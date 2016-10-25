@@ -3478,8 +3478,10 @@ colour_t item_def::missile_colour() const
             return LIGHTGREY;
         case MI_ARROW:
             return BLUE;
+#if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:
             return WHITE;
+#endif
         case MI_BOLT:
             return LIGHTBLUE;
         case MI_JAVELIN:
@@ -3488,6 +3490,10 @@ colour_t item_def::missile_colour() const
             return MAGENTA;
         case MI_TOMAHAWK:
             return GREEN;
+        case MI_DART_POISONED:
+        case MI_DART_CURARE:
+        case MI_DART_FRENZY:
+            return WHITE;
         case NUM_SPECIAL_MISSILES:
         case NUM_REAL_SPECIAL_MISSILES:
         default:

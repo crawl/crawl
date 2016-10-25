@@ -336,8 +336,8 @@ enum missile_type
 {
 #if TAG_MAJOR_VERSION == 34
     MI_DART,
-#endif
     MI_NEEDLE,
+#endif
     MI_ARROW,
     MI_BOLT,
     MI_JAVELIN,
@@ -347,6 +347,10 @@ enum missile_type
     MI_SLING_BULLET,
     MI_THROWING_NET,
     MI_TOMAHAWK,
+
+    MI_DART_POISONED,
+    MI_DART_CURARE,
+    MI_DART_FRENZY,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
@@ -580,7 +584,9 @@ enum weapon_type
     WPN_GLAIVE,
     WPN_BARDICHE,
 
+#if TAG_MAJOR_VERSION == 34
     WPN_BLOWGUN,
+#endif
 
 #if TAG_MAJOR_VERSION > 34
     WPN_HAND_CROSSBOW,

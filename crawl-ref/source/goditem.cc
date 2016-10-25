@@ -341,9 +341,11 @@ bool is_poisoned_item(const item_def& item)
         break;
     case OBJ_MISSILES:
         {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
-            return true;
+            if (item.sub_type == MI_DART_POISONED
+                || item.sub_type == MI_DART_CURARE)
+            {
+                return true;
+            }
         }
         break;
     case OBJ_STAVES:

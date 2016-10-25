@@ -600,10 +600,10 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_TOMAHAWK;
     else if (str == "net")
         return FIRE_NET;
-    else if (str == "return" || str == "returning")
-        return FIRE_RETURNING;
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
+    else if (str == "dart")
+        return FIRE_DART;
 
     return FIRE_NONE;
 }

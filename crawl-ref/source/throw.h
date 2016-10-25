@@ -14,9 +14,7 @@ enum fire_type
 {
     FIRE_NONE      = 0x0000,
     FIRE_LAUNCHER  = 0x0001,
-#if TAG_MAJOR_VERSION == 34
     FIRE_DART      = 0x0002,
-#endif
     FIRE_STONE     = 0x0004,
     FIRE_JAVELIN   = 0x0010,
     FIRE_ROCK      = 0x0100,

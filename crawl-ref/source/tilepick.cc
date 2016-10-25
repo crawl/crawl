@@ -1968,7 +1968,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BROAD_AXE:             return TILE_WPN_BROAD_AXE;
     case WPN_BATTLEAXE:             return TILE_WPN_BATTLEAXE;
     case WPN_EXECUTIONERS_AXE:      return TILE_WPN_EXECUTIONERS_AXE;
-    case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
     case WPN_HUNTING_SLING:         return TILE_WPN_HUNTING_SLING;
     case WPN_FUSTIBALUS:            return TILE_WPN_FUSTIBALUS;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
@@ -2033,15 +2032,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_SILVER:   return TILE_MI_TOMAHAWK_SILVER;
         }
 
-    case MI_NEEDLE:
-        switch (brand)
-        {
-        default:             return TILE_MI_NEEDLE + 1;
-        case 0:              return TILE_MI_NEEDLE;
-        case SPMSL_POISONED: return TILE_MI_NEEDLE_P;
-        case SPMSL_CURARE:   return TILE_MI_NEEDLE_CURARE;
-        }
-
     case MI_ARROW:
         switch (brand)
         {
@@ -2077,6 +2067,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
+    case MI_DART_POISONED: return TILE_MI_NEEDLE_P;
+    case MI_DART_CURARE:   return TILE_MI_NEEDLE_CURARE;
+    case MI_DART_FRENZY:   return TILE_MI_NEEDLE + 1;
     }
 
     return TILE_ERROR;

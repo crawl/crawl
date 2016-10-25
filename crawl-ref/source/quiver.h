@@ -18,8 +18,9 @@ enum ammo_t
     AMMO_BOW,             // wielded bow -> arrows
     AMMO_SLING,           // wielded sling -> stones, sling bullets
     AMMO_CROSSBOW,        // wielded crossbow -> bolts
-    // Used to be hand crossbows
+#if TAG_MAJOR_VERSION == 34
     AMMO_BLOWGUN,         // wielded blowgun -> needles
+#endif
     NUM_AMMO
 };
 

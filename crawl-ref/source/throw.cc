@@ -379,7 +379,7 @@ bool fire_warn_if_impossible(bool silent)
                 mprf("You cannot throw anything while %s.", held_status());
             return true;
         }
-        else if (weapon->sub_type != WPN_BLOWGUN)
+        else
         {
             if (!silent)
             {
@@ -618,15 +618,12 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     if (is_launched(act, launcher, ammo) != LRET_LAUNCHED)
         return;
 
-    // Throwing and blowguns are silent...
+    // Throwing is silent...
     int         level = 0;
     const char* msg   = nullptr;
 
     switch (launcher->sub_type)
     {
-    case WPN_BLOWGUN:
-        return;
-
     case WPN_HUNTING_SLING:
         level = 1;
         msg   = "You hear a whirring sound.";
@@ -910,7 +907,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
-    if (ammo_brand == SPMSL_FRENZY)
+    if (item.base_type == OBJ_MISSILES && item.sub_type == MI_DART_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), true);
 
     if (did_return)

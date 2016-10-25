@@ -306,8 +306,7 @@ TAGS:    no_monster_gen
 DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
-         w:14 tomahawk ego:poisoned | \
+         w:8 poisoned dart | w:4 curare dart | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
          w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon scales

@@ -84,10 +84,8 @@ appropriate launcher and ammunition.
 %%%%
 Throwing
 
-Training Throwing will make thrown weapons (such as javelins) and blowguns more
-effective. In particular, it makes weapons of returning more likely to return
-to their thrower, and makes certain magical needles more likely to have an
-effect when fired from a blowgun.
+Training Throwing will make thrown weapons (such as javelins) more effective.
+It also makes frenzy darts more likely to affect their target.
 
 Being skilled in Throwing increases your effectiveness with Slings, and vice
 versa.

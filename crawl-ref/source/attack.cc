@@ -1194,7 +1194,6 @@ int attack::player_apply_misc_modifiers(int damage)
 int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_STAVES
-        || weapon->sub_type == WPN_BLOWGUN
         || weapon->base_type == OBJ_RODS)
     {
         return 0;

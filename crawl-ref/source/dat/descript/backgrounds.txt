@@ -21,8 +21,7 @@ tools.
 %%%%
 Assassin
 
-Assassins carry a blowgun with poisoned needles, as well as a small number of
-nasty curare needles.
+Assassins carry poisoned darts, as well as a small number of nasty curare darts.
 %%%%
 Berserker
 

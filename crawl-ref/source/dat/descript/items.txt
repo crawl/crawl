@@ -81,11 +81,6 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
-blowgun
-
-A long, light tube, open at both ends, through which various types of needles
-are propelled by puffs of breath at enemies. It makes very little noise.
-%%%%
 bolt
 
 A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
@@ -345,6 +340,12 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
+curare dart
+
+A small projectile coated in asphyxiating poison. When thrown with precision it
+can deliver its toxins into the bloodstream of a living being, dealing heavy
+damage and slowing it.
+%%%%
 cutlass
 
 A broad curved short sword.
@@ -446,6 +447,12 @@ while rendering its wearer more susceptible to cold.
 flail
 
 A mace with a short chain connecting the head to the haft.
+%%%%
+frenzy dart
+
+A small projectile coated in an enraging toxin. When thrown with precision it
+can deliver its toxin into the bloodstream of a living or demonic being, causing
+it to become berserk and strike out at anything around it, friend or foe.
 %%%%
 fruit
 
@@ -640,12 +647,6 @@ An extremely rare book, powerful and sinister. Many foolhardy magicians have
 tried to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
 %%%%
-needle
-
-A thin piece of metal, typically coated in some harmful substance. When
-launched from a blowgun it can deliver its toxins into the bloodstream of a
-living or demonic being.
-%%%%
 orb of zot
 
 An invaluable artefact. Once you have escaped to the surface with it, your
@@ -683,6 +684,11 @@ plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
+%%%%
+poisoned dart
+
+A small projectile coated in some poison. When thrown with precision it can
+deliver its toxins into the bloodstream of a living being.
 %%%%
 potion of agility
 
@@ -979,8 +985,8 @@ contaminated with magical energy.
 scroll of brand weapon
 
 A scroll that imbues a weapon with a random brand, such as flame, freezing, or
-venom. Any existing brand will be replaced. Blowguns and artefacts cannot be
-branded in this way.
+venom. Any existing brand will be replaced. Artefacts cannot be branded in this
+way.
 %%%%
 scroll of enchant armour
 

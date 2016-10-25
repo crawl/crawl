@@ -3694,29 +3694,12 @@ bool mons_has_incapacitating_ranged_attack(const monster& mon, const actor& foe)
 
     if (missile && missile->sub_type == MI_THROWING_NET)
         return true;
-    else if (missile && missile->sub_type == MI_NEEDLE)
+    else if (missile && missile->sub_type == MI_DART_CURARE)
     {
-        switch (get_ammo_brand(*missile))
-        {
         // Not actually incapacitating, but marked as such so that
         // assassins will prefer using it while ammo remains
-        case SPMSL_CURARE:
-            if (foe.res_poison() <= 0)
-                return true;
-            break;
-
-        case SPMSL_SLEEP:
-            if (foe.can_sleep())
-                return true;
-            break;
-
-        case SPMSL_CONFUSION:
-        case SPMSL_PARALYSIS:
+        if (foe.res_poison() <= 0)
             return true;
-
-        default:
-            break;
-        }
     }
 
     return false;

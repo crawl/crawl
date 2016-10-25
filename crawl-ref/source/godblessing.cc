@@ -172,12 +172,6 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     if (ammo.sub_type == MI_STONE)
         ammo.sub_type = MI_SLING_BULLET; // ugly special case
 
-    // XXX: should beogh be gifting needles?
-    // if not, we'd need special checks in player gifting, etc... better to
-    // go along for now.
-    if (ammo.sub_type == MI_NEEDLE)
-        ammo.brand = SPMSL_POISONED;
-
     ammo.quantity = 30 + random2(10);
     if (initial_gift || !launcher)
         ammo.quantity /= 2;

@@ -36,9 +36,10 @@ private:
     int apply_damage_modifiers(int damage, int damage_max) override;
     bool apply_damage_brand(const char *what = nullptr) override;
     special_missile_type random_chaos_missile_brand();
-    bool blowgun_check(special_missile_type type);
-    int blowgun_duration_roll(special_missile_type type);
+    bool dart_check(uint8_t sub_type);
+    int dart_duration_roll(uint8_t sub_type);
     bool apply_missile_brand();
+    bool apply_dart_type();
 
     /* Weapon Effects */
     bool check_unrand_effects() override;

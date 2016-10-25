@@ -512,8 +512,8 @@ KMONS: g = tyrant leech
 KMONS: A = lindwurm
 KMONS: h = redback
 KMONS: i = hydra
-KMONS: j = patrolling spriggan ; blowgun . q:5 needle ego:sleep | \
- q:5 needle ego:paralysis | q:5 needle ego:frenzy
+KMONS: j = patrolling spriggan ; q:5 curare dart | \
+ q:5 poisoned dart | q:5 frenzy dart
 KMONS: k = patrolling spriggan druid
 KMONS: q = electric eel
 KFEAT: q = deep_water
@@ -816,26 +816,26 @@ KMONS: a = patrolling Sigmund hd:15 hp:100 \
         iskenderun's_mystic_blast.16.wizard \
  ; scythe ego:distortion
 KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
- . blowgun . needle ego:curare q:7
+ . curare dart q:7
 : elseif d2rnd == 1 then
 KMONS: a = patrolling Dowan hd:15 hp:100 \
  spells:bolt_of_cold.11.wizard;corona.11.wizard;blink_range.11.wizard;\
         bolt_of_fire.11.wizard;;haste_other.11.wizard;minor_healing.11.wizard \
  ; morningstar ego:distortion
 KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
- . blowgun . needle ego:curare q:7
+ . curare dart q:7
 : elseif d2rnd == 2 then
 KMONS: a = patrolling Harold hd:15 hp:100 \
  spells:poison_arrow.16.wizard;teleport_other.16.wizard;\
         minor_healing.16.wizard;slow.16.wizard \
  ; dire flail ego:distortion
 KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
- . blowgun . needle ego:curare q:7
+ . curare dart q:7
 : else
 KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
  . shield ego:reflection
 KMONS: b = patrolling Frances ; war axe ego:holy_wrath \
- . blowgun . needle ego:curare q:7
+ . curare dart q:7
 :end
 KITEM: & = lamp of fire, scroll of acquirement q:1 ident:all, \
  scroll of acquirement q:1 ident:all / w:15 scroll of torment ident:all, \

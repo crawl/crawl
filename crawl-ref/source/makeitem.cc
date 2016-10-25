@@ -217,8 +217,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                 return true;
         }
 
-        // Clubs and blowguns are never randarts.
-        if (item.sub_type == WPN_CLUB || item.sub_type == WPN_BLOWGUN)
+        // Clubs are never randarts.
+        if (item.sub_type == WPN_CLUB)
             return false;
 
         // Mean enchantment +6.
@@ -293,9 +293,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return true;
 
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
-        return false;
-
-    if (type == WPN_BLOWGUN)
         return false;
 
     switch ((brand_type)brand)
@@ -665,9 +662,11 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    20, MI_ARROW,
                                    12, MI_BOLT,
                                    12, MI_SLING_BULLET,
-                                   10, MI_NEEDLE,
+                                   6,  MI_DART_POISONED,
                                    3,  MI_TOMAHAWK,
                                    2,  MI_JAVELIN,
+                                   2,  MI_DART_CURARE,
+                                   2,  MI_DART_FRENZY,
                                    1,  MI_THROWING_NET,
                                    1,  MI_LARGE_ROCK);
     }
@@ -697,8 +696,7 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
-        || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
-        || get_ammo_brand(item) == SPMSL_RETURNING)
+        || item.sub_type == MI_DART_CURARE || item.sub_type == MI_DART_FRENZY)
     {
         item.quantity = random_range(2, 8);
     }

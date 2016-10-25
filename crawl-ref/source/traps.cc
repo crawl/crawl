@@ -1251,13 +1251,13 @@ item_def trap_def::generate_trap_item()
     switch (type)
     {
 #if TAG_MAJOR_VERSION == 34
-    case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;         break;
+    case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;          break;
 #endif
-    case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;        break;
-    case TRAP_BOLT:   base = OBJ_MISSILES; sub = MI_BOLT;         break;
-    case TRAP_SPEAR:  base = OBJ_WEAPONS;  sub = WPN_SPEAR;       break;
-    case TRAP_NEEDLE: base = OBJ_MISSILES; sub = MI_NEEDLE;       break;
-    case TRAP_NET:    base = OBJ_MISSILES; sub = MI_THROWING_NET; break;
+    case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;         break;
+    case TRAP_BOLT:   base = OBJ_MISSILES; sub = MI_BOLT;          break;
+    case TRAP_SPEAR:  base = OBJ_WEAPONS;  sub = WPN_SPEAR;        break;
+    case TRAP_NEEDLE: base = OBJ_MISSILES; sub = MI_DART_POISONED; break;
+    case TRAP_NET:    base = OBJ_MISSILES; sub = MI_THROWING_NET;  break;
     default:          return item;
     }
 
@@ -1265,12 +1265,7 @@ item_def trap_def::generate_trap_item()
     item.sub_type  = sub;
     item.quantity  = 1;
 
-    if (base == OBJ_MISSILES)
-    {
-        set_item_ego_type(item, base,
-                          (sub == MI_NEEDLE) ? SPMSL_POISONED : SPMSL_NORMAL);
-    }
-    else
+    if (base != OBJ_MISSILES)
         set_item_ego_type(item, base, SPWPN_NORMAL);
 
     item_colour(item);
