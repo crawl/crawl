@@ -324,7 +324,18 @@ bool ranged_attack::handle_phase_hit()
         damage_done = max(0, damage_done);
 
         set_attack_verb(0);
-        announce_hit();
+        if (damage_done > 0)
+        {
+            if (!handle_phase_damaged())
+               return false;
+        }
+        else
+        {
+            mprf("%s %s %s but does no damage.",
+                 projectile->name(DESC_THE).c_str(),
+                 attack_verb.c_str(),
+                 defender->name(DESC_THE).c_str());
+        }
     }
     else
     {

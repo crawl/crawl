@@ -286,6 +286,7 @@ void uskayaw_bonds_audience();
 void ieoh_jian_spawn_weapon(const coord_def& position);
 void ieoh_jian_despawn_weapon();
 void ieoh_jian_weapon_swap(monster* mons);
+bool ieoh_jian_interest();
 vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you);
 
 #endif

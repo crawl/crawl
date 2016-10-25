@@ -1452,7 +1452,7 @@ static item_def ieoh_jian_choose_weapon()
     return weapon;
 }
 
-static bool ieoh_jian_interest()
+bool ieoh_jian_interest()
 {
     if(you.duration[DUR_IEOH_JIAN_BOREDOM] > 0)
         you.duration[DUR_IEOH_JIAN_BOREDOM] = 0;
@@ -1473,7 +1473,6 @@ static bool ieoh_jian_interest()
 
     if ((you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] == 0) && x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
     {
-        you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = IEOH_JIAN_ATTENTION_SPAN;
         return true;
     }
 
@@ -1539,6 +1538,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         return;
     }
 
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = IEOH_JIAN_ATTENTION_SPAN;
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 

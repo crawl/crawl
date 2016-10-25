@@ -3062,7 +3062,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        project_weapon(beam, nullptr);
+        ieoh_jian_project_weapon(beam);
         break;
     case ABIL_IEOH_JIAN_RECALL_WEAPON:
         break;
