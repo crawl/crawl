@@ -350,7 +350,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_sidebar), false),
-        new BoolGameOption(SIMPLE_NAME(tile_web_mouse_control), false),
+        new BoolGameOption(SIMPLE_NAME(tile_web_mouse_control), true),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
