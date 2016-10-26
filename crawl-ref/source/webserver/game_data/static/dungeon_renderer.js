@@ -75,6 +75,8 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
 
         handle_mouse: function (ev)
         {
+            if (!options.get("tile_web_mouse_control"))
+                return;
             if (ev.type === "mouseleave")
             {
                 if (this.tooltip_timeout)

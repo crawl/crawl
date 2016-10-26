@@ -521,6 +521,7 @@ public:
     string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
+    bool        tile_web_mouse_control;
 #endif
 #endif // USE_TILE
 
