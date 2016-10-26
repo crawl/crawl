@@ -1637,12 +1637,11 @@ static int _get_monster_armour_value(const monster *mon,
 {
     // Each resistance/property counts as much as 1 point of AC.
     // Steam has been excluded because of its general uselessness.
-    // Well, the same's true for sticky flame but... (jpeg)
     int value = item.armour_rating()
               + get_armour_res_fire(item, true)
               + get_armour_res_cold(item, true)
               + get_armour_res_elec(item, true)
-              + get_armour_res_sticky_flame(item);
+              + get_armour_res_corr(item);
 
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)

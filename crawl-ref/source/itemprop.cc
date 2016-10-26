@@ -112,7 +112,7 @@ static const armour_def Armour_prop[] =
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
         ARMF_RES_STEAM),
     DRAGON_ARMOUR(ACID,        "acid",                    6,  -50,  400,
-        ARMF_RES_STICKY_FLAME),
+        ARMF_RES_CORR),
     DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,  600,
         ARMF_RES_MAGIC),
     DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,  500,
@@ -2482,12 +2482,12 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
     return false;
 }
 
-int get_armour_res_sticky_flame(const item_def &arm)
+int get_armour_res_corr(const item_def &arm)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     // intrinsic armour abilities
-    return armour_type_prop(arm.sub_type, ARMF_RES_STICKY_FLAME);
+    return armour_type_prop(arm.sub_type, ARMF_RES_CORR);
 }
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
