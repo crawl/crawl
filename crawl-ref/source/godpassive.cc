@@ -1500,6 +1500,7 @@ void ieoh_jian_despawn_weapon()
     {
         mprf(MSGCH_GOD, "%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+        place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
     }
 }
 
