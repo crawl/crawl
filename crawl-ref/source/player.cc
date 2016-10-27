@@ -1284,15 +1284,25 @@ int player_hunger_rate(bool temp)
     return hunger;
 }
 
+/**
+ * How many spell levels does the player have total, including those used up
+ * by memorized spells?
+ */
+int player_total_spell_levels()
+{
+    return you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
+}
+
+/**
+ * How many spell levels does the player currently have available for
+ * memorizing new spells?
+ */
 int player_spell_levels()
 {
-    int sl = you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
+    int sl = min(player_total_spell_levels(), 99);
 
     bool fireball = false;
     bool delayed_fireball = false;
-
-    if (sl > 99)
-        sl = 99;
 
     for (const spell_type spell : you.spells)
     {
@@ -1309,8 +1319,7 @@ int player_spell_levels()
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
 
-    // Note: This can happen because of level drain. Maybe we should
-    // force random spells out when that happens. -- bwr
+    // Note: This can happen because of draining. -- bwr
     if (sl < 0)
         sl = 0;
 

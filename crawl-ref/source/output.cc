@@ -2286,9 +2286,8 @@ static vector<formatted_string> _get_overview_stats()
     entry.cprintf("Spells: ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
-    entry.cprintf("%d memorised, %d level%s left",
-                  you.spell_no, player_spell_levels(),
-                  (player_spell_levels() == 1) ? "" : "s");
+    entry.cprintf("%d/%d levels left",
+                  player_spell_levels(), player_total_spell_levels());
 
     cols.add_formatted(3, entry.to_colour_string(), false);
     entry.clear();
