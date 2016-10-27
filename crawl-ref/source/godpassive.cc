@@ -1452,6 +1452,7 @@ static item_def ieoh_jian_choose_weapon()
     return weapon;
 }
 
+// Keeps Ieoh Jian interested and returns TRUE if they'd be fine with spawning a new weapon.
 bool ieoh_jian_interest()
 {
     if(you.duration[DUR_IEOH_JIAN_BOREDOM] > 0)
@@ -1466,15 +1467,12 @@ bool ieoh_jian_interest()
     auto yours = find_ieoh_jian_manifested_weapons(true);
     manifested.insert(manifested.end(), yours.begin(), yours.end());
     auto manifested_num = manifested.size();
-    auto slots = IEOH_JIAN_WEAPON_SLOTS - manifested_num;
 
     if (manifested_num >= IEOH_JIAN_WEAPON_SLOTS)
         return false;
 
-    if ((you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] == 0) && x_chance_in_y(slots, 2*IEOH_JIAN_WEAPON_SLOTS))
-    {
+    if ((you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] == 0))
         return true;
-    }
 
     return false;
 }
@@ -1502,6 +1500,9 @@ void ieoh_jian_despawn_weapon()
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
         place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
     }
+
+    // The backoff is cleared so you can quickly climb back from a lost weapon.
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
 }
 
 void ieoh_jian_spawn_weapon(const coord_def& position)
@@ -1539,7 +1540,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         return;
     }
 
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = IEOH_JIAN_ATTENTION_SPAN;
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 2 * IEOH_JIAN_ATTENTION_SPAN * pow(2,theirs_num);
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 
