@@ -1399,7 +1399,7 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
     else
     {
         for (auto& monster: menv)
-            if (monster.type == MONS_IEOH_JIAN_WEAPON && !monster.props.exists(IEOH_JIAN_SLOT))
+            if (monster.type == MONS_IEOH_JIAN_WEAPON && !monster.weapon()->props.exists(IEOH_JIAN_SLOT))
                 monsters.emplace_back(&monster);
     }
 

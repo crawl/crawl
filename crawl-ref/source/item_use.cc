@@ -314,6 +314,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
         SAY(canned_msg(MSG_TOO_BERSERK));
         return false;
     }
+    
+    auto manifested = find_ieoh_jian_manifested_weapons(true);
+    if (!manifested.empty())
+    {
+        SAY(mpr("You're too focused keeping your own weapon in the air."));
+        return false;
+    }
 
     if (you.melded[EQ_WEAPON] && unwield)
     {
