@@ -1341,7 +1341,16 @@ void bolt::do_fire()
         if (feat_is_solid(feat) && !can_affect_wall(pos()))
         {
             if (is_bouncy(feat))
+            {
                 bounce();
+                // see comment in bounce(); the beam will be cancelled if this
+                // is a tracer and showing the bounce would be an info leak.
+                // In that case, we have to break early to avoid adding this
+                // square to path_taken twice, which would make it look like a
+                // a bounce ANYWAY.
+                if (range_used() > range)
+                    break;
+            }
             else
             {
                 // Regress for explosions: blow up in an open grid (if regressing
