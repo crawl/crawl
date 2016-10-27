@@ -1889,7 +1889,7 @@ static string _stealth_bar(int sw)
     linebreak_string(bar, sw);
     return bar;
 }
-static string _status_mut_abilities(int sw);
+static string _status_mut_rune_list(int sw);
 
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
@@ -2467,7 +2467,7 @@ static char _get_overview_screen_results()
     }
 
     overview.add_text(" ");
-    overview.add_text(_status_mut_abilities(get_number_of_cols()));
+    overview.add_text(_status_mut_rune_list(get_number_of_cols()));
 
     vector<MenuEntry *> results = overview.show();
     return (!results.empty()) ? results[0]->hotkeys[0] : 0;
@@ -2494,7 +2494,12 @@ string dump_overview_screen(bool full_id)
     }
     text += "\n";
 
-    text += formatted_string::parse_string(_status_mut_abilities(80));
+    text += formatted_string::parse_string(_status_mut_rune_list(80));
+
+    string ability_list = formatted_string::parse_string(print_abilities());
+    linebreak_string(ability_list, 80);
+    text += ability_list;
+
     text += "\n";
 
     return text;
@@ -2530,9 +2535,9 @@ static string _dragon_abil(string desc)
     return _annotate_form_based(desc, supp);
 }
 
-// Creates rows of short descriptions for current
-// status, mutations and abilities.
-static string _status_mut_abilities(int sw)
+/// Creates rows of short descriptions for current status effects, mutations,
+/// and runes/Orbs of Zot.
+static string _status_mut_rune_list(int sw)
 {
     // print status information
     string text = "<w>@:</w> ";
@@ -2649,10 +2654,6 @@ static string _status_mut_abilities(int sw)
         text += comma_separated_line(mutations.begin(), mutations.end(),
                                      ", ", ", ");
     }
-
-    // print ability information
-
-    text += print_abilities();
 
     // print the Orb
     if (player_has_orb())
