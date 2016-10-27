@@ -188,5 +188,5 @@ spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();
 
 bool ieoh_jian_project_weapon(bolt &pbolt);
-bool ieoh_jian_recall_weapon(bolt &pbolt);
+bool ieoh_jian_recall_weapon();
 #endif

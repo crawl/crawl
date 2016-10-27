@@ -41,13 +41,14 @@ bool do_wear_armour(int item, bool quiet);
 
 bool can_wield(const item_def *weapon, bool say_why = false,
                bool ignore_temporary_disability = false, bool unwield = false,
-               bool only_known = true);
+               bool only_known = true, bool ignore_ieoh_jian = false);
 
 bool wield_weapon(bool auto_wield, int slot = -1,
                   bool show_weff_messages = true, bool force = false,
                   bool show_unwield_msg = true,
                   bool show_wield_msg = true,
-                  bool adjust_time_taken = true);
+                  bool adjust_time_taken = true,
+                  bool ignore_ieoh_jian = false);
 
 bool item_is_worn(int inv_slot);
 

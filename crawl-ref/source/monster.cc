@@ -36,6 +36,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -6495,13 +6496,15 @@ bool monster::ieoh_jian_swap_weapon_with_player()
         int item_index = inv[MSLOT_WEAPON];
         item_def& pitem = mitm[item_index];
 
-        if (!you.can_wield(pitem) || needs_handle_warning(pitem, OPER_WIELD, penance))
+        if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance))
             return false; // Player wouldn't be able to wield it safely.
 
         if (!unequip(pitem, false))
             return false; // Unsafe to unequip
 
         item_def weapon_copy = pitem;
+
+        // Ieoh Jian weapons can't live without a weapon (duh).
         monster_die(this, KILL_RESET, NON_MONSTER, true);
 
         int slot;
@@ -6546,7 +6549,7 @@ bool monster::ieoh_jian_swap_weapon_with_player()
         if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
             return false; // Can't unwield your current weapon safely.
 
-        if (!you.can_wield(*(weapon())) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
+        if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
             return false; // Player wouldn't be able to wield it safely.
 
         auto your_weapon_copy = *(you.weapon());
@@ -6556,6 +6559,9 @@ bool monster::ieoh_jian_swap_weapon_with_player()
         you.weapon()->slot = weapon()->slot;
         you.weapon()->link = weapon()->link;
         weapon()->set_holding_monster(*this);
+
+        // We need to reinitialize the ghost to inherit the qualities of the new weapon.
+        ghost->init_ieoh_jian_weapon(*(weapon()), you.skill(weapon_attack_skill(weapon()->sub_type), 4, true));
     }
 
     return true;

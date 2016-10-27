@@ -2523,6 +2523,7 @@ enum targ_mode_type
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_MOBILE_MONSTER,    // Non-stationary monsters
+    TARG_IEOH_JIAN_WEAPON,
     TARG_NUM_MODES
 };
 

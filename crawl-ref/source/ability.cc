@@ -3065,6 +3065,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         ieoh_jian_project_weapon(beam);
         break;
     case ABIL_IEOH_JIAN_RECALL_WEAPON:
+        if (!ieoh_jian_recall_weapon())
+        {
+            canned_msg(MSG_NOTHING_THERE);
+            return SPRET_ABORT;
+        }
         break;
     case ABIL_IEOH_JIAN_DRAGONFLY:
         break;

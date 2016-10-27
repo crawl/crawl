@@ -2166,6 +2166,9 @@ item_def* monster_die(monster* mons, killer_type killer,
                 reformed = true;
         }
 
+        if (!silent)
+            place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
+
         silent = true;
 
         int w_idx = mons->inv[MSLOT_WEAPON];
@@ -2178,7 +2181,6 @@ item_def* monster_die(monster* mons, killer_type killer,
                 destroy_item(w_idx);
         }
 
-        place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
