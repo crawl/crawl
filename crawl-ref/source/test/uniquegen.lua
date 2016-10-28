@@ -43,7 +43,7 @@ local function run_random_unique_tests()
     test_random_unique("Depths", depth, 3)
   end
 
-  for depth = 1, 7 do
+  for depth = 1, 4 do
     test_random_unique("Dis", depth, 3)
   end
 

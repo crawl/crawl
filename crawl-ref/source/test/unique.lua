@@ -52,9 +52,9 @@ local function run_unique_tests()
     test_uniques_random("Depths", depth, 3)
   end
 
-  for depth = 1, 7 do
+  for depth = 1, 4 do
     test_uniques_blank("Dis", depth, 3)
-    if depth < 7 then
+    if depth < 4 then
       -- otherwise we get failures for randomly placed Dispater
       -- getting placed again
       test_uniques_random("Dis", depth, 3)
