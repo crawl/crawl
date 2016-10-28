@@ -259,11 +259,10 @@ static int _scale_spawn_parameter(int base_value,
 
 static void _apply_ood(level_id &place)
 {
-    // OODs do not apply to any portal vaults, any 1-level branches, Zot and
-    // hells. What with newnewabyss?
+    // OODs do not apply to any portals, any 1-level branches, or Zot.
+    // What with newnewabyss?
     if (!is_connected_branch(place)
         || place.branch == BRANCH_ZOT
-        || is_hell_subbranch(place.branch)
         || brdepth[place.branch] <= 1)
     {
         return;

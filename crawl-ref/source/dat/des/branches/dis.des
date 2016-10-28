@@ -1008,7 +1008,7 @@ NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 NSUBST:  _ = 4:4 / *:.
 NSUBST:  5 = 1:5 / 1:. / * = 5., 6 = 1:6 / 1:. / * = 6., 7 = 1:7 / 1:. / * = 7.
 NSUBST:  8 = 2:4 / 1:6 / 1:7 / 4 = 4.. / 4 = 67. / *:.
-SUBST:   0 = 09988...
+SUBST:   0 = 00009...
 SHUFFLE: 67
 KMASK:   W = no_monster_gen
 : serpent_of_hell_setup(_G)

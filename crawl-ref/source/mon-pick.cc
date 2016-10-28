@@ -27,8 +27,12 @@ int branch_ood_cap(branch_type branch)
         return 27;
     case BRANCH_DEPTHS:
         return 14;
-    case BRANCH_VAULTS:
     case BRANCH_LAIR:
+    case BRANCH_VAULTS:
+    case BRANCH_DIS:
+    case BRANCH_GEHENNA:
+    case BRANCH_COCYTUS:
+    case BRANCH_TARTARUS:
         return 12;
     case BRANCH_ELF:
         return 7;
