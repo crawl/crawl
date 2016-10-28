@@ -2967,6 +2967,7 @@ void bolt::affect_place_explosion_clouds()
     {
         place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
+        // XXX: affect other open spaces?
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
             const god_type god =

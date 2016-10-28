@@ -4888,6 +4888,7 @@ enum zap_type
     ZAP_VIRULENCE,
     ZAP_DRAIN_MAGIC,
     ZAP_BECKONING,
+    ZAP_FIRE_STORM,
     NUM_ZAPS
 };
 
