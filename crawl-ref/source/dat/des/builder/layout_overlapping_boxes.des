@@ -12,7 +12,7 @@
 : require("dlua/layout/minimum_map_area.lua")
 
 NAME:   layout_overlapping_boxes
-DEPTH:  Dis:1-6
+DEPTH:  Dis, !Dis:$
 WEIGHT: 5
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions

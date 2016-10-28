@@ -54,7 +54,7 @@
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
 #
-# TODO: Remove small wall blocks in Dis, then add to Dis:1-6 at
+# TODO: Remove small wall blocks in Dis, then add to Dis:1-3 at
 #       weight 10.
 #
 NAME:   layout_stronghold

@@ -8,7 +8,7 @@
 
 {{
 function dis_setup(e)
-   e.place("Dis:7")
+   e.place("Dis:$")
    e.tags("dis", "no_rotate")
    e.kitem("$ = $ no_pickup")
 -- turn granite statues into iron statues
@@ -92,7 +92,7 @@ ENDMAP
 # The Dragons of Dis
 # There is an 8/27 chance all three downstairs will be here.
 NAME:    lemuel_dis_dragons
-DEPTH:   Dis:2-6
+DEPTH:   Dis, !Dis:1, !Dis:$
 ORIENT:  float
 TAGS:    no_rotate
 MONS:    iron dragon, iron dragon
@@ -174,7 +174,7 @@ ENDMAP
 
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
-DEPTH:   Dis:1-6, Zot:1-4
+DEPTH:   Dis, !Dis:$, Zot, !Zot:$
 SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
 SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
 NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%

@@ -811,17 +811,17 @@ A carved rock wall
 
 A wall decorated with images of death and destruction.
 %%%%
-# evilmike_haunted_forest (Crypt:5)
+# evilmike_haunted_forest (Crypt:$)
 A dead tree
 
 A tree, as dead as everything else here.
 %%%%
-# Dis:7
+# Dis
 An iron statue
 
 A statue with no mouth. Creepy!
 %%%%
-# Geh:7
+# Geh:4
 Ashen ground
 
 Ashen ground. It is warm and almost comfortable.
@@ -830,7 +830,7 @@ A tempered metal wall
 
 A metal wall, emitting heat.
 %%%%
-# Coc:7
+# Coc:4
 An ice-covered rock wall
 
 A rock wall coated in a thick layer of ice.

@@ -1204,7 +1204,7 @@ ENDMAP
 # TODO: place around primary vault, then allow on Dis:$.
 #
 NAME:   layout_subdivisions
-DEPTH:  Dis:1-6
+DEPTH:  Dis, !Dis:$
 WEIGHT: 15
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
@@ -1313,7 +1313,7 @@ ENDMAP
 # This is a Dis-specific variant of layout_honeycomb.
 #
 NAME:   layout_jigsaw
-DEPTH:  Dis:1-6
+DEPTH:  Dis, !Dis:$
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
