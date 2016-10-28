@@ -22,6 +22,8 @@ enum miscast_source
 {
     ZOT_TRAP_MISCAST,
     HELL_EFFECT_MISCAST,
+    HELL_SHARED_MISCAST,
+    HELL_SPECIFIC_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
     SPELL_MISCAST,
@@ -144,6 +146,8 @@ private:
     void _poison(int severity);
 
     void _zot();
+    void _hellshare();
+    void _hellspecific();
 };
 
 #endif

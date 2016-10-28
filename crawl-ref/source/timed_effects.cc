@@ -72,45 +72,45 @@ static void _hell_effect_noise()
 }
 
 /**
- * Choose a random miscast effect (from a weighted list) & apply it to the
- * player.
+ * Choose a custom hell effect from the spl-miscast list
+ * & apply it to the player.
  */
 static void _random_hell_miscast()
 {
-    const spschool_flag_type which_miscast
-        = random_choose_weighted(8, SPTYP_NECROMANCY,
-                                 4, SPTYP_SUMMONING,
-                                 2, SPTYP_CONJURATION,
-                                 1, SPTYP_CHARMS,
-                                 1, SPTYP_HEXES);
-
-    MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
+    MiscastEffect(&you, nullptr, HELL_SHARED_MISCAST, SPTYP_RANDOM,
                   4 + random2(6), random2avg(97, 3),
                   "the effects of Hell");
 }
 
-/// The thematically appropriate hell effects for a given hell branch.
+/// The thematically appropriate hell summons for a given hell branch.
 struct hell_effect_spec
 {
     /// The type of greater demon to spawn from hell effects.
-    vector<monster_type> fiend_types;
-    /// The appropriate theme of miscast effects to toss at the player.
-    spschool_flag_type miscast_type;
+    vector<pair<monster_type, int>> fiend_types;
     /// A weighted list of lesser creatures to spawn.
     vector<pair<monster_type, int>> minor_summons;
 };
 
-/// Hell effects for each branch of hell
+/// Hell effects for each branch of hell.
 static map<branch_type, hell_effect_spec> hell_effects_by_branch =
 {
-    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, SPTYP_EARTH, {
-        { RANDOM_MONSTER, 100 }, // TODO
+    // All sum to 100.
+    // TODO: Roll RANDOM_MONSTER to skip branch-specified fiends, so
+    // Cocytus doesn't need a specific list to nerf shard shrike drops.
+    { BRANCH_DIS, {{
+        { MONS_HELL_SENTINEL, 10 },
+        { RANDOM_DEMON_GREATER, 70 },
+        { MONS_IRON_GIANT, 20 },
+    }, {
+        { RANDOM_MONSTER, 100 },
     }}},
-    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, SPTYP_FIRE, {
-        { RANDOM_MONSTER, 100 }, // TODO
+    { BRANCH_GEHENNA, { { {MONS_BRIMSTONE_FIEND, 100 }, }, {
+        { RANDOM_MONSTER, 100 },
     }}},
-    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
-        // total weight 100
+    { BRANCH_COCYTUS, {{
+        { MONS_ICE_FIEND, 50 },
+        { MONS_SHARD_SHRIKE, 50 },
+    }, {
         { MONS_ZOMBIE, 15 },
         { MONS_SKELETON, 10 },
         { MONS_SIMULACRUM, 10 },
@@ -123,15 +123,16 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BLIZZARD_DEMON, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
-    { BRANCH_TARTARUS, { {MONS_TZITZIMITL}, SPTYP_NECROMANCY, {
-        { RANDOM_MONSTER, 100 }, // TODO
+    { BRANCH_TARTARUS, {{
+        { MONS_TZITZIMITL, 75 },
+        { MONS_DOOM_HOUND, 25 },
+    }, {
+        { RANDOM_MONSTER, 100 },
     }}},
 };
 
 /**
- * Either dump a fiend or a hell-appropriate miscast effect on the player.
- *
- * 40% chance of fiend, 60% chance of miscast.
+ * Either dump a fiend or a hell-appropriate effect on the player.
  */
 static void _themed_hell_summon_or_miscast()
 {
@@ -140,28 +141,28 @@ static void _themed_hell_summon_or_miscast()
     if (!spec)
         die("Attempting to call down a hell effect in a non-hellish branch.");
 
-    if (x_chance_in_y(2, 5))
+    if (coinflip())
     {
         const monster_type fiend
-            = spec->fiend_types[random2(spec->fiend_types.size())];
+            = *random_choose_weighted(spec->fiend_types);
         create_monster(
                        mgen_data::hostile_at(fiend, true, you.pos())
                        .set_non_actor_summoner("the effects of Hell"));
     }
     else
     {
-        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, spec->miscast_type,
+        MiscastEffect(&you, nullptr, HELL_SPECIFIC_MISCAST, SPTYP_RANDOM,
                       4 + random2(6), random2avg(97, 3),
                       "the effects of Hell");
     }
 }
 
 /**
- * Try to summon at some number of random spawns from the current branch, to
- * harass the player & give them easy xp/TSO piety. Occasionally, to kill them.
+ * Try to summon a few random current branch spawns, to harass
+ * the player and shorten the efffective effect window.
+ * Occasionally, to kill them.
  *
- * Min zero, max five, average 1.67.
- *
+ * Min one, max five, average 2.88.
  * Can and does summon bands as individual spawns.
  */
 static void _minor_hell_summons()
@@ -180,7 +181,7 @@ static void _minor_hell_summons()
 
     for (int i = 0; i < 4; ++i)
     {
-        if (one_chance_in(3))
+        if (i == 0 || one_chance_in(4))
         {
             monster_type *type
                 = random_choose_weighted(spec->minor_summons);
@@ -207,13 +208,13 @@ static void _hell_effects(int /*time_delta*/)
 
     _hell_effect_noise();
 
-    if (one_chance_in(3))
+    // 35%, 40%, and 25%, respectively.
+    if (x_chance_in_y(7, 20))
         _random_hell_miscast();
-    else if (x_chance_in_y(5, 9))
+    else if (x_chance_in_y(4, 13))
         _themed_hell_summon_or_miscast();
-
-    if (one_chance_in(3))   // NB: No "else"
-        _minor_hell_summons();
+    else
+         _minor_hell_summons();
 }
 
 // This function checks whether we can turn a wall into a floor space and
@@ -942,7 +943,7 @@ struct timed_effect
 static struct timed_effect timed_effects[] =
 {
     { rot_floor_items,               200,   200, true  },
-    { _hell_effects,                 200,   600, false },
+    { _hell_effects,                 400,   800, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif
