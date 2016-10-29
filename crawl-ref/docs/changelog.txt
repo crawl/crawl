@@ -11,7 +11,7 @@ Highlights
 Branches, Environment
 ---------------------
 * New timed portal vault: the Desolation of Salt, appearing in Elf and Vaults.
-  - Six new enemies, including fragile golems and several supporting allies.
+  - Six new enemies, including swarms of fragile golems with supporting allies.
   - Open terrain layout with large, opaque clouds to use as cover.
   - Many powerful artefacts resting within ancient ruins.
 * Volcanoes are now much more dangerous, but offer better rewards.
@@ -55,7 +55,7 @@ Gods
   - Piety gained by dealing damage to enemies.
   - Piety decays extremely rapidly over time.
   - 1*: Stomp: deals damage to all adjacent enemies.
-  - 2*: Line Pass: instantly travel through a line of enemies, confusing some
+  - 2*: Line Pass: instantly travel through a line of enemies, confusing some.
   - Solo Time: on reaching 3*, briefly paralyse all visible enemies.
   - Pain Bond: on reaching 4*, all visible enemies begin sharing damage
     taken with each-other.
@@ -82,7 +82,7 @@ Gods
   - Drawing from decks and using Nemelex abilities now uses invocations,
     not evocations.
   - Identify scrolls can no longer be used on decks.
-* Beogh's water-walking now always lasts until the player is on land.
+* Beogh's water-walking always lasts until the player is on land.
 * Beogh no longer increases the benefits of armour and shields.
 * Dithmenos's Shadow Step can no longer be used on allies or while immobile.
 * Fedhas appreciates all corpse decay, and rots all corpses when the player
@@ -161,7 +161,7 @@ Monsters
   - Dream sheep, pack monsters that put their enemies to sleep.
   - ...and the residents of the Desolation of Salt.
 * Uniques:
-  - Urug's weapons are now much nastier for their depth.
+  - Urug and Jory's weapons are now much nastier for their depth.
   - Mennas always spawns with a sacred weapon.
   - Donald can now cast Haste and Might.
   - Asterion's Spectral Weapon has been replaced by Greater Servant of Makhleb.
@@ -182,13 +182,13 @@ Monsters
 * Hellions no longer have fire resistance or cold vulnerability.
 * Deep elf archers no longer fire their bows in melee.
 * Death scarabs no longer trail miasma, but are somewhat tougher.
-* Tzitzimimeh's melee slows and rots victims, instead of creating miasma.
+* Tzitzimitl melee slows and rots victims, instead of creating miasma.
+* Ushabti gain Dispel Undead and Warning Cry, and their clouds are now miasma.
 * Friendly monsters will no longer open doors.
 * Jellies no longer eat unseen items for non-Jiyva worshippers.
 * Turtles no longer withdraw into their shells when injured.
 * Giant eyeballs charge up their paralysis-stare 50% faster.
 * Statues are now stabbable; obsidian & orange crystal statues gain sInv.
-* Ushabti gain Dispel Undead and Warning Cry, and their clouds are now miasma.
 * Renamed monsters:
   - Giant newt -> frilled lizard.
   - Giant frog -> bullfrog.
@@ -225,6 +225,7 @@ Spells
 * Olgreb's Toxic Radiance causes less damage, but doesn't poison the caster.
 * Simulacrum's duration is significantly shorter.
 * Spells formerly in the Akashic Record have been redistributed elsewhere.
+* Various other spellbooks have had minor adjustments.
 * Removed: Cure Poison, Haste, and Warp Weapon.
 
 
