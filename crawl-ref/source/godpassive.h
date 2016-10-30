@@ -245,6 +245,9 @@ enum class passive_t
 
     /// Spawn flying weapons on melee attack
     spawn_weapon_on_hit,
+
+    /// Unlock hidden potential on weapons
+    martial_weapon_mastery,
 };
 
 enum ru_interference
@@ -287,6 +290,10 @@ void ieoh_jian_spawn_weapon(const coord_def& position);
 void ieoh_jian_despawn_weapon();
 void ieoh_jian_weapon_swap(monster* mons);
 bool ieoh_jian_interest();
+void ieoh_jian_perform_martial_attacks(const coord_def& new_pos);
+bool ieoh_jian_can_pole_vault(const coord_def& target);
+void ieoh_jian_pole_vault_effects();
+
 vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you);
 
 #endif

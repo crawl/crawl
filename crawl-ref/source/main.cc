@@ -3364,7 +3364,9 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder && !fmonger)
+    bool can_pole_vault = ieoh_jian_can_pole_vault(targ);
+
+    if (!attacking && (targ_pass || can_pole_vault) && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -3422,6 +3424,10 @@ static void _move_player(coord_def move)
             additional_time_taken += BASELINE_DELAY / 5;
         }
 
+        // Ieoh Jian's lunge and whirlwind are taken care of before the swap.
+        if (will_have_passive(passive_t::martial_weapon_mastery))
+            ieoh_jian_perform_martial_attacks(you.pos() + move);
+
         if (swap)
             _swap_places(targ_monst, mon_swap_dest);
         else if (you.duration[DUR_CLOUD_TRAIL])
@@ -3449,8 +3455,17 @@ static void _move_player(coord_def move)
         you.stop_being_constricted();
 
         // Don't trigger traps when confusion causes no move.
-        if (you.pos() != targ)
+        if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
+        else if (can_pole_vault)
+        {
+            mprf("You bounce against the obstacle and pole vault!");
+            auto pole_vault_direction = (you.pos() - targ).sgn();
+            auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
+            move_player_to_grid(pole_vault_landing_spot, false);
+            ieoh_jian_pole_vault_effects();
+        }
+
         // Now it is safe to apply the swappee's location effects. Doing
         // so earlier would allow e.g. shadow traps to put a monster
         // at the player's location.
@@ -3509,7 +3524,7 @@ static void _move_player(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking)
+    else if (!targ_pass && !attacking && !can_pole_vault)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -3526,14 +3541,14 @@ static void _move_player(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking)
+    else if (beholder && !attacking && !can_pole_vault)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking)
+    else if (fmonger && !attacking && !can_pole_vault)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());

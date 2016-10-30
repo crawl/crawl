@@ -70,7 +70,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false)
+    cleaving(is_cleaving), is_riposte(false), is_ieoh_jian_martial(false)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -145,7 +145,7 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte)
+        if (!is_riposte && !is_ieoh_jian_martial)
             you.time_taken = you.attack_delay().roll();
 
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;

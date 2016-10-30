@@ -362,6 +362,16 @@ bool feat_is_solid(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_SOLID;
 }
 
+/** Can you pole vault against this feature? (Ieoh Jian)?
+ */
+bool feat_can_pole_vault_against(dungeon_feature_type feat)
+{
+    return feat_is_solid(feat)
+        && ((feat >= DNGN_TREE && feat <= DNGN_CLEAR_PERMAROCK_WALL)
+           || (feat == DNGN_ORCISH_IDOL)
+           || (feat == DNGN_GRANITE_STATUE));
+}
+
 /** Can you move into this cell in normal play?
  */
 bool cell_is_solid(const coord_def &c)

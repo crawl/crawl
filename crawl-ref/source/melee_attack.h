@@ -33,7 +33,8 @@ public:
 
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool      is_riposte;         // long blade retaliation attack
+    bool         is_riposte;            // long blade retaliation attack
+    bool         is_ieoh_jian_martial;  // Ieoh Jian auxiliary attacks
     coord_def attack_position;
 
 public:

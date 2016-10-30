@@ -24,6 +24,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-death.h"
@@ -291,6 +292,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     // Ieoh Jian
     {
         { -1, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
+        { 2, passive_t::martial_weapon_mastery, "you can unlock the hidden potential in melee weapons" },
     },
 };
 
@@ -1498,7 +1500,7 @@ void ieoh_jian_despawn_weapon()
     {
         mprf(MSGCH_GOD, "%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-        place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
+        check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
     }
 
     // The backoff is cleared so you can quickly climb back from a lost weapon.
@@ -1540,7 +1542,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         return;
     }
 
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 2 * IEOH_JIAN_ATTENTION_SPAN * pow(2,theirs_num);
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 2 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 
@@ -1553,6 +1555,128 @@ void ieoh_jian_weapon_swap(monster* mons)
         mprf(MSGCH_GOD, "You fail to grab %s from the air.!", mons->weapon()->name(DESC_THE, false, true).c_str());
 }
 
+static bool _dont_attack_martial(const monster* mons)
+{
+    return mons->friendly() || mons->good_neutral() || mons->strict_neutral();
+}
+
+static void _ieoh_jian_lunge(const coord_def& new_pos)
+{
+    coord_def lunge_direction = (you.pos() + new_pos).sgn();
+    coord_def potential_target = you.pos() + lunge_direction + lunge_direction;
+    monster* mons = monster_at(potential_target);
+
+    if (!mons || _dont_attack_martial(mons))
+        return;
+   
+    mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
+    melee_attack lunge(&you, mons);
+    lunge.is_ieoh_jian_martial = true;
+    lunge.attack();
+}
+
+static void _ieoh_jian_whirlwind(const coord_def& new_pos)
+{
+    vector<monster*> targets;
+
+    coord_def dir = coord_def(1,0);
+    for (int i = 0; i < 8; ++i)
+    {
+        monster* target = monster_at(you.pos() + dir);
+        if (target && !_dont_attack_martial(target))
+            targets.push_back(target);
+
+        dir = rotate_adjacent(dir, 1);
+    }
+
+    if (targets.empty())
+        return;
+
+    vector<monster*> new_targets;
+    for (int i = 0; i < 8; ++i)
+    {
+        monster* target = monster_at(new_pos + dir);
+        if (target && !_dont_attack_martial(target))
+            new_targets.push_back(target);
+
+        dir = rotate_adjacent(dir, 1);
+    }
+
+    sort(targets.begin(), targets.end()); 
+    sort(new_targets.begin(), new_targets.end()); 
+    vector<monster*> common_targets;
+    set_intersection(targets.begin(), targets.end(), 
+                     new_targets.begin(), new_targets.end(),
+                     back_inserter(common_targets));
+
+    for (auto mons : common_targets)
+    {
+        mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
+        melee_attack whirlwind(&you, mons);
+        whirlwind.is_ieoh_jian_martial = true;
+        whirlwind.attack();
+    }
+}
+
+void ieoh_jian_perform_martial_attacks(const coord_def& new_pos)
+{
+    if (!you.weapon())
+        return;
+
+    auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
+
+    if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
+        _ieoh_jian_lunge(new_pos);
+
+    if (weapon_skill == SK_LONG_BLADES || weapon_skill == SK_MACES_FLAILS)
+        _ieoh_jian_whirlwind(new_pos);
+}
+
+bool ieoh_jian_can_pole_vault(const coord_def& target)
+{
+   bool able = will_have_passive(passive_t::martial_weapon_mastery)
+                                  && feat_can_pole_vault_against(grd(target))
+                                  && you.weapon() 
+                                  && (weapon_attack_skill(you.weapon()->sub_type) == SK_STAVES
+                                      || weapon_attack_skill(you.weapon()->sub_type) == SK_POLEARMS);
+   
+   if (!able) 
+       return false;
+
+   auto pole_vault_direction = (you.pos() - target).sgn();
+   auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
+
+    if (feat_is_solid(grd(you.pos() + pole_vault_direction))
+        || !you.is_habitable(pole_vault_landing_spot)
+        || actor_at(pole_vault_landing_spot))
+    {
+        mprf("You have no room to pole vault.");
+        return false;
+    }
+
+    return true;
+}
+
+void ieoh_jian_pole_vault_effects()
+{
+    coord_def dir = coord_def(1,0);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        monster* target = monster_at(you.pos() + dir);
+        if (target && !_dont_attack_martial(target))
+        {
+            mprf("Your landing strike hits %s!", target->name(DESC_THE).c_str());
+            melee_attack slam(&you, target);
+            slam.is_ieoh_jian_martial = true;
+            slam.attack();
+        }
+
+        if(!cell_is_solid(you.pos() + dir))
+            check_place_cloud(CLOUD_DUST, you.pos() + dir, 1 + random2(3) , &you, 1, -1);
+        dir = rotate_adjacent(dir, 1);
+    }
+}
 
 /**
  * check if the monster in this cell exists and is a valid target for Uskayaw

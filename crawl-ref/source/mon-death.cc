@@ -2167,7 +2167,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         }
 
         if (!silent)
-            place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
+            check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
 
         silent = true;
 
