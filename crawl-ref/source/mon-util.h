@@ -325,6 +325,7 @@ int mons_class_colour(monster_type mc);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
+monster_type random_draconian_job();
 monster_type random_demonspawn_monster_species();
 monster_type random_demonspawn_job();
 

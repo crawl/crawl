@@ -581,10 +581,10 @@ monster_type resolve_monster_type(monster_type mon_type,
         // Pick any random drac, constrained by colour if requested.
         do
         {
-            mon_type =
-                static_cast<monster_type>(
-                    random_range(MONS_FIRST_BASE_DRACONIAN,
-                                 MONS_LAST_DRACONIAN));
+            if (coinflip())
+                mon_type = random_draconian_monster_species();
+            else
+                mon_type = random_draconian_job();
         }
         while (base_type != MONS_PROGRAM_BUG
                && mon_type != base_type
@@ -594,11 +594,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     else if (mon_type == RANDOM_BASE_DRACONIAN)
         mon_type = random_draconian_monster_species();
     else if (mon_type == RANDOM_NONBASE_DRACONIAN)
-    {
-        mon_type =
-            static_cast<monster_type>(
-                random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_DRACONIAN));
-    }
+        mon_type = random_draconian_job();
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
         mon_type = summon_any_demon(mon_type, true);
     else if (mon_type == RANDOM_DEMONSPAWN)
