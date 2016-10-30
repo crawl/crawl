@@ -276,6 +276,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_CHAOS_CHAMPION)
     AXED_MON(MONS_WASP)
     AXED_MON(MONS_MOTTLED_DRACONIAN)
+    AXED_MON(MONS_DRACONIAN_ZEALOT)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -700,20 +701,6 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
         MON_SHAPE_HUMANOID_TAILED,
     {TILEP_DRACO_MONK}, TILE_ERROR
-},
-
-{
-    MONS_DRACONIAN_ZEALOT, 'q', LIGHTGREEN, "draconian zealot",
-    M_COLD_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL | MH_EVIL, 40,
-    { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    16, 800,
-    3, 0, MST_DRACONIAN_ZEALOT, CE_CLEAN, S_ROAR,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
-        MON_SHAPE_HUMANOID_TAILED,
-    {TILEP_DRACO_ZEALOT}, TILE_ERROR
 },
 
 {

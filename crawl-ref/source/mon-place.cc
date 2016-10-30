@@ -2172,7 +2172,6 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DRACONIAN_SCORCHER, classy_drac_set },
     { MONS_DRACONIAN_KNIGHT, classy_drac_set },
     { MONS_DRACONIAN_ANNIHILATOR, classy_drac_set },
-    { MONS_DRACONIAN_ZEALOT, classy_drac_set },
     { MONS_DRACONIAN_SHIFTER, classy_drac_set },
     // yup, scary
     { MONS_TIAMAT,          { {}, {{ BAND_DRACONIAN, {8, 15}, true }}}},
@@ -2712,8 +2711,7 @@ static monster_type _band_member(band_type band, int which,
                 2, MONS_DRACONIAN_MONK,
                 2, MONS_DRACONIAN_SHIFTER,
                 2, MONS_DRACONIAN_ANNIHILATOR,
-                2, MONS_DRACONIAN_SCORCHER,
-                2, MONS_DRACONIAN_ZEALOT);
+                2, MONS_DRACONIAN_SCORCHER);
         }
 
         return random_draconian_monster_species();

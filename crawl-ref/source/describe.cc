@@ -3645,7 +3645,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:

@@ -1097,7 +1097,6 @@ draco-job-knight DRACO_KNIGHT
 draco-job-monk DRACO_MONK
 draco-job-scorcher DRACO_SCORCHER
 draco-job-shifter DRACO_SHIFTER
-draco-job-zealot DRACO_ZEALOT
 ## From the Wucad Mu wizard laboratory
 mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 

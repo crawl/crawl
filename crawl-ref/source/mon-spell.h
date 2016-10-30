@@ -649,15 +649,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DRACONIAN_ZEALOT,
-      {
-       { SPELL_CALL_DOWN_DAMNATION, 11, MON_SPELL_PRIEST },
-       { SPELL_SMITING, 11, MON_SPELL_PRIEST },
-       { SPELL_SUMMON_DEMON, 11, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 22, MON_SPELL_PRIEST },
-      }
-    },
-
     // ('s') Spiders and insects.
     {  MST_JUMPING_SPIDER,
       {

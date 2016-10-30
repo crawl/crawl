@@ -530,7 +530,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_ORC,                     { ORC_WEAPONS } },
         { MONS_ORC_PRIEST,              { ORC_WEAPONS } },
         { MONS_DRACONIAN,               { ORC_WEAPONS } },
-        { MONS_DRACONIAN_ZEALOT,        { ORC_WEAPONS } },
         { MONS_TERENCE,
             { { { WPN_FLAIL,            30 },
                 { WPN_HAND_AXE,         20 },
@@ -2012,7 +2011,6 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_BAI_SUZHEN:
         item.base_type = OBJ_ARMOUR;
