@@ -1092,7 +1092,7 @@ draco-base-grey
 draco-base-pale
 %rim 0
 draco-job-annihilator DRACO_ANNIHILATOR
-draco-job-caller DRACO_CALLER
+draco-job-stormcaller DRACO_STORMCALLER
 draco-job-knight DRACO_KNIGHT
 draco-job-monk DRACO_MONK
 draco-job-scorcher DRACO_SCORCHER
