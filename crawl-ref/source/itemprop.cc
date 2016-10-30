@@ -3105,3 +3105,9 @@ int armour_base_price(armour_type type)
 {
     return Armour_prop[ Armour_index[type] ].price;
 }
+
+bool you_could_wield_weapon_type(weapon_type type)
+{
+    auto size = you.body_size();
+    return Weapon_prop[Weapon_index[type]].min_2h_size <= size;
+}

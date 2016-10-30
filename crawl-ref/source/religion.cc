@@ -319,8 +319,10 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
     // Ieoh Jian
-    { { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
+    { { 0, "grab and wield flying weapons from the air" },
+      { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
       { 1, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
+      { 2, "unlock the hidden potential in melee weapons" },
       { 5, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate an enemy with a rain of blades" },
     },
 };

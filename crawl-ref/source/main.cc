@@ -3146,6 +3146,7 @@ static void _move_player(coord_def move)
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);
 
+    coord_def initial_position = you.pos();
     if (you.attribute[ATTR_HELD])
     {
         free_self_from_net();
@@ -3424,10 +3425,6 @@ static void _move_player(coord_def move)
             additional_time_taken += BASELINE_DELAY / 5;
         }
 
-        // Ieoh Jian's lunge and whirlwind are taken care of before the swap.
-        if (will_have_passive(passive_t::martial_weapon_mastery))
-            ieoh_jian_perform_martial_attacks(you.pos() + move);
-
         if (swap)
             _swap_places(targ_monst, mon_swap_dest);
         else if (you.duration[DUR_CLOUD_TRAIL])
@@ -3569,6 +3566,11 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+
+    // Ieoh Jian's lunge and whirlwind.
+    if (will_have_passive(passive_t::martial_weapon_mastery))
+        ieoh_jian_perform_martial_attacks(initial_position);
+
 }
 
 static int _get_num_and_char_keyfun(int &ch)

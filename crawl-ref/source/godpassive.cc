@@ -1408,44 +1408,89 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
     return monsters;
 }
 
+// Gives weights to Ieoh Jian weapons based on the weapon "tier", the player level and piety.
+static int _weapon_weight_by_tier(int tier)
+{
+    int level = you.get_experience_level();
+    int effective_level = level + 2 * piety_rank(you.piety); // up to 39
+    int weight = 0;
+    switch (tier)
+    {
+    case 0:
+        weight = 1;
+        break;
+    case 1:
+        weight = 2 * (effective_level > 8);
+        break;
+    case 2:
+        weight = 4 * (effective_level > 16);
+        break;
+    case 3:
+        weight = 8 * (effective_level > 24);
+        break;
+    }
+
+    return weight;
+}
+
+
 static item_def ieoh_jian_choose_weapon()
 {
-    vector<uint8_t> base_collection_types = {
+    static const int number_of_types = 11;
+    FixedVector<int, number_of_types> types
+    (
+        // Tier 0
         WPN_DAGGER,
+        WPN_SHORT_SWORD,
         WPN_FALCHION,
+        WPN_SHORT_SWORD,
         WPN_SPEAR,
+        WPN_TRIDENT,
         WPN_WHIP,
+        WPN_CLUB,
         WPN_HAND_AXE,
-        WPN_QUARTERSTAFF,
-    };
+        WPN_WAR_AXE,
+        WPN_QUARTERSTAFF
+    );
+    FixedVector<int, number_of_types> weights
+    (
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0),
+        _weapon_weight_by_tier(0) * 2
+    );
 
     auto manifested = find_ieoh_jian_manifested_weapons(false);
     auto yours = find_ieoh_jian_manifested_weapons(true);
     manifested.insert(manifested.end(), yours.begin(), yours.end());
 
-    // We get rid of all base types for which there is already a manifested weapon.
+    // We get rid of all base types for which there is already a manifested or owned weapon.
     for (auto monster: manifested)
-    {
-        auto monster_weapon_type = monster->weapon()->sub_type;
-        base_collection_types.erase(std::remove_if(base_collection_types.begin(), base_collection_types.end(), [monster_weapon_type](uint8_t type) {
-            return weapon_attack_skill(type) == weapon_attack_skill(monster_weapon_type);
-        }), base_collection_types.end());
-    }
-    if (you.weapon())
-    {
-        base_collection_types.erase(std::remove_if(base_collection_types.begin(), base_collection_types.end(), [](uint8_t type) {
-            return weapon_attack_skill(type) == weapon_attack_skill(you.weapon()->sub_type);
-        }), base_collection_types.end());
-    }
+        for (int i = 0; i != number_of_types; i++)
+            if (weapon_attack_skill(types[i]) == weapon_attack_skill(monster->weapon()->sub_type))
+                weights[i] = 0;
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
+        for (int i = 0; i != number_of_types; i++)
+            if (weapon_attack_skill(types[i]) == weapon_attack_skill(you.weapon()->sub_type))
+                weights[i] = 0;
 
-    // There should still be something free!
-    ASSERT(!base_collection_types.empty());
+    // We take out all types that our race can't wield.
+    for (int i = 0; i != number_of_types; i++)
+        if (!you_could_wield_weapon_type((weapon_type)types[i]))
+                weights[i] = 0;
 
     item_def weapon;
-
     weapon.base_type = OBJ_WEAPONS;
-    auto weapon_index = random_range(0, base_collection_types.size() - 1);
-    weapon.sub_type = base_collection_types.at(weapon_index);
+    int weapon_index = random_choose_weighted(weights);
+
+    weapon.sub_type = types[weapon_index];
     weapon.quantity = 1;
     weapon.plus = 2;
     weapon.brand = SPWPN_VORPAL;
@@ -1498,7 +1543,7 @@ void ieoh_jian_despawn_weapon()
 
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
     {
-        mprf(MSGCH_GOD, "%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+        mprf("%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
         check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
     }
@@ -1560,10 +1605,10 @@ static bool _dont_attack_martial(const monster* mons)
     return mons->friendly() || mons->good_neutral() || mons->strict_neutral();
 }
 
-static void _ieoh_jian_lunge(const coord_def& new_pos)
+static void _ieoh_jian_lunge(const coord_def& old_pos)
 {
-    coord_def lunge_direction = (you.pos() + new_pos).sgn();
-    coord_def potential_target = you.pos() + lunge_direction + lunge_direction;
+    coord_def lunge_direction = (you.pos() - old_pos).sgn();
+    coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
     if (!mons || _dont_attack_martial(mons))
@@ -1575,7 +1620,7 @@ static void _ieoh_jian_lunge(const coord_def& new_pos)
     lunge.attack();
 }
 
-static void _ieoh_jian_whirlwind(const coord_def& new_pos)
+static void _ieoh_jian_whirlwind(const coord_def& old_pos)
 {
     vector<monster*> targets;
 
@@ -1592,21 +1637,21 @@ static void _ieoh_jian_whirlwind(const coord_def& new_pos)
     if (targets.empty())
         return;
 
-    vector<monster*> new_targets;
+    vector<monster*> old_targets;
     for (int i = 0; i < 8; ++i)
     {
-        monster* target = monster_at(new_pos + dir);
+        monster* target = monster_at(old_pos + dir);
         if (target && !_dont_attack_martial(target))
-            new_targets.push_back(target);
+            old_targets.push_back(target);
 
         dir = rotate_adjacent(dir, 1);
     }
 
     sort(targets.begin(), targets.end()); 
-    sort(new_targets.begin(), new_targets.end()); 
+    sort(old_targets.begin(), old_targets.end()); 
     vector<monster*> common_targets;
     set_intersection(targets.begin(), targets.end(), 
-                     new_targets.begin(), new_targets.end(),
+                     old_targets.begin(), old_targets.end(),
                      back_inserter(common_targets));
 
     for (auto mons : common_targets)
@@ -1618,7 +1663,7 @@ static void _ieoh_jian_whirlwind(const coord_def& new_pos)
     }
 }
 
-void ieoh_jian_perform_martial_attacks(const coord_def& new_pos)
+void ieoh_jian_perform_martial_attacks(const coord_def& old_pos)
 {
     if (!you.weapon())
         return;
@@ -1626,10 +1671,10 @@ void ieoh_jian_perform_martial_attacks(const coord_def& new_pos)
     auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
 
     if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
-        _ieoh_jian_lunge(new_pos);
+        _ieoh_jian_lunge(old_pos);
 
     if (weapon_skill == SK_LONG_BLADES || weapon_skill == SK_MACES_FLAILS)
-        _ieoh_jian_whirlwind(new_pos);
+        _ieoh_jian_whirlwind(old_pos);
 }
 
 bool ieoh_jian_can_pole_vault(const coord_def& target)

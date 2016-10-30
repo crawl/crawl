@@ -2133,7 +2133,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         if (killer == KILL_RESET)
         {
             if (you.can_see(*mons) && !silent && mons->weapon())
-                mprf(MSGCH_GOD, "%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
+                mprf("%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
 
             // All slot indices are updated, so the age order is always respected.
             auto monsters = find_ieoh_jian_manifested_weapons(false);
