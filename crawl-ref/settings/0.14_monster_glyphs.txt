@@ -13,7 +13,6 @@ mon_glyph += death drake : lightgrey l
 mon_glyph += deep dwarf : lightblue q
 mon_glyph += draconian caller : brown d
 mon_glyph += draconian monk : blue d
-mon_glyph += draconian zealot : lightgreen d
 mon_glyph += draconian shifter : lightcyan d
 mon_glyph += draconian annihilator : lightblue d
 mon_glyph += draconian knight : cyan d
