@@ -1484,9 +1484,13 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 // to the base damage of the weapon.
 int melee_attack::player_apply_final_multipliers(int damage)
 {
-    //cleave damage modifier
+    // cleave damage modifier
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    // martial damage modifier (ieoh jian)
+    if (is_ieoh_jian_martial)
+        damage = martial_damage_mod(damage);
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
@@ -3423,6 +3427,38 @@ int melee_attack::cleave_damage_mod(int dam)
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
         return dam;
     return div_rand_round(dam * 7, 10);
+}
+
+static int _apply_momentum(int dam)
+{
+    // Momentum makes sure that heavy weapons do not get an unfair advantage
+    // when attacking on the move.
+    //
+    // Attack speed is calculated as it would on a normal attack, even though the time
+    // taken will correspond to the move speed. Instead, the ratio between move speed
+    // and the attack speed estimate is used as a damage factor.
+    //
+    // TODO dimension checks.
+    int move_delay = player_movement_speed();
+    int attack_delay = you.attack_delay().roll();
+
+    return div_rand_round(dam * move_delay, attack_delay);
+}
+
+// Martial strikes get modified by momentum and maneuver specific damage mods.
+int melee_attack::martial_damage_mod(int dam)
+{
+    ASSERT(will_have_passive(passive_t::martial_weapon_mastery));
+    ASSERT(you.weapon());
+
+    dam = _apply_momentum(dam);
+    auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
+   
+    // Lunge gets a damage bonus.
+    if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
+        dam = div_rand_round(dam * 12, 10);
+
+    return dam;
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)

@@ -3101,11 +3101,10 @@ static void _swap_places(monster* mons, const coord_def &loc)
         }
     }
 
-
     if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
         mons->move_to_pos(loc, true, true);
-        ieoh_jian_weapon_swap(mons);
+        mons->ieoh_jian_swap_weapon_with_player();
     }
     else
     {
