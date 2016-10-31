@@ -85,6 +85,9 @@ private:
     /* Long blade riposte */
     void riposte();
 
+    /* Ieoh Jian martial attacks*/
+    int martial_damage_mod(int dam);
+
     /* Mutation Effects */
     void do_spines();
     void do_passive_freeze();
