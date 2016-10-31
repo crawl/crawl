@@ -1591,15 +1591,6 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 
-// Grabs a Ieoh Jian floating weapon and leaves the player's weapon behind.
-void ieoh_jian_weapon_swap(monster* mons)
-{
-    if (mons->ieoh_jian_swap_weapon_with_player())
-        mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
-    else 
-        mprf(MSGCH_GOD, "You fail to grab %s from the air.!", mons->weapon()->name(DESC_THE, false, true).c_str());
-}
-
 static bool _dont_attack_martial(const monster* mons)
 {
     return mons->friendly() || mons->good_neutral() || mons->strict_neutral();
