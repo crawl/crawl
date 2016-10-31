@@ -791,6 +791,9 @@ string monster_info::get_max_hp_desc() const
         mhp = base_avg_hp * xl / base_xl; // rounds down - close enough
     }
 
+    if (type == MONS_SLIME_CREATURE)
+        mhp *= slime_size;
+
     return make_stringf("about %d", mhp);
 }
 
