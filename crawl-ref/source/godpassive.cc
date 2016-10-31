@@ -1505,9 +1505,6 @@ bool ieoh_jian_interest()
     if(you.duration[DUR_IEOH_JIAN_BOREDOM] > 0)
         you.duration[DUR_IEOH_JIAN_BOREDOM] = 0;
 
-    if(you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
-        mprf(MSGCH_GOD, "You feel a surge of divine interest. The Council is watching!");
-
     you.duration[DUR_IEOH_JIAN_INTEREST] = IEOH_JIAN_ATTENTION_SPAN;
    
     auto manifested = find_ieoh_jian_manifested_weapons(false);
