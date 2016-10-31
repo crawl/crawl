@@ -1227,7 +1227,7 @@ bool is_follower(const monster& mon)
     else if (you_worship(GOD_FEDHAS))
         return _is_plant_follower(&mon);
     else
-        return mon.alive() && mon.friendly();
+        return mon.alive() && mon.attitude == ATT_FRIENDLY;
 }
 
 
