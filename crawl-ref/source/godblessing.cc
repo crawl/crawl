@@ -816,6 +816,11 @@ static bool _tso_bless_follower(monster* follower, bool force)
     return true;
 }
 
+static bool _is_friendly_follower(const monster& mon)
+{
+    return mon.friendly() && is_follower(mon);
+}
+
 // Bless the follower indicated in follower, if any. If there isn't
 // one, bless a random follower within sight of the player, if any, or
 // any follower on the level.
@@ -835,14 +840,14 @@ bool bless_follower(monster* follower,
     {
         // Choose a random follower in LOS, preferably a named or
         // priestly one.
-        follower = choose_random_nearby_monster(0, is_follower,
+        follower = choose_random_nearby_monster(0, _is_friendly_follower,
                                                 god == GOD_BEOGH);
     }
 
     // Try *again*, on the entire level
     if (!follower)
     {
-        follower = choose_random_monster_on_level(0, is_follower,
+        follower = choose_random_monster_on_level(0, _is_friendly_follower,
                                                   god == GOD_BEOGH);
     }
 
