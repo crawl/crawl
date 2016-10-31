@@ -7144,7 +7144,6 @@ bool ieoh_jian_recall_weapon()
         mons->move_to_pos(new_location);
     }
     mons->ieoh_jian_swap_weapon_with_player();
-    mprf(MSGCH_GOD, "%s flies into your hand in a flash!", you.weapon()->name(DESC_YOUR, false, true).c_str());
     you.time_taken = 2; // Near instantaneous to allow precise positioning tricks.
 
     return true;

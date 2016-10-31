@@ -1420,13 +1420,12 @@ static int _weapon_weight_by_tier(int tier)
         weight = 1;
         break;
     case 1:
-        weight = 2 * (effective_level > 8);
+        weight = 2 * (effective_level > 10);
         break;
     case 2:
-        weight = 4 * (effective_level > 16);
+        weight = 4 * (effective_level > 20);
         break;
-    case 3:
-        weight = 8 * (effective_level > 24);
+    default:
         break;
     }
 
@@ -1436,35 +1435,108 @@ static int _weapon_weight_by_tier(int tier)
 
 static item_def ieoh_jian_choose_weapon()
 {
-    static const int number_of_types = 11;
-    FixedVector<int, number_of_types> types
+
+    // This vector mirrors the weapon_type enum, and gives
+    // an initial set of weights, that adjust based on level 
+    // and piety.
+    FixedVector<int, NUM_WEAPONS> weights
     (
-        // Tier 0
-        WPN_DAGGER,
-        WPN_SHORT_SWORD,
-        WPN_FALCHION,
-        WPN_SHORT_SWORD,
-        WPN_SPEAR,
-        WPN_TRIDENT,
-        WPN_WHIP,
-        WPN_CLUB,
-        WPN_HAND_AXE,
-        WPN_WAR_AXE,
-        WPN_QUARTERSTAFF
-    );
-    FixedVector<int, number_of_types> weights
-    (
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0),
-        _weapon_weight_by_tier(0) * 2
+        0, //WPN_CLUB,
+        _weapon_weight_by_tier(0), ///WPN_WHIP,
+#if TAG_MAJOR_VERSION == 34
+        0, ///WPN_HAMMER,
+#endif
+        2 * _weapon_weight_by_tier(0), ///WPN_MACE,
+        _weapon_weight_by_tier(0), ///WPN_FLAIL,
+        _weapon_weight_by_tier(1),/// WPN_MORNINGSTAR,
+#if TAG_MAJOR_VERSION == 34
+        0,//WPN_SPIKED_FLAIL,
+#endif
+        _weapon_weight_by_tier(1),//WPN_DIRE_FLAIL,
+        2 * _weapon_weight_by_tier(1),  //WPN_EVENINGSTAR,
+        _weapon_weight_by_tier(1), //WPN_GREAT_MACE,
+
+        2 * _weapon_weight_by_tier(0), ///WPN_DAGGER,
+        2 * _weapon_weight_by_tier(1),//WPN_QUICK_BLADE,
+        2 * _weapon_weight_by_tier(0), ///WPN_SHORT_SWORD,
+        2 * _weapon_weight_by_tier(1),//WPN_RAPIER,
+#if TAG_MAJOR_VERSION > 34
+        0,//WPN_CUTLASS,
+#endif
+
+        2 * _weapon_weight_by_tier(0), ///WPN_FALCHION,
+        2 * _weapon_weight_by_tier(0), ///WPN_LONG_SWORD,
+        2 * _weapon_weight_by_tier(1), //WPN_SCIMITAR,
+        2 * _weapon_weight_by_tier(1), //WPN_GREAT_SWORD,
+
+        3 * _weapon_weight_by_tier(0), ///WPN_HAND_AXE,
+        _weapon_weight_by_tier(0),//WPN_WAR_AXE,
+        2 * _weapon_weight_by_tier(1),// WPN_BROAD_AXE,
+        2 * _weapon_weight_by_tier(1),//WPN_BATTLEAXE,
+        4 * _weapon_weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
+
+        _weapon_weight_by_tier(0), ///WPN_SPEAR,
+        _weapon_weight_by_tier(0), ///WPN_TRIDENT,
+        _weapon_weight_by_tier(0),//WPN_HALBERD,
+        2 * _weapon_weight_by_tier(1),//WPN_GLAIVE,
+        2 * _weapon_weight_by_tier(1), //WPN_BARDICHE,
+
+        0, //WPN_BLOWGUN,
+
+#if TAG_MAJOR_VERSION > 34
+        0, //WPN_HAND_CROSSBOW,
+#endif
+        0, //WPN_ARBALEST,
+#if TAG_MAJOR_VERSION > 34
+        0, //WPN_TRIPLE_CROSSBOW,
+#endif
+
+        0, //WPN_SHORTBOW,
+        0, //WPN_LONGBOW,
+
+#if TAG_MAJOR_VERSION > 34
+        0, //WPN_HUNTING_SLING,
+        0, //WPN_FUSTIBALUS,
+#endif
+
+        4 * _weapon_weight_by_tier(2), //WPN_DEMON_WHIP,
+        _weapon_weight_by_tier(1), //WPN_GIANT_CLUB,
+        _weapon_weight_by_tier(2), //WPN_GIANT_SPIKED_CLUB,
+
+        _weapon_weight_by_tier(2),//WPN_DEMON_BLADE,
+        2 * _weapon_weight_by_tier(2),//WPN_DOUBLE_SWORD,
+        _weapon_weight_by_tier(2),//WPN_TRIPLE_SWORD,
+
+        4 * _weapon_weight_by_tier(2),//WPN_DEMON_TRIDENT,
+        _weapon_weight_by_tier(0),//WPN_SCYTHE,
+
+        0, //WPN_STAFF,          // Just used for the weapon stats for magical staves.
+        4 * _weapon_weight_by_tier(0), ///WPN_QUARTERSTAFF,
+        4 * _weapon_weight_by_tier(1) + 4 * _weapon_weight_by_tier(2), //WPN_LAJATANG,
+
+#if TAG_MAJOR_VERSION == 34
+        0, //WPN_HUNTING_SLING,
+
+        0, //WPN_BLESSED_FALCHION,
+        0, //WPN_BLESSED_LONG_SWORD,
+        0, //WPN_BLESSED_SCIMITAR,
+        0, //WPN_BLESSED_GREAT_SWORD,
+#endif
+        0, //WPN_EUDEMON_BLADE,
+#if TAG_MAJOR_VERSION == 34
+        0, //WPN_BLESSED_DOUBLE_SWORD,
+        0, //WPN_BLESSED_TRIPLE_SWORD,
+#endif
+        0, //WPN_SACRED_SCOURGE,
+        0, //WPN_TRISHULA,
+
+#if TAG_MAJOR_VERSION == 34
+        0, //WPN_FUSTIBALUS,
+        0, //WPN_HAND_CROSSBOW,
+        0, //WPN_TRIPLE_CROSSBOW,
+
+        0 //WPN_CUTLASS,
+#endif
     );
 
     auto manifested = find_ieoh_jian_manifested_weapons(false);
@@ -1473,24 +1545,22 @@ static item_def ieoh_jian_choose_weapon()
 
     // We get rid of all base types for which there is already a manifested or owned weapon.
     for (auto monster: manifested)
-        for (int i = 0; i != number_of_types; i++)
-            if (weapon_attack_skill(types[i]) == weapon_attack_skill(monster->weapon()->sub_type))
+        for (int i = 0; i != NUM_WEAPONS; i++)
+            if (weapon_attack_skill((weapon_type)i) == weapon_attack_skill(monster->weapon()->sub_type))
                 weights[i] = 0;
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
-        for (int i = 0; i != number_of_types; i++)
-            if (weapon_attack_skill(types[i]) == weapon_attack_skill(you.weapon()->sub_type))
+        for (int i = 0; i != NUM_WEAPONS; i++)
+            if (weapon_attack_skill((weapon_type)i) == weapon_attack_skill(you.weapon()->sub_type))
                 weights[i] = 0;
 
     // We take out all types that our race can't wield.
-    for (int i = 0; i != number_of_types; i++)
-        if (!you_could_wield_weapon_type((weapon_type)types[i]))
+    for (int i = 0; i != NUM_WEAPONS; i++)
+        if (!you_could_wield_weapon_type((weapon_type)i))
                 weights[i] = 0;
 
     item_def weapon;
     weapon.base_type = OBJ_WEAPONS;
-    int weapon_index = random_choose_weighted(weights);
-
-    weapon.sub_type = types[weapon_index];
+    weapon.sub_type = random_choose_weighted(weights);
     weapon.quantity = 1;
     weapon.plus = 2;
     weapon.brand = SPWPN_VORPAL;
