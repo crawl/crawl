@@ -167,6 +167,10 @@ bool prompt_eat_item(int slot)
     else
         item = &you.inv[slot];
 
+    ASSERT(item);
+    if (!can_eat(*item, false))
+        return false;
+
     eat_item(*item);
 
     return true;
