@@ -1526,9 +1526,14 @@ bool ieoh_jian_interest()
 
 void ieoh_jian_despawn_weapon()
 {
+    // We kill any ordinary IJC weapons first, in order of age.
     if (ieoh_jian_kill_oldest_weapon())
         return;
 
+    // If there aren't any left, but there is an animated weapon belonging to
+    // the player, we pull it back to the player's hand, killing the ghost.
+    // This has the side effect of shattering the IJC weapon that the player was
+    // wielding, if applicable.
     auto monsters = find_ieoh_jian_manifested_weapons(true);
     if (!monsters.empty())
     {
@@ -1541,6 +1546,7 @@ void ieoh_jian_despawn_weapon()
         return;
     }
 
+    // Finally, if the player is wielding an ICJ weapon, it is shattered.
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
     {
         mprf("%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
@@ -1589,15 +1595,6 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
 
     you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 2 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
-}
-
-// Grabs a Ieoh Jian floating weapon and leaves the player's weapon behind.
-void ieoh_jian_weapon_swap(monster* mons)
-{
-    if (mons->ieoh_jian_swap_weapon_with_player())
-        mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
-    else 
-        mprf(MSGCH_GOD, "You fail to grab %s from the air.!", mons->weapon()->name(DESC_THE, false, true).c_str());
 }
 
 static bool _dont_attack_martial(const monster* mons)
@@ -1718,7 +1715,7 @@ void ieoh_jian_pole_vault_effects()
         }
 
         if(!cell_is_solid(you.pos() + dir))
-            check_place_cloud(CLOUD_DUST, you.pos() + dir, 1 + random2(3) , &you, 1, -1);
+            check_place_cloud(CLOUD_DUST, you.pos() + dir, 1 + random2(3) , &you, 0, -1);
         dir = rotate_adjacent(dir, 1);
     }
 }
