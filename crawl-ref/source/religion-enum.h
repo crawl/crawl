@@ -30,4 +30,15 @@ enum nemelex_gift_types
 /// custom monster gender
 #define MON_GENDER_KEY "mon_gender"
 
+/// Weapon for monster generation
+#define IEOH_JIAN_WEAPON "ieoh-jian-weapon"
+#define IEOH_JIAN_POWER "ieoh-jian-power"
+/// What slot a weapon occupies when it was "gifted" by the IJC
+/// A lack of this value indicates the weapon belongs to you
+#define IEOH_JIAN_SLOT "ieoh-jian-slot"
+/// Whether a the weapon is being projected
+#define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
+/// Whether a the weapon is being projected as part of a Steel Dragonfly
+#define IEOH_JIAN_DRAGONFLY "ieoh-jian-dragonfly"
+
 #endif

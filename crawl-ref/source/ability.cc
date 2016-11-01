@@ -631,7 +631,7 @@ static const ability_def Ability_List[] =
     { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
         1, 0, 30, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_IEOH_JIAN_DRAGONFLY, "Steel Dragonfly Technique",
-        0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
+        6, 0, 80, 5, {FAIL_INVO}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -1644,7 +1644,6 @@ bool activate_talent(const talent& tal)
         case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         case ABIL_SIF_MUNA_DIVINE_ENERGY:
         case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
-        case ABIL_IEOH_JIAN_DRAGONFLY:
             hungerCheck = false;
             break;
         default:
@@ -3078,6 +3077,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
     case ABIL_IEOH_JIAN_DRAGONFLY:
+        if (!ieoh_jian_steel_dragonfly(beam))
+        {
+            return SPRET_ABORT;
+        }
         break;
 
     case ABIL_RENOUNCE_RELIGION:

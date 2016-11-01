@@ -288,6 +288,12 @@ static int calc_damage_for_ijc_weapon(const item_def* weapon)
     damage += (damage_plus > -1) ? (random2(1 + damage_plus))
                                  : (-random2(1 - damage_plus));
 
+
+    // Double damage for Steel Dragonfly projectiles.
+    if (weapon->props.exists(IEOH_JIAN_DRAGONFLY))
+        damage *= 2;
+
+    dprf("Ieoh Jian projected weapon damage %d", damage);
     return damage;
 }
 
@@ -314,7 +320,7 @@ bool ranged_attack::handle_phase_hit()
     }
     else if (projectile->base_type == OBJ_WEAPONS && projectile->props.exists(IEOH_JIAN_PROJECTED))
     {
-        if (!defender->alive())
+        if (!defender->alive() || defender->type == MONS_IEOH_JIAN_WEAPON) // IJC weapons bounce against each other.
             damage_done = 0;
         else
             damage_done = calc_damage_for_ijc_weapon(projectile);

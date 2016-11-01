@@ -330,7 +330,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "no longer leave an afterimage when switching weapons" },
       { 5, "hit pressure points as you attack while moving",
            "no longer hit pressure points as you attack while moving" },
-      { 6, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate an enemy with a rain of blades" },
+      { 6, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate foes with a rain of blades" },
     },
 };
 

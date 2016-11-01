@@ -7136,6 +7136,132 @@ bool ieoh_jian_recall_weapon()
     return true;
 }
 
+bool ieoh_jian_steel_dragonfly(bolt &pbolt)
+{
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    auto yours = find_ieoh_jian_manifested_weapons(true);
+    manifested.insert(manifested.end(), yours.begin(), yours.end());
+   
+    if (manifested.empty())
+    {
+        mprf("There are no flying weapons nearby.");
+        return false;
+    }
+
+    dist thr;
+
+    if (you.confused())
+    {
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.isValid = true;
+    }
+    else if (pbolt.target.zero())
+    {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
+
+        direction(thr, args);
+
+        if (!thr.isValid)
+        {
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
+
+            return false;
+        }
+    }
+    
+    monster* mons = monster_at(thr.target);
+    if (!mons)
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    pbolt.set_target(thr);
+
+    int number_of_impacts = 0;
+    // We launch a bolt per summoned weapon.
+    for (auto monster: manifested)
+    {
+        you.turn_is_over = false;
+        auto item = *(monster->weapon());
+        bolt monster_bolt = pbolt;
+        string ammo_name;
+        bool returning;
+        if (setup_missile_beam(monster, monster_bolt, item, ammo_name, returning))
+            break;
+
+        // Steel Dragonfly missiles are all piercing.
+        monster_bolt.pierce    = true;
+        monster_bolt.is_tracer = false;
+
+        monster_bolt.loudness = item.base_type == OBJ_MISSILES
+                       ? ammo_type_damage(item.sub_type) / 3
+                       : 0; 
+
+        bool hit = false;
+        monster_bolt.hit = property(item, PWPN_HIT);
+        monster_bolt.item->props[IEOH_JIAN_PROJECTED] = true;
+        monster_bolt.item->props[IEOH_JIAN_DRAGONFLY] = true;
+
+        monster_bolt.drop_item = false;
+        monster_bolt.aimed_at_spot = true;
+        alert_nearby_monsters();
+
+        if (item.props.exists(IEOH_JIAN_SLOT))
+        {
+            mprf(MSGCH_GOD,"%s flies violently to the target and shatters!", item.name(DESC_THE, false, true).c_str());
+            check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
+        }
+        else
+        {
+            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                         BEH_FRIENDLY,
+                         monster_bolt.target,
+                         MHITYOU,
+                         MG_FORCE_BEH,
+                         GOD_IEOH_JIAN);
+
+            int power = you.skill(weapon_attack_skill(monster->weapon()->sub_type), 4, true);
+            mg.props[IEOH_JIAN_WEAPON] = *(monster->weapon());
+            mg.props[IEOH_JIAN_POWER] = power;
+
+            if (!create_monster(mg))
+                dprf("Failed to animate Ieoh Jian weapon");
+
+            mprf(MSGCH_GOD,"%s flies violently to the target!", item.name(DESC_YOUR, false, true).c_str());
+        }
+
+        viewwindow();
+        monster_bolt.fire();
+        hit = !monster_bolt.hit_verb.empty();
+
+        monster_die(monster, KILL_RESET, NON_MONSTER, true);
+
+        check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
+
+        if (hit) number_of_impacts++;
+    }
+
+    int chance_to_liquify = 20 * number_of_impacts - 10;
+    if (mons->has_ench(ENCH_PARALYSIS))
+        chance_to_liquify *= 4;
+    else if (mons->has_ench(ENCH_SLOW))
+        chance_to_liquify *= 2;
+
+    dprf("Chance to liquify: %d%%", chance_to_liquify);
+    if (mons->alive() && mons->type != MONS_IEOH_JIAN_WEAPON && x_chance_in_y(chance_to_liquify, 100))
+    {
+        simple_monster_message(*mons, " starts to convulse uncontrollably...");
+        mons->hurt(&you, dice_def(5,mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
+    }
+
+    you.turn_is_over = true;
+    return true;
+}
+
 bool ieoh_jian_project_weapon(bolt &pbolt)
 {
     // Keeps the Council interested, but it won't generate any new weapons.
