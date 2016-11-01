@@ -6505,7 +6505,7 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance))
         {
             if (!silent)
-                mprf(MSGCH_GOD, "You fail to grab %s. Too dangerous!", weapon()->name(DESC_THE, false, true).c_str());
+                mprf(MSGCH_GOD, "You fail to grab %s!", weapon()->name(DESC_THE, false, true).c_str());
             return false; // Player wouldn't be able to wield it safely.
         }
 
@@ -6574,7 +6574,7 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
         {
             if (!silent)
-                mprf(MSGCH_GOD, "You fail to grab %s. Too dangerous!", weapon()->name(DESC_THE, false, true).c_str());
+                mprf(MSGCH_GOD, "You fail to grab %s!", weapon()->name(DESC_THE, false, true).c_str());
             return false; // Player wouldn't be able to wield it safely.
         }
 

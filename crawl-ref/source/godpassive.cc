@@ -291,9 +291,10 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Ieoh Jian
     {
-        { -1, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
+        { 0, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
         { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks on the move with melee weapons" },
         { 3, passive_t::afterimage, "leave a distracting afterimage after swapping weapons" },
+        { 5, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
     },
 };
 
@@ -1542,6 +1543,8 @@ static item_def ieoh_jian_choose_weapon()
 #endif
     );
 
+    dprf("Choosing with the following tier weights: %d %d %d",
+         _weapon_weight_by_tier(0), _weapon_weight_by_tier(1), _weapon_weight_by_tier(2));
     auto manifested = find_ieoh_jian_manifested_weapons(false);
 
     // We get rid of all base types for which there is already a manifested IJC weapon.

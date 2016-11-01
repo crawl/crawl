@@ -41,6 +41,7 @@
 #include "shout.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
@@ -413,6 +414,9 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
+    if (attacker->is_player() && is_ieoh_jian_martial && have_passive(passive_t::pressure_points))
+        player_strike_pressure_points(defender->as_monster());
+
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
     // meaning it could have made the attacked creature vanish. That
@@ -570,6 +574,40 @@ bool melee_attack::handle_phase_aux()
     }
 
     return true;
+}
+
+void melee_attack::player_strike_pressure_points(monster* mons)
+{
+    if (!you.weapon() || mons->check_stasis(false))
+        return;
+
+    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, true);
+    int paralysis_chance = 5;  
+    paralysis_chance *= power;
+    paralysis_chance /= (4*mons->get_hit_dice());
+    int slow_chance = 3 * paralysis_chance;
+
+    dprf("Pressure point strike, %d%% chance to paralyse (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
+    if (!mons->paralysed() && x_chance_in_y(paralysis_chance, 100))
+    {
+        if (!mons_is_immotile(*mons)
+            && simple_monster_message(*mons, " suddenly stops moving as you strike a pressure point!"))
+        {
+            mons->stop_constricting_all();
+            obvious_effect = true;
+        }
+
+        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, attacker, stepdown(power * BASELINE_DELAY, 70)));
+        return;
+    }
+
+    if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
+    {
+        simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
+                                     ? " seems to be slow for longer."
+                                     : " seems to slow down as you strike a pressure point.");
+        mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(power * BASELINE_DELAY, 70)));
+    }
 }
 
 /**

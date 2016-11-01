@@ -7213,7 +7213,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
         return false;
     }
 
-    if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
+    if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false, true))
         return false;
 
     // Now start real firing!

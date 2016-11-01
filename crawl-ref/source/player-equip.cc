@@ -1382,7 +1382,7 @@ static void _manifest_as_ieoh_jian_weapon(item_def& wpn)
         mprf(MSGCH_GOD, "%s flies away from your hand!", wpn.name(DESC_THE, false, true).c_str());
 }
 
-bool unwield_item(bool showMsgs)
+bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
 {
     if (!you.weapon())
         return false;
@@ -1408,7 +1408,7 @@ bool unwield_item(bool showMsgs)
     you.wield_change     = true;
     you.redraw_quiver    = true;
 
-    if (item.props.exists(IEOH_JIAN_SLOT))
+    if (!ignore_ieoh_jian && item.props.exists(IEOH_JIAN_SLOT))
     {
         // The weapon belongs to the IJC so you can't stash it away.
         // Instead, it is animated beside you.

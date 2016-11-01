@@ -319,13 +319,18 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
     // Ieoh Jian
-    { { 0, "grab and wield flying weapons from the air" },
-      { 0, "crosstrain your martial skills at an accelerated rate" },
+    { { -1, "crosstrain your martial skills at an accelerated rate"},
+      { 0, "manifest and wield flying weapons",
+           "no longer manifest flying weapons"},
       { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
       { 1, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
-      { 2, "perform various acrobatic attacks with melee weapons" },
-      { 3, "leave a distracting afterimage when switching weapons" },
-      { 5, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate an enemy with a rain of blades" },
+      { 2, "perform various acrobatic attacks with melee weapons",
+           "no longer perform acrobatic attacks" },
+      { 3, "leave a distracting afterimage when switching weapons",
+           "no longer leave an afterimage when switching weapons" },
+      { 5, "hit pressure points as you attack while moving",
+           "no longer hit pressure points as you attack while moving" },
+      { 6, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate an enemy with a rain of blades" },
     },
 };
 

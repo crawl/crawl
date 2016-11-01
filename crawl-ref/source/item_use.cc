@@ -539,7 +539,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             if (!_safe_to_remove_or_wear(*wpn, true))
                 return false;
 
-            if (!unwield_item(show_weff_messages))
+            if (!unwield_item(show_weff_messages, ignore_ieoh_jian))
                 return false;
 
             if (show_unwield_msg)
@@ -579,7 +579,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Unwield any old weapon.
     if (you.weapon())
     {
-        if (unwield_item(show_weff_messages))
+        if (unwield_item(show_weff_messages, ignore_ieoh_jian))
         {
             // Enable skills so they can be re-disabled later
             update_can_train();
