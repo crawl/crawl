@@ -56,6 +56,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "rot.h"
+#include "skills.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -6600,6 +6601,12 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 
     if (!silent)
         mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
+
+    if (you.weapon())
+    {
+        you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
+        update_can_train();
+    }
 
     return true;
 }
