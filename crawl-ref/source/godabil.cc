@@ -7131,7 +7131,7 @@ bool ieoh_jian_recall_weapon()
         mons->move_to_pos(new_location);
     }
     mons->ieoh_jian_swap_weapon_with_player();
-    you.time_taken = 2; // Near instantaneous to allow precise positioning tricks.
+    you.time_taken = 1; // Near instantaneous to allow precise positioning tricks.
 
     return true;
 }

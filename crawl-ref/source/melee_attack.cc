@@ -740,7 +740,7 @@ bool melee_attack::handle_phase_end()
 bool melee_attack::attack()
 {
     // The intention is what counts to IJC, so we attempt to summon here.
-    if (attacker->is_player() && will_have_passive(passive_t::spawn_weapon_on_hit))
+    if (attacker->is_player() && have_passive(passive_t::spawn_weapon_on_hit) && !mons_is_firewood(*defender->as_monster()))
         ieoh_jian_spawn_weapon(you.pos());
 
     if (!cleaving)
@@ -3448,7 +3448,7 @@ static int _apply_momentum(int dam)
 // Martial strikes get modified by momentum and maneuver specific damage mods.
 int melee_attack::martial_damage_mod(int dam)
 {
-    ASSERT(will_have_passive(passive_t::martial_weapon_mastery));
+    ASSERT(have_passive(passive_t::martial_weapon_mastery));
     ASSERT(you.weapon());
 
     dam = _apply_momentum(dam);

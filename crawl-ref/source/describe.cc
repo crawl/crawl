@@ -929,7 +929,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         const char* pole_vault_text = "\n\n<blue>Martial Mastery:</blue> It can be used to pole vault and land "
                                       "with a powerful slam, by moving against a solid obstacle.";
 
-        if (will_have_passive(passive_t::martial_weapon_mastery))
+        if (have_passive(passive_t::martial_weapon_mastery))
             switch (item_attack_skill(item))
             {
             case SK_POLEARMS:

@@ -32,6 +32,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -6482,7 +6483,7 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
  *
  *  @returns false if the swap failed.
  */
-bool monster::ieoh_jian_swap_weapon_with_player()
+bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 {
     bool penance;
     if (!you.weapon() && !weapon())
@@ -6493,7 +6494,8 @@ bool monster::ieoh_jian_swap_weapon_with_player()
     {
         if (inv_count() == ENDOFPACK)
         {
-            mprf(MSGCH_GOD, "You have no room for %s!", weapon()->name(DESC_THE, false, true).c_str());
+            if (!silent)
+                mprf(MSGCH_GOD, "You have no room for %s!", weapon()->name(DESC_THE, false, true).c_str());
             return false; // No room for new weapon
         }
 
@@ -6502,13 +6504,15 @@ bool monster::ieoh_jian_swap_weapon_with_player()
 
         if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance))
         {
-            mprf(MSGCH_GOD, "You fail to grab %s. Too dangerous!", weapon()->name(DESC_THE, false, true).c_str());
+            if (!silent)
+                mprf(MSGCH_GOD, "You fail to grab %s. Too dangerous!", weapon()->name(DESC_THE, false, true).c_str());
             return false; // Player wouldn't be able to wield it safely.
         }
 
         if (!unequip(pitem, false))
         {
-            mprf(MSGCH_GOD, "%s zooms past your reach!", weapon()->name(DESC_THE, false, true).c_str());
+            if (!silent)
+                mprf(MSGCH_GOD, "%s zooms past your reach!", weapon()->name(DESC_THE, false, true).c_str());
             return false; // Unsafe to unequip
         }
 
@@ -6536,7 +6540,8 @@ bool monster::ieoh_jian_swap_weapon_with_player()
 
         if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
         {
-            mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            if (!silent)
+                mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
             return false; // Can't unwield your current weapon safely.
         }
 
@@ -6561,13 +6566,15 @@ bool monster::ieoh_jian_swap_weapon_with_player()
         // Proper swap case
         if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
         {
-            mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            if (!silent)
+                mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
             return false; // Can't unwield your current weapon safely.
         }
 
         if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
         {
-            mprf(MSGCH_GOD, "You fail to grab %s. Too dangerous!", weapon()->name(DESC_THE, false, true).c_str());
+            if (!silent)
+                mprf(MSGCH_GOD, "You fail to grab %s. Too dangerous!", weapon()->name(DESC_THE, false, true).c_str());
             return false; // Player wouldn't be able to wield it safely.
         }
 
@@ -6583,7 +6590,9 @@ bool monster::ieoh_jian_swap_weapon_with_player()
         ghost->init_ieoh_jian_weapon(*(weapon()), you.skill(weapon_attack_skill(weapon()->sub_type), 4, true));
     }
 
-    mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
+    if (!silent)
+        mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
+
     return true;
 }
 

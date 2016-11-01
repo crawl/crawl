@@ -3114,6 +3114,12 @@ static void _swap_places(monster* mons, const coord_def &loc)
     {
         mons->move_to_pos(loc, true, true);
         mons->ieoh_jian_swap_weapon_with_player();
+        if (have_passive(passive_t::afterimage))
+        {
+            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = IEOH_JIAN_ATTENTION_SPAN;
+            you.redraw_evasion = true;
+        }
+
     }
     else
     {
@@ -3576,7 +3582,7 @@ static void _move_player(coord_def move)
     }
 
     // Ieoh Jian's lunge and whirlwind.
-    if (will_have_passive(passive_t::martial_weapon_mastery))
+    if (have_passive(passive_t::martial_weapon_mastery))
         ieoh_jian_perform_martial_attacks(initial_position);
 
 }

@@ -248,6 +248,9 @@ enum class passive_t
 
     /// Unlock hidden potential on weapons
     martial_weapon_mastery,
+
+    // Become evasive when switching weapons.
+    afterimage,
 };
 
 enum ru_interference

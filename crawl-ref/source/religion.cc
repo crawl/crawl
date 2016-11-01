@@ -323,7 +323,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 0, "crosstrain your martial skills at an accelerated rate" },
       { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
       { 1, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
-      { 2, "unlock the hidden potential in melee weapons" },
+      { 2, "perform various acrobatic attacks with melee weapons" },
+      { 3, "leave a distracting afterimage when switching weapons" },
       { 5, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate an enemy with a rain of blades" },
     },
 };

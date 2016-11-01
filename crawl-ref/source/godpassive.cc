@@ -292,7 +292,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     // Ieoh Jian
     {
         { -1, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
-        { 2, passive_t::martial_weapon_mastery, "you can unlock the hidden potential in melee weapons" },
+        { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks on the move with melee weapons" },
+        { 3, passive_t::afterimage, "leave a distracting afterimage after swapping weapons" },
     },
 };
 
@@ -1512,7 +1513,6 @@ static item_def ieoh_jian_choose_weapon()
 
         4 * _weapon_weight_by_tier(2),//WPN_DEMON_TRIDENT,
         _weapon_weight_by_tier(0),//WPN_SCYTHE,
-
         0, //WPN_STAFF,          // Just used for the weapon stats for magical staves.
         4 * _weapon_weight_by_tier(0), ///WPN_QUARTERSTAFF,
         4 * _weapon_weight_by_tier(1) + 4 * _weapon_weight_by_tier(2), //WPN_LAJATANG,
@@ -1573,10 +1573,10 @@ static item_def ieoh_jian_choose_weapon()
     case 0:
         weapon.brand = SPWPN_FLAMING; // Dragon
         break;
-    case 2:
+    case 1:
         weapon.brand = SPWPN_ELECTROCUTION; // Tiger
         break;
-    case 1:
+    case 2:
         weapon.brand = SPWPN_SPEED; // Viper
         break;
     default:
@@ -1625,7 +1625,7 @@ void ieoh_jian_despawn_weapon()
     if (!monsters.empty())
     {
         auto monster = monsters.at(0);
-        monster->ieoh_jian_swap_weapon_with_player();
+        monster->ieoh_jian_swap_weapon_with_player(true);
         mprf(MSGCH_GOD, "%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         if (monster->alive())
             monster_die(monster, KILL_RESET, NON_MONSTER);
@@ -1763,7 +1763,7 @@ void ieoh_jian_perform_martial_attacks(const coord_def& old_pos)
 
 bool ieoh_jian_can_pole_vault(const coord_def& target)
 {
-   bool able = will_have_passive(passive_t::martial_weapon_mastery)
+   bool able = have_passive(passive_t::martial_weapon_mastery)
                                   && feat_can_pole_vault_against(grd(target))
                                   && you.weapon() 
                                   && (weapon_attack_skill(you.weapon()->sub_type) == SK_STAVES
