@@ -7394,7 +7394,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     if (!mons)
         dprf("Failed to animate Ieoh Jian weapon");
 
-    dec_inv_item_quantity(weapon_index, 1);
+    dec_inv_item_quantity(weapon_index, 1, true);
     canned_msg(MSG_EMPTY_HANDED_NOW);
 
     return hit;
