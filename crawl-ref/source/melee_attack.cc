@@ -3475,8 +3475,6 @@ static int _apply_momentum(int dam)
     // Attack speed is calculated as it would on a normal attack, even though the time
     // taken will correspond to the move speed. Instead, the ratio between move speed
     // and the attack speed estimate is used as a damage factor.
-    //
-    // TODO dimension checks.
     int move_delay = player_movement_speed();
     int attack_delay = you.attack_delay().roll();
 

@@ -615,7 +615,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage = max(1, damage * power / 100);
 }
 
-// TODO properly differentiate this from Tukima's.
 void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 {
     int delay = property(weapon, PWPN_SPEED);

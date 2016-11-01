@@ -310,13 +310,11 @@ and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
 Ieoh Jian powers
 
-Followers of the Ieoh Jian Council can store a weapon of each type in the Council's
-sacred vault. By engaging in close quarters combat, the Council will manifest
-those weapons around the follower, which they can grab at will. They will later be 
+By engaging in close quarters combat, the Ieoh Jian Council will manifest flying
+weapons around the follower, which they can grab and wield at will. They will later be 
 initiated in the path of martial arts, learning to stay mobile while attacking,
-strike pressure points, liquify monster's entrails with deadly palm strikes, and
-finally to command multiple flying weapons to strike at once for a spectacular
-finish. The Council will also provide their own powerful weapons in times of danger.
+to strike pressure points, stay evasive, and eventually  to command multiple flying 
+weapons to strike at once for a spectacular finish. 
 %%%%
 Kikubaaqudgha powers
 

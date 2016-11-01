@@ -763,10 +763,11 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             cancelled = pbolt.beam_cancelled;
 
             pbolt.hit    = 0;
-            pbolt.is_tracer = false;
+            pbolt.damage = dice_def();
         }
     }
 
+    pbolt.is_tracer = false;
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
     if (cancelled)

@@ -667,31 +667,6 @@ void init_element_colours()
                        ));
 }
 
-// enum COLOURS
-// {
-//     COLOUR_INHERIT = -1,
-//     BLACK,
-//     COLOUR_UNDEF = BLACK,
-//     BLUE,
-//     GREEN,
-//     CYAN,
-//     RED,
-//     MAGENTA,
-//     BROWN,
-//     LIGHTGRAY,
-//     LIGHTGREY = LIGHTGRAY,
-//     DARKGRAY,
-//     DARKGREY = DARKGRAY,
-//     LIGHTBLUE,
-//     LIGHTGREEN,
-//     LIGHTCYAN,
-//     LIGHTRED,
-//     LIGHTMAGENTA,
-//     YELLOW,
-//     WHITE,
-//     NUM_TERM_COLOURS
-// };
-
 int element_colour(int element, bool no_random, const coord_def& loc)
 {
     // pass regular colours through for safety.

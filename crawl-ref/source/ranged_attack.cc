@@ -288,7 +288,6 @@ static int calc_damage_for_ijc_weapon(const item_def* weapon)
     damage += (damage_plus > -1) ? (random2(1 + damage_plus))
                                  : (-random2(1 - damage_plus));
 
-
     // Double damage for Steel Dragonfly projectiles.
     if (weapon->props.exists(IEOH_JIAN_DRAGONFLY))
         damage *= 2;
