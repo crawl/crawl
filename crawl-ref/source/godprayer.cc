@@ -114,18 +114,21 @@ static bool _pray_ecumenical_altar()
  *
  * @return True if the conversion happened, false otherwise.
  */
-static bool _try_god_conversion(god_type god, bool beogh_priest)
+void try_god_conversion(god_type god)
 {
     ASSERT(god != GOD_NO_GOD);
 
     if (you.species == SP_DEMIGOD)
     {
         mpr("A being of your status worships no god.");
-        return false;
+        return;
     }
 
     if (god == GOD_ECUMENICAL)
-        return _pray_ecumenical_altar();
+    {
+        _pray_ecumenical_altar();
+        return;
+    }
 
     if (you_worship(GOD_NO_GOD) || god != you.religion)
     {
@@ -134,73 +137,7 @@ static bool _try_god_conversion(god_type god, bool beogh_priest)
         // But if we don't convert then god_pitch
         // makes it not take a turn after all.
         god_pitch(god);
-        if (you.turn_is_over && you_worship(GOD_BEOGH) && beogh_priest)
-            spare_beogh_convert();
-        return you.turn_is_over;
     }
-    return false;
-}
-
-/**
- * Zazen.
- */
-static void _zen_meditation()
-{
-    const mon_holy_type holi = you.holiness();
-    mprf(MSGCH_PRAY,
-         "You spend a moment contemplating the meaning of %s.",
-         holi & MH_NONLIVING ? "existence" : holi & MH_UNDEAD ? "unlife" : "life");
-}
-
-/**
- * Pray. (To your god, or the god of the altar you're at, or to Beogh, if
- * you're an orc being preached at.)
- */
-void pray(bool allow_conversion)
-{
-    const god_type altar_god = feat_altar_god(grd(you.pos()));
-    const bool beogh_priest = env.level_state & LSTATE_BEOGH
-        && can_convert_to_beogh();
-    const god_type target_god = beogh_priest ? GOD_BEOGH : altar_god;
-
-    // only successful prayer takes time
-    you.turn_is_over = false;
-    // Try to pray to an altar or beogh (if either is possible)
-    if (allow_conversion
-        && target_god != GOD_NO_GOD
-        && you.religion != target_god)
-    {
-        if (_try_god_conversion(target_god, beogh_priest))
-            return;
-    }
-
-    ASSERT(!you.turn_is_over);
-    // didn't convert to anyone.
-    if (you_worship(GOD_NO_GOD))
-    {
-        // wasn't considering following a god; just meditating.
-        if (altar_god == GOD_NO_GOD)
-            _zen_meditation();
-        return;
-    }
-
-    mprf(MSGCH_PRAY, "You offer a %sprayer to %s.",
-         you.cannot_speak() ? "silent " : "",
-         god_name(you.religion).c_str());
-
-    if (you_worship(GOD_FEDHAS))
-        you.turn_is_over = fedhas_fungal_bloom();
-
-    if (you_worship(GOD_XOM))
-        god_speaks(GOD_XOM, getSpeakString("Xom prayer").c_str());
-    else if (you_worship(GOD_GOZAG))
-        god_speaks(GOD_GOZAG, getSpeakString("Gozag prayer").c_str());
-    else if (player_under_penance())
-        simple_god_message(" demands penance!");
-    else
-        mprf(MSGCH_PRAY, you.religion, "%s", god_prayer_reaction().c_str());
-
-    dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
 int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)

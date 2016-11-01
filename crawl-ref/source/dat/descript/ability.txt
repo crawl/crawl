@@ -316,8 +316,8 @@ spells without sufficient magical reserves.
 %%%%
 Channel Magic ability
 
-Invokes a magical power regeneration ability for a duration that depends on
-Invocations skill.
+Dramatically increase the user's regeneration of magical power for a duration
+that increases with Invocations skill.
 %%%%
 Forget Spell ability
 
@@ -479,6 +479,14 @@ Bring an orc corpse back to life. The orc will be an ally, even if it was not
 already one before it died.
 %%%%
 # Fedhas
+Fungal Bloom ability
+
+Call up Fedhas to accelerate the natural process of decay, transforming all
+corpses nearby into fast-growing, short-lived toadstools. Zombies, ghouls,
+and necrophages are considered walking corpses, and are affected accordingly;
+zombies rot into skeletons, and ghouls and necrophages rot away entirely,
+granting no experience.
+%%%%
 Sunlight ability
 
 Calls sunlight down over a small area of the dungeon. Monsters illuminated by
@@ -838,10 +846,10 @@ surroundings.
 Idealise ability
 
 Restores your ancestor to an idyllic vision of their best self. Their wounds
-are forgotten, harmful effects are wiped away, and a glow of perfection infuses
-them, giving them a short-lived but dramatic increase in strength, spellcasting,
-and armour. The quality of the healing and duration of the idealisation granted
-are both improved by the Invocations skill.
+are forgotten and a glow of perfection infuses them, giving them a short-lived
+but dramatic increase in strength, spellcasting, and armour. The quality of the
+healing and duration of the idealisation granted are both improved by the
+Invocations skill.
 %%%%
 Transference ability
 

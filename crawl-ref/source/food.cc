@@ -167,6 +167,10 @@ bool prompt_eat_item(int slot)
     else
         item = &you.inv[slot];
 
+    ASSERT(item);
+    if (!can_eat(*item, false))
+        return false;
+
     eat_item(*item);
 
     return true;
@@ -261,40 +265,23 @@ bool food_change(bool initial)
 
         if (you.species == SP_VAMPIRE)
         {
-            if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
+            const undead_form_reason form_reason = lifeless_prevents_form();
+            if (form_reason == UFR_GOOD)
             {
-                mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                     "your rage any longer.");
-                you.duration[DUR_BERSERK] = 1;
-            }
-
-            switch (lifeless_prevents_form())
-            {
-            case UFR_TOO_DEAD:
-                if (you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
-                {
-                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                         "your transformation much longer.");
-                    you.set_duration(DUR_TRANSFORMATION, 2);
-                }
-                break;
-            case UFR_TOO_ALIVE:
-                if (you.duration[DUR_TRANSFORMATION] > 5 * BASELINE_DELAY)
-                {
-                    print_stats();
-                    mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
-                                     "transformation much longer.");
-
-                    // Give more time because suddenly stopping flying can be fatal.
-                    you.set_duration(DUR_TRANSFORMATION, 5);
-                }
-                break;
-            case UFR_GOOD:
                 if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
                 {
                     print_stats();
                     mpr("You can't stomach any more blood right now.");
                 }
+            }
+            else if (you.duration[DUR_TRANSFORMATION])
+            {
+                print_stats();
+                mprf(MSGCH_WARN,
+                     "Your blood-%s body can't sustain your transformation.",
+                     form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
+                you.duration[DUR_TRANSFORMATION] = 1; // end at end of turn
+                // could maybe end immediately, but that makes me nervous
             }
         }
 

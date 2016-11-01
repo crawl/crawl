@@ -42,6 +42,8 @@
 #endif
 #include "traps.h"
 
+#define SPELL_HD_KEY "spell_hd"
+
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BERSERK,         MB_BERSERK },
@@ -674,6 +676,11 @@ monster_info::monster_info(const monster* m, int milev)
     else if (m->is_actual_spellcaster())
         props["actual_spellcaster"] = true;
 
+    // assumes spell hd modifying effects are always public
+    const int spell_hd = m->spell_hd();
+    if (spell_hd != hd)
+        props[SPELL_HD_KEY] = spell_hd;
+
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         attack[i] = mons_attack_spec(*m, i, true);
@@ -773,7 +780,9 @@ string monster_info::get_max_hp_desc() const
     if (props.exists(KNOWN_MAX_HP_KEY))
         return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
 
-    const int base_avg_hp = mons_avg_hp(type);
+    const int base_avg_hp = mons_class_is_zombified(type) ?
+                            derived_undead_avg_hp(type, hd, 1) :
+                            mons_avg_hp(type);
     int mhp = base_avg_hp;
     if (props.exists(VAULT_HD_KEY))
     {
@@ -781,6 +790,9 @@ string monster_info::get_max_hp_desc() const
         const int base_xl = mons_class_hit_dice(type);
         mhp = base_avg_hp * xl / base_xl; // rounds down - close enough
     }
+
+    if (type == MONS_SLIME_CREATURE)
+        mhp *= slime_size;
 
     return make_stringf("about %d", mhp);
 }
@@ -1747,6 +1759,14 @@ bool monster_info::has_spells() const
         return spells.size() > 0;
 
     return true;
+}
+
+/// What hd does this monster cast spells with? May vary from actual HD.
+int monster_info::spell_hd() const
+{
+    if (!props.exists(SPELL_HD_KEY))
+        return hd;
+    return props[SPELL_HD_KEY].get_int();
 }
 
 unsigned monster_info::colour(bool base_colour) const

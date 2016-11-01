@@ -3644,6 +3644,111 @@ x.................
 xxxxxxxxxxxxxxx..@
 ENDMAP
 
+# Certain creatures are attracted to an abandoned site of magical significance
+NAME: cheibrodos_forgotten_conduit
+DEPTH: Spider, Snake
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+: if you.branch() == "Spider" then
+MONS: w:5 wolf spider / tarantella / redback,  demonic crawler / orb spider
+MONS: spark wasp
+: else
+MONS: w:5 anaconda / black mamba / water moccasin, mana viper, shock serpent
+: end
+ITEM: w:60 star_item / crystal ball of energy / staff of air / \
+      staff of energy / disc of storms / lightning rod / fan of gales
+NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
+MAP
+@...........
+....ccccccc..
+.....""ccccc..
+...""""""`ccc..
+.c."m"""m"`ccc.
+.c""""mm..'`cc.
+.c"""mb-b.''cc.
+.cc""m-d-m''cc.
+.cc"".b-bm'''c.
+.cc`"..mm''''c.
+.ccc`'m'''m'.c.
+..ccc`''''''...
+ ..ccccc''.....
+  ..ccccccc....
+   ...........@
+ENDMAP
+
+NAME: cheibrodos_grave_circle
+DEPTH: D:7-11
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: place:D:14 skeleton w:5 / place:D:14 zombie, shadow imp, hellwing
+NSUBST: . = 5:1 / 3=1. / 3:2 / 2=2., " = 1:*% / 4=$%.
+SUBST: . = .....--__tG
+KMONS: t = withered plant
+KFEAT: A = stone_arch
+TILE: G = dngn_gravestone
+FTILE: - = floor_pebble_brown
+FTILE: _ = floor_pebble_darkgray
+: set_feature_name("granite_statue", "a gravestone")
+MAP
+  ....@....
+ ...........
+.............
+.............
+.............
+.....""3.....
+@...."A"....@
+.....3"".....
+.............
+.............
+.............
+ ...........
+  ....@....
+ENDMAP
+
+NAME: cheibrodos_greedy_goblins
+DEPTH: D:2-4
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: goblin, hobgoblin
+SUBST: - = 112..., " = 12., ' = 12.
+MAP
+    .....
+   ..xxx..
+   .xx$xx.
+ ...x$$$x...
+..xxxx+xxxx..
+.xx'm---m"xx.
+.x''+---+""x.
+.xx'm---m"xx.
+..xxxx+xxxx..
+ ...x...x...
+   .xx.xx.
+   ..x+x..
+    ..@..
+ENDMAP
+
+NAME: cheibrodos_thug_alley
+DEPTH: D:3-6
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+KPROP: w;W = no_tele_into
+MONS: kobold ; club / kobold ; dagger, hobgoblin ; club
+MONS: big kobold ; club | w:3 dagger ego:venom | w:3 dagger ego: draining \
+                   | w:3 dagger ego:speed
+NSUBST: - = 2:1 / 2=12., " = 3:1 / 3=12., ' = 1:3 / 1=3. / 1=1., ` = 1=*% / *:%
+SUBST: ; = WWWw
+MAP
+               WWWWW
+   xxxxxxx    WW;;;WWW
+ xxx-----xxxWWW;www;xxxxxx
+@...-----..xxxxxxwxxx''``x
+@...xxmxx.."""""xmx..''``x
+ xxxxwwwxxx""""""""..xxxxx
+  WW;;w;;Wxxxxxx"""xxx
+   WWWWWWWWW   xxxxx
+     WWW
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
@@ -7801,4 +7906,83 @@ vv............0vv
 vv[...........9vv
 vvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME: cheibrodos_helix_gallery
+DEPTH: D:1-12
+ORIENT: float
+NSUBST: - = 2:0
+MAP
+  ......@@......
+  c............c
+ cc........WW..cc
+ cc.......W..W.cc
+ccW...WW..W..WWWcc
+cWW..W--W--W..WWWc
+cWW..W--WT-W...WWc
+cWW...W-TW--W..WWc
+cWWW..W--W--W..WWc
+ccWWW..W..WW...Wcc
+ cc.W..W.......cc
+ cc..WW........cc
+  c............c
+  ......@@......
+ENDMAP
+
+NAME: cheibrodos_histonic
+DEPTH: D:8-
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+NSUBST: ' = 3:0 / 2=0., _ = 3:0 / 2=0., ` = 1=90 / 2:0 / 3=0.
+NSUBST: ; = 1=90 / 2:0 / 3=0., - = 1=|* / 2=*$ / 2=% / 6=%.
+MAP
+     ccccc      ccccc
+    cc...cc    cc...cc
+   cc..'..cccccc..;..cc
+   c..'''..c--c..;;;..c
+   c.'''''.n--c.;;;;;.c
+   c..'''..c--c..;;;..c
+  cc...'..cc+ccc..;..cc
+ cc......cc....+c...cc
+cc...cc.ccG.....cc.cccc@
+c...cc..c..90..cc..cc.=c
+c=.cc..cc..09..c..cc...c
+@cccc.cc.....Gcc.cc...cc
+  cc...c+....cc......cc
+ cc..`..ccc+cc.._...cc
+ c..```..c--c..___..c
+ c.`````.c--n._____.c
+ c..```..c--c..___..c
+ cc..`..cccccc.._..cc
+  cc...cc    cc...cc
+   ccccc      ccccc
+ENDMAP
+
+NAME: cheibrodos_salmonella
+DEPTH: Elf, Depths
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+SHUFFLE: Tw / VW / Gl
+NSUBST: - = 3=90 / 3:0. / 2=0.., ' = 2=90 / 2:0 / 3=0., ` = 2=90 / 2:0 / 3=0.
+NSUBST: " = 1=*% / 1=%$ / 2:%, ; = 3=|* / 2=*$ / 2:% / 3=%$
+MAP
+         .@@@.
+     ccccc...ccccc
+   ccc..c.....c..ccc
+  cc...............cc
+ cc....wTc...cTw....cc
+cc...wwwcc+++ccwww...cc
+c...wwccc.....cccww...c
+c...wcc---...---ccw...c
+c...wc"----.----"cw...c
+c...wc"----.----"cw...c
+c```wcc---...---ccw'''c
+c```wwccc..8..cccww'''c
+cc```wwwcccncccwww'''cc
+ c`````wwwwwwwww'''''c
+ cc``````.....''''''cc
+  cc`````.....'''''cc
+   ccc;;;9...9;;;ccc
+     cccc;;8;;cccc
+        ccccccc
 ENDMAP

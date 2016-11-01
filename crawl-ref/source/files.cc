@@ -29,6 +29,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "branch.h"
+#include "butcher.h" // for fedhas_rot_all_corpses
 #include "chardump.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -41,6 +42,7 @@
 #include "fineff.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godconduct.h" // for fedhas_rot_all_corpses
 #include "godcompanions.h"
 #include "godpassive.h"
 #include "hints.h"
@@ -60,6 +62,7 @@
 #include "place.h"
 #include "prompt.h"
 #include "spl-summoning.h"
+#include "stash.h"  // for fedhas_rot_all_corpses
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -1021,12 +1024,45 @@ static void _do_lost_items()
             item_was_lost(item);
 }
 
+/// Rot all corpses remaining on the level, giving Fedhas piety for doing so.
+static void _fedhas_rot_all_corpses(const level_id& old_level)
+{
+    bool messaged = false;
+    for (auto &item : mitm)
+    {
+        if (!item.defined()
+            || !item.is_type(OBJ_CORPSES, CORPSE_BODY)
+            || item.props.exists(CORPSE_NEVER_DECAYS))
+        {
+            continue;
+        }
+
+        turn_corpse_into_skeleton(item);
+
+        if (!messaged)
+        {
+            simple_god_message("'s fungi set to work.");
+            messaged = true;
+        }
+
+        const int piety = x_chance_in_y(2, 5) ? 2 : 1; // match fungal_bloom()
+        // XXX: deduplicate above ^
+        did_god_conduct(DID_ROT_CARRION, piety);
+    }
+
+    // assumption: CORPSE_NEVER_DECAYS is never set for seen corpses
+    LevelStashes *ls = StashTrack.find_level(old_level);
+    if (ls) // assert?
+        ls->rot_all_corpses();
+}
+
 /**
  * Perform cleanup when leaving a level.
  *
  * If returning to the previous level on the level stack (e.g. when leaving the
  * abyss), pop it off the stack. Delete non-permanent levels. Also check to be
- * sure no loops have formed in the level stack.
+ * sure no loops have formed in the level stack, and, for Fedhasites, rots any
+ * corpses left behind.
  *
  * @param stair_taken   The means used to leave the last level.
  * @param old_level     The ID of the previous level.
@@ -1037,6 +1073,9 @@ static bool _leave_level(dungeon_feature_type stair_taken,
                          const level_id& old_level, coord_def *return_pos)
 {
     bool popped = false;
+
+    if (you.religion == GOD_FEDHAS)
+        _fedhas_rot_all_corpses(old_level);
 
     if (!you.level_stack.empty()
         && you.level_stack.back().id == level_id::current())

@@ -317,6 +317,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
         return CMD_GO_UPSTAIRS;
     }
 
+    if (feat_is_altar(feat))
+        return CMD_GO_UPSTAIRS; // arbitrary; consistent with shops
+
     switch (feat)
     {
     case DNGN_ENTER_HELL:

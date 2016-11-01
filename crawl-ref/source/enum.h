@@ -370,6 +370,7 @@ enum ability_type
     ABIL_FEDHAS_PLANT_RING,
     ABIL_FEDHAS_SPAWN_SPORES,
     ABIL_FEDHAS_EVOLUTION,
+    ABIL_FEDHAS_FUNGAL_BLOOM,
     // Cheibriados
     ABIL_CHEIBRIADOS_TIME_STEP = 1151,
     ABIL_CHEIBRIADOS_TIME_BEND,
@@ -1036,7 +1037,6 @@ enum command_type
     CMD_FORCE_CAST_SPELL,
     CMD_MEMORISE_SPELL,
     CMD_USE_ABILITY,
-    CMD_PRAY,
     CMD_EAT,
     CMD_QUAFF,
     CMD_READ,
@@ -1316,6 +1316,7 @@ enum conduct_type
     DID_HASTY,                            // Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
+    DID_ROT_CARRION,                      // Fedhas (a corpse rotted)
     DID_SOULED_FRIEND_DIED,               // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_NONLIVING,

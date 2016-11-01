@@ -855,7 +855,7 @@ PLUS:    +0
 COLOUR:  WHITE
 TILE:    urand_fencer
 TILE_EQ: glove_white
-DEX:     6
+DEX:     3
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -1279,6 +1279,7 @@ BRAND:    SPARM_REFLECTION
 NAME:     amulet of invisibility
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
+TILE:     urand_cekugob
 BOOL:     inv, nogen
 
 # This entry must always be last.

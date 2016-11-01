@@ -13,7 +13,7 @@ over water, the cloud will dissipate much more quickly.
 noxious fumes cloud
 
 A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming confused by the gasses, unless resistant to poison.
+be at risk of becoming confused by the gases, unless resistant to poison.
 Tougher, more experienced creatures are less likely to be affected.
 %%%%
 freezing vapour cloud
@@ -21,7 +21,7 @@ freezing vapour cloud
 A cloud of freezing air. Any creature not entirely immune to cold will be hurt
 by time spent inside.
 
-Ranged cold attacks passing through the cloud are substantially reduced in
+Ranged fire attacks passing through the cloud are substantially reduced in
 range, dissipating the cloud in the process.
 
 If placed over lava, the cloud will dissipate much more quickly.
@@ -162,11 +162,11 @@ energy will mitigate the effects.
 %%%%
 white fluffiness cloud
 
-Not actually solid enough to use as a pillow. And yet, still, oddly peaceful.
+A white, fluffy cloud. Not actually solid enough to use as a pillow, and yet
+still oddly peaceful.
 %%%%
 salt cloud
 
-A cloud of rapidly whirling dust and salt, filling the air and stinging the
-eyes and skin of any unfortunate creatures caught within. Your cloak might
-need some laundering after this one.
+A cloud of rapidly whirling dust and salt. It stings the eyes and skin of any
+creatures caught within, although it is ultimately harmless.
 %%%%

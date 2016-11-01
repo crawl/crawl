@@ -372,11 +372,12 @@ sometimes look like normal floor until discovered.
 Shops
 ========================================
 
-When you visit a shop, you are shown what the shopkeeper has in stock and can
-choose what to buy. Unfortunately, the shopkeepers all have an exclusive deal
-with the Guild of Dungeon Procurers which prevents them using non-guild labour
-to obtain stock, so you can't sell anything in a shop. (But then, what
-shopkeeper would buy stolen goods from a disreputable adventurer, anyway?)
+When you visit a shop (by using < or > while standing on one), you are shown
+what the shopkeeper has in stock and can choose what to buy. Unfortunately,
+the shopkeepers all have an exclusive deal with the Guild of Dungeon Procurers
+which prevents them using non-guild labour to obtain stock, so you can't sell
+anything in a shop. (But then, what shopkeeper would buy stolen goods from a
+disreputable adventurer, anyway?)
 
 To purchase one or more items, select them by pressing the letters of the item
 in the shop menu and then press Enter to make the purchase; you can examine
@@ -1054,7 +1055,7 @@ pray at an altar to dedicate themselves to a life of servitude. There are altars
 scattered all over the dungeon, and there are rumours of a special temple
 somewhere near the surface.
 
-At an altar, you can enter a god's service by pressing 'p' - you'll first be
+At an altar, you can enter a god's service by pressing < or >. You'll first be
 given a description of the god, and then be asked if you really want to join.
 To see a list of the standard gods and which of their altars you've seen in your
 current game, press 'Ctrl-O'. You can also learn about all gods by pressing '?/G'.
@@ -2208,10 +2209,10 @@ Ctrl-direction or * direction
   else attacks without moving (even if no monster is seen).
 
 <
-  Use staircase to go higher or enter a shop or portal.
+  Use staircase to go higher, or use a shop, altar, or portal.
 
 >
-  Use staircase to go deeper or enter a shop or portal.
+  Use staircase to go deeper, or use a shop, altar, or portal.
 
 ;
   Examine occupied tile and auto-pickup eligible items. Can also be used to pick
@@ -2292,9 +2293,6 @@ I
 
 Other game-playing commands
 ----------------------------------------
-
-p
-  Pray, generally in order to convert to a new god at an altar.
 
 z
   Cast a spell. Should the spell demand monsters as targets but there are none
@@ -2545,9 +2543,7 @@ Level map ('X')
 ========================================
 
 The level map (brought up by 'X' in the main screen) uses the whole screen to
-show the dungeon. The first line of that screen usually gives the name of the
-level and a hint on the help screen. You can use the level_map_title option to
-get rid of that.
+show the dungeon.
 
 Esc, Space
   Leave level map.
@@ -2565,12 +2561,18 @@ direction
   Move cursor.
 
 Shift-direction
-  Move cursor in bigger steps (check the option or / direction
+  Move cursor in bigger steps (determined by the the option
   level_map_cursor_step).
 
 .
   Travel to cursor (also Enter, Del, ',' and ';'). If the cursor is on the
   character, move cursor to last travel destination instead.
+
+o
+  Move cursor to the next autoexplore target.
+
+v
+  Describe remembered feature or monster under the cursor.
 
 <
   Cycle through up stairs.
@@ -2593,14 +2595,29 @@ I
 O
   Cycle backward through all items and piles.
 
+G
+  Select another level (by branch and depth) to view the map of.
+
+[
+  View the previous level.
+
+]
+  View the next level.
+
+!
+  Add an annotation to the current level.
+
 Ctrl-C
   Clear level and main maps (from temporarily seen monsters, clouds, etc.).
 
 Ctrl-F
   Forget level map.
 
+Ctrl-U
+  Restore forgotten level map.
+
 Waypoints can be set on the level map. You can travel to waypoints using G.
-Check the option show_waypoints. The commands are:
+The commands are:
 
 Ctrl-W
   Set waypoint.
@@ -2624,8 +2641,8 @@ E
 Examining surroundings ('x')
 ========================================
 
-When roaming the dungeon, the surroundings mode is activated by 'x'. It lets you
-have a look at items or monsters in line of sight.
+When roaming the dungeon, the surroundings mode is activated by 'x'. It lets
+you look at items, monsters or other features in line of sight.
 
 Esc, Space, x
   Return to playing mode.
@@ -2652,8 +2669,8 @@ direction
   Travel to cursor (also Del).
 
 v
-  Describe feature or monster under cursor. Some branch entries have special
-  information.
+  Describe feature or monster under the cursor. Some branch entries have
+  special information.
 
 >
   Cycle downstairs.
@@ -2685,8 +2702,8 @@ Enter
   Fire at cursor direction (also Del and Space).
 
 .
-  Fire at cursor position and stop there with slightly reduced impact. This can
-  be useful to avoid damaging pets, or to avoid losing arrows.
+  Fire at cursor position and stop there. This can be useful to avoid damaging
+  allies, or to avoid losing arrows.
 
 p
   Fire at previous target (if still in sight).
@@ -2701,9 +2718,9 @@ f
 
 ( and )
   These two commands allow you to change ammunition while targeting. The choice
-  is subject to the fire_order option. Usually, you change missiles according to
-  your launcher; i.e. when wielding a bow, ( and ) will cycle through all stacks
-  of arrows in your inventory.
+  is subject to the fire_order option. Usually, you change missiles according
+  to your launcher; i.e. when wielding a bow, ( and ) will cycle through all
+  stacks of arrows in your inventory.
 
 Shift-direction
   Fire straight in that direction.
@@ -2718,12 +2735,6 @@ letter). This adds a note in curly braces to the item description. Besides
 simply allowing you to make comments about items, there are several further
 uses.
 
-Automatic inscriptions
-========================================
-
-These are done by the game to help you to identify items. For example, items
-that you have seen a monster use will be inscribed with "{tried by monster}".
-
 Inscriptions as shortcuts
 ========================================
 
@@ -2731,8 +2742,8 @@ You can use inscriptions to define shortcuts for easy access to items,
 regardless of their actual inventory letter. For example, if an item's
 inscription contains "@w9", you can type 'w9' in order to wield it. Instead of
 the 9, any other digit works as well. And instead of 'w'ield, any other command
-used for handling items can be used: 'e'at, 'r'ead, 'q'uaff, e'v'oke, 'f'ire, etc.
-Using "@*9" will make any action command followed by '9' use this item.
+used for handling items can be used: 'e'at, 'r'ead, 'q'uaff, e'v'oke, 'f'ire,
+etc. Using "@*9" will make any action command followed by '9' use this item.
 
 Safety inscriptions
 ========================================
@@ -2784,15 +2795,6 @@ commands:
 !Q
   Prompt before explicitly quivering this item.
 
-!p
-  Prompt before sacrificing a stack containing an item with this inscription; if
-  the answer is "No", the whole stack will be skipped, and no items will be
-  sacrificed.
-
-=p
-  Prompt before sacrificing this particular item; if the answer is "No", then
-  Crawl will go on to sacrifice further items in the stack.
-
 =g
   Pick this item up automatically if autopickup is on.
 
@@ -2813,11 +2815,10 @@ commands:
 
 !D
   Prompt before performing an action that might destroy this item. If you're
-  attempting to destroy an item thus inscribed by sacrificing it, destroying a
-  weapon or burning a book in the names of various deities, the game won't even
-  ask you for confirmation but silently ignore this item. It also protects
-  against accidentally casting Sticks to Snakes on your favourite weapon.
-  However, it won't protect against lava accidents or hungry jellies.
+  attempting to destroy an item thus inscribed by turning it into a snake, or
+  burning it in the name of Trog, the game won't even ask you for confirmation
+  but will ignore the item. However, it won't protect against lava or deep
+  water accidents.
 
 You can use the autoinscribe option to have some items automatically inscribed.
 See options_guide.txt for details. Some examples are:
@@ -2825,153 +2826,26 @@ See options_guide.txt for details. Some examples are:
   autoinscribe = royal jelly:=g
   autoinscribe = wand of heal wounds:!v
 
-Artefacts autoinscriptions
+Artefact autoinscriptions
 ========================================
 
-Many players use inscriptions for properties of artefacts. This makes browsing
-the inventory or stashes easier. Crawl provides a scheme for automatic
-inscription.
-
-Here, one has to negotiate between two concurrent objectives: terseness for
-better use of limited line lengths versus verboseness for easier reading. The
-default inscriptions use the following general ideas:
+Artefacts are automatically inscribed with abbreviated descriptions of their
+properties. The inscriptions use the following general ideas:
 
 rXXX
-  signifies a resistance
+  signifies a resistance; e.g. rF+ (a level of fire resistance), rN+++ (three
+  levels of negative energy resistance), rC- (cold vulnerability).
 
 \+XXX
-  signifies an ability you can evoke via the 'a' command
+  signifies an ability you can evoke via the 'a' command. E.g. +Fly (evocable,
+  temporary flight).
 
 \-XXX
-  signifies a suppressed ability
+  signifies a suppressed ability. E.g. -Cast (spellcasting forbidden).
 
 XX+6
-  means a boost to some numerical stat (similar with XX-2, etc.)
+  means a boost to some numerical stat (similar with XX-2, etc.). E.g. Slay+3
+  (+3 to accuracy and damage of melee and ranged combat).
 
-Here is the full list:
-
-rC+
-  one level of cold resistance
-
-rC++
-  two levels of cold resistance
-
-rC-
-  one level of cold susceptibility
-
-rF+
-  one level of fire resistance
-
-rF++
-  two levels of fire resistance
-
-rF-
-  one level of fire susceptibility
-
-rN+
-  one level of negative energy resistance (life protection)
-
-MR++
-  two levels of magical resistance (resistance to hostile enchantments)
-
-rPois
-  poison resistance
-
-rElec
-  electricity resistance (insulation)
-
-AC+3
-  AC (armour class) modifier
-
-EV+3
-  EV (evasion) modifier
-
-Str+3
-  strength modifier
-
-Dex+3
-  dexterity modifier
-
-Int+3
-  intelligence modifier
-
-Slay+3
-  accuracy &amp; damage modifier (to melee and ranged combat)
-
-Stealth+
-  stealth boost
-
-Stealth-
-  stealth penalty
-
-rCorr
-  resist corrosion
-
-rMut
-  resist mutation
-
-\+Fly
-  can evoke for flight (from the 'a'bilities menu)
-
-\+Inv
-  can evoke for invisibility (from the 'a'bilities menu)
-
-\+Blink
-  can evoke for blink (from the 'a'bilities menu)
-
-\+Rage
-  can evoke for berserk (from the 'a'bilities menu)
-
-\*Rage
-  uncontrolled berserk (may trigger on melee attacks)
-
-\*Tele
-  random teleportation
-
-\-Tele
-  prevents teleportation
-
-\-Cast
-  prevents spellcasting
-
-Contam
-  causes high magical contamination when unequipped
-
-Noisy
-  makes noises on hit
-
-Curse
-  chance of self-cursing when equipped
-
-Fire
-  rF+, rC-, enhances fire magic
-
-Ice
-  rC+, rF-, enhances ice magic
-
-Regen
-  regeneration
-
-Wiz
-  wizardry
-
-MP+3
-  magical power modifier
-
-HP+3
-  hit point modifier
-
-SInv
-  see invisible
-
-Clar
-  clarity
-
-Gourm
-  gourmand
-
-Spirit
-  guardian spirit
-
-Inacc
-  inaccuracy (affects all attacks that can miss)
+For more information, examine an item (by selecting it in your (i)nventory);
+each property of an artefact will be listed and described.

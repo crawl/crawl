@@ -493,7 +493,7 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
-    const int hd = mon_owner ? mon_owner->hd : 0;
+    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -506,8 +506,10 @@ static void _describe_book(const spellbook_contents &book,
                                   index_to_letter(*spell_letter_index) :
                                   ' ';
         if (hd > 0 && crawl_state.need_save
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
-            && mon_owner->attitude != ATT_FRIENDLY)
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
             description.cprintf("%c - (%d%%) %s",
                             spell_letter,

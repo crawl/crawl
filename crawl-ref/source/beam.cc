@@ -331,7 +331,8 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 // with targeting this target with this spell. Returns false otherwise.
 static bool _stop_because_god_hates_target_prompt(monster* mon,
                                                   spell_type spell,
-                                                  beam_type flavour)
+                                                  beam_type flavour,
+                                                  item_def *item)
 {
     if (spell == SPELL_TUKIMAS_DANCE)
     {
@@ -347,8 +348,13 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
         }
     }
 
+    const bool poisonous_attack =
+        flavour == BEAM_POISON
+        || flavour == BEAM_POISON_ARROW
+        || item && item->defined() && item->base_type == OBJ_MISSILES
+           && (item->brand == SPMSL_POISONED || item->brand == SPMSL_CURARE);
     if (you_worship(GOD_SHINING_ONE)
-        && (flavour == BEAM_POISON || flavour == BEAM_POISON_ARROW)
+        && poisonous_attack
         && mon->res_poison() < 3
         && !yesno("Poisoning this monster would place you under penance. "
                   "Continue anyway?", false, 'n'))
@@ -1335,7 +1341,16 @@ void bolt::do_fire()
         if (feat_is_solid(feat) && !can_affect_wall(pos()))
         {
             if (is_bouncy(feat))
+            {
                 bounce();
+                // see comment in bounce(); the beam will be cancelled if this
+                // is a tracer and showing the bounce would be an info leak.
+                // In that case, we have to break early to avoid adding this
+                // square to path_taken twice, which would make it look like a
+                // a bounce ANYWAY.
+                if (range_used() > range)
+                    break;
+            }
             else
             {
                 // Regress for explosions: blow up in an open grid (if regressing
@@ -4270,7 +4285,8 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     bool prompted = false;
 
     if (stop_attack_prompt(mon, true, target, &prompted)
-        || _stop_because_god_hates_target_prompt(mon, origin_spell, flavour))
+        || _stop_because_god_hates_target_prompt(mon, origin_spell, flavour,
+                                                 item))
     {
         beam_cancelled = true;
         finish_beam();

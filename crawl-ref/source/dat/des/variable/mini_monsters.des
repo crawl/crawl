@@ -1716,7 +1716,8 @@ KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of shadows
-ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
+ITEM:    amulet of magic regeneration w:5 ident:type / \
+            amulet of magic regeneration randart
 ITEM:    fan of gales / lamp of fire / phial of floods
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
@@ -6247,9 +6248,8 @@ MONS:    worker ant / soldier ant
 MONS:    killer bee
 MONS:    adder / water moccasin
 : if you.unrands("staff_of_olgreb") then
-ITEM:    book of envenomations / young poisoner's handbook / \
-         ring of poison resistance ident:type / staff of poison ident:type / \
-         swamp dragon scales
+ITEM:    young poisoner's handbook / ring of poison resistance ident:type / \
+         staff of poison ident:type / swamp dragon scales
 : else
 ITEM:    staff_of_olgreb no_pickup
 : end

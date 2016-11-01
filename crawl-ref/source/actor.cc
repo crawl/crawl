@@ -251,11 +251,6 @@ bool actor::faith(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
-bool actor::dismissal(bool calc_unid, bool items) const
-{
-    return items && wearing(EQ_AMULET, AMU_DISMISSAL, calc_unid);
-}
-
 int actor::archmagi(bool calc_unid, bool items) const
 {
     if (!items)

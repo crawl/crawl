@@ -116,7 +116,6 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
         return SPRET_ABORT;
     }
 
-    fail_check();
     setup_fire_storm(&you, pow, beam);
 
     bolt tempbeam = beam;
@@ -126,6 +125,8 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
     tempbeam.explode(false);
     if (tempbeam.beam_cancelled)
         return SPRET_ABORT;
+
+    fail_check();
 
     beam.refine_for_explosion();
     beam.explode(false);

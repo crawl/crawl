@@ -40,7 +40,7 @@ The contents of this text are:
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, auto_sacrifice, travel_key_stop,
+                explore_wall_bias, travel_key_stop,
                 tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
                 tc_exclude_circle, runrest_ignore_message,
                 runrest_stop_message, runrest_safe_poison,
@@ -110,7 +110,8 @@ The contents of this text are:
                 tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar,
-                tile_player_tile, tile_weapon_offsets, tile_shield_offsets
+                tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
+                tile_web_mouse_control
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -781,10 +782,6 @@ explore_wall_bias = 0
         perimeters and corners. At higher values, autoexplore will more
         heavily favour visiting squares that are next to walls; at 0 it
         will not favour them at all.
-
-auto_sacrifice = false
-       If set to true, the player is worshipping Fedhas, and there are corpses
-       around when autoexplore is initiated, they will be sacrificed.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
@@ -2067,6 +2064,11 @@ tile_shield_offsets = (<x>,<y> | reset)
 
         Using the value "reset" will clear any previously defined offset, which
         is using for in-game tile changes via lua.
+
+tile_web_mouse_control = false
+        Whether to enable the experimental mouse control for tooltips/cursor/
+        interaction on Webtiles. Regardless of the value of the setting, the
+        minimap will respond to mouse control.
 
 4-  Character Dump.
 ===================

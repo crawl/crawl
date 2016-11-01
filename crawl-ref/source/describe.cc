@@ -16,6 +16,7 @@
 #include <string>
 
 #include "adjust.h"
+#include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
@@ -134,10 +135,10 @@ const char* jewellery_base_ability_string(int subtype)
     case RING_TELEPORT_CONTROL:   return "+cTele";
 #endif
     case AMU_HARM:                return "Harm";
-    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_MANA_REGENERATION:   return "RegenMP";
     case AMU_THE_GOURMAND:        return "Gourm";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_DISMISSAL:           return "Dismiss";
     case AMU_CONSERVATION:        return "Cons";
     case AMU_CONTROLLED_FLIGHT:   return "cFly";
 #endif
@@ -384,13 +385,13 @@ static const char* _jewellery_base_ability_description(int subtype)
 #endif
     case AMU_HARM:
         return "It increases damage dealt and taken.";
-    case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
     case AMU_MANA_REGENERATION:
         return "It increases your magic regeneration.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_DISMISSAL:
+        return "It may teleport away creatures that harm you.";
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
 #endif
@@ -2122,9 +2123,28 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
-        long_desc += "\n(Pray here to learn more.)\n";
+    {
+        long_desc +=
+            make_stringf("\n(Pray here with '%s' to learn more.)\n",
+                         command_to_string(CMD_GO_DOWNSTAIRS).c_str());
+    }
 
     inf.body << long_desc;
+
+    if (!feat_is_solid(feat))
+    {
+        string area_desc = "";
+        if (haloed(pos) && !umbraed(pos))
+            area_desc += "\n" + getLongDescription("haloed");
+        if (umbraed(pos) && !haloed(pos))
+            area_desc += "\n" + getLongDescription("umbraed");
+        if (liquefied(pos))
+            area_desc += "\n" + getLongDescription("liquefied");
+        if (disjunction_haloed(pos))
+            area_desc += "\n" + getLongDescription("disjunction haloed");
+
+        inf.body << area_desc;
+    }
 
     if (const cloud_type cloud = env.map_knowledge(pos).cloud())
     {
@@ -2698,7 +2718,7 @@ static bool _get_spell_description(const spell_type spell,
 
     if (mon_owner)
     {
-        const int hd = mon_owner->hd;
+        const int hd = mon_owner->spell_hd();
         const int range = mons_spell_range(spell, hd);
         description += "\nRange : "
                        + range_string(range, range, mons_char(mon_owner->type))
@@ -2706,7 +2726,10 @@ static bool _get_spell_description(const spell_type spell,
 
         // only display this if the player exists (not in the main menu)
         if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
-            && mon_owner->attitude != ATT_FRIENDLY)
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            )
         {
             string wiz_info;
 #ifdef WIZARD

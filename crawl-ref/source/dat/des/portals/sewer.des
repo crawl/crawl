@@ -546,11 +546,10 @@ ENDMAP
 ############################################################################
 # Sewer in the shape of the letter W. Sort of. Frogs at the end.
 #
-# Harder than the two other frog maps. Frogs are guaranteed, exit isn't
-# reachable when frogs come to sight, and loot isn't handed out as a way
-# to handle them.
+# Harder than the two other frog maps. Frogs are guaranteed, and neither
+# exit nor chokepoints aren't reachable when one sees them.
 #
-# XXX: Still a big outlier in length, openness, and minimal land as a map.
+# XXX: An outlier in size, openness, and minimal land as a map.
 NAME:    sewer_minmay_w
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
@@ -563,8 +562,8 @@ ITEM:    potion of curing / potion of heal wounds / potion of might /\
 ITEM:    scroll of teleportation / scroll of blinking w:5 /\
          scroll of fear w:5 / scroll of magic mapping /\
          scroll of recharging / scroll of fog
-SUBST:   y : yyyyyyW., Y : YYYYYYWw
-SUBST:   y = W., Y = Ww, z = x., Z = wxx
+SUBST:   y : yyyyyyW., Y : YYYYYYWw, z = x., Z = wwwxx
+SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
 : sewer_setup(_G)
 MAP
@@ -580,17 +579,17 @@ cYYWYYYcxxxxxcYYWYYYcxcccccYYYYWYcxxxxxcYYZYYYc
 cwYWYYwcxxxxxcwYWYwwcxxxxxcwwwYWYcxxxxxcYYWYwYc
 cwYYWYwcxxxxxcwYWYYwcxxxxxcwwYYWYcxxxxxcwYWYYwc
 cwwYWYwcxxxxxcwwYWYwcxxxxxcwYYWYYcxxxxxcwYWWYwc
-cwwYWYwcxxxxxcwwYWYYcxxxxxcYWWYYwcxxxxxcwYYZYYc
-cwYYZYwcxxxxxcwwYYWYcxxxxxcWYYYwwcxxxxxcwwYYZYc
-cwYZYYwcxxxxxcwwwYZYcxxxxxcWWYYYwcxxxxxcwwwYWYc
-cw.WYwwcxxxxxcwwwwYWcxxxxxcZyyyyZcxxxxxcwwwY.Yc
-cwYZYYwcxxxxxcwwwwY.cxxxxxcyy%%ywcxxxxxcwwYYZYc
-cwYYZ.wcxxxxxcwwwYYWcxxxxxcZyyyyZcxxxxxcwwYZYYc
-cwwYWYwcxxxxxcwwwYZYcxxxxxcYWWYwwcxxxxxcwYY.Ywc
-cwwYWYwcxxxxxcwwYYWYcxxxxxcYYYWYwcxxxxxcwYWWYwc
-cwwYWYwcxxxxxcwwYWYYcxxxxxcwYWYwwcxxxxxcwYWYYwc
-cwwYWYwcxxxxxcwYYWYwcxxxxxcwYWYwwcxxxxxcwYWYwYc
-cYYYWYYcxxxxxcwYWYwwcxxxxxcYYYWYYcxcccccYYWYYYc
+cwwYWYwcxxxxxcwwYWZYcxxxxxcYWWYYwcxxxxxcwYYWZYc
+cwYZWYwcxxxxxcwwYZWYcxxxxxcWYYYwwcxxxxxcwwYZWYc
+cwYWZYwcxxxxxcwwwYWYcxxxxxcWWYYwwcxxxxxcwwwY.Yc
+cw.WYwwcxxxxxcwwwYYWcxxxxxcZyyyyZcxxxxxcwwwY.Yc
+cwYWZYwcxxxxxcwwwZY.cxxxxxcyy%%ywcxxxxxcwwYZWYc
+cwYZW.wcxxxxxcwwwYYWcxxxxxcZyyyyZcxxxxxcwwYWZYc
+cwwYWYwcxxxxxcwwwYWYcxxxxxcwwYYWWcxxxxxcwYYWYwc
+cwwYWYwcxxxxxcwwYZWYcxxxxxcwwwYYWcxxxxxcwYWWYwc
+cwwYWYwcxxxxxcwwYWZYcxxxxxcwYYWWYcxxxxxcwYWYYwc
+cwwYWYwcxxxxxcwYYWYwcxxxxxcwYWYYwcxxxxxcwYWYwYc
+cYYYWYYcxxxxxcwYWYwwcxxxxxcYYWYYYcxcccccYYWYYYc
 czyyyyzcxxxxxczyyyyzcxxxxxczyyyyzcxceecczyyyyzc
 c1.1.1.ccxxxcc......cxxxxxc1.1.1.ccceecc......c
 cc1.1.1.ccxcc......ccxxxxxcc1.1.1.cc+cc2.....cc

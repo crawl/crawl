@@ -487,6 +487,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 15, {FAIL_INVO}, abflag::NONE },
 
     // Fedhas
+    { ABIL_FEDHAS_FUNGAL_BLOOM, "Fungal Bloom",
+      0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_FEDHAS_EVOLUTION, "Evolution",
       2, 0, 0, 0, {FAIL_INVO, 30, 6, 20}, abflag::VARIABLE_FRUIT },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight",
@@ -607,10 +609,10 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_RECALL, "Recall Ancestor",
         2, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_HEPLIAKLQANA_TRANSFERENCE, "Transference",
-        2, 0, 0, generic_cost::range(4, 5), {FAIL_INVO, 40, 5, 20},
+        2, 0, 0, 3, {FAIL_INVO, 40, 5, 20},
         abflag::NONE },
     { ABIL_HEPLIAKLQANA_IDEALISE, "Idealise",
-        4, 0, 0, generic_cost::range(5, 6), {FAIL_INVO, 60, 4, 25},
+        4, 0, 0, 4, {FAIL_INVO, 60, 4, 25},
         abflag::NONE },
 
     { ABIL_HEPLIAKLQANA_TYPE_KNIGHT,       "Ancestor Life: Knight",
@@ -1840,8 +1842,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BREATHE_STICKY_FLAME:
     {
-        targetter_splash hitfunc(&you);
         beam.range = _calc_breath_ability_range(abil.ability);
+        targetter_splash hitfunc(&you, beam.range);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
@@ -2652,6 +2654,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         mpr("You stop recalling your allies.");
         end_recall();
         break;
+
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+        fedhas_fungal_bloom();
+        return SPRET_SUCCESS;
 
     case ABIL_FEDHAS_SUNLIGHT:
         return fedhas_sunlight(fail);

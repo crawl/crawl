@@ -290,10 +290,7 @@ void change_monster_type(monster* mons, monster_type targetc)
                                                     : targetc;
 
     const god_type god =
-        (player_will_anger_monster(real_targetc)
-            || (you_worship(GOD_BEOGH)
-                && mons_genus(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
-                                                          : mons->god;
+        player_will_anger_monster(real_targetc) ? GOD_NO_GOD : mons->god;
 
     if (god == GOD_NO_GOD)
         flags &= ~MF_GOD_GIFT;

@@ -567,14 +567,11 @@ static bool _is_chaos_polyable(const actor &defender)
 
 static bool _is_chaos_slowable(const actor &defender)
 {
-    if (!defender.can_safely_mutate())
-        return false;  // no polymorphing undead
-
     const monster* mon = defender.as_monster();
     if (!mon)
         return true;
 
-    return !mons_is_firewood(*mon) && !mons_immune_magic(*mon);
+    return !mons_is_firewood(*mon) && !mon->is_stationary();
 }
 
 struct chaos_effect

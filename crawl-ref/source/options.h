@@ -350,8 +350,6 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    bool        auto_sacrifice;
-
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
@@ -523,6 +521,7 @@ public:
     string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
+    bool        tile_web_mouse_control;
 #endif
 #endif // USE_TILE
 

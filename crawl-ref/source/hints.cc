@@ -1600,11 +1600,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "If you target the altar with <w>x</w>, then press <w>v</w> "
 #endif
                 "you can get a short description.\n"
-                "Press <w>%</w> while standing on the square to join the faith "
+                "Press <w>%</w> or <w>%</w> while standing on the square to join the faith "
                 "or read some information about the god in question. Before "
                 "taking up the corresponding faith you'll be asked for "
                 "confirmation.";
-        cmd.push_back(CMD_PRAY);
+        cmd.push_back(CMD_GO_UPSTAIRS);
+        cmd.push_back(CMD_GO_DOWNSTAIRS);
 
         if (you_worship(GOD_NO_GOD)
             && Hints.hints_type == HINT_MAGIC_CHAR)
@@ -2832,7 +2833,7 @@ static string _hints_target_mode(bool spells = false)
     }
 
     result += "</w> fires at the same target again.";
-    insert_commands(result, cmd, 0);
+    insert_commands(result, { cmd });
 
     return result;
 }
@@ -2887,7 +2888,7 @@ static string _hints_throw_stuff(const item_def &item)
     result += ". You'll ";
     result += _hints_target_mode();
 
-    insert_commands(result, CMD_FIRE, 0);
+    insert_commands(result, { CMD_FIRE });
     return result;
 }
 

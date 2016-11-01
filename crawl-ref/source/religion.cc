@@ -221,7 +221,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Fedhas
     {
-      { 0, "pray to speed up the decay of corpses" },
+      { 0, ABIL_FEDHAS_FUNGAL_BLOOM, "turn corpses into toadstools" },
       { 1, ABIL_FEDHAS_EVOLUTION, "induce evolution" },
       { 2, ABIL_FEDHAS_SUNLIGHT, "call sunshine" },
       { 3, ABIL_FEDHAS_PLANT_RING, "cause a ring of plants to grow" },
@@ -1198,8 +1198,7 @@ bool is_yred_undead_slave(const monster& mon)
 
 bool is_orcish_follower(const monster& mon)
 {
-    return mon.alive() && mons_genus(mon.type) == MONS_ORC
-           && mon.attitude == ATT_FRIENDLY
+    return mon.alive() && mon.attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_BEOGH);
 }
 
@@ -1237,7 +1236,7 @@ bool is_follower(const monster& mon)
     else if (you_worship(GOD_FEDHAS))
         return _is_plant_follower(&mon);
     else
-        return mon.alive() && mon.friendly();
+        return mon.alive() && mon.attitude == ATT_FRIENDLY;
 }
 
 

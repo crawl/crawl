@@ -1103,13 +1103,6 @@ static void _remove_amulet_of_harm()
     drain_player(150, false, true);
 }
 
-static void _equip_amulet_of_dismissal()
-{
-    mprf(MSGCH_WARN, "The world spins around you!");
-    you.increase_duration(DUR_VERTIGO, random2(4) + 3);
-    you.redraw_evasion = true;
-}
-
 static void _equip_amulet_of_regeneration()
 {
     if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
@@ -1226,11 +1219,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         mpr("You feel a craving for the dungeon's cuisine.");
         break;
 
-    case AMU_DISMISSAL:
-        if (!unmeld)
-            _equip_amulet_of_dismissal();
-        break;
-
     case AMU_REGENERATION:
         if (!unmeld)
             _equip_amulet_of_regeneration();
@@ -1306,7 +1294,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
-    case AMU_DISMISSAL:
     case AMU_REGENERATION:
         break;
 

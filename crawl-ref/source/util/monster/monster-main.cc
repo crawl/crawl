@@ -411,7 +411,16 @@ static string shorten_spell_name(string name)
         }
     }
     if ((pos = name.find(" of ")) != string::npos)
-        name = name.substr(0, 1) + "." + name.substr(pos + 4);
+    {
+        istringstream words { name.substr(0, pos) };
+        string abbrev, word;
+        while (words >> word)
+        {
+            abbrev += word[0];
+            abbrev += '.';
+        }
+        name = abbrev + name.substr(pos + 4);
+    }
     if (starts_with(name, "summon "))
         name = "sum." + name.substr(7);
     if (ends_with(name, " bolt"))

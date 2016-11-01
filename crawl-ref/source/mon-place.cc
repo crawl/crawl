@@ -1943,34 +1943,12 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
 void roll_zombie_hp(monster* mon)
 {
+    ASSERT(mon); // TODO: change to monster &mon
     ASSERT(mons_class_is_zombified(mon->type));
 
-    int hp = 0;
-
-    switch (mon->type)
-    {
-    case MONS_ZOMBIE:
-        hp = hit_points(mon->get_hit_dice() * 85);
-        break;
-
-    case MONS_SKELETON:
-        hp = hit_points(mon->get_hit_dice() * 70);
-        break;
-
-    case MONS_SIMULACRUM:
-        // Simulacra aren't tough, but you can create piles of them. - bwr
-        hp = hit_points(mon->get_hit_dice() * 30);
-        break;
-
-    case MONS_SPECTRAL_THING:
-        hp = hit_points(mon->get_hit_dice() * 60);
-        break;
-
-    default:
-        die("invalid zombie type %d (%s)", mon->type,
-            mons_class_name(mon->type));
-    }
-
+    const int avg_hp_10x = derived_undead_avg_hp(mon->type,
+                                                 mon->get_hit_dice());
+    const int hp = hit_points(avg_hp_10x);
     mon->max_hit_points = max(hp, 1);
     mon->hit_points     = mon->max_hit_points;
 }

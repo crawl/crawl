@@ -46,8 +46,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2 /\
               rat corpse w:5 / kobold corpse w:5",
          Pakellas="staff of energy / crystal ball of energy w:5",
-         ["the Shining One"]="book of Envenomations /\
-              Young Poisoner's Handbook /\
+         ["the Shining One"]="Young Poisoner's Handbook /\
               potion of invisibility ident:type q:3-6",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\

@@ -67,8 +67,8 @@ static const char *conducts[] =
     "Deliberate Mutation", "Cause Glowing", "Use Unclean",
     "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
-    "Souled Friend Died", "Attack In Sanctuary", "Kill Artificial",
-    "Exploration", "Desecrate Holy Remains", "Seen Monster",
+    "Carrion Rot", "Souled Friend Died", "Attack In Sanctuary",
+    "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
     "Fire", "Kill Fiery", "Sacrificed Love", "Channel", "Hurt Foe",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
@@ -696,7 +696,7 @@ static const like_response EXPLORE_RESPONSE = {
     [] (int &piety, int &denom, const monster* /*victim*/)
     {
         // piety = denom = level at the start of the function
-        piety = 20;
+        piety = 14;
     }
 };
 
@@ -847,19 +847,19 @@ static like_map divine_likes[] =
     },
     // GOD_NEMELEX_XOBEH,
     {
+        { DID_EXPLORATION, EXPLORE_RESPONSE },
+    },
+    // GOD_ELYVILON,
+    {
         { DID_EXPLORATION, {
             "you explore the world", false,
             0, 0, 0, nullptr,
             [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
-                piety = 14;
+                piety = 20;
             }
         } },
-    },
-    // GOD_ELYVILON,
-    {
-        { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
     // GOD_LUGONU,
     {
@@ -888,7 +888,11 @@ static like_map divine_likes[] =
     // GOD_JIYVA,
     like_map(),
     // GOD_FEDHAS,
-    like_map(),
+    {
+        { DID_ROT_CARRION, {
+            "corpses rot away", false, 0, 0, 0, " appreciates ongoing decay."
+        } },
+    },
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {

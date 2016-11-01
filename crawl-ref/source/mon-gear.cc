@@ -219,8 +219,8 @@ struct plus_range
 struct mon_weapon_spec {
     /// weighted list of weapon types; NUM_WEAPONS -> no weapon
     weapon_list types;
-    /// extra added weapon plusses; if nonzero, sets force_item
-    plus_range bonus_plus;
+    /// range of possible weapon enchant plusses; if nonzero, sets force_item
+    plus_range plusses;
     /// weighted brand list; NUM_BRANDS -> no forced brand
     vector<pair<brand_type, int>> brands;
     /// extra 1/x chance to generate as ISPEC_GOOD_ITEM
@@ -252,22 +252,35 @@ static bool _apply_weapon_spec(const mon_weapon_spec &spec, item_def &item,
     item.base_type = OBJ_WEAPONS;
     item.sub_type = *wpn_type;
 
-    if (spec.bonus_plus.odds && one_chance_in(spec.bonus_plus.odds))
+    if (spec.plusses.odds)
     {
-        const int rolls = max(1, spec.bonus_plus.nrolls);
-        item.plus += random_range(spec.bonus_plus.min, spec.bonus_plus.max,
-                                  rolls);
-        force_item = true;
+        if (one_chance_in(spec.plusses.odds))
+        {
+            const int rolls = max(1, spec.plusses.nrolls);
+            item.plus += random_range(spec.plusses.min, spec.plusses.max,
+                                      rolls);
+            force_item = true;
+        }
     }
+    else // normal plusses (ignored if brand isn't set)
+        item.plus = determine_nice_weapon_plusses(level);
 
     if (spec.good_chance && one_chance_in(spec.good_chance))
         level = ISPEC_GOOD_ITEM;
 
     const brand_type *brand = random_choose_weighted(spec.brands);
-    if (brand && *brand != NUM_SPECIAL_WEAPONS)
+    if (brand)
     {
-        set_item_ego_type(item, OBJ_WEAPONS, *brand);
-        force_item = true;
+        if (*brand != NUM_SPECIAL_WEAPONS)
+        {
+            set_item_ego_type(item, OBJ_WEAPONS, *brand);
+            force_item = true;
+        }
+    }
+    else if (force_item) // normal brand
+    {
+        set_item_ego_type(item, OBJ_WEAPONS,
+                          determine_weapon_brand(item, level));
     }
 
     return true;

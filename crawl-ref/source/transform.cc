@@ -19,6 +19,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::resist_polymorph
+#include "invent.h" // check_old_item_warning
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1751,6 +1752,18 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
+
+    // if going into lichform causes us to drop a holy weapon with consequences
+    // for unwielding (e.g. contam), warn first.
+    item_def nil_item;
+    nil_item.link = -1;
+    if (just_check && !involuntary
+        && which_trans == TRAN_LICH && rem_stuff.count(EQ_WEAPON)
+        && !check_old_item_warning(nil_item, OPER_WIELD))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
 
     if (which_trans == TRAN_APPENDAGE)
     {

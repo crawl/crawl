@@ -6189,15 +6189,13 @@ bool player::heal(int amount)
  */
 mon_holy_type player::holiness(bool temp) const
 {
-    mon_holy_type holi = MH_NATURAL;
+    mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
+
     if (species == SP_GARGOYLE ||
         temp && (form == TRAN_STATUE || form == TRAN_WISP || petrified()))
     {
         holi = MH_NONLIVING;
     }
-
-    if (undead_state(temp))
-        holi = MH_UNDEAD;
 
     if (is_good_god(religion))
         holi |= MH_HOLY;
@@ -7182,11 +7180,11 @@ bool player::visible_to(const actor *looker) const
 */
 bool player::backlit(bool self_halo) const
 {
-    return get_contamination_level() > 1
-        || duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES]
-        || duration[DUR_QUAD_DAMAGE]
-        || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
+    return player_severe_contamination()
+           || duration[DUR_CORONA]
+           || duration[DUR_LIQUID_FLAMES]
+           || duration[DUR_QUAD_DAMAGE]
+           || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
 }
 
 bool player::umbra() const

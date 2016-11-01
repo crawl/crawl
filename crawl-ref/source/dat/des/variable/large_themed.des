@@ -33,6 +33,19 @@ function grandhive_vaults(e, hivewallglyph)
                      catoblepas w:4')
     end
 end
+
+function callback.wizard_prison_walls()
+  local wall_pos = dgn.find_marker_positions_by_prop("prison", "wall")
+  if wall_pos == nil then
+    return
+  end
+
+  for i, pos in ipairs(wall_pos) do
+    dgn.terrain_changed(pos.x, pos.y, "floor", false)
+  end
+  crawl.mpr("You hear a hidden mechanism click...the prison walls lower!")
+end
+
 }}
 
 default-depth: D:12-, !D:$, Depths, !Depths:$
@@ -929,64 +942,55 @@ ENDMAP
 # Wizard Prison
 #
 NAME:   evilmike_wizard_prison
-TAGS:   no_monster_gen
-DEPTH:  Depths, !Depths:$, Crypt:1-4
+TAGS:   no_monster_gen no_item_gen no_trap_gen
+DEPTH:  Depths, Crypt
 ORIENT: southeast
-NSUBST: 3 = 3:. / *:3
-SUBST:  ^ : ^mmm
-KFEAT:  ^ = permanent teleport trap
-KFEAT:  m = iron_grate
-KFEAT:  y = rock_wall
-KMASK:  y = no_wall_fixup
-KPROP:  -d|*$14567^ = no_tele_into
-FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
-FTILE:  .@+23 = FLOOR_HALL
-TILE:   c = DNGN_STONE_WALL_DARKGRAY
-# This is to mark the wall clearly diggable.
-TILE:   y = WALL_NORMAL
-MONS:   patrolling silent spectre
-MONS:   patrolling curse skull, soul eater
-# Inmates are monsters capable of blinking, summoning or airstriking.
-MONS:   ogre mage / deep elf mage / wizard / necromancer / \
-        merfolk aquamancer / spriggan air mage / orc sorcerer / \
-        deep elf sorcerer / kobold demonologist / deep elf mage
-MONS:   draconian shifter / draconian annihilator / lich  / \
+KPROP:  -47 = no_tele_into
+MONS:   human att:neutral, silent spectre, patrolling soul eater
+MONS:   ogre mage / deep elf mage / wizard / necromancer / merfolk aquamancer / \
+        spriggan air mage / orc sorcerer / kobold demonologist / deep elf mage
+MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
-NSUBST: 4 = 6:5 / *:4
-MONS:   ancient lich
-MONS:   human att:neutral
-NSUBST: 4 = 1:7 / *:4
+MONS:   patrolling curse skull, ancient lich
 ITEM:   acquire any
-SUBST:  - = .
+KFEAT:  g = runed_door
+KFEAT:  ^ = known teleport trap
+NSUBST: D = 1:6 / *:33., 4 = 1:1 / 6:4 / 6:5 / 6=45.. / *:. , 7 = 1:7 / 1=75
+MARKER: n = lua:portal_desc {prison="wall"}
+FTILE:  nc-457 = FLOOR_PEBBLE_DARKGRAY
+FTILE:  .@+g^d|*$236 = FLOOR_HALL
+TILE:   c = DNGN_STONE_WALL_DARKGRAY
+{{
+  local tm_open = TriggerableFunction:new{func="callback.wizard_prison_walls"}
+  tm_open:add_triggerer(DgnTriggerer:new{type="player_los"})
+  lua_marker('2', tm_open)
+}}
 MAP
-xxxxxxxxxxxc.@.cxxxxxxxxxxx
-xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxxxxxxxxc.c.cxxxxxxxxxxx
-xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxcccccccc.c.ccccccccxxxx
-xxxxc-4cc--c...c4-cc--cxxxx
-xxxxc--cc4-c3.3c--cc-4cxxxx
-xxxccmmccmmcc+ccmmccmmccxxx
-xxxc3..................cxxx
-xxxc3................3.cxxx
-xxxcmmcmmc+cmmcmmcmmc..cccx
-xxxc--c-4c-c4-c4-c-4c..m4cx
-xxxc-4c--c-cccccccccc..m-cx
-xxxccccccc---^1y|c--m.3cccx
-xxxccccccc-ccccc|c-4m..m4cx
-xxxc4-c--c-c-4c||cccc..m-cx
-xxxc--c-4c-c--cddc-4c..cccx
-xxxcmmcmmc+cmmccccmmc..cxxx
-xxxc3..................cxxx
-xxxc3.................3cxxx
-xxxccmmcmmcmmc..cmmcmmccxxx
-xxxxc4-c-4c--c..c--c-4cxxxx
-xxxxc--c--c4-c..c4-c--cxxxx
-xccccccccccycc.2cccccccxxxx
-xc|$*$*$cccy-ccccxxxxxxxxxx
-xc$|$*$*-6-y-cxxxxxxxxxxxxx
-xcccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccc.@.ccccccccccc
+ccccccccccc...ccccccccccc
+ccccccccccc.c.ccccccccccc
+ccccccccccc...ccccccccccc
+cccc-4cc4-c3.3c4-cc-4cccc
+ccccnnccnncc+ccnnccnncccc
+cc4nD...............Dn4cc
+cc-n.................n-cc
+cccc..cnncnncnncnnc..cccc
+cc-n..c-4c4-c4-c-4c..n-cc
+cc4n..ccccccccccccc..n4cc
+cccc..c7n.......n-c..cccc
+cc4n..c-n..c+c..n7c..n-cc
+cc-nD.ccc+cc2cc+ccc.Dn4cc
+cccc..c*$$cc^cc$$*c..cccc
+cc-n..c||*c...c*||c..n4cc
+cc4n..cd||c...c||dc..n-cc
+cccc..ccccccgcccccc..cccc
+cc4n.................n-cc
+cc-nD...............Dn4cc
+ccccnnccnnc...cnnccnncccc
+cccc-4cc-4c...c-4cc4-cccc
+ccccccccccc.D.ccccccccccc
+ccccccccccccccccccccccccc
+ccccccccccccccccccccccccc
 ENDMAP
 
 ################################################################################

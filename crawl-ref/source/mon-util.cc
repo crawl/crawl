@@ -1243,6 +1243,21 @@ corpse_effect_type mons_corpse_effect(monster_type mc)
     return smc->corpse_thingy;
 }
 
+int derived_undead_avg_hp(monster_type mtype, int hd, int scale)
+{
+    static const map<monster_type, int> hp_per_hd_by_type = {
+        { MONS_ZOMBIE,          85 },
+        { MONS_SKELETON,        70 },
+        { MONS_SPECTRAL_THING,  60 },
+        // Simulacra aren't tough, but you can create piles of them. - bwr
+        { MONS_SIMULACRUM,      30 },
+    };
+
+    const int* hp_per_hd = map_find(hp_per_hd_by_type, mtype);
+    ASSERT(hp_per_hd);
+    return *hp_per_hd * hd * scale / 10;
+}
+
 monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
@@ -5471,7 +5486,7 @@ void throw_monster_bits(const monster& mon)
 /// Add an ancestor spell to the given list.
 static void _add_ancestor_spell(monster_spells &spells, spell_type spell)
 {
-    spells.emplace_back(spell, 40, MON_SPELL_WIZARD);
+    spells.emplace_back(spell, 25, MON_SPELL_WIZARD);
 }
 
 /**
@@ -5512,7 +5527,7 @@ void set_ancestor_spells(monster &ancestor, bool notify)
     }
 
     if (HD >= 13)
-        ancestor.spells.emplace_back(SPELL_HASTE, 40, MON_SPELL_WIZARD);
+        ancestor.spells.emplace_back(SPELL_HASTE, 25, MON_SPELL_WIZARD);
 
     if (ancestor.spells.size())
         ancestor.props[CUSTOM_SPELLS_KEY] = true;
