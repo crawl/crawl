@@ -1138,8 +1138,8 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
         return make_unique<targetter_beam>(&you, range, ZAP_DAMNATION, pow,
                                            1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC,
-                                           pow, pow >= 100 ? 1 : 0, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_MEPHITIC, pow,
+                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return make_unique<targetter_imb>(&you, pow, range);
     case SPELL_FIRE_STORM:
