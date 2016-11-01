@@ -677,9 +677,9 @@ monster_info::monster_info(const monster* m, int milev)
         props["actual_spellcaster"] = true;
 
     // assumes spell hd modifying effects are always public
-    const int spell_hd = m->spell_hd();
-    if (spell_hd != hd)
-        props[SPELL_HD_KEY] = spell_hd;
+    const int spellhd = m->spell_hd();
+    if (spellhd != hd)
+        props[SPELL_HD_KEY] = spellhd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
