@@ -1409,6 +1409,9 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
 }
 
 // Gives weights to Ieoh Jian weapons based on the weapon "tier", the player level and piety.
+//
+// The chance to manifest certain "tiers" of weapons keeps changing as you increase in level and 
+// piety. Tiers overlap to some extent until you end up only receiving weapons from the highest tier.
 static int _weapon_weight_by_tier(int tier)
 {
     int level = you.get_experience_level();
@@ -1417,13 +1420,13 @@ static int _weapon_weight_by_tier(int tier)
     switch (tier)
     {
     case 0:
-        weight = 1;
+        weight = max(0, 15 - abs(effective_level - 10));
         break;
     case 1:
-        weight = 2 * (effective_level > 10);
+        weight = max(0, 15 - abs(effective_level - 20));
         break;
     case 2:
-        weight = 4 * (effective_level > 20);
+        weight = max(0, 15 - abs(effective_level - 30));
         break;
     default:
         break;
@@ -1540,10 +1543,8 @@ static item_def ieoh_jian_choose_weapon()
     );
 
     auto manifested = find_ieoh_jian_manifested_weapons(false);
-    auto yours = find_ieoh_jian_manifested_weapons(true);
-    manifested.insert(manifested.end(), yours.begin(), yours.end());
 
-    // We get rid of all base types for which there is already a manifested or owned weapon.
+    // We get rid of all base types for which there is already a manifested IJC weapon.
     for (auto monster: manifested)
         for (int i = 0; i != NUM_WEAPONS; i++)
             if (weapon_attack_skill((weapon_type)i) == weapon_attack_skill(monster->weapon()->sub_type))
@@ -1558,12 +1559,31 @@ static item_def ieoh_jian_choose_weapon()
         if (!you_could_wield_weapon_type((weapon_type)i))
                 weights[i] = 0;
 
+
     item_def weapon;
     weapon.base_type = OBJ_WEAPONS;
     weapon.sub_type = random_choose_weighted(weights);
     weapon.quantity = 1;
-    weapon.plus = 2;
-    weapon.brand = SPWPN_VORPAL;
+
+    // From 0 to 9, piety based, with some variance.
+    weapon.plus = piety_rank(you.piety) + random2(4);
+
+    switch (random2(6))
+    {
+    case 0:
+        weapon.brand = SPWPN_FLAMING; // Dragon
+        break;
+    case 2:
+        weapon.brand = SPWPN_ELECTROCUTION; // Tiger
+        break;
+    case 1:
+        weapon.brand = SPWPN_SPEED; // Viper
+        break;
+    default:
+        // Vorpal is the likeliest brand (Half the weapons).
+        weapon.brand = SPWPN_VORPAL;
+        break;
+    }
     set_ident_type(weapon, true);
 
     return weapon;
