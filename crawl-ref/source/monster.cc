@@ -6571,6 +6571,14 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
             return false; // Can't unwield your current weapon safely.
         }
 
+        if (is_ranged_weapon_type(you.weapon()->sub_type))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You can't let go of %s fast enough!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            return false;
+        }
+            
+
         if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
         {
             if (!silent)

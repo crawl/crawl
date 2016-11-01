@@ -30,6 +30,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -1640,7 +1641,9 @@ void ieoh_jian_despawn_weapon()
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
     {
         mprf("%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+        int inventory_index = you.equip[EQ_WEAPON];
+        unwield_item(false, true);
+        dec_inv_item_quantity(inventory_index, 1);
         check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
     }
 

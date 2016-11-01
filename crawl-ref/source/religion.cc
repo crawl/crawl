@@ -3499,12 +3499,6 @@ static void _join_pakellas()
 // Setup when becoming a Ieoh Jian ninja
 static void _join_ieoh_jian()
 {
-    if (you.shield())
-    {
-        mprf(MSGCH_GOD, "'A shield? Cowardice begets weakness!'");
-        mprf(MSGCH_GOD, "An invisible force knocks your shield away.");
-        unequip_item(EQ_SHIELD);
-    }
 }
 
 

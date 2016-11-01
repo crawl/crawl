@@ -5850,9 +5850,9 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     {
         if (you_worship(GOD_IEOH_JIAN))
         {
-            // All martial skills cross-train fully
+            // All martial skills cross-train at 80%
             for (skill_type cross : get_secondary_crosstrain_skills(sk))
-                effective_points += skill_points[cross];
+                effective_points += skill_points[cross] * 4 / 5;
         }
         else
         {
