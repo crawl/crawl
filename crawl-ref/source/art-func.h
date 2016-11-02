@@ -1359,3 +1359,58 @@ static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
         _equip_mpr(show_msgs, "You feel very empty.");
     // else let player-equip.cc handle message
 }
+
+
+///////////////////////////////////////////////////
+
+static void _THERMIC_ENGINE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The engine hums to life!");
+    item->plus = 2;
+}
+
+static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The engine shudders to a halt.");
+    item->plus = 2;
+}
+
+static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    if (weapon->plus < 14)
+    {
+        weapon->plus++;
+        you.wield_change = true;
+    }
+
+    if (mondied)
+        return;
+
+    // the flaming brand has already been applied at this point
+    const int bonus_dam = resist_adjust_damage(defender, BEAM_COLD,
+                                               random2(dam) / 2 + 1);
+    if (bonus_dam > 0)
+    {
+        mprf("%s %s %s.",
+            attacker->name(DESC_THE).c_str(),
+            attacker->conj_verb("freeze").c_str(),
+            (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
+                                : defender->name(DESC_THE)).c_str());
+
+        defender->hurt(attacker, bonus_dam, BEAM_COLD);
+        if (defender->alive())
+            defender->expose_to_element(BEAM_COLD, 2);
+    }
+}
+
+static void _THERMIC_ENGINE_world_reacts(item_def *item)
+{
+    if (item->plus > 2 && one_chance_in(3))
+    {
+        item->plus--;
+        you.wield_change = true;
+        if (item->plus == 2 && one_chance_in(4))
+            mpr("The engine shudders to a halt.");
+    }
+}
