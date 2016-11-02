@@ -7210,6 +7210,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         monster_bolt.aimed_at_spot = true;
         alert_nearby_monsters();
 
+        viewwindow();
         if (item.props.exists(IEOH_JIAN_SLOT))
         {
             mprf(MSGCH_GOD,"%s flies violently to the target and shatters!", item.name(DESC_THE, false, true).c_str());
@@ -7232,9 +7233,9 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
                 dprf("Failed to animate Ieoh Jian weapon");
 
             mprf(MSGCH_GOD,"%s flies violently to the target!", item.name(DESC_YOUR, false, true).c_str());
+            monster->destroy_inventory();
         }
 
-        viewwindow();
         monster_bolt.fire();
         hit = !monster_bolt.hit_verb.empty();
 
