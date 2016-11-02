@@ -581,10 +581,10 @@ void melee_attack::player_strike_pressure_points(monster* mons)
     if (!you.weapon() || mons->check_stasis(false))
         return;
 
-    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, true);
-    int paralysis_chance = 8;  
+    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 2, false);
+    int paralysis_chance = 5;  
     paralysis_chance *= power;
-    paralysis_chance /= (4*mons->get_hit_dice());
+    paralysis_chance /= (2*mons->get_hit_dice());
     int slow_chance = 3 * paralysis_chance;
 
     dprf("Pressure point strike, %d%% chance to paralyse (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
