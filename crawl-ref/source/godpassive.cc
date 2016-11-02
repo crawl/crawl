@@ -1393,18 +1393,17 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
     if (!owned_by_you)
     {
         for (auto& monster: menv)
-            if (monster.type == MONS_IEOH_JIAN_WEAPON && monster.weapon()->props.exists(IEOH_JIAN_SLOT))
+            if (monster.type == MONS_IEOH_JIAN_WEAPON && monster.weapon() && monster.weapon()->props.exists(IEOH_JIAN_SLOT))
                 monsters.emplace_back(&monster);
 
         std::sort(monsters.begin(), monsters.end(), [](monster* a, monster* b) {
                 return (a->weapon()->props[IEOH_JIAN_SLOT].get_int() < b->weapon()->props[IEOH_JIAN_SLOT].get_int());
         });
-
     }
     else
     {
         for (auto& monster: menv)
-            if (monster.type == MONS_IEOH_JIAN_WEAPON && !monster.weapon()->props.exists(IEOH_JIAN_SLOT))
+            if (monster.type == MONS_IEOH_JIAN_WEAPON && monster.weapon() && !monster.weapon()->props.exists(IEOH_JIAN_SLOT))
                 monsters.emplace_back(&monster);
     }
 
@@ -1629,7 +1628,12 @@ void ieoh_jian_despawn_weapon()
     {
         auto monster = monsters.at(0);
         monster->ieoh_jian_swap_weapon_with_player(true);
-        mprf(MSGCH_GOD, "%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+
+        if (you.weapon())
+            mprf(MSGCH_GOD, "%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+        else
+            mprf(MSGCH_GOD, "%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true).c_str());
+
         if (monster->alive())
             monster_die(monster, KILL_RESET, NON_MONSTER);
 

@@ -2139,8 +2139,10 @@ item_def* monster_die(monster* mons, killer_type killer,
         bool reformed = false;
         if (killer == KILL_RESET)
         {
-            if (you.can_see(*mons) && !silent && mons->weapon())
+            if (you.can_see(*mons) && !silent && mons->weapon() && mons->weapon()->props.exists(IEOH_JIAN_SLOT))
                 mprf("%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
+            if (you.can_see(*mons) && !silent && mons->weapon() && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
+                mprf("%s bounces wildly and falls to the ground.", mons->weapon()->name(DESC_THE, false, true).c_str());
 
             // All slot indices are updated, so the age order is always respected.
             auto monsters = find_ieoh_jian_manifested_weapons(false);
@@ -2182,8 +2184,10 @@ item_def* monster_die(monster* mons, killer_type killer,
         if (mons->weapon() && (w_idx != NON_ITEM))
         {
             // Something went wrong with resummoning the player's weapon, so it must be dropped.
-            if (killer != KILL_RESET && !reformed && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
-                drop_item(w_idx,1);
+            if (killer == KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
+                mons->drop_item(MSLOT_WEAPON, false);
+            else if (killer != KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT) && !reformed)
+                mons->drop_item(MSLOT_WEAPON, false);
             else
                 destroy_item(w_idx);
         }

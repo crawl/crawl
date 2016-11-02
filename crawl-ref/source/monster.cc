@@ -6520,6 +6520,7 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 
         item_def weapon_copy = pitem;
 
+        this->destroy_inventory();
         // Ieoh Jian weapons can't live without a weapon (duh).
         monster_die(this, KILL_RESET, NON_MONSTER, true);
 
