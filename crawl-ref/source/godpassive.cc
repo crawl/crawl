@@ -1438,110 +1438,110 @@ static int _weapon_weight_by_tier(int tier)
     return weight;
 }
 
+static const int _ieoh_jian_num_weapons = 35;
+
+static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
+(
+    // M&F
+    WPN_WHIP,
+    WPN_MACE,
+    WPN_FLAIL,
+    WPN_MORNINGSTAR,
+    WPN_DIRE_FLAIL,
+    WPN_EVENINGSTAR,
+    WPN_GREAT_MACE,
+    WPN_DEMON_WHIP,
+    WPN_GIANT_CLUB,
+    WPN_GIANT_SPIKED_CLUB,
+
+    // SB
+    WPN_DAGGER,
+    WPN_QUICK_BLADE,
+    WPN_SHORT_SWORD,
+    WPN_RAPIER,
+
+    // LB
+    WPN_FALCHION,
+    WPN_LONG_SWORD,
+    WPN_SCIMITAR,
+    WPN_GREAT_SWORD,
+    WPN_DEMON_BLADE,
+    WPN_DOUBLE_SWORD,
+    WPN_TRIPLE_SWORD,
+
+    // Polearms
+    WPN_SPEAR,
+    WPN_TRIDENT,
+    WPN_HALBERD,
+    WPN_SCYTHE,
+    WPN_GLAIVE,
+    WPN_BARDICHE,
+    WPN_DEMON_TRIDENT,
+
+    // Axes
+    WPN_HAND_AXE,
+    WPN_WAR_AXE,
+    WPN_BROAD_AXE,
+    WPN_BATTLEAXE,
+    WPN_EXECUTIONERS_AXE,
+
+    // Polearms
+    WPN_QUARTERSTAFF,
+    WPN_LAJATANG
+);
+
 
 static item_def ieoh_jian_choose_weapon()
 {
-
-    // This vector mirrors the weapon_type enum, and gives
-    // an initial set of weights, that adjust based on level 
-    // and piety.
-    FixedVector<int, NUM_WEAPONS> weights
+    FixedVector<int, _ieoh_jian_num_weapons> weights
     (
-        0, //WPN_CLUB,
-        _weapon_weight_by_tier(0), ///WPN_WHIP,
-#if TAG_MAJOR_VERSION == 34
-        0, ///WPN_HAMMER,
-#endif
-        2 * _weapon_weight_by_tier(0), ///WPN_MACE,
-        _weapon_weight_by_tier(0), ///WPN_FLAIL,
-        _weapon_weight_by_tier(1),/// WPN_MORNINGSTAR,
-#if TAG_MAJOR_VERSION == 34
-        0,//WPN_SPIKED_FLAIL,
-#endif
+        //// M&F
+        _weapon_weight_by_tier(0), //WPN_WHIP,
+        2 * _weapon_weight_by_tier(0),//WPN_MACE,
+
+        _weapon_weight_by_tier(0),//WPN_FLAIL,
+        _weapon_weight_by_tier(1),//WPN_MORNINGSTAR,
         _weapon_weight_by_tier(1),//WPN_DIRE_FLAIL,
-        2 * _weapon_weight_by_tier(1),  //WPN_EVENINGSTAR,
-        _weapon_weight_by_tier(1), //WPN_GREAT_MACE,
+        _weapon_weight_by_tier(1),//WPN_EVENINGSTAR,
+        _weapon_weight_by_tier(1),//WPN_GREAT_MACE,
+        4 * _weapon_weight_by_tier(2),//WPN_DEMON_WHIP,
+        2 * _weapon_weight_by_tier(1),//WPN_GIANT_CLUB,
+        2 * _weapon_weight_by_tier(2),//WPN_GIANT_SPIKED_CLUB,
 
-        2 * _weapon_weight_by_tier(0), ///WPN_DAGGER,
-        2 * _weapon_weight_by_tier(1),//WPN_QUICK_BLADE,
-        2 * _weapon_weight_by_tier(0), ///WPN_SHORT_SWORD,
-        2 * _weapon_weight_by_tier(1),//WPN_RAPIER,
-#if TAG_MAJOR_VERSION > 34
-        0,//WPN_CUTLASS,
-#endif
+        //// SB
+        2 * _weapon_weight_by_tier(0),//WPN_DAGGER,
+        2 * _weapon_weight_by_tier(1) + 3 * _weapon_weight_by_tier(2),//WPN_QUICK_BLADE,
+        2 * _weapon_weight_by_tier(0),//WPN_SHORT_SWORD,
+        2 * _weapon_weight_by_tier(1) + _weapon_weight_by_tier(2),//WPN_RAPIER,
 
-        2 * _weapon_weight_by_tier(0), ///WPN_FALCHION,
-        2 * _weapon_weight_by_tier(0), ///WPN_LONG_SWORD,
-        2 * _weapon_weight_by_tier(1), //WPN_SCIMITAR,
-        2 * _weapon_weight_by_tier(1), //WPN_GREAT_SWORD,
-
-        3 * _weapon_weight_by_tier(0), ///WPN_HAND_AXE,
-        _weapon_weight_by_tier(0),//WPN_WAR_AXE,
-        2 * _weapon_weight_by_tier(1),// WPN_BROAD_AXE,
-        2 * _weapon_weight_by_tier(1),//WPN_BATTLEAXE,
-        4 * _weapon_weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
-
-        _weapon_weight_by_tier(0), ///WPN_SPEAR,
-        _weapon_weight_by_tier(0), ///WPN_TRIDENT,
-        _weapon_weight_by_tier(0),//WPN_HALBERD,
-        2 * _weapon_weight_by_tier(1),//WPN_GLAIVE,
-        2 * _weapon_weight_by_tier(1), //WPN_BARDICHE,
-
-        0, //WPN_BLOWGUN,
-
-#if TAG_MAJOR_VERSION > 34
-        0, //WPN_HAND_CROSSBOW,
-#endif
-        0, //WPN_ARBALEST,
-#if TAG_MAJOR_VERSION > 34
-        0, //WPN_TRIPLE_CROSSBOW,
-#endif
-
-        0, //WPN_SHORTBOW,
-        0, //WPN_LONGBOW,
-
-#if TAG_MAJOR_VERSION > 34
-        0, //WPN_HUNTING_SLING,
-        0, //WPN_FUSTIBALUS,
-#endif
-
-        4 * _weapon_weight_by_tier(2), //WPN_DEMON_WHIP,
-        _weapon_weight_by_tier(1), //WPN_GIANT_CLUB,
-        _weapon_weight_by_tier(2), //WPN_GIANT_SPIKED_CLUB,
-
+        //// LB
+        2 * _weapon_weight_by_tier(0),//WPN_FALCHION,
+        2 * _weapon_weight_by_tier(0),//WPN_LONG_SWORD,
+        2 * _weapon_weight_by_tier(1),//WPN_SCIMITAR,
+        2 * _weapon_weight_by_tier(1),//WPN_GREAT_SWORD,
         _weapon_weight_by_tier(2),//WPN_DEMON_BLADE,
         2 * _weapon_weight_by_tier(2),//WPN_DOUBLE_SWORD,
         _weapon_weight_by_tier(2),//WPN_TRIPLE_SWORD,
 
-        4 * _weapon_weight_by_tier(2),//WPN_DEMON_TRIDENT,
-        _weapon_weight_by_tier(0),//WPN_SCYTHE,
-        0, //WPN_STAFF,          // Just used for the weapon stats for magical staves.
-        4 * _weapon_weight_by_tier(0), ///WPN_QUARTERSTAFF,
-        4 * _weapon_weight_by_tier(1) + 4 * _weapon_weight_by_tier(2), //WPN_LAJATANG,
+        //// Polearms
+        _weapon_weight_by_tier(0),//WPN_SPEAR,
+        _weapon_weight_by_tier(0),//WPN_TRIDENT,
+        _weapon_weight_by_tier(0),//WPN_HALBERD,
+        _weapon_weight_by_tier(0) + _weapon_weight_by_tier(1),//WPN_SCYTHE,
+        2 * _weapon_weight_by_tier(1),//WPN_GLAIVE,
+        _weapon_weight_by_tier(1) + _weapon_weight_by_tier(2),//WPN_BARDICHE,
+        3 * _weapon_weight_by_tier(2),//WPN_DEMON_TRIDENT,
 
-#if TAG_MAJOR_VERSION == 34
-        0, //WPN_HUNTING_SLING,
+        //// Axes
+        3 * _weapon_weight_by_tier(0),//WPN_HAND_AXE,
+        _weapon_weight_by_tier(0),//WPN_WAR_AXE,
+        2 * _weapon_weight_by_tier(1),//WPN_BROAD_AXE,
+        2 * _weapon_weight_by_tier(1),//WPN_BATTLEAXE,
+        4 * _weapon_weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
 
-        0, //WPN_BLESSED_FALCHION,
-        0, //WPN_BLESSED_LONG_SWORD,
-        0, //WPN_BLESSED_SCIMITAR,
-        0, //WPN_BLESSED_GREAT_SWORD,
-#endif
-        0, //WPN_EUDEMON_BLADE,
-#if TAG_MAJOR_VERSION == 34
-        0, //WPN_BLESSED_DOUBLE_SWORD,
-        0, //WPN_BLESSED_TRIPLE_SWORD,
-#endif
-        0, //WPN_SACRED_SCOURGE,
-        0, //WPN_TRISHULA,
-
-#if TAG_MAJOR_VERSION == 34
-        0, //WPN_FUSTIBALUS,
-        0, //WPN_HAND_CROSSBOW,
-        0, //WPN_TRIPLE_CROSSBOW,
-
-        0 //WPN_CUTLASS,
-#endif
+        //// Polearms
+        4 * _weapon_weight_by_tier(0) + _weapon_weight_by_tier(1),//WPN_QUARTERSTAFF,
+        3 * _weapon_weight_by_tier(1) + 4 * _weapon_weight_by_tier(2)//WPN_LAJATANG
     );
 
     dprf("Choosing with the following tier weights: %d %d %d",
@@ -1550,22 +1550,22 @@ static item_def ieoh_jian_choose_weapon()
 
     // We get rid of all base types for which there is already a manifested IJC weapon.
     for (auto monster: manifested)
-        for (int i = 0; i != NUM_WEAPONS; i++)
-            if (weapon_attack_skill((weapon_type)i) == weapon_attack_skill(monster->weapon()->sub_type))
+        for (int i = 0; i != _ieoh_jian_num_weapons; i++)
+            if (weapon_attack_skill((weapon_type)_ieoh_jian_weapon_types[i]) == weapon_attack_skill(monster->weapon()->sub_type))
                 weights[i] = 0;
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
-        for (int i = 0; i != NUM_WEAPONS; i++)
-            if (weapon_attack_skill((weapon_type)i) == weapon_attack_skill(you.weapon()->sub_type))
+        for (int i = 0; i != _ieoh_jian_num_weapons; i++)
+            if (weapon_attack_skill((weapon_type)_ieoh_jian_weapon_types[i]) == weapon_attack_skill(you.weapon()->sub_type))
                 weights[i] = 0;
 
     // We take out all types that our race can't wield.
-    for (int i = 0; i != NUM_WEAPONS; i++)
-        if (!you_could_wield_weapon_type((weapon_type)i))
+    for (int i = 0; i != _ieoh_jian_num_weapons; i++)
+        if (!you_could_wield_weapon_type((weapon_type)_ieoh_jian_weapon_types[i]))
                 weights[i] = 0;
 
     item_def weapon;
     weapon.base_type = OBJ_WEAPONS;
-    weapon.sub_type = random_choose_weighted(weights);
+    weapon.sub_type = _ieoh_jian_weapon_types[random_choose_weighted(weights)];
     weapon.quantity = 1;
 
     // From 0 to 9, piety based, with some variance.
