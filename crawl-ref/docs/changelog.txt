@@ -20,7 +20,6 @@ Branches, Environment
 * The Slime treasure vault's walls disappear entirely on their master's death.
 * Webs are no longer destroyed after creatures escape from them.
 * Beogh will no longer smite creatures that destroy orcish idols.
-* Ambient noise is more significant in Shoals, the Desolation, Crypt, and Tomb.
   Lair and Orc no longer have ambient noise.
 * Storm cloud damage is more common and much less severe.
 * Non-opaque clouds created by the player vanish instantly when out of LOS.
