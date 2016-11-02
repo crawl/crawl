@@ -7399,4 +7399,3 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
 
     return hit;
 }
-

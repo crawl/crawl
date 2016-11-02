@@ -3496,11 +3496,10 @@ static void _join_pakellas()
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
-// Setup when becoming a Ieoh Jian ninja
+// Setup when becoming an Ieoh Jian ninja
 static void _join_ieoh_jian()
 {
 }
-
 
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {

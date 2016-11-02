@@ -6578,7 +6578,6 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
                 mprf(MSGCH_GOD, "You can't let go of %s fast enough!", you.weapon()->name(DESC_YOUR, false, true).c_str());
             return false;
         }
-            
 
         if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
         {

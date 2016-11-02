@@ -8537,7 +8537,6 @@ int player::inaccuracy() const
     return degree;
 }
 
-
 /**
  * Handle effects that occur after the player character stops berserking.
  */

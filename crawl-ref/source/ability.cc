@@ -72,7 +72,6 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
-#include "throw.h"
 #include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
@@ -3135,7 +3134,6 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
            ? div_rand_round(original_cost * 5, 2)
            : original_cost;
 }
-
 
 static void _pay_ability_costs(const ability_def& abil)
 {

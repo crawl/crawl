@@ -1563,7 +1563,6 @@ static item_def ieoh_jian_choose_weapon()
         if (!you_could_wield_weapon_type((weapon_type)i))
                 weights[i] = 0;
 
-
     item_def weapon;
     weapon.base_type = OBJ_WEAPONS;
     weapon.sub_type = random_choose_weighted(weights);
@@ -1653,9 +1652,7 @@ void ieoh_jian_despawn_weapon()
 
 void ieoh_jian_spawn_weapon(const coord_def& position)
 {
-    // We attempt to increase the activity level (see if the ICJ is interested
-    // in helping by sending more weapons. Less likely the higher it was to begin
-    // with).
+    // We check if the ICJ is interested in helping by sending more weapons. 
     if (!ieoh_jian_interest())
         return;
 
@@ -1801,10 +1798,10 @@ void ieoh_jian_pole_vault_effects()
         monster* target = monster_at(you.pos() + dir);
         if (target && !_dont_attack_martial(target))
         {
-            mprf("Your landing strike hits %s!", target->name(DESC_THE).c_str());
-            melee_attack slam(&you, target);
-            slam.is_ieoh_jian_martial = true;
-            slam.attack();
+            mprf("You attack %s while airborne!", target->name(DESC_THE).c_str());
+            melee_attack aerial(&you, target);
+            aerial.is_ieoh_jian_martial = true;
+            aerial.attack();
         }
 
         if(!cell_is_solid(you.pos() + dir))

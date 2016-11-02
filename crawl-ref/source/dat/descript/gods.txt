@@ -71,7 +71,7 @@ bringing them into the ranks of the mythical heroes.
 Ieoh Jian Council
 
 The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
-after fighting their way out of the afterlife. Disciples of the Council are
+after battling their way out of the afterlife. Disciples of the Council are
 taught to wield every weapon type with great proficiency. As they follow the
 Path they will become able to manifest blades at will from thin air, to execute
 acrobatic martial maneuvers, and to obliterate monsters with a rain of steel.
@@ -313,8 +313,8 @@ Ieoh Jian powers
 By engaging in close quarters combat, the Ieoh Jian Council will manifest flying
 weapons around the follower, which they can grab and wield at will. They will later be 
 initiated in the path of martial arts, learning to stay mobile while attacking,
-to strike pressure points, stay evasive, and eventually  to command multiple flying 
-weapons to strike at once for a spectacular finish. 
+to strike pressure points, to create distracting afterimages, and eventually 
+to command multiple flying weapons to strike at once for a spectacular finish. 
 %%%%
 Kikubaaqudgha powers
 
