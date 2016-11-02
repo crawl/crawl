@@ -14,7 +14,7 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
     {
         if (cell == null || cell.bg == null) return false;
         var base_bg = dngn.basetile(cell.bg.value);
-        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.DNGN_ENTER_ZOT_CLOSED)
+        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.FLOOR_MAX)
             return options.get("tile_water_anim");
         else if (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.BLOOD
                  || is_torch(base_bg))
