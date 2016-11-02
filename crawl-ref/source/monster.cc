@@ -53,6 +53,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "output.h"
 #include "prompt.h"
 #include "religion.h"
 #include "rot.h"
@@ -6606,6 +6607,9 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
         update_can_train();
     }
+
+    you.wield_change = true;
+    redraw_screen();
 
     return true;
 }
