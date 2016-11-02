@@ -20,7 +20,7 @@ Branches, Environment
 * The Slime treasure vault's walls disappear entirely on their master's death.
 * Webs are no longer destroyed after creatures escape from them.
 * Beogh will no longer smite creatures that destroy orcish idols.
-  Lair and Orc no longer have ambient noise.
+* Lair and Orc no longer have ambient noise.
 * Storm cloud damage is more common and much less severe.
 * Non-opaque clouds created by the player vanish instantly when out of LOS.
 * The Orb's translocation restrictions now apply throughout the Zot branch.
