@@ -626,22 +626,15 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
     colour = weapon.get_colour();
     flies = true;
 
-    xl = 15;
+    xl = 1 + div_rand_round(power, 4);
 
     speed   = 35 - delay; // They must be very fast to fly back to combat when knocked away.
-    ev      = 35 - delay / 2; // Slightly more evasive than Tukimas
-    ac      = damg;
-    damage  = 2 * damg;
+    ac      = damg + div_rand_round(power, 10);
+    damage  = 1.5 * damg;
 
-    // Don't allow the speed to become too low.
-    speed = max(3, (speed / 2) * (1 + power / 100));
-
-    ev    = max(3, ev * power / 100);
-    ac = ac * power / 100;
-
-    // Ieoh Jian weapons always die in one hit, but they are reformed immediately.
-    max_hp = 1;
-    damage = max(1, damage * power / 100);
+    ev     = 15 + 2 * div_rand_round(power, 10) - delay / 2; // Weapon + power based. Highest defensive stat since they die in one hit.
+    ac     = 2 + div_rand_round(power, 10);
+    max_hp = 1; // Ieoh Jian weapons always die in one hit and respawn elsewhere.
 }
 
 void ghost_demon::init_spectral_weapon(const item_def& weapon, int power)

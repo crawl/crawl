@@ -7225,7 +7225,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
                          MG_FORCE_BEH,
                          GOD_IEOH_JIAN);
 
-            int power = you.skill(weapon_attack_skill(monster->weapon()->sub_type), 2, false);
+            int power = you.skill(weapon_attack_skill(monster->weapon()->sub_type), 4, false);
             mg.props[IEOH_JIAN_WEAPON] = *(monster->weapon());
             mg.props[IEOH_JIAN_POWER] = power;
 
@@ -7386,7 +7386,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
                  MG_FORCE_BEH,
                  GOD_IEOH_JIAN);
 
-    int power = you.skill(weapon_attack_skill(thrown.sub_type), 2, false);
+    int power = you.skill(weapon_attack_skill(thrown.sub_type), 4, false);
     mg.props[IEOH_JIAN_WEAPON] = summoned_copy;
     mg.props[IEOH_JIAN_POWER] = power;
 

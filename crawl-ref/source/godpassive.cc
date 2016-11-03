@@ -1568,24 +1568,13 @@ static item_def ieoh_jian_choose_weapon()
     weapon.quantity = 1;
 
     // From 0 to 9, piety based, with some variance.
-    weapon.plus = piety_rank(you.piety) + random2(4);
+    weapon.plus = piety_rank(you.piety) + random2(3);
 
-    switch (random2(6))
-    {
-    case 0:
-        weapon.brand = SPWPN_FLAMING; // Dragon
-        break;
-    case 1:
-        weapon.brand = SPWPN_ELECTROCUTION; // Tiger
-        break;
-    case 2:
-        weapon.brand = SPWPN_SPEED; // Viper
-        break;
-    default:
-        // Vorpal is the likeliest brand (Half the weapons).
+    if (x_chance_in_y(3,4))
         weapon.brand = SPWPN_VORPAL;
-        break;
-    }
+    else
+        weapon.brand = SPWPN_SPEED;
+
     set_ident_type(weapon, true);
 
     return weapon;
@@ -1676,7 +1665,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
                  GOD_IEOH_JIAN);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
 
-    int power = you.skill(weapon_attack_skill(wpn.sub_type), 2, false);
+    int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, false);
     mg.props[IEOH_JIAN_POWER] = power;
 
     monster * const mons = create_monster(mg);
