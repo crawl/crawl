@@ -1625,10 +1625,7 @@ bool attack::apply_damage_brand(const char *what)
             break;
         }
 
-        const int hdcheck =
-            (defender->holiness() & MH_NATURAL ? random2(30) : random2(22));
-
-        if (hdcheck < defender->get_hit_dice()
+        if (random2(30) < defender->get_hit_dice()
             || one_chance_in(5)
             || defender->as_monster()->check_clarity(false))
         {
