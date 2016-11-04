@@ -728,6 +728,11 @@ void attack::chaos_affects_defender()
             return;
         }
 
+        // Chaos should not heal rot
+        if (beam.flavour == BEAM_HEALING && defender->is_player() && player_rotted() > 0) {
+            return;
+        }
+
         beam.glyph        = 0;
         beam.range        = 0;
         beam.colour       = BLACK;
