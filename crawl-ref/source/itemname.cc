@@ -1793,6 +1793,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                  << " wand";
         }
 
+        if (dbname)
+            break;
+
         if (know_type || know_pluses) // probably know_type is sufficient?
         {
             buff << " (";
@@ -1803,7 +1806,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "/" << wand_max_charges(*this) << ")";
         }
 
-        if (!know_pluses && !dbname && with_inscription)
+        if (!know_pluses && with_inscription)
         {
             if (used_count == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
