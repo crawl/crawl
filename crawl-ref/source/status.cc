@@ -749,7 +749,7 @@ static void _describe_glow(status_info* inf)
     {
         "",
         "very slightly ",
-        "slightly",
+        "slightly ",
         "",
         "heavily ",
         "very heavily ",
