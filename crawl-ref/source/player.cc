@@ -6204,11 +6204,6 @@ bool player::undead_or_demonic() const
     return undead_state() || species == SP_DEMONSPAWN;
 }
 
-bool player::holy_wrath_susceptible() const
-{
-    return undead_or_demonic();
-}
-
 bool player::is_holy(bool check_spells) const
 {
     return bool(holiness() & MH_HOLY);
@@ -6334,13 +6329,10 @@ bool player::res_sticky_flame() const
 int player::res_holy_energy(const actor *attacker) const
 {
     if (undead_or_demonic())
-        return -2;
-
-    if (evil()) // following evil god
         return -1;
 
     if (is_holy())
-        return 1;
+        return 3;
 
     return 0;
 }

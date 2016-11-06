@@ -699,13 +699,14 @@ Hurl Damnation spell
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
-gods. These flames are especially dangerous to evil creatures, and have no
-effect on holy creatures.
+gods. These flames are especially dangerous to undead and demonic creatures,
+and have no effect on holy creatures.
 %%%%
 Holy Flames spell
 
 Traps an enemy in a ring of blessed flame. These flames are especially
-dangerous to evil creatures, and have no effect on holy creatures.
+dangerous to undead and demonic creatures, and have no effect on holy
+creatures.
 %%%%
 Hydra Form spell
 

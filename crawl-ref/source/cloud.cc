@@ -179,11 +179,11 @@ static const cloud_data clouds[] = {
       BEAM_PETRIFYING_CLOUD, {},                // beam_effect & damage
       true,                                     // opacity
     },
-    // CLOUD_HOLY_FLAMES,
+    // CLOUD_HOLY,
     { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
       { TILE_CLOUD_YELLOW_SMOKE },              // tile
-      BEAM_HOLY_FLAME,                          // beam_effect
+      BEAM_HOLY,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
       true,                                     // opacity
     },
@@ -875,8 +875,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 
     if (player && you.species == SP_DJINNI
         && (cloud.type == CLOUD_FIRE
-            || cloud.type == CLOUD_FOREST_FIRE
-            || cloud.type == CLOUD_HOLY_FLAMES))
+            || cloud.type == CLOUD_FOREST_FIRE))
     {
         return true;
     }
@@ -891,8 +890,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return you.duration[DUR_FIRE_SHIELD]
                || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
                || player_equip_unrand(UNRAND_FIRESTARTER);
-    case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(cloud.agent()) > 0;
+    case CLOUD_HOLY:
+        return act->res_holy_energy(cloud.agent()) >= 3;
     case CLOUD_COLD:
         if (!player)
             return act->res_cold() >= 3;
@@ -939,7 +938,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
-    case CLOUD_HOLY_FLAMES:
+    case CLOUD_HOLY:
         return act->res_holy_energy(cloud.agent());
     case CLOUD_COLD:
         return act->res_cold();
@@ -1178,7 +1177,7 @@ static int _actor_cloud_damage(const actor *act,
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-    case CLOUD_HOLY_FLAMES:
+    case CLOUD_HOLY:
     case CLOUD_COLD:
     case CLOUD_STEAM:
     case CLOUD_SPECTRAL:
