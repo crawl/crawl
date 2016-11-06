@@ -271,17 +271,14 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_HOLY:
     {
-        // Cleansing flame.
-        const int rhe = you.res_holy_energy(nullptr);
-        if (rhe > 0)
-            hurted = 0;
-        else if (rhe == 0)
-            hurted /= 2;
-        else if (rhe < -1)
-            hurted = hurted * 3 / 2;
-
-        if (hurted == 0 && doEffects)
+        hurted = resist_adjust_damage(&you, flavour, hurted);
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
+        else if (hurted > original && doEffects)
+        {
+            mpr("You writhe in agony!");
+            xom_is_stimulated(200);
+        }
         break;
     }
 

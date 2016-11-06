@@ -677,7 +677,6 @@ enum beam_type                  // bolt::flavour
     BEAM_LAST_ENCHANTMENT = BEAM_AGONY,
 
     BEAM_MEPHITIC,
-    BEAM_HOLY_FLAME,
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_ENSNARE,
@@ -928,7 +927,7 @@ enum cloud_type
 #endif
     CLOUD_INK,
     CLOUD_PETRIFY,
-    CLOUD_HOLY_FLAMES,
+    CLOUD_HOLY,
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,

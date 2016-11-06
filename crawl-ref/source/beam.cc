@@ -713,7 +713,6 @@ void bolt::apply_beam_conducts()
             did_god_conduct(DID_EVIL, 2 + random2(3), god_cares());
             break;
         case BEAM_FIRE:
-        case BEAM_HOLY_FLAME:
         case BEAM_STICKY_FLAME:
             did_god_conduct(DID_FIRE,
                             pierce || is_explosion ? 6 + random2(3)
@@ -1680,20 +1679,25 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_HOLY:
     {
-        // Cleansing flame.
-        const int rhe = mons->res_holy_energy(pbolt.agent());
-        if (rhe > 0)
-            hurted = 0;
-        else if (rhe == 0)
-            hurted /= 2;
-        else if (rhe < -1)
-            hurted = hurted * 3 / 2;
-
-        if (doFlavouredEffects && !mons_is_firewood(*mons))
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
+        if (!hurted)
         {
-            simple_monster_message(*mons,
-                                   hurted == 0 ? " appears unharmed."
-                                               : " writhes in agony!");
+            if (doFlavouredEffects)
+            {
+                simple_monster_message(*mons,
+                                       (original > 0) ? " completely resists."
+                                                      : " appears unharmed.");
+            }
+        }
+        else if (original > hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(*mons, " resists.");
+        }
+        else if (original < hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(*mons, " writhes in agony!");
         }
         break;
     }
@@ -2541,7 +2545,7 @@ cloud_type bolt::get_cloud_type() const
         return CLOUD_POISON;
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        return CLOUD_HOLY_FLAMES;
+        return CLOUD_HOLY;
 
     if (origin_spell == SPELL_FLAMING_CLOUD)
         return CLOUD_FIRE;
@@ -2897,7 +2901,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
+        place_cloud(CLOUD_HOLY, p, random2(4) + 2, agent());
 
     if (origin_spell == SPELL_FLAMING_CLOUD)
         place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
@@ -3116,7 +3120,7 @@ bool bolt::is_harmless(const monster* mon) const
         return true;
 
     case BEAM_HOLY:
-        return mon->res_holy_energy(agent()) > 0;
+        return mon->res_holy_energy(agent()) >= 3;
 
     case BEAM_STEAM:
         return mon->res_steam() >= 3;
@@ -3179,7 +3183,7 @@ bool bolt::harmless_to_player() const
         return true;
 
     case BEAM_HOLY:
-        return you.res_holy_energy(&you);
+        return you.res_holy_energy(&you) >= 3;
 
     case BEAM_MIASMA:
         return you.res_rotting();
@@ -3209,7 +3213,6 @@ bool bolt::harmless_to_player() const
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
-    case BEAM_HOLY_FLAME:
     case BEAM_STICKY_FLAME:
         return you.species == SP_DJINNI;
 #endif
@@ -6259,7 +6262,7 @@ bool bolt::nasty_to(const monster* mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
-        return mon->res_holy_energy(agent()) <= 0;
+        return mon->res_holy_energy(agent()) < 3;
 
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
@@ -6517,7 +6520,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_STICKY_FLAME:          return "sticky fire";
     case BEAM_STEAM:                 return "steam";
     case BEAM_ENERGY:                return "energy";
-    case BEAM_HOLY:                  return "holy energy";
+    case BEAM_HOLY:                  return "cleansing flame";
     case BEAM_FRAG:                  return "fragments";
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
@@ -6553,7 +6556,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_BERSERK:               return "berserk";
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
-    case BEAM_HOLY_FLAME:            return "cleansing flame";
     case BEAM_AIR:                   return "air";
     case BEAM_INNER_FLAME:           return "inner flame";
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";

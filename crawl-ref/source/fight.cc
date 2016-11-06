@@ -497,6 +497,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
             return defender->res_poison();
+        case BEAM_HOLY:
+            return defender->res_holy_energy(nullptr);
         default:
             return 0;
     }
@@ -538,6 +540,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
                                      || flavour == BEAM_MALIGN_OFFERING
+                                     || flavour == BEAM_HOLY
                                      || flavour == BEAM_POISON
                                      // just the resistible part
                                      || flavour == BEAM_POISON_ARROW;

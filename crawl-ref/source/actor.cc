@@ -216,6 +216,11 @@ bool actor::res_corr(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_RCORR, calc_unid));
 }
 
+bool actor::holy_wrath_susceptible() const
+{
+    return res_holy_energy() < 0;
+}
+
 // This is a bit confusing. This is not the function that determines whether or
 // not an actor is capable of teleporting, only whether they are specifically
 // under the influence of the "notele" effect. See actor::no_tele() for a
