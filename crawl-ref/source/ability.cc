@@ -331,7 +331,7 @@ static const ability_def Ability_List[] =
       1, 0, 0, 0, {FAIL_XL, 45, 2}, abflag::PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-      0, 0, 600, 0, {FAIL_EVO, 50, 2}, abflag::NONE },
+      0, 0, 600, 0, {FAIL_EVO, 50, 2}, abflag::EXHAUSTION },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {FAIL_EVO, 60, 2}, abflag::NONE },
@@ -424,7 +424,8 @@ static const ability_def Ability_List[] =
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-    { ABIL_TROG_BERSERK, "Berserk", 0, 0, 600, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_TROG_BERSERK, "Berserk",
+      0, 0, 600, 0, {FAIL_INVO}, abflag::EXHAUSTION },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
       0, 0, 200, 2, {FAIL_INVO, piety_breakpoint(2), 0, 1}, abflag::NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
@@ -895,7 +896,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nUsing this ability will hurt you.";
 
     if (abil.flags & abflag::EXHAUSTION)
-        ret << "\nIt cannot be used when exhausted.";
+        ret << "\nIt causes exhaustion, and cannot be used when exhausted.";
 
     if (abil.flags & abflag::INSTANT)
         ret << "\nIt is instantaneous.";
