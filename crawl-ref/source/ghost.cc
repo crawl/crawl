@@ -617,6 +617,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
 void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 {
+    dprf("Initialising Ieoh Jian weapon with power %d", power);
     int delay = property(weapon, PWPN_SPEED);
     int damg  = property(weapon, PWPN_DAMAGE);
 
@@ -630,7 +631,7 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 
     speed   = 35 - delay; // They must be very fast to fly back to combat when knocked away.
     ac      = damg + div_rand_round(power, 10);
-    damage  = 1.5 * damg;
+    damage  = damg;
 
     ev     = 15 + 2 * div_rand_round(power, 10) - delay / 2; // Weapon + power based. Highest defensive stat since they die in one hit.
     ac     = 2 + div_rand_round(power, 10);
