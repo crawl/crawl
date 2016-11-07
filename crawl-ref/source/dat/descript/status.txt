@@ -491,3 +491,8 @@ You are channeling magical energy.
 You may cast spells with insufficient reserves of magic, but doing so will
 cause you to briefly lose access to your magic after the spell is cast.
 %%%%
+Orb status
+
+You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
+translocation magic. Teleportation will take longer, all blinks will become
+uncontrolled, and Passage of Golubria will completely fail to work.
