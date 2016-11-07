@@ -114,7 +114,7 @@ NAME:   minmay_swamp_entry_reptiles
 TAGS:   swamp_entry
 WEIGHT: 5
 MONS:   swamp drake / komodo dragon / hydra / swamp dragon
-MONS:   crocodile / iguana / frilled lizard
+MONS:   crocodile / iguana
 KFEAT:  O = enter_swamp
 MARKER: O = lua:fog_machine { \
              pow_min = 8, pow_max = 12, delay = 25, \
