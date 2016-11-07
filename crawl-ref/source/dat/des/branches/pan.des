@@ -3046,6 +3046,43 @@ ENDMAP
 
 ###################################
 
+# A series of small vaults that try to establish a thematic link between
+# Pan as the home of the pan lords, and their presence during the orb run.
+
+NAME:   dpeg_guardians_barracks
+TAGS:   extra
+MONS:   orb guardian, pandemonium lord
+KFEAT:  o = iron_grate
+COLOUR: 1 = magenta
+FTILE:  1 = floor_rough_magenta
+MAP
+xxxxxxxxx
+x111o...x
+x111o.2.+
+x111o...x
+xxxxxxxxx
+ENDMAP
+
+NAME:   dpeg_guardian_deployment
+TAGS:   extra
+MONS:   orb guardian
+COLOUR: ; = magenta
+FTILE:  ; = floor_rough_magenta
+NSUBST: ; = 6:1 / *:;
+SUBST:  ; = 1...
+KFEAT:  O = enter_zot
+MAP
+ .....
+.;;;;;.
+.;;;;;.
+.;;O;;.
+.;;;;;.
+.;;;;;.
+ .....
+ENDMAP
+
+###################################
+
 NAME:   pan_captured_pigsty
 TAGS:   extra
 MONS:   red devil, holy swine
