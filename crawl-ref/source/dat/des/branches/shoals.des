@@ -80,7 +80,7 @@ ENDMAP
 NAME:   minmay_shoals_entry_lonely_mermaid
 TAGS:   shoals_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = siren
+KMONS:  1 = merfolk siren
 KFEAT:  1 = w
 SUBST:  Y = W.
 SUBST:  y = Ww
@@ -168,7 +168,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: Z = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk / siren
+KMONS:  1 = merfolk / merfolk siren
 MAP
 ..xxx
 xZ..x
@@ -190,7 +190,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: 1 = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk / siren / nothing w:40
+KMONS:  1 = merfolk / merfolk siren / nothing w:40
 validate {{ return has_exit_from_glyph('O') }}
 MAP
 @...xxxxxxx....
@@ -319,7 +319,7 @@ DEPTH:   Shoals
 KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance | buckler | nothing w:30
-KMONS:   3 = siren ; trident ego:flaming | spear ego:flaming . \
+KMONS:   3 = merfolk siren ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance w:20 | buckler | nothing w:70
 KMONS:   4 = merfolk avatar
@@ -415,7 +415,7 @@ KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
 KMONS:   4 = merfolk
-KMONS:   5 = siren / merfolk avatar
+KMONS:   5 = merfolk siren / merfolk avatar
 KFEAT:   12345 = deep_water
 SHUFFLE: 1235
 NSUBST:  V = 1:w / *:x
@@ -445,7 +445,7 @@ KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
 KMONS:   4 = merfolk
-KMONS:   5 = siren / merfolk avatar
+KMONS:   5 = merfolk siren / merfolk avatar
 KMONS:   6 = cyclops
 KMONS:   7 = stone giant
 KMONS:   8 = frost giant
@@ -582,7 +582,7 @@ NAME:    hangedman_shoals_cup_caves
 TAGS:    water_ok
 DEPTH:   Shoals
 MONS:    cyclops / stone giant w:2
-MONS:    siren, harpy, snapping turtle, centaur / centaur warrior, sea snake
+MONS:    merfolk siren, harpy, snapping turtle, centaur / centaur warrior, sea snake
 SHUFFLE: 234560, ABC
 SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1, % = %:8 *:1 .:1
 MAP
@@ -720,7 +720,7 @@ NSUBST: { = 1:{ / *:.
 SUBST: b = .wW, r = ..Wxx
 KPROP: wW.{x1 = no_tide
 SHUFFLE: {([
-KMONS: 1 = merfolk / merfolk impaler w:5 / siren w:5 / nothing w:20
+KMONS: 1 = merfolk / merfolk impaler w:5 / merfolk siren w:5 / nothing w:20
 KFEAT: : = . / W
 KFEAT: y = w
 MAP
@@ -765,7 +765,7 @@ SUBST: . = ....W, w = wWW..., q = w, x = xxxc
 KFEAT: 123 = . w:40 / W
 KMONS: 1 = merfolk / nothing w:5
 KMONS: 2 = merfolk / merfolk aquamancer / merfolk javelineer / merfolk impaler / nothing w:45
-KMONS: 3 = siren / merfolk avatar w:5 / nothing w:5
+KMONS: 3 = merfolk siren / merfolk avatar w:5 / nothing w:5
 MAP
      .......
    ...xxxxx...
@@ -1070,7 +1070,7 @@ DEPTH: Shoals
 TAGS: water_ok no_item_gen
 NSUBST: % = 1:d / *:%%%%%*
 KMONS: 1 = oklob plant
-KMONS: 2 = siren
+KMONS: 2 = merfolk siren
 KMONS: p = plant
 KITEM: d = any ring w:24 / any ring good_item w:5
 MAP

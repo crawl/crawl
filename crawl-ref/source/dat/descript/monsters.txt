@@ -1625,6 +1625,10 @@ merfolk javelineer
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
 %%%%
+merfolk siren
+
+A beguiling merfolk whose voice can mesmerize listeners.
+%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
@@ -2100,10 +2104,6 @@ spells or reading scrolls.
 simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
-%%%%
-siren
-
-A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 sixfirhy
 
@@ -2903,7 +2903,7 @@ rotten bat
 
 A bat that is well past its sell-by date.
 %%%%
-sickly siren
+sickly merfolk siren
 
 A young merfolk that looks quite sick, but still has the power to mesmerize its
 victims.

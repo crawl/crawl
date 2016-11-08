@@ -1880,6 +1880,27 @@ merfolk javelineer
 
 <merfolk>
 %%%%
+merfolk siren
+
+“Row'd on, in reach of an erected voice,
+ The Sirens soon took note, without our noise,
+ Tuned those sweet accents that made charms so strong,
+ And these learn'd numbers made the Sirens' song:
+ ‘Come here, thou worthy of a world of praise,
+ That dost so high the Grecian glory raise,
+ Ulysses! stay thy ship, and that song hear
+ That none past ever but it bent his ear,
+ But left him ravish'd, and instructed more
+ By us, than any ever heard before.
+ For we know all things whatsoever were
+ In wide Troy labour'd; whatsoever there
+ The Grecians and the Trojans both sustain'd
+ By those high issues that the Gods ordain'd.
+ And whatsoever all the earth can show
+ T' inform a knowledge of desert, we know.’”
+    -Homer, _The Odyssey_, XII, 268-82.
+     trans. George Chapman, 1857.
+%%%%
 microbat
 
 <bat>
@@ -2629,27 +2650,6 @@ simulacrum
 is to say, the continuation of Nothingness.”
     -Jean Baudrillard, “Radical Thought”. 1994.
      trans. François Debrix, 1995.
-%%%%
-siren
-
-“Row'd on, in reach of an erected voice,
- The Sirens soon took note, without our noise,
- Tuned those sweet accents that made charms so strong,
- And these learn'd numbers made the Sirens' song:
- ‘Come here, thou worthy of a world of praise,
- That dost so high the Grecian glory raise,
- Ulysses! stay thy ship, and that song hear
- That none past ever but it bent his ear,
- But left him ravish'd, and instructed more
- By us, than any ever heard before.
- For we know all things whatsoever were
- In wide Troy labour'd; whatsoever there
- The Grecians and the Trojans both sustain'd
- By those high issues that the Gods ordain'd.
- And whatsoever all the earth can show
- T' inform a knowledge of desert, we know.’”
-    -Homer, _The Odyssey_, XII, 268-82.
-     trans. George Chapman, 1857.
 %%%%
 sixfirhy
 
