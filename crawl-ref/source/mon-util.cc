@@ -1323,7 +1323,7 @@ monster_type mons_detected_base(monster_type mc)
  */
 bool mons_is_siren_beholder(monster_type mc)
 {
-    return mc == MONS_SIREN || mc == MONS_MERFOLK_AVATAR;
+    return mc == MONS_MERFOLK_SIREN || mc == MONS_MERFOLK_AVATAR;
 }
 
 /** Does this monster behold opponents like a siren?

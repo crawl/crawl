@@ -301,7 +301,7 @@ static const pop_entry pop_shoals[] =
   {  1,  4,  475, FLAT, MONS_SEA_SNAKE },
   {  1,  4,  385, FLAT, MONS_SNAPPING_TURTLE },
   {  1,  4,  460, FLAT, MONS_MANTICORE },
-  {  1,  4,  300, FLAT, MONS_SIREN },
+  {  1,  4,  300, FLAT, MONS_MERFOLK_SIREN },
   {  1,  4,  195, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  4,  225, FLAT, MONS_WIND_DRAKE },
   {  1,  4,  175, FLAT, MONS_HARPY },

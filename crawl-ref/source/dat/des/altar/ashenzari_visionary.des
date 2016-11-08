@@ -233,7 +233,7 @@ ENDMAP
 NAME: grunt_ashenzari_visionary_shoals
 TAGS: grunt_ashenzari_visionary_shoals no_trap_gen no_monster_gen unrand
 # Monsters specified here to omit aquatic placements.
-MONS: bat w:35 / merfolk w:90 / siren w:40 / hippogriff w:35 / \
+MONS: bat w:35 / merfolk w:90 / merfolk siren w:40 / hippogriff w:35 / \
       centaur w:20 / sea snake w:40
 SUBST:  w = wwww.1
 COLOUR: 1. = brown

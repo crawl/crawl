@@ -2938,7 +2938,7 @@ enum monster_type                      // menv[].type
     MONS_GUARDIAN_SERPENT,
     MONS_OCTOPODE,
     MONS_MERFOLK,
-    MONS_SIREN,
+    MONS_MERFOLK_SIREN,
     MONS_MERFOLK_AVATAR,
 #if TAG_MAJOR_VERSION > 34
     MONS_DROWNED_SOUL,
