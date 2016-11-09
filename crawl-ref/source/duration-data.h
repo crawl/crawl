@@ -561,8 +561,8 @@ static const duration_def duration_data[] =
       {{ "",  _ieoh_jian_bored }}},
     { DUR_IEOH_JIAN_ACTIVITY_BACKOFF, 0, "", "", "ICJ backoff", "", D_NO_FLAGS, {{""}}},
     { DUR_IEOH_JIAN_AFTERIMAGE,
-      LIGHTBLUE, "AfImg",
-      "difficult to hit", "IJC afterimage",
+      LIGHTBLUE, "MR++",
+      "protected by a distracting afterimage", "IJC afterimage",
       "You distract enemies with a brief afterimage.", D_NO_FLAGS,
       {{ "Your afterimage dissipates.", [](){you.redraw_evasion = true;} }}},
     // The following are visible in wizmode only, or are handled
