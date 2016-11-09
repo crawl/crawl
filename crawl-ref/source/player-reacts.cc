@@ -294,7 +294,8 @@ static int _current_horror_level()
         if (mon == nullptr
             || mons_aligned(mon, &you)
             || !mons_is_threatening(*mon)
-            || !you.can_see(*mon))
+            || !you.can_see(*mon)
+            || !mons_is_tentacle_or_tentacle_segment(*mon))
         {
             continue;
         }
