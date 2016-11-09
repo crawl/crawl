@@ -1410,11 +1410,11 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
     return monsters;
 }
 
-// Gives weights to Ieoh Jian weapons based on the weapon "tier", the player level and piety.
+// Gives weights to Ieoh Jian weapons and brands based on an arbitrary tier, the player level and piety.
 //
-// The chance to manifest certain "tiers" of weapons keeps changing as you increase in level and 
-// piety. Tiers overlap to some extent until you end up only receiving weapons from the highest tier.
-static int _weapon_weight_by_tier(int tier)
+// The chance to manifest certain "tiers" of weapons and brands keeps changing as you increase in level and 
+// piety. Tiers overlap to some extent until you end up only receiving weapons and brands from the highest tier.
+static int _weight_by_tier(int tier)
 {
     int level = you.get_experience_level();
     int effective_level = level + 2 * piety_rank(you.piety); // up to 39
@@ -1489,62 +1489,61 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_LAJATANG
 );
 
-
 static item_def ieoh_jian_choose_weapon()
 {
     FixedVector<int, _ieoh_jian_num_weapons> weights
     (
         //// M&F
-        _weapon_weight_by_tier(0), //WPN_WHIP,
-        2 * _weapon_weight_by_tier(0),//WPN_MACE,
+        _weight_by_tier(0), //WPN_WHIP,
+        2 * _weight_by_tier(0),//WPN_MACE,
 
-        _weapon_weight_by_tier(0),//WPN_FLAIL,
-        _weapon_weight_by_tier(1),//WPN_MORNINGSTAR,
-        _weapon_weight_by_tier(1),//WPN_DIRE_FLAIL,
-        _weapon_weight_by_tier(1),//WPN_EVENINGSTAR,
-        _weapon_weight_by_tier(1),//WPN_GREAT_MACE,
-        4 * _weapon_weight_by_tier(2),//WPN_DEMON_WHIP,
-        2 * _weapon_weight_by_tier(1),//WPN_GIANT_CLUB,
-        2 * _weapon_weight_by_tier(2),//WPN_GIANT_SPIKED_CLUB,
+        _weight_by_tier(0),//WPN_FLAIL,
+        _weight_by_tier(1),//WPN_MORNINGSTAR,
+        _weight_by_tier(1),//WPN_DIRE_FLAIL,
+        _weight_by_tier(1),//WPN_EVENINGSTAR,
+        _weight_by_tier(1),//WPN_GREAT_MACE,
+        4 * _weight_by_tier(2),//WPN_DEMON_WHIP,
+        2 * _weight_by_tier(1),//WPN_GIANT_CLUB,
+        2 * _weight_by_tier(2),//WPN_GIANT_SPIKED_CLUB,
 
         //// SB
-        2 * _weapon_weight_by_tier(0),//WPN_DAGGER,
-        2 * _weapon_weight_by_tier(1) + 3 * _weapon_weight_by_tier(2),//WPN_QUICK_BLADE,
-        2 * _weapon_weight_by_tier(0),//WPN_SHORT_SWORD,
-        2 * _weapon_weight_by_tier(1) + _weapon_weight_by_tier(2),//WPN_RAPIER,
+        2 * _weight_by_tier(0),//WPN_DAGGER,
+        2 * _weight_by_tier(1) + 3 * _weight_by_tier(2),//WPN_QUICK_BLADE,
+        2 * _weight_by_tier(0),//WPN_SHORT_SWORD,
+        2 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_RAPIER,
 
         //// LB
-        2 * _weapon_weight_by_tier(0),//WPN_FALCHION,
-        2 * _weapon_weight_by_tier(0),//WPN_LONG_SWORD,
-        2 * _weapon_weight_by_tier(1),//WPN_SCIMITAR,
-        2 * _weapon_weight_by_tier(1),//WPN_GREAT_SWORD,
-        _weapon_weight_by_tier(2),//WPN_DEMON_BLADE,
-        2 * _weapon_weight_by_tier(2),//WPN_DOUBLE_SWORD,
-        _weapon_weight_by_tier(2),//WPN_TRIPLE_SWORD,
+        2 * _weight_by_tier(0),//WPN_FALCHION,
+        2 * _weight_by_tier(0),//WPN_LONG_SWORD,
+        2 * _weight_by_tier(1),//WPN_SCIMITAR,
+        2 * _weight_by_tier(1),//WPN_GREAT_SWORD,
+        _weight_by_tier(2),//WPN_DEMON_BLADE,
+        2 * _weight_by_tier(2),//WPN_DOUBLE_SWORD,
+        _weight_by_tier(2),//WPN_TRIPLE_SWORD,
 
         //// Polearms
-        _weapon_weight_by_tier(0),//WPN_SPEAR,
-        _weapon_weight_by_tier(0),//WPN_TRIDENT,
-        _weapon_weight_by_tier(0),//WPN_HALBERD,
-        _weapon_weight_by_tier(0) + _weapon_weight_by_tier(1),//WPN_SCYTHE,
-        2 * _weapon_weight_by_tier(1),//WPN_GLAIVE,
-        _weapon_weight_by_tier(1) + _weapon_weight_by_tier(2),//WPN_BARDICHE,
-        3 * _weapon_weight_by_tier(2),//WPN_DEMON_TRIDENT,
+        _weight_by_tier(0),//WPN_SPEAR,
+        _weight_by_tier(0),//WPN_TRIDENT,
+        _weight_by_tier(0),//WPN_HALBERD,
+        _weight_by_tier(0) + _weight_by_tier(1),//WPN_SCYTHE,
+        2 * _weight_by_tier(1),//WPN_GLAIVE,
+        _weight_by_tier(1) + _weight_by_tier(2),//WPN_BARDICHE,
+        3 * _weight_by_tier(2),//WPN_DEMON_TRIDENT,
 
         //// Axes
-        3 * _weapon_weight_by_tier(0),//WPN_HAND_AXE,
-        _weapon_weight_by_tier(0),//WPN_WAR_AXE,
-        2 * _weapon_weight_by_tier(1),//WPN_BROAD_AXE,
-        2 * _weapon_weight_by_tier(1),//WPN_BATTLEAXE,
-        4 * _weapon_weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
+        3 * _weight_by_tier(0),//WPN_HAND_AXE,
+        _weight_by_tier(0),//WPN_WAR_AXE,
+        2 * _weight_by_tier(1),//WPN_BROAD_AXE,
+        2 * _weight_by_tier(1),//WPN_BATTLEAXE,
+        4 * _weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
 
         //// Polearms
-        4 * _weapon_weight_by_tier(0) + _weapon_weight_by_tier(1),//WPN_QUARTERSTAFF,
-        3 * _weapon_weight_by_tier(1) + 4 * _weapon_weight_by_tier(2)//WPN_LAJATANG
+        4 * _weight_by_tier(0) + _weight_by_tier(1),//WPN_QUARTERSTAFF,
+        3 * _weight_by_tier(1) + 4 * _weight_by_tier(2)//WPN_LAJATANG
     );
 
     dprf("Choosing with the following tier weights: %d %d %d",
-         _weapon_weight_by_tier(0), _weapon_weight_by_tier(1), _weapon_weight_by_tier(2));
+         _weight_by_tier(0), _weight_by_tier(1), _weight_by_tier(2));
     auto manifested = find_ieoh_jian_manifested_weapons(false);
 
     // We get rid of all base types for which there is already a manifested IJC weapon.
@@ -1570,10 +1569,27 @@ static item_def ieoh_jian_choose_weapon()
     // From 0 to 9, piety based, with some variance.
     weapon.plus = piety_rank(you.piety) + random2(3);
 
-    if (x_chance_in_y(3,4))
-        weapon.brand = SPWPN_VORPAL;
-    else
-        weapon.brand = SPWPN_SPEED;
+    FixedVector<int, 3> brand_weights
+    (
+        2 * _weight_by_tier(0), // No brand
+        _weight_by_tier(0) + 3 * _weight_by_tier(1), // vorpal
+        3 * _weight_by_tier(2) // speed
+    );
+
+    switch (random_choose_weighted(brand_weights))
+    {
+        case 0:
+            weapon.brand = SPWPN_NORMAL;
+            break;
+        case 1:
+            weapon.brand = SPWPN_VORPAL;
+            break;
+        case 2:
+            weapon.brand = SPWPN_SPEED;
+            break;
+        default:
+            break;
+    }
 
     set_ident_type(weapon, true);
 
