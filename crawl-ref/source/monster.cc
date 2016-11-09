@@ -4671,7 +4671,7 @@ void monster::ghost_demon_init()
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     speed           = ghost->speed;
-    speed_increment = 70;
+    speed_increment = (type == MONS_IEOH_JIAN_WEAPON) ? (70 - you.time_taken) :  70;
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
 
