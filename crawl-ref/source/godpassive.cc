@@ -1571,9 +1571,9 @@ static item_def ieoh_jian_choose_weapon()
 
     FixedVector<int, 3> brand_weights
     (
-        2 * _weight_by_tier(0), // No brand
-        _weight_by_tier(0) + 3 * _weight_by_tier(1), // vorpal
-        3 * _weight_by_tier(2) // speed
+        _weight_by_tier(0), // No brand
+        _weight_by_tier(1), // vorpal
+        _weight_by_tier(2) // speed
     );
 
     switch (random_choose_weighted(brand_weights))
