@@ -7232,7 +7232,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
                          BEH_FRIENDLY,
                          pbolt.target,
                          MHITYOU,
-                         MG_FORCE_BEH,
+                         MG_FORCE_BEH | MG_FORCE_PLACE,
                          GOD_IEOH_JIAN);
 
             int power = you.skill(weapon_attack_skill(monster->weapon()->sub_type), 4, false);
@@ -7382,7 +7382,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
                  BEH_FRIENDLY,
                  pbolt.target,
                  MHITYOU,
-                 MG_FORCE_BEH,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
                  GOD_IEOH_JIAN);
 
     int power = you.skill(weapon_attack_skill(thrown.sub_type), 4, false);

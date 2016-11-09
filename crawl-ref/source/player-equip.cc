@@ -1367,7 +1367,7 @@ static void _manifest_as_ieoh_jian_weapon(item_def& wpn)
                  BEH_FRIENDLY,
                  you.pos(),
                  MHITYOU,
-                 MG_FORCE_BEH,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
                  GOD_IEOH_JIAN);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
 

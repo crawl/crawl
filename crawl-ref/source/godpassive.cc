@@ -1677,7 +1677,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
                  BEH_FRIENDLY,
                  position,
                  MHITYOU,
-                 MG_FORCE_BEH,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
                  GOD_IEOH_JIAN);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
 
