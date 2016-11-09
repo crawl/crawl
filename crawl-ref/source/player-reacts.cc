@@ -295,7 +295,7 @@ static int _current_horror_level()
             || mons_aligned(mon, &you)
             || !mons_is_threatening(*mon)
             || !you.can_see(*mon)
-            || !mons_is_tentacle_or_tentacle_segment(*mon))
+            || mons_is_tentacle_or_tentacle_segment(*mon))
         {
             continue;
         }
