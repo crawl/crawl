@@ -582,7 +582,7 @@ void melee_attack::player_strike_pressure_points(monster* mons)
         return;
 
     int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
-    int paralysis_chance = 5;  
+    int paralysis_chance = 3;
     paralysis_chance *= power;
     paralysis_chance /= (2*mons->get_hit_dice());
     int slow_chance = 3 * paralysis_chance;
