@@ -4752,9 +4752,8 @@ const char* mons_class_name(monster_type mc)
 
 mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
-    const monster& threat = get_tentacle_head(mon);
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(threat, real) / (1 + factor);
+    const int tension = exper_value(mon, real) / (1 + factor);
 
     if (tension <= 0)
     {
