@@ -3582,7 +3582,7 @@ static void _move_player(coord_def move)
     }
 
     // Ieoh Jian's lunge and whirlwind.
-    if (have_passive(passive_t::martial_weapon_mastery))
+    if (have_passive(passive_t::martial_weapon_mastery) && !attacking)
         ieoh_jian_perform_martial_attacks(initial_position);
 
 }
