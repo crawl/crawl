@@ -162,6 +162,25 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     function update(x, y, cell)
     {
         cell = cell || map_knowledge.get(x, y);
+
+        if (cell.mf && cell.mf != enums.MF_WALL && cell.mf != enums.MF_MAP_WALL)
+        {
+            for (var i = -1; i <= 1; i++)
+            {
+                for (var j = -1; j <= 1; j++)
+                {
+                    if (i != 0 || j != 0)
+                    {
+                        var c = map_knowledge.get(x + i, y + j);
+                        if (!c.mf)
+                        {
+                            set(x + i, y + j, minimap_colours[enums.MF_MAP_WALL]);
+                        }
+                    }
+                }
+            }
+        }
+
         if (x == player.pos.x && y == player.pos.y)
             set(x, y, minimap_colours[enums.MF_PLAYER]);
         else
