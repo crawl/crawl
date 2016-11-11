@@ -414,8 +414,14 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
-    if (attacker->is_player() && is_ieoh_jian_martial && have_passive(passive_t::pressure_points))
+    if (attacker->is_player() 
+        && is_ieoh_jian_martial 
+        && have_passive(passive_t::pressure_points)
+        && defender->as_monster()->holiness() != MH_NONLIVING
+        && defender->as_monster()->holiness() != MH_PLANT)
+    {
         player_strike_pressure_points(defender->as_monster());
+    }
 
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
