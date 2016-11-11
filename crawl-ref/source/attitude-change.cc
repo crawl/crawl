@@ -101,7 +101,6 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 void slime_convert(monster* mons)
 {
     if (have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
-        && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
