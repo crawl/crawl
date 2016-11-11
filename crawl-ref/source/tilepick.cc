@@ -3374,6 +3374,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         return TILEG_ABILITY_JIYVA_CURE_BAD_MUTATIONS;
     // Fedhas
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+        return TILEG_ABILITY_FEDHAS_FUNGAL_BLOOM;
     case ABIL_FEDHAS_SUNLIGHT:
         return TILEG_ABILITY_FEDHAS_SUNLIGHT;
     case ABIL_FEDHAS_RAIN:
