@@ -129,10 +129,35 @@ void MapRegion::recenter()
 void MapRegion::set(const coord_def &gc, map_feature f)
 {
     ASSERT((unsigned int)f <= (unsigned char)~0);
-    m_buf[gc.x + gc.y * mx] = f;
 
     if (f == MF_UNSEEN)
         return;
+
+    m_buf[gc.x + gc.y * mx] = f;
+
+    if (f != MF_WALL && f != MF_MAP_WALL)
+    {
+        for (int x = gc.x - 1; x <= gc.x + 1; x++)
+        {
+            for (int y = gc.y - 1; y <= gc.y + 1; y++)
+            {
+                if (x < mx && y < my && x >= 0 && y >= 0)
+                {
+                    map_feature c = (map_feature)m_buf[x + y * mx];
+                    if (c == MF_UNSEEN)
+                    {
+                        m_buf[x + y * mx] = MF_MAP_WALL;
+
+                        // Get map extents
+                        m_min_gx = min(m_min_gx, x);
+                        m_max_gx = max(m_max_gx, x);
+                        m_min_gy = min(m_min_gy, y);
+                        m_max_gy = max(m_max_gy, y);
+                    }
+                }
+            }
+        }
+    }
 
     // Get map extents
     m_min_gx = min(m_min_gx, gc.x);
