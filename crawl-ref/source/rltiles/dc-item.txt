@@ -541,7 +541,7 @@ i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
 bread_ration FOOD_BREAD_RATION
 
-apple FOOD_FRUIT_FIRST
+apple FOOD_FRUIT_FIRST FOOD_APPLE
 apricot
 banana
 choko
