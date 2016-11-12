@@ -58,8 +58,6 @@ bool food_change(bool initial = false);
 
 bool prompt_eat_item(int slot = -1);
 
-void vampire_nutrition_per_turn(const item_def &corpse, int feeding = 0);
-
 int you_max_hunger();
 int you_min_hunger();
 bool you_foodless(bool can_eat = false);

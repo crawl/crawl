@@ -186,40 +186,6 @@ bool MacroDelay::try_interrupt()
     // to the Lua function, it can't do damage.
 }
 
-static void _interrupt_vampire_feeding(item_def& corpse, int dur)
-{
-    mpr("You stop draining the corpse.");
-
-    _xom_check_corpse_waste();
-
-    // Don't skeletonize a corpse if it's no longer there!
-    if (corpse.defined() && corpse.is_type(OBJ_CORPSES, CORPSE_BODY)
-        && corpse.pos == you.pos())
-    {
-        const item_def old_corpse = corpse;
-
-        mpr("All the blood oozes out of the corpse!");
-
-        bleed_onto_floor(you.pos(), corpse.mon_type, dur, false);
-
-        if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-            turn_corpse_into_skeleton(corpse);
-        else
-            dec_mitm_item_quantity(corpse.index(), 1);
-
-        if (mons_genus(old_corpse.mon_type) == MONS_ORC)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-        if (mons_class_holiness(old_corpse.mon_type) & MH_HOLY)
-            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
-    }
-}
-
-bool FeedVampireDelay::try_interrupt()
-{
-    _interrupt_vampire_feeding(corpse, duration);
-    return true;
-}
-
 bool EatDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
@@ -613,33 +579,6 @@ void MacroDelay::handle()
         you.time_taken = 0;
 }
 
-bool FeedVampireDelay::invalidated()
-{
-    // Vampires stop feeding if ...
-    // * engorged ("alive")
-    // * bat form runs out due to becoming full
-    // * corpse disappears for some reason (e.g. animated by a monster)
-    if (!corpse.defined()                                     // missing
-        || corpse.base_type != OBJ_CORPSES                    // noncorpse
-        || corpse.pos != you.pos()                            // elsewhere
-        || you.hunger_state == HS_ENGORGED
-        || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT)
-    {
-        // Messages handled in _food_change() in food.cc.
-        _interrupt_vampire_feeding(corpse, duration);
-        return true;
-    }
-    else if (corpse.is_type(OBJ_CORPSES, CORPSE_SKELETON))
-    {
-        mprf("The corpse has rotted away into a skeleton before "
-             "you could finish drinking it!");
-        _interrupt_vampire_feeding(corpse, duration);
-        return true;
-    }
-
-    return false;
-}
-
 bool EatDelay::invalidated()
 {
     // Stop eating if something happens (chunk rots, you get teleported,
@@ -719,12 +658,6 @@ bool BlurryScrollDelay::invalidated()
         return true;
     }
     return false;
-}
-
-void FeedVampireDelay::tick()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
-    vampire_nutrition_per_turn(corpse, 0);
 }
 
 void MultidropDelay::tick()
@@ -863,28 +796,6 @@ void EatDelay::finish()
     if (food_turns(food) > 1) // If duration was just one turn, don't print.
         mpr("You finish eating.");
     finish_eating_item(food);
-}
-
-void FeedVampireDelay::finish()
-{
-    mpr("You finish drinking.");
-
-    vampire_nutrition_per_turn(corpse, 1);
-
-    const item_def old_corpse = corpse;
-
-    if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-    {
-        turn_corpse_into_skeleton(corpse);
-        item_check();
-    }
-    else
-        dec_mitm_item_quantity(corpse.index(), 1);
-
-    if (mons_genus(old_corpse.mon_type) == MONS_ORC)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    if (mons_class_holiness(corpse.mon_type) & MH_HOLY)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 }
 
 void MemoriseDelay::finish()
