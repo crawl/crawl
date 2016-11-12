@@ -680,7 +680,6 @@ static const vector<chaos_effect> chaos_effects = {
             return you.can_see(*attack.defender);
         },
     },
-    { "healing", 10, nullptr, BEAM_HEALING, },
     { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
     { "invisible", 10, nullptr, BEAM_INVISIBILITY, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
@@ -725,11 +724,6 @@ void attack::chaos_affects_defender()
         {
             simple_god_message(" protects you from inadvertent hurry.");
             obvious_effect = true;
-            return;
-        }
-
-        // Chaos should not heal rot
-        if (beam.flavour == BEAM_HEALING && defender->is_player() && player_rotted() > 0) {
             return;
         }
 
