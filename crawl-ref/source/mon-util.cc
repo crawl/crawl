@@ -3469,13 +3469,13 @@ bool mons_is_batty(const monster& m)
 
 bool mons_looks_stabbable(const monster& m)
 {
-    const stab_type st = find_stab_type(&you, m);
+    const stab_type st = find_stab_type(&you, m, false);
     return !m.friendly() && stab_bonus_denom(st) == 1; // top-tier stab
 }
 
 bool mons_looks_distracted(const monster& m)
 {
-    const stab_type st = find_stab_type(&you, m);
+    const stab_type st = find_stab_type(&you, m, false);
     return !m.friendly()
            && st != STAB_NO_STAB
            && !mons_looks_stabbable(m);

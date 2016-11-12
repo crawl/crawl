@@ -3976,7 +3976,7 @@ int monster::res_rotting(bool /*temp*/) const
     return min(3, res);
 }
 
-int monster::res_holy_energy(const actor *attacker) const
+int monster::res_holy_energy() const
 {
     if (type == MONS_PROFANE_SERVITOR)
         return 3;
@@ -3986,8 +3986,6 @@ int monster::res_holy_energy(const actor *attacker) const
 
     if (is_holy()
         || is_good_god(god)
-        || neutral()
-        || find_stab_type(attacker, *this) != STAB_NO_STAB
         || is_good_god(you.religion) && is_follower(*this))
     {
         return 3;

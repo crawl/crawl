@@ -3120,7 +3120,7 @@ bool bolt::is_harmless(const monster* mon) const
         return true;
 
     case BEAM_HOLY:
-        return mon->res_holy_energy(agent()) >= 3;
+        return mon->res_holy_energy() >= 3;
 
     case BEAM_STEAM:
         return mon->res_steam() >= 3;
@@ -3183,7 +3183,7 @@ bool bolt::harmless_to_player() const
         return true;
 
     case BEAM_HOLY:
-        return you.res_holy_energy(&you) >= 3;
+        return you.res_holy_energy() >= 3;
 
     case BEAM_MIASMA:
         return you.res_rotting();
@@ -6262,7 +6262,7 @@ bool bolt::nasty_to(const monster* mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
-        return mon->res_holy_energy(agent()) < 3;
+        return mon->res_holy_energy() < 3;
 
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one

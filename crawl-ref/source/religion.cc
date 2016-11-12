@@ -4239,18 +4239,6 @@ int piety_breakpoint(int i)
         return breakpoints[i];
 }
 
-// Returns true if the Shining One doesn't mind your using unchivalric
-// attacks on this creature.
-bool tso_unchivalric_attack_safe_monster(const monster& mon)
-{
-    const mon_holy_type holiness = mon.holiness();
-    return mons_intel(mon) < I_HUMAN
-           || mons_is_object(mon.mons_species())
-           || mon.undead_or_demonic()
-           || mon.is_shapeshifter() && (mon.flags & MF_KNOWN_SHIFTER)
-           || !mon.is_holy() && !(holiness & MH_NATURAL);
-}
-
 int get_monster_tension(const monster& mons, god_type god)
 {
     if (!mons.alive())

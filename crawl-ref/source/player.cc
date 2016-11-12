@@ -6326,7 +6326,7 @@ bool player::res_sticky_flame() const
     return player_res_sticky_flame();
 }
 
-int player::res_holy_energy(const actor *attacker) const
+int player::res_holy_energy() const
 {
     if (undead_or_demonic())
         return -1;

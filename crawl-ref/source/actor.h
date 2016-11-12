@@ -288,7 +288,7 @@ public:
     virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
-    virtual int res_holy_energy(const actor *attacker) const = 0;
+    virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
     virtual bool res_wind() const = 0;

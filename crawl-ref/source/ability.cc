@@ -1745,6 +1745,11 @@ static bool _abort_if_stationary()
     return true;
 }
 
+static bool _cleansing_flame_affects(const actor *act)
+{
+    return act->res_holy_energy() < 3;
+}
+
 /*
  * Use an ability.
  *
@@ -2192,10 +2197,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
+    {
+        targetter_los hitfunc(&you, LOS_SOLID, 2);
+        {
+            if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+                return SPRET_ABORT;
+        }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
                         CLEANSING_FLAME_INVOCATION, you.pos(), &you);
         break;
+    }
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         fail_check();

@@ -105,8 +105,6 @@ bool fedhas_protects(const monster& target);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
 
-bool tso_unchivalric_attack_safe_monster(const monster& mon);
-
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 
