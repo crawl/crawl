@@ -644,8 +644,7 @@ bool EatDelay::invalidated()
 {
     // Stop eating if something happens (chunk rots, you get teleported,
     // you get polymorphed into a lich, etc.)
-    if (food.base_type != OBJ_FOOD
-        || !can_eat(food, true)
+    if (!can_eat(food, true)
         || !in_inventory(food) && food.pos != you.pos())
     {
         mpr("You stop eating.");

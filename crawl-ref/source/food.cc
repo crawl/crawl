@@ -914,7 +914,7 @@ bool is_inedible(const item_def &item)
     if (you_foodless(true))
         return true;
 
-    if (item.base_type == OBJ_FOOD
+    if (item.base_type == OBJ_FOOD // XXX: removeme?
         && !can_eat(item, true, false))
     {
         return true;
@@ -1017,7 +1017,10 @@ bool is_forbidden_food(const item_def &food)
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 {
 #define FAIL(msg) { if (!suppress_msg) mpr(msg); return false; }
-    ASSERT(food.base_type == OBJ_FOOD || food.base_type == OBJ_CORPSES);
+    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
+    {
+        FAIL("That's not food!");
+    }
 
     // special case mutagenic chunks to skip hunger checks, as they don't give
     // nutrition and player can get hungry by using spells etc. anyway
@@ -1205,13 +1208,10 @@ void handle_starvation()
             auto it = min_element(begin(you.inv), end(you.inv),
                 [](const item_def& a, const item_def& b) -> bool
                 {
-                    return (a.base_type == OBJ_FOOD && can_eat(a, true)
-                                ? food_turns(a) : INT_MAX)
-                        < (b.base_type == OBJ_FOOD && can_eat(b, true)
-                                ? food_turns(b) : INT_MAX);
+                    return (can_eat(a, true) ? food_turns(a) : INT_MAX)
+                         < (can_eat(b, true) ? food_turns(b) : INT_MAX);
                 });
-            if (it != end(you.inv)
-                && it->base_type == OBJ_FOOD && can_eat(*it, true))
+            if (it != end(you.inv) && can_eat(*it, true))
             {
                 mpr("As you are about to starve, you manage to eat something.");
                 eat_item(*it);
