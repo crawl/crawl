@@ -815,64 +815,6 @@ static void _eat_chunk(item_def& food)
     }
 }
 
-// Divide full nutrition by duration, so that each turn you get the same
-// amount of nutrition. Also, experimentally regenerate 1 hp per feeding turn
-// - this is likely too strong.
-// feeding is -1 at start, 1 when finishing, and 0 else
-
-// Here are some values for nutrition (quantity * 1000) and duration:
-//    max_chunks      quantity    duration
-//     1               1           1
-//     2               1           1
-//     3               1           2
-//     4               1           2
-//     5               1           2
-//     6               2           3
-//     7               2           3
-//     8               2           3
-//     9               2           4
-//    10               2           4
-//    12               3           5
-//    15               3           5
-//    20               4           6
-//    25               4           6
-//    30               5           7
-
-void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
-{
-    const monster_type mons_type = corpse.mon_type;
-
-    // Duration depends on corpse weight.
-    const int max_chunks = max_corpse_chunks(mons_type);
-    const int chunk_amount = stepdown_value(1 + max_chunks/3, 6, 6, 12, 12);
-
-    // Add 1 for the artificial extra call at the start of draining.
-    const int duration   = 1 + chunk_amount;
-
-    // Use number of potions per corpse to calculate total nutrition, which
-    // then gets distributed over the entire duration.
-    int food_value = CHUNK_BASE_NUTRITION
-                     * num_blood_potions_from_corpse(mons_type);
-
-    bool start_feeding   = false;
-    bool end_feeding     = false;
-
-    if (feeding < 0)
-        start_feeding = true;
-    else if (feeding > 0)
-        end_feeding = true;
-
-    if (start_feeding)
-    {
-        mprf("This %sblood tastes delicious!",
-             mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
-                                                      : "");
-    }
-
-    if (!end_feeding)
-        lessen_hunger(food_value / duration, !start_feeding);
-}
-
 bool is_bad_food(const item_def &food)
 {
     return is_mutagenic(food) || is_forbidden_food(food) || is_noxious(food);
@@ -1106,26 +1048,34 @@ static bool _vampire_consume_corpse(item_def& corpse)
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
 
-    if (!mons_has_blood(corpse.mon_type))
+    const monster_type mons_type = corpse.mon_type;
+
+    if (!mons_has_blood(mons_type))
     {
         mpr("There is no blood in this body!");
         return false;
     }
 
-    // The delay for eating a chunk (mass 1000) is 2
-    // Here the base nutrition value equals that of chunks,
-    // but the delay should be smaller.
-    const int max_chunks = max_corpse_chunks(corpse.mon_type);
-    int duration = 1 + max_chunks / 3;
-    duration = stepdown_value(duration, 6, 6, 12, 12);
+    mprf("This %sblood tastes delicious!",
+         mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm " : "");
 
-    // Get some nutrition right away, in case we're interrupted.
-    // (-1 for the starting message.)
-    vampire_nutrition_per_turn(corpse, -1);
+    const int food_value = CHUNK_BASE_NUTRITION
+                           * num_blood_potions_from_corpse(mons_type);
+    lessen_hunger(food_value, false);
 
-    // The draining delay doesn't have a start action, and we only need
-    // the continue/finish messages if it takes longer than 1 turn.
-    start_delay<FeedVampireDelay>(duration, corpse);
+    // this will never matter :)
+    if (mons_genus(mons_type) == MONS_ORC)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+    if (mons_class_holiness(mons_type) & MH_HOLY)
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
+
+    if (mons_skeleton(mons_type) && one_chance_in(3))
+    {
+        turn_corpse_into_skeleton(corpse);
+        item_check();
+    }
+    else
+        dec_mitm_item_quantity(corpse.index(), 1);
 
     return true;
 }
