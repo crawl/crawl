@@ -130,10 +130,26 @@ void MapRegion::set(const coord_def &gc, map_feature f)
 {
     ASSERT((unsigned int)f <= (unsigned char)~0);
 
-    if (f == MF_UNSEEN)
-        return;
-
     m_buf[gc.x + gc.y * mx] = f;
+
+    if (f == MF_UNSEEN)
+    {
+        for (int x = gc.x - 1; x <= gc.x + 1; x++)
+        {
+            for (int y = gc.y - 1; y <= gc.y + 1; y++)
+            {
+                if (x < mx && y < my && x >= 0 && y >= 0)
+                {
+                    map_feature c = (map_feature)m_buf[x + y * mx];
+                    if (c != MF_UNSEEN && c != MF_WALL && c != MF_MAP_WALL)
+                    {
+                        m_buf[gc.x + gc.y * mx] = MF_MAP_WALL;
+                    }
+                }
+            }
+        }
+        return;
+    }
 
     if (f != MF_WALL && f != MF_MAP_WALL)
     {
