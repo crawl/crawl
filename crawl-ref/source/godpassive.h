@@ -242,6 +242,9 @@ enum class passive_t
 
     /// Hep reduces your max HP
     frail,
+
+    // TSO prevents you from stabbing
+    no_stabbing,
 };
 
 enum ru_interference

@@ -45,7 +45,9 @@ enum monster_info_flags
     MB_INSANE,
     MB_SILENCING,
     MB_MESMERIZING,
+#if TAG_MAJOR_VERSION == 34
     MB_EVIL_ATTACK,
+#endif
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
     MB_SUBMERGED,

@@ -57,13 +57,13 @@ static const char *conducts[] =
 {
     "",
     "Evil", "Holy", "Attack Holy", "Attack Neutral",
-    "Attack Friend", "Friend Died", "Unchivalric Attack",
+    "Attack Friend", "Friend Died",
     "Poison", "Kill Living", "Kill Undead",
     "Kill Demon", "Kill Natural Evil",
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
     "Kill Holy", "Kill Fast", "Banishment",
     "Spell Memorise", "Spell Cast", "Spell Practise",
-    "Cannibalism","Eat Souled Being",
+    "Cannibalism", "Eat Souled Being",
     "Deliberate Mutation", "Cause Glowing", "Use Unclean",
     "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
@@ -333,19 +333,11 @@ static peeve_map divine_peeves[] =
             "you use evil magic or items", true,
             1, 2, " forgives your inadvertent evil act, just this once."
         } },
-        { DID_UNCHIVALRIC_ATTACK, {
-            "you attack intelligent monsters in an unchivalric manner", true,
-            1, 2, " forgives your inadvertent dishonourable attack, just"
-                      " this once.", nullptr, [] (const monster* victim) -> bool {
-                return !victim || !tso_unchivalric_attack_safe_monster(*victim);
-            }
-        } },
         { DID_POISON, {
             "you poison monsters", true,
             1, 2, " forgives your inadvertent dishonourable attack, just"
-                      " this once.", nullptr, [] (const monster* victim) -> bool {
-                return !victim || !tso_unchivalric_attack_safe_monster(*victim);
-            }
+                      " this once.", nullptr,
+            [] (const monster* victim) -> bool { return !victim; }
         } },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },
@@ -1048,25 +1040,15 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
     _handle_your_gods_response(thing_done, level, known, victim);
 }
 
-// These three sets deal with the situation where a beam hits a non-fleeing
-// monster, the monster starts to flee because of the damage, and then the
-// beam bounces and hits the monster again. If the monster wasn't fleeing
-// when the beam started then hits from bounces shouldn't count as
-// unchivalric attacks, but if the first hit from the beam *was* unchivalrous
-// then all the bounces should count as unchivalrous as well.
-//
-// Also do the same sort of check for harming a friendly monster,
-// since a Beogh worshipper zapping an orc with lightning might cause it to
-// become a follower on the first hit, and the second hit would be
-// against a friendly orc.
+// A Beogh worshipper zapping an orc with lightning might cause it to become a
+// follower on the first hit, and the second hit would be against a friendly
+// orc. Don't cause penance in this case.
 static set<mid_t> _first_attack_conduct;
-static set<mid_t> _first_attack_was_unchivalric;
 static set<mid_t> _first_attack_was_friendly;
 
 void god_conduct_turn_start()
 {
     _first_attack_conduct.clear();
-    _first_attack_was_unchivalric.clear();
     _first_attack_was_friendly.clear();
 }
 
@@ -1088,15 +1070,6 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
     }
     else if (mon->neutral())
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
-
-    if (find_stab_type(&you, *mon) != STAB_NO_STAB
-        && (_first_attack_conduct.find(mid) == _first_attack_conduct.end()
-            || _first_attack_was_unchivalric.find(mid)
-               != _first_attack_was_unchivalric.end()))
-    {
-        conduct[1].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
-        _first_attack_was_unchivalric.insert(mid);
-    }
 
     if (mon->is_holy() && !mon->is_illusion())
         conduct[2].set(DID_ATTACK_HOLY, mon->get_experience_level(), known, mon);

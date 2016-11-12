@@ -562,8 +562,6 @@ conduct_type god_hates_item_handling(const item_def &item)
     case GOD_SHINING_ONE:
         if (item_type_known(item) && is_poisoned_item(item))
             return DID_POISON;
-        if (is_unrandom_artefact(item, UNRAND_CAPTAIN))
-            return DID_UNCHIVALRIC_ATTACK;
         break;
 
     case GOD_YREDELEMNUL:

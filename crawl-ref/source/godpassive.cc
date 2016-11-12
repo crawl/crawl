@@ -95,6 +95,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         },
         { -1, passive_t::restore_hp_mp_vs_evil,
               "gain health and magic from killing evil beings" },
+        { -1, passive_t::no_stabbing,
+              "are prevented from stabbing unaware creatures" },
         {  0, passive_t::halo, "are surrounded by divine halo" },
     },
 

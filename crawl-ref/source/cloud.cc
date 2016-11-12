@@ -891,7 +891,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
                || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
                || player_equip_unrand(UNRAND_FIRESTARTER);
     case CLOUD_HOLY:
-        return act->res_holy_energy(cloud.agent()) >= 3;
+        return act->res_holy_energy() >= 3;
     case CLOUD_COLD:
         if (!player)
             return act->res_cold() >= 3;
@@ -939,7 +939,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
     case CLOUD_HOLY:
-        return act->res_holy_energy(cloud.agent());
+        return act->res_holy_energy();
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:
