@@ -468,6 +468,7 @@ hep2
 hep3
 hep4
 hep5
+ieoh_jian DNGN_ALTAR_IEOH_JIAN
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn

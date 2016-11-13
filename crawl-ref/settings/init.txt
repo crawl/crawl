@@ -1,3 +1,6 @@
+show_more = false
+auto_butcher = true
+
 ##### Crawl Init file ###############################################
 # For descriptions of all options, as well as some more in-depth information
 # on setting them, consult the file
