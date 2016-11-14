@@ -25,6 +25,7 @@ protected:
     virtual void on_resize() override;
     void recenter();
     void pack_buffers();
+    void hide_cell(int x, int y);
 
     VColour m_colours[MF_MAX];
     int m_min_gx, m_max_gx, m_min_gy, m_max_gy;

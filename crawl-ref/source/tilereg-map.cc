@@ -140,11 +140,7 @@ void MapRegion::set(const coord_def &gc, map_feature f)
             {
                 if (x < mx && y < my && x >= 0 && y >= 0)
                 {
-                    map_feature c = (map_feature)m_buf[x + y * mx];
-                    if (c != MF_UNSEEN && c != MF_WALL && c != MF_MAP_WALL)
-                    {
-                        m_buf[gc.x + gc.y * mx] = MF_MAP_WALL;
-                    }
+                    hide_cell(x, y);
                 }
             }
         }
@@ -182,6 +178,32 @@ void MapRegion::set(const coord_def &gc, map_feature f)
     m_max_gy = max(m_max_gy, gc.y);
 
     recenter();
+}
+
+void MapRegion::hide_cell(int x, int y)
+{
+    map_feature cell = (map_feature)m_buf[x + y * mx];
+
+    if (cell != MF_MAP_WALL && cell != MF_UNSEEN)
+        return;
+
+    map_feature mf = MF_UNSEEN;
+
+    for (int i = -1; i <= 1 && mf == MF_UNSEEN; i++)
+    {
+        for (int j = -1; j <= 1 && mf == MF_UNSEEN; j++)
+        {
+            if ((x + i) < mx && (y + j) < my && (x + i) >= 0 && (y + j) >= 0)
+            {
+                map_feature c = (map_feature)m_buf[(x + i) + (y + j) * mx];
+                if (c != MF_UNSEEN && c != MF_WALL && c != MF_MAP_WALL)
+                {
+                    mf = MF_MAP_WALL;
+                }
+            }
+        }
+    }
+    m_buf[x + y * mx] = mf;
 }
 
 void MapRegion::update_bounds()
