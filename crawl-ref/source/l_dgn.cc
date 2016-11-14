@@ -1091,18 +1091,11 @@ static int dgn_floor_halo(lua_State *ls)
     return 0;
 }
 
-#define SQRT_2 1.41421356237309504880
-
 static int dgn_random_walk(lua_State *ls)
 {
     const int x     = luaL_checkint(ls, 1);
     const int y     = luaL_checkint(ls, 2);
     const int dist = luaL_checkint(ls, 3);
-
-    // Fourth param being true means that we can move past
-    // statues.
-    const dungeon_feature_type minmove =
-    lua_isnil(ls, 4) ? DNGN_LAVA : DNGN_ORCISH_IDOL;
 
     if (!in_bounds(x, y))
     {
@@ -1117,43 +1110,7 @@ static int dgn_random_walk(lua_State *ls)
         return 0;
     }
 
-    float dist_left = dist;
-    // Allow movement to all 8 adjacent squares if distance is 1
-    // (needed since diagonal moves are distance sqrt(2))
-    if (dist == 1)
-        dist_left = (float)SQRT_2;
-
-    int moves_left = dist;
-    coord_def pos(x, y);
-    while (dist_left >= 1.0 && moves_left-- > 0)
-    {
-        int okay_dirs = 0;
-        int dir       = -1;
-        for (int j = 0; j < 8; j++)
-        {
-            const coord_def new_pos   = pos + Compass[j];
-            const float     move_dist = (j % 2 == 0) ? 1.0 : SQRT_2;
-
-            if (in_bounds(new_pos) && grd(new_pos) >= minmove
-                && move_dist <= dist_left)
-            {
-                if (one_chance_in(++okay_dirs))
-                    dir = j;
-            }
-        }
-
-        if (okay_dirs == 0)
-            break;
-
-        if (one_chance_in(++okay_dirs))
-            continue;
-
-        pos       += Compass[dir];
-        dist_left -= (dir % 2 == 0) ? 1.0 : SQRT_2;
-    }
-
-    dlua_push_coordinates(ls, pos);
-
+    dlua_push_coordinates(ls, random_walk(coord_def(x, y), dist));
     return 2;
 }
 
