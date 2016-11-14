@@ -3235,9 +3235,9 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-
+    bool can_pole_vault = ieoh_jian_can_pole_vault(targ);
     // You can't walk out of bounds!
-    if (!in_bounds(targ))
+    if (!in_bounds(targ) && !can_pole_vault)
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -3377,8 +3377,6 @@ static void _move_player(coord_def move)
             return;
         }
     }
-
-    bool can_pole_vault = ieoh_jian_can_pole_vault(targ);
 
     if (!attacking && (targ_pass || can_pole_vault) && moving && !beholder && !fmonger)
     {
