@@ -1516,36 +1516,25 @@ cloud_type cloud_name_to_type(const string &name)
     return CLOUD_NONE;
 }
 
-#define SQRT_2 1.41421356237309504880
-
 coord_def random_walk(coord_def start, int dist)
 {
     ASSERT(in_bounds(start));
     ASSERT(dist >= 1);
 
-    float dist_left = dist;
-    // Allow movement to all 8 adjacent squares if distance is 1
-    // (needed since diagonal moves are distance sqrt(2))
-    // XXX: probably diagonal moves should just be distance 1...
-    if (dist == 1)
-        dist_left = (float)SQRT_2;
-
     int moves_left = dist;
     coord_def pos = start;
-    while (dist_left >= 1.0 && moves_left-- > 0)
+    while (moves_left-- > 0)
     {
         int okay_dirs = 0;
         int dir       = -1;
         for (int j = 0; j < 8; j++)
         {
             const coord_def new_pos   = pos + Compass[j];
-            const float     move_dist = (j % 2 == 0) ? 1.0 : SQRT_2;
 
             if (in_bounds(new_pos) && !feat_is_solid(grd(new_pos))
-                && move_dist <= dist_left)
+                && one_chance_in(++okay_dirs))
             {
-                if (one_chance_in(++okay_dirs))
-                    dir = j;
+                dir = j;
             }
         }
 
@@ -1556,7 +1545,6 @@ coord_def random_walk(coord_def start, int dist)
             continue;
 
         pos       += Compass[dir];
-        dist_left -= (dir % 2 == 0) ? 1.0 : SQRT_2;
     }
 
     return pos;
