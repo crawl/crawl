@@ -181,28 +181,47 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             }
         }
 
+        if (x == player.pos.x && y == player.pos.y)
+            set(x, y, minimap_colours[enums.MF_PLAYER]);
+        else
+            set(x, y, minimap_colours[cell.mf || enums.MF_UNSEEN]);
+
         if (!cell.mf)
         {
             for (var i = -1; i <= 1; i++)
             {
                 for (var j = -1; j <= 1; j++)
                 {
+                    hide_cell(x + i, y + j);
+                }
+            }
+        }
+    }
+
+    function hide_cell(x, y)
+    {
+        var cell = map_knowledge.get(x, y);
+        
+        if (!cell.mf && !(x == player.pos.x && y == player.pos.y))
+        {
+            var color = enums.MF_UNSEEN;
+            for (var i = -1; i <= 1 && color == enums.MF_UNSEEN; i++)
+            {
+                for (var j = -1; j <= 1 && color == enums.MF_UNSEEN; j++)
+                {
                     if (i != 0 || j != 0)
                     {
                         var c = map_knowledge.get(x + i, y + j);
                         if (c.mf && c.mf != enums.MF_WALL && c.mf != enums.MF_MAP_WALL)
                         {
-                            cell.mf = enums.MF_MAP_WALL;
+                            color = enums.MF_MAP_WALL;
                         }
                     }
                 }
             }
-        }
 
-        if (x == player.pos.x && y == player.pos.y)
-            set(x, y, minimap_colours[enums.MF_PLAYER]);
-        else
-            set(x, y, minimap_colours[cell.mf || enums.MF_UNSEEN]);
+            set(x, y, minimap_colours[color]);
+        }
     }
 
     // Minimap controls ------------------------------------------------------------
