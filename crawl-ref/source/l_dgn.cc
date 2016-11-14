@@ -1174,27 +1174,13 @@ static kill_category dgn_kill_name_to_category(string name)
         return KC_NCATEGORIES;
 }
 
-static int lua_cloud_pow_min;
-static int lua_cloud_pow_max;
-static int lua_cloud_pow_rolls;
-
-static int make_a_lua_cloud(coord_def where, int /*garbage*/, int spread_rate,
-                            cloud_type ctype, const actor *agent, int excl_rad)
-{
-    const int pow = random_range(lua_cloud_pow_min,
-                                 lua_cloud_pow_max,
-                                 lua_cloud_pow_rolls);
-    place_cloud(ctype, where, pow, agent, spread_rate, excl_rad);
-    return 1;
-}
-
 static int dgn_apply_area_cloud(lua_State *ls)
 {
     const int x         = luaL_checkint(ls, 1);
     const int y         = luaL_checkint(ls, 2);
-    lua_cloud_pow_min   = luaL_checkint(ls, 3);
-    lua_cloud_pow_max   = luaL_checkint(ls, 4);
-    lua_cloud_pow_rolls = luaL_checkint(ls, 5);
+    const int pow_min   = luaL_checkint(ls, 3);
+    const int pow_max   = luaL_checkint(ls, 4);
+    const int pow_rolls = luaL_checkint(ls, 5);
     const int size      = luaL_checkint(ls, 6);
 
     const cloud_type ctype = cloud_name_to_type(luaL_checkstring(ls, 7));
@@ -1213,25 +1199,25 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return 0;
     }
 
-    if (lua_cloud_pow_min < 0)
+    if (pow_min < 0)
     {
         luaL_argerror(ls, 4, "pow_min must be non-negative");
         return 0;
     }
 
-    if (lua_cloud_pow_max < lua_cloud_pow_min)
+    if (pow_max < pow_min)
     {
         luaL_argerror(ls, 5, "pow_max must not be less than pow_min");
         return 0;
     }
 
-    if (lua_cloud_pow_max == 0)
+    if (pow_max == 0)
     {
         luaL_argerror(ls, 5, "pow_max must be positive");
         return 0;
     }
 
-    if (lua_cloud_pow_rolls <= 0)
+    if (pow_rolls <= 0)
     {
         luaL_argerror(ls, 6, "pow_rolls must be positive");
         return 0;
@@ -1268,8 +1254,15 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return 0;
     }
 
-    apply_area_cloud(make_a_lua_cloud, coord_def(x, y), 0, size,
-                     ctype, 0, spread_rate, excl_rad);
+    apply_area_cloud(
+        [pow_min, pow_max, pow_rolls](coord_def where, int /*pow*/,
+                                      int spreadrate, cloud_type type,
+                                      const actor* agent, int exclrad)
+        {
+            const int pow = random_range(pow_min, pow_max, pow_rolls);
+            place_cloud(type, where, pow, agent, spreadrate, exclrad);
+            return 1;
+        }, coord_def(x, y), 0, size, ctype, 0, spread_rate, excl_rad);
 
     return 0;
 }
