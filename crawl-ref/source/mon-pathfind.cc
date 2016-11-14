@@ -231,7 +231,7 @@ bool monster_pathfind::calc_path_to_neighbours()
             continue;
 
 #ifdef DEBUG_PATHFIND
-        mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance2,
+        mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
              INFINITE_DISTANCE);
 #endif
         // If the new distance is better than the old one (initialised with
