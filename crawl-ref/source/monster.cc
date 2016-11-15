@@ -4118,6 +4118,11 @@ int monster::res_magic(bool calc_unid) const
     if (mons_is_hepliaklqana_ancestor(type))
         u = get_experience_level() * get_experience_level() / 2; // 0-160ish
 
+    // Draining/malmutation reduce monster base MR proportionately.
+    const int HD = get_hit_dice();
+    if (HD < get_experience_level())
+        u = u * HD / get_experience_level();
+
     // Resistance from artefact properties.
     u += 40 * scan_artefacts(ARTP_MAGIC_RESISTANCE);
 
