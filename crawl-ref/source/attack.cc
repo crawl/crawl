@@ -615,13 +615,7 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     {
-        "polymorph", 1, _is_chaos_polyable, BEAM_POLYMORPH,
-    },
-    {
-        "polymorph PPT_MORE", 1, [](const actor &defender) {
-            return _is_chaos_polyable(defender) && defender.is_monster();
-        },
-        BEAM_POLYMORPH,
+        "polymorph", 2, _is_chaos_polyable, BEAM_POLYMORPH,
     },
     {
         "shifter", 1, [](const actor &defender)
@@ -690,9 +684,8 @@ static const vector<chaos_effect> chaos_effects = {
         }, BEAM_PARALYSIS,
     },
     {
-        "petrify", 10, [](const actor &defender) {
-            return _is_chaos_slowable(defender) && !defender.res_petrify()
-                   && defender.is_monster(); // ??? why though
+        "petrify", 5, [](const actor &defender) {
+            return _is_chaos_slowable(defender) && !defender.res_petrify();
         }, BEAM_PETRIFY,
     },
 };
@@ -784,7 +777,6 @@ brand_type attack::random_chaos_brand()
     while (true)
     {
         brand = (random_choose_weighted(
-                     5, SPWPN_VORPAL,
                     10, SPWPN_FLAMING,
                     10, SPWPN_FREEZING,
                     10, SPWPN_ELECTROCUTION,
@@ -796,9 +788,6 @@ brand_type attack::random_chaos_brand()
                      5, SPWPN_ANTIMAGIC,
                      2, SPWPN_CONFUSE,
                      2, SPWPN_DISTORTION));
-
-        if (one_chance_in(3))
-            break;
 
         bool susceptible = true;
         switch (brand)
@@ -812,7 +801,7 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_VENOM:
-            if (defender->holiness() & MH_UNDEAD)
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
                 susceptible = false;
             break;
         case SPWPN_VAMPIRISM:
@@ -860,8 +849,6 @@ brand_type attack::random_chaos_brand()
     case SPWPN_VAMPIRISM:       brand_name += "vampirism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
     case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
-
-    // both ranged and non-ranged
     case SPWPN_CHAOS:           brand_name += "chaos"; break;
     case SPWPN_CONFUSE:         brand_name += "confusion"; break;
     default:                    brand_name += "(other)"; break;
@@ -1457,9 +1444,6 @@ attack_flavour attack::random_chaos_attack_flavour()
                                           2, AF_CONFUSE,
                                           2, AF_DISTORT);
 
-        if (one_chance_in(3))
-            break;
-
         bool susceptible = true;
         switch (flavour)
         {
@@ -1472,16 +1456,30 @@ attack_flavour attack::random_chaos_attack_flavour()
                 susceptible = false;
             break;
         case AF_POISON:
-            if (defender->holiness() & MH_UNDEAD)
+            if (defender->holiness() & (MH_UNDEAD | MH_NONLIVING))
                 susceptible = false;
             break;
         case AF_VAMPIRIC:
+            if (defender->is_summoned())
+            {
+                susceptible = false;
+                break;
+            }
+            // intentional fall-through
         case AF_DRAIN_XP:
             if (!(defender->holiness() & MH_NATURAL))
                 susceptible = false;
             break;
         case AF_HOLY:
             if (!defender->holy_wrath_susceptible())
+                susceptible = false;
+            break;
+        case AF_CONFUSE:
+            if (defender->holiness() & (MH_NONLIVING | MH_PLANT))
+                susceptible = false;
+            break;
+        case AF_ANTIMAGIC:
+            if (!defender->antimagic_susceptible())
                 susceptible = false;
             break;
         default:
