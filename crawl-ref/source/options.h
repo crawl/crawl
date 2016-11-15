@@ -245,6 +245,8 @@ public:
     bool        no_dark_brand;    // Assume dark grey is displayed as black.
     bool        blink_brightens_background; // Assume blink will brighten bg.
     bool        bold_brightens_foreground; // Assume bold will brighten fg.
+    bool        best_effort_brighten_background; // Allow bg brighten attempts.
+    bool        best_effort_brighten_foreground; // Allow fg brighten attempts.
     bool        allow_extended_colours; // Use more than 8 terminal colours.
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros

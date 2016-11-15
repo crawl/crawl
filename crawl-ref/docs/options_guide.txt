@@ -2523,6 +2523,22 @@ bold_brightens_foreground = false
         result in invisible glyphs for bright/normal color combos of the same
         base colour.
 
+best_effort_brighten_background = true
+        If set to true, try to brighten a background colour using blink even if
+        it is not assumed to be successful.
+
+        This option only affects colors which are safe to brighten. If the
+        blink_brightens_background option is set to true, this option is
+        effectively ignored.
+
+best_effort_brighten_foreground = true
+        If set to true, try to brighten a foreground colour using bold even if
+        it is not assumed to be successful.
+
+        This option only affects colors which are safe to brighten. If the
+        bold_brightens_foreground option is set to true, this option is
+        effectively ignored.
+
 allow_extended_colours = false
         Allow an *attempt* to use more than the eight basic terminal colours
         for crawl's bright colours.

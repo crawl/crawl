@@ -161,6 +161,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(no_dark_brand), true),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
+        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), true),
+        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
