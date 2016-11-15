@@ -771,8 +771,6 @@ the King of the Hill
 
 Mumblety Peg
 
-Pong
-
 # board games etc.
 the Game of Life
 
@@ -950,7 +948,7 @@ Undesirable Species
 
 Going Fast
 
-Life Insurance
+Insurance
 %%%%
 _card_
 
