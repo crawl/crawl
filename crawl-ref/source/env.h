@@ -6,6 +6,8 @@
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"
+#include "cloud.h"
+#include "map_knowledge.h"
 #include "monster.h"
 #include "trap-def.h"
 
@@ -108,6 +110,9 @@ struct crawl_environment
     int density;
     int absdepth0;
     vector<pair<coord_def, int> > sunlight;
+
+    /// Invisible generators that create clouds over time.
+    vector<CloudGenerator> cloud_generators;
 
     // Remaining fields not marshalled:
 

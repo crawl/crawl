@@ -60,3 +60,66 @@ const cloud_tile_info& cloud_type_tile_info(cloud_type type);
 
 void start_still_winds();
 void end_still_winds();
+
+
+// XXX: move CloudGenerator stuff into its own file
+class CloudGenerator
+{
+public:
+    CloudGenerator(coord_def _loc, cloud_type _type,
+                   int _pow_max, int _delay_max, int _size_max)
+        : loc(_loc), type(_type), walk_dist(0),
+          pow_min(1), pow_max(_pow_max), pow_rolls(1),
+          delay_min(_delay_max), delay_max(_delay_max),
+          size_min(_size_max), size_max(_size_max),
+          size_buildup_amnt(0), size_buildup_max(0),
+          initial_clouds(0), exclusion_radius(0), aut_extant(0), delay(0)
+    { }
+
+    // TODO: setter functions for pow, delay, size, buildup, initial, exclrad
+
+    void run();
+
+private:
+    /// Center of cloud generation.
+    coord_def loc;
+    /// Type of cloud to generate (e.g. CLOUD_BLUE_SMOKE)
+    cloud_type type;
+    /// The distance to move over the course of one random walk.
+    int walk_dist;
+    /// Cloud lifetime: [pow_min, pow_max]. More pow_rolls decrease variance.
+    int pow_min, pow_max, pow_rolls;
+    /// Delay between each cloud placement: [delay_min, delay_max].
+    int delay_min, delay_max;
+    /// # of clouds that are generated with each firing: [size_min, size_max].
+    int size_min, size_max;
+    /**
+     * If nonzero, adds
+     * (size_buildup_amnt / size_buildup_max * aut_extant)
+     * to size_min and size_max, maxing out at size_buildup_amnt.
+     */
+    int size_buildup_amnt, size_buildup_max;
+    /// Rate at which clouds spread; -1 is default for type, otherwise [0-100].
+    int spread_rate;
+    /**
+     * The number of clouds to lay when the level containing the cloud machine
+     * is entered. (Clouds are cleared when the player leaves a level.)
+     */
+    int initial_clouds;
+    /**
+     * Size of exclusions automatically placed around clouds from this
+     * generator. If 0, no exclusion will be placed.
+     */
+    int exclusion_radius;
+    /// How long has this generator existed?
+    int aut_extant;
+    /// How long until the next cloud generation event?
+    int delay;
+    // XXX: listener?
+    // XXX: kill_cat?
+    // XXX: spread_rate_buildup/amnt?
+
+    pair<int, int> get_size_range() const;
+};
+
+#endif

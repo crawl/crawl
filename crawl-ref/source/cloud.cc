@@ -599,6 +599,9 @@ void manage_clouds()
         _dissipate_cloud(cloud);
     }
 
+    for (CloudGenerator &generator : env.cloud_generators)
+        generator.run();
+
     update_cloud_knowledge();
 }
 
@@ -1517,7 +1520,9 @@ cloud_type cloud_name_to_type(const string &name)
 coord_def random_walk(coord_def start, int dist)
 {
     ASSERT(in_bounds(start));
-    ASSERT(dist >= 1);
+
+    if (dist <= 0)
+        return start;
 
     int moves_left = dist;
     coord_def pos = start;
@@ -1813,4 +1818,41 @@ void end_still_winds()
 {
     env.level_state &= ~LSTATE_STILL_WINDS;
     mpr("The air resumes its normal movements.");
+}
+
+
+// XXX: move CloudGenerator stuff into its own file
+
+/// Runs a cloud generator for a single turn.
+void CloudGenerator::run()
+{
+    aut_extant += you.elapsed_time;
+
+    delay -= you.elapsed_time;
+    while (delay <= 0)
+    {
+        const coord_def centre = random_walk(loc, walk_dist);
+        const pair<int, int> size_range = get_size_range();
+        const int size = random_range(size_range.first, size_range.second);
+
+        apply_area_cloud(
+            [this](coord_def where, int /*pow*/, int spreadrate,
+                   cloud_type /*type*/, const actor* agent, int excl_rad)
+            {
+                const int pow = random_range(pow_min, pow_max, pow_rolls);
+                place_cloud(type, where, pow, agent, spread_rate, excl_rad);
+                return 1;
+            }, centre, 0, size, type, 0, spread_rate, exclusion_radius);
+
+        delay += random_range(delay_min, delay_max);
+    }
+}
+
+pair<int, int> CloudGenerator::get_size_range() const
+{
+    /*
+    const int size_buildup_time = min(aut_extant, size_buildup_max);
+    const int size_buildup = size_buildup_max <= 0 ? 0 :
+        size_buildup_amnt * buildup_time / size_buildup_max;*/
+    return { size_min, size_max };
 }
