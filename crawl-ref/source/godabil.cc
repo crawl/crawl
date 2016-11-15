@@ -7282,6 +7282,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     {
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
+        args.range = 3;
         direction(thr, args);
 
         if (!thr.isValid)
@@ -7308,10 +7309,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
 
     bool returning;
     if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
-    {
-        you.turn_is_over = false;
         return false;
-    }
 
     // Don't trace at all when confused.
     bool cancelled = false;
@@ -7339,12 +7337,13 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     // "Fire through friendly?" prompts.
     if (cancelled)
     {
-        you.turn_is_over = false;
         return false;
     }
 
     if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false, true))
+    {
         return false;
+    }
 
     // Now start real firing!
     origin_set_unknown(item);
@@ -7362,7 +7361,6 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     pbolt.pierce    = false;
     pbolt.is_tracer = false;
 
-    bool hit = false;
     pbolt.hit = property(thrown, PWPN_HIT);
     pbolt.item->props[IEOH_JIAN_PROJECTED] = true;
 
@@ -7370,14 +7368,12 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     pbolt.aimed_at_spot = true;
     pbolt.fire();
 
-    hit = !pbolt.hit_verb.empty();
 
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
     alert_nearby_monsters();
 
-    you.turn_is_over = true;
-
+    you.turn_is_over = false;
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
                  BEH_FRIENDLY,
                  pbolt.target,
@@ -7397,5 +7393,6 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     dec_inv_item_quantity(weapon_index, 1, true);
     canned_msg(MSG_EMPTY_HANDED_NOW);
 
-    return hit;
+    you.turn_is_over = true;
+    return true;
 }
