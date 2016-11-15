@@ -874,13 +874,21 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
     {
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
-        if (fg_curses & COLFLAG_CURSES_BRIGHTEN)
+        if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
+            && (Options.bold_brightens_foreground
+                || Options.best_effort_brighten_foreground))
+        {
             flags |= WA_BOLD;
+        }
 
         // curses typically uses WA_BLINK to give bright background colour,
         // but various termcaps may disagree (in whole or in part)
-        if (bg_curses & COLFLAG_CURSES_BRIGHTEN)
+        if ((bg_curses & COLFLAG_CURSES_BRIGHTEN)
+            && (Options.blink_brightens_background
+                || Options.best_effort_brighten_background))
+        {
             flags |= WA_BLINK;
+        }
     }
 
     if (monochrome_output_requested)
@@ -1422,12 +1430,14 @@ static void flip_colour(cchar_t &ch)
         if (!curs_can_use_extended_colors())
         {
             if ((fg & COLFLAG_CURSES_BRIGHTEN)
-                && !(bg & COLFLAG_CURSES_BRIGHTEN))
+                && (Options.blink_brightens_background
+                    || Options.best_effort_brighten_background))
             {
                 attr |= WA_BLINK;
             }
-            else if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && !(fg & COLFLAG_CURSES_BRIGHTEN))
+            if ((bg & COLFLAG_CURSES_BRIGHTEN)
+                && (Options.bold_brightens_foreground
+                    || Options.best_effort_brighten_foreground))
             {
                 attr |= WA_BOLD;
             }
