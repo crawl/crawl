@@ -2515,7 +2515,7 @@ blink_brightens_background = false
         result in invisible glyphs for normal/bright color combos of the same
         base colour.
 
-bold_brightens_background = false
+bold_brightens_foreground = false
         Assume that a bold text attribute will end up brightening the foreground
         colour.
 
@@ -2550,7 +2550,7 @@ background_colour = black
         this option will have an effective value of black.
 
         The allow_extended_colors option may help with with enabling bright
-        background colors.  Beware of buggy or misleading terminfo files.
+        background colors. Beware of buggy or misleading terminfo files.
 
 foreground_color = lightgrey
         Sets the default foreground colour by name (defaults to LIGHTGREY).
