@@ -709,8 +709,7 @@ static like_map divine_likes[] =
         { DID_KILL_DEMON, _on_kill("you kill demons", MH_DEMONIC, true) },
         { DID_KILL_NATURAL_EVIL, _on_kill("you kill evil beings", MH_DEMONIC, true) },
         { DID_SEE_MONSTER, {
-            "you meet creatures to determine whether they need to be "
-            "eradicated", false,
+            "you encounter other hostile creatures", false,
             0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
             {
                 // don't give piety for seeing things we get piety for killing.
