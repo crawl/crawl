@@ -78,7 +78,7 @@ static const form_entry formdata[] =
     "",
     EQF_HANDS, MR_NO_FLAGS,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
-    0, 0, 0, true, 20, 12, -1,
+    0, 0, 0, true, 20, 12, 22,
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
     "", 0, "scythe-like blade", "", "", ""
@@ -88,7 +88,7 @@ static const form_entry formdata[] =
     "a stone statue.",
     EQF_STATUE, MR_RES_ELEC | MR_RES_NEG | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13,
-    20, 12, 0, true, 0, 9, -1,
+    20, 12, 0, true, 0, 9, 12,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
     "", 0, "", "", "place yourself before", "stone"
@@ -109,7 +109,7 @@ static const form_entry formdata[] =
     "a fearsome dragon!",
     EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
-    16, 0, 0, true, 0, 10, -1,
+    16, 0, 0, true, 0, 10, 32,
     SPWPN_NORMAL, GREEN, "Teeth and claws", { "hit", "claw", "bite", "maul" },
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
     "roar", 6, "foreclaw", "", "bow your head before", "flesh"
