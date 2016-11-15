@@ -128,7 +128,7 @@ deplete magical power.
 Blade Hands spell
 
 Causes long, scythe-shaped blades to grow from the caster's hands, increasing
-melee damage to a degree depending on strength and dexterity.
+melee damage significantly.
 
 While transformed, any equipped weapons are melded. The caster also becomes
 unable to evoke wands, and casting spells becomes somewhat more difficult.
@@ -495,8 +495,8 @@ Dragon Form spell
     desc = desc .. "."
 
     return desc
-}} The caster's melee damage will be substantially increased to a degree
-depending on strength, and they become much more robust but less evasive.
+}} The caster will find this form offers incredible melee damage and greatly
+increased robustness (though reduced evasiveness).
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1298,9 +1298,9 @@ the target may have.
 Statue Form spell
 
 Transforms the caster into a slow but extremely robust stone statue. The
-caster's unarmed damage will be increased to a degree depending on strength,
-and all melee attacks will be substantially more powerful. The caster's stone
-body is insulated from electricity and gains resistance to poison, rotting and
+caster's unarmed damage will be increased a moderate degree, and all melee
+attacks will be substantially more powerful. The caster's stone body is
+insulated from electricity and gains resistance to poison, rotting and
 negative energy.
 
 While transformed, any equipped body armour, gloves and boots are melded.

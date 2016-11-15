@@ -489,14 +489,6 @@ public:
     static const FormBlade &instance() { static FormBlade inst; return inst; }
 
     /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        return 8 + div_rand_round(you.strength() + you.dex(), 3);
-    }
-
-    /**
      * % screen description
      */
     string get_long_name() const override
@@ -558,14 +550,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormStatue);
 public:
     static const FormStatue &instance() { static FormStatue inst; return inst; }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        return 6 + div_rand_round(you.strength(), 3);
-    }
 
     /**
      * Get a message for transforming into this form.
@@ -688,15 +672,6 @@ public:
         if (species_is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
-    }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        // You also get another 6 damage from claws.
-        return 12 + div_rand_round(you.strength() * 2, 3);
     }
 
     /**
