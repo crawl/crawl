@@ -3204,20 +3204,6 @@ static void _move_player(coord_def move)
             return;
         }
     }
-    else if (you.form == TRAN_WISP && one_chance_in(10))
-    {
-        // Full confusion appears to be a pain in the rear, and monster
-        // wisps don't attack allies either. Thus, you can get redirected
-        // only into empty places or towards enemies.
-        coord_def dir = Compass[random2(8)];
-        coord_def targ = you.pos() + dir;
-        monster *dude = monster_at(targ);
-        if (in_bounds(targ) && (dude? !dude->wont_attack() :
-                                      you.can_pass_through(targ)))
-        {
-            move = dir;
-        }
-    }
 
     const coord_def targ = you.pos() + move;
 
