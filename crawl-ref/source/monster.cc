@@ -636,11 +636,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         {
             return false;
         }
-
-        // Monsters that are gifts/worshippers of TSO won't use poisoned
-        // weapons.
-        if (god == GOD_SHINING_ONE && is_poisoned_item(item))
-            return false;
     }
 
     return true;
