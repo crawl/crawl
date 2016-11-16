@@ -200,24 +200,24 @@ default-depth: Abyss
 # Dummy vaults
 NAME: abyss_furniture_dummy
 TAGS: dummy
-CHANCE: 0 : 90% (Abyss:1)
-CHANCE: 0 : 80% (Abyss:2)
-CHANCE: 0 : 70% (Abyss:3)
-CHANCE: 0 : 60% (Abyss:4)
-CHANCE: 0 : 50% (Abyss:5)
+CHANCE: 90% (Abyss:1)
+CHANCE: 80% (Abyss:2)
+CHANCE: 70% (Abyss:3)
+CHANCE: 60% (Abyss:4)
+CHANCE: 50% (Abyss:5)
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune unrand dummy
-CHANCE: 0 : 10%
+CHANCE: 10%
 
 # FIXME: the tag name is inaccurate with abyssal stairs placed by these vaults.
 NAME: abyss_exit_dummy
 TAGS: abyss_exit unrand dummy
-CHANCE: 0 : 95% (Abyss:1)
-CHANCE: 0 : 90% (Abyss:2)
-CHANCE: 0 : 85% (Abyss:3)
-CHANCE: 0 : 80% (Abyss:4)
-CHANCE: 0 : 75% (Abyss:5)
+CHANCE: 95% (Abyss:1)
+CHANCE: 90% (Abyss:2)
+CHANCE: 85% (Abyss:3)
+CHANCE: 80% (Abyss:4)
+CHANCE: 75% (Abyss:5)
 
 NAME:    abyss_fake_exit
 TAGS:    allow_dup
