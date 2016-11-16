@@ -58,8 +58,7 @@ static const char *conducts[] =
     "",
     "Evil", "Holy", "Attack Holy", "Attack Neutral",
     "Attack Friend", "Friend Died",
-    "Poison", "Kill Living", "Kill Undead",
-    "Kill Demon", "Kill Natural Evil",
+    "Kill Living", "Kill Undead", "Kill Demon", "Kill Natural Evil",
     "Kill Unclean", "Kill Chaotic", "Kill Wizard", "Kill Priest",
     "Kill Holy", "Kill Fast", "Banishment",
     "Spell Memorise", "Spell Cast", "Spell Practise",
@@ -332,12 +331,6 @@ static peeve_map divine_peeves[] =
         { DID_EVIL, {
             "you use evil magic or items", true,
             1, 2, " forgives your inadvertent evil act, just this once."
-        } },
-        { DID_POISON, {
-            "you poison monsters", true,
-            1, 2, " forgives your inadvertent dishonourable attack, just"
-                      " this once.", nullptr,
-            [] (const monster* victim) -> bool { return !victim; }
         } },
         { DID_ATTACK_NEUTRAL, GOOD_ATTACK_NEUTRAL_RESPONSE },
         { DID_ATTACK_FRIEND, _on_attack_friend("you attack allies") },

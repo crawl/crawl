@@ -1264,13 +1264,8 @@ static void _suppressed_card_message(god_type god, conduct_type done)
     switch (done)
     {
         case DID_EVIL: forbidden_act = "evil"; break;
-
-        case DID_POISON: forbidden_act = "poisonous"; break;
-
         case DID_CHAOS: forbidden_act = "chaotic"; break;
-
         case DID_HASTY: forbidden_act = "hasty"; break;
-
         case DID_FIRE: forbidden_act = "fiery"; break;
 
         default: forbidden_act = "buggy"; break;

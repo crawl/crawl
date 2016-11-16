@@ -2037,10 +2037,6 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
         mons->add_ench(me);
     }
 
-    // Deities take notice.
-    if (agent->is_player())
-        did_god_conduct(DID_POISON, 5 + random2(3));
-
     return hurted > 0;
 }
 
@@ -2075,10 +2071,6 @@ bool poison_monster(monster* mons, const actor *who, int levels,
             simple_monster_message(*mons, msg);
         }
     }
-
-    // Finally, take care of deity preferences.
-    if (who && who->is_player())
-        did_god_conduct(DID_POISON, 5 + random2(3));
 
     return new_pois.duration > old_pois.duration;
 }
