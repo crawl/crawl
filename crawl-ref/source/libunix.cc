@@ -235,14 +235,31 @@ static COLOURS curses_color_to_internal_colour(short col);
 /**
  * @brief Flip the foreground and background color of the @p ch.
  *
- * This flip respects the current rendering assumptions. Therefore, the
- * resulting color combination may not be a strict color swap, but one that
- * is guaranteed to be visible.
+ * @see flip_colour(short &, attr_t &, short, attr_t)
  *
  * @param ch
  *  The curses character whose colors will be flipped.
  */
 static void flip_colour(cchar_t &ch);
+
+/**
+ * @brief Flip the foreground and background color of the @p ch.
+ *
+ * This flip respects the current rendering assumptions. Therefore, the
+ * resulting color combination may not be a strict color swap, but one that
+ * is guaranteed to be visible.
+ *
+ * @param attr_flipped
+ *  The location to store the resulting character attributes.
+ * @param color_pair_flipped
+ *  The location to store the resulting color pair.
+ * @param attr_original
+ *  The character attributes to flip.
+ * @param color_pair_original
+ *  The color pair to flip.
+ */
+static void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
+    attr_t attr_original, short color_pair_original);
 
 /**
  * @brief Translate internal colours to flagged curses colors.
@@ -1376,24 +1393,42 @@ static void write_char_at(int y, int x, const cchar_t &ch)
     mvadd_wchnstr(y, x, &ch, 1);
 }
 
+// see declaration
 static void flip_colour(cchar_t &ch)
 {
     attr_t attr = 0;
     short color_pair = 0;
     wchar_t *wch = nullptr;
-    short fg = COLOR_WHITE;
-    short bg = COLOR_BLACK;
 
     // Make sure to allocate enough space for the characters.
-    int chars_to_allocate = getcchar(&ch, nullptr, &attr, &color_pair, nullptr);
+    int chars_to_allocate = getcchar(&ch, nullptr, &attr,
+        &color_pair, nullptr);
     if (chars_to_allocate > 0)
         wch = new wchar_t[chars_to_allocate];
 
     // Good to go. Grab the color / attr info.
     getcchar(&ch, wch, &attr, &color_pair, nullptr);
 
-    if (color_pair != 0)
-        pair_content(color_pair, &fg, &bg);
+    // Pass along to the more generic function for the heavy lifting.
+    flip_colour(attr, color_pair, attr, color_pair);
+
+    // Assign the new, reversed info and clean up.
+    setcchar(&ch, wch, attr, color_pair, nullptr);
+    if (chars_to_allocate > 0)
+        delete [] wch;
+}
+
+// see declaration
+void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
+    attr_t attr_original, short color_pair_original)
+{
+    short fg = COLOR_WHITE;
+    short bg = COLOR_BLACK;
+    attr_t temp_attr = attr_original;
+    short temp_color_pair = color_pair_original;
+
+    if (color_pair_original != 0)
+        pair_content(color_pair_original, &fg, &bg);
     else
     {
         // Default pair; use the current default colors.
@@ -1407,20 +1442,21 @@ static void flip_colour(cchar_t &ch)
     if (!curs_can_use_extended_colors())
     {
         // Check if these were brightened colours.
-        if (attr & WA_BOLD)
+        if (temp_attr & WA_BOLD)
             fg |= COLFLAG_CURSES_BRIGHTEN;
-        if (attr & WA_BLINK)
+        if (temp_attr & WA_BLINK)
             bg |= COLFLAG_CURSES_BRIGHTEN;
-        attr &= ~(WA_BOLD | WA_BLINK);
+        temp_attr &= ~(WA_BOLD | WA_BLINK);
     }
 
     if (!need_attribute_only_flip)
     {
         // Perform a flip using the inverse color pair.
-        attr_t newattr;
-        curs_attr(newattr, color_pair, curses_color_to_internal_colour(bg),
+        attr_t brightness_attr;
+        curs_attr(brightness_attr, temp_color_pair,
+            curses_color_to_internal_colour(bg),
             curses_color_to_internal_colour(fg));
-        attr |= newattr;
+        temp_attr |= brightness_attr;
     }
     else
     {
@@ -1433,27 +1469,26 @@ static void flip_colour(cchar_t &ch)
                 && (Options.blink_brightens_background
                     || Options.best_effort_brighten_background))
             {
-                attr |= WA_BLINK;
+                temp_attr |= WA_BLINK;
             }
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
                 && (Options.bold_brightens_foreground
                     || Options.best_effort_brighten_foreground))
             {
-                attr |= WA_BOLD;
+                temp_attr |= WA_BOLD;
             }
         }
 
         // Toggle the reverse video bit.
-        if (attr & WA_REVERSE)
-            attr &= ~WA_REVERSE;
+        if (temp_attr & WA_REVERSE)
+            temp_attr &= ~WA_REVERSE;
         else
-            attr |= WA_REVERSE;
+            temp_attr |= WA_REVERSE;
     }
 
-    // Assign the new, reversed info and clean up.
-    setcchar(&ch, wch, attr, color_pair, nullptr);
-    if (chars_to_allocate > 0)
-        delete [] wch;
+    // Write out the results.
+    color_pair_flipped = temp_color_pair;
+    attr_flipped = temp_attr;
 }
 
 void fakecursorxy(int x, int y)
