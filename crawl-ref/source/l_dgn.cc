@@ -189,13 +189,9 @@ static int dgn_chance(lua_State *ls)
     MAP(ls, 1, map);
     if (lua_isnumber(ls, 2))
     {
-        const bool has_priority = lua_isnumber(ls, 3);
-        const int chance_priority =
-            has_priority? luaL_checkint(ls, 2) : DEFAULT_CHANCE_PRIORITY;
-        const int chance_par = 2 + has_priority;
-        const int chance = luaL_checkint(ls, chance_par);
-        _chance_magnitude_check(ls, chance_par, chance);
-        map->_chance.set_default(map_chance(chance_priority, chance));
+        const int chance = luaL_checkint(ls, 2);
+        _chance_magnitude_check(ls, 2, chance);
+        map->_chance.set_default(map_chance(chance));
     }
     return 0;
 }
@@ -204,15 +200,11 @@ static int dgn_depth_chance(lua_State *ls)
 {
     MAP(ls, 1, map);
     const string depth(luaL_checkstring(ls, 2));
-    const bool has_priority = lua_gettop(ls) == 4;
-    const int chance_priority =
-        has_priority? luaL_checkint(ls, 3) : DEFAULT_CHANCE_PRIORITY;
-    const int chance_par = 3 + has_priority;
-    const int chance = luaL_checkint(ls, chance_par);
-    _chance_magnitude_check(ls, chance_par, chance);
+    const int chance = luaL_checkint(ls, 3);
+    _chance_magnitude_check(ls, 3, chance);
     try
     {
-        map->_chance.add_range(depth, map_chance(chance_priority, chance));
+        map->_chance.add_range(depth, map_chance(chance));
     }
     catch (const bad_level_id &error)
     {

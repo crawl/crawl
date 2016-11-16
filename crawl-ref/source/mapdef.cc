@@ -2079,7 +2079,7 @@ dlua_set_map::~dlua_set_map()
 
 string map_chance::describe() const
 {
-    return make_stringf("%d:%d", chance_priority, chance);
+    return make_stringf("%d", chance);
 }
 
 bool map_chance::roll() const
@@ -2089,13 +2089,11 @@ bool map_chance::roll() const
 
 void map_chance::write(writer &outf) const
 {
-    marshallInt(outf, chance_priority);
     marshallInt(outf, chance);
 }
 
 void map_chance::read(reader &inf)
 {
-    chance_priority = unmarshallInt(inf);
     chance = unmarshallInt(inf);
 }
 
