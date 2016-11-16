@@ -2997,25 +2997,27 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
 static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
-    set<attack_flavour> attack_flavours;
     vector<string> attack_descs;
 
     for (const auto &attack : mi.attack)
     {
-        attack_flavour af = attack.flavour;
-        if (!attack_flavours.count(af))
-        {
-            attack_flavours.insert(af);
-            const char * const desc = _describe_attack_flavour(af);
-            if (desc[0]) // non-empty
-                attack_descs.push_back(desc);
-        }
+        if (attack.type == AT_NONE)
+            break; // assumes there are no gaps in attack arrays
+
+        attack_descs.push_back(
+            make_stringf("%s for up to %d damage",
+                         mon_attack_name(attack.type).c_str(),
+                         attack.damage));
+        // TODO: flavours
+        // TODO: weapons
     }
 
     if (!attack_descs.empty())
     {
         result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << " may attack to " << comma_separated_line(attack_descs.begin(), attack_descs.end());
+        result << " can " << comma_separated_line(attack_descs.begin(),
+                                                  attack_descs.end(),
+                                                  "; and ", "; ");
         result << ".\n";
     }
 
