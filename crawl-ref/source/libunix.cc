@@ -945,6 +945,8 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     COLOURS fg_mod = fg;
     COLOURS bg_mod = bg;
     attr_t flags = 0;
+    attr_t temp_attr = 0;
+    short temp_color_pair = 0;
 
     // calculate which curses flags we need...
     if (brand != CHATTR_NORMAL)
@@ -972,17 +974,17 @@ static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
     else if (bg_mod == BG_COL_DEFAULT)
         bg_mod = BLACK;
 
+    // Done with color mapping; get the resulting attributes.
+    curs_attr(temp_attr, temp_color_pair, fg_mod, bg_mod);
+    temp_attr |= flags;
+
     // Reverse color manually to ensure correct brightening attrs.
     if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
-    {
-        COLOURS fg_mod_backup = fg_mod;
-        fg_mod = bg_mod;
-        bg_mod = fg_mod_backup;
-    }
+        flip_colour(temp_attr, temp_color_pair, temp_attr, temp_color_pair);
 
-    // Done with color mapping; get the resulting attributes.
-    curs_attr(attr, color_pair, fg_mod, bg_mod);
-    attr |= flags;
+    // Write out the results.
+    color_pair = temp_color_pair;
+    attr = temp_attr;
 }
 
 // see declaration
