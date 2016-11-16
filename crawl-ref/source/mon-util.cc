@@ -2023,6 +2023,52 @@ static int _mons_damage(monster_type mc, int rt)
     return smc->attack[rt].damage;
 }
 
+/**
+ * A short description of the given monster attack type.
+ *
+ * @param attack    The attack to be described; e.g. AT_HIT, AT_SPORE.
+ * @return          A short description; e.g. "hit", "release spores at".
+ */
+string mon_attack_name(attack_type attack)
+{
+    static const char *attack_types[] =
+    {
+        "hit",         // including weapon attacks
+        "bite",
+        "sting",
+
+        // spore
+        "release spores at",
+
+        "touch",
+        "engulf",
+        "claw",
+        "peck",
+        "headbutt",
+        "punch",
+        "kick",
+        "tentacle-slap",
+        "tail-slap",
+        "gore",
+        "constrict",
+        "trample",
+        "trunk-slap",
+#if TAG_MAJOR_VERSION == 34
+        "snap closed at",
+        "splash",
+#endif
+        "pounce on",
+#if TAG_MAJOR_VERSION == 34
+        "sting",
+#endif
+    };
+    COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
+
+    const int verb_index = attack - AT_FIRST_ATTACK;
+    ASSERT(verb_index < (int)ARRAYSZ(attack_types));
+    return attack_types[verb_index];
+}
+
 bool mons_immune_magic(const monster& mon)
 {
     return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;

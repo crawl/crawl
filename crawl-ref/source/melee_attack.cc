@@ -2307,42 +2307,7 @@ string melee_attack::mons_attack_verb()
     if (attk_type == AT_TENTACLE_SLAP && mons_is_tentacle(attacker->type))
         return "slap";
 
-    static const char *attack_types[] =
-    {
-        "hit",         // including weapon attacks
-        "bite",
-        "sting",
-
-        // spore
-        "release spores at",
-
-        "touch",
-        "engulf",
-        "claw",
-        "peck",
-        "headbutt",
-        "punch",
-        "kick",
-        "tentacle-slap",
-        "tail-slap",
-        "gore",
-        "constrict",
-        "trample",
-        "trunk-slap",
-#if TAG_MAJOR_VERSION == 34
-        "snap closed at",
-        "splash",
-#endif
-        "pounce on",
-#if TAG_MAJOR_VERSION == 34
-        "sting",
-#endif
-    };
-    COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
-
-    const int verb_index = attk_type - AT_FIRST_ATTACK;
-    ASSERT(verb_index < (int)ARRAYSZ(attack_types));
-    return attack_types[verb_index];
+    return mon_attack_name(attk_type);
 }
 
 string melee_attack::mons_attack_desc()
