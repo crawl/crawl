@@ -2990,7 +2990,7 @@ static string _flavour_effect(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
-        { AF_BLINK,             "blink self" },
+        { AF_BLINK,             "blink itself" },
         { AF_COLD,              "deal extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
         { AF_DRAIN_STR,         "drain strength" },
@@ -3013,7 +3013,7 @@ static string _flavour_effect(attack_flavour flavour)
         { AF_STICKY_FLAME,      "apply sticky flame" },
         { AF_CHAOTIC,           "cause unpredictable effects" },
         { AF_STEAL,             "steal items" },
-        { AF_CRUSH,             "constrict" },
+        { AF_CRUSH,             "ongoing constriction" },
         { AF_REACH,             "" },
         { AF_HOLY,              "deal extra damage to undead and demons" },
         { AF_ANTIMAGIC,         "drain magic" },
