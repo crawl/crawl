@@ -2088,6 +2088,44 @@ bool flavour_triggers_damageless(attack_flavour flavour)
         || flavour == AF_HUNGER;
 }
 
+/**
+ * How much special damage does the given attack flavour do for an attack from
+ * a monster of the given hit dice?
+ *
+ * Various effects (e.g. acid) currently go through more complex codepaths. :(
+ *
+ * @param flavour       The attack flavour in question; e.g. AF_FIRE.
+ * @param HD            The HD to calculate damage for.
+ * @param random        Whether to roll damage, or (if false) just return
+ *                      the top of the range.
+ * @return              The damage that the given attack flavour does, before
+ *                      resists and other effects are applied.
+ */
+int flavour_damage(attack_flavour flavour, int HD, bool random)
+{
+    switch (flavour)
+    {
+        case AF_FIRE:
+            if (random)
+                return HD + random2(HD);
+            return HD * 2;
+        case AF_COLD:
+            if (random)
+                return HD + random2(HD*2);
+            return HD * 3;
+        case AF_ELEC:
+            if (random)
+                return HD + random2(HD/2);
+            return HD * 3 / 2;
+        case AF_PURE_FIRE:
+            if (random)
+                return HD * 3 / 2 + random2(HD);
+            return HD * 5 / 2;
+        default:
+            return 0;
+    }
+}
+
 bool mons_immune_magic(const monster& mon)
 {
     return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;

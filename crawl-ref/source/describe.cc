@@ -2982,24 +2982,25 @@ static const char* _flavour_range_desc(attack_flavour flavour)
  * Provide a short, and-prefixed flavour description of the given attack
  * flavour, if any.
  *
- * @param flavour   E.g. AF_COLD, AF_PLAIN.
- * @return          "" if AF_PLAIN; else " <desc>", e.g.
- *                  " and, after penetrating armour, deal extra cold damage".
+ * @param flavour  E.g. AF_COLD, AF_PLAIN.
+ * @param HD       The hit dice of the monster using the flavour.
+ * @return         "" if AF_PLAIN; else " <desc>", e.g.
+ *                 " and, after penetrating armour, deal up to 27 cold damage".
  */
-static string _flavour_effect(attack_flavour flavour)
+static string _flavour_effect(attack_flavour flavour, int HD)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
         { AF_BLINK,             "blink itself" },
-        { AF_COLD,              "deal extra cold damage" },
+        { AF_COLD,              "deal up to %d cold damage" },
         { AF_CONFUSE,           "cause confusion" },
         { AF_DRAIN_STR,         "drain strength" },
         { AF_DRAIN_INT,         "drain intelligence" },
         { AF_DRAIN_DEX,         "drain dexterity" },
         { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
         { AF_DRAIN_XP,          "drain skills" },
-        { AF_ELEC,              "cause electrocution" },
-        { AF_FIRE,              "deal extra fire damage" },
+        { AF_ELEC,              "deal up to %d electric damage" },
+        { AF_FIRE,              "deal up to %d fire damage" },
         { AF_HUNGER,            "cause hunger" },
         { AF_MUTATE,            "cause mutations" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
@@ -3020,13 +3021,12 @@ static string _flavour_effect(attack_flavour flavour)
         { AF_PAIN,              "cause pain to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
         { AF_ENGULF,            "engulf with water" },
-        { AF_PURE_FIRE,         "deal pure fire damage" },
+        { AF_PURE_FIRE,         "deal up to %d fire damage" },
         { AF_DRAIN_SPEED,       "drain speed" },
         { AF_VULN,              "reduce resistance to hostile enchantments" },
         { AF_SHADOWSTAB,        "deal extra damage from the shadows" },
                                 // XXX: ^ 'if invisible' could be clearer?
         { AF_DROWN,             "deal drowning damage" },
-                                // XXX: ^ mention anti-spellcasting etc?
         { AF_CORRODE,           "cause corrosion" },
         { AF_SCARAB,            "drain speed and drain health" },
         { AF_TRAMPLE,           "knock back the defender" },
@@ -3042,13 +3042,16 @@ static string _flavour_effect(attack_flavour flavour)
     if (base_desc->empty())
         return *base_desc;
 
+    const int flavour_dam = flavour_damage(flavour, HD, false);
+    const string flavour_desc = make_stringf(base_desc->c_str(), flavour_dam);
+
     if (!flavour_triggers_damageless(flavour)
         && flavour != AF_KITE && flavour != AF_SWOOP)
     {
-        return " and, after penetrating armour, " + *base_desc;
+        return " and, after penetrating armour, " + flavour_desc;
     }
 
-    return " and " + *base_desc;
+    return " and " + flavour_desc;
 }
 
 struct mon_attack_info
@@ -3118,9 +3121,9 @@ static string _monster_attacks_description(const monster_info& mi)
                          _flavour_range_desc(attack.flavour),
                          count_desc.c_str(),
                          attack.damage,
-                         attack_count.second > 1 ? " each" : "",
                          weapon_note.c_str(),
-                         _flavour_effect(attack.flavour).c_str()));
+                         _flavour_effect(attack.flavour, mi.hd).c_str(),
+                         attack_count.second > 1 ? " each" : ""));
     }
 
 
