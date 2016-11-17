@@ -403,7 +403,7 @@ ENDMAP
 NAME:   chequers_ecumenical_altar_simple
 DEPTH:  D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
-CHANCE: 10 : 10%
+CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
 SUBST: G : Gbt x:5
 MAP
@@ -417,7 +417,7 @@ ENDMAP
 NAME: chequers_ecumenical_altar_simple_redux
 DEPTH: D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
-CHANCE: 10 : 10%
+CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
 SUBST: G : Gbt x:5
 MAP
@@ -435,7 +435,8 @@ DEPTH:  D:2-3
 TAGS:   uniq_ecumenical_altar chance_ecumenical_altar
 # Disconnected regions can spawn in the trees
 TAGS:   no_item_gen no_item_gen no_monster_gen
-CHANCE: 5 : 10%
+CHANCE: 10%
+WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
 SUBST:  - = tt.
 : if crawl.coinflip() then
@@ -462,7 +463,8 @@ ENDMAP
 NAME: chequers_ecumenical_altar_lobes
 DEPTH: D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
-CHANCE: 5 : 10%
+CHANCE: 10%
+WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
 KPROP:  - = no_tele_into
 NSUBST: + = 1:.
@@ -487,7 +489,8 @@ ENDMAP
 NAME: chequers_ecumenical_altar_twisty
 DEPTH: D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
-CHANCE: 5 : 10%
+CHANCE: 10%
+WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
 SUBST: x : x:30 c t:1
 MAP
@@ -507,7 +510,7 @@ ENDMAP
 NAME: chequers_ecumenical_altar_island
 DEPTH: D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
-CHANCE: 5 : 10%
+CHANCE: 10%
 KFEAT: _ = altar_ecumenical
 SUBST: - = W:5 . t:5
 SUBST: s = W:5 .
