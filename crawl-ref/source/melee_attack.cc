@@ -312,17 +312,6 @@ bool melee_attack::handle_phase_dodged()
     return true;
 }
 
-static bool _flavour_triggers_damageless(attack_flavour flavour)
-{
-    return flavour == AF_CRUSH
-           || flavour == AF_ENGULF
-           || flavour == AF_PURE_FIRE
-           || flavour == AF_SHADOWSTAB
-           || flavour == AF_DROWN
-           || flavour == AF_CORRODE
-           || flavour == AF_HUNGER;
-}
-
 void melee_attack::apply_black_mark_effects()
 {
     // Less reliable effects for players.
@@ -432,7 +421,7 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
-    if (damage_done > 0 || _flavour_triggers_damageless(attk_flavour))
+    if (damage_done > 0 || flavour_triggers_damageless(attk_flavour))
     {
         if (!handle_phase_damaged())
             return false;
@@ -2561,7 +2550,7 @@ void melee_attack::mons_apply_attack_flavour()
         flavour = random_chaos_attack_flavour();
 
     // Note that if damage_done == 0 then this code won't be reached
-    // unless the flavour is in _flavour_triggers_damageless.
+    // unless the flavour is in flavour_triggers_damageless.
     switch (flavour)
     {
     default:
