@@ -7789,7 +7789,8 @@ bool player::form_uses_xl() const
     // users of one particular [non-]weapon be effective for this
     // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
-    return form == TRAN_WISP || form == TRAN_FUNGUS;
+    return form == TRAN_WISP || form == TRAN_FUNGUS || form == TRAN_PIG
+           || form == TRAN_BAT && you.species != SP_VAMPIRE;
 }
 
 static int _get_device_heal_factor()
