@@ -1008,9 +1008,7 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 {
 #define FAIL(msg) { if (!suppress_msg) mpr(msg); return false; }
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
-    {
         FAIL("That's not food!");
-    }
 
     // special case mutagenic chunks to skip hunger checks, as they don't give
     // nutrition and player can get hungry by using spells etc. anyway
