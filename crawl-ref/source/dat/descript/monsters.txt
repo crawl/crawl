@@ -1093,7 +1093,7 @@ entire world to cinders.
 %%%%
 fire vortex
 
-A swirling cloud of flame.
+A swirling cloud of flame. After striking a foe, it disintegrates.
 %%%%
 flayed ghost
 
