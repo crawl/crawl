@@ -2543,11 +2543,12 @@ bool melee_attack::mons_attack_effects()
 void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
-    int base_damage = 0;
 
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
+
+    const int base_damage = flavour_damage(flavour, attacker->get_hit_dice());
 
     // Note that if damage_done == 0 then this code won't be reached
     // unless the flavour is in flavour_triggers_damageless.
@@ -2581,8 +2582,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
-        base_damage = attacker->get_hit_dice()
-                      + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -2603,8 +2602,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_COLD:
-        base_damage = attacker->get_hit_dice()
-                      + random2(2 * attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
@@ -2626,9 +2623,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ELEC:
-        base_damage = attacker->get_hit_dice()
-                      + random2(attacker->get_hit_dice() / 2);
-
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
@@ -2917,9 +2911,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->suicide(-10);
 
-        special_damage = (attacker->get_hit_dice() * 3 / 2
-                          + random2(attacker->get_hit_dice()));
-        special_damage = defender->apply_ac(special_damage, 0, AC_HALF);
+        special_damage = defender->apply_ac(base_damage, 0, AC_HALF);
         special_damage = resist_adjust_damage(defender,
                                               BEAM_FIRE,
                                               special_damage);

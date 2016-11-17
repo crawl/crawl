@@ -243,6 +243,7 @@ bool mons_immune_magic(const monster& mon);
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = false);
 string mon_attack_name(attack_type attack);
 bool flavour_triggers_damageless(attack_flavour flavour);
+int flavour_damage(attack_flavour flavour, int HD, bool random = true);
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 
