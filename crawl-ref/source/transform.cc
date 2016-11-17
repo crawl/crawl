@@ -782,14 +782,6 @@ public:
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     }
 
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        return you.species == SP_VAMPIRE ? 2 : 1;
-    }
-
     string get_description(bool past_tense) const override
     {
         return make_stringf("You %s in %sbat-form.",
