@@ -3088,10 +3088,7 @@ static string _monster_attacks_description(const monster_info& mi)
         mon_attack_info attack_info
             = { attack, weapon_index && mon_uses_weapons };
 
-        if (attack_counts.count(attack_info))
-            attack_counts[attack_info] += 1;
-        else
-            attack_counts[attack_info] = 1;
+        ++attack_counts[attack_info];
     }
 
     // XXX: hack alert
