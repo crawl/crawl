@@ -1597,12 +1597,14 @@ static void _print_head_change_message(int old_heads, int new_heads)
  *
  * @param which_trans   The tranformation which the player is undergoing
  *                      (default you.form).
+ * @param involuntary   Whether the transformation is involuntary or not.
  * @return              UFR_GOOD if the player is not blocked from entering the
  *                      given form by their undead race; UFR_TOO_ALIVE if the
  *                      player is too satiated as a vampire; UFR_TOO_DEAD if
  *                      the player is too dead (or too thirsty as a vampire).
  */
-undead_form_reason lifeless_prevents_form(transformation_type which_trans)
+undead_form_reason lifeless_prevents_form(transformation_type which_trans,
+                                          bool involuntary)
 {
     if (!you.undead_state(false))
         return UFR_GOOD; // not undead!
@@ -1620,7 +1622,12 @@ undead_form_reason lifeless_prevents_form(transformation_type which_trans)
         return UFR_TOO_DEAD; // vampires can never lichform
 
     if (which_trans == TRAN_BAT) // can batform on satiated or below
+    {
+        if (involuntary)
+            return UFR_TOO_DEAD; // but not as a forced polymorph effect
+
         return you.hunger_state <= HS_SATIATED ? UFR_GOOD : UFR_TOO_ALIVE;
+    }
 
     // other forms can only be entered when satiated or above.
     return you.hunger_state >= HS_SATIATED ? UFR_GOOD : UFR_TOO_DEAD;
@@ -1723,7 +1730,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     // the undead cannot enter most forms.
-    if (lifeless_prevents_form(which_trans) == UFR_TOO_DEAD)
+    if (lifeless_prevents_form(which_trans, involuntary) == UFR_TOO_DEAD)
     {
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;
