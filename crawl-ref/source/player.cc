@@ -7282,18 +7282,11 @@ bool player::polymorph(int pow)
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
     {
-        // Whole-body transformations only; mere appendage doesn't seem fitting.
-        f = random_choose_weighted(
-            120, TRAN_BAT,
-            120, TRAN_FUNGUS,
-            120, TRAN_PIG,
-            120, TRAN_TREE,
-            120, TRAN_WISP,
-             20, TRAN_SPIDER,
-             20, TRAN_ICE_BEAST,
-              5, TRAN_STATUE,
-              2, TRAN_HYDRA,
-              1, TRAN_DRAGON);
+        f = random_choose(TRAN_BAT,
+                          TRAN_FUNGUS,
+                          TRAN_PIG,
+                          TRAN_TREE,
+                          TRAN_WISP);
         // need to do a dry run first, as Zin's protection has a random factor
         if (transform(pow, f, true, true))
             break;
