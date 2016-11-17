@@ -3056,19 +3056,31 @@ static string _monster_attacks_description(const monster_info& mi)
     ostringstream result;
     vector<string> attack_descs;
 
+    int i = 0;
     for (const auto &attack : mi.attack)
     {
         if (attack.type == AT_NONE)
             break; // assumes there are no gaps in attack arrays
 
+        const bool weapon_index =
+            i == 0
+            || i == 1 && mons_class_wields_two_weapons(mi.base_type);
+        const bool uses_weapons
+            = mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT;
+        // XXX: ^ support bound souls?
+        const string weapon_note = weapon_index && uses_weapons ?
+                                   " (more with a weapon)" : "";
+
         attack_descs.push_back(
-            make_stringf("%s%s%s for up to %d damage%s",
+            make_stringf("%s%s%s for up to %d damage%s%s",
                          _special_flavour_prefix(attack.flavour),
                          mon_attack_name(attack.type).c_str(),
                          _flavour_range_desc(attack.flavour),
                          attack.damage,
+                         weapon_note.c_str(),
                          _flavour_effect(attack.flavour).c_str()));
-        // TODO: weapons
+
+        ++i;
     }
 
     if (!attack_descs.empty())
