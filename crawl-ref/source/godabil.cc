@@ -7368,7 +7368,6 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     pbolt.aimed_at_spot = true;
     pbolt.fire();
 
-
     // ...any monster nearby can see that something has been thrown, even
     // if it didn't make any noise.
     alert_nearby_monsters();
