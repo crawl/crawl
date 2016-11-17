@@ -3051,37 +3051,78 @@ static string _flavour_effect(attack_flavour flavour)
     return " and " + *base_desc;
 }
 
+struct mon_attack_info
+{
+    mon_attack_def definition;
+    bool uses_weapons;
+    bool operator < (const mon_attack_info &other) const
+    {
+        return std::tie(definition.type, definition.flavour,
+                        definition.damage, uses_weapons)
+             < std::tie(other.definition.type, other.definition.flavour,
+                        other.definition.damage, other.uses_weapons);
+    }
+};
+
 static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
-    vector<string> attack_descs;
+    map<mon_attack_info, int> attack_counts;
 
-    int i = 0;
-    for (const auto &attack : mi.attack)
+    const bool mon_uses_weapons
+        = mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT;
+    // XXX: ^ support bound souls?
+
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
+        const mon_attack_def &attack = mi.attack[i];
         if (attack.type == AT_NONE)
             break; // assumes there are no gaps in attack arrays
 
         const bool weapon_index =
             i == 0
             || i == 1 && mons_class_wields_two_weapons(mi.base_type);
-        const bool uses_weapons
-            = mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT;
-        // XXX: ^ support bound souls?
-        const string weapon_note = weapon_index && uses_weapons ?
+        mon_attack_info attack_info
+            = { attack, weapon_index && mon_uses_weapons };
+
+        if (attack_counts.count(attack_info))
+            attack_counts[attack_info] += 1;
+        else
+            attack_counts[attack_info] = 1;
+    }
+
+    // XXX: hack alert
+    if (mons_genus(mi.base_type) == MONS_HYDRA)
+    {
+        ASSERT(attack_counts.size() == 1);
+        for (auto &attack_count : attack_counts)
+            attack_count.second = mi.num_heads;
+    }
+
+    vector<string> attack_descs;
+    for (const auto &attack_count : attack_counts)
+    {
+        const mon_attack_info &info = attack_count.first;
+        const mon_attack_def &attack = info.definition;
+        const string weapon_note = info.uses_weapons ?
                                    " (more with a weapon)" : "";
+        const string count_desc =
+              attack_count.second == 1 ? "" :
+              attack_count.second == 2 ? " twice" :
+              " " + number_in_words(attack_count.second) + " times";
 
         attack_descs.push_back(
-            make_stringf("%s%s%s for up to %d damage%s%s",
+            make_stringf("%s%s%s%s for up to %d damage%s%s%s",
                          _special_flavour_prefix(attack.flavour),
                          mon_attack_name(attack.type).c_str(),
                          _flavour_range_desc(attack.flavour),
+                         count_desc.c_str(),
                          attack.damage,
+                         attack_count.second > 1 ? " each" : "",
                          weapon_note.c_str(),
                          _flavour_effect(attack.flavour).c_str()));
-
-        ++i;
     }
+
 
     if (!attack_descs.empty())
     {
