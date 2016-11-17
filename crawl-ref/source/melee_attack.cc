@@ -3118,8 +3118,7 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
-        const int mut = (you.form == TRAN_PORCUPINE) ? 3
-                        : player_mutation_level(MUT_SPINY);
+        const int mut = player_mutation_level(MUT_SPINY);
 
         if (mut && attacker->alive() && coinflip())
         {
