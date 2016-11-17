@@ -17,14 +17,6 @@ struct mon_attack_def
     attack_type     type;
     attack_flavour  flavour;
     int             damage;
-
-    static mon_attack_def attk(int dam,
-                               attack_type typ = AT_HIT,
-                               attack_flavour flav = AF_PLAIN)
-    {
-        mon_attack_def def = { typ, flav, dam };
-        return def;
-    }
 };
 
 // Amount of mons->speed_increment used by different actions; defaults

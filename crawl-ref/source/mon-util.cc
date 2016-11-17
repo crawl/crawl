@@ -1932,12 +1932,12 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_fla
     {
         if (attk_number == 0)
         {
-            return mon_attack_def::attk(mon.ghost->damage,
-                                        mon.ghost->att_type,
-                                        mon.ghost->att_flav);
+            return { mon.ghost->att_type, mon.ghost->att_flav,
+                     mon.ghost->damage };
+                                        
         }
 
-        return mon_attack_def::attk(0, AT_NONE);
+        return { AT_NONE, AF_PLAIN, 0 };
     }
     else if (mc == MONS_MUTANT_BEAST)
         return _mutant_beast_attack(mon, attk_number);
