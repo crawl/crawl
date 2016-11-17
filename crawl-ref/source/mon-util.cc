@@ -2069,6 +2069,25 @@ string mon_attack_name(attack_type attack)
     return attack_types[verb_index];
 }
 
+/**
+ * Does this monster attack flavour trigger even if the base attack does no
+ * damage?
+ *
+ * @param flavour   The attack flavour in question; e.g. AF_COLD.
+ * @return          Whether the flavour attack triggers on a successful hit
+ *                  regardless of damage done.
+ */
+bool flavour_triggers_damageless(attack_flavour flavour)
+{
+    return flavour == AF_CRUSH
+        || flavour == AF_ENGULF
+        || flavour == AF_PURE_FIRE
+        || flavour == AF_SHADOWSTAB
+        || flavour == AF_DROWN
+        || flavour == AF_CORRODE
+        || flavour == AF_HUNGER;
+}
+
 bool mons_immune_magic(const monster& mon)
 {
     return get_monster_data(mon.type)->resist_magic == MAG_IMMUNE;
