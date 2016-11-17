@@ -3021,7 +3021,7 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_PAIN,              "cause pain to the living" },
         { AF_ENSNARE,           "ensnare with webbing" },
         { AF_ENGULF,            "engulf with water" },
-        { AF_PURE_FIRE,         "deal up to %d fire damage" },
+        { AF_PURE_FIRE,         "" },
         { AF_DRAIN_SPEED,       "drain speed" },
         { AF_VULN,              "reduce resistance to hostile enchantments" },
         { AF_SHADOWSTAB,        "deal extra damage from the shadows" },
@@ -3113,6 +3113,16 @@ static string _monster_attacks_description(const monster_info& mi)
               attack_count.second == 1 ? "" :
               attack_count.second == 2 ? " twice" :
               " " + number_in_words(attack_count.second) + " times";
+
+        // XXX: hack alert
+        if (attack.flavour == AF_PURE_FIRE)
+        {
+            attack_descs.push_back(
+                make_stringf("%s to deal up to %d fire damage",
+                             mon_attack_name(attack.type).c_str(),
+                             flavour_damage(attack.flavour, mi.hd, false)));
+            continue;
+        }
 
         attack_descs.push_back(
             make_stringf("%s%s%s%s for up to %d damage%s%s%s",
