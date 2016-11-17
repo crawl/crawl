@@ -586,7 +586,9 @@ enum transformation_type
     TRAN_PIG,
     TRAN_APPENDAGE,
     TRAN_TREE,
+#if TAG_MAJOR_VERSION == 34
     TRAN_PORCUPINE,
+#endif
     TRAN_WISP,
 #if TAG_MAJOR_VERSION == 34
     TRAN_JELLY,

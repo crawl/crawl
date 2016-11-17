@@ -1234,7 +1234,7 @@ int attack::calc_base_unarmed_damage()
 
     if (you.form_uses_xl())
         damage += you.experience_level;
-    else if (you.form == TRAN_BAT || you.form == TRAN_PORCUPINE)
+    else if (you.form == TRAN_BAT)
     {
         // Bats really don't do a lot of damage.
         damage += you.skill_rdiv(wpn_skill, 1, 5);

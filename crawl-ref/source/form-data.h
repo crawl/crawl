@@ -170,6 +170,7 @@ static const form_entry formdata[] =
     "creak", 0, "branch", "root", "sway towards", "wood"
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     TRAN_PORCUPINE, MONS_PORCUPINE, "Porc", "porcupine-form", "porcupine",
     "a spiny porcupine.",
@@ -180,6 +181,7 @@ static const form_entry formdata[] =
     FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh"
 },
+#endif
 
 {
     TRAN_WISP, MONS_INSUBSTANTIAL_WISP, "Wisp", "wisp-form", "wisp",
