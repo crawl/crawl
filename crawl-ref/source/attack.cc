@@ -1233,7 +1233,7 @@ int attack::calc_base_unarmed_damage()
         damage += you.has_claws() * 2;
 
     if (you.form_uses_xl())
-        damage += you.experience_level;
+        damage += div_rand_round(you.experience_level, 3);
     else
         damage += you.skill_rdiv(wpn_skill);
 
