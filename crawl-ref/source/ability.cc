@@ -3045,8 +3045,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
-        fail_check();
-        if (!uskayaw_grand_finale())
+        if (!uskayaw_grand_finale(fail))
             return SPRET_ABORT;
         break;
 
