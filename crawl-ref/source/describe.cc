@@ -3057,24 +3057,40 @@ static string _flavour_effect(attack_flavour flavour, int HD)
 struct mon_attack_info
 {
     mon_attack_def definition;
-    bool uses_weapons;
+    const item_def* weapon;
     bool operator < (const mon_attack_info &other) const
     {
         return std::tie(definition.type, definition.flavour,
-                        definition.damage, uses_weapons)
+                        definition.damage, weapon)
              < std::tie(other.definition.type, other.definition.flavour,
-                        other.definition.damage, other.uses_weapons);
+                        other.definition.damage, other.weapon);
     }
 };
+
+/**
+ * What weapon is the given monster using for the given attack, if any?
+ *
+ * @param mi        The monster in question.
+ * @param atk       The attack number. (E.g. 0, 1, 2...)
+ * @return          The melee weapon being used by the monster for the given
+ *                  attack, if any.
+ */
+static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
+{
+    const item_def* weapon
+       = atk == 0 ? mi.inv[MSLOT_WEAPON].get() :
+         atk == 1 && mi.wields_two_weapons() ? mi.inv[MSLOT_ALT_WEAPON].get() :
+         nullptr;
+
+    if (weapon && is_weapon(*weapon))
+        return weapon;
+    return nullptr;
+}
 
 static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
     map<mon_attack_info, int> attack_counts;
-
-    const bool mon_uses_weapons
-        = mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT;
-    // XXX: ^ support bound souls?
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
@@ -3082,11 +3098,8 @@ static string _monster_attacks_description(const monster_info& mi)
         if (attack.type == AT_NONE)
             break; // assumes there are no gaps in attack arrays
 
-        const bool weapon_index =
-            i == 0
-            || i == 1 && mons_class_wields_two_weapons(mi.base_type);
-        mon_attack_info attack_info
-            = { attack, weapon_index && mon_uses_weapons };
+        const item_def* weapon = _weapon_for_attack(mi, i);
+        mon_attack_info attack_info = { attack, weapon };
 
         ++attack_counts[attack_info];
     }
@@ -3104,8 +3117,10 @@ static string _monster_attacks_description(const monster_info& mi)
     {
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
-        const string weapon_note = info.uses_weapons ?
-                                   " (more with a weapon)" : "";
+        const string weapon_note
+            = info.weapon ? make_stringf(" (plus %s damage)",
+                                         info.weapon->name(DESC_PLAIN).c_str())
+                          : "";
         const string count_desc =
               attack_count.second == 1 ? "" :
               attack_count.second == 2 ? " twice" :
