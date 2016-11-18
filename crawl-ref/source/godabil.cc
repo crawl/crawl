@@ -3900,17 +3900,20 @@ void spare_beogh_convert()
     }
 }
 
-#define STATIONARY_CHECK                               \
-    do {                                               \
-        if (you.is_stationary()) {                     \
-            canned_msg(MSG_CANNOT_MOVE);               \
-            return false;                              \
-        }                                              \
-    } while (0)
+/// If the player is stationary, print 'You cannot move.' and return true.
+static bool _abort_if_stationary()
+{
+    if (!you.is_stationary())
+        return false;
+
+    canned_msg(MSG_CANNOT_MOVE);
+    return true;
+}
 
 bool dithmenos_shadow_step()
 {
-    STATIONARY_CHECK;
+    if (_abort_if_stationary())
+        return false;
 
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
@@ -6179,7 +6182,8 @@ bool ru_power_leap()
         return false;
     }
 
-    STATIONARY_CHECK;
+    if (_abort_if_stationary())
+        return false;
 
     // query for location:
     dist beam;
@@ -6544,7 +6548,8 @@ bool uskayaw_line_pass()
         return false;
     }
 
-    STATIONARY_CHECK;
+    if (_abort_if_stationary())
+        return false;
 
     // query for location:
     int range = 8;
