@@ -1925,13 +1925,6 @@ static bool _rod_spell(item_def& irod, bool check_range)
 
 bool evoke_check(int slot, bool quiet)
 {
-    if (you.form == TRAN_WISP)
-    {
-        if (!quiet)
-            mpr("You cannot evoke items in this form.");
-        return false;
-    }
-
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
                           && !you.melded[EQ_WEAPON]
                           && weapon_reach(*you.weapon()) > REACH_NONE;
