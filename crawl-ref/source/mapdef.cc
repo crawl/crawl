@@ -2094,6 +2094,10 @@ void map_chance::write(writer &outf) const
 
 void map_chance::read(reader &inf)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() < TAG_MINOR_NO_PRIORITY)
+        unmarshallInt(inf); // was chance_priority
+#endif
     chance = unmarshallInt(inf);
 }
 
