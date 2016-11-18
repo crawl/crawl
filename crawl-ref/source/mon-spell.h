@@ -1984,19 +1984,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DEEP_ELF_KNIGHT_I,
-      {
-       { SPELL_THROW_ICICLE, 24, MON_SPELL_WIZARD },
-       { SPELL_HASTE, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
-      }
-    },
-
-    {  MST_DEEP_ELF_KNIGHT_II,
+    {  MST_DEEP_ELF_KNIGHT,
       {
        { SPELL_STONE_ARROW, 24, MON_SPELL_WIZARD },
-       { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
       }
     },
 
