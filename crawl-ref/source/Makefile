@@ -416,10 +416,11 @@ else
 CFLAGS_ARCH := -arch $(uname_M)
 endif
 
-CC = $(GCC) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GXX) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+MACOSX_MIN_VERSION=10.7
+CC = $(GCC) $(CFLAGS_ARCH) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
