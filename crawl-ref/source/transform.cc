@@ -918,22 +918,6 @@ public:
     static const FormFungus &instance() { static FormFungus inst; return inst; }
 
     /**
-     * Can the player wear the given item while in this form?
-     *
-     * Does not take mutations into account.
-     *
-     * @param item  The item in question
-     * @return      Whether this form prevents the player from wearing the
-     *              item. (Other things may also prevent it, of course)
-     */
-    bool can_wear_item(const item_def& item) const override
-    {
-        if (is_helmet(item) && !is_hard_helmet(item))
-            return true; // mushroom caps!
-        return Form::can_wear_item(item);
-    }
-
-    /**
      * Get a message for untransforming from this form.
      */
     string get_untransform_message() const override { return "You stop sporulating."; }
