@@ -6268,13 +6268,17 @@ bool ru_power_leap()
 
     bool return_val = false;
 
-    if (you.attempt_escape(2)) // I'm hoping this returns true if not constrict
+    if (!you.attempt_escape(2)) // returns true if not constricted
+        return true;
+
+    if (cell_is_solid(beam.target) || monster_at(beam.target))
     {
-        if (cell_is_solid(beam.target) || monster_at(beam.target))
-            mpr("Something unexpectedly blocked you, preventing you from leaping!");
-        else
-            move_player_to_grid(beam.target, false);
+        // XXX: try to jump somewhere nearby?
+        mpr("Something unexpectedly blocked you, preventing you from leaping!");
+        return true;
     }
+
+    move_player_to_grid(beam.target, false);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
