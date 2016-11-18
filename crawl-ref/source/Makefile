@@ -407,79 +407,13 @@ INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
 
-MARCH := $(uname_M)
-
-
-ifndef NO_AUTO_SDK
-
-# The SDK locations were moved in 10.8; this snippet tries to find them
-# there first, then reverts to the original location.
-XCODE_SDK_SUFFIX := Platforms/MacOSX.platform/Developer
-# Try to use xcode-select -p to find the current user-configured Xcode.app.
-XCODE_SELECT_PATH := $(shell xcode-select -p 2>/dev/null | sed 's/\/$$//')
-ifeq ($(shell test -e "$(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
-DEVELOPER_PATH := $(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)
-else
-# Otherwise, try /Applications/Xcode.app.
-XCODE_DEFAULT_PATH := /Applications/Xcode.app/Contents/Developer
-ifeq ($(shell test -e "$(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
-DEVELOPER_PATH := $(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)
-else
-# If all else fails, maybe it's in /Developer.
-DEVELOPER_PATH := /Developer
-endif
-endif
-
-# Find the oldest SDK available, in attempt to make this build as
-# backward-compatible as we possibly can.
-SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | grep -v "MacOSX.sdk" | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
-
-ifeq ($(SDK_VER),10.4u)
-SDK_VER := 10.4
-endif
-
-ifndef SDK_VER
-$(error You do not seem to have any Mac OS X SDKs installed! This build is doomed to fail)
-endif
-
-endif
-
-ifndef SDK_VER
-ifeq ($(MARCH),ppc)
-SDK_VER := 10.4
-endif
-ifeq ($(MARCH),i386)
-SDK_VER := 10.4
-endif
-ifeq ($(MARCH),x86_64)
-ifdef TILES
-SDK_VER := 10.6
-else
-SDK_VER := 10.5
-endif
-endif
-endif
-
-# Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
-# else is much easier to predict the name of.
-ifeq ($(SDK_VER),10.4)
-GCC_VER := 4.0
-SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER)u.sdk
-else
-SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER).sdk
-endif
-
-ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
-$(error The Mac OS X $(SDK_VER) SDK seems missing)
-endif
-
 ifdef BUILD_UNIVERSAL
 # [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
 CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
 CFLAGS_DEPCC_ARCH := -arch i386
 NO_INLINE_DEPGEN := YesPlease
 else
-CFLAGS_ARCH := -arch $(MARCH)
+CFLAGS_ARCH := -arch $(uname_M)
 endif
 
 MACOSX_MIN_VERSION=10.7
