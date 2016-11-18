@@ -1735,6 +1735,16 @@ static bool _sticky_flame_can_hit(const actor *act)
         return false;
 }
 
+/// If the player is stationary, print 'You cannot move.' and return true.
+static bool _abort_if_stationary()
+{
+    if (!you.is_stationary())
+        return false;
+
+    canned_msg(MSG_CANNOT_MOVE);
+    return true;
+}
+
 /*
  * Use an ability.
  *
@@ -2794,6 +2804,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_DITHMENOS_SHADOW_STEP:
+        if (_abort_if_stationary())
+            return SPRET_ABORT;
         fail_check();
         if (!dithmenos_shadow_step())
         {
@@ -2889,12 +2901,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_RU_POWER_LEAP:
-        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to power leap.");
             return SPRET_ABORT;
         }
+
+        if (_abort_if_stationary())
+            return SPRET_ABORT;
+
+        fail_check();
+
         if (!ru_power_leap())
         {
             canned_msg(MSG_OK);
@@ -2904,12 +2921,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_RU_APOCALYPSE:
-        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to unleash your apocalyptic power.");
             return SPRET_ABORT;
         }
+
+        fail_check();
+
         if (!ru_apocalypse())
             return SPRET_ABORT;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
@@ -3018,6 +3037,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_USKAYAW_LINE_PASS:
+        if (_abort_if_stationary())
+            return SPRET_ABORT;
         fail_check();
         if (!uskayaw_line_pass())
             return SPRET_ABORT;
