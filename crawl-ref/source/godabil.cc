@@ -6656,7 +6656,7 @@ bool uskayaw_line_pass()
     return true;
 }
 
-bool uskayaw_grand_finale()
+bool uskayaw_grand_finale(bool fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6733,6 +6733,8 @@ bool uskayaw_grand_finale()
             canned_msg(MSG_CANNOT_SEE);
         }
     }
+
+    fail_check();
 
     ASSERT(mons);
 
