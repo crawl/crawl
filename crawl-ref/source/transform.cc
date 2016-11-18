@@ -871,7 +871,7 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const override { return "You feel less woody."; }
+    string get_untransform_message() const override { return "You feel less wooden."; }
 };
 
 #if TAG_MAJOR_VERSION == 34
