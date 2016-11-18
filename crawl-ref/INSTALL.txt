@@ -204,17 +204,13 @@ installed through the AppStore as a free download; the associated command line
 tools can then be installed by opening Xcode, opening the Preferences dialog,
 and clicking Install on the Command Line Tools line in the Download tab.
 
-Mac builds then use the Unix build process described above, but require you to
-add 'APPLE_GCC=y' to the 'make' command-line. In addition, to build the
-graphical version of Crawl, you must add 'NO_PKGCONFIG=y' and 'CONTRIB_SDL=y'.
-
-So, to build build Crawl on a Mac you could use the following example command
-lines.
+Mac builds then use the Unix build process described above. To build Crawl on
+a Mac you could use the following example command lines.
 
 For the console version:
-  make APPLE_GCC=y
+  make
 For the graphical version:
-  make APPLE_GCC=y NO_PKGCONFIG=y CONTRIB_SDL=y TILES=y
+  make TILES=y
 
 
 Building on Windows (MSYS2)
