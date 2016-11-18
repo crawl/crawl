@@ -2846,7 +2846,7 @@ static void _xom_cleaving(int sever)
 {
     god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
 
-    you.increase_duration(DUR_CLEAVE, 10 + random2(sever) * 10);
+    you.increase_duration(DUR_CLEAVE, 10 + random2(sever));
 
     if (const item_def* const weapon = you.weapon())
     {
