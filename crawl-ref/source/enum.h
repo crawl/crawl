@@ -1922,6 +1922,7 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
+    DUR_XOM_UC_BONUS,
     NUM_DURATIONS
 };
 

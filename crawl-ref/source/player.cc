@@ -5887,6 +5887,8 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
+    if (duration[DUR_XOM_UC_BONUS] && sk == SK_UNARMED_COMBAT)
+        level = min(level + experience_level * scale, 27 * scale);
     return level;
 }
 

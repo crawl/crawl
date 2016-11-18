@@ -719,3 +719,10 @@ Zin welcome
 
 Zin says: Spread the light, my child.
 %%%%
+Xom unarmed bonus
+
+Xom says: You look like you could use a hand!
+
+Xom says: Here, borrow some skill!
+
+Xom says: Would this help?
