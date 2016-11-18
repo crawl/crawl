@@ -2069,26 +2069,27 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     if (!apply_visible_monsters([power_level](monster& mons)
            {
                if (mons.wont_attack() || !mons_is_threatening(mons))
-                   return false;;
+                   return false;
 
-               if (x_chance_in_y((power_level + 1) * 5 + random2(5),
-                                 mons.get_hit_dice()))
+               if (!x_chance_in_y((power_level + 1) * 5 + random2(5),
+                                  mons.get_hit_dice()))
                {
-                   if (mons.can_polymorph())
-                   {
-                       monster_polymorph(&mons, RANDOM_MONSTER, PPT_LESS);
-                       mons.malmutate("");
-                   }
-                   else
-                   {
-                       const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
-                       mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
-                       simple_monster_message(mons,
-                                              " is dazed by the mutagenic energy.");
-                       return true;
-                   }
+                   return false;
                }
-               return false;
+
+               if (mons.can_polymorph())
+               {
+                   monster_polymorph(&mons, RANDOM_MONSTER, PPT_LESS);
+                   mons.malmutate("");
+               }
+               else
+               {
+                   const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
+                   mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
+                   simple_monster_message(mons,
+                                          " is dazed by the mutagenic energy.");
+               }
+               return true;
            }))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
