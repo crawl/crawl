@@ -60,8 +60,11 @@ Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 
-Transforms you into a swift-moving vampire bat. The user becomes unable to
-evoke wands or to cast spells.
+Transforms the user into a swift-moving vampire bat, increasing evasion but
+substantially weakening melee attacks.
+
+While tranformed, any equipped weapons, armour and rings are melded, and the
+user becomes unable to evoke wands or to cast spells.
 %%%%
 Spit Acid ability
 
