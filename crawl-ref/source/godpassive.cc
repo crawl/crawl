@@ -1692,7 +1692,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         return;
     }
 
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 1.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 1.8 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
     mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 

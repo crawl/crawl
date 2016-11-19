@@ -3498,7 +3498,7 @@ int melee_attack::martial_damage_mod(int dam)
    
     // Lunge gets a damage bonus.
     if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
-        dam = div_rand_round(dam * 12, 10);
+        dam = div_rand_round(dam * 15, 10);
 
     return dam;
 }
