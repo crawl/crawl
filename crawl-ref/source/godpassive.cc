@@ -1484,7 +1484,7 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_BATTLEAXE,
     WPN_EXECUTIONERS_AXE,
 
-    // Polearms
+    // Staves
     WPN_QUARTERSTAFF,
     WPN_LAJATANG
 );

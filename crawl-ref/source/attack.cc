@@ -272,7 +272,6 @@ int attack::calc_to_hit(bool random)
         else if (!attacker->nightvision()
                  && defender->umbra())
             mhit -= 2 + random2(4);
-
     }
     // Don't delay doing this roll until test_hit().
     if (!attacker->is_player())
