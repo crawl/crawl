@@ -5267,24 +5267,15 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 
 static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
 {
-    monster *source = &caster; // laziness - rewriteme!
     actor* defender = caster.get_foe();
+    ASSERT(defender);
 
-    bool was_flayed = false;
     int damage_taken = 0;
     if (defender->is_player())
     {
         damage_taken = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
         damage_taken = min(damage_taken,
                            max(0, you.hp - 25 - random2(15)));
-        if (damage_taken < 10)
-            return;
-
-        if (you.duration[DUR_FLAYED])
-            was_flayed = true;
-
-        you.duration[DUR_FLAYED] = max(you.duration[DUR_FLAYED],
-                                       55 + random2(66));
     }
     else
     {
@@ -5294,34 +5285,64 @@ static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
                        * mon->max_hit_points / 100;
         damage_taken = min(damage_taken,
                            max(0, mon->hit_points - 25 - random2(15)));
-        if (damage_taken < 10)
-            return;
+    }
+
+    flay(caster, *defender, damage_taken);
+}
+
+/**
+ * Attempt to flay the given target, dealing 'temporary' damage that heals when
+ * a flayed ghost nearby dies.
+ *
+ * @param caster    The flayed ghost doing the flaying. (Mostly irrelevant.)
+ * @param defender  The thing being flayed.
+ * @param damage    How much flaying damage to do.
+ */
+void flay(const monster &caster, actor &defender, int damage)
+{
+    if (damage < 10)
+        return;
+
+    bool was_flayed = false;
+
+    if (defender.is_player())
+    {
+        if (you.duration[DUR_FLAYED])
+            was_flayed = true;
+
+        you.duration[DUR_FLAYED] = max(you.duration[DUR_FLAYED],
+                                       55 + random2(66));
+    }
+    else
+    {
+        monster* mon = defender.as_monster();
+        const int added_dur = 30 + random2(50);
 
         if (mon->has_ench(ENCH_FLAYED))
         {
             was_flayed = true;
             mon_enchant flayed = mon->get_ench(ENCH_FLAYED);
-            flayed.duration = min(flayed.duration + 30 + random2(50), 150);
+            flayed.duration = min(flayed.duration + added_dur, 150);
             mon->update_ench(flayed);
         }
         else
         {
-            mon_enchant flayed(ENCH_FLAYED, 1, source, 30 + random2(50));
+            mon_enchant flayed(ENCH_FLAYED, 1, &caster, added_dur);
             mon->add_ench(flayed);
         }
     }
 
-    if (you.can_see(*defender))
+    if (you.can_see(defender))
     {
         if (was_flayed)
         {
             mprf("Terrible wounds spread across more of %s body!",
-                 defender->name(DESC_ITS).c_str());
+                 defender.name(DESC_ITS).c_str());
         }
         else
         {
             mprf("Terrible wounds open up all over %s body!",
-                 defender->name(DESC_ITS).c_str());
+                 defender.name(DESC_ITS).c_str());
         }
     }
 
@@ -5330,27 +5351,27 @@ static void _cast_flay(monster &caster, mon_spell_slot, bolt&)
     // hp before and after the player is hurt; use this as the actual value for
     // flay damage to prevent the player from regaining extra hp when it wears off
 
-    const int orig_hp = defender->stat_hp();
+    const int orig_hp = defender.stat_hp();
 
-    defender->hurt(source, damage_taken, BEAM_NONE,
-                   KILLED_BY_MONSTER, "", "flay_damage", true);
-    defender->props["flay_damage"].get_int() += orig_hp - defender->stat_hp();
+    defender.hurt(&caster, damage, BEAM_NONE,
+                  KILLED_BY_MONSTER, "", "flay_damage", true);
+    defender.props["flay_damage"].get_int() += orig_hp - defender.stat_hp();
 
     vector<coord_def> old_blood;
-    CrawlVector &new_blood = defender->props["flay_blood"].get_vector();
+    CrawlVector &new_blood = defender.props["flay_blood"].get_vector();
 
     // Find current blood spatters
-    for (radius_iterator ri(defender->pos(), LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(defender.pos(), LOS_SOLID); ri; ++ri)
     {
         if (env.pgrid(*ri) & FPROP_BLOODY)
             old_blood.push_back(*ri);
     }
 
-    blood_spray(defender->pos(), defender->type, 20);
+    blood_spray(defender.pos(), defender.type, 20);
 
     // Compute and store new blood spatters
     unsigned int i = 0;
-    for (radius_iterator ri(defender->pos(), LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(defender.pos(), LOS_SOLID); ri; ++ri)
     {
         if (env.pgrid(*ri) & FPROP_BLOODY)
         {

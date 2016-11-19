@@ -1552,24 +1552,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
             if (monster *ghost = _friendly(MONS_FLAYED_GHOST, 3))
             {
-                bool msg = true;
-                bolt beem;
-                int dam = 5;
-
-                beem.origin_spell = SPELL_FLAY;
-                beem.source = ghost->pos();
-                beem.source_id = ghost->mid;
-                beem.range = 0;
-
-                if (!you.res_torment())
-                {
-                    if (can_shave_damage())
-                        dam = do_shave_damage(dam);
-
-                    if (dam > 0)
-                        dec_hp(dam, false);
-                }
-
                 apply_visible_monsters([&, ghost](monster& mons)
                 {
                     if (mons.wont_attack()
@@ -1578,21 +1560,18 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                         return false;
                     }
 
-                    beem.target = mons.pos();
-                    ghost->foe = mons.mindex();
-                    mons_cast(ghost, beem, SPELL_FLAY,
-                              ghost->spell_slot_flags(SPELL_FLAY), msg);
-                    msg = false;
+
+                    flay(*ghost, mons, mons.hit_points * 2 / 5);
                     return true;
                 }, ghost->pos());
 
-                ghost->foe = MHITYOU;
+                ghost->foe = MHITYOU; // follow you around (XXX: rethink)
+                return;
             }
-
-            return;
+            // else, fallback to level 1
         }
-        else
-            ztype = painzaps[power_level];
+
+        ztype = painzaps[min(power_level, (int)ARRAYSZ(painzaps)-1)];
         break;
 
     default:
