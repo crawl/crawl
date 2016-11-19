@@ -1643,6 +1643,13 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
 
+    if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
+        mpr("You begin rapidly regenerating health and magic.");
+    else if (you.duration[DUR_ELIXIR_HEALTH])
+        mpr("You begin rapidly regenerating.");
+    else
+        mpr("You begin rapidly regenerating magic.");
+
     apply_visible_monsters([=](monster& mon)
     {
         if (mon.wont_attack())
