@@ -434,10 +434,11 @@ NAME:   chequers_ecumenical_altar_grove
 DEPTH:  D:2-3
 TAGS:   uniq_ecumenical_altar chance_ecumenical_altar
 # Disconnected regions can spawn in the trees
-TAGS:   no_item_gen no_item_gen no_monster_gen
 CHANCE: 10%
 WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
+KMASK:  - = no_item_gen
+KMASK:  - = no_monster_gen
 SUBST:  - = tt.
 : if crawl.coinflip() then
 : set_feature_name("tree", "dead tree")
@@ -466,21 +467,22 @@ TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
 CHANCE: 10%
 WEIGHT: 5
 KFEAT:  _ = altar_ecumenical
-KPROP:  - = no_tele_into
+KPROP:  tG = no_tele_into
+KMASK:  tGp = no_item_gen
+KMASK:  tG = no_monster_gen
 NSUBST: + = 1:.
-SUBST:  - = . G:2 1:7 t:1
-MONS: plant
+SUBST:  ' : tGp, t = t:2 ., G = G:3 ., p = p:5 ., - = T U V .
 KMONS: p = plant
 MAP
    xxxxx    xxxxx
- xxx-_-xxxxxx-.-xxx
-xx---.---xx---.---xx
-xx---.---xx---.---xx
-xx---.---xx---.---xx
+ xxx'-'xxxxxx'-'xxx
+xxtGp_pGtxxtGp.pGtxx
+xxtGp.pGtxxtGp.pGtxx
+xxtGp.pGtxxtGp.pGtxx
 xxxxx+xxxxxxxx+xxxxx
-x----..........----x
-xxx------..------xxx
-  xxxxx--..--xxxxx
+xtGpp..........ppGtx
+xxxtGpppp..ppppGtxxx
+  xxxxxtG..Gtxxxxx
       xxx..xxx
         x..x
          @@
@@ -520,7 +522,7 @@ sssssssssssss
 sSSSSSSSSSSSs
 sSwwwwwwwwwSs
 sSwwwwwwwwwSs
-sSwWWWWwwwsSs
+sSwWWWWwwwwSs
 sSWww--WwwwSs
 sSwWw-_-wwwSs
 sSwWw---wwwSs
