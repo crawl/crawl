@@ -29,6 +29,8 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 dice_def waterstrike_damage(const monster &caster);
 dice_def resonance_strike_base_damage(const monster &caster);
 
+void flay(const monster &caster, actor &defender, int damage);
+
 bool handle_mon_spell(monster* mons);
 
 static const int ENCH_POW_FACTOR = 3;
