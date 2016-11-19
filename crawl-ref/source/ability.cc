@@ -630,7 +630,7 @@ static const ability_def Ability_List[] =
     { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
         1, 0, 30, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_IEOH_JIAN_DRAGONFLY, "Steel Dragonfly Technique",
-        6, 0, 80, 5, {FAIL_INVO}, abflag::NONE },
+        6, 0, 80, 4, {FAIL_INVO}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",

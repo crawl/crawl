@@ -7142,9 +7142,9 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     auto yours = find_ieoh_jian_manifested_weapons(true);
     manifested.insert(manifested.end(), yours.begin(), yours.end());
    
-    if (manifested.empty())
+    if (manifested.size() < 3)
     {
-        mprf("There are no flying weapons nearby.");
+        mprf("You need at least three flying weapons!");
         return false;
     }
 
@@ -7250,7 +7250,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
     }
 
-    int chance_to_liquify = 20 * number_of_impacts - 10;
+    int chance_to_liquify = 20 * number_of_impacts;
     if (mons->has_ench(ENCH_PARALYSIS))
         chance_to_liquify *= 4;
     else if (mons->has_ench(ENCH_SLOW))
@@ -7260,7 +7260,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     if (mons->alive() && mons->type != MONS_IEOH_JIAN_WEAPON && x_chance_in_y(chance_to_liquify, 100))
     {
         simple_monster_message(*mons, " starts to convulse uncontrollably...");
-        mons->hurt(&you, dice_def(5,mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
+        mons->hurt(&you, dice_def(8, mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
     }
 
     return true;
@@ -7282,7 +7282,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     {
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
-        args.range = 3;
+        args.range = 3 + piety_rank(you.piety) / 3;
         direction(thr, args);
 
         if (!thr.isValid)
