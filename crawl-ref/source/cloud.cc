@@ -184,7 +184,7 @@ static const cloud_data clouds[] = {
       ETC_HOLY,                                 // colour
       { TILE_CLOUD_YELLOW_SMOKE },              // tile
       BEAM_HOLY,                                // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      {4, 12, true},                            // base, random damage
       true,                                     // opacity
     },
     // CLOUD_MIASMA,

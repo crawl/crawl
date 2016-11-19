@@ -1487,7 +1487,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
 
     case SPELL_HOLY_BREATH:
         beam.name     = "blast of cleansing flame";
-        beam.damage   = dice_def(3, (mons->get_hit_dice() * 2));
+        beam.damage   = dice_def(3, mons->get_hit_dice());
         beam.colour   = ETC_HOLY;
         beam.flavour  = BEAM_HOLY;
         beam.hit      = 18 + power / 25;
@@ -6832,7 +6832,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CLEANSING_FLAME:
         simple_monster_message(*mons, " channels a blast of cleansing flame!");
-        cleansing_flame(5 + (7 * mons->spell_hd(spell_cast) / 12),
+        cleansing_flame(5 + (5 * mons->spell_hd(spell_cast) / 12),
                         CLEANSING_FLAME_SPELL, mons->pos(), mons);
         return;
 
