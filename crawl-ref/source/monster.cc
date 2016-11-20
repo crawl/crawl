@@ -6623,8 +6623,8 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis() const
 {
-    return (mons_genus(type) == MONS_FORMICID
-            || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID);
+    return mons_genus(type) == MONS_FORMICID
+           || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID;
 }
 
 bool monster::is_illusion() const
