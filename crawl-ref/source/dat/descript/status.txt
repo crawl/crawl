@@ -576,7 +576,13 @@ You have been transformed into a swift-moving bat, increasing your evasion but
 substantially weakening your melee attacks.
 
 Any equipped weapons, armour and rings are melded, and you are unable to evoke
-wands or cast spells.
+wands or cast spells. {{
+    if you.race() ~= "Vampire" then
+        return "The effectiveness of your melee attacks while " ..
+               "in this form is based on experience level instead of on " ..
+               "Unarmed Combat skill."
+    end
+}}
 %%%%
 Pig status
 
@@ -584,7 +590,8 @@ You have been transformed into a pig. You move quickly but are less effective
 in melee.
 
 Any equipped weapons, armour and rings are melded, and you are unable to evoke
-wands or cast spells.
+wands or cast spells. The effectiveness of your melee attacks while in this
+form is based on experience level instead of on Unarmed Combat skill.
 %%%%
 App status
 
@@ -614,7 +621,8 @@ to fire, cold, electricity and acid, and immune to poison, rotting and
 negative energy.
 
 Any equipped weapons, armour and jewellery are melded, and you are unable to
-evoke wands or cast spells.
+evoke wands or cast spells. The effectiveness of your melee attacks while in
+this form is based on experience level instead of on Unarmed Combat skill.
 %%%%
 Fungus status
 
@@ -624,7 +632,9 @@ to move when hostile creatures are present. You are resistant to poison and
 immune to negative energy.
 
 Any equipped cloak, gloves, boots, shield, body armour and weapons are melded,
-and you are unable to evoke wands or cast spells.
+and you are unable to evoke wands or cast spells. The effectiveness of your
+melee attacks while in this form is based on experience level instead of on
+Unarmed Combat skill.
 %%%%
 Shadow status
 
