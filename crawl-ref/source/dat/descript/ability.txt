@@ -60,8 +60,11 @@ Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 
-Transforms you into a swift-moving vampire bat. The user becomes unable to
-evoke wands or to cast spells.
+Transforms the user into a swift-moving vampire bat, increasing evasion but
+substantially weakening melee attacks.
+
+While tranformed, any equipped weapons, armour and rings are melded, and the
+user becomes unable to evoke wands or to cast spells.
 %%%%
 Spit Acid ability
 
@@ -316,7 +319,7 @@ spells without sufficient magical reserves.
 %%%%
 Channel Magic ability
 
-Dramatically increase the user's regeneration of magical power for a duration
+Dramatically increases the user's regeneration of magical power for a duration
 that increases with Invocations skill.
 %%%%
 Forget Spell ability
@@ -336,9 +339,8 @@ Berserk ability
 Sends the user into a berserk rage. Going berserk temporarily increases health,
 speed, and damage dealt in melee. It will time out quickly outside of combat,
 but may be extended by multiple kills. While berserk, almost all actions other
-than movement and melee combat are prevented. Such a rage is followed by deep
-exhaustion, during which the user is slowed and cannot berserk again, and
-occasionally may even pass out.
+than movement and melee combat are prevented. When the rage expires, the user
+will be briefly slowed and occasionally may even pass out.
 %%%%
 Trog's Hand ability
 
@@ -678,24 +680,18 @@ Taps into your inner power to restore health and magic, as well as freeing your
 body and mind from external constraints, including nets, webs, constriction,
 petrification, slowness, and confusion. The amount of health and magic restored
 increases with piety.
-
-Using this ability exhausts and slightly drains you.
 %%%%
 Power Leap ability
 
-Uses the power that infuses you to perform an incredibly fast leap. On landing,
-that power explodes outward, damaging all foes adjacent to you. The amount of
-damage done increases with your piety and experience level.
-
-Using this ability exhausts you.
+Performs an incredibly fast leap to a targeted location, causing an explosion
+upon landing which damages all adjacent foes. The amount of damage done
+increases with your piety and experience level.
 %%%%
 Apocalypse ability
 
-Reveals Ru's truth to your enemies. All enemies in your line of sight are
-dealt severe damage and may be rendered mute or paralyzed or slowed. The damage
-dealt increases with your piety and experience level.
-
-Using this ability exhausts and severely drains you.
+Reveals Ru's truth to your enemies, dealing severe damage to all enemies in
+your line of sight. Affected creatures may be paralyzed, slowed or have their
+magic drained. The damage dealt increases with your piety and experience level.
 %%%%
 Sacrifice Purity ability
 

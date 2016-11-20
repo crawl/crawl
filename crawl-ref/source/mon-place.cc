@@ -2516,7 +2516,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_GHOULS,              {{{MONS_GHOUL, 4},
                                   {MONS_NECROPHAGE, 3},
                                   {MONS_BOG_BODY, 2}}}},
-    { BAND_ILSUIW,              {{{MONS_SIREN, 6},
+    { BAND_ILSUIW,              {{{MONS_MERFOLK_SIREN, 6},
                                   {MONS_MERFOLK, 3},
                                   {MONS_MERFOLK_JAVELINEER, 2},
                                   {MONS_MERFOLK_IMPALER, 2}}}},
@@ -2558,7 +2558,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
 
                                 {{MONS_VAULT_GUARD, 1}}}},
 
-    { BAND_FAUN_PARTY,          {{{MONS_SIREN, 1}},
+    { BAND_FAUN_PARTY,          {{{MONS_MERFOLK_SIREN, 1}},
 
                                  {{MONS_FAUN, 1}}}},
 

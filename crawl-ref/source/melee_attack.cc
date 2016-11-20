@@ -313,17 +313,6 @@ bool melee_attack::handle_phase_dodged()
     return true;
 }
 
-static bool _flavour_triggers_damageless(attack_flavour flavour)
-{
-    return flavour == AF_CRUSH
-           || flavour == AF_ENGULF
-           || flavour == AF_PURE_FIRE
-           || flavour == AF_SHADOWSTAB
-           || flavour == AF_DROWN
-           || flavour == AF_CORRODE
-           || flavour == AF_HUNGER;
-}
-
 void melee_attack::apply_black_mark_effects()
 {
     // Less reliable effects for players.
@@ -442,7 +431,7 @@ bool melee_attack::handle_phase_hit()
         return false;
     }
 
-    if (damage_done > 0 || _flavour_triggers_damageless(attk_flavour))
+    if (damage_done > 0 || flavour_triggers_damageless(attk_flavour))
     {
         if (!handle_phase_damaged())
             return false;
@@ -584,7 +573,7 @@ bool melee_attack::handle_phase_aux()
 
 void melee_attack::player_strike_pressure_points(monster* mons)
 {
-    if (!you.weapon() || mons->check_stasis(false))
+    if (!you.weapon())
         return;
 
     int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
@@ -2359,42 +2348,7 @@ string melee_attack::mons_attack_verb()
     if (attk_type == AT_TENTACLE_SLAP && mons_is_tentacle(attacker->type))
         return "slap";
 
-    static const char *attack_types[] =
-    {
-        "hit",         // including weapon attacks
-        "bite",
-        "sting",
-
-        // spore
-        "release spores at",
-
-        "touch",
-        "engulf",
-        "claw",
-        "peck",
-        "headbutt",
-        "punch",
-        "kick",
-        "tentacle-slap",
-        "tail-slap",
-        "gore",
-        "constrict",
-        "trample",
-        "trunk-slap",
-#if TAG_MAJOR_VERSION == 34
-        "snap closed at",
-        "splash",
-#endif
-        "pounce on",
-#if TAG_MAJOR_VERSION == 34
-        "sting",
-#endif
-    };
-    COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
-
-    const int verb_index = attk_type - AT_FIRST_ATTACK;
-    ASSERT(verb_index < (int)ARRAYSZ(attack_types));
-    return attack_types[verb_index];
+    return mon_attack_name(attk_type);
 }
 
 string melee_attack::mons_attack_desc()
@@ -2641,14 +2595,15 @@ bool melee_attack::mons_attack_effects()
 void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
-    int base_damage = 0;
 
     attack_flavour flavour = attk_flavour;
     if (flavour == AF_CHAOTIC)
         flavour = random_chaos_attack_flavour();
 
+    const int base_damage = flavour_damage(flavour, attacker->get_hit_dice());
+
     // Note that if damage_done == 0 then this code won't be reached
-    // unless the flavour is in _flavour_triggers_damageless.
+    // unless the flavour is in flavour_triggers_damageless.
     switch (flavour)
     {
     default:
@@ -2679,8 +2634,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIRE:
-        base_damage = attacker->get_hit_dice()
-                      + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
@@ -2701,8 +2654,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_COLD:
-        base_damage = attacker->get_hit_dice()
-                      + random2(2 * attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
@@ -2724,9 +2675,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ELEC:
-        base_damage = attacker->get_hit_dice()
-                      + random2(attacker->get_hit_dice() / 2);
-
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
@@ -3015,9 +2963,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (attacker->type == MONS_FIRE_VORTEX)
             attacker->as_monster()->suicide(-10);
 
-        special_damage = (attacker->get_hit_dice() * 3 / 2
-                          + random2(attacker->get_hit_dice()));
-        special_damage = defender->apply_ac(special_damage, 0, AC_HALF);
+        special_damage = defender->apply_ac(base_damage, 0, AC_HALF);
         special_damage = resist_adjust_damage(defender,
                                               BEAM_FIRE,
                                               special_damage);
@@ -3224,8 +3170,7 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
-        const int mut = (you.form == TRAN_PORCUPINE) ? 3
-                        : player_mutation_level(MUT_SPINY);
+        const int mut = player_mutation_level(MUT_SPINY);
 
         if (mut && attacker->alive() && coinflip())
         {

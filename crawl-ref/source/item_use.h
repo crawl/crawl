@@ -58,11 +58,6 @@ void random_uselessness();
 
 void prompt_inscribe_item();
 
-#define STASIS_STABILITY_MSG "Your stasis keeps you stable."
-#define NO_HASTE_MSG "You cannot haste."
-
-bool check_stasis(const char *msg = STASIS_STABILITY_MSG);
-
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);
 void tile_item_pickup(int idx, bool part);

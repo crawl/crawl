@@ -3160,6 +3160,34 @@ xWw....lFx
 xxxx==xxxx
 ENDMAP
 
+# So he drove out the man; and he placed at the east of the garden of Eden
+# Cherubim, and a flaming sword which turned every way, to keep the way of the
+# tree of life.
+NAME:    pf_eden
+TAGS:    no_monster_gen
+DEPTH:   D:13-
+MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
+KMONS:   p = plant
+ITEM:    fruit tile:food_apple
+NSUBST:  1 = 2:1 / *:.
+NSUBST:  d = 3:d / *:.
+SUBST:   3 = 33.
+RTILE:   x = wall_lair
+FTILE:   12p.dt@ = floor_lair
+MAP
+       xxx
+  xxx xxpxx
+ xxpxxxp.1xxx
+xxppp2.1...px
+xppp..ppx1.1x
+xpdddpxxxp..xx
+xpdtdpxxxx...@
+xpddd.px xxp.@
+xp...pxx  xxxx
+xxpppxx
+ xxxxx
+ENDMAP
+
 ###################################################################
 #
 # <<7>> Random monsters

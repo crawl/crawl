@@ -1310,7 +1310,6 @@ static void _jiyva_transform()
                                                    TRAN_FUNGUS,
                                                    TRAN_PIG,
                                                    TRAN_TREE,
-                                                   TRAN_PORCUPINE,
                                                    TRAN_WISP);
 
     if (transform(random2(you.penance[god]) * 2, form, true))

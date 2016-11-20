@@ -157,9 +157,8 @@ union YYSTYPE
     int i;
     double f;
     const char *text;
-    map_chance_pair chance;
 
-#line 163 "levcomp.tab.h" /* yacc.c:1909  */
+#line 162 "levcomp.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

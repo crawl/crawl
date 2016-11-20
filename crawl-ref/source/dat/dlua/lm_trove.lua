@@ -369,7 +369,9 @@ function TroveMarker:item_name(do_grammar)
 
   s = util.trim(s)
 
-  if string.find(s, "^%d+") or do_grammar == false then
+  if string.find(s, "^%d+")
+     or string.find(item.sub_type, "dragon scales")
+     or do_grammar == false then
     return s
   else
     return crawl.grammar(s, "a")

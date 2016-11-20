@@ -2446,7 +2446,7 @@ static void _torpor_snail_slow(monster* mons)
     for (monster_near_iterator ri(mons->pos(), LOS_SOLID_SEE); ri; ++ri)
     {
         monster *m = *ri;
-        if (m && !mons_aligned(mons, m) && !m->check_stasis(true)
+        if (m && !mons_aligned(mons, m) && !m->stasis()
             && !m->is_stationary() && !is_sanctuary(m->pos()))
         {
             m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 1));

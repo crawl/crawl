@@ -3901,18 +3901,8 @@ void spare_beogh_convert()
     }
 }
 
-#define STATIONARY_CHECK                               \
-    do {                                               \
-        if (you.is_stationary()) {                     \
-            canned_msg(MSG_CANNOT_MOVE);               \
-            return false;                              \
-        }                                              \
-    } while (0)
-
 bool dithmenos_shadow_step()
 {
-    STATIONARY_CHECK;
-
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
     const int range = you.umbra_radius();
@@ -6180,8 +6170,6 @@ bool ru_power_leap()
         return false;
     }
 
-    STATIONARY_CHECK;
-
     // query for location:
     dist beam;
 
@@ -6267,19 +6255,20 @@ bool ru_power_leap()
         }
     }
 
-    bool return_val = false;
+    if (!you.attempt_escape(2)) // returns true if not constricted
+        return true;
 
-    if (you.attempt_escape(2)) // I'm hoping this returns true if not constrict
+    if (cell_is_solid(beam.target) || monster_at(beam.target))
     {
-        if (cell_is_solid(beam.target) || monster_at(beam.target))
-            mpr("Something unexpectedly blocked you, preventing you from leaping!");
-        else
-            move_player_to_grid(beam.target, false);
+        // XXX: try to jump somewhere nearby?
+        mpr("Something unexpectedly blocked you, preventing you from leaping!");
+        return true;
     }
+
+    move_player_to_grid(beam.target, false);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
-    return_val = true;
 
     bolt wave;
     wave.thrower = KILL_YOU;
@@ -6312,7 +6301,7 @@ bool ru_power_leap()
             BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
     }
 
-    return return_val;
+    return true;
 }
 
 int cell_has_valid_target(coord_def where)
@@ -6545,8 +6534,6 @@ bool uskayaw_line_pass()
         return false;
     }
 
-    STATIONARY_CHECK;
-
     // query for location:
     int range = 8;
     int invo_skill = you.skill(SK_INVOCATIONS);
@@ -6670,7 +6657,7 @@ bool uskayaw_line_pass()
     return true;
 }
 
-bool uskayaw_grand_finale()
+bool uskayaw_grand_finale(bool fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6747,6 +6734,8 @@ bool uskayaw_grand_finale()
             canned_msg(MSG_CANNOT_SEE);
         }
     }
+
+    fail_check();
 
     ASSERT(mons);
 

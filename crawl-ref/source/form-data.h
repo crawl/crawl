@@ -131,7 +131,7 @@ static const form_entry formdata[] =
     "",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 5, SIZE_TINY, 10,
-    0, 0, 0, false, 0, 12, -1,
+    0, 0, 0, false, 0, 12, 1,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
     "squeak", -8, "foreclaw", "", "perch on", "flesh"
@@ -170,6 +170,7 @@ static const form_entry formdata[] =
     "creak", 0, "branch", "root", "sway towards", "wood"
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     TRAN_PORCUPINE, MONS_PORCUPINE, "Porc", "porcupine-form", "porcupine",
     "a spiny porcupine.",
@@ -180,6 +181,7 @@ static const form_entry formdata[] =
     FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
     "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh"
 },
+#endif
 
 {
     TRAN_WISP, MONS_INSUBSTANTIAL_WISP, "Wisp", "wisp-form", "wisp",

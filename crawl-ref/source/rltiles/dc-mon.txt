@@ -978,8 +978,8 @@ merfolk_impaler MONS_MERFOLK_IMPALER
 merfolk_impaler_water MONS_MERFOLK_IMPALER_WATER
 merfolk_aquamancer MONS_MERFOLK_AQUAMANCER
 merfolk_aquamancer_water MONS_MERFOLK_AQUAMANCER_WATER
-siren MONS_SIREN
-siren_water MONS_SIREN_WATER
+merfolk_siren MONS_MERFOLK_SIREN
+merfolk_siren_water MONS_MERFOLK_SIREN_WATER
 merfolk_avatar MONS_MERFOLK_AVATAR
 merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
 dryad MONS_DRYAD

@@ -600,8 +600,11 @@ void zap_wand(int slot)
         {
             return;
         }
-        else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
+        else if (wand.sub_type == WAND_HASTING && you.stasis())
+        {
+            mpr("Your stasis prevents you from being hasted.");
             return;
+        }
     }
 
     if (!has_charges)
@@ -1922,13 +1925,6 @@ static bool _rod_spell(item_def& irod, bool check_range)
 
 bool evoke_check(int slot, bool quiet)
 {
-    if (you.form == TRAN_WISP)
-    {
-        if (!quiet)
-            mpr("You cannot evoke items in this form.");
-        return false;
-    }
-
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
                           && !you.melded[EQ_WEAPON]
                           && weapon_reach(*you.weapon()) > REACH_NONE;

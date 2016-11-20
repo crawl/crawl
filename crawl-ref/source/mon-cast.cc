@@ -5116,7 +5116,7 @@ static const pop_entry _invitation_swamp[] =
 
 static const pop_entry _invitation_shoals[] =
 { // Swamp enemies
-  {  1,   1,   60, FLAT, MONS_SIREN },
+  {  1,   1,   60, FLAT, MONS_MERFOLK_SIREN },
   {  1,   1,   40, FLAT, MONS_MANTICORE },
   {  1,   1,   20, FLAT, MONS_WIND_DRAKE },
   { 0,0,0,FLAT,MONS_0 }

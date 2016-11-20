@@ -19,9 +19,11 @@ spellcaster, but no more deadly in melee combat than others of her kind.
 %%%%
 Antaeus
 
-Once a mighty and renowned titan, his arrogance was his undoing. Now he is
-corrupt and tainted, a powerful demon who lords over the frozen wastes of
-Cocytus. His strength is legendary.
+Once a hero among the titans, Antaeus grew jealous of the titan queen. In
+single combat he challenged and slew her, and for this crime he was exiled and
+descended into the Hells. Finding the inhabitants of that place no match for his
+might, Antaeus tore from its substance a fourth Hell, Cocytus, a realm born of
+frozen spite.
 %%%%
 Arachne
 
@@ -32,7 +34,9 @@ them.
 %%%%
 Asmodeus
 
-One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
+Greatest and most cunning of the Lords of Hell, Asmodeus was born when the twin
+fires of greed and treachery first sparked to life within a mortal’s heart.
+His hideous body is perpetually wreathed in flame.
 %%%%
 Asterion
 
@@ -82,7 +86,9 @@ on to his ears with hooks?
 %%%%
 Dispater
 
-The lord of the Iron City of Dis.
+Greatest of the Lords of Hell, Dispater was born when first an iron sword drank
+mortal blood. It despises mortal vanities, the pursuit of ‘reason’ and ‘beauty’
+- the only art it enjoys is the art of war.
 %%%%
 Dissolution
 
@@ -135,7 +141,9 @@ with many colours.
 %%%%
 Ereshkigal
 
-A fearsome arch-fiend who rules the deathly netherworld of Tartarus.
+Greatest and most inexorable of the Lords of Hell, Ereshkigal was born when
+first a mortal breathed her last. Noiselessly she laughs at lives cut short and
+loved ones separated by untimely death, enwreathed in the silence of the grave.
 %%%%
 Erica
 
@@ -1093,7 +1101,7 @@ entire world to cinders.
 %%%%
 fire vortex
 
-A swirling cloud of flame.
+A swirling cloud of flame. After striking a foe, it disintegrates.
 %%%%
 flayed ghost
 
@@ -1625,6 +1633,10 @@ merfolk javelineer
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
 %%%%
+merfolk siren
+
+A beguiling merfolk whose voice can mesmerize listeners.
+%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
@@ -2100,10 +2112,6 @@ spells or reading scrolls.
 simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
-%%%%
-siren
-
-A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 sixfirhy
 
@@ -2903,7 +2911,7 @@ rotten bat
 
 A bat that is well past its sell-by date.
 %%%%
-sickly siren
+sickly merfolk siren
 
 A young merfolk that looks quite sick, but still has the power to mesmerize its
 victims.

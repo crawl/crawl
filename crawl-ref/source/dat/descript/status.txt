@@ -491,3 +491,166 @@ You are channeling magical energy.
 You may cast spells with insufficient reserves of magic, but doing so will
 cause you to briefly lose access to your magic after the spell is cast.
 %%%%
+Spider status
+
+You have been transformed into a venomous, spider-like creature. You become
+highly evasive and gain a poisonous bite, but gain vulnerability to poison.
+
+Any equipped weapons and armour are melded. Your success rate with spells is
+slightly reduced, and you are unable to evoke wands.
+%%%%
+Blade status
+
+Long, scythe-shaped blades have grown from your hands, increasing your melee
+damage to a degree depending on strength and dexterity.
+
+Any equipped weapons are melded. Your success rate with spells is somewhat
+reduced, and you are unable to evoke wands.
+%%%%
+Statue status
+
+You have been transformed into a slow but extremely robust stone statue.
+Your unarmed damage is increased to a degree depending on strength, and in
+addition all of your melee attacks are substantially more powerful. Your stone
+body is insulated from electricity and gains resistance to poison, rotting and
+negative energy.
+
+Any equipped body armour, gloves and boots are melded.
+%%%%
+Ice status
+
+You have been transformed into a frozen ice-creature, light enough to float on
+water. You gain a freezing melee attack, and are incredibly resistant to cold
+and resistant to poison, but vulnerable to fire.
+
+Any equipped weapons and armour are melded, and you are unable to evoke wands.
+%%%%
+Dragon status
+
+{{
+    local desc = "You have been transformed into a mighty"
+
+    if you.race():find("Draconian") then
+        desc = desc .. " dragon"
+        if you.race() ~= "Grey Draconian" then
+            desc = desc .. ", increasing the power of any innate breath attacks"
+        end
+        if you.race() == "Red Draconian" then
+            desc = desc .. ". You are highly resistant to fire and " ..
+                           "resistant to poison, but vulnerable to cold"
+        elseif you.race() == "White Draconian" then
+            desc = desc .. ". You are highly resistant to cold and " ..
+                           "resistant to poison, but vulnerable to fire"
+        elseif you.race() == "Green Draconian" then
+            desc = desc .. " and retaining your innate colour"
+        else
+            desc = desc .. ". You retain your innate colour, and are " ..
+                           "also resistant to poison"
+        end
+    else
+        desc = desc .. ", fire-breathing dragon. You are highly resistant " ..
+                       "to fire and resistant to poison, but vulnerable to " ..
+                       "cold"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}} Your melee damage is substantially increased to a degree depending on
+strength, and you are much more robust but less evasive.
+
+Any equipped weapons and armour are melded.
+%%%%
+Lich status
+
+You have been transformed into a lich. You are resistant to cold and hostile
+enchantments and completely immune to poison, rotting, negative energy and
+torment, and require no food at all for the duration of the transformation.
+Your necromancy spells are increased in power, and you gain a draining melee
+attack. However, you are also vulnerable to holy damage and Dispel Undead,
+and are unable to consume potions.
+%%%%
+Bat status
+
+You have been transformed into a swift-moving bat, increasing your evasion but
+substantially weakening your melee attacks.
+
+Any equipped weapons, armour and rings are melded, and you are unable to evoke
+wands or cast spells. {{
+    if you.race() ~= "Vampire" then
+        return "The effectiveness of your melee attacks while " ..
+               "in this form is based on experience level instead of on " ..
+               "Unarmed Combat skill."
+    end
+}}
+%%%%
+Pig status
+
+You have been transformed into a pig. You move quickly but are less effective
+in melee.
+
+Any equipped weapons, armour and rings are melded, and you are unable to evoke
+wands or cast spells. The effectiveness of your melee attacks while in this
+form is based on experience level instead of on Unarmed Combat skill.
+%%%%
+App status
+
+{{
+    if you.race() == "Octopode" then
+        return "A vicious spike has grown from one of your tentacles, " ..
+               "increasing the damage of your extra tentacle attacks."
+    else
+        return "Monstrous horns or talons have grown from your body, " ..
+               "granting a chance of making an extra attack in melee."
+    end
+}}
+%%%%
+Tree status
+
+You have been transformed into a tree and are rooted to the ground, unable to
+move or teleport. You have minimal evasion but increased health and natural
+armour, and are resistant to poison and immune to negative energy.
+
+Any equipped cloak, helmet, gloves, boots and body armour are melded.
+%%%%
+Wisp status
+
+You have been transformed into an insubstantial wisp of gas. You move quickly
+and are highly evasive, and you occasionally blink at random. You are resistant
+to fire, cold, electricity and acid, and immune to poison, rotting and
+negative energy.
+
+Any equipped weapons, armour and jewellery are melded, and you are unable to
+evoke wands or cast spells. The effectiveness of your melee attacks while in
+this form is based on experience level instead of on Unarmed Combat skill.
+%%%%
+Fungus status
+
+You have been transformed into a sentient fungus. You are highly evasive and
+can release spores to cause confusion when attacking in melee, but are unable
+to move when hostile creatures are present. You are resistant to poison and
+immune to negative energy.
+
+Any equipped cloak, gloves, boots, shield, body armour and weapons are melded,
+and you are unable to evoke wands or cast spells. The effectiveness of your
+melee attacks while in this form is based on experience level instead of on
+Unarmed Combat skill.
+%%%%
+Shadow status
+
+You have been transformed into a swirling mass of dark shadows. You are
+permanently invisible and are immune to poison, draining, torment, and hostile
+enchantments. All incoming damage is halved, and you bleed smoke on any
+incoming attack. However, your ability to deal damage in melee and with ranged
+attacks is halved, your spellcasting power is greatly hampered, and your skills
+are further drained when taking damage.
+%%%%
+Hydra status
+
+You have been transformed into an amphibious, many-headed hydra. Your multiple
+heads strike in all directions when attacking, and edible foes that are slain
+are instantly consumed for nutrition and health. You are naturally robust, and
+resistant to poison.
+
+Any equipped weapons and armour are melded, and you are unable to evoke wands.
+%%%%

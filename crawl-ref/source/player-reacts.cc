@@ -85,6 +85,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -294,7 +295,8 @@ static int _current_horror_level()
         if (mon == nullptr
             || mons_aligned(mon, &you)
             || !mons_is_threatening(*mon)
-            || !you.can_see(*mon))
+            || !you.can_see(*mon)
+            || mons_is_tentacle_or_tentacle_segment(mon->type))
         {
             continue;
         }

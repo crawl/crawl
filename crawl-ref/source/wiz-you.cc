@@ -1023,7 +1023,7 @@ void wizard_transform()
         for (int i = 0; i < NUM_TRANSFORMS; i++)
         {
 #if TAG_MAJOR_VERSION == 34
-            if (i == TRAN_JELLY)
+            if (i == TRAN_JELLY || i == TRAN_PORCUPINE)
                 continue;
 #endif
             line += make_stringf("[%c] %-10s ", i + 'a',
@@ -1049,8 +1049,11 @@ void wizard_transform()
             continue;
 
 #if TAG_MAJOR_VERSION == 34
-        if ((transformation_type)(keyin - 'a') == TRAN_JELLY)
+        if ((transformation_type)(keyin - 'a') == TRAN_JELLY
+            || (transformation_type)(keyin - 'a') == TRAN_PORCUPINE)
+        {
             continue;
+        }
 #endif
 
         form = (transformation_type)(keyin - 'a');

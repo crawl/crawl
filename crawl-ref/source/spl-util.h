@@ -95,8 +95,9 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype);
 const char* spelltype_long_name(spschool_flag_type which_spelltype);
 
 typedef function<int (coord_def where)> cell_func;
-typedef int cloud_func(coord_def where, int pow, int spreadrate,
-                       cloud_type type, const actor* agent, int excl_rad);
+typedef function<int (coord_def where, int pow, int spreadrate,
+                       cloud_type type, const actor* agent, int excl_rad)>
+        cloud_func;
 
 int apply_area_visible(cell_func cf, const coord_def& where);
 

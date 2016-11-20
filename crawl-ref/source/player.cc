@@ -1090,11 +1090,8 @@ static int _player_bonus_regen()
     rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
 
     // Troll leather
-    if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-        || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
-    {
+    if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR))
         rr += REGEN_PIP;
-    }
 
     // Fast heal mutation.
     rr += player_mutation_level(MUT_REGENERATION) * REGEN_PIP;
@@ -1236,19 +1233,6 @@ int player_hunger_rate(bool temp)
         hunger += 4;
     }
 
-    if (temp)
-    {
-        if (you.duration[DUR_INVIS])
-            hunger += 5;
-
-        // Berserk has its own food penalty - excluding berserk haste.
-        // Doubling the hunger cost for haste so that the per turn hunger
-        // is consistent now that a hasted turn causes 50% the normal hunger
-        // -cao
-        if (you.duration[DUR_HASTE])
-            hunger += haste_mul(5);
-    }
-
     if (you.species == SP_VAMPIRE)
     {
         switch (you.hunger_state)
@@ -1287,15 +1271,25 @@ int player_hunger_rate(bool temp)
     return hunger;
 }
 
+/**
+ * How many spell levels does the player have total, including those used up
+ * by memorized spells?
+ */
+int player_total_spell_levels()
+{
+    return you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
+}
+
+/**
+ * How many spell levels does the player currently have available for
+ * memorizing new spells?
+ */
 int player_spell_levels()
 {
-    int sl = you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
+    int sl = min(player_total_spell_levels(), 99);
 
     bool fireball = false;
     bool delayed_fireball = false;
-
-    if (sl > 99)
-        sl = 99;
 
     for (const spell_type spell : you.spells)
     {
@@ -1312,8 +1306,7 @@ int player_spell_levels()
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
 
-    // Note: This can happen because of level drain. Maybe we should
-    // force random spells out when that happens. -- bwr
+    // Note: This can happen because of draining. -- bwr
     if (sl < 0)
         sl = 0;
 
@@ -1982,7 +1975,7 @@ int player_movement_speed()
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
-    else if (you.form == TRAN_PORCUPINE || you.form == TRAN_WISP)
+    else if (you.form == TRAN_WISP)
         mv = 8;
     else if (you.fishtail || you.form == TRAN_HYDRA && you.in_water())
         mv = 6;
@@ -3549,7 +3542,7 @@ bool player::gourmand(bool calc_unid, bool items) const
            || actor::gourmand(calc_unid, items);
 }
 
-bool player::stasis(bool calc_unid, bool items) const
+bool player::stasis() const
 {
     return species == SP_FORMICID;
 }
@@ -4676,8 +4669,11 @@ bool slow_player(int turns)
     if (turns <= 0)
         return false;
 
-    if (check_stasis())
+    if (you.stasis())
+    {
+        mpr("Your stasis prevents you from being slowed.");
         return false;
+    }
 
     // Doubling these values because moving while slowed takes twice the
     // usual delay.
@@ -4752,8 +4748,11 @@ bool haste_player(int turns, bool rageext)
     if (turns <= 0)
         return false;
 
-    if (check_stasis())
+    if (you.stasis())
+    {
+        mpr("Your stasis prevents you from being hasted.");
         return false;
+    }
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
@@ -6384,11 +6383,10 @@ int player::res_constrict() const
 {
     if (is_insubstantial())
         return 3;
-    if (form == TRAN_PORCUPINE
-        || player_mutation_level(MUT_SPINY))
-    {
+
+    if (player_mutation_level(MUT_SPINY))
         return 3;
-    }
+
     return 0;
 }
 
@@ -6460,8 +6458,8 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (crawl_state.game_is_sprint() && !blinking)
         return "Long-range teleportation is disallowed in Dungeon Sprint.";
 
-    if (species == SP_FORMICID)
-        return pluralise(species_name(species)) + " cannot teleport.";
+    if (stasis())
+        return "Your stasis prevents you from teleporting.";
 
     vector<string> problems;
 
@@ -6472,7 +6470,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         problems.emplace_back("held in place by your roots");
 
     vector<item_def> notele_items;
-    if (has_notele_item(calc_unid, &notele_items) || stasis())
+    if (has_notele_item(calc_unid, &notele_items))
     {
         vector<string> worn_notele;
         bool found_nonartefact = false;
@@ -6501,13 +6499,6 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
                 make_stringf("wearing %s",
                              comma_separated_line(worn_notele.begin(),
                                                   worn_notele.end()).c_str()));
-        }
-
-        if (stasis())
-        {
-            // Formicids are handled above, other sources
-            // of stasis will display this message:
-            problems.emplace_back("affected by a buggy stasis");
         }
     }
 
@@ -6831,9 +6822,11 @@ void player::paralyse(actor *who, int str, string source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // The shock is too mild to do damage.
-    if (check_stasis())
+    if (stasis())
+    {
+        mpr("Your stasis prevents you from being paralysed.");
         return;
+    }
 
     // The who check has an effect in a few cases, most notably making
     // Death's Door + Borg's paralysis unblockable.
@@ -7305,19 +7298,11 @@ bool player::polymorph(int pow)
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
     {
-        // Whole-body transformations only; mere appendage doesn't seem fitting.
-        f = random_choose_weighted(
-            100, TRAN_BAT,
-            100, TRAN_FUNGUS,
-            100, TRAN_PIG,
-            100, TRAN_TREE,
-            100, TRAN_PORCUPINE,
-            100, TRAN_WISP,
-             20, TRAN_SPIDER,
-             20, TRAN_ICE_BEAST,
-              5, TRAN_STATUE,
-              2, TRAN_HYDRA,
-              1, TRAN_DRAGON);
+        f = random_choose(TRAN_BAT,
+                          TRAN_FUNGUS,
+                          TRAN_PIG,
+                          TRAN_TREE,
+                          TRAN_WISP);
         // need to do a dry run first, as Zin's protection has a random factor
         if (transform(pow, f, true, true))
             break;
@@ -7813,7 +7798,8 @@ bool player::form_uses_xl() const
     // users of one particular [non-]weapon be effective for this
     // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
-    return form == TRAN_WISP || form == TRAN_FUNGUS;
+    return form == TRAN_WISP || form == TRAN_FUNGUS || form == TRAN_PIG
+           || form == TRAN_BAT && you.species != SP_VAMPIRE;
 }
 
 static int _get_device_heal_factor()

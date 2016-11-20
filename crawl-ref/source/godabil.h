@@ -180,7 +180,7 @@ int pakellas_surge_devices();
 
 bool uskayaw_stomp();
 bool uskayaw_line_pass();
-bool uskayaw_grand_finale();
+bool uskayaw_grand_finale(bool fail);
 
 bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret_type hepliaklqana_idealise(bool fail);

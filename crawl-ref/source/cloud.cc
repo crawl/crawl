@@ -27,6 +27,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -1513,6 +1514,40 @@ cloud_type cloud_name_to_type(const string &name)
             return static_cast<cloud_type>(i);
 
     return CLOUD_NONE;
+}
+
+coord_def random_walk(coord_def start, int dist)
+{
+    ASSERT(in_bounds(start));
+    ASSERT(dist >= 1);
+
+    int moves_left = dist;
+    coord_def pos = start;
+    while (moves_left-- > 0)
+    {
+        int okay_dirs = 0;
+        int dir       = -1;
+        for (int j = 0; j < 8; j++)
+        {
+            const coord_def new_pos   = pos + Compass[j];
+
+            if (in_bounds(new_pos) && !feat_is_solid(grd(new_pos))
+                && one_chance_in(++okay_dirs))
+            {
+                dir = j;
+            }
+        }
+
+        if (okay_dirs == 0)
+            break;
+
+        if (one_chance_in(++okay_dirs))
+            continue;
+
+        pos       += Compass[dir];
+    }
+
+    return pos;
 }
 
 ////////////////////////////////////////////////////////////////////////

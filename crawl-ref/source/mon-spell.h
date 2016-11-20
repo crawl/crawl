@@ -379,7 +379,7 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('m') Merfolk and friends.
-    {  MST_SIREN,
+    {  MST_MERFOLK_SIREN,
       {
        { SPELL_SIREN_SONG, 160, MON_SPELL_WIZARD },
       }

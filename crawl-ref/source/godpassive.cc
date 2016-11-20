@@ -1279,8 +1279,8 @@ void shadow_monster_reset(monster *mon)
  */
 static bool _in_melee_range(actor* target)
 {
-    const int dist = (you.pos() - target->pos()).abs();
-    return dist < 2 || (dist <= 2 && you.reach_range() != REACH_NONE);
+    const int dist = (you.pos() - target->pos()).rdist();
+    return dist <= you.reach_range();
 }
 
 void dithmenos_shadow_melee(actor* target)

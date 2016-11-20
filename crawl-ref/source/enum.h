@@ -591,7 +591,9 @@ enum transformation_type
     TRAN_PIG,
     TRAN_APPENDAGE,
     TRAN_TREE,
+#if TAG_MAJOR_VERSION == 34
     TRAN_PORCUPINE,
+#endif
     TRAN_WISP,
 #if TAG_MAJOR_VERSION == 34
     TRAN_JELLY,
@@ -2952,7 +2954,7 @@ enum monster_type                      // menv[].type
     MONS_GUARDIAN_SERPENT,
     MONS_OCTOPODE,
     MONS_MERFOLK,
-    MONS_SIREN,
+    MONS_MERFOLK_SIREN,
     MONS_MERFOLK_AVATAR,
 #if TAG_MAJOR_VERSION > 34
     MONS_DROWNED_SOUL,
@@ -3925,7 +3927,6 @@ enum operation_types
     OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
-    OPER_ID       = 'i',
     OPER_BUTCHER  = 'c',
     OPER_ANY      = 0,
 };
@@ -4903,6 +4904,7 @@ enum zap_type
     ZAP_VIRULENCE,
     ZAP_DRAIN_MAGIC,
     ZAP_BECKONING,
+    ZAP_FIRE_STORM,
     NUM_ZAPS
 };
 

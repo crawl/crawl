@@ -225,11 +225,6 @@ bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
 }
 
-bool actor::stasis(bool calc_unid, bool items) const
-{
-    return false;
-}
-
 // permaswift effects like boots of running and lightning scales
 bool actor::run(bool calc_unid, bool items) const
 {
@@ -782,8 +777,7 @@ bool actor::torpor_slowed() const
 {
     if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
         || is_stationary()
-        || (is_monster() && as_monster()->check_stasis(true))
-        || (!is_monster() && stasis()))
+        || stasis())
     {
         return false;
     }

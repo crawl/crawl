@@ -824,29 +824,36 @@ A tree, as dead as everything else here.
 # Dis:7
 An iron statue
 
-A statue with no mouth. Creepy!
+A statue of an ancient warrior, festooned with trophies from fallen victims.
+Some dark substance oozes from the gaps in its visor; surely it must be oil..?
 %%%%
 # Geh:7
 Ashen ground
 
-Ashen ground. It is warm and almost comfortable.
+Ash and embers, littered with broken treasures and worthless coins from realms
+long fallen.
 %%%%
 A tempered metal wall
 
-A metal wall, emitting heat.
+Walls of brass and nickel, covered in a thin golden foil steadily peeling away
+in the constant, oppressive heat. Designs depict mortals dealing with devils,
+but the former rarely seem to come out ahead on the exchange.
 %%%%
 # Coc:7
 An ice-covered rock wall
 
-A rock wall coated in a thick layer of ice.
+A rock wall coated in a thick layer of ice. Twisted faces glower beneath the
+surface, locked in perpetual grimaces of rage and betrayal.
 %%%%
 An ice-covered stone wall
 
-A stone wall coated in a thick layer of ice.
+A stone wall coated in a thick layer of ice. Twisted faces glower beneath the
+surface, locked in perpetual grimaces of rage and betrayal.
 %%%%
 Frost-covered floor
 
-Frost-covered floor. It crunches satisfyingly underfoot.
+Earth locked within perpetual frost and cold. It seems ageless and changeless,
+as though it has existed in this state for an eternity.
 %%%%
 # Pan: the holy level
 A golden statue

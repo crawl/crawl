@@ -393,10 +393,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     }
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-    {
         attack[i] = get_monster_data(type)->attack[i];
-        attack[i].damage = 0;
-    }
 
     props.clear();
     // At least enough to keep from crashing. TODO: allow specifying these?
@@ -659,7 +656,7 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
         i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         i_ghost.ac = quantise(ghost.ac, 5);
-        i_ghost.damage = quantise(ghost.damage, 5);
+        i_ghost.damage = ghost.damage;
         props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
 
         // describe abnormal (branded) ghost weapons
@@ -682,10 +679,7 @@ monster_info::monster_info(const monster* m, int milev)
         props[SPELL_HD_KEY] = spellhd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-    {
         attack[i] = mons_attack_spec(*m, i, true);
-        attack[i].damage = 0;
-    }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {

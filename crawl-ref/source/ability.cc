@@ -331,7 +331,7 @@ static const ability_def Ability_List[] =
       1, 0, 0, 0, {FAIL_XL, 45, 2}, abflag::PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-      0, 0, 600, 0, {FAIL_EVO, 50, 2}, abflag::NONE },
+      0, 0, 600, 0, {FAIL_EVO, 50, 2}, abflag::EXHAUSTION },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {FAIL_EVO, 60, 2}, abflag::NONE },
@@ -424,7 +424,8 @@ static const ability_def Ability_List[] =
     // Trog
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
-    { ABIL_TROG_BERSERK, "Berserk", 0, 0, 600, 0, {FAIL_INVO}, abflag::NONE },
+    { ABIL_TROG_BERSERK, "Berserk",
+      0, 0, 600, 0, {FAIL_INVO}, abflag::EXHAUSTION },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
       0, 0, 200, 2, {FAIL_INVO, piety_breakpoint(2), 0, 1}, abflag::NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
@@ -903,7 +904,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << "\nUsing this ability will hurt you.";
 
     if (abil.flags & abflag::EXHAUSTION)
-        ret << "\nIt cannot be used when exhausted.";
+        ret << "\nIt causes exhaustion, and cannot be used when exhausted.";
 
     if (abil.flags & abflag::INSTANT)
         ret << "\nIt is instantaneous.";
@@ -1740,6 +1741,16 @@ static bool _sticky_flame_can_hit(const actor *act)
     }
     else
         return false;
+}
+
+/// If the player is stationary, print 'You cannot move.' and return true.
+static bool _abort_if_stationary()
+{
+    if (!you.is_stationary())
+        return false;
+
+    canned_msg(MSG_CANNOT_MOVE);
+    return true;
 }
 
 /*
@@ -2801,6 +2812,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_DITHMENOS_SHADOW_STEP:
+        if (_abort_if_stationary())
+            return SPRET_ABORT;
         fail_check();
         if (!dithmenos_shadow_step())
         {
@@ -2896,12 +2909,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_RU_POWER_LEAP:
-        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to power leap.");
             return SPRET_ABORT;
         }
+
+        if (_abort_if_stationary())
+            return SPRET_ABORT;
+
+        fail_check();
+
         if (!ru_power_leap())
         {
             canned_msg(MSG_OK);
@@ -2911,12 +2929,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_RU_APOCALYPSE:
-        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to unleash your apocalyptic power.");
             return SPRET_ABORT;
         }
+
+        fail_check();
+
         if (!ru_apocalypse())
             return SPRET_ABORT;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
@@ -3025,14 +3045,15 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_USKAYAW_LINE_PASS:
+        if (_abort_if_stationary())
+            return SPRET_ABORT;
         fail_check();
         if (!uskayaw_line_pass())
             return SPRET_ABORT;
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
-        fail_check();
-        if (!uskayaw_grand_finale())
+        if (!uskayaw_grand_finale(fail))
             return SPRET_ABORT;
         break;
 

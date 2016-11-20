@@ -727,7 +727,7 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
-    bool stasis(bool calc_unid = true, bool items = true) const override;
+    bool stasis() const override;
 
     bool airborne() const override;
     bool cancellable_flight() const;
@@ -990,6 +990,7 @@ const int player_adjust_evoc_power(const int power, int enhancers = 0);
 int player_speed();
 
 int player_spell_levels();
+int player_total_spell_levels();
 
 int player_teleport(bool calc_unid = true);
 
