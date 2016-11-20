@@ -600,8 +600,11 @@ void zap_wand(int slot)
         {
             return;
         }
-        else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
+        else if (wand.sub_type == WAND_HASTING && you.stasis())
+        {
+            mpr("Your stasis prevents you from being hasted.");
             return;
+        }
     }
 
     if (!has_charges)

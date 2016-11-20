@@ -2801,7 +2801,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
     if (!can_go_berserk())
         return false;
 
-    if (check_stasis(false))
+    if (stasis())
         return false;
 
     if (has_ench(ENCH_SLOW))
@@ -4173,7 +4173,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return true;
 
-    if (check_stasis(!permit_id, calc_unid))
+    if (stasis())
         return true;
 
     // TODO: permit_id
@@ -6616,29 +6616,10 @@ bool monster::check_clarity(bool silent) const
     return true;
 }
 
-bool monster::stasis(bool calc_unid, bool items) const
+bool monster::stasis() const
 {
-    if (mons_genus(type) == MONS_FORMICID
-        || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID)
-    {
-        return true;
-    }
-
-    return actor::stasis(calc_unid, items);
-}
-
-bool monster::check_stasis(bool silent, bool calc_unid) const
-{
-    if (stasis(false, false))
-        return true;
-
-    if (!stasis())
-        return false;
-
-    if (!silent && you.can_see(*this))
-        simple_monster_message(*this, " looks uneasy for a moment.");
-
-    return true;
+    return (mons_genus(type) == MONS_FORMICID
+            || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID);
 }
 
 bool monster::is_illusion() const

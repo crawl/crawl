@@ -2404,7 +2404,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Harm", cwidth, harm) + "\n";
 
     const int rclar = you.clarity(calc_unid);
-    const int stasis = you.stasis(calc_unid);
+    const int stasis = you.stasis();
     // TODO: what about different levels of anger/berserkitis?
     const bool show_angry = (you.angry(calc_unid)
                              || player_mutation_level(MUT_BERSERK))

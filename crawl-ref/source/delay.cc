@@ -801,24 +801,21 @@ void handle_delay()
 
 void JewelleryOnDelay::finish()
 {
-    // recheck stasis here, since our condition may have changed since
-    // starting the amulet swap process
-    // just breaking here is okay because swapping jewellery is a one-turn
-    // action, so conceptually there is nothing to interrupt - in other
-    // words, this is equivalent to if the user took off the previous
-    // amulet and was slowed before putting the amulet of stasis on as a
-    // separate action on the next turn
+    // Recheck -Tele here, since our condition may have changed since starting
+    // the amulet swap process.
+    // Just breaking here is okay because swapping jewellery is a one-turn
+    // action, so conceptually there is nothing to interrupt - in other words,
+    // this is equivalent to if the user took off the previous amulet and was
+    // affected by tele other before putting the -Tele amulet on as a separate
+    // action on the next turn.
     // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
     if (!crawl_state.disables[DIS_CONFIRMATIONS]
-        && nasty_stasis(jewellery, OPER_PUTON)
+        && needs_notele_warning(jewellery, OPER_PUTON)
         && item_ident(jewellery, ISFLAG_KNOW_TYPE))
     {
         string prompt = "Really put on ";
         prompt += jewellery.name(DESC_INVENTORY);
-        prompt += string(" while ")
-                  + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                     you.duration[DUR_SLOW] ? "slowed" : "hasted");
-        prompt += "?";
+        prompt += " while about to teleport?";
         if (!yesno(prompt.c_str(), false, 'n'))
             return;
     }

@@ -1943,7 +1943,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
 void bolt::apply_bolt_paralysis(monster* mons)
 {
-    if (mons->paralysed() || mons->check_stasis(false))
+    if (mons->paralysed() || mons->stasis())
         return;
     // asleep monsters can still be paralysed (and will be always woken by
     // trying to resist); the message might seem wrong but paralysis is
@@ -5467,7 +5467,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (YOU_KILL(thrower))
             did_god_conduct(DID_HASTY, 6, god_cares());
 
-        if (mon->check_stasis(false))
+        if (mon->stasis())
             return MON_AFFECTED;
 
         if (!mon->has_ench(ENCH_HASTE)

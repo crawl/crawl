@@ -337,7 +337,7 @@ static const map<species_type, species_def> species_data =
     12, 7, 6, // 25
     { STAT_STR, STAT_INT }, 4,
     { { MUT_ANTENNAE, 3, 1 }, },
-    { "You are under a permanent stasis effect.",
+    { "You cannot be hasted, slowed, berserked, paralysed or teleported.",
       "You can dig through walls and to a lower floor.",
       "Your four strong arms can wield two-handed weapons with a shield." },
     { "permanent stasis", "dig shafts and tunnels", "four strong arms" },

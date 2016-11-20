@@ -726,9 +726,6 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (check_stasis())
-        return false;
-
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
@@ -806,10 +803,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
 #endif
     else if (is_lifeless_undead())
         msg = "You cannot raise a blood rage in your lifeless body.";
-    // Stasis for identified amulets; unided amulets will trigger when the
-    // player attempts to activate berserk.
-    else if (stasis(false))
-        msg = "You cannot go berserk while under stasis.";
+    else if (stasis())
+        msg = "Your stasis prevents you from going berserk.";
     else if (!intentional && !potion && clarity())
         msg = "You're too calm and focused to rage.";
     else
