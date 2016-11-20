@@ -158,10 +158,12 @@ struct dice_def
     int num;
     int size;
 
-    dice_def() : num(0), size(0) {}
-    dice_def(int n, int s) : num(n), size(s) {}
+    constexpr dice_def() : num(0), size(0) {}
+    constexpr dice_def(int n, int s) : num(n), size(s) {}
     int roll() const;
 };
+
+constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
 dice_def calc_dice(int num_dice, int max_damage);
 

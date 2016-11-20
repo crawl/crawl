@@ -795,7 +795,7 @@ static void _setup_fake_beam(bolt& beam, const monster&, int)
     // Doesn't take distance into account, but this is just a tracer so
     // we'll ignore that. We need some damage on the tracer so the monster
     // doesn't think the spell is useless against other monsters.
-    beam.damage   = dice_def(42, 1);
+    beam.damage   = CONVENIENT_NONZERO_DAMAGE;
     beam.range    = LOS_RADIUS;
 }
 
