@@ -384,7 +384,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool antimagic_susceptible() const override;
 
-    bool stasis(bool calc_unid = true, bool items = true) const override;
+    bool stasis() const override;
 
     bool airborne() const override;
     bool can_cling_to_walls() const override;
@@ -534,7 +534,6 @@ public:
     bool has_usable_tentacle() const override;
 
     bool check_clarity(bool silent) const;
-    bool check_stasis(bool silent, bool calc_unid = true) const;
 
     bool is_child_tentacle() const;
     bool is_child_tentacle_of(const monster* mons) const;

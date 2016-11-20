@@ -44,8 +44,11 @@ void swap_with_monster(monster* mon_to_swap)
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 
-    if (check_stasis())
+    if (you.stasis())
+    {
+        mpr("Your stasis prevents you from teleporting.");
         return;
+    }
 
     // Be nice: no swapping into uninhabitable environments.
     if (!you.is_habitable(newpos) || !mon.is_habitable(you.pos()))

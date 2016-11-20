@@ -2996,14 +2996,6 @@ void read_scroll(item_def& scroll)
 
 }
 
-bool check_stasis(const char *msg)
-{
-    bool blocked = you.species == SP_FORMICID;
-    if (blocked)
-        mpr(msg);
-    return blocked;
-}
-
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 

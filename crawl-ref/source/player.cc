@@ -3543,7 +3543,7 @@ bool player::gourmand(bool calc_unid, bool items) const
            || actor::gourmand(calc_unid, items);
 }
 
-bool player::stasis(bool calc_unid, bool items) const
+bool player::stasis() const
 {
     return species == SP_FORMICID;
 }
@@ -4670,8 +4670,11 @@ bool slow_player(int turns)
     if (turns <= 0)
         return false;
 
-    if (check_stasis())
+    if (you.stasis())
+    {
+        mpr("Your stasis prevents you from being slowed.");
         return false;
+    }
 
     // Doubling these values because moving while slowed takes twice the
     // usual delay.
@@ -4746,8 +4749,11 @@ bool haste_player(int turns, bool rageext)
     if (turns <= 0)
         return false;
 
-    if (check_stasis())
+    if (you.stasis())
+    {
+        mpr("Your stasis prevents you from being hasted.");
         return false;
+    }
 
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
@@ -6441,8 +6447,8 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (crawl_state.game_is_sprint() && !blinking)
         return "Long-range teleportation is disallowed in Dungeon Sprint.";
 
-    if (species == SP_FORMICID)
-        return pluralise(species_name(species)) + " cannot teleport.";
+    if (stasis())
+        return "Your stasis prevents you from teleporting.";
 
     vector<string> problems;
 
@@ -6453,7 +6459,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         problems.emplace_back("held in place by your roots");
 
     vector<item_def> notele_items;
-    if (has_notele_item(calc_unid, &notele_items) || stasis())
+    if (has_notele_item(calc_unid, &notele_items))
     {
         vector<string> worn_notele;
         bool found_nonartefact = false;
@@ -6482,13 +6488,6 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
                 make_stringf("wearing %s",
                              comma_separated_line(worn_notele.begin(),
                                                   worn_notele.end()).c_str()));
-        }
-
-        if (stasis())
-        {
-            // Formicids are handled above, other sources
-            // of stasis will display this message:
-            problems.emplace_back("affected by a buggy stasis");
         }
     }
 
@@ -6812,9 +6811,11 @@ void player::paralyse(actor *who, int str, string source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // The shock is too mild to do damage.
-    if (check_stasis())
+    if (stasis())
+    {
+        mpr("Your stasis prevents you from being paralysed.");
         return;
+    }
 
     // The who check has an effect in a few cases, most notably making
     // Death's Door + Borg's paralysis unblockable.

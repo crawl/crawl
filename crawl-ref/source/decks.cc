@@ -1326,7 +1326,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
               if (!mons_immune_magic(mon))
               {
                   const bool hostile = !mon.wont_attack();
-                  const bool haste_immune = (mon.check_stasis(false)
+                  const bool haste_immune = (mon.stasis()
                                              || mons_is_immotile(mon));
 
                   bool did_haste = false;

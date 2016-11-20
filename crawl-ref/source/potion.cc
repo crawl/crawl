@@ -279,10 +279,10 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (you.stasis(false))
+        if (you.stasis())
         {
             if (reason)
-                *reason = NO_HASTE_MSG;
+                *reason = "Your stasis prevents you from being hasted.";
             return false;
         }
         return true;
@@ -1159,10 +1159,10 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (you.stasis(false))
+        if (you.stasis())
         {
             if (reason)
-                *reason = "This potion cannot work under stasis.";
+                *reason = "Your stasis prevents you from being slowed.";
             return false;
         }
         return true;
