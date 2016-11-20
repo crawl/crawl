@@ -491,3 +491,7 @@ You are channeling magical energy.
 You may cast spells with insufficient reserves of magic, but doing so will
 cause you to briefly lose access to your magic after the spell is cast.
 %%%%
+Unarmed status
+
+Xom has divinely improved your unarmed skill, raising it a number of levels equal to your XL.
+%%%%

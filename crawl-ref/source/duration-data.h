@@ -537,6 +537,11 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
+    { DUR_XOM_UC_BONUS,
+      LIGHTBLUE, "Unarmed",
+      "unarmed prowess", "unarmed",
+      "Your unarmed skill is divinely enhanced.", D_NO_FLAGS,
+      {{ "Your unarmed skill returns to normal." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
