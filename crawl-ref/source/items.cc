@@ -404,7 +404,7 @@ mon_inv_iterator mon_inv_iterator::operator++(int)
  * Reduce quantity of an inventory item, do cleanup if item goes away.
  * @return  True if stack of items no longer exists, false otherwise.
 */
-bool dec_inv_item_quantity(int obj, int amount)
+bool dec_inv_item_quantity(int obj, int amount, bool keep_training)
 {
     bool ret = false;
 
@@ -427,8 +427,9 @@ bool dec_inv_item_quantity(int obj, int amount)
                 you.equip[i] = -1;
             }
         }
-
-        item_skills(you.inv[obj], you.stop_train);
+        
+        if (!keep_training)
+            item_skills(you.inv[obj], you.stop_train);
 
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity  = 0;

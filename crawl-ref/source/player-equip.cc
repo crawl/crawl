@@ -23,6 +23,7 @@
 #include "libutil.h"
 #include "macro.h" // command_to_string
 #include "message.h"
+#include "mon-place.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "notes.h"
@@ -1360,7 +1361,28 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     calc_mp();
 }
 
-bool unwield_item(bool showMsgs)
+static void _manifest_as_ieoh_jian_weapon(item_def& wpn)
+{
+    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                 BEH_FRIENDLY,
+                 you.pos(),
+                 MHITYOU,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
+                 GOD_IEOH_JIAN);
+    mg.props[IEOH_JIAN_WEAPON] = wpn;
+
+    int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, false);
+    mg.props[IEOH_JIAN_POWER] = power;
+
+    monster * const mons = create_monster(mg);
+
+    if (!mons)
+        dprf("Failed to animate Ieoh Jian weapon");
+    else
+        mprf(MSGCH_GOD, "%s flies away from your hand!", wpn.name(DESC_THE, false, true).c_str());
+}
+
+bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
 {
     if (!you.weapon())
         return false;
@@ -1379,10 +1401,20 @@ bool unwield_item(bool showMsgs)
     if (is_weapon && !safe_to_remove(item))
         return false;
 
+    int inventory_slot = you.equip[EQ_WEAPON];
+
     unequip_item(EQ_WEAPON, showMsgs);
 
     you.wield_change     = true;
     you.redraw_quiver    = true;
+
+    if (!ignore_ieoh_jian && item.props.exists(IEOH_JIAN_SLOT))
+    {
+        // The weapon belongs to the IJC so you can't stash it away.
+        // Instead, it is animated beside you.
+        _manifest_as_ieoh_jian_weapon(item);
+        dec_inv_item_quantity(inventory_slot, 1);
+    }
 
     return true;
 }

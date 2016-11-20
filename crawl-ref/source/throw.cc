@@ -29,6 +29,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-place.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -514,7 +515,7 @@ void throw_item_no_quiver()
     throw_it(beam, slot);
 }
 
-static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
+bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 string &ammo_name, bool &returning)
 {
     const auto cglyph = get_item_glyph(item);
@@ -717,7 +718,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     string ammo_name;
 
-    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+    if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
     {
         you.turn_is_over = false;
         return false;
@@ -766,6 +767,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         }
     }
 
+    pbolt.is_tracer = false;
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
     if (cancelled)
@@ -774,7 +776,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         return false;
     }
 
-    pbolt.is_tracer = false;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
@@ -1005,7 +1006,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     item_def item = mitm[msl];
     item.quantity = 1;
 
-    if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
+    if (setup_missile_beam(mons, beam, item, ammo_name, returning))
         return false;
 
     beam.aimed_at_spot |= returning;

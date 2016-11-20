@@ -1925,6 +1925,11 @@ skill_type item_attack_skill(const item_def &item)
     return SK_FIGHTING;
 }
 
+skill_type weapon_attack_skill(uint8_t weapon_subtype)
+{
+    return Weapon_prop[ Weapon_index[weapon_subtype] ].skill;
+}
+
 /**
  * Returns the skill used by the given item type to attack.
  *
@@ -3102,4 +3107,10 @@ int missile_base_price(missile_type type)
 int armour_base_price(armour_type type)
 {
     return Armour_prop[ Armour_index[type] ].price;
+}
+
+bool you_could_wield_weapon_type(weapon_type type)
+{
+    auto size = you.body_size();
+    return Weapon_prop[Weapon_index[type]].min_2h_size <= size;
 }

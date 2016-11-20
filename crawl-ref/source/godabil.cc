@@ -85,6 +85,7 @@
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
+#include "throw.h"
 #include "timed_effects.h"
 #include "traps.h"
 #include "viewchar.h"
@@ -7088,4 +7089,298 @@ void hepliaklqana_choose_identity()
 {
     _hepliaklqana_choose_name();
     _hepliaklqana_choose_gender();
+}
+
+bool ieoh_jian_recall_weapon()
+{
+    bolt tracer;
+    direction_chooser_args args;
+    args.mode = TARG_IEOH_JIAN_WEAPON;
+    dist thr;
+    direction(thr, args);
+
+    if (!thr.isValid)
+    {
+        if (thr.isCancel)
+            canned_msg(MSG_OK);
+
+        return false;
+    }
+
+    monster* mons = monster_at(thr.target);
+
+    if (!mons || mons->type != MONS_IEOH_JIAN_WEAPON)
+        return false;
+
+    coord_def new_location;
+    // Your current weapon (if you had one) will appear by your side as you recall the new one.
+    // This is, as usual, done with some trickery involving swapping with the ghost...
+    if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
+    {
+        mons->move_to_pos(new_location);
+    }
+    mons->ieoh_jian_swap_weapon_with_player();
+    you.time_taken = 1; // Near instantaneous to allow precise positioning tricks.
+
+    return true;
+}
+
+bool ieoh_jian_steel_dragonfly(bolt &pbolt)
+{
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    auto yours = find_ieoh_jian_manifested_weapons(true);
+    manifested.insert(manifested.end(), yours.begin(), yours.end());
+   
+    if (manifested.size() < 3)
+    {
+        mprf("You need at least three flying weapons!");
+        return false;
+    }
+
+    dist thr;
+
+    if (you.confused())
+    {
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.isValid = true;
+    }
+    else if (pbolt.target.zero())
+    {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.needs_path = false;
+
+        direction(thr, args);
+
+        if (!thr.isValid)
+        {
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
+
+            return false;
+        }
+    }
+    
+    monster* mons = monster_at(thr.target);
+    if (!mons)
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    pbolt.set_target(thr);
+
+    // We launch a bolt per summoned weapon.
+    vector<item_def> weapon_copies;
+    vector<bolt> weapon_bolts;
+
+    weapon_copies.resize(manifested.size());
+    weapon_bolts.resize(manifested.size());
+    for (size_t index = 0; index != manifested.size(); index++)
+    {
+        auto monster = manifested[index];
+        weapon_copies[index] = *(monster->weapon());
+        weapon_bolts[index] = pbolt;
+        string ammo_name;
+        bool returning;
+        if (setup_missile_beam(monster, weapon_bolts[index], weapon_copies[index], ammo_name, returning))
+            break;
+
+        // Steel Dragonfly missiles are all piercing.
+        weapon_bolts[index].pierce    = true;
+        weapon_bolts[index].is_tracer = false;
+        weapon_bolts[index].hit = property(weapon_copies[index], PWPN_HIT);
+        weapon_bolts[index].item->props[IEOH_JIAN_PROJECTED] = true;
+        weapon_bolts[index].item->props[IEOH_JIAN_DRAGONFLY] = true;
+        weapon_bolts[index].drop_item = false;
+        weapon_bolts[index].aimed_at_spot = true;
+    }
+
+    alert_nearby_monsters();
+
+    
+    int number_of_impacts = 0;
+    for (auto& bolt: weapon_bolts)
+    {
+        bolt.fire();
+        viewwindow();
+        bool hit = !bolt.hit_verb.empty();
+        if (hit) number_of_impacts++;
+    }
+
+    for (auto monster: manifested)
+    {
+        if (monster->weapon()->props.exists(IEOH_JIAN_SLOT))
+        {
+            mprf(MSGCH_GOD,"%s flies violently to the target and shatters!", monster->weapon()->name(DESC_THE, false, true).c_str());
+            check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
+        }
+        else
+        {
+            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                         BEH_FRIENDLY,
+                         pbolt.target,
+                         MHITYOU,
+                         MG_FORCE_BEH | MG_FORCE_PLACE,
+                         GOD_IEOH_JIAN);
+
+            int power = you.skill(weapon_attack_skill(monster->weapon()->sub_type), 4, false);
+            mg.props[IEOH_JIAN_WEAPON] = *(monster->weapon());
+            mg.props[IEOH_JIAN_POWER] = power;
+
+            if (!create_monster(mg))
+                dprf("Failed to animate Ieoh Jian weapon");
+
+            mprf(MSGCH_GOD,"%s flies violently to the target!", monster->weapon()->name(DESC_YOUR, false, true).c_str());
+            monster->destroy_inventory();
+        }
+
+        monster_die(monster, KILL_RESET, NON_MONSTER, true);
+        check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
+    }
+
+    int chance_to_liquify = 20 * number_of_impacts;
+    if (mons->has_ench(ENCH_PARALYSIS))
+        chance_to_liquify *= 4;
+    else if (mons->has_ench(ENCH_SLOW))
+        chance_to_liquify *= 2;
+
+    dprf("Chance to liquify: %d%%", chance_to_liquify);
+    if (mons->alive() && mons->type != MONS_IEOH_JIAN_WEAPON && x_chance_in_y(chance_to_liquify, 100))
+    {
+        simple_monster_message(*mons, " starts to convulse uncontrollably...");
+        mons->hurt(&you, dice_def(8, mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
+    }
+
+    return true;
+}
+
+bool ieoh_jian_project_weapon(bolt &pbolt)
+{
+    // Keeps the Council interested, but it won't generate any new weapons.
+    ieoh_jian_interest();
+    ASSERT(you.weapon());
+    dist thr;
+
+    if (you.confused())
+    {
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.isValid = true;
+    }
+    else if (pbolt.target.zero())
+    {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.range = 3 + piety_rank(you.piety) / 3;
+        direction(thr, args);
+
+        if (!thr.isValid)
+        {
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
+
+            return false;
+        }
+    }
+    pbolt.set_target(thr);
+
+    int weapon_index = you.equip[EQ_WEAPON];
+    item_def& thrown = you.inv[weapon_index];
+    ASSERT(thrown.defined());
+
+    // Making a copy of the item, and another for the summoned copy.
+    item_def summoned_copy = thrown;
+    item_def item = thrown;
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+
+    string ammo_name;
+
+    bool returning;
+    if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+        return false;
+
+    // Don't trace at all when confused.
+    bool cancelled = false;
+    if (!you.confused())
+    {
+        // Set values absurdly high to make sure the tracer will
+        // complain if we're attempting to fire through allies.
+        pbolt.damage = dice_def(1, 100);
+
+        // Init tracer variables.
+        pbolt.foe_info.reset();
+        pbolt.friend_info.reset();
+        pbolt.foe_ratio = 100;
+        pbolt.is_tracer = true;
+
+        pbolt.fire();
+
+        cancelled = pbolt.beam_cancelled;
+
+        pbolt.hit    = 0;
+        pbolt.damage = dice_def();
+    }
+
+    // Should only happen if the player answered 'n' to one of those
+    // "Fire through friendly?" prompts.
+    if (cancelled)
+    {
+        return false;
+    }
+
+    if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false, true))
+    {
+        return false;
+    }
+
+    // Now start real firing!
+    origin_set_unknown(item);
+
+    // Even though direction is allowed, we're throwing so we
+    // want to use tx, ty to make the missile fly to map edge.
+    pbolt.set_target(thr);
+
+    you.time_taken = you.attack_delay(&item).roll();
+
+    // Create message.
+    mprf(MSGCH_GOD,"You project %s.", item.name(DESC_THE, false, true).c_str());
+
+    // Ensure we're firing a 'missile'-type beam.
+    pbolt.pierce    = false;
+    pbolt.is_tracer = false;
+
+    pbolt.hit = property(thrown, PWPN_HIT);
+    pbolt.item->props[IEOH_JIAN_PROJECTED] = true;
+
+    pbolt.drop_item = false;
+    pbolt.aimed_at_spot = true;
+    pbolt.fire();
+
+    // ...any monster nearby can see that something has been thrown, even
+    // if it didn't make any noise.
+    alert_nearby_monsters();
+
+    you.turn_is_over = false;
+    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                 BEH_FRIENDLY,
+                 pbolt.target,
+                 MHITYOU,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
+                 GOD_IEOH_JIAN);
+
+    int power = you.skill(weapon_attack_skill(thrown.sub_type), 4, false);
+    mg.props[IEOH_JIAN_WEAPON] = summoned_copy;
+    mg.props[IEOH_JIAN_POWER] = power;
+
+    monster * const mons = create_monster(mg);
+
+    if (!mons)
+        dprf("Failed to animate Ieoh Jian weapon");
+
+    dec_inv_item_quantity(weapon_index, 1, true);
+    canned_msg(MSG_EMPTY_HANDED_NOW);
+
+    you.turn_is_over = true;
+    return true;
 }

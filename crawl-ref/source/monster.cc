@@ -32,9 +32,12 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -50,8 +53,11 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
+#include "skills.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -4670,7 +4676,7 @@ void monster::ghost_demon_init()
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     speed           = ghost->speed;
-    speed_increment = 70;
+    speed_increment = (type == MONS_IEOH_JIAN_WEAPON) ? (70 - you.time_taken) :  70;
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
 
@@ -6478,6 +6484,140 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
     dec_inv_item_quantity(steal_what, new_item.quantity);
 
     return &new_item;
+}
+
+/** Swaps weapons with the player, provided both weapons are safe to wield and unwield.
+ *
+ *  @returns false if the swap failed.
+ */
+bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
+{
+    bool penance;
+    if (!you.weapon() && !weapon())
+    {
+        return false;
+    }
+    else if (!you.weapon())
+    {
+        if (inv_count() == ENDOFPACK)
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You have no room for %s!", weapon()->name(DESC_THE, false, true).c_str());
+            return false; // No room for new weapon
+        }
+
+        int item_index = inv[MSLOT_WEAPON];
+        item_def& pitem = mitm[item_index];
+
+        if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You fail to grab %s!", weapon()->name(DESC_THE, false, true).c_str());
+            return false; // Player wouldn't be able to wield it safely.
+        }
+
+        if (!unequip(pitem, false))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "%s zooms past your reach!", weapon()->name(DESC_THE, false, true).c_str());
+            return false; // Unsafe to unequip
+        }
+
+        item_def weapon_copy = pitem;
+
+        this->destroy_inventory();
+        // Ieoh Jian weapons can't live without a weapon (duh).
+        monster_die(this, KILL_RESET, NON_MONSTER, true);
+
+        int slot;
+        for (slot = 0; slot < ENDOFPACK; ++slot)
+            if (!you.inv[slot].defined())
+                break;
+
+        weapon_copy.pos = ITEM_IN_INVENTORY;
+        weapon_copy.link = slot;
+        weapon_copy.slot = index_to_letter(slot);
+        you.inv[slot] = weapon_copy;
+        you.equip[get_item_slot(weapon_copy)] = slot;
+    }
+    else if (!weapon())
+    {
+        int index = get_mitm_slot(10);
+        if (index == NON_ITEM)
+            return false; // No slot available.
+
+        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            return false; // Can't unwield your current weapon safely.
+        }
+
+        item_def &mons_weapon = mitm[index];
+
+        item_def& your_weapon = *(you.weapon());
+
+        mons_weapon = your_weapon;
+        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+
+        mons_weapon.pos.reset();
+        mons_weapon.link = NON_ITEM;
+
+        unlink_item(index);
+        inv[MSLOT_WEAPON] = index;
+        mons_weapon.set_holding_monster(*this);
+
+        equip(mons_weapon, true);
+    }
+    else
+    {
+        // Proper swap case
+        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            return false; // Can't unwield your current weapon safely.
+        }
+
+        if (is_ranged_weapon_type(you.weapon()->sub_type))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You can't let go of %s fast enough!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            return false;
+        }
+
+        if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
+        {
+            if (!silent)
+                mprf(MSGCH_GOD, "You fail to grab %s!", weapon()->name(DESC_THE, false, true).c_str());
+            return false; // Player wouldn't be able to wield it safely.
+        }
+
+        auto your_weapon_copy = *(you.weapon());
+        *(you.weapon()) = *(weapon());
+        *(weapon()) = your_weapon_copy;
+        you.weapon()->pos  = weapon()->pos;
+        you.weapon()->slot = weapon()->slot;
+        you.weapon()->link = weapon()->link;
+        weapon()->set_holding_monster(*this);
+
+        // We need to reinitialize the ghost to inherit the qualities of the new weapon.
+        ghost->init_ieoh_jian_weapon(*(weapon()), you.skill(weapon_attack_skill(weapon()->sub_type), 4, false));
+    }
+
+    if (!silent)
+        mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
+
+    if (you.weapon())
+    {
+        you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
+        update_can_train();
+    }
+
+    you.wield_change = true;
+    redraw_screen();
+
+    return true;
 }
 
 /** Disarm this monster, and preferably pull the weapon into your tile.

@@ -615,6 +615,29 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage = max(1, damage * power / 100);
 }
 
+void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
+{
+    dprf("Initialising Ieoh Jian weapon with power %d", power);
+    int delay = property(weapon, PWPN_SPEED);
+    int damg  = property(weapon, PWPN_DAMAGE);
+
+    if (power > 100)
+        power = 100;
+
+    colour = weapon.get_colour();
+    flies = true;
+
+    xl = 1 + div_rand_round(power, 4);
+
+    speed   = 35 - delay; // They must be very fast to fly back to combat when knocked away.
+    ac      = damg + div_rand_round(power, 10);
+    damage  = div_rand_round(damg * 7, 10);
+
+    ev     = 15 + 2 * div_rand_round(power, 10) - delay / 2; // Weapon + power based. Highest defensive stat since they die in one hit.
+    ac     = 2 + div_rand_round(power, 10);
+    max_hp = 1; // Ieoh Jian weapons always die in one hit and respawn elsewhere.
+}
+
 void ghost_demon::init_spectral_weapon(const item_def& weapon, int power)
 {
     int damg = property(weapon, PWPN_DAMAGE);

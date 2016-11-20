@@ -41,6 +41,7 @@
 #include "shout.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
@@ -70,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false)
+    cleaving(is_cleaving), is_riposte(false), is_ieoh_jian_martial(false)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -145,7 +146,7 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte)
+        if (!is_riposte && !is_ieoh_jian_martial)
             you.time_taken = you.attack_delay().roll();
 
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
@@ -402,6 +403,15 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
+    if (attacker->is_player() 
+        && is_ieoh_jian_martial 
+        && have_passive(passive_t::pressure_points)
+        && defender->as_monster()->holiness() != MH_NONLIVING
+        && defender->as_monster()->holiness() != MH_PLANT)
+    {
+        player_strike_pressure_points(defender->as_monster());
+    }
+
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
     // meaning it could have made the attacked creature vanish. That
@@ -559,6 +569,40 @@ bool melee_attack::handle_phase_aux()
     }
 
     return true;
+}
+
+void melee_attack::player_strike_pressure_points(monster* mons)
+{
+    if (!you.weapon())
+        return;
+
+    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
+    int paralysis_chance = 3;
+    paralysis_chance *= power;
+    paralysis_chance /= (2*mons->get_hit_dice());
+    int slow_chance = 3 * paralysis_chance;
+
+    dprf("Pressure point strike, %d%% chance to paralyse (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
+    if (!mons->paralysed() && x_chance_in_y(paralysis_chance, 100))
+    {
+        if (!mons_is_immotile(*mons)
+            && simple_monster_message(*mons, " suddenly stops moving as you strike a pressure point!"))
+        {
+            mons->stop_constricting_all();
+            obvious_effect = true;
+        }
+
+        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, attacker, stepdown(power * BASELINE_DELAY, 70)));
+        return;
+    }
+
+    if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
+    {
+        simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
+                                     ? " seems to be slow for longer."
+                                     : " seems to slow down as you strike a pressure point.");
+        mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(power * BASELINE_DELAY, 70)));
+    }
 }
 
 /**
@@ -728,6 +772,10 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
+    // The intention is what counts to IJC, so we attempt to summon here.
+    if (attacker->is_player() && have_passive(passive_t::spawn_weapon_on_hit) && !mons_is_firewood(*defender->as_monster()))
+        ieoh_jian_spawn_weapon(you.pos());
+
     if (!cleaving)
     {
         cleave_setup();
@@ -1469,9 +1517,13 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 // to the base damage of the weapon.
 int melee_attack::player_apply_final_multipliers(int damage)
 {
-    //cleave damage modifier
+    // cleave damage modifier
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    // martial damage modifier (ieoh jian)
+    if (is_ieoh_jian_martial)
+        damage = martial_damage_mod(damage);
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
@@ -2312,7 +2364,7 @@ string melee_attack::mons_attack_desc()
         ret = " from afar";
     }
 
-    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON)
+    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON && attacker->type != MONS_IEOH_JIAN_WEAPON)
         ret += " with " + weapon->name(DESC_A);
 
     return ret;
@@ -3364,6 +3416,36 @@ int melee_attack::cleave_damage_mod(int dam)
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
         return dam;
     return div_rand_round(dam * 7, 10);
+}
+
+static int _apply_momentum(int dam)
+{
+    // Momentum makes sure that heavy weapons do not get an unfair advantage
+    // when attacking on the move.
+    //
+    // Attack speed is calculated as it would on a normal attack, even though the time
+    // taken will correspond to the move speed. Instead, the ratio between move speed
+    // and the attack speed estimate is used as a damage factor.
+    int move_delay = player_movement_speed();
+    int attack_delay = you.attack_delay().roll();
+
+    return div_rand_round(dam * move_delay, attack_delay);
+}
+
+// Martial strikes get modified by momentum and maneuver specific damage mods.
+int melee_attack::martial_damage_mod(int dam)
+{
+    ASSERT(have_passive(passive_t::martial_weapon_mastery));
+    ASSERT(you.weapon());
+
+    dam = _apply_momentum(dam);
+    auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
+   
+    // Lunge gets a damage bonus.
+    if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
+        dam = div_rand_round(dam * 15, 10);
+
+    return dam;
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)

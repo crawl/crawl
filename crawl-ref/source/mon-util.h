@@ -485,6 +485,7 @@ vector<monster* > get_on_level_followers();
 bool mons_stores_tracking_data(const monster& mons);
 
 bool mons_is_player_shadow(const monster& mon);
+bool mons_is_ieoh_jian_weapon(const monster& mon);
 
 void reset_all_monsters();
 void debug_mondata();

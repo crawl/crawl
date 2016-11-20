@@ -85,6 +85,7 @@ static const char *_god_wrath_adjectives[] =
     "progress",         // Pakellas
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
+    "rancor",           // Ieoh Jian
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 

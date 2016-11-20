@@ -306,12 +306,19 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(const item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield, bool only_known)
+               bool ignore_temporary_disability, bool unwield, bool only_known, bool ignore_ieoh_jian)
 {
 #define SAY(x) {if (say_reason) { x; }}
     if (!ignore_temporary_disability && you.berserk())
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
+        return false;
+    }
+    
+    auto manifested = find_ieoh_jian_manifested_weapons(true);
+    if (!ignore_ieoh_jian && !manifested.empty())
+    {
+        SAY(mpr("You're too focused keeping your own weapon in the air."));
         return false;
     }
 
@@ -448,7 +455,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
  */
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool force, bool show_unwield_msg, bool show_wield_msg,
-                  bool adjust_time_taken)
+                  bool adjust_time_taken, bool ignore_ieoh_jian)
 {
     if (inv_count() < 1)
     {
@@ -458,7 +465,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
+    if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS, true, true))
         return false;
 
     int item_slot = 0;          // default is 'a'
@@ -532,7 +539,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             if (!_safe_to_remove_or_wear(*wpn, true))
                 return false;
 
-            if (!unwield_item(show_weff_messages))
+            if (!unwield_item(show_weff_messages, ignore_ieoh_jian))
                 return false;
 
             if (show_unwield_msg)
@@ -572,7 +579,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Unwield any old weapon.
     if (you.weapon())
     {
-        if (unwield_item(show_weff_messages))
+        if (unwield_item(show_weff_messages, ignore_ieoh_jian))
         {
             // Enable skills so they can be re-disabled later
             update_can_train();

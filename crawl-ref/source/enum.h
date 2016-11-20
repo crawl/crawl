@@ -450,6 +450,11 @@ enum ability_type
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
 #endif
 
+    // Ieoh Jian
+    ABIL_IEOH_JIAN_PROJECT_WEAPON = 1300,
+    ABIL_IEOH_JIAN_RECALL_WEAPON,
+    ABIL_IEOH_JIAN_DRAGONFLY,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -1661,6 +1666,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+    DNGN_ALTAR_IEOH_JIAN,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1727,6 +1733,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+    DNGN_ALTAR_IEOH_JIAN,
 
     DNGN_ENDLESS_SALT,
 #endif
@@ -1924,6 +1931,10 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
+    DUR_IEOH_JIAN_BOREDOM,
+    DUR_IEOH_JIAN_INTEREST,
+    DUR_IEOH_JIAN_ACTIVITY_BACKOFF,
+    DUR_IEOH_JIAN_AFTERIMAGE,
     NUM_DURATIONS
 };
 
@@ -2225,6 +2236,7 @@ enum god_type
     GOD_PAKELLAS,
     GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
+    GOD_IEOH_JIAN,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -2515,6 +2527,7 @@ enum targ_mode_type
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_MOBILE_MONSTER,    // Non-stationary monsters
+    TARG_IEOH_JIAN_WEAPON,
     TARG_NUM_MODES
 };
 
@@ -2672,6 +2685,7 @@ enum monster_type                      // menv[].type
     MONS_GLOWING_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
+    MONS_IEOH_JIAN_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
 #endif

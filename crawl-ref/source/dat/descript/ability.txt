@@ -875,3 +875,18 @@ Ancestor Identity ability
 
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
+%%%%
+Project Weapon ability
+
+Projects a weapon towards a target, hitting the first enemy in the way and animating
+the weapon at the target location.
+%%%%
+Recall Weapon ability
+
+Quickly recalls an animated weapon back to your hands. 
+%%%%
+Steel Dragonfly Technique ability
+
+Commands all flying weapons to converge towards an enemy. Weapons provided by the 
+Council will shatter on impact. This millenary technique is capable of liquifying
+the target's internal organs, specially if they were slowed or paralysed.

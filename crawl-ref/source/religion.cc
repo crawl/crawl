@@ -68,6 +68,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"
+#include "player-equip.h"
 
 #ifdef DEBUG_RELIGION
 #    define DEBUG_DIAGNOSTICS
@@ -326,6 +327,20 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
+    },
+    // Ieoh Jian
+    { { -1, "crosstrain your martial skills at an accelerated rate"},
+      { 0, "manifest and wield flying weapons",
+           "no longer manifest flying weapons"},
+      { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
+      { 1, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
+      { 2, "perform various acrobatic attacks with melee weapons",
+           "no longer perform acrobatic attacks" },
+      { 3, "leave a distracting afterimage when switching weapons",
+           "no longer leave an afterimage when switching weapons" },
+      { 5, "hit pressure points as you attack while moving",
+           "no longer hit pressure points as you attack while moving" },
+      { 6, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate foes with a rain of blades" },
     },
 };
 
@@ -2058,6 +2073,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_PAKELLAS:      return "Pakellas";
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
+    case GOD_IEOH_JIAN:     return "Ieoh Jian";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -3490,6 +3506,11 @@ static void _join_pakellas()
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
+// Setup when becoming an Ieoh Jian ninja
+static void _join_ieoh_jian()
+{
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
@@ -3514,6 +3535,7 @@ static const map<god_type, function<void ()>> on_join = {
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
     { GOD_PAKELLAS, _join_pakellas },
+    { GOD_IEOH_JIAN, _join_ieoh_jian },
     { GOD_RU, _join_ru },
     { GOD_TROG, _join_trog },
     { GOD_ZIN, _join_zin },
@@ -4008,6 +4030,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
+        case GOD_IEOH_JIAN:
         case GOD_JIYVA:
             if (one_chance_in(17))
                 lose_piety(1);
@@ -4101,6 +4124,9 @@ int god_colour(god_type god) // mv - added
     case GOD_CHEIBRIADOS:
     case GOD_HEPLIAKLQANA:
         return LIGHTCYAN;
+
+    case GOD_IEOH_JIAN:
+        return RED;
 
     case GOD_DITHMENOS:
     case GOD_USKAYAW:

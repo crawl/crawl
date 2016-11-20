@@ -2184,6 +2184,9 @@ static int _player_evasion_bonuses()
 
     if (you.duration[DUR_AGILITY])
         evbonus += AGILITY_BONUS;
+    
+    if (you.duration[DUR_IEOH_JIAN_AFTERIMAGE])
+        evbonus += 8;
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
@@ -5844,8 +5847,17 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     unsigned int effective_points = skill_points[sk];
     if (!real)
     {
-        for (skill_type cross : get_crosstrain_skills(sk))
-            effective_points += skill_points[cross] * 2 / 5;
+        if (you_worship(GOD_IEOH_JIAN))
+        {
+            // All martial skills cross-train at 80%
+            for (skill_type cross : get_secondary_crosstrain_skills(sk))
+                effective_points += skill_points[cross] * 4 / 5;
+        }
+        else
+        {
+            for (skill_type cross : get_crosstrain_skills(sk))
+                effective_points += skill_points[cross] * 2 / 5;
+        }
     }
     effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
@@ -6416,6 +6428,10 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
+        rm += MR_PIP * 2;
+
+    // IJC Afterimage
+    if (you.duration[DUR_IEOH_JIAN_AFTERIMAGE] && temp)
         rm += MR_PIP * 2;
 
     // Enchantment effect

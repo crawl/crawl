@@ -33,7 +33,8 @@ public:
 
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool      is_riposte;         // long blade retaliation attack
+    bool         is_riposte;            // long blade retaliation attack
+    bool         is_ieoh_jian_martial;  // Ieoh Jian auxiliary attacks
     coord_def attack_position;
 
 public:
@@ -83,6 +84,9 @@ private:
 
     /* Long blade riposte */
     void riposte();
+
+    /* Ieoh Jian martial attacks*/
+    int martial_damage_mod(int dam);
 
     /* Mutation Effects */
     void do_spines();
@@ -138,6 +142,7 @@ private:
     string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
+    void player_strike_pressure_points(monster* mons);
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc

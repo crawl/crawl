@@ -32,7 +32,7 @@
 #include "godblessing.h"
 #include "godcompanions.h"
 #include "godconduct.h"
-#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
+#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs, find_ieoh_jian_manifested_weapons
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -65,6 +65,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
+#include "teleport.h" // random_near_space
 #include "terrain.h"
 #include "timed_effects.h"
 #include "traps.h"
@@ -1464,6 +1465,8 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     cloud_type cloud = CLOUD_NONE;
     if (msg.find("smoke") != string::npos)
         cloud = random_smoke_type();
+    if (msg.find("steel") != string::npos)
+        cloud = CLOUD_DUST;
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
 
@@ -1982,12 +1985,14 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player
-    // instead. Ditto Dithmenos shadow melee and shadow throw.
+    // instead. Ditto Dithmenos shadow melee and shadow throw. 
+    // Ditto Ieoh Jian Council weapons.
     if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
              && menv[killer_index].summoner == MID_PLAYER)
-            || mons_is_player_shadow(menv[killer_index])))
+            || mons_is_player_shadow(menv[killer_index])
+            || mons_is_ieoh_jian_weapon(menv[killer_index])))
     {
         killer_index = you.mindex();
     }
@@ -2132,6 +2137,65 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             destroy_item(w_idx);
         }
+    }
+    else if (mons->type == MONS_IEOH_JIAN_WEAPON)
+    {
+        bool reformed = false;
+        if (killer == KILL_RESET)
+        {
+            if (you.can_see(*mons) && !silent && mons->weapon() && mons->weapon()->props.exists(IEOH_JIAN_SLOT))
+                mprf("%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
+            if (you.can_see(*mons) && !silent && mons->weapon() && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
+                mprf("%s bounces wildly and falls to the ground.", mons->weapon()->name(DESC_THE, false, true).c_str());
+
+            // All slot indices are updated, so the age order is always respected.
+            auto monsters = find_ieoh_jian_manifested_weapons(false);
+            size_t i;
+
+            for (i = 0; i != monsters.size(); i++)
+                monsters[i]->weapon()->props[IEOH_JIAN_SLOT] = (int)i;
+
+            if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
+                you.weapon()->props[IEOH_JIAN_SLOT] = (int)i;
+        }
+        else
+        {
+            coord_def reform_location;
+            random_near_space(mons, mons->pos(), reform_location, true, false, true);
+            // If the kill wasn't divine, the weapon is immediately reformed in LOS.
+            if (you.can_see(*mons))
+                mprf(MSGCH_GOD, "%s shatters and reforms nearby.", mons->weapon()->name(DESC_THE, false, true).c_str());
+            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                         BEH_FRIENDLY,
+                         reform_location,
+                         MHITYOU,
+                         MG_FORCE_BEH,
+                         GOD_IEOH_JIAN);
+            mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
+            mg.props[IEOH_JIAN_POWER] = 1;
+            if (!create_monster(mg))
+                dprf("Failed to reform Ieoh Jian weapon");
+            else
+                reformed = true;
+        }
+
+        if (!silent)
+            check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
+
+        silent = true;
+
+        int w_idx = mons->inv[MSLOT_WEAPON];
+        if (mons->weapon() && (w_idx != NON_ITEM))
+        {
+            // Something went wrong with resummoning the player's weapon, so it must be dropped.
+            if (killer == KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
+                mons->drop_item(MSLOT_WEAPON, false);
+            else if (killer != KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT) && !reformed)
+                mons->drop_item(MSLOT_WEAPON, false);
+            else
+                destroy_item(w_idx);
+        }
+
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
@@ -3108,6 +3172,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
             msg = "degenerate%s into a cloud of primal chaos";
         }
 
+        if (mons->type == MONS_IEOH_JIAN_WEAPON)
+            msg = "shatter%s in a cloud of steel fragments";
+
         if (mons->is_holy()
             && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
@@ -3512,3 +3579,14 @@ bool mons_bennu_can_revive(const monster* mons)
     return !mons->props.exists("bennu_revives")
            || mons->props["bennu_revives"].get_byte() < 1;
 }
+
+bool ieoh_jian_kill_oldest_weapon()
+{
+    auto monsters = find_ieoh_jian_manifested_weapons(false);
+    if (monsters.empty()) 
+        return false;
+
+    monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);
+    return true;
+}
+

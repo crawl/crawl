@@ -1667,7 +1667,7 @@ bool mons_class_is_hybrid(monster_type mc)
 
 bool mons_class_is_animated_weapon(monster_type type)
 {
-    return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
+    return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON || type == MONS_IEOH_JIAN_WEAPON;
 }
 
 bool mons_is_zombified(const monster& mon)
@@ -2952,6 +2952,7 @@ void define_monster(monster& mons)
     // Load with dummy values so certain monster properties can be queried
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
+    case MONS_IEOH_JIAN_WEAPON:
     case MONS_SPECTRAL_WEAPON:
     {
         ghost_demon ghost;
@@ -5217,6 +5218,11 @@ bool mons_is_player_shadow(const monster& mon)
 {
     return mon.type == MONS_PLAYER_SHADOW
            && mon.mname.empty();
+}
+
+bool mons_is_ieoh_jian_weapon(const monster& mon)
+{
+    return mon.type == MONS_IEOH_JIAN_WEAPON;
 }
 
 // The default suitable() function for choose_random_nearby_monster().

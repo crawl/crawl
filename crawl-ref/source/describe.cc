@@ -35,6 +35,7 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
@@ -920,6 +921,33 @@ static string _describe_weapon(const item_def &item, bool verbose)
         default:
             break;
         }
+
+        const char* lunge_text = "\n\n<blue>Martial Mastery:</blue> It can be used to strike with "
+                                    "a powerful lunging attack, by moving towards an enemy.";
+        const char* whirlwind_text = "\n\n<blue>Martial Mastery:</blue> It can be used to hit nearby enemies "
+                                     "in a whirlwind, by moving around them.";
+        const char* pole_vault_text = "\n\n<blue>Martial Mastery:</blue> It can be used to pole vault by moving"
+                                      " against a solid obstacle, performing an airborne attack to enemies near your"
+                                      " landing spot.";
+
+        if (have_passive(passive_t::martial_weapon_mastery))
+            switch (item_attack_skill(item))
+            {
+            case SK_POLEARMS:
+            case SK_STAVES:
+                description += pole_vault_text;
+                break;
+            case SK_AXES:
+            case SK_SHORT_BLADES:
+                description += lunge_text;
+                break;
+            case SK_MACES_FLAILS:
+            case SK_LONG_BLADES:
+                description += whirlwind_text;
+                break;
+            default:
+                break;
+            }
     }
 
     // ident known & no brand but still glowing

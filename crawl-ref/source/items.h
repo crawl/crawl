@@ -12,8 +12,6 @@ enum item_source_type
 {
     IT_SRC_NONE   = 0,
 
-    // Empty space for the gods
-
     AQ_SCROLL     = 100,
 #if TAG_MAJOR_VERSION == 34
     AQ_CARD_GENIE,
@@ -35,7 +33,7 @@ item_def& item_from_int(bool, int);
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
-bool dec_inv_item_quantity(int obj, int amount);
+bool dec_inv_item_quantity(int obj, int amount, bool keep_training = false);
 bool dec_mitm_item_quantity(int obj, int amount);
 
 void inc_inv_item_quantity(int obj, int amount);
