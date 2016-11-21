@@ -3745,15 +3745,7 @@ int monster::how_chaotic(bool check_spells_god) const
 
 bool monster::is_unbreathing() const
 {
-    const mon_holy_type holi = holiness();
-
-    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        return true;
-
-    if (mons_is_slime(*this))
-        return true;
-
-    return mons_class_flag(type, M_UNBREATHING);
+    return mons_is_unbreathing(type);
 }
 
 bool monster::is_insubstantial() const
