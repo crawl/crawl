@@ -3404,6 +3404,19 @@ bool mons_is_seeking(const monster& m)
     return m.behaviour == BEH_SEEK;
 }
 
+bool mons_is_unbreathing(monster_type mc)
+{
+    const mon_holy_type holi = mons_class_holiness(mc);
+
+    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
+        return true;
+
+    if (mons_class_is_slime(mc))
+        return true;
+
+    return mons_class_flag(mc, M_UNBREATHING);
+}
+
 // Either running in fear, or trapped and unable to do so (but still wishing to)
 bool mons_is_fleeing(const monster& m)
 {

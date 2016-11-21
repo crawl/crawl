@@ -1620,8 +1620,7 @@ bool attack::apply_damage_brand(const char *what)
             break;
         }
 
-        if (random2(30) < defender->get_hit_dice()
-            || one_chance_in(5)
+        if (!x_chance_in_y(melee_confuse_chance(defender->get_hit_dice()), 100)
             || defender->as_monster()->check_clarity(false))
         {
             break;

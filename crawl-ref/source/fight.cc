@@ -52,6 +52,19 @@
 #include "travel.h"
 
 /**
+ * What are the odds of an HD-checking confusion effect (e.g. Confusing Touch,
+ * Fungus Form, SPWPN_CHAOS maybe) to confuse a monster of the given HD?
+ *
+ * @param HD    The current hit dice (level) of the monster to confuse.
+ * @return      A percentage chance (0-100) of confusing that monster.
+ *              (Except it tops out at 80%.)
+ */
+int melee_confuse_chance(int HD)
+{
+    return 80 * (30 - HD) / 30;
+}
+
+/**
  * Switch from a bad weapon to melee.
  *
  * This function assumes some weapon is being wielded.

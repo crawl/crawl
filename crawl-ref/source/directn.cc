@@ -24,6 +24,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "english.h"
+#include "fight.h" // melee_confuse_chance
 #include "food.h"
 #include "godabil.h"
 #include "hints.h"
@@ -3011,6 +3012,13 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.emplace_back("mesmerising");
 
     _append_container(descs, _get_monster_behaviour_vector(mi));
+
+    if (you.duration[DUR_CONFUSING_TOUCH] && !you.weapon()
+        || you.form == TRAN_FUNGUS && !mons_is_unbreathing(mi.type))
+    {
+        descs.emplace_back(make_stringf("confuse odds on hit: %d%%",
+                                        melee_confuse_chance(mi.hd)));
+    }
 
     if (mi.attitude == ATT_FRIENDLY)
         descs.emplace_back("friendly");
