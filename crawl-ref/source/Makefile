@@ -323,10 +323,10 @@ endif
 #
 # Check for an Apple-released compiler.
 #
-ifndef NO_APPLE_GCC
+ifndef NO_APPLE_PLATFORM
 ifeq ($(uname_S),Darwin)
 ifneq ($(shell gcc -v 2>&1 | grep Apple),)
-APPLE_GCC = YesPlease
+APPLE_PLATFORM = YesPlease
 endif
 endif
 endif
@@ -405,7 +405,7 @@ endif
 
 INCLUDES_L += -Iutil -I.
 
-ifdef APPLE_GCC
+ifdef APPLE_PLATFORM
 
 ifdef BUILD_UNIVERSAL
 # [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
