@@ -1580,6 +1580,11 @@ Causes nearby corpses to begin crawling together, merging into horrible
 agglomerations of flesh. More and larger corpses result in more powerful
 creations.
 %%%%
+Upheaval spell
+
+Calls on the forces of nature to blast a small area with magma, ice, wind,
+or rubble.
+%%%%
 Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.

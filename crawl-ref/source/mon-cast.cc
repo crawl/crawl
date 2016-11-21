@@ -1202,6 +1202,7 @@ static spell_type _major_destruction_spell()
                          SPELL_BOLT_OF_DRAINING,
                          SPELL_ORB_OF_ELECTRICITY);
 }
+
 static spell_type _legendary_destruction_spell()
 {
     return random_choose_weighted(25, SPELL_FIREBALL,
@@ -1663,6 +1664,16 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_DEATH_RATTLE;
         beam.foe_ratio = 30;
         beam.pierce   = true;
+        break;
+
+    // Special behavior handled in _mons_upheaval
+    // Hack so beam.cc allows us to correctly use that function
+    case SPELL_UPHEAVAL:
+        beam.flavour     = BEAM_RANDOM;
+        beam.damage      = dice_def(3, 24);
+        beam.hit         = AUTOMATIC_HIT;
+        beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
+        beam.ex_size     = 2;
         break;
 
     default:
@@ -5630,6 +5641,127 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
         foe.put_to_sleep(&mons, sleep_pow, false);
 }
 
+// Draconian stormcaller upheaval. Simplified compared to the player version.
+// Noisy! Causes terrain changes. Destroys doors/walls.
+// TODO: Could use further simplification.
+static void _mons_upheaval(monster& mons, actor& foe)
+{
+    bolt beam;
+    beam.source_id   = mons.mid;
+    beam.source_name = mons.name(DESC_THE).c_str();
+    beam.thrower     = KILL_MON_MISSILE;
+    beam.range       = LOS_RADIUS;
+    beam.damage      = dice_def(3, 24);
+    beam.hit         = AUTOMATIC_HIT;
+    beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
+    beam.loudness    = 10;
+#ifdef USE_TILE
+    beam.tile_beam   = -1;
+#endif
+    beam.draw_delay  = 0;
+    beam.target = mons.target;
+    string message = "";
+
+    switch (random2(4))
+    {
+        case 0:
+            beam.name     = "blast of magma";
+            beam.flavour  = BEAM_LAVA;
+            beam.colour   = RED;
+            beam.hit_verb = "engulfs";
+            message       = "Magma suddenly erupts from the ground!";
+            break;
+        case 1:
+            beam.name    = "blast of ice";
+            beam.flavour = BEAM_ICE;
+            beam.colour  = WHITE;
+            message      = "A blizzard blasts the area with ice!";
+            break;
+        case 2:
+            beam.name    = "cutting wind";
+            beam.flavour = BEAM_AIR;
+            beam.colour  = LIGHTGRAY;
+            message      = "A storm cloud blasts the area with cutting wind!";
+            break;
+        case 3:
+            beam.name    = "blast of rubble";
+            beam.flavour = BEAM_FRAG;
+            beam.colour  = BROWN;
+            message      = "The ground shakes violently, spewing rubble!";
+            break;
+        default:
+            break;
+    }
+
+    vector<coord_def> affected;
+    affected.push_back(beam.target);
+
+    const int radius = 2;
+    for (radius_iterator ri(beam.target, radius, C_SQUARE, LOS_SOLID, true);
+         ri; ++ri)
+    {
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+
+        bool splash = true;
+        bool adj = adjacent(beam.target, *ri);
+        if (!adj)
+            splash = false;
+        if (adj || splash)
+        {
+            if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
+                affected.push_back(*ri);
+        }
+    }
+
+    for (coord_def pos : affected)
+    {
+        beam.draw(pos);
+        scaled_delay(25);
+    }
+
+    for (coord_def pos : affected)
+    {
+        beam.source = pos;
+        beam.target = pos;
+        beam.fire();
+
+        switch (beam.flavour)
+        {
+            case BEAM_LAVA:
+                if (grd(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                {
+                    temp_change_terrain(
+                        pos, DNGN_LAVA,
+                        random2(you.skill(SK_INVOCATIONS, BASELINE_DELAY)),
+                        TERRAIN_CHANGE_FLOOD);
+                }
+                break;
+            case BEAM_AIR:
+                if (!cell_is_solid(pos) && !cloud_at(pos) && coinflip())
+                    place_cloud(CLOUD_STORM, pos, random2(7), &mons);
+                break;
+            case BEAM_FRAG:
+                if (((grd(pos) == DNGN_ROCK_WALL
+                     || grd(pos) == DNGN_CLEAR_ROCK_WALL
+                     || grd(pos) == DNGN_SLIMY_WALL)
+                     && x_chance_in_y(1, 4)
+                     || grd(pos) == DNGN_CLOSED_DOOR
+                     || grd(pos) == DNGN_RUNED_DOOR
+                     || grd(pos) == DNGN_OPEN_DOOR
+                     || grd(pos) == DNGN_SEALED_DOOR
+                     || grd(pos) == DNGN_GRATE))
+                {
+                    noisy(30, pos);
+                    destroy_wall(pos);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -6900,6 +7032,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _summon(*mons, RANDOM_ELEMENT(servants), 5, slot);
         return;
     }
+
+    case SPELL_UPHEAVAL:
+        _mons_upheaval(*mons, *foe);
+        return;
 
     }
 
