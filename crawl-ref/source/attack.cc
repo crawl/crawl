@@ -615,13 +615,7 @@ static const vector<chaos_effect> chaos_effects = {
         },
     },
     {
-        "polymorph", 1, _is_chaos_polyable, BEAM_POLYMORPH,
-    },
-    {
-        "polymorph PPT_MORE", 1, [](const actor &defender) {
-            return _is_chaos_polyable(defender) && defender.is_monster();
-        },
-        BEAM_POLYMORPH,
+        "polymorph", 2, _is_chaos_polyable, BEAM_POLYMORPH,
     },
     {
         "shifter", 1, [](const actor &defender)
@@ -680,7 +674,6 @@ static const vector<chaos_effect> chaos_effects = {
             return you.can_see(*attack.defender);
         },
     },
-    { "healing", 10, nullptr, BEAM_HEALING, },
     { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
     { "invisible", 10, nullptr, BEAM_INVISIBILITY, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
@@ -691,9 +684,8 @@ static const vector<chaos_effect> chaos_effects = {
         }, BEAM_PARALYSIS,
     },
     {
-        "petrify", 10, [](const actor &defender) {
-            return _is_chaos_slowable(defender) && !defender.res_petrify()
-                   && defender.is_monster(); // ??? why though
+        "petrify", 5, [](const actor &defender) {
+            return _is_chaos_slowable(defender) && !defender.res_petrify();
         }, BEAM_PETRIFY,
     },
 };
@@ -772,85 +764,61 @@ void attack::chaos_affects_defender()
         obvious_effect = false; // XXX: VERY dubious!
 }
 
-// NOTE: random_chaos_brand() and random_chaos_attack_flavour() should
-// return a set of effects that are roughly the same, to make it easy
-// for chaos_affects_defender() not to do duplicate effects caused
-// by the non-chaos brands/flavours they return.
+struct chaos_attack_type
+{
+    attack_flavour flavour;
+    brand_type brand;
+    int chance;
+    function<bool(const actor& def)> valid;
+};
+
+// Chaos melee attacks randomly choose a brand from here, with brands that
+// definitely won't affect the target being invalid. Chaos itself should
+// always be a valid option, triggering a more unpredictable chaos_effect
+// instead of a normal attack brand when selected.
+static const vector<chaos_attack_type> chaos_types = {
+    { AF_FIRE,      SPWPN_FLAMING,       10,
+      [](const actor &d) { return !d.is_fiery(); } },
+    { AF_COLD,      SPWPN_FREEZING,      10,
+      [](const actor &d) { return !d.is_icy(); } },
+    { AF_ELEC,      SPWPN_ELECTROCUTION, 10,
+      nullptr },
+    { AF_POISON,    SPWPN_VENOM,         10,
+      [](const actor &d) {
+          return !(d.holiness() & (MH_UNDEAD | MH_NONLIVING)); } },
+    { AF_CHAOTIC,   SPWPN_CHAOS,         10,
+      nullptr },
+    { AF_DRAIN_XP,  SPWPN_DRAINING,      5,
+      [](const actor &d) { return bool(d.holiness() & MH_NATURAL); } },
+    { AF_VAMPIRIC,  SPWPN_VAMPIRISM,     5,
+      [](const actor &d) {
+          return !d.is_summoned() && bool(d.holiness() & MH_NATURAL); } },
+    { AF_HOLY,      SPWPN_HOLY_WRATH,    5,
+      [](const actor &d) { return d.holy_wrath_susceptible(); } },
+    { AF_ANTIMAGIC, SPWPN_ANTIMAGIC,     5,
+      [](const actor &d) { return d.antimagic_susceptible(); } },
+    { AF_CONFUSE,   SPWPN_CONFUSE,       2,
+      [](const actor &d) {
+          return !(d.holiness() & (MH_NONLIVING | MH_PLANT)); } },
+    { AF_DISTORT,   SPWPN_DISTORTION,    2,
+      nullptr },
+};
+
 brand_type attack::random_chaos_brand()
 {
-    brand_type brand = SPWPN_NORMAL;
-    // Assuming the chaos to be mildly intelligent, try to avoid brands
-    // that clash with the most basic resists of the defender,
-    // i.e. its holiness.
-    while (true)
-    {
-        brand = (random_choose_weighted(
-                     5, SPWPN_VORPAL,
-                    10, SPWPN_FLAMING,
-                    10, SPWPN_FREEZING,
-                    10, SPWPN_ELECTROCUTION,
-                    10, SPWPN_VENOM,
-                    10, SPWPN_CHAOS,
-                     5, SPWPN_DRAINING,
-                     5, SPWPN_VAMPIRISM,
-                     5, SPWPN_HOLY_WRATH,
-                     5, SPWPN_ANTIMAGIC,
-                     2, SPWPN_CONFUSE,
-                     2, SPWPN_DISTORTION));
+    vector<pair<brand_type, int>> weights;
+    for (const chaos_attack_type &choice : chaos_types)
+        if (!choice.valid || choice.valid(*defender))
+            weights.push_back({choice.brand, choice.chance});
 
-        if (one_chance_in(3))
-            break;
+    ASSERT(!weights.empty());
 
-        bool susceptible = true;
-        switch (brand)
-        {
-        case SPWPN_FLAMING:
-            if (defender->is_fiery())
-                susceptible = false;
-            break;
-        case SPWPN_FREEZING:
-            if (defender->is_icy())
-                susceptible = false;
-            break;
-        case SPWPN_VENOM:
-            if (defender->holiness() & MH_UNDEAD)
-                susceptible = false;
-            break;
-        case SPWPN_VAMPIRISM:
-            if (defender->is_summoned())
-            {
-                susceptible = false;
-                break;
-            }
-            // intentional fall-through
-        case SPWPN_DRAINING:
-            if (!(defender->holiness() & MH_NATURAL))
-                susceptible = false;
-            break;
-        case SPWPN_HOLY_WRATH:
-            if (!defender->holy_wrath_susceptible())
-                susceptible = false;
-            break;
-        case SPWPN_CONFUSE:
-            if (defender->holiness() & (MH_NONLIVING | MH_PLANT))
-                susceptible = false;
-            break;
-        case SPWPN_ANTIMAGIC:
-            if (!defender->antimagic_susceptible())
-                susceptible = false;
-            break;
-        default:
-            break;
-        }
+    brand_type brand = *random_choose_weighted(weights);
 
-        if (susceptible)
-            break;
-    }
 #ifdef NOTE_DEBUG_CHAOS_BRAND
     string brand_name = "CHAOS brand: ";
     switch (brand)
     {
-    case SPWPN_NORMAL:          brand_name += "(plain)"; break;
     case SPWPN_FLAMING:         brand_name += "flaming"; break;
     case SPWPN_FREEZING:        brand_name += "freezing"; break;
     case SPWPN_HOLY_WRATH:      brand_name += "holy wrath"; break;
@@ -859,13 +827,10 @@ brand_type attack::random_chaos_brand()
     case SPWPN_DRAINING:        brand_name += "draining"; break;
     case SPWPN_DISTORTION:      brand_name += "distortion"; break;
     case SPWPN_VAMPIRISM:       brand_name += "vampirism"; break;
-    case SPWPN_VORPAL:          brand_name += "vorpal"; break;
     case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
-
-    // both ranged and non-ranged
     case SPWPN_CHAOS:           brand_name += "chaos"; break;
     case SPWPN_CONFUSE:         brand_name += "confusion"; break;
-    default:                    brand_name += "(other)"; break;
+    default:                    brand_name += "BUGGY"; break;
     }
 
     // Pretty much duplicated by the chaos effect note,
@@ -874,6 +839,18 @@ brand_type attack::random_chaos_brand()
         take_note(Note(NOTE_MESSAGE, 0, 0, brand_name), true);
 #endif
     return brand;
+}
+
+attack_flavour attack::random_chaos_attack_flavour()
+{
+    vector<pair<attack_flavour, int>> weights;
+    for (const chaos_attack_type &choice : chaos_types)
+        if (!choice.valid || choice.valid(*defender))
+            weights.push_back({choice.flavour, choice.chance});
+
+    ASSERT(!weights.empty());
+
+    return *random_choose_weighted(weights);
 }
 
 void attack::do_miscast()
@@ -1256,12 +1233,7 @@ int attack::calc_base_unarmed_damage()
         damage += you.has_claws() * 2;
 
     if (you.form_uses_xl())
-        damage += you.experience_level;
-    else if (you.form == TRAN_BAT || you.form == TRAN_PORCUPINE)
-    {
-        // Bats really don't do a lot of damage.
-        damage += you.skill_rdiv(wpn_skill, 1, 5);
-    }
+        damage += div_rand_round(you.experience_level, 3);
     else
         damage += you.skill_rdiv(wpn_skill);
 
@@ -1438,62 +1410,6 @@ bool attack::attack_shield_blocked(bool verbose)
     }
 
     return false;
-}
-
-attack_flavour attack::random_chaos_attack_flavour()
-{
-    attack_flavour flavour = AF_PLAIN;
-
-    while (true)
-    {
-        flavour = random_choose_weighted(10, AF_FIRE,
-                                         10, AF_COLD,
-                                         10, AF_ELEC,
-                                         10, AF_POISON,
-                                         10, AF_CHAOTIC,
-                                          5, AF_DRAIN_XP,
-                                          5, AF_VAMPIRIC,
-                                          5, AF_HOLY,
-                                          5, AF_ANTIMAGIC,
-                                          2, AF_CONFUSE,
-                                          2, AF_DISTORT);
-
-        if (one_chance_in(3))
-            break;
-
-        bool susceptible = true;
-        switch (flavour)
-        {
-        case AF_FIRE:
-            if (defender->is_fiery())
-                susceptible = false;
-            break;
-        case AF_COLD:
-            if (defender->is_icy())
-                susceptible = false;
-            break;
-        case AF_POISON:
-            if (defender->holiness() & MH_UNDEAD)
-                susceptible = false;
-            break;
-        case AF_VAMPIRIC:
-        case AF_DRAIN_XP:
-            if (!(defender->holiness() & MH_NATURAL))
-                susceptible = false;
-            break;
-        case AF_HOLY:
-            if (!defender->holy_wrath_susceptible())
-                susceptible = false;
-            break;
-        default:
-            break;
-        }
-
-        if (susceptible)
-            break;
-    }
-
-    return flavour;
 }
 
 bool attack::apply_poison_damage_brand()
@@ -1704,10 +1620,7 @@ bool attack::apply_damage_brand(const char *what)
             break;
         }
 
-        const int hdcheck =
-            (defender->holiness() & MH_NATURAL ? random2(30) : random2(22));
-
-        if (hdcheck < defender->get_hit_dice()
+        if (random2(30) < defender->get_hit_dice()
             || one_chance_in(5)
             || defender->as_monster()->check_clarity(false))
         {

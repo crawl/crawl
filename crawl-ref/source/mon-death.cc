@@ -429,7 +429,11 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
+    {
         item.inscription = mons_type_name(montype, DESC_PLAIN);
+        if (montype == MONS_XTAHUA || montype == MONS_SNORG)
+            item.plus += random_range(2, 4); // a little nice bonus
+    }
 
     const coord_def pos = item_pos(corpse);
     if (pos.origin())

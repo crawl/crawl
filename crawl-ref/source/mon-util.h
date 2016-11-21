@@ -17,14 +17,6 @@ struct mon_attack_def
     attack_type     type;
     attack_flavour  flavour;
     int             damage;
-
-    static mon_attack_def attk(int dam,
-                               attack_type typ = AT_HIT,
-                               attack_flavour flav = AF_PLAIN)
-    {
-        mon_attack_def def = { typ, flav, dam };
-        return def;
-    }
 };
 
 // Amount of mons->speed_increment used by different actions; defaults
@@ -249,6 +241,9 @@ bool mons_class_sees_invis(monster_type type, monster_type base);
 bool mons_immune_magic(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = false);
+string mon_attack_name(attack_type attack);
+bool flavour_triggers_damageless(attack_flavour flavour);
+int flavour_damage(attack_flavour flavour, int HD, bool random = true);
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 

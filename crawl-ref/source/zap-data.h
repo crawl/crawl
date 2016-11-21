@@ -1358,4 +1358,22 @@ _mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
     0
 },
 
+{
+    ZAP_FIRE_STORM,
+    "great blast of fire",
+    200,
+    new calcdice_calculator<8, 5, 1, 1>,
+    new tohit_calculator<40>,
+    new calcdice_calculator<8, 5, 1, 1>,
+    new tohit_calculator<40>,
+    RED,
+    false,
+    BEAM_LAVA, // partially unaffected by rF
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    true,
+    0 // handled by explosion
+},
+
 };

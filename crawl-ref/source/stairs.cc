@@ -1018,6 +1018,12 @@ static void _update_level_state()
             env.level_state |= LSTATE_BEOGH;
         if (mon_it->has_ench(ENCH_STILL_WINDS))
             env.level_state |= LSTATE_STILL_WINDS;
+        if (mon_it->has_ench(ENCH_AWAKEN_FOREST))
+        {
+            env.forest_awoken_until
+                = you.elapsed_time
+                  + mon_it->get_ench(ENCH_AWAKEN_FOREST).duration;
+        }
     }
     for (rectangle_iterator ri(0); ri; ++ri)
         if (grd(*ri) == DNGN_SLIMY_WALL)

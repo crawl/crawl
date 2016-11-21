@@ -2996,14 +2996,6 @@ void read_scroll(item_def& scroll)
 
 }
 
-bool check_stasis(const char *msg)
-{
-    bool blocked = you.species == SP_FORMICID;
-    if (blocked)
-        mpr(msg);
-    return blocked;
-}
-
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
 
@@ -3048,15 +3040,8 @@ void tile_item_drop(int idx, bool partdrop)
 
 void tile_item_eat_floor(int idx)
 {
-    // XXX: refactor this
-    if (mitm[idx].base_type == OBJ_CORPSES
-            && you.species == SP_VAMPIRE
-        || mitm[idx].base_type == OBJ_FOOD
-            && you.undead_state() != US_UNDEAD && you.species != SP_VAMPIRE)
-    {
-        if (can_eat(mitm[idx], false))
-            eat_item(mitm[idx]);
-    }
+    if (can_eat(mitm[idx], false))
+        eat_item(mitm[idx]);
 }
 
 void tile_item_use_secondary(int idx)

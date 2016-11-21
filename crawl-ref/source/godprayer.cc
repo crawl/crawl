@@ -88,6 +88,7 @@ static bool _pray_ecumenical_altar()
             god_type altar_god = _altar_identify_ecumenical_altar();
             mprf(MSGCH_GOD, "%s accepts your prayer!",
                             god_name(altar_god).c_str());
+            you.turn_is_over = true;
             if (!you_worship(altar_god))
                 join_religion(altar_god);
             else

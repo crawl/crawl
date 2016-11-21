@@ -80,24 +80,14 @@ spret_type cast_delayed_fireball(bool fail)
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
-    beam.name         = "great blast of fire";
+    zappy(ZAP_FIRE_STORM, pow, source->is_monster(), beam);
     beam.ex_size      = 2 + (random2(1000) < pow);
-    beam.flavour      = BEAM_LAVA;
-    beam.real_flavour = beam.flavour;
-    beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
-    beam.colour       = RED;
     beam.source_id    = source->mid;
     // XXX: Should this be KILL_MON_MISSILE?
     beam.thrower      =
         source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
-    beam.obvious_effect = false;
-    beam.pierce       = false;
     beam.is_tracer    = false;
-    beam.is_explosion = true;
-    beam.ench_power   = pow;      // used for radius
-    beam.hit          = 20 + pow / 10;
-    beam.damage       = calc_dice(8, 5 + pow);
     beam.origin_spell = SPELL_FIRE_STORM;
 }
 

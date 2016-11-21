@@ -1323,7 +1323,7 @@ monster_type mons_detected_base(monster_type mc)
  */
 bool mons_is_siren_beholder(monster_type mc)
 {
-    return mc == MONS_SIREN || mc == MONS_MERFOLK_AVATAR;
+    return mc == MONS_MERFOLK_SIREN || mc == MONS_MERFOLK_AVATAR;
 }
 
 /** Does this monster behold opponents like a siren?
@@ -1932,12 +1932,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_fla
     {
         if (attk_number == 0)
         {
-            return mon_attack_def::attk(mon.ghost->damage,
-                                        mon.ghost->att_type,
-                                        mon.ghost->att_flav);
+            return { mon.ghost->att_type, mon.ghost->att_flav,
+                     mon.ghost->damage };
         }
 
-        return mon_attack_def::attk(0, AT_NONE);
+        return { AT_NONE, AF_PLAIN, 0 };
     }
     else if (mc == MONS_MUTANT_BEAST)
         return _mutant_beast_attack(mon, attk_number);
@@ -2022,6 +2021,109 @@ static int _mons_damage(monster_type mc, int rt)
         rt = 0;
     ASSERT_smc();
     return smc->attack[rt].damage;
+}
+
+/**
+ * A short description of the given monster attack type.
+ *
+ * @param attack    The attack to be described; e.g. AT_HIT, AT_SPORE.
+ * @return          A short description; e.g. "hit", "release spores at".
+ */
+string mon_attack_name(attack_type attack)
+{
+    static const char *attack_types[] =
+    {
+        "hit",         // including weapon attacks
+        "bite",
+        "sting",
+
+        // spore
+        "release spores at",
+
+        "touch",
+        "engulf",
+        "claw",
+        "peck",
+        "headbutt",
+        "punch",
+        "kick",
+        "tentacle-slap",
+        "tail-slap",
+        "gore",
+        "constrict",
+        "trample",
+        "trunk-slap",
+#if TAG_MAJOR_VERSION == 34
+        "snap closed at",
+        "splash",
+#endif
+        "pounce on",
+#if TAG_MAJOR_VERSION == 34
+        "sting",
+#endif
+    };
+    COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
+
+    const int verb_index = attack - AT_FIRST_ATTACK;
+    ASSERT(verb_index < (int)ARRAYSZ(attack_types));
+    return attack_types[verb_index];
+}
+
+/**
+ * Does this monster attack flavour trigger even if the base attack does no
+ * damage?
+ *
+ * @param flavour   The attack flavour in question; e.g. AF_COLD.
+ * @return          Whether the flavour attack triggers on a successful hit
+ *                  regardless of damage done.
+ */
+bool flavour_triggers_damageless(attack_flavour flavour)
+{
+    return flavour == AF_CRUSH
+        || flavour == AF_ENGULF
+        || flavour == AF_PURE_FIRE
+        || flavour == AF_SHADOWSTAB
+        || flavour == AF_DROWN
+        || flavour == AF_CORRODE
+        || flavour == AF_HUNGER;
+}
+
+/**
+ * How much special damage does the given attack flavour do for an attack from
+ * a monster of the given hit dice?
+ *
+ * Various effects (e.g. acid) currently go through more complex codepaths. :(
+ *
+ * @param flavour       The attack flavour in question; e.g. AF_FIRE.
+ * @param HD            The HD to calculate damage for.
+ * @param random        Whether to roll damage, or (if false) just return
+ *                      the top of the range.
+ * @return              The damage that the given attack flavour does, before
+ *                      resists and other effects are applied.
+ */
+int flavour_damage(attack_flavour flavour, int HD, bool random)
+{
+    switch (flavour)
+    {
+        case AF_FIRE:
+            if (random)
+                return HD + random2(HD);
+            return HD * 2;
+        case AF_COLD:
+            if (random)
+                return HD + random2(HD*2);
+            return HD * 3;
+        case AF_ELEC:
+            if (random)
+                return HD + random2(HD/2);
+            return HD * 3 / 2;
+        case AF_PURE_FIRE:
+            if (random)
+                return HD * 3 / 2 + random2(HD);
+            return HD * 5 / 2;
+        default:
+            return 0;
+    }
 }
 
 bool mons_immune_magic(const monster& mon)
@@ -4752,8 +4854,9 @@ const char* mons_class_name(monster_type mc)
 
 mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
+    const monster& threat = get_tentacle_head(mon);
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(mon, real) / (1 + factor);
+    const int tension = exper_value(threat, real) / (1 + factor);
 
     if (tension <= 0)
     {
@@ -5298,6 +5401,9 @@ bool mons_is_notable(const monster& mons)
         return true;
     // If it's never going to attack us, then not interesting
     if (mons.friendly())
+        return false;
+    // tentacles aren't real monsters.
+    if (mons_is_tentacle_or_tentacle_segment(mons.type))
         return false;
     // Hostile ghosts and illusions are always interesting.
     if (mons.type == MONS_PLAYER_GHOST

@@ -2972,19 +2972,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_AIR_MAGIC:      ch = TILEG_AIR_MAGIC_ON; break;
     case SK_EARTH_MAGIC:    ch = TILEG_EARTH_MAGIC_ON; break;
     case SK_POISON_MAGIC:   ch = TILEG_POISON_MAGIC_ON; break;
-    case SK_EVOCATIONS:
-        {
-            switch (you.religion)
-            {
-            case GOD_NEMELEX_XOBEH:
-                ch = TILEG_EVOCATIONS_N_ON; break;
-            case GOD_PAKELLAS:
-                ch = TILEG_EVOCATIONS_P_ON; break;
-            default:
-                ch = TILEG_EVOCATIONS_ON;
-            }
-        }
-        break;
+    case SK_EVOCATIONS:     ch = TILEG_EVOCATIONS_ON; break;
     case SK_INVOCATIONS:
         {
             switch (you.religion)
@@ -3008,6 +2996,8 @@ tileidx_t tileidx_skill(skill_type skill, int train)
                 ch = TILEG_INVOCATIONS_L_ON; break;
             case GOD_MAKHLEB:
                 ch = TILEG_INVOCATIONS_M_ON; break;
+            case GOD_NEMELEX_XOBEH:
+                ch = TILEG_INVOCATIONS_N_ON; break;
             case GOD_OKAWARU:
                 ch = TILEG_INVOCATIONS_O_ON; break;
             case GOD_QAZLAL:
@@ -3374,6 +3364,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_JIYVA_CURE_BAD_MUTATION:
         return TILEG_ABILITY_JIYVA_CURE_BAD_MUTATIONS;
     // Fedhas
+    case ABIL_FEDHAS_FUNGAL_BLOOM:
+        return TILEG_ABILITY_FEDHAS_FUNGAL_BLOOM;
     case ABIL_FEDHAS_SUNLIGHT:
         return TILEG_ABILITY_FEDHAS_SUNLIGHT;
     case ABIL_FEDHAS_RAIN:

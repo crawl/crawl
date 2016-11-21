@@ -1457,7 +1457,8 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves your effectiveness with ranged weaponry (Slay+4).";
+            description += "It improves your effectiveness with ranged "
+                           "weaponry, such as bows and javelins (Slay+4).";
             break;
         }
     }
@@ -2942,79 +2943,218 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
-static const char* _describe_attack_flavour(attack_flavour flavour)
+/**
+ * Describe monster attack 'flavours' that trigger before the attack.
+ *
+ * @param flavour   The flavour in question; e.g. AF_SWOOP.
+ * @return          A description of anything that happens 'before' an attack
+ *                  with the given flavour;
+ *                  e.g. "swoop behind its target and ".
+ */
+static const char* _special_flavour_prefix(attack_flavour flavour)
 {
     switch (flavour)
     {
-    case AF_ACID:            return "deal extra acid damage";
-    case AF_BLINK:           return "blink self";
-    case AF_COLD:            return "deal extra cold damage";
-    case AF_CONFUSE:         return "cause confusion";
-    case AF_DRAIN_STR:       return "drain strength";
-    case AF_DRAIN_INT:       return "drain intelligence";
-    case AF_DRAIN_DEX:       return "drain dexterity";
-    case AF_DRAIN_STAT:      return "drain strength, intelligence or dexterity";
-    case AF_DRAIN_XP:        return "drain skills";
-    case AF_ELEC:            return "cause electrocution";
-    case AF_FIRE:            return "deal extra fire damage";
-    case AF_HUNGER:          return "cause hungering";
-    case AF_MUTATE:          return "cause mutations";
-    case AF_POISON_PARALYSE: return "poison and cause paralysis or slowing";
-    case AF_POISON:          return "cause poisoning";
-    case AF_POISON_STRONG:   return "cause strong poisoning";
-    case AF_ROT:             return "cause rotting";
-    case AF_VAMPIRIC:        return "drain health from the living";
-    case AF_KLOWN:           return "cause random powerful effects";
-    case AF_DISTORT:         return "cause wild translocation effects";
-    case AF_RAGE:            return "cause berserking";
-    case AF_STICKY_FLAME:    return "apply sticky flame";
-    case AF_CHAOTIC:         return "cause unpredictable effects";
-    case AF_STEAL:           return "steal items";
-    case AF_CRUSH:           return "constrict";
-    case AF_REACH:           return "deal damage from a distance";
-    case AF_HOLY:            return "deal extra damage to undead and demons";
-    case AF_ANTIMAGIC:       return "drain magic";
-    case AF_PAIN:            return "cause pain to the living";
-    case AF_ENSNARE:         return "ensnare with webbing";
-    case AF_ENGULF:          return "engulf with water";
-    case AF_PURE_FIRE:       return "deal pure fire damage";
-    case AF_DRAIN_SPEED:     return "drain speed";
-    case AF_VULN:            return "reduce resistance to hostile enchantments";
-    case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
-    case AF_DROWN:           return "deal drowning damage";
-    case AF_CORRODE:         return "cause corrosion";
-    case AF_SCARAB:          return "drain speed and drain health";
-    case AF_TRAMPLE:         return "knock back the defender";
-    case AF_REACH_STING:     return "cause poisoning from a distance";
-    case AF_WEAKNESS:        return "cause weakness";
-    case AF_KITE:            return "retreat from adjacent targets";
-    case AF_SWOOP:           return "swoop behind its target";
-    default:                 return "";
+        case AF_KITE:
+            return "retreat from adjacent foes and ";
+        case AF_SWOOP:
+            return "swoop behind its foe and ";
+        default:
+            return "";
     }
+}
+
+/**
+ * Describe monster attack 'flavours' that have extra range.
+ *
+ * @param flavour   The flavour in question; e.g. AF_REACH_STING.
+ * @return          If the flavour has extra-long range, say so. E.g.,
+ *                  " from a distance". (Else "").
+ */
+static const char* _flavour_range_desc(attack_flavour flavour)
+{
+    if (flavour == AF_REACH || flavour == AF_REACH_STING)
+        return " from a distance";
+    return "";
+}
+
+/**
+ * Provide a short, and-prefixed flavour description of the given attack
+ * flavour, if any.
+ *
+ * @param flavour  E.g. AF_COLD, AF_PLAIN.
+ * @param HD       The hit dice of the monster using the flavour.
+ * @return         "" if AF_PLAIN; else " <desc>", e.g.
+ *                 " and, after penetrating armour, deal up to 27 cold damage".
+ */
+static string _flavour_effect(attack_flavour flavour, int HD)
+{
+    static const map<attack_flavour, string> base_descs = {
+        { AF_ACID,              "deal extra acid damage"},
+        { AF_BLINK,             "blink itself" },
+        { AF_COLD,              "deal up to %d cold damage" },
+        { AF_CONFUSE,           "cause confusion" },
+        { AF_DRAIN_STR,         "drain strength" },
+        { AF_DRAIN_INT,         "drain intelligence" },
+        { AF_DRAIN_DEX,         "drain dexterity" },
+        { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
+        { AF_DRAIN_XP,          "drain skills" },
+        { AF_ELEC,              "deal up to %d electric damage" },
+        { AF_FIRE,              "deal up to %d fire damage" },
+        { AF_HUNGER,            "cause hunger" },
+        { AF_MUTATE,            "cause mutations" },
+        { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
+        { AF_POISON,            "cause poisoning" },
+        { AF_POISON_STRONG,     "cause strong poisoning" },
+        { AF_ROT,               "cause rotting" },
+        { AF_VAMPIRIC,          "drain health from the living" },
+        { AF_KLOWN,             "cause random powerful effects" },
+        { AF_DISTORT,           "cause wild translocation effects" },
+        { AF_RAGE,              "cause berserking" },
+        { AF_STICKY_FLAME,      "apply sticky flame" },
+        { AF_CHAOTIC,           "cause unpredictable effects" },
+        { AF_STEAL,             "steal items" },
+        { AF_CRUSH,             "ongoing constriction" },
+        { AF_REACH,             "" },
+        { AF_HOLY,              "deal extra damage to undead and demons" },
+        { AF_ANTIMAGIC,         "drain magic" },
+        { AF_PAIN,              "cause pain to the living" },
+        { AF_ENSNARE,           "ensnare with webbing" },
+        { AF_ENGULF,            "engulf with water" },
+        { AF_PURE_FIRE,         "" },
+        { AF_DRAIN_SPEED,       "drain speed" },
+        { AF_VULN,              "reduce resistance to hostile enchantments" },
+        { AF_SHADOWSTAB,        "deal extra damage from the shadows" },
+                                // XXX: ^ 'if invisible' could be clearer?
+        { AF_DROWN,             "deal drowning damage" },
+        { AF_CORRODE,           "cause corrosion" },
+        { AF_SCARAB,            "drain speed and drain health" },
+        { AF_TRAMPLE,           "knock back the defender" },
+        { AF_REACH_STING,       "cause poisoning" },
+        { AF_WEAKNESS,          "cause weakness" },
+        { AF_KITE,              "" },
+        { AF_SWOOP,             "" },
+        { AF_PLAIN,             "" },
+    };
+
+    const string* base_desc = map_find(base_descs, flavour);
+    ASSERT(base_desc);
+    if (base_desc->empty())
+        return *base_desc;
+
+    const int flavour_dam = flavour_damage(flavour, HD, false);
+    const string flavour_desc = make_stringf(base_desc->c_str(), flavour_dam);
+
+    if (!flavour_triggers_damageless(flavour)
+        && flavour != AF_KITE && flavour != AF_SWOOP)
+    {
+        return " and, after penetrating armour, " + flavour_desc;
+    }
+
+    return " and " + flavour_desc;
+}
+
+struct mon_attack_info
+{
+    mon_attack_def definition;
+    const item_def* weapon;
+    bool operator < (const mon_attack_info &other) const
+    {
+        return std::tie(definition.type, definition.flavour,
+                        definition.damage, weapon)
+             < std::tie(other.definition.type, other.definition.flavour,
+                        other.definition.damage, other.weapon);
+    }
+};
+
+/**
+ * What weapon is the given monster using for the given attack, if any?
+ *
+ * @param mi        The monster in question.
+ * @param atk       The attack number. (E.g. 0, 1, 2...)
+ * @return          The melee weapon being used by the monster for the given
+ *                  attack, if any.
+ */
+static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
+{
+    const item_def* weapon
+       = atk == 0 ? mi.inv[MSLOT_WEAPON].get() :
+         atk == 1 && mi.wields_two_weapons() ? mi.inv[MSLOT_ALT_WEAPON].get() :
+         nullptr;
+
+    if (weapon && is_weapon(*weapon))
+        return weapon;
+    return nullptr;
 }
 
 static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
-    set<attack_flavour> attack_flavours;
-    vector<string> attack_descs;
+    map<mon_attack_info, int> attack_counts;
 
-    for (const auto &attack : mi.attack)
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        attack_flavour af = attack.flavour;
-        if (!attack_flavours.count(af))
-        {
-            attack_flavours.insert(af);
-            const char * const desc = _describe_attack_flavour(af);
-            if (desc[0]) // non-empty
-                attack_descs.push_back(desc);
-        }
+        const mon_attack_def &attack = mi.attack[i];
+        if (attack.type == AT_NONE)
+            break; // assumes there are no gaps in attack arrays
+
+        const item_def* weapon = _weapon_for_attack(mi, i);
+        mon_attack_info attack_info = { attack, weapon };
+
+        ++attack_counts[attack_info];
     }
+
+    // XXX: hack alert
+    if (mons_genus(mi.base_type) == MONS_HYDRA)
+    {
+        ASSERT(attack_counts.size() == 1);
+        for (auto &attack_count : attack_counts)
+            attack_count.second = mi.num_heads;
+    }
+
+    vector<string> attack_descs;
+    for (const auto &attack_count : attack_counts)
+    {
+        const mon_attack_info &info = attack_count.first;
+        const mon_attack_def &attack = info.definition;
+        const string weapon_note
+            = info.weapon ? make_stringf(" (plus %s damage)",
+                                         info.weapon->name(DESC_PLAIN).c_str())
+                          : "";
+        const string count_desc =
+              attack_count.second == 1 ? "" :
+              attack_count.second == 2 ? " twice" :
+              " " + number_in_words(attack_count.second) + " times";
+
+        // XXX: hack alert
+        if (attack.flavour == AF_PURE_FIRE)
+        {
+            attack_descs.push_back(
+                make_stringf("%s to deal up to %d fire damage",
+                             mon_attack_name(attack.type).c_str(),
+                             flavour_damage(attack.flavour, mi.hd, false)));
+            continue;
+        }
+
+        attack_descs.push_back(
+            make_stringf("%s%s%s%s for up to %d damage%s%s%s",
+                         _special_flavour_prefix(attack.flavour),
+                         mon_attack_name(attack.type).c_str(),
+                         _flavour_range_desc(attack.flavour),
+                         count_desc.c_str(),
+                         attack.damage,
+                         weapon_note.c_str(),
+                         _flavour_effect(attack.flavour, mi.hd).c_str(),
+                         attack_count.second > 1 ? " each" : ""));
+    }
+
 
     if (!attack_descs.empty())
     {
         result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-        result << " may attack to " << comma_separated_line(attack_descs.begin(), attack_descs.end());
+        result << " can " << comma_separated_line(attack_descs.begin(),
+                                                  attack_descs.end(),
+                                                  "; and ", "; ");
         result << ".\n";
     }
 

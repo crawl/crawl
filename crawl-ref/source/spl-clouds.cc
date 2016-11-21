@@ -158,7 +158,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
-    beam.damage            = dice_def(42, 1); // just a convenient non-zero
+    beam.damage            = CONVENIENT_NONZERO_DAMAGE;
     beam.is_tracer         = true;
     beam.use_target_as_pos = true;
     beam.origin_spell      = spl;

@@ -475,7 +475,7 @@ static const struct spell_desc spelldata[] =
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
     SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
-    6,
+    5,
     200,
     5, 5,
     6, 2,

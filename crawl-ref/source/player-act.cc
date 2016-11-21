@@ -260,10 +260,6 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         int sk = form_uses_xl() ? experience_level * 10 :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
-
-        // Bats are faster (for whatever good it does them).
-        if (you.form == TRAN_BAT && !projectile)
-            attk_delay = div_rand_round(attk_delay * 3, 5);
     }
     else if (weap &&
              (projectile ? projectile->launched_by(*weap)
@@ -726,9 +722,6 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (check_stasis())
-        return false;
-
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
@@ -806,10 +799,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
 #endif
     else if (is_lifeless_undead())
         msg = "You cannot raise a blood rage in your lifeless body.";
-    // Stasis for identified amulets; unided amulets will trigger when the
-    // player attempts to activate berserk.
-    else if (stasis(false))
-        msg = "You cannot go berserk while under stasis.";
+    else if (stasis())
+        msg = "Your stasis prevents you from going berserk.";
     else if (!intentional && !potion && clarity())
         msg = "You're too calm and focused to rage.";
     else

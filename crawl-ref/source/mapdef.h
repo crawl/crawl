@@ -944,30 +944,17 @@ struct map_file_place
     }
 };
 
-const int DEFAULT_CHANCE_PRIORITY = 100;
 struct map_chance
 {
-    int chance_priority;
     int chance;
-    map_chance() : chance_priority(-1), chance(-1) { }
-    map_chance(int _priority, int _chance)
-        : chance_priority(_priority), chance(_chance) { }
-    map_chance(int _chance)
-        : chance_priority(DEFAULT_CHANCE_PRIORITY), chance(_chance) { }
-    bool valid() const { return chance_priority >= 0 && chance >= 0; }
-    bool dummy_chance() const { return chance_priority == 0 && chance >= 0; }
+    map_chance() : chance(-1) { }
+    map_chance(int _chance) : chance(_chance) { }
+    bool valid() const { return chance >= 0; }
     string describe() const;
     // Returns true if the vault makes the random CHANCE_ROLL.
     bool roll() const;
     void write(writer &) const;
     void read(reader &);
-};
-
-// For the bison parser's token union:
-struct map_chance_pair
-{
-    int priority;
-    int chance;
 };
 
 typedef vector<level_range> depth_ranges_v;

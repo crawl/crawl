@@ -30,6 +30,8 @@ void remove_tornado_clouds(mid_t whose);
 void move_cloud(coord_def src, coord_def newpos);
 void swap_clouds(coord_def p1, coord_def p2);
 
+coord_def random_walk(coord_def start, int dist);
+
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                        const actor *agent, int spread_rate = -1,
                        int excl_rad = -1);

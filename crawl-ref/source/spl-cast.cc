@@ -569,68 +569,78 @@ void inspect_spells()
     list_spells(true, true);
 }
 
-static bool _can_cast()
+bool can_cast_spells(bool quiet)
 {
     if (!get_form()->can_cast)
     {
-        canned_msg(MSG_PRESENT_FORM);
+        if (!quiet)
+            canned_msg(MSG_PRESENT_FORM);
         return false;
     }
 
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
     {
-        mpr("You cannot cast spells while unable to breathe!");
+        if (!quiet)
+            mpr("You cannot cast spells while unable to breathe!");
         return false;
     }
 
     if (you.duration[DUR_BRAINLESS])
     {
-        mpr("You lack the mental capacity to cast spells.");
+        if (!quiet)
+            mpr("You lack the mental capacity to cast spells.");
         return false;
     }
 
     // Randart weapons.
     if (you.no_cast())
     {
-        mpr("Something interferes with your magic!");
+        if (!quiet)
+            mpr("Something interferes with your magic!");
         return false;
     }
 
     if (!you.spell_no)
     {
-        canned_msg(MSG_NO_SPELLS);
+        if (!quiet)
+            canned_msg(MSG_NO_SPELLS);
         return false;
     }
 
     if (you.berserk())
     {
-        canned_msg(MSG_TOO_BERSERK);
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
         return false;
     }
 
     if (you.confused())
     {
-        mpr("You're too confused to cast spells.");
+        if (!quiet)
+            mpr("You're too confused to cast spells.");
         return false;
     }
 
     if (silenced(you.pos()))
     {
-        mpr("You cannot cast spells when silenced!");
+        if (!quiet)
+            mpr("You cannot cast spells when silenced!");
         // included in default force_more_message
         return false;
     }
 
     if (you.duration[DUR_NO_CAST])
     {
-        mpr("You are unable to access your magic!");
+        if (!quiet)
+            mpr("You are unable to access your magic!");
         return false;
     }
 
     if (!you.undead_state() && !you_foodless()
         && you.hunger_state <= HS_STARVING)
     {
-        canned_msg(MSG_NO_ENERGY);
+        if (!quiet)
+            canned_msg(MSG_NO_ENERGY);
         return false;
     }
 
@@ -654,7 +664,7 @@ void do_cast_spell_cmd(bool force)
  **/
 bool cast_a_spell(bool check_range, spell_type spell)
 {
-    if (!_can_cast())
+    if (!can_cast_spells())
     {
         crawl_state.zero_turns_taken();
         return false;

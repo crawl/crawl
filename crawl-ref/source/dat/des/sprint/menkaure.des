@@ -134,7 +134,7 @@ ENDMAP
 
 NAME:   sprint2_early_2
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   siren
+MONS:   merfolk siren
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP

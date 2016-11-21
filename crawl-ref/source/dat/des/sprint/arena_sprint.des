@@ -244,7 +244,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Lair / w:5 yak / w:5 crocodile / w:3 basilisk /\
                     w:1 death yak / river rat / hell rat / porcupine /\
                     w:2 dream sheep",
-                "w:20 merfolk / w:5 siren / hippogriff w:15 / centaur /\
+                "w:20 merfolk / w:5 merfolk siren / hippogriff w:15 / centaur /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 tyrant leech / insubstantial wisp / w:5 swamp drake /\
                     bullfrog / w:2 spiny frog / w:2 hydra / w:2 vampire mosquito",

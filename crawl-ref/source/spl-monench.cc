@@ -95,7 +95,7 @@ bool backlight_monster(monster* mons)
 
 bool do_slow_monster(monster& mon, const actor* agent, int dur)
 {
-    if (mon.check_stasis(false))
+    if (mon.stasis())
         return true;
 
     if (!mon.is_stationary()

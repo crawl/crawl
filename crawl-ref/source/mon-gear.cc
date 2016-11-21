@@ -677,7 +677,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_MERFOLK_JAVELINEER, { { { WPN_SPEAR, 1 } } } },
         { MONS_SPRIGGAN_RIDER, { { { WPN_SPEAR, 1 } } } },
         { MONS_MERFOLK, { { { WPN_TRIDENT, 1 } } } },
-        { MONS_SIREN,
+        { MONS_MERFOLK_SIREN,
             { { { WPN_TRIDENT,          1 },
                 { WPN_SPEAR,            2 },
         } } },

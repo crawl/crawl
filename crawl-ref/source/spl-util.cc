@@ -1169,7 +1169,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
-            return pluralise(species_name(you.species)) + " cannot teleport.";
+            return "your stasis prevents you from teleporting.";
 
         if (temp && you.no_tele(false, false, true))
             return lowercase_first(you.no_tele_reason(false, true));

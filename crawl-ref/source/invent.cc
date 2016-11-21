@@ -1530,7 +1530,7 @@ static bool _is_known_no_tele_item(const item_def &item)
     return artefact_property(item, ARTP_PREVENT_TELEPORTATION, known) && known;
 }
 
-bool nasty_stasis(const item_def &item, operation_types oper)
+bool needs_notele_warning(const item_def &item, operation_types oper)
 {
     return (oper == OPER_PUTON || oper == OPER_WEAR
                 || oper == OPER_WIELD && !_is_wielded(item))
@@ -1584,7 +1584,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (oper == OPER_REMOVE && item.is_type(OBJ_JEWELLERY, AMU_HARM))
         return true;
 
-    if (nasty_stasis(item, oper))
+    if (needs_notele_warning(item, oper))
         return true;
 
     if (oper == OPER_ATTACK && god_hates_item(item)
@@ -1727,12 +1727,10 @@ bool check_warning_inscriptions(const item_def& item,
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (nasty_stasis(item, oper)
+        if (needs_notele_warning(item, oper)
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
-            prompt += string(" while ")
-                      + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                         you.duration[DUR_SLOW] ? "slowed" : "hasted");
+            prompt += " while about to teleport";
         }
         prompt += "?";
         if (penance)
