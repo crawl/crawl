@@ -294,7 +294,7 @@ FTILE:  -12O = floor_hall
 SUBST:  - = .
 KMONS:  O = nonbase draconian
 : zot_entry_setup(_G)
-MONS:   draconian zealot / draconian caller
+MONS:   draconian stormcaller
 MAP
 xxxxxxxxxxxx@xxxxxxxxxxxx
 xxx........---........xxx
@@ -764,7 +764,7 @@ NAME:   lemuel_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
+MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -790,7 +790,7 @@ NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
+MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -931,7 +931,7 @@ MARKER: X = lua:fog_machine { cloud_type="steam", \
             size = 2, walk_dist = 3, spread_rate= 10 }
 KMONS: M = patrolling red draconian att:neutral / \
       patrolling red draconian scorcher att:neutral w:2 / \
-      patrolling red draconian caller att:neutral w:2 / \
+      patrolling red draconian stormcaller att:neutral w:2 / \
       patrolling red draconian shifter att:neutral w:2 / \
       patrolling red draconian annihilator att:neutral w:2 / \
       patrolling red draconian knight att:neutral w:2 / \
@@ -1644,7 +1644,7 @@ NAME: nicolae_zot_draconian_monastery
 DEPTH: Zot, !Zot:$
 ORIENT: float
 TAGS: no_trap_gen no_monster_gen no_item_gen
-MONS: draconian monk / base draconian w:15, patrolling draconian zealot, patrolling draconian knight
+MONS: draconian monk / base draconian w:15, patrolling draconian stormcaller, patrolling draconian knight
 MONS: patrolling draconian scorcher
 SHUFFLE: ]}), rybgmq, DZF
 MARKER: + = lua:restrict_door()
