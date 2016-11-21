@@ -439,7 +439,7 @@ int spell_hunger(spell_type which_spell, bool rod)
 bool spell_is_direct_explosion(spell_type spell)
 {
     return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION
-           || spell == SPELL_GHOSTLY_SACRIFICE;
+           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL;
 }
 
 bool spell_harms_target(spell_type spell)

@@ -3857,6 +3857,18 @@ static const struct spell_desc spelldata[] =
     TILEG_BECKONING,
 },
 
+// Monster-only, players can use Qazlal's ability
+{
+    SPELL_UPHEAVAL, "Upheaval",
+    SPTYP_CONJURATION,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
 {
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
