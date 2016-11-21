@@ -1457,14 +1457,14 @@ MARKER: T = lua:fog_machine { \
         size_buildup_time = 1000, cloud_type = "mutagenic fog" }
 KFEAT: T = zot trap
 KMONS: * = orb of fire
-MONS: Tiamat, yellow draconian caller / yellow draconian shifter
+MONS: Tiamat, yellow draconian stormcaller / yellow draconian shifter
 MONS: white draconian scorcher
 MARKER: i = lua:fog_machine { \
         pow_max = 10, delay_min = 100, delay_max = 150, \
         size = 2, size_buildup_amnt = 15, \
         size_buildup_time = 1000, cloud_type = "freezing vapour" }
 MONS: patrolling storm dragon / patrolling electric golem
-MONS: red draconian zealot
+MONS: red draconian stormcaller
 KMONS: 7 = patrolling fire giant
 KMONS: 8 = patrolling frost giant
 KMONS: L = patrolling ancient lich

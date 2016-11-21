@@ -5023,7 +5023,7 @@ DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
 MONS:   deep elf high priest, deep elf mage
 :else
-MONS:   draconian zealot, base draconian
+MONS:   draconian stormcaller, base draconian
 :end
 COLOUR: x = white
 TILE:   x = wall_church
