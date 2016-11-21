@@ -1368,6 +1368,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "the air is too still for clouds to form.";
         break;
 
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (player_on_orb_run())
+            return "the Orb prevents this spell from working.";
+
     default:
         break;
     }
