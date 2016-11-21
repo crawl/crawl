@@ -61,7 +61,7 @@
  */
 int melee_confuse_chance(int HD)
 {
-    return 80 * (30 - HD) / 30;
+    return max(80 * (24 - HD) / 24, 0);
 }
 
 /**
