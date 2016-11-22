@@ -938,10 +938,6 @@ draconian annihilator
 A draconian that uses powerful conjurations to destroy anyone who dares to
 stand in its way.
 %%%%
-draconian caller
-
-A draconian that specializes in summoning hordes of drakes and dragons.
-%%%%
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
@@ -963,10 +959,10 @@ draconian shifter
 A draconian master of the warp, who can translocate both itself and anyone else
 to any place, either on this world or outside of it.
 %%%%
-draconian zealot
+draconian stormcaller
 
-A draconian deriving its hellish powers and demonic allies from the worship of
-some unknown dark god.
+A draconian deriving its thunderous powers and draconic allies from the worship
+of Qazlal.
 %%%%
 dream sheep
 

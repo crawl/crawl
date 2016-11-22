@@ -632,10 +632,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DRACONIAN_CALLER,
+    {  MST_DRACONIAN_STORMCALLER,
       {
-       { SPELL_SUMMON_DRAKES, 55, MON_SPELL_WIZARD },
-       { SPELL_SUMMON_DRAGON, 10, MON_SPELL_WIZARD },
+        { SPELL_SMITING, 20, MON_SPELL_PRIEST },
+        { SPELL_SUMMON_DRAKES, 20, MON_SPELL_PRIEST },
+        { SPELL_UPHEAVAL, 20, MON_SPELL_PRIEST },
       }
     },
 

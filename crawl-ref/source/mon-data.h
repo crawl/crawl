@@ -675,17 +675,17 @@ static monsterentry mondata[] =
 // nonbase draconians ('q')
 // Nonbase draconian AC and EV is additive with the base type.
 {
-    MONS_DRACONIAN_CALLER, 'q', BROWN, "draconian caller",
+    MONS_DRACONIAN_STORMCALLER, 'q', BROWN, "draconian stormcaller",
     M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     16, 880,
-    0, 0, MST_DRACONIAN_CALLER, CE_CLEAN, S_ROAR,
+    0, 0, MST_DRACONIAN_STORMCALLER, CE_CLEAN, S_ROAR,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM,
         MON_SHAPE_HUMANOID_TAILED,
-    {TILEP_DRACO_CALLER}, TILE_ERROR
+    {TILEP_DRACO_STORMCALLER}, TILE_ERROR
 },
 
 {

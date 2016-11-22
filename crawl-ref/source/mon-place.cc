@@ -2167,7 +2167,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_GREEN_DRACONIAN, basic_drac_set },
     { MONS_GREY_DRACONIAN, basic_drac_set },
     { MONS_PALE_DRACONIAN, basic_drac_set },
-    { MONS_DRACONIAN_CALLER, classy_drac_set },
+    { MONS_DRACONIAN_STORMCALLER, classy_drac_set },
     { MONS_DRACONIAN_MONK, classy_drac_set },
     { MONS_DRACONIAN_SCORCHER, classy_drac_set },
     { MONS_DRACONIAN_KNIGHT, classy_drac_set },
@@ -2706,7 +2706,7 @@ static monster_type _band_member(band_type band, int which,
         {
             // Hack: race is rolled elsewhere.
             return random_choose_weighted(
-                1, MONS_DRACONIAN_CALLER,
+                1, MONS_DRACONIAN_STORMCALLER,
                 2, MONS_DRACONIAN_KNIGHT,
                 2, MONS_DRACONIAN_MONK,
                 2, MONS_DRACONIAN_SHIFTER,
