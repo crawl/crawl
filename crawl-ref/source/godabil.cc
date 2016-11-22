@@ -7239,17 +7239,17 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
     }
 
-    int chance_to_liquify = 20 * number_of_impacts;
-    if (mons->has_ench(ENCH_PARALYSIS))
-        chance_to_liquify *= 4;
-    else if (mons->has_ench(ENCH_SLOW))
-        chance_to_liquify *= 2;
+    int liquify_dice = 2 * number_of_impacts;
 
-    dprf("Chance to liquify: %d%%", chance_to_liquify);
-    if (mons->alive() && mons->type != MONS_IEOH_JIAN_WEAPON && x_chance_in_y(chance_to_liquify, 100))
+    if (mons->has_ench(ENCH_PARALYSIS))
+        liquify_dice *= 4;
+    else if (mons->has_ench(ENCH_SLOW))
+        liquify_dice *= 2;
+
+    if (mons->alive() && mons->type != MONS_IEOH_JIAN_WEAPON && (liquify_dice > 0))
     {
         simple_monster_message(*mons, " starts to convulse uncontrollably...");
-        mons->hurt(&you, dice_def(8, mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
+        mons->hurt(&you, dice_def(liquify_dice, mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
     }
 
     return true;
