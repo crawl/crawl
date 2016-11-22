@@ -295,7 +295,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         { 0, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
         { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks. Different weapons allow for different maneuvers, read your weapon description!" },
         { 3, passive_t::afterimage, "leave a distracting afterimage after swapping weapons" },
-        { 5, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
+        { 4, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
     },
 };
 
@@ -1698,7 +1698,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
 
 static bool _dont_attack_martial(const monster* mons)
 {
-    return mons->friendly() || mons->good_neutral() || mons->strict_neutral();
+    return mons->friendly() || mons->good_neutral() || mons->strict_neutral() || mons_is_firewood(*mons);
 }
 
 static void _ieoh_jian_lunge(const coord_def& old_pos)
