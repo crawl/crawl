@@ -7186,7 +7186,6 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         if (setup_missile_beam(monster, weapon_bolts[index], weapon_copies[index], ammo_name, returning))
             break;
 
-        // Steel Dragonfly missiles are all piercing.
         weapon_bolts[index].pierce    = true;
         weapon_bolts[index].is_tracer = false;
         weapon_bolts[index].hit = property(weapon_copies[index], PWPN_HIT);
@@ -7239,7 +7238,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
     }
 
-    int liquify_dice = 2 * number_of_impacts;
+    int liquify_dice = 4 * number_of_impacts;
 
     if (mons->has_ench(ENCH_PARALYSIS))
         liquify_dice *= 4;

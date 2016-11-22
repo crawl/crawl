@@ -61,6 +61,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
 
     needs_message = defender_visible;
 
+
     if (!using_weapon())
         wpn_skill = SK_THROWING;
 }
@@ -287,10 +288,6 @@ static int calc_damage_for_ijc_weapon(const item_def* weapon)
 
     damage += (damage_plus > -1) ? (random2(1 + damage_plus))
                                  : (-random2(1 - damage_plus));
-
-    // Double damage for Steel Dragonfly projectiles.
-    if (weapon->props.exists(IEOH_JIAN_DRAGONFLY))
-        damage *= 2;
 
     dprf("Ieoh Jian projected weapon damage %d", damage);
     return damage;

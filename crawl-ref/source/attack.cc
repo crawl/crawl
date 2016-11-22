@@ -250,6 +250,11 @@ int attack::calc_to_hit(bool random)
         return AUTOMATIC_HIT;
     }
 
+    if (using_weapon() && weapon->props.exists(IEOH_JIAN_PROJECTED) && weapon->props.exists(IEOH_JIAN_DRAGONFLY))
+    {
+        return AUTOMATIC_HIT;
+    }
+
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
     if (defender == nullptr)
