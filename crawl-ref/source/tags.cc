@@ -5252,7 +5252,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
 
-    if (mi.type != MONS_PROGRAM_BUG && mons_species(mi.type) == MONS_PROGRAM_BUG)
+    if (mons_is_removed(mi.type))
     {
         mi.type = MONS_GHOST;
         mi.props.clear();

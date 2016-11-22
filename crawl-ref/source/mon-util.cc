@@ -2494,29 +2494,35 @@ int exper_value(const monster& mon, bool real)
 // TODO: clean up special case when save compatibility is broken.
 monster_type random_draconian_monster_species()
 {
-    int drac_type = random_range(MONS_FIRST_BASE_DRACONIAN, MONS_LAST_SPAWNED_DRACONIAN);
+    monster_type drac_type = MONS_PROGRAM_BUG;
 
-#if TAG_MAJOR_VERSION == 34
-    // Special case to skip mottled draconian
-    while (drac_type == MONS_MOTTLED_DRACONIAN)
-        drac_type = random_range(MONS_FIRST_BASE_DRACONIAN, MONS_LAST_SPAWNED_DRACONIAN);
-#endif
+    do // skip removed monsters
+    {
+        drac_type = static_cast<monster_type>(
+                        random_range(MONS_FIRST_BASE_DRACONIAN,
+                                     MONS_LAST_SPAWNED_DRACONIAN)
+                    );
+    }
+    while (mons_is_removed(drac_type));
 
-    return static_cast<monster_type>(drac_type);
+    return drac_type;
 }
 
 // TODO: clean up special case when save compatibility is broken.
 monster_type random_draconian_job()
 {
-    int drac_type = random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_NONBASE_DRACONIAN);
+    monster_type drac_type = MONS_PROGRAM_BUG;
 
-#if TAG_MAJOR_VERSION == 34
-    // Special case to skip draconian zealots
-    while (drac_type == MONS_DRACONIAN_ZEALOT)
-        drac_type = random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_NONBASE_DRACONIAN);
-#endif
+    do // skip removed monsters
+    {
+        drac_type = static_cast<monster_type>(
+                        random_range(MONS_FIRST_NONBASE_DRACONIAN,
+                                     MONS_LAST_NONBASE_DRACONIAN)
+                    );
+    }
+    while (mons_is_removed(drac_type));
 
-    return static_cast<monster_type>(drac_type);
+    return drac_type;
 }
 
 // TODO: Clean up special case when save compatibility is broken.
@@ -3483,6 +3489,11 @@ bool mons_is_immotile(const monster& mons)
 bool mons_is_batty(const monster& m)
 {
     return mons_class_flag(m.type, M_BATTY) || m.has_facet(BF_BAT);
+}
+
+bool mons_is_removed(monster_type mc)
+{
+    return mc != MONS_PROGRAM_BUG && mons_species(mc) == MONS_PROGRAM_BUG;
 }
 
 bool mons_looks_stabbable(const monster& m)
