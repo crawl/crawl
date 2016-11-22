@@ -1271,31 +1271,6 @@ Z...x.......2x
  xxxxxxxxxxxxx
 ENDMAP
 
-NAME:    minmay_guarded_unrand_high_council
-DEPTH:   Elf
-ORIENT:  float
-: if you.unrands("hat_of_the_high_council") then
-ITEM:    hat randart no_pickup
-: else
-ITEM:    hat_of_the_high_council no_pickup
-: end
-MONS:    deep elf sorcerer / deep elf annihilator
-NSUBST:  1 = 2:2 / 5=1.. / .
-SUBST:   2 = 1.
-MAP
-ccccccc@ccccccc
-c.1...c.c...1.c
-c.c..cc.cc..c.c
-c.c.cc...cc.c.c
-c.c1...1...1c.c
-c.cc.1.c.1.cc.c
-c..ccccccccc..c
-c.1..c*2*c..1.c
-cc.1..2d2..1.cc
- cc..c*2*c..cc
-  ccccccccccc
-ENDMAP
-
 ##############################################################################
 ##############################################################################
 #
