@@ -1161,7 +1161,6 @@ static short curs_get_fg_color_non_identical(short fg, short bg)
                 }
                 else
                     failsafe_col = COLOR_WHITE;
-                failsafe_col = COLOR_BLUE;
                 break;
             case COLOR_WHITE:
                 if (fg_default_to_compare == COLOR_WHITE
@@ -1171,7 +1170,6 @@ static short curs_get_fg_color_non_identical(short fg, short bg)
                 }
                 else
                     failsafe_col = COLOR_BLACK;
-                failsafe_col = COLOR_BLUE;
                 break;
             default:
                 failsafe_col = COLOR_BLACK;
