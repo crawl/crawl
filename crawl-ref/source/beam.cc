@@ -348,19 +348,6 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
         }
     }
 
-    const bool poisonous_attack =
-        flavour == BEAM_POISON
-        || flavour == BEAM_POISON_ARROW
-        || item && item->defined() && item->base_type == OBJ_MISSILES
-           && (item->brand == SPMSL_POISONED || item->brand == SPMSL_CURARE);
-    if (you_worship(GOD_SHINING_ONE)
-        && poisonous_attack
-        && mon->res_poison() < 3
-        && !yesno("Poisoning this monster would place you under penance. "
-                  "Continue anyway?", false, 'n'))
-    {
-        return true;
-    }
     return false;
 }
 
