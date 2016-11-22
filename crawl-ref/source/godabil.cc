@@ -6656,7 +6656,7 @@ bool uskayaw_line_pass()
     return true;
 }
 
-bool uskayaw_grand_finale(bool fail)
+spret_type uskayaw_grand_finale(bool fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6665,7 +6665,7 @@ bool uskayaw_grand_finale(bool fail)
         crawl_state.cant_cmd_repeat("No encores!");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return false;
+        return SPRET_ABORT;
     }
 
     // query for location:
@@ -6687,11 +6687,11 @@ bool uskayaw_grand_finale(bool fail)
         {
             clear_messages();
             mpr("Cancelling grand finale due to HUP.");
-            return false;
+            return SPRET_ABORT;
         }
 
         if (!beam.isValid || beam.target == you.pos())
-            return false;         // early return
+            return SPRET_ABORT;   // early return
 
         mons = monster_at(beam.target);
         if (!mons || !you.can_see(*mons))
@@ -6758,7 +6758,7 @@ bool uskayaw_grand_finale(bool fail)
 
     set_piety(piety_breakpoint(0)); // Reset piety to 1*.
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 /**
