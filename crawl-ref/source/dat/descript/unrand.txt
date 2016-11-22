@@ -540,6 +540,7 @@ A large, iron-shod maul specialised for dealing massively powerful blows. Such
 power comes at a price: the maul's head is so heavy it takes a great length of
 time to lift it up for another swing.
 %%%%
+# TAG_MAJOR_VERSION == 34
 hat of the High Council
 
 A relic of some ancient wizarding war. Centuries later, it still crackles with

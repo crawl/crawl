@@ -385,9 +385,6 @@ int raw_spell_fail(spell_type spell)
     chance2 += 4 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
 
-    if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
-        chance2 += 7;
-
     if (you.props.exists(SAP_MAGIC_KEY))
         chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
 

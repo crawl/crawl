@@ -1114,6 +1114,7 @@ BASE_DAM: +35
 BASE_DELAY: +13
 BRAND:    SPWPN_VORPAL
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    HIGH_COUNCIL
 NAME:    hat of the High Council
 INSCRIP: Wiz-
@@ -1124,6 +1125,7 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -1
+BOOL:    nogen
 
 NAME:     arc blade
 INSCRIP:  discharge,
