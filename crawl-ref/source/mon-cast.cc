@@ -92,7 +92,6 @@ static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_conjure_flame_pos(const monster &mon);
-static coord_def _mons_prism_pos(const monster &mon);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
@@ -400,18 +399,6 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         },
         _target_beam_setup(_mons_conjure_flame_pos),
         MSPELL_LOGIC_NONE, 6
-    } },
-    { SPELL_FULMINANT_PRISM, {
-        _always_worthwhile,
-        [](monster &caster, mon_spell_slot slot, bolt& pbolt) {
-            const int splpow = _mons_spellpower(slot.spell, caster);
-            if (in_bounds(pbolt.target))
-                cast_fulminating_prism(&caster, splpow, pbolt.target, false);
-            else if (you.can_see(caster))
-                canned_msg(MSG_NOTHING_HAPPENS);
-        },
-        _target_beam_setup(_mons_prism_pos),
-        MSPELL_LOGIC_NONE, 8
     } },
     { SPELL_AWAKEN_EARTH, {
         _always_worthwhile,
@@ -3445,80 +3432,6 @@ static coord_def _mons_conjure_flame_pos(const monster &mons)
         return coord_def(GXM+1, GYM+1);
 
     return targets[random2(count)];
-}
-
-/**
- * Pick a target for conjuring a fulminant prism.
- *
- * @param[in] mon The monster casting this.
- * @param[in] foe The victim we're trying to kill.
- * @return A position for conjuring a prism.
- */
-static coord_def _mons_prism_pos(const monster &mons)
-{
-    const monster *mon = &mons; // TODO: rewriteme
-    actor* foe = mon->get_foe();
-    // Don't bother if our target doesn't exist.
-    coord_def target = coord_def(GXM+1, GYM+1);
-    if (!foe)
-        return target;
-
-    const int foe_speed =
-        foe->is_player() ? player_movement_speed()
-                         : foe->as_monster()->action_energy(EUT_MOVE)
-                           * BASELINE_DELAY / foe->as_monster()->speed;
-
-    // The % bit is effectively a ceil(); it captures the partial move the
-    // target gets with their leftover energy.
-    const int rad = 3 * BASELINE_DELAY / foe_speed
-                    + (((3 * BASELINE_DELAY) % foe_speed) > 0 ? 1 : 0);
-
-    // XXX: make this use coord_def when we have a hash<> for it
-    unordered_set<int> possible_places;
-
-    for (radius_iterator ri(foe->pos(), rad, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-    {
-        if (cell_is_solid(*ri))
-            continue;
-
-        possible_places.insert(ri->y * GYM + ri->x);
-    }
-
-    int max_coverage = 0;
-    int hits = 1;
-
-    const int range = _mons_spell_range(SPELL_FULMINANT_PRISM, *mon);
-
-    // TODO: try to avoid hurting allies and oneself here.
-    for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
-    {
-        // Our target needs to be in LOS, and we can't have a creature there.
-        if (!cell_see_cell(mon->pos(), *di, LOS_NO_TRANS)
-            || cell_is_solid(*di)
-            || (actor_at(*di) && mon->can_see(*actor_at(*di))))
-        {
-            continue;
-        }
-        int coverage = 0;
-        for (radius_iterator ri(*di, 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-        {
-            if (possible_places.find(ri->y * GYM + ri->x)
-                != possible_places.end())
-            {
-                coverage++;
-            }
-        }
-        if (coverage > max_coverage)
-        {
-            target = *di;
-            max_coverage = coverage;
-            hits = 1;
-        }
-        else if (coverage == max_coverage && !random2(++hits))
-            target = *di;
-    }
-
-    return target;
 }
 
 /**
@@ -8321,6 +8234,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_HUNTING_CRY:
     case SPELL_CONTROL_WINDS:
     case SPELL_DEATHS_DOOR:
+    case SPELL_FULMINANT_PRISM:
 #endif
     case SPELL_NO_SPELL:
         return true;
