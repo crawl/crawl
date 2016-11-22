@@ -1711,6 +1711,12 @@ static bool _choose_hostile_monster(const monster& mon)
 }
 
 
+static bool _ieoh_jian_retribution()
+{
+    simple_god_message(" stare at you angrily (retribution not yet implemented, sorry!)");
+    return true;
+}
+
 static bool _uskayaw_retribution()
 {
     const god_type god = GOD_USKAYAW;
@@ -1796,6 +1802,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
+    case GOD_IEOH_JIAN:     do_more = _ieoh_jian_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:
