@@ -1674,7 +1674,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                                          hurted == 0 ? " completely resists." :
                                    hurted < original ? " resists." :
                                    hurted > original ? " writhes in agony!" :
-                                   die("impossible damage scaling amount"));
+                                   " suffers an impossible damage scaling amount!");
 
         }
         break;
