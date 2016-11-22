@@ -2061,10 +2061,17 @@ string mon_attack_name(attack_type attack)
 #if TAG_MAJOR_VERSION == 34
         "sting",
 #endif
+        "hit", // AT_CHERUB
+#if TAG_MAJOR_VERSION == 34
+        "hit", // AT_SHOOT
+#endif
+        "hit", // AT_WEAP_ONLY,
+        "hit", // AT_RANDOM
     };
-    COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
+    COMPILE_CHECK(ARRAYSZ(attack_types) == NUM_ATTACK_TYPES - AT_FIRST_ATTACK);
 
     const int verb_index = attack - AT_FIRST_ATTACK;
+    dprf("verb index: %d", verb_index);
     ASSERT(verb_index < (int)ARRAYSZ(attack_types));
     return attack_types[verb_index];
 }

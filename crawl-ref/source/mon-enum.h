@@ -60,6 +60,7 @@ enum attack_type
 #endif
     AT_WEAP_ONLY,   // AT_HIT if wielding a melee weapon, AT_NONE otherwise
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
+    NUM_ATTACK_TYPES,
 };
 
 // When adding an attack flavour, give it a short description in
