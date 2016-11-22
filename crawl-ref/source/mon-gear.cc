@@ -582,7 +582,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_DRACONIAN_SHIFTER,       { DRAC_MAGE_WEAPONS } },
         { MONS_DRACONIAN_SCORCHER,      { DRAC_MAGE_WEAPONS } },
         { MONS_DRACONIAN_ANNIHILATOR,   { DRAC_MAGE_WEAPONS } },
-        { MONS_DRACONIAN_CALLER,        { DRAC_MAGE_WEAPONS } },
+        { MONS_DRACONIAN_STORMCALLER,   { DRAC_MAGE_WEAPONS } },
         { MONS_RAGGED_HIEROPHANT,       { DRAC_MAGE_WEAPONS } },
         { MONS_VASHNIA,                 { NAGA_WEAPONS, {}, {}, 1 } },
         { MONS_NAGA_SHARPSHOOTER,       { NAGA_WEAPONS } },
@@ -2009,7 +2009,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_STORMCALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_BAI_SUZHEN:

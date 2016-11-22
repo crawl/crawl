@@ -5269,7 +5269,7 @@ static const pop_entry _planerend_abyss[] =
 
 static const pop_entry _planerend_zot[] =
 { // Zot enemies
-  {  1,   1,   40, FLAT, MONS_DRACONIAN_CALLER },
+  {  1,   1,   40, FLAT, MONS_DRACONIAN_STORMCALLER },
   {  1,   1,  100, FLAT, MONS_GOLDEN_DRAGON },
   {  1,   1,   80, FLAT, MONS_MOTH_OF_WRATH },
   { 0,0,0,FLAT,MONS_0 }
