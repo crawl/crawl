@@ -385,6 +385,8 @@ monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
 bool mons_is_siren_beholder(const monster& mons);
 
+bool mons_is_removed(monster_type mc);
+
 bool mons_looks_stabbable(const monster& m);
 bool mons_looks_distracted(const monster& m);
 
