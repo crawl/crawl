@@ -49,7 +49,6 @@ static option_handler handlers[] =
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },
     { "clear_messages",  &Options.clear_messages, option_hboolean },
-    { "no_dark_brand",   &Options.no_dark_brand, option_hboolean },
     { "blink_brightens_background", &Options.blink_brightens_background,
                                    option_hboolean },
     { "bold_brightens_foreground", &Options.bold_brightens_foreground,
