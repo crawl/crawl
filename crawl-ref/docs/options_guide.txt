@@ -134,8 +134,8 @@ The contents of this text are:
 5-b     DOS and Windows.
                 dos_use_background_intensity
 5-c     Unix.
-                no_dark_brand, blink_brightens_background,
-                bold_brightens_foreground, best_effort_brighten_background,
+                blink_brightens_background, bold_brightens_foreground,
+                best_effort_brighten_background,
                 best_effort_brighten_foreground, background_colour,
                 foreground_colour, use_fake_cursor
 
@@ -2508,15 +2508,6 @@ dos_use_background_intensity = false
 
 5-c     Unix.
 -------------
-no_dark_brand = true
-        Assume that dark grey will end up rendered identically to black.
-        I.e., bright black rendering is assumed to be broken for the terminal.
-
-        For a value of false to take effect, appropriate rendering assumptions
-        must also be enabled. See the blink_brightens_background,
-        bold_brightens_foreground, and allow_extended_colours options for more
-        details.
-
 blink_brightens_background = false
         For 8-colour mode, assume that a blink text attribute will end up
         brightening the background colour.

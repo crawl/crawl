@@ -242,7 +242,6 @@ public:
     bool        small_more;       // Show one-char more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
-    bool        no_dark_brand;    // Assume dark grey is displayed as black.
     bool        blink_brightens_background; // Assume blink will brighten bg.
     bool        bold_brightens_foreground; // Assume bold will brighten fg.
     bool        best_effort_brighten_background; // Allow bg brighten attempts.

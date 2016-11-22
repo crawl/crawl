@@ -1115,27 +1115,6 @@ static short curs_get_fg_color_non_identical(short fg, short bg)
         }
     }
 
-    // Special case: bright black, due to the history of broken terminals.
-    if (Options.no_dark_brand)
-    {
-        const short curses_black = translate_colour(BLACK);
-        const short curses_darkgrey = translate_colour(DARKGREY);
-        short * colours_to_change[] =
-        {
-            &fg_to_compare,
-            &bg_to_compare,
-            &fg_default_to_compare,
-            &bg_default_to_compare
-        };
-
-        // Convert any darkgreys to black.
-        for (size_t i = 0; i < ARRAYSZ(colours_to_change); i++)
-        {
-            if (*(colours_to_change[i]) == curses_darkgrey)
-                *(colours_to_change[i]) = curses_black;
-        }
-    }
-
     // Got the adjusted colors -- resolve any conflict.
     if (fg_to_compare == bg_to_compare)
     {
