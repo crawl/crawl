@@ -249,7 +249,8 @@ static void _count_gold()
         }
     }
 
-    you.attribute[ATTR_GOLD_GENERATED] += gold;
+    if (!player_in_branch(BRANCH_ABYSS))
+        you.attribute[ATTR_GOLD_GENERATED] += gold;
 
     if (have_passive(passive_t::detect_gold))
     {
