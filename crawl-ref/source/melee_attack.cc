@@ -577,16 +577,16 @@ void melee_attack::player_strike_pressure_points(monster* mons)
         return;
 
     int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
-    int paralysis_chance = 3;
+    int paralysis_chance = 4;
     paralysis_chance *= power;
     paralysis_chance /= (2*mons->get_hit_dice());
-    int slow_chance = 3 * paralysis_chance;
+    int slow_chance = 2 * paralysis_chance;
 
-    dprf("Pressure point strike, %d%% chance to paralyse (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
-    if (!mons->paralysed() && x_chance_in_y(paralysis_chance, 100))
+    dprf("Pressure point strike, %d%% chance to paralyse if slowed (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
+    if (!mons->paralysed() && mons->has_ench(ENCH_SLOW) && x_chance_in_y(paralysis_chance, 100))
     {
         if (!mons_is_immotile(*mons)
-            && simple_monster_message(*mons, " suddenly stops moving as you strike a pressure point!"))
+            && simple_monster_message(*mons, " suddenly stops moving as you strike another pressure point!"))
         {
             mons->stop_constricting_all();
             obvious_effect = true;
