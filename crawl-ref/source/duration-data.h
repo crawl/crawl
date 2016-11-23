@@ -550,7 +550,7 @@ static const duration_def duration_data[] =
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
     { DUR_IEOH_JIAN_INTEREST,
-      RED, "Council",
+      0, "",
       "being watched over by the Council", "IJC interested",
       "The Council is aiding you in battle.", D_NO_FLAGS,
       {{ "The Council is losing interest.",  _ieoh_jian_bored }}},

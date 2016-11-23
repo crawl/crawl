@@ -1707,7 +1707,7 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
-    if (!mons || _dont_attack_martial(mons))
+    if (!mons || _dont_attack_martial(mons) || mons->alive())
         return;
    
     mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
@@ -1752,6 +1752,9 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
 
     for (auto mons : common_targets)
     {
+        if (!mons->alive())
+            continue;
+
         mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
         melee_attack whirlwind(&you, mons);
         whirlwind.is_ieoh_jian_martial = true;
@@ -1805,7 +1808,7 @@ void ieoh_jian_pole_vault_effects()
     for (int i = 0; i < 8; ++i)
     {
         monster* target = monster_at(you.pos() + dir);
-        if (target && !_dont_attack_martial(target))
+        if (target && !_dont_attack_martial(target) && target->alive())
         {
             mprf("You attack %s while airborne!", target->name(DESC_THE).c_str());
             melee_attack aerial(&you, target);

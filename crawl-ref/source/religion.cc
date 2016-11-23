@@ -4106,6 +4106,7 @@ int god_colour(god_type god) // mv - added
     case GOD_BEOGH:
     case GOD_LUGONU:
     case GOD_ASHENZARI:
+    case GOD_IEOH_JIAN:
         return LIGHTRED;
 
     case GOD_GOZAG:
@@ -4124,9 +4125,6 @@ int god_colour(god_type god) // mv - added
     case GOD_CHEIBRIADOS:
     case GOD_HEPLIAKLQANA:
         return LIGHTCYAN;
-
-    case GOD_IEOH_JIAN:
-        return RED;
 
     case GOD_DITHMENOS:
     case GOD_USKAYAW:
@@ -4205,6 +4203,7 @@ colour_t god_message_altar_colour(god_type god)
         return BLUE;
 
     case GOD_LUGONU:
+    case GOD_IEOH_JIAN:
         return LIGHTRED;
 
     case GOD_CHEIBRIADOS:
