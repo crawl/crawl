@@ -2519,13 +2519,13 @@ monster_type random_draconian_job()
 monster_type random_demonspawn_monster_species()
 {
     return _random_mons_between(MONS_FIRST_BASE_DEMONSPAWN,
-                                MONS_LAST_BASE_DRACONIAN);
+                                MONS_LAST_BASE_DEMONSPAWN);
 }
 
 monster_type random_demonspawn_job()
 {
     return _random_mons_between(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                MONS_LAST_NONBASE_DRACONIAN);
+                                MONS_LAST_NONBASE_DEMONSPAWN);
 }
 
 // Note: For consistent behavior in player_will_anger_monster(), all
