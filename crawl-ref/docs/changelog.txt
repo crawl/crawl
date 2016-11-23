@@ -1,3 +1,14 @@
+Stone Soup 0.19.1 (20161123)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Demon tridents are two-handed for small races, as intended.
+* Allow Dith shadow to attack diagonally and to reach.
+* Many other bug-fixes and cleanups.
+
+
 Stone Soup 0.19 (20161031)
 --------------------------------------------
 
