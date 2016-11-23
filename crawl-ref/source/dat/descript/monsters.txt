@@ -784,7 +784,8 @@ A weapon enchanted to dance through the air and attack under its own power.
 flying weapon
 
 A weapon manifested by the Ieoh Jian council. It floats passively within your reach,
-ready for you to wield.
+ready for you to wield. It can be commanded to attack for a brief period by projecting
+it towards enemies.
 %%%%
 dart slug
 

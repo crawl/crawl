@@ -293,6 +293,14 @@ void handle_behaviour(monster* mon)
         return;
     }
 
+    // Ieoh Jian weapons stick to you unless combat active (recently projected)
+    if ((mon->type == MONS_IEOH_JIAN_WEAPON) && !mon->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
+    {
+        mon->foe = MHITNOT;
+        mon->target = you.pos();
+        return;
+    }
+
     // Make sure monsters are not targeting the player in arena mode.
     ASSERT(!crawl_state.game_is_arena() || mon->foe != MHITYOU);
 

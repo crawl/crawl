@@ -953,6 +953,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_STILL_WINDS:
         end_still_winds();
         break;
+    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
+        if (!quiet && this->weapon())
+            mprf(MSGCH_DURATION, "%s is no longer fighting on its own.", this->weapon()->name(DESC_THE).c_str());
+        break;
 
     default:
         break;
@@ -1435,6 +1439,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
+    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
         decay_enchantment(en);
         break;
 
@@ -2136,6 +2141,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds",
+    "active for combat",
     "buggy",
 };
 
