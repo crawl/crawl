@@ -3114,7 +3114,8 @@ static string _monster_attacks_description(const monster_info& mi)
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
         const string weapon_note
-            = info.weapon ? make_stringf(" (plus %s damage)",
+            = info.weapon ? make_stringf(" (plus %s %s)",
+                                         mi.pronoun(PRONOUN_POSSESSIVE),
                                          info.weapon->name(DESC_PLAIN).c_str())
                           : "";
         const string count_desc =
