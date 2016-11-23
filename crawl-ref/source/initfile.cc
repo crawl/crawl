@@ -155,10 +155,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(auto_butcher), false),
         new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
         new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
-// This is useful for terms where dark grey does
-// not have standout modes (since it's black on black).
-// This option will use light-grey instead in these cases.
-        new BoolGameOption(SIMPLE_NAME(no_dark_brand), true),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), true),
@@ -229,7 +225,6 @@ const vector<GameOption*> game_options::build_options_list()
                              CHATTR_HILITE | (YELLOW << 8)),
         new CursesGameOption(SIMPLE_NAME(feature_item_brand), CHATTR_REVERSE),
         new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
-        // no_dark_brand applies here as well.
         new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),
         new IntGameOption(SIMPLE_NAME(note_hp_percent), 5, 0, 100),
         new IntGameOption(SIMPLE_NAME(hp_warning), 30, 0, 100),
