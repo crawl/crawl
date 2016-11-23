@@ -83,8 +83,12 @@ static COLOURS BG_COL_DEFAULT = BLACK;
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
+ * @param adjust_background
+ *  Determines which color in the pair is adjusted if adjustment is necessary.
+ *  True chooses the background, while false chooses the foreground.
  */
-static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg);
+static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
+    bool adjust_background = false);
 
 /**
  * @brief Change the foreground colour and returns the resulting curses info.
@@ -116,7 +120,14 @@ static void curs_attr_fg(attr_t &attr, short &color_pair, int col);
  * Performs colour mapping for both default colours as well as the color map.
  * Additionally, this function takes into consideration a passed brand.
  *
- * @copydetails curs_attr(attr_t &, short *, COLOURS, COLOURS, int)
+ * @param attr
+ *  The destination for the resulting character attributes.
+ * @param color_pair
+ *  The destination for the resulting color pair index.
+ * @param fg
+ *  The internal colour for the foreground.
+ * @param bg
+ *  The internal colour for the background.
  * @param brand
  *  Internal color branding information.
  */
@@ -185,20 +196,23 @@ static bool curs_can_use_extended_colors();
 static bool curs_color_combo_has_pair(short fg, short bg);
 
 /**
- * @brief Get a foreground color which is not the same as the background.
+ * @brief Adjust a curses color pair to not be visually identical.
  *
  * Colors which are not equal in value may still be considered identical
- * in appearance depending on the current options.
+ * in appearance depending on the current rendering assumption options.
+ *
+ * If the pair is not considered visually identical, no change is performed.
  *
  * @param fg
- *  The foreground flagged curses color.
+ *  The pair's brightness-flagged foreground color.
  * @param bg
- *  The background flagged curses color.
- *
- * @return
- *  A flagged curses colour not visually-identical to @p bg.
+ *  The pair's brightness-flagged background color.
+ * @param adjust_background
+ *  Determines which color in the pair is adjusted if adjustment is necessary.
+ *  True chooses the background, while false chooses the foreground.
  */
-static short curs_get_fg_color_non_identical(short fg, short bg);
+static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
+    bool adjust_background = false);
 
 /**
  * @brief Get the @em maximum palette size currently supported by the program.
@@ -265,7 +279,7 @@ static void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
  * @brief Translate internal colours to flagged curses colors.
  *
  * @param col
- *  The internalcolour to translate.
+ *  The internal colour to translate.
  *
  * @return
  *  The equivalent flagged curses colour.
@@ -861,7 +875,8 @@ static inline unsigned get_brand(int col)
 }
 
 // see declaration
-static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
+static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
+    bool adjust_background)
 {
     attr_t flags = 0;
     short temp_color_pair = 0;
@@ -872,7 +887,8 @@ static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg)
     short bg_curses = translate_colour(bg);
 
     // Resolve fg/bg color conflicts.
-    fg_curses = curs_get_fg_color_non_identical(fg_curses, bg_curses);
+    curs_adjust_color_pair_to_non_identical(fg_curses, bg_curses,
+        adjust_background);
 
     if (!monochrome_output_requested)
     {
@@ -1084,10 +1100,11 @@ static bool curs_color_combo_has_pair(short fg, short bg)
 }
 
 // see declaration
-static short curs_get_fg_color_non_identical(short fg, short bg)
+static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
+    bool adjust_background)
 {
-    // The color to return.
-    short fg_non_conflicting = fg;
+    // The color to assign.
+    short non_conflicting_color = adjust_background ? bg : fg;
 
     // The default colors.
     short fg_default = translate_colour(FG_COL_DEFAULT);
@@ -1118,17 +1135,21 @@ static short curs_get_fg_color_non_identical(short fg, short bg)
     // Got the adjusted colors -- resolve any conflict.
     if (fg_to_compare == bg_to_compare)
     {
-        // Choose the background color as the default failsafe.
-        short failsafe_col = bg_default;
+        // Choose terminal's current default colors as the default failsafe.
+        short failsafe_col = adjust_background ? fg_default : bg_default;
 
-        if (fg_to_compare == bg_default_to_compare)
+        if (!adjust_background && fg_to_compare == bg_default_to_compare)
         {
             /*
-             * For default background colors other than black and lightgrey,
-             * use black as the failsafe. It looks good on any background.
+             * Replacing the *foreground* color with a secondary failsafe.
              *
-             * For black and lightgrey backgrounds, however, use blue to
-             * mitigate information contrast issues with darkgrey.
+             * In general, use black as a failsafe for non-black backgrounds
+             * and white as a failsafe for black backgrounds. Black tends to
+             * look good on any visible background.
+             *
+             * However, for black and white *default* background colours,
+             * mitigate information contrast issues with bright black
+             * foregrounds by using blue as a special-case failsafe color.
              */
             switch (bg_default_to_compare)
             {
@@ -1155,11 +1176,32 @@ static short curs_get_fg_color_non_identical(short fg, short bg)
                 break;
             }
         }
+        else if (adjust_background && bg_to_compare == fg_default_to_compare)
+        {
+            /*
+             * Replacing the *background* color with a secondary failsafe.
+             *
+             * Don't bother special-casing bright black:
+             *  - The information contrast issue is not as prevalent for
+             *    backgrounds as foregrounds.
+             *  - A visible bright-black-on-black glyph actively changing into
+             *    black-on-blue when reversed looks much worse than a change to
+             *    black-on-white.
+             */
+            if (fg_default_to_compare == COLOR_BLACK)
+                failsafe_col = COLOR_WHITE;
+            else
+                failsafe_col = COLOR_BLACK;
+        }
 
-        fg_non_conflicting = failsafe_col;
+        non_conflicting_color = failsafe_col;
     }
 
-    return fg_non_conflicting;
+    // Update the appropriate color in the pair.
+    if (adjust_background)
+        bg = non_conflicting_color;
+    else
+        fg = non_conflicting_color;
 }
 
 // see declaration
@@ -1430,11 +1472,12 @@ void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
 
     if (!need_attribute_only_flip)
     {
-        // Perform a flip using the inverse color pair.
+        // Perform a flip using the inverse color pair, preferring to adjust
+        // the background color in case of a conflict.
         attr_t brightness_attr;
         curs_attr(brightness_attr, temp_color_pair,
             curses_color_to_internal_colour(bg),
-            curses_color_to_internal_colour(fg));
+            curses_color_to_internal_colour(fg), true);
         temp_attr |= brightness_attr;
     }
     else
