@@ -136,8 +136,8 @@ The contents of this text are:
 5-c     Unix.
                 blink_brightens_background, bold_brightens_foreground,
                 best_effort_brighten_background,
-                best_effort_brighten_foreground, background_colour,
-                foreground_colour, use_fake_cursor
+                best_effort_brighten_foreground, allow_extended_colours,
+                background_colour, foreground_colour, use_fake_cursor
 
 6-  Lua.
 6-a     Including lua files.
