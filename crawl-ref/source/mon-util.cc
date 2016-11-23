@@ -2491,66 +2491,41 @@ int exper_value(const monster& mon, bool real)
     return x_val;
 }
 
-// TODO: clean up special case when save compatibility is broken.
+static monster_type _random_mons_between(monster_type min, monster_type max)
+{
+    monster_type mc = MONS_PROGRAM_BUG;
+
+    do // skip removed monsters
+    {
+        mc = static_cast<monster_type>(random_range(min, max));
+    }
+    while (mons_is_removed(mc));
+
+    return mc;
+}
+
 monster_type random_draconian_monster_species()
 {
-    monster_type drac_type = MONS_PROGRAM_BUG;
-
-    do // skip removed monsters
-    {
-        drac_type = static_cast<monster_type>(
-                        random_range(MONS_FIRST_BASE_DRACONIAN,
-                                     MONS_LAST_SPAWNED_DRACONIAN)
-                    );
-    }
-    while (mons_is_removed(drac_type));
-
-    return drac_type;
+    return _random_mons_between(MONS_FIRST_BASE_DRACONIAN,
+                                MONS_LAST_SPAWNED_DRACONIAN);
 }
 
-// TODO: clean up special case when save compatibility is broken.
 monster_type random_draconian_job()
 {
-    monster_type drac_type = MONS_PROGRAM_BUG;
-
-    do // skip removed monsters
-    {
-        drac_type = static_cast<monster_type>(
-                        random_range(MONS_FIRST_NONBASE_DRACONIAN,
-                                     MONS_LAST_NONBASE_DRACONIAN)
-                    );
-    }
-    while (mons_is_removed(drac_type));
-
-    return drac_type;
+    return _random_mons_between(MONS_FIRST_NONBASE_DRACONIAN,
+                                MONS_LAST_NONBASE_DRACONIAN);
 }
 
-// TODO: Clean up special case when save compatibility is broken.
 monster_type random_demonspawn_monster_species()
 {
-    int demon_type = random_range(MONS_FIRST_BASE_DEMONSPAWN, MONS_LAST_BASE_DEMONSPAWN);
-
-#if TAG_MAJOR_VERSION == 34
-    // Special case to skip putrid demonspawn
-    while (demon_type == MONS_PUTRID_DEMONSPAWN)
-        demon_type = random_range(MONS_FIRST_BASE_DEMONSPAWN, MONS_LAST_BASE_DEMONSPAWN);
-#endif
-
-    return static_cast<monster_type>(demon_type);
+    return _random_mons_between(MONS_FIRST_BASE_DEMONSPAWN,
+                                MONS_LAST_BASE_DRACONIAN);
 }
 
-// TODO: Clean up special case when save compatibility is broken.
 monster_type random_demonspawn_job()
 {
-    int demon_type = random_range(MONS_FIRST_NONBASE_DEMONSPAWN, MONS_LAST_NONBASE_DEMONSPAWN);
-
-#if TAG_MAJOR_VERSION == 34
-    // Special case to skip chaos champions
-    while (demon_type == MONS_CHAOS_CHAMPION)
-        demon_type = random_range(MONS_FIRST_NONBASE_DEMONSPAWN, MONS_LAST_NONBASE_DEMONSPAWN);
-#endif
-
-    return static_cast<monster_type>(demon_type);
+    return _random_mons_between(MONS_FIRST_NONBASE_DEMONSPAWN,
+                                MONS_LAST_NONBASE_DRACONIAN);
 }
 
 // Note: For consistent behavior in player_will_anger_monster(), all
