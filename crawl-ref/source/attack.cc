@@ -231,10 +231,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        // Ieoh Jian precision penalty. Flying weapons are fast and imprecise.
-        if (attacker->as_monster()->type == MONS_IEOH_JIAN_WEAPON)
-            mhit -= 25;
     }
 
     // Penalties for both players and monsters:
@@ -250,9 +246,9 @@ int attack::calc_to_hit(bool random)
         return AUTOMATIC_HIT;
     }
 
-    if (using_weapon() && weapon->props.exists(IEOH_JIAN_PROJECTED) && weapon->props.exists(IEOH_JIAN_DRAGONFLY))
+    if (using_weapon() && weapon->props.exists(IEOH_JIAN_PROJECTED) && defender->is_player()) // Prevent Dragonfly from chooping you up.
     {
-        return AUTOMATIC_HIT;
+        return 0;
     }
 
     // If no defender, we're calculating to-hit for debug-display
