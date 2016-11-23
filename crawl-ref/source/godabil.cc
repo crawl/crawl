@@ -7201,6 +7201,11 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     int number_of_impacts = 0;
     for (auto& bolt: weapon_bolts)
     {
+        if (bolt.item->props.exists(IEOH_JIAN_SLOT))
+            mprf(MSGCH_GOD,"%s flies violently to the target and shatters!", bolt.item->name(DESC_THE, false, true).c_str());
+        else
+            mprf(MSGCH_GOD,"%s flies violently to the target!", bolt.item->name(DESC_YOUR, false, true).c_str());
+
         bolt.fire();
         viewwindow();
         bool hit = !bolt.hit_verb.empty();
@@ -7211,7 +7216,6 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     {
         if (monster->weapon()->props.exists(IEOH_JIAN_SLOT))
         {
-            mprf(MSGCH_GOD,"%s flies violently to the target and shatters!", monster->weapon()->name(DESC_THE, false, true).c_str());
             check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
         }
         else
@@ -7230,7 +7234,6 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
             if (!create_monster(mg))
                 dprf("Failed to animate Ieoh Jian weapon");
 
-            mprf(MSGCH_GOD,"%s flies violently to the target!", monster->weapon()->name(DESC_YOUR, false, true).c_str());
             monster->destroy_inventory();
         }
 

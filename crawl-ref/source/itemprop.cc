@@ -2090,6 +2090,9 @@ bool has_launcher(const item_def &ammo)
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
+    if (wpn.props.exists(IEOH_JIAN_PROJECTED))
+        return true;
+
     if (wpn.base_type != OBJ_MISSILES)
         return false;
 
