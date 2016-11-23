@@ -548,7 +548,7 @@ enum attribute_type
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another
-    ATTR_GOLD_GENERATED,       // Count gold generated this game.
+    ATTR_GOLD_GENERATED,       // Count gold generated on permanent levels this game.
 #if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
 #endif
