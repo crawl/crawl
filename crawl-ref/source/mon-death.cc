@@ -2143,8 +2143,6 @@ item_def* monster_die(monster* mons, killer_type killer,
         bool reformed = false;
         if (killer == KILL_RESET)
         {
-            if (you.can_see(*mons) && !silent && mons->weapon() && mons->weapon()->props.exists(IEOH_JIAN_SLOT))
-                mprf("%s shatters into a cloud of steel fragments.", mons->weapon()->name(DESC_THE, false, true).c_str());
             if (you.can_see(*mons) && !silent && mons->weapon() && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
                 mprf("%s bounces wildly and falls to the ground.", mons->weapon()->name(DESC_THE, false, true).c_str());
 
@@ -2163,8 +2161,6 @@ item_def* monster_die(monster* mons, killer_type killer,
             coord_def reform_location;
             random_near_space(mons, mons->pos(), reform_location, true, false, true);
             // If the kill wasn't divine, the weapon is immediately reformed in LOS.
-            if (you.can_see(*mons))
-                mprf(MSGCH_GOD, "%s shatters and reforms nearby.", mons->weapon()->name(DESC_THE, false, true).c_str());
             mgen_data mg(MONS_IEOH_JIAN_WEAPON,
                          BEH_FRIENDLY,
                          reform_location,

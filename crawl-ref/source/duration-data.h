@@ -553,7 +553,7 @@ static const duration_def duration_data[] =
       0, "",
       "being watched over by the Council", "IJC interested",
       "The Council is aiding you in battle.", D_NO_FLAGS,
-      {{ "The Council is losing interest.",  _ieoh_jian_bored }}},
+      {{ "The Council is losing interest, and will start withdrawing weapons.",  _ieoh_jian_bored }}},
     { DUR_IEOH_JIAN_BOREDOM,
       0, "",
       "", "IJC bored",
