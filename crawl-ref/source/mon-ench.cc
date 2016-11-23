@@ -21,6 +21,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "ghost.h"
 #include "hints.h"
 #include "items.h"
 #include "libutil.h"
@@ -304,6 +305,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_STILL_WINDS:
         start_still_winds();
+        break;
+
+    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
+        this->ghost->ev = 100; // Extremely evasive when active
         break;
 
     default:
@@ -954,6 +959,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         end_still_winds();
         break;
     case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
+        this->ghost->ev = 15;
         if (!quiet && this->weapon())
             mprf(MSGCH_DURATION, "%s is no longer fighting on its own.", this->weapon()->name(DESC_THE).c_str());
         break;

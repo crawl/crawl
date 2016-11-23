@@ -111,8 +111,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack()
-            && !mons_is_confused(*attacker->as_monster())
-            && !attacker->as_monster()->has_ench(ENCH_INSANE))
+               && !mons_is_confused(*attacker->as_monster())
+               && !attacker->as_monster()->has_ench(ENCH_INSANE))
         {
             return false;
         }

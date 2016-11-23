@@ -633,7 +633,7 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
     ac      = damg + div_rand_round(power, 10);
     damage  = damg;
 
-    ev     = 15 + 2 * div_rand_round(power, 10) - delay / 2; // Weapon + power based. Highest defensive stat since they die in one hit.
+    ev     = 15;
     ac     = 2 + div_rand_round(power, 10);
     max_hp = 1; // Ieoh Jian weapons always die in one hit and respawn elsewhere.
 }

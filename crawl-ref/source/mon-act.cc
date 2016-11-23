@@ -2226,6 +2226,13 @@ void handle_monster_move(monster* mons)
                 _swim_or_move_energy(*mons);
                 return;
             }
+            // Ieoh Jian passive weapons blink back to you if the pathing is blocked.
+            else if (mons->type == MONS_IEOH_JIAN_WEAPON && !mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
+            {
+                coord_def new_location;
+                if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
+                    mons->move_to_pos(new_location);
+            }
             // Figure out if they fight.
             else if ((!mons_is_firewood(*targ)
                       || mons->is_child_tentacle())
@@ -3837,6 +3844,7 @@ static bool _monster_move(monster* mons)
     bool ret = false;
     if (good_move[mmov.x + 1][mmov.y + 1] && !mmov.origin())
     {
+
         // Check for attacking player.
         if (mons->pos() + mmov == you.pos())
         {
