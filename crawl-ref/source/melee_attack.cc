@@ -586,7 +586,7 @@ void melee_attack::player_strike_pressure_points(monster* mons)
     if (!mons->paralysed() && mons->has_ench(ENCH_SLOW) && x_chance_in_y(paralysis_chance, 100))
     {
         if (!mons_is_immotile(*mons)
-            && simple_monster_message(*mons, " suddenly stops moving as you strike another pressure point!"))
+            && simple_monster_message(*mons, " suddenly stops moving as you strike a critical pressure point!"))
         {
             mons->stop_constricting_all();
             obvious_effect = true;

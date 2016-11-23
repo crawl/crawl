@@ -631,7 +631,7 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 
     speed   = 35 - delay; // They must be very fast to fly back to combat when knocked away.
     ac      = damg + div_rand_round(power, 10);
-    damage  = div_rand_round(damg * 7, 10);
+    damage  = damg;
 
     ev     = 15 + 2 * div_rand_round(power, 10) - delay / 2; // Weapon + power based. Highest defensive stat since they die in one hit.
     ac     = 2 + div_rand_round(power, 10);

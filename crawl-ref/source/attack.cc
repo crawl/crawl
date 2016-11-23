@@ -231,10 +231,6 @@ int attack::calc_to_hit(bool random)
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
-
-        // Ieoh Jian precision penalty. Flying weapons are fast and imprecise.
-        if (attacker->as_monster()->type == MONS_IEOH_JIAN_WEAPON)
-            mhit -= 25;
     }
 
     // Penalties for both players and monsters:
