@@ -249,9 +249,6 @@ enum class passive_t
     /// Unlock hidden potential on weapons
     martial_weapon_mastery,
 
-    // Become evasive when switching weapons
-    afterimage,
-
     // Slow and paralyse enemies with martial strikes
     pressure_points,
 };

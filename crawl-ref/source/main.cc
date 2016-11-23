@@ -3113,19 +3113,13 @@ static void _swap_places(monster* mons, const coord_def &loc)
     if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
         mons->move_to_pos(loc, true, true);
-        if (mons->ieoh_jian_swap_weapon_with_player() && have_passive(passive_t::afterimage))
-        {
-            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = IEOH_JIAN_ATTENTION_SPAN;
-            you.redraw_evasion = true;
-        }
-
+        mons->ieoh_jian_swap_weapon_with_player();
     }
     else
     {
         mpr("You swap places.");
         mons->move_to_pos(loc, true, true);
     }
-
 
     return;
 }
