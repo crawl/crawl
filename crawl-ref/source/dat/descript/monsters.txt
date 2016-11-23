@@ -781,6 +781,11 @@ dancing weapon
 
 A weapon enchanted to dance through the air and attack under its own power.
 %%%%
+flying weapon
+
+A weapon manifested by the Ieoh Jian council. It floats passively within your reach,
+ready for you to wield.
+%%%%
 dart slug
 
 A small invertebrate. It hunts prey considerably larger than itself by firing
