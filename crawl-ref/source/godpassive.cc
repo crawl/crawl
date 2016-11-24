@@ -979,6 +979,11 @@ void qazlal_storm_clouds()
         if (cell_is_solid(*ri) || cloud_at(*ri))
             continue;
 
+        // Don't create clouds over firewood
+        const monster * mon = monster_at(*ri);
+        if (mon != nullptr && mons_is_firewood(*mon))
+            continue;
+
         // No clouds in corridors.
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (!cell_is_solid(*ai))
