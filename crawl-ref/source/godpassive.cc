@@ -1709,22 +1709,27 @@ static bool _dont_attack_martial(const monster* mons)
     return mons->friendly() || mons->good_neutral() || mons->strict_neutral() || mons_is_firewood(*mons);
 }
 
-static void _ieoh_jian_lunge(const coord_def& old_pos)
+// Returns enemy attacked with a lunge.
+static monster* _ieoh_jian_lunge(const coord_def& old_pos, const vector<monster*>& banlist)
 {
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
-    if (!mons || _dont_attack_martial(mons) || !mons->alive())
-        return;
+    if (!mons || _dont_attack_martial(mons) || !mons->alive() 
+           || (std::find(banlist.begin(), banlist.end(), mons) != banlist.end()))
+        return nullptr;
    
     mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
     melee_attack lunge(&you, mons);
     lunge.is_ieoh_jian_martial = true;
     lunge.attack();
+
+    return mons;
 }
 
-static void _ieoh_jian_whirlwind(const coord_def& old_pos)
+// Returns monsters hit by the whirlwind.
+static vector<monster*> _ieoh_jian_whirlwind(const coord_def& old_pos, const vector<monster*>& banlist)
 {
     vector<monster*> targets;
 
@@ -1739,7 +1744,7 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
     }
 
     if (targets.empty())
-        return;
+        return targets;
 
     vector<monster*> old_targets;
     for (int i = 0; i < 8; ++i)
@@ -1758,7 +1763,13 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
                      old_targets.begin(), old_targets.end(),
                      back_inserter(common_targets));
 
-    for (auto mons : common_targets)
+    sort(common_targets.begin(), common_targets.end());
+    vector<monster*> filtered_targets;
+    set_difference(common_targets.begin(), common_targets.end(), 
+                     banlist.begin(), banlist.end(),
+                     back_inserter(filtered_targets));
+
+    for (auto mons : filtered_targets)
     {
         if (!mons->alive())
             continue;
@@ -1768,20 +1779,46 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         whirlwind.is_ieoh_jian_martial = true;
         whirlwind.attack();
     }
+
+    return filtered_targets;
 }
 
-void ieoh_jian_perform_martial_attacks(const coord_def& old_pos)
+// Returns monsters hit by either whirlwind or lunge.
+static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_pos, const vector<monster*>& banlist)
 {
+    vector<monster*> targets;
     if (!you.weapon())
-        return;
+        return targets;
 
     auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
 
-    if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
-        _ieoh_jian_lunge(old_pos);
-
     if (weapon_skill == SK_LONG_BLADES || weapon_skill == SK_MACES_FLAILS)
-        _ieoh_jian_whirlwind(old_pos);
+        targets = _ieoh_jian_whirlwind(old_pos, banlist);
+
+    monster* lunged;
+    if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
+        lunged = _ieoh_jian_lunge(old_pos, banlist);
+
+    if (lunged)
+        targets.push_back(lunged);
+
+    return targets;
+}
+
+void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
+{
+    // We perform martial attacks with the weapon we had before potentially swapping for another
+    vector<monster*> banlist;
+    banlist = _ieoh_jian_perform_martial_attacks(old_pos, banlist);
+    sort(banlist.begin(), banlist.end());
+    auto swapped_monster = monster_at(old_pos);
+
+    // We swap, and if there is a monster we can hit that we couldn't before, we do so.
+    if (swapped_monster && swapped_monster->alive() && swapped_monster->type == MONS_IEOH_JIAN_WEAPON)
+    {
+        swapped_monster->ieoh_jian_swap_weapon_with_player();
+        _ieoh_jian_perform_martial_attacks(old_pos, banlist);
+    }
 }
 
 bool ieoh_jian_can_pole_vault(const coord_def& target)
@@ -1798,9 +1835,10 @@ bool ieoh_jian_can_pole_vault(const coord_def& target)
    auto pole_vault_direction = (you.pos() - target).sgn();
    auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
 
+    const actor* landing_actor = actor_at(pole_vault_landing_spot);
     if (feat_is_solid(grd(you.pos() + pole_vault_direction))
         || !you.is_habitable(pole_vault_landing_spot)
-        || actor_at(pole_vault_landing_spot))
+        || (landing_actor && (!landing_actor->as_monster() || (landing_actor->as_monster()->type != MONS_IEOH_JIAN_WEAPON))))
     {
         mprf("You have no room to pole vault.");
         return false;

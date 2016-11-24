@@ -292,7 +292,7 @@ void uskayaw_bonds_audience();
 void ieoh_jian_spawn_weapon(const coord_def& position);
 void ieoh_jian_despawn_weapon();
 bool ieoh_jian_interest();
-void ieoh_jian_perform_martial_attacks(const coord_def& old_pos);
+void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);
 bool ieoh_jian_can_pole_vault(const coord_def& target);
 void ieoh_jian_pole_vault_effects();
 

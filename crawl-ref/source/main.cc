@@ -3110,16 +3110,11 @@ static void _swap_places(monster* mons, const coord_def &loc)
         }
     }
 
-    if (mons->type == MONS_IEOH_JIAN_WEAPON)
-    {
-        mons->move_to_pos(loc, true, true);
-        mons->ieoh_jian_swap_weapon_with_player();
-    }
-    else
-    {
+    mons->move_to_pos(loc, true, true);
+
+    // Ieoh Jian weapons must swap silently.
+    if (mons->type != MONS_IEOH_JIAN_WEAPON) 
         mpr("You swap places.");
-        mons->move_to_pos(loc, true, true);
-    }
 
     return;
 }
@@ -3450,6 +3445,9 @@ static void _move_player(coord_def move)
             mprf("You bounce against the obstacle and pole vault!");
             auto pole_vault_direction = (you.pos() - targ).sgn();
             auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
+            targ_monst = monster_at(pole_vault_landing_spot);
+            if (targ_monst)
+                _swap_places(targ_monst, you.pos());
             move_player_to_grid(pole_vault_landing_spot, false);
             ieoh_jian_pole_vault_effects();
         }
@@ -3558,10 +3556,9 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    // Ieoh Jian's lunge and whirlwind.
+    // Ieoh Jian's lunge and whirlwind, as well as weapon swapping on move.
     if (have_passive(passive_t::martial_weapon_mastery) && !attacking)
-        ieoh_jian_perform_martial_attacks(initial_position);
-
+        ieoh_jian_trigger_martial_arts(initial_position);
 }
 
 static int _get_num_and_char_keyfun(int &ch)
