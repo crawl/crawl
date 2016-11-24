@@ -1550,6 +1550,7 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
         for (int i = 0; i != _ieoh_jian_num_weapons; i++)
             if (weapon_attack_skill((weapon_type)_ieoh_jian_weapon_types[i]) == weapon_attack_skill(monster->weapon()->sub_type))
                 weights[i] = 0;
+
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
         for (int i = 0; i != _ieoh_jian_num_weapons; i++)
             if (weapon_attack_skill((weapon_type)_ieoh_jian_weapon_types[i]) == weapon_attack_skill(you.weapon()->sub_type))

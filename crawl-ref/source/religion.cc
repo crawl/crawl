@@ -3033,6 +3033,10 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
 
+    // Paws can't hold weapons very well.
+    if (which_god == GOD_IEOH_JIAN && you.species == SP_FELID)
+        return false; 
+
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;
@@ -3054,6 +3058,7 @@ bool player_can_join_god(god_type which_god)
         && (which_god == GOD_BEOGH
             || which_god == GOD_JIYVA
             || which_god == GOD_HEPLIAKLQANA
+            || which_god == GOD_IEOH_JIAN
             || which_god == GOD_FEDHAS))
     {
         return false;
