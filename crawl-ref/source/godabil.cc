@@ -7381,7 +7381,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
         dprf("Failed to animate Ieoh Jian weapon");
 
     // Activates the flying weapon to attack for a while.
-    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, IEOH_JIAN_ATTENTION_SPAN * 2.5);
+    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, IEOH_JIAN_ATTENTION_SPAN * 1.5);
     mons->add_ench(combat_active);
 
     dec_inv_item_quantity(weapon_index, 1, true);
