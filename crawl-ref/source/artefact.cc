@@ -1792,7 +1792,8 @@ void unrand_reacts()
             item_def&        item  = you.inv[you.equip[i]];
             const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-            entry->world_reacts_func(&item);
+            if (entry->base_type != OBJ_UNASSIGNED)
+                entry->world_reacts_func(&item);
         }
     }
 
