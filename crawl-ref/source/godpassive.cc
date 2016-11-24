@@ -1532,9 +1532,9 @@ static item_def ieoh_jian_choose_weapon()
         //// Axes
         3 * _weight_by_tier(0),//WPN_HAND_AXE,
         _weight_by_tier(0),//WPN_WAR_AXE,
-        2 * _weight_by_tier(1),//WPN_BROAD_AXE,
+        2 * _weight_by_tier(1) + 1 * _weight_by_tier(2),//WPN_BROAD_AXE,
         2 * _weight_by_tier(1),//WPN_BATTLEAXE,
-        4 * _weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
+        3 * _weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
 
         //// Polearms
         4 * _weight_by_tier(0) + _weight_by_tier(1),//WPN_QUARTERSTAFF,
@@ -1555,9 +1555,10 @@ static item_def ieoh_jian_choose_weapon()
             if (weapon_attack_skill((weapon_type)_ieoh_jian_weapon_types[i]) == weapon_attack_skill(you.weapon()->sub_type))
                 weights[i] = 0;
 
-    // We take out all types that our race can't wield.
+    // We take out all types that our race can't wield, or that we can't handle with our shield.
     for (int i = 0; i != _ieoh_jian_num_weapons; i++)
-        if (!you_could_wield_weapon_type((weapon_type)_ieoh_jian_weapon_types[i]))
+        if (!you_could_wield_weapon_type((weapon_type)_ieoh_jian_weapon_types[i])
+             || ((hands_reqd(&you, OBJ_WEAPONS, (weapon_type)_ieoh_jian_weapon_types[i]) == HANDS_TWO) && you.shield()))
                 weights[i] = 0;
 
     item_def weapon;
