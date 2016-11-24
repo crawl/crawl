@@ -3512,6 +3512,11 @@ static void _join_pakellas()
 // Setup when becoming an Ieoh Jian ninja
 static void _join_ieoh_jian()
 {
+    if (you.shield())
+        mprf(MSGCH_GOD, "A shield? That cowardly tool is undeserving of our respect. Lose it or our help will be diminished.");
+
+    if (you.weapon() && is_range_weapon(*(you.weapon())))
+        mprf(MSGCH_GOD, "A ranged weapon? Pathetic! Forfeit it at once.");
 }
 
 /// What special things happen when you join a god?
@@ -4033,7 +4038,6 @@ void handle_god_time(int /*time_delta*/)
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
-        case GOD_IEOH_JIAN:
         case GOD_JIYVA:
             if (one_chance_in(17))
                 lose_piety(1);
@@ -4066,6 +4070,24 @@ void handle_god_time(int /*time_delta*/)
               ru_offer_new_sacrifices();
             }
 
+            break;
+        case GOD_IEOH_JIAN:
+            if (one_chance_in(17))
+            {
+                lose_piety(1);
+
+                if (you.weapon() && is_range_weapon(*you.weapon()))
+                {
+                    mprf(MSGCH_GOD, "The council finds your abuse of %s disgraceful!", you.weapon()->name(DESC_THE).c_str());
+                    lose_piety(3);
+                }
+
+                if (you.shield())
+                {
+                    mprf(MSGCH_GOD, "You should stop hiding behind %s, mortal!", you.shield()->name(DESC_THE).c_str());
+                    lose_piety(1);
+                }
+            }
             break;
 
         case GOD_USKAYAW:
