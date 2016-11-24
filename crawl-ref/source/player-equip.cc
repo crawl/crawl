@@ -1371,7 +1371,7 @@ static void _manifest_as_ieoh_jian_weapon(item_def& wpn)
                  GOD_IEOH_JIAN);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
 
-    int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, false);
+    int power = ieoh_jian_calc_power_for_weapon((weapon_type) wpn.sub_type);
     mg.props[IEOH_JIAN_POWER] = power;
 
     monster * const mons = create_monster(mg);

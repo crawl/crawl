@@ -627,11 +627,11 @@ static const ability_def Ability_List[] =
 
     // Ieoh Jian
     { ABIL_IEOH_JIAN_PROJECT_WEAPON, "Project Weapon",
-        3, 0, 80, 3, {FAIL_INVO}, abflag::NONE },
+        3, 0, 80, 3, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
-        1, 0, 30, 0, {FAIL_INVO}, abflag::NONE },
+        1, 0, 30, 0, {FAIL_INVO, 20, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_DRAGONFLY, "Steel Dragonfly Technique",
-        5, 0, 120, 8, {FAIL_INVO}, abflag::NONE },
+        5, 0, 120, 8, {FAIL_INVO, 40, 5, 20}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",

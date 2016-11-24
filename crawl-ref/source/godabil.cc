@@ -7227,7 +7227,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
                          MG_FORCE_BEH | MG_FORCE_PLACE,
                          GOD_IEOH_JIAN);
 
-            int power = you.skill(weapon_attack_skill(monster->weapon()->sub_type), 4, false);
+            int power = ieoh_jian_calc_power_for_weapon((weapon_type) monster->weapon()->sub_type);
             mg.props[IEOH_JIAN_WEAPON] = *(monster->weapon());
             mg.props[IEOH_JIAN_POWER] = power;
 
@@ -7371,7 +7371,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
                  MG_FORCE_BEH | MG_FORCE_PLACE,
                  GOD_IEOH_JIAN);
 
-    int power = you.skill(weapon_attack_skill(thrown.sub_type), 4, false);
+    int power = ieoh_jian_calc_power_for_weapon((weapon_type) summoned_copy.sub_type);
     mg.props[IEOH_JIAN_WEAPON] = summoned_copy;
     mg.props[IEOH_JIAN_POWER] = power;
 
@@ -7381,7 +7381,8 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
         dprf("Failed to animate Ieoh Jian weapon");
 
     // Activates the flying weapon to attack for a while.
-    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, IEOH_JIAN_ATTENTION_SPAN * 1.5);
+    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
+    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
     mons->add_ench(combat_active);
 
     dec_inv_item_quantity(weapon_index, 1, true);

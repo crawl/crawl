@@ -631,7 +631,7 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 
     speed   = 40 - delay; // They must be very fast to fly back to combat when knocked away.
     ac      = damg + div_rand_round(power, 10);
-    damage  = damg;
+    damage  = damg * (0.4 + (power/100.0));
 
     ev     = 15;
     ac     = 2 + div_rand_round(power, 10);

@@ -1488,6 +1488,11 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_LAJATANG
 );
 
+int ieoh_jian_calc_power_for_weapon(weapon_type sub_type)
+{
+    return you.skill(weapon_attack_skill(sub_type), 2, false) + you.skill(SK_INVOCATIONS, 2, false);
+}
+
 static bool ieoh_jian_choose_weapon(item_def& weapon)
 {
     FixedVector<int, _ieoh_jian_num_weapons> weights
@@ -1571,8 +1576,8 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
     weapon.sub_type = _ieoh_jian_weapon_types[index];
     weapon.quantity = 1;
 
-    // From 0 to 9, piety based, with some variance.
-    weapon.plus = piety_rank(you.piety) + random2(3);
+    // From 0 to 13, piety and invo based, with some variance.
+    weapon.plus = piety_rank(you.piety) + random2(3) + div_rand_round(you.skill(SK_INVOCATIONS, 1, true), 7);
 
     FixedVector<int, 3> brand_weights
     (
@@ -1689,7 +1694,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
                  GOD_IEOH_JIAN);
     mg.props[IEOH_JIAN_WEAPON] = wpn;
 
-    int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, false);
+    int power = ieoh_jian_calc_power_for_weapon((weapon_type) wpn.sub_type);
     mg.props[IEOH_JIAN_POWER] = power;
 
     monster * const mons = create_monster(mg);

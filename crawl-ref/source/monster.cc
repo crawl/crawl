@@ -6602,7 +6602,8 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         weapon()->set_holding_monster(*this);
 
         // We need to reinitialize the ghost to inherit the qualities of the new weapon.
-        ghost->init_ieoh_jian_weapon(*(weapon()), you.skill(weapon_attack_skill(weapon()->sub_type), 4, false));
+        int power = ieoh_jian_calc_power_for_weapon((weapon_type) weapon()->sub_type);
+        ghost->init_ieoh_jian_weapon(*(weapon()), power);
     }
 
     if (!silent)
