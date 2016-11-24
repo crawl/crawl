@@ -3879,11 +3879,6 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
 
     switch (god)
     {
-    case GOD_SHINING_ONE:
-        // TSO hates using poison.
-        if (disciplines & SPTYP_POISON)
-            return true;
-        break;
     case GOD_CHEIBRIADOS:
         if (is_hasty_spell(spell))
             return true;
@@ -3915,10 +3910,6 @@ bool god_hates_ability(ability_type ability, god_type god)
 {
     switch (ability)
     {
-        case ABIL_SPIT_POISON:
-        case ABIL_BREATHE_POISON:
-        case ABIL_BREATHE_MEPHITIC:
-            return god == GOD_SHINING_ONE;
         case ABIL_BREATHE_FIRE:
         case ABIL_DELAYED_FIREBALL:
             return god == GOD_DITHMENOS;
