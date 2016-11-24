@@ -1706,7 +1706,7 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
-    if (!mons || _dont_attack_martial(mons) || mons->alive())
+    if (!mons || _dont_attack_martial(mons) || !mons->alive())
         return;
    
     mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
