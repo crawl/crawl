@@ -1488,7 +1488,7 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_LAJATANG
 );
 
-static item_def ieoh_jian_choose_weapon()
+static bool ieoh_jian_choose_weapon(item_def& weapon)
 {
     FixedVector<int, _ieoh_jian_num_weapons> weights
     (
@@ -1561,9 +1561,13 @@ static item_def ieoh_jian_choose_weapon()
              || ((hands_reqd(&you, OBJ_WEAPONS, (weapon_type)_ieoh_jian_weapon_types[i]) == HANDS_TWO) && you.shield()))
                 weights[i] = 0;
 
-    item_def weapon;
     weapon.base_type = OBJ_WEAPONS;
-    weapon.sub_type = _ieoh_jian_weapon_types[random_choose_weighted(weights)];
+    int index = random_choose_weighted(weights);
+
+    if ((index < 0) || (index >= _ieoh_jian_num_weapons))
+        return false; // No valid weapons.
+
+    weapon.sub_type = _ieoh_jian_weapon_types[index];
     weapon.quantity = 1;
 
     // From 0 to 9, piety based, with some variance.
@@ -1593,7 +1597,7 @@ static item_def ieoh_jian_choose_weapon()
 
     set_ident_type(weapon, true);
 
-    return weapon;
+    return true;
 }
 
 // Keeps Ieoh Jian interested and returns TRUE if they'd be fine with spawning a new weapon.
@@ -1665,12 +1669,15 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     if (!ieoh_jian_interest())
         return;
 
+    item_def wpn;
+    if (!ieoh_jian_choose_weapon(wpn))
+        return;
+
     auto manifested = find_ieoh_jian_manifested_weapons(false);
     auto theirs_num = manifested.size();
     auto yours = find_ieoh_jian_manifested_weapons(true);
     manifested.insert(manifested.end(), yours.begin(), yours.end());
 
-    item_def wpn = ieoh_jian_choose_weapon();
     wpn.props[IEOH_JIAN_SLOT] = (int)(theirs_num + 1);
 
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
