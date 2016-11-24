@@ -7202,9 +7202,9 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     for (auto& bolt: weapon_bolts)
     {
         if (bolt.item->props.exists(IEOH_JIAN_SLOT))
-            mprf(MSGCH_GOD,"%s flies violently to the target and shatters!", bolt.item->name(DESC_THE, false, true).c_str());
+            mprf("%s flies violently to the target and shatters!", bolt.item->name(DESC_THE, false, true).c_str());
         else
-            mprf(MSGCH_GOD,"%s flies violently to the target!", bolt.item->name(DESC_YOUR, false, true).c_str());
+            mprf("%s flies violently to the target!", bolt.item->name(DESC_YOUR, false, true).c_str());
 
         bolt.fire();
         viewwindow();
@@ -7346,7 +7346,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
-    mprf(MSGCH_GOD,"You project %s.", item.name(DESC_THE, false, true).c_str());
+    mprf("You project %s.", item.name(DESC_THE, false, true).c_str());
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;

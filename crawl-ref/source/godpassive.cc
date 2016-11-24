@@ -1640,9 +1640,9 @@ void ieoh_jian_despawn_weapon()
         monster->ieoh_jian_swap_weapon_with_player(true);
 
         if (you.weapon())
-            mprf(MSGCH_GOD, "%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            mprf("%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
         else
-            mprf(MSGCH_GOD, "%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true).c_str());
+            mprf("%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true).c_str());
 
         if (monster->alive())
             monster_die(monster, KILL_RESET, NON_MONSTER);
@@ -1701,7 +1701,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     }
 
     you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 1.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
-    mprf(MSGCH_GOD, "%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
+    mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 
 static bool _dont_attack_martial(const monster* mons)
