@@ -2916,8 +2916,8 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    // Hack to evade mottled draconians
-                    // TODO: Please clean up once save compatibility is broken.
+#ifdef TAG_MAJOR_VERSION == 34
+                    // Hack to evade mottled draconians.
                     do
                     {
                         you.species = static_cast<species_type>(
@@ -2925,6 +2925,12 @@ void level_change(bool skip_attribute_increase)
                                                     SP_LAST_NONBASE_DRACONIAN));
                     }
                     while (you.species == SP_MOTTLED_DRACONIAN);
+#endif
+#ifdef TAG_MAJOR_VERSION > 34
+                    you.species = static_cast<species_type>(
+                                       random_range(SP_FIRST_NONBASE_DRACONIAN,
+                                                    SP_LAST_NONBASE_DRACONIAN));
+#endif
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
