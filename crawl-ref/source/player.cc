@@ -2916,7 +2916,7 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-#ifdef TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION == 34
                     // Hack to evade mottled draconians.
                     do
                     {
@@ -2926,7 +2926,7 @@ void level_change(bool skip_attribute_increase)
                     }
                     while (you.species == SP_MOTTLED_DRACONIAN);
 #endif
-#ifdef TAG_MAJOR_VERSION > 34
+#if TAG_MAJOR_VERSION > 34
                     you.species = static_cast<species_type>(
                                        random_range(SP_FIRST_NONBASE_DRACONIAN,
                                                     SP_LAST_NONBASE_DRACONIAN));
