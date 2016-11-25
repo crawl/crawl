@@ -7241,7 +7241,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         check_place_cloud(CLOUD_DUST, thr.target, 2 + random2(3) , &you, random2(3), -1);
     }
 
-    int liquify_dice = 4 * number_of_impacts;
+    int liquify_dice = number_of_impacts * (4 + div_rand_round(you.skill(SK_INVOCATIONS,1,false),8)) ;
 
     if (mons->has_ench(ENCH_PARALYSIS))
         liquify_dice *= 4;
@@ -7385,7 +7385,9 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     int duration = IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
     dprf("activating IJC flying weapon for combat with duration %d", duration); 
     mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, duration);
-    mons->add_ench(combat_active);
+
+    if (mons)
+        mons->add_ench(combat_active);
 
     dec_inv_item_quantity(weapon_index, 1, true);
     canned_msg(MSG_EMPTY_HANDED_NOW);

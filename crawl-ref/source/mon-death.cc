@@ -2141,6 +2141,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
         bool reformed = false;
+        bool was_active = mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
         if (killer == KILL_RESET)
         {
             if (you.can_see(*mons) && !silent && mons->weapon() && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
@@ -2169,10 +2170,20 @@ item_def* monster_die(monster* mons, killer_type killer,
                          GOD_IEOH_JIAN);
             mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
             mg.props[IEOH_JIAN_POWER] = 1;
-            if (!create_monster(mg))
+            auto new_mons = create_monster(mg); 
+            if (!new_mons)
                 dprf("Failed to reform Ieoh Jian weapon");
             else
+            {
                 reformed = true;
+                if (was_active)
+                {
+                    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
+                    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
+                    new_mons->add_ench(combat_active);
+                }
+            }
+
         }
 
         if (!silent)
