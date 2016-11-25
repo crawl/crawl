@@ -631,7 +631,7 @@ static const ability_def Ability_List[] =
     { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
         1, 0, 30, 0, {FAIL_INVO, 20, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_DRAGONFLY, "Steel Dragonfly Technique",
-        5, 0, 120, 8, {FAIL_INVO, 40, 5, 20}, abflag::NONE },
+        5, 0, 120, 8, {FAIL_INVO, 45, 5, 20}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3081,6 +3081,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_IEOH_JIAN_PROJECT_WEAPON:
+        fail_check();
         if (!you.weapon())
         {
             canned_msg(MSG_NOTHING_CARRIED);
@@ -3092,6 +3093,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         break;
     case ABIL_IEOH_JIAN_RECALL_WEAPON:
+        fail_check();
         if (!ieoh_jian_recall_weapon())
         {
             canned_msg(MSG_NOTHING_THERE);
@@ -3100,6 +3102,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_IEOH_JIAN_DRAGONFLY:
+        fail_check();
         if (!ieoh_jian_steel_dragonfly(beam))
         {
             return SPRET_ABORT;
