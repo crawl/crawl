@@ -293,7 +293,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     // Ieoh Jian
     {
         { 0, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
-        { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks. Different weapons allow for different maneuvers, read your weapon description!" },
+        { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks. read your weapon description for details" },
         { 4, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
     },
 };
@@ -1436,7 +1436,7 @@ static int _weight_by_tier(int tier)
     return weight;
 }
 
-static const int _ieoh_jian_num_weapons = 35;
+static const int _ieoh_jian_num_weapons = 34;
 
 static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
 (
@@ -1454,7 +1454,6 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
 
     // SB
     WPN_DAGGER,
-    WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
     WPN_RAPIER,
 
@@ -1511,10 +1510,9 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
         2 * _weight_by_tier(2),//WPN_GIANT_SPIKED_CLUB,
 
         //// SB
-        2 * _weight_by_tier(0),//WPN_DAGGER,
-        2 * _weight_by_tier(1) + 3 * _weight_by_tier(2),//WPN_QUICK_BLADE,
+        2 * _weight_by_tier(0) + 2 * _weight_by_tier(1),//WPN_DAGGER,
         2 * _weight_by_tier(0),//WPN_SHORT_SWORD,
-        2 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_RAPIER,
+        2 * _weight_by_tier(1) + 4 * _weight_by_tier(2),//WPN_RAPIER,
 
         //// LB
         2 * _weight_by_tier(0),//WPN_FALCHION,
