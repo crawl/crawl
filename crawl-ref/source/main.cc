@@ -3557,7 +3557,7 @@ static void _move_player(coord_def move)
     }
 
     // Ieoh Jian's lunge and whirlwind, as well as weapon swapping on move.
-    if (have_passive(passive_t::martial_weapon_mastery) && !attacking)
+    if (you_worship(GOD_IEOH_JIAN) && !attacking)
         ieoh_jian_trigger_martial_arts(initial_position);
 }
 

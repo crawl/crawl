@@ -1814,7 +1814,8 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 {
     // We perform martial attacks with the weapon we had before potentially swapping for another
     vector<monster*> banlist;
-    banlist = _ieoh_jian_perform_martial_attacks(old_pos, banlist);
+    if (have_passive(passive_t::martial_weapon_mastery))
+        banlist = _ieoh_jian_perform_martial_attacks(old_pos, banlist);
     sort(banlist.begin(), banlist.end());
     auto swapped_monster = monster_at(old_pos);
 
@@ -1822,7 +1823,8 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
     if (swapped_monster && swapped_monster->alive() && swapped_monster->type == MONS_IEOH_JIAN_WEAPON)
     {
         swapped_monster->ieoh_jian_swap_weapon_with_player();
-        _ieoh_jian_perform_martial_attacks(old_pos, banlist);
+        if (have_passive(passive_t::martial_weapon_mastery))
+            _ieoh_jian_perform_martial_attacks(old_pos, banlist);
     }
 }
 

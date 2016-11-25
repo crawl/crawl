@@ -4081,12 +4081,6 @@ void handle_god_time(int /*time_delta*/)
                     mprf(MSGCH_GOD, "The council finds your abuse of %s disgraceful!", you.weapon()->name(DESC_THE).c_str());
                     lose_piety(3);
                 }
-
-                if (you.shield())
-                {
-                    mprf(MSGCH_GOD, "You should stop hiding behind %s, mortal!", you.shield()->name(DESC_THE).c_str());
-                    lose_piety(1);
-                }
             }
             break;
 
