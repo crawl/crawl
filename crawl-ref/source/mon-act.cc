@@ -3887,10 +3887,18 @@ static bool _monster_move(monster* mons)
             }
             else
             {
-                fight_melee(mons, targ);
-                ret = true;
+                if (mons->type != MONS_IEOH_JIAN_WEAPON || mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
+                {
+                    fight_melee(mons, targ);
+                    ret = true;
+                }
+                else
+                {
+                    coord_def new_location;
+                    if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
+                        mons->move_to_pos(new_location);
+                }
             }
-
             // If the monster swapped places, the work's already done.
             mmov.reset();
         }

@@ -333,7 +333,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 0, "manifest and wield flying weapons",
            "no longer manifest flying weapons"},
       { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
-      { 2, "perform different acrobatic attacks. Read your weapon description for details!",
+      { 2, "perform different acrobatic attacks. Read your weapon description!",
            "no longer perform acrobatic attacks" },
       { 3, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
       { 4, "hit pressure points as you attack while moving",
