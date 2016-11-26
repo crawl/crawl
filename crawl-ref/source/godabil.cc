@@ -7220,18 +7220,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         }
         else
         {
-            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                         BEH_FRIENDLY,
-                         pbolt.target,
-                         MHITYOU,
-                         MG_FORCE_BEH | MG_FORCE_PLACE,
-                         GOD_IEOH_JIAN);
-
-            int power = ieoh_jian_calc_power_for_weapon((weapon_type) monster->weapon()->sub_type);
-            mg.props[IEOH_JIAN_WEAPON] = *(monster->weapon());
-            mg.props[IEOH_JIAN_POWER] = power;
-
-            if (!create_monster(mg))
+            if (ieoh_jian_manifest_weapon_monster(pbolt.target, *(monster->weapon())))
                 dprf("Failed to animate Ieoh Jian weapon");
 
             monster->destroy_inventory();
@@ -7367,30 +7356,22 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     alert_nearby_monsters();
 
     you.turn_is_over = false;
-    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                 BEH_FRIENDLY,
-                 pbolt.target,
-                 MHITYOU,
-                 MG_FORCE_BEH | MG_FORCE_PLACE,
-                 GOD_IEOH_JIAN);
-
-    int power = ieoh_jian_calc_power_for_weapon((weapon_type) summoned_copy.sub_type);
-    mg.props[IEOH_JIAN_WEAPON] = summoned_copy;
-    mg.props[IEOH_JIAN_POWER] = power;
-
-    monster * const mons = create_monster(mg);
+    
+    monster* mons = ieoh_jian_manifest_weapon_monster(pbolt.target, summoned_copy);
 
     if (!mons)
         dprf("Failed to animate Ieoh Jian weapon");
+    else
+    {
+        // Activates the flying weapon to attack for a while.
+        float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
+        int duration = IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
+        dprf("activating IJC flying weapon for combat with duration %d", duration); 
+        mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, duration);
 
-    // Activates the flying weapon to attack for a while.
-    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-    int duration = IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
-    dprf("activating IJC flying weapon for combat with duration %d", duration); 
-    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, duration);
-
-    if (mons)
-        mons->add_ench(combat_active);
+        if (mons)
+            mons->add_ench(combat_active);
+    }
 
     dec_inv_item_quantity(weapon_index, 1, true);
     canned_msg(MSG_EMPTY_HANDED_NOW);

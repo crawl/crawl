@@ -1361,27 +1361,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     calc_mp();
 }
 
-static void _manifest_as_ieoh_jian_weapon(item_def& wpn)
-{
-    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                 BEH_FRIENDLY,
-                 you.pos(),
-                 MHITYOU,
-                 MG_FORCE_BEH | MG_FORCE_PLACE,
-                 GOD_IEOH_JIAN);
-    mg.props[IEOH_JIAN_WEAPON] = wpn;
-
-    int power = ieoh_jian_calc_power_for_weapon((weapon_type) wpn.sub_type);
-    mg.props[IEOH_JIAN_POWER] = power;
-
-    monster * const mons = create_monster(mg);
-
-    if (!mons)
-        dprf("Failed to animate Ieoh Jian weapon");
-    else
-        mprf(MSGCH_GOD, "%s flies away from your hand!", wpn.name(DESC_THE, false, true).c_str());
-}
-
 bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
 {
     if (!you.weapon())
@@ -1412,7 +1391,8 @@ bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
     {
         // The weapon belongs to the IJC so you can't stash it away.
         // Instead, it is animated beside you.
-        _manifest_as_ieoh_jian_weapon(item);
+        if(ieoh_jian_manifest_weapon_monster(you.pos(), item))
+            mprf(MSGCH_GOD, "%s flies away from you!", item.name(DESC_THE, false, true).c_str());
         dec_inv_item_quantity(inventory_slot, 1);
     }
 

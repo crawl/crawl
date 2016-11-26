@@ -2159,18 +2159,11 @@ item_def* monster_die(monster* mons, killer_type killer,
         }
         else
         {
+            // If the kill wasn't divine, the weapon is immediately reformed in LOS.
             coord_def reform_location;
             random_near_space(mons, mons->pos(), reform_location, true, false, true);
-            // If the kill wasn't divine, the weapon is immediately reformed in LOS.
-            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                         BEH_FRIENDLY,
-                         reform_location,
-                         MHITYOU,
-                         MG_FORCE_BEH,
-                         GOD_IEOH_JIAN);
-            mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
-            mg.props[IEOH_JIAN_POWER] = 1;
-            auto new_mons = create_monster(mg); 
+            monster* new_mons = ieoh_jian_manifest_weapon_monster(reform_location, *(mons->weapon()));
+
             if (!new_mons)
                 dprf("Failed to reform Ieoh Jian weapon");
             else

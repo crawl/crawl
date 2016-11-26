@@ -289,6 +289,8 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
+
+monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon);
 int ieoh_jian_calc_power_for_weapon(weapon_type);
 void ieoh_jian_spawn_weapon(const coord_def& position);
 void ieoh_jian_despawn_weapon();
@@ -296,7 +298,6 @@ bool ieoh_jian_interest();
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);
 bool ieoh_jian_can_pole_vault(const coord_def& target);
 void ieoh_jian_pole_vault_effects();
-
 vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you);
 
 #endif

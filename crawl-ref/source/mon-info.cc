@@ -198,6 +198,8 @@ static bool _is_public_key(string key)
      || key == MON_GENDER_KEY
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
+     || key == IEOH_JIAN_WEAPON_NAME_KEY
+     || key == IEOH_JIAN_WEAPON_DESC_KEY
      || key == VAULT_HD_KEY )
     {
         return true;

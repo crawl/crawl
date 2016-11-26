@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <sstream>
 
 #include "artefact.h"
 #include "art-enum.h"
@@ -1690,6 +1691,25 @@ void ieoh_jian_despawn_weapon()
     you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
 }
 
+monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)
+{
+    if (!in_bounds(position))
+        return nullptr;
+
+    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                 BEH_FRIENDLY,
+                 position,
+                 MHITYOU,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
+                 GOD_IEOH_JIAN);
+    mg.props[IEOH_JIAN_WEAPON] = weapon;
+
+    int power = ieoh_jian_calc_power_for_weapon((weapon_type) weapon.sub_type);
+    mg.props[IEOH_JIAN_POWER] = power;
+
+    return create_monster(mg);
+}
+
 void ieoh_jian_spawn_weapon(const coord_def& position)
 {
     // We check if the ICJ is interested in helping by sending more weapons. 
@@ -1707,18 +1727,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
 
     wpn.props[IEOH_JIAN_SLOT] = (int)(theirs_num + 1);
 
-    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                 BEH_FRIENDLY,
-                 position,
-                 MHITYOU,
-                 MG_FORCE_BEH | MG_FORCE_PLACE,
-                 GOD_IEOH_JIAN);
-    mg.props[IEOH_JIAN_WEAPON] = wpn;
-
-    int power = ieoh_jian_calc_power_for_weapon((weapon_type) wpn.sub_type);
-    mg.props[IEOH_JIAN_POWER] = power;
-
-    monster * const mons = create_monster(mg);
+    const monster* mons = ieoh_jian_manifest_weapon_monster(position, wpn);
 
     if (!mons)
     {
