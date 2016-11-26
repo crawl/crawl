@@ -663,7 +663,11 @@ monster_info::monster_info(const monster* m, int milev)
         props[SPELL_HD_KEY] = spellhd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
         attack[i] = mons_attack_spec(*m, i, true);
+        if (m->has_hydra_multi_attack())
+            break; // hydra attacks get multiplied by heads as a special case
+    }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
