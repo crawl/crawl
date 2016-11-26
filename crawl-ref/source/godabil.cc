@@ -7254,6 +7254,9 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         mons->hurt(&you, dice_def(liquify_dice, mons->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
     }
 
+    // The backoff is cleared so you can quickly climb back from lost weapons (Dragonfly functions as a quick cycle).
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
+
     return true;
 }
 
