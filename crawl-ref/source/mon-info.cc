@@ -664,9 +664,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        attack[i] = mons_attack_spec(*m, i, true);
-        if (m->has_hydra_multi_attack())
-            break; // hydra attacks get multiplied by heads as a special case
+        // hydras are a mess!
+        const int atk_index = m->has_hydra_multi_attack() ? 0 : i;
+        attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)

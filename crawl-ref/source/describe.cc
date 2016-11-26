@@ -3044,7 +3044,7 @@ static string _flavour_effect(attack_flavour flavour, int HD)
     if (!flavour_triggers_damageless(flavour)
         && flavour != AF_KITE && flavour != AF_SWOOP)
     {
-        return " and, after penetrating armour, " + flavour_desc;
+        return " and, if it beats armour, " + flavour_desc;
     }
 
     return " and " + flavour_desc;
@@ -3103,7 +3103,7 @@ static string _monster_attacks_description(const monster_info& mi)
     // XXX: hack alert
     if (mons_genus(mi.base_type) == MONS_HYDRA)
     {
-        ASSERT(attack_counts.size() == 1);
+        //ASSERT(attack_counts.size() == 1);
         for (auto &attack_count : attack_counts)
             attack_count.second = mi.num_heads;
     }
@@ -3142,7 +3142,7 @@ static string _monster_attacks_description(const monster_info& mi)
                          attack.damage,
                          weapon_note.c_str(),
                          _flavour_effect(attack.flavour, mi.hd).c_str(),
-                         attack_count.second > 1 ? " each" : ""));
+                         attack_count.second > 1 ? " each time" : ""));
     }
 
 
