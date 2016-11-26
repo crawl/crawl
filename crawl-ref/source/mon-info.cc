@@ -397,7 +397,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         attack[i] = get_monster_data(type)->attack[i];
 
     props.clear();
-    ieoh_jian_weapon_ref = nullptr;
 
     // At least enough to keep from crashing. TODO: allow specifying these?
     if (type == MONS_MUTANT_BEAST)
@@ -438,7 +437,7 @@ monster_info::monster_info(const monster* m, int milev)
                 props[entry.first] = entry.second;
     }
 
-    ieoh_jian_weapon_ref = (m->type == MONS_IEOH_JIAN_WEAPON) ? m->weapon() : nullptr;
+    ieoh_jian_weapon_name = (m->type == MONS_IEOH_JIAN_WEAPON && m->weapon()) ? m->weapon()->name(DESC_PLAIN, false, true) : "";
 
     // Translate references to tentacles into just their locations
     if (mons_is_tentacle_or_tentacle_segment(type))
@@ -866,8 +865,8 @@ string monster_info::_core_name() const
         s = "Lernaean hydra"; // TODO: put this into mon-data.h
     else if (nametype == MONS_ROYAL_JELLY)
         s = "Royal Jelly";
-    else if (nametype == MONS_IEOH_JIAN_WEAPON && ieoh_jian_weapon_ref)
-        s = ieoh_jian_weapon_ref->name(DESC_PLAIN, false, true);
+    else if (nametype == MONS_IEOH_JIAN_WEAPON && !ieoh_jian_weapon_name.empty())
+        s = ieoh_jian_weapon_name;
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
