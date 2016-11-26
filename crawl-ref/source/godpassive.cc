@@ -1436,7 +1436,7 @@ static int _weight_by_tier(int tier)
     return weight;
 }
 
-static const int _ieoh_jian_num_weapons = 34;
+static const int _ieoh_jian_num_weapons = 35;
 
 static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
 (
@@ -1455,6 +1455,7 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     // SB
     WPN_DAGGER,
     WPN_SHORT_SWORD,
+    WPN_QUICK_BLADE,
     WPN_RAPIER,
 
     // LB
@@ -1512,7 +1513,8 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
         //// SB
         2 * _weight_by_tier(0) + 2 * _weight_by_tier(1),//WPN_DAGGER,
         2 * _weight_by_tier(0),//WPN_SHORT_SWORD,
-        2 * _weight_by_tier(1) + 4 * _weight_by_tier(2),//WPN_RAPIER,
+        _weight_by_tier(1) + 3 * _weight_by_tier(4),//WPN_QUICK_BLADE,
+        1 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_RAPIER,
 
         //// LB
         2 * _weight_by_tier(0),//WPN_FALCHION,
@@ -1574,14 +1576,16 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
     weapon.sub_type = _ieoh_jian_weapon_types[index];
     weapon.quantity = 1;
 
-    // From 0 to 13, piety and invo based, with some variance.
-    weapon.plus = piety_rank(you.piety) + random2(3) + div_rand_round(you.skill(SK_INVOCATIONS, 1, true), 7);
+    // Piety and invo based, with some variance.
+    weapon.plus = piety_rank(you.piety) 
+                  + random2(2 + div_rand_round(you.skill(SK_INVOCATIONS,1, false),10))
+                  + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 10);
 
     FixedVector<int, 3> brand_weights
     (
         _weight_by_tier(0), // No brand
         _weight_by_tier(1), // vorpal
-        _weight_by_tier(2) // speed
+        _weight_by_tier(2)  // flaming, elec and speed. 
     );
 
     switch (random_choose_weighted(brand_weights))
@@ -1593,9 +1597,28 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
             weapon.brand = SPWPN_VORPAL;
             break;
         case 2:
-            weapon.brand = SPWPN_SPEED;
+            // At higher ranks, a brand for each of the god's colours (gray, red and gold)
+            switch (weapon_attack_skill((weapon_type)weapon.sub_type))
+            {
+                case SK_STAVES:
+                case SK_MACES_FLAILS:
+                    weapon.brand = SPWPN_SPEED; 
+                    break;
+                case SK_LONG_BLADES:
+                case SK_AXES:
+                    weapon.brand = SPWPN_FLAMING;
+                    break;
+                case SK_SHORT_BLADES:
+                case SK_POLEARMS:
+                    weapon.brand = SPWPN_ELECTROCUTION;
+                    break;
+                default:
+                    weapon.brand = SPWPN_NORMAL;
+                    break;
+            }
             break;
         default:
+            weapon.brand = SPWPN_NORMAL;
             break;
     }
 
