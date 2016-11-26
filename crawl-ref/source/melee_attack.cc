@@ -576,10 +576,26 @@ void melee_attack::player_strike_pressure_points(monster* mons)
     if (!you.weapon())
         return;
 
-    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
     int paralysis_chance = 4;
+
+    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
     paralysis_chance *= power;
-    paralysis_chance /= (2*mons->get_hit_dice());
+
+    switch (weapon_attack_skill(you.weapon()->sub_type))
+    {
+        case SK_STAVES: // Pole Vault is slightly more effective at hitting PP.
+        case SK_POLEARMS:
+            paralysis_chance = div_rand_round(paralysis_chance * 13, 10);
+            break;
+        case SK_AXES:  // Lunge is substantially more effective.
+        case SK_SHORT_BLADES:
+            paralysis_chance *= 2;
+            break;
+        default:      // Whirlwind does not get a bonus.
+            break;
+    }
+
+    paralysis_chance = div_rand_round(paralysis_chance, 2*mons->get_hit_dice());
     int slow_chance = 2 * paralysis_chance;
 
     dprf("Pressure point strike, %d%% chance to paralyse if slowed (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
@@ -3435,6 +3451,7 @@ static int _apply_momentum(int dam)
 // Martial strikes get modified by momentum and maneuver specific damage mods.
 int melee_attack::martial_damage_mod(int dam)
 {
+    int original_dam = dam;
     ASSERT(have_passive(passive_t::martial_weapon_mastery));
     ASSERT(you.weapon());
 
@@ -3445,6 +3462,7 @@ int melee_attack::martial_damage_mod(int dam)
     if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
         dam = div_rand_round(dam * 15, 10);
 
+    dprf("Martial damage modifier, from %d to %d", original_dam, dam);
     return dam;
 }
 
