@@ -1800,7 +1800,8 @@ static int _downscale_zombie_damage(int damage)
 }
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
-                                               mon_attack_def attk)
+                                               mon_attack_def attk,
+                                               bool random)
 {
     switch (attk.type)
     {
@@ -1814,7 +1815,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
 
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons.type == MONS_SPECTRAL_THING && coinflip())
+    else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
         attk.flavour = AF_DRAIN_XP;
     else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
@@ -1914,7 +1915,8 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
  *                     random flavours.
  * @return  A mon_attack_def for the specified attack.
  */
-mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_flavour)
+mon_attack_def mons_attack_spec(const monster& m, int attk_number,
+                                bool base_flavour)
 {
     monster_type mc = m.type;
 
@@ -2012,7 +2014,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_fla
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         attk.damage *= mon.blob_size;
 
-    return zombified ? _downscale_zombie_attack(mon, attk) : attk;
+    return zombified ? _downscale_zombie_attack(mon, attk, !base_flavour) : attk;
 }
 
 static int _mons_damage(monster_type mc, int rt)
