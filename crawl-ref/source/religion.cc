@@ -2979,7 +2979,8 @@ static bool _transformed_player_can_join_god(god_type which_god)
         return false; // zin hates everything
     // all these clauses are written with a ! in front of them, so that
     // the stuff to the right of that is uniformly "gods that hate this form"
-    switch (you.form) {
+    switch (you.form)
+    {
     case TRAN_LICH:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
     case TRAN_STATUE:
@@ -3654,12 +3655,6 @@ void god_pitch(god_type which_god)
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
-        }
-        else if (player_mutation_level(MUT_NO_ARTIFICE)
-                 && which_god == GOD_NEMELEX_XOBEH)
-        {
-            simple_god_message(" does not accept worship from those who cannot "
-                              "deal a hand of cards!", which_god);
         }
         else if (player_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_PAKELLAS)
