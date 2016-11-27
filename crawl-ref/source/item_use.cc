@@ -505,6 +505,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return true;
     }
 
+    if (!item_is_wieldable(you.inv[item_slot]))
+    {
+        mpr("Why would you want to wield that?");
+        return false;
+    }
+
+
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
