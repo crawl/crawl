@@ -469,8 +469,7 @@ god_iterator god_iterator::operator++(int)
 
 bool active_penance(god_type god)
 {
-    // Nemelex's penance is only active when the penance counter is above 100;
-    // good gods only have active wrath when they hate your current god.
+    // Good gods only have active wrath when they hate your current god.
     return player_under_penance(god)
            && !is_unavailable_god(god)
            && god != GOD_ASHENZARI
@@ -478,7 +477,6 @@ bool active_penance(god_type god)
            && god != GOD_RU
            && god != GOD_HEPLIAKLQANA
            && god != GOD_PAKELLAS
-           && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
 }
@@ -589,15 +587,6 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, god, "Your full life essence returns.");
             }
         }
-    }
-    else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
-    { // Nemelex's penance works actively only until 100
-        if ((you.penance[god] -= val) > 100)
-            return;
-        mark_milestone("god.mollify",
-                       "partially mollified " + god_name(god) + ".");
-        simple_god_message(" seems mollified... mostly.", god);
-        take_note(Note(NOTE_MOLLIFY_GOD, god));
     }
     else
     {
@@ -2675,7 +2664,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (query_daction_counter(DACT_ALLY_YRED_SLAVE))
         {
             simple_god_message(" reclaims all of your granted undead slaves!",
-                               GOD_YREDELEMNUL);
+                               old_god);
             add_daction(DACT_ALLY_YRED_SLAVE);
             remove_all_companions(GOD_YREDELEMNUL);
         }
@@ -2704,7 +2693,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (query_daction_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
-                               "are?\"", GOD_BEOGH);
+                               "are?\"", old_god);
             mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
             add_daction(DACT_ALLY_BEOGH);
             remove_all_companions(GOD_BEOGH);
@@ -2724,8 +2713,10 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_NEMELEX_XOBEH:
-        nemelex_shuffle_decks();
-        _set_penance(old_god, 150); // Nemelex penance is special
+        nemelex_reclaim_decks();
+        mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
+             god_name(old_god).c_str());
+        _set_penance(old_god, 50);
         break;
 
     case GOD_LUGONU:

@@ -148,7 +148,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Nemelex
     {
-        {  0, passive_t::cards_power, "cards are more powerful" }
+        // None
     },
 
     // Elyvilon
