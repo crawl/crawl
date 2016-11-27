@@ -48,7 +48,7 @@ static const char *daction_names[] =
 #endif
     "holy beings go neutral",
     "Trog's gifts go hostile",
-    "shuffle decks",
+    "reclaim decks",
     "reapply passive mapping",
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
@@ -292,8 +292,8 @@ static void _apply_daction(daction_type act)
         }
         break;
 
-    case DACT_SHUFFLE_DECKS:
-        shuffle_all_decks_on_level();
+    case DACT_RECLAIM_DECKS:
+        reclaim_decks_on_level();
         break;
     case DACT_REAUTOMAP:
         reautomap_level();
