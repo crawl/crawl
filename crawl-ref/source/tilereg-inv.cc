@@ -429,12 +429,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                if (item.sub_type >= MISC_FIRST_DECK
-                    && item.sub_type <= MISC_LAST_DECK)
-                {
-                    _handle_wield_tip(tmp, cmd);
-                    break;
-                }
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
