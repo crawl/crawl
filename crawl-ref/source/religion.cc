@@ -3664,8 +3664,8 @@ void god_pitch(god_type which_god)
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
-            simple_god_message(" says: How dare you come in such a loathsome"
-                               " form!",
+            simple_god_message(" says: How dare you approach in such a "
+                               "loathsome form!",
                                which_god);
         }
         else
