@@ -2210,7 +2210,7 @@ DEPTH:  D:2-9
 TAGS:   temple_overflow_1 temple_overflow_uskayaw
 KFEAT:  _ = altar_uskayaw
 ITEM:   any potion q:1, any weapon
-ITEM:   fruit q:3 / fruit q:2 / pizza q:1 / royal jelly q:1
+ITEM:   fruit q:3 / fruit q:2 / slice of pizza q:1 / royal jelly q:1
 MAP
 ...........
 .G.......G.
