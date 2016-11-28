@@ -3512,8 +3512,8 @@ static void _join_pakellas()
 // Setup when becoming an Ieoh Jian ninja
 static void _join_ieoh_jian()
 {
-    if (you.shield())
-        mprf(MSGCH_GOD, "A shield? That cowardly tool is undeserving of our respect. Lose it or our help will be diminished.");
+    if (you.shield() && you.species != SP_FORMICID)
+        mprf(MSGCH_GOD, "A shield? That cowardly tool is undeserving of our respect. We don't oppose it, but our help will be diminished.");
 
     if (you.weapon() && is_range_weapon(*(you.weapon())))
         mprf(MSGCH_GOD, "A ranged weapon? Pathetic! Forfeit it at once.");

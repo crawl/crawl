@@ -1710,10 +1710,98 @@ static bool _choose_hostile_monster(const monster& mon)
     return mon.attitude == ATT_HOSTILE;
 }
 
+enum _ijc_pattern {
+    PATTERN_SHORT_CIRCLE,
+    PATTERN_LONG_CIRCLE,
+    PATTERN_CHECKERBOARD,
+};
+
+// They aren't actually IJC weapons; that would cause a LOT of mechanical trouble.
+// They're normal dancing weapons branded in the vein of IJC.
+static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_pattern pattern)
+{
+    vector<coord_def> positions;
+
+    switch (pattern) {
+        case PATTERN_SHORT_CIRCLE:
+            positions.push_back(you.pos() + coord_def(1,0));
+            positions.push_back(you.pos() + coord_def(-1,0));
+            positions.push_back(you.pos() + coord_def(0,1));
+            positions.push_back(you.pos() + coord_def(0,-1));
+            break;
+        case PATTERN_LONG_CIRCLE:
+            positions.push_back(you.pos() + coord_def(2,0));
+            positions.push_back(you.pos() + coord_def(-2,0));
+            positions.push_back(you.pos() + coord_def(0,2));
+            positions.push_back(you.pos() + coord_def(0,-2));
+            break;
+        case PATTERN_CHECKERBOARD:
+            positions.push_back(you.pos() + coord_def(1,1));
+            positions.push_back(you.pos() + coord_def(-1,1));
+            positions.push_back(you.pos() + coord_def(1,-1));
+            positions.push_back(you.pos() + coord_def(-1,-1));
+    }
+
+    for (auto& position : positions)
+    {
+        mgen_data mg = mgen_data::hostile_at(MONS_DANCING_WEAPON, true, position)
+                        .set_summoned(nullptr, 0, 0, GOD_IEOH_JIAN)
+                        .set_non_actor_summoner(_god_wrath_name(GOD_IEOH_JIAN));
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        mg.flags |= MG_FORCE_PLACE;
+        // Now create monster.
+        if (monster *mon =
+            create_monster(mg))
+        {
+            ASSERT(mon->weapon() != nullptr);
+            item_def& wpn(*mon->weapon());
+
+            switch (weapon_attack_skill(subtype))
+            {
+                case SK_SHORT_BLADES: 
+                case SK_POLEARMS:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+                    break;
+                case SK_AXES:
+                case SK_LONG_BLADES:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_FLAMING);
+                    break;
+                default:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
+                    break;
+            }
+
+            wpn.plus  = random2(3);
+            wpn.sub_type = subtype;
+
+            set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+
+            item_colour(wpn);
+
+            ghost_demon newstats;
+            newstats.init_dancing_weapon(wpn,
+                                         you.experience_level * 50 / 9);
+
+            mon->set_ghost(newstats);
+            mon->ghost_demon_init();
+        }
+    }
+}
 
 static bool _ieoh_jian_retribution()
 {
-    simple_god_message(" stare at you angrily (retribution not yet implemented, sorry!)");
+    switch(random2(1))
+    {
+        case 0:
+            simple_god_message(" whisper: Die a death by a thousand cuts...");
+            mpr("You feel the sudden stab of multiple needles!");
+            _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_CHECKERBOARD);
+            you.set_duration(DUR_BARBS,  random_range(4, 8));
+            break;
+        default: 
+            break;
+    }
+
     return true;
 }
 
