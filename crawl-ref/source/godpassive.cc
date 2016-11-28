@@ -1410,25 +1410,24 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
     return monsters;
 }
 
-// Gives weights to Ieoh Jian weapons and brands based on an arbitrary tier, the player level and piety.
+// Gives weights to Ieoh Jian weapons and brands based on an piety and invocations.
 //
 // The chance to manifest certain "tiers" of weapons and brands keeps changing as you increase in level and 
 // piety. Tiers overlap to some extent until you end up only receiving weapons and brands from the highest tier.
 static int _weight_by_tier(int tier)
 {
-    int level = you.get_experience_level();
-    int effective_level = level + 2 * piety_rank(you.piety); // up to 39
+    int effective_level = you.skill(SK_INVOCATIONS, 1, false) + 4 * piety_rank(you.piety); // up to 51
     int weight = 0;
     switch (tier)
     {
     case 0:
-        weight = max(0, 15 - abs(effective_level - 10));
+        weight = max(0, 20 - abs(effective_level - 5));
         break;
     case 1:
-        weight = max(0, 15 - abs(effective_level - 20));
+        weight = max(0, 20 - abs(effective_level - 25));
         break;
     case 2:
-        weight = max(0, 15 - abs(effective_level - 30));
+        weight = max(0, 20 - abs(effective_level - 45));
         break;
     default:
         break;
@@ -1577,10 +1576,10 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
     weapon.sub_type = _ieoh_jian_weapon_types[index];
     weapon.quantity = 1;
 
-    // Piety and invo based, with some variance.
-    weapon.plus = piety_rank(you.piety) 
-                  + random2(2 + div_rand_round(you.skill(SK_INVOCATIONS,1, false),10))
-                  + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 10);
+    // Piety and invo based, with some variance. Saturates at 9 very late.
+    weapon.plus = min(9, div_rand_round(piety_rank(you.piety), 1.5)
+                         + random2(1 + div_rand_round(you.skill(SK_INVOCATIONS,1, false),9))
+                         + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 9));
 
     FixedVector<int, 3> brand_weights
     (
