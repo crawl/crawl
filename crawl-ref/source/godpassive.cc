@@ -1436,7 +1436,7 @@ static int _weight_by_tier(int tier)
     return weight;
 }
 
-static const int _ieoh_jian_num_weapons = 35;
+static const int _ieoh_jian_num_weapons = 32;
 
 static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
 (
@@ -1448,7 +1448,6 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,
-    WPN_DEMON_WHIP,
     WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,
 
@@ -1463,7 +1462,6 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_LONG_SWORD,
     WPN_SCIMITAR,
     WPN_GREAT_SWORD,
-    WPN_DEMON_BLADE,
     WPN_DOUBLE_SWORD,
     WPN_TRIPLE_SWORD,
 
@@ -1474,7 +1472,6 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_SCYTHE,
     WPN_GLAIVE,
     WPN_BARDICHE,
-    WPN_DEMON_TRIDENT,
 
     // Axes
     WPN_HAND_AXE,
@@ -1504,9 +1501,8 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
         _weight_by_tier(0),//WPN_FLAIL,
         _weight_by_tier(1),//WPN_MORNINGSTAR,
         _weight_by_tier(1),//WPN_DIRE_FLAIL,
-        _weight_by_tier(1),//WPN_EVENINGSTAR,
-        _weight_by_tier(1),//WPN_GREAT_MACE,
-        4 * _weight_by_tier(2),//WPN_DEMON_WHIP,
+        _weight_by_tier(1) + 2 * _weight_by_tier(2),//WPN_EVENINGSTAR,
+        _weight_by_tier(1) + 2 * _weight_by_tier(2),//WPN_GREAT_MACE,
         2 * _weight_by_tier(1),//WPN_GIANT_CLUB,
         2 * _weight_by_tier(2),//WPN_GIANT_SPIKED_CLUB,
 
@@ -1520,8 +1516,7 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
         2 * _weight_by_tier(0),//WPN_FALCHION,
         2 * _weight_by_tier(0),//WPN_LONG_SWORD,
         2 * _weight_by_tier(1),//WPN_SCIMITAR,
-        2 * _weight_by_tier(1),//WPN_GREAT_SWORD,
-        _weight_by_tier(2),//WPN_DEMON_BLADE,
+        2 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_GREAT_SWORD,
         2 * _weight_by_tier(2),//WPN_DOUBLE_SWORD,
         _weight_by_tier(2),//WPN_TRIPLE_SWORD,
 
@@ -1530,9 +1525,8 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
         _weight_by_tier(0),//WPN_TRIDENT,
         _weight_by_tier(0),//WPN_HALBERD,
         _weight_by_tier(0) + _weight_by_tier(1),//WPN_SCYTHE,
-        2 * _weight_by_tier(1),//WPN_GLAIVE,
-        _weight_by_tier(1) + _weight_by_tier(2),//WPN_BARDICHE,
-        3 * _weight_by_tier(2),//WPN_DEMON_TRIDENT,
+        2 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_GLAIVE,
+        _weight_by_tier(1) + 3 * _weight_by_tier(2),//WPN_BARDICHE,
 
         //// Axes
         3 * _weight_by_tier(0),//WPN_HAND_AXE,
