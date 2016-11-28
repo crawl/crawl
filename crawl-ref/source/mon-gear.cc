@@ -636,7 +636,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_MORNINGSTAR, 1 },
                 { WPN_EVENINGSTAR, 1 },
                 { WPN_TRIDENT, 1 },
-                { WPN_DEMON_TRIDENT, 1},
+                { WPN_DEMON_TRIDENT, 1 },
         }, {}, {}, 1 } },
         { MONS_JORY,
             { { { WPN_GREAT_SWORD,      3 },
