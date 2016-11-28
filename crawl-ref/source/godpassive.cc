@@ -1421,13 +1421,13 @@ static int _weight_by_tier(int tier)
     switch (tier)
     {
     case 0:
-        weight = max(0, 20 - abs(effective_level - 5));
+        weight = max(0, 20 - abs(effective_level - 10));
         break;
     case 1:
-        weight = max(0, 20 - abs(effective_level - 25));
+        weight = max(0, 20 - abs(effective_level - 30));
         break;
     case 2:
-        weight = max(0, 20 - abs(effective_level - 45));
+        weight = max(0, 20 - abs(effective_level - 50));
         break;
     default:
         break;
@@ -1571,8 +1571,8 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
     weapon.quantity = 1;
 
     // Piety and invo based, with some variance. Saturates at 9 very late.
-    weapon.plus = min(9, div_rand_round(piety_rank(you.piety), 1.5)
-                         + random2(1 + div_rand_round(you.skill(SK_INVOCATIONS,1, false),9))
+    weapon.plus = min(9, div_rand_round(piety_rank(you.piety), 2)
+                         + random2(2 + div_rand_round(you.skill(SK_INVOCATIONS,1, false),9))
                          + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 9));
 
     FixedVector<int, 3> brand_weights
