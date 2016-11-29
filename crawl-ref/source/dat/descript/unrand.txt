@@ -647,3 +647,39 @@ amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
 %%%%
+divine deer horn knife
+
+An exotic, crescent-shaped blade belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine guan dao
+
+An exotic, heavy polearm belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine chang dao
+
+An exotic, massive sword belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine meteor hammer
+
+An exotic weapon consisting of two steel weights connected by a chain, 
+belonging to the Ieoh Jian Council's finest collection of weapons. It enhances 
+the wielder's momentum, causing the first attack made after moving to deal 
+increased damage.
+%%%%
+divine monk's spade
+
+An exotic bladed staff belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine yue
+
+An exotic, lumbering axe belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
