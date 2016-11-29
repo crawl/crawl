@@ -2880,7 +2880,7 @@ void bolt::affect_place_clouds()
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(feat) && is_fiery())
     {
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent(), 11);
     }
 
     if (feat_is_watery(feat) && flavour == BEAM_COLD
