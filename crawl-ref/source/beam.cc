@@ -4795,6 +4795,8 @@ void bolt::affect_monster(monster* mon)
         {
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
                 mpr("Your demonic guardian avoids your attack.");
+            else if (mon->type == MONS_IEOH_JIAN_WEAPON)
+                mpr("Your animated weapon moves out of the way.");
             else if (!bush_immune(*mon))
             {
                 simple_god_message(

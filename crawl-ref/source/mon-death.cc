@@ -2169,6 +2169,9 @@ item_def* monster_die(monster* mons, killer_type killer,
             else
             {
                 reformed = true;
+                if (you.can_see(*mons) && !silent)
+                    mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true).c_str());
+
                 if (was_active)
                 {
                     float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
