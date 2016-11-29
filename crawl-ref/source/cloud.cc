@@ -484,16 +484,9 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
         dissipate *= 4; // dubious...
     }
 
-    switch (cloud.type)
-    {
-        // Ink cloud shouldn't appear outside of water.
-        case CLOUD_INK:
-            if (!feat_is_watery(grd(cloud.pos)))
-                return cloud.decay;
-            break;
-        default:
-            break;
-    }
+    // Ink cloud shouldn't appear outside of water.
+    if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
+        return cloud.decay;
 
     return dissipate;
 }
