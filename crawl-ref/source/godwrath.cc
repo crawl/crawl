@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
@@ -34,6 +35,7 @@
 #include "mon-poly.h"
 #include "mutation.h"
 #include "notes.h"
+#include "output.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -1716,13 +1718,65 @@ enum _ijc_pattern {
     PATTERN_CHECKERBOARD,
 };
 
+static void _summon_traps_ijc(trap_type type, _ijc_pattern pattern, bool revealed)
+{
+    vector<coord_def> positions;
+    coord_def dir = coord_def(1,0);
+    switch(pattern) 
+    {
+        case PATTERN_SHORT_CIRCLE:
+            for (int i = 0; i < 8; ++i)
+            {
+                positions.push_back(you.pos() + dir);
+                dir = rotate_adjacent(dir, 1);
+            }
+            break;
+        case PATTERN_CHECKERBOARD:
+            for (int x = -3; x < 4; x++)
+                for (int y = -3; y < 4; y++)
+                    if (!((x+y) % 2))
+                        positions.push_back(you.pos() + coord_def(x, y));
+            break;
+        case PATTERN_LONG_CIRCLE:
+            for (int x = -2; x < 3; x++)
+                for (int y = -2; y < 3; y++)
+                    if (you.pos().distance_from(you.pos() + coord_def(x,y)) > 1)
+                        positions.push_back(you.pos() + coord_def(x, y));
+            break;
+        default:
+            break;
+    }
+
+    for (auto& position: positions)
+    {
+        trap_def ts;
+        ts.pos = position;
+        ts.type = type;
+
+        if (!in_bounds(ts.pos)
+            || grd(ts.pos) != DNGN_FLOOR
+            || map_masked(ts.pos, MMT_NO_TRAP))
+        {
+            continue; // Can't place it here.
+        }
+
+        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        if (revealed)
+            ts.reveal();
+        ts.prepare_ammo(5);
+        env.trap[ts.pos] = ts;
+        dprf("placed an IJC trap");
+    }
+}
+
 // They aren't actually IJC weapons; that would cause a LOT of mechanical trouble.
 // They're normal dancing weapons branded in the vein of IJC.
 static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_pattern pattern)
 {
     vector<coord_def> positions;
 
-    switch (pattern) {
+    switch (pattern)
+    {
         case PATTERN_SHORT_CIRCLE:
             positions.push_back(you.pos() + coord_def(1,0));
             positions.push_back(you.pos() + coord_def(-1,0));
@@ -1790,14 +1844,40 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_patter
 
 static bool _ieoh_jian_retribution()
 {
-    switch(random2(1))
+    switch(random2(5))
     {
         case 0:
-            simple_god_message(" whisper: Die a death by a thousand cuts...");
+            simple_god_message(" whisper, \"Die by a thousand cuts...\"");
             mpr("You feel the sudden stab of multiple needles!");
-            _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_CHECKERBOARD);
+            _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_LONG_CIRCLE);
             you.set_duration(DUR_BARBS,  random_range(4, 8));
             break;
+        case 1:
+            simple_god_message(" whisper, \"Nowhere to run...\"");
+            mpr("Your limbs feel heavy!");
+            _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_LONG_CIRCLE);
+            you.set_duration(DUR_SLOW, random_range(4,8));
+            break;
+        case 2:
+            simple_god_message(" whisper, \"Feeling trapped?\"");
+            mpr("You hear multiple clicking sounds nearby!");
+            _summon_hostile_weapons_ijc_flavour(WPN_HALBERD, PATTERN_LONG_CIRCLE);
+            _summon_traps_ijc(TRAP_NET, PATTERN_SHORT_CIRCLE, false);
+            break;
+        case 3:
+            simple_god_message(" whisper, \"Watch your step...\"");
+            mpr("You hear multiple clicking sounds nearby!");
+            _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_SHORT_CIRCLE);
+            _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
+            break;
+        case 4:
+            simple_god_message(" whisper, \"Suffer, mortal...\"");
+            mpr("You feel a burning poison under your skin!");
+            you.corrode_equipment("The poison", 3);
+            lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
+            lose_stat(STAT_DEX, 1 + random2(you.strength() / 8));
+            break;
+
         default: 
             break;
     }
