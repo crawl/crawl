@@ -563,11 +563,9 @@ string zin_recite_text(const int seed, const int prayertype, int step)
                                 (prayertype == RECITE_HERETIC)  ?  "Apostates"    :
                                 (prayertype == RECITE_UNHOLY)   ?  "Anathema"     :
                                                                    "Bugginess";
-        ostringstream numbers;
-        numbers << (chapter + 1);
-        numbers << ":";
-        numbers << (verse + 1);
-        return bookname + " " + numbers.str();
+        ostringstream out;
+        out << bookname << ' ' << (chapter + 1) << ':' << (verse + 1);
+        return out.str();
     }
 
     // These mad-libs are deterministically derived from the verse number
