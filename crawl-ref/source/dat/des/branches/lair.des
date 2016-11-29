@@ -3010,15 +3010,14 @@ ENDMAP
 #
 NAME:    gammafunk_lair_ancient_temple
 PLACE:   Lair:$
-TAGS:    patrolling no_pool_fixup no_monster_gen
+TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  float
-WEIGHT:  5
 KMONS:   ~ = plant
 KMONS:   1 = water moccasin / crocodile / hornet / wyvern / spiny frog
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
 KMONS:   3 = sea snake / manticore / wind drake / harpy
-KMONS:   4 = dire elephant / hydra w:8
-KMONS:   5 = merfolk avatar
+KMONS:   4 = dire elephant / hydra
+KMONS:   5 = patrolling merfolk avatar
 KFEAT:   ~12345%*|! = W
 KITEM:   % = any no_pickup
 KITEM:   * = star_item no_pickup
