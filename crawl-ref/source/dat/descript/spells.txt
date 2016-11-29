@@ -252,9 +252,9 @@ morale. They have no noticeable effect.
 %%%%
 Cause Fear spell
 
-Causes fear in those near to the caster. Adventurers suffering from this effect
-find that extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt it, as will leaving the caster's line of sight.
+Causes fear in those near to the caster, causing those affected to be unable to
+approach the caster, and to sometimes fail to attack them in melee. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Chain of Chaos spell
 
@@ -899,9 +899,8 @@ Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster. Extremely
-loud noises, such as those produced by lightning or scrolls of noise, will
-disrupt the effect, as will leaving the caster's line of sight.
+Makes a targeted creature unwilling to move away from the caster. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Metabolic Englaciation spell
 
@@ -1208,8 +1207,7 @@ Simulacra cannot leave the level they were created on.
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
-singer. Extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt the effect, as will leaving the caster's line of sight.
+singer. Leaving the caster's line of sight will end the effect.
 %%%%
 Sleep spell
 

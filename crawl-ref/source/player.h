@@ -507,7 +507,6 @@ public:
     monster* get_any_beholder() const;
     void remove_beholder(const monster& mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
     bool possible_beholder(const monster* mon) const;
@@ -520,7 +519,6 @@ public:
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
