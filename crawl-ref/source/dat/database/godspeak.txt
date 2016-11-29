@@ -516,6 +516,7 @@ w:5
 
 w:3
 "In fire! In pain!"
+%%%%
 ######################################
 # Welcome messages on game restoration
 ######################################
