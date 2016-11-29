@@ -370,9 +370,6 @@ MCHMOD_LOGS := 664
 INSTALL_UGRP := games:games
 endif
 
-chroot_prefix :=
-prefix        :=
-
 ifeq ($(patsubst %/local,%,$(patsubst %/,%,$(prefix))),/usr)
 FHS := yes
 endif
