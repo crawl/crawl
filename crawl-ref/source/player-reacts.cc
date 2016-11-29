@@ -511,19 +511,17 @@ static void _handle_recitation(int step)
 
     if (step == 0)
     {
-        string speech = zin_recite_text(you.attribute[ATTR_RECITE_SEED],
-                                        you.attribute[ATTR_RECITE_TYPE], -1);
-        speech += ".";
-        if (one_chance_in(9))
+        ostringstream speech;
+        speech << zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                                  you.attribute[ATTR_RECITE_TYPE], -1);
+        speech << '.';
+        if (one_chance_in(27))
         {
             const string closure = getSpeakString("recite_closure");
-            if (!closure.empty() && one_chance_in(3))
-            {
-                speech += " ";
-                speech += closure;
-            }
+            if (!closure.empty())
+                speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
+        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
     }
 }
 
