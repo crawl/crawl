@@ -36,6 +36,7 @@ enum nemelex_gift_types
 /// What slot a weapon occupies when it was "gifted" by the IJC
 /// A lack of this value indicates the weapon belongs to you
 #define IEOH_JIAN_SLOT "ieoh-jian-slot"
+#define IEOH_JIAN_STOLEN "ieoh-jian-stolen"
 /// The time left for IJC divine weapons.
 #define IEOH_JIAN_DIVINE_DEGREE "ieoh-jian-divine"
 /// The momentum bonus for divine weapons.

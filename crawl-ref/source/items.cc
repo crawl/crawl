@@ -24,6 +24,7 @@
 #include "bitary.h"
 #include "butcher.h"
 #include "cio.h"
+#include "cloud.h"
 #include "clua.h"
 #include "colour.h"
 #include "coord.h"
@@ -2482,6 +2483,17 @@ bool drop_item(int item_dropped, int quant_drop)
     }
 
     ASSERT(item.defined());
+
+    if (item.props.exists(IEOH_JIAN_STOLEN))
+    {
+        mprf("As you drop %s, it shatters in a myriad of steel fragments.", item.name(DESC_THE, false, true, false).c_str());
+        simple_god_message(" say: \"We take back what belongs to us... Next step, your life. \"", GOD_IEOH_JIAN);
+        dec_inv_item_quantity(item_dropped, quant_drop);
+        check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
+        you.turn_is_over = true;
+        return true;
+    }
+
 
     if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
     {

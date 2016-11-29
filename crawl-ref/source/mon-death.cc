@@ -3586,7 +3586,7 @@ bool mons_bennu_can_revive(const monster* mons)
            || mons->props["bennu_revives"].get_byte() < 1;
 }
 
-bool ieoh_jian_kill_oldest_weapon()
+bool ieoh_jian_kill_oldest_weapon(bool ignore_divine)
 {
     auto monsters = find_ieoh_jian_manifested_weapons(false);
     if (monsters.empty()) 
@@ -3594,7 +3594,7 @@ bool ieoh_jian_kill_oldest_weapon()
 
     auto front_weapon = monsters.at(0)->weapon();
 
-    if (front_weapon->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+    if (front_weapon->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !ignore_divine)
     {
         int divine_degree = front_weapon->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
         front_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;

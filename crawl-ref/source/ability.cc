@@ -632,6 +632,8 @@ static const ability_def Ability_List[] =
         1, 0, 30, 0, {FAIL_INVO, 20, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_DRAGONFLY, "Steel Dragonfly Technique",
         5, 0, 120, 8, {FAIL_INVO, 45, 5, 20}, abflag::NONE },
+    { ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL,"Steal And Renounce",
+      0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3109,6 +3111,33 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         break;
 
+    case ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL:
+        fail_check();
+        if (!you.weapon() || !you.weapon()->props.exists(IEOH_JIAN_SLOT))
+        {
+            mpr("You need to equip a weapon borrowed from the Council!");
+            return SPRET_ABORT;
+        }
+        if (yesno("Really steal from the Ieoh Jian Council and suffer excommunication? This will be seen as a tremendous offense.",
+                  false, 'n')
+            && yesno("Are you sure you won't change your mind later?",
+                     false, 'n'))
+        {
+            you.weapon()->props.erase(IEOH_JIAN_SLOT);
+            you.weapon()->props[IEOH_JIAN_STOLEN] = true;
+            if (!you.weapon()->inscription.empty())
+                you.weapon()->inscription += ", ";
+            you.weapon()->inscription += "stolen";
+            excommunication(true);
+        }
+        else
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3441,6 +3470,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
+
+    if (you_worship(GOD_IEOH_JIAN))
+        _add_talent(talents, ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL, check_confused);
 
     if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         _add_talent(talents, ABIL_CONVERT_TO_BEOGH, check_confused);

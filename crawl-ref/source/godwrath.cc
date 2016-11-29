@@ -1850,32 +1850,40 @@ static bool _ieoh_jian_retribution()
             simple_god_message(" whisper, \"Die by a thousand cuts...\"");
             mpr("You feel the sudden stab of multiple needles!");
             _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_LONG_CIRCLE);
-            you.set_duration(DUR_BARBS,  random_range(4, 8));
+            if (ieoh_jian_stolen_value() > 8)
+                _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_CHECKERBOARD);
+            you.set_duration(DUR_BARBS,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
         case 1:
             simple_god_message(" whisper, \"Nowhere to run...\"");
             mpr("Your limbs feel heavy!");
             _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_LONG_CIRCLE);
-            you.set_duration(DUR_SLOW, random_range(4,8));
+            if (ieoh_jian_stolen_value() > 8)
+                _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_SHORT_CIRCLE);
+            you.set_duration(DUR_SLOW,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
         case 2:
             simple_god_message(" whisper, \"Feeling trapped?\"");
             mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_HALBERD, PATTERN_LONG_CIRCLE);
             _summon_traps_ijc(TRAP_NET, PATTERN_SHORT_CIRCLE, false);
+            if (ieoh_jian_stolen_value() > 5)
+                _summon_traps_ijc(TRAP_NET, PATTERN_LONG_CIRCLE, false);
             break;
         case 3:
             simple_god_message(" whisper, \"Watch your step...\"");
             mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_SHORT_CIRCLE);
+            if (ieoh_jian_stolen_value() > 8)
+                _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_CHECKERBOARD);
             _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
             break;
         case 4:
             simple_god_message(" whisper, \"Suffer, mortal...\"");
             mpr("You feel a burning poison under your skin!");
-            you.corrode_equipment("The poison", 3);
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
-            lose_stat(STAT_DEX, 1 + random2(you.strength() / 8));
+            you.corrode_equipment("The poison", 3 + ieoh_jian_stolen_value() / 4);
+            lose_stat(STAT_STR, 1 + (ieoh_jian_stolen_value()/3) + random2(you.strength() / 8));
+            lose_stat(STAT_DEX, 1 + (ieoh_jian_stolen_value()/3) + random2(you.strength() / 8));
             break;
 
         default: 

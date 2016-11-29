@@ -2906,6 +2906,20 @@ void excommunication(bool voluntary, god_type new_god)
         _set_penance(old_god, 50);
         break;
 
+    case GOD_IEOH_JIAN:
+        if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_STOLEN))
+        {
+            simple_god_message(" booms, \"You treacherous mortal! Forfeit that weapon immediately!\" ", old_god);
+            _set_penance(old_god, 25 + you.weapon()->plus * 3);
+        }
+        else
+        {
+            simple_god_message(" withdraw all divine help and plot revenge.", old_god);
+            _set_penance(old_god, 25);
+        }
+        while(ieoh_jian_despawn_weapon(true)){};
+
+        break;
     default:
         _set_penance(old_god, 25);
         break;
@@ -3037,6 +3051,10 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_IEOH_JIAN && you.species == SP_FELID)
         return false; 
 
+    // Not until you forfeit the stolen goods!
+    if (which_god == GOD_IEOH_JIAN && ieoh_jian_stolen_value())
+        return false;
+
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;
@@ -3159,6 +3177,13 @@ void set_god_ability_slots()
         && you.ability_letter_table[letter_to_index('X')] == ABIL_NON_ABILITY)
     {
         you.ability_letter_table[letter_to_index('X')] = ABIL_RENOUNCE_RELIGION;
+    }
+
+    if (you_worship(GOD_IEOH_JIAN) && find(begin(you.ability_letter_table), end(you.ability_letter_table),
+             ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL) == end(you.ability_letter_table)
+        && you.ability_letter_table[letter_to_index('Y')] == ABIL_NON_ABILITY)
+    {
+        you.ability_letter_table[letter_to_index('Y')] = ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL;
     }
 
     // Clear out other god invocations.
@@ -3702,6 +3727,10 @@ void god_pitch(god_type which_god)
             simple_god_message(" says: How dare you come in such a loathsome"
                                " form!",
                                which_god);
+        }
+        else if (which_god == GOD_IEOH_JIAN && ieoh_jian_stolen_value())
+        {
+            simple_god_message(" says: \"How dare you, thief! Forfeit what you stole!\"", which_god);
         }
         else
         {

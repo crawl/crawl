@@ -1492,6 +1492,15 @@ int ieoh_jian_calc_power_for_weapon(weapon_type sub_type)
     return you.skill(weapon_attack_skill(sub_type), 2, false) + you.skill(SK_INVOCATIONS, 2, false);
 }
 
+int ieoh_jian_stolen_value()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+        if (you.inv[i].defined() && you.inv[i].props.exists(IEOH_JIAN_STOLEN))
+            return you.inv[i].plus;
+
+    return 0;
+}
+
 static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
 {
     FixedVector<int, _ieoh_jian_num_weapons> weights
@@ -1658,12 +1667,18 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
 {
     int tension = get_tension(GOD_IEOH_JIAN);
     int divine_chance = min(get_tension(GOD_IEOH_JIAN), div_rand_round(10 * you.skill(SK_INVOCATIONS, 1, false), 15));
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        divine_chance = 0;
+
+    for (auto monster : manifested)
+        if (monster->weapon() && monster->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+            divine_chance = 0; // Only one divine weapon at the time!
 
     dprf("Choosing IJC weapon with tension %d and chance of divine weapon %d", tension, divine_chance);
 
-    divine_chance = 30; // For testing!
-
-    if (piety_rank() > 4 && x_chance_in_y(divine_chance, 100)) 
+    if ((piety_rank() > 4) && x_chance_in_y(divine_chance, 100)) 
         return _ieoh_jian_choose_divine_weapon(weapon);
     else
         return _ieoh_jian_choose_normal_weapon(weapon);
@@ -1691,18 +1706,18 @@ bool ieoh_jian_interest()
     return false;
 }
 
-void ieoh_jian_despawn_weapon()
+bool ieoh_jian_despawn_weapon(bool at_excommunication)
 {
     // We kill any ordinary IJC weapons first, in order of age.
-    if (ieoh_jian_kill_oldest_weapon())
+    if (ieoh_jian_kill_oldest_weapon(at_excommunication))
     {
         you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
-        return;
+        return true;
     }
 
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
     {
-        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !at_excommunication)
         {
             int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
             you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
@@ -1710,7 +1725,7 @@ void ieoh_jian_despawn_weapon()
             if (divine_degree > 0)
             {
                 mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", you.weapon()->name(DESC_THE, false, true, false).c_str());
-                return;
+                return false;
             }
         }
 
@@ -1724,7 +1739,7 @@ void ieoh_jian_despawn_weapon()
         dec_inv_item_quantity(inventory_index, 1);
         check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
         you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
-        return;
+        return true;
     }
 
     // If there aren't any left, but there is an animated weapon belonging to
@@ -1735,18 +1750,31 @@ void ieoh_jian_despawn_weapon()
     if (!monsters.empty())
     {
         auto monster = monsters.at(0);
-        monster->ieoh_jian_swap_weapon_with_player(true);
 
-        if (you.weapon())
-            mprf("%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true, false).c_str());
-        else
-            mprf("%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true, false).c_str());
+        if (!at_excommunication)
+        {
+            monster->ieoh_jian_swap_weapon_with_player(true);
 
-        if (monster->alive())
-            monster_die(monster, KILL_RESET, NON_MONSTER);
+            if (you.weapon())
+                mprf("%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true, false).c_str());
+            else
+                mprf("%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true, false).c_str());
+
+            if (monster->alive())
+                monster_die(monster, KILL_RESET, NON_MONSTER);
+
+            you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
+            return true;
+        }
+        else 
+        {
+            if (monster->alive())
+                monster_die(monster, KILL_RESET, NON_MONSTER);
+            return true;
+        }
     }
 
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
+    return false;
 }
 
 monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)
