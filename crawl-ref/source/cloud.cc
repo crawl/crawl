@@ -455,10 +455,10 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             && feat_is_watery(grd(p))
             && !cell_is_solid(p)
             && !cloud_at(p)
-            && one_chance_in(7))
+            && one_chance_in(14))
         {
-            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, cloud.decay / 2 + 1,
-                                        22, cloud.whose, cloud.killer,
+            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, 2 + random2(5),
+                                        11, cloud.whose, cloud.killer,
                                         cloud.source, -1);
         }
     }
@@ -486,19 +486,6 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
 
     switch (cloud.type)
     {
-        // Fire clouds dissipate faster over water.
-        case CLOUD_FIRE:
-        case CLOUD_FOREST_FIRE:
-            if (feat_is_watery(grd(cloud.pos)))
-                return dissipate * 4;
-            break;
-        // rain and cold clouds dissipate faster over lava.
-        case CLOUD_COLD:
-        case CLOUD_RAIN:
-        case CLOUD_STORM:
-            if (grd(cloud.pos) == DNGN_LAVA)
-                return dissipate * 4;
-            break;
         // Ink cloud shouldn't appear outside of water.
         case CLOUD_INK:
             if (!feat_is_watery(grd(cloud.pos)))
@@ -989,14 +976,6 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                      act->name(DESC_THE).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "steam" : "sizzle").c_str());
-            }
-        }
-        if (player)
-        {
-            if (you.duration[DUR_FIRE_SHIELD] > 1)
-            {
-                you.duration[DUR_FIRE_SHIELD] = 1;
-                return true;
             }
         }
         break;
