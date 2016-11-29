@@ -2471,7 +2471,7 @@ pursuit no matter where they flee.
 %%%%
 vault warden
 
-A veteran commanders, able to seal nearby doorways and staircases to prevent
+A veteran commander, able to seal nearby doorways and staircases to prevent
 intruders from either trespassing further or escaping alive.
 %%%%
 very ugly thing
