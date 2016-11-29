@@ -498,6 +498,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (stepped)
         _moveto_maybe_repel_stairs();
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_MOMENTUM))
+        you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM] = 1;
 }
 
 // Use this function whenever the player enters (or lands and thus re-enters)

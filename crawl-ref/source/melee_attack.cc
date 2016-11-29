@@ -1537,9 +1537,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (cleaving)
         damage = cleave_damage_mod(damage);
 
-    // martial damage modifier (ieoh jian)
-    if (is_ieoh_jian_martial)
-        damage = martial_damage_mod(damage);
+    // martial damage modifier (ieoh jian), and momentum enhancing weapons.
+    damage = martial_damage_mod(damage);
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
@@ -3449,20 +3448,33 @@ static int _apply_momentum(int dam)
 }
 
 // Martial strikes get modified by momentum and maneuver specific damage mods.
+// This also takes care of divine weapon modifiers, regardless of the attack being martial.
 int melee_attack::martial_damage_mod(int dam)
 {
-    int original_dam = dam;
-    ASSERT(have_passive(passive_t::martial_weapon_mastery));
-    ASSERT(you.weapon());
+    if (is_ieoh_jian_martial)
+    {
+        int original_dam = dam;
+        ASSERT(have_passive(passive_t::martial_weapon_mastery));
+        ASSERT(you.weapon());
 
-    dam = _apply_momentum(dam);
-    auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
-   
-    // Lunge gets a damage bonus.
-    if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
-        dam = div_rand_round(dam * 15, 10);
+        dam = _apply_momentum(dam);
+        auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
+       
+        // Lunge gets a damage bonus.
+        if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
+            dam = div_rand_round(dam * 15, 10);
 
-    dprf("Martial damage modifier, from %d to %d", original_dam, dam);
+        dprf("Martial damage modifier, from %d to %d", original_dam, dam);
+    }
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_MOMENTUM)
+        && you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM].get_int())
+    {
+        mprf("%s carries your momentum!", you.weapon()->name(DESC_THE, false, true, false).c_str());
+        dam *= 1.5;
+        you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM] = 0;
+    }
+
     return dam;
 }
 

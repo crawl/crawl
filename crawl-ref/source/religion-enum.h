@@ -38,6 +38,8 @@ enum nemelex_gift_types
 #define IEOH_JIAN_SLOT "ieoh-jian-slot"
 /// The time left for IJC divine weapons.
 #define IEOH_JIAN_DIVINE_DEGREE "ieoh-jian-divine"
+/// The momentum bonus for divine weapons.
+#define IEOH_JIAN_DIVINE_MOMENTUM "ieoh-jian-momentum"
 /// Whether a the weapon is being projected
 #define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
 /// Whether a the weapon is being projected as part of a Steel Dragonfly

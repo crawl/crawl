@@ -1657,15 +1657,16 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
 static bool ieoh_jian_choose_weapon(item_def& weapon)
 {
     int tension = get_tension(GOD_IEOH_JIAN);
-    int divine_chance = min(get_tension(GOD_IEOH_JIAN), div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 2));
+    int divine_chance = min(get_tension(GOD_IEOH_JIAN), div_rand_round(10 * you.skill(SK_INVOCATIONS, 1, false), 15));
 
     dprf("Choosing IJC weapon with tension %d and chance of divine weapon %d", tension, divine_chance);
 
-    return _ieoh_jian_choose_divine_weapon(weapon);
-    //if (piety_rank() > 4 && x_chance_in_y(divine_chance, 100)) 
-    //    return _ieoh_jian_choose_divine_weapon(weapon);
-    //else
-    //    return _ieoh_jian_choose_normal_weapon(weapon);
+    divine_chance = 30; // For testing!
+
+    if (piety_rank() > 4 && x_chance_in_y(divine_chance, 100)) 
+        return _ieoh_jian_choose_divine_weapon(weapon);
+    else
+        return _ieoh_jian_choose_normal_weapon(weapon);
 }
 
 // Keeps Ieoh Jian interested and returns TRUE if they'd be fine with spawning a new weapon.
@@ -1737,9 +1738,9 @@ void ieoh_jian_despawn_weapon()
         monster->ieoh_jian_swap_weapon_with_player(true);
 
         if (you.weapon())
-            mprf("%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+            mprf("%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true, false).c_str());
         else
-            mprf("%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true).c_str());
+            mprf("%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true, false).c_str());
 
         if (monster->alive())
             monster_die(monster, KILL_RESET, NON_MONSTER);
