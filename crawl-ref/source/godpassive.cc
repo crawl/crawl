@@ -1650,7 +1650,7 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
     }
 
     weapon.quantity = 1;
-    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 3;
+    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 2;
     return true;
 }
 
@@ -1694,7 +1694,37 @@ void ieoh_jian_despawn_weapon()
 {
     // We kill any ordinary IJC weapons first, in order of age.
     if (ieoh_jian_kill_oldest_weapon())
+    {
+        you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
         return;
+    }
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
+    {
+        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        {
+            int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
+            you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
+
+            if (divine_degree > 0)
+            {
+                mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", you.weapon()->name(DESC_THE, false, true, false).c_str());
+                return;
+            }
+        }
+
+        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+            mprf("%s slips out of your grip ascends back to the heavens!", you.weapon()->name(DESC_THE, false, true, false).c_str());
+        else
+            mprf("%s shatters in your hands!", you.weapon()->name(DESC_THE, false, true).c_str());
+
+        int inventory_index = you.equip[EQ_WEAPON];
+        unwield_item(false, true);
+        dec_inv_item_quantity(inventory_index, 1);
+        check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
+        you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
+        return;
+    }
 
     // If there aren't any left, but there is an animated weapon belonging to
     // the player, we pull it back to the player's hand, killing the ghost.
@@ -1713,21 +1743,8 @@ void ieoh_jian_despawn_weapon()
 
         if (monster->alive())
             monster_die(monster, KILL_RESET, NON_MONSTER);
-
-        return;
     }
 
-    // Finally, if the player is wielding an ICJ weapon, it is shattered.
-    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
-    {
-        mprf("%s shatters in your hands!", you.weapon()->name(DESC_YOUR, false, true).c_str());
-        int inventory_index = you.equip[EQ_WEAPON];
-        unwield_item(false, true);
-        dec_inv_item_quantity(inventory_index, 1);
-        check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
-    }
-
-    // The backoff is cleared so you can quickly climb back from a lost weapon.
     you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
 }
 
@@ -1783,7 +1800,14 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     }
 
     you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 1.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
-    mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
+
+    if (wpn.props.exists(IEOH_JIAN_DIVINE_DEGREE))
+    {
+        mprf(MSGCH_GOD, "The Council says: \"In this moment of need, use this heavenly weapon!\"");
+        mprf("%s manifests in a flash of light!", wpn.name(DESC_A, false, true).c_str());
+    }
+    else
+        mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
 }
 
 static bool _dont_attack_martial(const monster* mons)
