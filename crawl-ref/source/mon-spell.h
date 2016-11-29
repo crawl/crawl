@@ -1567,7 +1567,7 @@ static const mon_spellbook mspell_list[] =
     // ('8') Animate / statues.
     {  MST_USHABTI,
       {
-       { SPELL_DEATH_RATTLE, 57, MON_SPELL_MAGICAL },
+       { SPELL_DEATH_RATTLE, 36, MON_SPELL_MAGICAL },
        { SPELL_WARNING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
                                 | MON_SPELL_BREATH },
        { SPELL_DISPEL_UNDEAD, 44, MON_SPELL_MAGICAL },
