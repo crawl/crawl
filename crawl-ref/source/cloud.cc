@@ -148,7 +148,6 @@ static const cloud_data clouds[] = {
       { TILE_CLOUD_FOREST_FIRE },               // tile
       BEAM_FIRE,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
-      true,                                     // opacity
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
