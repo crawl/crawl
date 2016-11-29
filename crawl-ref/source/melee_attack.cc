@@ -3471,7 +3471,7 @@ int melee_attack::martial_damage_mod(int dam)
         && you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM].get_int())
     {
         mprf("%s carries your momentum!", you.weapon()->name(DESC_THE, false, true, false).c_str());
-        dam *= 1.5;
+        dam = div_rand_round(dam * 15, 10);
         you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM] = 0;
     }
 
