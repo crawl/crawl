@@ -606,6 +606,11 @@ int monster::halo_radius() const
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
 
+    if (weap && (weap->flags & ISFLAG_UNRANDART)
+        && weap->unrand_idx >= UNRAND_DIVINE_DEER_HORN_KNIFE
+        && weap->unrand_idx <= UNRAND_DIVINE_METEOR_HAMMER)
+        size = 1;
+
     if (!(holiness() & MH_HOLY))
         return size;
 

@@ -923,7 +923,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
 
         const char* lunge_text = "\n\n<blue>Martial Mastery:</blue> Short blades and axes can be used to"
-                                 "strike with a powerful lunging attack, by moving towards an enemy.";
+                                 " strike with a powerful lunging attack, by moving towards an enemy.";
         const char* lunge_pp_text = " This technique is extremely effective at striking pressure points.";
 
         const char* whirlwind_text = "\n\n<blue>Martial Mastery:</blue> Long blades and maces can be used to hit"

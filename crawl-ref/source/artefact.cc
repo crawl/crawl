@@ -1759,6 +1759,8 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     if (unrand_index == UNRAND_VARIABILITY)
         item.plus = random_range(-4, 16);
+    else if (unrand_index >= UNRAND_DIVINE_DEER_HORN_KNIFE && unrand_index <= UNRAND_DIVINE_METEOR_HAMMER)
+        item.plus = random_range(9, 10 + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 7));
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)

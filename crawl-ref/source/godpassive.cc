@@ -6,6 +6,7 @@
 #include <cmath>
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -39,6 +40,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "view.h"
 
 // TODO: template out the differences between this and god_power.
 // TODO: use the display method rather than dummy powers in god_powers.
@@ -1490,7 +1492,7 @@ int ieoh_jian_calc_power_for_weapon(weapon_type sub_type)
     return you.skill(weapon_attack_skill(sub_type), 2, false) + you.skill(SK_INVOCATIONS, 2, false);
 }
 
-static bool ieoh_jian_choose_weapon(item_def& weapon)
+static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
 {
     FixedVector<int, _ieoh_jian_num_weapons> weights
     (
@@ -1621,6 +1623,51 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
     return true;
 }
 
+static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
+{
+    switch (random2(6))
+    {
+        case 0:
+            make_item_unrandart(weapon, UNRAND_DIVINE_DEER_HORN_KNIFE);
+            break;
+        case 1:
+            make_item_unrandart(weapon, UNRAND_DIVINE_GUAN_DAO);
+            break;
+        case 2:
+            make_item_unrandart(weapon, UNRAND_DIVINE_YUE);
+            break;
+        case 3:
+            make_item_unrandart(weapon, UNRAND_DIVINE_CHANG_DAO);
+            break;
+        case 4:
+            make_item_unrandart(weapon, UNRAND_DIVINE_MONK_SPADE);
+            break;
+        case 5:
+            make_item_unrandart(weapon, UNRAND_DIVINE_METEOR_HAMMER);
+            break;
+        default:
+            break;
+    }
+
+    weapon.quantity = 1;
+    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 3;
+    return true;
+}
+
+static bool ieoh_jian_choose_weapon(item_def& weapon)
+{
+    int tension = get_tension(GOD_IEOH_JIAN);
+    int divine_chance = min(get_tension(GOD_IEOH_JIAN), div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 2));
+
+    dprf("Choosing IJC weapon with tension %d and chance of divine weapon %d", tension, divine_chance);
+
+    return _ieoh_jian_choose_divine_weapon(weapon);
+    //if (piety_rank() > 4 && x_chance_in_y(divine_chance, 100)) 
+    //    return _ieoh_jian_choose_divine_weapon(weapon);
+    //else
+    //    return _ieoh_jian_choose_normal_weapon(weapon);
+}
+
 // Keeps Ieoh Jian interested and returns TRUE if they'd be fine with spawning a new weapon.
 bool ieoh_jian_interest()
 {
@@ -1695,12 +1742,19 @@ monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item
                  MHITYOU,
                  MG_FORCE_BEH | MG_FORCE_PLACE,
                  GOD_IEOH_JIAN);
+
     mg.props[IEOH_JIAN_WEAPON] = weapon;
 
     int power = ieoh_jian_calc_power_for_weapon((weapon_type) weapon.sub_type);
     mg.props[IEOH_JIAN_POWER] = power;
 
-    return create_monster(mg);
+    auto created_monster = create_monster(mg);
+    if (created_monster)
+    {
+        invalidate_agrid(true);
+        view_update_at(created_monster->pos()); // Halo on spawn.
+    }
+    return created_monster;
 }
 
 void ieoh_jian_spawn_weapon(const coord_def& position)

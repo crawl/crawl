@@ -6616,7 +6616,8 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
     }
 
     you.wield_change = true;
-    redraw_screen();
+    invalidate_agrid(true);
+    view_update_at(this->pos()); // Halo on spawn.
 
     del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE, true, true);
     return true;
