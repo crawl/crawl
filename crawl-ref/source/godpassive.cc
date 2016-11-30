@@ -1666,7 +1666,7 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
 static bool ieoh_jian_choose_weapon(item_def& weapon)
 {
     int tension = get_tension(GOD_IEOH_JIAN);
-    int divine_chance = min(get_tension(GOD_IEOH_JIAN), div_rand_round(10 * you.skill(SK_INVOCATIONS, 1, false), 15));
+    int divine_chance = min(tension, div_rand_round(10 * you.skill(SK_INVOCATIONS, 1, false), 15));
     auto manifested = find_ieoh_jian_manifested_weapons(false);
 
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
@@ -1730,9 +1730,9 @@ bool ieoh_jian_despawn_weapon(bool at_excommunication)
         }
 
         if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
-            mprf("%s slips out of your grip ascends back to the heavens!", you.weapon()->name(DESC_THE, false, true, false).c_str());
+            mprf("%s slips out of your %s and ascends back to the heavens!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
         else
-            mprf("%s shatters in your hands!", you.weapon()->name(DESC_THE, false, true).c_str());
+            mprf("%s shatters in your %s!", you.weapon()->name(DESC_THE, false, true).c_str(), you.hand_name(false).c_str());
 
         int inventory_index = you.equip[EQ_WEAPON];
         unwield_item(false, true);
@@ -1756,9 +1756,11 @@ bool ieoh_jian_despawn_weapon(bool at_excommunication)
             monster->ieoh_jian_swap_weapon_with_player(true);
 
             if (you.weapon())
-                mprf("%s flies back to your hands!", you.weapon()->name(DESC_YOUR, false, true, false).c_str());
+                mprf("%s flies back to your %s!", you.weapon()->name(DESC_YOUR, false, true, false).c_str(), you.hand_name(false).c_str());
             else
-                mprf("%s flies back to your hands, but you're too encumbered to catch it!", monster->weapon()->name(DESC_YOUR, false, true, false).c_str());
+                mprf("%s flies back to your %s, but you're too encumbered to catch it!", 
+                     monster->weapon()->name(DESC_YOUR, false, true, false).c_str(),
+                     you.hand_name(false).c_str());
 
             if (monster->alive())
                 monster_die(monster, KILL_RESET, NON_MONSTER);
@@ -1845,17 +1847,21 @@ static bool _dont_attack_martial(const monster* mons)
 }
 
 // Returns enemy attacked with a lunge.
-static monster* _ieoh_jian_lunge(const coord_def& old_pos, const vector<monster*>& banlist)
+static monster* _ieoh_jian_lunge(const coord_def& old_pos, const vector<monster*>& already_hit)
 {
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
     if (!mons || _dont_attack_martial(mons) || !mons->alive() 
-           || (std::find(banlist.begin(), banlist.end(), mons) != banlist.end()))
+           || (std::find(already_hit.begin(), already_hit.end(), mons) != already_hit.end()))
         return nullptr;
    
-    mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
+    if (already_hit.empty())
+        mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
+    else
+        mprf("You lunge at %s with your off %s!", mons->name(DESC_THE).c_str(), you.hand_name(false).c_str());
+
     melee_attack lunge(&you, mons);
     lunge.is_ieoh_jian_martial = true;
     lunge.attack();
@@ -1864,7 +1870,7 @@ static monster* _ieoh_jian_lunge(const coord_def& old_pos, const vector<monster*
 }
 
 // Returns monsters hit by the whirlwind.
-static vector<monster*> _ieoh_jian_whirlwind(const coord_def& old_pos, const vector<monster*>& banlist)
+static vector<monster*> _ieoh_jian_whirlwind(const coord_def& old_pos, const vector<monster*>& already_hit)
 {
     vector<monster*> targets;
 
@@ -1901,7 +1907,7 @@ static vector<monster*> _ieoh_jian_whirlwind(const coord_def& old_pos, const vec
     sort(common_targets.begin(), common_targets.end());
     vector<monster*> filtered_targets;
     set_difference(common_targets.begin(), common_targets.end(), 
-                     banlist.begin(), banlist.end(),
+                     already_hit.begin(), already_hit.end(),
                      back_inserter(filtered_targets));
 
     for (auto mons : filtered_targets)
@@ -1909,7 +1915,11 @@ static vector<monster*> _ieoh_jian_whirlwind(const coord_def& old_pos, const vec
         if (!mons->alive())
             continue;
 
-        mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
+        if (already_hit.empty())
+            mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
+        else
+            mprf("You spin and strike %s with your off %s!", mons->name(DESC_THE).c_str(), you.hand_name(false).c_str());
+
         melee_attack whirlwind(&you, mons);
         whirlwind.is_ieoh_jian_martial = true;
         whirlwind.attack();
@@ -1919,7 +1929,7 @@ static vector<monster*> _ieoh_jian_whirlwind(const coord_def& old_pos, const vec
 }
 
 // Returns monsters hit by either whirlwind or lunge.
-static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_pos, const vector<monster*>& banlist)
+static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_pos, const vector<monster*>& already_hit)
 {
     vector<monster*> targets;
     if (!you.weapon())
@@ -1928,11 +1938,11 @@ static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_
     auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
 
     if (weapon_skill == SK_LONG_BLADES || weapon_skill == SK_MACES_FLAILS)
-        targets = _ieoh_jian_whirlwind(old_pos, banlist);
+        targets = _ieoh_jian_whirlwind(old_pos, already_hit);
 
     monster* lunged;
     if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
-        lunged = _ieoh_jian_lunge(old_pos, banlist);
+        lunged = _ieoh_jian_lunge(old_pos, already_hit);
 
     if (lunged)
         targets.push_back(lunged);
@@ -1943,10 +1953,10 @@ static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 {
     // We perform martial attacks with the weapon we had before potentially swapping for another
-    vector<monster*> banlist;
+    vector<monster*> already_hit;
     if (have_passive(passive_t::martial_weapon_mastery))
-        banlist = _ieoh_jian_perform_martial_attacks(old_pos, banlist);
-    sort(banlist.begin(), banlist.end());
+        already_hit = _ieoh_jian_perform_martial_attacks(old_pos, already_hit);
+    sort(already_hit.begin(), already_hit.end());
     auto swapped_monster = monster_at(old_pos);
 
     // We swap, and if there is a monster we can hit that we couldn't before, we do so.
@@ -1954,7 +1964,7 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
     {
         swapped_monster->ieoh_jian_swap_weapon_with_player();
         if (have_passive(passive_t::martial_weapon_mastery))
-            _ieoh_jian_perform_martial_attacks(old_pos, banlist);
+            _ieoh_jian_perform_martial_attacks(old_pos, already_hit);
     }
 }
 
