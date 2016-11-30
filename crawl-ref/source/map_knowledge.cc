@@ -14,6 +14,7 @@
  #include "tilepick.h"
  #include "tileview.h"
 #endif
+#include "travel.h"
 #include "view.h"
 
 void set_terrain_mapped(const coord_def gc)
@@ -65,6 +66,21 @@ void clear_map(bool clear_items, bool clear_mons)
 #ifdef USE_TILE
         tile_reset_fg(p);
 #endif
+    }
+}
+
+void clear_map_or_travel_trail()
+{
+    if (Options.show_travel_trail && env.travel_trail.size())
+    {
+        mpr("Clearing travel trail.");
+        clear_travel_trail();
+    }
+    else
+    {
+        mpr("Clearing level map.");
+        clear_map();
+        crawl_view.set_player_at(you.pos());
     }
 }
 
