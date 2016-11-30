@@ -3917,12 +3917,13 @@ bool god_hates_ability(ability_type ability, god_type god)
 lifesaving_chance elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
-        return LIFESAVE_NEVER;
+        return lifesaving_chance::never;
 
     if (you.piety < piety_breakpoint(0))
-        return LIFESAVE_NEVER;
+        return lifesaving_chance::never;
 
-    return you.piety > 130 ? LIFESAVE_ALWAYS : LIFESAVE_SOMETIMES;
+    return you.piety > 130 ? lifesaving_chance::always
+                           : lifesaving_chance::sometimes;
 }
 
 bool god_protects_from_harm()
@@ -3931,11 +3932,11 @@ bool god_protects_from_harm()
     {
         switch (elyvilon_lifesaving())
         {
-        case LIFESAVE_SOMETIMES:
+        case lifesaving_chance::sometimes:
             if (random2(you.piety) >= piety_breakpoint(0))
                 return true;
             break;
-        case LIFESAVE_ALWAYS:
+        case lifesaving_chance::always:
             // Reliable lifesaving is costly.
             lose_piety(21 + random2(20));
             return true;
