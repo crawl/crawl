@@ -3914,15 +3914,15 @@ bool god_hates_ability(ability_type ability, god_type god)
     return false;
 }
 
-int elyvilon_lifesaving()
+lifesaving_chance elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
-        return 0;
+        return LIFESAVE_NEVER;
 
     if (you.piety < piety_breakpoint(0))
-        return 0;
+        return LIFESAVE_NEVER;
 
-    return you.piety > 130 ? 2 : 1;
+    return you.piety > 130 ? LIFESAVE_ALWAYS : LIFESAVE_SOMETIMES;
 }
 
 bool god_protects_from_harm()
@@ -3931,14 +3931,16 @@ bool god_protects_from_harm()
     {
         switch (elyvilon_lifesaving())
         {
-        case 1:
+        case LIFESAVE_SOMETIMES:
             if (random2(you.piety) >= piety_breakpoint(0))
                 return true;
             break;
-        case 2:
+        case LIFESAVE_ALWAYS:
             // Reliable lifesaving is costly.
             lose_piety(21 + random2(20));
             return true;
+        default:
+            break;
         }
     }
 
