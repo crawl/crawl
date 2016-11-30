@@ -874,7 +874,7 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_CLEAR_MAP:
-                clear_map();
+                clear_map_or_travel_trail();
                 break;
 
             case CMD_MAP_FORGET:
