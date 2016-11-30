@@ -118,6 +118,14 @@ A broken pillar
  I have no son to keep my name in remembrance...”
     -KJV Bible, 2 Samuel 18:18.
 %%%%
+A faded altar of an unknown god
+
+“Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
+perceive that in all things ye are too superstitious. For as I passed by, and
+beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
+GOD.”
+    -KJV Bible, Acts 17:23-24.
+%%%%
 A gateway to Hell
 
 “I am the way into the city of woe.
@@ -240,6 +248,14 @@ A staircase to the Shoals
 A staircase to the Tomb
 
 <Tomb>
+%%%%
+A stormy altar of Qazlal
+
+“The storm irresistibly propels him into the future to which his back is turned,
+while the pile of debris before him grows skyward. This storm is what we call
+progress.”
+    -Walter Benjamin, “Theses on the Philosophy of History”. 1940.
+   trans. Harry Zohn, 1969.
 %%%%
 A tree
 
