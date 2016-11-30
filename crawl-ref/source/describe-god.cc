@@ -730,11 +730,11 @@ static void _describe_god_powers(god_type which_god)
         {
             switch (elyvilon_lifesaving())
             {
-                case LIFESAVE_SOMETIMES:
+                case lifesaving_chance::sometimes:
                     when = ", especially when called upon";
                     prot_chance += 100 - 3000/piety;
                     break;
-                case LIFESAVE_ALWAYS:
+                case lifesaving_chance::always:
                     when = ", and always does so when called upon";
                     prot_chance = 100;
                     break;

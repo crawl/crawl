@@ -20,11 +20,11 @@
 
 #define NUM_PIETY_STARS 6
 
-enum lifesaving_chance
+enum class lifesaving_chance
 {
-    LIFESAVE_NEVER,
-    LIFESAVE_SOMETIMES,
-    LIFESAVE_ALWAYS,
+    never,
+    sometimes,
+    always,
 };
 
 bool is_evil_god(god_type god);
