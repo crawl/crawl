@@ -1972,6 +1972,7 @@ bool ieoh_jian_can_pole_vault(const coord_def& target)
 {
    bool able = have_passive(passive_t::martial_weapon_mastery)
                                   && feat_can_pole_vault_against(grd(target))
+                                  && !you.is_stationary()
                                   && you.weapon() 
                                   && (weapon_attack_skill(you.weapon()->sub_type) == SK_STAVES
                                       || weapon_attack_skill(you.weapon()->sub_type) == SK_POLEARMS);
