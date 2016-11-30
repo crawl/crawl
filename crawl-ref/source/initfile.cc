@@ -1565,7 +1565,7 @@ void read_init_file(bool runscript)
 
     /**
      Mac OS X apps almost always put their user-modifiable configuration files
-     in the Application Support directory.  On Mac OS X when DATA_DIR_PATH is
+     in the Application Support directory. On Mac OS X when DATA_DIR_PATH is
      not defined, place a symbolic link to the init.txt file in crawl_dir
      (probably "~/Library/Application Support/Dungeon Crawl Stone Soup") where
      the user is likely to go looking for it.
