@@ -1,3 +1,48 @@
+Stone Soup 0.20 (up to 0.20-a0-252-gcc89fee)
+--------------------------------------------
+
+Highlights
+----------
+* Have you taken the survey yet?
+* http://crawl.develz.org/wordpress/dcss-player-survey
+* :)
+
+Character
+---------
+* Removed mottled draconians.
+* Loud noises no longer break mesmerization or fear.
+* Various 'badform' (e.g. wispform) special cases have been removed.
+
+Gods
+----
+* The Shining One:
+  - Cleansing Flame is more effective against non-evil enemies.
+  - All bonus-damage 'stab' attacks are prevented.
+  - Poison is no longer forbidden.
+
+Interface
+---------
+* Monsters' melee attacks are now included in their descriptions.
+* The player's odds of succeeding with melee confusion attacks is displayed.
+
+Items
+-----
+* Removed the Hat of the High Council.
+
+Monsters
+--------
+* Draconian callers -> stormcallers, which Smite, Summon Drakes, and Upheaval.
+* Mottled dragons -> acid dragons.
+* The 'draining' effect once again lowers monsters' MR.
+* Various unique monsters give better rewards for defeating them.
+* Removed mottled draconians and draconian zealots.
+
+Spells
+------
+* Confusing Touch is less effective, especially against high-HD enemies.
+* Poisonous Cloud is level 5 (was level 6).
+
+
 Stone Soup 0.19.1 (20161123)
 --------------------------------------------
 
