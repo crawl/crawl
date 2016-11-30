@@ -2974,29 +2974,20 @@ static const char* _flavour_range_desc(attack_flavour flavour)
     return "";
 }
 
-/**
- * Provide a short, and-prefixed flavour description of the given attack
- * flavour, if any.
- *
- * @param flavour  E.g. AF_COLD, AF_PLAIN.
- * @param HD       The hit dice of the monster using the flavour.
- * @return         "" if AF_PLAIN; else " <desc>", e.g.
- *                 " and, after penetrating armour, deal up to 27 cold damage".
- */
-static string _flavour_effect(attack_flavour flavour, int HD)
+static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
         { AF_BLINK,             "blink itself" },
-        { AF_COLD,              "deal up to %d cold damage" },
+        { AF_COLD,              "deal up to %d extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
         { AF_DRAIN_STR,         "drain strength" },
         { AF_DRAIN_INT,         "drain intelligence" },
         { AF_DRAIN_DEX,         "drain dexterity" },
         { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
         { AF_DRAIN_XP,          "drain skills" },
-        { AF_ELEC,              "deal up to %d electric damage" },
-        { AF_FIRE,              "deal up to %d fire damage" },
+        { AF_ELEC,              "deal up to %d extra electric damage" },
+        { AF_FIRE,              "deal up to %d extra fire damage" },
         { AF_HUNGER,            "cause hunger" },
         { AF_MUTATE,            "cause mutations" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
@@ -3010,7 +3001,7 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_STICKY_FLAME,      "apply sticky flame" },
         { AF_CHAOTIC,           "cause unpredictable effects" },
         { AF_STEAL,             "steal items" },
-        { AF_CRUSH,             "ongoing constriction" },
+        { AF_CRUSH,             "begin ongoing constriction" },
         { AF_REACH,             "" },
         { AF_HOLY,              "deal extra damage to undead and demons" },
         { AF_ANTIMAGIC,         "drain magic" },
@@ -3020,8 +3011,7 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_PURE_FIRE,         "" },
         { AF_DRAIN_SPEED,       "drain speed" },
         { AF_VULN,              "reduce resistance to hostile enchantments" },
-        { AF_SHADOWSTAB,        "deal extra damage from the shadows" },
-                                // XXX: ^ 'if invisible' could be clearer?
+        { AF_SHADOWSTAB,        "deal increased damage when unseen" },
         { AF_DROWN,             "deal drowning damage" },
         { AF_CORRODE,           "cause corrosion" },
         { AF_SCARAB,            "drain speed and drain health" },
@@ -3033,21 +3023,36 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_PLAIN,             "" },
     };
 
-    const string* base_desc = map_find(base_descs, flavour);
-    ASSERT(base_desc);
-    if (base_desc->empty())
-        return *base_desc;
+    const string* desc = map_find(base_descs, flavour);
+    ASSERT(desc);
+    return *desc;
+}
+
+/**
+ * Provide a short, and-prefixed flavour description of the given attack
+ * flavour, if any.
+ *
+ * @param flavour  E.g. AF_COLD, AF_PLAIN.
+ * @param HD       The hit dice of the monster using the flavour.
+ * @return         "" if AF_PLAIN; else " <desc>", e.g.
+ *                 " to deal up to 27 extra cold damage if any damage is dealt".
+ */
+static string _flavour_effect(attack_flavour flavour, int HD)
+{
+    const string base_desc = _flavour_base_desc(flavour);
+    if (base_desc.empty())
+        return base_desc;
 
     const int flavour_dam = flavour_damage(flavour, HD, false);
-    const string flavour_desc = make_stringf(base_desc->c_str(), flavour_dam);
+    const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
     if (!flavour_triggers_damageless(flavour)
         && flavour != AF_KITE && flavour != AF_SWOOP)
     {
-        return " and, if it beats armour, " + flavour_desc;
+        return " to " + flavour_desc + " if any damage is dealt";
     }
 
-    return " and " + flavour_desc;
+    return " to " + flavour_desc;
 }
 
 struct mon_attack_info
@@ -3114,7 +3119,7 @@ static string _monster_attacks_description(const monster_info& mi)
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
         const string weapon_note
-            = info.weapon ? make_stringf(" (plus %s %s)",
+            = info.weapon ? make_stringf(" plus %s %s",
                                          mi.pronoun(PRONOUN_POSSESSIVE),
                                          info.weapon->name(DESC_PLAIN).c_str())
                           : "";
@@ -3127,22 +3132,31 @@ static string _monster_attacks_description(const monster_info& mi)
         if (attack.flavour == AF_PURE_FIRE)
         {
             attack_descs.push_back(
-                make_stringf("%s to deal up to %d fire damage",
+                make_stringf("%s for up to %d fire damage",
                              mon_attack_name(attack.type).c_str(),
                              flavour_damage(attack.flavour, mi.hd, false)));
             continue;
         }
 
+        // Damage is listed in parentheses for attacks with a flavour
+        // description, but not for plain attacks.
+        bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
+        const string damage_desc =
+            make_stringf("%sfor up to %d damage%s%s%s",
+                         has_flavour ? "(" : "",
+                         attack.damage,
+                         attack_count.second > 1 ? " each" : "",
+                         weapon_note.c_str(),
+                         has_flavour ? ")" : "");
+
         attack_descs.push_back(
-            make_stringf("%s%s%s%s for up to %d damage%s%s%s",
+            make_stringf("%s%s%s%s %s%s",
                          _special_flavour_prefix(attack.flavour),
                          mon_attack_name(attack.type).c_str(),
                          _flavour_range_desc(attack.flavour),
                          count_desc.c_str(),
-                         attack.damage,
-                         weapon_note.c_str(),
-                         _flavour_effect(attack.flavour, mi.hd).c_str(),
-                         attack_count.second > 1 ? " each time" : ""));
+                         damage_desc.c_str(),
+                         _flavour_effect(attack.flavour, mi.hd).c_str()));
     }
 
 
