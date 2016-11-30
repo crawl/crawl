@@ -852,7 +852,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
-    if (dam > 0 && death_type != KILLED_BY_POISON)
+    // Don't wake up the player with fatal or poison damage.
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
     const bool non_death = death_type == KILLED_BY_QUITTING
@@ -924,6 +925,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
+            // Ensure divine intervention wakes up sleeping players. Necessary
+            // because we otherwise don't wake up players who take fatal damage.
+            you.check_awaken(500);
             return;
         }
 
