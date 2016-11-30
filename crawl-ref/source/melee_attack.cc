@@ -3453,7 +3453,6 @@ int melee_attack::martial_damage_mod(int dam)
 {
     if (is_ieoh_jian_martial)
     {
-        int original_dam = dam;
         ASSERT(have_passive(passive_t::martial_weapon_mastery));
         ASSERT(you.weapon());
 
@@ -3463,8 +3462,6 @@ int melee_attack::martial_damage_mod(int dam)
         // Lunge gets a damage bonus.
         if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
             dam = div_rand_round(dam * 15, 10);
-
-        dprf("Martial damage modifier, from %d to %d", original_dam, dam);
     }
 
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_MOMENTUM)

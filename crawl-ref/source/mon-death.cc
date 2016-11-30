@@ -3599,11 +3599,11 @@ bool ieoh_jian_kill_oldest_weapon(bool ignore_divine)
         int divine_degree = front_weapon->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
         front_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
 
-        if (divine_degree > 0)
-        {
+        if (divine_degree == 2)
             mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", front_weapon->name(DESC_THE, false, true, false).c_str());
+       
+        if (divine_degree > 0)
             return false;
-        }
     }
 
     monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);
