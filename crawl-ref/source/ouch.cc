@@ -852,7 +852,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
-    // Don't wake up the player with fatal or poison damage.
+    // Don't wake the player with fatal or poison damage.
     if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
@@ -918,6 +918,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             dam -= mp;
             dec_mp(mp);
+
+            // Wake players who took fatal damage exactly equal to current HP,
+            // but had it reduced below fatal threshhold by spirit shield.
+            if (dam < you.hp)
+                you.check_awaken(500);
+
             if (dam <= 0 && you.hp > 0)
                 return;
         }
@@ -925,8 +931,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
-            // Ensure divine intervention wakes up sleeping players. Necessary
-            // because we otherwise don't wake up players who take fatal damage.
+            // Ensure divine intervention wakes sleeping players. Necessary
+            // because we otherwise don't wake players who take fatal damage.
             you.check_awaken(500);
             return;
         }
