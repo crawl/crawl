@@ -20,6 +20,13 @@
 
 #define NUM_PIETY_STARS 6
 
+enum lifesaving_chance
+{
+    LIFESAVE_NEVER,
+    LIFESAVE_SOMETIMES,
+    LIFESAVE_ALWAYS,
+};
+
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
@@ -97,7 +104,7 @@ bool god_hates_spell(spell_type spell, god_type god,
                      bool rod_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
-int elyvilon_lifesaving();
+lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
