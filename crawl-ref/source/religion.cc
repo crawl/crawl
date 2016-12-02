@@ -699,29 +699,25 @@ static void _inc_penance(god_type god, int val)
             notify_stat_change();
         }
 
-        // Neither does Trog's regeneration or magic resistance.
         if (god == GOD_TROG)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
 
-            make_god_gifts_disappear(); // only on level
+            make_god_gifts_disappear();
         }
-        // Neither does Zin's divine stamina.
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_DIVINE_STAMINA])
                 zin_remove_divine_stamina();
         }
-        // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
         {
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
 
-            make_god_gifts_disappear(); // only on level
+            make_god_gifts_disappear();
         }
-        // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
         {
             if (you.duration[DUR_DIVINE_VIGOUR])
@@ -774,6 +770,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_CHANNEL_ENERGY])
                 you.duration[DUR_CHANNEL_ENERGY] = 0;
+            if (you.attribute[ATTR_DIVINE_ENERGY])
+                you.attribute[ATTR_DIVINE_ENERGY] = 0;
         }
 
         if (you_worship(god))
@@ -2690,15 +2688,13 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_MAKHLEB:
         _set_penance(old_god, 25);
-        add_daction(DACT_ALLY_MAKHLEB);
+        make_god_gifts_disappear();
         break;
 
     case GOD_TROG:
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
-
-        add_daction(DACT_ALLY_TROG);
-
+        make_god_gifts_disappear();
         _set_penance(old_god, 50);
         break;
 
@@ -2738,13 +2734,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
 
-        // Leaving TSO for a non-good god will make all your followers
-        // abandon you. Leaving him for a good god will make your holy
-        // followers (daeva and angel servants) indifferent.
-        if (!is_good_god(new_god))
-            add_daction(DACT_ALLY_HOLY);
-        else
-            add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
+        make_god_gifts_disappear();
 
         _set_penance(old_god, 30);
         break;
@@ -2756,11 +2746,6 @@ void excommunication(bool voluntary, god_type new_god)
         if (env.sanctuary_time)
             remove_sanctuary();
 
-        // Leaving Zin for a non-good god will make neutral holies
-        // (originally from TSO) abandon you.
-        if (!is_good_god(new_god))
-            add_daction(DACT_ALLY_HOLY);
-
         _set_penance(old_god, 25);
         break;
 
@@ -2768,11 +2753,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-
-        // Leaving Elyvilon for a non-good god will make neutral holies
-        // (originally from TSO) abandon you.
-        if (!is_good_god(new_god))
-            add_daction(DACT_ALLY_HOLY);
 
         _set_penance(old_god, 30);
         break;
@@ -2895,14 +2875,6 @@ void excommunication(bool voluntary, god_type new_god)
     default:
         _set_penance(old_god, 25);
         break;
-    }
-
-    // When you start worshipping a non-good god, or no god, you make
-    // all non-hostile holy beings that worship a good god hostile.
-    if (!is_good_god(new_god) && query_daction_counter(DACT_ALLY_HOLY))
-    {
-        mprf(MSGCH_MONSTER_ENCHANT, "The divine host forsakes you.");
-        add_daction(DACT_ALLY_HOLY);
     }
 
 #ifdef USE_TILE_LOCAL
