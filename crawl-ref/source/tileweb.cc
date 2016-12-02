@@ -645,7 +645,7 @@ static bool _update_statuses(player_info& c)
         {
             if (!you.duration[status])
                 continue;
-            inf.short_text = "shielded";
+            inf.short_text = "divine shield";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
