@@ -702,6 +702,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_DIVINE_STAMINA])
                 zin_remove_divine_stamina();
+            if (env.sanctuary_time)
+                remove_sanctuary();
         }
         // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
