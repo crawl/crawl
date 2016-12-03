@@ -865,6 +865,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
     case (ET_SHIELD):
         if (bondage == 2)
             boost[SK_SHIELDS] = 1;
+            boost[SK_UNARMED_COMBAT] = 1;
         break;
 
     // Bonus for bounded armour depends on body armour type.
