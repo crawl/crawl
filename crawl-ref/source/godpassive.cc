@@ -298,6 +298,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         { 0, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
         { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks. read your weapon description for details" },
         { 4, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
+        { 5, passive_t::afterimage, "leave a distracting afterimage after swapping weapons" }, 
     },
 };
 
@@ -1706,10 +1707,10 @@ bool ieoh_jian_interest()
     return false;
 }
 
-bool ieoh_jian_despawn_weapon(bool at_excommunication)
+bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
 {
     // We kill any ordinary IJC weapons first, in order of age.
-    if (ieoh_jian_kill_oldest_weapon(at_excommunication))
+    if (ieoh_jian_kill_oldest_weapon(urgent))
     {
         you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
         return true;
@@ -1717,7 +1718,7 @@ bool ieoh_jian_despawn_weapon(bool at_excommunication)
 
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
     {
-        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !at_excommunication)
+        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !urgent)
         {
             int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
             you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
@@ -1744,8 +1745,6 @@ bool ieoh_jian_despawn_weapon(bool at_excommunication)
 
     // If there aren't any left, but there is an animated weapon belonging to
     // the player, we pull it back to the player's hand, killing the ghost.
-    // This has the side effect of shattering the IJC weapon that the player was
-    // wielding, if applicable.
     auto monsters = find_ieoh_jian_manifested_weapons(true);
     if (!monsters.empty())
     {
@@ -1959,7 +1958,14 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
     // We swap, and if there is a monster we can hit that we couldn't before, we do so.
     if (swapped_monster && swapped_monster->alive() && swapped_monster->type == MONS_IEOH_JIAN_WEAPON)
     {
-        swapped_monster->ieoh_jian_swap_weapon_with_player();
+        auto swap_success = swapped_monster->ieoh_jian_swap_weapon_with_player();
+
+        if (swap_success && have_passive(passive_t::afterimage))
+        {
+            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = IEOH_JIAN_ATTENTION_SPAN;
+            you.redraw_evasion = true;
+        }
+
         if (have_passive(passive_t::martial_weapon_mastery))
             _ieoh_jian_perform_martial_attacks(old_pos, already_hit);
     }

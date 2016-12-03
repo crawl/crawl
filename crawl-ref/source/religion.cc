@@ -338,6 +338,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
       { 4, "hit pressure points as you attack while moving",
            "no longer hit pressure points as you attack while moving" },
+      { 5, "leave a distracting afterimage as you switch weapons",
+           "no longer leave a distracting afterimage as you switch weapons" },
     },
 };
 
@@ -2916,7 +2918,7 @@ void excommunication(bool voluntary, god_type new_god)
             simple_god_message(" withdraw all divine help and plot revenge.", old_god);
             _set_penance(old_god, 25);
         }
-        while(ieoh_jian_despawn_weapon(true)){};
+        while(ieoh_jian_despawn_weapon(true, true)){};
 
         break;
     default:
