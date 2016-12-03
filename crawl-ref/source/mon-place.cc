@@ -887,9 +887,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     if (create_band)
     {
-        // Is this a band comprised solely of ugly things?
-        bool band_is_ugly = band_monsters[0] == MONS_UGLY_THING
-            || band_monsters[0] == MONS_VERY_UGLY_THING;
 #ifdef DEBUG_MON_CREATION
         mprf(MSGCH_DIAGNOSTICS, "Choose band members...");
 #endif
@@ -900,19 +897,10 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             band_monsters[i] = _band_member(band, i, place, allow_ood);
             if (band_monsters[i] == NUM_MONSTERS)
                 die("Unhandled band type %d", band);
-
-            if (band_is_ugly
-                && !(band_monsters[i] == MONS_UGLY_THING
-                    || band_monsters[i] == MONS_VERY_UGLY_THING))
-            {
-                // The whole band isn't ugly.
-                band_is_ugly = false;
-            }
         }
 
         // Set the (very) ugly thing band colour.
-        if (band_is_ugly && ugly_thing_colour_offset(mg.colour) == -1)
-            mg.colour = ugly_thing_random_colour();
+        ugly_thing_apply_uniform_band_colour(mg, band_monsters, band_size);
     }
 
     // Returns 2 if the monster is placed near player-occupied stairs.
