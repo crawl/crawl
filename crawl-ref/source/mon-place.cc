@@ -885,9 +885,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     band_type band = BAND_NO_BAND;
     band_monsters[0] = mg.cls;
 
-    // The (very) ugly thing band colour.
-    static colour_t ugly_colour = COLOUR_UNDEF;
-
     if (create_band)
     {
 #ifdef DEBUG_MON_CREATION
@@ -900,23 +897,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             band_monsters[i] = _band_member(band, i, place, allow_ood);
             if (band_monsters[i] == NUM_MONSTERS)
                 die("Unhandled band type %d", band);
-
-            // Get the (very) ugly thing band colour, so that all (very)
-            // ugly things in a band will start with it.
-            if ((band_monsters[i] == MONS_UGLY_THING
-                || band_monsters[i] == MONS_VERY_UGLY_THING)
-                    && ugly_colour == COLOUR_UNDEF)
-            {
-                ugly_colour = ugly_thing_colour_offset(mg.colour) == -1
-                            ? ugly_thing_random_colour()
-                            : mg.colour;
-            }
         }
-    }
 
-    // Set the (very) ugly thing band colour.
-    if (ugly_colour != COLOUR_UNDEF)
-        mg.colour = ugly_colour;
+        // Set the (very) ugly thing band colour.
+        ugly_thing_apply_uniform_band_colour(mg, band_monsters, band_size);
+    }
 
     // Returns 2 if the monster is placed near player-occupied stairs.
     int pval = _is_near_stairs(mg.pos);
@@ -1036,10 +1021,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         // Sanity check that the specified position is valid.
         return 0;
     }
-
-    // Reset the (very) ugly thing band colour.
-    if (ugly_colour != COLOUR_UNDEF)
-        ugly_colour = COLOUR_UNDEF;
 
     monster* mon = _place_monster_aux(mg, 0, place, force_pos, dont_place);
 
