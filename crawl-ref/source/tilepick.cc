@@ -3500,13 +3500,10 @@ tileidx_t tileidx_ability(const ability_type ability)
 
      // Ieoh Jian
     case ABIL_IEOH_JIAN_PROJECT_WEAPON:
-    case ABIL_IEOH_JIAN_DRAGONFLY: // For the time being.
         return TILEG_ABILITY_IEOH_JIAN_PROJECT_WEAPON;
-
     case ABIL_IEOH_JIAN_RECALL_WEAPON:
         return TILEG_ABILITY_IEOH_JIAN_RECALL_WEAPON;
   
-
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
     case ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL:

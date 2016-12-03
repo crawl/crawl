@@ -338,7 +338,6 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
       { 4, "hit pressure points as you attack while moving",
            "no longer hit pressure points as you attack while moving" },
-      { 5, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate foes with a rain of blades" },
     },
 };
 

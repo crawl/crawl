@@ -43,7 +43,5 @@ enum nemelex_gift_types
 #define IEOH_JIAN_DIVINE_MOMENTUM "ieoh-jian-momentum"
 /// Whether a the weapon is being projected
 #define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
-/// Whether a the weapon is being projected as part of a Steel Dragonfly
-#define IEOH_JIAN_DRAGONFLY "ieoh-jian-dragonfly"
 
 #endif

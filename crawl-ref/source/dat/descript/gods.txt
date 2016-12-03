@@ -75,8 +75,7 @@ after battling their way out of the afterlife. Disciples of the Council are
 taught to wield every weapon type with great proficiency. As they follow the
 Path they will become able to manifest blades at will from thin air, to execute
 acrobatic martial maneuvers, such as pole vaulting with polearms, performing
-powerful lunges with short blades, and more. Finally, they will learn how
-to obliterate monsters with a rain of steel.
+powerful lunges with short blades, and more.
 %%%%
 Jiyva
 
@@ -317,8 +316,7 @@ weapons around the follower, which they can grab and wield at will. They will la
 initiated in the path of martial arts, learning to perform martial techniques such as
 aerial strikes with staves and spears, powerful lunges with daggers and axes, and 
 spinning attacks with maces and long blades. They will be taught the technique necessary
-to strike vital pressure points, and eventually to command multiple flying weapons to
-strike at once for a spectacular finish. 
+to strike vital pressure points and to remain evasive when switching weapons.
 %%%%
 Kikubaaqudgha powers
 

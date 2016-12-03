@@ -453,7 +453,6 @@ enum ability_type
     // Ieoh Jian
     ABIL_IEOH_JIAN_PROJECT_WEAPON = 1300,
     ABIL_IEOH_JIAN_RECALL_WEAPON,
-    ABIL_IEOH_JIAN_DRAGONFLY,
     ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL,
 
     // For both Yred and Beogh

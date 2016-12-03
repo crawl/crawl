@@ -246,11 +246,6 @@ int attack::calc_to_hit(bool random)
         return AUTOMATIC_HIT;
     }
 
-    if (using_weapon() && weapon->props.exists(IEOH_JIAN_PROJECTED) && defender->is_player()) // Prevent Dragonfly from chooping you up.
-    {
-        return 0;
-    }
-
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
     if (defender == nullptr)
