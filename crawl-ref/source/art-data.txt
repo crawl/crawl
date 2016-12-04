@@ -1302,6 +1302,7 @@ PLUS: +9
 BRAND: SPWPN_ELECTROCUTION
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_guan_dao
+TILE_EQ: divine_guan_dao
 BOOL: nogen
 
 ENUM: DIVINE_YUE
@@ -1323,6 +1324,7 @@ PLUS: +9
 BRAND: SPWPN_FLAMING
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_chang_dao
+TILE_EQ: divine_chang_dao
 BOOL: nogen
 
 ENUM: DIVINE_MONK_SPADE
