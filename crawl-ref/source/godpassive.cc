@@ -1419,7 +1419,10 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
 // piety. Tiers overlap to some extent until you end up only receiving weapons and brands from the highest tier.
 static int _weight_by_tier(int tier)
 {
-    int effective_level = you.skill(SK_INVOCATIONS, 1, false) + 4 * piety_rank(you.piety); // up to 51
+    // Up to 51.
+    int effective_level = div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 2)
+                        + div_rand_round(you.experience_level, 2)
+                        + 4 * piety_rank(you.piety);
     int weight = 0;
     switch (tier)
     {
@@ -1584,7 +1587,7 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
 
     // Piety and invo based, with some variance. Saturates at 9 very late.
     weapon.plus = min(9, div_rand_round(piety_rank(you.piety) * 10, 15)
-                         + random2(1 + div_rand_round(you.skill(SK_INVOCATIONS,1, false),9))
+                         + random2(1 + div_rand_round(you.experience_level,9))
                          + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 9));
 
     FixedVector<int, 3> brand_weights
@@ -1666,20 +1669,39 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
 
 static bool ieoh_jian_choose_weapon(item_def& weapon)
 {
-    int tension = get_tension(GOD_IEOH_JIAN);
-    int divine_chance = tension > 10 ? (min(get_tension(GOD_IEOH_JIAN), you.skill(SK_INVOCATIONS, 1, false))) : 0;
-    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    if (piety_rank() < 5)
+        return _ieoh_jian_choose_normal_weapon(weapon);
 
-    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
-        divine_chance = 0;
+    int monsters = 0;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        const monster* mon = monster_at(*ri);
+        if (mon && mon->alive() && you.can_see(*mon))
+            monsters++;
+    }
+
+    if (monsters < 3)
+        return _ieoh_jian_choose_normal_weapon(weapon);
+
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
 
     for (auto monster : manifested)
         if (monster->weapon() && monster->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
-            divine_chance = 0; // Only one divine weapon at the time!
+            return _ieoh_jian_choose_normal_weapon(weapon); // Only one divine weapon at a time!
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        return _ieoh_jian_choose_normal_weapon(weapon); 
+
+    int tension = get_tension(GOD_IEOH_JIAN);
+
+    if (tension < 10)
+        return _ieoh_jian_choose_normal_weapon(weapon); 
+
+    int divine_chance = min(get_tension(GOD_IEOH_JIAN), 5 + you.skill(SK_INVOCATIONS, 1, false));
 
     dprf("Choosing IJC weapon with tension %d and chance of divine weapon %d", tension, divine_chance);
 
-    if ((piety_rank() > 4) && x_chance_in_y(divine_chance, 100)) 
+    if (x_chance_in_y(divine_chance, 100)) 
         return _ieoh_jian_choose_divine_weapon(weapon);
     else
         return _ieoh_jian_choose_normal_weapon(weapon);
@@ -1962,7 +1984,7 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 
         if (swap_success && have_passive(passive_t::afterimage))
         {
-            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = IEOH_JIAN_ATTENTION_SPAN;
+            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = div_rand_round(10 * IEOH_JIAN_ATTENTION_SPAN, 15);
             you.redraw_evasion = true;
         }
 
