@@ -3020,21 +3020,18 @@ int ugly_thing_colour_offset(colour_t colour)
 void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
     const monster_type *band_monsters, size_t num_monsters_in_band)
 {
-    bool band_is_ugly = true;
-
     // Verify that the whole band is ugly.
     for (size_t i = 0; i < num_monsters_in_band; i++)
     {
         if (!(band_monsters[i] == MONS_UGLY_THING
             || band_monsters[i] == MONS_VERY_UGLY_THING))
         {
-            band_is_ugly = false;
-            break;
+            return;
         }
     }
 
     // Apply a uniform colour to a fully-ugly band.
-    if (band_is_ugly && ugly_thing_colour_offset(mg.colour) == -1)
+    if (ugly_thing_colour_offset(mg.colour) == -1)
         mg.colour = ugly_thing_random_colour();
 }
 
