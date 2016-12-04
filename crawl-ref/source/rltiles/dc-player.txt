@@ -528,6 +528,8 @@ asmodeus ASMODEUS
 dispater DISPATER
 olgreb OLGREB
 order ORDER
+divine_monks_spade DIVINE_MONKS_SPADE
+divine_yue DIVINE_YUE
 ## axes
 axe_trog AXE_TROG
 arga ARGA

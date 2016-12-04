@@ -1311,6 +1311,7 @@ PLUS: +9
 BRAND: SPWPN_FLAMING
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_yue
+TILE_EQ: divine_yue
 BOOL: nogen
 
 ENUM: DIVINE_CHANG_DAO
@@ -1331,6 +1332,7 @@ PLUS: +9
 BRAND: SPWPN_SPEED
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_monks_spade
+TILE_EQ: divine_monks_spade
 BOOL: nogen
 
 ENUM: DIVINE_METEOR_HAMMER
