@@ -1291,6 +1291,7 @@ PLUS: +9
 BRAND: SPWPN_ELECTROCUTION
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_deer_horn_knife
+TILE_EQ: divine_deer_horn_knife
 BOOL: nogen
 
 ENUM: DIVINE_GUAN_DAO
@@ -1343,6 +1344,7 @@ PLUS: +9
 BRAND: SPWPN_SPEED
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_meteor_hammer
+TILE_EQ: divine_meteor_hammer
 BOOL: nogen
 
 # This entry must always be last.

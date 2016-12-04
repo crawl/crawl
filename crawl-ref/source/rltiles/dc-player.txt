@@ -530,6 +530,8 @@ olgreb OLGREB
 order ORDER
 divine_monks_spade DIVINE_MONKS_SPADE
 divine_yue DIVINE_YUE
+divine_meteor_hammer DIVINE_METEOR_HAMMER
+divine_deer_horn_knife DIVINE_DEER_HORN_KNIFE
 ## axes
 axe_trog AXE_TROG
 arga ARGA
