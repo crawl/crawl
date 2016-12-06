@@ -2157,9 +2157,10 @@ item_def* monster_die(monster* mons, killer_type killer,
             if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
                 you.weapon()->props[IEOH_JIAN_SLOT] = (int)i;
         }
-        else
+        else if (was_active || (mons->weapon() && (!mons->weapon()->props.exists(IEOH_JIAN_SLOT)
+                                                   || mons->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))))
         {
-            // If the kill wasn't divine, the weapon is immediately reformed in LOS.
+            // weapons of some importance (animated, yours, divine) reform in LOS
             coord_def reform_location;
             random_near_space(mons, mons->pos(), reform_location, true, false, true);
             monster* new_mons = ieoh_jian_manifest_weapon_monster(reform_location, *(mons->weapon()));
@@ -2180,6 +2181,11 @@ item_def* monster_die(monster* mons, killer_type killer,
                 }
             }
 
+        }
+        else
+        {
+            if (you.can_see(*mons) && !silent)
+                mprf("%s shatters in a myriad of steel fragments!", mons->weapon()->name(DESC_THE, false, true).c_str());
         }
 
         if (!silent)

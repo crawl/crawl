@@ -1850,7 +1850,7 @@ static bool _ieoh_jian_retribution()
             simple_god_message(" whisper, \"Die by a thousand cuts...\"");
             mpr("You feel the sudden stab of multiple needles!");
             _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_LONG_CIRCLE);
-            if (ieoh_jian_stolen_value() > 8)
+            if (ieoh_jian_stolen_value() > 9)
                 _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_CHECKERBOARD);
             you.set_duration(DUR_BARBS,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
@@ -1858,7 +1858,7 @@ static bool _ieoh_jian_retribution()
             simple_god_message(" whisper, \"Nowhere to run...\"");
             mpr("Your limbs feel heavy!");
             _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_LONG_CIRCLE);
-            if (ieoh_jian_stolen_value() > 8)
+            if (ieoh_jian_stolen_value() > 9)
                 _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_SHORT_CIRCLE);
             you.set_duration(DUR_SLOW,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
@@ -1874,7 +1874,7 @@ static bool _ieoh_jian_retribution()
             simple_god_message(" whisper, \"Watch your step...\"");
             mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_SHORT_CIRCLE);
-            if (ieoh_jian_stolen_value() > 8)
+            if (ieoh_jian_stolen_value() > 9)
                 _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_CHECKERBOARD);
             _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
             break;

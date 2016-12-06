@@ -3114,6 +3114,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                      false, 'n'))
         {
             you.weapon()->props.erase(IEOH_JIAN_SLOT);
+            you.weapon()->props.erase(IEOH_JIAN_DIVINE_DEGREE);
             you.weapon()->props[IEOH_JIAN_STOLEN] = true;
             if (!you.weapon()->inscription.empty())
                 you.weapon()->inscription += ", ";
