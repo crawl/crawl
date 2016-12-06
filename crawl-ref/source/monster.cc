@@ -6568,6 +6568,7 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
             return false; // Player wouldn't be able to wield it safely.
         }
 
+        unequip_effect(EQ_WEAPON, you.equip[EQ_WEAPON], false, false);
         auto your_weapon_copy = *(you.weapon());
         *(you.weapon()) = *(weapon());
         *(weapon()) = your_weapon_copy;
@@ -6575,6 +6576,8 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         you.weapon()->slot = weapon()->slot;
         you.weapon()->link = weapon()->link;
         weapon()->set_holding_monster(*this);
+        equip_effect(EQ_WEAPON, you.equip[EQ_WEAPON], false, false);
+        auto_id_inventory();
 
         // We need to reinitialize the ghost to inherit the qualities of the new weapon.
         int power = ieoh_jian_calc_power_for_weapon((weapon_type) weapon()->sub_type);
@@ -6586,8 +6589,6 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 
     if (you.weapon())
     {
-        equip_effect(EQ_WEAPON, you.equip[EQ_WEAPON], false, false);
-        auto_id_inventory();
         you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
         update_can_train();
     }
