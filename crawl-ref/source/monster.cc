@@ -55,6 +55,7 @@
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "rot.h"
 #include "skills.h"
@@ -6585,6 +6586,8 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 
     if (you.weapon())
     {
+        equip_effect(EQ_WEAPON, you.equip[EQ_WEAPON], false, false);
+        auto_id_inventory();
         you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
         update_can_train();
     }
