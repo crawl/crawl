@@ -608,7 +608,8 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Try to pick an enhancer staff matching the player's best skill.
-    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
+    skill_type best_spell_skill = best_skill(SK_FIRST_MAGIC_SCHOOL,
+                                             SK_LAST_MAGIC);
     bool found_enhancer = false;
     int result = 0;
     do
