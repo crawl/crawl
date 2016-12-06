@@ -1789,7 +1789,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
             if (you.weapon())
                 mprf("%s flies back to your %s!", you.weapon()->name(DESC_YOUR, false, true, false).c_str(), you.hand_name(false).c_str());
             else
-                mprf("%s flies back to your %s, but you're too encumbered to catch it!", 
+                mprf("%s flies back to your %s, but you fail to catch it!", 
                      monster->weapon()->name(DESC_YOUR, false, true, false).c_str(),
                      you.hand_name(false).c_str());
 
