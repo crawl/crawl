@@ -569,6 +569,9 @@ int player::halo_radius() const
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
 
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        size = max(size, 1);
+
     return size;
 }
 

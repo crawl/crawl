@@ -1663,7 +1663,7 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
     }
 
     weapon.quantity = 1;
-    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 4;
+    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 30;
     return true;
 }
 
@@ -1694,7 +1694,7 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
 
     int tension = get_tension(GOD_IEOH_JIAN);
 
-    if (tension < 10)
+    if (tension < 15)
         return _ieoh_jian_choose_normal_weapon(weapon); 
 
     int divine_chance = min(get_tension(GOD_IEOH_JIAN), 5 + you.skill(SK_INVOCATIONS, 1, false));
@@ -1745,7 +1745,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
             int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
             you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
 
-            if (divine_degree == 2)
+            if (divine_degree == 10)
                 mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", you.weapon()->name(DESC_THE, false, true, false).c_str());
 
             if (divine_degree > 0)
@@ -1753,7 +1753,10 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
         }
 
         if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        {
             mprf("%s slips out of your %s and ascends back to the heavens!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
+            invalidate_agrid(true);
+        }
         else
             mprf("%s shatters in your %s!", you.weapon()->name(DESC_THE, false, true).c_str(), you.hand_name(false).c_str());
 

@@ -2194,7 +2194,10 @@ item_def* monster_die(monster* mons, killer_type killer,
             check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
 
         if (!reformed && mons->weapon() && mons->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        {
             mprf("%s ascends back to the heavens!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
+            invalidate_agrid(true);
+        }
 
         silent = true;
 
@@ -3607,7 +3610,7 @@ bool ieoh_jian_kill_oldest_weapon(bool ignore_divine)
         int divine_degree = front_weapon->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
         front_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
 
-        if (divine_degree == 2)
+        if (divine_degree == 10)
             mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", front_weapon->name(DESC_THE, false, true, false).c_str());
        
         if (divine_degree > 0)
