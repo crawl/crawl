@@ -1986,6 +1986,7 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
         {
             you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = div_rand_round(10 * IEOH_JIAN_ATTENTION_SPAN, 15);
             you.redraw_evasion = true;
+            update_screen();
         }
 
         if (have_passive(passive_t::martial_weapon_mastery))
