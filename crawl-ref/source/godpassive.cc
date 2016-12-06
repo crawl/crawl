@@ -1786,7 +1786,6 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
             if (monster->alive())
                 monster_die(monster, KILL_RESET, NON_MONSTER);
 
-            you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
             return true;
         }
         else 
@@ -1970,12 +1969,12 @@ static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_
 
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 {
+    auto swapped_monster = monster_at(old_pos);
     // We perform martial attacks with the weapon we had before potentially swapping for another
     vector<monster*> already_hit;
     if (have_passive(passive_t::martial_weapon_mastery))
         already_hit = _ieoh_jian_perform_martial_attacks(old_pos, already_hit);
     sort(already_hit.begin(), already_hit.end());
-    auto swapped_monster = monster_at(old_pos);
 
     // We swap, and if there is a monster we can hit that we couldn't before, we do so.
     if (swapped_monster && swapped_monster->alive() && swapped_monster->type == MONS_IEOH_JIAN_WEAPON)

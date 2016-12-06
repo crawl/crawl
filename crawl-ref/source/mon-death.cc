@@ -2186,6 +2186,8 @@ item_def* monster_die(monster* mons, killer_type killer,
         {
             if (you.can_see(*mons) && !silent)
                 mprf("%s shatters in a myriad of steel fragments!", mons->weapon()->name(DESC_THE, false, true).c_str());
+
+            you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
         }
 
         if (!silent)

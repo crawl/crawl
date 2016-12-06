@@ -712,7 +712,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  * @param effective_attack_number   ?
  */
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
-                           int attack_number, int effective_attack_number)
+                           int attack_number, int effective_attack_number, bool ieoh_jian_martial)
 {
     while (attacker.alive() && !targets.empty())
     {
@@ -721,6 +721,8 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
+
+            attck.is_ieoh_jian_martial = ieoh_jian_martial;
             attck.attack();
         }
         targets.pop_front();

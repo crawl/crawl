@@ -761,7 +761,7 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number);
+                              effective_attack_number, is_ieoh_jian_martial);
     }
 
     // Check for passive mutation effects.
