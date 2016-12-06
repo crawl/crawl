@@ -1042,23 +1042,31 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     beam_type what = BEAM_NONE;
     duration_type dur = NUM_DURATIONS;
     string descript = "";
+    bool max_resists = false;
+
     switch (flavour)
     {
         case BEAM_FIRE:
         case BEAM_LAVA:
         case BEAM_STICKY_FLAME:
         case BEAM_STEAM:
+            if (you.res_fire() >= 3 && !you.duration[DUR_QAZLAL_FIRE_RES])
+                max_resists = true;
             what = BEAM_FIRE;
             dur = DUR_QAZLAL_FIRE_RES;
             descript = "fire";
             break;
         case BEAM_COLD:
         case BEAM_ICE:
+            if (you.res_cold() >= 3 && !you.duration[DUR_QAZLAL_COLD_RES])
+                max_resists = true;
             what = BEAM_COLD;
             dur = DUR_QAZLAL_COLD_RES;
             descript = "cold";
             break;
         case BEAM_ELECTRICITY:
+            if (you.res_elec() >= 2 && !you.duration[DUR_QAZLAL_ELEC_RES]) // max is 2 for this way of accessing it
+                max_resists = true;
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
@@ -1099,8 +1107,13 @@ void qazlal_element_adapt(beam_type flavour, int strength)
         you.redraw_armour_class = true;
     }
 
-    mprf(MSGCH_GOD, "You feel %sprotected from %s.",
-         you.duration[dur] > 0 ? "more " : "", descript.c_str());
+    if (max_resists)
+    {
+        mprf(MSGCH_GOD, "You feel momentarily protected from %s.", descript.c_str());
+        return;
+    } else
+        mprf(MSGCH_GOD, "You feel %sprotected from %s.",
+            you.duration[dur] > 0 ? "more " : "", descript.c_str());
 
     // was scaled by 10 * strength. But the strength parameter is used so inconsistently that
     // it seems like a constant would be better, based on the typical value of 2.
