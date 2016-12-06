@@ -204,17 +204,13 @@ installed through the AppStore as a free download; the associated command line
 tools can then be installed by opening Xcode, opening the Preferences dialog,
 and clicking Install on the Command Line Tools line in the Download tab.
 
-Mac builds then use the Unix build process described above, but require you to
-add 'APPLE_GCC=y' to the 'make' command-line. In addition, to build the
-graphical version of Crawl, you must add 'NO_PKGCONFIG=y' and 'CONTRIB_SDL=y'.
-
-So, to build build Crawl on a Mac you could use the following example command
-lines.
+Mac builds then use the Unix build process described above. To build Crawl on
+a Mac you could use the following example command lines.
 
 For the console version:
-  make APPLE_GCC=y
+  make
 For the graphical version:
-  make APPLE_GCC=y NO_PKGCONFIG=y CONTRIB_SDL=y TILES=y
+  make TILES=y
 
 
 Building on Windows (MSYS2)
@@ -227,64 +223,28 @@ download the MSYS2 installer from the following website:
 
 https://msys2.github.io/
 
-Follow all of the steps you see on that page to install MSYS2, but please read
-the additional notes below. The note for after Step 6 is particularly important
-to be able to start the MSYS2 shell.
-
-* Download and run the MSYS2 installer exe at the top that is appropriate for
-  your processor, either the 32-bit or 64-bit. The 32-bit installer file has
-  the prefix 'msys2-i686', and the 64-bit version has the prefix
-  'msys2-x86_64'. Most modern systems have 64-bit processors, but you can check
-  your system under Start->About this Computer or (e.g. Windows 10)
-  Start->Settings->About.
+You generally want to install the 64-bit version of MSYS2 unless you have a
+specific reason to build a 32-bit version of crawl. Follow all of the steps you
+see on that page to install MSYS2, but please read the additional notes below.
+In particular, when starting the MSYS2 Shell, be sure to run the 64-bit MinGW
+version of MSYS2 and *not* the version labeled 'MSYS2 MSYS'.
 
 * The installer will put all MSYS2/MinGW files into a folder of your choice,
-  which defaults to 'C:\msys64'. You should not reuse any previous folder made
-  with previous installs of MSYS (from msysgit and/or win-builds.org) or MSYS2
-  (from Git for Windows SDK). However if you have crawl-related work files from
-  such directories that you'd like to carry over, you can copy them to
-  e.g. 'C:\msys64\home\<Username>', where <Username> is your Windows
-  username. This is the path to your home directory in this new MSYS2
-  installation.
+  which defaults to 'C:\msys64'. If you have crawl-related work files from
+  other directories that you'd like to carry over, you can copy them into
+  'C:\msys64\home\<Username>', where <Username> is your Windows username. This
+  is the path to your home directory in this new MSYS2 installation.
 
-* After Step 6, where you update the installed packages, you'll see an update
-  message telling you to close the MSYS2 terminal and to update the Windows
-  shortcuts used to start MSYS2. The shortcut you'll use to start MSYS2 will be
-  either 'MinGW-w64 Win64 Shell' (64-bit systems) or 'MinGW-w64 Win32 Shell'
-  (32-bit systems), both of which you can find under the MSYS2 group in your
-  Start menu Applications list.
+* After the installer finishes, you'll want to start the MSYS2 Shell to follow
+  steps 5-7 in order to update your installation. Be sure to use the menu entry
+  that's labeled MSYS2 MinGW 64-bit and *not* the one labeled 'MSYS2 MSYS'.
+  After each update step, restart the MSYS2 shell before the next step.
 
-  You need to change the Target of this shortcut. On some systems you can
-  Right-click the shortcut and choosing Properties, and on later systems
-  (e.g. Windows 10), you Right-click, choose More->Open File Location,
-  right-click the file in the File manager window that appears, and then choose
-  Properties. From the Properties dialog, update the Target field according to
-  the message you saw in Step 6. For 64-bit systems, the necessary Target
-  should look like:
+After MSYS2 is fully installed and updated, follow steps below to install
+development packages and compile Crawl. The commands shown below should be run
+from within the MSYS2 Shell.
 
-  C:\msys64\msys2_shell.cmd -mingw64
-
-  For 32-bit systems:
-
-  C:\msys64\msys2_shell.cmd -mingw32
-
-  NOTE: The update message refers to a Target of 'MSYS2_ROOT\msys2_shell.cmd',
-  but the 'MSYS2_ROOT' in this path should be replaced with the directory where
-  you installed MSYS2, which by default is 'C:\msys64'.
-
-* After updating the shortcut above, you must close the MSYS2 shell and restart
-  it from the shortcut you've updated. Run the final update in Step 7 before
-  proceeding to the steps below. You can start the MSYS2 shell at any time
-  using the updated shortcut.
-
-  NOTE: You generally don't want to use the shortcut called 'MSYS2 Shell', as
-  this starts a shell for working with Cygwin-based MSYS2 components. Building
-  Crawl in this environment is currently not supported.
-
-Install Git and the development packages, and compile crawl:
-
-* To install git and the base development packages, run the following command
-  from the MSYS2 shell:
+* To install git and the base development packages, run:
 
   pacman -S base-devel git
 
@@ -292,48 +252,32 @@ Install Git and the development packages, and compile crawl:
   to any questions about installing packages or removing packages due to
   conflicts.
 
-* Install the mingw-w64 gcc toolchain for your system. For a 64-bit system,
-  run:
+* To install the mingw-w64 GCC toolchain for your system, run:
 
   pacman -S mingw-w64-x86_64-toolchain
-
-  For a 32-bit system, run:
-
-  pacman -S mingw-w64-i686-toolchain
 
   After the packages install, you're ready to build crawl!
 
 * To get the Crawl source, you can follow the steps in the Source Code Checkout
   section above to clone Crawl into your MSYS2 home directory. If you've
-  downloaded the source elsewhere, cd to that Crawl source directory. For
-  instance, if you have the Crawl sources in c:\crawl\source, you would type
-  'cd /c/crawl/source'.
+  downloaded the source elsewhere, first 'cd' to that Crawl source directory.
+  For example, if you have the Crawl sources in c:\crawl\source, you would run:
 
-* Build Crawl by running 'make'. If you want a graphical build, you will need
-  to add ' TILES=y' on the 'make' command line.
+  cd /c/crawl/source
+
+* Build the console version of Crawl by simply running:
+
+  make
+
+  If you want a graphical build, you will need to run add 'TILES=y':
+
+  make TILES=y
 
 * When the build process finishes, you can run crawl.exe directly from the
   source directory in the MSYS2 shell. For Tiles, type './crawl', and for
   console, type 'start crawl', which will open Crawl in a new console window
   (necessary for it to run properly). Both versions can also be started by
   double-clicking crawl.exe using the graphical file explorer.
-
-* For you stubborn types who insist on using separate MSYS and git installs,
-  make sure git.exe is in your PATH when trying to build from git! Otherwise,
-  util/gen_ver.pl will most likely fail to generate build.h.
-
-NOTE: If you have the older compilation environment of msysgit with Win-Builds
-gcc or a separate install of MSYS2 that otherwise differs from the steps above,
-you may need to add a 'NO_PKGCONFIG=y' argument when building Crawl. This makes
-the build use the contribs included in the Crawl distribution instead of those
-installed in your MSYS environment. If you do want to use these outside
-libraries, omit 'NO_PKGCONFIG=y', but you will likely need to use some of the
-Crawl contribs. You can make the build use a specific Crawl contrib library
-over ones installed in your MSYS by adding any of the following make arguments,
-which can be used in any combination:
-
-  BUILD_LUA=y BUILD_ZLIB=y BUILD_SQLITE=y BUILD_SDL2=y BUILD_SDL2IMAGE=y
-
 
 Building on Windows (Cygwin)
 ----------------------------

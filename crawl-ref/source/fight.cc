@@ -52,6 +52,19 @@
 #include "travel.h"
 
 /**
+ * What are the odds of an HD-checking confusion effect (e.g. Confusing Touch,
+ * Fungus Form, SPWPN_CHAOS maybe) to confuse a monster of the given HD?
+ *
+ * @param HD    The current hit dice (level) of the monster to confuse.
+ * @return      A percentage chance (0-100) of confusing that monster.
+ *              (Except it tops out at 80%.)
+ */
+int melee_confuse_chance(int HD)
+{
+    return max(80 * (24 - HD) / 24, 0);
+}
+
+/**
  * Switch from a bad weapon to melee.
  *
  * This function assumes some weapon is being wielded.
@@ -324,13 +337,25 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
  *
  * @param attacker  The attacker; may be null.
  * @param defender  The defender.
+ * @param actual    True if we're actually committing to a stab, false if we're
+ *                  just checking for display purposes.
  * @return          The best (most damaging) kind of stab available to the
  *                  attacker against this defender, or STAB_NO_STAB.
  */
 stab_type find_stab_type(const actor *attacker,
-                         const actor &defender)
+                         const actor &defender,
+                         bool actual)
 {
     const monster* def = defender.as_monster();
+
+    // Stabbing intelligent monsters is unchivalric, and disabled under TSO!
+    // When just checking for display purposes, still indicate when monsters
+    // are sleeping/paralysed etc.
+    if (actual && attacker && attacker->is_player()
+        && def && have_passive(passive_t::no_stabbing))
+    {
+        return STAB_NO_STAB;
+    }
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
@@ -378,10 +403,8 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_CONFUSED;
 
     // Distracted (but not batty); this only applies to players.
-    // Under TSO, monsters are never distracted by your allies.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(*def)
-        && (!you_worship(GOD_SHINING_ONE) || def->foe == MHITNOT))
+        && def && def->foe != MHITYOU && !mons_is_batty(*def))
     {
         return STAB_DISTRACTED;
     }
@@ -484,6 +507,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
             return defender->res_poison();
+        case BEAM_HOLY:
+            return defender->res_holy_energy();
         default:
             return 0;
     }
@@ -525,6 +550,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
                                      || flavour == BEAM_MALIGN_OFFERING
+                                     || flavour == BEAM_HOLY
                                      || flavour == BEAM_POISON
                                      // just the resistible part
                                      || flavour == BEAM_POISON_ARROW;
@@ -891,14 +917,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         }
 
         return true;
-    }
-
-    if (find_stab_type(&you, *mon) != STAB_NO_STAB
-        && you_worship(GOD_SHINING_ONE)
-        && !tso_unchivalric_attack_safe_monster(*mon))
-    {
-        adj += "helpless ";
-        would_cause_penance = true;
     }
 
     if (mon->neutral() && is_good_god(you.religion))

@@ -20,6 +20,13 @@
 
 #define NUM_PIETY_STARS 6
 
+enum class lifesaving_chance
+{
+    never,
+    sometimes,
+    always,
+};
+
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
@@ -97,15 +104,13 @@ bool god_hates_spell(spell_type spell, god_type god,
                      bool rod_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
-int elyvilon_lifesaving();
+lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster& target);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
-
-bool tso_unchivalric_attack_safe_monster(const monster& mon);
 
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);

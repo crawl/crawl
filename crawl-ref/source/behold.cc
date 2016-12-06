@@ -118,20 +118,6 @@ void player::clear_beholders()
     you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
 }
 
-// Possibly end mesmerisation if a loud noise happened.
-void player::beholders_check_noise(int loudness, bool axe)
-{
-    if (axe)
-        return;
-
-    if (loudness >= 20 && beheld())
-    {
-        mpr("Jolted by the loud noise, you snap out of your trance!");
-        clear_beholders();
-        _removed_beholder();
-    }
-}
-
 static void _removed_beholder_msg(const monster *mons)
 {
     if (!mons)

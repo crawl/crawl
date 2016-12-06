@@ -1035,9 +1035,9 @@ static armour_type _get_random_armour_type(int item_level)
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
-        // High level dragon armours
+        // High level dragon scales
         armtype = random_choose(ARM_STEAM_DRAGON_ARMOUR,
-                                ARM_MOTTLED_DRAGON_ARMOUR,
+                                ARM_ACID_DRAGON_ARMOUR,
                                 ARM_STORM_DRAGON_ARMOUR,
                                 ARM_GOLD_DRAGON_ARMOUR,
                                 ARM_SWAMP_DRAGON_ARMOUR,

@@ -613,22 +613,6 @@ monster_info::monster_info(const monster* m, int milev)
     if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
 
-    // Evilness of attacking
-    switch (attitude)
-    {
-    case ATT_NEUTRAL:
-    case ATT_HOSTILE:
-        if (you_worship(GOD_SHINING_ONE)
-            && !tso_unchivalric_attack_safe_monster(*m)
-            && find_stab_type(&you, *m) != STAB_NO_STAB)
-        {
-            mb.set(MB_EVIL_ATTACK);
-        }
-        break;
-    default:
-        break;
-    }
-
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);
 
@@ -683,7 +667,11 @@ monster_info::monster_info(const monster* m, int milev)
         props[SPELL_HD_KEY] = spellhd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-        attack[i] = mons_attack_spec(*m, i, true);
+    {
+        // hydras are a mess!
+        const int atk_index = m->has_hydra_multi_attack() ? 0 : i;
+        attack[i] = mons_attack_spec(*m, atk_index, true);
+    }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
@@ -1381,9 +1369,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         break;
     }
 
-    if (count == 1 && is(MB_EVIL_ATTACK))
-        desc_colour = Options.evil_colour;
-    else if (colour_type < _NUM_MLC)
+    if (colour_type < _NUM_MLC)
         desc_colour = _monster_list_colours[colour_type];
 
     // We still need something, or we'd get the last entry's colour.

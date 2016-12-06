@@ -3,6 +3,11 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
+Acid Splash spell
+
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
+%%%%
 Agony spell
 
 Cuts the resilience of a target creature in half. This damage is never directly
@@ -247,9 +252,9 @@ morale. They have no noticeable effect.
 %%%%
 Cause Fear spell
 
-Causes fear in those near to the caster. Adventurers suffering from this effect
-find that extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt it, as will leaving the caster's line of sight.
+Causes fear in those near to the caster, causing those affected to be unable to
+approach the caster, and to sometimes fail to attack them in melee. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Chain of Chaos spell
 
@@ -268,8 +273,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that bypasses any armour the target may have, and
-may knock back airborne targets.
+Exhales a blast of frost that may knock back airborne targets.
 %%%%
 Cigotuvi's Embrace spell
 
@@ -699,13 +703,14 @@ Hurl Damnation spell
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
-gods. These flames are especially dangerous to evil creatures, and have no
-effect on holy creatures.
+gods. These flames are especially dangerous to undead and demonic creatures,
+and have no effect on holy creatures.
 %%%%
 Holy Flames spell
 
 Traps an enemy in a ring of blessed flame. These flames are especially
-dangerous to evil creatures, and have no effect on holy creatures.
+dangerous to undead and demonic creatures, and have no effect on holy
+creatures.
 %%%%
 Hydra Form spell
 
@@ -893,9 +898,8 @@ Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster. Extremely
-loud noises, such as those produced by lightning or scrolls of noise, will
-disrupt the effect, as will leaving the caster's line of sight.
+Makes a targeted creature unwilling to move away from the caster. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Metabolic Englaciation spell
 
@@ -1202,8 +1206,7 @@ Simulacra cannot leave the level they were created on.
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
-singer. Extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt the effect, as will leaving the caster's line of sight.
+singer. Leaving the caster's line of sight will end the effect.
 %%%%
 Sleep spell
 
@@ -1573,6 +1576,11 @@ Twisted Resurrection spell
 Causes nearby corpses to begin crawling together, merging into horrible
 agglomerations of flesh. More and larger corpses result in more powerful
 creations.
+%%%%
+Upheaval spell
+
+Calls on the forces of nature to blast a small area with magma, ice, wind,
+or rubble.
 %%%%
 Vampiric Draining spell
 

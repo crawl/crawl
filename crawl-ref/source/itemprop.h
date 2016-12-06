@@ -35,7 +35,7 @@ enum armour_flag
     ARMF_RES_MAGIC          = 1 << 17,
     ARMF_RES_ELEC           = 1 << 18,
     ARMF_RES_POISON         = 1 << 19,
-    ARMF_RES_STICKY_FLAME   = 1 << 20,
+    ARMF_RES_CORR           = 1 << 20,
     ARMF_RES_STEAM          = 1 << 21,
     // vulnerabilities
     ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
@@ -211,7 +211,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_magic(const item_def &arm, bool check_artp) PURE;
-int get_armour_res_sticky_flame(const item_def &arm) PURE;
+int get_armour_res_corr(const item_def &arm) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp) PURE;

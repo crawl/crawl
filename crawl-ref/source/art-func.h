@@ -1275,7 +1275,6 @@ static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
                 apostrophise(defender->name(DESC_THE)).c_str(),
                 wpn->name(DESC_PLAIN).c_str());
             defender->hurt(attacker, 18 + random2(18));
-            did_god_conduct(DID_UNCHIVALRIC_ATTACK, 3);
         }
     }
 }

@@ -2316,8 +2316,11 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     // Output message before changing enchantment and curse status.
     if (!quiet)
     {
-        mprf("%s glows green for a moment.",
-             _item_name(arm).c_str());
+        const bool plural = armour_is_hide(arm)
+                            && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
+        mprf("%s %s green for a moment.",
+             _item_name(arm).c_str(),
+             conjugate_verb("glow", plural).c_str());
     }
 
     arm.plus++;

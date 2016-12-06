@@ -325,38 +325,6 @@ bool is_hasty_item(const item_def& item)
     return retval;
 }
 
-bool is_poisoned_item(const item_def& item)
-{
-    if (is_unrandom_artefact(item, UNRAND_OLGREB))
-        return true;
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_VENOM)
-            return true;
-        }
-        break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
-            return true;
-        }
-        break;
-    case OBJ_STAVES:
-        if (item.sub_type == STAFF_POISON)
-            return true;
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 static bool _is_potentially_fiery_item(const item_def& item)
 {
     switch (item.base_type)
@@ -557,13 +525,6 @@ conduct_type god_hates_item_handling(const item_def &item)
 
         if (is_chaotic_item(item))
             return DID_CHAOS;
-        break;
-
-    case GOD_SHINING_ONE:
-        if (item_type_known(item) && is_poisoned_item(item))
-            return DID_POISON;
-        if (is_unrandom_artefact(item, UNRAND_CAPTAIN))
-            return DID_UNCHIVALRIC_ATTACK;
         break;
 
     case GOD_YREDELEMNUL:

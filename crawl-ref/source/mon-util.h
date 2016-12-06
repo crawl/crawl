@@ -11,6 +11,7 @@
 #include "player.h"
 
 struct bolt;
+struct mgen_data;
 
 struct mon_attack_def
 {
@@ -325,6 +326,7 @@ int mons_class_colour(monster_type mc);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
+monster_type random_draconian_job();
 monster_type random_demonspawn_monster_species();
 monster_type random_demonspawn_job();
 
@@ -384,6 +386,8 @@ monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
 bool mons_is_siren_beholder(const monster& mons);
 
+bool mons_is_removed(monster_type mc);
+
 bool mons_looks_stabbable(const monster& m);
 bool mons_looks_distracted(const monster& m);
 
@@ -397,6 +401,7 @@ bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);
 bool mons_has_flesh(const monster& mon);
 bool mons_is_abyssal_only(monster_type mc);
+bool mons_is_unbreathing(monster_type mc);
 
 bool herd_monster(const monster& mon);
 
@@ -429,6 +434,23 @@ colour_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const string &s);
 colour_t random_monster_colour();
 int ugly_thing_colour_offset(colour_t colour);
+
+/**
+ * @brief
+ *  Apply uniform colour when generating a band containing only ugly things.
+ *
+ * If the passed band does not contain only ugly things, @p mg is not modified.
+ *
+ * @param mg
+ *  The generation data to adjust.
+ * @param band_monsters
+ *  The array of monsters types comprising the band.
+ * @param num_monsters_in_band
+ *  The number of elements in @p band_monsters.
+ */
+void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
+    const monster_type *band_monsters, size_t num_monsters_in_band);
+
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
 string  demonspawn_base_name(monster_type mon_type);

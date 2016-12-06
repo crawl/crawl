@@ -1722,13 +1722,6 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
 {
     int rsf = 0;
 
-    if (you.species == SP_MOTTLED_DRACONIAN)
-        rsf++;
-
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-    if (body_armour)
-        rsf += armour_type_prop(body_armour->sub_type, ARMF_RES_STICKY_FLAME);
-
     // dragonskin cloak: 0.5 to draconic resistances
     if (items && calc_unid
         && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -2929,9 +2922,21 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
+#if TAG_MAJOR_VERSION == 34
+                    // Hack to evade mottled draconians.
+                    do
+                    {
+                        you.species = static_cast<species_type>(
+                                       random_range(SP_FIRST_NONBASE_DRACONIAN,
+                                                    SP_LAST_NONBASE_DRACONIAN));
+                    }
+                    while (you.species == SP_MOTTLED_DRACONIAN);
+#endif
+#if TAG_MAJOR_VERSION > 34
                     you.species = static_cast<species_type>(
                                        random_range(SP_FIRST_NONBASE_DRACONIAN,
                                                     SP_LAST_NONBASE_DRACONIAN));
+#endif
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
@@ -6219,11 +6224,6 @@ bool player::undead_or_demonic() const
     return undead_state() || species == SP_DEMONSPAWN;
 }
 
-bool player::holy_wrath_susceptible() const
-{
-    return undead_or_demonic();
-}
-
 bool player::is_holy(bool check_spells) const
 {
     return bool(holiness() & MH_HOLY);
@@ -6346,16 +6346,13 @@ bool player::res_sticky_flame() const
     return player_res_sticky_flame();
 }
 
-int player::res_holy_energy(const actor *attacker) const
+int player::res_holy_energy() const
 {
     if (undead_or_demonic())
-        return -2;
-
-    if (evil()) // following evil god
         return -1;
 
     if (is_holy())
-        return 1;
+        return 3;
 
     return 0;
 }

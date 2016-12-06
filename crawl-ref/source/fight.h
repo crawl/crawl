@@ -34,10 +34,14 @@ int resist_adjust_damage(const actor *defender, beam_type flavour,
 
 int apply_chunked_AC(int dam, int ac);
 
+int melee_confuse_chance(int HD);
+
 bool wielded_weapon_check(item_def *weapon);
 
 stab_type find_stab_type(const actor *attacker,
-                         const actor &defender);
+                         const actor &defender,
+                         bool actual = true);
+
 int stab_bonus_denom(stab_type stab);
 
 void get_cleave_targets(const actor &attacker, const coord_def& def,

@@ -27,7 +27,7 @@ function base_monster_setup(e)
            wyvern / troll / two-headed ogre / yak band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
-           mottled dragon / blink frog band / vampire mosquito band /\
+           acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
            deep elf mage /\
@@ -146,7 +146,7 @@ function base_monster_setup(e)
            floating eye w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
-  e.kmons("W = mottled dragon / steam dragon / fire dragon / ice dragon /\
+  e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
            storm dragon / swamp drake / lindwurm / rime drake /\
            shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
@@ -231,8 +231,8 @@ function general_item_setup(e)
     ice dragon scales plus:10 not_cursed ident:all /\
     swamp dragon scales plus:9 not_cursed ident:all /\
     swamp dragon scales plus:5 good_item not_cursed ident:all /\
-    mottled dragon scales plus:8 not_cursed ident:all /\
-    mottled dragon scales plus:4 good_item not_cursed ident:all /\
+    acid dragon scales plus:8 not_cursed ident:all /\
+    acid dragon scales plus:4 good_item not_cursed ident:all /\
     quicksilver dragon scales good_item not_cursed ident:all w:5 /\
     storm dragon scales plus:12 not_cursed ident:all w:5 /\
     storm dragon scales plus:8 good_item not_cursed ident:all w:5 /\
@@ -295,7 +295,7 @@ function general_item_setup(e)
     fire dragon scales plus:7 not_cursed ident:all /\
     ice dragon scales plus:7 not_cursed ident:all /\
     swamp dragon scales plus:5 not_cursed ident:all /\
-    mottled dragon scales plus:5 not_cursed ident:all /\
+    acid dragon scales plus:5 not_cursed ident:all /\
     quicksilver dragon scales not_cursed ident:all w:5 /\
     storm dragon scales plus:6 not_cursed ident:all w:5 /\
     shadow dragon scales plus:6 not_cursed ident:all w:5 /\
@@ -445,7 +445,7 @@ function armoury_setup(e)
           fire dragon scales plus:4 not_cursed ident:all /\
           ice dragon scales plus:4 not_cursed ident:all /\
           swamp dragon scales plus:2 not_cursed ident:all /\
-          mottled dragon scales plus:2 not_cursed ident:all /\
+          acid dragon scales plus:2 not_cursed ident:all /\
           storm dragon scales plus:3 not_cursed ident:all w:5 /\
           shadow dragon scales plus:3 not_cursed ident:all w:5 /\
           gold dragon scales plus:2 not_cursed ident:all /\
@@ -2044,7 +2044,7 @@ KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
         freezing wraith w:3 / flayed ghost
 KMONS:  D = lich
-KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
+KMONS:  e = hydra w:20 / swamp dragon / acid dragon / steam dragon /\
         catoblepas / dire elephant / rime drake / lindwurm / komodo dragon /\
         basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
 KMONS:  E = golden dragon

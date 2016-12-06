@@ -581,10 +581,10 @@ monster_type resolve_monster_type(monster_type mon_type,
         // Pick any random drac, constrained by colour if requested.
         do
         {
-            mon_type =
-                static_cast<monster_type>(
-                    random_range(MONS_FIRST_BASE_DRACONIAN,
-                                 MONS_LAST_DRACONIAN));
+            if (coinflip())
+                mon_type = random_draconian_monster_species();
+            else
+                mon_type = random_draconian_job();
         }
         while (base_type != MONS_PROGRAM_BUG
                && mon_type != base_type
@@ -594,11 +594,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     else if (mon_type == RANDOM_BASE_DRACONIAN)
         mon_type = random_draconian_monster_species();
     else if (mon_type == RANDOM_NONBASE_DRACONIAN)
-    {
-        mon_type =
-            static_cast<monster_type>(
-                random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_DRACONIAN));
-    }
+        mon_type = random_draconian_job();
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
         mon_type = summon_any_demon(mon_type, true);
     else if (mon_type == RANDOM_DEMONSPAWN)
@@ -889,9 +885,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     band_type band = BAND_NO_BAND;
     band_monsters[0] = mg.cls;
 
-    // The (very) ugly thing band colour.
-    static colour_t ugly_colour = COLOUR_UNDEF;
-
     if (create_band)
     {
 #ifdef DEBUG_MON_CREATION
@@ -904,23 +897,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             band_monsters[i] = _band_member(band, i, place, allow_ood);
             if (band_monsters[i] == NUM_MONSTERS)
                 die("Unhandled band type %d", band);
-
-            // Get the (very) ugly thing band colour, so that all (very)
-            // ugly things in a band will start with it.
-            if ((band_monsters[i] == MONS_UGLY_THING
-                || band_monsters[i] == MONS_VERY_UGLY_THING)
-                    && ugly_colour == COLOUR_UNDEF)
-            {
-                ugly_colour = ugly_thing_colour_offset(mg.colour) == -1
-                            ? ugly_thing_random_colour()
-                            : mg.colour;
-            }
         }
-    }
 
-    // Set the (very) ugly thing band colour.
-    if (ugly_colour != COLOUR_UNDEF)
-        mg.colour = ugly_colour;
+        // Set the (very) ugly thing band colour.
+        ugly_thing_apply_uniform_band_colour(mg, band_monsters, band_size);
+    }
 
     // Returns 2 if the monster is placed near player-occupied stairs.
     int pval = _is_near_stairs(mg.pos);
@@ -1040,10 +1021,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         // Sanity check that the specified position is valid.
         return 0;
     }
-
-    // Reset the (very) ugly thing band colour.
-    if (ugly_colour != COLOUR_UNDEF)
-        ugly_colour = COLOUR_UNDEF;
 
     monster* mon = _place_monster_aux(mg, 0, place, force_pos, dont_place);
 
@@ -2176,18 +2153,16 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
     { MONS_PURPLE_DRACONIAN, basic_drac_set },
-    { MONS_MOTTLED_DRACONIAN, basic_drac_set },
     { MONS_YELLOW_DRACONIAN, basic_drac_set },
     { MONS_BLACK_DRACONIAN, basic_drac_set },
     { MONS_GREEN_DRACONIAN, basic_drac_set },
     { MONS_GREY_DRACONIAN, basic_drac_set },
     { MONS_PALE_DRACONIAN, basic_drac_set },
-    { MONS_DRACONIAN_CALLER, classy_drac_set },
+    { MONS_DRACONIAN_STORMCALLER, classy_drac_set },
     { MONS_DRACONIAN_MONK, classy_drac_set },
     { MONS_DRACONIAN_SCORCHER, classy_drac_set },
     { MONS_DRACONIAN_KNIGHT, classy_drac_set },
     { MONS_DRACONIAN_ANNIHILATOR, classy_drac_set },
-    { MONS_DRACONIAN_ZEALOT, classy_drac_set },
     { MONS_DRACONIAN_SHIFTER, classy_drac_set },
     // yup, scary
     { MONS_TIAMAT,          { {}, {{ BAND_DRACONIAN, {8, 15}, true }}}},
@@ -2722,13 +2697,12 @@ static monster_type _band_member(band_type band, int which,
         {
             // Hack: race is rolled elsewhere.
             return random_choose_weighted(
-                1, MONS_DRACONIAN_CALLER,
+                1, MONS_DRACONIAN_STORMCALLER,
                 2, MONS_DRACONIAN_KNIGHT,
                 2, MONS_DRACONIAN_MONK,
                 2, MONS_DRACONIAN_SHIFTER,
                 2, MONS_DRACONIAN_ANNIHILATOR,
-                2, MONS_DRACONIAN_SCORCHER,
-                2, MONS_DRACONIAN_ZEALOT);
+                2, MONS_DRACONIAN_SCORCHER);
         }
 
         return random_draconian_monster_species();

@@ -144,7 +144,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
         case SPELL_HOLY_BREATH:
             beam.flavour = BEAM_HOLY;
             beam.origin_spell = SPELL_HOLY_BREATH;
-            cty = CLOUD_HOLY_FLAMES;
+            cty = CLOUD_HOLY;
             break;
         case SPELL_FREEZING_CLOUD:
             beam.flavour = BEAM_COLD;
@@ -158,7 +158,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
-    beam.damage            = dice_def(42, 1); // just a convenient non-zero
+    beam.damage            = CONVENIENT_NONZERO_DAMAGE;
     beam.is_tracer         = true;
     beam.use_target_as_pos = true;
     beam.origin_spell      = spl;
@@ -296,7 +296,7 @@ void holy_flames(monster* caster, actor* defender)
             continue;
         }
 
-        place_cloud(CLOUD_HOLY_FLAMES, *ai, dur, caster);
+        place_cloud(CLOUD_HOLY, *ai, dur, caster);
 
         cloud_count++;
     }

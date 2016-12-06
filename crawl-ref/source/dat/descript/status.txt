@@ -654,3 +654,8 @@ resistant to poison.
 
 Any equipped weapons and armour are melded, and you are unable to evoke wands.
 %%%%
+Orb status
+
+You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
+translocation magic. Teleportation will take longer, all blinks will become
+uncontrolled, and Passage of Golubria will completely fail to work.

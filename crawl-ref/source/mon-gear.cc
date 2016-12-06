@@ -530,7 +530,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_ORC,                     { ORC_WEAPONS } },
         { MONS_ORC_PRIEST,              { ORC_WEAPONS } },
         { MONS_DRACONIAN,               { ORC_WEAPONS } },
-        { MONS_DRACONIAN_ZEALOT,        { ORC_WEAPONS } },
         { MONS_TERENCE,
             { { { WPN_FLAIL,            30 },
                 { WPN_HAND_AXE,         20 },
@@ -583,7 +582,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_DRACONIAN_SHIFTER,       { DRAC_MAGE_WEAPONS } },
         { MONS_DRACONIAN_SCORCHER,      { DRAC_MAGE_WEAPONS } },
         { MONS_DRACONIAN_ANNIHILATOR,   { DRAC_MAGE_WEAPONS } },
-        { MONS_DRACONIAN_CALLER,        { DRAC_MAGE_WEAPONS } },
+        { MONS_DRACONIAN_STORMCALLER,   { DRAC_MAGE_WEAPONS } },
         { MONS_RAGGED_HIEROPHANT,       { DRAC_MAGE_WEAPONS } },
         { MONS_VASHNIA,                 { NAGA_WEAPONS, {}, {}, 1 } },
         { MONS_NAGA_SHARPSHOOTER,       { NAGA_WEAPONS } },
@@ -596,13 +595,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_SPECTRAL_WEAPON,         { NAGA_WEAPONS } }, // for mspec placement
         { MONS_FRANCES,                 { NAGA_WEAPONS } },
         { MONS_HAROLD,                  { NAGA_WEAPONS } },
-        { MONS_LOUISE,                  { NAGA_WEAPONS } },
         { MONS_SKELETAL_WARRIOR,        { NAGA_WEAPONS } },
         { MONS_PALE_DRACONIAN,          { NAGA_WEAPONS } },
         { MONS_RED_DRACONIAN,           { NAGA_WEAPONS } },
         { MONS_WHITE_DRACONIAN,         { NAGA_WEAPONS } },
         { MONS_GREEN_DRACONIAN,         { NAGA_WEAPONS } },
-        { MONS_MOTTLED_DRACONIAN,       { NAGA_WEAPONS } },
         { MONS_BLACK_DRACONIAN,         { NAGA_WEAPONS } },
         { MONS_YELLOW_DRACONIAN,        { NAGA_WEAPONS } },
         { MONS_PURPLE_DRACONIAN,        { NAGA_WEAPONS } },
@@ -635,6 +632,12 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_TENGU_WARRIOR,           ORC_KNIGHT_WSPEC },
         { MONS_VAULT_GUARD,             ORC_KNIGHT_WSPEC },
         { MONS_VAMPIRE_KNIGHT,          ORC_KNIGHT_WSPEC },
+        { MONS_LOUISE,
+            { { { WPN_MORNINGSTAR, 1 },
+                { WPN_EVENINGSTAR, 1 },
+                { WPN_TRIDENT, 1 },
+                { WPN_DEMON_TRIDENT, 1 },
+        }, {}, {}, 1 } },
         { MONS_JORY,
             { { { WPN_GREAT_SWORD,      3 },
                 { WPN_GLAIVE,           1 },
@@ -1851,7 +1854,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_MARGERY:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(3, ARM_MOTTLED_DRAGON_ARMOUR,
+        item.sub_type = random_choose_weighted(3, ARM_ACID_DRAGON_ARMOUR,
                                                1, ARM_SWAMP_DRAGON_ARMOUR,
                                                6, ARM_FIRE_DRAGON_ARMOUR);
         break;
@@ -2011,9 +2014,8 @@ int make_mons_armour(monster_type type, int level)
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_STORMCALLER:
     case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
     case MONS_BAI_SUZHEN:
         item.base_type = OBJ_ARMOUR;
@@ -2100,7 +2102,7 @@ int make_mons_armour(monster_type type, int level)
                                                 100, ARM_PLATE_ARMOUR,
                                                   5, ARM_FIRE_DRAGON_ARMOUR,
                                                   5, ARM_ICE_DRAGON_ARMOUR,
-                                                  5, ARM_MOTTLED_DRAGON_ARMOUR);
+                                                  5, ARM_ACID_DRAGON_ARMOUR);
         break;
 
     case MONS_HALAZID_WARLOCK:

@@ -348,19 +348,6 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
         }
     }
 
-    const bool poisonous_attack =
-        flavour == BEAM_POISON
-        || flavour == BEAM_POISON_ARROW
-        || item && item->defined() && item->base_type == OBJ_MISSILES
-           && (item->brand == SPMSL_POISONED || item->brand == SPMSL_CURARE);
-    if (you_worship(GOD_SHINING_ONE)
-        && poisonous_attack
-        && mon->res_poison() < 3
-        && !yesno("Poisoning this monster would place you under penance. "
-                  "Continue anyway?", false, 'n'))
-    {
-        return true;
-    }
     return false;
 }
 
@@ -713,7 +700,6 @@ void bolt::apply_beam_conducts()
             did_god_conduct(DID_EVIL, 2 + random2(3), god_cares());
             break;
         case BEAM_FIRE:
-        case BEAM_HOLY_FLAME:
         case BEAM_STICKY_FLAME:
             did_god_conduct(DID_FIRE,
                             pierce || is_explosion ? 6 + random2(3)
@@ -1680,20 +1666,16 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_HOLY:
     {
-        // Cleansing flame.
-        const int rhe = mons->res_holy_energy(pbolt.agent());
-        if (rhe > 0)
-            hurted = 0;
-        else if (rhe == 0)
-            hurted /= 2;
-        else if (rhe < -1)
-            hurted = hurted * 3 / 2;
-
-        if (doFlavouredEffects && !mons_is_firewood(*mons))
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
+        if (doFlavouredEffects && (!hurted || hurted != original))
         {
             simple_monster_message(*mons,
-                                   hurted == 0 ? " appears unharmed."
-                                               : " writhes in agony!");
+                                       original == 0 ? " appears unharmed." :
+                                         hurted == 0 ? " completely resists." :
+                                   hurted < original ? " resists." :
+                                   hurted > original ? " writhes in agony!" :
+                                   " suffers an impossible damage scaling amount!");
+
         }
         break;
     }
@@ -2033,10 +2015,6 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
         mons->add_ench(me);
     }
 
-    // Deities take notice.
-    if (agent->is_player())
-        did_god_conduct(DID_POISON, 5 + random2(3));
-
     return hurted > 0;
 }
 
@@ -2071,10 +2049,6 @@ bool poison_monster(monster* mons, const actor *who, int levels,
             simple_monster_message(*mons, msg);
         }
     }
-
-    // Finally, take care of deity preferences.
-    if (who && who->is_player())
-        did_god_conduct(DID_POISON, 5 + random2(3));
 
     return new_pois.duration > old_pois.duration;
 }
@@ -2541,7 +2515,7 @@ cloud_type bolt::get_cloud_type() const
         return CLOUD_POISON;
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        return CLOUD_HOLY_FLAMES;
+        return CLOUD_HOLY;
 
     if (origin_spell == SPELL_FLAMING_CLOUD)
         return CLOUD_FIRE;
@@ -2897,7 +2871,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
-        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
+        place_cloud(CLOUD_HOLY, p, random2(4) + 2, agent());
 
     if (origin_spell == SPELL_FLAMING_CLOUD)
         place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
@@ -2906,7 +2880,7 @@ void bolt::affect_place_clouds()
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
         || feat_is_watery(feat) && is_fiery())
     {
-        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent());
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), agent(), 11);
     }
 
     if (feat_is_watery(feat) && flavour == BEAM_COLD
@@ -3116,7 +3090,7 @@ bool bolt::is_harmless(const monster* mon) const
         return true;
 
     case BEAM_HOLY:
-        return mon->res_holy_energy(agent()) > 0;
+        return mon->res_holy_energy() >= 3;
 
     case BEAM_STEAM:
         return mon->res_steam() >= 3;
@@ -3179,7 +3153,7 @@ bool bolt::harmless_to_player() const
         return true;
 
     case BEAM_HOLY:
-        return you.res_holy_energy(&you);
+        return you.res_holy_energy() >= 3;
 
     case BEAM_MIASMA:
         return you.res_rotting();
@@ -3209,7 +3183,6 @@ bool bolt::harmless_to_player() const
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
-    case BEAM_HOLY_FLAME:
     case BEAM_STICKY_FLAME:
         return you.species == SP_DJINNI;
 #endif
@@ -4017,8 +3990,7 @@ void bolt::affect_player()
 
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
-        || origin_spell == SPELL_STICKY_FLAME_RANGE
-        || origin_spell == SPELL_STICKY_FLAME_SPLASH)
+        || origin_spell == SPELL_STICKY_FLAME_RANGE)
     {
         if (!player_res_sticky_flame())
         {
@@ -4127,9 +4099,6 @@ int bolt::apply_AC(const actor *victim, int hurted)
         ac_rule = AC_TRIPLE; break;
     default: ;
     }
-
-    if (origin_spell == SPELL_CHILLING_BREATH)
-        ac_rule = AC_NONE;
 
     // beams don't obey GDR -> max_damage is 0
     return victim->apply_ac(hurted, 0, ac_rule, 0, !is_tracer);
@@ -4550,31 +4519,33 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
-        || origin_spell == SPELL_STICKY_FLAME_RANGE
-        || origin_spell == SPELL_STICKY_FLAME_SPLASH)
+        || origin_spell == SPELL_STICKY_FLAME_RANGE)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
+    }
 
-        if (origin_spell == SPELL_STICKY_FLAME_SPLASH)
-            for (adjacent_iterator ai(source); ai; ++ai)
+    // Acid splash from yellow draconians / acid dragons
+    if (origin_spell == SPELL_ACID_SPLASH)
+    {
+        mon->splash_with_acid(agent(), 3);
+
+        for (adjacent_iterator ai(source); ai; ++ai)
+        {
+            // the acid can splash onto adjacent targets
+            if (grid_distance(*ai, target) != 1)
+                continue;
+            if (actor *victim = actor_at(*ai))
             {
-                // the breath weapon can splash to adjacent people
-                if (grid_distance(*ai, target) != 1)
-                    continue;
-                if (actor *victim = actor_at(*ai))
+                if (you.see_cell(*ai))
                 {
-                    if (you.see_cell(*ai))
-                    {
-                        mprf("The sticky flame splashes onto %s!",
-                             victim->name(DESC_THE).c_str());
-                    }
-                    if (victim->is_player())
-                        napalm_player(levels, get_source_name(), aux_source);
-                    else
-                        napalm_monster(victim->as_monster(), agent(), levels);
+                    mprf("The acid splashes onto %s!",
+                         victim->name(DESC_THE).c_str());
                 }
+
+                victim->splash_with_acid(agent(), 3);
             }
+        }
     }
 
     // Handle missile effects.
@@ -4774,7 +4745,6 @@ bool bolt::bush_immune(const monster &mons) const
         && target != mons.pos()
         && origin_spell != SPELL_STICKY_FLAME
         && origin_spell != SPELL_STICKY_FLAME_RANGE
-        && origin_spell != SPELL_STICKY_FLAME_SPLASH
         && origin_spell != SPELL_CHAIN_LIGHTNING;
 }
 
@@ -6261,7 +6231,7 @@ bool bolt::nasty_to(const monster* mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
-        return mon->res_holy_energy(agent()) <= 0;
+        return mon->res_holy_energy() < 3;
 
     // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
@@ -6469,8 +6439,7 @@ string bolt::get_short_name() const
 
     if (flavour == BEAM_FIRE
         && (origin_spell == SPELL_STICKY_FLAME
-            || origin_spell == SPELL_STICKY_FLAME_RANGE
-            || origin_spell == SPELL_STICKY_FLAME_SPLASH))
+            || origin_spell == SPELL_STICKY_FLAME_RANGE))
     {
         return "sticky fire";
     }
@@ -6519,7 +6488,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_STICKY_FLAME:          return "sticky fire";
     case BEAM_STEAM:                 return "steam";
     case BEAM_ENERGY:                return "energy";
-    case BEAM_HOLY:                  return "holy energy";
+    case BEAM_HOLY:                  return "cleansing flame";
     case BEAM_FRAG:                  return "fragments";
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
@@ -6555,7 +6524,6 @@ static string _beam_type_name(beam_type type)
     case BEAM_BERSERK:               return "berserk";
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
-    case BEAM_HOLY_FLAME:            return "cleansing flame";
     case BEAM_AIR:                   return "air";
     case BEAM_INNER_FLAME:           return "inner flame";
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";

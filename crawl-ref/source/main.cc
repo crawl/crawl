@@ -2692,6 +2692,24 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
+static bool _cancel_barbed_move()
+{
+    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+    {
+        string prompt = "The barbs in your skin will harm you if you move."
+                        " Continue?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+
+        you.props[BARBS_MOVE_KEY] = true;
+    }
+
+    return false;
+}
+
 static bool _cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -3172,6 +3190,9 @@ static void _move_player(coord_def move)
         if (_cancel_confused_move(false))
             return;
 
+        if (_cancel_barbed_move())
+            return;
+
         if (!one_chance_in(3))
         {
             move.x = random2(3) - 1;
@@ -3371,19 +3392,10 @@ static void _move_player(coord_def move)
             return;
         }
 
-        if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
-        {
-            string prompt = "The barbs in your skin will harm you if you move."
-                            " Continue?";
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                you.turn_is_over = false;
-                return;
-            }
-
-            you.props[BARBS_MOVE_KEY] = true;
-        }
+        // If confused, we've already been prompted (in case of stumbling into
+        // a monster and attacking instead).
+        if (!you.confused() && _cancel_barbed_move())
+            return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;

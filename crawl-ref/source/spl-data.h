@@ -1938,6 +1938,16 @@ static const struct spell_desc spelldata[] =
     TILEG_SPIT_ACID,
 },
 
+{ SPELL_ACID_SPLASH, "Acid Splash",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_SPIT_ACID,
+},
+
 // Monster version of the spell (with full range)
 {
     SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
@@ -1948,17 +1958,6 @@ static const struct spell_desc spelldata[] =
     4, 4,
     4, 0,
     TILEG_STICKY_FLAME_RANGE,
-},
-
-{
-    SPELL_STICKY_FLAME_SPLASH, "Sticky Flame Splash",
-    SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
-    4,
-    100,
-    4, 4,
-    4, 0,
-    TILEG_STICKY_FLAME_SPLASH,
 },
 
 {
@@ -3856,6 +3855,18 @@ static const struct spell_desc spelldata[] =
     2, LOS_RADIUS,
     2, 0,
     TILEG_BECKONING,
+},
+
+// Monster-only, players can use Qazlal's ability
+{
+    SPELL_UPHEAVAL, "Upheaval",
+    SPTYP_CONJURATION,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
 },
 
 {

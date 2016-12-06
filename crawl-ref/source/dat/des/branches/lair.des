@@ -334,7 +334,7 @@ ENDMAP
 NAME:    erik_lair_dragon
 TAGS:    lair_entry no_rotate
 ORIENT:  float
-MONS:    steam dragon / mottled dragon / swamp drake
+MONS:    steam dragon / acid dragon / swamp drake
 MONS:    basilisk / wyvern w:25 / komodo dragon / crocodile w:25
 NSUBST:  2 = 3:2 / 3 = 2. / *:.
 SUBST:   z = .xc
@@ -1934,7 +1934,7 @@ ENDMAP
 NAME:   bobbens_dragon_lair_wall
 TAGS:   no_monster_gen
 DEPTH:  Lair:2-
-MONS:   steam dragon, mottled dragon, rime drake, lindwurm, fire dragon
+MONS:   steam dragon, acid dragon, rime drake, lindwurm, fire dragon
 ITEM:   any good_item
 : if you.absdepth() > 13 then
 SUBST:  A = 4:1 5:9, B = 3 4:2 .:4
@@ -2062,7 +2062,7 @@ ENDMAP
 NAME:   guppyfry_lair_drakes
 DEPTH:  Lair
 : if you.depth() > 3 and crawl.coinflip() then
-MONS:   rime drake / swamp drake / mottled dragon
+MONS:   rime drake / swamp drake / acid dragon
 MONS:   steam dragon
 MONS:   plant
 SUBST:  -_ = wwWW..%
@@ -2540,7 +2540,7 @@ NAME:   guppyfry_lair_end_dragon
 TAGS:   patrolling no_monster_gen no_pool_fixup
 PLACE:  Lair:$
 ORIENT: southeast
-MONS:   rime drake / swamp drake / mottled dragon / steam dragon
+MONS:   rime drake / swamp drake / acid dragon / steam dragon
 MONS:   basilisk / komodo dragon, iguana / crocodile
 MONS:   fire dragon, swamp dragon
 KMONS:  P = plant
@@ -3010,15 +3010,14 @@ ENDMAP
 #
 NAME:    gammafunk_lair_ancient_temple
 PLACE:   Lair:$
-TAGS:    patrolling no_pool_fixup no_monster_gen
+TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  float
-WEIGHT:  5
 KMONS:   ~ = plant
 KMONS:   1 = water moccasin / crocodile / hornet / wyvern / spiny frog
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
 KMONS:   3 = sea snake / manticore / wind drake / harpy
-KMONS:   4 = dire elephant / hydra w:8
-KMONS:   5 = merfolk avatar
+KMONS:   4 = dire elephant / hydra
+KMONS:   5 = patrolling merfolk avatar
 KFEAT:   ~12345%*|! = W
 KITEM:   % = any no_pickup
 KITEM:   * = star_item no_pickup
@@ -3078,7 +3077,7 @@ NAME:    cheibrodos_lair_end_hotspot
 TAGS:    no_item_gen no_monster_gen
 PLACE:   Lair:$
 ORIENT:  float
-MONS:    black mamba, mottled dragon / steam dragon
+MONS:    black mamba, steam dragon
 MONS:    hell hound, molten gargoyle
 MONS:    komodo dragon / w:7 wyvern / w:7 basilisk / w:3 hydra
 MONS:    lindwurm / fire crab, fire dragon

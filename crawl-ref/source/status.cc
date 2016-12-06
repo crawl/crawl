@@ -14,6 +14,7 @@
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
+#include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
@@ -646,6 +647,11 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_ORB:
     {
         if (player_has_orb())
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text = "Orb";
+        }
+        else if (orb_limits_translocation())
         {
             inf->light_colour = MAGENTA;
             inf->light_text = "Orb";

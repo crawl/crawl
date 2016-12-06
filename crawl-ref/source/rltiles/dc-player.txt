@@ -89,8 +89,6 @@ draconian_gray_f DRACONIAN_GREY
 draconian_gray_m
 draconian_green_f DRACONIAN_GREEN
 draconian_green_m
-draconian_mottled_f DRACONIAN_MOTTLED
-draconian_mottled_m
 draconian_pale_f DRACONIAN_PALE
 draconian_pale_m
 draconian_purple_f DRACONIAN_PURPLE
@@ -418,7 +416,7 @@ armour_mummy ARMOUR_MUMMY
 ##cloth_u_sail SAILOR
 dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
-dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_yellow DRAGONARM_YELLOW
 dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
@@ -1137,7 +1135,6 @@ drcwing_black BLACK
 drcwing_yellow YELLOW
 drcwing_grey GREY
 drcwing_green GREEN
-drcwing_mottled MOTTLED
 drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
@@ -1151,7 +1148,6 @@ drchead_black BLACK
 drchead_yellow YELLOW
 drchead_grey GREY
 drchead_green GREEN
-drchead_mottled MOTTLED
 drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED

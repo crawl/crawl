@@ -697,7 +697,7 @@ _mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 {
     ZAP_BREATHE_ACID,
-    "acid",
+    "glob of acid",
     50,
     new dicedef_calculator<3, 4, 1, 3>,
     new tohit_calculator<7, 1, 6>,
@@ -989,24 +989,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     true,
     false,
     0
-},
-
-{
-    ZAP_BREATHE_STICKY_FLAME,
-    "splash of liquid fire",
-    100,
-    new dicedef_calculator<2, 3, 1, 12>,
-    new tohit_calculator<11, 1, 10>,
-    new dicedef_calculator<3, 3, 1, 50>,
-    new tohit_calculator<18, 1, 15>,
-    RED,
-    false,
-    BEAM_FIRE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    false,
-    1
 },
 
 {

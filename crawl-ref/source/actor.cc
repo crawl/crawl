@@ -213,7 +213,13 @@ bool actor::gourmand(bool calc_unid, bool items) const
 bool actor::res_corr(bool calc_unid, bool items) const
 {
     return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
+                     || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
                      || scan_artefacts(ARTP_RCORR, calc_unid));
+}
+
+bool actor::holy_wrath_susceptible() const
+{
+    return res_holy_energy() < 0;
 }
 
 // This is a bit confusing. This is not the function that determines whether or

@@ -148,7 +148,6 @@ static const cloud_data clouds[] = {
       { TILE_CLOUD_FOREST_FIRE },               // tile
       BEAM_FIRE,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
-      true,                                     // opacity
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
@@ -179,12 +178,12 @@ static const cloud_data clouds[] = {
       BEAM_PETRIFYING_CLOUD, {},                // beam_effect & damage
       true,                                     // opacity
     },
-    // CLOUD_HOLY_FLAMES,
+    // CLOUD_HOLY,
     { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
       { TILE_CLOUD_YELLOW_SMOKE },              // tile
-      BEAM_HOLY_FLAME,                          // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      BEAM_HOLY,                                // beam_effect
+      {4, 12, true},                            // base, random damage
       true,                                     // opacity
     },
     // CLOUD_MIASMA,
@@ -455,10 +454,10 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             && feat_is_watery(grd(p))
             && !cell_is_solid(p)
             && !cloud_at(p)
-            && one_chance_in(7))
+            && one_chance_in(14))
         {
-            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, cloud.decay / 2 + 1,
-                                        22, cloud.whose, cloud.killer,
+            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, 2 + random2(5),
+                                        11, cloud.whose, cloud.killer,
                                         cloud.source, -1);
         }
     }
@@ -477,36 +476,15 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
 
     // Player-created non-opaque clouds vanish instantly when outside LOS.
     // (Opaque clouds don't to prevent cloud suicide.)
-    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
+    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos)
+        && !is_opaque_cloud(cloud.type))
     {
-        if (!is_opaque_cloud(cloud.type))
-            return cloud.decay;
-        dissipate *= 4; // dubious...
+        return cloud.decay;
     }
 
-    switch (cloud.type)
-    {
-        // Fire clouds dissipate faster over water.
-        case CLOUD_FIRE:
-        case CLOUD_FOREST_FIRE:
-            if (feat_is_watery(grd(cloud.pos)))
-                return dissipate * 4;
-            break;
-        // rain and cold clouds dissipate faster over lava.
-        case CLOUD_COLD:
-        case CLOUD_RAIN:
-        case CLOUD_STORM:
-            if (grd(cloud.pos) == DNGN_LAVA)
-                return dissipate * 4;
-            break;
-        // Ink cloud shouldn't appear outside of water.
-        case CLOUD_INK:
-            if (!feat_is_watery(grd(cloud.pos)))
-                return cloud.decay;
-            break;
-        default:
-            break;
-    }
+    // Ink cloud shouldn't appear outside of water.
+    if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
+        return cloud.decay;
 
     return dissipate;
 }
@@ -875,8 +853,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 
     if (player && you.species == SP_DJINNI
         && (cloud.type == CLOUD_FIRE
-            || cloud.type == CLOUD_FOREST_FIRE
-            || cloud.type == CLOUD_HOLY_FLAMES))
+            || cloud.type == CLOUD_FOREST_FIRE))
     {
         return true;
     }
@@ -891,8 +868,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return you.duration[DUR_FIRE_SHIELD]
                || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
                || player_equip_unrand(UNRAND_FIRESTARTER);
-    case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(cloud.agent()) > 0;
+    case CLOUD_HOLY:
+        return act->res_holy_energy() >= 3;
     case CLOUD_COLD:
         if (!player)
             return act->res_cold() >= 3;
@@ -939,8 +916,8 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
-    case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(cloud.agent());
+    case CLOUD_HOLY:
+        return act->res_holy_energy();
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:
@@ -990,14 +967,6 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                      act->name(DESC_THE).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "steam" : "sizzle").c_str());
-            }
-        }
-        if (player)
-        {
-            if (you.duration[DUR_FIRE_SHIELD] > 1)
-            {
-                you.duration[DUR_FIRE_SHIELD] = 1;
-                return true;
             }
         }
         break;
@@ -1178,7 +1147,7 @@ static int _actor_cloud_damage(const actor *act,
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-    case CLOUD_HOLY_FLAMES:
+    case CLOUD_HOLY:
     case CLOUD_COLD:
     case CLOUD_STEAM:
     case CLOUD_SPECTRAL:

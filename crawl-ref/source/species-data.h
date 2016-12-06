@@ -253,6 +253,7 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
 } },
 
+#if TAG_MAJOR_VERSION == 34
 { SP_MOTTLED_DRACONIAN, {
     "Dr",
     "Mottled Draconian", "Draconian", "Draconian",
@@ -269,6 +270,7 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
     {}, // not a starting race
 } },
+#endif
 
 { SP_PALE_DRACONIAN, {
     "Dr",

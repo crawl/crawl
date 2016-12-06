@@ -134,7 +134,10 @@ The contents of this text are:
 5-b     DOS and Windows.
                 dos_use_background_intensity
 5-c     Unix.
-                background_colour, use_fake_cursor
+                blink_brightens_background, bold_brightens_foreground,
+                best_effort_brighten_background,
+                best_effort_brighten_foreground, allow_extended_colours,
+                background_colour, foreground_colour, use_fake_cursor
 
 6-  Lua.
 6-a     Including lua files.
@@ -2505,12 +2508,90 @@ dos_use_background_intensity = false
 
 5-c     Unix.
 -------------
+blink_brightens_background = false
+        For 8-colour mode, assume that a blink text attribute will end up
+        brightening the background colour.
+
+        If enabled on a terminal where this assumption does not hold, this will
+        result in invisible glyphs for normal/bright colour combos of the same
+        base colour.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+bold_brightens_foreground = false
+        For 8-colour mode, assume that a bold text attribute will end up
+        brightening the foreground colour.
+
+        See blink_brightens_background for more information.
+
+best_effort_brighten_background = true
+        If set to true, try to brighten a background colour using blink even if
+        it is not assumed to be successful.
+
+        This option only affects colours which are safe to brighten. If the
+        blink_brightens_background option is set to true, this option is
+        effectively ignored.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+best_effort_brighten_foreground = true
+        If set to true, try to brighten a foreground colour using bold even if
+        it is not assumed to be successful.
+
+        This option only affects colours which are safe to brighten. If the
+        bold_brightens_foreground option is set to true, this option is
+        effectively ignored.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+allow_extended_colours = false
+        Allow an *attempt* to use more than the eight basic terminal colours
+        for crawl's bright colours.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        An appropriate TERM environment variable must be set for this option to
+        function as expected for capable terminals. For example:
+          * XTerm: xterm-256color
+          * gnome-terminal: vte-256color
+          * PuTTY: putty-256color
+            (set in 'Connection->Data->Terminal-type string')
+
+        If these conditions are not met, crawl will fall back to 8-colour mode
+        and use character attributes to render bright colours.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).
         This may be useful if you're using a terminal with a background
-        colour other than black (such as an xterm), but this option is
-        still experimental and the results may not be very good.
+        colour other than black and wish to retain the colour scheme for crawl.
+
+        Internally, black is mapped to the the passed background colour and
+        vice-versa.
+
+        This option requires extended support by the terminal library as well
+        as the terminal itself. Additionally, bright default colours are not
+        available unless extended colour support is present and explicitly
+        enabled via allow_extended_colours. If support is not present, either
+        outright or for the selected colour, this option will have an effective
+        value of black.
+
+        See the allow_extended_colours option for more information on enabling
+        use of bright default colours. Beware of buggy or misleading terminfo
+        files.
+
+foreground_colour = lightgrey
+        Sets the default foreground colour by name (defaults to LIGHTGREY).
+
+        Internally, lightgrey is mapped to the passed foreground colour and
+        vice-versa.
+
+        This option comes with the same baggage as the background_colour option.
+        See its documentation for more details.
 
 use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and

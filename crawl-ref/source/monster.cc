@@ -642,11 +642,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         {
             return false;
         }
-
-        // Monsters that are gifts/worshippers of TSO won't use poisoned
-        // weapons.
-        if (god == GOD_SHINING_ONE && is_poisoned_item(item))
-            return false;
     }
 
     return true;
@@ -1648,12 +1643,11 @@ static int _get_monster_armour_value(const monster *mon,
 {
     // Each resistance/property counts as much as 1 point of AC.
     // Steam has been excluded because of its general uselessness.
-    // Well, the same's true for sticky flame but... (jpeg)
     int value = item.armour_rating()
               + get_armour_res_fire(item, true)
               + get_armour_res_cold(item, true)
               + get_armour_res_elec(item, true)
-              + get_armour_res_sticky_flame(item);
+              + get_armour_res_corr(item);
 
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
@@ -3608,11 +3602,6 @@ bool monster::undead_or_demonic() const
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
-bool monster::holy_wrath_susceptible() const
-{
-    return undead_or_demonic() && type != MONS_PROFANE_SERVITOR;
-}
-
 bool monster::is_holy(bool check_spells) const
 {
     return bool(holiness() & MH_HOLY);
@@ -3751,15 +3740,7 @@ int monster::how_chaotic(bool check_spells_god) const
 
 bool monster::is_unbreathing() const
 {
-    const mon_holy_type holi = holiness();
-
-    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        return true;
-
-    if (mons_is_slime(*this))
-        return true;
-
-    return mons_class_flag(type, M_UNBREATHING);
+    return mons_is_unbreathing(type);
 }
 
 bool monster::is_insubstantial() const
@@ -3962,9 +3943,7 @@ int monster::res_poison(bool temp) const
 
 bool monster::res_sticky_flame() const
 {
-    return is_insubstantial()
-           || wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR)
-           || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
+    return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
 int monster::res_rotting(bool /*temp*/) const
@@ -3995,24 +3974,19 @@ int monster::res_rotting(bool /*temp*/) const
     return min(3, res);
 }
 
-int monster::res_holy_energy(const actor *attacker) const
+int monster::res_holy_energy() const
 {
     if (type == MONS_PROFANE_SERVITOR)
-        return 1;
+        return 3;
 
     if (undead_or_demonic())
-        return -2;
-
-    if (evil())
         return -1;
 
     if (is_holy()
         || is_good_god(god)
-        || neutral()
-        || find_stab_type(attacker, *this) != STAB_NO_STAB
         || is_good_god(you.religion) && is_follower(*this))
     {
-        return 1;
+        return 3;
     }
 
     return 0;
@@ -6766,8 +6740,8 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis() const
 {
-    return (mons_genus(type) == MONS_FORMICID
-            || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID);
+    return mons_genus(type) == MONS_FORMICID
+           || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID;
 }
 
 bool monster::is_illusion() const

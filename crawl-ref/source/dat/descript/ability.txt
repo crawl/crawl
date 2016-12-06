@@ -43,11 +43,10 @@ Breathe Lightning ability
 Releases a great discharge of electricity, causing an uncontrollable lightning
 storm. It partially bypasses armour.
 %%%%
-Breathe Sticky Flame ability
+Breathe Acid ability
 
-Spits a glob of sticky flame at an adjacent creature, covering it in liquid
-fire for a short time. It may also splash onto other nearby creatures on
-impact.
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
 Breathe Steam ability
 

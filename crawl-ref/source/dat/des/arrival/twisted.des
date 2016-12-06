@@ -185,7 +185,7 @@ KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
            w:1 golden dragon / large abomination / tentacled monstrosity / \
-           w:1 black draconian; nothing / w:1 mottled draconian; nothing / \
+           w:1 black draconian; nothing / \
            w:1 yellow draconian; nothing / w:2 green draconian; nothing / \
            w:1 purple draconian; nothing / w:2 red draconian; nothing / \
            w:1 white draconian; nothing / nothing

@@ -1813,10 +1813,6 @@ Black Draconians
   eventually grow larger, which allows them to fly continuously when combined
   with their natural skill with air magic.
 
-Mottled Draconians
-  are somewhat in touch with fire, yet are not weak with ice. They can spit
-  globs of sticky flame at those adjacent to them.
-
 Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes and charms in
   particular. They are a bit better at evoking things than most other

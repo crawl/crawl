@@ -490,6 +490,11 @@ acid blob
 
 A lump of sickly pustulent flesh, dripping with lethal acid.
 %%%%
+acid dragon
+
+A small dragon with brilliant yellow scales, its mouth dripping with
+corrosive slime.
+%%%%
 adder
 
 A common dungeon snake, a species of troglodytic reptile commonly found in
@@ -939,10 +944,6 @@ draconian annihilator
 A draconian that uses powerful conjurations to destroy anyone who dares to
 stand in its way.
 %%%%
-draconian caller
-
-A draconian that specializes in summoning hordes of drakes and dragons.
-%%%%
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
@@ -964,10 +965,10 @@ draconian shifter
 A draconian master of the warp, who can translocate both itself and anyone else
 to any place, either on this world or outside of it.
 %%%%
-draconian zealot
+draconian stormcaller
 
-A draconian deriving its hellish powers and demonic allies from the worship of
-some unknown dark god.
+A draconian deriving its thunderous powers and draconic allies from the worship
+of Qazlal.
 %%%%
 dream sheep
 
@@ -1662,15 +1663,6 @@ moth of wrath
 A moth known for its ability to inspire insane rages by touching its foes, or
 merely gazing at its friends. For some inexplicable reason, it was eradicated
 from the surface centuries ago.
-%%%%
-mottled draconian
-
-A muscular humanoid with mottled scales, a reptilian tail and small wings.
-%%%%
-mottled dragon
-
-A small purple dragon with curiously mottled scales, its mouth dripping with a
-strange liquid flame.
 %%%%
 mummy
 
@@ -2485,7 +2477,7 @@ pursuit no matter where they flee.
 %%%%
 vault warden
 
-A veteran commanders, able to seal nearby doorways and staircases to prevent
+A veteran commander, able to seal nearby doorways and staircases to prevent
 intruders from either trespassing further or escaping alive.
 %%%%
 very ugly thing

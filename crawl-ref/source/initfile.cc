@@ -76,6 +76,9 @@
 #include <shlobj.h>
 #elif defined (__APPLE__)
 extern char **NXArgv;
+#ifndef DATA_DIR_PATH
+#include <unistd.h>
+#endif
 #elif defined (__linux__)
 #include <unistd.h>
 #endif
@@ -155,10 +158,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(auto_butcher), false),
         new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
         new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
-// This is useful for terms where dark grey does
-// not have standout modes (since it's black on black).
-// This option will use light-grey instead in these cases.
-        new BoolGameOption(SIMPLE_NAME(no_dark_brand), true),
+        new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
+        new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
+        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), true),
+        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
+        new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
@@ -213,6 +217,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(remembered_monster_colour), DARKGREY),
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN, false),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK, false),
+        new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY, false),
         new CursesGameOption(SIMPLE_NAME(friend_brand),
                              CHATTR_HILITE | (GREEN << 8)),
         new CursesGameOption(SIMPLE_NAME(neutral_brand),
@@ -223,7 +228,6 @@ const vector<GameOption*> game_options::build_options_list()
                              CHATTR_HILITE | (YELLOW << 8)),
         new CursesGameOption(SIMPLE_NAME(feature_item_brand), CHATTR_REVERSE),
         new CursesGameOption(SIMPLE_NAME(trap_item_brand), CHATTR_REVERSE),
-        // no_dark_brand applies here as well.
         new CursesGameOption(SIMPLE_NAME(heap_brand), CHATTR_REVERSE),
         new IntGameOption(SIMPLE_NAME(note_hp_percent), 5, 0, 100),
         new IntGameOption(SIMPLE_NAME(hp_warning), 30, 0, 100),
@@ -1556,7 +1560,31 @@ void read_init_file(bool runscript)
     }
 
     // Load init.txt.
-    const string init_file_name(find_crawlrc());
+    const string crawl_rc = find_crawlrc();
+    const string init_file_name(crawl_rc);
+
+    /**
+     Mac OS X apps almost always put their user-modifiable configuration files
+     in the Application Support directory. On Mac OS X when DATA_DIR_PATH is
+     not defined, place a symbolic link to the init.txt file in crawl_dir
+     (probably "~/Library/Application Support/Dungeon Crawl Stone Soup") where
+     the user is likely to go looking for it.
+     */
+#if defined(TARGET_OS_MACOSX) && !defined(DATA_DIR_PATH)
+    char *cwd = getcwd(NULL, 0);
+    if (cwd)
+    {
+        const string absolute_crawl_rc = is_absolute_path(crawl_rc) ? crawl_rc : catpath(cwd, crawl_rc);
+        char *resolved = realpath(absolute_crawl_rc.c_str(), NULL);
+        if (resolved)
+        {
+            const string crawl_dir_init = catpath(SysEnv.crawl_dir.c_str(), "init.txt");
+            symlink(resolved, crawl_dir_init.c_str());
+            free(resolved);
+        }
+        free(cwd);
+    }
+#endif
 
     FileLineInput f(init_file_name.c_str());
 
@@ -1864,8 +1892,6 @@ void game_options::read_options(LineInput &il, bool runscript,
             mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
-
-    evil_colour = str_to_colour(variables["evil"]);
 }
 
 void game_options::fixup_options()
@@ -1879,9 +1905,6 @@ void game_options::fixup_options()
 
     if (!check_mkdir("Morgue directory", &morgue_dir))
         end(1);
-
-    if (evil_colour == BLACK)
-        evil_colour = MAGENTA;
 }
 
 static int _str_to_killcategory(const string &s)

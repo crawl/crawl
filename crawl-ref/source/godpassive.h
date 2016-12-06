@@ -207,9 +207,6 @@ enum class passive_t
     /// You can cast destructive spells farther
     spells_range,
 
-    /// Your cards are more powerful
-    cards_power,
-
     /// Clouds don't harm you
     cloud_immunity,
 
@@ -242,6 +239,9 @@ enum class passive_t
 
     /// Hep reduces your max HP
     frail,
+
+    // TSO prevents you from stabbing
+    no_stabbing,
 
     /// Spawn flying weapons on melee attack
     spawn_weapon_on_hit,

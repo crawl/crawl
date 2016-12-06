@@ -439,7 +439,7 @@ int spell_hunger(spell_type which_spell, bool rod)
 bool spell_is_direct_explosion(spell_type spell)
 {
     return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION
-           || spell == SPELL_GHOSTLY_SACRIFICE;
+           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL;
 }
 
 bool spell_harms_target(spell_type spell)
@@ -1367,6 +1367,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (env.level_state & LSTATE_STILL_WINDS)
             return "the air is too still for clouds to form.";
         break;
+
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (player_on_orb_run())
+            return "the Orb prevents this spell from working.";
 
     default:
         break;

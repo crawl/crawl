@@ -227,10 +227,12 @@ enum ability_type
     ABIL_BREATHE_POISON,
     ABIL_BREATHE_LIGHTNING,
     ABIL_BREATHE_POWER,
+#if TAG_MAJOR_VERSION == 34
     ABIL_BREATHE_STICKY_FLAME,
+#endif
     ABIL_BREATHE_STEAM,
     ABIL_BREATHE_MEPHITIC,
-    ABIL_SPIT_ACID,
+    ABIL_BREATHE_ACID,
     ABIL_BLINK,
     // Others
     ABIL_DELAYED_FIREBALL,
@@ -553,7 +555,7 @@ enum attribute_type
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another
-    ATTR_GOLD_GENERATED,       // Count gold generated this game.
+    ATTR_GOLD_GENERATED,       // Count gold generated on non-Abyss levels this game.
 #if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
 #endif
@@ -682,7 +684,6 @@ enum beam_type                  // bolt::flavour
     BEAM_LAST_ENCHANTMENT = BEAM_AGONY,
 
     BEAM_MEPHITIC,
-    BEAM_HOLY_FLAME,
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_ENSNARE,
@@ -933,7 +934,7 @@ enum cloud_type
 #endif
     CLOUD_INK,
     CLOUD_PETRIFY,
-    CLOUD_HOLY_FLAMES,
+    CLOUD_HOLY,
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
@@ -1290,8 +1291,6 @@ enum conduct_type
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
     DID_FRIEND_DIED,
-    DID_UNCHIVALRIC_ATTACK,
-    DID_POISON,
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
@@ -2653,7 +2652,7 @@ enum monster_type                      // menv[].type
     MONS_DRAGON,                // genus
 #endif
     MONS_STEAM_DRAGON,
-    MONS_MOTTLED_DRAGON,
+    MONS_ACID_DRAGON,
     MONS_SWAMP_DRAGON,
     MONS_FIRE_DRAGON,
     MONS_ICE_DRAGON,
@@ -3030,7 +3029,9 @@ enum monster_type                      // menv[].type
     // mon-util.cc.
     MONS_BLACK_DRACONIAN,
     MONS_FIRST_BASE_DRACONIAN = MONS_BLACK_DRACONIAN,
+#if TAG_MAJOR_VERSION == 34
     MONS_MOTTLED_DRACONIAN,
+#endif
     MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,
     MONS_PURPLE_DRACONIAN,
@@ -3042,17 +3043,19 @@ enum monster_type                      // menv[].type
     MONS_LAST_BASE_DRACONIAN = MONS_PALE_DRACONIAN,
 
     // Sync up with mon-place.cc's draconian selection if adding more.
-    MONS_DRACONIAN_CALLER,
-    MONS_FIRST_NONBASE_DRACONIAN = MONS_DRACONIAN_CALLER,
+    MONS_DRACONIAN_STORMCALLER,
+    MONS_FIRST_NONBASE_DRACONIAN = MONS_DRACONIAN_STORMCALLER,
     MONS_DRACONIAN_MONK,
+#if TAG_MAJOR_VERSION == 34
     MONS_DRACONIAN_ZEALOT,
+#endif
     MONS_DRACONIAN_SHIFTER,
     MONS_DRACONIAN_ANNIHILATOR,
     MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
 
-    MONS_LAST_DRACONIAN = MONS_DRACONIAN_SCORCHER,
     MONS_LAST_NONBASE_DRACONIAN = MONS_DRACONIAN_SCORCHER,
+    MONS_LAST_DRACONIAN = MONS_LAST_NONBASE_DRACONIAN,
 
     // Lava monsters:
 #if TAG_MAJOR_VERSION == 34
@@ -3501,7 +3504,7 @@ enum monster_type                      // menv[].type
     MONS_CORRUPTER,
     MONS_BLACK_SUN,
     MONS_LAST_NONBASE_DEMONSPAWN = MONS_BLACK_SUN,
-    MONS_LAST_DEMONSPAWN = MONS_BLACK_SUN,
+    MONS_LAST_DEMONSPAWN = MONS_LAST_NONBASE_DEMONSPAWN,
 
     MONS_WORLDBINDER,
     MONS_GRAND_AVATAR,
@@ -4250,7 +4253,9 @@ enum species_type
     SP_GREY_DRACONIAN,
     SP_BLACK_DRACONIAN,
     SP_PURPLE_DRACONIAN,
+#if TAG_MAJOR_VERSION == 34
     SP_MOTTLED_DRACONIAN,
+#endif
     SP_PALE_DRACONIAN,
       SP_LAST_NONBASE_DRACONIAN = SP_PALE_DRACONIAN,
     SP_BASE_DRACONIAN,
@@ -4478,7 +4483,7 @@ enum spell_type : int
     SPELL_BLINK_OTHER,
     SPELL_SUMMON_MUSHROOMS,
     SPELL_SPIT_ACID,
-    SPELL_STICKY_FLAME_SPLASH,
+    SPELL_ACID_SPLASH,
     SPELL_FIRE_BREATH,
     SPELL_COLD_BREATH,
 #if TAG_MAJOR_VERSION == 34
@@ -4724,6 +4729,7 @@ enum spell_type : int
     SPELL_GHOSTLY_SACRIFICE,
     SPELL_DREAM_DUST,
     SPELL_BECKONING,
+    SPELL_UPHEAVAL,
     NUM_SPELLS
 };
 
@@ -4934,7 +4940,9 @@ enum reach_type
 
 enum daction_type
 {
+#if TAG_MAJOR_VERSION == 34
     DACT_ALLY_HOLY,
+#endif
     DACT_ALLY_UNHOLY_EVIL,
     DACT_ALLY_UNCLEAN_CHAOTIC,
     DACT_ALLY_SPELLCASTER,
@@ -4952,10 +4960,12 @@ enum daction_type
 #else
     DACT_SLIME_NEW_ATTEMPT,
 #endif
+#if TAG_MAJOR_VERSION == 34
     DACT_HOLY_PETS_GO_NEUTRAL,
     DACT_ALLY_TROG,
+#endif
 
-    DACT_SHUFFLE_DECKS,
+    DACT_RECLAIM_DECKS,
     DACT_REAUTOMAP,
     DACT_REMOVE_JIYVA_ALTARS,
     DACT_PIKEL_SLAVES,
@@ -4972,8 +4982,8 @@ enum daction_type
     DACT_BRIBE_TIMEOUT,
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,
-    DACT_ALLY_MAKHLEB,
 #if TAG_MAJOR_VERSION == 34
+    DACT_ALLY_MAKHLEB,
     DACT_ALLY_SACRIFICE_LOVE,
 #endif
     DACT_ALLY_HEPLIAKLQANA,

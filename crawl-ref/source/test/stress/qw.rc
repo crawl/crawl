@@ -2265,7 +2265,7 @@ function on_valuable_corpse()
     return false
   end
   for it in at_feet() do
-    if it.name() == "mottled dragon corpse" or
+    if it.name() == "acid dragon corpse" or
        it.name() == "steam dragon corpse" then
       return true
     end

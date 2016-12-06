@@ -101,6 +101,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         },
         { -1, passive_t::restore_hp_mp_vs_evil,
               "gain health and magic from killing evil beings" },
+        { -1, passive_t::no_stabbing,
+              "are prevented from stabbing unaware creatures" },
         {  0, passive_t::halo, "are surrounded by divine halo" },
     },
 
@@ -152,7 +154,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Nemelex
     {
-        {  0, passive_t::cards_power, "cards are more powerful" }
+        // None
     },
 
     // Elyvilon
@@ -989,6 +991,11 @@ void qazlal_storm_clouds()
     {
         int count = 0;
         if (cell_is_solid(*ri) || cloud_at(*ri))
+            continue;
+
+        // Don't create clouds over firewood
+        const monster * mon = monster_at(*ri);
+        if (mon != nullptr && mons_is_firewood(*mon))
             continue;
 
         // No clouds in corridors.

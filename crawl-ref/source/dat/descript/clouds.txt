@@ -7,8 +7,7 @@ by time spent in the flames.
 Ranged cold attacks passing through the cloud are substantially reduced in
 range, dissipating the cloud in the process.
 
-If placed near water, the heat will generate steam nearby. If placed directly
-over water, the cloud will dissipate much more quickly.
+If placed near or over water, the heat will generate steam nearby.
 %%%%
 noxious fumes cloud
 
@@ -23,8 +22,6 @@ by time spent inside.
 
 Ranged fire attacks passing through the cloud are substantially reduced in
 range, dissipating the cloud in the process.
-
-If placed over lava, the cloud will dissipate much more quickly.
 %%%%
 poison gas cloud
 
@@ -69,8 +66,7 @@ will often find themselves transformed into more kindling for the fire.
 Ranged cold attacks passing through the cloud are substantially reduced in
 range, dissipating the cloud in the process.
 
-If placed near water, the heat will generate steam nearby. If placed directly
-over water, the cloud will dissipate much more quickly.
+If placed near or over water, the heat will generate steam nearby.
 %%%%
 steam cloud
 
@@ -90,9 +86,8 @@ to resist the effects.
 blessed fire cloud
 
 A cloud of divine fire, imbued with holy power. Those in the service of one of
-the good gods will be unaffected by it. All others will take substantial
-damage, with fire resistance offering no protection. Those following evil gods
-will take increased damage, and the undead and demonic even more.
+the good gods will be unaffected by it. All other creatures will be hurt by it,
+with undead and demonic creatures being greatly harmed.
 %%%%
 foul pestilence cloud
 
@@ -116,8 +111,6 @@ rain cloud
 An extremely localized rainstorm. It may produce pools of shallow water, or
 temporarily deepen existing pools. Beings made entirely out of fire are averse
 to spending much time in the rain.
-
-If placed over lava, the cloud will dissipate much more quickly.
 %%%%
 mutagenic fog cloud
 

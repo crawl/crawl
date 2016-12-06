@@ -243,7 +243,7 @@ hydra5 CORPSE_HYDRA
 steam_dragon CORPSE_STEAM_DRAGON
 ice_dragon CORPSE_ICE_DRAGON
 swamp_dragon CORPSE_SWAMP_DRAGON
-mottled_dragon CORPSE_MOTTLED_DRAGON
+acid_dragon CORPSE_ACID_DRAGON
 quicksilver_dragon CORPSE_QUICKSILVER_DRAGON
 iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON
@@ -313,12 +313,6 @@ deep_troll CORPSE_DEEP_TROLL
 %compose base/draconian_gray_f
 %compose drchead/drchead_grey
 %finish CORPSE_DRACONIAN_GREY
-
-%start
-%compose drcwing/drcwing_mottled
-%compose base/draconian_mottled_m
-%compose drchead/drchead_mottled
-%finish CORPSE_DRACONIAN_MOTTLED
 
 %start
 %compose drcwing/drcwing_pale

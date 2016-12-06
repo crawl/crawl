@@ -1819,7 +1819,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "which is perfect for butchering. Try to dine on chunks in "
                 "order to save permanent food.";
         if (Hints.hints_type == HINT_BERSERK_CHAR)
-            text << "\nNote that you cannot Berserk while very hungry or worse.";
+            text << "\nNote that you cannot Berserk while starving or near starving.";
         cmd.push_back(CMD_BUTCHER);
         break;
 
@@ -2720,8 +2720,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_WAIT);
         break;
     case HINT_ANIMATE_CORPSE_SKELETON:
-        text << "As long as a monster has a skeleton, Animate Skeleton also "
-                "works on unskeletalized corpses.";
+        text << "Animate Skeleton works on the corpse of any monster that has "
+                "a skeleton inside, and will also butcher them automatically.";
         break;
     default:
         text << "You've found something new (but I don't know what)!";
@@ -3933,7 +3933,7 @@ string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     if (mi.attitude == ATT_FRIENDLY)
     {
         ostr << "Friendly monsters will follow you around and attempt to aid "
-                "you in battle. You can order your allies by <w>t</w>alking "
+                "you in battle. You can order nearby allies by <w>t</w>alking "
                 "to them.";
 
         if (!mons_att_wont_attack(mi.attitude))

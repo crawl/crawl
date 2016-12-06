@@ -271,17 +271,14 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_HOLY:
     {
-        // Cleansing flame.
-        const int rhe = you.res_holy_energy(nullptr);
-        if (rhe > 0)
-            hurted = 0;
-        else if (rhe == 0)
-            hurted /= 2;
-        else if (rhe < -1)
-            hurted = hurted * 3 / 2;
-
-        if (hurted == 0 && doEffects)
+        hurted = resist_adjust_damage(&you, flavour, hurted);
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
+        else if (hurted > original && doEffects)
+        {
+            mpr("You writhe in agony!");
+            xom_is_stimulated(200);
+        }
         break;
     }
 
@@ -855,7 +852,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
-    if (dam > 0 && death_type != KILLED_BY_POISON)
+    // Don't wake the player with fatal or poison damage.
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
     const bool non_death = death_type == KILLED_BY_QUITTING
@@ -920,6 +918,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             dam -= mp;
             dec_mp(mp);
+
+            // Wake players who took fatal damage exactly equal to current HP,
+            // but had it reduced below fatal threshhold by spirit shield.
+            if (dam < you.hp)
+                you.check_awaken(500);
+
             if (dam <= 0 && you.hp > 0)
                 return;
         }
@@ -927,6 +931,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
+            // Ensure divine intervention wakes sleeping players. Necessary
+            // because we otherwise don't wake players who take fatal damage.
+            you.check_awaken(500);
             return;
         }
 

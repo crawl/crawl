@@ -8,7 +8,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit = false);
 void slime_convert(monster* mons);
 bool yred_slaves_abandon_you();
 bool beogh_followers_abandon_you();
-bool make_god_gifts_disappear();
+void make_god_gifts_disappear();
 enum class conv_t
 {
     SIGHT,

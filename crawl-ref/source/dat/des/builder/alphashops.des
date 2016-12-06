@@ -61,7 +61,7 @@
        "manual of air magic", "book of annihilations", "arrow",
        "potion of agility", "potion of ambrosia", "scroll of acquirement q:1",
        "scroll of amnesia", "staff of air", "manual of axes",
-       "manual of armour", "wand of acid" }
+       "manual of armour", "wand of acid", "acid dragon scales" }
 
       elseif s == "B" then i = { "bardiche", "battleaxe", "beef jerky", "bolt",
        "book of battle", "book of beasts", "book of burglary", "box of beasts",
@@ -124,9 +124,9 @@
 
       elseif s == "M" then i = { "manual of maces & flails", "meat ration",
        "book of minor magic", "book of misfortune", "book of maledictions",
-       "morningstar", "mace", "mottled dragon scales", "potion of magic",
-       "ring of magical power", "amulet of magic regeneration",
-       "potion of mutation", "potion of might", "scroll of magic mapping", }
+       "morningstar", "mace", "potion of magic",
+       "ring of magical power", "amulet of magic regeneration", "potion of might",
+       "potion of mutation", "scroll of magic mapping", }
 
       elseif s == "N" then i = { "book of necromancy", "naga barding",
        "necronomicon", "needle", "scroll of noise", "manual of necromancy" }

@@ -294,15 +294,13 @@ static const ability_def Ability_List[] =
     { ABIL_BREATHE_LIGHTNING, "Breathe Lightning",
       0, 0, 125, 0, {FAIL_XL, 30, 1}, abflag::BREATH },
     { ABIL_BREATHE_POWER, "Breathe Dispelling Energy",
-        0, 0, 125, 0, {FAIL_XL, 30, 1}, abflag::BREATH },
-    { ABIL_BREATHE_STICKY_FLAME, "Breathe Sticky Flame",
       0, 0, 125, 0, {FAIL_XL, 30, 1}, abflag::BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam",
-        0, 0, 75, 0, {FAIL_XL, 20, 1}, abflag::BREATH },
+      0, 0, 75, 0, {FAIL_XL, 20, 1}, abflag::BREATH },
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, {FAIL_XL, 45, 2}, abflag::NONE },
 
-    { ABIL_SPIT_ACID, "Spit Acid",
-        0, 0, 125, 0, {FAIL_XL, 30, 1}, abflag::BREATH },
+    { ABIL_BREATHE_ACID, "Breathe Acid",
+      0, 0, 125, 0, {FAIL_XL, 30, 1}, abflag::BREATH },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, {FAIL_XL, 42, 3}, abflag::NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, {}, abflag::NONE },
@@ -1001,10 +999,9 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
     {
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
-    case ABIL_SPIT_ACID:
+    case ABIL_BREATHE_ACID:
     case ABIL_BREATHE_LIGHTNING:
     case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_MEPHITIC:
     case ABIL_BREATHE_STEAM:
         if (you.form == TRAN_DRAGON)
@@ -1461,9 +1458,8 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_BREATHE_LIGHTNING:
-    case ABIL_SPIT_ACID:
+    case ABIL_BREATHE_ACID:
     case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
         if (you.duration[DUR_BREATH_WEAPON])
@@ -1715,9 +1711,8 @@ static int _calc_breath_ability_range(ability_type ability)
     case ABIL_BREATHE_FROST:        return 5;
     case ABIL_BREATHE_MEPHITIC:     return 6;
     case ABIL_BREATHE_LIGHTNING:    return 7;
-    case ABIL_SPIT_ACID:            return 7;
+    case ABIL_BREATHE_ACID:         return 3;
     case ABIL_BREATHE_POWER:        return 7;
-    case ABIL_BREATHE_STICKY_FLAME: return 3;
     case ABIL_BREATHE_STEAM:        return 6;
     case ABIL_SPIT_POISON:          return 5;
     case ABIL_BREATHE_POISON:       return 6;
@@ -1728,14 +1723,14 @@ static int _calc_breath_ability_range(ability_type ability)
     return -2;
 }
 
-static bool _sticky_flame_can_hit(const actor *act)
+static bool _acid_breath_can_hit(const actor *act)
 {
     if (act->is_monster())
     {
         const monster* mons = act->as_monster();
         bolt testbeam;
         testbeam.thrower = KILL_YOU;
-        zappy(ZAP_BREATHE_STICKY_FLAME, 100, false, testbeam);
+        zappy(ZAP_BREATHE_ACID, 100, false, testbeam);
 
         return !testbeam.ignores_monster(mons);
     }
@@ -1751,6 +1746,11 @@ static bool _abort_if_stationary()
 
     canned_msg(MSG_CANNOT_MOVE);
     return true;
+}
+
+static bool _cleansing_flame_affects(const actor *act)
+{
+    return act->res_holy_energy() < 3;
 }
 
 /*
@@ -1849,7 +1849,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_BREATHE_STICKY_FLAME:
+    case ABIL_BREATHE_ACID:       // Draconian acid splash
     {
         beam.range = _calc_breath_ability_range(abil.ability);
         targetter_splash hitfunc(&you, beam.range);
@@ -1857,25 +1857,24 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
         if (!spell_direction(abild, beam, &args))
-            return SPRET_ABORT;
+          return SPRET_ABORT;
 
-        if (stop_attack_prompt(hitfunc, "spit at", _sticky_flame_can_hit))
-            return SPRET_ABORT;
+        if (stop_attack_prompt(hitfunc, "spit at", _acid_breath_can_hit))
+          return SPRET_ABORT;
 
         fail_check();
-        zapping(ZAP_BREATHE_STICKY_FLAME, (you.form == TRAN_DRAGON) ?
+        zapping(ZAP_BREATHE_ACID, (you.form == TRAN_DRAGON) ?
                 2 * you.experience_level : you.experience_level,
-            beam, false, "You spit a glob of burning liquid.");
+                beam, false, "You spit a glob of acid.");
 
         you.increase_duration(DUR_BREATH_WEAPON,
-                      3 + random2(10) + random2(30 - you.experience_level));
+                          3 + random2(10) + random2(30 - you.experience_level));
         break;
     }
 
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
-    case ABIL_SPIT_ACID:
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
@@ -1932,7 +1931,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             black_drac_breath();
             break;
 
-        case ABIL_SPIT_ACID:
+        case ABIL_BREATHE_ACID:
             if (!zapping(ZAP_BREATHE_ACID,
                 (you.form == TRAN_DRAGON) ?
                     2 * you.experience_level : you.experience_level,
@@ -1948,17 +1947,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You breathe a bolt of dispelling energy."))
-            {
-                return SPRET_ABORT;
-            }
-            break;
-
-        case ABIL_BREATHE_STICKY_FLAME:
-            if (!zapping(ZAP_BREATHE_STICKY_FLAME,
-                (you.form == TRAN_DRAGON) ?
-                    2 * you.experience_level : you.experience_level,
-                beam, true,
-                         "You spit a glob of burning liquid."))
             {
                 return SPRET_ABORT;
             }
@@ -1993,11 +1981,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
 
-        if (abil.ability == ABIL_BREATHE_STEAM
-            || abil.ability == ABIL_SPIT_ACID)
-        {
+        if (abil.ability == ABIL_BREATHE_STEAM)
             you.duration[DUR_BREATH_WEAPON] /= 2;
-        }
 
         break;
 
@@ -2200,10 +2185,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
+    {
+        targetter_los hitfunc(&you, LOS_SOLID, 2);
+        {
+            if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
+                return SPRET_ABORT;
+        }
         fail_check();
         cleansing_flame(10 + you.skill_rdiv(SK_INVOCATIONS, 7, 6),
                         CLEANSING_FLAME_INVOCATION, you.pos(), &you);
         break;
+    }
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
         fail_check();
@@ -3053,9 +3045,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_USKAYAW_GRAND_FINALE:
-        if (!uskayaw_grand_finale(fail))
-            return SPRET_ABORT;
-        break;
+        return uskayaw_grand_finale(fail);
 
     case ABIL_HEPLIAKLQANA_IDEALISE:
         return hepliaklqana_idealise(fail);

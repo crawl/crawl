@@ -308,7 +308,7 @@ BOOL:    evil, nogen
 # Reserved for the Enchantress.
 ENUM:    FAERIE
 NAME:    faerie dragon scales
-OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_ACID_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
@@ -1114,6 +1114,7 @@ BASE_DAM: +35
 BASE_DELAY: +13
 BRAND:    SPWPN_VORPAL
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    HIGH_COUNCIL
 NAME:    hat of the High Council
 INSCRIP: Wiz-
@@ -1124,6 +1125,7 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -1
+BOOL:    nogen
 
 NAME:     arc blade
 INSCRIP:  discharge,

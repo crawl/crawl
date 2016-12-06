@@ -36,6 +36,7 @@
 #include "butcher.h"
 #if TAG_MAJOR_VERSION == 34
  #include "cloud.h"
+ #include "decks.h"
 #endif
 #include "colour.h"
 #include "coordit.h"
@@ -2489,6 +2490,12 @@ static void tag_read_you(reader &th)
                 a -= 1;
         }
 
+        if (th.getMinorVersion() < TAG_MINOR_MOTTLED_REMOVAL)
+        {
+            if (a == ABIL_BREATHE_STICKY_FLAME)
+                a = ABIL_BREATHE_FIRE;
+        }
+
         // Bad offset from games transferred prior to 0.17-a0-2121-g4af814f.
         if (a == NUM_ABILITIES)
             a = ABIL_NON_ABILITY;
@@ -3039,6 +3046,14 @@ static void tag_read_you(reader &th)
         }
 #endif
         you.penance[i] = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WRATH
+            && player_under_penance(GOD_NEMELEX_XOBEH)
+            && i == GOD_NEMELEX_XOBEH)
+        {
+            you.penance[i] = max(you.penance[i] - 100, 0);
+        }
+#endif
         ASSERT(you.penance[i] <= MAX_PENANCE);
     }
 
@@ -3695,6 +3710,14 @@ static void tag_read_you_items(reader &th)
                                                            | (seed2 << 8)
                                                            | (seed3 << 16);
         }
+    }
+    // Remove any decks if no longer worshipping Nemelex, now that items have
+    // been loaded.
+    if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WRATH
+        && !you_worship(GOD_NEMELEX_XOBEH)
+        && you.num_total_gifts[GOD_NEMELEX_XOBEH])
+    {
+        nemelex_reclaim_decks();
     }
 #endif
 }
@@ -4566,7 +4589,6 @@ void unmarshallItem(reader &th, item_def &item)
         { ARM_FIRE_DRAGON_HIDE,         ARM_FIRE_DRAGON_ARMOUR },
         { ARM_ICE_DRAGON_HIDE,          ARM_ICE_DRAGON_ARMOUR },
         { ARM_STEAM_DRAGON_HIDE,        ARM_STEAM_DRAGON_ARMOUR },
-        { ARM_MOTTLED_DRAGON_HIDE,      ARM_MOTTLED_DRAGON_ARMOUR },
         { ARM_STORM_DRAGON_HIDE,        ARM_STORM_DRAGON_ARMOUR },
         { ARM_GOLD_DRAGON_HIDE,         ARM_GOLD_DRAGON_ARMOUR },
         { ARM_SWAMP_DRAGON_HIDE,        ARM_SWAMP_DRAGON_ARMOUR },
@@ -5247,7 +5269,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
 
-    if (mi.type != MONS_PROGRAM_BUG && mons_species(mi.type) == MONS_PROGRAM_BUG)
+    if (mons_is_removed(mi.type))
     {
         mi.type = MONS_GHOST;
         mi.props.clear();

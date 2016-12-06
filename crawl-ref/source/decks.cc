@@ -190,35 +190,6 @@ int cards_in_deck(const item_def &deck)
     return props[CARD_KEY].get_vector().size();
 }
 
-static void _shuffle_deck(item_def &deck)
-{
-    if (!is_deck(deck))
-        return;
-
-    CrawlHashTable &props = deck.props;
-    ASSERT(props.exists(CARD_KEY));
-
-    CrawlVector &cards = props[CARD_KEY].get_vector();
-
-    CrawlVector &flags = props[CARD_FLAG_KEY].get_vector();
-    ASSERT(flags.size() == cards.size());
-
-    // Don't use shuffle(), since we want to apply exactly the
-    // same shuffling to both the cards vector and the flags vector.
-    vector<vec_size> pos;
-    for (const auto& _ : cards)
-    {
-        UNUSED(_);
-        pos.push_back(random2(cards.size()));
-    }
-
-    for (vec_size i = 0; i < pos.size(); ++i)
-    {
-        swap(cards[i], cards[pos[i]]);
-        swap(flags[i], flags[pos[i]]);
-    }
-}
-
 card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags)
 {
@@ -1125,42 +1096,6 @@ void draw_from_deck_of_punishment(bool deal)
     card_effect(card, DECK_RARITY_COMMON, flags);
 }
 
-static int _xom_check_card(item_def &deck, card_type card,
-                           uint8_t flags)
-{
-    int amusement = 64;
-
-    if (flags & CFLAG_PUNISHMENT)
-        amusement = 200;
-    else if (!item_type_known(deck))
-        amusement *= 2;
-
-    if (player_in_a_dangerous_place())
-        amusement *= 2;
-
-    if (flags & CFLAG_SEEN)
-        amusement /= 2;
-
-    switch (card)
-    {
-    case CARD_EXILE:
-        // Nothing happened, boring.
-        if (player_in_branch(BRANCH_ABYSS))
-            amusement = 0;
-        break;
-
-    case CARD_FAMINE:
-    case CARD_SWINE:
-        // Always hilarious.
-        amusement = 255;
-
-    default:
-        break;
-    }
-
-    return amusement;
-}
-
 void evoke_deck(item_def& deck)
 {
     if (_check_buggy_deck(deck))
@@ -1172,38 +1107,6 @@ void evoke_deck(item_def& deck)
 
     uint8_t flags = 0;
     card_type card = _draw_top_card(deck, true, flags);
-
-    // Passive Nemelex retribution: sometimes a card gets swapped out.
-    // More likely to happen with identified cards.
-    if (player_under_penance(GOD_NEMELEX_XOBEH))
-    {
-        int c = 1;
-        if (flags & CFLAG_SEEN)
-            c = 3;
-
-        if (x_chance_in_y(c * you.penance[GOD_NEMELEX_XOBEH], 3000))
-        {
-            card_type old_card = card;
-            card = _choose_from_deck(&deck_of_punishment, rarity);
-            if (card != old_card)
-            {
-                flags |= CFLAG_PUNISHMENT;
-                simple_god_message(" seems to have exchanged this card "
-                                   "behind your back!", GOD_NEMELEX_XOBEH);
-                mprf("It's actually %s.", card_name(card));
-                // You never completely appease Nemelex, but the effects
-                // get less frequent.
-                you.penance[GOD_NEMELEX_XOBEH] -=
-                    random2((you.penance[GOD_NEMELEX_XOBEH]+18) / 10);
-            }
-        }
-    }
-
-    const int amusement = _xom_check_card(deck, card, flags);
-
-    // Punishment cards don't give any information about the deck.
-    if (flags & (CFLAG_PUNISHMENT))
-        allow_id = false;
 
     deck.used_count++;
     _remember_drawn_card(deck, card, allow_id);
@@ -1221,8 +1124,6 @@ void evoke_deck(item_def& deck)
 
     card_effect(card, rarity, flags, false);
 
-    xom_is_stimulated(amusement);
-
     // Always wield change, since the number of cards used/left has
     // changed, and it might be wielded.
     you.wield_change = true;
@@ -1234,9 +1135,9 @@ static int _get_power_level(int power, deck_rarity_type rarity)
     switch (rarity)
     {
     case DECK_RARITY_COMMON:
-//give nemelex worshipers a small chance for an upgrade
-//approx 1/2 ORNATE chance (plain decks don't get the +150 power boost)
-        if (have_passive(passive_t::cards_power) && (x_chance_in_y(power, 1000)))
+        // small chance for an upgrade - approx 1/2 ORNATE chance
+        // (plain decks don't get the +150 power boost)
+        if (x_chance_in_y(power, 1000))
             ++power_level;
         break;
     case DECK_RARITY_LEGENDARY:
@@ -1264,13 +1165,8 @@ static void _suppressed_card_message(god_type god, conduct_type done)
     switch (done)
     {
         case DID_EVIL: forbidden_act = "evil"; break;
-
-        case DID_POISON: forbidden_act = "poisonous"; break;
-
         case DID_CHAOS: forbidden_act = "chaotic"; break;
-
         case DID_HASTY: forbidden_act = "hasty"; break;
-
         case DID_FIRE: forbidden_act = "fiery"; break;
 
         default: forbidden_act = "buggy"; break;
@@ -1557,24 +1453,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
             if (monster *ghost = _friendly(MONS_FLAYED_GHOST, 3))
             {
-                bool msg = true;
-                bolt beem;
-                int dam = 5;
-
-                beem.origin_spell = SPELL_FLAY;
-                beem.source = ghost->pos();
-                beem.source_id = ghost->mid;
-                beem.range = 0;
-
-                if (!you.res_torment())
-                {
-                    if (can_shave_damage())
-                        dam = do_shave_damage(dam);
-
-                    if (dam > 0)
-                        dec_hp(dam, false);
-                }
-
                 apply_visible_monsters([&, ghost](monster& mons)
                 {
                     if (mons.wont_attack()
@@ -1583,21 +1461,18 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                         return false;
                     }
 
-                    beem.target = mons.pos();
-                    ghost->foe = mons.mindex();
-                    mons_cast(ghost, beem, SPELL_FLAY,
-                              ghost->spell_slot_flags(SPELL_FLAY), msg);
-                    msg = false;
+
+                    flay(*ghost, mons, mons.hit_points * 2 / 5);
                     return true;
                 }, ghost->pos());
 
-                ghost->foe = MHITYOU;
+                ghost->foe = MHITYOU; // follow you around (XXX: rethink)
+                return;
             }
-
-            return;
+            // else, fallback to level 1
         }
-        else
-            ztype = painzaps[power_level];
+
+        ztype = painzaps[min(power_level, (int)ARRAYSZ(painzaps)-1)];
         break;
 
     default:
@@ -1668,6 +1543,13 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         you.set_duration(DUR_ELIXIR_HEALTH, 10);
         you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
+
+    if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
+        mpr("You begin rapidly regenerating health and magic.");
+    else if (you.duration[DUR_ELIXIR_HEALTH])
+        mpr("You begin rapidly regenerating.");
+    else
+        mpr("You begin rapidly regenerating magic.");
 
     apply_visible_monsters([=](monster& mon)
     {
@@ -1756,7 +1638,7 @@ static void _elements_card(int power, deck_rarity_type rarity)
     {
         {MONS_RAIJU, MONS_WIND_DRAKE, MONS_SHOCK_SERPENT},
         {MONS_BASILISK, MONS_CATOBLEPAS, MONS_IRON_GOLEM},
-        {MONS_MOTTLED_DRAGON, MONS_MOLTEN_GARGOYLE, MONS_FIRE_DRAGON},
+        {MONS_FIRE_VORTEX, MONS_MOLTEN_GARGOYLE, MONS_FIRE_DRAGON},
         {MONS_ICE_BEAST, MONS_POLAR_BEAR, MONS_ICE_DRAGON}
     };
 
@@ -2153,37 +2035,22 @@ static void _torment_card()
         torment_player(&you, TORMENT_CARDS);
 }
 
-// Punishment cards don't have their power adjusted depending on Nemelex piety
-// or penance, and are based on experience level instead of evocations skill
-// for more appropriate scaling.
+// Punishment cards don't have their power adjusted depending on Nemelex piety,
+// and are based on experience level instead of invocations skill.
 static int _card_power(deck_rarity_type rarity, bool punishment)
 {
-    int result = 0;
+    if (punishment)
+        return you.experience_level * 18;
 
-    if (!punishment)
-    {
-        if (player_under_penance(GOD_NEMELEX_XOBEH))
-            result -= you.penance[GOD_NEMELEX_XOBEH];
-        else if (have_passive(passive_t::cards_power))
-        {
-            result = you.piety;
-            result *= you.skill(SK_INVOCATIONS, 100) + 2500;
-            result /= 2700;
-        }
-    }
-
-    result += have_passive(passive_t::cards_power) ?
-                  you.skill(SK_INVOCATIONS, 9) :
-              punishment ? you.experience_level * 18 :
-                           you.experience_level * 9;
+    int result = you.piety;
+    result *= you.skill(SK_INVOCATIONS, 100) + 2500;
+    result /= 2700;
+    result += you.skill(SK_INVOCATIONS, 9);
 
     if (rarity == DECK_RARITY_RARE)
         result += 150;
     else if (rarity == DECK_RARITY_LEGENDARY)
         result += 300;
-
-    if (result < 0)
-        result = 0;
 
     return result;
 }
@@ -2440,50 +2307,22 @@ void init_deck(item_def &item)
     item.used_count  = 0;
 }
 
-void shuffle_all_decks_on_level()
+void reclaim_decks_on_level()
 {
     for (auto &item : mitm)
-    {
         if (item.defined() && is_deck(item))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on %s",
-                 item.name(DESC_PLAIN).c_str(),
-                 level_id::current().describe().c_str());
-#endif
-            _shuffle_deck(item);
-        }
-    }
+            destroy_item(item.index());
 }
 
-static bool _shuffle_inventory_decks()
+static void _reclaim_inventory_decks()
 {
-    bool success = false;
-
     for (auto &item : you.inv)
-    {
         if (item.defined() && is_deck(item))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Shuffling in inventory: %s",
-                 item.name(DESC_PLAIN).c_str());
-#endif
-            _shuffle_deck(item);
-
-            success = true;
-        }
-    }
-
-    return success;
+            dec_inv_item_quantity(item.link, 1);
 }
 
-void nemelex_shuffle_decks()
+void nemelex_reclaim_decks()
 {
-    add_daction(DACT_SHUFFLE_DECKS);
-    _shuffle_inventory_decks();
-
-    // Wildly inaccurate, but of similar quality as the old code which
-    // was triggered by the presence of any deck anywhere.
-    if (you.num_total_gifts[GOD_NEMELEX_XOBEH])
-        god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
+    add_daction(DACT_RECLAIM_DECKS);
+    _reclaim_inventory_decks();
 }
