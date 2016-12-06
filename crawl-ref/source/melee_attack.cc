@@ -3509,7 +3509,7 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max)
                      || (attk_flavour == AF_SHADOWSTAB
                          &&!defender->can_see(*attacker))))
     {
-        damage = damage * 5 / 2;
+        damage = damage * 2;
         dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
              defender->name(DESC_PLAIN).c_str(),
              damage);
