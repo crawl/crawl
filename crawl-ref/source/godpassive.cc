@@ -1617,10 +1617,10 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
             switch (weapon_attack_skill((weapon_type)weapon.sub_type))
             {
                 case SK_STAVES:
-                case SK_MACES_FLAILS:
+                case SK_LONG_BLADES:
                     weapon.brand = SPWPN_SPEED; 
                     break;
-                case SK_LONG_BLADES:
+                case SK_MACES_FLAILS:
                 case SK_AXES:
                     weapon.brand = SPWPN_FLAMING;
                     break;
