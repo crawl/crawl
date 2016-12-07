@@ -818,9 +818,14 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Misc items and rods have a common acquirement class.
-        if (class_wanted == OBJ_MISCELLANY && you.species != SP_FELID)
-            class_wanted = one_chance_in(8) ? OBJ_RODS : OBJ_MISCELLANY;
+        // Wands, rods, and misc have a common acquirement class.
+        if (class_wanted == OBJ_MISCELLANY)
+        {
+            if (one_chance_in(8) && you.species != SP_FELID)
+                class_wanted = OBJ_RODS;
+            else
+                class_wanted = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+        }
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -1529,10 +1534,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_RODS);
     }
     if (player_mutation_level(MUT_NO_ARTIFICE))
-    {
         bad_class.set(OBJ_MISCELLANY);
-        bad_class.set(OBJ_WANDS);
-    }
 
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
@@ -1543,13 +1545,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_JEWELLERY,  "Jewellery" },
         { OBJ_BOOKS,      "Book" },
         { OBJ_STAVES,     "Staff " },
-        { OBJ_WANDS,      "Wand" },
-        { OBJ_MISCELLANY, "Misc. Evocable" },
+        { OBJ_MISCELLANY, "Evocables" },
         { OBJ_FOOD,       0 }, // amended below
         { OBJ_GOLD,       "Gold" },
     };
-    ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you_worship(GOD_FEDHAS) ? "Fruit":
+    ASSERT(acq_classes[6].type == OBJ_FOOD);
+    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "Fruit":
                           you.species == SP_VAMPIRE  ? "Blood":
                                                        "Food";
 
