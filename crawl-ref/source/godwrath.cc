@@ -1847,7 +1847,7 @@ static bool _ieoh_jian_retribution()
     switch(random2(5))
     {
         case 0:
-            simple_god_message(" whisper, \"Die by a thousand cuts...\"");
+            simple_god_message(" whisper, \"Die by a thousand cuts...\"", GOD_IEOH_JIAN);
             mpr("You feel the sudden stab of multiple needles!");
             _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_LONG_CIRCLE);
             if (ieoh_jian_stolen_value() > 9)
@@ -1855,7 +1855,7 @@ static bool _ieoh_jian_retribution()
             you.set_duration(DUR_BARBS,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
         case 1:
-            simple_god_message(" whisper, \"Nowhere to run...\"");
+            simple_god_message(" whisper, \"Nowhere to run...\"",GOD_IEOH_JIAN);
             mpr("Your limbs feel heavy!");
             _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_LONG_CIRCLE);
             if (ieoh_jian_stolen_value() > 9)
@@ -1863,7 +1863,7 @@ static bool _ieoh_jian_retribution()
             you.set_duration(DUR_SLOW,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
         case 2:
-            simple_god_message(" whisper, \"Feeling trapped?\"");
+            simple_god_message(" whisper, \"Feeling trapped?\"", GOD_IEOH_JIAN);
             mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_HALBERD, PATTERN_LONG_CIRCLE);
             _summon_traps_ijc(TRAP_NET, PATTERN_SHORT_CIRCLE, false);
@@ -1871,7 +1871,7 @@ static bool _ieoh_jian_retribution()
                 _summon_traps_ijc(TRAP_NET, PATTERN_LONG_CIRCLE, false);
             break;
         case 3:
-            simple_god_message(" whisper, \"Watch your step...\"");
+            simple_god_message(" whisper, \"Watch your step...\"", GOD_IEOH_JIAN);
             mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_SHORT_CIRCLE);
             if (ieoh_jian_stolen_value() > 9)
@@ -1879,7 +1879,7 @@ static bool _ieoh_jian_retribution()
             _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
             break;
         case 4:
-            simple_god_message(" whisper, \"Suffer, mortal...\"");
+            simple_god_message(" whisper, \"Suffer, mortal...\"", GOD_IEOH_JIAN);
             mpr("You feel a burning poison under your skin!");
             you.corrode_equipment("The poison", 3 + ieoh_jian_stolen_value() / 4);
             lose_stat(STAT_STR, 1 + (ieoh_jian_stolen_value()/3) + random2(you.strength() / 8));
