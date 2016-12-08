@@ -1323,7 +1323,7 @@ NAME: divine chang dao
 OBJ:  OBJ_WEAPONS/WPN_GREAT_SWORD
 INSCRIP: momentum+,
 PLUS: +9
-BRAND: SPWPN_FLAMING
+BRAND: SPWPN_SPEED
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_chang_dao
 TILE_EQ: divine_chang_dao
@@ -1345,7 +1345,7 @@ NAME: divine meteor hammer
 OBJ: OBJ_WEAPONS/WPN_DIRE_FLAIL
 INSCRIP: momentum+,
 PLUS: +9
-BRAND: SPWPN_SPEED
+BRAND: SPWPN_FLAMING
 COLOUR: ETC_IEOH_JIAN
 TILE: spwpn_divine_meteor_hammer
 TILE_EQ: divine_meteor_hammer
