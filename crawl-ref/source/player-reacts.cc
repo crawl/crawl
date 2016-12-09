@@ -968,7 +968,7 @@ static void _regenerate_hp_and_mp(int delay)
 
         if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
-        if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
+        if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
             mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
 
         you.magic_points_regeneration += mp_regen_countup;
