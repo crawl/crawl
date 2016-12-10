@@ -98,13 +98,13 @@ trailing off like that of a snake. They move slowly but are naturally resilient.
 %%%%
 Octopode
 
-A species of amphibious cephalopods. They can wear eight rings, but almost no
-armour fits them.
+Octopodes are a species of amphibious cephalopods. They can wear eight rings,
+but almost no armour fits them.
 %%%%
 Ogre
 
-Large and strong, Ogres are mostly seen as brutes. They are very comfortable
-with the basics of magic, however.
+Large and strong, Ogres are mostly seen as brutes. They are extremely robust,
+and have an excellent grasp of magic.
 %%%%
 Spriggan
 
