@@ -525,8 +525,6 @@ void zap_wand(int slot)
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
-    const zap_type type_zapped = wand.zap();
-
     const bool has_charges = wand.charges > 0;
     if (!has_charges && wand.used_count == ZAPCOUNT_EMPTY)
     {
@@ -534,123 +532,149 @@ void zap_wand(int slot)
         return;
     }
 
-    // will waste charges
-    const bool wasteful     = !item_ident(wand, ISFLAG_KNOW_PLUSES);
-          bool invis_enemy  = false;
-    const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
-    targeter *hitfunc      = _wand_targeter(&wand);
+    // Will waste charges.
+    const bool wasteful = !item_ident(wand, ISFLAG_KNOW_PLUSES);
+    int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+                * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;
 
-    switch (wand.sub_type)
+    const spell_type spell =
+        spell_in_wand(static_cast<wand_type>(wand.sub_type));
+
+    if (spell != SPELL_NO_SPELL)
     {
-    case WAND_DIGGING:
-        targ_mode = TARG_ANY;
-        break;
-
-    default:
-        targ_mode = TARG_HOSTILE;
-        break;
-    }
-
-    const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS;
-
-    int power =
-        (15 + you.skill(SK_EVOCATIONS, 5) / 2)
-        * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;
-    const int tracer_range = !randeff ? _wand_range(type_zapped)
-                                      : _max_wand_range();
-    const string zap_title =
-        "Zapping: " + menu_colour_item_name(wand, DESC_INVENTORY)
-                    + (wasteful ? " <lightred>(will waste charges)</lightred>"
-                                : "");
-    direction_chooser_args args;
-    args.mode = targ_mode;
-    args.range = tracer_range;
-    args.top_prompt = zap_title;
-    args.hitfunc = hitfunc;
-    if (!randeff && testbits(get_spell_flags(zap_to_spell(type_zapped)),
-                             SPFLAG_MR_CHECK))
-    {
-        args.get_desc_func = bind(desc_success_chance, placeholders::_1,
-                                  zap_ench_power(type_zapped, power, false),
-                                  true, hitfunc);
-    }
-    direction(zap_wand, args);
-
-    if (hitfunc)
-        delete hitfunc;
-
-    if (!zap_wand.isValid)
-    {
-        if (zap_wand.isCancel)
-            canned_msg(MSG_OK);
-        return;
-    }
-
-    if (!has_charges)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        // It's an empty wand; inscribe it that way.
-        wand.used_count = ZAPCOUNT_EMPTY;
-        you.turn_is_over = true;
-        return;
-    }
-
-    if (you.confused())
-        zap_wand.confusion_fuzz();
-
-    if (randeff)
-    {
-        beam.effect_known = false;
-        beam.effect_wanton = true;
-    }
-
-    beam.source   = you.pos();
-    beam.attitude = ATT_FRIENDLY;
-    beam.evoked   = true;
-    beam.set_target(zap_wand);
-
-    const bool aimed_at_self = (beam.target == you.pos());
-
-    // Check whether we may hit friends, use "safe" values for random effects
-    // and unknown wands (highest possible range, and unresistable beam
-    // flavour). Don't use the tracer if firing at self.
-    if (!aimed_at_self)
-    {
-        beam.range = tracer_range;
-        if (!player_tracer(beam.effect_known ? type_zapped
-                                             : ZAP_DEBUGGING_RAY,
-                           power, beam, beam.effect_known ? 0 : 17))
+        if (!has_charges)
         {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            // It's an empty wand; inscribe it that way.
+            wand.used_count = ZAPCOUNT_EMPTY;
+            you.turn_is_over = true;
             return;
         }
+
+        const spret_type ret = your_spells(spell, power, false, true, false,
+                                           wasteful);
+
+        if (ret == SPRET_ABORT)
+            return;
     }
-
-    // Zapping the wand isn't risky if you aim it away from all monsters
-    // and yourself, unless there's a nearby invisible enemy and you're
-    // trying to hit it at random.
-    const bool risky = dangerous && (beam.friend_info.count
-                                     || beam.foe_info.count
-                                     || invis_enemy
-                                     || aimed_at_self);
-
-    if (risky && wand.sub_type == WAND_RANDOM_EFFECTS)
+    else
     {
-        // Xom loves it when you use a Wand of Random Effects and
-        // there is a dangerous monster nearby...
-        xom_is_stimulated(200);
+        const zap_type type_zapped = wand.zap();
+
+        bool invis_enemy  = false;
+        const bool dangerous = player_in_a_dangerous_place(&invis_enemy);
+        targetter *hitfunc = _wand_targetter(&wand);
+
+        switch (wand.sub_type)
+        {
+        case WAND_DIGGING:
+            targ_mode = TARG_ANY;
+            break;
+
+        default:
+            targ_mode = TARG_HOSTILE;
+            break;
+        }
+
+        const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS;
+
+        const int tracer_range = !randeff ? _wand_range(type_zapped)
+                                          : _max_wand_range();
+        const string zap_title =
+            "Zapping: " + menu_colour_item_name(wand, DESC_INVENTORY)
+                        + (wasteful ? " <lightred>(will waste charges)</lightred>"
+                                    : "");
+        direction_chooser_args args;
+        args.mode = targ_mode;
+        args.range = tracer_range;
+        args.top_prompt = zap_title;
+        args.hitfunc = hitfunc;
+        if (!randeff && testbits(get_spell_flags(zap_to_spell(type_zapped)),
+                                 SPFLAG_MR_CHECK))
+        {
+            args.get_desc_func = bind(desc_success_chance, placeholders::_1,
+                                      zap_ench_power(type_zapped, power, false),
+                                      true, hitfunc);
+        }
+        direction(zap_wand, args);
+
+        if (hitfunc)
+            delete hitfunc;
+
+        if (!zap_wand.isValid)
+        {
+            if (zap_wand.isCancel)
+                canned_msg(MSG_OK);
+            return;
+        }
+
+        if (!has_charges)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            // It's an empty wand; inscribe it that way.
+            wand.used_count = ZAPCOUNT_EMPTY;
+            you.turn_is_over = true;
+            return;
+        }
+
+        if (you.confused())
+            zap_wand.confusion_fuzz();
+
+        if (randeff)
+        {
+            beam.effect_known = false;
+            beam.effect_wanton = true;
+        }
+
+        beam.source   = you.pos();
+        beam.attitude = ATT_FRIENDLY;
+        beam.evoked   = true;
+        beam.set_target(zap_wand);
+
+        const bool aimed_at_self = (beam.target == you.pos());
+
+        // Check whether we may hit friends, use "safe" values for random effects
+        // and unknown wands (highest possible range, and unresistable beam
+        // flavour). Don't use the tracer if firing at self.
+        if (!aimed_at_self)
+        {
+            beam.range = tracer_range;
+            if (!player_tracer(beam.effect_known ? type_zapped
+                                                 : ZAP_DEBUGGING_RAY,
+                               power, beam, beam.effect_known ? 0 : 17))
+            {
+                return;
+            }
+        }
+
+        // Zapping the wand isn't risky if you aim it away from all monsters
+        // and yourself, unless there's a nearby invisible enemy and you're
+        // trying to hit it at random.
+        const bool risky = dangerous && (beam.friend_info.count
+                                         || beam.foe_info.count
+                                         || invis_enemy
+                                         || aimed_at_self);
+
+        if (risky && wand.sub_type == WAND_RANDOM_EFFECTS)
+        {
+            // Xom loves it when you use a Wand of Random Effects and
+            // there is a dangerous monster nearby...
+            xom_is_stimulated(200);
+        }
+
+        // Reset range.
+        beam.range = _wand_range(type_zapped);
+
+        const int surge = pakellas_surge_devices();
+        surge_power(you.spec_evoke() + surge);
+        power = player_adjust_evoc_power(power, surge);
+
+        // zapping() updates beam.
+        zapping(type_zapped, power, beam);
     }
 
-    // Reset range.
-    beam.range = _wand_range(type_zapped);
-
+    // Spend MP.
     dec_mp(mp_cost, false);
-
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-    power = player_adjust_evoc_power(power, surge);
-
-    // zapping() updates beam.
-    zapping(type_zapped, power, beam);
 
     // Take off a charge.
     wand.charges--;

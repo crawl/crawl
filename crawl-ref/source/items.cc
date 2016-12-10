@@ -3270,6 +3270,9 @@ zap_type item_def::zap() const
     zap_type result = ZAP_DEBUGGING_RAY;
     wand_type wand_sub_type = static_cast<wand_type>(sub_type);
 
+    if (spell_in_wand(wand_sub_type) != SPELL_NO_SPELL)
+        return NUM_ZAPS;
+
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
         // choose from all existing wands, except not really at all
@@ -3295,6 +3298,7 @@ zap_type item_def::zap() const
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
     case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
+    case WAND_CLOUDS:
     case WAND_RANDOM_EFFECTS:  /* impossible */
     case NUM_WANDS:
 #if TAG_MAJOR_VERSION == 34

@@ -1072,7 +1072,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
  * to cancel it in response to a prompt?
  *
  * @param spell         The spell to be checked.
- * @param evoked        Whether the spell is being evoked from a rod.
+ * @param evoked        Whether the spell is being evoked from a wand or rod.
  * @param fake_spell    Whether the spell is some other kind of fake spell
  *                      (such as an innate or divine ability).
  * @return              Whether the spellcasting should be aborted.
@@ -1281,15 +1281,17 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
  * @param allow_fail    Whether spell-fail chance applies.
- * @param evoked        Whether the spell comes from a rod.
+ * @param evoked        Whether the spell comes from a wand or rod.
  * @param fake_spell    Whether the spell was some other kind of fake spell
  *                      (such as an innate or divine ability).
+ * @param wasteful_wand Whether the spell comes from an unidentified wand.
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
  **/
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool evoked, bool fake_spell)
+                       bool allow_fail, bool evoked, bool fake_spell,
+                       bool wasteful_wand)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1361,6 +1363,8 @@ spret_type your_spells(spell_type spell, int powc,
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
+        if (wasteful_wand)
+            title += " <lightred>(will waste charges)</lightred>";
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
