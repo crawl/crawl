@@ -159,9 +159,6 @@ function trove.get_trove_item(e, value, base_item)
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
-    if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=9})
-    end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
     end

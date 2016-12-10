@@ -723,10 +723,6 @@ wand of fireball
 
 炎の爆風を放つ魔法の道具だ。
 %%%%
-wand of hasting
-
-狙った対象に動きを加速する魔法をかける魔法の道具だ。
-%%%%
 wand of invisibility
 
 対象を他者の視覚から隠蔽する魔法の道具だ。
@@ -750,8 +746,4 @@ wand of random effects
 wand of slowing
 
 これは狙った対象に動きが遅くなる魔法をかける魔法の道具だ。
-%%%%
-wand of teleportation
-
-対象に無作為な空間転位を引き起こす魔法の道具だ。
 %%%%

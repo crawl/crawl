@@ -30,8 +30,8 @@ or standing in shallow water).
 Tele status
 
 You are about to teleport. While waiting to teleport, attempting to apply the
-status again (such as by using a scroll or wand of teleportation) will cancel
-the teleportation.
+status again (such as by using a scroll of teleportation) will cancel the
+teleportation.
 %%%%
 Fly status
 

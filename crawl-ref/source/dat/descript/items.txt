@@ -1260,10 +1260,6 @@ wand of iceblast
 A magical device which throws exploding shards of ice, partially harming even
 creatures resistant to cold.
 %%%%
-wand of hasting
-
-A magical device which speeds up the actions of a targeted creature.
-%%%%
 wand of lightning
 
 A magical device which throws great bolts of lightning. They inflict less
@@ -1287,11 +1283,6 @@ A magical device which can produce a variety of effects.
 wand of slowing
 
 A magical device which slows down the actions of a targeted creature.
-%%%%
-wand of teleportation
-
-A magical device which causes a creature to be randomly translocated after a
-short delay.
 %%%%
 war axe
 
