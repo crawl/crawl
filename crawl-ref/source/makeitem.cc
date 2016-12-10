@@ -1359,14 +1359,14 @@ static void _generate_potion_item(item_def& item, int force_type,
         {
             // total weight is 1065
             stype = random_choose_weighted(192, POT_CURING,
-                                            95, POT_HEAL_WOUNDS,
-                                            73, POT_DEGENERATION,
+                                           105, POT_HEAL_WOUNDS,
                                             73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
+                                            73, POT_HASTE,
                                             66, POT_MIGHT,
                                             66, POT_AGILITY,
                                             66, POT_BRILLIANCE,
-                                            63, POT_HASTE,
+                                            53, POT_DEGENERATION,
                                             46, POT_MUTATION,
                                             35, POT_INVISIBILITY,
                                             35, POT_RESISTANCE,
@@ -1408,8 +1408,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
-                 80, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
-
+                100, (crawl_state.game_is_sprint() ? NUM_SCROLLS
+                                                   : SCR_TELEPORTATION),
                  45, SCR_AMNESIA,
                  40, SCR_ENCHANT_ARMOUR,
                  40, SCR_ENCHANT_WEAPON,
@@ -1417,11 +1417,11 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  40, SCR_MAGIC_MAPPING,
                  32, SCR_FEAR,
                  32, SCR_FOG,
-                 32, SCR_RANDOM_USELESSNESS,
                  32, SCR_BLINKING,
-                 // [Cha] don't generate noise scrolls if in sprint
-                 32, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  32, SCR_IMMOLATION,
+                 // [Cha] don't generate noise scrolls if in sprint
+                 22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
+                 22, SCR_RANDOM_USELESSNESS,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
                  17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
