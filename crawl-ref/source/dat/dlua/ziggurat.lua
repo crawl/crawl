@@ -590,7 +590,7 @@ local function ziggurat_create_loot_at(c)
                                    "potion of cure mutation no_pickup w:190 /" ..
                                    "potion of beneficial mutation no_pickup w:40 q:1 /" ..
                                    "royal jelly q:3 no_pickup w:80 /" ..
-                                   "wand of heal wounds no_pickup / " ..
+                                   "potion of heal wounds q:5 no_pickup / " ..
                                    "wand of hasting no_pickup / " ..
                                    dgn.good_scrolls)
 

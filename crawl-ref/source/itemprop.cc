@@ -765,6 +765,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
     { OBJ_WANDS,     WAND_COLD_REMOVED },
     { OBJ_WANDS,     WAND_INVISIBILITY_REMOVED },
+    { OBJ_WANDS,     WAND_HEAL_WOUNDS_REMOVED },
     { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
     { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
@@ -1561,7 +1562,6 @@ int wand_charge_value(int type)
     switch (type)
     {
     case WAND_TELEPORTATION:
-    case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
         return 3;
 
@@ -1631,7 +1631,6 @@ bool is_offensive_wand(const item_def& item)
 
     // Monsters will use them on themselves.
     case WAND_HASTING:
-    case WAND_HEAL_WOUNDS:
         return false;
 
     case WAND_FLAME:

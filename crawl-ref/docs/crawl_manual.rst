@@ -1688,7 +1688,7 @@ Vine Stalkers
   between their health and magical reserves. They also physically regenerate
   at an alarming rate. However these traits come at a price: the dual nature of
   their bodies makes them extremely frail, and they cannot benefit from potions
-  or wands to heal their wounds.
+  to heal their wounds.
 
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey

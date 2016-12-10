@@ -300,10 +300,6 @@ static void _give_items_skills(const newgame_def& ng)
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
-    // Deep Dwarves get a wand of heal wounds (5).
-    if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
-
     if (you.species == SP_FELID)
     {
         you.skills[SK_THROWING] = 0;

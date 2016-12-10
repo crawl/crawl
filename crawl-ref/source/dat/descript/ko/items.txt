@@ -861,10 +861,6 @@ wand of hasting
 
 짧은 시간동안 대상의 모든 행동을 가속시키는 마법봉이다.
 %%%%
-wand of heal wounds
-
-대상의 상처를 치료할 수 있는 희귀한 마법봉이다.
-%%%%
 wand of invisibility
 
 대상의 모습을 짧은 시간동안 감추는 마법봉이다.

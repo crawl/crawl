@@ -1017,10 +1017,6 @@ wand of hasting
 En magisk anordning, som kaster fortryllelser, der får målet til at bevæge sig
 og handle hurtigere.
 %%%%
-wand of heal wounds
-
-En magisk anordning, som kan helbrede et væsens sår.
-%%%%
 wand of invisibility
 
 En magisk anordning, som kan skjule et væsen for andres øjne.

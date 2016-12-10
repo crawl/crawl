@@ -4805,7 +4805,6 @@ enum zap_type
     ZAP_SLOW,
     ZAP_HASTE,
     ZAP_MAGIC_DART,
-    ZAP_HEAL_WOUNDS,
     ZAP_PARALYSE,
     ZAP_BOLT_OF_FIRE,
     ZAP_BOLT_OF_COLD,

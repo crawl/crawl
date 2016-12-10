@@ -414,7 +414,7 @@ DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
-   potion of heal wounds | potion of curing | wand of heal wounds | \
+   potion of heal wounds | potion of curing | \
    tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
    amulet of faith w:2 | potion of cure mutation | \
