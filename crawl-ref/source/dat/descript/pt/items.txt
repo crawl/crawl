@@ -317,10 +317,6 @@ swamp dragon scales
 Uma armadura mágica feita das escamas de um dragão do pântano, que confere
 resistência a veneno ao usuário.
 %%%%
-wand of heal wounds
-
-Um dispositivo mágico capaz de curar as feridas de uma criatura.
-%%%%
 wand of invisibility
 
 Um dispositivo mágico capaz de ocultar uma criatura das demais.

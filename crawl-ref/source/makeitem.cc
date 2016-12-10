@@ -1246,8 +1246,7 @@ static int _random_wand_subtype()
                                   5, WAND_DIGGING,
                                   3, WAND_ENSLAVEMENT,
                                   3, WAND_TELEPORTATION,
-                                  1, WAND_HASTING,
-                                  1, WAND_HEAL_WOUNDS);
+                                  1, WAND_HASTING);
 }
 
 /**

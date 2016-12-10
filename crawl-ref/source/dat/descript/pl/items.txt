@@ -782,11 +782,6 @@ wand of hasting
 Magiczny przedmiot który rzuca czar który przyspiesza wszystkie działania
 istoty na którą został skierowany.
 %%%%
-wand of heal wounds
-
-Magiczny przedmiot który leczy rany stworzenia na które został skierowany.
-Działa to nawet na nieumarłych zdolnych do zdrowienia.
-%%%%
 wand of invisibility
 
 Magiczny przedmiot który czyni stworzenie na które został skierowany

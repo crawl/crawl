@@ -548,7 +548,6 @@ void zap_wand(int slot)
         targ_mode = TARG_ANY;
         break;
 
-    case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
         targ_mode = TARG_FRIEND;
         break;
@@ -665,8 +664,7 @@ void zap_wand(int slot)
     beam.range = _wand_range(type_zapped);
 
     dec_mp(mp_cost, false);
-    if (wand.sub_type != WAND_HEAL_WOUNDS
-        && wand.sub_type != WAND_TELEPORTATION)
+    if (wand.sub_type != WAND_TELEPORTATION)
     {
         const int surge = pakellas_surge_devices();
         surge_power(you.spec_evoke() + surge);

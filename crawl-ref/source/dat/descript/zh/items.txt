@@ -682,10 +682,6 @@ wand of hasting
 
 这件魔法道具能加快目标生物的行动速度。
 %%%%
-wand of heal wounds
-
-这件魔法道具可以治疗各种生物身上受到的伤害。
-%%%%
 wand of invisibility
 
 这件魔法道具能使目标生物隐形。

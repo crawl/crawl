@@ -1412,8 +1412,7 @@ KITEM: 1 = bone rune of zot
 KMONS: % = patrolling greater mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
 KMONS: ? = patrolling greater mummy
-KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:3, \
-  wand of heal wounds ident:type
+KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
 KFEAT: # = closed_door

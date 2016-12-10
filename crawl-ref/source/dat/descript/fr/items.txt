@@ -1087,10 +1087,6 @@ wand of hasting
 Un instrument magique qui lance un enchantement accélérant la vitesse
 d'exécution des actions de la créature ciblée.
 %%%%
-wand of heal wounds
-
-Un instrument magique qui peut guérir les blessures d'une créature.
-%%%%
 wand of invisibility
 
 Un instrument magique qui cache une créature à la vue des autres.
