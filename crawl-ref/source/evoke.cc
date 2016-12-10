@@ -300,7 +300,7 @@ static bool _check_crystal_ball()
 
     if (you.magic_points == you.max_magic_points)
     {
-        mpr("Your reserves of magic are already full.");
+        canned_msg(MSG_FULL_MAGIC);
         return false;
     }
 
@@ -2060,7 +2060,7 @@ bool evoke_item(int slot, bool check_range)
 #endif
                 )
         {
-            mpr("Your reserves of magic are already full.");
+            canned_msg(MSG_FULL_MAGIC);
             return false;
         }
         else if (x_chance_in_y(apply_enhancement(

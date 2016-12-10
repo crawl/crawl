@@ -91,14 +91,10 @@ Stop Singing ability
 
 Stops singing your Song of Slaying.
 %%%%
-Self-Restoration ability
+Heal Wounds ability
 
-Restores your strength, dexterity and intelligence and heals any rotted health,
-at the permanent cost of one magic point.
-%%%%
-Device Recharging ability
-
-Recharges a wand or rod, at the permanent cost of one magic point.
+Heals the user significantly, with a chance of permanently reducing the user's
+maximum magic capacity by one.
 %%%%
 Dig ability
 

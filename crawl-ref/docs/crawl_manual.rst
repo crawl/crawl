@@ -1581,26 +1581,21 @@ Demonspawn
 Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate on their
-  own, nor are they receptive to any effects which merely hasten regeneration.
-  On the other hand, Deep Dwarves have developed the ability to instantly
-  counteract small doses of damage. Their empathy with the earth makes them
-  sense their surroundings; this ability increases in power as they gain
-  experience levels.
-
-  Given their lack of innate healing, few Deep Dwarves venture out for
-  adventures or even combat. Those who do bring a wand of heal wounds, or rely
-  on divine assistance.
+  generations made them turn pale and lose all ability to regenerate health
+  over time, or to have their rate of regeneration hastened by any effects.
+  Deep Dwarves can instead draw on their magical essence to heal, but doing so
+  will gradually deplete their maximum reserves of magic. They are passively
+  able to reduce all incoming damage, and their empathy with the earth allows
+  them to sense their surroundings; these abilities increase in power as they
+  gain experience levels.
 
   Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
   damage. Offensively, they are skilled users of axes, crossbows, and slings.
   Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with invocations is great. They
-  are most at home with the magic of earth and death, eventually gaining some
-  resistance to the dark powers of necromancy.
-
-  Deep Dwarves can tinker with wands so as to recharge them. However, each time
-  they do so, they lose a bit of their magical essence.
+  by outsiders; because of this, their skill with invocations is great, and
+  they often rely on divine assistance for healing. They are most at home with
+  the magic of earth and death, eventually gaining some resistance to the dark
+  powers of necromancy.
 
 Deep Elves
    This is an Elven species who long ago fled the overworld to live in darkness

@@ -178,7 +178,7 @@ public:
         if (you.hp == you.hp_max && player_rotted() == 0)
         {
             if (reason)
-                *reason = "Your health is already full!";
+                *reason = "Your health is already full.";
             return false;
         }
         return true;

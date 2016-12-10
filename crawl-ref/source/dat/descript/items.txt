@@ -1264,10 +1264,6 @@ wand of hasting
 
 A magical device which speeds up the actions of a targeted creature.
 %%%%
-wand of heal wounds
-
-A magical device which can heal a creature's wounds.
-%%%%
 wand of lightning
 
 A magical device which throws great bolts of lightning. They inflict less
