@@ -1951,40 +1951,12 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SCATTERSHOT:
         return cast_scattershot(&you, powc, target, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    // Removed spells.
-    case SPELL_ABJURATION:
-    case SPELL_CIGOTUVIS_DEGENERATION:
-    case SPELL_CONDENSATION_SHIELD:
-    case SPELL_CONTROL_TELEPORT:
-    case SPELL_DEMONIC_HORDE:
-    case SPELL_ENSLAVEMENT:
-    case SPELL_EVAPORATE:
-    case SPELL_FIRE_BRAND:
-    case SPELL_FORCEFUL_DISMISSAL:
-    case SPELL_FREEZING_AURA:
-    case SPELL_FULSOME_DISTILLATION:
-    case SPELL_INSULATION:
-    case SPELL_LETHAL_INFUSION:
-    case SPELL_POISON_WEAPON:
-    case SPELL_SEE_INVISIBLE:
-    case SPELL_SINGULARITY:
-    case SPELL_SONG_OF_SHIELDING:
-    case SPELL_SUMMON_SCORPIONS:
-    case SPELL_SUMMON_ELEMENTAL:
-    case SPELL_TWISTED_RESURRECTION:
-    case SPELL_SURE_BLADE:
-    case SPELL_FLY:
-    case SPELL_STONESKIN:
-    case SPELL_SUMMON_SWARM:
-    case SPELL_PHASE_SHIFT:
-    case SPELL_MASS_CONFUSION:
-    case SPELL_CURE_POISON:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     default:
+        if (spell_removed(spell))
+        {
+            mpr("Sorry, this spell is gone!");
+            return SPRET_ABORT;
+        }
         break;
     }
 
@@ -2308,4 +2280,42 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
     for (const auto bit : spschools_type::range())
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
+}
+
+const set<spell_type> removed_spells =
+{
+#if TAG_MAJOR_VERSION == 34
+    { SPELL_ABJURATION },
+    { SPELL_CIGOTUVIS_DEGENERATION },
+    { SPELL_CONDENSATION_SHIELD },
+    { SPELL_CONTROL_TELEPORT },
+    { SPELL_DEMONIC_HORDE },
+    { SPELL_ENSLAVEMENT },
+    { SPELL_EVAPORATE },
+    { SPELL_FIRE_BRAND },
+    { SPELL_FORCEFUL_DISMISSAL },
+    { SPELL_FREEZING_AURA },
+    { SPELL_FULSOME_DISTILLATION },
+    { SPELL_INSULATION },
+    { SPELL_LETHAL_INFUSION },
+    { SPELL_POISON_WEAPON },
+    { SPELL_SEE_INVISIBLE },
+    { SPELL_SINGULARITY },
+    { SPELL_SONG_OF_SHIELDING },
+    { SPELL_SUMMON_SCORPIONS },
+    { SPELL_SUMMON_ELEMENTAL },
+    { SPELL_TWISTED_RESURRECTION },
+    { SPELL_SURE_BLADE },
+    { SPELL_FLY },
+    { SPELL_STONESKIN },
+    { SPELL_SUMMON_SWARM },
+    { SPELL_PHASE_SHIFT },
+    { SPELL_MASS_CONFUSION },
+    { SPELL_CURE_POISON },
+#endif
+};
+
+bool spell_removed(spell_type spell)
+{
+    return removed_spells.count(spell) != 0;
 }
