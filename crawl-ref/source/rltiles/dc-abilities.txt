@@ -21,7 +21,9 @@ flight ABILITY_EVOKE_FLIGHT
 flight_end ABILITY_FLIGHT_END
 flight ABILITY_FLIGHT
 hurl_damnation ABILITY_HURL_DAMNATION
-recharge ABILITY_RECHARGE
+%sdir misc
+error ABILITY_HEAL_WOUNDS
+%sdir gui/abilities
 shaft_self ABILITY_SHAFT_SELF
 spit_poison ABILITY_SPIT_POISON
 stop_recall ABILITY_STOP_RECALL

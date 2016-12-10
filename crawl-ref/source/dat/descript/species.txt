@@ -7,7 +7,7 @@ weaponry.
 Deep Dwarf
 
 Deep Dwarves live underground and cannot regenerate health naturally, but they
-are very resilient to damage, and carry a wand of healing.
+are very resilient to damage, and have a limited ability to heal at will.
 %%%%
 Deep Elf
 

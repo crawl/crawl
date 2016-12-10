@@ -520,7 +520,7 @@ i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
 i-flame WAND_REMOVEME2
-i-heal_wounds WAND_REMOVEME
+i-heal_wounds WAND_REMOVEME6
 i-paralysis WAND_PARALYSIS
 i-flame WAND_REMOVEME3
 i-flame WAND_REMOVEME4

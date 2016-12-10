@@ -243,7 +243,7 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
 #endif
     // Deep Dwarves
-    ABIL_RECHARGING,
+    ABIL_HEAL_WOUNDS,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -874,6 +874,8 @@ enum canned_message_type
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
     MSG_GHOSTLY_OUTLINE,
+    MSG_FULL_HEALTH,
+    MSG_FULL_MAGIC,
     MSG_GAIN_HEALTH,
     MSG_GAIN_MAGIC,
     MSG_MAGIC_DRAIN,
