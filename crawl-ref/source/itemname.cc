@@ -3303,6 +3303,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
 #endif
+        case SCR_NOISE:
+            return true;
         default:
             return false;
         }
@@ -3384,7 +3386,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
-        case SCR_NOISE:
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
