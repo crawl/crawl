@@ -53,6 +53,20 @@ typedef vector<spell_type>                     spell_list;
 typedef unordered_set<spell_type, hash<int>>   spell_set;
 static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
 
+static const map<wand_type, spell_type> _wand_spells =
+{
+    { WAND_CLOUDS, SPELL_CLOUD_CONE },
+};
+
+
+spell_type spell_in_wand(wand_type wand)
+{
+    if (const spell_type* const spl = map_find(_wand_spells, wand))
+        return *spl;
+
+    return SPELL_NO_SPELL;
+}
+
 static const map<rod_type, spell_type> _rod_spells =
 {
     { ROD_LIGHTNING,   SPELL_THUNDERBOLT },

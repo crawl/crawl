@@ -1234,6 +1234,12 @@ wand of acid
 
 A magical device which throws bolts of corrosive acid.
 %%%%
+wand of clouds
+
+A magical device that allows its wielder to blast a cone-shaped area in front
+of them with various destructive clouds, their lethality increasing with
+Evocations skill.
+%%%%
 wand of confusion
 
 A magical device which induces confusion and bewilderment in a target creature.

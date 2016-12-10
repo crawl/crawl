@@ -1232,10 +1232,10 @@ static monster_type _choose_random_monster_corpse()
  */
 static int _random_wand_subtype()
 {
-    // total weight 84 [historical]
-    return random_choose_weighted(10, WAND_FLAME,
-                                  10, WAND_LIGHTNING,
-                                  10, WAND_ICEBLAST,
+    // total weight 78 [arbitrary]
+    return random_choose_weighted(9, WAND_FLAME,
+                                  9, WAND_LIGHTNING,
+                                  9, WAND_ICEBLAST,
                                   6, WAND_SLOWING,
                                   6, WAND_PARALYSIS,
                                   6, WAND_CONFUSION,
@@ -1244,7 +1244,8 @@ static int _random_wand_subtype()
                                   6, WAND_ACID,
                                   5, WAND_DISINTEGRATION,
                                   5, WAND_DIGGING,
-                                  3, WAND_ENSLAVEMENT);
+                                  3, WAND_ENSLAVEMENT,
+                                  2, WAND_CLOUDS);
 }
 
 /**
@@ -1266,6 +1267,7 @@ bool is_high_tier_wand(int type)
     case WAND_ACID:
     case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
+    case WAND_CLOUDS:
         return true;
     default:
         return false;

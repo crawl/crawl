@@ -534,7 +534,9 @@ i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
-i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
+i-disintegration WAND_DISINTEGRATION
+%sdir misc
+error WAND_CLOUDS WAND_ID_LAST
 
 #################OBJ_FOOD
 %sdir item/food

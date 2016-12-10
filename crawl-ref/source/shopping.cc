@@ -398,6 +398,11 @@ unsigned int item_value(item_def item, bool ident)
             bool good = false;
             switch (item.sub_type)
             {
+            case WAND_CLOUDS:
+                valued += 120;
+                good = true;
+                break;
+
             case WAND_ACID:
             case WAND_DIGGING:
                 valued += 80;

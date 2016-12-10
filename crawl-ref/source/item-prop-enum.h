@@ -725,6 +725,7 @@ enum wand_type
     WAND_ACID,
     WAND_RANDOM_EFFECTS,
     WAND_DISINTEGRATION,
+    WAND_CLOUDS,
     NUM_WANDS
 };
 

@@ -101,12 +101,11 @@ bool is_potentially_evil_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+        if (item.sub_type == WAND_RANDOM_EFFECTS
+            || item.sub_type == WAND_CLOUDS)
+        {
             return true;
-        break;
-    case OBJ_RODS:
-        if (item.sub_type == ROD_CLOUDS)
-            return true;
+        }
         break;
     default:
         break;
@@ -334,12 +333,11 @@ static bool _is_potentially_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+        if (item.sub_type == WAND_RANDOM_EFFECTS
+            || item.sub_type == WAND_CLOUDS)
+        {
             return true;
-        break;
-    case OBJ_RODS:
-        if (item.sub_type == ROD_CLOUDS)
-            return true;
+        }
         break;
     default:
         break;
