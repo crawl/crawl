@@ -177,8 +177,7 @@ Magic
   spellcasting, but is sometimes also used for the evoking and invoking of many
   other special abilities. They are displayed in the same way as hit points;
   nothing bad happens if these drop to zero, except, of course, that you can't
-  cast any spells. Resting restores these, too. It is difficult to have more than
-  50 magic points without using external devices.
+  cast any spells. Resting also restores your reserves of magic.
 
 Next come your defences. For all of them, more is better.
 
