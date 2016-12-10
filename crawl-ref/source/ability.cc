@@ -88,7 +88,7 @@ enum class abflag
     PIETY               = 0x00000008, // ability has its own piety cost
     EXHAUSTION          = 0x00000010, // fails if you.exhausted
     INSTANT             = 0x00000020, // doesn't take time to use
-    PERMANENT_HP        = 0x00000040, // costs permanent HPs
+                        //0x00000040,
     PERMANENT_MP        = 0x00000080, // costs permanent MPs
     CONF_OK             = 0x00000100, // can use even if confused
     FRUIT               = 0x00000200, // ability requires fruit
@@ -736,10 +736,7 @@ const string make_cost_description(ability_type ability)
         ret += make_stringf(", %d MP", _pakellas_quick_charge_mp_cost());
 
     if (abil.hp_cost)
-    {
-        ret += make_stringf(", %d %sHP", abil.hp_cost.cost(you.hp_max),
-            abil.flags & abflag::PERMANENT_HP ? "Permanent " : "");
-    }
+        ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
 
     if (abil.food_cost && !you_foodless(true)
         && (you.undead_state() != US_SEMI_UNDEAD
@@ -833,10 +830,7 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.hp_cost)
     {
         have_cost = true;
-        if (abil.flags & abflag::PERMANENT_HP)
-            ret << "\nMax HP : ";
-        else
-            ret << "\nHP     : ";
+        ret << "\nHP     : ";
         ret << abil.hp_cost.cost(you.hp_max);
     }
 
@@ -3140,11 +3134,7 @@ static void _pay_ability_costs(const ability_def& abil)
     }
 
     if (abil.hp_cost)
-    {
         dec_hp(hp_cost, false);
-        if (abil.flags & abflag::PERMANENT_HP)
-            rot_hp(hp_cost);
-    }
 
     if (food_cost)
         make_hungry(food_cost, false, true);
