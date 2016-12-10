@@ -862,10 +862,10 @@ WEIGHT: 3
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -917,10 +917,10 @@ DEPTH:  D:8-13
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
