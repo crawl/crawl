@@ -1356,32 +1356,6 @@ static bool _handle_wand(monster& mons)
         // This is handled elsewhere.
         return false;
 
-    // These are wands that monsters will aim at themselves {dlb}:
-    case WAND_HASTING:
-        if (!mons.has_ench(ENCH_HASTE))
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_TELEPORTATION:
-        if (mons.hit_points <= mons.max_hit_points / 2
-            || mons.caught())
-        {
-            if (!mons.has_ench(ENCH_TP)
-                && !one_chance_in(20))
-            {
-                beem.target = mons.pos();
-                niceWand = true;
-                break;
-            }
-            // This break causes the wand to be tried on the player.
-            break;
-        }
-        return false;
-
     default:
         break;
     }

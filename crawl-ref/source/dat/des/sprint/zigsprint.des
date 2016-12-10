@@ -88,11 +88,11 @@ function setup_room(e, id)
     -- Create items
 e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
             potion of heal wounds ident:all q:4 w:3 /\
-            wand of hasting ident:all w:1 /\
+            potion of haste ident:all q:4 w:3 /\
             scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-            potion of haste q:2 ident:all w:2 / scroll of acquirement q:1 w:1 ident:all /\
+            scroll of acquirement q:1 w:1 ident:all /\
             scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")

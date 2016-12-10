@@ -678,10 +678,6 @@ wand of fireball
 
 一件发射爆裂火球的魔法道具。
 %%%%
-wand of hasting
-
-这件魔法道具能加快目标生物的行动速度。
-%%%%
 wand of invisibility
 
 这件魔法道具能使目标生物隐形。
@@ -706,10 +702,6 @@ wand of random effects
 wand of slowing
 
 这件魔法道具能减慢目标生物的行动速度。
-%%%%
-wand of teleportation
-
-这件魔法道具会把目标生物传送到一个随机地点。
 %%%%
 whip
 

@@ -810,11 +810,6 @@ wand of fireball
 
 Ein magisches Gerät welches explodierende Feuerstöße wirft.
 %%%%
-wand of hasting
-
-Ein magisches Gerät welches Verzauberungen wirkt um die Aktion einer Kreatur
-beschleunigt in welche sie sich bewegt.
-%%%%
 wand of invisibility
 
 Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
@@ -841,10 +836,6 @@ wand of slowing
 
 Ein magisches Gerät welches Verzauberungen auf Kreaturen in seiner Richtung
 wirft, welche dadurch verlangsamt werden.
-%%%%
-wand of teleportation
-
-Ein magisches Gerät, das ein Wesen veranlasst, zufällig verlagert zu werden.
 %%%%
 whip
 

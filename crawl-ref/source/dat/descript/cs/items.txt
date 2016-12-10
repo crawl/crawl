@@ -263,7 +263,3 @@ wand of slowing
 Magické zařízení, které vrhá kouzla zpomalení na bytost, na kterou je právě
 namířeno.
 %%%%
-wand of teleportation
-
-Magické zařízení, které způsobí, že bytost bude náhodně přemístěna.
-%%%%
