@@ -1645,25 +1645,25 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
 
 static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
 {
-    switch (random2(6))
+    switch (you.body_size() < SIZE_MEDIUM ? random2(2) : random2(6))
     {
         case 0:
             make_item_unrandart(weapon, UNRAND_DIVINE_DEER_HORN_KNIFE);
             break;
         case 1:
-            make_item_unrandart(weapon, UNRAND_DIVINE_GUAN_DAO);
+            make_item_unrandart(weapon, UNRAND_DIVINE_MONK_SPADE);
             break;
         case 2:
-            make_item_unrandart(weapon, UNRAND_DIVINE_YUE);
+            make_item_unrandart(weapon, UNRAND_DIVINE_GUAN_DAO);
             break;
         case 3:
             make_item_unrandart(weapon, UNRAND_DIVINE_CHANG_DAO);
             break;
         case 4:
-            make_item_unrandart(weapon, UNRAND_DIVINE_MONK_SPADE);
+            make_item_unrandart(weapon, UNRAND_DIVINE_METEOR_HAMMER);
             break;
         case 5:
-            make_item_unrandart(weapon, UNRAND_DIVINE_METEOR_HAMMER);
+            make_item_unrandart(weapon, UNRAND_DIVINE_YUE);
             break;
         default:
             break;
