@@ -2023,6 +2023,7 @@ bool ieoh_jian_can_pole_vault(const coord_def& target)
 
     const actor* landing_actor = actor_at(pole_vault_landing_spot);
     if (feat_is_solid(grd(you.pos() + pole_vault_direction))
+        || !in_bounds(pole_vault_landing_spot)
         || !you.is_habitable(pole_vault_landing_spot)
         || (landing_actor && (!landing_actor->as_monster() || (landing_actor->as_monster()->type != MONS_IEOH_JIAN_WEAPON))))
     {
