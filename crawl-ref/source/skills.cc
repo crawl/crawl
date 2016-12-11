@@ -517,6 +517,23 @@ static void _check_start_train()
     you.start_train.clear();
 }
 
+static bool _skill_is_martial(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_LONG_BLADES: 
+    case SK_AXES: 
+    case SK_SHORT_BLADES: 
+    case SK_STAVES: 
+    case SK_POLEARMS: 
+    case SK_MACES_FLAILS: 
+    case SK_UNARMED_COMBAT: 
+        return true;
+    default:
+        return false;
+    }
+}
+
 static void _check_stop_train()
 {
     _check_inventory_skills();
@@ -532,6 +549,8 @@ static void _check_stop_train()
         if (is_invalid_skill(sk))
             continue;
         if (skill_has_manual(sk))
+            continue;
+        if (you_worship(GOD_IEOH_JIAN) && _skill_is_martial(sk))
             continue;
 
         if (skill_trained(sk) && you.training[sk])

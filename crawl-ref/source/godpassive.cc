@@ -1979,6 +1979,9 @@ static vector<monster*> _ieoh_jian_perform_martial_attacks(const coord_def& old_
 
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 {
+    if (you.pos() == old_pos) 
+        return;
+
     auto swapped_monster = monster_at(old_pos);
     // We perform martial attacks with the weapon we had before potentially swapping for another
     vector<monster*> already_hit;
