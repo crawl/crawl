@@ -7235,7 +7235,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     monster* mons = ieoh_jian_manifest_weapon_monster(pbolt.target, summoned_copy);
 
     if (!mons)
-        dprf("Failed to animate Ieoh Jian weapon");
+        mprf("%s bounces wildly and flies back to you!", item.name(DESC_THE, false, true).c_str());
     else
     {
         // Activates the flying weapon to attack for a while.
@@ -7246,9 +7246,10 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
 
         if (mons)
             mons->add_ench(combat_active);
+
+        dec_inv_item_quantity(weapon_index, 1, true);
     }
 
-    dec_inv_item_quantity(weapon_index, 1, true);
     canned_msg(MSG_EMPTY_HANDED_NOW);
 
     you.turn_is_over = true;
