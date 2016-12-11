@@ -31,6 +31,7 @@
 #include "god-passive.h" // passive_t::shadow_spells
 #include "god-wrath.h"
 #include "hints.h"
+#include "item-prop.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -1148,13 +1149,16 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     {
     case SPELL_FIREBALL:
         return make_unique<targeter_beam>(&you, range, ZAP_FIREBALL, pow,
-                                           1, 1);
+                                          1, 1);
+    case SPELL_ICEBLAST:
+        return make_unique<targeter_beam>(&you, range, ZAP_ICEBLAST, pow,
+                                          1, 1);
     case SPELL_HURL_DAMNATION:
         return make_unique<targeter_beam>(&you, range, ZAP_DAMNATION, pow,
-                                           1, 1);
+                                          1, 1);
     case SPELL_MEPHITIC_CLOUD:
         return make_unique<targeter_beam>(&you, range, ZAP_MEPHITIC, pow,
-                                           pow >= 100 ? 1 : 0, 1);
+                                          pow >= 100 ? 1 : 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return make_unique<targeter_imb>(&you, pow, range);
     case SPELL_FIRE_STORM:
@@ -1180,30 +1184,31 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
         return make_unique<targeter_cone>(&you, range);
     case SPELL_CLOUD_CONE:
         return make_unique<targeter_shotgun>(&you, CLOUD_CONE_BEAM_COUNT,
-                                              range);
+                                             range);
     case SPELL_SCATTERSHOT:
         return make_unique<targeter_shotgun>(&you, shotgun_beam_count(pow),
-                                              range);
+                                             range);
     case SPELL_GRAVITAS:
         return make_unique<targeter_smite>(&you, range,
-                                            gravitas_range(pow, 2),
-                                            gravitas_range(pow));
+                                           gravitas_range(pow, 2),
+                                           gravitas_range(pow));
     case SPELL_VIOLENT_UNRAVELLING:
         return make_unique<targeter_unravelling>(&you, range, pow);
     case SPELL_RANDOM_BOLT:
         return make_unique<targeter_beam>(&you, range, ZAP_CRYSTAL_BOLT, pow,
-                                           0, 0);
+                                          0, 0);
     case SPELL_INFESTATION:
         return make_unique<targeter_smite>(&you, range, 2, 2, false,
-                                            [](const coord_def& p) -> bool {
-                                                return you.pos() != p; });
+                                           [](const coord_def& p) -> bool {
+                                              return you.pos() != p; });
 
     default:
         break;
     }
 
     if (spell_to_zap(spell) != NUM_ZAPS)
-        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow, 0, 0);
+        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
+                                          pow, 0, 0);
 
     return nullptr;
 }
@@ -1281,30 +1286,34 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
  * @param allow_fail    Whether spell-fail chance applies.
- * @param evoked        Whether the spell comes from a wand or rod.
+ * @param evoked_item   The wand/rod the spell was evoked from if applicable,
+                        or nullptr.
  * @param fake_spell    Whether the spell was some other kind of fake spell
  *                      (such as an innate or divine ability).
- * @param wasteful_wand Whether the spell comes from an unidentified wand.
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
  **/
-spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool evoked, bool fake_spell,
-                       bool wasteful_wand)
+spret_type your_spells(spell_type spell, int powc, bool allow_fail,
+                       const item_def* const evoked_item, bool fake_spell)
 {
     ASSERT(!crawl_state.game_is_arena());
+    if (evoked_item)
+    {
+        ASSERT(evoked_item->base_type == OBJ_WANDS
+               || evoked_item->base_type == OBJ_RODS);
+    }
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
 
     dist spd;
     bolt beam;
     beam.origin_spell = spell;
-    beam.evoked = evoked;
+    beam.evoked = evoked_item;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (!wiz_cast && _spellcasting_aborted(spell, evoked, fake_spell))
+    if (!wiz_cast && _spellcasting_aborted(spell, evoked_item, fake_spell))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);
@@ -1357,14 +1366,18 @@ spret_type your_spells(spell_type spell, int powc,
                                                 : zap_ench_power(zap, powc,
                                                                  false);
             additional_desc = bind(desc_success_chance, placeholders::_1,
-                                   eff_pow, evoked, hitfunc.get());
+                                   eff_pow, evoked_item, hitfunc.get());
         }
 
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
-        if (wasteful_wand)
+        if (evoked_item
+            && evoked_item->base_type == OBJ_WANDS
+            && !item_ident(*evoked_item, ISFLAG_KNOW_PLUSES))
+        {
             title += " <lightred>(will waste charges)</lightred>";
+        }
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
@@ -1398,7 +1411,7 @@ spret_type your_spells(spell_type spell, int powc,
             return SPRET_ABORT;
     }
 
-    if (evoked)
+    if (evoked_item)
     {
         const int surge = pakellas_surge_devices();
         powc = player_adjust_evoc_power(powc, surge);
@@ -1425,7 +1438,13 @@ spret_type your_spells(spell_type spell, int powc,
     }
     else
 #endif
-    if (allow_fail)
+    if (evoked_item
+        && evoked_item->base_type == OBJ_WANDS
+        && evoked_item->charges == 0)
+    {
+        return SPRET_FAIL;
+    }
+    else if (allow_fail)
     {
         int spfl = random2avg(100, 3);
 

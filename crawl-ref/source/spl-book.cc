@@ -55,6 +55,17 @@ static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
 
 static const map<wand_type, spell_type> _wand_spells =
 {
+    { WAND_FLAME, SPELL_THROW_FLAME },
+    { WAND_SLOWING, SPELL_SLOW },
+    { WAND_PARALYSIS, SPELL_PARALYSE },
+    { WAND_CONFUSION, SPELL_CONFUSE },
+    { WAND_DIGGING, SPELL_DIG },
+    { WAND_ICEBLAST, SPELL_ICEBLAST },
+    { WAND_LIGHTNING, SPELL_LIGHTNING_BOLT },
+    { WAND_POLYMORPH, SPELL_POLYMORPH },
+    { WAND_ENSLAVEMENT, SPELL_ENSLAVEMENT },
+    { WAND_ACID, SPELL_CORROSIVE_BOLT },
+    { WAND_DISINTEGRATION, SPELL_DISINTEGRATE },
     { WAND_CLOUDS, SPELL_CLOUD_CONE },
 };
 
