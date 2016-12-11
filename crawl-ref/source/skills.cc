@@ -427,20 +427,6 @@ static void _erase_from_stop_train(const skill_set &can_train)
  */
 static void _check_inventory_skills()
 {
-
-    // Weapons you manifest are considered as in your inventory
-    // for training purposes.
-    auto your_manifested = find_ieoh_jian_manifested_weapons(true);
-    if (!your_manifested.empty())
-    {
-        if (you.stop_train.empty())
-            return;
-
-        skill_set skills;
-        if (your_manifested.front()->weapon()->defined() || item_skills(*(your_manifested.front()->weapon()), skills))
-            _erase_from_stop_train(skills);
-    }
-
     for (const auto &item : you.inv)
     {
         // Exit early if there's no more skill to check.

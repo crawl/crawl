@@ -6468,11 +6468,7 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
 bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 {
     bool penance;
-    if (!you.weapon() && !weapon())
-    {
-        return false;
-    }
-    else if (!you.weapon())
+    if (!you.weapon())
     {
         if (inv_count() == ENDOFPACK)
         {
@@ -6498,53 +6494,15 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
             return false; // Unsafe to unequip
         }
 
-        item_def weapon_copy = pitem;
+        int freeslot = find_free_slot(pitem);
+        move_item_to_inv(item_index, 1, true);
+        equip_item(EQ_WEAPON, freeslot, false);
 
         this->destroy_inventory();
         // Ieoh Jian weapons can't live without a weapon (duh).
         monster_die(this, KILL_RESET, NON_MONSTER, true);
-
-        int slot;
-        for (slot = 0; slot < ENDOFPACK; ++slot)
-            if (!you.inv[slot].defined())
-                break;
-
-        weapon_copy.pos = ITEM_IN_INVENTORY;
-        weapon_copy.link = slot;
-        weapon_copy.slot = index_to_letter(slot);
-        you.inv[slot] = weapon_copy;
-        you.equip[get_item_slot(weapon_copy)] = slot;
     }
-    else if (!weapon())
-    {
-        int index = get_mitm_slot(10);
-        if (index == NON_ITEM)
-            return false; // No slot available.
-
-        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
-        {
-            if (!silent)
-                mprf("You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
-            return false; // Can't unwield your current weapon safely.
-        }
-
-        item_def &mons_weapon = mitm[index];
-
-        item_def& your_weapon = *(you.weapon());
-
-        mons_weapon = your_weapon;
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        mons_weapon.pos.reset();
-        mons_weapon.link = NON_ITEM;
-
-        unlink_item(index);
-        inv[MSLOT_WEAPON] = index;
-        mons_weapon.set_holding_monster(*this);
-
-        equip(mons_weapon, true);
-    }
-    else
+    else if (you.weapon() && weapon())
     {
         // Proper swap case
         if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
@@ -6568,31 +6526,30 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
             return false; // Player wouldn't be able to wield it safely.
         }
 
-        unequip_effect(EQ_WEAPON, you.equip[EQ_WEAPON], false, false);
-        auto your_weapon_copy = *(you.weapon());
-        *(you.weapon()) = *(weapon());
+        auto your_weapon_slot = you.equip[EQ_WEAPON];
+        item_def& your_weapon = *(you.weapon());
+        item_def your_weapon_copy = your_weapon;
+        unequip_item(EQ_WEAPON, false);
+        your_weapon = *(weapon());
         *(weapon()) = your_weapon_copy;
-        you.weapon()->pos  = weapon()->pos;
-        you.weapon()->slot = weapon()->slot;
-        you.weapon()->link = weapon()->link;
+        your_weapon.pos  = weapon()->pos;
+        your_weapon.slot = weapon()->slot;
+        your_weapon.link = weapon()->link;
         weapon()->set_holding_monster(*this);
-        equip_effect(EQ_WEAPON, you.equip[EQ_WEAPON], false, false);
-        auto_id_inventory();
+        equip_item(EQ_WEAPON, your_weapon_slot, false);
 
         // We need to reinitialize the ghost to inherit the qualities of the new weapon.
         int power = ieoh_jian_calc_power_for_weapon((weapon_type) weapon()->sub_type);
         ghost->init_ieoh_jian_weapon(*(weapon()), power);
     }
+    else
+    {
+        return false;
+    }
 
     if (!silent)
         mprf("You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
-
-    if (you.weapon())
-    {
-        you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
-        update_can_train();
-    }
-
+    
     you.wield_change = true;
     invalidate_agrid(true);
     view_update_at(this->pos()); // Halo on spawn.
