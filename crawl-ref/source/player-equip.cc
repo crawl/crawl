@@ -321,14 +321,20 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
-    if (proprt[ARTP_CONTAM] && !meld)
+    if (proprt[ARTP_CONTAM] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
     {
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_DRAIN] && !meld)
+    if (proprt[ARTP_CONTAM] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
+        simple_god_message(" protects your body from contamination.");
+
+    if (proprt[ARTP_DRAIN] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
         drain_player(150, true, true);
+
+    if (proprt[ARTP_DRAIN] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
+        simple_god_message(" protects you from draining.");
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
@@ -345,11 +351,14 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     // this must be last!
-    if (proprt[ARTP_FRAGILE] && !meld)
+    if (proprt[ARTP_FRAGILE] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
     {
         mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
         dec_inv_item_quantity(item.link, 1);
     }
+
+    if (proprt[ARTP_FRAGILE] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
+        simple_god_message(" protects your weapon from shattering.");
 }
 
 static void _equip_use_warning(const item_def& item)
@@ -581,7 +590,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 if (you.species != SP_VAMPIRE
                     && you.undead_state() == US_ALIVE
                     && !you_foodless()
-                    && !unmeld)
+                    && !unmeld
+                    && !you.props.exists(IEOH_JIAN_SWAPPING))
                 {
                     make_hungry(4500, false, false);
                 }
@@ -703,6 +713,13 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                                            "weapon.");
                         break;
                     }
+                    
+                    if (you.props.exists(IEOH_JIAN_SWAPPING))
+                    {
+                        simple_god_message(" protects you from spatial distortion.");
+                        break;
+                    }
+
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).

@@ -7117,7 +7117,9 @@ bool ieoh_jian_recall_weapon()
     {
         mons->move_to_pos(new_location);
     }
+
     mons->ieoh_jian_swap_weapon_with_player();
+
     you.time_taken = 1; // Near instantaneous to allow precise positioning tricks.
 
     return true;
@@ -7193,14 +7195,13 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
     if (cancelled)
-    {
         return false;
-    }
 
-    if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false, true))
-    {
+    you.props[IEOH_JIAN_SWAPPING] = true;
+    auto unwield_result = wield_weapon(true, SLOT_BARE_HANDS, true, true, false, true, false, true);
+    you.props.erase(IEOH_JIAN_SWAPPING);
+    if (!unwield_result)
         return false;
-    }
 
     // Now start real firing!
     origin_set_unknown(item);

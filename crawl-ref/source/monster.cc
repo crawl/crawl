@@ -6461,11 +6461,7 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
     return &new_item;
 }
 
-/** Swaps weapons with the player, provided both weapons are safe to wield and unwield.
- *
- *  @returns false if the swap failed.
- */
-bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
+bool monster::ijc_swap(bool silent)
 {
     bool penance;
     if (!you.weapon())
@@ -6497,7 +6493,6 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         int freeslot = find_free_slot(pitem);
         move_item_to_inv(item_index, 1, true);
         equip_item(EQ_WEAPON, freeslot, false);
-
         this->destroy_inventory();
         // Ieoh Jian weapons can't live without a weapon (duh).
         monster_die(this, KILL_RESET, NON_MONSTER, true);
@@ -6508,7 +6503,7 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
         {
             if (!silent)
-                mprf("You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
+                mprf("You can not unwield %s!", you.weapon()->name(DESC_YOUR, false, true).c_str());
             return false; // Can't unwield your current weapon safely.
         }
 
@@ -6529,6 +6524,7 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
         auto your_weapon_slot = you.equip[EQ_WEAPON];
         item_def& your_weapon = *(you.weapon());
         item_def your_weapon_copy = your_weapon;
+
         unequip_item(EQ_WEAPON, false);
         your_weapon = *(weapon());
         *(weapon()) = your_weapon_copy;
@@ -6556,6 +6552,18 @@ bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
 
     del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE, true, true);
     return true;
+}
+
+/** Swaps weapons with the player.
+ *
+ *  @returns false if the swap failed.
+ */
+bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
+{
+    you.props[IEOH_JIAN_SWAPPING] = true;
+    bool result = ijc_swap(silent);
+    you.props.erase(IEOH_JIAN_SWAPPING);
+    return result;
 }
 
 /** Disarm this monster, and preferably pull the weapon into your tile.

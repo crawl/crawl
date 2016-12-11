@@ -1598,7 +1598,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         && is_weapon(item))
     {
         if (get_weapon_brand(item) == SPWPN_DISTORTION
-            && !have_passive(passive_t::safe_distortion))
+            && !have_passive(passive_t::safe_distortion)
+            && !you.props.exists(IEOH_JIAN_SWAPPING))
         {
             return true;
         }
@@ -1607,20 +1608,21 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             && you.undead_state() == US_ALIVE
             && !you_foodless()
             // Don't prompt if you aren't wielding it and you can't.
-            && (you.hunger_state >= HS_FULL || _is_wielded(item)))
+            && (you.hunger_state >= HS_FULL || _is_wielded(item))
+            && !you.props.exists(IEOH_JIAN_SWAPPING))
         {
             return true;
         }
 
-        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM))
+        if (is_artefact(item) && artefact_property(item, ARTP_CONTAM) && !you.props.exists(IEOH_JIAN_SWAPPING))
         {
             if (_is_wielded(item) && you_worship(GOD_ZIN))
                 penance = true;
             return true;
         }
 
-        if (is_artefact(item) && (artefact_property(item, ARTP_DRAIN)
-                                  || artefact_property(item, ARTP_FRAGILE)))
+        if (is_artefact(item) && !you.props.exists(IEOH_JIAN_SWAPPING) && (artefact_property(item, ARTP_DRAIN)
+                                                     || artefact_property(item, ARTP_FRAGILE)))
         {
             return true;
         }

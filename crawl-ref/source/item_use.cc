@@ -397,6 +397,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
              && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
              && you.undead_state() == US_ALIVE
              && !you_foodless()
+             && !you.props.exists(IEOH_JIAN_SWAPPING)
              && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)

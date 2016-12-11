@@ -36,6 +36,10 @@ enum nemelex_gift_types
 /// What slot a weapon occupies when it was "gifted" by the IJC
 /// A lack of this value indicates the weapon belongs to you
 #define IEOH_JIAN_SLOT "ieoh-jian-slot"
+/// Whether a IJC driven weapon swap is taking place. This supresses
+/// some warnings and dangerous brand effects.
+#define IEOH_JIAN_SWAPPING "ieoh-jian-swapping"
+/// Whether a IJC weapon was stolen.
 #define IEOH_JIAN_STOLEN "ieoh-jian-stolen"
 /// The time left for IJC divine weapons.
 #define IEOH_JIAN_DIVINE_DEGREE "ieoh-jian-divine"
