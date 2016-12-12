@@ -67,6 +67,7 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_ACID, SPELL_CORROSIVE_BOLT },
     { WAND_DISINTEGRATION, SPELL_DISINTEGRATE },
     { WAND_CLOUDS, SPELL_CLOUD_CONE },
+    { WAND_SCATTERSHOT, SPELL_SCATTERSHOT },
 };
 
 

@@ -1289,6 +1289,11 @@ wand of random effects
 
 A magical device which can produce a variety of effects.
 %%%%
+wand of scattershot
+
+A magical device which fires powerful blasts of metallic shrapnel. Its damage
+is strongly reduced by armour.
+%%%%
 wand of slowing
 
 A magical device which slows down the actions of a targeted creature.
