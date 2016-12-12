@@ -1238,7 +1238,10 @@ wand of clouds
 
 A magical device that allows its wielder to blast a cone-shaped area in front
 of them with various destructive clouds, their lethality increasing with
-Evocations skill.
+Evocations skill. At low power it will create noxious fumes, and as power
+increases this gives way to roaring flames, freezing vapours, and poisonous
+gas. At the highest tiers of power storm clouds, acidic fog and clouds of
+negative energy become available.
 %%%%
 wand of confusion
 
