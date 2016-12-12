@@ -712,8 +712,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
  */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // basic total: 101
+    // basic total: 121
     vector<pair<wand_type, int>> weights = {
+        { WAND_SCATTERSHOT,     20 },
         { WAND_CLOUDS,          20 },
         { WAND_LIGHTNING,       16 },
         { WAND_ACID,            16 },

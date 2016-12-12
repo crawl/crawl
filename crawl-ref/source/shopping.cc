@@ -399,6 +399,7 @@ unsigned int item_value(item_def item, bool ident)
             switch (item.sub_type)
             {
             case WAND_CLOUDS:
+            case WAND_SCATTERSHOT:
                 valued += 120;
                 good = true;
                 break;

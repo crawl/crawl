@@ -1564,6 +1564,7 @@ int wand_charge_value(int type)
     switch (type)
     {
     case WAND_CLOUDS:
+    case WAND_SCATTERSHOT:
         return 3;
 
     case WAND_ICEBLAST:

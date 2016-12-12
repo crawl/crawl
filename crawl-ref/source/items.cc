@@ -3299,6 +3299,7 @@ zap_type item_def::zap() const
     case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
     case WAND_CLOUDS:
+    case WAND_SCATTERSHOT:
     case WAND_RANDOM_EFFECTS:  /* impossible */
     case NUM_WANDS:
 #if TAG_MAJOR_VERSION == 34
