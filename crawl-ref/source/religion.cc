@@ -2884,7 +2884,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_STOLEN))
         {
             simple_god_message(" booms, \"You treacherous mortal! Forfeit that weapon immediately!\" ", old_god);
-            _set_penance(old_god, 25 + you.weapon()->plus * 3);
+            _set_penance(old_god, 25 + ieoh_jian_stolen_value() * 2);
         }
         else
         {

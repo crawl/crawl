@@ -9,6 +9,7 @@
 
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "coordit.h"
@@ -52,6 +53,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
+#include "traps.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1769,6 +1771,45 @@ static void _summon_traps_ijc(trap_type type, _ijc_pattern pattern, bool reveale
     }
 }
 
+static bool _copy_stolen_weapon_against_player()
+{
+    item_def* stolen_weapon = nullptr;
+    for (int i = 0; i < ENDOFPACK; i++)
+        if (you.inv[i].defined() && you.inv[i].props.exists(IEOH_JIAN_STOLEN))
+            stolen_weapon = &you.inv[i];
+
+    if (!stolen_weapon)
+        return false;
+
+    mgen_data mg = mgen_data::hostile_at(MONS_DANCING_WEAPON, true, you.pos())
+                    .set_summoned(nullptr, 0, 0, GOD_IEOH_JIAN)
+                    .set_non_actor_summoner(_god_wrath_name(GOD_IEOH_JIAN));
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mg.flags |= MG_FORCE_PLACE;
+    // Now create monster.
+    if (monster *mon =
+        create_monster(mg))
+    {
+        ASSERT(mon->weapon() != nullptr);
+        item_def& wpn(*mon->weapon());
+        wpn = *stolen_weapon;
+        wpn.inscription = "";
+        wpn.set_holding_monster(*mon);
+        item_colour(wpn);
+        ghost_demon newstats;
+        newstats.init_dancing_weapon(wpn,
+                                     you.experience_level * 50 / 9);
+        mon->set_ghost(newstats);
+        mon->ghost_demon_init();
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
 // They aren't actually IJC weapons; that would cause a LOT of mechanical trouble.
 // They're normal dancing weapons branded in the vein of IJC.
 static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_pattern pattern)
@@ -1844,7 +1885,8 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_patter
 
 static bool _ieoh_jian_retribution()
 {
-    switch(random2(5))
+    int copies = 1 + random2(4);
+    switch(ieoh_jian_stolen_value() ? random2(7) : random2(6))
     {
         case 0:
             simple_god_message(" whisper, \"Die by a thousand cuts...\"", GOD_IEOH_JIAN);
@@ -1864,11 +1906,8 @@ static bool _ieoh_jian_retribution()
             break;
         case 2:
             simple_god_message(" whisper, \"Feeling trapped?\"", GOD_IEOH_JIAN);
-            mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_HALBERD, PATTERN_LONG_CIRCLE);
-            _summon_traps_ijc(TRAP_NET, PATTERN_SHORT_CIRCLE, false);
-            if (ieoh_jian_stolen_value() > 5)
-                _summon_traps_ijc(TRAP_NET, PATTERN_LONG_CIRCLE, false);
+            player_caught_in_net();
             break;
         case 3:
             simple_god_message(" whisper, \"Watch your step...\"", GOD_IEOH_JIAN);
@@ -1879,13 +1918,24 @@ static bool _ieoh_jian_retribution()
             _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
             break;
         case 4:
+            simple_god_message(" whisper, \"These will loosen your tongue...\"", GOD_IEOH_JIAN);
+            _summon_hostile_weapons_ijc_flavour(WPN_DIRE_FLAIL, PATTERN_SHORT_CIRCLE);
+            you.increase_duration(DUR_SILENCE, 5 + random2(11 + ieoh_jian_stolen_value()), 50);
+            invalidate_agrid(true);
+            break;
+        case 5:
             simple_god_message(" whisper, \"Suffer, mortal...\"", GOD_IEOH_JIAN);
             mpr("You feel a burning poison under your skin!");
             you.corrode_equipment("The poison", 3 + ieoh_jian_stolen_value() / 4);
-            lose_stat(STAT_STR, 1 + (ieoh_jian_stolen_value()/3) + random2(you.strength() / 8));
-            lose_stat(STAT_DEX, 1 + (ieoh_jian_stolen_value()/3) + random2(you.strength() / 8));
+            lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
+            lose_stat(STAT_DEX, 1 + random2(you.dex() / 8));
             break;
-
+        case 6: // This one only ever triggers if you stole a weapon.
+            simple_god_message(" whisper, \"You seem to enjoy what you took from us... How about a few more?\"", GOD_IEOH_JIAN);
+            for (int i = 0; i < copies; i++)
+                _copy_stolen_weapon_against_player();
+            invalidate_agrid(true);
+            break;
         default: 
             break;
     }
