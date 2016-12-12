@@ -1670,7 +1670,7 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
     }
 
     weapon.quantity = 1;
-    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 30;
+    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 20;
     return true;
 }
 
