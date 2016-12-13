@@ -1885,14 +1885,14 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_patter
 
 static bool _ieoh_jian_retribution()
 {
-    int copies = 1 + random2(4);
-    switch(ieoh_jian_stolen_value() ? random2(7) : random2(6))
+    int copies = 1 + random2(5);
+    switch(ieoh_jian_stolen_value() ? random2(8) : random2(6))
     {
         case 0:
             simple_god_message(" whisper, \"Die by a thousand cuts...\"", GOD_IEOH_JIAN);
             mpr("You feel the sudden stab of multiple needles!");
             _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_LONG_CIRCLE);
-            if (ieoh_jian_stolen_value() > 9)
+            if (ieoh_jian_stolen_value() > 8)
                 _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_CHECKERBOARD);
             you.set_duration(DUR_BARBS,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
@@ -1900,7 +1900,7 @@ static bool _ieoh_jian_retribution()
             simple_god_message(" whisper, \"Nowhere to run...\"",GOD_IEOH_JIAN);
             mpr("Your limbs feel heavy!");
             _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_LONG_CIRCLE);
-            if (ieoh_jian_stolen_value() > 9)
+            if (ieoh_jian_stolen_value() > 8)
                 _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_SHORT_CIRCLE);
             you.set_duration(DUR_SLOW,  random_range(4 + ieoh_jian_stolen_value(), 8 + ieoh_jian_stolen_value()));
             break;
@@ -1913,7 +1913,7 @@ static bool _ieoh_jian_retribution()
             simple_god_message(" whisper, \"Watch your step...\"", GOD_IEOH_JIAN);
             mpr("You hear multiple clicking sounds nearby!");
             _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_SHORT_CIRCLE);
-            if (ieoh_jian_stolen_value() > 9)
+            if (ieoh_jian_stolen_value() > 8)
                 _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_CHECKERBOARD);
             _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
             break;
@@ -1930,7 +1930,8 @@ static bool _ieoh_jian_retribution()
             lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
             lose_stat(STAT_DEX, 1 + random2(you.dex() / 8));
             break;
-        case 6: // This one only ever triggers if you stole a weapon.
+        case 6: 
+        case 7: 
             simple_god_message(" whisper, \"You seem to enjoy what you took from us... How about a few more?\"", GOD_IEOH_JIAN);
             for (int i = 0; i < copies; i++)
                 _copy_stolen_weapon_against_player();
