@@ -368,9 +368,7 @@ static monster_type _choose_dragon_type(int pow, god_type god, bool player)
 
     // For good gods, switch away from shadow dragons to storm/iron dragons.
     if (player && player_will_anger_monster(mon))
-    {
         mon = random_choose(MONS_STORM_DRAGON, MONS_IRON_DRAGON);
-    }
 
     return mon;
 }
