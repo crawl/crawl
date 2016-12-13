@@ -53,7 +53,7 @@ static const pop_entry pop_d[] =
   {  7, 17,  350, SEMI, MONS_HUNGRY_GHOST },
   {  7, 17,  192, PEAK, MONS_CROCODILE },
   {  7, 17,  192, PEAK, MONS_HORNET },
-  {  8, 17,  300, SEMI, MONS_TWO_HEADED_OGRE },
+  {  8, 17,  750, FLAT, MONS_TWO_HEADED_OGRE },
   {  8, 18,  335, SEMI, MONS_WYVERN },
   {  8, 18,  230, PEAK, MONS_EYE_OF_DRAINING },
   {  9, 14,  825, SEMI, MONS_YAK },
