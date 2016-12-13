@@ -5586,6 +5586,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
     beam.thrower     = KILL_MON_MISSILE;
     beam.range       = LOS_RADIUS;
     beam.damage      = dice_def(3, 24);
+    beam.foe_ratio   = random_range(20, 30);
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
