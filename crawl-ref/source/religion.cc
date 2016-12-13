@@ -225,6 +225,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "Jiyva will mutate your body as your piety grows.",
            "Jiyva will no longer mutate your body." },
       { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
+      { 5, "You may now expel jellies when seriously injured.",
+           "You will no longer expel jellies when injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION, "call upon Jiyva to remove your harmful mutations" },
     },
 
