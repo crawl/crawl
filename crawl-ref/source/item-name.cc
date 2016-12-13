@@ -1122,32 +1122,6 @@ static const char* staff_type_name(int stafftype)
     }
 }
 
-static const char* rod_type_name(int type)
-{
-    switch ((rod_type)type)
-    {
-#if TAG_MAJOR_VERSION == 34
-    case ROD_SWARM:           return "the swarm";
-    case ROD_WARDING:         return "warding";
-#endif
-    case ROD_LIGHTNING:       return "lightning";
-    case ROD_IRON:            return "iron";
-    case ROD_SHADOWS:         return "shadows";
-#if TAG_MAJOR_VERSION == 34
-    case ROD_VENOM:           return "venom";
-#endif
-    case ROD_INACCURACY:      return "inaccuracy";
-
-    case ROD_IGNITION:        return "ignition";
-    case ROD_CLOUDS:          return "clouds";
-#if TAG_MAJOR_VERSION == 34
-    case ROD_DESTRUCTION:     return "destruction";
-#endif
-
-    default: return "bugginess";
-    }
-}
-
 const char *base_type_string(const item_def &item)
 {
     return base_type_string(item.base_type);
@@ -1167,7 +1141,9 @@ const char *base_type_string(object_class_type type)
     case OBJ_POTIONS: return "potion";
     case OBJ_BOOKS: return "book";
     case OBJ_STAVES: return "staff";
-    case OBJ_RODS: return "rod";
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS: return "removed rod";
+#endif
     case OBJ_ORBS: return "orb";
     case OBJ_MISCELLANY: return "miscellaneous";
     case OBJ_CORPSES: return "corpse";
@@ -1223,7 +1199,9 @@ string sub_type_string(const item_def &item, bool known)
         return string("book of ") + _book_type_name(sub_type);
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
-    case OBJ_RODS:   return rod_type_name(static_cast<rod_type>(sub_type));
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:   return "removed rod";
+#endif
     case OBJ_MISCELLANY: return misc_type_name(sub_type, known);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
@@ -2000,33 +1978,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << sub_type_string(*this, !dbname);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-        if (!know_type)
-        {
-            if (!basename)
-            {
-                buff << staff_secondary_string((rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC)
-                     << staff_primary_string(rnd % NDSC_STAVE_PRI);
-            }
-
-            buff << "rod";
-        }
-        else
-        {
-            if (know_type && know_pluses && !basename && !qualname && !dbname)
-                buff << make_stringf("%+d ", special);
-
-            if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
-                buff << "supercharged ";
-
-            if (item_typ == ROD_LIGHTNING)
-                buff << "lightning rod";
-            else if (item_typ == ROD_IRON)
-                buff << "iron rod";
-            else
-                buff << "rod of " << rod_type_name(item_typ);
-        }
+        buff << "removed rod";
         break;
+#endif
 
     case OBJ_STAVES:
         if (know_curse && !terse)
@@ -2122,15 +2078,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     if (need_plural && quantity > 1 && !basename && !qualname)
         buff.str(pluralise(buff.str()));
 
-    // Rod charges.
-    if (base_type == OBJ_RODS && know_type && know_pluses
-        && !basename && !qualname && !dbname)
-    {
-        buff << " (" << (charges / ROD_CHARGE_MULT)
-             << "/"  << (charge_cap / ROD_CHARGE_MULT)
-             << ")";
-    }
-
     // debugging output -- oops, I probably block it above ... dang! {dlb}
     if (buff.str().length() < 3)
     {
@@ -2158,7 +2105,9 @@ bool item_type_has_ids(object_class_type base_type)
     COMPILE_CHECK(NUM_BOOKS      < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_STAVES     < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_MISCELLANY < MAX_SUBTYPES);
+#if TAG_MAJOR_VERSION == 34
     COMPILE_CHECK(NUM_RODS       < MAX_SUBTYPES);
+#endif
 
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
         || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS
@@ -2441,7 +2390,7 @@ public:
         }
         else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
-        else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
+        else if (item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
             name = pluralise(name);
@@ -2645,7 +2594,6 @@ void check_item_knowledge(bool unknown_items)
         static const pair<object_class_type, int> misc_list[] =
         {
             { OBJ_BOOKS, BOOK_MANUAL },
-            { OBJ_RODS, NUM_RODS },
             { OBJ_GOLD, 1 },
             { OBJ_MISCELLANY, NUM_MISCELLANY },
             { OBJ_RUNES, NUM_RUNE_TYPES },
@@ -3698,26 +3646,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
         }
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-        if (you.species == SP_FELID
-            || player_mutation_level(MUT_NO_ARTIFICE))
-        {
             return true;
-        }
-        switch (item.sub_type)
-        {
-            case ROD_CLOUDS:
-                if (item_type_known(item))
-                    return env.level_state & LSTATE_STILL_WINDS;
-                break;
-            case ROD_SHADOWS:
-                if (item_type_known(item))
-                    return player_mutation_level(MUT_NO_LOVE);
-                // intentional fallthrough
-            default:
-                return false;
-        }
-        break;
+#endif
 
     case OBJ_STAVES:
         if (you.species == SP_FELID)

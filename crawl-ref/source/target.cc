@@ -1167,61 +1167,6 @@ bool targeter_shadow_step::has_additional_sites(coord_def a)
     return temp_sites.size();
 }
 
-targeter_explosive_bolt::targeter_explosive_bolt(const actor *act, int pow, int r) :
-                          targeter_beam(act, r, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
-{
-}
-
-bool targeter_explosive_bolt::set_aim(coord_def a)
-{
-    if (!targeter_beam::set_aim(a))
-        return false;
-
-    bolt tempbeam = beam;
-    tempbeam.target = origin;
-    for (auto c : path_taken)
-    {
-        if (cell_is_solid(c))
-            break;
-
-        tempbeam.target = c;
-        if (anyone_there(c))
-        {
-            tempbeam.use_target_as_pos = true;
-            exp_map.init(INT_MAX);
-            tempbeam.determine_affected_cells(exp_map, coord_def(), 0,
-                                              1, true, true);
-        }
-    }
-
-    return true;
-}
-
-aff_type targeter_explosive_bolt::is_affected(coord_def loc)
-{
-    bool on_path = false;
-    for (auto c : path_taken)
-    {
-        if (cell_is_solid(c))
-            break;
-        if (c == loc)
-            on_path = true;
-        if (anyone_there(c)
-            && !beam.ignores_monster(monster_at(c))
-            && (loc - c).rdist() <= 9)
-        {
-            coord_def centre(9,9);
-            if (exp_map(loc - c + centre) < INT_MAX
-                && !cell_is_solid(loc))
-            {
-                return AFF_MAYBE;
-            }
-        }
-    }
-
-    return on_path ? AFF_TRACER : AFF_NO;
-}
-
 targeter_cone::targeter_cone(const actor *act, int r)
 {
     ASSERT(act);
@@ -1400,7 +1345,7 @@ aff_type targeter_shotgun::is_affected(coord_def loc)
 }
 
 targeter_monster_sequence::targeter_monster_sequence(const actor *act, int pow, int r) :
-                          targeter_beam(act, r, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
+                          targeter_beam(act, r, ZAP_DEBUGGING_RAY, pow, 0, 0)
 {
 }
 

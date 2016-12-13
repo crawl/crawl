@@ -87,7 +87,6 @@ static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
-static void _explosive_bolt_explode(bolt *parent, coord_def pos);
 int _ench_pow_to_dur(int pow);
 
 tracer_info::tracer_info()
@@ -683,13 +682,6 @@ void bolt::initialise_fire()
 #endif
 }
 
-// Catch the bolt part of explosive bolt.
-static bool _is_explosive_bolt(const bolt *beam)
-{
-    return beam->origin_spell == SPELL_EXPLOSIVE_BOLT
-           && !beam->in_explosion_phase;
-}
-
 void bolt::apply_beam_conducts()
 {
     if (!is_tracer && YOU_KILL(thrower))
@@ -707,9 +699,6 @@ void bolt::apply_beam_conducts()
                             god_cares());
             break;
         default:
-            // Fire comes from a side-effect of the beam, not the beam itself.
-            if (_is_explosive_bolt(this))
-                did_god_conduct(DID_FIRE, 6 + random2(3), god_cares());
             break;
         }
     }
@@ -908,8 +897,6 @@ void bolt::burn_wall_effect()
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
 
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, pos());
     finish_beam();
 }
 
@@ -2434,28 +2421,6 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     }
 }
 
-static void _explosive_bolt_explode(bolt *parent, coord_def pos)
-{
-    bolt beam;
-
-    bolt_parent_init(*parent, beam);
-    beam.name         = "fiery explosion";
-    beam.aux_source   = "explosive bolt";
-    beam.damage       = dice_def(3, 9 + parent->ench_power / 6);
-    beam.colour       = RED;
-    beam.flavour      = BEAM_FIRE;
-    beam.is_explosion = true;
-    beam.source       = pos;
-    beam.target       = pos;
-    beam.origin_spell = SPELL_EXPLOSIVE_BOLT;
-    beam.refine_for_explosion();
-    beam.explode();
-    parent->friend_info += beam.friend_info;
-    parent->foe_info    += beam.foe_info;
-    if (beam.is_tracer && beam.beam_cancelled)
-        parent->beam_cancelled = true;
-}
-
 /**
  * Turn a BEAM_UNRAVELLING beam into a BEAM_UNRAVELLED_MAGIC beam, and make
  * it explode appropriately.
@@ -2797,7 +2762,6 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_BOLT_OF_FIRE
            || origin_spell == SPELL_BOLT_OF_MAGMA
            || origin_spell == SPELL_FIREBALL
-           || origin_spell == SPELL_EXPLOSIVE_BOLT
            || origin_spell == SPELL_INNER_FLAME;
 }
 
@@ -3294,9 +3258,6 @@ void bolt::tracer_affect_player()
     }
 
     extra_range_used += range_used_on_hit();
-
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, you.pos());
 }
 
 bool bolt::misses_player()
@@ -4062,11 +4023,9 @@ void bolt::affect_player()
 
     knockback_actor(&you, hurted);
 
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, you.pos());
-    else if (origin_spell == SPELL_FLASH_FREEZE
-             || name == "blast of ice"
-             || origin_spell == SPELL_GLACIATE && !is_explosion)
+    if (origin_spell == SPELL_FLASH_FREEZE
+        || name == "blast of ice"
+        || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
         if (you.duration[DUR_FROZEN])
         {
@@ -4316,9 +4275,6 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
-
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, mon->pos());
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4563,8 +4519,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         beogh_follower_convert(mon, true);
 
     knockback_actor(mon, dmg);
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, mon->pos());
 
     if (origin_spell == SPELL_DAZZLING_SPRAY)
         _dazzle_monster(mon, agent());
@@ -5851,10 +5805,6 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_GHOSTLY_FIREBALL, {
         "The ghostly flame explodes!",
         "the shriek of haunting fire",
-    } },
-    { SPELL_EXPLOSIVE_BOLT, {
-        "The explosive bolt releases an explosion!",
-        "an explosion",
     } },
     { SPELL_VIOLENT_UNRAVELLING, {
         "The enchantments explode!",

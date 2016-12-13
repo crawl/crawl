@@ -433,8 +433,10 @@ object_class_type item_class_by_sym(char32_t c)
     case U'£':
     case U'¥': // FR: support more currencies
         return OBJ_GOLD;
+#if TAG_MAJOR_VERSION == 34
     case '\\': // Compat break: used to be staves (why not '|'?).
         return OBJ_RODS;
+#endif
     default:
         return NUM_OBJECT_CLASSES;
     }
@@ -1007,7 +1009,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
     autopickups.set(OBJ_FOOD);
-    autopickups.set(OBJ_RODS);
 
     confirm_butcher        = CONFIRM_AUTO;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -1033,7 +1034,7 @@ void game_options::reset_options()
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
     dump_kill_places       = KDO_ONE_PLACE;
-    dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
+    dump_item_origins      = IODS_ARTEFACTS;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -3238,8 +3239,6 @@ void game_options::read_option_line(const string &str, bool runscript)
                 dump_item_origins |= IODS_JEWELLERY;
             else if (ch == "runes")
                 dump_item_origins |= IODS_RUNES;
-            else if (ch == "rods")
-                dump_item_origins |= IODS_RODS;
             else if (ch == "staves")
                 dump_item_origins |= IODS_STAVES;
             else if (ch == "books")

@@ -1715,7 +1715,7 @@ MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
-ITEM:    staff of summoning w:20 / rod of shadows
+ITEM:    staff of summoning
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    fan of gales / lamp of fire / phial of floods
@@ -3117,7 +3117,7 @@ MONS:    lightning spire, sky beast, electric eel
 KMONS:   E = insubstantial wisp w:10 / ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
 KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
-              disc of storms w:4 / lightning rod ident:type w:1
+              disc of storms
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = known permanent teleport trap

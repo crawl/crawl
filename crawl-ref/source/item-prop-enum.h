@@ -515,28 +515,22 @@ enum stave_type
     NUM_STAVES,
 };
 
+#if TAG_MAJOR_VERSION == 34
 enum rod_type
 {
     ROD_LIGHTNING,
-#if TAG_MAJOR_VERSION == 34
     ROD_SWARM,
-#endif
     ROD_IGNITION,
     ROD_CLOUDS,
-#if TAG_MAJOR_VERSION == 34
     ROD_DESTRUCTION,
-#endif
     ROD_INACCURACY,
-#if TAG_MAJOR_VERSION == 34
     ROD_WARDING,
-#endif
     ROD_SHADOWS,
     ROD_IRON,
-#if TAG_MAJOR_VERSION == 34
     ROD_VENOM,
-#endif
     NUM_RODS,
 };
+#endif
 
 enum weapon_type
 {

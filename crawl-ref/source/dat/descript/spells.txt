@@ -187,12 +187,6 @@ Bolt of Fire spell
 
 Fires a penetrating bolt of flames.
 %%%%
-Bolt of Inaccuracy spell
-
-Fires a penetrating bolt of incandescent energy which inflicts enormous damage
-upon any creature it strikes. Unfortunately, it is very difficult to aim and
-rarely hits anything. Pity, that.
-%%%%
 Bolt of Magma spell
 
 Fires a penetrating bolt of molten rock. A portion of its damage bypasses
@@ -564,11 +558,6 @@ Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain
 itself. It will not affect artefact weapons.
-%%%%
-Explosive Bolt spell
-
-Fires a bolt containing fiery energy; on piercing a target, it lets loose an
-explosion that harms nearby creatures as well.
 %%%%
 Flay spell
 
@@ -1610,11 +1599,6 @@ Waterstrike spell
 
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
-%%%%
-Weave Shadows spell
-
-Weaves a creature from shadows and threads of Abyssal matter. More powerful
-creatures are summoned with higher power.
 %%%%
 Wind Blast spell
 

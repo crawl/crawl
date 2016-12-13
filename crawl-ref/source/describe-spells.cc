@@ -1,7 +1,6 @@
 /**
  * @file
- * @brief Functions used to print information about spells, spellbooks, rods,
- *        etc.
+ * @brief Functions used to print information about spells, spellbooks, etc.
  **/
 
 #include "AppHdr.h"
@@ -31,7 +30,7 @@
  *
  * @param item      The item in question.
  * @return          A single-element vector, containing the list of all
- *                  non-null spells in the given book/rod, blank-labeled.
+ *                  non-null spells in the given book, blank-labeled.
  */
 spellset item_spellset(const item_def &item)
 {
@@ -373,9 +372,8 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!crawl_state.need_save)
         return COL_UNKNOWN;
 
-    const bool rod = source_item && OBJ_RODS == source_item->base_type;
-    if (!source_item || source_item->base_type != OBJ_BOOKS)
-        return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
+    if (!source_item)
+        return spell_highlight_by_utility(spell, COL_UNKNOWN);
 
     if (you.has_spell(spell))
         return COL_MEMORIZED;
@@ -388,13 +386,13 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
         return COL_USELESS;
     }
 
-    if (god_hates_spell(spell, you.religion, rod))
+    if (god_hates_spell(spell, you.religion))
         return COL_FORBIDDEN;
 
     if (!you.has_spell(spell))
         return COL_UNMEMORIZED;
 
-    return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
+    return spell_highlight_by_utility(spell, COL_UNKNOWN);
 }
 
 /**
@@ -427,8 +425,8 @@ static string _spell_schools(spell_type spell)
  * Should spells from the given source be listed in two columns instead of
  * one?
  *
- * @param source_item   The source of the spells; a book, rod, or nullptr in
- *                      the case of monster spellbooks.
+ * @param source_item   The source of the spells; a book, or nullptr in the
+ *                      case of monster spellbooks.
  * @return              source_item == nullptr
  */
 static bool _list_spells_doublecolumn(const item_def* const source_item)
@@ -441,8 +439,8 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  * the given spellset.
  *
  * @param spells        A list of 'books' of spells.
- * @param source_item   The source of the spells (book or rod),, or nullptr in
- *                      the case of monster spellbooks.
+ * @param source_item   The source of the spells; a book, or nullptr in the
+ *                      case of monster spellbooks.
  * @return              A list of all unique spells in the given set, ordered
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
@@ -465,8 +463,8 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
 /**
  * Describe a given set of spells.
  *
- * @param book              A labeled set of spells, corresponding to a book,
- *                          rod, or monster spellbook.
+ * @param book              A labeled set of spells, corresponding to a book
+ *                          or monster spellbook.
  * @param spell_letters     The letters to use for each spell.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
@@ -484,7 +482,7 @@ static void _describe_book(const spellbook_contents &book,
 
     description.cprintf("%s", book.label.c_str());
 
-    // only display header for book/rod spells
+    // only display header for book spells
     if (source_item)
         description.cprintf("\n Spells                             Type                      Level");
     description.cprintf("\n");
@@ -523,7 +521,7 @@ static void _describe_book(const spellbook_contents &book,
                             chop_string(spell_title(spell), 29).c_str());
         }
 
-        // only display type & level for book/rod spells
+        // only display type & level for book spells
         if (doublecolumn)
         {
             // print monster spells in two columns
@@ -580,7 +578,7 @@ void describe_spellset(const spellset &spells,
 /**
  * Return a description of the spells in the given item.
  *
- * @param item      The book or rod in question.
+ * @param item      The book in question.
  * @return          A column-and-row listing of the spells in the given item,
  *                  including names, schools & levels.
  */

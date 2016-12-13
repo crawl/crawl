@@ -388,10 +388,9 @@ SUBST: G : YlG
 :   "type:Sacrilege suffix:Store", "type:Wicked suffix:Wares"})
 : kfeat("s = general shop " .. shopname .. " ; \
 :   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain | \
-:   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
-:   demon blade w:5 | demon trident w:5 | wand of random effects w:3 | \
-:   demon whip w:5 | scroll of torment | staff of death | \
-:   book of necromancy | book of death | \
+:   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
+:   demon trident w:5 | wand of random effects w:3 | demon whip w:5 | \
+:   scroll of torment | staff of death | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
 :   grand grimoire w:1 | sceptre_of_torment w:1 | \
 :   scythe_of_curses w:1 | majin-bo w:1 | \
@@ -456,7 +455,7 @@ MAP
 ENDMAP
 
 #####################################################
-# Sells conjurations-heavy books, destructive wands and rods, etc.
+# Sells conjurations-heavy books, destructive wands, etc.
 NAME: nicolae_blasting_shop
 DEPTH: D:8-, Depths
 TAGS: no_trap_gen no_monster_gen no_item_gen
@@ -467,13 +466,11 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
    randbook disc:conjuration | book of the tempests | book of clouds | \
    wand of iceblast | wand of flame | wand of disintegration | \
-   wand of lightning | staff of conjuration | lightning rod | \
-   rod of inaccuracy | iron rod | large rock ego:exploding | \
-   javelin ego:exploding | wand of acid | \
-   tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
-   lamp of fire | phial of floods | rod of clouds | scroll of immolation | \
-   book of flames | book of fire | book of air | manual of conjurations | \
-   manual of evocations
+   wand of lightning | staff of conjuration | large rock ego:exploding | \
+   javelin ego:exploding | wand of acid | tomahawk ego:exploding | \
+   fan of gales | disc of storms | lamp of fire | phial of floods | \
+   scroll of immolation | book of flames | book of fire | book of air | \
+   manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
 MAP

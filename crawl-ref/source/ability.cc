@@ -2957,7 +2957,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_PAKELLAS_SUPERCHARGE:
     {
         fail_check();
-        simple_god_message(" will supercharge a wand or rod.");
+        simple_god_message(" will supercharge a wand.");
         // included in default force_more_message
 
         int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,
@@ -2984,18 +2984,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        if (wand.base_type == OBJ_RODS)
-        {
-            wand.charge_cap = wand.charges =
-                (MAX_ROD_CHARGE + 1) * ROD_CHARGE_MULT;
-            wand.rod_plus = MAX_WPN_ENCHANT + 1;
-        }
-        else
-        {
-            set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-            wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
-            wand.used_count = ZAPCOUNT_RECHARGED;
-        }
+        set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
+        wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
+        wand.used_count = ZAPCOUNT_RECHARGED;
 
         wand.props[PAKELLAS_SUPERCHARGE_KEY].get_bool() = true;
         you.wield_change = true;

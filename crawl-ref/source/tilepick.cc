@@ -56,7 +56,9 @@ COMPILE_CHECK(NUM_JEWELLERY - AMU_FIRST_AMULET
               == TILE_AMU_ID_LAST - TILE_AMU_ID_FIRST + 1);
 COMPILE_CHECK(NUM_SCROLLS == TILE_SCR_ID_LAST - TILE_SCR_ID_FIRST + 1);
 COMPILE_CHECK(NUM_STAVES == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1);
+#if TAG_MAJOR_VERSION == 34
 COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
+#endif
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
@@ -2535,8 +2537,10 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_STAFF_OFFSET
                + (subtype_rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
         return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
+#endif
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -3549,11 +3553,13 @@ tileidx_t tileidx_known_brand(const item_def &item)
             break;
         }
     }
+#if TAG_MAJOR_VERSION == 34
     else if (item.base_type == OBJ_RODS)
     {
         // Technically not a brand, but still handled here
         return TILE_ROD_ID_FIRST + item.sub_type;
     }
+#endif
     return 0;
 }
 

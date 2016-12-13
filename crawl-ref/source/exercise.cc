@@ -244,7 +244,7 @@ void practise_being_shot_at()
         _check_train_dodging(1);
 }
 
-/// Skill training when using an evocable item, such as a wand or rod.
+/// Skill training when using an evocable item such as a wand.
 void practise_evoking(int amount)
 {
     // XXX: degree determination is just passed in but should be done here.

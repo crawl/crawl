@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Spellbook/rod contents array and management functions
+ * @brief Spellbook contents array and management functions
 **/
 
 #include "AppHdr.h"
@@ -79,45 +79,11 @@ spell_type spell_in_wand(wand_type wand)
     return SPELL_NO_SPELL;
 }
 
-static const map<rod_type, spell_type> _rod_spells =
-{
-    { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
-#if TAG_MAJOR_VERSION == 34
-    { ROD_SWARM,       SPELL_SUMMON_SWARM },
-#endif
-    { ROD_IGNITION,    SPELL_EXPLOSIVE_BOLT },
-    { ROD_CLOUDS,      SPELL_CLOUD_CONE  },
-#if TAG_MAJOR_VERSION == 34
-    { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
-#endif
-    { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
-    { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
-    { ROD_IRON,        SPELL_SCATTERSHOT },
-#if TAG_MAJOR_VERSION == 34
-    { ROD_WARDING,     SPELL_NO_SPELL },
-    { ROD_VENOM,       SPELL_NO_SPELL },
-#endif
-};
-
-spell_type spell_in_rod(rod_type rod)
-{
-    if (const spell_type* const spl = map_find(_rod_spells, rod))
-        return *spl;
-    die("unknown rod type %d", rod);
-}
-
 vector<spell_type> spells_in_book(const item_def &book)
 {
-    ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_RODS);
+    ASSERT(book.base_type == OBJ_BOOKS);
 
     vector<spell_type> ret;
-    if (book.base_type == OBJ_RODS)
-    {
-        if (item_type_known(book))
-            ret.emplace_back(spell_in_rod(static_cast<rod_type>(book.sub_type)));
-        return ret;
-    }
-
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
         return spellbook_template(static_cast<book_type>(book.sub_type));

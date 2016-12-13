@@ -1892,59 +1892,6 @@ string get_item_description(const item_def &item, bool verbose,
         }
         break;
 
-    case OBJ_RODS:
-        if (verbose)
-        {
-            description <<
-                "\nIt uses its own magic reservoir for casting spells, and "
-                "recharges automatically according to the recharging "
-                "rate.";
-
-            const int max_charges = MAX_ROD_CHARGE;
-            const int max_recharge_rate = MAX_WPN_ENCHANT;
-            if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            {
-                const int num_charges = item.charge_cap / ROD_CHARGE_MULT;
-                if (max_charges > num_charges)
-                {
-                    description << "\nIt can currently hold " << num_charges
-                                << " charges. It can be magically "
-                                << "recharged to contain up to "
-                                << max_charges << " charges.";
-                }
-                else
-                    description << "\nIts capacity can be increased no further.";
-
-                const int recharge_rate = item.rod_plus;
-                if (recharge_rate < max_recharge_rate)
-                {
-                    description << "\nIts current recharge rate is "
-                                << (recharge_rate >= 0 ? "+" : "")
-                                << recharge_rate << ". It can be magically "
-                                << "recharged up to +" << max_recharge_rate
-                                << ".";
-                }
-                else
-                    description << "\nIts recharge rate is at maximum.";
-            }
-            else
-            {
-                description << "\nIt can have at most " << max_charges
-                            << " charges and +" << max_recharge_rate
-                            << " recharge rate.";
-            }
-        }
-        else if (Options.dump_book_spells)
-        {
-            desc += describe_item_spells(item);
-            if (desc.empty())
-                need_extra_line = false;
-            else
-                description << desc;
-        }
-
-        break;
-
     case OBJ_STAVES:
         {
             string stats = "\n";
@@ -1998,6 +1945,9 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
+#endif
         // No extra processing needed for these item types.
         break;
 
@@ -2211,7 +2161,6 @@ static vector<command_type> _allowed_actions(const item_def& item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
     case OBJ_MISCELLANY:
         if (!item_is_equipped(item))
         {
@@ -2405,7 +2354,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 
     if (fixup_desc)
         fixup_desc(desc);
-    // spellbooks & rods have their own UIs, so we don't currently support the
+    // spellbooks have their own UIs, so we don't currently support the
     // inscribe/drop/etc prompt UI for them.
     // ...it would be nice if we did, though.
     if (item.has_spells())
@@ -2476,36 +2425,33 @@ void inscribe_item(item_def &item)
  * in their current condition.
  *
  * @param spell     The spell in question.
- * @param rod       Whether the spell is being cast from a rod (not a book).
  */
-static string _player_spell_stats(const spell_type spell, bool rod)
+static string _player_spell_stats(const spell_type spell)
 {
     string description;
     description += make_stringf("\nLevel: %d", spell_difficulty(spell));
-    if (!rod)
+
+    const string schools = spell_schools_string(spell);
+    description +=
+        make_stringf("        School%s: %s",
+                     schools.find("/") != string::npos ? "s" : "",
+                     schools.c_str());
+
+    if (!crawl_state.need_save
+        || (get_spell_flags(spell) & SPFLAG_MONSTER))
     {
-        const string schools = spell_schools_string(spell);
-        description +=
-            make_stringf("        School%s: %s",
-                         schools.find("/") != string::npos ? "s" : "",
-                         schools.c_str());
-
-        if (!crawl_state.need_save
-            || (get_spell_flags(spell) & SPFLAG_MONSTER))
-        {
-            return description; // all other info is player-dependent
-        }
-
-        const string failure = failure_rate_to_string(raw_spell_fail(spell));
-        description += make_stringf("        Fail: %s", failure.c_str());
+        return description; // all other info is player-dependent
     }
 
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    description += make_stringf("        Fail: %s", failure.c_str());
+
     description += "\n\nPower : ";
-    description += spell_power_string(spell, rod);
+    description += spell_power_string(spell);
     description += "\nRange : ";
-    description += spell_range_string(spell, rod);
+    description += spell_range_string(spell);
     description += "\nHunger: ";
-    description += spell_hunger_string(spell, rod);
+    description += spell_hunger_string(spell);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";
@@ -2587,9 +2533,8 @@ int hex_chance(const spell_type spell, const int hd)
  * reason...)
  *
  * @param spell     The spell in question.
- * @param item      The object the spell is in; may be null.
  */
-static string _player_spell_desc(spell_type spell, const item_def* item)
+static string _player_spell_desc(spell_type spell)
 {
     if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
         return ""; // all info is player-dependent
@@ -2605,8 +2550,7 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                         + " summoned by this spell.\n";
     }
 
-    const bool rod = item && item->base_type == OBJ_RODS;
-    if (god_hates_spell(spell, you.religion, rod))
+    if (god_hates_spell(spell, you.religion))
     {
         description += uppercase_first(god_name(you.religion))
                        + " frowns upon the use of this spell.\n";
@@ -2625,10 +2569,10 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        + desc_cannot_memorise_reason(spell)
                        + "\n";
     }
-    else if (spell_is_useless(spell, true, false, rod))
+    else if (spell_is_useless(spell, true, false))
     {
         description += "\nThis spell will have no effect right now because "
-                       + spell_uselessness_reason(spell, true, false, rod)
+                       + spell_uselessness_reason(spell, true, false)
                        + "\n";
     }
 
@@ -2640,15 +2584,12 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
  * Describe a spell, as cast by the player.
  *
  * @param spell     The spell in question.
- * @param item      The object the spell is in; may be null.
  * @return          Information about the spell; does not include the title or
  *                  db description, but does include level, range, etc.
  */
-string player_spell_desc(spell_type spell, const item_def* item)
+string player_spell_desc(spell_type spell)
 {
-    const bool rod = item && item->base_type == OBJ_RODS;
-    return _player_spell_stats(spell, rod)
-           + _player_spell_desc(spell, item);
+    return _player_spell_stats(spell) + _player_spell_desc(spell);
 }
 
 /**
@@ -2660,7 +2601,7 @@ string player_spell_desc(spell_type spell, const item_def* item)
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
- * @param item          The item (book or rod) holding the spell, if any.
+ * @param item          The item holding the spell, if any.
  * @return              Whether you can memorise the spell.
  */
 static bool _get_spell_description(const spell_type spell,
@@ -2715,7 +2656,7 @@ static bool _get_spell_description(const spell_type spell,
 
     }
     else
-        description += player_spell_desc(spell, item);
+        description += player_spell_desc(spell);
 
     // Don't allow memorization after death.
     // (In the post-game inventory screen.)
@@ -2758,7 +2699,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
  *                  description, 'mon_owner' is that monster. Else, null.
- * @param item      The item (book or rod) holding the spell, if any.
+ * @param item      The item holding the spell, if any.
  */
 void describe_spell(spell_type spelled, const monster_info *mon_owner,
                     const item_def* item)

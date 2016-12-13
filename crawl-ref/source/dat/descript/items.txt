@@ -543,10 +543,6 @@ inedible chunk of flesh
 
 <chunk of flesh>
 %%%%
-iron rod
-
-A rod that allows its wielder to fire powerful blasts of metallic shrapnel.
-%%%%
 javelin
 
 A lightweight spear, designed for throwing.
@@ -593,13 +589,6 @@ leather armour
 
 A suit made from layers of tanned animal hide. It provides basic protection
 with almost no hindrance to spellcasting or stealthy movement.
-%%%%
-lightning rod
-
-A rod that allows its wielder to fire blasts of lightning. By evoking the rod
-in consecutive turns, the discharge will be sustained and can be redirected to
-new targets. It takes a moment to warm up, making short bursts rather
-ineffective.
 %%%%
 long sword
 
@@ -910,24 +899,6 @@ A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
 offers little protection against physical harm, but does not hinder evasion or
 spellcasting.
 %%%%
-rod of clouds
-
-A rod that allows its wielder to blast a cone-shaped area in front of them with
-various destructive clouds, their lethality increasing with Evocations skill.
-%%%%
-rod of ignition
-
-A rod that allows its wielder to launch a fiery bolt of explosive energy.
-%%%%
-rod of inaccuracy
-
-A rod that allows its wielder to fire a powerful but extremely inaccurate bolt
-of power.
-%%%%
-rod of shadows
-
-A rod that weaves creatures from shadows and ethereal matter.
-%%%%
 royal jelly
 
 A particularly rich and golden gelatinous thing.
@@ -1035,9 +1006,7 @@ A scroll with no apparent practical use.
 %%%%
 scroll of recharging
 
-A scroll that restores the charges of any magical wand or rod chosen by its
-reader. When used on a rod, it increases the rod's maximum charges and
-increases the rate at which it regenerates power.
+A scroll that restores the charges of any magical wand chosen by its reader.
 %%%%
 scroll of remove curse
 

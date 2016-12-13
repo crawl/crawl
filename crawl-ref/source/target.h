@@ -242,16 +242,6 @@ private:
     int range;
 };
 
-class targeter_explosive_bolt : public targeter_beam
-{
-public:
-    targeter_explosive_bolt(const actor *act, int pow, int range);
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-private:
-    explosion_map exp_map;
-};
-
 class targeter_cone : public targeter
 {
 public:

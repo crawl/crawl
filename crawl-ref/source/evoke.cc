@@ -738,8 +738,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
         if (item_slot == -1)
         {
             item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
-                                            divine ? OSEL_DIVINE_RECHARGE
-                                                   : OSEL_RECHARGE,
+                                           OSEL_RECHARGE,
                                            OPER_ANY,
                                            invprompt_flag::escape_only);
         }
@@ -775,101 +774,45 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             continue;
         }
 
-        if (wand.base_type != OBJ_WANDS && wand.base_type != OBJ_RODS)
-            return 0;
+        int charge_gain = wand_max_charges(wand) / 3;
 
-        if (wand.base_type == OBJ_WANDS)
+        const int new_charges =
+            divine
+            ? min<int>(charge_gain * 3,
+                       max<int>(wand.charges + 1,
+                                wand.charges + 3 * charge_gain * num / den))
+            : max<int>(wand.charges,
+                       min(charge_gain * 3,
+                           wand.charges +
+                           1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
+
+        const bool charged = (new_charges > wand.plus);
+
+        string desc;
+
+        if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
-            int charge_gain = wand_max_charges(wand) / 3;
-
-            const int new_charges =
-                divine
-                ? min<int>(charge_gain * 3,
-                           max<int>(wand.charges + 1,
-                                    wand.charges + 3 * charge_gain * num / den))
-                : max<int>(wand.charges,
-                           min(charge_gain * 3,
-                               wand.charges +
-                               1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
-
-            const bool charged = (new_charges > wand.plus);
-
-            string desc;
-
-            if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
-            {
-                desc = make_stringf(" and now has %d charge%s",
-                                    new_charges, new_charges == 1 ? "" : "s");
-            }
-
-            if (known && !pre_msg.empty())
-                mpr(pre_msg);
-
-            mprf("%s %s for a moment%s.",
-                 wand.name(DESC_YOUR).c_str(),
-                 charged ? "glows" : "flickers",
-                 desc.c_str());
-
-            if (!charged && !item_ident(wand, ISFLAG_KNOW_PLUSES))
-            {
-                mprf("It has %d charges and is fully charged.", new_charges);
-                set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-            }
-
-            // Reinitialise zap counts.
-            wand.charges  = new_charges;
-            wand.used_count = ZAPCOUNT_RECHARGED;
+            desc = make_stringf(" and now has %d charge%s",
+                                new_charges, new_charges == 1 ? "" : "s");
         }
-        else // It's a rod.
+
+        if (known && !pre_msg.empty())
+            mpr(pre_msg);
+
+        mprf("%s %s for a moment%s.",
+             wand.name(DESC_YOUR).c_str(),
+             charged ? "glows" : "flickers",
+             desc.c_str());
+
+        if (!charged && !item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
-            bool work = false;
-            // Keep track of the original name so that the original enchantment
-            // is displayed in the 'glows for a moment' output
-            // This is consistent with scrolls of enchant weapon/armour
-            const string orig_name = wand.name(DESC_YOUR);
-
-            if (!divine && wand.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
-            {
-                wand.charge_cap += ROD_CHARGE_MULT * random_range(1, 2);
-
-                if (wand.charge_cap > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
-                    wand.charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-
-                work = true;
-            }
-
-            if (wand.charges < wand.charge_cap)
-            {
-                if (divine)
-                {
-                    wand.charges =
-                        min<int>(wand.charge_cap,
-                                 max<int>(wand.charges + 1,
-                                          wand.charges
-                                              + num * wand.charge_cap / den));
-                }
-                else
-                    wand.charges = wand.charge_cap;
-                work = true;
-            }
-
-            if (!divine && wand.rod_plus < MAX_WPN_ENCHANT)
-            {
-                wand.rod_plus += random_range(1, 2);
-                if (wand.rod_plus > MAX_WPN_ENCHANT)
-                    wand.rod_plus = MAX_WPN_ENCHANT;
-
-                work = true;
-            }
-
-            if (!work)
-                return 0;
-
-            if (known && !pre_msg.empty())
-                mpr(pre_msg);
-
-            mprf("%s glows for a moment.", orig_name.c_str());
+            mprf("It has %d charges and is fully charged.", new_charges);
+            set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
         }
+
+        // Reinitialise zap counts.
+        wand.charges  = new_charges;
+        wand.used_count = ZAPCOUNT_RECHARGED;
 
         you.wield_change = true;
         return 1;
@@ -1842,86 +1785,6 @@ static spret_type _phantom_mirror()
     return SPRET_SUCCESS;
 }
 
-static bool _rod_spell(item_def& irod, bool check_range)
-{
-    ASSERT(irod.base_type == OBJ_RODS);
-
-    const spell_type spell = spell_in_rod(static_cast<rod_type>(irod.sub_type));
-    int mana = spell_mana(spell) * ROD_CHARGE_MULT;
-    int power = calc_spell_power(spell, false, false, true, true);
-
-    int food = spell_hunger(spell, true);
-
-    if (you.undead_state() == US_UNDEAD)
-        food = 0;
-
-    if (food && (you.hunger_state <= HS_STARVING || you.hunger <= food)
-        && !you.undead_state())
-    {
-        canned_msg(MSG_NO_ENERGY);
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")
-        && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
-    {
-        // Starting it up takes 2 mana, continuing any amount up to 5.
-        // You don't get to expend less (other than stopping the zap completely).
-        mana = min(5 * ROD_CHARGE_MULT, (int)irod.plus);
-        // Never allow using less than a whole point of charge.
-        mana = max(mana, ROD_CHARGE_MULT);
-        you.props["thunderbolt_mana"].get_int() = mana;
-    }
-
-    if (irod.plus < mana)
-    {
-        mpr("The rod doesn't have enough magic points.");
-        crawl_state.zero_turns_taken();
-        // Don't lose a turn for trying to evoke without enough MP - that's
-        // needlessly cruel for an honest error.
-        return false;
-    }
-
-    if (check_range && spell_no_hostile_in_range(spell, true))
-    {
-        // Abort if there are no hostiles within range, but flash the range
-        // markers for a short while.
-        mpr("You can't see any susceptible monsters within range! "
-            "(Use <w>V</w> to cast anyway.)");
-
-        if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
-        {
-            targeter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
-            range_view_annotator show_range(&range);
-            delay(50);
-        }
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    // All checks passed, we can cast the spell.
-    const spret_type ret = your_spells(spell, power, false, &irod);
-
-    if (ret == SPRET_ABORT)
-    {
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
-    make_hungry(food, true, true);
-    if (ret == SPRET_SUCCESS)
-    {
-        irod.plus -= mana;
-        you.wield_change = true;
-        if (item_is_quivered(irod))
-            you.redraw_quiver = true;
-    }
-    you.turn_is_over = true;
-
-    return true;
-}
-
 bool evoke_check(int slot, bool quiet)
 {
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
@@ -2008,30 +1871,6 @@ bool evoke_item(int slot, bool check_range)
         }
         else
             unevokable = true;
-        break;
-
-    case OBJ_RODS:
-        ASSERT(wielded);
-
-        if (you.confused())
-        {
-            canned_msg(MSG_TOO_CONFUSED);
-            return false;
-        }
-
-        if (player_under_penance(GOD_PAKELLAS))
-        {
-            simple_god_message("'s wrath prevents you from evoking devices!",
-                               GOD_PAKELLAS);
-            return false;
-        }
-
-        if (!_rod_spell(you.inv[slot], check_range))
-            return false;
-
-        did_work = true;  // _rod_spell() handled messages
-        practise_evoking(1);
-        count_action(CACT_EVOKE, EVOC_ROD);
         break;
 
     case OBJ_STAVES:

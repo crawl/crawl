@@ -4359,8 +4359,7 @@ static object_class_type _superb_object_class()
             10, OBJ_ARMOUR,
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
-            9, OBJ_STAVES,
-            1, OBJ_RODS,
+            10, OBJ_STAVES,
             10, OBJ_MISCELLANY);
 }
 
@@ -5657,8 +5656,6 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_JEWELLERY;
 
     case SHOP_EVOKABLES:
-        if (one_chance_in(10))
-            return OBJ_RODS;
         return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:

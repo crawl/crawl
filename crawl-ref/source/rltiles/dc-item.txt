@@ -927,6 +927,7 @@ i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
 
+# Remove rods TAG_MAJOR_VERSION > 34
 %sdir item/rod
 rod00 ROD
 rod01
@@ -941,18 +942,14 @@ rod09
 
 # These must be in the same order as the enum in item-prop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
-# Remove when TAG_MAJOR_VERSION > 34
 i-rod_summoning ROD_SUMMONING
 i-rod_ignition ROD_IGNITION
 i-rod_clouds ROD_CLOUDS
-# Remove when TAG_MAJOR_VERSION > 34
 i-rod_destruction ROD_DESTRUCTION
 i-rod_inaccuracy ROD_INACCURACY
-# Remove when TAG_MAJOR_VERSION > 34
 i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
 i-rod_iron ROD_IRON
-# Remove when TAG_MAJOR_VERSION > 34
 i-rod_venom ROD_VENOM ROD_ID_LAST
 %rim 1
 

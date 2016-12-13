@@ -3115,7 +3115,6 @@ void tile_item_use(int idx)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
-        case OBJ_RODS:
         case OBJ_MISCELLANY:
         case OBJ_WANDS:
             // Wield any unwielded item of these types.
@@ -3124,7 +3123,7 @@ void tile_item_use(int idx)
                 wield_weapon(true, idx);
                 return;
             }
-            // Evoke misc. items, rods, or wands.
+            // Evoke misc. items or wands.
             if (item_is_evokable(item, false))
             {
                 evoke_item(idx);

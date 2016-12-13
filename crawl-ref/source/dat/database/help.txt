@@ -19,7 +19,7 @@ The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 <h>Category shortcuts</h>
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
-<w>/</w>   wands        <w>\</w>   rods           <w>|</w>   magical staves  <w>?</w>   scrolls
+<w>/</w>   wands        <w>|</w>   magical staves  <w>?</w>   scrolls
 <w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>:</w>   books
 <w>%</w>   food
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all

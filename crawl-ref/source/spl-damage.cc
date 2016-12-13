@@ -2389,7 +2389,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     fail_check();
 
-    int juice = prev.origin() ? 2 * ROD_CHARGE_MULT
+    int juice = prev.origin() ? 2 * LIGHTNING_CHARGE_MULT
                               : caster->props["thunderbolt_mana"].get_int();
     bolt beam;
     beam.name              = "lightning";
@@ -2436,7 +2436,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, ROD_CHARGE_MULT),
+        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
                                div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }
@@ -2444,7 +2444,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     caster->props["thunderbolt_last"].get_int() = you.num_turns;
     caster->props["thunderbolt_aim"].get_coord() = aim;
 
-    noisy(15 + div_rand_round(juice, ROD_CHARGE_MULT), hitfunc.origin);
+    noisy(15 + div_rand_round(juice, LIGHTNING_CHARGE_MULT), hitfunc.origin);
 
     return SPRET_SUCCESS;
 }
