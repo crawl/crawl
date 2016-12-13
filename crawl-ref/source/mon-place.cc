@@ -1323,6 +1323,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Draconian stormcallers worship Qazlal.
         else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
             mon->god = GOD_QAZLAL;
+        // Classed demonspawn.
+        else if (mg.cls == MONS_BLOOD_SAINT)
+            mon->god = GOD_MAKHLEB;
+        else if (mg.cls == MONS_BLACK_SUN)
+            mon->god = GOD_KIKUBAAQUDGHA;
+        else if (mg.cls == MONS_CORRUPTER)
+            mon->god = GOD_LUGONU;
         else
         {
             switch (mons_genus(mg.cls))
