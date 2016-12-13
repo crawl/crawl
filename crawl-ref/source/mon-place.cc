@@ -1320,6 +1320,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Seraphim follow the Shining One.
         else if (mg.cls == MONS_SERAPH)
             mon->god = GOD_SHINING_ONE;
+        // Draconian stormcallers worship Qazlal.
+        else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
+            mon->god = GOD_QAZLAL;
         else
         {
             switch (mons_genus(mg.cls))
