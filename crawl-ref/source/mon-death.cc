@@ -54,6 +54,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -3605,24 +3606,34 @@ bool mons_bennu_can_revive(const monster* mons)
            || mons->props["bennu_revives"].get_byte() < 1;
 }
 
-bool ieoh_jian_kill_oldest_weapon(bool ignore_divine)
+bool ieoh_jian_kill_oldest_weapon(bool ignore_divine, bool prompt)
 {
     auto monsters = find_ieoh_jian_manifested_weapons(false);
     if (monsters.empty()) 
         return false;
 
-    auto front_weapon = monsters.at(0)->weapon();
+    auto target_weapon = monsters.at(0)->weapon();
 
-    if (front_weapon->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !ignore_divine)
+    if (target_weapon->props.exists(IEOH_JIAN_DIVINE_DEGREE) && monsters.size() > 1)
+        target_weapon = monsters.at(1)->weapon(); // Priorize non-divines
+
+    if (target_weapon->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !ignore_divine)
     {
-        int divine_degree = front_weapon->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
-        front_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
-
-        if (divine_degree == 10)
-            mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", front_weapon->name(DESC_THE, false, true, false).c_str());
+        int divine_degree = target_weapon->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
+        target_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
        
         if (divine_degree > 0)
             return false;
+
+        const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay longer? (5 piety)",
+                                   target_weapon->name(DESC_THE, false, true, false).c_str());
+        if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
+        {
+            simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
+            lose_piety(5);
+            target_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
+            return false;
+        }
     }
 
     monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);

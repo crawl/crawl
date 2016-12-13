@@ -33,6 +33,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -1670,7 +1671,7 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
     }
 
     weapon.quantity = 1;
-    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = 20;
+    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
     return true;
 }
 
@@ -1704,7 +1705,7 @@ static bool ieoh_jian_choose_weapon(item_def& weapon)
     if (tension < 15)
         return _ieoh_jian_choose_normal_weapon(weapon); 
 
-    int divine_chance = min(get_tension(GOD_IEOH_JIAN), 5 + you.skill(SK_INVOCATIONS, 1, false));
+    int divine_chance = min(get_tension(GOD_IEOH_JIAN), 5 + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 2));
 
     dprf("Choosing IJC weapon with tension %d and chance of divine weapon %d", tension, divine_chance);
 
@@ -1736,10 +1737,10 @@ bool ieoh_jian_interest()
     return false;
 }
 
-bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
+bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication, bool prompt)
 {
     // We kill any ordinary IJC weapons first, in order of age.
-    if (ieoh_jian_kill_oldest_weapon(urgent))
+    if (ieoh_jian_kill_oldest_weapon(urgent, prompt))
     {
         you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
         return true;
@@ -1752,15 +1753,22 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
             int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
             you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
 
-            if (divine_degree == 10)
-                mprf(MSGCH_GOD, "%s's halo dims as its time left in the world shortens.", you.weapon()->name(DESC_THE, false, true, false).c_str());
-
             if (divine_degree > 0)
                 return false;
         }
 
         if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
         {
+            const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay longer? (5 piety)",
+                                       you.weapon()->name(DESC_THE, false, true, false).c_str());
+            if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
+            {
+                simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
+                lose_piety(5);
+                you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
+                return false;
+            }
+
             mprf("%s slips out of your %s and ascends back to the heavens!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
             invalidate_agrid(true);
         }
@@ -1777,6 +1785,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
 
     // If there aren't any left, but there is an animated weapon belonging to
     // the player, we pull it back to the player's hand, killing the ghost.
+    // This won't happen if your weapon isn't divine, as it should stick to you.
     auto monsters = find_ieoh_jian_manifested_weapons(true);
     if (!monsters.empty())
     {
@@ -1811,7 +1820,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
 
 monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)
 {
-    if (!in_bounds(position))
+    if (!in_bounds(position) || weapon.base_type != OBJ_WEAPONS)
         return nullptr;
 
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
@@ -1866,6 +1875,19 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         mprf(MSGCH_GOD, "%s manifests in a flash of light!", wpn.name(DESC_A, false, true).c_str());
     else
         mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
+}
+
+item_def* ieoh_jian_get_current_divine_weapon()
+{
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    for (auto monster : manifested)
+        if (monster->weapon() && monster->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+            return monster->weapon(); 
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        return you.weapon(); 
+
+    return nullptr;
 }
 
 static bool _dont_attack_martial(const monster* mons)
