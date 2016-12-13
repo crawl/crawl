@@ -410,7 +410,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 3
   local e = 20 + you.zigs_completed() * 4
   local f = 20 + you.zigs_completed() * 5
-  return "hill giant w:20 / cyclops w:20 / ettin w:20 / " ..
+  return "cyclops w:20 / ettin w:20 / " ..
          "stone giant w:" .. d .. " / " .. "fire giant w:" .. d .. " / " ..
          "frost giant w:" .. d .. " / titan w:" .. f .. " / " ..
          "juggernaut w:" .. e .. " / iron giant w:" .. e

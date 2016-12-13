@@ -236,7 +236,7 @@ function choose_mset_2(e)
     e.kmons("1 =  zombie / skeleton / lesser demon / hell hound")
 -- Giant
   elseif rnd < 82 then
-    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5")
+    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5")
 -- Fire
   elseif rnd < 84 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
@@ -347,7 +347,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Dis:1")
 -- Giant
   elseif rnd < 71 then
-    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops / hill giant w:5 /\
+    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops /\
                stone giant w:5 / fire giant w:2 / frost giant w:2")
 -- Fire
   elseif rnd < 73 then
@@ -480,7 +480,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
 -- Giant
   elseif rnd < 75 then
-    e.kmons("1 = hill giant / cyclops / stone giant / fire giant /\
+    e.kmons("1 = cyclops / stone giant / fire giant /\
                frost giant / ettin / titan")
 -- Fire
   elseif rnd < 78 then

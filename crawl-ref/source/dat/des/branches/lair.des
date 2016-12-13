@@ -30,7 +30,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
         end
     else
         if you.absdepth() >= 12 then
-            e.mons("centaur warrior / hill giant")
+            e.mons("centaur warrior / two-headed ogre")
             e.mons("hell rat")
         elseif you.absdepth() >= 8 then
             e.mons("centaur / troll")

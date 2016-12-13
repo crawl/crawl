@@ -187,7 +187,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
             elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
                 if data.swcount > 5 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake hill giant zombie")
+                    spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
                 else
                     spawn_zombie(x, y, "generate_awake skeletal warrior")
                 data.swcount = data.swcount + 1
@@ -1138,7 +1138,7 @@ SUBST:      LZ = '
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
-:           set_random_mon_list([[ ogre zombie / troll zombie / hill giant zombie / ]]
+:           set_random_mon_list([[ ogre zombie / troll zombie / two-headed ogre zombie / ]]
 :           .. [[ wight w:20 / vampire w:5 / skeletal warrior w:15 / ]])
 epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")

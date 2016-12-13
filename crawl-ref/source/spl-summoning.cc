@@ -648,7 +648,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         else
         {
             // giants
-            mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+            mon = (coinflip()) ? MONS_CYCLOPS : MONS_STONE_GIANT;
         }
     }
 
