@@ -1072,16 +1072,13 @@ bool spell_is_form(spell_type spell)
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
- * @param fake_spell Is the spell some other kind of fake spell (such as an
-                     innate or divine ability)?
+ * @param fake_spell Is the spell evoked, or from an innate or divine ability?
  * @return           Whether the given spell has no chance of being useful.
  */
-bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
+bool spell_is_useless(spell_type spell, bool temp, bool prevent,
                       bool fake_spell)
 {
-    return spell_uselessness_reason(spell, temp, prevent,
-                                    evoked, fake_spell) != "";
+    return spell_uselessness_reason(spell, temp, prevent, fake_spell) != "";
 }
 
 /**
@@ -1093,23 +1090,21 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
- * @param fake_spell Is the spell some other kind of fake spell (such as an
-                     innate or divine ability)?
+ * @param fake_spell Is the spell evoked, or from an innate or divine ability?
  * @return           The reason a spell is useless to the player, if it is;
  *                   "" otherwise. The string should be a full clause, but
  *                   begin with a lowercase letter so callers can put it in
  *                   the middle of a sentence.
  */
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
-                                bool evoked, bool fake_spell)
+                                bool fake_spell)
 {
     if (temp)
     {
         if (!fake_spell && you.duration[DUR_CONF] > 0)
             return "you're too confused.";
         if (!enough_mp(spell_mana(spell), true, false)
-            && !evoked && !fake_spell)
+            && !fake_spell)
         {
             return "you don't have enough magic.";
         }
@@ -1118,12 +1113,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (!fake_spell && !evoked
-        && cannot_use_schools(get_spell_disciplines(spell)))
-    {
+    if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
-    }
-
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)

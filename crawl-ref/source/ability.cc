@@ -2017,7 +2017,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (your_spells(SPELL_HURL_DAMNATION,
                         you.experience_level * 10,
-                        false, nullptr, true) == SPRET_ABORT)
+                        false) == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
@@ -2616,7 +2616,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (your_spells(SPELL_SMITING,
                         12 + skill_bump(SK_INVOCATIONS, 6),
-                        false, nullptr, true) == SPRET_ABORT)
+                        false, nullptr) == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
