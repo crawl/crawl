@@ -1267,7 +1267,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_FIRE:
     case SPELL_BOLT_OF_COLD:
     case SPELL_THROW_ICICLE:
-    case SPELL_BOLT_OF_INACCURACY:
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
     case SPELL_FIREBALL:
@@ -1281,7 +1280,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_IRON_SHOT:
     case SPELL_STONE_ARROW:
     case SPELL_FORCE_LANCE:
-    case SPELL_EXPLOSIVE_BOLT:
     case SPELL_CORROSIVE_BOLT:
     case SPELL_HIBERNATION:
     case SPELL_SLEEP:
@@ -1728,7 +1726,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_VAMPIRE_SUMMON:
 #endif
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
-    case SPELL_WEAVE_SHADOWS:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_FAKE_RAKSHASA_SUMMON:
 #endif
@@ -6016,12 +6013,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
-    case SPELL_WEAVE_SHADOWS:
     {
-        level_id place = (spell_cast == SPELL_SHADOW_CREATURES)
-                         ? level_id::current()
-                         : level_id(BRANCH_DUNGEON,
-                                    min(27, max(1, mons->spell_hd(spell_cast))));
+        level_id place = level_id::current();
 
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 

@@ -278,7 +278,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     {
         { -1, passive_t::no_mp_regen, "GOD prevents you from regenerating your mana reserve" },
         { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
-        {  0, passive_t::identify_devices, "GOD identifies your wands and rods" },
+        {  0, passive_t::identify_devices, "GOD identifies your wands" },
         {  1, passive_t::bottle_mp, "GOD collects and distills excess magic from your kills" },
     },
 
@@ -669,11 +669,8 @@ bool god_id_item(item_def& item, bool silent)
             item.props["needs_autopickup"] = true;
         }
 
-        if (is_weapon(item) || item.base_type == OBJ_RODS
-            || item.base_type == OBJ_ARMOUR)
-        {
+        if (is_weapon(item) || item.base_type == OBJ_ARMOUR)
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
-        }
 
         if (item.base_type == OBJ_JEWELLERY)
             ided |= ISFLAG_IDENT_MASK;
@@ -730,8 +727,7 @@ void ash_id_monster_equipment(monster* mon)
 
         item_def &item = mitm[mon->inv[i]];
         if ((i != MSLOT_WAND || !is_offensive_wand(item))
-            && !item_is_branded(item)
-            && item.base_type != OBJ_RODS)
+            && !item_is_branded(item))
         {
             continue;
         }
@@ -1151,22 +1147,18 @@ ru_interference get_ru_attack_interference_level()
 }
 
 /**
- * ID the charges of wands and rods in the player's possession.
+ * ID the charges of wands in the player's possession.
  */
 void pakellas_id_device_charges()
 {
     for (int which_item = 0; which_item < ENDOFPACK; which_item++)
     {
         if (!you.inv[which_item].defined()
-            || !(you.inv[which_item].base_type == OBJ_WANDS
-                 || you.inv[which_item].base_type == OBJ_RODS)
-            || item_ident(you.inv[which_item], ISFLAG_KNOW_PLUSES)
-               && item_ident(you.inv[which_item], ISFLAG_KNOW_TYPE))
+            || !(you.inv[which_item].base_type == OBJ_WANDS)
+            || item_ident(you.inv[which_item], ISFLAG_KNOW_PLUSES))
         {
             continue;
         }
-        if (you.inv[which_item].base_type == OBJ_RODS)
-            set_ident_flags(you.inv[which_item], ISFLAG_KNOW_TYPE);
         set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
         mprf_nocap("%s",
                    menu_colour_item_name(you.inv[which_item],

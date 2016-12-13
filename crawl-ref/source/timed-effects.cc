@@ -1399,7 +1399,6 @@ void update_level(int elapsedTime)
     rot_floor_items(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
-    recharge_rods(turns, true);
 
     if (env.sanctuary_time)
     {
@@ -1451,61 +1450,6 @@ void update_level(int elapsedTime)
 #endif
 
     delete_all_clouds();
-}
-
-static void _recharge_rod(item_def &rod, int aut, bool in_inv)
-{
-    if (rod.base_type != OBJ_RODS || rod.charges >= rod.charge_cap)
-        return;
-
-    // Skill calculations with a massive scale would overflow, cap it.
-    // The worst case, a -3 rod, takes 17000 aut to fully charge.
-    // -4 rods don't recharge at all.
-    aut = min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
-
-    int rate = 4 + rod.rod_plus;
-
-    rate *= 10 * aut;
-    if (in_inv)
-        rate += skill_bump(SK_EVOCATIONS, aut);
-    rate = div_rand_round(rate, 100);
-
-    if (rate > rod.charge_cap - rod.charges) // Prevent overflow
-        rate = rod.charge_cap - rod.charges;
-
-    // With this, a +0 rod with no skill gets 1 mana per 25.0 turns
-
-    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
-    {
-        if (item_equip_slot(rod) == EQ_WEAPON)
-            you.wield_change = true;
-        if (item_is_quivered(rod))
-            you.redraw_quiver = true;
-    }
-
-    rod.plus += rate;
-
-    if (in_inv && rod.charges == rod.charge_cap)
-    {
-        msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
-                    << endl;
-        if (is_resting())
-            stop_running();
-    }
-
-    return;
-}
-
-void recharge_rods(int aut, bool level_only)
-{
-    if (!level_only)
-    {
-        for (auto &item : you.inv)
-            _recharge_rod(item, aut, true);
-    }
-
-    for (auto &item : mitm)
-        _recharge_rod(item, aut, false);
 }
 
 static void _drop_tomb(const coord_def& pos, bool premature, bool zin)

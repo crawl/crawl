@@ -758,6 +758,12 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
     { OBJ_RODS,      ROD_SWARM },
+    { OBJ_RODS,      ROD_LIGHTNING },
+    { OBJ_RODS,      ROD_IGNITION },
+    { OBJ_RODS,      ROD_CLOUDS },
+    { OBJ_RODS,      ROD_INACCURACY },
+    { OBJ_RODS,      ROD_SHADOWS },
+    { OBJ_RODS,      ROD_IRON },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
@@ -1104,6 +1110,9 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_ORBS:
     case OBJ_RUNES:
     case OBJ_GOLD:
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
+#endif
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -1136,7 +1145,6 @@ static iflags_t _full_ident_mask(const item_def& item)
         else
             flagset = 0;
         break;
-    case OBJ_RODS:
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
         // All flags necessary for full identification.
@@ -1521,42 +1529,25 @@ bool check_armour_size(const item_def &item, size_type size)
  *
  * @param it            The item in question.
  * @param hide_charged  Whether wands known to be full should be included.
- * @param divine        Whether the source of recharging is divine (and so can
-                        only recharge, not increase enchantment on rods).
  * @return              Whether the item can be recharged.
  *
  */
-bool item_is_rechargeable(const item_def &it, bool hide_charged, bool divine)
+bool item_is_rechargeable(const item_def &it, bool hide_charged)
 {
-    // These are obvious...
-    if (it.base_type == OBJ_WANDS)
-    {
-        if (!hide_charged)
-            return true;
+    if (it.base_type != OBJ_WANDS)
+        return false;
 
-        // Don't offer wands already maximally charged.
-        if (item_ident(it, ISFLAG_KNOW_PLUSES)
-            && it.charges >= wand_max_charges(it))
-        {
-            return false;
-        }
+    if (!hide_charged)
         return true;
-    }
-    else if (it.base_type == OBJ_RODS)
-    {
-        if (!hide_charged)
-            return true;
 
-        if (item_ident(it, ISFLAG_KNOW_PLUSES))
-        {
-            return !divine && (it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                               || it.rod_plus < MAX_WPN_ENCHANT)
-                   || it.charges < it.charge_cap;
-        }
-        return true;
+    // Don't offer wands already maximally charged.
+    if (item_ident(it, ISFLAG_KNOW_PLUSES)
+        && it.charges >= wand_max_charges(it))
+    {
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 int wand_charge_value(int type)
@@ -1993,8 +1984,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
             skills.insert(SK_EVOCATIONS);
     }
 
-    // Weapons, staves and rods allow training as long as your species can
-    // wield them.
+    // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
         return !skills.empty();
 
@@ -2845,7 +2835,9 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
+#endif
     case OBJ_MISCELLANY:
         return EQ_WEAPON;
 

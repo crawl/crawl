@@ -539,7 +539,7 @@ static spell_type _choose_random_spell(int sever)
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (!spell_is_useless(spell, true, true, false, true)
+        if (!spell_is_useless(spell, true, true, true)
              && _transformation_check(spell))
         {
             ok_spells.push_back(spell);
@@ -736,10 +736,16 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_unrandom_artefact(item))
         return false;
 
-    // Staves and rods can't be changed either, since they don't have brands
-    // in the way other weapons do.
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
+    // Staves can't be changed either, since they don't have brands in the way
+    // other weapons do.
+    if (item.base_type == OBJ_STAVES
+#if TAG_MAJOR_VERSION == 34
+        || item.base_type == OBJ_RODS
+#endif
+       )
+{
         return false;
+}
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.

@@ -536,37 +536,21 @@ static void _recap_card_keys(vector<string> &keys)
     }
 }
 
-static bool _is_rod_spell(spell_type spell)
-{
-    if (spell == SPELL_NO_SPELL)
-        return false;
-
-    for (int i = 0; i < NUM_RODS; i++)
-        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
-            return true;
-
-    return false;
-}
-
 /**
- * Make a list of all books/rods that contain a given spell.
+ * Make a list of all books that contain a given spell.
  *
  * @param spell_type spell      The spell in question.
- * @return                      A formatted list of books & rods containing
+ * @return                      A formatted list of books containing
  *                              the spell, e.g.:
- *    \n\nThis spell can be found in the following rod: iron rod.
- *    or
  *    \n\nThis spell can be found in the following books: dreams, burglary.
- *    \n\nThis spell can be found in the following rods: warding, clouds.
  *    or
- *    \n\nThis spell is not found in any books or rods.
+ *    \n\nThis spell is not found in any books.
  */
 static string _spell_sources(const spell_type spell)
 {
     item_def item;
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     vector<string> books;
-    vector<string> rods;
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
@@ -577,36 +561,16 @@ static string _spell_sources(const spell_type spell)
                 books.push_back(item.name(DESC_PLAIN));
             }
 
-    item.base_type = OBJ_RODS;
-    for (int i = 0; i < NUM_RODS; i++)
-    {
-        item.sub_type = i;
-        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
-            rods.push_back(item.name(DESC_BASENAME));
-    }
-
-    if (books.empty() && rods.empty())
-        return "\n\nThis spell is not found in any books or rods.";
+    if (books.empty())
+        return "\n\nThis spell is not found in any books.";
 
     string desc;
 
-    if (!books.empty())
-    {
-        desc += "\n\nThis spell can be found in the following book";
-        if (books.size() > 1)
-            desc += "s";
-        desc += ":\n ";
-        desc += comma_separated_line(books.begin(), books.end(), "\n ", "\n ");
-    }
-
-    if (!rods.empty())
-    {
-        desc += "\n\nThis spell can be found in the following rod";
-        if (rods.size() > 1)
-            desc += "s";
-        desc += ":\n ";
-        desc += comma_separated_line(rods.begin(), rods.end(), "\n ", "\n ");
-    }
+    desc += "\n\nThis spell can be found in the following book";
+    if (books.size() > 1)
+        desc += "s";
+    desc += ":\n ";
+    desc += comma_separated_line(books.begin(), books.end(), "\n ", "\n ");
 
     return desc;
 }
@@ -734,7 +698,6 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
     me->colour = is_player_spell(spell) ? WHITE
-               : _is_rod_spell(spell)   ? LIGHTGREY
                                         : DARKGREY; // monster-only
 
     return me;
@@ -1085,14 +1048,14 @@ static int _describe_cloud(const string &key, const string &suffix,
 
 
 /**
- * Describe the given spell-holding item. (Book or rod)
+ * Describe the given spellbook.
  *
  * @param item      The item in question.
  * @return          0.
  *                  TODO: change to the last keypress (to allow exact match
  *                  support)
  */
-static int _describe_spell_item(const item_def &item)
+static int _describe_spellbook(const item_def &item)
 {
     const string desc = get_item_description(item, true);
     formatted_string fdesc;
@@ -1124,12 +1087,11 @@ static int _describe_item(const string &key, const string &suffix,
         // don't request description since _describe_key handles that
         stats = get_item_description(item, true, false, true);
     }
-    // spellbooks/rods are interactive & so require special handling
-    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    // spellbooks are interactive & so require special handling
+    else if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS))
     {
         item_colour(item);
-        return _describe_spell_item(item);
+        return _describe_spellbook(item);
     }
 
     return _describe_key(key, suffix, footer, stats);

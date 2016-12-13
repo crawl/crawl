@@ -1021,11 +1021,11 @@ KFEAT:  { = {
 # grouped by category.
 
 KFEAT:  C = scroll shop type:Identification suffix:Station count:17 greed:25 ; scroll of identify q:3
-KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:13 use_all ; \
+KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:12 use_all ; \
             book of summonings | book of spatial translocations | book of enchantments |\
             book of death | book of the sky | book of the warp |\
             book of the earth | book of burglary | book of annihilations |\
-            grand grimoire | necronomicon | not_cursed lightning rod
+            grand grimoire | necronomicon
 KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\

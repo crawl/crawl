@@ -84,9 +84,8 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
 int raw_spell_fail(spell_type spell);
 int stepdown_spellpower(int power);
 int calc_spell_power(spell_type spell, bool apply_intel,
-                     bool fail_rate_chk = false, bool cap_power = true,
-                     bool rod = false);
-int calc_spell_range(spell_type spell, int power = 0, bool rod = false);
+                     bool fail_rate_chk = false, bool cap_power = true);
+int calc_spell_range(spell_type spell, int power = 0);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 
@@ -114,11 +113,11 @@ string failure_rate_to_string(int fail);
 
 int power_to_barcount(int power);
 
-string spell_power_string(spell_type spell, bool rod = false);
-string spell_range_string(spell_type spell, bool rod = false);
+string spell_power_string(spell_type spell);
+string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange, char32_t caster_char);
 string spell_schools_string(spell_type spell);
-string spell_hunger_string(spell_type spell, bool rod = false);
+string spell_hunger_string(spell_type spell);
 string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);

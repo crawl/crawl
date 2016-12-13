@@ -640,16 +640,15 @@ is to Pakellas.
 %%%%
 Quick Charge ability
 
-Spends two thirds of your current pool of magic to charge a wand or rod. The
+Spends two thirds of your current pool of magic to charge a wand. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
 Supercharge ability
 
-Infuses magical energy into a rod or wand. For a rod, its recharge rate and
-capacity are set to slightly above the normal maximums for such a device;
-for wands, their capacity is significantly increased beyond normal and fully
-charged to this new capacity. This ability may only be used once.
+Infuses magical energy into a wand. Its capacity is significantly increased
+beyond normal and fully charged to this new capacity. This ability may only be
+used once.
 %%%%
 # Qazlal
 Upheaval ability

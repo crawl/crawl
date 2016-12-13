@@ -1686,7 +1686,7 @@ wizname = crawl.make_name()
 kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
 }}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
-KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
+KITEM:      i = ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
             wand of acid / staff of summoning / any book w:30 / any good_item w:15

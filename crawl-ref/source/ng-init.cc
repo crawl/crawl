@@ -470,7 +470,7 @@ void initialise_item_descriptions()
                         you.item_description[i][j] %= NDSC_JEWEL_PRI;
                     break;
 
-                case IDESC_STAVES: // staves and rods
+                case IDESC_STAVES: // staves
                     you.item_description[i][j] = random2(NDSC_STAVE_PRI
                                                          * NDSC_STAVE_SEC);
                     break;
