@@ -258,7 +258,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }

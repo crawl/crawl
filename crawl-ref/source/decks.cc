@@ -1690,20 +1690,20 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     case 0:
         // Wimpy, negative-enchantment weapon.
         wpn.plus = random2(3) - 2;
-        wpn.sub_type = (coinflip() ? WPN_QUARTERSTAFF : WPN_HAND_AXE);
+        wpn.sub_type = random_choose(WPN_QUARTERSTAFF, WPN_HAND_AXE);
 
         set_item_ego_type(wpn, OBJ_WEAPONS,
-                          coinflip() ? SPWPN_VENOM : SPWPN_NORMAL);
+                          random_choose(SPWPN_VENOM, SPWPN_NORMAL));
         break;
     case 1:
         // This is getting good.
         wpn.plus = random2(4) - 1;
-        wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_TRIDENT);
+        wpn.sub_type = random_choose(WPN_LONG_SWORD, WPN_TRIDENT);
 
         if (coinflip())
         {
             set_item_ego_type(wpn, OBJ_WEAPONS,
-                              coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
+                              random_choose(SPWPN_FLAMING, SPWPN_FREEZING));
         }
         else
             set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
@@ -1711,10 +1711,10 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     default:
         // Rare and powerful.
         wpn.plus = random2(4) + 2;
-        wpn.sub_type = (coinflip() ? WPN_DEMON_TRIDENT : WPN_EXECUTIONERS_AXE);
+        wpn.sub_type = random_choose(WPN_DEMON_TRIDENT, WPN_EXECUTIONERS_AXE);
 
         set_item_ego_type(wpn, OBJ_WEAPONS,
-                          coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
+                          random_choose(SPWPN_SPEED, SPWPN_ELECTROCUTION));
     }
 
     item_colour(wpn); // this is probably not needed

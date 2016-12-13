@@ -1063,7 +1063,7 @@ static int _shatter_mon_dice(const monster *mon)
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
-            return coinflip() ? 5 : 4;
+            return random_range(4, 5);
         // Double damage to bone.
         else if (mon->is_skeletal())
             return 6;
@@ -1192,7 +1192,7 @@ static int _shatter_player_dice()
     else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
         return 6;
     else if (you.form == TRAN_ICE_BEAST)
-        return coinflip() ? 5 : 4;
+        return random_range(4, 5);
     else
         return 3;
 }
@@ -1896,7 +1896,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
         mpr("The lightning arcs!");
-        pow /= (coinflip() ? 2 : 3);
+        pow /= random_range(2, 3);
         damage += apply_random_around_square([pow, agent] (coord_def where2) {
             return discharge_monsters(where2, pow, agent);
         }, where, true, 1);
@@ -1966,8 +1966,9 @@ spret_type cast_discharge(int pow, bool fail)
                  plural ? "Some" : "A",
                  plural ? "s" : "",
                  plural ? " themselves" : "s itself",
-                 plural ? "around" : (coinflip() ? "beside" :
-                                      coinflip() ? "behind" : "before"));
+                 plural ? "around" : random_choose_weighted(2, "beside",
+                                                            1, "behind",
+                                                            1, "before"));
         }
     }
     return SPRET_SUCCESS;

@@ -908,7 +908,7 @@ static void _evolve(int time_delta)
             mpr("You feel a genetic drift.");
             bool evol = one_chance_in(5) ?
                 delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
-                mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
                        "evolution", false, false, false, false, MUTCLASS_NORMAL,
                        true);
             // it would kill itself anyway, but let's speed that up

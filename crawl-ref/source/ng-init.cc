@@ -395,9 +395,9 @@ static int _get_random_coagulated_blood_desc()
 
 static int _get_random_blood_desc()
 {
-    return PDESCQ(coinflip() ? PDQ_NONE :
-                  coinflip() ? PDQ_VISCOUS
-                             : PDQ_SEDIMENTED, PDC_RED);
+    return PDESCQ(random_choose_weighted(2, PDQ_NONE,
+                                         1, PDQ_VISCOUS,
+                                         1, PDQ_SEDIMENTED), PDC_RED);
 }
 
 void initialise_item_descriptions()

@@ -174,7 +174,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
             }
         case EQ_HELMET:
             if (you_can_wear(EQ_HELMET) == MB_MAYBE)
-                return coinflip() ? ARM_HELMET : ARM_HAT;
+                return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
             return _acquirement_shield_type();
@@ -320,7 +320,7 @@ static armour_type _useless_armour_type()
             // Boots-wearers get bardings, bardings-wearers get the wrong
             // barding, everyone else gets boots.
             if (you_can_wear(EQ_BOOTS) == MB_TRUE)
-                return coinflip() ? ARM_CENTAUR_BARDING : ARM_NAGA_BARDING;
+                return random_choose(ARM_CENTAUR_BARDING, ARM_NAGA_BARDING);
             if (you.species == SP_NAGA)
                 return ARM_CENTAUR_BARDING;
             if (you.species == SP_CENTAUR)
@@ -331,7 +331,7 @@ static armour_type _useless_armour_type()
         case EQ_HELMET:
             if (you_can_wear(EQ_HELMET))
                 return ARM_HELMET;
-            return coinflip() ? ARM_HELMET : ARM_HAT;
+            return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
             return ARM_CLOAK;
         case EQ_SHIELD:
@@ -824,7 +824,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
             if (one_chance_in(8) && you.species != SP_FELID)
                 class_wanted = OBJ_RODS;
             else
-                class_wanted = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+                class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
         }
 
         // Vampires acquire blood, not food.

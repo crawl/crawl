@@ -1673,7 +1673,7 @@ bool attack::apply_damage_brand(const char *what)
         {
             miscast_level  = 0;
             miscast_type   = SPTYP_RANDOM;
-            miscast_target = coinflip() ? attacker : defender;
+            miscast_target = random_choose(attacker, defender);
         }
 
         if (responsible->is_player())

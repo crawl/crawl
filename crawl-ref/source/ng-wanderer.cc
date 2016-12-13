@@ -267,7 +267,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_SUMMONINGS:
-        book = coinflip() ? BOOK_MINOR_MAGIC : BOOK_CALLINGS;
+        book = random_choose(BOOK_MINOR_MAGIC, BOOK_CALLINGS);
         break;
 
     case SK_NECROMANCY:
@@ -279,7 +279,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_TRANSMUTATIONS:
-        book = coinflip() ? BOOK_GEOMANCY : BOOK_CHANGES;
+        book = random_choose(BOOK_GEOMANCY, BOOK_CHANGES);
         break;
 
     case SK_FIRE_MAGIC:

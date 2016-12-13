@@ -2210,9 +2210,9 @@ static void _ruin_level(Iterator iter,
             && !plant_forbidden_at(p))
         {
             mgen_data mg;
-            mg.cls = one_chance_in(20) ? MONS_BUSH  :
-                     coinflip()        ? MONS_PLANT :
-                     MONS_FUNGUS;
+            mg.cls = random_choose_weighted( 2, MONS_BUSH,
+                                            19, MONS_PLANT,
+                                            19, MONS_FUNGUS);
             mg.pos = p;
             mg.flags = MG_FORCE_PLACE;
             mons_place(mgen_data(mg));
@@ -5261,7 +5261,7 @@ static dungeon_feature_type _pick_an_altar()
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL);
             break;
 
         case BRANCH_ORC: // There are a few heretics
@@ -5659,7 +5659,7 @@ object_class_type item_in_shop(shop_type shop_type)
     case SHOP_EVOKABLES:
         if (one_chance_in(10))
             return OBJ_RODS;
-        return coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
@@ -6214,8 +6214,8 @@ coord_def dgn_region::random_edge_point() const
 {
     return x_chance_in_y(size.x, size.x + size.y) ?
                   coord_def(pos.x + random2(size.x),
-                             coinflip()? pos.y : pos.y + size.y - 1)
-                : coord_def(coinflip()? pos.x : pos.x + size.x - 1,
+                             random_choose(pos.y, pos.y + size.y - 1))
+                : coord_def(random_choose(pos.x, pos.x + size.x - 1),
                              pos.y + random2(size.y));
 }
 

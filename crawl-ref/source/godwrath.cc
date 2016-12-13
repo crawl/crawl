@@ -907,7 +907,7 @@ static bool _beogh_retribution()
     case 2: // send out one or two dancing weapons (12.5%)
     {
         int num_created = 0;
-        int num_to_create = (coinflip()) ? 1 : 2;
+        int num_to_create = random_range(1, 2);
 
         for (int i = 0; i < num_to_create; ++i)
         {

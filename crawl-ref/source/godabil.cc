@@ -3131,7 +3131,7 @@ int fedhas_rain(const coord_def &target)
                 && ftype == DNGN_FLOOR)
             {
                 if (create_monster(mgen_data(
-                                      coinflip() ? MONS_PLANT : MONS_FUNGUS,
+                                      random_choose(MONS_PLANT, MONS_FUNGUS),
                                       BEH_GOOD_NEUTRAL,
                                       *rad,
                                       MHITNOT,

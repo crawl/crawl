@@ -812,7 +812,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       1, SPARM_SPIRIT_SHIELD);
 
     case ARM_HELMET:
-        return coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
+        return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
 
     case ARM_GLOVES:
         return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);
@@ -1440,10 +1440,9 @@ static void _generate_scroll_item(item_def& item, int force_type,
                   && --tries > 0);
     }
 
-    if (one_chance_in(24))
-        item.quantity = (coinflip() ? 2 : 3);
-    else
-        item.quantity = 1;
+    item.quantity = random_choose_weighted(46, 1,
+                                            1, 2,
+                                            1, 3);
 
     item.plus = 0;
 }
@@ -1554,7 +1553,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         // staves of energy are 25% less common, wizardry/power
         // are more common
         if (item.sub_type == STAFF_ENERGY && one_chance_in(4))
-            item.sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER;
+            item.sub_type = random_choose(STAFF_WIZARDRY, STAFF_POWER);
     }
     else
         item.sub_type = force_type;
@@ -1877,7 +1876,7 @@ int items(bool allow_uniques,
                 || item.base_type == OBJ_WANDS)
             && random2(7) >= item_level)
         {
-            item.base_type = coinflip() ? OBJ_POTIONS : OBJ_SCROLLS;
+            item.base_type = random_choose(OBJ_POTIONS, OBJ_SCROLLS);
         }
     }
 
@@ -2183,20 +2182,14 @@ void item_set_appearance(item_def &item)
     {
     case OBJ_WEAPONS:
         if (_weapon_is_visibly_special(item))
-        {
-            set_equip_desc(item,
-                           (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED));
-        }
+            set_equip_desc(item, random_choose(ISFLAG_GLOWING, ISFLAG_RUNED));
         break;
 
     case OBJ_ARMOUR:
         if (_armour_is_visibly_special(item))
         {
-            const item_status_flag_type descs[] = { ISFLAG_GLOWING,
-                                                    ISFLAG_RUNED,
-                                                    ISFLAG_EMBROIDERED_SHINY };
-
-            set_equip_desc(item, RANDOM_ELEMENT(descs));
+            set_equip_desc(item, random_choose(ISFLAG_GLOWING, ISFLAG_RUNED,
+                                               ISFLAG_EMBROIDERED_SHINY));
         }
         break;
 
@@ -2250,7 +2243,7 @@ void makeitem_tests()
 #endif
         _generate_weapon_item(item,
                               coinflip(),
-                              coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS),
+                              random_choose(OBJ_RANDOM, random2(NUM_WEAPONS)),
                               level);
     }
 
@@ -2264,7 +2257,7 @@ void makeitem_tests()
             item.brand = SPARM_NORMAL;
         else
             item.brand = random2(NUM_REAL_SPECIAL_ARMOURS);
-        int type = coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS);
+        int type = random_choose(OBJ_RANDOM, random2(NUM_ARMOURS));
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_CAP)
             type = ARM_HAT;

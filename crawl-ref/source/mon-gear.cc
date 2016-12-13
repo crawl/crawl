@@ -1568,7 +1568,7 @@ static void _give_shield(monster* mon, int level)
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  coinflip() ? ARM_LARGE_SHIELD : ARM_SHIELD,
+                                  random_choose(ARM_LARGE_SHIELD, ARM_SHIELD),
                                   level);
         }
         break;
@@ -1581,7 +1581,7 @@ static void _give_shield(monster* mon, int level)
         if (mon->type != MONS_TENGU_WARRIOR && !one_chance_in(3))
             break;
         make_item_for_monster(mon, OBJ_ARMOUR,
-                              coinflip() ? ARM_BUCKLER : ARM_SHIELD,
+                              random_choose(ARM_BUCKLER, ARM_SHIELD),
                               level);
         break;
 
@@ -1666,14 +1666,14 @@ static void _give_shield(monster* mon, int level)
     case MONS_BLACK_SUN:
         if (one_chance_in(3))
         {
-            armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
+            armour_type shield_type = random_choose(ARM_BUCKLER, ARM_SHIELD);
             make_item_for_monster(mon, OBJ_ARMOUR, shield_type, level);
         }
         break;
 
     case MONS_WARMONGER:
         make_item_for_monster(mon, OBJ_ARMOUR,
-                              coinflip() ? ARM_LARGE_SHIELD : ARM_SHIELD,
+                              random_choose(ARM_LARGE_SHIELD, ARM_SHIELD),
                               ISPEC_GOOD_ITEM);
         break;
 
@@ -1760,7 +1760,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_GNOLL_SHAMAN:
     case MONS_MELIAI:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = coinflip() ? ARM_ROBE : ARM_LEATHER_ARMOUR;
+        item.sub_type  = random_choose(ARM_ROBE, ARM_LEATHER_ARMOUR);
         break;
 
     case MONS_SOJOBO:
@@ -1769,7 +1769,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_GNOLL_SERGEANT:
     case MONS_TENGU_REAVER:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = coinflip() ? ARM_RING_MAIL : ARM_SCALE_MAIL;
+        item.sub_type  = random_choose(ARM_RING_MAIL, ARM_SCALE_MAIL);
         if (type == MONS_TENGU_REAVER && one_chance_in(3))
             level = ISPEC_GOOD_ITEM;
         break;
@@ -1951,7 +1951,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_TENGU_WARRIOR:
     case MONS_IRONHEART_PRESERVER:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_RING_MAIL;
+        item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_RING_MAIL);
         break;
 
     case MONS_GASTRONOK:
@@ -2105,7 +2105,7 @@ int make_mons_armour(monster_type type, int level)
 
     case MONS_HALAZID_WARLOCK:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_ROBE;
+        item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_ROBE);
         break;
 
     default:

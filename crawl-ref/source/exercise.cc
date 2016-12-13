@@ -209,7 +209,7 @@ void practise_being_attacked()
 void practise_being_hit()
 {
     if (coinflip())
-        _check_train_armour(coinflip() ? 2 : 1);
+        _check_train_armour(random_range(1, 2));
     else if (coinflip())
         exercise(SK_FIGHTING, 1);
 }
