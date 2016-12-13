@@ -555,14 +555,6 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     if (pow >= 100 && (mon == MONS_FIRE_DRAGON || mon == MONS_ICE_DRAGON))
         how_many = 2;
 
-    // For good gods, switch away from shadow dragons (and, for TSO,
-    // golden dragons, since they poison) to storm/iron dragons.
-    if (player_will_anger_monster(mon)
-        || (god == GOD_SHINING_ONE && mon == MONS_GOLDEN_DRAGON))
-    {
-        mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
-    }
-
     for (int i = 0; i < how_many; ++i)
     {
         if (monster *dragon = create_monster(
