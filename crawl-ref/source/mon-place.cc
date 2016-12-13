@@ -2315,7 +2315,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
     case MONS_FAUN:
         if (!one_chance_in(3))
         {
-            band = coinflip() ? BAND_FAUNS : BAND_FAUN_PARTY;
+            band = random_choose(BAND_FAUNS, BAND_FAUN_PARTY);
             band_size = 2 + random2(2);
         }
         break;
@@ -2753,7 +2753,7 @@ static monster_type _band_member(band_type band, int which,
         if (which == 1 || which == 2 && one_chance_in(3))
         {
             if (x_chance_in_y(2, 3))
-                return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
+                return random_choose(MONS_BALRUG, MONS_BLIZZARD_DEMON);
             else
                 return random_demonspawn_job();
         }

@@ -953,7 +953,7 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
 // that includes Statue Form and is named after her.
 void make_book_roxanne_special(item_def *book)
 {
-    spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
+    spschool_flag_type disc = random_choose(SPTYP_TRANSMUTATION, SPTYP_EARTH);
     vector<spell_type> forced_spell = {SPELL_STATUE_FORM};
     build_themed_book(*book,
                       forced_spell_filter(forced_spell,

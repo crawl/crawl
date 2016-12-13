@@ -3275,7 +3275,7 @@ static void _find_good_alternate_move(monster* mons,
         const int FAR_AWAY = 1000000;
 
         // Try both directions (but randomise which one is first).
-        const int sdir = coinflip() ? j : -j;
+        const int sdir = random_choose(j, -j);
         const int inc = -2 * sdir;
 
         for (int mod = sdir, i = 0; i < 2; mod += inc, i++)

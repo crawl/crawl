@@ -6693,8 +6693,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                      plural ? "Some" : "A",
                      plural ? "s" : "",
                      plural ? " themselves" : "s itself",
-                     plural ? "around" : (coinflip() ? "beside" :
-                                          coinflip() ? "behind" : "before"),
+                     plural ? "around" : random_choose_weighted(2, "beside",
+                                                                1, "behind",
+                                                                1, "before"),
                      mons->name(DESC_THE).c_str());
             }
         }

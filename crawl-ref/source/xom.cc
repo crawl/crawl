@@ -2011,7 +2011,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     {
         string str = "A monocle briefly appears over your ";
-        str += coinflip() ? "right" : "left";
+        str += random_choose("right", "left");
         if (you.form == TRAN_SPIDER)
         {
             if (coinflip())
@@ -2138,7 +2138,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         item_def &item = **random_iterator(inv_items);
 
         string name = item.name(DESC_YOUR, false, false, false);
-        string verb = coinflip() ? "glow" : "vibrate";
+        string verb = random_choose("glow", "vibrate");
 
         if (item.quantity == 1)
             verb += "s";

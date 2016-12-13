@@ -247,7 +247,7 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 
     if (pow < 10)
         pow = 10;
-    const float off = (coinflip() ? -1 : 1) * 0.25;
+    const float off = random_choose(-0.25, 0.25);
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
     int inaccuracy = caster->inaccuracy();

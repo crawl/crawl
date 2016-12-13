@@ -475,7 +475,7 @@ item_def *monster::melee_weapon() const
     const bool secondary_is_melee = second_weapon
                                     && is_melee_weapon(*second_weapon);
     if (primary_is_melee && secondary_is_melee)
-        return coinflip() ? first_weapon : second_weapon;
+        return random_choose(first_weapon, second_weapon);
     if (primary_is_melee)
         return first_weapon;
     if (secondary_is_melee)

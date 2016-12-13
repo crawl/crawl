@@ -156,9 +156,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =
-        (!feat_is_reachable_past(grd(first_middle)) ? second_middle :
-         (!feat_is_reachable_past(grd(second_middle)) ? first_middle :
-          (coinflip() ? first_middle : second_middle)));
+        !feat_is_reachable_past(grd(first_middle)) ? second_middle :
+        !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+        random_choose(first_middle, second_middle);
 
     // Check for a monster in the way. If there is one, it blocks the reaching
     // attack 50% of the time, and the attack tries to hit it if it is hostile.

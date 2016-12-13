@@ -980,7 +980,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                 mpr("You choke on the stench!");
                 // effectively one or two turns, since it will be
                 // decremented right away
-                confuse_player(coinflip() ? 3 : 2);
+                confuse_player(random_range(2, 3));
                 return true;
             }
         }

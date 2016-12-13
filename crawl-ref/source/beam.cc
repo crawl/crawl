@@ -811,7 +811,7 @@ void bolt::fake_flavour()
         flavour = _chaos_beam_flavour(this);
     else if (real_flavour == BEAM_CRYSTAL && flavour == BEAM_CRYSTAL)
     {
-        flavour = coinflip() ? BEAM_FIRE : BEAM_COLD;
+        flavour = random_choose(BEAM_FIRE, BEAM_COLD);
         hit_verb = (flavour == BEAM_FIRE) ? "burns" :
                    (flavour == BEAM_COLD) ? "freezes"
                                           : "bugs";

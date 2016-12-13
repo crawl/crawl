@@ -208,7 +208,7 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
     dec_hp(5 + random2avg(19, 2), false);
     dec_mp(2 + random2avg(5, 2));
     make_hungry(100, false, true);
-    practise_evoking(coinflip() ? 2 : 1);
+    practise_evoking(random_range(1, 2));
 
     return false;
 }
@@ -486,7 +486,7 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _VARIABILITY_world_reacts(item_def *item)
 {
     if (x_chance_in_y(2, 5))
-        item->plus += (coinflip() ? +1 : -1);
+        item->plus += random_choose(+1, -1);
 
     if (item->plus < -4)
         item->plus = -4;

@@ -119,7 +119,7 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
     monster_type mon = MONS_PROGRAM_BUG;
 
     if (x_chance_in_y(10, pow + 1))
-        mon = coinflip() ? MONS_BAT : MONS_RAT;
+        mon = random_choose(MONS_BAT, MONS_RAT);
     else
         mon = MONS_QUOKKA;
 
@@ -629,12 +629,12 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         if (pow <= 100)
         {
             // bears
-            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_POLAR_BEAR;
+            mon = random_choose(MONS_BLACK_BEAR, MONS_POLAR_BEAR);
         }
         else if (pow <= 140)
         {
             // ogres
-            mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
+            mon = random_choose_weighted(1, MONS_TWO_HEADED_OGRE, 2, MONS_OGRE);
         }
         else if (pow <= 180)
         {
@@ -646,7 +646,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         else
         {
             // giants
-            mon = (coinflip()) ? MONS_CYCLOPS : MONS_STONE_GIANT;
+            mon = random_choose(MONS_CYCLOPS, MONS_STONE_GIANT);
         }
     }
 
