@@ -102,8 +102,7 @@ class targeter;
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
                                    targeter* hitfunc);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                       const item_def* const evoked_item = nullptr,
-                       bool fake_spell = false);
+                       const item_def* const evoked_item = nullptr);
 
 extern const char *fail_severity_adjs[];
 

@@ -3828,10 +3828,10 @@ bool god_hates_spellcasting(god_type god)
     return god == GOD_TROG;
 }
 
-bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
+bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 {
     if (god_hates_spellcasting(god))
-        return !rod_spell;
+        return !fake_spell;
 
     if (god_punishes_spell(spell, god))
         return true;

@@ -1073,14 +1073,11 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
  * to cancel it in response to a prompt?
  *
  * @param spell         The spell to be checked.
- * @param evoked        Whether the spell is being evoked from a wand or rod.
- * @param fake_spell    Whether the spell is some other kind of fake spell
- *                      (such as an innate or divine ability).
+ * @param fake_spell    Whether the spell is evoked, or from an innate or
+ *                      divine ability.
  * @return              Whether the spellcasting should be aborted.
  */
-static bool _spellcasting_aborted(spell_type spell,
-                                  bool evoked,
-                                  bool fake_spell)
+static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
 {
     string msg;
 
@@ -1089,11 +1086,11 @@ static bool _spellcasting_aborted(spell_type spell,
         // isn't evoked but still doesn't use the spell's MP. your_spells,
         // this function, and spell_uselessness_reason should take a flag
         // indicating whether MP should be checked (or should never check).
-        const int rest_mp = (evoked || fake_spell) ? 0 : spell_mana(spell);
+        const int rest_mp = fake_spell ? 0 : spell_mana(spell);
 
         // Temporarily restore MP so that we're not uncastable for lack of MP.
         unwind_var<int> fake_mp(you.magic_points, you.magic_points + rest_mp);
-        msg = spell_uselessness_reason(spell, true, true, evoked, fake_spell);
+        msg = spell_uselessness_reason(spell, true, true, fake_spell);
     }
 
     if (msg != "")
@@ -1125,7 +1122,7 @@ static bool _spellcasting_aborted(spell_type spell,
     if (Options.fail_severity_to_confirm > 0
         && Options.fail_severity_to_confirm <= severity
         && !crawl_state.disables[DIS_CONFIRMATIONS]
-        && !evoked && !fake_spell)
+        && !fake_spell)
     {
         string prompt = make_stringf("The spell is %s to cast%s "
                                      "Continue anyway?",
@@ -1288,14 +1285,12 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  * @param allow_fail    Whether spell-fail chance applies.
  * @param evoked_item   The wand/rod the spell was evoked from if applicable,
                         or nullptr.
- * @param fake_spell    Whether the spell was some other kind of fake spell
- *                      (such as an innate or divine ability).
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
  **/
 spret_type your_spells(spell_type spell, int powc, bool allow_fail,
-                       const item_def* const evoked_item, bool fake_spell)
+                       const item_def* const evoked_item)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (evoked_item)
@@ -1313,7 +1308,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (!wiz_cast && _spellcasting_aborted(spell, evoked_item, fake_spell))
+    if (!wiz_cast && _spellcasting_aborted(spell, !allow_fail))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);
@@ -1549,7 +1544,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         // badly you missed the spell. High power spells can be
         // quite nasty: 9 * 9 * 90 / 500 = 15 points of
         // contamination!
-        int nastiness = spell_difficulty(spell) * spell_difficulty(spell) * fail + 250;
+        int nastiness = spell_difficulty(spell) * spell_difficulty(spell)
+                        * fail + 250;
 
         const int cont_points = 2 * nastiness;
 
