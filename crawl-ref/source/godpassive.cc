@@ -1759,7 +1759,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication, bool prompt)
 
         if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
         {
-            const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay longer? (5 piety)",
+            const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay for longer? (5 piety)",
                                        you.weapon()->name(DESC_THE, false, true, false).c_str());
             if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
             {

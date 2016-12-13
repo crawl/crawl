@@ -3625,7 +3625,7 @@ bool ieoh_jian_kill_oldest_weapon(bool ignore_divine, bool prompt)
         if (divine_degree > 0)
             return false;
 
-        const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay longer? (5 piety)",
+        const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay for longer? (5 piety)",
                                    target_weapon->name(DESC_THE, false, true, false).c_str());
         if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
         {

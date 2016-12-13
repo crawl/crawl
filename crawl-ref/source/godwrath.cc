@@ -1866,7 +1866,7 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_patter
                     break;
             }
 
-            wpn.plus  = random2(3);
+            wpn.plus  = random2(3 + ieoh_jian_stolen_value());
             wpn.sub_type = subtype;
 
             set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
