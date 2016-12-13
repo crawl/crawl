@@ -344,7 +344,7 @@ ENDMAP
 NAME: sprint_mu_d1_spiders
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: two-headed ogre hd:3 hp:40
-MONS: hill giant hd:5 hp:68
+MONS: two-headed ogre hd:5 hp:68
 MONS: Erolcha
 MONS: redback
 KFEAT: ~ = net trap

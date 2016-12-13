@@ -3216,7 +3216,7 @@ ENDMAP
 NAME:   minmay_roctagon
 DEPTH:  D:12-, Depths:1-2, Elf
 ORIENT: float
-MONS:   hill giant / troll
+MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
 ITEM:   book of geomancy / book of the earth / manual of earth magic / \
         iron rod ident:type / staff of earth ident:type / \

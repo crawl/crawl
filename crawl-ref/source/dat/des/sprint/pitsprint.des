@@ -25,7 +25,7 @@ function base_monster_setup(e)
   e.kmons("B = steam dragon / crocodile / hippogriff /\
            killer bee band / hornet / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
-           hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
+           komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
            acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
@@ -116,7 +116,7 @@ function base_monster_setup(e)
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
            Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
-  e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
+  e.kmons("M = stone giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
   e.kmons("O = deep elf mage w:30 /\
@@ -2032,9 +2032,8 @@ NSUBST: + = 1:& / *:v
 KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
         orc sorcerer / orc high priest
 KMONS:  A = orc warlord
-KMONS:  b = hill giant /\
-        ogre / two-headed ogre / troll / deep troll /\
-        iron troll w:5 / deep troll/ ogre mage w:5 /\
+KMONS:  b = ogre / two-headed ogre / troll / deep troll /\
+        iron troll w:5 / deep troll / ogre mage w:5 /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
@@ -2079,8 +2078,7 @@ TAGS:   the_golden_pit
 KITEM:  2ABCD = golden rune of zot
 KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
         any ident:all w:33
-KMONS:  a = stone giant / frost giant / fire giant / ettin / titan /\
-        cyclops / hill giant
+KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
 KMONS:  A = titan
 # I'm sorry if you get an undead pit here
 KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\

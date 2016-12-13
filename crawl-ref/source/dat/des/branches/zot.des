@@ -658,7 +658,7 @@ SUBST:  1 = 1 .:5
 SUBST:  1 = 1 3
 MONS:   troll / deep troll / iron troll / ogre / two-headed ogre
 MONS:   moth of wrath
-MONS:   hill giant / stone giant / fire giant / frost giant / ettin / \
+MONS:   stone giant / fire giant / frost giant / ettin / \
         w:5 efreet / w:3 titan
 SUBST:  } = }:80 >, ) = ):80 >
 MAP

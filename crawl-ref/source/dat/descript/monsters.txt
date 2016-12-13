@@ -1329,12 +1329,6 @@ perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
 %%%%
-hill giant
-
-A massive, burly humanoid standing taller even than an ogre. It is uncivilized
-in every sense of the word, and has few recreational interests beyond smashing
-adventurers.
-%%%%
 hippogriff
 
 A hybrid with the hindquarters of a horse and the wings, head and talons of a

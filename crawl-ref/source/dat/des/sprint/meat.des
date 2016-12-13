@@ -39,7 +39,7 @@
                         "call_down_damnation.33.natural"
 
   local large_bag =
-    "hill giant hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
+    "two-headed ogre hp:400 hd:40 name:large_bag_of_meat n_rpl n_des " ..
     "n_spe n_zom  col:red generate_awake perm_ench:inner_flame " ..
     "; ring of slaying plus:100 not_cursed ident:all " ..
     "no_pickup . " ..

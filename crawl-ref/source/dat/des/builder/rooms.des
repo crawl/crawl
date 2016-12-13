@@ -70,7 +70,7 @@ function sroom_orc_lair(e)
 
     if level > 20 or you.in_branch("Elf") then
         mon = "orc priest w:7 / orc warrior w:12 / orc knight w:8 / "
-              .. " orc high priest w:2 / hill giant w:1"
+              .. " orc high priest w:2 / two-headed ogre w:1"
         lord_mon = "orc warlord"
     elseif level > 14 or you.in_branch("Orc") then
         mon = "orc w:6 / orc warrior w:8 / orc priest w:2 /  "

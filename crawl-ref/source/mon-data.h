@@ -277,6 +277,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_WASP)
     AXED_MON(MONS_MOTTLED_DRACONIAN)
     AXED_MON(MONS_DRACONIAN_ZEALOT)
+    AXED_MON(MONS_HILL_GIANT)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -2830,20 +2831,7 @@ DUMMY(MONS_MOTH, 'y', WHITE, "moth", TILEP_MONS_MOTH_OF_WRATH)
 },
 
 // cyclopes and giants ('C')
-DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant", TILEP_MONS_HILL_GIANT)
-
-{
-    MONS_HILL_GIANT, 'C', LIGHTRED, "hill giant",
-    M_WARM_BLOOD | M_SPEAKS,
-    MR_NO_FLAGS,
-    7, MONS_GIANT, MONS_HILL_GIANT, MH_NATURAL, 40,
-    { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    11, 605,
-    3, 4, MST_NO_SPELLS, CE_CLEAN, S_SHOUT,
-    I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
-    MONUSE_STARTING_EQUIPMENT, SIZE_GIANT, MON_SHAPE_HUMANOID,
-    {TILEP_MONS_HILL_GIANT}, TILE_CORPSE_HILL_GIANT
-},
+DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant", TILEP_MONS_STONE_GIANT)
 
 {
     MONS_CYCLOPS, 'C', YELLOW, "cyclops",

@@ -382,7 +382,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
@@ -421,7 +421,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3 / two-headed ogre zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
@@ -1565,7 +1565,7 @@ TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
-MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
+MONS:    ogre mage, two-headed ogre w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
 MAP
  .....

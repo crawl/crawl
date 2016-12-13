@@ -386,7 +386,7 @@ KMONS:    1 = orc knight / orc warrior
 KMONS:    2 = orc sorcerer / orc wizard
 KMONS:    3 = orc high priest / orc priest
 KMONS:    4 = ogre / two-headed ogre / ogre mage w:7
-KMONS:    5 = troll / deep troll / hill giant / ogre mage w:7 / stone giant w:1 /\
+KMONS:    5 = troll / deep troll / ogre mage w:7 / stone giant w:1 /\
               ettin w:1 / iron troll w:1
 KMONS:    6 = orc knight / orc sorcerer / orc high priest / orc w:25
 KMONS:    7 = orc knight / orc high priest

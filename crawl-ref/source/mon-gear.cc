@@ -665,7 +665,6 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_GREAT_MACE,       1 },
         } } },
         { MONS_OGRE,                    { OGRE_WEAPONS } },
-        { MONS_HILL_GIANT,              { OGRE_WEAPONS } },
         { MONS_EROLCHA,                 { OGRE_WEAPONS } },
         { MONS_ILSUIW, {
             { { WPN_TRIDENT,            1 } },
@@ -1459,7 +1458,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         case MONS_DRACONIAN_KNIGHT:
         case MONS_GNOLL:
-        case MONS_HILL_GIANT:
             if (!level || !one_chance_in(20))
                 break;
             // deliberate fall-through to harold
