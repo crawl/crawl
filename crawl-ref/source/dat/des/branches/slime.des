@@ -707,8 +707,8 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 : lua_marker("Z", fixup_marker)
 
 {{
-    set_feature_name("stone_wall", "rune carved stone wall")
-    set_feature_name("clear_stone_wall", "rune carved clear stone wall")
+    set_feature_name("stone_wall", "rune-carved stone wall")
+    set_feature_name("clear_stone_wall", "rune-carved clear stone wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

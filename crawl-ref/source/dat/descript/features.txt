@@ -860,12 +860,12 @@ A silver wall
 A wall made of pure silver.
 %%%%
 # Slime:$
-A rune carved stone wall
+A rune-carved stone wall
 
 A strangely slime-free stone wall, carved all over with countless protective
 runes.
 %%%%
-A rune carved clear stone wall
+A rune-carved clear stone wall
 
 A strangely slime-free stone wall, with strange lights twinkling within its
 airy confines. Mystical runes are scattered across its surface, seemingly
