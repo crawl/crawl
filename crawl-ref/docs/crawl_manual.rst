@@ -1519,13 +1519,14 @@ Ogres
   are good at throwing things, in particular boulders.
 
 Trolls
-  Trolls are like Ogres, but even nastier. They have thick, knobbly skins of any
-  colour from putrid green to mucky brown, which are covered in patches of thick
-  fur, and their mouths are full of ichor-dripping fangs.
+  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
+  skins of any colour from putrid green to mucky brown, which are covered in
+  patches of thick fur.
 
-  They can rip creatures apart with their claws, and regenerate very quickly
-  from even the most terrible wounds. They learn slowly indeed - as slowly as
-  Demonspawn - and need a great amount of food to survive.
+  They are incredibly strong, and have a lightning-fast metabolism - requiring
+  a great deal of food to survive, but regenerating rapidly from even the most
+  terrible wounds. However, they are hopeless at spellcasting and learn most
+  skills very slowly.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
