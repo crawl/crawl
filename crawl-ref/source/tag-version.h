@@ -200,6 +200,7 @@ enum tag_minor_version
     TAG_MINOR_NO_PRIORITY,         // Remove CHANCE priority in map definitions.
     TAG_MINOR_MOTTLED_REMOVAL,     // Mottled dracos get breathe fire
     TAG_MINOR_NEMELEX_WRATH,       // Nemelex loses the passive wrath component
+    TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

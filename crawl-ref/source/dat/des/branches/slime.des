@@ -8,8 +8,7 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local seen = dgn.seen_destroy_feat("stone_wall")
-        seen = dgn.seen_destroy_feat("clear_stone_wall") or seen
+  local seen = dgn.seen_destroy_feat("clear_stone_wall")
 
   if you.god() == "Jiyva" and you.piety_rank() >= 6 then
     if you.silenced() then
@@ -709,6 +708,7 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 
 {{
     set_feature_name("stone_wall", "rune carved stone wall")
+    set_feature_name("clear_stone_wall", "rune carved clear stone wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -739,14 +739,14 @@ xxxxxxxxxxxxx'.'................"cc*cc..cc*cc".................''xxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxxxxxxxx
 xxxxxxxxxxxx''..............."cc*|P|*c4cc*|P|*cc"...............'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
-xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
-xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
+xxxxxxxxxxxx'................"cc**|*nc..cn*|**cc"................'''xxxxxxxxxxxx
+xxxxxxxxxxxx'................"ccc**n|nc4c|n**ccc"..................xxxxxxxxxxxxx
+xxxxxxxxxxx'................."cccccccn.3nncccccc"..................'xxxxxxxxxxxx
 xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
 xxxxxxxxxxx'..................2.c.4.c..Z.c.4.c.2....................'xxxxxxxxxxx
-xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
+xxxxxxxxxx'..........)......."ccccccnn3.nccccccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."ccc**n|cc4n|n**ccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."cc**|*nc..cn*|**cc"..................'xxxxxxxxxxxx
 xxxxxxxxx'..................."cc*|P|*c4cc*|P|*cc"..................'xxxxxxxxxxxx
 xxxxxxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxxxxxxxx
 xxxxxxxxxxx'..................."cc***cc4c***cc"...................'xxxxxxxxxxxxx
