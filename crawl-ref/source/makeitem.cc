@@ -730,8 +730,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // 10% of boots become barding.
         if (item.sub_type == ARM_BOOTS && one_chance_in(10))
         {
-            item.sub_type = coinflip() ? ARM_NAGA_BARDING
-                                       : ARM_CENTAUR_BARDING;
+            item.sub_type = random_choose(ARM_NAGA_BARDING,
+                                          ARM_CENTAUR_BARDING);
         }
 
         // Determine enchantment and cursedness.
@@ -2227,10 +2227,8 @@ void makeitem_tests()
         item.clear();
         level = _test_item_level();
         item.base_type = OBJ_WEAPONS;
-        if (coinflip())
-            item.brand = SPWPN_NORMAL;
-        else
-            item.brand = random2(NUM_REAL_SPECIAL_WEAPONS);
+        item.brand = coinflip() ? SPWPN_NORMAL
+                                : random2(NUM_REAL_SPECIAL_WEAPONS);
 #if TAG_MAJOR_VERSION == 34
         if (item.brand == SPWPN_ORC_SLAYING
             || item.brand == SPWPN_REACHING
@@ -2253,10 +2251,8 @@ void makeitem_tests()
         item.clear();
         level = _test_item_level();
         item.base_type = OBJ_ARMOUR;
-        if (coinflip())
-            item.brand = SPARM_NORMAL;
-        else
-            item.brand = random2(NUM_REAL_SPECIAL_ARMOURS);
+        item.brand = coinflip() ? SPARM_NORMAL
+                                : random2(NUM_REAL_SPECIAL_ARMOURS);
         int type = coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS);
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_CAP)
