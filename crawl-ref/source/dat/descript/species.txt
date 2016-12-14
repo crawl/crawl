@@ -108,8 +108,8 @@ and spellcasters.
 %%%%
 Troll
 
-Trolls are large brutes with powerful claws, always hungering for raw meat.
-They regenerate health rapidly.
+Trolls are monstrous creatures with powerful claws, always hungering for raw
+meat. They regenerate health rapidly.
 %%%%
 Vampire
 
