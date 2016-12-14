@@ -2243,7 +2243,7 @@ void makeitem_tests()
 #endif
         _generate_weapon_item(item,
                               coinflip(),
-                              random_choose(OBJ_RANDOM, random2(NUM_WEAPONS)),
+                              coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS),
                               level);
     }
 
@@ -2257,7 +2257,7 @@ void makeitem_tests()
             item.brand = SPARM_NORMAL;
         else
             item.brand = random2(NUM_REAL_SPECIAL_ARMOURS);
-        int type = random_choose(OBJ_RANDOM, random2(NUM_ARMOURS));
+        int type = coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS);
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_CAP)
             type = ARM_HAT;
