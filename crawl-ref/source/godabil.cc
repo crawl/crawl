@@ -7213,7 +7213,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     you.time_taken = you.attack_delay(&item).roll();
 
     // Create message.
-    mprf("You project %s.", item.name(DESC_THE, false, true).c_str());
+    mprf("You project %s.", item.name(DESC_THE, false, true, false).c_str());
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.pierce    = false;
@@ -7235,12 +7235,12 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     monster* mons = ieoh_jian_manifest_weapon_monster(pbolt.target, summoned_copy);
 
     if (!mons)
-        mprf("%s bounces wildly and flies back to you!", item.name(DESC_THE, false, true).c_str());
+        mprf("%s bounces wildly and flies back to you!", item.name(DESC_THE, false, true, false).c_str());
     else
     {
         // Activates the flying weapon to attack for a while.
         float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-        int duration = IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
+        int duration = 0.4 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
         dprf("activating IJC flying weapon for combat with duration %d", duration); 
         mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, duration);
 

@@ -2180,12 +2180,12 @@ item_def* monster_die(monster* mons, killer_type killer,
             {
                 reformed = true;
                 if (you.can_see(*mons) && !silent)
-                    mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true).c_str());
+                    mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
 
                 if (was_active)
                 {
                     float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-                    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
+                    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, 0.4 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
                     new_mons->add_ench(combat_active);
                 }
             }
@@ -2194,7 +2194,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         else
         {
             if (you.can_see(*mons) && !silent)
-                mprf("%s shatters in a myriad of steel fragments!", mons->weapon()->name(DESC_THE, false, true).c_str());
+                mprf("%s shatters in a myriad of steel fragments!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
 
             you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
         }
@@ -3625,12 +3625,12 @@ bool ieoh_jian_kill_oldest_weapon(bool ignore_divine, bool prompt)
         if (divine_degree > 0)
             return false;
 
-        const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay for longer? (5 piety)",
+        const string promptstr = make_stringf("%s is about to ascend to the heavens. Spend piety for it to stay for longer?",
                                    target_weapon->name(DESC_THE, false, true, false).c_str());
         if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
         {
             simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
-            lose_piety(5);
+            lose_piety(8);
             target_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
             return false;
         }

@@ -922,14 +922,14 @@ static string _describe_weapon(const item_def &item, bool verbose)
             break;
         }
 
-        const char* lunge_text = "\n\n<blue>Martial Mastery:</blue> Short blades and axes can be used to"
+        const char* lunge_text = "\n\n<lightred>Martial Mastery:</lightred> Short blades and axes can be used to"
                                  " strike with a powerful lunging attack, by moving towards an enemy.";
         const char* lunge_pp_text = " This technique is extremely effective at striking pressure points.";
 
-        const char* whirlwind_text = "\n\n<blue>Martial Mastery:</blue> Long blades and maces can be used to hit"
+        const char* whirlwind_text = "\n\n<lightred>Martial Mastery:</lightred> Long blades and maces can be used to hit"
                                      " nearby enemies in a whirlwind, by moving around them.";
         const char* whirlwind_pp_text = " This technique is moderately effective at striking pressure points.";
-        const char* pole_vault_text = "\n\n<blue>Martial Mastery:</blue> Polearms and staves can be used to pole vault by moving"
+        const char* pole_vault_text = "\n\n<lightred>Martial Mastery:</lightred> Polearms and staves can be used to pole vault by moving"
                                       " against a solid obstacle, performing an airborne attack to enemies near your landing spot.";
         const char* pole_vault_pp_text = " This technique is very effective at striking pressure points.";
 
@@ -957,6 +957,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             default:
                 break;
             }
+    }
+
+    if (item.props.exists(IEOH_JIAN_OVERENCHANTED))
+    {
+        description += " \n\n<lightred>It posesses an unusually powerful enchantment, granted temporarily by the Ieoh Jian Council"
+                       " to match the strength of your own weapon.</lightred>";
     }
 
     // ident known & no brand but still glowing

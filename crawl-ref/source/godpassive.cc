@@ -1421,6 +1421,19 @@ vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you)
     return monsters;
 }
 
+static item_def* _ieoh_jian_get_owned_weapon()
+{
+    auto weapons = find_ieoh_jian_manifested_weapons(true);
+
+    if (!weapons.empty()) 
+        return weapons.at(0)->weapon();
+
+    if (you.weapon() && !you.weapon()->props.exists(IEOH_JIAN_SLOT) && !you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+        return you.weapon();
+
+    return nullptr;
+}
+
 // Gives weights to Ieoh Jian weapons and brands based on an piety and invocations.
 //
 // The chance to manifest certain "tiers" of weapons and brands keeps changing as you increase in level and 
@@ -1759,12 +1772,12 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication, bool prompt)
 
         if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
         {
-            const string promptstr = make_stringf("%s is about to ascend to the heavens. Pray for it to stay for longer? (5 piety)",
+            const string promptstr = make_stringf("%s is about to ascend to the heavens. Spend piety for it to stay for longer?",
                                        you.weapon()->name(DESC_THE, false, true, false).c_str());
             if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
             {
                 simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
-                lose_piety(5);
+                lose_piety(8);
                 you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
                 return false;
             }
@@ -1773,7 +1786,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication, bool prompt)
             invalidate_agrid(true);
         }
         else
-            mprf("%s shatters in your %s!", you.weapon()->name(DESC_THE, false, true).c_str(), you.hand_name(false).c_str());
+            mprf("%s shatters in your %s!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
 
         int inventory_index = you.equip[EQ_WEAPON];
         unwield_item(false, true);
@@ -1861,6 +1874,18 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
 
     wpn.props[IEOH_JIAN_SLOT] = (int)(theirs_num + 1);
 
+    // Weapons are temporarily overenchanted to match your weapon strength.
+    if (!wpn.props.exists(IEOH_JIAN_DIVINE_DEGREE))
+    {
+        auto your_weapon = _ieoh_jian_get_owned_weapon();
+        if (your_weapon && your_weapon->plus > wpn.plus)
+        {
+            wpn.props[IEOH_JIAN_OVERENCHANTED] = your_weapon->plus - wpn.plus;
+            wpn.plus = your_weapon->plus;
+            wpn.inscription += "overenchanted";
+        }
+    }
+
     const monster* mons = ieoh_jian_manifest_weapon_monster(position, wpn);
 
     if (!mons)
@@ -1869,12 +1894,17 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         return;
     }
 
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 1.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
 
     if (wpn.props.exists(IEOH_JIAN_DIVINE_DEGREE))
-        mprf(MSGCH_GOD, "%s manifests in a flash of light!", wpn.name(DESC_A, false, true).c_str());
+        mprf(MSGCH_GOD, "%s manifests in a flash of light!", wpn.name(DESC_A, false, true, false).c_str());
     else
-        mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true).c_str());
+    {
+        if (wpn.props.exists(IEOH_JIAN_OVERENCHANTED))
+            mprf("%s manifests from thin air, drawing energy from your weapon!", wpn.name(DESC_A, false, true, false).c_str());
+        else
+            mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true, false).c_str());
+    }
 }
 
 item_def* ieoh_jian_get_current_divine_weapon()
@@ -2018,7 +2048,7 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 
         if (swap_success && have_passive(passive_t::afterimage))
         {
-            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = div_rand_round(10 * IEOH_JIAN_ATTENTION_SPAN, 15);
+            you.duration[DUR_IEOH_JIAN_AFTERIMAGE] = div_rand_round(10 * IEOH_JIAN_ATTENTION_SPAN, 40);
             you.redraw_evasion = true;
             update_screen();
         }
