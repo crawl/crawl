@@ -1062,7 +1062,7 @@ bool do_wear_armour(int item, bool quiet)
         start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1), invitem);
 
     if (you_worship(GOD_IEOH_JIAN) && you.species != SP_FORMICID &&  slot == EQ_SHIELD)
-        mprf(MSGCH_GOD, "A shield? That cowardly tool is undeserving of our respect. We don't oppose it, but our help will be diminished.");
+        mprf(MSGCH_GOD, "A shield? That tool is foreign to us. Well then, we shall only manifest one handed weapons.");
 
     return true;
 }

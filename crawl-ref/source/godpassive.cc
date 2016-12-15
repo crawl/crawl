@@ -1526,8 +1526,18 @@ int ieoh_jian_stolen_value()
     return 0;
 }
 
+// Boost the weight of other categories to compensate for the loss of a two handed equivalent?
+static int _hands_boost(weapon_type big_type)
+{
+    return (hands_reqd(&you, OBJ_WEAPONS, big_type) == HANDS_TWO && you.shield()) ? 1 : 0;
+}
+
 static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
 {
+
+    dprf("Choosing with the following tier weights: %d %d %d",
+         _weight_by_tier(0), _weight_by_tier(1), _weight_by_tier(2));
+
     FixedVector<int, _ieoh_jian_num_weapons> weights
     (
         //// M&F
@@ -1535,9 +1545,9 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
         2 * _weight_by_tier(0),//WPN_MACE,
 
         _weight_by_tier(0),//WPN_FLAIL,
-        _weight_by_tier(1),//WPN_MORNINGSTAR,
+        _weight_by_tier(1) * (1 + 2*_hands_boost(WPN_DIRE_FLAIL)),//WPN_MORNINGSTAR,
         _weight_by_tier(1),//WPN_DIRE_FLAIL,
-        _weight_by_tier(1) + 2 * _weight_by_tier(2),//WPN_EVENINGSTAR,
+        _weight_by_tier(1) + (2 + 2 *_hands_boost(WPN_GREAT_MACE)) * _weight_by_tier(2),//WPN_EVENINGSTAR,
         _weight_by_tier(1) + 2 * _weight_by_tier(2),//WPN_GREAT_MACE,
         2 * _weight_by_tier(1),//WPN_GIANT_CLUB,
         2 * _weight_by_tier(2),//WPN_GIANT_SPIKED_CLUB,
@@ -1551,14 +1561,16 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
         //// LB
         2 * _weight_by_tier(0),//WPN_FALCHION,
         2 * _weight_by_tier(0),//WPN_LONG_SWORD,
-        2 * _weight_by_tier(1),//WPN_SCIMITAR,
+        (2 + 2*_hands_boost(WPN_GREAT_SWORD)) * _weight_by_tier(1),//WPN_SCIMITAR,
         2 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_GREAT_SWORD,
-        2 * _weight_by_tier(2),//WPN_DOUBLE_SWORD,
+        (2 + 2*_hands_boost(WPN_TRIPLE_SWORD)) * _weight_by_tier(2),//WPN_DOUBLE_SWORD,
         _weight_by_tier(2),//WPN_TRIPLE_SWORD,
 
         //// Polearms
         _weight_by_tier(0),//WPN_SPEAR,
-        _weight_by_tier(0),//WPN_TRIDENT,
+        (1 + 2 * _hands_boost(WPN_HALBERD)) * _weight_by_tier(0) 
+            + (4 * _hands_boost(WPN_GLAIVE)) * _weight_by_tier(1)//WPN_TRIDENT,
+            + (4 * _hands_boost(WPN_BARDICHE)) * _weight_by_tier(2),//WPN_TRIDENT,
         _weight_by_tier(0),//WPN_HALBERD,
         _weight_by_tier(0) + _weight_by_tier(1),//WPN_SCYTHE,
         2 * _weight_by_tier(1) + _weight_by_tier(2),//WPN_GLAIVE,
@@ -1567,7 +1579,8 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
         //// Axes
         3 * _weight_by_tier(0),//WPN_HAND_AXE,
         _weight_by_tier(0),//WPN_WAR_AXE,
-        2 * _weight_by_tier(1) + 1 * _weight_by_tier(2),//WPN_BROAD_AXE,
+        (2 + 2*_hands_boost(WPN_BATTLEAXE)) * _weight_by_tier(1) 
+            + (1 + 3 * _hands_boost(WPN_EXECUTIONERS_AXE)) * _weight_by_tier(2),//WPN_BROAD_AXE,
         2 * _weight_by_tier(1),//WPN_BATTLEAXE,
         3 * _weight_by_tier(2),//WPN_EXECUTIONERS_AXE,
 
@@ -1576,8 +1589,6 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
         3 * _weight_by_tier(1) + 4 * _weight_by_tier(2)//WPN_LAJATANG
     );
 
-    dprf("Choosing with the following tier weights: %d %d %d",
-         _weight_by_tier(0), _weight_by_tier(1), _weight_by_tier(2));
     auto manifested = find_ieoh_jian_manifested_weapons(false);
 
     // We get rid of all base types for which there is already a manifested IJC weapon.

@@ -3505,7 +3505,7 @@ static void _join_pakellas()
 static void _join_ieoh_jian()
 {
     if (you.shield() && you.species != SP_FORMICID)
-        mprf(MSGCH_GOD, "A shield? That cowardly tool is undeserving of our respect. We don't oppose it, but our help will be diminished.");
+        mprf(MSGCH_GOD, "A shield? That tool is foreign to us. Well then, we shall only manifest one handed weapons.");
 
     if (you.weapon() && is_range_weapon(*(you.weapon())))
         mprf(MSGCH_GOD, "A ranged weapon? Pathetic! Forfeit it at once.");
