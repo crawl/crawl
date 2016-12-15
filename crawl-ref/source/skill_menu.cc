@@ -604,7 +604,7 @@ string SkillMenuSwitch::get_help()
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
             if (you_worship(GOD_IEOH_JIAN))
-                result += " The Ieoh Jian council substantially improves your martial cross-training.";
+                result += " The Ieoh Jian Council substantially improves your martial cross-training.";
         }
 
         if (skm.is_set(SKMF_REDUCED))

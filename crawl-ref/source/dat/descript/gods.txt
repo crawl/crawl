@@ -312,7 +312,8 @@ and armour; and mutate followers to better reflect Jiyva's image.
 Ieoh Jian powers
 
 By engaging in close quarters combat, the Ieoh Jian Council will manifest flying
-weapons around the follower, which they can grab and wield at will. They will later be 
+weapons around the follower, which they can grab and wield at will, and which will
+always be at least comparable in power to their own weapon. They will later be
 initiated in the path of martial arts, learning to perform martial techniques such as
 aerial strikes with staves and spears, powerful lunges with daggers and axes, and 
 spinning attacks with maces and long blades. They will be taught the technique necessary
