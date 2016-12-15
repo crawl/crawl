@@ -1512,6 +1512,26 @@ static const FixedVector<int, _ieoh_jian_num_weapons> _ieoh_jian_weapon_types
     WPN_LAJATANG
 );
 
+static const int _ieoh_jian_num_divine_weapons = 8;
+
+static const FixedVector<int, _ieoh_jian_num_divine_weapons> _ieoh_jian_divine_weapons
+(
+    // SB
+    UNRAND_DIVINE_DEER_HORN_KNIFE,
+    // LB
+    UNRAND_DIVINE_CHANG_DAO,
+    UNRAND_DIVINE_HOOK_BLADE,
+    // Axes
+    UNRAND_DIVINE_YUE,
+    // MF
+    UNRAND_DIVINE_METEOR_HAMMER,
+    UNRAND_DIVINE_CHUI,
+    // Polearms
+    UNRAND_DIVINE_GUAN_DAO,
+    // Staves
+    UNRAND_DIVINE_MONK_SPADE
+);
+
 int ieoh_jian_calc_power_for_weapon(weapon_type sub_type)
 {
     return you.skill(weapon_attack_skill(sub_type), 2, false) + you.skill(SK_INVOCATIONS, 2, false);
@@ -1670,30 +1690,35 @@ static bool _ieoh_jian_choose_normal_weapon(item_def& weapon)
 
 static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
 {
-    switch (you.body_size() < SIZE_MEDIUM ? random2(2) : random2(6))
-    {
-        case 0:
-            make_item_unrandart(weapon, UNRAND_DIVINE_DEER_HORN_KNIFE);
-            break;
-        case 1:
-            make_item_unrandart(weapon, UNRAND_DIVINE_MONK_SPADE);
-            break;
-        case 2:
-            make_item_unrandart(weapon, UNRAND_DIVINE_GUAN_DAO);
-            break;
-        case 3:
-            make_item_unrandart(weapon, UNRAND_DIVINE_CHANG_DAO);
-            break;
-        case 4:
-            make_item_unrandart(weapon, UNRAND_DIVINE_METEOR_HAMMER);
-            break;
-        case 5:
-            make_item_unrandart(weapon, UNRAND_DIVINE_YUE);
-            break;
-        default:
-            break;
-    }
+    FixedVector<int, _ieoh_jian_num_divine_weapons> weights
+    (
+        2, //UNRAND_DIVINE_DEER_HORN_KNIFE
+        1, //UNRAND_DIVINE_CHANG_DAO,
+        1 + _hands_boost(WPN_GREAT_SWORD), //UNRAND_DIVINE_HOOK_BLADE,
+        2, //UNRAND_DIVINE_YUE,
+        1, //UNRAND_DIVINE_METEOR_HAMMER,
+        1 + _hands_boost(WPN_DIRE_FLAIL), //UNRAND_DIVINE_CHUI,
+        2, //UNRAND_DIVINE_GUAN_DAO,
+        2 //UNRAND_DIVINE_MONK_SPADE
+    );
+    if (!you_could_wield_weapon_type(WPN_GREAT_SWORD)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_GREAT_SWORD) == HANDS_TWO) && you.shield()))
+        weights[1] = 0;
+    if (!you_could_wield_weapon_type(WPN_EXECUTIONERS_AXE)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_EXECUTIONERS_AXE) == HANDS_TWO) && you.shield()))
+        weights[3] = 0;
+    if (!you_could_wield_weapon_type(WPN_DIRE_FLAIL)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_DIRE_FLAIL) == HANDS_TWO) && you.shield()))
+        weights[4] = 0;
+    if (!you_could_wield_weapon_type(WPN_GLAIVE)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_GLAIVE) == HANDS_TWO) && you.shield()))
+        weights[6] = 0;
+    if (!you_could_wield_weapon_type(WPN_LAJATANG)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_LAJATANG) == HANDS_TWO) && you.shield()))
+        weights[7] = 0;
 
+    int index = random_choose_weighted(weights);
+    make_item_unrandart(weapon, _ieoh_jian_divine_weapons[index]);
     weapon.quantity = 1;
     weapon.props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
     return true;

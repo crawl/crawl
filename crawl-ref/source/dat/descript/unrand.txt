@@ -660,11 +660,24 @@ An exotic, heavy polearm belonging to the Ieoh Jian Council's finest
 collection of weapons. It enhances the wielder's momentum, causing the first
 attack made after moving to deal increased damage.
 %%%%
+divine hook blade
+
+An exotic, hook-shaped sword belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
 divine chang dao
 
 An exotic, massive sword belonging to the Ieoh Jian Council's finest
 collection of weapons. It enhances the wielder's momentum, causing the first
 attack made after moving to deal increased damage.
+%%%%
+divine chui
+
+An exotic mace, consisting of a threatening serpent head biting a steel sphere,
+belonging to the Ieoh Jian Council's finest collection of weapons. It enhances 
+the wielder's momentum, causing the first attack made after moving to deal 
+increased damage.
 %%%%
 divine meteor hammer
 
