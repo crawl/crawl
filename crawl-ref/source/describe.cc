@@ -243,9 +243,7 @@ static vector<string> _randart_propnames(const item_def& item,
         if (*type)
             propnames.push_back(type);
     }
-    else if ((item_ident(item, ISFLAG_KNOW_TYPE)
-              || is_artefact(item)
-                 && artefact_known_property(item, ARTP_BRAND))
+    else if (item_brand_known(item)
              && !(is_unrandom_artefact(item) && entry
                   && entry->flags & UNRAND_FLAG_SKIP_EGO))
     {

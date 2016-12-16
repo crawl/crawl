@@ -1447,12 +1447,7 @@ bool attack::apply_damage_brand(const char *what)
     bool ret = false;
 
     if (using_weapon())
-    {
-        if (is_artefact(*weapon))
-            brand_was_known = artefact_known_property(*weapon, ARTP_BRAND);
-        else
-            brand_was_known = item_type_known(*weapon);
-    }
+        brand_was_known = item_brand_known(*weapon);
 
     special_damage = 0;
     obvious_effect = false;
