@@ -625,7 +625,7 @@ static const ability_def Ability_List[] =
 
     // Ieoh Jian
     { ABIL_IEOH_JIAN_PROJECT_WEAPON, "Project Weapon",
-        3, 0, 80, 4, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
+        3, 0, 80, 5, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
         2, 0, 0, 0, {FAIL_INVO, 20, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL,"Steal And Renounce",

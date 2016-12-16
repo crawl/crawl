@@ -299,8 +299,8 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     // Ieoh Jian
     {
         { 0, passive_t::spawn_weapon_on_hit, "your melee attacks can spawn flying weapons nearby" },
-        { 2, passive_t::martial_weapon_mastery, "perform acrobatic attacks. read your weapon description for details" },
-        { 4, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
+        { 1, passive_t::martial_weapon_mastery, "perform acrobatic attacks. read your weapon description for details" },
+        { 3, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
         { 5, passive_t::afterimage, "leave a distracting afterimage after swapping weapons" }, 
     },
 };
