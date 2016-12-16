@@ -2166,6 +2166,13 @@ bool item_type_has_ids(object_class_type base_type)
         || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
 }
 
+bool item_brand_known(const item_def& item)
+{
+    return item_ident(item, ISFLAG_KNOW_TYPE)
+           || is_artefact(item)
+           && artefact_known_property(item, ARTP_BRAND);
+}
+
 bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))

@@ -844,7 +844,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
      (float) property(item, PWPN_SPEED) / 10,
-     (float) weapon_min_delay(item) / 10,
+     (float) weapon_min_delay(item, item_brand_known(item)) / 10,
      weapon_min_delay_skill(item),
      your_skill.c_str());
 
