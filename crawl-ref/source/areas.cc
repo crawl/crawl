@@ -611,7 +611,7 @@ int monster::halo_radius() const
 
     if (weap && (weap->flags & ISFLAG_UNRANDART)
         && weap->unrand_idx >= UNRAND_DIVINE_DEER_HORN_KNIFE
-        && weap->unrand_idx <= UNRAND_DIVINE_METEOR_HAMMER)
+        && weap->unrand_idx <= UNRAND_DIVINE_CHUI)
         size = 1;
 
     if (!(holiness() & MH_HOLY))
