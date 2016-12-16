@@ -2078,6 +2078,21 @@ string god_name_jiyva(bool second_name)
     return name;
 }
 
+string ieoh_jian_random_sifu_name()
+{
+    switch (random2(7))
+    {
+        case 0: return "Sifu Deng Ai";
+        case 1: return "Sifu Jiang Wei";
+        case 2: return "Sifu Zhang Bao";
+        case 3: return "Sifu Ma Yunglu";
+        case 4: return "Sifu Sun Luban";
+        case 5: return "Sifu Cen Wei";
+        case 6: return "Sifu Cai Fang";
+        default: return "Sifu Bug";
+    }
+}
+
 god_type str_to_god(const string &_name, bool exact)
 {
     string target(_name);

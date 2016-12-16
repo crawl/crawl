@@ -1885,7 +1885,7 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_patter
 
 static bool _ieoh_jian_retribution()
 {
-    int copies = 1 + random2(5);
+    int copies = 2 + random2(4);
     switch(ieoh_jian_stolen_value() ? random2(8) : random2(6))
     {
         case 0:

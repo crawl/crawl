@@ -1933,7 +1933,10 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
 
     if (wpn.props.exists(IEOH_JIAN_DIVINE_DEGREE))
+    {
+        simple_god_message(" says, \"in this time of need, wield my power!\"");
         mprf(MSGCH_GOD, "%s manifests in a flash of light!", wpn.name(DESC_A, false, true, false).c_str());
+    }
     else
     {
         if (wpn.props.exists(IEOH_JIAN_OVERENCHANTED))
