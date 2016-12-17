@@ -803,11 +803,6 @@ wand of random effects
 Magiczny przedmiot który w nieprzewidywalny sposób produkuje efekty
 jakiejkolwiek innej różdżki.
 %%%%
-wand of slowing
-
-Magiczny przedmiot który rzuca czar który spowalnia wszystkie działa istoty na
-którą został skierowany.
-%%%%
 whip
 
 Bat z byczej skóry.

@@ -1263,10 +1263,6 @@ wand of scattershot
 A magical device which fires powerful blasts of metallic shrapnel. Its damage
 is strongly reduced by armour.
 %%%%
-wand of slowing
-
-A magical device which slows down the actions of a targeted creature.
-%%%%
 war axe
 
 A military axe with a long haft and a single-bladed head.

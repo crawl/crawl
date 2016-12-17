@@ -602,7 +602,6 @@ static const char* _wand_type_name(int wandtype)
     switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
-    case WAND_SLOWING:         return "slowing";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_CONFUSION:       return "confusion";
     case WAND_DIGGING:         return "digging";

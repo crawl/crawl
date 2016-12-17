@@ -517,7 +517,7 @@ gem_plastic
 # Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
 i-flame WAND_REMOVEME
-i-slowing WAND_SLOWING
+i-slowing WAND_REMOVEME9
 i-hasting WAND_REMOVEME7
 i-flame WAND_REMOVEME2
 i-heal_wounds WAND_REMOVEME6

@@ -700,7 +700,7 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
  */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // basic total: 121
+    // basic total: 120
     vector<pair<wand_type, int>> weights = {
         { WAND_SCATTERSHOT,     20 },
         { WAND_CLOUDS,          20 },
@@ -715,7 +715,6 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         { WAND_CONFUSION,       3 },
         { WAND_RANDOM_EFFECTS,  3 },
         { WAND_FLAME,           1 },
-        { WAND_SLOWING,         1 },
     };
 
     // Unknown wands get a huge weight bonus.

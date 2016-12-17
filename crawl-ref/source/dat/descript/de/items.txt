@@ -832,11 +832,6 @@ wand of random effects
 
 Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
 %%%%
-wand of slowing
-
-Ein magisches Gerät welches Verzauberungen auf Kreaturen in seiner Richtung
-wirft, welche dadurch verlangsamt werden.
-%%%%
 whip
 
 Ein langer gepflochtener-Streifen aus Leder. Ursprünglich entwickelt für den

@@ -1104,11 +1104,6 @@ wand of random effects
 
 Un instrument magique qui peut produire une grande variété d'effets.
 %%%%
-wand of slowing
-
-Un instrument magique qui ralenti, par enchantement, les actions d'une créature
-ciblée.
-%%%%
 whip
 
 Une longue bande de cuir tressé. Développé à l'origine pour être utilisé avec

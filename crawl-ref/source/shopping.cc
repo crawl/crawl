@@ -424,7 +424,6 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_CONFUSION:
-            case WAND_SLOWING:
                 valued += 15;
                 break;
 

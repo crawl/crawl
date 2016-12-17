@@ -258,8 +258,3 @@ wand of random effects
 
 Magické zařízení, které může produkovat různé efekty.
 %%%%
-wand of slowing
-
-Magické zařízení, které vrhá kouzla zpomalení na bytost, na kterou je právě
-namířeno.
-%%%%
