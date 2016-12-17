@@ -597,7 +597,6 @@ public:
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
-    zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
     bool is_type(int base, int sub) const
     {
