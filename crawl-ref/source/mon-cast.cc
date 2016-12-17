@@ -1357,7 +1357,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
         beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
-        beam.pierce     = true;             // except it also destroys walls
+        beam.pierce     = true;             // (except bloodier)
         break;
 
     case SPELL_SPIT_POISON:
