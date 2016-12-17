@@ -287,7 +287,7 @@ static bool _check_crystal_ball()
 
     if (you.confused())
     {
-        mpr("You are unable to concentrate on the shapes in the crystal ball.");
+        canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
