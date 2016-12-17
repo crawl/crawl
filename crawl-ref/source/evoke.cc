@@ -426,11 +426,15 @@ void zap_wand(int slot)
         return;
     }
 
-    int item_slot;
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
+        return;
+    }
+
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
         return;
     }
 
@@ -457,6 +461,7 @@ void zap_wand(int slot)
     if (!enough_mp(mp_cost, false))
         return;
 
+    int item_slot;
     if (slot != -1)
         item_slot = slot;
     else
