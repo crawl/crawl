@@ -1232,7 +1232,7 @@ flesh.
 %%%%
 wand of acid
 
-A magical device which throws a bolt of corrosive acid.
+A magical device which throws bolts of corrosive acid.
 %%%%
 wand of confusion
 
@@ -1270,9 +1270,9 @@ A magical device which can heal a creature's wounds.
 %%%%
 wand of lightning
 
-A magical device which throws great bolts of lightning. It inflicts less
-damage than other similar bolts, but its damage partially bypasses armour and
-it can be bounced off walls to hit targets twice.
+A magical device which throws great bolts of lightning. They inflict less
+damage than other similar bolts, but their damage partially bypasses armour
+and they can be bounced off walls to hit targets twice.
 %%%%
 wand of paralysis
 
