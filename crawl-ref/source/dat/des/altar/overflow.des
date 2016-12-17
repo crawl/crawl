@@ -349,28 +349,6 @@ x.._..x
 xxxxxxx
 ENDMAP
 
-NAME:   cheibriados_altar_wand_db
-TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:   patrolling
-DEPTH:  D:3-9
-WEIGHT: 5
-KFEAT:  _ = altar_cheibriados
-MONS:   goblin; wand of slowing ident:type / \
-        hobgoblin; wand of slowing ident:type / \
-        gnoll; wand of slowing ident:type / \
-        orc; wand of slowing ident:type / \
-        kobold; wand of slowing ident:type
-MONS:   goblin / hobgoblin / gnoll / orc / kobold
-NSUBST: 2 = 1:1 / *:2
-MAP
-ccccccc
-c.2.2.c
-c2._.2c
-c.....c
-c.....c
-ccc+ccc
-ENDMAP
-
 NAME:   chei_slow_surprise
 TAGS:   uniq_slow_altar overflow_altar_cheibriados transparent no_monster_gen
 TAGS:   transparent

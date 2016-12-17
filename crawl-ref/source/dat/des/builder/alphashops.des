@@ -155,11 +155,11 @@
        "ring of see invisible", "ring of slaying", "spear", "ring of stealth",
        "ring of strength", "manual of stealth", "sack of spiders",
        "scroll of summoning", "scythe", "book of spatial translocations",
-       "scroll of silence", "shield", "shortbow", "wand of slowing",
-       "manual of staves", "steam dragon scales", "shadow dragon scales",
-       "storm dragon scales", "swamp dragon scales", "manual of short blades",
-       "staff of summoning", "manual of slings", "manual of shields",
-       "manual of spellcasting", "manual of summonings", "stone" }
+       "scroll of silence", "shield", "shortbow", "manual of staves",
+       "steam dragon scales", "shadow dragon scales", "storm dragon scales",
+       "swamp dragon scales", "manual of short blades", "staff of summoning",
+       "manual of slings", "manual of shields", "manual of spellcasting",
+       "manual of summonings", "stone", "wand of scattershot" }
 
       elseif s == "T" then i = { "book of the tempests", "scroll of torment",
        "book of transfigurations", "ring of teleportation",

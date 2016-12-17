@@ -1034,11 +1034,6 @@ wand of random effects
 
 En magisk anordning, som kan producere en lang række effekter.
 %%%%
-wand of slowing
-
-En magisk anordning, som kaster fortryllelser, der gør et væsens handlinger
-langsommere.
-%%%%
 whip
 
 Et langt, flettet stykke læder. Dette enkle våben blev oprindeligt brugt i
