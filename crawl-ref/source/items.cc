@@ -3258,61 +3258,6 @@ bool item_def::launched_by(const item_def &launcher) const
     return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
 }
 
-zap_type item_def::zap() const
-{
-    if (base_type != OBJ_WANDS)
-        return ZAP_DEBUGGING_RAY;
-
-    zap_type result = ZAP_DEBUGGING_RAY;
-    wand_type wand_sub_type = static_cast<wand_type>(sub_type);
-
-    if (spell_in_wand(wand_sub_type) != SPELL_NO_SPELL)
-        return NUM_ZAPS;
-
-    if (wand_sub_type == WAND_RANDOM_EFFECTS)
-    {
-        // choose from all existing wands, except not really at all
-        return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
-                             ZAP_PARALYSE, ZAP_CONFUSE,
-                             ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
-                             ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
-                             ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
-                             ZAP_INVISIBILITY,
-                             ZAP_BOLT_OF_FIRE);
-    }
-
-    switch (wand_sub_type)
-    {
-    case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_SLOWING:         result = ZAP_SLOW;            break;
-    case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
-    case WAND_DIGGING:         result = ZAP_DIG;             break;
-    case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
-    case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
-    case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
-    case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
-    case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
-    case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
-    case WAND_CLOUDS:
-    case WAND_SCATTERSHOT:
-    case WAND_RANDOM_EFFECTS:  /* impossible */
-    case NUM_WANDS:
-#if TAG_MAJOR_VERSION == 34
-    case WAND_INVISIBILITY_REMOVED:
-    case WAND_MAGIC_DARTS_REMOVED:
-    case WAND_FIRE_REMOVED:
-    case WAND_COLD_REMOVED:
-    case WAND_FROST_REMOVED:
-    case WAND_HEAL_WOUNDS_REMOVED:
-    case WAND_HASTING_REMOVED:
-    case WAND_TELEPORTATION_REMOVED:
-#endif
-        break;
-    }
-    return result;
-}
-
 int item_def::index() const
 {
     return this - mitm.buffer();

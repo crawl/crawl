@@ -4717,6 +4717,7 @@ enum spell_type : int
     SPELL_DREAM_DUST,
     SPELL_BECKONING,
     SPELL_UPHEAVAL,
+    SPELL_RANDOM_EFFECTS,
     NUM_SPELLS
 };
 

@@ -3876,6 +3876,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RANDOM_EFFECTS, "Random Effects",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

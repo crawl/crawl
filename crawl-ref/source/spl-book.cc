@@ -68,15 +68,19 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_DISINTEGRATION, SPELL_DISINTEGRATE },
     { WAND_CLOUDS, SPELL_CLOUD_CONE },
     { WAND_SCATTERSHOT, SPELL_SCATTERSHOT },
+    { WAND_RANDOM_EFFECTS, SPELL_RANDOM_EFFECTS },
 };
 
 
 spell_type spell_in_wand(wand_type wand)
 {
+    if (item_type_removed(OBJ_WANDS, wand))
+        return SPELL_NO_SPELL;
+
     if (const spell_type* const spl = map_find(_wand_spells, wand))
         return *spl;
 
-    return SPELL_NO_SPELL;
+    die("Unknown wand: %d", wand);
 }
 
 vector<spell_type> spells_in_book(const item_def &book)

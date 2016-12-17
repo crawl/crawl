@@ -1073,7 +1073,8 @@ static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
         return false;
     }
 
-    const spell_type mzap = zap_to_spell(wand.zap());
+    const spell_type mzap =
+        spell_in_wand(static_cast<wand_type>(wand.sub_type));
 
     // set up the beam
     int power         = 30 + mons.get_hit_dice();

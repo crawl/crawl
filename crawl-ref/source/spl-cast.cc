@@ -1905,6 +1905,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SCATTERSHOT:
         return cast_scattershot(&you, powc, target, fail);
 
+    case SPELL_RANDOM_EFFECTS:
+        return cast_random_effects(powc, beam, fail);
+
     default:
         if (spell_removed(spell))
         {
