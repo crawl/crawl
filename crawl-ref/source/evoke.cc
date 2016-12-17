@@ -494,7 +494,7 @@ void zap_wand(int slot)
 
     // Will waste charges.
     const bool wasteful = !item_ident(wand, ISFLAG_KNOW_PLUSES);
-    int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+    int power = (15 + you.skill(SK_EVOCATIONS, 7) / 2)
                 * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;
 
     const spell_type spell =
