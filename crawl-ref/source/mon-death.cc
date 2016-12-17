@@ -1424,22 +1424,8 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
 static void _infestation_create_scarab(monster* mons)
 {
-    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
-                                                   BEH_FRIENDLY, mons->pos(),
-                                                   MHITYOU, MG_AUTOFOE)
-                                         .set_summoned(&you, 0,
-                                                       SPELL_INFESTATION),
-                                         false))
-    {
-        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        if (you.see_cell(mons->pos()) || you.can_see(*scarab))
-        {
-            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
-                                       mons->name(DESC_THE).c_str());
-        }
-        mons->flags |= MF_EXPLODE_KILL;
-    }
+    mons->flags |= MF_EXPLODE_KILL;
+    infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
 }
 
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,

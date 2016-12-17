@@ -529,6 +529,25 @@ void bennu_revive_fineff::fire()
         newmons->props["bennu_revives"].get_byte() = revives + 1;
 }
 
+void infestation_death_fineff::fire()
+{
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, posn,
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_INFESTATION),
+                                         false))
+    {
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+        if (you.see_cell(posn) || you.can_see(*scarab))
+        {
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       name.c_str());
+        }
+    }
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
