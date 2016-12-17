@@ -80,9 +80,9 @@
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "demon blade",
-       "demon trident", "demon whip", "dire flail", "disc of storms",
-       "double sword", "ring of dexterity", "manual of dodging",
-       "wand of disintegration", "staff of death", "wand of digging" }
+       "demon trident", "demon whip", "dire flail", "double sword",
+       "ring of dexterity", "manual of dodging", "wand of disintegration",
+       "staff of death", "wand of digging" }
 
       elseif s == "E" then i = { "book of enchantments", "manual of evocations",
        "eveningstar", "ring of evasion", "executioner's axe",
@@ -119,7 +119,7 @@
       elseif s == "L" then i = { "lamp of fire", "manual of long blades",
        "large rock", "large shield", "leather armour", "long sword",
        "potion of lignification", "ring of loudness", "wand of lightning",
-       "lajatang", "longbow" }
+       "lajatang", "longbow", "lightning rod" }
 
       elseif s == "M" then i = { "manual of maces & flails", "meat ration",
        "book of minor magic", "book of misfortune", "book of maledictions",

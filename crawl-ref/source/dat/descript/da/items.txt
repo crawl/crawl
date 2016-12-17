@@ -302,12 +302,6 @@ dire flail
 
 En stridsplejl med lange pigge og et tungere hoved.
 %%%%
-disc of storms
-
-Denne ekstremt kraftulde genstand kan udløse en altødelæggende storm af
-elektricitet. Dens effektivitet er langt større i hænderne på en, som er dygtig
-med magiske anordninger.
-%%%%
 eudemon blade
 
 En hellig klinge, som er frembragt af Himmelens smedjer og beboet af en god

@@ -964,7 +964,7 @@ TAGS:    no_rotate
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
-ITEM:    disc of storms, fan of gales, staff of air, book of the sky
+ITEM:    lightning rod, fan of gales, staff of air, book of the sky
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
 KMONS:   F = shard shrike
@@ -2418,7 +2418,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  zZ = ball lightning
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
-ITEM:   disc of storms, book of the sky
+ITEM:   lightning rod, book of the sky
 ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         double sword ego:electrocution good_item ident:type w:5 / \
         executioner's axe ego:electrocution good_item ident:type w:5 / \

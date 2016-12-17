@@ -2378,29 +2378,31 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     }
 
     targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
-                                  prev);
+                                 prev);
     hitfunc.set_aim(aim);
 
-    if (caster->is_player())
+    if (caster->is_player()
+        && stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
     {
-        if (stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
-            return SPRET_ABORT;
+        return SPRET_ABORT;
     }
 
     fail_check();
 
-    int juice = prev.origin() ? 2 * LIGHTNING_CHARGE_MULT
-                              : caster->props["thunderbolt_mana"].get_int();
+    const int juice = (spell_mana(SPELL_THUNDERBOLT)
+                       + caster->props["thunderbolt_charge"].get_int())
+                      * LIGHTNING_CHARGE_MULT;
+
+    dprf("juice: %d", juice);
+
     bolt beam;
-    beam.name              = "lightning";
-    beam.aux_source        = "rod of lightning";
+    beam.name              = "thunderbolt";
+    beam.aux_source        = "lightning rod";
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
-    // Dodging a horizontal arc is nearly impossible: you'd have to fall prone
-    // or jump high.
-    beam.hit               = prev.origin() ? 10 + pow / 20 : 1000;
+    beam.hit               = AUTOMATIC_HIT;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
 #ifdef USE_TILE
@@ -2443,8 +2445,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     caster->props["thunderbolt_last"].get_int() = you.num_turns;
     caster->props["thunderbolt_aim"].get_coord() = aim;
-
-    noisy(15 + div_rand_round(juice, LIGHTNING_CHARGE_MULT), hitfunc.origin);
+    caster->props["thunderbolt_charge"].get_int()++;
 
     return SPRET_SUCCESS;
 }

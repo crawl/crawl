@@ -336,61 +336,30 @@ static void _spray_lightning(int range, int power)
 }
 
 /**
- * Evoke the Disc of Storms, potentially hurling Shock, Lightning Bolt, or
- * Orb of Electricity in all directions around the player. Odds of doing so,
- * the number of zaps created, & their power all increase with Evocations.
+ * Evoke a lightning rod, creating an arc of lightning that can be sustained
+ * by continuing to evoke.
  *
  * @return  Whether anything happened.
  */
-bool disc_of_storms()
+static bool _lightning_rod()
 {
+    if (you.confused())
+    {
+        canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    const spell_type spell = SPELL_THUNDERBOLT;
+
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
+    const int power =
+        player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
 
-    const int fail_rate =
-        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS), surge);
+    const spret_type ret = your_spells(spell, power, false);
 
-    if (x_chance_in_y(fail_rate, 100))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
+    if (ret == SPRET_ABORT)
         return false;
-    }
-    if (x_chance_in_y(fail_rate, 100))
-    {
-        mpr("The disc glows for a moment, then fades.");
-        return false;
-    }
-    if (x_chance_in_y(fail_rate, 100))
-    {
-        mpr("Little bolts of electricity crackle over the disc.");
-        return false;
-    }
-
-    const int disc_count
-        = roll_dice(2, player_adjust_evoc_power(
-                           1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7), surge));
-    ASSERT(disc_count);
-
-    mpr("The disc erupts in an explosion of electricity!");
-    const int range = player_adjust_evoc_power(
-                          you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5, surge); // 5--14
-    const int power = player_adjust_evoc_power(
-                          30 + you.skill(SK_EVOCATIONS, 2), surge); // 30-84
-    for (int i = 0; i < disc_count; ++i)
-        _spray_lightning(range, power);
-
-    // Let it rain.
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        if (!in_bounds(*ri) || cell_is_solid(*ri))
-            continue;
-
-        if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
-        {
-            place_cloud(CLOUD_RAIN, *ri,
-                        random2(you.skill(SK_EVOCATIONS)), &you);
-        }
-    }
 
     return true;
 }
@@ -1887,9 +1856,24 @@ bool evoke_item(int slot, bool check_range)
                 practise_evoking(1);
             break;
 
-        case MISC_DISC_OF_STORMS:
-            if (disc_of_storms())
+        case MISC_LIGHTNING_ROD:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
+            if (_lightning_rod())
+            {
                 practise_evoking(1);
+                if (you.props["thunderbolt_charge"].get_int() >=
+                    LIGHTNING_MAX_CHARGE)
+                {
+                    mpr("The lightning rod overheats!");
+                    expend_xp_evoker(item);
+                }
+            }
+            else
+                return false;
             break;
 
         case MISC_QUAD_DAMAGE:

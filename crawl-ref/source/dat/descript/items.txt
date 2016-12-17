@@ -397,11 +397,6 @@ dire flail
 
 A flail with long spikes and a heavy head.
 %%%%
-disc of storms
-
-A crackling disc which can unleash a destructive storm of electricity. Its
-effectiveness greatly improves in the hands of one skilled in Evocations.
-%%%%
 double sword
 
 A magical weapon with two razor-sharp blades.
@@ -589,6 +584,13 @@ leather armour
 
 A suit made from layers of tanned animal hide. It provides basic protection
 with almost no hindrance to spellcasting or stealthy movement.
+%%%%
+lightning rod
+
+A rod that allows its wielder to fire unavoidable blasts of lightning. It
+increases in power each time it is evoked, until eventually overheating and
+resetting. Evoking the rod on consecutive actions causes the discharge to be
+sustained, allowing it to be redirected to affect an area.
 %%%%
 long sword
 

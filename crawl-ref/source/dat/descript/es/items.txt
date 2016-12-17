@@ -219,13 +219,6 @@ demon whip
 
 Un arma terrible, fabricada en las profundidades del Hades.
 %%%%
-disc of storms
-
-Este objeto extremadamente poderoso es capaz de de desencadenar una destructiva
-tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
-manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
-imposible su uso por parte de alguien que no sea conductivo.
-%%%%
 eudemon blade
 
 Una gloriosa cuchilla creada en los forjas del Cielo, y poseída por un espíritu

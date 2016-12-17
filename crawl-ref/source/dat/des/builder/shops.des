@@ -465,7 +465,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of iceblast | wand of flame | wand of disintegration | \
    wand of lightning | wand of clouds | wand of scattershot | \
    staff of conjuration | large rock ego:exploding | javelin ego:exploding | \
-   wand of acid | tomahawk ego:exploding | fan of gales | disc of storms | \
+   wand of acid | tomahawk ego:exploding | fan of gales | lightning rod | \
    lamp of fire | phial of floods | scroll of immolation | book of flames | \
    book of fire | book of air | manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red

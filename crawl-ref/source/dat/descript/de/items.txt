@@ -288,12 +288,6 @@ demon whip
 
 Eine schreckliche Waffe, hergestellt in den Tiefen des Infernos.
 %%%%
-disc of storms
-
-Dieser äußerst starke Artikel kann einen zerstörenden Sturm der Elektrizität
-loslassen. Seine Wirksamkeit verbessert sich außerordentlich in den Händen
-eines erfahrenen im Verwenden magischer Geräte.
-%%%%
 eudemon blade
 
 Eine heilige Klinge von den Schmieden des Himmels, der durch einen guten Geist
