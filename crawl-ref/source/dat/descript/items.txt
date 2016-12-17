@@ -1270,7 +1270,9 @@ A magical device which can heal a creature's wounds.
 %%%%
 wand of lightning
 
-A magical device which throws great bolts of lightning.
+A magical device which throws great bolts of lightning. It inflicts less
+damage than other similar bolts, but its damage partially bypasses armour and
+it can be bounced off walls to hit targets twice.
 %%%%
 wand of paralysis
 

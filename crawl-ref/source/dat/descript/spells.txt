@@ -63,9 +63,7 @@ Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water. Extremely loud noises, such as those produced
-by lightning or scrolls of noise, will disrupt the effect, as will leaving the
-caster's line of sight.
+any nearby bodies of deep water.
 %%%%
 Awaken Earth spell
 
@@ -1118,7 +1116,8 @@ Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
 afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are cast.
+magic, progressively hindering their chances of success as more spells are
+cast.
 %%%%
 Scattershot spell
 
