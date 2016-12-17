@@ -535,7 +535,7 @@ Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Energy Bolt spell
 
-Fires a beam of highly destructive energy. It can blow rock into pieces.
+Fires a bolt of highly destructive energy.
 %%%%
 Enslavement spell
 
@@ -1121,7 +1121,7 @@ Searing Ray spell
 Fires a continuous ray of arcane energy from the caster's hands. Though
 initially mild, so long as the caster maintains focus upon the spell and
 supplies it with magical power (by waiting in place and not taking any other
-actions), the ray will grow in strength until it becomes a surging beam able to
+actions), the ray will grow in strength until it becomes a surging bolt able to
 tear clean through the ranks of the caster's foes.
 %%%%
 Searing Breath spell
