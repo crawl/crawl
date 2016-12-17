@@ -3114,7 +3114,7 @@ MONS:    lightning spire, sky beast, electric eel
 KMONS:   E = insubstantial wisp w:10 / ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
 KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
-              disc of storms
+              lightning rod
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = known permanent teleport trap

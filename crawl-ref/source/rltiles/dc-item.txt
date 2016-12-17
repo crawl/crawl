@@ -976,7 +976,9 @@ misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
-misc_disc MISC_DISC_OF_STORMS
+%sdir misc
+error MISC_LIGHTNING_ROD
+%sdir item/misc
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR

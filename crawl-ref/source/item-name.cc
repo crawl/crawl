@@ -979,7 +979,7 @@ static string misc_type_name(int type, bool known)
     case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";
 #endif
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
-    case MISC_DISC_OF_STORMS:            return "disc of storms";
+    case MISC_LIGHTNING_ROD:             return "lightning rod";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
     case MISC_RUNE_OF_ZOT:               return "obsolete rune of zot";
@@ -1944,6 +1944,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
     case OBJ_MISCELLANY:
+    {
         if (is_deck(*this) || item_typ == MISC_DECK_UNKNOWN)
         {
             _name_deck(*this, desc, ident, buff);
@@ -1954,8 +1955,18 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
             buff << " (inert)";
+        else if (!dbname && item_typ == MISC_LIGHTNING_ROD)
+        {
+            int rod_charge = LIGHTNING_MAX_CHARGE;
+            if (you.props.exists("thunderbolt_charge"))
+                rod_charge -= you.props["thunderbolt_charge"].get_int();
+
+            buff << " (" << rod_charge << "/" << LIGHTNING_MAX_CHARGE << ")";
+
+        }
 
         break;
+    }
 
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)

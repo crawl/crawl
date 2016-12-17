@@ -2538,7 +2538,11 @@ static void _recharge_xp_evokers(int exp)
 
         debt = max(0, debt - div_rand_round(exp, xp_factor));
         if (debt == 0)
+        {
+            if (i == MISC_LIGHTNING_ROD)
+                you.props["thunderbolt_charge"].get_int() = 0;
             mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
+        }
     }
 }
 

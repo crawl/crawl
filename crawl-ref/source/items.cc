@@ -3787,7 +3787,7 @@ colour_t item_def::miscellany_colour() const
         case MISC_STONE_OF_TREMORS:
             return BROWN;
 #endif
-        case MISC_DISC_OF_STORMS:
+        case MISC_LIGHTNING_ROD:
             return LIGHTGREY;
         case MISC_PHIAL_OF_FLOODS:
             return LIGHTBLUE;

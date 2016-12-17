@@ -3186,7 +3186,7 @@ ORIENT: float
 MONS:   raiju / sixfirhy w:2
 KMONS:  2 = shock serpent / storm dragon
 ITEM:   book of air / book of the sky / manual of air magic / \
-        staff of air ident:type / disc of storms w:15 / fan of gales w:15 / \
+        staff of air ident:type / lightning rod w:15 / fan of gales w:15 / \
         storm dragon scales w:5
 : if you.unrands("arc blade") then
 KITEM:  2 = quick blade ego:electrocution randart ident:type
@@ -3654,7 +3654,7 @@ MONS: spark wasp
 MONS: w:5 anaconda / black mamba / water moccasin, mana viper, shock serpent
 : end
 ITEM: w:60 star_item / crystal ball of energy / staff of air / \
-      staff of energy / disc of storms w:15  / fan of gales w:15
+      staff of energy / lightning rod w:15  / fan of gales w:15
 NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
 MAP
 @...........
