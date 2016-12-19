@@ -1016,7 +1016,7 @@ int trap_def::shot_damage(actor& act)
     return random2(dam) + 1;
 }
 
-int trap_def::difficulty()
+int trap_def::to_hit_bonus()
 {
     switch (type)
     {
@@ -1314,7 +1314,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (difficulty()*2)) * random2(200) / 100;
+    int trap_hit = (20 + (to_hit_bonus()*2)) * random2(200) / 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 
