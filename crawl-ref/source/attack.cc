@@ -1129,9 +1129,9 @@ int attack::player_stat_modify_damage(int damage)
     int dammod = 39;
 
     if (you.strength() > 10)
-        dammod += (random2(you.strength() - 10) * 2);
+        dammod += (random2(you.strength() - 9) * 2);
     else if (you.strength() < 10)
-        dammod -= (random2(10 - you.strength()) * 3);
+        dammod -= (random2(9 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
