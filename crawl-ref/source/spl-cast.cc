@@ -452,11 +452,11 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             power /= 10;
         }
 
-        // Each level of horror reduces spellpower by 10%
+        // Each level of horror reduces spellpower
         if (you.duration[DUR_HORROR] && !fail_rate_check)
         {
             power *= 10;
-            power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
+            power /= 10 + you.props[HORROR_PENALTY_KEY].get_int();
         }
 
         power = stepdown_spellpower(power);
