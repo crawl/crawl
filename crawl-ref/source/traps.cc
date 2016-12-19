@@ -1352,12 +1352,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else // OK, we've been hit.
     {
-        bool force_poison = (env.markers.property_at(pos, MAT_ANY,
-                                "poisoned_needle_trap") == "true");
-
-        bool poison = (type == TRAP_NEEDLE
-                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
-                            || force_poison));
+        bool poison = type == TRAP_NEEDLE
+                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100));
 
         int damage_taken = act.apply_ac(shot_damage(act));
 
