@@ -3638,7 +3638,7 @@ int slaying_bonus(bool ranged)
     if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
         ret += 4;
 
-    ret += 4 * augmentation_amount();
+    ret += 3 * augmentation_amount();
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         ret += you.props[SONG_OF_SLAYING_KEY].get_int();
