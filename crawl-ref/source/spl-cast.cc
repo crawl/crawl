@@ -448,7 +448,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Augmentation boosts spell power at high HP.
         if (!fail_rate_check)
         {
-            power *= 10 + 4 * augmentation_amount();
+            power *= 10 + 3 * augmentation_amount();
             power /= 10;
         }
 
