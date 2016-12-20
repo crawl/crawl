@@ -182,39 +182,25 @@ public:
     EXPANDMACRO(DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, ))
 // The trailing comma suppresses "ISO C99 requires rest arguments to be used"
 
-enum lang_t
+enum class lang_t
 {
-    LANG_EN = 0,
-    LANG_CS,
-    LANG_DA,
-    LANG_DE,
-    LANG_EL,
-    LANG_ES,
-    LANG_FI,
-    LANG_FR,
-    LANG_HU,
-    LANG_IT,
-    LANG_JA,
-    LANG_KO,
-    LANG_LT,
-    LANG_LV,
-    LANG_NL,
-    LANG_PL,
-    LANG_PT,
-    LANG_RU,
-    LANG_SV,
-    LANG_ZH,
+    EN = 0,
+    CS, DA, DE,
+    EL, ES, FI, FR,
+    HU, IT, JA, KO,
+    LT, LV, NL, PL,
+    PT, RU, SV, ZH,
 };
 
-enum flang_t
+enum class flang_t
 {
-    FLANG_DWARVEN,
-    FLANG_JAGERKIN,
-    FLANG_KRAUT,
-    FLANG_FUTHARK,
-    FLANG_WIDE,
-    FLANG_GRUNT,
-    FLANG_BUTT,
+    dwarven,
+    jagerkin,
+    kraut,
+    futhark,
+    wide,
+    grunt,
+    butt,
 };
 
 enum ability_type
