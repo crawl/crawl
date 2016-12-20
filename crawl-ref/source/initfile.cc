@@ -3387,7 +3387,7 @@ struct language_def
 static const language_def lang_data[] =
 {
     // Use null, not "en", for English so we don't try to look up translations.
-    { lang_t::EN, nullptr, { "english", "en" } },
+    { lang_t::EN, nullptr, { "english", "en", "c" } },
     { lang_t::CS, "cs", { "czech", "český", "cesky" } },
     { lang_t::DA, "da", { "danish", "dansk" } },
     { lang_t::DE, "de", { "german", "deutsch" } },
