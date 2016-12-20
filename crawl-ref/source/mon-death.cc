@@ -3622,17 +3622,14 @@ bool ieoh_jian_kill_oldest_weapon(bool ignore_divine, bool prompt)
         int divine_degree = target_weapon->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
         target_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
        
-        if (divine_degree > 0)
+        if (divine_degree > 1)
             return false;
 
-        const string promptstr = make_stringf("%s is about to ascend to the heavens. Spend piety for it to stay for longer?",
-                                   target_weapon->name(DESC_THE, false, true, false).c_str());
-        if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
+        if (divine_degree == 1)
         {
-            simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
-            lose_piety(8);
-            target_weapon->props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
-            return false;
+           if (prompt)
+              ieoh_jian_extend_divine_duration(*target_weapon);
+           return false;
         }
     }
 

@@ -1786,6 +1786,23 @@ bool ieoh_jian_interest()
     return false;
 }
 
+void ieoh_jian_extend_divine_duration(item_def& weapon)
+{
+   if (!weapon.props.exists(IEOH_JIAN_DIVINE_DEGREE))
+      return;
+
+   const string promptstr = make_stringf("%s is about to ascend to the heavens. Spend piety for it to stay for longer? (Y/N)",
+                              weapon.name(DESC_THE, false, true, false).c_str());
+   if (yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
+   {
+       simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
+       lose_piety(8);
+       weapon.props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
+   }
+   else
+      canned_msg(MSG_OK);
+}
+
 bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication, bool prompt)
 {
     // We kill any ordinary IJC weapons first, in order of age.
@@ -1802,23 +1819,22 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication, bool prompt)
             int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
             you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
 
-            if (divine_degree > 0)
+            if (divine_degree > 1)
                 return false;
+
+            if (divine_degree == 1)
+            {
+               if (prompt)
+                  ieoh_jian_extend_divine_duration(*(you.weapon()));
+
+               return false;
+            }
         }
 
         if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
         {
-            const string promptstr = make_stringf("%s is about to ascend to the heavens. Spend piety for it to stay for longer?",
-                                       you.weapon()->name(DESC_THE, false, true, false).c_str());
-            if (prompt && yesno(promptstr.c_str(), true, 0, true, true, false, nullptr, GOTO_MSG))
-            {
-                simple_god_message(" says, \"Well then. You may continue to wield our divine instrument\"");
-                lose_piety(8);
-                you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
-                return false;
-            }
-
-            mprf("%s slips out of your %s and ascends back to the heavens!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
+            mprf("%s slips out of your %s and ascends back to the heavens!", 
+                 you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
             invalidate_agrid(true);
         }
         else
