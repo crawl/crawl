@@ -1678,7 +1678,7 @@ TAGS:    no_rotate
 WEIGHT:  1
 ORIENT:  encompass
 SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
-KITEM:   ? = wand of disintegration ident:type
+KITEM:   ? = wand of digging ident:type
 KFEAT:   ? = gadget shop
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1

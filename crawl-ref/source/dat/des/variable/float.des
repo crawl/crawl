@@ -3219,7 +3219,7 @@ MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
 ITEM:   book of geomancy / book of the earth / manual of earth magic / \
         staff of earth ident:type / ring of protection ident:type / \
-        wand of disintegration ident:type / crystal plate armour w:5
+        wand of scattershot ident:type / crystal plate armour w:5
 : if you.unrands("devastator") then
 KITEM:  2 = eveningstar randart
 : else
