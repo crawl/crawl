@@ -2935,18 +2935,16 @@ TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes, eye of draining
 KITEM:   R = royal jelly
-ITEM:    scroll of teleportation q:2
-ITEM:    wand of digging
-ITEM:    wand of disintegration
-ITEM:    scroll of teleportation q:2 w:20 / \
+ITEM:    scroll of teleportation q:2 / wand of digging
+ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111123
 SUBST:   m : xxxm
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
-NSUBST:  ! = 1:e / * = %$
-NSUBST:  ' = 1:f / * = %$
-NSUBST:  " = 1:g / * = %$
+NSUBST:  ! = 1:d / * = %$
+NSUBST:  ' = 1:d / * = %$
+NSUBST:  " = 1:e / * = %$
 MAP
 ...................
 ..J.............J..
@@ -3509,7 +3507,7 @@ SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
-ITEM:    wand of digging / wand of disintegration
+ITEM:    wand of digging ident:type
 ITEM:    scroll of teleportation q:2
 MAP
 ...........

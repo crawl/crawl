@@ -76,7 +76,7 @@
        "crystal plate armour", "potion of cancellation", "book of clouds",
        "staff of cold", "wand of confusion", "staff of conjuration",
        "manual of crossbows", "manual of conjurations", "manual of charms",
-       "potion of curing" }
+       "potion of curing", "wand of clouds" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "demon blade",

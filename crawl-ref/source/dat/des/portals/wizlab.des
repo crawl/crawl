@@ -1371,7 +1371,7 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
-KITEM:   i = wand of disintegration w:5 / wand of digging w:5 / any wand w:1
+KITEM:   i = wand of digging / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
