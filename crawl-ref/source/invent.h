@@ -215,9 +215,7 @@ int prompt_invent_item(const char *prompt,
                        int type_expect,
                        operation_types oper = OPER_ANY,
                        invent_prompt_flag flags = INVPROMPT_NO_FLAGS,
-                       const char other_valid_char = '\0',
-                       int excluded_slot = -1,
-                       int *const count = nullptr);
+                       const char other_valid_char = '\0');
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
