@@ -45,21 +45,21 @@ enum object_selector
 };
 
 /// Behaviour flags for prompt_invent_item().
-enum invent_prompt_flags
+enum class invprompt_flag
 {
-    INVPROMPT_NO_FLAGS           = 0,
+    none               = 0,
     /// Warning inscriptions are not checked & the player will not be warned.
-    INVPROMPT_NO_WARNING         = 1 << 0,
+    no_warning         = 1 << 0,
     /// '\' will be ignored, instead of switching to the known item list.
-    INVPROMPT_HIDE_KNOWN         = 1 << 1,
+    hide_known         = 1 << 1,
     /// Allow selecting items that do not exist.
-    INVPROMPT_UNTHINGS_OK        = 1 << 2,
+    unthings_ok        = 1 << 2,
     /// Don't start in the '?' list InvMenu.
-    INVPROMPT_MANUAL_LIST        = 1 << 3,
+    manual_list        = 1 << 3,
     /// Only allow exiting with escape, not also space.
-    INVPROMPT_ESCAPE_ONLY        = 1 << 4,
+    escape_only        = 1 << 4,
 };
-DEF_BITFIELD(invent_prompt_flag, invent_prompt_flags);
+DEF_BITFIELD(invent_prompt_flags, invprompt_flag);
 
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
@@ -214,7 +214,7 @@ int prompt_invent_item(const char *prompt,
                        menu_type type,
                        int type_expect,
                        operation_types oper = OPER_ANY,
-                       invent_prompt_flag flags = INVPROMPT_NO_FLAGS,
+                       invent_prompt_flags flags = invprompt_flag::none,
                        const char other_valid_char = '\0');
 
 vector<SelItem> select_items(

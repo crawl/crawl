@@ -2973,7 +2973,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,
                                            OSEL_SUPERCHARGE, OPER_ANY,
-                                           INVPROMPT_ESCAPE_ONLY);
+                                           invprompt_flag::escape_only);
 
         if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
             return SPRET_ABORT;

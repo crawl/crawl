@@ -719,7 +719,7 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
                                             divine ? OSEL_DIVINE_RECHARGE
                                                    : OSEL_RECHARGE,
                                            OPER_ANY,
-                                           INVPROMPT_ESCAPE_ONLY);
+                                           invprompt_flag::escape_only);
         }
 
         if (item_slot == PROMPT_NOTHING)
