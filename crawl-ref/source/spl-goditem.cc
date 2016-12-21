@@ -620,7 +620,8 @@ static bool _selectively_remove_curse(const string &pre_msg)
         }
 
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
-                                           OSEL_CURSED_WORN, true, true, false);
+                                           OSEL_CURSED_WORN, OPER_ANY,
+                                           INVPROMPT_ESCAPE_ONLY);
         if (prompt_failed(item_slot))
             return used;
 
@@ -699,7 +700,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
         int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
                                                   : OSEL_UNCURSED_WORN_JEWELLERY,
-                                           true, true, false);
+                                           OPER_ANY, INVPROMPT_ESCAPE_ONLY);
         if (prompt_failed(item_slot))
             return false;
 

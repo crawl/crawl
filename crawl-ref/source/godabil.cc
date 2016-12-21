@@ -132,8 +132,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     ASSERT(can_do_capstone_ability(god));
 
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
-                                       OSEL_BLESSABLE_WEAPON, true, true,
-                                       false);
+                                       OSEL_BLESSABLE_WEAPON, OPER_ANY,
+                                       INVPROMPT_ESCAPE_ONLY);
 
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
     {
@@ -1695,7 +1695,7 @@ bool beogh_gift_item()
         return false;
 
     int item_slot = prompt_invent_item("Give which item?",
-                                       MT_INVLIST, OSEL_BEOGH_GIFT, true);
+                                       MT_INVLIST, OSEL_BEOGH_GIFT);
 
     if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
     {
@@ -3802,8 +3802,8 @@ bool ashenzari_curse_item(int num_rc)
             " (Esc to abort)",
             num_rc, num_rc == 1 ? "" : "s");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(), MT_INVLIST,
-                                             OSEL_CURSABLE,
-                                             true, true, false);
+                                             OSEL_CURSABLE, OPER_ANY,
+                                             INVPROMPT_ESCAPE_ONLY);
     if (prompt_failed(item_slot))
         return false;
 

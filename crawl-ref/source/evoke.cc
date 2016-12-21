@@ -504,7 +504,6 @@ void zap_wand(int slot)
         item_slot = prompt_invent_item("Zap which item?",
                                        MT_INVLIST,
                                        OBJ_WANDS,
-                                       true, true, true, 0, -1, nullptr,
                                        OPER_ZAP);
     }
 
@@ -719,7 +718,8 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
                                             divine ? OSEL_DIVINE_RECHARGE
                                                    : OSEL_RECHARGE,
-                                            true, true, false);
+                                           OPER_ANY,
+                                           INVPROMPT_ESCAPE_ONLY);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -1924,8 +1924,7 @@ bool evoke_item(int slot, bool check_range)
     {
         slot = prompt_invent_item("Evoke which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_EVOKABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_EVOKE);
+                                   OSEL_EVOKABLE, OPER_EVOKE);
 
         if (prompt_failed(slot))
             return false;

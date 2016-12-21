@@ -44,6 +44,23 @@ enum object_selector
     OSEL_DIVINE_RECHARGE         = -21,
 };
 
+/// Behaviour flags for prompt_invent_item().
+enum invent_prompt_flags
+{
+    INVPROMPT_NO_FLAGS           = 0,
+    /// Warning inscriptions are not checked & the player will not be warned.
+    INVPROMPT_NO_WARNING         = 1 << 0,
+    /// '\' will be ignored, instead of switching to the known item list.
+    INVPROMPT_HIDE_KNOWN         = 1 << 1,
+    /// Allow selecting items that do not exist.
+    INVPROMPT_UNTHINGS_OK        = 1 << 2,
+    /// Don't start in the '?' list InvMenu.
+    INVPROMPT_MANUAL_LIST        = 1 << 3,
+    /// Only allow exiting with escape, not also space.
+    INVPROMPT_ESCAPE_ONLY        = 1 << 4,
+};
+DEF_BITFIELD(invent_prompt_flag, invent_prompt_flags);
+
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
 #define PROMPT_NOTHING       -3
@@ -196,15 +213,11 @@ string slot_description();
 int prompt_invent_item(const char *prompt,
                        menu_type type,
                        int type_expect,
-                       bool must_exist = true,
-                       bool auto_list = true,
-                       bool allow_easy_quit = true,
+                       operation_types oper = OPER_ANY,
+                       invent_prompt_flag flags = INVPROMPT_NO_FLAGS,
                        const char other_valid_char = '\0',
                        int excluded_slot = -1,
-                       int *const count = nullptr,
-                       operation_types oper = OPER_ANY,
-                       bool allow_list_known = false,
-                       bool do_warning = true);
+                       int *const count = nullptr);
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,

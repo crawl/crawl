@@ -491,7 +491,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            true, true, true, '-', -1, nullptr, OPER_WIELD);
+                            OPER_WIELD, INVPROMPT_NO_FLAGS, '-');
         }
         else
             item_slot = SLOT_BARE_HANDS;
@@ -634,9 +634,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
-                                      true, true, true, 0, -1, nullptr,
-                                      oper);
+        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector, oper);
 
         if (!prompt_failed(slot))
         {
@@ -1702,8 +1700,7 @@ bool puton_ring(int slot, bool allow_prompt)
     else
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                        MT_INVLIST, OBJ_JEWELLERY, true, true,
-                                        true, 0, -1, nullptr, OPER_PUTON);
+                                        MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON);
     }
 
     if (prompt_failed(item_slot))
@@ -1761,9 +1758,10 @@ bool remove_ring(int slot, bool announce)
         const int equipn =
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
                                              MT_INVLIST,
-                                             OBJ_JEWELLERY, true, true, true,
-                                             0, -1, nullptr, OPER_REMOVE,
-                                             false, false)
+                                             OBJ_JEWELLERY,
+                                             OPER_REMOVE,
+                                             INVPROMPT_NO_WARNING
+                                                | INVPROMPT_HIDE_KNOWN)
                         : slot;
 
         if (prompt_failed(equipn))
