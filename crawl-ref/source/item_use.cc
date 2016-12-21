@@ -491,7 +491,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            OPER_WIELD, INVPROMPT_NO_FLAGS, '-');
+                            OPER_WIELD, invprompt_flag::none, '-');
         }
         else
             item_slot = SLOT_BARE_HANDS;
@@ -1760,8 +1760,8 @@ bool remove_ring(int slot, bool announce)
                                              MT_INVLIST,
                                              OBJ_JEWELLERY,
                                              OPER_REMOVE,
-                                             INVPROMPT_NO_WARNING
-                                                | INVPROMPT_HIDE_KNOWN)
+                                             invprompt_flag::no_warning
+                                                | invprompt_flag::hide_known)
                         : slot;
 
         if (prompt_failed(equipn))

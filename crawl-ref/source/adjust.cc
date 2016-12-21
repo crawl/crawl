@@ -57,8 +57,8 @@ void adjust_item(int from_slot)
     const int to_slot = prompt_invent_item("Adjust to which letter? ",
                                            MT_INVLIST,
                                            -1, OPER_ANY,
-                                           INVPROMPT_UNTHINGS_OK
-                                            | INVPROMPT_MANUAL_LIST);
+                                           invprompt_flag::unthings_ok
+                                            | invprompt_flag::manual_list);
     if (to_slot == PROMPT_ABORT
         || from_slot == to_slot)
     {

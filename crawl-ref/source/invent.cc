@@ -1771,14 +1771,14 @@ bool check_warning_inscriptions(const item_def& item,
 int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
                        operation_types oper,
-                       invent_prompt_flag flags,
+                       invent_prompt_flags flags,
                        const char other_valid_char)
 {
-    const bool do_warning = !(flags & INVPROMPT_NO_WARNING);
-    const bool allow_list_known = !(flags & INVPROMPT_HIDE_KNOWN);
-    const bool must_exist = !(flags & INVPROMPT_UNTHINGS_OK);
-    const bool auto_list = !(flags & INVPROMPT_MANUAL_LIST);
-    const bool allow_easy_quit = !(flags & INVPROMPT_ESCAPE_ONLY);
+    const bool do_warning = !(flags & invprompt_flag::no_warning);
+    const bool allow_list_known = !(flags & invprompt_flag::hide_known);
+    const bool must_exist = !(flags & invprompt_flag::unthings_ok);
+    const bool auto_list = !(flags & invprompt_flag::manual_list);
+    const bool allow_easy_quit = !(flags & invprompt_flag::escape_only);
 
     if (!any_items_of_type(type_expect)
         && type_expect == OSEL_THROWABLE
