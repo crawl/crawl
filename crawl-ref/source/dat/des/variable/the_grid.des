@@ -701,7 +701,7 @@ NAME:    minmay_the_grid_zigzag_pyramid
 TAGS:    the_grid unrand
 SUBST:   9 = 9.
 MAP
-. .......
+.........
 .       .
 .....9 ..
 ..     ..
