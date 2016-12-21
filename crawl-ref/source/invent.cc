@@ -1846,10 +1846,12 @@ int prompt_invent_item(const char *prompt,
         {
             // The "view inventory listing" mode.
             vector< SelItem > items;
+            if (keyin == '*')
+                type_expect = OSEL_ANY; // don't save original - no going back!
             keyin = _invent_select(
                         prompt,
                         mtype,
-                        keyin == '*' ? OSEL_ANY : type_expect,
+                        type_expect,
                         -1,
                         MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
                             | MF_EASY_EXIT,
@@ -1907,6 +1909,8 @@ int prompt_invent_item(const char *prompt,
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
+            else if (must_exist && !item_is_selected(you.inv[ret], type_expect))
+                mpr("That's the wrong kind of item! (Use * to select it.)");
             else if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
                 break;
         }
