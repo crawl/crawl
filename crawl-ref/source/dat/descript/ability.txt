@@ -882,7 +882,7 @@ is then brought to life, attacking nearby enemies for a brief period of time.
 %%%%
 Recall Weapon ability
 
-Recalls an animated weapon back to your hands (instant). 
+Recalls an animated weapon back to your hands. 
 %%%%
 Steal And Renounce ability
 
