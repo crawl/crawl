@@ -3506,11 +3506,6 @@ static void _join_pakellas()
 // Setup when becoming an Ieoh Jian ninja
 static void _join_ieoh_jian()
 {
-    if (you.shield() && you.species != SP_FORMICID)
-        mprf(MSGCH_GOD, "A shield? That tool is foreign to us. Well then, we shall only manifest one handed weapons.");
-
-    if (you.weapon() && is_range_weapon(*(you.weapon())))
-        mprf(MSGCH_GOD, "A ranged weapon? Pathetic! Forfeit it at once.");
 }
 
 /// What special things happen when you join a god?
@@ -4018,6 +4013,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_ZIN:
         case GOD_PAKELLAS:
         case GOD_JIYVA:
+        case GOD_IEOH_JIAN:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4050,19 +4046,6 @@ void handle_god_time(int /*time_delta*/)
             }
 
             break;
-        case GOD_IEOH_JIAN:
-            if (one_chance_in(17))
-            {
-                lose_piety(1);
-
-                if (you.weapon() && is_range_weapon(*you.weapon()))
-                {
-                    mprf(MSGCH_GOD, "The council finds your abuse of %s disgraceful!", you.weapon()->name(DESC_THE).c_str());
-                    lose_piety(3);
-                }
-            }
-            break;
-
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_GOZAG:

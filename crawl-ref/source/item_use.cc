@@ -607,9 +607,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     you.m_quiver.on_weapon_changed();
     you.turn_is_over  = true;
 
-    if (you_worship(GOD_IEOH_JIAN) && is_range_weapon(new_wpn))
-        mprf(MSGCH_GOD, "A ranged weapon? Pathetic! Forfeit it at once.");
-
     return true;
 }
 
@@ -1060,9 +1057,6 @@ bool do_wear_armour(int item, bool quiet)
     const int delay = armour_equip_delay(invitem);
     if (delay)
         start_delay<ArmourOnDelay>(delay - (swapping ? 0 : 1), invitem);
-
-    if (you_worship(GOD_IEOH_JIAN) && you.species != SP_FORMICID &&  slot == EQ_SHIELD)
-        mprf(MSGCH_GOD, "A shield? That tool is foreign to us. Well then, we shall only manifest one handed weapons.");
 
     return true;
 }
