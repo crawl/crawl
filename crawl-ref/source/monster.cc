@@ -5136,8 +5136,7 @@ bool monster::can_go_frenzy() const
         return false;
 
     // If we have no melee attack, going berserk is pointless.
-    const mon_attack_def attk = mons_attack_spec(*this, 0);
-    if (attk.type == AT_NONE || attk.damage == 0)
+    if (!mons_has_attacks(*this))
         return false;
 
     return true;

@@ -508,6 +508,8 @@ bool mons_stores_tracking_data(const monster& mons);
 
 bool mons_is_player_shadow(const monster& mon);
 
+bool mons_has_attacks(const monster& mon);
+
 void reset_all_monsters();
 void debug_mondata();
 void debug_monspells();
