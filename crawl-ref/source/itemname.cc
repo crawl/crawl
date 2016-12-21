@@ -3466,15 +3466,11 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_MISSILES:
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
-             || !you.num_turns
-                && you.char_class == JOB_TRANSMUTER)
-            && item.sub_type == MI_ARROW
+                || !you.num_turns && you.char_class == JOB_TRANSMUTER)
+                && item.sub_type == MI_ARROW
             || (you.has_spell(SPELL_SANDBLAST)
-                || !you.num_turns
-                   && you.char_class == JOB_EARTH_ELEMENTALIST)
-                && (item.sub_type == MI_STONE
-                    || item.sub_type == MI_LARGE_ROCK
-                       && you.could_wield(item, true, true)))
+                || !you.num_turns && you.char_class == JOB_EARTH_ELEMENTALIST)
+                && item.sub_type == MI_STONE)
         {
             return false;
         }
