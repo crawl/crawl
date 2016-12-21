@@ -5259,10 +5259,7 @@ bool mons_is_player_shadow(const monster& mon)
 bool mons_has_attacks(const monster& mon)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);
-    if (attk.type == AT_NONE || attk.damage == 0)
-        return false;
-
-    return true;
+    return attk.type != AT_NONE && attk.damage > 0;
 }
 
 // The default suitable() function for choose_random_nearby_monster().
