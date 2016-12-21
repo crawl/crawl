@@ -1220,39 +1220,53 @@ static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
     return keyin;
 }
 
-// This function prompts the user for an item, handles the '?' and '*'
-// listings, and returns the inventory slot to the caller (which if
-// must_exist is true, as it is by default, will be an assigned item,
-// with a positive quantity.
-//
-// It returns PROMPT_ABORT       if the player hits escape.
-// It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
-//
-// Note: This function never checks if the item is appropriate.
-vector<SelItem> prompt_invent_items(
-                        const char *prompt,
-                        menu_type mtype,
-                        int type_expect,
-                        invtitle_annotator titlefn,
-                        bool auto_list,
-                        bool allow_easy_quit,
-                        const char other_valid_char,
-                        vector<text_pattern> *select_filter,
-                        Menu::selitem_tfn fn,
-                        const vector<SelItem> *pre_select)
+static string _drop_selitem_text(const vector<MenuEntry*> *s)
 {
-    unsigned char  keyin = 0;
+    bool extraturns = false;
+
+    if (s->empty())
+        return "";
+
+    for (MenuEntry *entry : *s)
+    {
+        const item_def *item = static_cast<item_def *>(entry->data);
+        const int eq = get_equip_slot(item);
+        if (eq > EQ_WEAPON && eq < NUM_EQUIP)
+        {
+            extraturns = true;
+            break;
+        }
+    }
+
+    return make_stringf(" (%u%s turn%s)",
+                        (unsigned int)s->size(),
+                        extraturns? "+" : "",
+                        s->size() > 1? "s" : "");
+}
+
+/**
+ * Prompt the player to select zero or more items to drop.
+ * TODO: deduplicate/merge with prompt_invent_item().
+ *
+ * @param   Items already selected to drop.
+ * @return  The total set of items the player's chosen to drop.
+ */
+vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
+{
+    const string prompt = "Drop what? " + slot_description()
+#ifdef TOUCH_UI
+                          + " (<Enter> or tap header to drop)"
+#else
+                          + " (_ for help)"
+#endif
+    ;
+
+    unsigned char  keyin = '?';
     int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;
     bool           need_prompt = true;
-    bool           need_getch  = true;
-
-    if (auto_list)
-    {
-        need_getch = false;
-        keyin       = '?';
-    }
+    bool           need_getch  = false;
 
     vector<SelItem> items;
     int count = -1;
@@ -1267,7 +1281,7 @@ vector<SelItem> prompt_invent_items(
         if (need_prompt)
         {
             mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt);
+                 prompt.c_str());
         }
 
         if (need_getch)
@@ -1279,21 +1293,18 @@ vector<SelItem> prompt_invent_items(
 
         // Note:  We handle any "special" character first, so that
         //        it can be used to override the others.
-        if (other_valid_char != 0 && keyin == other_valid_char)
-        {
-            ret = PROMPT_GOT_SPECIAL;
-            break;
-        }
-        else if (keyin == '?' || keyin == '*' || keyin == ',')
+        if (keyin == '?' || keyin == '*' || keyin == ',')
         {
             // The "view inventory listing" mode.
-            const int ch = _invent_select(prompt,
-                                          mtype,
-                                          keyin == '*' ? OSEL_ANY : type_expect,
+            const int ch = _invent_select(prompt.c_str(),
+                                          MT_DROP,
+                                          OSEL_ANY,
                                           -1,
                                           MF_MULTISELECT | MF_ALLOW_FILTER,
-                                          titlefn, &items, select_filter, fn,
-                                          pre_select);
+                                          nullptr, &items,
+                                          &Options.drop_filter,
+                                          _drop_selitem_text,
+                                          &preselected_items);
 
             if (key_is_escape(ch))
             {
@@ -1333,9 +1344,7 @@ vector<SelItem> prompt_invent_items(
             need_getch  = false;
         }
         else if (key_is_escape(keyin)
-                || (Options.easy_quit_item_prompts
-                    && allow_easy_quit
-                    && keyin == ' '))
+                || (Options.easy_quit_item_prompts && keyin == ' '))
         {
             ret = PROMPT_ABORT;
             break;

@@ -223,17 +223,7 @@ vector<SelItem> select_items(
                         menu_type mtype = MT_PICKUP,
                         invtitle_annotator titlefn = nullptr);
 
-vector<SelItem> prompt_invent_items(
-                        const char *prompt,
-                        menu_type type,
-                        int type_expect,
-                        invtitle_annotator titlefn = nullptr,
-                        bool auto_list = true,
-                        bool allow_easy_quit = true,
-                        const char other_valid_char = '\0',
-                        vector<text_pattern> *filter = nullptr,
-                        Menu::selitem_tfn fn = nullptr,
-                        const vector<SelItem> *pre_select = nullptr);
+vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);
 
 void display_inventory();
 
