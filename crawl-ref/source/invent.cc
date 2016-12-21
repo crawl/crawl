@@ -1756,10 +1756,6 @@ bool check_warning_inscriptions(const item_def& item,
  * @param mtype            The menu type.
  * @param type_expect      The object_class_type or object_selector for
  *                         items to be listed.
- * @param must_exist       If true, only allows selecting items that exist.
- * @param auto_list        If true, start in the '?' list InvMenu.
- * @param allow_easy_quit  If true and the corresponding game option is enabled,
- *                         menu can be quit with space in addition to escape.
  * @param other_valid_char A character that, if not '\0', will cause
  *                         PROMPT_GOT_SPECIAL to be returned when pressed.
  * @param excluded_slot    An inventory slot that will be omitted from listings.
@@ -1769,9 +1765,7 @@ bool check_warning_inscriptions(const item_def& item,
  * @param oper             The operation_type that will be used on the result.
  *                         Modifies some checks, including applicability of
  *                         warning inscriptions.
- * @param allow_list_known If true, '\' will switch to the known item list.
- * @param do_warning       If true, warning inscriptions are checked and the
- *                         user prompted, if necessary.
+ * @param flags            See comments on invent_prompt_flags.
  *
  * @return  the inventory slot of an item or one of the following special values
  *          - PROMPT_ABORT:       if the player hits escape.
@@ -1780,15 +1774,18 @@ bool check_warning_inscriptions(const item_def& item,
  */
 int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
-                       bool must_exist, bool auto_list,
-                       bool allow_easy_quit,
+                       operation_types oper,
+                       invent_prompt_flag flags,
                        const char other_valid_char,
                        int excluded_slot,
-                       int *const count,
-                       operation_types oper,
-                       bool allow_list_known,
-                       bool do_warning)
+                       int *const count)
 {
+    const bool do_warning = !(flags & INVPROMPT_NO_WARNING);
+    const bool allow_list_known = !(flags & INVPROMPT_HIDE_KNOWN);
+    const bool must_exist = !(flags & INVPROMPT_UNTHINGS_OK);
+    const bool auto_list = !(flags & INVPROMPT_MANUAL_LIST);
+    const bool allow_easy_quit = !(flags & INVPROMPT_ESCAPE_ONLY);
+
     if (!any_items_of_type(type_expect, excluded_slot)
         && type_expect == OSEL_THROWABLE
         && (oper == OPER_FIRE || oper == OPER_QUIVER)
