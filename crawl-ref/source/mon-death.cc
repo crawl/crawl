@@ -2185,7 +2185,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                 if (was_active)
                 {
                     float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-                    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, 0.4 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
+                    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, 0.6 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
                     new_mons->add_ench(combat_active);
                 }
             }
