@@ -173,7 +173,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
                     return ARM_BOOTS;
             }
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_MAYBE)
+            if (you_can_wear(EQ_HELMET) == MB_TRUE)
                 return coinflip() ? ARM_HELMET : ARM_HAT;
             return ARM_HAT;
         case EQ_SHIELD:
