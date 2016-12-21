@@ -2087,7 +2087,7 @@ string ieoh_jian_random_sifu_name()
         case 2: return "Sifu Zhang Bao";
         case 3: return "Sifu Ma Yunglu";
         case 4: return "Sifu Sun Luban";
-        case 5: return "Sifu Cen Wei";
+        case 5: return "Sifu Gene Jian Bin";
         case 6: return "Sifu Cai Fang";
         default: return "Sifu Bug";
     }
@@ -2896,18 +2896,9 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_IEOH_JIAN:
-        if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_STOLEN))
-        {
-            simple_god_message(" booms, \"You treacherous mortal! Forfeit that weapon immediately!\" ", old_god);
-            _set_penance(old_god, 25 + ieoh_jian_stolen_value() * 2);
-        }
-        else
-        {
-            simple_god_message(" withdraw all divine help and plot revenge.", old_god);
-            _set_penance(old_god, 25);
-        }
+        simple_god_message(" withdraws all divine help and plots revenge.", old_god);
+        _set_penance(old_god, 25);
         while(ieoh_jian_despawn_weapon(true, true)){};
-
         break;
     default:
         _set_penance(old_god, 25);
@@ -3032,10 +3023,6 @@ bool player_can_join_god(god_type which_god)
     // Paws can't hold weapons very well.
     if (which_god == GOD_IEOH_JIAN && you.species == SP_FELID)
         return false; 
-
-    // Not until you forfeit the stolen goods!
-    if (which_god == GOD_IEOH_JIAN && ieoh_jian_stolen_value())
-        return false;
 
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
@@ -3703,10 +3690,6 @@ void god_pitch(god_type which_god)
             simple_god_message(" says: How dare you approach in such a "
                                "loathsome form!",
                                which_god);
-        }
-        else if (which_god == GOD_IEOH_JIAN && ieoh_jian_stolen_value())
-        {
-            simple_god_message(" says: \"How dare you, thief! Forfeit what you stole!\"", which_god);
         }
         else
         {

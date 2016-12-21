@@ -302,7 +302,6 @@ bool ieoh_jian_interest();
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);
 bool ieoh_jian_can_pole_vault(const coord_def& target);
 void ieoh_jian_pole_vault_effects();
-int ieoh_jian_stolen_value();
 void ieoh_jian_extend_divine_duration(item_def& weapon);
 vector<monster*> find_ieoh_jian_manifested_weapons(bool owned_by_you);
 

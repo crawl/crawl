@@ -628,8 +628,6 @@ static const ability_def Ability_List[] =
         3, 0, 80, 5, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
     { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
         2, 0, 0, 0, {FAIL_INVO, 20, 5, 20}, abflag::INSTANT },
-    { ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL,"Steal And Renounce",
-      0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3089,42 +3087,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             canned_msg(MSG_NOTHING_THERE);
             return SPRET_ABORT;
         }
-        break;
-
-    case ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL:
-        fail_check();
-        if (!you.weapon() || !you.weapon()->props.exists(IEOH_JIAN_SLOT))
-        {
-            mpr("You need to equip a weapon borrowed from the Council!");
-            return SPRET_ABORT;
-        }
-        if (yesno("Really steal from the Ieoh Jian Council and suffer excommunication? This will be seen as a tremendous offense.",
-                  false, 'n')
-            && yesno("Are you sure you won't change your mind later?",
-                     false, 'n'))
-        {
-            you.weapon()->props.erase(IEOH_JIAN_SLOT);
-            you.weapon()->props.erase(IEOH_JIAN_DIVINE_DEGREE);
-            you.weapon()->props[IEOH_JIAN_STOLEN] = true;
-
-            if (you.weapon()->props.exists(IEOH_JIAN_OVERENCHANTED))
-            {
-                you.weapon()->plus -= you.weapon()->props[IEOH_JIAN_OVERENCHANTED].get_int();
-                you.weapon()->props.erase(IEOH_JIAN_OVERENCHANTED);
-                you.weapon()->inscription = "";
-            }
-
-            if (!you.weapon()->inscription.empty())
-                you.weapon()->inscription += ", ";
-            you.weapon()->inscription += "stolen";
-            excommunication(true);
-        }
-        else
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
-
         break;
 
     case ABIL_RENOUNCE_RELIGION:

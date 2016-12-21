@@ -1537,15 +1537,6 @@ int ieoh_jian_calc_power_for_weapon(weapon_type sub_type)
     return you.skill(weapon_attack_skill(sub_type), 2, false) + you.skill(SK_INVOCATIONS, 2, false);
 }
 
-int ieoh_jian_stolen_value()
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && you.inv[i].props.exists(IEOH_JIAN_STOLEN))
-            return you.inv[i].plus;
-
-    return 0;
-}
-
 // Boost the weight of other categories to compensate for the loss of a two handed equivalent?
 static int _hands_boost(weapon_type big_type)
 {
