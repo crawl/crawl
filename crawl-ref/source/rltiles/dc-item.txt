@@ -535,9 +535,8 @@ i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION
-%sdir misc
-error WAND_CLOUDS
-error WAND_SCATTERSHOT WAND_ID_LAST
+i-clouds WAND_CLOUDS
+i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
 
 #################OBJ_FOOD
 %sdir item/food
@@ -941,16 +940,17 @@ rod08
 rod09
 
 # These must be in the same order as the enum in item-prop-enum.h!
-i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
-i-rod_summoning ROD_SUMMONING
-i-rod_ignition ROD_IGNITION
-i-rod_clouds ROD_CLOUDS
-i-rod_destruction ROD_DESTRUCTION
-i-rod_inaccuracy ROD_INACCURACY
-i-rod_warding ROD_WARDING
-i-rod_shadows ROD_SHADOWS
-i-rod_iron ROD_IRON
-i-rod_venom ROD_VENOM ROD_ID_LAST
+%sdir misc
+error ROD_LIGHTNING ROD_ID_FIRST
+error ROD_SUMMONING
+error ROD_IGNITION
+error ROD_CLOUDS
+error ROD_DESTRUCTION
+error ROD_INACCURACY
+error ROD_WARDING
+error ROD_SHADOWS
+error ROD_IRON
+error ROD_VENOM ROD_ID_LAST
 %rim 1
 
 #OBJ_ORBS
