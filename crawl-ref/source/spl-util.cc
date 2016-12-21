@@ -965,13 +965,6 @@ int spell_range(spell_type spell, int pow, bool player_spell)
     if (maxrange < 0)
         return maxrange;
 
-    // Sandblast is a special case.
-    if (spell == SPELL_SANDBLAST && wielding_rocks())
-    {
-        minrange++;
-        maxrange++;
-    }
-
     if (player_spell
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)

@@ -1545,7 +1545,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     1,
     50,
-    2, 2, // more with wielded stones
+    3, 3,
     1, 0,
     TILEG_SANDBLAST,
 },
