@@ -2350,23 +2350,28 @@ int wielding_rocks()
 
 spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 {
-    zap_type zap = ZAP_SMALL_SANDBLAST;
-    switch (wielding_rocks())
+    item_def *stone = nullptr;
+    int num_stones = 0;
+    for (item_def& i : you.inv)
     {
-    case 1:
-        zap = ZAP_SANDBLAST;
-        break;
-    case 2:
-        zap = ZAP_LARGE_SANDBLAST;
-        break;
-    default:
-        break;
+        if (i.is_type(OBJ_MISSILES, MI_STONE))
+        {
+            num_stones += i.quantity;
+            stone = &i;
+        }
     }
 
+    if (num_stones == 0)
+    {
+        mpr("You don't have any stones to cast with.");
+        return SPRET_ABORT;
+    }
+
+    zap_type zap = ZAP_SANDBLAST;
     const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
-    if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+    if (ret == SPRET_SUCCESS)
+        dec_inv_item_quantity(letter_to_index(stone->slot), 1);
 
     return ret;
 }
