@@ -1291,18 +1291,15 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         return;
     }
 
-    bool force_hit = (env.markers.property_at(pos, MAT_ANY,
-                            "force_hit") == "true");
-
     if (act.is_player())
     {
-        if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
+        if (one_chance_in(5) || was_known && !one_chance_in(4))
         {
             mprf("You avoid triggering %s.", name(DESC_A).c_str());
             return;
         }
     }
-    else if (!force_hit && one_chance_in(5))
+    else if (one_chance_in(5))
     {
         if (was_known && you.see_cell(pos) && you.can_see(act))
         {
@@ -1324,7 +1321,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
          trap_hit, act.evasion(), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.evasion())
+    if (trap_hit < act.evasion())
     {
         if (act.is_player())
             mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
@@ -1334,8 +1331,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                  act.name(DESC_THE).c_str());
         }
     }
-    else if (!force_hit
-             && pro_block >= con_block
+    else if (pro_block >= con_block
              && you.see_cell(act.pos()))
     {
         string owner;
