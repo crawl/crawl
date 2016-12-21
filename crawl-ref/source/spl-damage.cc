@@ -2335,19 +2335,6 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     return SPRET_SUCCESS;
 }
 
-int wielding_rocks()
-{
-    const item_def* wpn = you.weapon();
-    if (!wpn || wpn->base_type != OBJ_MISSILES)
-        return 0;
-    else if (wpn->sub_type == MI_STONE)
-        return 1;
-    else if (wpn->sub_type == MI_LARGE_ROCK)
-        return 2;
-    else
-        return 0;
-}
-
 spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 {
     item_def *stone = nullptr;
