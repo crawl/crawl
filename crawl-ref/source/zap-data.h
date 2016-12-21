@@ -861,24 +861,6 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 },
 
 {
-    ZAP_LARGE_SANDBLAST,
-    "large rocky blast",
-    50,
-    new dicedef_calculator<3, 4, 1, 3>,
-    new tohit_calculator<13, 1, 10>,
-    nullptr,
-    nullptr,
-    BROWN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_BOLT,
-    true,
-    false,
-    false,
-    3
-},
-
-{
     ZAP_SANDBLAST,
     "rocky blast",
     50,
@@ -894,24 +876,6 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
     false,
     false,
     2 // XXX: Sound 2 for level one spell?
-},
-
-{
-    ZAP_SMALL_SANDBLAST,
-    "blast of sand",
-    25,
-    new dicedef_calculator<1, 8, 1, 4>,
-    new tohit_calculator<8, 1, 5>,
-    nullptr,
-    nullptr,
-    BROWN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_BOLT,
-    true,
-    false,
-    false,
-    1
 },
 
 {

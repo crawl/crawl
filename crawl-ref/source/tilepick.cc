@@ -2826,12 +2826,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case BROWN:
-        if (bolt.name == "rocky blast"
-            || bolt.name == "large rocky blast"
-            || bolt.name == "blast of sand")
-        {
+        if (bolt.name == "rocky blast")
             return TILE_BOLT_SANDBLAST;
-        }
         break;
 
     case GREEN:
