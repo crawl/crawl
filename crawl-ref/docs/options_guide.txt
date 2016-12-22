@@ -1153,7 +1153,7 @@ ability_slot ^= <regex>:<ability letters>
         Uses the same interface as spell_slot, but applies to abilities
         in the 'a' menu.
 
-autofight_stop = 30
+autofight_stop = 50
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
         you would want:
