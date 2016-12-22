@@ -247,7 +247,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // Barachians
+    ABIL_HOP,
+    ABIL_MAX_INTRINSIC = ABIL_HOP,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1913,6 +1915,7 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
+    DUR_NO_HOP,
     NUM_DURATIONS
 };
 
@@ -3853,6 +3856,7 @@ enum mutation_type
     MUT_STURDY_FRAME,
     MUT_SANGUINE_ARMOUR,
 #endif
+    MUT_HOP,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -4259,6 +4263,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_BARACHIAN,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,

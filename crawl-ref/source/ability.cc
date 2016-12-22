@@ -315,6 +315,8 @@ static const ability_def Ability_List[] =
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
 
+    { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::NONE },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -1795,6 +1797,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         else
             return SPRET_ABORT;
         break;
+
+    case ABIL_HOP:
+        if (you.duration[DUR_NO_HOP])
+        {
+            mpr("Your legs are too worn out to hop.");
+            return SPRET_ABORT;
+        }
+        return frog_hop(fail);
 
     case ABIL_DELAYED_FIREBALL:
     {
@@ -3311,6 +3321,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
             _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
     }
+
+    if (player_mutation_level(MUT_HOP))
+        _add_talent(talents, ABIL_HOP, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (player_mutation_level(MUT_SPIT_POISON) == 2)

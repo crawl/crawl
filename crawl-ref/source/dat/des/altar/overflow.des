@@ -108,7 +108,9 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
 end
 
 function species_mock(e)
-  if you.race() == "Centaur" then
+  if you.race() == "Barachian" then
+    e.kmons("1 = spiny toad")
+  elseif you.race() == "Centaur" then
     e.kmons("1 = dart slug")
   elseif you.race() == "Demigod" then
     e.kmons("1 = titan simulacrum")
