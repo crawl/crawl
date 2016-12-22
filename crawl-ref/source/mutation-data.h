@@ -890,6 +890,19 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_HOP, 0, 2, mutflag::GOOD, true,
+  "strong legs",
+
+  {"You can hop short distances.",
+   "You can hop longer distances.",
+   ""},
+
+  {"", "Your legs feel stronger.", ""},
+
+  {"", "", ""},
+},
+
+
 { MUT_SHAGGY_FUR, 2, 3, mutflag::GOOD, true,
   "shaggy fur",
 
