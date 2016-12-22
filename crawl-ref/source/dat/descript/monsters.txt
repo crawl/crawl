@@ -1252,8 +1252,8 @@ A muscular grey-scaled humanoid with a reptilian tail and small wings.
 guardian golem
 
 A large construct, designed to protect. It can take the blows dealt to others
-upon itself, though it is prone to becoming unstable and overheating after
-heavy punishment.
+upon itself, though it is prone to becoming explosively unstable after heavy
+punishment.
 %%%%
 guardian mummy
 
