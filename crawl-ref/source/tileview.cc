@@ -1423,6 +1423,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP))
         cell.mangrove_water = true;
+    cell.awakened_forest = feat_is_tree(feat) && env.forest_awoken_until;
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
