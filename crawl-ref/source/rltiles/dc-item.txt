@@ -518,9 +518,9 @@ gem_plastic
 i-flame WAND_FLAME WAND_ID_FIRST
 i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
-i-hasting WAND_HASTING
+i-hasting WAND_REMOVEME7
 i-flame WAND_REMOVEME2
-i-heal_wounds WAND_HEAL_WOUNDS
+i-heal_wounds WAND_REMOVEME6
 i-paralysis WAND_PARALYSIS
 i-flame WAND_REMOVEME3
 i-flame WAND_REMOVEME4
@@ -528,7 +528,7 @@ i-confusion WAND_CONFUSION
 i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
 i-iceblast WAND_ICEBLAST
-i-teleportation WAND_TELEPORTATION
+i-teleportation WAND_REMOVEME8
 i-lightning WAND_LIGHTNING
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT

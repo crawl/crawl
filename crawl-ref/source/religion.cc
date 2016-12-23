@@ -226,6 +226,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "Jiyva will mutate your body as your piety grows.",
            "Jiyva will no longer mutate your body." },
       { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
+      { 5, "You may now expel jellies when seriously injured.",
+           "You will no longer expel jellies when injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION, "call upon Jiyva to remove your harmful mutations" },
     },
 
@@ -1122,7 +1124,7 @@ static bool _give_pakellas_gift()
         // Felids get another high-level wand or evoker instead of a rod.
         if (you.species == SP_FELID)
         {
-            basetype = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+            basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
             subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
                                               : _pakellas_high_misc();
         }
@@ -3714,7 +3716,7 @@ void god_pitch(god_type which_god)
         if (fee == 0)
         {
             service_fee = string("Gozag will waive the service fee if you ")
-                          + (coinflip() ? "act now" : "join today") + "!\n";
+                          + random_choose("act now", "join today") + "!\n";
         }
         else
         {
@@ -4148,16 +4150,16 @@ colour_t god_message_altar_colour(god_type god)
         return CYAN;
 
     case GOD_YREDELEMNUL:
-        return coinflip() ? DARKGREY : RED;
+        return random_choose(DARKGREY, RED);
 
     case GOD_BEOGH:
-        return coinflip() ? BROWN : LIGHTRED;
+        return random_choose(BROWN, LIGHTRED);
 
     case GOD_KIKUBAAQUDGHA:
         return DARKGREY;
 
     case GOD_FEDHAS:
-        return coinflip() ? BROWN : GREEN;
+        return random_choose(BROWN, GREEN);
 
     case GOD_XOM:
         return random2(15) + 1;
@@ -4191,13 +4193,13 @@ colour_t god_message_altar_colour(god_type god)
         return LIGHTCYAN;
 
     case GOD_JIYVA:
-        return coinflip() ? GREEN : LIGHTGREEN;
+        return random_choose(GREEN, LIGHTGREEN);
 
     case GOD_DITHMENOS:
         return MAGENTA;
 
     case GOD_GOZAG:
-        return coinflip() ? YELLOW : BROWN;
+        return random_choose(YELLOW, BROWN);
 
     case GOD_QAZLAL:
     case GOD_RU:
@@ -4210,7 +4212,7 @@ colour_t god_message_altar_colour(god_type god)
         return random_choose(RED, MAGENTA);
 
     case GOD_HEPLIAKLQANA:
-        return coinflip() ? LIGHTGREEN : LIGHTBLUE;
+        return random_choose(LIGHTGREEN, LIGHTBLUE);
 
     default:
         return YELLOW;

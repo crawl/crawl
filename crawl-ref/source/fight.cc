@@ -705,7 +705,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     {
         const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
-        const int dir = coinflip() ? -1 : 1;
+        const int dir = random_choose(-1, 1);
 
         for (int i = 0; i < 7; ++i)
         {

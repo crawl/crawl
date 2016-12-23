@@ -603,13 +603,10 @@ static const char* _wand_type_name(int wandtype)
     {
     case WAND_FLAME:           return "flame";
     case WAND_SLOWING:         return "slowing";
-    case WAND_HASTING:         return "hasting";
-    case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_CONFUSION:       return "confusion";
     case WAND_DIGGING:         return "digging";
     case WAND_ICEBLAST:        return "iceblast";
-    case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
@@ -2166,6 +2163,13 @@ bool item_type_has_ids(object_class_type base_type)
         || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
 }
 
+bool item_brand_known(const item_def& item)
+{
+    return item_ident(item, ISFLAG_KNOW_TYPE)
+           || is_artefact(item)
+           && artefact_known_property(item, ARTP_BRAND);
+}
+
 bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
@@ -3185,19 +3189,6 @@ bool is_emergency_item(const item_def &item)
 
     switch (item.base_type)
     {
-    case OBJ_WANDS:
-        switch (item.sub_type)
-        {
-        case WAND_HASTING:
-            return !have_passive(passive_t::no_haste)
-                && you.species != SP_FORMICID;
-        case WAND_TELEPORTATION:
-            return you.species != SP_FORMICID;
-        case WAND_HEAL_WOUNDS:
-            return you.can_device_heal();
-        default:
-            return false;
-        }
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
@@ -3303,6 +3294,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
 #endif
+        case SCR_NOISE:
+            return true;
         default:
             return false;
         }
@@ -3384,7 +3377,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
-        case SCR_NOISE:
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
@@ -3474,15 +3466,11 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_MISSILES:
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
-             || !you.num_turns
-                && you.char_class == JOB_TRANSMUTER)
-            && item.sub_type == MI_ARROW
+                || !you.num_turns && you.char_class == JOB_TRANSMUTER)
+                && item.sub_type == MI_ARROW
             || (you.has_spell(SPELL_SANDBLAST)
-                || !you.num_turns
-                   && you.char_class == JOB_EARTH_ELEMENTALIST)
-                && (item.sub_type == MI_STONE
-                    || item.sub_type == MI_LARGE_ROCK
-                       && you.could_wield(item, true, true)))
+                || !you.num_turns && you.char_class == JOB_EARTH_ELEMENTALIST)
+                && item.sub_type == MI_STONE)
         {
             return false;
         }
@@ -3559,24 +3547,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == WAND_ENSLAVEMENT
             && item_type_known(item)
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
-        // heal wand is useless for VS if they can't get allies
-        if (item.sub_type == WAND_HEAL_WOUNDS
-            && item_type_known(item)
-            && !you.can_device_heal()
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
-        // haste wand is useless for Formicid if they can't get allies
-        if (item.sub_type == WAND_HASTING
-            && item_type_known(item)
-            && you.species == SP_FORMICID
             && player_mutation_level(MUT_NO_LOVE))
         {
             return true;

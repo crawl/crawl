@@ -442,7 +442,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ALTAR_IEOH_JIAN:
         return TILE_DNGN_ALTAR_IEOH_JIAN;
     case DNGN_ALTAR_ECUMENICAL:
-        return TILE_DNGN_UNKNOWN_ALTAR;
+        return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -2837,12 +2837,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case BROWN:
-        if (bolt.name == "rocky blast"
-            || bolt.name == "large rocky blast"
-            || bolt.name == "blast of sand")
-        {
+        if (bolt.name == "rocky blast")
             return TILE_BOLT_SANDBLAST;
-        }
         break;
 
     case GREEN:
@@ -3219,8 +3215,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
     // Deep Dwarves
-    case ABIL_RECHARGING:
-        return TILEG_ABILITY_RECHARGE;
+    case ABIL_HEAL_WOUNDS:
+        return TILEG_ABILITY_HEAL_WOUNDS;
     // Formicids
     case ABIL_DIG:
         return TILEG_ABILITY_DIG;

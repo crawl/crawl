@@ -225,15 +225,14 @@ NSUBST:  6 = 2:6 / *:.
 SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
-MONS:    hill giant, cyclops
+MONS:    cyclops, ettin
 MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
 SUBST:   G = '
 # Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
 SHUFFLE: '1 / '1 / w2 / l3
 : end
-KMONS:   Z = hill giant zombie / cyclops zombie / \
-             stone giant zombie / titan zombie
+KMONS:   Z = cyclops zombie / stone giant zombie / titan zombie
 KMONS:   P = plant
 KITEM:   ( = any weapon good_item
 KITEM:   Z = large rock

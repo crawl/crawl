@@ -3237,10 +3237,6 @@ wand of flame
 
 <wand>
 %%%%
-wand of hasting
-
-<wand>
-%%%%
 wand of iceblast
 
 <wand>
@@ -3262,10 +3258,6 @@ wand of random effects
 <wand>
 %%%%
 wand of slowing
-
-<wand>
-%%%%
-wand of teleportation
 
 <wand>
 %%%%

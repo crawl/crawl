@@ -368,7 +368,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter",
                 -- Gimmicks
                 "neqoxec",
-                "moth of wrath / w:20 hill giant", "ball lightning",
+                "moth of wrath / w:20 two-headed ogre", "ball lightning",
                 "orb spider", "redback / sea snake w:3",
                 "hungry ghost / w:5 harpy", "shining eye"
             }
@@ -416,7 +416,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ugly thing w:14 / w:1 very ugly thing / w:1 wretched star",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage /\
                     lich / w:5 ancient lich / w:1 frederick",
-                "hill giant / stone giant / w:5 frost giant / w:5 fire giant /\
+                "cyclops / stone giant / w:5 frost giant / w:5 fire giant /\
                     w:1 titan",
                 "fire dragon / ice dragon / storm dragon / w:5 shadow dragon /\
                     w:5 golden dragon / w:1 xtahua",
@@ -1086,8 +1086,8 @@ KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ;
             potion of experience q:3
 KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             quad damage | quad damage | quad damage |\
-            wand of heal wounds charges:5 | wand of heal wounds charges:5 |\
-            wand of hasting charges:5 | wand of hasting charges:5 |\
+            potion of heal wounds q:5 | potion of heal wounds q:5 |\
+            potion of haste q:5 | potion of haste q:5 |\
             crystal ball of energy
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
             fruit q:100 | potion of blood q:5 | potion of blood q:5 |\

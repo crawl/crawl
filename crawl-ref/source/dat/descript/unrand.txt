@@ -393,7 +393,7 @@ fencer's gloves
 
 A pair of gloves made of white silk. They have a natural affinity with the
 riposte, allowing their wielder to retaliate against some missed attacks with
-any weapon, or to retaliate against all attacks when using a long blade.
+any weapon, or to retaliate against most attacks when using a long blade.
 %%%%
 cloak of Starlight
 

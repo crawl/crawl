@@ -1103,7 +1103,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_SLIMY_WALL:
         case DNGN_STONE_WALL:
         case DNGN_PERMAROCK_WALL:
-            return coinflip() ? CLOUD_BLUE_SMOKE : CLOUD_PURPLE_SMOKE;
+            return random_choose(CLOUD_BLUE_SMOKE, CLOUD_PURPLE_SMOKE);
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_CLEAR_STONE_WALL:
         case DNGN_CLEAR_PERMAROCK_WALL:
@@ -1701,8 +1701,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     {
         const int offsetX = random2avg(4, 3) + random2(3);
         const int offsetY = random2avg(4, 3) + random2(3);
-        const coord_def p(pos.x + (coinflip()? offsetX : -offsetX),
-                          pos.y + (coinflip()? offsetY : -offsetY));
+        const coord_def p(pos.x + random_choose(offsetX, -offsetX),
+                          pos.y + random_choose(offsetY, -offsetY));
         if (!in_bounds(p) || actor_at(p))
             continue;
 

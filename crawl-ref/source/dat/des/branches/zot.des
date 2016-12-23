@@ -658,7 +658,7 @@ SUBST:  1 = 1 .:5
 SUBST:  1 = 1 3
 MONS:   troll / deep troll / iron troll / ogre / two-headed ogre
 MONS:   moth of wrath
-MONS:   hill giant / stone giant / fire giant / frost giant / ettin / \
+MONS:   stone giant / fire giant / frost giant / ettin / \
         w:5 efreet / w:3 titan
 SUBST:  } = }:80 >, ) = ):80 >
 MAP
@@ -1084,8 +1084,8 @@ KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos . sling bullet / \
              guardian mummy ; randart fustibalus . sling bullet / \
              guardian mummy ; randart longbow . arrow / \
              guardian mummy ; randart arbalest . bolt
-KMONS:   5 = guardian mummy ; rod of shadows | rod of destruction | \
-             wand of draining | wand of lightning | scroll of summoning w:20
+KMONS:   5 = guardian mummy ; rod of shadows | wand of lightning | \
+                              scroll of summoning
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
              randart chain mail | randart robe . scroll of summoning
 KMONS:   2468 = killer klown
@@ -2432,9 +2432,8 @@ ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         trident ego:electrocution good_item ident:type / \
         quarterstaff ego:electrocution good_item ident:type
 ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
-        scroll of teleportation q:1 / scroll of teleportation q:2 / \
-        any scroll good_item / staff of energy ident:type / \
-        wand of lightning ident:type / wand of teleportation ident:type
+        scroll of teleportation q:3 w:30 / any scroll good_item / \
+        staff of energy ident:type / wand of lightning ident:type
 KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate

@@ -344,7 +344,7 @@ ENDMAP
 NAME: sprint_mu_d1_spiders
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: two-headed ogre hd:3 hp:40
-MONS: hill giant hd:5 hp:68
+MONS: two-headed ogre hd:5 hp:68
 MONS: Erolcha
 MONS: redback
 KFEAT: ~ = net trap
@@ -1368,8 +1368,8 @@ NSUBST: g = 1:+ / *:c
 KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
-KITEM: ! = potion of resistance ident:all q:3, potion of agility ident:all q:3, \
-           wand of hasting ident:type
+KITEM: ! = potion of resistance ident:all q:3, \
+           potion of agility ident:all q:3, potion of haste ident:all q:5
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1412,8 +1412,7 @@ KITEM: 1 = bone rune of zot
 KMONS: % = patrolling greater mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
 KMONS: ? = patrolling greater mummy
-KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:3, \
-  wand of heal wounds ident:type
+KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
 KFEAT: # = closed_door

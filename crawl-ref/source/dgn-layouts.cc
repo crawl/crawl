@@ -225,7 +225,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 
         dungeon_feature_type feature = DNGN_FLOOR;
         if (one_chance_in(10))
-            feature = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
+            feature = random_choose(DNGN_DEEP_WATER, DNGN_LAVA);
 
         _octa_room(room, oblique_max, feature);
     }
@@ -258,7 +258,7 @@ static int _trail_random_dir(int pos, int bound, int margin)
         dir = -1;
 
     if (dir == 0 || x_chance_in_y(2, 5))
-        dir = coinflip() ? -1 : 1;
+        dir = random_choose(-1, 1);
 
     return dir;
 }
@@ -801,7 +801,7 @@ static void _diamond_rooms(int level_number)
         type_floor = DNGN_LAVA;
 
     if (level_number > 10 && one_chance_in(15))
-        type_floor = (coinflip() ? DNGN_STONE_WALL : DNGN_ROCK_WALL);
+        type_floor = random_choose(DNGN_STONE_WALL, DNGN_ROCK_WALL);
 
     if (level_number > 12 && one_chance_in(20))
         type_floor = DNGN_METAL_WALL;

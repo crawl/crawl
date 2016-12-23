@@ -154,18 +154,11 @@ function trove.get_trove_item(e, value, base_item)
     end
   end
 
-  if you.race() ~= "Vine Stalker" and you.mutation("inability to use devices") ~= 1 then
-    table.insert(prices, {base="wand", type="heal wounds", quant=9})
-  end
-
   local stasis_tolls = {
        {base="scroll", type="blinking", quant=2+d(3)+d(3)},
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
-    if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=9})
-    end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
     end

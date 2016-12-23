@@ -3241,7 +3241,9 @@ static void _cast_black_mark(monster* agent)
         if (ai->is_player() || !mons_aligned(*ai, agent))
             continue;
         monster* mon = ai->as_monster();
-        if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(*mon))
+
+        if (!mon->has_ench(ENCH_BLACK_MARK)
+            && mons_has_attacks(*mon))
         {
             mon->add_ench(ENCH_BLACK_MARK);
             simple_monster_message(*mon, " begins absorbing vital energies!");
@@ -5586,6 +5588,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
     beam.thrower     = KILL_MON_MISSILE;
     beam.range       = LOS_RADIUS;
     beam.damage      = dice_def(3, 24);
+    beam.foe_ratio   = random_range(20, 30);
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
@@ -6224,8 +6227,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
         {
             monster_type berserkers[] = { MONS_BLACK_BEAR, MONS_OGRE, MONS_TROLL,
-                                           MONS_HILL_GIANT, MONS_DEEP_TROLL,
-                                           MONS_TWO_HEADED_OGRE};
+                                           MONS_TWO_HEADED_OGRE, MONS_DEEP_TROLL };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
 
@@ -6693,8 +6695,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                      plural ? "Some" : "A",
                      plural ? "s" : "",
                      plural ? " themselves" : "s itself",
-                     plural ? "around" : (coinflip() ? "beside" :
-                                          coinflip() ? "behind" : "before"),
+                     plural ? "around" : random_choose_weighted(2, "beside",
+                                                                1, "behind",
+                                                                1, "before"),
                      mons->name(DESC_THE).c_str());
             }
         }

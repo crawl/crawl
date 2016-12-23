@@ -857,14 +857,6 @@ wand of fireball
 
 폭발하는 화염구를 발사하는 마법봉이다.
 %%%%
-wand of hasting
-
-짧은 시간동안 대상의 모든 행동을 가속시키는 마법봉이다.
-%%%%
-wand of heal wounds
-
-대상의 상처를 치료할 수 있는 희귀한 마법봉이다.
-%%%%
 wand of invisibility
 
 대상의 모습을 짧은 시간동안 감추는 마법봉이다.
@@ -890,10 +882,6 @@ wand of random effects
 wand of slowing
 
 짧은 시간동안 대상의 모든 행동을 느려지게 하는 마법봉이다.
-%%%%
-wand of teleportation
-
-대상을 무작위한 곳으로 공간이동시키는 마법봉이다.
 %%%%
 whip
 

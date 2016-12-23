@@ -117,14 +117,16 @@ Donald
 %%%%
 Dowan
 
-A beautiful but vain elf with an aptitude for magic and little else. His skills
-are the perfect complement of his twin sister Duvessa's fighting prowess.
+A beautiful but vain deep elf with an aptitude for magic and little else. His
+skills are the perfect complement of his twin sister Duvessa's fighting prowess.
+In search of more powerful spells, he journeys to the surface with his sister.
 %%%%
 Duvessa
 
-A plain-looking elven fighter who is technically brilliant in many forms of
+A plain-looking deep elven fighter who is technically brilliant in many forms of
 combat, but over-confident because of it. She is complemented by the magical
-skills of her twin brother, Dowan.
+skills of her twin brother, Dowan. She journeys to the surface to challenge
+its greatest champions.
 %%%%
 Edmund
 
@@ -1256,8 +1258,8 @@ A muscular grey-scaled humanoid with a reptilian tail and small wings.
 guardian golem
 
 A large construct, designed to protect. It can take the blows dealt to others
-upon itself, though it is prone to becoming unstable and overheating after
-heavy punishment.
+upon itself, though it is prone to becoming explosively unstable after heavy
+punishment.
 %%%%
 guardian mummy
 
@@ -1334,12 +1336,6 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
-%%%%
-hill giant
-
-A massive, burly humanoid standing taller even than an ogre. It is uncivilized
-in every sense of the word, and has few recreational interests beyond smashing
-adventurers.
 %%%%
 hippogriff
 

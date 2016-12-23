@@ -5262,6 +5262,15 @@ bool mons_is_ieoh_jian_weapon(const monster& mon)
     return mon.type == MONS_IEOH_JIAN_WEAPON;
 }
 
+bool mons_has_attacks(const monster& mon)
+{
+    const mon_attack_def attk = mons_attack_spec(mon, 0);
+    if (attk.type == AT_NONE || attk.damage == 0)
+        return false;
+
+    return true;
+}
+
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monster& mon)
 {

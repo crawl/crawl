@@ -414,7 +414,7 @@ DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
-   potion of heal wounds | potion of curing | wand of heal wounds | \
+   potion of heal wounds | potion of curing | \
    tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
    amulet of faith w:2 | potion of cure mutation | \
@@ -600,10 +600,9 @@ WEIGHT: 5
 SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
- scroll of blinking | scroll of teleportation | scroll of fog w:8 | \
- potion of flight | potion of invisibility w:8 | potion of haste w:1 | \
- ring of flight w:5 | ring of teleportation w:5 | ring of stealth w:4 | \
- wand of teleportation w:5 | wand of digging w:4 | wand of hasting w:1
+ scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
+ potion of flight | potion of invisibility w:8 | potion of haste w:3 | \
+ ring of flight w:5 | ring of stealth w:4 | wand of digging w:4
 MAP
   wwwwwwwww
  wwwwwwwwwww

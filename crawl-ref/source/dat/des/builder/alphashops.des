@@ -102,10 +102,10 @@
        "glaive", "gold dragon scales", "grand grimoire", "great mace",
        "great sword", "pair of gloves" }
 
-      elseif s == "H" then i = { "amulet of harm", "halberd",
-       "hand axe", "hand crossbow", "hunting sling", "wand of hasting",
-       "potion of heal wounds", "potion of haste", "scroll of holy word",
-       "wand of heal wounds", "manual of hexes", "hat", "helmet" }
+      elseif s == "H" then i = { "amulet of harm", "halberd", "hand axe",
+       "hand crossbow", "hunting sling", "potion of heal wounds",
+       "potion of haste", "scroll of holy word", "manual of hexes", "hat",
+       "helmet" }
 
       elseif s == "I" then i = { "amulet of inaccuracy", "ring of ice",
        "scroll of immolation", "ice dragon scales", "book of ice", "iron rod",
@@ -167,8 +167,8 @@
        "book of transfigurations", "ring of teleportation",
        "scroll of teleportation", "triple sword", "triple crossbow",
        "troll leather armour", "manual of throwing",
-       "wand of teleportation", "manual of translocations",
-       "manual of transmutations", "tomahawk", "trident", "throwing net" }
+       "manual of translocations", "manual of transmutations", "tomahawk",
+       "trident", "throwing net" }
 
       elseif s == "U" then i = { "book of unlife", "manual of unarmed combat" }
 

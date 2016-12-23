@@ -1545,7 +1545,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     1,
     50,
-    2, 2, // more with wielded stones
+    3, 3,
     1, 0,
     TILEG_SANDBLAST,
 },
@@ -2556,7 +2556,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THUNDERBOLT, "Thunderbolt",
     SPTYP_CONJURATION | SPTYP_AIR,
-    SPFLAG_DIR_OR_TARGET,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
     2, // 2-5
     200,
     5, 5,

@@ -2568,30 +2568,6 @@ mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
     return NUM_MONSTER_SLOTS;
 }
 
-static string _drop_selitem_text(const vector<MenuEntry*> *s)
-{
-    bool extraturns = false;
-
-    if (s->empty())
-        return "";
-
-    for (MenuEntry *entry : *s)
-    {
-        const item_def *item = static_cast<item_def *>(entry->data);
-        const int eq = get_equip_slot(item);
-        if (eq > EQ_WEAPON && eq < NUM_EQUIP)
-        {
-            extraturns = true;
-            break;
-        }
-    }
-
-    return make_stringf(" (%u%s turn%s)",
-               (unsigned int)s->size(),
-               extraturns? "+" : "",
-               s->size() > 1? "s" : "");
-}
-
 // This has to be of static storage class, so that the value isn't lost when a
 // MultidropDelay is interrupted.
 static vector<SelItem> items_for_multidrop;
@@ -2629,18 +2605,8 @@ void drop()
     }
 
     vector<SelItem> tmp_items;
-    string prompt = "Drop what? " + slot_description()
-#ifdef TOUCH_UI
-                  + " (<Enter> or tap header to drop)"
-#else
-                  + " (_ for help)"
-#endif
-                  ;
 
-    tmp_items = prompt_invent_items(prompt.c_str(), MT_DROP,
-                                     -1, nullptr, true, true, 0,
-                                     &Options.drop_filter, _drop_selitem_text,
-                                     &items_for_multidrop);
+    tmp_items = prompt_drop_items(items_for_multidrop);
 
     if (tmp_items.empty())
     {
@@ -3308,9 +3274,7 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        // choose from all existing wands, except:
-        // (1) don't allow /hw, because it encourages stuff like curing rot
-        // (2) allow /invis even though that was removed, because it's fun
+        // choose from all existing wands, except not really at all
         return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
                              ZAP_PARALYSE, ZAP_CONFUSE,
                              ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
@@ -3324,13 +3288,10 @@ zap_type item_def::zap() const
     {
     case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
-    case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
     case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
-    case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
     case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
     case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
@@ -3344,6 +3305,9 @@ zap_type item_def::zap() const
     case WAND_FIRE_REMOVED:
     case WAND_COLD_REMOVED:
     case WAND_FROST_REMOVED:
+    case WAND_HEAL_WOUNDS_REMOVED:
+    case WAND_HASTING_REMOVED:
+    case WAND_TELEPORTATION_REMOVED:
 #endif
         break;
     }

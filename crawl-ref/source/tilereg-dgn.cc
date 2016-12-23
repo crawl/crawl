@@ -456,8 +456,6 @@ static bool _is_appropriate_evokable(const item_def& item,
         return true;
 
     spell_type spell = zap_to_spell(item.zap());
-    if (spell == SPELL_TELEPORT_OTHER && target->is_player())
-        spell = SPELL_TELEPORT_SELF;
 
     return _is_appropriate_spell(spell, target);
 }

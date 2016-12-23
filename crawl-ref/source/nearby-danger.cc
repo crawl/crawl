@@ -249,6 +249,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
             return false;
         }
+
+        if (you.duration[DUR_LIQUID_FLAMES])
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You are on fire!");
+
+            return false;
+        }
     }
 
     // Monster check.

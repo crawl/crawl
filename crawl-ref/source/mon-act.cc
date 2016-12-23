@@ -1356,41 +1356,6 @@ static bool _handle_wand(monster& mons)
         // This is handled elsewhere.
         return false;
 
-    // These are wands that monsters will aim at themselves {dlb}:
-    case WAND_HASTING:
-        if (!mons.has_ench(ENCH_HASTE))
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_HEAL_WOUNDS:
-        if (mons.hit_points <= mons.max_hit_points / 2)
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_TELEPORTATION:
-        if (mons.hit_points <= mons.max_hit_points / 2
-            || mons.caught())
-        {
-            if (!mons.has_ench(ENCH_TP)
-                && !one_chance_in(20))
-            {
-                beem.target = mons.pos();
-                niceWand = true;
-                break;
-            }
-            // This break causes the wand to be tried on the player.
-            break;
-        }
-        return false;
-
     default:
         break;
     }
@@ -3282,7 +3247,7 @@ static void _find_good_alternate_move(monster* mons,
         const int FAR_AWAY = 1000000;
 
         // Try both directions (but randomise which one is first).
-        const int sdir = coinflip() ? j : -j;
+        const int sdir = random_choose(j, -j);
         const int inc = -2 * sdir;
 
         for (int mod = sdir, i = 0; i < 2; mod += inc, i++)

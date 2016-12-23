@@ -579,7 +579,6 @@ mennas MONS_MENNAS
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 %sdir mon
-hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN
 cyclops MONS_CYCLOPS
 fire_giant MONS_FIRE_GIANT

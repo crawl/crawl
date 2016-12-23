@@ -569,7 +569,7 @@ SHUFFLE: O3hi
 SUBST: hi = .
 NSUBST: 1 = 1:2 / *=1
 KFEAT: O = enter_depths
-MONS: tengu warrior band w:5 / tengu conjurer band w:5 / hill giant / \
+MONS: tengu warrior band w:5 / tengu conjurer band w:5 / \
       ogre mage band / centaur warrior band / yaktaur band / cyclops band / \
       deep elf knight band
 MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \

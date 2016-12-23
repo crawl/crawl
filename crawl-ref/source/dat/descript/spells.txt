@@ -63,9 +63,7 @@ Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water. Extremely loud noises, such as those produced
-by lightning or scrolls of noise, will disrupt the effect, as will leaving the
-caster's line of sight.
+any nearby bodies of deep water.
 %%%%
 Awaken Earth spell
 
@@ -1109,16 +1107,15 @@ However, it also makes them much more susceptible to cold.
 %%%%
 Sandblast spell
 
-Creates a short blast of high-velocity particles. It has increased power and
-range when the caster provides some source (by wielding a stone), but will
-still have some effect with no source wielded. Its damage is strongly reduced
-by armour.
+Consumes a stone to create a short blast of high-velocity rock shards. Its
+damage is strongly reduced by armour.
 %%%%
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
 afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are cast.
+magic, progressively hindering their chances of success as more spells are
+cast.
 %%%%
 Scattershot spell
 
@@ -1417,8 +1414,8 @@ but the strongest demons may eventually turn against their summoner regardless.
 Summon Guardian Golem spell
 
 Summons a protective golem. It redirects the injuries of its allies (but not
-the caster) to itself, though it risks overheating after absorbing significant
-amounts of damage. It will gain more health at high power.
+the caster) to itself. When sufficiently damaged, it may fill with an inner
+flame, causing it to explode if destroyed. It gains more health at high power.
 %%%%
 Summon Hell Beast spell
 

@@ -822,6 +822,12 @@ string desc_cannot_memorise_reason(spell_type spell)
 */
 static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
+    if (spell_removed(specspell))
+    {
+        mpr("Sorry, this spell is gone!");
+        return false;
+    }
+
     if (!wizard && !can_learn_spell())
         return false;
 

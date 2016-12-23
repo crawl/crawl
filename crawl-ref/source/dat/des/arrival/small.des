@@ -2445,7 +2445,7 @@ MONS:    rat / river rat / hell rat / quokka
 MONS:    worker ant / soldier ant / queen ant
 MONS:    worm / tyrant leech
 MONS:    komodo dragon / iguana / basilisk
-MONS:    ettin / frost giant / hill giant / stone giant / fire giant
+MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
 MONS:    frilled lizard / leopard gecko / iguana / crocodile / komodo dragon

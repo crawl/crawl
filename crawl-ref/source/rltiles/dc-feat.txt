@@ -399,7 +399,6 @@ desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
 portal_unknown DNGN_UNKNOWN_PORTAL
 
 %sdir dngn/altars
-generic DNGN_UNSEEN_ALTAR
 zin DNGN_ALTAR_ZIN
 shining_one DNGN_ALTAR_SHINING_ONE
 kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
@@ -469,6 +468,7 @@ hep3
 hep4
 hep5
 ieoh_jian DNGN_ALTAR_IEOH_JIAN
+ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn

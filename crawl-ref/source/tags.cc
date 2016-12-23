@@ -1006,6 +1006,15 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
     {
         x = DNGN_SHALLOW_WATER;
     }
+
+    // ensure that killing TRJ opens the slime:$ vaults
+    if (you.where_are_you == BRANCH_SLIME && you.depth == brdepth[BRANCH_SLIME]
+        && minor_version < TAG_MINOR_SLIME_WALL_CLEAR
+        && x == DNGN_STONE_WALL)
+    {
+        x = DNGN_CLEAR_STONE_WALL;
+    }
+
 #endif
 
     return x;

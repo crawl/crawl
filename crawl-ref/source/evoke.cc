@@ -156,9 +156,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =
-        (!feat_is_reachable_past(grd(first_middle)) ? second_middle :
-         (!feat_is_reachable_past(grd(second_middle)) ? first_middle :
-          (coinflip() ? first_middle : second_middle)));
+        !feat_is_reachable_past(grd(first_middle)) ? second_middle :
+        !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+        random_choose(first_middle, second_middle);
 
     // Check for a monster in the way. If there is one, it blocks the reaching
     // attack 50% of the time, and the attack tries to hit it if it is hostile.
@@ -287,7 +287,7 @@ static bool _check_crystal_ball()
 
     if (you.confused())
     {
-        mpr("You are unable to concentrate on the shapes in the crystal ball.");
+        canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
@@ -300,7 +300,7 @@ static bool _check_crystal_ball()
 
     if (you.magic_points == you.max_magic_points)
     {
-        mpr("Your reserves of magic are already full.");
+        canned_msg(MSG_FULL_MAGIC);
         return false;
     }
 
@@ -504,7 +504,6 @@ void zap_wand(int slot)
         item_slot = prompt_invent_item("Zap which item?",
                                        MT_INVLIST,
                                        OBJ_WANDS,
-                                       true, true, true, 0, -1, nullptr,
                                        OPER_ZAP);
     }
 
@@ -544,13 +543,7 @@ void zap_wand(int slot)
     switch (wand.sub_type)
     {
     case WAND_DIGGING:
-    case WAND_TELEPORTATION:
         targ_mode = TARG_ANY;
-        break;
-
-    case WAND_HEAL_WOUNDS:
-    case WAND_HASTING:
-        targ_mode = TARG_FRIEND;
         break;
 
     default:
@@ -591,20 +584,6 @@ void zap_wand(int slot)
         if (zap_wand.isCancel)
             canned_msg(MSG_OK);
         return;
-    }
-
-    if (zap_wand.target == you.pos())
-    {
-        if (wand.sub_type == WAND_TELEPORTATION
-            && you.no_tele_print_reason(false, false))
-        {
-            return;
-        }
-        else if (wand.sub_type == WAND_HASTING && you.stasis())
-        {
-            mpr("Your stasis prevents you from being hasted.");
-            return;
-        }
     }
 
     if (!has_charges)
@@ -665,13 +644,10 @@ void zap_wand(int slot)
     beam.range = _wand_range(type_zapped);
 
     dec_mp(mp_cost, false);
-    if (wand.sub_type != WAND_HEAL_WOUNDS
-        && wand.sub_type != WAND_TELEPORTATION)
-    {
-        const int surge = pakellas_surge_devices();
-        surge_power(you.spec_evoke() + surge);
-        power = player_adjust_evoc_power(power, surge);
-    }
+
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+    power = player_adjust_evoc_power(power, surge);
 
     // zapping() updates beam.
     zapping(type_zapped, power, beam);
@@ -742,7 +718,8 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
                                             divine ? OSEL_DIVINE_RECHARGE
                                                    : OSEL_RECHARGE,
-                                            true, true, false);
+                                           OPER_ANY,
+                                           invprompt_flag::escape_only);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -1947,8 +1924,7 @@ bool evoke_item(int slot, bool check_range)
     {
         slot = prompt_invent_item("Evoke which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_EVOKABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_EVOKE);
+                                   OSEL_EVOKABLE, OPER_EVOKE);
 
         if (prompt_failed(slot))
             return false;
@@ -2062,7 +2038,7 @@ bool evoke_item(int slot, bool check_range)
 #endif
                 )
         {
-            mpr("Your reserves of magic are already full.");
+            canned_msg(MSG_FULL_MAGIC);
             return false;
         }
         else if (x_chance_in_y(apply_enhancement(

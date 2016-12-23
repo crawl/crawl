@@ -1016,7 +1016,7 @@ int trap_def::shot_damage(actor& act)
     return random2(dam) + 1;
 }
 
-int trap_def::difficulty()
+int trap_def::to_hit_bonus()
 {
     switch (type)
     {
@@ -1291,18 +1291,15 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         return;
     }
 
-    bool force_hit = (env.markers.property_at(pos, MAT_ANY,
-                            "force_hit") == "true");
-
     if (act.is_player())
     {
-        if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
+        if (one_chance_in(5) || was_known && !one_chance_in(4))
         {
             mprf("You avoid triggering %s.", name(DESC_A).c_str());
             return;
         }
     }
-    else if (!force_hit && one_chance_in(5))
+    else if (one_chance_in(5))
     {
         if (was_known && you.see_cell(pos) && you.can_see(act))
         {
@@ -1314,7 +1311,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (difficulty()*2)) * random2(200) / 100;
+    int trap_hit = (20 + (to_hit_bonus()*2)) * random2(200) / 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 
@@ -1324,7 +1321,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
          trap_hit, act.evasion(), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.evasion())
+    if (trap_hit < act.evasion())
     {
         if (act.is_player())
             mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
@@ -1334,8 +1331,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                  act.name(DESC_THE).c_str());
         }
     }
-    else if (!force_hit
-             && pro_block >= con_block
+    else if (pro_block >= con_block
              && you.see_cell(act.pos()))
     {
         string owner;
@@ -1352,12 +1348,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else // OK, we've been hit.
     {
-        bool force_poison = (env.markers.property_at(pos, MAT_ANY,
-                                "poisoned_needle_trap") == "true");
-
-        bool poison = (type == TRAP_NEEDLE
-                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
-                            || force_poison));
+        bool poison = type == TRAP_NEEDLE
+                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100));
 
         int damage_taken = act.apply_ac(shot_damage(act));
 

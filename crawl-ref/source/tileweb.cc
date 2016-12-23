@@ -1215,6 +1215,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.mangrove_water != current_pc.mangrove_water)
             json_write_bool("mangrove_water", next_pc.mangrove_water);
 
+        if (next_pc.awakened_forest != current_pc.awakened_forest)
+            json_write_bool("awakened_forest", next_pc.awakened_forest);
+
         if (next_pc.blood_rotation != current_pc.blood_rotation)
             json_write_int("blood_rotation", next_pc.blood_rotation);
 

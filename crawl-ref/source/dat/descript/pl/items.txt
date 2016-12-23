@@ -777,16 +777,6 @@ wand of fireball
 Magiczny przedmiot który strzela kulami ognia które wybuchają w żądanym
 miejscu.
 %%%%
-wand of hasting
-
-Magiczny przedmiot który rzuca czar który przyspiesza wszystkie działania
-istoty na którą został skierowany.
-%%%%
-wand of heal wounds
-
-Magiczny przedmiot który leczy rany stworzenia na które został skierowany.
-Działa to nawet na nieumarłych zdolnych do zdrowienia.
-%%%%
 wand of invisibility
 
 Magiczny przedmiot który czyni stworzenie na które został skierowany
@@ -817,11 +807,6 @@ wand of slowing
 
 Magiczny przedmiot który rzuca czar który spowalnia wszystkie działa istoty na
 którą został skierowany.
-%%%%
-wand of teleportation
-
-Magiczny przedmiot który przemieszcza stworzenie na które został skierowane w
-przypadkowe miejsce. Nie działa to natychmiastowo.
 %%%%
 whip
 

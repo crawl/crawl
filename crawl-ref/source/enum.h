@@ -182,39 +182,25 @@ public:
     EXPANDMACRO(DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, ))
 // The trailing comma suppresses "ISO C99 requires rest arguments to be used"
 
-enum lang_t
+enum class lang_t
 {
-    LANG_EN = 0,
-    LANG_CS,
-    LANG_DA,
-    LANG_DE,
-    LANG_EL,
-    LANG_ES,
-    LANG_FI,
-    LANG_FR,
-    LANG_HU,
-    LANG_IT,
-    LANG_JA,
-    LANG_KO,
-    LANG_LT,
-    LANG_LV,
-    LANG_NL,
-    LANG_PL,
-    LANG_PT,
-    LANG_RU,
-    LANG_SV,
-    LANG_ZH,
+    EN = 0,
+    CS, DA, DE,
+    EL, ES, FI, FR,
+    HU, IT, JA, KO,
+    LT, LV, NL, PL,
+    PT, RU, SV, ZH,
 };
 
-enum flang_t
+enum class flang_t
 {
-    FLANG_DWARVEN,
-    FLANG_JAGERKIN,
-    FLANG_KRAUT,
-    FLANG_FUTHARK,
-    FLANG_WIDE,
-    FLANG_GRUNT,
-    FLANG_BUTT,
+    dwarven,
+    jagerkin,
+    kraut,
+    futhark,
+    wide,
+    grunt,
+    butt,
 };
 
 enum ability_type
@@ -257,7 +243,7 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
 #endif
     // Deep Dwarves
-    ABIL_RECHARGING,
+    ABIL_HEAL_WOUNDS,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -893,6 +879,8 @@ enum canned_message_type
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
     MSG_GHOSTLY_OUTLINE,
+    MSG_FULL_HEALTH,
+    MSG_FULL_MAGIC,
     MSG_GAIN_HEALTH,
     MSG_GAIN_MAGIC,
     MSG_MAGIC_DRAIN,
@@ -2987,7 +2975,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_TROLL_SHAMAN,
 #endif
     MONS_GIANT,                 // genus
+#if TAG_MAJOR_VERSION == 34
     MONS_HILL_GIANT,
+#endif
     MONS_CYCLOPS,
     MONS_ETTIN,
     MONS_STONE_GIANT,
@@ -4232,7 +4222,9 @@ enum skill_focus_mode
 enum species_type
 {
     SP_HUMAN,
+#if TAG_MAJOR_VERSION == 34
     SP_HIGH_ELF,
+#endif
     SP_DEEP_ELF,
 #if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
@@ -4830,7 +4822,6 @@ enum zap_type
     ZAP_SLOW,
     ZAP_HASTE,
     ZAP_MAGIC_DART,
-    ZAP_HEAL_WOUNDS,
     ZAP_PARALYSE,
     ZAP_BOLT_OF_FIRE,
     ZAP_BOLT_OF_COLD,
@@ -4872,9 +4863,7 @@ enum zap_type
     ZAP_CORONA,
     ZAP_HIBERNATION,
     ZAP_FLAME_TONGUE,
-    ZAP_LARGE_SANDBLAST,
     ZAP_SANDBLAST,
-    ZAP_SMALL_SANDBLAST,
     ZAP_BOLT_OF_MAGMA,
     ZAP_POISON_ARROW,
     ZAP_BREATHE_STICKY_FLAME,

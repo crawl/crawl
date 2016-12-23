@@ -225,7 +225,6 @@ very_ugly_thing5
 
 ## Giants ('C')
 %sdir mon
-hill_giant CORPSE_HILL_GIANT
 ettin CORPSE_ETTIN
 cyclops CORPSE_CYCLOPS
 fire_giant CORPSE_FIRE_GIANT

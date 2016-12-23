@@ -173,8 +173,8 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
                     return ARM_BOOTS;
             }
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_MAYBE)
-                return coinflip() ? ARM_HELMET : ARM_HAT;
+            if (you_can_wear(EQ_HELMET) == MB_TRUE)
+                return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
             return _acquirement_shield_type();
@@ -320,7 +320,7 @@ static armour_type _useless_armour_type()
             // Boots-wearers get bardings, bardings-wearers get the wrong
             // barding, everyone else gets boots.
             if (you_can_wear(EQ_BOOTS) == MB_TRUE)
-                return coinflip() ? ARM_CENTAUR_BARDING : ARM_NAGA_BARDING;
+                return random_choose(ARM_CENTAUR_BARDING, ARM_NAGA_BARDING);
             if (you.species == SP_NAGA)
                 return ARM_CENTAUR_BARDING;
             if (you.species == SP_CENTAUR)
@@ -331,7 +331,7 @@ static armour_type _useless_armour_type()
         case EQ_HELMET:
             if (you_can_wear(EQ_HELMET))
                 return ARM_HELMET;
-            return coinflip() ? ARM_HELMET : ARM_HAT;
+            return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
             return ARM_CLOAK;
         case EQ_SHIELD:
@@ -703,44 +703,6 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 }
 
 /**
- * What weight should wands of Heal Wounds be given in wand acquirement, based
- * on their utility to the player? (More utile -> higher weight -> more likely)
- */
-static int _hw_wand_weight()
-{
-    if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
-        return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
-        return 5; // can be used on allies...? XXX: should be weight 1?
-    return 0; // with no allies, totally useless
-}
-
-/**
- * What weight should wands of Haste be given in wand acquirement, based on
- * their utility to the player? (More utile -> higher weight -> more likely)
- */
-static int _haste_wand_weight()
-{
-    if (you.species != SP_FORMICID)
-        return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
-        return 5; // can be used on allies...? XXX: should be weight 1?
-    return 0; // with no allies, totally useless
-}
-
-/**
- * What weight should wands of Teleportation be given in wand acquirement,
- * based on their utility to the player? (More utile -> higher weight -> more
- * likely)
- */
-static int _tele_wand_weight()
-{
-    if (you.species == SP_FORMICID || crawl_state.game_is_sprint())
-        return 1; // can only be used to tele away enemies
-    return 15;
-}
-
-/**
  * Choose a random type of wand to be generated via acquirement or god gifts.
  *
  * Heavily weighted toward more useful wands and wands the player hasn't yet
@@ -750,13 +712,8 @@ static int _tele_wand_weight()
  */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // basic total: 140
+    // basic total: 75
     vector<pair<wand_type, int>> weights = {
-        // normally 25
-        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
-        { WAND_HASTING,         _haste_wand_weight() },
-        // normally 15
-        { WAND_TELEPORTATION,   _tele_wand_weight() },
         { WAND_LIGHTNING,       16 },
         { WAND_ACID,            16 },
         { WAND_ICEBLAST,        16 },
@@ -764,10 +721,10 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         { WAND_DIGGING,         5 },
         { WAND_POLYMORPH,       5 },
         { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_PARALYSIS,       5 },
+        { WAND_CONFUSION,       3 },
         { WAND_RANDOM_EFFECTS,  3 },
         { WAND_FLAME,           1 },
-        { WAND_CONFUSION,       1 },
-        { WAND_PARALYSIS,       1 },
         { WAND_SLOWING,         1 },
     };
 
@@ -818,9 +775,14 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Misc items and rods have a common acquirement class.
-        if (class_wanted == OBJ_MISCELLANY && you.species != SP_FELID)
-            class_wanted = one_chance_in(8) ? OBJ_RODS : OBJ_MISCELLANY;
+        // Wands, rods, and misc have a common acquirement class.
+        if (class_wanted == OBJ_MISCELLANY)
+        {
+            if (one_chance_in(8) && you.species != SP_FELID)
+                class_wanted = OBJ_RODS;
+            else
+                class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
+        }
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -1529,10 +1491,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_RODS);
     }
     if (player_mutation_level(MUT_NO_ARTIFICE))
-    {
         bad_class.set(OBJ_MISCELLANY);
-        bad_class.set(OBJ_WANDS);
-    }
 
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
@@ -1543,13 +1502,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_JEWELLERY,  "Jewellery" },
         { OBJ_BOOKS,      "Book" },
         { OBJ_STAVES,     "Staff " },
-        { OBJ_WANDS,      "Wand" },
-        { OBJ_MISCELLANY, "Misc. Evocable" },
+        { OBJ_MISCELLANY, "Evocables" },
         { OBJ_FOOD,       0 }, // amended below
         { OBJ_GOLD,       "Gold" },
     };
-    ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you_worship(GOD_FEDHAS) ? "Fruit":
+    ASSERT(acq_classes[6].type == OBJ_FOOD);
+    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "Fruit":
                           you.species == SP_VAMPIRE  ? "Blood":
                                                        "Food";
 
