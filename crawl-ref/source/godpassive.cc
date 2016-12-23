@@ -1822,7 +1822,6 @@ static void _ieoh_jian_decay_equipped_weapon()
     unwield_item(false, true);
     dec_inv_item_quantity(inventory_index, 1);
     check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
     invalidate_agrid(true);
 }
 
@@ -1928,7 +1927,7 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
         return;
     }
 
-    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0.5 * IEOH_JIAN_ATTENTION_SPAN * (1 + theirs_num);
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0.5 * IEOH_JIAN_ATTENTION_SPAN;
 
     if (wpn.props.exists(IEOH_JIAN_DIVINE_DEGREE))
     {
