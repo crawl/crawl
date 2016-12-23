@@ -296,7 +296,7 @@ void uskayaw_bonds_audience();
 monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon);
 int ieoh_jian_calc_power_for_weapon(weapon_type);
 void ieoh_jian_spawn_weapon(const coord_def& position);
-bool ieoh_jian_despawn_weapon(bool urgent = false, bool at_excommunication = false);
+bool ieoh_jian_decay();
 item_def* ieoh_jian_get_current_divine_weapon();
 bool ieoh_jian_interest();
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);

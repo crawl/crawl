@@ -37,7 +37,7 @@ static void _redraw_armour()
 static void _ieoh_jian_bored()
 {
     if (you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
-        ieoh_jian_despawn_weapon(false, false);
+        ieoh_jian_decay();
 
     you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
 }

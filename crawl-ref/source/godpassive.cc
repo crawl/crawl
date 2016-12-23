@@ -1776,77 +1776,91 @@ bool ieoh_jian_interest()
     return false;
 }
 
-bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
+static void _ieoh_jian_decay_manifested_weapons(vector<monster*>& manifested)
 {
-    // We kill any ordinary IJC weapons first, in order of age.
-    if (ieoh_jian_kill_oldest_weapon(urgent))
+    if (manifested.at(0)->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE)) 
     {
-        you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
-        return true;
+       if (manifested.size() > 1) // Priorize non-divines
+       {
+          monster_die(manifested.at(1), KILL_RESET, NON_MONSTER);
+          return;
+       }
+       else
+       {
+           int divine_degree = manifested.at(0)->weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
+           manifested.at(0)->weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
+          
+           if (divine_degree > 0)
+               return;
+       }
     }
 
-    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
+    monster_die(manifested.at(0), KILL_RESET, NON_MONSTER);
+}
+
+static void _ieoh_jian_decay_equipped_weapon()
+{
+    if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
     {
-        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE) && !urgent)
+        int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
+        if (divine_degree > 0)
         {
-            int divine_degree = you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int();
             you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE] = divine_degree - 1;
-
-            if (divine_degree > 0)
-                return false;
-        }
-
-        if (you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
-        {
-            mprf("%s slips out of your %s and ascends back to the heavens!", 
-                 you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
-            invalidate_agrid(true);
-        }
-        else
-            mprf("%s shatters in your %s!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
-
-        int inventory_index = you.equip[EQ_WEAPON];
-        unwield_item(false, true);
-        dec_inv_item_quantity(inventory_index, 1);
-        check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
-        you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
-        return true;
-    }
-
-    // If there aren't any left, but there is an animated weapon belonging to
-    // the player, we pull it back to the player's hand, killing the ghost.
-    // This won't happen if your weapon isn't divine, as it should stick to you.
-    auto monsters = find_ieoh_jian_manifested_weapons(true);
-    if (!monsters.empty())
-    {
-        auto monster = monsters.at(0);
-
-        if (!at_excommunication)
-        {
-            monster->del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
-            monster->ieoh_jian_swap_weapon_with_player(true);
-
-            if (you.weapon())
-                mprf("%s flies back to your %s!", you.weapon()->name(DESC_YOUR, false, true, false).c_str(), you.hand_name(false).c_str());
-            else
-                mprf("%s flies back to your %s, but you fail to catch it!", 
-                     monster->weapon()->name(DESC_YOUR, false, true, false).c_str(),
-                     you.hand_name(false).c_str());
-
-            if (monster->alive())
-                monster_die(monster, KILL_RESET, NON_MONSTER);
-
-            return true;
+            return;
         }
         else 
         {
-            if (monster->alive())
-                monster_die(monster, KILL_RESET, NON_MONSTER);
-            return true;
+            mprf("%s slips out of your %s and ascends back to the heavens!",
+                 you.weapon()->name(DESC_THE, false, true, false).c_str(), 
+                 you.hand_name(false).c_str());
         }
     }
+    else
+        mprf("%s shatters in your %s!", you.weapon()->name(DESC_THE, false, true, false).c_str(), you.hand_name(false).c_str());
 
-    return false;
+    int inventory_index = you.equip[EQ_WEAPON];
+    unwield_item(false, true);
+    dec_inv_item_quantity(inventory_index, 1);
+    check_place_cloud(CLOUD_DUST, you.pos(), 2 + random2(4), &you, 5 + random2(15), -1);
+    you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
+    invalidate_agrid(true);
+}
+
+static void _ieoh_jian_retrieve_your_weapon(vector<monster*>& manifested)
+{
+    auto monster = manifested.at(0);
+    monster->del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
+    monster->ieoh_jian_swap_weapon_with_player(true);
+
+    if (you.weapon())
+        mprf("%s flies back to your %s!", you.weapon()->name(DESC_YOUR, false, true, false).c_str(), you.hand_name(false).c_str());
+    else
+        mprf("%s flies back to your %s, but you fail to catch it!", 
+             monster->weapon()->name(DESC_YOUR, false, true, false).c_str(),
+             you.hand_name(false).c_str());
+
+    if (monster->alive())
+        monster_die(monster, KILL_RESET, NON_MONSTER);
+}
+
+// Decays IJC weapons. Returns false if there is nothing to do.
+bool ieoh_jian_decay()
+{
+    auto manifested = find_ieoh_jian_manifested_weapons(false);
+    auto yours = find_ieoh_jian_manifested_weapons(true);
+   
+    if (!manifested.empty())
+       _ieoh_jian_decay_manifested_weapons(manifested);
+    else if (!yours.empty() && (!you.weapon() 
+                                || !you.weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE)
+                                || you.weapon()->props[IEOH_JIAN_DIVINE_DEGREE].get_int() == 0))
+       _ieoh_jian_retrieve_your_weapon(yours);
+    else if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
+       _ieoh_jian_decay_equipped_weapon();
+    else
+       return false;
+
+    return true;
 }
 
 monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)
@@ -2082,12 +2096,12 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 bool ieoh_jian_can_pole_vault(const coord_def& target)
 {
    bool able = have_passive(passive_t::martial_weapon_mastery)
-                                  && feat_can_pole_vault_against(grd(target))
-                                  && !you.is_stationary()
-                                  && !you.digging
-                                  && you.weapon() 
-                                  && (weapon_attack_skill(you.weapon()->sub_type) == SK_STAVES
-                                      || weapon_attack_skill(you.weapon()->sub_type) == SK_POLEARMS);
+                              && feat_can_pole_vault_against(grd(target))
+                              && !you.is_stationary()
+                              && !you.digging
+                              && you.weapon() 
+                              && (weapon_attack_skill(you.weapon()->sub_type) == SK_STAVES
+                                  || weapon_attack_skill(you.weapon()->sub_type) == SK_POLEARMS);
    
    if (!able) 
        return false;

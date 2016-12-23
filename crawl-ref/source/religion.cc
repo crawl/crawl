@@ -2900,7 +2900,7 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_IEOH_JIAN:
         simple_god_message(" withdraws all divine help and plots revenge.", old_god);
         _set_penance(old_god, 25);
-        while(ieoh_jian_despawn_weapon(true, true)){};
+        while(ieoh_jian_decay()){}
         break;
     default:
         _set_penance(old_god, 25);

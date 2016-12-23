@@ -541,16 +541,9 @@ void floor_transition(dungeon_feature_type how,
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
-    // Despawn all non-divine IJC weapons and pull your own back.
-    item_def divine_copy;
+    // Despawn all IJC weapons and pull your own back.
     if (you_worship(GOD_IEOH_JIAN))
-    {
-        item_def* divine = ieoh_jian_get_current_divine_weapon();
-        if (divine)
-            divine_copy = *divine;
-
-        while (ieoh_jian_despawn_weapon(true)){}
-    }
+       while (ieoh_jian_decay()){}
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
@@ -790,10 +783,6 @@ void floor_transition(dungeon_feature_type how,
 
         trackers_init_new_level(true);
     }
-
-    // Divine weapons follow you.
-    if (divine_copy.defined())
-        ieoh_jian_manifest_weapon_monster(you.pos(), divine_copy);
 
     you.clear_fearmongers();
 
