@@ -1823,6 +1823,7 @@ bool ieoh_jian_despawn_weapon(bool urgent, bool at_excommunication)
 
         if (!at_excommunication)
         {
+            monster->del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
             monster->ieoh_jian_swap_weapon_with_player(true);
 
             if (you.weapon())

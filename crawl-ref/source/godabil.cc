@@ -7117,7 +7117,8 @@ bool ieoh_jian_recall_weapon()
     {
         mons->move_to_pos(new_location);
     }
-
+   
+    mons->del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
     mons->ieoh_jian_swap_weapon_with_player();
 
     return true;

@@ -6465,6 +6465,13 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
 bool monster::ijc_swap(bool silent)
 {
     bool penance;
+    if (has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
+    {
+       if (!silent)
+          mprf("%s violently swings past you!", weapon()->name(DESC_THE, false, true, false).c_str());
+       return false;
+    }
+
     if (!you.weapon())
     {
         if (inv_count() == ENDOFPACK)
