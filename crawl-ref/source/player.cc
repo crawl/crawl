@@ -2174,7 +2174,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
 
 // Player EV bonuses for various effects and transformations. This
 // does not include tengu/merfolk EV bonuses for flight/swimming.
-static int _player_evasion_bonuses(int poststepdown_evasion, int afterimage_scale)
+static int _player_evasion_bonuses()
 {
     int evbonus = 0;
 
@@ -2182,7 +2182,7 @@ static int _player_evasion_bonuses(int poststepdown_evasion, int afterimage_scal
         evbonus += AGILITY_BONUS;
 
     if (you.duration[DUR_IEOH_JIAN_AFTERIMAGE])
-        evbonus += 4 + div_rand_round(poststepdown_evasion, 4 * afterimage_scale);
+        evbonus += 4 + div_rand_round(you.skill(SK_DODGING,1), 3);
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
@@ -2294,7 +2294,7 @@ static int _player_evasion(ev_ignore_type evit)
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
 
-    const int evasion_bonuses = _player_evasion_bonuses(poststepdown_evasion, scale) * scale;
+    const int evasion_bonuses = _player_evasion_bonuses() * scale;
 
     const int prescaled_evasion =
         poststepdown_evasion + evasion_bonuses;
