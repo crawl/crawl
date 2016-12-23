@@ -39,13 +39,11 @@ enum nemelex_gift_types
 /// Whether a IJC driven weapon swap is taking place. This supresses
 /// some warnings and dangerous brand effects.
 #define IEOH_JIAN_SWAPPING "ieoh-jian-swapping"
-/// Whether a IJC weapon is enhanced to match your own weapon, and by how much.
-#define IEOH_JIAN_OVERENCHANTED "ieoh-jian-overenchanted"
 /// The time left for IJC divine weapons.
 #define IEOH_JIAN_DIVINE_DEGREE "ieoh-jian-divine"
 /// The momentum bonus for divine weapons.
 #define IEOH_JIAN_DIVINE_MOMENTUM "ieoh-jian-momentum"
-/// Whether a the weapon is being projected
+/// Whether the weapon is being projected
 #define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
 
 #endif

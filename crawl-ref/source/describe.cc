@@ -957,12 +957,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             }
     }
 
-    if (item.props.exists(IEOH_JIAN_OVERENCHANTED))
-    {
-        description += " \n\n<lightred>It posesses an unusually powerful enchantment, granted temporarily by the Ieoh Jian Council"
-                       " to match the strength of your own weapon.</lightred>";
-    }
-
     // ident known & no brand but still glowing
     // TODO: deduplicate this with the code in itemname.cc
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL

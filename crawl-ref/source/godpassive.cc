@@ -1906,16 +1906,18 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
 
     wpn.props[IEOH_JIAN_SLOT] = (int)(theirs_num + 1);
 
-    // Weapons are temporarily overenchanted to match your weapon strength.
-    if (!wpn.props.exists(IEOH_JIAN_DIVINE_DEGREE))
+    // Weapons are at least as enchanted as your main weapon (or SK_UNARMED_COMBAT/3 + 2 if unarmed)
+    int boosted = false;
+    auto your_weapon = _ieoh_jian_get_owned_weapon();
+    if (your_weapon && your_weapon->plus > wpn.plus)
     {
-        auto your_weapon = _ieoh_jian_get_owned_weapon();
-        if (your_weapon && your_weapon->plus > wpn.plus)
-        {
-            wpn.props[IEOH_JIAN_OVERENCHANTED] = your_weapon->plus - wpn.plus;
-            wpn.plus = your_weapon->plus;
-            wpn.inscription += "overenchanted";
-        }
+       boosted = true;
+       wpn.plus = your_weapon->plus;
+    }
+    else if (!your_weapon && (you.skill(SK_UNARMED_COMBAT,1)/3 + 2 > wpn.plus))
+    {
+       boosted = true;
+       wpn.plus = you.skill(SK_UNARMED_COMBAT,1)/3 + 2;
     }
 
     const monster* mons = ieoh_jian_manifest_weapon_monster(position, wpn);
@@ -1935,7 +1937,11 @@ void ieoh_jian_spawn_weapon(const coord_def& position)
     }
     else
     {
-        if (wpn.props.exists(IEOH_JIAN_OVERENCHANTED))
+        if (boosted && !your_weapon)
+            mprf("%s manifests from thin air, drawing energy from your %s!", 
+                  wpn.name(DESC_A, false, true, false).c_str(),
+                  you.hand_name(true).c_str());
+        else if (boosted && your_weapon)
             mprf("%s manifests from thin air, drawing energy from your weapon!", wpn.name(DESC_A, false, true, false).c_str());
         else
             mprf("%s manifests from thin air!", wpn.name(DESC_A, false, true, false).c_str());
