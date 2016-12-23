@@ -598,13 +598,6 @@ static const vector<chaos_effect> chaos_effects = {
             const bool obvious_effect
                 = you.can_see(defender) && you.can_see(*clone);
 
-            if (obvious_effect)
-            {
-                attack.special_damage_message =
-                    make_stringf("%s is duplicated!",
-                                 attack.defender_name(false).c_str());
-            }
-
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
                 clone->mark_summoned(6, true, MON_SUMM_CLONE);
