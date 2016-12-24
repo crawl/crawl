@@ -792,7 +792,8 @@ bool melee_attack::attack()
     if (attacker->is_player() 
            && have_passive(passive_t::spawn_weapon_on_hit) 
            && !mons_is_firewood(*defender->as_monster())
-           && defender->as_monster()->type != MONS_IEOH_JIAN_WEAPON)
+           && defender->as_monster()->type != MONS_IEOH_JIAN_WEAPON
+           && (!you.weapon() || you.weapon()->base_type == OBJ_WEAPONS))
         ieoh_jian_spawn_weapon(you.pos());
 
     if (!cleaving)
