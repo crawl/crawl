@@ -6475,7 +6475,7 @@ bool monster::ijc_swap(bool silent)
         int item_index = inv[MSLOT_WEAPON];
         item_def& pitem = mitm[item_index];
 
-        if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance))
+        if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance, true))
         {
             if (!silent)
                 mprf("You fail to grab %s!", weapon()->name(DESC_THE, false, true, false).c_str());
@@ -6499,7 +6499,7 @@ bool monster::ijc_swap(bool silent)
     else if (you.weapon() && weapon())
     {
         // Proper swap case
-        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
+        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance, true))
         {
             if (!silent)
                 mprf("You can not unwield %s!", you.weapon()->name(DESC_YOUR, false, true, false).c_str());
@@ -6513,7 +6513,7 @@ bool monster::ijc_swap(bool silent)
             return false;
         }
 
-        if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
+        if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance, true))
         {
             if (!silent)
                 mprf("You fail to grab %s!", weapon()->name(DESC_THE, false, true, false).c_str());

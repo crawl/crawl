@@ -1547,9 +1547,9 @@ bool needs_notele_warning(const item_def &item, operation_types oper)
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper,
-                          bool &penance)
+                          bool &penance, bool ignore_inscription)
 {
-    if (_has_warning_inscription(item, oper))
+    if (!ignore_inscription && _has_warning_inscription(item, oper))
         return true;
 
     // Curses first.
