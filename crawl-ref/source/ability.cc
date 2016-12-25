@@ -3421,9 +3421,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (!you_worship(GOD_NO_GOD))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
-    if (you_worship(GOD_IEOH_JIAN))
-        _add_talent(talents, ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL, check_confused);
-
     if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         _add_talent(talents, ABIL_CONVERT_TO_BEOGH, check_confused);
 

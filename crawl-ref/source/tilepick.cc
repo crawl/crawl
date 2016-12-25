@@ -3500,7 +3500,6 @@ tileidx_t tileidx_ability(const ability_type ability)
   
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
-    case ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL:
         return TILEG_ABILITY_RENOUNCE_RELIGION;
 
     default:

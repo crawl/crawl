@@ -3150,13 +3150,6 @@ void set_god_ability_slots()
         you.ability_letter_table[letter_to_index('X')] = ABIL_RENOUNCE_RELIGION;
     }
 
-    if (you_worship(GOD_IEOH_JIAN) && find(begin(you.ability_letter_table), end(you.ability_letter_table),
-             ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL) == end(you.ability_letter_table)
-        && you.ability_letter_table[letter_to_index('Y')] == ABIL_NON_ABILITY)
-    {
-        you.ability_letter_table[letter_to_index('Y')] = ABIL_IEOH_JIAN_RENOUNCE_AND_STEAL;
-    }
-
     // Clear out other god invocations.
     for (ability_type& slot : you.ability_letter_table)
     {
