@@ -911,18 +911,13 @@ ability_type fixup_ability(ability_type ability)
     {
     case ABIL_YRED_ANIMATE_REMAINS:
         // suppress animate remains once animate dead is unlocked (ugh)
-        if (player_mutation_level(MUT_NO_LOVE)
-            || in_good_standing(GOD_YREDELEMNUL, 2))
-        {
+        if (in_good_standing(GOD_YREDELEMNUL, 2))
             return ABIL_NON_ABILITY;
-        }
         return ability;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        if (player_mutation_level(MUT_NO_LOVE))
-            return ABIL_NON_ABILITY;
-        else if (!you.recall_list.empty())
+        if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
         return ability;
 
@@ -958,8 +953,6 @@ ability_type fixup_ability(ability_type ability)
             return ability;
 
     case ABIL_ELYVILON_HEAL_OTHER:
-    case ABIL_YRED_ANIMATE_DEAD:
-    case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
