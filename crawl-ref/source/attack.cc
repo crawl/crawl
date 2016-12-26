@@ -22,9 +22,9 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::no_haste
-#include "itemname.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::no_haste
+#include "item-name.h"
 #include "itemprop.h"
 #include "message.h"
 #include "mon-behv.h"

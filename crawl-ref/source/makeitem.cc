@@ -15,7 +15,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h" // map_find

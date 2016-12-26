@@ -14,7 +14,7 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "itemprop.h"
 #include "items.h"
 #include "player-equip.h"

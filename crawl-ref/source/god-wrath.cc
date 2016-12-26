@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "godwrath.h"
+#include "god-wrath.h"
 
 #include <sstream>
 
@@ -19,8 +19,8 @@
 #include "evoke.h"
 #include "food.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godpassive.h" // shadow_monster
+#include "god-abil.h"
+#include "god-passive.h" // shadow_monster
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"

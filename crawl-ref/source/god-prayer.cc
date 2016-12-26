@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#include "godprayer.h"
+#include "god-prayer.h"
 
 #include <cmath>
 
@@ -13,9 +13,9 @@
 #include "env.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "itemprop.h"

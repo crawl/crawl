@@ -18,7 +18,7 @@
 #include "dbg-util.h"
 #include "decks.h"
 #include "env.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"

@@ -24,8 +24,8 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
-#include "godcompanions.h" // hep stuff
-#include "godpassive.h" // passive_t::slow_abyss
+#include "god-companions.h" // hep stuff
+#include "god-passive.h" // passive_t::slow_abyss
 #include "hiscores.h"
 #include "itemprop.h"
 #include "items.h"

@@ -17,7 +17,7 @@
 #include "art-enum.h"
 #include "decks.h"
 #include "describe.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "invent.h"
 #include "items.h"
 #include "item-use.h"

@@ -6,7 +6,7 @@
 #ifndef MAKEITEM_H
 #define MAKEITEM_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 int create_item_named(string name, coord_def pos, string *error);
 

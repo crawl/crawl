@@ -26,9 +26,9 @@
 #include "exercise.h"
 #include "fineff.h"
 #include "food.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "hints.h"
 #include "itemprop.h"
 #include "mapdef.h"

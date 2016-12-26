@@ -34,8 +34,8 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "goditem.h"
+#include "god-abil.h"
+#include "god-item.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -921,7 +921,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     }
 
     // ident known & no brand but still glowing
-    // TODO: deduplicate this with the code in itemname.cc
+    // TODO: deduplicate this with the code in item-name.cc
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
                            && !item_ident(item, ISFLAG_KNOW_PLUSES);
 

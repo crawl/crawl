@@ -17,8 +17,8 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "english.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"

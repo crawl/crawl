@@ -22,7 +22,7 @@ struct item_kind
 };
 
 // [dshaligram] If you edit potion colours/descriptions, also update
-// itemname.cc.
+// item-name.cc.
 enum potion_description_colour_type
 {
 #if TAG_MAJOR_VERSION == 34
@@ -54,7 +54,7 @@ enum potion_description_colour_type
 };
 
 // [dshaligram] If you edit potion colours/descriptions, also update
-// itemname.cc.
+// item-name.cc.
 enum potion_description_qualifier_type
 {
     PDQ_NONE,
@@ -76,7 +76,7 @@ enum potion_description_qualifier_type
 };
 
 // Primary and secondary description counts for some types of items.
-// If you change these counts, update itemname.cc.
+// If you change these counts, update item-name.cc.
 enum
 {
     NDSC_JEWEL_PRI  = 29,

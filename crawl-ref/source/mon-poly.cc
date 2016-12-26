@@ -15,7 +15,7 @@
 #include "dungeon.h"
 #include "exclude.h"
 #include "fineff.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"

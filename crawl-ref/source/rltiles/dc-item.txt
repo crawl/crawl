@@ -174,7 +174,7 @@ triple_crossbow2
 %sdir item/weapon/brands
 %rim 0
 # The order of weapon brands must be identical to the one defined
-# in itemprop-enum.h.
+# in item-prop-enum.h.
 i-flaming BRAND_FLAMING BRAND_WEP_FIRST
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
@@ -468,7 +468,7 @@ boots4_green
 
 ### Armour brands
 # The order of armour brands must be identical to the one defined
-# in itemprop-enum.h.
+# in item-prop-enum.h.
 %sdir item/armour/brands
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
@@ -513,7 +513,7 @@ gem_plastic
 %rim 1
 
 %sdir item/wand
-#### These must be in the same order as the enum in itemprop-enum.h!
+#### These must be in the same order as the enum in item-prop-enum.h!
 # Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
 i-flame WAND_REMOVEME
@@ -585,7 +585,7 @@ chunk_brands/i-inedible FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-#### These must be in the same order as the enum in itemprop-enum.h!
+#### These must be in the same order as the enum in item-prop-enum.h!
 %sdir item/scroll
 %back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
@@ -691,7 +691,7 @@ snake
 
 ###########icons
 %sdir item/ring
-#### These must be in the same order as the enum in itemprop-enum.h!
+#### These must be in the same order as the enum in item-prop-enum.h!
 # Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
 i-protection RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
@@ -765,7 +765,7 @@ sun
 
 ###########icons
 %sdir item/amulet
-# These must be in the same order as the enum in itemprop-enum.h!
+# These must be in the same order as the enum in item-prop-enum.h!
 # remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
 i-harm AMU_HARM
@@ -907,7 +907,7 @@ staff07
 staff08
 staff09
 
-# These must be in the same order as the enum in itemprop-enum.h!
+# These must be in the same order as the enum in item-prop-enum.h!
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
@@ -936,7 +936,7 @@ rod07
 rod08
 rod09
 
-# These must be in the same order as the enum in itemprop-enum.h!
+# These must be in the same order as the enum in item-prop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_summoning ROD_SUMMONING

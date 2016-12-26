@@ -27,8 +27,8 @@
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
-#include "godconduct.h"    // did_god_conduct
-#include "godpassive.h"    // passive_t::want_curses
+#include "god-conduct.h"    // did_god_conduct
+#include "god-passive.h"    // passive_t::want_curses
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke

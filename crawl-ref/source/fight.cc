@@ -21,8 +21,8 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"

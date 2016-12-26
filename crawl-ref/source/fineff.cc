@@ -15,7 +15,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-abil.h"

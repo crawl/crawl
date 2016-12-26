@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "godcompanions.h"
+#include "god-companions.h"
 
 #include <algorithm>
 

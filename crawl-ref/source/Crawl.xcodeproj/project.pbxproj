@@ -20,7 +20,7 @@
 		1F909AEB148B23BC00084E83 /* evoke.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD8148B23BC00084E83 /* evoke.cc */; };
 		1F909AEC148B23BC00084E83 /* exercise.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADA148B23BC00084E83 /* exercise.cc */; };
 		1F909AED148B23BC00084E83 /* fineff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADC148B23BC00084E83 /* fineff.cc */; };
-		1F909AEE148B23BC00084E83 /* godmenu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* godmenu.cc */; };
+		1F909AEE148B23BC00084E83 /* god-menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* god-menu.cc */; };
 		1F909AEF148B23BC00084E83 /* l-colour.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AE0148B23BC00084E83 /* l-colour.cc */; };
 		1F909B01148B23E000084E83 /* tilecell.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AF2148B23E000084E83 /* tilecell.cc */; };
 		1F909B02148B23E000084E83 /* tilereg-cmd.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AF7148B23E000084E83 /* tilereg-cmd.cc */; };
@@ -68,7 +68,7 @@
 		1F909BCF148B440800084E83 /* dgn-labyrinth.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD1148B23BC00084E83 /* dgn-labyrinth.cc */; };
 		1F909BD0148B440800084E83 /* dgn-layouts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AD3148B23BC00084E83 /* dgn-layouts.cc */; };
 		1F909BD1148B440800084E83 /* fineff.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADC148B23BC00084E83 /* fineff.cc */; };
-		1F909BD2148B440800084E83 /* godmenu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* godmenu.cc */; };
+		1F909BD2148B440800084E83 /* god-menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909ADE148B23BC00084E83 /* god-menu.cc */; };
 		1F909BD3148B440800084E83 /* package.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B3D148B244F00084E83 /* package.cc */; };
 		1F909BDC148B445100084E83 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F909B80148B2D9100084E83 /* libz.dylib */; };
 		1F909BE3148B450000084E83 /* skill-menu.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B08148B242D00084E83 /* skill-menu.cc */; };
@@ -103,9 +103,9 @@
 		4C59B0E711E7A06D00760867 /* feat.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 4C59B0E411E7A06D00760867 /* feat.png */; };
 		4C59B0E811E7A06D00760867 /* floor.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 4C59B0E511E7A06D00760867 /* floor.png */; };
 		4C59B0E911E7A06D00760867 /* wall.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 4C59B0E611E7A06D00760867 /* wall.png */; };
-		7B09F5441133D63E004F149D /* godconduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* godconduct.cc */; };
-		7B09F5451133D63E004F149D /* godpassive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* godpassive.cc */; };
-		7B09F5461133D63E004F149D /* godprayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* godprayer.cc */; };
+		7B09F5441133D63E004F149D /* god-conduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* god-conduct.cc */; };
+		7B09F5451133D63E004F149D /* god-passive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* god-passive.cc */; };
+		7B09F5461133D63E004F149D /* god-prayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* god-prayer.cc */; };
 		7B09F5471133D63E004F149D /* l-feat.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5411133D63E004F149D /* l-feat.cc */; };
 		7B09F5481133D63E004F149D /* l-spells.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5421133D63E004F149D /* l-spells.cc */; };
 		7B09F5601133D66C004F149D /* mgen_data.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F54D1133D66C004F149D /* mgen_data.cc */; };
@@ -137,7 +137,7 @@
 		7B09F5811133D6AB004F149D /* decks.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA010BD494400A99626 /* decks.cc */; };
 		7B09F5821133D6AB004F149D /* delay.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA310BD494400A99626 /* delay.cc */; };
 		7B09F5831133D6AB004F149D /* describe.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA510BD494400A99626 /* describe.cc */; };
-		7B09F5841133D6AB004F149D /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA710BD494400A99626 /* dgnevent.cc */; };
+		7B09F5841133D6AB004F149D /* dgn-event.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA710BD494400A99626 /* dgn-event.cc */; };
 		7B09F5851133D6AB004F149D /* directn.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA910BD494400A99626 /* directn.cc */; };
 		7B09F5861133D6AB004F149D /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FAB10BD494400A99626 /* dlua.cc */; };
 		7B09F5871133D6AB004F149D /* dungeon.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FAD10BD494400A99626 /* dungeon.cc */; };
@@ -151,17 +151,17 @@
 		7B09F58F1133D6AB004F149D /* fprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC210BD494400A99626 /* fprop.cc */; };
 		7B09F5901133D6AB004F149D /* geom2d.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC410BD494400A99626 /* geom2d.cc */; };
 		7B09F5911133D6AB004F149D /* ghost.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC610BD494400A99626 /* ghost.cc */; };
-		7B09F5921133D6AB004F149D /* godabil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC810BD494400A99626 /* godabil.cc */; };
-		7B09F5931133D6AB004F149D /* godconduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* godconduct.cc */; };
-		7B09F5941133D6AB004F149D /* goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCA10BD494400A99626 /* goditem.cc */; };
-		7B09F5951133D6AB004F149D /* godpassive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* godpassive.cc */; };
-		7B09F5961133D6AB004F149D /* godprayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* godprayer.cc */; };
-		7B09F5971133D6AB004F149D /* godwrath.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCC10BD494400A99626 /* godwrath.cc */; };
+		7B09F5921133D6AB004F149D /* god-abil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC810BD494400A99626 /* god-abil.cc */; };
+		7B09F5931133D6AB004F149D /* god-conduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* god-conduct.cc */; };
+		7B09F5941133D6AB004F149D /* god-item.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCA10BD494400A99626 /* god-item.cc */; };
+		7B09F5951133D6AB004F149D /* god-passive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* god-passive.cc */; };
+		7B09F5961133D6AB004F149D /* god-prayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* god-prayer.cc */; };
+		7B09F5971133D6AB004F149D /* god-wrath.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCC10BD494400A99626 /* god-wrath.cc */; };
 		7B09F5981133D6AB004F149D /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCE10BD494400A99626 /* hiscores.cc */; };
 		7B09F5991133D6AB004F149D /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD010BD494400A99626 /* initfile.cc */; };
 		7B09F59A1133D6AB004F149D /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD210BD494400A99626 /* invent.cc */; };
 		7B09F59D1133D6AB004F149D /* item-use.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD810BD494400A99626 /* item-use.cc */; };
-		7B09F59E1133D6AB004F149D /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* itemname.cc */; };
+		7B09F59E1133D6AB004F149D /* item-name.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* item-name.cc */; };
 		7B09F59F1133D6AB004F149D /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* itemprop.cc */; };
 		7B09F5A01133D6AB004F149D /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDF10BD494400A99626 /* items.cc */; };
 		7B09F5A11133D6AB004F149D /* jobs.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FE110BD494400A99626 /* jobs.cc */; };
@@ -503,7 +503,7 @@
 		E5D640DE10BD494500A99626 /* decks.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA010BD494400A99626 /* decks.cc */; };
 		E5D640DF10BD494500A99626 /* delay.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA310BD494400A99626 /* delay.cc */; };
 		E5D640E010BD494500A99626 /* describe.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA510BD494400A99626 /* describe.cc */; };
-		E5D640E110BD494500A99626 /* dgnevent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA710BD494400A99626 /* dgnevent.cc */; };
+		E5D640E110BD494500A99626 /* dgn-event.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA710BD494400A99626 /* dgn-event.cc */; };
 		E5D640E210BD494500A99626 /* directn.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FA910BD494400A99626 /* directn.cc */; };
 		E5D640E310BD494500A99626 /* dlua.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FAB10BD494400A99626 /* dlua.cc */; };
 		E5D640E410BD494500A99626 /* dungeon.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FAD10BD494400A99626 /* dungeon.cc */; };
@@ -517,14 +517,14 @@
 		E5D640EC10BD494500A99626 /* fprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC210BD494400A99626 /* fprop.cc */; };
 		E5D640ED10BD494500A99626 /* geom2d.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC410BD494400A99626 /* geom2d.cc */; };
 		E5D640EE10BD494500A99626 /* ghost.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC610BD494400A99626 /* ghost.cc */; };
-		E5D640EF10BD494500A99626 /* godabil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC810BD494400A99626 /* godabil.cc */; };
-		E5D640F010BD494500A99626 /* goditem.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCA10BD494400A99626 /* goditem.cc */; };
-		E5D640F110BD494500A99626 /* godwrath.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCC10BD494400A99626 /* godwrath.cc */; };
+		E5D640EF10BD494500A99626 /* god-abil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FC810BD494400A99626 /* god-abil.cc */; };
+		E5D640F010BD494500A99626 /* god-item.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCA10BD494400A99626 /* god-item.cc */; };
+		E5D640F110BD494500A99626 /* god-wrath.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCC10BD494400A99626 /* god-wrath.cc */; };
 		E5D640F210BD494500A99626 /* hiscores.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FCE10BD494400A99626 /* hiscores.cc */; };
 		E5D640F310BD494500A99626 /* initfile.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD010BD494400A99626 /* initfile.cc */; };
 		E5D640F410BD494500A99626 /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD210BD494400A99626 /* invent.cc */; };
 		E5D640F710BD494500A99626 /* item-use.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD810BD494400A99626 /* item-use.cc */; };
-		E5D640F810BD494500A99626 /* itemname.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* itemname.cc */; };
+		E5D640F810BD494500A99626 /* item-name.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* item-name.cc */; };
 		E5D640F910BD494500A99626 /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* itemprop.cc */; };
 		E5D640FA10BD494500A99626 /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDF10BD494400A99626 /* items.cc */; };
 		E5D640FB10BD494500A99626 /* jobs.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FE110BD494400A99626 /* jobs.cc */; };
@@ -933,8 +933,8 @@
 		1F909ADB148B23BC00084E83 /* exercise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exercise.h; sourceTree = "<group>"; };
 		1F909ADC148B23BC00084E83 /* fineff.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fineff.cc; sourceTree = "<group>"; };
 		1F909ADD148B23BC00084E83 /* fineff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fineff.h; sourceTree = "<group>"; };
-		1F909ADE148B23BC00084E83 /* godmenu.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godmenu.cc; sourceTree = "<group>"; };
-		1F909ADF148B23BC00084E83 /* godmenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godmenu.h; sourceTree = "<group>"; };
+		1F909ADE148B23BC00084E83 /* god-menu.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-menu.cc; sourceTree = "<group>"; };
+		1F909ADF148B23BC00084E83 /* god-menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-menu.h; sourceTree = "<group>"; };
 		1F909AE0148B23BC00084E83 /* l-colour.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-colour.cc; sourceTree = "<group>"; };
 		1F909AF2148B23E000084E83 /* tilecell.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tilecell.cc; sourceTree = "<group>"; };
 		1F909AF3148B23E000084E83 /* tilecell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tilecell.h; sourceTree = "<group>"; };
@@ -1015,12 +1015,12 @@
 		4C59B0E411E7A06D00760867 /* feat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = feat.png; path = rltiles/feat.png; sourceTree = "<group>"; };
 		4C59B0E511E7A06D00760867 /* floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = floor.png; path = rltiles/floor.png; sourceTree = "<group>"; };
 		4C59B0E611E7A06D00760867 /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wall.png; path = rltiles/wall.png; sourceTree = "<group>"; };
-		7B09F53B1133D63E004F149D /* godconduct.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godconduct.cc; sourceTree = "<group>"; };
-		7B09F53C1133D63E004F149D /* godconduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godconduct.h; sourceTree = "<group>"; };
-		7B09F53D1133D63E004F149D /* godpassive.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godpassive.cc; sourceTree = "<group>"; };
-		7B09F53E1133D63E004F149D /* godpassive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godpassive.h; sourceTree = "<group>"; };
-		7B09F53F1133D63E004F149D /* godprayer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godprayer.cc; sourceTree = "<group>"; };
-		7B09F5401133D63E004F149D /* godprayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godprayer.h; sourceTree = "<group>"; };
+		7B09F53B1133D63E004F149D /* god-conduct.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-conduct.cc; sourceTree = "<group>"; };
+		7B09F53C1133D63E004F149D /* god-conduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-conduct.h; sourceTree = "<group>"; };
+		7B09F53D1133D63E004F149D /* god-passive.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-passive.cc; sourceTree = "<group>"; };
+		7B09F53E1133D63E004F149D /* god-passive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-passive.h; sourceTree = "<group>"; };
+		7B09F53F1133D63E004F149D /* god-prayer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-prayer.cc; sourceTree = "<group>"; };
+		7B09F5401133D63E004F149D /* god-prayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-prayer.h; sourceTree = "<group>"; };
 		7B09F5411133D63E004F149D /* l-feat.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-feat.cc; sourceTree = "<group>"; };
 		7B09F5421133D63E004F149D /* l-spells.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l-spells.cc; sourceTree = "<group>"; };
 		7B09F54C1133D66C004F149D /* melee-attack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = melee-attack.h; sourceTree = "<group>"; };
@@ -1327,8 +1327,8 @@
 		E5D63FA410BD494400A99626 /* delay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = delay.h; sourceTree = "<group>"; };
 		E5D63FA510BD494400A99626 /* describe.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = describe.cc; sourceTree = "<group>"; };
 		E5D63FA610BD494400A99626 /* describe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = describe.h; sourceTree = "<group>"; };
-		E5D63FA710BD494400A99626 /* dgnevent.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dgnevent.cc; sourceTree = "<group>"; };
-		E5D63FA810BD494400A99626 /* dgnevent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dgnevent.h; sourceTree = "<group>"; };
+		E5D63FA710BD494400A99626 /* dgn-event.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dgn-event.cc; sourceTree = "<group>"; };
+		E5D63FA810BD494400A99626 /* dgn-event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dgn-event.h; sourceTree = "<group>"; };
 		E5D63FA910BD494400A99626 /* directn.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = directn.cc; sourceTree = "<group>"; };
 		E5D63FAA10BD494400A99626 /* directn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = directn.h; sourceTree = "<group>"; };
 		E5D63FAB10BD494400A99626 /* dlua.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dlua.cc; sourceTree = "<group>"; };
@@ -1360,12 +1360,12 @@
 		E5D63FC510BD494400A99626 /* geom2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geom2d.h; sourceTree = "<group>"; };
 		E5D63FC610BD494400A99626 /* ghost.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ghost.cc; sourceTree = "<group>"; };
 		E5D63FC710BD494400A99626 /* ghost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ghost.h; sourceTree = "<group>"; };
-		E5D63FC810BD494400A99626 /* godabil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godabil.cc; sourceTree = "<group>"; };
-		E5D63FC910BD494400A99626 /* godabil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godabil.h; sourceTree = "<group>"; };
-		E5D63FCA10BD494400A99626 /* goditem.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = goditem.cc; sourceTree = "<group>"; };
-		E5D63FCB10BD494400A99626 /* goditem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = goditem.h; sourceTree = "<group>"; };
-		E5D63FCC10BD494400A99626 /* godwrath.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godwrath.cc; sourceTree = "<group>"; };
-		E5D63FCD10BD494400A99626 /* godwrath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godwrath.h; sourceTree = "<group>"; };
+		E5D63FC810BD494400A99626 /* god-abil.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-abil.cc; sourceTree = "<group>"; };
+		E5D63FC910BD494400A99626 /* god-abil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-abil.h; sourceTree = "<group>"; };
+		E5D63FCA10BD494400A99626 /* god-item.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-item.cc; sourceTree = "<group>"; };
+		E5D63FCB10BD494400A99626 /* god-item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-item.h; sourceTree = "<group>"; };
+		E5D63FCC10BD494400A99626 /* god-wrath.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = god-wrath.cc; sourceTree = "<group>"; };
+		E5D63FCD10BD494400A99626 /* god-wrath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = god-wrath.h; sourceTree = "<group>"; };
 		E5D63FCE10BD494400A99626 /* hiscores.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hiscores.cc; sourceTree = "<group>"; };
 		E5D63FCF10BD494400A99626 /* hiscores.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hiscores.h; sourceTree = "<group>"; };
 		E5D63FD010BD494400A99626 /* initfile.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = initfile.cc; sourceTree = "<group>"; };
@@ -1374,9 +1374,9 @@
 		E5D63FD310BD494400A99626 /* invent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = invent.h; sourceTree = "<group>"; };
 		E5D63FD810BD494400A99626 /* item-use.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item-use.cc; sourceTree = "<group>"; };
 		E5D63FD910BD494400A99626 /* item-use.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item-use.h; sourceTree = "<group>"; };
-		E5D63FDA10BD494400A99626 /* itemname.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = itemname.cc; sourceTree = "<group>"; };
-		E5D63FDB10BD494400A99626 /* itemname.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itemname.h; sourceTree = "<group>"; };
-		E5D63FDC10BD494400A99626 /* itemprop-enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "itemprop-enum.h"; sourceTree = "<group>"; };
+		E5D63FDA10BD494400A99626 /* item-name.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item-name.cc; sourceTree = "<group>"; };
+		E5D63FDB10BD494400A99626 /* item-name.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item-name.h; sourceTree = "<group>"; };
+		E5D63FDC10BD494400A99626 /* item-prop-enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "item-prop-enum.h"; sourceTree = "<group>"; };
 		E5D63FDD10BD494400A99626 /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
 		E5D63FDE10BD494400A99626 /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
 		E5D63FDF10BD494400A99626 /* items.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = items.cc; sourceTree = "<group>"; };
@@ -1857,8 +1857,8 @@
 				7B09F63C1133D823004F149D /* dgn-shoals.h */,
 				7B09F63D1133D823004F149D /* dgn-swamp.cc */,
 				7B09F63E1133D823004F149D /* dgn-swamp.h */,
-				E5D63FA710BD494400A99626 /* dgnevent.cc */,
-				E5D63FA810BD494400A99626 /* dgnevent.h */,
+				E5D63FA710BD494400A99626 /* dgn-event.cc */,
+				E5D63FA810BD494400A99626 /* dgn-event.h */,
 				E5D63FA910BD494400A99626 /* directn.cc */,
 				E5D63FAA10BD494400A99626 /* directn.h */,
 				E5D63FAB10BD494400A99626 /* dlua.cc */,
@@ -1907,20 +1907,20 @@
 				7B51658B11859CE3005B23ED /* glwrapper-ogl.h */,
 				7B51658C11859CE3005B23ED /* glwrapper.cc */,
 				7B51658D11859CE3005B23ED /* glwrapper.h */,
-				E5D63FC810BD494400A99626 /* godabil.cc */,
-				E5D63FC910BD494400A99626 /* godabil.h */,
-				7B09F53B1133D63E004F149D /* godconduct.cc */,
-				7B09F53C1133D63E004F149D /* godconduct.h */,
-				E5D63FCA10BD494400A99626 /* goditem.cc */,
-				E5D63FCB10BD494400A99626 /* goditem.h */,
-				1F909ADE148B23BC00084E83 /* godmenu.cc */,
-				1F909ADF148B23BC00084E83 /* godmenu.h */,
-				7B09F53D1133D63E004F149D /* godpassive.cc */,
-				7B09F53E1133D63E004F149D /* godpassive.h */,
-				7B09F53F1133D63E004F149D /* godprayer.cc */,
-				7B09F5401133D63E004F149D /* godprayer.h */,
-				E5D63FCC10BD494400A99626 /* godwrath.cc */,
-				E5D63FCD10BD494400A99626 /* godwrath.h */,
+				E5D63FC810BD494400A99626 /* god-abil.cc */,
+				E5D63FC910BD494400A99626 /* god-abil.h */,
+				7B09F53B1133D63E004F149D /* god-conduct.cc */,
+				7B09F53C1133D63E004F149D /* god-conduct.h */,
+				E5D63FCA10BD494400A99626 /* god-item.cc */,
+				E5D63FCB10BD494400A99626 /* god-item.h */,
+				1F909ADE148B23BC00084E83 /* god-menu.cc */,
+				1F909ADF148B23BC00084E83 /* god-menu.h */,
+				7B09F53D1133D63E004F149D /* god-passive.cc */,
+				7B09F53E1133D63E004F149D /* god-passive.h */,
+				7B09F53F1133D63E004F149D /* god-prayer.cc */,
+				7B09F5401133D63E004F149D /* god-prayer.h */,
+				E5D63FCC10BD494400A99626 /* god-wrath.cc */,
+				E5D63FCD10BD494400A99626 /* god-wrath.h */,
 				4C59B08A11E7964700760867 /* hints.cc */,
 				4C59B08811E7964700760867 /* hints.h */,
 				E5D63FCE10BD494400A99626 /* hiscores.cc */,
@@ -1931,9 +1931,9 @@
 				E5D63FD310BD494400A99626 /* invent.h */,
 				E5D63FD810BD494400A99626 /* item-use.cc */,
 				E5D63FD910BD494400A99626 /* item-use.h */,
-				E5D63FDA10BD494400A99626 /* itemname.cc */,
-				E5D63FDB10BD494400A99626 /* itemname.h */,
-				E5D63FDC10BD494400A99626 /* itemprop-enum.h */,
+				E5D63FDA10BD494400A99626 /* item-name.cc */,
+				E5D63FDB10BD494400A99626 /* item-name.h */,
+				E5D63FDC10BD494400A99626 /* item-prop-enum.h */,
 				E5D63FDD10BD494400A99626 /* itemprop.cc */,
 				E5D63FDE10BD494400A99626 /* itemprop.h */,
 				E5D63FDF10BD494400A99626 /* items.cc */,
@@ -2961,7 +2961,7 @@
 				7B09F6441133D823004F149D /* dgn-overview.cc in Sources */,
 				7B09F6451133D823004F149D /* dgn-shoals.cc in Sources */,
 				7B09F6461133D823004F149D /* dgn-swamp.cc in Sources */,
-				7B09F5841133D6AB004F149D /* dgnevent.cc in Sources */,
+				7B09F5841133D6AB004F149D /* dgn-event.cc in Sources */,
 				7B09F5851133D6AB004F149D /* directn.cc in Sources */,
 				7B09F5861133D6AB004F149D /* dlua.cc in Sources */,
 				7B09F5871133D6AB004F149D /* dungeon.cc in Sources */,
@@ -2980,19 +2980,19 @@
 				7B09F58F1133D6AB004F149D /* fprop.cc in Sources */,
 				7B09F5901133D6AB004F149D /* geom2d.cc in Sources */,
 				7B09F5911133D6AB004F149D /* ghost.cc in Sources */,
-				7B09F5921133D6AB004F149D /* godabil.cc in Sources */,
-				7B09F5931133D6AB004F149D /* godconduct.cc in Sources */,
-				7B09F5941133D6AB004F149D /* goditem.cc in Sources */,
-				1F909BD2148B440800084E83 /* godmenu.cc in Sources */,
-				7B09F5951133D6AB004F149D /* godpassive.cc in Sources */,
-				7B09F5961133D6AB004F149D /* godprayer.cc in Sources */,
-				7B09F5971133D6AB004F149D /* godwrath.cc in Sources */,
+				7B09F5921133D6AB004F149D /* god-abil.cc in Sources */,
+				7B09F5931133D6AB004F149D /* god-conduct.cc in Sources */,
+				7B09F5941133D6AB004F149D /* god-item.cc in Sources */,
+				1F909BD2148B440800084E83 /* god-menu.cc in Sources */,
+				7B09F5951133D6AB004F149D /* god-passive.cc in Sources */,
+				7B09F5961133D6AB004F149D /* god-prayer.cc in Sources */,
+				7B09F5971133D6AB004F149D /* god-wrath.cc in Sources */,
 				4C59B0D611E79F6800760867 /* hints.cc in Sources */,
 				7B09F5981133D6AB004F149D /* hiscores.cc in Sources */,
 				7B09F5991133D6AB004F149D /* initfile.cc in Sources */,
 				7B09F59A1133D6AB004F149D /* invent.cc in Sources */,
 				7B09F59D1133D6AB004F149D /* item-use.cc in Sources */,
-				7B09F59E1133D6AB004F149D /* itemname.cc in Sources */,
+				7B09F59E1133D6AB004F149D /* item-name.cc in Sources */,
 				7B09F59F1133D6AB004F149D /* itemprop.cc in Sources */,
 				7B09F5A01133D6AB004F149D /* items.cc in Sources */,
 				7B09F5A11133D6AB004F149D /* jobs.cc in Sources */,
@@ -3205,7 +3205,7 @@
 				7B09F6401133D823004F149D /* dgn-overview.cc in Sources */,
 				7B09F6411133D823004F149D /* dgn-shoals.cc in Sources */,
 				7B09F6421133D823004F149D /* dgn-swamp.cc in Sources */,
-				E5D640E110BD494500A99626 /* dgnevent.cc in Sources */,
+				E5D640E110BD494500A99626 /* dgn-event.cc in Sources */,
 				E5D640E210BD494500A99626 /* directn.cc in Sources */,
 				E5D640E310BD494500A99626 /* dlua.cc in Sources */,
 				E5D640E410BD494500A99626 /* dungeon.cc in Sources */,
@@ -3227,19 +3227,19 @@
 				E5D640EE10BD494500A99626 /* ghost.cc in Sources */,
 				7B51658E11859CE3005B23ED /* glwrapper-ogl.cc in Sources */,
 				7B51658F11859CE3005B23ED /* glwrapper.cc in Sources */,
-				E5D640EF10BD494500A99626 /* godabil.cc in Sources */,
-				7B09F5441133D63E004F149D /* godconduct.cc in Sources */,
-				E5D640F010BD494500A99626 /* goditem.cc in Sources */,
-				1F909AEE148B23BC00084E83 /* godmenu.cc in Sources */,
-				7B09F5451133D63E004F149D /* godpassive.cc in Sources */,
-				7B09F5461133D63E004F149D /* godprayer.cc in Sources */,
-				E5D640F110BD494500A99626 /* godwrath.cc in Sources */,
+				E5D640EF10BD494500A99626 /* god-abil.cc in Sources */,
+				7B09F5441133D63E004F149D /* god-conduct.cc in Sources */,
+				E5D640F010BD494500A99626 /* god-item.cc in Sources */,
+				1F909AEE148B23BC00084E83 /* god-menu.cc in Sources */,
+				7B09F5451133D63E004F149D /* god-passive.cc in Sources */,
+				7B09F5461133D63E004F149D /* god-prayer.cc in Sources */,
+				E5D640F110BD494500A99626 /* god-wrath.cc in Sources */,
 				4C59B09011E7964700760867 /* hints.cc in Sources */,
 				E5D640F210BD494500A99626 /* hiscores.cc in Sources */,
 				E5D640F310BD494500A99626 /* initfile.cc in Sources */,
 				E5D640F410BD494500A99626 /* invent.cc in Sources */,
 				E5D640F710BD494500A99626 /* item-use.cc in Sources */,
-				E5D640F810BD494500A99626 /* itemname.cc in Sources */,
+				E5D640F810BD494500A99626 /* item-name.cc in Sources */,
 				E5D640F910BD494500A99626 /* itemprop.cc in Sources */,
 				E5D640FA10BD494500A99626 /* items.cc in Sources */,
 				E5D640FB10BD494500A99626 /* jobs.cc in Sources */,

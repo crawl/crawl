@@ -14,7 +14,7 @@
 #include "describe.h"
 #include "english.h" // apostrophise
 #include "evoke.h"
-#include "godpassive.h" // passive_t::bondage_skill_boost
+#include "god-passive.h" // passive_t::bondage_skill_boost
 #include "hints.h"
 #include "options.h"
 #include "output.h"

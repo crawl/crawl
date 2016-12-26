@@ -1,7 +1,7 @@
 #ifndef JOBS_H
 #define JOBS_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 const char *get_job_abbrev(job_type which_job);
 job_type get_job_by_abbrev(const char *abbrev);

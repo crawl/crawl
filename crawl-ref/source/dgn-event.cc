@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "dgnevent.h"
+#include "dgn-event.h"
 
 #include <algorithm>
 

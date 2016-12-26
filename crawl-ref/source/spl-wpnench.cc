@@ -8,7 +8,7 @@
 #include "spl-wpnench.h"
 
 #include "areas.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"

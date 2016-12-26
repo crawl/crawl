@@ -47,9 +47,9 @@
 #include "end.h"
 #include "errors.h"
 #include "ghost.h"
-#include "godabil.h" // just for the Ru sac penalty key
-#include "godcompanions.h"
-#include "itemname.h"
+#include "god-abil.h" // just for the Ru sac penalty key
+#include "god-companions.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"

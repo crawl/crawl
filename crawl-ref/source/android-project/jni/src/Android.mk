@@ -70,7 +70,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/dgn-proclayouts.cc \
     $(CRAWL_PATH)/dgn-shoals.cc \
     $(CRAWL_PATH)/dgn-swamp.cc \
-    $(CRAWL_PATH)/dgnevent.cc \
+    $(CRAWL_PATH)/dgn-event.cc \
     $(CRAWL_PATH)/directn.cc \
     $(CRAWL_PATH)/dlua.cc \
     $(CRAWL_PATH)/domino.cc \
@@ -92,22 +92,22 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/game-options.cc \
     $(CRAWL_PATH)/geom2d.cc \
     $(CRAWL_PATH)/ghost.cc \
-    $(CRAWL_PATH)/godabil.cc \
-    $(CRAWL_PATH)/godblessing.cc \
-    $(CRAWL_PATH)/godcompanions.cc \
-    $(CRAWL_PATH)/godconduct.cc \
-    $(CRAWL_PATH)/goditem.cc \
-    $(CRAWL_PATH)/godmenu.cc \
-    $(CRAWL_PATH)/godpassive.cc \
-    $(CRAWL_PATH)/godprayer.cc \
-    $(CRAWL_PATH)/godwrath.cc \
+    $(CRAWL_PATH)/god-abil.cc \
+    $(CRAWL_PATH)/god-blessing.cc \
+    $(CRAWL_PATH)/god-companions.cc \
+    $(CRAWL_PATH)/god-conduct.cc \
+    $(CRAWL_PATH)/god-item.cc \
+    $(CRAWL_PATH)/god-menu.cc \
+    $(CRAWL_PATH)/god-passive.cc \
+    $(CRAWL_PATH)/god-prayer.cc \
+    $(CRAWL_PATH)/god-wrath.cc \
     $(CRAWL_PATH)/hash.cc \
     $(CRAWL_PATH)/hints.cc \
     $(CRAWL_PATH)/hiscores.cc \
     $(CRAWL_PATH)/initfile.cc \
     $(CRAWL_PATH)/invent.cc \
     $(CRAWL_PATH)/item-use.cc \
-    $(CRAWL_PATH)/itemname.cc \
+    $(CRAWL_PATH)/item-name.cc \
     $(CRAWL_PATH)/itemprop.cc \
     $(CRAWL_PATH)/items.cc \
     $(CRAWL_PATH)/jobs.cc \

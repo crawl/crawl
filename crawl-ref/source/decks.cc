@@ -25,8 +25,8 @@
 #include "evoke.h"
 #include "food.h"
 #include "ghost.h"
-#include "godpassive.h" // passive_t::no_haste
-#include "godwrath.h"
+#include "god-passive.h" // passive_t::no_haste
+#include "god-wrath.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"

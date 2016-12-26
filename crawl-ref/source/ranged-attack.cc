@@ -13,7 +13,7 @@
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "itemprop.h"
 #include "message.h"
 #include "mon-behv.h"

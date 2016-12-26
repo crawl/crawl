@@ -17,7 +17,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "fight.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "items.h"
 #include "losglobal.h"
 #include "message.h"

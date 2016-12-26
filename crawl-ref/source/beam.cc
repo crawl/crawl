@@ -31,10 +31,10 @@
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "item-use.h"
 #include "itemprop.h"
 #include "items.h"

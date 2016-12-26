@@ -13,17 +13,17 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h" // RU_SAC_XP_LEVELS
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::no_haste
+#include "god-abil.h" // RU_SAC_XP_LEVELS
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::no_haste
 #include "hints.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "item-use.h"
 #include "message.h"

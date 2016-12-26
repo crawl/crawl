@@ -15,7 +15,7 @@
 #include "dungeon.h"
 #include "end.h"
 #include "food.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "items.h"
 #include "libutil.h"
 #include "los.h"

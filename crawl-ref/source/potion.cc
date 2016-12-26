@@ -12,10 +12,10 @@
 
 #include "cloud.h"
 #include "food.h"
-#include "godconduct.h"
-#include "godwrath.h" // reduce_xp_penance
+#include "god-conduct.h"
+#include "god-wrath.h" // reduce_xp_penance
 #include "hints.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "item-use.h"
 #include "message.h"

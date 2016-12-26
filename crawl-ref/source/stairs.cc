@@ -18,11 +18,11 @@
 #include "env.h"
 #include "files.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::slow_abyss
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "items.h"
 #include "mapmark.h"
 #include "message.h"
