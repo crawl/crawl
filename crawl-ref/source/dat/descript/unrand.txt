@@ -616,15 +616,8 @@ Kryia's mail coat
 A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
-draughts that kept her alive.
-
-{{
-    if you.race() == "Deep Dwarf" then
-        return "Sadly, it cannot assist deep dwarves' healing."
-    else
-        return "The wearer of this garment will have significantly increased healing from potions."
-    end
-}}
+draughts that kept her alive. The wearer of this garment will have
+significantly increased healing from potions.
 %%%%
 frozen axe "Frostbite"
 

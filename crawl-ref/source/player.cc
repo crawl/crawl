@@ -7792,11 +7792,8 @@ static int _get_potion_heal_factor()
     factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
     factor -= you.mutation[MUT_NO_POTION_HEAL];
 
-    // then apply bonuses
-    // Kryia's doubles potion healing for non-deep dwarves, because deep dwarves
-    // are abusive bastards.
-    if (you.species != SP_DEEP_DWARF)
-        factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
+    // then apply bonuses - Kryia's doubles potion healing
+    factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
 
     // make sure we don't turn healing negative.
     return max(0, factor);
