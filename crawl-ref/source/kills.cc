@@ -15,7 +15,7 @@
 #include "files.h"
 #include "ghost.h"
 #include "libutil.h"
-#include "l_libs.h"
+#include "l-libs.h"
 #include "mon-death.h"
 #include "mon-info.h"
 #include "monster.h"

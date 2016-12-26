@@ -34,7 +34,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "notes.h"

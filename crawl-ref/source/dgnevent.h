@@ -10,7 +10,7 @@
 
 #include "player.h"
 
-// Keep event names in l_dgnevt.cc in sync.
+// Keep event names in l-dgnevt.cc in sync.
 enum dgn_event_type
 {
     DET_NONE            = 0x0000,

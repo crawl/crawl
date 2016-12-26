@@ -13,7 +13,7 @@
 #include "items.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "terrain.h"

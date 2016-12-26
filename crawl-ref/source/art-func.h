@@ -29,7 +29,7 @@
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
 #include "godconduct.h"    // did_god_conduct
 #include "godpassive.h"    // passive_t::want_curses
-#include "mgen_data.h"     // For Sceptre of Asmodeus evoke
+#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"

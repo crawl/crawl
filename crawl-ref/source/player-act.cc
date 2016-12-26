@@ -25,7 +25,7 @@
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "message.h"
 #include "player-stats.h"
 #include "religion.h"

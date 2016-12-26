@@ -24,7 +24,7 @@
 #include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"

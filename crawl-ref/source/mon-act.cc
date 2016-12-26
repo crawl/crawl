@@ -64,7 +64,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"

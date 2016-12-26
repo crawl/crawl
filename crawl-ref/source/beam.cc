@@ -35,7 +35,7 @@
 #include "godconduct.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::convert_orcs
-#include "item_use.h"
+#include "item-use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -52,7 +52,7 @@
 #include "nearby-danger.h"
 #include "potion.h"
 #include "prompt.h"
-#include "ranged_attack.h"
+#include "ranged-attack.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-clouds.h"

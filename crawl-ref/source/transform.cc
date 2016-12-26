@@ -20,7 +20,7 @@
 #include "goditem.h"
 #include "godpassive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning
-#include "item_use.h"
+#include "item-use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1396,7 +1396,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
             continue;
         item_info inf = get_item_info(*item);
 
-        //similar code to safe_to_remove from item_use.cc
+        //similar code to safe_to_remove from item-use.cc
         if (inf.is_type(OBJ_JEWELLERY, RING_FLIGHT))
             sources_removed++;
         if (inf.base_type == OBJ_ARMOUR && inf.brand == SPARM_FLYING)

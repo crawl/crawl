@@ -27,7 +27,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"

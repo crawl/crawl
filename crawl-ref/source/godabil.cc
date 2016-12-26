@@ -40,7 +40,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -68,7 +68,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
-#include "skill_menu.h"
+#include "skill-menu.h"
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
@@ -85,7 +85,7 @@
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"

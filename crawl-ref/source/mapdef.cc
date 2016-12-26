@@ -2464,7 +2464,7 @@ void map_def::write_index(writer& outf) const
     marshallString4(outf, place_loaded_from.filename);
     marshallInt(outf, place_loaded_from.lineno);
     marshallShort(outf, orient);
-    // XXX: This is a hack. See the comment in l_dgn.cc.
+    // XXX: This is a hack. See the comment in l-dgn.cc.
     marshallShort(outf, static_cast<short>(border_fill_type));
     _chance.write(outf, _marshall_map_chance);
     _weight.write(outf, marshallInt);
@@ -2486,7 +2486,7 @@ void map_def::read_index(reader& inf)
     unmarshallString4(inf, place_loaded_from.filename);
     place_loaded_from.lineno = unmarshallInt(inf);
     orient = static_cast<map_section_type>(unmarshallShort(inf));
-    // XXX: Hack. See the comment in l_dgn.cc.
+    // XXX: Hack. See the comment in l-dgn.cc.
     border_fill_type =
         static_cast<dungeon_feature_type>(unmarshallShort(inf));
 

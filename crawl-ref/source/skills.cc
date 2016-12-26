@@ -29,7 +29,7 @@
 #include "output.h"
 #include "random.h"
 #include "religion.h"
-#include "skill_menu.h"
+#include "skill-menu.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"

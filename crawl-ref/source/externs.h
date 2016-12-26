@@ -379,7 +379,7 @@ struct bad_level_id : public runtime_error
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
-// stack in l_dgn.cc)
+// stack in l-dgn.cc)
 class level_id
 {
 public:

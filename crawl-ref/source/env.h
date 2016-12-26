@@ -4,9 +4,9 @@
 #include <set>
 #include <memory> // unique_ptr
 
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "monster.h"
-#include "trap_def.h"
+#include "trap-def.h"
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 typedef uint32_t terrain_property_t;
