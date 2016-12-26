@@ -92,9 +92,11 @@
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
 # * poison:   Grants poison resistance.
+# * rcorr:    Grants corrosion resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
 # * rmsl:     Passively repels missiles.
+# * rmut:     Grants mutation resistance.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * skip_ego: The item's ego is skipped in its inscription, to be replaced by
