@@ -31,7 +31,7 @@
 #include "godpassive.h" // passive_t::shadow_spells
 #include "godwrath.h"
 #include "hints.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"

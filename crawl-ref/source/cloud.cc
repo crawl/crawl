@@ -22,7 +22,7 @@
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"

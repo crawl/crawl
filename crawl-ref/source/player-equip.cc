@@ -19,7 +19,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
 #include "message.h"

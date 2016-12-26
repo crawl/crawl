@@ -20,7 +20,7 @@
 #include "english.h"
 #include "fprop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "message.h"
 #include "monster.h"

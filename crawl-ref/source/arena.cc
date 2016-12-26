@@ -23,7 +23,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-tentacle.h"

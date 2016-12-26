@@ -11,7 +11,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "los_def.h"
+#include "los-def.h"
 #include "losglobal.h"
 #include "mon-behv.h"
 #include "mon-pathfind.h"

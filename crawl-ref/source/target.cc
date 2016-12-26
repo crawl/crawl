@@ -12,7 +12,7 @@
 #include "env.h"
 #include "fight.h"
 #include "libutil.h"
-#include "los_def.h"
+#include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
 #include "spl-damage.h"

@@ -5,7 +5,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "libutil.h"
-#include "los_def.h"
+#include "los-def.h"
 
 #define LOS_KNOWN 4
 

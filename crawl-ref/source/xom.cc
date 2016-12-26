@@ -29,7 +29,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "losglobal.h"
 #include "makeitem.h"
 #include "message.h"

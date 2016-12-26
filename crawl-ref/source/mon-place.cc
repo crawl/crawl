@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "mon-place.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 
 #include <algorithm>
 

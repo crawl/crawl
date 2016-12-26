@@ -10,7 +10,7 @@
 #include "macro.h"
 #include "message.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"

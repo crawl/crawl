@@ -34,7 +34,7 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"

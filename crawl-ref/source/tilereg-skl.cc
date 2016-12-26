@@ -8,7 +8,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "skills.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"

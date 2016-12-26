@@ -10,7 +10,7 @@
 #include <map>
 #include <sys/un.h>
 
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "status.h"
 #include "tiledoll.h"
 #include "tileweb-text.h"

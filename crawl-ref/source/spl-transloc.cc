@@ -27,7 +27,7 @@
 #include "losglobal.h"
 #include "losparam.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"

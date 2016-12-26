@@ -35,7 +35,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"

@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "traps.h"
-#include "trap_def.h"
+#include "trap-def.h"
 
 #include <algorithm>
 #include <cmath>
@@ -31,7 +31,7 @@
 #include "mapmark.h"
 #include "mon-enum.h"
 #include "mon-tentacle.h"
-#include "mgen_enum.h"
+#include "mgen-enum.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mon-transit.h"

@@ -45,7 +45,7 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
 #include "view.h"

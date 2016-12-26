@@ -19,7 +19,7 @@
 #include "food.h"
 #include "godpassive.h"
 #include "godwrath.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "itemprop.h"
 #include "mapmark.h"
 #include "message.h"

@@ -20,7 +20,7 @@
 #include "godpassive.h"
 #include "invent.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h" // map_find
 #include "message.h"
 #include "misc.h"

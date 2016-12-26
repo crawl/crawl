@@ -38,7 +38,7 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
-#include "flood_find.h"
+#include "flood-find.h"
 #include "food.h"
 #include "ghost.h"
 #include "godpassive.h"
@@ -68,7 +68,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 
 #ifdef DEBUG_DIAGNOSTICS
