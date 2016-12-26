@@ -1893,21 +1893,6 @@ static void _do_rest()
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
 
-static void _do_clear_map()
-{
-    if (Options.show_travel_trail && env.travel_trail.size())
-    {
-        mpr("Clearing travel trail.");
-        clear_travel_trail();
-    }
-    else
-    {
-        mpr("Clearing level map.");
-        clear_map();
-        crawl_view.set_player_at(you.pos());
-    }
-}
-
 static void _do_display_map()
 {
     if (Hints.hints_events[HINT_MAP_VIEW])
@@ -2073,7 +2058,7 @@ void process_command(command_type cmd)
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
-    case CMD_CLEAR_MAP:       _do_clear_map();   break;
+    case CMD_CLEAR_MAP:       clear_map_or_travel_trail(); break;
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
