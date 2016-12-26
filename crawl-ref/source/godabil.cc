@@ -5050,7 +5050,7 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
     { PURITY_SAC_KEY, {
         MUT_SCREAM,
         MUT_SLOW_REGENERATION,
-        MUT_NO_DEVICE_HEAL,
+        MUT_NO_POTION_HEAL,
         MUT_DOPEY,
         MUT_CLUMSY,
         MUT_WEAK,

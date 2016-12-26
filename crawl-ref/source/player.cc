@@ -4875,7 +4875,7 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(you.scale_device_healing(hp_restoration));
+        inc_hp(you.scale_potion_healing(hp_restoration));
 
     inc_mp(mp_restoration);
 
@@ -7783,17 +7783,17 @@ bool player::form_uses_xl() const
            || form == TRAN_BAT && you.species != SP_VAMPIRE;
 }
 
-static int _get_device_heal_factor()
+static int _get_potion_heal_factor()
 {
     // healing factor is expressed in thirds, so default is 3/3 -- 100%.
     int factor = 3;
 
     // start with penalties
     factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
-    factor -= you.mutation[MUT_NO_DEVICE_HEAL];
+    factor -= you.mutation[MUT_NO_POTION_HEAL];
 
     // then apply bonuses
-    // Kryia's doubles device healing for non-deep dwarves, because deep dwarves
+    // Kryia's doubles potion healing for non-deep dwarves, because deep dwarves
     // are abusive bastards.
     if (you.species != SP_DEEP_DWARF)
         factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
@@ -7802,11 +7802,11 @@ static int _get_device_heal_factor()
     return max(0, factor);
 }
 
-void print_device_heal_message()
+void print_potion_heal_message()
 {
     // Don't give multiple messages in weird cases with both enhanced
     // and reduced healing.
-    if (_get_device_heal_factor() > 3)
+    if (_get_potion_heal_factor() > 3)
     {
         if (player_equip_unrand(UNRAND_KRYIAS))
         {
@@ -7818,20 +7818,20 @@ void print_device_heal_message()
             mpr("The healing is enhanced."); // bad message, but this should
                                              // never be possible anyway
     }
-    else if (_get_device_heal_factor() == 0)
+    else if (_get_potion_heal_factor() == 0)
         mpr("Your system rejects the healing.");
-    else if (_get_device_heal_factor() < 3)
+    else if (_get_potion_heal_factor() < 3)
         mpr("Your system partially rejects the healing.");
 }
 
-bool player::can_device_heal()
+bool player::can_potion_heal()
 {
-    return _get_device_heal_factor() > 0;
+    return _get_potion_heal_factor() > 0;
 }
 
-int player::scale_device_healing(int healing_amount)
+int player::scale_potion_healing(int healing_amount)
 {
-    return div_rand_round(healing_amount * _get_device_heal_factor(), 3);
+    return div_rand_round(healing_amount * _get_potion_heal_factor(), 3);
 }
 
 #if TAG_MAJOR_VERSION == 34

@@ -3211,7 +3211,7 @@ bool is_emergency_item(const item_def &item)
             return !have_passive(passive_t::no_haste)
                 && you.species != SP_FORMICID;
         case POT_HEAL_WOUNDS:
-            return you.can_device_heal();
+            return you.can_potion_heal();
         case POT_CURING:
         case POT_RESISTANCE:
         case POT_MAGIC:
@@ -3617,7 +3617,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_FORMICID;
 #endif
         case POT_HEAL_WOUNDS:
-            return !you.can_device_heal();
+            return !you.can_potion_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         }
