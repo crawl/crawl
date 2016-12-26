@@ -3539,9 +3539,6 @@ void lugonu_bend_space()
         _lugonu_warp_area(pow);
 
     uncontrolled_blink(true);
-
-    const int damage = roll_dice(1, 4);
-    ouch(damage, KILLED_BY_WILD_MAGIC, MID_NOBODY, "a spatial distortion");
 }
 
 void cheibriados_time_bend(int pow)
