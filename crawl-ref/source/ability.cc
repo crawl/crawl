@@ -453,7 +453,7 @@ static const ability_def Ability_List[] =
       {FAIL_INVO, 85, 7, 20}, abflag::NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 500, 10,
       {FAIL_INVO, 70, 4, 25}, abflag::NONE },
-    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 500, 28,
+    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 10, 0, 500, 28,
       {FAIL_INVO, 80, 4, 25}, abflag::PAIN },
     { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
       {FAIL_INVO}, abflag::NONE },
@@ -2586,10 +2586,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         // Deflate HP.
         dec_hp(random2avg(you.hp, 2), false);
-
-        // Deflate MP.
-        if (you.magic_points)
-            dec_mp(random2avg(you.magic_points, 2));
 
         no_notes nx; // This banishment shouldn't be noted.
         banished();

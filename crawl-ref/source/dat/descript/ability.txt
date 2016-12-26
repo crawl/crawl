@@ -424,7 +424,7 @@ Invocations skill.
 Enter the Abyss ability
 
 Transports you to Lugonu's realm instantly. The effort of even using the
-ability will leave your health and magic depleted.
+ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
