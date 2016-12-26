@@ -24,8 +24,8 @@
 #include "errors.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::slow_abyss, slow_orb_run
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -3104,7 +3104,7 @@ conduct_type player_will_anger_monster(monster_type type)
  * why?
  *
  * XXX: this should ideally return a list of conducts that can be filtered by
- *      callers by god; we're duplicating godconduct.cc right now.
+ *      callers by god; we're duplicating god-conduct.cc right now.
  *
  * @param mon   The monster in question.
  * @return      The reason the player's religion conflicts with the monster

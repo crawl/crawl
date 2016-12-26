@@ -25,11 +25,11 @@
 #include "fight.h"
 #include "fineff.h"
 #include "ghost.h"
-#include "godabil.h" // GOZAG_GOLD_AURA_KEY
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h" // GOZAG_GOLD_AURA_KEY
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"

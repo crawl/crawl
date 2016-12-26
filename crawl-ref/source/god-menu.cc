@@ -6,7 +6,7 @@
 
 #include "AppHdr.h"
 
-#include "godmenu.h"
+#include "god-menu.h"
 
 #include "colour.h"
 #include "libutil.h"

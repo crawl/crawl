@@ -14,7 +14,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "end.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "libutil.h"
 #include "maps.h"
 #include "random.h"
@@ -38,7 +38,7 @@ static uint8_t _random_potion_description()
         desc %= PDC_NCOLOURS;
 
     // nature and colour correspond to primary and secondary in
-    // itemname.cc.
+    // item-name.cc.
 
 #if TAG_MAJOR_VERSION == 34
     if (PCOLOUR(desc) == PDC_CLEAR) // only water can be clear, re-roll

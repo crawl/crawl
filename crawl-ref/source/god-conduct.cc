@@ -1,11 +1,11 @@
 #include "AppHdr.h"
 
-#include "godconduct.h"
+#include "god-conduct.h"
 
 #include "fight.h"
-#include "godabil.h" // ru sac key
-#include "goditem.h" // is_*_spell
-#include "godwrath.h"
+#include "god-abil.h" // ru sac key
+#include "god-item.h" // is_*_spell
+#include "god-wrath.h"
 #include "libutil.h"
 #include "message.h"
 #include "monster.h"

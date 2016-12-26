@@ -2,7 +2,7 @@
 #define ATTACK_H
 
 #include "artefact.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "mon-enum.h"
 #include "ouch.h"
 

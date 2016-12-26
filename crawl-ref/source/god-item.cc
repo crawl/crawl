@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "goditem.h"
+#include "god-item.h"
 
 #include <algorithm>
 #include <cmath>
@@ -17,7 +17,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "food.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "religion.h"
@@ -492,7 +492,7 @@ static bool item_handling_is_evil(const item_def &item)
  *
  * XXX: We should really be returning a list of all possible conducts for the
  * item and potentially letting callers filter them by the current god; this
- * is duplicating godconduct.cc otherwise.
+ * is duplicating god-conduct.cc otherwise.
  *
  * @param item  The item in question.
  * @return      Why the player's god hates the item, e.g. DID_HOLY for holy

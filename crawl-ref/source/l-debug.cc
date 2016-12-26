@@ -14,7 +14,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "files.h"
-#include "godwrath.h"
+#include "god-wrath.h"
 #include "los.h"
 #include "message.h"
 #include "mon-act.h"

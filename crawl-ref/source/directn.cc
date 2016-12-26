@@ -26,7 +26,7 @@
 #include "english.h"
 #include "fight.h" // melee_confuse_chance
 #include "food.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"

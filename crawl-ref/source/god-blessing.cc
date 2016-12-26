@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "godblessing.h"
+#include "god-blessing.h"
 
 #include "artefact.h"
 #include "env.h"

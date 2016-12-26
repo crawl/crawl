@@ -25,11 +25,11 @@
 #include "exercise.h"
 #include "food.h"
 #include "format.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::shadow_spells
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::shadow_spells
+#include "god-wrath.h"
 #include "hints.h"
 #include "item-use.h"
 #include "libutil.h"

@@ -20,7 +20,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "hints.h"
 #include "jobs.h"
 #include "libutil.h"

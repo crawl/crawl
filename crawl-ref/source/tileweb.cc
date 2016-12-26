@@ -20,7 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"

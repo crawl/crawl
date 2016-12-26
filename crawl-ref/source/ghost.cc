@@ -13,7 +13,7 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "mon-book.h"
 #include "mon-cast.h"

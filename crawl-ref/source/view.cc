@@ -32,12 +32,12 @@
 #include "feature.h"
 #include "files.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
-#include "itemname.h" // item_type_known
+#include "item-name.h" // item_type_known
 #include "itemprop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"

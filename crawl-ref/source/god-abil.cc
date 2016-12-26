@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "godabil.h"
+#include "god-abil.h"
 
 #include <cmath>
 #include <numeric>
@@ -31,10 +31,10 @@
 #include "files.h"
 #include "food.h"
 #include "format.h" // formatted_string
-#include "godblessing.h"
-#include "godcompanions.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-blessing.h"
+#include "god-companions.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"

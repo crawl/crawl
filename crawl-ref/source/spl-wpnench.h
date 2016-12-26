@@ -1,7 +1,7 @@
 #ifndef SPL_WPNENCH_H
 #define SPL_WPNENCH_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "spl-cast.h"
 
 #define ORIGINAL_BRAND_KEY "orig brand"

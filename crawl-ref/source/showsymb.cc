@@ -11,7 +11,7 @@
 
 #include "colour.h"
 #include "env.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "libutil.h" // map_find
 #include "options.h"
 #include "religion.h"

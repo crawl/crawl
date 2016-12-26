@@ -41,10 +41,10 @@
 #include "errors.h"
 #include "fineff.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godconduct.h" // for fedhas_rot_all_corpses
-#include "godcompanions.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h" // for fedhas_rot_all_corpses
+#include "god-companions.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "initfile.h"
 #include "items.h"

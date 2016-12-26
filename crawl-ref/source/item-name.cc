@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "itemname.h"
+#include "item-name.h"
 
 #include <cctype>
 #include <cstring>
@@ -29,8 +29,8 @@
 #include "errors.h" // sysfail
 #include "evoke.h"
 #include "food.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::want_curses, no_haste
+#include "god-item.h"
+#include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"

@@ -7,7 +7,7 @@
 
 #include "artefact.h"
 #include "describe.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "player.h"
 #include "tiledef-player.h"

@@ -23,7 +23,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"
-#include "godpassive.h" // passive_t::search_traps
+#include "god-passive.h" // passive_t::search_traps
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"

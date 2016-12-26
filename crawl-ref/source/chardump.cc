@@ -26,7 +26,7 @@
 #include "dungeon.h"
 #include "fight.h"
 #include "files.h"
-#include "godprayer.h"
+#include "god-prayer.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"

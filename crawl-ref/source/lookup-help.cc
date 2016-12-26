@@ -23,9 +23,9 @@
 #include "english.h"
 #include "enum.h"
 #include "env.h"
-#include "godmenu.h"
+#include "god-menu.h"
 #include "itemprop.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "macro.h"

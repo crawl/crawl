@@ -11,7 +11,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "itemprop.h"

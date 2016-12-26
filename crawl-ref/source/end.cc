@@ -16,7 +16,7 @@
 #include "database.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"

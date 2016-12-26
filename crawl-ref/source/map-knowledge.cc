@@ -6,7 +6,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
-#include "godpassive.h" // passive_t::auto_map
+#include "god-passive.h" // passive_t::auto_map
 #include "notes.h"
 #include "religion.h"
 #include "terrain.h"

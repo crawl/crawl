@@ -14,7 +14,7 @@
 #include "env.h"
 #include "food.h"
 #include "initfile.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "jobs.h"

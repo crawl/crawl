@@ -23,7 +23,7 @@
 #include "maps.h"
 #include "initfile.h"
 #include "libutil.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "act-iter.h"
 #include "mon-death.h"

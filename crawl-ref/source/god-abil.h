@@ -7,7 +7,7 @@
 #define GODABIL_H
 
 #include "enum.h"
-#include "itemprop-enum.h" // brand_type
+#include "item-prop-enum.h" // brand_type
 #include "spl-cast.h"
 
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"

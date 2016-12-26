@@ -1,7 +1,7 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "random-var.h"
 #include "ouch.h"
 

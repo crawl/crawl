@@ -8,7 +8,7 @@
 
 #include <set>
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 struct bolt;
 

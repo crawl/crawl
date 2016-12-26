@@ -16,12 +16,12 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::resist_polymorph
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning
 #include "item-use.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "message.h"

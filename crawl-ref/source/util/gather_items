@@ -11,7 +11,7 @@ sub jewellery_name($$)
     return "$type of $prefix$name";
 }
 
-open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
+open IN, "util/cpp_version item-name.cc|" or die "Can't read item-name.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 

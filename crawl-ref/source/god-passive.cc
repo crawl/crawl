@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#include "godpassive.h"
+#include "god-passive.h"
 
 #include <algorithm>
 #include <cmath>
@@ -16,11 +16,11 @@
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-prayer.h"
 #include "invent.h" // in_inventory
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"

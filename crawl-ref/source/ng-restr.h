@@ -1,7 +1,7 @@
 #ifndef NG_RESTR_H
 #define NG_RESTR_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 struct newgame_def;
 

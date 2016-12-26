@@ -27,7 +27,7 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"

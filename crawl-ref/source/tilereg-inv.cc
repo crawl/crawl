@@ -9,7 +9,7 @@
 #include "describe.h"
 #include "env.h"
 #include "invent.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "itemprop.h"
 #include "items.h"
 #include "item-use.h"

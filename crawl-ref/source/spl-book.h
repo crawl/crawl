@@ -7,7 +7,7 @@
 #define SPL_BOOK_H
 
 #define RANDBOOK_SIZE 8
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "spl-util.h" // spschool_flag_type
 
 #define SPELL_LIST_KEY "spell_list"

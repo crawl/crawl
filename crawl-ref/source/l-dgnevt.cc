@@ -3,7 +3,7 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 
 /*
  * Methods for DEVENT_METATABLE.

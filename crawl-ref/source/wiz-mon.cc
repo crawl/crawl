@@ -21,7 +21,7 @@
 #include "english.h"
 #include "files.h"
 #include "ghost.h"
-#include "godblessing.h"
+#include "god-blessing.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
