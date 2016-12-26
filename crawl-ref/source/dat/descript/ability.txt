@@ -416,7 +416,7 @@ harder to resist.
 Corrupt ability
 
 Corrupts the current level by unleashing Abyssal energies on it. This will
-cause the area nearby to change appearance, and will gate in demons from the
+cause the area nearby to change appearance, and will gate in creatures from the
 Abyss bent on causing destruction. This will not work on levels already
 corrupted or in the Abyss itself. The size of the effect is increased by
 Invocations skill.
