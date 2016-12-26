@@ -1481,6 +1481,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VINE_STALKER,    SK_POISON_MAGIC,    0),
     APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
     APT(SP_VINE_STALKER,    SK_EVOCATIONS,     -1),
+	
+	// SP_CYNO
+    APT(SP_CYNO,    		SK_FIGHTING,        5),
+    APT(SP_CYNO,    		SK_SHORT_BLADES,    5),
+    APT(SP_CYNO,    		SK_LONG_BLADES,     5),
+    APT(SP_CYNO,    		SK_AXES,            5),
+    APT(SP_CYNO,    		SK_MACES_FLAILS,    5),
+    APT(SP_CYNO,    		SK_POLEARMS,        5),
+    APT(SP_CYNO,    		SK_STAVES,          5),
+    APT(SP_CYNO,    		SK_SLINGS,          5),
+    APT(SP_CYNO,    		SK_BOWS,            5),
+    APT(SP_CYNO,    		SK_CROSSBOWS,       5),
+    APT(SP_CYNO,    		SK_THROWING,        5),
+    APT(SP_CYNO,    		SK_ARMOUR,          5),
+    APT(SP_CYNO,    		SK_DODGING,         5),
+    APT(SP_CYNO,    		SK_STEALTH,         5),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CYNO,    		SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_CYNO,    		SK_SHIELDS,         5),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CYNO,    		SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_CYNO,    		SK_UNARMED_COMBAT,  5),
+    APT(SP_CYNO,    		SK_SPELLCASTING,    5),
+    APT(SP_CYNO,    		SK_CONJURATIONS,    5),
+    APT(SP_CYNO,    		SK_HEXES,           5),
+    APT(SP_CYNO,    		SK_CHARMS,          5),
+    APT(SP_CYNO,    		SK_SUMMONINGS,      5),
+    APT(SP_CYNO,    		SK_NECROMANCY,      5),
+    APT(SP_CYNO,    		SK_TRANSLOCATIONS,  5),
+    APT(SP_CYNO,    		SK_TRANSMUTATIONS,  5),
+    APT(SP_CYNO,    		SK_FIRE_MAGIC,      5),
+    APT(SP_CYNO,    		SK_ICE_MAGIC,       5),
+    APT(SP_CYNO,    		SK_AIR_MAGIC,       5),
+    APT(SP_CYNO,    		SK_EARTH_MAGIC,     5),
+    APT(SP_CYNO,    		SK_POISON_MAGIC,    5),
+    APT(SP_CYNO,    		SK_INVOCATIONS,     5),
+    APT(SP_CYNO,    		SK_EVOCATIONS,      5),
 };
 COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);
 

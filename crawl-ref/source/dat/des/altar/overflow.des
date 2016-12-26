@@ -110,6 +110,8 @@ end
 function species_mock(e)
   if you.race() == "Centaur" then
     e.kmons("1 = dart slug")
+  elseif you.race() == "Cyno" then
+    e.kmons("1 = jackal")
   elseif you.race() == "Demigod" then
     e.kmons("1 = titan simulacrum")
   elseif you.race() == "Demonspawn" then

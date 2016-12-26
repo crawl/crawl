@@ -1693,6 +1693,21 @@ Vine Stalkers
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
+Cynii
+  Cynii are humanoids with the head of a dog, with origins from the eastern
+  deserts.  Cynii are unusually attracted to the dungeon, with mentions of the
+  Orb often generating blank stares, tilted heads, and involuntary drooling.
+
+  Cynii are quick to learn, picking up the basics of any skill within a short
+  period of time.  However, this incredible flexibility comes at the cost of
+  being unable to learn anything about a skill past the basics, requiring them
+  to take advantage of every option available to find an advantage against foes
+  of greater ability.
+
+  This lack of mastery also extends to their attributes.  Although they start 
+  out as able as a human, their attribute growth will leave them falling 
+  behind all but the undead.
+
 The Undead
 ========================================
 
