@@ -6561,23 +6561,6 @@ bool player::tengu_flight() const
 }
 
 /**
- * Returns the HP cost (per MP) of casting a spell.
- *
- * Checks to see if the player is wielding the Majin-Bo.
- *
- * @return        The HP cost (per MP) of casting a spell.
- **/
-int player::spell_hp_cost() const
-{
-    int cost = 0;
-
-    if (player_equip_unrand(UNRAND_MAJIN))
-        cost += 1;
-
-    return cost;
-}
-
-/**
  * Returns true if player spellcasting is considered unholy.
  *
  * Checks to see if the player is wielding the Majin-Bo.

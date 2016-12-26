@@ -975,11 +975,13 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
         // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
 
-        if (real_spell
-            && player_equip_unrand(UNRAND_MAJIN)
-            && one_chance_in(500))
+        if (real_spell && player_equip_unrand(UNRAND_MAJIN))
         {
-            _majin_speak(spell);
+            // never kill the player (directly)
+            int hp_cost = min(spell_mana(spell), you.hp - 1);
+            ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, "the Majin-Bo");
+            if (one_chance_in(500))
+                _majin_speak(spell);
         }
     }
 
@@ -1208,23 +1210,6 @@ static double _chance_miscast_prot()
         miscast_prot = (double) you.piety/piety_breakpoint(5);
 
     return min(1.0, miscast_prot);
-}
-
-/**
- * Handles damage from corrupted magic effects.
- *
- * Currently only from the Majin-Bo.
- *
- * @param spell         The type of spell that was just cast.
- **/
-static void _spellcasting_corruption(spell_type spell)
-{
-    // never kill the player (directly)
-    int hp_cost = min(you.spell_hp_cost() * spell_mana(spell), you.hp - 1);
-    const char * source = nullptr;
-    if (player_equip_unrand(UNRAND_MAJIN))
-        source = "the Majin-Bo"; // for debugging
-    ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
 }
 
 // Returns the nth triangular number.
@@ -1494,9 +1479,6 @@ spret_type your_spells(spell_type spell, int powc,
 
     spret_type cast_result = _do_cast(spell, powc, spd, beam, god,
                                       potion, fail);
-
-    if (cast_result != SPRET_ABORT && you.spell_hp_cost() && allow_fail)
-        _spellcasting_corruption(spell);
 
     switch (cast_result)
     {

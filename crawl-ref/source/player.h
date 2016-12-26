@@ -496,7 +496,6 @@ public:
     bool tengu_flight() const;
     int heads() const override;
 
-    int spell_hp_cost() const;
     bool spellcasting_unholy() const;
 
     // Dealing with beholders. Implemented in behold.cc.

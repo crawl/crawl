@@ -1392,8 +1392,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 int spell_highlight_by_utility(spell_type spell, int default_colour,
                                bool transient, bool rod_spell)
 {
-    // If your god hates the spell, that
-    // overrides all other concerns
+    // If your god hates the spell, that overrides all other concerns.
     if (god_hates_spell(spell, you.religion, rod_spell)
         || is_good_god(you.religion) && you.spellcasting_unholy())
     {
