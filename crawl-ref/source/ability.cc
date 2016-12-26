@@ -448,7 +448,7 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
       1, 0, 0, 10, {FAIL_INVO, 30, 6, 20}, abflag::NONE },
     { ABIL_LUGONU_BEND_SPACE, "Bend Space",
-      1, 0, 0, 0, {FAIL_INVO, 40, 5, 20}, abflag::PAIN },
+      1, scaling_cost::fixed(2), 0, 0, {FAIL_INVO, 40, 5, 20}, abflag::NONE },
     { ABIL_LUGONU_BANISH, "Banish", 4, 0, 200, generic_cost::range(3, 4),
       {FAIL_INVO, 85, 7, 20}, abflag::NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 500, 10,
