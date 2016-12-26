@@ -1229,20 +1229,20 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
 },
 
-{ MUT_NO_DEVICE_HEAL, 3, 3, mutflag::BAD, false,
-  "no device heal",
+{ MUT_NO_POTION_HEAL, 3, 3, mutflag::BAD, false,
+  "no potion heal",
 
   {"Potions are less effective at restoring your health.",
    "Potions are poor at restoring your health.",
    "Potions cannot restore your health."},
 
-  {"Your system partially rejects artificial healing.",
-   "Your system mostly rejects artificial healing.",
-   "Your system completely rejects artificial healing."},
+  {"Your system partially rejects the healing effects of potions.",
+   "Your system mostly rejects the healing effects of potions.",
+   "Your system completely rejects the healing effects of potions."},
 
-  {"Your system completely accepts artificial healing.",
-   "Your system mostly accepts artificial healing.",
-   "Your system partly accepts artificial healing."},
+  {"Your system completely accepts the healing effects of potions.",
+   "Your system mostly accepts the healing effects of potions.",
+   "Your system partly accepts the healing effects of potions."},
 },
 
 // Scale mutations

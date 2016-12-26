@@ -1231,7 +1231,7 @@ PLUS:    +2
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
-INSCRIP: NoDeviceHeal
+INSCRIP: NoPotionHeal
 REGEN:   7
 
 ENUM:    KRYIAS
@@ -1241,7 +1241,7 @@ PLUS:    +7
 COLOUR:  LIGHTCYAN
 TILE:    urand_kryias
 TILE_EQ: kryias
-INSCRIP: DeviceHeal*2
+INSCRIP: PotionHeal*2
 COLD:    1
 
 ENUM:    FROSTBITE

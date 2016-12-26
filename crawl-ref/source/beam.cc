@@ -3525,7 +3525,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_HEALING:
-        potionlike_effect(POT_HEAL_WOUNDS, ench_power, true, evoked);
+        potionlike_effect(POT_HEAL_WOUNDS, ench_power, true);
         obvious_effect = true;
         nasty = false;
         nice  = true;

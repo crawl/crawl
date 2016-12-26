@@ -131,7 +131,7 @@ static const int conflict[][3] =
     { MUT_STRONG,              MUT_WEAK,                   1},
     { MUT_CLEVER,              MUT_DOPEY,                  1},
     { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_REGENERATION,   MUT_NO_DEVICE_HEAL,         1},
+    { MUT_SLOW_REGENERATION,   MUT_NO_POTION_HEAL,         1},
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
