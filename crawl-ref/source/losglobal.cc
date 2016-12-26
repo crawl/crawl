@@ -67,8 +67,7 @@ void invalidate_los_around(const coord_def& p)
     int y2 = min(p.y + LOS_MAX_RANGE, GYM - 1);
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
-            if (max(abs(p.x - x), abs(p.y - y)) <= LOS_MAX_RANGE)
-                memset(globallos[x][y], 0, sizeof(halflos_t));
+            memset(globallos[x][y], 0, sizeof(halflos_t));
 }
 
 void invalidate_los()

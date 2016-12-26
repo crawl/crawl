@@ -27,10 +27,10 @@
 #include "los.h"
 #include "mapdef.h" // MON_NO_STAIR_KEY
 #include "message.h"
-#include "misc.h"
 #include "mon-book.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-tentacle.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
@@ -42,6 +42,8 @@
 #include "tilepick.h"
 #endif
 #include "traps.h"
+
+#define SPELL_HD_KEY "spell_hd"
 
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
@@ -69,7 +71,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_RAISED_MR,       MB_RAISED_MR },
     { ENCH_MIRROR_DAMAGE,   MB_MIRROR_DAMAGE },
     { ENCH_FEAR_INSPIRING,  MB_FEAR_INSPIRING },
-    { ENCH_WITHDRAWN,       MB_WITHDRAWN },
     { ENCH_DAZED,           MB_DAZED },
     { ENCH_MUTE,            MB_MUTE },
     { ENCH_BLIND,           MB_BLIND },
@@ -77,7 +78,6 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_MAD,             MB_MAD },
     { ENCH_INNER_FLAME,     MB_INNER_FLAME },
     { ENCH_BREATH_WEAPON,   MB_BREATH_WEAPON },
-    { ENCH_ROLLING,         MB_ROLLING },
     { ENCH_OZOCUBUS_ARMOUR, MB_OZOCUBUS_ARMOUR },
     { ENCH_WRETCHED,        MB_WRETCHED },
     { ENCH_SCREAMED,        MB_SCREAMED },
@@ -112,6 +112,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_IDEALISED,       MB_IDEALISED },
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
+    { ENCH_STILL_WINDS,     MB_STILL_WINDS },
+    { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -195,7 +197,9 @@ static bool _is_public_key(string key)
      || key == MON_NO_STAIR_KEY
      || key == DOOM_HOUND_HOWLED_KEY
      || key == MON_GENDER_KEY
-     || key == SEEN_SPELLS_KEY)
+     || key == SEEN_SPELLS_KEY
+     || key == KNOWN_MAX_HP_KEY
+     || key == VAULT_HD_KEY )
     {
         return true;
     }
@@ -280,7 +284,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
         // If the tentacle and the other segment are no longer adjacent
         // (distortion etc.), just treat them as not connected.
         if (adjacent(m->pos(), h_pos)
-            && !mons_is_zombified(other)
+            && !mons_is_zombified(*other)
             && !_tentacle_pos_unknown(other, m->pos()))
         {
             mi.props[key] = h_pos - m->pos();
@@ -390,10 +394,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     }
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-    {
         attack[i] = get_monster_data(type)->attack[i];
-        attack[i].damage = 0;
-    }
 
     props.clear();
     // At least enough to keep from crashing. TODO: allow specifying these?
@@ -421,10 +422,10 @@ monster_info::monster_info(const monster* m, int milev)
     attitude = ATT_HOSTILE;
     pos = m->pos();
 
-    attitude = mons_attitude(m);
+    attitude = mons_attitude(*m);
 
     type = m->type;
-    threat = mons_threat_level(m);
+    threat = mons_threat_level(*m);
 
     props.clear();
     // CrawlHashTable::begin() const can fail if the hash is empty.
@@ -536,40 +537,40 @@ monster_info::monster_info(const monster* m, int milev)
 
     holi = m->holiness();
 
-    mintel = mons_intel(m);
+    mintel = mons_intel(*m);
     hd = m->get_hit_dice();
     ac = m->armour_class(false);
     ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
     mr = m->res_magic(false);
     can_see_invis = m->can_see_invisible(false);
-    mresists = get_mons_resists(m);
-    mitemuse = mons_itemuse(m);
-    mbase_speed = mons_base_speed(m, true);
-    menergy = mons_energy(m);
+    mresists = get_mons_resists(*m);
+    mitemuse = mons_itemuse(*m);
+    mbase_speed = mons_base_speed(*m, true);
+    menergy = mons_energy(*m);
 
     if (m->airborne())
         mb.set(MB_AIRBORNE);
-    if (mons_wields_two_weapons(m))
+    if (mons_wields_two_weapons(*m))
         mb.set(MB_TWO_WEAPONS);
-    if (!mons_can_regenerate(m))
+    if (!mons_can_regenerate(*m))
         mb.set(MB_NO_REGEN);
     if (m->haloed() && !m->umbraed())
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
         mb.set(MB_UMBRAED);
-    if (mons_looks_stabbable(m))
+    if (mons_looks_stabbable(*m))
         mb.set(MB_STABBABLE);
-    if (mons_looks_distracted(m))
+    if (mons_looks_distracted(*m))
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOW_MOVEMENT);
     if (m->is_wall_clinging())
         mb.set(MB_CLINGING);
 
-    dam = mons_get_damage_level(m);
+    dam = mons_get_damage_level(*m);
 
-    if (mons_is_threatening(m)) // Firewood, butterflies, etc.
+    if (mons_is_threatening(*m)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -579,9 +580,9 @@ monster_info::monster_info(const monster* m, int milev)
                 mb.set(MB_SLEEPING);
         }
         // Applies to both friendlies and hostiles
-        else if (mons_is_fleeing(m))
+        else if (mons_is_fleeing(*m))
             mb.set(MB_FLEEING);
-        else if (mons_is_wandering(m) && !mons_is_batty(m))
+        else if (mons_is_wandering(*m) && !mons_is_batty(*m))
         {
             if (m->is_stationary())
                 mb.set(MB_UNAWARE);
@@ -589,7 +590,7 @@ monster_info::monster_info(const monster* m, int milev)
                 mb.set(MB_WANDERING);
         }
         // TODO: is this ever needed?
-        else if (m->foe == MHITNOT && !mons_is_batty(m)
+        else if (m->foe == MHITNOT && !mons_is_batty(*m)
                  && m->attitude == ATT_HOSTILE)
         {
             mb.set(MB_UNAWARE);
@@ -606,24 +607,8 @@ monster_info::monster_info(const monster* m, int milev)
     if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
 
-    if (you.beheld_by(m))
+    if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
-
-    // Evilness of attacking
-    switch (attitude)
-    {
-    case ATT_NEUTRAL:
-    case ATT_HOSTILE:
-        if (you_worship(GOD_SHINING_ONE)
-            && !tso_unchivalric_attack_safe_monster(m)
-            && find_stab_type(&you, *m) != STAB_NO_STAB)
-        {
-            mb.set(MB_EVIL_ATTACK);
-        }
-        break;
-    default:
-        break;
-    }
 
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);
@@ -656,7 +641,8 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
         i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         i_ghost.ac = quantise(ghost.ac, 5);
-        i_ghost.damage = quantise(ghost.damage, 5);
+        i_ghost.damage = ghost.damage;
+        props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
 
         // describe abnormal (branded) ghost weapons
         if (ghost.brand != SPWPN_NORMAL)
@@ -672,10 +658,16 @@ monster_info::monster_info(const monster* m, int milev)
     else if (m->is_actual_spellcaster())
         props["actual_spellcaster"] = true;
 
+    // assumes spell hd modifying effects are always public
+    const int spellhd = m->spell_hd();
+    if (spellhd != hd)
+        props[SPELL_HD_KEY] = spellhd;
+
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        attack[i] = mons_attack_spec(m, i, true);
-        attack[i].damage = 0;
+        // hydras are a mess!
+        const int atk_index = m->has_hydra_multi_attack() ? 0 : i;
+        attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -748,7 +740,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
     }
 
-    if (mons_has_known_ranged_attack(m))
+    if (mons_has_known_ranged_attack(*m))
         mb.set(MB_RANGED_ATTACK);
 
     // this must be last because it provides this structure to Lua code
@@ -758,13 +750,35 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_SAFE);
         else
             mb.set(MB_UNSAFE);
-        if (mons_is_firewood(m))
+        if (mons_is_firewood(*m))
             mb.set(MB_FIREWOOD);
     }
 
     client_id = m->get_client_id();
 }
 
+/// Player-known max HP information for a monster: "about 55", "243".
+string monster_info::get_max_hp_desc() const
+{
+    if (props.exists(KNOWN_MAX_HP_KEY))
+        return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
+
+    const int base_avg_hp = mons_class_is_zombified(type) ?
+                            derived_undead_avg_hp(type, hd, 1) :
+                            mons_avg_hp(type);
+    int mhp = base_avg_hp;
+    if (props.exists(VAULT_HD_KEY))
+    {
+        const int xl = props[VAULT_HD_KEY].get_int();
+        const int base_xl = mons_class_hit_dice(type);
+        mhp = base_avg_hp * xl / base_xl; // rounds down - close enough
+    }
+
+    if (type == MONS_SLIME_CREATURE)
+        mhp *= slime_size;
+
+    return make_stringf("about %d", mhp);
+}
 
 
 /**
@@ -815,7 +829,12 @@ string monster_info::_core_name() const
     monster_type nametype = type;
 
     if (mons_class_is_zombified(type))
-        nametype = mons_species(base_type);
+    {
+        if (mons_is_unique(base_type))
+            nametype = mons_species(base_type);
+        else
+            nametype = base_type;
+    }
     else if (type == MONS_PILLAR_OF_SALT
              || type == MONS_BLOCK_OF_ICE
              || type == MONS_SENSED)
@@ -1202,8 +1221,6 @@ static string _verbose_info0(const monster_info& mi)
         return "sleeping";
     if (mi.is(MB_UNAWARE))
         return "unaware";
-    if (mi.is(MB_WITHDRAWN))
-        return "withdrawn";
     if (mi.is(MB_DAZED))
         return "dazed";
     if (mi.is(MB_MUTE))
@@ -1347,9 +1364,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         break;
     }
 
-    if (count == 1 && is(MB_EVIL_ATTACK))
-        desc_colour = Options.evil_colour;
-    else if (colour_type < _NUM_MLC)
+    if (colour_type < _NUM_MLC)
         desc_colour = _monster_list_colours[colour_type];
 
     // We still need something, or we'd get the last entry's colour.
@@ -1402,7 +1417,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_PETRIFYING))
         v.emplace_back("slowly petrifying");
     if (is(MB_VULN_MAGIC))
-        v.emplace_back("susceptible to magic");
+        v.emplace_back("susceptible to hostile enchantments");
     if (is(MB_SWIFT))
         v.emplace_back("covering ground quickly");
     if (is(MB_SILENCING))
@@ -1420,12 +1435,6 @@ vector<string> monster_info::attributes() const
         v.push_back(string("catching ")
                     + pronoun(PRONOUN_POSSESSIVE) + " breath");
     }
-    if (is(MB_WITHDRAWN))
-    {
-        v.emplace_back("regenerating health quickly");
-        v.push_back(string("protected by ")
-                    + pronoun(PRONOUN_POSSESSIVE) + " shell");
-    }
     if (is(MB_DAZED))
         v.emplace_back("dazed");
     if (is(MB_MUTE))
@@ -1438,8 +1447,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("lost in madness");
     if (is(MB_REGENERATION))
         v.emplace_back("regenerating");
-    if (is(MB_ROLLING))
-        v.emplace_back("rolling");
+    if (is(MB_RAISED_MR))
+        v.emplace_back("resistant to hostile enchantments");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.emplace_back("covered in an icy film");
     if (is(MB_WRETCHED))
@@ -1472,7 +1481,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_TORNADO_COOLDOWN))
         v.emplace_back("surrounded by restless winds");
     if (is(MB_BARBS))
-        v.emplace_back("skewered by manticore barbs");
+        v.emplace_back("skewered by barbs");
     if (is(MB_POISON_VULN))
         v.emplace_back("more vulnerable to poison");
     if (is(MB_ICEMAIL))
@@ -1524,6 +1533,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("bound soul");
     if (is(MB_INFESTATION))
         v.emplace_back("infested");
+    if (is(MB_STILL_WINDS))
+        v.emplace_back("stilling the winds");
     return v;
 }
 
@@ -1731,6 +1742,14 @@ bool monster_info::has_spells() const
     return true;
 }
 
+/// What hd does this monster cast spells with? May vary from actual HD.
+int monster_info::spell_hd() const
+{
+    if (!props.exists(SPELL_HD_KEY))
+        return hd;
+    return props[SPELL_HD_KEY].get_int();
+}
+
 unsigned monster_info::colour(bool base_colour) const
 {
     if (!base_colour && Options.mon_glyph_overrides.count(type)
@@ -1794,7 +1813,7 @@ void get_monster_info(vector<monster_info>& mons)
 
     for (monster *mon : visible)
     {
-        if (mons_is_threatening(mon)
+        if (mons_is_threatening(*mon)
             || mon->is_child_tentacle())
         {
             mons.emplace_back(mon);

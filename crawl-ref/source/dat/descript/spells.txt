@@ -3,6 +3,11 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
+Acid Splash spell
+
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
+%%%%
 Agony spell
 
 Cuts the resilience of a target creature in half. This damage is never directly
@@ -58,9 +63,7 @@ Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water. Extremely loud noises, such as those produced
-by lightning or scrolls of noise, will disrupt the effect, as will leaving the
-caster's line of sight.
+any nearby bodies of deep water.
 %%%%
 Awaken Earth spell
 
@@ -89,9 +92,18 @@ the strength of their blows.
 %%%%
 Beastly Appendage spell
 
-Temporarily replaces one or a pair of the caster's appendages with an animal
-counterpart, giving them an extra attack. It is not powerful enough to meld
-armour or enhance appendages that are already nonhuman.
+{{
+    if you.race() == "Octopode" then
+        return "Causes a vicious spike to grow from one of the caster's " ..
+               "tentacles, increasing the damage of their extra tentacle " ..
+               "attacks."
+    else
+        return "Causes monstrous horns or talons to grow from the caster's " ..
+               "body, granting them a chance of making an extra attack in " ..
+               "melee. It is not powerful enough to meld armour or enhance " ..
+               "appendages that are already nonhuman."
+    end
+}}
 %%%%
 Berserker Rage spell
 
@@ -115,8 +127,11 @@ deplete magical power.
 %%%%
 Blade Hands spell
 
-Causes long, scythe-shaped blades to grow from the caster's hands. It makes
-spellcasting somewhat difficult.
+Causes long, scythe-shaped blades to grow from the caster's hands, increasing
+melee damage to a degree depending on strength and dexterity.
+
+While transformed, any equipped weapons are melded. The caster also becomes
+unable to evoke wands, and casting spells becomes somewhat more difficult.
 %%%%
 Blink Allies Away spell
 
@@ -196,7 +211,7 @@ undead.
 Brain Feed spell
 
 Drains a portion of a visible enemy's intelligence. Such a loss is only
-temporary, and can be prevented or reduced by having sustained attributes.
+temporary, and can be recovered by gaining experience.
 %%%%
 Brothers in Arms spell
 
@@ -235,9 +250,9 @@ morale. They have no noticeable effect.
 %%%%
 Cause Fear spell
 
-Causes fear in those near to the caster. Adventurers suffering from this effect
-find that extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt it, as will leaving the caster's line of sight.
+Causes fear in those near to the caster, causing those affected to be unable to
+approach the caster, and to sometimes fail to attack them in melee. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Chain of Chaos spell
 
@@ -256,8 +271,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that bypasses any armour the target may have, and
-may knock back airborne targets.
+Exhales a blast of frost that may knock back airborne targets.
 %%%%
 Cigotuvi's Embrace spell
 
@@ -381,7 +395,7 @@ a state of spectral slavery.
 %%%%
 Death Rattle spell
 
-Exhales the essence of the dying, creating clouds of negative energy.
+Exhales the essence of the dying, creating clouds of noxious miasma.
 %%%%
 Death's Door spell
 
@@ -433,8 +447,9 @@ cause severe damage, or remove a chunk of rock.
 Disjunction spell
 
 Destabilizes the space in a sphere around the caster for a while, causing
-anyone nearby to be randomly blinked. The chance of blinking depends on the
-distance from the caster, being nearly certain when directly adjacent.
+anyone nearby to blink away from the caster. The chance of blinking depends on
+the distance from the caster, being nearly certain when directly adjacent. It
+causes magical contamination when cast.
 %%%%
 Dispel Undead spell
 
@@ -452,7 +467,7 @@ Doom Howl spell
 
 Unleashes a piercing howl that catches and echoes in victims' minds. While
 those echoes linger, nightmarish creatures will hear and track them to their
-source.
+source. It can only be used once by a given creature.
 %%%%
 Dragon Form spell
 
@@ -460,18 +475,35 @@ Dragon Form spell
     local desc = "Transforms the caster into a mighty"
 
     if you.race():find("Draconian") then
-        desc = desc .. " dragon, retaining your innate colour"
+        desc = desc .. " dragon"
         if you.race() ~= "Grey Draconian" then
-            desc = desc .. " and increasing the power of your breath"
+            desc = desc .. ", increasing the power of any innate breath attacks"
+        end
+        if you.race() == "Red Draconian" then
+            desc = desc .. ". The caster becomes highly resistant to fire " ..
+                           "and resistant to poison, but vulnerable to cold"
+        elseif you.race() == "White Draconian" then
+            desc = desc .. ". The caster becomes highly resistant to cold " ..
+                           "and resistant to poison, but vulnerable to fire"
+        elseif you.race() == "Green Draconian" then
+            desc = desc .. " and retaining their innate colour"
+        else
+            desc = desc .. ". The caster retains their innate colour, and " ..
+                           "becomes resistant to poison"
         end
     else
-        desc = desc .. ", fire-breathing dragon"
+        desc = desc .. ", fire-breathing dragon. The caster becomes highly " ..
+                       "resistant to fire and resistant to poison, but " ..
+                       "vulnerable to cold"
     end
 
     desc = desc .. "."
 
     return desc
-}}
+}} The caster's melee damage will be substantially increased to a degree
+depending on strength, and they become much more robust but less evasive.
+
+While transformed, any equipped weapons and armour are melded.
 %%%%
 Dragon's Call spell
 
@@ -493,6 +525,11 @@ Draining Gaze spell
 
 Causes the target's magic to leak into the air, as though they were hit by an
 antimagic weapon, with no direct line of fire required.
+%%%%
+Dream Dust spell
+
+Overwhelms the target with soporific dream dust, putting them to sleep.
+Additional dream sheep will increase the strength and duration of this effect.
 %%%%
 Druid's Call spell
 
@@ -604,9 +641,14 @@ point – typically colliding with each other, or with a victim standing there.
 %%%%
 Ghostly Fireball spell
 
-Hurls an exploding ball of necromantic energy. Any undead creatures in the area
-of effect will be healed, and other creatures will be damaged. A small portion
-of its damage bypasses resistance to negative energy.
+Hurls an exploding ball of negative energy which drains any living creature
+it engulfs.
+%%%%
+Ghostly Sacrifice spell
+
+Uses an ally's motivating essence to create a blast of negative energy,
+draining any living creature it engulfs. The being used to fuel the spell, no
+matter whether living or construct, is consumed and unmade in the process.
 %%%%
 Throw Ally spell
 
@@ -659,22 +701,26 @@ Hurl Damnation spell
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
-gods. These flames are especially dangerous to evil creatures, and have no
-effect on holy creatures.
+gods. These flames are especially dangerous to undead and demonic creatures,
+and have no effect on holy creatures.
 %%%%
 Holy Flames spell
 
 Traps an enemy in a ring of blessed flame. These flames are especially
-dangerous to evil creatures, and have no effect on holy creatures.
+dangerous to undead and demonic creatures, and have no effect on holy
+creatures.
 %%%%
 Hydra Form spell
 
-Transforms the caster into a many-headed hydra for a brief duration. Its many
-heads strike in all directions. Edible foes slain by the gnashing teeth are
-instantly devoured, reinvigorating the caster in their reptilian rampage.
+Transforms the caster into an amphibious, many-headed hydra for a brief
+duration. Its multiple heads strike in all directions. Edible foes slain by the
+gnashing teeth are instantly devoured, reinvigorating the caster in their
+reptilian rampage. The caster gains innate armour and increased health, and
+becomes resistant to poison.
 
-The form's number of heads is fixed upon casting the spell, and increases with
-power.
+While transformed, any equipped weapons and armour are melded, and wands cannot
+be evoked. The form's number of heads is fixed upon casting the spell, and
+increases with power.
 %%%%
 Iceblast spell
 
@@ -684,8 +730,11 @@ cold-resistant creatures somewhat, due to the strong impact and cutting edges.
 Ice Form spell
 
 Transforms the caster into a frozen ice-creature, light enough to float on
-water. The caster becomes incredibly resistant to cold, and resistant to
-poison, but vulnerable to fire and unable to evoke wands.
+water. The caster gains a freezing melee attack, and becomes incredibly
+resistant to cold and resistant to poison, but vulnerable to fire.
+
+While transformed, any equipped weapons and armour are melded, and wands cannot
+be evoked.
 %%%%
 Ignite Poison spell
 
@@ -742,7 +791,7 @@ Irradiate spell
 Transmutes an ultra-thin layer of the caster's skin (or equivalent) directly
 into pure magical energy, blasting and deforming adjacent creatures. The caster
 is not left entirely unaffected; some of the magic lingers, enough to leave
-them dangerously contaminated after just two or three castings.
+them dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -761,7 +810,8 @@ traveled less distance.
 Leda's Liquefaction spell
 
 Liquefies the ground around the caster, making it difficult to move through.
-Any movement through liquefied ground will be slowed.
+Any movement through liquefied ground will be slowed, and attempts to attack
+in melee may fail.
 
 The effect starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before it times out.
@@ -791,6 +841,10 @@ be any mix of Fireball, Iceblast, and Ghostly Fireball.
 Lehudib's Crystal Spear spell
 
 Hurls a lethally sharp shard of crystal.
+%%%%
+Lesser Beckoning spell
+
+Beckons the target forward, attempting to place them adjacent to the caster.
 %%%%
 Lightning Bolt spell
 
@@ -842,9 +896,8 @@ Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster. Extremely
-loud noises, such as those produced by lightning or scrolls of noise, will
-disrupt the effect, as will leaving the caster's line of sight.
+Makes a targeted creature unwilling to move away from the caster. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Metabolic Englaciation spell
 
@@ -887,9 +940,10 @@ Necromutation spell
 Transforms the caster into a lich — a powerful skeletal figure. The caster
 becomes more resistant to cold and hostile enchantments and completely immune
 to poison, rotting, negative energy and torment, and requires no food at all
-for the duration of the spell. The caster also gains some of the more dubious
-benefits of having an undead body, such as a vulnerability to holy weapons and
-an inability to consume potions.
+for the duration of the spell. The caster's necromancy spells are increased in
+power, and they gain a draining melee attack. The caster also gains some of the
+more dubious benefits of having an undead body, such as a vulnerability to holy
+damage and Dispel Undead, and an inability to consume potions.
 %%%%
 Noxious Cloud spell
 
@@ -975,10 +1029,10 @@ otherwise almost indistinguishable from the original.
 %%%%
 Plane Rend spell
 
-Summons some of the greater threats from one of the Lair of Beasts, the Snake
-Pit, the Spider Nest, the Swamp, the Shoals, the Pits of Slime, the Orcish
-Mines, the Elven Halls, the Vaults, the Crypt, the Tomb of Ancients, or the
-Realm of Zot; the specific branch varies with each cast of the spell.
+Summons some of the greater threats from one of the Snake Pit, the Spider Nest,
+the Swamp, the Shoals, the Pits of Slime, the Elven Halls, the Vaults, the
+Crypt, the Tomb of Ancients, or the Realm of Zot; the specific branch varies
+with each cast of the spell.
 %%%%
 Poison Arrow spell
 
@@ -988,7 +1042,7 @@ damage bypasses poison resistance.
 %%%%
 Poisonous Cloud spell
 
-Conjures forth a great cloud of lethal gasses.
+Conjures forth a great cloud of lethal gases.
 %%%%
 Polymorph spell
 
@@ -1038,6 +1092,12 @@ easier to dodge. Single-target attacks are much easier to repel than
 penetrating attacks. Each time a missile is repelled the spell has a chance of
 expiring, with a lower chance of expiry at high power.
 %%%%
+Resonance Strike spell
+
+Calls a surge of power from the earth, striking an enemy within the caster's
+sight. The spell cascades through nearby constructs, growing in strength with
+each one standing near the target.
+%%%%
 Ring of Flames spell
 
 Surrounds the caster with a mobile ring of searing flame, and keeps other fire
@@ -1047,16 +1107,15 @@ However, it also makes them much more susceptible to cold.
 %%%%
 Sandblast spell
 
-Creates a short blast of high-velocity particles. It has increased power and
-range when the caster provides some source (by wielding a stone), but will
-still have some effect with no source wielded. Its damage is strongly reduced
-by armour.
+Consumes a stone to create a short blast of high-velocity rock shards. Its
+damage is strongly reduced by armour.
 %%%%
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
 afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are cast.
+magic, progressively hindering their chances of success as more spells are
+cast.
 %%%%
 Scattershot spell
 
@@ -1144,8 +1203,7 @@ Simulacra cannot leave the level they were created on.
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
-singer. Extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt the effect, as will leaving the caster's line of sight.
+singer. Leaving the caster's line of sight will end the effect.
 %%%%
 Sleep spell
 
@@ -1202,8 +1260,11 @@ of magics cannot be imbued in this fashion.
 Spider Form spell
 
 Transforms the caster into a venomous, spider-like creature. The caster becomes
-highly evasive and gains a poisonous bite, but gains vulnerability to poison
-and cannot evoke wands. It makes spellcasting slightly more difficult.
+highly evasive and gains a poisonous bite, but gains vulnerability to poison.
+
+While transformed, any equipped weapons and armour are melded. The caster also
+becomes unable to evoke wands, and casting spells becomes slightly more
+difficult.
 %%%%
 Spit Acid spell
 
@@ -1230,10 +1291,13 @@ the target may have.
 %%%%
 Statue Form spell
 
-Transforms the caster into a slow but extremely robust stone statue, capable of
-dealing powerful blows with weapons or bare fists. The caster's stone body is
-insulated from electricity and gains resistance to poison, rotting and negative
-energy.
+Transforms the caster into a slow but extremely robust stone statue. The
+caster's unarmed damage will be increased to a degree depending on strength,
+and all melee attacks will be substantially more powerful. The caster's stone
+body is insulated from electricity and gains resistance to poison, rotting and
+negative energy.
+
+While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
 Steam Ball spell
 
@@ -1257,6 +1321,13 @@ Sticky Flame spell
 
 Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
 for a short time.
+%%%%
+Still Winds spell
+
+Brings the air into unnatural stillness across a huge area, preventing anything
+short of a tornado from breaking the calm. The effect takes concentration to
+maintain, and only lasts a short time; if the caster is killed, clouds will
+begin to form again as normal.
 %%%%
 Sting spell
 
@@ -1343,8 +1414,8 @@ but the strongest demons may eventually turn against their summoner regardless.
 Summon Guardian Golem spell
 
 Summons a protective golem. It redirects the injuries of its allies (but not
-the caster) to itself, though it risks overheating after absorbing significant
-amounts of damage. It will gain more health at high power.
+the caster) to itself. When sufficiently damaged, it may fill with an inner
+flame, causing it to explode if destroyed. It gains more health at high power.
 %%%%
 Summon Hell Beast spell
 
@@ -1503,6 +1574,11 @@ Causes nearby corpses to begin crawling together, merging into horrible
 agglomerations of flesh. More and larger corpses result in more powerful
 creations.
 %%%%
+Upheaval spell
+
+Calls on the forces of nature to blast a small area with magma, ice, wind,
+or rubble.
+%%%%
 Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.
@@ -1514,8 +1590,7 @@ Fires a penetrating bolt of poison.
 %%%%
 Virulence spell
 
-Makes a targeted creature more vulnerable to poison, and strengthens any poison
-already in the target's body.
+Makes a targeted creature more vulnerable to poison.
 %%%%
 Volley of Thorns spell
 
@@ -1530,12 +1605,6 @@ brambles are sparse enough that almost any missile can pass through unhindered.
 Warning Cry spell
 
 Generates a loud noise, alerting nearby enemies.
-%%%%
-Warp Weapon spell
-
-Temporarily binds a localized warp field to the caster's weapon. Unlike a
-permanently distortion-branded weapon, the affected weapon may still be safely
-unwielded. It will not affect artefact weapons.
 %%%%
 Waterstrike spell
 

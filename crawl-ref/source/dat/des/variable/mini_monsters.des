@@ -78,9 +78,9 @@ default-depth: D:9-, Depths, Elf
 #
 ###############################################################################
 
-NAME:  minmay_newt_pond
+NAME:  minmay_lizard_pond
 DEPTH: D:1-2
-KMONS: 1 = giant newt
+KMONS: 1 = frilled lizard
 KFEAT: 1 = W
 SUBST: W = WWW1
 MAP
@@ -121,7 +121,7 @@ ENDMAP
 NAME:   hive_lemuel
 TAGS:   no_trap_gen
 DEPTH:  D:9-, Spider
-MONS:   killer bee, meliai, queen bee, wasp, hornet
+MONS:   killer bee, meliai, queen bee, hornet
 KMONS:  *R = worm
 KITEM:  * = *
 KITEM:  R = royal jelly
@@ -132,7 +132,7 @@ SUBST:  * : * R:3
 TAGS:   uniq_beehive
 NSUBST: 1 = 1:3 / 1:1 / * = 1 x:2
 : else
-TAGS:   uniq_wasphive
+TAGS:   uniq_hornetnest
 SUBST:  1 : 4 5:4
 : end
 COLOUR: x = yellow
@@ -352,8 +352,8 @@ NAME:    hangedman_stitches_earthworm
 TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
-KMONS:   1 = giant leech
-KMONS:   2 = boulder beetle
+KMONS:   1 = tyrant leech
+KMONS:   2 = earth elemental
 KMONS:   3 = redback w:5 / orb spider w:5 / nothing
 KMONS:   4 = thrashing horror
 KITEM:   ' = stone no_pickup q:1 w:5 / nothing
@@ -635,7 +635,7 @@ NAME:  pond
 TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / water moccasin / river rat / swamp drake w:2
+MONS:  bullfrog w:30 / water moccasin / river rat / swamp drake w:2
 MONS:  vampire mosquito / insubstantial wisp w:5 / swamp drake w:1
 KMONS: ? = plant
 SUBST: ! : w.
@@ -758,7 +758,7 @@ ENDMAP
 NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen
 DEPTH: Depths
-MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
+MONS:  naga / naga warrior w:2 / naga mage w:1, nagaraja / guardian serpent
 MONS:  ball python / adder / water moccasin / black mamba / anaconda
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
@@ -862,10 +862,10 @@ WEIGHT: 3
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -874,7 +874,7 @@ KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / nee
 KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = wasp
+KMONS:  7 = hornet
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
 KMONS:  & = bush
@@ -917,10 +917,10 @@ DEPTH:  D:8-13
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -929,7 +929,7 @@ KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / nee
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = wasp
+KMONS:  7 = hornet
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
 KMONS:  & = bush
@@ -974,13 +974,13 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
-MONS:    rat, bat, giant newt / giant gecko, worm, ooze
+MONS:    rat, bat, frilled lizard / leopard gecko, worm, ooze
 MONS:    giant cockroach, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
-KMONS:   D = worm / giant leech
+KMONS:   D = worm / tyrant leech
 KMONS:   E = jelly
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
@@ -1346,8 +1346,8 @@ MONS:    big kobold ; dagger . throwing net q:2
 : end
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
-: dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
-MONS:    rat / giant gecko
+: dgn.delayed_decay(_G, 'f', 'leopard gecko skeleton')
+MONS:    rat / leopard gecko
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \
@@ -1716,7 +1716,8 @@ KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
 ITEM:    staff of summoning w:20 / rod of shadows
-ITEM:    amulet of dismissal w:5 ident:type / amulet of dismissal randart
+ITEM:    amulet of magic regeneration w:5 ident:type / \
+            amulet of magic regeneration randart
 ITEM:    fan of gales / lamp of fire / phial of floods
 KITEM:   % = any, any / gold / nothing, any / nothing
 KITEM:   _ = scroll of summoning, scroll of summoning / nothing
@@ -1843,7 +1844,7 @@ DEPTH:   Snake, Elf, Orc, Zot
 ITEM:    gold / any scroll / any book w:4
 SUBST:   ? = 123d
 : if you.in_branch("Snake") then
-MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
+MONS:    naga, naga warrior, naga mage w:9 / nagaraja w:1
 : elseif you.in_branch("Elf") then
 MONS:    deep elf mage, deep elf knight / deep elf archer, deep elf mage
 : elseif you.in_branch("Orc") then
@@ -2225,13 +2226,12 @@ MAP
 ...........
 ENDMAP
 
-##### Demonic crawlers (s) and beetles.
+##### Demonic crawlers (s) and mosquitos.
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling
 DEPTH: D:13-, Elf, Spider
 MONS:  demonic crawler
-MONS:  vampire mosquito / boulder beetle w:8 / demonic crawler w:2 / \
-       nothing
+MONS:  vampire mosquito w:15 / demonic crawler w:5 / nothing
 MAP
 ..........
 .m.mmmmmm.
@@ -2805,7 +2805,7 @@ NSUBST: ' = 3:* / 1:> / 6:1 / *:., 1 : 2:1 / 2 = 1.. / *:w
 MONS:   lava snake, orange crystal statue
 SUBST:  wW = l
 : elseif crawl.coinflip() then
-MONS:   oklob plant, giant eyeball
+MONS:   oklob plant, floating eye
 MONS:   plant, bush
 SUBST:  w = 334, W = .
 : else
@@ -2899,28 +2899,6 @@ ENDMAP
 #
 ###################################################################
 
-# My mission is to annoy. -LP
-NAME:   lemuel_jelly_drop
-DEPTH:  D:8-, Depths
-WEIGHT: 5
-MONS:   jelly generate_awake
-KFEAT:  a = known permanent teleport trap
-MAP
-..............
-...vvvvvvvv...
-..vv......vv..
-.vv.vvvvvv.vv.
-.v1v.....vv.v.
-.vvvvvvvv.v.v.
-.vav111111vav.
-.v.v.vvvvvvvv.
-.v.vv.....v1v.
-.vv.vvvvvv.vv.
-..vv......vv..
-...vvvvvvvv...
-..............
-ENDMAP
-
 # This is probably a get-off-the-level vault. -LP
 NAME:  aerie_lemuel
 DEPTH: D:12-, Depths, !Depths:$
@@ -2999,7 +2977,7 @@ SUBST:   A : x, B : x, C : x, D : x, E : x, F : +, G : l:50 w:50 I
 SUBST:   x : xvcb
 SUBST:   H = 0 ., J = 1 0:100 $:20
 ITEM:    any jewellery
-MONS:    giant eyeball
+MONS:    floating eye
 MAP
 ...........
 ..xHxHxHx..
@@ -3071,7 +3049,7 @@ ENDMAP
 NAME:   hangedman_eye_storm
 TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths, !Depths:$, Abyss
-MONS:   golden eye, eye of draining, giant eyeball
+MONS:   golden eye, eye of draining, floating eye
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KPROP:  13' = no_tele_into
@@ -3160,37 +3138,6 @@ MAP
  (bab bab bababtt
 ENDMAP
 
-NAME:    lasty_cornered_adventurer
-TAGS:    no_monster_gen patrolling
-DEPTH:   D:8-11
-WEIGHT:  4
-MONS:    jelly, slime creature
-{{
-dgn.delayed_decay_extra(_G, 'A', 'human corpse', 'damaged shield ident:pluses / nothing, '
-                        .. 'damaged helmet ident:pluses / nothing, % / nothing, '
-                        .. '% / nothing, % / nothing, any damaged armour ident:pluses, '
-                        .. 'any damaged weapon good_item ident:pluses')
-}}
-KMONS:   A = toadstool
-KFEAT:   B = altar_jiyva
-NSUBST:  C = 2:1 / *:.
-NSUBST:  D = 3:2 / *:W
-SUBST:   2 = 21
-: if you.depth() < 10 then
-SUBST:   2 = 1
-: end
-MAP
-xxxxxxxxxxxxxx
-xx.xx.xxAxx.xx
-xx..D..CC...xx
-xx...D..D...xx
-@.....D....DBx
-xx.D..D..D..xx
-xx.....D...Dxx
-xx.xx.xx.xx.xx
-xxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   lightli_elemental_guards
 DEPTH:  D:10-14
 TAGS:   no_pool_fixup
@@ -3211,6 +3158,34 @@ x........x
 xww....llx
 xWw....lFx
 xxxx==xxxx
+ENDMAP
+
+# So he drove out the man; and he placed at the east of the garden of Eden
+# Cherubim, and a flaming sword which turned every way, to keep the way of the
+# tree of life.
+NAME:    pf_eden
+TAGS:    no_monster_gen
+DEPTH:   D:13-
+MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
+KMONS:   p = plant
+ITEM:    fruit tile:food_apple
+NSUBST:  1 = 2:1 / *:.
+NSUBST:  d = 3:d / *:.
+SUBST:   3 = 33.
+RTILE:   x = wall_lair
+FTILE:   12p.dt@ = floor_lair
+MAP
+       xxx
+  xxx xxpxx
+ xxpxxxp.1xxx
+xxppp2.1...px
+xppp..ppx1.1x
+xpdddpxxxp..xx
+xpdtdpxxxx...@
+xpddd.px xxp.@
+xp...pxx  xxxx
+xxpppxx
+ xxxxx
 ENDMAP
 
 ###################################################################
@@ -3508,7 +3483,7 @@ KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
 KMONS:   p = hornet
-KMONS:   q = wasp
+KMONS:   q = insubstantial wisp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklnopqr
@@ -4364,7 +4339,7 @@ ENDMAP
 
 NAME:    minmay_lizard_king
 DEPTH:   D:1-13
-MONS:    giant newt, giant gecko, iguana, crocodile, basilisk, plant
+MONS:    frilled lizard, leopard gecko, iguana, crocodile, basilisk, plant
 SUBST:   6 = 61, 1 = 1.
 : if you.absdepth() > 9 then
 SUBST:   1 = 433221
@@ -5048,7 +5023,7 @@ DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
 MONS:   deep elf high priest, deep elf mage
 :else
-MONS:   draconian zealot, base draconian
+MONS:   draconian stormcaller, base draconian
 :end
 COLOUR: x = white
 TILE:   x = wall_church
@@ -6301,9 +6276,8 @@ MONS:    worker ant / soldier ant
 MONS:    killer bee
 MONS:    adder / water moccasin
 : if you.unrands("staff_of_olgreb") then
-ITEM:    book of envenomations / young poisoner's handbook / \
-         ring of poison resistance ident:type / staff of poison ident:type / \
-         swamp dragon armour / swamp dragon hide
+ITEM:    young poisoner's handbook / ring of poison resistance ident:type / \
+         staff of poison ident:type / swamp dragon scales
 : else
 ITEM:    staff_of_olgreb no_pickup
 : end
@@ -6428,7 +6402,7 @@ MONS:    flying skull
 MONS:    curse skull
 NSUBST:  d = 1:d / *:*
 : else
-MONS:    death knight
+MONS:    skeletal warrior
 NSUBST:  d = 1:d / *:%
 : end
 : if you.unrands("skullcrusher") then

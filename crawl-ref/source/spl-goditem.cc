@@ -12,6 +12,7 @@
 #include "database.h"
 #include "directn.h"
 #include "env.h"
+#include "fight.h"
 #include "godconduct.h"
 #include "godpassive.h"
 #include "hints.h"
@@ -21,7 +22,6 @@
 #include "mapdef.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
@@ -48,7 +48,7 @@ static void _print_holy_pacification_speech(const string &key,
 
     if (!msg.empty())
     {
-        msg = do_mon_str_replacements(msg, &mon);
+        msg = do_mon_str_replacements(msg, mon);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
     }
@@ -76,7 +76,7 @@ string unpacifiable_reason(const monster &mon)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(&mon) <= I_BRAINLESS // no self-awareness
+    if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mon.type)) // body part
     {
         return generic_reason;
@@ -131,7 +131,7 @@ static int _pacification_heal_div(mon_holy_type holiness)
  */
 static int _pacifiable_hp(const monster &mon, int healing)
 {
-    const int heal_mult = (mons_intel(&mon) < I_HUMAN) ? 3  // animals
+    const int heal_mult = (mons_intel(mon) < I_HUMAN) ? 3  // animals
                                                       : 1; // other
     const int heal_div = _pacification_heal_div(mon.holiness());
     // ignoring monster holiness & int
@@ -206,7 +206,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
         string key;
 
         // Quadrupeds can't salute, etc.
-        if (mon_shape_is_humanoid(get_mon_shape(&mon)))
+        if (mon_shape_is_humanoid(get_mon_shape(mon)))
             key = "_humanoid";
 
         _print_holy_pacification_speech(key, mon,
@@ -220,10 +220,10 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
         }
     }
     else
-        simple_monster_message(&mon, " turns neutral.");
+        simple_monster_message(mon, " turns neutral.");
 
     record_monster_defeat(&mon, KILL_PACIFIED);
-    mons_pacify(&mon, ATT_NEUTRAL);
+    mons_pacify(mon, ATT_NEUTRAL);
 
     heal_monster(mon, healed);
     return SPRET_SUCCESS;
@@ -245,9 +245,9 @@ bool heal_monster(monster& patient, int amount)
     mprf("You heal %s.", patient.name(DESC_THE).c_str());
 
     if (patient.hit_points == patient.max_hit_points)
-        simple_monster_message(&patient, " is completely healed.");
+        simple_monster_message(patient, " is completely healed.");
     else
-        print_wounds(&patient);
+        print_wounds(patient);
 
     return true;
 }
@@ -313,8 +313,6 @@ struct player_debuff_effects
     vector<attribute_type> attributes;
     /// Durations removed by a debuff.
     vector<duration_type> durations;
-    /// Whether there's any contam to be removed by a debuff.
-    bool contam;
 };
 
 /**
@@ -348,8 +346,6 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         // anything already at 1 aut, or flight/transform while <= 11 aut
         // that's probably not an actual problem
     }
-
-    buffs.contam = get_contamination_level() > 0;
 }
 
 /**
@@ -361,9 +357,8 @@ bool player_is_debuffable()
 {
     player_debuff_effects buffs;
     _dispellable_player_buffs(buffs);
-    return buffs.contam
-            || !buffs.durations.empty()
-            || !buffs.attributes.empty();
+    return !buffs.durations.empty()
+           || !buffs.attributes.empty();
 }
 
 /**
@@ -374,7 +369,7 @@ bool player_is_debuffable()
  */
 void debuff_player()
 {
-    bool need_msg = false, danger = false;
+    bool need_msg = false;
 
     // find the list of debuffable effects currently active
     player_debuff_effects buffs;
@@ -392,13 +387,7 @@ void debuff_player()
     for (auto duration : buffs.durations)
     {
         int &len = you.duration[duration];
-        if (duration == DUR_TRANSFORMATION && len > 11)
-        {
-            len = 11;
-            need_msg = true;
-            danger = need_expiration_warning(you.pos());
-        }
-        else if (duration == DUR_TELEPORT)
+        if (duration == DUR_TELEPORT)
         {
             len = 0;
             mprf(MSGCH_DURATION, "You feel strangely stable.");
@@ -422,16 +411,7 @@ void debuff_player()
     }
 
     if (need_msg)
-    {
-        mprf(danger ? MSGCH_DANGER : MSGCH_WARN,
-             "%sYour magical effects are unravelling.",
-             danger ? "Careful! " : "");
-    }
-
-    const int old_contam_level = get_contamination_level();
-    contaminate_player(-1 * (1000 + random2(4000)));
-    if (old_contam_level && old_contam_level == get_contamination_level())
-        mpr("You feel slightly less contaminated with magical energies.");
+        mprf(MSGCH_WARN, "Your magical effects are unravelling.");
 }
 
 
@@ -493,7 +473,7 @@ void debuff_monster(monster &mon)
     for (enchant_type buff : buffs)
         mon.del_ench(buff, true, true);
 
-    simple_monster_message(&mon, "'s magical effects unravel!");
+    simple_monster_message(mon, "'s magical effects unravel!");
 }
 
 // pow -1 for passive
@@ -640,7 +620,8 @@ static bool _selectively_remove_curse(const string &pre_msg)
         }
 
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
-                                           OSEL_CURSED_WORN, true, true, false);
+                                           OSEL_CURSED_WORN, OPER_ANY,
+                                           invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
             return used;
 
@@ -719,7 +700,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
         int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
                                                   : OSEL_UNCURSED_WORN_JEWELLERY,
-                                           true, true, false);
+                                           OPER_ANY, invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
             return false;
 
@@ -1024,7 +1005,7 @@ bool cast_smiting(int pow, monster* mons)
         int damage_increment = div_rand_round(pow, 8);
         mons->hurt(&you, 6 + roll_dice(3, damage_increment));
         if (mons->alive())
-            print_wounds(mons);
+            print_wounds(*mons);
     }
 
     return success;
@@ -1091,9 +1072,9 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (hploss)
     {
         if (source == HOLY_WORD_ZIN)
-            simple_monster_message(mons, " is blasted by Zin's holy word!");
+            simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
-            simple_monster_message(mons, " convulses!");
+            simple_monster_message(*mons, " convulses!");
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
@@ -1190,6 +1171,10 @@ void torment_player(actor *attacker, torment_source_type taux)
         aux = "Symbol of Torment";
         break;
 
+    case TORMENT_AGONY:
+        aux = "Agony";
+        break;
+
     case TORMENT_SCEPTRE:
         aux = "sceptre of Torment";
         break;
@@ -1238,7 +1223,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     if (hploss)
     {
-        simple_monster_message(mons, " convulses!");
+        simple_monster_message(*mons, " convulses!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use

@@ -70,6 +70,7 @@
     <ClCompile Include="..\food.cc" />
     <ClCompile Include="..\format.cc" />
     <ClCompile Include="..\fprop.cc" />
+    <ClCompile Include="..\game-options.cc" />
     <ClCompile Include="..\geom2d.cc" />
     <ClCompile Include="..\ghost.cc" />
     <ClCompile Include="..\glwrapper-ogl.cc" />
@@ -180,6 +181,7 @@
     <ClCompile Include="..\mon-util.cc" />
     <ClCompile Include="..\monster.cc" />
     <ClCompile Include="..\mutation.cc" />
+    <ClCompile Include="..\nearby-danger.cc" />
     <ClCompile Include="..\newgame.cc" />
     <ClCompile Include="..\ng-init.cc" />
     <ClCompile Include="..\ng-input.cc" />
@@ -392,6 +394,7 @@
     <ClInclude Include="..\form-data.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\fprop.h" />
+    <ClInclude Include="..\game-options.h" />
     <ClInclude Include="..\geom2d.h" />
     <ClInclude Include="..\ghost.h" />
     <ClInclude Include="..\glwrapper-ogl.h" />

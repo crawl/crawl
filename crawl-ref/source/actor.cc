@@ -11,10 +11,10 @@
 #include "chardump.h"
 #include "directn.h"
 #include "env.h"
+#include "fight.h" // apply_chunked_ac
 #include "fprop.h"
 #include "itemprop.h"
 #include "los.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
@@ -124,27 +124,13 @@ int actor::check_res_magic(int power)
     if (mrs == MAG_IMMUNE)
         return 100;
 
-    // Evil, evil hack to make weak one hd monsters easier for first level
-    // characters who have resistable 1st level spells. Six is a very special
-    // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
-    // level monsters have been adjusted so that the "3" is typically a 1.
-    // There are some notable one hd monsters that shouldn't fall under this,
-    // so we do < 6, instead of <= 6...  or checking mons->hit_dice. The
-    // goal here is to make the first level easier for these classes and give
-    // them a better shot at getting to level two or three and spells that can
-    // help them out (or building a level or two of their base skill so they
-    // aren't resisted as often). - bwr
-    // If you change this, also change desc_success_chance() to match.
-    if (is_monster() && mrs < 6 && coinflip())
-        return -1;
+    const int adj_pow = ench_power_stepdown(power);
 
-    power = ench_power_stepdown(power);
-
-    const int mrchance = (100 + mrs) - power;
+    const int mrchance = (100 + mrs) - adj_pow;
     const int mrch2 = random2(100) + random2(101);
 
-    dprf("Power: %d, MR: %d, target: %d, roll: %d",
-         power, mrs, mrchance, mrch2);
+    dprf("Power: %d (%d pre-stepdown), MR: %d, target: %d, roll: %d",
+         adj_pow, power, mrs, mrchance, mrch2);
 
     return mrchance - mrch2;
 }
@@ -168,7 +154,7 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
     {
         // The monster is cold-resistant and can't be hibernated.
         if (intrinsic_only && is_monster()
-                ? get_mons_resist(as_monster(), MR_RES_COLD) > 0
+                ? get_mons_resist(*as_monster(), MR_RES_COLD) > 0
                 : res_cold() > 0)
         {
             return false;
@@ -192,7 +178,7 @@ bool actor::can_sleep(bool holi_only) const
         return false;
 
     if (!holi_only)
-        return !(berserk() || asleep());
+        return !(berserk() || clarity() || asleep());
 
     return true;
 }
@@ -227,7 +213,13 @@ bool actor::gourmand(bool calc_unid, bool items) const
 bool actor::res_corr(bool calc_unid, bool items) const
 {
     return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
+                     || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
                      || scan_artefacts(ARTP_RCORR, calc_unid));
+}
+
+bool actor::holy_wrath_susceptible() const
+{
+    return res_holy_energy() < 0;
 }
 
 // This is a bit confusing. This is not the function that determines whether or
@@ -237,11 +229,6 @@ bool actor::res_corr(bool calc_unid, bool items) const
 bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
-}
-
-bool actor::stasis(bool calc_unid, bool items) const
-{
-    return false;
 }
 
 // permaswift effects like boots of running and lightning scales
@@ -263,11 +250,6 @@ bool actor::clarity(bool calc_unid, bool items) const
 bool actor::faith(bool calc_unid, bool items) const
 {
     return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
-}
-
-bool actor::dismissal(bool calc_unid, bool items) const
-{
-    return items && wearing(EQ_AMULET, AMU_DISMISSAL, calc_unid);
 }
 
 int actor::archmagi(bool calc_unid, bool items) const
@@ -801,8 +783,7 @@ bool actor::torpor_slowed() const
 {
     if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
         || is_stationary()
-        || (is_monster() && as_monster()->check_stasis(true))
-        || (!is_monster() && stasis()))
+        || stasis())
     {
         return false;
     }

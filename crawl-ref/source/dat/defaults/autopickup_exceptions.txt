@@ -54,7 +54,6 @@ ae += [^n]identified.*spellbook
 :  and (itsubtype == "ring of positive energy"
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
-:   or itsubtype == "ring of sustain attributes"
 :   or itsubtype == "ring of wizardry"
 :   or itsubtype == "ring of stealth"
 :   or itsubtype == "ring of teleportation"
@@ -82,9 +81,8 @@ ae += [^n]identified.*spellbook
 # Excluding amulets as you only need one of each. (If you know the subtype
 # that means you already have one of it.). Some items may already be excluded
 # as bad_item, e.g. inaccuracy.
-ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|dismissal|harm)
+ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|harm)
 ae += amulet of (rage|guardian spirit|faith|magic regeneration)
 
 # Likewise for some rings.
-ae += ring of (see invisible|flight|poison resistance)
-ae += ring of (sustain attributes|resist corrosion)
+ae += ring of (see invisible|flight|poison resistance|resist corrosion)

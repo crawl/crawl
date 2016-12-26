@@ -29,8 +29,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Ashenzari="ring of see invisible ident:type",
          Beogh="scroll of fear ident:type q:3-6 /\
               disc of storms",
-         Cheibriados="wand of hasting ident:type w:5 /\
-              potion of haste ident:type q:2-4 /\
+         Cheibriados="potion of haste ident:type q:2-4 /\
               good_item quick blade",
          Dithmenos="lamp of fire w:5 / rod of ignition w:5 /\
               good_item " .. weapon .. " ego:flaming ident:type",
@@ -46,8 +45,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2 /\
               rat corpse w:5 / kobold corpse w:5",
          Pakellas="staff of energy / crystal ball of energy w:5",
-         ["the Shining One"]="book of Envenomations /\
-              Young Poisoner's Handbook /\
+         ["the Shining One"]="Young Poisoner's Handbook /\
               potion of invisibility ident:type q:3-6",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\

@@ -19,8 +19,8 @@
 #include "itemprop.h"
 #include "item_use.h"
 #include "message.h"
-#include "misc.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
@@ -178,7 +178,7 @@ public:
         if (you.hp == you.hp_max && player_rotted() == 0)
         {
             if (reason)
-                *reason = "Your health is already full!";
+                *reason = "Your health is already full.";
             return false;
         }
         return true;
@@ -279,10 +279,10 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (you.stasis(false))
+        if (you.stasis())
         {
             if (reason)
-                *reason = NO_HASTE_MSG;
+                *reason = "Your stasis prevents you from being hasted.";
             return false;
         }
         return true;
@@ -453,6 +453,10 @@ public:
     {
         debuff_player();
         mpr("You feel magically purged.");
+        const int old_contam_level = get_contamination_level();
+        contaminate_player(-1 * (1000 + random2(4000)));
+        if (old_contam_level && old_contam_level == get_contamination_level())
+            mpr("You feel slightly less contaminated with magical energies.");
         return true;
     }
 };
@@ -503,7 +507,7 @@ public:
             vector<const char *> afflictions;
             if (you.haloed() && !you.umbraed())
                 afflictions.push_back("halo");
-            if (get_contamination_level() > 1)
+            if (player_severe_contamination())
                 afflictions.push_back("magical contamination");
             if (you.duration[DUR_CORONA])
                 afflictions.push_back("corona");
@@ -1155,10 +1159,10 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (you.stasis(false))
+        if (you.stasis())
         {
             if (reason)
-                *reason = "This potion cannot work under stasis.";
+                *reason = "Your stasis prevents you from being slowed.";
             return false;
         }
         return true;

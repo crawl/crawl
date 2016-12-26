@@ -364,6 +364,7 @@ void wizard_map_level()
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         update_item_at(*ri, false, true);
+        show_update_at(*ri, LAYER_ITEMS);
 #ifdef USE_TILE
         tiles.update_minimap(*ri);
 #endif

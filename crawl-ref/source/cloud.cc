@@ -27,6 +27,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -63,10 +64,14 @@ struct cloud_data
     const char* verbose_name;
     /// The colour of the cloud in console.
     colour_t colour;
+    /// Info for calculating cloud tiles.
+    cloud_tile_info tile_info;
     /// The associated "beam" (effect) for this cloud type.
     beam_type beam_effect;
     /// How much damage the cloud does before defenses & resists.
     cloud_damage damage;
+    /// Do multiple squares of this cloud block LOS?
+    bool opaque;
 };
 
 /// A map from cloud_type to cloud_data.
@@ -77,99 +82,132 @@ static const cloud_data clouds[] = {
     // CLOUD_FIRE,
     { "flame", "roaring flames",                // terse, verbose name
        COLOUR_UNDEF,                            // colour
+       { TILE_CLOUD_FIRE, CTVARY_DUR },         // tile
        BEAM_FIRE,                               // beam_effect
        NORMAL_CLOUD_DAM,                        // base, random damage
     },
     // CLOUD_MEPHITIC,
     { "noxious fumes", nullptr,                 // terse, verbose name
       GREEN,                                    // colour
+      { TILE_CLOUD_MEPHITIC, CTVARY_DUR },      // tile
       BEAM_MEPHITIC,                            // beam_effect
       {0, 3},                                   // base, random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
       COLOUR_UNDEF,                             // colour
+      { TILE_CLOUD_COLD, CTVARY_DUR },          // tile
       BEAM_COLD,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_POISON,
     { "poison gas", nullptr,                    // terse, verbose name
       LIGHTGREEN,                               // colour
+      { TILE_CLOUD_POISON, CTVARY_DUR },        // tile
       BEAM_POISON,                              // beam_effect
       {0, 10},                                  // base, random damage
     },
     // CLOUD_BLACK_SMOKE,
     { "black smoke",  nullptr,                  // terse, verbose name
       DARKGREY,                                 // colour
+      { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },  // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_GREY_SMOKE,
     { "grey smoke",  nullptr,                   // terse, verbose name
       LIGHTGREY,                                // colour
+      { TILE_CLOUD_GREY_SMOKE, CTVARY_NONE },   // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_BLUE_SMOKE,
     { "blue smoke",  nullptr,                   // terse, verbose name
       LIGHTBLUE,                                // colour
+      { TILE_CLOUD_BLUE_SMOKE, CTVARY_NONE },   // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_PURPLE_SMOKE,
     { "purple smoke",  nullptr,                 // terse, verbose name
       MAGENTA,                                  // colour
+      { TILE_CLOUD_TLOC_ENERGY, CTVARY_NONE },  // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_TLOC_ENERGY,
     { "translocational energy",  nullptr,       // terse, verbose name
       MAGENTA,                                  // colour
+      { TILE_CLOUD_TLOC_ENERGY, CTVARY_NONE },  // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
     },
     // CLOUD_FOREST_FIRE,
     { "spreading flames", "a forest fire",      // terse, verbose name
       COLOUR_UNDEF,                             // colour
+      { TILE_CLOUD_FOREST_FIRE },               // tile
       BEAM_FIRE,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_STEAM,
     { "steam", "a cloud of scalding steam",     // terse, verbose name
       LIGHTGREY,                                // colour
+      { TILE_CLOUD_GREY_SMOKE, CTVARY_NONE },   // tile
       BEAM_STEAM,                               // beam_effect
       {0, 16},                                  // base, random damage
+      true,                                     // opacity
     },
 #if TAG_MAJOR_VERSION == 34
     // CLOUD_GLOOM,
     { "gloom", "thick gloom",                   // terse, verbose name
       MAGENTA,                                  // colour
+      { TILE_CLOUD_GLOOM },                     // tile
     },
 #endif
     // CLOUD_INK,
     { "ink",  nullptr,                          // terse, verbose name
       DARKGREY,                                 // colour
-      BEAM_INK,                                 // beam_effect
+      { TILE_CLOUD_INK },                       // tile
+      BEAM_NONE, {},                            // beam_effect & damage
+      true,                                     // opacity
     },
     // CLOUD_PETRIFY,
     { "calcifying dust",  nullptr,              // terse, verbose name
       WHITE,                                    // colour
-      BEAM_PETRIFYING_CLOUD,                    // beam_effect
+      { TILE_CLOUD_PETRIFY, CTVARY_RANDOM },    // tile
+      BEAM_PETRIFYING_CLOUD, {},                // beam_effect & damage
+      true,                                     // opacity
     },
-    // CLOUD_HOLY_FLAMES,
+    // CLOUD_HOLY,
     { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
-      BEAM_HOLY_FLAME,                          // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      { TILE_CLOUD_YELLOW_SMOKE },              // tile
+      BEAM_HOLY,                                // beam_effect
+      {4, 12, true},                            // base, random damage
+      true,                                     // opacity
     },
     // CLOUD_MIASMA,
     { "foul pestilence", "dark miasma",         // terse, verbose name
       DARKGREY,                                 // colour
+      { TILE_CLOUD_MIASMA, CTVARY_DUR },        // tile
       BEAM_MIASMA,                              // beam_effect
       { 0, 12 },                                // base, random damage
     },
     // CLOUD_MIST,
     { "thin mist", nullptr,                     // terse, verbose name
       ETC_MIST,                                 // colour
+      { TILE_CLOUD_MIST, CTVARY_NONE },         // tile
     },
     // CLOUD_CHAOS,
     { "seething chaos", nullptr,                // terse, verbose name
       ETC_RANDOM,                               // colour
+      { TILE_CLOUD_CHAOS, CTVARY_RANDOM },      // tile
       BEAM_CHAOS,                               // beam_effect
     },
     // CLOUD_RAIN,
     { "rain", "the rain",                       // terse, verbose name
       ETC_MIST,                                 // colour
+      { TILE_CLOUD_RAIN, CTVARY_RANDOM },       // tile
       BEAM_NONE,                                // unused
       { 0, 9 },                                 // base, random damage
                                                 // but only for fiery mons
@@ -177,42 +215,70 @@ static const cloud_data clouds[] = {
     // CLOUD_MUTAGENIC,
     { "mutagenic fog",  nullptr,                // terse, verbose name
       ETC_MUTAGENIC,                            // colour
+      { TILE_ERROR, CTVARY_NONE },              // tile
     },
     // CLOUD_MAGIC_TRAIL,
     { "magical condensation", nullptr,          // terse, verbose name
       ETC_MAGIC,                                // colour
+      { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
     },
     // CLOUD_TORNADO,
     { "raging winds", nullptr,                  // terse, verbose name
       ETC_TORNADO,                              // colour
+      { TILE_ERROR },                           // tile
     },
-    // CLOUD_DUST_TRAIL,
+    // CLOUD_DUST,
     { "sparse dust",  nullptr,                  // terse, verbose name
       ETC_EARTH,                                // colour
+      { TILE_CLOUD_DUST, CTVARY_DUR },          // tile
     },
     // CLOUD_SPECTRAL,
     { "spectral mist", nullptr,                 // terse, verbose name
       ETC_ELECTRICITY,                          // colour
+      { TILE_CLOUD_SPECTRAL, CTVARY_DUR },      // tile
       BEAM_NONE,                                // beam_effect
       { 4, 15 },                                // base, random damage
     },
     // CLOUD_ACID,
     { "acidic fog", nullptr,                    // terse, verbose name
       YELLOW,                                   // colour
+      { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
       ETC_DARK,                                 // colour
+      { TILE_CLOUD_STORM, CTVARY_RANDOM },      // tile
       BEAM_ELECTRICITY,                         // beam_effect
       {12, 12},         // fake damage - used only for monster pathing
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
       ETC_INCARNADINE,                          // colour
+      { TILE_CLOUD_NEG, CTVARY_DUR },           // tile
       BEAM_NEG,                                 // beam_effect
       NORMAL_CLOUD_DAM,                         // base, random damage
+    },
+    // CLOUD_FLUFFY,
+    { "white fluffiness",  nullptr,             // terse, verbose name
+      WHITE,                                    // colour
+      { TILE_CLOUD_WHITE_SMOKE, CTVARY_NONE },  // tile
+      BEAM_NONE, {},                            // beam & damage
+      true,                                     // opacity
+    },
+    // CLOUD_XOM_TRAIL,
+    { "magical condensation", nullptr,          // terse, verbose name
+      ETC_RANDOM,                               // colour
+      { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
+      // TODO: another tile?
+    },
+    // CLOUD_SALT,
+    { "salt",  nullptr,                           // terse, verbose name
+      ETC_AIR,                                    // colour
+      { TILE_CLOUD_WHITE_SMOKE, CTVARY_NONE },    // tile
+      BEAM_NONE, {},                              // beam & damage
+      true,                                       // opacity
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -234,6 +300,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
+    case CLOUD_FLUFFY:
         return 22;
     case CLOUD_RAIN:
     case CLOUD_INK:
@@ -280,24 +347,15 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
 }
 
 cloud_struct::cloud_struct(coord_def p, cloud_type c, int d, int spread,
-                           kill_category kc, killer_type kt, mid_t src, int clr,
-                           string name_, string tile_, int excl)
+                           kill_category kc, killer_type kt, mid_t src,
+                           int excl)
     : pos(p), type(c), decay(d), spread_rate(spread), whose(kc), killer(kt),
-      source(src), colour(clr), name(name_), tile(tile_), excl_rad(excl)
+      source(src), excl_rad(excl)
 {
     ASSERT(_killer_whose_match(whose, killer));
 
     if (type == CLOUD_RANDOM_SMOKE)
         type = random_smoke_type();
-    if (!tile.empty())
-    {
-        tileidx_t index;
-        if (!tile_main_index(tile.c_str(), &index))
-        {
-            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", tile.c_str());
-            tile = "";
-        }
-    }
     _los_cloud_changed(pos, type);
 }
 
@@ -396,11 +454,11 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             && feat_is_watery(grd(p))
             && !cell_is_solid(p)
             && !cloud_at(p)
-            && one_chance_in(7))
+            && one_chance_in(14))
         {
-            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, cloud.decay / 2 + 1,
-                                        22, cloud.whose, cloud.killer,
-                                        cloud.source, -1, "", "", -1);
+            env.cloud[p] = cloud_struct(p, CLOUD_STEAM, 2 + random2(5),
+                                        11, cloud.whose, cloud.killer,
+                                        cloud.source, -1);
         }
     }
 }
@@ -418,36 +476,15 @@ static int _cloud_dissipation_rate(const cloud_struct &cloud)
 
     // Player-created non-opaque clouds vanish instantly when outside LOS.
     // (Opaque clouds don't to prevent cloud suicide.)
-    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos))
+    if (cloud.source == MID_PLAYER && !you.see_cell_no_trans(cloud.pos)
+        && !is_opaque_cloud(cloud.type))
     {
-        if (!is_opaque_cloud(cloud.type))
-            return cloud.decay;
-        dissipate *= 4; // dubious...
+        return cloud.decay;
     }
 
-    switch (cloud.type)
-    {
-        // Fire clouds dissipate faster over water.
-        case CLOUD_FIRE:
-        case CLOUD_FOREST_FIRE:
-            if (feat_is_watery(grd(cloud.pos)))
-                return dissipate * 4;
-            break;
-        // rain and cold clouds dissipate faster over lava.
-        case CLOUD_COLD:
-        case CLOUD_RAIN:
-        case CLOUD_STORM:
-            if (grd(cloud.pos) == DNGN_LAVA)
-                return dissipate * 4;
-            break;
-        // Ink cloud shouldn't appear outside of water.
-        case CLOUD_INK:
-            if (!feat_is_watery(grd(cloud.pos)))
-                return cloud.decay;
-            break;
-        default:
-            break;
-    }
+    // Ink cloud shouldn't appear outside of water.
+    if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
+        return cloud.decay;
 
     return dissipate;
 }
@@ -493,18 +530,17 @@ static void _handle_spectral_cloud(const cloud_struct& cloud)
                                6,   MONS_HYDRA,
                                3,   MONS_SNAPPING_TURTLE,
                                2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
-                               100, RANDOM_MONSTER,
-                               0);
+                               100, RANDOM_MONSTER);
 
     monster* agent = monster_by_mid(cloud.source);
     create_monster(mgen_data(MONS_SPECTRAL_THING,
                              (cloud.whose == KC_OTHER ?
                                 BEH_HOSTILE :
-                                BEH_FRIENDLY),
-                             actor_by_mid(cloud.source), 1,
-                             SPELL_SPECTRAL_CLOUD, cloud.pos,
-                             (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE,
-                             GOD_NO_GOD, basetype));
+                                BEH_FRIENDLY), cloud.pos,
+                             (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE)
+                    .set_base(basetype)
+                    .set_summoned(actor_by_mid(cloud.source), 1,
+                                  SPELL_SPECTRAL_CLOUD));
 }
 
 void manage_clouds()
@@ -652,36 +688,38 @@ void swap_clouds(coord_def p1, coord_def p2)
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
-                       const actor *agent, int spread_rate, int colour,
-                       string name, string tile, int excl_rad)
+                       const actor *agent, int spread_rate, int excl_rad)
 {
     if (!in_bounds(p) || cloud_at(p))
         return;
 
-    place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile,
-                excl_rad);
+    place_cloud(cl_type, p, lifetime, agent, spread_rate, excl_rad);
 }
 
 static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
 {
     return is_harmless_cloud(cloud.type)
            || cloud.type == CLOUD_STEAM
-           || ct == CLOUD_TORNADO
-           || ct == CLOUD_POISON && cloud.type == CLOUD_MEPHITIC
-           || cloud.decay <= 20; // soon gone
+           || ct == CLOUD_TORNADO; // soon gone
 }
 
 //   Places a cloud with the given stats. Will overwrite an old
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
-                 const actor *agent, int _spread_rate, int colour,
-                 string name, string tile, int excl_rad)
+                 const actor *agent, int _spread_rate, int excl_rad)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
 
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
         return;
+
+    if (env.level_state & LSTATE_STILL_WINDS
+        && cl_type != CLOUD_TORNADO
+        && cl_type != CLOUD_INK)
+    {
+        return;
+    }
 
     ASSERT(!cell_is_solid(ctarget));
 
@@ -709,12 +747,13 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     env.cloud[ctarget] = cloud_struct(ctarget, cl_type, cl_range * 10,
                                       spread_rate, whose, killer, source,
-                                      colour, name, tile, excl_rad);
+                                      excl_rad);
 }
 
 bool is_opaque_cloud(cloud_type ctype)
 {
-    return ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST;
+    return ctype >= CLOUD_NONE && ctype < NUM_CLOUD_TYPES
+           && clouds[ctype].opaque;
 }
 
 cloud_type cloud_type_at(const coord_def &c)
@@ -799,7 +838,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 
     if (!player
         && (you_worship(GOD_FEDHAS)
-            && fedhas_protects(act->as_monster())
+            && fedhas_protects(*act->as_monster())
             || testbits(act->as_monster()->flags, MF_DEMONIC_GUARDIAN))
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))
@@ -807,15 +846,14 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return true;
     }
 
-    // Qazlalites get immunity to their own clouds.
-    if (player && YOU_KILL(cloud.killer) && have_passive(passive_t::resist_own_clouds))
+    // Qazlalites get immunity to clouds.
+    if (player && have_passive(passive_t::cloud_immunity))
         return true;
 #if TAG_MAJOR_VERSION == 34
 
     if (player && you.species == SP_DJINNI
         && (cloud.type == CLOUD_FIRE
-            || cloud.type == CLOUD_FOREST_FIRE
-            || cloud.type == CLOUD_HOLY_FLAMES))
+            || cloud.type == CLOUD_FOREST_FIRE))
     {
         return true;
     }
@@ -830,8 +868,8 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return you.duration[DUR_FIRE_SHIELD]
                || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
                || player_equip_unrand(UNRAND_FIRESTARTER);
-    case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(cloud.agent()) > 0;
+    case CLOUD_HOLY:
+        return act->res_holy_energy() >= 3;
     case CLOUD_COLD:
         if (!player)
             return act->res_cold() >= 3;
@@ -878,8 +916,8 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
-    case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(cloud.agent());
+    case CLOUD_HOLY:
+        return act->res_holy_energy();
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:
@@ -931,14 +969,6 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                                     "steam" : "sizzle").c_str());
             }
         }
-        if (player)
-        {
-            if (you.duration[DUR_FIRE_SHIELD] > 1)
-            {
-                you.duration[DUR_FIRE_SHIELD] = 1;
-                return true;
-            }
-        }
         break;
 
     case CLOUD_MEPHITIC:
@@ -950,7 +980,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                 mpr("You choke on the stench!");
                 // effectively one or two turns, since it will be
                 // decremented right away
-                confuse_player(coinflip() ? 3 : 2);
+                confuse_player(random_range(2, 3));
                 return true;
             }
         }
@@ -1117,7 +1147,7 @@ static int _actor_cloud_damage(const actor *act,
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-    case CLOUD_HOLY_FLAMES:
+    case CLOUD_HOLY:
     case CLOUD_COLD:
     case CLOUD_STEAM:
     case CLOUD_SPECTRAL:
@@ -1174,7 +1204,7 @@ static int _actor_cloud_damage(const actor *act,
             mpr("You are struck by lightning!");
         else if (you.can_see(*act))
         {
-            simple_monster_message(act->as_monster(),
+            simple_monster_message(*act->as_monster(),
                                    " is struck by lightning.");
         }
         else if (you.see_cell(act->pos()))
@@ -1332,7 +1362,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     const int resistance = _actor_cloud_resist(mons, cloud);
 
     // Thinking things avoid things they are vulnerable to (-resists)
-    if (mons_intel(mons) >= I_ANIMAL && resistance < 0)
+    if (mons_intel(*mons) >= I_ANIMAL && resistance < 0)
         return true;
 
     switch (cloud.type)
@@ -1356,7 +1386,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
         // This position could become deep water, and they might drown.
         if (grd(cloud.pos) == DNGN_SHALLOW_WATER
-            && mons_intel(mons) > I_BRAINLESS)
+            && mons_intel(*mons) > I_BRAINLESS)
         {
             return true;
         }
@@ -1377,7 +1407,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int hp_threshold = damage * 3;
 
         // intelligent monsters want a larger margin of safety
-        int safety_mult = (mons_intel(mons) > I_ANIMAL) ? 2 : 1;
+        int safety_mult = (mons_intel(*mons) > I_ANIMAL) ? 2 : 1;
         // dare we risk the damage?
         const bool hp_ok = mons->hit_points > safety_mult * hp_threshold;
         // dare we risk the status effects?
@@ -1390,7 +1420,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     }
 
     // Exceedingly dumb creatures will wander into harmful clouds.
-    if (mons_intel(mons) == I_BRAINLESS && !extra_careful)
+    if (mons_intel(*mons) == I_BRAINLESS && !extra_careful)
         return false;
 
     // If we get here, the cloud is potentially harmful.
@@ -1418,40 +1448,14 @@ bool mons_avoids_cloud(const monster* mons, coord_def pos, bool placement)
 
     return !_mons_avoids_cloud(mons, *cloud_at(mons->pos()), true);
 }
-// Is the cloud purely cosmetic with no gameplay effect? If so, <foo>
-// is engulfed in <cloud> messages will be suppressed.
-static bool _cloud_is_cosmetic(cloud_type type)
-{
-    switch (type)
-    {
-    case CLOUD_BLACK_SMOKE:
-    case CLOUD_GREY_SMOKE:
-    case CLOUD_BLUE_SMOKE:
-    case CLOUD_PURPLE_SMOKE:
-    case CLOUD_MIST:
-        return true;
-    default:
-        return false;
-    }
-}
 
 bool is_harmless_cloud(cloud_type type)
 {
-    switch (type)
-    {
-    case CLOUD_NONE:
-    case CLOUD_TLOC_ENERGY:
-    case CLOUD_MAGIC_TRAIL:
-    case CLOUD_DUST_TRAIL:
-#if TAG_MAJOR_VERSION == 34
-    case CLOUD_GLOOM:
-#endif
-    case CLOUD_INK:
-    case CLOUD_DEBUGGING:
-        return true;
-    default:
-        return _cloud_is_cosmetic(type);
-    }
+    return clouds[type].beam_effect == BEAM_NONE
+           && clouds[type].damage.base == 0
+           && clouds[type].damage.random == 0
+           && !_cloud_has_negative_side_effects(type)
+           && type != CLOUD_TORNADO;
 }
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1479,6 +1483,40 @@ cloud_type cloud_name_to_type(const string &name)
             return static_cast<cloud_type>(i);
 
     return CLOUD_NONE;
+}
+
+coord_def random_walk(coord_def start, int dist)
+{
+    ASSERT(in_bounds(start));
+    ASSERT(dist >= 1);
+
+    int moves_left = dist;
+    coord_def pos = start;
+    while (moves_left-- > 0)
+    {
+        int okay_dirs = 0;
+        int dir       = -1;
+        for (int j = 0; j < 8; j++)
+        {
+            const coord_def new_pos   = pos + Compass[j];
+
+            if (in_bounds(new_pos) && !feat_is_solid(grd(new_pos))
+                && one_chance_in(++okay_dirs))
+            {
+                dir = j;
+            }
+        }
+
+        if (okay_dirs == 0)
+            break;
+
+        if (one_chance_in(++okay_dirs))
+            continue;
+
+        pos       += Compass[dir];
+    }
+
+    return pos;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -1549,23 +1587,18 @@ actor *cloud_struct::agent() const
 
 string cloud_struct::cloud_name(bool terse) const
 {
-    return !name.empty() ? name : cloud_type_name(type, terse);
+    return cloud_type_name(type, terse);
 }
 
 void cloud_struct::announce_actor_engulfed(const actor *act,
                                            bool beneficial) const
 {
     ASSERT(act); // XXX: change to const actor &act
-    if (_cloud_is_cosmetic(type))
-        return;
-
     if (!you.can_see(*act))
         return;
 
     // Normal clouds. (Unmodified rain clouds have a different message.)
-    const bool raincloud = type == CLOUD_RAIN || type == CLOUD_STORM;
-    const bool unmodified = cloud_name() == cloud_type_name(type, false);
-    if (!raincloud || !unmodified)
+    if (type != CLOUD_RAIN && type != CLOUD_STORM)
     {
         mprf("%s %s in %s.",
              act->name(DESC_THE).c_str(),
@@ -1596,10 +1629,6 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
  */
 colour_t get_cloud_colour(const cloud_struct &cloud)
 {
-    // if the cloud has a set custom colour, use that.
-    if (cloud.colour != -1)
-        return cloud.colour;
-
     // if we have the colour in data, use that.
     if (clouds[cloud.type].colour)
         return clouds[cloud.type].colour;
@@ -1617,8 +1646,7 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
         // total weight 16
         return random_choose_weighted(9, YELLOW,
                                       4, RED,
-                                      3, LIGHTRED,
-                                      0);
+                                      3, LIGHTRED);
 
     case CLOUD_COLD:
         if (cloud.decay <= 20)
@@ -1629,8 +1657,7 @@ colour_t get_cloud_colour(const cloud_struct &cloud)
         // total weight 16
         return random_choose_weighted(9, WHITE,
                                       4, BLUE,
-                                      3, LIGHTBLUE,
-                                      0);
+                                      3, LIGHTBLUE);
         break;
 
     default:
@@ -1738,4 +1765,23 @@ void run_cloud_spreaders(int dur)
             break;
         }
     }
+}
+
+const cloud_tile_info& cloud_type_tile_info(cloud_type type)
+{
+    return clouds[type].tile_info;
+}
+
+/// Knock out clouds & set the still winds level flag; also message.
+void start_still_winds()
+{
+    delete_all_clouds();
+    env.level_state |= LSTATE_STILL_WINDS;
+    mprf(MSGCH_WARN, "%s", "The air becomes perfectly still.");
+}
+
+void end_still_winds()
+{
+    env.level_state &= ~LSTATE_STILL_WINDS;
+    mpr("The air resumes its normal movements.");
 }

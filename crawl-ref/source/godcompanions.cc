@@ -52,7 +52,7 @@ void remove_enslaved_soul_companion()
         monster* mons = monster_by_mid(entry.first);
         if (!mons)
             mons = &entry.second.mons.mons;
-        if (mons_enslaved_soul(mons))
+        if (mons_enslaved_soul(*mons))
         {
             remove_companion(mons);
             return;
@@ -67,7 +67,7 @@ void remove_all_companions(god_type god)
         monster* mons = monster_by_mid(i->first);
         if (!mons)
             mons = &i->second.mons.mons;
-        if (mons_is_god_gift(mons, god))
+        if (mons_is_god_gift(*mons, god))
             companion_list.erase(i++);
         else
             ++i;
@@ -143,7 +143,7 @@ bool recall_offlevel_ally(mid_t mid)
     // The monster is now on this level
     remove_monster_from_transit(comp->level, mid);
     comp->level = level_id::current();
-    simple_monster_message(mons, " is recalled.");
+    simple_monster_message(*mons, " is recalled.");
 
     // Now that the monster is onlevel, we can safely apply traps to it.
     // old location isn't very meaningful, so use current loc

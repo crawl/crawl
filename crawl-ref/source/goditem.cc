@@ -304,9 +304,6 @@ bool is_hasty_item(const item_def& item)
         retval = (item_brand == SPARM_RUNNING);
         }
         break;
-    case OBJ_WANDS:
-        retval = (item.sub_type == WAND_HASTING);
-        break;
     case OBJ_JEWELLERY:
         retval = (item.sub_type == AMU_RAGE && !is_artefact(item));
         break;
@@ -323,38 +320,6 @@ bool is_hasty_item(const item_def& item)
     }
 
     return retval;
-}
-
-bool is_poisoned_item(const item_def& item)
-{
-    if (is_unrandom_artefact(item, UNRAND_OLGREB))
-        return true;
-
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_VENOM)
-            return true;
-        }
-        break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
-            return true;
-        }
-        break;
-    case OBJ_STAVES:
-        if (item.sub_type == STAFF_POISON)
-            return true;
-        break;
-    default:
-        break;
-    }
-
-    return false;
 }
 
 static bool _is_potentially_fiery_item(const item_def& item)
@@ -394,6 +359,7 @@ bool is_fiery_item(const item_def& item)
             return true;
         }
         break;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
@@ -401,6 +367,7 @@ bool is_fiery_item(const item_def& item)
             return true;
         }
         break;
+#endif
     case OBJ_WANDS:
         if (item.sub_type == WAND_FLAME)
             return true;
@@ -555,13 +522,6 @@ conduct_type god_hates_item_handling(const item_def &item)
 
         if (is_chaotic_item(item))
             return DID_CHAOS;
-        break;
-
-    case GOD_SHINING_ONE:
-        if (item_type_known(item) && is_poisoned_item(item))
-            return DID_POISON;
-        if (is_unrandom_artefact(item, UNRAND_CAPTAIN))
-            return DID_UNCHIVALRIC_ATTACK;
         break;
 
     case GOD_YREDELEMNUL:

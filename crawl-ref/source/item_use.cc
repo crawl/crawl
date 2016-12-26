@@ -17,6 +17,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
@@ -41,6 +42,8 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mutation.h"
+#include "nearby-danger.h"
+#include "orb.h"
 #include "output.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -156,6 +159,11 @@ void UseItemMenu::populate_menu()
 
     if (!item_floor.empty())
     {
+#ifndef USE_TILE
+        // vertical padding for console
+        if (!item_inv.empty())
+            add_entry(new MenuEntry("", MEL_TITLE));
+#endif
         // Load floor items to menu
         string subtitle_text = "Floor Items";
         if (is_inventory)
@@ -194,6 +202,16 @@ bool UseItemMenu::process_key(int key)
         return false;
     }
     return Menu::process_key(key);
+}
+
+static string _weird_smell()
+{
+    return getMiscString("smell_name");
+}
+
+static string _weird_sound()
+{
+    return getMiscString("sound_name");
 }
 
 /**
@@ -473,7 +491,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            true, true, true, '-', -1, nullptr, OPER_WIELD);
+                            OPER_WIELD, invprompt_flag::none, '-');
         }
         else
             item_slot = SLOT_BARE_HANDS;
@@ -616,9 +634,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
-                                      true, true, true, 0, -1, nullptr,
-                                      oper);
+        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector, oper);
 
         if (!prompt_failed(slot))
         {
@@ -1684,8 +1700,7 @@ bool puton_ring(int slot, bool allow_prompt)
     else
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                        MT_INVLIST, OBJ_JEWELLERY, true, true,
-                                        true, 0, -1, nullptr, OPER_PUTON);
+                                        MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON);
     }
 
     if (prompt_failed(item_slot))
@@ -1743,9 +1758,10 @@ bool remove_ring(int slot, bool announce)
         const int equipn =
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
                                              MT_INVLIST,
-                                             OBJ_JEWELLERY, true, true, true,
-                                             0, -1, nullptr, OPER_REMOVE,
-                                             false, false)
+                                             OBJ_JEWELLERY,
+                                             OPER_REMOVE,
+                                             invprompt_flag::no_warning
+                                                | invprompt_flag::hide_known)
                         : slot;
 
         if (prompt_failed(equipn))
@@ -1877,23 +1893,9 @@ void drink(item_def* potion)
         return;
     }
 
-    if (inv_count() == 0)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
-        _vampire_corpse_help();
-        return;
-    }
-
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (you.form == TRAN_BAT)
-    {
-        canned_msg(MSG_PRESENT_FORM);
-        _vampire_corpse_help();
         return;
     }
 
@@ -2005,10 +2007,10 @@ bool god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
-    if (&wpn == you.weapon() && you.duration[DUR_WEAPON_BRAND])
+    if (&wpn == you.weapon() && you.duration[DUR_EXCRUCIATING_WOUNDS])
         end_weapon_brand(wpn);
-    int old_brand = get_weapon_brand(wpn);
-    int new_brand = old_brand;
+    const brand_type old_brand = get_weapon_brand(wpn);
+    brand_type new_brand = old_brand;
 
     // now try and find an appropriate brand
     while (old_brand == new_brand || god_hates_brand(new_brand))
@@ -2021,8 +2023,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     23, SPWPN_VENOM,
                                     23, SPWPN_VORPAL,
                                     5, SPWPN_ELECTROCUTION,
-                                    3, SPWPN_CHAOS,
-                                    0);
+                                    3, SPWPN_CHAOS);
         }
         else
         {
@@ -2035,8 +2036,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     15, SPWPN_ELECTROCUTION,
                                     12, SPWPN_PROTECTION,
                                     8, SPWPN_VAMPIRISM,
-                                    3, SPWPN_CHAOS,
-                                    0);
+                                    3, SPWPN_CHAOS);
         }
     }
 
@@ -2105,6 +2105,11 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_CHAOS:
         flash_colour = random_colour();
         mprf("%s erupts in a glittering mayhem of colour.", itname.c_str());
+        break;
+
+    case SPWPN_ACID:
+        flash_colour = ETC_SLIME;
+        mprf("%s oozes corrosive slime.", itname.c_str());
         break;
 
     default:
@@ -2210,8 +2215,20 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     return success;
 }
 
-// Returns true if the scroll is used up.
-static bool _identify(bool alreadyknown, const string &pre_msg)
+/**
+ * Prompt for an item to identify (either in the player's inventory or in
+ * the ground), and then, if one is chosen, identify it.
+ *
+ * @param alreadyknown  Did we know that this was an ID scroll before we
+ *                      started reading it?
+ * @param pre_msg       'As you read the scroll of foo, it crumbles to dust.'
+ * @param link[in,out]  The location of the ID scroll in the player's inventory
+ *                      or, if it's on the floor, -1.
+ *                      auto_assign_item_slot() may require us to update this.
+ * @return  true if the scroll is used up. (That is, whether it was used or
+ *          whether it was previously unknown (& thus uncancellable).)
+ */
+static bool _identify(bool alreadyknown, const string &pre_msg, int &link)
 {
     item_def* itemp = _choose_target_item_for_scroll(alreadyknown, OSEL_UNIDENT,
                        "Identify which item? (\\ to view known items)");
@@ -2227,7 +2244,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
     set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Output identified item.
-    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY_EQUIP).c_str());
     if (in_inventory(item))
     {
         if (item.link == you.equip[EQ_WEAPON])
@@ -2240,7 +2257,17 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
-        auto_assign_item_slot(item);
+        const int target_link = item.link;
+        item_def* moved_target = auto_assign_item_slot(item);
+        if (moved_target != nullptr && moved_target->link == link)
+        {
+            // auto-swapped ID'd item with scrolls being used to ID it
+            // correct input 'link' to the new location of the ID scroll stack
+            // so that we decrement *it* instead of the ID'd item (10663)
+            ASSERT(you.inv[target_link].defined());
+            ASSERT(you.inv[target_link].is_type(OBJ_SCROLLS, SCR_IDENTIFY));
+            link = target_link;
+        }
     }
     return true;
 }
@@ -2271,30 +2298,14 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         return false;
     }
 
-    // Turn hides into mails where applicable.
-    // NOTE: It is assumed that armour which changes in this way does
-    // not change into a form of armour with a different evasion modifier.
-    if (armour_is_hide(arm, false))
-    {
-        if (!quiet)
-        {
-            mprf("%s glows purple and changes!",
-                 _item_name(arm).c_str());
-        }
-
-        ac_change = property(arm, PARM_AC);
-        hide2armour(arm);
-        ac_change = property(arm, PARM_AC) - ac_change;
-
-        // No additional enchantment.
-        return true;
-    }
-
     // Output message before changing enchantment and curse status.
     if (!quiet)
     {
-        mprf("%s glows green for a moment.",
-             _item_name(arm).c_str());
+        const bool plural = armour_is_hide(arm)
+                            && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
+        mprf("%s %s green for a moment.",
+             _item_name(arm).c_str(),
+             conjugate_verb("glow", plural).c_str());
     }
 
     arm.plus++;
@@ -2353,7 +2364,7 @@ void random_uselessness()
         if (you.species == SP_MUMMY)
             mpr("Your bandages flutter.");
         else // if (you.can_smell())
-            mprf("You smell %s.", weird_smell().c_str());
+            mprf("You smell %s.", _weird_smell().c_str());
         break;
 
     case 4:
@@ -2371,7 +2382,7 @@ void random_uselessness()
 
     case 6:
     case 7:
-        mprf(MSGCH_SOUND, "You hear %s.", weird_sound().c_str());
+        mprf(MSGCH_SOUND, "You hear %s.", _weird_sound().c_str());
         noisy(2, you.pos());
         break;
     }
@@ -2416,7 +2427,7 @@ static void _vulnerability_scroll()
         if (monster* mon = monster_at(*ri))
         {
             // If relevant, monsters have their MR halved.
-            if (!mons_immune_magic(mon))
+            if (!mons_immune_magic(*mon))
                 mon->add_ench(lowered_mr);
 
             // Annoying but not enough to turn friendlies against you.
@@ -2463,12 +2474,6 @@ bool player_can_read()
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    if (inv_count() < 1)
-    {
-        canned_msg(MSG_NOTHING_CARRIED);
         return false;
     }
 
@@ -2620,7 +2625,7 @@ void read(item_def* scroll)
 
     // need to handle this before we waste time (with e.g. blurryvis)
     if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
-        && player_has_orb()
+        && orb_limits_translocation()
         && !yesno("Your blink will be uncontrolled - continue anyway?",
                   false, 'n'))
     {
@@ -2675,6 +2680,7 @@ void read_scroll(item_def& scroll)
 {
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const int prev_quantity = scroll.quantity;
+    int link = in_inventory(scroll) ? scroll.link : -1;
     const bool alreadyknown = item_type_known(scroll);
 
     // For cancellable scrolls leave printing this message to their
@@ -2713,7 +2719,7 @@ void read_scroll(item_def& scroll)
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
 
-        if (player_has_orb())
+        if (orb_limits_translocation())
         {
             mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
             uncontrolled_blink();
@@ -2765,6 +2771,12 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_FOG:
+        if (alreadyknown && (env.level_state & LSTATE_STILL_WINDS))
+        {
+            mpr("The air is too still for clouds to form.");
+            cancel_scroll = true;
+            break;
+        }
         mpr("The scroll dissolves into smoke.");
         big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
@@ -2796,7 +2808,7 @@ void read_scroll(item_def& scroll)
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_immune_magic(*mi) || mi->is_summoned())
+            if (mons_immune_magic(**mi) || mi->is_summoned())
                 continue;
 
             if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, &you)))
@@ -2868,7 +2880,7 @@ void read_scroll(item_def& scroll)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, true);
         }
-        cancel_scroll = !_identify(alreadyknown, pre_succ_msg);
+        cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
         break;
 
     case SCR_RECHARGING:
@@ -2952,7 +2964,7 @@ void read_scroll(item_def& scroll)
     if (!cancel_scroll)
     {
         if (in_inventory(scroll))
-            dec_inv_item_quantity(scroll.link, 1);
+            dec_inv_item_quantity(link, 1);
         else
             dec_mitm_item_quantity(scroll.index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
@@ -2983,14 +2995,6 @@ void read_scroll(item_def& scroll)
     if (!alreadyknown)
         auto_assign_item_slot(scroll);
 
-}
-
-bool check_stasis(const char *msg)
-{
-    bool blocked = you.species == SP_FORMICID;
-    if (blocked)
-        mpr(msg);
-    return blocked;
 }
 
 #ifdef USE_TILE
@@ -3037,15 +3041,8 @@ void tile_item_drop(int idx, bool partdrop)
 
 void tile_item_eat_floor(int idx)
 {
-    // XXX: refactor this
-    if (mitm[idx].base_type == OBJ_CORPSES
-            && you.species == SP_VAMPIRE
-        || mitm[idx].base_type == OBJ_FOOD
-            && you.undead_state() != US_UNDEAD && you.species != SP_VAMPIRE)
-    {
-        if (can_eat(mitm[idx], false))
-            eat_item(mitm[idx]);
-    }
+    if (can_eat(mitm[idx], false))
+        eat_item(mitm[idx]);
 }
 
 void tile_item_use_secondary(int idx)
@@ -3156,15 +3153,11 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_BOOKS:
-            if (item.sub_type == BOOK_MANUAL)
-                return;
-            if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
+            if (item_is_spellbook(item)
+                && check_warning_inscriptions(item, OPER_MEMORISE))
             {
-                if (check_warning_inscriptions(item, OPER_READ))
-                    _handle_read_book(you.inv[idx]);
-            } // else it's a spellbook
-            else if (check_warning_inscriptions(item, OPER_MEMORISE))
-                learn_spell(); // offers all spells, might not be what we want
+                learn_spell_from(item);
+            }
             return;
 
         case OBJ_SCROLLS:

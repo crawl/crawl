@@ -138,13 +138,13 @@ static string _spell_extra_description(spell_type spell, bool viewing)
     // spell name
     desc << chop_string(spell_title(spell), 30);
 
-    // spell power, spell range, hunger level, level
+    // spell power, spell range, hunger level, noise
     const string rangestring = spell_range_string(spell);
 
-    desc << chop_string(spell_power_string(spell), 14)
-         << chop_string(rangestring, 16 + tagged_string_tag_length(rangestring))
-         << chop_string(spell_hunger_string(spell), 12)
-         << spell_difficulty(spell);
+    desc << chop_string(spell_power_string(spell), 13)
+         << chop_string(rangestring, 9 + tagged_string_tag_length(rangestring))
+         << chop_string(spell_hunger_string(spell), 8)
+         << chop_string(spell_noise_string(spell, 10), 15);
 
     desc << "</" << colour_to_str(highlight) <<">";
 
@@ -176,9 +176,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 " " + titlestring + "         Type          "
-                "                Failure   Level",
-                " " + titlestring + "         Power         "
-                "Range           " + "Hunger" + "    Level",
+                "                Failure  Level",
+                " " + titlestring + "         Power        "
+                "Range    " + "Hunger  " + "Noise          ",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -187,9 +187,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " " + titlestring + "         Type          "
-            "                Failure   Level",
-            " " + titlestring + "         Power         "
-            "Range           " + "Hunger" + "    Level",
+            "                Failure  Level",
+            " " + titlestring + "         Power        "
+            "Range    " + "Hunger  " + "Noise          ",
             MEL_TITLE));
 #endif
     spell_menu.set_highlighter(nullptr);
@@ -385,9 +385,6 @@ int raw_spell_fail(spell_type spell)
     chance2 += 4 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
 
-    if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
-        chance2 += 7;
-
     if (you.props.exists(SAP_MAGIC_KEY))
         chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
 
@@ -451,15 +448,15 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Augmentation boosts spell power at high HP.
         if (!fail_rate_check)
         {
-            power *= 10 + 4 * augmentation_amount();
+            power *= 10 + 3 * augmentation_amount();
             power /= 10;
         }
 
-        // Each level of horror reduces spellpower by 10%
+        // Each level of horror reduces spellpower
         if (you.duration[DUR_HORROR] && !fail_rate_check)
         {
             power *= 10;
-            power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
+            power /= 10 + you.props[HORROR_PENALTY_KEY].get_int();
         }
 
         power = stepdown_spellpower(power);
@@ -507,8 +504,6 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & SPTYP_AIR)
         enhanced += player_spec_air();
 
-    if (you.attribute[ATTR_SHADOWS])
-        enhanced -= 2;
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
 
@@ -571,68 +566,78 @@ void inspect_spells()
     list_spells(true, true);
 }
 
-static bool _can_cast()
+bool can_cast_spells(bool quiet)
 {
     if (!get_form()->can_cast)
     {
-        canned_msg(MSG_PRESENT_FORM);
+        if (!quiet)
+            canned_msg(MSG_PRESENT_FORM);
         return false;
     }
 
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
     {
-        mpr("You cannot cast spells while unable to breathe!");
+        if (!quiet)
+            mpr("You cannot cast spells while unable to breathe!");
         return false;
     }
 
     if (you.duration[DUR_BRAINLESS])
     {
-        mpr("You lack the mental capacity to cast spells.");
+        if (!quiet)
+            mpr("You lack the mental capacity to cast spells.");
         return false;
     }
 
     // Randart weapons.
     if (you.no_cast())
     {
-        mpr("Something interferes with your magic!");
+        if (!quiet)
+            mpr("Something interferes with your magic!");
         return false;
     }
 
     if (!you.spell_no)
     {
-        canned_msg(MSG_NO_SPELLS);
+        if (!quiet)
+            canned_msg(MSG_NO_SPELLS);
         return false;
     }
 
     if (you.berserk())
     {
-        canned_msg(MSG_TOO_BERSERK);
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
         return false;
     }
 
     if (you.confused())
     {
-        mpr("You're too confused to cast spells.");
+        if (!quiet)
+            mpr("You're too confused to cast spells.");
         return false;
     }
 
     if (silenced(you.pos()))
     {
-        mpr("You cannot cast spells when silenced!");
+        if (!quiet)
+            mpr("You cannot cast spells when silenced!");
         // included in default force_more_message
         return false;
     }
 
     if (you.duration[DUR_NO_CAST])
     {
-        mpr("You are unable to access your magic!");
+        if (!quiet)
+            mpr("You are unable to access your magic!");
         return false;
     }
 
     if (!you.undead_state() && !you_foodless()
         && you.hunger_state <= HS_STARVING)
     {
-        canned_msg(MSG_NO_ENERGY);
+        if (!quiet)
+            canned_msg(MSG_NO_ENERGY);
         return false;
     }
 
@@ -656,7 +661,7 @@ void do_cast_spell_cmd(bool force)
  **/
 bool cast_a_spell(bool check_range, spell_type spell)
 {
-    if (!_can_cast())
+    if (!can_cast_spells())
     {
         crawl_state.zero_turns_taken();
         return false;
@@ -845,14 +850,12 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
+    practise_casting(spell, cast_result == SPRET_SUCCESS);
     if (cast_result == SPRET_SUCCESS)
     {
-        practise(EX_DID_CAST, spell);
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }
-    else
-        practise(EX_DID_MISCAST, spell);
 
 #if TAG_MAJOR_VERSION == 34
     // Nasty special cases.
@@ -1142,8 +1145,8 @@ static unique_ptr<targetter> _spell_targetter(spell_type spell, int pow,
         return make_unique<targetter_beam>(&you, range, ZAP_DAMNATION, pow,
                                            1, 1);
     case SPELL_MEPHITIC_CLOUD:
-        return make_unique<targetter_beam>(&you, range, ZAP_BREATHE_MEPHITIC,
-                                           pow, pow >= 100 ? 1 : 0, 1);
+        return make_unique<targetter_beam>(&you, range, ZAP_MEPHITIC, pow,
+                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return make_unique<targetter_imb>(&you, pow, range);
     case SPELL_FIRE_STORM:
@@ -1269,15 +1272,9 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
         descs.push_back("not susceptible");
     else
     {
-        int success = hex_success_chance(mr,
-                                         evoked
-                                         ? pakellas_effective_hex_power(pow)
-                                         : pow,
-                                         100);
-
-        // See comment in actor::check_res_magic; monster targets only.
-        if (mr < 6)
-            success = (success + 100)/2;
+        const int adj_pow = evoked ? pakellas_effective_hex_power(pow)
+                                   : pow;
+        const int success = hex_success_chance(mr, adj_pow, 100);
         descs.push_back(make_stringf("chance to defeat MR: %d%%", success));
     }
     return descs;
@@ -1404,12 +1401,8 @@ spret_type your_spells(spell_type spell, int powc,
             return SPRET_ABORT;
         }
 
-        if (spd.isMe()
-            && (spell == SPELL_HASTE && check_stasis(NO_HASTE_MSG)
-                || spell == SPELL_INVISIBILITY && !invis_allowed()))
-        {
+        if (spd.isMe() && spell == SPELL_INVISIBILITY && !invis_allowed())
             return SPRET_ABORT;
-        }
     }
 
     if (evoked)
@@ -1614,19 +1607,6 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool fail)
 {
-    // First handle the zaps.
-    zap_type zap = spell_to_zap(spell);
-    if (zap != NUM_ZAPS)
-    {
-        spret_type ret = zapping(zap, spell_zap_power(spell, powc), beam, true,
-                                 nullptr, fail);
-
-        if (ret == SPRET_SUCCESS)
-            _spell_zap_effect(spell);
-
-        return ret;
-    }
-
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
     {
@@ -1700,7 +1680,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_los_attack_spell(spell, powc, &you, true, true, fail);
+        return fire_los_attack_spell(spell, powc, &you, fail);
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return cast_toxic_radiance(&you, powc, fail);
@@ -1851,10 +1831,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     }
 
     case SPELL_EXCRUCIATING_WOUNDS:
-        return brand_weapon(SPWPN_PAIN, powc, fail);
-
-    case SPELL_WARP_BRAND:
-        return brand_weapon(SPWPN_DISTORTION, powc, fail);
+        return cast_excruciating_wounds(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
@@ -1974,44 +1951,29 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SCATTERSHOT:
         return cast_scattershot(&you, powc, target, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    // Removed spells.
-    case SPELL_ABJURATION:
-    case SPELL_CIGOTUVIS_DEGENERATION:
-    case SPELL_CONDENSATION_SHIELD:
-    case SPELL_CONTROL_TELEPORT:
-    case SPELL_DEMONIC_HORDE:
-    case SPELL_ENSLAVEMENT:
-    case SPELL_EVAPORATE:
-    case SPELL_FIRE_BRAND:
-    case SPELL_FORCEFUL_DISMISSAL:
-    case SPELL_FREEZING_AURA:
-    case SPELL_FULSOME_DISTILLATION:
-    case SPELL_INSULATION:
-    case SPELL_LETHAL_INFUSION:
-    case SPELL_POISON_WEAPON:
-    case SPELL_SEE_INVISIBLE:
-    case SPELL_SINGULARITY:
-    case SPELL_SONG_OF_SHIELDING:
-    case SPELL_SUMMON_SCORPIONS:
-    case SPELL_SUMMON_ELEMENTAL:
-    case SPELL_TWISTED_RESURRECTION:
-    case SPELL_SURE_BLADE:
-    case SPELL_FLY:
-    case SPELL_STONESKIN:
-    case SPELL_SUMMON_SWARM:
-    case SPELL_PHASE_SHIFT:
-    case SPELL_MASS_CONFUSION:
-    case SPELL_CURE_POISON:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     default:
-        return SPRET_NONE;
+        if (spell_removed(spell))
+        {
+            mpr("Sorry, this spell is gone!");
+            return SPRET_ABORT;
+        }
+        break;
     }
 
-    return SPRET_SUCCESS;
+    // Finally, try zaps.
+    zap_type zap = spell_to_zap(spell);
+    if (zap != NUM_ZAPS)
+    {
+        spret_type ret = zapping(zap, spell_zap_power(spell, powc), beam, true,
+                                 nullptr, fail);
+
+        if (ret == SPRET_SUCCESS)
+            _spell_zap_effect(spell);
+
+        return ret;
+    }
+
+    return SPRET_NONE;
 }
 
 // _tetrahedral_number: returns the nth tetrahedral number.
@@ -2153,7 +2115,7 @@ string spell_hunger_string(spell_type spell, bool rod)
     return hunger_cost_string(spell_hunger(spell, rod));
 }
 
-string spell_noise_string(spell_type spell)
+string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
     int effect_noise = spell_effect_noise(spell);
@@ -2185,7 +2147,17 @@ string spell_noise_string(spell_type spell)
 
 #ifdef WIZARD
     if (you.wizard)
-        return make_stringf("%s (%d)", desc, noise);
+    {
+        if (chop_wiz_display_width > 0)
+        {
+            ostringstream shortdesc;
+            shortdesc << chop_string(desc, chop_wiz_display_width)
+                      << "(" << to_string(noise) << ")";
+            return shortdesc.str();
+        }
+        else
+            return make_stringf("%s (%d)", desc, noise);
+    }
     else
 #endif
         return desc;
@@ -2274,7 +2246,7 @@ string spell_range_string(spell_type spell, bool rod)
  *                      Usually @ for the player.
  * @return              See above.
  */
-string range_string(int range, int maxrange, ucs_t caster_char)
+string range_string(int range, int maxrange, char32_t caster_char)
 {
     if (range <= 0)
         return "N/A";
@@ -2308,4 +2280,42 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
     for (const auto bit : spschools_type::range())
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
+}
+
+const set<spell_type> removed_spells =
+{
+#if TAG_MAJOR_VERSION == 34
+    SPELL_ABJURATION,
+    SPELL_CIGOTUVIS_DEGENERATION,
+    SPELL_CONDENSATION_SHIELD,
+    SPELL_CONTROL_TELEPORT,
+    SPELL_DEMONIC_HORDE,
+    SPELL_ENSLAVEMENT,
+    SPELL_EVAPORATE,
+    SPELL_FIRE_BRAND,
+    SPELL_FORCEFUL_DISMISSAL,
+    SPELL_FREEZING_AURA,
+    SPELL_FULSOME_DISTILLATION,
+    SPELL_INSULATION,
+    SPELL_LETHAL_INFUSION,
+    SPELL_POISON_WEAPON,
+    SPELL_SEE_INVISIBLE,
+    SPELL_SINGULARITY,
+    SPELL_SONG_OF_SHIELDING,
+    SPELL_SUMMON_SCORPIONS,
+    SPELL_SUMMON_ELEMENTAL,
+    SPELL_TWISTED_RESURRECTION,
+    SPELL_SURE_BLADE,
+    SPELL_FLY,
+    SPELL_STONESKIN,
+    SPELL_SUMMON_SWARM,
+    SPELL_PHASE_SHIFT,
+    SPELL_MASS_CONFUSION,
+    SPELL_CURE_POISON,
+#endif
+};
+
+bool spell_removed(spell_type spell)
+{
+    return removed_spells.count(spell) != 0;
 }

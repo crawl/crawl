@@ -45,8 +45,8 @@ struct feature_def
     {}
 
     bool is_notable() const { return flags & FFT_NOTABLE; }
-    ucs_t symbol() const;
-    ucs_t magic_symbol() const;
+    char32_t symbol() const;
+    char32_t magic_symbol() const;
     colour_t colour() const;
     colour_t map_colour() const;
     colour_t seen_colour() const;

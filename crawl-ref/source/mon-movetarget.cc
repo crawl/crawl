@@ -28,11 +28,11 @@
 // will still be able to come nearer (and the mark will then be cleared).
 static void _mark_neighbours_target_unreachable(monster* mon)
 {
-    const mon_intel_type intel = mons_intel(mon);
+    const mon_intel_type intel = mons_intel(*mon);
     const bool flies         = mon->airborne();
-    const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
-    const bool amph_lava     = (mons_habitat(mon) == HT_AMPHIBIOUS_LAVA);
-    const habitat_type habit = mons_primary_habitat(mon);
+    const bool amphibious    = (mons_habitat(*mon) == HT_AMPHIBIOUS);
+    const bool amph_lava     = (mons_habitat(*mon) == HT_AMPHIBIOUS_LAVA);
+    const habitat_type habit = mons_primary_habitat(*mon);
 
     for (radius_iterator ri(mon->pos(), 2, C_SQUARE); ri; ++ri)
     {
@@ -50,11 +50,11 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 
         // Don't restrict smarter monsters as they might find a path
         // a dumber monster wouldn't.
-        if (mons_intel(m) > intel)
+        if (mons_intel(*m) > intel)
             continue;
 
         // Monsters of differing habitats might prefer different routes.
-        if (mons_primary_habitat(m) != habit)
+        if (mons_primary_habitat(*m) != habit)
             continue;
 
         // Wall clinging monsters use different pathfinding.
@@ -64,8 +64,8 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
         if (!flies && m->airborne()
-            || !amphibious && mons_habitat(m) == HT_AMPHIBIOUS
-            || !amph_lava  && mons_habitat(m) == HT_AMPHIBIOUS_LAVA)
+            || !amphibious && mons_habitat(*m) == HT_AMPHIBIOUS
+            || !amph_lava  && mons_habitat(*m) == HT_AMPHIBIOUS_LAVA)
         {
             continue;
         }
@@ -134,7 +134,7 @@ bool try_pathfind(monster* mon)
     // realise that.
     if (need_pathfind
         && !mon->friendly()
-        && mons_has_ranged_attack(mon)
+        && mons_has_ranged_attack(*mon)
         && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
     {
         need_pathfind = false;
@@ -353,57 +353,47 @@ bool find_merfolk_avatar_water_target(monster* mon)
 
     int best_water_count = 0;
     coord_def best_target;
-    bool first = true;
 
     deep = false;
 
-    while (true)
+    // Try two iterations, the second more relaxed than the first. But if
+    // we find deep water on the first pass, don't bother with the second.
+    for (int iteration = 0; iteration < 2 && !deep; ++iteration)
     {
         int best_num = 0;
-        for (radius_iterator ri(mon->pos(), LOS_NO_TRANS);
-             ri; ++ri)
+        for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
         {
             if (!feat_is_water(grd(*ri)))
                 continue;
 
+            const int dist = grid_distance(mon->pos(), *ri);
+
             // In the first iteration only count water grids that are
             // not closer to the player than to the merfolk avatar.
-            if (first && (mon->pos() - *ri).rdist() > (you.pos() - *ri).rdist())
+            if (iteration == 0 && dist > grid_distance(you.pos(), *ri))
                 continue;
 
             // Counts deep water twice.
             const int water_count = _merfolk_avatar_water_score(*ri, deep);
-            if (water_count < best_water_count)
-                continue;
-
             if (water_count > best_water_count)
             {
                 best_water_count = water_count;
                 best_target = *ri;
                 best_num = 1;
             }
-            else // water_count == best_water_count
+            else if (water_count == best_water_count)
             {
-                const int old_dist = (mon->pos() - best_target).rdist();
-                const int new_dist = (mon->pos() - *ri).rdist();
-                if (new_dist > old_dist)
-                    continue;
-
-                if (new_dist < old_dist)
+                const int old_dist = best_target.origin() ? INFINITE_DISTANCE
+                                   : grid_distance(mon->pos(), best_target);
+                if (dist < old_dist)
                 {
                     best_target = *ri;
                     best_num = 1;
                 }
-                else if (one_chance_in(++best_num))
+                else if (dist == old_dist && one_chance_in(++best_num))
                     best_target = *ri;
             }
         }
-
-        if (!first || deep)
-            break;
-
-        // Else start the second iteration.
-        first = false;
     }
 
     if (!best_water_count)
@@ -564,7 +554,7 @@ static bool _handle_monster_travelling(monster* mon)
 
 static bool _choose_random_patrol_target_grid(monster* mon)
 {
-    const mon_intel_type intel = mons_intel(mon);
+    const mon_intel_type intel = mons_intel(*mon);
 
     // Zombies will occasionally just stand around.
     // This does not mean that they don't move every second turn. Rather,
@@ -934,9 +924,9 @@ void check_wander_target(monster* mon, bool isPacified)
 {
     // default wander behaviour
     if (mon->pos() == mon->target
-        || mons_is_batty(mon)
+        || mons_is_batty(*mon)
         || (!isPacified && !mons_is_avatar(mon->type) && one_chance_in(20))
-        || herd_monster(mon) && !_herd_ok(mon)
+        || herd_monster(*mon) && !_herd_ok(mon)
         || !_band_ok(mon))
     {
         bool need_target = true;
@@ -949,7 +939,7 @@ void check_wander_target(monster* mon, bool isPacified)
         if (need_target && mon->is_patrolling())
             need_target = _handle_monster_patrolling(mon);
 
-        if (need_target && herd_monster(mon))
+        if (need_target && herd_monster(*mon))
             need_target = _herd_wander_target(mon);
 
         if (need_target
@@ -1004,7 +994,7 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
         {
             // Ignore teleportation and shaft traps that the monster
             // shouldn't know about.
-            if (!mons_is_native_in_branch(mon)
+            if (!mons_is_native_in_branch(*mon)
                 && grd(e[i].target) == DNGN_UNDISCOVERED_TRAP)
             {
                 continue;
@@ -1053,7 +1043,7 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
     // Stupid monsters don't pathfind around shallow water
     // except the clinging ones.
     if (mon->floundering_at(p)
-        && (mons_intel(mon) >= I_HUMAN || mon->can_cling_to_walls()))
+        && (mons_intel(*mon) >= I_HUMAN || mon->can_cling_to_walls()))
     {
         return false;
     }

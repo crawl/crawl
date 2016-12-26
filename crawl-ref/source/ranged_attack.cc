@@ -150,7 +150,7 @@ bool ranged_attack::attack()
     if (attacker->is_player() && defender->is_monster()
         && !shield_blocked && ev_margin >= 0)
     {
-        print_wounds(defender->as_monster());
+        print_wounds(*defender->as_monster());
     }
 
     handle_phase_end();
@@ -449,8 +449,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                      5, SPMSL_FRENZY,
                      2, SPMSL_CURARE,
                      2, SPMSL_CONFUSION,
-                     2, SPMSL_DISPERSAL,
-                     0));
+                     2, SPMSL_DISPERSAL));
 
         if (one_chance_in(3))
             break;
@@ -536,7 +535,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         {
             if (defender->is_monster())
             {
-                simple_monster_message(defender->as_monster(),
+                simple_monster_message(*defender->as_monster(),
                                        " is unaffected.");
             }
             else
@@ -579,7 +578,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         if (needs_message)
         {
             if (defender->is_monster())
-                simple_monster_message(defender->as_monster(), " resists.");
+                simple_monster_message(*defender->as_monster(), " resists.");
             else
                 canned_msg(MSG_YOU_RESIST);
         }
@@ -644,11 +643,6 @@ bool ranged_attack::apply_missile_brand()
     default:
         break;
     case SPMSL_FLAME:
-        if (using_weapon()
-            && get_weapon_brand(*weapon) == SPWPN_FREEZING)
-        {
-            break;
-        }
         calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
@@ -660,11 +654,6 @@ bool ranged_attack::apply_missile_brand()
         attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:
-        if (using_weapon()
-            && get_weapon_brand(*weapon) == SPWPN_FLAMING)
-        {
-            break;
-        }
         calc_elemental_brand_damage(BEAM_COLD, "freeze",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_COLD, 2);

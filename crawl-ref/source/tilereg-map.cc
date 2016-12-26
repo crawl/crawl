@@ -8,7 +8,7 @@
 #include "command.h"
 #include "food.h"
 #include "libutil.h"
-#include "misc.h"
+#include "nearby-danger.h"
 #include "player.h"
 #include "options.h"
 #include "tilesdl.h"

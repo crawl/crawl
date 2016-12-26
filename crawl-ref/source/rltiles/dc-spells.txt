@@ -139,6 +139,7 @@ spellforged_servitor SPELLFORGED_SERVITOR
 
 %sdir gui/spells/translocation
 apportation APPORTATION
+beckoning BECKONING
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 disjunction DISJUNCTION
@@ -146,7 +147,6 @@ dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
-warp_weapon WARP_WEAPON
 shroud_of_golubria SHROUD_OF_GOLUBRIA
 gravitas GRAVITAS
 
@@ -203,7 +203,6 @@ error CHAOS_BREATH
 %sdir gui/spells/monster
 cold_breath COLD_BREATH
 %sdir misc
-error CORRUPT_BODY
 error CREATE_TENTACLES
 error CRYSTAL_BOLT
 error DEATH_RATTLE
@@ -273,7 +272,6 @@ spit_acid SPIT_ACID
 spit_poison SPIT_POISON
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
-sticky_flame_splash STICKY_FLAME_SPLASH
 %sdir misc
 error STRIP_RESISTANCE
 %sdir gui/spells/monster

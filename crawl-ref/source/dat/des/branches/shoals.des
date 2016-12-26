@@ -80,7 +80,7 @@ ENDMAP
 NAME:   minmay_shoals_entry_lonely_mermaid
 TAGS:   shoals_entry no_monster_gen
 ORIENT: float
-KMONS:  1 = siren
+KMONS:  1 = merfolk siren
 KFEAT:  1 = w
 SUBST:  Y = W.
 SUBST:  y = Ww
@@ -138,7 +138,7 @@ ENDMAP
 
 NAME:    minmay_shoals_entry_beasts
 TAGS:    shoals_entry
-MONS:    hippogriff, griffon, manticore, nothing, nothing, nothing, nothing
+MONS:    hippogriff, manticore, nothing, nothing, nothing, nothing, nothing
 KMONS:   8 = nothing
 SHUFFLE: 12345678
 KFEAT:   O = enter_shoals
@@ -168,7 +168,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: Z = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk / siren
+KMONS:  1 = merfolk / merfolk siren
 MAP
 ..xxx
 xZ..x
@@ -190,7 +190,7 @@ TAGS:   shoals_entry
 KFEAT:  O = enter_shoals
 NSUBST: 1 = 4:1 / *:W
 KFEAT:  1 = W
-KMONS:  1 = merfolk / siren / nothing w:40
+KMONS:  1 = merfolk / merfolk siren / nothing w:40
 validate {{ return has_exit_from_glyph('O') }}
 MAP
 @...xxxxxxx....
@@ -319,7 +319,7 @@ DEPTH:   Shoals
 KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance | buckler | nothing w:30
-KMONS:   3 = siren ; trident ego:flaming | spear ego:flaming . \
+KMONS:   3 = merfolk siren ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance w:20 | buckler | nothing w:70
 KMONS:   4 = merfolk avatar
@@ -415,7 +415,7 @@ KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
 KMONS:   4 = merfolk
-KMONS:   5 = siren / merfolk avatar
+KMONS:   5 = merfolk siren / merfolk avatar
 KFEAT:   12345 = deep_water
 SHUFFLE: 1235
 NSUBST:  V = 1:w / *:x
@@ -445,7 +445,7 @@ KMONS:   1 = merfolk javelineer
 KMONS:   2 = merfolk impaler
 KMONS:   3 = merfolk aquamancer
 KMONS:   4 = merfolk
-KMONS:   5 = siren / merfolk avatar
+KMONS:   5 = merfolk siren / merfolk avatar
 KMONS:   6 = cyclops
 KMONS:   7 = stone giant
 KMONS:   8 = frost giant
@@ -479,7 +479,7 @@ NAME: nicolae_shoals_undead_eyrie
 DEPTH: Shoals
 SUBST: y = ..xx1
 NSUBST: . = 4:1 / *:.
-MONS: harpy zombie w:30 / griffon zombie / hippogriff zombie / bat zombie w:5
+MONS: harpy zombie w:30 / hippogriff zombie / bat zombie w:5
 MAP
  .....
 ...y...
@@ -582,7 +582,7 @@ NAME:    hangedman_shoals_cup_caves
 TAGS:    water_ok
 DEPTH:   Shoals
 MONS:    cyclops / stone giant w:2
-MONS:    siren, harpy, snapping turtle, centaur / centaur warrior, sea snake
+MONS:    merfolk siren, harpy, snapping turtle, centaur / centaur warrior, sea snake
 SHUFFLE: 234560, ABC
 SUBST:   A : x:6 .:1, B : xxw., C : xw.., c = c:29 .:1, x = x:9 c:1, % = %:8 *:1 .:1
 MAP
@@ -680,7 +680,7 @@ NAME: nicolae_shoals_siren_and_animal_friends
 DEPTH: Shoals
 TAGS: patrolling no_monster_gen
 SUBST: w = f:4 w W
-KMONS: f = bat w:5 / griffon / harpy / hippogriff / \
+KMONS: f = bat w:5 / harpy / hippogriff w:5 / \
        kraken w:1 / sea snake / sky beast w:1 / \
        snapping turtle / steam dragon w:1 / alligator w:5 / \
        alligator snapping turtle / anaconda w:1 / \
@@ -720,7 +720,7 @@ NSUBST: { = 1:{ / *:.
 SUBST: b = .wW, r = ..Wxx
 KPROP: wW.{x1 = no_tide
 SHUFFLE: {([
-KMONS: 1 = merfolk / merfolk impaler w:5 / siren w:5 / nothing w:20
+KMONS: 1 = merfolk / merfolk impaler w:5 / merfolk siren w:5 / nothing w:20
 KFEAT: : = . / W
 KFEAT: y = w
 MAP
@@ -765,7 +765,7 @@ SUBST: . = ....W, w = wWW..., q = w, x = xxxc
 KFEAT: 123 = . w:40 / W
 KMONS: 1 = merfolk / nothing w:5
 KMONS: 2 = merfolk / merfolk aquamancer / merfolk javelineer / merfolk impaler / nothing w:45
-KMONS: 3 = siren / merfolk avatar w:5 / nothing w:5
+KMONS: 3 = merfolk siren / merfolk avatar w:5 / nothing w:5
 MAP
      .......
    ...xxxxx...
@@ -952,7 +952,7 @@ ORIENT: float
 SHUFFLE: 1Ww / 2DD
 MONS: merfolk, faun
 MONS: merfolk impaler ; demon trident good_item | trident good_item . gold
-MONS: satyr ; greatsling good_item . sling bullet good_item . gold / \
+MONS: satyr ; fustibalus good_item . sling bullet good_item . gold / \
       satyr ; longbow good_item . arrow good_item . gold
 COLOUR:   c = white
 COLOUR:   1234'D = cyan
@@ -1070,7 +1070,7 @@ DEPTH: Shoals
 TAGS: water_ok no_item_gen
 NSUBST: % = 1:d / *:%%%%%*
 KMONS: 1 = oklob plant
-KMONS: 2 = siren
+KMONS: 2 = merfolk siren
 KMONS: p = plant
 KITEM: d = any ring w:24 / any ring good_item w:5
 MAP
@@ -1166,19 +1166,19 @@ ENDMAP
 NAME:    regret_index_shoals_crete
 TAGS:    no_monster_gen
 DEPTH:   Shoals
-MONS:    snapping turtle / griffon / elephant w:4
+MONS:    snapping turtle / elephant
 MONS:    faun, satyr, meliai, minotaur
 KMONS:   _ = merfolk javelineer
 KMONS:   b = bush
 KMONS:   p = plant
-ITEM:    any potion, longbow good_item, greatsling good_item
+ITEM:    any potion, longbow good_item, fustibalus good_item
 # Bacchus-approved.
 KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI
 SUBST:   0 = 24., X : xp.., Y : xp..
 SUBST:   A = x, B : p., F = x, G = p., CHI = .
 : dgn.delayed_decay(_G, 'g', 'snapping turtle corpse')
-: dgn.delayed_decay(_G, 'h', 'griffon corpse')
+: dgn.delayed_decay(_G, 'h', 'elephant corpse')
 MAP
     ccccccxxxxxxxcccccc
     c3dd*xxxg_hxxx*dd5c
@@ -1226,6 +1226,62 @@ XwwwwwwwwwwwwwwwW
 Xwwwwwwwwwwwwww
 XwwwwwwwWWW@WW
 ENDMAP
+
+NAME: cheibrodos_shoals_epimethial_gifts
+DEPTH: Shoals
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+KPROP: . = no_tide
+MONS: sea snake, wind drake, manticore / hippogriff, alligator snapping turtle
+MONS: snapping turtle, merfolk impaler / merfolk aquamancer / merfolk javelineer
+SHUFFLE: -'"
+NSUBST: - = 2:1 / 2=1.., ' = 1:2 / 3=3., " = 1:4 / 2=5., ` = 1=|* / 2=*%
+NSUBST: _ = 2:6 / *=6...
+MAP
+       .cccccc
+cccccc.tc_..`c
+c`.._ct.c.''.c
+c.--.c..c.''.c
+c.--.c..c..._c
+c_...+..+ccccc
+cccccc......t.
+...........t.
+...t...c+cccc
+.......c..._c
+.t.G.t.c."".c
+.......c."".c
+...t...c_..`c
+@......cccccc
+ENDMAP
+
+NAME: cheibrodos_shoals_gigantism
+DEPTH: Shoals
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: titan, cyclops / w:3 stone giant / w:3 frost giant
+SUBST: " = .:2 W, x = c:1 x
+NSUBST: - = 1=|* / 1=|*% / 2=*%
+MAP
+     xxxxxxxxx
+   xxxxxxxxxxxx
+  xxx..x..""xxxx
+ xxx2..+...."xxxx
+ xxG...xx....""xxx
+ xxx".xxxx"...."xxx
+  xx"..xxxx"..."xxx
+ xxxx"..xxx"...."xx
+@xxxxx".2xx"...."xx
+@+..xxx..xxx...."xx
+@xx".xxx."mm...."xx
+ xxx".xx."mm..1..xx
+  xx".Gx."xxG.-.Gxx
+  xx"....xxxx---xxx
+   xx".."xxxxxxxxx
+   xxx2xxxx xxxxx
+    xxxxx    xxx
+     xxx
+ENDMAP
+
 
 ##############################################################################
 # Branch ends.

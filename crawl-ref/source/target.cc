@@ -126,7 +126,7 @@ void targetter_beam::set_explosion_target(bolt &tempbeam)
     tempbeam.target = origin;
     for (auto c : path_taken)
     {
-        if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
+        if (cell_is_solid(c) && !tempbeam.can_affect_wall(c))
             break;
         tempbeam.target = c;
         if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
@@ -162,7 +162,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
     for (auto pc : path_taken)
     {
         if (cell_is_solid(pc)
-            && !beam.can_affect_wall(grd(pc))
+            && !beam.can_affect_wall(pc)
             && max_expl_rad > 0)
         {
             break;
@@ -176,7 +176,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
                 on_path = true;
             else if (cell_is_solid(pc))
             {
-                bool res = beam.can_affect_wall(grd(pc));
+                bool res = beam.can_affect_wall(pc);
                 if (res)
                     return current;
                 else
@@ -200,7 +200,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
     {
         if ((loc - c).rdist() <= 9)
         {
-            bool aff_wall = beam.can_affect_wall(grd(loc));
+            bool aff_wall = beam.can_affect_wall(loc);
             if (!cell_is_solid(loc) || aff_wall)
             {
                 coord_def centre(9,9);
@@ -228,10 +228,18 @@ bool targetter_beam::affects_monster(const monster_info& mon)
     //     bolt::is_harmless (and transitively, bolt::nasty_to) should
     //     take monster_infos instead.
     const monster* m = monster_at(mon.pos);
-    return m && (!beam.is_harmless(m) || beam.nice_to(mon))
-           && !(beam.is_enchantment() && beam.has_saving_throw()
-                && beam.flavour != BEAM_VIRULENCE
-                && mon.res_magic() == MAG_IMMUNE);
+    if (!m)
+        return false;
+
+    if (beam.is_enchantment() && beam.has_saving_throw()
+        && mon.res_magic() == MAG_IMMUNE)
+    {
+        return false;
+    }
+
+    return !beam.is_harmless(m) || beam.nice_to(mon)
+    // Inner flame affects allies without harming or helping them.
+           || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();
 }
 
 targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
@@ -451,8 +459,8 @@ aff_type targetter_smite::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_transference::targetter_transference(const actor* act) :
-    targetter_smite(act, LOS_RADIUS, 0, 0, false, nullptr)
+targetter_transference::targetter_transference(const actor* act, int aoe) :
+    targetter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
 {
 }
 
@@ -692,7 +700,8 @@ aff_type targetter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_splash::targetter_splash(const actor* act)
+targetter_splash::targetter_splash(const actor* act, int ran)
+    : range(ran)
 {
     ASSERT(act);
     agent = act;
@@ -701,7 +710,7 @@ targetter_splash::targetter_splash(const actor* act)
 
 bool targetter_splash::valid_aim(coord_def a)
 {
-    if (agent && grid_distance(origin, a) > 1)
+    if (agent && grid_distance(origin, a) > range)
         return notify_fail("Out of range.");
     return true;
 }
@@ -1118,7 +1127,7 @@ void targetter_shadow_step::get_additional_sites(coord_def a)
 
     const actor *victim = actor_at(a);
     if (!victim || !victim->as_monster()
-        || mons_is_firewood(victim->as_monster())
+        || mons_is_firewood(*victim->as_monster())
         || victim->as_monster()->friendly()
         || !agent->can_see(*victim)
         || !victim->umbraed())

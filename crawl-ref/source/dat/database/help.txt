@@ -255,11 +255,11 @@ Training can be done in two modes, which are toggled with the <w>/</w> key.
 How fast you train a skill is governed by the following factors:
 - aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that less
             experience is needed to advance a skill. Depends on species.
-- skill manuals: Rare books giving an aptitude bonus of <lightgreen>+4</lightgreen> in one skill.
+- skill manuals: Rare books giving an aptitude bonus of <lightred>+4</lightred> in one skill.
 
 On top of that, there are some effects which directly modify a skill, for
 example draining, having trained a related skill (crosstraining), or certain
-god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <blue>blue</blue>.
+god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <green>green</green>.
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
 which will be used to train this skill.
 
@@ -276,7 +276,7 @@ can always be trained. For the rest:
 - Weapon skills require carrying a weapon of the appropriate type.
 - Shields requires that you either be carrying a shield, or worship a deity
       who can offer one through divine means (The Shining One).
-- Evocations requires carrying an evocable item, or worshipping Nemelex Xobeh.
+- Evocations requires carrying an evocable item.
 - Spell schools require knowing a spell of the school.
 - Necromancy can also be trained when worshipping Kikubaaqudgha.
 - Invocations requires worshipping a god whose abilities require it.

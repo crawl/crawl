@@ -310,7 +310,7 @@ KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:14 tomahawk ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
          w:2 staff of poison | w:4 any weapon ego:venom | \
-         w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
+         w:4 any armour ego:poison_resistance | w:1 swamp dragon scales
 SUBST:   ? = 2..
 : if you.absdepth() < 13 then
 SUBST:   2 = 1
@@ -329,11 +329,11 @@ NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
 DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / basilisk / earth elemental / cyclops w:3
-KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle / \
+KMONS:   2 = stone giant / catoblepas w:20 / deep troll earth mage /\
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 greatsling | \
+         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
          w:8 sling bullet | \
          w:7 crystal ball of energy | \
          w:4 wand of digging | w:5 randbook disc:earth | \
@@ -376,25 +376,6 @@ xxxxx
 ENDMAP
 
 #####################################################
-# Off-brand ammo
-NAME:  nicolae_offbrand_ammo
-DEPTH:  D:5-, Depths, Orc
-WEIGHT: 1
-TAGS:  no_hmirror no_vmirror
-KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
-       tomahawk ego:flame | tomahawk ego:frost | tomahawk ego:chaos | \
-       javelin ego:dispersal | javelin ego:exploding | javelin ego:chaos
-MAP
-.......
-.lllll.
-.lG.Gl.
-.l.S.l.
-.lG.Gl.
-.ll.ll.
-.......
-ENDMAP
-
-#####################################################
 # Sells only evil items.
 NAME: nicolae_evil_shop
 WEIGHT: 2
@@ -433,7 +414,7 @@ DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
-   potion of heal wounds | potion of curing | wand of heal wounds | \
+   potion of heal wounds | potion of curing | \
    tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
    amulet of faith w:2 | potion of cure mutation | \
@@ -619,10 +600,9 @@ WEIGHT: 5
 SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
 KFEAT: S = general shop type:Island suffix:Escapes count:7 ; \
- scroll of blinking | scroll of teleportation | scroll of fog w:8 | \
- potion of flight | potion of invisibility w:8 | potion of haste w:1 | \
- ring of flight w:5 | ring of teleportation w:5 | ring of stealth w:4 | \
- wand of teleportation w:5 | wand of digging w:4 | wand of hasting w:1
+ scroll of blinking | scroll of teleportation w:15 | scroll of fog w:8 | \
+ potion of flight | potion of invisibility w:8 | potion of haste w:3 | \
+ ring of flight w:5 | ring of stealth w:4 | wand of digging w:4
 MAP
   wwwwwwwww
  wwwwwwwwwww
@@ -663,6 +643,36 @@ MAP
 .mmmmmmm.
 .........
 ENDMAP
+
+NAME:   doesnt_shop_hydraphobe
+DEPTH:  D:5-11
+WEIGHT: 5
+TAGS:   transparent no_pool_fixup
+KPROP:  -1wP = no_tele_into
+KMASK:  -w = no_monster_gen
+KMASK:  -1wP = no_item_gen
+MONS:   hydra
+KMONS:  P = plant
+KFEAT:  P = shallow_water
+KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
+    long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
+    hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
+    battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
+    scythe ego:flaming | glaive ego:flaming | hand crossbow ego:freezing | \
+    arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
+FTILE:  -1wP = floor_lair
+COLOUR: -1 = brown
+MAP
+.......
+.ccccc.
+.cwP1c.
+.c---c.
+.cnnnc.
+.......
+...S...
+.......
+ENDMAP
+
 
 ###############################################################################
 # <<3>> Multi.

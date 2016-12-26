@@ -66,10 +66,38 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
         case WPN_HALBERD:     return WPN_GLAIVE;
         case WPN_GLAIVE:      return highlevel ? WPN_BARDICHE : WPN_GLAIVE;
 
+        case WPN_HUNTING_SLING: return WPN_FUSTIBALUS;
+        case WPN_HAND_CROSSBOW: return !has_shield ? WPN_ARBALEST :
+                                                     WPN_HAND_CROSSBOW;
+        case WPN_ARBALEST:      return highlevel ? WPN_TRIPLE_CROSSBOW :
+                                                   WPN_ARBALEST;
+        case WPN_SHORTBOW:      return highlevel ? WPN_LONGBOW : WPN_SHORTBOW;
+
         default:              return old_type;
     }
 }
 
+/**
+ * Try to upgrade an orc's melee weapon or launcher.
+ *
+ * @param mon The owner of the weapon.
+ * @param wpn The weapon to upgrade.
+ * @returns True if the weapon was upgraded.
+ */
+static bool _upgrade_orc_weapon(monster* mon, item_def& wpn)
+{
+    const int old_weapon_type = wpn.sub_type;
+
+    // lower chance of upgrading to very good weapon types
+    bool highlevel_ok = one_chance_in(mon->type == MONS_ORC_WARLORD ? 3 :
+                                      mon->type == MONS_ORC_KNIGHT ? 6 :
+                                      1000000); // it's one in a million!
+    wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
+                                        mon->inv[MSLOT_SHIELD] != NON_ITEM,
+                                        highlevel_ok);
+
+    return wpn.sub_type != old_weapon_type;
+}
 
 /**
  * Get a weapon for beogh to gift to a weaponless orc.
@@ -90,16 +118,14 @@ static int _orc_weapon_gift_type(monster_type mon_type)
         case MONS_ORC_SORCERER:
             return random_choose_weighted(2, WPN_HAND_AXE, // orcs love axes
                                           1, WPN_SHORT_SWORD,
-                                          1, WPN_MACE,
-                                          0);
+                                          1, WPN_MACE);
         case MONS_ORC_WARRIOR:
         case MONS_ORC_KNIGHT:
         case MONS_ORC_WARLORD:
             return random_choose_weighted(2, WPN_WAR_AXE, // orcs love axes
                                           1, WPN_LONG_SWORD,
                                           1, WPN_FLAIL,
-                                          1, WPN_SPEAR,
-                                          0);
+                                          1, WPN_SPEAR);
             // give a lower tier of polearms; reaching is good on followers
         default:
             return WPN_CLUB; // shouldn't ever come up?
@@ -177,38 +203,34 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
  */
 static string _beogh_bless_melee_weapon(monster* mon)
 {
+    bool blessed = false;
     item_def* wpn_ptr = mon->melee_weapon();
     ASSERT(wpn_ptr != nullptr);
     item_def& wpn = *wpn_ptr;
 
-    const int old_weapon_type = wpn.sub_type;
     // 50% chance of upgrading weapon type.
     if (!is_artefact(wpn)
-        && coinflip())
+        && coinflip()
+        && _upgrade_orc_weapon(mon, wpn))
     {
-        // lower chance of upgrading to very good weapon types
-        bool highlevel_ok = one_chance_in(mon->type == MONS_ORC_WARLORD ? 3 :
-                                          mon->type == MONS_ORC_KNIGHT ? 6 :
-                                          1000000); // it's one in a million!
-        wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
-                                            mon->inv[MSLOT_SHIELD] != NON_ITEM,
-                                            highlevel_ok);
+        blessed = true;
+    }
+    // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+    if (!x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
+        && enchant_weapon(wpn, true))
+    {
+        set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
+        blessed = true;
+    }
+    if (wpn.cursed())
+    {
+        do_uncurse_item(wpn);
+        if (!blessed)
+            return "uncursed armament";
     }
 
-    // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
-    const bool enchanted = !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
-                           && enchant_weapon(wpn, true);
-    if (enchanted)
-        set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
-
-    if (!enchanted && wpn.sub_type == old_weapon_type)
+    if (!blessed)
     {
-        if (wpn.cursed())
-        {
-            do_uncurse_item(wpn);
-            return "uncursed armament";
-        }
-
         dprf("Couldn't bless follower's weapon!");
         return "";
     }
@@ -225,20 +247,63 @@ static string _beogh_bless_melee_weapon(monster* mon)
  */
 static string _beogh_bless_ranged_weapon(monster* mon)
 {
-    // if they already have a launcher, restock it.
-    // likewise if they have a shield but no launcher (give tomahawks)
+    bool blessed = false;
     const bool mon_has_launcher = mon->launcher() != nullptr;
-    if (mon_has_launcher || mon->shield() != nullptr)
+
+    if (mon_has_launcher)
+    {
+        item_def& launcher = *mon->launcher();
+
+        // 50% chance of upgrading weapon type.
+        if (!is_artefact(launcher)
+            && coinflip()
+            && _upgrade_orc_weapon(mon, launcher))
+        {
+           blessed = true;
+        }
+        // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+        if (!x_chance_in_y(launcher.plus, MAX_WPN_ENCHANT)
+            && enchant_weapon(launcher, true))
+        {
+            set_ident_flags(launcher, ISFLAG_KNOW_PLUSES);
+            blessed = true;
+        }
+        if (launcher.cursed())
+        {
+            do_uncurse_item(launcher);
+            if (!blessed)
+                return "uncursed armament";
+        }
+
+        // Otherwise gift ammunition.
+        if (!blessed)
+        {
+            gift_ammo_to_orc(mon);
+            if (mon->missiles() != nullptr)
+                return "ammunition";
+
+            dprf("Couldn't give ammo to follower!");
+            return ""; // ?
+        }
+        else
+        {
+            item_set_appearance(launcher);
+            return "superior armament";
+        }
+    }
+
+    // If they have a shield but no launcher, give tomahawks.
+    if (mon->shield() != nullptr)
     {
         gift_ammo_to_orc(mon);
         if (mon->missiles() != nullptr)
-            return mon_has_launcher ? "ammunition" : "ranged armament";
+            return "ranged armament";
 
         dprf("Couldn't give ammo to follower!");
         return ""; // ?
     }
 
-    // no launcher, no shield: give them a crossbow & some ammo.
+    // No launcher, no shield: give them a crossbow & some ammo.
     _gift_weapon_to_orc(mon, WPN_ARBALEST);
     if (mon->launcher() == nullptr)
     {
@@ -438,7 +503,7 @@ static bool _blessing_healing(monster* mon)
     {
         // A high-HP monster might get a unique name.
         if (x_chance_in_y(mon->max_hit_points + 1, 100))
-            give_monster_proper_name(mon);
+            give_monster_proper_name(*mon);
         return true;
     }
 
@@ -509,7 +574,7 @@ static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed
 
     // For high level orcs, there's a chance of being named.
     if (high_level && one_chance_in(5))
-        give_monster_proper_name(mon);
+        give_monster_proper_name(*mon);
 }
 
 // If you don't currently have any followers, send a small band to help
@@ -538,10 +603,10 @@ static void _beogh_blessing_reinforcements()
         else
             follower_type = RANDOM_ELEMENT(followers);
 
-        delayed_monster(
-                         mgen_data(follower_type, BEH_FRIENDLY, &you, 0, 0,
-                                   you.pos(), MHITYOU, MG_NONE, GOD_BEOGH),
-                         _beogh_reinf_callback);
+        delayed_monster(mgen_data(follower_type, BEH_FRIENDLY, you.pos(),
+                                   MHITYOU)
+                        .set_summoned(&you, 0, 0, GOD_BEOGH),
+                        _beogh_reinf_callback);
     }
 }
 
@@ -665,7 +730,8 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     }
 
     // ~15% chance of blessing armament (assume that most priest buffs fail)
-    if (blessing.empty() && (force || one_chance_in(7)))
+    if (blessing.empty() && mons_genus(follower->type) == MONS_ORC
+        && (force || one_chance_in(7)))
     {
         blessing = coinflip() ? _beogh_bless_weapon(follower)
                               : _beogh_bless_armour(follower);
@@ -674,7 +740,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     // If they got a good blessing (priesthood or equipment), maybe give them
     // a name.
     if (!blessing.empty())
-        give_monster_proper_name(follower);
+        give_monster_proper_name(*follower);
 
     // ~85% chance of trying to heal.
     if (blessing.empty())
@@ -734,7 +800,7 @@ static string _tso_bless_duration(monster* follower)
 static bool _tso_bless_follower(monster* follower, bool force)
 {
 
-    if (!follower || (!force && !is_follower(follower)))
+    if (!follower || (!force && !is_follower(*follower)))
         return false;
 
     string blessing = "";
@@ -748,6 +814,11 @@ static bool _tso_bless_follower(monster* follower, bool force)
 
     _display_god_blessing(follower, GOD_SHINING_ONE, blessing);
     return true;
+}
+
+static bool _is_friendly_follower(const monster& mon)
+{
+    return mon.friendly() && is_follower(mon);
 }
 
 // Bless the follower indicated in follower, if any. If there isn't
@@ -765,18 +836,18 @@ bool bless_follower(monster* follower,
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower.
     // XXX: factor out into another function?
-    if (!follower || (!force && !is_follower(follower)))
+    if (!follower || (!force && !is_follower(*follower)))
     {
         // Choose a random follower in LOS, preferably a named or
         // priestly one.
-        follower = choose_random_nearby_monster(0, is_follower,
+        follower = choose_random_nearby_monster(0, _is_friendly_follower,
                                                 god == GOD_BEOGH);
     }
 
     // Try *again*, on the entire level
     if (!follower)
     {
-        follower = choose_random_monster_on_level(0, is_follower,
+        follower = choose_random_monster_on_level(0, _is_friendly_follower,
                                                   god == GOD_BEOGH);
     }
 

@@ -42,10 +42,6 @@ Halfling
 Pieniä mutta kovapintaisia, he ovat hyviä linkojen kanssa. He pystyvät myös
 puolustautumaan mutaatioefekteiltä jonkin verran.
 %%%%
-High Elf
-
-Ylpeitä haltioita, jotka osaavat taikoa sekä taistella miekalla.
-%%%%
 Hill Orc
 
 Örkit ovat taitavia lähitaistelussa, mutta heikkoja taikuudessa. Useimpien

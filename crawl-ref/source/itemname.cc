@@ -25,6 +25,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "english.h"
+#include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
 #include "evoke.h"
 #include "food.h"
@@ -174,6 +175,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     monster_flags_t corpse_flags;
 
+    // no "a dragon scales"
+    const bool always_plural = armour_is_hide(*this)
+                               && sub_type != ARM_TROLL_LEATHER_ARMOUR;
+
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
          && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
                & MF_NAME_SPECIES)
@@ -196,7 +201,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             break;
         }
     }
-    else if (quantity > 1)
+    else if (quantity > 1 || always_plural)
     {
         switch (descrip)
         {
@@ -212,7 +217,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         }
 
         if (descrip != DESC_BASENAME && descrip != DESC_QUALNAME
-            && descrip != DESC_DBNAME)
+            && descrip != DESC_DBNAME && !always_plural)
         {
             if (quantity_in_words)
                 buff << number_in_words(quantity) << " ";
@@ -346,10 +351,12 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         = static_cast<special_missile_type>(item.brand);
     switch (brand)
     {
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_FLAME:
         return "flame";
     case SPMSL_FROST:
         return "frost";
+#endif
     case SPMSL_POISONED:
         return t == MBN_NAME ? "poisoned" : "poison";
     case SPMSL_CURARE:
@@ -596,13 +603,10 @@ static const char* _wand_type_name(int wandtype)
     {
     case WAND_FLAME:           return "flame";
     case WAND_SLOWING:         return "slowing";
-    case WAND_HASTING:         return "hasting";
-    case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_CONFUSION:       return "confusion";
     case WAND_DIGGING:         return "digging";
     case WAND_ICEBLAST:        return "iceblast";
-    case WAND_TELEPORTATION:   return "teleportation";
     case WAND_LIGHTNING:       return "lightning";
     case WAND_POLYMORPH:       return "polymorph";
     case WAND_ENSLAVEMENT:     return "enslavement";
@@ -745,7 +749,9 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_LOUDNESS:              return "loudness";
         case RING_TELEPORTATION:         return "teleportation";
         case RING_EVASION:               return "evasion";
+#if TAG_MAJOR_VERSION == 34
         case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
+#endif
         case RING_STEALTH:               return "stealth";
         case RING_DEXTERITY:             return "dexterity";
         case RING_INTELLIGENCE:          return "intelligence";
@@ -761,10 +767,10 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #endif
         case AMU_RAGE:              return "rage";
         case AMU_HARM:              return "harm";
-        case AMU_DISMISSAL:         return "dismissal";
         case AMU_MANA_REGENERATION: return "magic regeneration";
         case AMU_THE_GOURMAND:      return "gourmand";
 #if TAG_MAJOR_VERSION == 34
+        case AMU_DISMISSAL:         return "obsoleteness";
         case AMU_CONSERVATION:      return "conservation";
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
@@ -806,6 +812,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
         case AMU_REFLECTION:             return "Reflect";
+        case AMU_NOTHING:                return "";
         default: return "buggy";
         }
     }
@@ -1206,8 +1213,10 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
+#if TAG_MAJOR_VERSION == 34
         else if (sub_type == BOOK_AKASHIC_RECORD)
             return "Akashic Record";
+#endif
 
         return string("book of ") + _book_type_name(sub_type);
     }
@@ -1418,8 +1427,6 @@ static string _curse_prefix(const item_def &weap, description_level_type desc,
     if (weap.cursed())
         return "cursed ";
 
-    if (!Options.show_uncursed)
-        return "";
     // We don't bother printing "uncursed" if the item is identified
     // for pluses (its state should be obvious), this is so that
     // the weapon name is kept short (there isn't a lot of room
@@ -1680,7 +1687,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses)
+            else if (!know_pluses)
                 buff << "uncursed ";
 
         }
@@ -1694,14 +1701,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "enchanted ";
         }
 
-        // Don't list hides or QDA as +0.
-        if (know_pluses
-            && !((armour_is_hide(*this)
-                  || sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
-                 && plus == 0))
-        {
+        // Don't list QDA as +0.
+        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR)
             buff << make_stringf("%+d ", plus);
-        }
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
@@ -1788,9 +1790,20 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                  << " wand";
         }
 
-        if (know_pluses)
-            buff << " (" << charges << "/" << wand_max_charges(*this) << ")";
-        else if (!dbname && with_inscription)
+        if (dbname)
+            break;
+
+        if (know_type || know_pluses) // probably know_type is sufficient?
+        {
+            buff << " (";
+            if (know_pluses)
+                buff << charges;
+            else
+                buff << "?";
+            buff << "/" << wand_max_charges(*this) << ")";
+        }
+
+        if (!know_pluses && with_inscription)
         {
             if (used_count == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
@@ -1908,7 +1921,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && desc != DESC_PLAIN
+            else if (desc != DESC_PLAIN
                      && (!is_randart || !know_type)
                      && (!jewellery_has_pluses(*this) || !know_pluses)
                      // If the item is worn, its curse status is known,
@@ -2018,7 +2031,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             if (cursed())
                 buff << "cursed ";
-            else if (Options.show_uncursed && desc != DESC_PLAIN
+            else if (desc != DESC_PLAIN
                      && (!know_type || !is_artefact(*this)))
             {
                 buff << "uncursed ";
@@ -2061,12 +2074,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
-
-        if (item_typ == CORPSE_BODY && props.exists(MANGLED_CORPSE_KEY)
-            && !dbname)
-        {
-            buff << "mangled ";
-        }
 
         monster_flags_t name_flags;
         const string _name = get_corpse_name(*this, &name_flags);
@@ -2154,6 +2161,13 @@ bool item_type_has_ids(object_class_type base_type)
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
         || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS
         || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
+}
+
+bool item_brand_known(const item_def& item)
+{
+    return item_ident(item, ISFLAG_KNOW_TYPE)
+           || is_artefact(item)
+           && artefact_known_property(item, ARTP_BRAND);
 }
 
 bool item_type_known(const item_def& item)
@@ -2253,7 +2267,7 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify)
 
     // We identified something, maybe we identified other things by process of
     // elimination.
-    if (identify && !(you.dead || crawl_state.updating_scores))
+    if (identify && !(you.pending_revival || crawl_state.updating_scores))
         _maybe_identify_pack_item();
 
     return true;
@@ -2757,8 +2771,8 @@ void display_runes()
 
     if (!crawl_state.game_is_sprint())
     {
-        // Add the runes in branch order.
-        for (branch_iterator it; it; ++it)
+        // Add the runes in order of challenge (semi-arbitrary).
+        for (branch_iterator it(BRANCH_ITER_DANGER); it; ++it)
         {
             const branch_type br = it->id;
             if (!connected_branch_can_exist(br))
@@ -3175,19 +3189,6 @@ bool is_emergency_item(const item_def &item)
 
     switch (item.base_type)
     {
-    case OBJ_WANDS:
-        switch (item.sub_type)
-        {
-        case WAND_HASTING:
-            return !have_passive(passive_t::no_haste)
-                && you.species != SP_FORMICID;
-        case WAND_TELEPORTATION:
-            return you.species != SP_FORMICID;
-        case WAND_HEAL_WOUNDS:
-            return you.can_device_heal();
-        default:
-            return false;
-        }
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
@@ -3293,6 +3294,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case SCR_CURSE_JEWELLERY:
             return !have_passive(passive_t::want_curses);
 #endif
+        case SCR_NOISE:
+            return true;
         default:
             return false;
         }
@@ -3374,7 +3377,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
-        case SCR_NOISE:
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
@@ -3464,15 +3466,11 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_MISSILES:
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
-             || !you.num_turns
-                && you.char_class == JOB_TRANSMUTER)
-            && item.sub_type == MI_ARROW
+                || !you.num_turns && you.char_class == JOB_TRANSMUTER)
+                && item.sub_type == MI_ARROW
             || (you.has_spell(SPELL_SANDBLAST)
-                || !you.num_turns
-                   && you.char_class == JOB_EARTH_ELEMENTALIST)
-                && (item.sub_type == MI_STONE
-                    || item.sub_type == MI_LARGE_ROCK
-                       && you.could_wield(item, true, true)))
+                || !you.num_turns && you.char_class == JOB_EARTH_ELEMENTALIST)
+                && item.sub_type == MI_STONE)
         {
             return false;
         }
@@ -3537,6 +3535,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_RECHARGING:
             return player_mutation_level(MUT_NO_ARTIFICE) > 0;
+        case SCR_FOG:
+            return env.level_state & LSTATE_STILL_WINDS;
         default:
             return false;
         }
@@ -3547,24 +3547,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (item.sub_type == WAND_ENSLAVEMENT
             && item_type_known(item)
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
-        // heal wand is useless for VS if they can't get allies
-        if (item.sub_type == WAND_HEAL_WOUNDS
-            && item_type_known(item)
-            && !you.can_device_heal()
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
-        // haste wand is useless for Formicid if they can't get allies
-        if (item.sub_type == WAND_HASTING
-            && item_type_known(item)
-            && you.species == SP_FORMICID
             && player_mutation_level(MUT_NO_LOVE))
         {
             return true;
@@ -3710,9 +3692,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_STEALTH:
             return player_mutation_level(MUT_NO_STEALTH);
 
-        case RING_SUSTAIN_ATTRIBUTES:
-            return player_mutation_level(MUT_SUSTAIN_ATTRIBUTES);
-
         default:
             return false;
         }
@@ -3725,6 +3704,10 @@ bool is_useless_item(const item_def &item, bool temp)
         }
         switch (item.sub_type)
         {
+            case ROD_CLOUDS:
+                if (item_type_known(item))
+                    return env.level_state & LSTATE_STILL_WINDS;
+                break;
             case ROD_SHADOWS:
                 if (item_type_known(item))
                     return player_mutation_level(MUT_NO_LOVE);
@@ -3737,8 +3720,6 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_STAVES:
         if (you.species == SP_FELID)
             return true;
-        if (you_worship(GOD_TROG))
-            return true;
         if (!you.could_wield(item, true, !temp))
         {
             // Weapon is too large (or small) to be wielded and cannot
@@ -3747,7 +3728,16 @@ bool is_useless_item(const item_def &item, bool temp)
         }
         if (!item_type_known(item))
             return false;
-        break;
+
+        switch (item.sub_type)
+        {
+        case STAFF_WIZARDRY:
+        case STAFF_CONJURATION:
+        case STAFF_SUMMONING:
+            return you_worship(GOD_TROG);
+        }
+
+        return false;
 
     case OBJ_FOOD:
         if (item.sub_type == NUM_FOODS)
@@ -3843,8 +3833,7 @@ string item_prefix(const item_def &item, bool temp)
     else
         prefixes.push_back("unidentified");
 
-    // Sometimes this is abbreviated out of the item name, or suppressed
-    // by the show_uncursed option.
+    // Sometimes this is abbreviated out of the item name.
     if (item_type_has_curses(item.base_type)
         && item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed())
     {
@@ -3950,27 +3939,25 @@ string item_prefix(const item_def &item, bool temp)
     return result;
 }
 
-string get_menu_colour_prefix_tags(const item_def &item,
-                                   description_level_type desc)
+/**
+ * Return an item's name surrounded by colour tags, using menu colouring
+ *
+ * @param item The item being queried
+ * @param desc The description level to use for the name string
+ * @return A string containing the item's name surrounded by colour tags
+ */
+string menu_colour_item_name(const item_def &item, description_level_type desc)
 {
-    string cprf       = item_prefix(item);
-    string colour     = "";
-    string colour_off = "";
-    string item_name  = item.name(desc);
-    int col = menu_colour(item_name, cprf, "pickup");
+    const string cprf      = item_prefix(item);
+    const string item_name = item.name(desc);
 
-    if (col != -1)
-        colour = colour_to_str(col);
+    const int col = menu_colour(item_name, cprf, "pickup");
+    if (col == -1)
+        return item_name;
 
-    if (!colour.empty())
-    {
-        // Order is important here.
-        colour_off  = "</" + colour + ">";
-        colour      = "<" + colour + ">";
-        item_name = colour + item_name + colour_off;
-    }
-
-    return item_name;
+    const string colour = colour_to_str(col);
+    const char * const colour_z = colour.c_str();
+    return make_stringf("<%s>%s</%s>", colour_z, item_name.c_str(), colour_z);
 }
 
 typedef map<string, item_kind> item_names_map;
@@ -4055,7 +4042,7 @@ item_kind item_kind_by_name(const string &name)
                   { OBJ_UNASSIGNED, 0, 0, 0 });
 }
 
-vector<string> item_name_list_for_glyph(unsigned glyph)
+vector<string> item_name_list_for_glyph(char32_t glyph)
 {
     return lookup(item_names_by_glyph_cache, glyph, {});
 }

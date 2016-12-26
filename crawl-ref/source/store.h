@@ -247,34 +247,16 @@ protected:
 // make it homogeneous (which causes dynamic type checking) you have
 // to give a type to the hash table constructor; once it's been
 // created its type (or lack of type) is immutable.
-class CrawlHashTable
+class CrawlHashTable : public map<string, CrawlStoreValue>
 {
 public:
-    CrawlHashTable();
-    CrawlHashTable(const CrawlHashTable& other);
-
-    ~CrawlHashTable();
-
-    typedef map<string, CrawlStoreValue>  hash_map_type;
-    typedef hash_map_type::iterator       iterator;
-    typedef hash_map_type::const_iterator const_iterator;
-
-protected:
-    // NOTE: Not using auto_ptr because making hash_map an auto_ptr
-    // causes compile weirdness in externs.h
-    hash_map_type *hash_map;
-
-    void init_hash_map();
-
     friend class CrawlStoreValue;
-
-public:
-    CrawlHashTable &operator = (const CrawlHashTable &other);
 
     void write(writer &) const;
     void read(reader &);
 
     bool exists(const string &key) const;
+
     void assert_validity() const;
 
     // NOTE: If the const versions of get_value() or [] are given a
@@ -297,24 +279,9 @@ public:
     CrawlStoreValue& get_value(const string &key);
     CrawlStoreValue& get_value(const char *key)
     { return get_value(string(key)); }
-    CrawlStoreValue& operator[] (const string &key)
-    { return get_value(key); }
+    using map::operator[];
     CrawlStoreValue& operator[] (const char *key)
     { return get_value(string(key)); }
-
-    // std::map style interface
-    unsigned int size() const;
-    bool      empty() const;
-
-    void      erase(const string& key);
-    void      erase(const char *key) { erase(string(key)); }
-    void      clear();
-
-    const_iterator begin() const;
-    const_iterator end() const;
-
-    iterator  begin();
-    iterator  end();
 };
 
 // A CrawlVector is the vector version of CrawlHashTable, except that

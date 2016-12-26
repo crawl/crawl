@@ -476,6 +476,17 @@ vector<stash_search_result> Stash::matches_search(
     return results;
 }
 
+/// Fedhas: rot away all corpses.
+void Stash::rot_all_corpses()
+{
+    for (int i = items.size() - 1; i >= 0; i--)
+    {
+        item_def &item = items[i];
+        if (item.is_type(OBJ_CORPSES, CORPSE_BODY) && item.stash_freshness >= 0)
+            item.stash_freshness = -1;
+    }
+}
+
 void Stash::_update_corpses(int rot_time)
 {
     for (int i = items.size() - 1; i >= 0; i--)
@@ -935,6 +946,13 @@ void LevelStashes::get_matching_stashes(
             results.push_back(res);
         }
     }
+}
+
+/// Fedhas: rot away all corpses.
+void LevelStashes::rot_all_corpses()
+{
+    for (auto &entry : m_stashes)
+        entry.second.rot_all_corpses();
 }
 
 void LevelStashes::_update_corpses(int rot_time)
@@ -1516,7 +1534,7 @@ bool StashTracker::display_search_results(
     if (results_in.empty())
         return false;
 
-    vector<stash_search_result> * results = &results_in;
+    vector<stash_search_result> * results;
     vector<stash_search_result> results_filtered;
 
     if (filter_useless)

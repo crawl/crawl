@@ -419,8 +419,8 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
 
     if (target->is_monster())
     {
-        msg = do_mon_str_replacements(msg, target->as_monster(), S_SILENT);
-        if (!mons_has_body(target->as_monster()))
+        msg = do_mon_str_replacements(msg, *target->as_monster(), S_SILENT);
+        if (!mons_has_body(*target->as_monster()))
             msg = replace_all(msg, "'s body", "");
     }
 
@@ -631,8 +631,9 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
 
     if (cause.empty())
         cause = get_default_cause(true);
-    mgen_data data = mgen_data::hostile_at(what, cause, alert,
-                                           abj_deg, 0, target->pos(), MG_NONE, god);
+    mgen_data data = mgen_data::hostile_at(what, alert, target->pos());
+    data.set_summoned(nullptr, abj_deg, SPELL_NO_SPELL, god);
+    data.set_non_actor_summoner(cause);
 
     if (special_source != HELL_EFFECT_MISCAST)
         data.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -855,7 +856,7 @@ void MiscastEffect::_conjuration(int severity)
             beam.damage  = dice_def(3, 20);
             beam.name    = "explosion";
             beam.colour  = random_colour();
-            beam.ex_size = coinflip() ? 1 : 2;
+            beam.ex_size = random_range(1, 2);
 
             _explosion();
             break;
@@ -1668,7 +1669,7 @@ void MiscastEffect::_divination_you(int severity)
             }
             break;
         case 1:
-            if (lose_stat(STAT_INT, 3 + random2(3)))
+            if (lose_stat(STAT_INT, 1 + random2avg(5, 2)))
             {
                 if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
@@ -1689,7 +1690,7 @@ void MiscastEffect::_divination_you(int severity)
 void MiscastEffect::_divination_mon(int severity)
 {
     // Nothing is appropriate for unmoving plants.
-    if (mons_is_firewood(target->as_monster()))
+    if (mons_is_firewood(*target->as_monster()))
         return;
 
     switch (severity)
@@ -1977,7 +1978,7 @@ void MiscastEffect::_necromancy(int severity)
                 break;
 
         case 5:
-            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         }
         break;
@@ -2348,7 +2349,7 @@ void MiscastEffect::_fire(int severity)
             beam.damage  = dice_def(3, 20);
             beam.name    = "fireball";
             beam.colour  = RED;
-            beam.ex_size = coinflip() ? 1 : 2;
+            beam.ex_size = random_range(1, 2);
 
             _explosion();
             break;
@@ -3098,7 +3099,7 @@ void MiscastEffect::_zot()
     case 0:    // mainly explosions
         beam.name = "explosion";
         beam.damage = dice_def(3, 20);
-        beam.ex_size = coinflip() ? 1 : 2;
+        beam.ex_size = random_range(1, 2);
         beam.glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         switch (random2(7))
         {
@@ -3288,7 +3289,7 @@ void MiscastEffect::_zot()
                 do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
             break;
         case 11:
-            lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         case 12:
             mpr("An unnatural silence engulfs you.");

@@ -41,6 +41,8 @@
 #define HORROR_LVL_EXTREME  3
 #define HORROR_LVL_OVERWHELMING  5
 
+#define SEVERE_CONTAM_LEVEL 3
+
 /// Maximum stat value
 static const int MAX_STAT_VALUE = 125;
 /// The standard unit of regen; one level in artifact inscriptions
@@ -63,7 +65,7 @@ static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 class targetter;
 class Delay;
 
-int check_stealth();
+int player_stealth();
 
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
@@ -177,7 +179,7 @@ public:
     FixedVector<int, NUM_TIMERS> last_timer_effect;
     FixedVector<int, NUM_TIMERS> next_timer_effect;
 
-    bool dead; // ... but pending revival
+    bool pending_revival;
     int lives;
     int deaths;
 #if TAG_MAJOR_VERSION == 34
@@ -498,14 +500,13 @@ public:
     bool spellcasting_unholy() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster* mon, bool axe = false);
+    void add_beholder(const monster& mon, bool axe = false);
     bool beheld() const;
-    bool beheld_by(const monster* mon) const;
+    bool beheld_by(const monster& mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
-    void remove_beholder(const monster* mon);
+    void remove_beholder(const monster& mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
     bool possible_beholder(const monster* mon) const;
@@ -518,7 +519,6 @@ public:
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
@@ -630,7 +630,6 @@ public:
     string unarmed_attack_name() const;
 
     bool fumbles_attack() override;
-    bool cannot_fight() const override;
     bool fights_well_unarmed(int heavy_armour_penalty) override;
 
     void attacking(actor *other, bool ranged = false) override;
@@ -675,7 +674,7 @@ public:
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr) override;
-    void corrode_equipment(const char* corrosion_source = "the acid",
+    bool corrode_equipment(const char* corrosion_source = "the acid",
                            int degree = 1) override;
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
@@ -688,15 +687,15 @@ public:
 
     bool wont_attack() const override { return true; };
     mon_attitude_type temp_attitude() const override { return ATT_FRIENDLY; };
+    mon_attitude_type real_attitude() const override { return ATT_FRIENDLY; };
 
     monster_type mons_species(bool zombie_base = false) const override;
 
     mon_holy_type holiness(bool temp = true) const override;
     bool undead_or_demonic() const override;
-    bool holy_wrath_susceptible() const override;
     bool is_holy(bool spells = true) const override;
+    bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
-    bool is_artificial(bool temp = true) const override;
     bool is_unbreathing() const override;
     bool is_insubstantial() const override;
     int res_acid(bool calc_unid = true) const override;
@@ -709,7 +708,7 @@ public:
     int res_rotting(bool temp = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
-    int res_holy_energy(const actor *) const override;
+    int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     bool res_wind() const override;
@@ -725,7 +724,7 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
-    bool stasis(bool calc_unid = true, bool items = true) const override;
+    bool stasis() const override;
 
     bool airborne() const override;
     bool cancellable_flight() const;
@@ -756,15 +755,17 @@ public:
 
     bool asleep() const override;
     void put_to_sleep(actor *, int power = 0, bool hibernate = false) override;
-    void awake();
+    void awaken();
     void check_awaken(int disturbance) override;
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
+    bool can_sleep(bool holi_only = false) const override;
 
     int racial_ac(bool temp) const;
+    int base_ac(int scale) const;
     int armour_class(bool /*calc_unid*/ = true) const override;
     int gdr_perc() const override;
     int evasion(ev_ignore_type evit = EV_IGNORE_NONE,
@@ -772,7 +773,7 @@ public:
 
     int stat_hp() const override     { return hp; }
     int stat_maxhp() const override  { return hp_max; }
-    int stealth() const override     { return check_stealth(); }
+    int stealth() const override     { return player_stealth(); }
 
     bool shielded() const override;
     int shield_bonus() const override;
@@ -986,8 +987,7 @@ const int player_adjust_evoc_power(const int power, int enhancers = 0);
 int player_speed();
 
 int player_spell_levels();
-
-bool player_sust_attr(bool calc_unid = true);
+int player_total_spell_levels();
 
 int player_teleport(bool calc_unid = true);
 
@@ -1005,8 +1005,6 @@ void forget_map(bool rot = false);
 
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
-
-bool player_can_open_doors();
 
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
@@ -1050,10 +1048,13 @@ int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
 
 int get_contamination_level();
+bool player_severe_contamination();
 string describe_contamination(int level);
 
 bool sanguine_armour_valid();
 void activate_sanguine_armour();
+
+void refresh_weapon_protection();
 
 void set_mp(int new_amount);
 
@@ -1106,6 +1107,7 @@ void handle_player_drowning(int delay);
 // Determines if the given grid is dangerous for the player to enter.
 bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,
                        bool ignore_flight = false);
+void enable_emergency_flight();
 
 int count_worn_ego(int which_ego);
 bool need_expiration_warning(duration_type dur, dungeon_feature_type feat);

@@ -205,8 +205,8 @@ public:
     void found_feature(const coord_def &pos, dungeon_feature_type grid);
     void found_item(const coord_def &pos, const item_def &item);
 
-    // Reports discoveries and prompts the player to stop (if necessary).
-    bool prompt_stop() const;
+    // Reports discoveries and stops exploration (if necessary).
+    bool stop_explore() const;
 
 private:
     template <class Z> struct named_thing

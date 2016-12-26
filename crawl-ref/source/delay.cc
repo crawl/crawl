@@ -41,10 +41,10 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -184,42 +184,6 @@ bool MacroDelay::try_interrupt()
     return true;
     // There's no special action needed for macros - if we don't call out
     // to the Lua function, it can't do damage.
-}
-
-static void _interrupt_vampire_feeding(item_def& corpse, int dur)
-{
-    mpr("You stop draining the corpse.");
-
-    _xom_check_corpse_waste();
-
-    // Don't skeletonize a corpse if it's no longer there!
-    if (corpse.defined() && corpse.is_type(OBJ_CORPSES, CORPSE_BODY)
-        && corpse.pos == you.pos())
-    {
-        const item_def old_corpse = corpse;
-
-        mpr("All the blood oozes out of the corpse!");
-
-        bleed_onto_floor(you.pos(), corpse.mon_type, dur, false);
-
-        if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-            turn_corpse_into_skeleton(corpse);
-        else
-            dec_mitm_item_quantity(corpse.index(), 1);
-
-        maybe_drop_monster_hide(old_corpse);
-
-        if (mons_genus(old_corpse.mon_type) == MONS_ORC)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-        if (mons_class_holiness(old_corpse.mon_type) & MH_HOLY)
-            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
-    }
-}
-
-bool FeedVampireDelay::try_interrupt()
-{
-    _interrupt_vampire_feeding(corpse, duration);
-    return true;
 }
 
 bool EatDelay::try_interrupt()
@@ -480,7 +444,8 @@ static bool _auto_eat()
 {
     return Options.auto_eat_chunks
            && Options.autopickup_on > 0
-           && (!you.gourmand()
+           && (player_likes_chunks(true)
+               || !you.gourmand()
                || you.duration[DUR_GOURMAND] >= GOURMAND_MAX / 4
                || you.hunger_state < HS_SATIATED);
 }
@@ -604,9 +569,9 @@ void MacroDelay::handle()
     {
         dprf("Expiring macro delay on turn: %d", you.num_turns);
         stop_delay();
-        return;
     }
-    run_macro();
+    else
+        run_macro();
 
     // Macros may not use up turns, but unless we zero time_taken,
     // main.cc will call world_reacts and increase turn count.
@@ -614,39 +579,11 @@ void MacroDelay::handle()
         you.time_taken = 0;
 }
 
-bool FeedVampireDelay::invalidated()
-{
-    // Vampires stop feeding if ...
-    // * engorged ("alive")
-    // * bat form runs out due to becoming full
-    // * corpse disappears for some reason (e.g. animated by a monster)
-    if (!corpse.defined()                                     // missing
-        || corpse.base_type != OBJ_CORPSES                    // noncorpse
-        || corpse.pos != you.pos()                            // elsewhere
-        || you.hunger_state == HS_ENGORGED
-        || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT)
-    {
-        // Messages handled in _food_change() in food.cc.
-        _interrupt_vampire_feeding(corpse, duration);
-        return true;
-    }
-    else if (corpse.is_type(OBJ_CORPSES, CORPSE_SKELETON))
-    {
-        mprf("The corpse has rotted away into a skeleton before "
-             "you could finish drinking it!");
-        _interrupt_vampire_feeding(corpse, duration);
-        return true;
-    }
-
-    return false;
-}
-
 bool EatDelay::invalidated()
 {
     // Stop eating if something happens (chunk rots, you get teleported,
     // you get polymorphed into a lich, etc.)
-    if (food.base_type != OBJ_FOOD
-        || !can_eat(food, true)
+    if (!can_eat(food, true)
         || !in_inventory(food) && food.pos != you.pos())
     {
         mpr("You stop eating.");
@@ -723,12 +660,6 @@ bool BlurryScrollDelay::invalidated()
     return false;
 }
 
-void FeedVampireDelay::tick()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
-    vampire_nutrition_per_turn(corpse, 0);
-}
-
 void MultidropDelay::tick()
 {
     if (!drop_item(items[0].slot, items[0].quantity))
@@ -803,24 +734,21 @@ void handle_delay()
 
 void JewelleryOnDelay::finish()
 {
-    // recheck stasis here, since our condition may have changed since
-    // starting the amulet swap process
-    // just breaking here is okay because swapping jewellery is a one-turn
-    // action, so conceptually there is nothing to interrupt - in other
-    // words, this is equivalent to if the user took off the previous
-    // amulet and was slowed before putting the amulet of stasis on as a
-    // separate action on the next turn
+    // Recheck -Tele here, since our condition may have changed since starting
+    // the amulet swap process.
+    // Just breaking here is okay because swapping jewellery is a one-turn
+    // action, so conceptually there is nothing to interrupt - in other words,
+    // this is equivalent to if the user took off the previous amulet and was
+    // affected by tele other before putting the -Tele amulet on as a separate
+    // action on the next turn.
     // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
     if (!crawl_state.disables[DIS_CONFIRMATIONS]
-        && nasty_stasis(jewellery, OPER_PUTON)
+        && needs_notele_warning(jewellery, OPER_PUTON)
         && item_ident(jewellery, ISFLAG_KNOW_TYPE))
     {
         string prompt = "Really put on ";
         prompt += jewellery.name(DESC_INVENTORY);
-        prompt += string(" while ")
-                  + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                     you.duration[DUR_SLOW] ? "slowed" : "hasted");
-        prompt += "?";
+        prompt += " while about to teleport?";
         if (!yesno(prompt.c_str(), false, 'n'))
             return;
     }
@@ -868,30 +796,6 @@ void EatDelay::finish()
     if (food_turns(food) > 1) // If duration was just one turn, don't print.
         mpr("You finish eating.");
     finish_eating_item(food);
-}
-
-void FeedVampireDelay::finish()
-{
-    mpr("You finish drinking.");
-
-    vampire_nutrition_per_turn(corpse, 1);
-
-    const item_def old_corpse = corpse;
-
-    if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-    {
-        turn_corpse_into_skeleton(corpse);
-        item_check();
-    }
-    else
-        dec_mitm_item_quantity(corpse.index(), 1);
-
-    maybe_drop_monster_hide(old_corpse);
-
-    if (mons_genus(old_corpse.mon_type) == MONS_ORC)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    if (mons_class_holiness(corpse.mon_type) & MH_HOLY)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 }
 
 void MemoriseDelay::finish()
@@ -1159,26 +1063,30 @@ static string _abyss_monster_creation_message(const monster* mon)
                           : " pops from nullspace!";
     }
 
-    return make_stringf(
-        random_choose_weighted(
-            17, " appears in a shower of translocational energy.",
-            34, " appears in a shower of sparks.",
-            45, " materialises.",
-            13, " emerges from chaos.",
-            26, " emerges from the beyond.",
-            33, " assembles %s!",
-             9, " erupts from nowhere!",
-            18, " bursts from nowhere!",
-             7, " is cast out of space!",
-            14, " is cast out of reality!",
-             5, " coalesces out of pure chaos.",
-            10, " coalesces out of seething chaos.",
-             2, " punctures the fabric of time!",
-             7, " punctures the fabric of the universe.",
-             3, " manifests%2$s!%1$.0s",
-             0),
-        mon->pronoun(PRONOUN_REFLEXIVE).c_str(),
-        silenced(you.pos()) ? "" : " with a bang");
+    // You may ask: "Why these weights?" So would I!
+    const vector<pair<string, int>> messages = {
+        { " appears in a shower of translocational energy.", 17 },
+        { " appears in a shower of sparks.", 34 },
+        { " materialises.", 45 },
+        { " emerges from chaos.", 13 },
+        { " emerges from the beyond.", 26 },
+        { make_stringf(" assembles %s!",
+                       mon->pronoun(PRONOUN_REFLEXIVE).c_str()), 33 },
+        { " erupts from nowhere.", 9 },
+        { " bursts from nowhere.", 18 },
+        { " is cast out of space.", 7 },
+        { " is cast out of reality.", 14 },
+        { " coalesces out of pure chaos.", 5 },
+        { " coalesces out of seething chaos.", 10 },
+        { " punctures the fabric of time!", 2 },
+        { " punctures the fabric of the universe.", 7 },
+        { make_stringf(" manifests%s!",
+                       silenced(you.pos()) ? "" : " with a bang"), 3 },
+
+
+    };
+
+    return *random_choose_weighted(messages);
 }
 
 static inline bool _monster_warning(activity_interrupt_type ai,
@@ -1246,9 +1154,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
-            if (mons_primary_habitat(mon) == HT_LAVA)
+            if (mons_primary_habitat(*mon) == HT_LAVA)
                 text += "lava";
-            else if (mons_primary_habitat(mon) == HT_WATER)
+            else if (mons_primary_habitat(*mon) == HT_WATER)
                 text += "water";
             else
                 text += "realm of bugdom";
@@ -1280,7 +1188,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             ASSERT(!ash_id);
             zin_id = true;
             mon->props["zin_id"] = true;
-            discover_shifter(mon);
+            discover_shifter(*mon);
             god_warning = uppercase_first(god_name(you.religion))
                           + " warns you: "
                           + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))

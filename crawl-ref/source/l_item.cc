@@ -818,6 +818,16 @@ IDEF(is_in_shop)
     return 1;
 }
 
+IDEF(inscription)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushstring(ls, item->inscription.c_str());
+
+    return 1;
+}
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1335,6 +1345,7 @@ static ItemAccessor item_attrs[] =
     { "ac",                l_item_ac },
     { "encumbrance",       l_item_encumbrance },
     { "is_in_shop",        l_item_is_in_shop },
+    { "inscription",       l_item_inscription },
 
     // dlua only past this point
     { "pluses",            l_item_pluses },

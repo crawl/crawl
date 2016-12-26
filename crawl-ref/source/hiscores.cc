@@ -1334,7 +1334,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (death || you.can_see(*mons))
             death_source_name = mons->full_name(desc);
 
-        if (mons_is_player_shadow(mons))
+        if (mons_is_player_shadow(*mons))
             death_source_name = "their own shadow"; // heh
 
         if (mons->mid == MID_YOU_FAULTLESS)
@@ -2524,7 +2524,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         break;
 
     case KILLED_BY_BARBS:
-        desc += terse ? "barbs" : "Succumbed to a manticore's barbed spikes";
+        desc += terse ? "barbs" : "Succumbed to barbed spike wounds";
         break;
 
     case KILLED_BY_BEING_THROWN:

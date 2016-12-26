@@ -8,25 +8,17 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local to_feat
-  if you.god() == "Jiyva" and you.one_time_ability_used() then
-    to_feat = "floor"
-  else
-    to_feat = "clear_rock_wall"
-  end
-
-  local seen = dgn.seen_replace_feat("stone_wall", to_feat)
-        seen = dgn.seen_replace_feat("clear_stone_wall", to_feat) or seen
+  local seen = dgn.seen_destroy_feat("clear_stone_wall")
 
   if you.god() == "Jiyva" and you.piety_rank() >= 6 then
     if you.silenced() then
-        crawl.mpr("An unexplained breeze blows through the dungeon.", "god")
+        crawl.mpr("You feel a strange vibration for a moment.", "god")
     else
         crawl.mpr("You hear the sound of toppling stones.", "god")
     end
   else
     if seen then
-        crawl.mpr("Suddenly, the colour oozes out of the stone walls.",
+        crawl.mpr("The stone walls suddenly crumble and collapse.",
                   "monster_enchant")
     else
         crawl.mpr("You feel a strange vibration for a moment.",
@@ -276,8 +268,8 @@ TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   Slime, !Slime:$
 WEIGHT:  1
 KMONS:   1 = slime creature w:30 / nothing w:2
-KMONS:   2 = shining eye / giant eyeball / eye of devastation w:5 / \
-             great orb of eyes / giant orange brain / random w:1
+KMONS:   2 = shining eye / floating eye / eye of devastation w:5 / \
+             great orb of eyes / glowing orange brain / random w:1
 KFEAT:   2 = alarm trap / . w:30
 SHUFFLE: AB, CD, EF, GH, ab
 SUBST:   ACEG = ', BDFH = x, 0 = 0 ':4, ab = 0XX
@@ -715,7 +707,8 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 : lua_marker("Z", fixup_marker)
 
 {{
-    set_feature_name("stone_wall", "rune carved stone wall")
+    set_feature_name("stone_wall", "rune-carved stone wall")
+    set_feature_name("clear_stone_wall", "rune-carved clear stone wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -745,16 +738,16 @@ xxxxxxxxxxxxx'x.................."cccc2ccccc".................'xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'.'................"cc*cc..cc*cc".................''xxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx''..............."cc*|P|*c4cc*|P|*cc"...............'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
-xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
-xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
-xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
-xxxxxxxxxxx'..................2.c.4.c..Z.c.4.c.2....................'xxxxxxxxxxx
-xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
-xxxxxxxxx'..................."cc*|P|*c4cc*|P|*cc"..................'xxxxxxxxxxxx
+xxxxxxxxxxxx''..............."cc*|P|*n4nn*|P|*cc"...............'xxxxxxxxxxxxxxx
+xxxxxxxxxxxx'................"cc**|*nn..nn*|**cc"................'''xxxxxxxxxxxx
+xxxxxxxxxxxx'................"ccc**n|nn4n|n**ccc"..................xxxxxxxxxxxxx
+xxxxxxxxxxx'................."ccccnnnn.3nnnncccc"..................'xxxxxxxxxxxx
+xxxxxxxxxxx'................."c.4.n.4.1..4.n.4.c"..................''xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.n..Z.n.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxx'..........)......."ccccnnnn3.nnnncccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."ccc**n|nn4n|n**ccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."cc**|*nn..nn*|**cc"..................'xxxxxxxxxxxx
+xxxxxxxxx'..................."cc*|P|*n4nn*|P|*cc"..................'xxxxxxxxxxxx
 xxxxxxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxxxxxxxx
 xxxxxxxxxxx'..................."cc***cc4c***cc"...................'xxxxxxxxxxxxx
 xxxxxxxxxxxx'..................."cc*cc..cc*cc"....................'xxxxxxxxxxxxx

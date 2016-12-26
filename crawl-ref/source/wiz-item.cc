@@ -92,8 +92,8 @@ void wizard_create_spec_object_by_name()
 
 void wizard_create_spec_object()
 {
-    char           specs[80];
-    ucs_t          keyin;
+    char specs[80];
+    char32_t keyin;
     object_class_type class_wanted;
 
     do
@@ -345,6 +345,40 @@ static void _tweak_randart(item_def &item)
                              val);
         break;
     }
+
+    case ARTP_VAL_BRAND:
+    {
+        mprf(MSGCH_PROMPT, "%s was %s.", artp_name(prop),
+             props[prop] ? ego_type_string(item, false).c_str() : "normal");
+
+        char specs[80];
+        msgwin_get_line("New ego? ", specs, sizeof(specs));
+        if (specs[0] == '\0')
+        {
+            canned_msg(MSG_OK);
+            break;
+        }
+
+        const int ego = str_to_ego(item.base_type, specs);
+
+        if (ego == 0 && string(specs) != "normal") // this is secretly a hack
+        {
+            mprf("No such ego as: %s", specs);
+            break;
+        }
+        if (ego == -1)
+        {
+            mprf("Ego '%s' is invalid for %s.",
+                 specs, item.name(DESC_A).c_str());
+            break;
+        }
+
+        // XXX: validate ego further? (is_weapon_brand_ok etc)
+
+        artefact_set_property(item, static_cast<artefact_prop_type>(prop),
+                              ego);
+        break;
+    }
     }
 }
 
@@ -479,18 +513,21 @@ static bool _make_book_randart(item_def &book)
     return true;
 }
 
-void wizard_value_artefact()
+/// Prompt for an item in inventory & print its base shop value.
+void wizard_value_item()
 {
-    int i = prompt_invent_item("Value of which artefact?", MT_INVLIST, -1);
+    const int i = prompt_invent_item("Value of which item?", MT_INVLIST, -1);
 
-    if (!prompt_failed(i))
-    {
-        const item_def& item(you.inv[i]);
-        if (!is_artefact(item))
-            mpr("That item is not an artefact!");
-        else
-            mpr(debug_art_val_str(item));
-    }
+    if (prompt_failed(i))
+        return;
+
+    const item_def& item(you.inv[i]);
+    const int real_value = item_value(item, true);
+    const int known_value = item_value(item, false);
+    if (real_value != known_value)
+        mprf("Real value: %d (known: %d)", real_value, known_value);
+    else
+        mprf("Value: %d", real_value);
 }
 
 void wizard_create_all_artefacts()
@@ -1454,7 +1491,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FOG",
 #endif
         "ARTP_REGENERATION",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_SUSTAT",
+#endif
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",
@@ -1463,7 +1502,7 @@ static void _debug_rap_stats(FILE *ostat)
 #endif
         "ARTP_CORRODE",
         "ARTP_DRAIN",
-        "ARTP_CONFUSE",
+        "ARTP_SLOW",
         "ARTP_FRAGILE",
         "ARTP_SHIELDING",
     };

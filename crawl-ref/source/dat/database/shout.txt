@@ -182,14 +182,6 @@ SOUND:You hear a roar.
 
 SOUND:You hear a low.
 %%%%
-__RUMBLE seen
-
-SOUND:@The_monster@ rumbles deeply!
-%%%%
-__RUMBLE unseen
-
-SOUND:You hear a deep rumbling!
-%%%%
 __LOUD_ROAR unseen
 
 SOUND:You hear a deafening roar!
@@ -328,7 +320,7 @@ VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 # Shouts for specific monsters
 ########################################
 %%%%
-giant spore
+ballistomycete spore
 
 VISUAL:@The_monster@ waves @possessive@ rhizomes.
 %%%%

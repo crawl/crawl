@@ -236,7 +236,7 @@ eveningstar
 
 Lo contrario del lucero del alba.
 %%%%
-fire dragon armour
+fire dragon scales
 
 Una armadura mágica confeccionada a partir de las escamas de un dragón que
 exhalaba fuego. Proporciona gran protección contra los efectos del fuego, pero
@@ -257,7 +257,7 @@ glaive
 
 Una garrocha con una enorme y pesada cuchilla en su extremo.
 %%%%
-gold dragon armour
+gold dragon scales
 
 Una armadura mágica elaborada a partir de las escamas de un dragón dorado. Es
 muy pesado y aparatoso, pero proporciona gran protección contra el fuego, el
@@ -363,7 +363,7 @@ pair of gloves
 
 Un par de guantes.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 Una armadura mágica elaborada a partir de las fuertes y flexibles escamas de un
 dragón nacarado. Proporciona protección contra la energía negativa.
@@ -490,11 +490,6 @@ ring of strength
 
 Este anillo aumenta o disminuye la fuerza física de su portador, en un grado
 que depende de su poder.
-%%%%
-ring of sustain attributes
-
-Este anillo protege a su portador ante la pérdida de su fuerza, destreza e
-inteligencia.
 %%%%
 ring of teleportation
 

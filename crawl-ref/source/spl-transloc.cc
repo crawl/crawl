@@ -19,6 +19,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "english.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -27,11 +28,12 @@
 #include "losparam.h"
 #include "message.h"
 #include "mgen_data.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
 #include "prompt.h"
@@ -66,7 +68,7 @@ spret_type cast_disjunction(int pow, bool fail)
     you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
-    contaminate_player(1000, true);
+    contaminate_player(750 + random2(500), true);
     disjunction();
     return SPRET_SUCCESS;
 }
@@ -154,7 +156,6 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel)
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
-    args.may_target_monster = false;
     args.top_prompt = "Blink to where?";
     dist beam;
     direction(beam, args);
@@ -235,7 +236,6 @@ void wizard_blink()
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
-    args.may_target_monster = false;
     args.top_prompt = "Blink to where?";
     dist beam;
     direction(beam, args);
@@ -312,7 +312,7 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
     _place_tloc_cloud(you.pos());
     move_player_to_grid(target, false);
     // Controlling teleport contaminates the player. -- bwr
-    contaminate_player(1000, true);
+    contaminate_player(750 + random2(500), true);
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -362,7 +362,7 @@ spret_type cast_controlled_blink(bool fail, bool safe)
         return SPRET_ABORT;
     }
 
-    if (player_has_orb())
+    if (orb_limits_translocation())
     {
         if (!yesno("Your blink will be uncontrolled - continue anyway?",
                    false, 'n'))
@@ -399,7 +399,7 @@ void you_teleport()
             mpr("You feel the power of the Abyss delaying your translocation!");
             teleport_delay += 5 + random2(10);
         }
-        else if (player_has_orb())
+        else if (orb_limits_translocation())
         {
             mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
             teleport_delay += 5 + random2(5);
@@ -559,7 +559,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         {
             int mons_near_target = 0;
             for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
-                if (mons_is_threatening(*mi) && mons_attitude(*mi) == ATT_HOSTILE)
+                if (mons_is_threatening(**mi) && mons_attitude(**mi) == ATT_HOSTILE)
                     mons_near_target++;
             if (!mons_near_target)
             {
@@ -594,6 +594,7 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         _place_tloc_cloud(old_pos);
 
         move_player_to_grid(newpos, false);
+        stop_delay(true);
     }
 
     _handle_teleport_update(large_change, old_pos);
@@ -675,10 +676,8 @@ void you_teleport_now(bool wizard_tele, bool teleportitis)
     // the player is in the Abyss and teleported to escape from all the
     // monsters chasing him/her, since in that case the new dangerous area is
     // almost certainly *less* dangerous than the old dangerous area.
-    // Teleporting in a labyrinth is also funny.
-    if (randtele
-        && (player_in_branch(BRANCH_LABYRINTH)
-            || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
+    if (randtele && !player_in_branch(BRANCH_ABYSS)
+        && player_in_a_dangerous_place())
     {
         xom_is_stimulated(200);
     }
@@ -769,9 +768,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
             mons->del_ench(ENCH_HELD, true);
     }
 
-    // Heavy items require more power to apport directly to your feet.
-    // They might end up just moving a few squares, depending on spell
-    // power and item mass.
     beam.is_tracer = true;
     beam.aimed_at_spot = true;
     beam.affects_nothing = true;
@@ -790,9 +786,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
     int location_on_path = max(-1, dist - max_dist);
-    // Don't move mimics under you.
-    if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
-        location_on_path = 0;
     coord_def new_spot;
     if (location_on_path == -1)
         new_spot = you.pos();
@@ -827,6 +820,12 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
 spret_type cast_golubrias_passage(const coord_def& where, bool fail)
 {
+    if (orb_limits_translocation())
+    {
+        mprf(MSGCH_ORB, "The Orb prevents you from opening a passage!");
+        return SPRET_ABORT;
+    }
+
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
@@ -892,31 +891,28 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _disperse_monster(monster* mon, int pow)
+static int _disperse_monster(monster& mon, int pow)
 {
-    if (!mon)
-        return 0;
+    if (mon.no_tele())
+        return false;
 
-    if (mon->no_tele())
-        return 0;
-
-    if (mon->check_res_magic(pow) > 0)
-        monster_blink(mon);
+    if (mon.check_res_magic(pow) > 0)
+        monster_blink(&mon);
     else
-        monster_teleport(mon, true);
+        monster_teleport(&mon, true);
 
     // Moving the monster may have killed it in apply_location_effects.
-    if (mon->alive() && mon->check_res_magic(pow) <= 0)
-        mon->confuse(&you, 1 + random2avg(pow / 10, 2));
+    if (mon.alive() && mon.check_res_magic(pow) <= 0)
+        mon.confuse(&you, 1 + random2avg(pow / 10, 2));
 
-    return 1;
+    return true;
 }
 
 spret_type cast_dispersal(int pow, bool fail)
 {
     fail_check();
     const int radius = spell_range(SPELL_DISPERSAL, pow);
-    if (!apply_monsters_around_square([pow] (monster* mon) {
+    if (!apply_monsters_around_square([pow] (monster& mon) {
             return _disperse_monster(mon, pow);
         }, you.pos(), radius))
     {
@@ -1026,4 +1022,62 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
                                    : "empty space");
     fatal_attraction(where, &you, pow);
     return SPRET_SUCCESS;
+}
+
+/**
+ * Where is the closest point along the given path to its source that the given
+ * actor can be moved to?
+ *
+ * @param beckoned      The actor to be moved.
+ * @param path          The path for the actor to be moved along
+ * @return              The closest point for the actor to be moved to;
+ *                      guaranteed to be on the path or its original location.
+ */
+static coord_def _beckon_destination(const actor &beckoned, const bolt &path)
+{
+    if (beckoned.is_stationary()  // don't move statues, etc
+        || mons_is_tentacle_or_tentacle_segment(beckoned.type)) // a mess...
+    {
+        return beckoned.pos();
+    }
+
+    for (coord_def pos : path.path_taken)
+    {
+        if (actor_at(pos) || !beckoned.is_habitable(pos))
+            continue; // actor could be caster, or a bush
+
+        return pos;
+    }
+
+    return beckoned.pos(); // failed to find any point along the path
+}
+
+/**
+ * Attempt to move the beckoned creature to the spot on the path closest to its
+ * beginning (that is, to the caster of the effect). Also handles some
+ * messaging.
+ *
+ * @param beckoned  The creature being moved.
+ * @param path      The path to move the creature along.
+ * @return          Whether the beckoned creature actually moved.
+ */
+bool beckon(actor &beckoned, const bolt &path)
+{
+    const coord_def dest = _beckon_destination(beckoned, path);
+    if (dest == beckoned.pos())
+        return false;
+
+    const coord_def old_pos = beckoned.pos();
+    if (!beckoned.move_to_pos(dest))
+        return false;
+
+    mprf("%s %s suddenly forward!",
+         beckoned.name(DESC_THE).c_str(),
+         beckoned.conj_verb("hurl").c_str());
+
+    beckoned.apply_location_effects(old_pos); // traps, etc.
+    if (beckoned.is_monster())
+        mons_relocated(beckoned.as_monster()); // cleanup tentacle segments
+
+    return true;
 }

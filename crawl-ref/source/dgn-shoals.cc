@@ -441,11 +441,9 @@ static coord_def _shoals_pick_region(
 
 static void _shoals_make_plant_at(coord_def p)
 {
-    if (shoals_plant_quota > 0)
+    if (shoals_plant_quota > 0) // a bad person could post-decrement here...
     {
-        // [ds] Why is hostile_at() saddled with unnecessary parameters
-        // related to summoning?
-        mons_place(mgen_data::hostile_at(MONS_PLANT, "", false, 0, 0, p));
+        mons_place(mgen_data::hostile_at(MONS_PLANT, false, p));
         --shoals_plant_quota;
     }
 }

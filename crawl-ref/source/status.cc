@@ -14,6 +14,7 @@
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
+#include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
@@ -647,12 +648,25 @@ bool fill_status_info(int status, status_info* inf)
     {
         if (player_has_orb())
         {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text = "Orb";
+        }
+        else if (orb_limits_translocation())
+        {
             inf->light_colour = MAGENTA;
             inf->light_text = "Orb";
         }
 
         break;
     }
+
+    case STATUS_STILL_WINDS:
+        if (env.level_state & LSTATE_STILL_WINDS)
+        {
+            inf->light_colour = BROWN;
+            inf->light_text = "-Clouds";
+        }
+        break;
 
     default:
         if (!found)
@@ -676,7 +690,7 @@ static void _describe_hunger(status_info* inf)
     switch (you.hunger_state)
     {
     case HS_ENGORGED:
-        inf->light_colour = LIGHTGREEN;
+        inf->light_colour = (vamp ? GREEN : LIGHTGREEN);
         inf->light_text   = (vamp ? "Alive" : "Engorged");
         break;
     case HS_VERY_FULL:
@@ -722,9 +736,15 @@ static void _describe_glow(status_info* inf)
         return;
 
     const unsigned int cont = signed_cont; // so we don't get compiler warnings
-    inf->light_colour = DARKGREY;
-    if (cont > 1)
-        inf->light_colour = _bad_ench_colour(cont, 3, 4);
+    if (player_severe_contamination())
+    {
+        inf->light_colour = _bad_ench_colour(cont, SEVERE_CONTAM_LEVEL + 1,
+                                                   SEVERE_CONTAM_LEVEL + 2);
+    }
+    else if (cont > 1)
+        inf->light_colour = LIGHTGREY;
+    else
+        inf->light_colour = DARKGREY;
 #if TAG_MAJOR_VERSION == 34
     if (cont > 1 || you.species != SP_DJINNI)
 #endif
@@ -735,6 +755,7 @@ static void _describe_glow(status_info* inf)
     {
         "",
         "very slightly ",
+        "slightly ",
         "",
         "heavily ",
         "very heavily ",
@@ -795,10 +816,8 @@ static void _describe_regen(status_info* inf)
 
         if (you.hunger_state < HS_SATIATED)
             inf->short_text += " slowly";
-        else if (you.hunger_state < HS_ENGORGED)
-            inf->short_text += " quickly";
         else
-            inf->short_text += " very quickly";
+            inf->short_text += " quickly";
     }
 }
 

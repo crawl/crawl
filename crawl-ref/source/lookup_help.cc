@@ -50,7 +50,7 @@
 #include "viewchar.h"
 
 
-typedef vector<string> (*keys_by_glyph)(ucs_t showchar);
+typedef vector<string> (*keys_by_glyph)(char32_t showchar);
 typedef vector<string> (*simple_key_list)();
 typedef void (*db_keys_recap)(vector<string>&);
 typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
@@ -298,7 +298,7 @@ static vector<string> _get_desc_keys(string regex, db_find_filter filter)
     return all_matches;
 }
 
-static vector<string> _get_monster_keys(ucs_t showchar)
+static vector<string> _get_monster_keys(char32_t showchar)
 {
     vector<string> mon_keys;
 
@@ -315,7 +315,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
         if (me->mc != i)
             continue;
 
-        if ((ucs_t)me->basechar != showchar)
+        if ((char32_t)me->basechar != showchar)
             continue;
 
         if (mons_species(i) == MONS_SERPENT_OF_HELL)
@@ -342,7 +342,9 @@ static vector<string> _get_god_keys()
     for (int i = GOD_NO_GOD + 1; i < NUM_GODS; i++)
     {
         god_type which_god = static_cast<god_type>(i);
-        names.push_back(god_name(which_god));
+        // XXX: currently disabled.
+        if (which_god != GOD_PAKELLAS)
+            names.push_back(god_name(which_god));
     }
 
     return names;
@@ -1234,32 +1236,6 @@ static string _branch_subbranches(branch_type br)
     return desc;
 }
 
-static string _branch_noise(branch_type br)
-{
-    string desc;
-    const int noise = branches[br].ambient_noise;
-    if (noise != 0)
-    {
-        desc = "\n\nThis branch is ";
-        if (noise > 0)
-        {
-            desc += make_stringf("filled with %snoise, and thus all sounds "
-                                 "travel %sless far.",
-                                 noise > 5 ? "deafening " : "",
-                                 noise > 5 ? "much " : "");
-        }
-        else
-        {
-            desc += make_stringf("%s, and thus all sounds travel %sfurther.",
-                                 noise < -5 ? "unnaturally silent"
-                                            : "very quiet",
-                                 noise < -5 ? "much " : "");
-        }
-    }
-
-    return desc;
-}
-
 /**
  * Describe the branch with the given name.
  *
@@ -1275,13 +1251,17 @@ static int _describe_branch(const string &key, const string &suffix,
     const branch_type branch = branch_by_shortname(branch_name);
     ASSERT(branch != NUM_BRANCHES);
 
-    const string info  = _branch_noise(branch)
-                         + _branch_location(branch)
-                         + _branch_entry_runes(branch)
-                         + _branch_depth(branch)
-                         + _branch_subbranches(branch)
-                         + "\n\n"
-                         + branch_rune_desc(branch, false);
+    string info = "";
+    const string noise_desc = branch_noise_desc(branch);
+    if (!noise_desc.empty())
+        info += "\n\n" + noise_desc;
+
+    info += _branch_location(branch)
+            + _branch_entry_runes(branch)
+            + _branch_depth(branch)
+            + _branch_subbranches(branch)
+            + "\n\n"
+            + branch_rune_desc(branch, false);
 
     return _describe_key(key, suffix, footer, info);
 }

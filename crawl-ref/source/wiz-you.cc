@@ -35,6 +35,7 @@
 #include "stringutil.h"
 #include "transform.h"
 #include "unicode.h"
+#include "unwind.h"
 #include "view.h"
 #include "xom.h"
 
@@ -329,6 +330,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
         you.duration[DUR_DOOM_HOWL] = 0;
+        you.duration[DUR_WEAK] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         while (delete_temp_mutation());
@@ -462,6 +464,25 @@ void wizard_set_piety_to(int newpiety, bool force)
         dec_penance(you.penance[you.religion]);
 }
 
+void wizard_set_gold()
+{
+    const int default_gold = you.gold + 1000;
+    mprf(MSGCH_PROMPT, "Enter new gold value (current = %d, Enter for %d): ",
+         you.gold, default_gold);
+
+    char buf[30];
+    if (cancellable_get_line_autohist(buf, sizeof buf))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    if (buf[0] == '\0')
+        you.gold = default_gold;
+    else
+        you.gold = atoi(buf);
+}
+
 void wizard_set_piety()
 {
     if (you_worship(GOD_NO_GOD))
@@ -584,52 +605,19 @@ bool wizard_add_mutation()
     bool success = false;
     char specs[80];
 
-    if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 0
-        && !crawl_state.is_replaying_keys())
-    {
-        const char* msg;
-
-        if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
-            msg = "You are immune to mutations; remove immunity?";
-        else
-            msg = "You are resistant to mutations; remove resistance?";
-
-        if (yesno(msg, true, 'n'))
-        {
-            you.mutation[MUT_MUTATION_RESISTANCE] = 0;
-            crawl_state.cancel_cmd_repeat();
-        }
-    }
-
-    int answer = yesnoquit("Force mutation to happen?", true, 'n');
-    if (answer == -1)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    const bool force = (answer == 1);
-
-    if (player_mutation_level(MUT_MUTATION_RESISTANCE) == 3 && !force)
-    {
-        mpr("Can't mutate when immune to mutations without forcing it.");
-        crawl_state.cancel_cmd_repeat();
-        return false;
-    }
-
-    answer = yesnoquit("Treat mutation as god gift?", true, 'n');
-    if (answer == -1)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-    const bool god_gift = (answer == 1);
+    if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 0)
+        mpr("Ignoring mut resistance to apply mutation.");
+    unwind_var<uint8_t> mut_res(you.mutation[MUT_MUTATION_RESISTANCE], 0);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
                     "'xom', 'slime', 'qazlal')? ",
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
-        return false;
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
 
     string spec = lowercase_string(specs);
 
@@ -649,19 +637,7 @@ bool wizard_add_mutation()
         mutat = RANDOM_QAZLAL_MUTATION;
 
     if (mutat != NUM_MUTATIONS)
-    {
-        int old_resist = player_mutation_level(MUT_MUTATION_RESISTANCE);
-
-        success = mutate(mutat, "wizard power", true, force, god_gift);
-
-        if (old_resist < player_mutation_level(MUT_MUTATION_RESISTANCE)
-            && !force)
-        {
-            crawl_state.cancel_cmd_repeat("Your mutation resistance has "
-                                          "increased.");
-        }
-        return success;
-    }
+        return mutate(mutat, "wizard power", true, true);
 
     vector<mutation_type> partial_matches;
 
@@ -728,13 +704,13 @@ bool wizard_add_mutation()
         else if (levels > 0)
         {
             for (int i = 0; i < levels; ++i)
-                if (mutate(mutat, "wizard power", true, force, god_gift))
+                if (mutate(mutat, "wizard power", true, true))
                     success = true;
         }
         else
         {
             for (int i = 0; i < -levels; ++i)
-                if (delete_mutation(mutat, "wizard power", true, force, god_gift))
+                if (delete_mutation(mutat, "wizard power", true, true))
                     success = true;
         }
     }
@@ -1048,7 +1024,7 @@ void wizard_transform()
         for (int i = 0; i < NUM_TRANSFORMS; i++)
         {
 #if TAG_MAJOR_VERSION == 34
-            if (i == TRAN_JELLY)
+            if (i == TRAN_JELLY || i == TRAN_PORCUPINE)
                 continue;
 #endif
             line += make_stringf("[%c] %-10s ", i + 'a',
@@ -1074,8 +1050,11 @@ void wizard_transform()
             continue;
 
 #if TAG_MAJOR_VERSION == 34
-        if ((transformation_type)(keyin - 'a') == TRAN_JELLY)
+        if ((transformation_type)(keyin - 'a') == TRAN_JELLY
+            || (transformation_type)(keyin - 'a') == TRAN_PORCUPINE)
+        {
             continue;
+        }
 #endif
 
         form = (transformation_type)(keyin - 'a');

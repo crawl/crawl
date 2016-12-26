@@ -97,11 +97,6 @@ static void _player_change_level(level_id lev)
     you.where_are_you = lev.branch;
 }
 
-static bool _marker_vetoes_level_change()
-{
-    return marker_vetoes_operation("veto_level_change");
-}
-
 static void _maybe_destroy_shaft(const coord_def &p)
 {
     trap_def* trap = trap_at(p);
@@ -521,10 +516,6 @@ static level_id _travel_destination(const dungeon_feature_type how,
         break;
     }
 
-    // Bail if any markers veto the move.
-    if (_marker_vetoes_level_change())
-        return dest;
-
     // Markers might be deleted when removing portals.
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
@@ -737,6 +728,10 @@ void floor_transition(dungeon_feature_type how,
                     mpr(branches[branch].entry_message);
                 else if (branch != BRANCH_ABYSS) // too many messages...
                     mprf("Welcome to %s!", branches[branch].longname);
+
+                const string noise_desc = branch_noise_desc(branch);
+                if (!noise_desc.empty())
+                    mpr(noise_desc);
 
                 const string rune_msg = branch_rune_desc(branch, true);
                 if (!rune_msg.empty())
@@ -1018,8 +1013,18 @@ static void _update_level_state()
     if (_any_glowing_mold())
         env.level_state |= LSTATE_GLOW_MOLD;
     for (monster_iterator mon_it; mon_it; ++mon_it)
-        if (mons_allows_beogh(*mon_it))
+    {
+        if (mons_allows_beogh(**mon_it))
             env.level_state |= LSTATE_BEOGH;
+        if (mon_it->has_ench(ENCH_STILL_WINDS))
+            env.level_state |= LSTATE_STILL_WINDS;
+        if (mon_it->has_ench(ENCH_AWAKEN_FOREST))
+        {
+            env.forest_awoken_until
+                = you.elapsed_time
+                  + mon_it->get_ench(ENCH_AWAKEN_FOREST).duration;
+        }
+    }
     for (rectangle_iterator ri(0); ri; ++ri)
         if (grd(*ri) == DNGN_SLIMY_WALL)
             env.level_state |= LSTATE_SLIMY_WALL;

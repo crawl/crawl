@@ -46,27 +46,6 @@
 #include "viewmap.h"
 
 #ifdef WIZARD
-// Creates a specific monster by mon type number.
-void wizard_create_spec_monster()
-{
-    int mon = prompt_for_int("Which monster by number? ", true);
-
-    if (mon == -1 || (mon >= NUM_MONSTERS
-                      && mon != RANDOM_MONSTER
-                      && mon != RANDOM_DRACONIAN
-                      && mon != RANDOM_BASE_DRACONIAN
-                      && mon != RANDOM_NONBASE_DRACONIAN
-                      && mon != WANDERING_MONSTER))
-    {
-        canned_msg(MSG_OK);
-    }
-    else
-    {
-        create_monster(
-            mgen_data::sleeper_at(
-                static_cast<monster_type>(mon), you.pos()));
-    }
-}
 
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.
@@ -283,7 +262,7 @@ void debug_list_monsters()
         count++;
         prev_name = name;
 
-        int exp = exper_value(mi);
+        int exp = exper_value(*mi);
         total_exp += exp;
         if (!mons_is_unique(mi->type))
             total_nonuniq_exp += exp;
@@ -461,7 +440,7 @@ void debug_stethoscope(int mon)
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
          mons.res_magic(),
-         exper_value(&mons),
+         exper_value(mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
@@ -477,7 +456,7 @@ void debug_stethoscope(int mon)
     }
 
     // Print habitat and behaviour information.
-    const habitat_type hab = mons_habitat(&mons);
+    const habitat_type hab = mons_habitat(mons);
 
     COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     const actor * const summoner = actor_by_mid(mons.summoner);
@@ -486,11 +465,11 @@ void debug_stethoscope(int mon)
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          mons.asleep()                    ? "sleep"
-         : mons_is_wandering(&mons)       ? "wander"
-         : mons_is_seeking(&mons)         ? "seek"
-         : mons_is_fleeing(&mons)         ? "flee"
+         : mons_is_wandering(mons)       ? "wander"
+         : mons_is_seeking(mons)         ? "seek"
+         : mons_is_fleeing(mons)         ? "flee"
          : mons.behaviour == BEH_RETREAT  ? "retreat"
-         : mons_is_cornered(&mons)        ? "cornered"
+         : mons_is_cornered(mons)        ? "cornered"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"
          :                                  "unknown",
          mons.behaviour,
@@ -696,7 +675,7 @@ void wizard_gain_monster_level(monster* mon)
     // but cap the levels gained to just 1.
     bool worked = mon->gain_exp(INT_MAX - mon->experience, 1);
     if (!worked)
-        simple_monster_message(mon, " seems unable to mature further.", MSGCH_WARN);
+        simple_monster_message(*mon, " seems unable to mature further.", MSGCH_WARN);
 
     // (The gain_exp() method will chop the monster's experience down
     // to half-way between its new level and the next, so we needn't
@@ -727,7 +706,7 @@ void wizard_apply_monster_blessing(monster* mon)
 
 void wizard_give_monster_item(monster* mon)
 {
-    mon_itemuse_type item_use = mons_itemuse(mon);
+    mon_itemuse_type item_use = mons_itemuse(*mon);
     if (item_use < MONUSE_STARTING_EQUIPMENT)
     {
         mpr("That type of monster can't use any items.");

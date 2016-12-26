@@ -95,24 +95,18 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype);
 const char* spelltype_long_name(spschool_flag_type which_spelltype);
 
 typedef function<int (coord_def where)> cell_func;
-typedef function<int (monster* mon)> monster_func;
-typedef int cloud_func(coord_def where, int pow, int spreadrate,
-                       cloud_type type, const actor* agent, int colour,
-                       string name, string tile, int excl_rad);
+typedef function<int (coord_def where, int pow, int spreadrate,
+                       cloud_type type, const actor* agent, int excl_rad)>
+        cloud_func;
 
 int apply_area_visible(cell_func cf, const coord_def& where);
-
-int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int radius = 1);
 
 int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int max_targs);
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
-                      const actor *agent,
-                      int spread_rate = -1, int colour = -1,
-                      string name = "", string tile = "",
+                      const actor *agent, int spread_rate = -1,
                       int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,

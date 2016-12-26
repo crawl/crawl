@@ -53,8 +53,8 @@
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-ench.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -118,6 +118,7 @@ item_def& item_from_int(bool inv, int number)
     return inv ? you.inv[number] : mitm[number];
 }
 
+static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
@@ -848,7 +849,7 @@ void item_check()
     if (items.size() == 1)
     {
         const item_def& it(*items[0]);
-        string name = get_menu_colour_prefix_tags(it, DESC_A);
+        string name = menu_colour_item_name(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
         _maybe_give_corpse_hint(it);
         return;
@@ -907,7 +908,7 @@ void item_check()
             mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
         for (const item_def *it : items)
         {
-            mprf_nocap("%s", get_menu_colour_prefix_tags(*it, DESC_A).c_str());
+            mprf_nocap("%s", menu_colour_item_name(*it, DESC_A).c_str());
             _maybe_give_corpse_hint(*it);
         }
     }
@@ -931,6 +932,31 @@ void item_check()
             }
         }
     }
+}
+
+/// If the given item is an unknown book, ID it; return whether we did.
+static bool _id_floor_book(item_def &book)
+{
+    if (book.base_type != OBJ_BOOKS)
+        return false;
+
+    if (fully_identified(book) && book.sub_type != BOOK_MANUAL)
+        return false;
+
+    // fix autopickup for previously-unknown books (hack)
+    if (item_needs_autopickup(book))
+        book.props["needs_autopickup"] = true;
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+    mark_had_book(book);
+    return true;
+}
+
+/// Auto-ID whatever spellbooks and manuals the player stands on.
+void id_floor_books()
+{
+    for (stack_iterator si(you.pos()); si; ++si)
+        if (si->base_type == OBJ_BOOKS)
+            _id_floor_book(*si);
 }
 
 void pickup_menu(int item_link)
@@ -1398,8 +1424,7 @@ void pickup(bool partial_quantity)
                 string prompt = "Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
 
                 mprf(MSGCH_PROMPT, prompt.c_str(),
-                     get_menu_colour_prefix_tags(mitm[o],
-                                                 DESC_A).c_str());
+                     menu_colour_item_name(mitm[o], DESC_A).c_str());
 
                 mouse_control mc(MOUSE_MODE_YESNO);
                 keyin = getchk();
@@ -1443,7 +1468,7 @@ void pickup(bool partial_quantity)
         if (!any_selectable)
         {
             for (stack_iterator si(you.pos(), true); si; ++si)
-                mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
+                mprf_nocap("%s", menu_colour_item_name(*si, DESC_A).c_str());
         }
 
         if (!pickup_warning.empty())
@@ -1831,13 +1856,8 @@ static void _get_orb(const item_def &it, bool quiet)
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
-    if (you.duration[DUR_TELEPORT])
-    {
-        mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
-        you.increase_duration(DUR_TELEPORT, 5 + random2(5));
-    }
-
-    start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out of the dungeon!");
+    start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
+                                    "of the dungeon!");
 }
 
 /**
@@ -1874,7 +1894,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
         if (!quiet)
         {
             mprf_nocap("%s (gained %d)",
-                        get_menu_colour_prefix_tags(you.inv[inv_slot],
+                        menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
@@ -2009,10 +2029,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;
     else if (!quiet)
-    {
-        mprf_nocap("%s", get_menu_colour_prefix_tags(item,
-                                                     DESC_INVENTORY).c_str());
-    }
+        mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
 
     return item.link;
 }
@@ -2212,6 +2229,9 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         god_id_item(item);
         maybe_identify_base_type(item);
     }
+
+    if (p == you.pos() && _id_floor_book(item))
+        mprf("You see here %s.", item.name(DESC_A).c_str());
 
     return true;
 }
@@ -2546,30 +2566,6 @@ mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
     return NUM_MONSTER_SLOTS;
 }
 
-static string _drop_selitem_text(const vector<MenuEntry*> *s)
-{
-    bool extraturns = false;
-
-    if (s->empty())
-        return "";
-
-    for (MenuEntry *entry : *s)
-    {
-        const item_def *item = static_cast<item_def *>(entry->data);
-        const int eq = get_equip_slot(item);
-        if (eq > EQ_WEAPON && eq < NUM_EQUIP)
-        {
-            extraturns = true;
-            break;
-        }
-    }
-
-    return make_stringf(" (%u%s turn%s)",
-               (unsigned int)s->size(),
-               extraturns? "+" : "",
-               s->size() > 1? "s" : "");
-}
-
 // This has to be of static storage class, so that the value isn't lost when a
 // MultidropDelay is interrupted.
 static vector<SelItem> items_for_multidrop;
@@ -2607,18 +2603,8 @@ void drop()
     }
 
     vector<SelItem> tmp_items;
-    string prompt = "Drop what? " + slot_description()
-#ifdef TOUCH_UI
-                  + " (<Enter> or tap header to drop)"
-#else
-                  + " (_ for help)"
-#endif
-                  ;
 
-    tmp_items = prompt_invent_items(prompt.c_str(), MT_DROP,
-                                     -1, nullptr, true, true, 0,
-                                     &Options.drop_filter, _drop_selitem_text,
-                                     &items_for_multidrop);
+    tmp_items = prompt_drop_items(items_for_multidrop);
 
     if (tmp_items.empty())
     {
@@ -2829,6 +2815,13 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
     return Options.autopickups[item.base_type];
 }
 
+/// Should the player automatically butcher the given item?
+static bool _should_autobutcher(const item_def &item)
+{
+    return Options.auto_butcher && item.base_type == OBJ_CORPSES
+           && !is_inedible(item) && !is_bad_food(item);
+}
+
 /** Is the item something that we should try to autopickup?
  *
  * @param ignore_force If true, ignore force_autopickup settings from the
@@ -2839,6 +2832,10 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
 {
     if (in_inventory(item))
         return false;
+
+    // mark autobutcher corpses for pickup so autotravel works
+    if (_should_autobutcher(item))
+        return true;
 
     if (item_is_stationary(item))
         return false;
@@ -3091,24 +3088,36 @@ static void _do_autopickup()
     while (o != NON_ITEM)
     {
         const int next = mitm[o].link;
+        item_def& mi = mitm[o];
 
-        if (item_needs_autopickup(mitm[o]))
+        if (item_needs_autopickup(mi))
         {
+            if (_should_autobutcher(mi))
+            {
+                if (you_are_delayed() && current_delay()->want_autoeat())
+                    butchery(&mi);
+                else
+                {
+                    o = next;
+                    continue;
+                }
+            }
+
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
             // will always return false.
             const bool interesting_pickup
-                = _interesting_explore_pickup(mitm[o]);
+                = _interesting_explore_pickup(mi);
 
-            const iflags_t iflags(mitm[o].flags);
+            const iflags_t iflags(mi.flags);
             if ((iflags & ISFLAG_THROWN))
                 learned_something_new(HINT_AUTOPICKUP_THROWN);
 
-            clear_item_pickup_flags(mitm[o]);
+            clear_item_pickup_flags(mi);
 
-            const bool pickup_result = move_item_to_inv(o, mitm[o].quantity);
-            if (mitm[o].is_type(OBJ_FOOD, FOOD_CHUNK))
-                mitm[o].flags |= ISFLAG_DROPPED;
+            const bool pickup_result = move_item_to_inv(o, mi.quantity);
+            if (mi.is_type(OBJ_FOOD, FOOD_CHUNK))
+                mi.flags |= ISFLAG_DROPPED;
 
             if (pickup_result)
             {
@@ -3120,10 +3129,9 @@ static void _do_autopickup()
             {
                 n_tried_pickup++;
                 pickup_warning = "Your pack is full.";
-                mitm[o].flags = iflags;
+                mi.flags = iflags;
             }
         }
-
         o = next;
     }
 
@@ -3264,9 +3272,7 @@ zap_type item_def::zap() const
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
     {
-        // choose from all existing wands, except:
-        // (1) don't allow /hw, because it encourages stuff like curing rot
-        // (2) allow /invis even though that was removed, because it's fun
+        // choose from all existing wands, except not really at all
         return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
                              ZAP_PARALYSE, ZAP_CONFUSE,
                              ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
@@ -3280,13 +3286,10 @@ zap_type item_def::zap() const
     {
     case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
     case WAND_SLOWING:         result = ZAP_SLOW;            break;
-    case WAND_HASTING:         result = ZAP_HASTE;           break;
-    case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
     case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
     case WAND_DIGGING:         result = ZAP_DIG;             break;
     case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
-    case WAND_TELEPORTATION:   result = ZAP_TELEPORT_OTHER;  break;
     case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
     case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
@@ -3300,6 +3303,9 @@ zap_type item_def::zap() const
     case WAND_FIRE_REMOVED:
     case WAND_COLD_REMOVED:
     case WAND_FROST_REMOVED:
+    case WAND_HEAL_WOUNDS_REMOVED:
+    case WAND_HASTING_REMOVED:
+    case WAND_TELEPORTATION_REMOVED:
 #endif
         break;
     }
@@ -3463,7 +3469,7 @@ colour_t item_def::armour_colour() const
     if (is_artefact(*this))
         return randart_colour();
 
-    if (armour_type_is_hide(sub_type, true))
+    if (armour_type_is_hide((armour_type)sub_type))
         return mons_class_colour(monster_for_hide((armour_type)sub_type));
 
 
@@ -4769,7 +4775,7 @@ item_info get_item_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, DRAWN_CARD_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY,
+        FORCED_ITEM_COLOUR_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))

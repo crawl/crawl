@@ -500,11 +500,6 @@ Une créature mort-vivante conservée par les eaux saumâtres d'une tourbière.
 Même si elle a été réanimée par quelque magie méconnue, cette magie ne peut
 l'empêcher de se décomposer.
 %%%%
-boulder beetle
-
-Un gros scarabée gris avec une carapace dure comme la pierre, capable de rouler
-sur ses adversaires à une grande vitesse.
-%%%%
 brain worm
 
 Un ver mauve et visqueux avec un grande tête distendue, cette créature se
@@ -955,11 +950,6 @@ giant mite
 
 Un énorme acarien assoiffé de sang. Ses mandibules sont empoisonnées.
 %%%%
-giant newt
-
-Un petit amphibien obstiné, qui fait plusieurs fois la taille d'un triton
-normal, mais il n'en est pas plus menaçant.
-%%%%
 giant orange brain
 
 Un énorme cerveau ridé, flottant au dessus du sol et irradiant d'énergie
@@ -1022,11 +1012,6 @@ green death
 
 Une forme boursoufflée, couverte de plaies suppurantes et expirant un poison
 mortel.
-%%%%
-griffon
-
-Une grande créature avec le postérieur d'un lion et les ailes, la tête et les
-serres d'un aigle.
 %%%%
 guardian mummy
 
@@ -1705,10 +1690,6 @@ sixfirhy
 
 Une petite créature vile qui bouge par saccades, s'arrêtant puis dardant à une
 vitesse fulgurante. Elle à l'air de lancer des étincelles autour d'elle.
-
-Cette bête peut se soigner avec les dégâts électriques, cependant, si elle se
-fait toucher par plus qu'elle ne peut en maîtriser, cela pourrait avoir des
-résultats plutôt violents.
 %%%%
 skeletal warrior
 

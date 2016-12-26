@@ -36,7 +36,7 @@ void TextRegion::on_resize()
     delete[] abuf;
 
     int size = mx * my;
-    cbuf = new ucs_t[size];
+    cbuf = new char32_t[size];
     abuf = new uint8_t[size];
 
     for (int i = 0; i < size; i++)
@@ -59,7 +59,7 @@ void TextRegion::adjust_region(int *x1, int *x2, int y)
 
 void TextRegion::addstr(const char *buffer)
 {
-    ucs_t buf2[1024], c;
+    char32_t buf2[1024], c;
 
     int j = 0;
 
@@ -103,7 +103,7 @@ void TextRegion::addstr(const char *buffer)
         cgotoxy(print_x+1, print_y+1);
 }
 
-void TextRegion::addstr_aux(const ucs_t *buffer, int len)
+void TextRegion::addstr_aux(const char32_t *buffer, int len)
 {
     int x = print_x - cx_ofs;
     int y = print_y - cy_ofs;
@@ -137,7 +137,7 @@ void TextRegion::clear_to_end_of_line()
     }
 }
 
-void TextRegion::putwch(ucs_t ch)
+void TextRegion::putwch(char32_t ch)
 {
     // special case: check for '0' char: map to space
     if (ch == 0)
@@ -214,8 +214,8 @@ void TextRegion::render()
     {
         int idx = cursor_x + mx * cursor_y;
 
-        ucs_t   char_back = cbuf[idx];
-        uint8_t col_back  = abuf[idx];
+        char32_t char_back = cbuf[idx];
+        uint8_t col_back = abuf[idx];
 
         cbuf[idx] = '_';
         abuf[idx] = WHITE;

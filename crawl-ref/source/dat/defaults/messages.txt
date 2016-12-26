@@ -56,6 +56,10 @@ msc += $warning:falling.*rocks
 msc += $warning:rumble.*avalanche of rocks
 msc += $warning:crackle.*arcane power
 msc += $warning:crackle.*magical portal
+msc += $warning:distant wind
+msc += $warning:whistling.*wind
+msc += $warning:rapidly growing quiet
+
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
@@ -69,7 +73,7 @@ msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
 msc += $boring:disappears? in a puff of smoke
 msc += $boring:dissolves? into (sparkling lights|shadows)
-msc += $boring:crumbles away
+msc += $boring:(crumbles|melts) away\.
 msc += $boring:returns to the deep
 msc += $boring:shimmers and vanishes
 #
@@ -100,7 +104,7 @@ force_more_message += You cannot cast spells when silenced
 force_more_message += You don't have the energy to cast that spell
 force_more_message += This is a scroll of acquirement
 
-## Reduce chance of drowning because flight or form runs out:
+## Reduce chance of draining because flight or form runs out:
 force_more_message += Careful!
 
 # Announcements of timed portal vaults:
@@ -112,6 +116,7 @@ force_more_message += hiss of flowing sand
 force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
+force_more_message += distant wind
 
 # Religion
 force_more_message += press .* to convert to Beogh
@@ -136,6 +141,9 @@ force_more_message += You are slowing down
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
 force_more_message += Found .* abyssal rune of Zot
+
+# Water nymph stair temp-drowning - people seem to miss these...
+force_more_message += watery aura .* (staircase|hatch)
 
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power

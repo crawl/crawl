@@ -85,6 +85,24 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
 }
 
 /**
+ * Produces a portion of the spellbook description: the portion indicating
+ * whether the list of spellbooks has been filtered based on which spells you
+ * have seen the monster cast already.
+ *
+ * @param type    The type of ability set / spellbook we're decribing.
+ * @param pronoun The monster pronoun to use (should be derived from PRONOUN_OBJECTIVE).
+ * @return        A string to include in the spellbook description.
+ */
+static string _describe_spell_filtering(mon_spell_slot_flag type, const char* pronoun)
+{
+    const bool is_spell = type = MON_SPELL_WIZARD;
+    return make_stringf(" (judging by the %s you have seen %s %s)",
+                        is_spell ? "spells" : "abilities",
+                        pronoun,
+                        is_spell ? "cast" : "use");
+}
+
+/**
  * What description should a given (set of) monster spellbooks be prefixed
  * with?
  *
@@ -94,44 +112,41 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
  *                          despite being non-wizardly and non-priestly.
  * @param has_filtered      Whether any spellbooks have been filtered out due
  *                          to the spells you've seen the monster cast.
+ * @param pronoun           The pronoun to use in describing which spells
+ *                          the monster has been seen casting.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable, bool has_filtered)
+                               bool has_silencable, bool has_filtered, const char* pronoun)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
+    const string spell_filter_desc = has_filtered ? _describe_spell_filtering(type, pronoun)
+                                                  : "";
 
     if (type == MON_SPELL_WIZARD)
     {
         return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            vulnerabilities.c_str(),
-                            has_filtered ? " (based on the spells you have"
-                                           " seen cast)"
-                                         : "");
+                            spell_filter_desc.c_str(),
+                            vulnerabilities.c_str());
     }
 
     const string descriptor = _ability_type_descriptor(type);
 
     return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        vulnerabilities.c_str(),
-                        has_filtered ? " (based on the abilities you have"
-                                       " seen used)"
-                                     : "");
+                        spell_filter_desc.c_str(),
+                        vulnerabilities.c_str());
 }
 
 static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
 {
-    // XXX: i'm 90% sure there's a neater way to do this (std something?)
-    for (mon_spell_slot slot : book)
-        if (slot.spell == spell)
-            return true;
-    return false;
+    return any_of(book.begin(), book.end(),
+                  [=](mon_spell_slot slot){return slot.spell == spell;});
 }
 
 /**
@@ -148,12 +163,37 @@ static bool _book_valid(const vector<mon_spell_slot> &book,
     if (!mi.props.exists(SEEN_SPELLS_KEY))
         return true;
 
+    auto seen_spells = mi.props[SEEN_SPELLS_KEY].get_vector();
+
     // assumption: any monster with multiple true spellbooks will only ever
     // use one of them
-    for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
-        if (!_spell_in_book((spell_type)spell, book))
-            return false;
-    return true;
+    return all_of(seen_spells.begin(), seen_spells.end(),
+                  [&](int spell){return _spell_in_book((spell_type)spell, book);});
+}
+
+static void _split_by_silflag(unique_books &books)
+{
+    unique_books result;
+
+    for (auto book : books)
+    {
+        vector<mon_spell_slot> silflag;
+        vector<mon_spell_slot> no_silflag;
+
+        for (auto i : book)
+        {
+            if (i.flags & MON_SPELL_NO_SILENT)
+                silflag.push_back(i);
+            else no_silflag.push_back(i);
+        }
+
+        if (!no_silflag.empty())
+            result.push_back(no_silflag);
+        if (!silflag.empty())
+            result.push_back(silflag);
+    }
+
+    books = result;
 }
 
 /**
@@ -169,7 +209,16 @@ static void _monster_spellbooks(const monster_info &mi,
                                 mon_spell_slot_flag type,
                                 spellset &all_books)
 {
-    const unique_books books = get_unique_spells(mi, type);
+    unique_books books = get_unique_spells(mi, type);
+
+    // Books of natural abilities get special treatment, because there should
+    // be information about silence in the label(s).
+    const bool ability_case =
+        (bool) (type & (MON_SPELL_MAGICAL | MON_SPELL_NATURAL));
+    // We must split them now; later we'll label them separately.
+    if (ability_case)
+        _split_by_silflag(books);
+
     const size_t num_books = books.size();
 
     if (num_books == 0)
@@ -200,17 +249,16 @@ static void _monster_spellbooks(const monster_info &mi,
                 return slot.flags & MON_SPELL_NO_SILENT;
             });
 
-
-        if (i == 0)
+        if (i == 0 || ability_case)
         {
             output_book.label +=
                 "\n" +
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
                 _booktype_header(type, valid_books.size(), has_silencable,
-                                 filtered_books);
+                                 filtered_books, mi.pronoun(PRONOUN_OBJECTIVE));
         }
-        if (valid_books.size() > 1)
+        else
         {
             output_book.label += make_stringf("\n%s %d:",
                                               set_name.c_str(), (int) i + 1);
@@ -445,7 +493,7 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
-    const int hd = mon_owner ? mon_owner->hd : 0;
+    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -458,6 +506,9 @@ static void _describe_book(const spellbook_contents &book,
                                   index_to_letter(*spell_letter_index) :
                                   ' ';
         if (hd > 0 && crawl_state.need_save
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
             && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
             description.cprintf("%c - (%d%%) %s",

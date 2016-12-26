@@ -271,6 +271,17 @@ swamp1
 swamp2
 swamp3
 
+salt0 FLOOR_SALT
+%weight 2
+salt1
+salt2
+%weight 10
+salt3
+salt4
+%weight 5
+salt5
+%weight 10
+
 %weight 20
 spider00 FLOOR_SPIDER
 spider01
@@ -1017,6 +1028,11 @@ mosaic12
 mosaic13
 mosaic14
 mosaic15
+
+endless_salt0 DNGN_ENDLESS_SALT
+endless_salt1
+endless_salt2
+endless_salt3
 
 %sdir dngn/floor
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may

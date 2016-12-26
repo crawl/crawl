@@ -20,6 +20,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "decks.h"
+#include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
@@ -47,6 +48,7 @@
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mutant-beast.h"
+#include "nearby-danger.h"
 #include "place.h"
 #include "player.h"
 #include "player-stats.h"
@@ -154,9 +156,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =
-        (!feat_is_reachable_past(grd(first_middle)) ? second_middle :
-         (!feat_is_reachable_past(grd(second_middle)) ? first_middle :
-          (coinflip() ? first_middle : second_middle)));
+        !feat_is_reachable_past(grd(first_middle)) ? second_middle :
+        !feat_is_reachable_past(grd(second_middle)) ? first_middle :
+        random_choose(first_middle, second_middle);
 
     // Check for a monster in the way. If there is one, it blocks the reaching
     // attack 50% of the time, and the attack tries to hit it if it is hostile.
@@ -255,9 +257,9 @@ static bool _evoke_horn_of_geryon(item_def &item)
 
         if (!will_anger && random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
-        mgen_data mg(MONS_HELL_BEAST, beh, &you, 3, SPELL_NO_SPELL, you.pos(),
-                     MHITYOU, MG_FORCE_BEH, GOD_NO_GOD, MONS_HELL_BEAST,
-                     COLOUR_INHERIT, PROX_CLOSE_TO_PLAYER);
+        mgen_data mg(MONS_HELL_BEAST, beh, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mg.set_summoned(&you, 3, SPELL_NO_SPELL);
+        mg.set_prox(PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
         if (mon)
             created = true;
@@ -285,7 +287,7 @@ static bool _check_crystal_ball()
 
     if (you.confused())
     {
-        mpr("You are unable to concentrate on the shapes in the crystal ball.");
+        canned_msg(MSG_TOO_CONFUSED);
         return false;
     }
 
@@ -298,7 +300,7 @@ static bool _check_crystal_ball()
 
     if (you.magic_points == you.max_magic_points)
     {
-        mpr("Your reserves of magic are already full.");
+        canned_msg(MSG_FULL_MAGIC);
         return false;
     }
 
@@ -502,7 +504,6 @@ void zap_wand(int slot)
         item_slot = prompt_invent_item("Zap which item?",
                                        MT_INVLIST,
                                        OBJ_WANDS,
-                                       true, true, true, 0, -1, nullptr,
                                        OPER_ZAP);
     }
 
@@ -542,13 +543,7 @@ void zap_wand(int slot)
     switch (wand.sub_type)
     {
     case WAND_DIGGING:
-    case WAND_TELEPORTATION:
         targ_mode = TARG_ANY;
-        break;
-
-    case WAND_HEAL_WOUNDS:
-    case WAND_HASTING:
-        targ_mode = TARG_FRIEND;
         break;
 
     default:
@@ -564,7 +559,7 @@ void zap_wand(int slot)
     const int tracer_range = !randeff ? _wand_range(type_zapped)
                                       : _max_wand_range();
     const string zap_title =
-        "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY)
+        "Zapping: " + menu_colour_item_name(wand, DESC_INVENTORY)
                     + (wasteful ? " <lightred>(will waste charges)</lightred>"
                                 : "");
     direction_chooser_args args;
@@ -589,17 +584,6 @@ void zap_wand(int slot)
         if (zap_wand.isCancel)
             canned_msg(MSG_OK);
         return;
-    }
-
-    if (zap_wand.target == you.pos())
-    {
-        if (wand.sub_type == WAND_TELEPORTATION
-            && you.no_tele_print_reason(false, false))
-        {
-            return;
-        }
-        else if (wand.sub_type == WAND_HASTING && check_stasis(NO_HASTE_MSG))
-            return;
     }
 
     if (!has_charges)
@@ -660,13 +644,10 @@ void zap_wand(int slot)
     beam.range = _wand_range(type_zapped);
 
     dec_mp(mp_cost, false);
-    if (wand.sub_type != WAND_HEAL_WOUNDS
-        && wand.sub_type != WAND_TELEPORTATION)
-    {
-        const int surge = pakellas_surge_devices();
-        surge_power(you.spec_evoke() + surge);
-        power = player_adjust_evoc_power(power, surge);
-    }
+
+    const int surge = pakellas_surge_devices();
+    surge_power(you.spec_evoke() + surge);
+    power = player_adjust_evoc_power(power, surge);
 
     // zapping() updates beam.
     zapping(type_zapped, power, beam);
@@ -719,7 +700,7 @@ void zap_wand(int slot)
     if (wand.charges == 0 && wand.flags & ISFLAG_KNOW_PLUSES)
         wand.used_count = ZAPCOUNT_EMPTY;
 
-    practise(EX_DID_ZAP_WAND);
+    practise_evoking(1);
     count_action(CACT_EVOKE, EVOC_WAND);
     alert_nearby_monsters();
 
@@ -737,7 +718,8 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
             item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
                                             divine ? OSEL_DIVINE_RECHARGE
                                                    : OSEL_RECHARGE,
-                                            true, true, false);
+                                           OPER_ANY,
+                                           invprompt_flag::escape_only);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -1000,11 +982,9 @@ static bool _box_of_beasts(item_def &box)
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
-    mgen_data mg = mgen_data(MONS_MUTANT_BEAST,
-                             BEH_FRIENDLY, &you,
-                             3 + random2(3), 0,
-                             you.pos(),
-                             MHITYOU, MG_AUTOFOE);
+    mgen_data mg(MONS_MUTANT_BEAST, BEH_FRIENDLY, you.pos(), MHITYOU,
+                 MG_AUTOFOE);
+    mg.set_summoned(&you, 3 + random2(3), 0);
 
     auto &avoids = mg.props[MUTANT_BEAST_AVOID_FACETS].get_vector();
     for (int facet = BF_FIRST; facet <= BF_LAST; ++facet)
@@ -1072,11 +1052,8 @@ static bool _sack_of_spiders(item_def &sack)
                                                  you.skill(SK_EVOCATIONS),
                                                  surge))),
                                              _sack_of_spiders_veto_mon);
-        mgen_data mg = mgen_data(mon,
-                                 BEH_FRIENDLY, &you,
-                                 3 + random2(4), 0,
-                                 you.pos(),
-                                 MHITYOU, MG_AUTOFOE);
+        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU, MG_AUTOFOE);
+        mg.set_summoned(&you, 3 + random2(4), 0);
         if (create_monster(mg))
             success = true;
     }
@@ -1171,7 +1148,7 @@ static bool _ball_of_energy()
                                        surge);
 
     if (use < 2)
-        lose_stat(STAT_INT, 1 + random2avg(7, 2));
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
     else if (use < 5 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");
@@ -1536,6 +1513,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                     && act->is_habitable(newpos))
                 {
                     act->move_to_pos(newpos);
+                    if (act->is_player())
+                        stop_delay(true);
                     --push;
                     pushed = true;
                 }
@@ -1552,6 +1531,9 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                             && act->is_habitable(*di))
                         {
                             act->move_to_pos(*di);
+                            if (act->is_player())
+                                stop_delay(true);
+
                             --push;
                             pushed = true;
 
@@ -1736,11 +1718,10 @@ static bool _phial_of_floods()
             attitude = BEH_HOSTILE;
         for (int n = 0; n < num; ++n)
         {
-            mgen_data mg (MONS_WATER_ELEMENTAL, attitude, &you, 3,
-                          SPELL_NO_SPELL, elementals[n], 0,
-                          MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
-                          MONS_WATER_ELEMENTAL, COLOUR_INHERIT,
-                          PROX_CLOSE_TO_PLAYER);
+            mgen_data mg (MONS_WATER_ELEMENTAL, attitude, elementals[n], 0,
+                          MG_FORCE_BEH | MG_FORCE_PLACE);
+            mg.set_summoned(&you, 3, SPELL_NO_SPELL);
+            mg.set_prox(PROX_CLOSE_TO_PLAYER);
             mg.hd = player_adjust_evoc_power(
                         6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15), surge);
             if (create_monster(mg))
@@ -1921,13 +1902,6 @@ static bool _rod_spell(item_def& irod, bool check_range)
 
 bool evoke_check(int slot, bool quiet)
 {
-    if (you.form == TRAN_WISP)
-    {
-        if (!quiet)
-            mpr("You cannot evoke items in this form.");
-        return false;
-    }
-
     const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
                           && !you.melded[EQ_WEAPON]
                           && weapon_reach(*you.weapon()) > REACH_NONE;
@@ -1950,8 +1924,7 @@ bool evoke_item(int slot, bool check_range)
     {
         slot = prompt_invent_item("Evoke which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_EVOKABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_EVOKE);
+                                   OSEL_EVOKABLE, OPER_EVOKE);
 
         if (prompt_failed(slot))
             return false;
@@ -1970,8 +1943,7 @@ bool evoke_item(int slot, bool check_range)
     if (!item_is_evokable(item, true, false, false, true))
         return false;
 
-    int pract = 0; // By how much Evocations is practised.
-    bool did_work   = false;  // Used for default "nothing happens" message.
+    bool did_work   = false;  // "Nothing happens" message
     bool unevokable = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
@@ -1987,7 +1959,7 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        bool qret = entry->evoke_func(&item, &pract, &did_work, &unevokable);
+        bool qret = entry->evoke_func(&item, &did_work, &unevokable);
 
         if (!unevokable)
             count_action(CACT_EVOKE, item.unrand_idx);
@@ -2008,10 +1980,7 @@ bool evoke_item(int slot, bool check_range)
         if (weapon_reach(item) > REACH_NONE)
         {
             if (_reaching_weapon_attack(item))
-            {
-                pract    = 0;
                 did_work = true;
-            }
             else
                 return false;
         }
@@ -2035,10 +2004,11 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
 
-        if (!(pract = _rod_spell(you.inv[slot], check_range)))
+        if (!_rod_spell(you.inv[slot], check_range))
             return false;
 
         did_work = true;  // _rod_spell() handled messages
+        practise_evoking(1);
         count_action(CACT_EVOKE, EVOC_ROD);
         break;
 
@@ -2068,7 +2038,7 @@ bool evoke_item(int slot, bool check_range)
 #endif
                 )
         {
-            mpr("Your reserves of magic are already full.");
+            canned_msg(MSG_FULL_MAGIC);
             return false;
         }
         else if (x_chance_in_y(apply_enhancement(
@@ -2079,8 +2049,8 @@ bool evoke_item(int slot, bool check_range)
             mpr("You channel some magical energy.");
             inc_mp(1 + random2(3));
             make_hungry(50, false, true);
-            pract = 1;
             did_work = true;
+            practise_evoking(1);
             count_action(CACT_EVOKE, STAFF_ENERGY, OBJ_STAVES);
 
             did_god_conduct(DID_CHANNEL, 1, true);
@@ -2108,7 +2078,7 @@ bool evoke_item(int slot, bool check_range)
         if (is_deck(item))
         {
             evoke_deck(item);
-            practise(EX_DID_USE_DECK);
+            practise_using_deck();
             count_action(CACT_EVOKE, EVOC_DECK);
             break;
         }
@@ -2136,7 +2106,7 @@ bool evoke_item(int slot, bool check_range)
                                                 surge),
                        coord_def());
             expend_xp_evoker(item);
-            pract = 1;
+            practise_evoking(3);
             break;
         }
 
@@ -2149,7 +2119,7 @@ bool evoke_item(int slot, bool check_range)
             if (_lamp_of_fire())
             {
                 expend_xp_evoker(item);
-                pract = 1;
+                practise_evoking(3);
             }
             else
                 return false;
@@ -2171,7 +2141,7 @@ bool evoke_item(int slot, bool check_range)
             if (_phial_of_floods())
             {
                 expend_xp_evoker(item);
-                pract = 1;
+                practise_evoking(3);
             }
             else
                 return false;
@@ -2186,7 +2156,7 @@ bool evoke_item(int slot, bool check_range)
             if (_evoke_horn_of_geryon(item))
             {
                 expend_xp_evoker(item);
-                pract = 1;
+                practise_evoking(3);
             }
             else
                 return false;
@@ -2194,24 +2164,24 @@ bool evoke_item(int slot, bool check_range)
 
         case MISC_BOX_OF_BEASTS:
             if (_box_of_beasts(item))
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_SACK_OF_SPIDERS:
             if (_sack_of_spiders(item))
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             if (!_check_crystal_ball())
                 unevokable = true;
             else if (_ball_of_energy())
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())
-                pract = 1;
+                practise_evoking(1);
             break;
 
         case MISC_QUAD_DAMAGE:
@@ -2234,7 +2204,7 @@ bool evoke_item(int slot, bool check_range)
                     dec_inv_item_quantity(item.link, 1);
                     // deliberate fall-through
                 case SPRET_FAIL:
-                    pract = 1;
+                    practise_evoking(1);
                     break;
             }
             break;
@@ -2260,8 +2230,6 @@ bool evoke_item(int slot, bool check_range)
 
     if (!did_work)
         canned_msg(MSG_NOTHING_HAPPENS);
-    else if (pract > 0)
-        practise(EX_DID_EVOKE_ITEM, pract);
 
     if (!unevokable)
         you.turn_is_over = true;

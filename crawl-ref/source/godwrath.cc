@@ -107,6 +107,15 @@ static string _god_wrath_name(god_type god)
                         god_name(god, use_full_name).c_str());
 }
 
+static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
+{
+    mgen_data mg = mgen_data::hostile_at(mtyp, true, you.pos())
+                    .set_summoned(nullptr, 0, 0, god)
+                    .set_non_actor_summoner(_god_wrath_name(god));
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    return mg;
+}
+
 static bool _yred_random_zombified_hostile()
 {
     const bool skel = one_chance_in(4);
@@ -123,12 +132,9 @@ static bool _yred_random_zombified_hostile()
     }
     while (skel && !mons_skeleton(z_base));
 
-    mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
-                                           _god_wrath_name(GOD_YREDELEMNUL),
-                                           true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_YREDELEMNUL, z_base);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mgen_data temp = _wrath_mon_data(skel ? MONS_SKELETON : MONS_ZOMBIE,
+                                     GOD_YREDELEMNUL)
+                     .set_base(z_base);
 
     return create_monster(temp, false);
 }
@@ -142,7 +148,6 @@ static const pop_entry _okawaru_servants[] =
   {  3,  7,   1, FLAT, MONS_TWO_HEADED_OGRE },
   {  3, 13,   3, PEAK, MONS_ORC_WARRIOR },
   {  5, 15,   3, PEAK, MONS_ORC_KNIGHT },
-  {  5, 15,   1, PEAK, MONS_HILL_GIANT },
   {  5, 15,   2, PEAK, MONS_CYCLOPS },
   {  7, 21,   2, PEAK, MONS_CENTAUR_WARRIOR },
   {  7, 21,   2, PEAK, MONS_NAGA_WARRIOR },
@@ -168,17 +173,12 @@ static bool _okawaru_random_servant()
     monster_type mon_type = pick_monster_from(_okawaru_servants,
                                               you.experience_level);
 
-    mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           _god_wrath_name(GOD_OKAWARU),
-                                           true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_OKAWARU);
+    mgen_data temp = _wrath_mon_data(mon_type, GOD_OKAWARU);
 
-    // Don't send sheep into battle, but otherwise let bands in.
+    // Don't send dream sheep into battle, but otherwise let bands in.
     // This makes sure you get multiple orcs/gnolls early on.
     if (mon_type != MONS_CYCLOPS)
         temp.flags |= MG_PERMIT_BANDS;
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     return create_monster(temp, false);
 }
@@ -191,14 +191,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
     else if (tier >= 1 && count < 3 && coinflip())
         mon_type = MONS_SHADOW_DEMON;
 
-    mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           _god_wrath_name(GOD_DITHMENOS),
-                                           true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_DITHMENOS);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    return create_monster(temp, false);
+    return create_monster(_wrath_mon_data(mon_type, GOD_DITHMENOS), false);
 }
 
 /**
@@ -355,9 +348,6 @@ static void _ely_dull_inventory_weapons()
 {
     int chance = 50;
     int num_dulled = 0;
-    int quiver_link;
-
-    you.m_quiver.get_desired_item(nullptr, &quiver_link);
 
     for (auto &item : you.inv)
     {
@@ -640,15 +630,7 @@ static int _makhleb_num_greater_servants()
  */
 static bool _makhleb_summon_servant(monster_type servant)
 {
-
-    mgen_data temp = mgen_data::hostile_at(servant,
-                                           _god_wrath_name(GOD_MAKHLEB),
-                                           true, 0, 0, you.pos(), MG_NONE,
-                                           GOD_MAKHLEB);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    return create_monster(temp, false);
+    return create_monster(_wrath_mon_data(servant, GOD_MAKHLEB), false);
 }
 
 /**
@@ -925,7 +907,7 @@ static bool _beogh_retribution()
     case 2: // send out one or two dancing weapons (12.5%)
     {
         int num_created = 0;
-        int num_to_create = (coinflip()) ? 1 : 2;
+        int num_to_create = random_range(1, 2);
 
         for (int i = 0; i < num_to_create; ++i)
         {
@@ -938,10 +920,7 @@ static bool _beogh_retribution()
 
             // Now create monster.
             if (monster *mon =
-                create_monster(
-                    mgen_data::hostile_at(MONS_DANCING_WEAPON,
-                        _god_wrath_name(god),
-                        true, 0, 0, you.pos(), MG_NONE, god)))
+                create_monster(_wrath_mon_data(MONS_DANCING_WEAPON, god)))
             {
                 ASSERT(mon->weapon() != nullptr);
                 item_def& wpn(*mon->weapon());
@@ -954,8 +933,6 @@ static bool _beogh_retribution()
                 set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
 
                 item_colour(wpn);
-
-                mon->flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
                 ghost_demon newstats;
                 newstats.init_dancing_weapon(wpn,
@@ -1001,18 +978,14 @@ static bool _beogh_retribution()
         else
             punisher = MONS_ORC;
 
-        mgen_data temp = mgen_data::hostile_at(punisher,
-                                               _god_wrath_name(god),
-                                               true, 0, 0, you.pos(),
-                                               MG_PERMIT_BANDS, god);
-
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        mgen_data temp = _wrath_mon_data(punisher, god);
+        temp.flags |=  MG_PERMIT_BANDS;
 
         monster *mons = create_monster(temp, false);
 
         // sometimes name band leader
         if (mons && one_chance_in(3))
-            give_monster_proper_name(mons);
+            give_monster_proper_name(*mons);
 
         simple_god_message(
             mons ? " sends forth an army of orcs."
@@ -1153,16 +1126,10 @@ static void _lugonu_minion_retribution()
                 15 - (you.experience_level/2),  MONS_ABOMINATION_SMALL,
                 you.experience_level/2,         MONS_ABOMINATION_LARGE,
                 6,                              MONS_THRASHING_HORROR,
-                3,                              MONS_ANCIENT_ZYME,
-                0
+                3,                              MONS_ANCIENT_ZYME
             );
 
-        mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               _god_wrath_name(god), true, 0,
-                                               0, you.pos(), MG_NONE, god);
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(to_summon, god), false))
             success = true;
     }
 
@@ -1173,12 +1140,7 @@ static void _lugonu_minion_retribution()
                                                      MONS_WRETCHED_STAR,
                                                      MONS_STARCURSED_MASS);
 
-        mgen_data temp = mgen_data::hostile_at(to_summon,
-                                               _god_wrath_name(god), true, 0,
-                                               0, you.pos(), MG_NONE, god);
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(to_summon, god), false))
             success = true;
     }
 
@@ -1295,7 +1257,7 @@ static bool _nemelex_retribution()
     // card theme
     const god_type god = GOD_NEMELEX_XOBEH;
 
-    simple_god_message(" makes you draw from the Deck of Punishment.", god);
+    simple_god_message(" makes you draw from the deck of Punishment.", god);
     draw_from_deck_of_punishment();
     return true;
 }
@@ -1346,7 +1308,6 @@ static void _jiyva_transform()
                                                    TRAN_FUNGUS,
                                                    TRAN_PIG,
                                                    TRAN_TREE,
-                                                   TRAN_PORCUPINE,
                                                    TRAN_WISP);
 
     if (transform(random2(you.penance[god]) * 2, form, true))
@@ -1368,12 +1329,12 @@ static void _jiyva_summon_slimes()
 
     const monster_type slimes[] =
     {
-        MONS_GIANT_EYEBALL,
+        MONS_FLOATING_EYE,
         MONS_EYE_OF_DRAINING,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
-        MONS_GIANT_ORANGE_BRAIN,
+        MONS_GLOWING_ORANGE_BRAIN,
         MONS_JELLY,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
@@ -1388,14 +1349,7 @@ static void _jiyva_summon_slimes()
     {
         const monster_type slime = RANDOM_ELEMENT(slimes);
 
-        mgen_data temp =
-            mgen_data::hostile_at(static_cast<monster_type>(slime),
-                                  _god_wrath_name(god),
-                                  true, 0, 0, you.pos(), MG_NONE, god);
-
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(slime, god), false))
             success = true;
     }
 
@@ -1471,14 +1425,7 @@ static bool _fedhas_summon_plants()
         }
     }
 
-    mgen_data temp =
-        mgen_data::hostile_at(MONS_OKLOB_PLANT,
-                              _god_wrath_name(god),
-                              false, 0, 0,
-                              coord_def(-1, -1),
-                              MG_FORCE_PLACE, god);
-
-    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    mgen_data temp = _wrath_mon_data(MONS_OKLOB_PLANT, god);
 
     // If we have a lot of space to work with we can do something
     // flashy.
@@ -1557,7 +1504,7 @@ static bool _fedhas_retribution()
     switch (random2(retribution_options))
     {
     case 0:
-        // Try and spawn some hostile giant spores, if none are created
+        // Try and spawn some hostile ballistomycete spores, if none are created
         // fall through to the elemental miscast effects.
         if (fedhas_corpse_spores(BEH_HOSTILE))
         {
@@ -1607,12 +1554,13 @@ static bool _dithmenos_retribution()
         {
             if (create_monster(
                     mgen_data(
-                        RANDOM_MOBILE_MONSTER, BEH_HOSTILE, 0,
-                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, MG_NONE, god,
-                        MONS_NO_MONSTER, COLOUR_UNDEF, PROX_ANYWHERE,
-                        level_id(BRANCH_DUNGEON,
-                                 min(27, you.experience_level + 5)),
-                        0, 0, MF_NO_FLAGS, "", _god_wrath_name(god))))
+                        RANDOM_MOBILE_MONSTER, BEH_HOSTILE, you.pos(), MHITYOU,
+                              MG_NONE, god)
+                            .set_place(level_id(BRANCH_DUNGEON,
+                                                min(27,
+                                                    you.experience_level + 5)))
+                            .set_summoned(nullptr, 4, MON_SUMM_WRATH)
+                            .set_non_actor_summoner(_god_wrath_name(god))))
             {
                 count++;
             }
@@ -1656,7 +1604,7 @@ static const pop_entry pop_qazlal_wrath[] =
 
   {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
   {  2, 10, 50, FLAT, MONS_BASILISK },
-  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
+  {  4, 14, 30, FLAT, MONS_CATOBLEPAS },
   { 18, 27, 50, RISE, MONS_IRON_DRAGON },
 
   { 0,0,0,FLAT,MONS_0 }
@@ -1677,13 +1625,7 @@ static void _qazlal_summon_elementals()
         monster_type mon = pick_monster_from(pop_qazlal_wrath,
                                              you.experience_level);
 
-        mgen_data temp =
-            mgen_data::hostile_at(mon, _god_wrath_name(god),
-                                  true, 0, 0, you.pos(), MG_NONE, god);
-
-        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-        if (create_monster(temp, false))
+        if (create_monster(_wrath_mon_data(mon, god), false))
             success = true;
     }
 
@@ -1761,9 +1703,9 @@ bool drain_wands()
     return true;
 }
 
-static bool _choose_hostile_monster(const monster* mon)
+static bool _choose_hostile_monster(const monster& mon)
 {
-    return mon->attitude == ATT_HOSTILE;
+    return mon.attitude == ATT_HOSTILE;
 }
 
 
@@ -1799,7 +1741,7 @@ static bool _uskayaw_retribution()
         }
         // else we intentionally fall through
 
-    case 5:
+    case 4:
         simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
         noisy(35, you.pos());
         break;
@@ -1896,43 +1838,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     dec_penance(god, 1 + random2(3));
 
     return true;
-}
-
-// Currently only used when orcish idols have been destroyed.
-static string _get_beogh_speech(const string &key)
-{
-    string result = getSpeakString("Beogh " + key);
-
-    if (result.empty())
-        return "Beogh is angry!";
-
-    return result;
-}
-
-// Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
-void beogh_idol_revenge()
-{
-    god_acting gdact(GOD_BEOGH, true);
-
-    // Beogh watches his charges closely, but for others doesn't always
-    // notice.
-    if (!you_worship(GOD_BEOGH)
-        && (!species_is_orcish(you.species) || coinflip())
-        && x_chance_in_y(2, 3))
-    {
-        return;
-    }
-
-    string revenge;
-
-    if (you_worship(GOD_BEOGH))
-        revenge = _get_beogh_speech("idol follower");
-    else if (species_is_orcish(you.species))
-        revenge = _get_beogh_speech("idol orc");
-    else
-        revenge = _get_beogh_speech("idol other");
-
-    _god_smites_you(GOD_BEOGH, revenge.c_str());
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)

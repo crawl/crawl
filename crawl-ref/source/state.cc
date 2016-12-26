@@ -45,9 +45,7 @@ game_state::game_state()
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
       stat_gain_prompt(false), level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
-#ifndef USE_TILE_LOCAL
-      mlist_targeting(false),
-#else
+#ifdef USE_TILE_LOCAL
       tiles_disabled(false),
       title_screen(true),
 #endif
@@ -278,7 +276,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         // when the only monsters around are 0xp.
         const monster* mon = at.mons_data;
 
-        if (!mons_is_threatening(mon) && mon->visible_to(&you))
+        if (!mons_is_threatening(*mon) && mon->visible_to(&you))
             return false;
 
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");

@@ -107,7 +107,7 @@ private:
 class targetter_transference : public targetter_smite
 {
 public:
-    targetter_transference(const actor *act);
+    targetter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
 };
 
@@ -157,12 +157,15 @@ public:
     bool avoid_clouds;
 };
 
+// TODO: this should be based on targetter_beam instead
 class targetter_splash : public targetter
 {
 public:
-    targetter_splash(const actor *act);
+    targetter_splash(const actor *act, int ran);
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+private:
+    int range;
 };
 
 class targetter_los : public targetter

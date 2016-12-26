@@ -42,11 +42,6 @@ Halfling
 Maži bet atsparūs, jie pranoksta visus kitus naudodami laidynes. Jie turi
 padidintą atsparumą mutageniniams efektams.
 %%%%
-High Elf
-
-Išdidūs elfai, sugebantys svaidyti burtus taip pat gerai kaip ir kautis su
-kardu.
-%%%%
 Hill Orc
 
 Orkai yra įgudę artimoje kovoje ir dažniausiai šiek tiek gaudosi puolamojoje

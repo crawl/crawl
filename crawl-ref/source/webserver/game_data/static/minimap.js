@@ -64,6 +64,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         }
 
         $("#minimap, #minimap_overlay").css("display", display);
+        // suppress rclick menu (so we can rclick to view)
+        $("#minimap")[0].oncontextmenu =  function() { return false; }
+        overlay.oncontextmenu =  function() { return false; }
     }
 
     function clear()

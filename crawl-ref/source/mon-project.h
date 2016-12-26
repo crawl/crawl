@@ -15,6 +15,5 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam,
 void cast_iood_burst(int pow, coord_def target);
 bool iood_act(monster& mon, bool no_trail = false);
 void iood_catchup(monster* mon, int turns);
-void boulder_start(monster *mon, bolt *beam);
 
 #endif

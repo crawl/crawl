@@ -20,8 +20,8 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
 #include "process_desc.h"
@@ -40,7 +40,7 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-static VColour _flash_colours[MAX_TERM_COLOUR] =
+static VColour _flash_colours[NUM_TERM_COLOURS] =
 {
     VColour(  0,   0,   0,   0), // BLACK (transparent)
     VColour(  0,   0, 128, 100), // BLUE
@@ -456,8 +456,6 @@ static bool _is_appropriate_evokable(const item_def& item,
         return true;
 
     spell_type spell = zap_to_spell(item.zap());
-    if (spell == SPELL_TELEPORT_OTHER && target->is_player())
-        spell = SPELL_TELEPORT_SELF;
 
     return _is_appropriate_spell(spell, target);
 }
@@ -841,14 +839,9 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
                     case CMD_GO_UPSTAIRS:
                         return command_to_key(feat_stair_direction(feat));
                     default:
-                        if (feat_is_altar(feat)
-                            && player_can_join_god(feat_altar_god(feat)))
-                        {
-                            return command_to_key(CMD_PRAY);
-                        }
+                        // otherwise wait
+                        return command_to_key(CMD_WAIT);
                     }
-                    // otherwise wait
-                    return command_to_key(CMD_WAIT);
                 }
                 else
                 {
@@ -873,11 +866,6 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             case CMD_GO_UPSTAIRS:
                 return command_to_key(feat_stair_direction(feat));
             default:
-                if (feat_is_altar(feat)
-                    && player_can_join_god(feat_altar_god(feat)))
-                {
-                    return command_to_key(CMD_PRAY);
-                }
                 return 0;
             }
         }
@@ -1190,6 +1178,11 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             _add_tip(tip, "[Shift + L-Click] ");
             if (feat == DNGN_ENTER_SHOP)
                 tip += "enter shop";
+            else if (feat_is_altar(feat)
+                     && player_can_join_god(feat_altar_god(feat)))
+            {
+                tip += "pray at altar";
+            }
             else if (feat_is_gate(feat))
                 tip += "enter gate";
             else
@@ -1197,12 +1190,6 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
 
             tip += " (%)";
             cmd.push_back(dir);
-        }
-        else if (feat_is_altar(feat)
-                 && player_can_join_god(feat_altar_god(feat)))
-        {
-            _add_tip(tip, "[Shift + L-Click] pray on altar (%)");
-            cmd.push_back(CMD_PRAY);
         }
     }
 
@@ -1217,6 +1204,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
                 || feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
             {
+                // XXX: wrong for golubria, shops?
                 _add_tip(tip, "[L-Click] Use stairs (%)");
                 cmd.push_back(feat_stair_direction(feat));
             }
@@ -1224,7 +1212,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
                      && player_can_join_god(feat_altar_god(feat)))
             {
                 _add_tip(tip, "[L-Click] Pray at altar (%)");
-                cmd.push_back(CMD_PRAY);
+                cmd.push_back(feat_stair_direction(feat));
             }
             else
             {

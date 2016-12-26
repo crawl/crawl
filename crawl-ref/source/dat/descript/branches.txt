@@ -69,7 +69,7 @@ Slime Pits
 The Slime Pits are the amorphous realm of acids, jellies and slimes. Even the
 walls drip with painful acid. Any trace of intelligent beings has long been
 dissolved. Still, there are rumours of great treasures deep down, hidden safely
-away in secret chambers without door or window.
+away in secret chambers without any entrance.
 %%%%
 Vaults
 
@@ -258,4 +258,14 @@ Depths
 
 The Depths are the deepest part of the dungeon proper, subject to the
 corrupting influence of the Realm of Zot without being considered a part of it.
+%%%%
+Desolation
+
+The Desolation was once ruled by the divines Sheza and Sargol. After the dread
+twins were cast down, the good gods reduced their former realm to salt, that
+such a terrible cult would never rise again. Amidst the ruins, only the last
+cultists of the dead gods, their heretical constructs, and the guardians
+of the cult's legendary treasure yet remain.
+
+# important note: the Twins were religion '2', as TSO is '1'. Not 'S'.
 %%%%

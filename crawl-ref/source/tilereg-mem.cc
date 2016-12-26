@@ -128,8 +128,7 @@ void MemoriseRegion::update()
 
     const unsigned int max_spells = mx * my;
 
-    vector<int>  books;
-    vector<spell_type> spells = get_mem_spell_list(books);
+    vector<spell_type> spells = get_mem_spell_list();
     for (unsigned int i = 0; m_items.size() < max_spells && i < spells.size();
          ++i)
     {
@@ -138,7 +137,6 @@ void MemoriseRegion::update()
         InventoryTile desc;
         desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
-        desc.special  = books[i];
         desc.quantity = spell_difficulty(spell);
 
         if (!can_learn_spell(true)

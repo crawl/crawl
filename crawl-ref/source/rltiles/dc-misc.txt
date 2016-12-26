@@ -111,18 +111,18 @@ indicator_7
 indicator_8
 
 #########CLOUDS
-cloud_fire0 CLOUD_FIRE_0
-cloud_fire1 CLOUD_FIRE_1
-cloud_fire2 CLOUD_FIRE_2
-cloud_cold0 CLOUD_COLD_0
-cloud_cold1 CLOUD_COLD_1
-cloud_cold2 CLOUD_COLD_2
-cloud_poison0 CLOUD_POISON_0
-cloud_poison1 CLOUD_POISON_1
-cloud_poison2 CLOUD_POISON_2
-cloud_meph0 CLOUD_MEPHITIC_0
-cloud_meph1 CLOUD_MEPHITIC_1
-cloud_meph2 CLOUD_MEPHITIC_2
+cloud_fire0 CLOUD_FIRE
+cloud_fire1
+cloud_fire2
+cloud_cold0 CLOUD_COLD
+cloud_cold1
+cloud_cold2
+cloud_poison0 CLOUD_POISON
+cloud_poison1
+cloud_poison2
+cloud_meph0 CLOUD_MEPHITIC
+cloud_meph1
+cloud_meph2
 cloud_black_smoke CLOUD_BLACK_SMOKE
 cloud_blue_smoke CLOUD_BLUE_SMOKE
 cloud_grey_smoke CLOUD_GREY_SMOKE
@@ -133,9 +133,9 @@ cloud_yellow_smoke CLOUD_YELLOW_SMOKE
 %repeat CLOUD_GREY_SMOKE CLOUD_WHITE_SMOKE
 %resetcol
 
-cloud_miasma0 CLOUD_MIASMA_0
-cloud_miasma1 CLOUD_MIASMA_1
-cloud_miasma2 CLOUD_MIASMA_2
+cloud_miasma0 CLOUD_MIASMA
+cloud_miasma1
+cloud_miasma2
 cloud_tloc_energy CLOUD_TLOC_ENERGY
 cloud_mutagenic_small1 CLOUD_MUTAGENIC_0
 cloud_mutagenic_small2
@@ -146,15 +146,14 @@ cloud_mutagenic_large2
 cloud_mutagenic_large3
 cloud_mutagenic_large4
 # orb of destruction
-cloud_magic_trail0 CLOUD_MAGIC_TRAIL_0
-cloud_magic_trail1 CLOUD_MAGIC_TRAIL_1
-cloud_magic_trail2 CLOUD_MAGIC_TRAIL_2
-cloud_magic_trail3 CLOUD_MAGIC_TRAIL_3
-# rolling boulder dust
-cloud_dust_trail0 CLOUD_DUST_TRAIL_0
-cloud_dust_trail1 CLOUD_DUST_TRAIL_1
-cloud_dust_trail2 CLOUD_DUST_TRAIL_2
-cloud_dust_trail3 CLOUD_DUST_TRAIL_3
+cloud_magic_trail0 CLOUD_MAGIC_TRAIL
+cloud_magic_trail1
+cloud_magic_trail2
+cloud_magic_trail3
+cloud_dust0 CLOUD_DUST
+cloud_dust1
+cloud_dust2
+cloud_dust3
 cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
@@ -180,23 +179,23 @@ cloud_calc_dust3
 
 cloud_forest_fire CLOUD_FOREST_FIRE
 
-cloud_spectral0 CLOUD_SPECTRAL_0
-cloud_spectral1 CLOUD_SPECTRAL_1
-cloud_spectral2 CLOUD_SPECTRAL_2
+cloud_spectral0 CLOUD_SPECTRAL
+cloud_spectral1
+cloud_spectral2
 
-cloud_acid0 CLOUD_ACID_0
-cloud_acid1 CLOUD_ACID_1
-cloud_acid2 CLOUD_ACID_2
+cloud_acid0 CLOUD_ACID
+cloud_acid1
+cloud_acid2
 
 cloud_storm1 CLOUD_STORM
 cloud_storm2
 
-cloud_neg0 CLOUD_NEG_0
-cloud_neg1 CLOUD_NEG_1
-cloud_neg2 CLOUD_NEG_2
+cloud_neg0 CLOUD_NEG
+cloud_neg1
+cloud_neg2
 
 %sdir mon
-fungi_plants/giant_spore SPORE_OVERLAY
+fungi_plants/ballistomycete_spore SPORE_OVERLAY
 
 #########MAP
 %sdir misc

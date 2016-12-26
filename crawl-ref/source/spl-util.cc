@@ -438,7 +438,8 @@ int spell_hunger(spell_type which_spell, bool rod)
 // an unobstructed beam path, such as fire storm.
 bool spell_is_direct_explosion(spell_type spell)
 {
-    return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION;
+    return spell == SPELL_FIRE_STORM || spell == SPELL_CALL_DOWN_DAMNATION
+           || spell == SPELL_GHOSTLY_SACRIFICE || spell == SPELL_UPHEAVAL;
 }
 
 bool spell_harms_target(spell_type spell)
@@ -595,26 +596,6 @@ static int _apply_area_around_square(cell_func cf, const coord_def& where)
     return rv;
 }
 
-// Like apply_area_around_square, but for monsters in those squares,
-// and takes care not to affect monsters twice that change position.
-int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int radius)
-{
-    int rv = 0;
-    set<const monster*> affected;
-    for (radius_iterator ri(where, radius, C_SQUARE, true); ri; ++ri)
-    {
-        monster* mon = monster_at(*ri);
-        if (mon && !affected.count(mon))
-        {
-            rv += mf(mon);
-            affected.insert(mon);
-        }
-    }
-
-    return rv;
-}
-
 // Affect up to max_targs monsters around a point, chosen randomly.
 // Return varies with the function called; return values will be added up.
 int apply_random_around_square(cell_func cf, const coord_def& where,
@@ -738,9 +719,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
-                       const actor *agent,
-                       int spread_rate, int colour, string name,
-                       string tile, int excl_rad)
+                       const actor *agent, int spread_rate, int excl_rad)
 {
     if (number <= 0)
         return;
@@ -762,7 +741,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 
         if (place.seen[c] <= 0 || cell_is_solid(c))
             continue;
-        func(c, pow, spread_rate, ctype, agent, colour, name, tile, excl_rad);
+        func(c, pow, spread_rate, ctype, agent, excl_rad);
         number--;
     }
 }
@@ -986,13 +965,6 @@ int spell_range(spell_type spell, int pow, bool player_spell)
     if (maxrange < 0)
         return maxrange;
 
-    // Sandblast is a special case.
-    if (spell == SPELL_SANDBLAST && wielding_rocks())
-    {
-        minrange++;
-        maxrange++;
-    }
-
     if (player_spell
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
@@ -1190,7 +1162,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // XXX: this is a little redundant with you_no_tele_reason()
         // but trying to sort out temp and so on is a mess
         if (you.species == SP_FORMICID)
-            return pluralise(species_name(you.species)) + " cannot teleport.";
+            return "your stasis prevents you from teleporting.";
 
         if (temp && you.no_tele(false, false, true))
             return lowercase_first(you.no_tele_reason(false, true));
@@ -1261,14 +1233,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead to regenerate.";
         break;
 
-    case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
         if (temp
             && (!you.weapon()
                 || you.weapon()->base_type != OBJ_WEAPONS
                 || !is_brandable_weapon(*you.weapon(), true)))
         {
-            return "you aren't wielding an enchantable weapon.";
+            return "you aren't wielding a brandable weapon.";
         }
         // intentional fallthrough
     case SPELL_PORTAL_PROJECTILE:
@@ -1341,7 +1312,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you have no blood to sublime.";
         }
         if (you.magic_points == you.max_magic_points && temp)
-            return "your magic capacity is already full.";
+            return "your reserves of magic are already full.";
         break;
 
     case SPELL_TORNADO:
@@ -1380,6 +1351,19 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (player_mutation_level(MUT_NO_LOVE))
             return "you cannot coerce anything to obey you.";
         break;
+
+    case SPELL_CORPSE_ROT:
+    case SPELL_CONJURE_FLAME:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_MEPHITIC_CLOUD:
+        if (env.level_state & LSTATE_STILL_WINDS)
+            return "the air is too still for clouds to form.";
+        break;
+
+    case SPELL_GOLUBRIAS_PASSAGE:
+        if (player_on_orb_run())
+            return "the Orb prevents this spell from working.";
 
     default:
         break;
@@ -1471,7 +1455,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
                 // Checks here are from get_dist_to_nearest_monster().
                 const monster* mons = monster_at(entry.first);
-                if (mons && !mons->wont_attack() && mons_is_threatening(mons))
+                if (mons && !mons->wont_attack() && mons_is_threatening(*mons))
                     return false;
             }
         }

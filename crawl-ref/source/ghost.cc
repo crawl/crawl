@@ -1,4 +1,3 @@
-
 /**
  * @file
  * @brief Player ghost and random Pandemonium demon handling.
@@ -148,8 +147,7 @@ static brand_type _random_special_pan_lord_brand()
                                   20, SPWPN_PAIN,
                                   20, SPWPN_ANTIMAGIC,
                                   20, SPWPN_DISTORTION,
-                                  20, SPWPN_CHAOS,
-                                  0);
+                                  20, SPWPN_CHAOS);
 }
 
 #define ADD_SPELL(which_spell) \
@@ -165,16 +163,14 @@ static int _panlord_random_resist_level()
                                   3,  0,
                                   3,  1,
                                   2,  2,
-                                  1,  3,
-                                  0);
+                                  1,  3);
 }
 
 static int _panlord_random_elec_resist_level()
 {
     return random_choose_weighted(3, 0,
                                   6, 1,
-                                  1, 3,
-                                  0);
+                                  1, 3);
 }
 
 void ghost_demon::init_pandemonium_lord()
@@ -262,7 +258,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }
@@ -693,6 +689,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_FIREBALL;
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
+    case SPELL_SWIFTNESS:
+        return SPELL_SPRINT;
     default:
         break;
     }

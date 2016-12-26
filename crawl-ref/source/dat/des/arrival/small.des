@@ -68,7 +68,7 @@ WEIGHT:  2
 TAGS:    arrival
 ORIENT:  float
 NSUBST:  % = 1:1 / 1:0 / 1:> / *=%...
-MONS:    gnoll / ogre / giant frog / centaur
+MONS:    gnoll / ogre / bullfrog / centaur
 MAP
 xxxxxxxxxx
 x.......{x
@@ -1584,36 +1584,6 @@ xx...xx.x+x
 ENDMAP
 
 ##############################################################################
-# Sounds of Crawl: the Slurp.
-NAME:    dpeg_arrival_sounds_slurp
-TAGS:    arrival no_monster_gen no_trap_gen
-MONS:    generate_awake jelly
-ITEM:    club
-ORIENT:  float
-KPROP:   1d> = no_tele_into
-SHUFFLE: {[(
-SUBST:   [=., (=.
-SUBST:   v:vxx
-NSUBST:  { = 1:{ / *:.
-MAP
-xxxxxxxxxxxxxxxxxxxxx....@.....
-xxxxx......xxxxxxxxxx.........@
-xxx............xxxxxx..........
-xx................xxxxxxxxxxxxx
-xx....vvvv.......xx.....xxxxxxx
-.....vv1dvvv.....x...{.....xxxx
-@....vdddd>vv................xx
-.....vvddvvv...x....vvv.......x
-xxx...vvvvv...xx...vvvvv..{...x
-xxx..........xx....vvvvv.....xx
-xxx..........xx.....vvv......xx
-xxxx........xx..............xxx
-xxxx.......xxxx....{......xxxxx
-xxxxx...xxxxxxxxx.....xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################################
 ###############################################################################
 # Sounds of Crawl: the *ZOT*
 NAME:    evilmike_arrival_sounds_zot
@@ -2473,12 +2443,12 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / river rat / hell rat / quokka
 MONS:    worker ant / soldier ant / queen ant
-MONS:    worm / giant leech
+MONS:    worm / tyrant leech
 MONS:    komodo dragon / iguana / basilisk
-MONS:    ettin / frost giant / hill giant / stone giant / fire giant
+MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
-MONS:    giant gecko / iguana / giant newt / crocodile / komodo dragon
+MONS:    frilled lizard / leopard gecko / iguana / crocodile / komodo dragon
 MONS:    hog / jackal / wolf / hound
 MONS:    giant cockroach / worker ant / butterfly / killer bee /\
          redback
@@ -2789,7 +2759,7 @@ SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant
+MONS:   bullfrog / spiny frog / yak / death yak w:1 / elephant
 MAP
           ccccccccc
        cccctccccctcccc
@@ -2820,16 +2790,16 @@ NSUBST:  w = @ / w
 SUBST:   w : wwwwwwtt.
 : end
 SUBST:   r : x
-NSUBST:  y = { / ...cc> / .
+NSUBST:  y = { / .....> / .
 KMASK:   W = no_monster_gen
 MONS:    anaconda / death yak / black mamba / elephant / hydra
 MAP
   xxxxxx
- xxccccxx
-xxtcyyctxx
-xt1cyyc1tx
-xtcc..cctx
-x.cc++cc.x
+xxxccccxxx
+xtttyytttx
+xt1tyyt1tx
+xcnc..cncx
+x..c++c..x
 r........z
 xuwwwwwwux
 ENDMAP

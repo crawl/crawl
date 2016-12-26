@@ -34,7 +34,11 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_ABYSS_SEED,   // Remove the abyss seed.
     TAG_MINOR_REIFY_SUBVAULTS,     // Save subvaults with level for attribution
     TAG_MINOR_VEHUMET_SPELL_GIFT,  // Vehumet gift spells instead of books
-    TAG_MINOR_0_11 = 17,           // 0.11 final saves
+    TAG_MINOR_LUA_DUMMY_0,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_LUA_DUMMY_1,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_LUA_DUMMY_2,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_LUA_DUMMY_3,         // dummy to unbreak util/gen-luatags.pl
+    TAG_MINOR_0_11,                 // 0.11 final saves
     TAG_MINOR_0_12,                // (no change)
     TAG_MINOR_BATTLESPHERE_MID,    // Monster battlesphere (mid of creator)
     TAG_MINOR_MALMUTATE,           // Convert Polymorph to Malmutate on old monsters
@@ -188,6 +192,16 @@ enum tag_minor_version
     TAG_MINOR_GHOST_NOSINV,        // don't marshall ghost_demon sinv
     TAG_MINOR_NO_DRACO_TYPE,       // don't marshall mon-info draco_type
     TAG_MINOR_DEMONIC_SPELLS,      // merge demonic spells into magical spells
+    TAG_MINOR_MUMMY_RESTORATION,   // remove mummy self-restoration ability
+    TAG_MINOR_DECUSTOM_CLOUDS,     // remove support for custom clouds
+    TAG_MINOR_PAKELLAS_WRATH,      // fix Pakellas passive wrath not expiring
+    TAG_MINOR_GLOBAL_BR_INFO,      // move global branch info to a reserved location
+    TAG_MINOR_SPIT_POISON_AGAIN,   // Make Naga poison spit a 2-level mutation.
+    TAG_MINOR_HIDE_TO_SCALE,       // Rename dragon hides to scales.
+    TAG_MINOR_NO_PRIORITY,         // Remove CHANCE priority in map definitions.
+    TAG_MINOR_MOTTLED_REMOVAL,     // Mottled dracos get breathe fire
+    TAG_MINOR_NEMELEX_WRATH,       // Nemelex loses the passive wrath component
+    TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -1482,29 +1482,6 @@ void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
     desc = replace_all(desc, "percent", "%");
 }
 
-void insert_commands(string &desc, const int first, ...)
-{
-    vector<command_type> cmd_vector;
-    cmd_vector.push_back((command_type) first);
-
-    va_list args;
-    va_start(args, first);
-    int nargs = 10;
-
-    while (nargs-- > 0)
-    {
-        int value = va_arg(args, int);
-        if (!value)
-            break;
-
-        cmd_vector.push_back((command_type) value);
-    }
-    ASSERT(nargs > 0);
-    va_end(args);
-
-    insert_commands(desc, cmd_vector);
-}
-
 #if 0
 // Currently unused, might be useful somewhere.
 static void _list_all_commands(string &commands)

@@ -23,29 +23,29 @@
 # For any of them, if a wizard has no arms, it will use "non-humanoid wizard"
 # instead of "wizard."
 #
-# For example, a greater naga casting Teleport Self:
-# * Teleport Self greater naga cast
+# For example, a nagaraja casting Teleport Self:
+# * Teleport Self nagaraja cast
 # * Teleport Self naga cast
 # * Teleport Self naga cast
 # * Teleport Self wizard cast
 # * Teleport Self cast real
 # * Teleport Self cast gestures
 # * Teleport Self cast
-# * greater naga cast
+# * nagaraja cast
 # * naga cast
 # * naga cast
 # * wizard cast
 #
 # And one "casting" Spit Poison:
-# * Spit Poison greater naga cast
+# * Spit Poison nagaraja cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison natural cast
 # * Spit Poison cast gestures
 # * Spit Poison cast
-# * greater naga cast targeted
-# * greater naga cast
+# * nagaraja cast targeted
+# * nagaraja cast
 # * naga cast targeted
 # * naga cast
 # * naga cast targeted
@@ -427,7 +427,7 @@ Paralyse Xtahua cast
 ########################################################################
 # Individual monsters
 ########################################################################
-giant orange brain cast
+glowing orange brain cast
 
 @The_monster@ pulsates.
 %%%%
@@ -486,11 +486,11 @@ eidolon cast targeted
 %%%%
 basilisk cast targeted
 
-@giant eyeball cast targeted@
+@floating eye cast targeted@
 %%%%
 basilisk cast
 
-@giant eyeball cast@
+@floating eye cast@
 %%%%
 wretched star cast
 
@@ -531,6 +531,10 @@ Cause Fear satyr cast
 Sleep satyr cast
 
 @The_monster@ plays a lulling melody on his pipes!
+%%%%
+Sleep dream sheep cast
+
+@The_monster@ suddenly materializes a large amount of dream dust!
 %%%%
 Metal Splinters war gargoyle cast
 
@@ -576,13 +580,21 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
-ushabti cast
+Death Rattle ushabti cast
 
 @The_monster@ shakes and rattles.
 %%%%
-Bolt of Draining anubis guard cast
+Warning Cry ushabti cast
 
-@The_monster@ breathes @beam@ @at@ @target@.
+@The_monster@ shakes and rattles deafeningly!
+%%%%
+unseen Warning Cry ushabti cast
+
+You hear a deafening rattling sound!
+%%%%
+ushabti cast targeted
+
+@The_monster@ gestures slowly @at@ @target@.
 %%%%
 Ghostly Fireball revenant cast
 
@@ -648,6 +660,10 @@ Fireball hell hog cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+Throw Barbs peacekeeper cast
+
+@The_monster@ hurls a @beam@ @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -688,15 +704,15 @@ unseen curse skull cast
 
 You hear the clattering of teeth.
 %%%%
-giant eyeball cast targeted
+floating eye cast targeted
 
 @The_monster@ gazes @at@ @target@.
 %%%%
-giant eyeball cast
+floating eye cast
 
 @The_monster@ looks around.
 %%%%
-unseen giant eyeball cast targeted
+unseen floating eye cast targeted
 
 You feel something staring at you. @player_only@
 %%%%

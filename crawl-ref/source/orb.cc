@@ -75,6 +75,15 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
     }
 }
 
+/**
+ * Is the Orb interfering with translocations?
+ * @return True if the player is in Zot or is carrying the Orb.
+ */
+bool orb_limits_translocation()
+{
+    return player_in_branch(BRANCH_ZOT) || player_has_orb();
+}
+
 void start_orb_run(game_chapter chapter, const char* message)
 {
     if (you.chapter != CHAPTER_ANGERED_PANDEMONIUM)

@@ -100,13 +100,16 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
+    const string stat_gain_message = make_stringf("Your experience leads to a%s "
+                                                  "increase in your attributes!",
+                                                  you.species == SP_DEMIGOD ?
+                                                  " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);
     Popup *pop = new Popup("Increase Attributes");
     MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry("Your experience leads to an increase in "
-                                  "your attributes! Increase:", MEL_TITLE));
+    pop->push_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
     pop->push_entry(status);
     MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
     me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
@@ -118,7 +121,7 @@ bool attribute_increase()
     me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
     pop->push_entry(me);
 #else
-    mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
+    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
         || innate_stat(STAT_INT) != you.intel()
@@ -462,9 +465,9 @@ static int _dex_modifier(bool innate_only)
 #if TAG_MAJOR_VERSION == 34
     result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
               - _mut_level(MUT_STRONG_STIFF, innate_only);
+    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 #endif
     result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
-    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 
     return result;
 }
@@ -507,11 +510,12 @@ int stat_loss_roll()
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
+    if (stat_loss <= 0)
+        return false;
+
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    // scale modifier by player_sust_attr() - right-shift
-    // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
         if (you.duration[DUR_DIVINE_STAMINA] > 0)
@@ -520,28 +524,16 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
                  _stat_name(which_stat).c_str());
             return false;
         }
-
-        int sust = player_sust_attr();
-        stat_loss >>= sust;
     }
 
-    mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
-         "You feel %s%s%s.",
-         stat_loss > 0 && player_sust_attr(false) ? "somewhat " : "",
-         stat_desc(which_stat, SD_LOSS),
-         stat_loss > 0 ? "" : " for a moment");
+    mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
 
-    if (stat_loss > 0)
-    {
-        you.stat_loss[which_stat] = min<int>(100,
-                                        you.stat_loss[which_stat] + stat_loss);
-        if (!you.attribute[ATTR_STAT_LOSS_XP])
-            you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-        _handle_stat_change(which_stat);
-        return true;
-    }
-    else
-        return false;
+    you.stat_loss[which_stat] = min<int>(100,
+                                         you.stat_loss[which_stat] + stat_loss);
+    if (!you.attribute[ATTR_STAT_LOSS_XP])
+        you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
+    _handle_stat_change(which_stat);
+    return true;
 }
 
 stat_type random_lost_stat()

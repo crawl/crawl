@@ -48,6 +48,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -129,7 +130,7 @@ void seen_monsters_react(int stealth)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if ((mi->asleep() || mons_is_wandering(*mi))
+        if ((mi->asleep() || mons_is_wandering(**mi))
             && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
@@ -284,7 +285,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
             continue;
         }
 
-        if (!divine && monsters.size() == 1)
+        if (!divine && (ash_ided || monsters.size() == 1))
             continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
@@ -403,7 +404,9 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
 
     for (const monster* mon : monsters)
     {
-        if (x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        if (!mons_is_tentacle_or_tentacle_segment(mon->type)
+            && !mons_is_conjured(mon->type)
+            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
         {
             yell(mon);
             return;
@@ -534,7 +537,7 @@ void mark_mon_equipment_seen(const monster *mons)
 
         // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
-            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*mons))
         {
             if (is_artefact(item))
                 artefact_learn_prop(item, ARTP_BRAND);
@@ -805,7 +808,7 @@ string screenshot()
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
                                      coord_def(x, y));
-            ucs_t ch =
+            char32_t ch =
                   (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;

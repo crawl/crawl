@@ -60,10 +60,6 @@ protected:
 
 #define MAX_NAME_LENGTH 30
 
-// This value is used to mark that the current berserk is free from
-// penalty (used for Xom's special berserk).
-#define NO_BERSERK_PENALTY    -1
-
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned int, GXM, GYM> map_mask;
 typedef FixedBitArray<GXM, GYM> map_bitmask;
@@ -79,9 +75,16 @@ class ghost_demon;
 
 typedef pair<coord_def, int> coord_weight;
 
-template <typename Z> static inline Z sgn(Z x)
+// Constexpr sign.
+template <typename Z> static constexpr Z sgn(Z x)
 {
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
+}
+
+// Constexpr absolute value.
+template <typename Z> static constexpr Z abs_ce(Z x)
+{
+    return x < 0 ? -x : x;
 }
 
 struct coord_def
@@ -89,8 +92,8 @@ struct coord_def
     int         x;
     int         y;
 
-    coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
-    coord_def() : coord_def(0,0) { }
+    constexpr coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
+    constexpr coord_def() : coord_def(0,0) { }
 
     void set(int xi, int yi)
     {
@@ -103,24 +106,27 @@ struct coord_def
         set(0, 0);
     }
 
-    int distance_from(const coord_def &b) const PURE;
+    constexpr int distance_from(const coord_def &b) const
+    {
+        return (b - *this).rdist();
+    }
 
-    bool operator == (const coord_def &other) const
+    constexpr bool operator == (const coord_def &other) const
     {
         return x == other.x && y == other.y;
     }
 
-    bool operator != (const coord_def &other) const
+    constexpr bool operator != (const coord_def &other) const
     {
         return !operator == (other);
     }
 
-    bool operator <  (const coord_def &other) const
+    constexpr bool operator <  (const coord_def &other) const
     {
         return x < other.x || (x == other.x && y < other.y);
     }
 
-    bool operator >  (const coord_def &other) const
+    constexpr bool operator >  (const coord_def &other) const
     {
         return x > other.x || (x == other.x && y > other.y);
     }
@@ -167,80 +173,87 @@ struct coord_def
         return *this;
     }
 
-    coord_def operator + (const coord_def &other) const
+    constexpr coord_def operator + (const coord_def &other) const
     {
-        coord_def copy = *this;
-        return copy += other;
+        return { x + other.x, y + other.y };
     }
 
-    coord_def operator + (int other) const
+    constexpr coord_def operator + (int other) const
     {
-        coord_def copy = *this;
-        return copy += other;
+        return *this + coord_def(other, other);
     }
 
-    coord_def operator - (const coord_def &other) const
+    constexpr coord_def operator - (const coord_def &other) const
     {
-        coord_def copy = *this;
-        return copy -= other;
+        return { x - other.x, y - other.y };
     }
 
-    coord_def operator -() const
+    constexpr coord_def operator -() const
     {
-        return coord_def(0, 0) - *this;
+        return { -x, -y };
     }
 
-    coord_def operator - (int other) const
+    constexpr coord_def operator - (int other) const
     {
-        coord_def copy = *this;
-        return copy -= other;
+        return *this - coord_def(other, other);
     }
 
-    coord_def operator / (int div) const
+    constexpr coord_def operator / (int div) const
     {
-        coord_def copy = *this;
-        return copy /= div;
+        return { x / div, y / div };
     }
 
-    coord_def operator * (int mul) const
+    constexpr coord_def operator * (int mul) const
     {
-        coord_def copy = *this;
-        return copy *= mul;
+        return { x * mul, y * mul };
     }
 
-    coord_def sgn() const
+    constexpr coord_def sgn() const
     {
         return coord_def(::sgn(x), ::sgn(y));
     }
 
-    int abs() const
+    constexpr int abs() const
     {
         return x * x + y * y;
     }
 
-    int rdist() const
+    constexpr int rdist() const
     {
-        return max(::abs(x), ::abs(y));
+        // Replace with max(abs_ce(x), abs_ce(y) when we require C++14.
+        return abs_ce(x) > abs_ce(y) ? abs_ce(x) : abs_ce(y);
     }
 
-    bool origin() const
+    constexpr bool origin() const
     {
         return !x && !y;
     }
 
-    bool zero() const
+    constexpr bool zero() const
     {
         return origin();
     }
 
-    bool equals(const int xi, const int yi) const
+    constexpr bool equals(const int xi, const int yi) const
     {
-        return xi == x && yi == y;
+        return *this == coord_def(xi, yi);
     }
 };
 
-extern const coord_def INVALID_COORD;
-extern const coord_def NO_CURSOR;
+namespace std {
+    template <>
+    struct hash<coord_def>
+    {
+        constexpr size_t operator()(const coord_def& c) const
+        {
+            // lazy assumption: no coordinate will ever be bigger than 2^16
+            return (c.x << 16) + c.y;
+        }
+    };
+}
+
+constexpr coord_def INVALID_COORD {-1, -1};
+constexpr coord_def NO_CURSOR { INVALID_COORD };
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
@@ -303,19 +316,14 @@ struct cloud_struct
     kill_category whose;
     killer_type   killer;
     mid_t         source;
-    int           colour;
-    string        name;
-    string        tile;
     int           excl_rad;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
-                     whose(KC_OTHER), killer(KILL_NONE), colour(-1),
-                     name(""), tile(""), excl_rad(-1)
+                     whose(KC_OTHER), killer(KILL_NONE), excl_rad(-1)
     {
     }
     cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
-                 killer_type kt, mid_t src, int clr, string name_, string tile_,
-                 int excl);
+                 killer_type kt, mid_t src, int excl);
 
     bool defined() const { return type != CLOUD_NONE; }
     bool temporary() const { return excl_rad == -1; }
@@ -509,7 +517,7 @@ typedef uint32_t iflags_t;
 
 struct item_def
 {
-    object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
+    object_class_type base_type; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
     union
@@ -871,10 +879,10 @@ private:
 
 struct cglyph_t
 {
-    ucs_t ch;
+    char32_t ch;
     unsigned short col; // XXX: real or unreal depending on context...
 
-    cglyph_t(ucs_t _ch = 0, unsigned short _col = LIGHTGREY)
+    cglyph_t(char32_t _ch = 0, unsigned short _col = LIGHTGREY)
         : ch(_ch), col(_col)
     {
     }

@@ -85,7 +85,6 @@ struct direction_chooser_args
     int range;
     bool just_looking;
     bool needs_path;
-    bool may_target_monster;
     confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
@@ -101,7 +100,6 @@ struct direction_chooser_args
         range(-1),
         just_looking(false),
         needs_path(true),
-        may_target_monster(true),
         self(CONFIRM_PROMPT),
         target_prefix(nullptr),
         behaviour(nullptr),
@@ -241,7 +239,6 @@ private:
     int range;                  // Max range to consider
     bool just_looking;
     bool needs_path;            // Determine a ray while we're at it?
-    bool may_target_monster;
     confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
@@ -267,12 +264,6 @@ private:
     bool need_all_redraw;       // All of the above.
 
     bool show_items_once;       // Should we show items this time?
-#ifndef USE_TILE_LOCAL
-    void update_mlist(bool enable);
-
-    bool mlist_full_info;
-    vector<monster_info> mlist;
-#endif
 
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
@@ -295,7 +286,7 @@ void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
-void full_describe_square(const coord_def &c);
+void full_describe_square(const coord_def &c, bool cleanup = true);
 void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();

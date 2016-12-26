@@ -40,6 +40,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mutation.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
 #include "player-equip.h"
@@ -117,7 +118,6 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
     SPELL_EXCRUCIATING_WOUNDS,
-    SPELL_WARP_BRAND,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
@@ -429,10 +429,10 @@ void xom_tick()
     }
 }
 
-static bool mon_nearby(function<bool(monster*)> filter)
+static bool mon_nearby(function<bool(monster&)> filter)
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (filter(*mi))
+        if (filter(**mi))
             return true;
     return false;
 }
@@ -488,21 +488,6 @@ static int _exploration_estimate(bool seen_only = false)
         seen *= 100 / total;
 
     return seen;
-}
-
-static bool _spell_weapon_check(const spell_type spell)
-{
-    switch (spell)
-    {
-    case SPELL_EXCRUCIATING_WOUNDS:
-    case SPELL_WARP_BRAND:
-    {
-        const item_def* weapon = you.weapon();
-        return weapon && !is_artefact(*weapon) && is_melee_weapon(*weapon);
-    }
-    default:
-        return true;
-    }
 }
 
 static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
@@ -569,8 +554,7 @@ static spell_type _choose_random_spell(int sever, int tense)
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (_spell_weapon_check(spell)
-            && !spell_is_useless(spell, true, true, false, true)
+        if (!spell_is_useless(spell, true, true, false, true)
              && _transformation_check(spell))
         {
             ok_spells.push_back(spell);
@@ -759,15 +743,15 @@ static void _xom_random_item(int sever)
     more();
 }
 
-static bool _choose_mutatable_monster(const monster* mon)
+static bool _choose_mutatable_monster(const monster& mon)
 {
-    return mon->alive() && mon->can_safely_mutate()
-           && !mon->submerged();
+    return mon.alive() && mon.can_safely_mutate()
+           && !mon.submerged();
 }
 
-static bool _choose_enchantable_monster(const monster* mon)
+static bool _choose_enchantable_monster(const monster& mon)
 {
-    return mon->alive() && !mon->wont_attack()
+    return mon.alive() && !mon.wont_attack()
            && !mons_immune_magic(mon);
 }
 
@@ -834,10 +818,10 @@ static bool _is_chaos_upgradeable(const item_def &item,
     return false;
 }
 
-static bool _choose_chaos_upgrade(const monster* mon)
+static bool _choose_chaos_upgrade(const monster& mon)
 {
     // Only choose monsters that will attack.
-    if (!mon->alive() || mons_attitude(mon) != ATT_HOSTILE
+    if (!mon.alive() || mons_attitude(mon) != ATT_HOSTILE
         || mons_is_fleeing(mon))
     {
         return false;
@@ -848,19 +832,19 @@ static bool _choose_chaos_upgrade(const monster* mon)
 
     // Holy beings are presumably protected by another god, unless
     // they're gifts from a chaotic god.
-    if (mon->is_holy() && !is_chaotic_god(mon->god))
+    if (mon.is_holy() && !is_chaotic_god(mon.god))
         return false;
 
     // God gifts from good gods will be protected by their god from
     // being given chaos weapons, while other gods won't mind the help
     // in their servants' killing the player.
-    if (is_good_god(mon->god))
+    if (is_good_god(mon.god))
         return false;
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.
-    if (mons_genus(mon->type) == MONS_ORC
-        && (mon->is_priest() || coinflip()))
+    if (mons_genus(mon.type) == MONS_ORC
+        && (mon.is_priest() || coinflip()))
     {
         return false;
     }
@@ -873,7 +857,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
     for (int i = 0; i < 3; ++i)
     {
         const mon_inv_type slot = slots[i];
-        const int          midx = mon->inv[slot];
+        const int          midx = mon.inv[slot];
 
         if (midx == NON_ITEM)
             continue;
@@ -884,7 +868,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
         if (is_chaotic_item(item))
             return false;
 
-        if (_is_chaos_upgradeable(item, mon))
+        if (_is_chaos_upgradeable(item, &mon))
         {
             if (item.base_type != OBJ_MISSILES)
                 return true;
@@ -1017,16 +1001,12 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_AGILITY,
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
-                                     10, POT_BERSERK_RAGE,
-                                     1,  POT_EXPERIENCE,
-                                     0);
+                                     5,  POT_BERSERK_RAGE,
+                                     1,  POT_EXPERIENCE);
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
-
-    if (pot == POT_BERSERK_RAGE)
-        you.berserk_penalty = NO_BERSERK_PENALTY;
 
     if (pot == POT_INVISIBILITY)
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
@@ -1050,9 +1030,9 @@ static void _confuse_monster(monster* mons, int sever)
           &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
     {
         if (was_confused)
-            simple_monster_message(mons, " looks rather more confused.");
+            simple_monster_message(*mons, " looks rather more confused.");
         else
-            simple_monster_message(mons, " looks rather confused.");
+            simple_monster_message(*mons, " looks rather confused.");
     }
 }
 
@@ -1100,8 +1080,8 @@ static void _xom_send_allies(int sever)
     {
         monster_type mon_type = _xom_random_demon(sever);
 
-        mgen_data mg(mon_type, BEH_FRIENDLY, &you, 3, MON_SUMM_AID,
-                     you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+        mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
+        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
 
         // Even though the friendlies are charged to you for accounting,
         // they should still show as Xom's fault if one of them kills you.
@@ -1127,8 +1107,8 @@ static void _xom_send_one_ally(int sever)
 {
     const monster_type mon_type = _xom_random_demon(sever);
 
-    mgen_data mg(mon_type, BEH_FRIENDLY, &you, 6, MON_SUMM_AID,
-                 you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mgen_data mg(mon_type, BEH_FRIENDLY, you.pos(), MHITYOU, MG_FORCE_BEH);
+    mg.set_summoned(&you, 6, MON_SUMM_AID, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
@@ -1196,7 +1176,7 @@ static void _xom_polymorph_monster(monster &mons, bool helpful)
 static monster* _xom_mons_poly_target()
 {
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (_choose_mutatable_monster(*mi) && !mons_is_firewood(*mi))
+        if (_choose_mutatable_monster(**mi) && !mons_is_firewood(**mi))
             return *mi;
     return nullptr;
 }
@@ -1339,10 +1319,10 @@ static int _xom_random_stickable(const int HD)
     return arr[c];
 }
 
-static bool _hostile_snake(monster* mon)
+static bool _hostile_snake(monster& mon)
 {
-    return mon->attitude == ATT_HOSTILE
-            && mons_genus(mon->type) == MONS_SNAKE;
+    return mon.attitude == ATT_HOSTILE
+            && mons_genus(mon.type) == MONS_SNAKE;
 }
 
 // An effect similar to old sticks to snakes (which worked on "sticks" other
@@ -1357,7 +1337,7 @@ static void _xom_snakes_to_sticks(int sever)
     bool action = false;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (!_hostile_snake(*mi))
+        if (!_hostile_snake(**mi))
             continue;
 
         if (!action)
@@ -1405,7 +1385,7 @@ static monster* _find_monster_with_animateable_weapon()
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack() || mi->is_summoned()
-            || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
+            || mons_itemuse(**mi) < MONUSE_STARTING_EQUIPMENT
             || (mi->flags & MF_HARD_RESET))
         {
             continue;
@@ -1447,9 +1427,8 @@ static void _xom_animate_monster_weapon(int sever)
 
     const int dur = min(2 + (random2(sever) / 5), 6);
 
-    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you, dur,
-                 SPELL_TUKIMAS_DANCE, mon->pos(), mon->mindex(),
-                 MG_NONE, GOD_XOM);
+    mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, mon->pos(), mon->mindex());
+    mg.set_summoned(&you, dur, SPELL_TUKIMAS_DANCE, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
@@ -1767,7 +1746,7 @@ static void _xom_destruction(int sever, bool real)
 
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mons_is_projectile(*mi)
+        if (mons_is_projectile(**mi)
             || mons_is_tentacle_or_tentacle_segment(mi->type)
             || one_chance_in(3))
         {
@@ -1927,12 +1906,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     }
 
     if (in_view[DNGN_ORCISH_IDOL])
-    {
-        if (species_is_orcish(you.species))
-            priority.emplace_back("The idol of Beogh turns to glare at you.");
-        else
-            priority.emplace_back("The orcish idol turns to glare at you.");
-    }
+        priority.emplace_back("The idol of Beogh turns to glare at you.");
 
     if (in_view[DNGN_GRANITE_STATUE])
         priority.emplace_back("The granite statue turns to stare at you.");
@@ -2037,7 +2011,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     {
         string str = "A monocle briefly appears over your ";
-        str += coinflip() ? "right" : "left";
+        str += random_choose("right", "left");
         if (you.form == TRAN_SPIDER)
         {
             if (coinflip())
@@ -2164,7 +2138,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         item_def &item = **random_iterator(inv_items);
 
         string name = item.name(DESC_YOUR, false, false, false);
-        string verb = coinflip() ? "glow" : "vibrate";
+        string verb = random_choose("glow", "vibrate");
 
         if (item.quantity == 1)
             verb += "s";
@@ -2627,8 +2601,7 @@ static void _xom_cloud_trail(int /*sever*/)
                                5,  CLOUD_MIASMA,
                                5,  CLOUD_PETRIFY,
                                5,  CLOUD_MUTAGENIC,
-                               5,  CLOUD_NEGATIVE_ENERGY,
-                               0);
+                               5,  CLOUD_NEGATIVE_ENERGY);
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "cloud trail"), true);
 
@@ -2682,6 +2655,13 @@ static void _xom_torment(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
+static monster* _xom_summon_hostile(monster_type hostile)
+{
+    return create_monster(mgen_data::hostile_at(hostile, true, you.pos())
+                          .set_summoned(nullptr, 4, MON_SUMM_WRATH, GOD_XOM)
+                          .set_non_actor_summoner("Xom"));
+}
+
 static void _xom_summon_hostiles(int sever)
 {
     int num_summoned = 0;
@@ -2690,18 +2670,10 @@ static void _xom_summon_hostiles(int sever)
     if (shadow_creatures)
     {
         // Small number of shadow creatures.
-        int count = 2 + random2(4);
+        int count = 1 + random2(4);
         for (int i = 0; i < count; ++i)
-        {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        RANDOM_MOBILE_MONSTER, "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
-                        GOD_XOM)))
-            {
+            if (_xom_summon_hostile(RANDOM_MOBILE_MONSTER))
                 num_summoned++;
-            }
-        }
     }
     else
     {
@@ -2721,16 +2693,8 @@ static void _xom_summon_hostiles(int sever)
         }
 
         for (int i = 0; i < numdemons; ++i)
-        {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        _xom_random_demon(sever), "Xom",
-                        true, 4, MON_SUMM_WRATH, you.pos(), MG_NONE,
-                        GOD_XOM)))
-            {
+            if (_xom_summon_hostile(_xom_random_demon(sever)))
                 num_summoned++;
-            }
-        }
     }
 
     if (num_summoned > 0)
@@ -2838,10 +2802,10 @@ static void _xom_noise(int /*sever*/)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "noise"), true);
 }
 
-static bool _mon_valid_blink_victim(const monster *mon)
+static bool _mon_valid_blink_victim(const monster& mon)
 {
-    return !mon->wont_attack()
-            && !mon->no_tele()
+    return !mon.wont_attack()
+            && !mon.no_tele()
             && !mons_is_projectile(mon);
 }
 
@@ -2856,7 +2820,7 @@ static void _xom_blink_monsters(int /*sever*/)
         if (blinks >= 5)
             break;
 
-        if (!_mon_valid_blink_victim(*mi) || coinflip())
+        if (!_mon_valid_blink_victim(**mi) || coinflip())
             continue;
 
         // Only give this message once.
@@ -2882,7 +2846,7 @@ static void _xom_cleaving(int sever)
 {
     god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
 
-    you.increase_duration(DUR_CLEAVE, 10 + random2(sever) * 10);
+    you.increase_duration(DUR_CLEAVE, 10 + random2(sever));
 
     if (const item_def* const weapon = you.weapon())
     {
@@ -3023,7 +2987,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > 0 && x_chance_in_y(5, sever)
-        && mon_nearby([](monster* mon){ return !mon->wont_attack(); }))
+        && mon_nearby([](monster& mon){ return !mon.wont_attack(); }))
     {
         return XOM_GOOD_CONFUSION;
     }
@@ -3068,7 +3032,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         const bool fake = one_chance_in(3);
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_is_projectile(*mi)
+            if (mons_is_projectile(**mi)
                 || mons_is_tentacle_or_tentacle_segment(mi->type))
             {
                 continue;

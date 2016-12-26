@@ -317,6 +317,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
         return CMD_GO_UPSTAIRS;
     }
 
+    if (feat_is_altar(feat))
+        return CMD_GO_UPSTAIRS; // arbitrary; consistent with shops
+
     switch (feat)
     {
     case DNGN_ENTER_HELL:
@@ -601,7 +604,8 @@ bool feat_is_valid_border(dungeon_feature_type feat)
     return feat_is_wall(feat)
            || feat_is_tree(feat)
            || feat == DNGN_OPEN_SEA
-           || feat == DNGN_LAVA_SEA;
+           || feat == DNGN_LAVA_SEA
+           || feat == DNGN_ENDLESS_SALT;
 }
 
 /** Can this feature be a mimic?
@@ -806,7 +810,7 @@ void slime_wall_damage(actor* act, int delay)
         monster* mon = act->as_monster();
 
         // Slime native monsters are immune to slime walls.
-        if (mons_is_slime(mon))
+        if (mons_is_slime(*mon))
             return;
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,
@@ -1577,7 +1581,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
     {
         mpr("You sink like a stone!");
 
-        if (you.is_artificial() || you.undead_state())
+        if (you.is_nonliving() || you.undead_state())
             mpr("You fall apart...");
         else
             mpr("You drown...");

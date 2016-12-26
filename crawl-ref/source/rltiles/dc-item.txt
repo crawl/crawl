@@ -152,8 +152,8 @@ blowgun2
 sling1 WPN_HUNTING_SLING
 sling2
 %rim 0
-greatsling WPN_GREATSLING
-greatsling2
+fustibalus WPN_FUSTIBALUS
+fustibalus2
 
 shortbow1 WPN_SHORTBOW
 shortbow2
@@ -188,6 +188,8 @@ i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
+# Remove the BRAND_FLAME and BRAND_FROST line s(but not the tiles, which are
+# still used for melee weapons) when TAG_MAJOR_VERSION > 34
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
 i-vampirism BRAND_VAMPIRISM
@@ -373,27 +375,16 @@ animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
 animal_skin3
 
-troll_hide ARM_TROLL_HIDE
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-red_dragon_scales ARM_FIRE_DRAGON_HIDE
 red_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
-ice_dragon_hide ARM_ICE_DRAGON_HIDE
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
-silver_dragon_scales ARM_STEAM_DRAGON_HIDE
 silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR
-mottled_dragon_hide ARM_MOTTLED_DRAGON_HIDE
-mottled_dragon_armour ARM_MOTTLED_DRAGON_ARMOUR
-quicksilver_dragon_scales ARM_QUICKSILVER_DRAGON_HIDE
+acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
 quicksilver_dragon_scale_mail ARM_QUICKSILVER_DRAGON_ARMOUR
-blue_dragon_scales ARM_STORM_DRAGON_HIDE
 blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR
-shadow_dragon_scales ARM_SHADOW_DRAGON_HIDE
 shadow_dragon_scale_mail ARM_SHADOW_DRAGON_ARMOUR
-gold_dragon_hide ARM_GOLD_DRAGON_HIDE
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
-swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
-pearl_dragon_hide ARM_PEARL_DRAGON_HIDE
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
 %rim 1
@@ -527,9 +518,9 @@ gem_plastic
 i-flame WAND_FLAME WAND_ID_FIRST
 i-flame WAND_REMOVEME
 i-slowing WAND_SLOWING
-i-hasting WAND_HASTING
+i-hasting WAND_REMOVEME7
 i-flame WAND_REMOVEME2
-i-heal_wounds WAND_HEAL_WOUNDS
+i-heal_wounds WAND_REMOVEME6
 i-paralysis WAND_PARALYSIS
 i-flame WAND_REMOVEME3
 i-flame WAND_REMOVEME4
@@ -537,7 +528,7 @@ i-confusion WAND_CONFUSION
 i-flame WAND_REMOVEME5
 i-digging WAND_DIGGING
 i-iceblast WAND_ICEBLAST
-i-teleportation WAND_TELEPORTATION
+i-teleportation WAND_REMOVEME8
 i-lightning WAND_LIGHTNING
 i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
@@ -550,7 +541,7 @@ i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
 bread_ration FOOD_BREAD_RATION
 
-apple FOOD_FRUIT_FIRST
+apple FOOD_FRUIT_FIRST FOOD_APPLE
 apricot
 banana
 choko
@@ -714,6 +705,7 @@ i-r-corrosion RING_RESIST_CORROSION
 i-loudness RING_LOUDNESS
 i-teleport RING_TELEPORTATION
 i-evasion RING_EVASION
+# Remove sustat when TAG_MAJOR_VERSION > 34
 i-s-attr RING_SUSTAIN_ATTRIBUTES
 i-stealth RING_STEALTH
 i-dex RING_DEXTERITY

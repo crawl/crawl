@@ -172,25 +172,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (!can_pass_through_feat(actual_grid))
         return false;
 
-    if (airborne()
-#if TAG_MAJOR_VERSION == 34
-            || species == SP_DJINNI
-#endif
-            )
-    {
-        return true;
-    }
-
-    if (
-#if TAG_MAJOR_VERSION == 34
-        actual_grid == DNGN_LAVA && species != SP_LAVA_ORC ||
-#endif
-        actual_grid == DNGN_DEEP_WATER && !can_swim())
-    {
-        return false;
-    }
-
-    return true;
+    return !is_feat_dangerous(actual_grid);
 }
 
 size_type player::body_size(size_part_type psize, bool base) const
@@ -278,10 +260,6 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         int sk = form_uses_xl() ? experience_level * 10 :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
-
-        // Bats are faster (for whatever good it does them).
-        if (you.form == TRAN_BAT && !projectile)
-            attk_delay = div_rand_round(attk_delay * 3, 5);
     }
     else if (weap &&
              (projectile ? projectile->launched_by(*weap)
@@ -320,11 +298,12 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         // longer so when Haste speeds it up, only Finesse will apply.
         if (you.duration[DUR_HASTE] && rescale)
             attk_delay = haste_mul(attk_delay);
-        attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
+        attk_delay = div_rand_round(attk_delay, 2);
     }
 
     // see comment on player.cc:player_speed
-    return div_rand_round(attk_delay * you.time_taken, 10);
+    return rv::max(div_rand_round(attk_delay * you.time_taken, 10),
+                   random_var(2));
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.
@@ -672,11 +651,6 @@ bool player::fumbles_attack()
     return did_fumble;
 }
 
-bool player::cannot_fight() const
-{
-    return false;
-}
-
 void player::attacking(actor *other, bool ranged)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -691,7 +665,7 @@ void player::attacking(actor *other, bool ranged)
             pet_target = mon->mindex();
     }
 
-    if (ranged || mons_is_firewood((monster*) other))
+    if (ranged || mons_is_firewood(*(monster*) other))
         return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
@@ -748,9 +722,6 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (check_stasis())
-        return false;
-
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
@@ -779,8 +750,7 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.duration[DUR_MIGHT])
         notify_stat_change(STAT_STR, 5, true);
 
-    if (you.berserk_penalty != NO_BERSERK_PENALTY)
-        you.berserk_penalty = 0;
+    you.berserk_penalty = 0;
 
     you.redraw_quiver = true; // Account for no firing.
 
@@ -809,7 +779,6 @@ bool player::can_go_berserk() const
 bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
                             string *reason) const
 {
-    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
     const bool verbose = (intentional || potion) && !quiet;
     string msg;
     bool success = false;
@@ -830,14 +799,10 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
 #endif
     else if (is_lifeless_undead())
         msg = "You cannot raise a blood rage in your lifeless body.";
-    // Stasis for identified amulets; unided amulets will trigger when the
-    // player attempts to activate berserk.
-    else if (stasis(false))
-        msg = "You cannot go berserk while under stasis.";
+    else if (stasis())
+        msg = "Your stasis prevents you from going berserk.";
     else if (!intentional && !potion && clarity())
         msg = "You're too calm and focused to rage.";
-    else if (hunger <= HUNGER_VERY_HUNGRY)
-        msg = "You're too hungry to go berserk.";
     else
         success = true;
 

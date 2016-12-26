@@ -104,7 +104,7 @@ void start_recall(recall_t type)
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mons_is_recallable(&you, *mi))
+        if (!mons_is_recallable(&you, **mi))
             continue;
 
         if (type == RECALL_YRED)
@@ -114,7 +114,7 @@ void start_recall(recall_t type)
         }
         else if (type == RECALL_BEOGH)
         {
-            if (!is_orcish_follower(*mi))
+            if (!is_orcish_follower(**mi))
                 continue;
         }
 
@@ -183,11 +183,11 @@ bool try_recall(mid_t mid)
         else
         {
             coord_def empty;
-            if (find_habitable_spot_near(you.pos(), mons_base_type(mons), 3, false, empty)
+            if (find_habitable_spot_near(you.pos(), mons_base_type(*mons), 3, false, empty)
                 && mons->move_to_pos(empty))
             {
                 recall_orders(mons);
-                simple_monster_message(mons, " is recalled.");
+                simple_monster_message(*mons, " is recalled.");
                 mons->apply_location_effects(mons->pos());
                 // mons may have been killed, shafted, etc,
                 // but they were still recalled!
@@ -296,10 +296,10 @@ static int _intoxicate_monsters(coord_def where, int pow)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
-        || mons_intel(mons) < I_HUMAN
+        || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
         || mons->check_clarity(false)
-        || monster_resists_this_poison(mons))
+        || monster_resists_this_poison(*mons))
     {
         return 0;
     }
@@ -307,7 +307,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     if (x_chance_in_y(40 + pow/3, 100))
     {
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
-        simple_monster_message(mons, " looks rather confused.");
+        simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
     return 0;

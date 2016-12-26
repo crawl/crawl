@@ -141,7 +141,7 @@ static void monster_action_cost(string& qual, int cost, const char* desc)
 static string monster_int(const monster& mon)
 {
     string intel = "???";
-    switch (mons_intel(&mon))
+    switch (mons_intel(mon))
     {
     case I_BRAINLESS:
         intel = "brainless";
@@ -193,7 +193,7 @@ static string monster_speed(const monster& mon, const monsterentry* me,
     else
         speed += to_string(speed_max);
 
-    const mon_energy_usage& cost = mons_energy(&mon);
+    const mon_energy_usage& cost = mons_energy(mon);
     string qualifiers;
 
     bool skip_action = false;
@@ -361,8 +361,11 @@ static string mons_human_readable_spell_damage_string(monster* monster,
         case SPELL_CHAIN_LIGHTNING:
             return mi_calc_chain_lightning_damage(monster);
         case SPELL_WATERSTRIKE:
-            spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
+            spell_beam.damage = waterstrike_damage(*monster);
             break;
+        case SPELL_RESONANCE_STRIKE:
+            return dice_def_string(resonance_strike_base_damage(*monster))
+                   + "+"; // could clarify further?
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
@@ -408,7 +411,16 @@ static string shorten_spell_name(string name)
         }
     }
     if ((pos = name.find(" of ")) != string::npos)
-        name = name.substr(0, 1) + "." + name.substr(pos + 4);
+    {
+        istringstream words { name.substr(0, pos) };
+        string abbrev, word;
+        while (words >> word)
+        {
+            abbrev += word[0];
+            abbrev += '.';
+        }
+        name = abbrev + name.substr(pos + 4);
+    }
     if (starts_with(name, "summon "))
         name = "sum." + name.substr(7);
     if (ends_with(name, " bolt"))
@@ -584,7 +596,6 @@ static void rebind_mspec(string* requested_name,
             || requested_name->find("blood saint") == 0
             || requested_name->find("corrupter") == 0
             || requested_name->find("warmonger") == 0
-            || requested_name->find("chaos champion") == 0
             || requested_name->find("black sun") == 0))
     {
         // If the user requested a drac, the game might generate a
@@ -653,7 +664,7 @@ static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
                     this_spec = true;
             }
 
-            mons_remove_from_grid(mp);
+            mons_remove_from_grid(*mp);
 
             if (this_spec)
             {
@@ -803,7 +814,7 @@ int main(int argc, char* argv[])
     {
         monster* mp = &menv[index];
         const string mname = mp->name(DESC_PLAIN, true);
-        exper += exper_value(mp);
+        exper += exper_value(*mp);
         mac += mp->armour_class();
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
@@ -851,7 +862,7 @@ int main(int argc, char* argv[])
         shapeshifter ? get_monster_data(spec_type) : mon.find_monsterentry();
 
     const monsterentry* mbase =
-        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(&mon)) :
+        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(mon)) :
                   (monsterentry*)0;
 
     if (me)
@@ -893,7 +904,7 @@ int main(int argc, char* argv[])
         string defenses;
         if (mon.is_spiny() > 0)
             defenses += colour(YELLOW, "(spiny 5d4)");
-        if (mons_species(mons_base_type(&mon)) == MONS_MINOTAUR)
+        if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
             defenses += colour(LIGHTRED, "(headbutt: d20-1)");
         if (defenses != "")
             printf(" %s", defenses.c_str());
@@ -905,7 +916,7 @@ int main(int argc, char* argv[])
             int attack_num = x;
             if (mon.has_hydra_multi_attack())
                 attack_num = x == 0 ? x : x + mon.number - 1;
-            mon_attack_def attk = mons_attack_spec(&mon, attack_num);
+            mon_attack_def attk = mons_attack_spec(mon, attack_num);
             if (attk.type)
             {
                 if (monsterattacks.empty())
@@ -996,7 +1007,7 @@ int main(int argc, char* argv[])
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
-                case AF_PARALYSE:
+                case AF_POISON_PARALYSE:
                     monsterattacks += colour(LIGHTRED, "(paralyse)");
                     break;
                 case AF_POISON:
@@ -1010,9 +1021,6 @@ int main(int argc, char* argv[])
                     break;
                 case AF_ROT:
                     monsterattacks += colour(LIGHTRED, "(rot)");
-                    break;
-                case AF_MIASMATA:
-                    monsterattacks += colour(LIGHTRED, "(miasmata)");
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
@@ -1088,6 +1096,7 @@ int main(int argc, char* argv[])
                 case AF_POISON_INT:
                 case AF_POISON_STAT:
                 case AF_FIREBRAND:
+                case AF_MIASMATA:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
@@ -1114,7 +1123,7 @@ int main(int argc, char* argv[])
                         monsterflags, colour(RED, "demonic"));
         mons_check_flag((bool)(me->holiness & MH_NONLIVING),
                         monsterflags, colour(LIGHTCYAN, "non-living"));
-        mons_check_flag(mons_is_plant(&mon), monsterflags,
+        mons_check_flag(mons_is_plant(mon), monsterflags,
                         colour(GREEN, "plant"));
 
         switch (me->gmon_use)
@@ -1136,12 +1145,12 @@ int main(int argc, char* argv[])
             break;
         }
 
-        mons_check_flag(bool(me->bitfields & M_EAT_ITEMS), monsterflags,
-                        colour(LIGHTRED, "eats items"));
+        mons_check_flag(bool(me->bitfields & M_EAT_DOORS), monsterflags,
+                        colour(LIGHTRED, "eats doors"));
         mons_check_flag(bool(me->bitfields & M_CRASH_DOORS), monsterflags,
                         colour(LIGHTRED, "breaks doors"));
 
-        mons_check_flag(mons_wields_two_weapons(&mon), monsterflags,
+        mons_check_flag(mons_wields_two_weapons(mon), monsterflags,
                         "two-weapon");
         mons_check_flag(mon.is_fighter(), monsterflags, "fighter");
         if (mon.is_archer())
@@ -1212,7 +1221,7 @@ int main(int argc, char* argv[])
         }
 
         const resists_t res(shapeshifter ? me->resists :
-                                           get_mons_resists(&mon));
+                                           get_mons_resists(mon));
 #define res(c, x)                                                              \
     do                                                                         \
     {                                                                          \
@@ -1241,7 +1250,7 @@ int main(int argc, char* argv[])
         res2(LIGHTBLUE, drown, mon.res_water_drowning());
         res2(LIGHTRED, rot, mon.res_rotting());
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
-        res2(YELLOW, holy, mon.res_holy_energy(&you));
+        res2(YELLOW, holy, mon.res_holy_energy());
         res2(LIGHTMAGENTA, torm, mon.res_torment());
         res2(LIGHTBLUE, wind, mon.res_wind());
         res2(LIGHTRED, napalm, mon.res_sticky_flame());

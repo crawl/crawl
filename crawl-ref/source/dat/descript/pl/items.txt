@@ -245,7 +245,7 @@ Ten zaklęty wachlarz jest zamieszkały przez przyjazne duchy powietrza.
 Machnięcie rozwartym wachlarzem wywoła mocny powiew wichru, oraz wyzwoli te
 duchy pozwalając im dobrać się do twych wrogów.
 %%%%
-fire dragon armour
+fire dragon scales
 
 Ta zbroja została wykonana skóry smoka właściwego. Zapewnia ona wspaniałą
 ochronę przed ogniem, ale czyni swego nosiciela wrażliwym na zimno.
@@ -264,7 +264,7 @@ glaive
 
 Duże ostrze osadzone na drzewcu.
 %%%%
-gold dragon armour
+gold dragon scales
 
 Zbroja zrobiona ze skóry i łusek złotego smoka. Jest skrajnie ciężka i
 krępująca ruchy, ale zapewnia ochronę przed ogniem, zimnem jak i trucizną. Jest
@@ -359,7 +359,7 @@ meat ration
 
 Duża pożywna porcja suszonego i zakonserwowanego mięsa.
 %%%%
-mottled dragon armour
+mottled dragon scales
 
 Zbroja ze skóry nakrapianego smoka. Co prawda w przeciwieństwie do zbrój
 wykonanych ze skór większych gatunków smoków nie zapewnia ona wielkiej ochrony,
@@ -384,7 +384,7 @@ pair of gloves
 
 Para skórzanych rękawic.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 Zbroja wykonana ze skóry perłowego smoka. Jest bardzo wytrzymała, lecz
 jednocześnie lekka i giętka. Zapewnia także ochronę przed nekromancją.
@@ -522,10 +522,6 @@ ring of strength
 
 Ten pierścień zwiększa lub zmniejsza fizyczną siłę nosiciela, w zależności od
 mocy i kierunku czaru nań rzuconego.
-%%%%
-ring of sustain attributes
-
-Ten pierścień chroni przed tymczasową utratą siły, inteligencji i zręczności.
 %%%%
 ring of teleportation
 
@@ -699,7 +695,7 @@ stone
 
 Mały kamyk. Można nim rzucić lub wystrzelić go z procy.
 %%%%
-storm dragon armour
+storm dragon scales
 
 Zbroja ze skóry smoka zionącego piorunami. Jest cięższa niż większość smoczych
 skór, ale zapewnia też świetną obronę, a także odporność na porażenie prądem.
@@ -719,7 +715,7 @@ sultana
 Pojedyncza rodzynka. Bardzo duża jak na rodzynkę, ale wciąż arbuz to to nie
 jest...
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 Zbroja ze skóry bagiennego smoka. Zapewnia odporność na trucizny i jady.
 %%%%
@@ -781,16 +777,6 @@ wand of fireball
 Magiczny przedmiot który strzela kulami ognia które wybuchają w żądanym
 miejscu.
 %%%%
-wand of hasting
-
-Magiczny przedmiot który rzuca czar który przyspiesza wszystkie działania
-istoty na którą został skierowany.
-%%%%
-wand of heal wounds
-
-Magiczny przedmiot który leczy rany stworzenia na które został skierowany.
-Działa to nawet na nieumarłych zdolnych do zdrowienia.
-%%%%
 wand of invisibility
 
 Magiczny przedmiot który czyni stworzenie na które został skierowany
@@ -821,11 +807,6 @@ wand of slowing
 
 Magiczny przedmiot który rzuca czar który spowalnia wszystkie działa istoty na
 którą został skierowany.
-%%%%
-wand of teleportation
-
-Magiczny przedmiot który przemieszcza stworzenie na które został skierowane w
-przypadkowe miejsce. Nie działa to natychmiastowo.
 %%%%
 whip
 

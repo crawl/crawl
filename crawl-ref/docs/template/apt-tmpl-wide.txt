@@ -1,0 +1,54 @@
+TABLES OF APTITUDES
+
+The following three tables describe all aptitudes of the various species
+for the various skills. Knowledge, neither explicit nor implicit, of these
+are not necessary for winning in Crawl. The qualitative information behind
+this sheet (i.e., which species are good at which tasks) can be obtained in
+two other ways:
+- Read the species section in the manual about strengths and weaknesses.
+- Look at which combinations of species and background are recommended.
+
+ -5  abysmal aptitude
+ -4  terrible aptitude (learning half as fast as at 0 aptitude)
+ -3  very poor aptitude
+ -2  poor aptitude
+ -1  slightly disfavoured aptitude
+  0  standard aptitude
+ +1  slightly favoured aptitude
+ +2  strong aptitude
+ +3  very strong aptitude
+ +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
+ +5  exceptional aptitude
+
+There are four special values: HP, MP, Experience and Magic Resistance:
+- The HP value indicates the percentage of hit points gained per experience
+  level, 100% being the Human standard.
+- The MP value indicates a fixed additive modifier to magic points.
+- The Experience value indicates how much experience has to be earned in
+  order to gain a new experience level, +1 being the Human standard. These
+  values use the same scale as the skill aptitudes.
+- The Magic Resistance value indicates resistance to hostile enchantments per
+  experience level, +3 being the Human standard.
+
+The abbreviations used for the skills are:
+
+General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
+--------------------------   -----------------------     ----------------------
+Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
+Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
+Sth - Stealth                LBl - Long Blades           Hex - Hexes
+Shd - Shields                M&F - Maces & Flails        Cha - Charms
+                             Axs - Axes                  Sum - Summonings
+Inv - Invocations            Pla - Polearms              Nec - Necromancy
+Evo - Evocations             Stv - Staves                Trl - Translocations
+                             UC  - Unarmed Combat        Trm - Transmutations
+
+HP  - hit points             Thr - Throwing              Fir - Fire Magic
+MP  - magic points           Slg - Slings                Ice - Ice Magic
+Exp - experience             Bws - Bows                  Air - Air Magic
+MR  - magic resistance       Crb - Crossbows             Ear - Earth Magic
+                                                         Poi - Poison Magic
+
+
+                 Arm Ddg Sth Shd   Inv Evo   HP  MP Exp  MR   Fgt SBl LBl M&F Axs Pla Stv UC   Thr Slg Bws Crb   Spc Coj Hex Cha Sum Nec Trl Trm   Fir Ice Air Ear Poi
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------

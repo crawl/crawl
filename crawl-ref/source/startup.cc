@@ -223,7 +223,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || !mons_is_threatening(mon))
+        if (mon == nullptr || !mons_is_threatening(*mon))
             continue;
 
         dprf("Dismissing %s",
@@ -571,8 +571,8 @@ static bool _game_defined(const newgame_def& ng)
 }
 
 static const int SCROLLER_MARGIN_X  = 18;
-static const int NAME_START_Y       = 5;
-static const int GAME_MODES_START_Y = 7;
+static const int NAME_START_Y       = 6;
+static const int GAME_MODES_START_Y = 8;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;

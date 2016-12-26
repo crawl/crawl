@@ -89,6 +89,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/food.cc \
     $(CRAWL_PATH)/format.cc \
     $(CRAWL_PATH)/fprop.cc \
+    $(CRAWL_PATH)/game-options.cc \
     $(CRAWL_PATH)/geom2d.cc \
     $(CRAWL_PATH)/ghost.cc \
     $(CRAWL_PATH)/godabil.cc \
@@ -177,12 +178,12 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-poly.cc \
     $(CRAWL_PATH)/mon-project.cc \
     $(CRAWL_PATH)/mon-speak.cc \
-    $(CRAWL_PATH)/mon-stealth.cc \
     $(CRAWL_PATH)/mon-tentacle.cc \
     $(CRAWL_PATH)/mon-transit.cc \
     $(CRAWL_PATH)/mon-util.cc \
     $(CRAWL_PATH)/monster.cc \
     $(CRAWL_PATH)/mutation.cc \
+    $(CRAWL_PATH)/nearby-danger.cc \
     $(CRAWL_PATH)/newgame.cc \
     $(CRAWL_PATH)/ng-init.cc \
     $(CRAWL_PATH)/ng-input.cc \

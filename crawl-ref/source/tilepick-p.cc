@@ -233,8 +233,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_HUNTING_SLING:
         tile = TILEP_HAND1_HUNTING_SLING;
         break;
-    case WPN_GREATSLING:
-        tile = TILEP_HAND1_GREATSLING;
+    case WPN_FUSTIBALUS:
+        tile = TILEP_HAND1_FUSTIBALUS;
         break;
     case WPN_SHORTBOW:
         tile = TILEP_HAND1_BOW2;
@@ -322,21 +322,10 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PLATE_ARMOUR:          tile = TILEP_BODY_PLATE; break;
     case ARM_CRYSTAL_PLATE_ARMOUR:  tile = TILEP_BODY_CRYSTAL_PLATE; break;
 
-    case ARM_FIRE_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_RED; break;
-    case ARM_ICE_DRAGON_HIDE:       tile = TILEP_BODY_DRAGONSC_CYAN; break;
-    case ARM_STEAM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_WHITE; break;
-    case ARM_MOTTLED_DRAGON_HIDE:   tile = TILEP_BODY_DRAGONSC_MAGENTA; break;
-    case ARM_QUICKSILVER_DRAGON_HIDE:   tile = TILEP_BODY_DRAGONSC_QUICKSILVER; break;
-    case ARM_STORM_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BLUE; break;
-    case ARM_SHADOW_DRAGON_HIDE:    tile = TILEP_BODY_DRAGONSC_SHADOW; break;
-    case ARM_GOLD_DRAGON_HIDE:      tile = TILEP_BODY_DRAGONSC_GOLD; break;
-    case ARM_SWAMP_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_BROWN; break;
-    case ARM_PEARL_DRAGON_HIDE:     tile = TILEP_BODY_DRAGONSC_PEARL; break;
-
     case ARM_FIRE_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_RED; break;
     case ARM_ICE_DRAGON_ARMOUR:     tile = TILEP_BODY_DRAGONARM_CYAN; break;
     case ARM_STEAM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_WHITE; break;
-    case ARM_MOTTLED_DRAGON_ARMOUR: tile = TILEP_BODY_DRAGONARM_MAGENTA; break;
+    case ARM_ACID_DRAGON_ARMOUR:    tile = TILEP_BODY_DRAGONARM_YELLOW; break;
     case ARM_QUICKSILVER_DRAGON_ARMOUR: tile = TILEP_BODY_DRAGONARM_QUICKSILVER; break;
     case ARM_STORM_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_BLUE; break;
     case ARM_SHADOW_DRAGON_ARMOUR:  tile = TILEP_BODY_DRAGONARM_SHADOW; break;
@@ -345,7 +334,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PEARL_DRAGON_ARMOUR:   tile = TILEP_BODY_DRAGONARM_PEARL; break;
 
     case ARM_ANIMAL_SKIN:           tile = TILEP_BODY_ANIMAL_SKIN; break;
-    case ARM_TROLL_HIDE:            tile = TILEP_BODY_TROLL_HIDE; break;
     case ARM_TROLL_LEATHER_ARMOUR:  tile = TILEP_BODY_TROLL_LEATHER; break;
 
     default:                        tile = 0;
@@ -470,7 +458,9 @@ tileidx_t tileidx_player()
     case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
     case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
     case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
+#if TAG_MAJOR_VERSION == 34
     case TRAN_PORCUPINE: ch = TILEP_MONS_PORCUPINE; break;
+#endif
     // non-animals
     case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
     case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
@@ -490,7 +480,6 @@ tileidx_t tileidx_player()
         case SP_YELLOW_DRACONIAN:  ch = TILEP_TRAN_DRAGON_YELLOW;  break;
         case SP_GREY_DRACONIAN:    ch = TILEP_TRAN_DRAGON_GREY;    break;
         case SP_GREEN_DRACONIAN:   ch = TILEP_TRAN_DRAGON_GREEN;   break;
-        case SP_MOTTLED_DRACONIAN: ch = TILEP_TRAN_DRAGON_MOTTLED; break;
         case SP_PALE_DRACONIAN:    ch = TILEP_TRAN_DRAGON_PALE;    break;
         case SP_PURPLE_DRACONIAN:  ch = TILEP_TRAN_DRAGON_PURPLE;  break;
         case SP_WHITE_DRACONIAN:   ch = TILEP_TRAN_DRAGON_WHITE;   break;
@@ -544,11 +533,10 @@ static int _draconian_colour(int race, int level)
         case MONS_YELLOW_DRACONIAN: return 2;
         case MONS_GREY_DRACONIAN:   return 3;
         case MONS_GREEN_DRACONIAN:  return 4;
-        case MONS_MOTTLED_DRACONIAN:return 5;
-        case MONS_PALE_DRACONIAN:   return 6;
-        case MONS_PURPLE_DRACONIAN: return 7;
-        case MONS_RED_DRACONIAN:    return 8;
-        case MONS_WHITE_DRACONIAN:  return 9;
+        case MONS_PALE_DRACONIAN:   return 5;
+        case MONS_PURPLE_DRACONIAN: return 6;
+        case MONS_RED_DRACONIAN:    return 7;
+        case MONS_WHITE_DRACONIAN:  return 8;
         }
     }
     switch (race)
@@ -557,11 +545,10 @@ static int _draconian_colour(int race, int level)
     case SP_YELLOW_DRACONIAN:  return 2;
     case SP_GREY_DRACONIAN:    return 3;
     case SP_GREEN_DRACONIAN:   return 4;
-    case SP_MOTTLED_DRACONIAN: return 5;
-    case SP_PALE_DRACONIAN:    return 6;
-    case SP_PURPLE_DRACONIAN:  return 7;
-    case SP_RED_DRACONIAN:     return 8;
-    case SP_WHITE_DRACONIAN:   return 9;
+    case SP_PALE_DRACONIAN:    return 5;
+    case SP_PURPLE_DRACONIAN:  return 6;
+    case SP_RED_DRACONIAN:     return 7;
+    case SP_WHITE_DRACONIAN:   return 8;
     }
     return 0;
 }
@@ -572,11 +559,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     {
     case SP_HUMAN:
         return TILEP_BASE_HUMAN;
-    case SP_HIGH_ELF:
 #if TAG_MAJOR_VERSION == 34
+    case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
 #endif
-        return TILEP_BASE_ELF;
     case SP_DEEP_ELF:
         return TILEP_BASE_DEEP_ELF;
     case SP_HALFLING:
@@ -605,7 +591,6 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_GREY_DRACONIAN:
     case SP_BLACK_DRACONIAN:
     case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
     {
         const int colour_offset = _draconian_colour(sp, level);
@@ -679,12 +664,12 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
 
     switch (sp)
     {
-        case SP_HIGH_ELF:
 #if TAG_MAJOR_VERSION == 34
+        case SP_HIGH_ELF:
         case SP_SLUDGE_ELF:
-#endif
             hair = TILEP_HAIR_ELF_YELLOW;
             break;
+#endif
         case SP_DEEP_ELF:
             hair = TILEP_HAIR_ELF_WHITE;
             break;
@@ -738,7 +723,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_GREY_DRACONIAN:
         case SP_BLACK_DRACONIAN:
         case SP_PURPLE_DRACONIAN:
-        case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
         {
             tilep_draconian_init(sp, level, &result, &head, &wing);
@@ -1231,7 +1215,6 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
             else if (idx != 0)
             {
                 idx = doll.parts[p] - tile_player_part_start[p] + 1;
-                ASSERT(idx >= 0);
                 if (idx > tile_player_part_count[p])
                     idx = 0;
             }

@@ -39,29 +39,45 @@ enum armour_type
 
     ARM_ANIMAL_SKIN,
 
+#if TAG_MAJOR_VERSION == 34
     ARM_TROLL_HIDE,
+#endif
     ARM_TROLL_LEATHER_ARMOUR,
 
+#if TAG_MAJOR_VERSION == 34
     ARM_FIRE_DRAGON_HIDE,
+#endif
     ARM_FIRE_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ARM_ICE_DRAGON_HIDE,
+#endif
     ARM_ICE_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ARM_STEAM_DRAGON_HIDE,
+#endif
     ARM_STEAM_DRAGON_ARMOUR,
-    ARM_MOTTLED_DRAGON_HIDE,
-    ARM_MOTTLED_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
+    ARM_ACID_DRAGON_HIDE,
+#endif
+    ARM_ACID_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ARM_STORM_DRAGON_HIDE,
+#endif
     ARM_STORM_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ARM_GOLD_DRAGON_HIDE,
+#endif
     ARM_GOLD_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ARM_SWAMP_DRAGON_HIDE,
+#endif
     ARM_SWAMP_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ARM_PEARL_DRAGON_HIDE,
+#endif
     ARM_PEARL_DRAGON_ARMOUR,
 #if TAG_MAJOR_VERSION > 34
-    ARM_SHADOW_DRAGON_HIDE,
     ARM_SHADOW_DRAGON_ARMOUR,
-    ARM_QUICKSILVER_DRAGON_HIDE,
     ARM_QUICKSILVER_DRAGON_ARMOUR,
 #endif
 
@@ -135,7 +151,7 @@ enum brand_type // item_def.special
 // From this point on save compat is irrelevant.
     NUM_REAL_SPECIAL_WEAPONS,
 
-    SPWPN_ACID,    // acid bite only for the moment
+    SPWPN_ACID,    // acid bite and Punk
 #if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
@@ -172,7 +188,9 @@ enum jewellery_type
     RING_LOUDNESS,
     RING_TELEPORTATION,
     RING_EVASION,
+#if TAG_MAJOR_VERSION == 34
     RING_SUSTAIN_ATTRIBUTES,
+#endif
     RING_STEALTH,
     RING_DEXTERITY,
     RING_INTELLIGENCE,
@@ -183,7 +201,9 @@ enum jewellery_type
     RING_PROTECTION_FROM_MAGIC,
     RING_FIRE,
     RING_ICE,
+#if TAG_MAJOR_VERSION == 34
     RING_TELEPORT_CONTROL,
+#endif
     NUM_RINGS,                         //   keep as last ring; should not overlap
                                        //   with amulets!
     // RINGS after num_rings are for unique types for artefacts
@@ -194,7 +214,9 @@ enum jewellery_type
     AMU_RAGE = 35,
     AMU_FIRST_AMULET = AMU_RAGE,
     AMU_HARM,
+#if TAG_MAJOR_VERSION == 34
     AMU_DISMISSAL,
+#endif
     AMU_MANA_REGENERATION,
     AMU_THE_GOURMAND,
 #if TAG_MAJOR_VERSION == 34
@@ -573,7 +595,7 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION > 34
     WPN_HUNTING_SLING,
-    WPN_GREATSLING,
+    WPN_FUSTIBALUS,
 #endif
 
     WPN_DEMON_WHIP,
@@ -608,7 +630,7 @@ enum weapon_type
     WPN_TRISHULA,
 
 #if TAG_MAJOR_VERSION == 34
-    WPN_GREATSLING,
+    WPN_FUSTIBALUS,
     WPN_HAND_CROSSBOW,
     WPN_TRIPLE_CROSSBOW,
 
@@ -678,11 +700,11 @@ enum wand_type
     WAND_FROST_REMOVED,
 #endif
     WAND_SLOWING,
-    WAND_HASTING,
 #if TAG_MAJOR_VERSION == 34
+    WAND_HASTING_REMOVED,
     WAND_MAGIC_DARTS_REMOVED,
+    WAND_HEAL_WOUNDS_REMOVED,
 #endif
-    WAND_HEAL_WOUNDS,
     WAND_PARALYSIS,
 #if TAG_MAJOR_VERSION == 34
     WAND_FIRE_REMOVED,
@@ -694,7 +716,9 @@ enum wand_type
 #endif
     WAND_DIGGING,
     WAND_ICEBLAST,
-    WAND_TELEPORTATION,
+#if TAG_MAJOR_VERSION == 34
+    WAND_TELEPORTATION_REMOVED,
+#endif
     WAND_LIGHTNING,
     WAND_POLYMORPH,
     WAND_ENSLAVEMENT,

@@ -210,7 +210,7 @@ VISUAL:@The_monster@ shimmers violently.
 
 VISUAL:@The_monster@ glows brightly for a moment.
 
-VISUAL:@The_monster@'s fingertips start to glow.
+VISUAL:@The_monster@'s @hands@ start to glow.
 
 VISUAL:You feel disoriented. @player_only@
 
@@ -924,7 +924,7 @@ default confused 'r'
 
 VISUAL:@The_monster@ runs around in a circle.
 %%%%
-# Bees and wasps - moths and giant fireflies have separate speech.
+# Bees and hornets - moths and giant fireflies have separate speech.
 default confused 'y'
 
 SOUND:@The_monster@ buzzes around in tight circles.
@@ -1302,8 +1302,6 @@ Invocations player ghost
 VISUAL:@The_monster@ prays.
 %%%%
 Evocations player ghost
-
-@The_monster@ says @to_foe@, "How about a game of cards?"
 
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
 
@@ -1871,11 +1869,9 @@ _Bai_Suzhen_common_
 
 @The_monster@ pines for @possessive@ lost husband.
 
-@The_monster@ roars, "Even the heavens can't seperate us forever!"
+@The_monster@ roars, "Even the heavens can't separate us forever!"
 
 @The_monster@ inspects @possessive@ gathered herbal reagents.
-
-@The_monster@ asserts, "Choosing our [truths|lies] is central to humanity, anyway."
 
 VISUAL:@The_monster@ twists and twirls @possessive@ body through the storm.
 %%%%
@@ -1938,7 +1934,7 @@ VISUAL:@The_monster@ looks angry.
 %%%%
 _Blork_rare_
 
-@The_monster@ screams @at_foe@, "I'll cut your head off!"
+@The_monster@ screams @at_foe@, "I'll rip your head off!"
 
 @The_monster@ screams @at_foe@, "I'll break your legs!"
 
@@ -2574,7 +2570,7 @@ w:50
 
 @The_monster@ says, "You've already taken the rune from here, haven't you?"
 
-@The_monster@ says, "So-called 'good' gods are just as evil as the rest. I hate hypocrisy."
+@The_monster@ says, "The so-called 'good' gods are just as evil as the rest. I hate hypocrisy."
 
 @The_monster@ says, "I hate temples."
 
@@ -2629,8 +2625,6 @@ w:50
 @The_monster@ says, "Really pretty, but really, really boring. I hate that."
 
 @The_monster@ says, "What's with all the gesturing? I hate that."
-
-@The_monster@ says, "I don't get the difference between high elves and deep elves."
 
 @The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
@@ -2744,11 +2738,7 @@ Slime Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Those amoebas look tasty."
-
 @The_monster@ says, "Where's all the loot?"
-
-@The_monster@ says, "A jelly ate my lunch. I hate jellies."
 
 @The_monster@ says, "I feel like a jelly sandwich, now."
 
@@ -2766,8 +2756,6 @@ w:50
 
 @The_monster@ says, "I always freeze up when I think I'm being watched."
 
-@The_monster@ says, "I dropped a potion and a jelly ate it. I hate jellies!"
-
 @The_monster@ says, "A death ooze jiggled at me. That's naff."
 
 @The_monster@ says, "Acid blobs make me think of reflux. I hate reflux."
@@ -2777,12 +2765,6 @@ w:50
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
 @The_monster@ says, "I hope the rune isn't sticky."
-
-@The_monster@ says, "I bet a jelly ate the rune."
-
-@The_monster@ says, "I hate that slurping noise."
-
-@The_monster@ says, "I hate that squelching noise."
 %%%%
 Snake Donald
 
@@ -2842,8 +2824,6 @@ w:50
 @The_monster@ says, "I asked the warden where the rune was. She slammed the door in my face."
 
 @The_monster@ says, "I don't remember getting an invitation to a convocation."
-
-@The_monster@ says, "What kind of idiots hire shapeshifters to protect treasure?"
 
 @The_monster@ says, "Who designed this place? It's just a bunch of weird little rooms stuck together."
 
@@ -3094,11 +3074,6 @@ w:50
 @The_monster@ says, "Ah. You're responsible for all those zombies upstairs."
 
 @The_monster@ says, "I hate zombies."
-
-w:2
-@The_monster@ says, "Bone dragons? Death cobs? Does your god just put random words together and see what pops into existence?"
-
-@The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
 
@@ -3468,8 +3443,6 @@ w:50
 @The_monster@ says, "Feeling hungry yet?"
 
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
-
-@The_monster@ says, "I bet you can make some really great dragon armour out of gold."
 
 @The_monster@ says, "What do potions have to do with a god of gold, anyway?"
 %%%%
@@ -5582,13 +5555,13 @@ mosquito
 w:2
 spider
 
-wasp
-
 centipede
 
 millipede
 
 w:1
+hornet
+
 small bird
 
 mouse
@@ -6188,7 +6161,7 @@ orb spider charge
 
 @The_monster@ begins to weave its threads into a brightly glowing ball.
 %%%%
-giant eyeball charge
+floating eye charge
 
 @The_monster@'s view fixates on @foe@.
 
@@ -6223,6 +6196,15 @@ confused Bennu killed
 confused Bennu permanently killed
 
 @Bennu permanently killed@
+%%%%
+################## Bullfrog ################################
+bullfrog
+
+@The_monster@ swells and bulges.
+
+@The_monster@ releases a deep croak.
+
+@The_monster@ snags a nearby @_frog_food_@ with @possessive@ tongue.
 %%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
@@ -6283,10 +6265,24 @@ deep elf sorcerer
 
 @_wizard_@
 %%%%
+################## Dream sheep ###################################
+dream sheep
+
+@The_monster@ "Baaaas" balefully.
+
+@The_monster@ "Baaaas" sleepily.
+%%%%
 ################## Electric golem ##########################
 default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
+%%%%
+################## Frilled lizard ##############################
+frilled lizard
+
+@The_monster@ unfolds @possessive@ giant frill.
+
+@The_monster@ hisses @at_foe@.
 %%%%
 ################## Ice statue ##############################
 default ice statue
@@ -6419,11 +6415,6 @@ VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 default obsidian statue
 
 VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
-%%%%
-################## Sheep ###################################
-sheep
-
-@The_monster@ "Baaaas" balefully.
 %%%%
 ################## Silent spectre ##########################
 silenced silent spectre
@@ -7182,7 +7173,7 @@ avoiding mutations.
 just saying no to mutations.
 
 # respecting intelligent beings
-proper burial practise.
+proper burial practice.
 
 # demons
 not dealing with demons.

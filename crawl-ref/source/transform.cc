@@ -19,6 +19,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h" // passive_t::resist_polymorph
+#include "invent.h" // check_old_item_warning
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -100,7 +101,7 @@ Form::Form(const form_entry &fe)
       hand_name(fe.hand_name), foot_name(fe.foot_name),
       flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
-      resists(fe.resists), stealth_mod(fe.stealth_mod),
+      resists(fe.resists),
       base_unarmed_damage(fe.base_unarmed_damage),
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       flat_ac(fe.flat_ac), power_ac(fe.power_ac), xl_ac(fe.xl_ac),
@@ -781,25 +782,6 @@ public:
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     }
 
-    /**
-     * Get a multiplier for skill when calculating stealth values.
-     *
-     * @return  The stealth modifier for the given form. (0 = default to
-     *          racial values.)
-     */
-    int get_stealth_mod() const override
-    {
-        return you.species == SP_VAMPIRE ? 20 : stealth_mod;
-    }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        return you.species == SP_VAMPIRE ? 2 : 1;
-    }
-
     string get_description(bool past_tense) const override
     {
         return make_stringf("You %s in %sbat-form.",
@@ -889,9 +871,10 @@ public:
     /**
      * Get a message for untransforming from this form.
      */
-    string get_untransform_message() const override { return "You feel less woody."; }
+    string get_untransform_message() const override { return "You feel less wooden."; }
 };
 
+#if TAG_MAJOR_VERSION == 34
 class FormPorcupine : public Form
 {
 private:
@@ -904,6 +887,7 @@ public:
         return inst;
     }
 };
+#endif
 
 class FormWisp : public Form
 {
@@ -932,22 +916,6 @@ private:
     DISALLOW_COPY_AND_ASSIGN(FormFungus);
 public:
     static const FormFungus &instance() { static FormFungus inst; return inst; }
-
-    /**
-     * Can the player wear the given item while in this form?
-     *
-     * Does not take mutations into account.
-     *
-     * @param item  The item in question
-     * @return      Whether this form prevents the player from wearing the
-     *              item. (Other things may also prevent it, of course)
-     */
-    bool can_wear_item(const item_def& item) const override
-    {
-        if (is_helmet(item) && !is_hard_helmet(item))
-            return true; // mushroom caps!
-        return Form::can_wear_item(item);
-    }
 
     /**
      * Get a message for untransforming from this form.
@@ -1613,12 +1581,14 @@ static void _print_head_change_message(int old_heads, int new_heads)
  *
  * @param which_trans   The tranformation which the player is undergoing
  *                      (default you.form).
+ * @param involuntary   Whether the transformation is involuntary or not.
  * @return              UFR_GOOD if the player is not blocked from entering the
  *                      given form by their undead race; UFR_TOO_ALIVE if the
  *                      player is too satiated as a vampire; UFR_TOO_DEAD if
  *                      the player is too dead (or too thirsty as a vampire).
  */
-undead_form_reason lifeless_prevents_form(transformation_type which_trans)
+undead_form_reason lifeless_prevents_form(transformation_type which_trans,
+                                          bool involuntary)
 {
     if (!you.undead_state(false))
         return UFR_GOOD; // not undead!
@@ -1636,7 +1606,12 @@ undead_form_reason lifeless_prevents_form(transformation_type which_trans)
         return UFR_TOO_DEAD; // vampires can never lichform
 
     if (which_trans == TRAN_BAT) // can batform on satiated or below
+    {
+        if (involuntary)
+            return UFR_TOO_DEAD; // but not as a forced polymorph effect
+
         return you.hunger_state <= HS_SATIATED ? UFR_GOOD : UFR_TOO_ALIVE;
+    }
 
     // other forms can only be entered when satiated or above.
     return you.hunger_state >= HS_SATIATED ? UFR_GOOD : UFR_TOO_DEAD;
@@ -1739,7 +1714,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     // the undead cannot enter most forms.
-    if (lifeless_prevents_form(which_trans) == UFR_TOO_DEAD)
+    if (lifeless_prevents_form(which_trans, involuntary) == UFR_TOO_DEAD)
     {
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;
@@ -1762,6 +1737,18 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
+
+    // if going into lichform causes us to drop a holy weapon with consequences
+    // for unwielding (e.g. contam), warn first.
+    item_def nil_item;
+    nil_item.link = -1;
+    if (just_check && !involuntary
+        && which_trans == TRAN_LICH && rem_stuff.count(EQ_WEAPON)
+        && !check_old_item_warning(nil_item, OPER_WIELD))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
 
     if (which_trans == TRAN_APPENDAGE)
     {
@@ -2050,7 +2037,9 @@ void untransform(bool skip_move)
     if (!skip_move)
     {
         // Land the player if we stopped flying.
-        if (was_flying && !you.airborne())
+        if (is_feat_dangerous(grd(you.pos())))
+            enable_emergency_flight();
+        else if (was_flying && !you.airborne())
             move_player_to_grid(you.pos(), false);
 
         // Update merfolk swimming for the form change.

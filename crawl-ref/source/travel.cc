@@ -43,8 +43,8 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-death.h"
+#include "nearby-danger.h"
 #include "output.h"
 #include "place.h"
 #include "prompt.h"
@@ -233,9 +233,12 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (forbidden_terrain[grid])
             return false;
 
-        // Swimmers get deep water.
-        if (grid == DNGN_DEEP_WATER && player_likes_water(true))
+        // Swimmers and water-walkers get deep water.
+        if (grid == DNGN_DEEP_WATER
+            && (player_likes_water(true) || have_passive(passive_t::water_walk)))
+        {
             return true;
+        }
 
         // Likewise for lava
         if (grid == DNGN_LAVA && player_likes_lava(true))
@@ -244,10 +247,6 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
             return you.permanent_flight();
-
-        // You can't open doors in bat form.
-        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
-            return player_can_open_doors();
     }
 
     return feat_is_traversable(grid, try_fallback);
@@ -540,14 +539,6 @@ static bool _is_branch_stair(const coord_def& pos)
     return next.branch != curr.branch;
 }
 
-// Prompts the user to stop explore if necessary for the given
-// explore-stop condition, returns true if explore should be stopped.
-static bool _prompt_stop_explore(int es_why)
-{
-    return !(Options.explore_stop_prompt & es_why)
-           || yesno("Stop exploring?", true, 'y', true, false);
-}
-
 #define ES_item   (Options.explore_stop & ES_ITEM)
 #define ES_greedy (Options.explore_stop & ES_GREEDY_ITEM)
 #define ES_glow   (Options.explore_stop & ES_GLOWING_ITEM)
@@ -670,19 +661,6 @@ static int _find_explore_status(const travel_pathfind &tp)
     return explore_status;
 }
 
-static int prev_travel_moves[2] = {-1, -1};
-static int prev_travel_index    = 0;
-
-static int anti_zigzag_dir = -1;
-
-static void _reset_zigzag_info()
-{
-    prev_travel_moves[0] = -1;
-    prev_travel_moves[1] = -1;
-    prev_travel_index    =  0;
-    anti_zigzag_dir      = -1;
-}
-
 static void _set_target_square(const coord_def &target)
 {
     you.running.pos = target;
@@ -690,7 +668,6 @@ static void _set_target_square(const coord_def &target)
 
 static void _explore_find_target_square()
 {
-    bool fallback = false;
     bool runed_door_pause = false;
 
     travel_pathfind tp;
@@ -702,7 +679,6 @@ static void _explore_find_target_square()
     // If we didn't find an explore target the first time, try fallback mode
     if (!whereto.x && !whereto.y)
     {
-        fallback = true;
         travel_pathfind fallback_tp;
         fallback_tp.set_floodseed(you.pos(), true);
         whereto = fallback_tp.pathfind(static_cast<run_mode_type>(you.running.runmode), true);
@@ -731,75 +707,8 @@ static void _explore_find_target_square()
 
     if (whereto.x || whereto.y)
     {
-        // Anti-zigzag turned off, or found a greedy target so we
-        // don't need anti-zigzaging.
-        if (!Options.explore_improved || whereto != tp.unexplored_square())
-        {
-            _set_target_square(whereto);
-            _reset_zigzag_info();
-            return;
-        }
-
-        // If the two previous travel moves are perpendicular to each
-        // other...
-        if (prev_travel_moves[0] != -1
-            && prev_travel_moves[1] != -1
-            && (abs(prev_travel_moves[1] - prev_travel_moves[0]) % 4) == 2)
-        {
-            ASSERT(anti_zigzag_dir == -1);
-
-            // Try moving along the line that bisects the right angle.
-            if ((abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
-                && prev_travel_moves[0] + prev_travel_moves[1] == 8)
-            {
-                anti_zigzag_dir = 0;
-            }
-            else
-            {
-                anti_zigzag_dir = min(prev_travel_moves[0],
-                                      prev_travel_moves[1]) + 1;
-            }
-        }
-
-        // anti_zigzag_dir might have just been set, or might have
-        // persisted from the previous call to
-        // _explore_find_target_square().
-        if (anti_zigzag_dir != -1)
-        {
-            coord_def target = you.pos();
-            coord_def delta  = Compass[anti_zigzag_dir];
-
-            dungeon_feature_type feature;
-            do
-            {
-                target += delta;
-                feature = grd(target);
-            }
-            while (_is_travelsafe_square(target, fallback)
-                   && feat_is_traversable_now(feature, fallback)
-                   && _feature_traverse_cost(feature) == 1);
-
-            target -= delta;
-
-            // Has moving along the straight line found an unexplored
-            // square?
-            if (!env.map_knowledge(target + delta).seen() && target != you.pos()
-                && target != whereto)
-            {
-                // Auto-explore is only zigzagging if the preferred
-                // target (whereto) and the anti-zigzag target are
-                // close together.
-                if (grid_distance(target, whereto) <= 5
-                    && distance2(target, whereto) <= 34)
-                {
-                    _set_target_square(target);
-                    return;
-                }
-            }
-            anti_zigzag_dir = -1;
-        }
-
         _set_target_square(whereto);
+        return;
     }
     else
     {
@@ -846,11 +755,8 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK
                                                   : ES_NONE;
 
-        if ((Options.explore_stop & estop) && _prompt_stop_explore(estop))
-        {
+        if (Options.explore_stop & estop)
             stop_delay();
-            _reset_zigzag_info();
-        }
     }
 
     // Greedy explore has no good way to deal with an item that we can't
@@ -878,7 +784,6 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
         }
         explore_stopped_pos = you.pos();
         stop_delay();
-        _reset_zigzag_info();
     }
 }
 
@@ -970,19 +875,6 @@ command_type travel()
         // we turn off travel (find_travel_pos does that automatically).
         find_travel_pos(you.pos(), move_x, move_y);
 
-        if (you.running < 0 && (*move_x || *move_y))
-        {
-            const int delta_to_dir[9] =
-            {
-                7,  0, 1,
-                6, -1, 2,
-                5,  4, 3,
-            };
-            prev_travel_moves[prev_travel_index] =
-                delta_to_dir[(*move_x + 1) + 3 * (*move_y + 1)];
-            prev_travel_index = !prev_travel_index;
-        }
-
         // Stop greedy explore when visiting an unverified stash.
         if ((*move_x || *move_y)
             && you.running == RMODE_EXPLORE_GREEDY
@@ -992,15 +884,10 @@ command_type travel()
             if (newpos == you.running.pos)
             {
                 const LevelStashes *lev = StashTrack.find_current_level();
-                const bool stack = lev && lev->needs_stop(newpos)
-                                   && ES_stack;
-                if (stack)
+                if (lev && lev->needs_stop(newpos))
                 {
-                    if (_prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK))
-                    {
-                        explore_stopped_pos = newpos;
-                        stop_running();
-                    }
+                    explore_stopped_pos = newpos;
+                    stop_running();
                     return direction_to_command(*move_x, *move_y);
                 }
             }
@@ -2723,7 +2610,7 @@ static int _find_transtravel_stair(const level_id &cur,
             si.distance = dist2stair;
 
             // Account for the cost of taking the stairs
-            dist2stair += Options.travel_stair_cost;
+            dist2stair += 500; // XXX: this seems large?
 
             // Already too expensive? Short-circuit.
             if (local_distance != -1 && dist2stair >= local_distance)
@@ -2948,25 +2835,6 @@ void start_explore(bool grab_items)
 
     if (!i_feel_safe(true, true))
         return;
-
-    if (you_worship(GOD_FEDHAS))
-    {
-        bool corpse_on_pos = false;
-        for (radius_iterator i(you.pos(), LOS_NO_TRANS); i && !corpse_on_pos; ++i)
-        {
-            for (stack_iterator j(*i); j; ++j)
-            {
-                if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
-                {
-                    corpse_on_pos = true;
-                    break;
-                }
-            }
-        }
-
-        if (corpse_on_pos && Options.auto_sacrifice)
-            pray(false);
-    }
 
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
@@ -4015,9 +3883,9 @@ bool runrest::run_should_stop() const
     const coord_def targ = you.pos() + pos;
     const map_cell& tcell = env.map_knowledge(targ);
 
+    // XXX: probably this should ignore cosmetic clouds (non-opaque)
     if (tcell.cloud() != CLOUD_NONE
-        && (!have_passive(passive_t::resist_own_clouds)
-            || !YOU_KILL(tcell.cloudinfo()->killer)))
+        && !have_passive(passive_t::cloud_immunity))
     {
         return true;
     }
@@ -4071,8 +3939,6 @@ void runrest::stop(bool clear_delays)
 
     if (need_redraw)
         viewwindow();
-
-    _reset_zigzag_info();
 }
 
 bool runrest::is_rest() const
@@ -4130,8 +3996,6 @@ void runrest::clear()
     mp = hp = travel_speed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
-
-    _reset_zigzag_info();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4296,7 +4160,7 @@ void explore_discoveries::add_item(const item_def &i)
         item.thing.quantity = orig_quantity;
     }
 
-    string itemname = get_menu_colour_prefix_tags(i, DESC_A);
+    string itemname = menu_colour_item_name(i, DESC_A);
     monster* mon = monster_at(i.pos);
     if (mon && mons_species(mon->type) == MONS_BUSH)
         itemname += " (under bush)";
@@ -4413,7 +4277,7 @@ vector<string> explore_discoveries::apply_quantities(
     return things;
 }
 
-bool explore_discoveries::prompt_stop() const
+bool explore_discoveries::stop_explore() const
 {
     const bool marker_stop = !marker_msgs.empty() || !marked_feats.empty();
 
@@ -4433,9 +4297,7 @@ bool explore_discoveries::prompt_stop() const
     say_any(apply_quantities(stairs), "stair");
     say_any(apply_quantities(runed_doors), "runed door");
 
-    return (Options.explore_stop_prompt & es_flags) != es_flags
-           || marker_stop
-           || _prompt_stop_explore(es_flags);
+    return true;
 }
 
 void do_interlevel_travel()
@@ -4562,7 +4424,7 @@ bool check_for_interesting_features()
         }
     }
 
-    return discoveries.prompt_stop();
+    return discoveries.stop_explore();
 }
 
 void clear_level_target()

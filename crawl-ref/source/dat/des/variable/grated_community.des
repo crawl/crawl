@@ -59,7 +59,7 @@ KFEAT:  j = fountain_sparkling
 KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
 KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
-            w:50 whip | wand of enslavement | w:1 wand of hasting
+            w:50 whip | wand of enslavement
 KFEAT:  B = food shop name:Jack type:Jerk-a-riffic suffix:Jerky count:10 ; \
             q:5 beef jerky
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
@@ -168,7 +168,7 @@ SUBST: * = *:35 -:1
 KITEM: - = animal skin
 : dgn.delayed_decay_extra(_G, '*', 'human skeleton / yak skeleton /\
 :                            elf skeleton / kobold skeleton /\
-:                            elephant skeleton / sheep skeleton /\
+:                            elephant skeleton / dream sheep skeleton /\
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor

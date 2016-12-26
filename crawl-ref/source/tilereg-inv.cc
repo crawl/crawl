@@ -429,12 +429,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                if (item.sub_type >= MISC_FIRST_DECK
-                    && item.sub_type <= MISC_LAST_DECK)
-                {
-                    _handle_wield_tip(tmp, cmd);
-                    break;
-                }
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
@@ -699,7 +693,7 @@ void InventoryRegion::update()
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
-    ucs_t c;
+    char32_t c;
     const char *tp = Options.tile_show_items.c_str();
     int s;
     do // Do one last iteration with the 0 char at the end.

@@ -127,13 +127,6 @@ public:
     bool res_petrify() const;
 
     /**
-     * A multiplier to Stealth skill for player stealth calculations.
-     *
-     * If 0, fall back to species values.
-     */
-    virtual int get_stealth_mod() const { return stealth_mod; }
-
-    /**
      * Base unarmed damage provided by the form.
      */
     virtual int get_base_unarmed_damage() const { return base_unarmed_damage; }
@@ -224,9 +217,6 @@ protected:
      */
     const int resists;
 
-    /// See Form::get_stealth_mod().
-    const int stealth_mod;
-
     /// See Form::get_base_unarmed_damage().
     const int base_unarmed_damage;
 
@@ -271,7 +261,8 @@ enum undead_form_reason
     UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
     UFR_TOO_ALIVE = 1,
 };
-undead_form_reason lifeless_prevents_form(transformation_type form = you.form);
+undead_form_reason lifeless_prevents_form(transformation_type form = you.form,
+                                          bool involuntary = false);
 
 bool form_can_wield(transformation_type form = you.form);
 bool form_can_wear(transformation_type form = you.form);

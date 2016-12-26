@@ -13,7 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iomanip>
-#include <set>
+#include <unordered_set>
 
 #include "artefact.h"
 #include "colour.h"
@@ -48,6 +48,10 @@
 
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
+
+typedef vector<spell_type>                     spell_list;
+typedef unordered_set<spell_type, hash<int>>   spell_set;
+static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
 
 static const map<rod_type, spell_type> _rod_spells =
 {
@@ -182,7 +186,6 @@ int book_rarity(book_type which_book)
     case BOOK_ANNIHILATIONS:
     case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
-    case BOOK_AKASHIC_RECORD:
     case BOOK_MANUAL:
         return 20;
 
@@ -196,7 +199,6 @@ static uint8_t _lowest_rarity[NUM_SPELLS];
 static const set<book_type> rare_books =
 {
     BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON,
-    BOOK_AKASHIC_RECORD,
 };
 
 bool is_rare_book(book_type type)
@@ -339,44 +341,52 @@ bool player_can_memorise(const item_def &book)
     return false;
 }
 
-typedef vector<spell_type>   spell_list;
-typedef map<spell_type, int> spells_to_books;
-
-static void _index_book(item_def& book, spells_to_books &book_hash,
-                        bool &book_errors)
+static void _mark_book_known(item_def& book)
 {
+    // XXX: revise and check how much of this is needed (if any)
     mark_had_book(book);
     set_ident_flags(book, ISFLAG_KNOW_TYPE);
     set_ident_flags(book, ISFLAG_IDENT_MASK);
+}
 
+/**
+ * List all spells in the given book.
+ *
+ * @param book      The book to be read.
+ * @param spells    The list of spells to populate. Doesn't have to be empty.
+ * @return          Whether the given book is invalid (empty).
+ */
+static bool _get_book_spells(const item_def& book, spell_set &spells)
+{
     int num_spells = 0;
     for (spell_type spell : spells_in_book(book))
     {
         num_spells++;
-
-        auto it = book_hash.find(spell);
-        if (it == book_hash.end())
-            book_hash[spell] = book.sub_type;
+        spells.insert(spell);
     }
 
     if (num_spells == 0)
     {
         mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
              "file a bug report.", book.name(DESC_PLAIN).c_str());
-        book_errors = true;
+        return true;
     }
+
+    return false;
 }
 
-static bool _get_mem_list(spell_list &mem_spells,
-                          spells_to_books &book_hash,
-                          unsigned int &num_misc,
-                          bool just_check = false,
-                          spell_type current_spell = SPELL_NO_SPELL)
+/**
+ * Populate the given list with all spells the player can currently memorize,
+ * from books in inventory, on the ground, or offered by Vehumet. Does not
+ * filter by currently known spells, spell levels, etc.
+ *
+ * @param available_spells  A list to be populated with available spells.
+ * @return                  Whether there were errors while looking for spells.
+ */
+static bool _list_available_spells(spell_set &available_spells)
 {
-    bool          book_errors    = false;
-    unsigned int  num_on_ground  = 0;
-    unsigned int  num_books      = 0;
-    unsigned int  num_unknown    = 0;
+
+    bool          book_errors = false;
 
     // Collect the list of all spells in all available spellbooks.
     for (auto &book : you.inv)
@@ -384,8 +394,8 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!book.defined() || !item_is_spellbook(book))
             continue;
 
-        num_books++;
-        _index_book(book, book_hash, book_errors);
+        _mark_book_known(book);
+        book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
     // We also check the ground
@@ -397,62 +407,42 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!item_is_spellbook(book))
             continue;
 
-        if (!item_type_known(book))
-        {
-            num_unknown++;
-            continue;
-        }
-
-        num_books++;
-        num_on_ground++;
-        _index_book(book, book_hash, book_errors);
+        _mark_book_known(book);
+        book_errors = _get_book_spells(book, available_spells) || book_errors;
     }
 
     // Handle Vehumet gifts
-    auto gift_iterator = you.vehumet_gifts.begin();
-    if (gift_iterator != you.vehumet_gifts.end())
-    {
-        num_books++;
-        while (gift_iterator != you.vehumet_gifts.end())
-            book_hash[*gift_iterator++] = NUM_BOOKS;
-    }
+    for (auto gift : you.vehumet_gifts)
+        available_spells.insert(gift);
 
-    if (book_errors)
-        more();
+    return book_errors;
+}
 
-    if (num_books == 0)
-    {
-        if (!just_check)
-        {
-            if (num_unknown > 1)
-                mprf(MSGCH_PROMPT, "You must pick up those books before reading them.");
-            else if (num_unknown == 1)
-                mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
-            else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
-        }
-        return false;
-    }
-    else if (book_hash.empty())
-    {
-        if (!just_check)
-            mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
-        return false;
-    }
-
+/**
+ * Take a list of spells and filter them to only those that the player can
+ * currently memorize.
+ *
+ * @param available_spells      The list of spells to be filtered.
+ * @param mem_spells[out]       The list of memorizeable spells to populate.
+ * @param num_misc[out]         How many spells are unmemorizable for 'misc
+ *                              reasons' (e.g. player species)
+ * @param return                The reason the player can't currently memorize
+ *                              any spells, if they can't. Otherwise, "".
+ */
+static string _filter_memorizable_spells(const spell_set &available_spells,
+                                         spell_list &mem_spells,
+                                         unsigned int &num_misc)
+{
     unsigned int num_known      = 0;
                  num_misc       = 0;
     unsigned int num_restricted = 0;
     unsigned int num_low_xl     = 0;
     unsigned int num_low_levels = 0;
     unsigned int num_memable    = 0;
-    bool         form           = false;
 
-    for (const auto &entry : book_hash)
+    for (const spell_type spell : available_spells)
     {
-        const spell_type spell = entry.first;
-
-        if (spell == current_spell || you.has_spell(spell))
+        if (you.has_spell(spell))
             num_known++;
         else if (!you_can_memorise(spell))
         {
@@ -465,9 +455,10 @@ static bool _get_mem_list(spell_list &mem_spells,
         {
             mem_spells.push_back(spell);
 
-            int avail_slots = player_spell_levels();
-            if (current_spell != SPELL_NO_SPELL)
-                avail_slots -= spell_levels_required(current_spell);
+            const int avail_slots = player_spell_levels();
+
+            // don't filter out spells that are too high-level for us; we
+            // probably still want to see them. (since that's temporary.)
 
             if (spell_difficulty(spell) > you.experience_level)
                 num_low_xl++;
@@ -478,63 +469,94 @@ static bool _get_mem_list(spell_list &mem_spells,
         }
     }
 
-    if (num_memable)
-        return true;
-
-    // Return true even if there are only spells we can't memorise _yet_.
-    if (just_check)
-        return num_low_levels > 0 || num_low_xl > 0;
+    if (num_memable || num_low_levels > 0 || num_low_xl > 0)
+        return "";
 
     unsigned int total = num_known + num_misc + num_low_xl + num_low_levels
-            + num_restricted;
+                         + num_restricted;
 
     if (num_known == total)
-        mprf(MSGCH_PROMPT, "You already know all available spells.");
-    else if (num_restricted == total || num_restricted + num_known == total)
+        return "You already know all available spells.";
+    if (num_restricted == total || num_restricted + num_known == total)
     {
-        mprf(MSGCH_PROMPT, "You cannot currently memorise any of the available "
-             "spells because you cannot use those schools of magic.");
+        return "You cannot currently memorise any of the available spells "
+               "because you cannot use those schools of magic.";
     }
-    else if (num_misc == total || (num_known + num_misc) == total
-            || num_misc + num_known + num_restricted == total)
+    if (num_misc == total || (num_known + num_misc) == total
+        || num_misc + num_known + num_restricted == total)
     {
-        if (form)
-        {
-            mprf(MSGCH_PROMPT, "You cannot currently memorise any of the "
-                 "available spells because you are in %s form.",
-                 uppercase_first(transform_name()).c_str());
-        }
-        else
-        {
-            mprf(MSGCH_PROMPT, "You cannot memorise any of the available "
-                 "spells.");
-        }
-    }
-    else if (num_low_levels > 0 || num_low_xl > 0)
-    {
-        // Just because we can't memorise them doesn't mean we don't want to
-        // see what we have available. See FR #235. {due}
-        return true;
-    }
-    else
-    {
-        mprf(MSGCH_PROMPT, "You can't memorise any new spells for an unknown "
-                           "reason; please file a bug report.");
+        return "You cannot memorise any of the available spells.";
     }
 
-    return false;
+    return "You can't memorise any new spells for an unknown reason; please "
+           "file a bug report.";
 }
 
-// If current_spell is a valid spell, returns whether you'll be able to
-// memorise any further spells once this one is committed to memory.
-bool has_spells_to_memorise(bool silent, spell_type current_spell)
+
+static void _get_mem_list(spell_list &mem_spells,
+                          unsigned int &num_misc,
+                          bool just_check = false)
+{
+    spell_set     available_spells;
+    bool          book_errors      = _list_available_spells(available_spells);
+
+    if (book_errors)
+        more();
+
+    if (available_spells.empty())
+    {
+        if (!just_check)
+        {
+            if (book_errors)
+                mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
+            else
+                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
+        }
+        return;
+    }
+
+    const string unavail_reason = _filter_memorizable_spells(available_spells,
+                                                             mem_spells,
+                                                             num_misc);
+    if (!just_check && !unavail_reason.empty())
+        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+}
+
+/// Give the player a memorization prompt for the spells from the given book.
+void learn_spell_from(const item_def &book)
+{
+    spell_set available_spells;
+    const bool book_error = _get_book_spells(book, available_spells);
+    if (book_error)
+        more();
+    if (available_spells.empty())
+        return;
+
+    spell_list mem_spells;
+    unsigned int num_misc;
+    const string unavail_reason = _filter_memorizable_spells(available_spells,
+                                                             mem_spells,
+                                                             num_misc);
+    if (!unavail_reason.empty())
+        mprf(MSGCH_PROMPT, "%s", unavail_reason.c_str());
+    if (mem_spells.empty())
+        return;
+
+    const spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
+
+    if (specspell == SPELL_NO_SPELL)
+        canned_msg(MSG_OK);
+    else
+        learn_spell(specspell);
+}
+
+bool has_spells_to_memorise(bool silent)
 {
     spell_list      mem_spells;
-    spells_to_books book_hash;
     unsigned int    num_misc;
 
-    return _get_mem_list(mem_spells, book_hash, num_misc, silent,
-                         (spell_type) current_spell);
+    _get_mem_list(mem_spells, num_misc, silent);
+    return !mem_spells.empty();
 }
 
 static bool _sort_mem_spells(spell_type a, spell_type b)
@@ -570,30 +592,21 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     return strcasecmp(spell_title(a), spell_title(b)) < 0;
 }
 
-vector<spell_type> get_mem_spell_list(vector<int> &books)
+vector<spell_type> get_mem_spell_list()
 {
-    vector<spell_type> spells;
-
     spell_list      mem_spells;
-    spells_to_books book_hash;
     unsigned int    num_misc;
+    _get_mem_list(mem_spells, num_misc);
 
-    if (!_get_mem_list(mem_spells, book_hash, num_misc))
-        return spells;
+    if (mem_spells.empty())
+        return spell_list();
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
-    for (spell_type spell : mem_spells)
-    {
-        spells.push_back(spell);
-        books.push_back(*map_find(book_hash, spell));
-    }
-
-    return spells;
+    return mem_spells;
 }
 
 static spell_type _choose_mem_spell(spell_list &spells,
-                                    spells_to_books &book_hash,
                                     unsigned int num_misc)
 {
     sort(spells.begin(), spells.end(), _sort_mem_spells);
@@ -770,14 +783,13 @@ bool learn_spell()
         return false;
 
     spell_list      mem_spells;
-    spells_to_books book_hash;
-
     unsigned int num_misc;
+    _get_mem_list(mem_spells, num_misc);
 
-    if (!_get_mem_list(mem_spells, book_hash, num_misc))
+    if (mem_spells.empty())
         return false;
 
-    spell_type specspell = _choose_mem_spell(mem_spells, book_hash, num_misc);
+    spell_type specspell = _choose_mem_spell(mem_spells, num_misc);
 
     if (specspell == SPELL_NO_SPELL)
     {
@@ -810,6 +822,12 @@ string desc_cannot_memorise_reason(spell_type spell)
 */
 static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
+    if (spell_removed(specspell))
+    {
+        mpr("Sorry, this spell is gone!");
+        return false;
+    }
+
     if (!wizard && !can_learn_spell())
         return false;
 

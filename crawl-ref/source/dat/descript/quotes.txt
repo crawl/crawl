@@ -118,6 +118,14 @@ A broken pillar
  I have no son to keep my name in remembrance...”
     -KJV Bible, 2 Samuel 18:18.
 %%%%
+A faded altar of an unknown god
+
+“Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
+perceive that in all things ye are too superstitious. For as I passed by, and
+beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
+GOD.”
+    -KJV Bible, Acts 17:23-24.
+%%%%
 A gateway to Hell
 
 “I am the way into the city of woe.
@@ -241,11 +249,23 @@ A staircase to the Tomb
 
 <Tomb>
 %%%%
+A stormy altar of Qazlal
+
+“The storm irresistibly propels him into the future to which his back is turned,
+while the pile of debris before him grows skyward. This storm is what we call
+progress.”
+    -Walter Benjamin, “Theses on the Philosophy of History”. 1940.
+   trans. Harry Zohn, 1969.
+%%%%
 A tree
 
 “I like trees because they seem more resigned to the way they have to live than
 other things do.”
     -Willa Cather, _O Pioneers_. 1913.
+%%%%
+acid dragon scales
+
+<steam dragon hide>
 %%%%
 Agony spell
 
@@ -1193,6 +1213,11 @@ Dragon's Call spell
  And presumably, somewhere, there's the key.”
     -Terry Pratchett, “Guards! Guards!”. 1990.
 %%%%
+dream sheep
+
+“How undisturbed, the sleep of the foolish.”
+    -Philip K. Dick
+%%%%
 dryad
 
  • Roy Quixote: Wait, what's my beef with clean energy again?
@@ -1309,7 +1334,7 @@ breathtaking slenderness and colour which [they] cut down and burned the crab
 meat with.”
     -Douglas Adams, The Hitch-hiker’s Guide to the Galaxy
 %%%%
-fire dragon armour
+fire dragon scales
 
 <steam dragon hide>
 %%%%
@@ -1372,14 +1397,14 @@ giant club
     -Edmund Spenser, _The Faerie Queene_, Book I, “The Legend of the Knight of
      the Red Crosse”, Canto VIII, stanza vii, l. 55-9. 1590.
 %%%%
-giant eyeball
+floating eye
 
 “El ojo que ves
  no es ojo porque tú lo veas,
  es ojo porque te ve.”
     -Antonio Machado, Campos de Castilla. 1912-1917.
 %%%%
-giant frog
+bullfrog
 
 “Hello, my baby
  Hello, my honey
@@ -1443,7 +1468,7 @@ goblin
  Below, my lad!”
     -J.R.R. Tolkien, _The Hobbit_
 %%%%
-gold dragon armour
+gold dragon scales
 
 <steam dragon hide>
 %%%%
@@ -1490,30 +1515,6 @@ great sword
 greater mummy
 
 <mummy>
-%%%%
-greater naga
-
-“Then there have also come
- nagas from Lake Nabhasa,
- Vesali, and Tacchaka.
- Kambalas, Assataras,
- Payagas, and their kin.
- And from the River Yamuna
- comes the prestigious naga, Dhatarattha.
- The great naga Eravanna:
- He, too, has come
- to the forest meeting.”
-    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
-     trans. Thanissaro Bhikkhu
-%%%%
-griffon
-
-“As when a Gryphon through the wilderness,
- With winged course, o’er hill and moory dale,
- Pursues the Arimaspian who by stealth
- Hath from his wakeful custody purloined
- His guarded gold.”
-    -Milton, _Paradise Lost_, Book II. 1667.
 %%%%
 guardian golem
 
@@ -1634,7 +1635,7 @@ ice bat
 
 <bat>
 %%%%
-ice dragon armour
+ice dragon scales
 
 <steam dragon hide>
 %%%%
@@ -1899,6 +1900,27 @@ merfolk javelineer
 
 <merfolk>
 %%%%
+merfolk siren
+
+“Row'd on, in reach of an erected voice,
+ The Sirens soon took note, without our noise,
+ Tuned those sweet accents that made charms so strong,
+ And these learn'd numbers made the Sirens' song:
+ ‘Come here, thou worthy of a world of praise,
+ That dost so high the Grecian glory raise,
+ Ulysses! stay thy ship, and that song hear
+ That none past ever but it bent his ear,
+ But left him ravish'd, and instructed more
+ By us, than any ever heard before.
+ For we know all things whatsoever were
+ In wide Troy labour'd; whatsoever there
+ The Grecians and the Trojans both sustain'd
+ By those high issues that the Gods ordain'd.
+ And whatsoever all the earth can show
+ T' inform a knowledge of desert, we know.’”
+    -Homer, _The Odyssey_, XII, 268-82.
+     trans. George Chapman, 1857.
+%%%%
 microbat
 
 <bat>
@@ -1935,14 +1957,6 @@ nothing but a club, which carried with it death and destruction.”
     -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
      Customs of the Ancestors of the English Speaking Nations_. 1889.
 %%%%
-mottled dragon armour
-
-<steam dragon hide>
-%%%%
-mottled dragon hide
-
-<steam dragon hide>
-%%%%
 mummy
 
 “I see Egypt and the Egyptians — I see the pyramids and obelisks;
@@ -1967,6 +1981,21 @@ tell thee, O lady, that we are incapable of being seen by human beings.”
 naga mage
 
 <naga>
+%%%%
+nagaraja
+
+“Then there have also come
+ nagas from Lake Nabhasa,
+ Vesali, and Tacchaka.
+ Kambalas, Assataras,
+ Payagas, and their kin.
+ And from the River Yamuna
+ comes the prestigious naga, Dhatarattha.
+ The great naga Eravanna:
+ He, too, has come
+ to the forest meeting.”
+    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
+     trans. Thanissaro Bhikkhu
 %%%%
 naga warrior
 
@@ -2086,7 +2115,7 @@ Passwall spell
 “He says the best way out is always through.”
     -Robert Frost, _A Servant to Servants_. 1915.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2363,10 +2392,6 @@ ring of strength
 
 <ring>
 %%%%
-ring of sustain attributes
-
-<ring>
-%%%%
 ring of stealth
 
 <ring>
@@ -2638,27 +2663,6 @@ is to say, the continuation of Nothingness.”
     -Jean Baudrillard, “Radical Thought”. 1994.
      trans. François Debrix, 1995.
 %%%%
-siren
-
-“Row'd on, in reach of an erected voice,
- The Sirens soon took note, without our noise,
- Tuned those sweet accents that made charms so strong,
- And these learn'd numbers made the Sirens' song:
- ‘Come here, thou worthy of a world of praise,
- That dost so high the Grecian glory raise,
- Ulysses! stay thy ship, and that song hear
- That none past ever but it bent his ear,
- But left him ravish'd, and instructed more
- By us, than any ever heard before.
- For we know all things whatsoever were
- In wide Troy labour'd; whatsoever there
- The Grecians and the Trojans both sustain'd
- By those high issues that the Gods ordain'd.
- And whatsoever all the earth can show
- T' inform a knowledge of desert, we know.’”
-    -Homer, _The Odyssey_, XII, 268-82.
-     trans. George Chapman, 1857.
-%%%%
 sixfirhy
 
 “I saw a mouth jeering. A smile of melted red iron ran over it. Its laugh was
@@ -2725,7 +2729,7 @@ smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
 %%%%
-greatsling
+fustibalus
 
 “Thrice whirling round his head
  The whistling thong, Mezentius took his aim.
@@ -2908,7 +2912,7 @@ starcursed mass
  up where the stars get lit.”
     -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
 %%%%
-steam dragon armour
+steam dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2944,7 +2948,7 @@ rills of water, along the field.”
      Mancha_, IV, 10. 1605.
      trans. Carlos Fuentes, 1997.
 %%%%
-storm dragon armour
+storm dragon scales
 
 <steam dragon hide>
 %%%%
@@ -2958,7 +2962,7 @@ sun demon
  The shadows lengthening as the vapours rise.”
     -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
 %%%%
-swamp dragon armour
+swamp dragon scales
 
 <steam dragon hide>
 %%%%
@@ -3233,10 +3237,6 @@ wand of flame
 
 <wand>
 %%%%
-wand of hasting
-
-<wand>
-%%%%
 wand of iceblast
 
 <wand>
@@ -3258,10 +3258,6 @@ wand of random effects
 <wand>
 %%%%
 wand of slowing
-
-<wand>
-%%%%
-wand of teleportation
 
 <wand>
 %%%%

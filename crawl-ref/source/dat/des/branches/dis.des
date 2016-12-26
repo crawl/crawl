@@ -26,7 +26,7 @@ function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
         dgn.persist.grunt_iron_hall_animated = true
         for slave in iter.slave_iterator("trap_statue", 1) do
         if crawl.one_chance_in(4) then
-            dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+            dgn.terrain_changed(slave.x, slave.y, "floor", false)
             dgn.create_monster(slave.x, slave.y,
                                "patrolling iron golem generate_awake")
         end

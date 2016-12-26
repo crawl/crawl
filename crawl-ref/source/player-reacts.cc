@@ -85,6 +85,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -293,15 +294,16 @@ static int _current_horror_level()
 
         if (mon == nullptr
             || mons_aligned(mon, &you)
-            || !mons_is_threatening(mon)
-            || !you.can_see(*mon))
+            || !mons_is_threatening(*mon)
+            || !you.can_see(*mon)
+            || mons_is_tentacle_or_tentacle_segment(mon->type))
         {
             continue;
         }
 
         ASSERT(mon);
 
-        const mon_threat_level_type threat_level = mons_threat_level(mon);
+        const mon_threat_level_type threat_level = mons_threat_level(*mon);
         if (threat_level == MTHRT_NASTY)
             horror_level += 3;
         else if (threat_level == MTHRT_TOUGH)
@@ -383,8 +385,7 @@ static void _update_cowardice()
 // Using Uskayaw abilities can still take you under *.
 static void _handle_uskayaw_piety(int time_taken)
 {
-    if (you.props[USKAYAW_DID_DANCE_ACTION].get_bool()
-            && you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
+    if (you.props[USKAYAW_NUM_MONSTERS_HURT].get_int() > 0)
     {
         int num_hurt = you.props[USKAYAW_NUM_MONSTERS_HURT];
         int hurt_val = you.props[USKAYAW_MONSTER_HURT_VALUE];
@@ -416,7 +417,6 @@ static void _handle_uskayaw_piety(int time_taken)
     }
 
     // Re-initialize Uskayaw piety variables
-    you.props[USKAYAW_DID_DANCE_ACTION] = false;
     you.props[USKAYAW_NUM_MONSTERS_HURT] = 0;
     you.props[USKAYAW_MONSTER_HURT_VALUE] = 0;
 }
@@ -469,7 +469,7 @@ void player_reacts_to_monsters()
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
-        you.awake();
+        you.awaken();
     _maybe_melt_armour();
     _update_cowardice();
     if (you_worship(GOD_USKAYAW))
@@ -505,25 +505,23 @@ static void _handle_recitation(int step)
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple
     // turns.
-    practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
+    practise_using_ability(ABIL_ZIN_RECITE);
 
     noisy(you.shout_volume(), you.pos());
 
     if (step == 0)
     {
-        string speech = zin_recite_text(you.attribute[ATTR_RECITE_SEED],
-                                        you.attribute[ATTR_RECITE_TYPE], -1);
-        speech += ".";
-        if (one_chance_in(9))
+        ostringstream speech;
+        speech << zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                                  you.attribute[ATTR_RECITE_TYPE], -1);
+        speech << '.';
+        if (one_chance_in(27))
         {
             const string closure = getSpeakString("recite_closure");
-            if (!closure.empty() && one_chance_in(3))
-            {
-                speech += " ";
-                speech += closure;
-            }
+            if (!closure.empty())
+                speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
+        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
     }
 }
 
@@ -640,6 +638,13 @@ static void _decrement_durations()
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
+        if (form_can_fly()
+            || form_likes_water() && feat_is_water(grd(you.pos())))
+        {
+            // Disable emergency flight if it was active
+            you.props.erase(EMERGENCY_FLIGHT_KEY);
+        }
+
         if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
                                   "Your transformation is almost over."))
         {
@@ -694,13 +699,6 @@ static void _decrement_durations()
             mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
             you.redraw_stats[s] = true;
         }
-    }
-
-
-    if (you.duration[DUR_BERSERK]
-        && you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION)
-    {
-        you.duration[DUR_BERSERK] = 1; // end
     }
 
     // Leak piety from the piety pool into actual piety.
@@ -970,7 +968,7 @@ static void _regenerate_hp_and_mp(int delay)
 
         if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
-        if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
+        if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
             mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
 
         you.magic_points_regeneration += mp_regen_countup;
@@ -992,7 +990,7 @@ void player_reacts()
     search_around();
 
     //XXX: does this _need_ to be calculated up here?
-    const int stealth = check_stealth();
+    const int stealth = player_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.

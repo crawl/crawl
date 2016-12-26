@@ -32,6 +32,7 @@ void read_book(item_def &item);
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();
+void learn_spell_from(const item_def &book);
 bool learn_spell(spell_type spell, bool wizard = false);
 
 string desc_cannot_memorise_reason(spell_type spell);
@@ -41,9 +42,8 @@ vector<spell_type> spellbook_template(book_type book);
 vector<spell_type> spells_in_book(const item_def &book);
 
 bool you_can_memorise(spell_type spell) PURE;
-bool has_spells_to_memorise(bool silent = true,
-                            spell_type current_spell = SPELL_NO_SPELL);
-vector<spell_type> get_mem_spell_list(vector<int> &books);
+bool has_spells_to_memorise(bool silent = true);
+vector<spell_type> get_mem_spell_list();
 
 void destroy_spellbook(const item_def &book);
 #endif

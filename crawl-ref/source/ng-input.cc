@@ -54,6 +54,7 @@ void opening_screen()
     }
 
     msg += "\n";
+    msg += "<lightgreen>Take part in the player survey at http://crawl.develz.org</lightgreen>\n";
 
     formatted_string::parse_string(msg).display();
     textcolour(LIGHTGREY);
@@ -64,7 +65,7 @@ static void _show_name_prompt(int where)
     cgotoxy(1, where);
     textcolour(CYAN);
 
-    cprintf("\nWhat is your name today? (Leave blank for a random name) ");
+    cprintf("\nWhat is your name today? (Leave blank for a random name, or use Escape to go back.) ");
 
     textcolour(LIGHTGREY);
 }
@@ -179,7 +180,7 @@ bool validate_player_name(const string &name, bool verbose)
         return false;
     }
 
-    ucs_t c;
+    char32_t c;
     for (const char *str = name.c_str(); int l = utf8towc(&c, str); str += l)
     {
         // The technical reasons are gone, but enforcing some sanity doesn't

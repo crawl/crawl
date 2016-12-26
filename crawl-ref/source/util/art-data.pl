@@ -28,7 +28,6 @@ my %field_type = (
     CLARITY  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
-    CONFUSE  => "bool",
     CORPSE_VIOLATING => "bool",
     CORRODE  => "bool",
     CURSED   => "num",
@@ -67,9 +66,9 @@ my %field_type = (
     SKIP_EGO => "bool",
     SLAY     => "num",
     SPECIAL  => "bool",
+    SLOW     => "bool",
     STEALTH  => "num",
     STR      => "num",
-    SUSTAT   => "bool",
     TYPE     => "str",
     UNIDED   => "bool",
     VALUE    => "num",
@@ -487,7 +486,7 @@ my @art_order = (
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
-    # Move FOG after FLY, and remove three copies of "unused", when
+    # Move FOG after FLY, and remove four copies of "unused", when
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
@@ -495,8 +494,8 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "SUSTAT", "NO_UPGRADE", "RCORR", "\n",
-    "RMUT", "unused", "CORRODE", "DRAIN", "CONFUSE", "FRAGILE", "\n",
+    "RMSL", "FOG", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
+    "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",

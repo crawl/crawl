@@ -21,18 +21,31 @@ function grandhive_vaults(e, hivewallglyph)
     e.colour(hivewallglyph .. ' = yellow')
     -- Lair has lots of randomization and thin scaling in its
     -- monster set, so specify some monsters for Lair. Also,
-    -- avoid wasps and bears, because nature or whatever.
+    -- avoid hornets and bears, because nature or whatever.
     if you.branch() == "Lair" then
-        e.kmons('0 = yak / hippogriff / sheep w:2 / wolf w:8 / \
+        e.kmons('0 = yak / hippogriff / wolf w:8 / \
                      water moccasin w:8 / wyvern w:8 / basilisk w:8 / \
                      crocodile / river rat w:2 / steam dragon w:2')
         e.kmons('9 = elephant / spiny frog / rime drake / \
-                     blink frog w:8 / griffon w:6 / hell rat w:4')
+                     blink frog w:8 / manticore w:4 / hell rat w:4')
         e.kmons('8 = death yak w:14 / hydra / komodo dragon / \
                      black mamba / lindwurm w:8 / torpor snail w:4 / \
-                     boulder beetle w:2 / catoblepas w:2')
+                     catoblepas w:4')
     end
 end
+
+function callback.wizard_prison_walls()
+  local wall_pos = dgn.find_marker_positions_by_prop("prison", "wall")
+  if wall_pos == nil then
+    return
+  end
+
+  for i, pos in ipairs(wall_pos) do
+    dgn.terrain_changed(pos.x, pos.y, "floor", false)
+  end
+  crawl.mpr("You hear a hidden mechanism click...the prison walls lower!")
+end
+
 }}
 
 default-depth: D:12-, !D:$, Depths, !Depths:$
@@ -212,15 +225,14 @@ NSUBST:  6 = 2:6 / *:.
 SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
-MONS:    hill giant, cyclops
+MONS:    cyclops, ettin
 MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
 SUBST:   G = '
 # Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
 SHUFFLE: '1 / '1 / w2 / l3
 : end
-KMONS:   Z = hill giant zombie / cyclops zombie / \
-             stone giant zombie / titan zombie
+KMONS:   Z = cyclops zombie / stone giant zombie / titan zombie
 KMONS:   P = plant
 KITEM:   ( = any weapon good_item
 KITEM:   Z = large rock
@@ -256,7 +268,7 @@ NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
 DEPTH:  D:10-, Depths
 MONS:   wizard / boggart / nothing
-MONS:   crystal guardian / giant orange brain / rakshasa
+MONS:   crystal guardian / glowing orange brain / rakshasa
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
             delay_max = 50, size_min = 1, size_max = 5,  \
@@ -651,50 +663,47 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# The Golem Gauntlet (by Mu.)
+# The Constructs Gauntlet (by Mu, modernized by HangedMan)
 #
 # Each room is progressively more challenging; both the golems, and their
 # creators.
-#
-# (With the drop-off of golems, this vault has been revamped into general
-#  "constructs". hangedman sends his regards.)
 NAME:   constructs_gauntlet_mu_hangedman
-DEPTH:  Depths, !Depths:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
+DEPTH:  Depths, !Depths:$
 ORIENT: east
-MARKER: m = lua:fog_machine { \
+MARKER: y = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 1, \
-                size_buildup_time = 25, cloud_type = "flame" \
-            }
+                size = 4, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "flame" }
 MARKER: z = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 1, \
-                size_buildup_time = 25, cloud_type = "freezing vapour" \
-            }
+                size = 4, size_buildup_amnt = 1, \
+                size_buildup_time = 25, cloud_type = "freezing vapour" }
 MONS:   gargoyle, earth elemental, air elemental
 MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
-KFEAT:  o = granite_statue
-KFEAT:  m = .
-KFEAT:  z = .
-KMONS:  A = wizard / Erica, wizard
-KMONS:  B = orc sorcerer / Nergalle, orc sorcerer
-KMONS:  C = ogre mage / Erolcha, ogre mage
+KMONS:  A = wizard
+KMONS:  B = orc sorcerer
+KMONS:  C = ogre mage
 KMONS:  D = deep elf sorcerer
-KMONS:  E = lich / Boris, lich
-KMONS:  F = ancient lich
+KMONS:  E = lich
+KMONS:  F = ancient lich / Boris w:2, ancient lich
+KFEAT:  yz = .
+COLOUR: y = yellow
+COLOUR: z = lightblue
+FTILE:  y = floor_rough_red
+FTILE:  z = floor_rough_blue
 MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
  cc......+.....cc......+....$cc
- ccmcccccc.....cczcccccc...6$cc
+ ccycccccc.....cczcccccc...6$cc
  cc.....cc*.E5.cc.....cc..F.$cc
- ccccccmcc|.5..cccccczcc.6..$cc
+ ccccccycc|.5..cccccczcc.6.>$cc
  cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
  cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
- cc...4.clcccclcc$..3.cwccccwcc
+ cc...4.clcccclcc$>.3.cwccccwcc
  cc..D..+.cllllcc$3C..+.cwwwwcc
  cc%4...ccclccccc..3..cccwccccc
  cc$$$%%ccclllll+.....cccwwwwcc
@@ -703,9 +712,9 @@ MAP
 .cc......+...$$ccWWWWWW+.....cc
 .cc.cccccc..1.$ccWcccccc...2.cc
 .cc.....cc..A..ccWWWWWWc..B..cc
-occcccc.cc..1..cccccccWc.2.1$cc
+Gcccccc.cc..1..cccccccWc.2.1$cc
 @+......cc.....+WWWWWWWc...$%cc
-occcccccccccccccccccccccccccccc
+Gcccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -932,64 +941,55 @@ ENDMAP
 # Wizard Prison
 #
 NAME:   evilmike_wizard_prison
-TAGS:   no_monster_gen
-DEPTH:  Depths, !Depths:$, Crypt:1-4
+TAGS:   no_monster_gen no_item_gen no_trap_gen
+DEPTH:  Depths, Crypt
 ORIENT: southeast
-NSUBST: 3 = 3:. / *:3
-SUBST:  ^ : ^mmm
-KFEAT:  ^ = permanent teleport trap
-KFEAT:  m = iron_grate
-KFEAT:  y = rock_wall
-KMASK:  y = no_wall_fixup
-KPROP:  -d|*$14567^ = no_tele_into
-FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
-FTILE:  .@+23 = FLOOR_HALL
-TILE:   c = DNGN_STONE_WALL_DARKGRAY
-# This is to mark the wall clearly diggable.
-TILE:   y = WALL_NORMAL
-MONS:   patrolling silent spectre
-MONS:   patrolling curse skull, soul eater
-# Inmates are monsters capable of blinking, summoning or airstriking.
-MONS:   ogre mage / deep elf mage / wizard / necromancer / \
-        merfolk aquamancer / spriggan air mage / orc sorcerer / \
-        deep elf sorcerer / kobold demonologist / deep elf mage
-MONS:   draconian shifter / draconian annihilator / lich  / \
+KPROP:  -47 = no_tele_into
+MONS:   human att:neutral, silent spectre, patrolling soul eater
+MONS:   ogre mage / deep elf mage / wizard / necromancer / merfolk aquamancer / \
+        spriggan air mage / orc sorcerer / kobold demonologist / deep elf mage
+MONS:   draconian shifter / draconian annihilator / lich / deep elf sorcerer / \
         deep elf annihilator / deep elf demonologist
-NSUBST: 4 = 6:5 / *:4
-MONS:   ancient lich
-MONS:   human att:neutral
-NSUBST: 4 = 1:7 / *:4
+MONS:   patrolling curse skull, ancient lich
 ITEM:   acquire any
-SUBST:  - = .
+KFEAT:  g = runed_door
+KFEAT:  ^ = known teleport trap
+NSUBST: D = 1:6 / *:33., 4 = 1:1 / 6:4 / 6:5 / 6=45.. / *:. , 7 = 1:7 / 1=75
+MARKER: n = lua:portal_desc {prison="wall"}
+FTILE:  nc-457 = FLOOR_PEBBLE_DARKGRAY
+FTILE:  .@+g^d|*$236 = FLOOR_HALL
+TILE:   c = DNGN_STONE_WALL_DARKGRAY
+{{
+  local tm_open = TriggerableFunction:new{func="callback.wizard_prison_walls"}
+  tm_open:add_triggerer(DgnTriggerer:new{type="player_los"})
+  lua_marker('2', tm_open)
+}}
 MAP
-xxxxxxxxxxxc.@.cxxxxxxxxxxx
-xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxxxxxxxxc.c.cxxxxxxxxxxx
-xxxxxxxxxxxc...cxxxxxxxxxxx
-xxxxcccccccc.c.ccccccccxxxx
-xxxxc-4cc--c...c4-cc--cxxxx
-xxxxc--cc4-c3.3c--cc-4cxxxx
-xxxccmmccmmcc+ccmmccmmccxxx
-xxxc3..................cxxx
-xxxc3................3.cxxx
-xxxcmmcmmc+cmmcmmcmmc..cccx
-xxxc--c-4c-c4-c4-c-4c..m4cx
-xxxc-4c--c-cccccccccc..m-cx
-xxxccccccc---^1y|c--m.3cccx
-xxxccccccc-ccccc|c-4m..m4cx
-xxxc4-c--c-c-4c||cccc..m-cx
-xxxc--c-4c-c--cddc-4c..cccx
-xxxcmmcmmc+cmmccccmmc..cxxx
-xxxc3..................cxxx
-xxxc3.................3cxxx
-xxxccmmcmmcmmc..cmmcmmccxxx
-xxxxc4-c-4c--c..c--c-4cxxxx
-xxxxc--c--c4-c..c4-c--cxxxx
-xccccccccccycc.2cccccccxxxx
-xc|$*$*$cccy-ccccxxxxxxxxxx
-xc$|$*$*-6-y-cxxxxxxxxxxxxx
-xcccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccc.@.ccccccccccc
+ccccccccccc...ccccccccccc
+ccccccccccc.c.ccccccccccc
+ccccccccccc...ccccccccccc
+cccc-4cc4-c3.3c4-cc-4cccc
+ccccnnccnncc+ccnnccnncccc
+cc4nD...............Dn4cc
+cc-n.................n-cc
+cccc..cnncnncnncnnc..cccc
+cc-n..c-4c4-c4-c-4c..n-cc
+cc4n..ccccccccccccc..n4cc
+cccc..c7n.......n-c..cccc
+cc4n..c-n..c+c..n7c..n-cc
+cc-nD.ccc+cc2cc+ccc.Dn4cc
+cccc..c*$$cc^cc$$*c..cccc
+cc-n..c||*c...c*||c..n4cc
+cc4n..cd||c...c||dc..n-cc
+cccc..ccccccgcccccc..cccc
+cc4n.................n-cc
+cc-nD...............Dn4cc
+ccccnnccnnc...cnnccnncccc
+cccc-4cc-4c...c-4cc4-cccc
+ccccccccccc.D.ccccccccccc
+ccccccccccccccccccccccccc
+ccccccccccccccccccccccccc
 ENDMAP
 
 ################################################################################
@@ -1201,10 +1201,8 @@ ORIENT: northeast
 DEPTH:  Depths
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
-COLOUR: = = red
 TILE:   v = DNGN_STONE_WALL_RED
 FTILE:  v'4! = FLOOR_PEBBLE_RED
-FTILE:  = = FLOOR_PEBBLE_RED
 FTILE:  G1BC = FLOOR_VAULT
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 20, \
@@ -1243,7 +1241,7 @@ xc2.........Gcccccc.cccc++cccc
 ccccGcGcc...cccvvvc.+........c
 ccGcccccG...Gccv4vccc...ccc..c
 ...2ccccc...vvvv'vvvv....ccc.c
-@.......+...=''4!4''=...5_cc2c
+@.......+...+''4!4''+...5_cc2c
 ...2ccccc...vvvv'vvvv....ccc.c
 ccGcccccG...Gccv4vccc...ccc..c
 ccccGcGcc...cccvvvc.+........c
@@ -1359,7 +1357,7 @@ SUBST:   BDFHJLNPR = .
 
   local function monslist(depth)
     local mons = nil
-    mons = add_mons(mons, "mottled dragon", semi(depth, 11, 21, 334))
+    mons = add_mons(mons, "acid dragon", semi(depth, 11, 21, 334))
     mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
     mons = add_mons(mons, "wizard", peak(depth, 14, 22, 89))
     mons = add_mons(mons, "fire dragon", peak(depth, 14, 24, 192))
@@ -1506,7 +1504,7 @@ xvvv#v#v#v#vl..l.+...+.....v
 xxxv1v1v1v1vl....vvvvv.GlG.v
 xxxvvvvvvvvv.l.........lYl.v
 xxxv1v1v1v1v.ll........GlG.v
-xvvv#v#v#v#v.lll.v---v.....v
+xvvv#v#v#v#v.lll.v+++v.....v
 xv*+..........l..v   vvvvvvv
 xvvv#v#v#v#vvvvvvv
 xxxv1v1v1v1v
@@ -1753,7 +1751,7 @@ NAME: cheibrodos_hippocracy
 DEPTH: D:12-
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: north
-MONS: giant orange brain, small abomination, giant eyeball, demonic crawler
+MONS: glowing orange brain, small abomination, floating eye, demonic crawler
 ITEM: randbook
 NSUBST: ' = 3:4 / *:.
 NSUBST: " = 4:0 / 1:9 / *:.
@@ -2145,7 +2143,7 @@ KMONS:   8 = bone dragon / reaper / doom hound
 KMONS:   _ = tzitzimitl
 ITEM:    robe_of_night, ring_of_shadows
 ITEM:    cloak_of_the_thief, boots_of_the_assassin
-ITEM:    shadow dragon armour randart, ring of stealth randart
+ITEM:    shadow dragon scales randart, ring of stealth randart
 ITEM:    phantom mirror, potion of invisibility ident:type q:2
 KFEAT:   F = floor
 KFEAT:   _ = altar_dithmenos
@@ -2245,4 +2243,23 @@ xxxxxxwwwxxxxxxxxxx
 xxxxxxxwwwxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    doesnt_quadruple_sword
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   D:13-
+ORIENT:  north
+MONS:    dancing weapon ; long sword
+ITEM:    double sword, triple sword
+KPROP:   .* = bloody
+NSUBST:  . = 4:1 / 2=1.. / 1:d / 1:e / 1:f / 4=ff.
+SUBST:   c : cbxv
+: dgn.delayed_decay(_G, 'f', 'wizard corpse')
+MAP
+cccccccccc
+c.**..**.c
+c........c
+c........c
+c........c
+cccc==cccc
 ENDMAP

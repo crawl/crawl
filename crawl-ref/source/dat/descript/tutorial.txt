@@ -183,7 +183,7 @@ tutorial2 rest_and_chop_reminder
 Don't forget about chopping corpses for food (with
 <input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
 mouseclick</input></localtiles>), or resting (with
-<input>$cmd[CMD_REST]</input><localtiles> or the third button in the command
+<input>$cmd[CMD_REST]</input><localtiles> or the button in the command
 bar</localtiles>)!
 %%%%
 tutorial2 wait
@@ -356,7 +356,7 @@ necessary.
 %%%%
 tutorial3 downstairs
 
-Well fought! If necessary, rest up with <input>$cmd[CMD_REST]</input>, the
+Well fought! If necessary, rest up with <input>$cmd[CMD_REST]</input>, then
 continue downwards with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or
 with a <input>click</input> on your character</localtiles>.
 %%%%
@@ -538,8 +538,8 @@ tutorial4 undead
 # TODO: This is more like hints mode stuff. Not sure if there's any harm though,
 #       and the mouse interface hint is good.
 Unlike most monsters, zombies and skeletons do not regenerate health.
-<localtiles> Incidentally, you can also cast spells by pressing
-<input>Ctrl+leftclick</input> on the monster.</localtiles>
+<localtiles> You can also attempt to re-cast the last spell you used by
+pressing <input>Ctrl+leftclick</input> on the monster.</localtiles>
 %%%%
 tutorial4 spell_success
 
@@ -663,10 +663,10 @@ found so far.
 %%%%
 tutorial5 altar
 
-You can pray on an altar with <input>$cmd[CMD_PRAY]</input><localtiles> (or by
-<input>clicking in the command panel</input> or <input>left clicking</input>
-on your character)</localtiles> to get an idea what a god offers you, and to
-join the faith. If you press <input>!</input><localtiles> or
+You can pray on an altar with <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> (or by <input>left clicking</input> on your character)</localtiles>
+to get an idea what a god offers you, and to join the faith. If
+you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
 more detailed description.
 
@@ -729,7 +729,7 @@ tutorial5 exit
 # A single screen recapping all commands.
 :nowrap
 <yellow>Religious commands</yellow>
-  <input>$cmd[CMD_PRAY]</input>  pray at an altar to join a god, or sacrifice a corpse
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  pray at an altar to join a god
   <input>$cmd[CMD_USE_ABILITY]</input>  use a divine ability
   <input>$cmd[CMD_DISPLAY_RELIGION]</input>  check your religious standing<localtiles>
   A <input>rightclick</input> on the player tile will also bring up the religion screen.</localtiles>

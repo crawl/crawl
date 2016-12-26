@@ -683,6 +683,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.QUAD_GLOW, x, y);
                     if (cell.disjunct)
                         this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
+                    if (cell.awakened_forest)
+                        this.draw_icon(icons.BERSERK, x, y);
 
                     if (cell.fg)
                     {
