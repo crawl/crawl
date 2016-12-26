@@ -1333,7 +1333,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
     fail_check();
-    if (one_chance_in(5))
+    if (god == GOD_NO_GOD && one_chance_in(5))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss"));
