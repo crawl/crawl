@@ -1079,6 +1079,9 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
  */
 int mons_power_for_hd(spell_type spell, int hd, bool random)
 {
+    if (spell == SPELL_SIREN_SONG)
+        return (hd * 22 / 3 + 15) * ENCH_POW_FACTOR; // ???
+
     const int power = hd * _mons_power_hd_factor(spell, random);
     if (spell == SPELL_PAIN)
         return max(50 * ENCH_POW_FACTOR, power);
@@ -7766,10 +7769,12 @@ static void _siren_sing(monster* mons, bool avatar)
             return;
     }
 
-    // Once mesmerised by a particular monster, you cannot resist anymore.
-    const int res_magic =
-        you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15);
+    // power is the same for siren & avatar song, so just use siren
+    const int pow = _ench_power(SPELL_SIREN_SONG, *mons);
 
+    const int res_magic = you.check_res_magic(pow);
+
+    // Once mesmerised by a particular monster, you cannot resist anymore.
     if (you.duration[DUR_MESMERISE_IMMUNE]
         || !already_mesmerised
            && (res_magic > 0 || you.clarity()))
