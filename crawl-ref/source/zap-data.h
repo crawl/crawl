@@ -862,7 +862,7 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 
 {
     ZAP_SANDBLAST,
-    "rocky blast",
+    "blast of sand",
     50,
     new dicedef_calculator<2, 4, 1, 3>,
     new tohit_calculator<13, 1, 10>,
