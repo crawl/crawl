@@ -14,7 +14,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "god-conduct.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-util.h"

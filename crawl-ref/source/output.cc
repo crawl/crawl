@@ -25,7 +25,7 @@
 #include "god-passive.h"
 #include "initfile.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"

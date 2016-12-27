@@ -18,7 +18,7 @@
 #include "art-enum.h"
 #include "food.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "religion.h"
 #include "skills.h"

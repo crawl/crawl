@@ -21,7 +21,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "makeitem.h"
 #include "message.h"

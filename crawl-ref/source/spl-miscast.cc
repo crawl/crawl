@@ -20,7 +20,7 @@
 #include "god-passive.h"
 #include "god-wrath.h"
 #include "item-use.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"

@@ -24,7 +24,7 @@
 #include "enum.h"
 #include "env.h"
 #include "god-menu.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "item-name.h"
 #include "items.h"
 #include "libutil.h" // map_find

@@ -39,7 +39,7 @@
 #include "god-wrath.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"

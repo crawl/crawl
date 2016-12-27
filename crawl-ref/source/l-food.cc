@@ -5,7 +5,7 @@
 #include "butcher.h"
 #include "cluautil.h"
 #include "food.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "player.h"
 
 /////////////////////////////////////////////////////////////////////

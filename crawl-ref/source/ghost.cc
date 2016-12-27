@@ -14,7 +14,7 @@
 #include "database.h"
 #include "env.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"

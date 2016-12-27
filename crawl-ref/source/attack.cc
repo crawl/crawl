@@ -25,7 +25,7 @@
 #include "god-conduct.h"
 #include "god-passive.h" // passive_t::no_haste
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-clone.h"

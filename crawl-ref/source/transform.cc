@@ -22,7 +22,7 @@
 #include "invent.h" // check_old_item_warning
 #include "item-use.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "message.h"
 #include "mon-death.h"

@@ -17,7 +17,7 @@
 #include "dungeon.h"
 #include "exclude.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "message.h"

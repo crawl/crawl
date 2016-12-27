@@ -9,7 +9,7 @@
 
 #include "artefact.h"
 #include "env.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
 #include "makeitem.h"

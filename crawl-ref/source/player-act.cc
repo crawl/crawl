@@ -24,7 +24,7 @@
 #include "god-passive.h" // passive_t::no_haste
 #include "hints.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "item-use.h"
 #include "message.h"
 #include "player-stats.h"

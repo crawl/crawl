@@ -36,7 +36,7 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "item-use.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"

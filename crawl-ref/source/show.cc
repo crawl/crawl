@@ -14,7 +14,7 @@
 #include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "mon-place.h"
 #include "options.h"

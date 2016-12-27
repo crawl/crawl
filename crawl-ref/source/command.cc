@@ -18,7 +18,7 @@
 #include "env.h"
 #include "files.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "lookup-help.h"

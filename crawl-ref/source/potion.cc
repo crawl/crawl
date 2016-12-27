@@ -16,7 +16,7 @@
 #include "god-wrath.h" // reduce_xp_penance
 #include "hints.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "item-use.h"
 #include "message.h"
 #include "mutation.h"

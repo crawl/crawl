@@ -12,7 +12,7 @@
 
 #include "ability.h"
 #include "fight.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "skills.h"
 #include "spl-util.h"
 

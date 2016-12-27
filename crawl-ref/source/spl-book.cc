@@ -26,7 +26,7 @@
 #include "god-conduct.h"
 #include "god-item.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"

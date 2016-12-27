@@ -24,7 +24,7 @@
 #include "feature.h"
 #include "fprop.h"
 #include "god-abil.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "map-knowledge.h"

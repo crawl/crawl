@@ -27,7 +27,7 @@
 #include "god-companions.h" // hep stuff
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hiscores.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"

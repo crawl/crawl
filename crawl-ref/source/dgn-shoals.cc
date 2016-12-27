@@ -13,7 +13,7 @@
 #include "dungeon.h"
 #include "english.h"
 #include "flood-find.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"

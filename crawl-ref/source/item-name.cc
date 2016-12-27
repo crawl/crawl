@@ -32,7 +32,7 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"
@@ -1183,7 +1183,7 @@ string sub_type_string(const item_def &item, bool known)
     switch (type)
     {
     case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
-    case OBJ_MISSILES: // variable to itemprop.cc.
+    case OBJ_MISSILES: // variable to item-prop.cc.
     case OBJ_ARMOUR:
         return item_base_name(type, sub_type);
     case OBJ_WANDS: return _wand_type_name(sub_type);

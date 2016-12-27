@@ -24,7 +24,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "act-iter.h"
 #include "mon-death.h"
 #include "random.h"

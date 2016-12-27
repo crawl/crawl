@@ -15,7 +15,7 @@
 #include "food.h"
 #include "initfile.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "losglobal.h"

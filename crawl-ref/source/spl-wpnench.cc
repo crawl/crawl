@@ -9,7 +9,7 @@
 
 #include "areas.h"
 #include "god-passive.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "makeitem.h"
 #include "message.h"
 #include "prompt.h"

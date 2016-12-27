@@ -89,7 +89,7 @@ initfile.o \
 invent.o \
 item-use.o \
 item-name.o \
-itemprop.o \
+item-prop.o \
 items.o \
 jobs.o \
 json.o \

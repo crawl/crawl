@@ -26,7 +26,7 @@
 #include "god-abil.h"
 #include "god-passive.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "menu.h"

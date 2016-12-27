@@ -38,7 +38,7 @@ $items{"staff of $_"} = 1 for /STAFF_[A-Z_]+: *return "([^"]+)";/g;
 $items{"rod of $_"} = 1 for /ROD_[A-Z_]+: *return "([^"]+)";/g;
 $items{$_} = 1 for /FOOD_[A-Z_]+: buff << "([^"]+)";/g;
 
-open IN, "util/cpp_version itemprop.cc|" or die "Can't read itemprop.cc\n";
+open IN, "util/cpp_version item-prop.cc|" or die "Can't read item-prop.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
