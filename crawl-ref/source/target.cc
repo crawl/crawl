@@ -414,7 +414,6 @@ bool targeter_smite::set_aim(coord_def a)
 
     if (exp_range_max > 0)
     {
-        coord_def centre(9,9);
         bolt beam;
         beam.target = a;
         beam.use_target_as_pos = true;
