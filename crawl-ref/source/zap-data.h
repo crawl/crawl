@@ -199,7 +199,7 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
 
 { // Used only by phial of floods
     ZAP_PRIMAL_WAVE,
-    "great wave of water",
+    "torrent of water",
     200,
     new calcdice_calculator<4, 14, 3, 5>,
     new tohit_calculator<10, 1, 25>,

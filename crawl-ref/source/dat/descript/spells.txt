@@ -1062,7 +1062,7 @@ each missile. Teleported projectiles have their accuracy greatly increased.
 %%%%
 Primal Wave spell
 
-Conjures a great wave of water that may knock back the target, and creates a
+Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
 Quicksilver Bolt spell
