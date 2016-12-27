@@ -99,7 +99,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     args.range = 2;
     args.top_prompt = "Attack whom?";
     args.self = CONFIRM_CANCEL;
-    targetter_reach hitfunc(&you, REACH_TWO);
+    targeter_reach hitfunc(&you, REACH_TWO);
     args.hitfunc = &hitfunc;
 
     direction(beam, args);
@@ -420,7 +420,7 @@ static int _max_wand_range()
     return LOS_RADIUS;
 }
 
-static targetter *_wand_targetter(const item_def *wand)
+static targeter *_wand_targeter(const item_def *wand)
 {
     int range = _wand_range(wand->zap());
     const int power = 15 + you.skill(SK_EVOCATIONS, 5) / 2;
@@ -428,13 +428,13 @@ static targetter *_wand_targetter(const item_def *wand)
     switch (wand->sub_type)
     {
     case WAND_ICEBLAST:
-        return new targetter_beam(&you, range, ZAP_ICEBLAST, power, 1, 1);
+        return new targeter_beam(&you, range, ZAP_ICEBLAST, power, 1, 1);
     case WAND_LIGHTNING:
-        return new targetter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
+        return new targeter_beam(&you, range, ZAP_LIGHTNING_BOLT, power, 0, 0);
     case WAND_FLAME:
-        return new targetter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
+        return new targeter_beam(&you, range, ZAP_THROW_FLAME, power, 0, 0);
     case WAND_DIGGING:
-        return new targetter_beam(&you, range, ZAP_DIG, power, 0, 0);
+        return new targeter_beam(&you, range, ZAP_DIG, power, 0, 0);
     default:
         return 0;
     }
@@ -538,7 +538,7 @@ void zap_wand(int slot)
     const bool wasteful     = !item_ident(wand, ISFLAG_KNOW_PLUSES);
           bool invis_enemy  = false;
     const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
-    targetter *hitfunc      = _wand_targetter(&wand);
+    targeter *hitfunc      = _wand_targeter(&wand);
 
     switch (wand.sub_type)
     {
@@ -1746,7 +1746,7 @@ static spret_type _phantom_mirror()
     bolt beam;
     monster* victim = nullptr;
     dist spd;
-    targetter_smite tgt(&you, LOS_RADIUS, 0, 0);
+    targeter_smite tgt(&you, LOS_RADIUS, 0, 0);
 
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
@@ -1870,7 +1870,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
 
         if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
-            targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
+            targeter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
             range_view_annotator show_range(&range);
             delay(50);
         }

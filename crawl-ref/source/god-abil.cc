@@ -3033,7 +3033,7 @@ bool fedhas_plant_ring_from_fruit()
     prioritise_adjacent(you.pos(), adjacent);
 
     // Screwing around with display code I don't really understand. -cao
-    targetter_smite range(&you, 1);
+    targeter_smite range(&you, 1);
     range_view_annotator show_range(&range);
 
     for (int i = 0; i < max_use; ++i)
@@ -3633,7 +3633,7 @@ bool cheibriados_slouch()
             return false;
         }
 
-    targetter_los hitfunc(&you, LOS_DEFAULT);
+    targeter_los hitfunc(&you, LOS_DEFAULT);
     if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
         return false;
 
@@ -3901,7 +3901,7 @@ bool dithmenos_shadow_step()
     ASSERT(you.umbra_radius() > -1);
     const int range = you.umbra_radius();
 
-    targetter_shadow_step tgt(&you, you.umbra_radius());
+    targeter_shadow_step tgt(&you, you.umbra_radius());
     direction_chooser_args args;
     args.hitfunc = &tgt;
     args.restricts = DIR_SHADOW_STEP;
@@ -4714,7 +4714,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
     if (target.origin())
     {
         dist spd;
-        targetter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
+        targeter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
@@ -6177,7 +6177,7 @@ bool ru_power_leap()
         args.top_prompt = "Aiming: <white>Power Leap</white>";
         args.self = CONFIRM_CANCEL;
         const int explosion_size = 1;
-        targetter_smite tgt(&you, args.range, explosion_size, explosion_size);
+        targeter_smite tgt(&you, args.range, explosion_size, explosion_size);
         args.hitfunc = &tgt;
         direction(beam, args);
         if (crawl_state.seen_hups)
@@ -6547,8 +6547,8 @@ bool uskayaw_line_pass()
 
     while (1)
     {
-        unique_ptr<targetter> hitfunc;
-        hitfunc = make_unique<targetter_monster_sequence>(&you, pow, range);
+        unique_ptr<targeter> hitfunc;
+        hitfunc = make_unique<targeter_monster_sequence>(&you, pow, range);
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
@@ -6675,7 +6675,7 @@ spret_type uskayaw_grand_finale(bool fail)
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Grand Finale</white>";
         args.self = CONFIRM_CANCEL;
-        targetter_smite tgt(&you, 7, 0, 0);
+        targeter_smite tgt(&you, 7, 0, 0);
         args.hitfunc = &tgt;
         direction(beam, args);
         if (crawl_state.seen_hups)
@@ -6870,7 +6870,7 @@ static coord_def _get_transference_target()
     dist spd;
 
     const int aoe_radius = have_passive(passive_t::transfer_drain) ? 1 : 0;
-    targetter_transference tgt(&you, aoe_radius);
+    targeter_transference tgt(&you, aoe_radius);
     direction_chooser_args args;
     args.hitfunc = &tgt;
     args.restricts = DIR_TARGET;
