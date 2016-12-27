@@ -108,7 +108,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/invent.cc \
     $(CRAWL_PATH)/item-use.cc \
     $(CRAWL_PATH)/item-name.cc \
-    $(CRAWL_PATH)/itemprop.cc \
+    $(CRAWL_PATH)/item-prop.cc \
     $(CRAWL_PATH)/items.cc \
     $(CRAWL_PATH)/jobs.cc \
     $(CRAWL_PATH)/json.cc \

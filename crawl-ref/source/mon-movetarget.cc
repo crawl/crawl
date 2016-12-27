@@ -8,7 +8,7 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "los-def.h"

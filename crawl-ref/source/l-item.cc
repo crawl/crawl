@@ -19,7 +19,7 @@
 #include "env.h"
 #include "food.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
 #include "l-defs.h"

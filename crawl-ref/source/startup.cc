@@ -26,7 +26,7 @@
 #include "hints.h"
 #include "initfile.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"

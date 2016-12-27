@@ -19,7 +19,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "los.h"
 #include "macro.h"
 #include "message.h"

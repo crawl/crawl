@@ -25,7 +25,7 @@
 #include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "item-use.h"
 #include "melee-attack.h"
 #include "message.h"

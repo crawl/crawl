@@ -13,7 +13,7 @@
 #include "env.h"
 #include "fight.h" // apply_chunked_ac
 #include "fprop.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "los.h"
 #include "mon-behv.h"
 #include "mon-death.h"

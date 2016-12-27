@@ -322,7 +322,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\invent.cc" />
     <ClCompile Include="..\item-use.cc" />
     <ClCompile Include="..\item-name.cc" />
-    <ClCompile Include="..\itemprop.cc" />
+    <ClCompile Include="..\item-prop.cc" />
     <ClCompile Include="..\items.cc" />
     <ClCompile Include="..\jobs.cc" />
     <ClCompile Include="..\json.cc" />
@@ -720,7 +720,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\item-prop-enum.h" />
     <ClInclude Include="..\item-use.h" />
     <ClInclude Include="..\item-name.h" />
-    <ClInclude Include="..\itemprop.h" />
+    <ClInclude Include="..\item-prop.h" />
     <ClInclude Include="..\items.h" />
     <ClInclude Include="..\jobs.h" />
     <ClInclude Include="..\json.h" />

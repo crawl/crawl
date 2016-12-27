@@ -30,7 +30,7 @@
 #include "god-item.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "mapdef.h"
 #include "message.h"
 #include "misc.h"

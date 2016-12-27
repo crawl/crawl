@@ -22,7 +22,7 @@
 #include "god-abil.h"
 #include "ghost.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "los.h"
 #include "message.h"

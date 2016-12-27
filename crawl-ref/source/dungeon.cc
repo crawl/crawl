@@ -43,7 +43,7 @@
 #include "ghost.h"
 #include "god-passive.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"

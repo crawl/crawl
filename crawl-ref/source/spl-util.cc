@@ -21,7 +21,7 @@
 #include "env.h"
 #include "god-passive.h"
 #include "god-abil.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"

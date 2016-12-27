@@ -86,7 +86,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"

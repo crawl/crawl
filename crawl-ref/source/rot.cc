@@ -15,7 +15,7 @@
 #include "english.h"
 #include "env.h"
 #include "god-conduct.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "player-equip.h"
 #include "religion.h"

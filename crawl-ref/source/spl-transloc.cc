@@ -20,7 +20,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "los.h"

@@ -17,7 +17,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "mapdef.h"
 #include "mapmark.h"

@@ -25,7 +25,7 @@
 #include "exercise.h"
 #include "god-passive.h" // passive_t::search_traps
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"

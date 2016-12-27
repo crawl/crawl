@@ -12,7 +12,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "dungeon.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"

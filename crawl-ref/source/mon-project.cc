@@ -17,7 +17,7 @@
 #include "cloud.h"
 #include "directn.h"
 #include "env.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "message.h"
 #include "mgen-data.h"
 #include "mon-death.h"

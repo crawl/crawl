@@ -47,7 +47,7 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -3428,7 +3428,7 @@ colour_t item_def::missile_colour() const
 {
     ASSERT(base_type == OBJ_MISSILES);
 
-    // TODO: move this into itemprop.cc
+    // TODO: move this into item-prop.cc
     switch (sub_type)
     {
         case MI_STONE:
@@ -3473,7 +3473,7 @@ colour_t item_def::armour_colour() const
         return mons_class_colour(monster_for_hide((armour_type)sub_type));
 
 
-    // TODO: move (some of?) this into itemprop.cc
+    // TODO: move (some of?) this into item-prop.cc
     switch (sub_type)
     {
         case ARM_CLOAK:

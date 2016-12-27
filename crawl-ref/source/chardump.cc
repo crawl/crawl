@@ -30,7 +30,7 @@
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"

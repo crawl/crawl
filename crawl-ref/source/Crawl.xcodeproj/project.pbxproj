@@ -162,7 +162,7 @@
 		7B09F59A1133D6AB004F149D /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD210BD494400A99626 /* invent.cc */; };
 		7B09F59D1133D6AB004F149D /* item-use.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD810BD494400A99626 /* item-use.cc */; };
 		7B09F59E1133D6AB004F149D /* item-name.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* item-name.cc */; };
-		7B09F59F1133D6AB004F149D /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* itemprop.cc */; };
+		7B09F59F1133D6AB004F149D /* item-prop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* item-prop.cc */; };
 		7B09F5A01133D6AB004F149D /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDF10BD494400A99626 /* items.cc */; };
 		7B09F5A11133D6AB004F149D /* jobs.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FE110BD494400A99626 /* jobs.cc */; };
 		7B09F5A21133D6AB004F149D /* kills.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FE310BD494400A99626 /* kills.cc */; };
@@ -525,7 +525,7 @@
 		E5D640F410BD494500A99626 /* invent.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD210BD494400A99626 /* invent.cc */; };
 		E5D640F710BD494500A99626 /* item-use.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FD810BD494400A99626 /* item-use.cc */; };
 		E5D640F810BD494500A99626 /* item-name.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDA10BD494400A99626 /* item-name.cc */; };
-		E5D640F910BD494500A99626 /* itemprop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* itemprop.cc */; };
+		E5D640F910BD494500A99626 /* item-prop.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDD10BD494400A99626 /* item-prop.cc */; };
 		E5D640FA10BD494500A99626 /* items.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FDF10BD494400A99626 /* items.cc */; };
 		E5D640FB10BD494500A99626 /* jobs.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FE110BD494400A99626 /* jobs.cc */; };
 		E5D640FC10BD494500A99626 /* kills.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63FE310BD494400A99626 /* kills.cc */; };
@@ -1377,8 +1377,8 @@
 		E5D63FDA10BD494400A99626 /* item-name.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item-name.cc; sourceTree = "<group>"; };
 		E5D63FDB10BD494400A99626 /* item-name.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item-name.h; sourceTree = "<group>"; };
 		E5D63FDC10BD494400A99626 /* item-prop-enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "item-prop-enum.h"; sourceTree = "<group>"; };
-		E5D63FDD10BD494400A99626 /* itemprop.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = itemprop.cc; sourceTree = "<group>"; };
-		E5D63FDE10BD494400A99626 /* itemprop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itemprop.h; sourceTree = "<group>"; };
+		E5D63FDD10BD494400A99626 /* item-prop.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = item-prop.cc; sourceTree = "<group>"; };
+		E5D63FDE10BD494400A99626 /* item-prop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = item-prop.h; sourceTree = "<group>"; };
 		E5D63FDF10BD494400A99626 /* items.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = items.cc; sourceTree = "<group>"; };
 		E5D63FE010BD494400A99626 /* items.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = items.h; sourceTree = "<group>"; };
 		E5D63FE110BD494400A99626 /* jobs.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jobs.cc; sourceTree = "<group>"; };
@@ -1934,8 +1934,8 @@
 				E5D63FDA10BD494400A99626 /* item-name.cc */,
 				E5D63FDB10BD494400A99626 /* item-name.h */,
 				E5D63FDC10BD494400A99626 /* item-prop-enum.h */,
-				E5D63FDD10BD494400A99626 /* itemprop.cc */,
-				E5D63FDE10BD494400A99626 /* itemprop.h */,
+				E5D63FDD10BD494400A99626 /* item-prop.cc */,
+				E5D63FDE10BD494400A99626 /* item-prop.h */,
 				E5D63FDF10BD494400A99626 /* items.cc */,
 				E5D63FE010BD494400A99626 /* items.h */,
 				E5D63FE110BD494400A99626 /* jobs.cc */,
@@ -2993,7 +2993,7 @@
 				7B09F59A1133D6AB004F149D /* invent.cc in Sources */,
 				7B09F59D1133D6AB004F149D /* item-use.cc in Sources */,
 				7B09F59E1133D6AB004F149D /* item-name.cc in Sources */,
-				7B09F59F1133D6AB004F149D /* itemprop.cc in Sources */,
+				7B09F59F1133D6AB004F149D /* item-prop.cc in Sources */,
 				7B09F5A01133D6AB004F149D /* items.cc in Sources */,
 				7B09F5A11133D6AB004F149D /* jobs.cc in Sources */,
 				7B09F5A21133D6AB004F149D /* kills.cc in Sources */,
@@ -3240,7 +3240,7 @@
 				E5D640F410BD494500A99626 /* invent.cc in Sources */,
 				E5D640F710BD494500A99626 /* item-use.cc in Sources */,
 				E5D640F810BD494500A99626 /* item-name.cc in Sources */,
-				E5D640F910BD494500A99626 /* itemprop.cc in Sources */,
+				E5D640F910BD494500A99626 /* item-prop.cc in Sources */,
 				E5D640FA10BD494500A99626 /* items.cc in Sources */,
 				E5D640FB10BD494500A99626 /* jobs.cc in Sources */,
 				E5D640FC10BD494500A99626 /* kills.cc in Sources */,

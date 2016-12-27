@@ -23,7 +23,7 @@
 #include "ghost.h"
 #include "god-blessing.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"

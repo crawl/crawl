@@ -21,7 +21,7 @@
 #include "god-prayer.h"
 #include "invent.h" // in_inventory
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "message.h"

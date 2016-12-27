@@ -16,7 +16,7 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"

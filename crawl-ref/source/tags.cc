@@ -50,7 +50,7 @@
 #include "god-abil.h" // just for the Ru sac penalty key
 #include "god-companions.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "mapmark.h"

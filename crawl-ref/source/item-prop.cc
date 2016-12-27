@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "itemprop.h"
+#include "item-prop.h"
 
 #include <algorithm>
 #include <cctype>

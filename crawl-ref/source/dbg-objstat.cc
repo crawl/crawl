@@ -26,7 +26,7 @@
 #include "initfile.h"
 #include "invent.h"
 #include "item-name.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "item-prop-enum.h"
 #include "items.h"
 #include "libutil.h"

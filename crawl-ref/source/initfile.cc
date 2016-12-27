@@ -32,7 +32,7 @@
 #include "files.h"
 #include "game-options.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"

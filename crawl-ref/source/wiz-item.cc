@@ -20,7 +20,7 @@
 #include "env.h"
 #include "god-passive.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"

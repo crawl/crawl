@@ -10,7 +10,7 @@
 #include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
