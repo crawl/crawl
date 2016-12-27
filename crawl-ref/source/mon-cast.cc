@@ -109,7 +109,7 @@ static function<void(bolt&, const monster&, int)>
 static function<void(bolt&, const monster&, int)>
     _buff_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
-    _target_beam_setup(function<coord_def(const monster&)> targetter);
+    _target_beam_setup(function<coord_def(const monster&)> targeter);
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
@@ -645,20 +645,20 @@ static void _setup_heal_other(bolt &beam, const monster &caster, int)
 /**
  * Build a function that sets up a fake beam for targeting special spells.
  *
- * @param targetter     A function that finds a target for the given spell.
+ * @param targeter     A function that finds a target for the given spell.
  *                      Expected to return an out-of-bounds coord on failure.
  * @return              A function that initializes a fake targetting beam.
  */
 static function<void(bolt&, const monster&, int)>
-    _target_beam_setup(function<coord_def(const monster&)> targetter)
+    _target_beam_setup(function<coord_def(const monster&)> targeter)
 {
-    return [targetter](bolt& beam, const monster& caster, int)
+    return [targeter](bolt& beam, const monster& caster, int)
     {
         _setup_fake_beam(beam, caster);
         // Your shadow keeps your targetting.
         if (_caster_is_player_shadow(caster))
             return;
-        beam.target = targetter(caster);
+        beam.target = targeter(caster);
         beam.aimed_at_spot = true;  // to get noise to work properly
     };
 }
@@ -3118,7 +3118,7 @@ static void _corrupting_pulse(monster *mons)
 {
     if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
     {
-        targetter_los hitfunc(mons, LOS_SOLID);
+        targeter_los hitfunc(mons, LOS_SOLID);
         flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
         if (!is_sanctuary(you.pos())
@@ -3288,7 +3288,7 @@ void aura_of_brilliance(monster* agent)
 
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 {
-    targetter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    targeter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
     hitfunc.set_aim(aim);
 
     mon_attitude_type castatt = caster->temp_attitude();
@@ -3318,7 +3318,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
 {
-    targetter_shotgun hitfunc(agent, CLOUD_CONE_BEAM_COUNT,
+    targeter_shotgun hitfunc(agent, CLOUD_CONE_BEAM_COUNT,
                               spell_range(SPELL_CLOUD_CONE, power));
 
     hitfunc.set_aim(pos);
@@ -3657,7 +3657,7 @@ static bool _worth_hexing(const monster &caster, spell_type spell)
 
 bool scattershot_tracer(monster *caster, int pow, coord_def aim)
 {
-    targetter_shotgun hitfunc(caster, shotgun_beam_count(pow),
+    targeter_shotgun hitfunc(caster, shotgun_beam_count(pow),
                               spell_range(SPELL_SCATTERSHOT, pow));
     hitfunc.set_aim(aim);
 

@@ -116,7 +116,7 @@ bool melee_attack::handle_phase_attempted()
                         ? "attack" : "attack near");
             }
 
-            targetter_smite hitfunc(attacker, 1, 1, 1, false);
+            targeter_smite hitfunc(attacker, 1, 1, 1, false);
             hitfunc.set_aim(defender->pos());
 
             if (stop_attack_prompt(hitfunc, verb))
@@ -127,7 +127,7 @@ bool melee_attack::handle_phase_attempted()
         }
         else if (!cleave_targets.empty())
         {
-            targetter_cleave hitfunc(attacker, defender->pos());
+            targeter_cleave hitfunc(attacker, defender->pos());
             if (stop_attack_prompt(hitfunc, "attack"))
             {
                 cancel_attack = true;

@@ -880,7 +880,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
             remove_unique_annotation(mons);
         }
 
-        targetter_los hitfunc(*mi, LOS_SOLID);
+        targeter_los hitfunc(*mi, LOS_SOLID);
         flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
         mons->heal(mons->max_hit_points);

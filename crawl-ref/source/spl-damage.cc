@@ -624,7 +624,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
     if (agent && agent->is_player())
     {
         ASSERT(actual);
-        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
                 return SPRET_ABORT;
@@ -1213,7 +1213,7 @@ static bool _shatterable(const actor *act)
 spret_type cast_shatter(int pow, bool fail)
 {
     {
-        targetter_los hitfunc(&you, LOS_ARENA);
+        targeter_los hitfunc(&you, LOS_ARENA);
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
     }
@@ -1801,7 +1801,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         fail_check();
     }
 
-    targetter_los hitfunc(agent, LOS_NO_TRANS);
+    targeter_los hitfunc(agent, LOS_NO_TRANS);
     flash_view_delay(
         agent->is_player()
             ? UA_PLAYER
@@ -2377,7 +2377,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         prev = caster->props["thunderbolt_aim"].get_coord();
     }
 
-    targetter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+    targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
                                   prev);
     hitfunc.set_aim(aim);
 
@@ -2663,7 +2663,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 {
     int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
 
-    targetter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
+    targeter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
     hitfunc.set_aim(aim);
     if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
         return SPRET_ABORT;
@@ -2698,7 +2698,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
 {
     if (agent->is_player())
     {
-        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
                 return SPRET_ABORT;
@@ -2738,7 +2738,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
                                         (5 + random2avg(pow/15, 2)) * BASELINE_DELAY));
 
-        targetter_los hitfunc(mon_agent, LOS_NO_TRANS);
+        targeter_los hitfunc(mon_agent, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
 
         return SPRET_SUCCESS;
@@ -2899,7 +2899,7 @@ static bool _player_glaciate_affects(const actor *victim)
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
-    targetter_cone hitfunc(caster, range);
+    targeter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
 
     if (caster->is_player()
@@ -3018,7 +3018,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
     const size_t range = spell_range(SPELL_SCATTERSHOT, pow);
     const size_t beam_count = shotgun_beam_count(pow);
 
-    targetter_shotgun hitfunc(caster, beam_count, range);
+    targeter_shotgun hitfunc(caster, beam_count, range);
 
     hitfunc.set_aim(pos);
 

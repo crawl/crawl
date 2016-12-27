@@ -925,7 +925,7 @@ bool view_update()
     return false;
 }
 
-void flash_view(use_animation_type a, colour_t colour, targetter *where)
+void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (Options.use_animations & a)
     {
@@ -936,7 +936,7 @@ void flash_view(use_animation_type a, colour_t colour, targetter *where)
 }
 
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
-                      targetter *where)
+                      targeter *where)
 {
     if (Options.use_animations & a)
     {

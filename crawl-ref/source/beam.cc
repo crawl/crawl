@@ -2601,7 +2601,7 @@ void bolt::affect_endpoint()
         if (cloud == CLOUD_NONE)
             return;
 
-        targetter_cloud tgt(agent(), range, get_cloud_size(true),
+        targeter_cloud tgt(agent(), range, get_cloud_size(true),
                             get_cloud_size(false, true));
         tgt.set_aim(pos());
         for (const auto &entry : tgt.seen)
@@ -5074,7 +5074,7 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_DIGGING)
         return true;
 
-    // The targetters might call us with nullptr in the event of a remembered
+    // The targeters might call us with nullptr in the event of a remembered
     // monster that is no longer there. Treat it as opaque.
     if (!mon)
         return false;

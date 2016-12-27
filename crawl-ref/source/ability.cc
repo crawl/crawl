@@ -1803,7 +1803,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         int power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
         beam.range = spell_range(SPELL_FIREBALL, power);
 
-        targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
+        targeter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
 
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
@@ -1843,7 +1843,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_BREATHE_ACID:       // Draconian acid splash
     {
         beam.range = _calc_breath_ability_range(abil.ability);
-        targetter_splash hitfunc(&you, beam.range);
+        targeter_splash hitfunc(&you, beam.range);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
@@ -2177,7 +2177,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        targetter_los hitfunc(&you, LOS_SOLID, 2);
+        targeter_los hitfunc(&you, LOS_SOLID, 2);
         {
             if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
                 return SPRET_ABORT;

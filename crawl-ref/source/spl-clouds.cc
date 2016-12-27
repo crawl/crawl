@@ -340,7 +340,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
 
     const int range = spell_range(SPELL_CLOUD_CONE, pow);
 
-    targetter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
+    targeter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
 
     hitfunc.set_aim(pos);
 
