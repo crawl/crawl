@@ -64,6 +64,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
+#include "terrain.h"
 #include "throw.h"
 #include "transform.h"
 #include "uncancel.h"
@@ -2752,9 +2753,22 @@ void read_scroll(item_def& scroll)
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
             mpr("This is a scroll of acquirement!");
+
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, true);
+
+        if (feat_eliminates_items(grd(you.pos())))
+        {
+            mpr("Anything you acquired here would fall and be lost!");
+            cancel_scroll = true;
+            break;
+            // yes, we cancel out even if the scroll wasn't known beforehand.
+            // there's no plausible abuse of this, and it's much better to
+            // never have to worry about "am i over dangerous terrain?" while
+            // IDing scrolls. (Not an interesting ID game mechanic!)
+        }
+
         run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
         break;
 
