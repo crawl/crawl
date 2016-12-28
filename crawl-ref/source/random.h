@@ -153,6 +153,90 @@ T random_choose_weighted(int cweight, T curr, int nweight, T next, Args... args)
                                      args...);
 }
 
+/**
+ * Get a random weighted choice from a iterator, using a weight function.
+ *
+ * Weights are assumed to be non-negative, but are allowed to be zero.
+ *
+ * @tparam Iterator An iterator type such that incrementing an iterator
+ *         does not affect copies of that iterator (that is, almost a
+ *         ForwardIterator, but possibly without a default constructor);
+ *         and also convertible to bool such that past-the-end iterators
+ *         are false and others are true.
+ *
+ * @tparam WeightFn A function or function-like object type taking as its
+ *         parameter an object returned by Iterator::operator*, and returning
+ *         a type convertible to integer.
+ *
+ * @param xs     The beginning of the range.
+ * @param weight The weight function.
+ *
+ * @return  An iterator to the chosen item, or a past-the-end iterator if
+ *          all weights are zero.
+ *
+ * @note Intended for use with iterators such as distance_iterator.
+ */
+template<typename Iterator, typename WeightFn>
+Iterator random_choose_weighted(Iterator xs, WeightFn weight)
+{
+    // Iterator might not have a default constructor, but it does have
+    // a copy constructor, so initialise to that.
+    Iterator result { xs };
+    bool found = false;
+
+    // TODO: use decltype(weight(*xs)) for totalweight so that we support
+    // weight functions that return floats etc. But that means we'd need
+    // versions of x_chance_in_y() that take those types.
+    int totalweight = 0;
+    while (xs)
+    {
+        auto cweight = weight(*xs);
+        totalweight += cweight;
+        if (x_chance_in_y(cweight, totalweight))
+        {
+            result = xs;
+            found = true;
+        }
+        ++xs;
+    }
+    return found ? result : xs; // xs is past-the-end
+}
+
+/**
+ * Get a random weighted choice from a range, using a weight function.
+ *
+ * Weights are assumed to be non-negative, but are allowed to be zero.
+ *
+ * @tparam Iterator An iterator type such that incrementing an iterator
+ *         does not affect copies of that iterator (that is, almost a
+ *         ForwardIterator, but possibly without a default constructor).
+ *
+ * @tparam WeightFn A function or function-like object type taking as its
+ *         parameter an object returned by Iterator::operator*, and returning
+ *         a type convertible to integer.
+ *
+ * @param start  The beginning of the range.
+ * @param end    The past-the-end iterator of the range.
+ * @param weight The weight function.
+ *
+ * @return  An iterator to the chosen item, or end if all weights are zero.
+ */
+template<typename Iterator, typename WeightFn>
+Iterator random_choose_weighted(Iterator start, Iterator end, WeightFn weight)
+{
+    Iterator result { end };
+    int totalweight = 0;
+    while (start != end)
+    {
+        auto cweight = weight(*start);
+        totalweight += cweight;
+        if (x_chance_in_y(cweight, totalweight))
+            result = start;
+        ++start;
+    }
+    return result;
+}
+
 struct dice_def
 {
     int num;
@@ -194,7 +278,7 @@ void shuffle_array(T *arr, int n)
 
 /**
  * A defer_rand object represents an infinite tree of random values, allowing
- * for a much more functional approach to randomness.  defer_rand values which
+ * for a much more functional approach to randomness. defer_rand values which
  * have been used should not be copy-constructed. Querying the same path
  * multiple times will always give the same result.
  *
@@ -249,26 +333,6 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     }
     ASSERT(result >= 0);
     return result;
-}
-
-template<typename T, typename Iterator, typename WeightFn>
-bool random_choose_weighted(T* result, Iterator xs, WeightFn weight)
-{
-    int totalweight = 0;
-    bool found = false;
-    while (xs)
-    {
-        T curr = *xs;
-        int cweight = weight(curr);
-        totalweight += cweight;
-        if (x_chance_in_y(cweight, totalweight))
-        {
-            *result = curr;
-            found = true;
-        }
-        xs++;
-    }
-    return found;
 }
 
 #endif
