@@ -276,7 +276,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Sil",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your hearing returns." }}, 5 },
+      {{ "Your hearing returns.", []() { invalidate_agrid(true); }}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
