@@ -310,6 +310,17 @@ bool x_chance_in_y(int x, int y)
     return random2(y) < x;
 }
 
+bool x_chance_in_y(double x, double y)
+{
+    if (x <= 0.0)
+        return false;
+
+    if (x >= y)
+        return true;
+
+    return random_real() < x / y;
+}
+
 // [val - lowfuzz, val + highfuzz]
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 {

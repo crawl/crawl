@@ -4,6 +4,7 @@
 #include <algorithm>  // iter_swap
 #include <iterator>   // advance
 #include <map>
+#include <type_traits> // remove_reference
 #include <vector>
 
 #include "hash.h"
@@ -20,6 +21,7 @@ int rand_round(double x);
 int div_round_up(int num, int den);
 bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
+bool x_chance_in_y(double x, double y);
 int random2(int max);
 int maybe_random2(int x, bool random_factor);
 int maybe_random_div(int nom, int denom, bool random_factor);
@@ -27,6 +29,16 @@ int maybe_roll_dice(int num, int size, bool random);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 double random_real();
+
+// Resolve ambiguous calls to x_chance_in_y in favour of the double version
+// if either parameter is floating-point, otherwise the integer version.
+template <typename T, typename U>
+bool x_chance_in_y(T x, U y)
+{
+    return (is_floating_point<T>::value || is_floating_point<U>::value)
+         ? x_chance_in_y(double(x), double(y))
+         : x_chance_in_y(int(x), int(y));
+}
 
 int random2avg(int max, int rolls);
 int biased_random2(int max, int n);
@@ -184,10 +196,9 @@ Iterator random_choose_weighted(Iterator xs, WeightFn weight)
     Iterator result { xs };
     bool found = false;
 
-    // TODO: use decltype(weight(*xs)) for totalweight so that we support
-    // weight functions that return floats etc. But that means we'd need
-    // versions of x_chance_in_y() that take those types.
-    int totalweight = 0;
+    // Use remove_reference just in case weight() returns a reference
+    // into the pointed-to data structure.
+    typename remove_reference<decltype(weight(*xs))>::type totalweight = 0;
     while (xs)
     {
         auto cweight = weight(*xs);
@@ -225,7 +236,7 @@ template<typename Iterator, typename WeightFn>
 Iterator random_choose_weighted(Iterator start, Iterator end, WeightFn weight)
 {
     Iterator result { end };
-    int totalweight = 0;
+    typename remove_reference<decltype(weight(*start))>::type totalweight = 0;
     while (start != end)
     {
         auto cweight = weight(*start);
