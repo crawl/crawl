@@ -1055,10 +1055,8 @@ static void _maybe_cancel_repeat(spell_type spell)
     }
 }
 
-static spret_type _do_cast(spell_type spell, int powc,
-                           const dist& spd, bolt& beam,
-                           god_type god, int potion,
-                           bool fail);
+static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
+                           bolt& beam, god_type god, bool fail);
 
 /**
  * Should this spell be aborted before casting properly starts, either because
@@ -1303,8 +1301,6 @@ spret_type your_spells(spell_type spell, int powc,
 
     ASSERT(wiz_cast || !(flags & SPFLAG_TESTING));
 
-    int potion = -1;
-
     if (!powc)
         powc = calc_spell_power(spell, true);
 
@@ -1477,8 +1473,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     const bool old_target = actor_at(beam.target);
 
-    spret_type cast_result = _do_cast(spell, powc, spd, beam, god,
-                                      potion, fail);
+    spret_type cast_result = _do_cast(spell, powc, spd, beam, god, fail);
 
     switch (cast_result)
     {
@@ -1584,10 +1579,8 @@ static void _spell_zap_effect(spell_type spell)
 
 // Returns SPRET_SUCCESS, SPRET_ABORT, SPRET_FAIL
 // or SPRET_NONE (not a player spell).
-static spret_type _do_cast(spell_type spell, int powc,
-                           const dist& spd, bolt& beam,
-                           god_type god, int potion,
-                           bool fail)
+static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
+                           bolt& beam, god_type god, bool fail)
 {
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE || spell == SPELL_VAMPIRIC_DRAINING)
