@@ -35,7 +35,7 @@ show_more = false
 :                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.teleport_to(40, 32)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
-:     crawl.sendkeys("&l27" .. eol .. "N")
+:     crawl.sendkeys("&l27" .. eol)
 :     crawl.sendkeys("&A27" .. eol)
 :     for i = 1, 40 do
 :       crawl.sendkeys("&H")
