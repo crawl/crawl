@@ -1295,7 +1295,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
     dist spd;
     bolt beam;
     beam.origin_spell = spell;
-    beam.evoked = evoked_item;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.

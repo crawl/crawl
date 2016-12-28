@@ -1055,7 +1055,6 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
     beem.pierce       = from.pierce ;
     beem.is_explosion = from.is_explosion;
     beem.origin_spell = from.origin_spell;
-    beem.evoked       = true;
     return beem;
 }
 
