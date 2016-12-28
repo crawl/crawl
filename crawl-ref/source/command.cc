@@ -1301,6 +1301,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>A</w>      set all skills to level\n"
                        "<w>Ctrl-D</w> change enchantments/durations\n"
                        "<w>g</w>      exercise a skill\n"
+                       "<w>k</w>      change experience level and skills\n"
                        "<w>l</w>      change experience level\n"
                        "<w>Ctrl-P</w> list props\n"
                        "<w>r</w>      change character's species\n"

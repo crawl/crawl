@@ -767,7 +767,7 @@ static void _do_wizard_command(int wiz_command)
         else
             mpr("This only makes sense in a labyrinth!");
         break;
-    // case 'K': break;
+    case 'K': wizard_set_xl(true); break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
     case 'l': wizard_set_xl(); break;
