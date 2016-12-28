@@ -251,4 +251,24 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     return result;
 }
 
+template<typename T, typename Iterator, typename WeightFn>
+bool random_choose_weighted(T* result, Iterator xs, WeightFn weight)
+{
+    int totalweight = 0;
+    bool found = false;
+    while (xs)
+    {
+        T curr = *xs;
+        int cweight = weight(curr);
+        totalweight += cweight;
+        if (x_chance_in_y(cweight, totalweight))
+        {
+            *result = curr;
+            found = true;
+        }
+        xs++;
+    }
+    return found;
+}
+
 #endif
