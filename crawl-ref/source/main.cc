@@ -1050,6 +1050,9 @@ static void _start_running(int dir, int mode)
         return;
 
     coord_def next_pos = you.pos() + Compass[dir];
+    if (!you.is_habitable_feat(grd(next_pos))) // only relevant for run
+        return; // don't warn about running through walls, etc
+
     for (adjacent_iterator ai(next_pos); ai; ++ai)
     {
         if (env.grid(*ai) == DNGN_SLIMY_WALL
