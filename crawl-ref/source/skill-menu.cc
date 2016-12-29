@@ -307,11 +307,7 @@ COLOURS SkillMenuEntry::get_colour() const
     else if (!you.training[m_sk])
         return DARKGREY;
     else if (skill_has_manual(m_sk))
-    {
-        if (is_set(SKMF_APTITUDE))
-            return LIGHTRED;
-        return use_bright_colour ? LIGHTRED : RED;
-    }
+        return LIGHTBLUE;
     else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
     else
