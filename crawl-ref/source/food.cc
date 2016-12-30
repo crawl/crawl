@@ -383,8 +383,8 @@ bool eat_item(item_def &food)
             you.turn_is_over = true;
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     int eat_time = food_turns(food);
