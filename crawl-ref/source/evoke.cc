@@ -226,7 +226,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     return true;
 }
 
-static bool _evoke_horn_of_geryon(item_def &item)
+static bool _evoke_horn_of_geryon()
 {
     bool created = false;
 
@@ -1830,7 +1830,7 @@ bool evoke_item(int slot, bool check_range)
                 mpr("That is presently inert.");
                 return false;
             }
-            if (_evoke_horn_of_geryon(item))
+            if (_evoke_horn_of_geryon())
             {
                 expend_xp_evoker(item);
                 practise_evoking(3);
