@@ -1427,8 +1427,9 @@ static bool _has_warning_inscription(const item_def& item,
     return false;
 }
 
-// Checks if current item (to be removed) has a warning inscription
-// and prompts the user for confirmation.
+// In order to equip this item, we may need to remove an old item in the
+// corresponding slot which has a warning inscription. If this is the case,
+// prompt the user for confirmation.
 bool check_old_item_warning(const item_def& item,
                              operation_types oper)
 {
@@ -1664,7 +1665,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     return false;
 }
 
-// Returns true if user OK'd it (or no warning), false otherwise.
+// If there are warning inscriptions associated with performing this operation
+// on this item, prompt the user for confirmation. Return true if all prompts
+// are OK'd.
 bool check_warning_inscriptions(const item_def& item,
                                  operation_types oper)
 {
@@ -1678,6 +1681,11 @@ bool check_warning_inscriptions(const item_def& item,
         if (oper == OPER_DESTROY)
             return false;
 
+        // Common pattern for wield/wear/put:
+        // - if the player isn't capable of equipping it, return true
+        //   immediately. No point warning, since the op is impossible.
+        // - if the item is already worn, treat this as the corresponding
+        //   unequip operation
         if (oper == OPER_WIELD)
         {
             // Can't use can_wield in item-use.cc because it wants
@@ -1685,7 +1693,6 @@ bool check_warning_inscriptions(const item_def& item,
             if (!you.can_wield(item))
                 return true;
 
-            // Don't ask if item already wielded.
             int equip = you.equip[EQ_WEAPON];
             if (equip != -1 && item.link == equip)
                 return check_old_item_warning(item, oper);
@@ -1695,7 +1702,6 @@ bool check_warning_inscriptions(const item_def& item,
             if (!can_wear_armour(item, false, false))
                 return true;
 
-            // Don't ask if item already worn.
             int equip = you.equip[get_armour_slot(item)];
             if (equip != -1 && item.link == equip)
                 return check_old_item_warning(item, oper);
@@ -1705,7 +1711,6 @@ bool check_warning_inscriptions(const item_def& item,
             if (item.base_type != OBJ_JEWELLERY)
                 return true;
 
-            // Don't ask if item already worn.
             if (jewellery_is_amulet(item))
             {
                 int equip = you.equip[EQ_AMULET];
@@ -1765,12 +1770,12 @@ bool check_warning_inscriptions(const item_def& item,
  * @param mtype            The menu type.
  * @param type_expect      The object_class_type or object_selector for
  *                         items to be listed.
- * @param other_valid_char A character that, if not '\0', will cause
- *                         PROMPT_GOT_SPECIAL to be returned when pressed.
  * @param oper             The operation_type that will be used on the result.
  *                         Modifies some checks, including applicability of
  *                         warning inscriptions.
  * @param flags            See comments on invent_prompt_flags.
+ * @param other_valid_char A character that, if not '\0', will cause
+ *                         PROMPT_GOT_SPECIAL to be returned when pressed.
  *
  * @return  the inventory slot of an item or one of the following special values
  *          - PROMPT_ABORT:       if the player hits escape.

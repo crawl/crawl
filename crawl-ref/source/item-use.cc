@@ -444,11 +444,17 @@ bool can_wield(const item_def *weapon, bool say_reason,
 }
 
 /**
- * @param force If true, don't check weapon inscriptions.
- * (Assuming the player was already prompted for that.)
+ * @param auto_wield true if this was initiated by the wield weapon command (w)
+ *      false otherwise (e.g. switching between ranged and melee with the
+ *      auto_switch option)
+ * @param slot Index into inventory of item to equip. Or one of following
+ *     special values:
+ *      - -1 (default): meaning no particular weapon. We'll either prompt for a
+ *        choice of weapon (if auto_wield is false) or choose one by default.
+ *      - SLOT_BARE_HANDS: equip nothing (unwielding current weapon, if any)
  */
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg, bool show_wield_msg,
+                  bool show_unwield_msg, bool show_wield_msg,
                   bool adjust_time_taken)
 {
     if (inv_count() < 1)
@@ -492,7 +498,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            OPER_WIELD, invprompt_flag::none, '-');
+                            OPER_WIELD, invprompt_flag::no_warning, '-');
         }
         else
             item_slot = SLOT_BARE_HANDS;
@@ -555,20 +561,22 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     item_def& new_wpn(you.inv[item_slot]);
 
-    // Non-auto_wield cases are checked below.
-    if (auto_wield && !force
-        && !check_warning_inscriptions(new_wpn, OPER_WIELD))
-    {
-        return false;
-    }
-
-    // Ensure wieldable, stat loss non-fatal
-    if (!can_wield(&new_wpn, true) || !_safe_to_remove_or_wear(new_wpn, false))
+    // Ensure wieldable
+    if (!can_wield(&new_wpn, true))
         return false;
 
     // Really ensure wieldable, even unknown brand
     if (!can_wield(&new_wpn, true, false, false, false))
         return false;
+
+    // At this point, we know it's possible to equip this item. However, there
+    // might be reasons it's not advisable.
+    if (!check_warning_inscriptions(new_wpn, OPER_WIELD)
+        || !_safe_to_remove_or_wear(new_wpn, false))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
 
     // Unwield any old weapon.
     if (you.weapon())
@@ -626,9 +634,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
 {
     ASSERT(index != nullptr);
 
-    if (inv_count() < 1)
-        canned_msg(MSG_NOTHING_CARRIED);
-    else if (you.berserk())
+    if (you.berserk())
         canned_msg(MSG_TOO_BERSERK);
     else
     {
@@ -645,31 +651,6 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
     }
 
     return false;
-}
-
-
-void wear_armour(int slot) // slot is for tiles
-{
-    if (you.species == SP_FELID)
-    {
-        mpr("You can't wear anything.");
-        return;
-    }
-
-    if (!form_can_wear())
-    {
-        mpr("You can't wear anything in your present form.");
-        return;
-    }
-
-    int armour_wear_2 = 0;
-
-    if (slot != -1)
-        armour_wear_2 = slot;
-    else if (!armour_prompt("Wear which item?", &armour_wear_2, OPER_WEAR))
-        return;
-
-    do_wear_armour(armour_wear_2, false);
 }
 
 /**
@@ -993,37 +974,100 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     return true;
 }
 
-bool do_wear_armour(int item, bool quiet)
+static bool _can_takeoff_armour(int item);
+
+// Like can_wear_armour, but also takes into account currently worn equipment.
+// e.g. you may be able to *wear* that robe, but you can't equip it if your
+// currently worn armour is cursed, or melded.
+// precondition: item is not already worn
+static bool _can_equip_armour(const item_def &item)
 {
-    item_def &invitem = you.inv[item];
-    if (!invitem.defined())
+    const object_class_type base_type = item.base_type;
+    if (base_type != OBJ_ARMOUR)
     {
-        if (!quiet)
-            mpr("You don't have any such object.");
+        mpr("You can't wear that.");
         return false;
     }
 
-    if (!can_wear_armour(invitem, !quiet, false))
+    const equipment_type slot = get_armour_slot(item);
+    const int equipped = you.equip[slot];
+    if (equipped != -1 && !_can_takeoff_armour(equipped))
         return false;
+    return can_wear_armour(item, true, false);
+}
 
+// Try to equip the armour in the given inventory slot (or, if slot is -1,
+// prompt for a choice of item, then try to wear it).
+bool wear_armour(int item)
+{
+    // Before (possibly) prompting for which item to wear, check for some
+    // conditions that would make it impossible to wear any type of armour.
+    // TODO: perhaps also worth checking here whether all available armour slots
+    // are cursed. Same with jewellery.
+    if (you.species == SP_FELID)
+    {
+        mpr("You can't wear anything.");
+        return false;
+    }
+
+    if (!form_can_wear())
+    {
+        mpr("You can't wear anything in your present form.");
+        return false;
+    }
+
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
+    if (item == -1)
+    {
+        item = prompt_invent_item("Wear which item", MT_INVLIST, OBJ_ARMOUR,
+                                  OPER_WEAR, invprompt_flag::no_warning);
+        if (prompt_failed(item))
+            return false;
+    }
+
+    item_def &invitem = you.inv[item];
     const equipment_type slot = get_armour_slot(invitem);
+    // First, let's check for any conditions that would make it impossible to
+    // equip the given item
+    if (!invitem.defined())
+    {
+        mpr("You don't have any such object.");
+        return false;
+    }
 
     if (item == you.equip[EQ_WEAPON])
     {
-        if (!quiet)
-            mpr("You are wielding that object!");
+        mpr("You are wielding that object!");
         return false;
     }
 
     if (item_is_worn(item))
     {
         if (Options.equip_unequip)
+            // TODO: huh? Why are we inverting the return value?
             return !takeoff_armour(item);
         else
         {
             mpr("You're already wearing that object!");
             return false;
         }
+    }
+
+    if (!_can_equip_armour(invitem))
+        return false;
+
+    // At this point, we know it's possible to equip this item. However, there
+    // might be reasons it's not advisable. Warn about any dangerous
+    // inscriptions, giving the player an opportunity to bail out.
+    if (!check_warning_inscriptions(invitem, OPER_WEAR))
+    {
+        canned_msg(MSG_OK);
+        return false;
     }
 
     bool swapping = false;
@@ -1042,6 +1086,9 @@ bool do_wear_armour(int item, bool quiet)
 
     you.turn_is_over = true;
 
+    // TODO: It would be nice if we checked this before taking off the item
+    // currently in the slot. But doing so is not quite trivial. Also applies
+    // to jewellery.
     if (!_safe_to_remove_or_wear(invitem, false))
         return false;
 
@@ -1052,10 +1099,9 @@ bool do_wear_armour(int item, bool quiet)
     return true;
 }
 
-bool takeoff_armour(int item)
+static bool _can_takeoff_armour(int item)
 {
     item_def& invitem = you.inv[item];
-
     if (invitem.base_type != OBJ_ARMOUR)
     {
         mpr("You aren't wearing that!");
@@ -1078,13 +1124,8 @@ bool takeoff_armour(int item)
 
     if (!item_is_worn(item))
     {
-        if (Options.equip_unequip)
-            return do_wear_armour(item, true);
-        else
-        {
-            mpr("You aren't wearing that object!");
-            return false;
-        }
+        mpr("You aren't wearing that object!");
+        return false;
     }
 
     // If we get here, we're wearing the item.
@@ -1093,11 +1134,29 @@ bool takeoff_armour(int item)
         mprf("%s is stuck to your body!", invitem.name(DESC_YOUR).c_str());
         return false;
     }
+    return true;
+}
 
+// TODO: It would be nice if this were made consistent with wear_armour,
+// wield_weapon, puton_ring, etc. in terms of taking a default value of -1,
+// which has the effect of prompting for an item to take off.
+bool takeoff_armour(int item)
+{
+    if (!_can_takeoff_armour(item))
+        return false;
+
+    item_def& invitem = you.inv[item];
+
+    // It's possible to take this thing off, but if it would drop a stat
+    // below 0, we should get confirmation.
     if (!_safe_to_remove_or_wear(invitem, true))
         return false;
 
+    const equipment_type slot = get_armour_slot(invitem);
 
+    // TODO: isn't this check covered above by the call to item_is_worn? The
+    // only way to return false inside this switch would be if the player is
+    // wearing a hat on their feet or something like that.
     switch (slot)
     {
     case EQ_BODY_ARMOUR:
@@ -1547,23 +1606,15 @@ static equipment_type _choose_ring_slot()
     return eqslot;
 }
 
-static bool _puton_item(int item_slot, bool prompt_slot)
+// Is it possible to put on the given item in a jewellery slot?
+// Preconditions:
+// - item_slot is a valid index into inventory
+// - item is not already equipped in a jewellery slot
+static bool _can_puton_jewellery(int item_slot)
 {
+    // TODO: between this function, _puton_item, _swap_rings, and remove_ring,
+    // there's a bit of duplicated work, and sep. of concerns not clear
     item_def& item = you.inv[item_slot];
-
-    for (int eq = EQ_FIRST_JEWELLERY; eq <= EQ_LAST_JEWELLERY; eq++)
-        if (item_slot == you.equip[eq])
-        {
-            // "Putting on" an equipped item means taking it off.
-            if (Options.equip_unequip)
-                return !remove_ring(item_slot);
-            else
-            {
-                mpr("You're already wearing that object!");
-                return false;
-            }
-        }
-
     if (item_slot == you.equip[EQ_WEAPON])
     {
         mpr("You are wielding that object.");
@@ -1585,10 +1636,90 @@ static bool _puton_item(int item_slot, bool prompt_slot)
         return false;
     }
 
+    // Make sure there's at least one slot where we could equip this item
+    if (is_amulet)
+    {
+        int existing = you.equip[EQ_AMULET];
+        if (existing != -1 && you.inv[existing].cursed())
+        {
+            mprf("%s is stuck to you!",
+                 you.inv[existing].name(DESC_YOUR).c_str());
+            return false;
+        }
+        else
+            return true;
+    }
+    // The ring case is a bit more complicated
+    else
+    {
+        const vector<equipment_type> slots = _current_ring_types();
+        int melded = 0;
+        int cursed = 0;
+        for (auto eq : slots)
+        {
+            if (!you_can_wear(eq, true) || you.melded[eq])
+            {
+                melded++;
+                continue;
+            }
+            int existing = you.equip[eq];
+            if (existing != -1 && you.inv[existing].cursed())
+                cursed++;
+            else
+                // We found an available slot. We're done.
+                return true;
+        }
+        // If we got this far, there are no available slots.
+        if (melded == (int)slots.size())
+            mpr("You can't wear that in your present form.");
+        else
+            mprf("You're already wearing %s cursed ring%s!%s",
+                 number_in_words(cursed).c_str(),
+                 (cursed == 1 ? "" : "s"),
+                 (cursed > 2 ? " Isn't that enough for you?" : ""));
+        return false;
+    }
+}
+
+// Put on a particular ring or amulet
+static bool _puton_item(int item_slot, bool prompt_slot)
+{
+    item_def& item = you.inv[item_slot];
+
+    for (int eq = EQ_FIRST_JEWELLERY; eq <= EQ_LAST_JEWELLERY; eq++)
+        if (item_slot == you.equip[eq])
+        {
+            // "Putting on" an equipped item means taking it off.
+            if (Options.equip_unequip)
+                // TODO: why invert the return value here? failing to remove
+                // a ring is equivalent to successfully putting one on?
+                return !remove_ring(item_slot);
+            else
+            {
+                mpr("You're already wearing that object!");
+                return false;
+            }
+        }
+
+    if (!_can_puton_jewellery(item_slot))
+        return false;
+
+    // It looks to be possible to equip this item. Before going any further,
+    // we should prompt the user with any warnings that come with trying to
+    // put it on.
+    if (!check_warning_inscriptions(item, OPER_PUTON))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    const bool is_amulet = jewellery_is_amulet(item);
+
     const vector<equipment_type> ring_types = _current_ring_types();
 
     if (!is_amulet)     // i.e. it's a ring
     {
+        // Check whether there are any unused ring slots
         bool need_swap = true;
         for (auto eq : ring_types)
         {
@@ -1599,6 +1730,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
             }
         }
 
+        // No unused ring slots. Swap out a worn ring for the new one.
         if (need_swap)
             return _swap_rings(item_slot);
     }
@@ -1618,6 +1750,8 @@ static bool _puton_item(int item_slot, bool prompt_slot)
         // Assume it's going to succeed.
         return true;
     }
+    // At this point, we know there's an empty slot for the ring/amulet we're
+    // trying to equip.
 
     // Check for stat loss.
     if (!_safe_to_remove_or_wear(item, false))
@@ -1680,6 +1814,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
     return true;
 }
 
+// Put on a ring or amulet. (If slot is -1, first prompt for which item to put on)
 bool puton_ring(int slot, bool allow_prompt)
 {
     int item_slot;
@@ -1701,7 +1836,8 @@ bool puton_ring(int slot, bool allow_prompt)
     else
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
-                                        MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON);
+                                       MT_INVLIST, OBJ_JEWELLERY, OPER_PUTON,
+                                       invprompt_flag::no_warning);
     }
 
     if (prompt_failed(item_slot))
@@ -1712,6 +1848,8 @@ bool puton_ring(int slot, bool allow_prompt)
     return _puton_item(item_slot, prompt);
 }
 
+// Remove the amulet/ring at given inventory slot (or, if slot is -1, prompt
+// for which piece of jewellery to remove)
 bool remove_ring(int slot, bool announce)
 {
     equipment_type hand_used = EQ_NONE;
@@ -1754,6 +1892,8 @@ bool remove_ring(int slot, bool announce)
         return false;
     }
 
+    // If more than one equipment slot had jewellery, we need to figure out
+    // which one to remove from.
     if (hand_used == EQ_NONE)
     {
         const int equipn =
