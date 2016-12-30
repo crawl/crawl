@@ -2975,11 +2975,8 @@ static int _count_adjacent_slime_walls(const coord_def &pos)
 static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
-    if (mons_is_slime(*mon) || actor_slime_wall_immune(mon)
-        || mons_intel(*mon) <= I_BRAINLESS)
-    {
+    if (actor_slime_wall_immune(mon) || mons_intel(*mon) <= I_BRAINLESS)
         return false;
-    }
     const int target_count = _count_adjacent_slime_walls(targ);
     // Entirely safe.
     if (!target_count)
