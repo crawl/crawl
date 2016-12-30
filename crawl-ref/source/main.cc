@@ -1049,11 +1049,10 @@ static void _start_running(int dir, int mode)
     if (!i_feel_safe(true))
         return;
 
-    coord_def next_pos = you.pos() + Compass[dir];
-    if (!you.is_habitable_feat(grd(next_pos))) // only relevant for run
-        return; // don't warn about running through walls, etc
+    const coord_def next_pos = you.pos() + Compass[dir];
 
     if (!have_passive(passive_t::slime_wall_immune)
+        && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
         && count_adjacent_slime_walls(next_pos))
     {
         if (dir == RDIR_REST)
