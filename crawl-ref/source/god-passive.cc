@@ -191,6 +191,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
         {  4, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
         {  5, passive_t::slime_hp, "items consumed by your fellow slimes restores your health" },
+        {  6, passive_t::spawn_slimes_on_hit, "spawn slimes when struck by massive blows" },
         {  6, passive_t::unlock_slime_vaults, "GOD grants you access to the hidden treasures of the Slime Pits" },
     },
 

@@ -575,8 +575,7 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
     monster_type mon;
     int how_many = 0;
 
-    if (you_worship(GOD_JIYVA)
-        && you.piety >= piety_breakpoint(5))
+    if (have_passive(passive_t::spawn_slimes_on_hit))
     {
         mon = royal_jelly_ejectable_monster();
         if (dam >= you.hp_max * 3 / 4)
