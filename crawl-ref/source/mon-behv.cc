@@ -16,6 +16,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
 #include "losglobal.h"
@@ -700,7 +701,7 @@ void handle_behaviour(monster* mon)
             }
 
             if (mon->strict_neutral() && mons_is_slime(*mon)
-                && you_worship(GOD_JIYVA))
+                && have_passive(passive_t::neutral_slimes))
             {
                 set_random_slime_target(mon);
             }
