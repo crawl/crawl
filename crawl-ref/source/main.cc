@@ -761,13 +761,13 @@ static void _do_wizard_command(int wiz_command)
         break;
     // case CONTROL('J'): break;
 
-    case 'k':
+    case 'k': wizard_set_xl(true); break;
+    case 'K':
         if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
         break;
-    case 'K': wizard_set_xl(true); break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
     case 'l': wizard_set_xl(); break;
