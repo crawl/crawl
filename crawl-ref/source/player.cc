@@ -6969,14 +6969,6 @@ int player::has_tail(bool allow_tran) const
 
 int player::has_usable_tail(bool allow_tran) const
 {
-    // TSO worshippers don't use their stinger in order
-    // to avoid poisoning.
-    if (religion == GOD_SHINING_ONE
-        && player_mutation_level(MUT_STINGER, allow_tran) > 0)
-    {
-        return 0;
-    }
-
     return has_tail(allow_tran);
 }
 
