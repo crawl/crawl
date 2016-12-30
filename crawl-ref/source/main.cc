@@ -1060,6 +1060,7 @@ static void _start_running(int dir, int mode)
             mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
         else
             mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
+        return;
     }
 
     you.running.initialise(dir, mode);
