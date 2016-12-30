@@ -1056,7 +1056,7 @@ static void _start_running(int dir, int mode)
     for (adjacent_iterator ai(next_pos); ai; ++ai)
     {
         if (env.grid(*ai) == DNGN_SLIMY_WALL
-            && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
+            && !have_passive(passive_t::slime_wall_immune))
         {
             if (dir == RDIR_REST)
                 mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");

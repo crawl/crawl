@@ -186,6 +186,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         { -1, passive_t::jellies_army, "GOD summons jellies to protect you" },
         { -1, passive_t::jelly_eating, "GOD allows jellies to devour items" },
         { -1, passive_t::fluid_stats, "GOD adjusts your attributes periodically" },
+        {  0, passive_t::slime_wall_immune, "are immune to slime covered walls" },
         {  2, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
         {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
         {  4, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
