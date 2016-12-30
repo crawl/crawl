@@ -5955,10 +5955,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
     {
         if (!feat_is_traversable(env.grid(*ai)))
             continue;
-        int walls = 0;
-        for (adjacent_iterator bi(*ai); bi && walls < max_walls; ++bi)
-            if (env.grid(*bi) == DNGN_SLIMY_WALL)
-                walls++;
+        const int walls = count_adjacent_slime_walls(*ai);
         if (walls < max_walls)
         {
             *pos = *ai;

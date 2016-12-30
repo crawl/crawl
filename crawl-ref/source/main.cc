@@ -1053,17 +1053,13 @@ static void _start_running(int dir, int mode)
     if (!you.is_habitable_feat(grd(next_pos))) // only relevant for run
         return; // don't warn about running through walls, etc
 
-    for (adjacent_iterator ai(next_pos); ai; ++ai)
+    if (!have_passive(passive_t::slime_wall_immune)
+        && count_adjacent_slime_walls(next_pos))
     {
-        if (env.grid(*ai) == DNGN_SLIMY_WALL
-            && !have_passive(passive_t::slime_wall_immune))
-        {
-            if (dir == RDIR_REST)
-                mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
-            else
-                mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
-            return;
-        }
+        if (dir == RDIR_REST)
+            mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
+        else
+            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
     }
 
     you.running.initialise(dir, mode);
