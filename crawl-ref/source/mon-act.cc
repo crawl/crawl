@@ -2776,7 +2776,7 @@ static bool _handle_pickup(monster* mons)
     // picking up stuff.
     const bool never_pickup
         = mons->neutral() || mons->friendly()
-          || you_worship(GOD_JIYVA) && mons_is_slime(*mons)
+          || have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
           || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
 
 

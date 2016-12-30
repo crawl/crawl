@@ -5456,7 +5456,7 @@ bool mons_is_notable(const monster& mons)
         return true;
     }
     // Jellies are never interesting to Jiyva.
-    if (mons.type == MONS_JELLY && you_worship(GOD_JIYVA))
+    if (mons.type == MONS_JELLY && have_passive(passive_t::jellies_army))
         return false;
     if (mons_threat_level(mons) == MTHRT_NASTY)
         return true;
