@@ -20,5 +20,6 @@ void wizard_list_items();
 void wizard_identify_all_items();
 void wizard_unidentify_all_items();
 void debug_item_statistics();
+void wizard_recharge_evokers();
 
 #endif
