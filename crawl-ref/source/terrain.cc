@@ -786,6 +786,9 @@ void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
+    if (actor_slime_wall_immune(act))
+        return;
+
     int walls = 0;
     for (adjacent_iterator ai(act->pos()); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
@@ -798,12 +801,9 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
-        {
-            you.splash_with_acid(nullptr, strength, false,
-                                (walls > 1) ? "The walls burn you!"
-                                            : "The wall burns you!");
-        }
+        you.splash_with_acid(nullptr, strength, false,
+                            (walls > 1) ? "The walls burn you!"
+                                        : "The wall burns you!");
     }
     else
     {

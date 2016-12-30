@@ -177,6 +177,9 @@ enum class passive_t
     /// Items consumed by your fellow slimes feed you
     slime_feed,
 
+    /// You are immune to slime covered walls
+    slime_wall_immune,
+
     /// Jiyva protects you from corrosion
     resist_corrosion,
 
