@@ -2473,7 +2473,7 @@ bool drop_item(int item_dropped, int quant_drop)
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, true, true, false))
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
