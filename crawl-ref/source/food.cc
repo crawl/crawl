@@ -386,11 +386,13 @@ bool eat_item(item_def &food)
         else
             return false;
     }
-    else
-        start_delay<EatDelay>(food_turns(food) - 1, food);
 
-    mprf("You start eating %s%s.", food.quantity > 1 ? "one of " : "",
-                                   food.name(DESC_THE).c_str());
+    int eat_time = food_turns(food);
+    start_delay<EatDelay>(eat_time - 1, food);
+
+    mprf("You %s %s%s.", eat_time == 1 ? "eat" : "start eating",
+                         food.quantity > 1 ? "one of " : "",
+                         food.name(DESC_THE).c_str());
     you.turn_is_over = true;
     return true;
 }
