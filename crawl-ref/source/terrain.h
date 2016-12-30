@@ -90,6 +90,7 @@ void find_connected_identical(const coord_def& d, set<coord_def>& out);
 coord_def get_random_stair();
 
 bool slime_wall_neighbour(const coord_def& c);
+int count_adjacent_slime_walls(const coord_def &pos);
 void slime_wall_damage(actor* act, int delay);
 
 void get_door_description(int door_size, const char** adjective,

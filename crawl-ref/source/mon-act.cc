@@ -2960,16 +2960,6 @@ static bool _mons_can_displace(const monster* mpusher,
     return true;
 }
 
-static int _count_adjacent_slime_walls(const coord_def &pos)
-{
-    int count = 0;
-    for (adjacent_iterator ai(pos); ai; ++ai)
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            count++;
-
-    return count;
-}
-
 // Returns true if the monster should try to avoid that position
 // because of taking damage from slime walls.
 static bool _check_slime_walls(const monster *mon,
@@ -2977,12 +2967,12 @@ static bool _check_slime_walls(const monster *mon,
 {
     if (actor_slime_wall_immune(mon) || mons_intel(*mon) <= I_BRAINLESS)
         return false;
-    const int target_count = _count_adjacent_slime_walls(targ);
+    const int target_count = count_adjacent_slime_walls(targ);
     // Entirely safe.
     if (!target_count)
         return false;
 
-    const int current_count = _count_adjacent_slime_walls(mon->pos());
+    const int current_count = count_adjacent_slime_walls(mon->pos());
     if (target_count <= current_count)
         return false;
 
