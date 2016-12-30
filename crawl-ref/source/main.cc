@@ -733,7 +733,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('D'): wizard_edit_durations(); break;
 
     case 'e': wizard_set_hunger_state(); break;
-    // case 'E': break;
+    case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
     case 'f': wizard_quick_fsim(); break;
@@ -810,10 +810,9 @@ static void _do_wizard_command(int wiz_command)
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
-    case 'v': wizard_value_item(); break;
+    case 'v': wizard_recharge_evokers(); break;
     case 'V': wizard_toggle_xray_vision(); break;
-    case 'E': wizard_freeze_time(); break;
-    // case CONTROL('V'): break;
+    case CONTROL('V'): wizard_value_item(); break;
 
     case 'w': wizard_god_mollify(); break;
     case 'W': wizard_god_wrath(); break;

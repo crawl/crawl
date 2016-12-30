@@ -1626,4 +1626,22 @@ void wizard_unidentify_all_items()
     }
 }
 
+void wizard_recharge_evokers()
+{
+    for (int i = 0; i < NUM_MISCELLANY; ++i)
+    {
+        item_def dummy;
+        dummy.base_type = OBJ_MISCELLANY;
+        dummy.sub_type = i;
+
+        if (!is_xp_evoker(dummy))
+            continue;
+
+        evoker_debt(dummy.sub_type) = 0;
+
+        if (dummy.sub_type == MISC_LIGHTNING_ROD)
+            you.props["thunderbolt_charge"].get_int() = 0;
+    }
+    mpr("Evokers recharged.");
+}
 #endif
