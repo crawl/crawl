@@ -3008,21 +3008,6 @@ MAP
   ...........
 ENDMAP
 
-NAME:   hangedman_glaring_trap
-TAGS:   extra transparent
-DEPTH:  D:12-, Depths
-WEIGHT: 5
-KMASK:  m = no_wall_fixup
-KMONS:  1 = eye of devastation
-KMONS:  8 = 8
-KITEM:  18 = star_item w:9 / any w:1
-MAP
-xxx@x
-x8m.xxxxxx
-xxm....=1x
-xxx@xxxxxx
-ENDMAP
-
 NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
