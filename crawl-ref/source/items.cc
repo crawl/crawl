@@ -3762,6 +3762,16 @@ colour_t item_def::rune_colour() const
     }
 }
 
+static colour_t _zigfig_colour()
+{
+    const int zigs = you.zigs_completed;
+    return zigs >= 27 ? ETC_JEWEL :
+           zigs >=  9 ? ETC_FLASH :
+           zigs >=  3 ? ETC_MAGIC :
+           zigs >=  1 ? ETC_SHIMMER_BLUE :
+                        ETC_BONE;
+}
+
 /**
  * Assuming this item is a miscellaneous item (evocations item or a rune), what
  * colour is it?
@@ -3810,7 +3820,7 @@ colour_t item_def::miscellany_colour() const
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:
-            return ETC_BONE;
+            return _zigfig_colour();
         default:
             return LIGHTGREEN;
     }
