@@ -39,6 +39,7 @@ int skill_cost_baseline();
 int one_level_cost(skill_type sk);
 float scaled_skill_cost(skill_type sk);
 
+int max_skill_training();
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);
 void check_skill_cost_change();
