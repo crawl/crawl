@@ -800,7 +800,7 @@ void reset_training()
 
 void exercise(skill_type exsk, int deg)
 {
-    if (you.skills[exsk] >= max_skill_training)())
+    if (you.skills[exsk] >= max_skill_training())
         return;
 
     dprf(DIAG_SKILLS, "Exercise %s by %d.", skill_name(exsk), deg);
