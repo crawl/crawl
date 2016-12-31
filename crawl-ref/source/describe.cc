@@ -1907,7 +1907,11 @@ string get_item_description(const item_def &item, bool verbose,
             description << _describe_deck(item);
         if (is_xp_evoker(item))
         {
-            description << "\n\nOnce activated, this device "
+            description << "\n\nOnce "
+                        << (item.sub_type == MISC_LIGHTNING_ROD
+                            ? "all charges have been used"
+                            : "activated")
+                        << ", this device "
                         << (!item_is_horn_of_geryon(item) ?
                            "and all other devices of its kind " : "")
                         << "will be rendered temporarily inert. However, "
