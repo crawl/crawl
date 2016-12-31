@@ -425,6 +425,15 @@ bool feat_is_permarock(dungeon_feature_type feat)
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
+/** Can this feature be dug?
+ */
+bool feat_is_diggable(dungeon_feature_type feat)
+{
+    return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+           || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
+           || feat == DNGN_ORCISH_IDOL || DNGN_GRANITE_STATUE;
+}
+
 /** Is this feature a type of trap?
  *
  *  @param feat the feature.
