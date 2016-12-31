@@ -244,7 +244,6 @@ private:
     void affect_wall();
     void digging_wall_effect();
     void burn_wall_effect();
-    void destroy_wall_effect();
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
