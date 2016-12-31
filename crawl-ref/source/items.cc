@@ -3924,7 +3924,11 @@ bool item_type_has_unidentified(object_class_type base_type)
         || base_type == OBJ_POTIONS
         || base_type == OBJ_BOOKS
         || base_type == OBJ_STAVES
-        || base_type == OBJ_MISCELLANY;
+        || base_type == OBJ_MISCELLANY
+#if TAG_MAJOR_VERSION == 34
+        || base_type == OBJ_RODS
+#endif
+        ;
 }
 
 // Checks whether the item is actually a good one.
