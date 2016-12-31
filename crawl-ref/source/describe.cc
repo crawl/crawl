@@ -1905,6 +1905,16 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck(item);
+        if (item.sub_type == MISC_ZIGGURAT && you.zigs_completed)
+        {
+            const int zigs = you.zigs_completed;
+            description << "\n\nIt is surrounded by a "
+                        << (zigs >= 27 ? "blinding " : // just plain silly
+                            zigs >=  9 ? "dazzling " :
+                            zigs >=  3 ? "bright " :
+                                         "gentle ")
+                        << "glow.";
+        }
         if (is_xp_evoker(item))
         {
             description << "\n\nOnce "

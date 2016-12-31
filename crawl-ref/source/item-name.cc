@@ -1951,6 +1951,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             break;
         }
 
+        if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
+            buff << "+" << you.zigs_completed << " ";
+
         buff << misc_type_name(item_typ, know_type);
 
         if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
