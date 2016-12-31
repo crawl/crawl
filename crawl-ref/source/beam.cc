@@ -809,13 +809,15 @@ void bolt::fake_flavour()
 
 void bolt::digging_wall_effect()
 {
-    const dungeon_feature_type feat = grd(pos());
-    switch (feat)
+    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
     {
-    case DNGN_ROCK_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_GRATE:
+        finish_beam();
+        return;
+    }
+
+    const dungeon_feature_type feat = grd(pos());
+    if (feat_is_diggable(feat))
+    {
         destroy_wall(pos());
         if (!msg_generated)
         {
@@ -827,7 +829,7 @@ void bolt::digging_wall_effect()
                     obvious_effect = true; // You may still see the caster.
                     msg_generated = true;
                 }
-                break;
+                return;
             }
 
             obvious_effect = true;
@@ -851,12 +853,9 @@ void bolt::digging_wall_effect()
                  agent() && agent()->is_player() ? "The" : "Some",
                  wall.c_str());
         }
-        break;
-
-    default:
-        if (feat_is_wall(feat))
-            finish_beam();
     }
+    else if (feat_is_wall(feat))
+        finish_beam();
 }
 
 void bolt::burn_wall_effect()
@@ -2772,12 +2771,8 @@ bool bolt::can_affect_wall(const coord_def& p) const
         return false;
 
     // digging
-    if (flavour == BEAM_DIGGING
-        && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE))
-    {
+    if (flavour == BEAM_DIGGING && feat_is_diggable(wall))
         return true;
-    }
 
     if (can_burn_trees())
         return feat_is_tree(wall);
