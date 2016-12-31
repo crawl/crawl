@@ -285,6 +285,8 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(save_dir), _get_save_path("saves/")),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
                              _get_save_path("morgue/")),
+#else
+        UNUSED(USING_LOCAL_TILES);
 #endif
 #ifdef USE_TILE
         new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
