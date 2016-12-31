@@ -899,132 +899,6 @@ void bolt::burn_wall_effect()
     finish_beam();
 }
 
-static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
-{
-    string msg = "";
-    msg_channel_type chan = MSGCH_PLAIN;
-    bool hear = player_can_hear(p);
-    bool see = you.see_cell(p);
-
-    switch (feat)
-    {
-    case DNGN_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_GRANITE_STATUE:
-    case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-        if (see)
-        {
-            msg = (feature_description_at(p, false, DESC_THE, false)
-                   + " explodes into countless fragments.");
-        }
-        else if (hear)
-        {
-            msg = "You hear a grinding noise.";
-            chan = MSGCH_SOUND;
-        }
-        break;
-
-    case DNGN_GRATE:
-        if (hear)
-        {
-            if (see)
-                msg = "The grate screeches as it bends and collapses.";
-            else
-                msg = "You hear the screech of bent metal.";
-            chan = MSGCH_SOUND;
-        }
-        else if (see)
-            msg = "The grate bends and collapses.";
-        break;
-
-    case DNGN_ORCISH_IDOL:
-        if (hear)
-        {
-            if (see)
-                msg = "The idol screams as its substance crumbles away!";
-            else
-                msg = "You hear a hideous screaming!";
-            chan = MSGCH_SOUND;
-        }
-        else if (see)
-            msg = "The idol twists and shakes as its substance crumbles away!";
-        break;
-
-    case DNGN_TREE:
-        if (see)
-            msg = "The tree breaks and falls down!";
-        else if (hear)
-        {
-            msg = "You hear timber falling.";
-            chan = MSGCH_SOUND;
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    if (!msg.empty())
-    {
-        mprf(chan, "%s", msg.c_str());
-        return true;
-    }
-    else
-        return false;
-}
-
-void bolt::destroy_wall_effect()
-{
-    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
-    {
-        finish_beam();
-        return;
-    }
-
-    const dungeon_feature_type feat = grd(pos());
-
-    switch (feat)
-    {
-    case DNGN_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_GRATE:
-    case DNGN_GRANITE_STATUE:
-    case DNGN_ORCISH_IDOL:
-    case DNGN_TREE:
-        destroy_wall(pos());
-        break;
-
-    case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-    {
-        set<coord_def> doors;
-        find_connected_identical(pos(), doors);
-        for (coord_def c : doors)
-            destroy_wall(c);
-        break;
-    }
-
-    default:
-        finish_beam();
-        return;
-    }
-
-    obvious_effect = _destroy_wall_msg(feat, pos());
-
-    if (feat_is_tree(feat))
-    {
-        if (whose_kill() == KC_YOU)
-            did_god_conduct(DID_KILL_PLANT, 1);
-        else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_KILL_PLANT, 1, god_cares(), 0);
-    }
-
-    finish_beam();
-}
-
 int bolt::range_used(bool leg_only) const
 {
     const int leg_length = pos().distance_from(leg_source());
@@ -1043,20 +917,18 @@ void bolt::affect_wall()
         if (!can_affect_wall(pos()))
             finish_beam();
 
-        // potentially warn about offending your god by burning/disinting trees
-        const bool burns_trees = can_burn_trees();
-        const bool god_relevant = you.religion == GOD_DITHMENOS && burns_trees
-                                  || you.religion == GOD_FEDHAS;
-        const string veto_key = burns_trees ? "veto_fire" : "veto_disintegrate";
-        const bool vetoed = env.markers.property_at(pos(), MAT_ANY, veto_key)
+        // potentially warn about offending your god by burning trees
+        const bool god_relevant = (you.religion == GOD_DITHMENOS
+                                   || you.religion == GOD_FEDHAS)
+                                  && can_burn_trees();
+        const bool vetoed = env.markers.property_at(pos(), MAT_ANY, "veto_fire")
                             == "veto";
         // XXX: should check env knowledge for feat_is_tree()
         if (god_relevant && feat_is_tree(grd(pos())) && !vetoed
             && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
         {
             const string prompt =
-                make_stringf("Are you sure you want to %s %s?",
-                             burns_trees ? "burn" : "destroy",
+                make_stringf("Are you sure you want to burn %s?",
                              feature_description_at(pos(), false, DESC_THE,
                                                     false).c_str());
 
