@@ -5852,10 +5852,10 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         for (skill_type cross : get_crosstrain_skills(sk))
             effective_points += skill_points[cross] * 2 / 5;
     }
-    effective_points = min(effective_points, skill_exp_needed(27, sk));
+    effective_points = min(effective_points, skill_exp_needed(max_skill_training(), sk));
     while (1)
     {
-        if (actual_skill < 27
+        if (actual_skill < max_skill_training()
             && effective_points >= skill_exp_needed(actual_skill + 1, sk))
         {
             ++actual_skill;
@@ -5893,7 +5893,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         }
     }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        level = min(level + 5 * scale, 27 * scale);
+        level = min(level + 5 * scale, max_skill_training() * scale);
     return level;
 }
 
