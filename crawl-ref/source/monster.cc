@@ -5755,12 +5755,6 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     if ((et == EUT_SPELL && type == MONS_SPELLFORGED_SERVITOR))
         energy_loss += random2(16);
 
-    // Randomize movement cost slightly, to make it less predictable,
-    // and make pillar-dancing not entirely safe.
-    // No randomization for allies following you to avoid traffic jam
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        energy_loss += random2(3) - 1;
-
     speed_increment -= energy_loss;
 }
 
@@ -6717,7 +6711,7 @@ bool monster::angered_by_attacks() const
 int monster::bezot(int i, bool is_percentage_increase) const
 {
     if (is_percentage_increase)
-        return i * 6 / 5; // +20%
+        return i * 6 / 5;
     else
         return i += 2;
 }
