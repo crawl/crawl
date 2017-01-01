@@ -6,7 +6,7 @@ weaponry.
 %%%%
 Cyno
 
-Cynii are humonids with the heads of dogs.  They are quick to train any skill,
+Cynos are humonids with the heads of dogs.  They are quick to train any skill,
 but are unable to master any.
 %%%%
 Deep Dwarf
