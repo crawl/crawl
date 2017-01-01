@@ -197,7 +197,9 @@ static bool _is_public_key(string key)
      || key == MON_GENDER_KEY
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
-     || key == VAULT_HD_KEY )
+     || key == VAULT_HD_KEY
+     || key == BEZOTTED_KEY
+     || key == TURNS_SPENT_TRACKING_PLAYER_KEY )
     {
         return true;
     }
@@ -941,6 +943,9 @@ string monster_info::common_name(description_level_type desc) const
 
     if (is(MB_SUBMERGED))
         ss << "submerged ";
+
+    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
+        ss << "bezotted ";
 
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";

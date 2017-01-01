@@ -271,6 +271,9 @@ static bool _do_mon_spell(monster* mons)
 
 static void _swim_or_move_energy(monster& mon)
 {
+    if (!mon.friendly() && mon.foe == MHITYOU && mon.foe_memory > 0)
+        mon.track_player();
+
     const dungeon_feature_type feat = grd(mon.pos());
 
     // FIXME: Replace check with mons_is_swimming()?

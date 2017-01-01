@@ -16,6 +16,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define SEEN_SPELLS_KEY "seen_spells"
 #define KNOWN_MAX_HP_KEY "known_max_hp"
 #define VAULT_HD_KEY "vault_hd"
+#define BEZOTTED_KEY "bezotted"
+#define TURNS_SPENT_TRACKING_PLAYER_KEY "turns_spent_tracking_player"
 
 #define FAKE_BLINK_KEY "fake_blink"
 
@@ -555,6 +557,10 @@ public:
 
     bool has_facet(int facet) const;
     bool angered_by_attacks() const;
+
+    int bezot(int i, bool is_percentage_increase) const;
+    void track_player();
+    void bezot_monster();
 
 private:
     int hit_dice;

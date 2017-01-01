@@ -50,6 +50,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "mon-util.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-monench.h"
@@ -2308,6 +2309,7 @@ string monster::name(description_level_type desc, bool force_vis,
     // i.e. to produce "the Maras" instead of just "Maras"
     if (force_article)
         mi.mb.set(MB_NAME_UNQUALIFIED, false);
+
     return mi.proper_name(desc)
 #ifdef DEBUG_MONINDEX
     // This is incredibly spammy, too bad for regular debug builds, but
@@ -3328,6 +3330,9 @@ int monster::armour_class(bool calc_unid) const
 {
     int ac = base_armour_class();
 
+    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
+        ac = bezot(ac, false);
+
     // check for protection-brand weapons
     ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
 
@@ -3442,6 +3447,9 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
 
     int ev = base_evasion();
+
+    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
+        ev = bezot(ev, false);
 
     // account for armour
     for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
@@ -5039,6 +5047,9 @@ bool monster::sicken(int amount)
 void monster::calc_speed()
 {
     speed = mons_base_speed(*this);
+
+    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
+        speed = bezot(speed, false);
 
     if (has_ench(ENCH_BERSERK))
         speed = berserk_mul(speed);
@@ -6692,3 +6703,60 @@ bool monster::angered_by_attacks() const
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
 }
+
+/**
+ * Increase an attribute of a bezotted monster, either by the standard
+ * percentage or by a standard additive value.
+ *
+ * @param i                      The value to upgrade
+ * @param is_percentage_increase Whether the upgrade should be a percentile
+ *                               or an additive increase.
+ *
+ * return int The upgraded value.
+ */
+int monster::bezot(int i, bool is_percentage_increase) const
+{
+    if (is_percentage_increase)
+        return i * 6 / 5;
+    else
+        return i += 2;
+}
+
+/**
+ * Upgrade a monster. This is intended to be used as a punishment for letting
+ * monsters spend a long time being aware of you. Some monster attributes are
+ * set directly here, but others are derived from the monster definition, and
+ * so are upgraded when they're read out of the monster definition.
+ *
+ * Other attributes upgraded: damage, ac, ev, move speed, action speed.
+ */
+void monster::bezot_monster()
+{
+    props[BEZOTTED_KEY] = true;
+    set_hit_dice(bezot(hit_dice, true));
+    hit_points = bezot(hit_points, true);
+    max_hit_points = bezot(max_hit_points, true);
+    calc_speed();
+    if (visible_to(&you))
+        simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
+}
+
+/**
+ * Updates the number of turns this monster has spent tracking the player. As
+ * this number increases, the odds of bezotting the monster increase as well.
+ */
+void monster::track_player()
+{
+    int turns = 0;
+    if (props.exists(TURNS_SPENT_TRACKING_PLAYER_KEY))
+        turns = props[TURNS_SPENT_TRACKING_PLAYER_KEY].get_int() += 1;
+
+    props[TURNS_SPENT_TRACKING_PLAYER_KEY] = turns;
+
+    if (x_chance_in_y(turns, turns + 500) &&
+        !(props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool()))
+    {
+        bezot_monster();
+    }
+}
+
