@@ -140,7 +140,7 @@ static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 //max skill cap to MAX_SKILL_CYNO, otherwise use the default of 27
 int max_skill_training()
 {
-	const int MAX_SKILL_CYNO = 12;
+	const int MAX_SKILL_CYNO = 14;
 	return (you.species == SP_CYNO) ? MAX_SKILL_CYNO : MAX_SKILL_LEVEL;
 }
 
