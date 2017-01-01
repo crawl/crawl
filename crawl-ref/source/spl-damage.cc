@@ -22,6 +22,7 @@
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "invent.h"
 #include "item-name.h"
 #include "items.h"
 #include "losglobal.h"
@@ -2341,7 +2342,8 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     int num_stones = 0;
     for (item_def& i : you.inv)
     {
-        if (i.is_type(OBJ_MISSILES, MI_STONE))
+        if (i.is_type(OBJ_MISSILES, MI_STONE)
+            && check_warning_inscriptions(i, OPER_DESTROY))
         {
             num_stones += i.quantity;
             stone = &i;
