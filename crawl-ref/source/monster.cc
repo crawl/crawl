@@ -6717,7 +6717,7 @@ bool monster::angered_by_attacks() const
 int monster::bezot(int i, bool is_percentage_increase) const
 {
     if (is_percentage_increase)
-        return i * 6 / 5;
+        return i * 6 / 5; // +20%
     else
         return i += 2;
 }
@@ -6753,7 +6753,7 @@ void monster::track_player()
 
     props[TURNS_SPENT_TRACKING_PLAYER_KEY] = turns;
 
-    if (x_chance_in_y(turns, turns + 500) &&
+    if (x_chance_in_y(turns, turns + 2000) &&
         !(props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool()))
     {
         bezot_monster();
