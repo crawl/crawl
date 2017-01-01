@@ -70,7 +70,7 @@ static const map<species_type, species_def> species_data =
     0, 0, 0, 3,
     MONS_JACKAL,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    8, 8, 8, // 24
+    7, 7, 10, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
     {},
     {"You have limited potential (max skill of 12)."},
