@@ -2358,7 +2358,12 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
     if (ret == SPRET_SUCCESS)
-        dec_inv_item_quantity(letter_to_index(stone->slot), 1);
+    {
+        if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
+            mpr("You now have no stones remaining.");
+        else
+            mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
+    }
 
     return ret;
 }
