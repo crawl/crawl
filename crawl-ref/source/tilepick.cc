@@ -2398,7 +2398,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
 
     case MISC_LIGHTNING_ROD:
-        return TILE_ERROR;
+        return evoker_is_charged(item) ? TILE_MISC_LIGHTNING_ROD
+                                       : TILE_MISC_LIGHTNING_ROD_INERT;
 
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
