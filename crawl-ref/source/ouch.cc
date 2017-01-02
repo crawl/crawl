@@ -28,25 +28,25 @@
 #include "colour.h"
 #include "delay.h"
 #include "describe.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "end.h"
 #include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -183,7 +183,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.
-            // See also melee_attack.cc:_print_resist_messages() which cannot be
+            // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
             int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
@@ -200,7 +200,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.
-            // See also melee_attack.cc:_print_resist_messages() which cannot be
+            // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
             int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
@@ -575,8 +575,7 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
     monster_type mon;
     int how_many = 0;
 
-    if (you_worship(GOD_JIYVA)
-        && you.piety >= piety_breakpoint(5))
+    if (have_passive(passive_t::spawn_slimes_on_hit))
     {
         mon = royal_jelly_ejectable_monster();
         if (dam >= you.hp_max * 3 / 4)

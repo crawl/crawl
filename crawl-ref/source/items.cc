@@ -34,21 +34,21 @@
 #include "defines.h"
 #include "delay.h"
 #include "describe.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "food.h"
-#include "godpassive.h"
-#include "godprayer.h"
-#include "godwrath.h"
+#include "god-passive.h"
+#include "god-prayer.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "item_use.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -1991,15 +1991,14 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
 
     god_id_item(item);
     if (item.base_type == OBJ_WANDS)
+    {
         set_ident_type(item, true);
 
-    if ((item.base_type == OBJ_WANDS || item.base_type == OBJ_RODS)
-        && have_passive(passive_t::identify_devices))
-    {
-        if (item.base_type == OBJ_RODS)
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
-        if (!item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (have_passive(passive_t::identify_devices)
+            && !item_ident(item, ISFLAG_KNOW_PLUSES))
+        {
             set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+        }
     }
 
     maybe_identify_base_type(item);
@@ -2769,7 +2768,9 @@ static int _autopickup_subtype(const item_def &item)
             return item.sub_type;
         else
             return max_type;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
+#endif
     case OBJ_GOLD:
     case OBJ_RUNES:
         return max_type;
@@ -3026,12 +3027,6 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Interesting if we don't have any other edible food.
         return _item_different_than_inv(item, _edible_food);
 
-    case OBJ_RODS:
-        // Rods are always interesting, even if you already have one of
-        // the same type, since each rod has its own mana.
-        return true;
-
-        // Intentional fall-through.
     case OBJ_MISCELLANY:
         // Decks always start out unidentified.
         if (is_deck(item))
@@ -3205,7 +3200,9 @@ int get_max_subtype(object_class_type base_type)
         NUM_MISCELLANY,
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
+#if TAG_MAJOR_VERSION == 34
         NUM_RODS,
+#endif
         NUM_RUNE_TYPES,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
@@ -3245,8 +3242,7 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return (item_is_spellbook(*this) || base_type == OBJ_RODS)
-           && item_type_known(*this);
+    return item_is_spellbook(*this) && item_type_known(*this);
 }
 
 bool item_def::cursed() const
@@ -3260,56 +3256,6 @@ bool item_def::launched_by(const item_def &launcher) const
         return false;
     const missile_type mt = fires_ammo_type(launcher);
     return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
-}
-
-zap_type item_def::zap() const
-{
-    if (base_type != OBJ_WANDS)
-        return ZAP_DEBUGGING_RAY;
-
-    zap_type result = ZAP_DEBUGGING_RAY;
-    wand_type wand_sub_type = static_cast<wand_type>(sub_type);
-
-    if (wand_sub_type == WAND_RANDOM_EFFECTS)
-    {
-        // choose from all existing wands, except not really at all
-        return random_choose(ZAP_THROW_FLAME, ZAP_SLOW, ZAP_HASTE,
-                             ZAP_PARALYSE, ZAP_CONFUSE,
-                             ZAP_ICEBLAST, ZAP_TELEPORT_OTHER,
-                             ZAP_LIGHTNING_BOLT, ZAP_POLYMORPH,
-                             ZAP_ENSLAVEMENT, ZAP_BOLT_OF_DRAINING,
-                             ZAP_INVISIBILITY,
-                             ZAP_BOLT_OF_FIRE);
-    }
-
-    switch (wand_sub_type)
-    {
-    case WAND_FLAME:           result = ZAP_THROW_FLAME;     break;
-    case WAND_SLOWING:         result = ZAP_SLOW;            break;
-    case WAND_PARALYSIS:       result = ZAP_PARALYSE;        break;
-    case WAND_CONFUSION:       result = ZAP_CONFUSE;         break;
-    case WAND_DIGGING:         result = ZAP_DIG;             break;
-    case WAND_ICEBLAST:        result = ZAP_ICEBLAST;        break;
-    case WAND_LIGHTNING:       result = ZAP_LIGHTNING_BOLT;  break;
-    case WAND_POLYMORPH:       result = ZAP_POLYMORPH;       break;
-    case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
-    case WAND_ACID:            result = ZAP_CORROSIVE_BOLT;  break;
-    case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATE;    break;
-    case WAND_RANDOM_EFFECTS:  /* impossible */
-    case NUM_WANDS:
-#if TAG_MAJOR_VERSION == 34
-    case WAND_INVISIBILITY_REMOVED:
-    case WAND_MAGIC_DARTS_REMOVED:
-    case WAND_FIRE_REMOVED:
-    case WAND_COLD_REMOVED:
-    case WAND_FROST_REMOVED:
-    case WAND_HEAL_WOUNDS_REMOVED:
-    case WAND_HASTING_REMOVED:
-    case WAND_TELEPORTATION_REMOVED:
-#endif
-        break;
-    }
-    return result;
 }
 
 int item_def::index() const
@@ -3428,7 +3374,7 @@ colour_t item_def::missile_colour() const
 {
     ASSERT(base_type == OBJ_MISSILES);
 
-    // TODO: move this into itemprop.cc
+    // TODO: move this into item-prop.cc
     switch (sub_type)
     {
         case MI_STONE:
@@ -3473,7 +3419,7 @@ colour_t item_def::armour_colour() const
         return mons_class_colour(monster_for_hide((armour_type)sub_type));
 
 
-    // TODO: move (some of?) this into itemprop.cc
+    // TODO: move (some of?) this into item-prop.cc
     switch (sub_type)
     {
         case ARM_CLOAK:
@@ -3816,6 +3762,16 @@ colour_t item_def::rune_colour() const
     }
 }
 
+static colour_t _zigfig_colour()
+{
+    const int zigs = you.zigs_completed;
+    return zigs >= 27 ? ETC_JEWEL :
+           zigs >=  9 ? ETC_FLASH :
+           zigs >=  3 ? ETC_MAGIC :
+           zigs >=  1 ? ETC_SHIMMER_BLUE :
+                        ETC_BONE;
+}
+
 /**
  * Assuming this item is a miscellaneous item (evocations item or a rune), what
  * colour is it?
@@ -3841,7 +3797,7 @@ colour_t item_def::miscellany_colour() const
         case MISC_STONE_OF_TREMORS:
             return BROWN;
 #endif
-        case MISC_DISC_OF_STORMS:
+        case MISC_LIGHTNING_ROD:
             return LIGHTGREY;
         case MISC_PHIAL_OF_FLOODS:
             return LIGHTBLUE;
@@ -3864,7 +3820,7 @@ colour_t item_def::miscellany_colour() const
         case MISC_QUAD_DAMAGE:
             return ETC_DARK;
         case MISC_ZIGGURAT:
-            return ETC_BONE;
+            return _zigfig_colour();
         default:
             return LIGHTGREEN;
     }
@@ -3944,8 +3900,10 @@ colour_t item_def::get_colour() const
             return LIGHTGREY;
         case OBJ_BOOKS:
             return book_colour();
+#if TAG_MAJOR_VERSION == 34
         case OBJ_RODS:
             return YELLOW;
+#endif
         case OBJ_STAVES:
             return BROWN;
         case OBJ_ORBS:
@@ -3976,8 +3934,11 @@ bool item_type_has_unidentified(object_class_type base_type)
         || base_type == OBJ_POTIONS
         || base_type == OBJ_BOOKS
         || base_type == OBJ_STAVES
+        || base_type == OBJ_MISCELLANY
+#if TAG_MAJOR_VERSION == 34
         || base_type == OBJ_RODS
-        || base_type == OBJ_MISCELLANY;
+#endif
+        ;
 }
 
 // Checks whether the item is actually a good one.
@@ -4472,12 +4433,6 @@ bool get_item_by_name(item_def *item, const char* specs,
         item->plus = wand_max_charges(*item);
         break;
 
-    case OBJ_RODS:
-        item->charges    = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-        item->charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-        init_rod_mp(*item);
-        break;
-
     case OBJ_POTIONS:
         item->quantity = 12;
         if (is_blood_potion(*item))
@@ -4676,20 +4631,11 @@ item_info get_item_info(const item_def& item)
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
             ii.skill = item.skill; // manual skill
         break;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-        if (item_type_known(item))
-        {
-            ii.sub_type = item.sub_type;
-            if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            {
-                ii.rod_plus = item.rod_plus;
-                ii.charges = item.charges;
-                ii.charge_cap = item.charge_cap;
-            }
-        }
-        else
-            ii.sub_type = NUM_RODS;
+        ii.sub_type = NUM_RODS;
         break;
+#endif
     case OBJ_STAVES:
         ii.sub_type = item_type_known(item) ? item.sub_type : NUM_STAVES;
         ii.subtype_rnd = item.subtype_rnd;
@@ -4817,8 +4763,8 @@ int runes_in_pack()
 object_class_type get_random_item_mimic_type()
 {
    return random_choose(OBJ_GOLD, OBJ_WEAPONS, OBJ_ARMOUR, OBJ_SCROLLS,
-                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_RODS,
-                        OBJ_FOOD, OBJ_MISCELLANY, OBJ_JEWELLERY);
+                        OBJ_POTIONS, OBJ_BOOKS, OBJ_STAVES, OBJ_FOOD,
+                        OBJ_MISCELLANY, OBJ_JEWELLERY);
 }
 
 /**

@@ -22,10 +22,10 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::no_haste
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::no_haste
+#include "item-name.h"
+#include "item-prop.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
@@ -1165,7 +1165,10 @@ int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_STAVES
         || weapon->sub_type == WPN_BLOWGUN
-        || weapon->base_type == OBJ_RODS)
+#if TAG_MAJOR_VERSION == 34
+        || weapon->base_type == OBJ_RODS
+#endif
+       )
     {
         return 0;
     }

@@ -27,7 +27,7 @@
 #include "mon-ench.h"
 #include "mon-flags.h"
 #include "tags.h"
-#include "travel_defs.h"
+#include "travel-defs.h"
 
 #define NEVER_CORPSE_KEY "never_corpse"
 

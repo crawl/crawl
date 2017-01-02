@@ -22,7 +22,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -675,9 +675,6 @@ void taken_new_item(object_class_type item_type)
     case OBJ_STAVES:
         learned_something_new(HINT_SEEN_STAFF);
         break;
-    case OBJ_RODS:
-        learned_something_new(HINT_SEEN_ROD);
-        break;
     case OBJ_GOLD:
         learned_something_new(HINT_SEEN_GOLD);
         break;
@@ -794,7 +791,6 @@ static bool _advise_use_wand()
         switch (obj.sub_type)
         {
         case WAND_FLAME:
-        case WAND_SLOWING:
         case WAND_PARALYSIS:
         case WAND_CONFUSION:
         case WAND_ICEBLAST:
@@ -803,6 +799,8 @@ static bool _advise_use_wand()
         case WAND_ACID:
         case WAND_RANDOM_EFFECTS:
         case WAND_DISINTEGRATION:
+        case WAND_CLOUDS:
+        case WAND_SCATTERSHOT:
             return true;
         }
     }
@@ -1357,24 +1355,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_WIELD_WEAPON);
         cmd.push_back(CMD_EVOKE_WIELDED);
         cmd.push_back(CMD_DISPLAY_INVENTORY);
-        break;
-
-    case HINT_SEEN_ROD:
-        text << "You have picked up a magical rod"
-                "<console> ('<w>";
-        text << stringize_glyph(get_item_symbol(SHOW_ITEM_ROD))
-             << "</w>')</console>"
-                ". It must be <w>%</w>ielded to be of use. "
-                "A rod allows the casting of the unique spell it contains "
-                "even without magic knowledge simply by "
-                "e<w>%</w>oking it. It has a limited pool of magic which"
-                "recharges over time, and its power depends on "
-                "your Evocations skill.";
-        cmd.push_back(CMD_WIELD_WEAPON);
-        cmd.push_back(CMD_EVOKE_WIELDED);
-
-        text << "<tiles> You can wield and then evoke rods by "
-                "<w>left-clicking</w> on them.</tiles>";
         break;
 
     case HINT_SEEN_STAFF:
@@ -3396,33 +3376,7 @@ string hints_describe_item(const item_def &item)
             cmd.push_back(CMD_BUTCHER);
             break;
 
-        case OBJ_RODS:
-            if (!item_ident(item, ISFLAG_KNOW_TYPE))
-            {
-                ostr << "\n\nTo find out what this rod might do, you have "
-                        "to <w>%</w>ield it to see if you can use the "
-                        "spell hidden within, then e<w>%</w>oke it to "
-                        "actually do so"
-#ifdef USE_TILE
-                        ", both of which can be done by clicking on it"
-#endif
-                        ".";
-            }
-            else
-            {
-                ostr << "\n\nYou can use this rod's magic by "
-                        "<w>%</w>ielding and e<w>%</w>oking it"
-#ifdef USE_TILE
-                        ", both of which can be achieved by clicking on it"
-#endif
-                        ".";
-            }
-            cmd.push_back(CMD_WIELD_WEAPON);
-            cmd.push_back(CMD_EVOKE_WIELDED);
-            Hints.hints_events[HINT_SEEN_ROD] = false;
-            break;
-
-        case OBJ_STAVES:
+       case OBJ_STAVES:
             ostr << "This staff can enhance your spellcasting, possibly "
                     "making a certain spell school more powerful, or "
                     "making difficult magic easier to cast. ";

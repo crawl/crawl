@@ -6,7 +6,7 @@
 #ifndef MONPLACE_H
 #define MONPLACE_H
 
-#include "mgen_enum.h"
+#include "mgen-enum.h"
 
 class mons_spec;
 struct mgen_data;

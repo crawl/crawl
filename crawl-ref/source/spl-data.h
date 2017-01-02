@@ -449,6 +449,7 @@ static const struct spell_desc spelldata[] =
     TILEG_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
     SPTYP_CONJURATION,
@@ -457,8 +458,9 @@ static const struct spell_desc spelldata[] =
     1000,
     6, 6,
     3, 0,
-    TILEG_BOLT_OF_INACCURACY,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_TORNADO, "Tornado",
@@ -1152,7 +1154,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
     6,
     200,
-    5, 5,
+    LOS_RADIUS, LOS_RADIUS,
     6, 0,
     TILEG_DISINTEGRATE,
 },
@@ -2557,10 +2559,10 @@ static const struct spell_desc spelldata[] =
     SPELL_THUNDERBOLT, "Thunderbolt",
     SPTYP_CONJURATION | SPTYP_AIR,
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
-    2, // 2-5
+    2, // 2-5, sort of
     200,
     5, 5,
-    2, 0,
+    15, 0,
     TILEG_THUNDERBOLT,
 },
 
@@ -2962,6 +2964,7 @@ static const struct spell_desc spelldata[] =
     TILEG_ORB_OF_ELECTRICITY,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EXPLOSIVE_BOLT, "Explosive Bolt",
     SPTYP_CONJURATION | SPTYP_FIRE,
@@ -2970,8 +2973,9 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    TILEG_EXPLOSIVE_BOLT,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_FLASH_FREEZE, "Flash Freeze",
@@ -3232,6 +3236,7 @@ static const struct spell_desc spelldata[] =
     TILEG_CLOUD_CONE,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_WEAVE_SHADOWS, "Weave Shadows",
     SPTYP_SUMMONING,
@@ -3240,8 +3245,9 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    TILEG_WEAVE_SHADOWS,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_DRAGON_CALL, "Dragon's Call",
@@ -3866,6 +3872,17 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     5, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_RANDOM_EFFECTS, "Random Effects",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
     TILEG_ERROR,
 },
 

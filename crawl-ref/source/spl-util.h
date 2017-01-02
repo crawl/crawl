@@ -62,7 +62,7 @@ bool add_spell_to_memory(spell_type spell);
 bool del_spell_from_memory_by_slot(int slot);
 bool del_spell_from_memory(spell_type spell);
 
-int spell_hunger(spell_type which_spell, bool rod = false);
+int spell_hunger(spell_type which_spell);
 int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
@@ -121,17 +121,15 @@ bool cannot_use_schools(spschools_type schools);
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true,
-                      bool prevent = false, bool evoked = false,
-                      bool fake_spell = false) PURE;
+                      bool prevent = false, bool fake_spell = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,
-                                bool prevent = false, bool evoked = false,
+                                bool prevent = false,
                                 bool fake_spell = false) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_colour = COL_UNKNOWN,
-                                bool transient = false,
-                                bool rod_spell = false);
-bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
+                                bool transient = false);
+bool spell_no_hostile_in_range(spell_type spell);
 
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);

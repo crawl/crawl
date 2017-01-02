@@ -28,15 +28,15 @@
 #include "env.h"
 #include "fineff.h"
 #include "food.h"
-#include "godabil.h"
-#include "godblessing.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
+#include "god-abil.h"
+#include "god-blessing.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::bless_followers, share_exp, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
@@ -66,7 +66,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -1411,7 +1411,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)
     {
-        targetter_los hitfunc(mons, LOS_SOLID);
+        targeter_los hitfunc(mons, LOS_SOLID);
         flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
@@ -3069,7 +3069,6 @@ string summoned_poof_msg(const monster* mons, bool plural)
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
-    case SPELL_WEAVE_SHADOWS:
     case MON_SUMM_SCROLL:
         msg      = "dissolve%s into shadows";
         no_chaos = true;

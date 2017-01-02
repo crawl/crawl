@@ -8,7 +8,7 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
-#include "itemname.h" // make_name
+#include "item-name.h" // make_name
 #include "initfile.h"
 #include "libutil.h"
 #include "options.h"

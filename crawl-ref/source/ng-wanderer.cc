@@ -2,7 +2,7 @@
 
 #include "ng-wanderer.h"
 
-#include "itemprop.h"
+#include "item-prop.h"
 #include "ng-setup.h"
 #include "randbook.h"
 #include "random.h"

@@ -25,11 +25,11 @@
 #include "english.h"
 #include "env.h"
 #include "errors.h"
-#include "goditem.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "losglobal.h"
 #include "makeitem.h"
 #include "message.h"
@@ -86,23 +86,10 @@ static bool _action_is_bad(xom_event_type action)
     return action > XOM_LAST_GOOD_ACT && action <= XOM_LAST_BAD_ACT;
 }
 
-// Spells to be cast at tension 0 (no or only low-level monsters around),
-// mostly flavour.
-static const vector<spell_type> _xom_nontension_spells =
-{
-    SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SPIDER_FORM,
-    SPELL_ICE_FORM,
-    SPELL_STATUE_FORM,
-    SPELL_HYDRA_FORM,
-    SPELL_DRAGON_FORM,
-    SPELL_NECROMUTATION
-};
-
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
 // Spells later in the list require higher severity to have a chance of being
 // selected.
-static const vector<spell_type> _xom_tension_spells =
+static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SMALL_MAMMAL,
@@ -128,7 +115,6 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_MONSTROUS_MENAGERIE,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
-    SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_DRAGON_FORM,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
@@ -545,16 +531,15 @@ static bool _transformation_check(const spell_type spell)
 }
 
 /// Try to choose a random player-castable spell.
-static spell_type _choose_random_spell(int sever, int tense)
+static spell_type _choose_random_spell(int sever)
 {
     const int spellenum = max(1, sever);
     vector<spell_type> ok_spells;
-    const vector<spell_type> &spell_list = tense ? _xom_tension_spells
-                                                 : _xom_nontension_spells;
+    const vector<spell_type> &spell_list = _xom_random_spells;
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (!spell_is_useless(spell, true, true, false, true)
+        if (!spell_is_useless(spell, true, true, true)
              && _transformation_check(spell))
         {
             ok_spells.push_back(spell);
@@ -567,9 +552,9 @@ static spell_type _choose_random_spell(int sever, int tense)
 }
 
 /// Cast a random spell 'through' the player.
-static void _xom_makes_you_cast_random_spell(int sever, bool tense)
+static void _xom_random_spell(int sever)
 {
-    const spell_type spell = _choose_random_spell(sever, tense);
+    const spell_type spell = _choose_random_spell(sever);
     if (spell == SPELL_NO_SPELL)
         return;
 
@@ -581,21 +566,9 @@ static void _xom_makes_you_cast_random_spell(int sever, bool tense)
          spell);
 #endif
 
-    your_spells(spell, sever, false, false, true);
+    your_spells(spell, sever, false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
-}
-
-/// Cast a random spell appropriate for tense/dangerous situations.
-static void _xom_tension_spell(int sever)
-{
-    _xom_makes_you_cast_random_spell(sever, true);
-}
-
-/// Cast a random spell appropriate for non-tense, calm situations.
-static void _xom_calm_spell(int sever)
-{
-    _xom_makes_you_cast_random_spell(sever, false);
 }
 
 /// Map out the level.
@@ -763,10 +736,16 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_unrandom_artefact(item))
         return false;
 
-    // Staves and rods can't be changed either, since they don't have brands
-    // in the way other weapons do.
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
+    // Staves can't be changed either, since they don't have brands in the way
+    // other weapons do.
+    if (item.base_type == OBJ_STAVES
+#if TAG_MAJOR_VERSION == 34
+        || item.base_type == OBJ_RODS
+#endif
+       )
+{
         return false;
+}
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.
@@ -2974,10 +2953,10 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return divination;
     }
 
-    if (x_chance_in_y(4, sever) && (tension > 0 || one_chance_in(3))
-        && _choose_random_spell(sever, tension > 0) != SPELL_NO_SPELL)
+    if (x_chance_in_y(4, sever) && tension > 0
+        && _choose_random_spell(sever) != SPELL_NO_SPELL)
     {
-        return tension > 0 ? XOM_GOOD_SPELL_TENSION : XOM_GOOD_SPELL_CALM;
+        return XOM_GOOD_SPELL;
     }
 
     if (tension <= 0 && x_chance_in_y(5, sever)
@@ -3677,8 +3656,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_MAGIC_MAPPING, { "magic mapping", _xom_magic_mapping }},
     { XOM_GOOD_DETECT_CREATURES, { "detect creatures", _xom_detect_creatures }},
     { XOM_GOOD_DETECT_ITEMS, { "detect items", _xom_detect_items }},
-    { XOM_GOOD_SPELL_TENSION, { "tension spell", _xom_tension_spell }},
-    { XOM_GOOD_SPELL_CALM, { "calm spell", _xom_calm_spell }},
+    { XOM_GOOD_SPELL, { "tension spell", _xom_random_spell }},
     { XOM_GOOD_CONFUSION, { "confuse monsters", _xom_confuse_monsters }},
     { XOM_GOOD_SINGLE_ALLY, { "single ally", _xom_send_one_ally }},
     { XOM_GOOD_ANIMATE_MON_WPN, { "animate monster weapon",

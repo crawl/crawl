@@ -14,7 +14,7 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"

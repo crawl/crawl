@@ -130,9 +130,8 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 // grids that monsters can see
 const int MONSTER_LOS_RANGE = LOS_RADIUS;
 
-// Maximum charge level for rods
-const int MAX_ROD_CHARGE  = 17;
-const int ROD_CHARGE_MULT = 100;
+const int LIGHTNING_CHARGE_MULT = 100;
+const int LIGHTNING_MAX_CHARGE = 4;
 
 // evoker_debt for evoking one XP evoker
 const int XP_EVOKE_DEBT   = 10;

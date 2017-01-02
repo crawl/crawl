@@ -27,9 +27,9 @@
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
-#include "godconduct.h"    // did_god_conduct
-#include "godpassive.h"    // passive_t::want_curses
-#include "mgen_data.h"     // For Sceptre of Asmodeus evoke
+#include "god-conduct.h"    // did_god_conduct
+#include "god-passive.h"    // passive_t::want_curses
+#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"
@@ -197,8 +197,7 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HURL_DAMNATION, power, false, false, true)
-        == SPRET_ABORT)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -250,15 +249,14 @@ static bool _OLGREB_evoke(item_def *item, bool* did_work, bool* unevokable)
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power,
-                    false, false, true) == SPRET_ABORT)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
     }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
-        your_spells(SPELL_VENOM_BOLT, power, false, false, true);
+        your_spells(SPELL_VENOM_BOLT, power, false);
 
     dec_mp(4);
     make_hungry(50, false, true);
@@ -1335,15 +1333,12 @@ static void _VINES_unequip(item_def *item, bool *show_msgs)
 
 static void _KRYIAS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.species == SP_DEEP_DWARF)
-        _equip_mpr(show_msgs, "You feel no connection to the armour.");
-    else
-        _equip_mpr(show_msgs, "Your attunement to healing devices increases!");
+    _equip_mpr(show_msgs, "Your attunement to healing potions increases.");
 }
 
 static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
 {
-        _equip_mpr(show_msgs, "Your attunement to healing devices decreases.");
+    _equip_mpr(show_msgs, "Your attunement to healing potions decreases.");
 }
 
 ///////////////////////////////////////////////////

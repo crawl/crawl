@@ -18,13 +18,13 @@
 #include "database.h"
 #include "delay.h"
 #include "env.h"
-#include "godabil.h"
-#include "godconduct.h"
+#include "god-abil.h"
+#include "god-conduct.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -383,14 +383,16 @@ bool eat_item(item_def &food)
             you.turn_is_over = true;
             return true;
         }
-        else
-            return false;
-    }
-    else
-        start_delay<EatDelay>(food_turns(food) - 1, food);
 
-    mprf("You start eating %s%s.", food.quantity > 1 ? "one of " : "",
-                                   food.name(DESC_THE).c_str());
+        return false;
+    }
+
+    int eat_time = food_turns(food);
+    start_delay<EatDelay>(eat_time - 1, food);
+
+    mprf("You %s %s%s.", eat_time == 1 ? "eat" : "start eating",
+                         food.quantity > 1 ? "one of " : "",
+                         food.name(DESC_THE).c_str());
     you.turn_is_over = true;
     return true;
 }

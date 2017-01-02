@@ -1,7 +1,7 @@
 # A shop (or perhaps really a series of shops) that sells items whose names all
 # start with the same letter.
-# Any initial class description (amulet, book, manual, potion, ring, rod,
-# scroll, staff, wand) or unit of measurement (slice, pair) is ignored when
+# Any initial class description (amulet, book, manual, potion, ring, scroll,
+# staff, wand) or unit of measurement (slice, pair) is ignored when
 # alphabetizing item names of the form "X of (the) Y". This way the shops have
 # more variety between them.
 # Various items, such as carrion, hides, skins, blessed weapons, and zigfigs
@@ -73,16 +73,16 @@
       elseif s == "C" then i = { "book of callings", "book of cantrips", "club",
        "book of changes", "book of conjurations", "potion of cure mutation",
        "centaur barding", "chain mail", "crystal ball of energy", "cloak",
-       "crystal plate armour", "potion of cancellation", "rod of clouds",
-       "book of clouds", "staff of cold", "wand of confusion",
-       "staff of conjuration", "manual of crossbows", "manual of conjurations",
-       "manual of charms", "potion of curing" }
+       "crystal plate armour", "potion of cancellation", "book of clouds",
+       "staff of cold", "wand of confusion", "staff of conjuration",
+       "manual of crossbows", "manual of conjurations", "manual of charms",
+       "potion of curing", "wand of clouds" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
        "book of dreams", "book of the dragon", "dagger", "demon blade",
-       "demon trident", "demon whip", "dire flail", "disc of storms",
-       "double sword", "ring of dexterity", "manual of dodging",
-       "wand of disintegration", "staff of death", "wand of digging" }
+       "demon trident", "demon whip", "dire flail", "double sword",
+       "ring of dexterity", "manual of dodging", "wand of disintegration",
+       "staff of death", "wand of digging" }
 
       elseif s == "E" then i = { "book of enchantments", "manual of evocations",
        "eveningstar", "ring of evasion", "executioner's axe",
@@ -108,19 +108,18 @@
        "helmet" }
 
       elseif s == "I" then i = { "amulet of inaccuracy", "ring of ice",
-       "scroll of immolation", "ice dragon scales", "book of ice", "iron rod",
-       "rod of ignition", "potion of invisibility", "ring of intelligence",
-       "scroll of identify", "wand of iceblast", "manual of invocations",
-       "rod of inaccuracy", "manual of ice magic" }
+       "scroll of immolation", "ice dragon scales", "book of ice",
+       "potion of invisibility", "ring of intelligence", "scroll of identify",
+       "wand of iceblast", "manual of invocations", "manual of ice magic" }
 
       elseif s == "J" then i = { "javelin" }
 
       elseif s == "K" then i = { "any" }
 
       elseif s == "L" then i = { "lamp of fire", "manual of long blades",
-       "large rock", "large shield", "leather armour", "lightning rod",
-       "long sword", "potion of lignification", "ring of loudness",
-       "wand of lightning", "lajatang", "longbow" }
+       "large rock", "large shield", "leather armour", "long sword",
+       "potion of lignification", "ring of loudness", "wand of lightning",
+       "lajatang", "longbow", "lightning rod" }
 
       elseif s == "M" then i = { "manual of maces & flails", "meat ration",
        "book of minor magic", "book of misfortune", "book of maledictions",
@@ -154,14 +153,13 @@
       elseif s == "S" then i = { "scimitar", "short sword",
        "sling bullet", "scale mail", "book of summonings", "book of the sky",
        "ring of see invisible", "ring of slaying", "spear", "ring of stealth",
-       "ring of strength", "rod of shadows", "manual of stealth",
-       "sack of spiders", "scroll of summoning", "scythe",
-       "book of spatial translocations", "scroll of silence", "shield",
-       "shortbow", "wand of slowing", "manual of staves",
+       "ring of strength", "manual of stealth", "sack of spiders",
+       "scroll of summoning", "scythe", "book of spatial translocations",
+       "scroll of silence", "shield", "shortbow", "manual of staves",
        "steam dragon scales", "shadow dragon scales", "storm dragon scales",
        "swamp dragon scales", "manual of short blades", "staff of summoning",
        "manual of slings", "manual of shields", "manual of spellcasting",
-       "manual of summonings", "stone" }
+       "manual of summonings", "stone", "wand of scattershot" }
 
       elseif s == "T" then i = { "book of the tempests", "scroll of torment",
        "book of transfigurations", "ring of teleportation",

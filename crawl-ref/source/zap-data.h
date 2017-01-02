@@ -199,7 +199,7 @@ _mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
 
 { // Used only by phial of floods
     ZAP_PRIMAL_WAVE,
-    "great wave of water",
+    "torrent of water",
     200,
     new calcdice_calculator<4, 14, 3, 5>,
     new tohit_calculator<10, 1, 25>,
@@ -382,24 +382,6 @@ _mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
     false,
     false,
     8
-},
-
-{
-    ZAP_BOLT_OF_INACCURACY,
-    "narrow beam of energy",
-    1000,
-    new calcdice_calculator<10, 40, 1, 1>,
-    new tohit_calculator<1>,
-    new calcdice_calculator<12, 40, 3, 2>,
-    new tohit_calculator<1>,
-    YELLOW,
-    false,
-    BEAM_ENERGY,
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    3
 },
 
 {
@@ -862,7 +844,7 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 
 {
     ZAP_SANDBLAST,
-    "rocky blast",
+    "blast of sand",
     50,
     new dicedef_calculator<2, 4, 1, 3>,
     new tohit_calculator<13, 1, 10>,
@@ -1061,24 +1043,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
     true,
     false,
     2
-},
-
-{
-    ZAP_EXPLOSIVE_BOLT,
-    "explosive bolt",
-    200,
-    nullptr,
-    new tohit_calculator<17, 1, 25>,
-    new dicedef_calculator<1, 0, 0, 1>, // deals damage through explosions
-    new tohit_calculator<17, 1, 25>,
-    RED,
-    false,
-    BEAM_MISSILE,  // To avoid printing needless messages for non-damaging hits
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    0
 },
 
 {

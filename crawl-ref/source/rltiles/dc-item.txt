@@ -174,7 +174,7 @@ triple_crossbow2
 %sdir item/weapon/brands
 %rim 0
 # The order of weapon brands must be identical to the one defined
-# in itemprop-enum.h.
+# in item-prop-enum.h.
 i-flaming BRAND_FLAMING BRAND_WEP_FIRST
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
@@ -468,7 +468,7 @@ boots4_green
 
 ### Armour brands
 # The order of armour brands must be identical to the one defined
-# in itemprop-enum.h.
+# in item-prop-enum.h.
 %sdir item/armour/brands
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
@@ -513,11 +513,11 @@ gem_plastic
 %rim 1
 
 %sdir item/wand
-#### These must be in the same order as the enum in itemprop-enum.h!
+#### These must be in the same order as the enum in item-prop-enum.h!
 # Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
 i-flame WAND_REMOVEME
-i-slowing WAND_SLOWING
+i-slowing WAND_REMOVEME9
 i-hasting WAND_REMOVEME7
 i-flame WAND_REMOVEME2
 i-heal_wounds WAND_REMOVEME6
@@ -534,7 +534,9 @@ i-polymorph WAND_POLYMORPH
 i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID
 i-random_effects WAND_RANDOM_EFFECTS
-i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
+i-disintegration WAND_DISINTEGRATION
+i-clouds WAND_CLOUDS
+i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
 
 #################OBJ_FOOD
 %sdir item/food
@@ -585,7 +587,7 @@ chunk_brands/i-inedible FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-#### These must be in the same order as the enum in itemprop-enum.h!
+#### These must be in the same order as the enum in item-prop-enum.h!
 %sdir item/scroll
 %back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
@@ -691,7 +693,7 @@ snake
 
 ###########icons
 %sdir item/ring
-#### These must be in the same order as the enum in itemprop-enum.h!
+#### These must be in the same order as the enum in item-prop-enum.h!
 # Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
 i-protection RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
@@ -765,7 +767,7 @@ sun
 
 ###########icons
 %sdir item/amulet
-# These must be in the same order as the enum in itemprop-enum.h!
+# These must be in the same order as the enum in item-prop-enum.h!
 # remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
 i-harm AMU_HARM
@@ -907,7 +909,7 @@ staff07
 staff08
 staff09
 
-# These must be in the same order as the enum in itemprop-enum.h!
+# These must be in the same order as the enum in item-prop-enum.h!
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
@@ -924,6 +926,7 @@ i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
 
+# Remove rods TAG_MAJOR_VERSION > 34
 %sdir item/rod
 rod00 ROD
 rod01
@@ -936,21 +939,18 @@ rod07
 rod08
 rod09
 
-# These must be in the same order as the enum in itemprop-enum.h!
-i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
-# Remove when TAG_MAJOR_VERSION > 34
-i-rod_summoning ROD_SUMMONING
-i-rod_ignition ROD_IGNITION
-i-rod_clouds ROD_CLOUDS
-# Remove when TAG_MAJOR_VERSION > 34
-i-rod_destruction ROD_DESTRUCTION
-i-rod_inaccuracy ROD_INACCURACY
-# Remove when TAG_MAJOR_VERSION > 34
-i-rod_warding ROD_WARDING
-i-rod_shadows ROD_SHADOWS
-i-rod_iron ROD_IRON
-# Remove when TAG_MAJOR_VERSION > 34
-i-rod_venom ROD_VENOM ROD_ID_LAST
+# These must be in the same order as the enum in item-prop-enum.h!
+%sdir misc
+error ROD_LIGHTNING ROD_ID_FIRST
+error ROD_SUMMONING
+error ROD_IGNITION
+error ROD_CLOUDS
+error ROD_DESTRUCTION
+error ROD_INACCURACY
+error ROD_WARDING
+error ROD_SHADOWS
+error ROD_IRON
+error ROD_VENOM ROD_ID_LAST
 %rim 1
 
 #OBJ_ORBS
@@ -976,7 +976,9 @@ misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
-misc_disc MISC_DISC_OF_STORMS
+%sdir misc
+error MISC_LIGHTNING_ROD
+%sdir item/misc
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR

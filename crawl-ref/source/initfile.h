@@ -10,7 +10,7 @@
 #include <string>
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "unicode.h"
 
 int str_to_summon_type(const string &str);

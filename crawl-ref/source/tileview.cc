@@ -9,7 +9,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "domino.h"
-#include "domino_data.h"
+#include "domino-data.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"

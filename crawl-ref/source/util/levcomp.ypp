@@ -5,7 +5,7 @@
 #include <map>
 #include <algorithm>
 #include "end.h"
-#include "l_defs.h"
+#include "l-defs.h"
 #include "mapdef.h"
 #include "maps.h"
 #include "stringutil.h"

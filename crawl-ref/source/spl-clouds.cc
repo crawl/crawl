@@ -17,7 +17,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "fight.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "items.h"
 #include "losglobal.h"
 #include "message.h"
@@ -313,12 +313,10 @@ void holy_flames(monster* caster, actor* defender)
 
 random_pick_entry<cloud_type> cloud_cone_clouds[] =
 {
-  { 0,   50,  80, FALL, CLOUD_RAIN },
-  { 0,   50, 100, FALL, CLOUD_MIST },
-  { 0,   50, 150, FALL, CLOUD_MEPHITIC },
-  { 0,  100, 100, PEAK, CLOUD_FIRE },
-  { 0,  100, 100, PEAK, CLOUD_COLD },
-  { 0,  100, 100, PEAK, CLOUD_POISON },
+  { 0,   50, 200, FALL, CLOUD_MEPHITIC },
+  { 0,  100, 125, PEAK, CLOUD_FIRE },
+  { 0,  100, 125, PEAK, CLOUD_COLD },
+  { 0,  100, 125, PEAK, CLOUD_POISON },
   { 30, 100, 125, RISE, CLOUD_NEGATIVE_ENERGY },
   { 40, 100, 135, RISE, CLOUD_STORM },
   { 50, 100, 175, RISE, CLOUD_ACID },
@@ -340,7 +338,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
 
     const int range = spell_range(SPELL_CLOUD_CONE, pow);
 
-    targetter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
+    targeter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
 
     hitfunc.set_aim(pos);
 

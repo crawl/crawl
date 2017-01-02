@@ -13,7 +13,7 @@
 #include "items.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "terrain.h"
@@ -101,12 +101,11 @@ static void _labyrinth_place_items(const coord_def &end)
                                        14, OBJ_ARMOUR,
                                        3, OBJ_MISSILES,
                                        3, OBJ_MISCELLANY,
-                                       10, OBJ_WANDS,
+                                       14, OBJ_WANDS,
                                        10, OBJ_SCROLLS,
                                        10, OBJ_JEWELLERY,
                                        8, OBJ_BOOKS,
-                                       4, OBJ_STAVES,
-                                       4, OBJ_RODS);
+                                       4, OBJ_STAVES);
 
         const int treasure_item =
             items(true, glopop, OBJ_RANDOM,

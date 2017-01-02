@@ -5,8 +5,8 @@
 # complete with quaint little homes and a handful of local shops.
 # How wonderful!
 #
-# Digging, disintegration or teleportation is required to enter the vault.
-# A wand of disintegration and scroll of teleportation is guaranteed in the
+# Digging or teleportation is required to enter the vault.
+# A wand of digging and scroll of teleportation is guaranteed in the
 # home of a local kobold to ensure random teleporters can escape. If
 # all else fails there is an escape hatch in the mall's washroom.
 
@@ -46,7 +46,7 @@ SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
 KITEM:  * = animal skin, q:2 beef jerky, any good_item
-KITEM:  ' = ident:type wand of disintegration, ident:type scroll of teleportation
+KITEM:  ' = ident:type wand of digging, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
 MARKER: # = lua:fog_machine { cloud_type = "flame", \
                 pow_min = 10, pow_max = 10, delay = 10, \

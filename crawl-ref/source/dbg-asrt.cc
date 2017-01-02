@@ -21,7 +21,7 @@
 #include "files.h"
 #include "hiscores.h"
 #include "initfile.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "jobs.h"
 #include "mapmark.h"
 #include "message.h"

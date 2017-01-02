@@ -288,12 +288,6 @@ demon whip
 
 Eine schreckliche Waffe, hergestellt in den Tiefen des Infernos.
 %%%%
-disc of storms
-
-Dieser äußerst starke Artikel kann einen zerstörenden Sturm der Elektrizität
-loslassen. Seine Wirksamkeit verbessert sich außerordentlich in den Händen
-eines erfahrenen im Verwenden magischer Geräte.
-%%%%
 eudemon blade
 
 Eine heilige Klinge von den Schmieden des Himmels, der durch einen guten Geist
@@ -831,11 +825,6 @@ zu werden. Es ist gegen Gestalt ändernde Wesen besonders wirksam.
 wand of random effects
 
 Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
-%%%%
-wand of slowing
-
-Ein magisches Gerät welches Verzauberungen auf Kreaturen in seiner Richtung
-wirft, welche dadurch verlangsamt werden.
 %%%%
 whip
 

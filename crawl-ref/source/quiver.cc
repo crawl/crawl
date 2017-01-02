@@ -15,7 +15,7 @@
 
 #include "env.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "options.h"
 #include "player.h"

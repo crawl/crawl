@@ -27,27 +27,27 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgn-overview.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "errors.h"
 #include "exercise.h"
 #include "food.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mutation.h"
@@ -2538,7 +2538,11 @@ static void _recharge_xp_evokers(int exp)
 
         debt = max(0, debt - div_rand_round(exp, xp_factor));
         if (debt == 0)
+        {
+            if (i == MISC_LIGHTNING_ROD)
+                you.props["thunderbolt_charge"].get_int() = 0;
             mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
+        }
     }
 }
 
@@ -4875,7 +4879,7 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(you.scale_device_healing(hp_restoration));
+        inc_hp(you.scale_potion_healing(hp_restoration));
 
     inc_mp(mp_restoration);
 
@@ -6561,23 +6565,6 @@ bool player::tengu_flight() const
 }
 
 /**
- * Returns the HP cost (per MP) of casting a spell.
- *
- * Checks to see if the player is wielding the Majin-Bo.
- *
- * @return        The HP cost (per MP) of casting a spell.
- **/
-int player::spell_hp_cost() const
-{
-    int cost = 0;
-
-    if (player_equip_unrand(UNRAND_MAJIN))
-        cost += 1;
-
-    return cost;
-}
-
-/**
  * Returns true if player spellcasting is considered unholy.
  *
  * Checks to see if the player is wielding the Majin-Bo.
@@ -6986,14 +6973,6 @@ int player::has_tail(bool allow_tran) const
 
 int player::has_usable_tail(bool allow_tran) const
 {
-    // TSO worshippers don't use their stinger in order
-    // to avoid poisoning.
-    if (religion == GOD_SHINING_ONE
-        && player_mutation_level(MUT_STINGER, allow_tran) > 0)
-    {
-        return 0;
-    }
-
     return has_tail(allow_tran);
 }
 
@@ -7783,30 +7762,27 @@ bool player::form_uses_xl() const
            || form == TRAN_BAT && you.species != SP_VAMPIRE;
 }
 
-static int _get_device_heal_factor()
+static int _get_potion_heal_factor()
 {
     // healing factor is expressed in thirds, so default is 3/3 -- 100%.
     int factor = 3;
 
     // start with penalties
     factor -= player_equip_unrand(UNRAND_VINES) ? 3 : 0;
-    factor -= you.mutation[MUT_NO_DEVICE_HEAL];
+    factor -= you.mutation[MUT_NO_POTION_HEAL];
 
-    // then apply bonuses
-    // Kryia's doubles device healing for non-deep dwarves, because deep dwarves
-    // are abusive bastards.
-    if (you.species != SP_DEEP_DWARF)
-        factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
+    // then apply bonuses - Kryia's doubles potion healing
+    factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
 
     // make sure we don't turn healing negative.
     return max(0, factor);
 }
 
-void print_device_heal_message()
+void print_potion_heal_message()
 {
     // Don't give multiple messages in weird cases with both enhanced
     // and reduced healing.
-    if (_get_device_heal_factor() > 3)
+    if (_get_potion_heal_factor() > 3)
     {
         if (player_equip_unrand(UNRAND_KRYIAS))
         {
@@ -7818,20 +7794,20 @@ void print_device_heal_message()
             mpr("The healing is enhanced."); // bad message, but this should
                                              // never be possible anyway
     }
-    else if (_get_device_heal_factor() == 0)
+    else if (_get_potion_heal_factor() == 0)
         mpr("Your system rejects the healing.");
-    else if (_get_device_heal_factor() < 3)
+    else if (_get_potion_heal_factor() < 3)
         mpr("Your system partially rejects the healing.");
 }
 
-bool player::can_device_heal()
+bool player::can_potion_heal()
 {
-    return _get_device_heal_factor() > 0;
+    return _get_potion_heal_factor() > 0;
 }
 
-int player::scale_device_healing(int healing_amount)
+int player::scale_potion_healing(int healing_amount)
 {
-    return div_rand_round(healing_amount * _get_device_heal_factor(), 3);
+    return div_rand_round(healing_amount * _get_potion_heal_factor(), 3);
 }
 
 #if TAG_MAJOR_VERSION == 34

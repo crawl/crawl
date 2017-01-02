@@ -1,7 +1,7 @@
 #ifndef EXCLUDE_H
 #define EXCLUDE_H
 
-#include "los_def.h"
+#include "los-def.h"
 
 void set_auto_exclude(const monster* mon);
 void remove_auto_exclude(const monster* mon, bool sleepy = false);

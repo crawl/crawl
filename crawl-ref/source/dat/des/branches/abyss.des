@@ -723,10 +723,9 @@ TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
-         wand of lightning / wand of acid / wand of slowing w:5 / \
-         wand of confusion w:5 / ring mail good_item / \
-         chain mail good_item w:12 / shield / spear good_item / \
-         trident good_item / any weapon w:12 / any w:2
+         wand of lightning / wand of acid / wand of confusion / \
+         ring mail good_item / chain mail good_item w:12 / shield / \
+         spear good_item / trident good_item / any weapon w:12 / any w:2
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -1454,8 +1453,8 @@ KMONS:   6 = lurking horror
 KITEM:   4d = scroll of random uselessness w:15 q:1 / fruit q:1 w:4 / \
          club w:6 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   5 = wand of slowing / wand of confusion / wand of flame w:5 / \
-         whip not_cursed w:2 / hat not_cursed mundane w:5
+KITEM:   5 = wand of confusion / wand of flame / whip not_cursed w:2 / \
+         hat not_cursed mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch

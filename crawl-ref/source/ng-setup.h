@@ -6,7 +6,7 @@
 #ifndef NG_SETUP_H
 #define NG_SETUP_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 struct item_def;
 item_def* newgame_make_item(object_class_type base,

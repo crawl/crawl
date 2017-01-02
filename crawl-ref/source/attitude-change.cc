@@ -14,9 +14,9 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"

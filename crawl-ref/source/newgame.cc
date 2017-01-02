@@ -15,7 +15,7 @@
 #include "files.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
