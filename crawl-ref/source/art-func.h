@@ -1393,7 +1393,7 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
     if (mondied)
         return;
 
-    const int bonus_dam = resist_adjust_damage(defender, BEAM_COLD, 
+    const int bonus_dam = resist_adjust_damage(defender, BEAM_COLD,
                                                random2(dam) / 2 + 1);
 
     if (bonus_dam <= 0)
@@ -1409,4 +1409,64 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
 
     if (defender->alive())
         defender->expose_to_element(BEAM_COLD, 2);
+}
+
+static bool _THERMIC_ENGINE_evoke(item_def *item, bool* did_work, bool* unevokable)
+{
+    if (!enough_hp(12, true))
+    {
+        mpr("You're too close to death to use this item.");
+        *unevokable = true;
+        return true;
+    }
+    if (!enough_mp(3, false))
+    {
+        *unevokable = true;
+        return true;
+    }
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
+        return false;
+
+    bool success = false;
+    bool angered = false;
+
+    const int how_many = 5 + random2(5);
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        monster_type mon = random_demon_by_tier(one_chance_in(15) ? 4 : 5);
+
+        mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
+                 MG_FORCE_BEH, you.religion);
+        mg.set_summoned(&you, 0, 0);
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        monster *m = create_monster(mg);
+
+        if (m)
+        {
+            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
+
+            if (player_angers_monster(m))
+                angered = true;
+
+            success = true;
+        }
+    }
+
+    if (success)
+    {
+        mpr("You release some of the engine's servants.");
+        did_god_conduct(DID_EVIL, 3);
+
+        if (angered)
+            mpr("You don't feel so good about this...");
+    }
+
+    mpr("You feel the engine feeding on your energy!");
+    dec_hp(11, false);
+    dec_mp(3);
+    practise_evoking(1);
+
+    return true;
 }
