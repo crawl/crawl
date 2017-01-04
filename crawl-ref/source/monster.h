@@ -304,8 +304,6 @@ public:
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot);
     item_def* disarm();
-    bool      ieoh_jian_swap_weapon_with_player(bool silent = false);
-
     bool      can_use_missile(const item_def &item) const;
     bool      likes_wand(const item_def &item) const;
 

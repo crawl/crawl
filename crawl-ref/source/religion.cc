@@ -332,16 +332,11 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
     // Ieoh Jian
     { { -1, "crosstrain your martial skills at an accelerated rate"},
-      { 0, "manifest and wield flying weapons",
-           "no longer manifest flying weapons"},
       { 1, "perform different acrobatic attacks. Read your weapon description!",
            "no longer perform acrobatic attacks" },
-      { 2, ABIL_IEOH_JIAN_RECALL_WEAPON, "instantly recall an animated weapon back to your hands" },
       { 3, "hit pressure points as you attack while moving",
            "no longer hit pressure points as you attack while moving" },
       { 4, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
-      { 5, "leave a distracting afterimage as you switch weapons",
-           "no longer leave a distracting afterimage as you switch weapons" },
     },
 };
 
@@ -2900,7 +2895,6 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_IEOH_JIAN:
         simple_god_message(" withdraws all divine help and plots revenge.", old_god);
         _set_penance(old_god, 25);
-        while(ieoh_jian_decay()){}
         break;
     default:
         _set_penance(old_god, 25);
@@ -3021,10 +3015,6 @@ bool player_can_join_god(god_type which_god)
 
     if (which_god == GOD_BEOGH && !species_is_orcish(you.species))
         return false;
-
-    // Paws can't hold weapons very well.
-    if (which_god == GOD_IEOH_JIAN && you.species == SP_FELID)
-        return false; 
 
     // Fedhas hates undead, but will accept demonspawn.
     if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)

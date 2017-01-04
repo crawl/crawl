@@ -626,9 +626,6 @@ static const ability_def Ability_List[] =
     // Ieoh Jian
     { ABIL_IEOH_JIAN_PROJECT_WEAPON, "Project Weapon",
         5, 0, 80, 8, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
-    { ABIL_IEOH_JIAN_RECALL_WEAPON, "Recall Weapon",
-        2, 0, 0, 0, {FAIL_INVO, 20, 5, 20}, abflag::INSTANT },
-
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3087,15 +3084,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
 
         break;
-    case ABIL_IEOH_JIAN_RECALL_WEAPON:
-        fail_check();
-        if (!ieoh_jian_recall_weapon())
-        {
-            canned_msg(MSG_NOTHING_THERE);
-            return SPRET_ABORT;
-        }
-        break;
-
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",

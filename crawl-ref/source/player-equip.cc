@@ -1395,21 +1395,10 @@ bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
     if (is_weapon && !safe_to_remove(item))
         return false;
 
-    int inventory_slot = you.equip[EQ_WEAPON];
-
     unequip_item(EQ_WEAPON, showMsgs);
 
     you.wield_change     = true;
     you.redraw_quiver    = true;
-
-    if (!ignore_ieoh_jian && item.props.exists(IEOH_JIAN_SLOT))
-    {
-        // The weapon belongs to the IJC so you can't stash it away.
-        // Instead, it is animated beside you.
-        if(ieoh_jian_manifest_weapon_monster(you.pos(), item))
-            mprf(MSGCH_GOD, "%s flies away from you!", item.name(DESC_THE, false, true).c_str());
-        dec_inv_item_quantity(inventory_slot, 1);
-    }
 
     return true;
 }

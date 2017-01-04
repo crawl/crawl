@@ -2135,79 +2135,31 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
-        bool reformed = false;
-        bool was_active = mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
         if (killer == KILL_RESET)
         {
-            if (you.can_see(*mons) && !silent && mons->weapon() && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
-                mprf("%s bounces wildly and falls to the ground.", mons->weapon()->name(DESC_THE, false, true).c_str());
-
-            // All slot indices are updated, so the age order is always respected.
-            auto monsters = find_ieoh_jian_manifested_weapons(false);
-            size_t i;
-
-            for (i = 0; i != monsters.size(); i++)
-                monsters[i]->weapon()->props[IEOH_JIAN_SLOT] = (int)i;
-
-            if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
-                you.weapon()->props[IEOH_JIAN_SLOT] = (int)i;
+            if (mons->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+            {
+                if (!silent)
+                    mprf("%s ascends back to the heavens!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
+                invalidate_agrid(true);
+            }
         }
-        else if (was_active || (mons->weapon() && (!mons->weapon()->props.exists(IEOH_JIAN_SLOT)
-                                                   || mons->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))))
+        else 
         {
-            // weapons of some importance (animated, yours, divine) reform in LOS
             coord_def reform_location;
             random_near_space(mons, mons->pos(), reform_location, true, false, true);
             monster* new_mons = ieoh_jian_manifest_weapon_monster(reform_location, *(mons->weapon()));
 
             if (!new_mons)
                 dprf("Failed to reform Ieoh Jian weapon");
-            else
-            {
-                reformed = true;
-                if (you.can_see(*mons) && !silent)
-                    mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
-
-                if (was_active)
-                {
-                    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-                    mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, 0.6 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor));
-                    new_mons->add_ench(combat_active);
-                }
-            }
-
-        }
-        else
-        {
-            if (you.can_see(*mons) && !silent)
-                mprf("%s shatters in a myriad of steel fragments!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
-
-            you.duration[DUR_IEOH_JIAN_ACTIVITY_BACKOFF] = 0;
+            else if (you.can_see(*mons) && !silent)
+                mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
         }
 
         if (!silent)
             check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
 
-        if (!reformed && mons->weapon() && mons->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
-        {
-            mprf("%s ascends back to the heavens!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
-            invalidate_agrid(true);
-        }
-
         silent = true;
-
-        int w_idx = mons->inv[MSLOT_WEAPON];
-        if (mons->weapon() && (w_idx != NON_ITEM))
-        {
-            // Something went wrong with resummoning the player's weapon, so it must be dropped.
-            if (killer == KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
-                mons->drop_item(MSLOT_WEAPON, false);
-            else if (killer != KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT) && !reformed)
-                mons->drop_item(MSLOT_WEAPON, false);
-            else
-                destroy_item(w_idx);
-        }
-
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {

@@ -33,15 +33,6 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
-// Self-renewing duration that despawns weapons constantly unless the Council is interested.
-static void _ieoh_jian_bored()
-{
-    if (you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
-        ieoh_jian_decay();
-
-    you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
-}
-
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -549,25 +540,8 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
-    { DUR_IEOH_JIAN_INTEREST,
-      0, "",
-      "being watched over by the Council", "IJC interested",
-      "The Council is aiding you in battle.", D_NO_FLAGS,
-      {{ "",  _ieoh_jian_bored }}},
-    { DUR_IEOH_JIAN_BOREDOM,
-      0, "",
-      "", "IJC bored",
-      "", D_NO_FLAGS,
-      {{ "",  _ieoh_jian_bored }}},
-    { DUR_IEOH_JIAN_ACTIVITY_BACKOFF, 0, "", "", "ICJ backoff", "", D_NO_FLAGS, {{""}}},
-    { DUR_IEOH_JIAN_AFTERIMAGE,
-      LIGHTBLUE, "MR++",
-      "protected by a distracting afterimage", "IJC afterimage",
-      "You distract enemies with a brief afterimage.", D_NO_FLAGS,
-      {{ "Your afterimage dissipates.", [](){you.redraw_evasion = true;} }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
-
     { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,
         {{ "", _end_invis }, { "You flicker for a moment.", 1}}, 6},
     { DUR_SLOW, 0, "", "", "slow", "", D_DISPELLABLE},

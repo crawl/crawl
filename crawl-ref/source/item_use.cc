@@ -315,10 +315,9 @@ bool can_wield(const item_def *weapon, bool say_reason,
         return false;
     }
     
-    auto manifested = find_ieoh_jian_manifested_weapons(true);
-    if (!ignore_ieoh_jian && !manifested.empty())
+    if (!ignore_ieoh_jian && ieoh_jian_find_projected_weapon())
     {
-        SAY(mpr("You're too focused keeping your own weapon in the air."));
+        SAY(mpr("You're too focused keeping your weapon in the air."));
         return false;
     }
 

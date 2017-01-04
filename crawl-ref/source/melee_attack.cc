@@ -788,14 +788,6 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-    // The intention is what counts to IJC, so we attempt to summon here.
-    if (attacker->is_player() 
-           && have_passive(passive_t::spawn_weapon_on_hit) 
-           && !mons_is_firewood(*defender->as_monster())
-           && defender->as_monster()->type != MONS_IEOH_JIAN_WEAPON
-           && (!you.weapon() || you.weapon()->base_type == OBJ_WEAPONS))
-        ieoh_jian_spawn_weapon(you.pos());
-
     if (!cleaving)
     {
         cleave_setup();

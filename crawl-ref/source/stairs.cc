@@ -541,9 +541,10 @@ void floor_transition(dungeon_feature_type how,
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
-    // Despawn all IJC weapons and pull your own back.
-    if (you_worship(GOD_IEOH_JIAN))
-       while (ieoh_jian_decay()){}
+    // Despawn IJC weapons
+    auto mons = ieoh_jian_find_projected_weapon();
+    if (mons) 
+       monster_die(mons, KILL_RESET, NON_MONSTER, true);
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.

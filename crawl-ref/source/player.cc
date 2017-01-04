@@ -2181,9 +2181,6 @@ static int _player_evasion_bonuses()
     if (you.duration[DUR_AGILITY])
         evbonus += AGILITY_BONUS;
 
-    if (you.duration[DUR_IEOH_JIAN_AFTERIMAGE])
-        evbonus += 4 + div_rand_round(you.skill(SK_DODGING,1), 3);
-
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
     evbonus += you.scan_artefacts(ARTP_EVASION);
@@ -6429,10 +6426,6 @@ int player_res_magic(bool calc_unid, bool temp)
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += MR_PIP * 2;
-
-        // IJC Afterimage
-    if (you.duration[DUR_IEOH_JIAN_AFTERIMAGE] && temp)
-        rm += MR_PIP * 1.5;
 
     // Enchantment effect
     if (you.duration[DUR_LOWERED_MR] && temp)

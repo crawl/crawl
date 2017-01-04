@@ -2191,13 +2191,6 @@ void handle_monster_move(monster* mons)
                 _swim_or_move_energy(*mons);
                 return;
             }
-            // Ieoh Jian passive weapons blink back to you if the pathing is blocked.
-            else if (mons->type == MONS_IEOH_JIAN_WEAPON && !mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
-            {
-                coord_def new_location;
-                if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
-                    mons->move_to_pos(new_location);
-            }
             // Figure out if they fight.
             else if ((!mons_is_firewood(*targ)
                       || mons->is_child_tentacle())
@@ -3852,17 +3845,8 @@ static bool _monster_move(monster* mons)
             }
             else
             {
-                if (mons->type != MONS_IEOH_JIAN_WEAPON || mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
-                {
-                    fight_melee(mons, targ);
-                    ret = true;
-                }
-                else
-                {
-                    coord_def new_location;
-                    if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
-                        mons->move_to_pos(new_location);
-                }
+                fight_melee(mons, targ);
+                ret = true;
             }
             // If the monster swapped places, the work's already done.
             mmov.reset();

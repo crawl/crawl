@@ -3129,10 +3129,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
     }
 
     mons->move_to_pos(loc, true, true);
-
-    // Ieoh Jian weapons must swap silently.
-    if (mons->type != MONS_IEOH_JIAN_WEAPON) 
-        mpr("You swap places.");
+    mpr("You swap places.");
 
     return;
 }

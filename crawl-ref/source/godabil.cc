@@ -7089,45 +7089,8 @@ void hepliaklqana_choose_identity()
     _hepliaklqana_choose_gender();
 }
 
-bool ieoh_jian_recall_weapon()
-{
-    bolt tracer;
-    direction_chooser_args args;
-    args.mode = TARG_IEOH_JIAN_WEAPON;
-    dist thr;
-    direction(thr, args);
-
-    if (!thr.isValid)
-    {
-        if (thr.isCancel)
-            canned_msg(MSG_OK);
-
-        return false;
-    }
-
-    monster* mons = monster_at(thr.target);
-
-    if (!mons || mons->type != MONS_IEOH_JIAN_WEAPON)
-        return false;
-
-    coord_def new_location;
-    // Your current weapon (if you had one) will appear by your side as you recall the new one.
-    // This is, as usual, done with some trickery involving swapping with the ghost...
-    if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
-    {
-        mons->move_to_pos(new_location);
-    }
-   
-    mons->del_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE);
-    mons->ieoh_jian_swap_weapon_with_player();
-
-    return true;
-}
-
 bool ieoh_jian_project_weapon(bolt &pbolt)
 {
-    // Keeps the Council interested, but it won't generate any new weapons.
-    ieoh_jian_interest();
     ASSERT(you.weapon());
     dist thr;
 
