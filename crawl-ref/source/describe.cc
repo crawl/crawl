@@ -3290,12 +3290,15 @@ static string _monster_stat_description(const monster_info& mi)
 {
     ostringstream result;
 
-    _describe_monster_hp(mi, result);
-    _describe_monster_ac(mi, result);
-    _describe_monster_ev(mi, result);
-    _describe_monster_mr(mi, result);
+    if (!mons_is_sensed(mi.type))
+    {
+        _describe_monster_hp(mi, result);
+        _describe_monster_ac(mi, result);
+        _describe_monster_ev(mi, result);
+        _describe_monster_mr(mi, result);
 
-    result << "\n";
+        result << "\n";
+    }
 
     resists_t resist = mi.resists();
 
