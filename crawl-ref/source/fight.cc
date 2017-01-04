@@ -738,8 +738,11 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  * @param effective_attack_number   ?
  */
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
-                           int attack_number, int effective_attack_number, bool ieoh_jian_martial)
+                           int attack_number, int effective_attack_number, ieoh_jian_attack_type ieoh_jian_attack)
 {
+    if (ieoh_jian_attack == IEOH_JIAN_ATTACK_WHIRLWIND || ieoh_jian_attack == IEOH_JIAN_ATTACK_WALL_JUMP)
+        return; // IJC AOE attacks don't cleave.
+
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
@@ -748,7 +751,7 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
 
-            attck.is_ieoh_jian_martial = ieoh_jian_martial;
+            attck.ieoh_jian_attack = ieoh_jian_attack;
             attck.attack();
         }
         targets.pop_front();

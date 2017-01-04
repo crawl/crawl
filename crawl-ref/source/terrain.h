@@ -41,7 +41,7 @@ bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_sealed(dungeon_feature_type feat);
 bool feat_is_statuelike(dungeon_feature_type feat);
 bool feat_is_permarock(dungeon_feature_type feat);
-bool feat_can_pole_vault_against(dungeon_feature_type feat);
+bool feat_can_wall_jump_against(dungeon_feature_type feat);
 
 bool feat_is_stone_stair_down(dungeon_feature_type feat);
 bool feat_is_stone_stair_up(dungeon_feature_type feat);

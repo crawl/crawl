@@ -71,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_ieoh_jian_martial(false)
+    cleaving(is_cleaving), is_riposte(false), ieoh_jian_attack(IEOH_JIAN_ATTACK_NONE)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -146,7 +146,7 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte && !is_ieoh_jian_martial)
+        if (!is_riposte && (ieoh_jian_attack == IEOH_JIAN_ATTACK_NONE))
             you.time_taken = you.attack_delay().roll();
 
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
@@ -401,15 +401,6 @@ bool melee_attack::handle_phase_hit()
                 dec_mp(1);
             }
         }
-    }
-
-    if (attacker->is_player() 
-        && is_ieoh_jian_martial 
-        && have_passive(passive_t::pressure_points)
-        && defender->as_monster()->holiness() != MH_NONLIVING
-        && defender->as_monster()->holiness() != MH_PLANT)
-    {
-        player_strike_pressure_points(defender->as_monster());
     }
 
     // This does more than just calculate the damage, it also sets up
@@ -761,7 +752,7 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number, is_ieoh_jian_martial);
+                              effective_attack_number, ieoh_jian_attack);
     }
 
     // Check for passive mutation effects.
@@ -3447,19 +3438,6 @@ static int _apply_momentum(int dam)
 // This also takes care of divine weapon modifiers, regardless of the attack being martial.
 int melee_attack::martial_damage_mod(int dam)
 {
-    if (is_ieoh_jian_martial)
-    {
-        ASSERT(have_passive(passive_t::martial_weapon_mastery));
-        ASSERT(you.weapon());
-
-        dam = _apply_momentum(dam);
-        auto weapon_skill = weapon_attack_skill(you.weapon()->sub_type);
-       
-        // Lunge gets a damage bonus.
-        if (weapon_skill == SK_SHORT_BLADES || weapon_skill == SK_AXES)
-            dam = div_rand_round(dam * 15, 10);
-    }
-
     if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_MOMENTUM)
         && you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM].get_int())
     {
@@ -3468,6 +3446,18 @@ int melee_attack::martial_damage_mod(int dam)
         you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM] = 0;
     }
 
+    switch (ieoh_jian_attack)
+    {
+    case IEOH_JIAN_ATTACK_NONE:
+        return dam;
+    case IEOH_JIAN_ATTACK_LUNGE:
+        dam = div_rand_round(dam * 15, 10);
+        break;
+    default:
+        break;
+    }
+
+    dam = _apply_momentum(dam);
     return dam;
 }
 

@@ -332,10 +332,12 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
     // Ieoh Jian
     { { -1, "crosstrain your martial skills at an accelerated rate"},
-      { 1, "perform different acrobatic attacks. Read your weapon description!",
-           "no longer perform acrobatic attacks" },
-      { 3, "hit pressure points as you attack while moving",
-           "no longer hit pressure points as you attack while moving" },
+      { 1, "perform a lunging strike when moving towards an enemy",
+           "no longer perform lunging strikes" },
+      { 2, "attack monsters by moving around them, rapidly striking pressure points",
+           "no longer perform spinning attacks" },
+      { 3, "perform a distracting airborne attack by moving against a solid obstacle",
+           "no longer perform airborne attacks" },
       { 4, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
     },
 };

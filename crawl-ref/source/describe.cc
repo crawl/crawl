@@ -919,42 +919,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
         default:
             break;
         }
-
-        const char* lunge_text = "\n\n<lightred>Martial Mastery:</lightred> Short blades and axes can be used to"
-                                 " strike with a powerful lunging attack, by moving towards an enemy.";
-        const char* lunge_pp_text = " This technique is extremely effective at striking pressure points.";
-
-        const char* whirlwind_text = "\n\n<lightred>Martial Mastery:</lightred> Long blades and maces can be used to hit"
-                                     " nearby enemies in a whirlwind, by moving around them.";
-        const char* whirlwind_pp_text = " This technique is moderately effective at striking pressure points.";
-        const char* pole_vault_text = "\n\n<lightred>Martial Mastery:</lightred> Polearms and staves can be used to pole vault by moving"
-                                      " against a solid obstacle, performing an airborne attack to enemies near your landing spot.";
-        const char* pole_vault_pp_text = " This technique is very effective at striking pressure points.";
-
-        if (have_passive(passive_t::martial_weapon_mastery))
-            switch (item_attack_skill(item))
-            {
-            case SK_POLEARMS:
-            case SK_STAVES:
-                description += pole_vault_text;
-                if (have_passive(passive_t::pressure_points))
-                    description += pole_vault_pp_text;
-                break;
-            case SK_AXES:
-            case SK_SHORT_BLADES:
-                description += lunge_text;
-                if (have_passive(passive_t::pressure_points))
-                    description += lunge_pp_text;
-                break;
-            case SK_MACES_FLAILS:
-            case SK_LONG_BLADES:
-                description += whirlwind_text;
-                if (have_passive(passive_t::pressure_points))
-                    description += whirlwind_pp_text;
-                break;
-            default:
-                break;
-            }
     }
 
     // ident known & no brand but still glowing

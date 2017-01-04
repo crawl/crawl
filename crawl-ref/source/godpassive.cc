@@ -297,8 +297,9 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Ieoh Jian
     {
-        { 1, passive_t::martial_weapon_mastery, "perform acrobatic attacks. read your weapon description for details" },
-        { 3, passive_t::pressure_points, "slow and paralyse foes as you attack while moving" },
+        { 1, passive_t::ieoh_jian_lunge, "perform a lunging strike when moving towards an enemy." },
+        { 2, passive_t::ieoh_jian_whirlwind, "attack monsters by moving around them, rapidly striking pressure points." },
+        { 3, passive_t::ieoh_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
     },
 };
 
@@ -1505,7 +1506,7 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
    
     mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
     melee_attack lunge(&you, mons);
-    lunge.is_ieoh_jian_martial = true;
+    lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
     lunge.attack();
 }
 
@@ -1551,47 +1552,50 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
 
         melee_attack whirlwind(&you, mons);
-        whirlwind.is_ieoh_jian_martial = true;
+        whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
         whirlwind.attack();
     }
 }
 
 void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
 {
-    if (you.pos() == old_pos || !have_passive(passive_t::martial_weapon_mastery)) 
+    if (you.pos() == old_pos)
         return;
-    _ieoh_jian_whirlwind(old_pos);
-    _ieoh_jian_lunge(old_pos);
+
+    if (have_passive(passive_t::ieoh_jian_lunge))
+        _ieoh_jian_lunge(old_pos);
+
+    if (have_passive(passive_t::ieoh_jian_whirlwind))
+        _ieoh_jian_whirlwind(old_pos);
 }
 
-bool ieoh_jian_can_pole_vault(const coord_def& target)
+bool ieoh_jian_can_wall_jump(const coord_def& target)
 {
-   bool able = have_passive(passive_t::martial_weapon_mastery)
-                              && feat_can_pole_vault_against(grd(target))
-                              && !you.is_stationary()
-                              && !you.digging
-                              && you.weapon();
-   
-   if (!able) 
-       return false;
+    bool able = have_passive(passive_t::ieoh_jian_wall_jump)
+                               && feat_can_wall_jump_against(grd(target))
+                               && !you.is_stationary()
+                               && !you.digging;
+    
+    if (!able) 
+        return false;
 
-   auto pole_vault_direction = (you.pos() - target).sgn();
-   auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
+    auto wall_jump_direction = (you.pos() - target).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction + wall_jump_direction);
 
-    const actor* landing_actor = actor_at(pole_vault_landing_spot);
-    if (feat_is_solid(grd(you.pos() + pole_vault_direction))
-        || !in_bounds(pole_vault_landing_spot)
-        || !you.is_habitable(pole_vault_landing_spot)
-        || (landing_actor && (!landing_actor->as_monster() || (landing_actor->as_monster()->type != MONS_IEOH_JIAN_WEAPON))))
+    const actor* landing_actor = actor_at(wall_jump_landing_spot);
+    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
+        || !in_bounds(wall_jump_landing_spot)
+        || !you.is_habitable(wall_jump_landing_spot)
+        || landing_actor)
     {
-        mprf("You have no room to pole vault.");
+        mprf("You have no room to wall jump.");
         return false;
     }
 
     return true;
 }
 
-void ieoh_jian_pole_vault_effects()
+void ieoh_jian_wall_jump_effects()
 {
     coord_def dir = coord_def(1,0);
 
@@ -1602,7 +1606,7 @@ void ieoh_jian_pole_vault_effects()
         {
             mprf("You attack %s while airborne!", target->name(DESC_THE).c_str());
             melee_attack aerial(&you, target);
-            aerial.is_ieoh_jian_martial = true;
+            aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
             aerial.attack();
         }
 

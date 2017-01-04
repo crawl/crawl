@@ -3228,9 +3228,9 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-    bool can_pole_vault = ieoh_jian_can_pole_vault(targ);
+    bool can_wall_jump = ieoh_jian_can_wall_jump(targ);
     // You can't walk out of bounds!
-    if (!in_bounds(targ) && !can_pole_vault)
+    if (!in_bounds(targ) && !can_wall_jump)
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -3371,7 +3371,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && (targ_pass || can_pole_vault) && moving && !beholder && !fmonger)
+    if (!attacking && (targ_pass || can_wall_jump) && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -3449,16 +3449,16 @@ static void _move_player(coord_def move)
         // Don't trigger traps when confusion causes no move.
         if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
-        else if (can_pole_vault)
+        else if (can_wall_jump)
         {
-            mprf("You bounce against the obstacle and pole vault!");
-            auto pole_vault_direction = (you.pos() - targ).sgn();
-            auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
-            targ_monst = monster_at(pole_vault_landing_spot);
+            mprf("You bounce against the obstacle!");
+            auto wall_jump_direction = (you.pos() - targ).sgn();
+            auto wall_jump_landing_spot = (you.pos() + wall_jump_direction + wall_jump_direction);
+            targ_monst = monster_at(wall_jump_landing_spot);
             if (targ_monst)
                 _swap_places(targ_monst, you.pos());
-            move_player_to_grid(pole_vault_landing_spot, false);
-            ieoh_jian_pole_vault_effects();
+            move_player_to_grid(wall_jump_landing_spot, false);
+            ieoh_jian_wall_jump_effects();
         }
 
         // Now it is safe to apply the swappee's location effects. Doing
@@ -3519,7 +3519,7 @@ static void _move_player(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking && !can_pole_vault)
+    else if (!targ_pass && !attacking && !can_wall_jump)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -3536,14 +3536,14 @@ static void _move_player(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking && !can_pole_vault)
+    else if (beholder && !attacking && !can_wall_jump)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking && !can_pole_vault)
+    else if (fmonger && !attacking && !can_wall_jump)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
