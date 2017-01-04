@@ -1595,7 +1595,7 @@ bool ieoh_jian_can_wall_jump(const coord_def& target)
     return true;
 }
 
-void ieoh_jian_wall_jump_effects()
+void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
 {
     coord_def dir = coord_def(1,0);
 
@@ -1613,6 +1613,29 @@ void ieoh_jian_wall_jump_effects()
         if(!cell_is_solid(you.pos() + dir))
             check_place_cloud(CLOUD_DUST, you.pos() + dir, 1 + random2(3) , &you, 0, -1);
         dir = rotate_adjacent(dir, 1);
+    }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && mon->alive() && you.can_see(*mon))
+        {
+            const monsterentry* entry = get_monster_data(mon->type);
+            if (!entry)
+                continue;
+
+            simple_monster_message(*mon, " is distracted by your jump.");
+            mon->add_ench(
+                mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
+                            random_range(2, 5) * BASELINE_DELAY));
+            mon->foe = MHITNOT;
+            mon->target = mon->pos();
+            int non_move_energy = min(entry->energy_usage.move,
+                                      entry->energy_usage.swim);
+
+            mon->speed_increment -= non_move_energy;
+        }
     }
 }
 

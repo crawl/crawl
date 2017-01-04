@@ -7203,12 +7203,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
         // Activates the flying weapon to attack for a while.
         float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
         int duration = 0.6 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
-        dprf("activating IJC flying weapon for combat with duration %d", duration); 
-        mon_enchant combat_active(ENCH_IEOH_JIAN_COMBAT_ACTIVE, 1, &you, duration);
-
-        if (mons)
-            mons->add_ench(combat_active);
-
+        (void) duration; // TODO
         dec_inv_item_quantity(weapon_index, 1, true);
     }
 

@@ -1074,6 +1074,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mon->has_ench(ENCH_GOLD_LUST))
             mon->del_ench(ENCH_GOLD_LUST);
 
+        if (mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
+            mon->del_ench(ENCH_DISTRACTED_ACROBATICS);
+
         // Will turn monster against <src>.
         // Orders to withdraw take precedence over interruptions
         if (mon->behaviour == BEH_WITHDRAW && src != &you)

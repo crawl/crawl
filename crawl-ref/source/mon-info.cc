@@ -112,7 +112,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
-    { ENCH_IEOH_JIAN_COMBAT_ACTIVE,     MB_COMBAT_ACTIVE },
+    { ENCH_DISTRACTED_ACROBATICS,     MB_DISTRACTED },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
 };
 

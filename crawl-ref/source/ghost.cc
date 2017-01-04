@@ -633,7 +633,7 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
     ac      = damg + div_rand_round(power, 10);
     damage  = damg * (0.4 + (power/100.0));
 
-    ev     = 15;
+    ev     = 100; // Extremely evasive due to their short duration).
     ac     = 2 + div_rand_round(power, 10);
     max_hp = 1; // Ieoh Jian weapons always die in one hit and respawn elsewhere.
 }

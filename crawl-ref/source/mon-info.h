@@ -169,7 +169,7 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
-    MB_COMBAT_ACTIVE,
+    MB_DISTRACTED_ACROBATICS,
     NUM_MB_FLAGS
 };
 

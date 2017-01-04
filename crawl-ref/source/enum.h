@@ -2091,7 +2091,7 @@ enum enchant_type
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
-    ENCH_IEOH_JIAN_COMBAT_ACTIVE,
+    ENCH_DISTRACTED_ACROBATICS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

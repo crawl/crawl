@@ -307,10 +307,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         start_still_winds();
         break;
 
-    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
-        this->ghost->ev = 100; // Extremely evasive when active
-        break;
-
     default:
         break;
     }
@@ -910,6 +906,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
            simple_monster_message(*this, " is no longer distracted by gold.");
         break;
 
+    case ENCH_DISTRACTED_ACROBATICS:
+        if (!quiet)
+           simple_monster_message(*this, " is no longer distracted by your wall jumping.");
+        break;
+
     case ENCH_DRAINED:
         if (!quiet)
             simple_monster_message(*this, " seems less drained.");
@@ -957,11 +958,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_STILL_WINDS:
         end_still_winds();
-        break;
-    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
-        this->ghost->ev = 15;
-        if (!quiet && this->weapon())
-            mprf(MSGCH_DURATION, "%s is no longer fighting on its own.", this->weapon()->name(DESC_THE).c_str());
         break;
 
     default:
@@ -1436,6 +1432,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
+    case ENCH_DISTRACTED_ACROBATICS:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
@@ -1445,7 +1442,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
-    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
         decay_enchantment(en);
         break;
 
@@ -2147,7 +2143,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds",
-    "active for combat",
+    "distracted by acrobatics",
     "buggy",
 };
 
