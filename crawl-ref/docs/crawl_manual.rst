@@ -1719,7 +1719,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
