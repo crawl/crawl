@@ -440,6 +440,7 @@ enum ability_type
 
     // Ieoh Jian
     ABIL_IEOH_JIAN_STEEL_DRAGONFLY = 1300,
+    ABIL_IEOH_JIAN_HEAVENLY_BLADE,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -1917,6 +1918,7 @@ enum duration_type
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
     DUR_IEOH_JIAN_PROJECTION,
+    DUR_IEOH_JIAN_DIVINE_BLADE,
     NUM_DURATIONS
 };
 

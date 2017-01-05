@@ -1376,7 +1376,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     calc_mp();
 }
 
-bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
+bool unwield_item(bool showMsgs)
 {
     if (!you.weapon())
         return false;
@@ -1391,11 +1391,22 @@ bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
     item_def& item = *you.weapon();
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
+    const int item_slot = you.equip[EQ_WEAPON];
 
     if (is_weapon && !safe_to_remove(item))
         return false;
 
     unequip_item(EQ_WEAPON, showMsgs);
+
+    if (item.props.exists(IEOH_JIAN_DIVINE) 
+        && !you.props.exists(IEOH_JIAN_SWAPPING)
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
+    {
+        string name = item.name(DESC_THE, false, true, false);
+        dec_inv_item_quantity(item_slot, 1);
+        mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
+        invalidate_agrid(true);
+    }
 
     you.wield_change     = true;
     you.redraw_quiver    = true;

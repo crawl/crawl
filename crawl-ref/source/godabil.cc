@@ -7089,6 +7089,63 @@ void hepliaklqana_choose_identity()
     _hepliaklqana_choose_gender();
 }
 
+bool ieoh_jian_heavenly_blade()
+{
+    bool directly_summon = false;
+    if (inv_count() == ENDOFPACK)
+    {
+        if (yesno("you don't have room in your inventory. Request the divine weapon as an animated ally?", true, 'n'))
+            directly_summon = true;
+        else
+            return false;
+    }
+
+    ieoh_jian_end_projection();
+    bool bare_handed = (you.weapon() == nullptr)
+                       || wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false);
+    
+    if (!bare_handed)
+    {
+        mprf("You can't unwield your weapon!");
+        return false;
+    }
+
+    auto weapon = ieoh_jian_generate_divine_weapon();
+
+    if (directly_summon)
+    {
+        monster* mons = ieoh_jian_manifest_weapon_monster(you.pos(), weapon);
+        if (mons)
+        {
+            mprf("%s manifests from thin air! You can feel the presence of %s wielding it.", 
+                 weapon.name(DESC_THE, false, true, false).c_str(),
+                 ieoh_jian_random_sifu_name().c_str());
+
+            lose_piety(5); // Compensation for the extra effect
+        }
+        else 
+        {
+            mprf(MSGCH_GOD, "You briefly feel the presence of %s, but nothing happens", ieoh_jian_random_sifu_name().c_str());
+            return false;
+        }
+    }
+    else
+    {
+        int slot = find_free_slot(weapon);
+        move_item_to_inv(weapon);
+        mprf(MSGCH_GOD,"%s manifests from thin air! You reach your %s and feel its power.", 
+             weapon.name(DESC_THE, false, true, false).c_str(),
+             you.hand_name(false).c_str());
+        equip_item(EQ_WEAPON, slot, false);
+    }
+
+    invalidate_agrid(true);
+    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
+    int duration = IEOH_JIAN_BASE_DIVINE_DURATION * (1 + invo_duration_factor);
+    you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = duration;
+    return true;
+}
+
 bool ieoh_jian_steel_dragonfly(bolt &pbolt)
 {
     ASSERT(you.weapon());
@@ -7161,7 +7218,7 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
 
     you.props[IEOH_JIAN_SWAPPING] = true;
     you.weapon()->props[IEOH_JIAN_PROJECTED] = true;
-    auto unwield_result = wield_weapon(true, SLOT_BARE_HANDS, true, true, false, true, false, true);
+    auto unwield_result = wield_weapon(true, SLOT_BARE_HANDS, true, true, false, true, false);
     you.props.erase(IEOH_JIAN_SWAPPING);
     if (!unwield_result)
     {
@@ -7208,6 +7265,9 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
         int duration = IEOH_JIAN_BASE_PROJECTED_DURATION * (1 + invo_duration_factor);
         you.duration[DUR_IEOH_JIAN_PROJECTION] = duration;
+        mprf(MSGCH_GOD, "You can feel the presence of %s wielding %s.", 
+             ieoh_jian_random_sifu_name().c_str(),
+             item.name(DESC_THE, false, true, false).c_str());
     }
 
     canned_msg(MSG_EMPTY_HANDED_NOW);

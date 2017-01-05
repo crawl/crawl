@@ -339,6 +339,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "perform a distracting airborne attack by moving against a solid obstacle",
            "no longer perform airborne attacks" },
       { 4, ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "throw a weapon at your foe and animate it" },
+      { 5, ABIL_IEOH_JIAN_HEAVENLY_BLADE, "request help in the form of powerful divine weapons" },
     },
 };
 

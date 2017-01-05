@@ -38,6 +38,12 @@ static void _end_projection()
     ieoh_jian_end_projection();
 }
 
+static void _end_divine_blade()
+{
+    ieoh_jian_end_projection();
+    ieoh_jian_end_divine_blade();
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -548,6 +554,9 @@ static const duration_def duration_data[] =
     { DUR_IEOH_JIAN_PROJECTION, 0, "", "projected weapon", "",
       "", D_NO_FLAGS,
       {{ "", _end_projection }}},
+    { DUR_IEOH_JIAN_DIVINE_BLADE, 0, "", "divine blade", "",
+      "", D_NO_FLAGS,
+      {{ "", _end_divine_blade }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
     { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,

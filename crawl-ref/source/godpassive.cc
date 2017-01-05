@@ -1404,23 +1404,39 @@ monster* ieoh_jian_find_projected_weapon()
     return nullptr;
 }
 
+void ieoh_jian_end_divine_blade()
+{
+    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
+    {
+        auto& item = you.inv[which_item];
+        if (item.defined() && item.props.exists(IEOH_JIAN_DIVINE))
+        {
+            string name = item.name(DESC_THE, false, true, false);
+            dec_inv_item_quantity(which_item, 1);
+            mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
+        }
+    }
+    invalidate_agrid(true);
+}
+
 void ieoh_jian_end_projection()
 {
     you.duration[DUR_IEOH_JIAN_PROJECTION] = 0;
     auto monster = ieoh_jian_find_projected_weapon();
     if (monster)
-        monster_die(monster, KILL_RESET, false);
+        monster_die(monster, KILL_RESET, NON_MONSTER, true);
 
     for (int which_item = 0; which_item < ENDOFPACK; which_item++)
     {
         auto& item = you.inv[which_item];
         if (item.defined() && item.props.exists(IEOH_JIAN_PROJECTED))
         {
+            mprf(MSGCH_GOD, "%s flies back to you!", item.name(DESC_THE, false, true, false).c_str());
             you.props[IEOH_JIAN_SWAPPING] = true;
             item.props.erase(IEOH_JIAN_PROJECTED);
-            wield_weapon(true, which_item, true, true, false, true, false, true);
+            wield_weapon(true, which_item, false, true, false, false, false);
             you.props.erase(IEOH_JIAN_SWAPPING);
-            return;
+            invalidate_agrid(true);
         }
     }
 }
@@ -1454,8 +1470,11 @@ static int _hands_boost(weapon_type big_type)
 {
     return (hands_reqd(&you, OBJ_WEAPONS, big_type) == HANDS_TWO && you.shield()) ? 1 : 0;
 }
-static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
+
+item_def ieoh_jian_generate_divine_weapon()
 {
+    item_def weapon;
+
     FixedVector<int, _ieoh_jian_num_divine_weapons> weights
     (
         2, //UNRAND_DIVINE_DEER_HORN_KNIFE
@@ -1486,7 +1505,7 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
     int index = random_choose_weighted(weights);
     make_item_unrandart(weapon, _ieoh_jian_divine_weapons[index]);
     weapon.quantity = 1;
-    return true;
+    return weapon;
 }
 
 monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)

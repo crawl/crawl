@@ -790,9 +790,8 @@ A weapon enchanted to dance through the air and attack under its own power.
 %%%%
 flying weapon
 
-A weapon held airborne by the Ieoh Jian Council. It floats passively within your reach,
-ready for you to wield. It can be commanded to attack for a brief period by projecting
-it towards enemies.
+A weapon held airborne by the Ieoh Jian Council. You can feel the presence of an
+ancient master wielding it with fierceness.
 %%%%
 dart slug
 

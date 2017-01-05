@@ -876,12 +876,8 @@ Steel Dragonfly ability
 Projects a weapon towards a target, hitting the first enemy in the way. The weapon
 is then brought to life, attacking nearby enemies for a brief period of time.
 %%%%
-Recall Weapon ability
+Heavenly Blade ability
 
-Recalls an animated weapon back to your hands. 
-%%%%
-Steal And Renounce ability
-
-Steals your currently equipped weapon from the Council. This will cause you to
-be excommunicated and suffer a relentless pursuit until you forfeit the weapon.
+Beseeches the council to send help in the form of a tremendously powerful divine
+weapon. 
 %%%%

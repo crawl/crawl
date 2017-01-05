@@ -626,6 +626,8 @@ static const ability_def Ability_List[] =
     // Ieoh Jian
     { ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "Steel Dragonfly",
         3, 0, 80, 5, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
+    { ABIL_IEOH_JIAN_HEAVENLY_BLADE, "Heavenly Blade",
+        5, 0, 80, 10, {FAIL_INVO, 60, 5, 25}, abflag::NONE },
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3081,6 +3083,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
 
         if (!ieoh_jian_steel_dragonfly(beam))
+            return SPRET_ABORT;
+
+        break;
+    case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
+        fail_check();
+
+        if (!ieoh_jian_heavenly_blade())
             return SPRET_ABORT;
 
         break;
