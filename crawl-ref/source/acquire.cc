@@ -1484,6 +1484,8 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
+    item_set_appearance(mitm[thing_created]); // cleanup
+
     ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
     ASSERT(!god_hates_item(mitm[thing_created]));
 
