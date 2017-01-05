@@ -422,7 +422,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
     { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
-    { SPELL_PAIN, _hex_logic(SPELL_PAIN) },
+    { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
+            return _torment_vulnerable(caster.get_foe());
+    }) },
     { SPELL_DISINTEGRATE, _hex_logic(SPELL_DISINTEGRATE) },
     { SPELL_CORONA, _hex_logic(SPELL_CORONA, [](const monster& caster) {
             return !caster.get_foe()->backlit();
