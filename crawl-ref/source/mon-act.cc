@@ -1131,6 +1131,7 @@ static bool _handle_wand(monster& mons)
         || mons.asleep()
         || mons_is_fleeing(mons)
         || mons.pacified()
+        || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || x_chance_in_y(3, 4)
@@ -1181,14 +1182,7 @@ static bool _handle_wand(monster& mons)
         break;
     }
 
-    if (mons.confused())
-    {
-        beem.target = dgn_random_point_from(mons.pos(), LOS_RADIUS);
-        if (beem.target.origin())
-            return false;
-        zap = true;
-    }
-    else if (!niceWand)
+    if (!niceWand)
     {
         // Fire tracer, if necessary.
         fire_tracer(&mons, beem);
