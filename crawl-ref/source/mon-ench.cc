@@ -906,11 +906,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
            simple_monster_message(*this, " is no longer distracted by gold.");
         break;
 
-    case ENCH_DISTRACTED_ACROBATICS:
-        if (!quiet)
-           simple_monster_message(*this, " is no longer distracted by your wall jumping.");
-        break;
-
     case ENCH_DRAINED:
         if (!quiet)
             simple_monster_message(*this, " seems less drained.");

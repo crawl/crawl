@@ -295,5 +295,6 @@ void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);
 bool ieoh_jian_can_wall_jump(const coord_def& target);
 monster* ieoh_jian_find_projected_weapon();
 void ieoh_jian_wall_jump_effects(const coord_def& old_pos);
+void ieoh_jian_end_projection();
 
 #endif

@@ -871,7 +871,7 @@ Ancestor Identity ability
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
-Project Weapon ability
+Steel Dragonfly ability
 
 Projects a weapon towards a target, hitting the first enemy in the way. The weapon
 is then brought to life, attacking nearby enemies for a brief period of time.

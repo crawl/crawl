@@ -624,8 +624,8 @@ static const ability_def Ability_List[] =
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
     // Ieoh Jian
-    { ABIL_IEOH_JIAN_PROJECT_WEAPON, "Project Weapon",
-        5, 0, 80, 8, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
+    { ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "Steel Dragonfly",
+        3, 0, 80, 5, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3072,7 +3072,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         hepliaklqana_choose_identity();
         break;
 
-    case ABIL_IEOH_JIAN_PROJECT_WEAPON:
+    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
         fail_check();
         if (!you.weapon())
         {
@@ -3080,7 +3080,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        if (!ieoh_jian_project_weapon(beam))
+        if (!ieoh_jian_steel_dragonfly(beam))
             return SPRET_ABORT;
 
         break;

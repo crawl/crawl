@@ -73,9 +73,10 @@ Ieoh Jian Council
 The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
 after battling their way out of the afterlife. Disciples of the Council are
 taught to wield every weapon type with great proficiency. As they follow the
-Path they will become able to manifest blades at will from thin air, to execute
-acrobatic martial maneuvers, such as pole vaulting with polearms, performing
-powerful lunges with short blades, and more.
+Path they will become able to execute acrobatic martial maneuvers, such as wall
+jumps, spinning attacks and punishing lunges. They will eventually become able
+to request temporary help in the form of powerful divine weapons.
+
 %%%%
 Jiyva
 
@@ -311,13 +312,12 @@ and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
 Ieoh Jian powers
 
-By engaging in close quarters combat, the Ieoh Jian Council will manifest flying
-weapons around the follower, which they can grab and wield at will, and which will
-always be at least comparable in power to their own weapon. They will later be
-initiated in the path of martial arts, learning to perform martial techniques such as
-aerial strikes with staves and spears, powerful lunges with daggers and axes, and 
-spinning attacks with maces and long blades. They will be taught the technique necessary
-to strike vital pressure points and to remain evasive when switching weapons.
+Disciples of the Council  will be initiated in the path of martial arts, learning 
+to perform martial techniques such as aerial strikes and spinning attacks, capable
+of distracting and slowing enemies, and to punish these weakened enemies with powerful
+lunging strikes. They will be taught the technique necessary to animate weapons at a 
+distance, and eventually given the ability to request extremely powerful divine weapons
+for a brief period of time.
 %%%%
 Kikubaaqudgha powers
 

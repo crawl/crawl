@@ -402,6 +402,13 @@ bool melee_attack::handle_phase_hit()
             }
         }
     }
+     if (attacker->is_player() 
+            && ieoh_jian_attack == IEOH_JIAN_ATTACK_WHIRLWIND 
+            && defender->as_monster()->holiness() != MH_NONLIVING
+            && defender->as_monster()->holiness() != MH_PLANT)
+    {
+        player_strike_pressure_points(defender->as_monster());
+    }
 
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
@@ -451,6 +458,15 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    // Internal damage when hitting slowed / distracted enemies.
+    if (ieoh_jian_attack == IEOH_JIAN_ATTACK_LUNGE 
+        && defender->as_monster()->has_ench(ENCH_SLOW)
+        && defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS))
+    {
+        simple_monster_message(*defender->as_monster(), " starts to convulse uncontrollably...");
+        defender->hurt(&you, dice_def(6, defender->as_monster()->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
+    }
 
     if (check_unrand_effects())
         return false;
@@ -564,51 +580,20 @@ bool melee_attack::handle_phase_aux()
 
 void melee_attack::player_strike_pressure_points(monster* mons)
 {
-    if (!you.weapon())
-        return;
+    int slow_chance = 4;
+    if (you.weapon())
+        slow_chance *= you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
+    else
+        slow_chance *= you.skill(SK_UNARMED_COMBAT, 4, false);
 
-    int paralysis_chance = 4;
+    slow_chance = div_rand_round(slow_chance, 2*mons->get_hit_dice());
 
-    int power = you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
-    paralysis_chance *= power;
-
-    switch (weapon_attack_skill(you.weapon()->sub_type))
-    {
-        case SK_STAVES: // Pole Vault is slightly more effective at hitting PP.
-        case SK_POLEARMS:
-            paralysis_chance = div_rand_round(paralysis_chance * 13, 10);
-            break;
-        case SK_AXES:  // Lunge is substantially more effective.
-        case SK_SHORT_BLADES:
-            paralysis_chance *= 2;
-            break;
-        default:      // Whirlwind does not get a bonus.
-            break;
-    }
-
-    paralysis_chance = div_rand_round(paralysis_chance, 2*mons->get_hit_dice());
-    int slow_chance = 2 * paralysis_chance;
-
-    dprf("Pressure point strike, %d%% chance to paralyse if slowed (%d power), %d%% to slow.", paralysis_chance, power, slow_chance);
-    if (!mons->paralysed() && mons->has_ench(ENCH_SLOW) && x_chance_in_y(paralysis_chance, 100))
-    {
-        if (!mons_is_immotile(*mons)
-            && simple_monster_message(*mons, " suddenly stops moving as you strike a critical pressure point!"))
-        {
-            mons->stop_constricting_all();
-            obvious_effect = true;
-        }
-
-        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, attacker, stepdown(power * BASELINE_DELAY, 70)));
-        return;
-    }
+    dprf("Pressure point strike, %d%% chance to slow.", slow_chance);
 
     if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
     {
-        simple_monster_message(*mons, mons->has_ench(ENCH_SLOW)
-                                     ? " seems to be slow for longer."
-                                     : " seems to slow down as you strike a pressure point.");
-        mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(power * BASELINE_DELAY, 70)));
+        simple_monster_message(*mons, " seems to slow down as you strike a pressure point.");
+        mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(80 * BASELINE_DELAY, 70)));
     }
 }
 
@@ -3438,12 +3423,12 @@ static int _apply_momentum(int dam)
 // This also takes care of divine weapon modifiers, regardless of the attack being martial.
 int melee_attack::martial_damage_mod(int dam)
 {
-    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE_MOMENTUM)
-        && you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM].get_int())
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE)
+        && you.weapon()->props[IEOH_JIAN_DIVINE].get_int())
     {
         mprf("%s carries your momentum!", you.weapon()->name(DESC_THE, false, true, false).c_str());
         dam = div_rand_round(dam * 15, 10);
-        you.weapon()->props[IEOH_JIAN_DIVINE_MOMENTUM] = 0;
+        you.weapon()->props[IEOH_JIAN_DIVINE] = 0;
     }
 
     switch (ieoh_jian_attack)
@@ -3451,7 +3436,25 @@ int melee_attack::martial_damage_mod(int dam)
     case IEOH_JIAN_ATTACK_NONE:
         return dam;
     case IEOH_JIAN_ATTACK_LUNGE:
-        dam = div_rand_round(dam * 15, 10);
+        if (defender->as_monster()->has_ench(ENCH_SLOW) 
+            && defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS))
+        {
+            mprf("%s is thoroughly helpless!!!", 
+                 defender->as_monster()->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 20, 10);
+        }
+        else if (defender->as_monster()->has_ench(ENCH_SLOW))
+        {
+            mprf("%s can't react fast enough!", defender->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 16, 10);
+        }
+        else if (defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS))
+        {
+            mprf("%s was looking away!", defender->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 16, 10);
+        }
+        else
+            dam = div_rand_round(dam * 13, 10);
         break;
     default:
         break;

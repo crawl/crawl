@@ -3490,8 +3490,8 @@ tileidx_t tileidx_ability(const ability_type ability)
          return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
 
      // Ieoh Jian
-    case ABIL_IEOH_JIAN_PROJECT_WEAPON:
-        return TILEG_ABILITY_IEOH_JIAN_PROJECT_WEAPON;
+    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
+        return TILEG_ABILITY_IEOH_JIAN_STEEL_DRAGONFLY;
   
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

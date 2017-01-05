@@ -317,7 +317,15 @@ bool can_wield(const item_def *weapon, bool say_reason,
     
     if (!ignore_ieoh_jian && ieoh_jian_find_projected_weapon())
     {
-        SAY(mpr("You're too focused keeping your weapon in the air."));
+        if (weapon->props.exists(IEOH_JIAN_PROJECTED))
+        {
+            SAY(mpr("That weapon is out of your reach!"));
+        }
+        else
+        {
+            SAY(mpr("You're too focused keeping your weapon in the air."));
+        }
+
         return false;
     }
 

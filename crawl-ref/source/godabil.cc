@@ -7089,7 +7089,7 @@ void hepliaklqana_choose_identity()
     _hepliaklqana_choose_gender();
 }
 
-bool ieoh_jian_project_weapon(bolt &pbolt)
+bool ieoh_jian_steel_dragonfly(bolt &pbolt)
 {
     ASSERT(you.weapon());
     dist thr;
@@ -7120,7 +7120,7 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     item_def& thrown = you.inv[weapon_index];
     ASSERT(thrown.defined());
 
-    // Making a copy of the item, and another for the summoned copy.
+    // Making a copy of the item, and another for the summoned monster.
     item_def summoned_copy = thrown;
     item_def item = thrown;
     item.quantity = 1;
@@ -7160,10 +7160,14 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
         return false;
 
     you.props[IEOH_JIAN_SWAPPING] = true;
+    you.weapon()->props[IEOH_JIAN_PROJECTED] = true;
     auto unwield_result = wield_weapon(true, SLOT_BARE_HANDS, true, true, false, true, false, true);
     you.props.erase(IEOH_JIAN_SWAPPING);
     if (!unwield_result)
+    {
+        you.weapon()->props.erase(IEOH_JIAN_PROJECTED);
         return false;
+    }
 
     // Now start real firing!
     origin_set_unknown(item);
@@ -7202,9 +7206,8 @@ bool ieoh_jian_project_weapon(bolt &pbolt)
     {
         // Activates the flying weapon to attack for a while.
         float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-        int duration = 0.6 * IEOH_JIAN_ATTENTION_SPAN * (1 + invo_duration_factor);
-        (void) duration; // TODO
-        dec_inv_item_quantity(weapon_index, 1, true);
+        int duration = IEOH_JIAN_BASE_PROJECTED_DURATION * (1 + invo_duration_factor);
+        you.duration[DUR_IEOH_JIAN_PROJECTION] = duration;
     }
 
     canned_msg(MSG_EMPTY_HANDED_NOW);

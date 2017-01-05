@@ -22,6 +22,7 @@
 #include "goditem.h"
 #include "godprayer.h"
 #include "invent.h" // in_inventory
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1396,7 +1397,32 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 
 monster* ieoh_jian_find_projected_weapon()
 {
-   return nullptr; // TODO
+    for (auto& monster: menv)
+        if (monster.type == MONS_IEOH_JIAN_WEAPON)
+            return &monster;
+
+    return nullptr;
+}
+
+void ieoh_jian_end_projection()
+{
+    you.duration[DUR_IEOH_JIAN_PROJECTION] = 0;
+    auto monster = ieoh_jian_find_projected_weapon();
+    if (monster)
+        monster_die(monster, KILL_RESET, false);
+
+    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
+    {
+        auto& item = you.inv[which_item];
+        if (item.defined() && item.props.exists(IEOH_JIAN_PROJECTED))
+        {
+            you.props[IEOH_JIAN_SWAPPING] = true;
+            item.props.erase(IEOH_JIAN_PROJECTED);
+            wield_weapon(true, which_item, true, true, false, true, false, true);
+            you.props.erase(IEOH_JIAN_SWAPPING);
+            return;
+        }
+    }
 }
 
 static const int _ieoh_jian_num_divine_weapons = 8;
@@ -1460,7 +1486,6 @@ static bool _ieoh_jian_choose_divine_weapon(item_def& weapon)
     int index = random_choose_weighted(weights);
     make_item_unrandart(weapon, _ieoh_jian_divine_weapons[index]);
     weapon.quantity = 1;
-    weapon.props[IEOH_JIAN_DIVINE_DEGREE] = IEOH_JIAN_DIVINE_DURATION;
     return true;
 }
 
@@ -1503,8 +1528,8 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
 
     if (!mons || _dont_attack_martial(mons) || !mons->alive())
         return;
-   
-    mprf("You lunge at %s!", mons->name(DESC_THE).c_str());
+  
+    mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
     melee_attack lunge(&you, mons);
     lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
     lunge.attack();
@@ -1619,16 +1644,30 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
     {
         monster* mon = monster_at(*ri);
 
-        if (mon && mon->alive() && you.can_see(*mon))
+        if (mon 
+            && mon->alive()
+            && you.can_see(*mon)
+            && mon->behaviour != BEH_SLEEP
+            && !_dont_attack_martial(mon))
         {
+            int distract_chance = 6;
+            
+            if (you.weapon())
+                distract_chance *= you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
+            else
+                distract_chance *= you.skill(SK_UNARMED_COMBAT, 4, false);
+
+            distract_chance = div_rand_round(distract_chance, 2*mon->get_hit_dice());
             const monsterentry* entry = get_monster_data(mon->type);
-            if (!entry)
+            
+            dprf("Attempting distract with chance %d", distract_chance);
+            if (!entry || !x_chance_in_y(distract_chance, 100))
                 continue;
 
             simple_monster_message(*mon, " is distracted by your jump.");
             mon->add_ench(
                 mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
-                            random_range(2, 5) * BASELINE_DELAY));
+                            random_range(2, 3) * BASELINE_DELAY));
             mon->foe = MHITNOT;
             mon->target = mon->pos();
             int non_move_energy = min(entry->energy_usage.move,

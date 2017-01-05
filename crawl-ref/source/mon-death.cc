@@ -2137,7 +2137,7 @@ item_def* monster_die(monster* mons, killer_type killer,
     {
         if (killer == KILL_RESET)
         {
-            if (mons->weapon()->props.exists(IEOH_JIAN_DIVINE_DEGREE))
+            if (mons->weapon()->props.exists(IEOH_JIAN_DIVINE))
             {
                 if (!silent)
                     mprf("%s ascends back to the heavens!", mons->weapon()->name(DESC_THE, false, true, false).c_str());

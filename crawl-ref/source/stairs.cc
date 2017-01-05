@@ -542,9 +542,7 @@ void floor_transition(dungeon_feature_type how,
     leaving_level_now(how);
 
     // Despawn IJC weapons
-    auto mons = ieoh_jian_find_projected_weapon();
-    if (mons) 
-       monster_die(mons, KILL_RESET, NON_MONSTER, true);
+    ieoh_jian_end_projection();
 
     // Not entirely accurate - the player could die before
     // reaching the Abyss.

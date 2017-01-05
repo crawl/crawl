@@ -33,6 +33,11 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
+static void _end_projection()
+{
+    ieoh_jian_end_projection();
+}
+
 // properties of the duration.
 enum duration_flags : uint32_t
 {
@@ -540,6 +545,9 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
+    { DUR_IEOH_JIAN_PROJECTION, 0, "", "projected weapon", "",
+      "", D_NO_FLAGS,
+      {{ "", _end_projection }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
     { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,

@@ -3453,7 +3453,6 @@ static void _move_player(coord_def move)
         else if (can_wall_jump)
         {
             did_wall_jump = true;
-            mprf("You bounce against the obstacle!");
             auto wall_jump_direction = (you.pos() - targ).sgn();
             auto wall_jump_landing_spot = (you.pos() + wall_jump_direction + wall_jump_direction);
             targ_monst = monster_at(wall_jump_landing_spot);
