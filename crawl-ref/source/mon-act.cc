@@ -3526,7 +3526,7 @@ static bool _monster_move(monster* mons)
     const bool flattens_trees = mons_flattens_trees(*mons);
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);
-    // Take care of formicid/Dissolution burrowing, lerny, etc
+    // Take care of Dissolution burrowing, lerny, etc
     if (burrows || flattens_trees || digs)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
@@ -3579,19 +3579,9 @@ static bool _monster_move(monster* mons)
                 else
                     noisy(25, target, "You hear a crashing sound.");
             }
+            // Dissolution dissolves walls.
             else if (player_can_hear(mons->pos() + mmov))
-            {
-                // Formicids take extra time to dig.
-                if (mons_genus(mons->type) == MONS_FORMICID)
-                    mons->lose_energy(EUT_MOVE, 5);
-
-                // Message depends on whether caused by acid (Dissolution)
-                // or direct digging (formicids).
-                mprf(MSGCH_SOUND, (mons->type == MONS_DISSOLUTION) ?
-                     "You hear a sizzling sound." :
-                     "You hear a grinding noise."
-                     );
-            }
+                mprf(MSGCH_SOUND, "You hear a sizzling sound.");
         }
     }
 
