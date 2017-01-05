@@ -109,7 +109,7 @@ end
 
 function species_mock(e)
   if you.race() == "Barachian" then
-    e.kmons("1 = spiny toad")
+    e.kmons("1 = bullfrog")
   elseif you.race() == "Centaur" then
     e.kmons("1 = dart slug")
   elseif you.race() == "Demigod" then
