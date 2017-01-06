@@ -322,7 +322,7 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
             ouch(1, KILLED_BY_FALLING_DOWN_STAIRS);
 
         // Note that if going downstairs, this only does damage.
-        // Tt doesn't cancel the level transition.
+        // It doesn't cancel the level transition.
         if (going_up)
         {
             you.turn_is_over = true;
