@@ -7094,7 +7094,7 @@ bool ieoh_jian_heavenly_blade()
     bool directly_summon = false;
     if (inv_count() == ENDOFPACK)
     {
-        if (yesno("you don't have room in your inventory. Request the divine weapon as an animated ally?", true, 'n'))
+        if (yesno("you don't have room in your inventory. Request the divine weapon as an animated ally? (15 piety)", true, 'n'))
             directly_summon = true;
         else
             return false;
@@ -7112,12 +7112,20 @@ bool ieoh_jian_heavenly_blade()
 
     auto weapon = ieoh_jian_generate_divine_weapon();
 
+    if (!can_wield(&weapon))
+    {
+        if (yesno("you can't wield weapons. Request the divine weapon as an animated ally (15 piety)?", true, 'n'))
+            directly_summon = true;
+        else
+            return false;
+    }
+
     if (directly_summon)
     {
         monster* mons = ieoh_jian_manifest_weapon_monster(you.pos(), weapon);
         if (mons)
         {
-            mprf("%s manifests from thin air! You can feel the presence of %s wielding it.", 
+            mprf(MSGCH_GOD, "%s manifests from thin air! You can feel the presence of %s wielding it.", 
                  weapon.name(DESC_THE, false, true, false).c_str(),
                  ieoh_jian_random_sifu_name().c_str());
 
