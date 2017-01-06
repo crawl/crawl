@@ -7094,7 +7094,7 @@ bool ieoh_jian_heavenly_blade()
     bool directly_summon = false;
     if (inv_count() == ENDOFPACK)
     {
-        if (yesno("you don't have room in your inventory. Request the divine weapon as an animated ally? (15 piety)", true, 'n'))
+        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
             directly_summon = true;
         else
             return false;
@@ -7112,9 +7112,9 @@ bool ieoh_jian_heavenly_blade()
 
     auto weapon = ieoh_jian_generate_divine_weapon();
 
-    if (!can_wield(&weapon))
+    if (!directly_summon && !can_wield(&weapon))
     {
-        if (yesno("you can't wield weapons. Request the divine weapon as an animated ally (15 piety)?", true, 'n'))
+        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
             directly_summon = true;
         else
             return false;
