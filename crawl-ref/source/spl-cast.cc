@@ -1907,6 +1907,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_RANDOM_EFFECTS:
         return cast_random_effects(powc, beam, fail);
 
+    case SPELL_NOXIOUS_VAPOURS:
+        return cast_noxious_vapours(powc, spd, fail);
+
     default:
         if (spell_removed(spell))
         {

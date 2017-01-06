@@ -247,7 +247,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // Barachians
+    ABIL_HOP,
+    ABIL_MAX_INTRINSIC = ABIL_HOP,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1913,6 +1915,7 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
+    DUR_NO_HOP,
     NUM_DURATIONS
 };
 
@@ -2604,6 +2607,7 @@ enum monster_type                      // menv[].type
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
+    MONS_BARACHIAN,
     MONS_BEAR,                  // genus
 #endif
     MONS_GRIZZLY_BEAR,
@@ -3548,6 +3552,7 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
+    MONS_BARACHIAN,
 	MONS_CYNO,
 #endif
 
@@ -3854,6 +3859,7 @@ enum mutation_type
     MUT_STURDY_FRAME,
     MUT_SANGUINE_ARMOUR,
 #endif
+    MUT_HOP,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -4260,6 +4266,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_BARACHIAN,
 	SP_CYNO,
     NUM_SPECIES,
 
@@ -4720,6 +4727,7 @@ enum spell_type : int
     SPELL_BECKONING,
     SPELL_UPHEAVAL,
     SPELL_RANDOM_EFFECTS,
+    SPELL_NOXIOUS_VAPOURS,
     NUM_SPELLS
 };
 

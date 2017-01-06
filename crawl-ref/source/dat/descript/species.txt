@@ -1,4 +1,9 @@
 %%%%
+Barachian
+
+Barachians are amphibious humanoids with an exceptionally vicious disposition.
+They can hop long distances, though their movement is otherwise somewhat slow.
+%%%%
 Centaur
 
 Swift, strong and bulky, Centaurs are particularly skilled with ranged

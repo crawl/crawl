@@ -3477,6 +3477,9 @@ static void _move_player(coord_def move)
                                  div_round_up(100, you.running.travel_speed));
         }
 
+        if (you.duration[DUR_NO_HOP])
+            you.duration[DUR_NO_HOP] += you.time_taken;
+
         move.reset();
         you.turn_is_over = true;
         request_autopickup();

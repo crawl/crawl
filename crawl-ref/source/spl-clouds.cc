@@ -13,6 +13,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
@@ -111,6 +112,58 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_noxious_vapours(int pow, const dist &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return SPRET_ABORT;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || mons->submerged())
+    {
+        fail_check();
+        canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_SUCCESS; // still losing a turn
+    }
+
+    if (mons->res_poison() == 1 && mons->observable())
+    {
+        mprf("But poisonous clouds would do no harm to %s!",
+             mons->name(DESC_THE).c_str());
+        return SPRET_ABORT;
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return SPRET_ABORT;
+
+    cloud_struct* cloud = cloud_at(beam.target);
+    if (cloud && cloud->type != CLOUD_POISON)
+    {
+        mpr("There's already a cloud there!");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const int cloud_duration = max(random2(pow * 3) / 30, 1);
+    if (cloud)
+    {
+        // Reinforce the cloud.
+        mpr("The noxious vapours increase!");
+        cloud->decay += cloud_duration;
+        cloud->set_whose(KC_YOU);
+    }
+    else
+    {
+        place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
+        mprf("Noxious vapours surround %s!", mons->name(DESC_THE).c_str());
+    }
 
     return SPRET_SUCCESS;
 }
