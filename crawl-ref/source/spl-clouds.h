@@ -4,9 +4,12 @@
 #include "spl-cast.h"
 
 struct bolt;
+class dist;
 
 spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
                          bool fail);
+
+spret_type cast_noxious_vapours(int pow, const dist &beam, bool fail);
 
 void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1);

@@ -3887,6 +3887,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_NOXIOUS_VAPOURS, "Noxious Vapours",
+    SPTYP_POISON | SPTYP_AIR,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF,
+    2,
+    50,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_NOXIOUS_VAPOURS,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,
