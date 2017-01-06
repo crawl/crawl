@@ -1667,7 +1667,9 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
             && mon->alive()
             && you.can_see(*mon)
             && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon))
+            && !_dont_attack_martial(mon)
+            && mon->holiness() != MH_NONLIVING
+            && mon->holiness() != MH_PLANT)
         {
             int distract_chance = 6;
             
@@ -1678,7 +1680,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
 
             distract_chance = div_rand_round(distract_chance, 2*mon->get_hit_dice());
             const monsterentry* entry = get_monster_data(mon->type);
-            
+           
             dprf("Attempting distract with chance %d", distract_chance);
             if (!entry || !x_chance_in_y(distract_chance, 100))
                 continue;
