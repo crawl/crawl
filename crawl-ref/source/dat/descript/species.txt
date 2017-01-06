@@ -4,6 +4,11 @@ Barachi
 Barachim are amphibious humanoids who rebelled against the gods. They're fast
 learners and can hop long distances, but are otherwise slow and easily seen.
 %%%%
+Bultungin
+
+Bultungins are humanoids with the heads of dogs. They are quick to learn the basics
+of any skill, but struggle to master any.
+%%%%
 Centaur
 
 Swift, strong and bulky, Centaurs are particularly skilled with ranged

@@ -662,6 +662,7 @@ manticore MONS_MANTICORE
 harpy MONS_HARPY
 sphinx MONS_SPHINX
 minotaur MONS_MINOTAUR
+bultungin MONS_BULTUNGIN
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
