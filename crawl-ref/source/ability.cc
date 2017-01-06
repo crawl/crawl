@@ -980,7 +980,11 @@ ability_type fixup_ability(ability_type ability)
         if (you.attribute[ATTR_DIVINE_ENERGY])
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
         return ability;
-
+    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
+        if (you.species == SP_FELID)
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
     default:
         return ability;
     }

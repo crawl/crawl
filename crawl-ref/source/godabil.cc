@@ -7092,7 +7092,10 @@ void hepliaklqana_choose_identity()
 bool ieoh_jian_heavenly_blade()
 {
     bool directly_summon = false;
-    if (inv_count() == ENDOFPACK)
+    if (you.species == SP_FELID)
+        directly_summon = true;
+
+    if (!directly_summon && inv_count() == ENDOFPACK)
     {
         if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
             directly_summon = true;
@@ -7114,7 +7117,7 @@ bool ieoh_jian_heavenly_blade()
 
     if (!directly_summon && !can_wield(&weapon))
     {
-        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
+        if (yesno("You can't wield weapons. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
             directly_summon = true;
         else
             return false;
