@@ -88,7 +88,7 @@ init.txt.persist
 /source/dat/tiles/feat.png
 /source/dat/tiles/main.png
 /source/dat/tiles/player.png
-/source/dat/tiles/gui.png
+gui.png
 /source/dat/tiles/icons.png
 /source/webserver/game_data/static/dngn.png
 /source/webserver/game_data/static/floor.png
@@ -100,20 +100,18 @@ init.txt.persist
 /source/webserver/game_data/static/icons.png
 /source/webserver/game_data/static/tileinfo-*.js
 /source/webserver/static/stone_soup_icon-32x32.png
-/source/webserver/static/title_*.png
+title_*.png
 
 # Makefile-generated junk
 makefile.dep
-/source/*.d
-/source/*.ilk
-/source/rltiles/*.d
-/source/.cflags
-/source/rltiles/.cflags
-/source/.android-cflags
-/source/.android-cxxflags
-/source/.contrib-ok
-/source/.contrib-libs
-/source/compflag.h
+*.d
+*.ilk
+.cflags
+.android-cflags
+.android-cxxflags
+.contrib-ok
+.contrib-libs
+compflag.h
 
 # The Crawl executable.
 /source/crawl
