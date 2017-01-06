@@ -172,11 +172,7 @@ static const species_type species_order[] =
     SP_MERFOLK,        SP_MINOTAUR,
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
-<<<<<<< HEAD
-    SP_BARACHIAN,
-=======
-	SP_CYNO,
->>>>>>> 3fa9390... Add Cyno race (without skill restriction).
+    SP_BARACHIAN,      SP_CYNO,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species

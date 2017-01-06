@@ -1520,7 +1520,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BARACHIAN,           SK_POISON_MAGIC,    0),
     APT(SP_BARACHIAN,           SK_INVOCATIONS,     1),
     APT(SP_BARACHIAN,           SK_EVOCATIONS,      0),
-	
+
 	// SP_CYNO
     APT(SP_CYNO,    		SK_FIGHTING,        2),
     APT(SP_CYNO,    		SK_SHORT_BLADES,    2),
