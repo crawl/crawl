@@ -1672,11 +1672,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
             && mon->holiness() != MH_PLANT)
         {
             int distract_chance = 6;
-            
-            if (you.weapon())
-                distract_chance *= you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
-            else
-                distract_chance *= you.skill(SK_UNARMED_COMBAT, 4, false);
+            distract_chance *= you.skill(SK_UNARMED_COMBAT, 4, false);
 
             distract_chance = div_rand_round(distract_chance, 2*mon->get_hit_dice());
             const monsterentry* entry = get_monster_data(mon->type);
