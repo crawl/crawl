@@ -151,7 +151,7 @@ spret_type cast_noxious_vapours(int pow, const dist &beam, bool fail)
 
     fail_check();
 
-    const int cloud_duration = max(random2(pow * 3) / 30, 1);
+    const int cloud_duration = max(random2(pow + 1) / 10, 1);
     if (cloud)
     {
         // Reinforce the cloud.
