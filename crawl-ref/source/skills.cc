@@ -290,6 +290,17 @@ static void _change_skill_level(skill_type exsk, int n)
              specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
+
+        // Send a status message about 'aptitude' increases/decreases if Bultungin
+        if (you.species == SP_BULTUNGIN)
+        {
+            if (n > 0 && you.skills[exsk] < 12 && you.skills[exsk] > 6)
+                mprf(MSGCH_MUTATION, "You become less interested in %s.",
+                     skill_name(exsk));
+            else if (n < 0 && you.skills[exsk] < 11 && you.skills[exsk] > 5)
+                mprf(MSGCH_MUTATION, "You become more interested in %s.",
+                     skill_name(exsk));
+        }
     }
     else if (you.num_turns)
     {
@@ -299,6 +310,17 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk),
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
+
+        // Send a status message about 'aptitude' increases/decreases if Bultungin
+        if (you.species == SP_BULTUNGIN)
+        {
+            if (n > 0 && (you.skills[exsk] - n) < 12 && you.skills[exsk] > 6)
+                mprf(MSGCH_MUTATION, "You become less interested in %s.",
+                     skill_name(exsk));
+            else if (n < 0 && you.skills[exsk] < 11 && (you.skills[exsk] - n) > 5)
+                mprf(MSGCH_MUTATION, "You become more interested in %s.",
+                     skill_name(exsk));
+        }
     }
 
     if (you.skills[exsk] == n && n > 0)
@@ -1496,15 +1518,27 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
-                          1050, 1400, 1800, 2250, 2800,      // 6-10
-                          3450, 4200, 5050, 6000, 7050,      // 11-15
-                          8200, 9450, 10800, 12300, 13950,   // 16-20
-                          15750, 17700, 19800, 22050, 24450, // 21-25
-                          27000, 29750 };
+    // Choose between the normal exp table and the Bultungin exp table
+    const int exp[28] =
+      { 0, 50, 150, 300, 500, 750,          // 0-5
+        1050, 1400, 1800, 2250, 2800,       // 6-10
+        3450, 4200, 5050, 6000, 7050,       // 11-15
+        8200, 9450, 10800, 12300, 13950,    // 16-20
+        15750, 17700, 19800, 22050, 24450,  // 21-25
+        27000, 29750 };
+    const int bultungin_exp[28] =
+      { 0, 25, 75, 150, 250, 375,           // 0-5
+        525, 700, 983, 1433, 2211,          // 6-10
+        3511, 5629, 8036, 10723, 13693,     // 11-15
+        16946, 20481, 24300, 28542, 33209,  // 16-20
+        38300, 43816, 49755, 56119, 62908,  // 21-25
+        70120, 77898 };
 
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-    return exp[lev] * species_apt_factor(sk, sp);
+    if (sp == SP_BULTUNGIN)
+        return bultungin_exp[lev] * species_apt_factor(sk, sp);
+    else
+        return exp[lev] * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)

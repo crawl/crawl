@@ -491,16 +491,20 @@ int detect_items(int pow)
     int map_radius = 0;
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
+
+    else if (you.mutation[MUT_STRONG_NOSE])
+        map_radius = LOS_DEFAULT_RANGE;
+
     else
     {
-        //Check which god may be providing detect_items (Ashenzari or Jiyva) and set map_radius
-        if (have_passive(passive_t::detect_items)) //Ashenzari
+        //Check which god may be providing detect_items and set map_radius
+        if (have_passive(passive_t::detect_items))
         {
             map_radius = min(you.piety / 20 - 1, LOS_DEFAULT_RANGE);
             if (map_radius <= 0)
                 return 0;
         }
-        else if (you.mutation[MUT_JELLY_GROWTH]) //Jiyva
+        else if (you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
             map_radius = 5;
     }
 

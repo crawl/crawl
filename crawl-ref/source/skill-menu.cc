@@ -348,18 +348,49 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white> ";
 
-    if (manual_bonus)
+    if (manual_bonus || you.species == SP_BULTUNGIN)
     {
-        skm.set_flag(SKMF_MANUAL);
-        text += "<lightgreen>";
+        if (manual_bonus)
+        {
+            skm.set_flag(SKMF_MANUAL);
+            text += "<lightgreen>";
+        }
+
+        int bultungin_bonus = 0;
+
+        // Determine Bultungin aptitude bonus/malus to display if SP_BULTUNGIN
+        if (you.species == SP_BULTUNGIN)
+        {
+            int bultungin_skill = you.skill(m_sk, 1, true);
+
+            // Bultungin aptitude costs start at effective +4 and reduce by -2 for
+            // each level after reaching 7, floor of -6
+            bultungin_bonus = max(4 - max((bultungin_skill - 6) * 2, 0), -6);
+        }
+        manual_bonus = manual_bonus + bultungin_bonus;
 
         // Only room for two characters.
-        if (manual_bonus < 10)
-            text += make_stringf("+%d", manual_bonus);
-        else
-            text += to_string(manual_bonus);
+        if (manual_bonus != 0)
+        {
+            // Add before based on positive or negative bonus (can be different
+            // from bonus being > 10)
+            if (manual_bonus > 0)
+                text += "<lightgreen>";
+            else
+                text += "<red>";
 
-        text += "</lightgreen>";
+            // Add '+' if bonus is positive and below 10, otherwise don't
+            if (manual_bonus < 10 && manual_bonus > 0)
+                text += make_stringf("+%d", manual_bonus);
+            else
+                text += to_string(manual_bonus);
+
+            // Close color tags based on same rules as above
+            if (manual_bonus > 0)
+                text += "</lightgreen>";
+            else
+                text += "</red>";
+        }
     }
 
     m_aptitude->set_text(text);

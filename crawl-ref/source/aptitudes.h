@@ -1522,5 +1522,44 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BARACHI,             SK_POISON_MAGIC,    1),
     APT(SP_BARACHI,             SK_INVOCATIONS,    -1),
     APT(SP_BARACHI,             SK_EVOCATIONS,      1),
+
+    // SP_BULTUNGIN
+    APT(SP_BULTUNGIN,           SK_FIGHTING,        0),
+    APT(SP_BULTUNGIN,           SK_SHORT_BLADES,    0),
+    APT(SP_BULTUNGIN,           SK_LONG_BLADES,     0),
+    APT(SP_BULTUNGIN,           SK_AXES,            0),
+    APT(SP_BULTUNGIN,           SK_MACES_FLAILS,    0),
+    APT(SP_BULTUNGIN,           SK_POLEARMS,        0),
+    APT(SP_BULTUNGIN,           SK_STAVES,          0),
+    APT(SP_BULTUNGIN,           SK_SLINGS,          0),
+    APT(SP_BULTUNGIN,           SK_BOWS,            0),
+    APT(SP_BULTUNGIN,           SK_CROSSBOWS,       0),
+    APT(SP_BULTUNGIN,           SK_THROWING,        0),
+    APT(SP_BULTUNGIN,           SK_ARMOUR,          0),
+    APT(SP_BULTUNGIN,           SK_DODGING,         0),
+    APT(SP_BULTUNGIN,           SK_STEALTH,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BULTUNGIN,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_BULTUNGIN,           SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BULTUNGIN,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_BULTUNGIN,           SK_UNARMED_COMBAT,  0),
+    APT(SP_BULTUNGIN,           SK_SPELLCASTING,    0),
+    APT(SP_BULTUNGIN,           SK_CONJURATIONS,    0),
+    APT(SP_BULTUNGIN,           SK_HEXES,           0),
+    APT(SP_BULTUNGIN,           SK_CHARMS,          0),
+    APT(SP_BULTUNGIN,           SK_SUMMONINGS,      0),
+    APT(SP_BULTUNGIN,           SK_NECROMANCY,      0),
+    APT(SP_BULTUNGIN,           SK_TRANSLOCATIONS,  0),
+    APT(SP_BULTUNGIN,           SK_TRANSMUTATIONS,  0),
+    APT(SP_BULTUNGIN,           SK_FIRE_MAGIC,      0),
+    APT(SP_BULTUNGIN,           SK_ICE_MAGIC,       0),
+    APT(SP_BULTUNGIN,           SK_AIR_MAGIC,       0),
+    APT(SP_BULTUNGIN,           SK_EARTH_MAGIC,     0),
+    APT(SP_BULTUNGIN,           SK_POISON_MAGIC,    0),
+    APT(SP_BULTUNGIN,           SK_INVOCATIONS,     0),
+    APT(SP_BULTUNGIN,           SK_EVOCATIONS,      0),
 };
 COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);
