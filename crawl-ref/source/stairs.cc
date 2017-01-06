@@ -635,14 +635,9 @@ void floor_transition(dungeon_feature_type how,
         how = branches[old_level.branch].entry_stairs;
     }
 
-    // Check for falling down the stairs or portal. (Why can't you fall in the abyss?)
-    if (!going_up && !shaft
-        && how != DNGN_ENTER_ABYSS
-        && how != DNGN_ABYSSAL_STAIR
-        && how != DNGN_EXIT_ABYSS)
-    {
+    // Check for falling down the stairs or portal.
+    if (!going_up && !shaft && !forced)
         _check_fall_down_stairs(how, false);
-    }
 
     if (shaft)
         how = DNGN_TRAP_SHAFT;
