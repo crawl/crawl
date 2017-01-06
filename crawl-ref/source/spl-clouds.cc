@@ -132,7 +132,7 @@ spret_type cast_noxious_vapours(int pow, const dist &beam, bool fail)
         return SPRET_SUCCESS; // still losing a turn
     }
 
-    if (mons->res_poison() > 0 && mons->observable())
+    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
     {
         mprf("But poisonous clouds would do no harm to %s!",
              mons->name(DESC_THE).c_str());

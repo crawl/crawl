@@ -3078,7 +3078,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(dummy);
 
-    return actor_cloud_immune(&dummy, *cloud);
+    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
