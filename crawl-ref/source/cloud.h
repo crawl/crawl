@@ -43,7 +43,8 @@ void manage_clouds();
 void run_cloud_spreaders(int dur);
 int max_cloud_damage(cloud_type cl_type, int power = -1);
 int actor_apply_cloud(actor *act);
-bool actor_cloud_immune(const actor *act, const cloud_struct &cloud);
+bool actor_cloud_immune(const actor &act, const cloud_struct &cloud);
+bool actor_cloud_immune(const actor &act, cloud_type type);
 bool mons_avoids_cloud(const monster* mons, coord_def pos,
                        bool placement = false);
 

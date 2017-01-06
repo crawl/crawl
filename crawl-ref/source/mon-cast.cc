@@ -2581,14 +2581,14 @@ static bool _should_still_winds(const monster &caster)
         // clouds the player might hide in are worrying.
         if (grid_distance(*ri, you.pos()) <= 3 // decent margin
             && is_opaque_cloud(cloud->type)
-            && actor_cloud_immune(&you, *cloud))
+            && actor_cloud_immune(you, *cloud))
         {
             return true;
         }
 
         // so are hazardous clouds on allies.
         const monster* mon = monster_at(*ri);
-        if (mon && !actor_cloud_immune(mon, *cloud))
+        if (mon && !actor_cloud_immune(*mon, *cloud))
             return true;
     }
 
