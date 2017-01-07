@@ -206,38 +206,6 @@ public:
     virtual const char* name() const = 0;
 };
 
-class EatDelay : public Delay
-{
-    item_def& food;
-    bool was_prompted = false;
-
-    bool invalidated() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
-    }
-
-    bool try_interrupt() override;
-
-    void finish() override;
-public:
-    EatDelay(int dur, item_def& item) :
-             Delay(dur), food(item)
-    {
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_EAT && (!item || &food == item);
-    }
-
-    const char* name() const override
-    {
-        return "eat";
-    }
-};
-
 class ArmourOnDelay : public Delay
 {
     item_def& armour;

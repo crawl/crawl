@@ -43,7 +43,6 @@
 #include "transform.h"
 #include "xom.h"
 
-static void _eat_chunk(item_def& food);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(item_def& corpse);
 static void _heal_from_food(int hp_amt);
@@ -370,31 +369,6 @@ static void _describe_food_change(int food_increment)
     mpr(msg);
 }
 
-bool eat_item(item_def &food)
-{
-    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
-    {
-        if (you.species != SP_VAMPIRE)
-            return false;
-
-        if (_vampire_consume_corpse(food))
-        {
-            count_action(CACT_EAT, -1); // subtype Corpse
-            you.turn_is_over = true;
-            return true;
-        }
-
-        return false;
-    }
-
-    start_delay<EatDelay>(0, food);
-
-    mprf("You eat %s%s.", food.quantity > 1 ? "one of " : "",
-                          food.name(DESC_THE).c_str());
-    you.turn_is_over = true;
-    return true;
-}
-
 // Handle messaging at the end of eating.
 // Some food types may not get a message.
 static void _finished_eating_message(food_type type)
@@ -482,29 +456,6 @@ static void _finished_eating_message(food_type type)
     default:
         break;
     }
-}
-
-
-void finish_eating_item(item_def& food)
-{
-    if (food.sub_type == FOOD_CHUNK)
-        _eat_chunk(food);
-    else
-    {
-        int value = food_value(food);
-        ASSERT(value > 0);
-        lessen_hunger(value, true);
-        _finished_eating_message(static_cast<food_type>(food.sub_type));
-    }
-
-    count_action(CACT_EAT, food.sub_type);
-
-    if (is_perishable_stack(food)) // chunks
-        remove_oldest_perishable_item(food);
-    if (in_inventory(food))
-        dec_inv_item_quantity(food.link, 1);
-    else
-        dec_mitm_item_quantity(food.index(), 1);
 }
 
 // Returns which of two food items is older (true for first, else false).
@@ -813,6 +764,49 @@ static void _eat_chunk(item_def& food)
         if (!suppress_msg)
             _chunk_nutrition_message(nutrition);
     }
+}
+
+bool eat_item(item_def &food)
+{
+    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
+    {
+        if (you.species != SP_VAMPIRE)
+            return false;
+
+        if (_vampire_consume_corpse(food))
+        {
+            count_action(CACT_EAT, -1); // subtype Corpse
+            you.turn_is_over = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    mprf("You eat %s%s.", food.quantity > 1 ? "one of " : "",
+                          food.name(DESC_THE).c_str());
+
+    if (food.sub_type == FOOD_CHUNK)
+        _eat_chunk(food);
+    else
+    {
+        int value = food_value(food);
+        ASSERT(value > 0);
+        lessen_hunger(value, true);
+        _finished_eating_message(static_cast<food_type>(food.sub_type));
+    }
+
+    count_action(CACT_EAT, food.sub_type);
+
+    if (is_perishable_stack(food)) // chunks
+        remove_oldest_perishable_item(food);
+    if (in_inventory(food))
+        dec_inv_item_quantity(food.link, 1);
+    else
+        dec_mitm_item_quantity(food.index(), 1);
+
+    you.turn_is_over = true;
+    return true;
 }
 
 bool is_bad_food(const item_def &food)
