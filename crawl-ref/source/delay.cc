@@ -186,22 +186,6 @@ bool MacroDelay::try_interrupt()
     // to the Lua function, it can't do damage.
 }
 
-bool EatDelay::try_interrupt()
-{
-    if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep eating?", true, 'N', false))
-        {
-            mpr("You stop eating.");
-            return true;
-        }
-        else
-            was_prompted = true;
-    }
-    return false;
-}
-
 bool ArmourOnDelay::try_interrupt()
 {
     if (duration > 1 && !was_prompted)
@@ -579,20 +563,6 @@ void MacroDelay::handle()
         you.time_taken = 0;
 }
 
-bool EatDelay::invalidated()
-{
-    // Stop eating if something happens (chunk rots, you get teleported,
-    // you get polymorphed into a lich, etc.)
-    if (!can_eat(food, true)
-        || !in_inventory(food) && food.pos != you.pos())
-    {
-        mpr("You stop eating.");
-        return true;
-    }
-
-    return false;
-}
-
 static bool _check_corpse_gone(item_def& item, const char* action)
 {
     // A monster may have raised the corpse you're chopping up! -- bwr
@@ -789,13 +759,6 @@ void ArmourOffDelay::finish()
 
     mprf("You finish taking off %s.", armour.name(DESC_YOUR).c_str());
     unequip_item(slot);
-}
-
-void EatDelay::finish()
-{
-    if (food_turns(food) > 1) // If duration was just one turn, don't print.
-        mpr("You finish eating.");
-    finish_eating_item(food);
 }
 
 void MemoriseDelay::finish()
