@@ -5162,12 +5162,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_DEMON_2    = 0x800000000ULL,
     TILE_FLAG_DEMON_1    = 0xE00000000ULL,
 
-    // 3 mutually exclusive flags for mimics.
-    TILE_FLAG_MIMIC_INEPT = 0x2000000000ULL,
-    TILE_FLAG_MIMIC       = 0x4000000000ULL,
-    TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
-    TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
-
     //// Background flags
 
     TILE_FLAG_RAY        = 0x00010000ULL,
