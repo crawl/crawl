@@ -938,7 +938,7 @@ Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
-Noxious Vapours spell
+Poisonous Vapours spell
 
 Turns the air around the target poisonous.
 %%%%

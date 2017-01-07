@@ -113,7 +113,7 @@ poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
-noxious_vapours NOXIOUS_VAPOURS
+poisonous_vapours POISONOUS_VAPOURS
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
