@@ -1858,23 +1858,6 @@ string get_item_description(const item_def &item, bool verbose,
 
         // intentional fall-through
     case OBJ_FOOD:
-        if (item.base_type == OBJ_FOOD)
-        {
-            description << "\n\n";
-
-            const int turns = food_turns(item);
-            ASSERT(turns > 0);
-            if (turns > 1)
-            {
-                description << "It is large enough that eating it takes "
-                            << ((turns > 2) ? "several" : "a couple of")
-                            << " turns, during which time the eater is vulnerable"
-                               " to attack.";
-            }
-            else
-                description << "It is small enough that eating it takes "
-                               "only one turn.";
-        }
         if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
         {
             switch (determine_chunk_effect(item))

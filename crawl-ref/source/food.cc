@@ -387,12 +387,10 @@ bool eat_item(item_def &food)
         return false;
     }
 
-    int eat_time = food_turns(food);
-    start_delay<EatDelay>(eat_time - 1, food);
+    start_delay<EatDelay>(0, food);
 
-    mprf("You %s %s%s.", eat_time == 1 ? "eat" : "start eating",
-                         food.quantity > 1 ? "one of " : "",
-                         food.name(DESC_THE).c_str());
+    mprf("You eat %s%s.", food.quantity > 1 ? "one of " : "",
+                          food.name(DESC_THE).c_str());
     you.turn_is_over = true;
     return true;
 }
@@ -1144,13 +1142,12 @@ void handle_starvation()
 
         if (you.hunger <= 0 && !you.duration[DUR_DEATHS_DOOR])
         {
-            auto it = min_element(begin(you.inv), end(you.inv),
-                [](const item_def& a, const item_def& b) -> bool
+            auto it = find_if(begin(you.inv), end(you.inv),
+                [](const item_def& food) -> bool
                 {
-                    return (can_eat(a, true) ? food_turns(a) : INT_MAX)
-                         < (can_eat(b, true) ? food_turns(b) : INT_MAX);
+                    return can_eat(food, true);
                 });
-            if (it != end(you.inv) && can_eat(*it, true))
+            if (it != end(you.inv))
             {
                 mpr("As you are about to starve, you manage to eat something.");
                 eat_item(*it);
