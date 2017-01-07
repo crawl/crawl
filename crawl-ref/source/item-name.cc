@@ -3508,17 +3508,22 @@ bool is_useless_item(const item_def &item, bool temp)
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (item.sub_type == WAND_ENSLAVEMENT
-            && item_type_known(item)
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        return is_known_empty_wand(item);
+        if (is_known_empty_wand(item))
+            return true;
+
+        if (!item_type_known(item))
+            return false;
+
+        if (item.sub_type == WAND_ENSLAVEMENT)
+            return player_mutation_level(MUT_NO_LOVE);
+
+        if (item.sub_type == WAND_CLOUDS)
+            return env.level_state & LSTATE_STILL_WINDS;
+
+        return false;
 
     case OBJ_POTIONS:
     {
