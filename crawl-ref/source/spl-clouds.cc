@@ -116,7 +116,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     return SPRET_SUCCESS;
 }
 
-spret_type cast_noxious_vapours(int pow, const dist &beam, bool fail)
+spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
@@ -155,14 +155,14 @@ spret_type cast_noxious_vapours(int pow, const dist &beam, bool fail)
     if (cloud)
     {
         // Reinforce the cloud.
-        mpr("The noxious vapours increase!");
+        mpr("The poisonous vapours increase!");
         cloud->decay += cloud_duration;
         cloud->set_whose(KC_YOU);
     }
     else
     {
         place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
-        mprf("Noxious vapours surround %s!", mons->name(DESC_THE).c_str());
+        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
     }
 
     return SPRET_SUCCESS;
