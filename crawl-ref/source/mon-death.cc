@@ -2159,6 +2159,7 @@ item_def* monster_die(monster* mons, killer_type killer,
         if (!silent)
             check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
 
+        mons->destroy_inventory();
         silent = true;
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
