@@ -224,12 +224,6 @@ dire flail
 
 Cep z kolczastymi odważnikami po obu stronach.
 %%%%
-disc of storms
-
-Ten potężny przedmiot potrafi wypuścić niszczące elektryczne wyładowanie,
-zwłaszcza w rękach kogoś kto potrafi dobrze posługiwać się magicznymi
-przedmiotami.
-%%%%
 eudemon blade
 
 Wspaniałe ostrze wykute w kuźniach Niebios, opętane przez dobrego ducha. Jest
@@ -802,11 +796,6 @@ wand of random effects
 
 Magiczny przedmiot który w nieprzewidywalny sposób produkuje efekty
 jakiejkolwiek innej różdżki.
-%%%%
-wand of slowing
-
-Magiczny przedmiot który rzuca czar który spowalnia wszystkie działa istoty na
-którą został skierowany.
 %%%%
 whip
 

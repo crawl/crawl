@@ -2,7 +2,7 @@
 #define SPECIES_H
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);

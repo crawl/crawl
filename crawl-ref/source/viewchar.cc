@@ -19,7 +19,11 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
         U'∆', // WGL4 and DEC
 #endif
          '0', U'φ',  ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(',
-         ':',  '|', '\\',  '}', U'†', U'÷',  '$',  '"', U'§', U'♣', U'©',
+         ':',  '|',
+#if TAG_MAJOR_VERSION == 34
+         '\\',
+#endif
+         '}', U'†', U'÷',  '$',  '"', U'§', U'♣', U'©',
          ' ',  '#',  '*', U'÷',  'X',  '`',  '#',  // space .. explosion
         U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
         '\\', U'┌', U'┐', U'└', U'┘',  'V', U'Λ',  '>',  '<',
@@ -49,7 +53,11 @@ dungeon_char_type dchar_by_name(const string &name)
         "invis_exposed", "item_detected",
         "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
-        "item_staff", "item_rod", "item_miscellany", "item_corpse", "item_skeleton",
+        "item_staff",
+#if TAG_MAJOR_VERSION == 34
+        "item_rod",
+#endif
+        "item_miscellany", "item_corpse", "item_skeleton",
         "item_gold", "item_amulet", "cloud", "tree", "teleporter",
         "space", "fired_bolt", "fired_zap", "fired_burst", "fired_debug",
         "fired_missile", "explosion", "frame_horiz", "frame_vert",

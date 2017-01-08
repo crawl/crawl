@@ -13,19 +13,19 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h" // RU_SAC_XP_LEVELS
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::no_haste
+#include "god-abil.h" // RU_SAC_XP_LEVELS
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::no_haste
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "item_use.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-use.h"
 #include "message.h"
 #include "player-stats.h"
 #include "religion.h"
@@ -382,7 +382,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     }
 
     // Most non-weapon objects can be wielded, though there's rarely a point
-    if (!is_weapon(item) && item.base_type != OBJ_RODS)
+    if (!is_weapon(item))
     {
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
@@ -396,14 +396,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     else if (species == SP_FELID)
     {
         if (!quiet)
-        {
-            mprf("You can't use %s.",
-                 item.base_type == OBJ_RODS ? "rods" : "weapons");
-        }
+            mpr("You can't use weapons.");
         return false;
     }
-    else if (item.base_type == OBJ_RODS)
-        return true;
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...

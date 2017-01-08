@@ -950,7 +950,7 @@ NSUBST: . = 15:M / *:.
 KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
- scroll of acquirement q:1 ident:all, wand of disintegration / \
+ scroll of acquirement q:1 ident:all, wand of digging / \
  wand of iceblast, acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow

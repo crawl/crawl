@@ -13,11 +13,11 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -1283,4 +1283,31 @@ void cleansing_flame(int pow, int caster, coord_def where,
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
+}
+
+spret_type cast_random_effects(int pow, bolt& beam, bool fail)
+{
+    bolt tracer = beam;
+    if (!player_tracer(ZAP_DEBUGGING_RAY, 200, tracer, LOS_RADIUS))
+        return SPRET_ABORT;
+
+    fail_check();
+
+    // Extremely arbitrary list of possible effects.
+    zap_type zap = random_choose(ZAP_THROW_FLAME,
+                                 ZAP_THROW_FROST,
+                                 ZAP_SLOW,
+                                 ZAP_HASTE,
+                                 ZAP_PARALYSE,
+                                 ZAP_CONFUSE,
+                                 ZAP_TELEPORT_OTHER,
+                                 ZAP_INVISIBILITY,
+                                 ZAP_ICEBLAST,
+                                 ZAP_FIREBALL,
+                                 ZAP_BOLT_OF_DRAINING,
+                                 ZAP_VENOM_BOLT);
+
+    zapping(zap, pow, beam, false);
+
+    return SPRET_SUCCESS;
 }

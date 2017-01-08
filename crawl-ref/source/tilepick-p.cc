@@ -7,8 +7,8 @@
 
 #include "artefact.h"
 #include "describe.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
@@ -40,8 +40,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         return TILEP_HAND1_STAFF_LARGE + desc;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (item.base_type == OBJ_RODS)
         return _mon_mod(TILEP_HAND1_ROD_FIRST, item.rnd);
+#endif
 
     if (item.base_type == OBJ_MISCELLANY)
     {
@@ -54,7 +56,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
         case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
 #endif
-        case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
+        case MISC_LIGHTNING_ROD:              return 0;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
 

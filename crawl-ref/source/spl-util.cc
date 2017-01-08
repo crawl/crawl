@@ -19,13 +19,14 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
-#include "godpassive.h"
-#include "godabil.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "god-abil.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -404,7 +405,7 @@ bool del_spell_from_memory(spell_type spell)
         return del_spell_from_memory_by_slot(i);
 }
 
-int spell_hunger(spell_type which_spell, bool rod)
+int spell_hunger(spell_type which_spell)
 {
     if (player_energy())
         return 0;
@@ -420,13 +421,7 @@ int spell_hunger(spell_type which_spell, bool rod)
     else
         hunger = (basehunger[0] * level * level) / 4;
 
-    if (rod)
-    {
-        hunger -= you.skill(SK_EVOCATIONS, 10);
-        hunger = max(hunger, level * 5);
-    }
-    else
-        hunger -= you.skill(SK_SPELLCASTING, you.intel());
+    hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     if (hunger < 0)
         hunger = 0;
@@ -724,7 +719,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     if (number <= 0)
         return;
 
-    targetter_cloud place(agent, GDM, number, number);
+    targeter_cloud place(agent, GDM, number, number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
@@ -1072,16 +1067,13 @@ bool spell_is_form(spell_type spell)
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
- * @param fake_spell Is the spell some other kind of fake spell (such as an
-                     innate or divine ability)?
+ * @param fake_spell Is the spell evoked, or from an innate or divine ability?
  * @return           Whether the given spell has no chance of being useful.
  */
-bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
+bool spell_is_useless(spell_type spell, bool temp, bool prevent,
                       bool fake_spell)
 {
-    return spell_uselessness_reason(spell, temp, prevent,
-                                    evoked, fake_spell) != "";
+    return spell_uselessness_reason(spell, temp, prevent, fake_spell) != "";
 }
 
 /**
@@ -1093,23 +1085,21 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent, bool evoked,
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param evoked     Is the spell being evoked from an item? (E.g., a rod)
- * @param fake_spell Is the spell some other kind of fake spell (such as an
-                     innate or divine ability)?
+ * @param fake_spell Is the spell evoked, or from an innate or divine ability?
  * @return           The reason a spell is useless to the player, if it is;
  *                   "" otherwise. The string should be a full clause, but
  *                   begin with a lowercase letter so callers can put it in
  *                   the middle of a sentence.
  */
 string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
-                                bool evoked, bool fake_spell)
+                                bool fake_spell)
 {
     if (temp)
     {
         if (!fake_spell && you.duration[DUR_CONF] > 0)
             return "you're too confused.";
         if (!enough_mp(spell_mana(spell), true, false)
-            && !evoked && !fake_spell)
+            && !fake_spell)
         {
             return "you don't have enough magic.";
         }
@@ -1118,12 +1108,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     }
 
     // Check for banned schools (Currently just Ru sacrifices)
-    if (!fake_spell && !evoked
-        && cannot_use_schools(get_spell_disciplines(spell)))
-    {
+    if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
-    }
-
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
@@ -1353,6 +1339,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_CORPSE_ROT:
+    case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
@@ -1362,7 +1349,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (player_on_orb_run())
+        if (orb_limits_translocation())
             return "the Orb prevents this spell from working.";
 
     default:
@@ -1386,15 +1373,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
  * @param spell           The type of spell to be coloured.
  * @param default_colour   Colour to be used if the spell is unremarkable.
  * @param transient       If true, check if spell is temporarily useless.
- * @param rod_spell       If the spell being evoked from a rod.
  * @return                The colour to highlight the spell.
  */
 int spell_highlight_by_utility(spell_type spell, int default_colour,
-                               bool transient, bool rod_spell)
+                               bool transient)
 {
-    // If your god hates the spell, that
-    // overrides all other concerns
-    if (god_hates_spell(spell, you.religion, rod_spell)
+    // If your god hates the spell, that overrides all other concerns.
+    if (god_hates_spell(spell, you.religion)
         || is_good_god(you.religion) && you.spellcasting_unholy())
     {
         return COL_FORBIDDEN;
@@ -1406,9 +1391,9 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
     return default_colour;
 }
 
-bool spell_no_hostile_in_range(spell_type spell, bool rod)
+bool spell_no_hostile_in_range(spell_type spell)
 {
-    const int range = calc_spell_range(spell, 0, rod);
+    const int range = calc_spell_range(spell, 0);
     const int minRange = get_dist_to_nearest_monster();
     switch (spell)
     {
@@ -1438,7 +1423,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     {
-        targetter_cloud tgt(&you, range);
+        targeter_cloud tgt(&you, range);
         // Accept monsters that are in clouds for the hostiles-in-range check
         // (not for actual targeting).
         tgt.avoid_clouds = false;
@@ -1490,7 +1475,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     if (zap != NUM_ZAPS)
     {
         beam.thrower = KILL_YOU_MISSILE;
-        zappy(zap, calc_spell_power(spell, true, false, true, rod), false,
+        zappy(zap, calc_spell_power(spell, true, false, true), false,
               beam);
         if (spell == SPELL_MEPHITIC_CLOUD)
             beam.damage = dice_def(1, 1); // so that foe_info is populated

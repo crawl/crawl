@@ -32,16 +32,16 @@
 #include "exercise.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "godprayer.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-prayer.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "maps.h"
@@ -315,6 +315,8 @@ static const ability_def Ability_List[] =
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
 
+    { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::NONE },
+
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
     // so we have to distinguish them (see above). The off items
@@ -448,13 +450,13 @@ static const ability_def Ability_List[] =
     { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
       1, 0, 0, 10, {FAIL_INVO, 30, 6, 20}, abflag::NONE },
     { ABIL_LUGONU_BEND_SPACE, "Bend Space",
-      1, 0, 0, 0, {FAIL_INVO, 40, 5, 20}, abflag::PAIN },
+      1, scaling_cost::fixed(2), 0, 0, {FAIL_INVO, 40, 5, 20}, abflag::NONE },
     { ABIL_LUGONU_BANISH, "Banish", 4, 0, 200, generic_cost::range(3, 4),
       {FAIL_INVO, 85, 7, 20}, abflag::NONE },
     { ABIL_LUGONU_CORRUPT, "Corrupt", 7, scaling_cost::fixed(5), 500, 10,
       {FAIL_INVO, 70, 4, 25}, abflag::NONE },
-    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 9, 0, 500,
-      generic_cost::fixed(35), {FAIL_INVO, 80, 4, 25}, abflag::PAIN },
+    { ABIL_LUGONU_ABYSS_ENTER, "Enter the Abyss", 10, 0, 500, 28,
+      {FAIL_INVO, 80, 4, 25}, abflag::PAIN },
     { ABIL_LUGONU_BLESS_WEAPON, "Brand Weapon With Distortion", 0, 0, 0, 0,
       {FAIL_INVO}, abflag::NONE },
 
@@ -474,7 +476,7 @@ static const ability_def Ability_List[] =
     { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_BEOGH_RESURRECTION, "Resurrection",
-      0, 0, 0, generic_cost::fixed(35), {FAIL_INVO}, abflag::NONE },
+      0, 0, 0, 28, {FAIL_INVO}, abflag::NONE },
 
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly",
@@ -916,18 +918,13 @@ ability_type fixup_ability(ability_type ability)
     {
     case ABIL_YRED_ANIMATE_REMAINS:
         // suppress animate remains once animate dead is unlocked (ugh)
-        if (player_mutation_level(MUT_NO_LOVE)
-            || in_good_standing(GOD_YREDELEMNUL, 2))
-        {
+        if (in_good_standing(GOD_YREDELEMNUL, 2))
             return ABIL_NON_ABILITY;
-        }
         return ability;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        if (player_mutation_level(MUT_NO_LOVE))
-            return ABIL_NON_ABILITY;
-        else if (!you.recall_list.empty())
+        if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
         return ability;
 
@@ -963,8 +960,6 @@ ability_type fixup_ability(ability_type ability)
             return ability;
 
     case ABIL_ELYVILON_HEAL_OTHER:
-    case ABIL_YRED_ANIMATE_DEAD:
-    case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
@@ -1812,6 +1807,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
+    case ABIL_HOP:
+        if (you.duration[DUR_NO_HOP])
+        {
+            mpr("Your legs are too worn out to hop.");
+            return SPRET_ABORT;
+        }
+        return frog_hop(fail);
+
     case ABIL_DELAYED_FIREBALL:
     {
         fail_check();
@@ -1819,7 +1822,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         int power = calc_spell_power(SPELL_DELAYED_FIREBALL, true);
         beam.range = spell_range(SPELL_FIREBALL, power);
 
-        targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
+        targeter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
 
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
@@ -1859,7 +1862,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_BREATHE_ACID:       // Draconian acid splash
     {
         beam.range = _calc_breath_ability_range(abil.ability);
-        targetter_splash hitfunc(&you, beam.range);
+        targeter_splash hitfunc(&you, beam.range);
         direction_chooser_args args;
         args.mode = TARG_HOSTILE;
         args.hitfunc = &hitfunc;
@@ -2033,7 +2036,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (your_spells(SPELL_HURL_DAMNATION,
                         you.experience_level * 10,
-                        false, false, true) == SPRET_ABORT)
+                        false) == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
@@ -2193,7 +2196,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TSO_CLEANSING_FLAME:
     {
-        targetter_los hitfunc(&you, LOS_SOLID, 2);
+        targeter_los hitfunc(&you, LOS_SOLID, 2);
         {
             if (stop_attack_prompt(hitfunc, "harm", _cleansing_flame_affects))
                 return SPRET_ABORT;
@@ -2596,10 +2599,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         // Deflate HP.
         dec_hp(random2avg(you.hp, 2), false);
 
-        // Deflate MP.
-        if (you.magic_points)
-            dec_mp(random2avg(you.magic_points, 2));
-
         no_notes nx; // This banishment shouldn't be noted.
         banished();
         break;
@@ -2636,7 +2635,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         if (your_spells(SPELL_SMITING,
                         12 + skill_bump(SK_INVOCATIONS, 6),
-                        false, false, true) == SPRET_ABORT)
+                        false, nullptr) == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
@@ -2977,7 +2976,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_PAKELLAS_SUPERCHARGE:
     {
         fail_check();
-        simple_god_message(" will supercharge a wand or rod.");
+        simple_god_message(" will supercharge a wand.");
         // included in default force_more_message
 
         int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,
@@ -3004,18 +3003,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        if (wand.base_type == OBJ_RODS)
-        {
-            wand.charge_cap = wand.charges =
-                (MAX_ROD_CHARGE + 1) * ROD_CHARGE_MULT;
-            wand.rod_plus = MAX_WPN_ENCHANT + 1;
-        }
-        else
-        {
-            set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
-            wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
-            wand.used_count = ZAPCOUNT_RECHARGED;
-        }
+        set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
+        wand.charges = 9 * wand_charge_value(wand.sub_type) / 2;
+        wand.used_count = ZAPCOUNT_RECHARGED;
 
         wand.props[PAKELLAS_SUPERCHARGE_KEY].get_bool() = true;
         you.wield_change = true;
@@ -3359,6 +3349,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
             _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
     }
+
+    if (player_mutation_level(MUT_HOP))
+        _add_talent(talents, ABIL_HOP, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (player_mutation_level(MUT_SPIT_POISON) == 2)

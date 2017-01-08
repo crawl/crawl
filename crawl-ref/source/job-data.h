@@ -45,7 +45,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_ARCANE_MARKSMAN, {
     "AM", "Arcane Marksman",
-    3, 5, 4,
+    2, 5, 5,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_TROLL, SP_CENTAUR, },
     { "robe", "book of Debilitation" },
     WCHOICE_RANGED,
@@ -123,7 +123,7 @@ static const map<job_type, job_def> job_data =
     "En", "Enchanter",
     0, 7, 5,
     { SP_DEEP_ELF, SP_FELID, SP_KOBOLD, SP_SPRIGGAN, SP_NAGA, SP_VAMPIRE, },
-    { "dagger plus:1", "robe plus:1", "book of Maledictions" },
+    { "dagger plus:1", "robe", "book of Maledictions" },
     WCHOICE_NONE,
     { { SK_WEAPON, 1 }, { SK_HEXES, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 3 }, },
@@ -152,7 +152,7 @@ static const map<job_type, job_def> job_data =
 
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
-    7, 0, 5,
+    6, 0, 6,
     { SP_DEEP_DWARF, SP_HILL_ORC, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE,
       SP_CENTAUR, },
     { "leather armour", "helmet", "throwing net q:3" },
@@ -206,11 +206,11 @@ static const map<job_type, job_def> job_data =
 
 { JOB_SKALD, {
     "Sk", "Skald",
-    4, 4, 4,
+    3, 5, 4,
     { SP_HALFLING, SP_CENTAUR, SP_MERFOLK, SP_BASE_DRACONIAN, SP_VAMPIRE, },
     { "leather armour", "book of Battle" },
     WCHOICE_PLAIN,
-    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
+    { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_CHARMS, 3 }, { SK_WEAPON, 2 }, },
 } },
 
@@ -243,8 +243,8 @@ static const map<job_type, job_def> job_data =
       SP_DEMONSPAWN, },
     { "robe", "Young Poisoner's Handbook" },
     WCHOICE_NONE,
-    { { SK_POISON_MAGIC, 4 }, { SK_SPELLCASTING, 2 }, { SK_DODGING, 2 },
-      { SK_STEALTH, 2 }, },
+    { { SK_CONJURATIONS, 1 }, { SK_POISON_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
+      { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
 { JOB_WANDERER, {

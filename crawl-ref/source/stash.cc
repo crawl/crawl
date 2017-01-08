@@ -22,10 +22,10 @@
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "menu.h"
@@ -178,9 +178,8 @@ Stash::Stash(coord_def pos_) : items()
 bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
     const bool same = a.is_type(b.base_type, b.sub_type)
-        // Ignore Gozag's gold flag, and rod charges.
-        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
-                             || a.base_type == OBJ_RODS && !exact)
+        // Ignore Gozag's gold flag.
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.get_colour() == b.get_colour() // ????????

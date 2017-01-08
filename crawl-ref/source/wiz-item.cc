@@ -18,9 +18,9 @@
 #include "dbg-util.h"
 #include "decks.h"
 #include "env.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -99,8 +99,8 @@ void wizard_create_spec_object()
     do
     {
         mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
-        mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   \\  - rods");
-        mprf(MSGCH_PROMPT, "} - miscellany  X - corpses   %% - food    $ - gold     0  - the Orb");
+        mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   }  - miscellany");
+        mprf(MSGCH_PROMPT, "X - corpses     %% - food      $ - gold    0  - the Orb");
         mprf(MSGCH_PROMPT, "ESC - exit");
 
         msgwin_prompt("What class of item? ");
@@ -671,7 +671,7 @@ void wizard_make_object_randart()
 static bool _item_type_can_be_cursed(int type)
 {
     return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-           || type == OBJ_STAVES || type == OBJ_RODS;
+           || type == OBJ_STAVES;
 }
 
 void wizard_uncurse_item()
@@ -767,7 +767,7 @@ static int _subtype_index(int acq_type, const item_def &item)
     switch (acq_type)
     {
         case OBJ_MISCELLANY:
-            if (item.base_type == OBJ_RODS)
+            if (item.base_type == OBJ_WANDS)
                 return NUM_MISCELLANY + item.sub_type;
             break;
         case OBJ_STAVES:
@@ -790,7 +790,7 @@ static void _fill_item_from_subtype(object_class_type acq_type, int subtype,
         case OBJ_MISCELLANY:
             if (subtype >= NUM_MISCELLANY)
             {
-                item.base_type = OBJ_RODS;
+                item.base_type = OBJ_WANDS;
                 item.sub_type = subtype - NUM_MISCELLANY;
                 return;
             }
@@ -822,8 +822,8 @@ static void _debug_acquirement_stats(FILE *ostat)
     mitm[p].base_type = OBJ_UNASSIGNED;
 
     clear_messages();
-    mpr("[a] Weapons [b] Armours [c] Jewellery      [d] Books");
-    mpr("[e] Staves  [f] Wands   [g] Miscellaneous  [h] Food");
+    mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
+    mpr("[e] Staves  [f] Evocables [g] Food");
     mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
     object_class_type type;
@@ -835,9 +835,8 @@ static void _debug_acquirement_stats(FILE *ostat)
     case 'c': type = OBJ_JEWELLERY;  break;
     case 'd': type = OBJ_BOOKS;      break;
     case 'e': type = OBJ_STAVES;     break;
-    case 'f': type = OBJ_WANDS;      break;
-    case 'g': type = OBJ_MISCELLANY; break;
-    case 'h': type = OBJ_FOOD;       break;
+    case 'f': type = OBJ_MISCELLANY; break;
+    case 'g': type = OBJ_FOOD;       break;
     default:
         canned_msg(MSG_OK);
         return;
@@ -889,7 +888,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         acq_calls++;
         total_quant += item.quantity;
         // hack alert: put unrands into the end of staff acq
-        // and rods into the end of misc acq
+        // and wands into the end of misc acq
         const int subtype_index = _subtype_index(type, item);
         subtype_quants[subtype_index] += item.quantity;
 
@@ -1627,4 +1626,22 @@ void wizard_unidentify_all_items()
     }
 }
 
+void wizard_recharge_evokers()
+{
+    for (int i = 0; i < NUM_MISCELLANY; ++i)
+    {
+        item_def dummy;
+        dummy.base_type = OBJ_MISCELLANY;
+        dummy.sub_type = i;
+
+        if (!is_xp_evoker(dummy))
+            continue;
+
+        evoker_debt(dummy.sub_type) = 0;
+
+        if (dummy.sub_type == MISC_LIGHTNING_ROD)
+            you.props["thunderbolt_charge"].get_int() = 0;
+    }
+    mpr("Evokers recharged.");
+}
 #endif

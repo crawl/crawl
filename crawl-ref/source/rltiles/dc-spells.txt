@@ -113,6 +113,7 @@ poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
+poisonous_vapours POISONOUS_VAPOURS
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
@@ -160,17 +161,12 @@ dragon_form DRAGON_FORM
 # item-based spells
 %sdir gui/spells/misc
 paralyse PARALYSE
-bolt_inacc BOLT_OF_INACCURACY
 bolt_thunder THUNDERBOLT
-bolt_explosive EXPLOSIVE_BOLT
 cloud_cone CLOUD_CONE
 bolt_random RANDOM_BOLT
 scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
-%sdir gui/spells/summoning
-summon_shadow_creatures WEAVE_SHADOWS
-
 
 # spells normally only used by monsters
 %sdir gui/spells/monster

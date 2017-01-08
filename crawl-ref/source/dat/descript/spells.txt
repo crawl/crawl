@@ -187,12 +187,6 @@ Bolt of Fire spell
 
 Fires a penetrating bolt of flames.
 %%%%
-Bolt of Inaccuracy spell
-
-Fires a penetrating bolt of incandescent energy which inflicts enormous damage
-upon any creature it strikes. Unfortunately, it is very difficult to aim and
-rarely hits anything. Pity, that.
-%%%%
 Bolt of Magma spell
 
 Fires a penetrating bolt of molten rock. A portion of its damage bypasses
@@ -541,7 +535,7 @@ Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Energy Bolt spell
 
-Fires a beam of highly destructive energy. It can blow rock into pieces.
+Fires a bolt of highly destructive energy.
 %%%%
 Enslavement spell
 
@@ -564,11 +558,6 @@ Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain
 itself. It will not affect artefact weapons.
-%%%%
-Explosive Bolt spell
-
-Fires a bolt containing fiery energy; on piercing a target, it lets loose an
-explosion that harms nearby creatures as well.
 %%%%
 Flay spell
 
@@ -949,6 +938,10 @@ Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
+Poisonous Vapours spell
+
+Turns the air around the target poisonous.
+%%%%
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
@@ -1062,7 +1055,7 @@ each missile. Teleported projectiles have their accuracy greatly increased.
 %%%%
 Primal Wave spell
 
-Conjures a great wave of water that may knock back the target, and creates a
+Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
 Quicksilver Bolt spell
@@ -1132,7 +1125,7 @@ Searing Ray spell
 Fires a continuous ray of arcane energy from the caster's hands. Though
 initially mild, so long as the caster maintains focus upon the spell and
 supplies it with magical power (by waiting in place and not taking any other
-actions), the ray will grow in strength until it becomes a surging beam able to
+actions), the ray will grow in strength until it becomes a surging bolt able to
 tear clean through the ranks of the caster's foes.
 %%%%
 Searing Breath spell
@@ -1610,11 +1603,6 @@ Waterstrike spell
 
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
-%%%%
-Weave Shadows spell
-
-Weaves a creature from shadows and threads of Abyssal matter. More powerful
-creatures are summoned with higher power.
 %%%%
 Wind Blast spell
 

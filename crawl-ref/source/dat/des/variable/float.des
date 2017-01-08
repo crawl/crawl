@@ -109,7 +109,7 @@ KITEM:  " = club, quarterstaff, quarterstaff good_item
 : else
 KITEM:  " = club, quarterstaff, quarterstaff
 : end
-KITEM:  ' = club, any magical staff / any rod w:1
+KITEM:  ' = club, any magical staff
 MAP
 xxxxx
 x"']x
@@ -2243,23 +2243,23 @@ SHUFFLE: {[(
 SUBST:   ( = (:70 <, [ = [:50 <
 MAP
   '''''''''''''''''
-  ''''''cnnnc''''''
+  ''''''ccccc''''''
 ''''ccccc.}.ccccc''''
 '''cc%.c..4..c.%cc'''
 ''cc%..+.cnc.+..%cc''
 ''c%.3%cnc6cnc%3.%c''
 ''c..%cc.....cc%..c''
 ''cc+cc.......cc+cc''
-'cc..n.........n..cc'
-'n..cc....<....cc..n'
-'n.1n2...[{(...2n1.n'
-'n..cc....>....cc..n'
-'cc..n.........n..cc'
+'cc..c.........c..cc'
+'n..+c....<....c+..n'
+'n.1+2...[{(...2+1.n'
+'n..+c....>....c+..n'
+'cc..c.........c..cc'
 ''cc+cc.......cc+cc''
 ''c..*cc.....cc*..c''
-''c*55*ccc.ccc*55*c''
-''cc*54n.+++.n45*cc''
-'''cc*.n..2..n.*cc'''
+''c*55*cnc.cnc*55*c''
+''cc*54+.cnc.+45*cc''
+'''cc*.+..2..+.*cc'''
 ''''ccccc...ccccc''''
   ''''..c+++c..''''
   ''''.........''''
@@ -2997,8 +2997,7 @@ TAGS:    transparent patrolling
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
 MONS:    necromancer ; wand of iceblast . \
-         staff of fire w:15 | quarterstaff ego:flaming w:14 | \
-         rod of ignition w:1 ident:type . \
+         staff of fire w:15 | quarterstaff ego:flaming w:15 . \
          robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
          robe ego:resistance w:1
 MONS:    necromancer ; wand of lightning . \
@@ -3187,8 +3186,8 @@ ORIENT: float
 MONS:   raiju / sixfirhy w:2
 KMONS:  2 = shock serpent / storm dragon
 ITEM:   book of air / book of the sky / manual of air magic / \
-        lightning rod ident:type / staff of air ident:type / \
-        disc of storms / fan of gales / storm dragon scales w:5
+        staff of air ident:type / lightning rod w:15 / fan of gales w:15 / \
+        storm dragon scales w:5
 : if you.unrands("arc blade") then
 KITEM:  2 = quick blade ego:electrocution randart ident:type
 : else
@@ -3219,9 +3218,8 @@ ORIENT: float
 MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
 ITEM:   book of geomancy / book of the earth / manual of earth magic / \
-        iron rod ident:type / staff of earth ident:type / \
-        ring of protection ident:type / wand of disintegration ident:type / \
-        crystal plate armour w:5
+        staff of earth ident:type / ring of protection ident:type / \
+        wand of scattershot ident:type / crystal plate armour w:5
 : if you.unrands("devastator") then
 KITEM:  2 = eveningstar randart
 : else
@@ -3288,8 +3286,8 @@ ORIENT: float
 MONS:   fire bat
 KMONS:  2 = fire giant / fire dragon
 ITEM:   book of flames / book of fire / manual of fire magic / \
-        rod of ignition ident:type / staff of fire ident:type / \
-        ring of fire ident:type / lamp of fire / fire dragon scales w:5
+        staff of fire ident:type / ring of fire ident:type / lamp of fire / \
+        fire dragon scales w:5
 : if you.unrands("firestarter") then
 KITEM:  2 = great mace ego:flaming randart ident:type
 : else
@@ -3656,7 +3654,7 @@ MONS: spark wasp
 MONS: w:5 anaconda / black mamba / water moccasin, mana viper, shock serpent
 : end
 ITEM: w:60 star_item / crystal ball of energy / staff of air / \
-      staff of energy / disc of storms / lightning rod / fan of gales
+      staff of energy / lightning rod w:15  / fan of gales w:15
 NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
 MAP
 @...........

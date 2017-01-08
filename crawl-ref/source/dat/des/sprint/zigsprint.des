@@ -800,7 +800,7 @@ KITEM:    T = piercer ident:all, \
               plutonium_sword ident:all, \
               devastator ident:all, \
               firestarter ident:all
-KITEM:    S = disc of storms ident:all
+KITEM:    S = lightning rod ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta

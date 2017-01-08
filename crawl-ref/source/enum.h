@@ -247,7 +247,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // Barachians
+    ABIL_HOP,
+    ABIL_MAX_INTRINSIC = ABIL_HOP,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1430,7 +1432,9 @@ enum dungeon_char_type
     DCHAR_ITEM_MISSILE,
     DCHAR_ITEM_BOOK,
     DCHAR_ITEM_STAFF,
+#if TAG_MAJOR_VERSION == 34
     DCHAR_ITEM_ROD,
+#endif
     DCHAR_ITEM_MISCELLANY,
     DCHAR_ITEM_CORPSE,
     DCHAR_ITEM_SKELETON,
@@ -1919,6 +1923,7 @@ enum duration_type
     DUR_SPWPN_PROTECTION,
     DUR_IEOH_JIAN_PROJECTION,
     DUR_IEOH_JIAN_DIVINE_BLADE,
+    DUR_NO_HOP,
     NUM_DURATIONS
 };
 
@@ -2613,6 +2618,7 @@ enum monster_type                      // menv[].type
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
+    MONS_BARACHIAN,
     MONS_BEAR,                  // genus
 #endif
     MONS_GRIZZLY_BEAR,
@@ -3558,6 +3564,7 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
+    MONS_BARACHIAN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3801,7 +3808,7 @@ enum mutation_type
     MUT_EXOSKELETON,
 #endif
     MUT_ANTIMAGIC_BITE,
-    MUT_NO_DEVICE_HEAL,
+    MUT_NO_POTION_HEAL,
 #if TAG_MAJOR_VERSION == 34
     MUT_COLD_VULNERABILITY,
     MUT_HEAT_VULNERABILITY,
@@ -3863,6 +3870,7 @@ enum mutation_type
     MUT_STURDY_FRAME,
     MUT_SANGUINE_ARMOUR,
 #endif
+    MUT_HOP,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3892,7 +3900,9 @@ enum object_class_type : uint8_t           // mitm[].base_type
     OBJ_MISCELLANY,
     OBJ_CORPSES,
     OBJ_GOLD,
+#if TAG_MAJOR_VERSION == 34
     OBJ_RODS,
+#endif
     OBJ_RUNES,
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,
@@ -4267,6 +4277,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_BARACHIAN,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,
@@ -4319,7 +4330,9 @@ enum spell_type : int
 #endif
     SPELL_BOLT_OF_DRAINING,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+#if TAG_MAJOR_VERSION == 34
     SPELL_BOLT_OF_INACCURACY,
+#endif
     SPELL_POISONOUS_CLOUD,
     SPELL_FIRE_STORM,
     SPELL_BLINK,
@@ -4614,7 +4627,9 @@ enum spell_type : int
     SPELL_IGNITE_POISON_SINGLE,
 #endif
     SPELL_ORB_OF_ELECTRICITY,
+#if TAG_MAJOR_VERSION == 34
     SPELL_EXPLOSIVE_BOLT,
+#endif
     SPELL_FLASH_FREEZE,
     SPELL_LEGENDARY_DESTRUCTION,
 #if TAG_MAJOR_VERSION == 34
@@ -4643,7 +4658,9 @@ enum spell_type : int
     SPELL_SUMMON_GUARDIAN_GOLEM,
     SPELL_RANDOM_BOLT,
     SPELL_CLOUD_CONE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_WEAVE_SHADOWS,
+#endif
     SPELL_DRAGON_CALL,
     SPELL_SPELLFORGED_SERVITOR,
 #if TAG_MAJOR_VERSION == 34
@@ -4719,6 +4736,8 @@ enum spell_type : int
     SPELL_DREAM_DUST,
     SPELL_BECKONING,
     SPELL_UPHEAVAL,
+    SPELL_RANDOM_EFFECTS,
+    SPELL_POISONOUS_VAPOURS,
     NUM_SPELLS
 };
 
@@ -4832,7 +4851,6 @@ enum zap_type
     ZAP_VENOM_BOLT,
     ZAP_BOLT_OF_DRAINING,
     ZAP_LEHUDIBS_CRYSTAL_SPEAR,
-    ZAP_BOLT_OF_INACCURACY,
     ZAP_ISKENDERUNS_MYSTIC_BLAST,
     ZAP_ENSLAVEMENT,
     ZAP_PAIN,
@@ -4877,7 +4895,6 @@ enum zap_type
     ZAP_SEARING_RAY_I,
     ZAP_SEARING_RAY_II,
     ZAP_SEARING_RAY_III,
-    ZAP_EXPLOSIVE_BOLT,
     ZAP_CRYSTAL_BOLT,
     ZAP_TUKIMAS_DANCE,
     ZAP_QUICKSILVER_BOLT,
@@ -5156,12 +5173,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_DEMON_3    = 0x600000000ULL,
     TILE_FLAG_DEMON_2    = 0x800000000ULL,
     TILE_FLAG_DEMON_1    = 0xE00000000ULL,
-
-    // 3 mutually exclusive flags for mimics.
-    TILE_FLAG_MIMIC_INEPT = 0x2000000000ULL,
-    TILE_FLAG_MIMIC       = 0x4000000000ULL,
-    TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
-    TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
 
     //// Background flags
 

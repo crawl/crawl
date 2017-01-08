@@ -19,12 +19,12 @@
 #include "art-enum.h"
 #include "dungeon.h"
 #include "food.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -646,18 +646,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
-{
-    int result;
-    do
-    {
-        result = random2(NUM_RODS);
-    }
-    while (player_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
-           || item_type_removed(OBJ_RODS, result));
-    return result;
-}
-
 /**
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
@@ -686,14 +674,14 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         {MISC_PHANTOM_MIRROR,
                                        (NO_LOVE ?     0 :  7)},
         // The player never needs more than one.
-        {MISC_DISC_OF_STORMS,
-            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 13)},
+        {MISC_LIGHTNING_ROD,
+            (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
         {MISC_LAMP_OF_FIRE,
-            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 18)},
+            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
         {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 18)},
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 17)},
         {MISC_FAN_OF_GALES,
-            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 18)},
+            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
     };
 
     const int * const choice = random_choose_weighted(choices);
@@ -712,8 +700,10 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
  */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // basic total: 75
+    // basic total: 120
     vector<pair<wand_type, int>> weights = {
+        { WAND_SCATTERSHOT,     20 },
+        { WAND_CLOUDS,          20 },
         { WAND_LIGHTNING,       16 },
         { WAND_ACID,            16 },
         { WAND_ICEBLAST,        16 },
@@ -725,7 +715,6 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         { WAND_CONFUSION,       3 },
         { WAND_RANDOM_EFFECTS,  3 },
         { WAND_FLAME,           1 },
-        { WAND_SLOWING,         1 },
     };
 
     // Unknown wands get a huge weight bonus.
@@ -755,7 +744,9 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_misc_subtype,
     0, // no corpses
     0, // gold handled elsewhere, and doesn't have subtypes anyway
-    _acquirement_rod_subtype,
+#if TAG_MAJOR_VERSION == 34
+    0, // no rods
+#endif
     0, // no runes either
 };
 
@@ -775,14 +766,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Wands, rods, and misc have a common acquirement class.
+        // Wands and misc have a common acquirement class.
         if (class_wanted == OBJ_MISCELLANY)
-        {
-            if (one_chance_in(8) && you.species != SP_FELID)
-                class_wanted = OBJ_RODS;
-            else
-                class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
-        }
+            class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -1238,7 +1224,7 @@ int acquirement_create_item(object_class_type class_wanted,
             type_wanted = _useless_armour_type();
         else
         {
-            // This may clobber class_wanted (e.g. staves/rods, or vampire food)
+            // This may clobber class_wanted (e.g. staves or vampire food)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
         }
@@ -1447,6 +1433,8 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
+    item_set_appearance(mitm[thing_created]); // cleanup
+
     ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
     ASSERT(!god_hates_item(mitm[thing_created]));
 
@@ -1488,7 +1476,6 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_MISSILES);
         bad_class.set(OBJ_ARMOUR);
         bad_class.set(OBJ_STAVES);
-        bad_class.set(OBJ_RODS);
     }
     if (player_mutation_level(MUT_NO_ARTIFICE))
         bad_class.set(OBJ_MISCELLANY);

@@ -10,7 +10,7 @@
 
 #include "acquire.h"
 #include "decks.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "libutil.h"
 #include "state.h"
 #include "unwind.h"

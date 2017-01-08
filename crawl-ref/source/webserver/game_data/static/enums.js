@@ -223,14 +223,6 @@ define(function () {
         DEMON_1    : [0, 0x0E],
     });
 
-    // Mimics, 2 bits.
-    fg_flags.exclusive_flags.push({
-        mask        : [0, 0x60],
-        MIMIC_INEPT : [0, 0x20],
-        MIMIC       : [0, 0x40],
-        MIMIC_RAVEN : [0, 0x60],
-    });
-
     fg_flags.mask             = 0x0000FFFF;
 
     // Background flags

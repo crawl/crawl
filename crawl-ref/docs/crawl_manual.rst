@@ -1624,6 +1624,16 @@ Felids
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
 
+Barachians
+  Barachians are an amphibious humanoid race, said to be distantly related to
+  the Elves. Spawned in great numbers beneath the southern ice, their
+  Mother-Father sends them forth to destroy and pillage the civilized lands.
+
+  Barachians' most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap remarkable distances. When not leaping, they are somewhat
+  slow-moving and their attributes are poor, but they do have considerable
+  flexibility in skill choice.
+
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
   humans and yet retain the ability to swim underwater, although their dual
@@ -1719,7 +1729,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use

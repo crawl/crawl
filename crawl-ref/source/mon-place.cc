@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "mon-place.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 
 #include <algorithm>
 
@@ -24,8 +24,8 @@
 #include "errors.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::slow_abyss, slow_orb_run
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -1640,12 +1640,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             // If this is a band member created by shadow creatures, link its
             // ID and don't count it against the summon cap
-            if ((mg.summon_type == SPELL_SHADOW_CREATURES
-                 || mg.summon_type == SPELL_WEAVE_SHADOWS)
-                 && leader)
-            {
+            if (mg.summon_type == SPELL_SHADOW_CREATURES && leader)
                 mon->props["summon_id"].get_int() = leader->mid;
-            }
             else
             {
                 summoned_monster(mon, mg.summoner,
@@ -3096,7 +3092,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(dummy);
 
-    return actor_cloud_immune(&dummy, *cloud);
+    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
@@ -3118,7 +3114,7 @@ conduct_type player_will_anger_monster(monster_type type)
  * why?
  *
  * XXX: this should ideally return a list of conducts that can be filtered by
- *      callers by god; we're duplicating godconduct.cc right now.
+ *      callers by god; we're duplicating god-conduct.cc right now.
  *
  * @param mon   The monster in question.
  * @return      The reason the player's religion conflicts with the monster

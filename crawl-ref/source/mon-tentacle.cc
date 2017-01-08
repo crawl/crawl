@@ -14,7 +14,7 @@
 #include "fprop.h"
 #include "libutil.h" // map_find
 #include "losglobal.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h"

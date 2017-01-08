@@ -585,6 +585,10 @@ balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
+barachian
+
+An amphibious humanoid with a very ugly attitude.
+%%%%
 basilisk
 
 A crested lizard of middling size with a terrible petrifying gaze.

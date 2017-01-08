@@ -7,7 +7,7 @@
 #define BRANCH_H
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "player.h"
 
 #define BRANCH_NOISE_AMOUNT 6

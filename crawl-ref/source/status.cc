@@ -8,9 +8,9 @@
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "god-passive.h"
+#include "item-prop.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"

@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "exclude.h"
-#include "travel_defs.h"
+#include "travel-defs.h"
 
 class reader;
 class writer;

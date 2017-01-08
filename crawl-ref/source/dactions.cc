@@ -12,7 +12,7 @@
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
-#include "godcompanions.h" // hepliaklqana_ancestor
+#include "god-companions.h" // hepliaklqana_ancestor
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"

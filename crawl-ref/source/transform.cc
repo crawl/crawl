@@ -16,13 +16,13 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::resist_polymorph
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::resist_polymorph
 #include "invent.h" // check_old_item_warning
-#include "item_use.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-use.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "message.h"
 #include "mon-death.h"
@@ -1218,7 +1218,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
         {
             if (form_can_wield(you.form))
                 unequip = true;
-            if (!is_weapon(*equip) && equip->base_type != OBJ_RODS)
+            if (!is_weapon(*equip))
                 unequip = true;
         }
 
@@ -1396,7 +1396,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
             continue;
         item_info inf = get_item_info(*item);
 
-        //similar code to safe_to_remove from item_use.cc
+        //similar code to safe_to_remove from item-use.cc
         if (inf.is_type(OBJ_JEWELLERY, RING_FLIGHT))
             sources_removed++;
         if (inf.base_type == OBJ_ARMOUR && inf.brand == SPARM_FLYING)

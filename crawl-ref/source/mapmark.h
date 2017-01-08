@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "clua.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers

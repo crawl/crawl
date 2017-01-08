@@ -14,7 +14,7 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -24,9 +24,10 @@
 #include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-zap.h"
 #include "stash.h"
@@ -455,7 +456,7 @@ static bool _is_appropriate_evokable(const item_def& item,
     if (item.sub_type == WAND_RANDOM_EFFECTS)
         return true;
 
-    spell_type spell = zap_to_spell(item.zap());
+    spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
 
     return _is_appropriate_spell(spell, target);
 }

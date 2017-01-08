@@ -3,7 +3,7 @@
  */
 
 #include "defines.h"
-#include "godpassive.h"
+#include "god-passive.h"
 
 static void _end_weapon_brand()
 {
@@ -290,7 +290,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Sil",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your hearing returns." }}, 5 },
+      {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
@@ -557,6 +557,10 @@ static const duration_def duration_data[] =
     { DUR_IEOH_JIAN_DIVINE_BLADE, 0, "", "divine blade", "",
       "", D_NO_FLAGS,
       {{ "", _end_divine_blade }}},
+    { DUR_NO_HOP, YELLOW, "-Hop",
+      "can't hop", "",
+      "", D_NO_FLAGS,
+      {{ "You are ready to hop once more." }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
     { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,

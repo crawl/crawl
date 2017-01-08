@@ -7,7 +7,7 @@
 #define DELAY_H
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 class monster;
 struct ait_hp_loss;

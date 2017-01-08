@@ -10,8 +10,8 @@
 #include <vector>
 
 #include "enum.h"
-#include "itemname.h"
-#include "itemprop-enum.h"
+#include "item-name.h"
+#include "item-prop-enum.h"
 #include "menu.h"
 
 enum object_selector

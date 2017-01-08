@@ -75,30 +75,30 @@
 #include "fineff.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "luaterp.h"
-#include "lookup_help.h"
+#include "lookup-help.h"
 #include "macro.h"
 #include "makeitem.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -146,7 +146,7 @@
  #include "tiledef-dngn.h"
  #include "tilepick.h"
 #endif
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -733,7 +733,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('D'): wizard_edit_durations(); break;
 
     case 'e': wizard_set_hunger_state(); break;
-    // case 'E': break;
+    case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
     case 'f': wizard_quick_fsim(); break;
@@ -761,13 +761,13 @@ static void _do_wizard_command(int wiz_command)
         break;
     // case CONTROL('J'): break;
 
-    case 'k':
+    case 'k': wizard_set_xl(true); break;
+    case 'K':
         if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
         break;
-    // case 'K': break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
     case 'l': wizard_set_xl(); break;
@@ -810,10 +810,9 @@ static void _do_wizard_command(int wiz_command)
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
-    case 'v': wizard_value_item(); break;
+    case 'v': wizard_recharge_evokers(); break;
     case 'V': wizard_toggle_xray_vision(); break;
-    case 'E': wizard_freeze_time(); break;
-    // case CONTROL('V'): break;
+    case CONTROL('V'): wizard_value_item(); break;
 
     case 'w': wizard_god_mollify(); break;
     case 'W': wizard_god_wrath(); break;
@@ -1049,18 +1048,17 @@ static void _start_running(int dir, int mode)
     if (!i_feel_safe(true))
         return;
 
-    coord_def next_pos = you.pos() + Compass[dir];
-    for (adjacent_iterator ai(next_pos); ai; ++ai)
+    const coord_def next_pos = you.pos() + Compass[dir];
+
+    if (!have_passive(passive_t::slime_wall_immune)
+        && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
+        && count_adjacent_slime_walls(next_pos))
     {
-        if (env.grid(*ai) == DNGN_SLIMY_WALL
-            && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
-        {
-            if (dir == RDIR_REST)
-                mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
-            else
-                mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
-            return;
-        }
+        if (dir == RDIR_REST)
+            mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
+        else
+            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
+        return;
     }
 
     you.running.initialise(dir, mode);
@@ -2843,7 +2841,7 @@ static void _swing_at_target(coord_def move)
 
         if (!cleave_targets.empty())
         {
-            targetter_cleave hitfunc(&you, target);
+            targeter_cleave hitfunc(&you, target);
             if (stop_attack_prompt(hitfunc, "attack"))
                 return;
 
@@ -3492,6 +3490,9 @@ static void _move_player(coord_def move)
             you.time_taken = max(you.time_taken,
                                  div_round_up(100, you.running.travel_speed));
         }
+
+        if (you.duration[DUR_NO_HOP])
+            you.duration[DUR_NO_HOP] += you.time_taken;
 
         move.reset();
         you.turn_is_over = true;

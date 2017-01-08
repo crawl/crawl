@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "traps.h"
-#include "trap_def.h"
+#include "trap-def.h"
 
 #include <algorithm>
 #include <cmath>
@@ -23,15 +23,15 @@
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"
-#include "godpassive.h" // passive_t::search_traps
+#include "god-passive.h" // passive_t::search_traps
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "mon-enum.h"
 #include "mon-tentacle.h"
-#include "mgen_enum.h"
+#include "mgen-enum.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mon-transit.h"

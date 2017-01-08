@@ -14,8 +14,8 @@
 #include "files.h"
 #include "food.h"
 #include "ghost.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
@@ -42,7 +42,7 @@
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0);
 
 // NOTE: If one of the following asserts fail, it's because the corresponding
-// enum in itemprop-enum.h was modified, but rltiles/dc-item.txt was not
+// enum in item-prop-enum.h was modified, but rltiles/dc-item.txt was not
 // modified in parallel.
 
 // These brands start with "normal" which there's no tile for, so subtract 1.
@@ -56,7 +56,9 @@ COMPILE_CHECK(NUM_JEWELLERY - AMU_FIRST_AMULET
               == TILE_AMU_ID_LAST - TILE_AMU_ID_FIRST + 1);
 COMPILE_CHECK(NUM_SCROLLS == TILE_SCR_ID_LAST - TILE_SCR_ID_FIRST + 1);
 COMPILE_CHECK(NUM_STAVES == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1);
+#if TAG_MAJOR_VERSION == 34
 COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
+#endif
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
@@ -1827,7 +1829,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_STAB;
     }
     // Should petrify show the '?' symbol?
-    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING) && !mons.is(MB_PETRIFIED))
+    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING))
         ch |= TILE_FLAG_MAY_STAB;
 
     mon_dam_level_type damage_level = mons.dam;
@@ -2403,8 +2405,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_CRYSTAL_BALL_OF_ENERGY:
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
 
-    case MISC_DISC_OF_STORMS:
-        return TILE_MISC_DISC_OF_STORMS;
+    case MISC_LIGHTNING_ROD:
+        return evoker_is_charged(item) ? TILE_MISC_LIGHTNING_ROD
+                                       : TILE_MISC_LIGHTNING_ROD_INERT;
 
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
@@ -2543,8 +2546,10 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_STAFF_OFFSET
                + (subtype_rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
         return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
+#endif
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -2834,7 +2839,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case BROWN:
-        if (bolt.name == "rocky blast")
+        if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
         break;
 
@@ -3188,6 +3193,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_ACID;
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
+    case ABIL_HOP:
+        return TILEG_ABILITY_HOP;
 
     // Others
     case ABIL_DELAYED_FIREBALL:
@@ -3564,11 +3571,13 @@ tileidx_t tileidx_known_brand(const item_def &item)
             break;
         }
     }
+#if TAG_MAJOR_VERSION == 34
     else if (item.base_type == OBJ_RODS)
     {
         // Technically not a brand, but still handled here
         return TILE_ROD_ID_FIRST + item.sub_type;
     }
+#endif
     return 0;
 }
 

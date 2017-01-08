@@ -15,8 +15,8 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::umbra
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::umbra
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"

@@ -21,15 +21,15 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
-#include "item_use.h"
-#include "melee_attack.h"
+#include "item-prop.h"
+#include "item-use.h"
+#include "melee-attack.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
@@ -996,7 +996,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     }
 }
 
-bool stop_attack_prompt(targetter &hitfunc, const char* verb,
+bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim), bool *prompted)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])

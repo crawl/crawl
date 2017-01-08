@@ -20,7 +20,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
@@ -29,15 +29,15 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -919,7 +919,6 @@ void monster::equip(item_def &item, bool msg)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
         equip_weapon(item, msg);
         break;
 
@@ -1502,11 +1501,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                     new_wpn_better = true;
             }
 
-            if (item.base_type == OBJ_RODS)
-                new_wpn_better = true; // rods are good.
-
-            if (new_wpn_better && !weap->cursed()
-                && weap->base_type != OBJ_RODS) // rods are good
+            if (new_wpn_better && !weap->cursed())
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
@@ -1900,22 +1895,6 @@ bool monster::pickup_weapon(item_def &item, bool msg, bool force)
     return false;
 }
 
-bool monster::pickup_rod(item_def &item, bool msg, bool force)
-{
-    // duplicating some relevant melee weapon pickup checks
-    if (!force &&
-            (!could_wield(item)
-            || type == MONS_DEEP_ELF_BLADEMASTER
-            || type == MONS_DEEP_ELF_MASTER_ARCHER)
-            || props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
-    {
-        // XXX: check to see whether this type of rod is evocable by monsters!
-        return false;
-    }
-
-    return pickup_melee_weapon(item, msg);
-}
-
 /**
  * Have a monster pick up a missile item.
  *
@@ -2129,8 +2108,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         return pickup_weapon(item, msg, force);
-    case OBJ_RODS:
-        return pickup_rod(item, msg, force);
     case OBJ_MISSILES:
         return pickup_missile(item, msg, force);
     // Other types can always be picked up

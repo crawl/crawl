@@ -97,7 +97,7 @@ enum tag_minor_version
     TAG_MINOR_ATTACK_DESCS,        // Added attacks to monster_info.
     TAG_MINOR_BRIBE_BRANCH,        // Bribe branch tracking
     TAG_MINOR_CLOUD_OWNER,         // Track owners of clouds in map knowledge
-    TAG_MINOR_NO_DEVICE_HEAL,      // Made MUT_NO_DEVICE_HEAL a normal bad mutation.
+    TAG_MINOR_NO_POTION_HEAL,      // Made MUT_NO_POTION_HEAL a normal bad mutation.
     TAG_MINOR_DIET_MUT,            // Remove carnivore/herbivore muts from random generation.
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
     TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load

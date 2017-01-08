@@ -28,12 +28,14 @@ show_more = false
 :     crawl.sendkeys("&~T")
 :     crawl.sendkeys("&Lcircular_temple_12" .. eol)
 :     crawl.sendkeys("&" .. string.char(20) ..
+:                    "debug.disable('confirmations')" .. eol ..
+:                    "debug.disable('death')" .. eol ..
 :                    "require('dlua/stress.lua')" .. eol ..
 :                    "stress.fill_level('floor')" .. eol ..
 :                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.teleport_to(40, 32)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
-:     crawl.sendkeys("&l27" .. eol .. "N")
+:     crawl.sendkeys("&l27" .. eol)
 :     crawl.sendkeys("&A27" .. eol)
 :     for i = 1, 40 do
 :       crawl.sendkeys("&H")
