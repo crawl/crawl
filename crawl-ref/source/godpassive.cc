@@ -1536,7 +1536,11 @@ monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item
 
 static bool _dont_attack_martial(const monster* mons)
 {
-    return mons->friendly() || mons->good_neutral() || mons->strict_neutral() || mons_is_firewood(*mons);
+    return mons->friendly() 
+           || mons->good_neutral() 
+           || mons->strict_neutral() 
+           || mons_is_firewood(*mons)
+           || !you.can_see(*mons);
 }
 
 static void _ieoh_jian_lunge(const coord_def& old_pos)
@@ -1684,7 +1688,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
             simple_monster_message(*mon, " is distracted by your jump.");
             mon->add_ench(
                 mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
-                            random_range(2, 3) * BASELINE_DELAY));
+                            random_range(2, 4) * BASELINE_DELAY));
             mon->foe = MHITNOT;
             mon->target = mon->pos();
             int non_move_energy = min(entry->energy_usage.move,
