@@ -253,9 +253,6 @@ enum class passive_t
     ieoh_jian_lunge,
     ieoh_jian_whirlwind,
     ieoh_jian_wall_jump,
-
-    // Slow and paralyse enemies with martial strikes
-    pressure_points,
 };
 
 enum ru_interference
