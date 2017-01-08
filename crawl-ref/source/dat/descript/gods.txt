@@ -312,10 +312,23 @@ and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
 Ieoh Jian powers
 
-Disciples of the Council  will be initiated in the path of martial arts, learning 
-to perform martial techniques such as aerial strikes and spinning attacks, capable
-of distracting and slowing enemies, and to punish these weakened enemies with powerful
-lunging strikes. They will be taught the technique necessary to animate weapons at a 
+Disciples of the Council will be initiated in the path of martial arts, becoming able
+to quickly cross-train all close quarter combat skills, and learning to perform 
+three powerful martial techniques with all weapons:
+
+  .......       ....... (*) <lightred>Lunge</lightred>: Moving towards an enemy in one of the eight 
+  ..@.O..  -->  ...@O.. cardinal directions deals extra damage, especially 
+  .......       ....... if it is slowed or distracted.
+
+  .......       ...@... (**) <lightred>Whirlwind</lightred>: Strike by moving between two tiles 
+  ...@O..  -->  ....O.. adjacent to an enemy. May slow down foes.
+  .......       .......  
+
+  ..x....       ..x.... (***) <lightred>Wall Jump</lightred>: Moving into a wall jumps away from 
+  ..x@...  -->  ..x..@. it, striking all enemies adjacent to the landing spot.
+  ..x....       ..x.... May distract any witnessing foes.
+
+Disciples of the Council will also be taught the technique necessary to animate weapons at a 
 distance, and eventually given the ability to request extremely powerful divine weapons
 for a brief period of time.
 %%%%
