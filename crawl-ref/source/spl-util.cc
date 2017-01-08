@@ -26,6 +26,7 @@
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -1348,7 +1349,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (player_on_orb_run())
+        if (orb_limits_translocation())
             return "the Orb prevents this spell from working.";
 
     default:
