@@ -312,9 +312,8 @@ and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
 Ieoh Jian powers
 
-Disciples of the Council will be initiated in the path of martial arts, becoming able
-to quickly cross-train all close quarter combat skills, and learning to perform 
-three powerful martial techniques with all weapons:
+Disciples of the Council become able to quickly cross-train all close 
+quarter combat skills, and learn to perform three martial techniques:
 
   .......       ....... (*) <lightred>Lunge</lightred>: Moving towards an enemy in one of the eight 
   ..@.O..  -->  ...@O.. cardinal directions deals extra damage, especially 
@@ -328,9 +327,8 @@ three powerful martial techniques with all weapons:
   ..x@...  -->  ..x..@. it, striking all enemies adjacent to the landing spot.
   ..x....       ..x.... May distract any witnessing foes.
 
-Disciples of the Council will also be taught the technique necessary to animate weapons at a 
-distance, and eventually given the ability to request extremely powerful divine weapons
-for a brief period of time.
+Disciples of the Council will also be taught to animate weapons at a distance,
+and eventually given the ability to temporarily wield powerful divine weapons.
 %%%%
 Kikubaaqudgha powers
 
