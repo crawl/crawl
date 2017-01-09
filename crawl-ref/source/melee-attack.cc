@@ -580,7 +580,7 @@ bool melee_attack::handle_phase_aux()
 
 void melee_attack::player_strike_pressure_points(monster* mons)
 {
-    int slow_chance = 4;
+    int slow_chance = 5;
     if (you.weapon())
         slow_chance *= you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
     else
@@ -593,7 +593,7 @@ void melee_attack::player_strike_pressure_points(monster* mons)
     if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
     {
         simple_monster_message(*mons, " seems to slow down as you strike a pressure point.");
-        mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(80 * BASELINE_DELAY, 70)));
+        mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(60 * BASELINE_DELAY, 70)));
     }
 }
 
