@@ -6279,8 +6279,7 @@ int player::res_water_drowning() const
     int rw = 0;
 
     if (is_unbreathing()
-        || species == SP_MERFOLK && !form_changed_physiology()
-        || species == SP_OCTOPODE && !form_changed_physiology()
+        || species_can_swim(species) && !form_changed_physiology()
         || form == TRAN_ICE_BEAST
         || form == TRAN_HYDRA)
     {
