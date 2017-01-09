@@ -916,6 +916,16 @@ bool melee_attack::attack()
 
     enable_attack_conducts(conducts);
 
+    // Divine Blade never disappears in the middle of a fight.
+    if (attack_occurred 
+        && attacker->is_player() 
+        && you_worship(GOD_IEOH_JIAN)
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] < 30) 
+    {
+        you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 30;
+    }
+
     return attack_occurred;
 }
 
@@ -3437,7 +3447,7 @@ int melee_attack::martial_damage_mod(int dam)
         return dam;
     case IEOH_JIAN_ATTACK_LUNGE:
         if (defender->as_monster()->has_ench(ENCH_SLOW) 
-            && defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS))
+            && (defender->as_monster()->foe != MHITYOU && !mons_is_batty(*defender->as_monster())))
         {
             mprf("%s is thoroughly helpless!!!", 
                  defender->as_monster()->name(DESC_THE).c_str());
@@ -3448,7 +3458,7 @@ int melee_attack::martial_damage_mod(int dam)
             mprf("%s can't react fast enough!", defender->name(DESC_THE).c_str());
             dam = div_rand_round(dam * 16, 10);
         }
-        else if (defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS))
+        else if (defender->as_monster()->foe != MHITYOU && !mons_is_batty(*defender->as_monster()))
         {
             mprf("%s was looking away!", defender->name(DESC_THE).c_str());
             dam = div_rand_round(dam * 16, 10);

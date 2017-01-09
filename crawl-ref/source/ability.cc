@@ -35,6 +35,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "god-prayer.h"
 #include "god-wrath.h"
 #include "hints.h"
@@ -628,6 +629,8 @@ static const ability_def Ability_List[] =
     // Ieoh Jian
     { ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "Steel Dragonfly",
         3, 0, 80, 5, {FAIL_INVO, 30, 5, 20}, abflag::NONE },
+    { ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY, "End Steel Dragonfly",
+        0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
     { ABIL_IEOH_JIAN_HEAVENLY_BLADE, "Heavenly Blade",
         5, 0, 80, 10, {FAIL_INVO, 60, 5, 25}, abflag::NONE },
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -976,7 +979,12 @@ ability_type fixup_ability(ability_type ability)
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
         return ability;
     case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
-        if (you.species == SP_FELID)
+        if (you.species == SP_FELID || you.duration[DUR_IEOH_JIAN_PROJECTION])
+            return ABIL_NON_ABILITY;
+        else
+            return ability;
+    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
+        if (you.duration[DUR_IEOH_JIAN_PROJECTION] == 0)
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -3080,6 +3088,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
 
         break;
+    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
+        fail_check();
+        ieoh_jian_end_projection();
+        break;
     case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
         fail_check();
 
@@ -3400,6 +3412,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
+
+    if (you.duration[DUR_IEOH_JIAN_PROJECTION])
+        _add_talent(talents, ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY, check_confused);
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);

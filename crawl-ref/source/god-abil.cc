@@ -7092,16 +7092,22 @@ bool ieoh_jian_heavenly_blade()
     if (you.species == SP_FELID)
         directly_summon = true;
 
+    if (you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
+    {
+        simple_god_message(" says: One heavenly blade is more than enough, mortal!");
+        return false;
+    }
+
     if (!directly_summon && inv_count() == ENDOFPACK)
     {
-        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
+        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
             directly_summon = true;
         else
             return false;
     }
 
-    ieoh_jian_end_projection();
-    bool bare_handed = (you.weapon() == nullptr)
+    auto your_weapon = you.weapon();
+    bool bare_handed = (your_weapon == nullptr)
                        || wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false);
     
     if (!bare_handed)
@@ -7110,11 +7116,14 @@ bool ieoh_jian_heavenly_blade()
         return false;
     }
 
+    if (your_weapon)
+        your_weapon->props[IEOH_JIAN_SWAPPED_OUT] = true;
+
     auto weapon = ieoh_jian_generate_divine_weapon();
 
     if (!directly_summon && !can_wield(&weapon))
     {
-        if (yesno("You can't wield weapons. Spend piety and request the divine weapon as an animated ally?", true, 'n'))
+        if (yesno("You can't wield weapons. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
             directly_summon = true;
         else
             return false;
@@ -7185,8 +7194,6 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     item_def& thrown = you.inv[weapon_index];
     ASSERT(thrown.defined());
 
-    // Making a copy of the item, and another for the summoned monster.
-    item_def summoned_copy = thrown;
     item_def item = thrown;
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
@@ -7262,7 +7269,8 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     alert_nearby_monsters();
 
     you.turn_is_over = false;
-    
+   
+    item_def summoned_copy = thrown;
     monster* mons = ieoh_jian_manifest_weapon_monster(pbolt.target, summoned_copy);
 
     if (!mons)
@@ -7279,6 +7287,13 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
     }
 
     canned_msg(MSG_EMPTY_HANDED_NOW);
+
+    // Divine Blade never disappears in the middle of a fight.
+    if(you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] < 30) 
+    {
+        you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 30;
+    }
 
     you.turn_is_over = true;
     return true;

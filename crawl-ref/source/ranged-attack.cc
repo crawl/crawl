@@ -272,7 +272,7 @@ static int calc_damage_for_ijc_weapon(const item_def* weapon)
 {
     int potential_damage, damage, damage_plus;
 
-    potential_damage = 2 * property(*weapon, PWPN_DAMAGE);
+    potential_damage = 3 * property(*weapon, PWPN_DAMAGE);
 
     damage = random2(potential_damage+1);
 

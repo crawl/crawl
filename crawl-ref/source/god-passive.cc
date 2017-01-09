@@ -1392,14 +1392,27 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 monster* ieoh_jian_find_projected_weapon()
 {
     for (auto& monster: menv)
-        if (monster.type == MONS_IEOH_JIAN_WEAPON)
+        if (monster.type == MONS_IEOH_JIAN_WEAPON 
+            && monster.weapon()
+            && monster.weapon()->props.exists(IEOH_JIAN_PROJECTED))
+        {
             return &monster;
+        }
 
     return nullptr;
 }
 
 void ieoh_jian_end_divine_blade()
 {
+    you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 0;
+    for (auto& monster: menv)
+        if (monster.type == MONS_IEOH_JIAN_WEAPON 
+            && monster.weapon()
+            && monster.weapon()->props.exists(IEOH_JIAN_DIVINE))
+        {
+            monster_die(&monster, KILL_RESET, NON_MONSTER, true);
+        }
+
     for (int which_item = 0; which_item < ENDOFPACK; which_item++)
     {
         auto& item = you.inv[which_item];
@@ -1409,6 +1422,13 @@ void ieoh_jian_end_divine_blade()
             dec_inv_item_quantity(which_item, 1);
             mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
         }
+
+        if (item.defined() && item.props.exists(IEOH_JIAN_SWAPPED_OUT))
+        {
+            wield_weapon(true, which_item, false, true, false, false, false);
+            item.props.erase(IEOH_JIAN_SWAPPED_OUT);
+        }
+
     }
     invalidate_agrid(true);
 }
@@ -1428,7 +1448,8 @@ void ieoh_jian_end_projection()
             mprf(MSGCH_GOD, "%s flies back to you!", item.name(DESC_THE, false, true, false).c_str());
             you.props[IEOH_JIAN_SWAPPING] = true;
             item.props.erase(IEOH_JIAN_PROJECTED);
-            wield_weapon(true, which_item, false, true, false, false, false);
+            if (!you.weapon())
+                wield_weapon(true, which_item, false, true, false, false, false);
             you.props.erase(IEOH_JIAN_SWAPPING);
             invalidate_agrid(true);
         }
@@ -1456,7 +1477,7 @@ static const FixedVector<int, _ieoh_jian_num_divine_weapons> _ieoh_jian_divine_w
 
 int ieoh_jian_calc_power_for_weapon(weapon_type sub_type)
 {
-    return you.skill(weapon_attack_skill(sub_type), 2, false) + you.skill(SK_INVOCATIONS, 2, false);
+    return you.experience_level * 2 + you.skill(SK_INVOCATIONS, 2, false);
 }
 
 // Boost the weight of other categories to compensate for the loss of a two handed equivalent?

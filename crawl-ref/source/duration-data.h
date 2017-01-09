@@ -40,7 +40,6 @@ static void _end_projection()
 
 static void _end_divine_blade()
 {
-    ieoh_jian_end_projection();
     ieoh_jian_end_divine_blade();
 }
 

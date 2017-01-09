@@ -3499,7 +3499,8 @@ tileidx_t tileidx_ability(const ability_type ability)
      // Ieoh Jian
     case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
         return TILEG_ABILITY_IEOH_JIAN_STEEL_DRAGONFLY;
-
+    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
+        return TILEG_ABILITY_IEOH_JIAN_END_STEEL_DRAGONFLY;
     case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
         return TILEG_ABILITY_IEOH_JIAN_HEAVENLY_BLADE;
   

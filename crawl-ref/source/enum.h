@@ -442,6 +442,7 @@ enum ability_type
 
     // Ieoh Jian
     ABIL_IEOH_JIAN_STEEL_DRAGONFLY = 1300,
+    ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY,
     ABIL_IEOH_JIAN_HEAVENLY_BLADE,
 
     // For both Yred and Beogh

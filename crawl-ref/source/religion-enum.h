@@ -40,5 +40,7 @@ enum nemelex_gift_types
 #define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
 /// Used to protect you from dangerous brands while projecting weapons.
 #define IEOH_JIAN_SWAPPING "ieoh-jian-swapping"
+/// Weapon swapped out when a divine is requested.
+#define IEOH_JIAN_SWAPPED_OUT "ieoh-jian-swapped-out"
 
 #endif
