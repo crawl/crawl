@@ -1522,7 +1522,7 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (you.duration[DUR_RESISTANCE])
         return true;
 
-    if ((form_keeps_mutations() || form == transformation::dragon)
+    if ((form_keeps_mutations() || form == TRAN_DRAGON)
         && species == SP_YELLOW_DRACONIAN)
     {
         return true;
@@ -1746,7 +1746,7 @@ int player_spec_death()
     sd += player_mutation_level(MUT_NECRO_ENHANCER);
 
     // transformations:
-    if (you.form == transformation::lich)
+    if (you.form == TRAN_LICH)
         sd++;
 
     return sd;
@@ -1964,13 +1964,13 @@ int player_movement_speed()
     int mv = 10;
 
     // transformations
-    if (you.form == transformation::bat)
+    if (you.form == TRAN_BAT)
         mv = 5; // but allowed minimum is six
-    else if (you.form == transformation::pig)
+    else if (you.form == TRAN_PIG)
         mv = 7;
-    else if (you.form == transformation::wisp)
+    else if (you.form == TRAN_WISP)
         mv = 8;
-    else if (you.fishtail || you.form == transformation::hydra && you.in_water())
+    else if (you.fishtail || you.form == TRAN_HYDRA && you.in_water())
         mv = 6;
 
     // moving on liquefied ground takes longer
@@ -2067,7 +2067,7 @@ int player_speed()
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == transformation::statue || you.duration[DUR_PETRIFYING])
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
@@ -2116,11 +2116,11 @@ bool player_effectively_in_light_armour()
 // it just makes the character undead (with the benefits that implies). - bwr
 bool player_is_shapechanged()
 {
-    if (you.form == transformation::none
-        || you.form == transformation::blade_hands
-        || you.form == transformation::lich
-        || you.form == transformation::shadow
-        || you.form == transformation::appendage)
+    if (you.form == TRAN_NONE
+        || you.form == TRAN_BLADE_HANDS
+        || you.form == TRAN_LICH
+        || you.form == TRAN_SHADOW
+        || you.form == TRAN_APPENDAGE)
     {
         return false;
     }
@@ -2267,8 +2267,7 @@ static int _player_evasion(ev_ignore_type evit)
 {
     const int size_factor = _player_evasion_size_factor();
     // Size is all that matters when paralysed or at 0 dex.
-    if ((you.cannot_move() || you.duration[DUR_CLUMSY]
-            || you.form == transformation::tree)
+    if ((you.cannot_move() || you.duration[DUR_CLUMSY] || you.form == TRAN_TREE)
         && !(evit & EV_IGNORE_HELPLESS))
     {
         return max(1, 2 + size_factor / 2);
@@ -3198,7 +3197,7 @@ int player_stealth()
     if (you.duration[DUR_AGILITY])
         stealth += STEALTH_PIP;
 
-    if (you.form == transformation::blade_hands && you.species == SP_FELID
+    if (you.form == TRAN_BLADE_HANDS && you.species == SP_FELID
         && !you.airborne())
     {
         stealth -= STEALTH_PIP; // klack klack klack go the blade paws
@@ -3226,7 +3225,7 @@ int player_stealth()
     // Thirsty vampires are stealthier.
     if (you.species == SP_VAMPIRE)
     {
-        if (you.hunger_state <= HS_STARVING || you.form == transformation::bat)
+        if (you.hunger_state <= HS_STARVING || you.form == TRAN_BAT)
             stealth += STEALTH_PIP * 2;
         else if (you.hunger_state <= HS_HUNGRY)
             stealth += STEALTH_PIP;
@@ -3246,12 +3245,8 @@ int player_stealth()
             stealth += STEALTH_PIP;
         else if (you.has_usable_hooves())
             stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
-        else if (you.species == SP_FELID
-                 && (you.form == transformation::none
-                     || you.form == transformation::appendage))
-        {
+        else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
             stealth += 20;  // paws
-        }
     }
 
     // If you've been tagged with Corona or are Glowing, the glow
@@ -3279,7 +3274,7 @@ int player_stealth()
         stealth /= umbra_div;
     }
 
-    if (you.form == transformation::shadow)
+    if (you.form == TRAN_SHADOW)
         stealth *= 2;
 
     // If you're surrounded by a storm, you're inherently pretty conspicuous.
@@ -4950,7 +4945,7 @@ bool flight_allowed(bool quiet, string *fail_reason)
 
     if (get_form()->forbids_flight())
     {
-        msg = you.form == transformation::tree ? "Your roots keep you in place."
+        msg = you.form == TRAN_TREE ? "Your roots keep you in place."
             : "You can't fly in this form.";
         success = false;
     }
@@ -5179,7 +5174,7 @@ player::player()
     unrand_reacts.reset();
 
     symbol          = MONS_PLAYER;
-    form            = transformation::none;
+    form            = TRAN_NONE;
 
     for (auto &item : inv)
         item.clear();
@@ -5988,8 +5983,7 @@ int player::racial_ac(bool temp) const
 {
     // drac scales suppressed in all serious forms, except dragon
     if (species_is_draconian(species)
-        && (!player_is_shapechanged() || form == transformation::dragon
-            || !temp))
+        && (!player_is_shapechanged() || form == TRAN_DRAGON || !temp))
     {
         int AC = 400 + 100 * (experience_level / 3);  // max 13
         if (species == SP_GREY_DRACONIAN) // no breath
@@ -6131,11 +6125,11 @@ int player::gdr_perc() const
 {
     switch (form)
     {
-    case transformation::dragon:
+    case TRAN_DRAGON:
         return 34; // base AC 8
-    case transformation::statue:
+    case TRAN_STATUE:
         return 39; // like plate (AC 10)
-    case transformation::tree:
+    case TRAN_TREE:
         return 48;
     default:
         break;
@@ -6197,8 +6191,7 @@ mon_holy_type player::holiness(bool temp) const
     mon_holy_type holi = undead_state(temp) ? MH_UNDEAD : MH_NATURAL;
 
     if (species == SP_GARGOYLE ||
-        temp && (form == transformation::statue
-                 || form == transformation::wisp || petrified()))
+        temp && (form == TRAN_STATUE || form == TRAN_WISP || petrified()))
     {
         holi = MH_NONLIVING;
     }
@@ -6253,7 +6246,7 @@ bool player::is_unbreathing() const
 
 bool player::is_insubstantial() const
 {
-    return form == transformation::wisp;
+    return form == TRAN_WISP;
 }
 
 int player::res_acid(bool calc_unid) const
@@ -6287,8 +6280,8 @@ int player::res_water_drowning() const
 
     if (is_unbreathing()
         || species_can_swim(species) && !form_changed_physiology()
-        || form == transformation::ice_beast
-        || form == transformation::hydra)
+        || form == TRAN_ICE_BEAST
+        || form == TRAN_HYDRA)
     {
         rw++;
     }
@@ -6393,7 +6386,7 @@ int player::res_magic(bool /*calc_unid*/) const
 int player_res_magic(bool calc_unid, bool temp)
 {
 
-    if (temp && you.form == transformation::shadow)
+    if (temp && you.form == TRAN_SHADOW)
         return MAG_IMMUNE;
 
     int rm = you.experience_level * species_mr_modifier(you.species);
@@ -6418,7 +6411,7 @@ int player_res_magic(bool calc_unid, bool temp)
     rm -= MR_PIP * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
 
     // transformations
-    if (you.form == transformation::lich && temp)
+    if (you.form == TRAN_LICH && temp)
         rm += MR_PIP;
 
     // Trog's Hand
@@ -6457,7 +6450,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (duration[DUR_DIMENSION_ANCHOR])
         problems.emplace_back("locked down by Dimension Anchor");
 
-    if (form == transformation::tree)
+    if (form == TRAN_TREE)
         problems.emplace_back("held in place by your roots");
 
     vector<item_def> notele_items;
@@ -6592,7 +6585,7 @@ bool player::spellcasting_unholy() const
  */
 undead_state_type player::undead_state(bool temp) const
 {
-    if (temp && you.form == transformation::lich)
+    if (temp && you.form == TRAN_LICH)
         return US_UNDEAD;
     return species_undead_type(you.species);
 }
@@ -6890,11 +6883,11 @@ int player::has_claws(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring claws with them
-        if (form == transformation::dragon)
+        if (form == TRAN_DRAGON)
             return 3;
 
         // blade hands override claws
-        if (form == transformation::blade_hands)
+        if (form == TRAN_BLADE_HANDS)
             return 0;
     }
 
@@ -6941,7 +6934,7 @@ int player::has_fangs(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring fangs with them
-        if (form == transformation::dragon)
+        if (form == TRAN_DRAGON)
             return 3;
     }
 
@@ -6958,7 +6951,7 @@ int player::has_tail(bool allow_tran) const
     if (allow_tran)
     {
         // these transformations bring a tail with them
-        if (form == transformation::dragon)
+        if (form == TRAN_DRAGON)
             return 1;
 
         // Most transformations suppress a tail.
@@ -7119,7 +7112,7 @@ bool player::innate_sinv() const
 
 bool player::invisible() const
 {
-    return (duration[DUR_INVIS] || form == transformation::shadow)
+    return (duration[DUR_INVIS] || form == TRAN_SHADOW)
            && !backlit();
 }
 
@@ -7161,7 +7154,7 @@ bool player::umbra() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!duration[DUR_INVIS] && form != transformation::shadow)
+    if (!duration[DUR_INVIS] && form != TRAN_SHADOW)
     {
         if (duration[DUR_CORONA])
             mpr("You glow brighter.");
@@ -7230,7 +7223,7 @@ bool player::can_bleed(bool allow_tran) const
 
 bool player::is_stationary() const
 {
-    return form == transformation::tree;
+    return form == TRAN_TREE;
 }
 
 bool player::malmutate(const string &reason)
@@ -7257,25 +7250,25 @@ bool player::polymorph(int pow)
     if (!can_polymorph())
         return false;
 
-    transformation f = transformation::none;
+    transformation_type f = TRAN_NONE;
 
     // Be unreliable over lava. This is not that important as usually when
     // it matters you'll have temp flight and thus that pig will fly (and
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
     {
-        f = random_choose(transformation::bat,
-                          transformation::fungus,
-                          transformation::pig,
-                          transformation::tree,
-                          transformation::wisp);
+        f = random_choose(TRAN_BAT,
+                          TRAN_FUNGUS,
+                          TRAN_PIG,
+                          TRAN_TREE,
+                          TRAN_WISP);
         // need to do a dry run first, as Zin's protection has a random factor
         if (transform(pow, f, true, true))
             break;
-        f = transformation::none;
+        f = TRAN_NONE;
     }
 
-    if (f != transformation::none && transform(pow, f))
+    if (f != TRAN_NONE && transform(pow, f))
     {
         transform_uncancellable = true;
         return true;
@@ -7285,7 +7278,7 @@ bool player::polymorph(int pow)
 
 bool player::is_icy() const
 {
-    return form == transformation::ice_beast;
+    return form == TRAN_ICE_BEAST;
 }
 
 bool player::is_fiery() const
@@ -7606,7 +7599,7 @@ void player::sentinel_mark(bool trap)
 
 bool player::made_nervous_by(const coord_def &p)
 {
-    if (form != transformation::fungus)
+    if (form != TRAN_FUNGUS)
         return false;
     monster* mons = monster_at(p);
     if (mons && mons_is_threatening(*mons))
@@ -7764,9 +7757,8 @@ bool player::form_uses_xl() const
     // users of one particular [non-]weapon be effective for this
     // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
-    return form == transformation::wisp || form == transformation::fungus
-        || form == transformation::pig
-        || form == transformation::bat && you.species != SP_VAMPIRE;
+    return form == TRAN_WISP || form == TRAN_FUNGUS || form == TRAN_PIG
+           || form == TRAN_BAT && you.species != SP_VAMPIRE;
 }
 
 static int _get_potion_heal_factor()
@@ -7932,11 +7924,8 @@ void temperature_changed(float change)
         maybe_melt_player_enchantments(BEAM_FIRE, 10);
 
         // Handled separately because normally heat doesn't affect this.
-        if (you.form == transformation::ice_beast
-            || you.form == transformation::statue)
-        {
+        if (you.form == TRAN_ICE_BEAST || you.form == TRAN_STATUE)
             untransform(false);
-        }
     }
 
     // Just reached the temp that kills off stoneskin.

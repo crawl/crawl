@@ -700,7 +700,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 
     if (weap && item_attack_skill(*weap) == SK_AXES
             || attacker.is_player()
-               && (you.form == transformation::hydra && you.heads() > 1
+               && (you.form == TRAN_HYDRA && you.heads() > 1
                    || you.duration[DUR_CLEAVE]))
     {
         const coord_def atk = attacker.pos();

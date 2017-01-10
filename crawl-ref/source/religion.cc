@@ -2774,7 +2774,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_DITHMENOS:
-        if (you.form == transformation::shadow)
+        if (you.form == TRAN_SHADOW)
             untransform();
         _set_penance(old_god, 25);
         break;
@@ -2931,16 +2931,16 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
 
 static bool _transformed_player_can_join_god(god_type which_god)
 {
-    if (which_god == GOD_ZIN && you.form != transformation::none)
+    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
         return false; // zin hates everything
     // all these clauses are written with a ! in front of them, so that
     // the stuff to the right of that is uniformly "gods that hate this form"
     switch (you.form)
     {
-    case transformation::lich:
+    case TRAN_LICH:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
-    case transformation::statue:
-    case transformation::wisp:
+    case TRAN_STATUE:
+    case TRAN_WISP:
         return !(which_god == GOD_YREDELEMNUL);
     default:
         return true;

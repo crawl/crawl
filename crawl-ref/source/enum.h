@@ -563,32 +563,31 @@ enum attribute_type
     NUM_ATTRIBUTES
 };
 
-enum class transformation
+enum transformation_type
 {
-    none,
-    spider,
-    blade_hands,
-    statue,
-    ice_beast,
-    dragon,
-    lich,
-    bat,
-    pig,
-    appendage,
-    tree,
+    TRAN_NONE,
+    TRAN_SPIDER,
+    TRAN_BLADE_HANDS,
+    TRAN_STATUE,
+    TRAN_ICE_BEAST,
+    TRAN_DRAGON,
+    TRAN_LICH,
+    TRAN_BAT,
+    TRAN_PIG,
+    TRAN_APPENDAGE,
+    TRAN_TREE,
 #if TAG_MAJOR_VERSION == 34
-    porcupine,
+    TRAN_PORCUPINE,
 #endif
-    wisp,
+    TRAN_WISP,
 #if TAG_MAJOR_VERSION == 34
-    jelly,
+    TRAN_JELLY,
 #endif
-    fungus,
-    shadow,
-    hydra,
-    COUNT
+    TRAN_FUNGUS,
+    TRAN_SHADOW,
+    TRAN_HYDRA,
+    NUM_TRANSFORMS,
 };
-constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);
 
 enum beam_type                  // bolt::flavour
 {

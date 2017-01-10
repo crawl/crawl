@@ -493,35 +493,35 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
 
 static bool _transformation_check(const spell_type spell)
 {
-    transformation tran = transformation::none;
+    transformation_type tran = TRAN_NONE;
     switch (spell)
     {
     case SPELL_BEASTLY_APPENDAGE:
-        tran = transformation::appendage;
+        tran = TRAN_APPENDAGE;
         break;
     case SPELL_SPIDER_FORM:
-        tran = transformation::spider;
+        tran = TRAN_SPIDER;
         break;
     case SPELL_STATUE_FORM:
-        tran = transformation::statue;
+        tran = TRAN_STATUE;
         break;
     case SPELL_ICE_FORM:
-        tran = transformation::ice_beast;
+        tran = TRAN_ICE_BEAST;
         break;
     case SPELL_HYDRA_FORM:
-        tran = transformation::hydra;
+        tran = TRAN_HYDRA;
         break;
     case SPELL_DRAGON_FORM:
-        tran = transformation::dragon;
+        tran = TRAN_DRAGON;
         break;
     case SPELL_NECROMUTATION:
-        tran = transformation::lich;
+        tran = TRAN_LICH;
         break;
     default:
         break;
     }
 
-    if (tran == transformation::none)
+    if (tran == TRAN_NONE)
         return true;
 
     // Check whether existing enchantments/transformations, cursed
@@ -1991,7 +1991,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = "A monocle briefly appears over your ";
         str += random_choose("right", "left");
-        if (you.form == transformation::spider)
+        if (you.form == TRAN_SPIDER)
         {
             if (coinflip())
                 str += " primary";
@@ -2155,7 +2155,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
         plural_vec.push_back(plural);
     }
 
-    if (you.form == transformation::spider)
+    if (you.form == TRAN_SPIDER)
     {
         hand_vec.emplace_back("mandible");
         plural_vec.push_back(true);
@@ -2168,7 +2168,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
         plural_vec.push_back(false);
     }
 
-    if (you.form == transformation::bat
+    if (you.form == TRAN_BAT
         || you.species != SP_MUMMY && you.species != SP_OCTOPODE
            && !form_changed_physiology())
     {
@@ -2847,7 +2847,7 @@ static void _xom_cleaving(int sever)
 
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
-    const transformation orig_form)
+    const transformation_type orig_form)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -3269,7 +3269,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 void xom_take_action(xom_event_type action, int sever)
 {
     const int  orig_hp       = you.hp;
-    const transformation orig_form = you.form;
+    const transformation_type orig_form = you.form;
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation = you.mutation;
     const bool was_bored = _xom_is_bored();
 

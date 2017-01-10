@@ -867,7 +867,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (you.form == transformation::appendage
+    if (you.form == TRAN_APPENDAGE
         && ignore_temporary
         && slot == beastly_slot(you.attribute[ATTR_APPENDAGE])
         && you.mutation[you.attribute[ATTR_APPENDAGE]])

@@ -1016,19 +1016,19 @@ void wizard_god_mollify()
 
 void wizard_transform()
 {
-    transformation form;
+    transformation_type form;
 
     while (true)
     {
         string line;
         for (int i = 0; i < NUM_TRANSFORMS; i++)
         {
-            const auto tr = static_cast<transformation>(i);
 #if TAG_MAJOR_VERSION == 34
-            if (tr == transformation::jelly || tr == transformation::porcupine)
+            if (i == TRAN_JELLY || i == TRAN_PORCUPINE)
                 continue;
 #endif
-            line += make_stringf("[%c] %-10s ", i + 'a', transform_name(tr));
+            line += make_stringf("[%c] %-10s ", i + 'a',
+                                 transform_name((transformation_type)i));
             if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
             {
                 mprf(MSGCH_PROMPT, "%s", line.c_str());
@@ -1049,12 +1049,16 @@ void wizard_transform()
         if (keyin < 'a' || keyin > 'a' + NUM_TRANSFORMS - 1)
             continue;
 
-        const auto k_tr = static_cast<transformation>(keyin - 'a');
 #if TAG_MAJOR_VERSION == 34
-        if (k_tr == transformation::jelly || k_tr == transformation::porcupine)
+        if ((transformation_type)(keyin - 'a') == TRAN_JELLY
+            || (transformation_type)(keyin - 'a') == TRAN_PORCUPINE)
+        {
             continue;
+        }
 #endif
-        form = k_tr;
+
+        form = (transformation_type)(keyin - 'a');
+
         break;
     }
 
