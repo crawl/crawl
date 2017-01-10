@@ -897,20 +897,23 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        return transform(0, TRAN_TREE, false, true, reason);
+        return transform(0, transformation::tree, false, true, reason);
     }
 
     bool effect(bool was_known = true, int=40, bool=true) const override
     {
-        return transform(30, TRAN_TREE, !was_known);
+        return transform(30, transformation::tree, !was_known);
     }
 
     bool quaff(bool was_known) const override
     {
         if (was_known)
         {
-            if (!check_known_quaff() || !check_form_stat_safety(TRAN_TREE))
+            if (!check_known_quaff()
+                || !check_form_stat_safety(transformation::tree))
+            {
                 return false;
+            }
 
             const cloud_type cloud = cloud_type_at(you.pos());
             if (is_damaging_cloud(cloud, false)

@@ -421,7 +421,7 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.form)
+    if (you.form != transformation::none)
         untransform();
     you.clear_beholders();
     you.clear_fearmongers();

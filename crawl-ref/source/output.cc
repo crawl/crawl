@@ -1960,7 +1960,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = "  - Unarmed";
         }
         else if (eqslot == EQ_WEAPON
-                 && you.form == TRAN_BLADE_HANDS)
+                 && you.form == transformation::blade_hands)
         {
             const bool plural = !player_mutation_level(MUT_MISSING_HAND);
             str = string("  - Blade Hand") + (plural ? "s" : "");
@@ -2531,7 +2531,8 @@ static string _annotate_form_based(string desc, bool suppressed)
 
 static string _dragon_abil(string desc)
 {
-    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    const bool supp = form_changed_physiology()
+                      && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp);
 }
 
