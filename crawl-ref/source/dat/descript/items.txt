@@ -84,10 +84,6 @@ battleaxe
 
 A large war axe with a formidable double-sided head.
 %%%%
-beef jerky
-
-A strip of preserved dead cow or bull.
-%%%%
 blowgun
 
 A long, light tube, open at both ends, through which various types of needles
@@ -1065,11 +1061,6 @@ A curved piece of wood and string, for shooting arrows.
 short sword
 
 A personal stabbing weapon with a short grip.
-%%%%
-slice of pizza
-
-A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
-basil.
 %%%%
 sling bullet
 

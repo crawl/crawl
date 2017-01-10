@@ -743,8 +743,8 @@ enum food_type
     FOOD_UNUSED, // was: royal jelly
 #endif
     FOOD_FRUIT,  // was: snozzcumber
-    FOOD_PIZZA,
 #if TAG_MAJOR_VERSION == 34
+    FOOD_PIZZA,
     FOOD_APRICOT,
     FOOD_ORANGE,
     FOOD_BANANA,
@@ -754,9 +754,7 @@ enum food_type
     FOOD_GRAPE,
     FOOD_SULTANA,
     FOOD_LYCHEE,
-#endif
     FOOD_BEEF_JERKY,
-#if TAG_MAJOR_VERSION == 34
     FOOD_CHEESE,
     FOOD_SAUSAGE,
 #endif

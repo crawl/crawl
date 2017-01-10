@@ -48,10 +48,6 @@ bardiche
 
 Broń z ogromnym ostrzem topora sięgającym do połowy długiego drzewca.
 %%%%
-beef jerky
-
-Suszony i solony pasek wycięty z wnętrza ciała martwej krowy lub byka.
-%%%%
 blessed great sword
 
 Wielki dwuręczny miecz, pobłogosławiony przez moc Świetlistego.
@@ -647,10 +643,6 @@ shield
 Kawał metalu, z uchwytem i paskami umożliwiającymi przyczepienie do ramienia.
 Pozwala blokować ciosy, jednak utrudnia ruchy co spowalnia szybkość ataków oraz
 przeszkadza w rzucaniu czarów.
-%%%%
-slice of pizza
-
-Kawałek płaskiego wyrobu chlebopodobnego z sosem pomidorowym, serem i bazylią.
 %%%%
 sling
 

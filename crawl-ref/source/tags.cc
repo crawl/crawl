@@ -4424,6 +4424,17 @@ void unmarshallItem(reader &th, item_def &item)
             }
         }
     }
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE_RELOADED)
+    {
+        if (item.base_type == OBJ_FOOD)
+        {
+            if (item.sub_type == FOOD_BEEF_JERKY
+                || item.sub_type == FOOD_PIZZA)
+            {
+                item.sub_type = FOOD_ROYAL_JELLY;
+            }
+        }
+    }
 
     // Combine old rings of slaying (Acc/Dam) to new (Dam).
     // Also handle the changes to the respective ARTP_.

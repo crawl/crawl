@@ -3528,13 +3528,11 @@ colour_t item_def::food_colour() const
     switch (sub_type)
     {
         case FOOD_ROYAL_JELLY:
-        case FOOD_PIZZA:
             return YELLOW;
         case FOOD_FRUIT:
             return LIGHTGREEN;
         case FOOD_CHUNK:
             return LIGHTRED;
-        case FOOD_BEEF_JERKY:
         case FOOD_BREAD_RATION:
         case FOOD_MEAT_RATION:
         default:

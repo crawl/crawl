@@ -1845,8 +1845,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_BREAD_RATION: buff << "bread ration"; break;
         case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_FRUIT: buff << "fruit"; break;
-        case FOOD_PIZZA: buff << "slice of pizza"; break;
-        case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
             switch (determine_chunk_effect(*this))
             {
@@ -2374,9 +2372,6 @@ public:
             case FOOD_MEAT_RATION:
                 name = "meat rations";
                 break;
-            case FOOD_BEEF_JERKY:
-                name = "beef jerky";
-                break;
             case FOOD_BREAD_RATION:
                 name = "bread rations";
                 break;
@@ -2385,9 +2380,6 @@ public:
 #endif
             case FOOD_FRUIT:
                 name = "fruit";
-                break;
-            case FOOD_PIZZA:
-                name = "pizza";
                 break;
             case FOOD_ROYAL_JELLY:
                 name = "royal jellies";

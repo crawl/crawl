@@ -50,10 +50,6 @@ bardiche
 
 En lang stage med et enormt, kløvende blad i den ene ende.
 %%%%
-beef jerky
-
-Et stykke konserveret, død ko.
-%%%%
 blessed double sword
 
 Et langt, stort sværd, som er bestyrket af Den Strålendes kraft.
@@ -817,10 +813,6 @@ langsommere.
 short sword
 
 En lille, tveægget klinge med et kort greb.
-%%%%
-slice of pizza
-
-Et stykke pizza: et fladbrød med tomatsauce, mozzarella di bufala og basilikum.
 %%%%
 sling
 
