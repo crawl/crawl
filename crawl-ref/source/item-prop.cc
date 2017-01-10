@@ -671,14 +671,12 @@ static const food_def Food_prop[] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500 },
     { FOOD_CHUNK,        "chunk",        1000,   100,  -500 },
-    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200 },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500 },
 
     { FOOD_FRUIT,        "fruit",         850,  -100,    50 },
 
     { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0 },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0 },
 
 #if TAG_MAJOR_VERSION == 34
     // is_real_food assumes we list FOOD_UNUSED as the first removed
@@ -699,6 +697,8 @@ static const food_def Food_prop[] =
     { FOOD_SULTANA,      "buggy",          70,   -20,    20 },
     { FOOD_CHEESE,       "buggy",        1200,     0,     0 },
     { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400 },
+    { FOOD_BEEF_JERKY,   "buggy",        1500,   200,  -200 },
+    { FOOD_PIZZA,        "buggy",        1500,     0,     0 },
 #endif
 };
 

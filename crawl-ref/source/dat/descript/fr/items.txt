@@ -90,10 +90,6 @@ battleaxe
 Une grande hache de guerre à deux main munie d'une redoutable tête à double
 tranchant.
 %%%%
-beef jerky
-
-Une tranche séchée de vache ou de bœuf mort.
-%%%%
 blessed double sword
 
 Une épée longue et large, améliorée par l'Étincelant.
@@ -938,10 +934,6 @@ shield
 Une planche de bois avec du métal que l'on attache au bras pour se défendre. Il
 est un peu encombrant à porter, et il peut réduire la vitesse de frappe des
 guerriers inexpérimentés.
-%%%%
-slice of pizza
-
-Une part de pizza : de la pâte avec sauce tomate, mozzarella, et basilic.
 %%%%
 sling
 

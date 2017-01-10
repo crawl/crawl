@@ -169,7 +169,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   hornet / worm w:5 / worker ant
 MONS:   hornet w:7 / soldier ant w:13
-ITEM:   beef jerky q:3 / fruit q:3
+ITEM:   meat ration q:1 / fruit q:3
 ITEM:   royal jelly q:3, royal jelly q:6
 MAP
 .xxxxxxx
@@ -218,7 +218,7 @@ KMONS:    C = yak
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
-KITEM:    C = slice of pizza q:3
+KITEM:    C = royal jelly q:2
 KITEM:    E = falchion ego:flaming ident:type / \
               hand axe ego:flaming ident:type
 KITEM:    H = meat ration q:2
@@ -318,7 +318,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
   dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
                              .. ' / dwarf skeleton')
 }}
-ITEM:   bread ration q:3, beef jerky q:3, throwing net
+ITEM:   bread ration q:3, meat ration q:1, throwing net
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -334,34 +334,6 @@ xxx.xxx
 xx.xxx.
  .g.
   @
-ENDMAP
-
-# 20.8k/23.8k/12.0k
-# Welcome to Pandemonium Pizzeria; is this for carry-out or delivery?
-# (Ideally the cashier would have a silly hat, but they can't wear hats.)
-NAME:   grunt_pizzeria
-DEPTH:  D:8-14
-: food_weight(_G, 8)
-WEIGHT: 10
-TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
-        patrolling
-MONS:   human ; short sword | rapier / \
-        orc warrior ; dagger / \
-        spriggan ; dagger
-ITEM:   slice of pizza q:8, bread ration q:2
-MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 10, size = 1, \
-                              walk_dist = 0, excl_rad = 0 }
-MAP
-xxxxxxx
-xvvvdex
-xvO+..x
-xvvv.xx
-x$1...x
-xmmm.xx
-x.....x
-xmm+mmx
- ..@..
 ENDMAP
 
 # 22.6k/22.6k/15k (+ perishable up to 16k, avg 6k)
@@ -380,8 +352,8 @@ MONS:   human ; animal skin . hand axe
     mons("hog w:" .. hog_weight .. " / yak w:1")
   end
 }}
-ITEM:   slice of pizza q:7, bread ration q:2
-ITEM:   beef jerky q:2
+ITEM:   royal jelly q:4, bread ration q:2
+ITEM:   meat ration q:1
 KFEAT:  K = iron_grate
 KFEAT:  - = open_door
 MAP

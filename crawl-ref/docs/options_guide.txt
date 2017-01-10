@@ -128,7 +128,7 @@ The contents of this text are:
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species, fake_lang, pizza,
+                use_fake_player_cursor, show_player_species, fake_lang,
                 read_persist_options
 
 5-b     DOS and Windows.
@@ -2467,9 +2467,6 @@ item_glyph -= <regexp>
 
         Removing a rule with -= removes all rules using the exact regexp
         provided; do not specify a colour or glyph in that case.
-
-pizza = <topping name>
-        A comma-separated list of the player's preferred pizza toppings.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the

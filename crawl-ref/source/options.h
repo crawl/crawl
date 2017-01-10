@@ -261,8 +261,6 @@ public:
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 
-    vector<string> pizzas;
-
 #ifdef WIZARD
     int            wiz_mode;      // no, never, start in wiz mode
     int            explore_mode;  // no, never, start in explore mode

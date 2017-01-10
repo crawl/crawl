@@ -272,7 +272,6 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_items)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
-        new ListGameOption<string>(pizzas, {"pizza"}),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},

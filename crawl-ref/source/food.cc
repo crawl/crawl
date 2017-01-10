@@ -386,18 +386,10 @@ static void _finished_eating_message(food_type type)
     }
     else
     {
-        switch (type)
+        if (type == FOOD_MEAT_RATION)
         {
-        case FOOD_MEAT_RATION:
             mpr("That meat ration really hit the spot!");
             return;
-        case FOOD_BEEF_JERKY:
-            mprf("That beef jerky was %s!",
-                 one_chance_in(4) ? "jerk-a-riffic"
-                                  : "delicious");
-            return;
-        default:
-            break;
         }
     }
 
@@ -422,40 +414,15 @@ static void _finished_eating_message(food_type type)
             if (taste.empty())
                 taste = "Eugh, buggy fruit.";
             mpr(taste);
-            break;
+            return;
         }
         default:
             break;
         }
     }
 
-    switch (type)
-    {
-    case FOOD_ROYAL_JELLY:
+    if (type == FOOD_ROYAL_JELLY)
         mpr("That royal jelly was delicious!");
-        break;
-    case FOOD_PIZZA:
-    {
-        if (!Options.pizzas.empty())
-        {
-            const string za = Options.pizzas[random2(Options.pizzas.size())];
-            mprf("Mmm... %s.", trimmed_string(za).c_str());
-            break;
-        }
-
-        const string taste = getMiscString("eating_pizza");
-        if (taste.empty())
-        {
-            mpr("Bleh, bug pizza.");
-            break;
-        }
-
-        mprf("%s", taste.c_str());
-        break;
-    }
-    default:
-        break;
-    }
 }
 
 // Returns which of two food items is older (true for first, else false).

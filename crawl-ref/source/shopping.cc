@@ -540,15 +540,13 @@ unsigned int item_value(item_def item, bool ident)
             valued = 20;
             break;
 
-        case FOOD_BEEF_JERKY:
-        case FOOD_PIZZA:
         case FOOD_FRUIT:
             valued = 15;
             break;
 
         case FOOD_CHUNK:
         default:
-                break;
+            break;
         }
         break;
 

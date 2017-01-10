@@ -49,10 +49,6 @@ bardiche
 
 Una larga garrocha con una enorme cuchilla en uno de sus extremos.
 %%%%
-beef jerky
-
-Una tira de carne seca de vaca o toro.
-%%%%
 blessed great sword
 
 Una espada con una larguísima y pesada cuchilla y un gran mango. Ha sido
@@ -581,11 +577,6 @@ shield
 
 Una pieza de metal diseñada para llevarse atada en un brazo. Es pesada de
 llevar y hace algo más lenta la velocidad a la que se puede atacar.
-%%%%
-slice of pizza
-
-Un trozo de pizza: un pan plano con salsa de tomate, mozzarela de búfala y
-orégano.
 %%%%
 sling
 
