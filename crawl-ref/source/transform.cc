@@ -78,7 +78,7 @@ static const FormDuration BAD_DURATION = FormDuration(15, PS_ONE_AND_A_HALF,
 // Class form_entry and the formdata array
 #include "form-data.h"
 
-static const form_entry &_find_form_entry(transformation_type form)
+static const form_entry &_find_form_entry(transformation form)
 {
     for (const form_entry &entry : formdata)
         if (entry.tran == form)
@@ -109,7 +109,7 @@ Form::Form(const form_entry &fe)
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons)
 { }
 
-Form::Form(transformation_type tran)
+Form::Form(transformation tran)
     : Form(_find_form_entry(tran))
 { }
 /**
@@ -213,7 +213,7 @@ string Form::get_description(bool past_tense) const
  *
  * @return The message for turning into this form.
  */
-string Form::transform_message(transformation_type previous_trans) const
+string Form::transform_message(transformation previous_trans) const
 {
     // XXX: refactor this into a second function (and also rethink the logic)
     string start = "Buggily, y";
@@ -459,7 +459,7 @@ string Form::player_prayer_action() const
 class FormNone : public Form
 {
 private:
-    FormNone() : Form(TRAN_NONE) { }
+    FormNone() : Form(transformation::none) { }
     DISALLOW_COPY_AND_ASSIGN(FormNone);
 public:
     static const FormNone &instance() { static FormNone inst; return inst; }
@@ -474,7 +474,7 @@ public:
 class FormSpider : public Form
 {
 private:
-    FormSpider() : Form(TRAN_SPIDER) { }
+    FormSpider() : Form(transformation::spider) { }
     DISALLOW_COPY_AND_ASSIGN(FormSpider);
 public:
     static const FormSpider &instance() { static FormSpider inst; return inst; }
@@ -483,7 +483,7 @@ public:
 class FormBlade : public Form
 {
 private:
-    FormBlade() : Form(TRAN_BLADE_HANDS) { }
+    FormBlade() : Form(transformation::blade_hands) { }
     DISALLOW_COPY_AND_ASSIGN(FormBlade);
 public:
     static const FormBlade &instance() { static FormBlade inst; return inst; }
@@ -517,7 +517,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const override
+    string transform_message(transformation previous_trans) const override
     {
         const bool singular = player_mutation_level(MUT_MISSING_HAND);
 
@@ -554,7 +554,7 @@ public:
 class FormStatue : public Form
 {
 private:
-    FormStatue() : Form(TRAN_STATUE) { }
+    FormStatue() : Form(transformation::statue) { }
     DISALLOW_COPY_AND_ASSIGN(FormStatue);
 public:
     static const FormStatue &instance() { static FormStatue inst; return inst; }
@@ -570,7 +570,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const override
+    string transform_message(transformation previous_trans) const override
     {
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             return "You inwardly fear your resemblance to a lawn ornament.";
@@ -631,7 +631,7 @@ public:
 class FormIce : public Form
 {
 private:
-    FormIce() : Form(TRAN_ICE_BEAST) { }
+    FormIce() : Form(transformation::ice_beast) { }
     DISALLOW_COPY_AND_ASSIGN(FormIce);
 public:
     static const FormIce &instance() { static FormIce inst; return inst; }
@@ -662,7 +662,7 @@ public:
 class FormDragon : public Form
 {
 private:
-    FormDragon() : Form(TRAN_DRAGON) { }
+    FormDragon() : Form(transformation::dragon) { }
     DISALLOW_COPY_AND_ASSIGN(FormDragon);
 public:
     static const FormDragon &instance() { static FormDragon inst; return inst; }
@@ -737,7 +737,7 @@ public:
 class FormLich : public Form
 {
 private:
-    FormLich() : Form(TRAN_LICH) { }
+    FormLich() : Form(transformation::lich) { }
     DISALLOW_COPY_AND_ASSIGN(FormLich);
 public:
     static const FormLich &instance() { static FormLich inst; return inst; }
@@ -745,7 +745,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const override
+    string transform_message(transformation previous_trans) const override
     {
         return "Your body is suffused with negative energy!";
     }
@@ -765,7 +765,7 @@ public:
 class FormBat : public Form
 {
 private:
-    FormBat() : Form(TRAN_BAT) { }
+    FormBat() : Form(transformation::bat) { }
     DISALLOW_COPY_AND_ASSIGN(FormBat);
 public:
     static const FormBat &instance() { static FormBat inst; return inst; }
@@ -803,7 +803,7 @@ public:
 class FormPig : public Form
 {
 private:
-    FormPig() : Form(TRAN_PIG) { }
+    FormPig() : Form(transformation::pig) { }
     DISALLOW_COPY_AND_ASSIGN(FormPig);
 public:
     static const FormPig &instance() { static FormPig inst; return inst; }
@@ -812,7 +812,7 @@ public:
 class FormAppendage : public Form
 {
 private:
-    FormAppendage() : Form(TRAN_APPENDAGE) { }
+    FormAppendage() : Form(transformation::appendage) { }
     DISALLOW_COPY_AND_ASSIGN(FormAppendage);
 public:
     static const FormAppendage &instance()
@@ -838,7 +838,7 @@ public:
     /**
      * Get a message for transforming into this form.
      */
-    string transform_message(transformation_type previous_trans) const override
+    string transform_message(transformation previous_trans) const override
     {
         // ATTR_APPENDAGE must be set earlier!
         switch (you.attribute[ATTR_APPENDAGE])
@@ -863,7 +863,7 @@ public:
 class FormTree : public Form
 {
 private:
-    FormTree() : Form(TRAN_TREE) { }
+    FormTree() : Form(transformation::tree) { }
     DISALLOW_COPY_AND_ASSIGN(FormTree);
 public:
     static const FormTree &instance() { static FormTree inst; return inst; }
@@ -878,7 +878,7 @@ public:
 class FormPorcupine : public Form
 {
 private:
-    FormPorcupine() : Form(TRAN_PORCUPINE) { }
+    FormPorcupine() : Form(transformation::porcupine) { }
     DISALLOW_COPY_AND_ASSIGN(FormPorcupine);
 public:
     static const FormPorcupine &instance()
@@ -892,7 +892,7 @@ public:
 class FormWisp : public Form
 {
 private:
-    FormWisp() : Form(TRAN_WISP) { }
+    FormWisp() : Form(transformation::wisp) { }
     DISALLOW_COPY_AND_ASSIGN(FormWisp);
 public:
     static const FormWisp &instance() { static FormWisp inst; return inst; }
@@ -902,7 +902,7 @@ public:
 class FormJelly : public Form
 {
 private:
-    FormJelly() : Form(TRAN_JELLY) { }
+    FormJelly() : Form(transformation::jelly) { }
     DISALLOW_COPY_AND_ASSIGN(FormJelly);
 public:
     static const FormJelly &instance() { static FormJelly inst; return inst; }
@@ -912,7 +912,7 @@ public:
 class FormFungus : public Form
 {
 private:
-    FormFungus() : Form(TRAN_FUNGUS) { }
+    FormFungus() : Form(transformation::fungus) { }
     DISALLOW_COPY_AND_ASSIGN(FormFungus);
 public:
     static const FormFungus &instance() { static FormFungus inst; return inst; }
@@ -926,7 +926,7 @@ public:
 class FormShadow : public Form
 {
 private:
-    FormShadow() : Form(TRAN_SHADOW) { }
+    FormShadow() : Form(transformation::shadow) { }
     DISALLOW_COPY_AND_ASSIGN(FormShadow);
 public:
     static const FormShadow &instance() { static FormShadow inst; return inst; }
@@ -956,7 +956,7 @@ void set_hydra_form_heads(int heads)
 class FormHydra : public Form
 {
 private:
-    FormHydra() : Form(TRAN_HYDRA) { }
+    FormHydra() : Form(transformation::hydra) { }
     DISALLOW_COPY_AND_ASSIGN(FormHydra);
 public:
     static const FormHydra &instance() { static FormHydra inst; return inst; }
@@ -1034,9 +1034,10 @@ static const Form* forms[] =
     &FormHydra::instance(),
 };
 
-const Form* get_form(transformation_type form)
+const Form* get_form(transformation xform)
 {
     COMPILE_CHECK(ARRAYSZ(forms) == NUM_TRANSFORMS);
+    const int form = static_cast<int>(xform);
     ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
     return forms[form];
 }
@@ -1050,10 +1051,9 @@ static void _extra_hp(int amount_extra);
  * @param form      The form in question.
  * @return          The form's casual, wizmode name.
  */
-const char* transform_name(transformation_type form)
+const char* transform_name(transformation form)
 {
-    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->wiz_name.c_str();
+    return get_form(form)->wiz_name.c_str();
 }
 
 /**
@@ -1062,10 +1062,9 @@ const char* transform_name(transformation_type form)
  * @param form      The form in question.
  * @return          Whether the player can wield items when in that form.
 */
-bool form_can_wield(transformation_type form)
+bool form_can_wield(transformation form)
 {
-    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->can_wield();
+    return get_form(form)->can_wield();
 }
 
 /**
@@ -1074,10 +1073,9 @@ bool form_can_wield(transformation_type form)
  * @param form      The form in question.
  * @return          Whether the player can wear armour when in that form.
  */
-bool form_can_wear(transformation_type form)
+bool form_can_wear(transformation form)
 {
-    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return (forms[form]->blocked_slots & EQF_WEAR) != EQF_WEAR;
+    return !testbits(get_form(form)->blocked_slots, EQF_WEAR);
 }
 
 /**
@@ -1087,7 +1085,7 @@ bool form_can_wear(transformation_type form)
  * @param form      The form in question.
  * @return          Whether the player will be able to fly in this form.
  */
-bool form_can_fly(transformation_type form)
+bool form_can_fly(transformation form)
 {
     return get_form(form)->player_can_fly();
 }
@@ -1104,7 +1102,7 @@ bool form_can_fly(transformation_type form)
  * @param form      The form in question.
  * @return          Whether the player will be able to swim in this form.
  */
-bool form_can_swim(transformation_type form)
+bool form_can_swim(transformation form)
 {
     return get_form(form)->player_can_swim();
 }
@@ -1118,12 +1116,13 @@ bool form_can_swim(transformation_type form)
  * @return          Whether the player won't be killed when entering deep water
  *                  in that form.
  */
-bool form_likes_water(transformation_type form)
+bool form_likes_water(transformation form)
 {
     // Grey dracs can't swim, so can't statue form merfolk/octopodes
     // -- yet they can still survive in water.
     if (species_likes_water(you.species)
-        && (form == TRAN_STATUE || !get_form(form)->forbids_swimming()))
+        && (form == transformation::statue
+            || !get_form(form)->forbids_swimming()))
     {
         return true;
     }
@@ -1132,25 +1131,26 @@ bool form_likes_water(transformation_type form)
     return form_can_swim(form);
 }
 
-bool form_likes_lava(transformation_type form)
+bool form_likes_lava(transformation form)
 {
 #if TAG_MAJOR_VERSION == 34
     // Lava orcs can only swim in non-phys-change forms.
     // However, ice beast & statue form will melt back to lava, so they're OK
     return you.species == SP_LAVA_ORC
            && (!form_changed_physiology(form)
-               || form == TRAN_ICE_BEAST
-               || form == TRAN_STATUE);
+               || form == transformation::ice_beast
+               || form == transformation::statue);
 #else
     return false;
 #endif
 }
 
 // Used to mark transformations which override species intrinsics.
-bool form_changed_physiology(transformation_type form)
+bool form_changed_physiology(transformation form)
 {
-    return form != TRAN_NONE && form != TRAN_APPENDAGE
-           && form != TRAN_BLADE_HANDS;
+    return form != transformation::none
+        && form != transformation::appendage
+        && form != transformation::blade_hands;
 }
 
 /**
@@ -1159,32 +1159,35 @@ bool form_changed_physiology(transformation_type form)
  * @param form      The form in question.
  * @return          Whether the form can bleed, sublime, etc.
  */
-bool form_can_bleed(transformation_type form)
+bool form_can_bleed(transformation form)
 {
     return get_form(form)->can_bleed != FC_FORBID;
 }
 
-bool form_can_use_wand(transformation_type form)
+bool form_can_use_wand(transformation form)
 {
-    return form_can_wield(form) || form == TRAN_DRAGON;
+    return form_can_wield(form) || form == transformation::dragon;
 }
 
 // Used to mark forms which keep most form-based mutations.
-bool form_keeps_mutations(transformation_type form)
+bool form_keeps_mutations(transformation form)
 {
     return get_form(form)->keeps_mutations;
 }
 
 static set<equipment_type>
-_init_equipment_removal(transformation_type form)
+_init_equipment_removal(transformation form)
 {
     set<equipment_type> result;
     if (!form_can_wield(form) && you.weapon() || you.melded[EQ_WEAPON])
         result.insert(EQ_WEAPON);
 
     // Liches can't wield holy weapons.
-    if (form == TRAN_LICH && you.weapon() && is_holy_item(*you.weapon()))
+    if (form == transformation::lich && you.weapon()
+        && is_holy_item(*you.weapon()))
+    {
         result.insert(EQ_WEAPON);
+    }
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
@@ -1372,7 +1375,7 @@ int form_hp_mod()
     return get_form()->hp_mod;
 }
 
-static bool _flying_in_new_form(transformation_type which_trans)
+static bool _flying_in_new_form(transformation which_trans)
 {
     if (get_form(which_trans)->forbids_flight())
         return false;
@@ -1419,7 +1422,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
  * @param feat              The dungeon feature to be checked for danger.
  * @return                  If the feat is lethal for the player in the form.
  */
-bool feat_dangerous_for_form(transformation_type which_trans,
+bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat)
 {
     // Everything is okay if we can fly.
@@ -1483,12 +1486,12 @@ static mutation_type _beastly_appendage()
     return chosen;
 }
 
-static bool _transformation_is_safe(transformation_type which_trans,
+static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
+    if (which_trans == transformation::ice_beast && you.species == SP_DJINNI)
         return false; // melting is fatal...
 #endif
     if (!feat_dangerous_for_form(which_trans, feat))
@@ -1512,7 +1515,7 @@ static bool _transformation_is_safe(transformation_type which_trans,
  * @param new_form  The form to check the safety of.
  * @return          Whether it's okay to go ahead with the transformation.
  */
-bool check_form_stat_safety(transformation_type new_form)
+bool check_form_stat_safety(transformation new_form)
 {
     const int str_mod = get_form(new_form)->str_mod - get_form()->str_mod;
     const int dex_mod = get_form(new_form)->dex_mod - get_form()->dex_mod;
@@ -1523,8 +1526,9 @@ bool check_form_stat_safety(transformation_type new_form)
         return true;
 
     string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
-                                 new_form == TRAN_NONE ? "Turning back"
-                                                       : "Transforming",
+                                 new_form == transformation::none
+                                     ? "Turning back"
+                                     : "Transforming",
                                  bad_str ? "strength" : "dexterity");
     if (yesno(prompt.c_str(), false, 'n'))
         return true;
@@ -1533,7 +1537,7 @@ bool check_form_stat_safety(transformation_type new_form)
     return false;
 }
 
-static int _transform_duration(transformation_type which_trans, int pow)
+static int _transform_duration(transformation which_trans, int pow)
 {
     return get_form(which_trans)->get_duration(pow);
 }
@@ -1587,25 +1591,25 @@ static void _print_head_change_message(int old_heads, int new_heads)
  *                      player is too satiated as a vampire; UFR_TOO_DEAD if
  *                      the player is too dead (or too thirsty as a vampire).
  */
-undead_form_reason lifeless_prevents_form(transformation_type which_trans,
+undead_form_reason lifeless_prevents_form(transformation which_trans,
                                           bool involuntary)
 {
     if (!you.undead_state(false))
         return UFR_GOOD; // not undead!
 
-    if (which_trans == TRAN_NONE)
+    if (which_trans == transformation::none)
         return UFR_GOOD; // everything can become itself
 
-    if (which_trans == TRAN_SHADOW)
+    if (which_trans == transformation::shadow)
         return UFR_GOOD; // even the undead can use dith's shadow form
 
     if (you.species != SP_VAMPIRE)
         return UFR_TOO_DEAD; // ghouls & mummies can't become anything else
 
-    if (which_trans == TRAN_LICH)
+    if (which_trans == transformation::lich)
         return UFR_TOO_DEAD; // vampires can never lichform
 
-    if (which_trans == TRAN_BAT) // can batform on satiated or below
+    if (which_trans == transformation::bat) // can batform on satiated or below
     {
         if (involuntary)
             return UFR_TOO_DEAD; // but not as a forced polymorph effect
@@ -1641,17 +1645,18 @@ undead_form_reason lifeless_prevents_form(transformation_type which_trans,
  *                          just_check run returns true; e.g. when Zin decides
  *                          to intervene. (That may be the only case.)
  */
-bool transform(int pow, transformation_type which_trans, bool involuntary,
+bool transform(int pow, transformation which_trans, bool involuntary,
                bool just_check, string *fail_reason)
 {
-    const transformation_type previous_trans = you.form;
+    const transformation previous_trans = you.form;
     const bool was_flying = you.airborne();
     bool success = true;
     string msg;
 
     // Zin's protection.
     if (!just_check && have_passive(passive_t::resist_polymorph)
-        && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
+        && x_chance_in_y(you.piety, MAX_PIETY)
+        && which_trans != transformation::none)
     {
         simple_god_message(" protects your body from unnatural transformation!");
         return false;
@@ -1685,14 +1690,14 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             return true;
 
         // update power
-        if (which_trans != TRAN_NONE)
+        if (which_trans != transformation::none)
         {
             you.props[TRANSFORM_POW_KEY] = pow;
             you.redraw_armour_class = true;
             // ^ could check more carefully for the exact cases, but I'm
             // worried about making the code too fragile
 
-            if (which_trans == TRAN_HYDRA)
+            if (which_trans == transformation::hydra)
             {
                 const int heads = you.heads();
                 set_hydra_form_heads(div_rand_round(pow, 10));
@@ -1707,7 +1712,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
         }
-        else if (!involuntary && which_trans != TRAN_NONE)
+        else if (!involuntary && which_trans != transformation::none)
             mpr("You fail to extend your transformation any further.");
 
         return true;
@@ -1719,21 +1724,23 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg = "Your unliving flesh cannot be transformed in this way.";
         success = false;
     }
-    else if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
+    else if (which_trans == transformation::lich
+             && you.duration[DUR_DEATHS_DOOR])
     {
         msg = "You cannot become a lich while in Death's Door.";
         success = false;
     }
 #if TAG_MAJOR_VERSION == 34
     else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
-             && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
+             && (which_trans == transformation::ice_beast
+                 || which_trans == transformation::statue))
     {
         msg =  "Your temperature is too high to benefit from that spell.";
         success = false;
     }
 #endif
 
-    if (!just_check && previous_trans != TRAN_NONE)
+    if (!just_check && previous_trans != transformation::none)
         untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
@@ -1743,14 +1750,14 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     item_def nil_item;
     nil_item.link = -1;
     if (just_check && !involuntary
-        && which_trans == TRAN_LICH && rem_stuff.count(EQ_WEAPON)
+        && which_trans == transformation::lich && rem_stuff.count(EQ_WEAPON)
         && !check_old_item_warning(nil_item, OPER_WIELD))
     {
         canned_msg(MSG_OK);
         return false;
     }
 
-    if (which_trans == TRAN_APPENDAGE)
+    if (which_trans == transformation::appendage)
     {
         const mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
@@ -1788,7 +1795,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (form_changed_physiology(which_trans))
         merfolk_stop_swimming();
 
-    if (which_trans == TRAN_HYDRA)
+    if (which_trans == transformation::hydra)
         set_hydra_form_heads(div_rand_round(pow, 10));
 
     // Give the transformation message.
@@ -1823,7 +1830,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // Extra effects
     switch (which_trans)
     {
-    case TRAN_STATUE:
+    case transformation::statue:
         if (you.duration[DUR_ICY_ARMOUR])
         {
             mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
@@ -1831,7 +1838,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
         break;
 
-    case TRAN_SPIDER:
+    case transformation::spider:
         if (you.attribute[ATTR_HELD])
         {
             trap_def *trap = trap_at(you.pos());
@@ -1843,7 +1850,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
         break;
 
-    case TRAN_TREE:
+    case transformation::tree:
         mpr("Your roots penetrate the ground.");
         if (you.duration[DUR_TELEPORT])
         {
@@ -1853,7 +1860,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         you.duration[DUR_FLIGHT] = 0;
         // break out of webs/nets as well
 
-    case TRAN_DRAGON:
+    case transformation::dragon:
         if (you.attribute[ATTR_HELD])
         {
             trap_def *trap = trap_at(you.pos());
@@ -1873,7 +1880,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
         break;
 
-    case TRAN_LICH:
+    case transformation::lich:
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
         {
@@ -1885,7 +1892,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         you.redraw_status_lights = true;
         break;
 
-    case TRAN_APPENDAGE:
+    case transformation::appendage:
         {
             int app = you.attribute[ATTR_APPENDAGE];
             ASSERT(app != NUM_MUTATIONS);
@@ -1894,7 +1901,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
         break;
 
-    case TRAN_SHADOW:
+    case transformation::shadow:
         drain_player(25, true, true);
         if (you.invisible())
             mpr("You fade into the shadows.");
@@ -1941,7 +1948,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // for example if Xom decides to transform you while you're busy
     // running around or butchering corpses.
     // If you're turned into a tree, you stop taking stairs.
-    stop_delay(which_trans == TRAN_TREE);
+    stop_delay(which_trans == transformation::tree);
 
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
@@ -1985,17 +1992,17 @@ void untransform(bool skip_move)
         you.props.erase(HYDRA_FORM_HEADS_KEY);
 
     // Must be unset first or else infinite loops might result. -- bwr
-    const transformation_type old_form = you.form;
+    const transformation old_form = you.form;
     int hp_downscale = form_hp_mod();
 
     // We may have to unmeld a couple of equipment types.
     set<equipment_type> melded = _init_equipment_removal(old_form);
 
-    you.form = TRAN_NONE;
+    you.form = transformation::none;
     you.duration[DUR_TRANSFORMATION] = 0;
     update_player_symbol();
 
-    if (old_form == TRAN_APPENDAGE)
+    if (old_form == transformation::appendage)
     {
         int app = you.attribute[ATTR_APPENDAGE];
         ASSERT(beastly_slot(app) != EQ_NONE);

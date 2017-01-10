@@ -675,7 +675,7 @@ static void _hydra_consider_devouring(monster &defender)
  */
 bool melee_attack::handle_phase_killed()
 {
-    if (attacker->is_player() && you.form == TRAN_HYDRA
+    if (attacker->is_player() && you.form == transformation::hydra
         && defender->is_monster() // better safe than sorry
         && defender->type != MONS_NO_MONSTER) // already reset
     {
@@ -1057,7 +1057,7 @@ public:
     {
         const int base_dam = damage + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
 
-        if (you.form == TRAN_BLADE_HANDS)
+        if (you.form == transformation::blade_hands)
             return base_dam + 6;
 
         if (you.has_usable_claws())
@@ -1068,7 +1068,7 @@ public:
 
     string get_name() const override
     {
-        if (you.form == TRAN_BLADE_HANDS)
+        if (you.form == transformation::blade_hands)
             return "slash";
 
         if (you.has_usable_claws())
@@ -1475,11 +1475,11 @@ int melee_attack::player_apply_final_multipliers(int damage)
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
-    if (you.form == TRAN_STATUE)
+    if (you.form == transformation::statue)
         damage = div_rand_round(damage * 3, 2);
 
     // Can't affect much of anything as a shadow.
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
 
     if (you.duration[DUR_WEAK])
@@ -3552,7 +3552,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     }
 
     // Now print message, need biting unless already done (never for bat form!)
-    if (needs_bite_msg && you.form != TRAN_BAT)
+    if (needs_bite_msg && you.form != transformation::bat)
     {
         mprf("You bite %s, and draw %s blood!",
              mon->name(DESC_THE, true).c_str(),
