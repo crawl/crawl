@@ -670,7 +670,7 @@ static void _maybe_fog(int dam)
                                   * (you.piety - minpiety)
                                   / (MAX_PIETY - minpiety);
     if (have_passive(passive_t::hit_smoke)
-        && (dam > 0 && you.form == transformation::shadow
+        && (dam > 0 && you.form == TRAN_SHADOW
             || dam >= lower_threshold
                && x_chance_in_y(dam - lower_threshold,
                                 upper_threshold - lower_threshold)))
@@ -732,7 +732,7 @@ static void _place_player_corpse(bool explode)
     if (explode)
         dummy.flags &= MF_EXPLODE_KILL;
 
-    if (you.form != transformation::none)
+    if (you.form != TRAN_NONE)
         mpr("Your shape twists and changes as you die.");
 
     place_monster_corpse(dummy, false);
@@ -838,7 +838,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.form == transformation::shadow)
+        if (you.form == TRAN_SHADOW)
         {
             drain_amount = (dam - (dam / 2));
             dam /= 2;

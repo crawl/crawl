@@ -640,11 +640,9 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 
 static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs,
-               species_is_draconian(you.species)
-                || you.form == transformation::dragon
-                   ? "You feel an overwhelming desire to commit suicide."
-                   : "You feel an overwhelming desire to slay dragons!");
+    _equip_mpr(show_msgs, species_is_draconian(you.species) || you.form == TRAN_DRAGON
+                            ? "You feel an overwhelming desire to commit suicide."
+                            : "You feel an overwhelming desire to slay dragons!");
 }
 
 static bool is_dragonkind(const actor *act)
@@ -657,7 +655,7 @@ static bool is_dragonkind(const actor *act)
     }
 
     if (act->is_player())
-        return you.form == transformation::dragon;
+        return you.form == TRAN_DRAGON;
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();

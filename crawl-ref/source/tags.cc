@@ -1367,7 +1367,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
-    _marshall_as_int(th, you.form);
+    marshallInt(th, you.form);
     CANARY;
 
     // how many you.equip?
@@ -2294,15 +2294,15 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
         unmarshallInt(th);
 #endif
-    you.form            = unmarshall_int_as<transformation>(th);
-    ASSERT_RANGE(static_cast<int>(you.form), 0, NUM_TRANSFORMS);
+    you.form            = static_cast<transformation_type>(unmarshallInt(th));
+    ASSERT_RANGE(you.form, TRAN_NONE, NUM_TRANSFORMS);
 #if TAG_MAJOR_VERSION == 34
     // Fix the effects of #7668 (Vampire lose undead trait once coming back
     // from lich form).
-    if (you.form == transformation::none)
+    if (you.form == TRAN_NONE)
         you.transform_uncancellable = false;
 #else
-    ASSERT(you.form != transformation::none || !you.transform_uncancellable);
+    ASSERT(you.form != TRAN_NONE || !you.transform_uncancellable);
 #endif
     EAT_CANARY;
 
@@ -2590,11 +2590,8 @@ static void tag_read_you(reader &th)
     if (you.species == SP_LAVA_ORC)
         you.duration[DUR_MAGIC_ARMOUR] = 0;
 
-    if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM
-        && you.form == transformation::fungus)
-    {
+    if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM && you.form == TRAN_FUNGUS)
         you.duration[DUR_CONFUSING_TOUCH] = 0;
-    }
 
     you.duration[DUR_JELLY_PRAYER] = 0;
 #endif

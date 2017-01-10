@@ -487,7 +487,7 @@ void kirke_death_fineff::fire()
     delayed_action_fineff::fire();
 
     // Revert the player last
-    if (you.form == transformation::pig)
+    if (you.form == TRAN_PIG)
         untransform();
 }
 

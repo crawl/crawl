@@ -151,7 +151,7 @@ public:
 
     // PC's symbol (usually @) and colour.
     monster_type symbol;
-    transformation form;
+    transformation_type form;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;

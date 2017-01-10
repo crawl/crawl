@@ -1190,9 +1190,9 @@ static int _shatter_player_dice()
     // flyers get no extra damage.
     else if (you.airborne())
         return 1;
-    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
         return 6;
-    else if (you.form == transformation::ice_beast)
+    else if (you.form == TRAN_ICE_BEAST)
         return random_range(4, 5);
     else
         return 3;
@@ -2004,11 +2004,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     {
         const bool petrified = (you.petrified() || you.petrifying());
 
-        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
+        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == transformation::statue ? 3 : 2;
+            beam.damage.num = you.form == TRAN_STATUE ? 3 : 2;
             return true;
         }
         else if (petrified)
@@ -2018,7 +2018,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.damage.num = 3;
             return true;
         }
-        else if (you.form == transformation::ice_beast) // blast of ice
+        else if (you.form == TRAN_ICE_BEAST) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;

@@ -228,7 +228,7 @@ static void _sdump_hunger(dump_params &par)
 static void _sdump_transform(dump_params &par)
 {
     string &text(par.text);
-    if (you.form != transformation::none)
+    if (you.form)
         text += get_form()->get_description(par.se) + "\n\n";}
 
 static branch_type single_portals[] =

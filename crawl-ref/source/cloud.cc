@@ -1338,7 +1338,7 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         // [ds] Yes, this is an ugly kludge: temporarily hide
         // durations and transforms.
         unwind_var<durations_t> old_durations(you.duration);
-        unwind_var<transformation> old_form(you.form, transformation::none);
+        unwind_var<transformation_type> old_form(you.form, TRAN_NONE);
         you.duration.init(0);
         return is_damaging_cloud(type, true, yours);
     }
