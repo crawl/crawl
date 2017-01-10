@@ -23,6 +23,10 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+frog_m BARACHIAN
+frog_f
+frog2_f
+frog2_m
 gnome_f
 gnome_m
 halfling_m HALFLING
