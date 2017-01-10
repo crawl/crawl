@@ -3417,7 +3417,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.form == TRAN_LICH
+            if (!temp && you.form == transformation::lich
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -3698,10 +3698,10 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!is_inedible(item))
             return false;
 
-        if (!temp && you.form == TRAN_LICH)
+        if (!temp && you.form == transformation::lich)
         {
             // See what would happen if we were in our normal state.
-            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
+            unwind_var<transformation> formsim(you.form, transformation::none);
 
             if (!is_inedible(item))
                 return false;

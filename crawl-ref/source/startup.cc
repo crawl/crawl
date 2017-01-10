@@ -254,7 +254,7 @@ static void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
-    if (you.form != TRAN_LICH)
+    if (you.form != transformation::lich)
         food_change(true);
     shopping_list.refresh();
 

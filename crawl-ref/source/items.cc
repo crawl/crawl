@@ -1381,10 +1381,12 @@ void pickup(bool partial_quantity)
 
     if (o == NON_ITEM)
         mpr("There are no items here.");
-    else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
+    else if (you.form == transformation::ice_beast
+             && grd(you.pos()) == DNGN_DEEP_WATER)
+    {
         mpr("You can't reach the bottom while floating on water.");
-    // just one movable item?
-    else if (num_items == 1)
+    }
+    else if (num_items == 1) // just one movable item?
     {
         // Get the link to the movable item in the pile.
         while (item_is_stationary(mitm[o]))

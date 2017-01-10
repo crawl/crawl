@@ -1196,7 +1196,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 int attack::player_apply_final_multipliers(int damage)
 {
     // Can't affect much of anything as a shadow.
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
 
     return damage;
@@ -1604,7 +1604,7 @@ bool attack::apply_damage_brand(const char *what)
 
         // Also used for players in fungus form.
         if (attacker->is_player()
-            && you.form == TRAN_FUNGUS
+            && you.form == transformation::fungus
             && !you.duration[DUR_CONFUSING_TOUCH]
             && defender->is_unbreathing())
         {
