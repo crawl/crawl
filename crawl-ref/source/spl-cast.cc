@@ -1199,8 +1199,10 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     }
 
     if (spell_to_zap(spell) != NUM_ZAPS)
+    {
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
                                           pow, 0, 0);
+    }
 
     return nullptr;
 }
