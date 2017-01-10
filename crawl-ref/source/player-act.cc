@@ -140,7 +140,7 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return species == SP_GREY_DRACONIAN
-              || form == TRAN_TREE
+              || form == transformation::tree
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
@@ -191,7 +191,7 @@ int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
-    else if (form == TRAN_BLADE_HANDS)
+    else if (form == transformation::blade_hands)
         return DVORP_SLICING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
@@ -590,9 +590,9 @@ string player::arm_name(bool plural, bool *can_plural) const
     else if (species == SP_OCTOPODE)
         str = "tentacle";
 
-    if (form == TRAN_LICH)
+    if (form == transformation::lich)
         adj = "bony";
-    else if (form == TRAN_SHADOW)
+    else if (form == transformation::shadow)
         adj = "shadowy";
 
     if (!adj.empty())
@@ -830,7 +830,7 @@ bool player::antimagic_susceptible() const
 bool player::is_web_immune() const
 {
     // Spider form
-    return form == TRAN_SPIDER;
+    return form == transformation::spider;
 }
 
 bool player::shove(const char* feat_name)
