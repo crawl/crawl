@@ -978,6 +978,8 @@ misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
+misc_ancient_crate MISC_ANCIENT_CRATE
+misc_dusty_tome MISC_DUSTY_TOME
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR

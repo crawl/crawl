@@ -998,11 +998,10 @@ void tilep_job_default(int job, dolls_data *doll)
 
         case JOB_ARCHAEOLOGIST:
             parts[TILEP_PART_HELM]  = TILEP_HELM_HAT_BLACK;
-            parts[TILEP_PART_BODY]  = TILEP_BODY_JACKET2;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_SLIT_BLACK;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_DARKBROWN;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MESH_BLACK;
             parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BROWN;
-            parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLACK;
             break;
 
         case JOB_ARTIFICER:

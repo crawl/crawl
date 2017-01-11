@@ -15,6 +15,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -669,13 +670,35 @@ bool skill_has_manual(skill_type skill)
     return manual_slot_for_skill(skill) != -1;
 }
 
+static void _archaeologist_open_crate()
+{
+
+    for (uint8_t i = 0; i < ENDOFPACK; i++)
+        if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
+        {
+            unrand_type type = (unrand_type)you.inv[i].props[ARCHAEOLOGIST_CRATE_ITEM].get_int();
+            make_item_unrandart(you.inv[i], type);
+            item_colour(you.inv[i]);
+            item_set_appearance(you.inv[i]);
+            mprf("The crate's locking mechanism finally gives in... Revealing %s!", you.inv[i].name(DESC_THE).c_str());
+        }
+}
+
 void finish_manual(int slot)
 {
     item_def& manual(you.inv[slot]);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    mprf("You have finished your manual of %s and toss it away.",
-         skill_name(skill));
+    if (you.char_class == JOB_ARCHAEOLOGIST && you.inv[slot].props.exists(ARCHAEOLOGIST_TOME_SKILL))
+    {
+        mprf("As you finish your manual of %s, the mysteries of the crate's mechanism unravel in your mind!",
+                skill_name(skill));
+        _archaeologist_open_crate();
+    }
+    else
+        mprf("You have finished your manual of %s and toss it away.",
+             skill_name(skill));
+
     dec_inv_item_quantity(slot, 1);
 }
 

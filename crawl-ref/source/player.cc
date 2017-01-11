@@ -47,6 +47,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-place.h"
@@ -3069,6 +3070,28 @@ void level_change(bool skip_attribute_increase)
             upgrade_hepliaklqana_ancestor();
 
         learned_something_new(HINT_NEW_LEVEL);
+    }
+
+    // Manual identification.
+    if (you.char_class == JOB_ARCHAEOLOGIST && you.experience_level >= 3)
+    {
+        int manual_index = -1;
+        for (int i = 0; i < ENDOFPACK; i++)
+            if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
+                manual_index = i;
+
+        if (manual_index != -1) // TODO: Handle an archeologist that dropped their manual for some reason
+        {
+            item_def& manual = you.inv[manual_index];
+            manual.base_type = OBJ_BOOKS;
+            manual.sub_type = BOOK_MANUAL;
+            manual.skill_points = 1500;
+            manual.skill = (skill_type)manual.props[ARCHAEOLOGIST_TOME_SKILL].get_int();
+            item_colour(manual);
+            item_set_appearance(manual);
+            mprf("You have an epiphany! The dusty tome is %s! Reading it may be key to unlocking the crate...",
+                 manual.name(DESC_A).c_str());
+        }
     }
 
     while (you.experience >= exp_needed(you.max_level + 1))

@@ -16,8 +16,8 @@ vulnerable to attacks from afar.
 %%%%
 Archaeologist
 
-Archaeologists enter the dungeon looking to cast light over the origins of 
-ancient relics.
+Thoroughly inept at fighting but well dressed, archaeologists enter the dungeon 
+looking to cast light over the origins of ancient relics.
 %%%%
 Artificer
 

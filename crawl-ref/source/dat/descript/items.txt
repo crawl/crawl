@@ -60,6 +60,11 @@ An amulet that allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition gained from them. These effects on the wearer's
 digestion are cumulative over time and are initially small.
 %%%%
+ancient crate
+
+A mysterious crate unearthed during an exotic excavation. No mundane methods have
+proven capable of opening it. Exploring the dungeon may help reveal its secrets.
+%%%%
 animal skin
 
 A large piece of thick skin covered in fur, cut from the corpse of an animal
@@ -400,6 +405,11 @@ A flail with long spikes and a heavy head.
 double sword
 
 A magical weapon with two razor-sharp blades.
+%%%%
+dusty tome
+
+A manuscript written in an undecipherable language. It was found buried, together 
+with an equally mystifying crate.
 %%%%
 eggplant
 
