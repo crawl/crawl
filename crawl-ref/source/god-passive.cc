@@ -1528,9 +1528,24 @@ monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item
     if (!in_bounds(position) || weapon.base_type != OBJ_WEAPONS)
         return nullptr;
 
+    coord_def spawn_position = position;
+    if (!you.is_habitable(position) || actor_at(position))
+    {
+        coord_def dir = coord_def(1,0);
+        for (int i = 0; i < 8; ++i)
+        {
+            if (you.is_habitable(position + dir) && !actor_at(position + dir))
+            {
+                spawn_position = position + dir;
+                break;
+            }
+            dir = rotate_adjacent(dir, 1);
+        }
+    }
+
     mgen_data mg(MONS_IEOH_JIAN_WEAPON,
                  BEH_FRIENDLY,
-                 position,
+                 spawn_position,
                  MHITYOU,
                  MG_FORCE_BEH | MG_FORCE_PLACE,
                  GOD_IEOH_JIAN);

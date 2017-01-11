@@ -873,7 +873,7 @@ gender. This does not take any time.
 Steel Dragonfly ability
 
 Projects a weapon towards a target, hitting the first enemy in the way. The weapon
-is then brought to life, attacking nearby enemies for a brief period of time.
+is then brought to life for a brief moment, striking again on its own.
 %%%%
 End Steel Dragonfly ability
 

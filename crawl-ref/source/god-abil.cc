@@ -7092,6 +7092,8 @@ bool ieoh_jian_heavenly_blade()
     if (you.species == SP_FELID)
         directly_summon = true;
 
+    ieoh_jian_end_projection();
+
     if (you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
     {
         simple_god_message(" says: One heavenly blade is more than enough, mortal!");
@@ -7120,14 +7122,6 @@ bool ieoh_jian_heavenly_blade()
         your_weapon->props[IEOH_JIAN_SWAPPED_OUT] = true;
 
     auto weapon = ieoh_jian_generate_divine_weapon();
-
-    if (!directly_summon && you.duration[DUR_IEOH_JIAN_PROJECTION])
-    {
-        if (yesno("You need your hands free to control your own flying weapon. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
-            directly_summon = true;
-        else
-            return false;
-    }
 
     if (!directly_summon && !can_wield(&weapon))
     {
@@ -7285,13 +7279,9 @@ bool ieoh_jian_steel_dragonfly(bolt &pbolt)
         mprf("%s bounces wildly and flies back to you!", item.name(DESC_THE, false, true, false).c_str());
     else
     {
-        // Activates the flying weapon to attack for a while.
-        float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-        int duration = IEOH_JIAN_BASE_PROJECTED_DURATION * (1 + invo_duration_factor);
+        // Activates the flying weapon to attack for a strike or two.
+        int duration = IEOH_JIAN_BASE_PROJECTED_DURATION;
         you.duration[DUR_IEOH_JIAN_PROJECTION] = duration;
-        mprf(MSGCH_GOD, "You can feel the presence of %s wielding %s.", 
-             ieoh_jian_random_sifu_name().c_str(),
-             item.name(DESC_THE, false, true, false).c_str());
     }
 
     canned_msg(MSG_EMPTY_HANDED_NOW);
