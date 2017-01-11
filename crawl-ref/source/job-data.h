@@ -54,12 +54,12 @@ static const map<job_type, job_def> job_data =
 } },
 
 { JOB_ARCHAEOLOGIST, {
-    "AC", "Archaeologist",
-    0, 1, 4,
+    "Ac", "Archaeologist",
+    3, 3, 6,
     { SP_HUMAN, },
-    { "robe", "scroll of identify q:2", "scroll of fear q:2", },
-    WCHOICE_PLAIN,
-    { { SK_FIGHTING, 1 }, { SK_DODGING, 1 }, { SK_WEAPON, 2 }, },
+    { "robe plus:2", "hat", "pair of boots", "pair of gloves", "cloak" },
+    WCHOICE_NONE,
+    { { SK_STEALTH, 1}, },
 } },
 
 { JOB_ARTIFICER, {
