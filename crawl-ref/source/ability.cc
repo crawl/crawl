@@ -628,7 +628,7 @@ static const ability_def Ability_List[] =
 
     // Ieoh Jian
     { ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "Steel Dragonfly",
-        2, 0, 30, generic_cost::range(0,1), {FAIL_INVO, 20, 5, 10}, abflag::NONE },
+        2, 20, 30, generic_cost::fixed(1), {FAIL_INVO, 20, 5, 10}, abflag::NONE },
     { ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY, "End Steel Dragonfly",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
     { ABIL_IEOH_JIAN_HEAVENLY_BLADE, "Heavenly Blade",
