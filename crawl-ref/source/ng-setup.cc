@@ -346,10 +346,6 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     // Handle items unlocked through interesting skills.
     switch (type)
     {
-    case UNRAND_OLGREB:
-        return SK_POISON_MAGIC;
-    case UNRAND_ELEMENTAL_STAFF:
-        return coinflip() ? SK_STAVES : SK_EVOCATIONS;
     case UNRAND_PONDERING:
     case UNRAND_MAXWELL:
     case UNRAND_FOLLY:
@@ -391,7 +387,7 @@ static void _setup_archaeologist()
                 you.inv[i].props["worn_tile"] = (short)TILEP_HELM_HAT_BLACK;
         }
 
-    skill_type manual_skill;
+    skill_type manual_skill = SK_NONE;
     for (uint8_t i = 0; i < ENDOFPACK; i++)
         if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
             manual_skill = _setup_archaeologist_crate(you.inv[i]);
