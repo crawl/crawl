@@ -3085,7 +3085,7 @@ void level_change(bool skip_attribute_increase)
             item_def& manual = you.inv[manual_index];
             manual.base_type = OBJ_BOOKS;
             manual.sub_type = BOOK_MANUAL;
-            manual.skill_points = 1500;
+            manual.skill_points = 700;
             manual.skill = (skill_type)manual.props[ARCHAEOLOGIST_TOME_SKILL].get_int();
             item_colour(manual);
             item_set_appearance(manual);
