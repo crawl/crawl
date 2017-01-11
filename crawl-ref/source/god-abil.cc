@@ -7121,6 +7121,14 @@ bool ieoh_jian_heavenly_blade()
 
     auto weapon = ieoh_jian_generate_divine_weapon();
 
+    if (!directly_summon && you.duration[DUR_IEOH_JIAN_PROJECTION])
+    {
+        if (yesno("You need your hands free to control your own flying weapon. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
+            directly_summon = true;
+        else
+            return false;
+    }
+
     if (!directly_summon && !can_wield(&weapon))
     {
         if (yesno("You can't wield weapons. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
