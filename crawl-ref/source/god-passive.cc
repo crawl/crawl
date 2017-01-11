@@ -1705,10 +1705,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
             && mon->holiness() != MH_NONLIVING
             && mon->holiness() != MH_PLANT)
         {
-            int distract_chance = 6;
-            distract_chance *= you.skill(SK_UNARMED_COMBAT, 4, false);
-
-            distract_chance = div_rand_round(distract_chance, 2*mon->get_hit_dice());
+            int distract_chance = div_rand_round(12 * you.experience_level, mon->get_hit_dice());
             const monsterentry* entry = get_monster_data(mon->type);
            
             dprf("Attempting distract with chance %d", distract_chance);

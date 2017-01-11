@@ -580,14 +580,7 @@ bool melee_attack::handle_phase_aux()
 
 void melee_attack::player_strike_pressure_points(monster* mons)
 {
-    int slow_chance = 5;
-    if (you.weapon())
-        slow_chance *= you.skill(weapon_attack_skill(you.weapon()->sub_type), 4, false);
-    else
-        slow_chance *= you.skill(SK_UNARMED_COMBAT, 4, false);
-
-    slow_chance = div_rand_round(slow_chance, 2*mons->get_hit_dice());
-
+    int slow_chance = div_rand_round(10 * you.experience_level, mons->get_hit_dice());
     dprf("Pressure point strike, %d%% chance to slow.", slow_chance);
 
     if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
