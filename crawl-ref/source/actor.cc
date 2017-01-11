@@ -13,7 +13,8 @@
 #include "env.h"
 #include "fight.h" // apply_chunked_ac
 #include "fprop.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-prop.h"
 #include "los.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -381,9 +382,9 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return
-       act->is_player() && you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA]
-       || act->res_acid() == 3;
+    return act->is_player() && have_passive(passive_t::slime_wall_immune)
+        || act->res_acid() == 3
+        || act->is_monster() && mons_is_slime(*act->as_monster());
 }
 
 /**

@@ -9,13 +9,13 @@
 #include "end.h"
 #include "files.h"
 #include "food.h"
-#include "godcompanions.h"
+#include "god-companions.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "mutation.h"
 #include "ng-init.h"
@@ -299,10 +299,6 @@ static void _give_items_skills(const newgame_def& ng)
 
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
-
-    // Deep Dwarves get a wand of heal wounds (5).
-    if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
 
     if (you.species == SP_FELID)
     {

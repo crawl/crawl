@@ -4,7 +4,7 @@
 
 #include "enum.h"
 #include "errors.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "ng-setup.h"

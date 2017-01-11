@@ -16,7 +16,7 @@ item += mutagenic.*:$mutagenic
 
 item += forbidden.*(potion|scroll|food):red
 
-item += unidentified.*(potion|scroll|book|jewellery|wand|rod|magical staff).*:lightblue
+item += unidentified.*(potion|scroll|book|jewellery|wand|magical staff).*:lightblue
 
 # Bad items purposefully become darkgrey here (not lightred as in inventory):
 item += useless.*(potion|scroll|jewellery|food):darkgrey

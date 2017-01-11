@@ -27,9 +27,9 @@
 #include "fight.h"
 #include "food.h"          // For evokes
 #include "ghost.h"         // For is_dragonkind ghost_demon datas
-#include "godconduct.h"    // did_god_conduct
-#include "godpassive.h"    // passive_t::want_curses
-#include "mgen_data.h"     // For Sceptre of Asmodeus evoke
+#include "god-conduct.h"    // did_god_conduct
+#include "god-passive.h"    // passive_t::want_curses
+#include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"
@@ -197,8 +197,7 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
     *did_work = true;
     int power = you.skill(SK_EVOCATIONS, 8);
 
-    if (your_spells(SPELL_HURL_DAMNATION, power, false, false, true)
-        == SPRET_ABORT)
+    if (your_spells(SPELL_HURL_DAMNATION, power, false) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
@@ -208,7 +207,7 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
     dec_hp(5 + random2avg(19, 2), false);
     dec_mp(2 + random2avg(5, 2));
     make_hungry(100, false, true);
-    practise_evoking(coinflip() ? 2 : 1);
+    practise_evoking(random_range(1, 2));
 
     return false;
 }
@@ -250,15 +249,14 @@ static bool _OLGREB_evoke(item_def *item, bool* did_work, bool* unevokable)
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power,
-                    false, false, true) == SPRET_ABORT)
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == SPRET_ABORT)
     {
         *unevokable = true;
         return false;
     }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
-        your_spells(SPELL_VENOM_BOLT, power, false, false, true);
+        your_spells(SPELL_VENOM_BOLT, power, false);
 
     dec_mp(4);
     make_hungry(50, false, true);
@@ -486,7 +484,7 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _VARIABILITY_world_reacts(item_def *item)
 {
     if (x_chance_in_y(2, 5))
-        item->plus += (coinflip() ? +1 : -1);
+        item->plus += random_choose(+1, -1);
 
     if (item->plus < -4)
         item->plus = -4;
@@ -642,9 +640,11 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 
 static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, species_is_draconian(you.species) || you.form == TRAN_DRAGON
-                            ? "You feel an overwhelming desire to commit suicide."
-                            : "You feel an overwhelming desire to slay dragons!");
+    _equip_mpr(show_msgs,
+               species_is_draconian(you.species)
+                || you.form == transformation::dragon
+                   ? "You feel an overwhelming desire to commit suicide."
+                   : "You feel an overwhelming desire to slay dragons!");
 }
 
 static bool is_dragonkind(const actor *act)
@@ -657,7 +657,7 @@ static bool is_dragonkind(const actor *act)
     }
 
     if (act->is_player())
-        return you.form == TRAN_DRAGON;
+        return you.form == transformation::dragon;
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();
@@ -1335,15 +1335,12 @@ static void _VINES_unequip(item_def *item, bool *show_msgs)
 
 static void _KRYIAS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.species == SP_DEEP_DWARF)
-        _equip_mpr(show_msgs, "You feel no connection to the armour.");
-    else
-        _equip_mpr(show_msgs, "Your attunement to healing devices increases!");
+    _equip_mpr(show_msgs, "Your attunement to healing potions increases.");
 }
 
 static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
 {
-        _equip_mpr(show_msgs, "Your attunement to healing devices decreases.");
+    _equip_mpr(show_msgs, "Your attunement to healing potions decreases.");
 }
 
 ///////////////////////////////////////////////////

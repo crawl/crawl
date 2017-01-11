@@ -6,9 +6,9 @@
 #include "clua.h"
 #include "delay.h"
 #include "files.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #ifdef TOUCH_UI

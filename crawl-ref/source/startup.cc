@@ -21,12 +21,12 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -254,7 +254,7 @@ static void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
-    if (you.form != TRAN_LICH)
+    if (you.form != transformation::lich)
         food_change(true);
     shopping_list.refresh();
 

@@ -20,12 +20,12 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"
@@ -1214,6 +1214,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.mangrove_water != current_pc.mangrove_water)
             json_write_bool("mangrove_water", next_pc.mangrove_water);
+
+        if (next_pc.awakened_forest != current_pc.awakened_forest)
+            json_write_bool("awakened_forest", next_pc.awakened_forest);
 
         if (next_pc.blood_rotation != current_pc.blood_rotation)
             json_write_int("blood_rotation", next_pc.blood_rotation);

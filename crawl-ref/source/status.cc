@@ -8,9 +8,9 @@
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "god-passive.h"
+#include "item-prop.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
@@ -933,7 +933,7 @@ static void _describe_sickness(status_info* inf)
  */
 static void _describe_transform(status_info* inf)
 {
-    if (you.form == TRAN_NONE)
+    if (you.form == transformation::none)
         return;
 
     const Form * const form = get_form();
@@ -941,7 +941,8 @@ static void _describe_transform(status_info* inf)
     inf->short_text = form->get_long_name();
     inf->long_text = form->get_description();
 
-    const bool vampbat = (you.species == SP_VAMPIRE && you.form == TRAN_BAT);
+    const bool vampbat = (you.species == SP_VAMPIRE
+                          && you.form == transformation::bat);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
     inf->light_colour = _dur_colour(GREEN, expire);
@@ -1012,10 +1013,10 @@ static void _describe_missiles(status_info* inf)
 
 static void _describe_invisible(status_info* inf)
 {
-    if (!you.duration[DUR_INVIS] && you.form != TRAN_SHADOW)
+    if (!you.duration[DUR_INVIS] && you.form != transformation::shadow)
         return;
 
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
     {
         inf->light_colour = _dur_colour(WHITE,
                                         dur_expiring(DUR_TRANSFORMATION));
@@ -1032,7 +1033,7 @@ static void _describe_invisible(status_info* inf)
         inf->short_text += " (but backlit and visible)";
     }
     inf->long_text = "You are " + inf->short_text + ".";
-    _mark_expiring(inf, dur_expiring(you.form == TRAN_SHADOW
+    _mark_expiring(inf, dur_expiring(you.form == transformation::shadow
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
 }

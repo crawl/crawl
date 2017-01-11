@@ -15,9 +15,9 @@
 #include "dungeon.h"
 #include "exclude.h"
 #include "fineff.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
@@ -569,7 +569,7 @@ void slimify_monster(monster* mon, bool hostile)
 {
     monster_type target = MONS_JELLY;
 
-    const int x = mon->get_hit_dice() + (coinflip() ? 1 : -1) * random2(5);
+    const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
 
     if (x < 3)
         target = MONS_OOZE;

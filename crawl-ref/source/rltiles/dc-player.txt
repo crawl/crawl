@@ -23,6 +23,10 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+frog_m BARACHIAN
+frog_f
+frog2_f
+frog2_m
 gnome_f
 gnome_m
 halfling_m HALFLING
@@ -685,6 +689,7 @@ staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
 ## rods
+# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -750,7 +755,6 @@ bottle BOTTLE
 box BOX
 crystal CRYSTAL
 deck DECK
-disc DISC
 horn HORN
 lantern LANTERN
 orb ORB

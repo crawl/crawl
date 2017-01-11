@@ -17,10 +17,10 @@
 #include "english.h"
 #include "env.h"
 #include "food.h"
-#include "godpassive.h"
-#include "godwrath.h"
-#include "item_use.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "god-wrath.h"
+#include "item-use.h"
+#include "item-prop.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -856,7 +856,7 @@ void MiscastEffect::_conjuration(int severity)
             beam.damage  = dice_def(3, 20);
             beam.name    = "explosion";
             beam.colour  = random_colour();
-            beam.ex_size = coinflip() ? 1 : 2;
+            beam.ex_size = random_range(1, 2);
 
             _explosion();
             break;
@@ -2349,7 +2349,7 @@ void MiscastEffect::_fire(int severity)
             beam.damage  = dice_def(3, 20);
             beam.name    = "fireball";
             beam.colour  = RED;
-            beam.ex_size = coinflip() ? 1 : 2;
+            beam.ex_size = random_range(1, 2);
 
             _explosion();
             break;
@@ -3099,7 +3099,7 @@ void MiscastEffect::_zot()
     case 0:    // mainly explosions
         beam.name = "explosion";
         beam.damage = dice_def(3, 20);
-        beam.ex_size = coinflip() ? 1 : 2;
+        beam.ex_size = random_range(1, 2);
         beam.glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         switch (random2(7))
         {

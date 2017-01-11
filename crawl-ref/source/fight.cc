@@ -21,15 +21,15 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
-#include "item_use.h"
-#include "melee_attack.h"
+#include "item-prop.h"
+#include "item-use.h"
+#include "melee-attack.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
@@ -700,12 +700,12 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 
     if (weap && item_attack_skill(*weap) == SK_AXES
             || attacker.is_player()
-               && (you.form == TRAN_HYDRA && you.heads() > 1
+               && (you.form == transformation::hydra && you.heads() > 1
                    || you.duration[DUR_CLEAVE]))
     {
         const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
-        const int dir = coinflip() ? -1 : 1;
+        const int dir = random_choose(-1, 1);
 
         for (int i = 0; i < 7; ++i)
         {
@@ -991,7 +991,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     }
 }
 
-bool stop_attack_prompt(targetter &hitfunc, const char* verb,
+bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim), bool *prompted)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])

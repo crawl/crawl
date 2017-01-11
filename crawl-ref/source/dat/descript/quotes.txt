@@ -1673,12 +1673,6 @@ insubstantial wisp
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
 %%%%
-iron rod
-
-“At this particular moment in time, I don't believe I have a healthier or more
-deeply-felt respect for any object in the universe than this here shotgun...”
-    -Steven ‘Body Bag’ Behling and Michael ‘Splatter’ Steward, _Doom_. 1996.
-%%%%
 Iskenderun's Battlesphere spell
 
 “Maxim 4: Close air support covereth a multitude of sins.”
@@ -3237,10 +3231,6 @@ wand of flame
 
 <wand>
 %%%%
-wand of hasting
-
-<wand>
-%%%%
 wand of iceblast
 
 <wand>
@@ -3258,14 +3248,6 @@ wand of polymorph
 <wand>
 %%%%
 wand of random effects
-
-<wand>
-%%%%
-wand of slowing
-
-<wand>
-%%%%
-wand of teleportation
 
 <wand>
 %%%%

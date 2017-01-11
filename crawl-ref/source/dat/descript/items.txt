@@ -397,11 +397,6 @@ dire flail
 
 A flail with long spikes and a heavy head.
 %%%%
-disc of storms
-
-A crackling disc which can unleash a destructive storm of electricity. Its
-effectiveness greatly improves in the hands of one skilled in Evocations.
-%%%%
 double sword
 
 A magical weapon with two razor-sharp blades.
@@ -543,10 +538,6 @@ inedible chunk of flesh
 
 <chunk of flesh>
 %%%%
-iron rod
-
-A rod that allows its wielder to fire powerful blasts of metallic shrapnel.
-%%%%
 javelin
 
 A lightweight spear, designed for throwing.
@@ -596,10 +587,10 @@ with almost no hindrance to spellcasting or stealthy movement.
 %%%%
 lightning rod
 
-A rod that allows its wielder to fire blasts of lightning. By evoking the rod
-in consecutive turns, the discharge will be sustained and can be redirected to
-new targets. It takes a moment to warm up, making short bursts rather
-ineffective.
+A rod that allows its wielder to fire unavoidable blasts of lightning. It
+increases in power each time it is evoked, until eventually overheating and
+resetting. Evoking the rod on consecutive actions causes the discharge to be
+sustained, allowing it to be redirected to affect an area.
 %%%%
 long sword
 
@@ -910,24 +901,6 @@ A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
 offers little protection against physical harm, but does not hinder evasion or
 spellcasting.
 %%%%
-rod of clouds
-
-A rod that allows its wielder to blast a cone-shaped area in front of them with
-various destructive clouds, their lethality increasing with Evocations skill.
-%%%%
-rod of ignition
-
-A rod that allows its wielder to launch a fiery bolt of explosive energy.
-%%%%
-rod of inaccuracy
-
-A rod that allows its wielder to fire a powerful but extremely inaccurate bolt
-of power.
-%%%%
-rod of shadows
-
-A rod that weaves creatures from shadows and ethereal matter.
-%%%%
 royal jelly
 
 A particularly rich and golden gelatinous thing.
@@ -1035,9 +1008,7 @@ A scroll with no apparent practical use.
 %%%%
 scroll of recharging
 
-A scroll that restores the charges of any magical wand or rod chosen by its
-reader. When used on a rod, it increases the rod's maximum charges and
-increases the rate at which it regenerates power.
+A scroll that restores the charges of any magical wand chosen by its reader.
 %%%%
 scroll of remove curse
 
@@ -1232,7 +1203,16 @@ flesh.
 %%%%
 wand of acid
 
-A magical device which throws a bolt of corrosive acid.
+A magical device which throws bolts of corrosive acid.
+%%%%
+wand of clouds
+
+A magical device that allows its wielder to blast a cone-shaped area in front
+of them with various destructive clouds, their lethality increasing with
+Evocations skill. At low power it will create noxious fumes, and as power
+increases this gives way to roaring flames, freezing vapours, and poisonous
+gas. At the highest tiers of power storm clouds, acidic fog and clouds of
+negative energy become available.
 %%%%
 wand of confusion
 
@@ -1244,8 +1224,8 @@ A magical device which drills tunnels through unworked rock.
 %%%%
 wand of disintegration
 
-A magical device which disrupts the physical structure of anything but the
-hardest walls — even granite statues, to say nothing of flesh.
+A magical device which disrupts the physical structure of a target creature,
+dealing heavy damage and bypassing armour.
 %%%%
 wand of enslavement
 
@@ -1260,17 +1240,11 @@ wand of iceblast
 A magical device which throws exploding shards of ice, partially harming even
 creatures resistant to cold.
 %%%%
-wand of hasting
-
-A magical device which speeds up the actions of a targeted creature.
-%%%%
-wand of heal wounds
-
-A magical device which can heal a creature's wounds.
-%%%%
 wand of lightning
 
-A magical device which throws great bolts of lightning.
+A magical device which throws great bolts of lightning. They inflict less
+damage than other similar bolts, but their damage partially bypasses armour
+and they can be bounced off walls to hit targets twice.
 %%%%
 wand of paralysis
 
@@ -1286,14 +1260,10 @@ wand of random effects
 
 A magical device which can produce a variety of effects.
 %%%%
-wand of slowing
+wand of scattershot
 
-A magical device which slows down the actions of a targeted creature.
-%%%%
-wand of teleportation
-
-A magical device which causes a creature to be randomly translocated after a
-short delay.
+A magical device which fires powerful blasts of metallic shrapnel. Its damage
+is strongly reduced by armour.
 %%%%
 war axe
 

@@ -349,6 +349,23 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_BARACHIAN, {
+    "Ba",
+    "Barachian", nullptr, "Frog",
+    SPF_NO_HAIR,
+    0, 0, 0, 3,
+    MONS_BARACHIAN,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    6, 6, 6, // 18
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_SLOW, 1, 1 }, { MUT_HOP, 1, 1}, {MUT_HOP, 1, 13}, },
+    { "You can swim through water.", },
+    { "swims", },
+    { JOB_FIGHTER, JOB_BERSERKER, JOB_SKALD, JOB_SUMMONER, JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_GHOUL, {
     "Gh",
     "Ghoul", "Ghoulish", nullptr,
@@ -404,23 +421,6 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
-} },
-
-{ SP_HIGH_ELF, {
-    "HE",
-    "High Elf", "Elven", "Elf",
-    SPF_ELVEN,
-    -1, -1, 1, 4,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    7, 11, 10, // 28
-    { STAT_INT, STAT_DEX }, 3,
-    {},
-    {},
-    {},
-    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
-      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 
 { SP_HILL_ORC, {
@@ -561,14 +561,14 @@ static const map<species_type, species_def> species_data =
     0, 3, 0, 4,
     MONS_OGRE,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    12, 7, 5, // 24
+    11, 9, 4, // 24
     { STAT_STR }, 3,
     { { MUT_TOUGH_SKIN, 1, 1 }, },
     {},
     {},
     { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
       JOB_FIRE_ELEMENTALIST },
-    { SK_MACES_FLAILS },
+    { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES },
 } },
 
 { SP_OCTOPODE, {
@@ -677,7 +677,7 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_DEX }, 4,
     { { MUT_FANGS, 2, 1 }, { MUT_FANGS, 1, 8 },
       { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
-      { MUT_NO_DEVICE_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
+      { MUT_NO_POTION_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
       { MUT_REGENERATION, 1, 4 }, { MUT_REGENERATION, 1, 12 }, },
     {},
     {},
@@ -736,6 +736,23 @@ static const map<species_type, species_def> species_data =
     { "fire immunity", "cold vulnerability" },
     {}, // not a starting race
     {}, // not a starting race
+} },
+
+{ SP_HIGH_ELF, {
+    "HE",
+    "High Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -1, -1, 1, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 11, 10, // 28
+    { STAT_INT, STAT_DEX }, 3,
+    {},
+    {},
+    {},
+    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 #endif
 // Ideally this wouldn't be necessary...

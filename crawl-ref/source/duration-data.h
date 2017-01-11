@@ -276,7 +276,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Sil",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your hearing returns." }}, 5 },
+      {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
@@ -537,6 +537,10 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
+    { DUR_NO_HOP, YELLOW, "-Hop",
+      "can't hop", "",
+      "", D_NO_FLAGS,
+      {{ "You are ready to hop once more." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

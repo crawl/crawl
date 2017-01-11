@@ -187,7 +187,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
             elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
                 if data.swcount > 5 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake hill giant zombie")
+                    spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
                 else
                     spawn_zombie(x, y, "generate_awake skeletal warrior")
                 data.swcount = data.swcount + 1
@@ -1138,7 +1138,7 @@ SUBST:      LZ = '
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
-:           set_random_mon_list([[ ogre zombie / troll zombie / hill giant zombie / ]]
+:           set_random_mon_list([[ ogre zombie / troll zombie / two-headed ogre zombie / ]]
 :           .. [[ wight w:20 / vampire w:5 / skeletal warrior w:15 / ]])
 epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")
@@ -1357,8 +1357,8 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
-KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
-             wand of teleportation w:5 / any scroll w:1
+KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
+             any scroll w:1
 KITEM:   e = any ring
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
@@ -1371,7 +1371,7 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
-KITEM:   i = wand of disintegration w:5 / wand of digging w:5 / any wand w:1
+KITEM:   i = wand of digging / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
@@ -1686,7 +1686,7 @@ wizname = crawl.make_name()
 kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
 }}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
-KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
+KITEM:      i = ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
             wand of acid / staff of summoning / any book w:30 / any good_item w:15

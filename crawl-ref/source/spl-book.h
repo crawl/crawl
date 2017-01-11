@@ -1,13 +1,13 @@
 /**
  * @file
- * @brief Spellbook/rod contents array and management functions
+ * @brief Spellbook contents array and management functions
 **/
 
 #ifndef SPL_BOOK_H
 #define SPL_BOOK_H
 
 #define RANDBOOK_SIZE 8
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "spl-util.h" // spschool_flag_type
 
 #define SPELL_LIST_KEY "spell_list"
@@ -37,7 +37,7 @@ bool learn_spell(spell_type spell, bool wizard = false);
 
 string desc_cannot_memorise_reason(spell_type spell);
 
-spell_type spell_in_rod(rod_type rod);
+spell_type spell_in_wand(wand_type wand);
 vector<spell_type> spellbook_template(book_type book);
 vector<spell_type> spells_in_book(const item_def &book);
 

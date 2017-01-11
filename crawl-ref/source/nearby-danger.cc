@@ -249,6 +249,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
             return false;
         }
+
+        if (you.duration[DUR_LIQUID_FLAMES])
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You are on fire!");
+
+            return false;
+        }
     }
 
     // Monster check.
@@ -413,7 +421,7 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.form)
+    if (you.form != transformation::none)
         untransform();
     you.clear_beholders();
     you.clear_fearmongers();

@@ -13,11 +13,11 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -339,7 +339,7 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+        if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
             continue;
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
@@ -620,7 +620,8 @@ static bool _selectively_remove_curse(const string &pre_msg)
         }
 
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
-                                           OSEL_CURSED_WORN, true, true, false);
+                                           OSEL_CURSED_WORN, OPER_ANY,
+                                           invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
             return used;
 
@@ -699,7 +700,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
         int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
                                                   : OSEL_UNCURSED_WORN_JEWELLERY,
-                                           true, true, false);
+                                           OPER_ANY, invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
             return false;
 
@@ -1122,7 +1123,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
             hploss /= 2;
     }
 
@@ -1282,4 +1283,31 @@ void cleansing_flame(int pow, int caster, coord_def where,
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
+}
+
+spret_type cast_random_effects(int pow, bolt& beam, bool fail)
+{
+    bolt tracer = beam;
+    if (!player_tracer(ZAP_DEBUGGING_RAY, 200, tracer, LOS_RADIUS))
+        return SPRET_ABORT;
+
+    fail_check();
+
+    // Extremely arbitrary list of possible effects.
+    zap_type zap = random_choose(ZAP_THROW_FLAME,
+                                 ZAP_THROW_FROST,
+                                 ZAP_SLOW,
+                                 ZAP_HASTE,
+                                 ZAP_PARALYSE,
+                                 ZAP_CONFUSE,
+                                 ZAP_TELEPORT_OTHER,
+                                 ZAP_INVISIBILITY,
+                                 ZAP_ICEBLAST,
+                                 ZAP_FIREBALL,
+                                 ZAP_BOLT_OF_DRAINING,
+                                 ZAP_VENOM_BOLT);
+
+    zapping(zap, pow, beam, false);
+
+    return SPRET_SUCCESS;
 }

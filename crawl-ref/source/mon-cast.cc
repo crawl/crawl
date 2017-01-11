@@ -27,7 +27,7 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -70,7 +70,7 @@
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
 #endif
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -109,7 +109,7 @@ static function<void(bolt&, const monster&, int)>
 static function<void(bolt&, const monster&, int)>
     _buff_beam_setup(beam_type flavour);
 static function<void(bolt&, const monster&, int)>
-    _target_beam_setup(function<coord_def(const monster&)> targetter);
+    _target_beam_setup(function<coord_def(const monster&)> targeter);
 static void _setup_minor_healing(bolt &beam, const monster &caster,
                                  int = -1);
 static void _setup_heal_other(bolt &beam, const monster &caster, int = -1);
@@ -184,7 +184,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
-        _should_selfench(ENCH_INVIS),
+        _should_selfench(ENCH_HASTE),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
     } },
@@ -422,7 +422,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
     { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
-    { SPELL_PAIN, _hex_logic(SPELL_PAIN) },
+    { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
+            return _torment_vulnerable(caster.get_foe());
+    }) },
     { SPELL_DISINTEGRATE, _hex_logic(SPELL_DISINTEGRATE) },
     { SPELL_CORONA, _hex_logic(SPELL_CORONA, [](const monster& caster) {
             return !caster.get_foe()->backlit();
@@ -645,20 +647,20 @@ static void _setup_heal_other(bolt &beam, const monster &caster, int)
 /**
  * Build a function that sets up a fake beam for targeting special spells.
  *
- * @param targetter     A function that finds a target for the given spell.
+ * @param targeter     A function that finds a target for the given spell.
  *                      Expected to return an out-of-bounds coord on failure.
  * @return              A function that initializes a fake targetting beam.
  */
 static function<void(bolt&, const monster&, int)>
-    _target_beam_setup(function<coord_def(const monster&)> targetter)
+    _target_beam_setup(function<coord_def(const monster&)> targeter)
 {
-    return [targetter](bolt& beam, const monster& caster, int)
+    return [targeter](bolt& beam, const monster& caster, int)
     {
         _setup_fake_beam(beam, caster);
         // Your shadow keeps your targetting.
         if (_caster_is_player_shadow(caster))
             return;
-        beam.target = targetter(caster);
+        beam.target = targeter(caster);
         beam.aimed_at_spot = true;  // to get noise to work properly
     };
 }
@@ -1037,6 +1039,9 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_MESMERISE:
             return 10 * ENCH_POW_FACTOR;
 
+        case SPELL_SIREN_SONG:
+            return 9 * ENCH_POW_FACTOR;
+
         case SPELL_MASS_CONFUSION:
             return 8 * ENCH_POW_FACTOR;
 
@@ -1264,7 +1269,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BOLT_OF_FIRE:
     case SPELL_BOLT_OF_COLD:
     case SPELL_THROW_ICICLE:
-    case SPELL_BOLT_OF_INACCURACY:
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
     case SPELL_FIREBALL:
@@ -1278,7 +1282,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_IRON_SHOT:
     case SPELL_STONE_ARROW:
     case SPELL_FORCE_LANCE:
-    case SPELL_EXPLOSIVE_BOLT:
     case SPELL_CORROSIVE_BOLT:
     case SPELL_HIBERNATION:
     case SPELL_SLEEP:
@@ -1356,7 +1359,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
         beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
-        beam.pierce     = true;             // except it also destroys walls
+        beam.pierce     = true;             // (except bloodier)
         break;
 
     case SPELL_SPIT_POISON:
@@ -1725,7 +1728,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_VAMPIRE_SUMMON:
 #endif
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
-    case SPELL_WEAVE_SHADOWS:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_FAKE_RAKSHASA_SUMMON:
 #endif
@@ -2579,14 +2581,14 @@ static bool _should_still_winds(const monster &caster)
         // clouds the player might hide in are worrying.
         if (grid_distance(*ri, you.pos()) <= 3 // decent margin
             && is_opaque_cloud(cloud->type)
-            && actor_cloud_immune(&you, *cloud))
+            && actor_cloud_immune(you, *cloud))
         {
             return true;
         }
 
         // so are hazardous clouds on allies.
         const monster* mon = monster_at(*ri);
-        if (mon && !actor_cloud_immune(mon, *cloud))
+        if (mon && !actor_cloud_immune(*mon, *cloud))
             return true;
     }
 
@@ -3118,7 +3120,7 @@ static void _corrupting_pulse(monster *mons)
 {
     if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
     {
-        targetter_los hitfunc(mons, LOS_SOLID);
+        targeter_los hitfunc(mons, LOS_SOLID);
         flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
         if (!is_sanctuary(you.pos())
@@ -3241,7 +3243,9 @@ static void _cast_black_mark(monster* agent)
         if (ai->is_player() || !mons_aligned(*ai, agent))
             continue;
         monster* mon = ai->as_monster();
-        if (!mon->has_ench(ENCH_BLACK_MARK) && !mons_is_firewood(*mon))
+
+        if (!mon->has_ench(ENCH_BLACK_MARK)
+            && mons_has_attacks(*mon))
         {
             mon->add_ench(ENCH_BLACK_MARK);
             simple_monster_message(*mon, " begins absorbing vital energies!");
@@ -3286,7 +3290,7 @@ void aura_of_brilliance(monster* agent)
 
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 {
-    targetter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    targeter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
     hitfunc.set_aim(aim);
 
     mon_attitude_type castatt = caster->temp_attitude();
@@ -3316,7 +3320,7 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
 {
-    targetter_shotgun hitfunc(agent, CLOUD_CONE_BEAM_COUNT,
+    targeter_shotgun hitfunc(agent, CLOUD_CONE_BEAM_COUNT,
                               spell_range(SPELL_CLOUD_CONE, power));
 
     hitfunc.set_aim(pos);
@@ -3655,7 +3659,7 @@ static bool _worth_hexing(const monster &caster, spell_type spell)
 
 bool scattershot_tracer(monster *caster, int pow, coord_def aim)
 {
-    targetter_shotgun hitfunc(caster, shotgun_beam_count(pow),
+    targeter_shotgun hitfunc(caster, shotgun_beam_count(pow),
                               spell_range(SPELL_SCATTERSHOT, pow));
     hitfunc.set_aim(aim);
 
@@ -5586,6 +5590,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
     beam.thrower     = KILL_MON_MISSILE;
     beam.range       = LOS_RADIUS;
     beam.damage      = dice_def(3, 24);
+    beam.foe_ratio   = random_range(20, 30);
     beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
@@ -6010,12 +6015,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
-    case SPELL_WEAVE_SHADOWS:
     {
-        level_id place = (spell_cast == SPELL_SHADOW_CREATURES)
-                         ? level_id::current()
-                         : level_id(BRANCH_DUNGEON,
-                                    min(27, max(1, mons->spell_hd(spell_cast))));
+        level_id place = level_id::current();
 
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
@@ -6224,8 +6225,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
         {
             monster_type berserkers[] = { MONS_BLACK_BEAR, MONS_OGRE, MONS_TROLL,
-                                           MONS_HILL_GIANT, MONS_DEEP_TROLL,
-                                           MONS_TWO_HEADED_OGRE};
+                                           MONS_TWO_HEADED_OGRE, MONS_DEEP_TROLL };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
 
@@ -6693,8 +6693,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                      plural ? "Some" : "A",
                      plural ? "s" : "",
                      plural ? " themselves" : "s itself",
-                     plural ? "around" : (coinflip() ? "beside" :
-                                          coinflip() ? "behind" : "before"),
+                     plural ? "around" : random_choose_weighted(2, "beside",
+                                                                1, "behind",
+                                                                1, "before"),
                      mons->name(DESC_THE).c_str());
             }
         }
@@ -7763,10 +7764,11 @@ static void _siren_sing(monster* mons, bool avatar)
             return;
     }
 
-    // Once mesmerised by a particular monster, you cannot resist anymore.
-    const int res_magic =
-        you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15);
+    // power is the same for siren & avatar song, so just use siren
+    const int pow = _ench_power(SPELL_SIREN_SONG, *mons);
+    const int res_magic = you.check_res_magic(pow);
 
+    // Once mesmerised by a particular monster, you cannot resist anymore.
     if (you.duration[DUR_MESMERISE_IMMUNE]
         || !already_mesmerised
            && (res_magic > 0 || you.clarity()))

@@ -20,7 +20,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
@@ -29,11 +29,11 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -475,7 +475,7 @@ item_def *monster::melee_weapon() const
     const bool secondary_is_melee = second_weapon
                                     && is_melee_weapon(*second_weapon);
     if (primary_is_melee && secondary_is_melee)
-        return coinflip() ? first_weapon : second_weapon;
+        return random_choose(first_weapon, second_weapon);
     if (primary_is_melee)
         return first_weapon;
     if (secondary_is_melee)
@@ -774,21 +774,13 @@ bool monster::can_use_missile(const item_def &item) const
 bool monster::likes_wand(const item_def &item) const
 {
     ASSERT(item.base_type == OBJ_WANDS);
-    switch (item.sub_type)
-    {
-        case WAND_TELEPORTATION:
-        case WAND_HEAL_WOUNDS:
-        case WAND_HASTING:
-            return true; // goodwands
-        default:
-            // kind of a hack
-            // assumptions:
-            // bad wands are value 16, so won't be used past hd 4
-            // mediocre wands are value 8; won't be used past hd 8
-            // other good wands are value 5, won't be used past hd 10
-            // better implementations welcome
-            return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
-    }
+    // kind of a hack
+    // assumptions:
+    // bad wands are value 16, so won't be used past hd 4
+    // mediocre wands are value 8; won't be used past hd 8
+    // other good wands are value 5, won't be used past hd 10
+    // better implementations welcome
+    return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
 }
 
 void monster::equip_weapon(item_def &item, bool msg)
@@ -920,7 +912,6 @@ void monster::equip(item_def &item, bool msg)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
         equip_weapon(item, msg);
         break;
 
@@ -1503,11 +1494,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                     new_wpn_better = true;
             }
 
-            if (item.base_type == OBJ_RODS)
-                new_wpn_better = true; // rods are good.
-
-            if (new_wpn_better && !weap->cursed()
-                && weap->base_type != OBJ_RODS) // rods are good
+            if (new_wpn_better && !weap->cursed())
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
@@ -1901,22 +1888,6 @@ bool monster::pickup_weapon(item_def &item, bool msg, bool force)
     return false;
 }
 
-bool monster::pickup_rod(item_def &item, bool msg, bool force)
-{
-    // duplicating some relevant melee weapon pickup checks
-    if (!force &&
-            (!could_wield(item)
-            || type == MONS_DEEP_ELF_BLADEMASTER
-            || type == MONS_DEEP_ELF_MASTER_ARCHER)
-            || props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
-    {
-        // XXX: check to see whether this type of rod is evocable by monsters!
-        return false;
-    }
-
-    return pickup_melee_weapon(item, msg);
-}
-
 /**
  * Have a monster pick up a missile item.
  *
@@ -2130,8 +2101,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         return pickup_weapon(item, msg, force);
-    case OBJ_RODS:
-        return pickup_rod(item, msg, force);
     case OBJ_MISSILES:
         return pickup_missile(item, msg, force);
     // Other types can always be picked up
@@ -4025,8 +3994,8 @@ int monster::res_negative_energy(bool intrinsic_only) const
 bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
-    return holy & (MH_UNDEAD | MH_DEMONIC |  MH_PLANT | MH_NONLIVING)
-            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
+    return holy & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING)
+           || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const
@@ -5144,8 +5113,7 @@ bool monster::can_go_frenzy() const
         return false;
 
     // If we have no melee attack, going berserk is pointless.
-    const mon_attack_def attk = mons_attack_spec(*this, 0);
-    if (attk.type == AT_NONE || attk.damage == 0)
+    if (!mons_has_attacks(*this))
         return false;
 
     return true;

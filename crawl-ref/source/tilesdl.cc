@@ -13,7 +13,7 @@
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"

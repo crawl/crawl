@@ -25,7 +25,7 @@ function base_monster_setup(e)
   e.kmons("B = steam dragon / crocodile / hippogriff /\
            killer bee band / hornet / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
-           hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
+           komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
            acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
@@ -116,7 +116,7 @@ function base_monster_setup(e)
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
            Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
-  e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
+  e.kmons("M = stone giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
   e.kmons("O = deep elf mage w:30 /\
@@ -164,12 +164,11 @@ end
 
 function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
-          wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
-          potion of heal wounds ident:all q:2 w:2 /\
+          potion of heal wounds ident:all q:4 w:3 /\
+          potion of haste ident:all q:4 w:3 /\
           scroll of recharging ident:all w:1 /\
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
           potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-          potion of haste q:2 ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
@@ -507,8 +506,8 @@ function coven_setup(e)
           ring of intelligence plus:6 randart ident:all not_cursed /\
           ring of dexterity plus:6 randart ident:all not_cursed /\
           ring of wizardry ident:all randart not_cursed")
-  e.kitem("d = wand of heal wounds charges:5 ident:all")
-  e.kitem("e = wand of hasting charges:5 ident:all")
+  e.kitem("d = potion of heal wounds q:5 ident:all")
+  e.kitem("e = potion of haste q:5 ident:all")
   e.kitem("f = any wand good_item ident:all")
   e.kitem("g = staff of energy ident:all")
   e.kitem("h = staff of power ident:all")
@@ -2032,9 +2031,8 @@ NSUBST: + = 1:& / *:v
 KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
         orc sorcerer / orc high priest
 KMONS:  A = orc warlord
-KMONS:  b = hill giant /\
-        ogre / two-headed ogre / troll / deep troll /\
-        iron troll w:5 / deep troll/ ogre mage w:5 /\
+KMONS:  b = ogre / two-headed ogre / troll / deep troll /\
+        iron troll w:5 / deep troll / ogre mage w:5 /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
@@ -2079,8 +2077,7 @@ TAGS:   the_golden_pit
 KITEM:  2ABCD = golden rune of zot
 KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
         any ident:all w:33
-KMONS:  a = stone giant / frost giant / fire giant / ettin / titan /\
-        cyclops / hill giant
+KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
 KMONS:  A = titan
 # I'm sorry if you get an undead pit here
 KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\

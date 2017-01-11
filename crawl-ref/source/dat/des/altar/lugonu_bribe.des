@@ -28,11 +28,10 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          ["No God"]="amulet of faith ident:type",
          Ashenzari="ring of see invisible ident:type",
          Beogh="scroll of fear ident:type q:3-6 /\
-              disc of storms",
-         Cheibriados="wand of hasting ident:type w:5 /\
-              potion of haste ident:type q:2-4 /\
+              scroll of immolation ident:type q:3-6",
+         Cheibriados="potion of haste ident:type q:2-4 /\
               good_item quick blade",
-         Dithmenos="lamp of fire w:5 / rod of ignition w:5 /\
+         Dithmenos="lamp of fire w:5 /\
               good_item " .. weapon .. " ego:flaming ident:type",
          Elyvilon="book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",

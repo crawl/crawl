@@ -13,8 +13,8 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
-#include "godcompanions.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-companions.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"

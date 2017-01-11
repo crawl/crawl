@@ -13,8 +13,8 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
@@ -258,7 +258,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }
@@ -293,7 +293,7 @@ static int _player_ghost_movement_energy()
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
     // don't preserve transformations for ghosty purposes
-    unwind_var<transformation_type> form(you.form, TRAN_NONE);
+    unwind_var<transformation> form(you.form, transformation::none);
     unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
                                                  FixedBitVector<NUM_EQUIP>());
     unwind_var<bool> fishtail(you.fishtail, false);

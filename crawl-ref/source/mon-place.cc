@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "mon-place.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 
 #include <algorithm>
 
@@ -24,8 +24,8 @@
 #include "errors.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::slow_abyss, slow_orb_run
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -1320,6 +1320,16 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Seraphim follow the Shining One.
         else if (mg.cls == MONS_SERAPH)
             mon->god = GOD_SHINING_ONE;
+        // Draconian stormcallers worship Qazlal.
+        else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
+            mon->god = GOD_QAZLAL;
+        // Classed demonspawn.
+        else if (mg.cls == MONS_BLOOD_SAINT)
+            mon->god = GOD_MAKHLEB;
+        else if (mg.cls == MONS_BLACK_SUN)
+            mon->god = GOD_KIKUBAAQUDGHA;
+        else if (mg.cls == MONS_CORRUPTER)
+            mon->god = GOD_LUGONU;
         else
         {
             switch (mons_genus(mg.cls))
@@ -1628,12 +1638,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             // If this is a band member created by shadow creatures, link its
             // ID and don't count it against the summon cap
-            if ((mg.summon_type == SPELL_SHADOW_CREATURES
-                 || mg.summon_type == SPELL_WEAVE_SHADOWS)
-                 && leader)
-            {
+            if (mg.summon_type == SPELL_SHADOW_CREATURES && leader)
                 mon->props["summon_id"].get_int() = leader->mid;
-            }
             else
             {
                 summoned_monster(mon, mg.summoner,
@@ -2305,7 +2311,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
     case MONS_FAUN:
         if (!one_chance_in(3))
         {
-            band = coinflip() ? BAND_FAUNS : BAND_FAUN_PARTY;
+            band = random_choose(BAND_FAUNS, BAND_FAUN_PARTY);
             band_size = 2 + random2(2);
         }
         break;
@@ -2453,10 +2459,9 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_OGRE, 1},
                                   {MONS_TROLL, 1},
                                   {MONS_ORC_SORCERER, 1}}}},
-    { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 1},
-                                  {MONS_OGRE, 2}}}},
+    { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 2},
+                                  {MONS_OGRE, 1}}}},
     { BAND_OGRE_MAGE_EXTERN,    {{{MONS_OGRE_MAGE, 1}},
-
                                  {{MONS_TWO_HEADED_OGRE, 1},
                                   {MONS_OGRE, 2}}}},
     { BAND_KOBOLD_DEMONOLOGIST, {{{MONS_KOBOLD, 4},
@@ -2744,7 +2749,7 @@ static monster_type _band_member(band_type band, int which,
         if (which == 1 || which == 2 && one_chance_in(3))
         {
             if (x_chance_in_y(2, 3))
-                return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
+                return random_choose(MONS_BALRUG, MONS_BLIZZARD_DEMON);
             else
                 return random_demonspawn_job();
         }
@@ -3073,7 +3078,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(dummy);
 
-    return actor_cloud_immune(&dummy, *cloud);
+    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
@@ -3095,7 +3100,7 @@ conduct_type player_will_anger_monster(monster_type type)
  * why?
  *
  * XXX: this should ideally return a list of conducts that can be filtered by
- *      callers by god; we're duplicating godconduct.cc right now.
+ *      callers by god; we're duplicating god-conduct.cc right now.
  *
  * @param mon   The monster in question.
  * @return      The reason the player's religion conflicts with the monster

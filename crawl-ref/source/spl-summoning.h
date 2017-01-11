@@ -3,7 +3,7 @@
 
 #include "beam.h"
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "spl-cast.h"
 
 //Bitfield for animate dead messages

@@ -410,7 +410,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 3
   local e = 20 + you.zigs_completed() * 4
   local f = 20 + you.zigs_completed() * 5
-  return "hill giant w:20 / cyclops w:20 / ettin w:20 / " ..
+  return "cyclops w:20 / ettin w:20 / " ..
          "stone giant w:" .. d .. " / " .. "fire giant w:" .. d .. " / " ..
          "frost giant w:" .. d .. " / titan w:" .. f .. " / " ..
          "juggernaut w:" .. e .. " / iron giant w:" .. e
@@ -590,8 +590,8 @@ local function ziggurat_create_loot_at(c)
                                    "potion of cure mutation no_pickup w:190 /" ..
                                    "potion of beneficial mutation no_pickup w:40 q:1 /" ..
                                    "royal jelly q:3 no_pickup w:80 /" ..
-                                   "wand of heal wounds no_pickup / " ..
-                                   "wand of hasting no_pickup / " ..
+                                   "potion of heal wounds q:5 no_pickup / " ..
+                                   "potion of haste q:5 no_pickup / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)

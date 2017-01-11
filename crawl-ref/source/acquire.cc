@@ -19,12 +19,12 @@
 #include "art-enum.h"
 #include "dungeon.h"
 #include "food.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -173,8 +173,8 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
                     return ARM_BOOTS;
             }
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_MAYBE)
-                return coinflip() ? ARM_HELMET : ARM_HAT;
+            if (you_can_wear(EQ_HELMET) == MB_TRUE)
+                return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
             return _acquirement_shield_type();
@@ -320,7 +320,7 @@ static armour_type _useless_armour_type()
             // Boots-wearers get bardings, bardings-wearers get the wrong
             // barding, everyone else gets boots.
             if (you_can_wear(EQ_BOOTS) == MB_TRUE)
-                return coinflip() ? ARM_CENTAUR_BARDING : ARM_NAGA_BARDING;
+                return random_choose(ARM_CENTAUR_BARDING, ARM_NAGA_BARDING);
             if (you.species == SP_NAGA)
                 return ARM_CENTAUR_BARDING;
             if (you.species == SP_CENTAUR)
@@ -331,7 +331,7 @@ static armour_type _useless_armour_type()
         case EQ_HELMET:
             if (you_can_wear(EQ_HELMET))
                 return ARM_HELMET;
-            return coinflip() ? ARM_HELMET : ARM_HAT;
+            return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
             return ARM_CLOAK;
         case EQ_SHIELD:
@@ -646,18 +646,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
-{
-    int result;
-    do
-    {
-        result = random2(NUM_RODS);
-    }
-    while (player_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
-           || item_type_removed(OBJ_RODS, result));
-    return result;
-}
-
 /**
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
@@ -686,58 +674,20 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
         {MISC_PHANTOM_MIRROR,
                                        (NO_LOVE ?     0 :  7)},
         // The player never needs more than one.
-        {MISC_DISC_OF_STORMS,
-            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 : 13)},
+        {MISC_LIGHTNING_ROD,
+            (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
         {MISC_LAMP_OF_FIRE,
-            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 18)},
+            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
         {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 18)},
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 17)},
         {MISC_FAN_OF_GALES,
-            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 18)},
+            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
     };
 
     const int * const choice = random_choose_weighted(choices);
 
     // Could be nullptr if all the weights were 0.
     return choice ? *choice : MISC_CRYSTAL_BALL_OF_ENERGY;
-}
-
-/**
- * What weight should wands of Heal Wounds be given in wand acquirement, based
- * on their utility to the player? (More utile -> higher weight -> more likely)
- */
-static int _hw_wand_weight()
-{
-    if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
-        return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
-        return 5; // can be used on allies...? XXX: should be weight 1?
-    return 0; // with no allies, totally useless
-}
-
-/**
- * What weight should wands of Haste be given in wand acquirement, based on
- * their utility to the player? (More utile -> higher weight -> more likely)
- */
-static int _haste_wand_weight()
-{
-    if (you.species != SP_FORMICID)
-        return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
-        return 5; // can be used on allies...? XXX: should be weight 1?
-    return 0; // with no allies, totally useless
-}
-
-/**
- * What weight should wands of Teleportation be given in wand acquirement,
- * based on their utility to the player? (More utile -> higher weight -> more
- * likely)
- */
-static int _tele_wand_weight()
-{
-    if (you.species == SP_FORMICID || crawl_state.game_is_sprint())
-        return 1; // can only be used to tele away enemies
-    return 15;
 }
 
 /**
@@ -750,13 +700,10 @@ static int _tele_wand_weight()
  */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // basic total: 140
+    // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        // normally 25
-        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
-        { WAND_HASTING,         _haste_wand_weight() },
-        // normally 15
-        { WAND_TELEPORTATION,   _tele_wand_weight() },
+        { WAND_SCATTERSHOT,     20 },
+        { WAND_CLOUDS,          20 },
         { WAND_LIGHTNING,       16 },
         { WAND_ACID,            16 },
         { WAND_ICEBLAST,        16 },
@@ -764,11 +711,10 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         { WAND_DIGGING,         5 },
         { WAND_POLYMORPH,       5 },
         { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_PARALYSIS,       5 },
+        { WAND_CONFUSION,       3 },
         { WAND_RANDOM_EFFECTS,  3 },
         { WAND_FLAME,           1 },
-        { WAND_CONFUSION,       1 },
-        { WAND_PARALYSIS,       1 },
-        { WAND_SLOWING,         1 },
     };
 
     // Unknown wands get a huge weight bonus.
@@ -798,7 +744,9 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_misc_subtype,
     0, // no corpses
     0, // gold handled elsewhere, and doesn't have subtypes anyway
-    _acquirement_rod_subtype,
+#if TAG_MAJOR_VERSION == 34
+    0, // no rods
+#endif
     0, // no runes either
 };
 
@@ -818,9 +766,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Misc items and rods have a common acquirement class.
-        if (class_wanted == OBJ_MISCELLANY && you.species != SP_FELID)
-            class_wanted = one_chance_in(8) ? OBJ_RODS : OBJ_MISCELLANY;
+        // Wands and misc have a common acquirement class.
+        if (class_wanted == OBJ_MISCELLANY)
+            class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -1276,7 +1224,7 @@ int acquirement_create_item(object_class_type class_wanted,
             type_wanted = _useless_armour_type();
         else
         {
-            // This may clobber class_wanted (e.g. staves/rods, or vampire food)
+            // This may clobber class_wanted (e.g. staves or vampire food)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
         }
@@ -1485,6 +1433,8 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
 
+    item_set_appearance(mitm[thing_created]); // cleanup
+
     ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
     ASSERT(!god_hates_item(mitm[thing_created]));
 
@@ -1526,13 +1476,9 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_MISSILES);
         bad_class.set(OBJ_ARMOUR);
         bad_class.set(OBJ_STAVES);
-        bad_class.set(OBJ_RODS);
     }
     if (player_mutation_level(MUT_NO_ARTIFICE))
-    {
         bad_class.set(OBJ_MISCELLANY);
-        bad_class.set(OBJ_WANDS);
-    }
 
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
@@ -1543,13 +1489,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_JEWELLERY,  "Jewellery" },
         { OBJ_BOOKS,      "Book" },
         { OBJ_STAVES,     "Staff " },
-        { OBJ_WANDS,      "Wand" },
-        { OBJ_MISCELLANY, "Misc. Evocable" },
+        { OBJ_MISCELLANY, "Evocables" },
         { OBJ_FOOD,       0 }, // amended below
         { OBJ_GOLD,       "Gold" },
     };
-    ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you_worship(GOD_FEDHAS) ? "Fruit":
+    ASSERT(acq_classes[6].type == OBJ_FOOD);
+    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "Fruit":
                           you.species == SP_VAMPIRE  ? "Blood":
                                                        "Food";
 

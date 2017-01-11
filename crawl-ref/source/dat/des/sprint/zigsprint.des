@@ -87,11 +87,12 @@ function setup_room(e, id)
 
     -- Create items
 e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
-            wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
-            potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
+            potion of heal wounds ident:all q:4 w:3 /\
+            potion of haste ident:all q:4 w:3 /\
+            scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-            potion of haste q:2 ident:all w:2 / scroll of acquirement q:1 w:1 ident:all /\
+            scroll of acquirement q:1 w:1 ident:all /\
             scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")
@@ -236,7 +237,7 @@ function choose_mset_2(e)
     e.kmons("1 =  zombie / skeleton / lesser demon / hell hound")
 -- Giant
   elseif rnd < 82 then
-    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5")
+    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5")
 -- Fire
   elseif rnd < 84 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
@@ -347,7 +348,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Dis:1")
 -- Giant
   elseif rnd < 71 then
-    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops / hill giant w:5 /\
+    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops /\
                stone giant w:5 / fire giant w:2 / frost giant w:2")
 -- Fire
   elseif rnd < 73 then
@@ -480,7 +481,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
 -- Giant
   elseif rnd < 75 then
-    e.kmons("1 = hill giant / cyclops / stone giant / fire giant /\
+    e.kmons("1 = cyclops / stone giant / fire giant /\
                frost giant / ettin / titan")
 -- Fire
   elseif rnd < 78 then
@@ -799,7 +800,7 @@ KITEM:    T = piercer ident:all, \
               plutonium_sword ident:all, \
               devastator ident:all, \
               firestarter ident:all
-KITEM:    S = disc of storms ident:all
+KITEM:    S = lightning rod ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta

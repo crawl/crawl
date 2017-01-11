@@ -40,8 +40,8 @@ Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to increase the
-spell's power. More earthen spells are in their book of Geomancy.
+Earth Elementalists know the Sandblast spell, and carry stones to fuel the
+spell. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 

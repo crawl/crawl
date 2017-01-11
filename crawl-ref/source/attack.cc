@@ -22,10 +22,10 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::no_haste
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::no_haste
+#include "item-name.h"
+#include "item-prop.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
@@ -598,13 +598,6 @@ static const vector<chaos_effect> chaos_effects = {
             const bool obvious_effect
                 = you.can_see(defender) && you.can_see(*clone);
 
-            if (obvious_effect)
-            {
-                attack.special_damage_message =
-                    make_stringf("%s is duplicated!",
-                                 attack.defender_name(false).c_str());
-            }
-
             // The player shouldn't get new permanent followers from cloning.
             if (clone->attitude == ATT_FRIENDLY && !clone->is_summoned())
                 clone->mark_summoned(6, true, MON_SUMM_CLONE);
@@ -1129,9 +1122,9 @@ int attack::player_stat_modify_damage(int damage)
     int dammod = 39;
 
     if (you.strength() > 10)
-        dammod += (random2(you.strength() - 10) * 2);
+        dammod += (random2(you.strength() - 9) * 2);
     else if (you.strength() < 10)
-        dammod -= (random2(10 - you.strength()) * 3);
+        dammod -= (random2(11 - you.strength()) * 3);
 
     damage *= dammod;
     damage /= 39;
@@ -1172,7 +1165,10 @@ int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_STAVES
         || weapon->sub_type == WPN_BLOWGUN
-        || weapon->base_type == OBJ_RODS)
+#if TAG_MAJOR_VERSION == 34
+        || weapon->base_type == OBJ_RODS
+#endif
+       )
     {
         return 0;
     }
@@ -1200,7 +1196,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 int attack::player_apply_final_multipliers(int damage)
 {
     // Can't affect much of anything as a shadow.
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
 
     return damage;
@@ -1447,12 +1443,7 @@ bool attack::apply_damage_brand(const char *what)
     bool ret = false;
 
     if (using_weapon())
-    {
-        if (is_artefact(*weapon))
-            brand_was_known = artefact_known_property(*weapon, ARTP_BRAND);
-        else
-            brand_was_known = item_type_known(*weapon);
-    }
+        brand_was_known = item_brand_known(*weapon);
 
     special_damage = 0;
     obvious_effect = false;
@@ -1613,7 +1604,7 @@ bool attack::apply_damage_brand(const char *what)
 
         // Also used for players in fungus form.
         if (attacker->is_player()
-            && you.form == TRAN_FUNGUS
+            && you.form == transformation::fungus
             && !you.duration[DUR_CONFUSING_TOUCH]
             && defender->is_unbreathing())
         {
@@ -1673,7 +1664,7 @@ bool attack::apply_damage_brand(const char *what)
         {
             miscast_level  = 0;
             miscast_type   = SPTYP_RANDOM;
-            miscast_target = coinflip() ? attacker : defender;
+            miscast_target = random_choose(attacker, defender);
         }
 
         if (responsible->is_player())

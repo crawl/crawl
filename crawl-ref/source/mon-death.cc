@@ -28,15 +28,15 @@
 #include "env.h"
 #include "fineff.h"
 #include "food.h"
-#include "godabil.h"
-#include "godblessing.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs
+#include "god-abil.h"
+#include "god-blessing.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::bless_followers, share_exp, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
@@ -66,7 +66,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -1411,7 +1411,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)
     {
-        targetter_los hitfunc(mons, LOS_SOLID);
+        targeter_los hitfunc(mons, LOS_SOLID);
         flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
@@ -1424,22 +1424,8 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
 static void _infestation_create_scarab(monster* mons)
 {
-    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
-                                                   BEH_FRIENDLY, mons->pos(),
-                                                   MHITYOU, MG_AUTOFOE)
-                                         .set_summoned(&you, 0,
-                                                       SPELL_INFESTATION),
-                                         false))
-    {
-        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        if (you.see_cell(mons->pos()) || you.can_see(*scarab))
-        {
-            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
-                                       mons->name(DESC_THE).c_str());
-        }
-        mons->flags |= MF_EXPLODE_KILL;
-    }
+    mons->flags |= MF_EXPLODE_KILL;
+    infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
 }
 
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
@@ -3083,7 +3069,6 @@ string summoned_poof_msg(const monster* mons, bool plural)
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
-    case SPELL_WEAVE_SHADOWS:
     case MON_SUMM_SCROLL:
         msg      = "dissolve%s into shadows";
         no_chaos = true;

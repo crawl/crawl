@@ -38,12 +38,12 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
-#include "flood_find.h"
+#include "flood-find.h"
 #include "food.h"
 #include "ghost.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
@@ -68,7 +68,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2210,9 +2210,9 @@ static void _ruin_level(Iterator iter,
             && !plant_forbidden_at(p))
         {
             mgen_data mg;
-            mg.cls = one_chance_in(20) ? MONS_BUSH  :
-                     coinflip()        ? MONS_PLANT :
-                     MONS_FUNGUS;
+            mg.cls = random_choose_weighted( 2, MONS_BUSH,
+                                            19, MONS_PLANT,
+                                            19, MONS_FUNGUS);
             mg.pos = p;
             mg.flags = MG_FORCE_PLACE;
             mons_place(mgen_data(mg));
@@ -4359,8 +4359,7 @@ static object_class_type _superb_object_class()
             10, OBJ_ARMOUR,
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
-            9, OBJ_STAVES,
-            1, OBJ_RODS,
+            10, OBJ_STAVES,
             10, OBJ_MISCELLANY);
 }
 
@@ -5261,7 +5260,7 @@ static dungeon_feature_type _pick_an_altar()
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL);
             break;
 
         case BRANCH_ORC: // There are a few heretics
@@ -5657,9 +5656,7 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_JEWELLERY;
 
     case SHOP_EVOKABLES:
-        if (one_chance_in(10))
-            return OBJ_RODS;
-        return coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
@@ -5955,10 +5952,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
     {
         if (!feat_is_traversable(env.grid(*ai)))
             continue;
-        int walls = 0;
-        for (adjacent_iterator bi(*ai); bi && walls < max_walls; ++bi)
-            if (env.grid(*bi) == DNGN_SLIMY_WALL)
-                walls++;
+        const int walls = count_adjacent_slime_walls(*ai);
         if (walls < max_walls)
         {
             *pos = *ai;
@@ -6214,8 +6208,8 @@ coord_def dgn_region::random_edge_point() const
 {
     return x_chance_in_y(size.x, size.x + size.y) ?
                   coord_def(pos.x + random2(size.x),
-                             coinflip()? pos.y : pos.y + size.y - 1)
-                : coord_def(coinflip()? pos.x : pos.x + size.x - 1,
+                             random_choose(pos.y, pos.y + size.y - 1))
+                : coord_def(random_choose(pos.x, pos.x + size.x - 1),
                              pos.y + random2(size.y));
 }
 

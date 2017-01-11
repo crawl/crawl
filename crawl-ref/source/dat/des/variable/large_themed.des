@@ -225,15 +225,14 @@ NSUBST:  6 = 2:6 / *:.
 SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
-MONS:    hill giant, cyclops
+MONS:    cyclops, ettin
 MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
 SUBST:   G = '
 # Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
 SHUFFLE: '1 / '1 / w2 / l3
 : end
-KMONS:   Z = hill giant zombie / cyclops zombie / \
-             stone giant zombie / titan zombie
+KMONS:   Z = cyclops zombie / stone giant zombie / titan zombie
 KMONS:   P = plant
 KITEM:   ( = any weapon good_item
 KITEM:   Z = large rock
@@ -752,9 +751,9 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: west
 DEPTH:  Depths, !Depths:$
 MONS:   crystal guardian, orange crystal statue
-ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
-        any scroll w:20 / potion of magic / potion of brilliance / \
-        fan of gales w:1 / lamp of fire w:1 / phial of floods w:1 / gold w:30
+ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:20 / \
+        potion of magic / potion of brilliance / fan of gales w:1 / \
+        lamp of fire w:1 / phial of floods w:1 / gold w:30
 KFEAT:  _ = altar_sif_muna
 MAP
             bbbbb

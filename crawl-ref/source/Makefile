@@ -1590,7 +1590,7 @@ $(RLTILES)/dc-unrand.txt: art-data.h
 artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
-l_moninf.o: mi-enum.h
+l-moninf.o: mi-enum.h
 macro.o: cmd-name.h
 
 #############################################################################

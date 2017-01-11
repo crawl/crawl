@@ -7,7 +7,7 @@
 #ifndef EXERCISE_H
 #define EXERCISE_H
 
-#include "itemprop-enum.h" // missile_type
+#include "item-prop-enum.h" // missile_type
 
 void practise_hitting(const item_def *weapon);
 void practise_launching(const item_def &weapon);

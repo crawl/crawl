@@ -16,10 +16,10 @@
 #include "describe.h"
 #include "english.h"
 #include "food.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -681,7 +681,7 @@ static string _god_penance_message(god_type which_god)
         (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
         (which_god_penance >= 20)   ? "%s is annoyed with you." :
         (which_god_penance >=  5)   ? "%s well remembers your sins." :
-        (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
+        (which_god_penance >   0)   ? "%s is almost ready to forgive your sins." :
         (you.worshipped[which_god]) ? "%s is ambivalent towards you."
                                     : "%s is neutral towards you.";
 

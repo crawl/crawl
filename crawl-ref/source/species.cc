@@ -3,7 +3,7 @@
 
 #include "species.h"
 
-#include "itemprop.h"
+#include "item-prop.h"
 #include "mon-enum.h"
 #include "mutation.h"
 #include "player.h"

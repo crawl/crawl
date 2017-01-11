@@ -47,10 +47,10 @@
 #include "end.h"
 #include "errors.h"
 #include "ghost.h"
-#include "godabil.h" // just for the Ru sac penalty key
-#include "godcompanions.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-abil.h" // just for the Ru sac penalty key
+#include "god-companions.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "mapmark.h"
@@ -1006,6 +1006,15 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
     {
         x = DNGN_SHALLOW_WATER;
     }
+
+    // ensure that killing TRJ opens the slime:$ vaults
+    if (you.where_are_you == BRANCH_SLIME && you.depth == brdepth[BRANCH_SLIME]
+        && minor_version < TAG_MINOR_SLIME_WALL_CLEAR
+        && x == DNGN_STONE_WALL)
+    {
+        x = DNGN_CLEAR_STONE_WALL;
+    }
+
 #endif
 
     return x;
@@ -1358,7 +1367,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
-    marshallInt(th, you.form);
+    _marshall_as_int(th, you.form);
     CANARY;
 
     // how many you.equip?
@@ -2285,15 +2294,15 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
         unmarshallInt(th);
 #endif
-    you.form            = static_cast<transformation_type>(unmarshallInt(th));
-    ASSERT_RANGE(you.form, TRAN_NONE, NUM_TRANSFORMS);
+    you.form            = unmarshall_int_as<transformation>(th);
+    ASSERT_RANGE(static_cast<int>(you.form), 0, NUM_TRANSFORMS);
 #if TAG_MAJOR_VERSION == 34
     // Fix the effects of #7668 (Vampire lose undead trait once coming back
     // from lich form).
-    if (you.form == TRAN_NONE)
+    if (you.form == transformation::none)
         you.transform_uncancellable = false;
 #else
-    ASSERT(you.form != TRAN_NONE || !you.transform_uncancellable);
+    ASSERT(you.form != transformation::none || !you.transform_uncancellable);
 #endif
     EAT_CANARY;
 
@@ -2581,8 +2590,11 @@ static void tag_read_you(reader &th)
     if (you.species == SP_LAVA_ORC)
         you.duration[DUR_MAGIC_ARMOUR] = 0;
 
-    if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM && you.form == TRAN_FUNGUS)
+    if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM
+        && you.form == transformation::fungus)
+    {
         you.duration[DUR_CONFUSING_TOUCH] = 0;
+    }
 
     you.duration[DUR_JELLY_PRAYER] = 0;
 #endif
@@ -2766,9 +2778,9 @@ static void tag_read_you(reader &th)
         you.mutation[j] = you.innate_mutation[j] = you.sacrifices[j];
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
+    if (th.getMinorVersion() < TAG_MINOR_NO_POTION_HEAL)
     {   // These use to apply no matter what the minor tag
-        // was, so when TAG_MINOR_NO_DEVICE_HEAL was added
+        // was, so when TAG_MINOR_NO_POTION_HEAL was added
         // these were all moved to only apply to previous
         // tags.
         if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
@@ -2831,8 +2843,8 @@ static void tag_read_you(reader &th)
     {
         if (you.species == SP_VINE_STALKER)
         {
-            you.mutation[MUT_NO_DEVICE_HEAL] =
-            you.innate_mutation[MUT_NO_DEVICE_HEAL] = 3;
+            you.mutation[MUT_NO_POTION_HEAL] =
+            you.innate_mutation[MUT_NO_POTION_HEAL] = 3;
         }
 
         if (you.species == SP_VINE_STALKER

@@ -32,7 +32,7 @@
 #include "files.h"
 #include "game-options.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"
@@ -125,6 +125,10 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         false;
 #endif
+#ifdef DGAMELAUNCH
+    UNUSED(USING_LOCAL_TILES);
+#endif
+
 #ifdef USE_TILE
     const bool USING_WEB_TILES =
 #if defined(USE_TILE_WEB)
@@ -433,8 +437,10 @@ object_class_type item_class_by_sym(char32_t c)
     case U'£':
     case U'¥': // FR: support more currencies
         return OBJ_GOLD;
+#if TAG_MAJOR_VERSION == 34
     case '\\': // Compat break: used to be staves (why not '|'?).
         return OBJ_RODS;
+#endif
     default:
         return NUM_OBJECT_CLASSES;
     }
@@ -1007,7 +1013,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
     autopickups.set(OBJ_FOOD);
-    autopickups.set(OBJ_RODS);
 
     confirm_butcher        = CONFIRM_AUTO;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -1033,7 +1038,7 @@ void game_options::reset_options()
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
     dump_kill_places       = KDO_ONE_PLACE;
-    dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
+    dump_item_origins      = IODS_ARTEFACTS;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -1718,7 +1723,7 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 }
 
 game_options::game_options()
-    : seed(0), no_save(false), language(LANG_EN), lang_name(nullptr)
+    : seed(0), no_save(false), language(lang_t::EN), lang_name(nullptr)
 {
     reset_options();
 }
@@ -3238,8 +3243,6 @@ void game_options::read_option_line(const string &str, bool runscript)
                 dump_item_origins |= IODS_JEWELLERY;
             else if (ch == "runes")
                 dump_item_origins |= IODS_RUNES;
-            else if (ch == "rods")
-                dump_item_origins |= IODS_RODS;
             else if (ch == "staves")
                 dump_item_origins |= IODS_STAVES;
             else if (ch == "books")
@@ -3342,39 +3345,72 @@ void game_options::read_option_line(const string &str, bool runscript)
 }
 
 static const map<string, flang_t> fake_lang_names = {
-    { "dwarven", FLANG_DWARVEN },
-    { "dwarf", FLANG_DWARVEN },
+    { "dwarven", flang_t::dwarven },
+    { "dwarf", flang_t::dwarven },
 
-    { "jäger", FLANG_JAGERKIN },
-    { "jägerkin", FLANG_JAGERKIN },
-    { "jager", FLANG_JAGERKIN },
-    { "jagerkin", FLANG_JAGERKIN },
-    { "jaeger", FLANG_JAGERKIN },
-    { "jaegerkin", FLANG_JAGERKIN },
+    { "jäger", flang_t::jagerkin },
+    { "jägerkin", flang_t::jagerkin },
+    { "jager", flang_t::jagerkin },
+    { "jagerkin", flang_t::jagerkin },
+    { "jaeger", flang_t::jagerkin },
+    { "jaegerkin", flang_t::jagerkin },
 
     // Due to a historical conflict with actual german, slang names are
     // supported. Not the really rude ones, though.
-    { "de", FLANG_KRAUT },
-    { "german", FLANG_KRAUT },
-    { "kraut", FLANG_KRAUT },
-    { "jerry", FLANG_KRAUT },
-    { "fritz", FLANG_KRAUT },
+    { "de", flang_t::kraut },
+    { "german", flang_t::kraut },
+    { "kraut", flang_t::kraut },
+    { "jerry", flang_t::kraut },
+    { "fritz", flang_t::kraut },
 
-    { "futhark", FLANG_FUTHARK },
-    { "runes", FLANG_FUTHARK },
-    { "runic", FLANG_FUTHARK },
+    { "futhark", flang_t::futhark },
+    { "runes", flang_t::futhark },
+    { "runic", flang_t::futhark },
 
-    { "wide", FLANG_WIDE },
-    { "doublewidth", FLANG_WIDE },
-    { "fullwidth", FLANG_WIDE },
+    { "wide", flang_t::wide },
+    { "doublewidth", flang_t::wide },
+    { "fullwidth", flang_t::wide },
 
-    { "grunt", FLANG_GRUNT },
-    { "sgrunt", FLANG_GRUNT },
-    { "!!!", FLANG_GRUNT },
+    { "grunt", flang_t::grunt },
+    { "sgrunt", flang_t::grunt },
+    { "!!!", flang_t::grunt },
 
-    { "butt", FLANG_BUTT },
-    { "buttbot", FLANG_BUTT },
-    { "tef", FLANG_BUTT },
+    { "butt", flang_t::butt },
+    { "buttbot", flang_t::butt },
+    { "tef", flang_t::butt },
+};
+
+struct language_def
+{
+    lang_t lang;
+    const char *code;
+    set<string> names;
+};
+
+static const language_def lang_data[] =
+{
+    // Use null, not "en", for English so we don't try to look up translations.
+    { lang_t::EN, nullptr, { "english", "en", "c" } },
+    { lang_t::CS, "cs", { "czech", "český", "cesky" } },
+    { lang_t::DA, "da", { "danish", "dansk" } },
+    { lang_t::DE, "de", { "german", "deutsch" } },
+    { lang_t::EL, "el", { "greek", "ελληνικά", "ελληνικα" } },
+    { lang_t::ES, "es", { "spanish", "español", "espanol" } },
+    { lang_t::FI, "fi", { "finnish", "suomi" } },
+    { lang_t::FR, "fr", { "french", "français", "francais" } },
+    { lang_t::HU, "hu", { "hungarian", "magyar" } },
+    { lang_t::IT, "it", { "italian", "italiano" } },
+    { lang_t::JA, "ja", { "japanese", "日本人" } },
+    { lang_t::KO, "ko", { "korean", "한국의" } },
+    { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
+    { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
+                          "latvieshu", "latviesu" } },
+    { lang_t::NL, "nl", { "dutch", "nederlands" } },
+    { lang_t::PL, "pl", { "polish", "polski" } },
+    { lang_t::PT, "pt", { "portuguese", "português", "portugues" } },
+    { lang_t::RU, "ru", { "russian", "русский", "русскии" } },
+    { lang_t::SV, "sv", { "swedish", "svenska" } },
+    { lang_t::ZH, "zh", { "chinese", "中国的", "中國的" } },
 };
 
 bool game_options::set_lang(const char *lc)
@@ -3386,59 +3422,25 @@ bool game_options::set_lang(const char *lc)
         return set_lang(string(lc, 2).c_str());
 
     const string l = lowercase_string(lc); // Windows returns it capitalized.
-    if (l == "en" || l == "english")
-        language = LANG_EN, lang_name = 0; // disable the db
-    else if (l == "cs" || l == "czech" || l == "český" || l == "cesky")
-        language = LANG_CS, lang_name = "cs";
-    else if (l == "da" || l == "danish" || l == "dansk")
-        language = LANG_DA, lang_name = "da";
-    else if (l == "de" || l == "german" || l == "deutsch")
-        language = LANG_DE, lang_name = "de";
-    else if (l == "el" || l == "greek" || l == "ελληνικά" || l == "ελληνικα")
-        language = LANG_EL, lang_name = "el";
-    else if (l == "es" || l == "spanish" || l == "español" || l == "espanol")
-        language = LANG_ES, lang_name = "es";
-    else if (l == "fi" || l == "finnish" || l == "suomi")
-        language = LANG_FI, lang_name = "fi";
-    else if (l == "fr" || l == "french" || l == "français" || l == "francais")
-        language = LANG_FR, lang_name = "fr";
-    else if (l == "hu" || l == "hungarian" || l == "magyar")
-        language = LANG_HU, lang_name = "hu";
-    else if (l == "it" || l == "italian" || l == "italiano")
-        language = LANG_IT, lang_name = "it";
-    else if (l == "ja" || l == "japanese" || l == "日本人")
-        language = LANG_JA, lang_name = "ja";
-    else if (l == "ko" || l == "korean" || l == "한국의")
-        language = LANG_KO, lang_name = "ko";
-    else if (l == "lt" || l == "lithuanian" || l == "lietuvos")
-        language = LANG_LT, lang_name = "lt";
-    else if (l == "lv" || l == "latvian" || l == "lettish"
-             || l == "latvijas" || l == "latviešu"
-             || l == "latvieshu" || l == "latviesu")
+    for (const auto &ldef : lang_data)
     {
-        language = LANG_LV, lang_name = "lv";
+        if ((ldef.code && l == ldef.code) || ldef.names.count(l))
+        {
+            language = ldef.lang;
+            lang_name = ldef.code;
+            return true;
+        }
     }
-    else if (l == "nl" || l == "dutch" || l == "nederlands")
-        language = LANG_NL, lang_name = "nl";
-    else if (l == "pl" || l == "polish" || l == "polski")
-        language = LANG_PL, lang_name = "pl";
-    else if (l == "pt" || l == "portuguese" || l == "português" || l == "portugues")
-        language = LANG_PT, lang_name = "pt";
-    else if (l == "ru" || l == "russian" || l == "русский" || l == "русскии")
-        language = LANG_RU, lang_name = "ru";
-    else if (l == "sv" || l == "swedish" || l == "svenska")
-        language = LANG_SV, lang_name = "sv";
-    else if (l == "zh" || l == "chinese" || l == "中国的" || l == "中國的")
-        language = LANG_ZH, lang_name = "zh";
-    else if (const flang_t * const flang = map_find(fake_lang_names, l))
+
+    if (const flang_t * const flang = map_find(fake_lang_names, l))
     {
         // Handle fake languages for backwards-compatibility with old rcs.
         // Override rather than stack, because that's how it used to work.
         fake_langs = { { *flang, -1 } };
+        return true;
     }
-    else
-        return false;
-    return true;
+
+    return false;
 }
 
 /**
@@ -3475,7 +3477,7 @@ void game_options::set_fake_langs(const string &input)
         {
             if (split_flang.size() >= 2)
             {
-                if (*flang != FLANG_BUTT)
+                if (*flang != flang_t::butt)
                 {
                     report_error("Lang %s doesn't take a value",
                                  flang_name.c_str());

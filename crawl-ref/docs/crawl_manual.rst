@@ -177,8 +177,7 @@ Magic
   spellcasting, but is sometimes also used for the evoking and invoking of many
   other special abilities. They are displayed in the same way as hit points;
   nothing bad happens if these drop to zero, except, of course, that you can't
-  cast any spells. Resting restores these, too. It is difficult to have more than
-  50 magic points without using external devices.
+  cast any spells. Resting also restores your reserves of magic.
 
 Next come your defences. For all of them, more is better.
 
@@ -1509,8 +1508,9 @@ Centaurs
   receive reduced protection from the body armour they wear.
 
 Ogres
-  Ogres are huge, chunky creatures who typically are strong rather than smart,
-  and not nimble at all. Ogres mature almost as quickly as Humans.
+  Ogres are huge, chunky creatures who are very strong and robust, but are not
+  nimble at all. Ogres mature almost as quickly as Humans. They possess a raw
+  talent for magic, but are poor at making use of magical devices.
 
   Their preferred methods of avoiding beatings are dodging and the use of
   shields. Many Ogres find it natural to wield some large and blunt weapon.
@@ -1518,19 +1518,15 @@ Ogres
   While all sophisticated forms of missile combat are too awkward for them, they
   are good at throwing things, in particular boulders.
 
-  Contrary to expectations, Ogres are not reduced to mindless brutes. They
-  possess a raw talent for witchcraft, letting them pick up the basics of
-  spellcasting at an amazing speed. However, the more arcane schools of magic
-  are foreign to them and are only learned at poor rates.
-
 Trolls
-  Trolls are like Ogres, but even nastier. They have thick, knobbly skins of any
-  colour from putrid green to mucky brown, which are covered in patches of thick
-  fur, and their mouths are full of ichor-dripping fangs.
+  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
+  skins of any colour from putrid green to mucky brown, which are covered in
+  patches of thick fur.
 
-  They can rip creatures apart with their claws, and regenerate very quickly
-  from even the most terrible wounds. They learn slowly indeed - as slowly as
-  High Elves - and need a great amount of food to survive.
+  They are incredibly strong, and have a lightning-fast metabolism - requiring
+  a great deal of food to survive, but regenerating rapidly from even the most
+  terrible wounds. However, they are hopeless at spellcasting and learn most
+  skills very slowly.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
@@ -1585,26 +1581,29 @@ Demonspawn
 Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate on their
-  own, nor are they receptive to any effects which merely hasten regeneration.
-  On the other hand, Deep Dwarves have developed the ability to instantly
-  counteract small doses of damage. Their empathy with the earth makes them
-  sense their surroundings; this ability increases in power as they gain
-  experience levels.
-
-  Given their lack of innate healing, few Deep Dwarves venture out for
-  adventures or even combat. Those who do bring a wand of heal wounds, or rely
-  on divine assistance.
+  generations made them turn pale and lose all ability to regenerate health
+  over time, or to have their rate of regeneration hastened by any effects.
+  Deep Dwarves can instead draw on their magical essence to heal, but doing so
+  will gradually deplete their maximum reserves of magic. They are passively
+  able to reduce all incoming damage, and their empathy with the earth allows
+  them to sense their surroundings; these abilities increase in power as they
+  gain experience levels.
 
   Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
   damage. Offensively, they are skilled users of axes, crossbows, and slings.
   Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with invocations is great. They
-  are most at home with the magic of earth and death, eventually gaining some
-  resistance to the dark powers of necromancy.
+  by outsiders; because of this, their skill with invocations is great, and
+  they often rely on divine assistance for healing. They are most at home with
+  the magic of earth and death, eventually gaining some resistance to the dark
+  powers of necromancy.
 
-  Deep Dwarves can tinker with wands so as to recharge them. However, each time
-  they do so, they lose a bit of their magical essence.
+Deep Elves
+   This is an Elven species who long ago fled the overworld to live in darkness
+   underground. There, they developed their mental powers, evolving a natural
+   gift for all forms of magic (including necromancy and earth magic), and
+   adapted physically to their new environment, becoming shorter, weaker, and
+   losing all colouration. They are poor at hand-to-hand combat, but excellent
+   at fighting from a distance.
 
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
@@ -1624,6 +1623,16 @@ Felids
 
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
+
+Barachians
+  Barachians are an amphibious humanoid race, said to be distantly related to
+  the Elves. Spawned in great numbers beneath the southern ice, their
+  Mother-Father sends them forth to destroy and pillage the civilized lands.
+
+  Barachians' most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap remarkable distances. When not leaping, they are somewhat
+  slow-moving and their attributes are poor, but they do have considerable
+  flexibility in skill choice.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
@@ -1684,7 +1693,7 @@ Vine Stalkers
   between their health and magical reserves. They also physically regenerate
   at an alarming rate. However these traits come at a price: the dual nature of
   their bodies makes them extremely frail, and they cannot benefit from potions
-  or wands to heal their wounds.
+  to heal their wounds.
 
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey
@@ -1693,37 +1702,6 @@ Vine Stalkers
   magic quite competently and then switching to a hybrid style when their
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
-
-Elves
-========================================
-
-There are a number of distinct species of Elf. Elves are all physically slight
-but long-lived people, quicker-witted than Humans, but sometimes slower to learn
-new things. Elves are especially good at using those skills which require a
-degree of finesse, such as stealth, sword-fighting and archery, but tend to be
-poor at using brute force and inelegant forms of combat. They find heavy armour
-to be uncomfortable.
-
-Due to their fey natures, all Elves are good at using magic in general and
-elemental magic in particular, while their affinity for other types of magic
-varies among the different sub-species.
-
-High Elves
-  This is a tall and powerful Elven species who advance in levels slowly,
-  requiring half again as much experience as Humans. They have good intelligence
-  and dexterity, but suffer in strength. Compared with Humans, they have fewer
-  HP but more magic. Among all races, they are best with blades and bows. They
-  are not very good with necromancy or with earth or poison magic, but are
-  highly skilled with most other forms of magic, especially Air and Charms.
-
-Deep Elves
-  This is an Elven species who long ago fled the overworld to live in darkness
-  underground. There, they developed their mental powers, evolving a natural
-  gift for all forms of magic (including necromancy and earth magic), and
-  adapted physically to their new environment, becoming shorter and weaker than
-  High Elves and losing all colouration. They are poor at hand-to-hand combat,
-  but excellent at fighting from a distance. They advance in levels at the same
-  speed as High Elves.
 
 The Undead
 ========================================
@@ -1751,7 +1729,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use

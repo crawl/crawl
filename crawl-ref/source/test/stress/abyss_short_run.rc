@@ -30,7 +30,7 @@ function ready()
                    --# don't let them stop us gearing up
                    "debug.disable('mon_act')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
-    crawl.sendkeys("&l27" .. eol .. "N")
+    crawl.sendkeys("&l27" .. eol)
     crawl.sendkeys("&A27" .. eol)
     crawl.sendkeys("&@27 12 12" .. eol)
     crawl.sendkeys("&o)demon whip" .. eol .. "chaos" .. eol)

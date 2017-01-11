@@ -154,18 +154,11 @@ function trove.get_trove_item(e, value, base_item)
     end
   end
 
-  if you.race() ~= "Vine Stalker" and you.mutation("inability to use devices") ~= 1 then
-    table.insert(prices, {base="wand", type="heal wounds", quant=9})
-  end
-
   local stasis_tolls = {
        {base="scroll", type="blinking", quant=2+d(3)+d(3)},
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
-    if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=9})
-    end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
     end
@@ -845,7 +838,7 @@ MONS:   ynoxinul
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   wand of disintegration ident:all
+ITEM:   wand of digging ident:all
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 MAP
@@ -922,7 +915,7 @@ SUBST:  d = dde
 FTILE:  ' : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc / any rod w:4
+ITEM:   any misc
 ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
 ITEM:   scroll of recharging / scroll of recharging q:3 w:5
 : trove.setup_features(_G)
@@ -985,7 +978,7 @@ ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 ITEM:    any useful armour good_item / any useful weapon good_item / \
          any useful jewellery good_item
 : trove.good_scroll(_G)
-KITEM:   h = wand of disintegration ident:all, wand of disintegration ident:all
+KITEM:   h = wand of digging ident:all, wand of digging ident:all
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP

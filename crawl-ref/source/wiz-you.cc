@@ -13,9 +13,9 @@
 #include "abyss.h"
 #include "dbg-util.h"
 #include "food.h"
-#include "godabil.h"
-#include "godwrath.h"
-#include "item_use.h"
+#include "god-abil.h"
+#include "god-wrath.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -914,7 +914,7 @@ static void debug_downtick_xl(int newxl)
     set_hp(max(1, you.hp));
 }
 
-void wizard_set_xl()
+void wizard_set_xl(bool change_skills)
 {
     mprf(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
@@ -931,7 +931,7 @@ void wizard_set_xl()
         return;
     }
 
-    set_xl(newxl, yesno("Train skills?", true, 'n'));
+    set_xl(newxl, change_skills);
     mprf("Experience level set to %d.", newxl);
 }
 
@@ -1016,19 +1016,19 @@ void wizard_god_mollify()
 
 void wizard_transform()
 {
-    transformation_type form;
+    transformation form;
 
     while (true)
     {
         string line;
         for (int i = 0; i < NUM_TRANSFORMS; i++)
         {
+            const auto tr = static_cast<transformation>(i);
 #if TAG_MAJOR_VERSION == 34
-            if (i == TRAN_JELLY || i == TRAN_PORCUPINE)
+            if (tr == transformation::jelly || tr == transformation::porcupine)
                 continue;
 #endif
-            line += make_stringf("[%c] %-10s ", i + 'a',
-                                 transform_name((transformation_type)i));
+            line += make_stringf("[%c] %-10s ", i + 'a', transform_name(tr));
             if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
             {
                 mprf(MSGCH_PROMPT, "%s", line.c_str());
@@ -1049,16 +1049,12 @@ void wizard_transform()
         if (keyin < 'a' || keyin > 'a' + NUM_TRANSFORMS - 1)
             continue;
 
+        const auto k_tr = static_cast<transformation>(keyin - 'a');
 #if TAG_MAJOR_VERSION == 34
-        if ((transformation_type)(keyin - 'a') == TRAN_JELLY
-            || (transformation_type)(keyin - 'a') == TRAN_PORCUPINE)
-        {
+        if (k_tr == transformation::jelly || k_tr == transformation::porcupine)
             continue;
-        }
 #endif
-
-        form = (transformation_type)(keyin - 'a');
-
+        form = k_tr;
         break;
     }
 

@@ -31,16 +31,16 @@
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -64,7 +64,7 @@
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -4209,7 +4209,9 @@ mon_inv_type item_to_mslot(const item_def &item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
+#endif
         return MSLOT_WEAPON;
     case OBJ_MISSILES:
         return MSLOT_MISSILE;
@@ -5256,6 +5258,12 @@ bool mons_is_player_shadow(const monster& mon)
            && mon.mname.empty();
 }
 
+bool mons_has_attacks(const monster& mon)
+{
+    const mon_attack_def attk = mons_attack_spec(mon, 0);
+    return attk.type != AT_NONE && attk.damage > 0;
+}
+
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monster& mon)
 {
@@ -5450,7 +5458,7 @@ bool mons_is_notable(const monster& mons)
         return true;
     }
     // Jellies are never interesting to Jiyva.
-    if (mons.type == MONS_JELLY && you_worship(GOD_JIYVA))
+    if (mons.type == MONS_JELLY && have_passive(passive_t::jellies_army))
         return false;
     if (mons_threat_level(mons) == MTHRT_NASTY)
         return true;
