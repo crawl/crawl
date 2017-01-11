@@ -185,7 +185,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
-        _should_selfench(ENCH_INVIS),
+        _should_selfench(ENCH_HASTE),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
     } },
