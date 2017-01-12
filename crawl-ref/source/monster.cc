@@ -6733,6 +6733,9 @@ void monster::bezot_monster()
     calc_speed();
     if (visible_to(&you))
         simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
+
+    // We probably want to eventually remove this, but it's good info for testing.
+    take_note(Note(NOTE_MESSAGE, 0, 0, name(DESC_A) + " gained the power of zot."));
 }
 
 /**
