@@ -151,12 +151,12 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 
     fail_check();
 
-    const int cloud_duration = max(random2(pow + 1) / 10, 1);
+    const int cloud_duration = max(random2(pow + 1) / 10, 1); // in dekaauts
     if (cloud)
     {
         // Reinforce the cloud.
         mpr("The poisonous vapours increase!");
-        cloud->decay += cloud_duration;
+        cloud->decay += cloud_duration * 10; // in this case, we're using auts
         cloud->set_whose(KC_YOU);
     }
     else
