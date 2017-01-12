@@ -90,6 +90,7 @@ monster::monster()
     clear_constricted();
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
+    turns_spent_tracking_player = 0;
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -140,6 +141,7 @@ void monster::reset()
     god             = GOD_NO_GOD;
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
+    turns_spent_tracking_player = 0;
 
     mons_remove_from_grid(*this);
     target.reset();
@@ -6744,14 +6746,10 @@ void monster::bezot_monster()
  */
 void monster::track_player()
 {
-    int turns = 0;
-    if (props.exists(TURNS_SPENT_TRACKING_PLAYER_KEY))
-        turns = props[TURNS_SPENT_TRACKING_PLAYER_KEY].get_int() += 1;
+    turns_spent_tracking_player += 1;
 
-    props[TURNS_SPENT_TRACKING_PLAYER_KEY] = turns;
-
-    if (x_chance_in_y(turns, turns + 2000) &&
-        !(props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool()))
+    if (x_chance_in_y(turns_spent_tracking_player, turns_spent_tracking_player + 2000)
+        && !(props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool()))
     {
         bezot_monster();
     }

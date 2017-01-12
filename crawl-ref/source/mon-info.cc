@@ -198,8 +198,7 @@ static bool _is_public_key(string key)
      || key == SEEN_SPELLS_KEY
      || key == KNOWN_MAX_HP_KEY
      || key == VAULT_HD_KEY
-     || key == BEZOTTED_KEY
-     || key == TURNS_SPENT_TRACKING_PLAYER_KEY )
+     || key == BEZOTTED_KEY )
     {
         return true;
     }

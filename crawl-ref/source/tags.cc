@@ -4906,6 +4906,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.damage_total);
     marshallByte(th, m.went_unseen_this_turn);
     marshallCoord(th, m.unseen_pos);
+    marshallInt(th, m.turns_spent_tracking_player);
 
     if (parts & MP_GHOST_DEMON)
     {
@@ -5808,6 +5809,13 @@ void unmarshallMonster(reader &th, monster& m)
 #if TAG_MAJOR_VERSION == 34
     }
 #endif
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_TRACKING)
+        m.turns_spent_tracking_player = 0;
+    else
+#endif
+    m.turns_spent_tracking_player = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (m.type == MONS_LABORATORY_RAT)

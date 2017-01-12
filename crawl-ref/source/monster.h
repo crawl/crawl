@@ -17,7 +17,6 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define KNOWN_MAX_HP_KEY "known_max_hp"
 #define VAULT_HD_KEY "vault_hd"
 #define BEZOTTED_KEY "bezotted"
-#define TURNS_SPENT_TRACKING_PLAYER_KEY "turns_spent_tracking_player"
 
 #define FAKE_BLINK_KEY "fake_blink"
 
@@ -104,6 +103,8 @@ public:
 
     bool went_unseen_this_turn;
     coord_def unseen_pos;
+
+    int turns_spent_tracking_player;
 
 public:
     void set_new_monster_id();
