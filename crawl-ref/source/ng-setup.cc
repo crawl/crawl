@@ -237,7 +237,7 @@ static void _give_ammo(weapon_type weapon, int plus)
     }
 }
 
-static const uint8_t _archa_num_unrands = 86;
+static const uint8_t _archa_num_unrands = 83;
 static const unrand_type _archa_unrands[_archa_num_unrands]
 {
     UNRAND_SINGING_SWORD,               // Singing Sword
@@ -279,12 +279,10 @@ static const unrand_type _archa_unrands[_archa_num_unrands]
     UNRAND_SNAKEBITE,                   // whip "Snakebite"
     UNRAND_CAPTAIN,                     // captain's cutlass
     UNRAND_STORM_BOW,                   // storm bow
-    UNRAND_IGNORANCE,                   // large shield of Ignorance
     UNRAND_AUGMENTATION,                // robe of Augmentation
     UNRAND_THIEF,                       // cloak of the Thief
     UNRAND_DYROVEPREVA,                 // crown of Dyrovepreva
     UNRAND_BEAR_SPIRIT,                 // hat of the Bear Spirit
-    UNRAND_MISFORTUNE,                  // robe of Misfortune
     UNRAND_BOOTS_ASSASSIN,              // boots of the Assassin
     UNRAND_LEAR,                        // Lear's hauberk
     UNRAND_ZHOR,                        // skin of Zhor
@@ -299,7 +297,6 @@ static const unrand_type _archa_unrands[_archa_num_unrands]
     UNRAND_ALCHEMIST,                   // hat of the Alchemist
     UNRAND_FENCERS,                     // fencer's gloves
     UNRAND_STARLIGHT,                   // cloak of Starlight
-    UNRAND_RATSKIN_CLOAK,               // ratskin cloak
     UNRAND_GONG,                        // shield of the Gong
     UNRAND_RCLOUDS,                     // robe of Clouds
     UNRAND_PONDERING,                   // hat of Pondering
@@ -349,9 +346,13 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     case UNRAND_PONDERING:
     case UNRAND_MAXWELL:
     case UNRAND_FOLLY:
+    case UNRAND_HIGH_COUNCIL:
+    case UNRAND_MAJIN:
+    case UNRAND_WUCAD_MU:
         return SK_SPELLCASTING;
     case UNRAND_DRAGONMASK:
     case UNRAND_WAR:
+    case UNRAND_BEAR_SPIRIT:
         return SK_FIGHTING;
     case UNRAND_FENCERS:
         return SK_DODGING;
@@ -368,7 +369,7 @@ static skill_type _setup_archaeologist_crate(item_def& crate)
     else if (is_shield(unrand))
         return SK_SHIELDS;
     else if (unrand.sub_type == ARM_ROBE)
-        return SK_DODGING;
+        return coinflip() ? SK_SPELLCASTING : SK_DODGING;
     else return SK_ARMOUR;
 }
 

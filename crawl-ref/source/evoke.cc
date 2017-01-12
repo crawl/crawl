@@ -670,18 +670,26 @@ bool skill_has_manual(skill_type skill)
     return manual_slot_for_skill(skill) != -1;
 }
 
-static void _archaeologist_open_crate()
+void archaeologist_open_crate(item_def& crate)
 {
+    unrand_type type = (unrand_type)crate.props[ARCHAEOLOGIST_CRATE_ITEM].get_int();
+    make_item_unrandart(crate, type);
+    item_colour(crate);
+    item_set_appearance(crate);
+    mprf("The crate's locking mechanism finally gives in... Revealing %s!", crate.name(DESC_THE).c_str());
+    crate.props.erase(ARCHAEOLOGIST_CRATE_ITEM);
+}
 
-    for (uint8_t i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
-        {
-            unrand_type type = (unrand_type)you.inv[i].props[ARCHAEOLOGIST_CRATE_ITEM].get_int();
-            make_item_unrandart(you.inv[i], type);
-            item_colour(you.inv[i]);
-            item_set_appearance(you.inv[i]);
-            mprf("The crate's locking mechanism finally gives in... Revealing %s!", you.inv[i].name(DESC_THE).c_str());
-        }
+void archaeologist_read_tome(item_def& tome)
+{
+    tome.base_type = OBJ_BOOKS;
+    tome.sub_type = BOOK_MANUAL;
+    tome.skill_points = 1000;
+    tome.skill = (skill_type)tome.props[ARCHAEOLOGIST_TOME_SKILL].get_int();
+    item_colour(tome);
+    item_set_appearance(tome);
+    mprf("You have an epiphany! The dusty tome is %s! Reading it may be key to unlocking the crate...",
+         tome.name(DESC_A).c_str());
 }
 
 void finish_manual(int slot)
@@ -689,11 +697,26 @@ void finish_manual(int slot)
     item_def& manual(you.inv[slot]);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    if (you.char_class == JOB_ARCHAEOLOGIST && you.inv[slot].props.exists(ARCHAEOLOGIST_TOME_SKILL))
+    if (you.char_class == JOB_ARCHAEOLOGIST && manual.props.exists(ARCHAEOLOGIST_TOME_SKILL))
     {
-        mprf("As you finish your manual of %s, the mysteries of the crate's mechanism unravel in your mind!",
-                skill_name(skill));
-        _archaeologist_open_crate();
+        int crate_index = -1;
+        for (int i = 0; i < ENDOFPACK; i++)
+            if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_ANCIENT_CRATE))
+                crate_index = i;
+
+        if (crate_index != -1) 
+        {
+            mprf("As you finish your manual of %s, the mysteries of the crate's mechanism unravel in your mind!",
+                 skill_name(skill));
+            archaeologist_open_crate(you.inv[crate_index]);
+        }
+        else
+        {
+            mprf("As you finish your manual of %s, you suddenly remember the ancient crate it was unearthed with."
+                 " You are certain you could open it now, if only you could find it again...",
+                 skill_name(skill)); 
+            you.props[ARCHAEOLOGIST_TRIGGER_CRATE_ON_PICKUP] = true;
+        }
     }
     else
         mprf("You have finished your manual of %s and toss it away.",
