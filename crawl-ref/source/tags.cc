@@ -4907,6 +4907,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, m.went_unseen_this_turn);
     marshallCoord(th, m.unseen_pos);
     marshallInt(th, m.turns_spent_tracking_player);
+    marshallInt(th, m.tracking_amnesty);
 
     if (parts & MP_GHOST_DEMON)
     {
@@ -5816,6 +5817,13 @@ void unmarshallMonster(reader &th, monster& m)
     else
 #endif
     m.turns_spent_tracking_player = unmarshallInt(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TRACKING_AMNESTY)
+        m.tracking_amnesty = 6; // same as DEFAULT_TRACKING_AMNESTY in monster.h
+    else
+#endif
+    m.tracking_amnesty = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
     if (m.type == MONS_LABORATORY_RAT)

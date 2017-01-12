@@ -92,6 +92,7 @@ monster::monster()
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
     turns_spent_tracking_player = 0;
+    tracking_amnesty = DEFAULT_TRACKING_AMNESTY;
 }
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
@@ -143,6 +144,7 @@ void monster::reset()
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
     turns_spent_tracking_player = 0;
+    tracking_amnesty = DEFAULT_TRACKING_AMNESTY;
 
     mons_remove_from_grid(*this);
     target.reset();
@@ -6747,6 +6749,13 @@ void monster::bezot_monster()
  */
 void monster::track_player()
 {
+    // If we've decided to defer tracking for a turn, don't track.
+    if (tracking_amnesty > 0)
+    {
+        tracking_amnesty -= 1;
+        return;
+    }
+
     turns_spent_tracking_player += 1;
 
     if (x_chance_in_y(turns_spent_tracking_player, turns_spent_tracking_player + 2000)
@@ -6755,4 +6764,3 @@ void monster::track_player()
         bezot_monster();
     }
 }
-

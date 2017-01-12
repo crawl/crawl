@@ -6,6 +6,7 @@
 #include "spl-util.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
+const int DEFAULT_TRACKING_AMNESTY = 6; // defaults to the distance between a monster at edge of los and player.
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
@@ -104,7 +105,8 @@ public:
     bool went_unseen_this_turn;
     coord_def unseen_pos;
 
-    int turns_spent_tracking_player;
+    int turns_spent_tracking_player;   // Used to decide when to upgrade monsters.
+    int tracking_amnesty;              // When this is >0, take turns off here instead of the above
 
 public:
     void set_new_monster_id();

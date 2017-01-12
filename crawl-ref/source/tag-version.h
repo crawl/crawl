@@ -202,6 +202,7 @@ enum tag_minor_version
     TAG_MINOR_NEMELEX_WRATH,       // Nemelex loses the passive wrath component
     TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
     TAG_MINOR_MONSTER_TRACKING,    // Move monster turns spent tracking player into monster class
+    TAG_MINOR_TRACKING_AMNESTY,    // Add the ability to defer bezotting on a monster for a while.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
