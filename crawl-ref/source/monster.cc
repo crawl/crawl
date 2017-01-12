@@ -51,6 +51,7 @@
 #include "mon-tentacle.h"
 #include "mon-transit.h"
 #include "mon-util.h"
+#include "notes.h" // bezotting
 #include "religion.h"
 #include "rot.h"
 #include "spl-monench.h"
@@ -6728,13 +6729,13 @@ int monster::bezot(int i, bool is_percentage_increase) const
  */
 void monster::bezot_monster()
 {
+    if (visible_to(&you))
+        simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
     props[BEZOTTED_KEY] = true;
     set_hit_dice(bezot(hit_dice, true));
     hit_points = bezot(hit_points, true);
     max_hit_points = bezot(max_hit_points, true);
     calc_speed();
-    if (visible_to(&you))
-        simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
 
     // We probably want to eventually remove this, but it's good info for testing.
     take_note(Note(NOTE_MESSAGE, 0, 0, name(DESC_A) + " gained the power of zot."));
