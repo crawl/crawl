@@ -876,11 +876,11 @@ static void _do_wizard_command(int wiz_command)
     case '\'': wizard_list_items(); break;
     case '"': debug_list_monsters(); break;
 
-    case ',': wizard_place_stairs(true); break;
-    // case '>': break; // XXX do not use, menu command
-
-    case '.': wizard_place_stairs(false); break;
+    case ',': wizard_place_stairs(false); break;
     // case '<': break; // XXX do not use, menu command
+
+    case '.': wizard_place_stairs(true); break;
+    // case '>': break; // XXX do not use, menu command
 
     // case '/': break;
 
