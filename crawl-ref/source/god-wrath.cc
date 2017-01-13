@@ -344,84 +344,6 @@ static bool _zin_retribution()
     return false;
 }
 
-static void _ely_dull_inventory_weapons()
-{
-    int chance = 50;
-    int num_dulled = 0;
-
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        if (item.base_type == OBJ_WEAPONS)
-        {
-            // Don't dull artefacts at all, or weapons below -1.
-            if (is_artefact(item) || item.plus <= -1)
-                continue;
-
-            // 2/3 of the time, don't do anything.
-            if (!one_chance_in(3))
-                continue;
-
-            bool wielded = false;
-
-            if (item.link == you.equip[EQ_WEAPON])
-                wielded = true;
-
-            // Dull the weapon.
-            if (item.plus > -1)
-                item.plus--;
-
-            // Update the weapon display, if necessary.
-            if (wielded)
-                you.wield_change = true;
-
-            chance += item_value(item, true) / 50;
-            num_dulled++;
-        }
-    }
-
-    if (num_dulled > 0)
-    {
-        if (x_chance_in_y(chance + 1, 100))
-            dec_penance(GOD_ELYVILON, 1);
-
-        simple_god_message(
-            make_stringf(" dulls %syour weapons.",
-                         num_dulled == 1 ? "one of " : "").c_str(),
-            GOD_ELYVILON);
-    }
-}
-
-static bool _elyvilon_retribution()
-{
-    // healing/interference with fighting theme
-    const god_type god = GOD_ELYVILON;
-
-    simple_god_message("'s displeasure finds you.", god);
-
-    switch (random2(5))
-    {
-    case 0:
-    case 1:
-        confuse_player(5 + random2(3));
-        break;
-
-    case 2: // mostly flavour messages
-        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_POISON,
-                      one_chance_in(3) ? 1 : 0, _god_wrath_name(god));
-        break;
-
-    case 3:
-    case 4: // Dull weapons in your inventory.
-        _ely_dull_inventory_weapons();
-        break;
-    }
-
-    return true;
-}
-
 static bool _cheibriados_retribution()
 {
     // time god/slowness theme
@@ -1787,7 +1709,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_VEHUMET:       do_more = _vehumet_retribution(); break;
     case GOD_NEMELEX_XOBEH: do_more = _nemelex_retribution(); break;
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
-    case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
@@ -1796,6 +1717,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
 
     case GOD_ASHENZARI:
+    case GOD_ELYVILON:
     case GOD_GOZAG:
     case GOD_RU:
     case GOD_HEPLIAKLQANA:

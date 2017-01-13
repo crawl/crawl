@@ -485,9 +485,7 @@ to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 Elyvilon wrath
 
 Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
-find themselves hampered in various ways; their weapons will be blunted and
-their blows in combat may be blocked, and they may be afflicted with poison or
-confusion.
+find the Healer occasionally protecting their foes from death.
 %%%%
 Fedhas wrath
 

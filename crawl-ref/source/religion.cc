@@ -479,6 +479,7 @@ bool active_penance(god_type god)
            && god != GOD_RU
            && god != GOD_HEPLIAKLQANA
            && god != GOD_PAKELLAS
+           && god != GOD_ELYVILON
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
 }
@@ -491,7 +492,9 @@ bool xp_penance(god_type god)
            && (god == GOD_ASHENZARI
                || god == GOD_GOZAG
                || god == GOD_HEPLIAKLQANA
-               || god == GOD_PAKELLAS);
+               || god == GOD_PAKELLAS
+               || god == GOD_ELYVILON)
+           && god_hates_your_god(god, you.religion);
 }
 
 void dec_penance(god_type god, int val)
@@ -2737,8 +2740,10 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-
-        _set_penance(old_god, 30);
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        _set_penance(old_god, 50);
         break;
 
     case GOD_JIYVA:
