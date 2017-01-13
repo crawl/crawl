@@ -3179,6 +3179,14 @@ static void tag_read_you(reader &th)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[GOD_PAKELLAS] = you.exp_docked[GOD_PAKELLAS];
     }
+    if (th.getMinorVersion() < TAG_MINOR_ELYVILON_WRATH
+        && player_under_penance(GOD_ELYVILON))
+    {
+        you.exp_docked[GOD_ELYVILON] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[GOD_ELYVILON] = you.exp_docked[GOD_ELYVILON];
+    }
+
 #endif
 
     // elapsed time
