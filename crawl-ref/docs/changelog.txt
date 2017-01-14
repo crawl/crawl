@@ -1,4 +1,4 @@
-Stone Soup 0.20 (up to 0.20-a0-350-ga83eecc)
+Stone Soup 0.20 (up to 0.20-a0-484-g71649f8)
 --------------------------------------------
 
 Highlights
@@ -13,6 +13,8 @@ Branches, Environment
 
 Character
 ---------
+* New species: Barachians, with an powerful innate Hop ability, balanced by
+  slow movement and low attributes.
 * Ogre aptitudes have been adjusted, trading M&F skill for spells.
 * Mummies' spellcasting aptitude has been increased to +2, from -1.
 * Deep dwarves have an innate ability that heals them and has a chance of
@@ -38,9 +40,18 @@ Interface
 
 Items
 -----
-* Wand and miscellaneous acquirement merged into 'evocations'.
+* Evocations:
+  - New wand types: Clouds and Scattershot.
+  - New misc item: the Lightning Rod, a 4-charge XP evocable.
+  - Wands scale better with Evocations.
+  - Wands can no longer be zapped while confused.
+  - Wands of disintegration no longer destroy terrain.
+  - Wands of digging can now destroy statues.
+  - Wand and miscellaneous acquirement merged into 'evocations'.
 * Removed:
-  - Wands of heal wounds, haste, and teleportation.
+  - Wands of heal wounds, haste, teleportation, and slowing.
+  - Rods.
+  - Discs of Storms.
   - The Hat of the High Council.
 
 Monsters
@@ -57,10 +68,12 @@ Monsters
 
 Spells
 ------
+* New spell: Poisonous Vapours (L2 Poison/Air); creates an extremely short-
+  duration poison cloud on a targeted creature.
 * Confusing Touch is less effective, especially against high-HD enemies.
-* Poisonous Cloud is level 5 (was level 6).
 * Sandblast consumes stones directly from inventory, but no longer functions
   without ammo, and cannot consume large rocks.
+* Removed: Poisonous Cloud.
 
 
 Stone Soup 0.19.1 (20161123)
