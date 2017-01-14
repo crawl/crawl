@@ -189,7 +189,7 @@ void ghost_demon::init_pandemonium_lord()
 
     // Panlord AC/EV should tend to be weighted towards one or the other.
     int total_def = 10 + random2avg(40, 3);
-    int split = biased_random2(5, 2);
+    int split = 1 + biased_random2(4, 2);
     ac = div_rand_round(total_def * split, 10);
     ev = total_def - ac;
     if (coinflip())
