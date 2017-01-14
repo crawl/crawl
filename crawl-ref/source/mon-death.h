@@ -79,5 +79,4 @@ bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
 bool mons_bennu_can_revive(const monster* mons);
-bool ieoh_jian_kill_oldest_weapon();
 #endif

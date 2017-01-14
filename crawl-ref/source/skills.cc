@@ -18,11 +18,11 @@
 #include "describe-god.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
 #include "monster.h"
@@ -31,7 +31,7 @@
 #include "output.h"
 #include "random.h"
 #include "religion.h"
-#include "skill_menu.h"
+#include "skill-menu.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -427,20 +427,6 @@ static void _erase_from_stop_train(const skill_set &can_train)
  */
 static void _check_inventory_skills()
 {
-
-    // Weapons you manifest are considered as in your inventory
-    // for training purposes.
-    auto your_manifested = find_ieoh_jian_manifested_weapons(true);
-    if (!your_manifested.empty())
-    {
-        if (you.stop_train.empty())
-            return;
-
-        skill_set skills;
-        if (your_manifested.front()->weapon()->defined() || item_skills(*(your_manifested.front()->weapon()), skills))
-            _erase_from_stop_train(skills);
-    }
-
     for (const auto &item : you.inv)
     {
         // Exit early if there's no more skill to check.
@@ -517,6 +503,23 @@ static void _check_start_train()
     you.start_train.clear();
 }
 
+static bool _skill_is_martial(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_LONG_BLADES: 
+    case SK_AXES: 
+    case SK_SHORT_BLADES: 
+    case SK_STAVES: 
+    case SK_POLEARMS: 
+    case SK_MACES_FLAILS: 
+    case SK_UNARMED_COMBAT: 
+        return true;
+    default:
+        return false;
+    }
+}
+
 static void _check_stop_train()
 {
     _check_inventory_skills();
@@ -532,6 +535,8 @@ static void _check_stop_train()
         if (is_invalid_skill(sk))
             continue;
         if (skill_has_manual(sk))
+            continue;
+        if (you_worship(GOD_IEOH_JIAN) && _skill_is_martial(sk))
             continue;
 
         if (skill_trained(sk) && you.training[sk])

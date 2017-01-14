@@ -25,12 +25,12 @@
 #include "fight.h"
 #include "fineff.h"
 #include "ghost.h"
-#include "godabil.h" // GOZAG_GOLD_AURA_KEY
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h" // GOZAG_GOLD_AURA_KEY
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -64,7 +64,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"
@@ -1055,7 +1055,6 @@ static bolt& _generate_item_beem(bolt &beem, bolt& from, monster& mons)
     beem.pierce       = from.pierce ;
     beem.is_explosion = from.is_explosion;
     beem.origin_spell = from.origin_spell;
-    beem.evoked       = true;
     return beem;
 }
 
@@ -1066,12 +1065,15 @@ static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
 
     //XXX: implement these for monsters... (:
     if (wand.sub_type == WAND_ICEBLAST
-        || wand.sub_type == WAND_RANDOM_EFFECTS)
+        || wand.sub_type == WAND_RANDOM_EFFECTS
+        || wand.sub_type == WAND_CLOUDS
+        || wand.sub_type == WAND_SCATTERSHOT)
     {
         return false;
     }
 
-    const spell_type mzap = zap_to_spell(wand.zap());
+    const spell_type mzap =
+        spell_in_wand(static_cast<wand_type>(wand.sub_type));
 
     // set up the beam
     int power         = 30 + mons.get_hit_dice();
@@ -1119,187 +1121,6 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
     mons.lose_energy(EUT_ITEM);
 }
 
-static void _rod_fired_pre(monster& mons)
-{
-    if (!simple_monster_message(mons, " zaps a rod.")
-        && !silenced(you.pos()))
-    {
-        mprf(MSGCH_SOUND, "You hear a zap.");
-    }
-}
-
-static bool _rod_fired_post(monster& mons, item_def &rod, bolt &beem,
-                            int rate, bool was_visible)
-{
-    rod.charges -= rate;
-    dprf("rod charge: %d, %d", rod.charges, rod.charge_cap);
-
-    if (was_visible)
-    {
-        if (!beem.is_enchantment() || beem.obvious_effect)
-            set_ident_flags(rod, ISFLAG_KNOW_TYPE);
-    }
-
-    mons.lose_energy(EUT_ITEM);
-    return true;
-}
-
-static bool _thunderbolt_tracer(monster &caster, int pow, coord_def aim)
-{
-    coord_def prev;
-    if (caster.props.exists("thunderbolt_last")
-        && caster.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
-    {
-        prev = caster.props["thunderbolt_aim"].get_coord();
-    }
-
-    targetter_thunderbolt hitfunc(&caster, spell_range(SPELL_THUNDERBOLT, pow),
-                                  prev);
-    hitfunc.set_aim(aim);
-
-    mon_attitude_type castatt = caster.temp_attitude();
-    int friendly = 0, enemy = 0;
-
-    for (auto &entry : hitfunc.zapped)
-    {
-        if (entry.second <= 0)
-            continue;
-
-        const actor *victim = actor_at(entry.first);
-        if (!victim)
-            continue;
-
-        int dam = 4 >> victim->res_elec();
-        if (mons_atts_aligned(castatt, victim->temp_attitude()))
-            friendly += dam;
-        else
-            enemy += dam;
-    }
-
-    return enemy > friendly;
-
-    return false;
-}
-
-// handle_rod
-// notes:
-// shamelessly repurposing handle_wand code
-// not one word about the name of this function!
-static bool _handle_rod(monster &mons)
-{
-    item_def* rod = mons.mslot_item(MSLOT_WEAPON);
-    // FIXME: monsters should be able to use rods
-    //        out of sight of the player [rob]
-    if (!you.see_cell(mons.pos())
-        || mons.asleep()
-        || mons_is_confused(mons)
-        || mons_is_fleeing(mons)
-        || mons.pacified()
-        || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
-        || mons.has_ench(ENCH_SUBMERGED)
-        || coinflip()
-        || !rod
-        || rod->base_type != OBJ_RODS)
-    {
-        return false;
-    }
-
-    // was the monster visible when we started?
-    bool was_visible = you.can_see(mons);
-
-    spell_type mzap = spell_in_rod(static_cast<rod_type>(rod->sub_type));
-    int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
-
-    if (rod->charges < rate)
-        return false;
-
-    bolt beem = setup_targetting_beam(mons);
-
-    // XXX: There should be a better way to do this than hardcoding
-    // monster-castable rod spells!
-    switch (mzap)
-    {
-    case SPELL_BOLT_OF_INACCURACY:
-    case SPELL_CLOUD_CONE:
-    case SPELL_SCATTERSHOT:
-    // Handled in mons_spell_beam
-    case SPELL_RANDOM_BOLT:
-        break;
-
-    case SPELL_THUNDERBOLT:
-        if (mons.props.exists("thunderbolt_last")
-            && mons.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
-        {
-            rate = min(5 * ROD_CHARGE_MULT, (int)rod->charges);
-            mons.props["thunderbolt_mana"].get_int() = rate;
-        }
-        break;
-
-    case SPELL_WEAVE_SHADOWS:
-        _rod_fired_pre(mons);
-        mons_cast(&mons, beem, mzap, MON_SPELL_NO_FLAGS, false);
-        _rod_fired_post(mons, *rod, beem, rate, was_visible);
-        return true;
-
-       break;
-
-    default:
-        return false;
-    }
-
-    bool zap = false;
-
-    // set up the beam
-    const int power = 5 + mons.skill(SK_EVOCATIONS)
-                        + 2 * random2(mons.skill(SK_EVOCATIONS));
-
-    dprf("using rod with power %d", power);
-
-    bolt theBeam;
-    do
-    {
-        theBeam = mons_spell_beam(&mons, mzap, power, true);
-    }
-    //XXX: this does fixed 3d20 by monsters, too nasty
-    while (mzap == SPELL_RANDOM_BOLT
-           && theBeam.origin_spell == SPELL_QUICKSILVER_BOLT);
-
-    beem         = _generate_item_beem(beem, theBeam, mons);
-    beem.aux_source =
-        rod->name(DESC_QUALNAME, false, true, false, false);
-
-    if (mzap == SPELL_THUNDERBOLT)
-        zap = _thunderbolt_tracer(mons, power, beem.target);
-    else if (mzap == SPELL_CLOUD_CONE)
-        zap = mons_should_cloud_cone(&mons, power, beem.target);
-    else if (mzap == SPELL_SCATTERSHOT)
-        zap = scattershot_tracer(&mons, power, beem.target);
-    else
-    {
-        fire_tracer(&mons, beem);
-        zap = mons_should_fire(beem);
-    }
-
-    if (zap)
-    {
-        _rod_fired_pre(mons);
-        if (mzap == SPELL_THUNDERBOLT)
-            cast_thunderbolt(&mons, power, beem.target);
-        else if (mzap == SPELL_CLOUD_CONE)
-            cast_cloud_cone(&mons, power, beem.target);
-        else if (mzap == SPELL_SCATTERSHOT)
-            cast_scattershot(&mons, power, beem.target);
-        else
-        {
-            beem.is_tracer = false;
-            beem.fire();
-        }
-        return _rod_fired_post(mons, *rod, beem, rate, was_visible);
-    }
-
-    return false;
-}
-
 static bool _handle_wand(monster& mons)
 {
     item_def *wand = mons.mslot_item(MSLOT_WAND);
@@ -1310,6 +1131,7 @@ static bool _handle_wand(monster& mons)
         || mons.asleep()
         || mons_is_fleeing(mons)
         || mons.pacified()
+        || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || x_chance_in_y(3, 4)
@@ -1356,53 +1178,11 @@ static bool _handle_wand(monster& mons)
         // This is handled elsewhere.
         return false;
 
-    // These are wands that monsters will aim at themselves {dlb}:
-    case WAND_HASTING:
-        if (!mons.has_ench(ENCH_HASTE))
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_HEAL_WOUNDS:
-        if (mons.hit_points <= mons.max_hit_points / 2)
-        {
-            beem.target = mons.pos();
-            niceWand = true;
-            break;
-        }
-        return false;
-
-    case WAND_TELEPORTATION:
-        if (mons.hit_points <= mons.max_hit_points / 2
-            || mons.caught())
-        {
-            if (!mons.has_ench(ENCH_TP)
-                && !one_chance_in(20))
-            {
-                beem.target = mons.pos();
-                niceWand = true;
-                break;
-            }
-            // This break causes the wand to be tried on the player.
-            break;
-        }
-        return false;
-
     default:
         break;
     }
 
-    if (mons.confused())
-    {
-        beem.target = dgn_random_point_from(mons.pos(), LOS_RADIUS);
-        if (beem.target.origin())
-            return false;
-        zap = true;
-    }
-    else if (!niceWand)
+    if (!niceWand)
     {
         // Fire tracer, if necessary.
         fire_tracer(&mons, beem);
@@ -1893,7 +1673,7 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->has_ench(ENCH_GOLD_LUST))
+    if (mons->has_ench(ENCH_GOLD_LUST) || mons->has_ench(ENCH_DISTRACTED_ACROBATICS))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2090,12 +1870,6 @@ void handle_monster_move(monster* mons)
                 return;
             }
 
-            if (_handle_rod(*mons))
-            {
-                DEBUG_ENERGY_USE("_handle_rod()");
-                return;
-            }
-
             if (_handle_wand(*mons))
             {
                 DEBUG_ENERGY_USE("_handle_wand()");
@@ -2225,13 +1999,6 @@ void handle_monster_move(monster* mons)
             {
                 _swim_or_move_energy(*mons);
                 return;
-            }
-            // Ieoh Jian passive weapons blink back to you if the pathing is blocked.
-            else if (mons->type == MONS_IEOH_JIAN_WEAPON && !mons->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
-            {
-                coord_def new_location;
-                if (find_habitable_spot_near(you.pos(), MONS_IEOH_JIAN_WEAPON, 2, false, new_location))
-                    mons->move_to_pos(new_location);
             }
             // Figure out if they fight.
             else if ((!mons_is_firewood(*targ)
@@ -2818,7 +2585,7 @@ static bool _handle_pickup(monster* mons)
     // picking up stuff.
     const bool never_pickup
         = mons->neutral() || mons->friendly()
-          || you_worship(GOD_JIYVA) && mons_is_slime(*mons)
+          || have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
           || mons->has_ench(ENCH_CHARM) || mons->has_ench(ENCH_HEXED);
 
 
@@ -3002,32 +2769,19 @@ static bool _mons_can_displace(const monster* mpusher,
     return true;
 }
 
-static int _count_adjacent_slime_walls(const coord_def &pos)
-{
-    int count = 0;
-    for (adjacent_iterator ai(pos); ai; ++ai)
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            count++;
-
-    return count;
-}
-
 // Returns true if the monster should try to avoid that position
 // because of taking damage from slime walls.
 static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
-    if (mons_is_slime(*mon) || actor_slime_wall_immune(mon)
-        || mons_intel(*mon) <= I_BRAINLESS)
-    {
+    if (actor_slime_wall_immune(mon) || mons_intel(*mon) <= I_BRAINLESS)
         return false;
-    }
-    const int target_count = _count_adjacent_slime_walls(targ);
+    const int target_count = count_adjacent_slime_walls(targ);
     // Entirely safe.
     if (!target_count)
         return false;
 
-    const int current_count = _count_adjacent_slime_walls(mon->pos());
+    const int current_count = count_adjacent_slime_walls(mon->pos());
     if (target_count <= current_count)
         return false;
 
@@ -3282,7 +3036,7 @@ static void _find_good_alternate_move(monster* mons,
         const int FAR_AWAY = 1000000;
 
         // Try both directions (but randomise which one is first).
-        const int sdir = coinflip() ? j : -j;
+        const int sdir = random_choose(j, -j);
         const int inc = -2 * sdir;
 
         for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
@@ -3772,7 +3526,7 @@ static bool _monster_move(monster* mons)
     const bool flattens_trees = mons_flattens_trees(*mons);
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);
-    // Take care of formicid/Dissolution burrowing, lerny, etc
+    // Take care of Dissolution burrowing, lerny, etc
     if (burrows || flattens_trees || digs)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
@@ -3825,19 +3579,9 @@ static bool _monster_move(monster* mons)
                 else
                     noisy(25, target, "You hear a crashing sound.");
             }
+            // Dissolution dissolves walls.
             else if (player_can_hear(mons->pos() + mmov))
-            {
-                // Formicids take extra time to dig.
-                if (mons_genus(mons->type) == MONS_FORMICID)
-                    mons->lose_energy(EUT_MOVE, 5);
-
-                // Message depends on whether caused by acid (Dissolution)
-                // or direct digging (formicids).
-                mprf(MSGCH_SOUND, (mons->type == MONS_DISSOLUTION) ?
-                     "You hear a sizzling sound." :
-                     "You hear a grinding noise."
-                     );
-            }
+                mprf(MSGCH_SOUND, "You hear a sizzling sound.");
         }
     }
 
@@ -3890,7 +3634,6 @@ static bool _monster_move(monster* mons)
                 fight_melee(mons, targ);
                 ret = true;
             }
-
             // If the monster swapped places, the work's already done.
             mmov.reset();
         }

@@ -118,6 +118,14 @@ A broken pillar
  I have no son to keep my name in remembrance...”
     -KJV Bible, 2 Samuel 18:18.
 %%%%
+A faded altar of an unknown god
+
+“Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
+perceive that in all things ye are too superstitious. For as I passed by, and
+beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
+GOD.”
+    -KJV Bible, Acts 17:23-24.
+%%%%
 A gateway to Hell
 
 “I am the way into the city of woe.
@@ -241,11 +249,23 @@ A staircase to the Tomb
 
 <Tomb>
 %%%%
+A stormy altar of Qazlal
+
+“The storm irresistibly propels him into the future to which his back is turned,
+while the pile of debris before him grows skyward. This storm is what we call
+progress.”
+    -Walter Benjamin, “Theses on the Philosophy of History”. 1940.
+   trans. Harry Zohn, 1969.
+%%%%
 A tree
 
 “I like trees because they seem more resigned to the way they have to live than
 other things do.”
     -Willa Cather, _O Pioneers_. 1913.
+%%%%
+acid dragon scales
+
+<steam dragon hide>
 %%%%
 Agony spell
 
@@ -1653,12 +1673,6 @@ insubstantial wisp
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
 %%%%
-iron rod
-
-“At this particular moment in time, I don't believe I have a healthier or more
-deeply-felt respect for any object in the universe than this here shotgun...”
-    -Steven ‘Body Bag’ Behling and Michael ‘Splatter’ Steward, _Doom_. 1996.
-%%%%
 Iskenderun's Battlesphere spell
 
 “Maxim 4: Close air support covereth a multitude of sins.”
@@ -1936,14 +1950,6 @@ throwing away their arms of defence, reckless of every danger, sometimes having
 nothing but a club, which carried with it death and destruction.”
     -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
      Customs of the Ancestors of the English Speaking Nations_. 1889.
-%%%%
-mottled dragon scales
-
-<steam dragon hide>
-%%%%
-mottled dragon hide
-
-<steam dragon hide>
 %%%%
 mummy
 
@@ -3225,10 +3231,6 @@ wand of flame
 
 <wand>
 %%%%
-wand of hasting
-
-<wand>
-%%%%
 wand of iceblast
 
 <wand>
@@ -3246,14 +3248,6 @@ wand of polymorph
 <wand>
 %%%%
 wand of random effects
-
-<wand>
-%%%%
-wand of slowing
-
-<wand>
-%%%%
-wand of teleportation
 
 <wand>
 %%%%

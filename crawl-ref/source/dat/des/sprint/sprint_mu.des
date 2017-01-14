@@ -344,7 +344,7 @@ ENDMAP
 NAME: sprint_mu_d1_spiders
 TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: two-headed ogre hd:3 hp:40
-MONS: hill giant hd:5 hp:68
+MONS: two-headed ogre hd:5 hp:68
 MONS: Erolcha
 MONS: redback
 KFEAT: ~ = net trap
@@ -950,7 +950,7 @@ NSUBST: . = 15:M / *:.
 KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
- scroll of acquirement q:1 ident:all, wand of disintegration / \
+ scroll of acquirement q:1 ident:all, wand of digging / \
  wand of iceblast, acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow
@@ -1368,8 +1368,8 @@ NSUBST: g = 1:+ / *:c
 KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
-KITEM: ! = potion of resistance ident:all q:3, potion of agility ident:all q:3, \
-           wand of hasting ident:type
+KITEM: ! = potion of resistance ident:all q:3, \
+           potion of agility ident:all q:3, potion of haste ident:all q:5
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1412,8 +1412,7 @@ KITEM: 1 = bone rune of zot
 KMONS: % = patrolling greater mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
 KMONS: ? = patrolling greater mummy
-KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:3, \
-  wand of heal wounds ident:type
+KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
 KFEAT: # = closed_door
@@ -1457,14 +1456,14 @@ MARKER: T = lua:fog_machine { \
         size_buildup_time = 1000, cloud_type = "mutagenic fog" }
 KFEAT: T = zot trap
 KMONS: * = orb of fire
-MONS: Tiamat, yellow draconian caller / yellow draconian shifter
+MONS: Tiamat, yellow draconian stormcaller / yellow draconian shifter
 MONS: white draconian scorcher
 MARKER: i = lua:fog_machine { \
         pow_max = 10, delay_min = 100, delay_max = 150, \
         size = 2, size_buildup_amnt = 15, \
         size_buildup_time = 1000, cloud_type = "freezing vapour" }
 MONS: patrolling storm dragon / patrolling electric golem
-MONS: red draconian zealot
+MONS: red draconian stormcaller
 KMONS: 7 = patrolling fire giant
 KMONS: 8 = patrolling frost giant
 KMONS: L = patrolling ancient lich

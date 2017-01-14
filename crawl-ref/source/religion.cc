@@ -28,23 +28,23 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe-god.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dlua.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "godprayer.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "god-prayer.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -226,6 +226,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "Jiyva will mutate your body as your piety grows.",
            "Jiyva will no longer mutate your body." },
       { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
+      { 5, "You may now expel jellies when seriously injured.",
+           "You will no longer expel jellies when injured." },
       { 5, ABIL_JIYVA_CURE_BAD_MUTATION, "call upon Jiyva to remove your harmful mutations" },
     },
 
@@ -307,8 +309,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
-           "Pakellas will now supercharge a wand or rod... once.",
-           "Pakellas is no longer ready to supercharge a wand or rod." },
+           "Pakellas will now supercharge a wand... once.",
+           "Pakellas is no longer ready to supercharge a wand." },
     },
     // Uskayaw
     {
@@ -330,15 +332,14 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
     // Ieoh Jian
     { { -1, "crosstrain your martial skills at an accelerated rate"},
-      { 0, "manifest and wield flying weapons",
-           "no longer manifest flying weapons"},
-      { 1, ABIL_IEOH_JIAN_PROJECT_WEAPON, "throw a weapon at your foe and animate it" },
-      { 1, ABIL_IEOH_JIAN_RECALL_WEAPON, "quickly recall an animated weapon to your hands" },
-      { 2, "perform acrobatic attacks. Different weapons allow for different maneuvers, read your weapon description!",
-           "no longer perform acrobatic attacks" },
-      { 4, "hit pressure points as you attack while moving",
-           "no longer hit pressure points as you attack while moving" },
-      { 5, ABIL_IEOH_JIAN_DRAGONFLY, "obliterate foes with a rain of blades" },
+      { 1, "perform a lunging strike when moving towards an enemy",
+           "no longer perform lunging strikes" },
+      { 2, "attack monsters by moving around them, rapidly striking pressure points",
+           "no longer perform spinning attacks" },
+      { 3, "perform a distracting airborne attack by moving against a solid obstacle",
+           "no longer perform airborne attacks" },
+      { 4, ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "throw a weapon at your foe and animate it" },
+      { 5, ABIL_IEOH_JIAN_HEAVENLY_BLADE, "request help in the form of powerful divine weapons" },
     },
 };
 
@@ -482,8 +483,7 @@ god_iterator god_iterator::operator++(int)
 
 bool active_penance(god_type god)
 {
-    // Nemelex's penance is only active when the penance counter is above 100;
-    // good gods only have active wrath when they hate your current god.
+    // Good gods only have active wrath when they hate your current god.
     return player_under_penance(god)
            && !is_unavailable_god(god)
            && god != GOD_ASHENZARI
@@ -491,7 +491,6 @@ bool active_penance(god_type god)
            && god != GOD_RU
            && god != GOD_HEPLIAKLQANA
            && god != GOD_PAKELLAS
-           && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
 }
@@ -603,15 +602,6 @@ void dec_penance(god_type god, int val)
             }
         }
     }
-    else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
-    { // Nemelex's penance works actively only until 100
-        if ((you.penance[god] -= val) > 100)
-            return;
-        mark_milestone("god.mollify",
-                       "partially mollified " + god_name(god) + ".");
-        simple_god_message(" seems mollified... mostly.", god);
-        take_note(Note(NOTE_MOLLIFY_GOD, god));
-    }
     else
     {
         you.penance[god] -= val;
@@ -712,29 +702,27 @@ static void _inc_penance(god_type god, int val)
             notify_stat_change();
         }
 
-        // Neither does Trog's regeneration or magic resistance.
         if (god == GOD_TROG)
         {
             if (you.duration[DUR_TROGS_HAND])
                 trog_remove_trogs_hand();
 
-            make_god_gifts_disappear(); // only on level
+            make_god_gifts_disappear();
         }
-        // Neither does Zin's divine stamina.
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_DIVINE_STAMINA])
                 zin_remove_divine_stamina();
+            if (env.sanctuary_time)
+                remove_sanctuary();
         }
-        // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
         {
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
 
-            make_god_gifts_disappear(); // only on level
+            make_god_gifts_disappear();
         }
-        // Neither does Ely's divine vigour.
         else if (god == GOD_ELYVILON)
         {
             if (you.duration[DUR_DIVINE_VIGOUR])
@@ -787,6 +775,8 @@ static void _inc_penance(god_type god, int val)
         {
             if (you.duration[DUR_CHANNEL_ENERGY])
                 you.duration[DUR_CHANNEL_ENERGY] = 0;
+            if (you.attribute[ATTR_DIVINE_ENERGY])
+                you.attribute[ATTR_DIVINE_ENERGY] = 0;
         }
 
         if (you_worship(god))
@@ -1035,7 +1025,6 @@ static int _pakellas_low_wand()
 {
     static const vector<int> low_wands = {
         WAND_FLAME,
-        WAND_SLOWING,
         WAND_CONFUSION,
         WAND_POLYMORPH,
         WAND_RANDOM_EFFECTS,
@@ -1071,7 +1060,7 @@ static int _pakellas_high_misc()
         MISC_FAN_OF_GALES,
         MISC_LAMP_OF_FIRE,
         MISC_PHIAL_OF_FLOODS,
-        MISC_DISC_OF_STORMS,
+        MISC_LIGHTNING_ROD,
     };
 
     return _preferably_unseen_item(high_miscs, [](int misc) {
@@ -1129,21 +1118,13 @@ static bool _give_pakellas_gift()
     else if (you.piety >= piety_breakpoint(4)
              && you.num_total_gifts[GOD_PAKELLAS] == 4)
     {
-        // Felids get another high-level wand or evoker instead of a rod.
-        if (you.species == SP_FELID)
-        {
-            basetype = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
-            subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
-                                              : _pakellas_high_misc();
-        }
-        else
-            basetype = OBJ_RODS;
+        basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
+        subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
+                                          : _pakellas_high_misc();
     }
 
     if (basetype == OBJ_UNASSIGNED)
         return false;
-    else if (basetype == OBJ_RODS)
-        success = acquirement(basetype, you.religion);
     else
     {
         ASSERT(subtype >= 0);
@@ -1825,10 +1806,8 @@ bool do_god_gift(bool forced)
         }
 
         case GOD_YREDELEMNUL:
-            if (!player_mutation_level(MUT_NO_LOVE)
-                && (forced
-                    || (random2(you.piety) >= piety_breakpoint(2)
-                        && one_chance_in(4))))
+            if (forced || (random2(you.piety) >= piety_breakpoint(2)
+                           && one_chance_in(4)))
             {
                 unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
                                          + you.num_current_gifts[you.religion] / 2;
@@ -2086,6 +2065,21 @@ string god_name_jiyva(bool second_name)
         name += " " + you.jiyva_second_name;
 
     return name;
+}
+
+string ieoh_jian_random_sifu_name()
+{
+    switch (random2(7))
+    {
+        case 0: return "Sifu Deng Ai";
+        case 1: return "Sifu Jiang Wei";
+        case 2: return "Sifu Zhang Bao";
+        case 3: return "Sifu Ma Yunglu";
+        case 4: return "Sifu Sun Luban";
+        case 5: return "Sifu Gene Jian Bin";
+        case 6: return "Sifu Cai Fang";
+        default: return "Sifu Bug";
+    }
 }
 
 god_type str_to_god(const string &_name, bool exact)
@@ -2689,7 +2683,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (query_daction_counter(DACT_ALLY_YRED_SLAVE))
         {
             simple_god_message(" reclaims all of your granted undead slaves!",
-                               GOD_YREDELEMNUL);
+                               old_god);
             add_daction(DACT_ALLY_YRED_SLAVE);
             remove_all_companions(GOD_YREDELEMNUL);
         }
@@ -2704,15 +2698,13 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_MAKHLEB:
         _set_penance(old_god, 25);
-        add_daction(DACT_ALLY_MAKHLEB);
+        make_god_gifts_disappear();
         break;
 
     case GOD_TROG:
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
-
-        add_daction(DACT_ALLY_TROG);
-
+        make_god_gifts_disappear();
         _set_penance(old_god, 50);
         break;
 
@@ -2720,7 +2712,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (query_daction_counter(DACT_ALLY_BEOGH))
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
-                               "are?\"", GOD_BEOGH);
+                               "are?\"", old_god);
             mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
             add_daction(DACT_ALLY_BEOGH);
             remove_all_companions(GOD_BEOGH);
@@ -2740,8 +2732,10 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_NEMELEX_XOBEH:
-        nemelex_shuffle_decks();
-        _set_penance(old_god, 150); // Nemelex penance is special
+        nemelex_reclaim_decks();
+        mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
+             god_name(old_god).c_str());
+        _set_penance(old_god, 50);
         break;
 
     case GOD_LUGONU:
@@ -2752,13 +2746,7 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
 
-        // Leaving TSO for a non-good god will make all your followers
-        // abandon you. Leaving him for a good god will make your holy
-        // followers (daeva and angel servants) indifferent.
-        if (!is_good_god(new_god))
-            add_daction(DACT_ALLY_HOLY);
-        else
-            add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
+        make_god_gifts_disappear();
 
         _set_penance(old_god, 30);
         break;
@@ -2770,11 +2758,6 @@ void excommunication(bool voluntary, god_type new_god)
         if (env.sanctuary_time)
             remove_sanctuary();
 
-        // Leaving Zin for a non-good god will make neutral holies
-        // (originally from TSO) abandon you.
-        if (!is_good_god(new_god))
-            add_daction(DACT_ALLY_HOLY);
-
         _set_penance(old_god, 25);
         break;
 
@@ -2782,11 +2765,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-
-        // Leaving Elyvilon for a non-good god will make neutral holies
-        // (originally from TSO) abandon you.
-        if (!is_good_god(new_god))
-            add_daction(DACT_ALLY_HOLY);
 
         _set_penance(old_god, 30);
         break;
@@ -2824,7 +2802,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_DITHMENOS:
-        if (you.form == TRAN_SHADOW)
+        if (you.form == transformation::shadow)
             untransform();
         _set_penance(old_god, 25);
         break;
@@ -2906,17 +2884,13 @@ void excommunication(bool voluntary, god_type new_god)
         _set_penance(old_god, 50);
         break;
 
+    case GOD_IEOH_JIAN:
+        simple_god_message(" withdraws all divine help and plots revenge.", old_god);
+        _set_penance(old_god, 25);
+        break;
     default:
         _set_penance(old_god, 25);
         break;
-    }
-
-    // When you start worshipping a non-good god, or no god, you make
-    // all non-hostile holy beings that worship a good god hostile.
-    if (!is_good_god(new_god) && query_daction_counter(DACT_ALLY_HOLY))
-    {
-        mprf(MSGCH_MONSTER_ENCHANT, "The divine host forsakes you.");
-        add_daction(DACT_ALLY_HOLY);
     }
 
 #ifdef USE_TILE_LOCAL
@@ -2989,15 +2963,16 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
 
 static bool _transformed_player_can_join_god(god_type which_god)
 {
-    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
+    if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
     // all these clauses are written with a ! in front of them, so that
     // the stuff to the right of that is uniformly "gods that hate this form"
-    switch (you.form) {
-    case TRAN_LICH:
+    switch (you.form)
+    {
+    case transformation::lich:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
-    case TRAN_STATUE:
-    case TRAN_WISP:
+    case transformation::statue:
+    case transformation::wisp:
         return !(which_god == GOD_YREDELEMNUL);
     default:
         return true;
@@ -3054,7 +3029,9 @@ bool player_can_join_god(god_type which_god)
         && (which_god == GOD_BEOGH
             || which_god == GOD_JIYVA
             || which_god == GOD_HEPLIAKLQANA
-            || which_god == GOD_FEDHAS))
+            || which_god == GOD_IEOH_JIAN
+            || which_god == GOD_FEDHAS
+            || which_god == GOD_YREDELEMNUL))
     {
         return false;
     }
@@ -3676,12 +3653,6 @@ void god_pitch(god_type which_god)
                                which_god);
         }
         else if (player_mutation_level(MUT_NO_ARTIFICE)
-                 && which_god == GOD_NEMELEX_XOBEH)
-        {
-            simple_god_message(" does not accept worship from those who cannot "
-                              "deal a hand of cards!", which_god);
-        }
-        else if (player_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_PAKELLAS)
         {
             simple_god_message(" does not accept worship from those who are "
@@ -3689,8 +3660,8 @@ void god_pitch(god_type which_god)
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
-            simple_god_message(" says: How dare you come in such a loathsome"
-                               " form!",
+            simple_god_message(" says: How dare you approach in such a "
+                               "loathsome form!",
                                which_god);
         }
         else
@@ -3721,7 +3692,7 @@ void god_pitch(god_type which_god)
         if (fee == 0)
         {
             service_fee = string("Gozag will waive the service fee if you ")
-                          + (coinflip() ? "act now" : "join today") + "!\n";
+                          + random_choose("act now", "join today") + "!\n";
         }
         else
         {
@@ -3887,23 +3858,16 @@ bool god_hates_spellcasting(god_type god)
     return god == GOD_TROG;
 }
 
-bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
+bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 {
     if (god_hates_spellcasting(god))
-        return !rod_spell;
+        return !fake_spell;
 
     if (god_punishes_spell(spell, god))
         return true;
 
-    spschools_type disciplines = get_spell_disciplines(spell);
-
     switch (god)
     {
-    case GOD_SHINING_ONE:
-        // TSO hates using poison.
-        if (disciplines & SPTYP_POISON)
-            return true;
-        break;
     case GOD_CHEIBRIADOS:
         if (is_hasty_spell(spell))
             return true;
@@ -3935,12 +3899,7 @@ bool god_hates_ability(ability_type ability, god_type god)
 {
     switch (ability)
     {
-        case ABIL_SPIT_POISON:
-        case ABIL_BREATHE_POISON:
-        case ABIL_BREATHE_MEPHITIC:
-            return god == GOD_SHINING_ONE;
         case ABIL_BREATHE_FIRE:
-        case ABIL_BREATHE_STICKY_FLAME:
         case ABIL_DELAYED_FIREBALL:
             return god == GOD_DITHMENOS;
         case ABIL_EVOKE_BERSERK:
@@ -3951,15 +3910,16 @@ bool god_hates_ability(ability_type ability, god_type god)
     return false;
 }
 
-int elyvilon_lifesaving()
+lifesaving_chance elyvilon_lifesaving()
 {
     if (!you_worship(GOD_ELYVILON))
-        return 0;
+        return lifesaving_chance::never;
 
     if (you.piety < piety_breakpoint(0))
-        return 0;
+        return lifesaving_chance::never;
 
-    return you.piety > 130 ? 2 : 1;
+    return you.piety > 130 ? lifesaving_chance::always
+                           : lifesaving_chance::sometimes;
 }
 
 bool god_protects_from_harm()
@@ -3968,14 +3928,16 @@ bool god_protects_from_harm()
     {
         switch (elyvilon_lifesaving())
         {
-        case 1:
+        case lifesaving_chance::sometimes:
             if (random2(you.piety) >= piety_breakpoint(0))
                 return true;
             break;
-        case 2:
+        case lifesaving_chance::always:
             // Reliable lifesaving is costly.
             lose_piety(21 + random2(20));
             return true;
+        default:
+            break;
         }
     }
 
@@ -4028,8 +3990,8 @@ void handle_god_time(int /*time_delta*/)
         case GOD_VEHUMET:
         case GOD_ZIN:
         case GOD_PAKELLAS:
-        case GOD_IEOH_JIAN:
         case GOD_JIYVA:
+        case GOD_IEOH_JIAN:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4062,7 +4024,6 @@ void handle_god_time(int /*time_delta*/)
             }
 
             break;
-
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_GOZAG:
@@ -4165,16 +4126,16 @@ colour_t god_message_altar_colour(god_type god)
         return CYAN;
 
     case GOD_YREDELEMNUL:
-        return coinflip() ? DARKGREY : RED;
+        return random_choose(DARKGREY, RED);
 
     case GOD_BEOGH:
-        return coinflip() ? BROWN : LIGHTRED;
+        return random_choose(BROWN, LIGHTRED);
 
     case GOD_KIKUBAAQUDGHA:
         return DARKGREY;
 
     case GOD_FEDHAS:
-        return coinflip() ? BROWN : GREEN;
+        return random_choose(BROWN, GREEN);
 
     case GOD_XOM:
         return random2(15) + 1;
@@ -4208,13 +4169,13 @@ colour_t god_message_altar_colour(god_type god)
         return LIGHTCYAN;
 
     case GOD_JIYVA:
-        return coinflip() ? GREEN : LIGHTGREEN;
+        return random_choose(GREEN, LIGHTGREEN);
 
     case GOD_DITHMENOS:
         return MAGENTA;
 
     case GOD_GOZAG:
-        return coinflip() ? YELLOW : BROWN;
+        return random_choose(YELLOW, BROWN);
 
     case GOD_QAZLAL:
     case GOD_RU:
@@ -4227,7 +4188,7 @@ colour_t god_message_altar_colour(god_type god)
         return random_choose(RED, MAGENTA);
 
     case GOD_HEPLIAKLQANA:
-        return coinflip() ? LIGHTGREEN : LIGHTBLUE;
+        return random_choose(LIGHTGREEN, LIGHTBLUE);
 
     default:
         return YELLOW;
@@ -4260,18 +4221,6 @@ int piety_breakpoint(int i)
         return 255;
     else
         return breakpoints[i];
-}
-
-// Returns true if the Shining One doesn't mind your using unchivalric
-// attacks on this creature.
-bool tso_unchivalric_attack_safe_monster(const monster& mon)
-{
-    const mon_holy_type holiness = mon.holiness();
-    return mons_intel(mon) < I_HUMAN
-           || mons_is_object(mon.mons_species())
-           || mon.undead_or_demonic()
-           || mon.is_shapeshifter() && (mon.flags & MF_KNOWN_SHIFTER)
-           || !mon.is_holy() && !(holiness & MH_NATURAL);
 }
 
 int get_monster_tension(const monster& mons, god_type god)

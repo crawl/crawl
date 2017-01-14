@@ -1755,6 +1755,12 @@ void canned_msg(canned_message_type which_message)
         case MSG_GHOSTLY_OUTLINE:
             mpr("You see a ghostly outline there, and the spell fizzles.");
             break;
+        case MSG_FULL_HEALTH:
+            mpr("Your health is already full.");
+            break;
+        case MSG_FULL_MAGIC:
+            mpr("Your reserves of magic are already full.");
+            break;
         case MSG_GAIN_HEALTH:
             mpr("You feel better.");
             break;
@@ -1801,7 +1807,12 @@ bool simple_monster_message(const monster& mons, const char *event,
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    string msg = uppercase_first(god_name(which_deity)) + event;
+    string msg;
+    if (which_deity == GOD_IEOH_JIAN)
+        msg = uppercase_first(ieoh_jian_random_sifu_name()) + event;
+    else
+        msg = uppercase_first(god_name(which_deity)) + event;
+
     god_speaks(which_deity, msg.c_str());
 }
 

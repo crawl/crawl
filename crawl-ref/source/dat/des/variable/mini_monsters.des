@@ -862,10 +862,10 @@ WEIGHT: 3
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -917,10 +917,10 @@ DEPTH:  D:8-13
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -1715,7 +1715,7 @@ MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
-ITEM:    staff of summoning w:20 / rod of shadows
+ITEM:    staff of summoning
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    fan of gales / lamp of fire / phial of floods
@@ -1752,8 +1752,7 @@ TAGS:    no_monster_gen
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
-KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
-                   wand of flame w:55 . \
+KMONS:   0 = orc ; robe . wand of confusion | wand of flame . \
                    potion of invisibility | potion of haste | nothing w:980
 KMONS:   89 = deep elf mage
 KITEM:   8d = robe, hat w:40 / hat good_item, \
@@ -2936,18 +2935,16 @@ TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes, eye of draining
 KITEM:   R = royal jelly
-ITEM:    scroll of teleportation q:2
-ITEM:    wand of digging
-ITEM:    wand of disintegration
-ITEM:    scroll of teleportation q:2 w:20 / \
+ITEM:    scroll of teleportation q:2 / wand of digging
+ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111123
 SUBST:   m : xxxm
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
-NSUBST:  ! = 1:e / * = %$
-NSUBST:  ' = 1:f / * = %$
-NSUBST:  " = 1:g / * = %$
+NSUBST:  ! = 1:d / * = %$
+NSUBST:  ' = 1:d / * = %$
+NSUBST:  " = 1:e / * = %$
 MAP
 ...................
 ..J.............J..
@@ -3009,21 +3006,6 @@ MAP
 ..nn1112111nn..
  ..nnnnnnnnn..
   ...........
-ENDMAP
-
-NAME:   hangedman_glaring_trap
-TAGS:   extra transparent
-DEPTH:  D:12-, Depths
-WEIGHT: 5
-KMASK:  m = no_wall_fixup
-KMONS:  1 = eye of devastation
-KMONS:  8 = 8
-KITEM:  18 = star_item w:9 / any w:1
-MAP
-xxx@x
-x8m.xxxxxx
-xxm....=1x
-xxx@xxxxxx
 ENDMAP
 
 NAME:   hangedman_incinerator
@@ -3117,7 +3099,7 @@ MONS:    lightning spire, sky beast, electric eel
 KMONS:   E = insubstantial wisp w:10 / ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
 KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
-              disc of storms w:4 / lightning rod ident:type w:1
+              lightning rod
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = known permanent teleport trap
@@ -3510,7 +3492,7 @@ SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
-ITEM:    wand of digging / wand of disintegration
+ITEM:    wand of digging ident:type
 ITEM:    scroll of teleportation q:2
 MAP
 ...........
@@ -5023,7 +5005,7 @@ DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
 MONS:   deep elf high priest, deep elf mage
 :else
-MONS:   draconian zealot, base draconian
+MONS:   draconian stormcaller, base draconian
 :end
 COLOUR: x = white
 TILE:   x = wall_church

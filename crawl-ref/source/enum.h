@@ -182,39 +182,25 @@ public:
     EXPANDMACRO(DEF_BITFIELD_OPERATORS(fieldT, __VA_ARGS__, ))
 // The trailing comma suppresses "ISO C99 requires rest arguments to be used"
 
-enum lang_t
+enum class lang_t
 {
-    LANG_EN = 0,
-    LANG_CS,
-    LANG_DA,
-    LANG_DE,
-    LANG_EL,
-    LANG_ES,
-    LANG_FI,
-    LANG_FR,
-    LANG_HU,
-    LANG_IT,
-    LANG_JA,
-    LANG_KO,
-    LANG_LT,
-    LANG_LV,
-    LANG_NL,
-    LANG_PL,
-    LANG_PT,
-    LANG_RU,
-    LANG_SV,
-    LANG_ZH,
+    EN = 0,
+    CS, DA, DE,
+    EL, ES, FI, FR,
+    HU, IT, JA, KO,
+    LT, LV, NL, PL,
+    PT, RU, SV, ZH,
 };
 
-enum flang_t
+enum class flang_t
 {
-    FLANG_DWARVEN,
-    FLANG_JAGERKIN,
-    FLANG_KRAUT,
-    FLANG_FUTHARK,
-    FLANG_WIDE,
-    FLANG_GRUNT,
-    FLANG_BUTT,
+    dwarven,
+    jagerkin,
+    kraut,
+    futhark,
+    wide,
+    grunt,
+    butt,
 };
 
 enum ability_type
@@ -227,10 +213,12 @@ enum ability_type
     ABIL_BREATHE_POISON,
     ABIL_BREATHE_LIGHTNING,
     ABIL_BREATHE_POWER,
+#if TAG_MAJOR_VERSION == 34
     ABIL_BREATHE_STICKY_FLAME,
+#endif
     ABIL_BREATHE_STEAM,
     ABIL_BREATHE_MEPHITIC,
-    ABIL_SPIT_ACID,
+    ABIL_BREATHE_ACID,
     ABIL_BLINK,
     // Others
     ABIL_DELAYED_FIREBALL,
@@ -255,11 +243,13 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
 #endif
     // Deep Dwarves
-    ABIL_RECHARGING,
+    ABIL_HEAL_WOUNDS,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // Barachians
+    ABIL_HOP,
+    ABIL_MAX_INTRINSIC = ABIL_HOP,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -451,9 +441,9 @@ enum ability_type
 #endif
 
     // Ieoh Jian
-    ABIL_IEOH_JIAN_PROJECT_WEAPON = 1300,
-    ABIL_IEOH_JIAN_RECALL_WEAPON,
-    ABIL_IEOH_JIAN_DRAGONFLY,
+    ABIL_IEOH_JIAN_STEEL_DRAGONFLY = 1300,
+    ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY,
+    ABIL_IEOH_JIAN_HEAVENLY_BLADE,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -553,7 +543,7 @@ enum attribute_type
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another
-    ATTR_GOLD_GENERATED,       // Count gold generated this game.
+    ATTR_GOLD_GENERATED,       // Count gold generated on non-Abyss levels this game.
 #if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
 #endif
@@ -578,31 +568,32 @@ enum attribute_type
     NUM_ATTRIBUTES
 };
 
-enum transformation_type
+enum class transformation
 {
-    TRAN_NONE,
-    TRAN_SPIDER,
-    TRAN_BLADE_HANDS,
-    TRAN_STATUE,
-    TRAN_ICE_BEAST,
-    TRAN_DRAGON,
-    TRAN_LICH,
-    TRAN_BAT,
-    TRAN_PIG,
-    TRAN_APPENDAGE,
-    TRAN_TREE,
+    none,
+    spider,
+    blade_hands,
+    statue,
+    ice_beast,
+    dragon,
+    lich,
+    bat,
+    pig,
+    appendage,
+    tree,
 #if TAG_MAJOR_VERSION == 34
-    TRAN_PORCUPINE,
+    porcupine,
 #endif
-    TRAN_WISP,
+    wisp,
 #if TAG_MAJOR_VERSION == 34
-    TRAN_JELLY,
+    jelly,
 #endif
-    TRAN_FUNGUS,
-    TRAN_SHADOW,
-    TRAN_HYDRA,
-    NUM_TRANSFORMS,
+    fungus,
+    shadow,
+    hydra,
+    COUNT
 };
+constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);
 
 enum beam_type                  // bolt::flavour
 {
@@ -682,7 +673,6 @@ enum beam_type                  // bolt::flavour
     BEAM_LAST_ENCHANTMENT = BEAM_AGONY,
 
     BEAM_MEPHITIC,
-    BEAM_HOLY_FLAME,
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_ENSNARE,
@@ -892,6 +882,8 @@ enum canned_message_type
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
     MSG_GHOSTLY_OUTLINE,
+    MSG_FULL_HEALTH,
+    MSG_FULL_MAGIC,
     MSG_GAIN_HEALTH,
     MSG_GAIN_MAGIC,
     MSG_MAGIC_DRAIN,
@@ -933,7 +925,7 @@ enum cloud_type
 #endif
     CLOUD_INK,
     CLOUD_PETRIFY,
-    CLOUD_HOLY_FLAMES,
+    CLOUD_HOLY,
     CLOUD_MIASMA,
     CLOUD_MIST,
     CLOUD_CHAOS,
@@ -1290,8 +1282,6 @@ enum conduct_type
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,
     DID_FRIEND_DIED,
-    DID_UNCHIVALRIC_ATTACK,
-    DID_POISON,
     DID_KILL_LIVING,
     DID_KILL_UNDEAD,
     DID_KILL_DEMON,
@@ -1444,7 +1434,9 @@ enum dungeon_char_type
     DCHAR_ITEM_MISSILE,
     DCHAR_ITEM_BOOK,
     DCHAR_ITEM_STAFF,
+#if TAG_MAJOR_VERSION == 34
     DCHAR_ITEM_ROD,
+#endif
     DCHAR_ITEM_MISCELLANY,
     DCHAR_ITEM_CORPSE,
     DCHAR_ITEM_SKELETON,
@@ -1931,9 +1923,9 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
-    DUR_IEOH_JIAN_BOREDOM,
-    DUR_IEOH_JIAN_INTEREST,
-    DUR_IEOH_JIAN_ACTIVITY_BACKOFF,
+    DUR_IEOH_JIAN_PROJECTION,
+    DUR_IEOH_JIAN_DIVINE_BLADE,
+    DUR_NO_HOP,
     NUM_DURATIONS
 };
 
@@ -2109,7 +2101,7 @@ enum enchant_type
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
-    ENCH_IEOH_JIAN_COMBAT_ACTIVE,
+    ENCH_DISTRACTED_ACROBATICS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2628,6 +2620,7 @@ enum monster_type                      // menv[].type
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
+    MONS_BARACHIAN,
     MONS_BEAR,                  // genus
 #endif
     MONS_GRIZZLY_BEAR,
@@ -2652,7 +2645,7 @@ enum monster_type                      // menv[].type
     MONS_DRAGON,                // genus
 #endif
     MONS_STEAM_DRAGON,
-    MONS_MOTTLED_DRAGON,
+    MONS_ACID_DRAGON,
     MONS_SWAMP_DRAGON,
     MONS_FIRE_DRAGON,
     MONS_ICE_DRAGON,
@@ -2987,7 +2980,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_TROLL_SHAMAN,
 #endif
     MONS_GIANT,                 // genus
+#if TAG_MAJOR_VERSION == 34
     MONS_HILL_GIANT,
+#endif
     MONS_CYCLOPS,
     MONS_ETTIN,
     MONS_STONE_GIANT,
@@ -3029,7 +3024,9 @@ enum monster_type                      // menv[].type
     // mon-util.cc.
     MONS_BLACK_DRACONIAN,
     MONS_FIRST_BASE_DRACONIAN = MONS_BLACK_DRACONIAN,
+#if TAG_MAJOR_VERSION == 34
     MONS_MOTTLED_DRACONIAN,
+#endif
     MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,
     MONS_PURPLE_DRACONIAN,
@@ -3041,17 +3038,19 @@ enum monster_type                      // menv[].type
     MONS_LAST_BASE_DRACONIAN = MONS_PALE_DRACONIAN,
 
     // Sync up with mon-place.cc's draconian selection if adding more.
-    MONS_DRACONIAN_CALLER,
-    MONS_FIRST_NONBASE_DRACONIAN = MONS_DRACONIAN_CALLER,
+    MONS_DRACONIAN_STORMCALLER,
+    MONS_FIRST_NONBASE_DRACONIAN = MONS_DRACONIAN_STORMCALLER,
     MONS_DRACONIAN_MONK,
+#if TAG_MAJOR_VERSION == 34
     MONS_DRACONIAN_ZEALOT,
+#endif
     MONS_DRACONIAN_SHIFTER,
     MONS_DRACONIAN_ANNIHILATOR,
     MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
 
-    MONS_LAST_DRACONIAN = MONS_DRACONIAN_SCORCHER,
     MONS_LAST_NONBASE_DRACONIAN = MONS_DRACONIAN_SCORCHER,
+    MONS_LAST_DRACONIAN = MONS_LAST_NONBASE_DRACONIAN,
 
     // Lava monsters:
 #if TAG_MAJOR_VERSION == 34
@@ -3500,7 +3499,7 @@ enum monster_type                      // menv[].type
     MONS_CORRUPTER,
     MONS_BLACK_SUN,
     MONS_LAST_NONBASE_DEMONSPAWN = MONS_BLACK_SUN,
-    MONS_LAST_DEMONSPAWN = MONS_BLACK_SUN,
+    MONS_LAST_DEMONSPAWN = MONS_LAST_NONBASE_DEMONSPAWN,
 
     MONS_WORLDBINDER,
     MONS_GRAND_AVATAR,
@@ -3567,6 +3566,7 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
+    MONS_BARACHIAN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3810,7 +3810,7 @@ enum mutation_type
     MUT_EXOSKELETON,
 #endif
     MUT_ANTIMAGIC_BITE,
-    MUT_NO_DEVICE_HEAL,
+    MUT_NO_POTION_HEAL,
 #if TAG_MAJOR_VERSION == 34
     MUT_COLD_VULNERABILITY,
     MUT_HEAT_VULNERABILITY,
@@ -3872,6 +3872,7 @@ enum mutation_type
     MUT_STURDY_FRAME,
     MUT_SANGUINE_ARMOUR,
 #endif
+    MUT_HOP,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3901,7 +3902,9 @@ enum object_class_type : uint8_t           // mitm[].base_type
     OBJ_MISCELLANY,
     OBJ_CORPSES,
     OBJ_GOLD,
+#if TAG_MAJOR_VERSION == 34
     OBJ_RODS,
+#endif
     OBJ_RUNES,
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,
@@ -4228,7 +4231,9 @@ enum skill_focus_mode
 enum species_type
 {
     SP_HUMAN,
+#if TAG_MAJOR_VERSION == 34
     SP_HIGH_ELF,
+#endif
     SP_DEEP_ELF,
 #if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
@@ -4249,7 +4254,9 @@ enum species_type
     SP_GREY_DRACONIAN,
     SP_BLACK_DRACONIAN,
     SP_PURPLE_DRACONIAN,
+#if TAG_MAJOR_VERSION == 34
     SP_MOTTLED_DRACONIAN,
+#endif
     SP_PALE_DRACONIAN,
       SP_LAST_NONBASE_DRACONIAN = SP_PALE_DRACONIAN,
     SP_BASE_DRACONIAN,
@@ -4272,6 +4279,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
+    SP_BARACHIAN,
     NUM_SPECIES,
 
     SP_UNKNOWN  = 100,
@@ -4324,7 +4332,9 @@ enum spell_type : int
 #endif
     SPELL_BOLT_OF_DRAINING,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+#if TAG_MAJOR_VERSION == 34
     SPELL_BOLT_OF_INACCURACY,
+#endif
     SPELL_POISONOUS_CLOUD,
     SPELL_FIRE_STORM,
     SPELL_BLINK,
@@ -4477,7 +4487,7 @@ enum spell_type : int
     SPELL_BLINK_OTHER,
     SPELL_SUMMON_MUSHROOMS,
     SPELL_SPIT_ACID,
-    SPELL_STICKY_FLAME_SPLASH,
+    SPELL_ACID_SPLASH,
     SPELL_FIRE_BREATH,
     SPELL_COLD_BREATH,
 #if TAG_MAJOR_VERSION == 34
@@ -4619,7 +4629,9 @@ enum spell_type : int
     SPELL_IGNITE_POISON_SINGLE,
 #endif
     SPELL_ORB_OF_ELECTRICITY,
+#if TAG_MAJOR_VERSION == 34
     SPELL_EXPLOSIVE_BOLT,
+#endif
     SPELL_FLASH_FREEZE,
     SPELL_LEGENDARY_DESTRUCTION,
 #if TAG_MAJOR_VERSION == 34
@@ -4648,7 +4660,9 @@ enum spell_type : int
     SPELL_SUMMON_GUARDIAN_GOLEM,
     SPELL_RANDOM_BOLT,
     SPELL_CLOUD_CONE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_WEAVE_SHADOWS,
+#endif
     SPELL_DRAGON_CALL,
     SPELL_SPELLFORGED_SERVITOR,
 #if TAG_MAJOR_VERSION == 34
@@ -4723,6 +4737,9 @@ enum spell_type : int
     SPELL_GHOSTLY_SACRIFICE,
     SPELL_DREAM_DUST,
     SPELL_BECKONING,
+    SPELL_UPHEAVAL,
+    SPELL_RANDOM_EFFECTS,
+    SPELL_POISONOUS_VAPOURS,
     NUM_SPELLS
 };
 
@@ -4823,7 +4840,6 @@ enum zap_type
     ZAP_SLOW,
     ZAP_HASTE,
     ZAP_MAGIC_DART,
-    ZAP_HEAL_WOUNDS,
     ZAP_PARALYSE,
     ZAP_BOLT_OF_FIRE,
     ZAP_BOLT_OF_COLD,
@@ -4837,7 +4853,6 @@ enum zap_type
     ZAP_VENOM_BOLT,
     ZAP_BOLT_OF_DRAINING,
     ZAP_LEHUDIBS_CRYSTAL_SPEAR,
-    ZAP_BOLT_OF_INACCURACY,
     ZAP_ISKENDERUNS_MYSTIC_BLAST,
     ZAP_ENSLAVEMENT,
     ZAP_PAIN,
@@ -4865,9 +4880,7 @@ enum zap_type
     ZAP_CORONA,
     ZAP_HIBERNATION,
     ZAP_FLAME_TONGUE,
-    ZAP_LARGE_SANDBLAST,
     ZAP_SANDBLAST,
-    ZAP_SMALL_SANDBLAST,
     ZAP_BOLT_OF_MAGMA,
     ZAP_POISON_ARROW,
     ZAP_BREATHE_STICKY_FLAME,
@@ -4884,7 +4897,6 @@ enum zap_type
     ZAP_SEARING_RAY_I,
     ZAP_SEARING_RAY_II,
     ZAP_SEARING_RAY_III,
-    ZAP_EXPLOSIVE_BOLT,
     ZAP_CRYSTAL_BOLT,
     ZAP_TUKIMAS_DANCE,
     ZAP_QUICKSILVER_BOLT,
@@ -4933,7 +4945,9 @@ enum reach_type
 
 enum daction_type
 {
+#if TAG_MAJOR_VERSION == 34
     DACT_ALLY_HOLY,
+#endif
     DACT_ALLY_UNHOLY_EVIL,
     DACT_ALLY_UNCLEAN_CHAOTIC,
     DACT_ALLY_SPELLCASTER,
@@ -4951,10 +4965,12 @@ enum daction_type
 #else
     DACT_SLIME_NEW_ATTEMPT,
 #endif
+#if TAG_MAJOR_VERSION == 34
     DACT_HOLY_PETS_GO_NEUTRAL,
     DACT_ALLY_TROG,
+#endif
 
-    DACT_SHUFFLE_DECKS,
+    DACT_RECLAIM_DECKS,
     DACT_REAUTOMAP,
     DACT_REMOVE_JIYVA_ALTARS,
     DACT_PIKEL_SLAVES,
@@ -4971,8 +4987,8 @@ enum daction_type
     DACT_BRIBE_TIMEOUT,
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,
-    DACT_ALLY_MAKHLEB,
 #if TAG_MAJOR_VERSION == 34
+    DACT_ALLY_MAKHLEB,
     DACT_ALLY_SACRIFICE_LOVE,
 #endif
     DACT_ALLY_HEPLIAKLQANA,
@@ -5159,12 +5175,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_DEMON_3    = 0x600000000ULL,
     TILE_FLAG_DEMON_2    = 0x800000000ULL,
     TILE_FLAG_DEMON_1    = 0xE00000000ULL,
-
-    // 3 mutually exclusive flags for mimics.
-    TILE_FLAG_MIMIC_INEPT = 0x2000000000ULL,
-    TILE_FLAG_MIMIC       = 0x4000000000ULL,
-    TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
-    TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
 
     //// Background flags
 

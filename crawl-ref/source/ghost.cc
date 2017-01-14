@@ -13,8 +13,8 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
@@ -258,7 +258,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }
@@ -293,7 +293,7 @@ static int _player_ghost_movement_energy()
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
     // don't preserve transformations for ghosty purposes
-    unwind_var<transformation_type> form(you.form, TRAN_NONE);
+    unwind_var<transformation> form(you.form, transformation::none);
     unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
                                                  FixedBitVector<NUM_EQUIP>());
     unwind_var<bool> fishtail(you.fishtail, false);
@@ -618,7 +618,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 {
     dprf("Initialising Ieoh Jian weapon with power %d", power);
-    int delay = property(weapon, PWPN_SPEED);
     int damg  = property(weapon, PWPN_DAMAGE);
 
     if (power > 100)
@@ -629,11 +628,11 @@ void ghost_demon::init_ieoh_jian_weapon(const item_def& weapon, int power)
 
     xl = 1 + div_rand_round(power, 4);
 
-    speed   = 45 - delay; // They must be very fast to fly back to combat when knocked away.
+    speed   = 30;
     ac      = damg + div_rand_round(power, 10);
-    damage  = damg;
+    damage  = damg * (0.4 + (power/100.0));
 
-    ev     = 15;
+    ev     = 100; // Extremely evasive due to their short duration).
     ac     = 2 + div_rand_round(power, 10);
     max_hp = 1; // Ieoh Jian weapons always die in one hit and respawn elsewhere.
 }

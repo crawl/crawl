@@ -19,9 +19,9 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "goditem.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -343,6 +343,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_NEGATIVE_ENERGY] += armour_type_prop(arm, ARMF_RES_NEG);
     proprt[ARTP_POISON] += armour_type_prop(arm, ARMF_RES_POISON);
     proprt[ARTP_ELECTRICITY] += armour_type_prop(arm, ARMF_RES_ELEC);
+    proprt[ARTP_RCORR] += armour_type_prop(arm, ARMF_RES_CORR);
     proprt[ARTP_MAGIC_RESISTANCE] += armour_type_prop(arm, ARMF_RES_MAGIC);
     proprt[ARTP_STEALTH] += armour_type_prop(arm, ARMF_STEALTH);
     proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
@@ -1759,6 +1760,11 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     if (unrand_index == UNRAND_VARIABILITY)
         item.plus = random_range(-4, 16);
+    else if (unrand_index >= UNRAND_DIVINE_DEER_HORN_KNIFE && unrand_index <= UNRAND_DIVINE_CHUI)
+    {
+        item.props[IEOH_JIAN_DIVINE] = 0;
+        item.plus = random_range(14, 16 + div_rand_round(you.skill(SK_INVOCATIONS, 1, false), 4));
+    }
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
@@ -1792,7 +1798,8 @@ void unrand_reacts()
             item_def&        item  = you.inv[you.equip[i]];
             const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
 
-            entry->world_reacts_func(&item);
+            if (entry->base_type != OBJ_UNASSIGNED)
+                entry->world_reacts_func(&item);
         }
     }
 

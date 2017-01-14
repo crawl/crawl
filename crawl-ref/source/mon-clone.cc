@@ -15,7 +15,7 @@
 #include "env.h"
 #include "items.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"

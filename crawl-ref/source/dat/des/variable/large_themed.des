@@ -225,15 +225,14 @@ NSUBST:  6 = 2:6 / *:.
 SUBST:   c = v
 : else
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
-MONS:    hill giant, cyclops
+MONS:    cyclops, ettin
 MONS:    w:50 ogre / w:5 ogre mage / two-headed ogre
 MONS:    wolf / warg
 SUBST:   G = '
 # Nothing / water moat / lava moat for stone / frost / fire giant chiefs.
 SHUFFLE: '1 / '1 / w2 / l3
 : end
-KMONS:   Z = hill giant zombie / cyclops zombie / \
-             stone giant zombie / titan zombie
+KMONS:   Z = cyclops zombie / stone giant zombie / titan zombie
 KMONS:   P = plant
 KITEM:   ( = any weapon good_item
 KITEM:   Z = large rock
@@ -267,26 +266,25 @@ ENDMAP
 
 NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
-DEPTH:  D:10-, Depths
-MONS:   wizard / boggart / nothing
-MONS:   crystal guardian / glowing orange brain / rakshasa
+DEPTH:  D:10-
+MONS:   wizard
+ITEM:   warlock's_mirror no_pickup
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
             delay_max = 50, size_min = 1, size_max = 5,  \
             walk_dist = 0, spread_rate= 100 }
 SUBST:  F = .
-: if you.absdepth() > 18 then
-SUBST:  1 = 2
-: end
+SUBST:  1 = 1.
+NSUBST: * = 1:d / *:*
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 xbbbbbbbbbbbbbbbbbbbbbbbbb
-xb....................Fbb.
+xb1...................Fbb.
 xb...bbbbb..1......1..bb..
 xb..bb***bb..........bb...
 xb.bb.....bb..1..1..bb....
 xb......1..bb......bb..1..
-xb..........bb||||bb......
+xb..........bb****bb......
 xb.1...bb...FbbbbbbF.....
 xb....bb....bb....bb.....
 xb...bb.1..bb......bb....
@@ -297,13 +295,13 @@ xb...bb...1..bb....bb...
 xb....bb....bb....bb....
 xb1....bbbbbb....bb.....
 xbbb........bb.........
-xb*bb........bb.....1..
+xb*bb....1...bb.....1..
 xb.1bb........bb.......
 xb...bb........bb.....
 xb...Fbb.............
 xb...bb.............
 xb..bb....1......
-xb.bb........
+xb1bb........
 xb......
 ENDMAP
 
@@ -752,9 +750,9 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: west
 DEPTH:  Depths, !Depths:$
 MONS:   crystal guardian, orange crystal statue
-ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
-        any scroll w:20 / potion of magic / potion of brilliance / \
-        fan of gales w:1 / lamp of fire w:1 / phial of floods w:1 / gold w:30
+ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:20 / \
+        potion of magic / potion of brilliance / fan of gales w:1 / \
+        lamp of fire w:1 / phial of floods w:1 / gold w:30
 KFEAT:  _ = altar_sif_muna
 MAP
             bbbbb
@@ -1358,7 +1356,7 @@ SUBST:   BDFHJLNPR = .
 
   local function monslist(depth)
     local mons = nil
-    mons = add_mons(mons, "mottled dragon", semi(depth, 11, 21, 334))
+    mons = add_mons(mons, "acid dragon", semi(depth, 11, 21, 334))
     mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
     mons = add_mons(mons, "wizard", peak(depth, 14, 22, 89))
     mons = add_mons(mons, "fire dragon", peak(depth, 14, 24, 192))

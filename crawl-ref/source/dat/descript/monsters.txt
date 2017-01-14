@@ -117,14 +117,16 @@ Donald
 %%%%
 Dowan
 
-A beautiful but vain elf with an aptitude for magic and little else. His skills
-are the perfect complement of his twin sister Duvessa's fighting prowess.
+A beautiful but vain deep elf with an aptitude for magic and little else. His
+skills are the perfect complement of his twin sister Duvessa's fighting prowess.
+In search of more powerful spells, he journeys to the surface with his sister.
 %%%%
 Duvessa
 
-A plain-looking elven fighter who is technically brilliant in many forms of
+A plain-looking deep elven fighter who is technically brilliant in many forms of
 combat, but over-confident because of it. She is complemented by the magical
-skills of her twin brother, Dowan.
+skills of her twin brother, Dowan. She journeys to the surface to challenge
+its greatest champions.
 %%%%
 Edmund
 
@@ -490,6 +492,11 @@ acid blob
 
 A lump of sickly pustulent flesh, dripping with lethal acid.
 %%%%
+acid dragon
+
+A small dragon with brilliant yellow scales, its mouth dripping with
+corrosive slime.
+%%%%
 adder
 
 A common dungeon snake, a species of troglodytic reptile commonly found in
@@ -577,6 +584,10 @@ the slightest disturbance.
 balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
+%%%%
+barachian
+
+An amphibious humanoid with a very ugly attitude.
 %%%%
 basilisk
 
@@ -783,9 +794,8 @@ A weapon enchanted to dance through the air and attack under its own power.
 %%%%
 flying weapon
 
-A weapon manifested by the Ieoh Jian council. It floats passively within your reach,
-ready for you to wield. It can be commanded to attack for a brief period by projecting
-it towards enemies.
+A weapon held airborne by the Ieoh Jian Council. You can feel the presence of an
+ancient master wielding it with fierceness.
 %%%%
 dart slug
 
@@ -939,10 +949,6 @@ draconian annihilator
 A draconian that uses powerful conjurations to destroy anyone who dares to
 stand in its way.
 %%%%
-draconian caller
-
-A draconian that specializes in summoning hordes of drakes and dragons.
-%%%%
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
@@ -964,10 +970,10 @@ draconian shifter
 A draconian master of the warp, who can translocate both itself and anyone else
 to any place, either on this world or outside of it.
 %%%%
-draconian zealot
+draconian stormcaller
 
-A draconian deriving its hellish powers and demonic allies from the worship of
-some unknown dark god.
+A draconian deriving its thunderous powers and draconic allies from the worship
+of Qazlal.
 %%%%
 dream sheep
 
@@ -1255,8 +1261,8 @@ A muscular grey-scaled humanoid with a reptilian tail and small wings.
 guardian golem
 
 A large construct, designed to protect. It can take the blows dealt to others
-upon itself, though it is prone to becoming unstable and overheating after
-heavy punishment.
+upon itself, though it is prone to becoming explosively unstable after heavy
+punishment.
 %%%%
 guardian mummy
 
@@ -1333,12 +1339,6 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
-%%%%
-hill giant
-
-A massive, burly humanoid standing taller even than an ogre. It is uncivilized
-in every sense of the word, and has few recreational interests beyond smashing
-adventurers.
 %%%%
 hippogriff
 
@@ -1662,15 +1662,6 @@ moth of wrath
 A moth known for its ability to inspire insane rages by touching its foes, or
 merely gazing at its friends. For some inexplicable reason, it was eradicated
 from the surface centuries ago.
-%%%%
-mottled draconian
-
-A muscular humanoid with mottled scales, a reptilian tail and small wings.
-%%%%
-mottled dragon
-
-A small purple dragon with curiously mottled scales, its mouth dripping with a
-strange liquid flame.
 %%%%
 mummy
 
@@ -2485,7 +2476,7 @@ pursuit no matter where they flee.
 %%%%
 vault warden
 
-A veteran commanders, able to seal nearby doorways and staircases to prevent
+A veteran commander, able to seal nearby doorways and staircases to prevent
 intruders from either trespassing further or escaping alive.
 %%%%
 very ugly thing

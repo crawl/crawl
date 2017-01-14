@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "mon-place.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 
 #include <algorithm>
 
@@ -24,8 +24,8 @@
 #include "errors.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::slow_abyss, slow_orb_run
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -581,10 +581,10 @@ monster_type resolve_monster_type(monster_type mon_type,
         // Pick any random drac, constrained by colour if requested.
         do
         {
-            mon_type =
-                static_cast<monster_type>(
-                    random_range(MONS_FIRST_BASE_DRACONIAN,
-                                 MONS_LAST_DRACONIAN));
+            if (coinflip())
+                mon_type = random_draconian_monster_species();
+            else
+                mon_type = random_draconian_job();
         }
         while (base_type != MONS_PROGRAM_BUG
                && mon_type != base_type
@@ -594,11 +594,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     else if (mon_type == RANDOM_BASE_DRACONIAN)
         mon_type = random_draconian_monster_species();
     else if (mon_type == RANDOM_NONBASE_DRACONIAN)
-    {
-        mon_type =
-            static_cast<monster_type>(
-                random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_DRACONIAN));
-    }
+        mon_type = random_draconian_job();
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
         mon_type = summon_any_demon(mon_type, true);
     else if (mon_type == RANDOM_DEMONSPAWN)
@@ -889,9 +885,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     band_type band = BAND_NO_BAND;
     band_monsters[0] = mg.cls;
 
-    // The (very) ugly thing band colour.
-    static colour_t ugly_colour = COLOUR_UNDEF;
-
     if (create_band)
     {
 #ifdef DEBUG_MON_CREATION
@@ -904,23 +897,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             band_monsters[i] = _band_member(band, i, place, allow_ood);
             if (band_monsters[i] == NUM_MONSTERS)
                 die("Unhandled band type %d", band);
-
-            // Get the (very) ugly thing band colour, so that all (very)
-            // ugly things in a band will start with it.
-            if ((band_monsters[i] == MONS_UGLY_THING
-                || band_monsters[i] == MONS_VERY_UGLY_THING)
-                    && ugly_colour == COLOUR_UNDEF)
-            {
-                ugly_colour = ugly_thing_colour_offset(mg.colour) == -1
-                            ? ugly_thing_random_colour()
-                            : mg.colour;
-            }
         }
-    }
 
-    // Set the (very) ugly thing band colour.
-    if (ugly_colour != COLOUR_UNDEF)
-        mg.colour = ugly_colour;
+        // Set the (very) ugly thing band colour.
+        ugly_thing_apply_uniform_band_colour(mg, band_monsters, band_size);
+    }
 
     // Returns 2 if the monster is placed near player-occupied stairs.
     int pval = _is_near_stairs(mg.pos);
@@ -1040,10 +1021,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         // Sanity check that the specified position is valid.
         return 0;
     }
-
-    // Reset the (very) ugly thing band colour.
-    if (ugly_colour != COLOUR_UNDEF)
-        ugly_colour = COLOUR_UNDEF;
 
     monster* mon = _place_monster_aux(mg, 0, place, force_pos, dont_place);
 
@@ -1343,6 +1320,16 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Seraphim follow the Shining One.
         else if (mg.cls == MONS_SERAPH)
             mon->god = GOD_SHINING_ONE;
+        // Draconian stormcallers worship Qazlal.
+        else if (mg.cls == MONS_DRACONIAN_STORMCALLER)
+            mon->god = GOD_QAZLAL;
+        // Classed demonspawn.
+        else if (mg.cls == MONS_BLOOD_SAINT)
+            mon->god = GOD_MAKHLEB;
+        else if (mg.cls == MONS_BLACK_SUN)
+            mon->god = GOD_KIKUBAAQUDGHA;
+        else if (mg.cls == MONS_CORRUPTER)
+            mon->god = GOD_LUGONU;
         else
         {
             switch (mons_genus(mg.cls))
@@ -1653,12 +1640,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             // If this is a band member created by shadow creatures, link its
             // ID and don't count it against the summon cap
-            if ((mg.summon_type == SPELL_SHADOW_CREATURES
-                 || mg.summon_type == SPELL_WEAVE_SHADOWS)
-                 && leader)
-            {
+            if (mg.summon_type == SPELL_SHADOW_CREATURES && leader)
                 mon->props["summon_id"].get_int() = leader->mid;
-            }
             else
             {
                 summoned_monster(mon, mg.summoner,
@@ -2176,18 +2159,16 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_WHITE_DRACONIAN, basic_drac_set },
     { MONS_RED_DRACONIAN,   basic_drac_set },
     { MONS_PURPLE_DRACONIAN, basic_drac_set },
-    { MONS_MOTTLED_DRACONIAN, basic_drac_set },
     { MONS_YELLOW_DRACONIAN, basic_drac_set },
     { MONS_BLACK_DRACONIAN, basic_drac_set },
     { MONS_GREEN_DRACONIAN, basic_drac_set },
     { MONS_GREY_DRACONIAN, basic_drac_set },
     { MONS_PALE_DRACONIAN, basic_drac_set },
-    { MONS_DRACONIAN_CALLER, classy_drac_set },
+    { MONS_DRACONIAN_STORMCALLER, classy_drac_set },
     { MONS_DRACONIAN_MONK, classy_drac_set },
     { MONS_DRACONIAN_SCORCHER, classy_drac_set },
     { MONS_DRACONIAN_KNIGHT, classy_drac_set },
     { MONS_DRACONIAN_ANNIHILATOR, classy_drac_set },
-    { MONS_DRACONIAN_ZEALOT, classy_drac_set },
     { MONS_DRACONIAN_SHIFTER, classy_drac_set },
     // yup, scary
     { MONS_TIAMAT,          { {}, {{ BAND_DRACONIAN, {8, 15}, true }}}},
@@ -2344,7 +2325,7 @@ static band_type _choose_band(monster_type mon_type, int *band_size_p,
     case MONS_FAUN:
         if (!one_chance_in(3))
         {
-            band = coinflip() ? BAND_FAUNS : BAND_FAUN_PARTY;
+            band = random_choose(BAND_FAUNS, BAND_FAUN_PARTY);
             band_size = 2 + random2(2);
         }
         break;
@@ -2492,10 +2473,9 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_OGRE, 1},
                                   {MONS_TROLL, 1},
                                   {MONS_ORC_SORCERER, 1}}}},
-    { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 1},
-                                  {MONS_OGRE, 2}}}},
+    { BAND_OGRE_MAGE,           {{{MONS_TWO_HEADED_OGRE, 2},
+                                  {MONS_OGRE, 1}}}},
     { BAND_OGRE_MAGE_EXTERN,    {{{MONS_OGRE_MAGE, 1}},
-
                                  {{MONS_TWO_HEADED_OGRE, 1},
                                   {MONS_OGRE, 2}}}},
     { BAND_KOBOLD_DEMONOLOGIST, {{{MONS_KOBOLD, 4},
@@ -2722,13 +2702,12 @@ static monster_type _band_member(band_type band, int which,
         {
             // Hack: race is rolled elsewhere.
             return random_choose_weighted(
-                1, MONS_DRACONIAN_CALLER,
+                1, MONS_DRACONIAN_STORMCALLER,
                 2, MONS_DRACONIAN_KNIGHT,
                 2, MONS_DRACONIAN_MONK,
                 2, MONS_DRACONIAN_SHIFTER,
                 2, MONS_DRACONIAN_ANNIHILATOR,
-                2, MONS_DRACONIAN_SCORCHER,
-                2, MONS_DRACONIAN_ZEALOT);
+                2, MONS_DRACONIAN_SCORCHER);
         }
 
         return random_draconian_monster_species();
@@ -2784,7 +2763,7 @@ static monster_type _band_member(band_type band, int which,
         if (which == 1 || which == 2 && one_chance_in(3))
         {
             if (x_chance_in_y(2, 3))
-                return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
+                return random_choose(MONS_BALRUG, MONS_BLIZZARD_DEMON);
             else
                 return random_demonspawn_job();
         }
@@ -3113,7 +3092,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(dummy);
 
-    return actor_cloud_immune(&dummy, *cloud);
+    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)
@@ -3135,7 +3114,7 @@ conduct_type player_will_anger_monster(monster_type type)
  * why?
  *
  * XXX: this should ideally return a list of conducts that can be filtered by
- *      callers by god; we're duplicating godconduct.cc right now.
+ *      callers by god; we're duplicating god-conduct.cc right now.
  *
  * @param mon   The monster in question.
  * @return      The reason the player's religion conflicts with the monster

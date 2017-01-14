@@ -558,7 +558,7 @@ Bolt of Magma molten gargoyle cast
 %%%%
 Primal Wave elemental wellspring cast
 
-A great wave of water rises up through @the_monster@!
+A torrent of water rises up through @the_monster@!
 %%%%
 Invisibility shadow cast
 

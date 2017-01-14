@@ -271,11 +271,6 @@ demon whip
 
 地獄の底で作り上げられた恐ろしい武器だ。
 %%%%
-disc of storms
-
-この極めて強力なアイテムは、破壊的な雷電の嵐を解き放つ。
-この魔法道具の熟練者に扱われると非常に効果的だ。
-%%%%
 eudemon blade
 
 天国の鍛冶場から生み出された善良な魂の宿る聖なる刃だ。
@@ -723,14 +718,6 @@ wand of fireball
 
 炎の爆風を放つ魔法の道具だ。
 %%%%
-wand of hasting
-
-狙った対象に動きを加速する魔法をかける魔法の道具だ。
-%%%%
-wand of heal wounds
-
-対象の傷を治療する魔法の道具だ。
-%%%%
 wand of invisibility
 
 対象を他者の視覚から隠蔽する魔法の道具だ。
@@ -750,12 +737,4 @@ wand of polymorph
 wand of random effects
 
 変化に富んだ効果を引き起こす魔法の道具だ。
-%%%%
-wand of slowing
-
-これは狙った対象に動きが遅くなる魔法をかける魔法の道具だ。
-%%%%
-wand of teleportation
-
-対象に無作為な空間転位を引き起こす魔法の道具だ。
 %%%%

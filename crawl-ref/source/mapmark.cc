@@ -15,7 +15,7 @@
 #include "end.h"
 #include "env.h"
 #include "libutil.h"
-#include "l_libs.h"
+#include "l-libs.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "unwind.h"

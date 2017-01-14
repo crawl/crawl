@@ -23,10 +23,10 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "godabil.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "menu.h"
@@ -131,7 +131,7 @@ static const int conflict[][3] =
     { MUT_STRONG,              MUT_WEAK,                   1},
     { MUT_CLEVER,              MUT_DOPEY,                  1},
     { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_REGENERATION,   MUT_NO_DEVICE_HEAL,         1},
+    { MUT_SLOW_REGENERATION,   MUT_NO_POTION_HEAL,         1},
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
@@ -261,7 +261,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     // First make sure the player's form permits the mutation.
     if (!form_keeps_mutations())
     {
-        if (you.form == TRAN_DRAGON)
+        if (you.form == transformation::dragon)
         {
             monster_type drag = dragon_form_dragon_type();
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
@@ -274,7 +274,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
                 return MUTACT_FULL;
         }
         // Vampire bats keep their fangs.
-        if (you.form == TRAN_BAT
+        if (you.form == transformation::bat
             && you.species == SP_VAMPIRE
             && mut == MUT_FANGS)
         {
@@ -291,7 +291,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             return MUTACT_INACTIVE;
     }
 
-    if (you.form == TRAN_STATUE)
+    if (you.form == transformation::statue)
     {
         // Statues get all but the AC benefit from scales, but are not affected
         // by other changes in body material or speed.
@@ -322,7 +322,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
 
     //XXX: Should this make claws inactive too?
-    if (you.form == TRAN_BLADE_HANDS && mut == MUT_PAWS)
+    if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return MUTACT_INACTIVE;
 
     if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
@@ -359,7 +359,7 @@ static string _annotate_form_based(string desc, bool suppressed)
 
 static string _dragon_abil(string desc)
 {
-    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    const bool supp = form_changed_physiology() && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp);
 }
 
@@ -415,7 +415,7 @@ string describe_mutations(bool center_title)
                        you.racial_ac(false) / 100),
                     player_is_shapechanged()
                     && !(species_is_draconian(you.species)
-                         && you.form == TRAN_DRAGON));
+                         && you.form == transformation::dragon));
     }
 
     if (you.species == SP_VAMPIRE)
@@ -1927,7 +1927,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
             colourname = "darkgrey";
         else if (partially_active)
             colourname = "brown";
-        else if (you.form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == mut)
+        else if (you.form == transformation::appendage && you.attribute[ATTR_APPENDAGE] == mut)
             colourname = "lightgreen";
         else if (is_slime_mutation(mut))
             colourname = "green";
@@ -2314,35 +2314,10 @@ int how_mutated(bool innate, bool levels, bool temp)
 // Return whether current tension is balanced
 static bool _balance_demonic_guardian()
 {
+    // if tension is unfavorably high, perhaps another guardian should spawn
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-
-    int tension = get_tension(GOD_NO_GOD), mons_val = 0, total = 0;
-    monster_iterator mons;
-
-    // tension is unfavorably high, perhaps another guardian should spawn
-    if (tension*3/4 > mutlevel*6 + random2(mutlevel*mutlevel*2))
-        return false;
-
-    for (int i = 0; mons && i <= 20/mutlevel; ++mons)
-    {
-        mons_val = get_monster_tension(**mons, GOD_NO_GOD);
-        const mon_attitude_type att = mons_attitude(**mons);
-
-        if (testbits(mons->flags, MF_DEMONIC_GUARDIAN)
-            && total < random2(mutlevel * 5)
-            && att == ATT_FRIENDLY
-            && !one_chance_in(3)
-            && !mons->has_ench(ENCH_LIFE_TIMER))
-        {
-            mprf("%s %s!", mons->name(DESC_THE).c_str(),
-                           summoned_poof_msg(*mons).c_str());
-            monster_die(*mons, KILL_NONE, NON_MONSTER);
-        }
-        else
-            total += mons_val;
-    }
-
-    return true;
+    const int tension = get_tension(GOD_NO_GOD);
+    return tension*3/4 <= mutlevel*6 + random2(mutlevel*mutlevel*2);
 }
 
 // Primary function to handle and balance demonic guardians, if the tension

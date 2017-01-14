@@ -3,7 +3,7 @@
  */
 
 #include "defines.h"
-#include "godpassive.h"
+#include "god-passive.h"
 
 static void _end_weapon_brand()
 {
@@ -33,13 +33,14 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
-// Self-renewing duration that despawns weapons constantly unless the Council is interested.
-static void _ieoh_jian_bored()
+static void _end_projection()
 {
-    if (you.duration[DUR_IEOH_JIAN_INTEREST] == 0)
-        ieoh_jian_despawn_weapon();
+    ieoh_jian_end_projection();
+}
 
-    you.duration[DUR_IEOH_JIAN_BOREDOM] = IEOH_JIAN_ATTENTION_SPAN;
+static void _end_divine_blade()
+{
+    ieoh_jian_end_divine_blade();
 }
 
 // properties of the duration.
@@ -288,7 +289,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Sil",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your hearing returns." }}, 5 },
+      {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
@@ -549,20 +550,18 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
-    { DUR_IEOH_JIAN_INTEREST,
-      0, "",
-      "being watched over by the Council", "IJC interested",
-      "The Council is aiding you in battle.", D_NO_FLAGS,
-      {{ "",  _ieoh_jian_bored }}},
-    { DUR_IEOH_JIAN_BOREDOM,
-      0, "",
-      "", "IJC bored",
+    { DUR_IEOH_JIAN_PROJECTION, 0, "", "projected weapon", "",
       "", D_NO_FLAGS,
-      {{ "",  _ieoh_jian_bored }}},
-    { DUR_IEOH_JIAN_ACTIVITY_BACKOFF, 0, "", "", "ICJ backoff", "", D_NO_FLAGS, {{""}}},
+      {{ "", _end_projection }}},
+    { DUR_IEOH_JIAN_DIVINE_BLADE, 0, "", "divine blade", "",
+      "", D_NO_FLAGS,
+      {{ "", _end_divine_blade }}},
+    { DUR_NO_HOP, YELLOW, "-Hop",
+      "can't hop", "",
+      "", D_NO_FLAGS,
+      {{ "You are ready to hop once more." }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
-
     { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,
         {{ "", _end_invis }, { "You flicker for a moment.", 1}}, 6},
     { DUR_SLOW, 0, "", "", "slow", "", D_DISPELLABLE},

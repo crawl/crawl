@@ -46,7 +46,7 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
 #include "view.h"
@@ -305,10 +305,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_STILL_WINDS:
         start_still_winds();
-        break;
-
-    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
-        this->ghost->ev = 100; // Extremely evasive when active
         break;
 
     default:
@@ -958,11 +954,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_STILL_WINDS:
         end_still_winds();
         break;
-    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
-        this->ghost->ev = 15;
-        if (!quiet && this->weapon())
-            mprf(MSGCH_DURATION, "%s is no longer fighting on its own.", this->weapon()->name(DESC_THE).c_str());
-        break;
 
     default:
         break;
@@ -1436,6 +1427,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
+    case ENCH_DISTRACTED_ACROBATICS:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
@@ -1445,7 +1437,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
-    case ENCH_IEOH_JIAN_COMBAT_ACTIVE:
         decay_enchantment(en);
         break;
 
@@ -2147,7 +2138,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds",
-    "active for combat",
+    "distracted by acrobatics",
     "buggy",
 };
 
@@ -2392,7 +2383,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 1000 / _mod_speed(50, mons->speed);
         break;
     case ENCH_LIFE_TIMER:
-        cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
+        cturn = 20 * (4 + random2(4)) / _mod_speed(10, mons->speed);
         break;
     case ENCH_INNER_FLAME:
         return random_range(25, 35) * 10;

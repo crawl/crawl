@@ -45,7 +45,9 @@ enum monster_info_flags
     MB_INSANE,
     MB_SILENCING,
     MB_MESMERIZING,
+#if TAG_MAJOR_VERSION == 34
     MB_EVIL_ATTACK,
+#endif
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
     MB_SUBMERGED,
@@ -167,6 +169,7 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
+    MB_DISTRACTED_ACROBATICS,
     NUM_MB_FLAGS
 };
 
@@ -208,6 +211,7 @@ struct monster_info_base
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;
+    string ieoh_jian_weapon_name;
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
 

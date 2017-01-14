@@ -34,14 +34,14 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godpassive.h"
-#include "goditem.h"
+#include "god-passive.h"
+#include "god-abil.h"
+#include "god-item.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -52,7 +52,7 @@
 #include "mon-tentacle.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
@@ -244,9 +244,7 @@ static vector<string> _randart_propnames(const item_def& item,
         if (*type)
             propnames.push_back(type);
     }
-    else if ((item_ident(item, ISFLAG_KNOW_TYPE)
-              || is_artefact(item)
-                 && artefact_known_property(item, ARTP_BRAND))
+    else if (item_brand_known(item)
              && !(is_unrandom_artefact(item) && entry
                   && entry->flags & UNRAND_FLAG_SKIP_EGO))
     {
@@ -845,7 +843,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
      (float) property(item, PWPN_SPEED) / 10,
-     (float) weapon_min_delay(item) / 10,
+     (float) weapon_min_delay(item, item_brand_known(item)) / 10,
      weapon_min_delay_skill(item),
      your_skill.c_str());
 
@@ -921,37 +919,10 @@ static string _describe_weapon(const item_def &item, bool verbose)
         default:
             break;
         }
-
-        const char* lunge_text = "\n\n<blue>Martial Mastery:</blue> It can be used to strike with "
-                                    "a powerful lunging attack, by moving towards an enemy.";
-        const char* whirlwind_text = "\n\n<blue>Martial Mastery:</blue> It can be used to hit nearby enemies "
-                                     "in a whirlwind, by moving around them.";
-        const char* pole_vault_text = "\n\n<blue>Martial Mastery:</blue> It can be used to pole vault by moving"
-                                      " against a solid obstacle, performing an airborne attack to enemies near your"
-                                      " landing spot.";
-
-        if (have_passive(passive_t::martial_weapon_mastery))
-            switch (item_attack_skill(item))
-            {
-            case SK_POLEARMS:
-            case SK_STAVES:
-                description += pole_vault_text;
-                break;
-            case SK_AXES:
-            case SK_SHORT_BLADES:
-                description += lunge_text;
-                break;
-            case SK_MACES_FLAILS:
-            case SK_LONG_BLADES:
-                description += whirlwind_text;
-                break;
-            default:
-                break;
-            }
     }
 
     // ident known & no brand but still glowing
-    // TODO: deduplicate this with the code in itemname.cc
+    // TODO: deduplicate this with the code in item-name.cc
     const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
                            && !item_ident(item, ISFLAG_KNOW_PLUSES);
 
@@ -1922,59 +1893,6 @@ string get_item_description(const item_def &item, bool verbose,
         }
         break;
 
-    case OBJ_RODS:
-        if (verbose)
-        {
-            description <<
-                "\nIt uses its own magic reservoir for casting spells, and "
-                "recharges automatically according to the recharging "
-                "rate.";
-
-            const int max_charges = MAX_ROD_CHARGE;
-            const int max_recharge_rate = MAX_WPN_ENCHANT;
-            if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            {
-                const int num_charges = item.charge_cap / ROD_CHARGE_MULT;
-                if (max_charges > num_charges)
-                {
-                    description << "\nIt can currently hold " << num_charges
-                                << " charges. It can be magically "
-                                << "recharged to contain up to "
-                                << max_charges << " charges.";
-                }
-                else
-                    description << "\nIts capacity can be increased no further.";
-
-                const int recharge_rate = item.rod_plus;
-                if (recharge_rate < max_recharge_rate)
-                {
-                    description << "\nIts current recharge rate is "
-                                << (recharge_rate >= 0 ? "+" : "")
-                                << recharge_rate << ". It can be magically "
-                                << "recharged up to +" << max_recharge_rate
-                                << ".";
-                }
-                else
-                    description << "\nIts recharge rate is at maximum.";
-            }
-            else
-            {
-                description << "\nIt can have at most " << max_charges
-                            << " charges and +" << max_recharge_rate
-                            << " recharge rate.";
-            }
-        }
-        else if (Options.dump_book_spells)
-        {
-            desc += describe_item_spells(item);
-            if (desc.empty())
-                need_extra_line = false;
-            else
-                description << desc;
-        }
-
-        break;
-
     case OBJ_STAVES:
         {
             string stats = "\n";
@@ -1988,9 +1906,23 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck(item);
+        if (item.sub_type == MISC_ZIGGURAT && you.zigs_completed)
+        {
+            const int zigs = you.zigs_completed;
+            description << "\n\nIt is surrounded by a "
+                        << (zigs >= 27 ? "blinding " : // just plain silly
+                            zigs >=  9 ? "dazzling " :
+                            zigs >=  3 ? "bright " :
+                                         "gentle ")
+                        << "glow.";
+        }
         if (is_xp_evoker(item))
         {
-            description << "\n\nOnce activated, this device "
+            description << "\n\nOnce "
+                        << (item.sub_type == MISC_LIGHTNING_ROD
+                            ? "all charges have been used"
+                            : "activated")
+                        << ", this device "
                         << (!item_is_horn_of_geryon(item) ?
                            "and all other devices of its kind " : "")
                         << "will be rendered temporarily inert. However, "
@@ -2028,6 +1960,9 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_ORBS:
     case OBJ_GOLD:
     case OBJ_RUNES:
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
+#endif
         // No extra processing needed for these item types.
         break;
 
@@ -2241,7 +2176,6 @@ static vector<command_type> _allowed_actions(const item_def& item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
     case OBJ_MISCELLANY:
         if (!item_is_equipped(item))
         {
@@ -2435,7 +2369,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
 
     if (fixup_desc)
         fixup_desc(desc);
-    // spellbooks & rods have their own UIs, so we don't currently support the
+    // spellbooks have their own UIs, so we don't currently support the
     // inscribe/drop/etc prompt UI for them.
     // ...it would be nice if we did, though.
     if (item.has_spells())
@@ -2506,36 +2440,33 @@ void inscribe_item(item_def &item)
  * in their current condition.
  *
  * @param spell     The spell in question.
- * @param rod       Whether the spell is being cast from a rod (not a book).
  */
-static string _player_spell_stats(const spell_type spell, bool rod)
+static string _player_spell_stats(const spell_type spell)
 {
     string description;
     description += make_stringf("\nLevel: %d", spell_difficulty(spell));
-    if (!rod)
+
+    const string schools = spell_schools_string(spell);
+    description +=
+        make_stringf("        School%s: %s",
+                     schools.find("/") != string::npos ? "s" : "",
+                     schools.c_str());
+
+    if (!crawl_state.need_save
+        || (get_spell_flags(spell) & SPFLAG_MONSTER))
     {
-        const string schools = spell_schools_string(spell);
-        description +=
-            make_stringf("        School%s: %s",
-                         schools.find("/") != string::npos ? "s" : "",
-                         schools.c_str());
-
-        if (!crawl_state.need_save
-            || (get_spell_flags(spell) & SPFLAG_MONSTER))
-        {
-            return description; // all other info is player-dependent
-        }
-
-        const string failure = failure_rate_to_string(raw_spell_fail(spell));
-        description += make_stringf("        Fail: %s", failure.c_str());
+        return description; // all other info is player-dependent
     }
 
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
+    description += make_stringf("        Fail: %s", failure.c_str());
+
     description += "\n\nPower : ";
-    description += spell_power_string(spell, rod);
+    description += spell_power_string(spell);
     description += "\nRange : ";
-    description += spell_range_string(spell, rod);
+    description += spell_range_string(spell);
     description += "\nHunger: ";
-    description += spell_hunger_string(spell, rod);
+    description += spell_hunger_string(spell);
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";
@@ -2617,9 +2548,8 @@ int hex_chance(const spell_type spell, const int hd)
  * reason...)
  *
  * @param spell     The spell in question.
- * @param item      The object the spell is in; may be null.
  */
-static string _player_spell_desc(spell_type spell, const item_def* item)
+static string _player_spell_desc(spell_type spell)
 {
     if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
         return ""; // all info is player-dependent
@@ -2635,8 +2565,7 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                         + " summoned by this spell.\n";
     }
 
-    const bool rod = item && item->base_type == OBJ_RODS;
-    if (god_hates_spell(spell, you.religion, rod))
+    if (god_hates_spell(spell, you.religion))
     {
         description += uppercase_first(god_name(you.religion))
                        + " frowns upon the use of this spell.\n";
@@ -2655,10 +2584,10 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        + desc_cannot_memorise_reason(spell)
                        + "\n";
     }
-    else if (spell_is_useless(spell, true, false, rod))
+    else if (spell_is_useless(spell, true, false))
     {
         description += "\nThis spell will have no effect right now because "
-                       + spell_uselessness_reason(spell, true, false, rod)
+                       + spell_uselessness_reason(spell, true, false)
                        + "\n";
     }
 
@@ -2670,15 +2599,12 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
  * Describe a spell, as cast by the player.
  *
  * @param spell     The spell in question.
- * @param item      The object the spell is in; may be null.
  * @return          Information about the spell; does not include the title or
  *                  db description, but does include level, range, etc.
  */
-string player_spell_desc(spell_type spell, const item_def* item)
+string player_spell_desc(spell_type spell)
 {
-    const bool rod = item && item->base_type == OBJ_RODS;
-    return _player_spell_stats(spell, rod)
-           + _player_spell_desc(spell, item);
+    return _player_spell_stats(spell) + _player_spell_desc(spell);
 }
 
 /**
@@ -2690,7 +2616,7 @@ string player_spell_desc(spell_type spell, const item_def* item)
  * @param mon_owner     If this spell is being examined from a monster's
  *                      description, 'spell' is that monster. Else, null.
  * @param description   Set to the description & details of the spell.
- * @param item          The item (book or rod) holding the spell, if any.
+ * @param item          The item holding the spell, if any.
  * @return              Whether you can memorise the spell.
  */
 static bool _get_spell_description(const spell_type spell,
@@ -2745,7 +2671,7 @@ static bool _get_spell_description(const spell_type spell,
 
     }
     else
-        description += player_spell_desc(spell, item);
+        description += player_spell_desc(spell);
 
     // Don't allow memorization after death.
     // (In the post-game inventory screen.)
@@ -2788,7 +2714,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
  * @param spelled   The spell in question.
  * @param mon_owner If this spell is being examined from a monster's
  *                  description, 'mon_owner' is that monster. Else, null.
- * @param item      The item (book or rod) holding the spell, if any.
+ * @param item      The item holding the spell, if any.
  */
 void describe_spell(spell_type spelled, const monster_info *mon_owner,
                     const item_def* item)
@@ -2827,7 +2753,6 @@ static string _describe_draconian(const monster_info& mi)
         switch (subsp)
         {
         case MONS_BLACK_DRACONIAN:      description += "black ";   break;
-        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
         case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
         case MONS_GREEN_DRACONIAN:      description += "green ";   break;
         case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
@@ -2846,9 +2771,6 @@ static string _describe_draconian(const monster_info& mi)
     {
     case MONS_BLACK_DRACONIAN:
         description += "Sparks flare out of its mouth and nostrils.";
-        break;
-    case MONS_MOTTLED_DRACONIAN:
-        description += "Liquid flames drip from its mouth.";
         break;
     case MONS_YELLOW_DRACONIAN:
         description += "Acidic fumes swirl around it.";
@@ -3006,29 +2928,20 @@ static const char* _flavour_range_desc(attack_flavour flavour)
     return "";
 }
 
-/**
- * Provide a short, and-prefixed flavour description of the given attack
- * flavour, if any.
- *
- * @param flavour  E.g. AF_COLD, AF_PLAIN.
- * @param HD       The hit dice of the monster using the flavour.
- * @return         "" if AF_PLAIN; else " <desc>", e.g.
- *                 " and, after penetrating armour, deal up to 27 cold damage".
- */
-static string _flavour_effect(attack_flavour flavour, int HD)
+static string _flavour_base_desc(attack_flavour flavour)
 {
     static const map<attack_flavour, string> base_descs = {
         { AF_ACID,              "deal extra acid damage"},
         { AF_BLINK,             "blink itself" },
-        { AF_COLD,              "deal up to %d cold damage" },
+        { AF_COLD,              "deal up to %d extra cold damage" },
         { AF_CONFUSE,           "cause confusion" },
         { AF_DRAIN_STR,         "drain strength" },
         { AF_DRAIN_INT,         "drain intelligence" },
         { AF_DRAIN_DEX,         "drain dexterity" },
         { AF_DRAIN_STAT,        "drain strength, intelligence or dexterity" },
         { AF_DRAIN_XP,          "drain skills" },
-        { AF_ELEC,              "deal up to %d electric damage" },
-        { AF_FIRE,              "deal up to %d fire damage" },
+        { AF_ELEC,              "deal up to %d extra electric damage" },
+        { AF_FIRE,              "deal up to %d extra fire damage" },
         { AF_HUNGER,            "cause hunger" },
         { AF_MUTATE,            "cause mutations" },
         { AF_POISON_PARALYSE,   "poison and cause paralysis or slowing" },
@@ -3042,7 +2955,7 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_STICKY_FLAME,      "apply sticky flame" },
         { AF_CHAOTIC,           "cause unpredictable effects" },
         { AF_STEAL,             "steal items" },
-        { AF_CRUSH,             "ongoing constriction" },
+        { AF_CRUSH,             "begin ongoing constriction" },
         { AF_REACH,             "" },
         { AF_HOLY,              "deal extra damage to undead and demons" },
         { AF_ANTIMAGIC,         "drain magic" },
@@ -3052,8 +2965,7 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_PURE_FIRE,         "" },
         { AF_DRAIN_SPEED,       "drain speed" },
         { AF_VULN,              "reduce resistance to hostile enchantments" },
-        { AF_SHADOWSTAB,        "deal extra damage from the shadows" },
-                                // XXX: ^ 'if invisible' could be clearer?
+        { AF_SHADOWSTAB,        "deal increased damage when unseen" },
         { AF_DROWN,             "deal drowning damage" },
         { AF_CORRODE,           "cause corrosion" },
         { AF_SCARAB,            "drain speed and drain health" },
@@ -3065,21 +2977,36 @@ static string _flavour_effect(attack_flavour flavour, int HD)
         { AF_PLAIN,             "" },
     };
 
-    const string* base_desc = map_find(base_descs, flavour);
-    ASSERT(base_desc);
-    if (base_desc->empty())
-        return *base_desc;
+    const string* desc = map_find(base_descs, flavour);
+    ASSERT(desc);
+    return *desc;
+}
+
+/**
+ * Provide a short, and-prefixed flavour description of the given attack
+ * flavour, if any.
+ *
+ * @param flavour  E.g. AF_COLD, AF_PLAIN.
+ * @param HD       The hit dice of the monster using the flavour.
+ * @return         "" if AF_PLAIN; else " <desc>", e.g.
+ *                 " to deal up to 27 extra cold damage if any damage is dealt".
+ */
+static string _flavour_effect(attack_flavour flavour, int HD)
+{
+    const string base_desc = _flavour_base_desc(flavour);
+    if (base_desc.empty())
+        return base_desc;
 
     const int flavour_dam = flavour_damage(flavour, HD, false);
-    const string flavour_desc = make_stringf(base_desc->c_str(), flavour_dam);
+    const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
     if (!flavour_triggers_damageless(flavour)
         && flavour != AF_KITE && flavour != AF_SWOOP)
     {
-        return " and, after penetrating armour, " + flavour_desc;
+        return " to " + flavour_desc + " if any damage is dealt";
     }
 
-    return " and " + flavour_desc;
+    return " to " + flavour_desc;
 }
 
 struct mon_attack_info
@@ -3146,7 +3073,8 @@ static string _monster_attacks_description(const monster_info& mi)
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
         const string weapon_note
-            = info.weapon ? make_stringf(" (plus %s damage)",
+            = info.weapon ? make_stringf(" plus %s %s",
+                                         mi.pronoun(PRONOUN_POSSESSIVE),
                                          info.weapon->name(DESC_PLAIN).c_str())
                           : "";
         const string count_desc =
@@ -3158,22 +3086,31 @@ static string _monster_attacks_description(const monster_info& mi)
         if (attack.flavour == AF_PURE_FIRE)
         {
             attack_descs.push_back(
-                make_stringf("%s to deal up to %d fire damage",
+                make_stringf("%s for up to %d fire damage",
                              mon_attack_name(attack.type).c_str(),
                              flavour_damage(attack.flavour, mi.hd, false)));
             continue;
         }
 
+        // Damage is listed in parentheses for attacks with a flavour
+        // description, but not for plain attacks.
+        bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
+        const string damage_desc =
+            make_stringf("%sfor up to %d damage%s%s%s",
+                         has_flavour ? "(" : "",
+                         attack.damage,
+                         attack_count.second > 1 ? " each" : "",
+                         weapon_note.c_str(),
+                         has_flavour ? ")" : "");
+
         attack_descs.push_back(
-            make_stringf("%s%s%s%s for up to %d damage%s%s%s",
+            make_stringf("%s%s%s%s %s%s",
                          _special_flavour_prefix(attack.flavour),
                          mon_attack_name(attack.type).c_str(),
                          _flavour_range_desc(attack.flavour),
                          count_desc.c_str(),
-                         attack.damage,
-                         weapon_note.c_str(),
-                         _flavour_effect(attack.flavour, mi.hd).c_str(),
-                         attack_count.second > 1 ? " each" : ""));
+                         damage_desc.c_str(),
+                         _flavour_effect(attack.flavour, mi.hd).c_str()));
     }
 
 
@@ -3354,12 +3291,15 @@ static string _monster_stat_description(const monster_info& mi)
 {
     ostringstream result;
 
-    _describe_monster_hp(mi, result);
-    _describe_monster_ac(mi, result);
-    _describe_monster_ev(mi, result);
-    _describe_monster_mr(mi, result);
+    if (!mons_is_sensed(mi.type))
+    {
+        _describe_monster_hp(mi, result);
+        _describe_monster_ac(mi, result);
+        _describe_monster_ev(mi, result);
+        _describe_monster_mr(mi, result);
 
-    result << "\n";
+        result << "\n";
+    }
 
     resists_t resist = mi.resists();
 
@@ -3671,16 +3611,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_WHITE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
     case MONS_PALE_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_CALLER:
+    case MONS_DRACONIAN_STORMCALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {

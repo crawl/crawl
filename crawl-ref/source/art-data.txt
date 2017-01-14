@@ -92,9 +92,11 @@
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
 # * poison:   Grants poison resistance.
+# * rcorr:    Grants corrosion resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
 # * rmsl:     Passively repels missiles.
+# * rmut:     Grants mutation resistance.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * skip_ego: The item's ego is skipped in its inscription, to be replaced by
@@ -308,7 +310,7 @@ BOOL:    evil, nogen
 # Reserved for the Enchantress.
 ENUM:    FAERIE
 NAME:    faerie dragon scales
-OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_ACID_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
@@ -1114,6 +1116,7 @@ BASE_DAM: +35
 BASE_DELAY: +13
 BRAND:    SPWPN_VORPAL
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    HIGH_COUNCIL
 NAME:    hat of the High Council
 INSCRIP: Wiz-
@@ -1124,6 +1127,7 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -1
+BOOL:    nogen
 
 NAME:     arc blade
 INSCRIP:  discharge,
@@ -1229,7 +1233,7 @@ PLUS:    +2
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
-INSCRIP: NoDeviceHeal
+INSCRIP: NoPotionHeal
 REGEN:   7
 
 ENUM:    KRYIAS
@@ -1239,7 +1243,7 @@ PLUS:    +7
 COLOUR:  LIGHTCYAN
 TILE:    urand_kryias
 TILE_EQ: kryias
-INSCRIP: DeviceHeal*2
+INSCRIP: PotionHeal*2
 COLD:    1
 
 ENUM:    FROSTBITE
@@ -1281,6 +1285,95 @@ OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
 TILE:     urand_cekugob
 BOOL:     inv, nogen
+
+# IJC divine weapons with random enchant level. Only ever spawned by IJC.
+ENUM: DIVINE_DEER_HORN_KNIFE
+NAME: divine deer horn knife
+OBJ:  OBJ_WEAPONS/WPN_QUICK_BLADE
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_ELECTROCUTION
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_deer_horn_knife
+TILE_EQ: divine_deer_horn_knife
+BOOL: nogen
+
+ENUM: DIVINE_GUAN_DAO
+NAME: divine guan dao
+OBJ:  OBJ_WEAPONS/WPN_BARDICHE
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_ELECTROCUTION
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_guan_dao
+TILE_EQ: divine_guan_dao
+BOOL: nogen
+
+ENUM: DIVINE_YUE
+NAME: divine yue
+OBJ: OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_FLAMING
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_yue
+TILE_EQ: divine_yue
+BOOL: nogen
+
+ENUM: DIVINE_CHANG_DAO
+NAME: divine chang dao
+OBJ:  OBJ_WEAPONS/WPN_GREAT_SWORD
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_SPEED
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_chang_dao
+TILE_EQ: divine_chang_dao
+BOOL: nogen
+
+ENUM: DIVINE_MONK_SPADE
+NAME: divine monk's spade
+OBJ: OBJ_WEAPONS/WPN_LAJATANG
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_SPEED
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_monks_spade
+TILE_EQ: divine_monks_spade
+BOOL: nogen
+
+ENUM: DIVINE_METEOR_HAMMER
+NAME: divine meteor hammer
+OBJ: OBJ_WEAPONS/WPN_DIRE_FLAIL
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_FLAMING
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_meteor_hammer
+TILE_EQ: divine_meteor_hammer
+BOOL: nogen
+
+ENUM: DIVINE_HOOK_BLADE
+NAME: divine hook blade
+OBJ:  OBJ_WEAPONS/WPN_DOUBLE_SWORD
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_SPEED
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_hook_blade
+TILE_EQ: divine_hook_blade
+BOOL: nogen
+
+ENUM: DIVINE_CHUI
+NAME: divine chui
+OBJ: OBJ_WEAPONS/WPN_EVENINGSTAR
+INSCRIP: momentum+,
+PLUS: +9
+BRAND: SPWPN_FLAMING
+COLOUR: ETC_IEOH_JIAN
+TILE: spwpn_divine_chui
+TILE_EQ: divine_chui
+BOOL: nogen
 
 # This entry must always be last.
 ENUM:   DUMMY2

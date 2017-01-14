@@ -16,10 +16,10 @@
 #include "describe.h"
 #include "english.h"
 #include "food.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -685,7 +685,7 @@ static string _god_penance_message(god_type which_god)
         (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
         (which_god_penance >= 20)   ? "%s is annoyed with you." :
         (which_god_penance >=  5)   ? "%s well remembers your sins." :
-        (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
+        (which_god_penance >   0)   ? "%s is almost ready to forgive your sins." :
         (you.worshipped[which_god]) ? "%s is ambivalent towards you."
                                     : "%s is neutral towards you.";
 
@@ -734,13 +734,15 @@ static void _describe_god_powers(god_type which_god)
         {
             switch (elyvilon_lifesaving())
             {
-                case 1:
+                case lifesaving_chance::sometimes:
                     when = ", especially when called upon";
                     prot_chance += 100 - 3000/piety;
                     break;
-                case 2:
+                case lifesaving_chance::always:
                     when = ", and always does so when called upon";
                     prot_chance = 100;
+                    break;
+                default:
                     break;
             }
         }
@@ -775,6 +777,8 @@ static void _describe_god_powers(god_type which_god)
     case GOD_SHINING_ONE:
     {
         have_any = true;
+        cprintf("%s prevents you from stabbing unaware foes.\n",
+                uppercase_first(god_name(which_god)).c_str());
         if (piety < piety_breakpoint(1))
             textcolour(DARKGREY);
         else

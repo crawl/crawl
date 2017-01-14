@@ -62,7 +62,7 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
-class targetter;
+class targeter;
 class Delay;
 
 int player_stealth();
@@ -151,7 +151,7 @@ public:
 
     // PC's symbol (usually @) and colour.
     monster_type symbol;
-    transformation_type form;
+    transformation form;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
@@ -403,7 +403,7 @@ public:
     bool redraw_status_lights;
 
     colour_t flash_colour;
-    targetter *flash_where;
+    targeter *flash_where;
 
     int time_taken;
 
@@ -496,7 +496,6 @@ public:
     bool tengu_flight() const;
     int heads() const override;
 
-    int spell_hp_cost() const;
     bool spellcasting_unholy() const;
 
     // Dealing with beholders. Implemented in behold.cc.
@@ -507,7 +506,6 @@ public:
     monster* get_any_beholder() const;
     void remove_beholder(const monster& mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
     bool possible_beholder(const monster* mon) const;
@@ -520,7 +518,6 @@ public:
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
@@ -695,7 +692,6 @@ public:
 
     mon_holy_type holiness(bool temp = true) const override;
     bool undead_or_demonic() const override;
-    bool holy_wrath_susceptible() const override;
     bool is_holy(bool spells = true) const override;
     bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
@@ -711,7 +707,7 @@ public:
     int res_rotting(bool temp = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
-    int res_holy_energy(const actor *) const override;
+    int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     bool res_wind() const override;
@@ -803,8 +799,8 @@ public:
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
-    bool can_device_heal();
-    int scale_device_healing(int healing_amount);
+    bool can_potion_heal();
+    int scale_potion_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
@@ -1064,7 +1060,7 @@ void set_mp(int new_amount);
 bool player_regenerates_hp();
 bool player_regenerates_mp();
 
-void print_device_heal_message();
+void print_potion_heal_message();
 
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 

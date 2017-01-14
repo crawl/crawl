@@ -393,7 +393,7 @@ fencer's gloves
 
 A pair of gloves made of white silk. They have a natural affinity with the
 riposte, allowing their wielder to retaliate against some missed attacks with
-any weapon, or to retaliate against all attacks when using a long blade.
+any weapon, or to retaliate against most attacks when using a long blade.
 %%%%
 cloak of Starlight
 
@@ -540,6 +540,7 @@ A large, iron-shod maul specialised for dealing massively powerful blows. Such
 power comes at a price: the maul's head is so heavy it takes a great length of
 time to lift it up for another swing.
 %%%%
+# TAG_MAJOR_VERSION == 34
 hat of the High Council
 
 A relic of some ancient wizarding war. Centuries later, it still crackles with
@@ -615,15 +616,8 @@ Kryia's mail coat
 A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
-draughts that kept her alive.
-
-{{
-    if you.race() == "Deep Dwarf" then
-        return "Sadly, it cannot assist deep dwarves' healing."
-    else
-        return "The wearer of this garment will have significantly increased healing from devices."
-    end
-}}
+draughts that kept her alive. The wearer of this garment will have
+significantly increased healing from potions.
 %%%%
 frozen axe "Frostbite"
 
@@ -647,3 +641,52 @@ amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
 %%%%
+divine deer horn knife
+
+An exotic, crescent-shaped blade belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine guan dao
+
+An exotic, heavy polearm belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine hook blade
+
+An exotic, hook-shaped sword belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine chang dao
+
+An exotic, massive sword belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine chui
+
+An exotic mace, consisting of a threatening serpent head biting a steel sphere,
+belonging to the Ieoh Jian Council's finest collection of weapons. It enhances 
+the wielder's momentum, causing the first attack made after moving to deal 
+increased damage.
+%%%%
+divine meteor hammer
+
+An exotic weapon consisting of two steel weights connected by a chain, 
+belonging to the Ieoh Jian Council's finest collection of weapons. It enhances 
+the wielder's momentum, causing the first attack made after moving to deal 
+increased damage.
+%%%%
+divine monk's spade
+
+An exotic bladed staff belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.
+%%%%
+divine yue
+
+An exotic, lumbering axe belonging to the Ieoh Jian Council's finest
+collection of weapons. It enhances the wielder's momentum, causing the first
+attack made after moving to deal increased damage.

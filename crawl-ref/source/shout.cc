@@ -20,7 +20,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "hints.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -1357,11 +1357,6 @@ static void _actor_apply_noise(actor *act,
     {
         const int loudness = div_rand_round(noise_intensity_millis, 1000);
         act->check_awaken(loudness);
-        if (!(noise.noise_flags & NF_SIREN))
-        {
-            you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
-            you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
-        }
     }
     else
     {

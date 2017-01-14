@@ -14,8 +14,8 @@
 #include "files.h"
 #include "food.h"
 #include "ghost.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
@@ -42,7 +42,7 @@
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0);
 
 // NOTE: If one of the following asserts fail, it's because the corresponding
-// enum in itemprop-enum.h was modified, but rltiles/dc-item.txt was not
+// enum in item-prop-enum.h was modified, but rltiles/dc-item.txt was not
 // modified in parallel.
 
 // These brands start with "normal" which there's no tile for, so subtract 1.
@@ -56,7 +56,9 @@ COMPILE_CHECK(NUM_JEWELLERY - AMU_FIRST_AMULET
               == TILE_AMU_ID_LAST - TILE_AMU_ID_FIRST + 1);
 COMPILE_CHECK(NUM_SCROLLS == TILE_SCR_ID_LAST - TILE_SCR_ID_FIRST + 1);
 COMPILE_CHECK(NUM_STAVES == TILE_STAFF_ID_LAST - TILE_STAFF_ID_FIRST + 1);
+#if TAG_MAJOR_VERSION == 34
 COMPILE_CHECK(NUM_RODS == TILE_ROD_ID_LAST - TILE_ROD_ID_FIRST + 1);
+#endif
 COMPILE_CHECK(NUM_WANDS == TILE_WAND_ID_LAST - TILE_WAND_ID_FIRST + 1);
 COMPILE_CHECK(NUM_POTIONS == TILE_POT_ID_LAST - TILE_POT_ID_FIRST + 1);
 
@@ -442,7 +444,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ALTAR_IEOH_JIAN:
         return TILE_DNGN_ALTAR_IEOH_JIAN;
     case DNGN_ALTAR_ECUMENICAL:
-        return TILE_DNGN_UNKNOWN_ALTAR;
+        return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -1187,7 +1189,7 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
     // specific per-species zombies - use to override genuses
     static const map<monster_type, tileidx_t> species_tiles = {
         { MONS_JUGGERNAUT,              TILEP_MONS_ZOMBIE_JUGGERNAUT },
-        { MONS_MOTTLED_DRAGON,          TILEP_MONS_ZOMBIE_DRAKE },
+        { MONS_ACID_DRAGON,             TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_STEAM_DRAGON,            TILEP_MONS_ZOMBIE_DRAKE },
         { MONS_JACKAL,                  TILEP_MONS_ZOMBIE_JACKAL },
         { MONS_ADDER,                   TILEP_MONS_ZOMBIE_ADDER },
@@ -1811,7 +1813,6 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_BOUND_SOUL;
     if (mons.is(MB_INFESTATION))
         ch |= TILE_FLAG_INFESTED;
-
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
     else if (mons.attitude == ATT_GOOD_NEUTRAL)
@@ -1828,7 +1829,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_STAB;
     }
     // Should petrify show the '?' symbol?
-    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING) && !mons.is(MB_PETRIFIED))
+    else if (mons.is(MB_DISTRACTED) && !mons.is(MB_PETRIFYING))
         ch |= TILE_FLAG_MAY_STAB;
 
     mon_dam_level_type damage_level = mons.dam;
@@ -2173,8 +2174,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_STEAM_DRAGON_ARMOUR:
         return TILE_ARM_STEAM_DRAGON_ARMOUR;
 
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-        return TILE_ARM_MOTTLED_DRAGON_ARMOUR;
+    case ARM_ACID_DRAGON_ARMOUR:
+        return TILE_ARM_ACID_DRAGON_ARMOUR;
 
     case ARM_QUICKSILVER_DRAGON_ARMOUR:
         return TILE_ARM_QUICKSILVER_DRAGON_ARMOUR;
@@ -2404,8 +2405,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_CRYSTAL_BALL_OF_ENERGY:
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
 
-    case MISC_DISC_OF_STORMS:
-        return TILE_MISC_DISC_OF_STORMS;
+    case MISC_LIGHTNING_ROD:
+        return evoker_is_charged(item) ? TILE_MISC_LIGHTNING_ROD
+                                       : TILE_MISC_LIGHTNING_ROD_INERT;
 
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
@@ -2544,8 +2546,10 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_STAFF_OFFSET
                + (subtype_rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
         return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
+#endif
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -2835,12 +2839,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         break;
 
     case BROWN:
-        if (bolt.name == "rocky blast"
-            || bolt.name == "large rocky blast"
-            || bolt.name == "blast of sand")
-        {
+        if (bolt.name == "blast of sand")
             return TILE_BOLT_SANDBLAST;
-        }
         break;
 
     case GREEN:
@@ -3185,16 +3185,16 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BREATHE_LIGHTNING;
     case ABIL_BREATHE_POWER:
         return TILEG_ABILITY_BREATHE_ENERGY;
-    case ABIL_BREATHE_STICKY_FLAME:
-        return TILEG_ABILITY_BREATHE_STICKY_FLAME;
     case ABIL_BREATHE_STEAM:
         return TILEG_ABILITY_BREATHE_STEAM;
     case ABIL_BREATHE_MEPHITIC:
         return TILEG_ABILITY_BREATHE_MEPHITIC;
-    case ABIL_SPIT_ACID:
-        return TILEG_ABILITY_SPIT_ACID;
+    case ABIL_BREATHE_ACID:
+        return TILEG_ABILITY_BREATHE_ACID;
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
+    case ABIL_HOP:
+        return TILEG_ABILITY_HOP;
 
     // Others
     case ABIL_DELAYED_FIREBALL:
@@ -3219,8 +3219,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_TRAN_BAT:
         return TILEG_ABILITY_BAT_FORM;
     // Deep Dwarves
-    case ABIL_RECHARGING:
-        return TILEG_ABILITY_RECHARGE;
+    case ABIL_HEAL_WOUNDS:
+        return TILEG_ABILITY_HEAL_WOUNDS;
     // Formicids
     case ABIL_DIG:
         return TILEG_ABILITY_DIG;
@@ -3497,14 +3497,13 @@ tileidx_t tileidx_ability(const ability_type ability)
          return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
 
      // Ieoh Jian
-    case ABIL_IEOH_JIAN_PROJECT_WEAPON:
-    case ABIL_IEOH_JIAN_DRAGONFLY: // For the time being.
-        return TILEG_ABILITY_IEOH_JIAN_PROJECT_WEAPON;
-
-    case ABIL_IEOH_JIAN_RECALL_WEAPON:
-        return TILEG_ABILITY_IEOH_JIAN_RECALL_WEAPON;
+    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
+        return TILEG_ABILITY_IEOH_JIAN_STEEL_DRAGONFLY;
+    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
+        return TILEG_ABILITY_IEOH_JIAN_END_STEEL_DRAGONFLY;
+    case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
+        return TILEG_ABILITY_IEOH_JIAN_HEAVENLY_BLADE;
   
-
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
         return TILEG_ABILITY_RENOUNCE_RELIGION;
@@ -3573,11 +3572,13 @@ tileidx_t tileidx_known_brand(const item_def &item)
             break;
         }
     }
+#if TAG_MAJOR_VERSION == 34
     else if (item.base_type == OBJ_RODS)
     {
         // Technically not a brand, but still handled here
         return TILE_ROD_ID_FIRST + item.sub_type;
     }
+#endif
     return 0;
 }
 

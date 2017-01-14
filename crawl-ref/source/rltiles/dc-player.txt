@@ -23,6 +23,10 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+frog_m BARACHIAN
+frog_f
+frog2_f
+frog2_m
 gnome_f
 gnome_m
 halfling_m HALFLING
@@ -89,8 +93,6 @@ draconian_gray_f DRACONIAN_GREY
 draconian_gray_m
 draconian_green_f DRACONIAN_GREEN
 draconian_green_m
-draconian_mottled_f DRACONIAN_MOTTLED
-draconian_mottled_m
 draconian_pale_f DRACONIAN_PALE
 draconian_pale_m
 draconian_purple_f DRACONIAN_PURPLE
@@ -418,7 +420,7 @@ armour_mummy ARMOUR_MUMMY
 ##cloth_u_sail SAILOR
 dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
-dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_yellow DRAGONARM_YELLOW
 dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
@@ -502,6 +504,9 @@ spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
+divine_chang_dao DIVINE_CHANG_DAO
+divine_hook_blade DIVINE_HOOK_BLADE
+divine_deer_horn_knife DIVINE_DEER_HORN_KNIFE
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -514,6 +519,8 @@ dark_maul DARK_MAUL
 spellbinder SPELLBINDER
 firestarter FIRESTARTER
 majin MAJIN
+divine_meteor_hammer DIVINE_METEOR_HAMMER
+divine_chui DIVINE_CHUI
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
@@ -522,18 +529,21 @@ finisher FINISHER
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
 wyrmbane WYRMBANE
 crystal_spear CRYSTAL_SPEAR
+divine_guan_dao DIVINE_GUAN_DAO
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
 dispater DISPATER
 olgreb OLGREB
 order ORDER
+divine_monks_spade DIVINE_MONKS_SPADE
 ## axes
 axe_trog AXE_TROG
 arga ARGA
 demon_axe DEMON_AXE
 axe_of_woe AXE_OF_WOE
 frostbite FROSTBITE
+divine_yue DIVINE_YUE
 ## launchers
 blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
@@ -687,6 +697,7 @@ staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
 ## rods
+# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -752,7 +763,6 @@ bottle BOTTLE
 box BOX
 crystal CRYSTAL
 deck DECK
-disc DISC
 horn HORN
 lantern LANTERN
 orb ORB
@@ -1131,7 +1141,6 @@ drcwing_black BLACK
 drcwing_yellow YELLOW
 drcwing_grey GREY
 drcwing_green GREEN
-drcwing_mottled MOTTLED
 drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
@@ -1145,7 +1154,6 @@ drchead_black BLACK
 drchead_yellow YELLOW
 drchead_grey GREY
 drchead_green GREEN
-drchead_mottled MOTTLED
 drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED

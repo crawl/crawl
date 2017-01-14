@@ -1,3 +1,79 @@
+Stone Soup 0.20 (up to 0.20-a0-350-ga83eecc)
+--------------------------------------------
+
+Highlights
+----------
+* Have you taken the survey yet?
+* http://crawl.develz.org/wordpress/dcss-player-survey
+* :)
+
+Branches, Environment
+---------------------
+* The Slime treasure vault's walls disappear partially on their master's death.
+
+Character
+---------
+* Ogre aptitudes have been adjusted, trading M&F skill for spells.
+* Mummies' spellcasting aptitude has been increased to +2, from -1.
+* Deep dwarves have an innate ability that heals them and has a chance of
+  permanently reducing their MP. Their old recharge ability has been removed.
+* Loud noises no longer break mesmerization or fear.
+* Various 'badform' (e.g. wispform) special cases have been removed.
+* Removed:
+  - High elves.
+  - Mottled draconians.
+
+Gods
+----
+* The Shining One:
+  - Cleansing Flame is more effective against non-evil enemies.
+  - All bonus-damage 'stab' attacks are prevented.
+  - Poison is no longer forbidden.
+* Nemelex's wrath reclaims all decks, rather than sabotaging them.
+
+Interface
+---------
+* Monsters' melee attacks are now included in their descriptions.
+* The player's odds of succeeding with melee confusion attacks is displayed.
+
+Items
+-----
+* Wand and miscellaneous acquirement merged into 'evocations'.
+* Removed:
+  - Wands of heal wounds, haste, and teleportation.
+  - The Hat of the High Council.
+
+Monsters
+--------
+* Draconian callers -> stormcallers, which Smite, Summon Drakes, and Upheaval.
+* Mottled dragons -> acid dragons.
+* Two-headed ogres are significantly stronger.
+* The 'draining' effect once again lowers monsters' MR.
+* Various unique monsters give better rewards for defeating them.
+* Removed:
+  - Mottled draconians.
+  - Draconian zealots.
+  - Hill giants.
+
+Spells
+------
+* Confusing Touch is less effective, especially against high-HD enemies.
+* Poisonous Cloud is level 5 (was level 6).
+* Sandblast consumes stones directly from inventory, but no longer functions
+  without ammo, and cannot consume large rocks.
+
+
+Stone Soup 0.19.1 (20161123)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Demon tridents are two-handed for small races, as intended.
+* Allow Dith shadow to attack diagonally and to reach.
+* Many other bug-fixes and cleanups.
+
+
 Stone Soup 0.19 (20161031)
 --------------------------------------------
 

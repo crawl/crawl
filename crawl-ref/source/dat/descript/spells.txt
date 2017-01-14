@@ -3,6 +3,11 @@ Abjuration spell
 
 Reduces the remaining duration of any nearby hostile summoned creatures.
 %%%%
+Acid Splash spell
+
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
+%%%%
 Agony spell
 
 Cuts the resilience of a target creature in half. This damage is never directly
@@ -58,9 +63,7 @@ Avatar Song spell
 
 Sings a powerfully haunting song; in addition to making nearby victims
 unwilling to move away from the singer, it calls forth drowned souls from
-any nearby bodies of deep water. Extremely loud noises, such as those produced
-by lightning or scrolls of noise, will disrupt the effect, as will leaving the
-caster's line of sight.
+any nearby bodies of deep water.
 %%%%
 Awaken Earth spell
 
@@ -184,12 +187,6 @@ Bolt of Fire spell
 
 Fires a penetrating bolt of flames.
 %%%%
-Bolt of Inaccuracy spell
-
-Fires a penetrating bolt of incandescent energy which inflicts enormous damage
-upon any creature it strikes. Unfortunately, it is very difficult to aim and
-rarely hits anything. Pity, that.
-%%%%
 Bolt of Magma spell
 
 Fires a penetrating bolt of molten rock. A portion of its damage bypasses
@@ -247,9 +244,9 @@ morale. They have no noticeable effect.
 %%%%
 Cause Fear spell
 
-Causes fear in those near to the caster. Adventurers suffering from this effect
-find that extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt it, as will leaving the caster's line of sight.
+Causes fear in those near to the caster, causing those affected to be unable to
+approach the caster, and to sometimes fail to attack them in melee. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Chain of Chaos spell
 
@@ -268,8 +265,7 @@ Exhales a large cloud of fumes filled with the very essence of chaos.
 %%%%
 Chilling Breath spell
 
-Exhales a blast of frost that bypasses any armour the target may have, and
-may knock back airborne targets.
+Exhales a blast of frost that may knock back airborne targets.
 %%%%
 Cigotuvi's Embrace spell
 
@@ -539,7 +535,7 @@ Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Energy Bolt spell
 
-Fires a beam of highly destructive energy. It can blow rock into pieces.
+Fires a bolt of highly destructive energy.
 %%%%
 Enslavement spell
 
@@ -562,11 +558,6 @@ Excruciating Wounds spell
 
 Temporarily infuses the weapon held by the caster with the essence of pain
 itself. It will not affect artefact weapons.
-%%%%
-Explosive Bolt spell
-
-Fires a bolt containing fiery energy; on piercing a target, it lets loose an
-explosion that harms nearby creatures as well.
 %%%%
 Flay spell
 
@@ -699,13 +690,14 @@ Hurl Damnation spell
 Holy Breath spell
 
 Exhales a large cloud of blessed flame, shining with the glory of the good
-gods. These flames are especially dangerous to evil creatures, and have no
-effect on holy creatures.
+gods. These flames are especially dangerous to undead and demonic creatures,
+and have no effect on holy creatures.
 %%%%
 Holy Flames spell
 
 Traps an enemy in a ring of blessed flame. These flames are especially
-dangerous to evil creatures, and have no effect on holy creatures.
+dangerous to undead and demonic creatures, and have no effect on holy
+creatures.
 %%%%
 Hydra Form spell
 
@@ -893,9 +885,8 @@ Conjures up a short-lived cloud of noxious fumes, which may cause confusion.
 %%%%
 Mesmerise spell
 
-Makes a targeted creature unwilling to move away from the caster. Extremely
-loud noises, such as those produced by lightning or scrolls of noise, will
-disrupt the effect, as will leaving the caster's line of sight.
+Makes a targeted creature unwilling to move away from the caster. Leaving the
+caster's line of sight will end the effect.
 %%%%
 Metabolic Englaciation spell
 
@@ -946,6 +937,10 @@ damage and Dispel Undead, and an inability to consume potions.
 Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
+%%%%
+Poisonous Vapours spell
+
+Turns the air around the target poisonous.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -1060,7 +1055,7 @@ each missile. Teleported projectiles have their accuracy greatly increased.
 %%%%
 Primal Wave spell
 
-Conjures a great wave of water that may knock back the target, and creates a
+Conjures a torrent of water that may knock back the target, and creates a
 pool of shallow water for a short duration.
 %%%%
 Quicksilver Bolt spell
@@ -1105,16 +1100,15 @@ However, it also makes them much more susceptible to cold.
 %%%%
 Sandblast spell
 
-Creates a short blast of high-velocity particles. It has increased power and
-range when the caster provides some source (by wielding a stone), but will
-still have some effect with no source wielded. Its damage is strongly reduced
-by armour.
+Consumes a stone to create a short blast of high-velocity rock shards. Its
+damage is strongly reduced by armour.
 %%%%
 Sap Magic spell
 
 Taints a targeted creature's ability to cast spells. Casting a spell while
 afflicted with this condition may cause the target to lose control over their
-magic, progressively hindering their chances of success as more spells are cast.
+magic, progressively hindering their chances of success as more spells are
+cast.
 %%%%
 Scattershot spell
 
@@ -1131,7 +1125,7 @@ Searing Ray spell
 Fires a continuous ray of arcane energy from the caster's hands. Though
 initially mild, so long as the caster maintains focus upon the spell and
 supplies it with magical power (by waiting in place and not taking any other
-actions), the ray will grow in strength until it becomes a surging beam able to
+actions), the ray will grow in strength until it becomes a surging bolt able to
 tear clean through the ranks of the caster's foes.
 %%%%
 Searing Breath spell
@@ -1202,8 +1196,7 @@ Simulacra cannot leave the level they were created on.
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the
-singer. Extremely loud noises, such as those produced by lightning or scrolls
-of noise, will disrupt the effect, as will leaving the caster's line of sight.
+singer. Leaving the caster's line of sight will end the effect.
 %%%%
 Sleep spell
 
@@ -1414,8 +1407,8 @@ but the strongest demons may eventually turn against their summoner regardless.
 Summon Guardian Golem spell
 
 Summons a protective golem. It redirects the injuries of its allies (but not
-the caster) to itself, though it risks overheating after absorbing significant
-amounts of damage. It will gain more health at high power.
+the caster) to itself. When sufficiently damaged, it may fill with an inner
+flame, causing it to explode if destroyed. It gains more health at high power.
 %%%%
 Summon Hell Beast spell
 
@@ -1574,6 +1567,11 @@ Causes nearby corpses to begin crawling together, merging into horrible
 agglomerations of flesh. More and larger corpses result in more powerful
 creations.
 %%%%
+Upheaval spell
+
+Calls on the forces of nature to blast a small area with magma, ice, wind,
+or rubble.
+%%%%
 Vampiric Draining spell
 
 Steals the life of an adjacent living creature and grants it to the caster.
@@ -1605,11 +1603,6 @@ Waterstrike spell
 
 Causes the water around or under the target to violently swirl, dealing damage.
 It can affect targets standing in or flying above water.
-%%%%
-Weave Shadows spell
-
-Weaves a creature from shadows and threads of Abyssal matter. More powerful
-creatures are summoned with higher power.
 %%%%
 Wind Blast spell
 

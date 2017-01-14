@@ -386,7 +386,7 @@ KMONS:    1 = orc knight / orc warrior
 KMONS:    2 = orc sorcerer / orc wizard
 KMONS:    3 = orc high priest / orc priest
 KMONS:    4 = ogre / two-headed ogre / ogre mage w:7
-KMONS:    5 = troll / deep troll / hill giant / ogre mage w:7 / stone giant w:1 /\
+KMONS:    5 = troll / deep troll / ogre mage w:7 / stone giant w:1 /\
               ettin w:1 / iron troll w:1
 KMONS:    6 = orc knight / orc sorcerer / orc high priest / orc w:25
 KMONS:    7 = orc knight / orc high priest
@@ -447,7 +447,7 @@ KITEM:    d = any armour level:27 ident:all /\
           fire dragon scales plus:1 not_cursed ident:all /\
           ice dragon scales plus:1 not_cursed ident:all /\
           swamp dragon scales plus:0 not_cursed ident:all /\
-          mottled dragon scales plus:0 not_cursed ident:all /\
+          acid dragon scales plus:0 not_cursed ident:all /\
           storm dragon scales plus:0 not_cursed ident:all w:5 /\
           shadow dragon scales plus:0 not_cursed ident:all w:5 /\
           large shield plus:1 not_cursed ident:all /\
@@ -633,7 +633,7 @@ KITEM:    d = plate armour plus:5 not_cursed ident:all /\
     fire dragon scales plus:3 not_cursed ident:all /\
     ice dragon scales plus:3 not_cursed ident:all /\
     swamp dragon scales plus:1 not_cursed ident:all /\
-    mottled dragon scales plus:1 not_cursed ident:all /\
+    acid dragon scales plus:1 not_cursed ident:all /\
     storm dragon scales plus:2 not_cursed ident:all w:5 /\
     shadow dragon scales plus:2 not_cursed ident:all w:5 /\
     gold dragon scales plus:0 not_cursed ident:all /\
@@ -767,7 +767,7 @@ NAME:     d_27
 TAGS:     d_27
 KMONS:    1 = place:Depths:$
 KMONS:    2 = fire dragon w:20 / ice dragon w:20 / storm dragon /\
-              bone dragon / golden dragon / mottled dragon
+              bone dragon / golden dragon / acid dragon
 KMONS:    3 = base draconian
 SUBST:    2 = 2223, 3 = 3332
 : line_setup(_G)
@@ -850,8 +850,8 @@ KITEM:    d = plate armour plus:6 not_cursed ident:all /\
     ice dragon scales plus:6 not_cursed ident:all /\
     swamp dragon scales plus:4 not_cursed ident:all /\
     swamp dragon scales plus:2 good_item not_cursed ident:all /\
-    mottled dragon scales plus:4 not_cursed ident:all /\
-    mottled dragon scales plus:2 good_item not_cursed ident:all /\
+    acid dragon scales plus:4 not_cursed ident:all /\
+    acid dragon scales plus:2 good_item not_cursed ident:all /\
     quicksilver dragon scales not_cursed ident:all w:5 /\
     storm dragon scales plus:5 not_cursed ident:all w:5 /\
     storm dragon scales plus:3 good_item not_cursed ident:all w:5 /\
@@ -873,7 +873,7 @@ KITEM:    d = plate armour plus:6 not_cursed ident:all /\
     large shield plus:3 good_item not_cursed ident:all /\
     naga barding plus:4 not_cursed ident:all w:5 /\
     centaur barding plus:4 not_cursed ident:all w:5
-KITEM:     e = wand of hasting charges:5 ident:all
+KITEM:     e = potion of haste q:5 ident:all
 KITEM:     f = crystal ball of energy ident:all
 : line_setup(_G)
 : general_item_setup(_G)

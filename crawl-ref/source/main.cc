@@ -75,30 +75,30 @@
 #include "fineff.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "luaterp.h"
-#include "lookup_help.h"
+#include "lookup-help.h"
 #include "macro.h"
 #include "makeitem.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -146,7 +146,7 @@
  #include "tiledef-dngn.h"
  #include "tilepick.h"
 #endif
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -733,7 +733,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('D'): wizard_edit_durations(); break;
 
     case 'e': wizard_set_hunger_state(); break;
-    // case 'E': break;
+    case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
     case 'f': wizard_quick_fsim(); break;
@@ -761,13 +761,13 @@ static void _do_wizard_command(int wiz_command)
         break;
     // case CONTROL('J'): break;
 
-    case 'k':
+    case 'k': wizard_set_xl(true); break;
+    case 'K':
         if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
         break;
-    // case 'K': break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
     case 'l': wizard_set_xl(); break;
@@ -810,10 +810,9 @@ static void _do_wizard_command(int wiz_command)
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
-    case 'v': wizard_value_item(); break;
+    case 'v': wizard_recharge_evokers(); break;
     case 'V': wizard_toggle_xray_vision(); break;
-    case 'E': wizard_freeze_time(); break;
-    // case CONTROL('V'): break;
+    case CONTROL('V'): wizard_value_item(); break;
 
     case 'w': wizard_god_mollify(); break;
     case 'W': wizard_god_wrath(); break;
@@ -877,11 +876,11 @@ static void _do_wizard_command(int wiz_command)
     case '\'': wizard_list_items(); break;
     case '"': debug_list_monsters(); break;
 
-    case ',': wizard_place_stairs(true); break;
-    // case '>': break; // XXX do not use, menu command
-
-    case '.': wizard_place_stairs(false); break;
+    case ',': wizard_place_stairs(false); break;
     // case '<': break; // XXX do not use, menu command
+
+    case '.': wizard_place_stairs(true); break;
+    // case '>': break; // XXX do not use, menu command
 
     // case '/': break;
 
@@ -1049,18 +1048,17 @@ static void _start_running(int dir, int mode)
     if (!i_feel_safe(true))
         return;
 
-    coord_def next_pos = you.pos() + Compass[dir];
-    for (adjacent_iterator ai(next_pos); ai; ++ai)
+    const coord_def next_pos = you.pos() + Compass[dir];
+
+    if (!have_passive(passive_t::slime_wall_immune)
+        && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
+        && count_adjacent_slime_walls(next_pos))
     {
-        if (env.grid(*ai) == DNGN_SLIMY_WALL
-            && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
-        {
-            if (dir == RDIR_REST)
-                mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
-            else
-                mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
-            return;
-        }
+        if (dir == RDIR_REST)
+            mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
+        else
+            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
+        return;
     }
 
     you.running.initialise(dir, mode);
@@ -2692,6 +2690,24 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
+static bool _cancel_barbed_move()
+{
+    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+    {
+        string prompt = "The barbs in your skin will harm you if you move."
+                        " Continue?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return true;
+        }
+
+        you.props[BARBS_MOVE_KEY] = true;
+    }
+
+    return false;
+}
+
 static bool _cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -2825,7 +2841,7 @@ static void _swing_at_target(coord_def move)
 
         if (!cleave_targets.empty())
         {
-            targetter_cleave hitfunc(&you, target);
+            targeter_cleave hitfunc(&you, target);
             if (stop_attack_prompt(hitfunc, "attack"))
                 return;
 
@@ -3110,16 +3126,8 @@ static void _swap_places(monster* mons, const coord_def &loc)
         }
     }
 
-    if (mons->type == MONS_IEOH_JIAN_WEAPON)
-    {
-        mons->move_to_pos(loc, true, true);
-        mons->ieoh_jian_swap_weapon_with_player();
-    }
-    else
-    {
-        mpr("You swap places.");
-        mons->move_to_pos(loc, true, true);
-    }
+    mons->move_to_pos(loc, true, true);
+    mpr("You swap places.");
 
     return;
 }
@@ -3177,6 +3185,9 @@ static void _move_player(coord_def move)
         if (_cancel_confused_move(false))
             return;
 
+        if (_cancel_barbed_move())
+            return;
+
         if (!one_chance_in(3))
         {
             move.x = random2(3) - 1;
@@ -3215,9 +3226,10 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-    bool can_pole_vault = ieoh_jian_can_pole_vault(targ);
+    bool can_wall_jump = ieoh_jian_can_wall_jump(targ);
+    bool did_wall_jump = false;
     // You can't walk out of bounds!
-    if (!in_bounds(targ) && !can_pole_vault)
+    if (!in_bounds(targ) && !can_wall_jump)
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -3227,11 +3239,11 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    const string walkverb = you.airborne()              ? "fly"
-                          : you.form == TRAN_SPIDER     ? "crawl"
+    const string walkverb = you.airborne()                     ? "fly"
+                          : you.form == transformation::spider ? "crawl"
                           : (you.species == SP_NAGA
-                             && form_keeps_mutations()) ? "slither"
-                                                        : "walk";
+                             && form_keeps_mutations())        ? "slither"
+                                                               : "walk";
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -3347,7 +3359,7 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
-    else if (you.form == TRAN_FUNGUS && moving && !you.confused())
+    else if (you.form == transformation::fungus && moving && !you.confused())
     {
         if (you.made_nervous_by(targ))
         {
@@ -3358,7 +3370,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && (targ_pass || can_pole_vault) && moving && !beholder && !fmonger)
+    if (!attacking && (targ_pass || can_wall_jump) && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -3376,19 +3388,10 @@ static void _move_player(coord_def move)
             return;
         }
 
-        if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
-        {
-            string prompt = "The barbs in your skin will harm you if you move."
-                            " Continue?";
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                you.turn_is_over = false;
-                return;
-            }
-
-            you.props[BARBS_MOVE_KEY] = true;
-        }
+        // If confused, we've already been prompted (in case of stumbling into
+        // a monster and attacking instead).
+        if (!you.confused() && _cancel_barbed_move())
+            return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
@@ -3445,13 +3448,16 @@ static void _move_player(coord_def move)
         // Don't trigger traps when confusion causes no move.
         if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
-        else if (can_pole_vault)
+        else if (can_wall_jump)
         {
-            mprf("You bounce against the obstacle and pole vault!");
-            auto pole_vault_direction = (you.pos() - targ).sgn();
-            auto pole_vault_landing_spot = (you.pos() + pole_vault_direction + pole_vault_direction);
-            move_player_to_grid(pole_vault_landing_spot, false);
-            ieoh_jian_pole_vault_effects();
+            did_wall_jump = true;
+            auto wall_jump_direction = (you.pos() - targ).sgn();
+            auto wall_jump_landing_spot = (you.pos() + wall_jump_direction + wall_jump_direction);
+            targ_monst = monster_at(wall_jump_landing_spot);
+            if (targ_monst)
+                _swap_places(targ_monst, you.pos());
+            move_player_to_grid(wall_jump_landing_spot, false);
+            ieoh_jian_wall_jump_effects(initial_position);
         }
 
         // Now it is safe to apply the swappee's location effects. Doing
@@ -3485,6 +3491,9 @@ static void _move_player(coord_def move)
                                  div_round_up(100, you.running.travel_speed));
         }
 
+        if (you.duration[DUR_NO_HOP])
+            you.duration[DUR_NO_HOP] += you.time_taken;
+
         move.reset();
         you.turn_is_over = true;
         request_autopickup();
@@ -3512,7 +3521,7 @@ static void _move_player(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking && !can_pole_vault)
+    else if (!targ_pass && !attacking && !can_wall_jump)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -3529,14 +3538,14 @@ static void _move_player(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking && !can_pole_vault)
+    else if (beholder && !attacking && !can_wall_jump)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking && !can_pole_vault)
+    else if (fmonger && !attacking && !can_wall_jump)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
@@ -3558,10 +3567,9 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    // Ieoh Jian's lunge and whirlwind.
-    if (have_passive(passive_t::martial_weapon_mastery) && !attacking)
-        ieoh_jian_perform_martial_attacks(initial_position);
-
+    // Ieoh Jian's lunge and whirlwind, as well as weapon swapping on move.
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && !did_wall_jump)
+        ieoh_jian_trigger_martial_arts(initial_position);
 }
 
 static int _get_num_and_char_keyfun(int &ch)

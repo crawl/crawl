@@ -31,7 +31,7 @@ end
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
     e.depth("Zot, !Zot:$")
-    e.kmons("D = mottled dragon / fire dragon w:25 / ice dragon w:25 /\
+    e.kmons("D = acid dragon / fire dragon w:25 / ice dragon w:25 /\
                storm dragon w:20 / shadow dragon w:20 / golden dragon /\
                iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
                lindwurm w:2 / rime drake w:2 / death drake w:2 /\
@@ -232,7 +232,7 @@ MONS:   grey draconian, wyvern
 : end
 # medium: 3, 4
 : if crawl.coinflip() then
-MONS:   mottled draconian, mottled dragon
+MONS:   yellow draconian, acid dragon
 : else
 MONS:   green draconian, swamp dragon
 : end
@@ -294,7 +294,7 @@ FTILE:  -12O = floor_hall
 SUBST:  - = .
 KMONS:  O = nonbase draconian
 : zot_entry_setup(_G)
-MONS:   draconian zealot / draconian caller
+MONS:   draconian stormcaller
 MAP
 xxxxxxxxxxxx@xxxxxxxxxxxx
 xxx........---........xxx
@@ -658,7 +658,7 @@ SUBST:  1 = 1 .:5
 SUBST:  1 = 1 3
 MONS:   troll / deep troll / iron troll / ogre / two-headed ogre
 MONS:   moth of wrath
-MONS:   hill giant / stone giant / fire giant / frost giant / ettin / \
+MONS:   stone giant / fire giant / frost giant / ettin / \
         w:5 efreet / w:3 titan
 SUBST:  } = }:80 >, ) = ):80 >
 MAP
@@ -764,7 +764,7 @@ NAME:   lemuel_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
+MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -790,7 +790,7 @@ NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
+MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -851,7 +851,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   orb of fire
 MONS:   fire elemental
-MONS:   red draconian / weight:2 mottled draconian
+MONS:   red draconian
 MONS:   any nonbase red draconian
 MONS:   efreet
 SUBST:  1=122, 3=322
@@ -931,7 +931,7 @@ MARKER: X = lua:fog_machine { cloud_type="steam", \
             size = 2, walk_dist = 3, spread_rate= 10 }
 KMONS: M = patrolling red draconian att:neutral / \
       patrolling red draconian scorcher att:neutral w:2 / \
-      patrolling red draconian caller att:neutral w:2 / \
+      patrolling red draconian stormcaller att:neutral w:2 / \
       patrolling red draconian shifter att:neutral w:2 / \
       patrolling red draconian annihilator att:neutral w:2 / \
       patrolling red draconian knight att:neutral w:2 / \
@@ -964,7 +964,7 @@ TAGS:    no_rotate
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
-ITEM:    disc of storms, fan of gales, staff of air, book of the sky
+ITEM:    lightning rod, fan of gales, staff of air, book of the sky
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
 KMONS:   F = shard shrike
@@ -1084,8 +1084,7 @@ KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos . sling bullet / \
              guardian mummy ; randart fustibalus . sling bullet / \
              guardian mummy ; randart longbow . arrow / \
              guardian mummy ; randart arbalest . bolt
-KMONS:   5 = guardian mummy ; rod of shadows | rod of destruction | \
-             wand of draining | wand of lightning | scroll of summoning w:20
+KMONS:   5 = guardian mummy ; wand of lightning | scroll of summoning
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
              randart chain mail | randart robe . scroll of summoning
 KMONS:   2468 = killer klown
@@ -1644,7 +1643,7 @@ NAME: nicolae_zot_draconian_monastery
 DEPTH: Zot, !Zot:$
 ORIENT: float
 TAGS: no_trap_gen no_monster_gen no_item_gen
-MONS: draconian monk / base draconian w:15, patrolling draconian zealot, patrolling draconian knight
+MONS: draconian monk / base draconian w:15, patrolling draconian stormcaller, patrolling draconian knight
 MONS: patrolling draconian scorcher
 SHUFFLE: ]}), rybgmq, DZF
 MARKER: + = lua:restrict_door()
@@ -2079,8 +2078,7 @@ DEPTH: Zot, !Zot:$
 ORIENT: float
 # The competitors:
 {{
-  local teams = { "black", "yellow", "green", "purple", "red", "white",
-                  "mottled" }
+  local teams = { "black", "yellow", "green", "purple", "red", "white", }
 
   local team1num = crawl.random2(#teams) + 1
   local team1 = teams[team1num]
@@ -2420,7 +2418,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  zZ = ball lightning
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
-ITEM:   lightning rod ident:type / disc of storms, book of the sky
+ITEM:   lightning rod, book of the sky
 ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         double sword ego:electrocution good_item ident:type w:5 / \
         executioner's axe ego:electrocution good_item ident:type w:5 / \
@@ -2433,9 +2431,8 @@ ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         trident ego:electrocution good_item ident:type / \
         quarterstaff ego:electrocution good_item ident:type
 ITEM:   scroll of blinking q:1 / scroll of blinking q:2 / \
-        scroll of teleportation q:1 / scroll of teleportation q:2 / \
-        any scroll good_item / staff of energy ident:type / \
-        wand of lightning ident:type / wand of teleportation ident:type
+        scroll of teleportation q:3 w:30 / any scroll good_item / \
+        staff of energy ident:type / wand of lightning ident:type
 KFEAT:  yz = w
 KFEAT:  YZ" = W
 KFEAT:  # = iron_grate

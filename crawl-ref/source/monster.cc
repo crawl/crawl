@@ -20,7 +20,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "english.h"
@@ -29,15 +29,15 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -55,6 +55,7 @@
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "rot.h"
 #include "skills.h"
@@ -481,7 +482,7 @@ item_def *monster::melee_weapon() const
     const bool secondary_is_melee = second_weapon
                                     && is_melee_weapon(*second_weapon);
     if (primary_is_melee && secondary_is_melee)
-        return coinflip() ? first_weapon : second_weapon;
+        return random_choose(first_weapon, second_weapon);
     if (primary_is_melee)
         return first_weapon;
     if (secondary_is_melee)
@@ -642,11 +643,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
         {
             return false;
         }
-
-        // Monsters that are gifts/worshippers of TSO won't use poisoned
-        // weapons.
-        if (god == GOD_SHINING_ONE && is_poisoned_item(item))
-            return false;
     }
 
     return true;
@@ -785,21 +781,13 @@ bool monster::can_use_missile(const item_def &item) const
 bool monster::likes_wand(const item_def &item) const
 {
     ASSERT(item.base_type == OBJ_WANDS);
-    switch (item.sub_type)
-    {
-        case WAND_TELEPORTATION:
-        case WAND_HEAL_WOUNDS:
-        case WAND_HASTING:
-            return true; // goodwands
-        default:
-            // kind of a hack
-            // assumptions:
-            // bad wands are value 16, so won't be used past hd 4
-            // mediocre wands are value 8; won't be used past hd 8
-            // other good wands are value 5, won't be used past hd 10
-            // better implementations welcome
-            return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
-    }
+    // kind of a hack
+    // assumptions:
+    // bad wands are value 16, so won't be used past hd 4
+    // mediocre wands are value 8; won't be used past hd 8
+    // other good wands are value 5, won't be used past hd 10
+    // better implementations welcome
+    return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
 }
 
 void monster::equip_weapon(item_def &item, bool msg)
@@ -931,7 +919,6 @@ void monster::equip(item_def &item, bool msg)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
         equip_weapon(item, msg);
         break;
 
@@ -1514,11 +1501,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                     new_wpn_better = true;
             }
 
-            if (item.base_type == OBJ_RODS)
-                new_wpn_better = true; // rods are good.
-
-            if (new_wpn_better && !weap->cursed()
-                && weap->base_type != OBJ_RODS) // rods are good
+            if (new_wpn_better && !weap->cursed())
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
@@ -1648,12 +1631,11 @@ static int _get_monster_armour_value(const monster *mon,
 {
     // Each resistance/property counts as much as 1 point of AC.
     // Steam has been excluded because of its general uselessness.
-    // Well, the same's true for sticky flame but... (jpeg)
     int value = item.armour_rating()
               + get_armour_res_fire(item, true)
               + get_armour_res_cold(item, true)
               + get_armour_res_elec(item, true)
-              + get_armour_res_sticky_flame(item);
+              + get_armour_res_corr(item);
 
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
@@ -1913,22 +1895,6 @@ bool monster::pickup_weapon(item_def &item, bool msg, bool force)
     return false;
 }
 
-bool monster::pickup_rod(item_def &item, bool msg, bool force)
-{
-    // duplicating some relevant melee weapon pickup checks
-    if (!force &&
-            (!could_wield(item)
-            || type == MONS_DEEP_ELF_BLADEMASTER
-            || type == MONS_DEEP_ELF_MASTER_ARCHER)
-            || props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
-    {
-        // XXX: check to see whether this type of rod is evocable by monsters!
-        return false;
-    }
-
-    return pickup_melee_weapon(item, msg);
-}
-
 /**
  * Have a monster pick up a missile item.
  *
@@ -2142,8 +2108,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         return pickup_weapon(item, msg, force);
-    case OBJ_RODS:
-        return pickup_rod(item, msg, force);
     case OBJ_MISSILES:
         return pickup_missile(item, msg, force);
     // Other types can always be picked up
@@ -3608,11 +3572,6 @@ bool monster::undead_or_demonic() const
     return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
-bool monster::holy_wrath_susceptible() const
-{
-    return undead_or_demonic() && type != MONS_PROFANE_SERVITOR;
-}
-
 bool monster::is_holy(bool check_spells) const
 {
     return bool(holiness() & MH_HOLY);
@@ -3751,15 +3710,7 @@ int monster::how_chaotic(bool check_spells_god) const
 
 bool monster::is_unbreathing() const
 {
-    const mon_holy_type holi = holiness();
-
-    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
-        return true;
-
-    if (mons_is_slime(*this))
-        return true;
-
-    return mons_class_flag(type, M_UNBREATHING);
+    return mons_is_unbreathing(type);
 }
 
 bool monster::is_insubstantial() const
@@ -3962,9 +3913,7 @@ int monster::res_poison(bool temp) const
 
 bool monster::res_sticky_flame() const
 {
-    return is_insubstantial()
-           || wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR)
-           || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
+    return is_insubstantial() || get_mons_resist(*this, MR_RES_STICKY_FLAME) > 0;
 }
 
 int monster::res_rotting(bool /*temp*/) const
@@ -3995,24 +3944,19 @@ int monster::res_rotting(bool /*temp*/) const
     return min(3, res);
 }
 
-int monster::res_holy_energy(const actor *attacker) const
+int monster::res_holy_energy() const
 {
     if (type == MONS_PROFANE_SERVITOR)
-        return 1;
+        return 3;
 
     if (undead_or_demonic())
-        return -2;
-
-    if (evil())
         return -1;
 
     if (is_holy()
         || is_good_god(god)
-        || neutral()
-        || find_stab_type(attacker, *this) != STAB_NO_STAB
         || is_good_god(you.religion) && is_follower(*this))
     {
-        return 1;
+        return 3;
     }
 
     return 0;
@@ -4057,8 +4001,8 @@ int monster::res_negative_energy(bool intrinsic_only) const
 bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
-    return holy & (MH_UNDEAD | MH_DEMONIC |  MH_PLANT | MH_NONLIVING)
-            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
+    return holy & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING)
+           || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const
@@ -4676,7 +4620,8 @@ void monster::ghost_demon_init()
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     speed           = ghost->speed;
-    speed_increment = (type == MONS_IEOH_JIAN_WEAPON) ? (70 - you.time_taken) :  70;
+    speed_increment = 70;
+
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
 
@@ -5176,8 +5121,7 @@ bool monster::can_go_frenzy() const
         return false;
 
     // If we have no melee attack, going berserk is pointless.
-    const mon_attack_def attk = mons_attack_spec(*this, 0);
-    if (attk.type == AT_NONE || attk.damage == 0)
+    if (!mons_has_attacks(*this))
         return false;
 
     return true;
@@ -6485,141 +6429,6 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
 
     return &new_item;
 }
-
-/** Swaps weapons with the player, provided both weapons are safe to wield and unwield.
- *
- *  @returns false if the swap failed.
- */
-bool monster::ieoh_jian_swap_weapon_with_player(bool silent)
-{
-    bool penance;
-    if (!you.weapon() && !weapon())
-    {
-        return false;
-    }
-    else if (!you.weapon())
-    {
-        if (inv_count() == ENDOFPACK)
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "You have no room for %s!", weapon()->name(DESC_THE, false, true).c_str());
-            return false; // No room for new weapon
-        }
-
-        int item_index = inv[MSLOT_WEAPON];
-        item_def& pitem = mitm[item_index];
-
-        if (!::can_wield(&pitem, false, false, false, true, true) || needs_handle_warning(pitem, OPER_WIELD, penance))
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "You fail to grab %s!", weapon()->name(DESC_THE, false, true).c_str());
-            return false; // Player wouldn't be able to wield it safely.
-        }
-
-        if (!unequip(pitem, false))
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "%s zooms past your reach!", weapon()->name(DESC_THE, false, true).c_str());
-            return false; // Unsafe to unequip
-        }
-
-        item_def weapon_copy = pitem;
-
-        this->destroy_inventory();
-        // Ieoh Jian weapons can't live without a weapon (duh).
-        monster_die(this, KILL_RESET, NON_MONSTER, true);
-
-        int slot;
-        for (slot = 0; slot < ENDOFPACK; ++slot)
-            if (!you.inv[slot].defined())
-                break;
-
-        weapon_copy.pos = ITEM_IN_INVENTORY;
-        weapon_copy.link = slot;
-        weapon_copy.slot = index_to_letter(slot);
-        you.inv[slot] = weapon_copy;
-        you.equip[get_item_slot(weapon_copy)] = slot;
-    }
-    else if (!weapon())
-    {
-        int index = get_mitm_slot(10);
-        if (index == NON_ITEM)
-            return false; // No slot available.
-
-        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
-            return false; // Can't unwield your current weapon safely.
-        }
-
-        item_def &mons_weapon = mitm[index];
-
-        item_def& your_weapon = *(you.weapon());
-
-        mons_weapon = your_weapon;
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
-        mons_weapon.pos.reset();
-        mons_weapon.link = NON_ITEM;
-
-        unlink_item(index);
-        inv[MSLOT_WEAPON] = index;
-        mons_weapon.set_holding_monster(*this);
-
-        equip(mons_weapon, true);
-    }
-    else
-    {
-        // Proper swap case
-        if (needs_handle_warning(*(you.weapon()), OPER_WIELD, penance))
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "You can not unwield %s. Too dangerous!", you.weapon()->name(DESC_YOUR, false, true).c_str());
-            return false; // Can't unwield your current weapon safely.
-        }
-
-        if (is_ranged_weapon_type(you.weapon()->sub_type))
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "You can't let go of %s fast enough!", you.weapon()->name(DESC_YOUR, false, true).c_str());
-            return false;
-        }
-
-        if (!::can_wield(weapon(), false, false, false, true, true) || needs_handle_warning(*(weapon()), OPER_WIELD, penance))
-        {
-            if (!silent)
-                mprf(MSGCH_GOD, "You fail to grab %s!", weapon()->name(DESC_THE, false, true).c_str());
-            return false; // Player wouldn't be able to wield it safely.
-        }
-
-        auto your_weapon_copy = *(you.weapon());
-        *(you.weapon()) = *(weapon());
-        *(weapon()) = your_weapon_copy;
-        you.weapon()->pos  = weapon()->pos;
-        you.weapon()->slot = weapon()->slot;
-        you.weapon()->link = weapon()->link;
-        weapon()->set_holding_monster(*this);
-
-        // We need to reinitialize the ghost to inherit the qualities of the new weapon.
-        ghost->init_ieoh_jian_weapon(*(weapon()), you.skill(weapon_attack_skill(weapon()->sub_type), 4, false));
-    }
-
-    if (!silent)
-        mprf(MSGCH_GOD, "You grab %s from the air.", you.weapon()->name(DESC_THE, false, true).c_str());
-
-    if (you.weapon())
-    {
-        you.can_train.set(you.skill(weapon_attack_skill(you.weapon()->sub_type)));
-        update_can_train();
-    }
-
-    you.wield_change = true;
-    redraw_screen();
-
-    return true;
-}
-
 /** Disarm this monster, and preferably pull the weapon into your tile.
  *
  *  @returns a pointer to the weapon disarmed, or nullptr if unsuccessful.
@@ -6763,8 +6572,8 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis() const
 {
-    return (mons_genus(type) == MONS_FORMICID
-            || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID);
+    return mons_genus(type) == MONS_FORMICID
+           || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID;
 }
 
 bool monster::is_illusion() const
@@ -6887,6 +6696,7 @@ bool monster::angered_by_attacks() const
     return !has_ench(ENCH_INSANE)
             && !mons_is_avatar(type)
             && type != MONS_SPELLFORGED_SERVITOR
+            && type != MONS_IEOH_JIAN_WEAPON
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
 }

@@ -31,7 +31,7 @@
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"

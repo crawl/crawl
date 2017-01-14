@@ -304,8 +304,6 @@ public:
     void      steal_item_from_player();
     item_def* take_item(int steal_what, mon_inv_type mslot);
     item_def* disarm();
-    bool      ieoh_jian_swap_weapon_with_player(bool silent = false);
-
     bool      can_use_missile(const item_def &item) const;
     bool      likes_wand(const item_def &item) const;
 
@@ -355,7 +353,6 @@ public:
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
     bool undead_or_demonic() const override;
-    bool holy_wrath_susceptible() const override;
     bool is_holy(bool check_spells = true) const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;
@@ -372,7 +369,7 @@ public:
     int res_rotting(bool /*temp*/ = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
-    int res_holy_energy(const actor *) const override;
+    int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     int res_acid(bool calc_unid = true) const override;
@@ -571,7 +568,6 @@ private:
     bool pickup_launcher(item_def &launcher, bool msg, bool force = false);
     bool pickup_melee_weapon(item_def &item, bool msg);
     bool pickup_weapon(item_def &item, bool msg, bool force);
-    bool pickup_rod(item_def &item, bool msg, bool force);
     bool pickup_armour(item_def &item, bool msg, bool force);
     bool pickup_jewellery(item_def &item, bool msg, bool force);
     bool pickup_misc(item_def &item, bool msg, bool force);
@@ -605,6 +601,8 @@ private:
                               int &nvalid) const;
     bool search_spells(function<bool (spell_type)> func) const;
     bool is_cloud_safe(const coord_def &place) const;
+
+    bool ijc_swap(bool silent);
 };
 
 #endif

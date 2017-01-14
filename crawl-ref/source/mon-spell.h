@@ -632,10 +632,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_DRACONIAN_CALLER,
+    {  MST_DRACONIAN_STORMCALLER,
       {
-       { SPELL_SUMMON_DRAKES, 55, MON_SPELL_WIZARD },
-       { SPELL_SUMMON_DRAGON, 10, MON_SPELL_WIZARD },
+        { SPELL_SMITING, 20, MON_SPELL_PRIEST },
+        { SPELL_SUMMON_DRAKES, 20, MON_SPELL_PRIEST },
+        { SPELL_UPHEAVAL, 20, MON_SPELL_PRIEST },
       }
     },
 
@@ -646,15 +647,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_RANGE, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_ENCIRCLE, 15, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 15, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-      }
-    },
-
-    {  MST_DRACONIAN_ZEALOT,
-      {
-       { SPELL_CALL_DOWN_DAMNATION, 11, MON_SPELL_PRIEST },
-       { SPELL_SMITING, 11, MON_SPELL_PRIEST },
-       { SPELL_SUMMON_DEMON, 11, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 22, MON_SPELL_PRIEST },
       }
     },
 
@@ -844,9 +836,9 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_MOTTLED_DRAGON,
+    {  MST_ACID_DRAGON,
       {
-       { SPELL_STICKY_FLAME_RANGE, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
+       { SPELL_SPIT_ACID, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
                                         | MON_SPELL_NOISY },
       }
     },
@@ -1575,7 +1567,7 @@ static const mon_spellbook mspell_list[] =
     // ('8') Animate / statues.
     {  MST_USHABTI,
       {
-       { SPELL_DEATH_RATTLE, 57, MON_SPELL_MAGICAL },
+       { SPELL_DEATH_RATTLE, 36, MON_SPELL_MAGICAL },
        { SPELL_WARNING_CRY, 56, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
                                 | MON_SPELL_BREATH },
        { SPELL_DISPEL_UNDEAD, 44, MON_SPELL_MAGICAL },

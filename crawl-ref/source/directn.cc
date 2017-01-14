@@ -24,11 +24,12 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "english.h"
+#include "fight.h" // melee_confuse_chance
 #include "food.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -90,21 +91,21 @@ static bool _print_cloud_desc(const coord_def where);
 static bool _print_item_desc(const coord_def where);
 
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
-                                 targetter* hitfunc);
+                                 targeter* hitfunc);
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
-                          bool need_path, int range, targetter *hitfunc);
+                          bool need_path, int range, targeter *hitfunc);
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
-                               bool need_path, int range, targetter *hitfunc,
+                               bool need_path, int range, targeter *hitfunc,
                                aff_type mon_aff, aff_type allowed_self_aff);
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    bool need_path, int range,
-                                   targetter *hitfunc);
+                                   targeter *hitfunc);
 static bool _find_object(const coord_def& where, bool need_path, int range,
-                         targetter *hitfunc);
+                         targeter *hitfunc);
 
 typedef function<bool (const coord_def& where)> target_checker;
 static bool _find_square_wrapper(coord_def &mfp, int direction,
-                                 target_checker find_targ, targetter *hitfunc,
+                                 target_checker find_targ, targeter *hitfunc,
                                  LOSSelect los = LS_ANY);
 
 static int  _targeting_cmd_to_compass(command_type command);
@@ -480,7 +481,7 @@ static bool _mon_exposed(const monster* mon)
 }
 
 static bool _is_target_in_range(const coord_def& where, int range,
-                                targetter *hitfunc)
+                                targeter *hitfunc)
 {
     if (hitfunc)
         return hitfunc->valid_aim(where);
@@ -843,7 +844,7 @@ void do_look_around(const coord_def &whence)
 }
 
 
-range_view_annotator::range_view_annotator(targetter *range)
+range_view_annotator::range_view_annotator(targeter *range)
 {
     if (range && Options.darken_beyond_range)
     {
@@ -1137,7 +1138,9 @@ void direction_chooser::draw_beam_if_needed()
                     bcol = (*ri == target()) ? LIGHTCYAN : CYAN;
                 else
                     die("unhandled aff %d", aff);
-                _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
+
+                int mbcol = (*ri == target()) ? bcol : bcol | COLFLAG_REVERSE;
+                _draw_ray_glyph(*ri, bcol, '*', mbcol);
 #endif
             }
 #ifdef USE_TILE
@@ -1988,7 +1991,7 @@ bool direction_chooser::choose_direction()
     cursor_control ccon(!Options.use_fake_cursor);
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
-    targetter_smite legacy_range(&you, range, 0, 0, true);
+    targeter_smite legacy_range(&you, range, 0, 0, true);
     range_view_annotator rva(hitfunc ? hitfunc :
                              (range >= 0) ? &legacy_range : nullptr);
 
@@ -2216,7 +2219,7 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
 }
 
 static bool _want_target_monster(const monster *mon, targ_mode_type mode,
-                                 targetter* hitfunc)
+                                 targeter* hitfunc)
 {
     if (hitfunc && !hitfunc->affects_monster(monster_info(mon)))
         return false;
@@ -2261,7 +2264,7 @@ static bool _tobool(maybe_bool mb)
 #endif
 
 static bool _find_monster(const coord_def& where, targ_mode_type mode,
-                          bool need_path, int range, targetter *hitfunc)
+                          bool need_path, int range, targeter *hitfunc)
 {
 #ifdef CLUA_BINDINGS
     {
@@ -2303,7 +2306,7 @@ static bool _find_monster(const coord_def& where, targ_mode_type mode,
 
 static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    bool need_path, int range,
-                                   targetter *hitfunc)
+                                   targeter *hitfunc)
 {
 #ifdef CLUA_BINDINGS
     {
@@ -2327,7 +2330,7 @@ static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
 }
 
 static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
-                               bool need_path, int range, targetter *hitfunc,
+                               bool need_path, int range, targeter *hitfunc,
                                aff_type mon_aff, aff_type allowed_self_aff)
 {
     ASSERT(hitfunc);
@@ -2368,7 +2371,7 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
 }
 
 static bool _find_object(const coord_def& where, bool need_path, int range,
-                         targetter *hitfunc)
+                         targeter *hitfunc)
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
@@ -2440,7 +2443,7 @@ static int _next_los(int dir, int los, bool wrap)
 //
 //---------------------------------------------------------------
 static bool _find_square(coord_def &mfp, int direction,
-                         target_checker find_targ, targetter *hitfunc,
+                         target_checker find_targ, targeter *hitfunc,
                          bool wrap, int los)
 {
     int temp_xps = mfp.x;
@@ -2649,7 +2652,7 @@ static bool _find_square(coord_def &mfp, int direction,
 // Identical to _find_square, except that mfp is in grid coordinates
 // rather than view coordinates.
 static bool _find_square_wrapper(coord_def &mfp, int direction,
-                                 target_checker find_targ, targetter *hitfunc,
+                                 target_checker find_targ, targeter *hitfunc,
                                  LOSSelect los)
 {
     mfp = grid2view(mfp);
@@ -3011,6 +3014,13 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.emplace_back("mesmerising");
 
     _append_container(descs, _get_monster_behaviour_vector(mi));
+
+    if (you.duration[DUR_CONFUSING_TOUCH] && !you.weapon()
+        || you.form == transformation::fungus && !mons_is_unbreathing(mi.type))
+    {
+        descs.emplace_back(make_stringf("confuse odds on hit: %d%%",
+                                        melee_confuse_chance(mi.hd)));
+    }
 
     if (mi.attitude == ATT_FRIENDLY)
         descs.emplace_back("friendly");

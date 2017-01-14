@@ -12,19 +12,19 @@
 
 #include "cloud.h"
 #include "food.h"
-#include "godconduct.h"
-#include "godwrath.h" // reduce_xp_penance
+#include "god-conduct.h"
+#include "god-wrath.h" // reduce_xp_penance
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "item_use.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-use.h"
 #include "message.h"
 #include "mutation.h"
 #include "nearby-danger.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
-#include "skill_menu.h"
+#include "skill-menu.h"
 #include "spl-goditem.h"
 #include "stringutil.h"
 #include "transform.h"
@@ -89,7 +89,7 @@ public:
                 *reason = "You can't heal while in Death's door.";
             return false;
         }
-        if (!you.can_device_heal()
+        if (!you.can_potion_heal()
             || you.hp == you.hp_max && player_rotted() == 0)
         {
             if (reason)
@@ -99,25 +99,25 @@ public:
         return true;
     }
 
-    bool effect(bool=true, int=40, bool is_device = true) const override
+    bool effect(bool=true, int=40, bool is_potion = true) const override
     {
         const bool ddoor = you.duration[DUR_DEATHS_DOOR];
         bool unrotted = false;
 
-        if ((you.can_device_heal() || !is_device) && !ddoor || player_rotted())
+        if ((you.can_potion_heal() || !is_potion) && !ddoor || player_rotted())
         {
             int amount = 5 + random2(7);
-            if (is_device && !you.can_device_heal() && player_rotted())
+            if (is_potion && !you.can_potion_heal() && player_rotted())
             {
                 // Treat the effectiveness of rot removal as if the player
-                // had two levels of MUT_NO_DEVICE_HEAL
+                // had two levels of MUT_NO_POTION_HEAL
                 unrot_hp(div_rand_round(amount,3));
                 unrotted = true;
             }
             else
             {
-                if (is_device)
-                    amount = you.scale_device_healing(amount);
+                if (is_potion)
+                    amount = you.scale_potion_healing(amount);
                 if (player_rotted())
                     unrotted = true;
                 // Pay for rot right off the top.
@@ -128,14 +128,14 @@ public:
 
         if (ddoor)
             mpr("You feel queasy.");
-        else if (you.can_device_heal()
-                 || !is_device
+        else if (you.can_potion_heal()
+                 || !is_potion
                  || you.duration[DUR_POISONING]
                  || you.duration[DUR_CONF]
                  || unrotted)
         {
-            if (is_device)
-                print_device_heal_message();
+            if (is_potion)
+                print_potion_heal_message();
             canned_msg(MSG_GAIN_HEALTH);
         }
         else
@@ -163,7 +163,7 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (!you.can_device_heal())
+        if (!you.can_potion_heal())
         {
             if (reason)
                 *reason = "That would not heal you.";
@@ -178,33 +178,33 @@ public:
         if (you.hp == you.hp_max && player_rotted() == 0)
         {
             if (reason)
-                *reason = "Your health is already full!";
+                *reason = "Your health is already full.";
             return false;
         }
         return true;
     }
 
-    bool effect(bool=true, int=40, bool is_device = true) const override
+    bool effect(bool=true, int=40, bool is_potion = true) const override
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel queasy.");
             return false;
         }
-        if (!you.can_device_heal() && is_device)
+        if (!you.can_potion_heal() && is_potion)
         {
             mpr("That seemed strangely inert.");
             return false;
         }
 
         int amount = 10 + random2avg(28, 3);
-        if (is_device)
-            amount = you.scale_device_healing(amount);
+        if (is_potion)
+            amount = you.scale_potion_healing(amount);
         // Pay for rot right off the top.
         amount = unrot_hp(amount);
         inc_hp(amount);
-        if (is_device)
-            print_device_heal_message();
+        if (is_potion)
+            print_potion_heal_message();
         mpr("You feel much better.");
         return true;
     }
@@ -477,7 +477,7 @@ public:
         const int ambrosia_turns = 3 + random2(8);
         if (confuse_player(ambrosia_turns, false, true))
         {
-            print_device_heal_message();
+            print_potion_heal_message();
             mprf("You feel%s invigorated.",
                  you.duration[DUR_AMBROSIA] ? " more" : "");
             you.increase_duration(DUR_AMBROSIA, ambrosia_turns);
@@ -897,20 +897,23 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        return transform(0, TRAN_TREE, false, true, reason);
+        return transform(0, transformation::tree, false, true, reason);
     }
 
     bool effect(bool was_known = true, int=40, bool=true) const override
     {
-        return transform(30, TRAN_TREE, !was_known);
+        return transform(30, transformation::tree, !was_known);
     }
 
     bool quaff(bool was_known) const override
     {
         if (was_known)
         {
-            if (!check_known_quaff() || !check_form_stat_safety(TRAN_TREE))
+            if (!check_known_quaff()
+                || !check_form_stat_safety(transformation::tree))
+            {
                 return false;
+            }
 
             const cloud_type cloud = cloud_type_at(you.pos());
             if (is_damaging_cloud(cloud, false)
@@ -1333,12 +1336,10 @@ bool quaff_potion(item_def &potion)
  * @param effect        The type of potion in question.
  * @param pow           The power of the effect. (Only relevant for some pots.)
  * @param was_known     Whether the player should be held responsible.
- * @param is_device     Whether to apply the effects of MUT_NO_DEVICE_HEAL.
  */
-void potionlike_effect(potion_type effect, int pow, bool was_known,
-                       bool is_device)
+void potionlike_effect(potion_type effect, int pow, bool was_known)
 {
-    get_potion_effect(effect)->effect(was_known, pow, is_device);
+    get_potion_effect(effect)->effect(was_known, pow, false);
 }
 
 int _xom_factor(bool was_known)

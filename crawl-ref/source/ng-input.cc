@@ -8,7 +8,7 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
-#include "itemname.h" // make_name
+#include "item-name.h" // make_name
 #include "initfile.h"
 #include "libutil.h"
 #include "options.h"
@@ -54,6 +54,7 @@ void opening_screen()
     }
 
     msg += "\n";
+    msg += "<lightgreen>Take part in the player survey at http://crawl.develz.org</lightgreen>\n";
 
     formatted_string::parse_string(msg).display();
     textcolour(LIGHTGREY);

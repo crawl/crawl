@@ -355,7 +355,7 @@ ENDMAP
 #
 NAME:    minmay_the_grid_dragon_a
 TAGS:    the_grid unrand
-MONS:    steam dragon / mottled dragon
+MONS:    steam dragon / acid dragon
 MONS:    fire dragon / ice dragon / swamp dragon w:5
 MONS:    shadow dragon / iron dragon / golden dragon / storm dragon / \
          quicksilver dragon / pearl dragon
@@ -380,7 +380,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_dragon_b
 TAGS:    the_grid unrand
-MONS:    steam dragon / mottled dragon
+MONS:    steam dragon / acid dragon
 MONS:    fire dragon / ice dragon / swamp dragon w:5
 MONS:    shadow dragon / iron dragon / golden dragon / storm dragon / \
          quicksilver dragon / pearl dragon
@@ -409,8 +409,8 @@ MONS:   wizard / ogre mage / orc sorcerer w:5 / deep elf mage w:5
 MONS:   deep elf mage / orc sorcerer / kobold demonologist w:5
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any wand / any jewellery / any book / any magical staff
-ITEM:   any randart jewellery / any rod / any misc / \
-        any weapon good_item w:5 / any armour good_item w:5
+ITEM:   any randart jewellery / any misc / any weapon good_item w:5 / \
+        any armour good_item w:5
 : if you.absdepth() < 8 then
 NSUBST: d = 1:d / *:.
 : elseif you.absdepth() < 14 then
@@ -475,7 +475,7 @@ ENDMAP
 NAME:   minmay_the_grid_artifice
 TAGS:   the_grid unrand
 DEPTH:  D:13-, Depths, Elf
-ITEM:   any rod
+ITEM:   any misc
 MONS:   crystal guardian
 NSUBST: 1 = 2:1 / 4 = 1. / *:.
 MAP
@@ -701,7 +701,7 @@ NAME:    minmay_the_grid_zigzag_pyramid
 TAGS:    the_grid unrand
 SUBST:   9 = 9.
 MAP
-. .......
+.........
 .       .
 .....9 ..
 ..     ..

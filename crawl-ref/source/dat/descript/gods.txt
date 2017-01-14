@@ -73,8 +73,10 @@ Ieoh Jian Council
 The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
 after battling their way out of the afterlife. Disciples of the Council are
 taught to wield every weapon type with great proficiency. As they follow the
-Path they will become able to manifest blades at will from thin air, to execute
-acrobatic martial maneuvers, and to obliterate monsters with a rain of steel.
+Path they will become able to execute acrobatic martial maneuvers, such as wall
+jumps, spinning attacks and punishing lunges. They will eventually become able
+to request temporary help in the form of powerful divine weapons.
+
 %%%%
 Jiyva
 
@@ -310,11 +312,23 @@ and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
 Ieoh Jian powers
 
-By engaging in close quarters combat, the Ieoh Jian Council will manifest flying
-weapons around the follower, which they can grab and wield at will. They will later be 
-initiated in the path of martial arts, learning to stay mobile while attacking,
-to strike pressure points, and eventually to command multiple flying weapons to 
-strike at once for a spectacular finish. 
+Disciples of the Council become able to quickly cross-train all close 
+quarter combat skills, and learn to perform three martial techniques:
+
+  .......       ....... (*) <lightred>Lunge</lightred>: Moving towards an enemy in one of the eight 
+  ..@.O..  -->  ...@O.. cardinal directions deals extra damage, especially 
+  .......       ....... if it is slowed or distracted.
+
+  .......       ...@... (**) <lightred>Whirlwind</lightred>: Strike by moving between two tiles 
+  ...@O..  -->  ....O.. adjacent to an enemy. May slow down foes.
+  .......       .......  
+
+  ..x....       ..x.... (***) <lightred>Wall Jump</lightred>: Moving into a wall jumps away from 
+  ..x@...  -->  ..x..@. it, striking all enemies adjacent to the landing spot.
+  ..x....       ..x.... May distract any witnessing foes.
+
+Disciples of the Council will also be taught to animate weapons at a distance,
+and eventually given the ability to temporarily wield powerful divine weapons.
 %%%%
 Kikubaaqudgha powers
 
@@ -492,12 +506,11 @@ unpredictable magical effects from the depths of time.
 %%%%
 Dithmenos wrath
 
-When angered, Dithmenos turns the shadows against victims. Monsters emerge
-from the darkness, both illusions woven from shadow and the very shadows
-themselves turning against sinners. Dithmenos's subtle punishments are, if
-anything, more dangerous: victims find the shadows ripped away from them,
-hunted with nowhere to hide; or find themselves smothered in shadow and
-sleeping, perhaps forever.
+When angered, Dithmenos turns the shadows against victims. Monsters emerge from
+the darkness, both illusions woven from shadow and the very shadow themselves
+turning against sinners. Dithmenos's subtle punishments are, if anything, more
+dangerous: victims find the shadows ripped away from them, hunted with nowhere
+to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 %%%%
 Elyvilon wrath
 
@@ -509,9 +522,9 @@ confusion.
 Fedhas wrath
 
 Those who offend Fedhas will have forces of nature invoked against them in the
-form of pure elemental destruction. Waves of ballistomycete spores will rise from nearby
-corpses, and the worst offenders will be surrounded by animate mushrooms and
-acid-spitting oklob plants.
+form of pure elemental destruction. Waves of ballistomycete spores will rise
+from nearby corpses, and the worst offenders will be surrounded by animate
+mushrooms and acid-spitting oklob plants.
 %%%%
 Hepliaklqana wrath
 
@@ -544,10 +557,7 @@ Ieoh Jian wrath
 Those who turn against the Council must be prepared to endure death by a thousand
 cuts. No hiding place is secure, no disguise perfect enough to avoid the sudden
 spring of traps, the flying daggers and the armies of animated weapons that will
-torture the betrayer. Still, the Council is equanimous and will eventually forgive
-those who stray from the path... Unless, of course, the betrayer had the audacity
-to steal a weapon from their sacred vault. The punishment reserved for such a sin
-is unspeakable.
+ambush the betrayer. 
 %%%%
 Kikubaaqudgha wrath
 
@@ -575,10 +585,11 @@ deserving!
 %%%%
 Nemelex Xobeh wrath
 
-Nemelex Xobeh forces sinners to rely on the luck of the draw. Stacked decks are
-immediately shuffled, and offenders are regularly forced to draw from the deck
-of Punishment, inflicting a range of unpleasant effects. Further, attempting to
-draw from other decks may instead lead to drawing from the deck of Punishment.
+Those who abandon Nemelex Xobeh have all of their gifted decks revoked
+immediately. They are also regularly forced to draw from the deck of
+Punishment, inflicting a range of unpleasant effects including draining,
+hunger, torment and polymorphing, as well as calling upon other gods to assist
+in inflicting wrath.
 %%%%
 Okawaru wrath
 

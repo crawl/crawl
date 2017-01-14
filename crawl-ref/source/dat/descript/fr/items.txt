@@ -436,12 +436,6 @@ dire flail
 
 Un fléau d'arme avec des pointes plus longues, et une tête plus lourde.
 %%%%
-disc of storms
-
-Cet objet, extrêmement puissant, peut déchaîner des tempêtes d'électricité
-destructrices. Son efficacité augmente entre les main d'une personne habituée à
-manipuler les dispositifs magiques.
-%%%%
 eudemon blade
 
 Une lame sacrée tout droit sortie des forges du paradis, et habitée par une
@@ -1082,15 +1076,6 @@ wand of fireball
 
 Un instrument magique qui tire des salves de flammes explosives.
 %%%%
-wand of hasting
-
-Un instrument magique qui lance un enchantement accélérant la vitesse
-d'exécution des actions de la créature ciblée.
-%%%%
-wand of heal wounds
-
-Un instrument magique qui peut guérir les blessures d'une créature.
-%%%%
 wand of invisibility
 
 Un instrument magique qui cache une créature à la vue des autres.
@@ -1112,15 +1097,6 @@ créature. Ceci est particulièrement efficace contre les changeurs de forme.
 wand of random effects
 
 Un instrument magique qui peut produire une grande variété d'effets.
-%%%%
-wand of slowing
-
-Un instrument magique qui ralenti, par enchantement, les actions d'une créature
-ciblée.
-%%%%
-wand of teleportation
-
-Un instrument magique qui téléporte aléatoirement une créature ciblée.
 %%%%
 whip
 

@@ -30,12 +30,12 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -77,7 +77,6 @@ void draconian_change_colour(monster* drac)
                                        MONS_BLACK_DRACONIAN,
                                        MONS_GREEN_DRACONIAN,
                                        MONS_PURPLE_DRACONIAN,
-                                       MONS_MOTTLED_DRACONIAN,
                                        MONS_YELLOW_DRACONIAN);
     drac->colour = mons_class_colour(drac->base_monster);
 
@@ -881,7 +880,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
             remove_unique_annotation(mons);
         }
 
-        targetter_los hitfunc(*mi, LOS_SOLID);
+        targeter_los hitfunc(*mi, LOS_SOLID);
         flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
         mons->heal(mons->max_hit_points);

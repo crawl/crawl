@@ -12,7 +12,7 @@
 
 #include "ability.h"
 #include "fight.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "skills.h"
 #include "spl-util.h"
 
@@ -209,7 +209,7 @@ void practise_being_attacked()
 void practise_being_hit()
 {
     if (coinflip())
-        _check_train_armour(coinflip() ? 2 : 1);
+        _check_train_armour(random_range(1, 2));
     else if (coinflip())
         exercise(SK_FIGHTING, 1);
 }
@@ -244,7 +244,7 @@ void practise_being_shot_at()
         _check_train_dodging(1);
 }
 
-/// Skill training when using an evocable item, such as a wand or rod.
+/// Skill training when using an evocable item such as a wand.
 void practise_evoking(int amount)
 {
     // XXX: degree determination is just passed in but should be done here.

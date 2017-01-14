@@ -9,10 +9,10 @@
 #include "describe.h"
 #include "env.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -20,7 +20,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "rot.h"
 #include "spl-book.h"
 #include "tiledef-dngn.h"
@@ -409,7 +409,6 @@ bool InventoryRegion::update_tip_text(string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-            case OBJ_RODS:
                 if (you.species != SP_FELID)
                 {
                     _handle_wield_tip(tmp, cmd);
@@ -429,12 +428,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                if (item.sub_type >= MISC_FIRST_DECK
-                    && item.sub_type <= MISC_LAST_DECK)
-                {
-                    _handle_wield_tip(tmp, cmd);
-                    break;
-                }
                 tmp += "Evoke (V)";
                 cmd.push_back(CMD_EVOKE);
                 break;
@@ -662,13 +655,15 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     {
         desc.quantity = item.charges;
     }
-    else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
-        desc.quantity = item.charges / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES
-        || type == OBJ_ARMOUR || type == OBJ_RODS)
+        || type == OBJ_ARMOUR
+#if TAG_MAJOR_VERSION == 34
+        || type == OBJ_RODS
+#endif
+       )
     {
         desc.special = tileidx_known_brand(item);
     }

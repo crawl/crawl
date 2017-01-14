@@ -1002,10 +1002,10 @@ KMONS:   1 = green draconian
 KMONS:   a = death drake
 KMONS:   A = tentacled monstrosity / green death
 # No burning down the trees or making them look burnt.
-KMONS:   b = green draconian caller w:15 / yellow draconian caller w:1 / \
-             white draconian caller w:1 / purple draconian caller w:1
-KMONS:   B = green draconian zealot w:15 / yellow draconian zealot w:1 / \
-             white draconian zealot w:1 / purple draconian zealot w:1
+KMONS:   b = green draconian stormcaller w:15 / yellow draconian stormcaller w:1 / \
+             white draconian stormcaller w:1 / purple draconian stormcaller w:1
+KMONS:   B = green draconian stormcaller w:15 / yellow draconian stormcaller w:1 / \
+             white draconian stormcaller w:1 / purple draconian stormcaller w:1
 KMONS:   % = ugly thing / orange demon
 KMONS:   *d = swamp dragon w:8 / seven-headed hydra w:5 / eight-headed hydra w:5
 KMONS:   | = large abomination / tentacled monstrosity w:5
@@ -1458,7 +1458,7 @@ ENDMAP
 NAME:    hangedman_swamp_double_dragon
 TAGS:    no_monster_gen patrolling
 DEPTH:   Swamp:2-, !Swamp:$
-MONS:    fire dragon, lindwurm / mottled dragon w:8
+MONS:    fire dragon, lindwurm
 MONS:    ice dragon, bog body / hydra simulacrum w:8
 MONS:    swamp dragon, alligator / hydra w:8
 ITEM:    any good_item
@@ -2025,7 +2025,7 @@ TAGS:    transparent no_pool_fixup no_rotate
 PLACE:   Swamp:$
 ORIENT:  float
 MONS:    fire dragon, lindwurm / fire crab w:8, swamp dragon / hydra w:12
-MONS:    mottled dragon w:6 / swamp drake / steam dragon w:4
+MONS:    swamp drake / steam dragon w:4
 SUBST:   L = ll., ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \

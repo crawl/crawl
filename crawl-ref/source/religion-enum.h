@@ -33,12 +33,14 @@ enum nemelex_gift_types
 /// Weapon for monster generation
 #define IEOH_JIAN_WEAPON "ieoh-jian-weapon"
 #define IEOH_JIAN_POWER "ieoh-jian-power"
-/// What slot a weapon occupies when it was "gifted" by the IJC
-/// A lack of this value indicates the weapon belongs to you
-#define IEOH_JIAN_SLOT "ieoh-jian-slot"
-/// Whether a the weapon is being projected
+/// Property tag for divine weapons. Its value reflects whether the momentum effect
+/// is active.
+#define IEOH_JIAN_DIVINE "ieoh-jian-divine"
+/// Whether the weapon is being projected.
 #define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
-/// Whether a the weapon is being projected as part of a Steel Dragonfly
-#define IEOH_JIAN_DRAGONFLY "ieoh-jian-dragonfly"
+/// Used to protect you from dangerous brands while projecting weapons.
+#define IEOH_JIAN_SWAPPING "ieoh-jian-swapping"
+/// Weapon swapped out when a divine is requested.
+#define IEOH_JIAN_SWAPPED_OUT "ieoh-jian-swapped-out"
 
 #endif

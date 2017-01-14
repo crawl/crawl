@@ -17,9 +17,9 @@
 #include "cloud.h"
 #include "directn.h"
 #include "env.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "ouch.h"
@@ -247,7 +247,7 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 
     if (pow < 10)
         pow = 10;
-    const float off = (coinflip() ? -1 : 1) * 0.25;
+    const float off = random_choose(-0.25, 0.25);
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
     int inaccuracy = caster->inaccuracy();

@@ -579,7 +579,6 @@ mennas MONS_MENNAS
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 %sdir mon
-hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN
 cyclops MONS_CYCLOPS
 fire_giant MONS_FIRE_GIANT
@@ -615,7 +614,7 @@ hydra5
 ice_dragon MONS_ICE_DRAGON
 steam_dragon MONS_STEAM_DRAGON
 swamp_dragon MONS_SWAMP_DRAGON
-mottled_dragon MONS_MOTTLED_DRAGON
+acid_dragon MONS_ACID_DRAGON
 %rim 0
 quicksilver_dragon MONS_QUICKSILVER_DRAGON
 iron_dragon MONS_IRON_DRAGON
@@ -1092,12 +1091,11 @@ draco-base-grey
 draco-base-pale
 %rim 0
 draco-job-annihilator DRACO_ANNIHILATOR
-draco-job-caller DRACO_CALLER
+draco-job-stormcaller DRACO_STORMCALLER
 draco-job-knight DRACO_KNIGHT
 draco-job-monk DRACO_MONK
 draco-job-scorcher DRACO_SCORCHER
 draco-job-shifter DRACO_SHIFTER
-draco-job-zealot DRACO_ZEALOT
 ## From the Wucad Mu wizard laboratory
 mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 
@@ -1127,7 +1125,6 @@ dragon_form_yellow TRAN_DRAGON_YELLOW
 dragon_form_grey TRAN_DRAGON_GREY
 dragon_form_black TRAN_DRAGON_BLACK
 dragon_form_purple TRAN_DRAGON_PURPLE
-dragon_form_mottled TRAN_DRAGON_MOTTLED
 dragon_form_pale TRAN_DRAGON_PALE
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST

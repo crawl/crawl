@@ -16,8 +16,9 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "message.h"
@@ -290,14 +291,6 @@ void handle_behaviour(monster* mon)
         && mons_is_fleeing(*mon)
         && is_sanctuary(you.pos()))
     {
-        return;
-    }
-
-    // Ieoh Jian weapons stick to you unless combat active (recently projected)
-    if ((mon->type == MONS_IEOH_JIAN_WEAPON) && !mon->has_ench(ENCH_IEOH_JIAN_COMBAT_ACTIVE))
-    {
-        mon->foe = MHITNOT;
-        mon->target = you.pos();
         return;
     }
 
@@ -708,7 +701,7 @@ void handle_behaviour(monster* mon)
             }
 
             if (mon->strict_neutral() && mons_is_slime(*mon)
-                && you_worship(GOD_JIYVA))
+                && have_passive(passive_t::neutral_slimes))
             {
                 set_random_slime_target(mon);
             }
@@ -1081,6 +1074,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     case ME_ANNOY:
         if (mon->has_ench(ENCH_GOLD_LUST))
             mon->del_ench(ENCH_GOLD_LUST);
+
+        if (mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
+            mon->del_ench(ENCH_DISTRACTED_ACROBATICS);
 
         // Will turn monster against <src>.
         // Orders to withdraw take precedence over interruptions

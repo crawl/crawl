@@ -47,11 +47,6 @@ Halfling
 De er små, men hårdføre, og fremragende til at bruge slynger. De har begrænset
 modstandskraft over for mutagene virkninger.
 %%%%
-High Elf
-
-Stolte elvere, der er lige så gode til at væve besværgelser, som de er til at
-kæmpe med sværd.
-%%%%
 Hill Orc
 
 Orker er dygtige i nærkamp, og de forsøger sig ofte med angrebsmagi. De er

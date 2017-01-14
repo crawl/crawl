@@ -20,9 +20,10 @@
 #include "fight.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "itemname.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "invent.h"
+#include "item-name.h"
 #include "items.h"
 #include "losglobal.h"
 #include "message.h"
@@ -624,7 +625,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
     if (agent && agent->is_player())
     {
         ASSERT(actual);
-        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
                 return SPRET_ABORT;
@@ -1063,7 +1064,7 @@ static int _shatter_mon_dice(const monster *mon)
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
-            return coinflip() ? 5 : 4;
+            return random_range(4, 5);
         // Double damage to bone.
         else if (mon->is_skeletal())
             return 6;
@@ -1189,10 +1190,10 @@ static int _shatter_player_dice()
     // flyers get no extra damage.
     else if (you.airborne())
         return 1;
-    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
-    else if (you.form == TRAN_ICE_BEAST)
-        return coinflip() ? 5 : 4;
+    else if (you.form == transformation::ice_beast)
+        return random_range(4, 5);
     else
         return 3;
 }
@@ -1213,7 +1214,7 @@ static bool _shatterable(const actor *act)
 spret_type cast_shatter(int pow, bool fail)
 {
     {
-        targetter_los hitfunc(&you, LOS_ARENA);
+        targeter_los hitfunc(&you, LOS_ARENA);
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
     }
@@ -1801,7 +1802,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         fail_check();
     }
 
-    targetter_los hitfunc(agent, LOS_NO_TRANS);
+    targeter_los hitfunc(agent, LOS_NO_TRANS);
     flash_view_delay(
         agent->is_player()
             ? UA_PLAYER
@@ -1896,7 +1897,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
         mpr("The lightning arcs!");
-        pow /= (coinflip() ? 2 : 3);
+        pow /= random_range(2, 3);
         damage += apply_random_around_square([pow, agent] (coord_def where2) {
             return discharge_monsters(where2, pow, agent);
         }, where, true, 1);
@@ -1966,8 +1967,9 @@ spret_type cast_discharge(int pow, bool fail)
                  plural ? "Some" : "A",
                  plural ? "s" : "",
                  plural ? " themselves" : "s itself",
-                 plural ? "around" : (coinflip() ? "beside" :
-                                      coinflip() ? "behind" : "before"));
+                 plural ? "around" : random_choose_weighted(2, "beside",
+                                                            1, "behind",
+                                                            1, "before"));
         }
     }
     return SPRET_SUCCESS;
@@ -2002,11 +2004,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     {
         const bool petrified = (you.petrified() || you.petrifying());
 
-        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == TRAN_STATUE ? 3 : 2;
+            beam.damage.num = you.form == transformation::statue ? 3 : 2;
             return true;
         }
         else if (petrified)
@@ -2016,7 +2018,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.damage.num = 3;
             return true;
         }
-        else if (you.form == TRAN_ICE_BEAST) // blast of ice
+        else if (you.form == transformation::ice_beast) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
@@ -2334,38 +2336,36 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     return SPRET_SUCCESS;
 }
 
-int wielding_rocks()
-{
-    const item_def* wpn = you.weapon();
-    if (!wpn || wpn->base_type != OBJ_MISSILES)
-        return 0;
-    else if (wpn->sub_type == MI_STONE)
-        return 1;
-    else if (wpn->sub_type == MI_LARGE_ROCK)
-        return 2;
-    else
-        return 0;
-}
-
 spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 {
-    zap_type zap = ZAP_SMALL_SANDBLAST;
-    switch (wielding_rocks())
+    item_def *stone = nullptr;
+    int num_stones = 0;
+    for (item_def& i : you.inv)
     {
-    case 1:
-        zap = ZAP_SANDBLAST;
-        break;
-    case 2:
-        zap = ZAP_LARGE_SANDBLAST;
-        break;
-    default:
-        break;
+        if (i.is_type(OBJ_MISSILES, MI_STONE)
+            && check_warning_inscriptions(i, OPER_DESTROY))
+        {
+            num_stones += i.quantity;
+            stone = &i;
+        }
     }
 
+    if (num_stones == 0)
+    {
+        mpr("You don't have any stones to cast with.");
+        return SPRET_ABORT;
+    }
+
+    zap_type zap = ZAP_SANDBLAST;
     const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
-    if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+    if (ret == SPRET_SUCCESS)
+    {
+        if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
+            mpr("You now have no stones remaining.");
+        else
+            mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
+    }
 
     return ret;
 }
@@ -2384,30 +2384,32 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         prev = caster->props["thunderbolt_aim"].get_coord();
     }
 
-    targetter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
-                                  prev);
+    targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+                                 prev);
     hitfunc.set_aim(aim);
 
-    if (caster->is_player())
+    if (caster->is_player()
+        && stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
     {
-        if (stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
-            return SPRET_ABORT;
+        return SPRET_ABORT;
     }
 
     fail_check();
 
-    int juice = prev.origin() ? 2 * ROD_CHARGE_MULT
-                              : caster->props["thunderbolt_mana"].get_int();
+    const int juice = (spell_mana(SPELL_THUNDERBOLT)
+                       + caster->props["thunderbolt_charge"].get_int())
+                      * LIGHTNING_CHARGE_MULT;
+
+    dprf("juice: %d", juice);
+
     bolt beam;
-    beam.name              = "lightning";
-    beam.aux_source        = "rod of lightning";
+    beam.name              = "thunderbolt";
+    beam.aux_source        = "lightning rod";
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
-    // Dodging a horizontal arc is nearly impossible: you'd have to fall prone
-    // or jump high.
-    beam.hit               = prev.origin() ? 10 + pow / 20 : 1000;
+    beam.hit               = AUTOMATIC_HIT;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
 #ifdef USE_TILE
@@ -2443,15 +2445,14 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, ROD_CHARGE_MULT),
+        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
                                div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }
 
     caster->props["thunderbolt_last"].get_int() = you.num_turns;
     caster->props["thunderbolt_aim"].get_coord() = aim;
-
-    noisy(15 + div_rand_round(juice, ROD_CHARGE_MULT), hitfunc.origin);
+    caster->props["thunderbolt_charge"].get_int()++;
 
     return SPRET_SUCCESS;
 }
@@ -2670,7 +2671,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 {
     int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
 
-    targetter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
+    targeter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
     hitfunc.set_aim(aim);
     if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
         return SPRET_ABORT;
@@ -2705,7 +2706,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
 {
     if (agent->is_player())
     {
-        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
                 return SPRET_ABORT;
@@ -2745,7 +2746,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
                                         (5 + random2avg(pow/15, 2)) * BASELINE_DELAY));
 
-        targetter_los hitfunc(mon_agent, LOS_NO_TRANS);
+        targeter_los hitfunc(mon_agent, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
 
         return SPRET_SUCCESS;
@@ -2906,7 +2907,7 @@ static bool _player_glaciate_affects(const actor *victim)
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
-    targetter_cone hitfunc(caster, range);
+    targeter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
 
     if (caster->is_player()
@@ -3025,7 +3026,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
     const size_t range = spell_range(SPELL_SCATTERSHOT, pow);
     const size_t beam_count = shotgun_beam_count(pow);
 
-    targetter_shotgun hitfunc(caster, beam_count, range);
+    targeter_shotgun hitfunc(caster, beam_count, range);
 
     hitfunc.set_aim(pos);
 

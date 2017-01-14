@@ -8,8 +8,7 @@ function fixup_slime_vaults(data, triggerable, triggerer, marker, ev)
     return
   end
 
-  local seen = dgn.seen_destroy_feat("stone_wall")
-        seen = dgn.seen_destroy_feat("clear_stone_wall") or seen
+  local seen = dgn.seen_destroy_feat("clear_stone_wall")
 
   if you.god() == "Jiyva" and you.piety_rank() >= 6 then
     if you.silenced() then
@@ -242,65 +241,6 @@ ENDMAP
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
-NAME:    hangedman_slime_spill
-TAGS:    no_monster_gen no_trap_gen
-DEPTH:   Slime, !Slime:$
-WEIGHT:  1
-MONS:    patrolling eye of devastation
-SHUFFLE: yzZ
-SUBST:   2 = 00xxY, y = ., zZX = x., Y = x', { = {}, 0 : 00'''
-KPROP:   02' = no_tele_into
-MAP
-   ' ' '''Y.xx.@@@
-  YY'Y'xxx'x.....@
- Yxxxxxx2xxX......
-xxx222x0xxXX...XyX
- x20000xx......yXy
- x2202x.x.{.....1X
-xx20000xx......yXy
- xx222x0xxXX...XyX
- Yxxxxxx2xxX......
-  YY'Y'xxx'x.....@
-   ' ' '''x.xx.@@@
-ENDMAP
-
-NAME:    hangedman_slime_tunnels
-TAGS:    no_monster_gen no_trap_gen transparent
-DEPTH:   Slime, !Slime:$
-WEIGHT:  1
-KMONS:   1 = slime creature w:30 / nothing w:2
-KMONS:   2 = shining eye / floating eye / eye of devastation w:5 / \
-             great orb of eyes / glowing orange brain / random w:1
-KFEAT:   2 = alarm trap / . w:30
-SHUFFLE: AB, CD, EF, GH, ab
-SUBST:   ACEG = ', BDFH = x, 0 = 0 ':4, ab = 0XX
-SUBST:   X = x', Y = x., } = {} .:30, 0 : 00'''
-KMASK:   ' = !no_monster_gen
-KMASK:   '0x = opaque
-KPROP:   '0 = no_tele_into
-MAP
-  X'            'X
- X'X'X x  x  x XX'X
-X'xxxxxxxxxxxxxxxx'X
-'xx0x0x00xx00x0x0xx'
-'x'x0x'xx0axx'x0x'x'
-'xAxxxxBxaXxCxxxxDx'
-'xxAxxBxxxxxxCxxDxx'
-.Y.Y..Yx2xY.YY..YY..
-..Y....xx1.........@
-@................}.@
-@..................@
-@.........1xx....Y.@
-..YY..YY.Yx2xY.xY...
-.xxExxFxxxxxxGxxHxx'
-'xExxxxFxbXxGxxxxHx'
-'x'x0x'xx0bxx'x0x'x'
-'xx0x0x00xx00x0x0xx'
-X'xxxxxxxxxxxxxxxx'X
- X'XX x  x  x X'X'X
-  X'            'X
-ENDMAP
-
 NAME: nicolae_slime_pool
 DEPTH: Slime, !Slime:$
 TAGS: transparent
@@ -708,7 +648,8 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 : lua_marker("Z", fixup_marker)
 
 {{
-    set_feature_name("stone_wall", "rune carved stone wall")
+    set_feature_name("stone_wall", "rune-carved stone wall")
+    set_feature_name("clear_stone_wall", "rune-carved clear stone wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -738,16 +679,16 @@ xxxxxxxxxxxxx'x.................."cccc2ccccc".................'xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'.'................"cc*cc..cc*cc".................''xxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'................."cc***cc4c***cc".................xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx'................"cc*|*cc..cc*|*cc"................'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx''..............."cc*|P|*c4cc*|P|*cc"...............'xxxxxxxxxxxxxxx
-xxxxxxxxxxxx'................"cc**|*cc..cc*|**cc"................'''xxxxxxxxxxxx
-xxxxxxxxxxxx'................"ccc**c|cc4c|c**ccc"..................xxxxxxxxxxxxx
-xxxxxxxxxxx'................."cccccccc.3cccccccc"..................'xxxxxxxxxxxx
-xxxxxxxxxxx'................."c.4.c.4.1..4.c.4.c"..................''xxxxxxxxxxx
-xxxxxxxxxxx'..................2.c.4.c..Z.c.4.c.2....................'xxxxxxxxxxx
-xxxxxxxxxx'..........)......."cccccccc3.cccccccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."ccc**c|cc4c|c**ccc"...................'xxxxxxxxxxx
-xxxxxxxxxx'.................."cc**|*cc..cc*|**cc"..................'xxxxxxxxxxxx
-xxxxxxxxx'..................."cc*|P|*c4cc*|P|*cc"..................'xxxxxxxxxxxx
+xxxxxxxxxxxx''..............."cc*|P|*n4nn*|P|*cc"...............'xxxxxxxxxxxxxxx
+xxxxxxxxxxxx'................"cc**|*nn..nn*|**cc"................'''xxxxxxxxxxxx
+xxxxxxxxxxxx'................"ccc**n|nn4n|n**ccc"..................xxxxxxxxxxxxx
+xxxxxxxxxxx'................."ccccnnnn.3nnnncccc"..................'xxxxxxxxxxxx
+xxxxxxxxxxx'................."c.4.n.4.1..4.n.4.c"..................''xxxxxxxxxxx
+xxxxxxxxxxx'..................2.c.4.n..Z.n.4.c.2....................'xxxxxxxxxxx
+xxxxxxxxxx'..........)......."ccccnnnn3.nnnncccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."ccc**n|nn4n|n**ccc"...................'xxxxxxxxxxx
+xxxxxxxxxx'.................."cc**|*nn..nn*|**cc"..................'xxxxxxxxxxxx
+xxxxxxxxx'..................."cc*|P|*n4nn*|P|*cc"..................'xxxxxxxxxxxx
 xxxxxxxxx''..................."cc*|*cc..cc*|*cc"..................'xxxxxxxxxxxxx
 xxxxxxxxxxx'..................."cc***cc4c***cc"...................'xxxxxxxxxxxxx
 xxxxxxxxxxxx'..................."cc*cc..cc*cc"....................'xxxxxxxxxxxxx

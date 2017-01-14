@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "feature.h"
-#include "newgame_def.h"
+#include "newgame-def.h"
 #include "pattern.h"
 
 enum autosac_type
@@ -230,6 +230,7 @@ public:
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
+    unsigned    foreground_colour; // select default foreground colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
@@ -241,7 +242,11 @@ public:
     bool        small_more;       // Show one-char more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
-    bool        no_dark_brand;    // Attribute for branding friendly monsters
+    bool        blink_brightens_background; // Assume blink will brighten bg.
+    bool        bold_brightens_foreground; // Assume bold will brighten fg.
+    bool        best_effort_brighten_background; // Allow bg brighten attempts.
+    bool        best_effort_brighten_foreground; // Allow fg brighten attempts.
+    bool        allow_extended_colours; // Use more than 8 terminal colours.
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
     int         autofight_warning;      // Amount of real time required between
@@ -255,8 +260,6 @@ public:
 
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
-
-    int         num_colours;     // used for setting up curses colour table (8 or 16)
 
     vector<string> pizzas;
 

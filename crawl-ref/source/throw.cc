@@ -18,14 +18,14 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -326,8 +326,7 @@ static int _fire_prompt_for_item()
 
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_FIRE);
+                                   OSEL_THROWABLE, OPER_FIRE);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;

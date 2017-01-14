@@ -58,26 +58,26 @@
 #include "fineff.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "hints.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
@@ -124,7 +124,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -511,19 +511,17 @@ static void _handle_recitation(int step)
 
     if (step == 0)
     {
-        string speech = zin_recite_text(you.attribute[ATTR_RECITE_SEED],
-                                        you.attribute[ATTR_RECITE_TYPE], -1);
-        speech += ".";
-        if (one_chance_in(9))
+        ostringstream speech;
+        speech << zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                                  you.attribute[ATTR_RECITE_TYPE], -1);
+        speech << '.';
+        if (one_chance_in(27))
         {
             const string closure = getSpeakString("recite_closure");
-            if (!closure.empty() && one_chance_in(3))
-            {
-                speech += " ";
-                speech += closure;
-            }
+            if (!closure.empty())
+                speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
+        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
     }
 }
 
@@ -629,14 +627,14 @@ static void _decrement_durations()
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.form != TRAN_NONE)
+        && you.form != transformation::none)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != TRAN_BAT
+    if (you.species != SP_VAMPIRE || you.form != transformation::bat
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
@@ -970,7 +968,7 @@ static void _regenerate_hp_and_mp(int delay)
 
         if (player_mutation_level(MUT_MANA_REGENERATION))
             mp_regen_countup *= 2;
-        if (you.wearing(EQ_AMULET, AMU_MANA_REGENERATION))
+        if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
             mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
 
         you.magic_points_regeneration += mp_regen_countup;
@@ -1043,7 +1041,7 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == TRAN_WISP && !you.stasis())
+        else if (you.form == transformation::wisp && !you.stasis())
             uncontrolled_blink();
     }
 
@@ -1088,8 +1086,6 @@ void player_reacts()
     dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
-
-    recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)

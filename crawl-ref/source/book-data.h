@@ -83,9 +83,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
+    SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_INTOXICATE,
     SPELL_VENOM_BOLT,
 },
 
@@ -149,9 +149,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 #endif
 {   // Book of Clouds
+    SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_CONJURE_FLAME,
-    SPELL_POISONOUS_CLOUD,
     SPELL_FREEZING_CLOUD,
     SPELL_RING_OF_FLAMES,
 },
@@ -213,7 +213,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
-    SPELL_POISONOUS_CLOUD,
 },
 #endif
 

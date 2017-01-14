@@ -1030,7 +1030,7 @@ MONS:   wizard w:300 / deep elf mage w:120 / orc wizard / \
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
-        any randart armour w:3 / any rod w:3
+        any randart armour w:3
 : if you.absdepth() > 18 then
 NSUBST: 2 = 2:2 / 2 = 21 / *:1
 : else

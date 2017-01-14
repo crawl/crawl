@@ -43,11 +43,10 @@ Breathe Lightning ability
 Releases a great discharge of electricity, causing an uncontrollable lightning
 storm. It partially bypasses armour.
 %%%%
-Breathe Sticky Flame ability
+Breathe Acid ability
 
-Spits a glob of sticky flame at an adjacent creature, covering it in liquid
-fire for a short time. It may also splash onto other nearby creatures on
-impact.
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
 Breathe Steam ability
 
@@ -92,14 +91,10 @@ Stop Singing ability
 
 Stops singing your Song of Slaying.
 %%%%
-Self-Restoration ability
+Heal Wounds ability
 
-Restores your strength, dexterity and intelligence and heals any rotted health,
-at the permanent cost of one magic point.
-%%%%
-Device Recharging ability
-
-Recharges a wand or rod, at the permanent cost of one magic point.
+Heals the user significantly, with a chance of permanently reducing the user's
+maximum magic capacity by one.
 %%%%
 Dig ability
 
@@ -421,7 +416,7 @@ harder to resist.
 Corrupt ability
 
 Corrupts the current level by unleashing Abyssal energies on it. This will
-cause the area nearby to change appearance, and will gate in demons from the
+cause the area nearby to change appearance, and will gate in creatures from the
 Abyss bent on causing destruction. This will not work on levels already
 corrupted or in the Abyss itself. The size of the effect is increased by
 Invocations skill.
@@ -429,7 +424,7 @@ Invocations skill.
 Enter the Abyss ability
 
 Transports you to Lugonu's realm instantly. The effort of even using the
-ability will leave your health and magic depleted.
+ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
@@ -645,16 +640,15 @@ is to Pakellas.
 %%%%
 Quick Charge ability
 
-Spends two thirds of your current pool of magic to charge a wand or rod. The
+Spends two thirds of your current pool of magic to charge a wand. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
 Supercharge ability
 
-Infuses magical energy into a rod or wand. For a rod, its recharge rate and
-capacity are set to slightly above the normal maximums for such a device;
-for wands, their capacity is significantly increased beyond normal and fully
-charged to this new capacity. This ability may only be used once.
+Infuses magical energy into a wand. Its capacity is significantly increased
+beyond normal and fully charged to this new capacity. This ability may only be
+used once.
 %%%%
 # Qazlal
 Upheaval ability
@@ -876,17 +870,22 @@ Ancestor Identity ability
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
-Project Weapon ability
+Steel Dragonfly ability
 
 Projects a weapon towards a target, hitting the first enemy in the way. The weapon
-is then brought to life, attacking nearby enemies for a brief period of time.
+is then brought to life for a brief moment, striking again on its own.
 %%%%
-Recall Weapon ability
+End Steel Dragonfly ability
 
-Quickly recalls an animated weapon back to your hands. 
+Instantly recalls the animated weapon back to your hands.
 %%%%
-Steel Dragonfly Technique ability
+Heavenly Blade ability
 
-Commands all flying weapons to converge towards an enemy. Weapons provided by the 
-Council will shatter on impact. This millenary technique is capable of liquifying
-the target's internal organs, specially if they were slowed or paralysed.
+Beseeches the council to send help in the form of a tremendously powerful divine
+weapon. 
+%%%%
+Hop ability
+
+Hops toward a chosen destination, landing somewhere nearby. After using this
+ability, you will be unable to hop again until you have spent some time not
+moving. (Other actions, such as casting spells and attacking, are fine.)

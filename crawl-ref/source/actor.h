@@ -1,7 +1,7 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "random-var.h"
 #include "ouch.h"
 
@@ -271,7 +271,7 @@ public:
 
     virtual mon_holy_type holiness(bool temp = true) const = 0;
     virtual bool undead_or_demonic() const = 0;
-    virtual bool holy_wrath_susceptible() const = 0;
+    virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy(bool spells = true) const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
     bool evil() const;
@@ -288,7 +288,7 @@ public:
     virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
-    virtual int res_holy_energy(const actor *attacker) const = 0;
+    virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
     virtual bool res_wind() const = 0;

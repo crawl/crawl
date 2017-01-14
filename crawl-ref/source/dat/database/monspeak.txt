@@ -2626,8 +2626,6 @@ w:50
 
 @The_monster@ says, "What's with all the gesturing? I hate that."
 
-@The_monster@ says, "I don't get the difference between high elves and deep elves."
-
 @The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
@@ -3179,8 +3177,6 @@ w:50
 
 @The_monster@ says, "Hey, I thought wands weren't allowed!"
 
-@The_monster@ says, "What about rods?"
-
 @The_monster@ says, "If I tell you I hate magic, will you worship me?"
 
 @The_monster@ says, "I hate ogres."
@@ -3501,7 +3497,7 @@ w:50
 
 @The_monster@ says, "Bet you can't [analyse|invent] your way out of this one."
 
-@The_monster@ says, "Can I borrow that [wand|rod|lamp|fan] for a second? You must have some to spare."
+@The_monster@ says, "Can I borrow that [wand|lamp|fan] for a second? You must have some to spare."
 %%%%
 No God Donald
 

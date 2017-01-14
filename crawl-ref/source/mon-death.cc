@@ -28,15 +28,15 @@
 #include "env.h"
 #include "fineff.h"
 #include "food.h"
-#include "godabil.h"
-#include "godblessing.h"
-#include "godcompanions.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::bless_followers, share_exp, convert_orcs, find_ieoh_jian_manifested_weapons
+#include "god-abil.h"
+#include "god-blessing.h"
+#include "god-companions.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::bless_followers, share_exp, convert_orcs
 #include "hints.h"
 #include "hiscores.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
@@ -54,6 +54,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -67,7 +68,7 @@
 #include "target.h"
 #include "teleport.h" // random_near_space
 #include "terrain.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -430,11 +431,19 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
-    {
         item.inscription = mons_type_name(montype, DESC_PLAIN);
-        if (montype == MONS_XTAHUA || montype == MONS_SNORG)
-            item.plus += random_range(2, 4); // a little nice bonus
-    }
+
+    /// Slightly randomized bonus enchantment for certain uniques' hides
+    static const map<monster_type, int> hide_avg_plusses = {
+        { MONS_SNORG, 2 },
+        { MONS_XTAHUA, 3 },
+        { MONS_BAI_SUZHEN, 3 },
+        { MONS_BAI_SUZHEN_DRAGON, 3 },
+    };
+
+    const int* bonus_plus = map_find(hide_avg_plusses, montype);
+    if (bonus_plus)
+        item.plus += random_range(*bonus_plus * 2/3, *bonus_plus * 3/2);
 
     const coord_def pos = item_pos(corpse);
     if (pos.origin())
@@ -1404,7 +1413,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // FIXME: show_more == you.see_cell(mons->pos())
     if (type == MONS_LURKING_HORROR)
     {
-        targetter_los hitfunc(mons, LOS_SOLID);
+        targeter_los hitfunc(mons, LOS_SOLID);
         flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
@@ -1417,22 +1426,8 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
 static void _infestation_create_scarab(monster* mons)
 {
-    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
-                                                   BEH_FRIENDLY, mons->pos(),
-                                                   MHITYOU, MG_AUTOFOE)
-                                         .set_summoned(&you, 0,
-                                                       SPELL_INFESTATION),
-                                         false))
-    {
-        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        if (you.see_cell(mons->pos()) || you.can_see(*scarab))
-        {
-            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
-                                       mons->name(DESC_THE).c_str());
-        }
-        mons->flags |= MF_EXPLODE_KILL;
-    }
+    mons->flags |= MF_EXPLODE_KILL;
+    infestation_death_fineff::schedule(mons->pos(), mons->name(DESC_THE));
 }
 
 static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
@@ -2140,58 +2135,32 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_IEOH_JIAN_WEAPON)
     {
-        bool reformed = false;
         if (killer == KILL_RESET)
         {
-            if (you.can_see(*mons) && !silent && mons->weapon() && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
-                mprf("%s bounces wildly and falls to the ground.", mons->weapon()->name(DESC_THE, false, true).c_str());
-
-            // All slot indices are updated, so the age order is always respected.
-            auto monsters = find_ieoh_jian_manifested_weapons(false);
-            size_t i;
-
-            for (i = 0; i != monsters.size(); i++)
-                monsters[i]->weapon()->props[IEOH_JIAN_SLOT] = (int)i;
-
-            if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_SLOT))
-                you.weapon()->props[IEOH_JIAN_SLOT] = (int)i;
+            if (mons->weapon()->props.exists(IEOH_JIAN_DIVINE))
+            {
+                if (!silent)
+                    mprf("%s ascends back to the heavens!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
+                invalidate_agrid(true);
+            }
         }
-        else
+        else 
         {
             coord_def reform_location;
             random_near_space(mons, mons->pos(), reform_location, true, false, true);
-            // If the kill wasn't divine, the weapon is immediately reformed in LOS.
-            mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                         BEH_FRIENDLY,
-                         reform_location,
-                         MHITYOU,
-                         MG_FORCE_BEH,
-                         GOD_IEOH_JIAN);
-            mg.props[IEOH_JIAN_WEAPON] = *(mons->weapon());
-            mg.props[IEOH_JIAN_POWER] = 1;
-            if (!create_monster(mg))
+            monster* new_mons = ieoh_jian_manifest_weapon_monster(reform_location, *(mons->weapon()));
+
+            if (!new_mons)
                 dprf("Failed to reform Ieoh Jian weapon");
-            else
-                reformed = true;
+            else if (you.can_see(*mons) && !silent)
+                mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
         }
 
         if (!silent)
             check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
 
+        mons->destroy_inventory();
         silent = true;
-
-        int w_idx = mons->inv[MSLOT_WEAPON];
-        if (mons->weapon() && (w_idx != NON_ITEM))
-        {
-            // Something went wrong with resummoning the player's weapon, so it must be dropped.
-            if (killer == KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT))
-                mons->drop_item(MSLOT_WEAPON, false);
-            else if (killer != KILL_RESET && !mons->weapon()->props.exists(IEOH_JIAN_SLOT) && !reformed)
-                mons->drop_item(MSLOT_WEAPON, false);
-            else
-                destroy_item(w_idx);
-        }
-
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
@@ -3135,7 +3104,6 @@ string summoned_poof_msg(const monster* mons, bool plural)
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
-    case SPELL_WEAVE_SHADOWS:
     case MON_SUMM_SCROLL:
         msg      = "dissolve%s into shadows";
         no_chaos = true;
@@ -3575,14 +3543,3 @@ bool mons_bennu_can_revive(const monster* mons)
     return !mons->props.exists("bennu_revives")
            || mons->props["bennu_revives"].get_byte() < 1;
 }
-
-bool ieoh_jian_kill_oldest_weapon()
-{
-    auto monsters = find_ieoh_jian_manifested_weapons(false);
-    if (monsters.empty()) 
-        return false;
-
-    monster_die(monsters.at(0), KILL_RESET, NON_MONSTER);
-    return true;
-}
-

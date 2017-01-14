@@ -12,14 +12,14 @@
 #include "english.h" // conjugate_verb
 #include "evoke.h"
 #include "food.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
 #include "message.h"
@@ -321,14 +321,20 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
-    if (proprt[ARTP_CONTAM] && !meld)
+    if (proprt[ARTP_CONTAM] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
     {
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_DRAIN] && !meld)
+    if (proprt[ARTP_CONTAM] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
+        simple_god_message(" protects your body from contamination.");
+
+    if (proprt[ARTP_DRAIN] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
         drain_player(150, true, true);
+
+    if (proprt[ARTP_DRAIN] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
+        simple_god_message(" protects you from draining.");
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
@@ -345,11 +351,14 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     // this must be last!
-    if (proprt[ARTP_FRAGILE] && !meld)
+    if (proprt[ARTP_FRAGILE] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
     {
         mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
         dec_inv_item_quantity(item.link, 1);
     }
+
+    if (proprt[ARTP_FRAGILE] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
+        simple_god_message(" protects your weapon from shattering.");
 }
 
 static void _equip_use_warning(const item_def& item)
@@ -366,8 +375,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a chaotic item like this.");
     else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
         mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_poisoned_item(item) && you_worship(GOD_SHINING_ONE))
-        mpr("You really shouldn't be using a poisoned item like this.");
     else if (is_fiery_item(item) && you_worship(GOD_DITHMENOS))
         mpr("You really shouldn't be using a fiery item like this.");
     else if (is_channeling_item(item) && you_worship(GOD_PAKELLAS))
@@ -417,13 +424,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             calc_mp();
         }
 
-        _wield_cursed(item, known_cursed, unmeld);
-        break;
-    }
-
-    case OBJ_RODS:
-    {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
         _wield_cursed(item, known_cursed, unmeld);
         break;
     }
@@ -583,7 +583,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 if (you.species != SP_VAMPIRE
                     && you.undead_state() == US_ALIVE
                     && !you_foodless()
-                    && !unmeld)
+                    && !unmeld
+                    && !you.props.exists(IEOH_JIAN_SWAPPING))
                 {
                     make_hungry(4500, false, false);
                 }
@@ -705,6 +706,13 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                                            "weapon.");
                         break;
                     }
+                    
+                    if (you.props.exists(IEOH_JIAN_SWAPPING))
+                    {
+                        simple_god_message(" protects you from spatial distortion.");
+                        break;
+                    }
+
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
@@ -1361,28 +1369,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     calc_mp();
 }
 
-static void _manifest_as_ieoh_jian_weapon(item_def& wpn)
-{
-    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                 BEH_FRIENDLY,
-                 you.pos(),
-                 MHITYOU,
-                 MG_FORCE_BEH | MG_FORCE_PLACE,
-                 GOD_IEOH_JIAN);
-    mg.props[IEOH_JIAN_WEAPON] = wpn;
-
-    int power = you.skill(weapon_attack_skill(wpn.sub_type), 4, false);
-    mg.props[IEOH_JIAN_POWER] = power;
-
-    monster * const mons = create_monster(mg);
-
-    if (!mons)
-        dprf("Failed to animate Ieoh Jian weapon");
-    else
-        mprf(MSGCH_GOD, "%s flies away from your hand!", wpn.name(DESC_THE, false, true).c_str());
-}
-
-bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
+bool unwield_item(bool showMsgs)
 {
     if (!you.weapon())
         return false;
@@ -1397,24 +1384,25 @@ bool unwield_item(bool showMsgs, bool ignore_ieoh_jian)
     item_def& item = *you.weapon();
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
+    const int item_slot = you.equip[EQ_WEAPON];
 
     if (is_weapon && !safe_to_remove(item))
         return false;
 
-    int inventory_slot = you.equip[EQ_WEAPON];
-
     unequip_item(EQ_WEAPON, showMsgs);
+
+    if (item.props.exists(IEOH_JIAN_DIVINE) 
+        && !you.props.exists(IEOH_JIAN_SWAPPING)
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
+    {
+        string name = item.name(DESC_THE, false, true, false);
+        dec_inv_item_quantity(item_slot, 1);
+        mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
+        invalidate_agrid(true);
+    }
 
     you.wield_change     = true;
     you.redraw_quiver    = true;
-
-    if (!ignore_ieoh_jian && item.props.exists(IEOH_JIAN_SLOT))
-    {
-        // The weapon belongs to the IJC so you can't stash it away.
-        // Instead, it is animated beside you.
-        _manifest_as_ieoh_jian_weapon(item);
-        dec_inv_item_quantity(inventory_slot, 1);
-    }
 
     return true;
 }

@@ -130,9 +130,8 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 // grids that monsters can see
 const int MONSTER_LOS_RANGE = LOS_RADIUS;
 
-// Maximum charge level for rods
-const int MAX_ROD_CHARGE  = 17;
-const int ROD_CHARGE_MULT = 100;
+const int LIGHTNING_CHARGE_MULT = 100;
+const int LIGHTNING_MAX_CHARGE = 4;
 
 // evoker_debt for evoking one XP evoker
 const int XP_EVOKE_DEBT   = 10;
@@ -177,8 +176,8 @@ const int AGILITY_BONUS = 5;
 
 #define TORNADO_RADIUS 5
 
-#define IEOH_JIAN_WEAPON_SLOTS 6
-#define IEOH_JIAN_ATTENTION_SPAN 40
+#define IEOH_JIAN_BASE_PROJECTED_DURATION 25
+#define IEOH_JIAN_BASE_DIVINE_DURATION 80
 
 #define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3
@@ -238,7 +237,7 @@ typedef uint8_t colour_t;
 
 // This is used to signal curses (which has seven base colours) to
 // try to get a brighter version using recommissioned attribute flags.
-#define COLFLAG_CURSES_BRIGHTEN          0x0080
+#define COLFLAG_CURSES_BRIGHTEN          0x0008
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
 #define COLFLAG_NEUTRAL_MONSTER          0x0200

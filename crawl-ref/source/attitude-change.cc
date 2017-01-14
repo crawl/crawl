@@ -14,9 +14,9 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -128,29 +128,22 @@ void fedhas_neutralise(monster* mons)
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when
-// abandoning the god in question (Trog or TSO).
-bool make_god_gifts_disappear()
+// abandoning the god in question.
+void make_god_gifts_disappear()
 {
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
-    int count = 0;
-
     for (monster_iterator mi; mi; ++mi)
     {
         if (is_follower(**mi)
             && mi->has_ench(ENCH_ABJ)
             && mons_is_god_gift(**mi, god))
         {
-            if (simple_monster_message(**mi, " abandons you!"))
-                count++;
-
             // The monster disappears.
             monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
-
-    return count;
 }
 
 // When under penance, Yredelemnulites can lose all nearby undead slaves.

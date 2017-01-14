@@ -3,7 +3,7 @@
 #include "branch.h"
 #include "branch-data.h"
 
-#include "itemname.h"
+#include "item-name.h"
 #include "player.h"
 #include "stringutil.h"
 #include "travel.h"
