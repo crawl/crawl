@@ -116,7 +116,7 @@ static void _mark_expiring(status_info* inf, bool expiring)
     }
 }
 
-string _ray_text()
+static string _ray_text()
 {
     // i feel like we could do this with math instead...
     switch (you.attribute[ATTR_SEARING_RAY])
