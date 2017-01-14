@@ -71,7 +71,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_TRANSLOCATION,
     SPFLAG_TARGET | SPFLAG_OBJ | SPFLAG_NOT_SELF,
     1,
-    1000,
+    50,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
     TILEG_APPORTATION,
