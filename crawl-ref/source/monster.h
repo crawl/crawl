@@ -18,6 +18,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define VAULT_HD_KEY "vault_hd"
 
 #define FAKE_BLINK_KEY "fake_blink"
+#define CEREBOV_DISARMED_KEY "cerebov_disarmed"
 
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
