@@ -26,6 +26,7 @@
 #include "item-name.h"
 #include "items.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -2820,7 +2821,9 @@ spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
         you.attribute[ATTR_SEARING_RAY] = -1;
         you.props["searing_ray_target"].get_coord() = beam.target;
         you.props["searing_ray_aimed_at_spot"].get_bool() = beam.aimed_at_spot;
-        mpr("(Press . to maintain the ray.)");
+        string msg = "(Press <w>%</w> to maintain the ray.)";
+        insert_commands(msg, { CMD_WAIT });
+        mpr(msg);
     }
 
     return ret;
