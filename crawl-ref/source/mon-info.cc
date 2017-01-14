@@ -112,6 +112,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_BOUND_SOUL,      MB_BOUND_SOUL },
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
+    { ENCH_DISTRACTED_ACROBATICS,     MB_DISTRACTED },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
 };
 
@@ -434,6 +435,8 @@ monster_info::monster_info(const monster* m, int milev)
             if (_is_public_key(entry.first))
                 props[entry.first] = entry.second;
     }
+
+    ieoh_jian_weapon_name = (m->type == MONS_IEOH_JIAN_WEAPON && m->weapon()) ? m->weapon()->name(DESC_PLAIN, false, true,false) : "";
 
     // Translate references to tentacles into just their locations
     if (mons_is_tentacle_or_tentacle_segment(type))
@@ -849,6 +852,8 @@ string monster_info::_core_name() const
         s = "Lernaean hydra"; // TODO: put this into mon-data.h
     else if (nametype == MONS_ROYAL_JELLY)
         s = "Royal Jelly";
+    else if (nametype == MONS_IEOH_JIAN_WEAPON && !ieoh_jian_weapon_name.empty())
+        s = ieoh_jian_weapon_name;
     else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)

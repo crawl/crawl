@@ -54,6 +54,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -65,6 +66,7 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
+#include "teleport.h" // random_near_space
 #include "terrain.h"
 #include "timed-effects.h"
 #include "traps.h"
@@ -1458,6 +1460,8 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     cloud_type cloud = CLOUD_NONE;
     if (msg.find("smoke") != string::npos)
         cloud = random_smoke_type();
+    if (msg.find("steel") != string::npos)
+        cloud = CLOUD_DUST;
     else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
 
@@ -1976,12 +1980,14 @@ item_def* monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player
-    // instead. Ditto Dithmenos shadow melee and shadow throw.
+    // instead. Ditto Dithmenos shadow melee and shadow throw. 
+    // Ditto Ieoh Jian Council weapons.
     if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
              && menv[killer_index].summoner == MID_PLAYER)
-            || mons_is_player_shadow(menv[killer_index])))
+            || mons_is_player_shadow(menv[killer_index])
+            || mons_is_ieoh_jian_weapon(menv[killer_index])))
     {
         killer_index = you.mindex();
     }
@@ -2126,6 +2132,35 @@ item_def* monster_die(monster* mons, killer_type killer,
 
             destroy_item(w_idx);
         }
+    }
+    else if (mons->type == MONS_IEOH_JIAN_WEAPON)
+    {
+        if (killer == KILL_RESET)
+        {
+            if (mons->weapon()->props.exists(IEOH_JIAN_DIVINE))
+            {
+                if (!silent)
+                    mprf("%s ascends back to the heavens!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
+                invalidate_agrid(true);
+            }
+        }
+        else 
+        {
+            coord_def reform_location;
+            random_near_space(mons, mons->pos(), reform_location, true, false, true);
+            monster* new_mons = ieoh_jian_manifest_weapon_monster(reform_location, *(mons->weapon()));
+
+            if (!new_mons)
+                dprf("Failed to reform Ieoh Jian weapon");
+            else if (you.can_see(*mons) && !silent)
+                mprf("%s shatters and reforms elsewhere!", mons->weapon()->name(DESC_THE, false, true, false).c_str());
+        }
+
+        if (!silent)
+            check_place_cloud(CLOUD_DUST, mons->pos(), 2 + random2(4), mons, 5 + random2(15), -1);
+
+        mons->destroy_inventory();
+        silent = true;
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE)
     {
@@ -3100,6 +3135,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
         {
             msg = "degenerate%s into a cloud of primal chaos";
         }
+
+        if (mons->type == MONS_IEOH_JIAN_WEAPON)
+            msg = "shatter%s in a cloud of steel fragments";
 
         if (mons->is_holy()
             && summon_type != SPELL_SHADOW_CREATURES

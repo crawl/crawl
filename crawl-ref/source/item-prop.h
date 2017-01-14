@@ -148,6 +148,7 @@ int single_damage_type(const item_def &item) PURE;
 bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = false);
 
 skill_type item_attack_skill(const item_def &item) PURE;
+skill_type weapon_attack_skill(uint8_t weapon_subtype) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 bool staff_uses_evocations(const item_def &item);
@@ -248,5 +249,6 @@ static inline bool is_weapon(const item_def &item)
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
+bool you_could_wield_weapon_type(weapon_type type);
 
 #endif

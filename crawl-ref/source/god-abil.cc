@@ -85,6 +85,7 @@
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
+#include "throw.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "viewchar.h"
@@ -7083,4 +7084,215 @@ void hepliaklqana_choose_identity()
 {
     _hepliaklqana_choose_name();
     _hepliaklqana_choose_gender();
+}
+
+bool ieoh_jian_heavenly_blade()
+{
+    bool directly_summon = false;
+    if (you.species == SP_FELID)
+        directly_summon = true;
+
+    if (you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
+    {
+        simple_god_message(" says: One heavenly blade is more than enough, mortal!");
+        return false;
+    }
+
+    if (!directly_summon && inv_count() == ENDOFPACK)
+    {
+        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
+            directly_summon = true;
+        else
+            return false;
+    }
+
+    ieoh_jian_end_projection();
+
+    auto your_weapon = you.weapon();
+    bool bare_handed = (your_weapon == nullptr)
+                       || wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false);
+    
+    if (!bare_handed)
+    {
+        mprf("You can't unwield your weapon!");
+        return false;
+    }
+
+    if (your_weapon)
+        your_weapon->props[IEOH_JIAN_SWAPPED_OUT] = true;
+
+    auto weapon = ieoh_jian_generate_divine_weapon();
+
+    if (!directly_summon && !can_wield(&weapon))
+    {
+        if (yesno("You can't wield weapons. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
+            directly_summon = true;
+        else
+            return false;
+    }
+
+    if (directly_summon)
+    {
+        monster* mons = ieoh_jian_manifest_weapon_monster(you.pos(), weapon);
+        if (mons)
+        {
+            mprf(MSGCH_GOD, "%s manifests from thin air! You can feel the presence of %s wielding it.", 
+                 weapon.name(DESC_THE, false, true, false).c_str(),
+                 ieoh_jian_random_sifu_name().c_str());
+
+            lose_piety(5); // Compensation for the extra effect
+        }
+        else 
+        {
+            mprf(MSGCH_GOD, "You briefly feel the presence of %s, but nothing happens", ieoh_jian_random_sifu_name().c_str());
+            return false;
+        }
+    }
+    else
+    {
+        int slot = find_free_slot(weapon);
+        move_item_to_inv(weapon);
+        mprf(MSGCH_GOD,"%s manifests from thin air! You reach your %s and feel its power.", 
+             weapon.name(DESC_THE, false, true, false).c_str(),
+             you.hand_name(false).c_str());
+        equip_item(EQ_WEAPON, slot, false);
+    }
+
+    invalidate_agrid(true);
+    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
+    int duration = IEOH_JIAN_BASE_DIVINE_DURATION * (1 + invo_duration_factor);
+    you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = duration;
+    return true;
+}
+
+bool ieoh_jian_steel_dragonfly(bolt &pbolt)
+{
+    ASSERT(you.weapon());
+    dist thr;
+
+    if (you.confused())
+    {
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.isValid = true;
+    }
+    else if (pbolt.target.zero())
+    {
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        args.range = 3 + piety_rank(you.piety) / 3;
+        direction(thr, args);
+
+        if (!thr.isValid)
+        {
+            if (thr.isCancel)
+                canned_msg(MSG_OK);
+
+            return false;
+        }
+    }
+    pbolt.set_target(thr);
+
+    int weapon_index = you.equip[EQ_WEAPON];
+    item_def& thrown = you.inv[weapon_index];
+    ASSERT(thrown.defined());
+
+    item_def item = thrown;
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+
+    string ammo_name;
+
+    bool returning;
+    if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+        return false;
+
+    // Don't trace at all when confused.
+    bool cancelled = false;
+    if (!you.confused())
+    {
+        // Set values absurdly high to make sure the tracer will
+        // complain if we're attempting to fire through allies.
+        pbolt.damage = dice_def(1, 100);
+
+        // Init tracer variables.
+        pbolt.foe_info.reset();
+        pbolt.friend_info.reset();
+        pbolt.foe_ratio = 100;
+        pbolt.is_tracer = true;
+
+        pbolt.fire();
+
+        cancelled = pbolt.beam_cancelled;
+
+        pbolt.hit    = 0;
+        pbolt.damage = dice_def();
+    }
+
+    // Should only happen if the player answered 'n' to one of those
+    // "Fire through friendly?" prompts.
+    if (cancelled)
+        return false;
+
+    you.props[IEOH_JIAN_SWAPPING] = true;
+    you.weapon()->props[IEOH_JIAN_PROJECTED] = true;
+    auto unwield_result = wield_weapon(true, SLOT_BARE_HANDS, true, true, false, true, false);
+    you.props.erase(IEOH_JIAN_SWAPPING);
+    if (!unwield_result)
+    {
+        you.weapon()->props.erase(IEOH_JIAN_PROJECTED);
+        return false;
+    }
+
+    // Now start real firing!
+    origin_set_unknown(item);
+
+    // Even though direction is allowed, we're throwing so we
+    // want to use tx, ty to make the missile fly to map edge.
+    pbolt.set_target(thr);
+
+    you.time_taken = you.attack_delay(&item).roll();
+
+    // Create message.
+    mprf("You project %s.", item.name(DESC_THE, false, true, false).c_str());
+
+    // Ensure we're firing a 'missile'-type beam.
+    pbolt.pierce    = false;
+    pbolt.is_tracer = false;
+
+    pbolt.hit = property(thrown, PWPN_HIT);
+    pbolt.item->props[IEOH_JIAN_PROJECTED] = true;
+
+    pbolt.drop_item = false;
+    pbolt.aimed_at_spot = true;
+    pbolt.fire();
+
+    // ...any monster nearby can see that something has been thrown, even
+    // if it didn't make any noise.
+    alert_nearby_monsters();
+
+    you.turn_is_over = false;
+   
+    item_def summoned_copy = thrown;
+    monster* mons = ieoh_jian_manifest_weapon_monster(pbolt.target, summoned_copy);
+
+    if (!mons)
+        mprf("%s bounces wildly and flies back to you!", item.name(DESC_THE, false, true, false).c_str());
+    else
+    {
+        // Activates the flying weapon to attack for a strike or two.
+        int duration = IEOH_JIAN_BASE_PROJECTED_DURATION;
+        you.duration[DUR_IEOH_JIAN_PROJECTION] = duration;
+    }
+
+    canned_msg(MSG_EMPTY_HANDED_NOW);
+
+    // Divine Blade never disappears in the middle of a fight.
+    if(you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] < 30) 
+    {
+        you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 30;
+    }
+
+    you.turn_is_over = true;
+    return true;
 }

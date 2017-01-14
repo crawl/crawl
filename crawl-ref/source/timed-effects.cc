@@ -1298,9 +1298,9 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INJURY_BOND: case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
-        case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
+        case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST: 
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
-        case ENCH_BOUND_SOUL:
+        case ENCH_BOUND_SOUL: case ENCH_DISTRACTED_ACROBATICS:
         case ENCH_STILL_WINDS:
             lose_ench_levels(entry.second, levels);
             break;

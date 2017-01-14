@@ -68,6 +68,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "view.h"
+#include "player-equip.h"
 
 #ifdef DEBUG_RELIGION
 #    define DEBUG_DIAGNOSTICS
@@ -328,6 +329,17 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
+    },
+    // Ieoh Jian
+    { { -1, "crosstrain your martial skills at an accelerated rate"},
+      { 1, "strike by moving towards foes, devastating them if slowed or distracted",
+           "no longer perform lunging strikes" },
+      { 2, "attack and slow down monsters by moving around them",
+           "no longer perform spinning attacks" },
+      { 3, "perform a distracting airborne attack by moving against a solid obstacle",
+           "no longer perform airborne attacks" },
+      { 4, ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "throw a weapon at your foe and animate it" },
+      { 5, ABIL_IEOH_JIAN_HEAVENLY_BLADE, "request help in the form of powerful divine weapons" },
     },
 };
 
@@ -2038,6 +2050,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_PAKELLAS:      return "Pakellas";
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
+    case GOD_IEOH_JIAN:     return "Ieoh Jian";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2052,6 +2065,21 @@ string god_name_jiyva(bool second_name)
         name += " " + you.jiyva_second_name;
 
     return name;
+}
+
+string ieoh_jian_random_sifu_name()
+{
+    switch (random2(7))
+    {
+        case 0: return "Sifu Deng Ai";
+        case 1: return "Sifu Jiang Wei";
+        case 2: return "Sifu Zhang Bao";
+        case 3: return "Sifu Ma Yunglu";
+        case 4: return "Sifu Sun Luban";
+        case 5: return "Sifu Gene Jian Bin";
+        case 6: return "Sifu Cai Fang";
+        default: return "Sifu Bug";
+    }
 }
 
 god_type str_to_god(const string &_name, bool exact)
@@ -2856,6 +2884,10 @@ void excommunication(bool voluntary, god_type new_god)
         _set_penance(old_god, 50);
         break;
 
+    case GOD_IEOH_JIAN:
+        simple_god_message(" withdraws all divine help and plots revenge.", old_god);
+        _set_penance(old_god, 25);
+        break;
     default:
         _set_penance(old_god, 25);
         break;
@@ -2997,6 +3029,7 @@ bool player_can_join_god(god_type which_god)
         && (which_god == GOD_BEOGH
             || which_god == GOD_JIYVA
             || which_god == GOD_HEPLIAKLQANA
+            || which_god == GOD_IEOH_JIAN
             || which_god == GOD_FEDHAS
             || which_god == GOD_YREDELEMNUL))
     {
@@ -3448,6 +3481,11 @@ static void _join_pakellas()
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
+// Setup when becoming an Ieoh Jian ninja
+static void _join_ieoh_jian()
+{
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
@@ -3472,6 +3510,7 @@ static const map<god_type, function<void ()>> on_join = {
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
     { GOD_PAKELLAS, _join_pakellas },
+    { GOD_IEOH_JIAN, _join_ieoh_jian },
     { GOD_RU, _join_ru },
     { GOD_TROG, _join_trog },
     { GOD_ZIN, _join_zin },
@@ -3952,6 +3991,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_ZIN:
         case GOD_PAKELLAS:
         case GOD_JIYVA:
+        case GOD_IEOH_JIAN:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -3984,7 +4024,6 @@ void handle_god_time(int /*time_delta*/)
             }
 
             break;
-
         case GOD_USKAYAW:
             // We handle Uskayaw elsewhere because this func gets called rarely
         case GOD_GOZAG:
@@ -4026,6 +4065,7 @@ int god_colour(god_type god) // mv - added
     case GOD_BEOGH:
     case GOD_LUGONU:
     case GOD_ASHENZARI:
+    case GOD_IEOH_JIAN:
         return LIGHTRED;
 
     case GOD_GOZAG:
@@ -4122,6 +4162,7 @@ colour_t god_message_altar_colour(god_type god)
         return BLUE;
 
     case GOD_LUGONU:
+    case GOD_IEOH_JIAN:
         return LIGHTRED;
 
     case GOD_CHEIBRIADOS:

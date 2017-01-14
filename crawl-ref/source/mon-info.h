@@ -169,6 +169,7 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
+    MB_DISTRACTED_ACROBATICS,
     NUM_MB_FLAGS
 };
 
@@ -210,6 +211,7 @@ struct monster_info_base
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;
+    string ieoh_jian_weapon_name;
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
 

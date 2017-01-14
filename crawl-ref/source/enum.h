@@ -440,6 +440,11 @@ enum ability_type
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
 #endif
 
+    // Ieoh Jian
+    ABIL_IEOH_JIAN_STEEL_DRAGONFLY = 1300,
+    ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY,
+    ABIL_IEOH_JIAN_HEAVENLY_BLADE,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -1653,6 +1658,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+    DNGN_ALTAR_IEOH_JIAN,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1719,6 +1725,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
+    DNGN_ALTAR_IEOH_JIAN,
 
     DNGN_ENDLESS_SALT,
 #endif
@@ -1916,6 +1923,8 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
+    DUR_IEOH_JIAN_PROJECTION,
+    DUR_IEOH_JIAN_DIVINE_BLADE,
     DUR_NO_HOP,
     NUM_DURATIONS
 };
@@ -2092,6 +2101,7 @@ enum enchant_type
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
+    ENCH_DISTRACTED_ACROBATICS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2218,6 +2228,7 @@ enum god_type
     GOD_PAKELLAS,
     GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
+    GOD_IEOH_JIAN,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -2508,6 +2519,7 @@ enum targ_mode_type
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_MOBILE_MONSTER,    // Non-stationary monsters
+    TARG_IEOH_JIAN_WEAPON,
     TARG_NUM_MODES
 };
 
@@ -2666,6 +2678,7 @@ enum monster_type                      // menv[].type
     MONS_GLOWING_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
+    MONS_IEOH_JIAN_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
 #endif

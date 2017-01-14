@@ -2,6 +2,9 @@
  * Status defaults for durations.
  */
 
+#include "defines.h"
+#include "god-passive.h"
+
 static void _end_weapon_brand()
 {
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
@@ -28,6 +31,16 @@ static void _end_corrosion()
 static void _redraw_armour()
 {
     you.redraw_armour_class = true;
+}
+
+static void _end_projection()
+{
+    ieoh_jian_end_projection();
+}
+
+static void _end_divine_blade()
+{
+    ieoh_jian_end_divine_blade();
 }
 
 // properties of the duration.
@@ -537,14 +550,18 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
+    { DUR_IEOH_JIAN_PROJECTION, 0, "", "projected weapon", "",
+      "", D_NO_FLAGS,
+      {{ "", _end_projection }}},
+    { DUR_IEOH_JIAN_DIVINE_BLADE, 0, "", "divine blade", "",
+      "", D_NO_FLAGS,
+      {{ "", _end_divine_blade }}},
     { DUR_NO_HOP, YELLOW, "-Hop",
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
-
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
-
     { DUR_INVIS, 0, "", "", "invis", "", D_DISPELLABLE,
         {{ "", _end_invis }, { "You flicker for a moment.", 1}}, 6},
     { DUR_SLOW, 0, "", "", "slow", "", D_DISPELLABLE},

@@ -569,6 +569,9 @@ int player::halo_radius() const
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
 
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE))
+        size = max(size, 1);
+
     return size;
 }
 
@@ -605,6 +608,11 @@ int monster::halo_radius() const
 
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
+
+    if (weap && (weap->flags & ISFLAG_UNRANDART)
+        && weap->unrand_idx >= UNRAND_DIVINE_DEER_HORN_KNIFE
+        && weap->unrand_idx <= UNRAND_DIVINE_CHUI)
+        size = 1;
 
     if (!(holiness() & MH_HOLY))
         return size;

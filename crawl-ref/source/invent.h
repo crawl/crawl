@@ -249,6 +249,6 @@ bool item_is_evokable(const item_def &item, bool reach = true,
                       bool msg = false, bool equip = true);
 bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
-                          bool &penance);
+                          bool &penance, bool ignore_inscription = false);
 int digit_inscription_to_inv_index(char digit, operation_types oper);
 #endif

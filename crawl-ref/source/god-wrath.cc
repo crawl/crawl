@@ -9,11 +9,13 @@
 
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
@@ -34,6 +36,7 @@
 #include "mon-poly.h"
 #include "mutation.h"
 #include "notes.h"
+#include "output.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -50,6 +53,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
+#include "traps.h"
 #include "view.h"
 #include "xom.h"
 
@@ -85,6 +89,7 @@ static const char *_god_wrath_adjectives[] =
     "progress",         // Pakellas
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
+    "rancor",           // Ieoh Jian
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -1708,6 +1713,182 @@ static bool _choose_hostile_monster(const monster& mon)
     return mon.attitude == ATT_HOSTILE;
 }
 
+enum _ijc_pattern {
+    PATTERN_SHORT_CIRCLE,
+    PATTERN_LONG_CIRCLE,
+    PATTERN_CHECKERBOARD,
+};
+
+static void _summon_traps_ijc(trap_type type, _ijc_pattern pattern, bool revealed)
+{
+    vector<coord_def> positions;
+    coord_def dir = coord_def(1,0);
+    switch(pattern) 
+    {
+        case PATTERN_SHORT_CIRCLE:
+            for (int i = 0; i < 8; ++i)
+            {
+                positions.push_back(you.pos() + dir);
+                dir = rotate_adjacent(dir, 1);
+            }
+            break;
+        case PATTERN_CHECKERBOARD:
+            for (int x = -3; x < 4; x++)
+                for (int y = -3; y < 4; y++)
+                    if (!((x+y) % 2))
+                        positions.push_back(you.pos() + coord_def(x, y));
+            break;
+        case PATTERN_LONG_CIRCLE:
+            for (int x = -2; x < 3; x++)
+                for (int y = -2; y < 3; y++)
+                    if (you.pos().distance_from(you.pos() + coord_def(x,y)) > 1)
+                        positions.push_back(you.pos() + coord_def(x, y));
+            break;
+        default:
+            break;
+    }
+
+    for (auto& position: positions)
+    {
+        trap_def ts;
+        ts.pos = position;
+        ts.type = type;
+
+        if (!in_bounds(ts.pos)
+            || grd(ts.pos) != DNGN_FLOOR
+            || map_masked(ts.pos, MMT_NO_TRAP))
+        {
+            continue; // Can't place it here.
+        }
+
+        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        if (revealed)
+            ts.reveal();
+        ts.prepare_ammo(5);
+        env.trap[ts.pos] = ts;
+        dprf("placed an IJC trap");
+    }
+}
+
+// They aren't actually IJC weapons; that would cause a LOT of mechanical trouble.
+// They're normal dancing weapons branded in the vein of IJC.
+static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype, _ijc_pattern pattern)
+{
+    vector<coord_def> positions;
+
+    switch (pattern)
+    {
+        case PATTERN_SHORT_CIRCLE:
+            positions.push_back(you.pos() + coord_def(1,0));
+            positions.push_back(you.pos() + coord_def(-1,0));
+            positions.push_back(you.pos() + coord_def(0,1));
+            positions.push_back(you.pos() + coord_def(0,-1));
+            break;
+        case PATTERN_LONG_CIRCLE:
+            positions.push_back(you.pos() + coord_def(2,0));
+            positions.push_back(you.pos() + coord_def(-2,0));
+            positions.push_back(you.pos() + coord_def(0,2));
+            positions.push_back(you.pos() + coord_def(0,-2));
+            break;
+        case PATTERN_CHECKERBOARD:
+            positions.push_back(you.pos() + coord_def(1,1));
+            positions.push_back(you.pos() + coord_def(-1,1));
+            positions.push_back(you.pos() + coord_def(1,-1));
+            positions.push_back(you.pos() + coord_def(-1,-1));
+    }
+
+    for (auto& position : positions)
+    {
+        mgen_data mg = mgen_data::hostile_at(MONS_DANCING_WEAPON, true, position)
+                        .set_summoned(nullptr, 0, 0, GOD_IEOH_JIAN)
+                        .set_non_actor_summoner(_god_wrath_name(GOD_IEOH_JIAN));
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        mg.flags |= MG_FORCE_PLACE;
+        // Now create monster.
+        if (monster *mon =
+            create_monster(mg))
+        {
+            ASSERT(mon->weapon() != nullptr);
+            item_def& wpn(*mon->weapon());
+
+            switch (weapon_attack_skill(subtype))
+            {
+                case SK_SHORT_BLADES: 
+                case SK_POLEARMS:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+                    break;
+                case SK_AXES:
+                case SK_LONG_BLADES:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_FLAMING);
+                    break;
+                default:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
+                    break;
+            }
+
+            wpn.plus  = random2(5); 
+            wpn.sub_type = subtype;
+
+            set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+
+            item_colour(wpn);
+
+            ghost_demon newstats;
+            newstats.init_dancing_weapon(wpn,
+                                         you.experience_level * 50 / 9);
+
+            mon->set_ghost(newstats);
+            mon->ghost_demon_init();
+        }
+    }
+}
+
+static bool _ieoh_jian_retribution()
+{
+    switch(random2(6))
+    {
+        case 0:
+            simple_god_message(" whispers, \"Die by a thousand cuts...\"", GOD_IEOH_JIAN);
+            mpr("You feel the sudden stab of multiple needles!");
+            _summon_hostile_weapons_ijc_flavour(WPN_DAGGER, PATTERN_LONG_CIRCLE);
+            you.set_duration(DUR_BARBS,  random_range(5, 10));
+            break;
+        case 1:
+            simple_god_message(" whispers, \"Nowhere to run...\"",GOD_IEOH_JIAN);
+            mpr("Your limbs feel heavy!");
+            _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF, PATTERN_LONG_CIRCLE);
+            you.set_duration(DUR_SLOW,  random_range(5 , 10));
+            break;
+        case 2:
+            simple_god_message(" whispers, \"Feeling trapped?\"", GOD_IEOH_JIAN);
+            _summon_hostile_weapons_ijc_flavour(WPN_HALBERD, PATTERN_LONG_CIRCLE);
+            player_caught_in_net();
+            break;
+        case 3:
+            simple_god_message(" whispers, \"Watch your step...\"", GOD_IEOH_JIAN);
+            mpr("You hear multiple clicking sounds nearby!");
+            _summon_hostile_weapons_ijc_flavour(WPN_SCIMITAR, PATTERN_SHORT_CIRCLE);
+            _summon_traps_ijc(TRAP_BLADE, PATTERN_CHECKERBOARD, false);
+            break;
+        case 4:
+            simple_god_message(" whispers, \"These will loosen your tongue...\"", GOD_IEOH_JIAN);
+            _summon_hostile_weapons_ijc_flavour(WPN_DIRE_FLAIL, PATTERN_SHORT_CIRCLE);
+            you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
+            invalidate_agrid(true);
+            break;
+        case 5:
+            simple_god_message(" whispers, \"Suffer, mortal...\"", GOD_IEOH_JIAN);
+            mpr("You feel a burning poison under your skin!");
+            you.corrode_equipment("The poison", 4);
+            lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
+            lose_stat(STAT_DEX, 1 + random2(you.dex() / 8));
+            break;
+        default:
+            break;
+    }
+
+    return true;
+}
 
 static bool _uskayaw_retribution()
 {
@@ -1794,6 +1975,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
+    case GOD_IEOH_JIAN:     do_more = _ieoh_jian_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

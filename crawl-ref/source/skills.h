@@ -97,6 +97,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk,
 
 bool compare_skills(skill_type sk1, skill_type sk2);
 vector<skill_type> get_crosstrain_skills(skill_type sk);
+vector<skill_type> get_secondary_crosstrain_skills(skill_type sk);
 
 int elemental_preference(spell_type spell, int scale = 1);
 

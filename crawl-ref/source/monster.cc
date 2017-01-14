@@ -32,9 +32,12 @@
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
+#include "god-passive.h"
+#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -50,8 +53,12 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
+#include "output.h"
+#include "prompt.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "rot.h"
+#include "skills.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -4614,6 +4621,7 @@ void monster::ghost_demon_init()
     hit_points      = max_hit_points;
     speed           = ghost->speed;
     speed_increment = 70;
+
     if (ghost->colour != COLOUR_UNDEF)
         colour = ghost->colour;
 
@@ -6421,7 +6429,6 @@ item_def* monster::take_item(int steal_what, mon_inv_type mslot)
 
     return &new_item;
 }
-
 /** Disarm this monster, and preferably pull the weapon into your tile.
  *
  *  @returns a pointer to the weapon disarmed, or nullptr if unsuccessful.
@@ -6689,6 +6696,7 @@ bool monster::angered_by_attacks() const
     return !has_ench(ENCH_INSANE)
             && !mons_is_avatar(type)
             && type != MONS_SPELLFORGED_SERVITOR
+            && type != MONS_IEOH_JIAN_WEAPON
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
 }

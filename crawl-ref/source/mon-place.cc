@@ -1556,6 +1556,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
+        else if (mg.props.exists(IEOH_JIAN_WEAPON))
+            give_specific_item(mon, mg.props[IEOH_JIAN_WEAPON].get_item());
         else
             give_item(mon, place.absdepth(), summoned);
 
@@ -1673,6 +1675,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.cls == MONS_DANCING_WEAPON)
             blame_prefix = "animated by ";
 
+        if (mg.cls == MONS_IEOH_JIAN_WEAPON)
+            blame_prefix = "manifested by ";
+
         if (mg.summon_type == SPELL_SPECTRAL_CLOUD)
             blame_prefix = "called from beyond by ";
     }
@@ -1690,7 +1695,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         blame_prefix = "created by ";
 
-    if (!mg.non_actor_summoner.empty())
+    if (mg.cls == MONS_IEOH_JIAN_WEAPON)
+        mons_add_blame(mon, blame_prefix + "the Ieoh Jian Council");
+    else if (!mg.non_actor_summoner.empty())
         mons_add_blame(mon, blame_prefix + mg.non_actor_summoner);
     // NOTE: The summoner might be dead if the summoned is placed by a
     // beam which killed the summoner first (like fire vortexes placed
@@ -1752,6 +1759,13 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
                                       mg.props.exists(TUKIMA_POWER) ?
                                           mg.props[TUKIMA_POWER].get_int() : 100);
+        }
+        else if (mon->type == MONS_IEOH_JIAN_WEAPON)
+        {
+            /// Ieoh Jian weapons are weaker tukima's with a few extra effects on top.
+            ghost.init_ieoh_jian_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                      mg.props.exists(IEOH_JIAN_POWER) ?
+                                          mg.props[IEOH_JIAN_POWER].get_int() : 100);
         }
         else
         {

@@ -1910,6 +1910,11 @@ skill_type item_attack_skill(const item_def &item)
     return SK_FIGHTING;
 }
 
+skill_type weapon_attack_skill(uint8_t weapon_subtype)
+{
+    return Weapon_prop[ Weapon_index[weapon_subtype] ].skill;
+}
+
 /**
  * Returns the skill used by the given item type to attack.
  *
@@ -2069,6 +2074,9 @@ bool has_launcher(const item_def &ammo)
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
+    if (wpn.props.exists(IEOH_JIAN_PROJECTED))
+        return true;
+
     if (wpn.base_type != OBJ_MISSILES)
         return false;
 
@@ -2093,6 +2101,9 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile)
 {
+    if (missile.props.exists(IEOH_JIAN_PROJECTED))
+        return LRET_THROWN;
+
     if (missile.base_type != OBJ_MISSILES)
         return LRET_FUMBLED;
 
@@ -3089,4 +3100,10 @@ int missile_base_price(missile_type type)
 int armour_base_price(armour_type type)
 {
     return Armour_prop[ Armour_index[type] ].price;
+}
+
+bool you_could_wield_weapon_type(weapon_type type)
+{
+    auto size = you.body_size();
+    return Weapon_prop[Weapon_index[type]].min_2h_size <= size;
 }

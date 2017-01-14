@@ -4,7 +4,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -20,14 +22,18 @@
 #include "god-item.h"
 #include "god-prayer.h"
 #include "invent.h" // in_inventory
+#include "item-use.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -35,6 +41,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "view.h"
 
 // TODO: template out the differences between this and god_power.
 // TODO: use the display method rather than dummy powers in god_powers.
@@ -289,6 +296,13 @@ static const vector<god_passive> god_passives[NUM_GODS] =
     {
         { -1, passive_t::frail, "GOD siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain, "drain nearby creatures when transferring your ancestor" },
+    },
+
+    // Ieoh Jian
+    {
+        { 1, passive_t::ieoh_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
+        { 2, passive_t::ieoh_jian_whirlwind, "attack monsters by moving around them, rapidly striking pressure points." },
+        { 3, passive_t::ieoh_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
     },
 };
 
@@ -1373,6 +1387,321 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
+}
+
+monster* ieoh_jian_find_projected_weapon()
+{
+    for (auto& monster: menv)
+        if (monster.type == MONS_IEOH_JIAN_WEAPON 
+            && monster.weapon()
+            && monster.weapon()->props.exists(IEOH_JIAN_PROJECTED))
+        {
+            return &monster;
+        }
+
+    return nullptr;
+}
+
+void ieoh_jian_end_divine_blade()
+{
+    you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 0;
+    for (auto& monster: menv)
+        if (monster.type == MONS_IEOH_JIAN_WEAPON 
+            && monster.weapon()
+            && monster.weapon()->props.exists(IEOH_JIAN_DIVINE))
+        {
+            monster_die(&monster, KILL_RESET, NON_MONSTER, true);
+        }
+
+    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
+    {
+        auto& item = you.inv[which_item];
+        if (item.defined() && item.props.exists(IEOH_JIAN_DIVINE))
+        {
+            string name = item.name(DESC_THE, false, true, false);
+            dec_inv_item_quantity(which_item, 1);
+            mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
+        }
+
+        if (item.defined() && item.props.exists(IEOH_JIAN_SWAPPED_OUT))
+        {
+            wield_weapon(true, which_item, false, true, false, false, false);
+            item.props.erase(IEOH_JIAN_SWAPPED_OUT);
+        }
+
+    }
+    invalidate_agrid(true);
+}
+
+void ieoh_jian_end_projection()
+{
+    you.duration[DUR_IEOH_JIAN_PROJECTION] = 0;
+    auto monster = ieoh_jian_find_projected_weapon();
+    if (monster)
+        monster_die(monster, KILL_RESET, NON_MONSTER, true);
+
+    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
+    {
+        auto& item = you.inv[which_item];
+        if (item.defined() && item.props.exists(IEOH_JIAN_PROJECTED))
+        {
+            mprf(MSGCH_GOD, "%s flies back to you!", item.name(DESC_THE, false, true, false).c_str());
+            you.props[IEOH_JIAN_SWAPPING] = true;
+            item.props.erase(IEOH_JIAN_PROJECTED);
+            if (!you.weapon())
+                wield_weapon(true, which_item, false, true, false, false, false);
+            you.props.erase(IEOH_JIAN_SWAPPING);
+            invalidate_agrid(true);
+        }
+    }
+}
+
+static const int _ieoh_jian_num_divine_weapons = 8;
+static const FixedVector<int, _ieoh_jian_num_divine_weapons> _ieoh_jian_divine_weapons
+(
+    // SB
+    UNRAND_DIVINE_DEER_HORN_KNIFE,
+    // LB
+    UNRAND_DIVINE_CHANG_DAO,
+    UNRAND_DIVINE_HOOK_BLADE,
+    // Axes
+    UNRAND_DIVINE_YUE,
+    // MF
+    UNRAND_DIVINE_METEOR_HAMMER,
+    UNRAND_DIVINE_CHUI,
+    // Polearms
+    UNRAND_DIVINE_GUAN_DAO,
+    // Staves
+    UNRAND_DIVINE_MONK_SPADE
+);
+
+// Boost the weight of other categories to compensate for the loss of a two handed equivalent?
+static int _hands_boost(weapon_type big_type)
+{
+    return (hands_reqd(&you, OBJ_WEAPONS, big_type) == HANDS_TWO && you.shield()) ? 1 : 0;
+}
+
+item_def ieoh_jian_generate_divine_weapon()
+{
+    item_def weapon;
+
+    FixedVector<int, _ieoh_jian_num_divine_weapons> weights
+    (
+        2, //UNRAND_DIVINE_DEER_HORN_KNIFE
+        1, //UNRAND_DIVINE_CHANG_DAO,
+        1 + _hands_boost(WPN_GREAT_SWORD), //UNRAND_DIVINE_HOOK_BLADE,
+        2, //UNRAND_DIVINE_YUE,
+        1, //UNRAND_DIVINE_METEOR_HAMMER,
+        1 + _hands_boost(WPN_DIRE_FLAIL), //UNRAND_DIVINE_CHUI,
+        2, //UNRAND_DIVINE_GUAN_DAO,
+        2 //UNRAND_DIVINE_MONK_SPADE
+    );
+    if (!you_could_wield_weapon_type(WPN_GREAT_SWORD)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_GREAT_SWORD) == HANDS_TWO) && you.shield()))
+        weights[1] = 0;
+    if (!you_could_wield_weapon_type(WPN_EXECUTIONERS_AXE)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_EXECUTIONERS_AXE) == HANDS_TWO) && you.shield()))
+        weights[3] = 0;
+    if (!you_could_wield_weapon_type(WPN_DIRE_FLAIL)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_DIRE_FLAIL) == HANDS_TWO) && you.shield()))
+        weights[4] = 0;
+    if (!you_could_wield_weapon_type(WPN_GLAIVE)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_GLAIVE) == HANDS_TWO) && you.shield()))
+        weights[6] = 0;
+    if (!you_could_wield_weapon_type(WPN_LAJATANG)
+         || ((hands_reqd(&you, OBJ_WEAPONS, WPN_LAJATANG) == HANDS_TWO) && you.shield()))
+        weights[7] = 0;
+
+    int index = random_choose_weighted(weights);
+    make_item_unrandart(weapon, _ieoh_jian_divine_weapons[index]);
+    weapon.quantity = 1;
+    return weapon;
+} 
+
+monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)
+{
+    if (!in_bounds(position) || weapon.base_type != OBJ_WEAPONS)
+        return nullptr;
+
+    coord_def spawn_position = position;
+    for (adjacent_iterator ai(position, false); ai; ++ai)
+    {
+        if (you.is_habitable(*ai) && !actor_at(*ai))
+        {
+            spawn_position = *ai;
+            break;
+        }
+    }
+
+    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
+                 BEH_FRIENDLY,
+                 spawn_position,
+                 MHITYOU,
+                 MG_FORCE_BEH | MG_FORCE_PLACE,
+                 GOD_IEOH_JIAN);
+
+    mg.props[IEOH_JIAN_WEAPON] = weapon;
+
+    int power = you.experience_level * 2 + you.skill(SK_INVOCATIONS, 2, false);
+    mg.props[IEOH_JIAN_POWER] = power;
+
+    auto created_monster = create_monster(mg);
+    if (created_monster)
+    {
+        invalidate_agrid(true);
+        view_update_at(created_monster->pos()); // Halo on spawn.
+    }
+    return created_monster;
+}
+
+static bool _dont_attack_martial(const monster* mons)
+{
+    return mons->friendly() 
+           || mons->good_neutral() 
+           || mons->strict_neutral() 
+           || mons_is_firewood(*mons)
+           || !you.can_see(*mons);
+}
+
+static void _ieoh_jian_lunge(const coord_def& old_pos)
+{
+    coord_def lunge_direction = (you.pos() - old_pos).sgn();
+    coord_def potential_target = you.pos() + lunge_direction;
+    monster* mons = monster_at(potential_target);
+
+    if (!mons || _dont_attack_martial(mons) || !mons->alive())
+        return;
+  
+    mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
+    melee_attack lunge(&you, mons);
+    lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
+    lunge.attack();
+}
+
+static void _ieoh_jian_whirlwind(const coord_def& old_pos)
+{
+    vector<monster*> targets;
+
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
+        if (monster_at(*ai) && !_dont_attack_martial(monster_at(*ai)))
+            targets.push_back(monster_at(*ai));
+
+    if (targets.empty())
+        return;
+
+    vector<monster*> old_targets;
+    for (adjacent_iterator ai(old_pos, true); ai; ++ai)
+        if (monster_at(*ai) && !_dont_attack_martial(monster_at(*ai)))
+            old_targets.push_back(monster_at(*ai));
+
+    sort(targets.begin(), targets.end()); 
+    sort(old_targets.begin(), old_targets.end()); 
+    vector<monster*> common_targets;
+    set_intersection(targets.begin(), targets.end(), 
+                     old_targets.begin(), old_targets.end(),
+                     back_inserter(common_targets));
+
+    for (auto mons : common_targets)
+    {
+        if (!mons->alive())
+            continue;
+
+        mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
+
+        melee_attack whirlwind(&you, mons);
+        whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
+        whirlwind.attack();
+    }
+}
+
+void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
+{
+    if (you.pos() == old_pos)
+        return;
+
+    if (have_passive(passive_t::ieoh_jian_lunge))
+        _ieoh_jian_lunge(old_pos);
+
+    if (have_passive(passive_t::ieoh_jian_whirlwind))
+        _ieoh_jian_whirlwind(old_pos);
+}
+
+bool ieoh_jian_can_wall_jump(const coord_def& target)
+{
+    bool able = have_passive(passive_t::ieoh_jian_wall_jump)
+                && feat_can_wall_jump_against(grd(target))
+                && !you.is_stationary()
+                && !you.digging;
+    
+    if (!able) 
+        return false;
+
+    auto wall_jump_direction = (you.pos() - target).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction + wall_jump_direction);
+
+    const actor* landing_actor = actor_at(wall_jump_landing_spot);
+    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
+        || !in_bounds(wall_jump_landing_spot)
+        || !you.is_habitable(wall_jump_landing_spot)
+        || landing_actor)
+    {
+        mprf("You have no room to wall jump.");
+        return false;
+    }
+
+    return true;
+}
+
+void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
+{
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
+    {
+        monster* target = monster_at(*ai);
+        if (target && !_dont_attack_martial(target) && target->alive())
+        {
+            mprf("You attack %s while airborne!", target->name(DESC_THE).c_str());
+            melee_attack aerial(&you, target);
+            aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
+            aerial.attack();
+        }
+
+        if(!cell_is_solid(*ai))
+            check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
+    }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon 
+            && mon->alive()
+            && you.can_see(*mon)
+            && mon->behaviour != BEH_SLEEP
+            && !_dont_attack_martial(mon))
+        {
+            int distract_chance = div_rand_round(12 * you.experience_level, mon->get_hit_dice());
+            const monsterentry* entry = get_monster_data(mon->type);
+           
+            dprf("Attempting distract with chance %d", distract_chance);
+            if (!entry || !x_chance_in_y(distract_chance, 100))
+                continue;
+
+            if (mon->holiness() == MH_NONLIVING)
+               simple_monster_message(*mon, " loses track of your position.");
+            else
+               simple_monster_message(*mon, " is distracted by your jump.");
+
+            mon->add_ench(
+                mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
+                            random_range(2, 4) * BASELINE_DELAY));
+            mon->foe = MHITNOT;
+            mon->target = mon->pos();
+            int non_move_energy = min(entry->energy_usage.move,
+                                      entry->energy_usage.swim);
+
+            mon->speed_increment -= non_move_energy;
+        }
+    }
 }
 
 /**

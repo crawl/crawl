@@ -498,6 +498,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (stepped)
         _moveto_maybe_repel_stairs();
+
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE))
+        you.weapon()->props[IEOH_JIAN_DIVINE] = 1; // activates the momentum+ bonus.
 }
 
 // Use this function whenever the player enters (or lands and thus re-enters)
@@ -5858,8 +5861,17 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     unsigned int effective_points = skill_points[sk];
     if (!real)
     {
-        for (skill_type cross : get_crosstrain_skills(sk))
-            effective_points += skill_points[cross] * 2 / 5;
+        if (you_worship(GOD_IEOH_JIAN))
+        {
+            // All martial skills cross-train at 80%
+            for (skill_type cross : get_secondary_crosstrain_skills(sk))
+                effective_points += skill_points[cross] * 4 / 5;
+        }
+        else
+        {
+            for (skill_type cross : get_crosstrain_skills(sk))
+                effective_points += skill_points[cross] * 2 / 5;
+        }
     }
     effective_points = min(effective_points, skill_exp_needed(MAX_SKILL_LEVEL, sk));
     while (1)

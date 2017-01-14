@@ -248,6 +248,11 @@ enum class passive_t
 
     // TSO prevents you from stabbing
     no_stabbing,
+
+    /// Martial attacks
+    ieoh_jian_lunge,
+    ieoh_jian_whirlwind,
+    ieoh_jian_wall_jump,
 };
 
 enum ru_interference
@@ -286,5 +291,14 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
+
+monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon);
+void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);
+bool ieoh_jian_can_wall_jump(const coord_def& target);
+monster* ieoh_jian_find_projected_weapon();
+void ieoh_jian_wall_jump_effects(const coord_def& old_pos);
+item_def ieoh_jian_generate_divine_weapon();
+void ieoh_jian_end_projection();
+void ieoh_jian_end_divine_blade();
 
 #endif

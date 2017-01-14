@@ -4574,6 +4574,8 @@ void bolt::affect_monster(monster* mon)
         {
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
                 mpr("Your demonic guardian avoids your attack.");
+            else if (mon->type == MONS_IEOH_JIAN_WEAPON)
+                mpr("Your animated weapon moves out of the way.");
             else if (!bush_immune(*mon))
             {
                 simple_god_message(
@@ -6419,6 +6421,7 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
 
     bool origin_worships_fedhas;
     mon_attitude_type origin_attitude;
+
     if (originator->is_player())
     {
         origin_worships_fedhas = have_passive(passive_t::shoot_through_plants);
@@ -6437,6 +6440,8 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
             && fedhas_protects(*victim))
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN))
+           || (originator->is_player()
+               && victim->type == MONS_IEOH_JIAN_WEAPON)
            && !beam.is_enchantment()
            && beam.origin_spell != SPELL_CHAIN_LIGHTNING
            && (mons_atts_aligned(victim->attitude, origin_attitude)

@@ -186,4 +186,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();
+
+bool ieoh_jian_steel_dragonfly(bolt &pbolt);
+bool ieoh_jian_heavenly_blade();
 #endif

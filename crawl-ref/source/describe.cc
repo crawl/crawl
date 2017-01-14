@@ -34,6 +34,7 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "god-passive.h"
 #include "god-abil.h"
 #include "god-item.h"
 #include "hints.h"

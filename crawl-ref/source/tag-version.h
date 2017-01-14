@@ -197,6 +197,7 @@ enum tag_minor_version
     TAG_MINOR_GLOBAL_BR_INFO,      // move global branch info to a reserved location
     TAG_MINOR_SPIT_POISON_AGAIN,   // Make Naga poison spit a 2-level mutation.
     TAG_MINOR_HIDE_TO_SCALE,       // Rename dragon hides to scales.
+    TAG_MINOR_IEOH_JIAN,           // Ieoh Jian Council
     TAG_MINOR_NO_PRIORITY,         // Remove CHANCE priority in map definitions.
     TAG_MINOR_MOTTLED_REMOVAL,     // Mottled dracos get breathe fire
     TAG_MINOR_NEMELEX_WRATH,       // Nemelex loses the passive wrath component

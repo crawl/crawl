@@ -26,6 +26,14 @@ enum stab_type
     NUM_STABS
 };
 
+enum ieoh_jian_attack_type
+{
+    IEOH_JIAN_ATTACK_NONE,
+    IEOH_JIAN_ATTACK_LUNGE,
+    IEOH_JIAN_ATTACK_WHIRLWIND,
+    IEOH_JIAN_ATTACK_WALL_JUMP
+};
+
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
 
@@ -47,8 +55,9 @@ int stab_bonus_denom(stab_type stab);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
-                           int attack_number = 0,
-                           int effective_attack_number = 0);
+                           int attack_number = 0, 
+                           int effective_attack_number = 0,
+                           ieoh_jian_attack_type ieoh_jian_attack = IEOH_JIAN_ATTACK_NONE);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);

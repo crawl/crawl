@@ -545,6 +545,15 @@ static bool _any_crosstrained()
             // but close enough.
             return true;
         }
+
+        if (you_worship(GOD_IEOH_JIAN)
+            && you.skill_points[sk]
+            && !get_secondary_crosstrain_skills(sk).empty())
+        {
+            // Takes into account the secondary cross training obtained
+            // by worshipping Ieoh Jian.
+            return true;
+        }
     }
     return false;
 }
@@ -590,6 +599,8 @@ string SkillMenuSwitch::get_help()
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
+            if (you_worship(GOD_IEOH_JIAN))
+                result += " The Ieoh Jian Council substantially improves your martial cross-training.";
         }
 
         if (skm.is_set(SKMF_REDUCED))

@@ -2246,6 +2246,8 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_MOBILE_MONSTER:
         return !(mons_is_tentacle_or_tentacle_segment(mon->type)
                  || mon->is_stationary());
+    case TARG_IEOH_JIAN_WEAPON:
+        return (mon->type == MONS_IEOH_JIAN_WEAPON);
     case TARG_NUM_MODES:
         break;
     // intentionally no default
@@ -3215,6 +3217,7 @@ string get_monster_equipment_desc(const monster_info& mi,
                                               attributes.end());
 
             if (mi.type == MONS_DANCING_WEAPON
+                || mi.type == MONS_IEOH_JIAN_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST)
             {
@@ -3223,6 +3226,8 @@ string get_monster_equipment_desc(const monster_info& mi,
 
                 if (mi.type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
+                if (mi.type == MONS_IEOH_JIAN_WEAPON)
+                    str += "flying weapon";
                 else if (mi.type == MONS_PANDEMONIUM_LORD)
                     str += "pandemonium lord";
                 else if (mi.type == MONS_PLAYER_GHOST)
@@ -3235,11 +3240,11 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     string weap = "";
 
-    if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
+    if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON && mi.type != MONS_IEOH_JIAN_WEAPON)
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
     else if (level == DESC_IDENTIFIED || level == DESC_WEAPON_WARNING
              // dancing weapons' names already include this information
-             || level == DESC_WEAPON && mi.type != MONS_DANCING_WEAPON)
+             || level == DESC_WEAPON && mi.type != MONS_DANCING_WEAPON && mi.type != MONS_IEOH_JIAN_WEAPON)
     {
         return " " + mi.full_name(DESC_A);
     }

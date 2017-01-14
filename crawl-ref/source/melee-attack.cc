@@ -41,6 +41,7 @@
 #include "shout.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
@@ -70,7 +71,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false)
+    cleaving(is_cleaving), is_riposte(false), ieoh_jian_attack(IEOH_JIAN_ATTACK_NONE)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -145,7 +146,7 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte)
+        if (!is_riposte && (ieoh_jian_attack == IEOH_JIAN_ATTACK_NONE))
             you.time_taken = you.attack_delay().roll();
 
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
@@ -399,6 +400,9 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
+    if (attacker->is_player() && ieoh_jian_attack == IEOH_JIAN_ATTACK_WHIRLWIND)
+       player_strike_pressure_points(defender->as_monster());
+
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,
     // meaning it could have made the attacked creature vanish. That
@@ -447,6 +451,15 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    // Internal damage when hitting slowed / distracted enemies.
+    if (ieoh_jian_attack == IEOH_JIAN_ATTACK_LUNGE 
+        && defender->as_monster()->has_ench(ENCH_SLOW)
+        && defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS))
+    {
+        simple_monster_message(*defender->as_monster(), " starts to convulse uncontrollably...");
+        defender->hurt(&you, dice_def(6, defender->as_monster()->get_hit_dice()).roll(), BEAM_DISINTEGRATION);
+    }
 
     if (check_unrand_effects())
         return false;
@@ -556,6 +569,22 @@ bool melee_attack::handle_phase_aux()
     }
 
     return true;
+}
+
+void melee_attack::player_strike_pressure_points(monster* mons)
+{
+    int slow_chance = div_rand_round(10 * you.experience_level, mons->get_hit_dice());
+    dprf("Pressure point strike, %d%% chance to slow.", slow_chance);
+
+    if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
+    {
+         if (mons->holiness() == MH_NONLIVING)
+            simple_monster_message(*mons, " seems to slow down after your strike.");
+         else
+            simple_monster_message(*mons, " seems to slow down as you strike a pressure point.");
+
+         mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker, stepdown(60 * BASELINE_DELAY, 70)));
+    }
 }
 
 /**
@@ -698,7 +727,7 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number);
+                              effective_attack_number, ieoh_jian_attack);
     }
 
     // Check for passive mutation effects.
@@ -876,6 +905,16 @@ bool melee_attack::attack()
     handle_phase_end();
 
     enable_attack_conducts(conducts);
+
+    // Divine Blade never disappears in the middle of a fight.
+    if (attack_occurred 
+        && attacker->is_player() 
+        && you_worship(GOD_IEOH_JIAN)
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0
+        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] < 30) 
+    {
+        you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 30;
+    }
 
     return attack_occurred;
 }
@@ -1466,9 +1505,12 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 // to the base damage of the weapon.
 int melee_attack::player_apply_final_multipliers(int damage)
 {
-    //cleave damage modifier
+    // cleave damage modifier
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    // martial damage modifier (ieoh jian), and momentum enhancing weapons.
+    damage = martial_damage_mod(damage);
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
@@ -2309,7 +2351,7 @@ string melee_attack::mons_attack_desc()
         ret = " from afar";
     }
 
-    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON)
+    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON && attacker->type != MONS_IEOH_JIAN_WEAPON)
         ret += " with " + weapon->name(DESC_A);
 
     return ret;
@@ -3361,6 +3403,65 @@ int melee_attack::cleave_damage_mod(int dam)
     if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
         return dam;
     return div_rand_round(dam * 7, 10);
+}
+
+static int _apply_momentum(int dam)
+{
+    // Momentum makes sure that heavy weapons do not get an unfair advantage
+    // when attacking on the move.
+    //
+    // Attack speed is calculated as it would on a normal attack, even though the time
+    // taken will correspond to the move speed. Instead, the ratio between move speed
+    // and the attack speed estimate is used as a damage factor.
+    int move_delay = player_movement_speed();
+    int attack_delay = you.attack_delay().roll();
+
+    return div_rand_round(dam * move_delay, attack_delay);
+}
+
+// Martial strikes get modified by momentum and maneuver specific damage mods.
+// This also takes care of divine weapon modifiers, regardless of the attack being martial.
+int melee_attack::martial_damage_mod(int dam)
+{
+    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE)
+        && you.weapon()->props[IEOH_JIAN_DIVINE].get_int())
+    {
+        mprf("%s carries your momentum!", you.weapon()->name(DESC_THE, false, true, false).c_str());
+        dam = div_rand_round(dam * 15, 10);
+        you.weapon()->props[IEOH_JIAN_DIVINE] = 0;
+    }
+
+    switch (ieoh_jian_attack)
+    {
+    case IEOH_JIAN_ATTACK_NONE:
+        return dam;
+    case IEOH_JIAN_ATTACK_LUNGE:
+        if (defender->as_monster()->has_ench(ENCH_SLOW) 
+            && (defender->as_monster()->foe != MHITYOU && !mons_is_batty(*defender->as_monster())))
+        {
+            mprf("%s is thoroughly helpless!!!", 
+                 defender->as_monster()->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 20, 10);
+        }
+        else if (defender->as_monster()->has_ench(ENCH_SLOW))
+        {
+            mprf("%s can't react fast enough!", defender->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 16, 10);
+        }
+        else if (defender->as_monster()->foe != MHITYOU && !mons_is_batty(*defender->as_monster()))
+        {
+            mprf("%s was looking away!", defender->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 16, 10);
+        }
+        else
+            dam = div_rand_round(dam * 13, 10);
+        break;
+    default:
+        break;
+    }
+
+    dam = _apply_momentum(dam);
+    return dam;
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)

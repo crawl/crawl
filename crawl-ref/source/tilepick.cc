@@ -441,6 +441,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_USKAYAW;
     case DNGN_ALTAR_HEPLIAKLQANA:
         return TILE_DNGN_ALTAR_HEPLIAKLQANA;
+    case DNGN_ALTAR_IEOH_JIAN:
+        return TILE_DNGN_ALTAR_IEOH_JIAN;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
@@ -1673,6 +1675,13 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
         }
 
+        case MONS_IEOH_JIAN_WEAPON:
+        {
+            // Use item tile.
+            const item_def& item = *mon.inv[MSLOT_WEAPON];
+            return tileidx_item(item);
+        }
+
         case MONS_SPECTRAL_WEAPON:
         {
             if (!mon.inv[MSLOT_WEAPON].get())
@@ -1804,7 +1813,6 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_BOUND_SOUL;
     if (mons.is(MB_INFESTATION))
         ch |= TILE_FLAG_INFESTED;
-
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
     else if (mons.attitude == ATT_GOOD_NEUTRAL)
@@ -3481,13 +3489,21 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_HEPLIAKLQANA_TYPE_HEXER:
         return TILEG_ABILITY_HEP_HEXER;
     // usk
-   case ABIL_USKAYAW_STOMP:
-        return TILEG_ABILITY_USKAYAW_STOMP;
-   case ABIL_USKAYAW_LINE_PASS:
-        return TILEG_ABILITY_USKAYAW_LINE_PASS;
-   case ABIL_USKAYAW_GRAND_FINALE:
-        return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
+    case ABIL_USKAYAW_STOMP:
+         return TILEG_ABILITY_USKAYAW_STOMP;
+    case ABIL_USKAYAW_LINE_PASS:
+         return TILEG_ABILITY_USKAYAW_LINE_PASS;
+    case ABIL_USKAYAW_GRAND_FINALE:
+         return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
 
+     // Ieoh Jian
+    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
+        return TILEG_ABILITY_IEOH_JIAN_STEEL_DRAGONFLY;
+    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
+        return TILEG_ABILITY_IEOH_JIAN_END_STEEL_DRAGONFLY;
+    case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
+        return TILEG_ABILITY_IEOH_JIAN_HEAVENLY_BLADE;
+  
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
         return TILEG_ABILITY_RENOUNCE_RELIGION;

@@ -20,10 +20,12 @@
 #include "exercise.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
+#include "monster.h"
 #include "misc.h"
 #include "notes.h"
 #include "output.h"
@@ -501,6 +503,23 @@ static void _check_start_train()
     you.start_train.clear();
 }
 
+static bool _skill_is_martial(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_LONG_BLADES: 
+    case SK_AXES: 
+    case SK_SHORT_BLADES: 
+    case SK_STAVES: 
+    case SK_POLEARMS: 
+    case SK_MACES_FLAILS: 
+    case SK_UNARMED_COMBAT: 
+        return true;
+    default:
+        return false;
+    }
+}
+
 static void _check_stop_train()
 {
     _check_inventory_skills();
@@ -516,6 +535,8 @@ static void _check_stop_train()
         if (is_invalid_skill(sk))
             continue;
         if (skill_has_manual(sk))
+            continue;
+        if (you_worship(GOD_IEOH_JIAN) && _skill_is_martial(sk))
             continue;
 
         if (skill_trained(sk) && you.training[sk])
@@ -1552,6 +1573,31 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
         return { SK_THROWING };
     case SK_THROWING:
         return { SK_SLINGS };
+    default:
+        return {};
+    }
+}
+
+// Relevant to Ieoh Jian (These skills will cross train to
+// a lower degree than the main ones.
+vector<skill_type> get_secondary_crosstrain_skills(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_SHORT_BLADES:
+        return { SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT };
+    case SK_LONG_BLADES:
+        return { SK_SHORT_BLADES, SK_AXES, SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT };
+    case SK_AXES:
+        return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT };
+    case SK_STAVES:
+        return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_AXES, SK_UNARMED_COMBAT };
+    case SK_MACES_FLAILS:
+        return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_POLEARMS, SK_AXES, SK_UNARMED_COMBAT };
+    case SK_POLEARMS:
+        return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_MACES_FLAILS, SK_AXES, SK_UNARMED_COMBAT };
+    case SK_UNARMED_COMBAT:
+        return { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_MACES_FLAILS, SK_AXES, SK_POLEARMS };
     default:
         return {};
     }

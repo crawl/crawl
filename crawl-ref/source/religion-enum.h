@@ -30,4 +30,17 @@ enum nemelex_gift_types
 /// custom monster gender
 #define MON_GENDER_KEY "mon_gender"
 
+/// Weapon for monster generation
+#define IEOH_JIAN_WEAPON "ieoh-jian-weapon"
+#define IEOH_JIAN_POWER "ieoh-jian-power"
+/// Property tag for divine weapons. Its value reflects whether the momentum effect
+/// is active.
+#define IEOH_JIAN_DIVINE "ieoh-jian-divine"
+/// Whether the weapon is being projected.
+#define IEOH_JIAN_PROJECTED "ieoh-jian-projected"
+/// Used to protect you from dangerous brands while projecting weapons.
+#define IEOH_JIAN_SWAPPING "ieoh-jian-swapping"
+/// Weapon swapped out when a divine is requested.
+#define IEOH_JIAN_SWAPPED_OUT "ieoh-jian-swapped-out"
+
 #endif
