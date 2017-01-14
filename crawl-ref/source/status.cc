@@ -116,6 +116,20 @@ static void _mark_expiring(status_info* inf, bool expiring)
     }
 }
 
+string _ray_text()
+{
+    // i feel like we could do this with math instead...
+    switch (you.attribute[ATTR_SEARING_RAY])
+    {
+        case 2:
+            return "Ray+";
+        case 3:
+            return "Ray++";
+        default:
+            return "Ray";
+    }
+}
+
 /**
  * Populate a status_info struct from the duration_data struct corresponding
  * to the given duration_type.
@@ -491,7 +505,7 @@ bool fill_status_info(int status, status_info* inf)
         if (you.attribute[ATTR_SEARING_RAY])
         {
             inf->light_colour = WHITE;
-            inf->light_text   = "Ray";
+            inf->light_text   = _ray_text().c_str();
         }
         break;
 

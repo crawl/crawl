@@ -665,3 +665,11 @@ uncontrolled, and Passage of Golubria will completely fail to work.
 Your legs are tired, and you are unable to hop. This status will only recover
 after you spend several turns not moving. (Other actions, such as attacking or
 casting spells, are fine.)
+%%%%
+Ray status
+
+You are currently channeling a ray of searing magical energy. Pressing . will
+maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
+including recasting the spell, will end it.
+
+# XXX: also cover Ray+, Ray++?
