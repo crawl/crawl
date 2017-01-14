@@ -7471,7 +7471,7 @@ static bool _will_throw_ally(const monster& thrower, const monster& throwee)
     case MONS_POLYPHEMUS:
         return mons_genus(throwee.type) == MONS_YAK;
     case MONS_IRON_GIANT:
-        return true;
+        return !mons_is_conjured(throwee.type);
     default:
         return false;
     }
@@ -7509,7 +7509,10 @@ static monster* _find_ally_to_throw(const monster &mons)
         }
     }
 
-    dprf("found a monster to toss");
+    if (best != nullptr)
+        dprf("found a monster to toss");
+    else
+        dprf("couldn't find anyone to toss");
     return best;
 }
 
