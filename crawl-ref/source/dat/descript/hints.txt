@@ -3,7 +3,7 @@ welcome
 
 <white>Welcome to Dungeon Crawl!</white>
 
-Your objective is to lead a <w>{{ return you.race() }} {{ return you.class()
+Your objective is to lead your <w>{{ return you.race() }} {{ return you.class()
 }}</w> safely through the depths of the dungeon, retrieving the fabled Orb of
 Zot and returning it to the surface. In the beginning, however, let discovery
 be your main goal. Try to delve as deeply as possible but beware; death lurks
@@ -160,7 +160,7 @@ with the <input>left mouse button</input></localtiles>.
 HINT_CONVERT Xom
 
 You've just converted to worshipping <w>Xom</w>. You can keep Xom happy by
-keeping him amused; you do absolutely not want this god to grow bored with you!
+keeping him amused; you absolutely do not want this god to grow bored with you!
 
 If you keep Xom amused he'll treat you like a plaything, randomly helping and
 harming you for his own amusement; otherwise he'll treat you like a disfavoured

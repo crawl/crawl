@@ -67,7 +67,7 @@ spret_type ice_armour(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
-    else if (you.form == TRAN_ICE_BEAST)
+    else if (you.form == transformation::ice_beast)
         mpr("Your icy body feels more resilient.");
     else
         mpr("A film of ice covers your body!");
@@ -373,7 +373,7 @@ spret_type cast_shroud_of_golubria(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_transform(int pow, transformation_type which_trans, bool fail)
+spret_type cast_transform(int pow, transformation which_trans, bool fail)
 {
     if (!transform(pow, which_trans, false, true)
         || !check_form_stat_safety(which_trans))

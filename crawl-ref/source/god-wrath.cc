@@ -1309,11 +1309,11 @@ static void _jiyva_transform()
     const god_type god = GOD_JIYVA;
     god_speaks(god, "Mutagenic energy floods into your body!");
 
-    const transformation_type form = random_choose(TRAN_BAT,
-                                                   TRAN_FUNGUS,
-                                                   TRAN_PIG,
-                                                   TRAN_TREE,
-                                                   TRAN_WISP);
+    const transformation form = random_choose(transformation::bat,
+                                              transformation::fungus,
+                                              transformation::pig,
+                                              transformation::tree,
+                                              transformation::wisp);
 
     if (transform(random2(you.penance[god]) * 2, form, true))
         you.transform_uncancellable = true;

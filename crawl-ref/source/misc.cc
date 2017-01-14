@@ -101,11 +101,6 @@ void swap_with_monster(monster* mon_to_swap)
             else
                 mpr("You get stuck in the web!");
             you.redraw_quiver = true; // Account for being in a net.
-            // Xom thinks this is hilarious if you trap yourself this way.
-            if (you_caught)
-                xom_is_stimulated(12);
-            else
-                xom_is_stimulated(200);
         }
 
         if (!you_caught)

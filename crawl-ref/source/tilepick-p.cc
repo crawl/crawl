@@ -452,29 +452,29 @@ tileidx_t tileidx_player()
     switch (you.form)
     {
     // equipment-using forms are handled regularly
-    case TRAN_STATUE:
-    case TRAN_LICH:
-    case TRAN_TREE:
+    case transformation::statue:
+    case transformation::lich:
+    case transformation::tree:
         break;
     // animals
-    case TRAN_BAT:       ch = TILEP_TRAN_BAT;       break;
-    case TRAN_SPIDER:    ch = TILEP_TRAN_SPIDER;    break;
-    case TRAN_PIG:       ch = TILEP_TRAN_PIG;       break;
+    case transformation::bat:       ch = TILEP_TRAN_BAT;       break;
+    case transformation::spider:    ch = TILEP_TRAN_SPIDER;    break;
+    case transformation::pig:       ch = TILEP_TRAN_PIG;       break;
 #if TAG_MAJOR_VERSION == 34
-    case TRAN_PORCUPINE: ch = TILEP_MONS_PORCUPINE; break;
+    case transformation::porcupine: ch = TILEP_MONS_PORCUPINE; break;
 #endif
     // non-animals
-    case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
-    case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
+    case transformation::ice_beast: ch = TILEP_TRAN_ICE_BEAST; break;
+    case transformation::wisp:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
 #if TAG_MAJOR_VERSION == 34
-    case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
+    case transformation::jelly:     ch = TILEP_MONS_JELLY;     break;
 #endif
-    case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
-    case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
-    case TRAN_HYDRA:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
-                                                you.heads() - 1);
-                         break;
-    case TRAN_DRAGON:
+    case transformation::fungus:    ch = TILEP_TRAN_MUSHROOM;  break;
+    case transformation::shadow:    ch = TILEP_TRAN_SHADOW;    break;
+    case transformation::hydra:     ch = tileidx_mon_clamp(TILEP_MONS_HYDRA,
+                                                           you.heads() - 1);
+                                    break;
+    case transformation::dragon:
     {
         switch (you.species)
         {
@@ -491,9 +491,9 @@ tileidx_t tileidx_player()
         break;
     }
     // no special tile
-    case TRAN_BLADE_HANDS:
-    case TRAN_APPENDAGE:
-    case TRAN_NONE:
+    case transformation::blade_hands:
+    case transformation::appendage:
+    case transformation::none:
     default:
         break;
     }
@@ -632,6 +632,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FORMICID;
     case SP_VINE_STALKER:
         return TILEP_BASE_VINE_STALKER;
+    case SP_BARACHIAN:
+        return TILEP_BASE_BARACHIAN;
     default:
         return TILEP_BASE_HUMAN;
     }

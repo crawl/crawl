@@ -1,7 +1,7 @@
 struct form_entry
 {
     // Row 1:
-    transformation_type tran;
+    transformation tran;
     monster_type equivalent_mons;
     const char *short_name;
     const char *long_name;
@@ -54,7 +54,7 @@ struct form_entry
 static const form_entry formdata[] =
 {
 {
-    TRAN_NONE, MONS_PLAYER, "", "", "none",
+    transformation::none, MONS_PLAYER, "", "", "none",
     "",
     EQF_NONE, MR_NO_FLAGS,
     FormDuration(0, PS_NONE, 0), 0, 0, SIZE_CHARACTER, 10,
@@ -64,7 +64,7 @@ static const form_entry formdata[] =
     "", 0, "", "", "", ""
 },
 {
-    TRAN_SPIDER, MONS_SPIDER, "Spider", "spider-form", "spider",
+    transformation::spider, MONS_SPIDER, "Spider", "spider-form", "spider",
     "a venomous arachnid creature.",
     EQF_PHYSICAL, MR_VUL_POISON,
     FormDuration(10, PS_DOUBLE, 60), 0, 5, SIZE_TINY, 10,
@@ -74,7 +74,7 @@ static const form_entry formdata[] =
     "hiss", -4, "front leg", "", "crawl onto", "flesh"
 },
 {
-    TRAN_BLADE_HANDS, MONS_PLAYER, "Blade", "", "blade",
+    transformation::blade_hands, MONS_PLAYER, "Blade", "", "blade",
     "",
     EQF_HANDS, MR_NO_FLAGS,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_CHARACTER, 10,
@@ -84,7 +84,7 @@ static const form_entry formdata[] =
     "", 0, "scythe-like blade", "", "", ""
 },
 {
-    TRAN_STATUE, MONS_STATUE, "Statue", "statue-form", "statue",
+    transformation::statue, MONS_STATUE, "Statue", "statue-form", "statue",
     "a stone statue.",
     EQF_STATUE, MR_RES_ELEC | MR_RES_NEG | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 13,
@@ -94,7 +94,7 @@ static const form_entry formdata[] =
     "", 0, "", "", "place yourself before", "stone"
 },
 {
-    TRAN_ICE_BEAST, MONS_ICE_BEAST, "Ice", "ice-form", "ice",
+    transformation::ice_beast, MONS_ICE_BEAST, "Ice", "ice-form", "ice",
     "a creature of crystalline ice.",
     EQF_PHYSICAL, MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     FormDuration(30, PS_DOUBLE, 100), 0, 0, SIZE_LARGE, 12,
@@ -105,7 +105,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_DRAGON, MONS_PROGRAM_BUG, "Dragon", "dragon-form", "dragon",
+    transformation::dragon, MONS_PROGRAM_BUG, "Dragon", "dragon-form", "dragon",
     "a fearsome dragon!",
     EQF_PHYSICAL, MR_RES_POISON,
     DEFAULT_DURATION, 10, 0, SIZE_GIANT, 15,
@@ -116,7 +116,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_LICH, MONS_LICH, "Lich", "lich-form", "lich",
+    transformation::lich, MONS_LICH, "Lich", "lich-form", "lich",
     "a lich.",
     EQF_NONE, MR_RES_COLD | mrd(MR_RES_NEG, 3),
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10,
@@ -127,7 +127,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_BAT, MONS_PROGRAM_BUG, "Bat", "bat-form", "bat",
+    transformation::bat, MONS_PROGRAM_BUG, "Bat", "bat-form", "bat",
     "",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     DEFAULT_DURATION, 0, 5, SIZE_TINY, 10,
@@ -138,7 +138,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_PIG, MONS_HOG, "Pig", "pig-form", "pig",
+    transformation::pig, MONS_HOG, "Pig", "pig-form", "pig",
     "a filthy swine.",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     BAD_DURATION, 0, 0, SIZE_SMALL, 10,
@@ -149,7 +149,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_APPENDAGE, MONS_PLAYER, "App", "appendage", "appendage",
+    transformation::appendage, MONS_PLAYER, "App", "appendage", "appendage",
     "",
     EQF_NONE, MR_NO_FLAGS,
     FormDuration(10, PS_DOUBLE, 60), 0, 0, SIZE_CHARACTER, 10,
@@ -160,7 +160,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_TREE, MONS_ANIMATED_TREE, "Tree", "tree-form", "tree",
+    transformation::tree, MONS_ANIMATED_TREE, "Tree", "tree-form", "tree",
     "a tree.",
     EQF_LEAR | SLOTF(EQ_CLOAK), MR_RES_POISON | mrd(MR_RES_NEG, 3),
     BAD_DURATION, 0, 0, SIZE_CHARACTER, 15,
@@ -172,7 +172,7 @@ static const form_entry formdata[] =
 
 #if TAG_MAJOR_VERSION == 34
 {
-    TRAN_PORCUPINE, MONS_PORCUPINE, "Porc", "porcupine-form", "porcupine",
+    transformation::porcupine, MONS_PORCUPINE, "Porc", "porcupine-form", "porcupine",
     "a spiny porcupine.",
     EQF_ALL, MR_NO_FLAGS,
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
@@ -184,7 +184,7 @@ static const form_entry formdata[] =
 #endif
 
 {
-    TRAN_WISP, MONS_INSUBSTANTIAL_WISP, "Wisp", "wisp-form", "wisp",
+    transformation::wisp, MONS_INSUBSTANTIAL_WISP, "Wisp", "wisp-form", "wisp",
     "an insubstantial wisp.",
     EQF_ALL, mrd(MR_RES_FIRE, 2) | mrd(MR_RES_COLD, 2) | MR_RES_ELEC
              | MR_RES_STICKY_FLAME | mrd(MR_RES_NEG, 3) | MR_RES_ACID
@@ -199,7 +199,7 @@ static const form_entry formdata[] =
 
 #if TAG_MAJOR_VERSION == 34
 {
-    TRAN_JELLY, MONS_JELLY, "Jelly", "jelly-form", "jelly",
+    transformation::jelly, MONS_JELLY, "Jelly", "jelly-form", "jelly",
     "a lump of jelly.",
     EQF_PHYSICAL | EQF_RINGS, MR_NO_FLAGS,
     BAD_DURATION, 0, 0, SIZE_CHARACTER, 10,
@@ -211,7 +211,7 @@ static const form_entry formdata[] =
 #endif
 
 {
-    TRAN_FUNGUS, MONS_WANDERING_MUSHROOM, "Fungus", "fungus-form", "fungus",
+    transformation::fungus, MONS_WANDERING_MUSHROOM, "Fungus", "fungus-form", "fungus",
     "a sentient fungus.",
     EQF_PHYSICAL & ~SLOTF(EQ_HELMET), MR_RES_POISON | mrd(MR_RES_NEG, 3),
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
@@ -222,7 +222,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_SHADOW, MONS_PLAYER_SHADOW, "Shadow", "shadow-form", "shadow",
+    transformation::shadow, MONS_PLAYER_SHADOW, "Shadow", "shadow-form", "shadow",
     "a swirling mass of dark shadows.",
     EQF_NONE, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING
                                                          | MR_RES_PETRIFY,
@@ -234,7 +234,7 @@ static const form_entry formdata[] =
 },
 
 {
-    TRAN_HYDRA, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
+    transformation::hydra, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
     EQF_PHYSICAL, MR_RES_POISON,
     FormDuration(10, PS_SINGLE, 100), 0, 0, SIZE_BIG, 13,

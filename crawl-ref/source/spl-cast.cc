@@ -501,7 +501,7 @@ static int _spell_enhancement(spell_type spell)
     if (typeflags & SPTYP_AIR)
         enhanced += player_spec_air();
 
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
         enhanced -= 2;
 
     enhanced += you.archmagi();
@@ -1199,8 +1199,10 @@ static unique_ptr<targeter> _spell_targeter(spell_type spell, int pow,
     }
 
     if (spell_to_zap(spell) != NUM_ZAPS)
+    {
         return make_unique<targeter_beam>(&you, range, spell_to_zap(spell),
                                           pow, 0, 0);
+    }
 
     return nullptr;
 }
@@ -1788,28 +1790,28 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
-        return cast_transform(powc, TRAN_APPENDAGE, fail);
+        return cast_transform(powc, transformation::appendage, fail);
 
     case SPELL_BLADE_HANDS:
-        return cast_transform(powc, TRAN_BLADE_HANDS, fail);
+        return cast_transform(powc, transformation::blade_hands, fail);
 
     case SPELL_SPIDER_FORM:
-        return cast_transform(powc, TRAN_SPIDER, fail);
+        return cast_transform(powc, transformation::spider, fail);
 
     case SPELL_STATUE_FORM:
-        return cast_transform(powc, TRAN_STATUE, fail);
+        return cast_transform(powc, transformation::statue, fail);
 
     case SPELL_ICE_FORM:
-        return cast_transform(powc, TRAN_ICE_BEAST, fail);
+        return cast_transform(powc, transformation::ice_beast, fail);
 
     case SPELL_HYDRA_FORM:
-        return cast_transform(powc, TRAN_HYDRA, fail);
+        return cast_transform(powc, transformation::hydra, fail);
 
     case SPELL_DRAGON_FORM:
-        return cast_transform(powc, TRAN_DRAGON, fail);
+        return cast_transform(powc, transformation::dragon, fail);
 
     case SPELL_NECROMUTATION:
-        return cast_transform(powc, TRAN_LICH, fail);
+        return cast_transform(powc, transformation::lich, fail);
 
     // General enhancement.
     case SPELL_REGENERATION:

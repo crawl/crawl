@@ -882,7 +882,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (you.form == TRAN_APPENDAGE
+    if (you.form == transformation::appendage
         && ignore_temporary
         && slot == beastly_slot(you.attribute[ATTR_APPENDAGE])
         && you.mutation[you.attribute[ATTR_APPENDAGE]])
@@ -2827,7 +2827,7 @@ void read_scroll(item_def& scroll)
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
-        bad_effect = true;
+        bad_effect = !player_res_torment(false);
         break;
 
     case SCR_IMMOLATION:
@@ -2952,6 +2952,7 @@ void read_scroll(item_def& scroll)
         // This is always naughty, even if you didn't affect anyone.
         // Don't speak those foul holy words even in jest!
         did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
+        bad_effect = you.undead_or_demonic();
         break;
     }
 

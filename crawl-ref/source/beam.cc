@@ -3476,7 +3476,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_PORKALATOR:
-        if (!transform(ench_power, TRAN_PIG, true))
+        if (!transform(ench_power, transformation::pig, true))
         {
             mpr("You feel a momentary urge to oink.");
             break;
