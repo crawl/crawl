@@ -938,10 +938,6 @@ Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
-Poisonous Vapours spell
-
-Turns the air around the target poisonous.
-%%%%
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
@@ -1037,6 +1033,11 @@ Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
 %%%%
+Poisonous Vapours spell
+
+Turns the air around a targeted creature poisonous. Exceedingly little poison
+is created, generally just enough to poison the target before dispersing.
+%%%%
 Polymorph spell
 
 Randomly alters the form of a creature. It is especially effective against
@@ -1097,6 +1098,10 @@ Surrounds the caster with a mobile ring of searing flame, and keeps other fire
 clouds away from the caster. This spell attunes the caster to the forces of
 fire, increasing the power of their fire magic and giving protection from fire.
 However, it also makes them much more susceptible to cold.
+%%%%
+Ring of Thunder spell
+
+Surrounds the caster with a mobile ring of highly-damaging thunderclouds.
 %%%%
 Sandblast spell
 

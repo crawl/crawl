@@ -864,8 +864,9 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     int dist = beam.path_taken.size();
 
     // The maximum number of squares the item will actually move, always
-    // at least one square.
-    int max_dist = max(pow * 2 / 5, 1);
+    // at least one square. Always has a chance to move the full LOS_RADIUS,
+    // but only becomes certain at max power (50).
+    int max_dist = max(1, min(LOS_RADIUS, random2(8) + div_rand_round(pow, 7)));
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 

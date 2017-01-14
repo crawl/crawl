@@ -453,6 +453,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
         return caster.get_foe()->res_poison(false) < 3;
     }, 6) },
+    { SPELL_RING_OF_THUNDER, { _should_selfench(ENCH_RING_OF_THUNDER),
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.add_ench(ENCH_RING_OF_THUNDER);
+    } } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -7471,7 +7475,7 @@ static bool _will_throw_ally(const monster& thrower, const monster& throwee)
     case MONS_POLYPHEMUS:
         return mons_genus(throwee.type) == MONS_YAK;
     case MONS_IRON_GIANT:
-        return true;
+        return !mons_is_conjured(throwee.type);
     default:
         return false;
     }
@@ -7509,7 +7513,10 @@ static monster* _find_ally_to_throw(const monster &mons)
         }
     }
 
-    dprf("found a monster to toss");
+    if (best != nullptr)
+        dprf("found a monster to toss");
+    else
+        dprf("couldn't find anyone to toss");
     return best;
 }
 

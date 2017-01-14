@@ -8,6 +8,7 @@ misc/error MONS_PROGRAM_BUG
 %rim 0
 asmodeus MONS_ASMODEUS
 cerebov MONS_CEREBOV
+cerebov_swordless MONS_CEREBOV_SWORDLESS
 dispater MONS_DISPATER
 ereshkigal MONS_ERESHKIGAL
 gloorx_vloq MONS_GLOORX_VLOQ
