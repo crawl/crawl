@@ -1139,8 +1139,7 @@ void handle_starvation()
             if (!you.duration[DUR_PARALYSIS])
                 take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "fainting"));
             you.increase_duration(DUR_PARALYSIS, turns, 13);
-            if (you_worship(GOD_XOM))
-                xom_is_stimulated(get_tension() > 0 ? 200 : 100);
+            xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
         if (you.hunger <= 0 && !you.duration[DUR_DEATHS_DOOR])

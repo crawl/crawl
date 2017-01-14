@@ -782,7 +782,6 @@ static bool _box_of_beasts(item_def &box)
 
     mprf("...and %s %s out!",
          mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
-    xom_is_stimulated(10); // dubious
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
     // After unboxing a beast, chance to break.
