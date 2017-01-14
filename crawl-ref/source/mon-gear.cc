@@ -1150,6 +1150,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_CEREBOV:
+        if (you.props.exists(CEREBOV_DISARMED_KEY))
+            break;
         force_item = true;
         make_item_unrandart(item, UNRAND_CEREBOV);
         break;
