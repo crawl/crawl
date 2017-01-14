@@ -191,7 +191,7 @@ void ghost_demon::init_pandemonium_lord()
     int total_def = 10 + random2avg(40, 3);
     int split = biased_random2(5, 2);
     ac = div_rand_round(total_def * split, 10);
-    ev = total_def - ev;
+    ev = total_def - ac;
     if (coinflip())
         swap(ac, ev);
 
