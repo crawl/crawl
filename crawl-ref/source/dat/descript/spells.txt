@@ -1099,6 +1099,10 @@ clouds away from the caster. This spell attunes the caster to the forces of
 fire, increasing the power of their fire magic and giving protection from fire.
 However, it also makes them much more susceptible to cold.
 %%%%
+Ring of Thunder spell
+
+Surrounds the caster with a mobile ring of highly-damaging thunderclouds.
+%%%%
 Sandblast spell
 
 Consumes a stone to create a short blast of high-velocity rock shards. Its
