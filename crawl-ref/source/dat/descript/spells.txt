@@ -938,10 +938,6 @@ Noxious Cloud spell
 
 Creates a large cloud of noxious fumes, which may cause confusion.
 %%%%
-Poisonous Vapours spell
-
-Turns the air around the target poisonous.
-%%%%
 Olgreb's Toxic Radiance spell
 
 Causes the caster to radiate toxic energy, continuously inflicting poison on
@@ -1036,6 +1032,11 @@ damage bypasses poison resistance.
 Poisonous Cloud spell
 
 Conjures forth a great cloud of lethal gases.
+%%%%
+Poisonous Vapours spell
+
+Turns the air around a targeted creature poisonous. Exceedingly little poison
+is created, generally just enough to poison the target before dispersing.
 %%%%
 Polymorph spell
 
