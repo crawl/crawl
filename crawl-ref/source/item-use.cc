@@ -2812,7 +2812,7 @@ void read_scroll(item_def& scroll)
 
         // This is only naughty if you know you're doing it.
         did_god_conduct(DID_EVIL, 10, item_type_known(scroll));
-        bad_effect = true;
+        bad_effect = !player_res_torment(false);
         break;
 
     case SCR_IMMOLATION:
@@ -2937,6 +2937,7 @@ void read_scroll(item_def& scroll)
         // This is always naughty, even if you didn't affect anyone.
         // Don't speak those foul holy words even in jest!
         did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
+        bad_effect = you.undead_or_demonic();
         break;
     }
 

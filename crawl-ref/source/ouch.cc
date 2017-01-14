@@ -122,11 +122,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
-        else if (hurted > original && doEffects)
-        {
-            mpr("The water douses you terribly!");
-            xom_is_stimulated(200);
-        }
         break;
 
     case BEAM_STEAM:
@@ -170,11 +165,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original && doEffects)
-        {
-            mpr("You are shocked senseless!");
-            xom_is_stimulated(200);
-        }
         break;
 
     case BEAM_POISON:
@@ -221,11 +211,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // drain_player handles the messaging here
-            if (hurted > original)
-            {
-                mpr("The negative energy saps you greatly!");
-                xom_is_stimulated(200);
-            }
             drain_player(min(75, 35 + original * 2 / 3), true);
         }
         break;
@@ -506,14 +491,6 @@ static void _xom_checks_damage(kill_method_type death_type,
 
         if (mons->speed < 100/player_movement_speed())
             amusementvalue += 7;
-
-        if (death_type != KILLED_BY_BEAM
-            && you.skill(SK_THROWING) <= (you.experience_level / 4))
-        {
-            amusementvalue += 2;
-        }
-        else if (you.skill(SK_FIGHTING) <= (you.experience_level / 4))
-            amusementvalue += 2;
 
         if (player_in_a_dangerous_place())
             amusementvalue += 2;

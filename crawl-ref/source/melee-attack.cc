@@ -207,10 +207,7 @@ bool melee_attack::handle_phase_attempted()
     }
     // Non-fumbled self-attacks due to confusion are still pretty funny, though.
     else if (attacker == defender && attacker->confused())
-    {
-        // And is still hilarious if it's the player.
-        xom_is_stimulated(attacker->is_player() ? 200 : 100);
-    }
+        xom_is_stimulated(100);
 
     // Any attack against a monster we're afraid of has a chance to fail
     if (attacker->is_player() && you.afraid_of(defender->as_monster())
