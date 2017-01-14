@@ -491,3 +491,10 @@ You are channeling magical energy.
 You may cast spells with insufficient reserves of magic, but doing so will
 cause you to briefly lose access to your magic after the spell is cast.
 %%%%
+Ray status
+
+You are currently channeling a ray of searing magical energy. Pressing . will
+maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
+including recasting the spell, will end it.
+
+# XXX: also cover Ray+, Ray++?
