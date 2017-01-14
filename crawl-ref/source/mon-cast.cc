@@ -453,6 +453,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
         return caster.get_foe()->res_poison(false) < 3;
     }, 6) },
+    { SPELL_RING_OF_THUNDER, { _should_selfench(ENCH_RING_OF_THUNDER),
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.add_ench(ENCH_RING_OF_THUNDER);
+    } } },
 };
 
 /// Is the 'monster' actually a proxy for the player?

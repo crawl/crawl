@@ -314,6 +314,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RING_OF_THUNDER, "Ring of Thunder",
+    SPTYP_CHARMS | SPTYP_AIR,
+    SPFLAG_AREA,
+    7,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_VENOM_BOLT, "Venom Bolt",
     SPTYP_CONJURATION | SPTYP_POISON,
     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
