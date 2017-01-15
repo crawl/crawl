@@ -122,7 +122,7 @@ static const body_facet_def _body_facets[] =
 static const int conflict[][3] =
 {
     { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      0},
+    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION, 0},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
     { MUT_FAST,                MUT_SLOW,                   0},
 #if TAG_MAJOR_VERSION == 34
@@ -131,13 +131,12 @@ static const int conflict[][3] =
     { MUT_STRONG,              MUT_WEAK,                   1},
     { MUT_CLEVER,              MUT_DOPEY,                  1},
     { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_REGENERATION,   MUT_NO_POTION_HEAL,         1},
     { MUT_ROBUST,              MUT_FRAIL,                  1},
     { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
     { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
     { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
     { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
-    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
+    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION, 1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_BERSERK,             MUT_CLARITY,                1},
     { MUT_FAST,                MUT_SLOW,                   1},
@@ -151,6 +150,7 @@ static const int conflict[][3] =
     { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,    -1},
     { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,   -1},
     { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY, -1},
+    { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION -1},
 };
 
 equipment_type beastly_slot(int mut)
@@ -923,11 +923,13 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 /**
  * Does the player have a mutation that conflicts with the given mutation?
  *
- * @param mut           A mutation. (E.g. MUT_SLOW_REGENERATION, MUT_REGENERATION...)
+ * @param mut           A mutation. (E.g. MUT_INHIBITED_REGENERATION, ...)
  * @param innate_only   Whether to only check innate mutations (from e.g. race)
  * @return              The level of the conflicting mutation.
- *                      E.g., if MUT_SLOW_REGENERATION is passed in and the player
- *                      has 2 levels of MUT_REGENERATION, 2 will be returned.)
+ *                      E.g., if MUT_INHIBITED_REGENERATION is passed in and the
+ *                      player has 2 levels of MUT_REGENERATION, 2 will be
+ *                      returned.
+ *
  *                      No guarantee is offered on ordering if there are
  *                      multiple conflicting mutations with different levels.
  */
@@ -1089,7 +1091,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
         && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_REGENERATION
+            || mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION
             || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
     {
         return true;

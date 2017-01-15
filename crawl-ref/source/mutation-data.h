@@ -214,20 +214,14 @@ static const mutation_def mut_data[] =
    "Your rate of healing slows."},
 },
 
-{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD, false,
-  "slow regeneration",
+{ MUT_INHIBITED_REGENERATION, 0, 1, mutflag::BAD, false,
+  "inhibited regeneration",
 
-  {"You regenerate slowly when monsters are visible.",
-   "You do not regenerate when monsters are visible.",
-   "You do not regenerate."},
+  {"You do not regenerate when monsters are visible.", },
 
-  {"Your regeneration weakens near monsters.",
-   "Your regeneration stops near monsters.",
-   "Your regeneration stops completely."},
+  {"Your regeneration stops near monsters.", },
 
-  {"Your regeneration returns to normal.",
-   "Your regeneration begins to work slowly in the presence of monsters.",
-   "You begin to regenerate when monsters are not visible."},
+  {"You begin to regenerate regardless of the presence of monsters.", },
 },
 
 { MUT_FAST_METABOLISM, 0, 3, mutflag::BAD, false,
@@ -1905,5 +1899,13 @@ static const mutation_def mut_data[] =
   {"You are sensitive to extremes of temperature. (rF-, rC-)", "", ""},
   {"You feel sensitive to extremes of temperature.", "", ""},
   {"You no longer feel sensitive to extremes of temperature", "", ""},
+},
+
+{ MUT_NO_REGENERATION, 0, 1, mutflag::BAD, false,
+  "no regeneration",
+
+  {"You do not regenerate.", "", ""},
+  {"You stop regenerating.", "", ""},
+  {"You start regenerating.", "", ""},
 },
 };

@@ -1106,23 +1106,31 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Slow regeneration mutation: slows or stops regeneration when monsters are
-// visible at level 1 or 2 respectively, stops regeneration at level 3.
-static int _slow_regeneration_rate()
+// Inhibited regeneration mutation: stops regeneration when monsters are
+// visible at level 1, and completely at level 2.
+bool regeneration_is_inhibited()
 {
-    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
-        return 0;
-
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    switch (player_mutation_level(MUT_INHIBITED_REGENERATION))
     {
-        if (mons_is_threatening(**mi)
-            && !mi->wont_attack()
-            && !mi->neutral())
+    case 0:
+      return false;
+    case 1:
+      {
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
-            return 2 - player_mutation_level(MUT_SLOW_REGENERATION);
+            if (mons_is_threatening(**mi)
+                && !mi->wont_attack()
+                && !mi->neutral())
+            {
+                return true;
+            }
         }
+        return false;
+      }
+    default:
+      die("Unknown inhibited regeneration level.");
+      break;
     }
-    return 2;
 }
 
 int player_regen()
@@ -1163,19 +1171,13 @@ int player_regen()
             rr += (100 - you.hp_max) / 6;
 #endif
 
-    // Slow regeneration mutation.
-    if (player_mutation_level(MUT_SLOW_REGENERATION) > 0)
-    {
-        rr *= _slow_regeneration_rate();
-        rr /= 2;
-    }
     if (you.duration[DUR_COLLAPSE])
         rr /= 4;
 
-    if (you.disease)
+    if (you.disease || regeneration_is_inhibited() || !player_regenerates_hp())
         rr = 0;
 
-    // Trog's Hand. This circumvents the slow regeneration mutation.
+    // Trog's Hand. This circumvents sickness or inhibited regeneration.
     if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
@@ -1200,7 +1202,7 @@ int player_mp_regen()
 void update_regen_amulet_attunement()
 {
     if (you.wearing(EQ_AMULET, AMU_REGENERATION)
-        && player_mutation_level(MUT_SLOW_REGENERATION) < 3)
+        && player_mutation_level(MUT_NO_REGENERATION) == 0)
     {
         if (you.hp == you.hp_max
             && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
@@ -4125,7 +4127,7 @@ int get_real_mp(bool include_items)
 
 bool player_regenerates_hp()
 {
-    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+    if (player_mutation_level(MUT_NO_REGENERATION) > 0)
         return false;
     if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         return false;
@@ -5493,7 +5495,7 @@ bool player::is_banished() const
 bool player::is_sufficiently_rested() const
 {
     // Only return false if resting will actually help.
-    return (hp >= _rest_trigger_level(hp_max) || !player_regenerates_hp())
+    return (!player_regenerates_hp() || hp >= _rest_trigger_level(hp_max))
             && (magic_points >= _rest_trigger_level(max_magic_points)
                 || !player_regenerates_mp());
 }
