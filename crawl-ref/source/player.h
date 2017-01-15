@@ -958,6 +958,7 @@ int player_wizardry(spell_type spell);
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
+bool regeneration_is_inhibited();
 int player_regen();
 int player_mp_regen();
 void update_regen_amulet_attunement();

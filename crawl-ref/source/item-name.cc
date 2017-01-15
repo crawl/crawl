@@ -44,6 +44,7 @@
 #include "orb-type.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -3640,9 +3641,12 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
-                   || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state <= HS_STARVING;
+            return player_mutation_level(MUT_NO_REGENERATION) > 0
+                   || (temp
+                       && player_mutation_level(MUT_INHIBITED_REGENERATION) > 0
+                       && regeneration_is_inhibited())
+                   || (temp && you.species == SP_VAMPIRE
+                      && you.hunger_state <= HS_STARVING);
 
         case AMU_MANA_REGENERATION:
             return you_worship(GOD_PAKELLAS);
