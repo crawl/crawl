@@ -1101,8 +1101,10 @@ static void _remove_amulet_of_harm()
 
 static void _equip_amulet_of_regeneration()
 {
-    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+    if (player_mutation_level(MUT_NO_REGENERATION) > 0)
+    {
         mpr("The amulet feels cold and inert.");
+    }
     else if (you.hp == you.hp_max)
     {
         you.props[REGEN_AMULET_ACTIVE] = 1;
