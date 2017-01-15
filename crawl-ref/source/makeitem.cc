@@ -186,12 +186,12 @@ static weapon_type _determine_weapon_subtype(int item_level)
 
 static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
 {
-    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == -1)
+    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
 
     int idx = find_okay_unrandart(item.base_type, force_type,
                                   player_in_branch(BRANCH_ABYSS)
-                                      && agent == -1);
+                                      && agent == NO_AGENT);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return true;
@@ -388,7 +388,7 @@ int determine_nice_weapon_plusses(int item_level)
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = -1)
+                                  int agent = NO_AGENT)
 {
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
@@ -1090,7 +1090,7 @@ static armour_type _get_random_armour_type(int item_level)
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = -1)
+                                  int agent = NO_AGENT)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1865,7 +1865,7 @@ int items(bool allow_uniques,
 
     // make_item_randart() might do things differently based upon the
     // acquirement agent, especially for god gifts.
-    if (agent != -1 && !is_stackable_item(item))
+    if (agent != NO_AGENT && !is_stackable_item(item))
         origin_acquired(item, agent);
 
     item.quantity = 1;          // generally the case
@@ -1955,7 +1955,7 @@ int items(bool allow_uniques,
     case OBJ_STAVES:
         // Don't generate unrand staves this way except through acquirement,
         // since they also generate as OBJ_WEAPONS.
-        _generate_staff_item(item, (agent != -1), force_type, item_level, agent);
+        _generate_staff_item(item, (agent != NO_AGENT), force_type, item_level, agent);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
