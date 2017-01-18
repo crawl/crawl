@@ -436,12 +436,13 @@ BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 BOOL:     seeinv, berserk
 
-NAME:     sword of Jihad
+ENUM:     ZEALOT_SWORD
+NAME:     zealot's sword
 OBJ:      OBJ_WEAPONS/WPN_EUDEMON_BLADE
 PLUS:     +10
 COLOUR:   ETC_HOLY
-TILE:     urand_jihad
-TILE_EQ:  jihad
+TILE:     unrand_zealot_sword
+TILE_EQ:  zealot_sword
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    5

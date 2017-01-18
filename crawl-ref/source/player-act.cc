@@ -758,7 +758,7 @@ bool player::go_berserk(bool intentional, bool potion)
     }
 #endif
 
-    if (player_equip_unrand(UNRAND_JIHAD))
+    if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->friendly())
                 mi->go_berserk(false);
