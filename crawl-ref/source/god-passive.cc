@@ -1389,17 +1389,11 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-monster* ieoh_jian_find_projected_weapon()
+bool is_ieoh_jian_divine_weapon(const item_def* item)
 {
-    for (auto& monster: menv)
-        if (monster.type == MONS_IEOH_JIAN_WEAPON 
-            && monster.weapon()
-            && monster.weapon()->props.exists(IEOH_JIAN_PROJECTED))
-        {
-            return &monster;
-        }
-
-    return nullptr;
+    return (item && item->flags & ISFLAG_UNRANDART)
+            && item->unrand_idx >= UNRAND_DIVINE_DEER_HORN_KNIFE
+            && item->unrand_idx <= UNRAND_DIVINE_CHUI;
 }
 
 void ieoh_jian_end_divine_blade()
@@ -1408,7 +1402,7 @@ void ieoh_jian_end_divine_blade()
     for (auto& monster: menv)
         if (monster.type == MONS_IEOH_JIAN_WEAPON 
             && monster.weapon()
-            && monster.weapon()->props.exists(IEOH_JIAN_DIVINE))
+            && is_ieoh_jian_divine_weapon(monster.weapon()))
         {
             monster_die(&monster, KILL_RESET, NON_MONSTER, true);
         }
@@ -1416,7 +1410,7 @@ void ieoh_jian_end_divine_blade()
     for (int which_item = 0; which_item < ENDOFPACK; which_item++)
     {
         auto& item = you.inv[which_item];
-        if (item.defined() && item.props.exists(IEOH_JIAN_DIVINE))
+        if (item.defined() && is_ieoh_jian_divine_weapon(&item))
         {
             string name = item.name(DESC_THE, false, true, false);
             dec_inv_item_quantity(which_item, 1);
@@ -1431,29 +1425,6 @@ void ieoh_jian_end_divine_blade()
 
     }
     invalidate_agrid(true);
-}
-
-void ieoh_jian_end_projection()
-{
-    you.duration[DUR_IEOH_JIAN_PROJECTION] = 0;
-    auto monster = ieoh_jian_find_projected_weapon();
-    if (monster)
-        monster_die(monster, KILL_RESET, NON_MONSTER, true);
-
-    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
-    {
-        auto& item = you.inv[which_item];
-        if (item.defined() && item.props.exists(IEOH_JIAN_PROJECTED))
-        {
-            mprf(MSGCH_GOD, "%s flies back to you!", item.name(DESC_THE, false, true, false).c_str());
-            you.props[IEOH_JIAN_SWAPPING] = true;
-            item.props.erase(IEOH_JIAN_PROJECTED);
-            if (!you.weapon())
-                wield_weapon(true, which_item, false, true, false, false, false);
-            you.props.erase(IEOH_JIAN_SWAPPING);
-            invalidate_agrid(true);
-        }
-    }
 }
 
 static const int _ieoh_jian_num_divine_weapons = 8;
@@ -1571,8 +1542,12 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
 
     if (!mons || _dont_attack_martial(mons) || !mons->alive())
         return;
-  
-    mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
+ 
+    if (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+       mprf("You lunge at %s with incredible momentum!", mons->name(DESC_THE).c_str());
+    else
+       mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
+
     melee_attack lunge(&you, mons);
     lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
     lunge.attack();
@@ -1606,7 +1581,10 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         if (!mons->alive())
             continue;
 
-        mprf("You spin and strike %s!", mons->name(DESC_THE).c_str());
+        if (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+            mprf("You spin and strike %s with incredible momentum!", mons->name(DESC_THE).c_str());
+        else
+            mprf("You spin and strike %s.", mons->name(DESC_THE).c_str());
 
         melee_attack whirlwind(&you, mons);
         whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
@@ -1659,7 +1637,11 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
         {
-            mprf("You attack %s while airborne!", target->name(DESC_THE).c_str());
+            if (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+                mprf("You attack %s while airborne with incredible momentum!", target->name(DESC_THE).c_str());
+            else
+                mprf("You attack %s while airborne.", target->name(DESC_THE).c_str());
+
             melee_attack aerial(&you, target);
             aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
             aerial.attack();

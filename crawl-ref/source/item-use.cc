@@ -315,20 +315,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
         SAY(canned_msg(MSG_TOO_BERSERK));
         return false;
     }
-    
-    if (ieoh_jian_find_projected_weapon())
-    {
-        if (weapon && weapon->props.exists(IEOH_JIAN_PROJECTED))
-        {
-            SAY(mpr("That weapon is out of your reach!"));
-        }
-        else
-        {
-            SAY(mpr("You're too focused keeping your weapon in the air."));
-        }
-
-        return false;
-    }
 
     if (you.melded[EQ_WEAPON] && unwield)
     {
@@ -405,7 +391,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
              && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
              && you.undead_state() == US_ALIVE
              && !you_foodless()
-             && !you.props.exists(IEOH_JIAN_SWAPPING)
              && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)

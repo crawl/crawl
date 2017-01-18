@@ -441,8 +441,7 @@ enum ability_type
 #endif
 
     // Ieoh Jian
-    ABIL_IEOH_JIAN_STEEL_DRAGONFLY = 1300,
-    ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY,
+    ABIL_IEOH_JIAN_SERPENTS_LASH = 1300,
     ABIL_IEOH_JIAN_HEAVENLY_BLADE,
 
     // For both Yred and Beogh
@@ -1658,7 +1657,6 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
-    DNGN_ALTAR_IEOH_JIAN,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1725,9 +1723,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
-    DNGN_ALTAR_IEOH_JIAN,
-
     DNGN_ENDLESS_SALT,
+    DNGN_ALTAR_IEOH_JIAN,
 #endif
 
     NUM_FEATURES
@@ -1923,9 +1920,8 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
-    DUR_IEOH_JIAN_PROJECTION,
-    DUR_IEOH_JIAN_DIVINE_BLADE,
     DUR_NO_HOP,
+    DUR_IEOH_JIAN_DIVINE_BLADE,
     NUM_DURATIONS
 };
 
@@ -2520,7 +2516,6 @@ enum targ_mode_type
     TARG_BEOGH_GIFTABLE,    // For Beogh followers who can be given gifts
     TARG_MOVABLE_OBJECT,    // Movable objects only
     TARG_MOBILE_MONSTER,    // Non-stationary monsters
-    TARG_IEOH_JIAN_WEAPON,
     TARG_NUM_MODES
 };
 
@@ -2679,7 +2674,6 @@ enum monster_type                      // menv[].type
     MONS_GLOWING_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
-    MONS_IEOH_JIAN_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
 #endif
@@ -3568,6 +3562,7 @@ enum monster_type                      // menv[].type
     MONS_DREAM_SHEEP,
     MONS_FROG,
     MONS_BARACHIAN,
+    MONS_IEOH_JIAN_WEAPON,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

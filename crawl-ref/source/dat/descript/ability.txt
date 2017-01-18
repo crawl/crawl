@@ -870,14 +870,11 @@ Ancestor Identity ability
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
-Steel Dragonfly ability
+Serpent's Lash ability
 
-Projects a weapon towards a target, hitting the first enemy in the way. The weapon
-is then brought to life for a brief moment, striking again on its own.
-%%%%
-End Steel Dragonfly ability
-
-Instantly recalls the animated weapon back to your hands.
+Moves at supernatural speeds for a short distance. After using this ability, 
+the next two movement actions are instant. Taking any action other than movement
+cancels the effect.
 %%%%
 Heavenly Blade ability
 

@@ -33,11 +33,6 @@ static void _redraw_armour()
     you.redraw_armour_class = true;
 }
 
-static void _end_projection()
-{
-    ieoh_jian_end_projection();
-}
-
 static void _end_divine_blade()
 {
     ieoh_jian_end_divine_blade();
@@ -550,9 +545,6 @@ static const duration_def duration_data[] =
     { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
       "Your weapon is exuding a protective aura.", D_NO_FLAGS,
       {{ "", _redraw_armour }}},
-    { DUR_IEOH_JIAN_PROJECTION, 0, "", "projected weapon", "",
-      "", D_NO_FLAGS,
-      {{ "", _end_projection }}},
     { DUR_IEOH_JIAN_DIVINE_BLADE, 0, "", "divine blade", "",
       "", D_NO_FLAGS,
       {{ "", _end_divine_blade }}},

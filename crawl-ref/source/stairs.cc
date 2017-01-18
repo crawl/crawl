@@ -549,9 +549,6 @@ void floor_transition(dungeon_feature_type how,
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
-    // Despawn IJC weapons
-    ieoh_jian_end_projection();
-
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
     if (!forced && whence == DNGN_ENTER_ABYSS)

@@ -627,12 +627,10 @@ static const ability_def Ability_List[] =
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
     // Ieoh Jian
-    { ABIL_IEOH_JIAN_STEEL_DRAGONFLY, "Steel Dragonfly",
-        2, 20, 30, generic_cost::fixed(1), {FAIL_INVO, 20, 5, 10}, abflag::NONE },
-    { ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY, "End Steel Dragonfly",
-        0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
+    { ABIL_IEOH_JIAN_SERPENTS_LASH, "Serpent's Lash",
+        0, 0, 0, 3, {FAIL_INVO, 20, 5, 10}, abflag::EXHAUSTION | abflag::INSTANT },
     { ABIL_IEOH_JIAN_HEAVENLY_BLADE, "Heavenly Blade",
-        5, 0, 80, 10, {FAIL_INVO, 60, 5, 25}, abflag::NONE },
+        0, 0, 0, 10, {FAIL_INVO, 60, 5, 25}, abflag::NONE },
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -978,16 +976,6 @@ ability_type fixup_ability(ability_type ability)
         if (you.attribute[ATTR_DIVINE_ENERGY])
             return ABIL_SIF_MUNA_STOP_DIVINE_ENERGY;
         return ability;
-    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
-        if (you.species == SP_FELID || you.duration[DUR_IEOH_JIAN_PROJECTION])
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
-        if (you.duration[DUR_IEOH_JIAN_PROJECTION] == 0)
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
     default:
         return ability;
     }
@@ -3076,21 +3064,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         hepliaklqana_choose_identity();
         break;
 
-    case ABIL_IEOH_JIAN_STEEL_DRAGONFLY:
+    case ABIL_IEOH_JIAN_SERPENTS_LASH:
         fail_check();
-        if (!you.weapon())
-        {
-            canned_msg(MSG_NOTHING_CARRIED);
-            return SPRET_ABORT;
-        }
-
-        if (!ieoh_jian_steel_dragonfly(beam))
-            return SPRET_ABORT;
-
-        break;
-    case ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY:
-        fail_check();
-        ieoh_jian_end_projection();
+        // TODO
+        return SPRET_ABORT;
         break;
     case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
         fail_check();
@@ -3412,9 +3389,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
-
-    if (you.duration[DUR_IEOH_JIAN_PROJECTION])
-        _add_talent(talents, ABIL_IEOH_JIAN_END_STEEL_DRAGONFLY, check_confused);
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);

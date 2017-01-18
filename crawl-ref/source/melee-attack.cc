@@ -3423,12 +3423,10 @@ static int _apply_momentum(int dam)
 // This also takes care of divine weapon modifiers, regardless of the attack being martial.
 int melee_attack::martial_damage_mod(int dam)
 {
-    if (you.weapon() && you.weapon()->props.exists(IEOH_JIAN_DIVINE)
-        && you.weapon()->props[IEOH_JIAN_DIVINE].get_int())
+    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE 
+        && you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
     {
-        mprf("%s carries your momentum!", you.weapon()->name(DESC_THE, false, true, false).c_str());
         dam = div_rand_round(dam * 15, 10);
-        you.weapon()->props[IEOH_JIAN_DIVINE] = 0;
     }
 
     switch (ieoh_jian_attack)

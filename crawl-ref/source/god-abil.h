@@ -187,6 +187,6 @@ spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();
 
-bool ieoh_jian_steel_dragonfly(bolt &pbolt);
+bool ieoh_jian_serpents_lash();
 bool ieoh_jian_heavenly_blade();
 #endif

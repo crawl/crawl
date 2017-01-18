@@ -2255,8 +2255,6 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode,
     case TARG_MOBILE_MONSTER:
         return !(mons_is_tentacle_or_tentacle_segment(mon->type)
                  || mon->is_stationary());
-    case TARG_IEOH_JIAN_WEAPON:
-        return (mon->type == MONS_IEOH_JIAN_WEAPON);
     case TARG_NUM_MODES:
         break;
     // intentionally no default

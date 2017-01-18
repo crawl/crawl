@@ -321,20 +321,14 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
-    if (proprt[ARTP_CONTAM] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
+    if (proprt[ARTP_CONTAM] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
 
-    if (proprt[ARTP_CONTAM] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
-        simple_god_message(" protects your body from contamination.");
-
-    if (proprt[ARTP_DRAIN] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
+    if (proprt[ARTP_DRAIN] && !meld)
         drain_player(150, true, true);
-
-    if (proprt[ARTP_DRAIN] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
-        simple_god_message(" protects you from draining.");
 
     if (proprt[ARTP_SEE_INVISIBLE])
         _mark_unseen_monsters();
@@ -351,14 +345,11 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     // this must be last!
-    if (proprt[ARTP_FRAGILE] && !meld && !you.props.exists(IEOH_JIAN_SWAPPING))
+    if (proprt[ARTP_FRAGILE] && !meld)
     {
         mprf("%s crumbles to dust!", item.name(DESC_THE).c_str());
         dec_inv_item_quantity(item.link, 1);
     }
-
-    if (proprt[ARTP_FRAGILE] && !meld && you.props.exists(IEOH_JIAN_SWAPPING))
-        simple_god_message(" protects your weapon from shattering.");
 }
 
 static void _equip_use_warning(const item_def& item)
@@ -583,8 +574,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 if (you.species != SP_VAMPIRE
                     && you.undead_state() == US_ALIVE
                     && !you_foodless()
-                    && !unmeld
-                    && !you.props.exists(IEOH_JIAN_SWAPPING))
+                    && !unmeld)
                 {
                     make_hungry(4500, false, false);
                 }
@@ -704,12 +694,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                         simple_god_message(" absorbs the residual spatial "
                                            "distortion as you unwield your "
                                            "weapon.");
-                        break;
-                    }
-                    
-                    if (you.props.exists(IEOH_JIAN_SWAPPING))
-                    {
-                        simple_god_message(" protects you from spatial distortion.");
                         break;
                     }
 
@@ -1384,20 +1368,15 @@ bool unwield_item(bool showMsgs)
     item_def& item = *you.weapon();
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
-    const int item_slot = you.equip[EQ_WEAPON];
 
     if (is_weapon && !safe_to_remove(item))
         return false;
 
     unequip_item(EQ_WEAPON, showMsgs);
 
-    if (item.props.exists(IEOH_JIAN_DIVINE) 
-        && !you.props.exists(IEOH_JIAN_SWAPPING)
-        && you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
+    if (is_ieoh_jian_divine_weapon(&item))
     {
-        string name = item.name(DESC_THE, false, true, false);
-        dec_inv_item_quantity(item_slot, 1);
-        mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
+        ieoh_jian_end_divine_blade();
         invalidate_agrid(true);
     }
 
