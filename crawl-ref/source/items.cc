@@ -4323,6 +4323,9 @@ bool get_item_by_name(item_def *item, const char* specs,
             case OBJ_ARMOUR:
             case OBJ_JEWELLERY:
             {
+                // XXX: if we ever allow ?/ lookup of unrands, change this,
+                // since at present, it'll mark any matching unrands as
+                // created & prevent them from showing up in the game!
                 for (int unrand = 0; unrand < NUM_UNRANDARTS; ++unrand)
                 {
                     int index = unrand + UNRAND_START;

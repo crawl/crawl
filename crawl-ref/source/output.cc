@@ -2377,7 +2377,7 @@ static vector<formatted_string> _get_overview_resistances(
 
     out += _stealth_bar(get_number_of_cols()) + "\n";
 
-    const int regen = player_regen() / 10;
+    const int regen = (player_regen() + 9) / 10; // round up
     out += make_stringf("Regen  %d.%d/turn\n", regen/10, regen % 10);
 
     cols.add_formatted(0, out, false);
