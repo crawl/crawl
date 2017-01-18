@@ -929,9 +929,9 @@ OBJ:     OBJ_JEWELLERY/AMU_RAGE
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 INT:     -3
-MAGIC:   1
+MAGIC:   2
 ANGRY:   5
-SLAY:    3
+SLAY:    6
 CURSED:  3
 
 NAME:    ring of Shaolin
