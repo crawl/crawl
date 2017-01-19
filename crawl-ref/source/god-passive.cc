@@ -1422,6 +1422,12 @@ void ieoh_jian_trigger_serpents_lash()
        }
 }
 
+bool ieoh_jian_has_momentum()
+{
+   return (you.attribute[ATTR_SERPENTS_LASH] > 0)
+          || (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()));
+}
+
 void ieoh_jian_end_divine_blade()
 {
     you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 0;
@@ -1434,8 +1440,15 @@ void ieoh_jian_end_divine_blade()
             dec_inv_item_quantity(which_item, 1);
             mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
         }
-
     }
+
+    for (int which_item = 0; which_item < MAX_ITEMS; which_item++)
+    {
+        auto& item(mitm[which_item]);
+        if (item.defined() && is_ieoh_jian_divine_weapon(&item))
+           dec_mitm_item_quantity(which_item, 1);
+    }
+
     invalidate_agrid(true);
 }
 
@@ -1519,7 +1532,7 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
     if (!mons || _dont_attack_martial(mons) || !mons->alive())
         return;
  
-    if (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+    if (ieoh_jian_has_momentum())
        mprf("You lunge at %s with incredible momentum!", mons->name(DESC_THE).c_str());
     else
        mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
@@ -1557,7 +1570,7 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         if (!mons->alive())
             continue;
 
-        if (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+        if (ieoh_jian_has_momentum())
             mprf("You spin and strike %s with incredible momentum!", mons->name(DESC_THE).c_str());
         else
             mprf("You spin and strike %s.", mons->name(DESC_THE).c_str());
@@ -1613,7 +1626,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
         {
-            if (you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+            if (ieoh_jian_has_momentum())
                 mprf("You attack %s while airborne with incredible momentum!", target->name(DESC_THE).c_str());
             else
                 mprf("You attack %s while airborne.", target->name(DESC_THE).c_str());
@@ -1638,6 +1651,9 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
             && !_dont_attack_martial(mon))
         {
             int distract_chance = div_rand_round(12 * you.experience_level, mon->get_hit_dice());
+            if (ieoh_jian_has_momentum())
+                distract_chance = div_rand_round(distract_chance * 15, 10);
+
             const monsterentry* entry = get_monster_data(mon->type);
            
             dprf("Attempting distract with chance %d", distract_chance);

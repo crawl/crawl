@@ -298,6 +298,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos);
 void ieoh_jian_trigger_serpents_lash();
 item_def ieoh_jian_generate_divine_weapon();
 void ieoh_jian_end_divine_blade();
+bool ieoh_jian_has_momentum();
 bool is_ieoh_jian_divine_weapon(const item_def*);
 
 #endif

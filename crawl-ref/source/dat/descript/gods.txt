@@ -75,7 +75,8 @@ after battling their way out of the afterlife. Disciples of the Council are
 taught to wield every weapon type with great proficiency. As they follow the
 Path they will become able to execute acrobatic martial maneuvers, such as wall
 jumps, spinning attacks and punishing lunges. They will eventually become able
-to request temporary help in the form of powerful divine weapons.
+to request temporary help in the form of powerful divine weapons. Followers
+unlock these abilities through practice, so they do not need to train Invocations.
 
 %%%%
 Jiyva

@@ -1376,6 +1376,7 @@ bool unwield_item(bool showMsgs)
 
     you.wield_change     = true;
     you.redraw_quiver    = true;
+    invalidate_agrid(true);
 
     return true;
 }

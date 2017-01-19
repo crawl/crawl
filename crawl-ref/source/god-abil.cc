@@ -7108,6 +7108,7 @@ bool ieoh_jian_heavenly_blade()
         return false;
     }
 
+    simple_god_message(" says: On these moments of need, wield our instrument and treat it with respect!");
     mprf(MSGCH_GOD,"%s manifests from thin air! You reach your %s and feel its power.", 
          weapon.name(DESC_THE, false, true, false).c_str(),
          you.hand_name(false).c_str());

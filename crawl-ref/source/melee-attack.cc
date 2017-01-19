@@ -574,6 +574,9 @@ bool melee_attack::handle_phase_aux()
 void melee_attack::player_strike_pressure_points(monster* mons)
 {
     int slow_chance = div_rand_round(10 * you.experience_level, mons->get_hit_dice());
+    if (ieoh_jian_has_momentum())
+        slow_chance = div_rand_round(slow_chance * 15, 10);
+
     dprf("Pressure point strike, %d%% chance to slow.", slow_chance);
 
     if (!mons->cannot_move() && x_chance_in_y(slow_chance, 100))
@@ -3405,7 +3408,7 @@ int melee_attack::cleave_damage_mod(int dam)
     return div_rand_round(dam * 7, 10);
 }
 
-static int _apply_momentum(int dam)
+static int _apply_move_speed_damage_compensation(int dam)
 {
     // Momentum makes sure that heavy weapons do not get an unfair advantage
     // when attacking on the move.
@@ -3423,8 +3426,7 @@ static int _apply_momentum(int dam)
 // This also takes care of divine weapon modifiers, regardless of the attack being martial.
 int melee_attack::martial_damage_mod(int dam)
 {
-    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE 
-        && you.weapon() && is_ieoh_jian_divine_weapon(you.weapon()))
+    if ((ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE) && ieoh_jian_has_momentum())
     {
         dam = div_rand_round(dam * 15, 10);
     }
@@ -3460,7 +3462,7 @@ int melee_attack::martial_damage_mod(int dam)
         break;
     }
 
-    dam = _apply_momentum(dam);
+    dam = _apply_move_speed_damage_compensation(dam);
     return dam;
 }
 

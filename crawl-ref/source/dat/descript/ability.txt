@@ -874,7 +874,7 @@ Serpent's Lash ability
 
 Moves at supernatural speeds for a short distance. After using this ability, 
 the next two movement actions are instant. Martial attacks performed under the
-effect of Serpent's Lash are especially effective.
+effect of Serpent's Lash are more effective.
 %%%%
 Heavenly Blade ability
 
