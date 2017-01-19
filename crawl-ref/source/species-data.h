@@ -466,7 +466,7 @@ static const map<species_type, species_def> species_data =
     MONS_KOBOLD,
     HT_LAND, US_ALIVE, SIZE_SMALL,
     5, 9, 10, // 24
-    { STAT_STR, STAT_DEX }, 5,
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_CARNIVOROUS, 3, 1 }, },
     {},
     {},
