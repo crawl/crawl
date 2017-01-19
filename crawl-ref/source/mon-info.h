@@ -211,7 +211,6 @@ struct monster_info_base
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;
-    string ieoh_jian_weapon_name;
     monster_spells spells;
     mon_attack_def attack[MAX_NUM_ATTACKS];
 

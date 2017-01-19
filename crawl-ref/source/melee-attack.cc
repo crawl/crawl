@@ -2351,7 +2351,7 @@ string melee_attack::mons_attack_desc()
         ret = " from afar";
     }
 
-    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON && attacker->type != MONS_IEOH_JIAN_WEAPON)
+    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON)
         ret += " with " + weapon->name(DESC_A);
 
     return ret;

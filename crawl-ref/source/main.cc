@@ -3564,9 +3564,12 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    // Ieoh Jian's lunge and whirlwind, as well as weapon swapping on move.
-    if (you_worship(GOD_IEOH_JIAN) && !attacking && !did_wall_jump)
+    // Ieoh Jian's lunge and whirlwind.
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && (you.pos() == move) && !did_wall_jump)
         ieoh_jian_trigger_martial_arts(initial_position);
+
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && (you.pos() == move || did_wall_jump))
+        ieoh_jian_trigger_serpents_lash();
 }
 
 static int _get_num_and_char_keyfun(int &ch)

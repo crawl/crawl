@@ -1678,13 +1678,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
         }
 
-        case MONS_IEOH_JIAN_WEAPON:
-        {
-            // Use item tile.
-            const item_def& item = *mon.inv[MSLOT_WEAPON];
-            return tileidx_item(item);
-        }
-
         case MONS_SPECTRAL_WEAPON:
         {
             if (!mon.inv[MSLOT_WEAPON].get())

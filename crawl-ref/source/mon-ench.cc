@@ -21,7 +21,6 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
-#include "ghost.h"
 #include "hints.h"
 #include "items.h"
 #include "libutil.h"

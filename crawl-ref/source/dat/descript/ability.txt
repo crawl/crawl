@@ -873,13 +873,13 @@ gender. This does not take any time.
 Serpent's Lash ability
 
 Moves at supernatural speeds for a short distance. After using this ability, 
-the next two movement actions are instant. Taking any action other than movement
-cancels the effect.
+the next two movement actions are instant. Martial attacks performed under the
+effect of Serpent's Lash are especially effective.
 %%%%
 Heavenly Blade ability
 
 Beseeches the council to send help in the form of a tremendously powerful divine
-weapon. 
+weapon. The weapon will accompany you for a significant period of time.
 %%%%
 Hop ability
 

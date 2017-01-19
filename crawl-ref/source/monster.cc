@@ -32,12 +32,9 @@
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-item.h"
-#include "god-passive.h"
-#include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
-#include "item-use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -53,12 +50,8 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-transit.h"
-#include "output.h"
-#include "prompt.h"
-#include "player-equip.h"
 #include "religion.h"
 #include "rot.h"
-#include "skills.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -6689,7 +6682,6 @@ bool monster::angered_by_attacks() const
     return !has_ench(ENCH_INSANE)
             && !mons_is_avatar(type)
             && type != MONS_SPELLFORGED_SERVITOR
-            && type != MONS_IEOH_JIAN_WEAPON
             && !testbits(flags, MF_DEMONIC_GUARDIAN)
             && !mons_is_hepliaklqana_ancestor(type);
 }

@@ -1374,12 +1374,6 @@ bool unwield_item(bool showMsgs)
 
     unequip_item(EQ_WEAPON, showMsgs);
 
-    if (is_ieoh_jian_divine_weapon(&item))
-    {
-        ieoh_jian_end_divine_blade();
-        invalidate_agrid(true);
-    }
-
     you.wield_change     = true;
     you.redraw_quiver    = true;
 

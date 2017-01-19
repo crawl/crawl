@@ -296,7 +296,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
         string monname;
         if (monsters.size() == 1)
             monname = mon->pronoun(PRONOUN_SUBJECTIVE);
-        else if (mon->type == MONS_DANCING_WEAPON || mon->type == MONS_IEOH_JIAN_WEAPON)
+        else if (mon->type == MONS_DANCING_WEAPON)
             monname = "There";
         else if (types[mon->type] == 1)
             monname = mon->full_name(DESC_THE);

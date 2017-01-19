@@ -16,7 +16,6 @@
 #include "god-conduct.h"
 #include "item-prop.h"
 #include "message.h"
-#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "monster.h"

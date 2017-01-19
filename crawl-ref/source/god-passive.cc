@@ -30,7 +30,6 @@
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-cast.h"
-#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "player-equip.h"
@@ -1399,14 +1398,6 @@ bool is_ieoh_jian_divine_weapon(const item_def* item)
 void ieoh_jian_end_divine_blade()
 {
     you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = 0;
-    for (auto& monster: menv)
-        if (monster.type == MONS_IEOH_JIAN_WEAPON 
-            && monster.weapon()
-            && is_ieoh_jian_divine_weapon(monster.weapon()))
-        {
-            monster_die(&monster, KILL_RESET, NON_MONSTER, true);
-        }
-
     for (int which_item = 0; which_item < ENDOFPACK; which_item++)
     {
         auto& item = you.inv[which_item];
@@ -1415,12 +1406,6 @@ void ieoh_jian_end_divine_blade()
             string name = item.name(DESC_THE, false, true, false);
             dec_inv_item_quantity(which_item, 1);
             mprf(MSGCH_GOD,"%s ascends back to the heavens!", name.c_str());
-        }
-
-        if (item.defined() && item.props.exists(IEOH_JIAN_SWAPPED_OUT))
-        {
-            wield_weapon(true, which_item, false, true, false, false, false);
-            item.props.erase(IEOH_JIAN_SWAPPED_OUT);
         }
 
     }
@@ -1488,42 +1473,6 @@ item_def ieoh_jian_generate_divine_weapon()
     weapon.quantity = 1;
     return weapon;
 } 
-
-monster* ieoh_jian_manifest_weapon_monster(const coord_def& position, const item_def& weapon)
-{
-    if (!in_bounds(position) || weapon.base_type != OBJ_WEAPONS)
-        return nullptr;
-
-    coord_def spawn_position = position;
-    for (adjacent_iterator ai(position, false); ai; ++ai)
-    {
-        if (you.is_habitable(*ai) && !actor_at(*ai))
-        {
-            spawn_position = *ai;
-            break;
-        }
-    }
-
-    mgen_data mg(MONS_IEOH_JIAN_WEAPON,
-                 BEH_FRIENDLY,
-                 spawn_position,
-                 MHITYOU,
-                 MG_FORCE_BEH | MG_FORCE_PLACE,
-                 GOD_IEOH_JIAN);
-
-    mg.props[IEOH_JIAN_WEAPON] = weapon;
-
-    int power = you.experience_level * 2 + you.skill(SK_INVOCATIONS, 2, false);
-    mg.props[IEOH_JIAN_POWER] = power;
-
-    auto created_monster = create_monster(mg);
-    if (created_monster)
-    {
-        invalidate_agrid(true);
-        view_update_at(created_monster->pos()); // Halo on spawn.
-    }
-    return created_monster;
-}
 
 static bool _dont_attack_martial(const monster* mons)
 {

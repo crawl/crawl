@@ -29,10 +29,7 @@ enum nemelex_gift_types
 
 /// custom monster gender
 #define MON_GENDER_KEY "mon_gender"
-/// Weapon for monster generation
-#define IEOH_JIAN_WEAPON "ieoh-jian-weapon"
-#define IEOH_JIAN_POWER "ieoh-jian-power"
-/// Weapon swapped out when a divine is requested.
-#define IEOH_JIAN_SWAPPED_OUT "ieoh-jian-swapped-out"
+
+#define IEOH_JIAN_SERPENTS_LASH_LEVEL "ieoh_jian_serpents_lash_level"
 
 #endif

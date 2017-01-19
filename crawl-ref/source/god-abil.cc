@@ -7088,77 +7088,30 @@ void hepliaklqana_choose_identity()
 
 bool ieoh_jian_heavenly_blade()
 {
-    bool directly_summon = false;
-    if (you.species == SP_FELID)
-        directly_summon = true;
-
     if (you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] > 0)
     {
         simple_god_message(" says: One heavenly blade is more than enough, mortal!");
         return false;
     }
 
-    if (!directly_summon && inv_count() == ENDOFPACK)
+    if (inv_count() == ENDOFPACK)
     {
-        if (yesno("you don't have room in your inventory. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
-            directly_summon = true;
-        else
-            return false;
+       mpr("You don't have room in your inventory!");
+       return false;
     }
-
-    auto your_weapon = you.weapon();
-    bool bare_handed = (your_weapon == nullptr)
-                       || wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false);
-    
-    if (!bare_handed)
-    {
-        mprf("You can't unwield your weapon!");
-        return false;
-    }
-
-    if (your_weapon)
-        your_weapon->props[IEOH_JIAN_SWAPPED_OUT] = true;
 
     auto weapon = ieoh_jian_generate_divine_weapon();
 
-    if (!directly_summon && !can_wield(&weapon))
+    if (!can_wield(&weapon))
     {
-        if (yesno("You can't wield weapons. Spend piety and request the divine weapon as an animated ally? (y/n)", true, 'n'))
-            directly_summon = true;
-        else
-            return false;
+        mpr("You can't wield weapons!");
+        return false;
     }
 
-    if (directly_summon)
-    {
-        monster* mons = ieoh_jian_manifest_weapon_monster(you.pos(), weapon);
-        if (mons)
-        {
-            mprf(MSGCH_GOD, "%s manifests from thin air! You can feel the presence of %s wielding it.", 
-                 weapon.name(DESC_THE, false, true, false).c_str(),
-                 ieoh_jian_random_sifu_name().c_str());
-
-            lose_piety(5); // Compensation for the extra effect
-        }
-        else 
-        {
-            mprf(MSGCH_GOD, "You briefly feel the presence of %s, but nothing happens", ieoh_jian_random_sifu_name().c_str());
-            return false;
-        }
-    }
-    else
-    {
-        int slot = find_free_slot(weapon);
-        move_item_to_inv(weapon);
-        mprf(MSGCH_GOD,"%s manifests from thin air! You reach your %s and feel its power.", 
-             weapon.name(DESC_THE, false, true, false).c_str(),
-             you.hand_name(false).c_str());
-        equip_item(EQ_WEAPON, slot, false);
-    }
-
-    invalidate_agrid(true);
-    float invo_duration_factor = you.skill(SK_INVOCATIONS,1,false) / 15.0;
-    int duration = IEOH_JIAN_BASE_DIVINE_DURATION * (1 + invo_duration_factor);
-    you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = duration;
+    mprf(MSGCH_GOD,"%s manifests from thin air! You reach your %s and feel its power.", 
+         weapon.name(DESC_THE, false, true, false).c_str(),
+         you.hand_name(false).c_str());
+    move_item_to_inv(weapon);
+    you.duration[DUR_IEOH_JIAN_DIVINE_BLADE] = IEOH_JIAN_DIVINE_DURATION;
     return true;
 }
