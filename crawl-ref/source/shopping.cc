@@ -222,6 +222,8 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_DISTORTION:
             case SPWPN_ELECTROCUTION:
             case SPWPN_PAIN:
+            case SPWPN_ACID: // Unrand-only.
+            case SPWPN_PENETRATION: // Unrand-only.
                 valued *= 25;
                 break;
 

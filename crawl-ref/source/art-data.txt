@@ -173,7 +173,7 @@ PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
-VALUE:   1200
+VALUE:   1000
 BOOL:    special
 
 NAME:    Wrath of Trog
@@ -182,7 +182,7 @@ PLUS:    +8
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
-VALUE:   1000
+VALUE:   800
 ANGRY:   50
 BRAND:   SPWPN_ANTIMAGIC
 
@@ -192,7 +192,7 @@ PLUS:    +0   # Set on generation
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
-VALUE:   700
+VALUE:   600
 BOOL:    special, no_upgrade
 BRAND:   SPWPN_CHAOS
 
@@ -202,7 +202,6 @@ PLUS:    +12
 COLOUR:  LIGHTMAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
-VALUE:   1000
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
 
@@ -212,7 +211,7 @@ PLUS:    +0 # Set on wield
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
-VALUE:   1000
+VALUE:   800
 BOOL:    special, no_upgrade
 
 NAME:    staff of Olgreb
@@ -241,7 +240,7 @@ COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRISM
-VALUE:   1000
+VALUE:   600
 
 NAME:    scythe of Curses
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
@@ -269,7 +268,7 @@ COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
-VALUE:   1250
+VALUE:   800
 BOOL:    evil, corpse_violating
 
 NAME:    sword of Cerebov
@@ -282,7 +281,6 @@ PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
-VALUE:   2000
 BRAND:   SPWPN_FLAMING
 BOOL:    evil, nogen
 
@@ -293,7 +291,6 @@ PLUS:    +4
 COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
-VALUE:   1200
 BOOL:    evil, nogen
 
 NAME:    sceptre of Asmodeus
@@ -303,7 +300,6 @@ PLUS:    +7
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
-VALUE:   1500
 BOOL:    evil, nogen
 
 # Randomised properties, fixed appearance.
@@ -436,12 +432,13 @@ BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 BOOL:     seeinv, berserk
 
-NAME:     sword of Jihad
+ENUM:     ZEALOT_SWORD
+NAME:     zealot's sword
 OBJ:      OBJ_WEAPONS/WPN_EUDEMON_BLADE
 PLUS:     +10
 COLOUR:   ETC_HOLY
-TILE:     urand_jihad
-TILE_EQ:  jihad
+TILE:     unrand_zealot_sword
+TILE_EQ:  zealot_sword
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    5
@@ -454,6 +451,7 @@ PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_damnation
 TILE_EQ: crossbow_fire
+VALUE:   800
 BOOL:    evil
 
 # TAG_MAJOR_VERSION == 34
@@ -592,6 +590,7 @@ TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
 BOOL:    mutate, chaotic
 STEALTH: -1
+VALUE:   1000
 
 NAME:     great mace "Undeadhunter"
 INSCRIP:  disrupt,
@@ -929,9 +928,9 @@ OBJ:     OBJ_JEWELLERY/AMU_RAGE
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 INT:     -3
-MAGIC:   1
+MAGIC:   2
 ANGRY:   5
-SLAY:    3
+SLAY:    6
 CURSED:  3
 
 NAME:    ring of Shaolin
@@ -1040,6 +1039,7 @@ BASE_DAM: +3
 BOOL:     special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
 COLOUR:   WHITE
+VALUE:    600
 
 # Worn by Tiamat.
 ENUM:     DRAGONSKIN
@@ -1137,6 +1137,7 @@ COLOUR:   ETC_ELECTRICITY
 TILE:     urand_arc_blade
 TILE_EQ:  arc_blade
 BOOL:     elec
+VALUE:    600
 
 ENUM:     SPELLBINDER
 NAME:     demon whip "Spellbinder"
