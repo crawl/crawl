@@ -32,11 +32,13 @@
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "output.h"
 #include "player-equip.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
@@ -1393,6 +1395,31 @@ bool is_ieoh_jian_divine_weapon(const item_def* item)
     return (item && item->flags & ISFLAG_UNRANDART)
             && item->unrand_idx >= UNRAND_DIVINE_DEER_HORN_KNIFE
             && item->unrand_idx <= UNRAND_DIVINE_CHUI;
+}
+
+void ieoh_jian_trigger_serpents_lash()
+{
+    if (you.attribute[ATTR_SERPENTS_LASH] == 0)
+       return;
+
+    you.turn_is_over = false;
+    you.elapsed_time_at_last_input = you.elapsed_time;
+    you.attribute[ATTR_SERPENTS_LASH]--;
+    you.redraw_status_lights = true;
+    update_turn_count();
+
+    if (you.attribute[ATTR_SERPENTS_LASH] == 0)
+       switch(random2(2)) 
+       {
+       case 0: mpr("ZOOOM!!!"); break;
+       case 1: mpr("SWOOSH!!!"); break;
+       }
+    else
+       switch(random2(2)) 
+       {
+       case 0: mpr("Zoom!!"); break;
+       case 1: mpr("Swooosh!!"); break;
+       }
 }
 
 void ieoh_jian_end_divine_blade()

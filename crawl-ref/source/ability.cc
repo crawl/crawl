@@ -628,9 +628,9 @@ static const ability_def Ability_List[] =
 
     // Ieoh Jian
     { ABIL_IEOH_JIAN_SERPENTS_LASH, "Serpent's Lash",
-        0, 0, 0, 3, {FAIL_INVO, 20, 5, 10}, abflag::EXHAUSTION | abflag::INSTANT },
+        0, 0, 0, 4, {FAIL_INVO, 20, 5, 10}, abflag::EXHAUSTION | abflag::INSTANT },
     { ABIL_IEOH_JIAN_HEAVENLY_BLADE, "Heavenly Blade",
-        0, 0, 0, 10, {FAIL_INVO, 60, 5, 25}, abflag::NONE },
+        0, 0, 0, 40, {FAIL_INVO, 60, 5, 25}, abflag::NONE },
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3065,10 +3065,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_IEOH_JIAN_SERPENTS_LASH:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to lash out.");
+            return SPRET_ABORT;
+        }
         fail_check();
-        // TODO
-        return SPRET_ABORT;
-        break;
+        mprf(MSGCH_GOD, "Your muscles tense, ready for explosive movement");
+        you.attribute[ATTR_SERPENTS_LASH] = 2;
+        you.redraw_status_lights = true;
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        return SPRET_SUCCESS;
     case ABIL_IEOH_JIAN_HEAVENLY_BLADE:
         fail_check();
 

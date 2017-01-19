@@ -30,6 +30,4 @@ enum nemelex_gift_types
 /// custom monster gender
 #define MON_GENDER_KEY "mon_gender"
 
-#define IEOH_JIAN_SERPENTS_LASH_LEVEL "ieoh_jian_serpents_lash_level"
-
 #endif

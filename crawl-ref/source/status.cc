@@ -434,6 +434,18 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_SERPENTS_LASH:
+        if (you.attribute[ATTR_SERPENTS_LASH] > 0)
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text
+               = make_stringf("Serp (%u)",
+                              you.attribute[ATTR_SERPENTS_LASH]);
+            inf->short_text = "serpent's lash";
+            inf->long_text = "You are moving at supernatural speed.";
+        }
+        break;
+
     case DUR_SONG_OF_SLAYING:
         inf->light_text
             = make_stringf("Slay (%u)",

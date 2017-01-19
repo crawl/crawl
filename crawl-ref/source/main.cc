@@ -3565,10 +3565,10 @@ static void _move_player(coord_def move)
     }
 
     // Ieoh Jian's lunge and whirlwind.
-    if (you_worship(GOD_IEOH_JIAN) && !attacking && (you.pos() == move) && !did_wall_jump)
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && !did_wall_jump)
         ieoh_jian_trigger_martial_arts(initial_position);
 
-    if (you_worship(GOD_IEOH_JIAN) && !attacking && (you.pos() == move || did_wall_jump))
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && you.turn_is_over) 
         ieoh_jian_trigger_serpents_lash();
 }
 
