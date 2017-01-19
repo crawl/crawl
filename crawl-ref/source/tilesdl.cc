@@ -629,8 +629,7 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
 int TilesFramework::getch_ck()
 {
     wm_event event;
-    cursor_loc cur_loc;
-    cursor_loc last_loc;
+    cursor_loc last_loc = m_cur_loc;
 
     int key = 0;
 
@@ -656,7 +655,6 @@ int TilesFramework::getch_ck()
             return ESCAPE;
 
         unsigned int ticks = 0;
-        last_loc = m_cur_loc;
 
         if (wm->wait_event(&event))
         {
@@ -745,18 +743,6 @@ int TilesFramework::getch_ck()
                     int mouse_key = handle_mouse(event.mouse_event);
 
                     m_region_msg->alt_text().clear();
-                    // find mouse location
-                    for (Region *reg : m_layers[m_active_layer].m_regions)
-                    {
-                        if (reg->mouse_pos(m_mouse.x, m_mouse.y,
-                                           m_cur_loc.cx, m_cur_loc.cy))
-                        {
-                            m_cur_loc.reg = reg;
-                            m_cur_loc.mode = mouse_control::current_mode();
-                            reg->update_alt_text(m_region_msg->alt_text());
-                            break;
-                        }
-                    }
 
                     // Don't break back to Crawl and redraw for every mouse
                     // event, because there's a lot of them.
@@ -769,6 +755,21 @@ int TilesFramework::getch_ck()
                     ASSERT(count >= 0);
                     if (count > 0)
                         continue;
+
+                    // Remember our current location
+                    last_loc = m_cur_loc;
+                    // Find the new mouse location
+                    for (Region *reg : m_layers[m_active_layer].m_regions)
+                    {
+                        if (reg->mouse_pos(m_mouse.x, m_mouse.y,
+                                           m_cur_loc.cx, m_cur_loc.cy))
+                        {
+                            m_cur_loc.reg = reg;
+                            m_cur_loc.mode = mouse_control::current_mode();
+                            reg->update_alt_text(m_region_msg->alt_text());
+                            break;
+                        }
+                    }
 
                     // Stay within this input loop until the mouse moves
                     // to a semantically different location. Crawl doesn't
