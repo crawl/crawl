@@ -628,7 +628,8 @@ unsigned int item_value(item_def item, bool ident)
                     || item.sub_type == RING_EVASION
                     || item.sub_type == RING_DEXTERITY
                     || item.sub_type == RING_INTELLIGENCE
-                    || item.sub_type == RING_SLAYING))
+                    || item.sub_type == RING_SLAYING
+                    || item.sub_type == AMU_REFLECTION))
             {
                 // Formula: price = kn(n+1) / 2, where k depends on the subtype,
                 // n is the power. (The base variable is equal to 2n.)
@@ -649,6 +650,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_STRENGTH:
                 case RING_DEXTERITY:
                 case RING_INTELLIGENCE:
+                case AMU_REFLECTION:
                     coefficient = 30;
                     break;
                 default:
@@ -683,7 +685,6 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
                 case RING_PROTECTION_FROM_MAGIC:
-                case AMU_REFLECTION:
                     valued += 250;
                     break;
 
