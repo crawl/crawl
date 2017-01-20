@@ -3860,6 +3860,7 @@ enum mutation_type
     MUT_SANGUINE_ARMOUR,
 #endif
     MUT_HOP,
+	MUT_STRONG_NOSE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

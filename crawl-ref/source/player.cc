@@ -7727,6 +7727,8 @@ int player_monster_detect_radius()
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);
+	if (you.mutation[MUT_STRONG_NOSE] > 0)
+		radius = max(radius, player_mutation_level(MUT_STRONG_NOSE) * 2 + 1); 
     if (have_passive(passive_t::detect_montier))
         radius = max(radius, you.piety / 20);
     return min(radius, LOS_RADIUS);

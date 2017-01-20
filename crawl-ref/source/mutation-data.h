@@ -1906,4 +1906,20 @@ static const mutation_def mut_data[] =
   {"You feel sensitive to extremes of temperature.", "", ""},
   {"You no longer feel sensitive to extremes of temperature", "", ""},
 },
+
+{ MUT_STRONG_NOSE, 0, 3, mutflag::GOOD, false,
+  "strong nose",
+  
+  {"You have a good sense of smell.", 
+   "You have a very good sense of smell.", 
+   "You have an uncanny sense of smell."},
+   
+  {"Your sense of smell grows stronger.",
+   "Your sense of smell grows stronger.",
+   "Your sense of smell grows stronger."},
+	
+  {"Your sense of smell gets weaker."
+   "Your sense of smell gets weaker."
+   "Your sense of smell gets weaker."},
+},
 };

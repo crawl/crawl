@@ -137,7 +137,7 @@ struct species_skill_aptitude
 static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 
 //Determines if the current player species is Cyno; if it is, set the
-//max skill cap to MAX_SKILL_CYNO, otherwise use the default of 27
+//max skill cap to MAX_SKILL_CYNO, otherwise use the default of MAX_SKILL_LEVEL
 int max_skill_training()
 {
 	const int MAX_SKILL_CYNO = 14;
