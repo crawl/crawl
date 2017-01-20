@@ -80,11 +80,15 @@ int artefact_value(const item_def &item)
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 6 * prop[ ARTP_AC ] + 6 * prop[ ARTP_EVASION ]
+    ret += 6 * prop[ ARTP_AC ]
+            + 6 * prop[ ARTP_EVASION ]
             + 4 * prop[ ARTP_SHIELDING ]
             + 6 * prop[ ARTP_SLAYING ]
-            + 3 * prop[ ARTP_STRENGTH ] + 3 * prop[ ARTP_INTELLIGENCE ]
-            + 3 * prop[ ARTP_DEXTERITY ];
+            + 3 * prop[ ARTP_STRENGTH ]
+            + 3 * prop[ ARTP_INTELLIGENCE ]
+            + 3 * prop[ ARTP_DEXTERITY ]
+            + 4 * prop[ ARTP_HP ]
+            + 3 * prop[ ARTP_MAGICAL_POWER ];
 
     // These resistances have meaningful levels
     if (prop[ ARTP_FIRE ] > 0)
@@ -178,6 +182,9 @@ int artefact_value(const item_def &item)
         ret += 50;
 
     if (prop[ ARTP_RMSL ])
+        ret += 20;
+
+    if (prop[ ARTP_CLARITY ])
         ret += 20;
 
     return (ret > 0) ? ret : 0;

@@ -742,6 +742,7 @@ COLOUR:   BROWN
 TILE:     urand_assassin
 TILE_EQ:  middle_gray
 STEALTH:  2
+VALUE:    600
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
@@ -827,6 +828,7 @@ TILE:     urand_night
 TILE_EQ:  robe_of_night
 MAGIC:    1
 BOOL:     seeinv
+VALUE:    600
 
 NAME:    armour of the Dragon King
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
@@ -857,6 +859,7 @@ COLOUR:  WHITE
 TILE:    urand_fencer
 TILE_EQ: glove_white
 DEX:     3
+VALUE:   400
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -904,6 +907,7 @@ OBJ:     OBJ_JEWELLERY/RING_STEALTH
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
 BOOL:    inv
+VALUE:   400
 
 # TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob
@@ -1091,6 +1095,7 @@ OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
+VALUE:    400
 
 # TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1213,6 +1218,7 @@ INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec, chaotic
+VALUE:   400
 
 # TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
@@ -1236,6 +1242,7 @@ TILE:    urand_vines
 TILE_EQ: vines
 INSCRIP: NoPotionHeal
 REGEN:   7
+VALUE:   800
 
 ENUM:    KRYIAS
 NAME:    Kryia's mail coat
@@ -1246,6 +1253,7 @@ TILE:    urand_kryias
 TILE_EQ: kryias
 INSCRIP: PotionHeal*2
 COLD:    1
+VALUE:   600
 
 ENUM:    FROSTBITE
 NAME:    frozen axe "Frostbite"
@@ -1279,6 +1287,7 @@ TILE:     urand_warlock
 TILE_EQ:  buckler_warlock
 COLOUR:   ETC_SILVER
 BRAND:    SPARM_REFLECTION
+VALUE:    400
 
 # Fedhas sprint, to allow all species access to evocable invisibility.
 NAME:     amulet of invisibility
