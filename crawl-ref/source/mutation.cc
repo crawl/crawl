@@ -337,6 +337,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
         return MUTACT_INACTIVE;
 
+    if (mut == MUT_DEMONIC_GUARDIAN && player_mutation_level(MUT_NO_LOVE))
+        return MUTACT_INACTIVE;
+
     return MUTACT_FULL;
 }
 
