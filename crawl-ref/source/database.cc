@@ -121,6 +121,7 @@ static TextDB AllDBs[] =
             "miscname.txt", // names for miscellaneous things
             "godname.txt",  // god-related names (mostly His Xomminess)
             "montitle.txt", // titles for monsters (i.e. uniques)
+			"misc.txt", // misc from cc files [ policy : first translate, second divide ]
             nullptr),
 
     TextDB("quotes", "descript/",
