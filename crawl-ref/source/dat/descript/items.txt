@@ -1,15 +1,10 @@
 %%%%
-akashic record
+acid dragon scales
 
-The last and greatest work of the Warper Golubria, detailing the most powerful
-Translocations spells in existence.
-%%%%
-amulet of dismissal
-
-An amulet which generates a field of translocational energy that will teleport
-away creatures that seriously harm you, one time in ten. It takes a few moments
-to get used to the translocational energy field, initially disorienting the
-wearer for a few turns.
+The scales of an acid dragon. Although it does not provide its wearer with as
+much protection as the armour made from the scales of some larger dragons, it is
+somewhat lighter and less encumbering. It is also remarkably smooth, letting
+corrosive slime flow off it like water.
 %%%%
 amulet of faith
 
@@ -88,10 +83,6 @@ A long pole with an enormous, cleaving blade on one end.
 battleaxe
 
 A large war axe with a formidable double-sided head.
-%%%%
-beef jerky
-
-A strip of preserved dead cow or bull.
 %%%%
 blowgun
 
@@ -402,11 +393,6 @@ dire flail
 
 A flail with long spikes and a heavy head.
 %%%%
-disc of storms
-
-A crackling disc which can unleash a destructive storm of electricity. Its
-effectiveness greatly improves in the hands of one skilled in Evocations.
-%%%%
 double sword
 
 A magical weapon with two razor-sharp blades.
@@ -437,8 +423,8 @@ A long single-edged sword with a slightly curved blade.
 %%%%
 fan of gales
 
-An enchanted fan inhabited by benevolent air spirits. Swinging the fan
-unleashes a powerful blast of wind around the bearer.
+An enchanted fan. Swinging the fan unleashes a powerful blast of wind around
+the bearer.
 %%%%
 fen folio
 
@@ -450,16 +436,10 @@ A small figurine made of some strange material, shaped like a stepped pyramid.
 It is remarkably detailed – almost like a real, vast structure, shrunk somehow
 smaller than a human hand.
 %%%%
-fire dragon armour
+fire dragon scales
 
-A suit of armour made from the scales of a fire-breathing dragon. It provides
-great protection from fire, while rendering its wearer more susceptible to
-cold.
-%%%%
-fire dragon hide
-
-The scaly skin of a fire-breathing dragon. It provides great protection from
-fire, while rendering its wearer susceptible to cold.
+The scales of a fire-breathing dragon. It provides great protection from fire,
+while rendering its wearer more susceptible to cold.
 %%%%
 flail
 
@@ -468,6 +448,12 @@ A mace with a short chain connecting the head to the haft.
 fruit
 
 A delicious edible flower ovary.
+%%%%
+fustibalus
+
+A length of wood with a reinforced sling at one end, able to fire projectiles
+at high velocity. It deals more damage when launching purpose-made ammunition,
+rather than stones found on the floor.
 %%%%
 giant club
 
@@ -481,16 +467,10 @@ glaive
 
 A pole with a large, heavy blade on one end.
 %%%%
-gold dragon armour
+gold dragon scales
 
-A suit of armour made from the scales of a gold dragon. It is much heavier than
-most dragon scale armours, and grants its wearer resistance to poison, fire and
-cold.
-%%%%
-gold dragon hide
-
-The hide of a gold dragon, covered in extremely hard golden scales. It provides
-resistance to poison, fire and cold.
+The scales of a gold dragon. It is much heavier than most dragon scale armours,
+and grants its wearer resistance to poison, fire and cold.
 %%%%
 gold piece
 
@@ -506,12 +486,6 @@ eldritch horrors.
 great mace
 
 An enormous metal war club, of great cumbrousness.
-%%%%
-greatsling
-
-A large piece of cloth and leather, reinforced with a rigid frame. It deals
-more damage when launching purpose-made projectiles, rather than stones found
-on the floor.
 %%%%
 great sword
 
@@ -549,26 +523,16 @@ hunting sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
 game like rabbits or goblins. It deals more damage when launching purpose-made
-projectiles, rather than rocks found on the floor.
+ammunition, rather than rocks found on the floor.
 %%%%
-ice dragon armour
+ice dragon scales
 
-A suit of armour made from the scales of a cold-breathing dragon. It provides
-great protection from cold, while rendering its wearer more susceptible to
-fire.
-%%%%
-ice dragon hide
-
-The scaly skin of a cold-breathing dragon. It provides great protection from
-cold, while rendering its wearer susceptible to fire.
+The scales of a cold-breathing dragon. It provides great protection from cold,
+while rendering its wearer more susceptible to fire.
 %%%%
 inedible chunk of flesh
 
 <chunk of flesh>
-%%%%
-iron rod
-
-A rod that allows its wielder to fire powerful blasts of metallic shrapnel.
 %%%%
 javelin
 
@@ -591,8 +555,8 @@ half-moon blades at both ends.
 %%%%
 lamp of fire
 
-A magical lamp inhabited by benevolent fire spirits. Unlatching the case sets
-the spirits free to trail clouds of searing flame around the target.
+A magical lamp which can be aimed at a creature to unleash trails of searing
+flame around the target.
 %%%%
 large rock
 
@@ -619,10 +583,10 @@ with almost no hindrance to spellcasting or stealthy movement.
 %%%%
 lightning rod
 
-A rod that allows its wielder to fire blasts of lightning. By evoking the rod
-in consecutive turns, the discharge will be sustained and can be redirected to
-new targets. It takes a moment to warm up, making short bursts rather
-ineffective.
+A rod that allows its wielder to fire unavoidable blasts of lightning. It
+increases in power each time it is evoked, until eventually overheating and
+resetting. Evoking the rod on consecutive actions causes the discharge to be
+sustained, allowing it to be redirected to affect an area.
 %%%%
 long sword
 
@@ -648,18 +612,6 @@ A filling ration of dried and preserved meats.
 morningstar
 
 A mace with a head covered in short spikes.
-%%%%
-mottled dragon armour
-
-A suit of armour made from the scales of a mottled dragon. Although it does not
-provide its wearer with as much protection as the armour made from the scales
-of some larger dragons, it is somewhat lighter and less encumbering. It is also
-remarkably smooth, letting sticky flames flow off it like water.
-%%%%
-mottled dragon hide
-
-The weirdly-patterned scaly skin of a mottled dragon. Its smooth surface lets
-sticky flames flow off it like water.
 %%%%
 mutagenic chunk of flesh
 
@@ -696,15 +648,10 @@ pair of gloves
 A pair of gloves. They are worn on the hands, and cover all but the largest
 claws.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
-A suit of armour made from the nacreous scales of a pearl dragon. It grants its
-wearer resistance to negative energies.
-%%%%
-pearl dragon hide
-
-The hide of a pearl dragon, covered in iridescent nacreous scales. It provides
-resistance to negative energy.
+The nacreous scales of a pearl dragon. It grants its wearer resistance to
+negative energies.
 %%%%
 phantom mirror
 
@@ -825,18 +772,12 @@ quarterstaff
 
 A sturdy wooden pole, meant for fighting.
 %%%%
-quicksilver dragon armour
+quicksilver dragon scales
 
-A suit of armour made from the scales of a quicksilver dragon. Although it does
-not provide its wearer with as much protection as the armour made from the
-scales of some heavier dragons, it is somewhat lighter and less encumbering. It
-is excellent at repelling hostile enchantments – and also cannot be enchanted
-beyond its current form as a result.
-%%%%
-quicksilver dragon hide
-
-The sinuous hide of a quicksilver dragon, covered in mercurial scales. It
-provides resistance to hostile enchantments.
+The scales of a quicksilver dragon. Although it does not provide its wearer
+with as much protection as the scales of some heavier dragons, it is somewhat
+lighter and less encumbering. It is excellent at repelling hostile enchantments
+– and also cannot be enchanted beyond its current form as a result.
 %%%%
 quick blade
 
@@ -956,24 +897,6 @@ A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
 offers little protection against physical harm, but does not hinder evasion or
 spellcasting.
 %%%%
-rod of clouds
-
-A rod that allows its wielder to blast a cone-shaped area in front of them with
-various destructive clouds, their lethality increasing with Evocations skill.
-%%%%
-rod of ignition
-
-A rod that allows its wielder to launch a fiery bolt of explosive energy.
-%%%%
-rod of inaccuracy
-
-A rod that allows its wielder to fire a powerful but extremely inaccurate bolt
-of power.
-%%%%
-rod of shadows
-
-A rod that weaves creatures from shadows and ethereal matter.
-%%%%
 royal jelly
 
 A particularly rich and golden gelatinous thing.
@@ -1081,9 +1004,7 @@ A scroll with no apparent practical use.
 %%%%
 scroll of recharging
 
-A scroll that restores the charges of any magical wand or rod chosen by its
-reader. When used on a rod, it increases the rod's maximum charges and
-increases the rate at which it regenerates power.
+A scroll that restores the charges of any magical wand chosen by its reader.
 %%%%
 scroll of remove curse
 
@@ -1140,11 +1061,6 @@ A curved piece of wood and string, for shooting arrows.
 short sword
 
 A personal stabbing weapon with a short grip.
-%%%%
-slice of pizza
-
-A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
-basil.
 %%%%
 sling bullet
 
@@ -1215,58 +1131,31 @@ staff of wizardry
 
 A staff that increases the ability of its wielder to use magical spells.
 %%%%
-steam dragon armour
+steam dragon scales
 
-A suit of armour made from the scales of a steam-breathing dragon. Unlike
-armour made from the scales of some larger dragons, it does not provide its
-wearer with much protection (beyond a resistance to scalding steam), but it is
-extremely light and supple.
-%%%%
-steam dragon hide
-
-The soft and supple scaly skin of a steam dragon. It provides protection
-against scalding steam.
+The scales of a steam-breathing dragon. Unlike the scales of some larger
+dragons, it does not provide its wearer with much protection (beyond a
+resistance to scalding steam), but it is extremely light and supple.
 %%%%
 stone
 
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
 thrown by hand or launched with a sling.
 %%%%
-shadow dragon armour
+shadow dragon scales
 
-A suit of armour made from the scales of a great umbral dragon. It is heavier
-than most dragon scale armours, but despite this, blends in so well with the
-shadows as to provide a substantial benefit to the wearer's stealth.
+The scales of a great umbral dragon. It is heavier than most dragon scale
+armours, but despite this, blends in so well with the shadows as to provide a
+substantial benefit to the wearer's stealth.
 %%%%
-shadow dragon hide
+storm dragon scales
 
-The hide of a great umbral dragon, covered in extremely hard blue-black scales.
-It blends in with the shadows, and grants its wearer improved stealth.
+The scales of a lightning-breathing dragon. It is heavier than most dragon
+scale armours, and gives its wearer resistance to electrical discharges.
 %%%%
-storm dragon armour
+swamp dragon scales
 
-A suit of armour made from the scales of a lightning-breathing dragon. It is
-heavier than most dragon scale armours, and gives its wearer resistance to
-electrical discharges.
-%%%%
-storm dragon hide
-
-The hide of a lightning-breathing dragon, covered in extremely hard blue
-scales. It provides resistance to electrical discharges.
-%%%%
-swamp dragon armour
-
-A suit of armour made from the scales of a swamp dragon. It confers resistance
-to poison on its wearer.
-%%%%
-swamp dragon hide
-
-# Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
-The slimy{{
-    if you.can_smell() then
-        return ", smelly"
-    end
-}} skin of a swamp-dwelling dragon. It provides resistance to poison.
+The scales of a swamp dragon. It confers resistance to poison on its wearer.
 %%%%
 throwing net
 
@@ -1298,18 +1187,23 @@ A blessed trident moulded by cleansing flame, with three points symbolising the
 combined might of the three holy gods. It is a favoured weapon of the Shining
 One's servants.
 %%%%
-troll hide
-
-The stiff and knobbly hide of a troll, with magical regenerative properties.
-%%%%
 troll leather armour
 
-A suit of armour made from the stiff and knobbly skin of a troll. It magically
-regenerates its wearer's flesh.
+The stiff and knobbly skin of a troll. It magically regenerates its wearer's
+flesh.
 %%%%
 wand of acid
 
-A magical device which throws a bolt of corrosive acid.
+A magical device which throws bolts of corrosive acid.
+%%%%
+wand of clouds
+
+A magical device that allows its wielder to blast a cone-shaped area in front
+of them with various destructive clouds, their lethality increasing with
+Evocations skill. At low power it will create noxious fumes, and as power
+increases this gives way to roaring flames, freezing vapours, and poisonous
+gas. At the highest tiers of power storm clouds, acidic fog and clouds of
+negative energy become available.
 %%%%
 wand of confusion
 
@@ -1321,8 +1215,8 @@ A magical device which drills tunnels through unworked rock.
 %%%%
 wand of disintegration
 
-A magical device which disrupts the physical structure of anything but the
-hardest walls — even granite statues, to say nothing of flesh.
+A magical device which disrupts the physical structure of a target creature,
+dealing heavy damage and bypassing armour.
 %%%%
 wand of enslavement
 
@@ -1337,17 +1231,11 @@ wand of iceblast
 A magical device which throws exploding shards of ice, partially harming even
 creatures resistant to cold.
 %%%%
-wand of hasting
-
-A magical device which speeds up the actions of a targeted creature.
-%%%%
-wand of heal wounds
-
-A magical device which can heal a creature's wounds.
-%%%%
 wand of lightning
 
-A magical device which throws great bolts of lightning.
+A magical device which throws great bolts of lightning. They inflict less
+damage than other similar bolts, but their damage partially bypasses armour
+and they can be bounced off walls to hit targets twice.
 %%%%
 wand of paralysis
 
@@ -1363,14 +1251,10 @@ wand of random effects
 
 A magical device which can produce a variety of effects.
 %%%%
-wand of slowing
+wand of scattershot
 
-A magical device which slows down the actions of a targeted creature.
-%%%%
-wand of teleportation
-
-A magical device which causes a creature to be randomly translocated after a
-short delay.
+A magical device which fires powerful blasts of metallic shrapnel. Its damage
+is strongly reduced by armour.
 %%%%
 war axe
 

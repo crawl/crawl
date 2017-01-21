@@ -20,7 +20,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "hints.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -64,7 +64,6 @@ static const map<shout_type, string> default_msg_keys = {
     { S_HISS,           "__HISS" },
     { S_DEMON_TAUNT,    "__DEMON_TAUNT" },
     { S_CHERUB,         "__CHERUB" },
-    { S_RUMBLE,         "__RUMBLE" },
     { S_SQUEAL,         "__SQUEAL" },
     { S_LOUD_ROAR,      "__LOUD_ROAR" },
 };
@@ -251,7 +250,7 @@ void monster_shout(monster* mons, int shout)
                 seen_monster(mons);
             }
 
-            message = do_mon_str_replacements(message, mons, s_type);
+            message = do_mon_str_replacements(message, *mons, s_type);
             msg::streams(channel) << message << endl;
         }
     }
@@ -272,7 +271,7 @@ bool check_awaken(monster* mons, int stealth)
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
-    if (mons_just_slept(mons))
+    if (mons_just_slept(*mons))
         return false;
 
     // Berserkers aren't really concerned about stealth.
@@ -284,7 +283,7 @@ bool check_awaken(monster* mons, int stealth)
         return true;
 
 
-    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->get_hit_dice();
+    int mons_perc = 10 + (mons_intel(*mons) * 4) + mons->get_hit_dice();
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
 
@@ -292,7 +291,7 @@ bool check_awaken(monster* mons, int stealth)
     // still actively on guard for the player, even if they can't see you.
     // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
     // a while, removing this bonus.
-    if (mons_is_wandering(mons) && mons->foe == MHITYOU)
+    if (mons_is_wandering(*mons) && mons->foe == MHITYOU)
         mons_perc += 15;
 
     if (!you.visible_to(mons))
@@ -330,7 +329,7 @@ bool check_awaken(monster* mons, int stealth)
         && !mons->neutral() // include pacified monsters
         && mons_class_gives_xp(mons->type))
     {
-        practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
+        practise_sneaking(unnatural_stealthy);
     }
 
     return false;
@@ -445,7 +444,7 @@ void noisy_equipment()
 static bool _follows_orders(monster* mon)
 {
     return mon->friendly()
-           && mon->type != MONS_GIANT_SPORE
+           && mon->type != MONS_BALLISTOMYCETE_SPORE
            && !mon->berserk_or_insane()
            && !mons_is_conjured(mon->type)
            && !mon->has_ench(ENCH_HAUNTING);
@@ -789,10 +788,10 @@ bool noisy(int original_loudness, const coord_def& where,
         return false;
 
     // high ambient noise makes sounds harder to hear
-    const int ambient = current_level_ambient_noise();
+    const int ambient = ambient_noise();
     const int loudness =
-        ambient < 0? original_loudness + random2avg(abs(ambient), 3)
-                   : original_loudness - random2avg(abs(ambient), 3);
+        ambient < 0 ? original_loudness + random2avg(abs(ambient), 3)
+                    : original_loudness - random2avg(abs(ambient), 3);
 
     dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
          loudness, original_loudness, ambient, where.x, where.y);
@@ -1139,7 +1138,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
     if (monster *mons = monster_at(pos))
     {
         if (mons->alive()
-            && !mons_just_slept(mons)
+            && !mons_just_slept(*mons)
             && mons->mid != noise.noise_producer_mid)
         {
             const coord_def perceived_position =
@@ -1358,11 +1357,6 @@ static void _actor_apply_noise(actor *act,
     {
         const int loudness = div_rand_round(noise_intensity_millis, 1000);
         act->check_awaken(loudness);
-        if (!(noise.noise_flags & NF_SIREN))
-        {
-            you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
-            you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
-        }
     }
     else
     {
@@ -1372,7 +1366,7 @@ static void _actor_apply_noise(actor *act,
         if (grid_distance(apparent_source, you.pos()) <= 3)
             behaviour_event(mons, ME_ALERT, &you, apparent_source);
         else if ((noise.noise_flags & NF_SIREN)
-                 && mons_secondary_habitat(mons) == HT_WATER
+                 && mons_secondary_habitat(*mons) == HT_WATER
                  && !mons->friendly())
         {
             // Sirens/merfolk avatar call (hostile) aquatic monsters.

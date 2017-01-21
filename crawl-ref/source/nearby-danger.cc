@@ -96,7 +96,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
-        && mons_has_known_ranged_attack(mon))
+        && mons_has_known_ranged_attack(*mon))
     {
         return true;
     }
@@ -111,9 +111,9 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 static bool _mons_is_always_safe(const monster *mon)
 {
     return mon->wont_attack()
-        || mon->type == MONS_BUTTERFLY
-        || mon->withdrawn()
-        || (mon->type == MONS_BALLISTOMYCETE && !mons_is_active_ballisto(mon));
+           || mon->type == MONS_BUTTERFLY
+           || (mon->type == MONS_BALLISTOMYCETE
+               && !mons_is_active_ballisto(*mon));
 }
 
 bool mons_is_safe(const monster* mon, const bool want_move,
@@ -121,7 +121,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 {
     // Short-circuit plants, some vaults have tons of those. Except for both
     // active and inactive ballistos, players may still want these.
-    if (mons_is_firewood(mon) && mon->type != MONS_BALLISTOMYCETE)
+    if (mons_is_firewood(*mon) && mon->type != MONS_BALLISTOMYCETE)
         return true;
 
     int  dist    = grid_distance(you.pos(), mon->pos());
@@ -249,6 +249,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
             return false;
         }
+
+        if (you.duration[DUR_LIQUID_FLAMES])
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "You are on fire!");
+
+            return false;
+        }
     }
 
     // Monster check.
@@ -316,7 +324,7 @@ static void _monster_threat_values(double *general, double *highest,
         if (mi->friendly())
             continue;
 
-        const int xp = exper_value(*mi);
+        const int xp = exper_value(**mi);
         const double log_xp = log((double)xp);
         sum += log_xp;
         if (xp > highest_xp)
@@ -413,7 +421,7 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.form)
+    if (you.form != transformation::none)
         untransform();
     you.clear_beholders();
     you.clear_fearmongers();
@@ -428,12 +436,13 @@ void revive()
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
+    update_vision_range(); // in case you had darkness cast before
     you.props["corrosion_amount"] = 0;
 
     unrot_hp(9999);
     set_hp(9999);
     set_mp(9999);
-    you.dead = false;
+    you.pending_revival = false;
 
     // Remove silence.
     invalidate_agrid();

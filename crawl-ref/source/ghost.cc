@@ -1,4 +1,3 @@
-
 /**
  * @file
  * @brief Player ghost and random Pandemonium demon handling.
@@ -14,8 +13,8 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
@@ -148,8 +147,7 @@ static brand_type _random_special_pan_lord_brand()
                                   20, SPWPN_PAIN,
                                   20, SPWPN_ANTIMAGIC,
                                   20, SPWPN_DISTORTION,
-                                  20, SPWPN_CHAOS,
-                                  0);
+                                  20, SPWPN_CHAOS);
 }
 
 #define ADD_SPELL(which_spell) \
@@ -165,16 +163,14 @@ static int _panlord_random_resist_level()
                                   3,  0,
                                   3,  1,
                                   2,  2,
-                                  1,  3,
-                                  0);
+                                  1,  3);
 }
 
 static int _panlord_random_elec_resist_level()
 {
     return random_choose_weighted(3, 0,
                                   6, 1,
-                                  1, 3,
-                                  0);
+                                  1, 3);
 }
 
 void ghost_demon::init_pandemonium_lord()
@@ -193,9 +189,9 @@ void ghost_demon::init_pandemonium_lord()
 
     // Panlord AC/EV should tend to be weighted towards one or the other.
     int total_def = 10 + random2avg(40, 3);
-    int split = biased_random2(5, 2);
+    int split = 1 + biased_random2(4, 2);
     ac = div_rand_round(total_def * split, 10);
-    ev = total_def - ev;
+    ev = total_def - ac;
     if (coinflip())
         swap(ac, ev);
 
@@ -262,7 +258,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }
@@ -297,7 +293,7 @@ static int _player_ghost_movement_energy()
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
     // don't preserve transformations for ghosty purposes
-    unwind_var<transformation_type> form(you.form, TRAN_NONE);
+    unwind_var<transformation> form(you.form, transformation::none);
     unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
                                                  FixedBitVector<NUM_EQUIP>());
     unwind_var<bool> fishtail(you.fishtail, false);
@@ -693,6 +689,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_FIREBALL;
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
+    case SPELL_SWIFTNESS:
+        return SPELL_SPRINT;
     default:
         break;
     }

@@ -21,11 +21,11 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "godabil.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-passive.h"
 #include "initfile.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "jobs.h"
 #include "lang-fake.h"
 #include "libutil.h"
@@ -494,11 +494,7 @@ static bool _boosted_mp()
 
 static bool _boosted_ac()
 {
-    return you.duration[DUR_ICY_ARMOUR]
-           || player_icemail_armour_class()
-           || you.duration[DUR_QAZLAL_AC]
-           || sanguine_armour_bonus()
-           || you.attribute[ATTR_BONE_ARMOUR] > 0;
+    return you.armour_class() > you.base_ac(1);
 }
 
 static bool _boosted_ev()
@@ -552,7 +548,7 @@ void update_turn_count()
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolour(HUD_VALUE_COLOUR);
-    if (Options.show_game_turns)
+    if (Options.show_game_time)
     {
         CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
                 (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
@@ -1398,8 +1394,12 @@ static string _level_description_string_hud()
     if (brdepth[place.branch] > 1)
         short_name += make_stringf(":%d", you.depth);
     // Indefinite articles
-    else if (place.branch != BRANCH_PANDEMONIUM && !is_connected_branch(place.branch))
+    else if (place.branch != BRANCH_PANDEMONIUM
+             && place.branch != BRANCH_DESOLATION
+             && !is_connected_branch(place.branch))
+    {
         short_name = article_a(short_name);
+    }
     return short_name;
 }
 
@@ -1469,7 +1469,7 @@ void draw_border()
 #endif
     CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
     CGOTOXY(19, 9 + yhack, GOTO_STAT);
-    CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
+    CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
 }
 
@@ -1514,11 +1514,17 @@ void redraw_screen()
         update_turn_count();
     }
 
-    viewwindow();
+    if (Options.messages_at_top)
+    {
+        display_message_window();
+        viewwindow();
+    }
+    else
+    {
+        viewwindow();
+        display_message_window();
+    }
 
-    // Display the message window at the end because it places
-    // the cursor behind possible prompts.
-    display_message_window();
     update_screen();
 }
 
@@ -1598,8 +1604,7 @@ string mpr_monster_list(bool past)
 
 #ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const vector<monster_info>& mons,
-                                     int& start, bool zombified = false,
-                                     int idx = -1)
+                                     int& start, bool zombified = false)
 {
     // Skip forward to past the end of the range of identical monsters.
     unsigned int end;
@@ -1614,15 +1619,6 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
     // Print info on the monsters we've found.
     {
         int printed = 0;
-
-        // for targeting
-        if (idx >= 0)
-        {
-            textcolour(WHITE);
-            CPRINTF(stringize_glyph(mlist_index_to_letter(idx)).c_str());
-            CPRINTF(" - ");
-            printed += 4;
-        }
 
         // One glyph for each monster.
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
@@ -1734,10 +1730,7 @@ int update_monster_pane()
         CGOTOXY(1, 1 + i_print, GOTO_MLIST);
         // i_mons is incremented by _print_next_monster_desc
         if (i_print >= skip_lines && i_mons < (int) mons.size())
-        {
-            int idx = crawl_state.mlist_targeting ? i_print - skip_lines : -1;
-            _print_next_monster_desc(mons, i_mons, full_info, idx);
-        }
+            _print_next_monster_desc(mons, i_mons, full_info);
         else
             CPRINTF("%s", blank.c_str());
     }
@@ -1887,7 +1880,7 @@ static string _stealth_bar(int sw)
     //no colouring
     bar += _determine_colour_string(0, 5);
     bar += "Stlth  ";
-    const int stealth_num = _stealth_breakpoint(check_stealth());
+    const int stealth_num = _stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
     for (int i = 0; i < 10 - stealth_num; i++)
@@ -1896,7 +1889,7 @@ static string _stealth_bar(int sw)
     linebreak_string(bar, sw);
     return bar;
 }
-static string _status_mut_abilities(int sw);
+static string _status_mut_rune_list(int sw);
 
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
@@ -1967,7 +1960,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = "  - Unarmed";
         }
         else if (eqslot == EQ_WEAPON
-                 && you.form == TRAN_BLADE_HANDS)
+                 && you.form == transformation::blade_hands)
         {
             const bool plural = !player_mutation_level(MUT_MISSING_HAND);
             str = string("  - Blade Hand") + (plural ? "s" : "");
@@ -2293,9 +2286,8 @@ static vector<formatted_string> _get_overview_stats()
     entry.cprintf("Spells: ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
-    entry.cprintf("%d memorised, %d level%s left",
-                  you.spell_no, player_spell_levels(),
-                  (player_spell_levels() == 1) ? "" : "s");
+    entry.cprintf("%d/%d levels left",
+                  player_spell_levels(), player_total_spell_levels());
 
     cols.add_formatted(3, entry.to_colour_string(), false);
     entry.clear();
@@ -2385,6 +2377,9 @@ static vector<formatted_string> _get_overview_resistances(
 
     out += _stealth_bar(get_number_of_cols()) + "\n";
 
+    const int regen = (player_regen() + 9) / 10; // round up
+    out += make_stringf("Regen  %d.%d/turn\n", regen/10, regen % 10);
+
     cols.add_formatted(0, out, false);
 
     // Second column, resist name is 9 chars
@@ -2402,9 +2397,6 @@ static vector<formatted_string> _get_overview_resistances(
     const int rspir = you.spirit_shield(calc_unid);
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
 
-    const int rward = you.dismissal(calc_unid);
-    out += _resist_composer("Dismiss", cwidth, rward) + "\n";
-
     const item_def *sh = you.shield();
     const int reflect = you.reflection(calc_unid)
                         || sh && shield_reflects(*sh);
@@ -2414,7 +2406,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Harm", cwidth, harm) + "\n";
 
     const int rclar = you.clarity(calc_unid);
-    const int stasis = you.stasis(calc_unid);
+    const int stasis = you.stasis();
     // TODO: what about different levels of anger/berserkitis?
     const bool show_angry = (you.angry(calc_unid)
                              || player_mutation_level(MUT_BERSERK))
@@ -2478,7 +2470,7 @@ static char _get_overview_screen_results()
     }
 
     overview.add_text(" ");
-    overview.add_text(_status_mut_abilities(get_number_of_cols()));
+    overview.add_text(_status_mut_rune_list(get_number_of_cols()));
 
     vector<MenuEntry *> results = overview.show();
     return (!results.empty()) ? results[0]->hotkeys[0] : 0;
@@ -2505,7 +2497,12 @@ string dump_overview_screen(bool full_id)
     }
     text += "\n";
 
-    text += formatted_string::parse_string(_status_mut_abilities(80));
+    text += formatted_string::parse_string(_status_mut_rune_list(80));
+
+    string ability_list = formatted_string::parse_string(print_abilities());
+    linebreak_string(ability_list, 80);
+    text += ability_list;
+
     text += "\n";
 
     return text;
@@ -2537,13 +2534,14 @@ static string _annotate_form_based(string desc, bool suppressed)
 
 static string _dragon_abil(string desc)
 {
-    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    const bool supp = form_changed_physiology()
+                      && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp);
 }
 
-// Creates rows of short descriptions for current
-// status, mutations and abilities.
-static string _status_mut_abilities(int sw)
+/// Creates rows of short descriptions for current status effects, mutations,
+/// and runes/Orbs of Zot.
+static string _status_mut_rune_list(int sw)
 {
     // print status information
     string text = "<w>@:</w> ";
@@ -2617,6 +2615,9 @@ static string _status_mut_abilities(int sw)
     if (you.can_water_walk())
         mutations.emplace_back("walk on water");
 
+    if (have_passive(passive_t::frail) || player_under_penance(GOD_HEPLIAKLQANA))
+        mutations.emplace_back("reduced essence");
+
     string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
@@ -2657,10 +2658,6 @@ static string _status_mut_abilities(int sw)
         text += comma_separated_line(mutations.begin(), mutations.end(),
                                      ", ", ", ");
     }
-
-    // print ability information
-
-    text += print_abilities();
 
     // print the Orb
     if (player_has_orb())

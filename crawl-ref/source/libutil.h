@@ -52,7 +52,7 @@ static inline bool isaalnum(int c)
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-static inline ucs_t toalower(ucs_t c)
+static inline char32_t toalower(char32_t c)
 {
     return isaupper(c) ? c + 'a' - 'A' : c;
 }

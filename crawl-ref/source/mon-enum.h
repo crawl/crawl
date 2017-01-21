@@ -60,6 +60,7 @@ enum attack_type
 #endif
     AT_WEAP_ONLY,   // AT_HIT if wielding a melee weapon, AT_NONE otherwise
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
+    NUM_ATTACK_TYPES,
 };
 
 // When adding an attack flavour, give it a short description in
@@ -83,7 +84,7 @@ enum attack_flavour
     AF_FIRE,
     AF_HUNGER,
     AF_MUTATE,
-    AF_PARALYSE,
+    AF_POISON_PARALYSE,
     AF_POISON,
 #if TAG_MAJOR_VERSION == 34
     AF_POISON_NASTY,
@@ -132,7 +133,9 @@ enum attack_flavour
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
     AF_WEAKNESS,
+#if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
+#endif
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -248,7 +251,6 @@ enum shout_type
     S_HISS,                 // for reptiles & arachnids. quiet!
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CHERUB,               // for cherubs
-    S_RUMBLE,               // for ushabti. very loud!
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
     NUM_SHOUTS,

@@ -15,7 +15,7 @@
 
 #include "env.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "options.h"
 #include "player.h"
@@ -176,9 +176,8 @@ void choose_item_for_quiver()
     }
 
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
-                                  MT_INVLIST,
-                                  OSEL_THROWABLE, true, true, true, '-',
-                                  -1, nullptr, OPER_QUIVER, false);
+                                  MT_INVLIST, OSEL_THROWABLE, OPER_QUIVER,
+                                  invprompt_flag::hide_known, '-');
 
     if (prompt_failed(slot))
         return;
@@ -588,7 +587,7 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
         case WPN_BLOWGUN:
             return AMMO_BLOWGUN;
         case WPN_HUNTING_SLING:
-        case WPN_GREATSLING:
+        case WPN_FUSTIBALUS:
             return AMMO_SLING;
         case WPN_SHORTBOW:
         case WPN_LONGBOW:

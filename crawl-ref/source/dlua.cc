@@ -9,7 +9,7 @@
 
 #include <sstream>
 
-#include "l_libs.h"
+#include "l-libs.h"
 #include "stringutil.h"
 
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,

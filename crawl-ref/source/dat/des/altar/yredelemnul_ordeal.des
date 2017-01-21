@@ -17,7 +17,7 @@ function callback.dk_yredelemnul_ordeal(data, triggerable, triggerer, marker, ev
 
   for slave in iter.slave_iterator("floor", 1) do
       if not dgn.is_passable(slave.x,slave.y) then
-        dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+        dgn.terrain_changed(slave.x, slave.y, "floor", false)
         dgn.place_cloud(slave.x, slave.y, "foul pestilence", crawl.random2(15) + 5)
       else
         crawl.mpr("You feel a numb sensation.")

@@ -15,7 +15,7 @@
 #include "dungeon.h"
 #include "end.h"
 #include "food.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "items.h"
 #include "libutil.h"
 #include "los.h"
@@ -23,7 +23,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-tentacle.h"
@@ -830,7 +830,7 @@ namespace arena
         trials_done++;
 
         // We bother with all this to properly deal with ties, and with
-        // ball lightning or giant spores winning the fight via suicide.
+        // ball lightning or ballistomycete spores winning the fight via suicide.
         // The sanity checking is probably just paranoia.
         bool was_tied = false;
         if (!faction_a.won && !faction_b.won)
@@ -1208,7 +1208,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         // winner, since self-destruction is their purpose. But if a
         // trap causes the spore to explode, and that kills everything,
         // it's a tie, since it counts as the trap killing everyone.
-        else if (mons_self_destructs(mons) && MON_KILL(killer))
+        else if (mons_self_destructs(*mons) && MON_KILL(killer))
         {
             if (mons->attitude == ATT_FRIENDLY)
                 arena::faction_a.won = true;

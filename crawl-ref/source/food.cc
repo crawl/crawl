@@ -18,13 +18,13 @@
 #include "database.h"
 #include "delay.h"
 #include "env.h"
-#include "godabil.h"
-#include "godconduct.h"
+#include "god-abil.h"
+#include "god-conduct.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -43,7 +43,6 @@
 #include "transform.h"
 #include "xom.h"
 
-static void _eat_chunk(item_def& food);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(item_def& corpse);
 static void _heal_from_food(int hp_amt);
@@ -87,14 +86,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (!suppress_msg && !state_message)
         _describe_food_change(-hunger_amount);
 }
-
-// Must match the order of hunger_state_t enums
-static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-{
-    HUNGER_FAINTING, HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY,
-    HUNGER_HUNGRY, HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL,
-    HUNGER_ENGORGED
-};
 
 /**
  * Attempt to reduce the player's hunger.
@@ -174,6 +165,10 @@ bool prompt_eat_item(int slot)
     }
     else
         item = &you.inv[slot];
+
+    ASSERT(item);
+    if (!can_eat(*item, false))
+        return false;
 
     eat_item(*item);
 
@@ -269,40 +264,23 @@ bool food_change(bool initial)
 
         if (you.species == SP_VAMPIRE)
         {
-            if (you.duration[DUR_BERSERK] > 1 && newstate <= HS_HUNGRY)
+            const undead_form_reason form_reason = lifeless_prevents_form();
+            if (form_reason == UFR_GOOD)
             {
-                mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                     "your rage any longer.");
-                you.duration[DUR_BERSERK] = 1;
-            }
-
-            switch (lifeless_prevents_form())
-            {
-            case UFR_TOO_DEAD:
-                if (you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
-                {
-                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
-                                         "your transformation much longer.");
-                    you.set_duration(DUR_TRANSFORMATION, 2);
-                }
-                break;
-            case UFR_TOO_ALIVE:
-                if (you.duration[DUR_TRANSFORMATION] > 5 * BASELINE_DELAY)
-                {
-                    print_stats();
-                    mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
-                                     "transformation much longer.");
-
-                    // Give more time because suddenly stopping flying can be fatal.
-                    you.set_duration(DUR_TRANSFORMATION, 5);
-                }
-                break;
-            case UFR_GOOD:
                 if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
                 {
                     print_stats();
                     mpr("You can't stomach any more blood right now.");
                 }
+            }
+            else if (you.duration[DUR_TRANSFORMATION])
+            {
+                print_stats();
+                mprf(MSGCH_WARN,
+                     "Your blood-%s body can't sustain your transformation.",
+                     form_reason == UFR_TOO_DEAD ? "deprived" : "filled");
+                you.duration[DUR_TRANSFORMATION] = 1; // end at end of turn
+                // could maybe end immediately, but that makes me nervous
             }
         }
 
@@ -391,31 +369,6 @@ static void _describe_food_change(int food_increment)
     mpr(msg);
 }
 
-bool eat_item(item_def &food)
-{
-    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
-    {
-        if (you.species != SP_VAMPIRE)
-            return false;
-
-        if (_vampire_consume_corpse(food))
-        {
-            count_action(CACT_EAT, -1); // subtype Corpse
-            you.turn_is_over = true;
-            return true;
-        }
-        else
-            return false;
-    }
-    else
-        start_delay<EatDelay>(food_turns(food) - 1, food);
-
-    mprf("You start eating %s%s.", food.quantity > 1 ? "one of " : "",
-                                   food.name(DESC_THE).c_str());
-    you.turn_is_over = true;
-    return true;
-}
-
 // Handle messaging at the end of eating.
 // Some food types may not get a message.
 static void _finished_eating_message(food_type type)
@@ -433,18 +386,10 @@ static void _finished_eating_message(food_type type)
     }
     else
     {
-        switch (type)
+        if (type == FOOD_MEAT_RATION)
         {
-        case FOOD_MEAT_RATION:
             mpr("That meat ration really hit the spot!");
             return;
-        case FOOD_BEEF_JERKY:
-            mprf("That beef jerky was %s!",
-                 one_chance_in(4) ? "jerk-a-riffic"
-                                  : "delicious");
-            return;
-        default:
-            break;
         }
     }
 
@@ -469,63 +414,15 @@ static void _finished_eating_message(food_type type)
             if (taste.empty())
                 taste = "Eugh, buggy fruit.";
             mpr(taste);
-            break;
+            return;
         }
         default:
             break;
         }
     }
 
-    switch (type)
-    {
-    case FOOD_ROYAL_JELLY:
+    if (type == FOOD_ROYAL_JELLY)
         mpr("That royal jelly was delicious!");
-        break;
-    case FOOD_PIZZA:
-    {
-        if (!Options.pizzas.empty())
-        {
-            const string za = Options.pizzas[random2(Options.pizzas.size())];
-            mprf("Mmm... %s.", trimmed_string(za).c_str());
-            break;
-        }
-
-        const string taste = getMiscString("eating_pizza");
-        if (taste.empty())
-        {
-            mpr("Bleh, bug pizza.");
-            break;
-        }
-
-        mprf("%s", taste.c_str());
-        break;
-    }
-    default:
-        break;
-    }
-}
-
-
-void finish_eating_item(item_def& food)
-{
-    if (food.sub_type == FOOD_CHUNK)
-        _eat_chunk(food);
-    else
-    {
-        int value = food_value(food);
-        ASSERT(value > 0);
-        lessen_hunger(value, true);
-        _finished_eating_message(static_cast<food_type>(food.sub_type));
-    }
-
-    count_action(CACT_EAT, food.sub_type);
-
-    if (is_perishable_stack(food)) // chunks
-        remove_oldest_perishable_item(food);
-    if (in_inventory(food))
-        dec_inv_item_quantity(food.link, 1);
-    else
-        dec_mitm_item_quantity(food.index(), 1);
 }
 
 // Returns which of two food items is older (true for first, else false).
@@ -631,7 +528,7 @@ int prompt_eat_chunks(bool only_auto)
         for (item_def *item : chunks)
         {
             bool autoeat = false;
-            string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
+            string item_name = menu_colour_item_name(*item, DESC_A);
 
             const bool bad = is_bad_food(*item);
 
@@ -836,62 +733,47 @@ static void _eat_chunk(item_def& food)
     }
 }
 
-// Divide full nutrition by duration, so that each turn you get the same
-// amount of nutrition. Also, experimentally regenerate 1 hp per feeding turn
-// - this is likely too strong.
-// feeding is -1 at start, 1 when finishing, and 0 else
-
-// Here are some values for nutrition (quantity * 1000) and duration:
-//    max_chunks      quantity    duration
-//     1               1           1
-//     2               1           1
-//     3               1           2
-//     4               1           2
-//     5               1           2
-//     6               2           3
-//     7               2           3
-//     8               2           3
-//     9               2           4
-//    10               2           4
-//    12               3           5
-//    15               3           5
-//    20               4           6
-//    25               4           6
-//    30               5           7
-
-void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
+bool eat_item(item_def &food)
 {
-    const monster_type mons_type = corpse.mon_type;
-
-    // Duration depends on corpse weight.
-    const int max_chunks = max_corpse_chunks(mons_type);
-    const int chunk_amount = stepdown_value(1 + max_chunks/3, 6, 6, 12, 12);
-
-    // Add 1 for the artificial extra call at the start of draining.
-    const int duration   = 1 + chunk_amount;
-
-    // Use number of potions per corpse to calculate total nutrition, which
-    // then gets distributed over the entire duration.
-    int food_value = CHUNK_BASE_NUTRITION
-                     * num_blood_potions_from_corpse(mons_type);
-
-    bool start_feeding   = false;
-    bool end_feeding     = false;
-
-    if (feeding < 0)
-        start_feeding = true;
-    else if (feeding > 0)
-        end_feeding = true;
-
-    if (start_feeding)
+    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
     {
-        mprf("This %sblood tastes delicious!",
-             mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
-                                                      : "");
+        if (you.species != SP_VAMPIRE)
+            return false;
+
+        if (_vampire_consume_corpse(food))
+        {
+            count_action(CACT_EAT, -1); // subtype Corpse
+            you.turn_is_over = true;
+            return true;
+        }
+
+        return false;
     }
 
-    if (!end_feeding)
-        lessen_hunger(food_value / duration, !start_feeding);
+    mprf("You eat %s%s.", food.quantity > 1 ? "one of " : "",
+                          food.name(DESC_THE).c_str());
+
+    if (food.sub_type == FOOD_CHUNK)
+        _eat_chunk(food);
+    else
+    {
+        int value = food_value(food);
+        ASSERT(value > 0);
+        lessen_hunger(value, true);
+        _finished_eating_message(static_cast<food_type>(food.sub_type));
+    }
+
+    count_action(CACT_EAT, food.sub_type);
+
+    if (is_perishable_stack(food)) // chunks
+        remove_oldest_perishable_item(food);
+    if (in_inventory(food))
+        dec_inv_item_quantity(food.link, 1);
+    else
+        dec_mitm_item_quantity(food.index(), 1);
+
+    you.turn_is_over = true;
+    return true;
 }
 
 bool is_bad_food(const item_def &food)
@@ -925,7 +807,7 @@ bool is_inedible(const item_def &item)
     if (you_foodless(true))
         return true;
 
-    if (item.base_type == OBJ_FOOD
+    if (item.base_type == OBJ_FOOD // XXX: removeme?
         && !can_eat(item, true, false))
     {
         return true;
@@ -1028,7 +910,8 @@ bool is_forbidden_food(const item_def &food)
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 {
 #define FAIL(msg) { if (!suppress_msg) mpr(msg); return false; }
-    ASSERT(food.base_type == OBJ_FOOD || food.base_type == OBJ_CORPSES);
+    if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
+        FAIL("That's not food!");
 
     // special case mutagenic chunks to skip hunger checks, as they don't give
     // nutrition and player can get hungry by using spells etc. anyway
@@ -1126,26 +1009,34 @@ static bool _vampire_consume_corpse(item_def& corpse)
     ASSERT(corpse.base_type == OBJ_CORPSES);
     ASSERT(corpse.sub_type == CORPSE_BODY);
 
-    if (!mons_has_blood(corpse.mon_type))
+    const monster_type mons_type = corpse.mon_type;
+
+    if (!mons_has_blood(mons_type))
     {
         mpr("There is no blood in this body!");
         return false;
     }
 
-    // The delay for eating a chunk (mass 1000) is 2
-    // Here the base nutrition value equals that of chunks,
-    // but the delay should be smaller.
-    const int max_chunks = max_corpse_chunks(corpse.mon_type);
-    int duration = 1 + max_chunks / 3;
-    duration = stepdown_value(duration, 6, 6, 12, 12);
+    mprf("This %sblood tastes delicious!",
+         mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm " : "");
 
-    // Get some nutrition right away, in case we're interrupted.
-    // (-1 for the starting message.)
-    vampire_nutrition_per_turn(corpse, -1);
+    const int food_value = CHUNK_BASE_NUTRITION
+                           * num_blood_potions_from_corpse(mons_type);
+    lessen_hunger(food_value, false);
 
-    // The draining delay doesn't have a start action, and we only need
-    // the continue/finish messages if it takes longer than 1 turn.
-    start_delay<FeedVampireDelay>(duration, corpse);
+    // this will never matter :)
+    if (mons_genus(mons_type) == MONS_ORC)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+    if (mons_class_holiness(mons_type) & MH_HOLY)
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
+
+    if (mons_skeleton(mons_type) && one_chance_in(3))
+    {
+        turn_corpse_into_skeleton(corpse);
+        item_check();
+    }
+    else
+        dec_mitm_item_quantity(corpse.index(), 1);
 
     return true;
 }
@@ -1207,22 +1098,17 @@ void handle_starvation()
             if (!you.duration[DUR_PARALYSIS])
                 take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "fainting"));
             you.increase_duration(DUR_PARALYSIS, turns, 13);
-            if (you_worship(GOD_XOM))
-                xom_is_stimulated(get_tension() > 0 ? 200 : 100);
+            xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
         if (you.hunger <= 0 && !you.duration[DUR_DEATHS_DOOR])
         {
-            auto it = min_element(begin(you.inv), end(you.inv),
-                [](const item_def& a, const item_def& b) -> bool
+            auto it = find_if(begin(you.inv), end(you.inv),
+                [](const item_def& food) -> bool
                 {
-                    return (a.base_type == OBJ_FOOD && can_eat(a, true)
-                                ? food_turns(a) : INT_MAX)
-                        < (b.base_type == OBJ_FOOD && can_eat(b, true)
-                                ? food_turns(b) : INT_MAX);
+                    return can_eat(food, true);
                 });
-            if (it != end(you.inv)
-                && it->base_type == OBJ_FOOD && can_eat(*it, true))
+            if (it != end(you.inv))
             {
                 mpr("As you are about to starve, you manage to eat something.");
                 eat_item(*it);
@@ -1231,7 +1117,7 @@ void handle_starvation()
 
             mprf(MSGCH_FOOD, "You have starved to death.");
             ouch(INSTANT_DEATH, KILLED_BY_STARVATION);
-            if (!you.dead) // if we're still here...
+            if (!you.pending_revival) // if we're still here...
                 set_hunger(HUNGER_DEFAULT, true);
         }
     }

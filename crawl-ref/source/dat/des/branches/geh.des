@@ -104,8 +104,8 @@ ENDMAP
 NAME:    hangedman_hellfire_club
 TAGS:    transparent no_monster_gen
 DEPTH:   Geh, !Geh:$, Zot:1-4
-MONS:    red draconian scorcher / mottled draconian scorcher w:7
-MONS:    red draconian zealot / mottled draconian zealot w:7
+MONS:    red draconian scorcher
+MONS:    red draconian stormcaller
 MONS:    hellion
 ITEM:    any potion good_item
 KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8

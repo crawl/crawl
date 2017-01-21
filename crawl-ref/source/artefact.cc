@@ -19,9 +19,9 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "goditem.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -343,6 +343,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_NEGATIVE_ENERGY] += armour_type_prop(arm, ARMF_RES_NEG);
     proprt[ARTP_POISON] += armour_type_prop(arm, ARMF_RES_POISON);
     proprt[ARTP_ELECTRICITY] += armour_type_prop(arm, ARMF_RES_ELEC);
+    proprt[ARTP_RCORR] += armour_type_prop(arm, ARMF_RES_CORR);
     proprt[ARTP_MAGIC_RESISTANCE] += armour_type_prop(arm, ARMF_RES_MAGIC);
     proprt[ARTP_STEALTH] += armour_type_prop(arm, ARMF_STEALTH);
     proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
@@ -466,8 +467,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             4, SPWPN_VENOM,
             4, SPWPN_VORPAL,
             4, SPWPN_FLAMING,
-            4, SPWPN_FREEZING,
-            0);
+            4, SPWPN_FREEZING);
 
         if (item_attack_skill(item) == SK_CROSSBOWS)
         {
@@ -505,8 +505,9 @@ static void _add_randart_weapon_brand(const item_def &item,
             13, SPWPN_VAMPIRISM,
             13, SPWPN_PAIN,
             13, SPWPN_ANTIMAGIC,
+            13, SPWPN_PROTECTION,
              3, SPWPN_DISTORTION,
-             0);
+             3, SPWPN_CHAOS);
     }
 
     // no brand = magic flag to reject and retry
@@ -624,7 +625,7 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
 {
-    { "Brand", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 }, // ARTP_BRAND,
+    { "Brand", ARTP_VAL_BRAND, 0, nullptr, nullptr, 0, 0 }, // ARTP_BRAND,
     { "AC", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0}, // ARTP_AC,
     { "EV", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_EVASION,
     { "Str", ARTP_VAL_ANY, 100,     // ARTP_STRENGTH,
@@ -711,7 +712,7 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Drain", ARTP_VAL_BOOL, 25, // ARTP_DRAIN,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Confuse", ARTP_VAL_BOOL, 25, // ARTP_CONFUSE,
+    { "*Slow", ARTP_VAL_BOOL, 25, // ARTP_SLOW,
         nullptr, []() { return 1; }, 0, 0 },
     { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
@@ -1681,12 +1682,7 @@ static void _make_faerie_armour(item_def &item)
             continue;
 
         if (one_chance_in(20))
-        {
-            // Replace Confusing if present.
-            if (artefact_property(doodad, ARTP_CONFUSE))
-                artefact_set_property(doodad, ARTP_CONFUSE, 0);
             artefact_set_property(doodad, ARTP_CLARITY, 1);
-        }
         if (one_chance_in(20))
             artefact_set_property(doodad, ARTP_MAGICAL_POWER, 1 + random2(10));
         if (one_chance_in(20))

@@ -13,8 +13,8 @@
 #include "art-enum.h"
 #include "butcher.h" // butcher_corpse
 #include "coordit.h" // radius_iterator
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "items.h" // stack_iterator
 #include "libutil.h"
@@ -67,7 +67,7 @@ spret_type ice_armour(int pow, bool fail)
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
-    else if (you.form == TRAN_ICE_BEAST)
+    else if (you.form == transformation::ice_beast)
         mpr("Your icy body feels more resilient.");
     else
         mpr("A film of ice covers your body!");
@@ -92,9 +92,11 @@ spret_type ice_armour(int pow, bool fail)
  * @param harvester   The entity planning to do the harvesting.
  * @param dry_run     Whether this is a test run & no corpses should be
  *                    actually destroyed.
+ * @param defy_god    Whether to ignore religious restrictions on defiling
+ *                    corpses.
  * @return            The total number of corpses (available to be) destroyed.
  */
-int harvest_corpses(const actor &harvester, bool dry_run)
+int harvest_corpses(const actor &harvester, bool dry_run, bool defy_god)
 {
     int harvested = 0;
 
@@ -105,6 +107,15 @@ int harvest_corpses(const actor &harvester, bool dry_run)
             item_def &item = *si;
             if (item.base_type != OBJ_CORPSES)
                 continue;
+
+            // forbid harvesting orcs under Beogh
+            if (you.religion == GOD_BEOGH && !defy_god)
+            {
+                const monster_type monnum
+                    = static_cast<monster_type>(item.orig_monnum);
+                if (mons_genus(monnum) == MONS_ORC)
+                    continue;
+            }
 
             ++harvested;
 
@@ -135,7 +146,6 @@ int harvest_corpses(const actor &harvester, bool dry_run)
     return harvested;
 }
 
-
 /**
  * Casts the player spell "Cigotuvi's Embrace", pulling all corpses into LOS
  * around the caster to serve as armour.
@@ -158,7 +168,10 @@ spret_type corpse_armour(int pow, bool fail)
 
     if (!harvested)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (harvest_corpses(you, true, true))
+            mpr("It would be a sin to defile those corpses!");
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS; // still takes a turn, etc
     }
 
@@ -174,7 +187,6 @@ spret_type corpse_armour(int pow, bool fail)
 
     return SPRET_SUCCESS;
 }
-
 
 spret_type missile_prot(int pow, bool fail)
 {
@@ -375,7 +387,7 @@ spret_type cast_shroud_of_golubria(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_transform(int pow, transformation_type which_trans, bool fail)
+spret_type cast_transform(int pow, transformation which_trans, bool fail)
 {
     if (!transform(pow, which_trans, false, true)
         || !check_form_stat_safety(which_trans))

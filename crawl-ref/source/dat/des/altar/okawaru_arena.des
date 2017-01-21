@@ -6,14 +6,14 @@
 function callback.oka_start_challange(data, triggerable, triggerer, marker, ev)
   -- Open the cages.
   for slave in iter.slave_iterator("cage_doors", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+    dgn.terrain_changed(slave.x, slave.y, "floor", false)
   end
   crawl.mpr("The portcullises are lifted away, releasing the combatants.",
             "warning")
   crawl.mpr("The doors seal shut behind you!", "warning")
   -- Close the door.
   for slave in iter.slave_iterator("iron_doors", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "metal_wall", false, false)
+    dgn.terrain_changed(slave.x, slave.y, "metal_wall", false)
   end
 end
 
@@ -29,11 +29,11 @@ function callback.oka_monsters_death (data, triggerable, triggerer, marker, ev)
                      "Okawaru booms, \"Excellent! You may choose a reward.\"")
     -- Open exit.
     for slave in iter.slave_iterator("iron_doors", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+      dgn.terrain_changed(slave.x, slave.y, "floor", false)
     end
     -- Open loot doors.
     for slave in iter.slave_iterator("loot_doors", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+      dgn.terrain_changed(slave.x, slave.y, "floor", false)
     end
     crawl.mpr("The gates behind the altar rise, and the entry reopens.")
   end
@@ -60,10 +60,10 @@ function callback.oka_populate_cages (data, triggerable, triggerer, marker, ev)
   -- These are Okawaru's warriors, depth-weighted as though they are 9s.
   local monsters = ""
   if you.absdepth() < 11 then
-      monsters = "orc warrior w:15 / hill giant w:5 / cyclops w:10"
+      monsters = "orc warrior w:15 / two-headed ogre w:5 / cyclops w:10"
                  .. " / centaur warrior w:10 / naga warrior w:10"
   elseif you.absdepth() < 16 then
-      monsters = "orc knight w:15 / hill giant w:5 / cyclops w:10"
+      monsters = "orc knight w:15 / two-headed ogre w:5 / cyclops w:10"
                  .. " / centaur warrior w:10 / naga warrior w:10"
   else
      monsters = "orc knight w:15 / stone giant w:10 / fire giant w:10"

@@ -21,12 +21,12 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -223,7 +223,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == nullptr || !mons_is_threatening(mon))
+        if (mon == nullptr || !mons_is_threatening(*mon))
             continue;
 
         dprf("Dismissing %s",
@@ -254,7 +254,7 @@ static void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
-    if (you.form != TRAN_LICH)
+    if (you.form != transformation::lich)
         food_change(true);
     shopping_list.refresh();
 
@@ -571,8 +571,8 @@ static bool _game_defined(const newgame_def& ng)
 }
 
 static const int SCROLLER_MARGIN_X  = 18;
-static const int NAME_START_Y       = 5;
-static const int GAME_MODES_START_Y = 7;
+static const int NAME_START_Y       = 6;
+static const int GAME_MODES_START_Y = 8;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;

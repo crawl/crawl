@@ -20,14 +20,15 @@ two other ways:
  +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
  +5  exceptional aptitude
 
-There are three special values: HP, MP and Experience:
-- The HP value indicates the percentage of hit points gained per level,
-  100% being the Human standard.
+There are four special values: HP, MP, Experience and Magic Resistance:
+- The HP value indicates the percentage of hit points gained per experience
+  level, 100% being the Human standard.
 - The MP value indicates a fixed additive modifier to magic points.
 - The Experience value indicates how much experience has to be earned in
-  order to gain a new level. +1 is the Human standard, and all other
-  species (apart from Formicid, Halfling and Kobold) are slower. These
+  order to gain a new experience level, +1 being the Human standard. These
   values use the same scale as the skill aptitudes.
+- The Magic Resistance value indicates resistance to hostile enchantments per
+  experience level, +3 being the Human standard.
 
 The abbreviations used for the skills are:
 
@@ -42,14 +43,14 @@ Inv - Invocations            Pla - Polearms              Nec - Necromancy
 Evo - Evocations             Stv - Staves                Trl - Translocations
                              UC  - Unarmed Combat        Trm - Transmutations
 
-                             Thr - Throwing              Fir - Fire Magic
-HP  - hit points             Slg - Slings                Ice - Ice Magic
-MP  - magic points           Bws - Bows                  Air - Air Magic
-Exp - experience             Crb - Crossbows             Ear - Earth Magic
+HP  - hit points             Thr - Throwing              Fir - Fire Magic
+MP  - magic points           Slg - Slings                Ice - Ice Magic
+Exp - experience             Bws - Bows                  Air - Air Magic
+MR  - magic resistance       Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
 
-                 Arm Ddg Sth Shd   Inv Evo           HP   MP   Exp
+                 Arm Ddg Sth Shd     Inv Evo        HP  MP Exp  MR
 ----------------------------------------------------------------------
 
 

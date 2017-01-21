@@ -41,7 +41,7 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 string lowercase_string(const string &s)
 {
     string res;
-    ucs_t c;
+    char32_t c;
     char buf[4];
     for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
         res.append(buf, wctoutf8(buf, towlower(c)));
@@ -78,7 +78,7 @@ string uppercase_string(string s)
 // least unless you use some more powerful API.
 string lowercase_first(string s)
 {
-    ucs_t c;
+    char32_t c;
     if (!s.empty())
     {
         utf8towc(&c, &s[0]);
@@ -92,7 +92,7 @@ string uppercase_first(string s)
     // Incorrect due to those pesky Dutch having "ij" as a single letter (wtf?).
     // Too bad, there's no standard function to handle that character, and I
     // don't care enough.
-    ucs_t c;
+    char32_t c;
     if (!s.empty())
     {
         utf8towc(&c, &s[0]);
@@ -143,7 +143,7 @@ string wordwrap_line(string &s, int width, bool tags, bool indent)
 {
     const char *cp0 = s.c_str();
     const char *cp = cp0, *space = 0;
-    ucs_t c;
+    char32_t c;
 
     while (int clen = utf8towc(&c, cp))
     {

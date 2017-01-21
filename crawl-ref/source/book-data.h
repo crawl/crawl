@@ -65,9 +65,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Spatial Translocations
-    SPELL_APPORTATION,
     SPELL_BLINK,
     SPELL_SHROUD_OF_GOLUBRIA,
+    SPELL_BECKONING,
     SPELL_PORTAL_PROJECTILE,
     SPELL_TELEPORT_OTHER,
     SPELL_GOLUBRIAS_PASSAGE,
@@ -78,15 +78,14 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
-    SPELL_HASTE,
     SPELL_DISCORD,
 },
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
+    SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
-    SPELL_INTOXICATE,
     SPELL_VENOM_BOLT,
 },
 
@@ -150,9 +149,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 #endif
 {   // Book of Clouds
+    SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_CONJURE_FLAME,
-    SPELL_POISONOUS_CLOUD,
     SPELL_FREEZING_CLOUD,
     SPELL_RING_OF_FLAMES,
 },
@@ -201,11 +200,12 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Warp
-    SPELL_RECALL,
     SPELL_GRAVITAS,
+    SPELL_PORTAL_PROJECTILE,
     SPELL_FORCE_LANCE,
-    SPELL_WARP_BRAND,
-    SPELL_SUMMON_FOREST,
+    SPELL_DISPERSAL,
+    SPELL_CONTROLLED_BLINK,
+    SPELL_DISJUNCTION,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -213,7 +213,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
-    SPELL_POISONOUS_CLOUD,
 },
 #endif
 
@@ -261,7 +260,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Wizardry
     SPELL_FORCE_LANCE,
     SPELL_AGONY,
-    SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
@@ -287,17 +285,20 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
+    SPELL_BECKONING,
     SPELL_TUKIMAS_DANCE,
     SPELL_INTOXICATE,
     SPELL_INVISIBILITY
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Akashic Record
     SPELL_DISPERSAL,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISJUNCTION,
     SPELL_CONTROLLED_BLINK,
 },
+#endif
 
 {   // Book of Debilitation
     SPELL_CORONA,

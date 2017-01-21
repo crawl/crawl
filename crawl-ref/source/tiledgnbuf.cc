@@ -292,6 +292,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_QUAD_GLOW, x, y);
             if (cell.disjunct)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
+            if (cell.awakened_forest)
+                m_buf_icons.add(TILEI_BERSERK, x, y);
 
             if (cell.fg)
             {

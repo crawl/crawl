@@ -246,7 +246,7 @@ dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longb
 
  -- Dwarven artificer. 3 items.
 dgn.delayed_decay_extra(_G, 'E', 'dwarf skeleton', 'any wand, any wand, '
-   .. 'any wand / any misc / any rod' )
+   .. 'any wand / any misc w:20' )
 
  -- Dead octopode. 3 rings, possibly up to 8, though with a very low chance.
 dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
@@ -256,8 +256,8 @@ dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
 
  -- Merfolk skald. 3 items.
 dgn.delayed_decay_extra(_G, 'H', 'merfolk skeleton', 'leather armour good_item w:30 / '
-   .. 'swamp dragon armour w:2 / fire dragon armour w:2 / '
-   .. 'ice dragon armour w:2, trident / demon trident / glaive / bardiche, '
+   .. 'swamp dragon scales w:2 / fire dragon scales w:2 / '
+   .. 'ice dragon scales w:2, trident / demon trident / glaive / bardiche, '
    .. 'randbook disc:charms / any book' )
 
  -- Human wanderer. 3-5 items.
@@ -739,8 +739,7 @@ ENDMAP
 NAME: nicolae_lab_stuck
 TAGS: extra
 : dgn.delayed_decay(_G, 'v', 'human skeleton')
-KITEM: w = wand of digging charges:0 ident:all /\
-           wand of teleportation charges:0 ident:all
+KITEM: w = wand of digging charges:0 ident:all
 KPROP: w'v = no_tele_into
 MAP
 ......

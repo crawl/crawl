@@ -150,11 +150,10 @@ cloud_magic_trail0 CLOUD_MAGIC_TRAIL
 cloud_magic_trail1
 cloud_magic_trail2
 cloud_magic_trail3
-# rolling boulder dust
-cloud_dust_trail0 CLOUD_DUST_TRAIL
-cloud_dust_trail1
-cloud_dust_trail2
-cloud_dust_trail3
+cloud_dust0 CLOUD_DUST
+cloud_dust1
+cloud_dust2
+cloud_dust3
 cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
@@ -196,7 +195,7 @@ cloud_neg1
 cloud_neg2
 
 %sdir mon
-fungi_plants/giant_spore SPORE_OVERLAY
+fungi_plants/ballistomycete_spore SPORE_OVERLAY
 
 #########MAP
 %sdir misc

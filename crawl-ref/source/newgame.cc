@@ -15,7 +15,7 @@
 #include "files.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -149,7 +149,7 @@ static void _print_character_info(const newgame_def& ng)
 
 void choose_tutorial_character(newgame_def& ng_choice)
 {
-    ng_choice.species = SP_HIGH_ELF;
+    ng_choice.species = SP_HUMAN;
     ng_choice.job = JOB_FIGHTER;
     ng_choice.weapon = WPN_FLAIL;
 }
@@ -160,9 +160,8 @@ void choose_tutorial_character(newgame_def& ng_choice)
 static const species_type species_order[] =
 {
     // comparatively human-like looks
-    SP_HUMAN,          SP_HIGH_ELF,
-    SP_DEEP_ELF,       SP_DEEP_DWARF,
-    SP_HILL_ORC,
+    SP_HUMAN,          SP_DEEP_ELF,
+    SP_DEEP_DWARF,     SP_HILL_ORC,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -173,6 +172,7 @@ static const species_type species_order[] =
     SP_MERFOLK,        SP_MINOTAUR,
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
+    SP_BARACHIAN,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
@@ -1754,14 +1754,12 @@ static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
     case WPN_MACE:
         return WPN_FLAIL;
     case WPN_HAND_AXE:
-        // Little fighters can't use war axes with a shield.
-        return fighter && size <= SIZE_LITTLE ? wp : WPN_WAR_AXE;
+        return WPN_WAR_AXE;
     case WPN_SPEAR:
         // Small fighters can't use tridents with a shield.
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
-        // Little fighters can't use long swords with a shield.
-        return fighter && size <= SIZE_LITTLE ? wp : WPN_LONG_SWORD;
+        return WPN_LONG_SWORD;
     default:
         return wp;
     }

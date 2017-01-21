@@ -45,7 +45,9 @@ enum monster_info_flags
     MB_INSANE,
     MB_SILENCING,
     MB_MESMERIZING,
+#if TAG_MAJOR_VERSION == 34
     MB_EVIL_ATTACK,
+#endif
     MB_SHAPESHIFTER,
     MB_CHAOTIC,
     MB_SUBMERGED,
@@ -71,8 +73,8 @@ enum monster_info_flags
     MB_MOSTLY_FADED,
 #endif
     MB_FEAR_INSPIRING,
-    MB_WITHDRAWN,
 #if TAG_MAJOR_VERSION == 34
+    MB_WITHDRAWN,
     MB_ATTACHED,
 #endif
     MB_DAZED,
@@ -97,8 +99,8 @@ enum monster_info_flags
     MB_NO_REGEN,
 #if TAG_MAJOR_VERSION == 34
     MB_SUPPRESSED,
-#endif
     MB_ROLLING,
+#endif
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
@@ -165,6 +167,8 @@ enum monster_info_flags
     MB_BOUND_SOUL,
     MB_INFESTATION,
     MB_NO_REWARD,
+    MB_STILL_WINDS,
+    MB_SLOWLY_DYING,
     NUM_MB_FLAGS
 };
 
@@ -279,6 +283,7 @@ struct monster_info : public monster_info_base
     {
         return get_damage_level_string(holi, dam);
     }
+    string get_max_hp_desc() const;
 
     inline bool neutral() const
     {
@@ -357,6 +362,7 @@ struct monster_info : public monster_info_base
     }
 
     bool has_spells() const;
+    int spell_hd() const;
     unsigned colour(bool base_colour = false) const;
     void set_colour(int colour);
 

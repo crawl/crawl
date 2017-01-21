@@ -43,11 +43,10 @@ Breathe Lightning ability
 Releases a great discharge of electricity, causing an uncontrollable lightning
 storm. It partially bypasses armour.
 %%%%
-Breathe Sticky Flame ability
+Breathe Acid ability
 
-Spits a glob of sticky flame at an adjacent creature, covering it in liquid
-fire for a short time. It may also splash onto other nearby creatures on
-impact.
+Spits a glob of acid at a nearby creature, covering it in corrosive slime
+for a short time. It may also splash onto other nearby creatures on impact.
 %%%%
 Breathe Steam ability
 
@@ -60,8 +59,11 @@ Breathes a blast of noxious fumes at a targeted creature.
 %%%%
 Bat Form ability
 
-Transforms you into a swift-moving vampire bat. The user becomes unable to
-drink potions or evoke wands, to open or close doors, or to cast spells.
+Transforms the user into a swift-moving vampire bat, increasing evasion but
+substantially weakening melee attacks.
+
+While tranformed, any equipped weapons, armour and rings are melded, and the
+user becomes unable to evoke wands or to cast spells.
 %%%%
 Spit Acid ability
 
@@ -70,8 +72,8 @@ Spits acid at a targeted creature.
 Fly ability
 
 Starts flight. During flight you can safely cross water and similar obstacles.
-Be warned, though, that some forms of flight are temporary and may time out at
-an inopportune moment, causing you to fall to your death.
+Be warned, though, that some forms of flight are temporary and may expire at
+inopportune moments.
 %%%%
 Hurl Damnation ability
 
@@ -89,14 +91,10 @@ Stop Singing ability
 
 Stops singing your Song of Slaying.
 %%%%
-Self-Restoration ability
+Heal Wounds ability
 
-Restores your strength, dexterity and intelligence and heals any rotted health,
-at the permanent cost of one magic point.
-%%%%
-Device Recharging ability
-
-Recharges a wand or rod, at the permanent cost of one magic point.
+Heals the user significantly, with a chance of permanently reducing the user's
+maximum magic capacity by one.
 %%%%
 Dig ability
 
@@ -316,8 +314,8 @@ spells without sufficient magical reserves.
 %%%%
 Channel Magic ability
 
-Invokes a magical power regeneration ability for a duration that depends on
-Invocations skill.
+Dramatically increases the user's regeneration of magical power for a duration
+that increases with Invocations skill.
 %%%%
 Forget Spell ability
 
@@ -336,9 +334,8 @@ Berserk ability
 Sends the user into a berserk rage. Going berserk temporarily increases health,
 speed, and damage dealt in melee. It will time out quickly outside of combat,
 but may be extended by multiple kills. While berserk, almost all actions other
-than movement and melee combat are prevented. Such a rage is followed by deep
-exhaustion, during which the user is slowed and cannot berserk again, and
-occasionally may even pass out.
+than movement and melee combat are prevented. When the rage expires, the user
+will be briefly slowed and occasionally may even pass out.
 %%%%
 Trog's Hand ability
 
@@ -419,7 +416,7 @@ harder to resist.
 Corrupt ability
 
 Corrupts the current level by unleashing Abyssal energies on it. This will
-cause the area nearby to change appearance, and will gate in demons from the
+cause the area nearby to change appearance, and will gate in creatures from the
 Abyss bent on causing destruction. This will not work on levels already
 corrupted or in the Abyss itself. The size of the effect is increased by
 Invocations skill.
@@ -427,7 +424,7 @@ Invocations skill.
 Enter the Abyss ability
 
 Transports you to Lugonu's realm instantly. The effort of even using the
-ability will leave your health and magic depleted.
+ability will leave your health depleted.
 %%%%
 Brand Weapon With Distortion ability
 
@@ -479,6 +476,14 @@ Bring an orc corpse back to life. The orc will be an ally, even if it was not
 already one before it died.
 %%%%
 # Fedhas
+Fungal Bloom ability
+
+Call up Fedhas to accelerate the natural process of decay, transforming all
+corpses nearby into fast-growing, short-lived toadstools. Zombies, ghouls,
+and necrophages are considered walking corpses, and are affected accordingly;
+zombies rot into skeletons, and ghouls and necrophages rot away entirely,
+granting no experience.
+%%%%
 Sunlight ability
 
 Calls sunlight down over a small area of the dungeon. Monsters illuminated by
@@ -502,7 +507,7 @@ number of rain-clouds created.
 %%%%
 Reproduction ability
 
-Creates giant spores from corpses in your line of sight. The spores will
+Creates ballistomycete spores from corpses in your line of sight. The spores will
 explode, causing damage to you or your enemies.
 %%%%
 Evolution ability
@@ -581,10 +586,10 @@ Shadow Form ability
 Transforms you into a swirling mass of dark shadows. While in this form, you
 are permanently invisible and are immune to poison, draining, torment, and
 hostile enchantments. All incoming damage will be halved, and you will bleed
-smoke on any incoming attack. However, your ability to deal damage in melee
-will be halved, your spellcasting power will be greatly hampered, and your
-skills will be further drained when taking damage. Invocations skill increases
-the duration of the transformation.
+smoke on any incoming attack. However, your ability to deal damage in melee and
+with ranged attacks will be halved, your spellcasting power will be greatly
+hampered, and your skills will be further drained when taking damage.
+Invocations skill increases the duration of the transformation.
 %%%%
 # Gozag
 Potion Petition ability
@@ -635,16 +640,15 @@ is to Pakellas.
 %%%%
 Quick Charge ability
 
-Spends two thirds of your current pool of magic to charge a wand or rod. The
+Spends two thirds of your current pool of magic to charge a wand. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
 Supercharge ability
 
-Infuses magical energy into a rod or wand. For a rod, its recharge rate and
-capacity are set to slightly above the normal maximums for such a device;
-for wands, their capacity is significantly increased beyond normal and fully
-charged to this new capacity. This ability may only be used once.
+Infuses magical energy into a wand. Its capacity is significantly increased
+beyond normal and fully charged to this new capacity. This ability may only be
+used once.
 %%%%
 # Qazlal
 Upheaval ability
@@ -654,10 +658,9 @@ or rubble. Invocations skill increases both damage and area affected.
 %%%%
 Elemental Force ability
 
-Causes elemental clouds around you to coalesce into elementals. Your own
-clouds create friendly elementals; hostile clouds create hostile elementals;
-natural clouds create neutral elementals. Invocations skill increases the
-maximum number of elementals that can be created with one use of the ability.
+Causes your elemental clouds to coalesce into friendly elementals. Your
+Invocations skill increases the maximum number of elementals that can be
+created with one use of the ability.
 %%%%
 Disaster Area ability
 
@@ -671,24 +674,18 @@ Taps into your inner power to restore health and magic, as well as freeing your
 body and mind from external constraints, including nets, webs, constriction,
 petrification, slowness, and confusion. The amount of health and magic restored
 increases with piety.
-
-Using this ability exhausts and slightly drains you.
 %%%%
 Power Leap ability
 
-Uses the power that infuses you to perform an incredibly fast leap. On landing,
-that power explodes outward, damaging all foes adjacent to you. The amount of
-damage done increases with your piety and experience level.
-
-Using this ability exhausts you.
+Performs an incredibly fast leap to a targeted location, causing an explosion
+upon landing which damages all adjacent foes. The amount of damage done
+increases with your piety and experience level.
 %%%%
 Apocalypse ability
 
-Reveals Ru's truth to your enemies. All enemies in your line of sight are
-dealt severe damage and may be rendered mute or paralyzed or slowed. The damage
-dealt increases with your piety and experience level.
-
-Using this ability exhausts and severely drains you.
+Reveals Ru's truth to your enemies, dealing severe damage to all enemies in
+your line of sight. Affected creatures may be paralyzed, slowed or have their
+magic drained. The damage dealt increases with your piety and experience level.
 %%%%
 Sacrifice Purity ability
 
@@ -839,10 +836,10 @@ surroundings.
 Idealise ability
 
 Restores your ancestor to an idyllic vision of their best self. Their wounds
-are forgotten, harmful effects are wiped away, and a glow of perfection infuses
-them, giving them a short-lived but dramatic increase in strength, spellcasting,
-and armour. The quality of the healing and duration of the idealisation granted
-are both improved by the Invocations skill.
+are forgotten and a glow of perfection infuses them, giving them a short-lived
+but dramatic increase in strength, spellcasting, and armour. The quality of the
+healing and duration of the idealisation granted are both improved by the
+Invocations skill.
 %%%%
 Transference ability
 
@@ -872,3 +869,9 @@ Ancestor Identity ability
 
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
+%%%%
+Hop ability
+
+Hops toward a chosen destination, landing somewhere nearby. After using this
+ability, you will be unable to hop again until you have spent some time not
+moving. (Other actions, such as casting spells and attacking, are fine.)

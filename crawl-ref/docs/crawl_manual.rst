@@ -177,8 +177,7 @@ Magic
   spellcasting, but is sometimes also used for the evoking and invoking of many
   other special abilities. They are displayed in the same way as hit points;
   nothing bad happens if these drop to zero, except, of course, that you can't
-  cast any spells. Resting restores these, too. It is difficult to have more than
-  50 magic points without using external devices.
+  cast any spells. Resting also restores your reserves of magic.
 
 Next come your defences. For all of them, more is better.
 
@@ -372,11 +371,12 @@ sometimes look like normal floor until discovered.
 Shops
 ========================================
 
-When you visit a shop, you are shown what the shopkeeper has in stock and can
-choose what to buy. Unfortunately, the shopkeepers all have an exclusive deal
-with the Guild of Dungeon Procurers which prevents them using non-guild labour
-to obtain stock, so you can't sell anything in a shop. (But then, what
-shopkeeper would buy stolen goods from a disreputable adventurer, anyway?)
+When you visit a shop (by using < or > while standing on one), you are shown
+what the shopkeeper has in stock and can choose what to buy. Unfortunately,
+the shopkeepers all have an exclusive deal with the Guild of Dungeon Procurers
+which prevents them using non-guild labour to obtain stock, so you can't sell
+anything in a shop. (But then, what shopkeeper would buy stolen goods from a
+disreputable adventurer, anyway?)
 
 To purchase one or more items, select them by pressing the letters of the item
 in the shop menu and then press Enter to make the purchase; you can examine
@@ -1054,7 +1054,7 @@ pray at an altar to dedicate themselves to a life of servitude. There are altars
 scattered all over the dungeon, and there are rumours of a special temple
 somewhere near the surface.
 
-At an altar, you can enter a god's service by pressing 'p' - you'll first be
+At an altar, you can enter a god's service by pressing < or >. You'll first be
 given a description of the god, and then be asked if you really want to join.
 To see a list of the standard gods and which of their altars you've seen in your
 current game, press 'Ctrl-O'. You can also learn about all gods by pressing '?/G'.
@@ -1508,8 +1508,9 @@ Centaurs
   receive reduced protection from the body armour they wear.
 
 Ogres
-  Ogres are huge, chunky creatures who typically are strong rather than smart,
-  and not nimble at all. Ogres mature almost as quickly as Humans.
+  Ogres are huge, chunky creatures who are very strong and robust, but are not
+  nimble at all. Ogres mature almost as quickly as Humans. They possess a raw
+  talent for magic, but are poor at making use of magical devices.
 
   Their preferred methods of avoiding beatings are dodging and the use of
   shields. Many Ogres find it natural to wield some large and blunt weapon.
@@ -1517,19 +1518,15 @@ Ogres
   While all sophisticated forms of missile combat are too awkward for them, they
   are good at throwing things, in particular boulders.
 
-  Contrary to expectations, Ogres are not reduced to mindless brutes. They
-  possess a raw talent for witchcraft, letting them pick up the basics of
-  spellcasting at an amazing speed. However, the more arcane schools of magic
-  are foreign to them and are only learned at poor rates.
-
 Trolls
-  Trolls are like Ogres, but even nastier. They have thick, knobbly skins of any
-  colour from putrid green to mucky brown, which are covered in patches of thick
-  fur, and their mouths are full of ichor-dripping fangs.
+  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
+  skins of any colour from putrid green to mucky brown, which are covered in
+  patches of thick fur.
 
-  They can rip creatures apart with their claws, and regenerate very quickly
-  from even the most terrible wounds. They learn slowly indeed - as slowly as
-  High Elves - and need a great amount of food to survive.
+  They are incredibly strong, and have a lightning-fast metabolism - requiring
+  a great deal of food to survive, but regenerating rapidly from even the most
+  terrible wounds. However, they are hopeless at spellcasting and learn most
+  skills very slowly.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
@@ -1584,26 +1581,29 @@ Demonspawn
 Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate on their
-  own, nor are they receptive to any effects which merely hasten regeneration.
-  On the other hand, Deep Dwarves have developed the ability to instantly
-  counteract small doses of damage. Their empathy with the earth makes them
-  sense their surroundings; this ability increases in power as they gain
-  experience levels.
-
-  Given their lack of innate healing, few Deep Dwarves venture out for
-  adventures or even combat. Those who do bring a wand of heal wounds, or rely
-  on divine assistance.
+  generations made them turn pale and lose all ability to regenerate health
+  over time, or to have their rate of regeneration hastened by any effects.
+  Deep Dwarves can instead draw on their magical essence to heal, but doing so
+  will gradually deplete their maximum reserves of magic. They are passively
+  able to reduce all incoming damage, and their empathy with the earth allows
+  them to sense their surroundings; these abilities increase in power as they
+  gain experience levels.
 
   Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
   damage. Offensively, they are skilled users of axes, crossbows, and slings.
   Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with invocations is great. They
-  are most at home with the magic of earth and death, eventually gaining some
-  resistance to the dark powers of necromancy.
+  by outsiders; because of this, their skill with invocations is great, and
+  they often rely on divine assistance for healing. They are most at home with
+  the magic of earth and death, eventually gaining some resistance to the dark
+  powers of necromancy.
 
-  Deep Dwarves can tinker with wands so as to recharge them. However, each time
-  they do so, they lose a bit of their magical essence.
+Deep Elves
+   This is an Elven species who long ago fled the overworld to live in darkness
+   underground. There, they developed their mental powers, evolving a natural
+   gift for all forms of magic (including necromancy and earth magic), and
+   adapted physically to their new environment, becoming shorter, weaker, and
+   losing all colouration. They are poor at hand-to-hand combat, but excellent
+   at fighting from a distance.
 
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
@@ -1623,6 +1623,16 @@ Felids
 
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
+
+Barachians
+  Barachians are an amphibious humanoid race, said to be distantly related to
+  the Elves. Spawned in great numbers beneath the southern ice, their
+  Mother-Father sends them forth to destroy and pillage the civilized lands.
+
+  Barachians' most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap remarkable distances. When not leaping, they are somewhat
+  slow-moving and their attributes are poor, but they do have considerable
+  flexibility in skill choice.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
@@ -1683,7 +1693,7 @@ Vine Stalkers
   between their health and magical reserves. They also physically regenerate
   at an alarming rate. However these traits come at a price: the dual nature of
   their bodies makes them extremely frail, and they cannot benefit from potions
-  or wands to heal their wounds.
+  to heal their wounds.
 
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey
@@ -1692,37 +1702,6 @@ Vine Stalkers
   magic quite competently and then switching to a hybrid style when their
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
-
-Elves
-========================================
-
-There are a number of distinct species of Elf. Elves are all physically slight
-but long-lived people, quicker-witted than Humans, but sometimes slower to learn
-new things. Elves are especially good at using those skills which require a
-degree of finesse, such as stealth, sword-fighting and archery, but tend to be
-poor at using brute force and inelegant forms of combat. They find heavy armour
-to be uncomfortable.
-
-Due to their fey natures, all Elves are good at using magic in general and
-elemental magic in particular, while their affinity for other types of magic
-varies among the different sub-species.
-
-High Elves
-  This is a tall and powerful Elven species who advance in levels slowly,
-  requiring half again as much experience as Humans. They have good intelligence
-  and dexterity, but suffer in strength. Compared with Humans, they have fewer
-  HP but more magic. Among all races, they are best with blades and bows. They
-  are not very good with necromancy or with earth or poison magic, but are
-  highly skilled with most other forms of magic, especially Air and Charms.
-
-Deep Elves
-  This is an Elven species who long ago fled the overworld to live in darkness
-  underground. There, they developed their mental powers, evolving a natural
-  gift for all forms of magic (including necromancy and earth magic), and
-  adapted physically to their new environment, becoming shorter and weaker than
-  High Elves and losing all colouration. They are poor at hand-to-hand combat,
-  but excellent at fighting from a distance. They advance in levels at the same
-  speed as High Elves.
 
 The Undead
 ========================================
@@ -1750,7 +1729,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
@@ -1811,10 +1791,6 @@ Black Draconians
   good at air magic but feel cumbersome with earth magic. Their wings will
   eventually grow larger, which allows them to fly continuously when combined
   with their natural skill with air magic.
-
-Mottled Draconians
-  are somewhat in touch with fire, yet are not weak with ice. They can spit
-  globs of sticky flame at those adjacent to them.
 
 Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes and charms in
@@ -2050,11 +2026,10 @@ There are a number of individual weapon skills for missile weapons:
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: tomahawks,
-javelins, tomahawks, nets, etc. The other skills refer to various types of
-missiles shot with a launcher. An exception to this are needles: these are
-launched using blowguns, an action which uses the Throwing skill. Since
-stones can be thrown without launchers to some effect, these skills
-crosstrain:
+javelins, nets, etc. The other skills refer to various types of missiles shot
+with a launcher. An exception to this are needles: these are launched using
+blowguns, an action which uses the Throwing skill. Since stones can be thrown
+without launchers to some effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2129,9 +2104,8 @@ Invocations
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
-  number of charges in a wand through usage. Similarly, all other items that
-  have certain powers (such as crystal balls, decks of cards, or elemental
-  summoners) work better for characters trained in this skill.
+  number of charges in a wand through usage. Similarly, various other items
+  that have evocable powers work better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The
@@ -2208,10 +2182,10 @@ Ctrl-direction or * direction
   else attacks without moving (even if no monster is seen).
 
 <
-  Use staircase to go higher or enter a shop or portal.
+  Use staircase to go higher, or use a shop, altar, or portal.
 
 >
-  Use staircase to go deeper or enter a shop or portal.
+  Use staircase to go deeper, or use a shop, altar, or portal.
 
 ;
   Examine occupied tile and auto-pickup eligible items. Can also be used to pick
@@ -2292,9 +2266,6 @@ I
 
 Other game-playing commands
 ----------------------------------------
-
-p
-  Pray, generally in order to convert to a new god at an altar.
 
 z
   Cast a spell. Should the spell demand monsters as targets but there are none
@@ -2545,9 +2516,7 @@ Level map ('X')
 ========================================
 
 The level map (brought up by 'X' in the main screen) uses the whole screen to
-show the dungeon. The first line of that screen usually gives the name of the
-level and a hint on the help screen. You can use the level_map_title option to
-get rid of that.
+show the dungeon.
 
 Esc, Space
   Leave level map.
@@ -2565,12 +2534,18 @@ direction
   Move cursor.
 
 Shift-direction
-  Move cursor in bigger steps (check the option or / direction
+  Move cursor in bigger steps (determined by the the option
   level_map_cursor_step).
 
 .
   Travel to cursor (also Enter, Del, ',' and ';'). If the cursor is on the
   character, move cursor to last travel destination instead.
+
+o
+  Move cursor to the next autoexplore target.
+
+v
+  Describe remembered feature or monster under the cursor.
 
 <
   Cycle through up stairs.
@@ -2593,14 +2568,29 @@ I
 O
   Cycle backward through all items and piles.
 
+G
+  Select another level (by branch and depth) to view the map of.
+
+[
+  View the previous level.
+
+]
+  View the next level.
+
+!
+  Add an annotation to the current level.
+
 Ctrl-C
   Clear level and main maps (from temporarily seen monsters, clouds, etc.).
 
 Ctrl-F
   Forget level map.
 
+Ctrl-U
+  Restore forgotten level map.
+
 Waypoints can be set on the level map. You can travel to waypoints using G.
-Check the option show_waypoints. The commands are:
+The commands are:
 
 Ctrl-W
   Set waypoint.
@@ -2624,8 +2614,8 @@ E
 Examining surroundings ('x')
 ========================================
 
-When roaming the dungeon, the surroundings mode is activated by 'x'. It lets you
-have a look at items or monsters in line of sight.
+When roaming the dungeon, the surroundings mode is activated by 'x'. It lets
+you look at items, monsters or other features in line of sight.
 
 Esc, Space, x
   Return to playing mode.
@@ -2652,8 +2642,8 @@ direction
   Travel to cursor (also Del).
 
 v
-  Describe feature or monster under cursor. Some branch entries have special
-  information.
+  Describe feature or monster under the cursor. Some branch entries have
+  special information.
 
 >
   Cycle downstairs.
@@ -2685,8 +2675,8 @@ Enter
   Fire at cursor direction (also Del and Space).
 
 .
-  Fire at cursor position and stop there with slightly reduced impact. This can
-  be useful to avoid damaging pets, or to avoid losing arrows.
+  Fire at cursor position and stop there. This can be useful to avoid damaging
+  allies, or to avoid losing arrows.
 
 p
   Fire at previous target (if still in sight).
@@ -2701,9 +2691,9 @@ f
 
 ( and )
   These two commands allow you to change ammunition while targeting. The choice
-  is subject to the fire_order option. Usually, you change missiles according to
-  your launcher; i.e. when wielding a bow, ( and ) will cycle through all stacks
-  of arrows in your inventory.
+  is subject to the fire_order option. Usually, you change missiles according
+  to your launcher; i.e. when wielding a bow, ( and ) will cycle through all
+  stacks of arrows in your inventory.
 
 Shift-direction
   Fire straight in that direction.
@@ -2718,12 +2708,6 @@ letter). This adds a note in curly braces to the item description. Besides
 simply allowing you to make comments about items, there are several further
 uses.
 
-Automatic inscriptions
-========================================
-
-These are done by the game to help you to identify items. For example, items
-that you have seen a monster use will be inscribed with "{tried by monster}".
-
 Inscriptions as shortcuts
 ========================================
 
@@ -2731,8 +2715,8 @@ You can use inscriptions to define shortcuts for easy access to items,
 regardless of their actual inventory letter. For example, if an item's
 inscription contains "@w9", you can type 'w9' in order to wield it. Instead of
 the 9, any other digit works as well. And instead of 'w'ield, any other command
-used for handling items can be used: 'e'at, 'r'ead, 'q'uaff, e'v'oke, 'f'ire, etc.
-Using "@*9" will make any action command followed by '9' use this item.
+used for handling items can be used: 'e'at, 'r'ead, 'q'uaff, e'v'oke, 'f'ire,
+etc. Using "@*9" will make any action command followed by '9' use this item.
 
 Safety inscriptions
 ========================================
@@ -2784,15 +2768,6 @@ commands:
 !Q
   Prompt before explicitly quivering this item.
 
-!p
-  Prompt before sacrificing a stack containing an item with this inscription; if
-  the answer is "No", the whole stack will be skipped, and no items will be
-  sacrificed.
-
-=p
-  Prompt before sacrificing this particular item; if the answer is "No", then
-  Crawl will go on to sacrifice further items in the stack.
-
 =g
   Pick this item up automatically if autopickup is on.
 
@@ -2813,11 +2788,10 @@ commands:
 
 !D
   Prompt before performing an action that might destroy this item. If you're
-  attempting to destroy an item thus inscribed by sacrificing it, destroying a
-  weapon or burning a book in the names of various deities, the game won't even
-  ask you for confirmation but silently ignore this item. It also protects
-  against accidentally casting Sticks to Snakes on your favourite weapon.
-  However, it won't protect against lava accidents or hungry jellies.
+  attempting to destroy an item thus inscribed by turning it into a snake, or
+  burning it in the name of Trog, the game won't even ask you for confirmation
+  but will ignore the item. However, it won't protect against lava or deep
+  water accidents.
 
 You can use the autoinscribe option to have some items automatically inscribed.
 See options_guide.txt for details. Some examples are:
@@ -2825,153 +2799,26 @@ See options_guide.txt for details. Some examples are:
   autoinscribe = royal jelly:=g
   autoinscribe = wand of heal wounds:!v
 
-Artefacts autoinscriptions
+Artefact autoinscriptions
 ========================================
 
-Many players use inscriptions for properties of artefacts. This makes browsing
-the inventory or stashes easier. Crawl provides a scheme for automatic
-inscription.
-
-Here, one has to negotiate between two concurrent objectives: terseness for
-better use of limited line lengths versus verboseness for easier reading. The
-default inscriptions use the following general ideas:
+Artefacts are automatically inscribed with abbreviated descriptions of their
+properties. The inscriptions use the following general ideas:
 
 rXXX
-  signifies a resistance
+  signifies a resistance; e.g. rF+ (a level of fire resistance), rN+++ (three
+  levels of negative energy resistance), rC- (cold vulnerability).
 
 \+XXX
-  signifies an ability you can evoke via the 'a' command
+  signifies an ability you can evoke via the 'a' command. E.g. +Fly (evocable,
+  temporary flight).
 
 \-XXX
-  signifies a suppressed ability
+  signifies a suppressed ability. E.g. -Cast (spellcasting forbidden).
 
 XX+6
-  means a boost to some numerical stat (similar with XX-2, etc.)
+  means a boost to some numerical stat (similar with XX-2, etc.). E.g. Slay+3
+  (+3 to accuracy and damage of melee and ranged combat).
 
-Here is the full list:
-
-rC+
-  one level of cold resistance
-
-rC++
-  two levels of cold resistance
-
-rC-
-  one level of cold susceptibility
-
-rF+
-  one level of fire resistance
-
-rF++
-  two levels of fire resistance
-
-rF-
-  one level of fire susceptibility
-
-rN+
-  one level of negative energy resistance (life protection)
-
-MR++
-  two levels of magical resistance (resistance to hostile enchantments)
-
-rPois
-  poison resistance
-
-rElec
-  electricity resistance (insulation)
-
-AC+3
-  AC (armour class) modifier
-
-EV+3
-  EV (evasion) modifier
-
-Str+3
-  strength modifier
-
-Dex+3
-  dexterity modifier
-
-Int+3
-  intelligence modifier
-
-Slay+3
-  accuracy &amp; damage modifier (to melee and ranged combat)
-
-Stealth+
-  stealth boost
-
-Stealth-
-  stealth penalty
-
-rCorr
-  resist corrosion
-
-rMut
-  resist mutation
-
-\+Fly
-  can evoke for flight (from the 'a'bilities menu)
-
-\+Inv
-  can evoke for invisibility (from the 'a'bilities menu)
-
-\+Blink
-  can evoke for blink (from the 'a'bilities menu)
-
-\+Rage
-  can evoke for berserk (from the 'a'bilities menu)
-
-\*Rage
-  uncontrolled berserk (may trigger on melee attacks)
-
-\*Tele
-  random teleportation
-
-\-Tele
-  prevents teleportation
-
-\-Cast
-  prevents spellcasting
-
-Contam
-  causes high magical contamination when unequipped
-
-Noisy
-  makes noises on hit
-
-Curse
-  chance of self-cursing when equipped
-
-Fire
-  rF+, rC-, enhances fire magic
-
-Ice
-  rC+, rF-, enhances ice magic
-
-Regen
-  regeneration
-
-Wiz
-  wizardry
-
-MP+3
-  magical power modifier
-
-HP+3
-  hit point modifier
-
-SInv
-  see invisible
-
-Clar
-  clarity
-
-Gourm
-  gourmand
-
-Spirit
-  guardian spirit
-
-Inacc
-  inaccuracy (affects all attacks that can miss)
+For more information, examine an item (by selecting it in your (i)nventory);
+each property of an artefact will be listed and described.

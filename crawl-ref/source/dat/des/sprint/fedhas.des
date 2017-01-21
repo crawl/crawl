@@ -19,7 +19,7 @@ KMONS:  J = spriggan druid
 KMONS:  M = oklob plant hp:30 name:conjurer n_suf \
             spells:spit_acid.67.natural;stone_arrow.30.wizard;\
                    iskenderun's_mystic_blast.30.wizard
-KMONS:  N = giant spore
+KMONS:  N = ballistomycete spore
 KMONS:  O = oklob plant hp:30 name:summoner n_suf \
             spells:spit_acid.67.natural;call_imp.30.wizard;\
                    summon_swarm.30.wizard
@@ -33,7 +33,7 @@ KMONS:  V = Agnes
 KMONS:  W = spriggan defender
 KMONS:  X = spriggan rider ; storm_bow . arrow
 KMONS:  Y = bush
-KMONS:  a = wasp
+KMONS:  a = hornet
 KMONS:  b = ghost moth
 KMONS:  d = oklob plant name:meteorologist n_suf \
             spells:spit_acid.67.natural;lightning_bolt.30.wizard;\
@@ -50,7 +50,7 @@ KMONS:  m = river rat
 KMONS:  n = worker ant
 KMONS:  u = rat
 KITEM:  j = royal jelly q:3
-KITEM:  n = cloak ego:invisibility ident:type
+KITEM:  n = amulet of invisibility
 KITEM:  M = any book
 KITEM:  # = Orb of Zot
 KFEAT:  Z = any shop
@@ -98,36 +98,35 @@ ENDMAP
 
 NAME:   sprint_temple
 TAGS:   fedhas_sprint_temple no_rotate no_hmirror no_vmirror
-KFEAT:  A = altar_cheibriados
-KFEAT:  B = altar_zin
-KFEAT:  C = altar_elyvilon
-KFEAT:  D = altar_the_shining_one
-KFEAT:  E = altar_okawaru
-KFEAT:  F = altar_yredelemnul
-KFEAT:  G = altar_kikubaaqudgha
-KFEAT:  H = altar_trog
-KFEAT:  I = altar_lugonu
-KFEAT:  J = altar_nemelex_xobeh
-KFEAT:  K = altar_xom
-KFEAT:  L = altar_beogh
-KFEAT:  M = altar_jiyva
-KFEAT:  N = altar_vehumet
-KFEAT:  O = altar_sif_muna
-KFEAT:  P = altar_makhleb
-KFEAT:  Q = altar_dithmenos
-KFEAT:  R = altar_gozag
-KFEAT:  S = altar_qazlal
-KFEAT:  U = altar_ru
-KFEAT:  V = altar_pakellas
-KFEAT:  W = altar_uskayaw
-KMONS:  X = oklob sapling name:priest n_suf \
+# No Fedhas or Ashenzari.
+KFEAT:  b = altar_beogh
+KFEAT:  c = altar_cheibriados
+KFEAT:  d = altar_dithmenos
+KFEAT:  e = altar_elyvilon
+KFEAT:  g = altar_gozag
+KFEAT:  h = altar_hepliaklqana
+KFEAT:  j = altar_jiyva
+KFEAT:  k = altar_kikubaaqudgha
+KFEAT:  l = altar_lugonu
+KFEAT:  m = altar_makhleb
+KFEAT:  n = altar_nemelex_xobeh
+KFEAT:  o = altar_okawaru
+KFEAT:  q = altar_qazlal
+KFEAT:  r = altar_ru
+KFEAT:  s = altar_sif_muna
+KFEAT:  t = altar_trog
+KFEAT:  u = altar_uskayaw
+KFEAT:  v = altar_vehumet
+KFEAT:  x = altar_xom
+KFEAT:  y = altar_yredelemnul
+KFEAT:  z = altar_zin
+KFEAT:  1 = altar_the_shining_one
+KMONS:  P = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
-KFEAT:  Y = altar_hepliaklqana
-
 MAP
-.T..Y.V....T.
-.A.B.C.D.E.F.
-M.N.OXP.QWR.S
-.G.H.I.J.K.L.
-.T....U....T.
+.T.b.c.d.e.T.
+..g.h.j.k.l..
+...m.nPo.q...
+..r.s.t.u.v..
+.T.x.y.z.1.T.
 ENDMAP

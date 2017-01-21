@@ -6,7 +6,7 @@
 #ifndef MONPLACE_H
 #define MONPLACE_H
 
-#include "mgen_enum.h"
+#include "mgen-enum.h"
 
 class mons_spec;
 struct mgen_data;
@@ -87,6 +87,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
                               int radius, bool allow_centre, coord_def& empty,
                               const monster* viable_mon = nullptr);
 
+monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
 
 bool drac_colour_incompatible(int drac, int colour);

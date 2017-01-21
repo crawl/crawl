@@ -24,6 +24,30 @@ struct zap_info
 }
 */
 
+/// Boilerplate monster hex.
+static zap_info _mon_hex_zap(zap_type ztype, beam_type beam,
+                             int player_pow_cap = 100,
+                             colour_t colour = BLACK)
+{
+    return {
+        ztype,
+        "",
+        player_pow_cap,
+        nullptr,
+        nullptr,
+        nullptr,
+        new tohit_calculator<0, 1, 3>, // ENCH_POW_FACTOR
+        colour,
+        true,
+        beam,
+        NUM_DCHAR_TYPES,
+        false,
+        false,
+        false,
+        0
+    };
+}
+
 static const zap_info zap_data[] =
 {
 
@@ -135,41 +159,7 @@ static const zap_info zap_data[] =
     1
 },
 
-{
-    ZAP_HEAL_WOUNDS,
-    "",
-    100,
-    new dicedef_calculator<1, 7, 1, 3>,
-    nullptr,
-    nullptr,
-    nullptr,
-    BLACK,
-    true,
-    BEAM_HEALING,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
-    ZAP_PARALYSE,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_PARALYSIS,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_PARALYSE, BEAM_PARALYSIS),
 
 {
     ZAP_BOLT_OF_FIRE,
@@ -209,12 +199,15 @@ static const zap_info zap_data[] =
 
 { // Used only by phial of floods
     ZAP_PRIMAL_WAVE,
-    "flood of elemental water",
+    "torrent of water",
     200,
     new calcdice_calculator<4, 14, 3, 5>,
     new tohit_calculator<10, 1, 25>,
-    nullptr,
-    nullptr,
+    // Water attack is weaker than the pure elemental damage attacks, but also
+    // less resistible.
+    new dicedef_calculator<3, 6, 1, 12>,
+    // Huge wave of water is hard to dodge.
+    new tohit_calculator<14, 1, 35>,
     LIGHTBLUE,
     false,
     BEAM_WATER,
@@ -225,23 +218,7 @@ static const zap_info zap_data[] =
     6
 },
 
-{
-    ZAP_CONFUSE,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_CONFUSION,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_CONFUSE, BEAM_CONFUSION),
 
 {
     ZAP_TUKIMAS_DANCE,
@@ -322,7 +299,7 @@ static const zap_info zap_data[] =
     nullptr,
     new tohit_calculator<0, 3, 2>,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_TELEPORT,
@@ -351,23 +328,7 @@ static const zap_info zap_data[] =
     5 // XXX: Maybe louder?
 },
 
-{
-    ZAP_POLYMORPH,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_POLYMORPH,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_POLYMORPH, BEAM_POLYMORPH),
 
 {
     ZAP_VENOM_BOLT,
@@ -424,24 +385,6 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_BOLT_OF_INACCURACY,
-    "narrow beam of energy",
-    1000,
-    new calcdice_calculator<10, 40, 1, 1>,
-    new tohit_calculator<1>,
-    new calcdice_calculator<12, 40, 3, 2>,
-    new tohit_calculator<1>,
-    YELLOW,
-    false,
-    BEAM_ENERGY,
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    3
-},
-
-{
     ZAP_ISKENDERUNS_MYSTIC_BLAST,
     "orb of energy",
     100,
@@ -459,23 +402,7 @@ static const zap_info zap_data[] =
     4
 },
 
-{
-    ZAP_ENSLAVEMENT,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_ENSLAVE,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_ENSLAVEMENT, BEAM_ENSLAVE),
 
 {
     ZAP_PAIN,
@@ -483,8 +410,8 @@ static const zap_info zap_data[] =
     100,
     new dicedef_calculator<1, 4, 1, 5>,
     new tohit_calculator<0, 7, 2>,
-    nullptr,
-    nullptr,
+    new dicedef_calculator<1, 7, 1, 20>,
+    new tohit_calculator<0, 1, 3>,
     BLACK,
     true,
     BEAM_PAIN,
@@ -537,8 +464,8 @@ static const zap_info zap_data[] =
     100,
     new calcdice_calculator<3, 20, 3, 4>,
     new tohit_calculator<0, 3, 2>,
-    nullptr,
-    nullptr,
+    new dicedef_calculator<3, 6, 1, 10>,
+    new tohit_calculator<AUTOMATIC_HIT>,
     BLACK,
     true,
     BEAM_DISPEL_UNDEAD,
@@ -549,23 +476,7 @@ static const zap_info zap_data[] =
     0
 },
 
-{
-    ZAP_BANISHMENT,
-    "",
-    150,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_BANISH,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_BANISHMENT, BEAM_BANISH, 150),
 
 {
     ZAP_STING,
@@ -750,7 +661,7 @@ static const zap_info zap_data[] =
 
 {
     ZAP_BREATHE_ACID,
-    "acid",
+    "glob of acid",
     50,
     new dicedef_calculator<3, 4, 1, 3>,
     new tohit_calculator<7, 1, 6>,
@@ -844,8 +755,8 @@ static const zap_info zap_data[] =
     100,
     new calcdice_calculator<3, 15, 3, 4>,
     new tohit_calculator<0, 5, 2>,
-    nullptr,
-    nullptr,
+    new calcdice_calculator<1, 30, 1, 10>,
+    new tohit_calculator<50, 0, 1>,
     BLACK,
     true,
     BEAM_DISINTEGRATION,
@@ -862,8 +773,8 @@ static const zap_info zap_data[] =
     50,
     new dicedef_calculator<3, 4, 1, 5>,
     new tohit_calculator<10, 1, 10>,
-    nullptr,
-    nullptr,
+    new dicedef_calculator<3, 7, 1, 15>,
+    new tohit_calculator<20, 1, 20>,
     LIGHTGREY,
     false,
     BEAM_STEAM,
@@ -910,23 +821,8 @@ static const zap_info zap_data[] =
     0
 },
 
-{
-    ZAP_HIBERNATION,
-    "",
-    100, // power is capped to 50 in spl-zap.cc:spell_zap_power.
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_HIBERNATION,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+// player spellpower is capped to 50 in spl-zap.cc:spell_zap_power.
+_mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 
 {
     ZAP_FLAME_TONGUE,
@@ -947,31 +843,13 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_LARGE_SANDBLAST,
-    "large rocky blast",
-    50,
-    new dicedef_calculator<3, 4, 1, 3>,
-    new tohit_calculator<13, 1, 10>,
-    nullptr,
-    nullptr,
-    BROWN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_BOLT,
-    true,
-    false,
-    false,
-    3
-},
-
-{
     ZAP_SANDBLAST,
-    "rocky blast",
+    "blast of sand",
     50,
     new dicedef_calculator<2, 4, 1, 3>,
     new tohit_calculator<13, 1, 10>,
-    nullptr,
-    nullptr,
+    new dicedef_calculator<3, 5, 1, 40>,
+    new tohit_calculator<20, 1, 40>,
     BROWN,
     false,
     BEAM_FRAG,
@@ -980,24 +858,6 @@ static const zap_info zap_data[] =
     false,
     false,
     2 // XXX: Sound 2 for level one spell?
-},
-
-{
-    ZAP_SMALL_SANDBLAST,
-    "blast of sand",
-    25,
-    new dicedef_calculator<1, 8, 1, 4>,
-    new tohit_calculator<8, 1, 5>,
-    nullptr,
-    nullptr,
-    BROWN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_BOLT,
-    true,
-    false,
-    false,
-    1
 },
 
 {
@@ -1036,59 +896,9 @@ static const zap_info zap_data[] =
     6 // XXX: Less noise because it's poison?
 },
 
-{
-    ZAP_PETRIFY,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_PETRIFY,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
-    ZAP_PORKALATOR,
-    "porkalator",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    RED,
-    true,
-    BEAM_PORKALATOR,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
-    ZAP_SLEEP,
-    "",
-    100,
-    nullptr,
-    nullptr,
-    nullptr,
-    new tohit_calculator<0, 1, 3>,
-    BLACK,
-    true,
-    BEAM_SLEEP,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
+_mon_hex_zap(ZAP_PETRIFY, BEAM_PETRIFY),
+_mon_hex_zap(ZAP_PORKALATOR, BEAM_PORKALATOR, 100, RED),
+_mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 
 {
     ZAP_IOOD,
@@ -1107,24 +917,6 @@ static const zap_info zap_data[] =
     true,
     false,
     0
-},
-
-{
-    ZAP_BREATHE_STICKY_FLAME,
-    "splash of liquid fire",
-    100,
-    new dicedef_calculator<2, 3, 1, 12>,
-    new tohit_calculator<11, 1, 10>,
-    new dicedef_calculator<3, 3, 1, 50>,
-    new tohit_calculator<18, 1, 15>,
-    RED,
-    false,
-    BEAM_FIRE,
-    DCHAR_FIRED_ZAP,
-    true,
-    false,
-    false,
-    1
 },
 
 {
@@ -1251,24 +1043,6 @@ static const zap_info zap_data[] =
     true,
     false,
     2
-},
-
-{
-    ZAP_EXPLOSIVE_BOLT,
-    "explosive bolt",
-    200,
-    nullptr,
-    new tohit_calculator<17, 1, 25>,
-    new dicedef_calculator<1, 0, 0, 1>, // deals damage through explosions
-    new tohit_calculator<17, 1, 25>,
-    RED,
-    false,
-    BEAM_MISSILE,  // To avoid printing needless messages for non-damaging hits
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    0
 },
 
 {
@@ -1414,4 +1188,84 @@ static const zap_info zap_data[] =
     false,
     1
 },
+
+{
+    ZAP_BLINKBOLT,
+    "living lightning",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 10, 1, 17>,
+    new tohit_calculator<16, 1, 40>,
+    LIGHTCYAN, // match slug's own colour
+    false,
+    BEAM_ELECTRICITY,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0
+},
+
+{
+    ZAP_FREEZING_BLAST,
+    "freezing blast",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<2, 9, 1, 11>,
+    new tohit_calculator<17, 1, 25>,
+    WHITE, // match slug's own colour
+    false,
+    BEAM_COLD,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0
+},
+
+_mon_hex_zap(ZAP_DIMENSION_ANCHOR, BEAM_DIMENSION_ANCHOR),
+_mon_hex_zap(ZAP_VULNERABILITY, BEAM_VULNERABILITY),
+_mon_hex_zap(ZAP_SENTINEL_MARK, BEAM_SENTINEL_MARK),
+_mon_hex_zap(ZAP_VIRULENCE, BEAM_VIRULENCE),
+_mon_hex_zap(ZAP_SAP_MAGIC, BEAM_SAP_MAGIC),
+_mon_hex_zap(ZAP_DRAIN_MAGIC, BEAM_DRAIN_MAGIC),
+
+{
+    ZAP_BECKONING,
+    "beckoning",
+    200,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    ETC_WARP,
+    true,
+    BEAM_BECKONING,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    false,
+    0
+},
+
+{
+    ZAP_FIRE_STORM,
+    "great blast of fire",
+    200,
+    new calcdice_calculator<8, 5, 1, 1>,
+    new tohit_calculator<40>,
+    new calcdice_calculator<8, 5, 1, 1>,
+    new tohit_calculator<40>,
+    RED,
+    false,
+    BEAM_LAVA, // partially unaffected by rF
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    true,
+    0 // handled by explosion
+},
+
 };

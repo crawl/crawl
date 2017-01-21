@@ -14,9 +14,9 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -31,7 +31,7 @@
 void mons_att_changed(monster* mon)
 {
     const mon_attitude_type att = mon->temp_attitude();
-    const monster_type mc = mons_base_type(mon);
+    const monster_type mc = mons_base_type(*mon);
 
     if (mons_is_tentacle_head(mc)
         || mons_is_solo_tentacle(mc))
@@ -56,8 +56,8 @@ void mons_att_changed(monster* mon)
     }
 
     if (mon->attitude == ATT_HOSTILE
-        && (mons_is_god_gift(mon, GOD_BEOGH)
-           || mons_is_god_gift(mon, GOD_YREDELEMNUL)))
+        && (mons_is_god_gift(*mon, GOD_BEOGH)
+           || mons_is_god_gift(*mon, GOD_YREDELEMNUL)))
     {
         remove_companion(mon);
     }
@@ -81,7 +81,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons->friendly()
         && you.visible_to(mons) && !mons->asleep()
-        && !mons_is_confused(mons) && !mons->paralysed())
+        && !mons_is_confused(*mons) && !mons->paralysed())
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
 
@@ -100,8 +100,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
 void slime_convert(monster* mons)
 {
-    if (have_passive(passive_t::neutral_slimes) && mons_is_slime(mons)
-        && !mons->is_shapeshifter()
+    if (have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
         && !mons->neutral()
         && !mons->friendly()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
@@ -119,7 +118,7 @@ void fedhas_neutralise(monster* mons)
 {
     if (have_passive(passive_t::friendly_plants)
         && mons->attitude == ATT_HOSTILE
-        && fedhas_neutralises(mons)
+        && fedhas_neutralises(*mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         _fedhas_neutralise_plant(mons);
@@ -129,29 +128,22 @@ void fedhas_neutralise(monster* mons)
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when
-// abandoning the god in question (Trog or TSO).
-bool make_god_gifts_disappear()
+// abandoning the god in question.
+void make_god_gifts_disappear()
 {
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
-    int count = 0;
-
     for (monster_iterator mi; mi; ++mi)
     {
-        if (is_follower(*mi)
+        if (is_follower(**mi)
             && mi->has_ench(ENCH_ABJ)
-            && mons_is_god_gift(*mi, god))
+            && mons_is_god_gift(**mi, god))
         {
-            if (simple_monster_message(*mi, " abandons you!"))
-                count++;
-
             // The monster disappears.
             monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
-
-    return count;
 }
 
 // When under penance, Yredelemnulites can lose all nearby undead slaves.
@@ -166,7 +158,7 @@ bool yred_slaves_abandon_you()
         if (mons == nullptr)
             continue;
 
-        if (is_yred_undead_slave(mons))
+        if (is_yred_undead_slave(*mons))
         {
             num_slaves++;
 
@@ -218,14 +210,14 @@ bool beogh_followers_abandon_you()
             continue;
 
         // Note that orc high priests' summons are gifts of Beogh,
-        // so we can't use is_orcish_follower() here.
-        if (mons_is_god_gift(mons, GOD_BEOGH))
+        // so we can't use is_orcish_follower(*) here.
+        if (mons_is_god_gift(*mons, GOD_BEOGH))
         {
             num_followers++;
 
             if (you.visible_to(mons)
                 && !mons->asleep()
-                && !mons_is_confused(mons)
+                && !mons_is_confused(*mons)
                 && !mons->cannot_act())
             {
                 const int hd = mons->get_experience_level();
@@ -284,7 +276,7 @@ static void _print_converted_orc_speech(const string& key,
 
     if (!msg.empty())
     {
-        msg = do_mon_str_replacements(msg, mon);
+        msg = do_mon_str_replacements(msg, *mon);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
     }
@@ -339,7 +331,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
     if (!orc->alive())
         orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
 
-    mons_make_god_gift(orc, GOD_BEOGH);
+    mons_make_god_gift(*orc, GOD_BEOGH);
     add_companion(orc);
 
     // Avoid immobile "followers".
@@ -351,7 +343,7 @@ void beogh_convert_orc(monster* orc, conv_t conv)
 static void _fedhas_neutralise_plant(monster* plant)
 {
     if (!plant
-        || !fedhas_neutralises(plant)
+        || !fedhas_neutralises(*plant)
         || plant->attitude != ATT_HOSTILE
         || testbits(plant->flags, MF_ATT_CHANGE_ATTEMPT))
     {
@@ -366,13 +358,13 @@ static void _fedhas_neutralise_plant(monster* plant)
 static void _jiyva_convert_slime(monster* slime)
 {
     ASSERT(slime); // XXX: change to monster &slime
-    ASSERT(mons_is_slime(slime));
+    ASSERT(mons_is_slime(*slime));
 
     behaviour_event(slime, ME_ALERT);
 
     if (you.can_see(*slime))
     {
-        if (mons_genus(slime->type) == MONS_GIANT_EYEBALL)
+        if (mons_genus(slime->type) == MONS_FLOATING_EYE)
         {
             mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
                             "then relaxes.",
@@ -389,7 +381,7 @@ static void _jiyva_convert_slime(monster* slime)
     slime->attitude = ATT_STRICT_NEUTRAL;
     slime->flags   |= MF_WAS_NEUTRAL;
 
-    mons_make_god_gift(slime, GOD_JIYVA);
+    mons_make_god_gift(*slime, GOD_JIYVA);
 
     mons_att_changed(slime);
 }
@@ -437,7 +429,7 @@ void gozag_check_bribe(monster* traitor)
     if (branch_bribe[branch] == 0)
         return; // Do nothing if branch isn't currently bribed.
 
-    const int base_cost = max(1, exper_value(traitor) / 20);
+    const int base_cost = max(1, exper_value(*traitor) / 20);
 
     int cost = 0;
 
@@ -471,7 +463,7 @@ void gozag_check_bribe(monster* traitor)
     if (!msg.empty())
     {
         msg_channel_type channel = MSGCH_FRIEND_ENCHANT;
-        msg = do_mon_str_replacements(msg, traitor);
+        msg = do_mon_str_replacements(msg, *traitor);
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
         // !msg.empty means a monster was bribed.

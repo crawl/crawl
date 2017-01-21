@@ -12,14 +12,14 @@
 #include "english.h" // conjugate_verb
 #include "evoke.h"
 #include "food.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
 #include "message.h"
@@ -365,8 +365,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a chaotic item like this.");
     else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
         mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_poisoned_item(item) && you_worship(GOD_SHINING_ONE))
-        mpr("You really shouldn't be using a poisoned item like this.");
     else if (is_fiery_item(item) && you_worship(GOD_DITHMENOS))
         mpr("You really shouldn't be using a fiery item like this.");
     else if (is_channeling_item(item) && you_worship(GOD_PAKELLAS))
@@ -416,13 +414,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             calc_mp();
         }
 
-        _wield_cursed(item, known_cursed, unmeld);
-        break;
-    }
-
-    case OBJ_RODS:
-    {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
         _wield_cursed(item, known_cursed, unmeld);
         break;
     }
@@ -496,7 +487,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_PROTECTION:
-                    mpr("You feel protected!");
+                    mprf("%s hums with potential!", item_name.c_str());
                     break;
 
                 case SPWPN_DRAINING:
@@ -566,6 +557,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     mpr("Space warps around you for a moment!");
                     break;
 
+                case SPWPN_ACID:
+                    mprf("%s begins to ooze corrosive slime!", item_name.c_str());
+                    break;
+
                 default:
                     break;
                 }
@@ -574,10 +569,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             // effect second
             switch (special)
             {
-            case SPWPN_PROTECTION:
-                you.redraw_armour_class = true;
-                break;
-
             case SPWPN_VAMPIRISM:
                 if (you.species != SP_VAMPIRE
                     && you.undead_state() == US_ALIVE
@@ -664,8 +655,12 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
             case SPWPN_PROTECTION:
                 if (showMsgs)
-                    mpr("You feel less protected.");
-                you.redraw_armour_class = true;
+                    mprf("%s goes still.", msg.c_str());
+                if (you.duration[DUR_SPWPN_PROTECTION])
+                {
+                    you.duration[DUR_SPWPN_PROTECTION] = 0;
+                    you.redraw_armour_class = true;
+                }
                 break;
 
             case SPWPN_VAMPIRISM:
@@ -691,7 +686,7 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 // int effect = 9 -
                 //        random2avg(you.skills[SK_TRANSLOCATIONS] * 2, 2);
 
-                if (you.duration[DUR_WEAPON_BRAND] == 0 && !meld)
+                if (!meld)
                 {
                     if (have_passive(passive_t::safe_distortion))
                     {
@@ -716,14 +711,16 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
 
                 // NOTE: When more are added here, *must* duplicate unwielding
                 // effect in brand weapon scroll effect in read_scroll.
+
+            case SPWPN_ACID:
+                mprf("%s stops oozing corrosive slime.", msg.c_str());
+                break;
             }
 
-            if (you.duration[DUR_WEAPON_BRAND])
+            if (you.duration[DUR_EXCRUCIATING_WOUNDS])
             {
                 ASSERT(real_item.defined());
-                end_weapon_brand(real_item);
-                // We're letting this through even if hiding messages.
-                mpr("Your temporary branding evaporates.");
+                end_weapon_brand(real_item, true);
             }
         }
     }
@@ -1096,13 +1093,6 @@ static void _remove_amulet_of_harm()
     drain_player(150, false, true);
 }
 
-static void _equip_amulet_of_dismissal()
-{
-    mprf(MSGCH_WARN, "The world spins around you!");
-    you.increase_duration(DUR_VERTIGO, random2(4) + 3);
-    you.redraw_evasion = true;
-}
-
 static void _equip_amulet_of_regeneration()
 {
     if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
@@ -1219,11 +1209,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         mpr("You feel a craving for the dungeon's cuisine.");
         break;
 
-    case AMU_DISMISSAL:
-        if (!unmeld)
-            _equip_amulet_of_dismissal();
-        break;
-
     case AMU_REGENERATION:
         if (!unmeld)
             _equip_amulet_of_regeneration();
@@ -1285,14 +1270,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
                                       equipment_type slot)
 {
     // The ring/amulet must already be removed from you.equip at this point.
-
-    // Turn off show_uncursed before getting the item name, because this item
-    // was just removed, and the player knows it's uncursed.
-    const bool old_showuncursed = Options.show_uncursed;
-    Options.show_uncursed = false;
-
-    Options.show_uncursed = old_showuncursed;
-
     switch (item.sub_type)
     {
     case RING_FIRE:
@@ -1307,7 +1284,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
     case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
-    case AMU_DISMISSAL:
     case AMU_REGENERATION:
         break;
 

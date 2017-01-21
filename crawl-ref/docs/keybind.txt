@@ -159,7 +159,6 @@ SPACE, !       CMD_TARGET_SELECT
 _              CMD_TARGET_FIND_ALTAR
 <              CMD_TARGET_FIND_UPSTAIR
 >              CMD_TARGET_FIND_DOWNSTAIR
-^L             CMD_TARGET_TOGGLE_MLIST     (non-Tiles only)
 p              CMD_TARGET_PREV_TARGET
 f, t           CMD_TARGET_MAYBE_PREV_TARGET
 -              CMD_TARGET_CYCLE_BACK,

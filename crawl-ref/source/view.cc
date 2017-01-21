@@ -32,13 +32,13 @@
 #include "feature.h"
 #include "files.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
-#include "itemname.h" // item_type_known
-#include "itemprop.h" // get_weapon_brand
+#include "item-name.h" // item_type_known
+#include "item-prop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -130,7 +130,7 @@ void seen_monsters_react(int stealth)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if ((mi->asleep() || mons_is_wandering(*mi))
+        if ((mi->asleep() || mons_is_wandering(**mi))
             && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
@@ -261,7 +261,7 @@ static void _genus_factoring(map<monster_type, int> &types,
 
 static bool _is_weapon_worth_listing(const item_def *wpn)
 {
-    return wpn && (wpn->base_type == OBJ_RODS || wpn->base_type == OBJ_STAVES
+    return wpn && (wpn->base_type == OBJ_STAVES
                    || is_unrandom_artefact(*wpn)
                    || get_weapon_brand(*wpn) != SPWPN_NORMAL);
 }
@@ -285,7 +285,7 @@ static string _monster_headsup(const vector<monster*> &monsters,
             continue;
         }
 
-        if (!divine && monsters.size() == 1)
+        if (!divine && (ash_ided || monsters.size() == 1))
             continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
@@ -404,7 +404,9 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
 
     for (const monster* mon : monsters)
     {
-        if (x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        if (!mons_is_tentacle_or_tentacle_segment(mon->type)
+            && !mons_is_conjured(mon->type)
+            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
         {
             yell(mon);
             return;
@@ -535,7 +537,7 @@ void mark_mon_equipment_seen(const monster *mons)
 
         // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
-            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*mons))
         {
             if (is_artefact(item))
                 artefact_learn_prop(item, ARTP_BRAND);
@@ -806,7 +808,7 @@ string screenshot()
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
                                      coord_def(x, y));
-            ucs_t ch =
+            char32_t ch =
                   (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;
@@ -923,7 +925,7 @@ bool view_update()
     return false;
 }
 
-void flash_view(use_animation_type a, colour_t colour, targetter *where)
+void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (Options.use_animations & a)
     {
@@ -934,7 +936,7 @@ void flash_view(use_animation_type a, colour_t colour, targetter *where)
 }
 
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
-                      targetter *where)
+                      targeter *where)
 {
     if (Options.use_animations & a)
     {

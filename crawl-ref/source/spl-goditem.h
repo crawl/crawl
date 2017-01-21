@@ -80,4 +80,6 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = nullptr);
 
+spret_type cast_random_effects(int pow, bolt& beam, bool fail);
+
 #endif

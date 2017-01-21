@@ -6,32 +6,27 @@
 #include "unicode.h"
 
 // For order and meaning of symbols, see dungeon_char_type in enum.h.
-static const ucs_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
+static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
 {
     // CSET_DEFAULT
     // It must be limited to stuff present both in CP437 and WGL4.
     {
-    //       ▓
-        '#', 0x2593, '*', '.', ',', '\'', '+', '^', '>', '<',
-    //            ∩       ⌠       ≈
-        '#', '_', 0x2229, 0x2320, 0x2248, '8', '{',
+         '#', U'▓',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<',
+         '#',  '_', U'∩', U'⌠', U'≈',  '8',  '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
-    //  ⌂
-        0x2302, // CP437 but "optional" in WGL4
+        U'⌂', // CP437 but "optional" in WGL4
 #else
-    //  ∆
-        0x2206, // WGL4 and DEC
+        U'∆', // WGL4 and DEC
 #endif
-    //       φ
-        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
-    //                       †       ÷               §     ♣       ©
-        ':', '|', '\\', '}', 0x2020, 0xF7, '$', '"', 0xA7, 0x2663, 0xA9,
-    //                 ÷
-        ' ', '#', '*', 0xF7, 'X', '`', '#',  // space .. explosion
-    //  ═       ║       ╔       ╗       ╚       ╝       ─       │
-        0x2550, 0x2551, 0x2554, 0x2557, 0x255a, 0x255d, 0x2500, 0x2502, '/',
-    //        ┌       ┐       └       ┘            Λ
-        '\\', 0x250C, 0x2510, 0x2514, 0x2518, 'V', 0x39B, '>', '<'
+         '0', U'φ',  ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(',
+         ':',  '|',
+#if TAG_MAJOR_VERSION == 34
+         '\\',
+#endif
+         '}', U'†', U'÷',  '$',  '"', U'§', U'♣', U'©',
+         ' ',  '#',  '*', U'÷',  'X',  '`',  '#',  // space .. explosion
+        U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
+        '\\', U'┌', U'┐', U'└', U'┘',  'V', U'Λ',  '>',  '<',
     },
     // CSET_ASCII
     {
@@ -58,7 +53,11 @@ dungeon_char_type dchar_by_name(const string &name)
         "invis_exposed", "item_detected",
         "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
-        "item_staff", "item_rod", "item_miscellany", "item_corpse", "item_skeleton",
+        "item_staff",
+#if TAG_MAJOR_VERSION == 34
+        "item_rod",
+#endif
+        "item_miscellany", "item_corpse", "item_skeleton",
         "item_gold", "item_amulet", "cloud", "tree", "teleporter",
         "space", "fired_bolt", "fired_zap", "fired_burst", "fired_debug",
         "fired_missile", "explosion", "frame_horiz", "frame_vert",
@@ -80,7 +79,7 @@ void init_char_table(char_set_type set)
 {
     for (int i = 0; i < NUM_DCHAR_TYPES; i++)
     {
-        ucs_t c;
+        char32_t c;
         if (Options.cset_override[i])
             c = Options.cset_override[i];
         else
@@ -91,7 +90,7 @@ void init_char_table(char_set_type set)
     }
 }
 
-ucs_t dchar_glyph(dungeon_char_type dchar)
+char32_t dchar_glyph(dungeon_char_type dchar)
 {
     if (dchar >= 0 && dchar < NUM_DCHAR_TYPES)
         return Options.char_table[dchar];
@@ -99,7 +98,7 @@ ucs_t dchar_glyph(dungeon_char_type dchar)
         return 0;
 }
 
-string stringize_glyph(ucs_t glyph)
+string stringize_glyph(char32_t glyph)
 {
     char buf[5];
     buf[wctoutf8(buf, glyph)] = 0;

@@ -198,7 +198,7 @@ static const mutation_def mut_data[] =
   {"You feel less vulnerable to electricity.", "", ""},
 },
 
-{ MUT_REGENERATION, 3, 3, mutflag::GOOD, false,
+{ MUT_REGENERATION, 2, 3, mutflag::GOOD, false,
   "regeneration",
 
   {"Your natural rate of healing is unusually fast.",
@@ -218,16 +218,16 @@ static const mutation_def mut_data[] =
   "slow regeneration",
 
   {"You regenerate slowly when monsters are visible.",
-   "You do not regenerate naturally when monsters are visible.",
-   "You do not regenerate naturally."},
+   "You do not regenerate when monsters are visible.",
+   "You do not regenerate."},
 
-  {"Your natural regeneration is weakened.",
-   "Your natural regeneration is weakened.",
-   "You stop regenerating."},
+  {"Your regeneration weakens near monsters.",
+   "Your regeneration stops near monsters.",
+   "Your regeneration stops completely."},
 
-  {"Your natural regeneration is strengthened.",
-   "Your natural regeneration is strengthened.",
-   "Your natural regeneration is strengthened."},
+  {"Your regeneration returns to normal.",
+   "Your regeneration begins to work slowly in the presence of monsters.",
+   "You begin to regenerate when monsters are not visible."},
 },
 
 { MUT_FAST_METABOLISM, 0, 3, mutflag::BAD, false,
@@ -381,20 +381,20 @@ static const mutation_def mut_data[] =
   {"Your body's shape seems more normal.", "", ""},
 },
 
-{ MUT_SPIT_POISON, 8, 3, mutflag::GOOD, false,
+{ MUT_SPIT_POISON, 8, 2, mutflag::GOOD, false,
   "spit poison",
 
-  {"You can spit weak poison.",
-   "You can spit poison.",
-   "You can exhale a cloud of poison."},
+  {"You can spit poison.",
+   "You can exhale a cloud of poison.",
+   ""},
 
   {"There is a nasty taste in your mouth for a moment.",
    "There is a nasty taste in your mouth for a moment.",
-   "There is a nasty taste in your mouth for a moment."},
+   ""},
 
   {"You feel an ache in your throat.",
    "You feel an ache in your throat.",
-   "You feel an ache in your throat."},
+   ""},
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -890,6 +890,19 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_HOP, 0, 2, mutflag::GOOD, true,
+  "strong legs",
+
+  {"You can hop short distances.",
+   "You can hop longer distances.",
+   ""},
+
+  {"", "Your legs feel stronger.", ""},
+
+  {"", "", ""},
+},
+
+
 { MUT_SHAGGY_FUR, 2, 3, mutflag::GOOD, true,
   "shaggy fur",
 
@@ -1229,20 +1242,20 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
 },
 
-{ MUT_NO_DEVICE_HEAL, 3, 3, mutflag::BAD, false,
-  "no device heal",
+{ MUT_NO_POTION_HEAL, 3, 3, mutflag::BAD, false,
+  "no potion heal",
 
-  {"Potions and wands are less effective at restoring your health.",
-   "Potions and wands are poor at restoring your health.",
-   "Potions and wands cannot restore your health."},
+  {"Potions are less effective at restoring your health.",
+   "Potions are poor at restoring your health.",
+   "Potions cannot restore your health."},
 
-  {"Your system partially rejects artificial healing.",
-   "Your system mostly rejects artificial healing.",
-   "Your system completely rejects artificial healing."},
+  {"Your system partially rejects the healing effects of potions.",
+   "Your system mostly rejects the healing effects of potions.",
+   "Your system completely rejects the healing effects of potions."},
 
-  {"Your system completely accepts artificial healing.",
-   "Your system mostly accepts artificial healing.",
-   "Your system partly accepts artificial healing."},
+  {"Your system completely accepts the healing effects of potions.",
+   "Your system mostly accepts the healing effects of potions.",
+   "Your system partly accepts the healing effects of potions."},
 },
 
 // Scale mutations
@@ -1297,9 +1310,9 @@ static const mutation_def mut_data[] =
 { MUT_LARGE_BONE_PLATES, 2, 3, mutflag::GOOD, true,
   "large bone plates",
 
-  {"You are partially covered in large bone plates. (AC +2, SH +2)",
-   "You are mostly covered in large bone plates. (AC +3, SH +3)",
-   "You are completely covered in large bone plates. (AC +4, SH +4)"},
+  {"You are partially covered in large bone plates. (SH +4)",
+   "You are mostly covered in large bone plates. (SH +6)",
+   "You are completely covered in large bone plates. (SH +8)"},
 
   {"Large bone plates grow over parts of your arms.",
    "Large bone plates spread over more of your arms.",
@@ -1326,7 +1339,8 @@ static const mutation_def mut_data[] =
    "Your molten scales recede somewhat."},
 },
 
-{ MUT_ROUGH_BLACK_SCALES, 2, 3, mutflag::GOOD, true,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_ROUGH_BLACK_SCALES, 0, 3, mutflag::GOOD, true,
   "rough black scales",
 
   {"You are partially covered in rough black scales. (AC +2, Dex -1)",
@@ -1341,6 +1355,7 @@ static const mutation_def mut_data[] =
    "Your rough black scales recede somewhat.",
    "Your rough black scales recede somewhat."},
 },
+#endif
 
 { MUT_RUGGED_BROWN_SCALES, 2, 3, mutflag::GOOD, true,
   "rugged brown scales",

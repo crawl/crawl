@@ -23,6 +23,10 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+frog_m BARACHIAN
+frog_f
+frog2_f
+frog2_m
 gnome_f
 gnome_m
 halfling_m HALFLING
@@ -89,8 +93,6 @@ draconian_gray_f DRACONIAN_GREY
 draconian_gray_m
 draconian_green_f DRACONIAN_GREEN
 draconian_green_m
-draconian_mottled_f DRACONIAN_MOTTLED
-draconian_mottled_m
 draconian_pale_f DRACONIAN_PALE
 draconian_pale_m
 draconian_purple_f DRACONIAN_PURPLE
@@ -416,19 +418,9 @@ crystal_plate3
 armour_mummy ARMOUR_MUMMY
 
 ##cloth_u_sail SAILOR
-dragonsc_red DRAGONSC_RED
-dragonsc_white DRAGONSC_WHITE
-dragonsc_magenta DRAGONSC_MAGENTA
-dragonsc_quicksilver DRAGONSC_QUICKSILVER
-dragonsc_cyan DRAGONSC_CYAN
-dragonsc_brown DRAGONSC_BROWN
-dragonsc_blue DRAGONSC_BLUE
-dragonsc_shadow DRAGONSC_SHADOW
-dragonsc_gold DRAGONSC_GOLD
-dragonsc_pearl DRAGONSC_PEARL
 dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
-dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_yellow DRAGONARM_YELLOW
 dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
@@ -502,7 +494,7 @@ flaming_death FLAMING_DEATH
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD
-jihad JIHAD
+zealot_sword ZEALOT_SWORD
 singing_sword SINGING_SWORD
 zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
@@ -697,6 +689,7 @@ staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
 ## rods
+# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -727,7 +720,7 @@ axe_short AXE_SHORT
 
 ## launchers
 sling HUNTING_SLING
-greatsling GREATSLING
+fustibalus FUSTIBALUS
 bow BOW
 bow_two BOW2
 bow_three BOW3
@@ -762,7 +755,6 @@ bottle BOTTLE
 box BOX
 crystal CRYSTAL
 deck DECK
-disc DISC
 horn HORN
 lantern LANTERN
 orb ORB
@@ -1141,7 +1133,6 @@ drcwing_black BLACK
 drcwing_yellow YELLOW
 drcwing_grey GREY
 drcwing_green GREEN
-drcwing_mottled MOTTLED
 drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
@@ -1155,7 +1146,6 @@ drchead_black BLACK
 drchead_yellow YELLOW
 drchead_grey GREY
 drchead_green GREEN
-drchead_mottled MOTTLED
 drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED

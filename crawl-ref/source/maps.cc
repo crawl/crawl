@@ -860,7 +860,7 @@ bool map_selector::accept(const map_def &mapdef) const
         const map_chance chance(mapdef.chance(place));
         return mapdef.is_minivault() == mini
                && _is_extra_compatible(extra, mapdef.has_tag("extra"))
-               && (!chance.valid() || chance.dummy_chance())
+               && (!chance.valid() || mapdef.has_tag("dummy"))
                && depth_selectable(mapdef)
                && !mapdef.map_already_used();
     }
@@ -870,7 +870,7 @@ bool map_selector::accept(const map_def &mapdef) const
         const map_chance chance(mapdef.chance(place));
         // Only vaults with valid chance
         return chance.valid()
-               && !chance.dummy_chance()
+               && !mapdef.has_tag("dummy")
                && depth_selectable(mapdef)
                && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && !mapdef.map_already_used();
@@ -956,8 +956,7 @@ static bool _vault_chance_new(const map_def &map,
         // vault that want to be governed by one common
         // CHANCE. In this case each vault will use a
         // CHANCE, and a common chance_xxx tag. Pick the
-        // first such vault for the chance roll. Note that
-        // at this point we ignore chance_priority.
+        // first such vault for the chance roll.
         const string tag = vault_chance_tag(map);
         if (!chance_tags.count(tag))
         {
@@ -1291,8 +1290,8 @@ static bool _load_map_index(const string& cache, const string &base,
     }
 
 #if TAG_MAJOR_VERSION == 34
-    // Throw out pre-ORDER: indices entirely.
-    if (minor < TAG_MINOR_MAP_ORDER)
+    // Throw out indices that could have CHANCE priority entirely.
+    if (minor < TAG_MINOR_NO_PRIORITY)
         return false;
 #endif
 

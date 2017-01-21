@@ -1,4 +1,9 @@
 %%%%
+Barachian
+
+Barachians are amphibious humanoids with an exceptionally vicious disposition.
+They can hop long distances, though their movement is otherwise somewhat slow.
+%%%%
 Centaur
 
 Swift, strong and bulky, Centaurs are particularly skilled with ranged
@@ -7,7 +12,7 @@ weaponry.
 Deep Dwarf
 
 Deep Dwarves live underground and cannot regenerate health naturally, but they
-are very resilient to damage, and carry a wand of healing.
+are very resilient to damage, and have a limited ability to heal at will.
 %%%%
 Deep Elf
 
@@ -53,11 +58,6 @@ Halfling
 Small but hardy, Halflings excel with slings. They have an increased resistance
 to mutagenic effects.
 %%%%
-High Elf
-
-High Elves are adept with blades and with many schools of magic, and have high
-attributes.
-%%%%
 Hill Orc
 
 Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
@@ -98,13 +98,13 @@ trailing off like that of a snake. They move slowly but are naturally resilient.
 %%%%
 Octopode
 
-A species of amphibious cephalopods. They can wear eight rings, but almost no
-armour fits them.
+Octopodes are a species of amphibious cephalopods. They can wear eight rings,
+but almost no armour fits them.
 %%%%
 Ogre
 
-Large and strong, Ogres are mostly seen as brutes. They are very comfortable
-with the basics of magic, however.
+Large and strong, Ogres are mostly seen as brutes. They are extremely robust,
+and have an excellent grasp of magic.
 %%%%
 Spriggan
 
@@ -113,8 +113,8 @@ and spellcasters.
 %%%%
 Troll
 
-Trolls are large brutes with powerful claws, always hungering for raw meat.
-They regenerate health rapidly.
+Trolls are monstrous creatures with powerful claws, always hungering for raw
+meat. They regenerate health rapidly.
 %%%%
 Vampire
 

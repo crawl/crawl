@@ -4,7 +4,7 @@
 
 static void _end_weapon_brand()
 {
-    you.duration[DUR_WEAPON_BRAND] = 1;
+    you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
     ASSERT(you.weapon());
     end_weapon_brand(*you.weapon(), true);
 }
@@ -276,7 +276,7 @@ static const duration_def duration_data[] =
       MAGENTA, "Sil",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your hearing returns." }}, 5 },
+      {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
     { DUR_STEALTH,
       BLUE, "Stealth",
       "especially stealthy", "stealth",
@@ -408,8 +408,8 @@ static const duration_def duration_data[] =
       {{ "You feel less vulnerable to fire." }}},
     { DUR_BARBS,
       RED, "Barbs",
-      "manticore barbs", "",
-      "Manticore spikes are embedded in your body.", D_NO_FLAGS},
+      "barbed spikes", "",
+      "Barbed spikes are embedded in your body.", D_NO_FLAGS},
     { DUR_POISON_VULN,
       RED, "rP-",
       "poison vulnerable", "poison vulnerability",
@@ -534,6 +534,13 @@ static const duration_def duration_data[] =
       "sanguine armour", "",
       "Your shed blood clings to and protects you.", D_NO_FLAGS,
         {{ "Your blood armour dries and flakes away.", _redraw_armour }}},
+    { DUR_SPWPN_PROTECTION, 0, "", "protection aura", "",
+      "Your weapon is exuding a protective aura.", D_NO_FLAGS,
+      {{ "", _redraw_armour }}},
+    { DUR_NO_HOP, YELLOW, "-Hop",
+      "can't hop", "",
+      "", D_NO_FLAGS,
+      {{ "You are ready to hop once more." }}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -553,7 +560,7 @@ static const duration_def duration_data[] =
       {{ "Your skin stops crawling." },
           { "Your skin is crawling a little less now.", 1}}, 6},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/, {}, 10},
-    { DUR_WEAPON_BRAND, 0, "", "", "weapon brand", "", D_DISPELLABLE,
+    { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "excruciating wounds", "", D_DISPELLABLE,
       {{ "", _end_weapon_brand }}},
     { DUR_DEMONIC_GUARDIAN, 0, "", "", "demonic guardian", "", D_NO_FLAGS, {{""}}},
     { DUR_POWERED_BY_DEATH, 0, "", "", "pbd", "", D_NO_FLAGS},

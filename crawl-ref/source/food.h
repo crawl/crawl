@@ -8,8 +8,6 @@
 
 #include "mon-enum.h"
 
-#define BERSERK_NUTRITION     700
-
 #define HUNGER_FAINTING       400
 #define HUNGER_STARVING       900
 #define HUNGER_NEAR_STARVING 1433
@@ -22,6 +20,14 @@
 
 #define HUNGER_DEFAULT       5900
 #define HUNGER_MAXIMUM      11900
+
+// Must match the order of hunger_state_t enums
+constexpr int hunger_threshold[HS_ENGORGED + 1] =
+{
+    HUNGER_FAINTING, HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY,
+    HUNGER_HUNGRY, HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL,
+    HUNGER_ENGORGED
+};
 
 bool eat_food(int slot = -1);
 
@@ -44,15 +50,12 @@ mon_intel_type corpse_intelligence(const item_def &corpse);
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);
 
 bool eat_item(item_def &food);
-void finish_eating_item(item_def &food);
 
 int prompt_eat_chunks(bool only_auto = false);
 
 bool food_change(bool initial = false);
 
 bool prompt_eat_item(int slot = -1);
-
-void vampire_nutrition_per_turn(const item_def &corpse, int feeding = 0);
 
 int you_max_hunger();
 int you_min_hunger();

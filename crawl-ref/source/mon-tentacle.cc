@@ -14,7 +14,7 @@
 #include "fprop.h"
 #include "libutil.h" // map_find
 #include "losglobal.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
@@ -38,6 +38,16 @@ static monster_type _solo_tentacle_to_segment[][2] =
     { MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT },
     { MONS_SNAPLASHER_VINE,   MONS_SNAPLASHER_VINE_SEGMENT },
 };
+
+static mgen_data _segment_data(const monster& head, coord_def pos,
+                               monster_type type)
+{
+    mgen_data mg(type, SAME_ATTITUDE((&head)), pos, head.foe, MG_FORCE_PLACE);
+    mg.set_summoned(&head, 0, 0, head.god)
+      .set_prox(PROX_CLOSE_TO_PLAYER)
+      .set_col(head.colour);
+    return mg;
+}
 
 bool mons_is_tentacle_head(monster_type mc)
 {
@@ -96,7 +106,7 @@ bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
 
 monster_type mons_tentacle_parent_type(const monster* mons)
 {
-    const monster_type mc = mons_base_type(mons);
+    const monster_type mc = mons_base_type(*mons);
 
     for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[1])
@@ -115,7 +125,7 @@ monster_type mons_tentacle_parent_type(const monster* mons)
 
 monster_type mons_tentacle_child_type(const monster* mons)
 {
-    const monster_type mc = mons_base_type(mons);
+    const monster_type mc = mons_base_type(*mons);
 
     for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[0])
@@ -134,12 +144,12 @@ monster_type mons_tentacle_child_type(const monster* mons)
 
 bool monster::is_child_tentacle() const
 {
-    return mons_is_child_tentacle(mons_base_type(this));
+    return mons_is_child_tentacle(mons_base_type(*this));
 }
 
 bool monster::is_child_tentacle_segment() const
 {
-    return mons_is_child_tentacle_segment(mons_base_type(this));
+    return mons_is_child_tentacle_segment(mons_base_type(*this));
 }
 
 bool monster::is_child_monster() const
@@ -149,13 +159,13 @@ bool monster::is_child_monster() const
 
 bool monster::is_child_tentacle_of(const monster* mons) const
 {
-    return mons_base_type(mons) == mons_tentacle_parent_type(this)
+    return mons_base_type(*mons) == mons_tentacle_parent_type(this)
            && tentacle_connect == mons->mid;
 }
 
 bool monster::is_parent_monster_of(const monster* mons) const
 {
-    return mons_base_type(this) == mons_tentacle_parent_type(mons)
+    return mons_base_type(*this) == mons_tentacle_parent_type(mons)
            && mons->tentacle_connect == mid;
 }
 
@@ -163,35 +173,36 @@ bool monster::is_parent_monster_of(const monster* mons) const
 //to the parent monster
 bool mons_tentacle_adjacent(const monster* parent, const monster* child)
 {
-    return mons_is_tentacle_head(mons_base_type(parent))
+    return mons_is_tentacle_head(mons_base_type(*parent))
            && mons_is_tentacle_segment(child->type)
            && child->props.exists("inwards")
            && child->props["inwards"].get_int() == (int) parent->mid;
 }
 
-bool get_tentacle_head(const monster*& mon)
+const monster& get_tentacle_head(const monster& mon)
 {
+    const monster* m = &mon;
     // For tentacle segments, find the associated tentacle.
-    if (mon->is_child_tentacle_segment())
+    if (m->is_child_tentacle_segment())
     {
-        monster* tentacle = monster_by_mid(mon->tentacle_connect);
+        monster* tentacle = monster_by_mid(m->tentacle_connect);
         if (!tentacle)
-            return false;
+            return *m;
 
-        mon = tentacle;
+        m = tentacle;
     }
 
     // For tentacles, find the associated head.
-    if (mon->is_child_tentacle())
+    if (m->is_child_tentacle())
     {
-        monster* head = monster_by_mid(mon->tentacle_connect);
+        monster* head = monster_by_mid(m->tentacle_connect);
         if (!head)
-            return false;
+            return *m;
 
-        mon = head;
+        m = head;
     }
 
-    return true;
+    return *m;
 }
 
 static void _establish_connection(monster* tentacle,
@@ -217,10 +228,7 @@ static void _establish_connection(monster* tentacle,
     // No base monster case (demonic tentacles)
     if (!monster_at(last->pos))
     {
-        mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
-                     0, 0, last->pos, head->foe,
-                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mgen_data mg = _segment_data(*head, last->pos, connector_type);
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
@@ -262,10 +270,7 @@ static void _establish_connection(monster* tentacle,
         }
 
          // place a connector
-        mgen_data mg(connector_type, SAME_ATTITUDE(head), head,
-                     0, 0, current->pos, head->foe,
-                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mgen_data mg = _segment_data(*head, current->pos, connector_type);
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
@@ -349,7 +354,7 @@ struct tentacle_attack_constraints
                     temp.path_distance += 1;
                 // Can still search through a firewood monster, just at a higher
                 // path cost.
-                else if (mons_at && mons_is_firewood(mons_at)
+                else if (mons_at && mons_is_firewood(*mons_at)
                     && !mons_aligned(base_monster, mons_at))
                 {
                     temp.path_distance += 10;
@@ -668,7 +673,7 @@ static void _collect_foe_positions(monster* mons,
     for (monster_iterator mi; mi; ++mi)
     {
         monster* test = *mi;
-        if (!mons_is_firewood(test)
+        if (!mons_is_firewood(*test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
             && sight_check(mons, test))
@@ -729,7 +734,7 @@ static int _collect_connection_data(monster* start_monster,
 
 void move_solo_tentacle(monster* tentacle)
 {
-    if (!tentacle || !mons_is_solo_tentacle(mons_base_type(tentacle)))
+    if (!tentacle || !mons_is_solo_tentacle(mons_base_type(*tentacle)))
         return;
 
     vector<coord_def> foe_positions;
@@ -956,7 +961,7 @@ void move_solo_tentacle(monster* tentacle)
 
 void move_child_tentacles(monster* mons)
 {
-    if (!mons_is_tentacle_head(mons_base_type(mons))
+    if (!mons_is_tentacle_head(mons_base_type(*mons))
         || mons->asleep())
     {
         return;
@@ -1203,7 +1208,7 @@ bool destroy_tentacles(monster* head)
 
 static int _max_tentacles(const monster* mon)
 {
-    if (mons_base_type(mon) == MONS_KRAKEN)
+    if (mons_base_type(*mon) == MONS_KRAKEN)
         return MAX_ACTIVE_KRAKEN_TENTACLES;
     else if (mon->type == MONS_TENTACLED_STARSPAWN)
         return MAX_ACTIVE_STARSPAWN_TENTACLES;
@@ -1255,10 +1260,7 @@ void mons_create_tentacles(monster* head)
 
     for (int i = 0 ; i < possible_count; ++i)
     {
-        mgen_data mg(tent_type, SAME_ATTITUDE(head), head,
-                     0, 0, adj_squares[i], head->foe,
-                     MG_FORCE_PLACE, head->god, MONS_NO_MONSTER,
-                     head->colour, PROX_CLOSE_TO_PLAYER);
+        mgen_data mg = _segment_data(*head, adj_squares[i], tent_type);
         mg.props[MGEN_TENTACLE_CONNECT] = int(head->mid);
         if (monster *tentacle = create_monster(mg))
         {
@@ -1272,7 +1274,7 @@ void mons_create_tentacles(monster* head)
         }
     }
 
-    if (mons_base_type(head) == MONS_KRAKEN)
+    if (mons_base_type(*head) == MONS_KRAKEN)
     {
         if (visible_count == 1)
             mpr("A tentacle rises from the water!");

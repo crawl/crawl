@@ -119,10 +119,6 @@ The parameters include:
       in (defaults to "arena:default"). See source/dat/des/builder/arena.des
       for a list.
 
-* no_force_ai: The monsters in the arena are somewhat smarter than they are
-      than when they're facing the player. This parameter removes that
-      extra intelligence.
-
 * names: Causes all non-unique monsters to be given random names.
 
 * no_animate: Prevents corpses from being animated into zombies.

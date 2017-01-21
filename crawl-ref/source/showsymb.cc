@@ -11,7 +11,7 @@
 
 #include "colour.h"
 #include "env.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "libutil.h" // map_find
 #include "options.h"
 #include "religion.h"
@@ -104,6 +104,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
+
+    if (feat_is_tree(feat) && env.forest_awoken_until)
+        colour = ETC_AWOKEN_FOREST;
 
     if (feat == DNGN_FLOOR)
     {
@@ -537,12 +540,12 @@ cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
     return _get_cell_glyph_with_class(cell, loc, cell_show_class, colour_mode);
 }
 
-ucs_t get_feat_symbol(dungeon_feature_type feat)
+char32_t get_feat_symbol(dungeon_feature_type feat)
 {
     return get_feature_def(feat).symbol();
 }
 
-ucs_t get_item_symbol(show_item_type it)
+char32_t get_item_symbol(show_item_type it)
 {
     return get_feature_def(show_type(it)).symbol();
 }

@@ -791,7 +791,7 @@ ITEM: demon whip good_item / demon blade good_item / demon trident good_item
 :   " / pair of boots good_item / buckler " .. coldres)
 : item("crystal plate armour " .. coldres ..
 :   " / troll leather armour " .. coldres ..
-:   " / ice dragon armour good_item / robe ego:resistance ident:type / " ..
+:   " / ice dragon scales good_item / robe ego:resistance ident:type / " ..
 :   " / naga barding " .. goodcoldres .. " w:5" ..
 :   " / centaur barding " .. goodcoldres .. " w:5" ..
 :   " / crystal plate armour " .. goodcoldres ..
@@ -1178,9 +1178,9 @@ MONS:   ice beast, white ugly thing, ice statue, white very ugly thing
 : cruel_simulacrum(_G)
 : mons(cruel_ice)
 ITEM:   battleaxe ego:freezing good_item ident:type / book of frost w:5 / \
-        book of ice w:5 / ice dragon armour
+        book of ice w:5 / ice dragon scales
 ITEM:   executioner's axe ego:freezing good_item ident:type / \
-        book of ice w:5 / manual of ice magic w:5 / ice dragon armour randart
+        book of ice w:5 / manual of ice magic w:5 / ice dragon scales randart
 : if dgn.persist.ice_cave_hard then
 SUBST:  ! = 3, 2 = 4, ? = d
 : else

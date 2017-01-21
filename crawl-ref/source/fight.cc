@@ -21,15 +21,15 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
-#include "item_use.h"
-#include "melee_attack.h"
+#include "item-prop.h"
+#include "item-use.h"
+#include "melee-attack.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
@@ -50,6 +50,19 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+
+/**
+ * What are the odds of an HD-checking confusion effect (e.g. Confusing Touch,
+ * Fungus Form, SPWPN_CHAOS maybe) to confuse a monster of the given HD?
+ *
+ * @param HD    The current hit dice (level) of the monster to confuse.
+ * @return      A percentage chance (0-100) of confusing that monster.
+ *              (Except it tops out at 80%.)
+ */
+int melee_confuse_chance(int HD)
+{
+    return max(80 * (24 - HD) / 24, 0);
+}
 
 /**
  * Switch from a bad weapon to melee.
@@ -111,19 +124,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack()
-            && !mons_is_confused(attacker->as_monster())
+            && !mons_is_confused(*attacker->as_monster())
             && !attacker->as_monster()->has_ench(ENCH_INSANE))
         {
             return false;
         }
-
-        // It's hard to attack from within a shell.
-        if (attacker->as_monster()->withdrawn())
-            return false;
-
-        // Boulders can't melee while they're rolling past you
-        if (attacker->as_monster()->rolling())
-            return false;
 
         // In case the monster hasn't noticed you, bumping into it will
         // change that.
@@ -255,7 +260,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         }
 
         if (!simu && attacker->is_monster()
-            && mons_attack_spec(attacker->as_monster(), attack_number, true)
+            && mons_attack_spec(*attacker->as_monster(), attack_number, true)
                    .flavour == AF_KITE
             && attacker->as_monster()->foe_distance() == 1
             && attacker->reach_range() == REACH_TWO
@@ -332,18 +337,33 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
  *
  * @param attacker  The attacker; may be null.
  * @param defender  The defender.
+ * @param actual    True if we're actually committing to a stab, false if we're
+ *                  just checking for display purposes.
  * @return          The best (most damaging) kind of stab available to the
  *                  attacker against this defender, or STAB_NO_STAB.
  */
 stab_type find_stab_type(const actor *attacker,
-                         const actor &defender)
+                         const actor &defender,
+                         bool actual)
 {
     const monster* def = defender.as_monster();
+
+    // Stabbing intelligent monsters is unchivalric, and disabled under TSO!
+    // When just checking for display purposes, still indicate when monsters
+    // are sleeping/paralysed etc.
+    if (actual && attacker && attacker->is_player()
+        && def && have_passive(passive_t::no_stabbing))
+    {
+        return STAB_NO_STAB;
+    }
 
     // No stabbing monsters that cannot fight (e.g.  plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
-    if (defender.cannot_fight() || (attacker && !attacker->can_see(defender)))
+    if (def && mons_is_firewood(*def))
+        return STAB_NO_STAB;
+
+    if (attacker && !attacker->can_see(defender))
         return STAB_NO_STAB;
 
     // sleeping
@@ -371,7 +391,7 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_INVISIBLE;
 
     // fleeing
-    if (def && mons_is_fleeing(def))
+    if (def && mons_is_fleeing(*def))
         return STAB_FLEEING;
 
     // allies
@@ -379,14 +399,12 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_ALLY;
 
     // confused (but not perma-confused)
-    if (def && mons_is_confused(def, false))
+    if (def && mons_is_confused(*def, false))
         return STAB_CONFUSED;
 
     // Distracted (but not batty); this only applies to players.
-    // Under TSO, monsters are never distracted by your allies.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(def)
-        && (!you_worship(GOD_SHINING_ONE) || def->foe == MHITNOT))
+        && def && def->foe != MHITYOU && !mons_is_batty(*def))
     {
         return STAB_DISTRACTED;
     }
@@ -489,6 +507,8 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_POISON:
         case BEAM_POISON_ARROW:
             return defender->res_poison();
+        case BEAM_HOLY:
+            return defender->res_holy_energy();
         default:
             return 0;
     }
@@ -530,6 +550,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
                                      || flavour == BEAM_MALIGN_OFFERING
+                                     || flavour == BEAM_HOLY
                                      || flavour == BEAM_POISON
                                      // just the resistible part
                                      || flavour == BEAM_POISON_ARROW;
@@ -649,7 +670,7 @@ static bool _dont_harm(const actor &attacker, const actor &defender)
     if (attacker.is_player())
     {
         return defender.wont_attack()
-               || mons_attitude(defender.as_monster()) == ATT_NEUTRAL;
+               || mons_attitude(*defender.as_monster()) == ATT_NEUTRAL;
     }
 
     return false;
@@ -679,12 +700,12 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 
     if (weap && item_attack_skill(*weap) == SK_AXES
             || attacker.is_player()
-               && (you.form == TRAN_HYDRA && you.heads() > 1
+               && (you.form == transformation::hydra && you.heads() > 1
                    || you.duration[DUR_CLEAVE]))
     {
         const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
-        const int dir = coinflip() ? -1 : 1;
+        const int dir = random_choose(-1, 1);
 
         for (int i = 0; i < 7; ++i)
         {
@@ -864,7 +885,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     if (check_landing_only)
         return bad_landing;
 
-    if (you_worship(GOD_JIYVA) && mons_is_slime(mon)
+    if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
         would_cause_penance = true;
@@ -873,7 +894,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
     if (mon->friendly())
     {
-        if (god_hates_attacking_friend(you.religion, mon))
+        if (god_hates_attacking_friend(you.religion, *mon))
         {
             adj = "your ally ";
 
@@ -894,14 +915,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         }
 
         return true;
-    }
-
-    if (find_stab_type(&you, *mon) != STAB_NO_STAB
-        && you_worship(GOD_SHINING_ONE)
-        && !tso_unchivalric_attack_safe_monster(mon))
-    {
-        adj += "helpless ";
-        would_cause_penance = true;
     }
 
     if (mon->neutral() && is_good_god(you.religion))
@@ -978,7 +991,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     }
 }
 
-bool stop_attack_prompt(targetter &hitfunc, const char* verb,
+bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim), bool *prompted)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])

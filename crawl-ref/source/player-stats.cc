@@ -6,9 +6,9 @@
 #include "clua.h"
 #include "delay.h"
 #include "files.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #ifdef TOUCH_UI
@@ -465,9 +465,9 @@ static int _dex_modifier(bool innate_only)
 #if TAG_MAJOR_VERSION == 34
     result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
               - _mut_level(MUT_STRONG_STIFF, innate_only);
+    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 #endif
     result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
-    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 
     return result;
 }

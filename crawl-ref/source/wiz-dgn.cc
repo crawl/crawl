@@ -103,9 +103,9 @@ void wizard_level_travel(bool down)
     }
 
     if (down)
-        down_stairs(stairs, false, true);
+        down_stairs(stairs);
     else
-        up_stairs(stairs, true);
+        up_stairs(stairs);
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
@@ -364,6 +364,7 @@ void wizard_map_level()
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         update_item_at(*ri, false, true);
+        show_update_at(*ri, LAYER_ITEMS);
 #ifdef USE_TILE
         tiles.update_minimap(*ri);
 #endif

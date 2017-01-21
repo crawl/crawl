@@ -18,14 +18,14 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -325,8 +325,7 @@ static int _fire_prompt_for_item()
 
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_FIRE);
+                                   OSEL_THROWABLE, OPER_FIRE);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
@@ -535,7 +534,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         const monster* mon = agent->as_monster();
 
-        beam.attitude      = mons_attitude(mon);
+        beam.attitude      = mons_attitude(*mon);
         beam.thrower       = KILL_MON_MISSILE;
     }
 
@@ -631,7 +630,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 1;
         msg   = "You hear a whirring sound.";
         break;
-    case WPN_GREATSLING:
+    case WPN_FUSTIBALUS:
         level = 3;
         msg   = "You hear a loud whirring sound.";
         break;
@@ -817,7 +816,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         const item_def *launcher = you.weapon();
         ASSERT(launcher);
-        practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
+        practise_launching(*launcher);
         if (is_unrandom_artefact(*launcher)
             && get_unrand_entry(launcher->unrand_idx)->type_name)
         {
@@ -828,11 +827,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         break;
     }
     case LRET_THROWN:
-        practise(EX_WILL_THROW_MSL, wepType);
+        practise_throwing((missile_type)wepType);
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
     case LRET_FUMBLED:
-        practise(EX_WILL_THROW_OTHER);
         break;
     case LRET_BUGGY:
         dprf("Unknown launch type for weapon."); // should never happen :)

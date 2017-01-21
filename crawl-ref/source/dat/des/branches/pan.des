@@ -35,7 +35,7 @@ function pan_lord_epilogue(name)
 
     crawl.mpr(msgs[name], "warning")
     crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
-    -- Counterpart to branch_rune_desc from lookup_help.cc
+    -- Counterpart to branch_rune_desc from lookup-help.cc
     crawl.mpr("It guards the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
@@ -49,12 +49,12 @@ function pan_lord_setup(_G, name)
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / " ..
-                 "giant eyeball / golden eye band / eye of devastation / " ..
+                 "floating eye / golden eye band / eye of devastation / " ..
                  "eye of draining / shining eye / very ugly thing band / "..
                  "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
-                 "green death w:200 / giant orange brain / rakshasa / " ..
+                 "green death w:200 / glowing orange brain / rakshasa / " ..
                  "wizard / draconian annihilator / deep elf annihilator / " ..
                  "titan w:5 / lich w:5 / gelid blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
@@ -628,7 +628,7 @@ TAGS:       mnoleg uniq_mnoleg
 NSUBST:     O = 1:O / *:|
 TILE:       c = dngn_stone_wall_yellow
 MONS:       patrolling mnoleg
-MONS:       giant eyeball / golden eye / eye of devastation / \
+MONS:       floating eye / golden eye / eye of devastation / \
             eye of draining / shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
@@ -741,7 +741,7 @@ NSUBST:  O = 1:O / *:|
 TILE:    c = dngn_stone_wall_yellow
 MONS:    patrolling Mnoleg, patrolling cacodemon
 MONS:    neqoxec, tentacled monstrosity, large abomination
-MONS:    very ugly thing band w:20 / giant eyeball / golden eye band / \
+MONS:    very ugly thing band w:20 / floating eye / golden eye band / \
          great orb of eyes / shining eye
 epilogue{{
   pan_lord_epilogue('Mnoleg')
@@ -790,7 +790,7 @@ NAME:      lom_lobon
 TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, giant orange brain, rakshasa
+MONS:      patrolling Lom Lobon, glowing orange brain, rakshasa
 MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
@@ -957,7 +957,7 @@ ORIENT:  north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS: patrolling Lom Lobon
 MONS: draconian annihilator / deep elf annihilator / \
-      wizard w:20 / rakshasa w:20 / giant orange brain / \
+      wizard w:20 / rakshasa w:20 / glowing orange brain / \
       blizzard demon / green death / titan w:5 / \
       spriggan air mage w:5 / lich w:5
 SUBST:   W = ww.
@@ -1017,7 +1017,7 @@ SHUFFLE: O2
 MONS:    patrolling Lom Lobon, patrolling titan, patrolling wind drake
 MONS:    blizzard demon / titan / spriggan air mage / storm dragon
 MONS:    draconian annihilator / deep elf annihilator / \
-         wizard w:20 / rakshasa w:20 / giant orange brain / \
+         wizard w:20 / rakshasa w:20 / glowing orange brain / \
          blizzard demon / green death / titan w:5 / \
          spriggan air mage w:5 / lich w:5
 epilogue{{
@@ -2838,7 +2838,7 @@ ENDMAP
 NAME:    pan_disco_hall
 TAGS:    pan_fixed_rune_disco pan_fixed_lure_disco no_rotate
 ORIENT:  southeast
-MONS:    rakshasa, corrupter, chaos champion
+MONS:    rakshasa, corrupter, blood saint
 MONS:    dancing weapon ; demon trident good_item ego:distortion
 MONS:    dancing weapon ; lajatang good_item ego:distortion
 MONS:    dancing weapon ; demon blade good_item ego:distortion

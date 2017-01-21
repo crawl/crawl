@@ -113,6 +113,7 @@ poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
+poisonous_vapours POISONOUS_VAPOURS
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
@@ -139,6 +140,7 @@ spellforged_servitor SPELLFORGED_SERVITOR
 
 %sdir gui/spells/translocation
 apportation APPORTATION
+beckoning BECKONING
 blink BLINK
 controlled_blink CONTROLLED_BLINK
 disjunction DISJUNCTION
@@ -146,7 +148,6 @@ dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
-warp_weapon WARP_WEAPON
 shroud_of_golubria SHROUD_OF_GOLUBRIA
 gravitas GRAVITAS
 
@@ -160,17 +161,12 @@ dragon_form DRAGON_FORM
 # item-based spells
 %sdir gui/spells/misc
 paralyse PARALYSE
-bolt_inacc BOLT_OF_INACCURACY
 bolt_thunder THUNDERBOLT
-bolt_explosive EXPLOSIVE_BOLT
 cloud_cone CLOUD_CONE
 bolt_random RANDOM_BOLT
 scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
-%sdir gui/spells/summoning
-summon_shadow_creatures WEAVE_SHADOWS
-
 
 # spells normally only used by monsters
 %sdir gui/spells/monster
@@ -203,7 +199,6 @@ error CHAOS_BREATH
 %sdir gui/spells/monster
 cold_breath COLD_BREATH
 %sdir misc
-error CORRUPT_BODY
 error CREATE_TENTACLES
 error CRYSTAL_BOLT
 error DEATH_RATTLE
@@ -273,7 +268,6 @@ spit_acid SPIT_ACID
 spit_poison SPIT_POISON
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
-sticky_flame_splash STICKY_FLAME_SPLASH
 %sdir misc
 error STRIP_RESISTANCE
 %sdir gui/spells/monster

@@ -389,7 +389,7 @@ This example is from sewer.des:
 
 {{
 function sewer_random_monster_list(e)
-  e.set_random_mon_list("bat w:20 / giant newt w:20 / small snake / \
+  e.set_random_mon_list("bat w:20 / frilled lizard w:20 / small snake / \
                          ooze / worm / snake / vampire mosquito w:15")
 end
 }}
@@ -863,9 +863,9 @@ The "you" module provides functions that describe the player character.
 
 turn_is_over, spells, abilities, name, race, class, god, hp, mp,
 hunger, strength, intelligence, dexterity, xl, exp, res_poison,
-res_fire, res_cold, res_draining, res_shock, res_statdrain,
-res_mutation, res_slowing, gourmand, levitating, flying, transform,
-stop_activity, floor_items, where, branch, subdepth, absdepth
+res_fire, res_cold, res_draining, res_shock, res_mutation, res_slowing,
+gourmand, levitating, flying, transform, stop_activity, floor_items,
+where, branch, subdepth, absdepth
 
 
 Lua API - colour definitions

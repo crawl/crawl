@@ -18,7 +18,7 @@
 #include "env.h"
 #include "hints.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mon-util.h"
 #include "options.h"
 #include "stringutil.h"
@@ -68,9 +68,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
 // only makes sense. This is only possible because it's a permanent
-// mutation; the lantern of Shadows should not have this effect.
-// TODO: update the radiuses on wield/unwield, we already need to do that
-// when gaining/losing nightstalker.
+// mutation; other sources of LOS reduction should not have this effect.
 static int _get_full_exclusion_radius()
 {
     return LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);

@@ -14,8 +14,11 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define MON_SPEED_KEY "speed"
 #define CUSTOM_SPELLS_KEY "custom_spells"
 #define SEEN_SPELLS_KEY "seen_spells"
+#define KNOWN_MAX_HP_KEY "known_max_hp"
+#define VAULT_HD_KEY "vault_hd"
 
 #define FAKE_BLINK_KEY "fake_blink"
+#define CEREBOV_DISARMED_KEY "cerebov_disarmed"
 
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
@@ -111,6 +114,7 @@ public:
     void set_hit_dice(int new_hd);
 
     mon_attitude_type temp_attitude() const override;
+    mon_attitude_type real_attitude() const override { return attitude; }
 
     // Returns true if the monster is named with a proper name, or is
     // a player ghost.
@@ -323,7 +327,6 @@ public:
     string arm_name(bool plural, bool *can_plural = nullptr) const override;
 
     bool fumbles_attack() override;
-    bool cannot_fight() const override;
 
     int  skill(skill_type skill, int scale = 1,
                bool real = false, bool drained = true) const override;
@@ -352,7 +355,6 @@ public:
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
     bool undead_or_demonic() const override;
-    bool holy_wrath_susceptible() const override;
     bool is_holy(bool check_spells = true) const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;
@@ -369,7 +371,7 @@ public:
     int res_rotting(bool /*temp*/ = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
-    int res_holy_energy(const actor *) const override;
+    int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     int res_acid(bool calc_unid = true) const override;
@@ -382,7 +384,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool antimagic_susceptible() const override;
 
-    bool stasis(bool calc_unid = true, bool items = true) const override;
+    bool stasis() const override;
 
     bool airborne() const override;
     bool can_cling_to_walls() const override;
@@ -427,9 +429,7 @@ public:
     bool strict_neutral() const;
     bool wont_attack() const override;
     bool pacified() const;
-    bool withdrawn() const {return has_ench(ENCH_WITHDRAWN);};
 
-    bool rolling() const { return has_ench(ENCH_ROLLING); } ;
     bool has_spells() const;
     bool has_spell(spell_type spell) const override;
     mon_spell_slot_flags spell_slot_flags(spell_type spell) const;
@@ -465,8 +465,8 @@ public:
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr) override;
-    void corrode_equipment(const char* corrosion_source = "the acid",
-                            int degree = 1) override;
+    bool corrode_equipment(const char* corrosion_source = "the acid",
+                           int degree = 1) override;
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -491,7 +491,8 @@ public:
 
     int stat_hp() const override    { return hit_points; }
     int stat_maxhp() const override { return max_hit_points; }
-    int stealth() const override;
+    int stealth() const override { return 0; }
+
 
     bool    shielded() const override;
     int     shield_bonus() const override;
@@ -533,7 +534,6 @@ public:
     bool has_usable_tentacle() const override;
 
     bool check_clarity(bool silent) const;
-    bool check_stasis(bool silent, bool calc_unid = true) const;
 
     bool is_child_tentacle() const;
     bool is_child_tentacle_of(const monster* mons) const;
@@ -543,7 +543,6 @@ public:
 
     bool is_illusion() const;
     bool is_divine_companion() const;
-    bool is_projectile() const;
     // Jumping spiders (jump instead of blink)
     bool is_jumpy() const;
 
@@ -571,7 +570,6 @@ private:
     bool pickup_launcher(item_def &launcher, bool msg, bool force = false);
     bool pickup_melee_weapon(item_def &item, bool msg);
     bool pickup_weapon(item_def &item, bool msg, bool force);
-    bool pickup_rod(item_def &item, bool msg, bool force);
     bool pickup_armour(item_def &item, bool msg, bool force);
     bool pickup_jewellery(item_def &item, bool msg, bool force);
     bool pickup_misc(item_def &item, bool msg, bool force);

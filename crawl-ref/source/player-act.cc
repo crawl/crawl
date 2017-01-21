@@ -13,19 +13,19 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"
-#include "godabil.h" // RU_SAC_XP_LEVELS
-#include "godconduct.h"
-#include "goditem.h"
-#include "godpassive.h" // passive_t::no_haste
+#include "god-abil.h" // RU_SAC_XP_LEVELS
+#include "god-conduct.h"
+#include "god-item.h"
+#include "god-passive.h" // passive_t::no_haste
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "item_use.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-use.h"
 #include "message.h"
 #include "player-stats.h"
 #include "religion.h"
@@ -140,7 +140,7 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return species == SP_GREY_DRACONIAN
-              || form == TRAN_TREE
+              || form == transformation::tree
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
@@ -172,25 +172,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (!can_pass_through_feat(actual_grid))
         return false;
 
-    if (airborne()
-#if TAG_MAJOR_VERSION == 34
-            || species == SP_DJINNI
-#endif
-            )
-    {
-        return true;
-    }
-
-    if (
-#if TAG_MAJOR_VERSION == 34
-        actual_grid == DNGN_LAVA && species != SP_LAVA_ORC ||
-#endif
-        actual_grid == DNGN_DEEP_WATER && !can_swim())
-    {
-        return false;
-    }
-
-    return true;
+    return !is_feat_dangerous(actual_grid);
 }
 
 size_type player::body_size(size_part_type psize, bool base) const
@@ -209,7 +191,7 @@ int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
-    else if (form == TRAN_BLADE_HANDS)
+    else if (form == transformation::blade_hands)
         return DVORP_SLICING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
@@ -278,10 +260,6 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         int sk = form_uses_xl() ? experience_level * 10 :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
-
-        // Bats are faster (for whatever good it does them).
-        if (you.form == TRAN_BAT && !projectile)
-            attk_delay = div_rand_round(attk_delay * 3, 5);
     }
     else if (weap &&
              (projectile ? projectile->launched_by(*weap)
@@ -320,11 +298,12 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         // longer so when Haste speeds it up, only Finesse will apply.
         if (you.duration[DUR_HASTE] && rescale)
             attk_delay = haste_mul(attk_delay);
-        attk_delay = rv::max(random_var(2), div_rand_round(attk_delay, 2));
+        attk_delay = div_rand_round(attk_delay, 2);
     }
 
     // see comment on player.cc:player_speed
-    return div_rand_round(attk_delay * you.time_taken, 10);
+    return rv::max(div_rand_round(attk_delay * you.time_taken, 10),
+                   random_var(2));
 }
 
 // Returns the item in the given equipment slot, nullptr if the slot is empty.
@@ -403,7 +382,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     }
 
     // Most non-weapon objects can be wielded, though there's rarely a point
-    if (!is_weapon(item) && item.base_type != OBJ_RODS)
+    if (!is_weapon(item))
     {
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
@@ -417,14 +396,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     else if (species == SP_FELID)
     {
         if (!quiet)
-        {
-            mprf("You can't use %s.",
-                 item.base_type == OBJ_RODS ? "rods" : "weapons");
-        }
+            mpr("You can't use weapons.");
         return false;
     }
-    else if (item.base_type == OBJ_RODS)
-        return true;
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
@@ -616,9 +590,9 @@ string player::arm_name(bool plural, bool *can_plural) const
     else if (species == SP_OCTOPODE)
         str = "tentacle";
 
-    if (form == TRAN_LICH)
+    if (form == transformation::lich)
         adj = "bony";
-    else if (form == TRAN_SHADOW)
+    else if (form == transformation::shadow)
         adj = "shadowy";
 
     if (!adj.empty())
@@ -672,11 +646,6 @@ bool player::fumbles_attack()
     return did_fumble;
 }
 
-bool player::cannot_fight() const
-{
-    return false;
-}
-
 void player::attacking(actor *other, bool ranged)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -691,7 +660,7 @@ void player::attacking(actor *other, bool ranged)
             pet_target = mon->mindex();
     }
 
-    if (ranged || mons_is_firewood((monster*) other))
+    if (ranged || mons_is_firewood(*(monster*) other))
         return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
@@ -748,9 +717,6 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.can_go_berserk(intentional, potion))
         return false;
 
-    if (check_stasis())
-        return false;
-
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
@@ -779,8 +745,7 @@ bool player::go_berserk(bool intentional, bool potion)
     if (!you.duration[DUR_MIGHT])
         notify_stat_change(STAT_STR, 5, true);
 
-    if (you.berserk_penalty != NO_BERSERK_PENALTY)
-        you.berserk_penalty = 0;
+    you.berserk_penalty = 0;
 
     you.redraw_quiver = true; // Account for no firing.
 
@@ -793,7 +758,7 @@ bool player::go_berserk(bool intentional, bool potion)
     }
 #endif
 
-    if (player_equip_unrand(UNRAND_JIHAD))
+    if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->friendly())
                 mi->go_berserk(false);
@@ -809,7 +774,6 @@ bool player::can_go_berserk() const
 bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
                             string *reason) const
 {
-    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
     const bool verbose = (intentional || potion) && !quiet;
     string msg;
     bool success = false;
@@ -830,14 +794,10 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
 #endif
     else if (is_lifeless_undead())
         msg = "You cannot raise a blood rage in your lifeless body.";
-    // Stasis for identified amulets; unided amulets will trigger when the
-    // player attempts to activate berserk.
-    else if (stasis(false))
-        msg = "You cannot go berserk while under stasis.";
+    else if (stasis())
+        msg = "Your stasis prevents you from going berserk.";
     else if (!intentional && !potion && clarity())
         msg = "You're too calm and focused to rage.";
-    else if (hunger <= HUNGER_VERY_HUNGRY)
-        msg = "You're too hungry to go berserk.";
     else
         success = true;
 
@@ -870,7 +830,7 @@ bool player::antimagic_susceptible() const
 bool player::is_web_immune() const
 {
     // Spider form
-    return form == TRAN_SPIDER;
+    return form == transformation::spider;
 }
 
 bool player::shove(const char* feat_name)

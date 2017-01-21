@@ -1,7 +1,6 @@
 /**
  * @file
- * @brief Functions used to print information about spells, spellbooks, rods,
- *        etc.
+ * @brief Functions used to print information about spells, spellbooks, etc.
  **/
 
 #ifndef DESCRIBE_SPELLS_H

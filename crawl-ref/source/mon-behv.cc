@@ -16,8 +16,9 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "message.h"
@@ -84,7 +85,7 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_HUMAN || !mons_has_ranged_attack(mon))
+    if (mons_intel(*mon) < I_HUMAN || !mons_has_ranged_attack(*mon))
         return false;
 
     // Any special case should go here.
@@ -222,7 +223,7 @@ static bool _monster_guesses_invis_player(const monster &mon)
 
     // [dshaligram] Smart monsters have a chance of clueing in to
     // invisible players in various ways.
-    if (mons_intel(&mon) == I_HUMAN && one_chance_in(12))
+    if (mons_intel(mon) == I_HUMAN && one_chance_in(12))
         return true;
 
     // Ash penance makes monsters very likely to target you through invis.
@@ -268,7 +269,7 @@ void handle_behaviour(monster* mon)
 
     bool proxFoe;
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart    = (mons_intel(mon) >= I_HUMAN);
+    bool isSmart    = (mons_intel(*mon) >= I_HUMAN);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
@@ -286,8 +287,8 @@ void handle_behaviour(monster* mon)
         return;
     }
 
-    if (mons_is_fleeing_sanctuary(mon)
-        && mons_is_fleeing(mon)
+    if (mons_is_fleeing_sanctuary(*mon)
+        && mons_is_fleeing(*mon)
         && is_sanctuary(you.pos()))
     {
         return;
@@ -352,7 +353,7 @@ void handle_behaviour(monster* mon)
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk_or_insane()
         && mon->behaviour != BEH_WITHDRAW
-        && mon->type != MONS_GIANT_SPORE
+        && mon->type != MONS_BALLISTOMYCETE_SPORE
         && mon->type != MONS_BALL_LIGHTNING
         && !mons_is_avatar(mon->type))
     {
@@ -366,7 +367,7 @@ void handle_behaviour(monster* mon)
     if (mon->behaviour != BEH_SLEEP
         && (mon->has_ench(ENCH_INSANE)
             || ((mon->berserk()
-                 || mon->type == MONS_GIANT_SPORE
+                 || mon->type == MONS_BALLISTOMYCETE_SPORE
                  || mon->type == MONS_BALL_LIGHTNING)
                 && (mon->foe == MHITNOT
                     || isFriendly && mon->foe == MHITYOU))))
@@ -376,7 +377,7 @@ void handle_behaviour(monster* mon)
         if (!isFriendly
             && !mon->has_ench(ENCH_INSANE)
             && proxPlayer
-            && mons_intel(mon) >= I_HUMAN)
+            && mons_intel(*mon) >= I_HUMAN)
         {
             mon->foe = MHITYOU;
         }
@@ -487,7 +488,7 @@ void handle_behaviour(monster* mon)
                     || !proxPlayer && !isFriendly
                     || isNeutral && !mon->has_ench(ENCH_INSANE)
                     || patrolling
-                    || mon->type == MONS_GIANT_SPORE
+                    || mon->type == MONS_BALLISTOMYCETE_SPORE
                     || mon->type == MONS_BALL_LIGHTNING)
                 {
                     new_beh = BEH_WANDER;
@@ -516,7 +517,7 @@ void handle_behaviour(monster* mon)
             {
                 // If their foe is marked, the monster always knows exactly
                 // where they are.
-                if (mons_foe_is_marked(mon) || mon->has_ench(ENCH_HAUNTING))
+                if (mons_foe_is_marked(*mon) || mon->has_ench(ENCH_HAUNTING))
                 {
                     mon->target = afoe->pos();
                     try_pathfind(mon);
@@ -644,7 +645,7 @@ void handle_behaviour(monster* mon)
 
             // Monster can see foe: set memory in case it loses sight.
             // Hack: smarter monsters will tend to pursue the player longer.
-            switch (mons_intel(mon))
+            switch (mons_intel(*mon))
             {
             case I_HUMAN:
                 mon->foe_memory = random_range(450, 1000);
@@ -699,8 +700,8 @@ void handle_behaviour(monster* mon)
                     return;
             }
 
-            if (mon->strict_neutral() && mons_is_slime(mon)
-                && you_worship(GOD_JIYVA))
+            if (mon->strict_neutral() && mons_is_slime(*mon)
+                && have_passive(passive_t::neutral_slimes))
             {
                 set_random_slime_target(mon);
             }
@@ -709,7 +710,7 @@ void handle_behaviour(monster* mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if (proxFoe && !mons_is_batty(mon) || mons_foe_is_marked(mon))
+            if (proxFoe && !mons_is_batty(*mon) || mons_foe_is_marked(*mon))
             {
                 new_beh = BEH_SEEK;
                 break;
@@ -736,7 +737,7 @@ void handle_behaviour(monster* mon)
             // leave the level, in case their current choice is blocked.
             if (!proxFoe && !mons_is_avatar(mon->type) && mon->foe != MHITNOT
                    && one_chance_in(isSmart ? 60 : 20)
-                   && !mons_foe_is_marked(mon)
+                   && !mons_foe_is_marked(*mon)
                 || isPacified && one_chance_in(isSmart ? 40 : 120))
             {
                 new_foe = MHITNOT;
@@ -761,7 +762,7 @@ void handle_behaviour(monster* mon)
             // dancing in and out of the water.
             try_pathfind(mon);
             if (one_chance_in(10) && !target_is_unreachable(mon)
-                || mons_can_attack(mon))
+                || mons_can_attack(*mon))
             {
                 new_beh = BEH_SEEK;
             }
@@ -935,10 +936,10 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
                || foe->friendly() != friendly
                || neutral && !foe->neutral())
            && (ignore_sight || mon->can_see(*foe))
-           && !foe->is_projectile()
+           && !mons_is_projectile(*foe)
            && summon_can_attack(mon, p)
            && (friendly || !is_sanctuary(p))
-           && !mons_is_firewood(foe)
+           && !mons_is_firewood(*foe)
            || mon->has_ench(ENCH_INSANE) && p == you.pos();
 }
 
@@ -1023,7 +1024,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    bool isSmart          = (mons_intel(mon) >= I_HUMAN);
+    bool isSmart          = (mons_intel(*mon) >= I_HUMAN);
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_unaware      = mon->asleep() || mon->foe == MHITNOT;
@@ -1034,7 +1035,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (src_idx == YOU_FAULTLESS)
         src_idx = MHITYOU;
 
-    if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
+    if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(*mon))
     {
         mon->behaviour = BEH_FLEE;
         mon->foe       = MHITYOU;
@@ -1059,7 +1060,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // monsters who aren't otherwise occupied will at
         // least consider the (apparent) source of the noise
         // interesting for a moment. -- bwr
-        if (!isSmart || mon->foe == MHITNOT || mons_is_wandering(mon))
+        if (!isSmart || mon->foe == MHITNOT || mons_is_wandering(*mon))
         {
             if (mon->is_patrolling())
                 break;
@@ -1088,7 +1089,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // dies, and you'll get a warning prompt and penance once
         // *per hit*. This may not be the best way to address the
         // issue, though. -cao
-        if (!mons_is_threatening(mon)
+        if (!mons_is_threatening(*mon)
             && mon->attitude != ATT_FRIENDLY
             && mon->attitude != ATT_GOOD_NEUTRAL)
         {
@@ -1103,7 +1104,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If the monster can't reach its target and can't attack it
         // either, retreat.
         try_pathfind(mon);
-        if (mons_intel(mon) > I_BRAINLESS && !mons_can_attack(mon)
+        if (mons_intel(*mon) > I_BRAINLESS && !mons_can_attack(*mon)
             && target_is_unreachable(mon))
         {
             mon->behaviour = BEH_RETREAT;
@@ -1123,7 +1124,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else if (!mons_is_fleeing(mon))
+        else if (!mons_is_fleeing(*mon))
             mon->behaviour = BEH_SEEK;
 
         if (src == &you && mon->angered_by_attacks())
@@ -1158,7 +1159,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         // Avoid moving friendly explodey things out of BEH_WANDER.
         if (mon->friendly()
-            && (mon->type == MONS_GIANT_SPORE
+            && (mon->type == MONS_BALLISTOMYCETE_SPORE
                 || mon->type == MONS_BALL_LIGHTNING))
         {
             break;
@@ -1181,7 +1182,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_retreating(mon))
+        if (!mons_is_retreating(*mon))
             mon->behaviour = BEH_SEEK;
 
         if (mon->foe == MHITNOT)
@@ -1189,7 +1190,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         if (!src_pos.origin()
             && (mon->foe == MHITNOT || src && mon->foe == src->mindex()
-                || mons_is_wandering(mon)))
+                || mons_is_wandering(*mon)))
         {
             if (mon->is_patrolling())
                 break;
@@ -1240,7 +1241,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     case ME_CORNERED:
         // We only care about this event if we were actually running away
-        if (!mons_is_retreating(mon))
+        if (!mons_is_retreating(*mon))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
@@ -1250,7 +1251,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // If we were already cornered last turn, give up on trying to flee
         // and turn to fight instead. Otherwise, pause a turn in hope that
         // an escape route will open up.
-        if (mons_is_cornered(mon))
+        if (mons_is_cornered(*mon))
         {
             if (mon->friendly() && !crawl_state.game_is_arena())
             {
@@ -1266,7 +1267,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             mon->del_ench(ENCH_FEAR, true);
             mon->behaviour = BEH_SEEK;
         }
-        else if (mons_is_fleeing(mon))
+        else if (mons_is_fleeing(*mon))
         {
             // Save their current position so we know if they manage to move
             // on the following turn (and thus resume BEH_FLEE)
@@ -1335,7 +1336,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (!msg.empty() && mon->visible_to(&you))
         mons_speaks_msg(mon, msg, MSGCH_TALK, silenced(mon->pos()));
 
-    if (mons_allows_beogh_now(mon))
+    if (mons_allows_beogh_now(*mon))
     {
         const bool first = !you.attribute[ATTR_SEEN_BEOGH];
         if (first || one_chance_in(10))
@@ -1360,7 +1361,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
 void make_mons_stop_fleeing(monster* mon)
 {
-    if (mons_is_retreating(mon))
+    if (mons_is_retreating(*mon))
         behaviour_event(mon, ME_CORNERED);
 }
 
@@ -1426,11 +1427,11 @@ static void _mons_indicate_level_exit(const monster* mon)
     const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
     if (feat_is_gate(feat))
-        simple_monster_message(mon, " passes through the gate.");
+        simple_monster_message(*mon, " passes through the gate.");
     else if (feat_is_travelable_stair(feat))
     {
         command_type dir = feat_stair_direction(feat);
-        simple_monster_message(mon,
+        simple_monster_message(*mon,
             make_stringf(" %s the %s.",
                 dir == CMD_GO_UPSTAIRS     ? "goes up" :
                 dir == CMD_GO_DOWNSTAIRS   ? "goes down"
@@ -1440,7 +1441,7 @@ static void _mons_indicate_level_exit(const monster* mon)
     }
     else if (is_shaft)
     {
-        simple_monster_message(mon,
+        simple_monster_message(*mon,
             make_stringf(" %s the shaft.",
                 mon->airborne() ? "goes down"
                                 : "jumps into").c_str());
@@ -1486,6 +1487,7 @@ bool summon_can_attack(const monster* mons)
     return crawl_state.game_is_arena()
            || !mons->friendly()
            || !mons->is_summoned()
+              && !mons->has_ench(ENCH_FAKE_ABJURATION)
               && !mons_is_hepliaklqana_ancestor(mons->type)
            || you.see_cell_no_trans(mons->pos());
 }
@@ -1509,7 +1511,9 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
     }
 
     if (!mons->friendly()
-        || !mons->is_summoned() && !mons_is_hepliaklqana_ancestor(mons->type))
+        || !mons->is_summoned()
+            && !mons->has_ench(ENCH_FAKE_ABJURATION)
+            && !mons_is_hepliaklqana_ancestor(mons->type))
     {
         return true;
     }

@@ -189,11 +189,12 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = beef jerky / nothing / animal skin / potion of degeneration w:20 /\
-             w:2 potion of haste / w:2 potion of might
+KITEM:   1 = meat ration w:5 / nothing / animal skin / \
+             potion of degeneration w:20 / potion of haste w:2 / \
+             potion of might w:2
 KFEAT:   1 = 1
-ITEM:    club, potion of degeneration ident:type, slice of pizza
-ITEM:    beef jerky / weight:40 nothing, potion of degeneration ident:type
+ITEM:    club, potion of degeneration ident:type, royal jelly
+ITEM:    meat ration w:2 / nothing, potion of degeneration ident:type
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
 MAP
@@ -382,7 +383,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
@@ -421,7 +422,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3 / two-headed ogre zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
@@ -932,10 +933,10 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Orc
-MONS:   orc ; hunting sling . stone q:30, boulder beetle
+MONS:   orc ; hunting sling . stone q:30
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
-NSUBST: b = 1:2 / 5:1 / *:d
+NSUBST: b = 6:1 / *:d
 SUBST:  1 = 1 .
 MAP
      . .
@@ -1565,7 +1566,7 @@ TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
-MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
+MONS:    ogre mage, two-headed ogre w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
 MAP
  .....
@@ -1925,8 +1926,8 @@ MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
 MONS: orc knight
 # non-monstrous demonspawn only (1/3 chance of none)
-MONS: gelid demonspawn / infernal demonspawn / putrid demonspawn /\
-      torturous demonspawn / nothing w:20
+MONS: gelid demonspawn / infernal demonspawn / \
+      torturous demonspawn / nothing w:15
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
 KFEAT: A = general shop / food shop / distillery shop / scroll shop

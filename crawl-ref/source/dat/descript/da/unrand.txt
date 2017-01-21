@@ -54,7 +54,7 @@ Sword of Cerebov
 Sælsomme flammer dækker dets forvredne klinge. Dets dæmoniske kraft brænder
 noget af forsvarerens modstandskraft over for ild bort.
 %%%%
-faerie dragon armour
+faerie dragon scales
 
 Fedrager var engang en race af samme art som de spættede. Uheldigvis blev deres
 livlige farver deres undergang, fordi de advarede eventuelt bytte. De er nu
@@ -98,7 +98,7 @@ glaive of the Guard
 Dette våben har engang tilhørt Gar Dogh, som vogtede en konges skatte. I følge
 legenderne for han vild et sted i de underjordiske gange.
 %%%%
-sword of Jihad
+zealot's sword
 
 Et langsværd, som er lavet af et kæmpe stykke krystal. Legenderne vil vide, at
 det var en gave fra Den Strålende til en tilbeder. Klingen er berygtet for at

@@ -141,7 +141,7 @@ function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
     data.phase = data.phase + 1
     crawl.mpr("The walls fall away. The entombed are set free!", "warning")
     for _, i in ipairs(dgn.find_marker_positions_by_prop("wall_drop", 1)) do
-      dgn.terrain_changed(i.x, i.y, "floor", false, false)
+      dgn.terrain_changed(i.x, i.y, "floor", false)
       dgn.place_cloud(i.x, i.y, "black smoke", 2)
     end
     return
@@ -151,7 +151,7 @@ function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
 end
 
 local function spawn_zombie (x, y, spec)
-    dgn.terrain_changed(x, y, "floor", false, false)
+    dgn.terrain_changed(x, y, "floor", false)
     local mons = dgn.create_monster(x, y, spec)
     mons.set_prop("zonguldrok", 1)
     return mons
@@ -187,7 +187,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
             elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
                 if data.swcount > 5 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake hill giant zombie")
+                    spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
                 else
                     spawn_zombie(x, y, "generate_awake skeletal warrior")
                 data.swcount = data.swcount + 1
@@ -218,7 +218,7 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
        and #dgn.find_markers_by_prop("grave", 1) < 10 then
         local x, y = marker:pos()
         dgn.tile_feat_changed(x, y, nil)
-        dgn.terrain_changed(x, y, "closed_door", false, false)
+        dgn.terrain_changed(x, y, "closed_door", false)
         data.door_appeared = true
         if you.see_cell(x, y) then
             crawl.mpr("A door appears!")
@@ -757,7 +757,7 @@ KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon 
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
-KITEM:      | = cursed robe ego:resistance ident:type / cursed gold dragon armour
+KITEM:      | = cursed robe ego:resistance ident:type / cursed gold dragon scales
 :           else
 KITEM:      % = any / star_item w:2
 KITEM:      * = star_item / superb_item w:2
@@ -886,7 +886,7 @@ MONS:       ugly thing, very ugly thing
 MONS:       shapeshifter / glowing shapeshifter w:1
 MONS:       small abomination
 KMONS:      8 = large abomination
-KMONS:      9 = generate_awake giant eyeball
+KMONS:      9 = generate_awake floating eye
 KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-sting-weird mutant beast \
@@ -1138,7 +1138,7 @@ SUBST:      LZ = '
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
-:           set_random_mon_list([[ ogre zombie / troll zombie / hill giant zombie / ]]
+:           set_random_mon_list([[ ogre zombie / troll zombie / two-headed ogre zombie / ]]
 :           .. [[ wight w:20 / vampire w:5 / skeletal warrior w:15 / ]])
 epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")
@@ -1348,7 +1348,7 @@ KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
               wind drake w:5 / earth elemental w:5 / water elemental / \
               ugly thing / base draconian / guardian serpent / \
               eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
-              great orb of eyes w:5 / giant orange brain
+              great orb of eyes w:5 / glowing orange brain
 KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
              tormentor w:5 / lorocyproca w:5 / blizzard demon / \
              reaper / lich w:5 / angel / profane servitor w:5 / \
@@ -1357,8 +1357,8 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
-KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
-             wand of teleportation w:5 / any scroll w:1
+KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
+             any scroll w:1
 KITEM:   e = any ring
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
@@ -1371,7 +1371,7 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
-KITEM:   i = wand of disintegration w:5 / wand of digging w:5 / any wand w:1
+KITEM:   i = wand of digging / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
@@ -1434,7 +1434,7 @@ end
 
 set_random_mon_list([[rakshasa w:15 / deep elf mage w:15 / wizard w:15 / spatial vortex w:15 /
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
-                    raiju / ynoxinul / neqoxec / chaos spawn / giant orange brain /
+                    raiju / ynoxinul / neqoxec / chaos spawn / glowing orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /
                     hellwing w:5 / smoke demon w:5 / hell hound w:5 / ugly thing w:5 /
                     golden eye w:5 / executioner w:3 / shadow demon w:4 / hellion w:3 /
@@ -1686,7 +1686,7 @@ wizname = crawl.make_name()
 kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
 }}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
-KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
+KITEM:      i = ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
             wand of acid / staff of summoning / any book w:30 / any good_item w:15
@@ -1797,7 +1797,7 @@ NSUBST:     k = 2:1 / ., q = 3:1 / ., r = 3:1 / ., s = 1:1 / .
 NSUBST:     " = 3:K / ., ` = 8:N / d / 4 / 233 / .
 KMONS:      MNO = demonic plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
-MONS:       w:20 giant orange brain / w:12 great orb of eyes / w:5 neqoxec \
+MONS:       w:20 glowing orange brain / w:12 great orb of eyes / w:5 neqoxec \
             / w:3 golden eye band
 MONS:       starcursed mass / brown very ugly thing band
 MONS:       cacodemon

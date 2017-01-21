@@ -6,7 +6,7 @@
 #include "player.h"
 
 PlaceInfo::PlaceInfo()
-    : branch(NUM_BRANCHES), num_visits(0),
+    : branch(GLOBAL_BRANCH_INFO), num_visits(0),
       levels_seen(0), mon_kill_exp(0), turns_total(0), turns_explore(0),
       turns_travel(0), turns_interlevel(0), turns_resting(0),
       turns_other(0), elapsed_total(0), elapsed_explore(0),
@@ -19,7 +19,7 @@ PlaceInfo::PlaceInfo()
 
 bool PlaceInfo::is_global() const
 {
-    return branch == NUM_BRANCHES;
+    return branch == GLOBAL_BRANCH_INFO;
 }
 
 void PlaceInfo::assert_validity() const

@@ -490,7 +490,7 @@ void formatted_string::fs_op::display() const
     {
     case FSOP_COLOUR:
 #ifndef USE_TILE_LOCAL
-        if (x < MAX_TERM_COLOUR)
+        if (x < NUM_TERM_COLOURS)
 #endif
             ::textcolour(x);
         break;

@@ -48,7 +48,7 @@ struct bolt
     spell_type  origin_spell = SPELL_NO_SPELL; // may remain SPELL_NO_SPELL for
                                                // non-spell beams.
     int         range = -2;
-    ucs_t       glyph = '*';           // missile gfx
+    char32_t    glyph = '*';           // missile gfx
     colour_t    colour = BLACK;
     beam_type   flavour = BEAM_MAGIC;
     beam_type   real_flavour = BEAM_MAGIC; // for random and chaos beams this
@@ -99,8 +99,6 @@ struct bolt
                                         // itself.
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
-    bool   evoked = false;        // Was this beam evoked from a wand?
-
     // Do we draw animations?
     bool   animate = bool(Options.use_animations & UA_BEAM);
     ac_type ac_rule = AC_NORMAL;   // How defender's AC affects damage.
@@ -180,7 +178,7 @@ public:
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
-    bool can_affect_wall(dungeon_feature_type feat) const;
+    bool can_affect_wall(const coord_def& p) const;
     bool ignores_monster(const monster* mon) const;
     bool can_knockback(const actor *act = nullptr, int dam = -1) const;
     bool god_cares() const; // Will the god be unforgiving about this beam?
@@ -246,7 +244,6 @@ private:
     void affect_wall();
     void digging_wall_effect();
     void burn_wall_effect();
-    void destroy_wall_effect();
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
@@ -319,7 +316,7 @@ bool curare_actor(actor* source, actor* target, int levels, string name,
                   string source_name);
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
-                  bool explode_only = false);
+                  bool explode_only = false, bool explosion_hole = false);
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,

@@ -18,7 +18,7 @@ static feature_def invis_fd, cloud_fd;
  *  @returns The symbol from the 'feature' option if given, otherwise the
  *           character corresponding to ::dchar.
  */
-ucs_t feature_def::symbol() const
+char32_t feature_def::symbol() const
 {
     auto over = map_find(Options.feature_symbol_overrides, feat);
     if (over && (*over)[0])
@@ -33,7 +33,7 @@ ucs_t feature_def::symbol() const
  *           character corresponding to ::magic_dchar if set, otherwise
  *           the normal symbol.
  */
-ucs_t feature_def::magic_symbol() const
+char32_t feature_def::magic_symbol() const
 {
     auto over = map_find(Options.feature_symbol_overrides, feat);
     if (over && (*over)[1])

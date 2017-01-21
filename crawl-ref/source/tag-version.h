@@ -97,7 +97,7 @@ enum tag_minor_version
     TAG_MINOR_ATTACK_DESCS,        // Added attacks to monster_info.
     TAG_MINOR_BRIBE_BRANCH,        // Bribe branch tracking
     TAG_MINOR_CLOUD_OWNER,         // Track owners of clouds in map knowledge
-    TAG_MINOR_NO_DEVICE_HEAL,      // Made MUT_NO_DEVICE_HEAL a normal bad mutation.
+    TAG_MINOR_NO_POTION_HEAL,      // Made MUT_NO_POTION_HEAL a normal bad mutation.
     TAG_MINOR_DIET_MUT,            // Remove carnivore/herbivore muts from random generation.
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
     TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load
@@ -193,6 +193,15 @@ enum tag_minor_version
     TAG_MINOR_DEMONIC_SPELLS,      // merge demonic spells into magical spells
     TAG_MINOR_MUMMY_RESTORATION,   // remove mummy self-restoration ability
     TAG_MINOR_DECUSTOM_CLOUDS,     // remove support for custom clouds
+    TAG_MINOR_PAKELLAS_WRATH,      // fix Pakellas passive wrath not expiring
+    TAG_MINOR_GLOBAL_BR_INFO,      // move global branch info to a reserved location
+    TAG_MINOR_SPIT_POISON_AGAIN,   // Make Naga poison spit a 2-level mutation.
+    TAG_MINOR_HIDE_TO_SCALE,       // Rename dragon hides to scales.
+    TAG_MINOR_NO_PRIORITY,         // Remove CHANCE priority in map definitions.
+    TAG_MINOR_MOTTLED_REMOVAL,     // Mottled dracos get breathe fire
+    TAG_MINOR_NEMELEX_WRATH,       // Nemelex loses the passive wrath component
+    TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
+    TAG_MINOR_FOOD_PURGE_RELOADED, // The exciting sequel, removing pizza/jerky.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

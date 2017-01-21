@@ -200,24 +200,24 @@ default-depth: Abyss
 # Dummy vaults
 NAME: abyss_furniture_dummy
 TAGS: dummy
-CHANCE: 0 : 90% (Abyss:1)
-CHANCE: 0 : 80% (Abyss:2)
-CHANCE: 0 : 70% (Abyss:3)
-CHANCE: 0 : 60% (Abyss:4)
-CHANCE: 0 : 50% (Abyss:5)
+CHANCE: 90% (Abyss:1)
+CHANCE: 80% (Abyss:2)
+CHANCE: 70% (Abyss:3)
+CHANCE: 60% (Abyss:4)
+CHANCE: 50% (Abyss:5)
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune unrand dummy
-CHANCE: 0 : 10%
+CHANCE: 10%
 
 # FIXME: the tag name is inaccurate with abyssal stairs placed by these vaults.
 NAME: abyss_exit_dummy
 TAGS: abyss_exit unrand dummy
-CHANCE: 0 : 95% (Abyss:1)
-CHANCE: 0 : 90% (Abyss:2)
-CHANCE: 0 : 85% (Abyss:3)
-CHANCE: 0 : 80% (Abyss:4)
-CHANCE: 0 : 75% (Abyss:5)
+CHANCE: 95% (Abyss:1)
+CHANCE: 90% (Abyss:2)
+CHANCE: 85% (Abyss:3)
+CHANCE: 80% (Abyss:4)
+CHANCE: 75% (Abyss:5)
 
 NAME:    abyss_fake_exit
 TAGS:    allow_dup
@@ -244,10 +244,10 @@ TAGS:    no_rotate
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
 COLOUR:  " : white w:5 / none
-FTILE:   "ABCDEFGHIJKLMNOPRQSTUV : floor_limestone w:5 / floor_nerves
+FTILE:   "ABCDEFGHIJKLMNOPRQSTU : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
-SHUFFLE: ABCDEFHIJKLMNOPQRSTUV
+SHUFFLE: ABCDEFHIJKLMNOPQRSTU
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
@@ -266,18 +266,17 @@ KFEAT:   P = altar_ashenzari
 KFEAT:   Q = altar_dithmenos
 KFEAT:   R = altar_gozag
 KFEAT:   S = altar_qazlal
-KFEAT:   T = altar_pakellas
-KFEAT:   U = altar_uskayaw
-KFEAT:   V = altar_hepliaklqana
+KFEAT:   T = altar_uskayaw
+KFEAT:   U = altar_hepliaklqana
 MAP
 ''''''...............
 ''ccccccccccccccccc..
 ''G'c"""D"""""P"""c..
-''''c"A"""I"L"""T"c..
+''''c"A"""I"L"""S"c..
 ''G'c"""E"""""Q"""ct.
-''''+"B"""J"N"""U"c..
+''''+"B"""J"N"""T"c..
 ''G'c"""F"""""R"""c..
-''''c"C"""K"O"""V"c.t
+''''c"C"""K"O"""U"c.t
 ''G'c"""H"""""S"""c..
 ''ccccccccccccccccc..
 .......t......ttt....
@@ -312,7 +311,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf demonologist
-MONS:   worker ant w:40 / vampire mosquito w:20 / wasp
+MONS:   worker ant w:40 / vampire mosquito w:20 / hornet
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion / death scarab
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -334,9 +333,9 @@ C   111111 ww 444444   C
 ENDMAP
 
 NAME:   hangedman_abyss_sting
-TAGS:   no_item_gen no_monster_gen uniq_wasphive
+TAGS:   no_item_gen no_monster_gen uniq_hornetnest
 KMONS:  1 = orange demon
-KMONS:  2 = hornet / wasp / killer bee w:2 / nothing w:2
+KMONS:  2 = hornet / killer bee w:2 / nothing w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
 KITEM:  3 = royal jelly
@@ -491,7 +490,7 @@ ENDMAP
 
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
-MONS:    guardian serpent, great orb of eyes, giant orange brain
+MONS:    guardian serpent, great orb of eyes, glowing orange brain
 MONS:    boggart, rakshasa, cacodemon, shadow demon
 KMONS:   0 = wizard
 KMONS:   8 = orc sorcerer
@@ -590,7 +589,7 @@ MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
 MONS:    large abomination / ghoul / death ooze w:2, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
-KMONS:   9 = giant eyeball / chaos spawn / anaconda perm_ench:shapeshifter w:2
+KMONS:   9 = floating eye / chaos spawn / anaconda perm_ench:shapeshifter w:2
 KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
@@ -691,7 +690,7 @@ NAME:    hangedman_classic_abyss_death
 TAGS:    transparent no_monster_gen
 MONS:    large abomination / ynoxinul / unseen horror / \
          skeleton / sixfirhy / smoke demon / neqoxec / \
-         efreet / rakshasa / giant orange brain / ugly thing / \
+         efreet / rakshasa / glowing orange brain / ugly thing / \
          golden eye / hell hog
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
          death drake / daeva / angel / bone dragon / balrug w:4 / \
@@ -724,10 +723,9 @@ TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
-         wand of lightning / wand of acid / wand of slowing w:5 / \
-         wand of confusion w:5 / ring mail good_item / \
-         chain mail good_item w:12 / shield / spear good_item / \
-         trident good_item / any weapon w:12 / any w:2
+         wand of lightning / wand of acid / wand of confusion / \
+         ring mail good_item / chain mail good_item w:12 / shield / \
+         spear good_item / trident good_item / any weapon w:12 / any w:2
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -1062,7 +1060,7 @@ MONS:   ettin ; giant spiked club ego:distortion | giant club ego:distortion . \
                 giant spiked club ego:chaos | giant club ego:chaos
 MONS:   ettin skeleton w:6 / flayed ghost / shadow wraith w:4
 MONS:   place:Abyss:$, silent spectre
-KMONS:  O = giant eyeball
+KMONS:  O = floating eye
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 SUBST:  x = xxccn, . = ...W
@@ -1109,7 +1107,7 @@ ENDMAP
 NAME:    hangedman_abyss_rune_flesh_and_stone
 TAGS:    abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  5
-MONS:    catoblepas, earth elemental, basilisk, boulder beetle
+MONS:    catoblepas, earth elemental, basilisk, gargoyle
 MONS:    catoblepas skeleton, air elemental, death drake
 ITEM:    potion of flight q:1 ident:type
 KMONS:   O = patrolling war gargoyle
@@ -1143,8 +1141,8 @@ ENDMAP
 # being separated from their forced union as runed doors...
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune unrand no_monster_gen
-KMONS:  1 = giant orange brain
-KMONS:  2 = golden eye / eye of draining w:4 / giant eyeball w:2
+KMONS:  1 = glowing orange brain
+KMONS:  2 = golden eye / eye of draining w:4 / floating eye w:2
 KMONS:  3O = flying skull
 KMONS:  4 = large abomination / small abomination w:6 / macabre mass w:2
 KMONS:  5 = cacodemon
@@ -1257,7 +1255,7 @@ WEIGHT:  25
 MONS:    ancient zyme, wretched star, starcursed mass, lurking horror
 MONS:    thrashing horror, tentacled starspawn, apocalypse crab
 # Worldbinders summon from other branches....
-KMONS:   8 = greater naga / ghost moth / thorn hunter / merfolk javelineer
+KMONS:   8 = nagaraja / ghost moth / thorn hunter / merfolk javelineer
 KMONS:   9 = guardian serpent / entropy weaver / swamp dragon / satyr
 KMONS:   0 = place:Abyss:$
 KMONS:   O = worldbinder
@@ -1455,8 +1453,8 @@ KMONS:   6 = lurking horror
 KITEM:   4d = scroll of random uselessness w:15 q:1 / fruit q:1 w:4 / \
          club w:6 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   5 = wand of slowing / wand of confusion / wand of flame w:5 / \
-         whip not_cursed w:2 / hat not_cursed mundane w:5
+KITEM:   5 = wand of confusion / wand of flame / whip not_cursed w:2 / \
+         hat not_cursed mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
@@ -1559,6 +1557,34 @@ MAP
  .cccWWwwwWWccc.
  ...""""A""""...
 ENDMAP
+
+NAME:   doesnt_abyss_rune_brain_food
+TAGS:   abyss_rune unrand patrolling no_pool_fixup
+MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
+MONS:   starcursed mass
+KITEM:  O = abyssal rune of Zot
+COLOUR: n = lightmagenta
+NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
+SUBST:  l : lw
+{{
+dgn.delayed_decay(_G, 'd', 'ghoul corpse / minotaur corpse / ' ..
+                           'troll corpse / ogre corpse')
+}}
+MAP
+  cccnccc
+ cc-nOn-cc
+ c.--n--.c
+cc.-n-n-.cc
+c---...---c
+nll-...-lln
+n3l-...-l3n
+nll-...-lln
+n---...---n
+nn.......nn
+ nn.....nn
+  nn...nn
+ENDMAP
+
 
 ###############################################################################
 # Abyss Exit Vaults
@@ -1984,8 +2010,8 @@ ENDMAP
 NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
 MONS:    hell hound, raiju, great orb of eyes
-MONS:    giant orange brain, swamp drake, wind drake, torpor snail
-KMONS:   8 = giant leech
+MONS:    glowing orange brain, swamp drake, wind drake, torpor snail
+KMONS:   8 = tyrant leech
 KMONS:   9 = mana viper
 KMONS:   0 = anaconda
 KMONS:   A = ball lightning

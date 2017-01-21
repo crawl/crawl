@@ -3,7 +3,7 @@
 #include "branch.h"
 #include "branch-data.h"
 
-#include "itemname.h"
+#include "item-name.h"
 #include "player.h"
 #include "stringutil.h"
 #include "travel.h"
@@ -13,7 +13,7 @@ FixedVector<int, NUM_BRANCHES> brdepth;
 FixedVector<int, NUM_BRANCHES> branch_bribe;
 branch_type root_branch;
 
-/// A basic ordering for branches.
+/// A save-compat ordering for branches.
 static const branch_type logical_branch_order[] = {
     BRANCH_DUNGEON,
     BRANCH_TEMPLE,
@@ -53,7 +53,8 @@ static const branch_type logical_branch_order[] = {
     BRANCH_BAILEY,
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
-    BRANCH_WIZLAB
+    BRANCH_WIZLAB,
+    BRANCH_DESOLATION,
 };
 COMPILE_CHECK(ARRAYSZ(logical_branch_order) == NUM_BRANCHES);
 
@@ -78,6 +79,7 @@ static const branch_type danger_branch_order[] = {
     BRANCH_VAULTS,
     BRANCH_ELF,
     BRANCH_CRYPT,
+    BRANCH_DESOLATION,
     BRANCH_ABYSS,
     BRANCH_WIZLAB,
     BRANCH_SLIME,
@@ -209,9 +211,19 @@ branch_type branch_by_shortname(const string &branch)
     return NUM_BRANCHES;
 }
 
-int current_level_ambient_noise()
+int ambient_noise(branch_type branch)
 {
-    return branches[you.where_are_you].ambient_noise;
+    switch (branches[branch].ambient_noise)
+    {
+    case BRANCH_NOISE_NORMAL:
+        return 0;
+    case BRANCH_NOISE_QUIET:
+        return -BRANCH_NOISE_AMOUNT;
+    case BRANCH_NOISE_LOUD:
+        return BRANCH_NOISE_AMOUNT;
+    default:
+        die("Invalid noise level!");
+    };
 }
 
 branch_type get_branch_at(const coord_def& pos)
@@ -249,6 +261,35 @@ int runes_for_branch(branch_type branch)
     case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
     default:              return 0;
     }
+}
+
+/**
+ * Describe the ambient noise level in this branch.
+ *
+ * @param branch The branch in question.
+ * @returns      A string describing how noisy or quiet the branch is.
+ */
+string branch_noise_desc(branch_type br)
+{
+    string desc;
+    const int noise = ambient_noise(br);
+    if (noise != 0)
+    {
+        desc = "This branch is ";
+        if (noise > 0)
+        {
+            desc += make_stringf("very noisy, and so sound travels much less "
+                                 "far.");
+        }
+        else
+        {
+            desc += make_stringf("unnaturally silent, and so sound travels "
+                                 "much further.");
+
+        }
+    }
+
+    return desc;
 }
 
 /**

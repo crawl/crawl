@@ -62,7 +62,7 @@ bool add_spell_to_memory(spell_type spell);
 bool del_spell_from_memory_by_slot(int slot);
 bool del_spell_from_memory(spell_type spell);
 
-int spell_hunger(spell_type which_spell, bool rod = false);
+int spell_hunger(spell_type which_spell);
 int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
@@ -95,14 +95,11 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype);
 const char* spelltype_long_name(spschool_flag_type which_spelltype);
 
 typedef function<int (coord_def where)> cell_func;
-typedef function<int (monster* mon)> monster_func;
-typedef int cloud_func(coord_def where, int pow, int spreadrate,
-                       cloud_type type, const actor* agent, int excl_rad);
+typedef function<int (coord_def where, int pow, int spreadrate,
+                       cloud_type type, const actor* agent, int excl_rad)>
+        cloud_func;
 
 int apply_area_visible(cell_func cf, const coord_def& where);
-
-int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int radius = 1);
 
 int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int max_targs);
@@ -124,17 +121,15 @@ bool cannot_use_schools(spschools_type schools);
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true,
-                      bool prevent = false, bool evoked = false,
-                      bool fake_spell = false) PURE;
+                      bool prevent = false, bool fake_spell = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,
-                                bool prevent = false, bool evoked = false,
+                                bool prevent = false,
                                 bool fake_spell = false) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_colour = COL_UNKNOWN,
-                                bool transient = false,
-                                bool rod_spell = false);
-bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
+                                bool transient = false);
+bool spell_no_hostile_in_range(spell_type spell);
 
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);

@@ -124,7 +124,7 @@ WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
 KMONS:   _ = demonic plant
 KMONS:   no = vault guard
-KMONS:   p = giant eyeball
+KMONS:   p = floating eye
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
 KMONS:   r = ettin / deep troll shaman / yaktaur captain / frost giant
 KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
@@ -569,7 +569,7 @@ SHUFFLE: O3hi
 SUBST: hi = .
 NSUBST: 1 = 1:2 / *=1
 KFEAT: O = enter_depths
-MONS: tengu warrior band w:5 / tengu conjurer band w:5 / hill giant / \
+MONS: tengu warrior band w:5 / tengu conjurer band w:5 / \
       ogre mage band / centaur warrior band / yaktaur band / cyclops band / \
       deep elf knight band
 MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
@@ -629,7 +629,7 @@ KMONS:  1 = merfolk
 KMONS:  2 = orc warrior / big kobold / two-headed ogre / troll / gnoll sergeant
 KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
-KMONS:  5 = yak / hog / sheep w:50
+KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:5 / manticore w:2 / hippogriff w:2 / black bear w:19
 KITEM:  o5 = fruit q:1 / nothing w:400
 SUBST:  M = tww.!, p = pP!!!!!

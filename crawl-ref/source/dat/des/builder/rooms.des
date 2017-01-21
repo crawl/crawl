@@ -70,7 +70,7 @@ function sroom_orc_lair(e)
 
     if level > 20 or you.in_branch("Elf") then
         mon = "orc priest w:7 / orc warrior w:12 / orc knight w:8 / "
-              .. " orc high priest w:2 / hill giant w:1"
+              .. " orc high priest w:2 / two-headed ogre w:1"
         lord_mon = "orc warlord"
     elseif level > 14 or you.in_branch("Orc") then
         mon = "orc w:6 / orc warrior w:8 / orc priest w:2 /  "
@@ -257,16 +257,15 @@ function sroom_mythical_zoo(e)
     mons[3] = "wyvern w:" .. math.max(44 - Z * 2, 1)
     mons[4] = "hippogriff w:" .. math.max(44 - Z * 2, 1)
     mons[5] = "hell hound w:" .. math.max(Z - 11, 1)
-    mons[6] = "griffon w:" .. math.max(Z * 2 - 28, 1)
-    mons[7] = "hydra w:" .. math.max(Z * 2 - 26, 1)
+    mons[6] = "hydra w:" .. math.max(Z * 2 - 26, 1)
 
     if Z >= 16 then
-        mons[8] = "manticore w:" .. (Z * 2 - 24)
-        mons[9] = "harpy w:" .. (Z - 15)
+        mons[7] = "manticore w:" .. (Z * 2 - 24)
+        mons[8] = "harpy w:" .. (Z - 15)
     end
     if Z >= 19 then
-        mons[10] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[11] = "sphinx w:" .. (Z - 16)
+        mons[9] = "fire dragon w:" .. (Z * 2 - 37)
+        mons[10] = "sphinx w:" .. (Z - 16)
     end
 
     if Z >= 21 then

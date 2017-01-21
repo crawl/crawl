@@ -11,10 +11,10 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "mon-place.h"
 #include "options.h"
@@ -209,7 +209,9 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_POTIONS:    return SHOW_ITEM_POTION;
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAFF;
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:       return SHOW_ITEM_ROD;
+#endif
     case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
@@ -476,11 +478,8 @@ static void _update_monster(monster* mons)
         return;
     }
 
-    // Monsters at anything other than max stealth get a stealth check; if they
-    // fail this and are either very unstealthy or also fail a flat 1/4 chance,
-    // they leave an invis indicator at their position.
-    if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4
-        && (mons->stealth() <= -2 || !_hashed_rand(mons, 1, 4)))
+    // 1/7 chance to leave an invis indicator at the real position.
+    if (!_hashed_rand(mons, 0, 7))
     {
         _mark_invisible_at(gp);
         mons->unseen_pos = gp;

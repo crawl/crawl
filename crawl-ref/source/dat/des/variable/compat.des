@@ -53,7 +53,7 @@ function callback.grunt_zot_stairs_roulette_spawn_doors(data, triggerable,
   dgn.persist.grunt_zot_stairs_roulette_doors_spawned = true
 
   for p in iter.slave_iterator("hidden_door", 1) do
-    dgn.terrain_changed(p.x, p.y, "clear_stone_wall", false, false)
+    dgn.terrain_changed(p.x, p.y, "clear_stone_wall", false)
   end
 end
 
@@ -71,7 +71,7 @@ function callback.grunt_zot_stairs_roulette_door_open(data, triggerable,
 
   crawl.mpr("Several panes of glass retract into the floor.")
   for p in iter.slave_iterator("hidden_door", 1) do
-    dgn.terrain_changed(p.x, p.y, "floor", false, false)
+    dgn.terrain_changed(p.x, p.y, "floor", false)
   end
 end
 
@@ -134,7 +134,7 @@ function callback.ancient_champions_mu_skele_death(data, triggerable,
     crawl.mpr("Couldn't find a slave!")
   end
 
-  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false)
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false)
 
   if you.see_cell(wall_pos.x, wall_pos.y) then
     crawl.mpr("As the champion is destroyed, a metal wall slides away!")
@@ -185,9 +185,14 @@ function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
   else
     crawl.god_speaks("Beogh", "Beogh's servants are called upon to defend the altar!")
     for slave in iter.slave_iterator("bridge", 1) do
-      dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+      dgn.terrain_changed(slave.x, slave.y, "floor", false)
     end
     dgn.grid(x, y, "floor")
   end
+end
+
+function callback.boulder_grate_trap_stepped(data, triggerable, triggerer,
+                                             marker, ev)
+  -- do nothing
 end
 }}

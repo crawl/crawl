@@ -15,9 +15,9 @@
 #include "dungeon.h"
 #include "exclude.h"
 #include "fineff.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "message.h"
@@ -217,16 +217,16 @@ void change_monster_type(monster* mons, monster_type targetc)
     // the polymorph disrupts the beholding process. Do this before
     // changing mons->type, since unbeholding can only happen while
     // the monster is still a siren/merfolk avatar.
-    you.remove_beholder(mons);
+    you.remove_beholder(*mons);
     you.remove_fearmonger(mons);
 
-    if (mons_is_tentacle_head(mons_base_type(mons)))
+    if (mons_is_tentacle_head(mons_base_type(*mons)))
         destroy_tentacles(mons);
 
     // trj spills out jellies when polied, as if he'd been hit for mhp.
     if (mons->type == MONS_ROYAL_JELLY)
     {
-        simple_monster_message(mons, "'s form twists and warps, and jellies "
+        simple_monster_message(*mons, "'s form twists and warps, and jellies "
                                "spill out!");
         trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
                                    mons->hit_points);
@@ -290,10 +290,7 @@ void change_monster_type(monster* mons, monster_type targetc)
                                                     : targetc;
 
     const god_type god =
-        (player_will_anger_monster(real_targetc)
-            || (you_worship(GOD_BEOGH)
-                && mons_genus(real_targetc) != MONS_ORC)) ? GOD_NO_GOD
-                                                          : mons->god;
+        player_will_anger_monster(real_targetc) ? GOD_NO_GOD : mons->god;
 
     if (god == GOD_NO_GOD)
         flags &= ~MF_GOD_GIFT;
@@ -308,7 +305,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
         const monster_type type = mons_is_job(mons->type)
-                                ? draco_or_demonspawn_subspecies(mons)
+                                ? draco_or_demonspawn_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
@@ -327,22 +324,16 @@ void change_monster_type(monster* mons, monster_type targetc)
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
     mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
 
-    monster_spells spl    = mons->spells;
-    const bool need_save_spells
-            =  old_mon_unique && !slimified
-               && mons_class_intel(targetc) >= I_HUMAN
-               && (!mons->has_spells() || mons->is_actual_spellcaster());
-
     mons->number       = 0;
 
-    // Note: define_monster() will clear out all enchantments! - bwr
-    if (!slimified && mons_is_zombified(mons))
+    // Note: define_monster(*) will clear out all enchantments! - bwr
+    if (!slimified && mons_is_zombified(*mons))
         define_zombie(mons, targetc, mons->type);
     else
     {
         mons->type         = targetc;
         mons->base_monster = MONS_NO_MONSTER;
-        define_monster(mons);
+        define_monster(*mons);
     }
 
     mons->mname = name;
@@ -356,17 +347,6 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Forget various speech/shout Lua functions.
     mons->props.erase("speech_prefix");
-
-    // Keep spells for named monsters, but don't override innate ones
-    // for dragons and the like. This means that Sigmund polymorphed
-    // into a goblin will still cast spells, but if he ends up as a
-    // swamp drake he'll breathe fumes and, if polymorphed further,
-    // won't remember his spells anymore.
-    if (need_save_spells
-        && (!mons->has_spells() || mons->is_actual_spellcaster()))
-    {
-        mons->spells = spl;
-    }
 
     // Make sure we have a god if we've been polymorphed into a priest.
     mons->god = mons->is_priest() ? GOD_NAMELESS : god;
@@ -414,7 +394,7 @@ void change_monster_type(monster* mons, monster_type targetc)
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (could_see && shifter.ench != ENCH_NONE)
-            discover_shifter(mons);
+            discover_shifter(*mons);
     }
 
     if (old_mon_caught)
@@ -459,7 +439,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // make one, let's ban this outright.
     if (source_tier == -1)
     {
-        return simple_monster_message(mons,
+        return simple_monster_message(*mons,
             "'s appearance momentarily alters.");
     }
     relax = 1;
@@ -480,7 +460,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 relax++;
 
             if (relax > 50)
-                return simple_monster_message(mons, " shudders.");
+                return simple_monster_message(*mons, " shudders.");
         }
         while (tries-- && (!_valid_morph(mons, targetc)
                            || source_tier != target_tier && !x_chance_in_y(relax, 200)
@@ -514,7 +494,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
 
     if (!_valid_morph(mons, targetc))
-        return simple_monster_message(mons, " looks momentarily different.");
+        return simple_monster_message(*mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
 
@@ -582,14 +562,14 @@ bool mon_can_be_slimified(const monster* mons)
 
     return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(mons));
+           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(*mons));
 }
 
 void slimify_monster(monster* mon, bool hostile)
 {
     monster_type target = MONS_JELLY;
 
-    const int x = mon->get_hit_dice() + (coinflip() ? 1 : -1) * random2(5);
+    const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
 
     if (x < 3)
         target = MONS_OOZE;
@@ -614,7 +594,7 @@ void slimify_monster(monster* mon, bool hostile)
     // Bail out if jellies can't live here.
     if (!monster_habitable_grid(target, grd(mon->pos())))
     {
-        simple_monster_message(mon, " quivers momentarily.");
+        simple_monster_message(*mon, " quivers momentarily.");
         return;
     }
 
@@ -628,7 +608,7 @@ void slimify_monster(monster* mon, bool hostile)
     else
         mon->attitude = ATT_HOSTILE;
 
-    mons_make_god_gift(mon, GOD_JIYVA);
+    mons_make_god_gift(*mon, GOD_JIYVA);
 
     // Don't want shape-shifters to shift into non-slimes.
     mon->del_ench(ENCH_GLOWING_SHAPESHIFTER);
@@ -674,7 +654,7 @@ void seen_monster(monster* mons)
 
     if (!(mons->flags & MF_TSO_SEEN))
     {
-        if (mons_gives_xp(mons, &you) && !crawl_state.game_is_arena())
+        if (mons_gives_xp(*mons, you) && !crawl_state.game_is_arena())
         {
             did_god_conduct(DID_SEE_MONSTER, mons->get_experience_level(),
                             true, mons);
@@ -682,6 +662,6 @@ void seen_monster(monster* mons)
         mons->flags |= MF_TSO_SEEN;
     }
 
-    if (mons_allows_beogh(mons))
+    if (mons_allows_beogh(*mons))
         env.level_state |= LSTATE_BEOGH;
 }

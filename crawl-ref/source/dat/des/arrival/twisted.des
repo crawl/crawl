@@ -80,7 +80,7 @@ ENDMAP
 #########################################
 # Representatives of all player genuses, locked up.
 NAME:    kb_arrival_jail
-TAGS:    arrival no_monster_gen
+TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  north
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
 KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
@@ -149,14 +149,14 @@ ENDMAP
 #########################################
 # A horror show for the beginning adventurer
 NAME:    shiori_arrival_whats_in_store_for_you
-TAGS:    arrival no_monster_gen no_pool_fixup
+TAGS:    arrival no_monster_gen no_pool_fixup no_trap_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
 KPROP:   M = no_tele_into
 NSUBST:  M = 2=E / *=M E:2
-KFEAT:   E = permanent teleport trap
+KFEAT:   E = permanent known teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
@@ -185,7 +185,7 @@ KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
            w:1 golden dragon / large abomination / tentacled monstrosity / \
-           w:1 black draconian; nothing / w:1 mottled draconian; nothing / \
+           w:1 black draconian; nothing / \
            w:1 yellow draconian; nothing / w:2 green draconian; nothing / \
            w:1 purple draconian; nothing / w:2 red draconian; nothing / \
            w:1 white draconian; nothing / nothing
@@ -400,15 +400,15 @@ ENDMAP
 NAME:    erik_arrival_cave_to_temple
 # Intentionally higher chances for the non-Temple gods.
 TAGS:    cave_to_temple_subvault no_rotate no_trap_gen
-SUBST:   X : nnG
 NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
 KPROP:   'tCD> = no_tele_into
+KMASK:   'tCD> = no_item_gen
 : local rnd = crawl.random2(9)
 : if rnd == 0 then
 KFEAT:   C = altar_beogh
 SUBST:   DG = I
 KMONS:   1 = orc / nothing
-KMONS:   2 = orc wizard / orc / nothing
+KMONS:   2 = orc wizard / orc priest / orc / nothing
 KMONS:   3 = orc warrior
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
@@ -421,9 +421,7 @@ SUBST:   D = .
 KMONS:   1 = jelly / ooze
 SUBST:   t : U...., 23 = 0
 : else
-SUBST:   D = C
-SHUFFLE: VCd
-KITEM:   d = any scroll
+SUBST:   D = V
 KMONS:   1 : gnoll / orc / 0 w:20
 KMONS:   2 : big kobold / ogre / 0 w:60
 KMONS:   3 : troll / 0 w:70
@@ -435,10 +433,10 @@ MAP
 ...xxxxxxxx.
 ..xxxxt't>x.
 .xxxxx''''x.
-.G.x$X'C''x.
+.G.x$n'C''x.
 ...+0x''''x.
 ...+0x''''x.
-.G.x$X'D''x.
+.G.x$n'D''x.
 .xxxxx''''x.
 ..xxxxt't>x.
   .xxxxxxxx

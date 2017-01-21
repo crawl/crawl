@@ -1,7 +1,6 @@
 /**
  * @file
- * @brief Functions used to print information about spells, spellbooks, rods,
- *        etc.
+ * @brief Functions used to print information about spells, spellbooks, etc.
  **/
 
 #include "AppHdr.h"
@@ -31,7 +30,7 @@
  *
  * @param item      The item in question.
  * @return          A single-element vector, containing the list of all
- *                  non-null spells in the given book/rod, blank-labeled.
+ *                  non-null spells in the given book, blank-labeled.
  */
 spellset item_spellset(const item_def &item)
 {
@@ -85,6 +84,24 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
 }
 
 /**
+ * Produces a portion of the spellbook description: the portion indicating
+ * whether the list of spellbooks has been filtered based on which spells you
+ * have seen the monster cast already.
+ *
+ * @param type    The type of ability set / spellbook we're decribing.
+ * @param pronoun The monster pronoun to use (should be derived from PRONOUN_OBJECTIVE).
+ * @return        A string to include in the spellbook description.
+ */
+static string _describe_spell_filtering(mon_spell_slot_flag type, const char* pronoun)
+{
+    const bool is_spell = type = MON_SPELL_WIZARD;
+    return make_stringf(" (judging by the %s you have seen %s %s)",
+                        is_spell ? "spells" : "abilities",
+                        pronoun,
+                        is_spell ? "cast" : "use");
+}
+
+/**
  * What description should a given (set of) monster spellbooks be prefixed
  * with?
  *
@@ -94,24 +111,26 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type,
  *                          despite being non-wizardly and non-priestly.
  * @param has_filtered      Whether any spellbooks have been filtered out due
  *                          to the spells you've seen the monster cast.
+ * @param pronoun           The pronoun to use in describing which spells
+ *                          the monster has been seen casting.
  * @return                  A header string for the bookset; e.g.,
  *                          "has mastered one of the following spellbooks:"
  *                          "possesses the following natural abilities:"
  */
 static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
-                               bool has_silencable, bool has_filtered)
+                               bool has_silencable, bool has_filtered, const char* pronoun)
 {
     const string vulnerabilities =
         _ability_type_vulnerabilities(type, has_silencable);
+    const string spell_filter_desc = has_filtered ? _describe_spell_filtering(type, pronoun)
+                                                  : "";
 
     if (type == MON_SPELL_WIZARD)
     {
         return make_stringf("has mastered %s%s%s:",
                             num_books > 1 ? "one of the following spellbooks"
                                           : "the following spells",
-                            has_filtered ? " (judging by the spells you have"
-                                           " seen them cast)"
-                                         : "",
+                            spell_filter_desc.c_str(),
                             vulnerabilities.c_str());
     }
 
@@ -119,19 +138,14 @@ static string _booktype_header(mon_spell_slot_flag type, size_t num_books,
 
     return make_stringf("possesses the following %s abilities%s%s:",
                         descriptor.c_str(),
-                        has_filtered ? " (judging by the abilities you have"
-                                       " seen them use)"
-                                     : "",
+                        spell_filter_desc.c_str(),
                         vulnerabilities.c_str());
 }
 
 static bool _spell_in_book(spell_type spell, const vector<mon_spell_slot> &book)
 {
-    // XXX: i'm 90% sure there's a neater way to do this (std something?)
-    for (mon_spell_slot slot : book)
-        if (slot.spell == spell)
-            return true;
-    return false;
+    return any_of(book.begin(), book.end(),
+                  [=](mon_spell_slot slot){return slot.spell == spell;});
 }
 
 /**
@@ -148,12 +162,37 @@ static bool _book_valid(const vector<mon_spell_slot> &book,
     if (!mi.props.exists(SEEN_SPELLS_KEY))
         return true;
 
+    auto seen_spells = mi.props[SEEN_SPELLS_KEY].get_vector();
+
     // assumption: any monster with multiple true spellbooks will only ever
     // use one of them
-    for (int spell : mi.props[SEEN_SPELLS_KEY].get_vector())
-        if (!_spell_in_book((spell_type)spell, book))
-            return false;
-    return true;
+    return all_of(seen_spells.begin(), seen_spells.end(),
+                  [&](int spell){return _spell_in_book((spell_type)spell, book);});
+}
+
+static void _split_by_silflag(unique_books &books)
+{
+    unique_books result;
+
+    for (auto book : books)
+    {
+        vector<mon_spell_slot> silflag;
+        vector<mon_spell_slot> no_silflag;
+
+        for (auto i : book)
+        {
+            if (i.flags & MON_SPELL_NO_SILENT)
+                silflag.push_back(i);
+            else no_silflag.push_back(i);
+        }
+
+        if (!no_silflag.empty())
+            result.push_back(no_silflag);
+        if (!silflag.empty())
+            result.push_back(silflag);
+    }
+
+    books = result;
 }
 
 /**
@@ -169,7 +208,16 @@ static void _monster_spellbooks(const monster_info &mi,
                                 mon_spell_slot_flag type,
                                 spellset &all_books)
 {
-    const unique_books books = get_unique_spells(mi, type);
+    unique_books books = get_unique_spells(mi, type);
+
+    // Books of natural abilities get special treatment, because there should
+    // be information about silence in the label(s).
+    const bool ability_case =
+        (bool) (type & (MON_SPELL_MAGICAL | MON_SPELL_NATURAL));
+    // We must split them now; later we'll label them separately.
+    if (ability_case)
+        _split_by_silflag(books);
+
     const size_t num_books = books.size();
 
     if (num_books == 0)
@@ -200,17 +248,16 @@ static void _monster_spellbooks(const monster_info &mi,
                 return slot.flags & MON_SPELL_NO_SILENT;
             });
 
-
-        if (i == 0)
+        if (i == 0 || ability_case)
         {
             output_book.label +=
                 "\n" +
                 uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE)) +
                 " " +
                 _booktype_header(type, valid_books.size(), has_silencable,
-                                 filtered_books);
+                                 filtered_books, mi.pronoun(PRONOUN_OBJECTIVE));
         }
-        if (valid_books.size() > 1)
+        else
         {
             output_book.label += make_stringf("\n%s %d:",
                                               set_name.c_str(), (int) i + 1);
@@ -325,9 +372,8 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!crawl_state.need_save)
         return COL_UNKNOWN;
 
-    const bool rod = source_item && OBJ_RODS == source_item->base_type;
-    if (!source_item || source_item->base_type != OBJ_BOOKS)
-        return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
+    if (!source_item)
+        return spell_highlight_by_utility(spell, COL_UNKNOWN);
 
     if (you.has_spell(spell))
         return COL_MEMORIZED;
@@ -340,13 +386,13 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
         return COL_USELESS;
     }
 
-    if (god_hates_spell(spell, you.religion, rod))
+    if (god_hates_spell(spell, you.religion))
         return COL_FORBIDDEN;
 
     if (!you.has_spell(spell))
         return COL_UNMEMORIZED;
 
-    return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
+    return spell_highlight_by_utility(spell, COL_UNKNOWN);
 }
 
 /**
@@ -379,8 +425,8 @@ static string _spell_schools(spell_type spell)
  * Should spells from the given source be listed in two columns instead of
  * one?
  *
- * @param source_item   The source of the spells; a book, rod, or nullptr in
- *                      the case of monster spellbooks.
+ * @param source_item   The source of the spells; a book, or nullptr in the
+ *                      case of monster spellbooks.
  * @return              source_item == nullptr
  */
 static bool _list_spells_doublecolumn(const item_def* const source_item)
@@ -393,8 +439,8 @@ static bool _list_spells_doublecolumn(const item_def* const source_item)
  * the given spellset.
  *
  * @param spells        A list of 'books' of spells.
- * @param source_item   The source of the spells (book or rod),, or nullptr in
- *                      the case of monster spellbooks.
+ * @param source_item   The source of the spells; a book, or nullptr in the
+ *                      case of monster spellbooks.
  * @return              A list of all unique spells in the given set, ordered
  *                      either in original order or column-major order, the
  *                      latter in the case of a double-column layout.
@@ -417,8 +463,8 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
 /**
  * Describe a given set of spells.
  *
- * @param book              A labeled set of spells, corresponding to a book,
- *                          rod, or monster spellbook.
+ * @param book              A labeled set of spells, corresponding to a book
+ *                          or monster spellbook.
  * @param spell_letters     The letters to use for each spell.
  * @param source_item       The physical item holding the spells. May be null.
  * @param description[out]  An output string to append to.
@@ -436,7 +482,7 @@ static void _describe_book(const spellbook_contents &book,
 
     description.cprintf("%s", book.label.c_str());
 
-    // only display header for book/rod spells
+    // only display header for book spells
     if (source_item)
         description.cprintf("\n Spells                             Type                      Level");
     description.cprintf("\n");
@@ -445,7 +491,7 @@ static void _describe_book(const spellbook_contents &book,
     const bool doublecolumn = _list_spells_doublecolumn(source_item);
 
     bool first_line_element = true;
-    const int hd = mon_owner ? mon_owner->hd : 0;
+    const int hd = mon_owner ? mon_owner->spell_hd() : 0;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -458,8 +504,10 @@ static void _describe_book(const spellbook_contents &book,
                                   index_to_letter(*spell_letter_index) :
                                   ' ';
         if (hd > 0 && crawl_state.need_save
-            && (get_spell_flags(spell) & SPFLAG_MR_CHECK)
-            && mon_owner->attitude != ATT_FRIENDLY)
+#ifndef DEBUG_DIAGNOSTICS
+            && mon_owner->attitude != ATT_FRIENDLY
+#endif
+            && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
             description.cprintf("%c - (%d%%) %s",
                             spell_letter,
@@ -473,7 +521,7 @@ static void _describe_book(const spellbook_contents &book,
                             chop_string(spell_title(spell), 29).c_str());
         }
 
-        // only display type & level for book/rod spells
+        // only display type & level for book spells
         if (doublecolumn)
         {
             // print monster spells in two columns
@@ -530,7 +578,7 @@ void describe_spellset(const spellset &spells,
 /**
  * Return a description of the spells in the given item.
  *
- * @param item      The book or rod in question.
+ * @param item      The book in question.
  * @return          A column-and-row listing of the spells in the given item,
  *                  including names, schools & levels.
  */

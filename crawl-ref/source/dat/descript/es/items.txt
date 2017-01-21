@@ -49,10 +49,6 @@ bardiche
 
 Una larga garrocha con una enorme cuchilla en uno de sus extremos.
 %%%%
-beef jerky
-
-Una tira de carne seca de vaca o toro.
-%%%%
 blessed great sword
 
 Una espada con una larguísima y pesada cuchilla y un gran mango. Ha sido
@@ -219,13 +215,6 @@ demon whip
 
 Un arma terrible, fabricada en las profundidades del Hades.
 %%%%
-disc of storms
-
-Este objeto extremadamente poderoso es capaz de de desencadenar una destructiva
-tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
-manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
-imposible su uso por parte de alguien que no sea conductivo.
-%%%%
 eudemon blade
 
 Una gloriosa cuchilla creada en los forjas del Cielo, y poseída por un espíritu
@@ -236,7 +225,7 @@ eveningstar
 
 Lo contrario del lucero del alba.
 %%%%
-fire dragon armour
+fire dragon scales
 
 Una armadura mágica confeccionada a partir de las escamas de un dragón que
 exhalaba fuego. Proporciona gran protección contra los efectos del fuego, pero
@@ -257,7 +246,7 @@ glaive
 
 Una garrocha con una enorme y pesada cuchilla en su extremo.
 %%%%
-gold dragon armour
+gold dragon scales
 
 Una armadura mágica elaborada a partir de las escamas de un dragón dorado. Es
 muy pesado y aparatoso, pero proporciona gran protección contra el fuego, el
@@ -363,7 +352,7 @@ pair of gloves
 
 Un par de guantes.
 %%%%
-pearl dragon armour
+pearl dragon scales
 
 Una armadura mágica elaborada a partir de las fuertes y flexibles escamas de un
 dragón nacarado. Proporciona protección contra la energía negativa.
@@ -588,11 +577,6 @@ shield
 
 Una pieza de metal diseñada para llevarse atada en un brazo. Es pesada de
 llevar y hace algo más lenta la velocidad a la que se puede atacar.
-%%%%
-slice of pizza
-
-Un trozo de pizza: un pan plano con salsa de tomate, mozzarela de búfala y
-orégano.
 %%%%
 sling
 

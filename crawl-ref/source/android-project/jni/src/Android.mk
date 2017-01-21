@@ -70,7 +70,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/dgn-proclayouts.cc \
     $(CRAWL_PATH)/dgn-shoals.cc \
     $(CRAWL_PATH)/dgn-swamp.cc \
-    $(CRAWL_PATH)/dgnevent.cc \
+    $(CRAWL_PATH)/dgn-event.cc \
     $(CRAWL_PATH)/directn.cc \
     $(CRAWL_PATH)/dlua.cc \
     $(CRAWL_PATH)/domino.cc \
@@ -89,73 +89,74 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/food.cc \
     $(CRAWL_PATH)/format.cc \
     $(CRAWL_PATH)/fprop.cc \
+    $(CRAWL_PATH)/game-options.cc \
     $(CRAWL_PATH)/geom2d.cc \
     $(CRAWL_PATH)/ghost.cc \
-    $(CRAWL_PATH)/godabil.cc \
-    $(CRAWL_PATH)/godblessing.cc \
-    $(CRAWL_PATH)/godcompanions.cc \
-    $(CRAWL_PATH)/godconduct.cc \
-    $(CRAWL_PATH)/goditem.cc \
-    $(CRAWL_PATH)/godmenu.cc \
-    $(CRAWL_PATH)/godpassive.cc \
-    $(CRAWL_PATH)/godprayer.cc \
-    $(CRAWL_PATH)/godwrath.cc \
+    $(CRAWL_PATH)/god-abil.cc \
+    $(CRAWL_PATH)/god-blessing.cc \
+    $(CRAWL_PATH)/god-companions.cc \
+    $(CRAWL_PATH)/god-conduct.cc \
+    $(CRAWL_PATH)/god-item.cc \
+    $(CRAWL_PATH)/god-menu.cc \
+    $(CRAWL_PATH)/god-passive.cc \
+    $(CRAWL_PATH)/god-prayer.cc \
+    $(CRAWL_PATH)/god-wrath.cc \
     $(CRAWL_PATH)/hash.cc \
     $(CRAWL_PATH)/hints.cc \
     $(CRAWL_PATH)/hiscores.cc \
     $(CRAWL_PATH)/initfile.cc \
     $(CRAWL_PATH)/invent.cc \
-    $(CRAWL_PATH)/item_use.cc \
-    $(CRAWL_PATH)/itemname.cc \
-    $(CRAWL_PATH)/itemprop.cc \
+    $(CRAWL_PATH)/item-use.cc \
+    $(CRAWL_PATH)/item-name.cc \
+    $(CRAWL_PATH)/item-prop.cc \
     $(CRAWL_PATH)/items.cc \
     $(CRAWL_PATH)/jobs.cc \
     $(CRAWL_PATH)/json.cc \
     $(CRAWL_PATH)/kills.cc \
-    $(CRAWL_PATH)/l_colour.cc \
-    $(CRAWL_PATH)/l_crawl.cc \
-    $(CRAWL_PATH)/l_debug.cc \
-    $(CRAWL_PATH)/l_dgn.cc \
-    $(CRAWL_PATH)/l_dgnbld.cc \
-    $(CRAWL_PATH)/l_dgnevt.cc \
-    $(CRAWL_PATH)/l_dgngrd.cc \
-    $(CRAWL_PATH)/l_dgnit.cc \
-    $(CRAWL_PATH)/l_dgnlvl.cc \
-    $(CRAWL_PATH)/l_dgnmon.cc \
-    $(CRAWL_PATH)/l_dgntil.cc \
-    $(CRAWL_PATH)/l_feat.cc \
-    $(CRAWL_PATH)/l_file.cc \
-    $(CRAWL_PATH)/l_food.cc \
-    $(CRAWL_PATH)/l_global.cc \
-    $(CRAWL_PATH)/l_item.cc \
-    $(CRAWL_PATH)/l_los.cc \
-    $(CRAWL_PATH)/l_mapgrd.cc \
-    $(CRAWL_PATH)/l_mapmrk.cc \
-    $(CRAWL_PATH)/l_moninf.cc \
-    $(CRAWL_PATH)/l_mons.cc \
-    $(CRAWL_PATH)/l_option.cc \
-    $(CRAWL_PATH)/l_spells.cc \
-    $(CRAWL_PATH)/l_subvault.cc \
-    $(CRAWL_PATH)/l_travel.cc \
-    $(CRAWL_PATH)/l_view.cc \
-    $(CRAWL_PATH)/l_you.cc \
+    $(CRAWL_PATH)/l-colour.cc \
+    $(CRAWL_PATH)/l-crawl.cc \
+    $(CRAWL_PATH)/l-debug.cc \
+    $(CRAWL_PATH)/l-dgn.cc \
+    $(CRAWL_PATH)/l-dgnbld.cc \
+    $(CRAWL_PATH)/l-dgnevt.cc \
+    $(CRAWL_PATH)/l-dgngrd.cc \
+    $(CRAWL_PATH)/l-dgnit.cc \
+    $(CRAWL_PATH)/l-dgnlvl.cc \
+    $(CRAWL_PATH)/l-dgnmon.cc \
+    $(CRAWL_PATH)/l-dgntil.cc \
+    $(CRAWL_PATH)/l-feat.cc \
+    $(CRAWL_PATH)/l-file.cc \
+    $(CRAWL_PATH)/l-food.cc \
+    $(CRAWL_PATH)/l-global.cc \
+    $(CRAWL_PATH)/l-item.cc \
+    $(CRAWL_PATH)/l-los.cc \
+    $(CRAWL_PATH)/l-mapgrd.cc \
+    $(CRAWL_PATH)/l-mapmrk.cc \
+    $(CRAWL_PATH)/l-moninf.cc \
+    $(CRAWL_PATH)/l-mons.cc \
+    $(CRAWL_PATH)/l-option.cc \
+    $(CRAWL_PATH)/l-spells.cc \
+    $(CRAWL_PATH)/l-subvault.cc \
+    $(CRAWL_PATH)/l-travel.cc \
+    $(CRAWL_PATH)/l-view.cc \
+    $(CRAWL_PATH)/l-you.cc \
     $(CRAWL_PATH)/lang-fake.cc \
     $(CRAWL_PATH)/lev-pand.cc \
     $(CRAWL_PATH)/libutil.cc \
-    $(CRAWL_PATH)/lookup_help.cc \
+    $(CRAWL_PATH)/lookup-help.cc \
     $(CRAWL_PATH)/los.cc \
-    $(CRAWL_PATH)/los_def.cc \
+    $(CRAWL_PATH)/los-def.cc \
     $(CRAWL_PATH)/losglobal.cc \
     $(CRAWL_PATH)/losparam.cc \
     $(CRAWL_PATH)/luaterp.cc \
     $(CRAWL_PATH)/macro.cc \
     $(CRAWL_PATH)/main.cc \
     $(CRAWL_PATH)/makeitem.cc \
-    $(CRAWL_PATH)/map_knowledge.cc \
+    $(CRAWL_PATH)/map-knowledge.cc \
     $(CRAWL_PATH)/mapdef.cc \
     $(CRAWL_PATH)/mapmark.cc \
     $(CRAWL_PATH)/maps.cc \
-    $(CRAWL_PATH)/melee_attack.cc \
+    $(CRAWL_PATH)/melee-attack.cc \
     $(CRAWL_PATH)/menu.cc \
     $(CRAWL_PATH)/message-stream.cc \
     $(CRAWL_PATH)/message.cc \
@@ -177,7 +178,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mon-poly.cc \
     $(CRAWL_PATH)/mon-project.cc \
     $(CRAWL_PATH)/mon-speak.cc \
-    $(CRAWL_PATH)/mon-stealth.cc \
     $(CRAWL_PATH)/mon-tentacle.cc \
     $(CRAWL_PATH)/mon-transit.cc \
     $(CRAWL_PATH)/mon-util.cc \
@@ -212,7 +212,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/randbook.cc \
     $(CRAWL_PATH)/random.cc \
     $(CRAWL_PATH)/random-var.cc \
-    $(CRAWL_PATH)/ranged_attack.cc \
+    $(CRAWL_PATH)/ranged-attack.cc \
     $(CRAWL_PATH)/ray.cc \
     $(CRAWL_PATH)/rot.cc \
     $(CRAWL_PATH)/religion.cc \
@@ -220,7 +220,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/shout.cc \
     $(CRAWL_PATH)/show.cc \
     $(CRAWL_PATH)/showsymb.cc \
-    $(CRAWL_PATH)/skill_menu.cc \
+    $(CRAWL_PATH)/skill-menu.cc \
     $(CRAWL_PATH)/skills.cc \
     $(CRAWL_PATH)/species.cc \
     $(CRAWL_PATH)/spl-book.cc \
@@ -255,7 +255,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/teleport.cc \
     $(CRAWL_PATH)/terrain.cc \
     $(CRAWL_PATH)/throw.cc \
-    $(CRAWL_PATH)/timed_effects.cc \
+    $(CRAWL_PATH)/timed-effects.cc \
     $(CRAWL_PATH)/transform.cc \
     $(CRAWL_PATH)/traps.cc \
     $(CRAWL_PATH)/travel.cc \

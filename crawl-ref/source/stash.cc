@@ -22,10 +22,10 @@
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "menu.h"
@@ -178,9 +178,8 @@ Stash::Stash(coord_def pos_) : items()
 bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
     const bool same = a.is_type(b.base_type, b.sub_type)
-        // Ignore Gozag's gold flag, and rod charges.
-        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
-                             || a.base_type == OBJ_RODS && !exact)
+        // Ignore Gozag's gold flag.
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.get_colour() == b.get_colour() // ????????
@@ -474,6 +473,17 @@ vector<stash_search_result> Stash::matches_search(
         res.pos.pos = pos;
 
     return results;
+}
+
+/// Fedhas: rot away all corpses.
+void Stash::rot_all_corpses()
+{
+    for (int i = items.size() - 1; i >= 0; i--)
+    {
+        item_def &item = items[i];
+        if (item.is_type(OBJ_CORPSES, CORPSE_BODY) && item.stash_freshness >= 0)
+            item.stash_freshness = -1;
+    }
 }
 
 void Stash::_update_corpses(int rot_time)
@@ -935,6 +945,13 @@ void LevelStashes::get_matching_stashes(
             results.push_back(res);
         }
     }
+}
+
+/// Fedhas: rot away all corpses.
+void LevelStashes::rot_all_corpses()
+{
+    for (auto &entry : m_stashes)
+        entry.second.rot_all_corpses();
 }
 
 void LevelStashes::_update_corpses(int rot_time)
@@ -1516,7 +1533,7 @@ bool StashTracker::display_search_results(
     if (results_in.empty())
         return false;
 
-    vector<stash_search_result> * results = &results_in;
+    vector<stash_search_result> * results;
     vector<stash_search_result> results_filtered;
 
     if (filter_useless)

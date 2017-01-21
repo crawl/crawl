@@ -16,10 +16,10 @@
 #include "database.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "los.h"
 #include "macro.h"
 #include "message.h"
@@ -313,8 +313,6 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         if (crawl_state.game_is_hints())
             hints_death_screen();
     }
-    else
-        you.delay_queue.clear(); // don't lose ev for taking the exit...
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))

@@ -13,7 +13,7 @@
 
 extern const char * const standard_plural_qualifiers[];
 
-bool is_vowel(const ucs_t chr);
+bool is_vowel(const char32_t chr);
 
 string pluralise(const string &name,
                  const char * const stock_plural_quals[]

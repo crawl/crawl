@@ -27,7 +27,6 @@ struct species_def
     int xp_mod; ///< Experience level modifier
     int hp_mod; ///< HP modifier (in tenths)
     int mp_mod; ///< MP modifier
-    int stealth_mod; ///< Stealth modifier
     int mr_mod; ///< MR modifier (multiplied by XL for base MR)
     monster_type monster_species; ///< Corresponding monster (for display)
     habitat_type habitat; ///< Where it can live; HT_WATER -> no penalties
@@ -50,8 +49,7 @@ static const map<species_type, species_def> species_data =
     "Ce",
     "Centaur", nullptr, nullptr,
     SPF_SMALL_TORSO,
-    -1, 1, 0,
-    9, 3,
+    -1, 1, 0, 3,
     MONS_CENTAUR,
     HT_LAND, US_ALIVE, SIZE_LARGE,
     10, 7, 4, // 21
@@ -69,8 +67,7 @@ static const map<species_type, species_def> species_data =
     "DD",
     "Deep Dwarf", "Dwarven", "Dwarf",
     SPF_NONE,
-    -1, 2, 0,
-    15, 6,
+    -1, 2, 0, 6,
     MONS_DEEP_DWARF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 8, 8, // 27
@@ -90,8 +87,7 @@ static const map<species_type, species_def> species_data =
     "DE",
     "Deep Elf", "Elven", "Elf",
     SPF_ELVEN,
-    -1, -2, 2,
-    15, 4,
+    -1, -2, 2, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     5, 12, 10, // 27
@@ -109,8 +105,7 @@ static const map<species_type, species_def> species_data =
     "Dg",
     "Demigod", "Divine", nullptr,
     SPF_NONE,
-    -2, 1, 2,
-    15, 4,
+    -2, 1, 2, 4,
     MONS_DEMIGOD,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 12, 11, // 34
@@ -128,8 +123,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Draconian", nullptr, nullptr,
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -148,8 +142,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Red Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_RED_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -165,8 +158,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "White Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_WHITE_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -183,8 +175,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Green Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_GREEN_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -201,8 +192,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Yellow Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_YELLOW_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -218,8 +208,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Grey Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_GREY_DRACONIAN,
     HT_AMPHIBIOUS, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -235,8 +224,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Black Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_BLACK_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -253,8 +241,7 @@ static const map<species_type, species_def> species_data =
     "Dr",
     "Purple Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 6,
+    -1, 1, 0, 6,
     MONS_PURPLE_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -266,12 +253,12 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
 } },
 
+#if TAG_MAJOR_VERSION == 34
 { SP_MOTTLED_DRACONIAN, {
     "Dr",
     "Mottled Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_MOTTLED_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -283,13 +270,13 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
     {}, // not a starting race
 } },
+#endif
 
 { SP_PALE_DRACONIAN, {
     "Dr",
     "Pale Draconian", "Draconian", "Draconian",
     SPF_DRACONIAN,
-    -1, 1, 0,
-    12, 3,
+    -1, 1, 0, 3,
     MONS_PALE_DRACONIAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -305,8 +292,7 @@ static const map<species_type, species_def> species_data =
     "Ds",
     "Demonspawn", "Demonic", nullptr,
     SPF_NONE,
-    -1, 0, 0,
-    15, 3,
+    -1, 0, 0, 3,
     MONS_DEMONSPAWN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 9, 8, // 25
@@ -325,8 +311,7 @@ static const map<species_type, species_def> species_data =
     "Fe",
     "Felid", "Feline", "Cat",
     SPF_NONE,
-    -1, -4, 1,
-    18, 6,
+    -1, -4, 1, 6,
     MONS_FELID,
     HT_LAND, US_ALIVE, SIZE_LITTLE,
     4, 9, 11, // 24
@@ -336,8 +321,9 @@ static const map<species_type, species_def> species_data =
       { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 },
       { MUT_SHAGGY_FUR, 1, 6 }, { MUT_SHAGGY_FUR, 1, 12 }, },
     { "You cannot wear armour.",
-      "You are incapable of wielding weapons or throwing items." },
-    { "no armour", "no weapons or thrown items" },
+      "You are incapable of wielding weapons or throwing items.",
+      "Your paws allow you to move quietly. (Stealth)" },
+    { "no armour", "no weapons or thrown items", "stealth" },
     { JOB_BERSERKER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_ICE_ELEMENTALIST,
       JOB_CONJURER, JOB_SUMMONER, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
     { SK_UNARMED_COMBAT },
@@ -347,14 +333,13 @@ static const map<species_type, species_def> species_data =
     "Fo",
     "Formicid", nullptr, "Ant",
     SPF_NONE,
-    1, 0, 0,
-    15, 4,
+    1, 0, 0, 4,
     MONS_FORMICID,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     12, 7, 6, // 25
     { STAT_STR, STAT_INT }, 4,
     { { MUT_ANTENNAE, 3, 1 }, },
-    { "You are under a permanent stasis effect.",
+    { "You cannot be hasted, slowed, berserked, paralysed or teleported.",
       "You can dig through walls and to a lower floor.",
       "Your four strong arms can wield two-handed weapons with a shield." },
     { "permanent stasis", "dig shafts and tunnels", "four strong arms" },
@@ -364,12 +349,28 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_BARACHIAN, {
+    "Ba",
+    "Barachian", nullptr, "Frog",
+    SPF_NO_HAIR,
+    0, 0, 0, 3,
+    MONS_BARACHIAN,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    6, 6, 6, // 18
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_SLOW, 1, 1 }, { MUT_HOP, 1, 1}, {MUT_HOP, 1, 13}, },
+    { "You can swim through water.", },
+    { "swims", },
+    { JOB_FIGHTER, JOB_BERSERKER, JOB_SKALD, JOB_SUMMONER, JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_GHOUL, {
     "Gh",
     "Ghoul", "Ghoulish", nullptr,
     SPF_NO_HAIR,
-    0, 1, -1,
-    15, 3,
+    0, 1, -1, 3,
     MONS_GHOUL,
     HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
     11, 3, 4, // 18
@@ -390,8 +391,7 @@ static const map<species_type, species_def> species_data =
     "Gr",
     "Gargoyle", nullptr, nullptr,
     SPF_NO_HAIR,
-    0, -2, 0,
-    15, 3,
+    0, -2, 0, 3,
     MONS_GARGOYLE,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 8, 5, // 24
@@ -411,44 +411,23 @@ static const map<species_type, species_def> species_data =
     "Ha",
     "Halfling", nullptr, nullptr,
     SPF_NONE,
-    1, -1, 0,
-    18, 3,
+    1, -1, 0, 3,
     MONS_HALFLING,
     HT_LAND, US_ALIVE, SIZE_SMALL,
-    8, 7, 9, // 24
+    9, 6, 9, // 24
     { STAT_DEX }, 5,
     { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
     {},
     {},
-    { JOB_FIGHTER, JOB_HUNTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ENCHANTER,
-      JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_SLINGS },
-} },
-
-{ SP_HIGH_ELF, {
-    "HE",
-    "High Elf", "Elven", "Elf",
-    SPF_ELVEN,
-    -1, -1, 1,
-    15, 4,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    7, 11, 10, // 28
-    { STAT_INT, STAT_DEX }, 3,
-    {},
-    {},
-    {},
-    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
-      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
+    { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
 } },
 
 { SP_HILL_ORC, {
     "HO",
     "Hill Orc", "Orcish", "Orc",
     SPF_ORCISH,
-    0, 1, 0,
-    15, 3,
+    0, 1, 0, 3,
     MONS_ORC,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -465,8 +444,7 @@ static const map<species_type, species_def> species_data =
     "Hu",
     "Human", nullptr, nullptr,
     SPF_NONE,
-    1, 0, 0,
-    15, 3,
+    1, 0, 0, 3,
     MONS_HUMAN,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
@@ -484,34 +462,33 @@ static const map<species_type, species_def> species_data =
     "Ko",
     "Kobold", nullptr, nullptr,
     SPF_NONE,
-    1, -2, 0,
-    18, 3,
+    1, -2, 0, 3,
     MONS_KOBOLD,
     HT_LAND, US_ALIVE, SIZE_SMALL,
-    6, 6, 11, // 23
-    { STAT_STR, STAT_DEX }, 5,
+    5, 9, 10, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_CARNIVOROUS, 3, 1 }, },
     {},
     {},
-    { JOB_HUNTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ARCANE_MARKSMAN,
-      JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_STAVES, SK_CROSSBOWS, SK_SLINGS },
+    { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_ENCHANTER,
+      JOB_CONJURER, JOB_SUMMONER },
+    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_STAVES, SK_CROSSBOWS },
 } },
 
 { SP_MERFOLK, {
     "Mf",
     "Merfolk", "Merfolkian", nullptr,
     SPF_NONE,
-    0, 0, 0,
-    15, 3,
+    0, 0, 0, 3,
     MONS_MERFOLK,
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
     8, 7, 9, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
     {},
     { "You revert to your normal form in water.",
-      "You are very nimble and swift while swimming." },
-    { "change form in water", "swift swim" },
+      "You are very nimble and swift while swimming.",
+      "You are very stealthy in the water. (Stealth+)" },
+    { "change form in water", "swift swim", "stealthy swim" },
     { JOB_GLADIATOR, JOB_BERSERKER, JOB_SKALD, JOB_TRANSMUTER, JOB_SUMMONER,
       JOB_ICE_ELEMENTALIST, JOB_VENOM_MAGE },
     { SK_POLEARMS, SK_LONG_BLADES },
@@ -521,8 +498,7 @@ static const map<species_type, species_def> species_data =
     "Mi",
     "Minotaur", nullptr, nullptr,
     SPF_NONE,
-    -1, 1, -1,
-    12, 3,
+    -1, 1, -1, 3,
     MONS_MINOTAUR,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     12, 5, 5, // 22
@@ -540,8 +516,7 @@ static const map<species_type, species_def> species_data =
     "Mu",
     "Mummy", nullptr, nullptr,
     SPF_NONE,
-    -1, 0, 0,
-    15, 5,
+    -1, 0, 0, 5,
     MONS_MUMMY,
     HT_LAND, US_UNDEAD, SIZE_MEDIUM,
     11, 7,  7, // 25
@@ -563,14 +538,13 @@ static const map<species_type, species_def> species_data =
     "Na",
     "Naga", nullptr, nullptr,
     SPF_SMALL_TORSO,
-    0, 2, 0,
-    18, 5,
+    0, 2, 0, 5,
     MONS_NAGA,
     HT_LAND, US_ALIVE, SIZE_LARGE,
     10, 8, 6, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
     { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
-      { MUT_SPIT_POISON, 2, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
+      { MUT_SPIT_POISON, 1, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
       { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CONSTRICTING_TAIL, 1, 13 } },
     { "You cannot wear boots." },
     {},
@@ -584,33 +558,32 @@ static const map<species_type, species_def> species_data =
     "Og",
     "Ogre", "Ogreish", nullptr,
     SPF_NONE,
-    0, 3, 0,
-    9, 4,
+    0, 3, 0, 4,
     MONS_OGRE,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    12, 7, 5, // 24
+    11, 9, 4, // 24
     { STAT_STR }, 3,
     { { MUT_TOUGH_SKIN, 1, 1 }, },
     {},
     {},
     { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
       JOB_FIRE_ELEMENTALIST },
-    { SK_MACES_FLAILS },
+    { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES },
 } },
 
 { SP_OCTOPODE, {
     "Op",
     "Octopode", "Octopoid", "Octopus",
     SPF_NO_HAIR,
-    0, -1, 0,
-    18, 3,
+    0, -1, 0, 3,
     MONS_OCTOPODE,
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
     7, 10, 7, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_CAMOUFLAGE, 1, 1 }, { MUT_GELATINOUS_BODY, 1, 1 }, },
-    { "You cannot wear most types of armour." },
-    { "almost no armour" },
+    { "You cannot wear most types of armour.",
+      "You are very stealthy in the water. (Stealth+)" },
+    { "almost no armour", "stealthy swim" },
     { JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, JOB_ASSASSIN,
       JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
       JOB_VENOM_MAGE },
@@ -622,8 +595,7 @@ static const map<species_type, species_def> species_data =
     "Sp",
     "Spriggan", nullptr, nullptr,
     SPF_NONE,
-    -1, -3, 1,
-    18, 7,
+    -1, -3, 1, 7,
     MONS_SPRIGGAN,
     HT_LAND, US_ALIVE, SIZE_LITTLE,
     4, 9, 11, // 24
@@ -641,8 +613,7 @@ static const map<species_type, species_def> species_data =
     "Te",
     "Tengu", nullptr, nullptr,
     SPF_NO_HAIR,
-    0, -2, 1,
-    15, 3,
+    0, -2, 1, 3,
     MONS_TENGU,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 9, // 25
@@ -661,13 +632,12 @@ static const map<species_type, species_def> species_data =
     "Tr",
     "Troll", "Trollish", nullptr,
     SPF_NONE,
-    -1, 3, -1,
-    9, 3,
+    -1, 3, -1, 3,
     MONS_TROLL,
     HT_LAND, US_ALIVE, SIZE_LARGE,
     15, 4, 5, // 24
     { STAT_STR }, 3,
-    { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 2, 1 }, { MUT_CLAWS, 3, 1 },
+    { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 1, 1 }, { MUT_CLAWS, 3, 1 },
       { MUT_GOURMAND, 1, 1 }, { MUT_FAST_METABOLISM, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, },
     {},
@@ -681,8 +651,7 @@ static const map<species_type, species_def> species_data =
     "Vp",
     "Vampire", "Vampiric", nullptr,
     SPF_NONE,
-    -1, 0, 0,
-    18, 4,
+    -1, 0, 0, 4,
     MONS_VAMPIRE,
     HT_LAND, US_SEMI_UNDEAD, SIZE_MEDIUM,
     7, 10, 9, // 26
@@ -701,17 +670,15 @@ static const map<species_type, species_def> species_data =
     "VS",
     "Vine Stalker", "Vine", "Vine",
     SPF_NONE,
-    0, -3, 1,
-    15, 5,
+    0, -3, 1, 5,
     MONS_VINE_STALKER,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 9, // 27
     { STAT_STR, STAT_DEX }, 4,
     { { MUT_FANGS, 2, 1 }, { MUT_FANGS, 1, 8 },
       { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
-      { MUT_NO_DEVICE_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
-      { MUT_REGENERATION, 1, 1 }, { MUT_REGENERATION, 1, 6 },
-      { MUT_REGENERATION, 1, 12 }, },
+      { MUT_NO_POTION_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
+      { MUT_REGENERATION, 1, 4 }, { MUT_REGENERATION, 1, 12 }, },
     {},
     {},
     { JOB_FIGHTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ENCHANTER, JOB_CONJURER,
@@ -724,8 +691,7 @@ static const map<species_type, species_def> species_data =
     "SE",
     "Sludge Elf", "Elven", "Elf",
     SPF_ELVEN,
-    0, -1, 1,
-    15, 3,
+    0, -1, 1, 3,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
@@ -741,8 +707,7 @@ static const map<species_type, species_def> species_data =
     "LO",
     "Lava Orc", "Orcish", "Orc",
     SPF_ORCISH | SPF_NO_HAIR,
-    -1, 1, 0,
-    15, 3,
+    -1, 1, 0, 3,
     MONS_LAVA_ORC,
     HT_AMPHIBIOUS_LAVA, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
@@ -758,8 +723,7 @@ static const map<species_type, species_def> species_data =
     "Dj",
     "Djinni", "Djinn", nullptr,
     SPF_NONE,
-    -1, -1, 0,
-    9, 3,
+    -1, -1, 0, 3,
     MONS_DJINNI,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
@@ -773,22 +737,38 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
     {}, // not a starting race
 } },
+
+{ SP_HIGH_ELF, {
+    "HE",
+    "High Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -1, -1, 1, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 11, 10, // 28
+    { STAT_INT, STAT_DEX }, 3,
+    {},
+    {},
+    {},
+    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
+} },
 #endif
 // Ideally this wouldn't be necessary...
 { SP_UNKNOWN, { // Line 1: enum
     "??", // Line 2: abbrev
     "Yak", nullptr, nullptr, // Line 3: name, genus name, adjectival name
     SPF_NONE, // Line 4: flags
-    0, 0, 0, // Line 5: XP, HP, MP (gen-apt.pl needs them here!)
-    0, 0, // Line 6: Stealth, MR
-    MONS_PROGRAM_BUG, // Line 7: equivalent monster type
-    HT_LAND, US_ALIVE, SIZE_MEDIUM, // Line 8: habitat, life, size
-    0, 0, 0, // Line 9: str, int, dex
-    set<stat_type>(), 28, // Line 10: str gain, int gain, dex gain, frequency
-    {}, // Line 11: Mutations
+    0, 0, 0, 0, // Line 5: XP, HP, MP, MR (gen-apt.pl needs them here!)
+    MONS_PROGRAM_BUG, // Line 6: equivalent monster type
+    HT_LAND, US_ALIVE, SIZE_MEDIUM, // Line 7: habitat, life, size
+    0, 0, 0, // Line 8: str, int, dex
+    set<stat_type>(), 28, // Line 9: str gain, int gain, dex gain, frequency
+    {}, // Line 10: Mutations
+    {}, // Line 11: Fake mutations
     {}, // Line 12: Fake mutations
-    {}, // Line 13: Fake mutations
-    {}, // Line 14: Recommended jobs
-    {}, // Line 15: Recommended weapons
+    {}, // Line 13: Recommended jobs
+    {}, // Line 14: Recommended weapons
 } }
 };

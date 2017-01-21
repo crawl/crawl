@@ -30,12 +30,12 @@
 #include "exclude.h"
 #include "fight.h"
 #include "fprop.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -77,7 +77,6 @@ void draconian_change_colour(monster* drac)
                                        MONS_BLACK_DRACONIAN,
                                        MONS_GREEN_DRACONIAN,
                                        MONS_PURPLE_DRACONIAN,
-                                       MONS_MOTTLED_DRACONIAN,
                                        MONS_YELLOW_DRACONIAN);
     drac->colour = mons_class_colour(drac->base_monster);
 
@@ -88,7 +87,7 @@ void draconian_change_colour(monster* drac)
         if (!(slot.flags & MON_SPELL_BREATH))
             drac->spells.push_back(slot);
 
-    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(drac)));
+    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(*drac)));
 }
 
 bool ugly_thing_mutate(monster* ugly, bool force)
@@ -125,7 +124,7 @@ bool ugly_thing_mutate(monster* ugly, bool force)
     if (!msg) // didn't find anything to mutate off of
         return false;
 
-    simple_monster_message(ugly, msg);
+    simple_monster_message(*ugly, msg);
     ugly->uglything_mutate(new_colour);
     return true;
 }
@@ -201,9 +200,6 @@ static monster* _do_split(monster* thing, const coord_def & target)
     // Create a new slime.
     mgen_data new_slime_data = mgen_data(thing->type,
                                          SAME_ATTITUDE(thing),
-                                         0,
-                                         0,
-                                         0,
                                          target,
                                          thing->foe,
                                          MG_FORCE_PLACE);
@@ -361,7 +357,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     merge_to->set_hit_dice(orighd);
     merge_ench_durations(crawlie, merge_to, true);
 
-    init_abomination(merge_to, newhd);
+    init_abomination(*merge_to, newhd);
     merge_to->max_hit_points = mhp;
     merge_to->hit_points = hp;
 
@@ -469,7 +465,7 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monster* thing)
 {
-    return thing->asleep() || mons_is_wandering(thing)
+    return thing->asleep() || mons_is_wandering(*thing)
            || thing->foe == MHITNOT;
 }
 
@@ -477,8 +473,8 @@ static bool _unoccupied_slime(monster* thing)
 static bool _disabled_merge(monster* thing)
 {
     return !thing
-           || mons_is_fleeing(thing)
-           || mons_is_confused(thing)
+           || mons_is_fleeing(*thing)
+           || mons_is_confused(*thing)
            || thing->paralysed();
 }
 
@@ -795,7 +791,7 @@ static bool _will_starcursed_scream(monster* mon)
 static bool _lost_soul_affectable(const monster &mons)
 {
     // zombies are boring
-    if (mons_is_zombified(&mons))
+    if (mons_is_zombified(mons))
         return false;
 
     // undead can be reknit, naturals ghosted, everyone else is out of luck
@@ -884,7 +880,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
             remove_unique_annotation(mons);
         }
 
-        targetter_los hitfunc(*mi, LOS_SOLID);
+        targeter_los hitfunc(*mi, LOS_SOLID);
         flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
         mons->heal(mons->max_hit_points);
@@ -931,16 +927,15 @@ void treant_release_fauna(monster* mons)
     int count = mons->mangrove_pests;
     bool created = false;
 
-    monster_type fauna_t = (one_chance_in(6) ? MONS_HORNET
-                                             : MONS_WASP);
+    monster_type fauna_t = MONS_HORNET;
 
     mon_enchant abj = mons->get_ench(ENCH_ABJ);
 
     for (int i = 0; i < count; ++i)
     {
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(mons),
-                            mons, 0, SPELL_NO_SPELL, mons->pos(),
-                            mons->foe);
+                            mons->pos(),  mons->foe);
+        fauna_data.set_summoned(mons, 0, SPELL_NO_SPELL);
         fauna_data.extra_flags |= MF_WAS_IN_VIEW;
         monster* fauna = create_monster(fauna_data);
 
@@ -1008,7 +1003,7 @@ bool mon_special_ability(monster* mons)
     bool used = false;
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                  ? draco_or_demonspawn_subspecies(mons)
+                                  ? draco_or_demonspawn_subspecies(*mons)
                                   : mons->type;
 
     // Slime creatures can split while out of sight.
@@ -1085,53 +1080,6 @@ bool mon_special_ability(monster* mons)
         }
         break;
 
-    case MONS_SNAPPING_TURTLE:
-    case MONS_ALLIGATOR_SNAPPING_TURTLE:
-        // Use the same calculations as for low-HP casting
-        if (mons->hit_points < mons->max_hit_points / 4 && !one_chance_in(4)
-            && !mons->has_ench(ENCH_WITHDRAWN))
-        {
-            mons->add_ench(ENCH_WITHDRAWN);
-
-            if (mons_is_retreating(mons))
-                behaviour_event(mons, ME_CORNERED);
-
-            simple_monster_message(mons, " withdraws into its shell!");
-            return true;
-        }
-        break;
-
-    case MONS_BOULDER_BEETLE:
-        if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (!mons->has_ench(ENCH_ROLLING)
-            && !feat_is_water(grd(mons->pos())))
-        {
-            bolt beem = setup_targetting_beam(*mons);
-
-            // Fleeing check
-            if (mons_is_fleeing(mons))
-            {
-                if (coinflip())
-                {
-                //  behaviour_event(mons, ME_CORNERED);
-                    simple_monster_message(mons, " curls into a ball and rolls away!");
-                    boulder_start(mons, &beem);
-                    used = true;
-                }
-            }
-            // Normal check - don't roll at adjacent targets
-            else if (one_chance_in(3)
-                     && !adjacent(mons->pos(), beem.target))
-            {
-                simple_monster_message(mons, " curls into a ball and starts rolling!");
-                boulder_start(mons, &beem);
-                used = true;
-            }
-        }
-        break;
-
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->blob_size,8) && x_chance_in_y(2,3)
             && mons->hit_points >= 8)
@@ -1139,7 +1087,7 @@ bool mon_special_ability(monster* mons)
             _starcursed_split(mons), used = true;
         }
 
-        if (!mons_is_confused(mons)
+        if (!mons_is_confused(*mons)
                 && !is_sanctuary(mons->pos()) && !is_sanctuary(mons->target)
                 && _will_starcursed_scream(mons)
                 && coinflip())
@@ -1177,7 +1125,7 @@ bool mon_special_ability(monster* mons)
         // defensive wall of brambles (use the number of brambles in the area
         // as some indication if we've already done this, and shouldn't repeat)
         else if (mons->props["foe_approaching"].get_bool() == true
-                 && !mons_is_confused(mons)
+                 && !mons_is_confused(*mons)
                  && coinflip())
         {
             int briar_count = 0;
@@ -1213,7 +1161,7 @@ bool mon_special_ability(monster* mons)
                 {
                     if (mons->move_to_pos(spot))
                     {
-                        simple_monster_message(mons, " flows with the water.");
+                        simple_monster_message(*mons, " flows with the water.");
                         used = true;
                     }
                 }
@@ -1256,7 +1204,7 @@ bool mon_special_ability(monster* mons)
         if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
-            simple_monster_message(mons, " overheats!");
+            simple_monster_message(*mons, " overheats!");
             mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0,
                                        INFINITE_DURATION));
         }

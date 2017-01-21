@@ -38,12 +38,12 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
-#include "flood_find.h"
+#include "flood-find.h"
 #include "food.h"
 #include "ghost.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
@@ -68,7 +68,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -249,7 +249,8 @@ static void _count_gold()
         }
     }
 
-    you.attribute[ATTR_GOLD_GENERATED] += gold;
+    if (!player_in_branch(BRANCH_ABYSS))
+        you.attribute[ATTR_GOLD_GENERATED] += gold;
 
     if (have_passive(passive_t::detect_gold))
     {
@@ -1291,8 +1292,7 @@ static void _fixup_walls()
         if (you.depth == branches[BRANCH_VAULTS].numlevels)
         {
             wall_type = random_choose_weighted(1, DNGN_CRYSTAL_WALL,
-                                               9, DNGN_METAL_WALL,
-                                               0);
+                                               9, DNGN_METAL_WALL);
         }
         break;
     }
@@ -1623,7 +1623,11 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs,
     // In Zot, don't create extra escape hatches, in order to force
     // the player through vaults that use all three down stone stairs.
     if (player_in_branch(BRANCH_ZOT))
-        replace = DNGN_GRANITE_STATUE;
+    {
+        replace = random_choose(DNGN_FOUNTAIN_BLUE,
+                                DNGN_FOUNTAIN_SPARKLING,
+                                DNGN_FOUNTAIN_BLOOD);
+    }
 
     dprf(DIAG_DNGN, "Before culling: %d/%d %s stairs",
          (int)stairs.size(), needed_stairs, checking_up_stairs ? "up" : "down");
@@ -2206,9 +2210,9 @@ static void _ruin_level(Iterator iter,
             && !plant_forbidden_at(p))
         {
             mgen_data mg;
-            mg.cls = one_chance_in(20) ? MONS_BUSH  :
-                     coinflip()        ? MONS_PLANT :
-                     MONS_FUNGUS;
+            mg.cls = random_choose_weighted( 2, MONS_BUSH,
+                                            19, MONS_PLANT,
+                                            19, MONS_FUNGUS);
             mg.pos = p;
             mg.flags = MG_FORCE_PLACE;
             mons_place(mgen_data(mg));
@@ -3157,8 +3161,6 @@ static void _place_traps()
         max_webs /= 2;
         place_webs(max_webs + random2(max_webs));
     }
-    else if (player_in_branch(BRANCH_CRYPT))
-        place_webs(random2(20));
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
@@ -3549,12 +3551,11 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
             && player_in_hell()
             && mons_class_can_be_zombified(mg.cls))
         {
-            static const monster_type lut[3] =
-                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
-
             mg.base_type = mg.cls;
-            int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
+            const int skel_chance = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = random_choose_weighted(skel_chance, MONS_SKELETON,
+                                            8,           MONS_ZOMBIE,
+                                            1,           MONS_SIMULACRUM);
         }
 
         place_monster(mg);
@@ -3706,7 +3707,7 @@ static void _randomly_place_item(int item)
         found = grd(itempos) == DNGN_FLOOR
                 && !map_masked(itempos, MMT_NO_ITEM)
                 // oklobs or statues are ok
-                && (!mon || !mons_is_firewood(mon));
+                && (!mon || !mons_is_firewood(*mon));
     }
     if (!found)
     {
@@ -4211,7 +4212,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(*corpse);
     else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
-        turn_corpse_into_chunks(*corpse, false, false);
+        turn_corpse_into_chunks(*corpse, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
     {
@@ -4358,10 +4359,8 @@ static object_class_type _superb_object_class()
             10, OBJ_ARMOUR,
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
-            9, OBJ_STAVES,
-            1, OBJ_RODS,
-            10, OBJ_MISCELLANY,
-            0);
+            10, OBJ_STAVES,
+            10, OBJ_MISCELLANY);
 }
 
 int dgn_place_item(const item_spec &spec,
@@ -4418,7 +4417,7 @@ int dgn_place_item(const item_spec &spec,
 
     while (true)
     {
-        int item_made;
+        int item_made = NON_ITEM;
 
         if (acquire)
         {
@@ -4426,15 +4425,20 @@ int dgn_place_item(const item_spec &spec,
                                                 spec.acquirement_source,
                                                 true, where);
         }
-        else if (spec.corpselike())
-            item_made = _dgn_item_corpse(spec, where);
-        else
-        {
-            item_made = items(spec.allow_uniques, base_type,
-                              spec.sub_type, level, spec.ego);
 
-            if (spec.level == ISPEC_MUNDANE)
-                squash_plusses(item_made);
+        // Both normal item generation and the failed "acquire foo" fallback.
+        if (item_made == NON_ITEM)
+        {
+            if (spec.corpselike())
+                item_made = _dgn_item_corpse(spec, where);
+            else
+            {
+                item_made = items(spec.allow_uniques, base_type,
+                                  spec.sub_type, level, spec.ego);
+
+                if (spec.level == ISPEC_MUNDANE)
+                    squash_plusses(item_made);
+            }
         }
 
         if (item_made == NON_ITEM || item_made == -1)
@@ -4669,7 +4673,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.hd        = mspec.hd;
     mg.hp        = mspec.hp;
     mg.props     = mspec.props;
-    mg.initial_shifter = mspec.initial_shifter;
 
     // Marking monsters as summoned
     mg.abjuration_duration = mspec.abjuration_duration;
@@ -5045,24 +5048,19 @@ static void _vault_grid_mons(vault_placement &place,
         _vault_grid_glyph_mons(place, where, vgrid);
 }
 
-// Currently only used for Slime: branch end
-// where it will turn the stone walls into clear rock walls
-// once the Royal Jelly has been killed.
-bool seen_replace_feat(dungeon_feature_type old_feat,
-                       dungeon_feature_type new_feat)
+// Only used for Slime:$ where it will turn the stone walls into floor once the
+// Royal Jelly has been killed, or at 6* Jiyva piety.
+bool seen_destroy_feat(dungeon_feature_type old_feat)
 {
-    ASSERT(old_feat != new_feat);
-
     coord_def p1(0, 0);
     coord_def p2(GXM - 1, GYM - 1);
 
     bool seen = false;
     for (rectangle_iterator ri(p1, p2); ri; ++ri)
     {
-        if (grd(*ri) == old_feat)
+        if (orig_terrain(*ri) == old_feat)
         {
-            grd(*ri) = new_feat;
-            set_terrain_changed(*ri);
+            destroy_wall(*ri);
             if (you.see_cell(*ri))
                 seen = true;
         }
@@ -5262,7 +5260,7 @@ static dungeon_feature_type _pick_an_altar()
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL);
             break;
 
         case BRANCH_ORC: // There are a few heretics
@@ -5473,15 +5471,12 @@ static int _make_delicious_corpse()
     // Create corpse object.
     monster dummy;
     dummy.type = mon_type;
-    define_monster(&dummy);
+    define_monster(dummy);
 
     item_def* corpse = place_monster_corpse(dummy, true, true);
     if (!corpse)
         return NON_ITEM;
 
-    // no hides allowed, I guess?
-    if (mons_class_leaves_hide(mon_type))
-        corpse->props[MANGLED_CORPSE_KEY] = true;
     return corpse->index();
 }
 
@@ -5661,9 +5656,7 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_JEWELLERY;
 
     case SHOP_EVOKABLES:
-        if (one_chance_in(10))
-            return OBJ_RODS;
-        return coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
@@ -5959,10 +5952,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
     {
         if (!feat_is_traversable(env.grid(*ai)))
             continue;
-        int walls = 0;
-        for (adjacent_iterator bi(*ai); bi && walls < max_walls; ++bi)
-            if (env.grid(*bi) == DNGN_SLIMY_WALL)
-                walls++;
+        const int walls = count_adjacent_slime_walls(*ai);
         if (walls < max_walls)
         {
             *pos = *ai;
@@ -6218,8 +6208,8 @@ coord_def dgn_region::random_edge_point() const
 {
     return x_chance_in_y(size.x, size.x + size.y) ?
                   coord_def(pos.x + random2(size.x),
-                             coinflip()? pos.y : pos.y + size.y - 1)
-                : coord_def(coinflip()? pos.x : pos.x + size.x - 1,
+                             random_choose(pos.y, pos.y + size.y - 1))
+                : coord_def(random_choose(pos.x, pos.x + size.x - 1),
                              pos.y + random2(size.y));
 }
 

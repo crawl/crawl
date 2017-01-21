@@ -114,7 +114,7 @@ void dgn_build_basic_level()
 
     int no_rooms = random_choose_weighted(636, (5 + random2avg(29, 2)),
                                           49, 100,
-                                          15, 1, 0);
+                                          15, 1);
 
     _make_random_rooms(no_rooms, 2 + random2(8), doorlevel, 50, 40, roomsize);
 
@@ -164,7 +164,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
                                               24, 3000,
                                               16, 5000,
                                               8, 2000,
-                                              1, 1000, 0);
+                                              1, 1000);
 
     if (force_wall != NUM_FEATURES)
         drawing = force_wall;
@@ -172,7 +172,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
     {
         drawing = random_choose_weighted(10, DNGN_ROCK_WALL,
                                          5, DNGN_STONE_WALL,
-                                         3, DNGN_METAL_WALL, 0);
+                                         3, DNGN_METAL_WALL);
     }
 
     dgn_replace_area(10, 10, (GXM - 10), (GYM - 10), DNGN_ROCK_WALL,
@@ -202,7 +202,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
         {
             drawing = random_choose_weighted(261, DNGN_ROCK_WALL,
                                              116, DNGN_STONE_WALL,
-                                             40, DNGN_METAL_WALL, 0);
+                                             40, DNGN_METAL_WALL);
         }
 
         if (one_chance_in(3))
@@ -225,7 +225,7 @@ void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 
         dungeon_feature_type feature = DNGN_FLOOR;
         if (one_chance_in(10))
-            feature = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
+            feature = random_choose(DNGN_DEEP_WATER, DNGN_LAVA);
 
         _octa_room(room, oblique_max, feature);
     }
@@ -258,7 +258,7 @@ static int _trail_random_dir(int pos, int bound, int margin)
         dir = -1;
 
     if (dir == 0 || x_chance_in_y(2, 5))
-        dir = coinflip() ? -1 : 1;
+        dir = random_choose(-1, 1);
 
     return dir;
 }
@@ -654,7 +654,7 @@ static void _box_room(int bx1, int bx2, int by1, int by2,
 
     new_doors = random_choose_weighted(54, 2,
                                        23, 1,
-                                       23, 3, 0);
+                                       23, 3);
 
     // Small rooms don't have as many doors.
     if ((bx2-bx1)*(by2-by1) < 36 && new_doors > 1)
@@ -801,7 +801,7 @@ static void _diamond_rooms(int level_number)
         type_floor = DNGN_LAVA;
 
     if (level_number > 10 && one_chance_in(15))
-        type_floor = (coinflip() ? DNGN_STONE_WALL : DNGN_ROCK_WALL);
+        type_floor = random_choose(DNGN_STONE_WALL, DNGN_ROCK_WALL);
 
     if (level_number > 12 && one_chance_in(20))
         type_floor = DNGN_METAL_WALL;

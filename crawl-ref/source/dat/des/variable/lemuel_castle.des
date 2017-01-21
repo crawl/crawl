@@ -60,13 +60,13 @@ function castle_lemuel_subvault_setup(e)
             e.mons("nothing")
          elseif you.absdepth () < 27 then
             e.subst("* = *$")
-            e.mons("hill giant / cyclops / deep troll / ogre mage w:5")
+            e.mons("two-headed ogre / cyclops / deep troll / ogre mage w:5")
             e.mons("ettin / fire giant / frost giant / stone giant / \
                     deep troll shaman w:5")
             e.mons("titan")
             e.mons("nothing")
             e.mons("cyclops")
-            e.mons("sheep / yak w:5 / death yak w:5")
+            e.mons("yak / death yak w:5")
             e.mons("plant / w:1 bush")
          else
             e.subst("* = *$")
@@ -74,10 +74,10 @@ function castle_lemuel_subvault_setup(e)
             e.nsubst("1 = 14:1 / *:.")
             e.mons("red draconian / white draconian / green draconian / \
                     black draconian / purple draconian / nothing w:30")
-            e.mons("mottled draconian monk / purple draconian annihilator / \
+            e.mons("yellow draconian monk / purple draconian annihilator / \
                     green draconian monk / golden dragon w:5")
             e.mons("red draconian scorcher / white draconian knight / \
-                    purple draconian zealot / black draconian shifter")
+                    purple draconian stormcaller / black draconian shifter")
             e.mons("lindwurm / wind drake w:5 / death drake w:5 / \
                     swamp drake / nothing w:5")
             e.mons("red draconian / green draconian / white draconian / \
@@ -91,7 +91,7 @@ function castle_lemuel_subvault_setup(e)
             e.kfeat("3 = enter_zot")
             -- Ugly hack to get around kfeat overwriting the mons definition.
             e.kmons("3 = red draconian scorcher / white draconian knight / "
-                    .. "purple draconian zealot / black draconian shifter")
+                    .. "purple draconian stormcaller / black draconian shifter")
         end
 end
 }}
@@ -145,7 +145,7 @@ NAME:   lemuel_castle_interior_carwin_2
 TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 SUBST:  $ = $:5 .
-ITEM:   w:5 meat ration / beef jerky / potion of ambrosia ident:type
+ITEM:   meat ration w:20 / potion of ambrosia ident:type
 MAP
 +c....+.......1.............$*c+
 ...1..cccccccccccccccccccccccXc.
