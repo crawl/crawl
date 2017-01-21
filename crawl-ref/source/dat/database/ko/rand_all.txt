@@ -1,0 +1,485 @@
+######################################################
+# Randart Names
+# -------------
+# rand_all.txt: keywords for randart JEWELLERY and
+#               those used for ALL randart types
+#
+# This file contains the lists of keywords (and their
+# weights) for keywords specific to randart jewellery
+# as well as those used for all three types of
+# randarts (weapons, armour, jewellery). You will find
+# other ones in rand_wpn.txt and rand_arm.txt.
+# See the explanation in the main file, randname.txt,
+# for more details.
+######################################################
+%%%%
+######################################################
+# Library of keywords used (mostly) for randart jewellery.
+######################################################
+_jewellery_animal_
+
+반딧불이
+
+딱정벌레
+
+w:5
+까치
+
+w:5
+갈까마귀
+%%%%
+_jewellery_special_name_
+
+재앙
+
+잠깐의 행운
+
+희망적인 생각
+
+변덕
+
+상환
+
+폭풍
+
+궁극
+
+태도
+
+행운의 여신
+
+유혹
+
+허위
+
+# FIXME: should appear on amulets only
+옌더
+%%%%
+_suspicion_name_
+
+비밀
+
+의심
+
+불신
+
+시기
+
+불신
+
+의심
+
+미심쩍은 배반
+
+회의
+
+동요
+
+w:20
+@_conflict_name_@
+%%%%
+######################################################
+# Library of keywords used for all randart types.
+######################################################
+# Used for god gifts from C++ side, as "of $GOD's @divine_esteem@".
+divine_esteem
+
+# good
+존중
+
+호의
+
+희망
+
+경의
+
+호의
+
+기쁨
+
+긍지
+
+관대함
+
+지고
+
+선의
+
+변덕
+
+# bad
+불만
+
+시기
+
+혹평
+
+책망
+
+비난
+
+w:70
+@_anger_name_@
+%%%%
+_xom_esteem_
+
+# chosen 20% of the time
+w:40
+@divine_esteem@
+
+유희
+
+정성
+
+여흥
+
+솟아나는 웃음소리
+
+곤혹함
+
+일시적인 흥미
+
+전념
+
+기행
+
+불규칙적임
+
+교묘한 속임수
+
+허황된 일
+
+방심
+
+악의적인 즐거움
+
+공정한 시합
+
+무자비함
+
+무모함
+%%%%
+_time_name_
+
+주간
+
+한밤중
+
+황혼
+
+새벽
+
+w:5
+봄
+
+w:5
+봄철
+
+w:5
+여름
+
+w:5
+서머타임
+
+가을
+
+겨울
+
+한여름
+
+한겨울
+
+지점
+
+수확기
+
+영원한 밤
+
+영겁
+
+정오
+
+현재
+
+아침
+
+저녁
+
+주야 평분시
+%%%%
+_sky_colour_name_
+
+어두운
+
+푸른
+
+회색
+
+주황빛
+
+보라빛
+
+붉은
+%%%%
+_sky_or_light_
+
+태양
+
+달
+
+빛
+
+어둠
+
+희미한 빛
+
+환한 빛
+
+햇빛
+
+별빛
+
+하늘
+
+땅거미
+
+하늘나라
+
+하늘 위쪽
+
+@_sky_colour_name_@ 하늘
+%%%%
+_virtue_or_vice_
+
+w:5
+@_virtue_name_@
+
+@_valour_name_@
+
+@_vice_name_@
+%%%%
+_virtue_name_
+
+미덕
+
+진실
+
+정직
+
+자비
+
+헌신
+
+관대함
+
+은혜
+
+절제
+
+환대
+
+자선
+
+인내
+
+겸손
+%%%%
+_vice_name_
+
+# some of the deadly sins
+나태
+
+허영심
+
+식탐
+
+교만
+
+탐욕
+
+# general immorality
+죄악
+
+원죄
+
+거짓
+
+부정
+
+비겁함
+
+부도
+
+성급함
+
+부도덕
+
+무도덕
+
+그릇됨
+
+원한
+%%%%
+_destiny_name_
+
+인과관계
+
+데스티니
+
+페이트
+
+카르마
+
+키스멧
+
+위드
+
+불안한 운명
+%%%%
+_number_or_qualifier_
+
+# exact numbers
+the Three
+
+the Four
+
+the Five
+
+the Six
+
+the Seven
+
+the Eight
+
+the Nine
+
+the Ten
+
+the Eleven
+
+w:5
+the Twelve
+
+w:5
+the Dozen
+
+the Thirteen
+
+the Fifty
+
+w:5
+a Hundred
+
+w:5
+the Hundredfold
+
+a Thousand
+
+# vague numbers
+the
+
+the Many
+
+the Countless
+
+the Assorted
+
+the Manifold
+
+# other qualifiers
+the Lost
+
+the Forgotten
+
+the Forsaken
+
+the Hidden
+
+the Last
+
+the Lonely
+
+the Jolly
+
+the Ancient
+
+the Exiled
+
+the Illusory
+
+the Pure
+
+the Peculiar
+
+the Special
+
+the First
+%%%%
+_thing_names_
+
+태양
+
+달
+
+별
+
+행성
+
+지옥
+
+삶
+
+죽음
+
+저주
+
+축복
+
+신
+
+정령
+
+유령
+
+악마
+
+전쟁
+
+쥐
+
+안구
+
+밤
+
+오브
+
+룬 문자
+
+바다
+
+장소
+
+영역
+
+소망
+
+경이로움
+
+침대
+
+거지
+
+도시
+
+춤사위
+
+거짓말
+
+선박
+
+노래
+
+영혼
+
+이야기
+%%%%

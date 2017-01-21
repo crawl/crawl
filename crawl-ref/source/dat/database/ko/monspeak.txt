@@ -1,0 +1,7503 @@
+############################################################
+# This file contains the messages of monsters that "talk"
+# to the player, or at least the biggest part there-of.
+#
+# For an explanation of how to read shout.txt and monspeak.txt
+# and how to add new messages, see monster_speech.txt in the
+# docs/develop/ directory.
+############################################################
+
+############################################################
+# Library of randomised word/phrase substitutions.
+# The keys will have to be changed in the unlikely event that
+# monsters are ever given names like "yells" or "begs".
+############################################################
+%%%%
+_shouts_
+
+소리쳤다 
+
+고함쳤다 
+
+포효했다
+%%%%
+_yells_
+
+고함쳤다
+
+흐느꼈다
+
+울었다
+
+비명질렀다
+
+울부짖었다
+%%%%
+# for ghosts
+_wails_
+
+흐느꼈다
+
+소리쳤다
+
+말했다
+
+비명질렀다
+
+날카로운 소리를 냈다
+%%%%
+_begs_
+
+빌었다
+
+애원했다
+
+w:3
+간청했다
+
+w:1
+비굴하게 애원했다
+%%%%
+_mutters_
+
+투덜거렸다
+
+중얼거렸다
+
+w:2
+속삭였다
+%%%%
+_pointless_
+
+가치없는
+
+무의미한
+
+쓸모없는
+%%%%
+############################################################
+# Library of speeches for types of monsters, like priests,
+# wizards, guards and so on.
+############################################################
+%%%%
+_high_priest_
+
+@_high_priest_common_@
+
+w:5
+@_high_priest_medium_@
+
+w:1
+@_high_priest_rare_@
+%%%%
+_high_priest_common_
+
+@The_monster@는 기도했다.
+
+@The_monster@는 낯선 기도문을 중얼거렸다.
+
+@The_monster@는 끔찍한 기도문을 읊조렸다.
+
+@The_monster@는 기도문을 노래하기 시작했다.
+%%%%
+_high_priest_medium_
+
+VISUAL:@The_monster@는 낯선 손짓을 하였다.
+
+@The_monster@는 적을 향해 소리쳤다, "넌 이단이며 반드시 파괴되어야 해!"
+
+@The_monster@는 적을 향해 말했다, "넌 좋은 제물이 될 거야,"
+
+@The_monster@는 적을 향해 말했다, "넌 반드시 심판받아야 해!"
+
+@The_monster@는 적을 향해 말했다, "모든 죄인은 반드시 죽어야 해."
+
+@The_monster@는 적을 향해 말했다, "불신자에게 망각을."
+%%%%
+_high_priest_rare_
+
+@The_monster@는 적을 향해 말했다, "한참 나의 설교중이기도하지."
+
+@The_monster@는 적을 향해 말했다, "너도 알듯이, 죄의 댓가는 죽음이야."
+
+@The_monster@는 적을 향해 속삭였다, "내 일을 대신 해준다면 보내주지."
+
+# Mother Theresa
+@The_monster@는 적을 향해 속삭였다, "깊은 안쪽, 그건 때때로 너무나 공허해."
+
+@The_monster@는 적을 향해 말했다, "내 신의 분노가 네게 향한다."
+
+@The_monster@는 적을 향해 말했다, "어리석은 자여, 신성한 에너지를 맛봐라."
+
+@The_monster@는 적을 향해 말했다, "너의 고통은 너의 이단성을 씻어낼 것이다."
+## END _high_priest_ ##
+%%%%
+_mercenary_guard_
+
+@_mercenary_guard_common_@
+
+w:5
+@_mercenary_guard_medium_@
+
+w:1
+@_mercenary_guard_rare_@
+%%%%
+_mercenary_guard_common_
+
+VISUAL:@The_monster@(은)는 매우 불친절해 보인다.
+
+VISUAL:@The-monsters@(은)는 사악하게 활짝 웃었다.
+
+@The_monster@(은)는 적을 향해 소리질렀다, "한발짝이라도 잘못 떼면 난 널 죽여버릴거야."
+
+@The_monster@(은)는 적을 향해 소리쳤다, "난 너를 죽일거야! 지금!"
+
+@The_monster@(은)는 적을 향해 소리쳤다, "넌 절대 오브에 도달할 수 없어!"
+
+@The_monster@(은)는 적을 향해 말했다, "여기는 무단침입이 허용되지 않는다."
+
+@The_monster@(은)는 적을 향해 말했다, "네가 찾은 모든것을 여기에 두고 집에 돌아가."
+
+@The_monster@(은)는 적을 향해 말했다, "네가 훔친 모든 아이템을 돌려 놔!"
+
+@The_monster@(은)는 적을 향해 소리쳤다, "불청객!"
+
+@The_monster@(은)는 적을 향해 소리질렀다, "넌 반드시 심판받아야 해!"
+%%%%
+_mercenary_guard_medium_
+
+@The_monster@(은)는 적을 향해 말했다, "넌 절대 네 여행의 끝에 도달할 수 없어."
+
+@The_monster@(은)는 적을 향해 말했다, "이건 개인적인게 아니야."
+
+@The_monster@(은)는 적을 향해 말했다, "여기 온게 네 마지막 실수야."
+
+@The_monster@(은)는 적을 향해 말했다, "최고의 공격은 좋은 공격이지."
+
+@The_monster@(은)는 적을 향해 소리쳤다, "당장 돌려 놔, 아니면 난 널 죽일거야!"
+%%%%
+_mercenary_guard_rare_
+
+@The_monster@(이)가 말했다, "오직 죽은 모험가만이 좋은 모험가다." @player_only@
+
+@The_monster@(은)는 적을 향해 소리쳤다, "파티는 끝이다!"
+
+@The_monster@(은)는 적을 향해 소리쳤다, "항복하고 죽어라!"
+## END _mercenary_guard_ ##
+%%%%
+_wizard_
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+
+w:8
+@_wizard_medium_@
+
+w:1
+@_wizard_rare_@
+%%%%
+_wizard_common_spell_
+
+@The_monster@는 크게 몸짓했다.
+
+@The_monster@는 낯선 단어를 읊조렸다.
+
+@The_monster@는 주문을 울부짖었다.
+%%%%
+_fake_spell_effect_
+
+VISUAL:@The_monster@(은)는 격렬하게 일렁였다.
+
+VISUAL:@The_monster@(은)는 잠깐동안 밝게 빛났다.
+
+VISUAL:@The_monster@의 손톱이 빛나기 시작했다.
+
+VISUAL:당신은 길을 잃은 기분이 들었다. @player_only@
+
+VISUAL:당신은 문제있는 기분이 들었다. @player_only@
+%%%%
+_wizard_medium_
+
+VISUAL:@The_monster@(은)는 잠깐동안 더 커졌다.
+
+VISUAL:@The_monster@의 눈이 빛나기 시작했다.
+
+@The_monster@(은)는 적을 향해 소리쳣다, "넌 내 힘을 견디지 못해!"
+
+@The_monster@(은)는 적을 향해 소리쳤다, "넌 중요치 않아!"
+%%%%
+_wizard_rare_
+
+@The_monster@는 적을 향해 말했다, "알가택스 네트라노크 디르텍스."
+
+@The_monster@는 적을 향해 말했다, "독르 누튜 벅."
+
+@The_monster@는 적을 향해 소리쳤다, "엔트램 모쓰 덱 울라그!"
+## END _wizard_ ##
+%%%%
+_friendly_imp_
+
+@_friendly_imp_common_@
+
+w:6
+@_friendly_imp_rare_@
+%%%%
+_friendly_imp_common_
+
+VISUAL:@The_monster@는 흥분해서 위 아래로 뛰었다.
+
+VISUAL:@The_monster@는 당신을 향해 소악마같이 씨익 웃었다.
+
+VISUAL:@The_monster@는 @surface@에서 딱정벌레들을 주워서 당신에게 선물했다.
+
+VISUAL:@The_monster@는 연기 링을 만들었다.
+
+@The_monster@는 말했다, "오케이, 보스!"
+
+@The_monster@는 말했다, "오브는 모두 네 거야."
+
+@The_monster@는 말했다, "친구들과 함께면 더 즐겁지 않아?"
+%%%%
+_friendly_imp_rare_
+
+@The_monster@는 말했다, "어어! 기다려봐. 좋아."
+
+@The_monster@는 말했다, "넌 내 저번 보스보다 훨씬 더 좋아."
+
+@The_monster@는 소리쳤다, "뒤로 물러서! 이건 아마 [계략|속임수|작전|함정]일거야!"
+
+@The_monster@는 소리쳤다, "여기야! 내가 찾았어!"
+
+@The_monster@는 말했다, "그냥 나한테 누구를 죽이지 '말지' 말해."
+## END _friendly_imp_ ##
+%%%%
+_friendly_imp_greeting
+
+@The_monster@는 말했다, "나 여기있어!"
+
+@The_monster@는 말했다, "너, 나 불렀어?"
+
+@The_monster@는 말했다, "우리 @_mayhem_@을(를) @_cause_or_spread_@!"
+
+@The_monster@ says, "I @_truckle_@ to your @_vassalage_@, @_suck_up_address_@ @_suck_up_adj1_@ and @_suck_up_adj2_@ @_suck_up_noun_@!"
+
+w:970
+__NONE
+%%%%
+_cause_or_spread_
+
+초래하자
+
+펼치자
+
+뿌리자
+
+일으키자
+%%%%
+_mayhem_
+
+아수라장
+
+파괴
+
+황폐
+
+분열
+%%%%
+_truckle_
+
+굴종해라
+
+헌신해라
+
+받아들여라
+
+엎드려라
+
+항복해라
+%%%%
+_vassalage_
+
+예속
+
+봉사
+
+굴종
+
+충성
+%%%%
+_suck_up_address_
+
+O
+
+my
+%%%%
+_suck_up_adj1_
+
+과장된
+
+걸출한
+
+훌륭한
+%%%%
+_suck_up_adj2_
+
+{{
+if you.race() == "Mummy" then
+    return "밸벳으로 덮힌"
+elseif you.mutation('beak') > 0 then
+    return "진주빛 부리의"
+elseif you.transform() == "lich" then
+    return "상아빛 뼈대의"
+elseif you.transform() == "statue" then
+    return "대리석 발톱의"
+elseif you.transform() == "dragon" then
+    return "오팔빛 비늘의"
+elseif you.race() == "Felid" then
+    return "푹신푹신한 발바닥의"
+elseif you.race() == "Octopode" then
+    return "유연한 촉수의"
+elseif you.race() == "Formicid" then
+    return "커다란 아래턱의"
+else
+    return "앵두같은 입술의"
+end
+}}
+
+멋진
+
+위대한
+
+신적인
+%%%%
+_suck_up_noun_
+
+군수 
+
+대가 
+
+지배자 
+
+총독
+
+거물 
+
+귀족{{ return you.genus() }}
+%%%%
+_hostile_imp_
+
+@_hostile_imp_common_@
+
+w:7
+@_hostile_imp_rare_@
+%%%%
+_hostile_imp_common_
+
+@The_monster@는 미친듯이 웃었다.
+
+VISUAL:@The_monster@는 사악하게 활짝 웃었다.
+
+VISUAL:@The_monster@는 @possessive@한 꼬리를 내리쳤다.
+
+VISUAL:@The_monster@는 @possessive@한 이빨을 갈았다.
+
+VISUAL:@The_monster@는 적에게 연기를 뿜었다.
+%%%%
+_hostile_imp_rare_
+
+VISUAL:@The_monster@는 적을 향해 침을 뱉었다.
+
+VISUAL:@The_monster@는 딱정벌레를 주워들고는, 그것을 먹었다.
+
+@The_monster@는 쾅쾅 거리는 소리를 냈다.
+
+VISUAL:@The_monster@는 잠깐동안 사라졌다.
+
+VISUAL:@The_monster@는 한 무리의 파리들을 소환했다.
+## END _hostile_imp_ ##
+%%%%
+_hell_lord_taunt_
+
+@The_monster@ @says@ @to_foe@, "@demon_taunt@"
+%%%%
+_demon_taunt_
+
+@The_monster@ @says@ @to_foe@, "@demon_taunt@"
+%%%%
+_says_imp_taunt_
+
+@The_monster@ @says@ @to_foe@, "@imp_taunt@"
+##########################################
+# Messages by monster body shape
+##########################################
+%%%%
+default stupid friendly humanoid
+
+__NONE
+%%%%
+default stupid fleeing humanoid
+
+__NONE
+%%%%
+default stupid silenced humanoid
+
+__NONE
+%%%%
+default stupid confused humanoid
+
+__NONE
+%%%%
+default silenced confused humanoid
+
+w:40
+VISUAL:@The_monster@(은)는 크게 몸짓했다.
+
+w:20
+VISUAL:@The_monster@(은)는 무언가를 말했지만, 당신은 아무것도 듣지 못했다.
+
+VISUAL:@The_monster@(은)는 혼란스러워 보인다.
+
+VISUAL:@The_monster@(은)는 사악하게 웃었다.
+
+VISUAL:@The_monster@(은)는 행복하게 미소지었다.
+
+VISUAL:@The_monster@(은)는 울었다.
+## END silenced confused humanoid ##
+%%%%
+default fleeing silenced humanoid
+
+@_fleeing_silenced_common_@
+
+w:5
+@_fleeing_silenced_rare_@
+%%%%
+_fleeing_silenced_common_
+
+VISUAL:@The_monster@(은)는 흘낏 바라봤다.
+
+VISUAL:@The_monster@(은)는 뭔가를 말하려는 것처럼 보인다.
+%%%%
+_fleeing_silenced_rare_
+
+VISUAL:@The_monster@(은)는 @possesive@ 입을 열어, 뭔가를 소리치려는것처럼 보인다.
+
+VISUAL:@The_monster@(은)는 미친듯이 주위를 둘러보았다.
+
+VISUAL:@The_monster@(은)는 상황에 대해 곰곰히 생각했다.
+## END fleeing silenced humanoid ##
+%%%%
+default friendly silenced humanoid
+
+w:6
+@_friendly_silenced_common_@
+
+w:4
+@_friendly_silenced_rare_@
+%%%%
+_friendly_silenced_common_
+
+VISUAL:@The_monster@(은)는 당신을 향해 엄지를 올렸다.
+
+VISUAL:@The_monster@(은)는 당신이 들을 수 없는 무언가를 말했다.
+%%%%
+_friendly_silenced_rare_
+
+VISUAL:@The_monster@(은)는 당신을 바라보았다.
+
+VISUAL:@The_monster@(은)는 당신을 보고 손을 흔들었다.
+
+VISUAL:@The_monster@(은)는 행복하게 미소지었다.
+
+VISUAL:@The_monster@(은)는 위 아래로 뛰며 당신의 관심을 끌었다.
+
+VISUAL:@The_monster@(은)는 당신을 보고 윙크했다
+## END friendly silenced humanoid ##
+%%%%
+default silenced humanoid
+
+w:6
+@_silenced_humanoid_common_@
+
+w:4
+@_silenced_humanoid_rare_@
+
+@The_monster@ stomps in frustration.
+%%%%
+_silenced_humanoid_common_
+
+VISUAL:@The_monster@(은)는 뭔가를 말했지만, 당신은 아무것도 듣지 못했다.
+
+VISUAL:@The_monster@(은)는 몸짓했다.
+%%%%
+_silenced_humanoid_rare_
+
+VISUAL:@The_monster@(은)는 불쾌하게 몸짓했다.
+
+VISUAL:@The_monster@(은)는 씨익 웃었다.
+
+VISUAL:@The_monster@(은)는 화나 보인다.
+
+VISUAL:@The_monster@(은)는 듣고있는 것처럼 보인다.
+## END silenced humanoid ##
+%%%%
+default friendly confused humanoid
+
+@_friendly_confused_common_@
+
+w:5
+@_friendly_confused_medium_@
+
+w:1
+@_friendly_confused_rare_@
+%%%%
+_friendly_confused_common_
+
+@The_monster@(은)는 비명질렀다, "도와줘!"
+
+@The_monster@(은)는 소리쳤다, "무슨 일이 일어나고 있는 거야?"
+
+@The_monster@(은)는 뭔가를 읊조렸다.
+
+@The_monster@(은)는 미친듯이 웃었다.
+
+VISUAL:@The_monster@(은)는 울었다.
+
+VISUAL:@The_monster@(은)는 매우 혼란스러워 보인다.
+%%%%
+_friendly_confused_medium_
+
+@The_monster@(은)는 미친듯이 낄낄거렸다.
+
+@The_monster@(은)는 비명질렀다, "@player_name@! 무슨일이 일어나고 있는거야?!"
+
+@The_monster@(은)는 신에게 기도했다.
+
+@The_monster@(은)는 공기 중으로 깜빡인 후에 말했다, "나 자신을 잡을 수가 없어!"
+
+VISUAL:@The_monster@(은)는 미친듯이 활짝 웃었다.
+
+VISUAL:@The_monster@ ponders the situation.
+
+VISUAL:@The_monster@(은)는 앞뒤로 발을 굴렀다.
+%%%%
+_friendly_confused_rare_
+
+@The_monster@(은)는 소리쳤다, "통제가 안되!"
+
+@The_monster@(은)는 소리쳤다, "예아!"
+
+@The_monster@(은)는 노래했다.
+
+@The_monster@(은)는 비명질렀다, "@player_name@! 도와줘!"
+
+@The_monster@(은)는 말했다, "@player_name@, 나 조금 혼란스러워!"
+
+VISUAL:@The_monster@(은)는 적에게 홀딱 반한 것 같다.
+## END friendly confused humanoid ##
+%%%%
+default confused humanoid
+
+@_confused_humanoid_common_@
+
+w:5
+@_confused_humanoid_medium_@
+
+w:1
+@_confused_humanoid_rare_@
+%%%%
+_confused_humanoid_common_
+
+w:20
+VISUAL:@The_monster@(은)는 크게 몸짓했다.
+
+@The_monster@(은)는 소리쳤다, "무슨일이 일어나고 있는거야?"
+
+VISUAL:@The_monster@(은)는 운다.
+
+@The_monster@(은)는 미친듯이 웃었다.
+
+VISUAL:@The_monster@(은)는 미친듯이 활짝 웃었다.
+
+VISUAL:@The_monster@(은)는 허공을 보고 웃었다.
+
+VISUAL:@The_monster@(은)는 낄낄대며 웃고는 우주를 들여다보았다.
+
+VISUAL:@The_monster@(은)는 매우 혼란스러워 보인다.
+
+@The_monster@(은)는 뭔가를 읊조렸다.
+%%%%
+_confused_humanoid_medium_
+
+VISUAL:@The_monster@(은)는 상황에 대해 숙고했다.
+
+@The_monster@(은)는 조금 혼란스러워 보인다.
+
+@The_monster@(은)는 물었다, "내가 누구야?"
+
+@The_monster@(은)는 의아해했다, "내가 여기서 뭘 하고있는거야?"
+
+@The_monster@(은)는 말했다, "왜 모든것이 빙빙 돌고 있는거야?"
+
+@The_monster@(은)는 비명을 질렀다, "어쨌든 난 널 죽여버릴거야!"
+
+VISUAL:@The_monster@(은)는 @possesice@ 눈을 감았다.
+%%%%
+_confused_humanoid_rare_
+
+@The_monster@(은)는 소리쳤다, "그들을 나에게서 떼어내 줘!"
+
+@The_monster@(은)는 소리쳤다, "안돼!"
+
+@The_monster@(은)는 울부짖었다, "내 콧구멍들!"
+
+@The_monster@(은)는 소리쳤다, "좋아!"
+
+VISUAL:@The_monster@(은)는 몸을 떨었다.
+
+VISUAL:@The_monster@(은)는 갑자기 던전 자체에 매우 화가 나 보인다.
+
+@The_monster@(은)는 적에게 물었다, "넌 누구야?"
+
+@The_monster@(은)는 적에게 물었다 "시발 우리가 여기서 대체 뭘 하고있는거야? 음... 알겠다..."
+
+@The_monster@(은)는 울었다, "내 머리! 내 머리!!"
+
+@The_monster@(은)는 비명질렀다, "안돼! 나는 이렇게 많은 소음을 견딜 수 없어!"
+## END confused humanoid ##
+%%%%
+default friendly fleeing humanoid
+
+@_friendly_fleeing_common_@
+
+w:1
+@_friendly_fleeing_rare_@
+%%%%
+_friendly_fleeing_common_
+
+w:20
+VISUAL:@The_monster@(은)는 어딘가에 숨으려 하는것처럼 보인다.
+
+@The_monster@(은)는 비명질렀다, "도와줘!"
+
+@The_monster@(은)는 소리쳤다, "날 보호해줘!"
+
+@The_monster@(은)는 비명질렀다, @player_name@! 도와줘!"
+
+@The_monster@(은)는 신에게 기도했다.
+%%%%
+_friendly_fleeing_rare_
+
+@The_monster@(은)는 @_shouts_@, "날 기다려줘, @player_name@! 나 좀 도와줘."
+
+@The_monster@(은)는 울었다, "너의 친구들을 잊지 마!"
+
+@The_monster@(은)는 소리쳤다, "나 좀 보호해 줄래?"
+## END friendly fleeing humanoid ##
+%%%%
+default fleeing humanoid
+
+@_fleeing_humanoid_common_@
+
+w:3
+@_fleeing_humanoid_rare_@
+%%%%
+_fleeing_humanoid_common_
+
+w:20
+VISUAL:@The_monster@(은)는 포기했다.
+
+w:20
+@The_monster@(은)는 @_yell_@, "도와줘!"
+
+# This one won't work for nagas.
+VISUAL:@The_monster@(은)는 도망가려다 발을 거의 헛디뎠다.
+
+@The_monster@(은)는 기도하였다.
+
+@The_monster@(은)는 웅크리고 도망갔다.
+
+@The_monster@(은)는 울기 시작하였다.
+
+@The_monster@(은)는 당신에게 소리쳤다, "저리가!!"
+
+@The_monster@(은)는 횡설수설하고 있다.
+
+@The_monster@(은)는 공포에 울부짖었다.
+
+@The_monster@(은)는 [탄식하였다|통곡하였다|울었다], "오 이런! 세상에!"
+
+@The_monster@(은)는 @_begs_@ @to_foe@, "살려주세요, 제발!"
+
+@The_monster@(은)는 자비를 구했다.
+
+@The_monster@(은)는 적에게 외쳤다, "자비를!"
+%%%%
+_fleeing_humanoid_rare_
+
+@the_monster@(은)는 적에게 @_begs_@, "우리 그냥 사이좋게 지내면 안되요?"
+
+@The_monster@(은)는 @_mutters_@, "이런 젠장!"
+
+@The_monster@(은)는 적에게 소리쳤다, "안할게요! 다시는 안할게요!
+
+@The_monster@(은)는 [엉엉 울었다|울부짖었다], "[엄마아아|아빠아아|미이이이입|살려줘어어어어|이이이이이익|안돼애애애애|우와와아아앙]!!"
+
+@The_monster@(은)는 적에게 @_begs@, "살려주세요! 제겐 자식들이 있어요!"
+
+VISUAL:@The_monster@(은)는 [달가닥 거려|공포에 떨려|몸이 굳어]보인다.
+
+@The_monster@(은)는 조용히 울었다.
+
+VISUAL:@The_monster@(은)는 탈출 경로를 간절히 찾고있다.
+
+@The_monster@(은)는 자포자기하여, @reflexive@ 를 진정시키기위해, 중얼거렸다.
+
+VISUAL:@The_monster@(은)는 @possessive@ 평정을 얻으려했다.
+
+@The_monster@(은)는 @_mutters_@, "하필이면 재수가 없어서!"
+
+VISUAL:@The_monster@(은)는 @possessive@ 잃어버린 용기를 회복하려했다.
+## END fleeing humanoid ##
+%%%%
+_friendly_family_
+
+@The_monster@(은)는 말했다, "네가 좋아, 형씨!"
+
+@The_monster@(은)는 말했다, "동족은 항상 함께한다고, @player_name@!"
+
+@The_monster@(은)는 말했다,"@player_genus@종족은 함께 뭉치지!"
+
+@The_monster@(은)는 소리쳤다, ʺ@player_genus_plural@은 최고야!
+
+@The_monster@(은)는 기쁘게 말했다, "너와 내가 있으니, 우린 가족이야."
+%%%%
+default friendly related humanoid
+
+w:2
+@_friendly_family_@
+
+@default friendly humanoid@
+%%%%
+default friendly humanoid
+
+w:4
+__NONE
+
+@_friendly_humanoid_common_@
+
+w:4
+@_friendly_humanoid_medium_@
+
+w:1
+@_friendly_humanoid_rare_@
+%%%%
+_friendly_humanoid_common_
+
+@The_monster@(은)는 소리쳤다, "물러서! 엄호해줄께!"
+
+@The_monster@(은)는 적에게 소리쳤다, "죽어라, 몬스터!"
+
+VISUAL:@The_monster@(은)는 당신을 보고 있다.
+
+VISUAL:@The_monster@(은)는 당신을 향해 웃고 있다.
+
+@The_monster@(은)는 말했다, ʺ@player_name@, 널 좋아해."
+
+VISUAL:@The_monster@(은)는 당신에게 손을 흔들었다.
+
+@The_monster@(은)는 말했다, "조심해!"
+
+@The_monster@(은)는 말했다, "너를 절대로 두고가지 않을거야."
+%%%%
+_friendly_humanoid_medium_
+
+@The_monster@(은)는 말했다, "친구를 사귀는건 좋은거지."
+
+@The_monster@(은)는 말했다, ʺ@player_name@, 넌 나의 하나뿐인 친구야."
+
+@The_monster@(은)는 외쳤다, "살려줄 필요 없어! 모두 죽여!"
+
+@The_monster@(은)는 말했다, "걱정마. 내가 네옆에 있잖아."
+
+VISUAL:@The_monster@(은)는 행복하게 웃었다.
+
+@The_monster@(은)는 외쳤다, "몬스터들을 조심해!"
+%%%%
+_friendly_humanoid_rare_
+
+VISUAL:@The_monster@ looks friendly.
+## END friendly humanoid ##
+%%%%
+hound
+
+VISUAL:@The_monster@는 지면에 킁킁대는것을 [멈추었다|그만두었다].
+%%%%
+friendly hound
+
+VISUAL:@The_monster@는 @possessive@ 꼬리를 흔들었다.
+
+VISUAL:@The_monster@는 [행복하게|즐겁게] 짖었다!
+
+VISUAL:@The_monster@는 단순한 원을 그리며 뛰어다녔다!
+
+VISUAL:@The_monster@는 당신을 기대에 찬 시선으로 올려보았다.
+
+VISUAL:@The_monster@는 @possessive@ 귀를 긁었다.
+
+VISUAL:@The_monster@는 @possessive@ 머리를 당신의 주변에 세웠다.
+
+VISUAL:@The_monster@는 벼룩있는곳을 긁었다.
+
+w:1
+VISUAL:@The_monster@는 뼈다귀를 갉아댔다 — 어디서 가져온걸까?
+
+@hound@
+%%%%
+friendly hound Shoals
+
+w:50
+@friendly hound@
+
+VISUAL:@The_monster@는 파도속에서 [놀았다|장난쳤다]!
+
+떨어진 곳에 @the_monster@의 냄새가 나는, 젖은 개가 있다.
+
+w:1
+VISUAL:@The_monster@는 기쁘게 나뭇쪼가리를 줏어오고는 당신을 보았다.
+%%%%
+default insect
+
+VISUAL:@The_monster@(은)는 @possessive@ 더듬이를 흔들었다.
+%%%%
+default confused insect
+
+VISUAL:@The_monster@(은)는 @possessive@ 더듬이를 난폭하게 흔들었다.
+
+VISUAL:@The_monster@(은)는 여섯개의 @possessive@ 다리를 조율하는데 문제가 있어보인다.
+%%%%
+default confused winged insect
+
+VISUAL:@The_monster@(은)는 어지러운 원을 그리며 퍼덕거렷다.
+
+VISUAL:@The_monster@(은)는  @possessive@ 난폭하게 더듬이를 흔들었다.
+
+VISUAL:@The_monster@(은)는 @possessive@ 부들부들거리며 날아다녔다
+%%%%
+default confused arachnid
+
+VISUAL:@The_monster@의 @possessive@ 8개의 다리들은 제각각 다른방향으로 나아가려 하는듯하다. 
+%%%%
+centipede
+
+VISUAL:@The_monster@는 @possessive@ 더듬이를 흔들었다.
+%%%%
+default confused centipede
+
+VISUAL:@The_monster@의 @possessive@ 수많은 다리들은 갈팡질팡하며 다른방향으로 나아가려 하는듯 보인다.
+
+VISUAL:@The_monster@는 @possessive@ 무언가를 찾으려는듯 더듬이를 넓게 흔들어댄다.
+%%%%
+orb spider charge
+
+@The_monster@가 순수한 힘으로 차오르기 시작했다.
+
+@The_monster@가 이상한 힘으로 진동하기 시작했다.
+
+@The_monster@가 빛나는 구체를 베를 짜듯 만들기 시작했다.
+%%%%
+salamander stormcaller charge
+
+@The_monster@는 마력을 모으기 시작했다.
+
+@The_monster@는 뚜렷한 열기로 휩싸이기 시작했다.
+
+@The_monster@는 폭풍을 부르려는듯 하다.
+#########################################
+# Speech strings by monster symbol
+#########################################
+%%%%
+default confused 'b'
+
+VISUAL:@The_monster@(은)는 불규칙적인 원을 그리며 펄럭거리며 날아다니고 있다.
+%%%%
+default 'cap-G'
+
+VISUAL:@The_monster@(은)는 기분나쁘게 고동쳤다.
+%%%%
+default 'cap-J'
+
+VISUAL:@The_monster@(은)는 흔들렸다.
+%%%%
+'l'
+
+@The_monster@(은)는 위협적으로 쉿소리를 냈다.
+%%%%
+'r'
+
+VISUAL:@The_monster@(은)는 수염을 씰룩거렸다.
+%%%%
+default confused 'r'
+
+VISUAL:@The_monster@(은)는 원을 그리며 뛰어다녔다.
+%%%%
+# Bees and wasps - moths and giant fireflies have separate speech.
+default confused 'y'
+
+SOUND:@The_monster@(은)는 급선회하며 부산하게 돌아다녔다.
+%%%%
+default silenced confused 'y'
+
+VISUAL:@The_monster@(은)는 @possessive@ 눈자루들을 잠시 길게 만들었다.
+%%%%
+# Statues and golems never speak unless assigned a message to their
+# specific species.
+default '8'
+
+__NONE
+#########################################
+# Speech strings by monster genus
+#########################################
+%%%%
+giant slug
+
+VISUAL:@The_monster@ briefly extends @possessive@ eye-stalks.
+%%%%
+default confused moth
+
+@default confused winged insect@
+######################
+# Demon taunts
+######################
+%%%%
+'&'
+
+@_demon_taunt_@
+%%%%
+'1'
+
+@_demon_taunt_@
+%%%%
+'2'
+
+@_demon_taunt_@
+%%%%
+'3'
+
+@_demon_taunt_@
+%%%%
+'4'
+
+@_demon_taunt_@
+#####################################
+# Demons are silent when not taunting
+#####################################
+%%%%
+default '&'
+
+__NONE
+%%%%
+default '1'
+
+__NONE
+%%%%
+default '2'
+
+__NONE
+%%%%
+default '3'
+
+__NONE
+%%%%
+default '4'
+
+__NONE
+%%%%
+default '5'
+
+__NONE
+###############
+# Friendly imps
+###############
+%%%%
+# Friendly imps are very common so they speak very very rarely
+friendly '5'
+
+w:9
+__NONE
+
+w:1
+@_friendly_imp_@
+####################################################################
+# Player ghost phrases. Ghosts with different classes can be given
+# different messages.
+####################################################################
+%%%%
+# Only use messages that are explicitly for the player ghost, since
+# other messages might seem weird coming out of it.
+default player ghost
+
+__NONE
+%%%%
+silenced player ghost
+
+VISUAL:@The_monster@(은)는 적을 응시했다.
+
+w:5
+VISUAL:@The_monster@(은)는 적을 위협적으로 가리켰다.
+
+w:5
+VISUAL:@The_monster@(은)는 적을 바라보면서 손가락으로 느리게 @possessive@ 목을 가로질렀다.
+## END silenced player ghost ##
+%%%%
+Fighting player ghost
+
+@The_monster@(은)는 우쭐거리며 말했다, "난 네녀석이 한번도 보지못한 괴물들을 죽이고 다녔지."
+
+VISUAL:@The_monster@(은)는 싸움을 준비하려한다.
+
+@The_monster@(은)는 말했다, "나의 엄청난 전략앞에 넌 무릎을 꿇을것이다."
+
+@The_monster@(은)는 말했다, "너는 싸우면서 기꺼이 죽을수 있나? 난 그랬다!"
+
+@The_monster@(은)는 조롱했다, "그게 네놈의 싸움이란 거냐?"
+
+@The_monster@(은)는 웃었다, "네가 오브를 찾을 능력이 된다고 생각하나? 난 가졌었다. 그리곤 다시금 빼앗기위해 내다버렸지."
+%%%%
+Short Blades player ghost
+
+@The_monster@(은)는 말했다, "검의 크기가 중요한게 아냐, 네가 어떻게쓰느냐지."
+
+@The_monster@(은)는 적에게 말했다, "넌 내 단검을 비웃었군. 난 네 차가운 시체위에서 널 비웃어주마."
+
+VISUAL:@The_monster@(은)는 @possessive@ 검을 눈으로 쫒을수있는것보다 더빠르게, 손에서 손으로 튕겨냈다.
+%%%%
+Long Blades player ghost
+
+VISUAL:@The_monster@(은)는 준비완료된 @possessive@ 검을 들고있다.
+
+@The_monster@(은)는 말했다, "검에 살고, 검에 죽는다."
+%%%%
+Axes player ghost
+
+@The_monster@(은)는 말했다, "널 두조각으로 쪼개주지!"
+
+@The_monster@(은)는 중얼거렸다, "베갯잇으로 밖에는 보이지 않는군..."
+
+@The_monster@(은)는 말했다, "피가 튀지 않도록 주의해봐라."
+%%%%
+Maces & Flails player ghost
+
+@The_monster@(은)는 적에게 말했다, "네놈을 끝장낸 뒤엔 네놈의 잔해를 누군가가 청소해야 할 것이다!"
+
+VISUAL:@The_monster@(은)는 근처의 벌레를 짓뭉개고는 웃었다.
+
+@The_monster@(은)는 적에게 말했다, "널 뭉개서 곤죽으로 만드는건 많이 아플거야. 그 뒤엔? 아프지 않을 거다! 약속한다!"
+%%%%
+Polearms player ghost
+
+@The_monster@(은)는 말했다, "또 한 마리 적이, 꼬치가 되려고 다가오는군."
+
+@The_monster@(은)는 적에게 말했다, "네 머리를 창대에 꽂아놓으면 참 멋지겠군."
+
+@The_monster@(은)는 적에게 말했다, "내 창에 네 머리가 박혀 있으면 완벽해질 것 같군."
+%%%%
+Staves player ghost
+
+@The_monster@(은)는 말했다, "난 나약한 모험가를 후려치는데 탁월하지."
+
+VISUAL:@The_monster@(은)는 @possessive@ 육척봉을 빙빙 돌렸다.
+
+@The_monster@(은)는 당신의 두개골을 부숴버리겠다고 겁주었다. @player_only@
+%%%%
+Slings player ghost
+
+@The_monster@(은)는 말했다, "그것들이 클수록, 쓰러뜨리기 어렵지!"
+
+VISUAL:@The_monster@(은)는 실체없는 슬링을 @possessive@ 머리 너머로 돌렸다.
+
+@_generic_ranged_@
+%%%%
+Bows player ghost
+
+@_generic_ranged_@
+
+@The_monster@(은)는 말했다, "사과를 갖고있나? 한번 쏴보고 싶은데."
+%%%%
+Crossbows player ghost
+
+@_generic_ranged_@
+
+VISUAL:@The_monster@(은)는 @possesive@ 무기를 [장전하려 애썼다|수월하게 장전했다] .
+%%%%
+Throwing player ghost
+
+VISUAL:@The_monster@(은)는 주변에 던질 무언가가 있나 둘러보았다.
+
+@The_monster@(은)는 당신을 모욕하며, 신속히 던졌다. @player_only@
+
+@_generic_ranged_@
+%%%%
+Armour player ghost
+
+@The_monster@(은)는 말했다, "나를 해칠수 없어!"
+
+@The_monster@(은)는 말했다, "나는 무적이다!"
+
+@The_monster@(은)는 말했다, "난 무쇠로 되어있다!"
+%%%%
+Dodging player ghost
+
+@The_monster@(은)는 말했다, "날 놓쳤군!"
+
+@The_monster@(은)는 머리를 수그리고는 말했다, "너무 높았어!"
+
+@The_monster@(은)는 피하고는 말했다, "너무 느려!"
+%%%%
+Stealth player ghost
+
+VISUAL:@The_monster@(은)는 살짝 도망치려 하고있다.
+
+VISUAL:@The_monster@(은)는 @possessive@ 주변에 섞이려 하고있다.
+
+VISUAL:@The_monster@(은)는 무언가를 매우 조용히 속삭여서, 당신은 @objective@(을)를 들을수 없었다.
+
+VISUAL:순간, 당신은 @the_monster@의 자취를 잃어버렸다.
+
+@The_monster@(은)는 속삭였다, "정말 조용히 있어라, 난 @player_genus_plural@ 를 사냥중이다." @player_only@
+
+VISUAL:순간, @the_monster@(은)는 그림자 속에 뒤섞였다.
+%%%%
+Shields player ghost
+
+@The_monster@ says, "You can hit me, but you can't hurt me."
+%%%%
+Unarmed Combat player ghost
+
+@The_monster@(은)는 비웃었다, "약자들만이 무기를 들지."
+
+VISUAL:@The_monster@(은)는 [왼쪽|오른쪽]으로 페인트 모션을 취했다.
+
+VISUAL:@The_monster@(은)는 레슬링 자세를 취했다.
+
+@The_monster@는 말했다, "네놈의 뼈와 두개골을... 맨손으로 부셔주마."
+
+VISUAL:@The_monster@(은)는 @possessive@ 주먹을 당신을 향해 휘둘렀다. @player_only@
+
+VISUAL:@The_monster@(은)는 @possessive@ 손가락들을 풀었다
+%%%%
+Spellcasting player ghost
+
+@The_monster@(은)는 말했다, "나는 어떤 상황에서든 대응할 수 있는 주문들을 가지고 있지."
+
+@The_monster@(은)는 말했다, "나야말로 지식이 곧 힘이라는 증거이니라."
+
+@The_monster@(은)는 말했다, "보아라 그리고 경외하라!"
+
+@The_monster@(은)는 말했다, "나는 죽음을 경험한 이후에도 많은 노력을 했지."
+
+VISUAL:@The_monster@의 손가락끝이 빛나기 시작했다.
+
+VISUAL:@The_monster@는 집중을 하며 얼굴을 찌푸렸다.
+
+@The_monster@(은)는 말했다, "나는 너보다 똑똑하다!"
+%%%%
+Conjurations player ghost
+
+VISUAL:@The_monster@(은)는 자신의 적에게 마법을 겨냥한다.
+
+@The_monster@(은)는 말했다, "널 산산조각으로 폭파할거야."
+
+@The_monster@(은)는, 거의 형언할수없는 주문을 [능숙하게 영창했다|잘못 발음했다].
+
+VISUAL:@The_monster@(은)는 이스켄데룬의 복사광을 몸으로 받았다.
+
+VISUAL:@the_monster@의 앞에 에너지가 모였으나, 빠르게 소멸되었다.
+%%%%
+Hexes player ghost
+
+@The_monster@(은)는 적에게 말했다, "너는 곧 내 힘을 피하는 것으로 무력해질거야."
+
+@The_monster@(은)는 적에게 말했다, "내가 손가락을 딱 튕기면, 너 자신을 통닭이라고 생각하게 될거야."
+%%%%
+Charms player ghost
+
+@The_monster@(은)는 말했다, "혹시 너 내가 지금 강해보인다고 생각한다면, 그냥 기다려!"
+%%%%
+Summonings player ghost
+
+@The_monster@(은)는 말했다, "혼자서 모험하는건 위험해."
+
+VISUAL:@The_monster@(은)는 @possessive@ 모자에서 쿼카 한마리를 끌어내었다.
+
+@The_monster@(은)는 적에게 가리키고는 소리쳤다, "공격!"
+
+@The_monster@(은)는 말했다, "친구를 갖는건 좋은 일이지."
+%%%%
+Necromancy player ghost
+
+@The_monster@(은)는 적에게 말했다, "곧 너는 내 노예가 될것이다."
+
+@The_monster@(은)는 말했다, "죽음이 너의 고통을 끝낼것이다."
+
+@The_monster@(은)는 적에게 말했다, "걱정하지마라, 네 시체를 낭비하게 두지않겠다."
+
+@The_monster@(은)는 적에게 말했다, "널 죽인뒤에, 널 또 죽일거다."
+
+@The_monster@(은)는 적에게 말했다, "내가 가진 주문을 쓰는데 네 뼈가 필요해."
+%%%%
+Translocations player ghost
+
+VISUAL:@The_monster@(은)는 현실의 안과 밖에서 깜빡거렸다.
+
+VISUAL:@The_monster@(은)는 전이 에너지의 구름에 둘러싸였다.
+
+VISUAL:@The_monster@(은)는 적에게 순간이동했다.
+%%%%
+Transmutations player ghost
+
+VISUAL:@The_monster@(은)는 알수없게도 잠시 @_form_@ 으로 보였다.
+
+VISUAL:@The_monster@(은)는 잠시 @_form_@ 으로 변했다가 되돌아갔다.
+%%%%
+Fire Magic player ghost
+
+@The_monster@은(는) 말했다, "살점이 타들어가는 냄새가 너무 좋아."
+
+@The_monster@은(는) 말했다, "화장되는거 좋아하나?"
+
+@The_monster@은(는) 말했다, "걱정마. 잠깐 따뜻해질 뿐이야."
+%%%%
+Ice Magic player ghost
+
+VISUAL:한기가 당신의 등골을 타고 흘렀다. @player_only@
+
+@The_monster@은(는) 적에게 말했다, "널 보는 다음 괴물이 널 냉동식품처럼 먹기를 바라."
+
+@The_monster@은(는) 적에게 말했다, "널 얼음조각으로 만들면 이 곳에 굉장히 잘 어울리겠어."
+%%%%
+Air Magic player ghost
+
+VISUAL:@The_monster@은(는) 전기의 쇄도에 둘러쌓여있다.
+
+@The_monster@은(는) 말했다, "이 싸움이 내 기분을 몹시 과부하시키는군."
+
+@The_monster@은(는) 말했다, "저항은 무의미하다!"
+%%%%
+Earth Magic player ghost
+
+@The_monster@은(는) 말했다, "구르는 돌에는 @foe_name@ 이(가) 낀다."
+
+@The_monster@은(는) 말했다, "온 대지가 내 손 안에 있다."
+
+VISUAL:지면이 잠깐 흔들렸다.
+%%%%
+Poison Magic player ghost
+
+@The_monster@은(는) 말했다, "그것처럼 작은 상처는 전혀 위험하지 않을거야."
+
+@The_monster@은(는) 적에게 말했다, "뭐 좋아. 도망가 봐."
+
+@The_monster@은(는) 적에게 말했다, "니가 날 죽여도 별 상관없어. 그래봤자 너도 죽을테니까."
+
+@The_monster@은(는) 적에게 말했다, "움직이지 마. 아님 움직이고 더 빨리 중독돼서 죽어버리던가."
+
+@The_monster@은(는) 적에게 말했다, "난 더 이상 숨 쉴 필요가 없는데, 넌 숨 쉬어야겠네!?"
+%%%%
+Invocations player ghost
+
+@The_monster@가 신을 저주했다.
+
+@The_monster@(이)가 말했다, "신에게 의존한 결과가 이것이다."
+
+@The_monster@(이)가 적에게 비웃었다, "네가 믿는 신은 지금 어디에서 뭘 하고 있는 거지?"
+
+@The_monster@(이)가 말했다, "하, 신들은 쓸모없어!"
+
+@The_monster@(이)가 투덜거렸다, "신들이 약속했던 내세가 이럴 줄이야. 완전 멋져빠진 내세로구만."
+
+VISUAL:@The_monster@(이)가 기도했다.
+%%%%
+Evocations player ghost
+
+@The_monster@(이)가 적에게 말했다, "카드게임 한 판 어때?"
+
+@The_monster@(이)가 적에게 말했다, "마법봉을 제대로 겨눈 것 맞나?"
+
+@The_monster@(이)가 말했다, "[돌로|부채로|램프로] 널 죽일 수 있겠군."
+%%%%
+Ashenzari player ghost
+
+@The_monster@(이)가 적에게 말했다, "삶은 저주다,  너도 곧 이해하게 될 것이다."
+
+@The_monster@(이)가 적에게 말했다, "암울이라는 말로도 네 미래를 설명하긴 모자라다."
+
+@The_monster@(이)가 적에게 말했다, "너는 대지에 영원히 묶일 것이다."
+
+@The_monster@(이)가 속삭였다: "죽은 뒤, 나는 나의 실수를, 수많은 실수를 깨달았다."
+
+@The_monster@(이)가 웃음을 터트리며 말했다: "그러나 그런 실수에도 아랑곳하지 않고 나는 내가 이렇게 될 것임을 알고 있었다..."
+
+@The_monster@ (이)가 약속했다, "네 내장으로 내장점을 쳐보도록 하겠다."
+%%%%
+Beogh player ghost
+
+@The_monster@(이)가 말했다, "누구도 죽은 구원자를 따르고 싶어하지 않는다!"
+
+@The_monster@(이)가 말했다, "원래는 물 위를 걸었었는데. 이젠 그 위를 날아다니는군."
+
+@The_monster@(이)가 적에게 말했다, "널 죽이는 데는 군대를 부를 필요도 없겠군!"
+%%%%
+Cheibriados player ghost
+
+@The_monster@(이)가 적에게 말했다, "서두를 필요가 어디 있나? 어차피 죽을 텐데."
+
+@The_monster@(이)가 적에게 말했다, "도망칠 수는 있어도, 숨지는 못할 것이다!"
+%%%%
+Dithmenos player ghost
+
+@The_monster@(이)가 적에게 말했다, "그림자 속으로 보내주마!"
+
+@The_monster@(이)가 적에게 말했다, "어둠이 너를 삼키게 두어라."
+
+@The_monster@(이)가 적에게 말했다, "너도 곧, 나처럼 그림자 속을 걷게 될 것이다."
+%%%%
+Elyvilon player ghost
+
+@The_monster@(이)가 적에게 말했다, "살아있었을 때라면, 당신을 치료해줬어야 하는 거였지."
+
+@The_monster@(이)가 말했다, "폭력은 아무 것도 낳지 않는다고 생각했었는데. 내 죽음은 낳더군."
+
+@The_monster@(이)가 혼잣말했다, "누군가를 죽이는 것이 이렇게 재미있을 줄은 몰랐군."
+%%%%
+Fedhas player ghost
+
+@The_monster@(이)가 울부짖었다, "내가 도대체 왜 식물이 날 지켜줄 거라고 믿었지?"
+
+@The_monster@(이)가 적에게 말했다, "난 이제 더 이상 생명을 흩뿌릴 순 없다. 그러나 네게서 생명을 앗아갈 수는 있다!"
+
+@The_monster@(이)가 말했다, "넌 좋은 비료가 되겠군."
+
+@The_monster@(이)가 말했다, "생명은 윤회한다. 너도 곧 환생할 것이다. 촌충으로."
+%%%%
+Gozag player ghost
+
+VISUAL:@The_monster@(이)가 당신을 향해 불룩한 동전지갑을 흔들었다.
+
+@The_monster@(이)가 말했다, "넌 황금만큼이나 좋구나."
+
+@The_monster@(이)가 말했다, "네 재력으로는 좋은 내세를 사긴 그른 것 같구나."
+%%%%
+Jiyva player ghost
+
+@The_monster@(이)가 적에게 말했다, "반짝이는 물건에 아직도 집착하느냐?"
+
+@The_monster@(이)가 적에게 말했다, "멍청하군. 약탈을 갈망하다니."
+
+@The_monster@(이)가 적에게 말했다, "살아 있었을 적에도, 지금도, 값싼 장신구 따위는 필요하지 않다."
+%%%%
+Kikubaaqudgha player ghost
+
+@The_monster@(이)가 말했다, "죽은 뒤 리치가 되기로 했었는데. 이것도 그리 나쁘진 않군."
+
+@The_monster@(이)가 적에게 소리쳤다, "너만을 위해 준비해둔 고통과 격통이 얼마나 되는지 넌 상상도 하지 못할 것이다!"
+
+@The_monster@(이)가 적에게 말했다, "죽음은 언제나 삶을 이길 것이다."
+
+@The_monster@(이)가 적에게 말했다, "넌 괜찮은 좀비가 되겠군."
+%%%%
+Lugonu player ghost
+
+# These first two only really make sense outside the Abyss
+@The_monster@(이)가 후회에 찬 어조로 말했다, "이것들 모두를 다 타락시켰어야 했는데."
+
+@The_monster@(이)가 말했다, "이곳은 정말 황량하구나. 심연에 도달하지 못할 너에게 동정심이 드는구나!"
+
+@The_monster@(이)가 자랑스럽게 말했다, "형상없는 신을 섬기기에는 형상없는 유령이 알맞지."
+%%%%
+Makhleb player ghost
+
+@The_monster@(이)가 말했다, "널 상대하는 데 악마의 도움은 필요 없겠군."
+
+@The_monster@(이)가 말했다, "네놈 같은 녀석들을 가지고 놀기 위해서 나는 죽음을 택했다."
+
+@The_monster@(이)가 말했다, "죽은 뒤에도 파괴는 심심풀이로 알맞군."
+
+@The_monster@(이)가 적에게 말했다, "처음엔 고통스러울 것이다. 그 다음엔 죽을 것이다."
+%%%%
+Nemelex Xobeh player ghost
+
+@The_monster@(이)가 당신에게 말했다, "카드가 당신에게 불길한 미래를 점치는군."
+
+@The_monster@(이)가 적에게 말했다, "네가 죽을 거라는 데에, 올인!"
+
+@The_monster@(이)가 당신에게 말했다, "지옥살이 카드를 뽑은 것 같군."
+%%%%
+Okawaru player ghost
+
+@The_monster@(이)가 말했다, "난 한때 위대한 전사였다... 그리고 지금도 그렇다!"
+
+@The_monster@(이)가 말했다, "아, 나 자신을 전장에서 증명할 두 번째 기회라니."
+%%%%
+Pakellas player ghost
+
+@The_monster@(이)가 말했다, "너는 곧 풀리기만을 기다리는 문제와 같군."
+
+@The_monster@(이)가 말했다, "넌 이거라도 빌려야겠는걸."
+
+@The_monster@(이)가 말했다, "주문이라니? 하! 진짜 마법이 무엇인지 내 완드로 보여주도록 하지"
+%%%%
+Qazlal player ghost
+
+@The_monster@(이)가 말했다, "폭풍이 다가온다..."
+
+@The_monster@(이)가 말했다, "자연이 너를 비켜가기를 바라거라!"
+
+@The_monster@(이)가 말했다, "대자연이 너를 부술 것이다!"
+%%%%
+Ru player ghost
+
+@The_monster@(은)는 말했다, "궁극의 힘을 위해, 내 몸을 희생했다!"
+
+@The_monster@(은)는 말했다, "너에게 위대한 섬멸의 진실을 보여주마!"
+
+@The_monster@(이)가 당신에게 말했다, "이럴수는 없어! 이건 현실이 아니야!"
+
+@The_monster@(이)가 적에게 말했다, "먼저, 넌 고통받을거야. 그리고 죽겠지."
+%%%%
+Sif Muna player ghost
+
+@The_monster@(이)가 말했다, "죽음은 지식에 이르는 또 다른 길일 뿐."
+
+@The_monster@(이)가 말했다, "아, 이제 연구할 시간이 충분하겠군."
+%%%%
+The Shining One player ghost
+
+@The_monster@(은)는 말했다, "난 신의 보호를 약속받았었다. 그정도만 해두지."
+
+@The_monster@(이)가 말했다, "살아있을 때, 난 거대한 악과 싸웠다. 지금은, 그냥 싸울뿐이다."
+
+@The_monster@(이)가 말했다, "사람들이 말하길 기사도는 죽었다고 한다. 뭐, 그래서 나 역시 죽었다."
+
+@The_monster@(이)가 속삭였다, "나도 그들 중 하나가 되었노라."
+
+@The_monster@(이)가 중얼거렸다, "우린 악의 요새로 진군했었지. 그리고 지금은 나 홀로 걷는다네."
+
+@The_monster@(이)가 말했다, "나를 이끄는 그 어떤 불빛도 없어..."
+%%%%
+Trog player ghost
+
+@The_monster@(은)는 고함쳤다, "누가 생각했겠어, 죽어서도 섬길수있는 기쁨이라니!"
+
+@The_monster@(은)는 기쁨에 차서 소리질렀다, "살아있을때도, 죽음속에서도, 죽인다! 죽인다!! 죽인다!!!"
+%%%%
+Vehumet player ghost
+
+@The_monster@(은)는 위협했다, "지옥불은 다썼지만, 어째뜬 넌 끝장날거야."
+
+@The_monster@(이)가 말했다, "죽어도 멈추지 않는 완전한 파괴의 대리인."
+
+@The_monster@(이)가 우쭐댔다, "널 좀 만져주고 난 뒤, 세상을 흡수할 주문을 연구해야겠어."
+
+@The_monster@(이)가 위협했다, "날 실망시키지 마, 이스켄데룬의 불꽃!"
+%%%%
+Xom player ghost
+
+@The_monster@(은)는 @_laughs_@, "난 죽일 때 웃어. 넌 죽을 때 웃어. 스마-일!"
+
+@The_monster@(이)가 불평했다, "너 잘 죽는 녀석인데, 재미는 없어."
+
+@The_monster@(이)가 회상했다, "선물이랑 장난이 그리워."
+
+@The_monster@(이)가 잡담했다, "살아있을 때도 참 유쾌한 시간을 보냈지! 지금도 유쾌해!"
+
+@The_monster@(이)가 웃었다, "야이 돌대가리야. 니 대가리가 잘려서 돌에 떨어지는거 웃길 거 같지 않아."
+
+@The_monster@(이)가 말했다: "가위 없어?! 나 손톱 어디쯤에 거스러미 생긴 것 같은데..."
+
+@The_monster@(이)가 웃긴 표정을 지으려고 노력했다.
+%%%%
+Yredelemnul player ghost
+
+@The_monster@(이)가 적에게 말했다, "넌 나를 영원히 섬기리라."
+
+@The_monster@(이)가 적에게 말했다, "널 나의 영원한 노예로 만들어 주마."
+
+@The_monster@(이)가 적에게 말했다, "넌 먼저 죽으리라. 그 후 고통받을지어다."
+%%%%
+Zin player ghost
+
+@The_monster@(이)가 적에게 말했다, "난 가난하고 쓸모없이 죽었지만, 적어도 괴물은 아니었어."
+
+@The_monster@(이)가 적에게 말했다, "내 모든 십일조를 바치면서, 이것보단 더 영광스러운 사후세계를 기대했는데."
+%%%%
+_generic_ranged_
+
+@The_monster@(은)는 적에게 조준했다.
+
+당신은 머리쪽에 가까이에서 위험하게 통과하는 무언가를 느꼈다. @player_only@
+%%%%
+_form_
+
+거미
+
+석상
+
+w:5
+용
+%%%%
+_laughs_
+# also used by mimics
+
+낄낄거렸다
+
+킥킥 웃었다
+
+피식 웃었다 
+
+깔깔거렸다 
+
+싱긋 웃었다 
+
+크게 웃었다 
+%%%%
+player ghost
+
+@_player_ghost_common_@
+
+w:5
+@_player_ghost_medium_@
+
+w:2
+@_player_ghost_rare_@
+%%%%
+_player_ghost_common_
+
+VISUAL:@The_monster@(은)는 적을 응시했다.
+
+@The_monster@(은)는 원망에 차 울부짖었다.
+
+@The_monster@(은)는 슬픔에 잠겨 노려보았다.
+
+@The_monster@(은)는 울부짖었다.
+
+VISUAL:@The_monster@(은)는 잔잔히 일렁거렸다.
+
+@The_monster@이(가) @_wails_@, "내가 가지지 못한 것을 가지고 있나?"
+
+@The_monster@이(가) 몹시 천천히 말했다, "희망따윈 없어."
+
+@The_monster@이(가) @_wails_@, "넌 오브를 가질 수 없어!" @player_only@
+
+@The_monster@은(는) 속삭였다, "오브같은 건 없어." @player_only@
+
+@The_monster@이(가) @_wails_@, "그들이 너에게 거짓을 말했지. 던전은 밑으로 밑으로 내려갈 뿐이야. 영원히."
+
+@The_monster@이(가) @_wails_@, "너도 곧 나처럼 될거야!"
+
+@The_monster@이(가) @_wails_@, "내가 실패한 곳에서 너 역시 성공하지 못 할거야."
+
+# Sid Vicious II
+@The_monster@(이)가 적에게 속삭였다, "네겐 미래가 없다."
+%%%%
+_player_ghost_medium_
+
+@The_monster@(은)는 미친듯이 웃었다.
+
+VISUAL:@The_monster@(은)는 사악하게 웃었다.
+
+@The_monster@(은)는 철컹거리는 쇠사슬 소리를 내었다.
+
+@The_monster@(은)는 @_wails_@, "나도 한때는 너와 같았지."
+
+@The_monster@(은)는 @_wails_@, "아주 인상적이군. 허나 도움이 되진 않을거야.  아무것도 아니게 될것이지."
+
+@The_monster@(은)는 @_wails_@, "난 네 미래를 보았지, 그리고 그것이 ."
+
+@The_monster@(은)는 @_wails_@, "신이 널 지켜줄거라고 생각하나?"
+
+@The_monster@(은)는 소리질렀다, "누구든 오브를 원하는 자를 죽여버리겠다!" @player_only@
+
+@The_monster@(은)는 적에게 소리질렀다, "방어하지마! 네겐 기회가 없어!"
+
+@The_monster@(은)는 소리질렀다, "조트는 미신이고, 오브는 우화일 뿐이지, 너도 곧 이야기의 일부가 될거야!" @player_only@
+
+@The_monster@(은)는 속삭였다, "죽음이 곧 해방이다."
+
+@The_monster@(은)는 @_wails_@, "죽음이 너의 유일한 미래이다!"
+
+@The_monster@(은)는 속삭였다, "죽음의 공허와 만나보아라!"
+
+# Sid Vicious I
+@The_monster@(은)는 @_wails_@, "나에겐 미래가 없어!"
+
+@The_monster@(은)는 속삭였다, "그들이 네게 다가올거야..."
+
+@The_monster@(은)는 속삭였다, "날 믿어봐. 그냥 항복해."
+%%%%
+_player_ghost_rare_
+
+# Hamlet
+@The_monster@(은)는 @_wails_@, "죽던지, 잠들던지, 그게다야."
+
+@The_monster@(은)는 속삭였다, "영원한 침묵이 너를 기다린다..."
+
+@The_monster@(은)는 속삭였다, "죽음은 아프지않아. 네가 느끼는 것은 생명이다."
+
+@The_monster@(은)는 속삭였다, "너도 곧 나를 더 잘 이해하게 될거야."
+
+# The Mysterious Stranger
+@The_monster@은(는) 속삭였다, "이건 다 꿈일거야 - 괴상하고 멍청한 꿈."
+
+@The_monster@은(는) 속삭였다, "곧 휴식시간을 가지게 될거야. 아주 많은 시간을..."
+
+@The_monster@이(가) @_wails_@, "내가 통과한 곳에서 실패해서는 안돼!"
+%%%%
+## END player ghost ##
+#######################################
+# Unique monsters
+#######################################
+############ AIZUL ### Renegade guardian serpent whose vault was raided.
+Aizul
+
+@_Aizul_common_@
+
+w:5
+@_Aizul_rare_@
+%%%%
+_Aizul_common_
+
+VISUAL:@The_monster@이 하품하고는, 하지 않은 척 했다.
+
+@The_monster@이 말했다, "졸리니?"
+
+@The_monster@이 말했다, "난 전혀 졸리지 않아!"
+
+VISUAL:@The_monster@은 위협적으로 쉿쉿거렸다.
+
+@The_monster@은 적에게 소리쳤다, "네 악몽에까지 나타날거야!"
+%%%%
+_Aizul_rare_
+
+@The_monster@은 말했다, "좋은 꿈 꿔!"
+
+@The_monster@은 자장가를 흥얼거렸다.
+
+VISUAL:@The_monster@은 똬리를 틀었다가 풀었다.
+
+@The_monster@은 말했다, "누구나 언젠간 자야하지."
+
+@The_monster@은 적에게 말했다, "잠깐 잠들었나?"
+
+@The_monster@은 말했다, "그들이 너보다 나은 사람을 찾았다고 하더라고!"
+
+@The_monster@은 말했다, "넌 교체된거야! 교체된 느낌이 어때?"
+
+@The_monster@은 울먹거렸다, "아무 곳도 없어! 누가 졸린 아이줄을 보물 지킴이로 고용하겠어!"
+
+VISUAL:@The_monster@은 적에게 몇번 윙크를 날렸다.
+%%%%
+############ AGNES ### She is an honourable warrior from a far-away land.
+Agnes
+
+@_Agnes_common_@
+
+w:5
+@_Agnes_rare_@
+%%%%
+_Agnes_common_
+
+VISUAL:@The_monster@는 허리를 굽혔다.
+
+@The_monster@는 적에게 말했다, "네 선조들을 욕보이는군."
+
+@The_monster@는 적에게 말했다, "난 불명예스러운 적을 경멸해."
+
+@The_monster@는 적에게 말했다, "널 죽이는게 내 임무지만, 또한 내 기쁨이기도 해."
+
+@The_monster@는 중얼거렸다, "절대 이것을 연습해본적이 없지."
+
+@The_monster@는 적에게 말했다, "죽음속에서, 따라가기 쉬운 평온의 길을 찾게될거야."
+%%%%
+_Agnes_rare_
+
+@The_monster@는 말했다, "오브는 지금부터 내꺼야."
+
+#sepaktakraw reference
+@The_monster@는 적에게 소리쳤다, "나무 공처럼 널 뻥 차버릴거야."
+
+@The_monster@는 물었다, "내 구불무늬 단검 어딨는지 봤어?"
+
+@The_monster@는 속삭였다, "맛있는 빵나무 열매 하나 있었으면 괜찮을텐데."
+## END Agnes ##
+%%%%
+############ ANTAEUS ### A titan demonically corrupted into a hell lord.
+Antaeus
+
+@_hell_lord_taunt_@
+## END Antaeus
+%%%%
+############ ARACHNE ### Half-human half-spider
+Arachne
+
+@The_monster@는 적에게 말했다, "내 거미줄 속으로 들어오렴."
+
+@The_monster@는 적에게 말했다, "가까이 오렴. 작은 날파리야."
+
+@The_monster@는 적에게 말했다, "내 거미줄 가까이에 온다면 너 자신을 좀 더 알 수 있을거야."
+
+@The_monster@는 적에게 말했다, "아무도 내 거미줄에서 도망칠 수 없어."
+%%%%
+############ ASTERION ### Minotaur of Makhleb
+Asterion
+
+@_Asterion_common_@
+
+w:5
+@_Asterion_rare_@
+%%%%
+_Asterion_common_
+
+VISUAL:@The_monster@은 콧김을 뿜으며 땅을 굴렀다.
+
+VISUAL:@The_monster@은 천천히 자신의 무기를 바꿔쥐었다.
+
+@The_monster@은 말했다, "네 영혼은 곧 마크레브님께 귀속될 것이다!" @player_only@
+
+@The_monster@은 말했다, "마크레브님은 내게 파괴의 힘을 주셨지."
+
+@The_monster@은 말했다, "네 시체로 나의 성벽을 장식해주마." @player_only@
+
+@The_monster@은 말했다, "나의 왕국에선, 너 같은 약골은 검에 꿰이지." @player_only@
+
+@The_monster@은 말했다, "어떤 미궁도 날 가둘순 없어."
+
+@The_monster@은 말했다, "내 집에 들어와라, 네게 악마부터 갖다주겠다." @player_only@
+
+@The_monster@은 말했다, "나의 어머니, 그녀는 여왕이셨다." @player_only@
+
+@The_monster@은 절규했다, "날 쳐다보지마!" @player_only@
+
+@The_monster@은 푸념했다, "우리 집은 문이 14개나 된다고!"
+
+@The_monster@은 마크레브를 기리는 찬송가를 불렀다.
+
+@The_monster@은 적에게 말했다, "너의 가치있는 의지는 내 금고에 잘 들어갈거다." @player_only@
+
+%%%%
+_Asterion_rare_
+
+@The_monster@은 응축된 함성을 내질렀다.
+
+@The_monster@은 잠시 불에 휘감긴채 주문을 영창했다.
+
+@The_monster@의 눈은 빛났다.
+당신은 악마의 웃음소리를 들었다.
+
+@The_monster@ says, "{{
+    if you.skill("Spellcasting") >= 5 then
+      return "아, 마법사! 난 네놈이 목숨을 구걸하는걸 들으며 즐길 것이다."
+    else
+      return "넌 전사가 아니야. 넌 마치 농부처럼 싸우는군!"
+    end }}" @player_only@
+
+@The_monster@ says, "{{
+    if you.god() == "Makhleb" then
+      return "우리 신의 이름에 걸고, 네 목숨을 내놓아라!"
+    else
+      return "마크레브님 앞에 무릎 꿇어라, 이 불신자!"
+    end }}" @player_only@
+
+@The_monster@은 적에게 소리질렀다, "오브가 뭐? 난 하나의 왕국을 가지고 있다!" @player_only@
+
+@The_monster@은 적에게 소리질렀다, "네 놈의 왕 앞에 경배하라! 경배하라! 경배!" @player_only@
+%%%%
+############ AZRAEL ### efreet
+Azrael
+
+@_Azrael_common_@
+
+w:2
+@_Azrael_rare_@
+%%%%
+_Azrael_common_
+
+@The_monster@은 미친듯이 웃었다.
+
+@The_monster@은 분노에 찬 함성을 외쳤다.
+
+@The_monster@은 적에게 소리질렀다., "타올라라! 타올라! 이 모든것은 타오를지어다!"
+
+VISUAL:@The_monster@은 연기로 된 고리를 내뿜었다.
+
+VISUAL:@The_monster@의 눈은 불같이 타오른다.
+
+VISUAL:@The_monster@은 순간적으로 화염의 구름에 숨겨졌다.
+%%%%
+_Azrael_rare_
+
+@The_monster@은 싱긋 웃으며 적에게 물었다, "너 [불에 잘타니|불에 안타니|뜨겁다고 느끼니]?"
+
+@The_monster@은 적에게 말했다, "우린 오늘밤 맛있는 적으로 된 케밥을 먹을거야!"
+
+@The_monster@은 적에게 소리질렀다, "안돼! 안돼애! 그래! 안돼!"
+
+VISUAL:@The_monster@은 원을 그리며 돌았다.
+
+@The_monster@은 적에게 말했다, "수천마리 낙타의 벼룩이 네 겨드랑이를 감염시킬거야."
+
+@The_monster@은 적에게 궁금해했다, "아직도 타당한 망상으로 고통받고 있나?"
+
+@The_monster@은 적에게 말했다, "네 아랫도리가 끊임없이 가려울것이고, 네 팔은 거기를 긁기엔 너무 짧은것같아."
+
+@The_monster@은 적에게 말했다, "애미없는 염소 새끼."
+
+@The_monster@은 적에게 말했다, "광견병 걸린 개가 니 애비야! 그리고 냄새나는 자칼이 니 할배고! 니 증조할배는 털 다 뽑힌 대머리 독수리다!"
+
+@The_monster@은 적에게 말했다, "고슴도치가 니 바지 속에서 천일을 살다가 그 다음날 죽을거다!"
+%%%%
+_player_arms_
+
+{{
+if you.race() == "Felid" then
+    return "발"
+elseif you.race() == "Octopode" then
+    return "촉수"
+elseif you.race() == "Formicid" then
+    return "수족"
+else
+    return "팔"
+end
+}}
+## END Azrael ##
+%%%%
+############ BLORK ### In case Blork ends up polymorphed.
+Blork
+
+@Blork the orc@
+%%%%
+Blork the orc
+
+@_Blork_common_@
+
+w:5
+@_Blork_rare_@
+%%%%
+_Blork_common_
+
+# some chance of generic orc speech
+w:20
+@_generic_orc_speech_@
+
+VISUAL:@The_monster@는 사악하게 웃었다.
+
+VISUAL:@The_monster@는 얼굴을 찌푸렸다.
+
+VISUAL:@The_monster@는 화나보인다.
+
+@The_monster@는 적에게 소리질렀다., "난 너 싫어!"
+
+@The_monster@는 적에게 소리질렀다., "널 죽여버릴거야!"
+
+@The_monster@는 적에게 소리질렀다., "난 너보다 세!"
+
+@The_monster@는 적에게 소리질렀다, "네 뇌를 먹을거야! 그리고 다시 토해버릴거야!"
+
+@The_monster@는 적에게 소리질렀다, "내가 본 것들 중에 니가 가장 못생겼어!"
+
+@The_monster@는 적에게 소리질렀다, "죽어!"
+
+@The_monster@는 적에게 소리질렀다, "이 던전을 네 피로 뒤덮어버리겠어!"
+
+%%%%
+_Blork_rare_
+
+@The_monster@는 적에게 소리질렀다, "네 대가리를 잘라주마!"
+
+@The_monster@는 적에게 소리질렀다, "네 다리를 부러뜨릴거다!"
+
+@The_monster@는 적에게 소리질렀다, "네 팔을 부숴버릴거다!"
+
+@The_monster@는 적에게 소리질렀다, "네 갈빗대를 박살낼거다! 하나 하나!"
+
+@The_monster@는 적에게 소리질렀다, "네 가죽으로 망토를 만들거다!"
+
+@The_monster@는 적에게 소리질렀다, "네 내장으로 내집을 장식할거다!"
+
+@The_monster@는 적에게 소리질렀다, "네 피를 마셔주겠다! 곧!"
+## END Blork the orc ##
+%%%%
+############ BORIS ### An ancient lich with the nasty habit of coming back
+Boris
+
+@_Boris_common_@
+
+w:5
+@_Boris_medium_@
+
+w:2
+@_Boris_rare_@
+%%%%
+_Boris_common_
+
+VISUAL:@The_monster@는 적을 응시했다.
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+%%%%
+_Boris_medium_
+
+@The_monster@가 소리내어 웃었다.
+
+@The_monster@는 적에게 말했다, "내 힘을 상상할 수 조차 없을거다."
+
+@The_monster@는 말했다, "오브를 원해? 넌 절대 가질 수 없어." @player_only@
+
+@The_monster@는 적에게 말했다, "내 힘에는 한계가 없다."
+
+@The_monster@는 적에게 말했다, "넌 날 죽이지 못해. 난 불멸이다!"
+
+@The_monster@는 적에게 말했다, "난 영생의 비밀을 알고 있지. 넌 어떤가."
+
+@The_monster@는 적에게 말했다, "네 미래를 알고 있지. 네 미래는 죽음이다."
+
+@The_monster@는 적에게 말했다, "누가 영원히 살기를 원할까? 바로 나다."
+
+@The_monster@는 적에게 말했다, "너에겐 단 하나의 해결책이 있겠군. 바로 죽음."
+
+@The_monster@는 적에게 말했다, "넌 절대 이기지 못해."
+%%%%
+_Boris_rare_
+
+@The_monster@는 적에게 말했다, "널 초대한 적이 없는데."
+
+@The_monster@는 적에게 말했다, "세계, 육체 그리고 악마."
+
+@The_monster@는 말했다. "넌 마법에 대해 아무것도 몰라."
+
+@The_monster@는 적에게 말했다, "난 다시 돌아온다."
+
+@The_monster@는 적에게 말했다, "내 노예 군대로 들어오거라."
+%%%%
+Boris killed
+
+@_Boris_return_common_@
+
+w:5
+@_Boris_return_rare_@
+%%%%
+_Boris_return_common_
+
+@The_monster@는 적에게 말했다, "넌 내 마지막을 보지 못할거다!"
+
+@The_monster@는 적에게 말했다, "다음엔 널 잡고야 말겠다!"
+
+@The_monster@는 적에게 말했다, "아직 끝나지 않았어!"
+
+@The_monster@는 말했다, "난 다시 돌아온다!"
+
+@The_monster@는 말했다, "끝이 아니다. 아직 시작에 불과하다!"
+%%%%
+_Boris_return_rare_
+
+@The_monster@는 적에게 말했다, "날 죽인다고? 안 될 걸?!"
+
+@The_monster@는 적에게 말했다, "나를 그렇게 쉽게 제압할 수는 없을것이다!"
+
+@The_monster@는 적에게 말했다, "우리는 또 만날것이다!"
+%%%%
+Boris unsummoned
+
+@The_monster@는 말했다, "넌 나를 불태울수 없지, 퇴장하겠다!"
+%%%%
+friendly Boris unsummoned
+
+@Boris unsummoned@
+## END Boris ##
+%%%%
+############ CHUCK ### An avid rock collector.
+Chuck
+
+@_chuck_generic_@
+
+w:2
+@_chuck_rare_@
+%%%%
+_chuck_generic_
+
+@The_monster@은 으르릉거렸다.
+
+@The_monster@은 말했다, "나, 바위 좋아한다."
+
+@The_monster@은 말했다, "나 바위 가졌다. 많이."
+
+@The_monster@은 말했다, "내 바위 보고 싶어?"
+
+@The_monster@은 말했다, "너 내 바위 조금 봤다.."
+
+@The_monster@은 말했다, "큰 바위, 작은 바위, 거대한 바위! 마법 바위!"
+
+VISUAL:@The_monster@은 조금 군침을 흘렸다.
+%%%%
+_chuck_rare_
+
+@The_monster@이 말했다, "나 돌 짱쎄다"
+
+VISUAL:@The_monster@이 당신을 수상한듯 의심했다.
+
+@The_monster@이 말했다, "바위 훔친다! 안돼!"
+
+@The_monster@이 외쳤다, "도둑놈!"
+
+@The_monster@이 말했다, "나 봤다, 너 가져갔다."
+
+@The_monster@이 말했다, "최고의 바위! 바위!"
+
+@The_monster@이 말했다, "바아위!"
+
+@The_monster@이 말했다, "내 바위이이!"
+### End CHUCK ###
+%%%%
+############ CRAZY YIUF ### A mad old gnoll!
+Crazy Yiuf
+
+@_crazy_yiuf_speech_@
+%%%%
+# Xom worshippers will find Crazy Yiuf to be somewhat more enlightening.
+Xom Crazy Yiuf
+
+# Socrates
+@The_monster@가 말했다, "반성하지 않는 삶은, 살 가치도 없다."
+
+# Stephen Hawking
+@The_monster@가 말했다, "내 목표는 간단하다. 우주를 완전히 이해하는 것이다. 우주가 어떻게 존재하는지, 그리고 어떻게 존재할 수 있었는지."
+
+# Einstein
+@The_monster@가 말했다, "누군가는 말했지. 이 세계를 이해할 수 있다는 것이, 가장 이해할 수 없는 것이라고"
+
+# Kierkegaard
+@The_monster@가 말했다, "어느쪽이 더 어렵겠나? 잠든 자를 깨우는 것과, 잠들었음에도 자신이 깨어 있다는 꿈을 꾸는 자를 깨우는 것 중에서?"
+
+# Chekhov
+@The_monster@가 말했다, "모든 이들이 믿는 신은 같은 신이다. 그저 믿는 사람이 다를 뿐이다."
+
+# Nietzsche
+@The_monster@가 말했다, "심지어 신조차 지루함을 견디기 어려웠던 것이다."
+
+# Ralph Waldo Emerson
+@The_monster@가 말했다, "그 어떤 사실도 내게 신성하지 않다. 또한 그 어떤 사실도 내게 불경하지 않다. 나는 그저 연구하는, 뒤로의 과거없이 끝없이 추구하는 자다."
+
+# Robert Ingersoll
+@The_monster@가 말했다, "현재는 모든 과거의 자식이고, 또한 모든 미래의 어머니이다."
+
+# Hume
+@The_monster@가 말했다, "이성은 특별한 것이 아니다. 멋지지만, 이성으로는 이해할 수 없는 우리 영혼의 본능에 불과하다."
+
+# Kant
+@The_monster@가 말했다, "이성으로 이해되길 요구한 것은, 지극히 불합리하지만, 그럼에도 틀림없이 마음이 기우는 쪽으로 규정해야 하는것이다."
+
+VISUAL:@The_monster@는 변증법적 유물론을 고려하였다.
+
+VISUAL:@The_monster@는 실존적 딜레마를 곰곰히 생각했다.
+
+VISUAL:@The_monster@는 @possessive@ 망토 아래의 @possessive@ 메모들을 뒤섞었다.
+
+VISUAL:@The_monster@는 사색에 잠겨 한숨을 쉬었다.
+%%%%
+orb Crazy Yiuf
+
+@The_monster@는 말했다, "날 기다려줘!"
+
+@The_monster@는 말했다, "그것을 찾았군!"
+
+@The_monster@는 말했다, "이곳에서 날 꺼내줘."
+
+@The_monster@는 말했다, "날 위해 돌아온거야."
+%%%%
+# Not quite so mad when he's confused.
+confused Crazy Yiuf
+
+@The_monster@는 말했다, "이 수염은 진짜 미친듯이 가려워!"
+
+@The_monster@는 말했다, "내가 창문을 열어놓고 왔던가."
+
+VISUAL:@The_monster@는 생각에 잠긴채 @possessive@ 머리를 긁었다.
+
+@The_monster@는 말했다, "내 안경 봤어?"
+
+@The_monster@는 말했다, "아마 저녁용으로 쓸 새끼양이 있을거야."
+
+@The_monster@는 말했다, "오, 이건 꽤나 괜찮은걸."
+
+@The_monster@는 말했다, "내 망토 봤어?"
+
+@The_monster@는 웃었다.
+
+VISUAL:@The_monster@는 @possessive@ 손가락으로 무언가의 수를 헤아렸다.
+
+@The_monster@는 말했다, "내, 내 머리가 빙빙 돈다!"
+
+@The_monster@는 말했다, "꽤나 독특한 기분이 드는데."
+%%%%
+_crazy_yiuf_speech_
+
+w:300
+@The_monster@ @_crazy_yiuf_speech_verbs_@, "@_crazy_yiuf_sentence_@"
+
+VISUAL:@The_monster@는 @possessive@ 육척봉을 당신을 향해 흔들었다. @player_only@
+
+@The_monster@는 울부짖었다, "너는 다리가 부러진 노래, 아니야?"
+
+VISUAL:@The_monster@는 노려보았다.
+
+VISUAL:@The_monster@는 그자리에서 빙빙 돌았다.
+
+VISUAL:@The_monster@는 @possessive@ 망토를 펄럭거렸다.
+
+@The_monster@는 말했다, "돌았어? 돌았다고!? 호저!"
+
+@The_monster@는 노래했다, "나무, 나무, 나무, 서커스!"
+
+w:2
+@The_monster@는 말했다, "난 안 돌았다!"
+%%%%
+_crazy_yiuf_speech_verbs_
+
+w:20
+는 말했다
+
+는 훌쩍거렸다
+
+는 울었다
+
+는 웃었다
+
+는 소리쳤다 
+
+는 고함쳤다 
+
+는 이를 갈았다 
+%%%%
+_crazy_yiuf_sentence_
+
+w:2
+@_crazy_yiuf_wordlist1_@! @_crazy_yiuf_wordlist1_@ @_crazy_yiuf_wordlist2_@ @_crazy_yiuf_wordlist2_@.
+
+w:6
+@_crazy_yiuf_wordlist1_@ @_crazy_yiuf_wordlist2_@ @_crazy_yiuf_wordlist2_@!
+
+w:2
+@_crazy_yiuf_wordlist1_@!
+%%%%
+# Uppercase words
+_crazy_yiuf_wordlist1_
+
+너
+
+엿보기
+
+불
+
+얼음
+
+그림자
+
+철
+
+행동
+
+땅돼지
+
+발표
+
+페인트
+
+껴안는 배게
+
+하
+
+파우더
+
+건조대
+
+웃음거리
+
+둘
+
+초
+
+고무
+
+부패
+
+성
+
+콜레스테롤
+
+친구
+
+제설기
+
+가죽
+
+소총
+
+트라이플
+
+보풀
+
+놀
+
+오브
+
+살무사
+
+망침
+
+금붕어
+
+샤워
+
+줄
+
+산
+
+멍청이
+
+음조의
+
+동쪽
+
+밝은
+
+층
+
+화이트보드
+
+꽃
+
+아빠
+
+엄마
+
+휘펫
+
+쇠스랑
+
+대구
+
+구울
+
+스노서핑
+
+땅콩
+
+프롤로그
+
+양성자
+
+열쇠
+
+섬
+
+십
+
+카드
+
+시프 무나
+
+루고누
+
+매듭
+
+종족
+
+씨앗
+
+케이크
+
+감귤류
+
+마리화나 담배
+
+헐뜯기
+
+간
+
+강도
+
+걸음
+%%%%
+# Lowercase words
+_crazy_yiuf_wordlist2_
+
+노래 부른다
+
+노래한다
+
+노래
+
+부서졌네
+
+다리
+
+아래
+
+덤불
+
+피곤한
+
+달팽이
+
+좀
+
+웅크려라
+
+의자
+
+파란색이네
+
+녹색이네
+
+삼켜라
+
+심어라
+
+집
+
+계단
+
+포장지
+
+왕
+
+무한
+
+구름
+
+가방
+
+차
+
+빛
+
+어둠
+
+물
+
+발
+
+신발
+
+손
+
+팔
+
+머리
+
+눈알
+
+술취한그대
+
+쿨룰루
+
+안녕나무국수
+
+유치한
+
+헝겊인형
+
+칠십
+
+불쌍한자
+
+사다리
+
+일리윌리딜리킬리
+
+오브 수호자
+
+벌집
+
+거북이
+
+바다 거북
+
+귀갑이네
+
+노래로 복귀해
+
+mobile
+
+노망
+
+개같아
+
+무시
+
+거만한 언동
+
+베르데
+
+수퇘지
+
+에나
+
+스피너
+
+친절해
+
+알가
+
+메카로로
+
+빨라
+
+가지
+
+낙천적이야
+
+사십 이
+
+생각도 못했어
+
+높아
+
+행동
+
+피자거품 
+
+국수한숟갈
+
+왱알앵알 
+%%%%
+############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
+Dissolution
+
+@_dissolution_common_@
+
+w:5
+@_dissolution_speech_@
+%%%%
+# Dissolution non-speech
+_dissolution_common_
+
+@The_monster@은 꼴꼴거렸다.
+
+@The_monster@은 크게 꼴꼴거렸다.
+
+@The_monster@은 타는듯한 소음을 방출했다.
+
+VISUAL:@The_monster@은 흔들거렸다.
+
+VISUAL:@The_monster@은 떨었다.
+%%%%
+_dissolution_speech_
+
+@The_monster@은 말했다, "나와 영원히 함께해라!"
+
+@The_monster@은 말했다, "내 슬픔과 함께 하나가 되어라!"
+
+@The_monster@은 말했다, "슬라임 신을 위한 슬라임을!"
+
+@The_monster@은 말했다, "산은 물보다 진하다."
+
+@The_monster@은 말했다, "산은 산이고, 슬라임은 슬라임이다."
+
+@_dissolution_rare_@
+%%%%
+_dissolution_rare_
+
+@The_monster@은 말했다, "우리는 슬라임에서 왔고, 슬라임으로 돌아간다."
+
+w:1
+@The_monster@은 말했다, "슬라임으로부터 왔다면, 슬라임으로 나아간다."
+
+@The_monster@은 말했다, "해결이란 용해되는것이다!"
+
+@The_monster@은 예언했다, "산성 홍수가 모든 쓰레기들을 부식시킬 것이다!"
+
+w:2
+@The_monster@은 말했다, "문제 해결자가 있지, 그 @possessive@ 이름은 '용해자'이다!"
+## END Dissolution ##
+%%%%
+############ DONALD ### An adventurer hating competition
+#################################################################### BRANCHES #
+Temple Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@가 말했다, "신을 믿고는 싶었는데 제단을 찾을 수가 없었어."
+
+@The_monster@가 말했다, "나보고 자기를 섬기라는 신이 너무 많아. 짱싫어."
+
+@The_monster@가 말했다, "도대체 여기 내려와서 뭘 보라는 건지? 사원만 잔뜩이야."
+
+@The_monster@가 말했다, "여긴 보물이 별로 없군."
+
+@The_monster@가 말했다, "너 저번에 이미 룬 챙겼었던 것 같은데. 아닌가?"
+
+@The_monster@가 말했다, "소위 '선한' 신이라는 녀석들이 다른 신들처럼 나쁘다니까. 위선 짱싫어."
+
+@The_monster@가 말했다, "난 신전이 짱싫어."
+
+w:5
+@The_monster@가 말했다, "야, 만신전에 제단 말고 주점을 잔뜩 늘어놓는 건 어때?"
+
+%%%%
+Orc Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@가 말했다, "오크들 불평불만 덩어리 아니냐. 짱싫어."
+
+@The_monster@가 말했다, "오크 냄새 한번 지독하군. 우웩."
+
+@The_monster@가 말했다, "그나마 오크놈들은 황금이라도 많이 갖고 있으니 다행이야. 그래도 역시 역겹지만."
+
+@The_monster@가 말했다, "황금이 너무 많아서 다 들고 다닐 수가 없잖아. 짱싫어."
+
+@The_monster@가 말했다, "그나저나 오크놈들은 도대체 여기에 왜 광산을 만든 거야? 광물도 없는데."
+
+@The_monster@가 말했다, "야, 근데 너 오크 광부 본 적 있냐? 나도 없어."
+
+VISUAL:@The_monster@가 돌을 걷어차곤 째려본다.
+
+@The_monster@가 말했다, "여긴 또 왜 이렇게 어두워? 오크놈들은 횃불이라는 게 뭔지 모르나?"
+
+@The_monster@가 말했다, "상점에서 랜턴을 사왔는데 작동을 안해. 짱싫어."
+
+@The_monster@가 곰곰이 생각했다, "진짜 더럽게 못생겼네!"
+
+@The_monster@가 말했다, "저번에 한 오크한테 간 적이 있었는데, 자기가 오크 전쟁군주라더라. 그래서 내가 말했지. '최근엔 전쟁 없었거든?'"
+
+@The_monster@가 말했다, "오크놈들 정말 멍청하다. 오크 광산에 룬이 없는 이유가 아마 그 룬을 오크놈들이 먹어치워서일 거야."
+
+@The_monster@가 말했다, "들어봐. 오크놈들에게 내가 룬 어딨냐고 물어봤더니, 대답대신 트림을 내뿜었다니까. 분명 먹어치운 거야."
+
+@The_monster@가 말했다, "솔직히 까놓고 말해서, 난 짐승굴이 더 좋아. 동물들은 불평할 줄 모르니까."
+
+@The_monster@가 말했다, "막 말끝마다 짱싫어 하는 불평쟁이들 짱싫지 않냐?"
+%%%%
+Elf Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@가 말했다, "야, 니네집 정문은 왜 오크 광산에 있냐? 멍청한 엘프야."
+
+@The_monster@가 말했다, "이 룬이 그럴만한 가치가 있었으면 좋겠군."
+
+@The_monster@가 말했다, "보통 파티에 가보면 엘프 인형 같은 걸 두길래 진짜 엘프들도 파티 잘 할 줄 알았는데."
+
+@The_monster@가 말했다, "그래, 엘프 정말 예쁘지. 근데 정말 지루하기도 해. 짱싫어."
+
+@The_monster@가 말했다, "왜 자꾸 나한테 손짓하는 거냐? 짱싫어."
+
+@The_monster@가 말했다, "도대체 하이 엘프랑 딥 엘프랑 뭐가 다른거람?"
+
+@The_monster@가 말했다, "근데 그 예쁜 엘프가 왜 집에 역겨운 쥐랑 거미를 키우는 거야?"
+
+@The_monster@가 말했다, "엘프놈들 중 싸우는 걸 아는 놈은 없구만. 짱싫어."
+
+@The_monster@가 말했다, "도대체 칼날의 방같은 걸 만들어서 뭐에 써먹냐?"
+%%%%
+Swamp Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@가 말했다, "이건 뭔 냄새야? 무슨... 우웩."
+
+@The_monster@가 말했다, "내가 물 진짜 싫어하거든? 근데 물보다 더 싫어하는 게 생겼어. 늪지소금물."
+
+@The_monster@가 말했다, "나무 짱싫어. 늪의 물 짱싫어. 여기 짱싫어."
+
+@The_monster@가 말했다, "진짜 모기 멸종시키고싶다."
+
+@The_monster@가 말했다, "자꾸 앵앵거리는 게 진짜 제일로 짱싫어."
+
+@The_monster@가 말했다, "내 피로 도대체 뭘 하려고 빠는 거지?"
+
+@The_monster@가 말했다, "저 늪지 벌레놈들 좀 익사좀 해라."
+
+@The_monster@가 말했다, "썅, 불꽃 브랜드 칼을 집에다 놓고왔구만."
+
+@The_monster@가 말했다, "거머리 진짜 싫지. 나도 싫어."
+
+@The_monster@가 말했다, "모기 진짜 싫어. 늪지소금물만큼이나 싫어."
+
+@The_monster@가 말했다, "그나마 전부 늪지는 아니고 땅은 있네. 젖는거 짱싫어."
+
+@The_monster@가 말했다, "아니 무슨 개구리 떼가 휩쓸기라도 했나? 메뚜기 떼 마냥."
+
+@The_monster@가 말했다, "히드라 머리 하나씩 늘어날 때마다 점점 싫어진다."
+%%%%
+Shoals Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "파도라니? 파도 짱경멸, 아니 잠깐, 짱싫어."
+
+@The_monster@는 말했다, "거북이 수프는 짱좋은데 거북이는 짱싫어."
+
+@The_monster@는 말했다, "해적 짱싫어. 해적을 본 적은 없지만."
+
+@The_monster@는 말했다, "야, 그래도 여긴 늪보단 낫다. 냄새는 안 나니까."
+
+@The_monster@는 말했다, "사이렌놈들이 내 귀를 아프게 하고 있어."
+
+@The_monster@는 말했다, "사이렌 노래소리 원래 저러냐? 내가 불러도 저것보단 잘 부르겠다!"
+
+@The_monster@는 말했다, "아니 근데 여기에 어떻게 바다가 있는 거야? 지하로 내려온 줄 알았는데?"
+
+@The_monster@는 말했다, "해수욕장은 좋아. 근데 바다는 짱싫어."
+
+@The_monster@는 말했다, "파도 속도좀 봐. 저게 어떻게 자연적인 파도야?"
+
+@The_monster@는 말했다, "그래도 오리는 없네. 오리 짱싫어."
+
+@The_monster@는 말했다, "완전 홀딱 젖었어. 젖는 거 짱싫어."
+
+@The_monster@는 말했다, "저 크라켄 진짜 맞냐? 진짜 같지가 않은데."
+
+@The_monster@는 말했다, "메두사 양을 찾고 있는데, 본 적 있어?"
+
+@The_monster@는 말했다, "여기 사람이 말하는 거 반도 못 알아듣겠네. 그리스 어로 들리는데."
+
+@The_monster@는 말했다, "그리스 사람들은 보통 그리스 시로 유명하지 않나?"
+
+@The_monster@는 말했다, "미끄러져서 넘어졌어. 짱싫어."
+
+@The_monster@는 말했다, "파도놈들 좀 우유부단하지 말고 결정좀 했으면 좋겠다. 쓸려들어오든가 쓸려나가든가 하나만 했으면."
+
+@The_monster@는 말했다, "거북이한테 물렸어. 거북이 짱싫어."
+
+@The_monster@는 말했다, "촉수가 갑자기 이상한 데서 나와서 날 건드렸어. 촉수 짱싫어!"
+%%%%
+Spider Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "네 목에 거미 붙었다!"
+
+@The_monster@는 말했다, "기어다니는 것들 짱싫어."
+
+@The_monster@는 말했다, "여기 누가 청소좀 했으면 좋겠다. 거미줄 짱싫어."
+
+@The_monster@는 말했다, "우리 삼촌 다락방에는 이것보다 더 큰 거미줄이 있었어. 짱싫어."
+
+@The_monster@는 말했다, "거미줄에 걸리는 거 짱싫어."
+
+@The_monster@는 말했다, "아니, 춤추는 거미라고? 머리에 마술사 모자랑 지팡이도 없는?"
+
+@The_monster@는 말했다, "내 바지에 뭔가 있어! 아아아악!"
+
+@The_monster@는 말했다, "거미독 짱싫어. 물리는 거 짱싫어."
+
+@The_monster@는 말했다, "거미공포증이라니? 공포증이 아니라 인간의 기본 상식이지."
+
+@The_monster@는 말했다, "악! 천장에 거미가! 벽에도 거미가!"
+
+# TODO: If the Hellspider is added, you know what to do.
+%%%%
+Slime Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "저 아메바 맛있게 생겼다."
+
+@The_monster@는 말했다, "아이템 다 어디갔어?"
+
+@The_monster@는 말했다, "젤리가 내 점심을 먹어치웠어. 젤리 짱싫어."
+
+@The_monster@는 말했다, "젤리 샌드위치가 된 기분이군."
+
+@The_monster@는 말했다, "여기 슬라임 '굴'이라며?."
+
+@The_monster@는 말했다, "초록색 짱싫어."
+
+@The_monster@는 말했다, "여기 아무 냄새도 안 난다. 짱싫어."
+
+@The_monster@는 말했다, "자꾸 끈적끈적한 슬라임이 발에 붙는 거 짜증나."
+
+@The_monster@는 말했다, "누가 날 무언가로 감시하는 것 같은 기분이 드는데. 으스스하군."
+
+@The_monster@는 말했다, "돌연변이 치료 물약 다썼어. 짱싫어."
+
+@The_monster@는 말했다, "생각해보니, 누가 날 감시하는 것 같은 기분이 들 때마다 세상이 멈추는 것 같았어."
+
+@The_monster@는 말했다, "물약을 실수로 떨어트렸는데 젤리가 먹어버렸어. 진짜 젤리 짱싫어!"
+
+@The_monster@는 말했다, "죽은 진흙괴물이 움직인 것 같은데. 죽은 척도 제대로 못하는군."
+
+@The_monster@는 말했다, "산성 젤리를 보니까 토사물 생각난다. 토사물 짱싫어."
+
+@The_monster@는 말했다, "뭐냐 이 찐득거리는 것들은? 진짜 잔뜩 널려있네. 짱싫어."
+
+@The_monster@는 말했다, "예전에 누가 산을 부어버리면 네 문제는 전부 해결될거라고 하더라. 해결되기는커녕 나빠지기만 했구만."
+
+@The_monster@는 말했다, "슬라임 굴에 있는 룬이 찐득거리지 않았으면 좋겠다."
+
+@The_monster@는 말했다, "분명 젤리가 룬 먹어버렸을 거다."
+
+@The_monster@는 말했다, "이 후루룩거리는 소리 짱싫어."
+
+@The_monster@는 말했다, "질퍽거리는 소리 짱싫어."
+%%%%
+Snake Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "쉬익거리는 소리 들려? 그 소리 짱싫어"
+
+@The_monster@는 말했다, "미끄러지는 소리 들려? 그 소리 짱싫어."
+
+@The_monster@는 말했다, "이 뱀 자식들로 뱀 장갑이나 만들었으면 좋겠군. 근데 장갑 짱싫은데."
+
+@The_monster@는 말했다, "여기 뱀 '굴'이라며?"
+
+@The_monster@는 말했다, "나가 꼬리 갑옷을 도대체 어디다 쓰라고?"
+
+@The_monster@는 말했다, "그나저나 도대체 나가 갑옷이라는 게 뭐야? 그거 입으면 나가야 되는 거야?"
+
+@The_monster@는 말했다, "로브는 약골들이나 입는거야. 진짜 전사는 중갑전사뿐이지!"
+
+@The_monster@는 말했다, "나가 진짜 못생겼다. 나가 짱싫어."
+
+@The_monster@는 말했다, "여기 있는 전사들은 뭐 무슨 방패술 학원이라도 다닌 거야?"
+
+@The_monster@는 말했다, "그래, 도대체 뱀이 어떻게 말하는 거야?"
+
+@The_monster@는 말했다, "이름이 나가가 뭐야 정말. 나가라고 바가지도 못긁는 주제에."
+
+@The_monster@는 말했다, "적어도 가루다는 없구만. 가루다 짱 싫어."
+
+@The_monster@는 말했다, "넌 구덩이가 더 있다고 생각하는구만. 난 못봤지만."
+
+@The_monster@는 말했다, "여기 진짜 질린다. 아니면 내가 중독되서 하얗게 질린건가... "
+
+@The_monster@는 말했다, "난 돌연변이 뱀새끼들 짱 싫어."
+
+@The_monster@는 말했다, "그래서, 나가들이 조용하다고? 웃기지 마."
+
+@The_monster@는 말했다, "난 제발 얘들이 빨리 움직여서 길 좀 안막았으면 좋겠어."
+
+@The_monster@는 말했다, "와 진짜, 달팽이가 얘들보단 빨리 움직이겠다."
+
+@The_monster@는 말했다, "솔직히, 어떻게 뱀이 번개를 쏴제끼냐 진짜."
+
+w:1
+@The_monster@는 말했다, "처음엔 나가, 이젠 샐러맨더. 다음은 뭐냐. 뭐, 거울 보고 있는 악어라도 나오냐?"
+%%%%
+Vaults Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "보물창고? 고물창고겠지."
+
+@The_monster@는 말했다, "귀찮게 여기까지 오지 마. 이 밑엔 쓰레기밖에 없어."
+
+@The_monster@는 말했다, "경비들한테 룬이 어딨냐고 물어봤었어. 근데 문전박대 하더구만."
+
+@The_monster@는 말했다, "소집 명령서를 가져오는걸 깜빡했어."
+
+@The_monster@는 말했다, "어떤 멍청이들이 보물을 지키라고 변형괴물을 고용했을까?"
+
+@The_monster@는 말했다, "누가 여길 디자인했지? 이건 그냥 몇개의 괴상한 작은 방이 부대껴있는거잖아."
+
+@The_monster@는 말했다, "이건 정말 참... 쓰레기 몇개 때문에 이 많은 공간을..."
+
+@The_monster@는 말했다, "야크타우어 몇마리를 봤었지. 볼트로 다 꿰어버렸지만."
+
+@The_monster@는 말했다, "드래곤을 전에 봤었는데, 가까이 가진 못했어. 무슨 수은처럼 보였거든. 중독되면 어떡해."
+%%%%
+Crypt Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "좀비들은 너무 지루해."
+
+@The_monster@는 말했다, "배고파."
+
+@The_monster@는 말했다, "와, 룬 언제 찾냐 진짜."
+
+@The_monster@는 말했다, "좀비 숫자좀 봐. 여기 다 채우려고 한 몇백년 동안 좀비만 소환했나봐."
+
+@The_monster@는 말했다, "목아프다."
+
+@The_monster@는 말했다, "그러니까 저게 '저주받은'녀석들이야 아니면 '저주하는'녀석들이야? 진짜 이해가 안 되네."
+
+@The_monster@는 말했다, "저주받은 해골, 저주받은 발가락... 다음은 뭐냐?"
+
+@The_monster@는 말했다, "여긴 그렇게 귀신이 나올 것 같이 생기지도 않았는데."
+
+@The_monster@는 말했다, "여긴 꽤나 비밀스럽네."
+
+@The_monster@는 말했다, "해골 보니까 진짜 치가 떨린다."
+
+@The_monster@는 말했다, "해골들 짱 싫어."
+
+@The_monster@는 말했다, "좀비 짱싫어."
+
+@The_monster@는 말했다, "뱀파이어 짱싫어."
+
+@The_monster@는 말했다, "저 구울 보니까 속이쓰린다."
+
+@The_monster@는 말했다, "시체먹는자? 무슨 이름이 그래?"
+
+@The_monster@는 말했다, "도대체 문은 다 어디갔어?"
+
+@The_monster@는 말했다, "있잖아, 무덤에는 관들이 더 많을 줄 알았는데..."
+
+@The_monster@는 말했다, "혹시 보물이 잔뜩 들어있는 석관 본 적 없냐? 응, 나도 없어."
+
+@The_monster@는 말했다, "제발 리치들이 아이템 지키는 거 아니었음 좋겠다. 리치 짱싫어."
+
+@The_monster@는 말했다, "저 미라 진짜, 별로다."
+
+@The_monster@는 말했다, "진짜 다른 곳이랑 다를 바가 없이 쓰레기만 주네. 짱싫어."
+
+@The_monster@는 말했다, "먹을 게 하나도 없잖아. 짱싫어."
+
+@The_monster@는 말했다, "왜 이리 조용한거람?"
+
+@The_monster@는 말했다, "제발 이제 불편한 언데드좀 그만."
+
+@The_monster@는 말했다, "이젠 거의 어기적거리지도 않네. 짱싫어."
+
+@The_monster@는 말했다, "음악도 안 틀어 놓다니?"
+
+@The_monster@는 말했다, "영묘네."
+
+@The_monster@는 말했다, "좀 전에 스핑크스를 봤어. 짱싫어."
+
+@The_monster@는 말했다, "처음엔 납골당, 이번엔 무덤... 다음엔 뭐냐? 관으로 들어가냐?"
+
+@The_monster@는 말했다, "모든 뱀파이어들이 내게 화가나서 펄펄 뛰어다니네!"
+%%%%
+Lab Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "식량좀 나눠줄래?"
+
+@The_monster@는 말했다, "나도 너처럼 길을 잃은거라고, 이 친구야."
+
+@The_monster@는 말했다, "배고픈거 짱싫어."
+
+@The_monster@는 말했다, "나 빵가루 있었는데, 다 먹었어."
+
+@The_monster@는 말했다, "좌수법 안 통하더라."
+
+@The_monster@는 말했다, "근데 미노타우르스는 여기서 뭐 먹냐?"
+
+@The_monster@는 말했다, "그래서 누가 이 기계장치들을 관리하는거야?"
+
+@The_monster@는 말했다, "정말 붐비는 곳이네."
+
+@The_monster@는 말했다, "미로, 퍼즐. 나 퍼즐 짱싫어해."
+%%%%
+Abyss Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "근데 더 깊숙히 들어가야한다니, 짱싫어!"
+
+@The_monster@는 말했다, "도대체 '섬뜩한'게 무슨 뜻이야?"
+
+@The_monster@는 말했다, "내 머릿속에서 계속 이상한 비명소리가 들려온다고. 이거 짱싫어."
+
+@The_monster@는 말했다, "저주받은 별 어쩌고같은건 들어본적 없다고."
+
+@The_monster@는 말했다, "스타 스폰 어쩌고같은건 들어본적 없다고."
+
+@The_monster@는 손을 들어올리고는 말했다, "그래, 인정할게, 길을 잃었다!"
+
+@The_monster@는 말했다, "난 비틀리는 감각이 짱싫어."
+
+@The_monster@는 말했다, "심연이라면서? 촉수랑 별이 무슨 심연이야?"
+%%%%
+Zot Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "드라코니언들 색이 계속 바뀌더라. 우유부단하기는."
+
+@The_monster@는 말했다, "근데 왜 다들 망토를 입고 있는 거야?"
+
+@The_monster@는 말했다, "한 드라코니언에게 갑옷좀 나눠달라고 부탁했었거든. 근데 네 몸에는 안 맞을 거라더라."
+
+@The_monster@는 말했다, "뭔가 날 쳐다보고있는 느낌을 계속 받는데. 너도 그래?"
+
+@The_monster@는 말했다, "어떻게 전기로 골렘을 만들어낼 생각을 한거야?"
+
+@The_monster@는 말했다, "도대체 "오브 수호자"는 또 뭐야?"
+
+@The_monster@는 말했다, "화염의 구, 파괴의 구, 조트의 오브... 왜 죄다 둥근 공이야?"
+
+@The_monster@는 말했다, "오브 짱싫어."
+
+@The_monster@는 말했다, "삐에로 짱싫어."
+
+@The_monster@는 말했다, "드라코니언 짱싫어."
+
+@The_monster@는 말했다, "보라색 짱싫어."
+
+@The_monster@는 말했다, "무슨 서커스라도 열었나?"
+
+@The_monster@는 말했다, "여기선 여행자를 보기 힘들구나."
+
+@The_monster@는 말했다, "그래, 룬을 여기다 써먹는 거구나!"
+
+@The_monster@는 말했다, "왜 매층마다 벽색깔이 바뀌는 걸까? 페인트가 모자라서 그런가?"
+
+@The_monster@는 말했다, "야, 오브 수호자들로부터는 누가 오브를 수호해주냐?"
+
+@The_monster@는 말했다, "여기서 무슨 얼음의 구 같은걸 만나지 않았으면 좋겠군!"
+
+@The_monster@는 말했다, "너, 얼음 반지 가져왔어?"
+
+@The_monster@는 말했다, "힘의 오브가 여기있다고? 그럼 다른 것들은 어디 있는데?"
+
+@The_monster@는 말했다, "맛있어 보이는 옥수수를 봤었는데, 그게 날 먹으려 들었어. 그거 짱싫어."
+
+%%%%
+orb Donald
+
+w:25
+@_generic_Donald_@
+
+@The_monster@는 말했다, "힘의 오브를 내게 갖다줘서 고마워."
+
+@The_monster@는 말했다, "그거 무겁지않아? 내가 대신 들어줄게."
+
+@The_monster@는 말했다, "오염이 걱정되지 않냐? 잠깐 내려놔."
+
+@The_monster@는 말했다, "그 오브 가지고 뭘 하려고?"
+
+@The_monster@는 말했다, "오브가 굳이 그렇게 깊은 곳에 있는 이유가 다 있을 것 같지 않냐?"
+
+@The_monster@는 말했다, "지상으로 그 오브를 가져가면 이 세계가 끝난다고 들었어."
+
+@The_monster@는 말했다, "지금 그 오브 찾으려고 누가 오고 있다."
+
+@The_monster@는 말했다, "그게 진짜 오브라고 확신해? 싸구려 모조품이 아니라?"
+
+@The_monster@는 말했다, "오브를 가지고 있군. 그래서, 어때? 던전에 들어올 가치는 있었어?"
+
+######################################################################## GODS #
+Zin Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "이제 그만좀 떠들어라. 그러다가 얼굴 얻어 맞겠다."
+
+@The_monster@는 말했다, "도대체 암송이 무슨 소용이 있는지 이 팜플렛에는 안 적혀 있는데."
+
+@The_monster@는 말했다, "난 모험가가 되고싶다고, 전도사가 아니라!"
+
+@The_monster@는 말했다, "근데 진은 뭐때문에 우리 금화를 요구하는거야?"
+
+@The_monster@는 말했다, "돈을 지불받으려는 신은 뭔가 조금 이상하다고."
+
+@The_monster@는 말했다, "진을 믿으면 너 정말 비쩍 마르게 될 거다."
+
+@The_monster@는 말했다, "난 멍청한 음식 규정이 짱싫어! 소고기를 먹고 싶으면 그냥 먹어야지!"
+
+@The_monster@는 말했다, "내 돌연변이를 치료하는데 금화 200개면 될까?"
+
+@The_monster@는 말했다, "너, 네 뿔들을 좋아하지않았어?"
+
+@The_monster@는 말했다, "금화 20개 주면 이 짜증나는 비늘 없애줄 수 있냐?"
+
+@The_monster@는 @possessive@ 귀를 틀어막았다. "입 좀 닥쳐!"
+%%%%
+the Shining One Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "아무도 뒤에선 기사도적이지 않다면, 기사도를 지키는게 의미가 있나?"
+
+@The_monster@는 말했다, "고블린한테 문을 열어줬더니 그게 내 얼굴을 때리더라고. 기사도 짱싫어."
+
+@The_monster@는 말했다, "네가 오는 건 1km 밖에서도 보일걸?"
+
+@The_monster@는 말했다, "너 진짜 눈에 잘 띈다. 최소한 샤이닝하게 빛나고 있는걸?"
+
+@The_monster@는 말했다, "그럼 이 독저항 반지 필요없는 거야? 그래?"
+
+@The_monster@는 말했다, "그 빛좀 약간 줄여주면 안될까? 널 때리려는데, 볼수가 없잖아."
+
+@The_monster@는 말했다, "정화의 불꽃? 뭘 정화한다는거야? 바닥을 청소해서 정화하나?"
+
+@The_monster@는 말했다, "난 후광 짱싫어."
+%%%%
+Kikubaaqudgha Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "키쿠바-뭐? 저거 뭐라고 발음하냐?"
+
+@The_monster@는 말했다, "미안한데, 이해를 못했어. 누굴 숭배한다고? 철자를 어떻게 쓰는데?"
+
+@The_monster@는 말했다, "철자좀 천천히 말해줘."
+
+@The_monster@는 말했다, "어떻게 발음하는 거야?"
+
+@The_monster@는 말했다, "적어도 읽을거리는 얻을 수 있겠네."
+
+@The_monster@는 말했다, "나 좀비 짱싫어."
+
+@The_monster@는 말했다, "배고픈데. 간식좀 소환해줄래?"
+
+@The_monster@는 말했다, "욱, 너한테서 독기가 풍기는데!"
+%%%%
+Yredelemnul Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "야, 근데 해골용은 날개에 살도 없으면서 어떻게 나는 거야?"
+
+@The_monster@는 말했다, "유령 껍질도 벗겨? 어떻게?"
+
+@The_monster@는 말했다, "하! 뭐야, 강령술사 짭이잖아."
+
+@The_monster@는 말했다, "너 강령술 배우다가 중퇴했지?"
+
+@The_monster@는 말했다, "아, 그러니까 바로 네가 윗층에 우글거리는 좀비를 만든 녀석이구만?"
+
+@The_monster@는 말했다, "좀비 짱싫어."
+
+w:2
+@The_monster@는 말했다, "뭐? 해골 용? 죽음의 옥수수? 네가 믿는 신은 그냥 아무 단어를 무작위로 배열해서 뭐가 튀어나오는지 보는 신이냐?"
+
+@The_monster@는 말했다, "아, 진짜 설명좀 해줘! 그래서 '죽음의 옥수수'가 정확히 뭔데?"
+
+@The_monster@는 말했다, "좀비? 해골? 너 살아있는 진짜 동료 안 그립냐?"
+
+@The_monster@는 말했다, "검은색으로 칠한 천사라니. 진짜 백년쯤 전에나 봤을 디자인이네."
+
+@The_monster@는 말했다, "천사의 후광이 너무 밝으면 그냥 천사한테 빛좀 줄여달라 그러면 돼."
+%%%%
+Okawaru Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "오카와루라는 이름 들으니까 무슨 박 이름 같다."
+
+@The_monster@는 말했다, "어, 안녕! 너 오카와루한테 방패 받지 않았냐? 남는 거 있으면 좀 주라."
+
+@The_monster@는 말했다, "장비 멋진데."
+
+@The_monster@는 물었다, "오카와루한테 그 신발 받으려고 무고한 생명체를 얼마나 죽였냐?"
+
+@The_monster@는 말했다, "진짜 그런 아이템 주는 건 거의 살인행위로 봐야 돼."
+
+@The_monster@는 말했다, "망토는 하나만 입을 수 있는 거 알고 있지?"
+
+@The_monster@는 말했다, "자기가 무슨 진짜 영웅이라도 된 줄 알아. 짱싫어"
+
+@The_monster@는 말했다, "근데 얼마나 기교(Finesse)를 부려야 진짜로 팔이 빨라지는 거야?"
+%%%%
+Makhleb Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "최소한 이번에는 악마가 동료군."
+
+@The_monster@는 말했다, "아니, 진짜, 지금 악마를 소환하는 게 정말 최선이었어?"
+
+@The_monster@는 말했다, "소파괴? 어떻게 파괴해야 조금만 파괴하는 건데?"
+
+@The_monster@는 말했다, "야, 그 전기 구좀 어디 쏘는지 봐라!"
+
+@The_monster@는 말했다, "너 혼자 자폭하지 말라고."
+
+@The_monster@는 말했다, "악마 짱싫어."
+
+@The_monster@는 말했다, "피 짱싫어."
+
+@The_monster@는 말했다, "아픈 거 짱싫어."
+
+@The_monster@는 말했다, "발가락 찧었어. 이거 내가 정화됐다는 얘기인가?"
+%%%%
+Sif Muna Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "휴대용 책장 하나 있으면 좋겠다고 생각한 적 없어?"
+
+@The_monster@는 말했다, "그 마법책 만드려고 몇 그루의 나무가 잘려나갔을까?"
+
+@The_monster@는 말했다, "어우야, 무슨 도서관인줄 알았네."
+
+@The_monster@는 말했다, "아직 원하는 주문 못 찾았어?"
+
+@The_monster@는 말했다, "그렇게 바리바리 싸들고 다닐 정도로 책을 좋아하면 그냥 사서하지 그랬냐?"
+
+@The_monster@는 말했다, "혹시 너는 잊어버렸던 거 기억할 수 있냐? 짱싫어."
+
+@The_monster@는 말했다, "그러니까... 무슨, 다 읽을 수 있다는 것 같은데."
+
+@The_monster@는 말했다, "책 짱싫어."
+
+@The_monster@는 말했다, "분명히 네가 들고다닐수있는 마법책의 숫자는 한계가 있지. 그렇지?"
+
+@The_monster@는 말했다, "요술처럼 마법을 배울수있다니 얼마나 좋겠어."
+
+@The_monster@는 말했다, "주문 짱싫어."
+
+@The_monster@는 말했다, "주문실패 진짜 싫지않냐?"
+%%%%
+Trog Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "그래서, 넌 책을 읽어도 된다고 허가받았냐?"
+
+@The_monster@는 말했다, "너 혈거인이냐!"
+
+@The_monster@는 말했다, "트로그는 어릴적에 버려졌었다던데."
+
+@The_monster@는 말했다, "트로그가 주는 다음 도끼가 분명 널 어비스로 추방할 거다."
+
+@The_monster@는 말했다, "트로그를 고려해봤는데, 광폭화의 부작용이 두려워."
+
+@The_monster@는 말했다, "저렇게 자주 실신하는건 뭔가 잘못됬다는걸 의미하는게 틀림없어, 맞지?"
+
+@The_monster@는 말했다, "너 지금 마법 쓰고 싶다는 생각했지?"
+
+@The_monster@는 말했다, "마법 두루마리를 읽어도 된다고 확신하는거야?"
+
+@The_monster@는 말했다, "세상에! 마법봉 쓰면 안 되는 줄 알았는데!"
+
+@The_monster@는 말했다, "마법막대는 어떤데?"
+
+@The_monster@는 말했다, "내가 트로그처럼 마법 싫어하면 날 숭배해줄래?"
+
+@The_monster@는 말했다, "난 오우거가 짱싫어."
+%%%%
+Nemelex Xobeh Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "그 카드 안에 뭐가 있는데? 네 미래?"
+
+@The_monster@는 말했다, "카드나 뽑고 있으려니 멍청한 기분이 들지?"
+
+@The_monster@는 말했다, "잠깐, 내가 카드 한 장 뽑을테니 그게 무슨 카드인지 맞춰봐."
+
+@The_monster@는 말했다, "그 덱은 어디다 들고 다니는 거냐?"
+
+@The_monster@는 말했다, "그렇게 카드를 싸들고 다니는데 물약 넣을 자리는 있냐?"
+
+@The_monster@는 말했다, "그 덱에서 카드 떨어진 거 봤다."
+
+@The_monster@는 말했다, "아, 안 속아. 예전에 트릭을 봤거든. 소매속에 에이스 숨겼지?"
+
+@The_monster@는 말했다, "이제 도박이 좋다는 걸 인정할 수밖에 없지?"
+
+@The_monster@는 말했다, "52장 카드뽑기 게임 한 판 안 할래?"
+
+@The_monster@는 웃었다, "와, 판돈이 폭발하네... 짱싫어."
+%%%%
+Elyvilon Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "'일단 공격하지 않는다?' 그럼 뭔 일이 일어나는데?"
+
+@The_monster@는 말했다, "적을 치료해준다니. 참 사서 고생한다."
+
+@The_monster@는 말했다, "기도나 하러 다니는 게 나을듯."
+
+@The_monster@는 말했다, "야, 내가 내 무기 줄게, 제발 나좀 가만히 내버려둬."
+
+@The_monster@는 말했다, "아, 제발. 평화하기 좋은 조건 좀 제시해봐"
+
+@The_monster@는 말했다, "네가 안 죽였었던 몬스터 있잖아, 네가 셋 죽였어."
+%%%%
+Lugonu Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "어비스에 가려고 한다고? 왜? 무슨 휴가라도 받았냐?"
+
+@The_monster@는 말했다, "순간이동이 아플줄은 몰랐는데."
+
+@The_monster@는 말했다, "내가 어비스에 있을 때, 아무것도 날 공격하지 않더라고."
+
+@The_monster@는 말했다, "저기, 나도 추방할거야?"
+
+@The_monster@는 말했다, "내 음식이 나한테서 사라지는거, 그거 짱싫어."
+%%%%
+Beogh Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "베오그는 종족차별 쩔어."
+
+@The_monster@는 말했다, "예전에 오크 사제 중 한 명이 선교를 하려고 하더라... 지금은 분명히 마음을 바꿨을 거야."
+
+@The_monster@는 말했다, "물 위를 걷는 게 멋지다고 생각하냐? 근데 어쩌냐, 난 수영할 수 있는데."
+
+@The_monster@는 말했다, "사람들이 니 주변에 따라다니면 짜증나지않냐?"
+
+@The_monster@는 말했다, "그렇게 많은 군대를 정비하는 건 싫증난다고."
+
+@The_monster@는 말했다, "걔네들 어떻게 먹여살리냐? 무슨 오병이어의 기적이라도 부리냐?"
+
+@The_monster@는 말했다, "나랑 싸우려면 더 많이 데려와라."
+
+@The_monster@는 말했다, "산에서 기도해가지고 십계명이라도 받을 생각이냐?"
+
+@The_monster@는 말했다, "신의 섭리라는건 또 뭐야? 그거 짱싫어."
+
+@The_monster@는 말했다, "조심하는게 좋을거야. 왼쪽의 녀석은 쉽게 길 잃을 것같거든."
+
+@The_monster@는 말했다, "네가 구원자라고 생각해? 다른 놈도 분명 자기가 구원자라고 생각할걸?"
+
+@The_monster@는 말했다, 구원자? 난 구원자 짱싫어."
+
+@The_monster@는 당신에게 절하며 굴복했다. "아니, 그냥 농담이야."
+%%%%
+Jiyva Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "나와 함께 슬라임이 되자!"
+
+@The_monster@는 말했다, "너 약간 슬라임같이 보이는데."
+
+@The_monster@는 말했다, "아, 그 아이템들이 전부 어디로 갔는지 설명이 되네."
+
+@The_monster@는 말했다, "오브를 찾고나서 젤리 농장을 차릴거야?"
+
+@The_monster@는 말했다, "젤리가 한층을 다 차지하는거 짱싫어."
+
+@The_monster@는 말했다, "니 젤리가 내 점심을 먹었다고. 짱싫어."
+
+@The_monster@는 말했다, "슬라임 짱싫어."
+
+@The_monster@는 말했다, "넌 틀림없이 문을 정말 싫어할거야."
+
+@The_monster@는 말했다, "내가 젤리인 척 한다면, 니껄 가질수 있어?"
+%%%%
+Fedhas Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "이 버섯들은 다 뭐람?"
+
+@The_monster@는 말했다, "나도 바닥에 물웅덩이는 만들수 있다고."
+
+@The_monster@는 말했다, "나무 짱싫어."
+
+@The_monster@는 말했다, "식물 짱싫어."
+
+@The_monster@는 말했다, "과일 짱싫어."
+
+@The_monster@는 말했다, "너는 걸어다니는 과일 샐러드같아. 그거 짱싫어."
+
+@The_monster@는 말했다, "도대체 어디로부터 햇빛이 나온다는건데?"
+
+@The_monster@는 말했다, "너 정원손질 좋아해? 난 그거 짱싫어."
+
+@The_monster@는 말했다, "그래서 그 잡초들을 어떻게 쓸건데?"
+
+@The_monster@는 말했다, "식물이 나한테 산을 뿌렸어. 저거 짱싫어."
+%%%%
+Cheibriados Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "속도 줄여!"
+
+@The_monster@는 말했다, "너말이야 이해가 그렇게 빠르진 않은것 같네, 안그래?"
+
+@The_monster@는 말했다, "저기, 니가 원한다면, 정말 잘하는 자세훈련 교관을 알고있는데 말이지."
+
+@The_monster@는 말했다, "너한테는, 내가 말을 너무빨리 하고있는건가?"
+
+@The_monster@는 말했다, "날 봐바! 나 뛰고있어, 뛰고있다고!"
+
+@The_monster@는 말했다, "빨리좀, 도망치라고!"
+
+@The_monster@는 말했다, "우리들 경주로 결착을 내는건 어때?"
+%%%%
+Xom Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "좀을 믿는다고? 너 돌았니?"
+
+@The_monster@는 말했다, "좀은 진짜 이해가 안 돼."
+
+@The_monster@는 말했다, "좀 짱싫어."
+
+@The_monster@는 말했다, "매니악한 웃음소리 짱싫어."
+
+@The_monster@는 말했다, "신의 번개 짱싫어."
+
+@The_monster@는 말했다, "지금 돌연변이 얻자고 좀을 믿는 거냐? 차라리 지이바를 믿어라."
+
+@The_monster@는 말했다, "춤추는 무기를 좋아하길 바래. 난 싫다고."
+
+@The_monster@는 말했다, "악마 무리에 둘러싸였었다고? 짱싫어."
+
+@The_monster@는 말했다, "좀은 전혀 이해가 안 될뿐이야. 그런거 짱싫어."
+
+@The_monster@는 말했다, "그나저나 도대체 왜 이름이 '좀'이야?"
+
+@The_monster@는 말했다, "'난수의 신'이라니 그건 또 뭐야?"
+
+@The_monster@는 말했다, "나도 테디 베어였어. 그거 짱싫어."
+%%%%
+Vehumet Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "무슨 신이 마법책이 아니라, 주문을 주는거야?"
+
+@The_monster@는 말했다, "헬파이어로 끝낼거야? 언제 헬파이어 주문을 얻은거야?"
+
+@The_monster@는 말했다, "베후멧 짱싫어"
+
+@The_monster@는 말했다, "헬파이어 짱싫어."
+
+@The_monster@는 말했다, "요술이란거의 요점이 뭐야?"
+
+@The_monster@는 말했다, "이제 주문을 쓰는 더 쉬운 방법을 찾아낸거야?"
+
+@The_monster@는 말했다, "폭발 짱싫어."
+
+%%%%
+Ashenzari Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "너 정말 다 아는것처럼 보이네. 짱싫어."
+
+@The_monster@는 말했다, "아무것도 못한다면, 다 아는게 무슨 소용이 있어?"
+
+@The_monster@는 얼굴을 찌뿌리고는 소리쳤다, "저주한다!"
+
+@The_monster@는 말했다, "나도 하늘에 못박힌적 있었어. 별거아냐, 정말로."
+
+@The_monster@는 말했다, "넌 틀림없이 시체처럼 차가운 느낌을 좋아할거야. 그거 짱싫어."
+
+@The_monster@는 말했다, "관음증 환자 짱싫어."
+
+@The_monster@는 말했다, "대체 무슨 신이, 저주를 받아야한다는거야?"
+%%%%
+Dithmenos Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "너 상당히 어두운 신을 섬기는것처럼 들리는데."
+
+@The_monster@는 말했다, "너에게 꽤나 암담한 미래가 있다고 생각하는데."
+
+@The_monster@는 눈을 가늘게뜨고 주변을 돌아봤다. "아무것도 못보겠어. 짱싫어."
+
+@The_monster@는 말했다, "그림자 짱싫어."
+
+@The_monster@는 말했다, "아직도 어두운게 무섭니?"
+
+@The_monster@는 말했다, "조심하라고; 자기 그림자에 걸려서 넘어지겠다."
+
+@The_monster@는 토치를 들어올리고는 말했다, "넌 틀림없이 이게 그리울거야."
+%%%%
+Gozag Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "동전좀 줄까?"
+
+@The_monster@는 말했다, "부자들 짱싫어."
+
+@The_monster@는 말했다, "너 친구를 사귀려고 걔들한테 돈을 줄거같은데."
+
+@The_monster@는 말했다, "충분한 물약을 찾지못했었어?"
+
+@The_monster@는 말했다, "그래서 여기 상점들은 네게 충분하지 않았나보네?"
+
+@The_monster@는 말했다, "이제 배고픈거야?"
+
+@The_monster@는 말했다, "저쪽에서 금화 몇개를 봤어. 빨리가, 가져가는게 낫다고!"
+
+@The_monster@는 말했다, "네가 금으로된 정말 훌륭한 용갑옷을 만들수있다고 생각하는데. "
+
+@The_monster@는 말했다, "대체 재물의 신이 물약으로 뭘 한다는거야?"
+%%%%
+Qazlal Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "어떻게 이런 먹구름낀 밤에 잠을 자라는거야?"
+
+@The_monster@는 말했다, "틀림없이 이 먼지 속에선 간파해내기 꽤 어려울거야."
+
+@The_monster@는 말했다, "폭풍 짱싫어."
+
+@The_monster@는 말했다, "자연재해 짱싫어."
+
+@The_monster@는 말했다, "그거 뭐였어? 미안한데, 소음 속에선 들을수 없었어."
+
+@The_monster@는 말했다, "음, 적어도 동료가 부족할 일은 절대로 없겠네."
+
+@The_monster@는 말했다, "대단했어. 이제 내 방패가 완전 더러워졌다고."
+%%%%
+Ru Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "뭔가를 잃어버렸어?"
+
+@The_monster@는 말했다, "희생 짱싫어."
+
+@The_monster@는 말했다, "희생하는 자들 짱싫어."
+
+@The_monster@는 말했다, "언제한번, 한주동안 고기먹기를 그만뒀었는데. 그거 짱싫어."
+
+@The_monster@는 말했다, "언제한번, 한주동안 술마시는걸 그만뒀었어. 그거 짱싫어."
+
+@The_monster@는 말했다, "현실의 숨겨진 층이 짱싫어."
+
+@The_monster@는 말했다, "실존적 의심 짱싫어."
+
+@The_monster@는 말했다, "위대한 섬멸의 진리는, 내가 짱싫어하는거라고."
+%%%%
+Pakellas Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "난 발명가들이 짱싫어."
+
+@The_monster@는 말했다, "그 도구들로 뭘할껀데, 전당포같은거?"
+
+@The_monster@는 말했다, "너 오브로 뭐할꺼야? 그걸로 실험?"
+
+@The_monster@는 말했다, "이 물건을 네 방식으로 [분석|발명]을 할수없는게 틀림없지."
+
+@The_monster@는 말했다, "그 [마법봉|마법막대|램프|부채] 잠깐 빌려줄래? 틀림없이 넌 예비로 더 갖고있을거야."
+%%%%
+No God Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@는 말했다, "너, 신이 없으면 외롭지않아?"
+
+@The_monster@는 말했다, "난 신들이 짱싫어."
+
+@The_monster@는 말했다, "난 무신론자들이 짱싫어."
+
+w:5
+@The_monster@는 말했다, "난 신들이 짱싫어, 그리고 신들도 날 짱싫어해."
+
+@The_monster@는 말했다, "넌 틀림없이 저주받아서 신들이 사라진거야."
+
+@The_monster@는 말했다, "너, 만신전을 놓쳐버린거야?"
+%%%%
+##################################################################### GENERIC #
+_generic_Donald_
+
+@The_monster@는 말했다, "너 진짜 못생겼다. 알고있었어?"
+
+@The_monster@는 말했다, "정말 의미없는 질문이네."
+
+@The_monster@는 말했다, "오브없이는 그들이 날 모험가 클럽에 가입시켜주지 않을거야."
+
+@The_monster@는 말했다, "여기 짱싫어."
+
+@The_monster@는 말했다, "나도 너 싫다고."
+
+@The_monster@는 말했다, "발이 아파."
+
+@The_monster@는 말했다, "내 손도 아프다고."
+
+@The_monster@는 말했다, "나 감기걸린거 같아. 짱싫어."
+
+@The_monster@는 말했다, "머리가 아픈데. 이거 짱싫어."
+
+@The_monster@는 말했다, "니가 입은 옷 색깔말야? 짱싫어."
+
+@The_monster@는 말했다, "내가 항상 말하던것처럼, 그 단지는 반이나 비어있다고."
+
+@The_monster@는 말했다, "그리고 넌 니가 재수없었다고 생각하겠지..."
+
+@The_monster@는 말했다, "이 장소에 끝이 존재하는지 궁금한데."
+
+@The_monster@는 말했다, "저 길 아래에 있는거 거북이들 아냐?"
+
+@The_monster@는 말했다, "여길 만든 사람들? 틀림없이 돌았을거야."
+
+@The_monster@는 말했다, "여긴 공기가 구린데. 짱싫어."
+
+@The_monster@는 말했다, "그 오브란게 그렇게나 대단한 물건은 아니라 생각해."
+
+@The_monster@는 말했다, "그래, 그 오브라는건 대체 뭔데?"
+
+@The_monster@는 말했다, "내가, 그런 미화된 종이누르개때문에 먼길을 온게 아니길, 바란다고."
+
+@The_monster@는 말했다, "난 27이라는 숫자가 뭐가 특별한지 잘 모르겠어."
+
+@The_monster@는 말했다, "여기있는 다른 사람들은 정말 무례하군."
+
+@The_monster@는 말했다, "아마 다음번에는 지옥에 갈거같은데."
+
+@The_monster@는 말했다."이 지하는 지루해 보인다고."
+
+@The_monster@는 말했다, "왜 상점에서 음식만 파는거야? 집에서 가져올수 있었는데."
+
+@The_monster@는 말했다, "이 두루마리들에 적힌 것들이 뭔지 답을 진짜로 못내겠는걸."
+
+@The_monster@는 말했다, "배고픈데."
+
+@The_monster@는 한숨을 쉬었다.
+
+VISUAL:@The_monster@는 주춤거렸다.
+
+VISUAL:@The_monster@는 당신에게 경멸적인 몸짓을 했다.
+
+VISUAL:@The_monster@는 머리를 가로저었다.
+
+@The_monster@는 말했다, "어떤 미친놈들이 문을 모아서 방을 만드냐?"
+
+@The_monster@는 말했다, "어떤 놈이 검을 작은 상자에 쑤셔넣냐?"
+
+@The_monster@는 말했다, "난 강이 짱싫은데, 이유는 기억안나"
+
+@The_monster@는 말했다, "저 낫든 놈은 정말 비열하군"
+
+w:1
+@The_monster@는 말했다, "폰틀로이는 어떤 이름이지?"
+
+w:1
+@The_monster@는 말했다, "어쩔 작정이야?!"
+%%%%
+default hostile confused Donald
+
+@The_monster@는 말했다, "어, 음, 모두 괜찮은거지?"
+
+@The_monster@는 말했다, "사실, 난 네가 좋아."
+
+@The_monster@는 말했다, "이봐, 어이, 저기요!"
+
+@The_monster@는 말했다, "제기랄!"
+
+@The_monster@는 말했다, "아내와 자식이 있다고! 아니, 있었나?"
+
+@The_monster@는 소리질렀다.
+
+@The_monster@는 꽥꽥거렸다.
+
+@The_monster@는 말했다, "내 다리! 내 다리! 내 다리에 무슨 짓을!"
+
+@The_monster@는 아주 음치처럼 노래를 불렀다.
+
+VISUAL:@The_monster@는 즐거운 춤을 췄다.
+
+VISUAL:@The_monster@는 돼지코를 만들었다.
+
+VISUAL:@The_monster@는 머리를 세게 잡아당겼다.
+
+VISUAL:@The_monster@는 살짝 제자리를 돌았다.
+%%%%
+Donald killed
+
+w:100
+__NONE
+
+w:1
+@The_monster@는 말했다, "죽을 지경이야. 짱싫어."
+%%%%
+############ DOWAN ### A vain elf caster, twin brother of Duvessa
+twin_died Dowan
+
+VISUAL:@The_monster@은 슬픔에 몸을 떨고있다.
+
+@The_monster@이 말했다, "마법으로 모든걸 이겨낼거야!"
+
+@The_monster@이 말했다, "듀베사의 죽음을 헛되이 하지 않겠어!"
+
+@The_monster@이 말했다, "듀베사가 없는 삶을 어떻게 살아가야 하는걸까?"
+
+@The_monster@이 중얼거렸다, "듀베사는... 나의 유일한..."
+%%%%
+twin_banished Dowan
+
+VISUAL:@The_monster@은 슬픔에 몸을 떨고있다.
+
+@The_monster@은 말했다, "되찾을거야! 듀베사를 돌려받고 말겠어!"
+
+@The_monster@은 말했다, "듀베사를 영원히 잃지 않을거야!"
+%%%%
+Dowan
+
+@_Dowan_common_@
+
+w:2
+@_Dowan_rare_@
+%%%%
+fleeing Dowan
+
+VISUAL:@The_monster@은 공포에 휩싸여 울었다.
+%%%%
+_Dowan_common_
+
+VISUAL:@The_monster@은 실실 쪼개며 가느다란 손가락으로 적을 가리켰다.
+
+@The_monster@은 적에게 말했다, "내 약점은 그녀의 강점이지"
+
+@The_monster@는 적에게 말했다, "내 눈앞에서 꺼져"
+
+@The_monster@ 가 적에게 말했다, "마법과 검술이 함께라면, 너를 무찌를 수 있을테지" @player_only@
+%%%%
+_Dowan_rare_
+
+VISUAL:@The_monster@은 다루기힘든 마법 불꽃을 던지고 받고나서는, 실실 쪼갰다.
+
+VISUAL:@The_monster@의 로브는 마법적인 바람에 의해 나부꼈다.
+
+VISUAL:@The_monster@의 발은 잠깐동안 지면과 합쳐졌다.
+
+VISUAL:@The_monster@은 깨끗한 물의 분수를 만들어내고는, 몹시 웃었다.
+
+@The_monster@은 적에거 말했다, "이제 오래끌지 않을거야."
+
+@The_monster@은 적에게 쉿 소리를 냈다, "내 미모를 모욕하는것은 오직 싸움을 더 어렵게 만들 뿐이지!"
+
+@The_monster@은 적에게 말했다, "검이 실패하는 곳에서, 마법은 성공한다!"
+
+@The_monster@은 적에게 말했다, "죽음에는 어떤 아름다움이 있지, 그렇게 생각하지않아?"
+
+@The_monster@은 당신을 비웃었다. "착각하지마, 넌 이길수 없어!"
+%%%%
+Dowan_Duvessa_dies
+
+@The_monster@은 비명질렀다, "안돼! 안돼!"
+
+VISUAL:@The_monster@은 슬픔에 압도당한듯 보였지만, 곧 스스로를 반사적으로 바로세웠다.
+
+@The_monster@은 비명질렀다, "안돼! 오 안돼!"
+
+@The_monster@의 눈이 어두워졌다. "넌 나쁜 잘못을 저지른거야."
+%%%%
+Dowan_Duvessa_dies_invisible
+
+@The_monster@(은)는 비명질렀다, "안돼! 안돼! 안돼애!"
+%%%%
+Dowan_Duvessa_dies_distance
+
+당신은 멀리서 절망의 통곡을 들었다.
+%%%%
+Dowan_Duvessa_dies_bytwin
+
+@The_monster@(은)는 공포에 비명을 질렀다.
+%%%%
+Dowan_Duvessa_dies_invisible_bytwin
+
+@Dowan_Duvessa_dies_bytwin@
+%%%%
+Dowan_Duvessa_dies_distance_bytwin
+
+@Dowan_Duvessa_dies_distance@
+%%%%
+############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
+twin_died Duvessa
+
+VISUAL:@The_monster@는 분노와 슬픔의 조화속에서 몸을 떨었다.
+
+VISUAL:@The_monster@는 @possessive@ 이를 악물고는 집중했다.
+
+@The_monster@는 말했다, "이 검으로 슬픔을 극복해낼거야!"
+
+@The_monster@는 말했다, "도완의 죽음을 헛되이 하지 않겠어!"
+
+@The_monster@는 말했다, "도완의 복수를 할거야!"
+
+@The_monster@는 말했다, "도완을 되찾기 위해 지옥으로 떠날거야!"
+
+VISUAL:@The_monster@는 울었다.
+%%%%
+twin_ikilled Duvessa
+
+VISUAL:@The_monster@는 슬픔과 공포에 떨었다.
+
+@The_monster@는 말했다, "내가 뭘 한거지? 내가 뭘 한거야?"
+
+@The_monster@는 말했다, "이 뒤로 어떻게 살수있겠어?"
+
+@The_monster@는 비명을 질렀다.
+%%%%
+twin_banished Duvessa
+
+VISUAL:@The_monster@는 분노와 슬픔의 조화속에서 몸을 떨었다.
+
+VISUAL:@The_monster@는 @possessive@ 이를 꽉 물고는 집중했다.
+
+@The_monster@는 말했다, "도완을 되찾으러 어비스로 떠날거야!"
+
+@The_monster@는 말했다, "도완을 되찾을거야!"
+%%%%
+twin_ikilled Dowan
+
+VISUAL:@The_monster@는 공포에 눈이 휘둥그레해졌다.
+
+@The_monster@는 비명질렀다.
+
+@The_monster@는 @possessive@ 머리를 가로저으면서 말했다, "아냐, 아냐, 안돼!"
+
+@The_monster@는 비명질렀다, "안돼! 내가 뭘한거야?"
+%%%%
+Duvessa
+
+@_Duvessa_common_@
+
+w:2
+@_Duvessa_rare_@
+%%%%
+_Duvessa_common_
+
+VISUAL:@The_monster@는 쥐고있는 무기로 적을 가리켰다.
+
+@The_monster@는 적에게 말했다, "내 약점이 그의 강점이지!"
+
+@The_monster@는 적에게 말했다, "마법이 실패한 곳에서, 검이 성공한다!"
+
+@The_monster@는 적에게 말했다, "마법과 검이 합치면, 어떤것도 버틸수 없지."
+%%%%
+_Duvessa_rare_
+
+@The_monster@는 적에게 @_shouts_@, "도망칠순 있지만, 우리한테서 벗어날순 없어!" @player_only@
+
+@The_monster@는 적에게 말했다, "외견은 신경쓰지않아, 난 기술을 신경쓰지!"
+
+@The_monster@는 적에게 말했다, "그 움직임 봤어? 완벽했지!"
+
+@The_monster@는 적에게 말했다, "아름다움은 가죽 한꺼풀일 뿐이지, 내 무기가 그것을 훨씬더 깊게 관통할거야."
+
+@The_monster@는 적에게 말했다, "연습해, 연습, 연습하라고! 언젠가 나만큼 뛰어나게 될거야." @player_only@
+%%%%
+Duvessa_Dowan_dies
+
+@The_monster@는 분노에 차 소리질렀다.
+
+@The_monster@는 소리쳤다, "안돼! 감히 너따위가!"
+
+VISUAL:@The_monster@는 울었다, 그리고나서 스스로를 바로세우고 @possessive@ 무기를 흔들었다.
+%%%%
+Duvessa_Dowan_dies_invisible
+
+@The_monster@는 분노에 비명질렀다.
+
+@The_monster@는 분노에 가득찬 목소리를 내질렀다, "안돼, 안돼!"
+
+@The_monster@는 분노한 채 소리쳤다, "안돼!"
+%%%%
+Duvessa_Dowan_dies_distance
+
+당신은 멀리서 분노에 찬 비명을 들었다.
+%%%%
+Duvessa_Dowan_dies_bytwin
+
+@The_monster@(은)는 비명질렀다.
+
+w:1
+@The_monster@(은)는 소리질렀다, "안돼! 내가 뭘 한거지?"
+%%%%
+Duvessa_Dowan_dies_invisible_bytwin
+
+@Duvessa_Dowan_dies_bytwin@
+%%%%
+Duvessa_Dowan_dies_distance_bytwin
+
+@Duvessa_Dowan_dies_distance@
+%%%%
+############ EDMUND ### One of Sigmund's nine brothers, no magic
+Edmund
+
+@_Edmund_common_@
+
+w:5
+@_Edmund_rare_@
+%%%%
+_Edmund_common_
+
+VISUAL:@The_monster@는 플레일로 적을 가리켰다.
+
+@The_monster@는 목을 가다듬었다.
+
+@The_monster@는 말했다, "넌 내가 얼마를 주고 이 플레일을 샀는지 믿지 못할거야."
+
+@The_monster@는 적에게 물었다, "내 대단하신 형님을 만난 적이 있나?"
+
+@The_monster@는 적에게 말했다, "마법은 별로 못하지만, 너를 죽일수는 있어!"
+
+@The_monster@는 말했다, "사람들은 내 형이 최고라고 생각하지. 난 그가 미쳤다고 생각하는데 말야."
+
+@The_monster@는 말했다, "난 덧셈도 할줄 안다고."
+
+@The_monster@는 말했다, "사람들이 날 소매치기 짓으로 고발했다고!"
+%%%%
+_Edmund_rare_
+
+VISUAL:@The_monster@는 @possessive@ 이를 갈고는, 한숨을 쉬었다.
+
+w:1
+VISUAL:@The_monster@는 다소 경계하는듯 보였다.
+
+@The_monster@는 말했다, "플레일이 낫보다 낫지, 어떤 요일에도!"
+
+w:5
+@The_monster@는 말했다, "대체 주문은 무엇에 쓰는거야?"
+
+w:5
+@The_monster@는 중얼거렸다, "대체 누가 주문을 필요로하는거야?"
+
+@The_monster@는 말했다, "모두가 항상 내 형만 기억하지. '에드문드가 누군데?' 라고 물어본다고!"
+
+@The_monster@는 말했다, "사람들이 날 기억할거야! 그들은 날 기억하고는 죽을것이다!"
+
+w:1
+@The_monster@는 말했다, "작위를 살까하는데. 에드문드 백작, 은 듣기 어때?"
+
+w:1
+@The_monster@는 징징거렸다, "내 부모님은 날위해 시간을 낸적이 절대로 없었어!"
+%%%%
+############ ERICA ### A wild tempered adventuress
+Erica
+
+@_Erica_common_@
+
+w:5
+@_Erica_rare_@
+%%%%
+_Erica_common_
+VISUAL:@The_monster@는 화나 보인다.
+
+@The_monster@는 몹시 웃었다.
+
+@The_monster@는 적에게 말했다, "난 너보다 훨씬 더 뛰어나지."
+
+@The_monster@는 적에게 말했다, "난 전투를 좋아하지만, 죽이는건 더 좋아해."
+
+@The_monster@는 적에게 소리쳤다, "신속함과 완벽함. 이것들이 죽이는 방식이지."
+
+@The_monster@는 적에게 소리쳤다, "죽어!"
+
+@The_monster@는 적에게 소리쳤다, "빠르게 해줘, 아님 느리게 해줘?!"
+%%%%
+_Erica_rare_
+
+@The_monster@는 적에게 소리쳤다, "서둘러, 죽음이 너를 기.다.린.다.고!"
+
+@The_monster@는 적에게 소리쳤다, "그게 어디있는지 절대 말안할거야!"
+
+@The_monster@는 적에게 소리쳤다, "넌 그걸 얻을수 없어!"
+
+@The_monster@는 적에게 소리쳤다, "여기오는건 자살행위였어! 너에겐!"
+## END Erica ##
+%%%%
+############ EROLCHA ### A vicious ogre capable of casting
+Erolcha
+
+@_Erolcha_common_@
+
+w:5
+@_Erolcha_rare_@
+%%%%
+_Erolcha_common_
+
+@The_monster@는 포효했다.
+
+@The_monster@는 으르렁거렸다.
+
+VISUAL:@The_monster@는 사악하게 웃으려했다.
+
+@The_monster@는 적에게 소리쳤다, "죽어!"
+
+@The_monster@는 적에게 소리쳤다, "점심이다!"
+
+@The_monster@는 적에게 소리쳤다, "에롤차 너 죽인다!"
+%%%%
+_Erolcha_rare_
+
+@The_monster@ screams 적에게, "먹는다!"
+
+@The_monster@ screams 적에게, "가만히 있어! 에롤차 너 때린다!"
+
+@The_monster@ screams 적에게, "피!"
+
+@The_monster@ screams 적에게, "에롤차 너 머리 부순다!"
+
+@The_monster@ screams 적에게, "에롤차 너 기쁘게 죽인다!"
+
+@The_monster@ screams 적에게, "에롤차 화났다!"
+## END Erolcha ##
+%%%%
+############ EUSTACHIO ### apprentice summoner, has funny ideas about honour
+Eustachio
+
+@_Eustachio_common_@
+
+w:5
+@_Eustachio_rare_@
+%%%%
+_Eustachio_common_
+
+@The_monster@는 적에게 소리쳤다, "적어도 복수를 하겐 해줘!"
+
+@The_monster@는 적에게 소리쳤다, "이봐, 넌 내가 제일좋아하는 박쥐를 죽였어!"
+
+@The_monster@는 적에게 말했다, "소환술은 재미있지!"
+
+@The_monster@는 적에게 말했다, "동료들이 내 복수를 해줄거야."
+
+@The_monster@는 소리쳤다, "이 잔혹한 행위는 피로써 정화될것이다."
+
+@The_monster@는 선서를 했다, "내 친구들을 위해서 죽을것이다!"
+
+@The_monster@는 으르렁거렸다, "지옥에나 가라, 불명예스러운 악한아!"
+
+@The_monster@는 물었다, "매너와 도덕, 공경없이 어떻게 살수있어?"
+%%%%
+_Eustachio_rare_
+
+@The_monster@는 적에게 야유했다, "위증한 배반자야, 죽어라!"
+
+VISUAL:@The_monster@는 콧수염을 빙빙 돌렸다.
+
+@The_monster@는 그림자의 능력을 불러들였다!
+
+@The_monster@는 떠벌렸다, "난 거대한 깊은 곳으로부터 정령들을 불러올수 있지."
+## END Eustachio ##
+%%%%
+############ FRANCES ### A warrior who bested a Pandemonium Lord
+Frances
+
+@_Frances_common_@
+
+w:5
+@_Frances_rare_@
+%%%%
+_Frances_common_
+
+VISUAL:@The_monster@는 적에게 코웃음쳤다.
+
+VISUAL:@The_monster@는 가지고있는 흉터에 손가락을 갓다댔다.
+
+@The_monster@는 이해할수 없는 언어로 말했다.
+
+@The_monster@는 알아듣기 어려운 말을 중얼거린다.
+
+@The_monster@는 말했다, "너의 정복을 내게 증명해봐라. 그러면 너를 위대한 모험가로 인정해주지." @player_only@
+
+@The_monster@는 말했다, "나는 악마의 군단을 지휘하지. 너는 무엇을 지휘하는가?" @player_only@
+
+@The_monster@는 말했다, "나는 힘과 권력을 높게 사지 . 너에겐 둘 다 보이지 않는군." @player_only@
+
+@The_monster@는 말했다, "나는 악마의 언어를 구사한다!"
+
+@The_monster@는 형용할수 없는 저주의 언도를 퍼붓는다.
+
+@The_monster@는 말했다, "나는 상상할수 있는 모든 세계들과 우주들을 보았지."
+%%%%
+_Frances_rare_
+
+VISUAL:@The_monster@는 방어적인 자세를 취한다.
+
+@The_monster@는 한 음절씩 긁어가며 목울음을 냈다.
+
+@The_monster@는 말했다, "악마에게는 기이한 아름다움이 있지, 안그래?"
+
+@The_monster@는 말했다, "내 힘을 알고도, 나에게 도전하는건가?"
+
+@The_monster@는 말했다, "나는 한손무기 싸움에서 진적이 없지."
+
+@The_monster@는 말했다, "전사는 전쟁과 전투에서 만들어지지. 너는 스스로 전사라 부를 수 있나?"
+
+w:1
+@The_monster@는 말했다, "심지어 지옥의 전당도 나를 견뎌낼수 없었지."
+
+@The_monster@는 말했다, "널 패배시킬것이다, 나는 이것을 의심치않는다!" @player_only@
+%%%%
+############ FREDERICK ### An extremely smug (& powerful) demigod
+Frederick
+
+@_Frederick_common_@
+
+w:5
+@_Frederick_rare_@
+%%%%
+Beogh Frederick
+
+w:2
+@The_monster@은 말했다, "넌 충분한 증원군을 데려오지않았어. 나중에 돌아와라!"
+
+w:30
+@Frederick@
+%%%%
+Okawaru Frederick
+
+w:2
+@The_monster@은 말했다, "흥! 힘을 위해 신에게 의존한 이들은, 인생에 도움이 안되지."
+
+w:30
+@Frederick@
+%%%%
+_Frederick_common_
+
+VISUAL:@The_monster@은 상대할만한 적을 간절히 원했다.
+
+VISUAL:@The_monster@은 과장된 행동을 하며 하품했다.
+
+@The_monster@은 약간의 말로 전술 조언을 해주었다.
+
+@The_monster@은 말했다, "요새 모험가들은 걷는것도 못하나, 전투는 고사하고."
+
+@The_monster@은 말했다, "내 시절에는, 영웅이 되는것은 뭔가를 의미했지. 요새는, 그냥 좀더 빨리 죽는걸 뜻한다지."
+
+@The_monster@은 말했다, "스스로를 모험가라고 불러? 하!"
+
+@The_monster@은 말했다, "난 오늘 다섯 '모험가들'을 죽였어. 너 여섯번째가 되고싶은거야?"
+
+@The_monster@은 말했다, "나한테 도전을 해? 너, 그리고 네 병력들로?" @player_only@
+
+@The_monster@은 적에게 말했다, "왜 내가 너같은 놈들하고 싸우는걸 신경써야하지?"
+%%%%
+_Frederick_rare_
+
+VISUAL:@The_monster@은 가지고있는 외알 안경을 닦았다.
+
+VISUAL:@The_monster@은 지루해 보인다.
+
+VISUAL:@The_monster@은 한숨을 쉬었다.
+
+@The_monster@은 명예의 실추에 대해 불평했다.
+
+@The_monster@은 말했다, "너같은 모험가들 전부다 나한텐 똑같아보인다고! 갈팡질팡하는 약골들, 전부다!" @player_only@
+
+# extra-silly
+w:5
+@The_monster@은 말했다, "너에게는, 오늘이 네 인생의 가장 도전적인 전투가 될거야. 나한테는... 음, 짧은 점심시간이 될거야." @player_only@
+
+@The_monster@은 말했다, "어쩌면 벌목꾼을 했어야할지도 모르겠네. 나무들이 전투보다 더 오래 견뎌내는것 같으니까 ."
+
+@The_monster@은 말했다, "널 죽이는건 그저 잡일이라고, 즐거움이 아니라." @player_only@
+
+@The_monster@은 적을 조심스럽게 쳐다봤다. "괜찮은 적들은 이렇게까지 하게한다고, 그들이 말해줬어"
+%%%%
+############ FANNAR ### A cold-hearted elven sorcerer
+Fannar
+
+@_Fannar_common_@
+
+w:5
+@_Fannar_rare_@
+%%%%
+_Fannar_common_
+
+VISUAL:@The_monster@는 적을 싸늘하게 노려보았다.
+
+VISUAL:약간의 눈송이가 @the_monster@에게 모여들었다.
+
+VISUAL:@The_monster@는 입고있는 로브에서 눈송이를 털어냈다.
+
+@The_monster@는 자신에게 몇가지 주문을 속삭였다.
+%%%%
+_Fannar_rare_
+
+@The_monster@는 적에게 말했다, "얼어라!"
+
+@The_monster@는 적에게 말했다, "네놈의 영혼까지 얼려주마!"
+
+@The_monster@는 적에게 말했다, "혹한의 포옹이 너를 기다린다..."
+
+@The_monster@는 적에게 말했다, "너는 훌륭한 얼음조각이 되겠구나."
+
+@The_monster@는 적에게 말했다, "소름끼치지 않나?"
+%%%%
+############ Gastronok ### A rather hungry wizard-slug
+# Cantrip messages:
+gastronok_self_buff
+
+@_gastronok_self_buff_@
+%%%%
+gastronok_other_buff
+
+@_gastronok_other_buff_@
+%%%%
+gastronok_debuff
+
+@_gastronok_debuff_@
+%%%%
+_gastronok_self_buff_
+
+@The_monster@은 즐겁게 거품을 뿜었다.
+
+@The_monster@은 은은하게 반짝이는 연분홍 빛을 냈다.
+
+@The_monster@은 미친듯이 부들거렸다.
+
+@The_monster@의 눈이 뻗어졌다가 원래대로 돌아왔다.
+%%%%
+# When targeting other monsters.
+_gastronok_other_buff_
+
+@The_monster@은 부들거렸다.
+
+@The_monster@은 잠시 느려졌다.
+
+@The_monster@은 쩝쩝대는 소리를 냈다, then looks surprised.
+%%%%
+# Slugform affecting the player.
+_gastronok_debuff_
+
+w:20
+당신은 느려졌다.
+
+당신은 순간 소금이 혐오스럽다고 느꼈다.
+
+당신의 피부에 옅은 녹빛이 드리웠다.
+
+# Doesn't work for Naga and transformed Merfolk.
+# There's a hack in mon-cast.cc to prevent it from being used in those cases.
+당신의 다리가 젤리처럼 떨렸다.
+
+w:5
+당신은 존재하지 않을 눈자루가 돌아가는 듯한 느낌이 들었다.
+%%%%
+# And finally, his speech.
+Gastronok
+
+@_Gastronok_common_@
+
+w:4
+@_Gastronok_rare_@
+%%%%
+_Gastronok_common_
+
+VISUAL:@The_monster@은 철퍽거리며 돌아다녔다.
+
+@The_monster@은 꾸르륵거렸다, "널 먹을거야, 꼭!"
+
+@The_monster@은 꾸르륵거렸다, "간식! 간식!"
+
+@The_monster@은 꾸르륵거렸다.
+
+@The_monster@은 낯선 소음을 냈다.
+%%%%
+_Gastronok_rare_
+
+VISUAL:@The_monster@의 입이 열렸다. 치설이 격렬하게 움직였다.
+
+VISUAL:@The_monster@ 은 갑작스런 산들바람에 흔들렸다.
+
+VISUAL:@The_monster@의 눈자루가 흔들리며 쓰고있던 모자를 거의 밀어냈다.
+
+@The_monster@은 꾸르륵거렸다, "넌 내가 좋아하는 음식이야. 날쌘돌이!"
+
+@The_monster@은 꾸르륵거렸다, "서두르지 마, 그래야 널 먹을수 있잖아.."
+
+@The_monster@은 꾸르륵거렸다, " 너 혹시 마법사니? 마법사들은 맛이 좋지..."
+
+@The_monster@은 꾸르륵거렸다, "배애애애애애애고파!"
+
+@The_monster@은 꾸르륵거렸다, "분명해, 너는 니가 먹은 걸로 되어있지."
+
+@The_monster@은 꾸르륵거렸다, "넌 분명히 맛있을거야."
+%%%%
+############ GRINDER ### An inefficient ex-torturer
+Grinder
+
+@_Grinder_common_@
+
+w:2
+@_Grinder_rare_@
+%%%%
+_Grinder_common_
+
+VISUAL:@The_monster@는 날카로운 이빨을 내보이며 웃었다.
+
+@The_monster@는 말했다, "넌 괜찮은 고문에 쓰일거같이 생겼어."
+
+@The_monster@는 말했다, "난 암시장에 발톱들을 팔기도 했었지."
+
+@The_monster@는 말했다, "혀는 단 한가지 좋은 쓰임새가 있어: 잘라내는거야."
+
+@The_monster@는 말했다, "대다수는 살려두지 못했었어."
+
+@The_monster@는 말했다, "이봐!"
+
+@The_monster@는 말했다, "반편아!"
+
+@The_monster@는 말했다, "기다려봐."
+
+@The_monster@는 말했다, "그냥 거기 잠깐만 있어봐..."
+
+@The_monster@는 말했다, "눈 하나 깜짝하지마."
+
+@The_monster@는 말했다, "네 비밀을 전부 나한테 말해, 아니면 널 죽일거야."
+%%%%
+_Grinder_rare_
+
+@The_monster@는 말했다, "너 생선이니?"
+
+@The_monster@는 말했다, "우주는 무슨 용도지?"
+
+@The_monster@는 말했다, "내 보스가 나보고 쓰레기같다네. 그의 내장은 다르게 말했어."
+
+@The_monster@는 말했다, "적어도 @my_God@(은)는 내가 한 일들에 감사할거야."
+
+VISUAL:@The_monster@는 눈알을 굴렸다.
+%%%%
+############ GRUM ### A war dog-breeding gnoll
+Grum
+
+@_Grum_common_@
+
+w:2
+@_Grum_rare_@
+%%%%
+_Grum_common_
+
+VISUAL:@The_monster@은 가진 이빨을 드러냈다.
+
+@The_monster@은 @_Grum_verb_@.
+
+@The_monster@은 오로지 적을 응시하였고, @_Grum_verb_@.
+
+@The_monster@은 위협적인 울음소리를 냈다.
+
+VISUAL:@The_monster@은 허공에 킁킁댔고, 재빨리 주변을 돌아봤다.
+
+## The following ones make little sense after you've killed his dogs. Maybe Grum is a little bit crazy..? ##
+@The_monster@은 손가락으로 적을 가르키고는 @_Grum_verb_@, "공격해!"
+
+@The_monster@은 손가락으로 적을 가르키고는 외쳤다, "@_Grum_dog_name_@! 가서 덤벼!"
+
+@The_monster@은 주변을 힐끗보고는 외쳤다, "@_Grum_dog_name_@! 일로와!"
+
+@The_monster@은 외쳤다, "@_Grum_dog_name_@! 착하지!"
+
+%%%%
+_Grum_rare_
+
+VISUAL:@The_monster@은 입은 코트의 벼룩에 의해 잠깐 산만해졌다.
+
+@The_monster@은 적에게 @_Grum_verb_@, "밤이고 낮이고 쫒아가서 괴롭혀주지!"
+
+@The_monster@은 적에게 @_Grum_verb_@, "내 개들이랑 난 오늘밤 축제를 가질거야..."
+
+@The_monster@은 적에게 @_Grum_verb_@, "너 꽤나 먹음직스러운데."
+
+@The_monster@은 적에게 @_Grum_verb_@, "널 강아지처럼 뭉개주마."
+
+@The_monster@은 넌더리나서 적을 보고는 @_Grum_verb_@, "넌 내 소유의 어떤 개도 가질수없어."
+
+@The_monster@은 기분좋게 말했다, "그룸은 오늘밤, 개고기 안먹어도되!"
+
+@The_monster@은 @_Grum_verb_@, "넌 개껌이야, @player_name@!"
+
+@The_monster@은 물었다, "@player_genus_plural@(은)는 어떤 뼈들을 갖고있지? 내 개들이 엄청 궁금해하더라고." @player_only@
+
+@The_monster@은 적에게 말했다, "내 비밀이 뭐냐고? 난 개들에게 @player_genus_plural@(을)를 먹이로 줘. 그걸로 개들의 털이 좋고 윤기가 나게되." @player_only@
+
+@The_monster@은 적을 보고는 @_Grum_verb_@, "가장 작고 귀여운 강아지를 내려놓을 시간이야."
+
+@The_monster@은 적에게 @_Grum_verb_@, "나랑 @_Grum_dog_name_@(은)는 네 뼈로 던지기놀이를 할거야!"
+
+# stupid dog pun
+@The_monster@은 적에게 @_Grum_verb_@, "나랑 싸울거라고? 그건... 힘들거야!"
+
+@The_monster@는 외쳤다, "사냥개들을 풀어라!"
+
+@The_monster@는 적에게 말했다, "난 질좋은 가죽 모피를 팔고있어."
+
+@The_monster@는 외쳤다, "더빨리, @_Grum_dog_name_@! 죽여! 죽여라!"
+
+%%%%
+_Grum_verb_
+
+소리질렀다
+
+으르렁거렸다
+
+불평했다
+
+짖었다
+%%%%
+_Grum_dog_name_
+
+피도
+
+렉스
+
+로버
+
+스팟
+
+스파이크
+
+듀크
+
+주니어
+
+스파키
+
+플루토
+
+쿠조
+## END Grum ##
+%%%%
+############ HAROLD ### A middle aged man, anxious to retire after killing you.
+Harold
+
+@_Harold_common_@
+
+w:6
+@_Harold_rare_@
+%%%%
+_Harold_common_
+
+VISUAL:@The_monster@는 이 일을 끝내고싶어 하는것 같다.
+
+@The_monster@는 적에게 외쳤다, "시간이 넉넉하지 않아!"
+
+@The_monster@는 적에게 투덜거렸다, "빨리 포기해, 난 집에 가고싶어!"
+
+@The_monster@는 적에게 말했다, "난 마지막 일이 도전 그 이상이길 원했었어, 돈은 돈이지만."
+
+@The_monster@는 적에게 소리쳤다, "이제 죽어도 되지않아? 난 이후의 계획이 있다고!"
+
+@The_monster@는 말했다, "사람들이 뭐때문에 널 죽이는데 현상금을 걸었는지, 짐작가는거 있어, @player_name@?" @player_only@
+
+@The_monster@는 적에게 말했다, "빨리 끝내자고,응? 나에겐 먹여살릴 처자식이 있어."
+
+@The_monster@는 적에게 말했다, "이봐, 사적인 감정은 없어. 일은 일이라고."
+
+@The_monster@는 적에게 말했다, "정말 신나는군! 끝내주는 은퇴방법이야!"
+
+@The_monster@는 적에게 말했다, "아, 이게 이일을 하게된 이유라고!"
+%%%%
+# Harold talks about his retirement
+_Harold_rare_
+
+VISUAL:@The_monster@는 잠깐 멈춰서서, 웃는 얼굴을 하고는 무언가를 상상했다.
+
+@The_monster@는 고민했다, "네 현상금으로 @_Harold_retirement_plan_@ 라고 생각했어..." @player_only@
+
+@The_monster@는 물었다, "혹시 내 보트이름을 '@player_name@'로 하면 기분나쁘니? 네 머릿값으로 지불될거야, 결국." @player_only@
+
+@The_monster@는 행복하게 말했다, "네 머리에 걸린 돈이라면 내 비상금을 잘 채워놓겠지!" @player_only@
+
+@The_monster@는 뭔가 생각하고, 적에게 말했다, "아마도 여기일을 끝낸 이후에 @_Harold_ret_hobby_@(을)를 시작할거야..."
+
+@The_monster@는 말했다, "밝은 면을 보도록 해보라고. 너의 죽음으로 우리 애들이 학교를 다니는데 도움될거야." @player_only@
+
+@The_monster@는 적에게 말했다, "현상금 사냥은 좋았지만, 은퇴하기까지 기다릴 수 없어."
+
+@The_monster@는 적에게 말했다, "아내는 내가 피묻은 옷을 더이상 가져오지않는 것에대해 감사하겠지."
+
+%%%%
+fleeing Harold
+
+__NEXT
+
+w:5
+@The_monster@는 @yells@, "이걸 하기엔 너무 나이 들었어!"
+%%%%
+Harold killed
+
+__NONE
+
+w:4
+@The_monster@는 신음했다, "내... 가족..." 그리고나서 쓰러졌고, 죽었다.
+
+w:3
+@The_monster@는 치명적인 상처들을 내려다보고는 울부짖었다, "그치만... 오늘이 은퇴전 마지막 하루였다고..."
+
+w:2
+@The_monster@는 마지막 호흡을 하며 갈망했다, "일을 덜했었음하고 바랐는데..."
+
+w:1
+@The_monster@는 쓰러졌고, 생긴 상처들을 움켜쥐었다. "그치만 난 @_Harold_retirement_plan_@ 아...직은..."
+%%%%
+# Giving Harold some retirement options...
+_Harold_retirement_plan_
+
+@_Harold_ret_house_@ @_Harold_ret_place_@
+
+선상 낚시를 할거야.
+
+말 목장을 차릴거야.
+
+소 목장을 차릴거야.
+
+괜찮은 대지를 관리할거야.
+%%%%
+_Harold_ret_house_
+
+빌라에서
+
+맨션에서
+
+집에서
+
+작은 집에서
+
+장소에서
+%%%%
+_Harold_ret_place_
+
+산속의
+
+호수 옆의
+
+바닷가 근처의
+
+시골의
+
+숲속의
+%%%%
+_Harold_ret_hobby_
+
+낚시
+
+하이킹
+
+목공
+
+모형 제작
+
+글쓰기
+
+회화
+## END Harold ##
+%%%%
+############ IGNACIO ### A human executioner turned into a demon
+Ignacio
+
+@_Ignacio_common_@
+
+w:3
+@_Ignacio_rare_@
+%%%%
+_Ignacio_common_
+
+VISUAL:@The_monster@는 가지고있는 도끼를 보았고, 그다음에 적을보았고, 그다음에 도끼를 보았고, 그다음에 적을보았고...
+
+VISUAL:@The_monster@는 즐거움에 웃었다.
+
+@The_monster@는 외쳤다, "그거야! 우리는 재미있게 놀거야!"
+
+@The_monster@는 적에게 말했다, "고통은 나의 일이지; 너는 알게될거야!"
+
+@The_monster@는 적에게 소리쳤다, "네 머리통을 떼낼거야!"
+%%%%
+_Ignacio_rare_
+
+@The_monster@는 말했다, "난 죽음을 즐겨. 그 냄새도 좋아해. 피를 식히는 미끄러운 느낌도 좋아해."
+
+@The_monster@는 말했다, "난 미와 완벽함을 동경한다고 말했었지. 난 최후를 보는것을 좋아해. 썩어가는것의 차이는 매우 강렬하지."
+
+@The_monster@는 침착하고 걸걸한 목소리로 말했다, "173 아래네. 일 백만은 더 남아있는데."
+
+@The_monster@는 말했다, "죽음의 일격은 신나지만, 진정한 기쁨은 미리 고문해놓는것이지."
+
+@The_monster@는 적에게 말했다, "근처에 교수대가 없으니까, 바로 참수하면 되는거지."
+## END Ignacio ##
+%%%%
+############ IJYB ### A twisted goblin
+Ijyb
+
+@_Ijyb_common_@
+
+w:5
+@_Ijyb_rare_@
+%%%%
+_Ijyb_common_
+
+VISUAL:@The_monster@는 사악하게 웃었다.
+
+@The_monster@는 적에게 소리쳤다, "죽어!"
+
+@The_monster@는 적에게 소리쳤다, "나 너 죽인다!"
+
+@The_monster@는 적에게 소리쳤다, "나 너보다 강해!"
+
+@The_monster@는 적에게 소리쳤다, "전부 내꺼야!"
+
+@The_monster@는 적에게 소리쳤다, "저리가!"
+
+@The_monster@는 적에게 소리쳤다, "여기 내꺼! 전부 내꺼!"
+
+@The_monster@는 적에게 소리쳤다, "너 나빠! 크게 나빠!"
+%%%%
+_Ijyb_rare_
+
+@The_monster@는 적에게 소리쳤다, "니머리 짤라낸다!"
+
+@The_monster@는 적에게 소리쳤다, "니 뼈위에 춤춘다!"
+
+@The_monster@는 적에게 말했다, "나 마니 속상해!"
+
+@The_monster@는 적에게 말했다, "아냐! 아니, 아니, 아냐, 아니야!"
+
+@The_monster@는 적에게 말했다, "너 안좋아!"
+%%%%
+confused Ijyb
+
+@The_monster@는 웅크리고는 비명질렀다, "내 머리! 으아악! 이제 나가!"
+
+@The_monster@는 적에게 소리쳤다, "나 여기 전부 준다! 그러고 날 냅둬."
+
+@The_monster@는 적에게 소리쳤다, "나 아직 더쎄다! 너 정말 못됬다!"
+
+@The_monster@는 적에게 소리쳤다, "나 이거보다 나은 대우 해달라!"
+
+@The_monster@는 적에게 소리쳤다, "나도 너 반갑다! 나 약속한다!"
+
+@The_monster@는 적에게 소리쳤다, "나 너 죽이러 쫌따 간다!"
+
+VISUAL:@The_monster@는 머리를 움켜쥐고는 빠르게 흐느적 거리며, 횡설수설했다.
+## END Ijyb ##
+%%%%
+############ ILSUIW ### a powerful merfolk witch
+Ilsuiw
+
+@_Ilsuiw_common_@
+
+w:5
+@_Ilsuiw_rare_@
+%%%%
+_Ilsuiw_common_
+
+@The_monster@는 적에게 물었다, "나와 수영하지 않을래요?"
+
+@The_monster@는 적에게 속삭였다, "안으로 들어와요, 물은 괜찮아요."
+
+@The_monster@는 [기묘한|잊을수없는] [바다의 찬가|멜로디]를 노래했다.
+
+VISUAL:@The_monster@는 손가락들로 긴 녹색 머리카락을 쓸어내렸다.
+%%%%
+_Ilsuiw_rare_
+
+VISUAL:@The_monster@는 [최면을 거는듯이|유혹적으로] 적을 응시했다.
+
+@The_monster@는 노래했다, "잠들면, 잠들면... 어쩌다 익사해요."
+
+@The_monster@는 적에게 말했다, "아래쪽의 멋진 파도를 봐요 - 두고보세요!"
+
+@The_monster@는 적에게 물었다, "당신에게 바닷가를 거닐 용기가 있나요?"
+
+@The_monster@는 적에게 말했다, "날 잡아봐요, 날 만져요, 날 사랑해줘요, 날 만족시켜줘요!"
+
+@The_monster@는 적에게 천진난만하게 속삭였다, "이야기는 믿지말아요, 날 믿어요!"
+
+# On the Beach, Above & Beyond presents OceanLab
+@The_monster@는 적에게 말했다, "이 바닷가에, 당신과 내가 있는것만큼 좋은게 없어요..."
+## END Ilsuiw ##
+%%%%
+############ JESSICA ### A sorceress disturbed by player
+Jessica
+
+@_Jessica_common_@
+
+w:5
+@_Jessica_rare_@
+%%%%
+_Jessica_common_
+
+VISUAL:@The_monster@는 사악하게 웃었다.
+
+VISUAL:@The_monster@는 매우 화나 보인다.
+
+@The_monster@는 적에게 소리쳤다, "넌 나를 방해했어! 널 없애야해!"
+
+VISUAL:@The_monster@는 크게 몸짓했다.
+
+@The_monster@는 무언가 이상한것을 중얼거렸다.
+%%%%
+_Jessica_rare_
+
+@The_monster@는 적에게 말했다, "여기 왜 온거지?"
+
+@The_monster@는 말했다, "정말 화나는데."
+
+@The_monster@는 적에게 차갑게 말했다, "네 동료들도 정말 싫어."
+
+@The_monster@는 적에게 소리쳤다, "난 너처럼 되지 않을거야!"
+
+@The_monster@는 적에게 소리쳤다, "날 괴롭히지마, 아님 죽여버릴거야!"
+
+@The_monster@는 적에게 소리쳤다, "넌 기분나쁜 성가신 존재야!"
+## END Jessica ##
+%%%%
+############ JORGRUN ### A dwarven earth elementalist.
+Jorgrun
+
+@_Jorgrun_common_@
+
+w:5
+@_Jorgrun_rare_@
+%%%%
+_Jorgrun_common_
+
+@The_monster@는 적에게 말했다, "대지가 그대를 사로잡게 하리라!"
+
+@The_monster@는 적에게 말했다, "이곳이 그대의 무덤이 되리라!"
+
+@The_monster@은 자신에게 몇가지 주문을 속삭였다.
+%%%%
+_Jorgrun_rare_
+
+@The_monster@은 적에게 말했다, "대지는 나의 집이다, 그리고 그대는 무단으로 침입하고있지!"
+
+@The_monster@은 적에게 말했다, "그대는 그저 현실을 충분히 직시하지 못하는군."
+
+@The_monster@은 말했다, "그런 특별한, 바위의 배치는 본적 없었다네."
+
+@The_monster@은 말했다, "머지않아 벽들이 이곳에 쓰러지고, 모든 곳이 무너져 내릴 것이다."
+## END Jorgrun ##
+%%%%
+############ JORY ### A powerful vampire Lord.
+silenced Jory
+
+@_Jory_silent_@
+%%%%
+Jory
+
+@_Jory_common_@
+%%%%
+_Jory_common_
+
+w:50
+@_Jory_silent_@
+
+@The_monster@는 말했다, "날 내버려둬!"
+
+@The_monster@는 알수없는 언어로 낮게 말했다.
+
+@The_monster@는 말했다, "산사나무로는 내게 상처입힐수 없어."
+
+@The_monster@는 말했다, "성직자들은 날 겁주지 못하지."
+
+@The_monster@는 말했다, "꺼져라, 꺼져, 꺼지라고!"
+
+w:2
+@The_monster@는 말했다, "아내가 날 버렸지, 그래서 복수를 했어."
+%%%%
+_Jory_silent_
+
+VISUAL:@The_monster@는 당신을 향해 크게 몸짓했다. @player_only@
+
+VISUAL:@The_monster@는 깔보는듯이 목이 잘리는 흉내를 냈다.
+
+VISUAL:@The_monster@는 당신을 조심스럽게 응시했다. @player_only@
+
+VISUAL:@The_monster@는 가진 망토를 진부하게 휘둘렀다.
+
+VISUAL:@The_monster@는 인상을 찌뿌렸다.
+
+VISUAL:@The_monster@는 잠시 분노에 사로잡혔다!
+
+w:5
+VISUAL:@The_monster@는 한방울의 눈물을 흘렸다.
+
+VISUAL:@The_monster@는 깜짝놀라 당신에게 몸짓했다. @player_only@
+
+VISUAL:@The_monster@는 빛나는 송곳니를 드러내며 실실 웃었다.
+
+VISUAL:@The_monster@는 목을 드러내는것을 보여주었다.
+
+VISUAL:@The_monster@는 소리없이 씩씩거렸다.
+%%%%
+Jory killed
+
+@The_monster@는 비명질렀다, "안돼, 안된다고!" 면전에서 피구름으로 변해 폭파했다!
+%%%%
+silent Jory killed
+
+VISUAL:@The_monster@는 잠깐 당신을 공포속에서 응시했고, 면전에서 피구름으로 변해 폭파했다!
+%%%%
+############ JOSEPH ### Hired to kill you
+Joseph
+
+@_Joseph_common_@
+
+w:2
+@_Joseph_rare_@
+%%%%
+_Joseph_common_
+
+w:20
+@_mercenary_guard_@
+
+VISUAL:@The_monster@은 행복하게 웃는다.
+
+VISUAL:@The_monster@은 사악하게 웃으려고 한다.
+
+@The_monster@은 적에게 말했다, "만나서 반갑다. 널 죽이게 되어서 반갑고."
+
+@The_monster@은 적에게 말했다, "오랫동안 이 순간을 기다려왔어."
+
+@The_monster@은 적에게 말했다, "사적인 감정은 없지만, 널 죽여야겠어."
+
+@The_monster@은 말했다, "넌 절대 오브를 가져가지 못해, 미안," @player_only@
+
+@The_monster@은 적에게 소리쳤다, "나는 싸움이 좋다! 살육이 좋다!"
+
+@The_monster@은 적에게 말했다, "난 무단침입자를 죽이러 왔지. 난 내 일이 좋아."
+
+@The_monster@은 적에게 말했다, "너는 심판받아야 해! 아니면.. 내가 너를 심판하겠다!"
+%%%%
+_Joseph_rare_
+
+@The_monster@은 적에게 소리쳤다, "드디어!"
+
+@The_monster@은 적에게 한숨쉬었다, "보통 경비병으로 근무하는건 지루하단 말이야..."
+
+@The_monster@은 적에게 소리쳤다, "와우!"
+## END Joseph ##
+%%%%
+############ JOSEPHINE ### A twisted old witch looking for someone to kill
+Josephine
+
+VISUAL:@The_monster@은 사악하게 웃었다.
+
+VISUAL:@The_monster@은 악의적으로 웃었다.
+
+VISUAL:@The_monster@은 이를 갈았다.
+
+@The_monster@은 미친듯이 웃었다.
+
+@The_monster@은 말했다, "네 가죽으로 깔개를 만들거야."
+
+@The_monster@은 말했다, "참수는 어때?"
+
+@The_monster@은 적에게 소리쳤다, "죽어!"
+
+@The_monster@은 적에게 소리쳤다, "너한테 특별한걸 줄게."
+
+@The_monster@은 적에게 소리쳤다, "네 머리통을 내 집의 장식으로 쓸거야!" 
+## END Josephine ##
+%%%%
+############ KHUFU ### mummy emperor with delusions of godhood
+Khufu
+
+@The_monster@는 우렁찬 소리로 알렸다, "모두가 쿠푸를 숭배할 것이다, 네가 아니라!"
+
+@The_monster@는 선언했다, "너를 끝내고나서, 신들을 상대할 것이다!"
+
+@The_monster@는 의문을 제기했다, "나의 인간들은 내게 피라미드를 지어주었지 - 너의 인간들은 너에게 무엇을 지어줬지?"
+
+@The_monster@는 말했다, "치고 빠지기는, 나를 따라오기엔 멀었구나."
+
+@The_monster@는 말했다, "나는 초월이고, 너는 증발이다."
+
+@The_monster@는 적에게 말했다, "너의 시체는 어떤 묘라도 더럽힐 것이다."
+
+@The_monster@는 적에게 말했다, "너는 내가 여태껏 보았던 미라중에 가장 못생긴 것이 될것이다."
+
+@The_monster@는 말했다, "나는 북극성을 지켜본다."
+
+@The_monster@는 적에게 외쳤다, "나일강에 널 빠트려주지!"
+## END Khufu ##
+%%%%
+############ KIRKE ### an enchantress, lover of Odysseus
+Kirke
+
+VISUAL:@The_monster@는 적에게 물약을 뿌렸다.
+
+VISUAL:@The_monster@는 [기이한|이상한|미스터리한] 가루를 적에게 던졌다.
+
+@The_monster@는 적에게 말했다, "오디세우스는 괜찮은 남자였는데, 넌 끔찍하구나."
+
+@The_monster@는 그녀의 옆구리를 붙들고는 말했다, "넌 내 발바닥 밑의 더러움을 먹게될거야."
+
+# "moly" is a magic herb, mentioned only in Kirke's myth (as an antidote to
+# Kirke's potions) and in the English interjection.
+@The_monster@ whispers @to_foe@, "Not even holy moly will save you."
+
+@The_monster@ says, "Can we stop fighting? I have some good wine for you..." @player_only@
+
+@The_monster@ shouts @at_foe@, "You pig! I'll make you look the way you deserve."
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+### END Kirke ###
+%%%%
+############ LOUISE ### A sorceress driven mad by the abyss
+Louise
+
+@_Louise_common_@
+
+w:2
+@_Louise_rare_@
+
+%%%%
+_Louise_common_
+
+@The_monster@는 말했다, "여행을 떠나고싶어?"
+
+@The_monster@는 말했다, "어비스도 날 죽이지 못했는데, 네가 할 수 있을 것 같아?"
+
+@The_monster@는 말했다, "현실너머로 부터의 힘이, 내 부름에 응답한다!"
+
+@The_monster@는 말했다, "오브까지 가는 지름길을 열어주지! 자!"
+
+@The_monster@는 앞뒤안맞게 횡설수설했다.
+
+@The_monster@는 비명을 질렀다!
+
+@The_monster@는 통제가 안되는듯이 웃었다.
+
+@The_monster@는 훌쩍이기 시작했다.
+
+@The_monster@는 물었다, "어째서 내 친구가 되어주지 않는거야?"
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+%%%%
+_Louise_rare_
+
+@The_monster@는 말했다, "난 기분이 매우 괜찮지 않아..."
+
+@The_monster@는 말했다, "너 내가 누구라고 생각해, 그저 흔한 용병이라고?"
+
+@The_monster@는 말했다, "일 년 중에 휴가를 떠나기에 완벽한 시간이야!"
+### END Louise
+%%%%
+############ MARA ### A powerful demon lord, Lord of Illusions
+Mara
+
+@_Mara_common_@
+
+w:5
+@_Mara_rare_@
+%%%%
+_Mara_common_
+
+VISUAL:@The_monster@의 얼굴이 두차례 변했다.
+
+@The_monster@는 말했다, "나는 인간의 마음을 현혹하지!"
+
+@The_monster@는 말했다, "무기와 마법이 내 환각을 상대로 무슨 소용이 있지?"
+
+# Buddhism
+@The_monster@는 말했다, "시적인 비행에 넋을 잃었군, 안그런가?"
+
+@The_monster@는 말했다, "모든 유혹에 걸려 묶여있구나!"
+
+# And original
+@The_monster@는 으르렁거렸다.
+
+VISUAL:@The_monster@는 몸짓했다.
+
+VISUAL:@The_monster@는 드러내놓고 지적했다.
+
+VISUAL:@The_monster@는 환각을 만들어냈다.
+%%%%
+_Mara_rare_
+
+# Lord of Light
+@The_monster@는 소리쳤다, "네 영겁은 열 배가 될것이다! "
+
+@The_monster@의 창조물이 순간 당신의 모습으로 변했다. "네 자신을 없애보지않겠나?"
+
+@The_monster@는 말했다, "바다 밑바닥 위에 있는 별처럼, 나는 네 위에 존재한다."
+
+@The_monster@는 실실 웃었다. "나는 계획과 정의를 추구하는 자이다."
+
+@The_monster@는 말했다, "너는 빈약하고, 불쾌하지, 그리고 죽음이 너의 이웃이다!"
+
+@The_monster@는 말했다, "노력의 방법은 괴롭지, 넘어서기도 어렵고, 시작하기도 어렵지."
+
+@The_monster@는 불러세웠다, "멈춰! 오늘부터 칠일 안에, 왕국의 운명이 나타날 것이다!"
+
+@The_monster@는 자랑했다, "나는 네개의 대륙과 이천개의 인접한 섬들을 지배한다."
+%%%%
+############ MARGERY ### A powerful sorceress, guarding the ORB
+Margery
+
+@_Margery_common_@
+
+w:5
+@_Margery_rare_@
+%%%%
+_spell_colour_
+
+붉은색 
+
+푸른색 
+
+초록색 
+%%%%
+_Margery_spell_results_
+
+VISUAL:@The_monster@는 힘의 아우라로 둘러싸였다.
+
+VISUAL:@The_monster@는 순간 투명해졌다.
+
+VISUAL:@The_monster@의 손이 빛나기 시작했다.
+%%%%
+_Margery_common_
+
+VISUAL:@The_monster@는 몸짓했다.
+@_Margery_spell_results_@
+
+VISUAL:@The_monster@의 눈이 @_spell_colour_@ 빛으로 반짝이기 시작했다.
+
+VISUAL:@The_monster@는 몸짓했다.
+VISUAL:당신은 [저주받은|파멸되는] 느낌이 들었다.
+
+w:5
+VISUAL:@The_monster@는 보라색 가루를 당신쪽으로 던졌다.
+
+@The_monster@는 적에게 말했다, "죽어!"
+
+@The_monster@는 적에게 소리쳤다, "넌 반드시 벌을 받아야해!"
+
+@The_monster@는 적에게 소리쳤다, "넌 내 힘을 견뎌낼수 없어!"
+
+@The_monster@는 적에게 소리쳤다, "모든 통행자는 반드시 죽어야한다!"
+%%%%
+_Margery_rare_
+
+@The_monster@는 적에게 소리쳤다, "에그리차티그 레쟈하우!"
+
+VISUAL:@The_monster@는 매우 자신만만해 보인다.
+
+@The_monster@는 적에게 말했다, "넌 죽었어."
+
+@The_monster@는 적에게 소리쳤다, "나를 통과해야 할것이다!"
+
+@The_monster@는 적에게 소리쳤다, "넌 끝장이야!"
+
+@The_monster@는 적에게 소리쳤다, "아무것도 널 도와줄수 없어."
+
+@The_monster@는 적에게 소리쳤다, "죽음이 나의, 미들 네임이지!"
+
+@The_monster@는 소리쳤다, "오브는 그저 이야기일뿐이야, 어째뜬 널 죽일거야!" @player_only@
+## END Margery
+%%%%
+############ MAUD ### A warrior princess looking for the sword "Entarex".
+Maud
+
+@_Maud_common_@
+
+w:5
+@_Maud_rare_@
+%%%%
+_Maud_common_
+
+VISUAL:@The_monster@는 눈살을 찌뿌렸다.
+
+VISUAL:@The_monster@는 화나 보인다.
+
+@The_monster@는 적에게 소리쳤다, "'엔타렉스' 는 내것이다!"
+
+@The_monster@는 적에게 소리쳤다, "넌 내 힘에 맞설수 없어!"
+
+@The_monster@는 적에게 소리쳤다, "그 검 이리내! 빨리!"
+
+@The_monster@는 적에게 소리쳤다, "네 목숨이냐 '엔타렉스' 냐! 선택해!"
+
+@The_monster@는 적에게 소리쳤다, "난 그걸 원해!"
+
+@The_monster@는 적에게 소리쳤다, "죽어라, 도둑놈!"
+%%%%
+_Maud_rare_
+
+@The_monster@는 적에게 소리쳤다, "바치던가, 아니면 죽어라!"
+
+@The_monster@는 적에게 소리쳤다, "'엔타렉스' 를 내놔라!"
+
+@The_monster@는 적에게 소리쳤다, "'엔타렉스' 를 내게 준다면, 널 살려주겠다!"
+
+@The_monster@는 적에게 물었다, "네가 죽을때, 나를 떠올릴건가?"
+%%%%
+confused Maud
+
+@The_monster@는 생각을 입밖으로 냈다, "뭔가를 잊어버린듯 한데..."
+
+@The_monster@는 적에게 물었다, "내가 또 뭘 찾고있었던거야?"
+
+@The_monster@는 생각을 입밖으로 냈다, "엔터... 엔테로?"
+
+@The_monster@는 궁금해 했다, "근데 난 누구야?"
+## END Maud ##
+%%%%
+############ MAURICE ### A thief.
+Maurice
+
+@_Maurice_common_@
+
+w:6
+@_Maurice_medium_@
+
+w:2
+@_Maurice_rare_@
+%%%%
+_Maurice_common_
+
+VISUAL:@The_monster@는 그림자 속에 숨으려했다.
+
+@The_monster@는 소리쳤다, "하하!"
+
+@The_monster@는 말했다, "좋은 장비네. 몇개 빌릴수 있을까?"
+
+@The_monster@는 소리쳤다, "내꺼야, 전부 내꺼라고!"
+%%%%
+_Maurice_medium_
+
+VISUAL:@The_monster@는 교활해 보인다.
+
+@The_monster@는 말했다, "뭔가 잃어버렸니?"
+
+@The_monster@는 말했다, "아주 흥미로워."
+
+@The_monster@는 말했다, "나눠줄 금화 좀 갖고있니?"
+%%%%
+_Maurice_rare_
+
+@The_monster@는 말했다, "오는걸 보지도 못했지, 응?"
+
+@The_monster@는 적에게 말했다, "돈이야 목숨이야? 신경쓰지마, 난 둘다 가져갈거라 생각해."
+
+@The_monster@는 말했다, "모험가를 죽이고 그들의 물건을 갖는것. 그게 내가 하는 일이야."
+%%%%
+# Triggered when Maurice tries to steal something, but doesn't find anything.
+Maurice nonstealing
+
+@The_monster@는 불평했다, "저주받아라!"
+
+@The_monster@는 중얼거렸다, "지금 그거 어디에 숨긴거야?"
+
+@The_monster@는 신음했다, "넌 뭐야, 수도승?"
+%%%%
+# Triggered when Maurice tries to steal but is too confused to do so.
+Maurice confused nonstealing
+
+w:70
+__NONE
+
+@The_monster@는 당신의 귀중품을 쥐고 서투른 시도를 했다.
+
+@The_monster@는 당신의 주머니를 더듬거리고는 놓쳤다.
+
+@The_monster@는 당신의 주머니에 달려들었고, 발을 헛딛었다.
+
+w:5
+@The_monster@는 음정을 틀려가며 노래했다, "나한테 줄 돈, 좀 있니?"
+%%%%
+############ MENKAURE ### A mummy whose rest you've disturbed
+Menkaure
+
+@_Menkaure_common_@
+
+w:2
+@_Menkaure_rare_@
+%%%%
+_Menkaure_common_
+
+VISUAL:@The_monster@의 붕대가 파닥였다.
+
+@The_monster@는 해석할수없는 언어로 @_Menkaure_verb_@.
+
+@The_monster@는 @_wails_@, "어째서 내 휴식에, 날 내버려두지 않는건가?"
+
+@The_monster@는 킥킥거렸다, "이 수의는 간지럽게 한다고..."
+
+@The_monster@는 @_Menkaure_verb_@, "내가 의식을 수행하게 두어라..."
+
+VISUAL:@The_monster@는 거무튀튀한 숨을 당신에게 내뱉었다.
+
+VISUAL:@The_monster@는 어두운 에너지로 이글거렸다!
+
+@The_monster@는 몇마디 말하고는, @_Menkaure_verb_@.
+
+VISUAL:@The_monster@는 건조하게 @_Menkaure_verb_@.
+
+@The_monster@는 @_Menkaure_verb_@, "스스로 너의 뇌를, 코로 꺼낸다면 아프지 않을것이다."
+
+VISUAL:@The_monster@는 웃었다.
+%%%%
+_Menkaure_rare_
+
+@The_monster@의 발목이 깃털장식의 먼지를 털어냈고, 그러면서 @The_monster@는 고백했다, "나는 진짜 미라가 아니다, 알잖아."
+
+VISUAL:@The_monster@는 몇세기동안 말을 안해서, 어떻게 발성하는지 잊어버렸다.
+
+VISUAL:@The_monster@는 적에게 불길하게 몸짓했다.
+
+@The_monster@는 적에게 외쳤다, "너는 내 휴식을 방해했다! 죽어라!"
+
+@The_monster@는 적에게 @_Menkaure_verb_@, "먼지로부터 왔다면, 먼지가 되어 돌아가리라."
+
+@The_monster@는 적에게 소리쳤다, "시간의 모래가 역사에서 너를 지워버리리라!"
+
+@The_monster@는 적에게 소리쳤다, "파라오들의 저주가 네게 있으리라!"
+
+VISUAL:@The_monster@는 먼지에 "우자트" 의 상징을 그렸다.
+%%%%
+_Menkaure_verb_
+
+웅웅거렸다
+
+웅얼거렸다
+
+한숨쉬었다
+
+중얼거렸다
+
+바스락거렸다
+
+속삭였다
+## END Menkaure ##
+%%%%
+############ MENNAS ### A silent angel.
+Mennas
+
+VISUAL:@The_monster@는 당신에게 몸짓했다. @player_only@
+
+VISUAL:@The_monster@는 하늘을 응시했다.
+
+VISUAL:@The_monster@는 머리를 슬프게 가로저었다.
+
+VISUAL:@The_monster@는 기도하는 순간에 조우했다.
+%%%%
+silenced Mennas
+
+@Mennas@
+%%%%
+############ MURRAY ### A disembodied skull.
+Murray
+
+@_Murray_common_@
+
+w:5
+@_Murray_rare_@
+%%%%
+_Murray_common_
+
+VISUAL:@The_monster@는 원을 그리며 굴렀다.
+
+VISUAL:@The_monster@는 주변을 굴러다녔다.
+
+VISUAL:@The_monster@는 팽이처럼 빙글 돌았다.
+
+VISUAL:@The_monster@는 사악하게 웃었다.
+
+@The_monster@는 사악하게 웃었다.
+
+@The_monster@의 이빨이 큰소리로 딱딱 맞부딪쳤다.
+
+@The_monster@는 적에게 딱딱거렸다, "난 세상을 지배할 것이다!"
+%%%%
+_Murray_rare_
+
+@The_monster@는 적에게 말했다, "너는 여태까지 만나본 바보들중에서 두번째로 덩치가 크구나!"
+
+@The_monster@는 적에게 소리쳤다, "내게 다리가 있었다면, 너는 열 두번은 넘게 죽었을 것이다!"
+
+@The_monster@는 적에게 외쳤다, "네 머리를 내놔라, 창 위에 꽂아놓을수 있게!"
+
+@The_monster@는 적에게 외쳤다, "악마와 흑마술의 힘이, 너를 압도하게 두어라!"
+
+@The_monster@는 적에게 고함쳤다, "나는 강대한 악마의 힘이다!"
+
+@The_monster@는 적에게 고함쳤다, "내 얼굴은 던전 곳곳에서 유명하지!"
+## END Murray ##
+%%%%
+silenced Murray
+
+VISUAL:@The_monster@는 원을 그리며 굴렀다.
+
+VISUAL:@The_monster@는 주변을 굴러다녔다.
+
+VISUAL:@The_monster@는 팽이처럼 빙글 돌았다.
+
+VISUAL:@The_monster@는 사악하게 웃었다.
+
+VISUAL:@The_monster@는 무언가 말하려는것 같다.
+
+VISUAL:@The_monster@는 당신이 들을수없는 무언가를 말했다. 아마 칭찬은 아닐것이다. @player_only@
+## END silenced Murray ##
+%%%%
+############ NATASHA ### An abandoned felid familiar.
+Natasha
+
+@_Natasha_common_@
+
+w:5
+@_Natasha_rare_@
+%%%%
+_Natasha_common_
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+%%%%
+_Natasha_rare_
+
+@The_monster@는 적에게 쉿소리를 냈다.
+
+@The_monster@는 적에게 으르렁거렸다.
+
+@The_monster@는 슬픔에 가냘프게 울었다.
+
+VISUAL:@The_monster@는 발톱을 펼쳤다.
+%%%%
+friendly Natasha
+
+@The_monster@는 야옹하고 울었다.
+
+@The_monster@는 갸르릉거렸다.
+%%%%
+Natasha killed
+
+@_Natasha_death_common_@
+
+w:1
+@_Natasha_death_rare_@
+%%%%
+_Natasha_death_common_
+
+@The_monster@는 자신이 죽어감에, 분노로 소리질렀다!
+
+@The_monster@는 자신이 죽어감에, 고통으로 비명질렀다!
+
+@The_monster@는 고통속에서 으르렁거렸다!
+%%%%
+_Natasha_death_rare_
+@the_monster@의 영혼이 갑자기, 생기없는 몸에서부터 떠올랐다.
+
+애절하게 신음하면서, @the_monster@의 영혼이 땅속으로 빠져들었다.
+
+당신은 증오와 슬픔으로 차있는 희미한, 울려퍼지는 포효를 들었다!
+%%%%
+Natasha permanently killed
+
+당신은 @the_monster@의 영혼이, 마침내 휴식에 들어감을 느꼈다.
+%%%%
+confused Natasha killed
+
+@Natasha killed@
+%%%%
+confused Natasha permanently killed
+
+@Natasha permanently killed@
+%%%%
+############ ROBIN ### A hobgoblin with a plan.
+Robin
+
+@_Robin_common_@
+
+w:5
+@_Robin_rare_@
+
+%%%%
+_Robin_common_
+@The_monster@은 말했다. "무릎 꿇어라 벌레자식!"
+
+@The_monster@은 말했다, "내 군대는 무적이지!"
+
+@The_monster@은 말했다, "쓸쓸한가?"
+
+@The_monster@은 말했다, "머리 숙여라!"
+
+@The_monster@은 의기양양하게 웃었다
+
+VISUAL:@The_monster@의 팔찌가 크게 찰랑거렸다.
+
+VISUAL:@The_monster@의 뿔달린 투구가 철컹거렸다.
+
+VISUAL:@The_monster@은 위협적이게 이두박근을 움직였다.
+
+# YOU ARE VIOLATING AREA SECURITY!
+@The_monster@은 적을 가리켰다. "죽여라!"
+
+%%%%
+_Robin_rare_
+@The_monster@은 말했다, "너희 @player_genus@ 족속들은 절대로 오브를 찾지 못할 것이다!"
+
+# You can be the slave of me, the Spider Queen!
+@The_monster@은 말했다, "내게 무릎꿇어라. 내가 바로 모든 홉고블린 중 가장 강한 자다!"
+
+# ...or food for my pets!
+@The_monster@은 말했다, "내 고블린들은 오늘 네 뼈로 성대한 연회를 벌일 것이다."
+
+w:2
+@The_monster@은 말했다, "언덕 드워프들을 싹쓸어버렸듯이, 너 또한 그리되리라!"
+%%%%
+############ NELLIE ### An escaped circus (h)elephant.
+Nellie
+
+@_Nellie_common_@
+
+w:2
+@_Nellie_rare_@
+%%%%
+_Nellie_common_
+
+@The_monster@는 말했다, "비치볼 위에서 균형 잡을수 있어? 난 되는데!"
+
+@The_monster@는 말했다, "서커스단은 단지 감옥일 뿐이야."
+
+@The_monster@는 말했다, "절대 돌아가지 않을거야!"
+
+@The_monster@는 말했다, "두번다시는 줄타기를 하지 않을거야!"
+
+@The_monster@는 말했다, "사자 먹이가 되는건 걱정하지마. 내 먹이가 되는걸 걱정해."
+
+VISUAL:@The_monster@는 지면에 쿵쿵거렸다.
+
+VISUAL:@The_monster@는 당신을 의심스럽게 바라봤다.
+
+VISUAL:@The_monster@는 비행의 시도로써, 두 귀를 펄럭거렸다.
+%%%%
+_Nellie_rare_
+
+w:2
+@The_monster@는 말했다, "너 로미를 알아? 좋은 친구인데!"
+
+@The_monster@는 말했다, "나 한번은 천막을 짓밟은적 있어."
+
+@The_monster@는 말했다, "아니, 쥐들이랑은 문제 없는데."
+
+@The_monster@는 말했다, "네가 기억나는거 같아..."
+%%%%
+############ NERGALLE ### ugly orc sorceress
+Nergalle
+
+@_Nergalle_common_@
+
+@_Nergalle_rare_@
+%%%%
+_Nergalle_common_
+
+VISUAL:@The_monster@은 끔찍하게 얼굴을 찡그렸다.
+
+@The_monster@은 무언가 중얼거렸다.
+
+@The_monster@은 적에게 물었다, "맛있는 음식이 약간 있는데, 응?"
+%%%%
+_Nergalle_rare_
+
+@The_monster@은 적에게 고함쳤다,  "너 임마 뭐보냐?"
+
+@The_monster@은 적에게 외쳤다, "죽여, 죽여라, 내 예쁜이들!"
+
+@The_monster@은 적에게 말했다, "그게 이유야. 얼마나 끔찍하냐. 너!"
+
+@The_monster@은 코를 풀었다.
+## END Nergalle ##
+%%%%
+############ NESSOS ### evil centaur
+Nessos
+
+@_Nessos_common_@
+
+w:3
+@_Nessos_rare_@
+%%%%
+_Nessos_common_
+
+@The_monster@는 발굽으로 땅을 굴렀다.
+
+@The_monster@는 골똘히 적을 바라보며, 서서히 자신의 꼬리를 움직였다.
+
+@The_monster@는 잠깐 뒷발로 곧추섰다.
+%%%%
+_Nessos_rare_
+
+@The_monster@는 말했다, "고전을 공부해보시지!"
+
+@The_monster@는 말했다, "너에 대해 배울 것이다. 너에 대해 아직 배우지 못했다!"
+
+@The_monster@는 말했다, "네놈이 설사 암말이라고 해도 네놈을 죽이고 말테다!"
+
+@The_monster@는 외쳤다, "나는 반인 반마이자 냉혹한 살해자다!"
+
+w:1
+@The_monster@는 말했다, "잠깐만 멈춰있지 않겠나? 해보고 싶은 사격술 연습이 있었거든."
+
+w:1
+@The_monster@는 말했다, "학교에서 거인에 대해서도 배웠었다. 그러니 너는 문제가 되지 않을 것이다."
+
+w:1
+@The_monster@는 적에게 히드라와, 네소스 자신의 피, 그리고 결혼에 관련된 복잡한 이야기를 말하려고 했다. 
+## END NESSOS
+%%%%
+############ NIKOLA ### A brilliant scientist obsessed with electricity.
+Nikola
+
+@The_monster@는 외쳤다. "위험! 위험! 고압주의!"
+
+@The_monster@는 말했다. "네 눈에서 마법의 스파크가 보이는군."
+
+@The_monster@는 열변했다. "느껴져? 느껴져? 느껴지냐구!!!!!"
+
+@The_monster@는 경고했다. "내 골렘을 보면 조심해, 물지도 몰라."
+
+@The_monster@는 물었다. "넌 절연처리가 되있니?"
+
+@The_monster@는 물었다. "넌 그다지 좋은 절연체가 아닌거 같은데."
+
+@The_monster@는 웅얼거렸다. "흠, 넌 전기가 잘 통할려나."
+%%%%
+############ NORRIS ### An enlightened but crazy man
+Norris
+
+@_Norris_common_@
+
+w:5
+@_Norris_rare_@
+%%%%
+_Norris_common_
+
+@The_monster@는 만트라 몇가지를 중얼거렸다.
+
+VISUAL:@The_monster@는 평화의 아우라로 둘러싸였다.
+
+VISUAL:@The_monster@는 적에게 웃었다.
+
+VISUAL:@The_monster@는 편안해 보인다.
+
+@The_monster@는 노래했다, "이젠 평화를, 이젠 자유를! 이젠 평화를, 이젠 자유를!"
+
+@The_monster@는 적에게 @_Norris_verb_@, "삶은 그저 고통받는것이야. 내가 도와줄게."
+
+@The_monster@는 적에게 @_Norris_verb_@, "죽음은 그저 해방일 뿐이야!"
+
+@The_monster@는 적에게 말했다, "거리낌없이 죽으렴. 그건 위대한 것이야."
+
+@The_monster@는 적에게 말했다, "깊게 호흡해."
+
+@The_monster@는 적에게 @_Norris_verb_@, "평화! 네게 영원한 평화를 가져다줄게!"
+
+@The_monster@는 적에게 @_Norris_verb_@, "네 영혼을 자유롭게 해줘! 죽어!"
+
+@The_monster@는 적에게 @_Norris_verb_@, "우리 죽자."
+
+@The_monster@는 적에게 @_Norris_verb_@, "어째서 피할수 없는것을 지체하는거지?"
+
+@The_monster@는 적에게 @_Norris_verb_@, "개인적으로, 죽는게 더 나은 형편인것 같다고 생각해"
+
+@The_monster@는 적을 보고는 읊조렸다, "너무나 많은 생명을 보았고, 죽음은 거의 보지 못했어. 참 딱하네!"
+%%%%
+_Norris_rare_
+
+VISUAL:@The_monster@는 매우 안정되 보인다.
+
+@The_monster@는 행복하게 제안했다, "전부 죽이자!"
+
+@The_monster@는 @_Norris_verb_@, "내 생각엔 한번쯤은 정말 사망 상태를 시도해봐야 겠어."
+
+@The_monster@는 적에게 @_Norris_verb_@, "너 그다음 무슨일이 생길지, 아주 조금이라도 궁금하지않아?"
+
+@The_monster@는 적에게 @_Norris_verb_@, "알잖아, 난 삶이 약간 지루해졌어. 넌 안그래?"
+
+@The_monster@는 @_Norris_verb_@, "개인적으로, 죽은게 형편이 더 나은것 같아."
+
+@The_monster@는 적에게 @_Norris_verb_@, "바보들만 죽음을 두려워해. 난 죽음을 포옹할거야."
+
+@The_monster@는 적에게 @_Norris_verb_@, "죽음 이후에, 내면의 평화를 알게될거야."
+
+@The_monster@는 적에게 @_Norris_verb_@, "저항하지마. 널 위해 해줄게."
+
+@The_monster@는 적에게 말했다, "오브는 미신이야. 잊어버려." @player_only@
+
+@The_monster@는 적에게 한숨쉬었다, "깨달음은 책임같은거야."
+
+@The_monster@는 적에게 @_Norris_verb_@, "우리가 같이 죽으면, 우리의 영혼이 합쳐질까? 불쾌한데!"
+
+@The_monster@는 적에게 @_Norris_verb_@, "난 너같은, 많은 자들이 여기와서 죽는것을 봐왔어. 나라면 차라리 집에서 죽겠어."
+%%%%
+_Norris_verb_
+
+흥얼거렸다
+
+웃었다
+
+웅얼거렸다
+
+부드럽게 말했다
+
+한숨쉬었다
+
+중얼거렸다
+
+무심히 말했다
+
+속삭였다
+
+## END Norris ##
+%%%%
+############ Pikel ######## A big kobold slaver!
+Pikel
+
+@_Pikel_common_@
+
+w:5
+@_Pikel_rare_@
+%%%%
+_Pikel_common_
+
+@The_monster@은 가진 채찍으로 날카로운 소리를 냈다.
+
+@The_monster@은 말했다, "넌 적당한 가격에 팔릴거야!" @player_only@
+
+@The_monster@은 말했다, "노예제도는 그렇게 나쁘지않아."
+
+@The_monster@은 적에게 말했다, "내 채찍의 강타를 느끼게 될꺼야!"
+
+VISUAL:@The_monster@은 당신을 향해 채찍을 휘둘렀다.
+%%%%
+_Pikel_rare_
+
+VISUAL:@The_monster@은 한쌍의 수갑을 당신에게 흔들었다. @player_only@
+
+@The_monster@은 적에게 말했다, "한번 해보는게 어때? 넌 밥을 얻을수 있을거야. 아마."
+
+@The_monster@은 말했다, "내가 무슨소릴 하는거야? 그들이 널 죽도록 일시킬꺼야!"
+
+@The_monster@은 적에게 말했다, "내가 볼때 넌 침실 노예같은데." 
+
+# Greedy Pikel
+VISUAL:@The_monster@은 동전 지갑을 확인하고는 인상을 썼다.
+
+@The_monster@은 말했다, "진짜로 돈이 전부야."
+
+@The_monster@은 말했다, "난 그저 돈을 받고싶다고!"
+
+@The_monster@은 말했다, "어째뜬 이것들이 잘 대접받을거라 생각해."
+
+@The_monster@은 말했다, "오크 광산이 이 근처라고 확신해..."
+
+@The_monster@은 말했다, "지도를 가지고 왔어야 했는데."
+
+VISUAL:@The_monster@은 노려보고는, 입고있는 로브를 손으로 닦아냈다.
+
+# Kinky Pikel
+@The_monster@은 적에게 말했다, "네가 묶이는걸 좋아한다고 확신해!"
+
+@The_monster@은 한숨쉬었다. "취급 물품을 엘프로 바꿔야겠어; 다루기 더 쉽거든. 그리고 더 예쁘지!"
+%%%%
+############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
+# (A cyclops watching over a herd of yaks.)
+Polyphemus
+
+@_Polyphemus_common_@
+
+w:5
+@_Polyphemus_rare_@
+%%%%
+_Polyphemus_common_
+
+VISUAL:@The_monster@는 하나뿐인 눈으로 적을 응시했다.
+
+VISUAL:@The_monster@는 적에게 눈알을 크게 굴렸다.
+
+@The_monster@는, 애완동물들이 공격하도록, 크게 @_shouts_@!
+
+@The_monster@는 적에게 @_shouts_@, "넌 좋은 간식거리가 될거야!"
+
+@The_monster@는 @_shouts_@, "공격해, 애완동물들아! 공격!"
+
+@The_monster@는 적에게 말했다, "내게서 탈출하려는 것은 @_pointless_@ 일이지!"
+%%%%
+_Polyphemus_rare_
+
+VISUAL:@The_monster@는 다음 식사로, 적을 사로잡으려는 듯 하다.
+
+VISUAL:@The_monster@는 지면을 분노하여 쿵쾅거렸다.
+
+VISUAL:@The_monster@는 적에게 던질 무거운 것을 찾고있다.
+
+@The_monster@는 적에게 말했다, "너 '던지기' 놀이 하고싶어?"
+
+#I suppose this line may not fit if the player is of certain species...
+@The_monster@는 적에게 말했다, "저녁식사로 @Foe_genus@? 맛있겠는데!"
+## END Polyphemus ##
+%%%%
+############ PRINCE RIBBIT ### Prince turned into frog
+Prince Ribbit
+
+@_Prince_Ribbit_common_@
+
+w:2
+@_Prince_Ribbit_rare_@
+%%%%
+_Prince_Ribbit_common_
+
+@The_monster@는 당당히 개굴개굴 거렸다.
+
+@The_monster@는 애절한 개굴개굴 소리를 내었다.
+
+VISUAL:@The_monster@는 주변에 어색하게 폴짝거렸다.
+
+VISUAL:@The_monster@는 혓바닥으로 @_frog_food_@(을)를 잡아챘다.
+%%%%
+_Prince_Ribbit_rare_
+
+@The_monster@는 적에게 물었다, "키스 한번만 해도되?"
+
+@The_monster@는 적에게 한숨쉬었다, "초록색이 되는건 쉬운일이 아니야!"
+
+@The_monster@는 적에게 말했다, "넌 그저 또다른 파리 한마리일 뿐이야."
+
+VISUAL:@The_monster@는 적에게 윙크하고, 입술을 일그러뜨렸다.
+%%%%
+_frog_food_
+
+파리
+
+w:5
+나비
+
+나방
+
+모기
+
+w:2
+거미
+
+벌
+
+지네
+
+노래기
+
+w:1
+작은 새
+
+쥐
+
+새끼 박쥐
+
+파란 꼬리의 도마뱀
+## END Prince Ribbit ##
+%%%%
+############ PSYCHE ### An insane sorceress
+Psyche
+
+@_Psyche_common_@
+
+w:7
+@_Psyche_medium_@
+
+w:3
+@_Psyche_rare_@
+%%%%
+_Psyche_common_
+
+@The_monster@는 비밀스럽게 웃었다.
+%%%%
+_Psyche_medium_
+
+VISUAL:@The_monster@는 이상한 힘의 무지개로 빛나고 있다.
+
+VISUAL:@The_monster@는 잠깐 머리카락을 가지고 놀았다.
+
+@The_monster@는 미친듯이 낄낄거렸다.
+
+VISUAL:@The_monster@는 눈물을 흘렸다.
+
+@The_monster@는 노래했다.
+
+@The_monster@는 이상한 노래를 불렀다.
+
+@The_monster@는 적에게 말했다, "조금 더 빨리 죽어줄 수 없나요?"
+
+@The_monster@는 적에게 말했다, "저는 나쁜 여자에요. 하지만 저도 어쩔 수가 없네요."
+
+@The_monster@는 적에게 말했다, "너무 외로워... 친구라고는 시체밖에 없어."
+
+@The_monster@는 적에게 말했다. "당신이 죽으면 같이 놀 수 있을 텐데!"
+
+@The_monster@는 적에게 말했다, "당신을 죽이고, 집으로 데려다 드릴게요."
+
+@The_monster@는 울부짖었다, "피와 폭력은 싫어."
+
+@The_monster@는 적에게 울부짖었다, "당신이 제 애완동물을 죽였어요!"
+%%%%
+_Psyche_rare_
+
+VISUAL:@The_monster@는 기쁜듯 미소지었다.
+
+VISUAL:@The_monster@는 적을 잠깐 응시했다.
+
+VISUAL:@The_monster@는 눈물을 터트렸다.
+
+VISUAL:@The_monster@는 엄지 손가락을 빨았다
+
+@The_monster@는 적에게 소리쳤다, "제 구역에 들어오지 말아요!!!!!"
+
+@The_monster@는 적에게 외쳤다, "평화여! 꽃송이여! 자유여! 그리고 죽은 모험가여!"
+
+@The_monster@는 적에게 외쳤다, "어쩌면 전 약간 정신이 나가버렸는지도요. 근데 알 게 뭐에요?!"
+
+@The_monster@는 적에게 외쳤다, "전 안 미쳤어요! 당신이 미쳤지!"
+
+@The_monster@는 적에게 외쳤다, "그런 생각을 했다는 점에 미안해 하길 바라요!"
+
+# Copyright U2?
+@The_monster@는 적에게 속삭였다, "날 붙잡아줘, 날 흥분시켜줘, 내게 키스해줘, 그리고 날 죽여줘."
+## END Psyche ##
+%%%%
+############ PURGY ### A teased troll
+Purgy
+
+@_Purgy_common_@
+
+w:5
+@_Purgy_rare_@
+%%%%
+_Purgy_common_
+
+@The_monster@는 적에게 으르렁거렸다, "가! 너 가!"
+
+VISUAL:@The_monster@는 긴장한 듯 주변을 두리번 거렸다.
+
+@The_monster@는 위협적으로 쉿소리를 냈다.
+
+@The_monster@는 적에게 으르렁거렸다, "내 집! 너 가!!"
+%%%%
+_Purgy_rare_
+
+VISUAL:@The_monster@는 이를 꽉 다물었다.
+
+VISUAL:@The_monster@는 손톱을 꽉 쥐었다.
+
+@The_monster@는 적에게 소리쳤다, "나 너 문다!"
+
+@The_monster@는 적에게 애원했다, "너 나 때리지 마라!"
+
+VISUAL:@The_monster@는 잠깐동안 매우 슬프게 보였다.
+%%%%
+############ ROXANNE ### a sapphire statue of an earth mage
+Roxanne
+
+@_Roxanne_common_@
+
+w:5
+@_Roxanne_medium_@
+
+w:1
+@_Roxanne_rare_@
+%%%%
+_Roxanne_common_
+
+@The_monster@는 중얼거렸다, "영원히 살길 원한다고 말했을 때에는... 이런건 내가 생각했던게 아니였어."
+
+@The_monster@는 적에게 말했다, "적어도 아무도 말걸어주지 않는, 어딘가에 있게 되진 않았네."
+
+@The_monster@는 흐느꼈다, "안돼---!"
+
+@The_monster@는 적에게 말했다, "좀더 가까이 와, 자기, 내가 비록 몸은 돌이지만, 무정하지는 않아."
+
+w:20
+__NONE
+%%%%
+_Roxanne_medium_
+
+@The_monster@는 적에게 물었다, "내 애인이 되서, 날위해 이 마법책들을 가져가지 않을래요?"
+
+@The_monster@는 적에게 물었다, "말해봐, 날위해 내 등좀 긁어줄수 있어?"
+
+@The_monster@는 한숨쉬고는 말했다, "새똥만 없다면 그렇게 나쁘지는 않은데."
+%%%%
+_Roxanne_rare_
+
+@The_monster@는 적에게 소리쳤다, "내가 거기로 갈수만 있었다면, 당신을 혼쭐내 줄텐데 말이죠!"
+
+@The_monster@는 '돌에서 살점으로' 주문을 위해 기도했다.
+
+@The_monster@는 궁금해 했다, "설마 기름이 먹힐까? 아마 안되겠지."
+
+@The_monster@는 적에게 말했다, "당신은 몇분안에 벌레 밥이 될거지만, 나는 [수천 년|영겁]을 견디게 될거야."
+
+@The_monster@는 적에게 말했다, "당신이 강력한 전사일지는 모르겠지만, 석공은 아니로군요!"
+
+@The_monster@는 적에게 말했다, "그들이 내가 새로운 주문들에 미쳐있었다고 말했었지... 그들이 옳았음이 밝혀졌어."
+%%%%
+Roxanne blink_other_closer
+
+w:20
+__NONE
+
+@The_monster@는 적에게 말했다, "조금만 더 가까이 와요, 해줄거죠?"
+
+@The_monster@는 말했다, "내 친구들이 가까이 오게 두니까, 내 적들도 더 가까이 다가왔어."
+
+@The_monster@는 말했다, "부디, 내 손을 잡지 않을래요?"
+
+w:5
+@The_monster@는 적에게 말했다, "거기 서있기만하면 안되! 움직여도 되, 못하겠어?"
+## END Roxanne ##
+%%%%
+############ RUPERT ### A crazy adventurer
+Rupert
+
+@_Rupert_common_@
+
+w:5
+@_Rupert_rare_@
+%%%%
+_Rupert_common_
+
+VISUAL:@The_monster@는 흥분한듯 보인다.
+
+VISUAL:@The_monster@는 혼란스러워 보인다.
+
+@The_monster@는 외쳤다. "죽어라, 괴물!"
+
+@The_monster@는 적에게 소리쳤다, "나에게 성배를 줘!"
+
+@The_monster@는 적에게 소리쳤다, "네가 사랑스러운 몬스터들 전부를 죽였군, 이 살해범!"
+
+@The_monster@는 적에게 소리쳤다, "잘가라!"
+%%%%
+_Rupert_rare_
+
+@The_monster@는 적에게 물었다, "넌 괴물이지, 아니야?"
+
+@The_monster@는 적에게 말했다, "내 엄마는 항상 말했었어: '전부 죽여버려라.'"
+
+@The_monster@는 적에게 외쳤다, "나는 위대하고 강력한 영웅이다!"
+
+@The_monster@는 적에게 소리쳤다, "준비해둬! 널 죽일거야! 아니면 비슷한 뭔가를 할거야..."
+
+@The_monster@는 적에게 소리쳤다, "빨강! 아니, 파랑!"
+## END Rupert ##
+%%%%
+############ SAINT ROKA ### orc warlord
+# Only used if the player is not an orc.
+Saint Roka
+
+w:7
+@_Saint Roka generic_@
+
+@The_monster@는 적에게 말했다, "여기서는, 네가 오크이던지 아무것도 아니던지 둘중 하나이다."
+
+@The_monster@는 적에게 말했다, "오크 광산에서는, 오크들이 너같은 것들을 죽인다!"
+%%%%
+_Saint Roka generic_
+
+w:2
+@_generic_orc_speech_@
+
+@The_monster@는 호출했다, "오크들아! 내 뒤로 물러서!"
+
+@The_monster@는 호출했다, "오직 베오그 신만이 이곳을 지배한다!"
+
+@The_monster@는 적에게 말했다, "천벌을 주어서 널 날려버릴거다."
+
+@The_monster@는 강대한 전투의 함성을 이끌어냈다!
+
+@The_monster@는 울부짖었다, "베오그 신이 내게 힘을 주셨다!"
+
+@The_monster@는 울부짖었다, "베오그 신의 이름으로, 죽어라!"
+%%%%
+related Saint Roka
+
+@_Saint Roka generic_@
+
+w:2
+@The_monster@는 소리쳤다, "날 따르던가 아니면 죽어라!"
+%%%%
+_Saint Roka rival_
+
+@The_monster@는 적에게 소리쳤다, "너따위가 감히 메시아인 나의 권리에 도전해?"
+
+@The_monster@는 적에게 소리쳤다, "오직 단 한명의 메시아만이 존재할수있지: 바로 나!"
+
+@The_monster@는 적에게 절망했다, "잘못된 예언가들이 여기 아주많군!"
+
+@The_monster@는 소리쳤다, "오크들은, 주목해라: 이 사기꾼은 단순한 {{ return you.race() }}!(이)다!"
+%%%%
+# need different speech if you also worship Beogh
+related beogh Saint Roka
+
+w:20
+@related Saint Roka@
+
+@_hostile_orc_beogh_believer_speech_common_@
+
+w:5
+@_hostile_orc_beogh_believer_speech_rare_@
+
+w:5
+@_Saint Roka rival_@
+## END Saint Roka ##
+%%%%
+############ SIGMUND ### Mad old wizard
+Sigmund
+
+@_Sigmund_common_@
+
+w:2
+@_Sigmund_rare_@
+%%%%
+_Sigmund_common_
+
+w:20
+@The_monster@는 험악하게 웃었다.
+
+VISUAL:@The_monster@는 적의를 갖고 당신을 보았다.
+
+@The_monster@는 마치 실체가 없는것처럼 깜빡거렸다.
+
+@The_monster@는 적에게 말했다, "너의 종족이 전에도 이곳에 왔었지. 왜 그런지 이제 이해되는군. 죽음을 바라는거야..."
+
+@The_monster@는 적에게 말했다, "지금 날 보고있지, 이제는 안될걸..."
+
+@The_monster@는 말했다, "걱정마, 널 빨리 죽일거야."
+
+@The_monster@는 적에게 말했다, "곧 모든것을 잊게될거야."
+
+@The_monster@는 적에게 말했다, "내 눈을 바라봐."
+
+@The_monster@는 적에게 말했다, "나는 너의 운명이다."
+
+@The_monster@는 적에게 소리쳤다, "죽어라, 괴물!"
+
+@The_monster@는 적에게 소리쳤다, "저항하려 하지마!"
+
+@The_monster@는 실실 웃었다. "네가 뿌린것을 거둘 시간이다."
+
+VISUAL:@The_monster@의 눈이 붉게 빛나기 시작했다.
+
+@The_monster@는 몇가지 말을 내뱉었다.
+VISUAL:@The_monster@의 손이 극도로 깜빡거리기 시작했다.
+
+VISUAL:@The_monster@는 갑자기 희미한 @_spell_colour_@ 빛으로 둘러싸였다.
+%%%%
+_Sigmund_rare_
+
+@The_monster@는 적에게 물었다, "날 좋아해?"
+
+@The_monster@는 적에게 소리쳤다, "너는 절대... 절대 안돼!!!"
+
+@The_monster@는 적에게 소리쳤다, "나는, 조트의 천사다!!!"
+
+@The_monster@는 적에게 소리쳤다, "오직 죽음만이 널 해방할수있다!"
+
+@The_monster@는 적에게 속삭였다, "너는 곧 영원을 알게될거야."
+
+VISUAL:@The_monster@는 오싹하게 웃었다.
+## END Sigmund ##
+%%%%
+############ SOJOBO ### tengu king
+Sojobo
+
+@_Sojobo_common_@
+
+w:5
+@_Sojobo_rare_@
+%%%%
+_Sojobo_common_
+
+VISUAL:@The_monster@는 펜싱 포즈를 취했다.
+
+@The_monster@는 부하들에게 소리지르며 명령했다.
+
+VISUAL:@The_monster@는 극악무도하게 웃었다.
+
+@the_monster@ 주변의 대기가, 잠깐 치직거렸다.
+
+VISUAL:@the_monster@의 손톱으로부터 불꽃의 소나기가 발사됬다. 
+%%%%
+_Sojobo_rare_
+
+@The_monster@는 적에게 말했다, "이번 전투는 도전거리도 안되는군!"
+
+@The_monster@는 적에게 호통쳤다, "네 형태는 끔찍하구나!"
+
+@The_monster@는 적을 비웃었다, "네 전술에는 일 천 한가지의 결함들이 있지!"
+## END Sojobo
+%%%%
+############ SONJA ### female kobold assassin
+Sonja
+
+@_Sonja_common_@
+
+w:5
+@_Sonja_rare_@
+%%%%
+_Sonja_common_
+
+@The_monster@는 적에게 말했다, "난 전문학교에서 훈련받았지, 알잖아."
+
+@The_monster@는 적에게 외쳤다, "너무 느려!"
+
+VISUAL:@The_monster@는 입고있는 케이프를 빙빙 돌렸다.
+
+VISUAL:@The_monster@는 우아하게 몸을 숙였다.
+
+VISUAL:@The_monster@는 무더기에 발을 딛었다.
+%%%%
+_Sonja_rare_
+
+@The_monster@는 적에게 소리쳤다, "아하! 날 또 놓쳤네!"
+
+w:1
+@The_monster@는 적에게 말했다, "왕실 발레단은 코볼트를 받지않았어. 그게 내가 사람들을 죽이게된 이유야."
+
+@The_monster@는 적에게 말했다, "지금 브레위트 여사가 날 볼수 있었다면 좋을텐데!"
+
+@The_monster@는 적에게 외쳤다, "굉장한 댄스 파트너구나!"
+
+@The_monster@는 적에게 말했다, "누군가가 널 죽이라고 날 고용했지, 그치만 누구인지 말하면 안되."
+## END Sonja ##
+%%%%
+############ TERENCE ### A fighter who likes to kill
+Terence
+
+@_Terence_common_@
+
+w:4
+@_Terence_rare_@
+%%%%
+_Terence_common_
+
+VISUAL:@The_monster@는 적을 경멸적으로 보았다.
+
+VISUAL:@The_monster@는 이를 드러냈다.
+
+@The_monster@는 적에게 물었다, "빠르거나 느리게 하길 원해?"
+
+@The_monster@는 적에게 말했다, "막으려고 애쓰지마, 그건 @_pointless_@ 일이야."
+
+@The_monster@는 적에게 외쳤다, "이제 죽어라!"
+
+@The_monster@는 적에게 외쳤다, "[공격|죽어]!!!"
+
+@The_monster@는 적에게 소리쳤다, "죽을 준비를 해둬라!"
+
+@The_monster@는 적에게 소리쳤다, "네 피를 원한다!"
+
+@The_monster@는 적에게 소리쳤다, "널 죽일것이다!" 
+%%%%
+_Terence_rare_
+
+@The_monster@는 적에게 말했다, "편히 잠들어라."
+
+@The_monster@는 적에게 말했다, "어떻게 그것을 즐기지?"
+
+@The_monster@는 적에게 말했다, "넌 끝장이다."
+
+@The_monster@는 적에게 말했다, "유언장은 써뒀나? 해야할걸..."
+
+@The_monster@는 적에게 말했다, "작별인사할 시간이다..."
+
+## END Terence ###
+%%%%
+##################### A coarse and lanky orc. Urug lost his eye in a fight with a harpy,
+############ URUG ### and has sworn to slay every last one of them. Unfortunately, the
+##################### vision in his remaining eye is not very good, and he has mistaken you for one.
+Urug
+
+@_Urug_common_@
+
+w:2
+@_Urug_rare_@
+%%%%
+_Urug_common_
+
+@_generic_orc_speech_@
+
+VISUAL:@The_monster@은 사악하게 웃었다.
+
+VISUAL:@The_monster@은 가지고있는 안대를 정리했다.
+
+VISUAL:@The_monster@은 가진 한개의 눈알로 적을 응시했다.
+
+@The_monster@은 포효했다.
+
+@The_monster@은 피에 굶주려 울부짖었다.
+
+@The_monster@은 눈을 찡그리고 본뒤 적에게 말했다, "넌 내가 여지껏 봤던 하피중에 제일 못생겼어."
+
+@The_monster@은 찡그려 보고는 적에게 말했다, "하나남은 눈이 그렇게 좋진 않지만, 그저 널 볼수 있다는 걸로 괜찮다고, 하피야."
+
+@The_monster@은 찡그려 보고는 적에게 소리쳤다, "하피냐? 죽을 시간이다, 이 빌어먹을 독수리야!"
+
+@The_monster@은 눈을 찡그리고 본뒤 적에게 소리쳤다, "내가 뭔가 봤을땐 하피인줄 안다구!"
+
+@The_monster@은 찡그려 보고, 으쓱하고는 중얼거렸다, "충분히 가깝군."
+
+@The_monster@은 웃고는 말했다, "칠면조를 썰 시간이야."
+
+@The_monster@은 적에게 소리쳤다, "새대가리야!"
+
+@The_monster@은 적에게 소리쳤다, "털 뽑힐 준비를 해둬라!"
+
+@The_monster@은 적에게 소리쳤다, "복수다!"
+
+@The_monster@은 적에게 소리쳤다, "죽어라, 하피!"
+
+@The_monster@은 적에게 소리쳤다, "너희 하피들은 다 죽을거다!"
+
+@The_monster@은 적에게 소리쳤다, "내 눈의 보복이다!"
+
+@The_monster@은 적에게 소리쳤다, "빌어먹을 그 눈!"
+
+@The_monster@은 적에게 소리쳤다, "널 죽여버릴거야! 지금!"
+%%%%
+_Urug_rare_
+
+VISUAL:@The_monster@은 적에게 윙크했다... 아니 깜빡였다.
+
+@The_monster@은 적에게 소리쳤다, "네 친척이 괜찮은 내 한쪽 눈을 뺏어갔지. 이제 죽어라, 하피!"
+
+@The_monster@은 적에게 말했다, "그들이 날 외눈의 우룩이라고 부르지. 널 끝장내면, 그들이 널 머리없는 @player_name@(이)라고 부를거야." @player_only@
+
+@The_monster@은 적에게 소리쳤다, "넌 이미 죽어있다."
+
+@The_monster@은 중얼거렸다, "가끔 그것들이 전부 하피였었는지 궁금하기도 해."
+## END Urug ##
+%%%%
+############ VASHNIA ### An elite marksnaga
+Vashnia
+
+@_Vashnia_common_@
+
+w:5
+@_Vashnia_rare_@
+
+w:5
+@_Vashnia_nonnaga_@
+%%%%
+
+related Vashnia
+
+@_Vashnia_common_@
+
+w:5
+@_Vashnia_rare_@
+
+w:5
+@_Vashnia_naga_@
+%%%%
+_Vashnia_common_
+
+VISUAL:@The_monster@는 몇가지 비밀 수신호를 만들어내고는, 적을 가리켰다.
+
+VISUAL:@The_monster@는 적을 조준했다.
+
+VISUAL:@the_monster@ 주위의 공간이 이상하게 뒤틀린것 같아 보인다.
+
+VISUAL:@The_monster@는 다음 공격을 계획하려는듯 적을 살펴보았다.
+
+VISUAL:@The_monster@는 조용히 움직이면서, 분대를 노려보았다.
+%%%%
+_Vashnia_rare_
+@The_monster@는 적에게 말했다, "미간의 정 중앙에..."
+
+@The_monster@는 적에게 말했다, "넌 좋은 바늘방석이 될거야."
+
+@The_monster@는 적에게 말했다, "잠깐만 얌전히 있어. 넌 사격을 어렵게 만들고있어."
+%%%%
+_Vashnia_naga_
+
+@The_monster@는 적에게 말했다, "넌 우리 종족의 배신자다!"
+
+@The_monster@는 적에게 조롱했다, "이단자!"
+
+@The_monster@는 적에게 말했다, "우리 여왕에게 충성을 맹세한다면, 너를 살려줄지도 모른다!"
+%%%%
+_Vashnia_nonnaga_
+
+@The_monster@는 적에게 말했다, "당장 @foe_genus@(을)를 없애버려라!" @player_only@
+
+@The_monster@는 적에게 말했다, "우리는 침입자를 승인하지 않는다!"
+
+@The_monster@는 분대에게 말했다, "@foe_genus@(이)가 탈출하게 두지 마라!"
+## END Vashnia ##
+%%%%
+############ WIGLAF ### A dwarf. Nuff said.
+Wiglaf
+
+@_Wiglaf_common_@
+
+w:5
+@_Wiglaf_rare_@
+
+@_Wiglaf_nondwarf_@
+%%%%
+related Wiglaf
+
+@_Wiglaf_common_@
+
+w:5
+@_Wiglaf_rare_@
+%%%%
+_Wiglaf_common_
+
+@The_monster@는 적에게 말했다, "내 도깽이가 점마 대가리 쪼사뿐다!"
+
+@The_monster@는 적에게 말했다, "조상님덜 수염에 걸고 말할낀데, 니 낼 아침 해 못 볼끼라!"
+
+@The_monster@는 전투의 함성을 내질렀다.
+%%%%
+_Wiglaf_rare_
+
+VISUAL:@The_monster@는 당신을 조심스럽게 살폈다. 아니면 그냥 취한 걸지도.
+
+@The_monster@는 말했다, "이 맥주 뭐꼬?! 이게 뭐 맥주가?! 야크 오줌이제, 드워프 에일 가꼬온나!"
+
+@The_monster@는 말했다, "존 광맥은 저 산에 있다안카나, 여기 괜히 내려온거데이!"
+
+@The_monster@는 말했다, "뭐꼬? 여기 미스릴 있다카지 않았나? 왜 없노?"
+
+@The_monster@는 말했다, "그라제, 술 몬 마셔서 간이 말랐다."
+
+@The_monster@는 말했다, "오크라꼬? 엘프랑 하플링 조아하는 놈덜 아이가?!"
+
+@The_monster@는 말했다, "하! 니 나랑 기리뿔만큼 멍청한 거 아이구마?!"
+
+@The_monster@는 적에게 말했다, "금마 참 약하게 생겼데이."
+
+@The_monster@는 말했다, "마짱 함 떠볼끼가?"
+
+w:1
+@The_monster@는 말했다, "할 수 있겄냐"
+
+w:1
+@The_monster@는 말했다, "나 안 빡칬다. 아직은."
+%%%%
+_Wiglaf_nondwarf_
+
+w:5
+@The_monster@는 말했다, "오크 점마들에 엘프에 이젠 빙시같은 @player_genus@이가?" @player_only@
+
+@The_monster@는 적에게 말했다, "이 드워프 도깽이가 니 쪼싸뿐다 안카나!"
+
+@The_monster@는 적에게 말했다, "드워프랑 마짱뜨기엔 니 풋사과다."
+
+@The_monster@는 적에게 말했다. "드워프랑 싸워본 적 없제?"
+## END Wiglaf ##
+%%%%
+############ XTAHUA ### An ancient fire dragon
+Xtahua
+
+@_Xtahua_common_@
+
+@_Xtahua_rare_@
+%%%%
+_Xtahua_common_
+
+@The_monster@는 무섭게 포효했다.
+
+VISUAL:@The_monster@는 적을 노려봤다.
+
+@The_monster@는 적에게 으르렁거렸다, "네놈은 날 지루하게 하는구나!!"
+
+@The_monster@는 적에게 포효했다, "죽어라! 보잘것 없는 자여!!"
+
+@The_monster@는 적에게 포효했다, "내 분노를 목도하라!!"
+
+@The_monster@는 적에게 포효했다, "이곳에 발을 들인 것이 네 인생 최후의 실수일 것이다!!"
+
+@The_monster@는 포효했다, "이제껏 수많은 모험가를 죽여왔었다!!" @player_only@
+%%%%
+_Xtahua_rare_
+
+@The_monster@는 적에게 우르르거렸다, "네놈은 한 주먹거리다!!"
+
+@The_monster@는 적에게 우르르거렸다, "맛있어 보이는 구나!!"
+
+@The_monster@는 적에게 포효했다, "날 방해하지 마라!!"
+
+@The_monster@는 적에게 포효했다, "네놈이 맛있었으면 좋겠군!!"
+
+@The_monster@는 포효했다, "푸하! 빌어먹을 모험가!!" @player_only@
+## END Xtahua ##
+%%%%
+##########################################
+# Specific non-unique monsters
+##########################################
+################## Bennu ###################################
+%%%%
+bennu
+
+VISUAL:@The_monster@의 깃털은 이세계의 화염으로 잠시 불타올랐다.
+
+VISUAL:@The_monster@는 의기양양하게 여기저기 날아다녔다.
+%%%%
+Bennu killed
+
+@_Bennu_death_@
+%%%%
+_Bennu_death_
+
+VISUAL:@The_monster@는 화염의 폭발 속에서 자신을 되찾았다!
+%%%%
+Bennu permanently killed
+
+VISUAL:@The_monster@는, 영적인 에너지가 바닥나서, 이 세계에서 점차 희미해졌다.
+%%%%
+confused Bennu killed
+
+@Bennu killed@
+%%%%
+confused Bennu permanently killed
+
+@Bennu permanently killed@
+%%%%
+################## Chaos spawn #############################
+# Chaos spawns shouldn't have coherent speech, since that would be too
+# orderly for beings of pure chaos.
+chaos spawn
+
+VISUAL:@The_monster@는 적을 더 잘 보기 위해서 수십개의 눈 줄기를 자라게했다.
+
+VISUAL:@The_monster@는 형형색색의 작은 구체들을 수없이 뿜어냈다.
+
+VISUAL:@The_monster@는 혼란스럽게 순간 당신과 비슷한 얼굴을 하였다. 
+
+@The_monster@는 수많은 입으로 소름끼치게 울부짖었다.
+
+@The_monster@는 불협화음으로 괴상하게 지껄였다.
+%%%%
+################## Catoblepas ##############################
+catoblepas
+
+@The_monster@는 사납게 포효했고, 눈을 아래로 깔았다.
+
+@The_monster@는 지면을 내리쳐 균열을 만들었다.
+
+VISUAL:@The_monster@는 발로 지면을 내려쳤다.
+
+VISUAL:@The_monster@는 지면에 머리를 육중하게 들이받았다.
+
+@The_monster@는 숨을 들이쉬었다.
+
+@The_monster@는 흥미로운 것에 킁킁거렸다.
+%%%%
+################## Crystal guardian ###########################
+crystal guardian
+
+VISUAL:@The_monster@(은)는 희미한 던전의 빛속에서 불안정하게 빛났다.
+%%%%
+################## Death cob ###############################
+death cob
+
+w:1
+죽음의 옥수수는 옥수수같이 진부한 농담을 했다.
+
+w:1999
+__NONE
+%%%%
+################## Death yak ###############################
+death yak
+
+@yak@
+%%%%
+################## Deep elf high priest ####################
+deep elf high priest
+
+@_high_priest_@
+################## Deep elf sorcerer #######################
+%%%%
+deep elf sorcerer
+
+@_wizard_@
+%%%%
+################## Electric golem ##########################
+default electric golem
+
+SOUND:@The_monster@은 치직거리고 지글지글거렸다.
+%%%%
+################## Ice statue ##############################
+default ice statue
+
+VISUAL:@The_monster@은 희미한 던전의 빛속에서 섬뜩하게 반짝였다.
+%%%%
+################## Hell lords ##############################
+hell lord
+
+@_hell_lord_taunt_@
+%%%%
+crimson imp
+
+w:1
+@_says_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+iron imp
+
+w:1
+@_says_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+shadow imp
+
+w:1
+@_says_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+white imp
+
+w:1
+@_says_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
+################## Reaper ##################################
+# The reaper has come for you!
+reaper
+
+@The_monster@는 속삭였다, "시간이 되었다, @foe_name@!"
+
+VISUAL:@The_monster@는 적에게 손짓하여 불렀다.
+
+VISUAL:@The_monster@는 입술없이 미소지었다.
+
+@The_monster@는 적에게 소리쳤다, "나는 너를 데리러왔다, @foe_name@!"
+
+@The_monster@는 적에게 소리쳤다, "죽음이 너를 기다린다!"
+
+@The_monster@는 적에게 말했다, "누구나 언젠간 죽는다, 그리고 너의 그때는 바로 지금이다."
+
+VISUAL:@The_monster@는 손가락을 목에 가로질러서 끌어당겼다.
+
+@The_monster@는 적에게 말했다, "지금 넌 죽어야해!"
+
+@The_monster@는 적에게 소리쳤다, "죽어라, @foe_name@!"
+%%%%
+################## Killer Klown ############################
+# Welcome to the circus!
+Killer Klown
+
+@_Killer_Klown_common_@
+
+@_Killer_Klown_rare_@
+%%%%
+_Killer_Klown_common_
+
+VISUAL:@The_monster@는 미친 듯이 킥킥거린다.
+
+VISUAL:@The_monster@는 이유없이 웃었다.
+
+VISUAL:@The_monster@는 적에게 손짓한다.
+
+VISUAL:@The_monster@는 공중제비를 돌았다.
+
+VISUAL:@The_monster@는 재주넘기를 했다.
+
+VISUAL:@The_monster@는 적을 향해 미소지었다.
+
+VISUAL:@The_monster@는 자유분방하게 웃고있다.
+
+VISUAL:@The_monster@는 열 개의 횃불과 모자를 가지고 저글링을 시작했다. 
+
+VISUAL:@The_monster@는 적에게 물을 뿌렸다.
+
+VISUAL:@The_monster@는 광분하여 울부짖었다!
+%%%%
+_Killer_Klown_rare_
+
+@The_monster@는 깔깔거리며 웃었다.
+
+VISUAL:@The_monster@는 적의 행동을 흉내냈다.
+
+VISUAL:@The_monster@는 메-롱했다.
+
+VISUAL:@The_monster@는 네 개가 넘는 머리를 잘라 그것으로 저글링을 한다!
+
+VISUAL:@The_monster@는 깡총깡총 뛰었다.
+
+@The_monster@는 적에게 말했다, "이리와서 나랑 놀자!"
+
+@The_monster@는 말했다, "날 믿어, 내가 의사야"
+## END Killer Klown ##
+%%%%
+################## Moth of wrath ###########################
+moth of wrath
+
+VISUAL:@The_monster@은 가진 더듬이들을 화난듯이 흔들었다.
+%%%%
+################## Profane servitor ########################
+# Empty, to prevent falling back to holy-specific cap-A
+# speech.
+default profane servitor
+
+__NONE
+%%%%
+################## Statues ##################
+default orange crystal statue
+
+VISUAL:@The_monster@(은)는 희미한 던전의 빛속에서 오렌지색으로 빛났다.
+%%%%
+default obsidian statue
+
+VISUAL:@The_monster@은 순간 던전의 어둠속에 빠져들었다.
+%%%%
+################## Sheep ###################################
+sheep
+
+@The_monster@은 불길하게 "음매애애" 하고 울었다.
+%%%%
+################## Silent spectre ##########################
+silenced silent spectre
+
+VISUAL:@The_monster@은 당신에게 조용히 하라고 몸짓했다.
+
+VISUAL:@The_monster@은 바람 속에 있는것처럼 펄럭거렸다.
+
+VISUAL:@The_monster@은 유령의 눈으로 당신을 응시했다.
+
+VISUAL:@The_monster@은 시야에서 깜빡거렸다.
+
+VISUAL:@The_monster@은 어둠 속으로 움직였다.
+
+VISUAL:@The_monster@은 당신에게 천천히 웃었다.
+%%%%
+################## Tormentor ###############################
+# A cruel demon
+tormentor
+
+w:1
+@_demon_taunt_@
+
+w:9
+@_tormentor_@
+%%%%
+_tormentor_
+
+@_tormentor_common_@
+
+@_tormentor_rare_@
+%%%%
+_tormentor_common_
+
+w:15
+@The_monster@는 적에게 말했다, "네 뼈를 하나, 하나씩 부숴주지."
+
+VISUAL:@The_monster@는 사악하게 웃었다.
+
+VISUAL:@The_monster@는 미친듯이 웃었다.
+
+VISUAL:@The_monster@는 고약하게 웃었다.
+
+@The_monster@는 적에게 말했다, "고통이 뭔지 보여주지."
+
+@The_monster@는 말했다, "내가 널 잡았을때, 넌 죽길 바랄거야."
+
+@The_monster@는 적에게 말했다, "네 운명을 알고있지. 바로 고통이다."
+
+@The_monster@는 적에게 소리쳤다, "넌 끔찍하게 죽을거야!"
+%%%%
+_tormentor_rare_
+
+@The_monster@는 미친듯이 폭소했다.
+
+@The_monster@는 적에게 말했다, "나는, 너의 실현된 악몽이다."
+
+@The_monster@는 적에게 말했다, "너 자신의 핏속에 익사시켜 주겠다."
+
+@The_monster@는 적에게 말했다, "네 간을 먹을거야."
+
+@The_monster@는 적에게 말했다, "널 죽이는 천 한가지의 방법을 알고있지."
+
+@The_monster@는 적에게 말했다, "나의 고문실을 보여주지!"
+
+@The_monster@는 적에게 말했다, "준비해! 고통의 단말마가 널 기다린다."
+
+@The_monster@는 적에게 외쳤다, "나의 고통의 천 바늘을 준비해 둬!"
+
+@The_monster@는 적에게 외쳤다, "널 찢어버릴 것이다!" 
+## END _tormentor_ ##
+%%%%
+################## Wizard ##################################
+wizard
+
+@_wizard_@
+%%%%
+################## Yak #####################################
+yak
+
+@The_monster@는 콧김을 뿜고는 지면을 발로 찼다.
+%%%%
+########################################################################
+# Religious messaging
+########################################################################
+_good_god_
+
+진
+
+샤이닝 원
+
+엘리빌론
+%%%%
+_holy_being_
+
+w:2
+@The_monster@(은)는 기도를 읊조렸다.
+VISUAL:평온함이 당신에게 밀려왔다.
+
+w:1
+@The_monster@(은)는 적에게 말했다, "그대는 악과의 전투에서 틀림없이 순수함을 유지할것이다."
+
+w:1
+@The_monster@(은)는 적에게 말했다, "@foe_god@(이)가 항상 그대에게 빛을 비추게 두어라, @foe_name@!"
+
+w:1
+@The_monster@(은)는 적에게 말했다, "@foe_god@(이)가 그대와 함께 한다, 필멸자!" @player_only@
+
+# The good gods are assumed to work closely together, so a daeva praising
+# Elyvilon is actually flavour.
+w:1
+@The_monster@(은)는 적에게 말했다, "천국에 계신 @_good_god_@을 찬미해라!"
+%%%%
+neutral good god 'cap-A'
+
+__NONE
+
+w:1
+@_holy_being_@
+%%%%
+friendly good god 'cap-A'
+
+w:19
+__NONE
+
+w:1
+@_holy_being_@
+%%%%
+# Otherwise, they'll stay silent.
+default 'cap-A'
+
+__NONE
+%%%%
+holy_being_pacification
+
+VISUAL:@The_monster@(은)는 당신의 신성한 아우라에 의해 진정되었다.
+%%%%
+holy_being_pacification_humanoid
+
+w:5
+@holy_being_pacification@
+
+VISUAL:@The_monster@(은)는 전투 자세를 풀었다.
+
+VISUAL:@The_monster@(은)는 당신에게 경례를 했다.
+%%%%
+holy_being_pacification_speech
+
+@The_monster@(은)는 당신에게 외쳤다, "그대의 임무를 이어가라, 필멸자!"
+
+@The_monster@(은)는 당신에게 말했다, "앞으로 전진하라, 엘리빌론의 종복이여!"
+
+@The_monster@(은)는 당신에게 말했다, "계속 해 나가라, 필멸자."
+%%%%
+#############################################################
+# evil monsters may also have some choice things to say...
+#############################################################
+good god '&'
+
+w:20
+@_demon_taunt_@
+
+w:1
+@The_monster@(은)는 적에게 소리쳤다, "너의 신이라도 널 지켜주진 않을거다, @foe_name@!"
+
+w:1
+@The_monster@(은)는 적에게 소리쳤다, "너의 신은 내게 하찮은 존재일 뿐이다, 필멸자!"
+%%%%
+##############################################
+# Special orc speech
+##############################################
+_orc_shouts_
+
+꿀꿀거렸다
+
+@_shouts_@
+
+불평했다
+
+격려했다
+
+야유했다
+
+욕을 했다
+%%%%
+_loudly_or_repeatedly_
+
+크게
+
+w:5
+시끄럽게
+
+w:5
+반복해서
+%%%%
+_orc_modifier_
+
+.
+
+w:3
+, 오크들이 자주 그러듯, 
+
+w:1
+, 오크의 전통에 따라,
+%%%%
+_generic_orc_speech_
+
+w:50
+@The_monster@(은)는@_orc_modifier_@ @_loudly_or_repeatedly_@ @_orc_shouts_@.
+
+w:20
+@The_monster@(은)는 갑자기@_orc_modifier_@ @_orc_shouts_@.
+
+w:5
+@The_monster@(은)는 딱히 누구를 향하지않고, @_orc_shouts_@.
+
+w:2
+@The_monster@(은)는 딱히 누구를 향하지 않은, 격려의 말을 @_loudly_or_repeatedly_@ @_shouts_@.
+
+@The_monster@(은)는 오크 성가의 몇 소절을 불렀다.
+%%%%
+# some synonyms for slandering non-believers
+_orc_heathen_
+
+이교도
+
+회의론자
+
+불신자
+
+이단자
+
+배교자
+%%%%
+######################################################
+# General, non-descript orcs
+######################################################
+orc
+
+# stay silent most of the time
+w:19
+__NONE
+
+w:1
+@_generic_orc_speech_@
+%%%%
+# charmed orcs
+friendly orc
+
+@default friendly humanoid@
+
+w:5
+@_generic_orc_speech_@
+%%%%
+# charmed orcs, for orcs (not counting Beogh)
+friendly related orc
+
+@default friendly related humanoid@
+
+w:5
+@_generic_orc_speech_@
+%%%%
+_orc_says_to_foe_
+
+적에게 소리쳤다
+
+적에게 말했다
+
+적에게 꿀꿀거렸다
+
+w:5
+적에게 조롱했다
+%%%%
+_orc_says_
+
+소리쳤다
+
+말했다
+
+꿀꿀거렸다
+
+w:5
+조롱했다
+%%%%
+_says_or_shouts_
+
+말했다
+
+소리쳤다
+%%%%
+#######################################################
+# Heretic orcs, not believing in Beogh.
+#######################################################
+related unbeliever orc
+
+# hostile orcs shouldn't be too talkative
+w:60
+__NONE
+
+w:1
+@_generic_orc_speech_@
+
+w:5
+@_hostile_orc_beogh_unbeliever_speech_@
+%%%%
+#######################################################
+# Heretic orcs, doubting the saviour story.
+#######################################################
+related beogh orc
+
+# hostile orcs shouldn't be too talkative
+w:60
+__NONE
+
+w:1
+@_generic_orc_speech_@
+
+w:5
+@_hostile_orc_beogh_believer_speech_@
+%%%%
+_hostile_orc_beogh_believer_speech_
+
+@_hostile_orc_beogh_believer_speech_common_@
+
+w:4
+@_hostile_orc_beogh_believer_speech_rare_@
+%%%%
+_hostile_orc_beogh_unbeliever_speech_
+
+@_hostile_orc_beogh_unbeliever_speech_common_@
+
+w:4
+@_hostile_orc_beogh_unbeliever_speech_rare_@
+%%%%
+_hostile_orc_beogh_unbeliever_speech_common_
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "나는 베오그를 숭배하지 않는다!"
+
+@The_monster@(은)는 적에게 @_shouts_@, "넌 메시아가 아냐, 바로 나다!"
+%%%%
+_hostile_orc_beogh_believer_speech_common_
+
+@The_monster@(은)는 적에게 중얼거렸다, "넌 오크들의 구세주가, 아니라고."
+
+@The_monster@(은)는 적에게 투덜거렸다, "넌 심지어 제대로 된 오크도 아니잖아..."
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "어째서 베오그가 널 선택한거지?"
+
+@The_monster@(은)는 뭔가 모욕적인 말을 중얼거렸다.
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "베오그 신이 틀림없이 네 오만함을 벌할것이다!"
+
+@The_monster@(은)는 적에게 꿀꿀거렸다, "네가, 메시아라고? 네게 어울리지도 않는다!"
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "메시아가 {{ return you.race() }} 종족일리 없지!"
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "메시아는 참된 오크일 것이다!"
+
+@The_monster@ @_orc_says_to_foe_@, "{{
+    if you.race() == "Hill Orc" then
+        return "산으로 돌아가라"
+    elseif you.race() == "Lava Orc" then
+        return "용암속에서 수영해라"
+    else -- shouldn't happen
+        return "지옥에 가라"
+    end
+}}, 사기꾼!"
+
+@The_monster@(은)는 적에게 @_shouts_@, "죽어라, @_orc_heathen_@!"
+
+@The_monster@(은)는 @_shouts_@, "죽어라, @foe_name@, 베오그 신의 이름을 더럽힌 죄로!"
+
+VISUAL:@The_monster@(은)는 얼굴을 찡그렸다.
+%%%%
+_hostile_orc_beogh_unbeliever_speech_rare_
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "오크들은 베오그가 필요하지 않아!"
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "베오그의 메시아는, 그저 우화일 뿐이야."
+
+@The_monster@(은)는 적에게 말했다, "만약에 메시아가 있다해도, 너는 아닐거야."
+%%%%
+_hostile_orc_beogh_believer_speech_rare_
+
+@The_monster@(은)는 적에게 웃었다, "네가, 우리 구세주라고!?"
+
+@The_monster@(은)는 적에게 @_shouts_@, "오크들아! @foe_name@(이)가 거짓말을 하고있어!"
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "메시아라기엔, 넌 꽤나 [유감스러워|멍청해|비참해] 보이는군."
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "네 [옷차림|변장|속임수](으)로는 날 [갖고 놀수|속일수] 없어."
+
+@The_monster@(은)는 @_orc_says_to_foe_@, "궁금한데, 네가 죽었을때, 베오그가 부활시켜줄까?"
+
+VISUAL:@The_monster@(은)는 고개를 가로저었다.
+
+VISUAL:@The_monster@(은)는 재미있다는 듯이 당신을 쳐다봤다. @player_only@
+%%%%
+###################################################
+# Orcish followers of Beogh's messiah
+###################################################
+friendly related beogh orc
+
+# As they'll be constantly around you, don't let them talk too much.
+w:80
+__NONE
+
+# general friendly speech
+w:1
+@default friendly humanoid@
+
+w:2
+@_generic_orc_speech_@
+
+w:12
+@_friendly_beogh_speech_@
+%%%%
+_friendly_beogh_speech_
+
+@_friendly_beogh_speech_common_@
+
+w:5
+@_friendly_beogh_speech_rare_@
+%%%%
+_friendly_beogh_speech_common_
+
+w:5
+@The_monster@(은)는@_orc_modifier_@ 격려의 말을 @_loudly_or_repeatedly_@ @_shouts_@.
+
+@The_monster@(은)는 소리쳤다, "오크는 베오그를 위해 죽이고, 오크는 베오그를 위해 죽는다!"
+
+@The_monster@(은)는 말했다, "당신이 나의 삶을 변화시켰다!"
+
+@The_monster@(은)는 @_says_or_shouts_@, "무분별한 분풀이보다 베오그를 위해 죽는 것이 낫다."
+
+@The_monster@(은)는 @_shouts_@, "베오그 신에게 피를!"
+
+@The_monster@(은)는 소리쳤다, "모든 @_orc_heathen_@들은 반드시 죽어야해!"
+
+@The_monster@(은)는 @_shouts_@, "모든 @_orc_heathen_@들을 [죽어야 해|박살내야 해|불태워야 해|불구로 만들어야 해] !"
+
+@The_monster@(은)는 @_orc_says_@, "베오그의 도움 아래 우리는 @_orc_heathen_@들을 타도한다!"
+
+@The_monster@(은)는 @_shouts_@, "@_orc_heathen_@들을 징벌하라!"
+
+# messages submitted by Lemuel
+@The_monster@(은)는 @_says_or_shouts_@, "섬기게 되어 영광이다; 죽을 준비가 되어있다."
+
+@The_monster@(은)는 말했다, "베오그 신이 네게 미소짓는군, @player_name@."
+
+@The_monster@(은)는 소리질렀다, "겁먹지마, @player_name@! 베오그 신이 전사한 이들에게 미소지을 것이다!"
+
+@The_monster@(은)는 베오그의 이름으로 일련의 더러운 저주들에서 자유롭게 했다.
+
+@The_monster@(은)는 @_says_or_shouts_@, "난 @player_name@(을)를 위해 싸우고, 베오그를 위해 지배할것이다!"
+
+@The_monster@(은)는 @_says_or_shouts_@, "오크들이 그것들을 전부 죽일것이다!"
+
+@The_monster@(은)는 @_shouts_@, "오크들은 지배한다!"
+
+@The_monster@(은)는 말했다, "당신을 섬기는 동안에 죽기를 원한다, @player_name@!"
+
+@The_monster@(은)는 말했다, "알다시피 베오그 신은 모든 살해 행위를 신경쓰지않는다."
+%%%%
+_friendly_beogh_speech_rare_
+
+@The_monster@(은)는 @_says_or_shouts_@, "베오그는 위대하고, @player_name@도 그러하다!"
+
+@The_monster@(은)는 @_says_or_shouts_@, "널 만나서 매우 기쁘다."
+
+@The_monster@(은)는 @_orc_says_@, "죽은 @_orc_heathen_@(은)는 내 영혼을 괴롭히지 못할것이다."
+
+@The_monster@(은)는 말했다, "이전에는 절대로 비전을 갖지 못했었다."
+
+@The_monster@(은)는 @_says_or_shouts_@, "우리의 전사한 신도들은 잊혀지질 않을것이다."
+
+VISUAL:@The_monster@(은)는 초조하게 주변의 적들을 살폈다.
+
+# messages submitted by Lemuel
+@The_monster@(은)는 적을 보고는 말했다, "당신을 섬기는 동안은 죽지않는게 낫겠다, @player_name@."
+
+@The_monster@(은)는 연호했다, "@player_name@(이)가 내 구세주이기때문에, 어떤 해악도 두렵지않다."
+
+@The_monster@(은)는 말했다, "오크들은 평판이 나쁘지."
+
+@The_monster@(은)는 @_mutters_@, "항상 엘프들, 엘프들, 엘프들."
+
+@The_monster@(은)는 말했다, "나도 오크고, 너도 오크지, 그럼 된거야."
+
+@The_monster@(은)는 @subjective@처럼 보였고, 막 당신에게 무언가 말하려했지만, 그만두었다.
+
+@The_monster@(은)는 @_mutters_@, "이게 전부 끝나면, 난 버섯 농장을 시작할거야."
+%%%%
+################################################
+# Make this work for other predefined orcs!
+#################################################
+related beogh orc high priest
+
+__NONE
+
+w:5
+@_high_priest_@
+
+w:3
+@related beogh orc@
+%%%%
+orc high priest
+
+@_high_priest_@
+
+w:1
+@_generic_orc_speech_@
+
+w:1
+__NONE
+%%%%
+related beogh orc sorcerer
+
+__NONE
+
+w:5
+@_wizard_@
+
+w:3
+@related beogh orc@
+%%%%
+orc sorcerer
+
+@_wizard_@
+
+w:1
+@_generic_orc_speech_@
+
+w:1
+__NONE
+%%%%
+# special casing for Blork
+related beogh Blork the orc
+
+# behave like normal Blork
+@Blork the orc@
+
+# with some Beogh-hostile messages strewn in
+w:4
+@related beogh orc@
+%%%%
+# and the same for Urug
+related beogh Urug
+
+# behave like normal Urug
+@Urug@
+
+# with some Beogh-hostile messages strewn in
+w:4
+@related beogh orc@
+%%%%
+###############################
+# orc conversion speech
+###############################
+# on sight
+beogh_converted_orc_reaction_sight
+
+@The_monster@(은)는 놀라움에 당신을 응시하였고 무릎꿇었다.
+
+@The_monster@(은)는 @possessive@ 전투 태세를 풀고는 당신을 향해 웃었다.
+
+@The_monster@(은)는 당신 앞에 @possessive@ 무릎을 꿇었다.
+%%%%
+beogh_converted_orc_speech_sight
+
+@Subjective@(은)는 소리쳤다, "그대를 기쁘게 따르겠다!"
+
+@Subjective@(은)는 소리쳤다, "분명히 베오그 신께서 당신을 보내신거다!"
+
+@Subjective@(은)는 물었다, "당신은 구세주입니까?"
+
+@Subjective@(은)는 말했다, "당신과 지금 여기에 있어서 아주 기쁘다."
+%%%%
+# through battle
+beogh_converted_orc_reaction_battle
+
+@The_monster@(은)는 항복했다.
+
+@The_monster@(은)는 @possessive@ 무릎을 꿇었다.
+
+@The_monster@(은)는 항복의 표시로 @possessive@ 손을 들어올렸다.
+%%%%
+beogh_converted_orc_speech_battle
+
+오크는 소리쳤다, "너를 따르겠다! 살려만 달라!"
+
+오크는 말했다, "너는 틀림없이 메시아다, 지금 알았다!"
+
+오크는 외쳤다, "베오그는 나의 신이다, 맹세한다!"
+%%%%
+########################################################
+# Maybe use different speech if converted by a follower.
+########################################################
+beogh_converted_orc_reaction_battle_follower
+
+@beogh_converted_orc_reaction_battle@
+%%%%
+beogh_converted_orc_reaction_speech_follower
+
+@beogh_converted_orc_reaction_speech@
+%%%%
+#######################################################
+# Or if they weren't converted because you did this already.
+####
+orc_priest_apostate
+
+오크 사제는 소리쳤다, "불충한 악당아, 내 시야에서 꺼져라!"
+
+오크 사제는 호통쳤다, "네가 도망친다면 살려는 주겠다! 사라져라!"
+
+오크 사제는 저주했다, "네 믿음없는 독실한 모습이 나를 역겹게 만든다!"
+
+오크 사제는 조롱했다, "베오그 신께서 널 용서해도, 난 아니야!"
+
+오크 사제는 소리질렀다, "넌 기회를 가졌었다, 배교자 새끼야!"
+%%%%
+#######################################################
+#
+####
+orc_priest_preaching
+
+@The_monster@(은)는 소리쳤다, "유일한 참된 신을 믿던가 아니면 죽어라!"
+
+@The_monster@(은)는 소리쳤다, "베오그 신은 우리의 참된 주인이시다! 진실을 수용하던가 아니면 죽어라!"
+
+@The_monster@(은)는 소리쳤다, "베오그 신에게 굴복하면 너를 살려주겠다!"
+
+@The_monster@(은)는 겁을 주었다, "제단이나 도끼에 의해서, 베오그 신을 만나게 될것이다!"
+%%%%
+#################################
+# Cherubs.
+#################################
+cherub
+
+@The_monster@는 샤이닝 원에 대한 찬가를, 네개의 화음으로 노래했다.
+
+@The_monster@의 사자 머리가 포효했다!
+
+@The_monster@의 독수리 머리가 날카로운 소리를 냈다!
+
+@The_monster@는 진에 대한 찬가를 불렀다.
+
+@The_monster@는 엘리빌론에 대한 찬가를 불렀다.
+%%%%
+#################################
+# Monsters who worship Zin
+#################################
+zin angel
+
+w:40
+@The_monster@는 @_axioms_of_law_@(을)를 암송했다.
+
+@The_monster@는 @_recite_what_@ @_recite_subject_@(을)를 암송했다. 
+
+@The_monster@는 @_recite_subject_@에 대해 설교했다.
+
+@The_monster@는 @_recite_subject_@에 대한 @_lecture_modifier_@ 강의를 @_recite_start_@.
+
+@The_monster@는 @_recite_subject_@에 대해 상세하게 설명했다
+
+@The_monster@는 @_important_subject_@의 중요성에 대해 설명했다.
+
+@The_monster@는 @_lecture_modifier_@ @_recite_subject_@에 대한 설교를 @_recite_start_@.
+
+@The_monster@는 @_lecture_modifier_@ @_recite_subject_@에 대한 연설을 @_recite_start_@.
+
+w:5
+@The_monster@는 @_recite_subject_@에 대하여 말했다.
+%%%%
+_recites_start_
+
+시작했다
+
+말을 꺼냈다
+
+착수했다
+%%%%
+_recite_what_
+
+시 한편으로 된 
+
+신성한 문자로 된
+
+진의 말씀이 옮겨진
+
+잘 울려퍼지는 소리로
+
+큰 목소리로
+%%%%
+_lecture_modifier_
+
+장황한
+
+열성적인
+
+고결한
+
+엄격한
+%%%%
+_axioms_of_law_
+
+진의 질서의 공리.
+
+질서의 자명한 이치.
+
+질서의 서.
+
+진의 숭고한 질서.
+%%%%
+# used for "explaining the importance of ..."
+_important_subject_
+
+# law
+w:50
+@_axioms_of_law_@
+
+영원한 질서.
+
+질서에의 순종.
+
+단 하나의 참된 길.
+
+# purity
+몸과 마음의 순수함.
+
+육체적 온전함을 보전하는것.
+
+네 몸을 청결하고 순수하게 유지하는것.
+
+몸과 정신의 적절한 관리.
+
+# mutations
+돌연변이를 피하는것.
+
+돌연변이에 대해 그릇된 것이라고 말하기.
+
+# respecting intelligent beings
+적절한 매장을 실행하기.
+
+# demons
+악마와 거래하지않기.
+
+악마의 도움을 거절하는것.
+%%%%
+# the subject of your recital/lecture/whatever
+# needs the full dot or exclamation mark
+_recite_subject_
+
+w:120
+@_important_subject_@
+
+# first, law and order
+w:80
+@_axioms_of_law_@
+
+질서와 그 예언자들.
+
+질서의 중요성.
+
+# anti-mutation
+돌연변이와, 그것들을 어떻게 피하는가.
+
+돌연변이 물약 - 악마의 술!
+
+네퀘젝과 카코데몬 - 모두 파멸되야할 것들!
+
+# respecting intelligent beings
+지성적인 존재에 관한 적절한 식단.
+
+# necromancy and evil
+강령술의 해악.
+
+언데드와, 그것들이 어째서 악한가.
+
+# the gods
+루고누의 타락.
+
+진과 샤이닝 원의 동맹.
+
+진과 엘리빌론의 동맹.
+
+@_chaotic_god_@의 무법 상태.
+
+@_evil_god_@의 사악함.
+%%%%
+_chaotic_god_
+
+좀
+
+마크레브
+
+루고누
+
+지이바
+%%%%
+_evil_god_
+
+키쿠바쿠드하
+
+마크레브
+
+이레데렘눌
+
+베오그
+
+루고누
+%%%%
+confused zin angel
+
+@The_monster@는 이질적으로 거닐었다.
+
+@The_monster@는 지면에서 @_important_subject_@에 대해 강의했다.
+
+@The_monster@는 @possessive@ 발로 @_important_subject_@에 대해 길게 강의했다.
+
+VISUAL:@The_monster@는 잠깐동안 허공을 응시했다. 
+%%%%
+silenced zin angel
+
+VISUAL:@The_monster@는 적에게 극도로 흥분하여 몸짓했다.
+
+VISUAL:@The_monster@는 노하여 하늘을 보았다.
+
+VISUAL:@The_monster@는 주변에 사납게 몸짓했다.
+
+VISUAL:@The_monster@는 정당한 분노를 갖고 노려보았다.
+%%%%
+###############################################################################
+# Speech keys used *specifically* in (portal) vaults.
+#
+###############################################################################
+deformed humanoid
+
+VISUAL:@The_monster@(은)는 고통에 울부짖었다.
+
+VISUAL:@The_monster@(은)는 괴로움에 통곡했다.
+
+VISUAL:@The_monster@(은)는 눈물을 흘렸다.
+
+VISUAL:@The_monster@(은)는 흐느껴 울었다.
+
+@The_monster@(은)는 소리질렀다, "고통, 고통!"
+
+VISUAL:@The_monster@(은)는 피를 토해내기 시작했다.
+
+@The_monster@(은)는 외쳤다, "제발, 그냥 죽여줘!"
+
+w:1
+VISUAL:@The_monster@(은)는 숨을 헐떡이기 시작했다.
+
+VISUAL:@The_monster@(은)는 고통에 비틀거렸다.
+
+VISUAL:@The_monster@(은)는 @possessive@ 흉측하게 변형된 손들을 멍하니 응시했다.
+
+@The_monster@(은)는 물었다, "내게 무슨일이 생긴거야?"
+
+@The_monster@(은)는 물었다, "내게 무슨짓을 한거지?"
+
+VISUAL:@The_monster@(은)는 도움을 빌었다.
+
+@The_monster@(은)는 말했다, "내가 죽었다고 생각했는데... 난 죽은거라고..."
+
+w:3
+@The_monster@(은)는 울부짖었다, "너무 가려워! 가려워, 가려워, 가려워! 항상 가렵다고!"
+
+VISUAL:@The_monster@(은)는 꼴꼴거렸고, 말을 할수 없었다.
+
+w:1
+@The_monster@(은)는 외쳤다, "이런짓을한 괴물들에게 복수할거야!"
+
+@The_monster@(은)는 중얼거렸다, "내 가죽을 빼앗기곤, 전부 없어졌어..."
+
+@The_monster@(은)는 말했다, "나도 한때는 아름다웠지. 지금의 날 봐."
+
+VISUAL:@The_monster@(은)는 @possessive@ 촉수들을 꿈틀거렸다.
+
+VISUAL:@monster@의 열려진 흉부에서 여러개의 눈이 깜빡였다.
+
+VISUAL:@monster@의 등에서 기이한 부속물들이 자라나기 시작했다.
+
+VISUAL:@The_monster@(은)는 @possessive@ 꼬리를 휘둘렀다.
+
+VISUAL:@The_monster@에게 갑자기 두개의 커다란 뿔이 생겼다!
+
+w:3
+VISUAL:@The_monster@의 살점이 진한 점액을 분비하였다.
+
+VISUAL:@monster@의 머리에서 푹꺼진, 멀어버린 눈들이 나타났다.
+
+VISUAL:@monster@의 눈꺼풀 아래에서 곪은 상처들이 피어났다.
+
+@The_monster@(은)는 당신에게 @objective@를 죽여달라고 애원했다.
+
+VISUAL:@The_monster@(은)는 @possessive@ 몸을 보고는 눈물없이 울었다.
+
+# Pungent Stench
+@The_monster@(은)는 소리질렀다, "난 단지 병들고, 기이하고, 훼손된 생물일 뿐이야."
+%%%%
+#############################################################
+# Gozag bribery keys
+# Prefix this with a specific monster name to give speech
+# for a specific monster type.
+#############################################################
+Gozag bribe
+
+@The_monster@(은)는 적을 응시하였고, 동전 지갑을 짤랑거리게하여 돌려보냈다.
+%%%%
+Gozag permabribe
+
+@The_monster@(은)는 동전 지갑을 짤랑거리며 적에게 탐욕스럽게 웃었다.
+%%%%

@@ -1,0 +1,1572 @@
+######################################################
+# Randart Names
+# -------------
+# rand_wpn.txt: keywords for randart WEAPONS
+#
+# This file contains the lists of keywords (and their
+# weights) for most of the keywords used for randart
+# weapons. You will find other ones in rand_all.txt.
+# See the explanation in the main file, randname.txt,
+# for more details.
+######################################################
+%%%%
+_power_or_anger_
+
+@_power_name_@
+
+w:7
+@_conflict_name_@
+
+w:7
+@_anger_name_@
+%%%%
+_power_name_
+
+Power
+
+Might
+
+Wondrous Power
+
+Invincibility
+
+Glory
+
+Success
+
+Triumph
+
+Domination
+
+Dominance
+
+Victory
+
+Intimidation
+
+Grandeur
+
+Mastery
+
+Superiority
+
+Magnificence
+%%%%
+_conflict_name_
+
+Conflict
+
+Tension
+
+Dischord
+
+Division
+
+Doubt
+
+Internal Strife
+
+Contention
+
+Dissent
+
+Quarrel
+%%%%
+_anger_name_
+
+Anger
+
+Fury
+
+Righteous Anger
+
+Righteous Fury
+
+Wrath
+
+Brutal Revenge
+
+Vengeance
+
+Hatred
+
+Indignation
+
+Outrage
+
+Scorn
+%%%%
+_battle_or_war_
+
+Battle
+
+Crusades
+
+War
+
+Eternal War
+
+the Eternal Warrior
+
+the Onslaught
+
+Skirmishing
+
+the Endless March
+
+Plunder
+
+Ravage
+
+Iconoclasm
+
+Regicide
+
+# Lemuel's Suggestions
+the Warrior
+
+the Doomed Warrior
+
+# akrasiac patch
+the Pyrrhic Victory
+
+#killing
+Blood-Lust
+
+Joyful Slaughter
+
+Wounding
+
+Blood
+
+Fear
+
+Massacring
+
+# was Pain, clashing with the brand
+Insufficient Pleasure
+
+Agony
+
+Trauma
+
+# Lemuel's suggestion
+Hacking and Slashing
+
+# related to cutting
+Truncation
+
+Severance
+
+Dullness
+
+Precise Incision
+
+Laceration
+
+#collateral effects
+Mourning
+
+Death's Door
+
+the Grave
+%%%%
+# used from C++'s side
+death_or_doom
+
+# death
+죽음
+
+피투성이 죽음
+
+고통스러운 죽음
+
+빠른 죽음
+
+순간의 죽음
+
+임박한 죽음
+
+갑작스러운 죽음
+
+느린 죽음
+
+틀림없는 죽음
+
+불특정한 죽음
+
+강렬한 죽음
+
+고통과 죽음
+
+때 이른 사망
+
+# doom
+Doom
+
+Premature Burial
+
+Peril
+
+Execution
+
+Destruction
+
+Disembowelment
+
+Evisceration
+
+Extermination
+
+Extinguishment
+
+# pain and misery
+무한의 고통
+
+분열
+
+두려움
+
+재앙
+
+비통
+
+극심한 고통
+
+강렬한 격통
+
+고뇌
+%%%%
+_strategy_or_justice_
+
+w:2
+@_strategy_name_@
+
+w:4
+@_valour_name_@
+
+w:3
+@_justice_name_@
+%%%%
+_strategy_name_
+
+#strategy
+Defence
+
+Defence by Offence
+
+Offence
+
+Reinforcement
+
+Expedience
+
+Optimality
+
+Overwhelming Force
+
+Subterfuge
+
+Strategic Superiority
+
+Guile
+%%%%
+_valour_name_
+
+Honour
+
+Integrity
+
+Responsibility
+
+Watchfulness
+
+Duty
+
+Prudence
+
+Valour
+
+Resourcefulness
+
+Action
+
+Purpose
+
+Fortitude
+
+Defiance
+
+Valiance
+
+Courage
+
+Eternal Vigilance
+
+Gallantry
+
+Tenacity
+
+True Grit
+
+Indomitability
+
+Conscience
+%%%%
+_justice_name_
+
+Tender Mercy
+
+Cruel Justice
+
+Punishment
+
+Innocence
+
+Guilt
+
+Tortfeasance
+
+Extenuating Circumstances
+
+Absolution
+
+Exoneration
+
+허위사실에 대한 고소
+
+불법 구금
+
+태형
+
+사형
+
+용서
+
+가책에 의한 심판
+
+눈먼 정의
+
+심판
+%%%%
+_diviner_name_
+
+역술인
+
+수맥 점쟁이
+
+예언자
+
+탐구자
+
+선지자
+
+오라클
+
+점쟁이
+
+무당
+
+예견자
+%%%%
+_people_name_
+
+King
+
+Queen
+
+Jester
+
+Fool
+
+Ancients
+
+Saviour
+
+Messenger
+
+Genius
+
+Coward
+
+Philosopher
+
+Hero
+
+Traitor
+
+Enemy
+
+Priest
+
+Madman
+
+Scavenger
+
+Pariah
+
+w:15
+@_diviner_name_@
+%%%%
+_weapon_animal_
+
+# insects
+Pill Bug
+
+Butterfly
+
+Wasp
+
+Moth
+
+Mosquito
+
+Gnat
+
+Blowfly
+
+Dragonfly
+
+Firefly
+
+# arachnids
+거미
+
+전갈
+
+# amphibians and reptiles
+방울뱀
+
+독사
+
+살모사
+
+# fish
+상어
+
+칠성장어
+
+뱀장어
+
+연어
+
+# birds
+펭귄
+
+바다오리
+
+풀머갈매기
+
+비둘기
+
+매
+
+벌새
+
+부엉이
+
+황새
+
+독수리
+
+# mammals
+w:5
+Weasel
+
+Goat
+
+Whale
+
+Ass
+
+Badger
+
+Bear
+
+Boar
+
+Fox
+
+Rat
+
+w:5
+Stoat
+
+Tiger
+
+Wolf
+%%%%
+# plants and fungi
+_plant_name_
+
+#plants
+Eggplant
+
+Turnip
+
+Chickpea
+
+Lettuce
+
+Radish
+
+Sugar Beet
+
+Shallot
+
+Tomato
+
+# er...aren't whelks gastropods?
+Whelk
+
+#fungus and similar
+Mushroom
+
+Toadstool
+
+Puffball
+
+Slime-mould
+%%%%
+# undead and evil beings
+_evil_stuff_
+
+Hell's Wrath
+
+the Undead
+
+Ancient Evil
+
+Evil
+
+the Beast
+
+Shrieking Terror
+
+the Lurker
+
+the Crawling Thing
+
+the Thing
+
+Abomination
+
+Mutilation
+
+Deformation
+
+Infection
+
+Corruption
+
+Demonkind
+
+Abuse
+
+죽은자
+
+오염
+
+악마의 눈
+
+귀신
+
+리빙 데드
+
+악몽
+
+왜곡된 것
+
+부패
+
+사신
+
+공포
+
+살아있지 않은 것
+
+형언할수 없는 자
+
+유령
+%%%%
+# catastrophes etc.
+_catastrophe_name_
+
+the Inferno
+
+Earthquakes
+
+Cataclysm
+
+Drought
+
+Floods
+
+Ruination
+
+# the Apocalypse
+the Apocalypse
+
+Armageddon
+
+World's End
+
+Ragnarok
+
+Fimbulwinter
+
+Annihilation
+
+the End of Times
+
+World Downfall
+
+# the Apocalyptic Riders (except Death)
+역병
+
+저주
+
+기아
+
+전쟁
+%%%%
+_chaos_name_
+
+Chaos
+
+Chance
+
+Mayhem
+
+Havoc
+
+Turmoil
+
+Calamity
+
+Arbitration
+
+the Extremes
+
+Disorder
+
+Disaster
+
+Imbalance
+
+Disharmony
+
+Ambiguity
+
+Change
+
+Extremism
+
+Impermanence
+
+Constant Reorganisation
+
+Contradiction
+
+Disarray
+
+Disintegration
+
+Dissolution
+
+Distraction
+
+Forced Transition
+
+the Fray
+
+Revolt
+
+Tumult
+
+Upheaval
+
+Incongruity
+%%%%
+_balance_or_order_
+
+the Middle
+
+the Median
+
+Departure
+
+Arrival
+
+Ascent
+
+Descent
+
+Symmetry
+
+Bodily Harmony
+
+Moderation
+
+Eternal Harmony
+
+Peace
+
+평형
+
+균형
+
+조화
+
+깨지기 쉬운 평화
+
+순환성
+
+선형성
+
+법
+
+합의
+
+순응
+
+적당한 비율
+
+균등
+
+기관
+
+최종 결정
+
+적법성
+%%%%
+_economics_or_politics_
+
+# economics
+인플레이션
+
+디플레이션
+
+공급
+
+수요
+
+할부 상환
+
+야성적 충동
+
+파산
+
+공모
+
+복리
+
+통화
+
+부채
+
+배당금
+
+교체
+
+성장
+
+소득
+
+사치
+
+이득
+
+위기 관리
+
+과세 제도
+
+귀중한 자산들
+
+복지
+
+# politics
+주권
+
+큰 효요성
+
+혁명
+
+축출
+
+사람들
+
+일반 대중
+
+복리
+
+빈곤
+
+재분배
+
+견제와 균형
+
+공익
+
+보수성
+
+지명 후보
+
+선동 정치가
+
+통치
+
+레임덕
+
+덜 나쁜 것
+
+민간 수요
+
+급진주의
+
+왕정주의
+
+소리없는 대중
+
+# akrasiac patch
+탄핵
+
+# umm, quoi?
+자유보유권
+
+권리박탈
+
+단순 부동산권
+
+직무 집행 영장
+
+파기
+
+근본적 위반
+
+만기
+
+가압류
+%%%%
+_place_name_
+
+세상
+
+바다
+
+삼림
+
+숲
+
+화산지대
+
+적도
+
+극지
+
+낡은 세상
+
+새로운 세상
+
+떨어져있는 세계
+
+보이지않는 영역
+
+천체
+
+근접
+
+황무지
+
+미로
+
+갱 
+
+영원한 공허
+
+저편
+
+축복받은 영역
+
+사막
+
+떨어진 호숫가
+
+숨겨진 계곡
+
+산
+
+알려진 세상
+
+비옥한 땅
+
+다른쪽
+
+미확인된 지점
+
+어딘가
+
+해안
+
+툰드라
+
+계곡
+
+죽음의 계곡
+
+불모지
+%%%%
+_discomfort_weapon_
+
+악감정
+
+불쾌함
+
+혐오감
+
+좌절감
+
+원통함
+
+낭패감
+
+자포자기
+
+수치심
+
+당혹감
+
+짜증
+
+불안
+
+긴급성
+
+어색함
+
+불만
+
+악취
+
+결함있는 실행
+
+침울
+
+불편함
+
+짜증
+
+불쾌감
+
+끈적거림
+
+고통스러운 발진
+%%%%
+_mental_illness_weapon_
+
+정신병
+
+노이로제
+
+강박 관념
+
+과대망상증
+
+자기 중심벽
+
+집착
+
+강박증
+
+피로
+
+노출증
+
+불면증
+
+음주벽
+
+완벽주의
+
+방화벽
+
+음란증
+
+자살 성향
+%%%%
+_philosophy_or_science_
+
+@_philosophy_name_@
+
+@_science_name_@
+%%%%
+_philosophy_name_
+
+유일신교
+
+단일신교
+
+다신론
+
+무신론
+
+자기 신격화
+
+범신론
+
+만유 내재신론
+
+불가지론
+
+실존주의
+
+상대주의
+
+절대주의
+
+금욕
+
+쾌락주의
+
+통설
+
+이단
+
+자유로운 표현
+
+자아
+
+낙천주의
+
+비관주의
+
+뜻밖의 재미
+
+한계
+
+경박
+
+허무주의
+
+실용주의
+
+관념론
+
+능동주의
+
+이타주의
+
+무정부 상태
+
+도그마
+
+평등주의
+
+엘리트 의식
+
+윤리
+
+오류
+
+광신
+
+자유 의지
+
+진보주의
+
+도덕성
+
+신비주의
+
+합리성
+%%%%
+_science_name_
+
+근거
+
+불합리
+
+계산
+
+본능
+
+직관
+
+순환 논리
+
+맥락
+
+조음
+
+정신
+
+결합
+
+시작
+
+끝
+
+분석
+
+무한
+
+양자 비약
+
+중력
+
+로테이션
+
+빅뱅
+
+끓는점
+
+범주
+
+진화
+
+실험
+
+초점
+
+추론
+
+연구
+
+객관적 실재
+
+주관성
+
+패턴
+
+이론
+%%%%
+_item_name_
+
+# items
+오브
+
+알
+
+지구본
+
+양초
+
+촛대
+
+열쇠
+
+고리
+
+체인
+
+동전
+
+컵
+
+깃털
+
+거들
+
+뿔
+
+기둥
+
+지갑
+
+두루마리
+
+배
+
+천막
+
+화분
+
+포도나무
+
+호두
+
+바퀴
+
+멍에
+
+# body parts
+심장
+
+뇌
+
+치아
+
+발
+
+손
+
+머리
+
+입
+
+목구멍
+
+신장
+%%%%
+_magic_name_
+
+동방박사
+
+전투 마법사
+
+최고 사제
+
+현자
+%%%%
+# substances
+_substance_name_
+
+빵
+
+유황
+
+크리스탈
+
+혈석
+
+흘러나오는 고름
+
+재
+
+슬라임
+
+담즙
+
+몸 개그
+
+거미줄
+
+치즈
+
+마른 눈물
+
+약
+
+연고
+
+종이
+
+쓰레기
+
+소금
+
+질산칼륨
+
+상어 가죽
+
+테라 코타
+
+# these don't really fit
+마력
+
+효모균
+
+포자
+
+먼지
+%%%%
+# non-groupables
+other_weapon_name
+
+오메가 점
+
+크롤링
+
+전환
+
+처방전
+
+대범함
+
+자연 연소
+
+무주물
+
+무주지
+
+사막화
+
+방적 돌기
+
+그론톨
+
+두개의 이름들
+
+휴식 없음
+
+상호의존적인 발생
+
+멀어버린 눈
+
+바다의 깊은곳
+
+끝장난 행운
+
+기업가 정신
+
+앙갚음
+
+빈 페이지
+
+최종장
+
+먹고살기 힘듦
+
+레드 와인
+
+실패의 원인
+
+잘 죽지않는 것
+
+# akrasiac patch
+억누를수 없는 웃음소리
+%%%%
+# single word monster names, to allow for combinations like <Monster>slayer
+short_monster_name_
+
+용
+
+히드라
+
+오우거
+
+거미
+
+뉴트
+
+거인
+
+딱정벌레
+
+젤리
+
+w:1
+거북목
+
+w:1
+도마뱀류
+
+w:1
+진드기
+
+야수
+
+악마
+
+고블린
+
+임프
+%%%%
+_monster_name_
+
+@short_monster_name_@
+
+@player_species@
+
+킬러 비
+
+살인자 삐에로
+
+오브 수호자
+%%%%
+_short_killer_name_
+
+파멸
+
+살해자
+%%%%
+# used from the C++ side
+killer_name
+
+의 파멸
+
+의 죽음
+
+의 불행한 운명
+
+의 적
+
+의 후회
+
+의 저주
+
+의 위험성
+%%%%
+_long_killer_name_
+
+의 사망 도구
+
+의 장례식
+
+의 악몽
+
+의 실패의 원인
+
+의 종말
+
+w:1
+의 다가오는 최후
+%%%%
+_real_weapon_name_
+
+사나운 이빨
+
+w:5
+과부 제조기
+
+w:5
+홀아비 제조기
+
+라이프베인
+
+콘서베이터
+
+추방자
+
+고문관
+
+추
+
+소곤거림
+
+석관
+
+일치
+
+용의 혓바닥
+
+중재자
+
+죽음의 딸랑이
+
+비결
+
+윤회하는 자
+
+최후통첩
+
+지렁이
+
+벌레
+
+벌레의 분노
+
+레위기
+
+암울함
+
+# Lemuel's suggestions
+내장 제거기
+
+언더테이커
+
+방부 처리기
+
+트로그의 @_anger_name_@
+
+헬블레이저
+
+지옥의 약탈자
+
+# Sigmund's sword
+그람
+%%%%
+_joke_weapon_name_
+
+비밀 병기
+
+두가지 이름
+
+물건
+
+죽음의 진흙 파이
+
+좀의 @_xom_esteem_@
+
+덩굴손
+
+완두콩
+
+방울
+
+덩어리
+
+헐크
+
+건포도
+
+별빛
+
+거인의 이쑤시개
+
+등긁개
+
+청소솔
+
+그롬
+
+그럼
+
+수색
+
+오믈렛
+
+알
+
+가지
+
+Z
+
+X
+
+Q
+
+Ox
+
+수다쟁이
+
+물고기
+
+검은돈
+
+빙고
+
+# from the crawl.akrasiac.org patch
+쿠키 커터
+
+에테이어인 슈러들루
+
+로렘 입숨
+
+# These three are from old Crawl code.
+플로이
+
+글로포
+
+루피
+%%%%
+_plain_weapon_name_
+
+w:15
+@short_monster_name_@@_short_killer_name_@
+
+w:8
+@_monster_name_@@killer_name@
+
+w:2
+@short_monster_name_@@_long_killer_name_@
+
+w:1
+@player_death@
+
+w:15
+@_real_weapon_name_@
+
+w:5
+@_joke_weapon_name_@
+%%%%

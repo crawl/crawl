@@ -1,0 +1,897 @@
+######################################################
+# Randart Names
+# -------------
+# rand_arm.txt: keywords for randart ARMOUR
+#
+# This file contains the lists of keywords (and their
+# weights) for most of the keywords used for randart
+# armour. You will find others in rand_wpn.txt and
+# rand_all.txt, respectively.
+#
+# See the explanation in the main file, randname.txt,
+# for more details.
+######################################################
+%%%%
+_armour_animal_
+
+# microorganisms
+아메바
+
+# insects
+나비
+
+매미
+
+귀뚜라미
+
+무당벌레
+
+개미
+
+바퀴벌레
+
+메뚜기
+
+이
+
+사마귀
+
+진드기
+
+# invertebrates
+민달팽이 
+
+달팽이
+
+복족류
+
+삼엽충
+
+지네
+
+갑오징어
+
+벌레
+
+# arachnids and clams
+타란튤라
+
+조개
+
+따개비
+
+랍스터
+
+대합조개
+
+# amphibians and reptiles
+육지거북
+
+거북이
+
+개구리
+
+코모도 왕도마뱀
+
+도마뱀
+
+샐러맨더
+
+뱀
+
+# fish
+창꼬치고기
+
+메기
+
+고등어
+
+청새치
+
+연어
+
+철갑상어
+
+개복치
+
+송어
+
+참치
+
+# birds
+알바트로스
+
+멧비둘기
+
+나이팅게일
+
+들종다리
+
+독수리
+
+매
+
+왜가리
+
+까마귀
+
+참새
+
+백조
+
+# mammals
+토끼
+
+캥거루
+
+코끼리
+
+얼룩말
+
+하마
+
+원숭이
+
+황소
+
+기린
+
+스라소니
+
+돌고래
+
+바늘두더지
+
+붉은 수사슴
+
+사자
+
+종마
+
+수사슴
+
+오카피
+
+# not strictly an animal... :)
+원숭이의 사촌
+
+#classical mythical animals
+코카트리스
+
+드래곤
+
+그리폰
+
+크라켄
+
+# modern mythical animals
+드롭 베어
+
+재카로프
+
+와일드 해기스
+
+츄파카브라
+
+예티
+
+%%%%
+_flower_name_
+
+라일락
+
+수선화
+
+장미
+
+정원
+
+데이지
+
+엉겅퀴
+
+튤립
+
+백합
+
+선인장 꽃
+%%%%
+# non-Crawl critters
+_critter_name_
+
+슬로그
+
+알파고르곤
+
+# from the crawl.akrasiac.org patch.
+핫 오셀롯
+
+에이트 볼 위빌스
+
+그루
+
+재버워크
+
+w:1
+웨어 레빗
+
+움퍼스
+%%%%
+_discomfort_and_inaction_
+
+# discomfort
+가벼운 짜증
+
+쓰라림
+
+부정
+
+실패
+
+노예 상태
+
+굴복
+
+불안정
+
+성가심
+
+실망
+
+# inaction
+활기 없음
+
+지루함
+
+권태감
+
+쉼없음
+
+누락
+
+태만
+
+무대책
+
+망각
+
+침울
+
+노곤함
+
+무관심
+
+무기력
+%%%%
+_mental_illness_armour_
+
+편집증
+
+밀실공포증
+
+광장공포증
+
+통합 운동 장애
+
+정신적 마비
+
+긴장증
+
+우울함
+
+히스테리증
+
+병적 도벽
+
+멜랑꼴리
+
+마조히즘
+
+자아도취증
+%%%%
+_good_or_divine_
+
+# good things
+최상품
+
+낱장
+
+잎사귀들
+
+음악
+
+새소리
+
+훌륭함
+
+만족
+
+재미
+
+즐거움
+
+행복
+
+경이로움
+
+놀라움
+
+호기심
+
+창의성
+
+아름다움
+
+생명
+
+독립
+
+자유
+
+향상
+
+경외심
+
+만족
+
+웃음소리
+
+# divine events
+신의 강제
+
+보이지않는 손
+
+신의 개입
+
+중재
+
+기적
+
+구세
+
+신들의 의지
+%%%%
+# in contrast to "_wacky_armour_name_" these do have some
+# connection to armour and protection
+_armour_name_shielding_
+
+차폐
+
+기밀성
+
+방어
+
+죽음의 문
+
+관문
+
+구세군
+
+언터쳐블
+
+무장한 자
+
+배제
+
+반발
+
+불가침
+
+도피
+
+방어벽
+
+병동
+
+강화
+
+완벽한 보호
+%%%%
+# other armour properties (beside protection)
+_armour_property_name_
+
+유연한 힘
+
+죽음에 대한 저항
+
+품위
+
+무중력상태
+
+그림자와 안개
+
+위장
+
+최소한의 저항
+
+보호감호
+
+탄성
+
+유행 가능성
+
+장엄함
+%%%%
+_wacky_armour_name_
+
+양파
+
+블라드
+
+영원의 과일
+
+가소성
+
+탈모
+
+테러
+
+좋은 의도들
+
+부재
+
+아르카나
+
+마취 상태
+
+아르마딜로
+
+기묘함
+
+파토스
+
+손실
+
+연계 매매
+
+배상금
+
+말하지않은 비밀들
+
+대지
+
+유한 책임
+
+혼합
+
+메스칼
+
+하드마
+
+털 많음
+
+공간
+
+진공
+
+압축
+
+감압
+
+목욕용 수세미
+
+사랑과 죽음
+
+성기 노출죄
+
+미개척의 길
+
+눈먼 명사수
+
+너무 많은 음식들
+
+레알 굉장한 축복
+
+오리의 이빨
+
+갈림길
+
+핑크 코너
+
+우표 수집
+%%%%
+# Lemuel's suggestions
+_celestial_bodies_
+
+태양
+
+달
+
+별
+
+행성
+
+플레이아데스
+
+모닝 스타
+
+이브닝 스타
+
+혜성
+
+w:5
+밤중의 태양
+
+w:5
+푸른 달
+
+w:5
+중추명월
+
+# astrological
+검은 달
+%%%%
+_instrument_name_
+
+트럼펫
+
+케틀 드럼
+
+아코디언
+
+백파이프
+
+류트
+
+벨
+
+차임
+
+플루트
+
+하프
+
+구슬라
+%%%%
+_evil_being_
+
+악마
+
+악마들
+
+하급 악마들
+
+고위 악마들
+
+철 악마
+
+악마의 대변인
+
+악마 대공
+
+사악한 자
+
+복수자
+
+어둠의 대공
+
+상급악마
+
+w:5
+대악마
+
+소악마
+
+임프
+
+악당
+%%%%
+_weather_name_
+
+첫눈
+
+거친 우박
+
+빈번한 가뭄
+
+번개폭풍
+
+허리케인
+
+푸른 하늘
+
+쾌적한 산들바람
+
+한파
+
+쌀쌀한 바람
+%%%%
+_profession_name_
+
+길드원
+
+길드마스터
+
+견습생
+
+대장장이
+
+목수
+
+수레바퀴 제조인
+
+통 제조업자
+
+어부
+
+사냥꾼
+
+막노동자
+
+수호자
+
+양봉가
+
+정원사
+
+군인
+
+편자공
+
+엔지니어
+
+돌팔이 의사
+
+평범한 일꾼
+
+대서인
+
+음유 시인
+
+장의사
+
+거지
+
+상인
+
+선원
+
+무덤 파는 인부
+
+해적
+
+무법자
+
+환전상
+%%%%
+# something for Xom
+_game_name_
+
+# general games
+장난과 게임
+
+훌륭한 게임
+
+계획중인 게임
+
+집 안의 게임
+
+왕들의 시합
+
+# children's games
+까꿍
+
+숨바꼭질
+
+말뚝박기
+
+돌차기
+
+대장 따라하기
+
+골목대장
+
+잭나이프 던지기
+
+# board games etc.
+인생 게임
+
+카드 마술
+
+행맨
+
+주사위
+
+조각그림
+
+두더지 잡기
+
+사다리와 뱀
+
+구슬치기
+
+OX게임
+%%%%
+_politics_name_armour_
+
+왕
+
+여왕
+
+왕족
+
+귀족
+
+공화정
+
+왕정
+
+대관식
+
+평민
+
+소작농
+
+읍민
+
+도시
+
+국가
+
+교외
+
+폭동
+
+왕권
+
+공작
+
+공작 부인
+
+총독
+
+금지령
+
+the Castellan
+
+the Komtur
+
+the Voivode
+
+the Rabble
+
+the Prince
+
+the Princeling
+
+the Princess
+
+the Oligarchy
+
+the Cast Vote
+
+the Burgomaster
+
+the Failed Coup
+
+Sovereignty
+%%%%
+_other_armour_name_
+
+#unpleasantness
+
+w:5
+Grot
+
+w:5
+Grottiness
+
+Filth
+
+Slovenliness
+
+# magic
+Magic
+
+Sorcery
+
+Broken Taboos
+
+Bedevilment
+w:5
+Grot
+
+w:5
+Grottiness
+
+Filth
+
+Slovenliness
+
+# magic
+Magic
+
+Sorcery
+
+Broken Taboos
+
+Bedevilment
+
+# other
+크롤링
+
+오브
+
+오브 수호자
+
+폭풍의 왕
+
+@_suit_@의 @_card_@ 카드
+
+매달린 남자
+
+비밀 신기
+
+잔치
+
+채울수없는 갈망
+
+결함
+
+시행 착오
+
+재해
+
+잘못된 결정
+
+명료성의 원리
+
+잃어버린 길
+
+인간 불신
+
+낭비된 공간
+
+이세계
+
+불가피함
+%%%%
+_card_
+
+2번
+
+3번
+
+4번
+
+5번
+
+6번
+
+7번
+
+8번
+
+9번
+
+10번
+
+시종
+
+기사
+
+여왕
+
+왕
+
+1번
+%%%%
+_suit_
+
+컵
+
+펜타클
+
+지팡이
+
+검
+%%%%
+# "something" rather than of Something
+_plain_armour_name_
+
+물망초
+
+영웅의 친구
+
+믿음직한 동료
+%%%%
