@@ -1,3 +1,12 @@
+Stone Soup 0.19.3 (20170121)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Work around an AMD driver bug where the game crashes when loading 512x512
+  images.
+
 Stone Soup 0.19.2 (20170120)
 --------------------------------------------
 
