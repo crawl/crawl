@@ -1,3 +1,16 @@
+Stone Soup 0.19.2 (20170120)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix a long-standing Tiles mouse lag bug. Now there is no lag when updating
+  cursor information upon mouse movement to a new tile.
+* Fix to allow helmets as armour acquirement gifts.
+* Fix to prevent Infestation death scarabs becoming hostile when killing their
+  host in an explosion.
+* 24 other bug-fixes and cleanups.
+
 Stone Soup 0.19.1 (20161123)
 --------------------------------------------
 
