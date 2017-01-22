@@ -99,7 +99,6 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
-    SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_MANA_VIPER,
