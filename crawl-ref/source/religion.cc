@@ -1679,12 +1679,6 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
     return eligible_spells;
 }
 
-static int _vehumet_weighting(spell_type spell)
-{
-    int bias = 100 + elemental_preference(spell, 10);
-    return bias;
-}
-
 static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
 {
     set<spell_type> eligible_spells = _vehumet_eligible_gift_spells(excluded_spells);
@@ -1693,7 +1687,7 @@ static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
     int this_weight = 0;
     for (auto elig : eligible_spells)
     {
-        this_weight = _vehumet_weighting(elig);
+        this_weight = spell_weight(elig);
         total_weight += this_weight;
         if (x_chance_in_y(this_weight, total_weight))
             spell = elig;

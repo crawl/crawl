@@ -848,7 +848,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
 // The weight of a spell takes into account its disciplines' skill levels
 // and the spell difficulty.
-static int _spell_weight(spell_type spell)
+int spell_weight(spell_type spell)
 {
     ASSERT(spell != SPELL_NO_SPELL);
 
@@ -886,7 +886,7 @@ static int _book_weight(book_type book)
         if (god_hates_spell(stype, you.religion))
             continue;
 
-        total_weight += _spell_weight(stype);
+        total_weight += spell_weight(stype);
     }
 
     return total_weight;
