@@ -808,7 +808,6 @@ void game_options::set_default_activity_interrupts()
         "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
-        "interrupt_eat = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
