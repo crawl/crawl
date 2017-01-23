@@ -9,6 +9,11 @@ Centaur
 Swift, strong and bulky, Centaurs are particularly skilled with ranged
 weaponry.
 %%%%
+Cyno
+
+Cynos are humonids with the heads of dogs.  They are quick to train any skill,
+but are unable to master any.
+%%%%
 Deep Dwarf
 
 Deep Dwarves live underground and cannot regenerate health naturally, but they
