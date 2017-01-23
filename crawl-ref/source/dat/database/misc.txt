@@ -2,3 +2,398 @@
 # misc.txt
 # total miscellaneous words and sentence
 ###############################################################################
+#
+# 
+# startup.cc
+%%%%
+Loading databases...
+
+Loading databases...
+%%%%
+Loading spells and features...
+
+Loading spells and features...
+%%%%
+Loading maps...
+
+Loading maps...
+%%%%
+Loading complete, press any key to start.
+
+Loading complete, press any key to start.
+%%%%
+Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS)
+
+Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS)
+%%%%
+Dismissing %s
+
+Dismissing %s
+%%%%
+Dungeon Crawl
+
+Dungeon Crawl
+%%%%
+Dungeon Crawl: The main game: full of monsters, items, gods and danger!
+
+Dungeon Crawl: The main game: full of monsters, items, gods and danger!
+%%%%
+Tutorial for Dungeon Crawl
+
+Tutorial for Dungeon Crawl
+%%%%
+Tutorial that covers the basics of Dungeon Crawl survival.
+
+Tutorial that covers the basics of Dungeon Crawl survival.
+%%%%
+Hints Mode for Dungeon Crawl
+
+Hints Mode for Dungeon Crawl
+%%%%
+A mostly normal game that provides more advanced hints than the tutorial.
+
+A mostly normal game that provides more advanced hints than the tutorial.
+%%%%
+Dungeon Sprint
+
+Dungeon Sprint
+%%%%
+Hard, fixed single level game mode.
+
+Hard, fixed single level game mode.
+%%%%
+Instructions
+
+명령어
+%%%%
+Help menu.
+
+Help menu.
+%%%%
+The Arena
+
+The Arena
+%%%%
+Pit computer controlled teams versus each other!
+
+Pit computer controlled teams versus each other!
+%%%%
+High Scores
+
+High Scores
+%%%%
+View the high score list.
+
+View the high score list.
+%%%%
+New Game
+
+New Game
+%%%%
+Enter your name:
+
+Enter your name:
+%%%%
+Choices:
+
+Choices:
+%%%%
+Saved games:
+
+Saved games:
+%%%%
+Use the up/down keys to select the type of game or load a character.
+
+Use the up/down keys to select the type of game or load a character.
+%%%%
+You can type your name; if you leave it blank you will be asked later.\nPress Enter to start
+
+You can type your name; if you leave it blank you will be asked later.\nPress Enter to start
+%%%%
+, Tab to repeat the last game's choice
+
+, Tab to repeat the last game's choice
+%%%%
+That's a silly name
+
+That's a silly name
+%%%%
+Enter your choice of teams:\n
+
+Enter your choice of teams:\n
+%%%%
+Enter - %s\n
+
+Enter - %s\n
+%%%%
+Examples:\n
+
+Examples:\n
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%

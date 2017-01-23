@@ -1,4 +1,395 @@
 ###############################################################################
 # misc.txt
 # total miscellaneous words and sentence
-#########
+###############################################################################
+#
+# 
+# startup.cc
+%%%%
+Loading databases...
+
+데이터베이스 로딩 중...
+%%%%
+Loading spells and features...
+
+스펠하고 피쳐 로딩 중...
+%%%%
+Loading maps...
+
+맵 로딩 중...
+%%%%
+Loading complete, press any key to start.
+
+로딩 완료, 아무 키나 눌러서 시작하세요.
+%%%%
+Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS)
+
+비-디버그용 크롤은 테스트 실행이 안됩니다. 디버그 빌드를 이용하세요 (FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS를 정의하세요)
+%%%%
+Dismissing %s
+
+Dismissing %s
+%%%%
+Dungeon Crawl
+
+던전 크롤
+%%%%
+Dungeon Crawl: The main game: full of monsters, items, gods and danger!
+
+던전 크롤: 메인 게임: 모든 몬스터, 아이템, 신 그리고  위험까지!
+%%%%
+Tutorial for Dungeon Crawl
+
+던전크롤 튜토리얼
+%%%%
+Tutorial that covers the basics of Dungeon Crawl survival.
+
+던전크롤에서 살아남기 위한 기본 튜토리얼
+%%%%
+Hints Mode for Dungeon Crawl
+
+던전크롤을 위한 힌트모드
+%%%%
+A mostly normal game that provides more advanced hints than the tutorial.
+
+튜토리얼보다 고급 힌트를 제공하는 노멀모드와 거의 같은 게임.
+%%%%
+Dungeon Sprint
+
+던전 스프린트
+%%%%
+Hard, fixed single level game mode.
+
+어렵고, 고정된 단층짜리 게임 모드.
+%%%%
+Help menu.
+
+도움말 메뉴.
+%%%%
+The Arena
+
+아레나
+%%%%
+Pit computer controlled teams versus each other!
+
+컴퓨터가 조종하는 팀들을 서로 싸우게 하세요!
+%%%%
+High Scores
+
+고득점
+%%%%
+View the high score list.
+
+고득점 목록 보기
+%%%%
+New Game
+
+새 게임
+%%%%
+Enter your name:
+
+당신의 이름을 입력하세요:
+%%%%
+Choices:
+
+선택:
+%%%%
+Saved games:
+
+저장된 게임:
+%%%%
+Use the up/down keys to select the type of game or load a character.
+
+위/아래 방향키를 이용해서 게임 종류를 선택하거나 로드할 캐릭터를 선택하세요.
+%%%%
+You can type your name; if you leave it blank you will be asked later.\nPress Enter to start
+
+당신은 이름을 입력 할 수 있습니다. 빈칸으로 두고 넘어가면 나중에 물어봅니다.\n엔터를 쳐서 시작하세요
+%%%%
+, Tab to repeat the last game's choice
+
+, 탭 눌러서 마지막 게임 설정 반복하기
+%%%%
+That's a silly name
+
+거참 존나 웃긴 이름이군
+%%%%
+Enter your choice of teams:\n
+
+선택할 팀을 입력:\n
+%%%%
+Enter - %s\n
+
+Enter - %s\n
+%%%%
+Examples:\n
+
+예:\n
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
+
+
+%%%%
