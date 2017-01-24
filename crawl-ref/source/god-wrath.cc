@@ -354,8 +354,6 @@ static bool _cheibriados_retribution()
     int tension = get_tension(GOD_CHEIBRIADOS);
     int wrath_value = random2(tension);
 
-    bool glammer = false;
-
     // Determine the level of wrath
     int wrath_type = 0;
     if (wrath_value < 2)       { wrath_type = 0; }
@@ -365,29 +363,28 @@ static bool _cheibriados_retribution()
     else                       { wrath_type = 4; }
 
     // Strip away extra speed
-    if (one_chance_in(5 - wrath_type))
-        dec_haste_player(10000);
-
-    // Chance to be overwhelmed by the divine experience
-    if (one_chance_in(5 - wrath_type))
-        glammer = true;
+    dec_haste_player(10000);
 
     switch (wrath_type)
     {
     // Very high tension wrath
     case 4:
         simple_god_message(" adjusts the clock.", god);
-        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM, 8, 90,
-                      _god_wrath_name(god));
-        if (one_chance_in(wrath_type - 1))
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM,
+                      5 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
+        if (one_chance_in(3))
             break;
+        else
+            dec_penance(god, 1); // and fall-through.
     // High tension wrath
     case 3:
         mpr("You lose track of time.");
         you.put_to_sleep(nullptr, 30 + random2(20));
-        dec_penance(god, 1);
-        if (one_chance_in(wrath_type - 2))
+        if (coinflip())
             break;
+        else
+            dec_penance(god, 1); // and fall-through.
     // Medium tension
     case 2:
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
@@ -396,29 +393,21 @@ static bool _cheibriados_retribution()
             you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
-
-        if (one_chance_in(wrath_type - 2))
-            break;
-    // Low tension
+        break;
+    // Low/no tension
     case 1:
-        mpr("Time shudders.");
-        cheibriados_time_step(2+random2(4));
-        if (one_chance_in(3))
-            break;
-    // No tension wrath.
     case 0:
-        if (curse_an_item())
-            simple_god_message(" makes up for lost time.", god);
-        else
-            glammer = true;
+        mpr("Time shudders.");
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM,
+                      5 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
+        break;
 
     default:
         break;
     }
 
-    if (wrath_type > 2)
-        dec_penance(god, 1 + random2(wrath_type));
-    return glammer;
+    return true;
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
