@@ -194,9 +194,9 @@ static void _initialize()
         run_tests();
         // doesn't return
 #else
-        end(1, false, getMiscString("Non-debug Crawl cannot run tests. "
+        end(1, false, "Non-debug Crawl cannot run tests. "
             "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
-            "or DEBUG_TESTS)").c_str());
+            "or DEBUG_TESTS)");
 #endif
     }
 }
