@@ -629,7 +629,7 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
 int TilesFramework::getch_ck()
 {
     wm_event event;
-    cursor_loc last_loc = m_cur_loc;
+    cursor_loc last_redraw_loc = m_cur_loc;
 
     int key = 0;
 
@@ -740,24 +740,9 @@ int TilesFramework::getch_ck()
 
                     event.mouse_event.held = m_buttons_held;
                     event.mouse_event.mod  = m_key_mod;
-                    int mouse_key = handle_mouse(event.mouse_event);
+                    key = handle_mouse(event.mouse_event);
 
                     m_region_msg->alt_text().clear();
-
-                    // Don't break back to Crawl and redraw for every mouse
-                    // event, because there's a lot of them.
-                    //
-                    // If there are other mouse events in the queue
-                    // (possibly because redrawing is slow or the user
-                    // is moving the mouse really quickly), process those
-                    // first, before bothering to redraw the screen.
-                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
-                    ASSERT(count >= 0);
-                    if (count > 0)
-                        continue;
-
-                    // Remember our current location
-                    last_loc = m_cur_loc;
                     // Find the new mouse location
                     for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
@@ -771,13 +756,18 @@ int TilesFramework::getch_ck()
                         }
                     }
 
-                    // Stay within this input loop until the mouse moves
-                    // to a semantically different location. Crawl doesn't
-                    // care about small mouse movements.
-                    if (!need_redraw() && last_loc == m_cur_loc)
+                    // Don't break back to Crawl and redraw for every mouse
+                    // event, because there's a lot of them.
+                    //
+                    // If there are other mouse events in the queue
+                    // (possibly because redrawing is slow or the user
+                    // is moving the mouse really quickly), process those
+                    // first, before bothering to redraw the screen.
+                    unsigned int count = wm->get_event_count(WME_MOUSEMOTION);
+                    ASSERT(count >= 0);
+                    if (count > 0)
                         continue;
 
-                    key = mouse_key;
                 }
                break;
 
@@ -844,7 +834,7 @@ int TilesFramework::getch_ck()
             }
             else
             {
-                if (last_loc != m_cur_loc)
+                if (last_redraw_loc != m_cur_loc)
                     set_need_redraw();
 
                 m_tooltip.clear();
@@ -854,6 +844,7 @@ int TilesFramework::getch_ck()
                 || ticks > m_last_tick_redraw
                    && ticks - m_last_tick_redraw > ticks_per_screen_redraw)
             {
+                last_redraw_loc = m_cur_loc;
                 redraw();
             }
         }
