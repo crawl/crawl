@@ -227,7 +227,7 @@ static void _zap_los_monsters(bool items_also)
             continue;
 
         dprf("Dismissing %s",
-             mon->name(DESC_PLAIN, true));
+             mon->name(DESC_PLAIN, true).c_str());
 
         // Do a hard reset so the monster's items will be discarded.
         mon->flags |= MF_HARD_RESET;
