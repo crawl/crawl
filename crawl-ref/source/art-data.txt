@@ -73,7 +73,7 @@
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
 # * corrode:  Randomly causes corrosion when taking damage.
-# * cursed:   Item is generated cursed.
+# * curse:    Item curses itself on equip, and is generated cursed.
 # * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
@@ -135,8 +135,6 @@
 # COLOUR:   The colour of the artefact, either as listed in defines.h
 #           (e.g., LIGHTRED) or as listed under element_type in view.h
 #           (e.g., ETC_FIRE)
-# CURSED:   The artefact has a one-in-num chance of becoming cursed each
-#           time it's equipped (and is generated cursed).
 # SLAY:     Slaying modifier (for non-weapon artefacts).
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
@@ -250,7 +248,7 @@ TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
 BRAND:   SPWPN_DRAINING
 VALUE:   800
-CURSED:  3
+BOOL:    curse
 
 NAME:    sceptre of Torment
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -718,9 +716,8 @@ COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       -5
-CURSED:   1
 STEALTH:  -2
-BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain
+BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain, curse
 
 # TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -934,7 +931,7 @@ INT:     -3
 MAGIC:   2
 ANGRY:   5
 SLAY:    6
-CURSED:  3
+BOOL:    curse
 
 NAME:    ring of Shaolin
 OBJ:     OBJ_JEWELLERY/RING_EVASION
@@ -989,8 +986,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
-CURSED:   1
-BOOL:     evil, seeinv, fly
+BOOL:     evil, seeinv, fly, curse
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1229,8 +1225,7 @@ TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
-CURSED:  1
-BOOL:    evil, seeinv, nogen
+BOOL:    evil, seeinv, nogen, curse
 
 ENUM:    VINES
 NAME:    robe of Vines
