@@ -226,7 +226,7 @@ static void _zap_los_monsters(bool items_also)
         if (mon == nullptr || !mons_is_threatening(*mon))
             continue;
 
-        dprf(getMiscString("Dismissing %s").c_str(),
+        dprf("Dismissing %s",
              mon->name(DESC_PLAIN, true));
 
         // Do a hard reset so the monster's items will be discarded.
