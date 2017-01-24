@@ -240,7 +240,7 @@ static void _tso_squelches()
  *
  * Holy warriors/cleansing theme.
  *
- * @return Whether to take further divine wrath actions afterward. (false.)
+ * @return Whether to take further divine wrath actions afterward.
  */
 static bool _tso_retribution()
 {
@@ -262,7 +262,7 @@ static bool _tso_retribution()
         _tso_squelches();
         break;
     }
-    return false;
+    return true;
 }
 
 static void _zin_remove_good_mutations()
@@ -291,10 +291,7 @@ static void _zin_remove_good_mutations()
     }
 
     if (success && !how_mutated())
-    {
         simple_god_message(" rids your body of chaos!", god);
-        dec_penance(god, 1);
-    }
 }
 
 static bool _zin_retribution()
@@ -324,7 +321,7 @@ static bool _zin_retribution()
             break;
         case 2:
             paralyse_player(_god_wrath_name(god));
-            break;
+            return false;
         }
         break;
     case 3:
@@ -341,7 +338,7 @@ static bool _zin_retribution()
         _zin_remove_good_mutations();
         break;
     }
-    return false;
+    return true;
 }
 
 static bool _cheibriados_retribution()
@@ -767,19 +764,17 @@ static bool _trog_retribution()
         case 3:
             if (!you.duration[DUR_PARALYSIS])
             {
-                dec_penance(god, 3);
                 mprf(MSGCH_WARN, "You suddenly pass out!");
                 const int turns = 2 + random2(6);
                 take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
                 you.increase_duration(DUR_PARALYSIS, turns, 13);
             }
-            break;
+            return false;
 
         case 4:
         case 5:
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                dec_penance(god, 1);
                 mprf(MSGCH_WARN, "You suddenly feel exhausted!");
                 you.set_duration(DUR_EXHAUSTED, 200);
                 slow_player(100);
@@ -793,7 +788,6 @@ static bool _trog_retribution()
         // -- actually, this function partially exists to remove that,
         //    we'll leave this effect in, but we'll remove the wild
         //    fire magic. -- bwr
-        dec_penance(god, 2);
         mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_FIRE,
                       8 + you.experience_level, random2avg(98, 3),
@@ -930,7 +924,6 @@ static bool _sif_muna_retribution()
     const god_type god = GOD_SIF_MUNA;
 
     simple_god_message("'s wrath finds you.", god);
-    dec_penance(god, 1);
 
     switch (random2(10))
     {
@@ -1062,14 +1055,14 @@ static void _lugonu_minion_retribution()
 /**
  * Call down the wrath of Lugonu upon the player!
  *
- * @return Whether to take further divine wrath actions afterward. (false.)
+ * @return Whether to take further divine wrath actions afterward.
  */
 static bool _lugonu_retribution()
 {
     _lugonu_transloc_retribution();
     _lugonu_minion_retribution();
 
-    return false;
+    return true;
 }
 
 
@@ -1648,6 +1641,7 @@ static bool _uskayaw_retribution()
             simple_god_message(" booms out, \"Time for someone else to take a solo\"",
                                     god);
             paralyse_player(_god_wrath_name(god));
+            dec_penance(god, 1);
             return false;
         }
         // else we intentionally fall through
@@ -1730,8 +1724,11 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
         if (coinflip())
         {
-            mprf(MSGCH_WARN, "The divine experience confuses you!");
-            confuse_player(5 + random2(3));
+            if (!you.confused())
+            {
+                mprf(MSGCH_WARN, "The divine experience confuses you!");
+                confuse_player(5 + random2(3));
+            }
         }
         else
         {
@@ -1799,7 +1796,6 @@ static void _god_smites_you(god_type god, const char *message,
 
     simple_god_message(" smites you!", god);
     ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
-    dec_penance(god, 1);
 }
 
 void reduce_xp_penance(god_type god, int amount)

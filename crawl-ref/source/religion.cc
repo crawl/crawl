@@ -2703,7 +2703,7 @@ void excommunication(bool voluntary, god_type new_god)
             you.duration[DUR_CHANNEL_ENERGY] = 0;
         if (you.attribute[ATTR_DIVINE_ENERGY])
             you.attribute[ATTR_DIVINE_ENERGY] = 0;
-        _set_penance(old_god, 50);
+        _set_penance(old_god, 30);
         break;
 
     case GOD_NEMELEX_XOBEH:
