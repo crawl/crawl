@@ -963,8 +963,8 @@ void MiscastEffect::_hexes(int severity)
         case 2:
             if (target->is_player())
             {
-                mpr("You sense a malignant aura.");
-                curse_an_item();
+                mpr("You feel dizzy.");
+                you.increase_duration(DUR_VERTIGO, 10 + random2(11), 50);
                 break;
             }
             // Intentional fall-through for monsters.
@@ -1117,13 +1117,17 @@ void MiscastEffect::_charms(int severity)
         case 0:
         case 1:
         case 2:
+            you_msg      = "You feel enfeebled.";
+            mon_msg_seen = "@The_monster@ is weakened.";
+            do_msg();
             if (target->is_player())
+                you.increase_duration(DUR_WEAK, 10 + random2(6), 50);
+            else if (target->is_monster())
             {
-                mpr("You sense a malignant aura.");
-                curse_an_item();
-                break;
+                 target->as_monster()->add_ench(mon_enchant(ENCH_WEAK,
+                 0, act_source, 10 + random2(6) * BASELINE_DELAY));
             }
-            // Intentional fall-through for monsters.
+            break;
         case 3:
         case 4:
         case 5:
