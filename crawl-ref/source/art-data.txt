@@ -533,7 +533,7 @@ TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
-INSCRIP:  nevermiss,
+INSCRIP:  Acc+∞
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
@@ -584,7 +584,7 @@ STEALTH:  1
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
-PLUS:    +14
+PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
@@ -660,7 +660,6 @@ TILE_EQ: lshield_of_ignorance
 AC:      4
 INT:     -6
 LIFE:    1
-CURSED:  3
 
 NAME:    robe of Augmentation
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -736,7 +735,7 @@ BOOL:     fly, nogen
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
-INSCRIP:  DetectMon Stab+
+INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
