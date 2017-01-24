@@ -518,18 +518,18 @@ static string _describe_god_wrath_causes(god_type which_god)
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
             return uppercase_first(god_name(which_god)) +
-                   " forgives followers who leave " + god_name(which_god)+"'s"
-                   " service; however, those who take up the worship of evil"
-                   " gods will be punished. (" +
+                   " forgives followers for abandonment; however, those who"
+                   " later take up the worship of an evil god will be"
+                   " punished. (" +
                    comma_separated_fn(begin(evil_gods), end(evil_gods),
                                       bind(god_name, placeholders::_1, false)) +
                    " are evil gods.)";
 
         case GOD_ZIN:
             return uppercase_first(god_name(which_god)) +
-                   " does not punish followers who leave "+god_name(which_god)+
-                   "'s service; however, those who take up the worship of evil"
-                   " or chaotic gods will be scourged. (" +
+                   " forgives followers for abandonment; however, those who"
+                   " later take up the worship of an evil or chaotic god will"
+                   " be scourged. (" +
                    comma_separated_fn(begin(evil_gods), end(evil_gods),
                                       bind(god_name, placeholders::_1, false)) +
                    " are evil, and " +
