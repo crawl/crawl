@@ -4487,6 +4487,14 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
         // the Royal Jelly).
+        if (has_ench(ENCH_PAIN_BOND) && flavour != BEAM_SHARED_PAIN)
+        {
+            // this is passive damage behaviour in a sense, but unlike everything else there, can do damage.
+            // radiate_pain_bond may do additional damage in a complex recursive fashion, by looping back to the original trigger.
+            int hp_before_pain_bond = hit_points;
+            radiate_pain_bond(*this, amount, this);
+            amount += hp_before_pain_bond - hit_points; // is this right? it seems like react_to_damage should want the updated amount.
+        }
         react_to_damage(agent, amount, flavour);
 
         // Don't mirror Yredelemnul's effects (in particular don't mirror
@@ -5993,9 +6001,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
 void monster::react_to_damage(const actor *oppressor, int damage,
                                beam_type flavour)
 {
-    if (has_ench(ENCH_PAIN_BOND))
-        radiate_pain_bond(*this, damage);
-
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
     // XXX: this might not be necessary anymore?
