@@ -1105,7 +1105,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
     {
         description += "\n\nThis ";
         if (is_unrandom_artefact(item))
-            description += get_artefact_base_name(item, true);
+            description += get_artefact_base_name(item);
         else
             description += "weapon";
         description += " falls into the";
