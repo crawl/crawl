@@ -265,7 +265,7 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         {  0, passive_t::cloud_immunity, "clouds can't harm you" },
         {  1, passive_t::storm_shield, "generate elemental clouds to protect you" },
         {  4, passive_t::upgraded_storm_shield, "chances to be struck by projectiles are reduced" },
-        {  5, passive_t::elemental_adaptation, "elemental attacks leaves you somewhat more resistant to themxo" }
+        {  5, passive_t::elemental_adaptation, "elemental attacks leaves you somewhat more resistant to them" }
     },
 
     // Ru
