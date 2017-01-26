@@ -438,7 +438,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_STAFF:
         {
             const mon_inv_type end = mons_wields_two_weapons(*this)
-                                     ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
+                                     ? MSLOT_WEAPON4 : MSLOT_WEAPON;
 
             for (int i = MSLOT_WEAPON; i <= end; i = i + 1)
             {
@@ -458,7 +458,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
 
     case EQ_ALL_ARMOUR:
     case EQ_CLOAK:
-    case EQ_HELMET:
+    case EQ_HEADGEAR:
     case EQ_GLOVES:
     case EQ_BOOTS:
     case EQ_SHIELD:
@@ -477,13 +477,32 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
 
     case EQ_AMULET:
     case EQ_AMULET_PLUS:
-    case EQ_RINGS:
-    case EQ_RINGS_PLUS:
-        item = mslot_item(MSLOT_JEWELLERY);
+        item = mslot_item(MSLOT_AMULET);
         if (item && item->is_type(OBJ_JEWELLERY, sub_type)
             && (calc_unid || item_type_known(*item)))
         {
-            if (slot == EQ_RINGS_PLUS || slot == EQ_AMULET_PLUS)
+            if (slot == EQ_AMULET_PLUS)
+                ret += item->plus;
+            else
+                ret++;
+        }
+        break;
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS:
+        item = mslot_item(MSLOT_RING);
+        if (item && item->is_type(OBJ_JEWELLERY, sub_type)
+            && (calc_unid || item_type_known(*item)))
+        {
+            if (slot == EQ_RINGS_PLUS)
+                ret += item->plus;
+            else
+                ret++;
+        }
+        item = mslot_item(MSLOT_RING2);
+        if (item && item->is_type(OBJ_JEWELLERY, sub_type)
+            && (calc_unid || item_type_known(*item)))
+        {
+            if (slot == EQ_RINGS_PLUS)
                 ret += item->plus;
             else
                 ret++;
@@ -505,7 +524,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_WEAPON:
         {
             const mon_inv_type end = mons_wields_two_weapons(*this)
-                                     ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
+                                     ? MSLOT_WEAPON3: MSLOT_WEAPON;
 
             for (int i = MSLOT_WEAPON; i <= end; i++)
             {
@@ -521,10 +540,50 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
         break;
 
     case EQ_ALL_ARMOUR:
+        ret = wearing_ego(EQ_CLOAK, special, calc_unid) +
+              wearing_ego(EQ_HEADGEAR, special, calc_unid) +
+              wearing_ego(EQ_GLOVES, special, calc_unid) +
+              wearing_ego(EQ_BOOTS, special, calc_unid) +
+              wearing_ego(EQ_SHIELD, special, calc_unid) +
+              wearing_ego(EQ_BODY_ARMOUR, special, calc_unid);
+        break;
+       
     case EQ_CLOAK:
-    case EQ_HELMET:
+        item = mslot_item(MSLOT_CLOAK);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        break;
+    case EQ_HEADGEAR:
+        item = mslot_item(MSLOT_HEADGEAR);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        break;
     case EQ_GLOVES:
+        item = mslot_item(MSLOT_GLOVES);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        break;
     case EQ_BOOTS:
+        item = mslot_item(MSLOT_BOOTS);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        break;
     case EQ_SHIELD:
         item = mslot_item(MSLOT_SHIELD);
         if (item && item->base_type == OBJ_ARMOUR
@@ -533,10 +592,7 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
         {
             ret++;
         }
-        // Don't check MSLOT_ARMOUR for EQ_SHIELD
-        if (slot == EQ_SHIELD)
-            break;
-        // intentional fall-through
+        break;
     case EQ_BODY_ARMOUR:
         item = mslot_item(MSLOT_ARMOUR);
         if (item && item->base_type == OBJ_ARMOUR
@@ -571,9 +627,17 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
     {
         const int weap      = inv[MSLOT_WEAPON];
         const int second    = inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
+        const int third     = inv[MSLOT_WEAPON3]; // Nagaraja
+        const int fourth    = inv[MSLOT_WEAPON4]; // Nagaraja
         const int armour    = inv[MSLOT_ARMOUR];
+        const int cloak     = inv[MSLOT_CLOAK];
+        const int helm      = inv[MSLOT_HEADGEAR];
+        const int gloves    = inv[MSLOT_GLOVES];
+        const int boots     = inv[MSLOT_BOOTS];
         const int shld      = inv[MSLOT_SHIELD];
-        const int jewellery = inv[MSLOT_JEWELLERY];
+        const int amulet    = inv[MSLOT_AMULET];
+        const int ring1     = inv[MSLOT_RING];
+        const int ring2     = inv[MSLOT_RING2];
 
         if (weap != NON_ITEM && mitm[weap].base_type == OBJ_WEAPONS
             && is_artefact(mitm[weap]))
@@ -587,11 +651,44 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
             ret += artefact_property(mitm[second], ra_prop);
         }
 
+        if (third != NON_ITEM && mitm[third].base_type == OBJ_WEAPONS
+            && is_artefact(mitm[third]) && mons_wields_four_weapons(*this))
+        {
+            ret += artefact_property(mitm[third], ra_prop);
+        }
+
+        if (fourth != NON_ITEM && mitm[fourth].base_type == OBJ_WEAPONS
+            && is_artefact(mitm[fourth]) && mons_wields_four_weapons(*this))
+        {
+            ret += artefact_property(mitm[fourth], ra_prop);
+        }
+
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
             && is_artefact(mitm[armour]))
         {
             ret += artefact_property(mitm[armour], ra_prop);
         }
+        if (cloak != NON_ITEM && mitm[cloak].base_type == OBJ_ARMOUR
+            && is_artefact(mitm[cloak]))
+        {
+            ret += artefact_property(mitm[cloak], ra_prop);
+        }
+        if (helm != NON_ITEM && mitm[helm].base_type == OBJ_ARMOUR
+            && is_artefact(mitm[helm]))
+        {
+            ret += artefact_property(mitm[helm], ra_prop);
+        }
+        if (gloves != NON_ITEM && mitm[gloves].base_type == OBJ_ARMOUR
+            && is_artefact(mitm[gloves]))
+        {
+            ret += artefact_property(mitm[gloves], ra_prop);
+        }
+        if (boots != NON_ITEM && mitm[boots].base_type == OBJ_ARMOUR
+            && is_artefact(mitm[boots]))
+        {
+            ret += artefact_property(mitm[boots], ra_prop);
+        }
+
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
             && is_artefact(mitm[shld]))
@@ -599,10 +696,20 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
             ret += artefact_property(mitm[shld], ra_prop);
         }
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && is_artefact(mitm[jewellery]))
+        if (amulet != NON_ITEM && mitm[amulet].base_type == OBJ_JEWELLERY
+            && is_artefact(mitm[amulet]))
         {
-            ret += artefact_property(mitm[jewellery], ra_prop);
+            ret += artefact_property(mitm[amulet], ra_prop);
+        }
+        if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY
+            && is_artefact(mitm[ring1]))
+        {
+            ret += artefact_property(mitm[ring1], ra_prop);
+        }
+        if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY
+            && is_artefact(mitm[ring2]))
+        {
+            ret += artefact_property(mitm[ring2], ra_prop);
         }
     }
 
@@ -3376,7 +3483,8 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
 
 bool mons_class_wields_two_weapons(monster_type mc)
 {
-    return mons_class_flag(mc, M_TWO_WEAPONS);
+    return mons_class_flag(mc, M_TWO_WEAPONS) ||
+           mons_class_flag(mc, M_FOUR_WEAPONS);
 }
 
 bool mons_wields_two_weapons(const monster& mon)
@@ -3385,6 +3493,16 @@ bool mons_wields_two_weapons(const monster& mon)
         return true;
 
     return mons_class_wields_two_weapons(mons_base_type(mon));
+}
+
+bool mons_class_wields_four_weapons(monster_type mc)
+{
+    return mons_class_flag(mc, M_FOUR_WEAPONS);
+}
+
+bool mons_wields_four_weapons(const monster& mon)
+{
+    return mons_class_wields_four_weapons(mons_base_type(mon));
 }
 
 bool mons_self_destructs(const monster& m)
@@ -4196,9 +4314,13 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
     {
     case EQ_WEAPON:      return MSLOT_WEAPON;
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
+    case EQ_HEADGEAR:    return MSLOT_HEADGEAR;
+    case EQ_CLOAK:       return MSLOT_CLOAK;
+    case EQ_GLOVES:      return MSLOT_GLOVES;
+    case EQ_BOOTS:       return MSLOT_BOOTS;
     case EQ_SHIELD:      return MSLOT_SHIELD;
-    case EQ_RINGS:
-    case EQ_AMULET:      return MSLOT_JEWELLERY;
+    case EQ_RINGS:       return MSLOT_RING;
+    case EQ_AMULET:      return MSLOT_AMULET;
     default: return NUM_MONSTER_SLOTS;
     }
 }
@@ -4218,7 +4340,9 @@ mon_inv_type item_to_mslot(const item_def &item)
     case OBJ_ARMOUR:
         return equip_slot_to_mslot(get_armour_slot(item));
     case OBJ_JEWELLERY:
-        return MSLOT_JEWELLERY;
+        if (jewellery_is_amulet(item))
+            return MSLOT_AMULET;
+        return MSLOT_RING;
     case OBJ_WANDS:
         return MSLOT_WAND;
     case OBJ_BOOKS:

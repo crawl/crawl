@@ -203,6 +203,7 @@ enum tag_minor_version
     TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
     TAG_MINOR_FOOD_PURGE_RELOADED, // The exciting sequel, removing pizza/jerky.
     TAG_MINOR_ELYVILON_WRATH,      // Make Elyvilon wrath expire with XP gain.
+    TAG_MINOR_MON_AUX_ARMOUR,      // Give monsters more inventory and attack slots
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

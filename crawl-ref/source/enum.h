@@ -2117,7 +2117,7 @@ enum equipment_type
     EQ_WEAPON,
     EQ_FIRST_EQUIP = EQ_WEAPON,
     EQ_CLOAK,
-    EQ_HELMET,
+    EQ_HEADGEAR,
     EQ_GLOVES,
     EQ_BOOTS,
     EQ_SHIELD,
@@ -3633,12 +3633,20 @@ enum mon_inv_type           // menv[].inv[]
     MSLOT_WEAPON,           // Primary weapon (melee)
     MSLOT_ALT_WEAPON,       // Alternate weapon, ranged or second melee weapon
                             // for monsters that can use two weapons.
+    MSLOT_WEAPON3,
+    MSLOT_WEAPON4,          // For nagaraja.
     MSLOT_MISSILE,
-    MSLOT_ALT_MISSILE,
+    MSLOT_ALT_MISSILE,      // seems to be unused
     MSLOT_ARMOUR,
+    MSLOT_CLOAK,
+    MSLOT_HEADGEAR,
+    MSLOT_GLOVES,
+    MSLOT_BOOTS,             // holds barding for relevant monsters.
     MSLOT_SHIELD,
     MSLOT_WAND,
-    MSLOT_JEWELLERY,
+    MSLOT_AMULET,
+    MSLOT_RING,
+    MSLOT_RING2,
     MSLOT_MISCELLANY,
 
     // [ds] Last monster gear slot that the player can observe by examining

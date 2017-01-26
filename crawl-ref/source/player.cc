@@ -769,7 +769,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
             alternate.sub_type = ARM_BUCKLER;
         break;
 
-    case EQ_HELMET:
+    case EQ_HEADGEAR:
         dummy.sub_type = ARM_HELMET;
         alternate.sub_type = ARM_HAT;
         break;
@@ -7084,7 +7084,7 @@ bool player::can_see_invisible(bool calc_unid) const
 
     if (wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
         // armour: (checks head armour only)
-        || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
+        || wearing_ego(EQ_HEADGEAR, SPARM_SEE_INVISIBLE)
         // randart gear
         || scan_artefacts(ARTP_SEE_INVISIBLE, calc_unid) > 0)
     {

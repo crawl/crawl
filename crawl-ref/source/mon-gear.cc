@@ -354,6 +354,14 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { WPN_FLAIL,            9 },
         { WPN_BROAD_AXE,        1 },
         { WPN_MORNINGSTAR,      1 }, };
+    static const weapon_list NAGARAJA_WEAPONS =
+    {   { WPN_CLUB,             1 },
+        { WPN_WHIP,             1 },
+        { WPN_DAGGER,           1 },
+        { WPN_SHORT_SWORD,      1 },
+        { WPN_SCIMITAR,         1 },
+        { WPN_FLAIL,            1 },
+        { WPN_HAND_AXE,         1 }, };
     static const weapon_list ORC_KNIGHT_WEAPONS =
     {   { WPN_GREAT_SWORD,      4 },
         { WPN_LONG_SWORD,       4 },
@@ -501,7 +509,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_GNOLL,                   { GNOLL_WEAPONS } },
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
-        { MONS_NAGARAJA,            { GNOLL_WEAPONS } },
+        { MONS_NAGARAJA,            { NAGARAJA_WEAPONS } },
         { MONS_GNOLL_SHAMAN,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
@@ -1650,20 +1658,6 @@ static void _give_shield(monster* mon, int level)
 
         break;
 
-    case MONS_NIKOLA:
-        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
-                                       level * 2 + 1, 1);
-        // Gloves.
-        if (shield && get_armour_ego_type(*shield) == SPARM_ARCHERY)
-            _strip_item_ego(*shield);
-        break;
-
-    case MONS_ROBIN:
-        // The Nikola Hack
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_HELMET,
-                              level * 2 + 1, 1);
-        break;
-
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:
         if (one_chance_in(3))
@@ -1695,6 +1689,37 @@ static void _give_shield(monster* mon, int level)
         mitm[thing_created] = shld;
         give_specific_item(mon, thing_created);
     }
+        break;
+
+    default:
+        break;
+    }
+}
+
+static void _give_aux_armor(monster* mon, int level)
+{
+    item_def *armor;
+    switch (mon->type)
+    {
+    case MONS_NIKOLA:
+        armor = make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
+                                       level * 2 + 1, 1);
+        // Don't give Nikola gloves of archery.
+        if (armor && get_armour_ego_type(*armor) == SPARM_ARCHERY)
+            _strip_item_ego(*armor);
+        break;
+
+    case MONS_ROBIN:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_HELMET,
+                              level * 2 + 1, 1);
+        break;
+
+    case MONS_JOSEPH:
+        armor = make_item_for_monster(mon, OBJ_ARMOUR, ARM_HAT,
+                              level * 2 + 1, 1);
+        armor->props["item_tile_name"] = "hat_joseph";
+        armor->props["worn_tile_name"] = "hat_joseph";
+        bind_item_tile(*armor);
         break;
 
     default:
@@ -2192,4 +2217,5 @@ void give_item(monster *mons, int level_number, bool mons_summoned)
     _give_ammo(mons, level_number, mons_summoned);
     _give_armour(mons, 1 + level_number / 2);
     _give_shield(mons, 1 + level_number / 2);
+    _give_aux_armor(mons, 1 + level_number / 2);
 }

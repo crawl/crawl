@@ -436,22 +436,30 @@ item_def *monster::weapon(int which_attack) const
     if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
         return nullptr;
 
-    // Even/odd attacks use main/offhand weapon.
-    if (which_attack > 1)
-        which_attack &= 1;
 
     // This randomly picks one of the wielded weapons for monsters that can use
     // two weapons. Not ideal, but better than nothing. fight.cc does it right,
     // for various values of right.
     int weap = inv[MSLOT_WEAPON];
-
-    if (which_attack && mons_wields_two_weapons(*this))
+    if (mons_wields_two_weapons(*this))
     {
-        const int offhand = _mons_offhand_weapon_index(this);
-        if (offhand != NON_ITEM
-            && (weap == NON_ITEM || which_attack == 1 || coinflip()))
+        if (which_attack == 1)
         {
-            weap = offhand;
+            const int offhand = inv[MSLOT_ALT_WEAPON];
+            if (offhand != NON_ITEM)
+                weap = offhand;
+        }
+        else if (which_attack == 2 && mons_wields_four_weapons(*this))
+        {
+            const int offhand = inv[MSLOT_WEAPON3];
+            if (offhand != NON_ITEM)
+                weap = offhand;
+        }
+        else if (which_attack == 3 && mons_wields_four_weapons(*this))
+        {
+            const int offhand = inv[MSLOT_WEAPON4];
+            if (offhand != NON_ITEM)
+                weap = offhand;
         }
     }
 
@@ -1189,7 +1197,9 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     bool was_unequipped = false;
     if (eslot == MSLOT_WEAPON
         || eslot == MSLOT_ARMOUR
-        || eslot == MSLOT_JEWELLERY
+        || eslot == MSLOT_AMULET
+        || eslot == MSLOT_RING
+        || eslot == MSLOT_RING2
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*this))
     {
         if (!unequip(pitem, msg))
@@ -1427,6 +1437,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
     }
 
     const bool dual_wielding = mons_wields_two_weapons(*this);
+    const bool quad_wielding = mons_wields_four_weapons(*this);
     if (dual_wielding)
     {
         // If we have either weapon slot free, pick up the weapon.
@@ -1435,6 +1446,12 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
 
         if (inv[MSLOT_ALT_WEAPON] == NON_ITEM)
             return pickup(item, MSLOT_ALT_WEAPON, msg);
+
+        if (quad_wielding && inv[MSLOT_WEAPON3] == NON_ITEM)
+            return pickup(item, MSLOT_WEAPON3, msg);
+
+        if (quad_wielding && inv[MSLOT_WEAPON4] == NON_ITEM)
+            return pickup(item, MSLOT_WEAPON4, msg);
     }
 
     const int new_wpn_dam = mons_weapon_damage_rating(item)
@@ -1541,7 +1558,7 @@ bool monster::wants_weapon(const item_def &weap) const
 
     // Monsters capable of dual-wielding will always prefer two weapons
     // to a single two-handed one, however strong.
-    if (mons_wields_two_weapons(*this)
+    if ((mons_wields_two_weapons(*this) || mons_wields_four_weapons(*this))
         && hands_reqd(weap) == HANDS_TWO)
     {
         return false;
@@ -1676,62 +1693,84 @@ bool monster::pickup_armour(item_def &item, bool msg, bool force)
     const monster_type base_type = mons_is_zombified(*this) ? base_monster
                                                             : type;
     equipment_type eq = EQ_NONE;
+    int at = item.sub_type;
 
-    // HACK to allow nagas/centaurs to wear bardings. (jpeg)
-    switch (item.sub_type)
-    {
-    case ARM_NAGA_BARDING:
-        if (genus == MONS_NAGA || genus == MONS_SALAMANDER)
-            eq = EQ_BODY_ARMOUR;
-        break;
-    case ARM_CENTAUR_BARDING:
-        if (genus == MONS_CENTAUR || genus == MONS_YAKTAUR)
-            eq = EQ_BODY_ARMOUR;
-        break;
-    // And another hack or two...
-    case ARM_HAT:
-        if (base_type == MONS_GASTRONOK || genus == MONS_OCTOPODE)
-            eq = EQ_BODY_ARMOUR;
-        break;
-    case ARM_CLOAK:
-        if (base_type == MONS_MAURICE
-            || base_type == MONS_NIKOLA
-            || base_type == MONS_CRAZY_YIUF
-            || genus == MONS_DRACONIAN)
-        {
-            eq = EQ_BODY_ARMOUR;
-        }
-        break;
-    case ARM_GLOVES:
-        if (base_type == MONS_NIKOLA)
-            eq = EQ_SHIELD;
-        break;
-    case ARM_HELMET:
-        if (base_type == MONS_ROBIN)
-            eq = EQ_SHIELD;
-        break;
-    default:
-        eq = get_armour_slot(item);
+    eq = get_armour_slot(item);
 
-        if (eq == EQ_BODY_ARMOUR && genus == MONS_DRACONIAN)
-            return false;
-
-        if (eq != EQ_HELMET && base_type == MONS_GASTRONOK)
-            return false;
-
-        if (eq != EQ_HELMET && eq != EQ_SHIELD
-            && genus == MONS_OCTOPODE)
-        {
-            return false;
-        }
-    }
-
-    // Bardings are only wearable by the appropriate monster.
-    if (eq == EQ_NONE)
+    // Categorically remove anything that won't fit by size.
+    if (fit_armour_size(item, body_size()))
         return false;
 
-    // XXX: Monsters can only equip body armour and shields (as of 0.4).
-    if (!force && eq != EQ_BODY_ARMOUR && eq != EQ_SHIELD)
+    // Draconians can't wear any body armor.
+    if (eq == EQ_BODY_ARMOUR && genus == MONS_DRACONIAN)
+        return false;
+
+    // A human head is needed for a helmet.
+    if (at == ARM_HELMET &&
+        (genus == MONS_DRACONIAN ||
+         genus == MONS_OCTOPODE ||
+         genus == MONS_TENGU ||
+         genus == MONS_RAKSHASA))
+        return false;
+
+    // Only nagas and salamanders get naga bardings.
+    if (at == ARM_NAGA_BARDING &&
+        (genus != MONS_NAGA && genus != MONS_SALAMANDER))
+        return false;
+
+    // Only centaurs and yaktaurs get centaur bardings.
+    if (at == ARM_CENTAUR_BARDING &&
+        (genus != MONS_CENTAUR && genus != MONS_YAKTAUR))
+        return false;
+
+    // Anything with a barding is disqualified from boots.
+    if (at == ARM_BOOTS &&
+        (genus == MONS_NAGA || genus == MONS_SALAMANDER ||
+         genus == MONS_CENTAUR || genus == MONS_YAKTAUR))
+        return false;
+
+    // Antennae and horns block all headwear.
+    if (eq == EQ_HEADGEAR && 
+        (genus == MONS_FORMICID ||
+         genus == MONS_MINOTAUR ||
+         genus == MONS_IRON_IMP ||
+         genus == MONS_RED_DEVIL ||
+         genus == MONS_BALRUG))
+        return false;
+
+    // They have talons, so no gloves.
+    if (eq == EQ_GLOVES && 
+        (base_type == MONS_ENTROPY_WEAVER))
+        return false;
+
+    // These lack human-like feet for boots.
+    if (eq == EQ_BOOTS && 
+        (base_type == MONS_ENTROPY_WEAVER ||
+         base_type == MONS_MELIAI ||
+         base_type == MONS_ARACHNE ||
+         genus == MONS_MERFOLK ||
+         genus == MONS_EFREET ||
+         genus == MONS_TENGU))
+        return false;
+
+    // At the level they're venturing Pan, monstrous Ds lack slots.
+    if (genus == MONS_DEMONSPAWN && 
+        draco_or_demonspawn_subspecies(*this) == MONS_MONSTROUS_DEMONSPAWN &&
+        (eq != EQ_BODY_ARMOUR && eq != EQ_CLOAK))
+        return false;
+
+    // Gastronok can only wear its hat.
+    if (eq != EQ_HEADGEAR && base_type == MONS_GASTRONOK)
+        return false;
+
+    // Octopodes only get a shield and a hat.
+    if (eq != EQ_HEADGEAR && eq != EQ_SHIELD
+        && genus == MONS_OCTOPODE)
+    {
+        return false;
+    }
+
+    if (eq == EQ_NONE)
         return false;
 
     const mon_inv_type mslot = equip_slot_to_mslot(eq);
@@ -1819,6 +1858,25 @@ static int _get_monster_jewellery_value(const monster *mon,
     return value;
 }
 
+static bool _compare_jewellery_value(const monster* mon,
+                                   const item_def &item1,
+                                   const item_def &item2)
+{
+    // Returns true if item1 is greater or equal value to item2
+    int value_1 = _get_monster_jewellery_value(mon, item1);
+    int value_2 = _get_monster_jewellery_value(mon, item2);
+    if (value_1 > value_2)
+        return true;
+    else if (value_1 < value_2)
+        return false;
+
+    // Use shop prices to estimate in event of a tie.
+    value_1 = item_value(item1);
+    value_2 = item_value(item2);
+    return value_1 >= value_2;
+}
+
+
 bool monster::pickup_jewellery(item_def &item, bool msg, bool force)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
@@ -1826,43 +1884,47 @@ bool monster::pickup_jewellery(item_def &item, bool msg, bool force)
     if (!force && !wants_jewellery(item))
         return false;
 
-    equipment_type eq = EQ_RINGS;
+    if (jewellery_is_amulet(item))
+    {
+        const item_def* old_item = mslot_item(MSLOT_AMULET);
+        if (old_item && !force)
+        {
+            if (_compare_jewellery_value(this, *old_item, item))
+                return false;
+        }
+        if (old_item && !drop_item(MSLOT_AMULET, msg))
+            return false;
+        return pickup(item, MSLOT_AMULET, msg);
+    }
 
-    const mon_inv_type mslot = equip_slot_to_mslot(eq);
-    if (mslot == NUM_MONSTER_SLOTS)
-        return false;
+    // If we're here, it's a ring.
+    const item_def* old_ring1 = mslot_item(MSLOT_RING);
+    const item_def* old_ring2 = mslot_item(MSLOT_RING2);
+    mon_inv_type mslot;
 
-    int value_new = _get_monster_jewellery_value(this, item);
-
-    // No armour yet -> get this one.
-    if (!mslot_item(mslot) && value_new > 0)
-        return pickup(item, mslot, msg);
-
-    // Simplistic jewellery evaluation (comparing AC and resistances).
-    if (const item_def *existing_jewellery = slot_item(eq, false))
+    // Figure out which finger to put the ring on.
+    if (!old_ring1)
+        mslot = MSLOT_RING;
+    else if (!old_ring2)
+        mslot = MSLOT_RING2;
+    else
+    {
+        if (_compare_jewellery_value(this, *old_ring1, *old_ring2))
+            mslot = MSLOT_RING;
+        else
+            mslot = MSLOT_RING2;
+    }
+    
+    if (const item_def *existing_ring = mslot_item(mslot))
     {
         if (!force)
         {
-            int value_old = _get_monster_jewellery_value(this,
-                                                         *existing_jewellery);
-            if (value_old > value_new)
+            if (_compare_jewellery_value(this, *existing_ring, item))
                 return false;
-
-            if (value_old == value_new)
-            {
-                // If items are of the same value, use shopping
-                // value as a further crude estimate.
-                value_old = item_value(*existing_jewellery, true);
-                value_new = item_value(item, true);
-                if (value_old >= value_new)
-                    return false;
-            }
         }
-
         if (!drop_item(mslot, msg))
             return false;
     }
-
     return pickup(item, mslot, msg);
 }
 
@@ -3127,7 +3189,7 @@ int monster::shield_bonus() const
         sh = max(sh + bone_armour, bone_armour);
     }
     // shielding from jewellery
-    const item_def *amulet = mslot_item(MSLOT_JEWELLERY);
+    const item_def *amulet = mslot_item(MSLOT_AMULET);
     if (amulet && amulet->sub_type == AMU_REFLECTION)
     {
         const int jewellery_plus = amulet->plus;
@@ -3332,12 +3394,24 @@ int monster::armour_class(bool calc_unid) const
     ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
 
     // armour from ac
-    const item_def *armour = mslot_item(MSLOT_ARMOUR);
+    item_def* armour = mslot_item(MSLOT_ARMOUR);
     if (armour)
         ac += armour_bonus(*armour, calc_unid);
+    armour = mslot_item(MSLOT_CLOAK);
+    if (armour)
+        ac += armour_bonus(*armour, calc_unid);
+    armour = mslot_item(MSLOT_HEADGEAR);
+    if (armour)
+        ac += armour_bonus(*armour, calc_unid);
+    armour = mslot_item(MSLOT_GLOVES);
+    if (armour)
+        ac += armour_bonus(*armour, calc_unid);
+    armour = mslot_item(MSLOT_BOOTS);
+    if (armour)
+        ac += armour_bonus(*armour, calc_unid);    
 
     // armour from jewellery
-    const item_def *ring = mslot_item(MSLOT_JEWELLERY);
+    item_def* ring = mslot_item(MSLOT_RING);
     if (ring && ring->sub_type == RING_PROTECTION
         && (calc_unid
             || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
@@ -3346,6 +3420,22 @@ int monster::armour_class(bool calc_unid) const
         ASSERT(abs(jewellery_plus) < 30); // sanity check
         ac += jewellery_plus;
     }
+    ring = mslot_item(MSLOT_RING);
+    if (ring && ring->sub_type == RING_PROTECTION
+        && (calc_unid
+            || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
+    {
+        const int jewellery_plus = ring->plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        ac += jewellery_plus;
+    }
+
+    // AC from shields of protection
+    if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
+        ac += 3;
+
+    // AC from artifacts
+    ac += scan_artefacts(ARTP_AC);
 
     // various enchantments
     if (has_ench(ENCH_OZOCUBUS_ARMOUR))
@@ -3455,7 +3545,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
     }
 
     // evasion from jewellery
-    const item_def *ring = mslot_item(MSLOT_JEWELLERY);
+    item_def* ring = mslot_item(MSLOT_RING);
     if (ring && ring->sub_type == RING_EVASION
         && (calc_unid
             || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
@@ -3464,6 +3554,18 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
         ASSERT(abs(jewellery_plus) < 30); // sanity check
         ev += jewellery_plus;
     }
+    ring = mslot_item(MSLOT_RING2);
+    if (ring && ring->sub_type == RING_EVASION
+        && (calc_unid
+            || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
+    {
+        const int jewellery_plus = ring->plus;
+        ASSERT(abs(jewellery_plus) < 30); // sanity check
+        ev += jewellery_plus;
+    }
+
+    // EV from artifacts
+    ev += scan_artefacts(ARTP_EVASION);
 
     if (has_ench(ENCH_AGILE))
         ev += 5;
@@ -3727,7 +3829,8 @@ int monster::res_fire() const
 
         const int armour    = inv[MSLOT_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
-        const int jewellery = inv[MSLOT_JEWELLERY];
+        const int ring1     = inv[MSLOT_RING];
+        const int ring2     = inv[MSLOT_RING2];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_fire(mitm[armour], false);
@@ -3735,8 +3838,11 @@ int monster::res_fire() const
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_fire(mitm[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_fire(mitm[jewellery], false);
+        if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_fire(mitm[ring1], false);
+
+        if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_fire(mitm[ring2], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_FIRE))
@@ -3781,7 +3887,8 @@ int monster::res_cold() const
 
         const int armour    = inv[MSLOT_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
-        const int jewellery = inv[MSLOT_JEWELLERY];
+        const int ring1     = inv[MSLOT_RING];
+        const int ring2     = inv[MSLOT_RING2];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_cold(mitm[armour], false);
@@ -3789,8 +3896,11 @@ int monster::res_cold() const
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_cold(mitm[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_cold(mitm[jewellery], false);
+        if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_cold(mitm[ring1], false);
+
+        if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_cold(mitm[ring2], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_COLD))
@@ -3824,13 +3934,17 @@ int monster::res_elec() const
         // Also no non-artefact rings at present,
         // but it doesn't hurt to be thorough.
         const int armour    = inv[MSLOT_ARMOUR];
-        const int jewellery = inv[MSLOT_JEWELLERY];
+        const int ring1     = inv[MSLOT_RING];
+        const int ring2     = inv[MSLOT_RING2];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_elec(mitm[armour], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_elec(mitm[jewellery], false);
+        if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_elec(mitm[ring1], false);
+
+        if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_elec(mitm[ring2], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_AIR))
@@ -3878,7 +3992,8 @@ int monster::res_poison(bool temp) const
 
         const int armour    = inv[MSLOT_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
-        const int jewellery = inv[MSLOT_JEWELLERY];
+        const int ring1     = inv[MSLOT_RING];
+        const int ring2     = inv[MSLOT_RING2];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(mitm[armour], false);
@@ -3886,8 +4001,11 @@ int monster::res_poison(bool temp) const
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(mitm[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_res_poison(mitm[jewellery], false);
+        if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_poison(mitm[ring1], false);
+
+        if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_res_poison(mitm[ring2], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_POISON))
@@ -3969,7 +4087,8 @@ int monster::res_negative_energy(bool intrinsic_only) const
 
         const int armour    = inv[MSLOT_ARMOUR];
         const int shld      = inv[MSLOT_SHIELD];
-        const int jewellery = inv[MSLOT_JEWELLERY];
+        const int ring1     = inv[MSLOT_RING];
+        const int ring2     = inv[MSLOT_RING2];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(mitm[armour], false);
@@ -3977,8 +4096,11 @@ int monster::res_negative_energy(bool intrinsic_only) const
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(mitm[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_jewellery_life_protection(mitm[jewellery], false);
+        if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_life_protection(mitm[ring1], false);
+
+        if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY)
+            u += get_jewellery_life_protection(mitm[ring2], false);
 
         const item_def *w = primary_weapon();
         if (w && w->is_type(OBJ_STAVES, STAFF_DEATH))
@@ -4072,7 +4194,8 @@ int monster::res_magic(bool calc_unid) const
     // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
     const int shld      = inv[MSLOT_SHIELD];
-    const int jewellery = inv[MSLOT_JEWELLERY];
+    const int ring1     = inv[MSLOT_RING];
+    const int ring2     = inv[MSLOT_RING2];
 
     // XXX: should also include artefacts mr props
     // (remove ", false" and add appropriate flag checks for calc_unid)
@@ -4089,11 +4212,17 @@ int monster::res_magic(bool calc_unid) const
         u += get_armour_res_magic(mitm[shld], false);
     }
 
-    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
-        && calc_unid) // XXX: can you ever see monster jewellery?
+    if (ring1 != NON_ITEM && mitm[ring1].base_type == OBJ_JEWELLERY
+        && calc_unid)
     {
-        u += get_jewellery_res_magic(mitm[jewellery], false);
+        u += get_jewellery_res_magic(mitm[ring1], false);
     }
+    if (ring2 != NON_ITEM && mitm[ring2].base_type == OBJ_JEWELLERY
+        && calc_unid)
+    {
+        u += get_jewellery_res_magic(mitm[ring2], false);
+    }
+
 
     if (has_ench(ENCH_RAISED_MR)) //trog's hand
         u += 80;
@@ -4150,11 +4279,13 @@ bool monster::airborne() const
            || mons_class_flag(type, M_FLIES)
            || has_facet(BF_BAT)
            || scan_artefacts(ARTP_FLY) > 0
-           || mslot_item(MSLOT_ARMOUR)
-              && mslot_item(MSLOT_ARMOUR)->base_type == OBJ_ARMOUR
-              && mslot_item(MSLOT_ARMOUR)->brand == SPARM_FLYING
-           || mslot_item(MSLOT_JEWELLERY)
-              && mslot_item(MSLOT_JEWELLERY)->is_type(OBJ_JEWELLERY, RING_FLIGHT)
+           || mslot_item(MSLOT_BOOTS)
+              && mslot_item(MSLOT_BOOTS)->base_type == OBJ_ARMOUR
+              && mslot_item(MSLOT_BOOTS)->brand == SPARM_FLYING
+           || mslot_item(MSLOT_RING)
+              && mslot_item(MSLOT_RING)->is_type(OBJ_JEWELLERY, RING_FLIGHT)
+           || mslot_item(MSLOT_RING2)
+              && mslot_item(MSLOT_RING2)->is_type(OBJ_JEWELLERY, RING_FLIGHT)
            || has_ench(ENCH_FLIGHT);
 }
 

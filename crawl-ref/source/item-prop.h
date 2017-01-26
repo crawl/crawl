@@ -75,7 +75,7 @@ bool fully_identified(const item_def &item) PURE;
 void     set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_desc(const item_def &item) PURE;
 
-bool  is_helmet(const item_def &item) PURE;
+bool  is_headgear(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:

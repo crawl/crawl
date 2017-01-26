@@ -131,7 +131,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
         { EQ_BODY_ARMOUR,   divine ? 5 : 1 },
         { EQ_SHIELD,        1 },
         { EQ_CLOAK,         1 },
-        { EQ_HELMET,        1 },
+        { EQ_HEADGEAR,      1 },
         { EQ_GLOVES,        1 },
         { EQ_BOOTS,         1 },
     };
@@ -172,8 +172,8 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
                 default:
                     return ARM_BOOTS;
             }
-        case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_TRUE)
+        case EQ_HEADGEAR:
+            if (you_can_wear(EQ_HEADGEAR) == MB_TRUE)
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
@@ -302,7 +302,7 @@ static armour_type _useless_armour_type()
 {
     vector<pair<equipment_type, int>> weights = {
         { EQ_BODY_ARMOUR, 1 }, { EQ_SHIELD, 1 }, { EQ_CLOAK, 1 },
-        { EQ_HELMET, 1 }, { EQ_GLOVES, 1 }, { EQ_BOOTS, 1 },
+        { EQ_HEADGEAR, 1 }, { EQ_GLOVES, 1 }, { EQ_BOOTS, 1 },
     };
 
     // everyone has some kind of boot-slot item they can't wear, regardless
@@ -328,8 +328,8 @@ static armour_type _useless_armour_type()
             return ARM_BOOTS;
         case EQ_GLOVES:
             return ARM_GLOVES;
-        case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET))
+        case EQ_HEADGEAR:
+            if (you_can_wear(EQ_HEADGEAR))
                 return ARM_HELMET;
             return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
@@ -374,7 +374,7 @@ static armour_type _pick_unseen_armour()
     // This affects only the "unfilled slot" special-case, not regular
     // acquirement which can always produce (wearable) shields.
     static const equipment_type armour_slots[] =
-        {  EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
+        {  EQ_CLOAK, EQ_HEADGEAR, EQ_GLOVES, EQ_BOOTS  };
 
     armour_type picked = NUM_ARMOURS;
     int count = 0;

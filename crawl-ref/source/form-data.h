@@ -213,7 +213,7 @@ static const form_entry formdata[] =
 {
     transformation::fungus, MONS_WANDERING_MUSHROOM, "Fungus", "fungus-form", "fungus",
     "a sentient fungus.",
-    EQF_PHYSICAL & ~SLOTF(EQ_HELMET), MR_RES_POISON | mrd(MR_RES_NEG, 3),
+    EQF_PHYSICAL & ~SLOTF(EQ_HEADGEAR), MR_RES_POISON | mrd(MR_RES_NEG, 3),
     BAD_DURATION, 0, 0, SIZE_TINY, 10,
     12, 0, 0, false, 0, 10, 12,
     SPWPN_CONFUSE, BROWN, "Spores", FormAttackVerbs("release spores at"),

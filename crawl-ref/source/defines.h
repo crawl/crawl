@@ -44,7 +44,7 @@ enum extra_monster_index_type
 };
 
 // number of monster attack specs
-#define MAX_NUM_ATTACKS 4
+#define MAX_NUM_ATTACKS 5
 
 // size of Pan monster sets
 #define PAN_MONS_ALLOC 10

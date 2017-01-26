@@ -732,7 +732,11 @@ int player::umbra_radius() const
 
 int monster::umbra_radius() const
 {
-    item_def* ring = mslot_item(MSLOT_JEWELLERY);
+    item_def* ring = mslot_item(MSLOT_RING);
+    if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
+        return 3;
+
+    ring = mslot_item(MSLOT_RING2);
     if (ring && is_unrandom_artefact(*ring, UNRAND_SHADOWS))
         return 3;
 

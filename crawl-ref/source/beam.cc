@@ -4522,7 +4522,7 @@ bool bolt::attempt_block(monster* mon)
                      name.c_str(),
                      mon->name(DESC_THE).c_str());
 
-                item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
+                item_def *amulet = mon->mslot_item(MSLOT_AMULET);
                 if (amulet)
                     ident_reflector(amulet);
             }

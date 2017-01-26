@@ -50,7 +50,7 @@ static const int EQF_HANDS = SLOTF(EQ_WEAPON) | SLOTF(EQ_SHIELD)
 static const int EQF_STATUE = SLOTF(EQ_GLOVES) | SLOTF(EQ_BOOTS)
                               | SLOTF(EQ_BODY_ARMOUR);
 // more core body slots (Lear's Hauberk)
-static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HELMET);
+static const int EQF_LEAR = EQF_STATUE | SLOTF(EQ_HEADGEAR);
 // everything you can (W)ear
 static const int EQF_WEAR = EQF_LEAR | SLOTF(EQ_CLOAK) | SLOTF(EQ_SHIELD);
 // everything but jewellery
@@ -1318,7 +1318,7 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
 
 void unmeld_one_equip(equipment_type eq)
 {
-    if (eq >= EQ_HELMET && eq <= EQ_BOOTS)
+    if (eq >= EQ_HEADGEAR && eq <= EQ_BOOTS)
     {
         const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true);
         if (arm && is_unrandom_artefact(*arm, UNRAND_LEAR))
@@ -1332,7 +1332,7 @@ void unmeld_one_equip(equipment_type eq)
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
-    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HELMET && eq <= EQ_BOOTS)
+    if (player_equip_unrand(UNRAND_LEAR) && eq >= EQ_HEADGEAR && eq <= EQ_BOOTS)
         eq = EQ_BODY_ARMOUR;
 
     set<equipment_type> r;
@@ -1453,7 +1453,7 @@ static bool _slot_conflict(equipment_type eq)
     if (you.equip[eq] != -1)
     {
         // Horns + hat is fine.
-        if (eq != EQ_HELMET
+        if (eq != EQ_HEADGEAR
             || you.melded[eq]
             || is_hard_helmet(*(you.slot_item(eq))))
         {

@@ -1795,7 +1795,7 @@ static string _itosym(int level, int max = 1)
 
 static const char *s_equip_slot_names[] =
 {
-    "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
+    "Weapon", "Cloak",  "Headgear", "Gloves", "Boots",
     "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
     "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
     "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
@@ -1898,7 +1898,7 @@ static void _print_overview_screen_equip(column_composer& cols,
 {
     const equipment_type e_order[] =
     {
-        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
+        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HEADGEAR, EQ_CLOAK,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
         EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
         EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,

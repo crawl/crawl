@@ -1030,7 +1030,8 @@ wizard_red WIZARD_RED
 wizard_white WIZARD_WHITE
 turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
-turban_purple TURBAN_PURPLE HAT_LAST_NORM
+turban_purple TURBAN_PURPLE 
+hat_joseph HAT_JOSEPH HAT_LAST_NORM
 pumpkin PUMPKIN
 
 ## Mutations

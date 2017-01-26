@@ -168,6 +168,9 @@ enum monclass_flag_type : uint64_t
 
     /// monster will never harm the player
     M_NO_THREAT         = BIT(55),
+
+    /// wields four weapons at once
+    M_FOUR_WEAPONS      = BIT(56),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 

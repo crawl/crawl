@@ -3010,6 +3010,8 @@ static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
     const item_def* weapon
        = atk == 0 ? mi.inv[MSLOT_WEAPON].get() :
          atk == 1 && mi.wields_two_weapons() ? mi.inv[MSLOT_ALT_WEAPON].get() :
+         atk == 2 && mi.wields_four_weapons() ? mi.inv[MSLOT_WEAPON3].get() :
+         atk == 3 && mi.wields_four_weapons() ? mi.inv[MSLOT_WEAPON4].get() :
          nullptr;
 
     if (weapon && is_weapon(*weapon))

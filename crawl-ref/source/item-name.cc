@@ -264,7 +264,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                         buff << " (in " << you.hand_name(false) << ")";
                     break;
                 case EQ_CLOAK:
-                case EQ_HELMET:
+                case EQ_HEADGEAR:
                 case EQ_GLOVES:
                 case EQ_BOOTS:
                 case EQ_SHIELD:
@@ -1702,7 +1702,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
-                    || get_armour_slot(*this) == EQ_HELMET
+                    || get_armour_slot(*this) == EQ_HEADGEAR
                        && !is_hard_helmet(*this))
                 {
                     buff << "embroidered ";

@@ -138,15 +138,15 @@ static const armour_def Armour_prop[] =
         EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
     { ARM_HELMET,               "helmet",                 1,   0,   45,
-        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_HEADGEAR,    SIZE_SMALL,  SIZE_MEDIUM, true },
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_CAP,                  "cap",                    0,   0,   45,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
+        EQ_HEADGEAR,    SIZE_LITTLE, SIZE_LARGE, true },
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,   40,
-        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true },
+        EQ_HEADGEAR,    SIZE_TINY, SIZE_LARGE, true },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
@@ -1182,9 +1182,9 @@ void set_equip_desc(item_def &item, iflags_t flags)
     item.flags |= flags;
 }
 
-bool is_helmet(const item_def& item)
+bool is_headgear(const item_def& item)
 {
-    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
+    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HEADGEAR;
 }
 
 bool is_hard_helmet(const item_def &item)

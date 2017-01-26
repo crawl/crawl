@@ -87,9 +87,9 @@ COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 static const body_facet_def _body_facets[] =
 {
     //{ EQ_NONE, MUT_FANGS },
-    { EQ_HELMET, MUT_HORNS },
-    { EQ_HELMET, MUT_ANTENNAE },
-    //{ EQ_HELMET, MUT_BEAK },
+    { EQ_HEADGEAR, MUT_HORNS },
+    { EQ_HEADGEAR, MUT_ANTENNAE },
+    //{ EQ_HEADGEAR, MUT_BEAK },
     { EQ_GLOVES, MUT_CLAWS },
     { EQ_BOOTS, MUT_HOOVES },
     { EQ_BOOTS, MUT_TALONS }
@@ -160,7 +160,7 @@ equipment_type beastly_slot(int mut)
     case MUT_HORNS:
     case MUT_ANTENNAE:
     // Not putting MUT_BEAK here because it doesn't conflict with the other two.
-        return EQ_HELMET;
+        return EQ_HEADGEAR;
     case MUT_CLAWS:
         return EQ_GLOVES;
     case MUT_HOOVES:
@@ -1497,16 +1497,16 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // Horns & Antennae 3 removes all headgear. Same algorithm as with
             // glove removal.
 
-            if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
-                remove_one_equip(EQ_HELMET, false, true);
+            if (you.mutation[mutat] >= 3 && !you.melded[EQ_HEADGEAR])
+                remove_one_equip(EQ_HEADGEAR, false, true);
             // Intentional fall-through
         case MUT_BEAK:
             // Horns, beaks, and antennae force hard helmets off.
-            if (you.equip[EQ_HELMET] != -1
-                && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
-                && !you.melded[EQ_HELMET])
+            if (you.equip[EQ_HEADGEAR] != -1
+                && is_hard_helmet(you.inv[you.equip[EQ_HEADGEAR]])
+                && !you.melded[EQ_HEADGEAR])
             {
-                remove_one_equip(EQ_HELMET, false, true);
+                remove_one_equip(EQ_HEADGEAR, false, true);
             }
             // Recheck Ashenzari bondage in case our available slots changed.
             ash_check_bondage();

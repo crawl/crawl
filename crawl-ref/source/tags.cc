@@ -3714,7 +3714,7 @@ static void tag_read_you_items(reader &th)
             food_pickups[FOOD_FRUIT] = food_pickups[FOOD_PEAR];
     }
     if (you.species == SP_FORMICID)
-        remove_one_equip(EQ_HELMET, false, true);
+        remove_one_equip(EQ_HEADGEAR, false, true);
 
     if (th.getMinorVersion() < TAG_MINOR_CONSUM_APPEARANCE)
     {
@@ -4872,9 +4872,14 @@ void marshallMonster(writer &th, const monster& m)
         parts |= MP_GHOST_DEMON;
     if (m.held || m.constricting && m.constricting->size())
         parts |= MP_CONSTRICTION;
+
+    #if TAG_MAJOR_VERSION == 34
+    
+    #endif
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         if (m.inv[i] != NON_ITEM)
             parts |= MP_ITEMS;
+
     if (m.spells.size() > 0)
         parts |= MP_SPELLS;
 
@@ -5246,19 +5251,107 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
             mi.attack[i].damage = 0;
         }
     }
+    else if (th.getMinorVersion() < TAG_MINOR_MON_AUX_ARMOUR)
+    {
+        for (int i = 0; i < 4; ++i)
+            mi.attack[i] = _unmarshall_mi_attack(th);
+        mi.attack[4] = get_monster_data(mi.type)->attack[4];
+        mi.attack[4].damage = 0;
+    }
     else
 #endif
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         mi.attack[i] = _unmarshall_mi_attack(th);
 
-    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MON_AUX_ARMOUR)
     {
         if (unmarshallBoolean(th))
         {
-            mi.inv[i].reset(new item_def());
-            unmarshallItem(th, *mi.inv[i].get());
+            mi.inv[MSLOT_WEAPON].reset(new item_def());
+            unmarshallItem(th, *mi.inv[MSLOT_WEAPON].get());
+        }
+        if (unmarshallBoolean(th))
+        {
+            mi.inv[MSLOT_ALT_WEAPON].reset(new item_def());
+            unmarshallItem(th, *mi.inv[MSLOT_ALT_WEAPON].get());
+        }
+        if (unmarshallBoolean(th))
+        {
+            mi.inv[MSLOT_MISSILE].reset(new item_def());
+            unmarshallItem(th, *mi.inv[MSLOT_MISSILE].get());
+        }
+        if (unmarshallBoolean(th))
+        {
+            mi.inv[MSLOT_ALT_MISSILE].reset(new item_def());
+            unmarshallItem(th, *mi.inv[MSLOT_ALT_MISSILE].get());
+        }
+        if (unmarshallBoolean(th))
+        {
+            //Body armor; held lots of stuff it shouldn't
+            item_def* armor = new item_def();
+            unmarshallItem(th, *armor);
+            if (armor->sub_type == ARM_CLOAK)
+                mi.inv[MSLOT_CLOAK].reset(armor);
+            else if (armor->sub_type == ARM_HAT)
+                mi.inv[MSLOT_HEADGEAR].reset(armor);
+            else if (armor->sub_type == ARM_NAGA_BARDING ||
+                     armor->sub_type == ARM_CENTAUR_BARDING)
+                mi.inv[MSLOT_BOOTS].reset(armor);
+            else
+                mi.inv[MSLOT_ARMOUR].reset(armor);
+        }
+        if (unmarshallBoolean(th))  
+        {
+            //Shield (also Robin's helm and Nikola's gloves)
+            if (mi.type == MONS_ROBIN)
+            {
+                mi.inv[MSLOT_HEADGEAR].reset(new item_def());
+                unmarshallItem(th, *mi.inv[MSLOT_HEADGEAR].get());
+            }
+            else if (mi.type == MONS_NIKOLA)
+            {
+                mi.inv[MSLOT_GLOVES].reset(new item_def());
+                unmarshallItem(th, *mi.inv[MSLOT_GLOVES].get());
+            }
+            else
+            {
+                mi.inv[MSLOT_SHIELD].reset(new item_def());
+                unmarshallItem(th, *mi.inv[MSLOT_SHIELD].get());
+            }
+        }
+        if (unmarshallBoolean(th))
+        {
+            mi.inv[MSLOT_WAND].reset(new item_def());
+                unmarshallItem(th, *mi.inv[MSLOT_WAND].get());
+        }
+        if (unmarshallBoolean(th)) //Jewellery; could be a ring or an amulet.
+        {
+            item_def* jewellery = new item_def();
+            unmarshallItem(th, *jewellery);
+            if (jewellery_is_amulet(*jewellery))
+                mi.inv[MSLOT_AMULET].reset(jewellery);
+            else
+                mi.inv[MSLOT_RING].reset(jewellery);
+        }
+        if (unmarshallBoolean(th))
+        {
+            mi.inv[MSLOT_MISCELLANY].reset(new item_def());
+                unmarshallItem(th, *mi.inv[MSLOT_MISCELLANY].get());
         }
     }
+    else
+    {
+        for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+        {
+            if (unmarshallBoolean(th))
+            {
+                mi.inv[i].reset(new item_def());
+                unmarshallItem(th, *mi.inv[i].get());
+            }
+        }
+    }
+#endif
 
     if (mons_is_pghost(mi.type))
     {
@@ -5744,8 +5837,74 @@ void unmarshallMonster(reader &th, monster& m)
     m.summoner       = unmarshallInt(th);
 
     if (parts & MP_ITEMS)
-        for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-            m.inv[j] = unmarshallShort(th);
+    {
+        if (th.getMinorVersion() < TAG_MINOR_MON_AUX_ARMOUR)
+        {
+            m.inv[MSLOT_WEAPON] = unmarshallShort(th); //0
+            m.inv[MSLOT_ALT_WEAPON] = unmarshallShort(th); //1
+            m.inv[MSLOT_WEAPON3] = NON_ITEM;
+            m.inv[MSLOT_MISSILE] = unmarshallShort(th); //2
+            m.inv[MSLOT_ALT_MISSILE] = unmarshallShort(th); //3
+            m.inv[MSLOT_ARMOUR] = unmarshallShort(th); //4
+            m.inv[MSLOT_CLOAK] = NON_ITEM;
+            m.inv[MSLOT_HEADGEAR] = NON_ITEM;
+            m.inv[MSLOT_GLOVES] = NON_ITEM;
+            m.inv[MSLOT_BOOTS] = NON_ITEM;
+            m.inv[MSLOT_SHIELD] = unmarshallShort(th); //5
+            m.inv[MSLOT_WAND] = unmarshallShort(th); //6
+            m.inv[MSLOT_AMULET] = unmarshallShort(th); //7
+            m.inv[MSLOT_RING] = NON_ITEM;
+            m.inv[MSLOT_RING2] = NON_ITEM;
+            m.inv[MSLOT_MISCELLANY] = unmarshallShort(th); //8
+            m.inv[MSLOT_POTION] = unmarshallShort(th); //9
+            m.inv[MSLOT_SCROLL] = unmarshallShort(th); //10
+            m.inv[MSLOT_GOLD] = unmarshallShort(th); //11
+
+            // Put things back in the right place.
+            
+            if (m.type == MONS_NIKOLA)
+            {
+                m.inv[MSLOT_GLOVES] = m.inv[MSLOT_SHIELD];
+                m.inv[MSLOT_SHIELD] = NON_ITEM;
+            }
+            if (m.type == MONS_ROBIN)
+            {
+                m.inv[MSLOT_HEADGEAR] = m.inv[MSLOT_SHIELD];
+                m.inv[MSLOT_SHIELD] = NON_ITEM;
+            }
+            if (m.type == MONS_GASTRONOK)
+            {
+                m.inv[MSLOT_HEADGEAR] = m.inv[MSLOT_ARMOUR];
+                m.inv[MSLOT_ARMOUR] = NON_ITEM;
+            }
+
+            // Many monsters could wear cloaks in armor slot.
+            if (m.inv[MSLOT_ARMOUR] != NON_ITEM && 
+                mitm[m.inv[MSLOT_ARMOUR]].sub_type == ARM_CLOAK)
+            {
+                m.inv[MSLOT_CLOAK] = m.inv[MSLOT_ARMOUR];
+                m.inv[MSLOT_ARMOUR] = NON_ITEM;
+            }
+            // Monsters with bardings wore them in the armor slot.
+            if (m.inv[MSLOT_ARMOUR] != NON_ITEM &&
+                (mitm[m.inv[MSLOT_ARMOUR]].sub_type == ARM_CENTAUR_BARDING ||
+                 mitm[m.inv[MSLOT_ARMOUR]].sub_type == ARM_NAGA_BARDING))
+            {
+                m.inv[MSLOT_BOOTS] = m.inv[MSLOT_ARMOUR];
+                m.inv[MSLOT_ARMOUR] = NON_ITEM;
+            }
+            // Amulets and rings shared a jewellery slot.
+            if (m.inv[MSLOT_AMULET] != NON_ITEM &&
+                !jewellery_is_amulet(mitm[m.inv[MSLOT_AMULET]]))
+            {
+                m.inv[MSLOT_RING] = m.inv[MSLOT_AMULET];
+                m.inv[MSLOT_AMULET] = NON_ITEM;
+            }
+        }
+        else
+            for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+                m.inv[j] = unmarshallShort(th);
+    }
 
     if (parts & MP_SPELLS)
     {

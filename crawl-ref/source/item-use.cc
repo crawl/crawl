@@ -712,7 +712,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
+    if (you.species == SP_OCTOPODE && slot != EQ_HEADGEAR && slot != EQ_SHIELD)
     {
         if (verbose)
             mpr("You can't wear that!");
@@ -804,12 +804,12 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
         if (!ignore_temporary)
         {
-            for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
+            for (int s = EQ_HEADGEAR; s <= EQ_BOOTS; s++)
             {
                 // No strange race can wear this.
                 const string parts[] = { "head", you.hand_name(true),
                                          you.foot_name(true) };
-                COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HELMET + 1);
+                COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HEADGEAR + 1);
 
                 // Auto-disrobing would be nice.
                 if (you.equip[s] != -1)
@@ -817,7 +817,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     if (verbose)
                     {
                         mprf("You'd need your %s free.",
-                             parts[s - EQ_HELMET].c_str());
+                             parts[s - EQ_HEADGEAR].c_str());
                     }
                     return false;
                 }
@@ -827,14 +827,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     if (verbose)
                     {
                         mprf("The hauberk won't fit your %s.",
-                             parts[s - EQ_HELMET].c_str());
+                             parts[s - EQ_HEADGEAR].c_str());
                     }
                     return false;
                 }
             }
         }
     }
-    else if (slot >= EQ_HELMET && slot <= EQ_BOOTS
+    else if (slot >= EQ_HEADGEAR && slot <= EQ_BOOTS
              && !ignore_temporary
              && player_equip_unrand(UNRAND_LEAR))
     {
@@ -925,7 +925,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    if (slot == EQ_HELMET)
+    if (slot == EQ_HEADGEAR)
     {
         // Horns 3 & Antennae 3 mutations disallow all headgear
         if (player_mutation_level(MUT_HORNS, false) == 3)
@@ -1028,7 +1028,7 @@ bool do_wear_armour(int item, bool quiet)
 
     bool swapping = false;
     if ((slot == EQ_CLOAK
-           || slot == EQ_HELMET
+           || slot == EQ_HEADGEAR
            || slot == EQ_GLOVES
            || slot == EQ_BOOTS
            || slot == EQ_SHIELD
@@ -1103,7 +1103,7 @@ bool takeoff_armour(int item)
     case EQ_BODY_ARMOUR:
     case EQ_SHIELD:
     case EQ_CLOAK:
-    case EQ_HELMET:
+    case EQ_HEADGEAR:
     case EQ_GLOVES:
     case EQ_BOOTS:
         if (item != you.equip[slot])

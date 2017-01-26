@@ -198,15 +198,15 @@ void list_armour()
         estr.str("");
         estr.clear();
 
-        estr << ((i == EQ_CLOAK)       ? "Cloak  " :
-                 (i == EQ_HELMET)      ? "Helmet " :
-                 (i == EQ_GLOVES)      ? "Gloves " :
-                 (i == EQ_SHIELD)      ? "Shield " :
-                 (i == EQ_BODY_ARMOUR) ? "Armour " :
+        estr << ((i == EQ_CLOAK)       ? "Cloak   " :
+                 (i == EQ_HEADGEAR)    ? "Headgear" :
+                 (i == EQ_GLOVES)      ? "Gloves  " :
+                 (i == EQ_SHIELD)      ? "Shield  " :
+                 (i == EQ_BODY_ARMOUR) ? "Armour  " :
                  (i == EQ_BOOTS) ?
                  ((you.species == SP_CENTAUR
-                   || you.species == SP_NAGA) ? "Barding"
-                                              : "Boots  ")
+                   || you.species == SP_NAGA) ? "Barding "
+                                              : "Boots   ")
                                  : "unknown")
              << " : ";
 

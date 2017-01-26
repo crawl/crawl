@@ -2936,9 +2936,11 @@ string feature_description_at(const coord_def& where, bool covering,
 static string _describe_monster_weapon(const monster_info& mi, bool ident)
 {
     string desc = "";
-    string name1, name2;
+    string name1, name2, name3, name4;
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
+    const item_def *third  = mi.inv[MSLOT_WEAPON3].get();
+    const item_def *fourth = mi.inv[MSLOT_WEAPON4].get();
 
     if (weap && (!ident || item_type_known(*weap)))
     {
@@ -2950,11 +2952,31 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
         name2 = alt->name(DESC_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
     }
+    if (third && (!ident || item_type_known(*third)) && mi.wields_four_weapons())
+    {
+        name3 = third->name(DESC_A, false, false, true,
+                          false, ISFLAG_KNOW_CURSE);
+    }
+    if (fourth && (!ident || item_type_known(*fourth)) && mi.wields_four_weapons())
+    {
+        name4 = fourth->name(DESC_A, false, false, true,
+                          false, ISFLAG_KNOW_CURSE);
+    }
 
+    //sort all empty slots to the back of the line
+    if (name3.empty() && !name4.empty())
+        name3.swap(name4);
+    if (name2.empty() && !name3.empty())
+        name2.swap(name3);
     if (name1.empty() && !name2.empty())
         name1.swap(name2);
+    if (name2.empty() && !name3.empty())
+        name2.swap(name3);
+    if (name3.empty() && !name4.empty())
+        name3.swap(name4);
 
-    if (name1 == name2 && weap && !name1.empty())
+    if (name1 == name2 && weap && !name1.empty() && 
+        name3.empty() && name4.empty())
     {
         item_def dup = *weap;
         ++dup.quantity;
@@ -2972,7 +2994,24 @@ static string _describe_monster_weapon(const monster_info& mi, bool ident)
     desc += " wielding ";
     desc += name1;
 
-    if (!name2.empty())
+    if (!name2.empty() && !name3.empty())
+    {
+        desc += ", ";
+        desc += name2;
+        if (name4.empty())
+        {
+            desc += ", and ";
+            desc += name3;
+        }
+        else
+        {
+            desc += ", ";
+            desc += name3;
+            desc += ", and ";
+            desc += name4;
+        }
+    }
+    else if (!name2.empty())
     {
         desc += " and ";
         desc += name2;
@@ -3274,80 +3313,123 @@ string get_monster_equipment_desc(const monster_info& mi,
     if (level == DESC_WEAPON || level == DESC_WEAPON_WARNING)
         return desc + weap;
 
-    item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
-    item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
-    item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
-    item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
-    item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
-    item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
+    item_def* mon_wep2 = mi.inv[MSLOT_ALT_WEAPON].get();
+    item_def* mon_wep3 = mi.inv[MSLOT_WEAPON3].get();
+    item_def* mon_armr = mi.inv[MSLOT_ARMOUR].get();
+    item_def* mon_shld = mi.inv[MSLOT_SHIELD].get();
+    item_def* mon_helm = mi.inv[MSLOT_HEADGEAR].get();
+    item_def* mon_clok = mi.inv[MSLOT_CLOAK].get();
+    item_def* mon_glvs = mi.inv[MSLOT_GLOVES].get();
+    item_def* mon_boot = mi.inv[MSLOT_BOOTS].get();
+    item_def* mon_quvr = mi.inv[MSLOT_MISSILE].get();
+    item_def* mon_wand = mi.inv[MSLOT_WAND].get();
+    item_def* mon_amul = mi.inv[MSLOT_AMULET].get();
+    item_def* mon_rng1 = mi.inv[MSLOT_RING].get();
+    item_def* mon_rng2 = mi.inv[MSLOT_RING2].get();
 
 #define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
+#define maybe_no_warn(x) if (x && no_warn(x)) x = 0;
     // For Ashenzari warnings, we only care about ided and branded stuff.
     if (level == DESC_IDENTIFIED)
     {
-        if (mon_arm && no_warn(mon_arm))
-            mon_arm = 0;
-        if (mon_shd && no_warn(mon_shd))
-            mon_shd = 0;
-        if (mon_qvr && no_warn(mon_qvr))
-            mon_qvr = 0;
-        if (mon_rng && no_warn(mon_rng))
-            mon_rng = 0;
-        if (mon_alt && (!item_type_known(*mon_alt)
-                        || mon_alt->base_type == OBJ_WANDS
-                        && !is_offensive_wand(*mon_alt)))
-        {
-            mon_alt = 0;
-        }
+        maybe_no_warn(mon_wep2);
+        maybe_no_warn(mon_wep3);
+        maybe_no_warn(mon_armr);
+        maybe_no_warn(mon_shld);
+        maybe_no_warn(mon_helm);
+        maybe_no_warn(mon_clok);
+        maybe_no_warn(mon_glvs);
+        maybe_no_warn(mon_boot);
+        maybe_no_warn(mon_quvr);
+        maybe_no_warn(mon_amul);
+        maybe_no_warn(mon_rng1);
+        maybe_no_warn(mon_rng2);
     }
 
     // _describe_monster_weapon already took care of this
     if (mi.wields_two_weapons())
-        mon_alt = 0;
+        mon_wep2 = 0;
 
-    const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
-    const bool mon_carry = mon_alt || mon_has_wand;
+    const bool mon_has_wand = mi.props.exists("wand_known") && mon_wand;
+    const bool mon_carry = mon_wep2 || mon_has_wand;
 
     vector<string> item_descriptions;
 
     if (!weap.empty())
         item_descriptions.push_back(weap.substr(1)); // strip leading space
 
-    if (mon_arm)
+    string item_desc;
+
+    if (mon_armr)
     {
-        const string armour_desc = make_stringf("wearing %s",
-                                                mon_arm->name(DESC_A).c_str());
-        item_descriptions.push_back(armour_desc);
+        item_desc = make_stringf("wearing %s",
+                                                mon_armr->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
     }
 
-    if (mon_shd)
+    if (mon_shld)
     {
-        const string shield_desc = make_stringf("wearing %s",
-                                                mon_shd->name(DESC_A).c_str());
-        item_descriptions.push_back(shield_desc);
+        item_desc = make_stringf("wearing %s",
+                                                mon_shld->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_clok)
+    {
+        item_desc = make_stringf("wearing %s",
+                                                mon_clok->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_helm)
+    {
+        item_desc = make_stringf("wearing %s",
+                                                mon_helm->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_glvs)
+    {
+        item_desc = make_stringf("wearing %s",
+                                                mon_glvs->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_boot)
+    {
+        item_desc = make_stringf("wearing %s",
+                                                mon_boot->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_amul)
+    {
+        item_desc = make_stringf("wearing %s",
+                                             mon_amul->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_rng1)
+    {
+        item_desc = make_stringf("wearing %s",
+                                             mon_rng1->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
+    }
+    if (mon_rng2)
+    {
+        item_desc = make_stringf("wearing %s",
+                                             mon_rng2->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
     }
 
-    if (mon_rng)
+    if (mon_quvr)
     {
-        const string rng_desc = make_stringf("wearing %s",
-                                             mon_rng->name(DESC_A).c_str());
-        item_descriptions.push_back(rng_desc);
-    }
-
-    if (mon_qvr)
-    {
-        const string qvr_desc = make_stringf("quivering %s",
-                                             mon_qvr->name(DESC_A).c_str());
-        item_descriptions.push_back(qvr_desc);
+        item_desc = make_stringf("quivering %s",
+                                             mon_quvr->name(DESC_A).c_str());
+        item_descriptions.push_back(item_desc);
     }
 
     if (mon_carry)
     {
         string carried_desc = "carrying ";
 
-        if (mon_alt)
+        if (mon_wep2)
         {
-            carried_desc += mon_alt->name(DESC_A);
+            carried_desc += mon_wep2->name(DESC_A);
             if (mon_has_wand)
                 carried_desc += " and ";
         }
@@ -3355,7 +3437,7 @@ string get_monster_equipment_desc(const monster_info& mi,
         if (mon_has_wand)
         {
             if (mi.props["wand_known"])
-                carried_desc += mon_wnd->name(DESC_A);
+                carried_desc += mon_wand->name(DESC_A);
             else
                 carried_desc += "a wand";
         }
