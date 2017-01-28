@@ -940,7 +940,9 @@ allow_self_target = (yes | no | prompt)
 
 auto_butcher = false
         If this is set to true, you will automatically travel to and attempt to
-        butcher edible corpses.
+        butcher edible corpses. Can also be set to a hunger threshold ('very
+        full', 'full', 'satiated', 'hungry', 'very hungry', or 'near starving')
+        to enable automatic butchery only when at that state or hungrier.
 
 confirm_butcher = (always | never | auto)
         If auto (default) you will be prompted for which corpses to butcher if

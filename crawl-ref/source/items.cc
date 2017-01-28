@@ -2821,7 +2821,8 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
 /// Should the player automatically butcher the given item?
 static bool _should_autobutcher(const item_def &item)
 {
-    return Options.auto_butcher && item.base_type == OBJ_CORPSES
+    return Options.auto_butcher >= you.hunger_state
+           && item.base_type == OBJ_CORPSES
            && !is_inedible(item) && !is_bad_food(item);
 }
 

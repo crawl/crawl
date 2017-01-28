@@ -159,7 +159,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
-        new BoolGameOption(SIMPLE_NAME(auto_butcher), false),
         new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
         new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
@@ -1013,6 +1012,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = CONFIRM_AUTO;
+    auto_butcher           = HS_STARVING;
     easy_confirm           = CONFIRM_SAFE_EASY;
     allow_self_target      = CONFIRM_PROMPT;
     skill_focus            = SKM_FOCUS_ON;
@@ -2596,6 +2596,25 @@ void game_options::read_option_line(const string &str, bool runscript)
             confirm_butcher = CONFIRM_NEVER;
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
+    }
+    else if (key == "auto_butcher")
+    {
+        if (field == "true" || field == "engorged")
+            auto_butcher = HS_ENGORGED;
+        else if (field == "very full")
+            auto_butcher = HS_VERY_FULL;
+        else if (field == "full")
+            auto_butcher = HS_FULL;
+        else if (field == "satiated")
+            auto_butcher = HS_SATIATED;
+        else if (field == "hungry")
+            auto_butcher = HS_HUNGRY;
+        else if (field == "very hungry")
+            auto_butcher = HS_VERY_HUNGRY;
+        else if (field == "near starving")
+            auto_butcher = HS_NEAR_STARVING;
+        else if (field == "false" || field == "starving")
+            auto_butcher = HS_STARVING;
     }
     else if (key == "lua_file" && runscript)
     {
