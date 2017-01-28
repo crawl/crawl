@@ -930,13 +930,13 @@ simple_targeting =
         while avoiding the player.
 
 allow_self_target = (yes | no | prompt)
-        Allow targeting yourself with risky magic (e.g., the spell
-        Bolt of Fire or a wand of slowing.)
-        When set to 'yes', you are a valid target. When set to 'no',
-        you cannot target yourself with such spells. When set to
-        'prompt' (the default), you will be required to confirm
-        self-targeting. This option has no effect on area-effect
-        spells, such as Mephitic Cloud, where you are always a valid target.
+        Allow targeting yourself with risky magic (e.g., the spell Bolt of Fire
+        or a wand of paralysis.)
+        When set to 'yes', you are a valid target. When set to 'no', you cannot
+        target yourself with such spells. When set to 'prompt' (the default),
+        you will be required to confirm self-targeting. This option has no
+        effect on area-effect spells, such as Mephitic Cloud, where you are
+        always a valid target.
 
 auto_butcher = false
         If this is set to true, you will automatically travel to and attempt to
