@@ -1370,12 +1370,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     if (!extra_careful && mons->berserk_or_insane())
         return false;
 
-    const int resistance = _actor_cloud_resist(mons, cloud);
-
-    // Thinking things avoid things they are vulnerable to (-resists)
-    if (mons_intel(*mons) >= I_ANIMAL && resistance < 0)
-        return true;
-
     switch (cloud.type)
     {
     case CLOUD_MIASMA:
@@ -1412,13 +1406,16 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // set our own # of trials, to try to make the AI more consistent
         // XXX: add a param instead?
         const cloud_damage &dam_info = clouds[cloud.type].damage;
-        const int damage = _cloud_damage_calc(dam_info.random,
-                                              max(1, dam_info.random / 9),
-                                              dam_info.base, false);
+        const int base_damage = _cloud_damage_calc(dam_info.random,
+                                                   max(1, dam_info.random / 9),
+                                                   dam_info.base, false);
+        const int damage = resist_adjust_damage(mons,
+                                                clouds[cloud.type].beam_effect,
+                                                base_damage);
         const int hp_threshold = damage * 3;
 
         // intelligent monsters want a larger margin of safety
-        int safety_mult = (mons_intel(*mons) > I_ANIMAL) ? 2 : 1;
+        const int safety_mult = (mons_intel(*mons) > I_ANIMAL) ? 2 : 1;
         // dare we risk the damage?
         const bool hp_ok = mons->hit_points > safety_mult * hp_threshold;
         // dare we risk the status effects?
