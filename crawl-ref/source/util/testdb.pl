@@ -1,4 +1,6 @@
 #!/usr/bin/env perl
+use warnings;
+
 use DB_File;
 
 tie %descriptions, 'DB_File', "descriptions.db";

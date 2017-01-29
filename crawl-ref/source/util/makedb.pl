@@ -1,4 +1,6 @@
 #!/usr/bin/env perl
+use warnings;
+
 use DB_File;
 
 open(TEXT,"../dat/descriptions.txt");

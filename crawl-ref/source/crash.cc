@@ -7,19 +7,22 @@
 
 #include "crash.h"
 
+#if defined(UNIX)
+#include <unistd.h>
+#include <sys/param.h>
+#ifdef __FreeBSD__
+#include <signal.h>
+#endif
+        #define BACKTRACE_SUPPORTED
+#endif
+
 #ifdef USE_UNIX_SIGNALS
-#include <csignal>
 #include <sys/time.h>
 #endif
 
 #ifndef TARGET_OS_WINDOWS
 # include <cerrno>
 # include <sys/wait.h>
-#endif
-
-#if defined(UNIX)
-#include <unistd.h>
-        #define BACKTRACE_SUPPORTED
 #endif
 
 #ifdef BACKTRACE_SUPPORTED
@@ -271,7 +274,18 @@ void init_crash_handler()
 void dump_crash_info(FILE* file)
 {
 #if defined(UNIX)
-    const char *name = strsignal(_crash_signal);
+  #ifndef __FreeBSD__
+  const char *name = strsignal(_crash_signal);
+  #else
+  const char *name;
+  if ( (_crash_signal >= SIGHUP) && (_crash_signal <= SIGLIBRT)) {
+    name = sys_signame[_crash_signal];  
+  }
+  else {
+    name = nullptr;  
+  }
+  #endif
+    
     if (name == nullptr)
         name = "INVALID";
 

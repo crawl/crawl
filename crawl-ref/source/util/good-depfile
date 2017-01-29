@@ -1,4 +1,6 @@
-#! /usr/bin/perl -w
+#! /usr/bin/env perl
+use warnings;
+
 
 # Check a gcc -M dependency file (provided on stdin or in ARGV) for
 # existence of all the prerequisites. If any is missing, exit with failure.

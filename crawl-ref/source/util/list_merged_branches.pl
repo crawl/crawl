@@ -1,4 +1,6 @@
 #!/usr/bin/env perl
+use warnings;
+
 
 %remote_branches;
 %merged_branches;

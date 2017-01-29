@@ -131,9 +131,11 @@ clean:
 distclean: clean
 
 %.o: %.cc .cflags
+	@echo $HOSTCXX
 	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -MMD -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
-	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)
+        #$(info $$CFLAGS is [${CFLAGS}])
+	$(QUIET_HOSTLINK)$(HOSTCXX) $(CFLAGS) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .PHONY: all clean distclean

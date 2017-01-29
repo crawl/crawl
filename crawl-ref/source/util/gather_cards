@@ -1,4 +1,6 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
+use warnings;
+
 
 undef $/;
 open IN, "util/cpp_version decks.cc|" or die "Can't read decks.cc\n";

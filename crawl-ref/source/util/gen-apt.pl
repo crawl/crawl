@@ -1,5 +1,6 @@
 #! /usr/bin/env perl
 
+
 # Generates aptitude table from skills.cc and the aptitude template file.
 # All species names are discovered from skills.cc and all skill abbreviations
 # are discovered from the apt template file, so this script should be
