@@ -8,4 +8,4 @@ $script =~ /(.*)\/MacOS\/(\w+)/;
 $scriptdir = $1;
 $resdir = $scriptdir . "/Resources/";
 $executable = $resdir . "crawl";
-system "/usr/bin/open /Applications/Utilities/Terminal.app '$executable'";
+system "/usr/bin/open -a /Applications/Utilities/Terminal.app '$executable'";
