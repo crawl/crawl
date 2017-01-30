@@ -3,11 +3,9 @@
 
 #include "noise.h"
 
-bool noisy(int loudness, const coord_def& where, mid_t who,
-           noise_flag_type flags = NF_NONE);
+bool noisy(int loudness, const coord_def& where, mid_t who);
 bool noisy(int loudness, const coord_def& where, const char *msg = nullptr,
-           mid_t who = MID_NOBODY, noise_flag_type flags = NF_NONE,
-           bool fake_noise = false);
+           mid_t who = MID_NOBODY, bool fake_noise = false);
 bool fake_noisy(int loudness, const coord_def& where);
 
 void yell(const actor* mon = nullptr);
