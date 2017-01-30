@@ -130,7 +130,6 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
         }
         if (defender->is_monster()
             && !mondied
-            && !defender->as_monster()->res_damnation() // XXX: ???
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
             if (you.can_see(*attacker))
