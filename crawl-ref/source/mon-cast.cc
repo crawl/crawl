@@ -5676,7 +5676,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
-                        random2(you.skill(SK_INVOCATIONS, BASELINE_DELAY)),
+                        random2(14) * BASELINE_DELAY,
                         TERRAIN_CHANGE_FLOOD);
                 }
                 break;
