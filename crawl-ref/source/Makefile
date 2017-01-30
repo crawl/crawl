@@ -266,18 +266,6 @@ ifdef BUILD_ALL
 	BUILD_LIBPNG = YesPlease
 	BUILD_ZLIB = YesPlease
 endif
-ifeq ($(uname_S),FreeBSD)
-	undefine BUILD_SDL2IMAGE
-	undefine BUILD_LIBPNG
-	undefine BUILD_SDL2
-	undefine BUILD_SDL2MIXER
-	undefine BUILD_FREETYPE
-	undefine BUILD_SQLITE
-	undefine BUILD_ZLIB
-	undefine BUILD_PCRE
-	undefine msys
-endif
-
 
 # Should be the first rule, but must come after $(GAME) is set.
 all: greet check-fonts $(GAME) docs webserver
@@ -297,7 +285,13 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-	SQLITE_INCLUDE_DIR := /usr/include
+	# FreeBSD keeps all of its userland includes in /usr/local so
+	# look there
+	ifeq ($(uname_S),FreeBSD)
+		SQLITE_INCLUDE_DIR := /usr/local/include
+	else
+		SQLITE_INCLUDE_DIR := /usr/include
+	endif
 else
 	# This is totally wrong, works only with some old-style setups, and
 	# on some architectures of Debian/new FHS multiarch -- excluding, for
@@ -445,13 +439,6 @@ export HOSTCXX
 endif
 
 endif # MacOS
-
-ifeq ($(uname_S),FreeBSD)
-	CFLAGS_ARCH += -DUNIX
-	CC = $(GCC) $(CFLAGS_ARCH)
-	CXX = $(GXX) $(CFLAGS_ARCH)
-	LIBS += $(shell $(PKGCONFIG) sqlite3 --libs)
-endif # FreeBSD
 
 ifndef CROSSHOST
 
@@ -630,18 +617,17 @@ ifdef USE_LUAJIT
 DEFINES_L += -DUSE_LUAJIT
 endif
 
-# TODO: Undisable
-# ifndef BUILD_SQLITE
-#   ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
-#     # INCLUDES_L += -isystem $(SQLITE_INCLUDE_DIR)
-#     LIBS += $(SQLITE_LIB)
-#     ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
-#       DEFINES_L += -DANCIENT_SQLITE
-#     endif
-#   else
-#     BUILD_SQLITE = yes
-#   endif
-# endif
+ifndef BUILD_SQLITE
+  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+    # INCLUDES_L += -isystem $(SQLITE_INCLUDE_DIR)
+    LIBS += $(SQLITE_LIB)
+    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+      DEFINES_L += -DANCIENT_SQLITE
+    endif
+  else
+    BUILD_SQLITE = yes
+  endif
+endif
 
 ifndef BUILD_ZLIB
   LIBS += -lz
@@ -1161,7 +1147,6 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
-	$(info $$CFLAGS is [${CFLAGS}])
 	@if [ ! -e $(GAME) ]; then\
 		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
 		                  "at INSTALL.txt: the solution to your problem just might be in there!";\

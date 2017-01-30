@@ -277,6 +277,10 @@ void dump_crash_info(FILE* file)
   #ifndef __FreeBSD__
   const char *name = strsignal(_crash_signal);
   #else
+  // FreeBSD's strsignal was not working properly so
+  // we just check to make sure that the signal is in the available
+  // list of signals, and then look it up in the table of signal
+  // handler names that FreeBSD exposes
   const char *name;
   if ( (_crash_signal >= SIGHUP) && (_crash_signal <= SIGLIBRT)) {
     name = sys_signame[_crash_signal];  
