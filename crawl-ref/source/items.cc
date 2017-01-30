@@ -2821,7 +2821,8 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
 /// Should the player automatically butcher the given item?
 static bool _should_autobutcher(const item_def &item)
 {
-    return Options.auto_butcher && item.base_type == OBJ_CORPSES
+    return Options.auto_butcher >= you.hunger_state
+           && item.base_type == OBJ_CORPSES
            && !is_inedible(item) && !is_bad_food(item);
 }
 
@@ -3528,13 +3529,11 @@ colour_t item_def::food_colour() const
     switch (sub_type)
     {
         case FOOD_ROYAL_JELLY:
-        case FOOD_PIZZA:
             return YELLOW;
         case FOOD_FRUIT:
             return LIGHTGREEN;
         case FOOD_CHUNK:
             return LIGHTRED;
-        case FOOD_BEEF_JERKY:
         case FOOD_BREAD_RATION:
         case FOOD_MEAT_RATION:
         default:

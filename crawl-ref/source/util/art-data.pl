@@ -31,7 +31,7 @@ my %field_type = (
     COLOUR   => "enum",
     CORPSE_VIOLATING => "bool",
     CORRODE  => "bool",
-    CURSED   => "num",
+    CURSE    => "bool",
     DEX      => "num",
     DRAIN    => "bool",
     ELEC     => "bool",
@@ -326,12 +326,7 @@ sub process_line
         foreach $part (@parts)
         {
             my $up = uc($part);
-            if ($up eq "CURSED")
-            {
-                # Start out cursed, but don't re-curse.
-                $artefact->{CURSED} = -1;
-            }
-            elsif (!exists($field_type{$up}))
+            if (!exists($field_type{$up}))
             {
                 error($artefact, "Unknown bool '$part'");
             }
@@ -493,7 +488,7 @@ my @art_order = (
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
-    "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
+    "MUTATE", "unused", "SLAY", "CURSE", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "FOG", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",

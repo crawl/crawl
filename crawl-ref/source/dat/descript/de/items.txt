@@ -54,10 +54,6 @@ bardiche
 
 Eine lange Stange mit einer enormen, spaltenden Klinge an einem Ende.
 %%%%
-beef jerky
-
-Ein Streifen konservierten Kuh- oder Bullenfleisches.
-%%%%
 blessed great sword
 
 Ein Schwert mit einer sehr langen, schweren Klinge und einem langen Griff. Es
@@ -687,11 +683,6 @@ shield
 Ein Stück von Holz und Metall, um auf einem Arm für die Verteidigung
 festgeschnallt zu werden. Es ist beschwerlich, um, und ohne Ausbildung zu
 halten, verlangsamt die Rate, an der ein Krieger angreift.
-%%%%
-slice of pizza
-
-Ein Stück Pizza: Ein Fladenbrot mit Tomatensoße, Büffelmozzarella und
-Basilikum.
 %%%%
 sling
 

@@ -211,7 +211,7 @@ public:
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     int         confirm_butcher; // When to prompt for butchery
-    bool        auto_butcher;    // auto-butcher corpses while travelling
+    hunger_state_t auto_butcher; // auto-butcher corpses while travelling
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
@@ -260,8 +260,6 @@ public:
 
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
-
-    vector<string> pizzas;
 
 #ifdef WIZARD
     int            wiz_mode;      // no, never, start in wiz mode

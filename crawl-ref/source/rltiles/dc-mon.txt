@@ -44,13 +44,9 @@ giant_cockroach MONS_GIANT_COCKROACH
 worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
-%sdir mon
-%rim 0
-formicid MONS_FORMICID
-%sdir mon/animals
-%rim 1
 
 ## Batty monsters ('b')
+%rim 1
 bat MONS_BAT
 vampire_bat MONS_VAMPIRE_BAT
 butterfly MONS_BUTTERFLY
@@ -104,7 +100,9 @@ natasha MONS_NATASHA
 ## Bees ('y')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
-../meliai MONS_MELIAI
+%sdir mon/demihumanoids
+meliai MONS_MELIAI
+%sdir mon/animals
 
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
@@ -345,7 +343,7 @@ ufetubus MONS_UFETUBUS
 white_imp MONS_WHITE_IMP
 
 # demonspawn ('6')
-%sdir mon/demonspawn
+%sdir mon/humanoids/demonspawn
 %rim 0
 demonspawn MONS_DEMONSPAWN
 monstrous MONS_MONSTROUS_DEMONSPAWN
@@ -357,7 +355,8 @@ warmonger MONS_WARMONGER
 corrupter MONS_CORRUPTER
 black_sun MONS_BLACK_SUN
 ## From the Wucad Mu wizard laboratory
-mon/vault/demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
+%sdir mon/vault
+demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
 
 ## Spiritual beings ('R')
 %sdir mon/unique
@@ -516,12 +515,19 @@ sigmund MONS_SIGMUND
 %rim 1
 terence MONS_TERENCE
 
-%sdir mon
+%sdir mon/amorphous
 %rim 0
+shapeshifter MONS_SHAPESHIFTER
+glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
+
+%sdir mon/demihumanoids
+entropy_weaver MONS_ENTROPY_WEAVER
+formicid MONS_FORMICID
+
+%sdir mon/humanoids/humans
 human MONS_HUMAN
 human2
 human3
-entropy_weaver MONS_ENTROPY_WEAVER
 hell_knight MONS_HELL_KNIGHT
 death_knight MONS_DEATH_KNIGHT
 necromancer MONS_NECROMANCER
@@ -534,8 +540,6 @@ ironheart_preserver MONS_IRONHEART_PRESERVER
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
-shapeshifter MONS_SHAPESHIFTER
-glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER
 killer_klown_blue MONS_KILLER_KLOWN
 killer_klown_green
 killer_klown_purple
@@ -543,21 +547,23 @@ killer_klown_red
 killer_klown_yellow
 slave MONS_SLAVE
 slave_freed
+%sdir mon/vault
 ## From a Lair ending
 %rim 0
-vault/hell_wizard_50 MONS_HELL_WIZARD
-vault/hell_wizard_75
-vault/hell_wizard_100
+hell_wizard_50 MONS_HELL_WIZARD
+hell_wizard_75
+hell_wizard_100
 %rim 1
 ## From the Cigotuvi wizlab
-vault/deformed_human MONS_DEFORMED_HUMAN
+deformed_human MONS_DEFORMED_HUMAN
 ## From the Cloud Mage wizlab
-vault/cloud_mage MONS_CLOUD_MAGE
+cloud_mage MONS_CLOUD_MAGE
 ## From the Hellbinder wizlab
-vault/hellbinder MONS_HELLBINDER
+hellbinder MONS_HELLBINDER
 ## From a floating vault (mu_elemental_laboratory)
 %rim 0
-vault/master_elementalist MONS_MASTER_ELEMENTALIST
+master_elementalist MONS_MASTER_ELEMENTALIST
+%sdir mon/humanoids
 %rim 1
 ## From an entry vault
 halfling MONS_HALFLING
@@ -579,7 +585,7 @@ mennas MONS_MENNAS
 %rim 0
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
-%sdir mon
+%sdir mon/humanoids/giants
 ettin MONS_ETTIN
 cyclops MONS_CYCLOPS
 fire_giant MONS_FIRE_GIANT
@@ -637,7 +643,7 @@ ballistomycete_spore MONS_BALLISTOMYCETE_SPORE
 floating_eye MONS_FLOATING_EYE
 eye_of_draining MONS_EYE_OF_DRAINING
 %rim 0
-mon/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
+mon/aberrations/glowing_orange_brain MONS_GLOWING_ORANGE_BRAIN
 %rim 1
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 %rim 0
@@ -649,12 +655,13 @@ golden_eye MONS_GOLDEN_EYE
 ophan MONS_OPHAN
 
 ## Hybrids ('H')
-%sdir mon
+%sdir mon/animals
 hippogriff MONS_HIPPOGRIFF
-minotaur MONS_MINOTAUR
 manticore MONS_MANTICORE
+%sdir mon/demihumanoids
 harpy MONS_HARPY
 sphinx MONS_SPHINX
+minotaur MONS_MINOTAUR
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
@@ -742,7 +749,7 @@ death_ooze MONS_DEATH_OOZE
 %sdir mon/unique
 sonja MONS_SONJA
 pikel MONS_PIKEL
-%sdir mon
+%sdir mon/humanoids
 kobold MONS_KOBOLD
 big_kobold MONS_BIG_KOBOLD
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
@@ -775,23 +782,24 @@ mummy_priest MONS_MUMMY_PRIEST
 %sdir mon/unique
 aizul MONS_AIZUL
 vashnia MONS_VASHNIA
-%sdir mon
+%sdir mon/demihumanoids/naga
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE
 naga_ritualist MONS_NAGA_RITUALIST
 naga_sharpshooter MONS_NAGA_SHARPSHOOTER
 naga_warrior MONS_NAGA_WARRIOR
 nagaraja MONS_NAGARAJA
-guardian_serpent MONS_GUARDIAN_SERPENT
+%sdir mon/demihumanoids
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
+guardian_serpent MONS_GUARDIAN_SERPENT
 
 ## Ogres ('O')
 %sdir mon/unique
 %rim 0
 erolcha MONS_EROLCHA
 %rim 1
-%sdir mon
+%sdir mon/humanoids
 ogre MONS_OGRE
 two_headed_ogre MONS_TWO_HEADED_OGRE
 %rim 0
@@ -833,16 +841,17 @@ vine_stalker MONS_VINE_STALKER
 %sdir mon/unique
 purgy MONS_PURGY
 snorg MONS_SNORG
-%sdir mon
+%sdir mon/humanoids
 troll MONS_TROLL
 iron_troll MONS_IRON_TROLL
 deep_troll MONS_DEEP_TROLL
 deep_troll_earth_mage MONS_DEEP_TROLL_EARTH_MAGE
 deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
+%sdir mon/vault
 ## From the Wucad Mu wizard laboratory
-vault/deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
+deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
 ## From moon base wizlab
-vault/moon_troll MONS_MOON_TROLL
+moon_troll MONS_MOON_TROLL
 
 ## Vampires ('V')
 %sdir mon/undead
@@ -864,7 +873,7 @@ phantasmal_warrior MONS_PHANTASMAL_WARRIOR
 eidolon MONS_EIDOLON
 
 ## Orb guardians ('X')
-%sdir mon
+%sdir mon/aberrations
 %rim 0
 orb_guardian MONS_ORB_GUARDIAN
 
@@ -872,7 +881,7 @@ orb_guardian MONS_ORB_GUARDIAN
 %rim 1
 %sdir mon/unique
 nessos MONS_NESSOS
-%sdir mon
+%sdir mon/demihumanoids/taurs
 %rim 0
 # 'melee' tiles must be immediately following the normal ones
 centaur MONS_CENTAUR
@@ -883,6 +892,7 @@ yaktaur MONS_YAKTAUR
 yaktaur-melee MONS_YAKTAUR_MELEE
 yaktaur_captain MONS_YAKTAUR_CAPTAIN
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
+%sdir mon/demihumanoids
 faun MONS_FAUN
 satyr MONS_SATYR
 
@@ -894,7 +904,7 @@ duvessa MONS_DUVESSA
 duvessa2
 fannar MONS_FANNAR
 %rim 1
-%sdir mon
+%sdir mon/humanoids/elves
 elf MONS_ELF
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
 %rim 0
@@ -908,9 +918,10 @@ deep_elf_annihilator MONS_DEEP_ELF_ANNIHILATOR
 deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST
 deep_elf_blademaster MONS_DEEP_ELF_BLADEMASTER
 deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
-## From the Cigotuvi wizlab
-vault/deformed_elf MONS_DEFORMED_ELF
 deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
+%sdir mon/vault
+## From the Cigotuvi wizlab
+deformed_elf MONS_DEFORMED_ELF
 
 ## Fungi ('f')
 %sdir mon/fungi_plants
@@ -941,7 +952,7 @@ robin MONS_ROBIN
 %rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
-%sdir mon
+%sdir mon/humanoids
 goblin MONS_GOBLIN
 hobgoblin MONS_HOBGOBLIN
 gnoll MONS_GNOLL
@@ -950,7 +961,7 @@ gnoll_sergeant MONS_GNOLL_SERGEANT
 boggart MONS_BOGGART
 
 ## Spriggans ('i')
-%sdir mon/spriggan
+%sdir mon/humanoids/spriggans
 spriggan MONS_SPRIGGAN
 spriggan_rider MONS_SPRIGGAN_RIDER
 spriggan_druid MONS_SPRIGGAN_DRUID
@@ -969,7 +980,7 @@ mon/unique/agnes_staveless MONS_AGNES_STAVELESS
 %sdir mon/unique
 ilsuiw MONS_ILSUIW
 ilsuiw_water MONS_ILSUIW_WATER
-%sdir mon
+%sdir mon/demihumanoids/merfolk
 merfolk MONS_MERFOLK
 merfolk_water MONS_MERFOLK_WATER
 merfolk_javelineer MONS_MERFOLK_JAVELINEER
@@ -982,6 +993,7 @@ merfolk_siren MONS_MERFOLK_SIREN
 merfolk_siren_water MONS_MERFOLK_SIREN_WATER
 merfolk_avatar MONS_MERFOLK_AVATAR
 merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
+%sdir mon/humanoids
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH
 %rim 1
@@ -998,7 +1010,7 @@ blork_the_orc MONS_BLORK_THE_ORC
 urug MONS_URUG
 nergalle MONS_NERGALLE
 saint_roka MONS_SAINT_ROKA
-%sdir mon
+%sdir mon/humanoids/orcs
 orc MONS_ORC
 orc_wizard MONS_ORC_WIZARD
 orc_priest MONS_ORC_PRIEST
@@ -1008,7 +1020,8 @@ orc_warlord MONS_ORC_WARLORD
 orc_sorcerer MONS_ORC_SORCERER
 orc_high_priest MONS_ORC_HIGH_PRIEST
 %rim 1
-vault/deformed_orc MONS_DEFORMED_ORC
+%sdir mon/vault
+deformed_orc MONS_DEFORMED_ORC
 
 ## Ghosts ('p')
 %sdir mon/undead
@@ -1030,7 +1043,7 @@ hungry_ghost MONS_HUNGRY_GHOST
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 
 ## Dwarves ('q')
-%sdir mon
+%sdir mon/humanoids
 dwarf MONS_DWARF
 deep_dwarf MONS_DEEP_DWARF
 %sdir mon/unique

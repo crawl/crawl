@@ -73,7 +73,7 @@
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
 # * corrode:  Randomly causes corrosion when taking damage.
-# * cursed:   Item is generated cursed.
+# * curse:    Item curses itself on equip, and is generated cursed.
 # * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
@@ -135,8 +135,6 @@
 # COLOUR:   The colour of the artefact, either as listed in defines.h
 #           (e.g., LIGHTRED) or as listed under element_type in view.h
 #           (e.g., ETC_FIRE)
-# CURSED:   The artefact has a one-in-num chance of becoming cursed each
-#           time it's equipped (and is generated cursed).
 # SLAY:     Slaying modifier (for non-weapon artefacts).
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
@@ -250,7 +248,7 @@ TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
 BRAND:   SPWPN_DRAINING
 VALUE:   800
-CURSED:  3
+BOOL:    curse
 
 NAME:    sceptre of Torment
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -533,7 +531,7 @@ TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
-INSCRIP:  nevermiss,
+INSCRIP:  Acc+∞
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
@@ -584,7 +582,7 @@ STEALTH:  1
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
-PLUS:    +14
+PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
@@ -660,7 +658,6 @@ TILE_EQ: lshield_of_ignorance
 AC:      4
 INT:     -6
 LIFE:    1
-CURSED:  3
 
 NAME:    robe of Augmentation
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -719,9 +716,8 @@ COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       -5
-CURSED:   1
 STEALTH:  -2
-BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain
+BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain, curse
 
 # TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -736,12 +732,13 @@ BOOL:     fly, nogen
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
-INSCRIP:  DetectMon Stab+
+INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
 TILE_EQ:  middle_gray
 STEALTH:  2
+VALUE:    600
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
@@ -827,6 +824,7 @@ TILE:     urand_night
 TILE_EQ:  robe_of_night
 MAGIC:    1
 BOOL:     seeinv
+VALUE:    600
 
 NAME:    armour of the Dragon King
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
@@ -857,6 +855,7 @@ COLOUR:  WHITE
 TILE:    urand_fencer
 TILE_EQ: glove_white
 DEX:     3
+VALUE:   400
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -904,6 +903,7 @@ OBJ:     OBJ_JEWELLERY/RING_STEALTH
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
 BOOL:    inv
+VALUE:   400
 
 # TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob
@@ -931,7 +931,7 @@ INT:     -3
 MAGIC:   2
 ANGRY:   5
 SLAY:    6
-CURSED:  3
+BOOL:    curse
 
 NAME:    ring of Shaolin
 OBJ:     OBJ_JEWELLERY/RING_EVASION
@@ -986,8 +986,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
-CURSED:   1
-BOOL:     evil, seeinv, fly
+BOOL:     evil, seeinv, fly, curse
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1091,6 +1090,7 @@ OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
+VALUE:    400
 
 # TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1213,6 +1213,7 @@ INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec, chaotic
+VALUE:   400
 
 # TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
@@ -1224,8 +1225,7 @@ TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
-CURSED:  1
-BOOL:    evil, seeinv, nogen
+BOOL:    evil, seeinv, nogen, curse
 
 ENUM:    VINES
 NAME:    robe of Vines
@@ -1236,6 +1236,7 @@ TILE:    urand_vines
 TILE_EQ: vines
 INSCRIP: NoPotionHeal
 REGEN:   7
+VALUE:   800
 
 ENUM:    KRYIAS
 NAME:    Kryia's mail coat
@@ -1246,6 +1247,7 @@ TILE:    urand_kryias
 TILE_EQ: kryias
 INSCRIP: PotionHeal*2
 COLD:    1
+VALUE:   600
 
 ENUM:    FROSTBITE
 NAME:    frozen axe "Frostbite"
@@ -1279,6 +1281,7 @@ TILE:     urand_warlock
 TILE_EQ:  buckler_warlock
 COLOUR:   ETC_SILVER
 BRAND:    SPARM_REFLECTION
+VALUE:    400
 
 # Fedhas sprint, to allow all species access to evocable invisibility.
 NAME:     amulet of invisibility

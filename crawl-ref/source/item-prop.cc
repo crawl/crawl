@@ -664,42 +664,41 @@ struct food_def
     int         value;
     int         carn_mod;
     int         herb_mod;
-    int         turns;
 };
 
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  3 },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  1 },
-    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  1 },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500 },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500 },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  3 },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500 },
 
-    { FOOD_FRUIT,        "fruit",         850,  -100,    50,  1 },
+    { FOOD_FRUIT,        "fruit",         850,  -100,    50 },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  3 },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  1 },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0 },
 
 #if TAG_MAJOR_VERSION == 34
     // is_real_food assumes we list FOOD_UNUSED as the first removed
     // food here, after all the unremoved foods.
-    { FOOD_UNUSED,       "buggy",           0,     0,     0,  1 },
-    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  1 },
-    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  1 },
-    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  1 },
-    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  1 },
-    { FOOD_PEAR,         "buggy",         700,  -200,   200,  1 },
-    { FOOD_APPLE,        "buggy",         700,  -200,   200,  1 },
-    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  1 },
-    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  1 },
-    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  1 },
-    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  1 },
-    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,  1 },
-    { FOOD_GRAPE,        "buggy",         100,   -20,    20,  1 },
-    { FOOD_SULTANA,      "buggy",          70,   -20,    20,  1 },
-    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  1 },
-    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  1 },
+    { FOOD_UNUSED,       "buggy",           0,     0,     0 },
+    { FOOD_AMBROSIA,     "buggy",           0,     0,     0 },
+    { FOOD_ORANGE,       "buggy",        1000,  -300,   300 },
+    { FOOD_BANANA,       "buggy",        1000,  -300,   300 },
+    { FOOD_LEMON,        "buggy",        1000,  -300,   300 },
+    { FOOD_PEAR,         "buggy",         700,  -200,   200 },
+    { FOOD_APPLE,        "buggy",         700,  -200,   200 },
+    { FOOD_APRICOT,      "buggy",         700,  -200,   200 },
+    { FOOD_CHOKO,        "buggy",         600,  -200,   200 },
+    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200 },
+    { FOOD_LYCHEE,       "buggy",         600,  -200,   200 },
+    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50 },
+    { FOOD_GRAPE,        "buggy",         100,   -20,    20 },
+    { FOOD_SULTANA,      "buggy",          70,   -20,    20 },
+    { FOOD_CHEESE,       "buggy",        1200,     0,     0 },
+    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400 },
+    { FOOD_BEEF_JERKY,   "buggy",        1500,   200,  -200 },
+    { FOOD_PIZZA,        "buggy",        1500,     0,     0 },
 #endif
 };
 
@@ -2324,12 +2323,6 @@ int food_value(const item_def &item)
     ret += herb * food.herb_mod;
 
     return ret;
-}
-
-int food_turns(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return Food_prop[Food_index[item.sub_type]].turns;
 }
 
 bool is_fruit(const item_def & item)

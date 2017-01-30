@@ -80,11 +80,15 @@ int artefact_value(const item_def &item)
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 6 * prop[ ARTP_AC ] + 6 * prop[ ARTP_EVASION ]
+    ret += 6 * prop[ ARTP_AC ]
+            + 6 * prop[ ARTP_EVASION ]
             + 4 * prop[ ARTP_SHIELDING ]
             + 6 * prop[ ARTP_SLAYING ]
-            + 3 * prop[ ARTP_STRENGTH ] + 3 * prop[ ARTP_INTELLIGENCE ]
-            + 3 * prop[ ARTP_DEXTERITY ];
+            + 3 * prop[ ARTP_STRENGTH ]
+            + 3 * prop[ ARTP_INTELLIGENCE ]
+            + 3 * prop[ ARTP_DEXTERITY ]
+            + 4 * prop[ ARTP_HP ]
+            + 3 * prop[ ARTP_MAGICAL_POWER ];
 
     // These resistances have meaningful levels
     if (prop[ ARTP_FIRE ] > 0)
@@ -178,6 +182,9 @@ int artefact_value(const item_def &item)
         ret += 50;
 
     if (prop[ ARTP_RMSL ])
+        ret += 20;
+
+    if (prop[ ARTP_CLARITY ])
         ret += 20;
 
     return (ret > 0) ? ret : 0;
@@ -540,15 +547,13 @@ unsigned int item_value(item_def item, bool ident)
             valued = 20;
             break;
 
-        case FOOD_BEEF_JERKY:
-        case FOOD_PIZZA:
         case FOOD_FRUIT:
             valued = 15;
             break;
 
         case FOOD_CHUNK:
         default:
-                break;
+            break;
         }
         break;
 
@@ -630,7 +635,8 @@ unsigned int item_value(item_def item, bool ident)
                     || item.sub_type == RING_EVASION
                     || item.sub_type == RING_DEXTERITY
                     || item.sub_type == RING_INTELLIGENCE
-                    || item.sub_type == RING_SLAYING))
+                    || item.sub_type == RING_SLAYING
+                    || item.sub_type == AMU_REFLECTION))
             {
                 // Formula: price = kn(n+1) / 2, where k depends on the subtype,
                 // n is the power. (The base variable is equal to 2n.)
@@ -651,6 +657,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_STRENGTH:
                 case RING_DEXTERITY:
                 case RING_INTELLIGENCE:
+                case AMU_REFLECTION:
                     coefficient = 30;
                     break;
                 default:
@@ -685,7 +692,6 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
                 case RING_PROTECTION_FROM_MAGIC:
-                case AMU_REFLECTION:
                     valued += 250;
                     break;
 

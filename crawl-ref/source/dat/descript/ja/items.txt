@@ -50,10 +50,6 @@ bardiche
 
 巨大で切断するための刃がついた長柄武器だ。
 %%%%
-beef jerky
-
-細長く切られた保存加工済みの牛肉だ。
-%%%%
 blessed double sword
 
 長くて幅広な大剣だ。輝けるものの力により強化されている。
@@ -609,10 +605,6 @@ scroll of teleportation
 scythe
 
 農具だ。たいてい訓練されていない群衆だけが戦闘で使用する。
-%%%%
-slice of pizza
-
-一切れのピザ: a flatbread with tomato sauce, mozzarella di bufala, and basil.
 %%%%
 sling
 

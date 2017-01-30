@@ -3179,6 +3179,14 @@ static void tag_read_you(reader &th)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[GOD_PAKELLAS] = you.exp_docked[GOD_PAKELLAS];
     }
+    if (th.getMinorVersion() < TAG_MINOR_ELYVILON_WRATH
+        && player_under_penance(GOD_ELYVILON))
+    {
+        you.exp_docked[GOD_ELYVILON] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[GOD_ELYVILON] = you.exp_docked[GOD_ELYVILON];
+    }
+
 #endif
 
     // elapsed time
@@ -4421,6 +4429,17 @@ void unmarshallItem(reader &th, item_def &item)
                 || item.sub_type == FOOD_LEMON)
             {
                 item.sub_type = FOOD_FRUIT;
+            }
+        }
+    }
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE_RELOADED)
+    {
+        if (item.base_type == OBJ_FOOD)
+        {
+            if (item.sub_type == FOOD_BEEF_JERKY
+                || item.sub_type == FOOD_PIZZA)
+            {
+                item.sub_type = FOOD_ROYAL_JELLY;
             }
         }
     }

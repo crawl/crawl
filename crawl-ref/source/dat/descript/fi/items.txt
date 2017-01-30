@@ -50,10 +50,6 @@ bardiche
 
 Pitkä paalu, jonka toisessa päässä on valtava, halkova terä.
 %%%%
-beef jerky
-
-Suikale säilöttyä lehmää tai sonnia.
-%%%%
 blessed great sword
 
 Miekka, jossa on erittäin pitkä ja raskas terä sekä sekä suuri kahva. Se on
