@@ -1,3 +1,13 @@
+Stone Soup 0.19.4 (20170130)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix mouse lag experienced by trackpad users on Mac systems.
+* Fix to allow the Temple entrance to place as part of a vault instead of
+  always by itself.
+
 Stone Soup 0.19.3 (20170121)
 --------------------------------------------
 
