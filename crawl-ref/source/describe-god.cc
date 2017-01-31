@@ -576,6 +576,10 @@ static void _god_wrath_description(god_type which_god)
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
+    const bool long_wrath = initial_wrath_penance_for(which_god) > 30;
+    _print_string_wrapped(apostrophise(uppercase_first(god_name(which_god)))
+                          + " wrath is relatively " +
+                          (long_wrath ? "long." : "short."), width);
 }
 
 /**
