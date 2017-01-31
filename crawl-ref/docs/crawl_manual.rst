@@ -2036,11 +2036,10 @@ There are a number of individual weapon skills for missile weapons:
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: tomahawks,
-javelins, tomahawks, nets, etc. The other skills refer to various types of
-missiles shot with a launcher. An exception to this are needles: these are
-launched using blowguns, an action which uses the Throwing skill. Since
-stones can be thrown without launchers to some effect, these skills
-crosstrain:
+javelins, nets, etc. The other skills refer to various types of missiles shot
+with a launcher. An exception to this are needles: these are launched using
+blowguns, an action which uses the Throwing skill. Since stones can be thrown
+without launchers to some effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2115,9 +2114,8 @@ Invocations
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
-  number of charges in a wand through usage. Similarly, all other items that
-  have certain powers (such as crystal balls, decks of cards, or elemental
-  summoners) work better for characters trained in this skill.
+  number of charges in a wand through usage. Similarly, various other items
+  that have evocable powers work better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The

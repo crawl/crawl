@@ -2790,7 +2790,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
 
     if (const item_def* w = weapon())
     {
-        if (is_unrandom_artefact(*w, UNRAND_JIHAD))
+        if (is_unrandom_artefact(*w, UNRAND_ZEALOT_SWORD))
             for (actor_near_iterator mi(pos(), LOS_NO_TRANS); mi; ++mi)
                 if (mons_aligned(this, *mi))
                     mi->go_berserk(false);
@@ -3994,8 +3994,8 @@ int monster::res_negative_energy(bool intrinsic_only) const
 bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
-    return holy & (MH_UNDEAD | MH_DEMONIC |  MH_PLANT | MH_NONLIVING)
-            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
+    return holy & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING)
+           || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const
@@ -6161,23 +6161,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         ench_cache     = old_ench_cache;
         ench_countdown = old_ench_countdown;
 
-        cloud_type ctype = CLOUD_STORM;
-
-        for (adjacent_iterator ai(pos()); ai; ++ai)
-            if (!cell_is_solid(*ai)
-                && (!cloud_at(*ai)
-                   || cloud_at(*ai)->type == ctype))
-            {
-                place_cloud(ctype, *ai, 2 + random2(3), this);
-            }
-
         if (observable())
         {
             mprf(MSGCH_WARN, "%s roars in fury and transforms into a fierce dragon!",
                  name(DESC_THE).c_str());
-            mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
-                 name(DESC_THE).c_str());
         }
+
+        add_ench(ENCH_RING_OF_THUNDER);
     }
 
     if (alive())
@@ -6455,6 +6445,9 @@ item_def* monster::disarm()
     // XXX: assumes nothing's re-ordering items - e.g. gozag gold
     if (your_tile_ok)
         move_top_item(pos(), you.pos());
+
+    if (type == MONS_CEREBOV)
+        you.props[CEREBOV_DISARMED_KEY] = true;
 
     return mons_wpn;
 }

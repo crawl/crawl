@@ -349,14 +349,12 @@ static bool _lightning_rod()
         return false;
     }
 
-    const spell_type spell = SPELL_THUNDERBOLT;
-
     const int surge = pakellas_surge_devices();
     surge_power(you.spec_evoke() + surge);
     const int power =
         player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
 
-    const spret_type ret = your_spells(spell, power, false);
+    const spret_type ret = your_spells(SPELL_THUNDERBOLT, power, false);
 
     if (ret == SPRET_ABORT)
         return false;
@@ -784,7 +782,6 @@ static bool _box_of_beasts(item_def &box)
 
     mprf("...and %s %s out!",
          mons->name(DESC_A).c_str(), mons->airborne() ? "flies" : "leaps");
-    xom_is_stimulated(10); // dubious
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
     // After unboxing a beast, chance to break.

@@ -45,7 +45,7 @@ COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
-KITEM:  * = animal skin, q:2 beef jerky, any good_item
+KITEM:  * = animal skin, meat ration, any good_item
 KITEM:  ' = ident:type wand of digging, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
 MARKER: # = lua:fog_machine { cloud_type = "flame", \
@@ -61,7 +61,7 @@ KFEAT:  7 = tree
 KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
             w:50 whip | wand of enslavement
 KFEAT:  B = food shop name:Jack type:Jerk-a-riffic suffix:Jerky count:10 ; \
-            q:5 beef jerky
+            q:1 meat ration
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:50 ; potion of mutation
 : local smithy = string.gsub(crawl.make_name(), " ", "_")
@@ -172,10 +172,8 @@ KITEM: - = animal skin
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
-KITEM:  $ = q:5 meat ration, giant spiked club, q:2 beef jerky
-: kitem("$ = q:" .. crawl.random_range(1, 5) .. " beef jerky / w:5 nothing, \
-:            q:" .. crawl.random_range(1, 3) .. " meat ration / w:5 nothing, \
-:            giant spiked club / giant club / nothing")
+KITEM:  $ = q:5 meat ration / nothing, \
+            giant spiked club / giant club / nothing
 : local frosty = crawl.random2(6)
 : if frosty == 5 then
 SUBST:  1 = 2
@@ -275,11 +273,11 @@ SUBST:   2 = 2.
 SUBST:   3 = 3.
 NSUBST:  . = 5:% / *:.
 KITEM:   % = w:12 animal skin / club / hand axe /\
-             beef jerky / slice of pizza / nothing
+             meat ration / royal jelly / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
 KITEM:   $ = battleaxe / nothing, plate armour / nothing, \
-             meat ration, q:2 beef jerky / nothing, gold, any, any
+             meat ration / nothing, gold, any, any
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
                  size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }

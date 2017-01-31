@@ -340,7 +340,7 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+        if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
             continue;
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
@@ -1129,7 +1129,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
             hploss /= 2;
     }
 

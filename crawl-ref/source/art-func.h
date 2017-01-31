@@ -130,7 +130,6 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
         }
         if (defender->is_monster()
             && !mondied
-            && !defender->as_monster()->res_damnation() // XXX: ???
             && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
         {
             if (you.can_see(*attacker))
@@ -384,15 +383,6 @@ static void _TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "A terribly searing pain shoots up your arm!");
 }
 
-static void _TORMENT_world_reacts(item_def *item)
-{
-    if (one_chance_in(200))
-    {
-        torment(&you, TORMENT_SCEPTRE, you.pos());
-        did_god_conduct(DID_EVIL, 1);
-    }
-}
-
 static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
@@ -640,9 +630,11 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 
 static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, species_is_draconian(you.species) || you.form == TRAN_DRAGON
-                            ? "You feel an overwhelming desire to commit suicide."
-                            : "You feel an overwhelming desire to slay dragons!");
+    _equip_mpr(show_msgs,
+               species_is_draconian(you.species)
+                || you.form == transformation::dragon
+                   ? "You feel an overwhelming desire to commit suicide."
+                   : "You feel an overwhelming desire to slay dragons!");
 }
 
 static bool is_dragonkind(const actor *act)
@@ -655,7 +647,7 @@ static bool is_dragonkind(const actor *act)
     }
 
     if (act->is_player())
-        return you.form == TRAN_DRAGON;
+        return you.form == transformation::dragon;
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();

@@ -184,7 +184,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
-        _should_selfench(ENCH_INVIS),
+        _should_selfench(ENCH_HASTE),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
     } },
@@ -453,6 +453,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
         return caster.get_foe()->res_poison(false) < 3;
     }, 6) },
+    { SPELL_RING_OF_THUNDER, { _should_selfench(ENCH_RING_OF_THUNDER),
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.add_ench(ENCH_RING_OF_THUNDER);
+    } } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -2581,14 +2585,14 @@ static bool _should_still_winds(const monster &caster)
         // clouds the player might hide in are worrying.
         if (grid_distance(*ri, you.pos()) <= 3 // decent margin
             && is_opaque_cloud(cloud->type)
-            && actor_cloud_immune(&you, *cloud))
+            && actor_cloud_immune(you, *cloud))
         {
             return true;
         }
 
         // so are hazardous clouds on allies.
         const monster* mon = monster_at(*ri);
-        if (mon && !actor_cloud_immune(mon, *cloud))
+        if (mon && !actor_cloud_immune(*mon, *cloud))
             return true;
     }
 
@@ -5672,7 +5676,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
-                        random2(you.skill(SK_INVOCATIONS, BASELINE_DELAY)),
+                        random2(14) * BASELINE_DELAY,
                         TERRAIN_CHANGE_FLOOD);
                 }
                 break;
@@ -7331,7 +7335,6 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags)
 {
     bool force_silent = false;
-    noise_flag_type noise_flags = NF_NONE;
 
     if (mons->type == MONS_SHADOW_DRAGON)
         // Draining breath is silent.
@@ -7360,7 +7363,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         if (silent)
             return;
 
-        noisy(noise, mons->pos(), mons->mid, noise_flags);
+        noisy(noise, mons->pos(), mons->mid);
         return;
     }
 
@@ -7396,7 +7399,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (silent || noise == 0)
         mons_speaks_msg(mons, msg, chan, true);
-    else if (noisy(noise, mons->pos(), mons->mid, noise_flags) || !unseen)
+    else if (noisy(noise, mons->pos(), mons->mid) || !unseen)
     {
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
@@ -7471,7 +7474,7 @@ static bool _will_throw_ally(const monster& thrower, const monster& throwee)
     case MONS_POLYPHEMUS:
         return mons_genus(throwee.type) == MONS_YAK;
     case MONS_IRON_GIANT:
-        return true;
+        return !mons_is_conjured(throwee.type);
     default:
         return false;
     }
@@ -7509,7 +7512,10 @@ static monster* _find_ally_to_throw(const monster &mons)
         }
     }
 
-    dprf("found a monster to toss");
+    if (best != nullptr)
+        dprf("found a monster to toss");
+    else
+        dprf("couldn't find anyone to toss");
     return best;
 }
 
@@ -7739,7 +7745,7 @@ static void _siren_sing(monster* mons, bool avatar)
                                                        : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(*mons);
 
-    noisy(LOS_RADIUS, mons->pos(), mons->mid, NF_SIREN);
+    noisy(LOS_RADIUS, mons->pos(), mons->mid);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));

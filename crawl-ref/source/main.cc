@@ -876,11 +876,11 @@ static void _do_wizard_command(int wiz_command)
     case '\'': wizard_list_items(); break;
     case '"': debug_list_monsters(); break;
 
-    case ',': wizard_place_stairs(true); break;
-    // case '>': break; // XXX do not use, menu command
-
-    case '.': wizard_place_stairs(false); break;
+    case ',': wizard_place_stairs(false); break;
     // case '<': break; // XXX do not use, menu command
+
+    case '.': wizard_place_stairs(true); break;
+    // case '>': break; // XXX do not use, menu command
 
     // case '/': break;
 
@@ -3237,11 +3237,11 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    const string walkverb = you.airborne()              ? "fly"
-                          : you.form == TRAN_SPIDER     ? "crawl"
+    const string walkverb = you.airborne()                     ? "fly"
+                          : you.form == transformation::spider ? "crawl"
                           : (you.species == SP_NAGA
-                             && form_keeps_mutations()) ? "slither"
-                                                        : "walk";
+                             && form_keeps_mutations())        ? "slither"
+                                                               : "walk";
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -3357,7 +3357,7 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
-    else if (you.form == TRAN_FUNGUS && moving && !you.confused())
+    else if (you.form == transformation::fungus && moving && !you.confused())
     {
         if (you.made_nervous_by(targ))
         {

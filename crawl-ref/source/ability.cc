@@ -988,7 +988,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_MEPHITIC:
     case ABIL_BREATHE_STEAM:
-        if (you.form == TRAN_DRAGON)
+        if (you.form == transformation::dragon)
             return base_chance - 20;
         return base_chance;
 
@@ -1571,7 +1571,7 @@ bool activate_talent(const talent& tal)
     }
     else if (tal.which == ABIL_TRAN_BAT)
     {
-        if (!check_form_stat_safety(TRAN_BAT))
+        if (!check_form_stat_safety(transformation::bat))
         {
             crawl_state.zero_turns_taken();
             return false;
@@ -1579,7 +1579,7 @@ bool activate_talent(const talent& tal)
     }
     else if (tal.which == ABIL_END_TRANSFORMATION)
     {
-        if (feat_dangerous_for_form(TRAN_NONE, env.grid(you.pos())))
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
             mprf("Turning back right now would cause you to %s!",
                  env.grid(you.pos()) == DNGN_LAVA ? "burn" : "drown");
@@ -1588,7 +1588,7 @@ bool activate_talent(const talent& tal)
             return false;
         }
 
-        if (!check_form_stat_safety(TRAN_NONE))
+        if (!check_form_stat_safety(transformation::none))
         {
             crawl_state.zero_turns_taken();
             return false;
@@ -1864,7 +1864,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
           return SPRET_ABORT;
 
         fail_check();
-        zapping(ZAP_BREATHE_ACID, (you.form == TRAN_DRAGON) ?
+        zapping(ZAP_BREATHE_ACID, (you.form == transformation::dragon) ?
                 2 * you.experience_level : you.experience_level,
                 beam, false, "You spit a glob of acid.");
 
@@ -1897,7 +1897,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         {
             int power = you.experience_level;
 
-            if (you.form == TRAN_DRAGON)
+            if (you.form == transformation::dragon)
                 power += 12;
 
             string msg = "You breathe a blast of fire";
@@ -1910,7 +1910,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         case ABIL_BREATHE_FROST:
             if (!zapping(ZAP_BREATHE_FROST,
-                 (you.form == TRAN_DRAGON) ?
+                 (you.form == transformation::dragon) ?
                      2 * you.experience_level : you.experience_level,
                  beam, true,
                          "You exhale a wave of freezing cold."))
@@ -1934,7 +1934,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         case ABIL_BREATHE_ACID:
             if (!zapping(ZAP_BREATHE_ACID,
-                (you.form == TRAN_DRAGON) ?
+                (you.form == transformation::dragon) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true, "You spit a glob of acid."))
             {
@@ -1944,7 +1944,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         case ABIL_BREATHE_POWER:
             if (!zapping(ZAP_BREATHE_POWER,
-                (you.form == TRAN_DRAGON) ?
+                (you.form == transformation::dragon) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You breathe a bolt of dispelling energy."))
@@ -1955,7 +1955,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         case ABIL_BREATHE_STEAM:
             if (!zapping(ZAP_BREATHE_STEAM,
-                (you.form == TRAN_DRAGON) ?
+                (you.form == transformation::dragon) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You exhale a blast of scalding steam."))
@@ -1966,7 +1966,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         case ABIL_BREATHE_MEPHITIC:
             if (!zapping(ZAP_BREATHE_MEPHITIC,
-                (you.form == TRAN_DRAGON) ?
+                (you.form == transformation::dragon) ?
                     2 * you.experience_level : you.experience_level,
                 beam, true,
                          "You exhale a blast of noxious fumes."))
@@ -2688,7 +2688,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_TRAN_BAT:
         fail_check();
-        if (!transform(100, TRAN_BAT))
+        if (!transform(100, transformation::bat))
         {
             crawl_state.zero_turns_taken();
             return SPRET_ABORT;
@@ -2813,7 +2813,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_DITHMENOS_SHADOW_FORM:
         fail_check();
-        if (!transform(you.skill(SK_INVOCATIONS, 2), TRAN_SHADOW))
+        if (!transform(you.skill(SK_INVOCATIONS, 2), transformation::shadow))
         {
             crawl_state.zero_turns_taken();
             return SPRET_ABORT;
@@ -3334,7 +3334,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (species_is_draconian(you.species)
         // Draconians don't maintain their original breath weapons
         // if shapechanged into a non-dragon form.
-        && (!form_changed_physiology() || you.form == TRAN_DRAGON)
+        && (!form_changed_physiology() || you.form == transformation::dragon)
         && draconian_breath(you.species) != ABIL_NON_ABILITY)
     {
         _add_talent(talents, draconian_breath(you.species), check_confused);
@@ -3342,7 +3342,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
         && you.hunger_state <= HS_SATIATED
-        && you.form != TRAN_BAT)
+        && you.form != transformation::bat)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
@@ -3392,7 +3392,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
-    if (you.species != SP_RED_DRACONIAN && you.form == TRAN_DRAGON
+    if (you.species != SP_RED_DRACONIAN && you.form == transformation::dragon
          && dragon_form_dragon_type() == MONS_FIRE_DRAGON)
     {
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);

@@ -71,7 +71,7 @@ static const struct spell_desc spelldata[] =
     SPTYP_TRANSLOCATION,
     SPFLAG_TARGET | SPFLAG_OBJ | SPFLAG_NOT_SELF,
     1,
-    1000,
+    50,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
     TILEG_APPORTATION,
@@ -311,6 +311,17 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     6, 0,
     TILEG_RING_OF_FLAMES,
+},
+
+{
+    SPELL_RING_OF_THUNDER, "Ring of Thunder",
+    SPTYP_CHARMS | SPTYP_AIR,
+    SPFLAG_AREA,
+    7,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_ERROR,
 },
 
 {
@@ -3887,14 +3898,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_NOXIOUS_VAPOURS, "Noxious Vapours",
+    SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
     SPTYP_POISON | SPTYP_AIR,
     SPFLAG_TARGET | SPFLAG_NOT_SELF,
     2,
     50,
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
-    TILEG_NOXIOUS_VAPOURS,
+    TILEG_POISONOUS_VAPOURS,
 },
 
 {

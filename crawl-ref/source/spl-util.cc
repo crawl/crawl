@@ -26,6 +26,7 @@
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -1037,7 +1038,7 @@ int spell_effect_noise(spell_type spell)
  * Does the given spell map to a player transformation?
  *
  * @param spell     The spell in question.
- * @return          Whether the spell, when cast, sets a TRAN_ on the player.
+ * @return          Whether the spell, when cast, puts the player in a form.
  */
 bool spell_is_form(spell_type spell)
 {
@@ -1274,14 +1275,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && !player_effectively_in_light_armour())
             return "your body armour is too heavy.";
-        if (temp && you.form == TRAN_STATUE)
+        if (temp && you.form == transformation::statue)
             return "the film of ice won't work on stone.";
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return "your ring of flames would instantly melt the ice.";
         break;
 
     case SPELL_CIGOTUVIS_EMBRACE:
-        if (temp && you.form == TRAN_STATUE)
+        if (temp && you.form == transformation::statue)
             return "the corpses won't embrace your stony flesh.";
         if (temp && you.duration[DUR_ICY_ARMOUR])
             return "the corpses won't embrace your icy flesh.";
@@ -1338,7 +1339,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_CORPSE_ROT:
-    case SPELL_NOXIOUS_VAPOURS:
+    case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
@@ -1348,7 +1349,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (player_on_orb_run())
+        if (orb_limits_translocation())
             return "the Orb prevents this spell from working.";
 
     default:

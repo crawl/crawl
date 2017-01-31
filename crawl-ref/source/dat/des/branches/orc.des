@@ -189,11 +189,12 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = beef jerky / nothing / animal skin / potion of degeneration w:20 /\
-             w:2 potion of haste / w:2 potion of might
+KITEM:   1 = meat ration w:5 / nothing / animal skin / \
+             potion of degeneration w:20 / potion of haste w:2 / \
+             potion of might w:2
 KFEAT:   1 = 1
-ITEM:    club, potion of degeneration ident:type, slice of pizza
-ITEM:    beef jerky / weight:40 nothing, potion of degeneration ident:type
+ITEM:    club, potion of degeneration ident:type, royal jelly
+ITEM:    meat ration w:2 / nothing, potion of degeneration ident:type
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
 MAP

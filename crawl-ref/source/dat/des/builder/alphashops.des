@@ -63,7 +63,7 @@
        "scroll of amnesia", "staff of air", "manual of axes",
        "manual of armour", "wand of acid", "acid dragon scales" }
 
-      elseif s == "B" then i = { "bardiche", "battleaxe", "beef jerky", "bolt",
+      elseif s == "B" then i = { "bardiche", "battleaxe", "bolt",
        "book of battle", "book of beasts", "book of burglary", "box of beasts",
        "bread ration", "broad axe", "pair of boots", "potion of berserk rage",
        "potion of beneficial mutation q:1", "blowgun", "potion of blood",
@@ -138,8 +138,7 @@
        "wand of polymorph", "ring of positive energy", "ring of protection",
        "manual of poison magic", "staff of power", "wand of paralysis",
        "ring of protection from fire", "ring of protection from magic",
-       "staff of poison", "ring of protection from cold",
-       "slice of pizza" }
+       "staff of poison", "ring of protection from cold" }
 
       elseif s == "Q" then i = { "quarterstaff", "quicksilver dragon scales",
        "quick blade" }

@@ -50,7 +50,6 @@ mon_intel_type corpse_intelligence(const item_def &corpse);
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);
 
 bool eat_item(item_def &food);
-void finish_eating_item(item_def &food);
 
 int prompt_eat_chunks(bool only_auto = false);
 

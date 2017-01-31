@@ -563,31 +563,32 @@ enum attribute_type
     NUM_ATTRIBUTES
 };
 
-enum transformation_type
+enum class transformation
 {
-    TRAN_NONE,
-    TRAN_SPIDER,
-    TRAN_BLADE_HANDS,
-    TRAN_STATUE,
-    TRAN_ICE_BEAST,
-    TRAN_DRAGON,
-    TRAN_LICH,
-    TRAN_BAT,
-    TRAN_PIG,
-    TRAN_APPENDAGE,
-    TRAN_TREE,
+    none,
+    spider,
+    blade_hands,
+    statue,
+    ice_beast,
+    dragon,
+    lich,
+    bat,
+    pig,
+    appendage,
+    tree,
 #if TAG_MAJOR_VERSION == 34
-    TRAN_PORCUPINE,
+    porcupine,
 #endif
-    TRAN_WISP,
+    wisp,
 #if TAG_MAJOR_VERSION == 34
-    TRAN_JELLY,
+    jelly,
 #endif
-    TRAN_FUNGUS,
-    TRAN_SHADOW,
-    TRAN_HYDRA,
-    NUM_TRANSFORMS,
+    fungus,
+    shadow,
+    hydra,
+    COUNT
 };
+constexpr int NUM_TRANSFORMS = static_cast<int>(transformation::COUNT);
 
 enum beam_type                  // bolt::flavour
 {
@@ -2091,6 +2092,7 @@ enum enchant_type
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
+    ENCH_RING_OF_THUNDER,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4728,7 +4730,8 @@ enum spell_type : int
     SPELL_BECKONING,
     SPELL_UPHEAVAL,
     SPELL_RANDOM_EFFECTS,
-    SPELL_NOXIOUS_VAPOURS,
+    SPELL_POISONOUS_VAPOURS,
+    SPELL_RING_OF_THUNDER,
     NUM_SPELLS
 };
 
@@ -5164,12 +5167,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_DEMON_3    = 0x600000000ULL,
     TILE_FLAG_DEMON_2    = 0x800000000ULL,
     TILE_FLAG_DEMON_1    = 0xE00000000ULL,
-
-    // 3 mutually exclusive flags for mimics.
-    TILE_FLAG_MIMIC_INEPT = 0x2000000000ULL,
-    TILE_FLAG_MIMIC       = 0x4000000000ULL,
-    TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
-    TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
 
     //// Background flags
 

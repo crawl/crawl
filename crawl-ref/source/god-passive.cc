@@ -46,7 +46,59 @@ struct god_passive
     // -1 means it is present even under penance;
     int rank;
     passive_t pasv;
+    /** Message to be given on gain of this passive.
+     *
+     * If the string begins with an uppercase letter, it is treated as
+     * a complete sentence. Otherwise, if it contains the substring " NOW ",
+     * the string "You " is prepended. Otherwise, the string "You NOW " is
+     * prepended to the message, with the " NOW " then being replaced.
+     *
+     * The substring "GOD" is replaced with the name of the god.
+     * The substring " NOW " is replaced with " now " for messages about
+     * gaining the ability, or " " for messages about having the ability.
+     *
+     * Examples:
+     *   "have super powers"
+     *     => "You have super powers", "You now have super powers."
+     *   "are NOW powerful"
+     *     => "You are powerful", "You are now powerful."
+     *   "Your power is NOW great"
+     *     => "Your power is great", "Your power is now great"
+     *   "GOD NOW makes you powerful"
+     *     => "Moloch makes you powerful", "Moloch now makes you powerful"
+     *   "GOD grants you a boon"
+     *     => "Moloch grants you a boon" (in all situations)
+     *
+     * FIXME: This member is currently unused.
+     *
+     * @see god_passive::loss.
+     */
     const char* gain;
+    /** Message to be given on loss of this passive.
+     *
+     * If empty, use the gain message. This makes sense only if the message
+     * contains " NOW ", either explicitly or implicitly through not
+     * beginning with a capital letter.
+     *
+     * The substring "GOD" is replaced with the name of the god.
+     * The substring " NOW " is replaced with " no longer ".
+     *
+     * Examples:
+     *   "have super powers"
+     *     => "You no longer have super powers"
+     *   "are NOW powerful"
+     *     => "You are no longer powerful"
+     *   "Your power is NOW great"
+     *     => "Your power is no longer great"
+     *   "GOD NOW makes you powerful"
+     *     => "Moloch no longer makes you powerful"
+     *   "GOD grants you a boon"
+     *     => "Moloch grants you a boon" (probably incorrect)
+     *
+     * FIXME: This member is currently unused.
+     *
+     * @see god_passive::gain.
+     */
     const char* loss;
 
     god_passive(int rank_, passive_t pasv_, const char* gain_,
@@ -68,49 +120,64 @@ struct god_passive
     }
 };
 
-static const vector<god_passive> god_passives[NUM_GODS] =
+static const vector<god_passive> god_passives[] =
 {
     // no god
     { },
 
     // Zin
     {
-        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
-        { -1, passive_t::resist_mutation, "GOD can shield you from mutations" },
+        { -1, passive_t::protect_from_harm,
+              "GOD sometimes watches over you",
+              "GOD no longer watches over you"
+        },
+        { -1, passive_t::resist_mutation,
+              "GOD can shield you from mutations",
+              "GOD NOW you from mutations"
+        },
         { -1, passive_t::resist_polymorph,
-              "GOD can protect you from unnatural transformations" },
+              "GOD can protect you from unnatural transformations",
+              "GOD NOW protects you from unnatural transformations",
+        },
         { -1, passive_t::resist_hell_effects,
-              "GOD can protect you from effects of Hell" },
+              "GOD can protect you from effects of Hell",
+              "GOD NOW protects you from effects of Hell"
+        },
         { -1, passive_t::warn_shapeshifter,
-              "GOD will warn you about shapeshifters" },
+              "GOD will NOW warn you about shapeshifters"
+        },
     },
 
     // TSO
     {
-        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
-        { -1, passive_t::abjuration_protection_hd,
-              "GOD protects your summons from abjuration" },
-        { -1, passive_t::bless_followers_vs_evil,
-              "GOD blesses your followers when they kill evil beings"
+        { -1, passive_t::protect_from_harm,
+              "GOD sometimes watches over you",
+              "GOD no longer watches over you"
         },
+        { -1, passive_t::abjuration_protection_hd,
+              "GOD NOW protects your summons from abjuration" },
+        { -1, passive_t::bless_followers_vs_evil,
+              "GOD NOW blesses your followers when they kill evil beings" },
         { -1, passive_t::restore_hp_mp_vs_evil,
               "gain health and magic from killing evil beings" },
         { -1, passive_t::no_stabbing,
-              "are prevented from stabbing unaware creatures" },
-        {  0, passive_t::halo, "are surrounded by divine halo" },
+              "are NOW prevented from stabbing unaware creatures" },
+        {  0, passive_t::halo, "are NOW surrounded by divine halo" },
     },
 
     // Kikubaaqudgha
     {
         {  2, passive_t::miscast_protection_necromancy,
-              "GOD protects you from necromancy miscasts and mummy death curses"
+              "GOD NOW protects you from necromancy miscasts"
+              " and mummy death curses"
         },
-        {  4, passive_t::resist_torment, "GOD protects you from torment" },
+        {  4, passive_t::resist_torment,
+              "GOD NOW protects you from torment" },
     },
 
     // Yredelemnul
     {
-        {  3, passive_t::nightvision, "can see well in the dark" },
+        {  3, passive_t::nightvision, "can NOW see well in the dark" },
     },
 
     // Xom
@@ -118,9 +185,12 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Vehumet
     {
-        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
-        {  3, passive_t::spells_success, "are less likely to miscast destructive spells" },
-        {  4, passive_t::spells_range, "can cast destructive spells farther" },
+        { -1, passive_t::mp_on_kill,
+              "have a chance to gain mana when you kill" },
+        {  3, passive_t::spells_success,
+              "are NOW less likely to miscast destructive spells" },
+        {  4, passive_t::spells_range,
+              "can NOW cast destructive spells farther" },
     },
 
     // Okawaru
@@ -135,15 +205,19 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Sif Muna
     {
-        {  2, passive_t::miscast_protection, "GOD protects you from miscasts" },
+        {  2, passive_t::miscast_protection,
+              "GOD NOW protects you from miscasts" },
     },
 
     // Trog
     {
         { -1, passive_t::abjuration_protection,
-              "GOD protects your allies from abjuration" },
-        {  0, passive_t::extend_berserk, "can maintain berserk longer and you "
-                                         "are less likely to pass out" },
+              "GOD NOW protects your allies from abjuration"
+        },
+        {  0, passive_t::extend_berserk,
+              "can NOW maintain berserk longer, and are less likely to pass out",
+              "can NOW maintain berserk as long, and are more likely to pass out"
+        },
     },
 
     // Nemelex
@@ -153,20 +227,24 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Elyvilon
     {
-        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
-        { -1, passive_t::protect_ally, "can protect the life of your allies" },
+        { -1, passive_t::protect_from_harm,
+              "GOD sometimes watches over you",
+              "GOD no longer watches over you"
+        },
+        { -1, passive_t::protect_ally,
+              "GOD can protect the life of your allies",
+              "GOD NOW protects the life of your allies"
+        },
     },
 
     // Lugonu
     {
         { -1, passive_t::safe_distortion,
-              "protected from distortion unwield effects" },
+              "are NOW protected from distortion unwield effects" },
         { -1, passive_t::map_rot_res_abyss,
               "remember the shape of the Abyss better" },
         {  5, passive_t::attract_abyssal_rune,
-              "GOD will help you find the Abyssal rune.",
-              "GOD will no longer help you find the Abyssal rune."
-        },
+              "GOD will NOW help you find the Abyssal rune" },
     },
 
     // Beogh
@@ -174,49 +252,67 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         { -1, passive_t::share_exp, "share experience with your followers" },
         {  3, passive_t::convert_orcs, "inspire orcs to join your side" },
         {  3, passive_t::bless_followers,
-              "GOD will bless your followers.",
-              "GOD will no longer bless your followers."
+              "GOD will bless your followers",
+              "GOD will no longer bless your followers"
         },
         {  5, passive_t::water_walk, "walk on water" },
     },
 
     // Jiyva
     {
-        { -1, passive_t::neutral_slimes, "slimes and eye monsters are neutral towards you" },
-        { -1, passive_t::jellies_army, "GOD summons jellies to protect you" },
-        { -1, passive_t::jelly_eating, "GOD allows jellies to devour items" },
-        { -1, passive_t::fluid_stats, "GOD adjusts your attributes periodically" },
-        {  0, passive_t::slime_wall_immune, "are immune to slime covered walls" },
-        {  2, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
-        {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
-        {  4, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
-        {  5, passive_t::slime_hp, "items consumed by your fellow slimes restores your health" },
-        {  6, passive_t::spawn_slimes_on_hit, "spawn slimes when struck by massive blows" },
-        {  6, passive_t::unlock_slime_vaults, "GOD grants you access to the hidden treasures of the Slime Pits" },
+        { -1, passive_t::neutral_slimes,
+              "Slimes and eye monsters are NOW neutral towards you" },
+        { -1, passive_t::jellies_army,
+              "GOD NOW summons jellies to protect you" },
+        { -1, passive_t::jelly_eating,
+              "GOD NOW allows jellies to devour items" },
+        { -1, passive_t::fluid_stats,
+              "GOD NOW adjusts your attributes periodically" },
+        {  0, passive_t::slime_wall_immune,
+              "are NOW immune to slime covered walls" },
+        {  2, passive_t::slime_feed,
+              "Items consumed by your fellow slimes NOW feed you" },
+        {  3, passive_t::resist_corrosion,
+              "GOD NOW protects you from corrosion" },
+        {  4, passive_t::slime_mp,
+              "Items consumed by your fellow slimes NOW restore"
+              " your mana reserve"
+        },
+        {  5, passive_t::slime_hp,
+              "Items consumed by your fellow slimes NOW restore"
+              " your health"
+        },
+        {  6, passive_t::spawn_slimes_on_hit,
+              "spawn slimes when struck by massive blows" },
+        {  6, passive_t::unlock_slime_vaults,
+              "GOD NOW grants you access to the hidden treasures"
+              " of the Slime Pits"
+        },
     },
 
     // Fedhas
     {
-        { -1, passive_t::pass_through_plants, "can walk through plants" },
-        { -1, passive_t::shoot_through_plants, "can safely fire through allied plants" },
-        {  0, passive_t::friendly_plants, "Allied plants are friendly towards you" },
+        { -1, passive_t::pass_through_plants,
+              "can NOW walk through plants" },
+        { -1, passive_t::shoot_through_plants,
+              "can NOW safely fire through allied plants" },
+        {  0, passive_t::friendly_plants,
+              "Allied plants are NOW friendly towards you" },
     },
 
     // Cheibriados
     {
-        { -1, passive_t::no_haste, "are protected from inadvertent hurry" },
+        { -1, passive_t::no_haste,
+              "are NOW protected from inadvertent hurry" },
         { -1, passive_t::slowed, "move less quickly" },
         {  0, passive_t::slow_orb_run,
-              "GOD will aid your escape with the Orb of Zot.",
-              "GOD will no longer aid your escape with the Orb of Zot."
+              "GOD will NOW aid your escape with the Orb of Zot",
         },
         {  0, passive_t::stat_boost,
-              "GOD supports your attributes",
-              "GOD no longer supports your attributes",
+              "GOD NOW supports your attributes"
         },
         {  0, passive_t::slow_abyss,
-              "GOD will slow the abyss.",
-              "GOD will no longer slow the abyss."
+              "GOD will NOW slow the Abyss"
         },
         // TODO: this one should work regardless of penance
         {  1, passive_t::slow_metabolism, "have a slowed metabolism" },
@@ -230,56 +326,70 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         {  0, passive_t::auto_map, "have improved mapping abilities" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
-        {  0, passive_t::search_traps, "are better at searching for traps" },
+        {  0, passive_t::search_traps,
+              "are NOW better at searching for traps" },
         {  2, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
-        {  3, passive_t::sinv, "are clear of vision" },
-        {  4, passive_t::clarity, "are clear of mind" },
+        {  3, passive_t::sinv, "are NOW clear of vision" },
+        {  4, passive_t::clarity, "are NOW clear of mind" },
     },
 
     // Dithmenos
     {
-        {  1, passive_t::nightvision, "can see well in the dark" },
-        {  1, passive_t::umbra, "are surrounded by an umbra" },
+        {  1, passive_t::nightvision, "can NOW see well in the dark" },
+        {  1, passive_t::umbra, "are NOW surrounded by an umbra" },
         // TODO: this one should work regardless of penance.
         {  3, passive_t::hit_smoke, "emit smoke when hit" },
         {  4, passive_t::shadow_attacks,
-              "Your attacks are mimicked by a shadow.",
-              "Your attacks are no longer mimicked by a shadow."
-        },
+              "Your attacks are NOW mimicked by a shadow" },
         {  4, passive_t::shadow_spells,
-              "Your attack spells are mimicked by a shadow.",
-              "Your attack spells are no longer mimicked by a shadow."
-        },
+              "Your attack spells are NOW mimicked by a shadow" },
     },
 
     // Gozag
     {
         { -1, passive_t::detect_gold, "detect gold" },
-        {  0, passive_t::goldify_corpses, "GOD turns all corpses to gold." },
+        {  0, passive_t::goldify_corpses,
+              "GOD NOW turns all corpses to gold" },
         {  0, passive_t::gold_aura, "have a gold aura" },
     },
 
     // Qazlal
     {
-        {  0, passive_t::cloud_immunity, "clouds can't harm you" },
-        {  1, passive_t::storm_shield, "generate elemental clouds to protect you" },
-        {  4, passive_t::upgraded_storm_shield, "chances to be struck by projectiles are reduced" },
-        {  5, passive_t::elemental_adaptation, "elemental attacks leaves you somewhat more resistant to themxo" }
+        {  0, passive_t::cloud_immunity, "are ADV immune to clouds" },
+        {  1, passive_t::storm_shield,
+              "generate elemental clouds to protect yourself" },
+        {  4, passive_t::upgraded_storm_shield,
+              "Your chances to be struck by projectiles are NOW reduced" },
+        {  5, passive_t::elemental_adaptation,
+              "Elemental attacks NOW leave you somewhat more resistant"
+              " to them"
+        }
     },
 
     // Ru
     {
-        {  1, passive_t::aura_of_power, "your enemies will sometime fail their attack or even hit themselves" },
-        {  2, passive_t::upgraded_aura_of_power, "enemies that inflict damage upon you will sometime receive a detrimental status effect" },
+        {  1, passive_t::aura_of_power,
+              "Your enemies will sometimes fail their attack or even hit themselves",
+              "Your enemies will NOW fail their attack or hit themselves"
+        },
+        {  2, passive_t::upgraded_aura_of_power,
+              "Enemies that inflict damage upon you will sometimes receive"
+              " a detrimental status effect",
+              "Enemies that inflict damage upon you will NOW receive"
+              " a detrimental status effect"
+        },
     },
 
     // Pakellas
     {
-        { -1, passive_t::no_mp_regen, "GOD prevents you from regenerating your mana reserve" },
+        { -1, passive_t::no_mp_regen,
+              "GOD NOW prevents you from regenerating your mana reserve" },
         { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
-        {  0, passive_t::identify_devices, "GOD identifies your wands" },
-        {  1, passive_t::bottle_mp, "GOD collects and distills excess magic from your kills" },
+        {  0, passive_t::identify_devices, "GOD NOW identifies your wands" },
+        {  1, passive_t::bottle_mp,
+              "GOD NOW collects and distills excess magic from your kills"
+        },
     },
 
     // Uskayaw
@@ -287,10 +397,13 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Hepliaklqana
     {
-        { -1, passive_t::frail, "GOD siphons a part of your essence into your ancestor" },
-        {  5, passive_t::transfer_drain, "drain nearby creatures when transferring your ancestor" },
+        { -1, passive_t::frail,
+              "GOD NOW siphons a part of your essence into your ancestor" },
+        {  5, passive_t::transfer_drain,
+              "drain nearby creatures when transferring your ancestor" },
     },
 };
+COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
 bool have_passive(passive_t passive)
 {

@@ -1562,7 +1562,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         // (since showing 'eudaemon blade' is unhelpful in the former case, and
         // showing 'broad axe' is misleading in the latter)
         // could be a flag, but doesn't seem worthwhile for only two items
-        if (is_unrandom_artefact(weap, UNRAND_JIHAD)
+        if (is_unrandom_artefact(weap, UNRAND_ZEALOT_SWORD)
             || is_unrandom_artefact(weap, UNRAND_DEMON_AXE))
         {
             return long_name;
@@ -1845,8 +1845,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_BREAD_RATION: buff << "bread ration"; break;
         case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_FRUIT: buff << "fruit"; break;
-        case FOOD_PIZZA: buff << "slice of pizza"; break;
-        case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
             switch (determine_chunk_effect(*this))
             {
@@ -2374,9 +2372,6 @@ public:
             case FOOD_MEAT_RATION:
                 name = "meat rations";
                 break;
-            case FOOD_BEEF_JERKY:
-                name = "beef jerky";
-                break;
             case FOOD_BREAD_RATION:
                 name = "bread rations";
                 break;
@@ -2385,9 +2380,6 @@ public:
 #endif
             case FOOD_FRUIT:
                 name = "fruit";
-                break;
-            case FOOD_PIZZA:
-                name = "pizza";
                 break;
             case FOOD_ROYAL_JELLY:
                 name = "royal jellies";
@@ -3417,7 +3409,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.form == TRAN_LICH
+            if (!temp && you.form == transformation::lich
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -3508,17 +3500,22 @@ bool is_useless_item(const item_def &item, bool temp)
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (item.sub_type == WAND_ENSLAVEMENT
-            && item_type_known(item)
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        return is_known_empty_wand(item);
+        if (is_known_empty_wand(item))
+            return true;
+
+        if (!item_type_known(item))
+            return false;
+
+        if (item.sub_type == WAND_ENSLAVEMENT)
+            return player_mutation_level(MUT_NO_LOVE);
+
+        if (item.sub_type == WAND_CLOUDS)
+            return env.level_state & LSTATE_STILL_WINDS;
+
+        return false;
 
     case OBJ_POTIONS:
     {
@@ -3693,10 +3690,10 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!is_inedible(item))
             return false;
 
-        if (!temp && you.form == TRAN_LICH)
+        if (!temp && you.form == transformation::lich)
         {
             // See what would happen if we were in our normal state.
-            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
+            unwind_var<transformation> formsim(you.form, transformation::none);
 
             if (!is_inedible(item))
                 return false;

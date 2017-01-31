@@ -825,6 +825,13 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
 
+    const int mon_count = count_if(begin(menv), end(menv),
+                                   [] (const monster &mons) -> bool
+                                   { return mons.type != MONS_NO_MONSTER; });
+    // All monsters have been assigned? {dlb}
+    if (mon_count >= MAX_MONSTERS - 1)
+        return nullptr;
+
     int tries = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
 
@@ -2858,24 +2865,14 @@ monster* mons_place(mgen_data mg)
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in mons_place()");
 #endif
-    const int mon_count = count_if(begin(menv), end(menv),
-                                   [] (const monster &mons) -> bool
-                                   { return mons.type != MONS_NO_MONSTER; });
 
     if (mg.cls == WANDERING_MONSTER)
     {
-        if (mon_count > MAX_MONSTERS - 50)
-            return 0;
-
 #ifdef DEBUG_MON_CREATION
         mprf(MSGCH_DIAGNOSTICS, "Set class RANDOM_MONSTER");
 #endif
         mg.cls = RANDOM_MONSTER;
     }
-
-    // All monsters have been assigned? {dlb}
-    if (mon_count >= MAX_MONSTERS - 1)
-        return 0;
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
@@ -3078,7 +3075,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(dummy);
 
-    return actor_cloud_immune(&dummy, *cloud);
+    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)

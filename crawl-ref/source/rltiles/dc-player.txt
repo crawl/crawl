@@ -23,6 +23,10 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+frog_m BARACHIAN
+frog_f
+frog2_f
+frog2_m
 gnome_f
 gnome_m
 halfling_m HALFLING
@@ -490,7 +494,7 @@ flaming_death FLAMING_DEATH
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD
-jihad JIHAD
+zealot_sword ZEALOT_SWORD
 singing_sword SINGING_SWORD
 zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
