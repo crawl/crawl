@@ -11,8 +11,8 @@ weaponry.
 %%%%
 Cyno
 
-Cynos are humonids with the heads of dogs.  They are quick to train any skill,
-but are unable to master any.
+Cynos are humonids with the heads of dogs.  They are quick to train the basics
+of any skill, but struggle to master any.
 %%%%
 Deep Dwarf
 

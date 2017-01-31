@@ -163,7 +163,7 @@ bool SkillMenuEntry::is_set(int flag) const
 bool SkillMenuEntry::mastered() const
 {
     return (is_set(SKMF_EXPERIENCE) ? skm.get_raw_skill_level(m_sk)
-                                    : you.skills[m_sk]) >= max_skill_training();
+                                    : you.skills[m_sk]) >= MAX_SKILL_LEVEL;
 }
 
 void SkillMenuEntry::refresh(bool keep_hotkey)
@@ -232,7 +232,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_name->clear_tile();
-        if (you.skills[m_sk] >= max_skill_training())
+        if (you.skills[m_sk] >= MAX_SKILL_LEVEL)
         {
             m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED),
                                       TEX_GUI));
@@ -348,18 +348,50 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white> ";
 
-    if (manual_bonus)
+    if (manual_bonus || you.species == SP_CYNO)
     {
-        skm.set_flag(SKMF_MANUAL);
-        text += "<lightgreen>";
-
+		if(manual_bonus)
+		{
+			skm.set_flag(SKMF_MANUAL);
+			text += "<lightgreen>";
+		}
+		
+		int cyno_bonus = 0;
+		//Determine Cyno skill bonus/malus to display if SP_CYNO 
+		if(you.species == SP_CYNO)
+		{
+			//Divide aptitude skill by 3 and subtract from 3 to get "current" Cyno aptitude to display
+			int cyno_apt = you.skill(m_sk, 1, true) / 3;
+			cyno_bonus = 3 - cyno_apt;
+			
+			//Set the floor display aptitude to -4
+			if(cyno_bonus < -4)
+				cyno_bonus = -4;
+		}
+		manual_bonus = manual_bonus + cyno_bonus;
+		
         // Only room for two characters.
-        if (manual_bonus < 10)
-            text += make_stringf("+%d", manual_bonus);
-        else
-            text += to_string(manual_bonus);
-
-        text += "</lightgreen>";
+		if(manual_bonus != 0)
+		{
+			if(manual_bonus > 0)
+				text += "<lightgreen>";
+			else
+				text += "<red>";
+			
+			if (manual_bonus < 10 && manual_bonus > 0)
+			{
+				text += make_stringf("+%d", manual_bonus);
+			}
+			else
+			{
+				text += to_string(manual_bonus);
+			}
+			
+			if(manual_bonus > 0)
+				text += "</lightgreen>";
+			else
+				text += "</red>";
+		}
     }
 
     m_aptitude->set_text(text);
@@ -501,7 +533,7 @@ void SkillMenuEntry::set_training()
 
 void SkillMenuEntry::set_cost()
 {
-    if (you.skills[m_sk] == max_skill_training())
+    if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
     if (skill_has_manual(m_sk))
         m_progress->set_fg_colour(LIGHTRED);

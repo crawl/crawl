@@ -1709,10 +1709,9 @@ Cynos
   Orb often generating blank stares, tilted heads, and involuntary drooling.
 
   Cynos are quick to learn, picking up the basics of any skill within a short
-  period of time.  However, this incredible flexibility comes at the cost of
-  being unable to learn anything about a skill past the basics, requiring them
-  to take advantage of every option available to find an advantage against foes
-  of greater ability.
+  period of time.  This comes at the cost of a poor attention span, making
+  it more difficult to train a skill the higher it gets.  Thus, Cynos often 
+  prefer to dabble in everything over mastering in one particular skill.
 
 The Undead
 ========================================
