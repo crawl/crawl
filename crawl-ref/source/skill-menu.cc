@@ -347,7 +347,7 @@ void SkillMenuEntry::set_aptitude()
         text += make_stringf(" %d", apt);
 
     text += "</white> ";
-
+	
     if (manual_bonus || you.species == SP_CYNO)
     {
 		if(manual_bonus)
@@ -357,6 +357,7 @@ void SkillMenuEntry::set_aptitude()
 		}
 		
 		int cyno_bonus = 0;
+		
 		//Determine Cyno skill bonus/malus to display if SP_CYNO 
 		if(you.species == SP_CYNO)
 		{
@@ -373,11 +374,13 @@ void SkillMenuEntry::set_aptitude()
         // Only room for two characters.
 		if(manual_bonus != 0)
 		{
+			//Add before based on positive or negative bonus (can be different from bonus being > 10)
 			if(manual_bonus > 0)
 				text += "<lightgreen>";
 			else
 				text += "<red>";
 			
+			//Add '+' if bonus is positive and below 10, otherwise don't
 			if (manual_bonus < 10 && manual_bonus > 0)
 			{
 				text += make_stringf("+%d", manual_bonus);
@@ -387,6 +390,7 @@ void SkillMenuEntry::set_aptitude()
 				text += to_string(manual_bonus);
 			}
 			
+			//Close color tags based on same rules as above
 			if(manual_bonus > 0)
 				text += "</lightgreen>";
 			else

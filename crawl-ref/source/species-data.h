@@ -67,7 +67,7 @@ static const map<species_type, species_def> species_data =
     "Cy",
     "Cyno", nullptr, nullptr,
     SPF_NONE,
-    -4, 0, 0, 3,
+    -2, 0, 0, 3,
     MONS_CYNO,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     7, 8, 9, // 24

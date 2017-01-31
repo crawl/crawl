@@ -1496,7 +1496,7 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-	//I give up, here's two arrays just to see if the other thing works
+	//Choose between the normal exp table and the cyno exp table based on sp
     const int exp[28] = 
 	  { 0, 50, 150, 300, 500, 750,			// 0-5
 		1050, 1400, 1800, 2250, 2800,		// 6-10
