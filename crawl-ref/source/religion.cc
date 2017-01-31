@@ -796,6 +796,11 @@ static void _set_penance(god_type god, int val)
     you.penance[god] = val;
 }
 
+static void _set_wrath_penance(god_type god)
+{
+    _set_penance(god, initial_wrath_penance_for(god));
+}
+
 static void _inc_gift_timeout(int val)
 {
     if (200 - you.gift_timeout < val)
@@ -2553,6 +2558,47 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
+/**
+ * When you abandon this god, how much penance do you gain? (How long does the
+ * wrath last?
+ *
+ * @param god   The god in question.
+ * @return      The initial penance for the given god's wrath.
+ */
+int initial_wrath_penance_for(god_type god)
+{
+    // TODO: transform to data (tables)
+    switch (god)
+    {
+        case GOD_ASHENZARI:
+        case GOD_BEOGH:
+        case GOD_ELYVILON:
+        case GOD_GOZAG:
+        case GOD_HEPLIAKLQANA:
+        case GOD_LUGONU:
+        case GOD_NEMELEX_XOBEH:
+        case GOD_TROG:
+        case GOD_XOM:
+            return 50;
+        case GOD_FEDHAS:
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_JIYVA:
+        case GOD_SHINING_ONE:
+        case GOD_SIF_MUNA:
+        case GOD_YREDELEMNUL:
+            return 30;
+        case GOD_CHEIBRIADOS:
+        case GOD_DITHMENOS:
+        case GOD_MAKHLEB:
+        case GOD_PAKELLAS:
+        case GOD_QAZLAL:
+        case GOD_VEHUMET:
+        case GOD_ZIN:
+        default:
+            return 25;
+    }
+}
+
 void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
@@ -2643,14 +2689,9 @@ void excommunication(bool voluntary, god_type new_god)
 
     switch (old_god)
     {
-    case GOD_XOM:
-        _set_penance(old_god, 50);
-        break;
-
     case GOD_KIKUBAAQUDGHA:
         mprf(MSGCH_GOD, old_god, "You sense decay."); // in the state of Denmark
         add_daction(DACT_ROT_CORPSES);
-        _set_penance(old_god, 30);
         break;
 
     case GOD_YREDELEMNUL:
@@ -2662,17 +2703,14 @@ void excommunication(bool voluntary, god_type new_god)
             add_daction(DACT_ALLY_YRED_SLAVE);
             remove_all_companions(GOD_YREDELEMNUL);
         }
-        _set_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
         you.vehumet_gifts.clear();
         you.duration[DUR_VEHUMET_GIFT] = 0;
-        _set_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
-        _set_penance(old_god, 25);
         make_god_gifts_disappear();
         break;
 
@@ -2680,7 +2718,6 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
         make_god_gifts_disappear();
-        _set_penance(old_god, 50);
         break;
 
     case GOD_BEOGH:
@@ -2694,8 +2731,6 @@ void excommunication(bool voluntary, god_type new_god)
         }
 
         env.level_state |= LSTATE_BEOGH;
-
-        _set_penance(old_god, 50);
         break;
 
     case GOD_SIF_MUNA:
@@ -2703,18 +2738,12 @@ void excommunication(bool voluntary, god_type new_god)
             you.duration[DUR_CHANNEL_ENERGY] = 0;
         if (you.attribute[ATTR_DIVINE_ENERGY])
             you.attribute[ATTR_DIVINE_ENERGY] = 0;
-        _set_penance(old_god, 30);
         break;
 
     case GOD_NEMELEX_XOBEH:
         nemelex_reclaim_decks();
         mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
              god_name(old_god).c_str());
-        _set_penance(old_god, 50);
-        break;
-
-    case GOD_LUGONU:
-        _set_penance(old_god, 50);
         break;
 
     case GOD_SHINING_ONE:
@@ -2722,8 +2751,6 @@ void excommunication(bool voluntary, god_type new_god)
             tso_remove_divine_shield();
 
         make_god_gifts_disappear();
-
-        _set_penance(old_god, 30);
         break;
 
     case GOD_ZIN:
@@ -2732,8 +2759,6 @@ void excommunication(bool voluntary, god_type new_god)
 
         if (env.sanctuary_time)
             remove_sanctuary();
-
-        _set_penance(old_god, 25);
         break;
 
     case GOD_ELYVILON:
@@ -2743,7 +2768,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_JIYVA:
@@ -2755,8 +2779,6 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
-
-        _set_penance(old_god, 30);
         break;
 
     case GOD_FEDHAS:
@@ -2765,7 +2787,6 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon turn on you.");
             add_daction(DACT_ALLY_PLANT);
         }
-        _set_penance(old_god, 30);
         break;
 
     case GOD_ASHENZARI:
@@ -2775,13 +2796,11 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_DITHMENOS:
         if (you.form == transformation::shadow)
             untransform();
-        _set_penance(old_god, 25);
         break;
 
     case GOD_GOZAG:
@@ -2800,7 +2819,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_QAZLAL:
@@ -2832,7 +2850,6 @@ void excommunication(bool voluntary, god_type new_god)
             you.duration[DUR_QAZLAL_AC] = 0;
             you.redraw_armour_class = true;
         }
-        _set_penance(old_god, 25);
         break;
 
     case GOD_PAKELLAS:
@@ -2843,12 +2860,10 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
-        _set_penance(old_god, 25);
         break;
 
     case GOD_HEPLIAKLQANA:
@@ -2858,13 +2873,13 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                     - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     default:
-        _set_penance(old_god, 25);
         break;
     }
+
+    _set_wrath_penance(old_god);
 
 #ifdef USE_TILE_LOCAL
     tiles.layout_statcol();

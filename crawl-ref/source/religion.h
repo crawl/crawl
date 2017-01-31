@@ -44,6 +44,7 @@ string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 
+int initial_wrath_penance_for(god_type god);
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
