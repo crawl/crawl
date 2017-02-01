@@ -576,10 +576,15 @@ static void _god_wrath_description(god_type which_god)
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
-    const bool long_wrath = initial_wrath_penance_for(which_god) > 30;
-    _print_string_wrapped(apostrophise(uppercase_first(god_name(which_god)))
-                          + " wrath is relatively " +
-                          (long_wrath ? "long." : "short."), width);
+
+    if (which_god != GOD_RU) // Permanent wrath.
+    {
+        const bool long_wrath = initial_wrath_penance_for(which_god) > 30;
+        _print_string_wrapped(apostrophise(uppercase_first(god_name(which_god)))
+                              + " wrath lasts for a relatively " +
+                              (long_wrath ? "long" : "short") + " duration.",
+                              width);
+    }
 }
 
 /**
@@ -674,8 +679,10 @@ static string _raw_penance_message(god_type which_god)
         if (is_good_god(you.religion))
             return "%s is ambivalent towards you.";
         if (!god_hates_your_god(which_god))
+        {
             return "%s is almost ready to forgive your sins.";
                  // == "Come back to the one true church!"
+        }
     }
 
     const int initial_penance = initial_wrath_penance_for(which_god);
