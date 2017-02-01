@@ -4611,6 +4611,13 @@ mons_spec mons_list::mons_by_name(string name) const
     if (spec.type != MONS_PROGRAM_BUG)
         return spec;
 
+    bool enslaved = false;
+    if (starts_with(name, "enslaved "))
+    {
+        name = name.substr(strlen("enslaved "));
+        enslaved = true;
+    }
+
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
 
@@ -4632,7 +4639,13 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name == "bai suzhen dragon")
         return MONS_BAI_SUZHEN_DRAGON;
 
-    return get_monster_by_name(name);
+    mons_spec result = get_monster_by_name(name);
+    if (enslaved)
+    {
+        mpr("making enslaved");
+        result.extra_monster_flags |= MF_ENSLAVED_SOUL;
+    }
+    return result;
 }
 
 //////////////////////////////////////////////////////////////////////
