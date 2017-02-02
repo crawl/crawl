@@ -12,7 +12,7 @@
 ##############################################################################
 
 {{
-function bailey_portal(e, ptype)
+function bailey_portal(e)
   local timeout_turns = crawl.random_range(600, 800)
 
   local messager =
@@ -31,8 +31,6 @@ function bailey_portal(e, ptype)
       }
     }
 
-  dgn.persist.bailey_type = "bailey_" .. ptype
-
   e.lua_marker('O',
       timed_marker {
         disappear = "The portal closes with a thud.",
@@ -48,14 +46,6 @@ function bailey_portal(e, ptype)
 
   e.kfeat("O = enter_bailey")
   e.tile("c = wall_stone_smooth")
-end
-
-function bailey_portal_axe(e)
-  bailey_portal(e, 'axe')
-end
-
-function bailey_portal_polearm(e)
-  bailey_portal(e, 'polearm')
 end
 
 -- colours
@@ -129,26 +119,15 @@ default-depth: D:7-14, Orc, !Orc:$
 NAME: enter_bailey_1
 TAGS: transparent
 WEIGHT: 1
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal(_G)
 MAP
 O
 ENDMAP
 
 NAME: enter_bailey_2
 TAGS: transparent
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-ITEM: hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-ITEM: halberd / spear
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal(_G)
+ITEM: hand axe / spear
 MAP
 .....
 ..d..
@@ -159,14 +138,8 @@ ENDMAP
 
 NAME: enter_bailey_3
 TAGS: transparent
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-MONS: goblin ; hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-MONS: goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal(_G)
+MONS: goblin ; hand axe / goblin ; spear
 KMASK: wW = no_monster_gen
 MAP
 .........
@@ -183,21 +156,10 @@ ENDMAP
 NAME:   enter_bailey_4
 TAGS:   transparent
 WEIGHT: 5
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
+: bailey_portal(_G)
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; tomahawk ego:returning ident:type q:4 | \
-                 tomahawk ego:returning ident:type q:3 / \
-        hobgoblin ; tomahawk ego:returning ident:type q:4 | \
-                    tomahawk ego:returning ident:type q:3 / \
-        orc ; tomahawk ego:returning ident:type q:4 | \
-              tomahawk ego:returning ident:type q:3
-SUBST: 1 = 122
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
 MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear
-:   bailey_portal_polearm(_G)
-: end
+SUBST: 1 = 12
 KMASK: wW = no_monster_gen
 MAP
 ...........
@@ -213,15 +175,11 @@ ENDMAP
 
 NAME: enter_bailey_5
 TAGS: transparent
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
+: bailey_portal(_G)
 MONS: goblin ; tomahawk ego:returning ident:type q:4 | \
                tomahawk ego:returning ident:type q:3
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
 MONS: goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+SUBST: 1 = 12
 KMASK: wW = no_monster_gen
 MAP
 .......
@@ -240,14 +198,10 @@ COLOUR: ; : red / lightred
 SUBST:  ; = .
 KMASK:  d = no_item_gen
 KPROP:  d = no_tele_into
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-KITEM:  d = unobtainable war axe / unobtainable battleaxe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-KITEM:  d = unobtainable glaive / unobtainable bardiche
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal(_G)
+KITEM:  d = unobtainable battleaxe / \
+            unobtainable executioner's axe / \
+            unobtainable glaive / unobtainable bardiche
 MAP
 .......ooo.......
 ..ooo..odo..ooo..
@@ -267,14 +221,10 @@ ENDMAP
 # They were just having a party.
 NAME:   enter_bailey_7
 WEIGHT: 3
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
+: bailey_portal(_G)
 MONS:   gnoll ; hand axe / goblin ; hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
 MONS:   gnoll ; spear / goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+SUBST: 1 = 12
 SUBST:  . = ...;!
 COLOUR: ; = red
 KITEM:  ! = potion of degeneration q:2 ident:type
@@ -295,14 +245,10 @@ WEIGHT: 3
 COLOUR: n = red
 KMASK:  d = no_item_gen
 KPROP:  d = no_tele_into
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-KITEM:  d = unobtainable war axe / unobtainable battleaxe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
-KITEM:  d = unobtainable glaive / unobtainable bardiche
-:   bailey_portal_polearm(_G)
-: end
+: bailey_portal(_G)
+KITEM:  d = unobtainable battleaxe / \
+            unobtainable executioner's axe / \
+            unobtainable glaive / unobtainable bardiche
 MAP
  xxxxxxxxxxxxxxxxxxx
  x.................@
@@ -318,16 +264,11 @@ ENDMAP
 NAME: lightli_bailey_entry_fortress
 TAGS: transparent
 WEIGHT: 1
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
+: bailey_portal(_G)
 MONS: orc ; tomahawk ego:returning ident:type q:3 | \
             tomahawk ego:returning ident:type q:4 . hand axe
-MONS: gnoll ; hand axe / goblin ; hand axe
-:   bailey_portal_axe(_G)
-: elseif rnd == 1 then
 MONS: orc ; spear, gnoll ; spear / goblin ; spear
-:   bailey_portal_polearm(_G)
-: end
+SUBST: 1 = 12
 KMASK: W = no_monster_gen
 MAP
 WWWWWWWWWWWWWWW
@@ -355,17 +296,9 @@ TAGS:   allow_dup
 PLACE:  Bailey
 ORIENT: encompass
 {{
-  local btype = dgn.persist.bailey_type
-  if not btype then -- Wizmode
-    if crawl.coinflip() then
-      btype = "bailey_axe"
-    else
-      btype = "bailey_polearm"
-    end
-  end
   if crawl.game_started() then
-    local map = dgn.map_by_tag(btype)
-    assert(map, "Couldn't find a map for " .. btype)
+    local map = dgn.map_by_tag("bailey")
+    assert(map, "Couldn't find a map for bailey")
     dgn.place_map(map, false, false)
   end
 }}
@@ -387,7 +320,7 @@ ENDMAP
 # Loot consists of approximately six good items.
 NAME:   bailey_axe_1
 ORIENT: encompass
-TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:   any good_item w:10 / nothing w:5
 #
@@ -461,7 +394,7 @@ ENDMAP
 # Plus, there is always one stack of very good potions.
 NAME:   bailey_axe_2
 ORIENT: encompass
-TAGS:   bailey_axe no_rotate
+TAGS:   bailey no_rotate
 : axe_returning(_G)
 MONS:   gnoll ; mundane halberd | halberd ego:electrocution ident:type
 MONS:   orc warrior / orc knight
@@ -499,7 +432,7 @@ ENDMAP
 # Another actual bailey. Six good items.
 NAME:   bailey_axe_3
 ORIENT: encompass
-TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey no_rotate no_item_gen no_monster_gen no_pool_fixup
 SUBST:  v : ccv
 ITEM:   any good_item
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
@@ -558,7 +491,7 @@ ENDMAP
 #
 NAME:    bailey_axe_4
 ORIENT:  encompass
-TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:    bailey no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
 ITEM:    potion of flight ident:type
@@ -626,7 +559,7 @@ ENDMAP
 
 NAME:   bailey_axe_minmay_hex_keep
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen
+TAGS:   bailey no_item_gen no_monster_gen
 # Loot consists of 8 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
@@ -711,7 +644,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_1
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
+TAGS:   bailey no_rotate no_pool_fixup no_monster_gen
 NSUBST: D = 1:+ / *:c
 NSUBST: E = 1:+ / *:c
 : orc_with_polearm(_G)
@@ -763,7 +696,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_2
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_pool_fixup no_monster_gen
+TAGS:   bailey no_rotate no_pool_fixup no_monster_gen
 MONS:   orc warrior w:5 ; arbalest . bolt . ring mail | scale mail / \
         orc ; arbalest . bolt . ring mail | scale mail
 : orc_with_polearm(_G)
@@ -832,7 +765,7 @@ ENDMAP
 NAME:    bailey_polearm_3
 ORIENT:  encompass
 WEIGHT:  5
-TAGS:    bailey_polearm no_rotate
+TAGS:    bailey no_rotate
 SHUFFLE: DF/EG
 SUBST:   D : d, E = 1.., F : 2, G : .
 NSUBST:  d = 3:d / *:$
@@ -879,7 +812,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_4
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey no_rotate no_item_gen no_monster_gen no_pool_fixup
 ITEM:   any good_item
 MONS:   orc warrior ; arbalest . bolt . ring mail | scale mail | chain mail / \
         orc warrior ; halberd . ring mail | scale mail | chain mail
@@ -915,7 +848,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_5
 ORIENT: encompass
-TAGS:   bailey_polearm no_item_gen no_monster_gen
+TAGS:   bailey no_item_gen no_monster_gen
 ITEM:   potion of beneficial mutation q:1 / potion of experience q:1
 ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
         potion of berserk rage w:3 / potion of haste w:2 /\
@@ -953,7 +886,7 @@ ENDMAP
 # the player starts right in the middle of a fight
 NAME:   bailey_polearm_flooded_kennysheep
 ORIENT: encompass
-TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
+TAGS:   bailey no_item_gen no_monster_gen no_pool_fixup patrolling
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 MONS:   centaur ; javelin ego:returning ident:type q:2 | \
@@ -1002,7 +935,7 @@ ENDMAP
 #6 good items and two gold piles for murdering a bunch of gnolls
 NAME:   bailey_polearm_gnolls_kennysheep
 ORIENT: encompass
-TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey no_item_gen no_monster_gen no_pool_fixup
 MONS:   gnoll ; spear | trident | halberd . \
             ring mail | scale mail | chain mail . \
             throwing net | nothing
@@ -1058,7 +991,7 @@ ENDMAP
 # along with 1 guaranteed acquirement scroll and 3 gold piles in the bastions
 NAME:   bailey_axe_of_yendor_kennysheep
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey no_item_gen no_monster_gen no_pool_fixup
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 KMONS:  3 = orc sorcerer ; war axe | broad axe w:2 | battleaxe w:1 . \
@@ -1149,7 +1082,7 @@ ENDMAP
 # the warlord fight is a little easier, and the outer fights are harder
 NAME:   bailey_axe_bossmonster_kennysheep
 ORIENT: encompass
-TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
+TAGS:   bailey no_item_gen no_monster_gen no_pool_fixup
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
             potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
             potion of magic w:5 / potion of haste w:5 / \
