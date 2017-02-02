@@ -361,13 +361,13 @@ void SkillMenuEntry::set_aptitude()
 		//Determine Cyno skill bonus/malus to display if SP_CYNO 
 		if(you.species == SP_CYNO)
 		{
-			//Divide aptitude skill by 3 and subtract from 3 to get "current" Cyno aptitude to display
-			int cyno_apt = you.skill(m_sk, 1, true) / 3;
-			cyno_bonus = 3 - cyno_apt;
+			//Divide aptitude skill to get "current" Cyno aptitude to display
+			int cyno_apt = you.skill(m_sk, 1, true) / 5;
+			cyno_bonus = 3 - cyno_apt * 2;
 			
-			//Set the floor display aptitude to -4
-			if(cyno_bonus < -4)
-				cyno_bonus = -4;
+			//Set the floor aptitude to -5
+			if(cyno_bonus < -5)
+				cyno_bonus = -5;
 		}
 		manual_bonus = manual_bonus + cyno_bonus;
 		
