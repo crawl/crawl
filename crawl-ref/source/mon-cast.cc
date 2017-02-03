@@ -1139,8 +1139,6 @@ int mons_spell_range(spell_type spell, int hd)
 {
     switch (spell)
     {
-        case SPELL_SANDBLAST:
-            return 2; // spell_range changes with player wielded items
         case SPELL_FLAME_TONGUE:
             // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
             // use the mighty Throw Flame for big ranges.
