@@ -2427,6 +2427,8 @@ public:
     {
         if (selected_qty >= 1)
             return WHITE;
+        else if (is_useless_item(*item))
+            return DARKGREY;
         else
             return MENU_ITEM_STOCK_COLOUR;
 
