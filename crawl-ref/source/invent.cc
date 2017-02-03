@@ -1965,18 +1965,7 @@ bool prompt_failed(int retval)
 // wielded to be used normally.
 bool item_is_wieldable(const item_def &item)
 {
-    if (is_weapon(item))
-        return you.species != SP_FELID;
-
-    if (item.base_type == OBJ_MISSILES
-        && (item.sub_type == MI_STONE
-            || item.sub_type == MI_LARGE_ROCK
-               && you.could_wield(item, true, true)))
-    {
-        return you.has_spell(SPELL_SANDBLAST);
-    }
-
-    return false;
+    return is_weapon(item) && you.species != SP_FELID;
 }
 
 /**
