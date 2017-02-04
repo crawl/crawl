@@ -67,16 +67,14 @@ void swap_with_monster(monster* mon_to_swap)
 
     mon.move_to_pos(you.pos(), true, true);
 
+    // XXX: destroy ammo == 1 webs if they don't catch the mons? very rare case
+
     if (you_caught)
     {
         // XXX: this doesn't correctly handle web traps
         check_net_will_hold_monster(&mon);
         if (!mon_caught)
-        {
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
-            you.redraw_evasion = true;
-        }
+            stop_being_held();
     }
 
     // Move you to its previous location.
@@ -84,17 +82,21 @@ void swap_with_monster(monster* mon_to_swap)
 
     if (mon_caught)
     {
-        if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        // XXX: destroy ammo == 1 webs? (rare case)
+
+        if (you.body_size(PSIZE_BODY) >= SIZE_GIANT) // e.g. dragonform
         {
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
+            {
                 destroy_item(net);
-            mprf("The %s rips apart!", (net == NON_ITEM) ? "web" : "net");
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
-            you.redraw_evasion = true;
+                mpr("The net rips apart!");
+            }
+
+            if (you_caught)
+                stop_being_held();
         }
-        else
+        else // XXX: doesn't handle e.g. spiderform swapped into webs
         {
             you.attribute[ATTR_HELD] = 1;
             if (get_trapping_net(you.pos()) != NON_ITEM)
@@ -102,6 +104,7 @@ void swap_with_monster(monster* mon_to_swap)
             else
                 mpr("You get stuck in the web!");
             you.redraw_quiver = true; // Account for being in a net.
+            you.redraw_evasion = true;
         }
 
         if (!you_caught)
