@@ -69,6 +69,7 @@ void swap_with_monster(monster* mon_to_swap)
 
     if (you_caught)
     {
+        // XXX: this doesn't correctly handle web traps
         check_net_will_hold_monster(&mon);
         if (!mon_caught)
         {
