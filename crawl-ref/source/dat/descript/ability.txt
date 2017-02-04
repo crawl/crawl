@@ -182,8 +182,9 @@ Cures all your mutations — but only once.
 Divine Shield ability
 
 Grants a temporary divine shield. Because it is held aloft by the Shining One's
-power, it does not interfere with your equipment. The strength and duration
-of the shield are increased by Invocations skill.
+power, it does not interfere with your equipment, but it functions otherwise as
+a normal, physical shield. The strength and duration of the shield are increased
+by Invocations skill.
 %%%%
 Cleansing Flame ability
 
