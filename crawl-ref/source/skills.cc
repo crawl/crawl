@@ -290,6 +290,17 @@ static void _change_skill_level(skill_type exsk, int n)
              specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
+		
+		//Send a status message about 'aptitude' increases/decreases if species is Cyno
+		if (you.species == SP_CYNO && you.skills[exsk] < 21)
+		{
+			if (n > 0 && you.skills[exsk] % 5 == 0)
+				mprf(MSGCH_MUTATION, "You become less interested in %s.",
+					 skill_name(exsk));
+			else if (n < 0 && you.skills[exsk] % 5 == 4)
+				mprf(MSGCH_MUTATION, "You become more interested in %s.",
+					 skill_name(exsk));
+		}
     }
     else if (you.num_turns)
     {
@@ -299,6 +310,29 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk),
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
+		
+		//Send a status message about 'aptitude' increases/decreases if species is Cyno
+		if (you.species == SP_CYNO)
+		{
+			if (n > 0 && (you.skills[exsk] - n) < 21)
+			{
+				for (int sk_level = you.skills[exsk] - n + 1; sk_level <= you.skills[exsk]; sk_level++)
+				{
+					if(sk_level % 5 == 0 && sk_level < 21)
+						mprf(MSGCH_MUTATION, "You become less interested in %s.",
+							 skill_name(exsk));
+				}
+			}
+			else if (n < 0 && you.skills[exsk] < 21)
+			{
+				for (int sk_level = you.skills[exsk] + n - 1; sk_level >= you.skills[exsk]; sk_level--)
+				{
+					if(sk_level % 5 == 4)
+						mprf(MSGCH_MUTATION, "You become more interested in %s.",
+							 skill_name(exsk));
+				}
+			}
+		}
     }
 
     if (you.skills[exsk] == n && n > 0)
