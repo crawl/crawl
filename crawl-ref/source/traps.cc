@@ -398,6 +398,7 @@ bool player_caught_in_net()
 
 void check_net_will_hold_monster(monster* mons)
 {
+    ASSERT(mons); // XXX: should be monster &mons
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
         int net = get_trapping_net(mons->pos());
