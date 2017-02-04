@@ -1294,6 +1294,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BLINKBOLT:
     case SPELL_STEAM_BALL:
     case SPELL_TELEPORT_OTHER:
+    case SPELL_SANDBLAST:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1301,11 +1302,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         zappy(ZAP_DAZZLING_SPRAY, power, true, beam);
         break;
 
-    case SPELL_SANDBLAST: // special-cased to avoid breaking battlesphere :(
-        zappy(ZAP_SANDBLAST, power, true, beam);
-        break;
-
-    case SPELL_FREEZING_CLOUD: // another battlesphere special-case
+    case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
         break;
 
