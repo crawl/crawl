@@ -878,7 +878,14 @@ bool learn_spell(spell_type specspell, bool wizard)
 
     if (!wizard)
     {
-        int severity = fail_severity(specspell);
+        if (specspell == SPELL_OZOCUBUS_ARMOUR
+            && !player_effectively_in_light_armour())
+        {
+            mprf(MSGCH_WARN,
+                 "Your armour is too heavy for you to cast this spell!");
+        }
+
+        const int severity = fail_severity(specspell);
 
         if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
             mprf(MSGCH_WARN, "This spell is impossible to cast!");
