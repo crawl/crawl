@@ -2100,7 +2100,14 @@ void monster::struggle_against_net()
                 }
                 return;
             }
-            simple_monster_message(*this, " pulls away from the web.");
+
+            if (trap->ammo_qty == 1) // temp web from e.g. jumpspider/spidersack
+            {
+                simple_monster_message(*this, " tears the web.");
+                destroy_trap(pos());
+            }
+            else
+                simple_monster_message(*this, " pulls away from the web.");
 
         }
         del_ench(ENCH_HELD);
