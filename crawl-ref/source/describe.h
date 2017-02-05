@@ -6,6 +6,7 @@
 #ifndef DESCRIBE_H
 #define DESCRIBE_H
 
+#include <functional>
 #include <sstream>
 #include <string>
 

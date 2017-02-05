@@ -7,6 +7,7 @@
 #define INVENT_H
 
 #include <cstddef>
+#include <functional>
 #include <vector>
 
 #include "enum.h"

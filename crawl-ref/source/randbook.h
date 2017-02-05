@@ -6,6 +6,8 @@
 #ifndef RANDBOOK_H
 #define RANDBOOK_H
 
+#include <functional>
+
 #include "spl-util.h"
 
 typedef function<bool(spschool_flag_type discipline_1,

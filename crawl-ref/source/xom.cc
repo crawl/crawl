@@ -8,6 +8,7 @@
 #include "xom.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "abyss.h"
 #include "acquire.h"

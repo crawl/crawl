@@ -1,6 +1,8 @@
 #ifndef MON_INFO_H
 #define MON_INFO_H
 
+#include <functional>
+
 #include "mon-util.h"
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"

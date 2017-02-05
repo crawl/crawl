@@ -6,6 +6,7 @@
 #ifndef ITEM_USE_H
 #define ITEM_USE_H
 
+#include <functional>
 #include <string>
 
 #include "enum.h"
