@@ -25,22 +25,19 @@
 #include "spl-book.h"
 #include "spl-util.h"
 
-static bool _is_bookrod_type(const item_def& item,
-                             bool (*matches)(spell_type spell))
+static bool _is_book_type(const item_def& item,
+                          bool (*matches)(spell_type spell))
 {
     if (!item.defined())
         return false;
 
     // Return false for item_infos of unknown subtype
-    // (== NUM_{BOOKS,RODS} in most cases, OBJ_RANDOM for acquirement)
+    // (== NUM_BOOKS in most cases, OBJ_RANDOM for acquirement)
     if (item.sub_type == get_max_subtype(item.base_type)
         || item.sub_type == OBJ_RANDOM)
     {
         return false;
     }
-
-    if (item.base_type == OBJ_RODS)
-        return matches(spell_in_rod(static_cast<rod_type>(item.sub_type)));
 
     if (!item_is_spellbook(item))
         return false;
@@ -101,12 +98,11 @@ bool is_potentially_evil_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+        if (item.sub_type == WAND_RANDOM_EFFECTS
+            || item.sub_type == WAND_CLOUDS)
+        {
             return true;
-        break;
-    case OBJ_RODS:
-        if (item.sub_type == ROD_CLOUDS)
-            return true;
+        }
         break;
     default:
         break;
@@ -137,8 +133,7 @@ bool is_corpse_violating_item(const item_def& item)
         break;
     }
     case OBJ_BOOKS:
-    case OBJ_RODS:
-        retval = _is_bookrod_type(item, is_corpse_violating_spell);
+        retval = _is_book_type(item, is_corpse_violating_spell);
         break;
     default:
         break;
@@ -183,8 +178,7 @@ bool is_evil_item(const item_def& item)
     case OBJ_STAVES:
         return item.sub_type == STAFF_DEATH;
     case OBJ_BOOKS:
-    case OBJ_RODS:
-        return _is_bookrod_type(item, is_evil_spell);
+        return _is_book_type(item, is_evil_spell);
     case OBJ_MISCELLANY:
         return item.sub_type == MISC_HORN_OF_GERYON;
     default:
@@ -203,7 +197,7 @@ bool is_unclean_item(const item_def& item)
     }
 
     if (item.has_spells())
-        return _is_bookrod_type(item, is_unclean_spell);
+        return _is_book_type(item, is_unclean_spell);
 
     return false;
 }
@@ -243,8 +237,7 @@ bool is_chaotic_item(const item_def& item)
                  || item.sub_type == POT_LIGNIFY;
         break;
     case OBJ_BOOKS:
-    case OBJ_RODS:
-        retval = _is_bookrod_type(item, is_chaotic_spell);
+        retval = _is_book_type(item, is_chaotic_spell);
         break;
     case OBJ_MISCELLANY:
         retval = (item.sub_type == MISC_BOX_OF_BEASTS);
@@ -312,8 +305,7 @@ bool is_hasty_item(const item_def& item)
                   || item.sub_type == POT_BERSERK_RAGE);
         break;
     case OBJ_BOOKS:
-    case OBJ_RODS:
-        retval = _is_bookrod_type(item, is_hasty_spell);
+        retval = _is_book_type(item, is_hasty_spell);
         break;
     default:
         break;
@@ -334,12 +326,11 @@ static bool _is_potentially_fiery_item(const item_def& item)
         }
         break;
     case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
+        if (item.sub_type == WAND_RANDOM_EFFECTS
+            || item.sub_type == WAND_CLOUDS)
+        {
             return true;
-        break;
-    case OBJ_RODS:
-        if (item.sub_type == ROD_CLOUDS)
-            return true;
+        }
         break;
     default:
         break;
@@ -377,8 +368,7 @@ bool is_fiery_item(const item_def& item)
             return true;
         break;
     case OBJ_BOOKS:
-    case OBJ_RODS:
-        return _is_bookrod_type(item, is_fiery_spell);
+        return _is_book_type(item, is_fiery_spell);
         break;
     case OBJ_STAVES:
         if (item.sub_type == STAFF_FIRE)
@@ -462,11 +452,6 @@ static bool _your_god_hates_spell(spell_type spell)
     return god_hates_spell(spell, you.religion);
 }
 
-static bool _your_god_hates_rod_spell(spell_type spell)
-{
-    return god_hates_spell(spell, you.religion, true);
-}
-
 /**
  * Do the good gods dislike players using this item? If so, why?
  *
@@ -537,9 +522,6 @@ conduct_type god_hates_item_handling(const item_def &item)
         {
             return DID_SPELL_PRACTISE;
         }
-        // Only Trog cares about spellbooks vs rods.
-        if (item.base_type == OBJ_RODS)
-            return DID_NOTHING;
         break;
 
     case GOD_FEDHAS:
@@ -580,10 +562,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         return DID_EVIL;
     }
 
-    if (item_type_known(item) && _is_bookrod_type(item,
-                                                  item.base_type == OBJ_RODS
-                                                  ? _your_god_hates_rod_spell
-                                                  : _your_god_hates_spell))
+    if (item_type_known(item) && _is_book_type(item, _your_god_hates_spell))
     {
         return NUM_CONDUCTS; // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.

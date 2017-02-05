@@ -8,6 +8,7 @@
 #include "terrain.h"
 
 #include <algorithm>
+#include <functional>
 #include <sstream>
 
 #include "areas.h"
@@ -425,6 +426,15 @@ bool feat_is_permarock(dungeon_feature_type feat)
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
+/** Can this feature be dug?
+ */
+bool feat_is_diggable(dungeon_feature_type feat)
+{
+    return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+           || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
+           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
+}
+
 /** Is this feature a type of trap?
  *
  *  @param feat the feature.
@@ -776,21 +786,32 @@ bool slime_wall_neighbour(const coord_def& c)
     if (_slime_wall_precomputed_neighbour_mask.get())
         return (*_slime_wall_precomputed_neighbour_mask)(c);
 
+    // Not using count_adjacent_slime_walls because the early return might
+    // be relevant for performance here. TODO: profile it and find out.
     for (adjacent_iterator ai(c); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
             return true;
     return false;
 }
 
+int count_adjacent_slime_walls(const coord_def &pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            count++;
+
+    return count;
+}
+
 void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
-    int walls = 0;
-    for (adjacent_iterator ai(act->pos()); ai; ++ai)
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            walls++;
+    if (actor_slime_wall_immune(act))
+        return;
 
+    const int walls = count_adjacent_slime_walls(act->pos());
     if (!walls)
         return;
 
@@ -798,20 +819,13 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
-        {
-            you.splash_with_acid(nullptr, strength, false,
-                                (walls > 1) ? "The walls burn you!"
-                                            : "The wall burns you!");
-        }
+        you.splash_with_acid(nullptr, strength, false,
+                            (walls > 1) ? "The walls burn you!"
+                                        : "The wall burns you!");
     }
     else
     {
         monster* mon = act->as_monster();
-
-        // Slime native monsters are immune to slime walls.
-        if (mons_is_slime(*mon))
-            return;
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,
                                              roll_dice(2, strength));

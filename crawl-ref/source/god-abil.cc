@@ -1537,7 +1537,7 @@ bool trog_burn_spellbooks()
             if (cloud)
             {
                 // Reinforce the cloud.
-                mpr("The fire roars with new energy!");
+                mpr("The fire blazes with new energy!");
                 const int extra_dur = count + random2(6);
                 cloud->decay += extra_dur * 5;
                 cloud->set_whose(KC_YOU);
@@ -6124,6 +6124,8 @@ void ru_draw_out_power()
         if (trap && trap->type == TRAP_WEB)
         {
             destroy_trap(you.pos());
+            // XXX: destroying them is dubious in general - abuseable by loons?
+            // (but definitely destroy if ammo == 1, per trap-def.h!)
             mpr("You burst free from the webs!");
         }
     }
@@ -6132,6 +6134,7 @@ void ru_draw_out_power()
         destroy_item(net);
         mpr("You burst free from the net!");
     }
+    stop_being_held();
 
     // Escape constriction
     you.stop_being_constricted(false);
@@ -6140,10 +6143,6 @@ void ru_draw_out_power()
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
-
-    you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
-    you.redraw_evasion = true;
 
     inc_hp(div_rand_round(you.piety, 16)
            + roll_dice(div_rand_round(you.piety, 20), 6));

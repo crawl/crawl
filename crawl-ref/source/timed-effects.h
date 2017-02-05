@@ -10,7 +10,6 @@ void change_labyrinth(bool msg = false);
 
 void update_level(int elapsedTime);
 void handle_time();
-void recharge_rods(int aut, bool floor_only);
 
 void timeout_tombs(int duration);
 

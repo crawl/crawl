@@ -8,6 +8,7 @@
 #include "xom.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "abyss.h"
 #include "acquire.h"
@@ -93,21 +94,16 @@ static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SMALL_MAMMAL,
-    SPELL_CONFUSING_TOUCH,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
-    SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
-    SPELL_EXCRUCIATING_WOUNDS,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
-    SPELL_HYDRA_FORM,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
@@ -115,7 +111,6 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_MONSTROUS_MENAGERIE,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
-    SPELL_DRAGON_FORM,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
     SPELL_NECROMUTATION,
@@ -493,35 +488,35 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
 
 static bool _transformation_check(const spell_type spell)
 {
-    transformation_type tran = TRAN_NONE;
+    transformation tran = transformation::none;
     switch (spell)
     {
     case SPELL_BEASTLY_APPENDAGE:
-        tran = TRAN_APPENDAGE;
+        tran = transformation::appendage;
         break;
     case SPELL_SPIDER_FORM:
-        tran = TRAN_SPIDER;
+        tran = transformation::spider;
         break;
     case SPELL_STATUE_FORM:
-        tran = TRAN_STATUE;
+        tran = transformation::statue;
         break;
     case SPELL_ICE_FORM:
-        tran = TRAN_ICE_BEAST;
+        tran = transformation::ice_beast;
         break;
     case SPELL_HYDRA_FORM:
-        tran = TRAN_HYDRA;
+        tran = transformation::hydra;
         break;
     case SPELL_DRAGON_FORM:
-        tran = TRAN_DRAGON;
+        tran = transformation::dragon;
         break;
     case SPELL_NECROMUTATION:
-        tran = TRAN_LICH;
+        tran = transformation::lich;
         break;
     default:
         break;
     }
 
-    if (tran == TRAN_NONE)
+    if (tran == transformation::none)
         return true;
 
     // Check whether existing enchantments/transformations, cursed
@@ -539,7 +534,7 @@ static spell_type _choose_random_spell(int sever)
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (!spell_is_useless(spell, true, true, false, true)
+        if (!spell_is_useless(spell, true, true, true)
              && _transformation_check(spell))
         {
             ok_spells.push_back(spell);
@@ -566,7 +561,7 @@ static void _xom_random_spell(int sever)
          spell);
 #endif
 
-    your_spells(spell, sever, false, false, true);
+    your_spells(spell, sever, false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
@@ -736,10 +731,16 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_unrandom_artefact(item))
         return false;
 
-    // Staves and rods can't be changed either, since they don't have brands
-    // in the way other weapons do.
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
+    // Staves can't be changed either, since they don't have brands in the way
+    // other weapons do.
+    if (item.base_type == OBJ_STAVES
+#if TAG_MAJOR_VERSION == 34
+        || item.base_type == OBJ_RODS
+#endif
+       )
+{
         return false;
+}
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.
@@ -1985,7 +1986,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     {
         string str = "A monocle briefly appears over your ";
         str += random_choose("right", "left");
-        if (you.form == TRAN_SPIDER)
+        if (you.form == transformation::spider)
         {
             if (coinflip())
                 str += " primary";
@@ -2149,7 +2150,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
         plural_vec.push_back(plural);
     }
 
-    if (you.form == TRAN_SPIDER)
+    if (you.form == transformation::spider)
     {
         hand_vec.emplace_back("mandible");
         plural_vec.push_back(true);
@@ -2162,7 +2163,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
         plural_vec.push_back(false);
     }
 
-    if (you.form == TRAN_BAT
+    if (you.form == transformation::bat
         || you.species != SP_MUMMY && you.species != SP_OCTOPODE
            && !form_changed_physiology())
     {
@@ -2841,7 +2842,7 @@ static void _xom_cleaving(int sever)
 
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
-    const transformation_type orig_form)
+    const transformation orig_form)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -3263,7 +3264,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 void xom_take_action(xom_event_type action, int sever)
 {
     const int  orig_hp       = you.hp;
-    const transformation_type orig_form = you.form;
+    const transformation orig_form = you.form;
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation = you.mutation;
     const bool was_bored = _xom_is_bored();
 

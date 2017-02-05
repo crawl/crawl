@@ -469,10 +469,10 @@ deserting them.
 Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
-the attention of Cheibriados remains upon them. They may also find themselves
-slowed and exhausted, forced to step from time at unexpected moments, or even
-put to sleep. In very dangerous situations, Cheibriados may unleash wild and
-unpredictable magical effects from the depths of time.
+the attention of Cheibriados remains upon them, and will frequently have any
+magical hasting stripped away. They may also become further slowed and
+exhausted, be put to sleep, or have wild and unpredictable magical effects from
+the depths of time unleashed upon them.
 %%%%
 Dithmenos wrath
 
@@ -485,9 +485,7 @@ to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 Elyvilon wrath
 
 Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
-find themselves hampered in various ways; their weapons will be blunted and
-their blows in combat may be blocked, and they may be afflicted with poison or
-confusion.
+find the Healer occasionally protecting their foes from death.
 %%%%
 Fedhas wrath
 

@@ -117,12 +117,6 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    if (mspec.type == MONS_KRAKEN && mgrd(place) >= MAX_MONSTERS)
-    {
-        mpr("Couldn't find player kraken!");
-        return;
-    }
-
     // FIXME: This is a bit useless, seeing how you cannot set the
     // ghost's stats, brand or level, among other things.
     if (mspec.type == MONS_PLAYER_GHOST)

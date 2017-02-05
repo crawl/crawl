@@ -527,7 +527,6 @@ struct item_def
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
-                                    // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
         short net_durability;       ///< damage dealt to a net
     };
@@ -540,7 +539,6 @@ struct item_def
                             // info (e.g. "recharged", "empty", "unknown")
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
-        short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
     };
 #pragma pack(pop)
@@ -550,7 +548,6 @@ struct item_def
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
-        int rod_plus;           ///< rate at which a rod recharges
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()
@@ -600,7 +597,6 @@ public:
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
-    zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
     bool is_type(int base, int sub) const
     {

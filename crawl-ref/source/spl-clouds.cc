@@ -13,6 +13,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
@@ -89,7 +90,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
         if (you.see_cell(where))
-            mpr("The fire roars with new energy!");
+            mpr("The fire blazes with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         cloud->decay += extra_dur * 5;
         cloud->source = agent->mid;
@@ -105,12 +106,64 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         if (you.see_cell(where))
         {
             if (agent->is_player())
-                mpr("The fire roars!");
+                mpr("The fire ignites!");
             else
-                mpr("A cloud of flames roars to life!");
+                mpr("A cloud of flames bursts into life!");
         }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return SPRET_ABORT;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || mons->submerged() || !you.can_see(*mons))
+    {
+        mpr("You can't see any monster there!");
+        return SPRET_ABORT;
+    }
+
+    if (actor_cloud_immune(*mons, CLOUD_POISON))
+    {
+        mprf("But poisonous clouds would do no harm to %s!",
+             mons->name(DESC_THE).c_str());
+        return SPRET_ABORT;
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return SPRET_ABORT;
+
+    cloud_struct* cloud = cloud_at(beam.target);
+    if (cloud && cloud->type != CLOUD_POISON)
+    {
+        // XXX: consider replacing the cloud instead?
+        mpr("There's already a cloud there!");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const int cloud_duration = max(random2(pow + 1) / 10, 1); // in dekaauts
+    if (cloud)
+    {
+        // Reinforce the cloud.
+        mpr("The poisonous vapours increase!");
+        cloud->decay += cloud_duration * 10; // in this case, we're using auts
+        cloud->set_whose(KC_YOU);
+    }
+    else
+    {
+        place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
+        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
+    }
 
     return SPRET_SUCCESS;
 }
@@ -313,12 +366,10 @@ void holy_flames(monster* caster, actor* defender)
 
 random_pick_entry<cloud_type> cloud_cone_clouds[] =
 {
-  { 0,   50,  80, FALL, CLOUD_RAIN },
-  { 0,   50, 100, FALL, CLOUD_MIST },
-  { 0,   50, 150, FALL, CLOUD_MEPHITIC },
-  { 0,  100, 100, PEAK, CLOUD_FIRE },
-  { 0,  100, 100, PEAK, CLOUD_COLD },
-  { 0,  100, 100, PEAK, CLOUD_POISON },
+  { 0,   50, 200, FALL, CLOUD_MEPHITIC },
+  { 0,  100, 125, PEAK, CLOUD_FIRE },
+  { 0,  100, 125, PEAK, CLOUD_COLD },
+  { 0,  100, 125, PEAK, CLOUD_POISON },
   { 30, 100, 125, RISE, CLOUD_NEGATIVE_ENERGY },
   { 40, 100, 135, RISE, CLOUD_STORM },
   { 50, 100, 175, RISE, CLOUD_ACID },

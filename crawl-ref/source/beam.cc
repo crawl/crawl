@@ -87,7 +87,6 @@ static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
-static void _explosive_bolt_explode(bolt *parent, coord_def pos);
 int _ench_pow_to_dur(int pow);
 
 tracer_info::tracer_info()
@@ -683,13 +682,6 @@ void bolt::initialise_fire()
 #endif
 }
 
-// Catch the bolt part of explosive bolt.
-static bool _is_explosive_bolt(const bolt *beam)
-{
-    return beam->origin_spell == SPELL_EXPLOSIVE_BOLT
-           && !beam->in_explosion_phase;
-}
-
 void bolt::apply_beam_conducts()
 {
     if (!is_tracer && YOU_KILL(thrower))
@@ -707,9 +699,6 @@ void bolt::apply_beam_conducts()
                             god_cares());
             break;
         default:
-            // Fire comes from a side-effect of the beam, not the beam itself.
-            if (_is_explosive_bolt(this))
-                did_god_conduct(DID_FIRE, 6 + random2(3), god_cares());
             break;
         }
     }
@@ -820,13 +809,15 @@ void bolt::fake_flavour()
 
 void bolt::digging_wall_effect()
 {
-    const dungeon_feature_type feat = grd(pos());
-    switch (feat)
+    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
     {
-    case DNGN_ROCK_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_GRATE:
+        finish_beam();
+        return;
+    }
+
+    const dungeon_feature_type feat = grd(pos());
+    if (feat_is_diggable(feat))
+    {
         destroy_wall(pos());
         if (!msg_generated)
         {
@@ -838,7 +829,7 @@ void bolt::digging_wall_effect()
                     obvious_effect = true; // You may still see the caster.
                     msg_generated = true;
                 }
-                break;
+                return;
             }
 
             obvious_effect = true;
@@ -862,12 +853,9 @@ void bolt::digging_wall_effect()
                  agent() && agent()->is_player() ? "The" : "Some",
                  wall.c_str());
         }
-        break;
-
-    default:
-        if (feat_is_wall(feat))
-            finish_beam();
     }
+    else if (feat_is_wall(feat))
+        finish_beam();
 }
 
 void bolt::burn_wall_effect()
@@ -908,134 +896,6 @@ void bolt::burn_wall_effect()
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
 
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, pos());
-    finish_beam();
-}
-
-static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
-{
-    string msg = "";
-    msg_channel_type chan = MSGCH_PLAIN;
-    bool hear = player_can_hear(p);
-    bool see = you.see_cell(p);
-
-    switch (feat)
-    {
-    case DNGN_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_GRANITE_STATUE:
-    case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-        if (see)
-        {
-            msg = (feature_description_at(p, false, DESC_THE, false)
-                   + " explodes into countless fragments.");
-        }
-        else if (hear)
-        {
-            msg = "You hear a grinding noise.";
-            chan = MSGCH_SOUND;
-        }
-        break;
-
-    case DNGN_GRATE:
-        if (hear)
-        {
-            if (see)
-                msg = "The grate screeches as it bends and collapses.";
-            else
-                msg = "You hear the screech of bent metal.";
-            chan = MSGCH_SOUND;
-        }
-        else if (see)
-            msg = "The grate bends and collapses.";
-        break;
-
-    case DNGN_ORCISH_IDOL:
-        if (hear)
-        {
-            if (see)
-                msg = "The idol screams as its substance crumbles away!";
-            else
-                msg = "You hear a hideous screaming!";
-            chan = MSGCH_SOUND;
-        }
-        else if (see)
-            msg = "The idol twists and shakes as its substance crumbles away!";
-        break;
-
-    case DNGN_TREE:
-        if (see)
-            msg = "The tree breaks and falls down!";
-        else if (hear)
-        {
-            msg = "You hear timber falling.";
-            chan = MSGCH_SOUND;
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    if (!msg.empty())
-    {
-        mprf(chan, "%s", msg.c_str());
-        return true;
-    }
-    else
-        return false;
-}
-
-void bolt::destroy_wall_effect()
-{
-    if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
-    {
-        finish_beam();
-        return;
-    }
-
-    const dungeon_feature_type feat = grd(pos());
-
-    switch (feat)
-    {
-    case DNGN_ROCK_WALL:
-    case DNGN_SLIMY_WALL:
-    case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_GRATE:
-    case DNGN_GRANITE_STATUE:
-    case DNGN_ORCISH_IDOL:
-    case DNGN_TREE:
-        destroy_wall(pos());
-        break;
-
-    case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-    {
-        set<coord_def> doors;
-        find_connected_identical(pos(), doors);
-        for (coord_def c : doors)
-            destroy_wall(c);
-        break;
-    }
-
-    default:
-        finish_beam();
-        return;
-    }
-
-    obvious_effect = _destroy_wall_msg(feat, pos());
-
-    if (feat_is_tree(feat))
-    {
-        if (whose_kill() == KC_YOU)
-            did_god_conduct(DID_KILL_PLANT, 1);
-        else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_KILL_PLANT, 1, god_cares(), 0);
-    }
-
     finish_beam();
 }
 
@@ -1057,20 +917,18 @@ void bolt::affect_wall()
         if (!can_affect_wall(pos()))
             finish_beam();
 
-        // potentially warn about offending your god by burning/disinting trees
-        const bool burns_trees = can_burn_trees();
-        const bool god_relevant = you.religion == GOD_DITHMENOS && burns_trees
-                                  || you.religion == GOD_FEDHAS;
-        const string veto_key = burns_trees ? "veto_fire" : "veto_disintegrate";
-        const bool vetoed = env.markers.property_at(pos(), MAT_ANY, veto_key)
+        // potentially warn about offending your god by burning trees
+        const bool god_relevant = (you.religion == GOD_DITHMENOS
+                                   || you.religion == GOD_FEDHAS)
+                                  && can_burn_trees();
+        const bool vetoed = env.markers.property_at(pos(), MAT_ANY, "veto_fire")
                             == "veto";
         // XXX: should check env knowledge for feat_is_tree()
         if (god_relevant && feat_is_tree(grd(pos())) && !vetoed
             && !is_targeting && YOU_KILL(thrower) && !dont_stop_trees)
         {
             const string prompt =
-                make_stringf("Are you sure you want to %s %s?",
-                             burns_trees ? "burn" : "destroy",
+                make_stringf("Are you sure you want to burn %s?",
                              feature_description_at(pos(), false, DESC_THE,
                                                     false).c_str());
 
@@ -1095,8 +953,6 @@ void bolt::affect_wall()
             digging_wall_effect();
         else if (can_burn_trees())
             burn_wall_effect();
-        else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
-            destroy_wall_effect();
     }
     if (cell_is_solid(pos()))
         finish_beam();
@@ -2434,28 +2290,6 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     }
 }
 
-static void _explosive_bolt_explode(bolt *parent, coord_def pos)
-{
-    bolt beam;
-
-    bolt_parent_init(*parent, beam);
-    beam.name         = "fiery explosion";
-    beam.aux_source   = "explosive bolt";
-    beam.damage       = dice_def(3, 9 + parent->ench_power / 6);
-    beam.colour       = RED;
-    beam.flavour      = BEAM_FIRE;
-    beam.is_explosion = true;
-    beam.source       = pos;
-    beam.target       = pos;
-    beam.origin_spell = SPELL_EXPLOSIVE_BOLT;
-    beam.refine_for_explosion();
-    beam.explode();
-    parent->friend_info += beam.friend_info;
-    parent->foe_info    += beam.foe_info;
-    if (beam.is_tracer && beam.beam_cancelled)
-        parent->beam_cancelled = true;
-}
-
 /**
  * Turn a BEAM_UNRAVELLING beam into a BEAM_UNRAVELLED_MAGIC beam, and make
  * it explode appropriately.
@@ -2797,7 +2631,6 @@ bool bolt::can_burn_trees() const
            || origin_spell == SPELL_BOLT_OF_FIRE
            || origin_spell == SPELL_BOLT_OF_MAGMA
            || origin_spell == SPELL_FIREBALL
-           || origin_spell == SPELL_EXPLOSIVE_BOLT
            || origin_spell == SPELL_INNER_FLAME;
 }
 
@@ -2810,28 +2643,11 @@ bool bolt::can_affect_wall(const coord_def& p) const
         return false;
 
     // digging
-    if (flavour == BEAM_DIGGING
-        && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE))
-    {
+    if (flavour == BEAM_DIGGING && feat_is_diggable(wall))
         return true;
-    }
 
     if (can_burn_trees())
         return feat_is_tree(wall);
-
-    if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
-        || flavour == BEAM_DEVASTATION)
-    {
-        return wall == DNGN_ROCK_WALL
-               || wall == DNGN_SLIMY_WALL
-               || wall == DNGN_CLEAR_ROCK_WALL
-               || wall == DNGN_GRATE
-               || wall == DNGN_CLOSED_DOOR
-               || wall == DNGN_RUNED_DOOR
-               || feat_is_statuelike(wall)
-               || feat_is_tree(wall);
-    }
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
@@ -2869,6 +2685,9 @@ void bolt::affect_place_clouds()
 
     if (origin_spell == SPELL_POISONOUS_CLOUD)
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
+
+    if (origin_spell == SPELL_POISONOUS_CLOUD)
+        place_cloud(CLOUD_POISON, p, random2(2) + 1, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY, p, random2(4) + 2, agent());
@@ -3294,9 +3113,6 @@ void bolt::tracer_affect_player()
     }
 
     extra_range_used += range_used_on_hit();
-
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, you.pos());
 }
 
 bool bolt::misses_player()
@@ -3660,7 +3476,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_PORKALATOR:
-        if (!transform(ench_power, TRAN_PIG, true))
+        if (!transform(ench_power, transformation::pig, true))
         {
             mpr("You feel a momentary urge to oink.");
             break;
@@ -4062,11 +3878,9 @@ void bolt::affect_player()
 
     knockback_actor(&you, hurted);
 
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, you.pos());
-    else if (origin_spell == SPELL_FLASH_FREEZE
-             || name == "blast of ice"
-             || origin_spell == SPELL_GLACIATE && !is_explosion)
+    if (origin_spell == SPELL_FLASH_FREEZE
+        || name == "blast of ice"
+        || origin_spell == SPELL_GLACIATE && !is_explosion)
     {
         if (you.duration[DUR_FROZEN])
         {
@@ -4316,9 +4130,6 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
-
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, mon->pos());
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4563,8 +4374,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         beogh_follower_convert(mon, true);
 
     knockback_actor(mon, dmg);
-    if (_is_explosive_bolt(this))
-        _explosive_bolt_explode(this, mon->pos());
 
     if (origin_spell == SPELL_DAZZLING_SPRAY)
         _dazzle_monster(mon, agent());
@@ -5852,10 +5661,6 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The ghostly flame explodes!",
         "the shriek of haunting fire",
     } },
-    { SPELL_EXPLOSIVE_BOLT, {
-        "The explosive bolt releases an explosion!",
-        "an explosion",
-    } },
     { SPELL_VIOLENT_UNRAVELLING, {
         "The enchantments explode!",
         "a sharp crackling", // radiation = geiger counter
@@ -6241,47 +6046,37 @@ bool bolt::nasty_to(const monster* mon) const
     if (!is_enchantment())
         return true;
 
-    // Now for some non-hurtful enchantments.
-    if (flavour == BEAM_DIGGING)
-        return false;
-
     // Positive effects.
     if (nice_to(monster_info(mon)))
         return false;
 
-    // Co-aligned inner flame is fine.
-    if (flavour == BEAM_INNER_FLAME && mons_aligned(mon, agent()))
-        return false;
-
-    // Friendly and good neutral monsters don't mind being teleported.
-    if (flavour == BEAM_TELEPORT)
-        return !mon->wont_attack();
-
-    if (flavour == BEAM_ENSLAVE_SOUL || flavour == BEAM_INFESTATION)
-        return ench_flavour_affects_monster(flavour, mon);
-
-    // sleep
-    if (flavour == BEAM_HIBERNATION)
-        return mon->can_hibernate();
-
-    if (flavour == BEAM_SLOW || flavour == BEAM_PARALYSIS)
-        return !mon->stasis();
-
-    // dispel undead
-    if (flavour == BEAM_DISPEL_UNDEAD)
-        return bool(mon->holiness() & MH_UNDEAD);
-
-    if (flavour == BEAM_PAIN)
-        return mon->res_negative_energy() < 3;
-
-    if (flavour == BEAM_AGONY)
-        return !mon->res_torment();
-
-    if (flavour == BEAM_TUKIMAS_DANCE)
-        return tukima_affects(*mon);
-
-    if (flavour == BEAM_UNRAVELLING)
-        return monster_is_debuffable(*mon);
+    switch (flavour)
+    {
+        case BEAM_DIGGING:
+            return false;
+        case BEAM_INNER_FLAME:
+            // Co-aligned inner flame is fine.
+            return !mons_aligned(mon, agent());
+        case BEAM_TELEPORT:
+        case BEAM_BECKONING:
+            // Friendly and good neutral monsters don't mind being teleported.
+            return !mon->wont_attack();
+        case BEAM_ENSLAVE_SOUL:
+        case BEAM_INFESTATION:
+        case BEAM_SLOW:
+        case BEAM_PARALYSIS:
+        case BEAM_DISPEL_UNDEAD:
+        case BEAM_PAIN:
+        case BEAM_AGONY:
+        case BEAM_HIBERNATION:
+            return ench_flavour_affects_monster(flavour, mon);
+        case BEAM_TUKIMAS_DANCE:
+            return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
+        case BEAM_UNRAVELLING:
+            return monster_is_debuffable(*mon); // XXX: as tukima's
+        default:
+            break;
+    }
 
     // everything else is considered nasty by everyone
     return true;

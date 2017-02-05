@@ -228,7 +228,7 @@ static void _sdump_hunger(dump_params &par)
 static void _sdump_transform(dump_params &par)
 {
     string &text(par.text);
-    if (you.form)
+    if (you.form != transformation::none)
         text += get_form()->get_description(par.se) + "\n\n";}
 
 static branch_type single_portals[] =
@@ -640,9 +640,6 @@ static bool _dump_item_origin(const item_def &item)
         return true;
 
     if (fs(IODS_RUNES) && item.base_type == OBJ_RUNES)
-        return true;
-
-    if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
         return true;
 
     if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES)
@@ -1168,8 +1165,10 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         {
         case EVOC_WAND:
             return "Wand";
+#if TAG_MAJOR_VERSION == 34
         case EVOC_ROD:
             return "Rod";
+#endif
         case EVOC_DECK:
             return "Deck";
 #if TAG_MAJOR_VERSION == 34

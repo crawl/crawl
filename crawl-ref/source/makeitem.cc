@@ -186,12 +186,12 @@ static weapon_type _determine_weapon_subtype(int item_level)
 
 static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
 {
-    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == -1)
+    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
 
     int idx = find_okay_unrandart(item.base_type, force_type,
                                   player_in_branch(BRANCH_ABYSS)
-                                      && agent == -1);
+                                      && agent == NO_AGENT);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return true;
@@ -388,7 +388,7 @@ int determine_nice_weapon_plusses(int item_level)
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = -1)
+                                  int agent = NO_AGENT)
 {
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
@@ -1090,7 +1090,7 @@ static armour_type _get_random_armour_type(int item_level)
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = -1)
+                                  int agent = NO_AGENT)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1232,19 +1232,20 @@ static monster_type _choose_random_monster_corpse()
  */
 static int _random_wand_subtype()
 {
-    // total weight 84 [historical]
-    return random_choose_weighted(10, WAND_FLAME,
-                                  10, WAND_LIGHTNING,
-                                  10, WAND_ICEBLAST,
-                                  6, WAND_SLOWING,
+    // total weight 80 [arbitrary]
+    return random_choose_weighted(9, WAND_FLAME,
+                                  9, WAND_LIGHTNING,
+                                  9, WAND_ICEBLAST,
+                                  8, WAND_RANDOM_EFFECTS,
+                                  8, WAND_CONFUSION,
+                                  8, WAND_POLYMORPH,
                                   6, WAND_PARALYSIS,
-                                  6, WAND_CONFUSION,
-                                  6, WAND_POLYMORPH,
-                                  6, WAND_RANDOM_EFFECTS,
                                   6, WAND_ACID,
                                   5, WAND_DISINTEGRATION,
                                   5, WAND_DIGGING,
-                                  3, WAND_ENSLAVEMENT);
+                                  3, WAND_ENSLAVEMENT,
+                                  2, WAND_CLOUDS,
+                                  2, WAND_SCATTERSHOT);
 }
 
 /**
@@ -1266,6 +1267,8 @@ bool is_high_tier_wand(int type)
     case WAND_ACID:
     case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
+    case WAND_CLOUDS:
+    case WAND_SCATTERSHOT:
         return true;
     default:
         return false;
@@ -1299,12 +1302,10 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     // Determine sub_type:
     if (force_type == OBJ_RANDOM)
     {
-        item.sub_type = random_choose_weighted( 30, FOOD_BREAD_RATION,
-                                                10, FOOD_FRUIT,
-                                                30, FOOD_MEAT_RATION,
-                                                15, FOOD_BEEF_JERKY,
-                                                10, FOOD_PIZZA,
-                                                 5, FOOD_ROYAL_JELLY);
+        item.sub_type = random_choose_weighted(30, FOOD_MEAT_RATION,
+                                               30, FOOD_BREAD_RATION,
+                                               25, FOOD_ROYAL_JELLY,
+                                               15, FOOD_FRUIT);
     }
     else
         item.sub_type = force_type;
@@ -1333,7 +1334,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                 item.quantity += random2(3);
 
             if (is_fruit(item))
-                item.quantity += random2avg(5,2);
+                item.quantity += random2(4);
         }
     }
 }
@@ -1559,25 +1560,6 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         do_curse_item(item);
 }
 
-static void _generate_rod_item(item_def& item, int force_type, int item_level)
-{
-    if (force_type == OBJ_RANDOM)
-    {
-        do
-        {
-            item.sub_type = random2(NUM_RODS);
-        }
-        while (item_type_removed(OBJ_RODS, item.sub_type));
-    }
-    else
-        item.sub_type = force_type;
-
-    init_rod_mp(item, -1, item_level);
-
-    if (one_chance_in(16))
-        do_curse_item(item);
-}
-
 static void _generate_rune_item(item_def& item, int force_type)
 {
     if (force_type == OBJ_RANDOM)
@@ -1743,7 +1725,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         item.sub_type = random_choose(MISC_FAN_OF_GALES,
                                       MISC_LAMP_OF_FIRE,
                                       MISC_PHIAL_OF_FLOODS,
-                                      MISC_DISC_OF_STORMS,
+                                      MISC_LIGHTNING_ROD,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
@@ -1849,8 +1831,7 @@ int items(bool allow_uniques,
         ASSERT(force_type == OBJ_RANDOM);
         // Total weight: 1960
         item.base_type = random_choose_weighted(
-                                     1, OBJ_RODS,
-                                     9, OBJ_STAVES,
+                                    10, OBJ_STAVES,
                                     30, OBJ_BOOKS,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,
@@ -1869,7 +1850,6 @@ int items(bool allow_uniques,
         if (item_level < 7
             && (item.base_type == OBJ_BOOKS
                 || item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_RODS
                 || item.base_type == OBJ_WANDS)
             && random2(7) >= item_level)
         {
@@ -1883,7 +1863,7 @@ int items(bool allow_uniques,
 
     // make_item_randart() might do things differently based upon the
     // acquirement agent, especially for god gifts.
-    if (agent != -1 && !is_stackable_item(item))
+    if (agent != NO_AGENT && !is_stackable_item(item))
         origin_acquired(item, agent);
 
     item.quantity = 1;          // generally the case
@@ -1973,11 +1953,7 @@ int items(bool allow_uniques,
     case OBJ_STAVES:
         // Don't generate unrand staves this way except through acquirement,
         // since they also generate as OBJ_WEAPONS.
-        _generate_staff_item(item, (agent != -1), force_type, item_level, agent);
-        break;
-
-    case OBJ_RODS:
-        _generate_rod_item(item, force_type, item_level);
+        _generate_staff_item(item, (agent != NO_AGENT), force_type, item_level, agent);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
@@ -2049,44 +2025,6 @@ void reroll_brand(item_def &item, int item_level)
         die("can't reroll brands of this type");
     }
     item_set_appearance(item);
-}
-
-static int _roll_rod_enchant(int item_level)
-{
-    int value = 0;
-
-    if (one_chance_in(4))
-        value -= random_range(1, 3);
-
-    if (item_level >= ISPEC_GIFT)
-        value += 2;
-
-    int pr = 20 + item_level * 2;
-
-    if (pr > 80)
-        pr = 80;
-
-    while (random2(100) < pr) value++;
-
-    return stepdown_value(value, 4, 4, 4, 9);
-}
-
-void init_rod_mp(item_def &item, int ncharges, int item_level)
-{
-    ASSERT(item.base_type == OBJ_RODS);
-
-    if (ncharges != -1)
-    {
-        item.charge_cap = ncharges * ROD_CHARGE_MULT;
-        item.rod_plus = 0;
-    }
-    else
-    {
-        item.charge_cap = random_range(9, 14) * ROD_CHARGE_MULT;
-        item.rod_plus = _roll_rod_enchant(item_level);
-    }
-
-    item.charges = item.charge_cap;
 }
 
 static bool _weapon_is_visibly_special(const item_def &item)

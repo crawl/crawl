@@ -664,42 +664,41 @@ struct food_def
     int         value;
     int         carn_mod;
     int         herb_mod;
-    int         turns;
 };
 
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  3 },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  1 },
-    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  1 },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500 },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500 },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  3 },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500 },
 
-    { FOOD_FRUIT,        "fruit",         850,  -100,    50,  1 },
+    { FOOD_FRUIT,        "fruit",         850,  -100,    50 },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  3 },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  1 },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0 },
 
 #if TAG_MAJOR_VERSION == 34
     // is_real_food assumes we list FOOD_UNUSED as the first removed
     // food here, after all the unremoved foods.
-    { FOOD_UNUSED,       "buggy",           0,     0,     0,  1 },
-    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  1 },
-    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  1 },
-    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  1 },
-    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  1 },
-    { FOOD_PEAR,         "buggy",         700,  -200,   200,  1 },
-    { FOOD_APPLE,        "buggy",         700,  -200,   200,  1 },
-    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  1 },
-    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  1 },
-    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  1 },
-    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  1 },
-    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,  1 },
-    { FOOD_GRAPE,        "buggy",         100,   -20,    20,  1 },
-    { FOOD_SULTANA,      "buggy",          70,   -20,    20,  1 },
-    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  1 },
-    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  1 },
+    { FOOD_UNUSED,       "buggy",           0,     0,     0 },
+    { FOOD_AMBROSIA,     "buggy",           0,     0,     0 },
+    { FOOD_ORANGE,       "buggy",        1000,  -300,   300 },
+    { FOOD_BANANA,       "buggy",        1000,  -300,   300 },
+    { FOOD_LEMON,        "buggy",        1000,  -300,   300 },
+    { FOOD_PEAR,         "buggy",         700,  -200,   200 },
+    { FOOD_APPLE,        "buggy",         700,  -200,   200 },
+    { FOOD_APRICOT,      "buggy",         700,  -200,   200 },
+    { FOOD_CHOKO,        "buggy",         600,  -200,   200 },
+    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200 },
+    { FOOD_LYCHEE,       "buggy",         600,  -200,   200 },
+    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50 },
+    { FOOD_GRAPE,        "buggy",         100,   -20,    20 },
+    { FOOD_SULTANA,      "buggy",          70,   -20,    20 },
+    { FOOD_CHEESE,       "buggy",        1200,     0,     0 },
+    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400 },
+    { FOOD_BEEF_JERKY,   "buggy",        1500,   200,  -200 },
+    { FOOD_PIZZA,        "buggy",        1500,     0,     0 },
 #endif
 };
 
@@ -758,6 +757,12 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
     { OBJ_RODS,      ROD_SWARM },
+    { OBJ_RODS,      ROD_LIGHTNING },
+    { OBJ_RODS,      ROD_IGNITION },
+    { OBJ_RODS,      ROD_CLOUDS },
+    { OBJ_RODS,      ROD_INACCURACY },
+    { OBJ_RODS,      ROD_SHADOWS },
+    { OBJ_RODS,      ROD_IRON },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_II },
     { OBJ_SCROLLS,   SCR_ENCHANT_WEAPON_III },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
@@ -768,6 +773,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_WANDS,     WAND_HEAL_WOUNDS_REMOVED },
     { OBJ_WANDS,     WAND_HASTING_REMOVED },
     { OBJ_WANDS,     WAND_TELEPORTATION_REMOVED },
+    { OBJ_WANDS,     WAND_SLOWING_REMOVED },
     { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
     { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
@@ -1104,6 +1110,9 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_ORBS:
     case OBJ_RUNES:
     case OBJ_GOLD:
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
+#endif
         flagset = 0;
         break;
     case OBJ_BOOKS:
@@ -1136,7 +1145,6 @@ static iflags_t _full_ident_mask(const item_def& item)
         else
             flagset = 0;
         break;
-    case OBJ_RODS:
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
         // All flags necessary for full identification.
@@ -1521,48 +1529,35 @@ bool check_armour_size(const item_def &item, size_type size)
  *
  * @param it            The item in question.
  * @param hide_charged  Whether wands known to be full should be included.
- * @param divine        Whether the source of recharging is divine (and so can
-                        only recharge, not increase enchantment on rods).
  * @return              Whether the item can be recharged.
  *
  */
-bool item_is_rechargeable(const item_def &it, bool hide_charged, bool divine)
+bool item_is_rechargeable(const item_def &it, bool hide_charged)
 {
-    // These are obvious...
-    if (it.base_type == OBJ_WANDS)
-    {
-        if (!hide_charged)
-            return true;
+    if (it.base_type != OBJ_WANDS)
+        return false;
 
-        // Don't offer wands already maximally charged.
-        if (item_ident(it, ISFLAG_KNOW_PLUSES)
-            && it.charges >= wand_max_charges(it))
-        {
-            return false;
-        }
+    if (!hide_charged)
         return true;
-    }
-    else if (it.base_type == OBJ_RODS)
-    {
-        if (!hide_charged)
-            return true;
 
-        if (item_ident(it, ISFLAG_KNOW_PLUSES))
-        {
-            return !divine && (it.charge_cap < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                               || it.rod_plus < MAX_WPN_ENCHANT)
-                   || it.charges < it.charge_cap;
-        }
-        return true;
+    // Don't offer wands already maximally charged.
+    if (item_ident(it, ISFLAG_KNOW_PLUSES)
+        && it.charges >= wand_max_charges(it))
+    {
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 int wand_charge_value(int type)
 {
     switch (type)
     {
+    case WAND_CLOUDS:
+    case WAND_SCATTERSHOT:
+        return 3;
+
     case WAND_ICEBLAST:
     case WAND_LIGHTNING:
     case WAND_ACID:
@@ -1572,7 +1567,6 @@ int wand_charge_value(int type)
         return 8;
 
     case WAND_FLAME:
-    case WAND_SLOWING:
     case WAND_CONFUSION:
     case WAND_RANDOM_EFFECTS:
         return 16;
@@ -1629,7 +1623,6 @@ bool is_offensive_wand(const item_def& item)
         return false;
 
     case WAND_FLAME:
-    case WAND_SLOWING:
     case WAND_PARALYSIS:
     case WAND_CONFUSION:
     case WAND_ICEBLAST:
@@ -1637,6 +1630,7 @@ bool is_offensive_wand(const item_def& item)
     case WAND_POLYMORPH:
     case WAND_ACID:
     case WAND_DISINTEGRATION:
+    case WAND_CLOUDS:
         return true;
     }
     return false;
@@ -1988,8 +1982,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
             skills.insert(SK_EVOCATIONS);
     }
 
-    // Weapons, staves and rods allow training as long as your species can
-    // wield them.
+    // Weapons and staves allow training as long as your species can wield them.
     if (!you.could_wield(item, true, true))
         return !skills.empty();
 
@@ -2330,12 +2323,6 @@ int food_value(const item_def &item)
     ret += herb * food.herb_mod;
 
     return ret;
-}
-
-int food_turns(const item_def &item)
-{
-    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return Food_prop[Food_index[item.sub_type]].turns;
 }
 
 bool is_fruit(const item_def & item)
@@ -2840,7 +2827,9 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
+#endif
     case OBJ_MISCELLANY:
         return EQ_WEAPON;
 
@@ -2987,6 +2976,7 @@ static const map<int, const char*> debt_map = {
     { MISC_LAMP_OF_FIRE,        "lamp_debt" },
     { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
     { MISC_HORN_OF_GERYON,      "horn_debt" },
+    { MISC_LIGHTNING_ROD,       "rod_debt" },
 };
 
 /**

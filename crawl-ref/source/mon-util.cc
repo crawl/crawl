@@ -4209,7 +4209,9 @@ mon_inv_type item_to_mslot(const item_def &item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
+#endif
         return MSLOT_WEAPON;
     case OBJ_MISSILES:
         return MSLOT_MISSILE;
@@ -5456,7 +5458,7 @@ bool mons_is_notable(const monster& mons)
         return true;
     }
     // Jellies are never interesting to Jiyva.
-    if (mons.type == MONS_JELLY && you_worship(GOD_JIYVA))
+    if (mons.type == MONS_JELLY && have_passive(passive_t::jellies_army))
         return false;
     if (mons_threat_level(mons) == MTHRT_NASTY)
         return true;
@@ -5564,7 +5566,7 @@ int max_mons_charge(monster_type m)
 }
 
 // Deal out damage to nearby pain-bonded monsters based on the distance between them.
-void radiate_pain_bond(const monster& mon, int damage)
+void radiate_pain_bond(const monster& mon, int damage, const monster* original_target)
 {
     for (actor_near_iterator ai(mon.pos(), LOS_NO_TRANS); ai; ++ai)
     {
@@ -5589,7 +5591,16 @@ void radiate_pain_bond(const monster& mon, int damage)
         if (damage > 0)
         {
             behaviour_event(target, ME_ANNOY, &you, you.pos());
-            target->hurt(&you, damage, BEAM_SHARED_PAIN);
+
+            // save any potential cleanup of the original target for later
+            // (in `monster::hurt`).
+            if (target == original_target)
+                damage = target->hurt(&you, damage, BEAM_SHARED_PAIN, KILLED_BY_MONSTER, "", "", false);
+            else
+                damage = target->hurt(&you, damage, BEAM_SHARED_PAIN);
+
+            if (damage > 0)
+                radiate_pain_bond(*target, damage, original_target);
         }
     }
 }

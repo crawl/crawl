@@ -838,7 +838,7 @@ MONS:   ynoxinul
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   wand of disintegration ident:all
+ITEM:   wand of digging ident:all
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 MAP
@@ -915,7 +915,7 @@ SUBST:  d = dde
 FTILE:  ' : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc / any rod w:4
+ITEM:   any misc
 ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
 ITEM:   scroll of recharging / scroll of recharging q:3 w:5
 : trove.setup_features(_G)
@@ -978,7 +978,7 @@ ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 ITEM:    any useful armour good_item / any useful weapon good_item / \
          any useful jewellery good_item
 : trove.good_scroll(_G)
-KITEM:   h = wand of disintegration ident:all, wand of disintegration ident:all
+KITEM:   h = wand of digging ident:all, wand of digging ident:all
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP

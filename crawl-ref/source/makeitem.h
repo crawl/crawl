@@ -8,13 +8,14 @@
 
 #include "item-prop-enum.h"
 
+static const int NO_AGENT = -1;
+
 int create_item_named(string name, coord_def pos, string *error);
 
 int items(bool allow_uniques, object_class_type force_class, int force_type,
-          int item_level, int force_ego = 0, int agent = -1);
+          int item_level, int force_ego = 0, int agent = NO_AGENT);
 
 void item_colour(item_def &item);
-void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);
 
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();

@@ -182,8 +182,9 @@ Cures all your mutations — but only once.
 Divine Shield ability
 
 Grants a temporary divine shield. Because it is held aloft by the Shining One's
-power, it does not interfere with your equipment. The strength and duration
-of the shield are increased by Invocations skill.
+power, it does not interfere with your equipment, but it functions otherwise as
+a normal, physical shield. The strength and duration of the shield are increased
+by Invocations skill.
 %%%%
 Cleansing Flame ability
 
@@ -640,16 +641,15 @@ is to Pakellas.
 %%%%
 Quick Charge ability
 
-Spends two thirds of your current pool of magic to charge a wand or rod. The
+Spends two thirds of your current pool of magic to charge a wand. The
 effectiveness of this depends on your current pool of magic and your
 Evocations skill.
 %%%%
 Supercharge ability
 
-Infuses magical energy into a rod or wand. For a rod, its recharge rate and
-capacity are set to slightly above the normal maximums for such a device;
-for wands, their capacity is significantly increased beyond normal and fully
-charged to this new capacity. This ability may only be used once.
+Infuses magical energy into a wand. Its capacity is significantly increased
+beyond normal and fully charged to this new capacity. This ability may only be
+used once.
 %%%%
 # Qazlal
 Upheaval ability
@@ -870,3 +870,9 @@ Ancestor Identity ability
 
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
+%%%%
+Hop ability
+
+Hops toward a chosen destination, landing somewhere nearby. After using this
+ability, you will be unable to hop again until you have spent some time not
+moving. (Other actions, such as casting spells and attacking, are fine.)

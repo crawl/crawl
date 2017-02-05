@@ -50,10 +50,6 @@ bardiche
 
 巨大で切断するための刃がついた長柄武器だ。
 %%%%
-beef jerky
-
-細長く切られた保存加工済みの牛肉だ。
-%%%%
 blessed double sword
 
 長くて幅広な大剣だ。輝けるものの力により強化されている。
@@ -270,11 +266,6 @@ demon trident
 demon whip
 
 地獄の底で作り上げられた恐ろしい武器だ。
-%%%%
-disc of storms
-
-この極めて強力なアイテムは、破壊的な雷電の嵐を解き放つ。
-この魔法道具の熟練者に扱われると非常に効果的だ。
 %%%%
 eudemon blade
 
@@ -615,10 +606,6 @@ scythe
 
 農具だ。たいてい訓練されていない群衆だけが戦闘で使用する。
 %%%%
-slice of pizza
-
-一切れのピザ: a flatbread with tomato sauce, mozzarella di bufala, and basil.
-%%%%
 sling
 
 布切れと皮紐でできた投石器だ。それほどのダメージは期待できない。 Unlike with
@@ -742,8 +729,4 @@ wand of polymorph
 wand of random effects
 
 変化に富んだ効果を引き起こす魔法の道具だ。
-%%%%
-wand of slowing
-
-これは狙った対象に動きが遅くなる魔法をかける魔法の道具だ。
 %%%%

@@ -22,9 +22,11 @@
 #include "fprop.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "invent.h"
 #include "item-name.h"
 #include "items.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1189,9 +1191,9 @@ static int _shatter_player_dice()
     // flyers get no extra damage.
     else if (you.airborne())
         return 1;
-    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
-    else if (you.form == TRAN_ICE_BEAST)
+    else if (you.form == transformation::ice_beast)
         return random_range(4, 5);
     else
         return 3;
@@ -2003,11 +2005,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     {
         const bool petrified = (you.petrified() || you.petrifying());
 
-        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == TRAN_STATUE ? 3 : 2;
+            beam.damage.num = you.form == transformation::statue ? 3 : 2;
             return true;
         }
         else if (petrified)
@@ -2017,7 +2019,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.damage.num = 3;
             return true;
         }
-        else if (you.form == TRAN_ICE_BEAST) // blast of ice
+        else if (you.form == transformation::ice_beast) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
@@ -2341,7 +2343,8 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     int num_stones = 0;
     for (item_def& i : you.inv)
     {
-        if (i.is_type(OBJ_MISSILES, MI_STONE))
+        if (i.is_type(OBJ_MISSILES, MI_STONE)
+            && check_warning_inscriptions(i, OPER_DESTROY))
         {
             num_stones += i.quantity;
             stone = &i;
@@ -2358,7 +2361,12 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
     if (ret == SPRET_SUCCESS)
-        dec_inv_item_quantity(letter_to_index(stone->slot), 1);
+    {
+        if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
+            mpr("You now have no stones remaining.");
+        else
+            mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
+    }
 
     return ret;
 }
@@ -2378,29 +2386,31 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     }
 
     targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
-                                  prev);
+                                 prev);
     hitfunc.set_aim(aim);
 
-    if (caster->is_player())
+    if (caster->is_player()
+        && stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
     {
-        if (stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
-            return SPRET_ABORT;
+        return SPRET_ABORT;
     }
 
     fail_check();
 
-    int juice = prev.origin() ? 2 * ROD_CHARGE_MULT
-                              : caster->props["thunderbolt_mana"].get_int();
+    const int juice = (spell_mana(SPELL_THUNDERBOLT)
+                       + caster->props["thunderbolt_charge"].get_int())
+                      * LIGHTNING_CHARGE_MULT;
+
+    dprf("juice: %d", juice);
+
     bolt beam;
-    beam.name              = "lightning";
-    beam.aux_source        = "rod of lightning";
+    beam.name              = "thunderbolt";
+    beam.aux_source        = "lightning rod";
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
-    // Dodging a horizontal arc is nearly impossible: you'd have to fall prone
-    // or jump high.
-    beam.hit               = prev.origin() ? 10 + pow / 20 : 1000;
+    beam.hit               = AUTOMATIC_HIT;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
 #ifdef USE_TILE
@@ -2436,15 +2446,14 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, ROD_CHARGE_MULT),
+        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
                                div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }
 
     caster->props["thunderbolt_last"].get_int() = you.num_turns;
     caster->props["thunderbolt_aim"].get_coord() = aim;
-
-    noisy(15 + div_rand_round(juice, ROD_CHARGE_MULT), hitfunc.origin);
+    caster->props["thunderbolt_charge"].get_int()++;
 
     return SPRET_SUCCESS;
 }
@@ -2812,6 +2821,9 @@ spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
         you.attribute[ATTR_SEARING_RAY] = -1;
         you.props["searing_ray_target"].get_coord() = beam.target;
         you.props["searing_ray_aimed_at_spot"].get_bool() = beam.aimed_at_spot;
+        string msg = "(Press <w>%</w> to maintain the ray.)";
+        insert_commands(msg, { CMD_WAIT });
+        mpr(msg);
     }
 
     return ret;

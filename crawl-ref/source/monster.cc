@@ -912,7 +912,6 @@ void monster::equip(item_def &item, bool msg)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
-    case OBJ_RODS:
         equip_weapon(item, msg);
         break;
 
@@ -1495,11 +1494,7 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
                     new_wpn_better = true;
             }
 
-            if (item.base_type == OBJ_RODS)
-                new_wpn_better = true; // rods are good.
-
-            if (new_wpn_better && !weap->cursed()
-                && weap->base_type != OBJ_RODS) // rods are good
+            if (new_wpn_better && !weap->cursed())
             {
                 if (!dual_wielding
                     || slot == MSLOT_WEAPON
@@ -1893,22 +1888,6 @@ bool monster::pickup_weapon(item_def &item, bool msg, bool force)
     return false;
 }
 
-bool monster::pickup_rod(item_def &item, bool msg, bool force)
-{
-    // duplicating some relevant melee weapon pickup checks
-    if (!force &&
-            (!could_wield(item)
-            || type == MONS_DEEP_ELF_BLADEMASTER
-            || type == MONS_DEEP_ELF_MASTER_ARCHER)
-            || props.exists(BEOGH_MELEE_WPN_GIFT_KEY))
-    {
-        // XXX: check to see whether this type of rod is evocable by monsters!
-        return false;
-    }
-
-    return pickup_melee_weapon(item, msg);
-}
-
 /**
  * Have a monster pick up a missile item.
  *
@@ -2122,8 +2101,6 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
     case OBJ_STAVES:
     case OBJ_WEAPONS:
         return pickup_weapon(item, msg, force);
-    case OBJ_RODS:
-        return pickup_rod(item, msg, force);
     case OBJ_MISSILES:
         return pickup_missile(item, msg, force);
     // Other types can always be picked up
@@ -2813,7 +2790,7 @@ bool monster::go_berserk(bool intentional, bool /* potion */)
 
     if (const item_def* w = weapon())
     {
-        if (is_unrandom_artefact(*w, UNRAND_JIHAD))
+        if (is_unrandom_artefact(*w, UNRAND_ZEALOT_SWORD))
             for (actor_near_iterator mi(pos(), LOS_NO_TRANS); mi; ++mi)
                 if (mons_aligned(this, *mi))
                     mi->go_berserk(false);
@@ -4017,8 +3994,8 @@ int monster::res_negative_energy(bool intrinsic_only) const
 bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
-    return holy & (MH_UNDEAD | MH_DEMONIC |  MH_PLANT | MH_NONLIVING)
-            || get_mons_resist(*this, MR_RES_TORMENT) > 0;
+    return holy & (MH_UNDEAD | MH_DEMONIC | MH_PLANT | MH_NONLIVING)
+           || get_mons_resist(*this, MR_RES_TORMENT) > 0;
 }
 
 bool monster::res_wind() const
@@ -4508,8 +4485,18 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
+        // Handle pain bond behavior here. Is technically passive damage.
+        // radiate_pain_bond may do additional damage by recursively looping
+        // back to the original trigger.
+        if (has_ench(ENCH_PAIN_BOND) && flavour != BEAM_SHARED_PAIN)
+        {
+            int hp_before_pain_bond = hit_points;
+            radiate_pain_bond(*this, amount, this);
+            amount += hp_before_pain_bond - hit_points;
+        }
+
         // Allow the victim to exhibit passive damage behaviour (e.g.
-        // the Royal Jelly).
+        // the Royal Jelly or Uskayaw's Pain Bond).
         react_to_damage(agent, amount, flavour);
 
         // Don't mirror Yredelemnul's effects (in particular don't mirror
@@ -6016,9 +6003,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
 void monster::react_to_damage(const actor *oppressor, int damage,
                                beam_type flavour)
 {
-    if (has_ench(ENCH_PAIN_BOND))
-        radiate_pain_bond(*this, damage);
-
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
     // XXX: this might not be necessary anymore?
@@ -6184,23 +6168,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         ench_cache     = old_ench_cache;
         ench_countdown = old_ench_countdown;
 
-        cloud_type ctype = CLOUD_STORM;
-
-        for (adjacent_iterator ai(pos()); ai; ++ai)
-            if (!cell_is_solid(*ai)
-                && (!cloud_at(*ai)
-                   || cloud_at(*ai)->type == ctype))
-            {
-                place_cloud(ctype, *ai, 2 + random2(3), this);
-            }
-
         if (observable())
         {
             mprf(MSGCH_WARN, "%s roars in fury and transforms into a fierce dragon!",
                  name(DESC_THE).c_str());
-            mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
-                 name(DESC_THE).c_str());
         }
+
+        add_ench(ENCH_RING_OF_THUNDER);
     }
 
     if (alive())
@@ -6478,6 +6452,9 @@ item_def* monster::disarm()
     // XXX: assumes nothing's re-ordering items - e.g. gozag gold
     if (your_tile_ok)
         move_top_item(pos(), you.pos());
+
+    if (type == MONS_CEREBOV)
+        you.props[CEREBOV_DISARMED_KEY] = true;
 
     return mons_wpn;
 }

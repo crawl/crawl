@@ -1367,7 +1367,7 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
-    marshallInt(th, you.form);
+    _marshall_as_int(th, you.form);
     CANARY;
 
     // how many you.equip?
@@ -2294,15 +2294,15 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_NOME_NO_MORE)
         unmarshallInt(th);
 #endif
-    you.form            = static_cast<transformation_type>(unmarshallInt(th));
-    ASSERT_RANGE(you.form, TRAN_NONE, NUM_TRANSFORMS);
+    you.form            = unmarshall_int_as<transformation>(th);
+    ASSERT_RANGE(static_cast<int>(you.form), 0, NUM_TRANSFORMS);
 #if TAG_MAJOR_VERSION == 34
     // Fix the effects of #7668 (Vampire lose undead trait once coming back
     // from lich form).
-    if (you.form == TRAN_NONE)
+    if (you.form == transformation::none)
         you.transform_uncancellable = false;
 #else
-    ASSERT(you.form != TRAN_NONE || !you.transform_uncancellable);
+    ASSERT(you.form != transformation::none || !you.transform_uncancellable);
 #endif
     EAT_CANARY;
 
@@ -2590,8 +2590,11 @@ static void tag_read_you(reader &th)
     if (you.species == SP_LAVA_ORC)
         you.duration[DUR_MAGIC_ARMOUR] = 0;
 
-    if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM && you.form == TRAN_FUNGUS)
+    if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM
+        && you.form == transformation::fungus)
+    {
         you.duration[DUR_CONFUSING_TOUCH] = 0;
+    }
 
     you.duration[DUR_JELLY_PRAYER] = 0;
 #endif
@@ -3176,6 +3179,14 @@ static void tag_read_you(reader &th)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[GOD_PAKELLAS] = you.exp_docked[GOD_PAKELLAS];
     }
+    if (th.getMinorVersion() < TAG_MINOR_ELYVILON_WRATH
+        && player_under_penance(GOD_ELYVILON))
+    {
+        you.exp_docked[GOD_ELYVILON] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[GOD_ELYVILON] = you.exp_docked[GOD_ELYVILON];
+    }
+
 #endif
 
     // elapsed time
@@ -4418,6 +4429,17 @@ void unmarshallItem(reader &th, item_def &item)
                 || item.sub_type == FOOD_LEMON)
             {
                 item.sub_type = FOOD_FRUIT;
+            }
+        }
+    }
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE_RELOADED)
+    {
+        if (item.base_type == OBJ_FOOD)
+        {
+            if (item.sub_type == FOOD_BEEF_JERKY
+                || item.sub_type == FOOD_PIZZA)
+            {
+                item.sub_type = FOOD_ROYAL_JELLY;
             }
         }
     }

@@ -44,6 +44,7 @@ string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 
+int initial_wrath_penance_for(god_type god);
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
@@ -100,8 +101,7 @@ bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spellcasting(god_type god);
-bool god_hates_spell(spell_type spell, god_type god,
-                     bool rod_spell = false);
+bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
 lifesaving_chance elyvilon_lifesaving();

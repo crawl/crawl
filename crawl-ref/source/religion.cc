@@ -308,8 +308,8 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_PAKELLAS_DEVICE_SURGE,
            "spend magic to empower your devices" },
       { 7, ABIL_PAKELLAS_SUPERCHARGE,
-           "Pakellas will now supercharge a wand or rod... once.",
-           "Pakellas is no longer ready to supercharge a wand or rod." },
+           "Pakellas will now supercharge a wand... once.",
+           "Pakellas is no longer ready to supercharge a wand." },
     },
     // Uskayaw
     {
@@ -479,6 +479,7 @@ bool active_penance(god_type god)
            && god != GOD_RU
            && god != GOD_HEPLIAKLQANA
            && god != GOD_PAKELLAS
+           && god != GOD_ELYVILON
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
 }
@@ -491,7 +492,9 @@ bool xp_penance(god_type god)
            && (god == GOD_ASHENZARI
                || god == GOD_GOZAG
                || god == GOD_HEPLIAKLQANA
-               || god == GOD_PAKELLAS);
+               || god == GOD_PAKELLAS
+               || god == GOD_ELYVILON)
+           && god_hates_your_god(god, you.religion);
 }
 
 void dec_penance(god_type god, int val)
@@ -793,6 +796,11 @@ static void _set_penance(god_type god, int val)
     you.penance[god] = val;
 }
 
+static void _set_wrath_penance(god_type god)
+{
+    _set_penance(god, initial_wrath_penance_for(god));
+}
+
 static void _inc_gift_timeout(int val)
 {
     if (200 - you.gift_timeout < val)
@@ -1013,7 +1021,6 @@ static int _pakellas_low_wand()
 {
     static const vector<int> low_wands = {
         WAND_FLAME,
-        WAND_SLOWING,
         WAND_CONFUSION,
         WAND_POLYMORPH,
         WAND_RANDOM_EFFECTS,
@@ -1049,7 +1056,7 @@ static int _pakellas_high_misc()
         MISC_FAN_OF_GALES,
         MISC_LAMP_OF_FIRE,
         MISC_PHIAL_OF_FLOODS,
-        MISC_DISC_OF_STORMS,
+        MISC_LIGHTNING_ROD,
     };
 
     return _preferably_unseen_item(high_miscs, [](int misc) {
@@ -1107,21 +1114,13 @@ static bool _give_pakellas_gift()
     else if (you.piety >= piety_breakpoint(4)
              && you.num_total_gifts[GOD_PAKELLAS] == 4)
     {
-        // Felids get another high-level wand or evoker instead of a rod.
-        if (you.species == SP_FELID)
-        {
-            basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
-            subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
-                                              : _pakellas_high_misc();
-        }
-        else
-            basetype = OBJ_RODS;
+        basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
+        subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
+                                          : _pakellas_high_misc();
     }
 
     if (basetype == OBJ_UNASSIGNED)
         return false;
-    else if (basetype == OBJ_RODS)
-        success = acquirement(basetype, you.religion);
     else
     {
         ASSERT(subtype >= 0);
@@ -2559,6 +2558,47 @@ static string _god_hates_your_god_reaction(god_type god, god_type your_god)
     return "";
 }
 
+/**
+ * When you abandon this god, how much penance do you gain? (How long does the
+ * wrath last?
+ *
+ * @param god   The god in question.
+ * @return      The initial penance for the given god's wrath.
+ */
+int initial_wrath_penance_for(god_type god)
+{
+    // TODO: transform to data (tables)
+    switch (god)
+    {
+        case GOD_ASHENZARI:
+        case GOD_BEOGH:
+        case GOD_ELYVILON:
+        case GOD_GOZAG:
+        case GOD_HEPLIAKLQANA:
+        case GOD_LUGONU:
+        case GOD_NEMELEX_XOBEH:
+        case GOD_TROG:
+        case GOD_XOM:
+            return 50;
+        case GOD_FEDHAS:
+        case GOD_KIKUBAAQUDGHA:
+        case GOD_JIYVA:
+        case GOD_SHINING_ONE:
+        case GOD_SIF_MUNA:
+        case GOD_YREDELEMNUL:
+            return 30;
+        case GOD_CHEIBRIADOS:
+        case GOD_DITHMENOS:
+        case GOD_MAKHLEB:
+        case GOD_PAKELLAS:
+        case GOD_QAZLAL:
+        case GOD_VEHUMET:
+        case GOD_ZIN:
+        default:
+            return 25;
+    }
+}
+
 void excommunication(bool voluntary, god_type new_god)
 {
     const god_type old_god = you.religion;
@@ -2649,14 +2689,9 @@ void excommunication(bool voluntary, god_type new_god)
 
     switch (old_god)
     {
-    case GOD_XOM:
-        _set_penance(old_god, 50);
-        break;
-
     case GOD_KIKUBAAQUDGHA:
         mprf(MSGCH_GOD, old_god, "You sense decay."); // in the state of Denmark
         add_daction(DACT_ROT_CORPSES);
-        _set_penance(old_god, 30);
         break;
 
     case GOD_YREDELEMNUL:
@@ -2668,17 +2703,14 @@ void excommunication(bool voluntary, god_type new_god)
             add_daction(DACT_ALLY_YRED_SLAVE);
             remove_all_companions(GOD_YREDELEMNUL);
         }
-        _set_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
         you.vehumet_gifts.clear();
         you.duration[DUR_VEHUMET_GIFT] = 0;
-        _set_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
-        _set_penance(old_god, 25);
         make_god_gifts_disappear();
         break;
 
@@ -2686,7 +2718,6 @@ void excommunication(bool voluntary, god_type new_god)
         if (you.duration[DUR_TROGS_HAND])
             trog_remove_trogs_hand();
         make_god_gifts_disappear();
-        _set_penance(old_god, 50);
         break;
 
     case GOD_BEOGH:
@@ -2700,8 +2731,6 @@ void excommunication(bool voluntary, god_type new_god)
         }
 
         env.level_state |= LSTATE_BEOGH;
-
-        _set_penance(old_god, 50);
         break;
 
     case GOD_SIF_MUNA:
@@ -2709,18 +2738,12 @@ void excommunication(bool voluntary, god_type new_god)
             you.duration[DUR_CHANNEL_ENERGY] = 0;
         if (you.attribute[ATTR_DIVINE_ENERGY])
             you.attribute[ATTR_DIVINE_ENERGY] = 0;
-        _set_penance(old_god, 50);
         break;
 
     case GOD_NEMELEX_XOBEH:
         nemelex_reclaim_decks();
         mprf(MSGCH_GOD, old_god, "Your access to %s's decks is revoked.",
              god_name(old_god).c_str());
-        _set_penance(old_god, 50);
-        break;
-
-    case GOD_LUGONU:
-        _set_penance(old_god, 50);
         break;
 
     case GOD_SHINING_ONE:
@@ -2728,8 +2751,6 @@ void excommunication(bool voluntary, god_type new_god)
             tso_remove_divine_shield();
 
         make_god_gifts_disappear();
-
-        _set_penance(old_god, 30);
         break;
 
     case GOD_ZIN:
@@ -2738,16 +2759,15 @@ void excommunication(bool voluntary, god_type new_god)
 
         if (env.sanctuary_time)
             remove_sanctuary();
-
-        _set_penance(old_god, 25);
         break;
 
     case GOD_ELYVILON:
         you.duration[DUR_LIFESAVING] = 0;
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
-
-        _set_penance(old_god, 30);
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
 
     case GOD_JIYVA:
@@ -2759,8 +2779,6 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
-
-        _set_penance(old_god, 30);
         break;
 
     case GOD_FEDHAS:
@@ -2769,7 +2787,6 @@ void excommunication(bool voluntary, god_type new_god)
             mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon turn on you.");
             add_daction(DACT_ALLY_PLANT);
         }
-        _set_penance(old_god, 30);
         break;
 
     case GOD_ASHENZARI:
@@ -2779,13 +2796,11 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_DITHMENOS:
-        if (you.form == TRAN_SHADOW)
+        if (you.form == transformation::shadow)
             untransform();
-        _set_penance(old_god, 25);
         break;
 
     case GOD_GOZAG:
@@ -2804,7 +2819,6 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_QAZLAL:
@@ -2836,7 +2850,6 @@ void excommunication(bool voluntary, god_type new_god)
             you.duration[DUR_QAZLAL_AC] = 0;
             you.redraw_armour_class = true;
         }
-        _set_penance(old_god, 25);
         break;
 
     case GOD_PAKELLAS:
@@ -2847,12 +2860,10 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                   - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
-        _set_penance(old_god, 25);
         break;
 
     case GOD_HEPLIAKLQANA:
@@ -2862,13 +2873,13 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                     - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
-        _set_penance(old_god, 50);
         break;
 
     default:
-        _set_penance(old_god, 25);
         break;
     }
+
+    _set_wrath_penance(old_god);
 
 #ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
@@ -2940,16 +2951,16 @@ bool god_hates_attacking_friend(god_type god, const monster& fr)
 
 static bool _transformed_player_can_join_god(god_type which_god)
 {
-    if (which_god == GOD_ZIN && you.form != TRAN_NONE)
+    if (which_god == GOD_ZIN && you.form != transformation::none)
         return false; // zin hates everything
     // all these clauses are written with a ! in front of them, so that
     // the stuff to the right of that is uniformly "gods that hate this form"
     switch (you.form)
     {
-    case TRAN_LICH:
+    case transformation::lich:
         return !(is_good_god(which_god) || which_god == GOD_FEDHAS);
-    case TRAN_STATUE:
-    case TRAN_WISP:
+    case transformation::statue:
+    case transformation::wisp:
         return !(which_god == GOD_YREDELEMNUL);
     default:
         return true;
@@ -3828,10 +3839,10 @@ bool god_hates_spellcasting(god_type god)
     return god == GOD_TROG;
 }
 
-bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
+bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 {
     if (god_hates_spellcasting(god))
-        return !rod_spell;
+        return !fake_spell;
 
     if (god_punishes_spell(spell, god))
         return true;

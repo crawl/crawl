@@ -923,7 +923,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, item_types,
                          CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                          CMD_FORCE_CAST_SPELL, 0);
-    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
+    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves (<w>%</w>ield and e<w>%</w>oke)",
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
     _add_insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
                          CMD_EVOKE, 0);
@@ -1233,7 +1233,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
     item_types +=
         "</brown> : </console>"
-        "staves and rods (<w>%</w>ield and e<w>%</w>oke)";
+        "staves (<w>%</w>ield and e<w>%</w>oke)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
@@ -1301,7 +1301,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>A</w>      set all skills to level\n"
                        "<w>Ctrl-D</w> change enchantments/durations\n"
                        "<w>g</w>      exercise a skill\n"
-                       "<w>K</w>      change experience level and skills\n"
+                       "<w>k</w>      change experience level and skills\n"
                        "<w>l</w>      change experience level\n"
                        "<w>Ctrl-P</w> list props\n"
                        "<w>r</w>      change character's species\n"
@@ -1329,7 +1329,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>b</w>      controlled blink\n"
                        "<w>B</w>      controlled teleport\n"
                        "<w>Ctrl-B</w> banish yourself to the Abyss\n"
-                       "<w>k</w>      shift section of a labyrinth\n"
+                       "<w>K</w>      shift section of a labyrinth\n"
                        "<w>R</w>      change monster spawn rate\n"
                        "<w>Ctrl-S</w> change Abyss speed\n"
                        "<w>u</w>/<w>d</w>    shift up/down one level\n"
@@ -1365,7 +1365,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>m</w>/<w>M</w>    create specified monster\n"
                        "<w>D</w>      detect all monsters\n"
-                       "<w>g</w>/<w>G</w>    dismiss all monsters\n"
+                       "<w>G</w>      dismiss all monsters\n"
                        "<w>\"</w>      list monsters\n"
                        "\n"
                        "<yellow>Item related commands</yellow>\n"
@@ -1375,7 +1375,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>y</w>/<w>Y</w>    id/unid item types+level items\n"
                        "<w>o</w>/<w>%</w>    create an object\n"
                        "<w>t</w>      tweak object properties\n"
-                       "<w>v</w>      show gold value of an item\n"
+                       "<w>v</w>      recharge all XP evokers\n"
+                       "<w>Ctrl-V</w> show gold value of an item\n"
                        "<w>-</w>      get a god gift\n"
                        "<w>|</w>      create all unrand artefacts\n"
                        "<w>+</w>      make randart from item\n"

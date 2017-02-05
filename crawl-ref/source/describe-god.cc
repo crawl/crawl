@@ -518,18 +518,18 @@ static string _describe_god_wrath_causes(god_type which_god)
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
             return uppercase_first(god_name(which_god)) +
-                   " forgives followers who leave " + god_name(which_god)+"'s"
-                   " service; however, those who take up the worship of evil"
-                   " gods will be punished. (" +
+                   " forgives followers for abandonment; however, those who"
+                   " later take up the worship of an evil god will be"
+                   " punished. (" +
                    comma_separated_fn(begin(evil_gods), end(evil_gods),
                                       bind(god_name, placeholders::_1, false)) +
                    " are evil gods.)";
 
         case GOD_ZIN:
             return uppercase_first(god_name(which_god)) +
-                   " does not punish followers who leave "+god_name(which_god)+
-                   "'s service; however, those who take up the worship of evil"
-                   " or chaotic gods will be scourged. (" +
+                   " forgives followers for abandonment; however, those who"
+                   " later take up the worship of an evil or chaotic god will"
+                   " be scourged. (" +
                    comma_separated_fn(begin(evil_gods), end(evil_gods),
                                       bind(god_name, placeholders::_1, false)) +
                    " are evil, and " +
@@ -576,6 +576,15 @@ static void _god_wrath_description(god_type which_god)
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
+
+    if (which_god != GOD_RU) // Permanent wrath.
+    {
+        const bool long_wrath = initial_wrath_penance_for(which_god) > 30;
+        _print_string_wrapped(apostrophise(uppercase_first(god_name(which_god)))
+                              + " wrath lasts for a relatively " +
+                              (long_wrath ? "long" : "short") + " duration.",
+                              width);
+    }
 }
 
 /**
@@ -658,34 +667,47 @@ static void _detailed_god_description(god_type which_god)
  * Player may or may not be currently under penance.
  *
  * @param which_god     The god in question.
+ * @return              A format string, describing the god's ire (or lack of).
+ */
+static string _raw_penance_message(god_type which_god)
+{
+    const int penance = you.penance[which_god];
+
+    // Give more appropriate message for the good gods.
+    if (penance > 0 && is_good_god(which_god))
+    {
+        if (is_good_god(you.religion))
+            return "%s is ambivalent towards you.";
+        if (!god_hates_your_god(which_god))
+        {
+            return "%s is almost ready to forgive your sins.";
+                 // == "Come back to the one true church!"
+        }
+    }
+
+    const int initial_penance = initial_wrath_penance_for(which_god);
+    // could do some math tricks to turn this into a table, but it seems fiddly
+    if (penance > initial_penance * 3 / 4)
+        return "%s's wrath is upon you!";
+    if (penance > initial_penance / 2)
+        return "%s is annoyed with you.";
+    if (penance > initial_penance / 4)
+        return "%s is almost ready to forgive your sins.";
+    return "%s is neutral towards you.";
+}
+
+/**
+ * Describe the given god's level of irritation at the player.
+ *
+ * Player may or may not be currently under penance.
+ *
+ * @param which_god     The god in question.
  * @return              A description of the god's ire (or lack thereof).
  */
 static string _god_penance_message(god_type which_god)
 {
-    int which_god_penance = you.penance[which_god];
-
-    // Give more appropriate message for the good gods.
-    // XXX: ^ this is a hack
-    if (which_god_penance > 0 && is_good_god(which_god))
-    {
-        if (is_good_god(you.religion))
-            which_god_penance = 0;
-        else if (!god_hates_your_god(which_god) && which_god_penance >= 5)
-            which_god_penance = 2; // == "Come back to the one true church!"
-    }
-
-    const string penance_message =
-        (which_god == GOD_NEMELEX_XOBEH
-         && which_god_penance > 0 && which_god_penance <= 100)
-            ? "%s won't play fair with you." :
-        (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
-        (which_god_penance >= 20)   ? "%s is annoyed with you." :
-        (which_god_penance >=  5)   ? "%s well remembers your sins." :
-        (which_god_penance >   0)   ? "%s is almost ready to forgive your sins." :
-        (you.worshipped[which_god]) ? "%s is ambivalent towards you."
-                                    : "%s is neutral towards you.";
-
-    return make_stringf(penance_message.c_str(),
+    const string message = _raw_penance_message(which_god);
+    return make_stringf(message.c_str(),
                         uppercase_first(god_name(which_god)).c_str());
 }
 

@@ -1481,6 +1481,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VINE_STALKER,    SK_POISON_MAGIC,    0),
     APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
     APT(SP_VINE_STALKER,    SK_EVOCATIONS,     -1),
+
+    // SP_BARACHIAN
+    APT(SP_BARACHIAN,           SK_FIGHTING,        1),
+    APT(SP_BARACHIAN,           SK_SHORT_BLADES,    0),
+    APT(SP_BARACHIAN,           SK_LONG_BLADES,     1),
+    APT(SP_BARACHIAN,           SK_AXES,            0),
+    APT(SP_BARACHIAN,           SK_MACES_FLAILS,    0),
+    APT(SP_BARACHIAN,           SK_POLEARMS,       -1),
+    APT(SP_BARACHIAN,           SK_STAVES,          0),
+    APT(SP_BARACHIAN,           SK_SLINGS,         -1),
+    APT(SP_BARACHIAN,           SK_BOWS,           -1),
+    APT(SP_BARACHIAN,           SK_CROSSBOWS,      -1),
+    APT(SP_BARACHIAN,           SK_THROWING,       -1),
+    APT(SP_BARACHIAN,           SK_ARMOUR,          1),
+    APT(SP_BARACHIAN,           SK_DODGING,         0),
+    APT(SP_BARACHIAN,           SK_STEALTH,         1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BARACHIAN,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_BARACHIAN,           SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_BARACHIAN,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_BARACHIAN,           SK_UNARMED_COMBAT,  0),
+    APT(SP_BARACHIAN,           SK_SPELLCASTING,   -1),
+    APT(SP_BARACHIAN,           SK_CONJURATIONS,    0),
+    APT(SP_BARACHIAN,           SK_HEXES,           0),
+    APT(SP_BARACHIAN,           SK_CHARMS,          0),
+    APT(SP_BARACHIAN,           SK_SUMMONINGS,      1),
+    APT(SP_BARACHIAN,           SK_NECROMANCY,     -1),
+    APT(SP_BARACHIAN,           SK_TRANSLOCATIONS,  0),
+    APT(SP_BARACHIAN,           SK_TRANSMUTATIONS,  0),
+    APT(SP_BARACHIAN,           SK_FIRE_MAGIC,      0),
+    APT(SP_BARACHIAN,           SK_ICE_MAGIC,       1),
+    APT(SP_BARACHIAN,           SK_AIR_MAGIC,       0),
+    APT(SP_BARACHIAN,           SK_EARTH_MAGIC,    -1),
+    APT(SP_BARACHIAN,           SK_POISON_MAGIC,    0),
+    APT(SP_BARACHIAN,           SK_INVOCATIONS,     1),
+    APT(SP_BARACHIAN,           SK_EVOCATIONS,      0),
 };
 COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);
 

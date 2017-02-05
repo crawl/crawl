@@ -23,7 +23,7 @@ end
 
 -- Standard temple entry header lines.
 function temple_entry(e)
-  e.tags("temple entry")
+  e.tags("temple_entry")
   e.orient("float")
   e.kfeat("O = enter_temple")
 end

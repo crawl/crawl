@@ -177,6 +177,9 @@ enum class passive_t
     /// Items consumed by your fellow slimes feed you
     slime_feed,
 
+    /// You are immune to slime covered walls
+    slime_wall_immune,
+
     /// Jiyva protects you from corrosion
     resist_corrosion,
 
@@ -194,6 +197,9 @@ enum class passive_t
 
     /// Jiyva adjusts your stats as needed.
     fluid_stats,
+
+    // You have a chance to spawn slimes when hit hard
+    spawn_slimes_on_hit,
 
     /// Jiyva grants you access to the hidden treasures of the Slime Pits
     unlock_slime_vaults,

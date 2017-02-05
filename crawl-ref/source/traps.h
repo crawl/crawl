@@ -47,4 +47,8 @@ trap_type random_vault_trap();
 int count_traps(trap_type ttyp);
 void place_webs(int num);
 bool ensnare(actor *fly);
+void leave_web(bool quiet = false);
+void monster_web_cleanup(const monster &mons, bool quiet = false);
+void stop_being_held();
+
 #endif

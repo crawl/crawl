@@ -189,9 +189,9 @@ void ghost_demon::init_pandemonium_lord()
 
     // Panlord AC/EV should tend to be weighted towards one or the other.
     int total_def = 10 + random2avg(40, 3);
-    int split = biased_random2(5, 2);
+    int split = 1 + biased_random2(4, 2);
     ac = div_rand_round(total_def * split, 10);
-    ev = total_def - ev;
+    ev = total_def - ac;
     if (coinflip())
         swap(ac, ev);
 
@@ -293,7 +293,7 @@ static int _player_ghost_movement_energy()
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
     // don't preserve transformations for ghosty purposes
-    unwind_var<transformation_type> form(you.form, TRAN_NONE);
+    unwind_var<transformation> form(you.form, transformation::none);
     unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
                                                  FixedBitVector<NUM_EQUIP>());
     unwind_var<bool> fishtail(you.fishtail, false);

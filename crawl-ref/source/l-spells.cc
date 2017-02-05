@@ -78,7 +78,7 @@ LUAFN(l_spells_fail_severity)
 LUAFN(l_spells_hunger)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(number, hunger_bars(spell_hunger(spell, false)));
+    PLUARET(number, hunger_bars(spell_hunger(spell)));
 }
 
 LUAFN(l_spells_power)

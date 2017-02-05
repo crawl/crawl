@@ -1,6 +1,8 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
+#include <functional>
+
 #include "actor.h"
 #include "mon-ench.h"
 #include "spl-util.h"
@@ -18,6 +20,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define VAULT_HD_KEY "vault_hd"
 
 #define FAKE_BLINK_KEY "fake_blink"
+#define CEREBOV_DISARMED_KEY "cerebov_disarmed"
 
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
@@ -569,7 +572,6 @@ private:
     bool pickup_launcher(item_def &launcher, bool msg, bool force = false);
     bool pickup_melee_weapon(item_def &item, bool msg);
     bool pickup_weapon(item_def &item, bool msg, bool force);
-    bool pickup_rod(item_def &item, bool msg, bool force);
     bool pickup_armour(item_def &item, bool msg, bool force);
     bool pickup_jewellery(item_def &item, bool msg, bool force);
     bool pickup_misc(item_def &item, bool msg, bool force);

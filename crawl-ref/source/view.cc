@@ -261,7 +261,7 @@ static void _genus_factoring(map<monster_type, int> &types,
 
 static bool _is_weapon_worth_listing(const item_def *wpn)
 {
-    return wpn && (wpn->base_type == OBJ_RODS || wpn->base_type == OBJ_STAVES
+    return wpn && (wpn->base_type == OBJ_STAVES
                    || is_unrandom_artefact(*wpn)
                    || get_weapon_brand(*wpn) != SPWPN_NORMAL);
 }

@@ -1624,6 +1624,16 @@ Felids
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
 
+Barachians
+  Barachians are an amphibious humanoid race, said to be distantly related to
+  the Elves. Spawned in great numbers beneath the southern ice, their
+  Mother-Father sends them forth to destroy and pillage the civilized lands.
+
+  Barachians' most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap remarkable distances. When not leaping, they are somewhat
+  slow-moving and their attributes are poor, but they do have considerable
+  flexibility in skill choice.
+
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
   humans and yet retain the ability to swim underwater, although their dual
@@ -1719,7 +1729,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
@@ -2015,11 +2026,10 @@ There are a number of individual weapon skills for missile weapons:
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: tomahawks,
-javelins, tomahawks, nets, etc. The other skills refer to various types of
-missiles shot with a launcher. An exception to this are needles: these are
-launched using blowguns, an action which uses the Throwing skill. Since
-stones can be thrown without launchers to some effect, these skills
-crosstrain:
+javelins, nets, etc. The other skills refer to various types of missiles shot
+with a launcher. An exception to this are needles: these are launched using
+blowguns, an action which uses the Throwing skill. Since stones can be thrown
+without launchers to some effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2094,9 +2104,8 @@ Invocations
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
-  number of charges in a wand through usage. Similarly, all other items that
-  have certain powers (such as crystal balls, decks of cards, or elemental
-  summoners) work better for characters trained in this skill.
+  number of charges in a wand through usage. Similarly, various other items
+  that have evocable powers work better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The

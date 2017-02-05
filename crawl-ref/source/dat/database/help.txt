@@ -19,7 +19,7 @@ The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 <h>Category shortcuts</h>
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
-<w>/</w>   wands        <w>\</w>   rods           <w>|</w>   magical staves  <w>?</w>   scrolls
+<w>/</w>   wands        <w>|</w>   magical staves  <w>?</w>   scrolls
 <w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>:</w>   books
 <w>%</w>   food
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
@@ -33,11 +33,12 @@ known-menu
 Pressing an item type's letter key selects that item.
 
 <h>Selecting item types</h>
-Items types displayed in grey use the default autopickup options set in your
-configuration file. Selecting a type of item overrides those options
+Item types displayed in grey use the default autopickup options set in your
+configuration file. (Items that are useless to your character are displayed
+in <darkgrey>dark grey</darkgrey>.) Selecting a type of item overrides those options
 (indicated by <w>white</w> text), and toggles the item between the states:
  <w>+</w>  Items of this type will be picked up automatically.
- <w>-</w>  Items of this type will will not be picked up automatically.
+ <w>-</w>  Items of this type will not be picked up automatically.
 Autopickup can also be toggled for all unknown items of a given category.
 
 <h>Category shortcuts</h>

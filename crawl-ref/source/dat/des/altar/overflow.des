@@ -108,7 +108,9 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
 end
 
 function species_mock(e)
-  if you.race() == "Centaur" then
+  if you.race() == "Barachian" then
+    e.kmons("1 = bullfrog")
+  elseif you.race() == "Centaur" then
     e.kmons("1 = dart slug")
   elseif you.race() == "Demigod" then
     e.kmons("1 = titan simulacrum")
@@ -347,28 +349,6 @@ x.....x
 x.....x
 x.._..x
 xxxxxxx
-ENDMAP
-
-NAME:   cheibriados_altar_wand_db
-TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:   patrolling
-DEPTH:  D:3-9
-WEIGHT: 5
-KFEAT:  _ = altar_cheibriados
-MONS:   goblin; wand of slowing ident:type / \
-        hobgoblin; wand of slowing ident:type / \
-        gnoll; wand of slowing ident:type / \
-        orc; wand of slowing ident:type / \
-        kobold; wand of slowing ident:type
-MONS:   goblin / hobgoblin / gnoll / orc / kobold
-NSUBST: 2 = 1:1 / *:2
-MAP
-ccccccc
-c.2.2.c
-c2._.2c
-c.....c
-c.....c
-ccc+ccc
 ENDMAP
 
 NAME:   chei_slow_surprise
@@ -2208,7 +2188,7 @@ DEPTH:  D:2-9
 TAGS:   temple_overflow_1 temple_overflow_uskayaw
 KFEAT:  _ = altar_uskayaw
 ITEM:   any potion q:1, any weapon
-ITEM:   fruit q:3 / fruit q:2 / slice of pizza q:1 / royal jelly q:1
+ITEM:   fruit q:3 / fruit q:2 / royal jelly q:1
 MAP
 ...........
 .G.......G.

@@ -244,11 +244,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (unknown_proprt(ARTP_CONTAM) && msg)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE] > 0
-         && one_chance_in(proprt[ARTP_CURSE]))
-    {
+    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE])
         do_curse_item(item, !msg);
-    }
 
     if (!alreadyknown && dangerous)
     {
@@ -414,13 +411,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             calc_mp();
         }
 
-        _wield_cursed(item, known_cursed, unmeld);
-        break;
-    }
-
-    case OBJ_RODS:
-    {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
         _wield_cursed(item, known_cursed, unmeld);
         break;
     }

@@ -627,14 +627,14 @@ static void _decrement_durations()
 
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.form != TRAN_NONE)
+        && you.form != transformation::none)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != TRAN_BAT
+    if (you.species != SP_VAMPIRE || you.form != transformation::bat
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
@@ -1041,7 +1041,7 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == TRAN_WISP && !you.stasis())
+        else if (you.form == transformation::wisp && !you.stasis())
             uncontrolled_blink();
     }
 
@@ -1086,8 +1086,6 @@ void player_reacts()
     dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
-
-    recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)

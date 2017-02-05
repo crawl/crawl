@@ -733,7 +733,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('D'): wizard_edit_durations(); break;
 
     case 'e': wizard_set_hunger_state(); break;
-    // case 'E': break;
+    case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
     case 'f': wizard_quick_fsim(); break;
@@ -761,13 +761,13 @@ static void _do_wizard_command(int wiz_command)
         break;
     // case CONTROL('J'): break;
 
-    case 'k':
+    case 'k': wizard_set_xl(true); break;
+    case 'K':
         if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
         break;
-    case 'K': wizard_set_xl(true); break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
     case 'l': wizard_set_xl(); break;
@@ -810,10 +810,9 @@ static void _do_wizard_command(int wiz_command)
     // case 'U': break;
     case CONTROL('U'): debug_terp_dlua(clua); break;
 
-    case 'v': wizard_value_item(); break;
+    case 'v': wizard_recharge_evokers(); break;
     case 'V': wizard_toggle_xray_vision(); break;
-    case 'E': wizard_freeze_time(); break;
-    // case CONTROL('V'): break;
+    case CONTROL('V'): wizard_value_item(); break;
 
     case 'w': wizard_god_mollify(); break;
     case 'W': wizard_god_wrath(); break;
@@ -877,11 +876,11 @@ static void _do_wizard_command(int wiz_command)
     case '\'': wizard_list_items(); break;
     case '"': debug_list_monsters(); break;
 
-    case ',': wizard_place_stairs(true); break;
-    // case '>': break; // XXX do not use, menu command
-
-    case '.': wizard_place_stairs(false); break;
+    case ',': wizard_place_stairs(false); break;
     // case '<': break; // XXX do not use, menu command
+
+    case '.': wizard_place_stairs(true); break;
+    // case '>': break; // XXX do not use, menu command
 
     // case '/': break;
 
@@ -1049,21 +1048,17 @@ static void _start_running(int dir, int mode)
     if (!i_feel_safe(true))
         return;
 
-    coord_def next_pos = you.pos() + Compass[dir];
-    if (!you.is_habitable_feat(grd(next_pos))) // only relevant for run
-        return; // don't warn about running through walls, etc
+    const coord_def next_pos = you.pos() + Compass[dir];
 
-    for (adjacent_iterator ai(next_pos); ai; ++ai)
+    if (!have_passive(passive_t::slime_wall_immune)
+        && (dir == RDIR_REST || you.is_habitable_feat(grd(next_pos)))
+        && count_adjacent_slime_walls(next_pos))
     {
-        if (env.grid(*ai) == DNGN_SLIMY_WALL
-            && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
-        {
-            if (dir == RDIR_REST)
-                mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
-            else
-                mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
-            return;
-        }
+        if (dir == RDIR_REST)
+            mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
+        else
+            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
+        return;
     }
 
     you.running.initialise(dir, mode);
@@ -1896,21 +1891,6 @@ static void _do_rest()
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
 
-static void _do_clear_map()
-{
-    if (Options.show_travel_trail && env.travel_trail.size())
-    {
-        mpr("Clearing travel trail.");
-        clear_travel_trail();
-    }
-    else
-    {
-        mpr("Clearing level map.");
-        clear_map();
-        crawl_view.set_player_at(you.pos());
-    }
-}
-
 static void _do_display_map()
 {
     if (Hints.hints_events[HINT_MAP_VIEW])
@@ -2076,7 +2056,7 @@ void process_command(command_type cmd)
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
-    case CMD_CLEAR_MAP:       _do_clear_map();   break;
+    case CMD_CLEAR_MAP:       clear_map_or_travel_trail(); break;
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
@@ -3242,11 +3222,11 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    const string walkverb = you.airborne()              ? "fly"
-                          : you.form == TRAN_SPIDER     ? "crawl"
+    const string walkverb = you.airborne()                     ? "fly"
+                          : you.form == transformation::spider ? "crawl"
                           : (you.species == SP_NAGA
-                             && form_keeps_mutations()) ? "slither"
-                                                        : "walk";
+                             && form_keeps_mutations())        ? "slither"
+                                                               : "walk";
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -3362,7 +3342,7 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
-    else if (you.form == TRAN_FUNGUS && moving && !you.confused())
+    else if (you.form == transformation::fungus && moving && !you.confused())
     {
         if (you.made_nervous_by(targ))
         {
@@ -3481,6 +3461,9 @@ static void _move_player(coord_def move)
             you.time_taken = max(you.time_taken,
                                  div_round_up(100, you.running.travel_speed));
         }
+
+        if (you.duration[DUR_NO_HOP])
+            you.duration[DUR_NO_HOP] += you.time_taken;
 
         move.reset();
         you.turn_is_over = true;

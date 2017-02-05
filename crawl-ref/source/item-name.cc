@@ -602,7 +602,6 @@ static const char* _wand_type_name(int wandtype)
     switch (wandtype)
     {
     case WAND_FLAME:           return "flame";
-    case WAND_SLOWING:         return "slowing";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_CONFUSION:       return "confusion";
     case WAND_DIGGING:         return "digging";
@@ -613,6 +612,8 @@ static const char* _wand_type_name(int wandtype)
     case WAND_ACID:            return "acid";
     case WAND_RANDOM_EFFECTS:  return "random effects";
     case WAND_DISINTEGRATION:  return "disintegration";
+    case WAND_CLOUDS:          return "clouds";
+    case WAND_SCATTERSHOT:     return "scattershot";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";
@@ -978,7 +979,7 @@ static string misc_type_name(int type, bool known)
     case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";
 #endif
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
-    case MISC_DISC_OF_STORMS:            return "disc of storms";
+    case MISC_LIGHTNING_ROD:             return "lightning rod";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
     case MISC_RUNE_OF_ZOT:               return "obsolete rune of zot";
@@ -1120,32 +1121,6 @@ static const char* staff_type_name(int stafftype)
     }
 }
 
-static const char* rod_type_name(int type)
-{
-    switch ((rod_type)type)
-    {
-#if TAG_MAJOR_VERSION == 34
-    case ROD_SWARM:           return "the swarm";
-    case ROD_WARDING:         return "warding";
-#endif
-    case ROD_LIGHTNING:       return "lightning";
-    case ROD_IRON:            return "iron";
-    case ROD_SHADOWS:         return "shadows";
-#if TAG_MAJOR_VERSION == 34
-    case ROD_VENOM:           return "venom";
-#endif
-    case ROD_INACCURACY:      return "inaccuracy";
-
-    case ROD_IGNITION:        return "ignition";
-    case ROD_CLOUDS:          return "clouds";
-#if TAG_MAJOR_VERSION == 34
-    case ROD_DESTRUCTION:     return "destruction";
-#endif
-
-    default: return "bugginess";
-    }
-}
-
 const char *base_type_string(const item_def &item)
 {
     return base_type_string(item.base_type);
@@ -1165,7 +1140,9 @@ const char *base_type_string(object_class_type type)
     case OBJ_POTIONS: return "potion";
     case OBJ_BOOKS: return "book";
     case OBJ_STAVES: return "staff";
-    case OBJ_RODS: return "rod";
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS: return "removed rod";
+#endif
     case OBJ_ORBS: return "orb";
     case OBJ_MISCELLANY: return "miscellaneous";
     case OBJ_CORPSES: return "corpse";
@@ -1221,7 +1198,9 @@ string sub_type_string(const item_def &item, bool known)
         return string("book of ") + _book_type_name(sub_type);
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
-    case OBJ_RODS:   return rod_type_name(static_cast<rod_type>(sub_type));
+#if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:   return "removed rod";
+#endif
     case OBJ_MISCELLANY: return misc_type_name(sub_type, known);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
@@ -1583,7 +1562,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         // (since showing 'eudaemon blade' is unhelpful in the former case, and
         // showing 'broad axe' is misleading in the latter)
         // could be a flag, but doesn't seem worthwhile for only two items
-        if (is_unrandom_artefact(weap, UNRAND_JIHAD)
+        if (is_unrandom_artefact(weap, UNRAND_ZEALOT_SWORD)
             || is_unrandom_artefact(weap, UNRAND_DEMON_AXE))
         {
             return long_name;
@@ -1866,8 +1845,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_BREAD_RATION: buff << "bread ration"; break;
         case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_FRUIT: buff << "fruit"; break;
-        case FOOD_PIZZA: buff << "slice of pizza"; break;
-        case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
             switch (determine_chunk_effect(*this))
             {
@@ -1965,18 +1942,32 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
     case OBJ_MISCELLANY:
+    {
         if (is_deck(*this) || item_typ == MISC_DECK_UNKNOWN)
         {
             _name_deck(*this, desc, ident, buff);
             break;
         }
 
+        if (!dbname && item_typ == MISC_ZIGGURAT && you.zigs_completed > 0)
+            buff << "+" << you.zigs_completed << " ";
+
         buff << misc_type_name(item_typ, know_type);
 
         if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
             buff << " (inert)";
+        else if (!dbname && item_typ == MISC_LIGHTNING_ROD)
+        {
+            int rod_charge = LIGHTNING_MAX_CHARGE;
+            if (you.props.exists("thunderbolt_charge"))
+                rod_charge -= you.props["thunderbolt_charge"].get_int();
+
+            buff << " (" << rod_charge << "/" << LIGHTNING_MAX_CHARGE << ")";
+
+        }
 
         break;
+    }
 
     case OBJ_BOOKS:
         if (is_random_artefact(*this) && !dbname && !basename)
@@ -1998,33 +1989,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << sub_type_string(*this, !dbname);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-        if (!know_type)
-        {
-            if (!basename)
-            {
-                buff << staff_secondary_string((rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC)
-                     << staff_primary_string(rnd % NDSC_STAVE_PRI);
-            }
-
-            buff << "rod";
-        }
-        else
-        {
-            if (know_type && know_pluses && !basename && !qualname && !dbname)
-                buff << make_stringf("%+d ", special);
-
-            if (!dbname && props.exists(PAKELLAS_SUPERCHARGE_KEY))
-                buff << "supercharged ";
-
-            if (item_typ == ROD_LIGHTNING)
-                buff << "lightning rod";
-            else if (item_typ == ROD_IRON)
-                buff << "iron rod";
-            else
-                buff << "rod of " << rod_type_name(item_typ);
-        }
+        buff << "removed rod";
         break;
+#endif
 
     case OBJ_STAVES:
         if (know_curse && !terse)
@@ -2120,15 +2089,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     if (need_plural && quantity > 1 && !basename && !qualname)
         buff.str(pluralise(buff.str()));
 
-    // Rod charges.
-    if (base_type == OBJ_RODS && know_type && know_pluses
-        && !basename && !qualname && !dbname)
-    {
-        buff << " (" << (charges / ROD_CHARGE_MULT)
-             << "/"  << (charge_cap / ROD_CHARGE_MULT)
-             << ")";
-    }
-
     // debugging output -- oops, I probably block it above ... dang! {dlb}
     if (buff.str().length() < 3)
     {
@@ -2156,7 +2116,9 @@ bool item_type_has_ids(object_class_type base_type)
     COMPILE_CHECK(NUM_BOOKS      < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_STAVES     < MAX_SUBTYPES);
     COMPILE_CHECK(NUM_MISCELLANY < MAX_SUBTYPES);
+#if TAG_MAJOR_VERSION == 34
     COMPILE_CHECK(NUM_RODS       < MAX_SUBTYPES);
+#endif
 
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
         || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS
@@ -2410,9 +2372,6 @@ public:
             case FOOD_MEAT_RATION:
                 name = "meat rations";
                 break;
-            case FOOD_BEEF_JERKY:
-                name = "beef jerky";
-                break;
             case FOOD_BREAD_RATION:
                 name = "bread rations";
                 break;
@@ -2421,9 +2380,6 @@ public:
 #endif
             case FOOD_FRUIT:
                 name = "fruit";
-                break;
-            case FOOD_PIZZA:
-                name = "pizza";
                 break;
             case FOOD_ROYAL_JELLY:
                 name = "royal jellies";
@@ -2439,7 +2395,7 @@ public:
         }
         else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
-        else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
+        else if (item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
             name = pluralise(name);
@@ -2471,6 +2427,8 @@ public:
     {
         if (selected_qty >= 1)
             return WHITE;
+        else if (is_useless_item(*item))
+            return DARKGREY;
         else
             return MENU_ITEM_STOCK_COLOUR;
 
@@ -2643,7 +2601,6 @@ void check_item_knowledge(bool unknown_items)
         static const pair<object_class_type, int> misc_list[] =
         {
             { OBJ_BOOKS, BOOK_MANUAL },
-            { OBJ_RODS, NUM_RODS },
             { OBJ_GOLD, 1 },
             { OBJ_MISCELLANY, NUM_MISCELLANY },
             { OBJ_RUNES, NUM_RUNE_TYPES },
@@ -3454,7 +3411,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.form == TRAN_LICH
+            if (!temp && you.form == transformation::lich
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -3545,17 +3502,22 @@ bool is_useless_item(const item_def &item, bool temp)
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (item.sub_type == WAND_ENSLAVEMENT
-            && item_type_known(item)
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        return is_known_empty_wand(item);
+        if (is_known_empty_wand(item))
+            return true;
+
+        if (!item_type_known(item))
+            return false;
+
+        if (item.sub_type == WAND_ENSLAVEMENT)
+            return player_mutation_level(MUT_NO_LOVE);
+
+        if (item.sub_type == WAND_CLOUDS)
+            return env.level_state & LSTATE_STILL_WINDS;
+
+        return false;
 
     case OBJ_POTIONS:
     {
@@ -3696,26 +3658,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
         }
 
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
-        if (you.species == SP_FELID
-            || player_mutation_level(MUT_NO_ARTIFICE))
-        {
             return true;
-        }
-        switch (item.sub_type)
-        {
-            case ROD_CLOUDS:
-                if (item_type_known(item))
-                    return env.level_state & LSTATE_STILL_WINDS;
-                break;
-            case ROD_SHADOWS:
-                if (item_type_known(item))
-                    return player_mutation_level(MUT_NO_LOVE);
-                // intentional fallthrough
-            default:
-                return false;
-        }
-        break;
+#endif
 
     case OBJ_STAVES:
         if (you.species == SP_FELID)
@@ -3746,10 +3692,10 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!is_inedible(item))
             return false;
 
-        if (!temp && you.form == TRAN_LICH)
+        if (!temp && you.form == transformation::lich)
         {
             // See what would happen if we were in our normal state.
-            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
+            unwind_var<transformation> formsim(you.form, transformation::none);
 
             if (!is_inedible(item))
                 return false;

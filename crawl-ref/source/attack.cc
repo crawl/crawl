@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 
 #include "art-enum.h"
 #include "chardump.h"
@@ -1165,7 +1166,10 @@ int attack::get_weapon_plus()
 {
     if (weapon->base_type == OBJ_STAVES
         || weapon->sub_type == WPN_BLOWGUN
-        || weapon->base_type == OBJ_RODS)
+#if TAG_MAJOR_VERSION == 34
+        || weapon->base_type == OBJ_RODS
+#endif
+       )
     {
         return 0;
     }
@@ -1193,7 +1197,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 int attack::player_apply_final_multipliers(int damage)
 {
     // Can't affect much of anything as a shadow.
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
 
     return damage;
@@ -1601,7 +1605,7 @@ bool attack::apply_damage_brand(const char *what)
 
         // Also used for players in fungus form.
         if (attacker->is_player()
-            && you.form == TRAN_FUNGUS
+            && you.form == transformation::fungus
             && !you.duration[DUR_CONFUSING_TOUCH]
             && defender->is_unbreathing())
         {
