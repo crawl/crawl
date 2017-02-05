@@ -9,6 +9,7 @@
 #include "mgen-data.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "abyss.h"
 #include "areas.h"

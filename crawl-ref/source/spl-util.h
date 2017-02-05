@@ -6,6 +6,8 @@
 #ifndef SPL_UTIL_H
 #define SPL_UTIL_H
 
+#include <functional>
+
 #include "enum.h"
 #include "mon-info.h"
 

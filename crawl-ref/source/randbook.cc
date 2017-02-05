@@ -7,6 +7,8 @@
 
 #include "randbook.h"
 
+#include <functional>
+
 #include "artefact.h"
 #include "database.h"
 #include "english.h"
