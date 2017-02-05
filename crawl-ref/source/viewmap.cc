@@ -804,7 +804,7 @@ bool show_map(level_pos &lpos,
 
             c_input_reset(true);
 #ifdef USE_TILE_LOCAL
-            const int key = tiles.getch_ck();
+            const int key = getchm(KMC_LEVELMAP);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
