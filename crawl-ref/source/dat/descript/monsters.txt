@@ -2131,8 +2131,9 @@ as its master does, and it would surely appreciate being freed.
 %%%%
 slime creature
 
-An icky glob of slime that slithers along the ground, occasionally merging with
-other nearby globs.
+An icky glob of slime that slithers along the ground. It can merge with other
+slime creatures to become dramatically more dangerous, and is especially likely
+to do so in confined spaces.
 %%%%
 small abomination
 
