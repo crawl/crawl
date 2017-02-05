@@ -3136,7 +3136,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             {
                 sound_mapping entry;
                 entry.pattern = sub.substr(0, cpos);
-                entry.soundfile = sub.substr(cpos + 1);
+                entry.soundfile = sound_file_path + sub.substr(cpos + 1);
                 if (minus_equal)
                     remove_matching(sound_mappings, entry);
                 else
@@ -3144,6 +3144,10 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
         merge_lists(sound_mappings, new_entries, caret_equal);
+    }
+    else if (key == "sound_file_path")
+    {
+	    sound_file_path = field;
     }
 #ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.

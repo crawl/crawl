@@ -352,6 +352,7 @@ public:
     bool        travel_key_stop;   // Travel stops on keypress.
 
     vector<sound_mapping> sound_mappings;
+    string sound_file_path;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
 

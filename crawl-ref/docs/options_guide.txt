@@ -402,6 +402,19 @@ sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
 
+sound_file_path = <path>
+        When playing sounds (with the option above), the contents of
+        this variable is appended to the start of the path. This is
+        intended to make it easier to take one configuration across
+        several platforms. These two lines are equivalent to the
+        line above:
+             sound_file_path = sound\sounds2\
+             sound += LOW HITPOINT WARNING:danger3.wav
+        The most recent instance of this option is the one that
+        takes effect, and is not applied retroactively to previous
+        instances of the sound option.
+
+
 3-  Interface.
 ==============
 
