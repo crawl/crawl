@@ -6827,15 +6827,9 @@ void player::paralyse(actor *who, int str, string source)
                                                : source;
     }
 
-    mprf("You %s the ability to move!",
-         paralysis ? "still don't have" : "suddenly lose");
+    mpr("You suddenly lose the ability to move!");
 
-    str *= BASELINE_DELAY;
-    if (str > paralysis && (paralysis < 3 || one_chance_in(paralysis)))
-        paralysis = str;
-
-    if (paralysis > 13 * BASELINE_DELAY)
-        paralysis = 13 * BASELINE_DELAY;
+    paralysis = min(str, 13) * BASELINE_DELAY;
 
     stop_constricting_all();
     end_searing_ray();
