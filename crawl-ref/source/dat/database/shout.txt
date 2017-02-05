@@ -298,10 +298,6 @@ Wanderer player ghost
 
 VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
-'cap-B'
-
-VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
-%%%%
 'cap-G'
 
 VISUAL:@The_monster@ turns @possessive@ gaze towards you.
@@ -323,6 +319,10 @@ VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 ballistomycete spore
 
 VISUAL:@The_monster@ waves @possessive@ rhizomes.
+%%%%
+glowing orange brain
+
+VISUAL:@The_monster@ turns @possessive@ attention towards you.
 %%%%
 # Iron imps, shadow imps and white imps copy imps.
 imp
