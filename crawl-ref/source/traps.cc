@@ -1221,6 +1221,30 @@ void free_self_from_net()
         mpr("You struggle against the net.");
 }
 
+/**
+ * Deals with messaging & cleanup for temporary web traps. Does not actually
+ * delete ENCH_HELD!
+ *
+ * @param mons      The monster leaving a web.
+ * @param quiet     Whether to suppress messages.
+ */
+void monster_web_cleanup(const monster &mons, bool quiet)
+{
+    trap_def *trap = trap_at(mons.pos());
+    if (trap && trap->type == TRAP_WEB)
+    {
+        if (trap->ammo_qty == 1)
+        {
+            // temp web from e.g. jumpspider/spidersack
+            if (!quiet)
+                simple_monster_message(mons, " tears the web.");
+            destroy_trap(mons.pos());
+        }
+        else if (!quiet)
+            simple_monster_message(mons, " pulls away from the web.");
+    }
+}
+
 void mons_clear_trapping_net(monster* mon)
 {
     if (!mon->caught())
