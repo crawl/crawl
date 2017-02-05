@@ -213,6 +213,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
+        new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
+        new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -281,6 +283,7 @@ const vector<GameOption*> game_options::build_options_list()
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
+        new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -2492,7 +2495,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "explore_stop_pickup_ignore"
-        && key != "stop_travel" && key != "sound"
+        && key != "stop_travel"
         && key != "force_more_message"
         && key != "flash_screen_message"
         && key != "confirm_action"
@@ -2511,6 +2514,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "spell_slot"
         && key != "item_slot"
         && key != "ability_slot"
+        && key != "sound" && key != "hold_sound" && key != "sound_file_path"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -3127,7 +3131,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
-    else if (key == "sound")
+    else if (key == "sound" || key == "hold_sound")
     {
         if (plain)
             sound_mappings.clear();
@@ -3140,7 +3144,12 @@ void game_options::read_option_line(const string &str, bool runscript)
             {
                 sound_mapping entry;
                 entry.pattern = sub.substr(0, cpos);
-                entry.soundfile = sub.substr(cpos + 1);
+                entry.soundfile = sound_file_path + sub.substr(cpos + 1);
+                if (key == "hold_sound")
+                    entry.interrupt_game = true;
+                else
+                    entry.interrupt_game = false;
+
                 if (minus_equal)
                     remove_matching(sound_mappings, entry);
                 else

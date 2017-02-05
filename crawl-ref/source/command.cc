@@ -27,6 +27,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "showsymb.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -65,8 +66,8 @@ static const char *features[] =
     "Glob patterns",
 #endif
 
-#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS)
-    "Sound support",
+#if defined(USE_SOUND) && defined(SOUND_BACKEND)
+    SOUND_BACKEND,
 #endif
 
 #ifdef DGL_MILESTONES
@@ -1026,6 +1027,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+#ifdef USE_SOUND
+    _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
+#endif
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
     cols.add_formatted(1, "         slowest ally\n",
                            false);

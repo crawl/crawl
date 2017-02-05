@@ -148,12 +148,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // uncomment the line below and add -lpcre to your makefile.
     // #define REGEX_PCRE
 
-    // Uncomment (and edit as appropriate) to play sounds.
-    //
-    // WARNING: Filenames passed to this command *are not validated in any way*.
-    //
-    // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
-
     #include "libunix.h"
 
 #elif defined(TARGET_OS_WINDOWS)
@@ -171,9 +165,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
     #define ALT_FILE_SEPARATOR '\\'
-
-    // Uncomment to play sounds. winmm must be linked in if this is uncommented.
-    // #define WINMM_PLAY_SOUNDS
 
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in. Required in the absence of POSIX regexes.
