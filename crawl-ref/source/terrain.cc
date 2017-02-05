@@ -8,6 +8,7 @@
 #include "terrain.h"
 
 #include <algorithm>
+#include <functional>
 #include <sstream>
 
 #include "areas.h"
