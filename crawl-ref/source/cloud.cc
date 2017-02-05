@@ -80,7 +80,7 @@ static const cloud_data clouds[] = {
     { "?", "?",                                 // terse, verbose name
     },
     // CLOUD_FIRE,
-    { "flame", "roaring flames",                // terse, verbose name
+    { "flame", "blazing flames",                // terse, verbose name
        COLOUR_UNDEF,                            // colour
        { TILE_CLOUD_FIRE, CTVARY_DUR },         // tile
        BEAM_FIRE,                               // beam_effect

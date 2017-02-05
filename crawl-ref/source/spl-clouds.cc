@@ -108,7 +108,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
             if (agent->is_player())
                 mpr("The fire ignites!");
             else
-                mpr("A cloud of flames roars to life!");
+                mpr("A cloud of flames bursts into life!");
         }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);

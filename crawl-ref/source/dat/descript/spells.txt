@@ -318,7 +318,7 @@ exploding.
 %%%%
 Conjure Flame spell
 
-Creates a column of roaring flame in a targeted empty location.
+Creates a blazing column of flame in a targeted empty location.
 %%%%
 Control Undead spell
 

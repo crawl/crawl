@@ -1537,7 +1537,7 @@ bool trog_burn_spellbooks()
             if (cloud)
             {
                 // Reinforce the cloud.
-                mpr("The fire roars with new energy!");
+                mpr("The fire blazes with new energy!");
                 const int extra_dur = count + random2(6);
                 cloud->decay += extra_dur * 5;
                 cloud->set_whose(KC_YOU);
