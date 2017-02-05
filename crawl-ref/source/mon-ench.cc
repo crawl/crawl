@@ -682,11 +682,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             break;
         }
 
-        // cleanup temp webs
-        // XXX: deduplicate with leave_web()
-        const trap_def *trap = trap_at(pos());
-        if (trap && trap->type == TRAP_WEB && trap->ammo_qty == 1)
-            destroy_trap(pos());
+        monster_web_cleanup(*this, true);
         break;
     }
     case ENCH_FAKE_ABJURATION:
