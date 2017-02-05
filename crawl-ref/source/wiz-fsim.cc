@@ -408,6 +408,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
         for (int i = 0; i < iter_limit; i++)
         {
             you.hp = you.hp_max = 999; // again, arbitrary
+            mon.hit_points = mon.max_hit_points;
             bool did_hit = false;
             you.shield_blocks = 0; // no blocks this round
             fight_melee(&mon, &you, &did_hit, true);
