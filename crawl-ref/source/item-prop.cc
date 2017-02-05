@@ -134,6 +134,9 @@ static const armour_def Armour_prop[] =
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
         EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
+    { ARM_SCARF,                "scarf",                  0,   0,   50,
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
+
     { ARM_GLOVES,               "gloves",                 1,   0,   45,
         EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
@@ -1305,7 +1308,9 @@ int armour_max_enchant(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+    // Unenchantables.
+    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR
+        || item.sub_type == ARM_SCARF)
         return 0;
 
     const int eq_slot = get_armour_slot(item);

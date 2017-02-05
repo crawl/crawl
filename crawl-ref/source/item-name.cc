@@ -1680,8 +1680,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "enchanted ";
         }
 
-        // Don't list QDA as +0.
-        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR)
+        // Don't list unenchantable armor as +0.
+        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
+                        && sub_type != ARM_SCARF)
             buff << make_stringf("%+d ", plus);
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
@@ -1702,6 +1703,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
+                    || item_typ == ARM_SCARF
                     || get_armour_slot(*this) == EQ_HELMET
                        && !is_hard_helmet(*this))
                 {

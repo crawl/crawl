@@ -149,7 +149,7 @@
        "ring mail", "scroll of random uselessness", "scroll of remove curse",
        "wand of random effects" }
 
-      elseif s == "S" then i = { "scimitar", "short sword",
+      elseif s == "S" then i = { "scarf", "scimitar", "short sword",
        "sling bullet", "scale mail", "book of summonings", "book of the sky",
        "ring of see invisible", "ring of slaying", "spear", "ring of stealth",
        "ring of strength", "manual of stealth", "sack of spiders",
