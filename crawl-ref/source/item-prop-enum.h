@@ -16,6 +16,9 @@ enum armour_type
 #endif
 
     ARM_CLOAK,
+#if TAG_MAJOR_VERSION > 34
+    ARM_SCARF,
+#endif
 
 #if TAG_MAJOR_VERSION == 34
     ARM_CAP,
@@ -89,6 +92,8 @@ enum armour_type
     ARM_SHADOW_DRAGON_ARMOUR,
     ARM_QUICKSILVER_DRAGON_HIDE,
     ARM_QUICKSILVER_DRAGON_ARMOUR,
+
+    ARM_SCARF,
 #endif
 
     NUM_ARMOURS

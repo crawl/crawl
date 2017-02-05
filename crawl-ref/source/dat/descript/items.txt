@@ -923,6 +923,11 @@ A leather suit covered with metal plates attached to each other in overlapping
 rows to provide full protection, but at the cost of reduced freedom of
 movement.
 %%%%
+scarf
+
+A length of stylish fabric. At its creation, enchantments were woven into it,
+and as such it cannot accept further enchantment.
+%%%%
 scimitar
 
 A long sword with a wide, curved blade.

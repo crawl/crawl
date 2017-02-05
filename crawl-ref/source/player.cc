@@ -741,6 +741,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     {
     case EQ_CLOAK:
         dummy.sub_type = ARM_CLOAK;
+        alternate.sub_type = ARM_SCARF;
         break;
 
     case EQ_GLOVES:

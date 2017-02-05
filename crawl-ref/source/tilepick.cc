@@ -2125,6 +2125,9 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_CLOAK:
         return TILE_ARM_CLOAK;
 
+    case ARM_SCARF:
+        return TILE_ARM_SCARF;
+
     case ARM_HAT:
         return TILE_THELM_HAT;
 
