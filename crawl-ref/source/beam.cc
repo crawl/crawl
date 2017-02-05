@@ -6046,47 +6046,36 @@ bool bolt::nasty_to(const monster* mon) const
     if (!is_enchantment())
         return true;
 
-    // Now for some non-hurtful enchantments.
-    if (flavour == BEAM_DIGGING)
-        return false;
-
     // Positive effects.
     if (nice_to(monster_info(mon)))
         return false;
 
-    // Co-aligned inner flame is fine.
-    if (flavour == BEAM_INNER_FLAME && mons_aligned(mon, agent()))
-        return false;
-
-    // Friendly and good neutral monsters don't mind being teleported.
-    if (flavour == BEAM_TELEPORT)
-        return !mon->wont_attack();
-
-    if (flavour == BEAM_ENSLAVE_SOUL || flavour == BEAM_INFESTATION)
-        return ench_flavour_affects_monster(flavour, mon);
-
-    // sleep
-    if (flavour == BEAM_HIBERNATION)
-        return mon->can_hibernate();
-
-    if (flavour == BEAM_SLOW || flavour == BEAM_PARALYSIS)
-        return !mon->stasis();
-
-    // dispel undead
-    if (flavour == BEAM_DISPEL_UNDEAD)
-        return bool(mon->holiness() & MH_UNDEAD);
-
-    if (flavour == BEAM_PAIN)
-        return mon->res_negative_energy() < 3;
-
-    if (flavour == BEAM_AGONY)
-        return !mon->res_torment();
-
-    if (flavour == BEAM_TUKIMAS_DANCE)
-        return tukima_affects(*mon);
-
-    if (flavour == BEAM_UNRAVELLING)
-        return monster_is_debuffable(*mon);
+    switch (flavour)
+    {
+        case BEAM_DIGGING:
+            return false;
+        case BEAM_INNER_FLAME:
+            // Co-aligned inner flame is fine.
+            return !mons_aligned(mon, agent());
+        case BEAM_TELEPORT:
+            // Friendly and good neutral monsters don't mind being teleported.
+            return !mon->wont_attack();
+        case BEAM_ENSLAVE_SOUL:
+        case BEAM_INFESTATION:
+        case BEAM_SLOW:
+        case BEAM_PARALYSIS:
+        case BEAM_DISPEL_UNDEAD:
+        case BEAM_PAIN:
+        case BEAM_AGONY:
+        case BEAM_HIBERNATION:
+            return ench_flavour_affects_monster(flavour, mon);
+        case BEAM_TUKIMAS_DANCE:
+            return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
+        case BEAM_UNRAVELLING:
+            return monster_is_debuffable(*mon); // XXX: as tukima's
+        default:
+            break;
+    }
 
     // everything else is considered nasty by everyone
     return true;
