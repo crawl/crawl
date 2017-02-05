@@ -6058,6 +6058,7 @@ bool bolt::nasty_to(const monster* mon) const
             // Co-aligned inner flame is fine.
             return !mons_aligned(mon, agent());
         case BEAM_TELEPORT:
+        case BEAM_BECKONING:
             // Friendly and good neutral monsters don't mind being teleported.
             return !mon->wont_attack();
         case BEAM_ENSLAVE_SOUL:
