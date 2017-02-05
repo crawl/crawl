@@ -71,6 +71,7 @@
 #include "shopping.h"
 #include "showsymb.h"
 #include "slot-select-mode.h"
+#include "sound.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -1912,6 +1913,9 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 
         if (!quiet)
         {
+#ifdef USE_SOUND
+            parse_sound(PICKUP_SOUND);
+#endif
             mprf_nocap("%s (gained %d)",
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
@@ -2047,7 +2051,12 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;
     else if (!quiet)
+    {
+#ifdef USE_SOUND
+        parse_sound(PICKUP_SOUND);
+#endif
         mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
+    }
 
     return item.link;
 }

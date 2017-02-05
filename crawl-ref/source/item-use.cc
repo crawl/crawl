@@ -55,6 +55,7 @@
 #include "rot.h"
 #include "shout.h"
 #include "skills.h"
+#include "sound.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
@@ -545,7 +546,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 return false;
 
             if (show_unwield_msg)
+            {
+#ifdef USE_SOUND
+                parse_sound(WIELD_NOTHING_SOUND);
+#endif
                 canned_msg(MSG_EMPTY_HANDED_NOW);
+            }
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
@@ -598,7 +604,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
     if (show_wield_msg)
+    {
+#ifdef USE_SOUND
+        parse_sound(WIELD_WEAPON_SOUND);
+#endif
         mprf_nocap("%s", new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+    }
 
     check_item_hint(new_wpn, old_talents);
 
@@ -1970,6 +1981,9 @@ bool remove_ring(int slot, bool announce)
     if (!_safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return false;
 
+#ifdef USE_SOUND
+    parse_sound(REMOVE_JEWELLERY_SOUND);
+#endif
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
 #ifdef USE_TILE_LOCAL
     const unsigned int old_talents = your_talents(false).size();

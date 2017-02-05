@@ -37,6 +37,7 @@
 #include "shout.h"
 #include "showsymb.h"
 #include "skills.h"
+#include "sound.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -464,6 +465,10 @@ bool is_pproj_active()
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
+#ifdef USE_SOUND
+    parse_sound(FIRE_PROMPT_SOUND);
+#endif
+
     dist target;
     item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
