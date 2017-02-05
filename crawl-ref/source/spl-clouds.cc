@@ -90,7 +90,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
         if (you.see_cell(where))
-            mpr("The fire roars with new energy!");
+            mpr("The fire blazes with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         cloud->decay += extra_dur * 5;
         cloud->source = agent->mid;
@@ -106,7 +106,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         if (you.see_cell(where))
         {
             if (agent->is_player())
-                mpr("The fire roars!");
+                mpr("The fire ignites!");
             else
                 mpr("A cloud of flames roars to life!");
         }
