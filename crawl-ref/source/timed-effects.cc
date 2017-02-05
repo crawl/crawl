@@ -916,7 +916,10 @@ static void _evolve(int time_delta)
                 && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
-                evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
+                const string reason = (you.mutation[MUT_EVOLUTION] == 1)
+                                    ? "end of evolution"
+                                    : "decline of evolution";
+                evol |= delete_mutation(MUT_EVOLUTION, reason, false);
             }
             // interrupt the player only if something actually happened
             if (evol)
