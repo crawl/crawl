@@ -6,6 +6,7 @@
 #ifndef GAME_OPTIONS_H
 #define GAME_OPTIONS_H
 
+#include <functional>
 #include <string>
 #include <set>
 
