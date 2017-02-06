@@ -780,7 +780,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
     SPTYP_CHARMS | SPTYP_AIR,
-    SPFLAG_NONE,
+    SPFLAG_MONSTER,
     2,
     50,
     -1, -1,
