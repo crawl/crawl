@@ -185,11 +185,11 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_DISCHARGE,
+    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_LIGHTNING_BOLT,
 },
 
 {   // Book of the Sky
-    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_AIRSTRIKE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
