@@ -1865,7 +1865,7 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
     if (blast_sources.empty()) {
         canned_msg(MSG_NOTHING_HAPPENS);
     } else {
-        mpr("The air bursts into flame!"); 
+        mpr("The air bursts into flame!");
 
         vector<coord_def> blast_adjacents;
 
@@ -1884,7 +1884,7 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
         beam_actual.flavour       = BEAM_FIRE;
         beam_actual.real_flavour  = BEAM_FIRE;
         beam_actual.glyph         = 0;
-        beam_actual.damage        = calc_dice(3, 10 + pow/2); // same as fireball for now
+        beam_actual.damage        = calc_dice(3, 10 + pow/3); // less than fireball
         beam_actual.name          = "fireball";
         beam_actual.colour        = RED;
         beam_actual.ex_size       = 0;
