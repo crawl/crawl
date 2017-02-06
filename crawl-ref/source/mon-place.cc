@@ -1587,6 +1587,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
             give_weapon(mon, place.absdepth());
+        if (mons_class_wields_four_weapons(mg.cls))
+        {
+            give_weapon(mon, place.absdepth());
+            give_weapon(mon, place.absdepth());
+        }
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(MB_FALSE);

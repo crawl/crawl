@@ -793,7 +793,8 @@ static bool _handle_potion(monster& mons)
 static bool _handle_evoke_equipment(monster& mons)
 {
     // TODO: check non-ring, non-amulet equipment
-    item_def* jewel = mons.mslot_item(MSLOT_JEWELLERY);
+    // TODO: check non-amulet equipment since rn all they can use is "rage
+    item_def* jewel = mons.mslot_item(MSLOT_AMULET);
     if (mons.asleep()
         || mons_is_confused(mons)
         || !jewel

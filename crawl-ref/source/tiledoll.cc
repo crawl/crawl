@@ -395,7 +395,7 @@ void fill_doll_equipment(dolls_data &result)
     // Helmet.
     if (result.parts[TILEP_PART_HELM] == TILEP_SHOW_EQUIP)
     {
-        const int item = you.melded[EQ_HELMET] ? -1 : you.equip[EQ_HELMET];
+        const int item = you.melded[EQ_HEADGEAR] ? -1 : you.equip[EQ_HEADGEAR];
         if (item != -1)
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
         else if (player_mutation_level(MUT_HORNS) > 0)

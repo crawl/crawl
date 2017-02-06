@@ -905,7 +905,7 @@ void melee_attack::check_autoberserk()
     }
     else
     {
-        for (int i = MSLOT_WEAPON; i <= MSLOT_JEWELLERY; ++i)
+        for (int i = MSLOT_WEAPON; i <= MSLOT_RING2; ++i)
         {
             const item_def *item =
                 attacker->as_monster()->mslot_item(static_cast<mon_inv_type>(i));

@@ -171,6 +171,7 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
+    MB_FOUR_WEAPONS,
     NUM_MB_FLAGS
 };
 
@@ -337,6 +338,7 @@ struct monster_info : public monster_info_base
     string speed_description() const;
 
     bool wields_two_weapons() const;
+    bool wields_four_weapons() const;
     bool can_regenerate() const;
     reach_type reach_range() const;
 
@@ -375,6 +377,7 @@ protected:
     string _core_name() const;
     string _base_name() const;
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
+    int _randart_prop_of_slot(artefact_prop_type, int) const;
 };
 
 // Colour should be between -1 and 15 inclusive!

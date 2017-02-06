@@ -224,11 +224,17 @@ int attack::calc_to_hit(bool random)
         if (using_weapon())
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
-        const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
-        if (jewellery != NON_ITEM
-            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
+        int ring = attacker->as_monster()->inv[MSLOT_RING];
+        if (ring != NON_ITEM
+            && mitm[ring].is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
-            mhit += mitm[jewellery].plus;
+            mhit += mitm[ring].plus;
+        }
+        ring = attacker->as_monster()->inv[MSLOT_RING2];
+        if (ring != NON_ITEM
+            && mitm[ring].is_type(OBJ_JEWELLERY, RING_SLAYING))
+        {
+            mhit += mitm[ring].plus;
         }
 
         mhit += attacker->scan_artefacts(ARTP_SLAYING);
@@ -1246,31 +1252,36 @@ int attack::calc_damage()
     {
         int damage = 0;
         int damage_max = 0;
+        int slaying_max = 0;
         if (using_weapon() || wpn_skill == SK_THROWING)
         {
             damage_max = weapon_damage();
             damage += random2(damage_max);
 
-            int wpn_damage_plus = 0;
             if (weapon) // can be 0 for throwing projectiles
-                wpn_damage_plus = get_weapon_plus();
-
-            const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
-            if (jewellery != NON_ITEM
-                && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
-            {
-                wpn_damage_plus += mitm[jewellery].plus;
-            }
-
-            wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
-
-            if (wpn_damage_plus >= 0)
-                damage += random2(wpn_damage_plus);
-            else
-                damage -= random2(1 - wpn_damage_plus);
+                slaying_max += get_weapon_plus();
 
             damage -= 1 + random2(3);
         }
+
+        int ring = attacker->as_monster()->inv[MSLOT_RING];
+        if (ring != NON_ITEM
+            && mitm[ring].is_type(OBJ_JEWELLERY, RING_SLAYING))
+        {
+            slaying_max += mitm[ring].plus;
+        }
+        ring = attacker->as_monster()->inv[MSLOT_RING2];
+        if (ring != NON_ITEM
+            && mitm[ring].is_type(OBJ_JEWELLERY, RING_SLAYING))
+        {
+            slaying_max += mitm[ring].plus;
+        }
+        slaying_max += attacker->scan_artefacts(ARTP_SLAYING);
+
+        if (slaying_max >= 0)
+            damage += random2(slaying_max);
+        else
+            damage -= random2(1 - slaying_max);
 
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);

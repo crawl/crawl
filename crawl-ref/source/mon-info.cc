@@ -345,6 +345,12 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         mb.set(MB_TWO_WEAPONS);
     }
 
+    if (mons_class_wields_four_weapons(type)
+        || mons_class_wields_four_weapons(base_type))
+    {
+        mb.set(MB_FOUR_WEAPONS);
+    }
+
     if (!mons_class_can_regenerate(type)
         || !mons_class_can_regenerate(base_type))
     {
@@ -552,6 +558,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_AIRBORNE);
     if (mons_wields_two_weapons(*m))
         mb.set(MB_TWO_WEAPONS);
+    if (mons_wields_four_weapons(*m))
+        mb.set(MB_FOUR_WEAPONS);
     if (!mons_can_regenerate(*m))
         mb.set(MB_NO_REGEN);
     if (m->haloed() && !m->umbraed())
@@ -684,6 +692,8 @@ monster_info::monster_info(const monster* m, int milev)
             ok = true;
         else if (i == MSLOT_ALT_WEAPON)
             ok = wields_two_weapons();
+        else if (i == MSLOT_WEAPON3 || i == MSLOT_WEAPON4)
+            ok = wields_four_weapons();
         else if (i == MSLOT_MISSILE)
             ok = false;
         else
@@ -1583,32 +1593,22 @@ string monster_info::constriction_description() const
     return cinfo;
 }
 
+int monster_info::_randart_prop_of_slot(artefact_prop_type ra_prop, int mslot) const
+{
+    item_def* item = inv[mslot].get();
+    if(item && is_artefact(*item))
+        return artefact_property(*item, ra_prop);
+    return 0;
+}
+
 int monster_info::randarts(artefact_prop_type ra_prop) const
 {
     int ret = 0;
 
     if (itemuse() >= MONUSE_STARTING_EQUIPMENT)
     {
-        item_def* weapon = inv[MSLOT_WEAPON].get();
-        item_def* second = inv[MSLOT_ALT_WEAPON].get(); // Two-headed ogres, etc.
-        item_def* armour = inv[MSLOT_ARMOUR].get();
-        item_def* shield = inv[MSLOT_SHIELD].get();
-        item_def* ring   = inv[MSLOT_JEWELLERY].get();
-
-        if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
-            ret += artefact_property(*weapon, ra_prop);
-
-        if (second && second->base_type == OBJ_WEAPONS && is_artefact(*second))
-            ret += artefact_property(*second, ra_prop);
-
-        if (armour && armour->base_type == OBJ_ARMOUR && is_artefact(*armour))
-            ret += artefact_property(*armour, ra_prop);
-
-        if (shield && shield->base_type == OBJ_ARMOUR && is_artefact(*shield))
-            ret += artefact_property(*shield, ra_prop);
-
-        if (ring && ring->base_type == OBJ_JEWELLERY && is_artefact(*ring))
-            ret += artefact_property(*ring, ra_prop);
+        ret += _randart_prop_of_slot(ra_prop, MSLOT_WEAPON);
+        
     }
 
     return ret;
@@ -1647,6 +1647,11 @@ string monster_info::speed_description() const
 bool monster_info::wields_two_weapons() const
 {
     return is(MB_TWO_WEAPONS);
+}
+
+bool monster_info::wields_four_weapons() const
+{
+    return is(MB_FOUR_WEAPONS);
 }
 
 bool monster_info::can_regenerate() const

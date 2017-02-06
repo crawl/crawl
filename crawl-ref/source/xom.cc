@@ -2025,7 +2025,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     if (you.slot_item(EQ_CLOAK))
         messages.emplace_back("Your cloak billows in an unfelt wind.");
 
-    if (item_def* item = you.slot_item(EQ_HELMET))
+    if (item_def* item = you.slot_item(EQ_HEADGEAR))
     {
         string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
