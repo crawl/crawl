@@ -136,6 +136,9 @@ force_more_message += The Abyss bends around you
 # Petrification
 force_more_message += You are slowing down
 
+# Sleep
+force_more_message += You fall asleep
+
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
