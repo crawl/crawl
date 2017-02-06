@@ -325,8 +325,7 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
 {
     // attributes
     static const attribute_type dispellable_attributes[] = {
-        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
-        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS, ATTR_DEFLECT_MISSILES,
     };
 
     for (auto attribute : dispellable_attributes)
