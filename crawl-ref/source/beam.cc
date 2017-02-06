@@ -5782,7 +5782,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 {
     ASSERT(!special_explosion);
     ASSERT(!in_explosion_phase);
-    ASSERT(ex_size > 0);
+    ASSERT(ex_size >= 0);
 
     // explode() can be called manually without setting real_flavour.
     // FIXME: The entire flavour/real_flavour thing needs some

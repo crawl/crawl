@@ -1289,23 +1289,28 @@ int player_spell_levels()
 {
     int sl = min(player_total_spell_levels(), 99);
 
+#if TAG_MAJOR_VERSION == 34
     bool fireball = false;
     bool delayed_fireball = false;
+#endif
 
     for (const spell_type spell : you.spells)
     {
+#if TAG_MAJOR_VERSION == 34
         if (spell == SPELL_FIREBALL)
             fireball = true;
         else if (spell == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
-
+#endif
         if (spell != SPELL_NO_SPELL)
             sl -= spell_difficulty(spell);
     }
 
+#if TAG_MAJOR_VERSION == 34
     // Fireball is free for characters with delayed fireball
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
+#endif
 
     // Note: This can happen because of draining. -- bwr
     if (sl < 0)

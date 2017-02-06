@@ -344,6 +344,7 @@ static void _remove_spell_attributes(spell_type spell)
                                  : "your spell is no longer protecting you");
         }
         break;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -351,6 +352,7 @@ static void _remove_spell_attributes(spell_type spell)
             mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         }
         break;
+#endif
     default:
         break;
     }
@@ -469,7 +471,7 @@ int spell_difficulty(spell_type which_spell)
 int spell_levels_required(spell_type which_spell)
 {
     int levels = spell_difficulty(which_spell);
-
+#if TAG_MAJOR_VERSION == 34
     if (which_spell == SPELL_DELAYED_FIREBALL
         && you.has_spell(SPELL_FIREBALL))
     {
@@ -480,6 +482,7 @@ int spell_levels_required(spell_type which_spell)
     {
         levels = 0;
     }
+#endif
 
     return levels;
 }
@@ -1000,6 +1003,7 @@ int spell_effect_noise(spell_type spell)
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_VIOLENT_UNRAVELLING:
+    case SPELL_IGNITION:
         expl_size = 1;
         break;
 
@@ -1221,12 +1225,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you must stand on solid ground to cast this.";
         }
         break;
-
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
             return "you are already charged.";
         break;
-
+#endif
     case SPELL_BORGNJORS_REVIVIFICATION:
         if (temp && you.hp == you.hp_max)
             return "you cannot be healed further.";
@@ -1394,6 +1398,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_INTOXICATE:
+    case SPELL_IGNITION:
         return minRange > LOS_RADIUS;
 
     // Special handling for cloud spells.

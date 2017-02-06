@@ -76,7 +76,7 @@ static const struct spell_desc spelldata[] =
     1, 0,
     TILEG_APPORTATION,
 },
-
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_DELAYED_FIREBALL, "Delayed Fireball",
     SPTYP_FIRE | SPTYP_CONJURATION,
@@ -85,9 +85,9 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     7, 0,
-    TILEG_DELAYED_FIREBALL,
+    TILEG_ERROR,
 },
-
+#endif
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
     SPTYP_CONJURATION | SPTYP_FIRE,
@@ -3906,6 +3906,17 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
     TILEG_POISONOUS_VAPOURS,
+},
+
+{
+    SPELL_IGNITION, "Ignition",
+    SPTYP_FIRE,
+    SPFLAG_AREA,
+    8,
+    200,
+    -1, -1,
+    8, 0,
+    TILEG_IGNITION,
 },
 
 {

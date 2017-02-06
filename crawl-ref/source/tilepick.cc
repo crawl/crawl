@@ -3193,8 +3193,10 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HOP;
 
     // Others
+#if TAG_MAJOR_VERSION == 34
     case ABIL_DELAYED_FIREBALL:
         return TILEG_ABILITY_DELAYED_FIREBALL;
+#endif
     case ABIL_END_TRANSFORMATION:
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
