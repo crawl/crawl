@@ -875,6 +875,13 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_ARCHERY:
             mpr("You feel that your aim is more steady.");
             break;
+
+        case SPARM_BOXING:
+            if (you.strength() > you.dex())
+                mprf("Your %s tougher.", you.hands_verb("feel").c_str());
+            else
+                mprf("Your %s steadier.", you.hands_verb("feel").c_str());
+            break;
         }
     }
 
@@ -1038,6 +1045,12 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_ARCHERY:
         mpr("Your aim is not that steady anymore.");
         break;
+
+    case SPARM_BOXING:
+        if (you.strength() > you.dex())
+            mprf("Your %s less tough.", you.hands_verb("feel").c_str());
+        else
+            mprf("Your %s less steady.", you.hands_verb("feel").c_str());
 
     default:
         break;

@@ -1451,6 +1451,11 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It improves your effectiveness with ranged "
                            "weaponry, such as bows and javelins (Slay+4).";
             break;
+
+        case SPARM_BOXING:
+            description += "It improves your effectiveness with unarmed "
+                           "combat (Slay+4).";
+            break;
         }
     }
 
