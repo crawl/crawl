@@ -560,6 +560,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_PUNCHING:          return "punching";
         default:                      return "bugginess";
         }
     }
