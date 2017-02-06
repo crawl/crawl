@@ -876,7 +876,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             mpr("You feel that your aim is more steady.");
             break;
 
-        case SPARM_PUNCHING:
+        case SPARM_BOXING:
             if (you.strength() > you.dex())
                 mprf("Your %s tougher.", you.hands_verb("feel").c_str());
             else
@@ -1046,7 +1046,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         mpr("Your aim is not that steady anymore.");
         break;
 
-    case SPARM_PUNCHING:
+    case SPARM_BOXING:
         if (you.strength() > you.dex())
             mprf("Your %s less tough.", you.hands_verb("feel").c_str());
         else

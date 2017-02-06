@@ -3647,7 +3647,7 @@ int slaying_bonus(bool ranged)
     if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
         ret += 4;
 
-    if (you.wearing_ego(EQ_GLOVES, SPARM_PUNCHING) && !you.weapon())
+    if (you.wearing_ego(EQ_GLOVES, SPARM_BOXING) && !you.weapon())
         ret += 4;
 
     ret += 3 * augmentation_amount();
