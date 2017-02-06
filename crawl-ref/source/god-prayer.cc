@@ -139,6 +139,13 @@ void try_god_conversion(god_type god)
         // makes it not take a turn after all.
         god_pitch(god);
     }
+    else
+    {
+        // Already worshipping this god - just print a message.
+        mprf(MSGCH_GOD, "You offer a %sprayer to %s.",
+             you.cannot_speak() ? "silent " : "",
+             god_name(god).c_str());
+    }
 }
 
 int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
