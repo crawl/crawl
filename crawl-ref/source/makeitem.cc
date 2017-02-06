@@ -763,9 +763,12 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // bardings named Boots of xy.
         make_item_randart(item);
 
-        // Don't let quicksilver dragon armour get minuses.
-        if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+        // Don't let unenchantable armour get minuses.
+        if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR
+            || item.sub_type == ARM_SCARF)
+        {
             item.plus = 0;
+        }
 
         return true;
     }
