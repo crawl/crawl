@@ -764,11 +764,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         make_item_randart(item);
 
         // Don't let unenchantable armour get minuses.
-        if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR
-            || item.sub_type == ARM_SCARF)
-        {
+        if (!armour_is_enchantable(item))
             item.plus = 0;
-        }
 
         return true;
     }
@@ -1214,11 +1211,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         item.plus = armour_max_enchant(item);
 
     // Don't let unenchantable armour get minuses.
-    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR
-        || item.sub_type == ARM_SCARF)
-    {
+    if (!armour_is_enchantable(item))
         item.plus = 0;
-    }
 
     // Never give brands to scales or hides, in case of misbehaving vaults.
     if (armour_type_is_hide(static_cast<armour_type>(item.sub_type)))

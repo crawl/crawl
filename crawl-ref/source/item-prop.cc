@@ -1299,6 +1299,19 @@ armour_type hide_for_monster(monster_type mc)
 }
 
 /**
+ * Return whether a piece of armour is enchantable.
+ *
+ * @param item      The item being considered.
+ * @return          The maximum enchantment the item can hold.
+ */
+bool armour_is_enchantable(const item_def &item)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    return item.sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
+        && item.sub_type != ARM_SCARF;
+}
+
+/**
  * Return the enchantment limit of a piece of armour.
  *
  * @param item      The item being considered.
@@ -1309,11 +1322,8 @@ int armour_max_enchant(const item_def &item)
     ASSERT(item.base_type == OBJ_ARMOUR);
 
     // Unenchantables.
-    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR
-        || item.sub_type == ARM_SCARF)
-    {
+    if (!armour_is_enchantable(item))
         return 0;
-    }
 
     const int eq_slot = get_armour_slot(item);
 
