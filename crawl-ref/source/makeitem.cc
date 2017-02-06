@@ -802,7 +802,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
     case ARM_SCARF:
         return random_choose_weighted(3, SPARM_COLD_RESISTANCE,
                                       1, SPARM_SPIRIT_SHIELD,
-                                      1, SPARM_RESISTANCE);
+                                      1, SPARM_RESISTANCE,
+                                      1, SPARM_REPULSION);
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
@@ -979,10 +980,15 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 #endif
                slot == EQ_SHIELD ||
                type == ARM_SCARF || !strict;
+
+    case SPARM_REPULSION:
+        return type == ARM_SCARF;
+
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
     }
+
 
     return true;
 }
