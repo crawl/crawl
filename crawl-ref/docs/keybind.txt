@@ -91,7 +91,6 @@ Player status
 -------------
 a         CMD_USE_ABILITY
 m         CMD_DISPLAY_SKILLS
-p         CMD_PRAY
 A         CMD_DISPLAY_MUTATIONS
 E         CMD_EXPERIENCE_CHECK
 I         CMD_DISPLAY_SPELLS

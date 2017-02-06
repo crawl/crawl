@@ -920,7 +920,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         switch (channel)
         {
         case MSGCH_GOD:
-        case MSGCH_PRAY:
             ret = (Options.channels[channel] == MSGCOL_DEFAULT)
                    ? msg_colour(god_colour(static_cast<god_type>(param)))
                    : msg_colour(god_message_altar_colour(static_cast<god_type>(param)));
@@ -1188,7 +1187,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     {
     case MSGCH_PROMPT:
     case MSGCH_GOD:
-    case MSGCH_PRAY:
     case MSGCH_DURATION:
     case MSGCH_FOOD:
     case MSGCH_RECOVERY:

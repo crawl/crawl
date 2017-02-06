@@ -50,7 +50,6 @@ ignore += .*force your foes to helplessly watch your dance\.
 ignore += .*force your foes to share their pain\.
 ignore += .*merge with and destroy a victim.*
 
-ignore += pray:
 ignore += talk:
 ignore += talk_visual:
 ignore += friend_spell:
