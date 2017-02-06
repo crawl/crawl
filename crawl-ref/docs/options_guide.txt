@@ -19,7 +19,8 @@ The contents of this text are:
                 restart_after_game, restart_after_save,
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
-                crawl_dir, morgue_dir, save_dir, macro_dir, sound
+                crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
+		sound_file_path
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
@@ -402,12 +403,16 @@ sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
 
+hold_sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+	Functionally identical to sound, except the game is paused
+	until the sound finishes playing.
+
 sound_file_path = <path>
         When playing sounds (with the option above), the contents of
         this variable is appended to the start of the path. This is
         intended to make it easier to take one configuration across
         several platforms. These two lines are equivalent to the
-        line above:
+        example above:
              sound_file_path = sound\sounds2\
              sound += LOW HITPOINT WARNING:danger3.wav
         The most recent instance of this option is the one that

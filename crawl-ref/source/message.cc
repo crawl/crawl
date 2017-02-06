@@ -1493,7 +1493,7 @@ static void mpr_check_sound_patterns(const string& message,
         if (sound.pattern.matches(message))
         {
 	    viewwindow();
-            play_sound(sound.soundfile.c_str());
+            play_sound(sound.soundfile.c_str(), sound.interrupt_game);
             break;
         }
     }

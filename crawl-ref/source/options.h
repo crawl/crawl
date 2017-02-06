@@ -46,9 +46,13 @@ struct sound_mapping
 {
     text_pattern pattern;
     string       soundfile;
+    bool         interrupt_game;
+
     bool operator== (const sound_mapping &o) const
     {
-        return pattern == o.pattern && soundfile == o.soundfile;
+        return pattern == o.pattern
+		&& soundfile == o.soundfile
+		&& interrupt_game == o.interrupt_game;
     }
 };
 

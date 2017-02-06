@@ -107,8 +107,10 @@ bool shell_safe(const char *file)
     return match < 0 || !file[match];
 }
 
+// TODO: Make interrupt_game apply to any sound-playing method, not just SOUND_PLAY_COMMAND
+// TODO: Add in-game option for disabling interrupt sounds
 #ifdef USE_SOUND
-void play_sound(const char *file)
+void play_sound(const char *file, bool interrupt_game)
 {
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
@@ -121,7 +123,13 @@ void play_sound(const char *file)
     if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
         && shell_safe(file))
     {
-        snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
+#if defined(HOLD_SOUND_PLAY_COMMAND)
+	if(interrupt_game)
+            snprintf(command, sizeof command, HOLD_SOUND_PLAY_COMMAND, file);
+	else
+#endif
+	    snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
+
         system(OUTS(command));
     }
 #elif defined(USE_SDL)
