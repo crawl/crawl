@@ -1684,8 +1684,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         // Don't list unenchantable armor as +0.
         if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
-                        && sub_type != ARM_SCARF)
+            && sub_type != ARM_SCARF)
+        {
             buff << make_stringf("%+d ", plus);
+        }
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
