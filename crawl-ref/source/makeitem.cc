@@ -814,8 +814,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
         return random_choose_weighted(8, SPARM_NORMAL,
                                       3, SPARM_MAGIC_RESISTANCE,
                                       2, SPARM_INTELLIGENCE,
-                                      2, SPARM_SEE_INVISIBLE,
-                                      1, SPARM_SPIRIT_SHIELD);
+                                      2, SPARM_SEE_INVISIBLE);
 
     case ARM_HELMET:
         return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
