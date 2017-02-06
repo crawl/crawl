@@ -395,6 +395,7 @@ cloak4
 
 scarf1 ARM_SCARF
 scarf2
+scarf3
 
 %sdir item/armour/bardings
 naga_barding_blue ARM_NAGA_BARDING
