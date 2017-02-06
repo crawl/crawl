@@ -731,6 +731,13 @@ Converts all nearby poison into liquid flame, burning poisoned creatures from
 within. It also turns clouds of poison and mephitic gases into flame. The
 caster is not affected directly.
 %%%%
+Ignition spell
+
+All foes in the caster's surroundings are engulfed in balls of fire. The caster
+and their allies are protected from the fire and will never be harmed by this
+spell.
+
+%%%%
 Infestation spell
 
 Calls forth a plague of scarabs, infesting affected creatures for a duration

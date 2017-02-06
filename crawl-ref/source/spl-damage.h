@@ -7,7 +7,9 @@
 struct bolt;
 class dist;
 
+#if TAG_MAJOR_VERSION == 34
 spret_type cast_delayed_fireball(bool fail);
+#endif
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_smitey_damnation(int pow, bolt &beam);
@@ -70,4 +72,6 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail = false);
 size_t shotgun_beam_count(int pow);
 spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
                             bool fail = false);
+
+spret_type cast_ignition(const actor *caster, int pow, bool fail = false);
 #endif

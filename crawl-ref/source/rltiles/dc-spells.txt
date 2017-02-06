@@ -66,6 +66,7 @@ ring_of_flames RING_OF_FLAMES
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
 inner_flame INNER_FLAME
+ignition IGNITION
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
