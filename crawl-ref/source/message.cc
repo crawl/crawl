@@ -36,6 +36,13 @@
 static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
                  bool nojoin=false, bool cap=true);
 
+#ifdef USE_SOUND
+static void mpr_check_sound_patterns(const string& message,
+				     msg_channel_type channel,
+				     int param);
+#endif
+
+
 void mpr(const string &text)
 {
     _mpr(text);
@@ -1352,6 +1359,11 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         more(true);
     if (do_flash_screen)
         flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
+
+    // If we play sound, wait until the corresponding message is printed
+#ifdef USE_SOUND
+    mpr_check_sound_patterns(text, channel, param);
+#endif
 }
 
 static string show_prompt(string prompt)
@@ -1467,20 +1479,26 @@ static void mpr_check_patterns(const string& message,
 
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
+}
 
 #ifdef USE_SOUND
+static void mpr_check_sound_patterns(const string& message,
+									 msg_channel_type channel,
+									 int param)
+{
     for (const sound_mapping &sound : Options.sound_mappings)
     {
         // Maybe we should allow message channel matching as for
         // force_more_message?
         if (sound.pattern.matches(message))
         {
+	    viewwindow();
             play_sound(sound.soundfile.c_str());
             break;
         }
     }
-#endif
 }
+#endif
 
 static bool channel_message_history(msg_channel_type channel)
 {
