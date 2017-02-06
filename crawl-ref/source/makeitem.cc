@@ -1166,6 +1166,12 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
+    // Non-randart scarves always get an ego
+    else if (item.sub_type == ARM_SCARF)
+    {
+        set_item_ego_type(item, OBJ_ARMOUR,
+                          _generate_armour_ego(item, item_level));
+    }
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
                 && !item.is_mundane() || force_good)
@@ -1204,9 +1210,12 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item.plus > armour_max_enchant(item))
         item.plus = armour_max_enchant(item);
 
-    // Don't let quicksilver dragon armour get minuses.
-    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+    // Don't let unenchantable armour get minuses.
+    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR
+        || item.sub_type == ARM_SCARF)
+    {
         item.plus = 0;
+    }
 
     // Never give brands to scales or hides, in case of misbehaving vaults.
     if (armour_type_is_hide(static_cast<armour_type>(item.sub_type)))
