@@ -2507,6 +2507,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "spell_slot"
         && key != "item_slot"
         && key != "ability_slot"
+	&& key != "sound_file_path"
         && key.find("font") == string::npos)
     {
         lowercase(field);
