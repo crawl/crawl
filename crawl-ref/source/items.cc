@@ -934,29 +934,39 @@ void item_check()
     }
 }
 
-/// If the given item is an unknown book, ID it; return whether we did.
-static bool _id_floor_book(item_def &book)
+// Identify the object the player stepped on.
+// Books and manuals are fully identified.
+// Wands are only type-identified.
+static bool _id_floor_item(item_def &item)
 {
-    if (book.base_type != OBJ_BOOKS)
-        return false;
+    if (item.base_type == OBJ_BOOKS)
+    {
+        if (fully_identified(item) && item.sub_type != BOOK_MANUAL)
+            return false;
 
-    if (fully_identified(book) && book.sub_type != BOOK_MANUAL)
-        return false;
-
-    // fix autopickup for previously-unknown books (hack)
-    if (item_needs_autopickup(book))
-        book.props["needs_autopickup"] = true;
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-    mark_had_book(book);
-    return true;
+        // fix autopickup for previously-unknown books (hack)
+        if (item_needs_autopickup(item))
+            item.props["needs_autopickup"] = true;
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        mark_had_book(item);
+        return true;
+    }
+    else if (item.base_type == OBJ_WANDS)
+    {
+        if (!get_ident_type(item))
+        {
+            set_ident_type(item, true);
+            return true;
+        }
+    }
+    return false;
 }
 
-/// Auto-ID whatever spellbooks and manuals the player stands on.
-void id_floor_books()
+/// Auto-ID whatever stuff the player stands on.
+void id_floor_items()
 {
     for (stack_iterator si(you.pos()); si; ++si)
-        if (si->base_type == OBJ_BOOKS)
-            _id_floor_book(*si);
+        _id_floor_item(*si);
 }
 
 void pickup_menu(int item_link)
@@ -2231,7 +2241,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         maybe_identify_base_type(item);
     }
 
-    if (p == you.pos() && _id_floor_book(item))
+    if (p == you.pos() && _id_floor_item(item))
         mprf("You see here %s.", item.name(DESC_A).c_str());
 
     return true;
