@@ -488,7 +488,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             you.props.erase(TEMP_WATERWALK_KEY);
     }
 
-    id_floor_books();
+    id_floor_items();
 
     // Traps go off.
     // (But not when losing flight - i.e., moving into the same tile)
