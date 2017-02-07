@@ -1445,13 +1445,12 @@ static string _describe_armour(const item_def &item, bool verbose)
                            "positive or negative.";
 
             break;
-
+#if TAG_MAJOR_VERSION == 34
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves your effectiveness with ranged "
-                           "weaponry, such as bows and javelins (Slay+4).";
+            description += "It does nothing special.";
             break;
-
+#endif
         // This is only for scarves.
         case SPARM_REPULSION:
             description += "It protects its wearer by repelling missiles.";

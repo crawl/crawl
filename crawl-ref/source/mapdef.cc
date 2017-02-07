@@ -4850,8 +4850,8 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #endif
         "reflection",
         "spirit_shield",
-        "archery",
 #if TAG_MAJOR_VERSION == 34
+        "archery",
         "jumping",
 #endif
         "repulsion",
