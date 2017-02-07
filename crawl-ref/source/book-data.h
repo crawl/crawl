@@ -16,8 +16,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SEARING_RAY,
     SPELL_DAZZLING_SPRAY,
     SPELL_FULMINANT_PRISM,
+    SPELL_FORCE_LANCE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_BATTLESPHERE,
 },
 
 {   // Book of Flames
@@ -185,12 +185,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_DISCHARGE,
-    SPELL_SUMMON_LIGHTNING_SPIRE,
+    SPELL_AIRSTRIKE,
     SPELL_LIGHTNING_BOLT,
 },
 
 {   // Book of the Sky
-    SPELL_AIRSTRIKE,
+    SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_CONJURE_BALL_LIGHTNING,
@@ -264,8 +264,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 {   // Book of Power
-    SPELL_FULMINANT_PRISM,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_BATTLESPHERE,
     SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
