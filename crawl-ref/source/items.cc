@@ -955,7 +955,12 @@ static bool _id_floor_item(item_def &item)
     {
         if (!get_ident_type(item))
         {
+            // If the player doesn't want unknown wands picked up, assume
+            // they won't want this wand after it is identified.
+            bool should_pickup = item_needs_autopickup(item);
             set_ident_type(item, true);
+            if (!should_pickup)
+                you.force_autopickup[item.base_type][item.sub_type] = -1;
             return true;
         }
     }
