@@ -5569,11 +5569,12 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
                                num_sheep == 1 ? "s its" : " their");
     }
 
-    if (!foe.is_player()) // Messaging for non-player targets
+    // Messaging for non-player targets
+    if (!foe.is_player() && you.see_cell(foe.pos()))
     {
         const char* pluralize = num_sheep == 1 ? "s": "";
         const string foe_name = foe.name(DESC_THE);
-        if (you.see_cell(foe.pos()) && sleep_pow)
+        if (sleep_pow)
         {
             mprf(foe.as_monster()->friendly() ? MSGCH_FRIEND_SPELL
                                               : MSGCH_MONSTER_SPELL,
@@ -5592,7 +5593,7 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
             mprf("%s is unaffected.", foe_name.c_str());
         }
     }
-    else
+    else if (foe.is_player())
     {
         mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(),
              sleep_pow ? " You feel drowsy..." : "");
