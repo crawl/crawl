@@ -1023,6 +1023,12 @@ Phantom Mirror spell
 Creates a phantom copy of a creature. The copy will be somewhat fragile, but
 otherwise almost indistinguishable from the original.
 %%%%
+Piercing Shot spell
+
+Allows the caster to throw or fire missiles through any targets they hit,
+potentially hitting all targets in their path until they reach their maximum
+distance. Each missile thrown or fired in this way consumes additional magic.
+%%%%
 Plane Rend spell
 
 Summons some of the greater threats from one of the Snake Pit, the Spider Nest,
