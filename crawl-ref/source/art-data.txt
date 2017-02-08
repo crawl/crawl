@@ -651,12 +651,11 @@ BRAND:    SPWPN_ELECTROCUTION
 
 NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
-PLUS:    +6
+PLUS:    +10
 COLOUR:  BROWN
 TILE:    urand_ignorance
 TILE_EQ: lshield_of_ignorance
-AC:      4
-INT:     -6
+INT:     -4
 LIFE:    1
 
 NAME:    robe of Augmentation
