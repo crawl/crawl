@@ -836,6 +836,35 @@ public:
     }
 };
 
+class PotionDegeneration : public PotionEffect
+{
+private:
+    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
+public:
+    static const PotionDegeneration &instance()
+    {
+        static PotionDegeneration inst; return inst;
+    }
+
+    bool effect(bool=true, int=40, bool=true) const override
+    {
+        mpr("There was something very wrong with that liquid.");
+        bool success = false;
+        for (int i = 0; i < NUM_STATS; ++i)
+            if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
+                success = true;
+        return success;
+    }
+
+    bool quaff(bool was_known) const override
+    {
+        if (effect())
+            xom_is_stimulated( 50 / _xom_factor(was_known));
+        return true;
+    }
+};
+
 // Removed potions
 #if TAG_MAJOR_VERSION == 34
 class PotionDecay : public PotionEffect
@@ -1221,35 +1250,6 @@ public:
     }
 };
 #endif
-
-class PotionDegeneration : public PotionEffect
-{
-private:
-    PotionDegeneration() : PotionEffect(POT_DEGENERATION) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDegeneration);
-public:
-    static const PotionDegeneration &instance()
-    {
-        static PotionDegeneration inst; return inst;
-    }
-
-    bool effect(bool=true, int=40, bool=true) const override
-    {
-        mpr("There was something very wrong with that liquid.");
-        bool success = false;
-        for (int i = 0; i < NUM_STATS; ++i)
-            if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
-                success = true;
-        return success;
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (effect())
-            xom_is_stimulated( 50 / _xom_factor(was_known));
-        return true;
-    }
-};
 
 // placeholder 'buggy' potion
 class PotionStale : public PotionEffect
