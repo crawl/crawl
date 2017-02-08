@@ -273,7 +273,7 @@ unsigned int item_value(item_def item, bool ident)
         else if (!(item.flags & ISFLAG_IDENT_MASK)
                  && (get_equip_desc(item) != 0))
         {
-            valued += 60; // un-id'd "glowing" - arbitrary added cost
+            valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
         if (item_known_cursed(item))
@@ -389,7 +389,7 @@ unsigned int item_value(item_def item, bool ident)
         else if (!(item.flags & ISFLAG_IDENT_MASK)
                  && (get_equip_desc(item) != 0))
         {
-            valued += 60; // un-id'd "glowing" - arbitrary added cost
+            valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
         if (item_known_cursed(item))
