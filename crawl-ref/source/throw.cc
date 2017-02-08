@@ -51,12 +51,25 @@ static bool _fire_validate_item(int selected, string& err);
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
 {
-    return is_launched(&attacker, weapon, projectile) != LRET_FUMBLED
-            && projectile.base_type == OBJ_MISSILES
-            && get_ammo_brand(projectile) == SPMSL_PENETRATION
-           || weapon
-              && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
-              && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
+    // Fumbles are never penetrating.
+    if (is_launched(&attacker, weapon, projectile) == LRET_FUMBLED)
+        return false;
+
+    // Never penetrate if throwing non-ammo.
+    if (projectile.base_type != OBJ_MISSILES)
+        return false;
+
+    // Ammo of penetration penetrates freely.
+    if (get_ammo_brand(projectile) == SPMSL_PENETRATION)
+        return true;
+
+    // Otherwise, check if we're using a penetration launcher.
+    if (weapon && get_weapon_brand(*weapon) == SPWPN_PENETRATION &&
+        is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED)
+        return true;
+
+    // Finally, check if Piercing Shot is up.
+    return attacker.is_player() && is_pierce_active();
 }
 
 bool item_is_quivered(const item_def &item)
@@ -457,6 +470,13 @@ bool is_pproj_active()
 {
     return !you.confused() && you.duration[DUR_PORTAL_PROJECTILE]
            && enough_mp(1, true, false);
+}
+
+// Piercing Shot requires MP per shot.
+bool is_pierce_active()
+{
+    return !you.confused() && you.duration[DUR_PIERCING_SHOT]
+           && enough_mp(2, true, false);
 }
 
 // If item == -1, prompt the user.

@@ -36,6 +36,7 @@ bool fire_warn_if_impossible(bool silent = false);
 int get_next_fire_item(int current, int offset);
 int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 bool is_pproj_active();
+bool is_pierce_active();
 void fire_thing(int item = -1);
 void throw_item_no_quiver();
 
