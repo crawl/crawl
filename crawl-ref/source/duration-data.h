@@ -541,7 +541,10 @@ static const duration_def duration_data[] =
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
-
+    { DUR_PIERCING_SHOT, LIGHTBLUE, "Pierce",
+      "piercing shot", "",
+      "Your projectiles penetrate their targets.", D_DISPELLABLE,
+      {{ "Your projectiles no longer penetrate their targets." }}},
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
 
