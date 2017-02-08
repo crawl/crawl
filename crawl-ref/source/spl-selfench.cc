@@ -388,3 +388,18 @@ spret_type cast_transform(int pow, transformation which_trans, bool fail)
     transform(pow, which_trans);
     return SPRET_SUCCESS;
 }
+
+spret_type cast_piercing_shot(int pow, bool fail)
+{
+    fail_check();
+    if (!you.duration[DUR_PIERCING_SHOT])
+        mpr("You begin enchanting your missiles to pierce their targets.");
+    else
+        mpr("You renew your piercing charm.");
+
+    // Piercing Shot and Portal Projectile are mutually exclusive.
+    you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
+    you.duration[DUR_PORTAL_PROJECTILE] = 0;
+    you.increase_duration(DUR_PIERCING_SHOT, 3 + random2(pow / 2) + random2(pow / 5), 50);
+    return SPRET_SUCCESS;
+}

@@ -774,6 +774,10 @@ spret_type cast_portal_projectile(int pow, bool fail)
         mpr("You begin teleporting projectiles to their destination.");
     else
         mpr("You renew your portal.");
+
+    // Piercing Shot and Portal Projectile are mutually exclusive.
+    you.duration[DUR_PIERCING_SHOT] = 0;
+
     // Calculate the accuracy bonus based on current spellpower.
     you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
     you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
