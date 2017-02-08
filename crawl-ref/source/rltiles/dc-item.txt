@@ -843,13 +843,15 @@ i-magic POT_MAGIC
 i-restore-abilities POT_REMOVEME6
 i-strong-poison POT_REMOVEME7
 i-berserk-rage POT_BERSERK_RAGE
-i-cure-mutation POT_CURE_MUTATION
+# please remove POT_CURE_MUTATION when TAG_MAJOR_VERSION is bumped
+i-cure-mutation POT_REMOVEME8
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
+# please remove POT_BENEFICIAL_MUTATION when TAG_MAJOR_VERSION is bumped
+i-good-mutation POT_REMOVEME9 POT_ID_LAST
 %back none
 %rim 1
 

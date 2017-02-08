@@ -167,7 +167,7 @@ MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
- potion of cure mutation ident:all q:2 / potion of cure mutation q:1 / any potion, \
+ potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly w:20 / fruit, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
@@ -200,7 +200,7 @@ MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
- potion of cure mutation ident:all q:2 / potion of cure mutation q:1 / any potion, \
+ potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly w:20 / fruit, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
@@ -233,7 +233,7 @@ KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
 KMONS: e = patrolling deep elf mage ; long sword ego:holy_wrath
-KITEM: e = potion of curing / potion of heal wounds / potion of cure mutation
+KITEM: e = potion of curing / potion of heal wounds
 KFEAT: B = altar_beogh
 KFEAT: O = altar_okawaru
 KFEAT: T = altar_trog
