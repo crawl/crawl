@@ -1036,7 +1036,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
 KFEAT:  FS = distillery shop use_all count:17 greed:7 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\
              potion of agility q:6 | potion of might q:6 | potion of brilliance q:6 |\
-             potion of cure mutation | potion of cure mutation q:2 | potion of cure mutation q:3 |\
+             potion of mutation | potion of mutation q:2 | potion of mutation q:3 |\
              potion of resistance q:6 | potion of resistance q:6 | potion of magic q:6 |\
              potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5
 KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:7 ; \

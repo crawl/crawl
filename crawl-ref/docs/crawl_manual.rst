@@ -1089,11 +1089,11 @@ Mutations can also be caused by specific potions, very rare trap effects, or
 spells cast by powerful enemies found deep in the dungeon. A few types of monsters
 have mutagenic corpses; these will appear in magenta by default.
 
-It is much more difficult to get rid of bad mutations than to get one. A lucky
-mutation attempt can actually remove mutations. However, the only sure-fire ways
-are to quaff a potion of cure mutation, which will attempt to remove one or more
-random mutations, or to join the gods Zin or Jivya, each of whom provides some
-remedy against mutations.
+It is more difficult to get rid of bad mutations than to get one. Using potions
+of mutations will remove a number of your current mutations, but will give you
+more mutations. These might be better to your taste. However, the only sure-fire
+ways is to join the gods Zin or Jivya, each of whom provides some remedy against
+mutations.
 
 Demonspawn are a special case. Characters of this species get certain special
 mutations as they gain levels; these are listed in cyan. They are permanent and

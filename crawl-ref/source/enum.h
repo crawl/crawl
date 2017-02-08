@@ -3993,7 +3993,9 @@ enum potion_type
     POT_STRONG_POISON,
 #endif
     POT_BERSERK_RAGE,
+#if TAG_MAJOR_VERSION == 34
     POT_CURE_MUTATION,
+#endif
     POT_MUTATION,
     POT_RESISTANCE,
     POT_BLOOD,
@@ -4001,7 +4003,9 @@ enum potion_type
     POT_BLOOD_COAGULATED,
 #endif
     POT_LIGNIFY,
+#if TAG_MAJOR_VERSION == 34
     POT_BENEFICIAL_MUTATION,
+#endif
     NUM_POTIONS
 };
 

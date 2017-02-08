@@ -66,12 +66,12 @@
       elseif s == "B" then i = { "bardiche", "battleaxe", "bolt",
        "book of battle", "book of beasts", "book of burglary", "box of beasts",
        "bread ration", "broad axe", "pair of boots", "potion of berserk rage",
-       "potion of beneficial mutation q:1", "blowgun", "potion of blood",
-       "potion of brilliance", "scroll of blinking", "scroll of brand weapon",
+       "blowgun", "potion of blood", "potion of brilliance",
+       "scroll of blinking", "scroll of brand weapon",
        "manual of bows", "buckler" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips", "club",
-       "book of changes", "book of conjurations", "potion of cure mutation",
+       "book of changes", "book of conjurations",
        "centaur barding", "chain mail", "crystal ball of energy", "cloak",
        "crystal plate armour", "potion of cancellation", "book of clouds",
        "staff of cold", "wand of confusion", "staff of conjuration",
