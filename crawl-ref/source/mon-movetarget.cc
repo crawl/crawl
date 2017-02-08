@@ -1071,7 +1071,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
 
     // XXX: Hack to improve results for now. See FIXME above.
     ray_def ray;
-    if (!find_ray(p1, p2, ray, opc_immob))
+    if (!find_ray(p1, p2, ray, opacity_mons_immob(mon)))
         return false;
 
     while (ray.advance() && ray.pos() != p2)
