@@ -625,6 +625,7 @@ A massive axe that looks like it was carved from a glacier, or possibly calved
 from one. It leaves ice crystals in its wake as it swings through the air, and
 grants its wielder immunity to freezing vapours.
 %%%%
+# TAG_MAJOR_VERSION == 34
 armour of Talos
 
 A huge and weighty suit of bronze plate armour. Only one with a correspondingly
