@@ -101,6 +101,7 @@
     Policarpo Caballero
     Edgar Carballo
     Cedor
+    Cerol
     Rahul Chandra
     Gregory Chereshnev
     Thom Chiovoloni
