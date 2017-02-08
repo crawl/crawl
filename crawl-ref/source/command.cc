@@ -27,6 +27,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "showsymb.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"

@@ -398,10 +398,18 @@ macro_dir = settings/
         It should end with the path delimiter.
 
 sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+        (Requires "Sound support"; check your version info)
         (Ordered list option)
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+        There are certain pre-defined regexes, as well, which can be
+        used to get a sound to trigger for something that cannot
+        otherwise be matched using a regex string. For example,
+        using FIRE_PROMPT_SOUND for the regex will cause Crawl to
+        play a sound whenever the fire prompt is opened. Check
+        sound.h for a full listing of all these pre-defined regex
+        strings.
 
 sound_file_path = <path>
         When playing sounds (with the option above), the contents of
