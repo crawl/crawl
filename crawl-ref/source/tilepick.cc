@@ -2015,9 +2015,6 @@ static tileidx_t _tileidx_weapon(const item_def &item)
 
 static tileidx_t _tileidx_missile_base(const item_def &item)
 {
-    int brand = item.brand;
-    // 0 indicates no ego at all
-
     switch (item.sub_type)
     {
     case MI_STONE:         return TILE_MI_STONE;
