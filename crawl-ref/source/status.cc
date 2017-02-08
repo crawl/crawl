@@ -653,6 +653,13 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case DUR_PIERCING_SHOT:
+    {
+        if (!is_pierce_active())
+            inf->light_colour = DARKGREY;
+        break;
+    }
+
     case DUR_INFUSION:
     {
         if (!enough_mp(1, true, false))

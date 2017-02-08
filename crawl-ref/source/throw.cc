@@ -45,11 +45,13 @@
 #include "viewchar.h"
 #include "view.h"
 
+static bool _is_always_penetrating_attack(const actor& attacker, 
+                          const item_def* weapon, const item_def& projectile);
 static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, string& err);
 
-bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
-                           const item_def& projectile)
+static bool _is_always_penetrating_attack(const actor& attacker, 
+                          const item_def* weapon, const item_def& projectile)
 {
     // Fumbles are never penetrating.
     if (is_launched(&attacker, weapon, projectile) == LRET_FUMBLED)
@@ -68,8 +70,14 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
         is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED)
         return true;
 
-    // Finally, check if Piercing Shot is up.
-    return attacker.is_player() && is_pierce_active();
+    return false;
+}
+
+bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
+                          const item_def& projectile)
+{
+    return _is_always_penetrating_attack(attacker, weapon, projectile) ||
+           is_pierce_active();
 }
 
 bool item_is_quivered(const item_def &item)
@@ -699,6 +707,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     const bool teleport = is_pproj_active();
+    bool pierce = is_pierce_active();
 
     if (you.confused())
     {
@@ -735,6 +744,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     item.slot     = index_to_letter(item.link);
 
     string ammo_name;
+
+    if(_is_always_penetrating_attack(you, you.weapon(), item))
+        pierce = false;
 
     if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
     {
@@ -874,7 +886,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     // Create message.
     mprf("You %s%s %s.",
-          teleport ? "magically " : "",
+          teleport || pierce ? "magically " : "",
           (projected == LRET_FUMBLED ? "toss away" :
            projected == LRET_LAUNCHED ? "shoot" : "throw"),
           ammo_name.c_str());
@@ -922,6 +934,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         if (did_return && thrown_object_destroyed(&item, pbolt.target))
             did_return = false;
     }
+
+
+    if (pierce)
+        dec_mp(2);
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
         did_god_conduct(DID_CHAOS, 2 + random2(3), bow_brand == SPWPN_CHAOS);
