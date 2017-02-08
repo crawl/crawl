@@ -81,10 +81,6 @@ description_level_type description_type_by_name(const char *desc);
 
 bool shell_safe(const char *file);
 
-#ifdef USE_SOUND
-void play_sound(const char *file, bool interrupt_game = false);
-#endif
-
 string unwrap_desc(string desc);
 
 /** Ignore any number of arguments and return true.

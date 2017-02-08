@@ -148,13 +148,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // uncomment the line below and add -lpcre to your makefile.
     // #define REGEX_PCRE
 
-    // Uncomment (and edit as appropriate) to play sounds.
-    //
-    // WARNING: Filenames passed to this command *are not validated in any way*.
-    //
-    //#define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
-    //#define HOLD_SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null"
-
     #include "libunix.h"
 
 #elif defined(TARGET_OS_WINDOWS)

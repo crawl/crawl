@@ -468,6 +468,8 @@ void fire_thing(int item)
     if (item == -1)
         return;
 
+//    play_sound_from_pattern("PROMPT_FIRE");
+
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE)
         && (!you.weapon()
             || is_launched(&you, you.weapon(), you.inv[item]) != LRET_LAUNCHED

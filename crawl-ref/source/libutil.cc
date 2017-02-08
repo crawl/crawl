@@ -40,15 +40,6 @@
     #include <sys/resource.h>
 #endif
 
-#if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
-    #ifdef __ANDROID__
-        #include <SDL_mixer.h>
-    #else
-        #include <SDL2/SDL_mixer.h>
-    #endif
-    Mix_Chunk* sdl_sound_to_play = nullptr;
-#endif
-
 unsigned int isqrt(unsigned int a)
 {
     unsigned int rem = 0, root = 0;
@@ -106,42 +97,6 @@ bool shell_safe(const char *file)
     int match = strcspn(file, "\\`$*?|><&\n!;");
     return match < 0 || !file[match];
 }
-
-// TODO: Make interrupt_game apply to any sound-playing method, not just SOUND_PLAY_COMMAND
-// TODO: Add in-game option for disabling interrupt sounds
-#ifdef USE_SOUND
-void play_sound(const char *file, bool interrupt_game)
-{
-#if defined(WINMM_PLAY_SOUNDS)
-    // Check whether file exists, is readable, etc.?
-    if (file && *file)
-        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
-
-#elif defined(SOUND_PLAY_COMMAND)
-    char command[255];
-    command[0] = 0;
-    if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
-        && shell_safe(file))
-    {
-#if defined(HOLD_SOUND_PLAY_COMMAND)
-	if(interrupt_game)
-            snprintf(command, sizeof command, HOLD_SOUND_PLAY_COMMAND, file);
-	else
-#endif
-	    snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-
-        system(OUTS(command));
-    }
-#elif defined(USE_SDL)
-    if (Mix_Playing(0))
-        Mix_HaltChannel(0);
-    if (sdl_sound_to_play != nullptr)
-        Mix_FreeChunk(sdl_sound_to_play);
-    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
-    Mix_PlayChannel(0, sdl_sound_to_play, 0);
-#endif
-}
-#endif
 
 bool key_is_escape(int key)
 {
