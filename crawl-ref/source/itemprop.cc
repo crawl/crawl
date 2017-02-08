@@ -602,7 +602,7 @@ static const weapon_def Weapon_prop[] =
     #if TAG_MAJOR_VERSION == 34
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,
         SK_THROWING,     SIZE_LITTLE, SIZE_LITTLE, MI_NEEDLE,
-        DAMV_NON_MELEE, 5, 0, 25, {}, },
+        DAMV_NON_MELEE, 0, 0, 0, {}, },
     #endif
 
     { WPN_HUNTING_SLING,     "hunting sling",       5,  2, 12,

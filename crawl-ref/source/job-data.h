@@ -71,7 +71,7 @@ static const map<job_type, job_def> job_data =
     3, 3, 6,
     { SP_TROLL, SP_HALFLING, SP_SPRIGGAN, SP_DEMONSPAWN, SP_VAMPIRE,
       SP_VINE_STALKER, },
-    { "dagger plus:2", "blowgun", "robe", "cloak", "poisoned dart q:8",
+    { "dagger plus:2", "robe", "cloak", "poisoned dart q:8",
       "curare dart q:2" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 2 }, { SK_DODGING, 1 }, { SK_STEALTH, 4 },
