@@ -403,10 +403,6 @@ sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
 
-hold_sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
-	Functionally identical to sound, except the game is paused
-	until the sound finishes playing.
-
 sound_file_path = <path>
         When playing sounds (with the option above), the contents of
         this variable is appended to the start of the path. This is
