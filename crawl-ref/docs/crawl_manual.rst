@@ -1092,7 +1092,7 @@ have mutagenic corpses; these will appear in magenta by default.
 It is more difficult to get rid of bad mutations than to get one. Using potions
 of mutations will remove a number of your current mutations, but will give you
 more mutations. These might be better to your taste. However, the only sure-fire
-ways is to join the gods Zin or Jivya, each of whom provides some remedy against
+ways is to join the gods Zin or Jiyva, each of whom provides some remedy against
 mutations.
 
 Demonspawn are a special case. Characters of this species get certain special

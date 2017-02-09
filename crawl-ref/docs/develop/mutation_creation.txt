@@ -140,7 +140,7 @@ at the end:
         if (player_mutation_level(MUT_MISSING_EYE) //Ru - Sacrifice an Eye
             power = power / 2; //only get half power if you only have half as many eyes.
 
-        if (player_mutation_level(MUT_EYEBALLS)) //Jivya mutation.
+        if (player_mutation_level(MUT_EYEBALLS)) // Jiyva mutation.
             power = power * 4; //if you're all eyes, you're also all eye-lasers!
 
         if (!spell_direction(abild, beam)
