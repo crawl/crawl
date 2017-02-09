@@ -344,17 +344,7 @@ static void _remove_spell_attributes(spell_type spell)
                                  : "your spell is no longer protecting you");
         }
         break;
-    case SPELL_REPEL_MISSILES:
-        if (you.attribute[ATTR_REPEL_MISSILES])
-        {
-            const int orig_defl = you.missile_deflection();
-            you.attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel %s from missiles.",
-                                 you.missile_deflection() < orig_defl
-                                 ? "less protected"
-                                 : "your spell is no longer protecting you");
-        }
-        break;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -362,6 +352,7 @@ static void _remove_spell_attributes(spell_type spell)
             mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         }
         break;
+#endif
     default:
         break;
     }
@@ -480,7 +471,7 @@ int spell_difficulty(spell_type which_spell)
 int spell_levels_required(spell_type which_spell)
 {
     int levels = spell_difficulty(which_spell);
-
+#if TAG_MAJOR_VERSION == 34
     if (which_spell == SPELL_DELAYED_FIREBALL
         && you.has_spell(SPELL_FIREBALL))
     {
@@ -491,6 +482,7 @@ int spell_levels_required(spell_type which_spell)
     {
         levels = 0;
     }
+#endif
 
     return levels;
 }
@@ -1011,6 +1003,7 @@ int spell_effect_noise(spell_type spell)
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_VIOLENT_UNRAVELLING:
+    case SPELL_IGNITION:
         expl_size = 1;
         break;
 
@@ -1177,16 +1170,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "darkness is useless against divine light.";
         break;
 
-    case SPELL_REPEL_MISSILES:
-        if (temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-                     || you.scan_artefacts(ARTP_RMSL, true)
-                     || you.attribute[ATTR_REPEL_MISSILES]
-                     || you.attribute[ATTR_DEFLECT_MISSILES]))
-        {
-            return "you're already repelling missiles.";
-        }
-        break;
-
     case SPELL_DEFLECT_MISSILES:
         if (temp && you.attribute[ATTR_DEFLECT_MISSILES])
             return "you're already deflecting missiles.";
@@ -1242,12 +1225,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you must stand on solid ground to cast this.";
         }
         break;
-
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
             return "you are already charged.";
         break;
-
+#endif
     case SPELL_BORGNJORS_REVIVIFICATION:
         if (temp && you.hp == you.hp_max)
             return "you cannot be healed further.";
@@ -1358,7 +1341,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (get_spell_disciplines(spell) & SPTYP_SUMMONING
         && spell != SPELL_AURA_OF_ABJURATION
-        && spell != SPELL_RECALL
         && player_mutation_level(MUT_NO_LOVE))
     {
         return "you cannot coerce anything to answer your summons.";
@@ -1416,6 +1398,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_INTOXICATE:
+    case SPELL_IGNITION:
         return minRange > LOS_RADIUS;
 
     // Special handling for cloud spells.

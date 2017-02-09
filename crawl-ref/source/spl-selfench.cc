@@ -188,22 +188,11 @@ spret_type corpse_armour(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type missile_prot(int pow, bool fail)
-{
-    fail_check();
-    you.attribute[ATTR_REPEL_MISSILES] = 1;
-    mpr("You feel protected from missiles.");
-    return SPRET_SUCCESS;
-}
-
 spret_type deflection(int pow, bool fail)
 {
     fail_check();
     you.attribute[ATTR_DEFLECT_MISSILES] = 1;
     mpr("You feel very safe from missiles.");
-    // Replace RMsl, if active.
-    if (you.attribute[ATTR_REPEL_MISSILES])
-        you.attribute[ATTR_REPEL_MISSILES] = 0;
 
     return SPRET_SUCCESS;
 }

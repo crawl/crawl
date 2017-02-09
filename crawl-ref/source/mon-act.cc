@@ -2087,7 +2087,6 @@ void monster::struggle_against_net()
         trap_def *trap = trap_at(pos());
         if (trap && trap->type == TRAP_WEB)
         {
-
             if (coinflip())
             {
                 if (you.see_cell(pos()))
@@ -2100,9 +2099,8 @@ void monster::struggle_against_net()
                 }
                 return;
             }
-            simple_monster_message(*this, " pulls away from the web.");
-
         }
+        monster_web_cleanup(*this);
         del_ench(ENCH_HELD);
         return;
     }

@@ -134,6 +134,9 @@ static const armour_def Armour_prop[] =
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
         EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
+    { ARM_SCARF,                "scarf",                  0,   0,   50,
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
+
     { ARM_GLOVES,               "gloves",                 1,   0,   45,
         EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
 
@@ -1296,6 +1299,19 @@ armour_type hide_for_monster(monster_type mc)
 }
 
 /**
+ * Return whether a piece of armour is enchantable.
+ *
+ * @param item      The item being considered.
+ * @return          The maximum enchantment the item can hold.
+ */
+bool armour_is_enchantable(const item_def &item)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    return item.sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR
+        && item.sub_type != ARM_SCARF;
+}
+
+/**
  * Return the enchantment limit of a piece of armour.
  *
  * @param item      The item being considered.
@@ -1305,7 +1321,8 @@ int armour_max_enchant(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+    // Unenchantables.
+    if (!armour_is_enchantable(item))
         return 0;
 
     const int eq_slot = get_armour_slot(item);
@@ -2465,6 +2482,20 @@ int get_armour_res_corr(const item_def &arm)
 
     // intrinsic armour abilities
     return armour_type_prop(arm.sub_type, ARMF_RES_CORR);
+}
+
+int get_armour_repel_missiles(const item_def &arm, bool check_artp)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    // check for ego resistance
+    if (get_armour_ego_type(arm) == SPARM_REPULSION)
+        return true;
+
+    if (check_artp && is_artefact(arm))
+        return artefact_property(arm, ARTP_RMSL);
+
+    return false;
 }
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)

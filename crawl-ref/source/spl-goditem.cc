@@ -325,8 +325,11 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
 {
     // attributes
     static const attribute_type dispellable_attributes[] = {
-        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
-        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+#if TAG_MAJOR_VERSION == 34
+        ATTR_DELAYED_FIREBALL,
+#endif
+        ATTR_REPEL_MISSILES,
+        ATTR_DEFLECT_MISSILES,
     };
 
     for (auto attribute : dispellable_attributes)
@@ -378,9 +381,11 @@ void debuff_player()
     for (auto attr : buffs.attributes)
     {
         you.attribute[attr] = 0;
+#if TAG_MAJOR_VERSION == 34
         if (attr == ATTR_DELAYED_FIREBALL)
             mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         else
+#endif
             need_msg = true;
     }
 

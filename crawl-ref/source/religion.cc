@@ -3881,8 +3881,10 @@ bool god_hates_ability(ability_type ability, god_type god)
     switch (ability)
     {
         case ABIL_BREATHE_FIRE:
+#if TAG_MAJOR_VERSION == 34
         case ABIL_DELAYED_FIREBALL:
             return god == GOD_DITHMENOS;
+#endif
         case ABIL_EVOKE_BERSERK:
             return god == GOD_CHEIBRIADOS;
         default:

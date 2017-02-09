@@ -392,6 +392,7 @@ bool fill_status_info(int status, status_info* inf)
         _describe_stat_zero(inf, STAT_DEX);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case STATUS_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -401,6 +402,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "You have a stored fireball ready to release.";
         }
         break;
+#endif
 
     case STATUS_BONE_ARMOUR:
         if (you.attribute[ATTR_BONE_ARMOUR] > 0)
@@ -1016,6 +1018,7 @@ static void _describe_missiles(status_info* inf)
     else
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
                     || you.scan_artefacts(ARTP_RMSL)
                     || have_passive(passive_t::upgraded_storm_shield);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;

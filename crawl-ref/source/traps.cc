@@ -398,6 +398,7 @@ bool player_caught_in_net()
 
 void check_net_will_hold_monster(monster* mons)
 {
+    ASSERT(mons); // XXX: should be monster &mons
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
         int net = get_trapping_net(mons->pos());
@@ -1128,6 +1129,41 @@ void search_around()
 }
 
 /**
+ * End the ATTR_HELD state & redraw appropriate UI.
+ *
+ * Do NOT call without clearing up nets, webs, etc first!
+ */
+void stop_being_held()
+{
+    you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
+    you.redraw_evasion = true;
+}
+
+/**
+ * Exit a web that's currently holding you.
+ *
+ * @param quiet     Whether to squash messages.
+ */
+void leave_web(bool quiet)
+{
+    const trap_def *trap = trap_at(you.pos());
+    if (!trap || trap->type != TRAP_WEB)
+        return;
+
+    if (trap->ammo_qty == 1) // temp web from e.g. jumpspider/spidersack
+    {
+        if (!quiet)
+            mpr("The web tears apart.");
+        destroy_trap(you.pos());
+    }
+    else if (!quiet)
+        mpr("You disentangle yourself.");
+
+    stop_being_held();
+}
+
+/**
  * Let the player attempt to unstick themself from a web.
  */
 static void _free_self_from_web()
@@ -1144,18 +1180,16 @@ static void _free_self_from_web()
             return;
         }
 
-        mpr("You disentangle yourself.");
+        leave_web();
     }
 
     // whether or not there was a web trap there, you're free now.
-    you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
-    you.redraw_evasion = true;
+    stop_being_held();
 }
 
 void free_self_from_net()
 {
-    int net = get_trapping_net(you.pos());
+    const int net = get_trapping_net(you.pos());
 
     if (net == NON_ITEM)
     {
@@ -1167,7 +1201,7 @@ void free_self_from_net()
     int hold = mitm[net].net_durability;
     dprf("net.net_durability: %d", hold);
 
-    int damage = 1 + random2(4);
+    const int damage = 1 + random2(4);
 
     hold -= damage;
     mitm[net].net_durability = hold;
@@ -1177,10 +1211,7 @@ void free_self_from_net()
         mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
 
         destroy_item(net);
-
-        you.attribute[ATTR_HELD] = 0;
-        you.redraw_quiver = true;
-        you.redraw_evasion = true;
+        stop_being_held();
         return;
     }
 
@@ -1188,6 +1219,30 @@ void free_self_from_net()
         mpr("You tear a large gash into the net.");
     else
         mpr("You struggle against the net.");
+}
+
+/**
+ * Deals with messaging & cleanup for temporary web traps. Does not actually
+ * delete ENCH_HELD!
+ *
+ * @param mons      The monster leaving a web.
+ * @param quiet     Whether to suppress messages.
+ */
+void monster_web_cleanup(const monster &mons, bool quiet)
+{
+    trap_def *trap = trap_at(mons.pos());
+    if (trap && trap->type == TRAP_WEB)
+    {
+        if (trap->ammo_qty == 1)
+        {
+            // temp web from e.g. jumpspider/spidersack
+            if (!quiet)
+                simple_monster_message(mons, " tears the web.");
+            destroy_trap(mons.pos());
+        }
+        else if (!quiet)
+            simple_monster_message(mons, " pulls away from the web.");
+    }
 }
 
 void mons_clear_trapping_net(monster* mon)
@@ -1234,12 +1289,12 @@ void clear_trapping_net()
         return;
 
     const int net = get_trapping_net(you.pos());
-    if (net != NON_ITEM)
+    if (net == NON_ITEM)
+        leave_web(true);
+    else
         free_stationary_net(net);
 
-    you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
-    you.redraw_evasion = true;
+    stop_being_held();
 }
 
 item_def trap_def::generate_trap_item()
@@ -1712,7 +1767,7 @@ bool ensnare(actor *fly)
     // fail to attach and you'll be released after a single turn.
     if (grd(fly->pos()) == DNGN_FLOOR)
     {
-        place_specific_trap(fly->pos(), TRAP_WEB);
+        place_specific_trap(fly->pos(), TRAP_WEB, 1); // 1 ammo = destroyed on exit (hackish)
         if (grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
             && you.see_cell(fly->pos()))
         {

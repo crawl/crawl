@@ -1839,15 +1839,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::spider:
-        if (you.attribute[ATTR_HELD])
-        {
-            trap_def *trap = trap_at(you.pos());
-            if (trap && trap->type == TRAP_WEB)
-            {
-                mpr("You disentangle yourself from the web.");
-                you.attribute[ATTR_HELD] = 0;
-            }
-        }
+        leave_web();
         break;
 
     case transformation::tree:
@@ -1876,7 +1868,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
                 destroy_item(net);
             }
 
-            you.attribute[ATTR_HELD] = 0;
+            stop_being_held();
         }
         break;
 

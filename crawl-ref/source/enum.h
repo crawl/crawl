@@ -221,7 +221,9 @@ enum ability_type
     ABIL_BREATHE_ACID,
     ABIL_BLINK,
     // Others
+#if TAG_MAJOR_VERSION == 34
     ABIL_DELAYED_FIREBALL,
+#endif
     ABIL_END_TRANSFORMATION,
     ABIL_STOP_SINGING, // From song of slaying
 
@@ -482,7 +484,9 @@ enum attribute_type
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_CARD_COUNTDOWN,
     ATTR_BANISHMENT_IMMUNITY,   // banishment immunity until
+#if TAG_MAJOR_VERSION == 34
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
+#endif
     ATTR_HELD,                  // caught in a net or web
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
@@ -532,7 +536,9 @@ enum attribute_type
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
 #endif
     ATTR_BARBS_POW,            // How badly we are currently skewered
+#if TAG_MAJOR_VERSION == 34
     ATTR_REPEL_MISSILES,       // Repel missiles active
+#endif
     ATTR_DEFLECT_MISSILES,     // Deflect missiles active
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
@@ -3987,7 +3993,9 @@ enum potion_type
     POT_STRONG_POISON,
 #endif
     POT_BERSERK_RAGE,
+#if TAG_MAJOR_VERSION == 34
     POT_CURE_MUTATION,
+#endif
     POT_MUTATION,
     POT_RESISTANCE,
     POT_BLOOD,
@@ -3995,7 +4003,9 @@ enum potion_type
     POT_BLOOD_COAGULATED,
 #endif
     POT_LIGNIFY,
+#if TAG_MAJOR_VERSION == 34
     POT_BENEFICIAL_MUTATION,
+#endif
     NUM_POTIONS
 };
 
@@ -4283,8 +4293,8 @@ enum spell_type : int
     SPELL_MAGIC_DART,
     SPELL_FIREBALL,
     SPELL_APPORTATION,
-    SPELL_DELAYED_FIREBALL,
 #if TAG_MAJOR_VERSION == 34
+    SPELL_DELAYED_FIREBALL,
     SPELL_STRIKING,
 #endif
     SPELL_CONJURE_FLAME,
@@ -4729,6 +4739,7 @@ enum spell_type : int
     SPELL_RANDOM_EFFECTS,
     SPELL_POISONOUS_VAPOURS,
     SPELL_RING_OF_THUNDER,
+    SPELL_IGNITION,
     NUM_SPELLS
 };
 

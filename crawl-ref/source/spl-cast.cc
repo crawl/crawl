@@ -1050,6 +1050,7 @@ static void _try_monster_cast(spell_type spell, int powc,
 
 static void _maybe_cancel_repeat(spell_type spell)
 {
+#if TAG_MAJOR_VERSION == 34
     switch (spell)
     {
     case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
@@ -1059,6 +1060,7 @@ static void _maybe_cancel_repeat(spell_type spell)
     default:
         break;
     }
+#endif
 }
 
 static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
@@ -1611,8 +1613,10 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_DOWN_DAMNATION:
         return cast_smitey_damnation(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
+#endif
 
     // LOS spells
 
@@ -1672,6 +1676,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CLOUD_CONE:
         return cast_cloud_cone(&you, powc, target, fail);
+
+    case SPELL_IGNITION:
+        return cast_ignition(&you, powc, fail);
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
@@ -1816,9 +1823,6 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     // General enhancement.
     case SPELL_REGENERATION:
         return cast_regen(powc, fail);
-
-    case SPELL_REPEL_MISSILES:
-        return missile_prot(powc, fail);
 
     case SPELL_DEFLECT_MISSILES:
         return deflection(powc, fail);

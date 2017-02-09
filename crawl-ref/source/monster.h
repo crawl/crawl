@@ -1,6 +1,8 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
+#include <functional>
+
 #include "actor.h"
 #include "mon-ench.h"
 #include "spl-util.h"

@@ -182,7 +182,7 @@ function general_item_setup(e)
           potion of haste ident:all /\
           potion of resistance ident:all w:5 / potion of brilliance ident:all /\
           potion of berserk rage ident:all /\
-          potion of cure mutation ident:all")
+          potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all /\
           scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of recharging ident:all /\
@@ -512,7 +512,7 @@ function coven_setup(e)
   e.kitem("g = staff of energy ident:all")
   e.kitem("h = staff of power ident:all")
   e.kitem("i = crystal ball of energy")
-  e.kitem("j = potion of cure mutation ident:all")
+  e.kitem("j = potion of mutation ident:all")
   e.lua_marker('~', props_marker {
            door_description_suffix=" to the Coven (Very Hard)",
            })

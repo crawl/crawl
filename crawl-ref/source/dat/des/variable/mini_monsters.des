@@ -6453,6 +6453,55 @@ MAP
 ...........
 ENDMAP
 
+NAME:    chequers_guarded_unrand_ignorance
+DEPTH:   D:7-12, Orc
+TAGS:    no_monster_gen no_item_gen
+: if you.unrands("large_shield_of_ignorance") then
+ITEM:    large shield randart no_pickup
+: else
+ITEM:    large_shield_of_ignorance no_pickup
+: end
+MONS:    orange crystal statue
+MAP
+...........
+.cccc=cccc.
+.c1.....1c.
+.c.c...c.c.
+.c.......c.
+.n...d...n.
+.c.......c.
+.c.c...c.c.
+.c1.....1c.
+.cncc=cccc.
+...........
+ENDMAP
+
+NAME:    chequers_guarded_unrand_mask_of_the_dragon
+DEPTH:   Zot, !Zot:$
+TAGS:    no_monster_gen no_item_gen transparent
+: if you.unrands("mask_of_the_dragon") then
+ITEM:    hat randart no_pickup
+: else
+ITEM:    mask_of_the_dragon no_pickup
+: end
+MONS:    nonbase draconian, storm dragon, shadow dragon, golden dragon, ghost moth
+NSUBST:  . = 6:1 / 4:5 / 2:2 / 2:3 / 2:4
+MAP
+   @@     ccccccc
+  c==cccccc.....c
+  cc.........c..cc
+    c.......ccc..cc
+     c.....cccc...cc
+     c.....cc......c
+     c......cd.....n
+     c.....cc......c
+     c.....cccc...cc
+    c.......ccc..cc
+  cc.........c..cc
+  c==cccccc.....c
+   @@     ccccccc
+ENDMAP
+
 ###################################################################
 #
 # <<9>> The classics.

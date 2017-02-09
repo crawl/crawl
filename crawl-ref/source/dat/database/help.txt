@@ -76,7 +76,7 @@ name). In the list of search results, you can select a search result by its
 hotkey to travel to its location.
 
 Some examples of search strings:
-<w>cure mutation</w> find all potions of cure mutation, including potions in shops.
+<w>mutation</w>      find all potions of mutation, including potions in shops.
 <w>royal</w>         finds every single royal jelly and heaps of royal jellies.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.

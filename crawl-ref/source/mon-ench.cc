@@ -679,7 +679,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
             if (!quiet)
                 simple_monster_message(*this, " breaks free.");
+            break;
         }
+
+        monster_web_cleanup(*this, true);
         break;
     }
     case ENCH_FAKE_ABJURATION:

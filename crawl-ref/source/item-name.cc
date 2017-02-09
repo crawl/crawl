@@ -560,6 +560,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_REPULSION:         return "repulsion";
         default:                      return "bugginess";
         }
     }
@@ -592,6 +593,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_REPULSION:         return "repulsion";
         default:                      return "buggy";
         }
     }
@@ -676,7 +678,9 @@ const char* potion_type_name(int potiontype)
     case POT_RESTORE_ABILITIES: return "restore abilities";
 #endif
     case POT_BERSERK_RAGE:      return "berserk rage";
+#if TAG_MAJOR_VERSION == 34
     case POT_CURE_MUTATION:     return "cure mutation";
+#endif
     case POT_MUTATION:          return "mutation";
     case POT_BLOOD:             return "blood";
 #if TAG_MAJOR_VERSION == 34
@@ -684,7 +688,9 @@ const char* potion_type_name(int potiontype)
 #endif
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
+#if TAG_MAJOR_VERSION == 34
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
+#endif
     default:                    return "bugginess";
     }
 }
@@ -1680,8 +1686,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "enchanted ";
         }
 
-        // Don't list QDA as +0.
-        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR)
+        // Don't list unenchantable armor as +0.
+        if (know_pluses && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
@@ -1702,6 +1708,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
+                    || item_typ == ARM_SCARF
                     || get_armour_slot(*this) == EQ_HELMET
                        && !is_hard_helmet(*this))
                 {
@@ -3206,16 +3213,18 @@ bool is_good_item(const item_def &item)
             return false;
         switch (item.sub_type)
         {
-        case POT_CURE_MUTATION:
 #if TAG_MAJOR_VERSION == 34
+        case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
         case POT_EXPERIENCE:
             return true;
+#if TAG_MAJOR_VERSION == 34
         case POT_BENEFICIAL_MUTATION:
             return you.species != SP_GHOUL; // Mummies are already handled
+#endif
         default:
             return false;
         }
@@ -3542,14 +3551,14 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_HASTE:
             return you.species == SP_FORMICID;
 
-        case POT_CURE_MUTATION:
-        case POT_MUTATION:
-        case POT_BENEFICIAL_MUTATION:
 #if TAG_MAJOR_VERSION == 34
+        case POT_CURE_MUTATION:
+        case POT_BENEFICIAL_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
+        case POT_MUTATION:
             return !you.can_safely_mutate(temp);
 
         case POT_LIGNIFY:

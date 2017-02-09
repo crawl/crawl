@@ -159,7 +159,9 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
     switch (slot_type)
     {
         case EQ_CLOAK:
-            return ARM_CLOAK;
+            if (you_can_wear(EQ_CLOAK) == MB_TRUE)
+                return random_choose(ARM_CLOAK, ARM_SCARF);
+            return ARM_SCARF;
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_BOOTS:

@@ -15,7 +15,6 @@ enum msg_channel_type
     MSGCH_FRIEND_ACTION,    // friendly monsters taking actions
     MSGCH_PROMPT,           // various prompts
     MSGCH_GOD,              // god/religion (param is god)
-    MSGCH_PRAY,             // praying messages (param is god)
     MSGCH_DURATION,         // effect down/warnings
     MSGCH_DANGER,           // serious life threats (ie very large HP attacks)
     MSGCH_WARN,             // much less serious threats

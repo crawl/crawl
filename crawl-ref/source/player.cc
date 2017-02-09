@@ -488,7 +488,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             you.props.erase(TEMP_WATERWALK_KEY);
     }
 
-    id_floor_books();
+    id_floor_items();
 
     // Traps go off.
     // (But not when losing flight - i.e., moving into the same tile)
@@ -741,6 +741,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     {
     case EQ_CLOAK:
         dummy.sub_type = ARM_CLOAK;
+        alternate.sub_type = ARM_SCARF;
         break;
 
     case EQ_GLOVES:
@@ -1288,23 +1289,28 @@ int player_spell_levels()
 {
     int sl = min(player_total_spell_levels(), 99);
 
+#if TAG_MAJOR_VERSION == 34
     bool fireball = false;
     bool delayed_fireball = false;
+#endif
 
     for (const spell_type spell : you.spells)
     {
+#if TAG_MAJOR_VERSION == 34
         if (spell == SPELL_FIREBALL)
             fireball = true;
         else if (spell == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
-
+#endif
         if (spell != SPELL_NO_SPELL)
             sl -= spell_difficulty(spell);
     }
 
+#if TAG_MAJOR_VERSION == 34
     // Fireball is free for characters with delayed fireball
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
+#endif
 
     // Note: This can happen because of draining. -- bwr
     if (sl < 0)
@@ -5560,6 +5566,7 @@ bool player::cannot_speak() const
 
 static const string shout_verbs[] = {"shout", "yell", "scream"};
 static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
+static const string frog_shout_verbs[] = {"ribbit", "croak", "bellow"};
 
 /**
  * What verb should be used to describe the player's shouting?
@@ -5574,6 +5581,8 @@ string player::shout_verb(bool directed) const
 
     const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
 
+    if (species == SP_BARACHIAN)
+        return frog_shout_verbs[screaminess];
     if (species != SP_FELID)
         return shout_verbs[screaminess];
     if (directed && screaminess == 0)
@@ -5728,8 +5737,8 @@ int player::missile_deflection() const
     if (attribute[ATTR_DEFLECT_MISSILES])
         return 2;
 
-    if (attribute[ATTR_REPEL_MISSILES]
-        || player_mutation_level(MUT_DISTORTION_FIELD) == 3
+    if (player_mutation_level(MUT_DISTORTION_FIELD) == 3
+        || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
         || scan_artefacts(ARTP_RMSL, true)
         || have_passive(passive_t::upgraded_storm_shield))
     {
@@ -5741,35 +5750,14 @@ int player::missile_deflection() const
 
 void player::ablate_deflection()
 {
-    const int orig_defl = missile_deflection();
-
-    bool did_something = false;
     if (attribute[ATTR_DEFLECT_MISSILES])
     {
         const int power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
         if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_DEFLECT_MISSILES] = 0;
-            did_something = true;
+            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
         }
-    }
-    else if (attribute[ATTR_REPEL_MISSILES])
-    {
-        const int power = calc_spell_power(SPELL_REPEL_MISSILES, true);
-        if (one_chance_in(2 + power / 8))
-        {
-            attribute[ATTR_REPEL_MISSILES] = 0;
-            did_something = true;
-        }
-    }
-
-    if (did_something)
-    {
-        // We might also have the effect from a non-expiring source.
-        mprf(MSGCH_DURATION, "You feel %s from missiles.",
-                             missile_deflection() < orig_defl
-                                 ? "less protected"
-                                 : "your spell is no longer protecting you");
     }
 }
 
@@ -6812,24 +6800,21 @@ void player::paralyse(actor *who, int str, string source)
 
     int &paralysis(duration[DUR_PARALYSIS]);
 
-    if (source.empty() && who)
+    const bool use_actor_name = source.empty() && who != nullptr;
+    if (use_actor_name)
         source = who->name(DESC_A);
 
     if (!paralysis && !source.empty())
     {
         take_note(Note(NOTE_PARALYSIS, str, 0, source));
-        props["paralysed_by"] = source;
+        // use the real name here even for invisible monsters
+        props["paralysed_by"] = use_actor_name ? who->name(DESC_A, true)
+                                               : source;
     }
 
-    mprf("You %s the ability to move!",
-         paralysis ? "still don't have" : "suddenly lose");
+    mpr("You suddenly lose the ability to move!");
 
-    str *= BASELINE_DELAY;
-    if (str > paralysis && (paralysis < 3 || one_chance_in(paralysis)))
-        paralysis = str;
-
-    if (paralysis > 13 * BASELINE_DELAY)
-        paralysis = 13 * BASELINE_DELAY;
+    paralysis = min(str, 13) * BASELINE_DELAY;
 
     stop_constricting_all();
     end_searing_ray();

@@ -1,4 +1,4 @@
-Stone Soup 0.20 (up to 0.20-a0-484-g71649f8)
+Stone Soup 0.20 (up to 0.20-a0-617-g89cf17a)
 --------------------------------------------
 
 Highlights
@@ -9,7 +9,9 @@ Highlights
 
 Branches, Environment
 ---------------------
-* The Slime treasure vault's walls disappear partially on their master's death.
+* The Slime treasure vault's walls are breached on their master's death.
+* Web traps created in play (by e.g. jumping spiders) are destroyed on
+  escape.
 
 Character
 ---------
@@ -31,15 +33,20 @@ Gods
   - Cleansing Flame is more effective against non-evil enemies.
   - All bonus-damage 'stab' attacks are prevented.
   - Poison is no longer forbidden.
+* Minor Elyvilon wrath effects removed; enemy lifesaving strengthened.
 * Nemelex's wrath reclaims all decks, rather than sabotaging them.
 
 Interface
 ---------
 * Monsters' melee attacks are now included in their descriptions.
 * The player's odds of succeeding with melee confusion attacks is displayed.
+* auto_butcher can be configured to trigger on different hunger levels.
 
 Items
 -----
+* New item type: scarves, occupying the cloak slot.
+  - Scarves give 0 AC and cannot be enchanted, but always have an ego.
+  - Scarf egos: rC+, Spirit Shield, Resistance, rMsl.
 * Evocations:
   - New wand types: Clouds and Scattershot.
   - New misc item: the Lightning Rod, a 4-charge XP evocable.
@@ -48,11 +55,18 @@ Items
   - Wands of disintegration no longer destroy terrain.
   - Wands of digging can now destroy statues.
   - Wand and miscellaneous acquirement merged into 'evocations'.
+* Unrandarts:
+  - Amulet of Bloodlust: Slay+6 (was +3), MR++ (was MR+).
+  - Shield of Ignorance: Now +10 {Int-4, rN+}. *Curse, AC+4 removed.
+  - Sword of Jihad: renamed to Zealot's Sword.
+  - Sceptre of Torment only torments on-hit, rather than randomly.
+* All types of food take one turn to eat.
 * Removed:
   - Wands of heal wounds, haste, teleportation, and slowing.
   - Rods.
   - Discs of Storms.
   - The Hat of the High Council.
+  - Beef jerky and pizza.
 
 Monsters
 --------
@@ -69,11 +83,18 @@ Monsters
 Spells
 ------
 * New spell: Poisonous Vapours (L2 Poison/Air); creates an extremely short-
-  duration poison cloud on a targeted creature.
+  duration poison cloud on a targeted creature. Appears in the VM book.
+* New spell: Ignition (L8 Fire). Drops a Fireball on every monster in line of
+  sight. The caster and their allies are unaffected.
+* Book of Conjurations: Battlesphere replaced with Force Lance.
+* Book of Air: Repel Missiles replaced with Airstrike.
 * Confusing Touch is less effective, especially against high-HD enemies.
 * Sandblast consumes stones directly from inventory, but no longer functions
   without ammo, and cannot consume large rocks.
-* Removed: Poisonous Cloud.
+* Removed:
+    - Delayed Fireball.
+    - Poisonous Cloud
+    - Repel Missiles.
 
 
 Stone Soup 0.19.1 (20161123)

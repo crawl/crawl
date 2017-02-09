@@ -76,13 +76,13 @@ The contents of this text are:
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
-                plain, prompt, god, pray, duration, danger, food, warning,
-                recovery, talk, talk_visual, timed_portal, sound,
-                intrinsic_gain, mutation, monster_spell, monster_enchant,
-                monster_warning, friend_spell, friend_enchant, friend_action,
-                monster_damage, monster_target, banishment, rotten_meat,
-                equipment, floor, multiturn, examine, examine_filter,
-                diagnostic, error, tutorial, orb, hell_effect, dgl_message
+                plain, prompt, god, duration, danger, food, warning, recovery,
+                talk, talk_visual, timed_portal, sound, intrinsic_gain,
+                mutation, monster_spell, monster_enchant, monster_warning,
+                friend_spell, friend_enchant, friend_action, monster_damage,
+                monster_target, banishment, rotten_meat, equipment, floor,
+                multiturn, examine, examine_filter, diagnostic, error,
+                tutorial, orb, hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -1688,7 +1688,6 @@ CHANNEL_NAME can currently be one of these:
    plain           = regular text (and things "uncoloured")
    prompt          = input prompts to the player
    god             = messages from the gods
-   pray            = standard praying messages
    duration        = messages about character spells/effects wearing off
    danger          = serious threats to the character's existence
    food            = warnings about food

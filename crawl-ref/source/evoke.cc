@@ -867,7 +867,7 @@ static bool _sack_of_spiders(item_def &sack)
                 if (trap && trap->type == TRAP_WEB)
                     destroy_trap((*mi)->pos());
 
-                place_specific_trap((*mi)->pos(), TRAP_WEB);
+                place_specific_trap((*mi)->pos(), TRAP_WEB, 1); // 1 ammo = temp
                 // Reveal the trap
                 grd((*mi)->pos()) = DNGN_TRAP_WEB;
                 trap = trap_at((*mi)->pos());

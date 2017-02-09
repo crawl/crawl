@@ -468,11 +468,11 @@ static msg_colour_type _str_to_channel_colour(const string &str)
 
 static const string message_channel_names[] =
 {
-    "plain", "friend_action", "prompt", "god", "pray", "duration", "danger",
-    "warning", "food", "recovery", "sound", "talk", "talk_visual",
-    "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
-    "friend_spell", "friend_enchant", "monster_damage", "monster_target",
-    "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
+    "plain", "friend_action", "prompt", "god", "duration", "danger", "warning",
+    "food", "recovery", "sound", "talk", "talk_visual", "intrinsic_gain",
+    "mutation", "monster_spell", "monster_enchant", "friend_spell",
+    "friend_enchant", "monster_damage", "monster_target", "banishment",
+    "rotten_meat", "equipment", "floor", "multiturn", "examine",
     "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal",
     "hell_effect", "monster_warning", "dgl_message",
 };
