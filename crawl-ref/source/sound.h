@@ -14,7 +14,7 @@
 //
 // WARNING: Filenames passed to this command *are not validated in any way*.
 //
-#define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
+//#define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
 
 // Uncomment this to enable playing sounds that play sounds that pause the
 // gameplay until they finish.
