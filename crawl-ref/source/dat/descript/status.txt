@@ -414,6 +414,12 @@ PProj status
 You are teleporting fired or thrown missiles directly to their targets with
 increased accuracy, at the cost of a small amount of magic for each missile.
 %%%%
+Pierce status
+
+You are enchanting your fired or thrown missiles to penetrate their targets,
+potentially hitting everything in their path and bypassing shields. This comes
+at the cost of some magic for each missile.
+%%%%
 Forest status
 
 You are calling a forested plane into temporary existence, and awakening nearby
