@@ -1,0 +1,319 @@
+Written by Cerol, 2017/02/09
+
+Before we get to modding species in my set of tutorials, we need to
+cover mutations and abilities first. All of a species innate abilities
+are handled by mutations. Some grant stat changes, others grant
+abilities, but they all use the same framework.
+
+We start off as before, by editing enum.h to add the entry for our new
+mutation. This time, we're updating mutation_data.h in the same way,
+putting our new entry right above the NUM_MUTATIONS magic entry. Note
+that if you're adding multiple mutations (or anything, really) it
+doesn't matter which order they get added in, as long as they don't
+replace the spot any existing mutation had.
+
+    #if TAG_MAJOR_VERSION == 34
+        MUT_STURDY_FRAME,
+        MUT_SANGUINE_ARMOUR,
+    #endif
+    MUT_LASER_EYES, //first new entry
+    MUT_PREHENSILE_BEARD, //second new entry
+    NUM_MUTATIONS,
+    RANDOM_MUTATION,
+
+There's more special cases for mutations below RANDOM_MUTATION than we
+saw for jobs, but those are for code that adds or removes mutations in
+play. We aren't concerned with those now.
+
+The second place we'll handle code is mutation-data.h. Much less happens
+here than in other structs of similar purpose, but it's similarly nicely
+documented. Most of the actual work for mutations is checked in the
+relevant part of the code elsewhere in the game. This mostly handles how
+many levels your mutation has and the text for them.
+
+    struct mutation_def
+    {
+        mutation_type mutation;
+        short       weight;     ///< Commonality of the mutation;
+                                /// bigger = appears more often.
+        short       levels;     ///< The number of levels of the mutation.
+        mutflags    uses;       ///< Bitfield holding types of effects that
+                                ///  grant this mutation (mutflag::*)
+        bool        form_based; ///< Mutation is suppressed when shapechanged.
+        const char* short_desc; ///< What appears on the '%' screen.
+        const char* have[3];    ///< What appears on the 'A' screen.
+        const char* gain[3];    ///< Message when you gain the mutation.
+        const char* lose[3];    ///< Message when you lose the mutation.
+    };
+
+Again, copy and paste an existing one to minimize mistakes in structure:
+
+    { MUT_LASER_EYES, 2, 2, mutflag::GOOD, false,
+      "laser eyes",
+
+      {"You can shoot laser beams from your eyes.",
+       "You can shoot BIGGER laser beams from your eyes.",
+       ""},
+
+      {"Your eyes burn with power.",
+       "Your burning eyes intensify."
+       ""},
+
+      {"Your eyes feel refreshed and cease burning.",
+       "Your eyes relax and burn less.",
+       ""},
+    },
+
+    { MUT_PREHENSILE_BEARD, 1, 1, mutflag::GOOD, false,
+      "prehensile beard",
+
+      {"Your beard can move around on its own.",
+       "",
+       ""},
+
+      {"Your beard gains a will of its own.",
+      ""
+      ""},
+
+      {"Your beard shaves itself off in shame.",
+       "",
+       ""},
+    },
+
+We're going to have the laser eyes mutation be an activateable ability,
+and prehensile beard will be yet another off-hand attack passive power.
+These aren't fantastically clever mutations, but they'll illustrate how
+to implement your own.
+
+We can look at the naga's spit poison ability as the closest thing in
+place to our laser eyes power. We'll search for that mutation's name
+[MUT_SPIT_POISON] and we see that it's checked in ability.cc,
+mutation.cc, and tags.cc outside of the mutation and species definition
+blocks. Lucky for us, tsgs.cc is for save file compatibility across
+versions, so we can ignore it for our new mutations. Were we editing
+levels of an existing mutation, we might want to update tags.cc as well
+to handle saves to keep them in line with the current range of levels.
+
+For our laser eyes active ability, we need add an entry in enum.h again,
+this time to the ability_type enum. This list is nicely organized right
+now, but we should add our entry to the end right before NUM_ABILITIES
+to minimize any possible save compatibility issue. I'll skip cutting and
+pasting yet another block of code, but our name is ABIL_LASER_EYES.
+
+Next, in ability.cc, we find that there's an array called Ability_List[].
+The entries in it aren't sorted the same as the enum, but that's ok.
+We'll still add a new entry to the bottom. The actual entries follow
+this struct:
+
+    // Structure for representing an ability:
+    struct ability_def
+    {
+        ability_type     ability;
+        const char *     name;
+        unsigned int     mp_cost;        // magic cost of ability
+        scaling_cost     hp_cost;        // hit point cost of ability
+        unsigned int     food_cost;      // + rand2avg(food_cost, 2)
+        generic_cost     piety_cost;     // + random2((piety_cost + 1) / 2 + 1)
+        failure_info     failure;        // calculator for failure odds
+        ability_flags    flags;          // used for additional cost notices
+    };
+
+Here we see there's 2 different random rolls involving different costs,
+2 static costs that won't change, and flags for other costs. Let's add
+our own, similar to ABIL_SPIT_POISON:
+
+    { ABIL_LASER_EYES, "Shoot Eye Lasers",
+        1, 0, 50, 0, {FAIL_XL, 20, 1}, abflag::NONE },
+
+This ability will cost us about 50 food and 1 MP to use, and the success
+chance is only attached to our character level, not any skill. Farther
+down, in, the _do_ability function, we see the master switch() statement
+that handles ability use. We'll add ours in here, and order does not
+matter for this one, so we'll place it by similiar abilities instead of
+at the end:
+
+    case ABIL_LASER_EYES:      // eye lasers
+    {
+        int power = 25 + (you.experience_level * 2 * player_mutation_level(MUT_LASER_EYES);
+        beam.range = _calc_breath_ability_range(abil.ability);
+
+        if (player_mutation_level(MUT_MISSING_EYE) //Ru - Sacrifice an Eye
+            power = power / 2; //only get half power if you only have half as many eyes.
+
+        if (player_mutation_level(MUT_EYEBALLS)) //Jivya mutation.
+            power = power * 4; //if you're all eyes, you're also all eye-lasers!
+
+        if (!spell_direction(abild, beam)
+            || !player_tracer(ZAP_DISINTEGRATE, power, beam))
+        {
+            return SPRET_ABORT;
+        }
+        else
+        {
+            fail_check();
+            zapping(ZAP_DISINTEGRATE, power, beam);
+        }
+        break;
+    }
+
+In this case, I'm being lazy and using an existing spell for my laser
+eyes' effect, and the casting power gets slightly stronger every level,
+and doubles if I have 2 levels instead of 1. I could create a new spell,
+and a new zap_type entry to match it, but that's another post.
+
+You may also want to update the your_talents() or find_ability_slot()
+blocks of ability.cc to set the letter for your ability if it should
+have its own static letter. We won't this time, so laser eyes will
+simply go in the next open letter slot for the character. In addition,
+we also need to add an entry to _calc_breath_ability_range() for our
+ranged ability.
+
+    case ABIL_BREATHE_STEAM:        return 6;
+    case ABIL_SPIT_POISON:          return 5;
+    case ABIL_BREATHE_POISON:       return 6;
+    case ABIL_LASER_EYES:           return 7; //7 is max for Line of
+                                              //Sight, so that's how far
+                                              //our eyes can work.
+
+If you have an ability that might not always be possible to activate
+(like a breath weapon, or stopping flight over deep water), you need to
+go to _check_ability_possible() and add a check there. Laser eyes
+shouldn't have any such conditions. We may also need to add the ability
+as a talent (yet another term, this one means 'activateable ability' as
+I've been using it here) in the your_talents function like so:
+
+    if (player_mutation_level(MUT_LASER_EYES) > 0)
+        _add_talent(talents, ABIL_LASER_EYES, check_confused);
+
+You can do all sorts of complicated checks here, and the vampire part
+should be a good example of how complex you might want to get at worst.
+Note that deity-granted talents will be added automatically, and don't
+appear in this block of code. We could also edit find_ability_slot() if
+we wanted to assign a set letter to our ability, but I don't currently
+want to do that for a randomly acquired mutation.
+
+That should be all of the required steps for an active ability.
+
+Now, let's look at our passive power, prehensile beard. Again, this is a
+1-level copy of the horns/hooves/beak/etc mutations for demonstration
+purposes, so we can search for MUT_HORNS and see it gets checked in
+itemuse.cc, melee_attack.cc, mutation.cc, tiledoll.cc, and transform.cc
+in addition to the files we handled at the beginning.
+
+transform.cc handles gaining MUT_HORNS via the Beastly Appendage spell,
+so we won't need to copy that part. All of the mutation.cc entries
+involve conflicting mutations and gear slots, and the item-use.cc
+entires stop you from equipping gear that won't fit over horns. This is
+worth taking a look at, especially if you want to do similar body mods
+like new scale mutations, or blade-hands, or something else that should
+replace a piece of gear. We'll assume that beards can be tucked through
+the facemask or bottom of a helmet and won't conflict with equipment.
+tiledoll.cc handles the player character's tile icon in tiles mode. We
+should update that to be a good citizen, but I don't want to worry about
+the complexity of displaying a layered icon correctly in this tutorial.
+
+That leaves melee_attack.cc as where the meat of the mutation goes. The
+good news is that we can make a copy of already frequently implemented
+code. First let's copy this auxilliary attack class and modify it, then
+make an instance of our new class, and then check for our new attack
+along with the other auxilliary attacks:
+
+    //CREATE THIS:
+    class AuxBeard: public AuxAttackType
+    {
+    public:
+        AuxBeard()
+        : AuxAttackType(9, "beard-slap") { }; //base damage, then display name.
+
+        int get_damage() const override
+        {
+            //dwarven beards are just as strong as their dwarf in many cases.
+            return damage + you.species == SP_DEEP_DWARF ? 20 : 1;
+        }
+    };
+
+    //ALSO CREATE THIS
+    static const AuxBeard        AUX_BEARD = AuxBeard();
+
+    //UPDATE BOTTOM OF THIS LIST
+    static const AuxAttackType* const aux_attack_types[] =
+    {
+        &AUX_CONSTRICT,
+        &AUX_KICK,
+        &AUX_HEADBUTT,
+        &AUX_PECK,
+        &AUX_TAILSLAP,
+        &AUX_PUNCH,
+        &AUX_BITE,
+        &AUX_PSEUDOPODS,
+        &AUX_TENTACLES,
+        &AUX_BEARD,
+    };
+
+    //ADD A CASE TO THIS FUNCTION:
+    bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
+    {
+        if (atk != UNAT_CONSTRICT
+            && you.strength() + you.dex() <= random2(50))
+        {
+            return false;
+        }
+
+        switch (atk)
+        {
+        case UNAT_CONSTRICT:
+            return player_mutation_level(MUT_CONSTRICTING_TAIL)
+                    || you.species == SP_OCTOPODE && you.has_usable_tentacle();
+
+        case UNAT_BEARD:
+            return player_mutation_level(MUT_PREHENSILE_BEARD)
+        //REST OF THE FUNCTION TRIMMED FOR SPACE
+
+Now we have to go back to melee_attack.h and add in the new UNAT_BEARD
+enum entry to unarmed_attack_type, since we didn't see that until
+etting to the code above (also note, this enum is NOT in enums.h like
+every other one so far):
+
+    enum unarmed_attack_type
+    {
+        UNAT_NO_ATTACK,                    //    0
+        UNAT_CONSTRICT,  // put constriction first so octopodes will use it
+        UNAT_KICK,
+        UNAT_HEADBUTT,
+        UNAT_PECK,
+        UNAT_TAILSLAP,
+        UNAT_PUNCH,
+        UNAT_BITE,
+        UNAT_PSEUDOPODS,
+        UNAT_TENTACLES,
+        UNAT_BEARD,
+        UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
+        UNAT_LAST_ATTACK = UNAT_BEARD, //we had to update this now because
+                                       //we replaced the last attack. Still
+                                       //stay before NUM_UNARMED_ATTACKS
+        NUM_UNARMED_ATTACKS,
+    };
+
+...and that should do it. Compile, and you should have a small chance
+for a character to gain laser eyes or an off-hand attack with a beard
+when mutating. Other flags can mark your mutation as being usable
+exclusively by a deity.
+
+Your mutations can do pretty much anything, so your own new mutations
+might be much more complicated than these examples are. There are enough
+current mutations that you most likely will have a good starting place
+by looking at an existing mutation and making small changes to it. The
+most complexity comes from when a mutation gets referenced on something
+else, like how our beard ended up needed a new class to work correctly.
+
+Summary Notes:
+   - enum.h for mutation_type entry (and ability entries if applicable)
+   - mutation-data.h to fill in the basics of the mutation.
+   - mutation.cc for any conflicting mutations or mutations sharing the
+     same 'slot'.
+   - ability.cc for mutations that have an activatable component (talents).
+   - mutations can affect stuff in almost any other file, depending on
+     what your mutation changes. Our example changed melee_attack.cc.
+   - check for your mutation using
+     "player_mutation_level(MUT_NAME_HERE) > 0"
+     as a simple check when getting creative with your code.
