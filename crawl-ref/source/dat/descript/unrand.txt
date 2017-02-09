@@ -657,4 +657,3 @@ and hexes with no physical manifestation at all.
 amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
-%%%%

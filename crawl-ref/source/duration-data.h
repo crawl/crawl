@@ -2,6 +2,8 @@
  * Status defaults for durations.
  */
 
+#include "god-passive.h"
+
 static void _end_weapon_brand()
 {
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
@@ -541,6 +543,11 @@ static const duration_def duration_data[] =
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
+    { DUR_HEAVEN_ON_EARTH,
+      0, "", "", "", "", D_NO_FLAGS,
+      {{ "", []() {
+          ieoh_jian_heaven_tick();
+      }}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

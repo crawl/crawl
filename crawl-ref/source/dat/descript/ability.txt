@@ -871,6 +871,18 @@ Ancestor Identity ability
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
 %%%%
+Serpent's Lash ability
+
+Moves at supernatural speeds for a short distance. After using this ability,
+the next two movement actions are instant. Martial attacks performed under the
+effect of Serpent's Lash are more effective.
+%%%%
+Heaven On Earth ability
+
+Beseeches the Council to send help by flooding the surroundings with a storm of 
+heavenly clouds. The clouds inspire you to strike strong and true, and hitting
+enemies with martial attacks will keep the storm raging for longer.
+%%%%
 Hop ability
 
 Hops toward a chosen destination, landing somewhere nearby. After using this

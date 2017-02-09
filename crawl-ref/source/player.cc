@@ -3661,6 +3661,8 @@ int slaying_bonus(bool ranged)
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
 
+    ret += you.attribute[ATTR_HEAVEN_ON_EARTH];
+
     return ret;
 }
 
@@ -5846,8 +5848,8 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     unsigned int effective_points = skill_points[sk];
     if (!real)
     {
-        for (skill_type cross : get_crosstrain_skills(sk))
-            effective_points += skill_points[cross] * 2 / 5;
+         for (skill_type cross : get_crosstrain_skills(sk))
+             effective_points += skill_points[cross] * 2 / 5;
     }
     effective_points = min(effective_points, skill_exp_needed(MAX_SKILL_LEVEL, sk));
     while (1)
@@ -5891,6 +5893,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
+
     return level;
 }
 

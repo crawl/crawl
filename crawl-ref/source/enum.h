@@ -442,6 +442,10 @@ enum ability_type
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
 #endif
 
+    // Ieoh Jian
+    ABIL_IEOH_JIAN_SERPENTS_LASH = 1300,
+    ABIL_IEOH_JIAN_HEAVEN_ON_EARTH,
+
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
 
@@ -566,6 +570,8 @@ enum attribute_type
 #endif
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
     ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
+    ATTR_SERPENTS_LASH,        // Remaining turns in which you can move instantly.
+    ATTR_HEAVEN_ON_EARTH,      // Measures the strength of the Heaven on Earth effect.
     NUM_ATTRIBUTES
 };
 
@@ -942,6 +948,7 @@ enum cloud_type
     CLOUD_FLUFFY,
     CLOUD_XOM_TRAIL,
     CLOUD_SALT,
+    CLOUD_GOLD_DUST,
     NUM_CLOUD_TYPES,
 
     // Random per-square.
@@ -1725,8 +1732,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_USKAYAW,
     DNGN_ALTAR_HEPLIAKLQANA,
-
     DNGN_ENDLESS_SALT,
+    DNGN_ALTAR_IEOH_JIAN,
 #endif
 
     NUM_FEATURES
@@ -1923,6 +1930,7 @@ enum duration_type
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
     DUR_NO_HOP,
+    DUR_HEAVEN_ON_EARTH,
     NUM_DURATIONS
 };
 
@@ -2099,6 +2107,7 @@ enum enchant_type
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
     ENCH_RING_OF_THUNDER,
+    ENCH_DISTRACTED_ACROBATICS,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2225,6 +2234,7 @@ enum god_type
     GOD_PAKELLAS,
     GOD_USKAYAW,
     GOD_HEPLIAKLQANA,
+    GOD_IEOH_JIAN,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -5280,6 +5290,15 @@ enum deck_rarity_type
     DECK_RARITY_COMMON,
     DECK_RARITY_RARE,
     DECK_RARITY_LEGENDARY,
+};
+
+enum ieoh_jian_attack_type
+{
+    IEOH_JIAN_ATTACK_NONE,
+    IEOH_JIAN_ATTACK_LUNGE,
+    IEOH_JIAN_ATTACK_WHIRLWIND,
+    IEOH_JIAN_ATTACK_WALL_JUMP,
+    IEOH_JIAN_ATTACK_TRIGGERED_AUX,
 };
 
 enum timed_effect_type

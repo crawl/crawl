@@ -113,6 +113,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
+    { ENCH_DISTRACTED_ACROBATICS,     MB_DISTRACTED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)

@@ -35,6 +35,7 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "god-prayer.h"
 #include "god-wrath.h"
 #include "hints.h"
@@ -626,6 +627,12 @@ static const ability_def Ability_List[] =
 
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
+
+    // Ieoh Jian
+    { ABIL_IEOH_JIAN_SERPENTS_LASH, "Serpent's Lash",
+        0, 0, 0, 4, {}, abflag::EXHAUSTION | abflag::INSTANT },
+    { ABIL_IEOH_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
+        0, 0, 0, 20, {}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3063,6 +3070,29 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_HEPLIAKLQANA_IDENTITY:
         hepliaklqana_choose_identity();
+        break;
+
+    case ABIL_IEOH_JIAN_SERPENTS_LASH:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to lash out.");
+            return SPRET_ABORT;
+        }
+        fail_check();
+        mprf(MSGCH_GOD, "Your muscles tense, ready for explosive movement...");
+        you.attribute[ATTR_SERPENTS_LASH] = 2;
+        you.redraw_status_lights = true;
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        return SPRET_SUCCESS;
+
+    case ABIL_IEOH_JIAN_HEAVEN_ON_EARTH:
+        fail_check();
+        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds! You feel the urge to strike!");
+        ieoh_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
+        big_cloud(CLOUD_GOLD_DUST, &you, you.pos(), 15 + random2(10), 50 + random2(30), 4);
+        you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
+        you.duration[DUR_HEAVEN_ON_EARTH] = IEOH_JIAN_HEAVEN_TICK_TIME;
+        invalidate_agrid(true);
         break;
 
     case ABIL_RENOUNCE_RELIGION:
