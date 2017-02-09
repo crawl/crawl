@@ -301,8 +301,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    // see comment on player.cc:player_speed
-    return rv::max(div_rand_round(attk_delay * you.time_taken, 10),
+    // XXX: this is supposed to compensate for DUR_SLOW/DUR_FAST, but behaves
+    // incorrectly if attacking while moving/etc (as with IJC)
+    return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }
 

@@ -3650,6 +3650,8 @@ int slaying_bonus(bool ranged)
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
 
+    ret += you.attribute[ATTR_HEAVEN_ON_EARTH];
+
     return ret;
 }
 

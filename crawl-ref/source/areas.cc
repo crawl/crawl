@@ -568,6 +568,8 @@ int player::halo_radius() const
 
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        size = max(size, 1);
 
     return size;
 }

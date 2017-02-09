@@ -41,6 +41,7 @@
 #include "shout.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stepdown.h"
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
@@ -70,7 +71,9 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false)
+    cleaving(is_cleaving), is_riposte(false),
+    ieoh_jian_attack(IEOH_JIAN_ATTACK_NONE),
+    ieoh_jian_number_of_targets(1)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -145,8 +148,11 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player())
     {
         // Set delay now that we know the attack won't be cancelled.
-        if (!is_riposte)
+        if (!is_riposte
+             && (ieoh_jian_attack == IEOH_JIAN_ATTACK_NONE))
+        {
             you.time_taken = you.attack_delay().roll();
+        }
 
         const caction_type cact_typ = is_riposte ? CACT_RIPOSTE : CACT_MELEE;
         if (weapon)
@@ -336,6 +342,15 @@ void melee_attack::apply_black_mark_effects()
     }
 }
 
+// For IJC, does the defender count as being distracted?
+bool melee_attack::defender_ijc_distracted() const
+{
+    ASSERT(defender->is_monster());
+    return defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS)
+            || defender->as_monster()->foe != MHITYOU
+               && !mons_is_batty(*defender->as_monster());
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -448,6 +463,27 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
+    if (attacker->is_player()
+        && defender->alive()
+        && ieoh_jian_attack == IEOH_JIAN_ATTACK_WHIRLWIND)
+    {
+       player_strike_pressure_points(defender->as_monster());
+    }
+
+    // Fireworks when hitting slowed / distracted enemies.
+    // XXX: this seems massively overcomplicated. also, it currently only
+    // triggers when the victim is both slowed AND distracted?
+    if (!defender->alive()
+        && defender->as_monster()->can_bleed()
+        && ieoh_jian_attack == IEOH_JIAN_ATTACK_LUNGE
+        && defender->as_monster()->has_ench(ENCH_SLOW)
+        && defender_ijc_distracted())
+    {
+        blood_spray(defender->pos(), defender->as_monster()->type,
+                    damage_done / 5);
+        defender->as_monster()->flags |= MF_EXPLODE_KILL;
+    }
+
     if (check_unrand_effects())
         return false;
 
@@ -535,7 +571,9 @@ bool melee_attack::handle_phase_damaged()
 
 bool melee_attack::handle_phase_aux()
 {
-    if (attacker->is_player() && !cleaving)
+    if (attacker->is_player()
+        && !cleaving
+        && ieoh_jian_attack != IEOH_JIAN_ATTACK_TRIGGERED_AUX)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
@@ -556,6 +594,40 @@ bool melee_attack::handle_phase_aux()
     }
 
     return true;
+}
+
+/// Percentage chance for an IJC effect to slow a target of the given HD.
+static int _pressure_point_slow_chance(int hd)
+{
+    // XXX: unify with _walljump_distract_chance()
+    const int base_chance = div_rand_round(8 * you.experience_level, hd);
+    if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+        return div_rand_round(base_chance * 15, 10);
+    return min(base_chance, 50); // Capped if you don't have momentum.
+}
+
+void melee_attack::player_strike_pressure_points(monster* mons)
+{
+    const int slow_chance = _pressure_point_slow_chance(mons->get_hit_dice());
+
+    dprf("Pressure point strike, %d%% chance to slow.", slow_chance);
+
+    if (mons->cannot_move() || !x_chance_in_y(slow_chance, 100))
+        return;
+
+    if (mons->holiness() == MH_NONLIVING)
+    {
+        simple_monster_message(*mons, " seems to slow down after your "
+                               "strike.");
+    }
+    else
+    {
+        simple_monster_message(*mons, " seems to slow down as you strike "
+                               "a pressure point.");
+    }
+
+    mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker,
+                               stepdown(5 * BASELINE_DELAY, 70)));
 }
 
 /**
@@ -698,7 +770,7 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number);
+                              effective_attack_number, ieoh_jian_attack);
     }
 
     // Check for passive mutation effects.
@@ -1174,6 +1246,9 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
 
+    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE)
+        ieoh_jian_attack = IEOH_JIAN_ATTACK_TRIGGERED_AUX;
+
     if (atk == UNAT_BITE
         && _vamp_wants_blood_from_monster(defender->as_monster()))
     {
@@ -1466,9 +1541,12 @@ int melee_attack::player_apply_misc_modifiers(int damage)
 // to the base damage of the weapon.
 int melee_attack::player_apply_final_multipliers(int damage)
 {
-    //cleave damage modifier
+    // cleave damage modifier
     if (cleaving)
         damage = cleave_damage_mod(damage);
+
+    // martial damage modifier (ieoh jian)
+    damage = martial_damage_mod(damage);
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
@@ -3363,6 +3441,50 @@ int melee_attack::cleave_damage_mod(int dam)
     return div_rand_round(dam * 7, 10);
 }
 
+// Martial strikes get modified by momentum and maneuver specific damage mods.
+int melee_attack::martial_damage_mod(int dam)
+{
+    if (ieoh_jian_has_momentum(ieoh_jian_attack))
+        dam = div_rand_round(dam * 15, 10);
+
+    switch (ieoh_jian_attack)
+    {
+    case IEOH_JIAN_ATTACK_NONE:
+    case IEOH_JIAN_ATTACK_TRIGGERED_AUX:
+        return dam;
+
+    case IEOH_JIAN_ATTACK_LUNGE:
+    {
+        const bool slow = defender->as_monster()->has_ench(ENCH_SLOW);
+        const bool distracted = defender_ijc_distracted();
+        if (slow && distracted)
+        {
+            mprf("%s is thoroughly helpless against your lunge!",
+                 defender->as_monster()->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 20, 10);
+        }
+        else if (slow)
+        {
+            mprf("%s can't react fast enough to your lunge!",
+                 defender->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 16, 10);
+        }
+        else if (distracted)
+        {
+            mprf("%s does not see your lunge coming!", defender->name(DESC_THE).c_str());
+            dam = div_rand_round(dam * 16, 10);
+        }
+        else
+            dam = div_rand_round(dam * 13, 10);
+        break;
+    }
+    default:
+        break;
+    }
+
+    return dam;
+}
+
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     ASSERT(victim); // XXX: change to actor &victim
@@ -3392,6 +3514,14 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         && you.strength() + you.dex() <= random2(50))
     {
         return false;
+    }
+
+    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE
+        && !x_chance_in_y(1, ieoh_jian_number_of_targets))
+    {
+       // Reduces aux chance proportionally to number of
+       // enemies attacked with a martial attack
+       return false;
     }
 
     switch (atk)
