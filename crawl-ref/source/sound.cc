@@ -18,7 +18,7 @@
 #ifdef USE_SOUND
 void play_sound_from_pattern(const string& message)
 {
-	play_sound(check_sound_patterns(message));
+    play_sound(check_sound_patterns(message));
 }
 
 // This function will return the sound_mapping it finds that matches
@@ -53,9 +53,9 @@ sound_mapping check_sound_patterns(const string& message)
 
 void play_sound(sound_mapping sound_data)
 {
-    if(sound_data.soundfile != "")
+    if (sound_data.soundfile != "")
     {
-		play_sound(sound_data.soundfile.c_str(), sound_data.interrupt_game);
+                play_sound(sound_data.soundfile.c_str(), sound_data.interrupt_game);
     }
 }
 
@@ -75,11 +75,11 @@ void play_sound(const char *file, bool interrupt_game)
         && shell_safe(file))
     {
 #if defined(HOLD_SOUND_PLAY_COMMAND)
-	if(interrupt_game)
+        if (interrupt_game)
             snprintf(command, sizeof command, HOLD_SOUND_PLAY_COMMAND, file);
-	else
+        else
 #endif
-	    snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
+            snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
 
         system(OUTS(command));
     }

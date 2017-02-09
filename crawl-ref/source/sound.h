@@ -44,5 +44,5 @@ void play_sound(sound_mapping sound_data);
 void play_sound(const char *file, bool interrupt_game = false);
 
 
-#endif	// End ifdef USE_SOUND
-#endif	// End ifndef SOUNDS_H
+#endif  // End ifdef USE_SOUND
+#endif  // End ifndef SOUNDS_H

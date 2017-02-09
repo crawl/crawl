@@ -51,8 +51,8 @@ struct sound_mapping
     bool operator== (const sound_mapping &o) const
     {
         return pattern == o.pattern
-		&& soundfile == o.soundfile
-		&& interrupt_game == o.interrupt_game;
+                && soundfile == o.soundfile
+                && interrupt_game == o.interrupt_game;
     }
 };
 

@@ -732,29 +732,29 @@ public:
 
     void add(const message_line& msg)
     {
-		string orig_full_text = msg.full_text();
+        string orig_full_text = msg.full_text();
 
         if (!(msg.channel != MSGCH_PROMPT && prev_msg.merge(msg)))
-		{
-	        flush_prev();
-	        prev_msg = msg;
-        	if (msg.channel == MSGCH_PROMPT || _temporary)
-	            flush_prev();
-		}
-		
-		// If we play sound, wait until the corresponding message is printed
-		// in case we intend on holding up output that comes after.
-		//
-		// FIXME This doesn't work yet, and causes the game to play the sound,
-		// THEN display the text. This appears to only be solvable by reworking
-		// the way the game outputs messages, as the game it prints messages
-		// one line at a time, not one message at a time.
-		//
-		// However, it should only print one message at a time when it really
-		// needs to, i.e. an sound that interrupts the game. Otherwise it is
-		// more efficent to print text together.
+        {
+            flush_prev();
+            prev_msg = msg;
+            if (msg.channel == MSGCH_PROMPT || _temporary)
+                flush_prev();
+            }
+
+            // If we play sound, wait until the corresponding message is printed
+            // in case we intend on holding up output that comes after.
+            //
+            // FIXME This doesn't work yet, and causes the game to play the sound,
+            // THEN display the text. This appears to only be solvable by reworking
+            // the way the game outputs messages, as the game it prints messages
+            // one line at a time, not one message at a time.
+            //
+            // However, it should only print one message at a time when it really
+            // needs to, i.e. an sound that interrupts the game. Otherwise it is
+            // more efficent to print text together.
 #ifdef USE_SOUND
-		play_sound(check_sound_patterns(orig_full_text));
+            play_sound(check_sound_patterns(orig_full_text));
 #endif
     }
 

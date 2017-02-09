@@ -2507,7 +2507,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "spell_slot"
         && key != "item_slot"
         && key != "ability_slot"
-	&& key != "sound" && key != "hold_sound" && key != "sound_file_path"
+        && key != "sound" && key != "hold_sound" && key != "sound_file_path"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -3138,10 +3138,10 @@ void game_options::read_option_line(const string &str, bool runscript)
                 sound_mapping entry;
                 entry.pattern = sub.substr(0, cpos);
                 entry.soundfile = sound_file_path + sub.substr(cpos + 1);
-		if(key == "hold_sound")
-			entry.interrupt_game = true;
-		else
-			entry.interrupt_game = false;
+                if (key == "hold_sound")
+                    entry.interrupt_game = true;
+                else
+                    entry.interrupt_game = false;
 
                 if (minus_equal)
                     remove_matching(sound_mappings, entry);
@@ -3153,7 +3153,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "sound_file_path")
     {
-	    sound_file_path = field;
+            sound_file_path = field;
     }
 #ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.
