@@ -3502,7 +3502,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RECHARGING:
             return player_mutation_level(MUT_NO_ARTIFICE) > 0;
         case SCR_FOG:
-            return env.level_state & LSTATE_STILL_WINDS;
+            return temp && (env.level_state & LSTATE_STILL_WINDS);
         default:
             return false;
         }
@@ -3524,7 +3524,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_mutation_level(MUT_NO_LOVE);
 
         if (item.sub_type == WAND_CLOUDS)
-            return env.level_state & LSTATE_STILL_WINDS;
+            return temp && (env.level_state & LSTATE_STILL_WINDS);
 
         return false;
 
@@ -3567,7 +3567,8 @@ bool is_useless_item(const item_def &item, bool temp)
                        || temp && you.hunger_state < HS_SATIATED);
 
         case POT_FLIGHT:
-            return you.permanent_flight();
+            return you.permanent_flight()
+                   || you.racial_permanent_flight();
 
 #if TAG_MAJOR_VERSION == 34
         case POT_PORRIDGE:
@@ -3658,6 +3659,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_FLIGHT:
             return you.permanent_flight()
+                   || you.racial_permanent_flight()
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_STEALTH:
