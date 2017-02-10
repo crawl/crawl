@@ -60,7 +60,7 @@ void play_sound(sound_mapping sound_data)
 }
 
 // TODO: Make interrupt_game apply to any sound-playing method, not just SOUND_PLAY_COMMAND
-// TODO: Add in-game option for disabling interrupt sounds
+// TODO: Add in-game option for disabling interrupt sounds (and sounds in general)
 void play_sound(const char *file, bool interrupt_game)
 {
 #if defined(WINMM_PLAY_SOUNDS)
@@ -86,15 +86,16 @@ void play_sound(const char *file, bool interrupt_game)
 #elif defined(USE_SDL)
     static int last_channel = -1;
 
-    if (last_channel != -1 && Mix_Playing(last_channel))
-		Mix_HaltChannel(0);
+    if (Options.one_SDL_sound_channel
+        && last_channel != -1
+        && Mix_Playing(last_channel))
+                Mix_HaltChannel(0);
     if (sdl_sound_to_play != nullptr)
         Mix_FreeChunk(sdl_sound_to_play);
-    
-	sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
-    last_channel = Mix_PlayChannel(-1, sdl_sound_to_play, 0);
 
+    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
+    last_channel = Mix_PlayChannel(-1, sdl_sound_to_play, 0);
 #endif
 }
 
-#endif
+#endif // USE_SOUND

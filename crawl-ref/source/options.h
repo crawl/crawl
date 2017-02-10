@@ -262,6 +262,8 @@ public:
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
+        bool        one_SDL_sound_channel;  // Limit to one SDL sound at once
+
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 

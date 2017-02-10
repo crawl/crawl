@@ -20,7 +20,7 @@ The contents of this text are:
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
-		sound_file_path
+                sound_file_path
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
@@ -422,6 +422,11 @@ sound_file_path = <path>
         The most recent instance of this option is the one that
         takes effect, and is not applied retroactively to previous
         instances of the sound option.
+
+one_SDL_sound_channel = false
+        When true, only one sound can play at a time (if using SDL).
+        Is false by default since non-SDL sound backends don't
+        support such control.
 
 
 3-  Interface.
