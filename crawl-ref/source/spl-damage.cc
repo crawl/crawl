@@ -31,6 +31,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"
@@ -1856,7 +1857,10 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
-        if (ai->is_monster() && !ai->as_monster()->wont_attack())
+        if (ai->is_monster()
+            && !ai->as_monster()->wont_attack()
+            && !mons_is_firewood(*ai->as_monster())
+            && !mons_is_tentacle_or_tentacle_segment(ai->as_monster()->type))
         {
             blast_sources.push_back(ai->position);
         }
