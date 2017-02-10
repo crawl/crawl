@@ -6,6 +6,8 @@
 #include "options.h"
 #include "unicode.h"
 
+#include <iostream>
+
 #if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
     #ifdef __ANDROID__
         #include <SDL_mixer.h>
@@ -84,12 +86,20 @@ void play_sound(const char *file, bool interrupt_game)
         system(OUTS(command));
     }
 #elif defined(USE_SDL)
-    if (Mix_Playing(0))
-        Mix_HaltChannel(0);
+    static int last_channel = -1;
+
+    if (last_channel != -1 && Mix_Playing(last_channel))
+		Mix_HaltChannel(0);
     if (sdl_sound_to_play != nullptr)
         Mix_FreeChunk(sdl_sound_to_play);
-    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
-    Mix_PlayChannel(0, sdl_sound_to_play, 0);
+    
+	sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
+    last_channel = Mix_PlayChannel(-1, sdl_sound_to_play, 0);
+
+    if(last_channel == -1)
+	{
+        cerr << "Failed to play sound " << file << "!\n";
+	}
 #endif
 }
 

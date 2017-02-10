@@ -66,7 +66,7 @@ static const char *features[] =
     "Glob patterns",
 #endif
 
-#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS)
+#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS) || defined(USE_SDL)
     "Sound support",
 #endif
 
