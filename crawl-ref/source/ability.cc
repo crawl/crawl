@@ -185,6 +185,7 @@ static skill_type _invo_skill()
         case GOD_GOZAG:
         case GOD_RU:
         case GOD_TROG:
+        case GOD_IEOH_JIAN:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -630,9 +631,9 @@ static const ability_def Ability_List[] =
 
     // Ieoh Jian
     { ABIL_IEOH_JIAN_SERPENTS_LASH, "Serpent's Lash",
-        0, 0, 0, 4, {}, abflag::EXHAUSTION | abflag::INSTANT },
+        0, 0, 0, 4, {FAIL_INVO}, abflag::EXHAUSTION | abflag::INSTANT },
     { ABIL_IEOH_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
-        0, 0, 0, 20, {}, abflag::NONE },
+        0, 0, 0, 20, {FAIL_INVO, piety_breakpoint(5), 0, 1}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
@@ -3073,6 +3074,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_IEOH_JIAN_SERPENTS_LASH:
+        if (you.attribute[ATTR_SERPENTS_LASH])
+        {
+            mpr("You're already lashing out.");
+            return SPRET_ABORT;
+        }
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to lash out.");
@@ -3082,7 +3088,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         mprf(MSGCH_GOD, "Your muscles tense, ready for explosive movement...");
         you.attribute[ATTR_SERPENTS_LASH] = 2;
         you.redraw_status_lights = true;
-        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
         return SPRET_SUCCESS;
 
     case ABIL_IEOH_JIAN_HEAVEN_ON_EARTH:

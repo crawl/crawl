@@ -1517,6 +1517,7 @@ void ieoh_jian_trigger_serpents_lash(const coord_def& old_pos)
 
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
     {
+       you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
        switch (random2(2))
        {
        case 0: mpr("ZOOOM!!!"); break;
