@@ -3094,7 +3094,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds! You feel the urge to strike!");
         ieoh_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
-        big_cloud(CLOUD_GOLD_DUST, &you, you.pos(), 15 + random2(10), 50 + random2(30), 4);
+        for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
+            big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
         you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
         you.duration[DUR_HEAVEN_ON_EARTH] = IEOH_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
