@@ -66,9 +66,15 @@ static const char *features[] =
     "Glob patterns",
 #endif
 
-#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS) || defined(USE_SDL)
-    "Sound support",
-#endif
+#if defined(USE_SOUND)
+ #if defined(WINMM_PLAY_SOUNDS)
+    "Sound support (Windows Multimedia API)",
+ #elif defined(SOUND_PLAY_COMMAND)
+    "Sound support (Custom command)",
+ #elif defined(USE_SDL)
+    "Sound support (SDL_mixer)",
+ #endif
+#endif // USE_SOUNDS
 
 #ifdef DGL_MILESTONES
     "Milestones",

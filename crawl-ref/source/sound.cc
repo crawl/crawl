@@ -87,9 +87,9 @@ void play_sound(const char *file, bool interrupt_game)
     static int last_channel = -1;
 
     if (Options.one_SDL_sound_channel
-        && last_channel != -1
-        && Mix_Playing(last_channel))
-                Mix_HaltChannel(0);
+         && last_channel != -1
+         && Mix_Playing(last_channel))
+        Mix_HaltChannel(last_channel);
     if (sdl_sound_to_play != nullptr)
         Mix_FreeChunk(sdl_sound_to_play);
 
