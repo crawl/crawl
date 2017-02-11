@@ -10,11 +10,14 @@
 
 #ifdef USE_SOUND
 
+// Uncomment to play sounds. winmm must be linked in if this is uncommented.
+// #define WINMM_PLAY_SOUNDS
+
 // Uncomment (and edit as appropriate) to play sounds.
 //
 // WARNING: Filenames passed to this command *are not validated in any way*.
 //
-//#define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
+#define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
 
 // Uncomment this to enable playing sounds that play sounds that pause the
 // gameplay until they finish.

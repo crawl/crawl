@@ -18,6 +18,7 @@
 #include "message.h"
 #include "state.h"
 #include "stringutil.h"
+#include "sound.h"
 #include "unicode.h"
 #include "viewgeom.h"
 

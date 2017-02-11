@@ -66,7 +66,7 @@ static const char *features[] =
     "Glob patterns",
 #endif
 
-#if defined(USE_SOUND)
+#if defined(USE_SOUND) && defined(SOUND_BACKEND)
     SOUND_BACKEND,
 #endif
 

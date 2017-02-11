@@ -166,9 +166,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define FILE_SEPARATOR '/'
     #define ALT_FILE_SEPARATOR '\\'
 
-    // Uncomment to play sounds. winmm must be linked in if this is uncommented.
-    // #define WINMM_PLAY_SOUNDS
-
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in. Required in the absence of POSIX regexes.
     #ifndef REGEX_PCRE
