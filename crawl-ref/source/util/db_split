@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
-use warnings;
 
+use warnings;
 
 die "One arg plz (dat/descript/foo.txt), m'kay?\n" if $#ARGV;
 

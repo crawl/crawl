@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
-use warnings;
 
+use warnings;
 
 open IN, "<mon-info.h" or die "Can't read mon-info.h\n";
 undef $/;

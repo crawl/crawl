@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
-use warnings;
 
+use warnings;
 
 # Run gather_features -a if you want "A pigsty" rather than "pigsty".
 my $art = grep /^-a$/, @ARGV;

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
-use warnings;
 
+use warnings;
 
 undef $/;
 open IN, "util/cpp_version spl-data.h|" or die "Can't read spl-data.h\n";

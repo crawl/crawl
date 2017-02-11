@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
-use warnings;
 
+use warnings;
 
 my $db = grep /^-d$/, @ARGV;
 my %jewellery_prefixes;
