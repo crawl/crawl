@@ -3315,15 +3315,6 @@ bool dur_expiring(duration_type dur)
     return value <= duration_expire_point(dur);
 }
 
-static void _output_expiring_message(duration_type dur, const char* msg)
-{
-    if (you.duration[dur])
-    {
-        const bool expires = dur_expiring(dur);
-        mprf("%s%s", expires ? "Expiring: " : "", msg);
-    }
-}
-
 static void _display_char_status(int value, const char *fmt, ...)
 {
     va_list argp;
@@ -3485,21 +3476,6 @@ static string _constriction_description();
 
 void display_char_status()
 {
-    if (you.undead_state() == US_SEMI_UNDEAD
-        && you.hunger_state == HS_ENGORGED)
-    {
-        mpr("You feel almost alive.");
-    }
-    else if (you.undead_state())
-        mpr("You are undead.");
-    else if (you.duration[DUR_DEATHS_DOOR])
-    {
-        _output_expiring_message(DUR_DEATHS_DOOR,
-                                 "You are standing in death's doorway.");
-    }
-    else
-        mpr("You are alive.");
-
     const int halo_size = you.halo_radius();
     if (halo_size >= 0)
     {
