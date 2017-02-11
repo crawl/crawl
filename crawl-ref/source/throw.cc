@@ -76,6 +76,11 @@ static bool _is_always_penetrating_attack(const actor& attacker,
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                           const item_def& projectile)
 {
+    //Nets do weird things if allowed to penetrate,
+    //to say nothing of how counter-productive a penetrating net is.
+    if (projectile.is_type(OBJ_MISSILES, MI_THROWING_NET))
+        return false;
+
     return _is_always_penetrating_attack(attacker, weapon, projectile) ||
            is_pierce_active();
 }
@@ -745,7 +750,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     string ammo_name;
 
-    if(_is_always_penetrating_attack(you, you.weapon(), item))
+    if (!pbolt.pierce)
+        pierce = false;
+
+    else if(_is_always_penetrating_attack(you, you.weapon(), item))
         pierce = false;
 
     if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
