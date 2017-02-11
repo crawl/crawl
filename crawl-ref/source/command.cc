@@ -67,14 +67,8 @@ static const char *features[] =
 #endif
 
 #if defined(USE_SOUND)
- #if defined(WINMM_PLAY_SOUNDS)
-    "Sound support (Windows Multimedia API)",
- #elif defined(SOUND_PLAY_COMMAND)
-    "Sound support (Custom command)",
- #elif defined(USE_SDL)
-    "Sound support (SDL_mixer)",
- #endif
-#endif // USE_SOUNDS
+    SOUND_BACKEND,
+#endif
 
 #ifdef DGL_MILESTONES
     "Milestones",

@@ -23,6 +23,15 @@
 //
 //#define HOLD_SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null"
 
+// This should match up with what's in play_sound, which will prioritize
+// the various backends in a certain order.
+#if defined(WINMM_PLAY_SOUNDS)
+ #define SOUND_BACKEND "Sound support (Windows Multimedia API)"
+#elif defined(SOUND_PLAY_COMMAND)
+ #define SOUND_BACKEND "Sound support (External command)"
+#elif defined(USE_SDL)
+ #define SOUND_BACKEND "Sound support (SDL_mixer)"
+#endif
 
 // These are generic queues for playing sounds; they're intended for
 // console outputs that are either so generic that regexes can't match
