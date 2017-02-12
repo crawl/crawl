@@ -5982,6 +5982,11 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
 #if TAG_MAJOR_VERSION == 34
+    // Forget seen spells if the monster doesn't have any, most likely because
+    // of a polymorph that happened before polymorph began removing this key.
+    if (m.spells.empty())
+        m.props.erase(SEEN_SPELLS_KEY);
+
     // Battlespheres that don't know their creator's mid must have belonged
     // to the player pre-monster-battlesphere.
     if (th.getMinorVersion() < TAG_MINOR_BATTLESPHERE_MID
