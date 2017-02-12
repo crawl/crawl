@@ -1199,7 +1199,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
                                " has no use for such trinkets.");
         }
         else if (you_worship(GOD_GOZAG))
-            simple_god_message(" cares for nothing but gold!");
+            simple_god_message(" grants you a favorable conversion rate!");
         else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
