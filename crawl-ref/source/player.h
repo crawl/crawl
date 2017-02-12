@@ -936,6 +936,7 @@ int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
 int player_regen();
+int player_mp_regen();
 void update_regen_amulet_attunement();
 void update_mana_regen_amulet_attunement();
 

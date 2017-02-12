@@ -1866,9 +1866,10 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
         }
     }
 
-    if (blast_sources.empty()) {
+    if (blast_sources.empty())
         canned_msg(MSG_NOTHING_HAPPENS);
-    } else {
+    else
+    {
         mpr("The air bursts into flame!");
 
         vector<coord_def> blast_adjacents;
@@ -1901,17 +1902,22 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
 #endif
 
         // Fake "shaped" radius 1 explosions (skipping squares with friends).
-        for (coord_def pos : blast_sources) {
-            for (adjacent_iterator ai(pos); ai; ++ai) {
+        for (coord_def pos : blast_sources)
+        {
+            for (adjacent_iterator ai(pos); ai; ++ai)
+            {
                 if (cell_is_solid(*ai))
                     continue;
 
                 actor *act = actor_at(*ai);
 
                 // Friendly creature, don't blast this square.
-                if (act && (act == agent || (act->is_monster()
-                    && act->as_monster()->wont_attack())))
+                if (act && (act == agent
+                            || (act->is_monster()
+                                && act->as_monster()->wont_attack())))
+                {
                     continue;
+                }
 
                 blast_adjacents.push_back(*ai);
                 beam_visual.explosion_draw_cell(*ai);
@@ -1922,12 +1928,10 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
         scaled_delay(50);
 
         // Real explosions on each individual square.
-        for (coord_def pos : blast_sources) {
+        for (coord_def pos : blast_sources)
             _ignition_square(agent, beam_actual, pos, true);
-        }
-        for (coord_def pos : blast_adjacents) {
+        for (coord_def pos : blast_adjacents)
             _ignition_square(agent, beam_actual, pos, false);
-        }
     }
 
     return SPRET_SUCCESS;
