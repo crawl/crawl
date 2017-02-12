@@ -1070,9 +1070,18 @@ static void _remove_amulet_of_faith(item_def &item)
                  you.props[RU_SACRIFICE_DELAY_KEY].get_int());
         }
     }
+    else if (you_worship(GOD_GOZAG))
+    {
+#ifdef DEBUG_DIAGNOSTICS
+            const int shop_price = you.props[gozag_price_for_shop].get_int();
+#endif
+        // Gozag shops get more expensive by 200, as if you called one.
+        you.attribute[ATTR_GOZAG_SHOPS]++;
+        you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
+        simple_god_message(" raises the fee for funding new merchants.");
+        dprf("prev price %d, new price %d", shop_price,
     else if (!you_worship(GOD_NO_GOD)
-             && !you_worship(GOD_XOM)
-             && !you_worship(GOD_GOZAG))
+             && !you_worship(GOD_XOM))
     {
         simple_god_message(" seems less interested in you.");
 
