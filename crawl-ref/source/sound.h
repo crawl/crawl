@@ -44,6 +44,7 @@
 // regex search will use that sound if it's found.
 #define FIRE_PROMPT_SOUND "FIRE_PROMPT_SOUND"
 
+void toggle_sound();
 
 void play_sound_from_pattern(const string& message);
 

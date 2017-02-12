@@ -16,6 +16,8 @@
 #endif
 
 #ifdef USE_SOUND
+
+
 void play_sound_from_pattern(const string& message)
 {
     play_sound(check_sound_patterns(message));
@@ -63,39 +65,42 @@ void play_sound(sound_mapping sound_data)
 // TODO: Add in-game option for disabling interrupt sounds (and sounds in general)
 void play_sound(const char *file, bool interrupt_game)
 {
+    if(Options.sounds_on)
+    {
 #if defined(WINMM_PLAY_SOUNDS)
-    // Check whether file exists, is readable, etc.?
-    if (file && *file)
-        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
+        // Check whether file exists, is readable, etc.?
+        if (file && *file)
+            sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
-    char command[255];
-    command[0] = 0;
-    if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
-        && shell_safe(file))
-    {
+        char command[255];
+        command[0] = 0;
+        if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
+            && shell_safe(file))
+        {
 #if defined(HOLD_SOUND_PLAY_COMMAND)
-        if (interrupt_game)
-            snprintf(command, sizeof command, HOLD_SOUND_PLAY_COMMAND, file);
-        else
+            if (interrupt_game)
+                snprintf(command, sizeof command, HOLD_SOUND_PLAY_COMMAND, file);
+            else
 #endif
-            snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
+                snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
 
-        system(OUTS(command));
-    }
+            system(OUTS(command));
+        }
 #elif defined(USE_SDL)
-    static int last_channel = -1;
+        static int last_channel = -1;
 
-    if (Options.one_SDL_sound_channel
-         && last_channel != -1
-         && Mix_Playing(last_channel))
-        Mix_HaltChannel(last_channel);
-    if (sdl_sound_to_play != nullptr)
-        Mix_FreeChunk(sdl_sound_to_play);
+        if (Options.one_SDL_sound_channel
+             && last_channel != -1
+             && Mix_Playing(last_channel))
+            Mix_HaltChannel(last_channel);
+        if (sdl_sound_to_play != nullptr)
+            Mix_FreeChunk(sdl_sound_to_play);
 
-    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
-    last_channel = Mix_PlayChannel(-1, sdl_sound_to_play, 0);
-#endif
+        sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
+        last_channel = Mix_PlayChannel(-1, sdl_sound_to_play, 0);
+    #endif
+    } // End if (Options.sounds_on)
 }
 
 #endif // USE_SOUND
