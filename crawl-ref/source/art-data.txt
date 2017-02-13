@@ -1284,9 +1284,9 @@ BOOL:     inv, nogen
 
 ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
-OBJ:      OBJ_WEAPONS/WPN_DEMON_BLADE
+OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
 INSCRIP:  freeze,
-PLUS:     +6
+PLUS:     +2
 COLOUR:   ETC_VEHUMET
 #TILE:     urand_thermic_engine
 #TILE_EQ:  thermic_engine

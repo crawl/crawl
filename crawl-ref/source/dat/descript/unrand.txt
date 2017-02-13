@@ -649,8 +649,7 @@ An amulet that can be activated to render its wearer invisible.
 %%%%
 Maxwell's thermic engine
 
-A strange sword, one edge blistering hot and the other icy cold. What causes
-this effect is unknown but it is rumored that otherworldly forces are involved.
-Evoking it temporarily releases some of it's motive force, but with a cost to the
-wielder's vitality.
+A strange sword, one blade blistering hot and the other icy cold. When it hits
+its target the thermal gradient increases. What causes this effect is unknown
+but it is rumored that otherworldly forces are involved.
 %%%%

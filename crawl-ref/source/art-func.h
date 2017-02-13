@@ -1380,93 +1380,51 @@ static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _THERMIC_ENGINE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "The engine hums to life!");
+    item->plus = 2;
 }
 
 static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
 {
     _equip_mpr(show_msgs, "The engine shudders to a halt.");
+    item->plus = 2;
 }
 
 static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
+    if (weapon->plus < 14)
+    {
+        weapon->plus++;
+        you.wield_change = true;
+    }
+
     if (mondied)
         return;
 
+    // the flaming brand has already been applied at this point
     const int bonus_dam = resist_adjust_damage(defender, BEAM_COLD,
                                                random2(dam) / 2 + 1);
+    if (bonus_dam > 0)
+    {
+        mprf("%s %s %s.",
+            attacker->name(DESC_THE).c_str(),
+            attacker->conj_verb("freeze").c_str(),
+            (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
+                                : defender->name(DESC_THE)).c_str());
 
-    if (bonus_dam <= 0)
-        return;
-
-    mprf("%s %s %s.",
-         attacker->name(DESC_THE).c_str(),
-         attacker->conj_verb("freeze").c_str(),
-         (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
-                               : defender->name(DESC_THE)).c_str());
-
-    defender->hurt(attacker, bonus_dam, BEAM_COLD);
-
-    if (defender->alive())
-        defender->expose_to_element(BEAM_COLD, 2);
+        defender->hurt(attacker, bonus_dam, BEAM_COLD);
+        if (defender->alive())
+            defender->expose_to_element(BEAM_COLD, 2);
+    }
 }
 
-static bool _THERMIC_ENGINE_evoke(item_def *item, bool* did_work, bool* unevokable)
+static void _THERMIC_ENGINE_world_reacts(item_def *item)
 {
-    if (!enough_hp(12, true))
+    if (item->plus > 2 && one_chance_in(3))
     {
-        mpr("You're too close to death to use this item.");
-        *unevokable = true;
-        return true;
+        item->plus--;
+        you.wield_change = true;
+        if (item->plus == 2 && one_chance_in(4))
+            mpr("The engine shudders to a halt.");
     }
-    if (!enough_mp(3, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-        return false;
-
-    bool success = false;
-    bool angered = false;
-
-    const int how_many = 5 + random2(5);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        monster_type mon = random_demon_by_tier(one_chance_in(15) ? 4 : 5);
-
-        mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-        mg.set_summoned(&you, 0, 0);
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-        monster *m = create_monster(mg);
-
-        if (m)
-        {
-            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
-
-            if (player_angers_monster(m))
-                angered = true;
-
-            success = true;
-        }
-    }
-
-    if (success)
-    {
-        mpr("You release some of the engine's servants.");
-        did_god_conduct(DID_EVIL, 3);
-
-        if (angered)
-            mpr("You don't feel so good about this...");
-    }
-
-    mpr("You feel the engine feeding on your energy!");
-    dec_hp(11, false);
-    dec_mp(3);
-    practise_evoking(1);
-
-    return true;
 }
