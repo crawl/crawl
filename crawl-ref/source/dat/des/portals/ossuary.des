@@ -420,7 +420,6 @@ MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
 MONS:    mummy
 MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
 ITEM:    nothing / any scroll w:5 / any potion
-KFEAT:   ^ = alarm trap
 : ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
@@ -432,7 +431,7 @@ cc........22........cc
 ccc..3....22....3..ccc
 cccc..............cccc
 cccc+cc........cc+cccc
-cccc^^cc111111cc^^cccc
+cccc..cc111111cc..cccc
 ccc....cc....cc....ccc
 ccd.....c....c.....dcc
 c$dd....c....c....dd$c
