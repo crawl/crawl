@@ -51,6 +51,7 @@ struct player_info
     int mp, mp_max;
     int contam;
     int heat;
+    int noise;
 
     int armour_class;
     int evasion;

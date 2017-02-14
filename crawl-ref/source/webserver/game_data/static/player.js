@@ -97,6 +97,58 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_bar("heat");
     }
 
+    function update_bar_noise()
+    {
+        player.noise_max = 30;
+        var value = player.noise, max = player.noise_max;
+        var old_value;
+        if ("old_noise" in player)
+            old_value = player.old_noise
+        else
+            old_value = value;
+        if (value < 0)
+            value = 0;
+        if (old_value > max)
+            old_value = max;
+        player.old_noise = value;
+        var full_bar = Math.round(10000 * value / max);
+        var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
+        if (full_bar + change_bar > 10000)
+        {
+            change_bar = 10000 - full_bar;
+        }
+
+        $("#stats_noise_bar").css("background-color", "#2F2F2F");
+        if (player.has_status("silence"))
+        {
+            value = 0;
+            full_bar = 0;
+            change_bar = 0;
+            $("#stats_noise_bar").css("background-color", "#000000");
+            // I couldn't get this to work just directly putting the text in #stats_noise_bar
+            $("#stats_noise_status").text("(Silenced)");
+        } else {
+            $("#stats_noise_bar").css("background-color", "#2F2F2F");
+            $("#stats_noise_status").text("");
+            $("#stats_noise_status").css("width", 0);
+        }
+
+        // See output.cc for documentation of these cutoff points
+        if (player.noise < 7)
+            $("#stats_noise_bar_full").css("background-color", "#D3D3D3"); // lightgray
+        else if (player.noise < 14)
+            $("#stats_noise_bar_full").css("background-color", "#FFD700"); // gold
+        else if (player.noise >= 30)
+            $("#stats_noise_bar_full").css("background-color", "#FF00FF"); // magenta
+        else
+            $("#stats_noise_bar_full").css("background-color", "#FF0000"); // red
+        $("#stats_noise_bar_full").css("width", (full_bar / 100) + "%");
+        if (value < old_value)
+            $("#stats_noise_bar_decrease").css("width", (change_bar / 100) + "%");
+        else
+            $("#stats_noise_bar_decrease").css("width", 0);
+    }
+
     function repeat_string(s, n)
     {
         return Array(n+1).join(s);
@@ -366,6 +418,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_stat("str");
         update_stat("int");
         update_stat("dex");
+        if (player.wizard) // the exact value is too hard to interpret to show outside of wizmode, because noise propagation is very complicated.
+        {
+            $("#stats_noise").text(player.noise);
+        }
+        update_bar_noise();
 
         if (options.get("show_game_time") === true)
         {
@@ -482,7 +539,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 wizard: 0,
                 depth: 0, place: "",
                 contam: 0,
-                heat: 0
+                heat: 0,
+                noise: 0
             });
             delete player["old_hp"];
             delete player["old_mp"];

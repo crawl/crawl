@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "areas.h"
 #include "branch.h"
 #include "colour.h"
 #include "describe.h"
@@ -412,6 +413,24 @@ public:
         textbackground(BLACK);
     }
 
+    void blank(int ox, int oy, int max_val)
+    {
+        colour_t old_change_col = m_change_neg;
+        colour_t old_change_pos = m_change_pos;
+        colour_t old_empty = m_empty;
+
+        m_change_neg = BLACK;
+        m_change_pos = BLACK;
+        m_empty = BLACK;
+
+        draw(ox, oy, 0, max_val);
+
+        m_change_neg = old_change_col;
+        m_change_pos = old_change_pos;
+        m_empty = old_empty;
+
+    }
+
     void vdraw(int ox, int oy, int val, int max_val)
     {
         // ox is width from l/h edge; oy is height from top
@@ -476,6 +495,13 @@ static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 
 colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
 colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
+
+#ifdef USE_TILE_LOCAL
+static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
+#else
+static colour_bar Noise_Bar(LIGHTGREY, LIGHTGREY, MAGENTA, BLACK);
+#endif
+
 
 // ----------------------------------------------------------------------
 // Status display
@@ -581,6 +607,68 @@ static void _print_stats_temperature(int x, int y)
     Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
 }
 #endif
+
+/*
+ * Print the noise bar to the HUD with appropriate coloring.
+ * if in wizmode, also print the adjusted noise value.
+ */
+static void _print_stats_noise(int x, int y)
+{
+    bool silence = silenced(you.pos());
+    int level = silence ? 0 : you.adjusted_noise_perception();
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    cprintf("Noise: ");
+    CGOTOXY(x+7, y, GOTO_STAT);
+    colour_t noisecolour;
+
+    // This is calibrated roughly so that in an open-ish area:
+    //   LIGHTGREY = not very likely to carry outside of your los 
+    //               (though it is possible depending on terrain).
+    //   YELLOW = likely to carry outside of your los, up to double.
+    //   RED = likely to carry at least 16 spaces, up to much further.
+    //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
+    // In more enclosed areas, these values will be attenuated,
+    // and this isn't represented.
+    // NOTE: This logic is duplicated in player.js.
+    if (level < 7)
+        noisecolour = WHITE;
+    else if (level < 14)
+        noisecolour = YELLOW;
+    else if (level >= 30)
+        noisecolour = LIGHTMAGENTA;
+    else
+        noisecolour = RED;
+
+    if (you.wizard)
+    {
+        textcolour(noisecolour);
+        CPRINTF("%2d", level); // adjusted noise level that the player heard.
+                               // The exact value is too hard to interpret to show 
+                               // outside of wizmode, because noise propagation 
+                               //is very complicated
+    }
+    if (silence)
+    {
+        Noise_Bar.blank(19, y, 30);
+        CGOTOXY(19, y, GOTO_STAT);
+        textcolour(LIGHTMAGENTA);
+        CPRINTF("(Silenced)");
+
+    } else {
+#ifndef USE_TILE_LOCAL
+        // use the previous color for negative change in console; there's a
+        // visual difference in bar width. Negative change doesn't get shown
+        // in local tiles.
+        Noise_Bar.m_change_neg = Noise_Bar.m_default; 
+#endif
+        Noise_Bar.m_default = noisecolour;
+        Noise_Bar.m_change_pos = noisecolour;
+        if (level == 1)
+            level = 2; // this looks weird but it ensures that something gets drawn for this case -- `draw` with level 1 usually won't draw anything.
+        Noise_Bar.draw(19, y, min(level, 30), 30);
+    }
+}
 
 static void _print_stats_mp(int x, int y)
 {
@@ -1342,6 +1430,14 @@ void print_stats()
         else
             textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%-6d", you.gold);
+    }
+
+#ifdef USE_TILE_LOCAL
+    if (!tiles.is_using_small_layout())
+#endif
+    {
+        yhack++;
+        _print_stats_noise(1, 8+yhack);
     }
 
     if (you.wield_change)

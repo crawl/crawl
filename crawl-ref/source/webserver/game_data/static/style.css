@@ -147,6 +147,22 @@ body {
     background-color: #ee4f45; /* lightred */
 }
 
+#stats_noise_bar {
+    background-color: #000000; /* dark slate gray */
+}
+#stats_noise_status {
+    color: #FF00FF; /* magenta */
+}
+#stats_noise_bar_full {
+    background-color: #00D300; /* lightgray */
+}
+#stats_noise_bar_decrease {
+    background-color: #555753; /* darkgray */
+}
+#stats_noise_bar_increase {
+    background-color: #555753; /* darkgray */
+}
+
 #stats[data-species="Djinni"] #stats_hp_bar_full {
     background-color: #ba2cde;
 }

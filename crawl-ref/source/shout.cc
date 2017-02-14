@@ -1130,6 +1130,23 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
         _actor_apply_noise(&you, noise.noise_source,
                            noise_intensity_millis, noise,
                            noise_travel_distance);
+
+        // The next bit stores noise heard at the player's position for
+        // display in the HUD.  A more interesting (and much more complicated)
+        // way of doing this might be to sample from the noise grid at
+        // selected distances from the player. Dealing with terrain is a bit
+        // nightmarish for this alternative, though, so I'm going to keep it
+        // simple.
+        if (you.asleep()) // noise may awaken the player but this should be
+                          // dealt with in `_actor_apply_noise`. We want only
+                          // noises after awakening (or the awakening noise)
+                          // to be shown.
+        {
+            you.los_noise_level = 0;
+        } else {
+            you.los_noise_level = max(you.los_noise_level,
+                                      div_rand_round(noise_intensity_millis, 1000));
+        }
         ++affected_actor_count;
     }
 

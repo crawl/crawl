@@ -1520,6 +1520,7 @@ static void _input()
     _update_place_info();
 
     crawl_state.clear_god_acting();
+
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
@@ -2566,6 +2567,13 @@ void world_reacts()
             save_game(false);
         }
     }
+    // End of a turn.
+    //
+    // `los_noise_last_turn` is the value for display -- it needs to persist
+    // for any calls to print_stats during the next turn. Meanwhile, reset
+    // the loudest noise tracking for the next world_reacts cycle.
+    you.los_noise_last_turn = you.los_noise_level;
+    you.los_noise_level = 0;
 }
 
 static command_type _get_next_cmd()

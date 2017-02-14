@@ -5366,6 +5366,10 @@ player::player()
         game_seeds[i] = get_uint32();
 
     old_hunger          = hunger;
+
+    los_noise_level     = 0;            // temporary slot for loud noise levels
+    los_noise_last_turn = 0;            // loudest noise heard on the last turn, for displaying in the HUD
+
     transit_stair       = DNGN_UNSEEN;
     entering_level      = false;
 
@@ -5642,6 +5646,25 @@ int calc_hunger(int food_cost)
         return food_cost/2;
     }
     return food_cost;
+}
+
+// Return an approximation of the loudest noise the player heard in the last
+// turn, adjusted (roughly) for branch ambient noise. This gets updated every
+// `world_reacts`.
+int player::adjusted_noise_perception() const
+{
+    // los_noise_last_turn is already normalized for the branch's ambient
+    // noise, depending on distance, but this doesn't give an accurate measure
+    // of how likely the sound is to be heard. To approximate this, subtract
+    // half the ambient noise level for the branch.  (which is one of -6, 0, 6
+    // -- so for crypt/tomb this adds extra loudness, for shoals it
+    // subtracts.) The choice of /2 was found via calibration of various cases
+    // (such as qazlal at full piety in shoals). This adjustment makes the
+    // most sense for sounds close to the player. To do an exact version of
+    // this you would need to run the full noise propagation algorithm in
+    // shout.cc.
+    int ambient_adjustment = ambient_noise() / 2;
+    return max(los_noise_last_turn - ambient_adjustment, 0);
 }
 
 bool player::paralysed() const
@@ -7373,7 +7396,10 @@ void player::awaken()
 void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
+    {
         awaken();
+        dprf("Disturbance of intensity %d awoke player", disturbance);
+    }
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
