@@ -234,9 +234,15 @@ Place
   branch. The starting branch is called Dungeon, so that the place information
   will read "Dungeon:1" for a new character.
 
-Gold
-  Displays the number of gold pieces you have found. Gold is found scattered
-  around the dungeon, and is primarily used to buy items from shops.
+Noise
+  This is a colored bar indicating the loudness of noise that you heard on your
+  last turn. The color provides a rough guide to how far away the noise it
+  indicates might be audible.  If the bar is gray, the sound is less likely to
+  be audible outside of your line of sight (at least in an open area); if it is
+  yellow, the sound is likely to be audible outside of your line of sight; and
+  if it is red, the sound will be audible at a substantial distance.  If the bar
+  turns magenta, you have made one of the loudest noises in the dungeon. N.b.:
+  terrain can reduce or block the spread of noise.
 
 Time
   This indicates the amount of time that has passed since entering the dungeon,

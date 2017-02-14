@@ -32,7 +32,7 @@
       <div id="stats_titleline" />
       <div>
         <span id="stats_species_god" />
-        <span id="stats_piety" />
+        <span id="stats_piety" /><span id="stats_gozag_gold_label" class="stats_caption" /><span id="stats_gozag_gold" />
       </div>
       <div id="stats_hpline">
         <span id="stats_hp_bar" class="bar" style="float:right; width:55%; height:1em;"><!-- Whitespace...
@@ -82,8 +82,15 @@
             <span id="stats_xl" />
             <span class="stats_caption">Next:</span>
             <span id="stats_progress" />%</div>
-          <div><span class="stats_caption">Gold:</span>
-            <span id="stats_gold" /></div>
+          <div id="stats_noise_container" style="float:left;width:85%;">
+            <span id="stats_noise_bar" class="bar" style="float:right;width:56%;height:1em;"><!-- Whitespace...
+           --><span id="stats_noise_bar_full" /><!--
+           --><span id="stats_noise_bar_decrease" /><!--
+         --></span>
+           <span id="stats_noise_status" style="float:right;width:0%;"></span>
+            <span class="stats_caption">Noise:</span>
+            <span id="stats_noise"></span>
+          </div>
         </div>
         <div id="stats_rightcolumn" style="float:right;width:55%;">
           <div><span class="stats_caption">Str:</span>
@@ -97,11 +104,12 @@
           <div><span class="stats_caption" id="stats_time_caption"></span>
             <span id="stats_time" /></div>
         </div>
-        <div><span class="stats_caption" id="stats_weapon_letter"></span>
+        </div>
+        <div style="float:left;width:100%;"><span class="stats_caption" id="stats_weapon_letter"></span>
           <span id="stats_weapon" /></div>
-        <div id="stats_quiver_line"><span class="stats_caption" id="stats_quiver_letter"></span>
+        <div id="stats_quiver_line" style="float:left;width:100%;"><span class="stats_caption" id="stats_quiver_letter"></span>
           <span id="stats_quiver" /></div>
-        <div id="stats_status_lights" />
+        <div id="stats_status_lights" style="float:left;width:100%;" />
       </div>
     </div>
     <div id="minimap_block">

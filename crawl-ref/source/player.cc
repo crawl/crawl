@@ -5360,6 +5360,11 @@ player::player()
         game_seeds[i] = get_uint32();
 
     old_hunger          = hunger;
+
+    los_noise_level     = 0;        ///< temporary slot for loud noise levels
+    los_noise_last_turn = 0;
+    ///< loudest noise heard on the last turn, for HUD display
+
     transit_stair       = DNGN_UNSEEN;
     entering_level      = false;
 
@@ -5636,6 +5641,48 @@ int calc_hunger(int food_cost)
         return food_cost/2;
     }
     return food_cost;
+}
+
+/*
+ * Approximate the loudest noise the player heard in the last
+ * turn, possibly rescaling. This gets updated every
+ * `world_reacts`. If `adjusted` is set to true, this rescales
+ * noise on a 0-1000 scale according to some breakpoints that
+ * I have hand-calibrated. Otherwise, it returns the raw noise
+ * value (approximately from 0 to 40). The breakpoints aim to
+ * approximate 1x los radius, 2x los radius, and 3x los radius
+ * relative to an open area.
+ *
+ * @param adjusted      Whether to rescale the noise level.
+ *
+ * @return The (scaled or unscaled) noise level heard by the player.
+ */
+int player::get_noise_perception(bool adjusted) const
+{
+    // los_noise_last_turn is already normalized for the branch's ambient
+    // noise.
+    const int level = los_noise_last_turn;
+    static const int BAR_MAX = 1000; // TODO: export to output.cc & webtiles
+    if (!adjusted)
+         return div_rand_round(level, BAR_MAX);
+
+    static const vector<int> NOISE_BREAKPOINTS = { 0, 6000, 7000, 16000 };
+    const int BAR_FRAC = BAR_MAX / (NOISE_BREAKPOINTS.size() - 1);
+    for (size_t i = 1; i < NOISE_BREAKPOINTS.size(); ++i)
+    {
+        const int breakpoint = NOISE_BREAKPOINTS[i];
+        if (level > breakpoint)
+            continue;
+        const int prev_break = NOISE_BREAKPOINTS[i-1];
+        // what fragment of this breakpoint does the noise fill up?
+        const int within_segment = (level - prev_break) * BAR_FRAC / breakpoint;
+        // that fragment + previous breakpoints passed is our total noise.
+        return within_segment + (i - 1) * BAR_FRAC;
+        // example: 10k noise. that's 4k past the 6k breakpoint and into the 7k
+        // (4k * 333 / 7k) + 333, or a bit more than half the bar.
+    }
+
+    return BAR_MAX;
 }
 
 bool player::paralysed() const
@@ -7355,7 +7402,10 @@ void player::awaken()
 void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
+    {
         awaken();
+        dprf("Disturbance of intensity %d awoke player", disturbance);
+    }
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
@@ -7499,6 +7549,7 @@ void player::set_gold(int amount)
                 else if (old_gold >= cost && gold < cost)
                     power.display(false, "You no longer have enough gold to %s.");
             }
+            you.redraw_title = true;
         }
     }
 }
