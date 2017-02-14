@@ -302,6 +302,7 @@ public:
     colour_t m_change_pos;
     colour_t m_change_neg;
     colour_t m_empty;
+    int horiz_bar_width;
 
     colour_bar(colour_t default_colour,
                colour_t change_pos,
@@ -310,6 +311,7 @@ public:
                bool round = false)
         : m_default(default_colour), m_change_pos(change_pos),
           m_change_neg(change_neg), m_empty(empty),
+          horiz_bar_width(-1),
           m_old_disp(-1),
           m_request_redraw_after(0)
     {
@@ -337,7 +339,11 @@ public:
 #if TAG_MAJOR_VERSION == 34
         const colour_t temp_colour = temperature_colour(temperature());
 #endif
-        const int width = crawl_view.hudsz.x - (ox - 1);
+        int width;
+        if (horiz_bar_width == -1)
+            width = crawl_view.hudsz.x - (ox - 1);
+        else
+            width = horiz_bar_width;
         const int sub_disp = (width * val / max_val);
         int disp  = width * max(0, val - sub_val) / max_val;
         const int old_disp = (m_old_disp < 0) ? sub_disp : m_old_disp;
@@ -619,7 +625,6 @@ static void _print_stats_noise(int x, int y)
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     cprintf("Noise: ");
-    CGOTOXY(x+7, y, GOTO_STAT);
     colour_t noisecolour;
 
     // This is calibrated roughly so that in an open-ish area:
@@ -631,29 +636,43 @@ static void _print_stats_noise(int x, int y)
     // In more enclosed areas, these values will be attenuated,
     // and this isn't represented.
     // NOTE: This logic is duplicated in player.js.
+    int adjusted_level;
     if (level < 7)
-        noisecolour = WHITE;
-    else if (level < 14)
+    {
+        noisecolour = LIGHTGREY;
+        adjusted_level = (level == 0) ? 0 : ((level < 4) ? 1 : 2);
+    } 
+    else if (level < 14) 
+    {
         noisecolour = YELLOW;
-    else if (level >= 30)
-        noisecolour = LIGHTMAGENTA;
-    else
+        adjusted_level = (level < 10) ? 3 : 4;
+    }
+    else if (level < 30)
+    {
+        adjusted_level = (level < 22) ? 5 : 6;
         noisecolour = RED;
+    } else {
+        adjusted_level = 6;
+        noisecolour = LIGHTMAGENTA;
+    }
 
+    int bar_position = 10;
     if (you.wizard)
     {
+        CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
         textcolour(noisecolour);
-        CPRINTF("%2d", level); // adjusted noise level that the player heard.
+        CPRINTF("%2d", level);  // adjusted noise level that the player heard.
                                // The exact value is too hard to interpret to show 
                                // outside of wizmode, because noise propagation 
-                               //is very complicated
+                               // is very complicated
     }
+    Noise_Bar.horiz_bar_width = 6;
     if (silence)
     {
-        Noise_Bar.blank(19, y, 30);
-        CGOTOXY(19, y, GOTO_STAT);
+        Noise_Bar.blank(x + bar_position, y, 6);
+        CGOTOXY(x + bar_position, y, GOTO_STAT);
         textcolour(LIGHTMAGENTA);
-        CPRINTF("(Silenced)");
+        CPRINTF("(Sil) ");
 
     } else {
 #ifndef USE_TILE_LOCAL
@@ -664,9 +683,7 @@ static void _print_stats_noise(int x, int y)
 #endif
         Noise_Bar.m_default = noisecolour;
         Noise_Bar.m_change_pos = noisecolour;
-        if (level == 1)
-            level = 2; // this looks weird but it ensures that something gets drawn for this case -- `draw` with level 1 usually won't draw anything.
-        Noise_Bar.draw(19, y, min(level, 30), 30);
+        Noise_Bar.draw(x + bar_position, y, min(adjusted_level, 6), 6);
     }
 }
 

@@ -100,50 +100,73 @@ function ($, comm, enums, map_knowledge, messages, options) {
     function update_bar_noise()
     {
         player.noise_max = 30;
-        var value = player.noise, max = player.noise_max;
+        var level = player.noise, max = player.noise_max;
         var old_value;
         if ("old_noise" in player)
             old_value = player.old_noise
         else
-            old_value = value;
-        if (value < 0)
-            value = 0;
+            old_value = level;
+        if (level < 0)
+            level = 0;
         if (old_value > max)
             old_value = max;
-        player.old_noise = value;
-        var full_bar = Math.round(10000 * value / max);
-        var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
-        if (full_bar + change_bar > 10000)
+
+        // See output.cc for documentation of these cutoff points
+        // `adjusted_noise` is `noise` rescaled so that the three
+        // categories each take up 1/3 of the bar.
+        var noise_color = "", adjusted_level = 0;
+        if (level <= 6)
         {
-            change_bar = 10000 - full_bar;
+            noise_color = "#D3D3D3"; // lightgray
+            adjusted_level = level * 10 / 6;
+        }
+        else if (level <= 13)
+        {
+            noise_color = "#FFD700"; // gold
+            adjusted_level = (level - 6) * 10 / 7 + 10;
+        }
+        else if (level <= 29)
+        {
+            noise_color = "#FF0000"; // red
+            adjusted_level = (level - 13) * 10 / 16 + 20;
+        } else {
+            noise_color = "#FF00FF"; // magenta
+            adjusted_level = 30;
         }
 
-        $("#stats_noise_bar").css("background-color", "#2F2F2F");
         if (player.has_status("silence"))
         {
-            value = 0;
-            full_bar = 0;
-            change_bar = 0;
+            level = 0;
+            old_value = 0;
             $("#stats_noise_bar").css("background-color", "#000000");
             // I couldn't get this to work just directly putting the text in #stats_noise_bar
-            $("#stats_noise_status").text("(Silenced)");
+            $("#stats_noise_status").text("(Sil)");
         } else {
             $("#stats_noise_bar").css("background-color", "#2F2F2F");
             $("#stats_noise_status").text("");
             $("#stats_noise_status").css("width", 0);
         }
 
-        // See output.cc for documentation of these cutoff points
-        if (player.noise < 7)
-            $("#stats_noise_bar_full").css("background-color", "#D3D3D3"); // lightgray
-        else if (player.noise < 14)
-            $("#stats_noise_bar_full").css("background-color", "#FFD700"); // gold
-        else if (player.noise >= 30)
-            $("#stats_noise_bar_full").css("background-color", "#FF00FF"); // magenta
-        else
-            $("#stats_noise_bar_full").css("background-color", "#FF0000"); // red
+        player.old_noise = adjusted_level;
+
+
+        var full_bar = Math.round(10000 * adjusted_level / max);
+        var change_bar = Math.round(10000 * Math.abs(old_value - adjusted_level) / max);
+        if (full_bar + change_bar > 10000)
+        {
+            change_bar = 10000 - full_bar;
+        }
+
+        if (player.wizard) // the exact value is too hard to interpret to show outside of wizmode, because noise propagation is very complicated.
+        {
+            $("#stats_noise").text(player.noise);
+            $("#stats_noise").css("color", noise_color);
+        }
+
+        $("#stats_noise_bar_full").css("background-color", noise_color); 
+
         $("#stats_noise_bar_full").css("width", (full_bar / 100) + "%");
-        if (value < old_value)
+        if (adjusted_level < old_value)
             $("#stats_noise_bar_decrease").css("width", (change_bar / 100) + "%");
         else
             $("#stats_noise_bar_decrease").css("width", 0);
@@ -418,10 +441,6 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_stat("str");
         update_stat("int");
         update_stat("dex");
-        if (player.wizard) // the exact value is too hard to interpret to show outside of wizmode, because noise propagation is very complicated.
-        {
-            $("#stats_noise").text(player.noise);
-        }
         update_bar_noise();
 
         if (options.get("show_game_time") === true)
