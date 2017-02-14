@@ -409,6 +409,10 @@ public:
 
     int old_hunger;            // used for hunger delta-meter (see output.cc)
 
+    // the loudest noise level the player has experienced in los this turn
+    int los_noise_level;
+    int los_noise_last_turn;
+
     // Set when the character is going to a new level, to guard against levgen
     // failures
     dungeon_feature_type transit_stair;
@@ -729,6 +733,7 @@ public:
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
+    int get_noise_perception(bool adjusted = true) const;
 
     bool paralysed() const override;
     bool cannot_move() const override;
