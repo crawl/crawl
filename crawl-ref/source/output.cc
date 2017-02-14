@@ -212,7 +212,7 @@ static void _cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf(you.your_name.c_str());
+            cprintf("%s", you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
@@ -228,11 +228,11 @@ static void _cprintf_touchui(const char *format, ...)
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
@@ -242,7 +242,7 @@ static void _cprintf_touchui(const char *format, ...)
 
         default:
 //            printf("p: %s\n",buf.c_str());
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
     }
     va_end(args);
 }
