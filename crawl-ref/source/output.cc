@@ -419,11 +419,14 @@ public:
         textbackground(BLACK);
     }
 
+    // NOTE: this doesn't behave exactly as you might expect on console, because BLACK
+    // prints as dark blue.
     void blank(int ox, int oy, int max_val)
     {
         colour_t old_change_col = m_change_neg;
         colour_t old_change_pos = m_change_pos;
         colour_t old_empty = m_empty;
+        m_old_disp = 0;
 
         m_change_neg = BLACK;
         m_change_pos = BLACK;
@@ -505,7 +508,7 @@ colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
 #ifdef USE_TILE_LOCAL
 static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
 #else
-static colour_bar Noise_Bar(LIGHTGREY, LIGHTGREY, MAGENTA, BLACK);
+static colour_bar Noise_Bar(LIGHTGREY, LIGHTGREY, MAGENTA, DARKGREY);
 #endif
 
 
