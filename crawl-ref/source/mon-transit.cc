@@ -13,8 +13,8 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
-#include "godcompanions.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-companions.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
@@ -354,7 +354,7 @@ static bool _is_religious_follower(const monster* mon)
     return (you_worship(GOD_YREDELEMNUL)
             || will_have_passive(passive_t::convert_orcs)
             || you_worship(GOD_FEDHAS))
-                && is_follower(mon);
+                && is_follower(*mon);
 }
 
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
@@ -369,7 +369,6 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if (!fol->alive()
         || fol->speed_increment < 50
         || fol->incapacitated()
-        || mons_is_boulder(fol)
         || fol->is_stationary())
     {
         return false;
@@ -381,7 +380,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     // Only non-wandering friendly monsters or those actively
     // seeking the player will follow up/down stairs.
     if (!fol->friendly()
-          && (!mons_is_seeking(fol) || fol->foe != MHITYOU)
+          && (!mons_is_seeking(*fol) || fol->foe != MHITYOU)
         || fol->foe == MHITNOT)
     {
         return false;
@@ -394,7 +393,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     // Monsters that can't use stairs can still be marked as followers
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
-    if (!mons_can_use_stairs(fol, grd(you.pos())))
+    if (!mons_can_use_stairs(*fol, grd(you.pos())))
     {
         if (_is_religious_follower(fol))
         {
@@ -476,6 +475,6 @@ void tag_followers()
 
 void untag_followers()
 {
-    for (auto &mons : menv)
+    for (auto &mons : menv_real)
         mons.flags &= ~MF_TAKING_STAIRS;
 }

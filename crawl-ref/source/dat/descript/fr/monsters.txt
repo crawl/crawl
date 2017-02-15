@@ -240,12 +240,6 @@ Une agile lanceuse de sorts. Elle est légèrement vêtue, mais cependant, le pe
 qu'elle porte semble être une armure de dragon d'une qualité rare, garantissant
 une assez bonne protection. Et distraire les hommes au combat est une qualité.
 %%%%
-Maud
-
-Une mystérieuse princesse guerrière d'un royaume lointain, dans sa quête pour
-retrouver l'épée légendaire “Entarex”. Nombreux sont ses admirateurs qui,
-pensant à Maud, oublient tout autre chose.
-%%%%
 Maurice
 
 Un voleur sournois et connivent. En sa profession, Maurice est considéré comme
@@ -286,12 +280,6 @@ Nikola
 Un brillant scientifique obsédé par l'électricité. Depuis un terrible accident
 survenu lors d'une de ses tentatives pour parfaire son ire s d'électricité, il
 lui arrive de se déphaser de la réalité.
-%%%%
-Norris
-
-Un cultiste détendu avec une voix saine et douce, cherchant la paix dans la
-mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — « les deux »
-serait probablement la meilleure option.
 %%%%
 Polyphemus
 
@@ -356,14 +344,6 @@ de ces créatures.
 {{
     if you.can_smell() then
         return "Il pue horriblement."
-    end
-}}
-%%%%
-Wiglaf
-
-Un nain obèse qui porte un chapeau stupide. {{
-    if you.can_smell() then
-        return "Il empeste l'alcool. "
     end
 }}
 %%%%
@@ -519,11 +499,6 @@ bog body
 Une créature mort-vivante conservée par les eaux saumâtres d'une tourbière.
 Même si elle a été réanimée par quelque magie méconnue, cette magie ne peut
 l'empêcher de se décomposer.
-%%%%
-boulder beetle
-
-Un gros scarabée gris avec une carapace dure comme la pierre, capable de rouler
-sur ses adversaires à une grande vitesse.
 %%%%
 brain worm
 
@@ -975,11 +950,6 @@ giant mite
 
 Un énorme acarien assoiffé de sang. Ses mandibules sont empoisonnées.
 %%%%
-giant newt
-
-Un petit amphibien obstiné, qui fait plusieurs fois la taille d'un triton
-normal, mais il n'en est pas plus menaçant.
-%%%%
 giant orange brain
 
 Un énorme cerveau ridé, flottant au dessus du sol et irradiant d'énergie
@@ -1042,11 +1012,6 @@ green death
 
 Une forme boursoufflée, couverte de plaies suppurantes et expirant un poison
 mortel.
-%%%%
-griffon
-
-Une grande créature avec le postérieur d'un lion et les ailes, la tête et les
-serres d'un aigle.
 %%%%
 guardian mummy
 
@@ -1725,10 +1690,6 @@ sixfirhy
 
 Une petite créature vile qui bouge par saccades, s'arrêtant puis dardant à une
 vitesse fulgurante. Elle à l'air de lancer des étincelles autour d'elle.
-
-Cette bête peut se soigner avec les dégâts électriques, cependant, si elle se
-fait toucher par plus qu'elle ne peut en maîtriser, cela pourrait avoir des
-résultats plutôt violents.
 %%%%
 skeletal warrior
 

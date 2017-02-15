@@ -18,9 +18,9 @@ const int monster_xp_base       = 15;
 const int monster_xp_multiplier = 150;
 const mons_experience_levels mexplevs;
 
-// Monster growing-up sequences. You can specify a chance to indicate that
-// the monster only has a chance of changing type, otherwise the monster
-// will grow up when it reaches the HD of the target form.
+// Monster growing-up sequences, for Beogh orcs. You can specify a chance to
+// indicate that the monster only has a chance of changing type, otherwise the
+// monster will grow up when it reaches the HD of the target form.
 //
 // No special cases are in place: make sure source and target forms are similar.
 // If the target form requires special handling of some sort, add the handling
@@ -33,38 +33,6 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_ORC_KNIGHT, MONS_ORC_WARLORD),
     monster_level_up(MONS_ORC_PRIEST, MONS_ORC_HIGH_PRIEST),
     monster_level_up(MONS_ORC_WIZARD, MONS_ORC_SORCERER),
-
-    monster_level_up(MONS_KOBOLD, MONS_BIG_KOBOLD),
-
-    monster_level_up(MONS_UGLY_THING, MONS_VERY_UGLY_THING),
-
-    monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
-    monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
-
-    monster_level_up(MONS_NAGA, MONS_NAGA_MAGE, 500),
-    monster_level_up(MONS_NAGA, MONS_NAGA_WARRIOR),
-    monster_level_up(MONS_NAGA_MAGE, MONS_GREATER_NAGA),
-    monster_level_up(MONS_NAGA_WARRIOR, MONS_GREATER_NAGA),
-
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEATH_MAGE, 250),
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_DEMONOLOGIST, 333),
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_ANNIHILATOR, 500),
-    monster_level_up(MONS_DEEP_ELF_MAGE, MONS_DEEP_ELF_SORCERER),
-
-    monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
-
-    monster_level_up(MONS_MERFOLK, MONS_MERFOLK_IMPALER),
-    monster_level_up(MONS_SIREN, MONS_MERFOLK_AVATAR),
-
-    // Spriggan -> rider is no good (no mount), -> defender would be an insane
-    // power jump, -> druid or -> air mage would require magic training,
-    // -> berserker an altar.
-
-    monster_level_up(MONS_FAUN, MONS_SATYR),
-    monster_level_up(MONS_TENGU, MONS_TENGU_CONJURER, 500),
-    monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),
-    monster_level_up(MONS_TENGU_CONJURER, MONS_TENGU_REAVER),
-    monster_level_up(MONS_TENGU_WARRIOR, MONS_TENGU_REAVER),
 };
 
 mons_experience_levels::mons_experience_levels()
@@ -110,7 +78,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     dummy.type         = after;
     dummy.base_monster = base_monster;
     dummy.number       = number;
-    define_monster(&dummy); // assumes after is not a zombie
+    define_monster(dummy); // assumes after is not a zombie
 
     colour = dummy.colour;
     speed  = dummy.speed;
@@ -130,11 +98,6 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
             hit_points     = min(hit_points, max_hit_points);
         }
     }
-
-    // An ugly thing is the only ghost demon monster that can level up.
-    // If one has leveled up to a very ugly thing, upgrade it properly.
-    if (type == MONS_VERY_UGLY_THING)
-        uglything_upgrade();
 }
 
 bool monster::level_up_change()
@@ -145,14 +108,6 @@ bool monster::level_up_change()
     {
         upgrade_type(lup->after, false, lup->adjust_hp);
         return true;
-    }
-    else if (mons_is_base_draconian(type))
-    {
-        base_monster = type;
-        monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN,
-                                                    type);
-        if (get_monster_data(upgrade)->HD == get_experience_level())
-            upgrade_type(upgrade, false, true);
     }
     return false;
 }
@@ -229,10 +184,10 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
 
     if (levels_gained)
     {
-        if (mons_intel(this) >= I_HUMAN)
-            simple_monster_message(&mcopy, " looks more experienced.");
+        if (mons_intel(*this) >= I_HUMAN)
+            simple_monster_message(mcopy, " looks more experienced.");
         else
-            simple_monster_message(&mcopy, " looks stronger.");
+            simple_monster_message(mcopy, " looks stronger.");
     }
 
     if (get_experience_level() < MAX_MONS_HD

@@ -527,7 +527,7 @@ ENDMAP
 NAME:   kennysheep_water_balloons
 TAGS:   no_pool_fixup
 ORIENT: northwest
-DEPTH:  D:15-, Depths
+DEPTH:  D:14-, Depths
 NSUBST: % = 5:|
 SUBST:  % : %$
 MAP
@@ -768,32 +768,34 @@ ENDMAP
 NAME:   minmay_expanding_circles
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
-KPROP:  .089 = no_tele_into
-SUBST:  c : cv
-KMONS:  0 = 0
+KMONS:  01 = 0
 KMONS:  8 = 8
-KMONS:  9 = 9
-KITEM:  0 = %
+KMONS:  92 = 9
+KITEM:  01 = %
 KITEM:  8 = |
-KITEM:  9 = *
+KITEM:  92 = *
+SUBST:  c : cv
+KPROP:  .089 = no_tele_into
 MAP
-@cccccccccccccccc
-c+..ccccccccccccc
-c...0cccccccccccc
-c...9cccccccccccc
-cc09=xccccccccccc
-ccccxx...cccccccc
-ccccc....0ccccccc
-ccccc...09ccccccc
-ccccc..098ccccccc
-cccccc098=xcccccc
-cccccccccxx....cc
-cccccccccc.....0c
-cccccccccc....09c
-cccccccccc...098c
-cccccccccc..0988c
-ccccccccccc0988cc
-ccccccccccccccccc
+@cccccccccccccccccx
+c+''ccccccccccccccx
+c'''1cccccccccccccx
+c'''2cccccccccccccx
+cc12mmccccccccccccx
+ccccmm...cccccccccx
+ccccc....0ccccccccx
+ccccc...09ccccccccx
+ccccc..098ccccccccx
+cccccc098mmcccccccx
+cccccccccmm....cccx
+cccccccccc.....0ccx
+cccccccccc....09ccx
+cccccccccc...098ccx
+cccccccccc..0988ccx
+ccccccccccc0988cccx
+ccccccccccccccccccx
+ccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_box_of_statues
@@ -1028,7 +1030,7 @@ MONS:   wizard w:300 / deep elf mage w:120 / orc wizard / \
 MONS:   deep elf sorcerer / deep elf annihilator / lich / ancient lich w:5
 ITEM:   any book / any jewellery / any wand / any misc w:3 / \
         any magical staff w:3 / any randart weapon w:3 / \
-        any randart armour w:3 / any rod w:3
+        any randart armour w:3
 : if you.absdepth() > 18 then
 NSUBST: 2 = 2:2 / 2 = 21 / *:1
 : else
@@ -1610,32 +1612,118 @@ ENDMAP
 NAME:   kennysheep_large_spiral
 TAGS:   no_trap_gen no_item_gen
 ORIENT: northwest
-DEPTH:  D:15-, Depths, !Depths:$
+DEPTH:  D:14-, Depths, !Depths:$
 : ks_random_setup(_G, true)
+SUBST:  X = x
 MAP
-ccccccccccccccccccccccccc
-cwwwwwwwwwwwwwwwwwwwwwwwc
-cwt9.................*twc
-cw*xxxxxxxxxxxxxxxxxxx9wc
-cw.xcccccccccccccccccx.wc
-cw.xcwwwwwwwwwwwwwwwcx.wc
-cw.xcwt9.........*twcx.wc
-cw.xcw*xxxxxxxxxxx9wcx.wc
-cw.xcw.xcccccccccx.wcx.wc
-cw.xcw.xcwwwwwwwcx.wcx.wc
-cw.xcw.xcwt888twcx.wcx.wc
-cw.xcw.xcw.xxx|wcx.wcx.wc
-cw.xcw.xcw.xcx|wcx.wcx.wc
-cw.xcw.xcw.xcx|wcx.wcx.wc
-cw.xcw.xcw.xcx|wcx.wcx.wc
-cw.xcw.xcw.xcxwwcx.wcx.wc
-cw.xcw.xcw.xcccccx.wcx.wc
-cw.xcw.xcw9xxxxxxx*wcx.wc
-cw.xcw.xcwt*.....9twcx.wc
-cw.xcw.xcwwwwwwwwwwwcx.wc
-cw.xcw.xcccccccccccccx.wc
-cw.xcw*xxxxxxxxxxxxxxx*wc
-cw.xcwt9.............9twc
-cw.xcwwwwwwwwwwwwwwwwwwwc
-cw@xccccccccccccccccccccc
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+Xccccccccccccccccccccccccc
+Xcwwwwwwwwwwwwwwwwwwwwwwwc
+Xcwt9.................*twc
+Xcw*xxxxxxxxxxxxxxxxxxx9wc
+Xcw.xcccccccccccccccccx.wc
+Xcw.xcwwwwwwwwwwwwwwwcx.wc
+Xcw.xcwt9.........*twcx.wc
+Xcw.xcw*xxxxxxxxxxx9wcx.wc
+Xcw.xcw.xcccccccccx.wcx.wc
+Xcw.xcw.xcwwwwwwwcx.wcx.wc
+Xcw.xcw.xcwt888twcx.wcx.wc
+Xcw.xcw.xcw.xxx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcx|wcx.wcx.wc
+Xcw.xcw.xcw.xcxwwcx.wcx.wc
+Xcw.xcw.xcw.xcccccx.wcx.wc
+Xcw.xcw.xcw9xxxxxxx*wcx.wc
+Xcw.xcw.xcwt*.....9twcx.wc
+Xcw.xcw.xcwwwwwwwwwwwcx.wc
+Xcw.xcw.xcccccccccccccx.wc
+Xcw.xcw*xxxxxxxxxxxxxxx*wc
+Xcw.xcwt9.............9twc
+Xcw.xcwwwwwwwwwwwwwwwwwwwc
+Xcw@xccccccccccccccccccccc
+ENDMAP
+
+NAME:   minmay_tile_spiral
+DEPTH:  D:11-, Depths
+ORIENT: southwest
+SUBST:  x : cvb, z : cvb, y : cvbnTUVtG8|, X = x
+: if you.absdepth() < 16 then
+NSUBST:  8 = 2:8 / 8 = 8. / *:.
+NSUBST:  9 = 2:9 / 4 = 9. / *:.
+NSUBST:  0 = 3:9 / 6 = 9. / *:.
+: else
+NSUBST:  8 = 4:8 / 10 = 8. / *:.
+NSUBST:  9 = 4:9 / 8 = 9. / *:.
+NSUBST:  0 = 4:9 / 6 = 9. / *:.
+: end
+MAP
+Xxxxxxxxxzxxxxxxxzxxxxxxxz
+Xxxxxxxx..x..9..x..0...0..
+Xxxxxx....0..x..0..xx9xx..
+Xxxxx.....0.xxx.0..xx*xx..
+Xxxx...xxnxxxxxxxnxxxxxxx@
+Xxx...xx..0.xxx.0..xx*xx..
+Xxx..xx...0..x..0..xx9xx..
+Xx...x....x..9..x..0...0..
+Xz...n...zxxxxxxxzxxxxxxxz
+Xx..xxx..xxxx88.9..xxxxxxx
+Xxx00x00xxx|888.9....xxxxx
+Xx...x...xx|888.x.....xxxx
+Xx99xxx99x||8y8xxnxx...xxx
+Xx...x...xx|888.x..xx...xx
+Xxx00x00xxx|888.9...xx..xx
+Xx..xxx..xxxx88.9....x...x
+Xz...n...zxxxxxxxz...n...z
+Xx...x....0988890....x...x
+Xxx..xx...xx8y8xx...xx..xx
+Xxx...xx...x***x...xx...xx
+Xxxx...xxnxxxxxxxnxx...xxx
+Xxxxx......x***x......xxxx
+Xxxxxx....xx8y8xx....xxxxx
+Xxxxxxxx..0988890..xxxxxxx
+Xxxxxxxxxzxxxxxxxzxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME:    minmay_tearing_corner
+DEPTH:   D:11-, Depths
+ORIENT:  northeast
+SUBST:   x : ccvvb, X = x
+: if you.absdepth() < 16 then
+NSUBST:  8 = 4:8 / 8 = 8. / *:.
+NSUBST:  9 = 6:9 / 12 = 9. / *:.
+: else
+NSUBST:  8 = 4:8 / 10 = 8. / *:.
+NSUBST:  9 = 6:9 / 18 = 9. / *:.
+: end
+MAP
+         XXXXXXXXX
+         xxxxxxxxx
+         x9x....9x
+         x9x..xx.x
+         xx.x...9x
+          x.xx..xx
+          x.x8..8x
+          x.xx..xx
+         xx.x8||8x
+        xx..xxxxxxx
+xxxxxxxxx.x9..99x.xx
+x9.9x8x8xx9x...x9x.xxxxxx
+x.x....|x9x.x.x.x9......xxxX
+x.x....|x9.x.x.x..xxxxxx..xX
+x...x8x8x...x.x...x8x8x...xX
+x9.xxxxxx..x.x.x.9x|....x.xX
+xxx......9x.x.x.x9x|....x.xX
+x9.xxxxx.x9x...x9xx8x8x9.9xX
+xxx.....x.x99..9x.xxxxxxxxxX
+x9.xxx.x.xxxxxx..xx
+xxx...x.xx8||8x.xx
+x9.x.x.x.xx..xx.x
+xxx.x.x..x8..8x.x
+x..x.x.x.xx..xx.x
+x.x.x..x.x9...x.xx
+xx.xx..x.x.xx..x9x
+@.x.x99x9x9....x9x
+xxxxxxxxxxxxxxxxxx
 ENDMAP

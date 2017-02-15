@@ -9,7 +9,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "domino.h"
-#include "domino_data.h"
+#include "domino-data.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -271,7 +271,13 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+    case BRANCH_DESOLATION:
+        flv.floor = TILE_FLOOR_SALT;
+        flv.wall = TILE_WALL_DESOLATION;
+        return;
+
     case NUM_BRANCHES:
+    case GLOBAL_BRANCH_INFO:
         break;
     }
 }
@@ -922,8 +928,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
-    if ((mons_class_is_stationary(mon.type)
-         || mon.is(MB_WITHDRAWN))
+    if (mons_class_is_stationary(mon.type)
         && mon.type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
@@ -1378,16 +1383,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
     else if (mc.flags & MAP_HALOED)
-    {
-        monster_info* mon = mc.monsterinfo();
-        if (mon && mons_class_gives_xp(mon->type))
-        {
-            cell.halo = HALO_MONSTER;
-            print_blood = false;
-        }
-        else
-            cell.halo = HALO_RANGE;
-    }
+        cell.halo = HALO_RANGE;
     else
         cell.halo = HALO_NONE;
 
@@ -1427,6 +1423,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP))
         cell.mangrove_water = true;
+    cell.awakened_forest = feat_is_tree(feat) && env.forest_awoken_until;
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;

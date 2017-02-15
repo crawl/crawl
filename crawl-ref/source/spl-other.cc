@@ -12,7 +12,7 @@
 #include "delay.h"
 #include "env.h"
 #include "food.h"
-#include "godcompanions.h"
+#include "god-companions.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -24,24 +24,6 @@
 #include "religion.h"
 #include "spl-util.h"
 #include "terrain.h"
-
-spret_type cast_cure_poison(int pow, bool fail)
-{
-    if (!you.duration[DUR_POISONING])
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-    reduce_player_poison((15 + roll_dice(3, pow / 2)) * 1000);
-
-    // A message is already printed if we removed all of the poison
-    if (you.duration[DUR_POISONING])
-        mpr("The poison in your system diminishes.");
-
-    return SPRET_SUCCESS;
-}
 
 spret_type cast_sublimation_of_blood(int pow, bool fail)
 {
@@ -122,7 +104,7 @@ void start_recall(recall_t type)
     you.recall_list.clear();
     for (monster_iterator mi; mi; ++mi)
     {
-        if (!mons_is_recallable(&you, *mi))
+        if (!mons_is_recallable(&you, **mi))
             continue;
 
         if (type == RECALL_YRED)
@@ -132,7 +114,7 @@ void start_recall(recall_t type)
         }
         else if (type == RECALL_BEOGH)
         {
-            if (!is_orcish_follower(*mi))
+            if (!is_orcish_follower(**mi))
                 continue;
         }
 
@@ -183,7 +165,7 @@ void recall_orders(monster *mons)
 
 // Attempt to recall a single monster by mid, which might be either on or off
 // our current level. Returns whether this monster was successfully recalled.
-static bool _try_recall(mid_t mid)
+bool try_recall(mid_t mid)
 {
     monster* mons = monster_by_mid(mid);
     // Either it's dead or off-level.
@@ -201,11 +183,11 @@ static bool _try_recall(mid_t mid)
         else
         {
             coord_def empty;
-            if (find_habitable_spot_near(you.pos(), mons_base_type(mons), 3, false, empty)
+            if (find_habitable_spot_near(you.pos(), mons_base_type(*mons), 3, false, empty)
                 && mons->move_to_pos(empty))
             {
                 recall_orders(mons);
-                simple_monster_message(mons, " is recalled.");
+                simple_monster_message(*mons, " is recalled.");
                 mons->apply_location_effects(mons->pos());
                 // mons may have been killed, shafted, etc,
                 // but they were still recalled!
@@ -227,7 +209,7 @@ void do_recall(int time)
         // Try to recall an ally.
         mid_t mid = you.recall_list[you.attribute[ATTR_NEXT_RECALL_INDEX]-1];
         you.attribute[ATTR_NEXT_RECALL_INDEX]++;
-        if (_try_recall(mid))
+        if (try_recall(mid))
         {
             time -= you.attribute[ATTR_NEXT_RECALL_TIME];
             you.attribute[ATTR_NEXT_RECALL_TIME] = 3 + random2(4);
@@ -304,7 +286,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         if (check_moveto(dest, "passwall", msg))
         {
             // Passwall delay is reduced, and the delay cannot be interrupted.
-            start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
+            start_delay<PasswallDelay>(1 + walls, dest);
         }
     }
     return SPRET_SUCCESS;
@@ -314,19 +296,18 @@ static int _intoxicate_monsters(coord_def where, int pow)
 {
     monster* mons = monster_at(where);
     if (mons == nullptr
-        || mons_intel(mons) < I_HUMAN
+        || mons_intel(*mons) < I_HUMAN
         || !(mons->holiness() & MH_NATURAL)
-        || monster_resists_this_poison(mons))
+        || mons->check_clarity(false)
+        || monster_resists_this_poison(*mons))
     {
         return 0;
     }
 
     if (x_chance_in_y(40 + pow/3, 100))
     {
-        if (mons->check_clarity(false))
-            return 1;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
-        simple_monster_message(mons, " looks rather confused.");
+        simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
     return 0;
@@ -354,12 +335,6 @@ spret_type cast_intoxicate(int pow, bool fail)
 
 spret_type cast_darkness(int pow, bool fail)
 {
-    if (you.haloed())
-    {
-        mpr("It would have no effect in that bright light!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
     if (you.duration[DUR_DARKNESS])
         mprf(MSGCH_DURATION, "It gets a bit darker.");

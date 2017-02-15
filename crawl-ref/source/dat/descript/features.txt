@@ -1,89 +1,329 @@
-%%%%
-A Zot trap
+########################################################################
+### Altars
+########################################################################
+A detected altar
 
-A trap which inflicts dangerously unpredictable magical effects on those
-unlucky enough to step on it. You may find yourself thrown into the Abyss,
-contaminated with enormous amounts of wild magic, have mighty fiends summoned
-against you, or the like — it is something to avoid at all costs. The monsters
-of the dungeon may even trigger it themselves to invoke its effects against
-you.
+An altar of some kind. You cannot tell what deity it is consecrated to without
+approaching it.
 %%%%
-A basalt altar of Yredelemnul
+A faded altar of an unknown god
 
-An altar to Yredelemnul the Dark, worked from columnar basalt.
+An ancient altar, stripped of all identifying characteristics by the passage of
+aeons. Praying at it will convert you to an unknown god, and the altar's deity
+will greatly appreciate conversion at so ancient a site of worship.
 %%%%
-A blade trap
+A glowing golden altar of the Shining One
 
-A massive scythe-like blade hidden in a slit, with a counterweight that acts as
-a pendulum.
+An altar to the Shining One, made from the purest gold and almost blinding in
+its radiance.
 %%%%
-A bloodstained altar of Trog
+A shattered altar of Ashenzari
 
-An altar to Trog the Wrathful, crudely made by what seem to be the hands of
-giants and covered with bloodstains.
+A crystal altar which shattered to pieces when Ashenzari was cursed. There is
+still a great power remaining within it: a dark aura holds the shards in
+mid-explosion, suspended in time and space much like the god they herald.
+%%%%
+A roughly hewn altar of Beogh
+
+An altar to Beogh, unmistakably roughly hewn by orcish artisans.
+%%%%
+A snail-covered altar of Cheibriados
+
+A timeless altar to Cheibriados the Contemplative.
+%%%%
+A shadowy altar of Dithmenos
+
+An altar to Dithmenos the Shadowed. It seems to absorb light from its
+surroundings.
+%%%%
+A white marble altar of Elyvilon
+
+An altar to Elyvilon the Healer, made from purest white marble and topped by a
+sculpture of the Chalice of Purification.
 %%%%
 A blossoming altar of Fedhas
 
 An altar to Fedhas Madash, covered in vibrant and colourful plant life.
 %%%%
-A bolt trap
+An opulent altar of Gozag
 
-A well-concealed hole containing a crossbow-like contraption with a
-self-loading mechanism.
+A glittering golden and bejewelled altar to Gozag Ym Sagoz the Greedy, gleaming
+brightly even in the dim dungeon light.
 %%%%
-# column_ruins
-A broken pillar
+A hazy altar of Hepliaklqana
 
-A ruined and crumbled stone pillar.
+An altar to Hepliaklqana the Forgotten, shrouded in mist and difficult to make
+out clearly. Something about it seems terribly familiar, but it's impossible to
+say exactly why.
 %%%%
-A burning altar of Makhleb
+A viscous altar of Jiyva
 
-An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
-visible in the flames.
+A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and
+you don't really want to know.
 %%%%
-A closed door
+An ancient bone altar of Kikubaaqudgha
 
-A wooden door.
-%%%%
-# These should get custom names instead. Currently used by: IceCv, Ossuary,
-# Sewer, Trove, Volcano.
-A collapsed entrance
-
-A collapsed passage which cannot be used anymore.
+An altar created from piles of ancient bones, dedicated to the terrible
+Demon-God Kikubaaqudgha.
 %%%%
 A corrupted altar of Lugonu
 
 An altar to Lugonu the Unformed, possibly dedicated to some other power before
 it was irrevocably corrupted.
 %%%%
-A crawl-hole back to the Lair
+A burning altar of Makhleb
 
-A passage leading back to the Lair of Beasts.
+An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
+visible in the flames.
+%%%%
+A sparkling altar of Nemelex Xobeh
+
+An altar sparkling with a lightshow brighter than any gambling den's, to
+attract followers for Nemelex Xobeh.
+%%%%
+An iron altar of Okawaru
+
+An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
+surprisingly sharp.
+%%%%
+An oddly glowing altar of Pakellas
+
+An altar to Pakellas the Inventive, adorned with strange half-completed devices
+and tools, and glowing with an odd, persistent light.
+%%%%
+A stormy altar of Qazlal
+
+An altar dedicated to Qazlal Stormbringer, surrounded by fierce winds,
+electrical discharges, puffs of fire and magma, and the occasional tremor.
+%%%%
+A sacrificial altar of Ru
+
+An altar to Ru the Awakened in the shape of a pair of scales, with a heart in
+one scale and a pictogram representing power and enlightenment in the other.
 %%%%
 A deep blue altar of Sif Muna
 
 An altar of the deepest blue, covered in intricate patterns and writings in
 long forgotten scripts, devoted to Sif Muna the Loreminder.
 %%%%
-A detected altar
+A bloodstained altar of Trog
 
-An altar of some kind. You cannot tell what deity it is consecrated to without
-approaching it.
+An altar to Trog the Wrathful, crudely made by what seem to be the hands of
+giants and covered with bloodstains.
+%%%%
+A hide-covered altar of Uskayaw
+
+An altar to Uskayaw the Reveler. It appears to be hollow and covered in a hide,
+giving it a resonant surface. Carvings on the side depict grouped figures that
+could be dancing or loving or fighting.
+%%%%
+A radiant altar of Vehumet
+
+An altar, ablaze in the lights of Iskenderun and promising great destructive
+powers to those who would follow Vehumet.
+%%%%
+A shimmering altar of Xom
+
+An altar constantly shimmering in all visible colours, and probably some
+invisible ones, matching the whims of Xom the Unpredictable.
+%%%%
+A basalt altar of Yredelemnul
+
+An altar to Yredelemnul the Dark, worked from columnar basalt.
+%%%%
+A glowing silver altar of Zin
+
+An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers
+are expected to be, and glowing gently.
+%%%%
+########################################################################
+### Terrain
+########################################################################
+The endless lava
+
+A sea of fire and brimstone as far as the eye can see. Anyone venturing across
+it would be roasted in no time.
+%%%%
+The floor
+
+The floor.
+%%%%
+Some deep water
+
+A pool of deep water. Only giant creatures can wade through this, and only
+those well-adapted to water can swim through it; for the rest, the only way
+through is to fly over.
+%%%%
+Some lava
+
+An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
+Nothing but the mythical salamander can cross this without flight.
+%%%%
+Some shallow water
+
+A pool of cloudy, waist-deep water. Those well-adapted to water can swim
+through it; other creatures can wade through it slowly. Non-swimmers will
+occasionally fail to attack in melee when wading through shallow water,
+although large creatures are able to keep their balance and avoid fumbling.
+%%%%
+The open sea
+
+An expanse of endless wind and waves, with not a lighthouse in sight. Anyone
+venturing across it would be lost beyond all hope in short order.
+%%%%
+An unnaturally hard rock wall
+
+A wall imbued with magic that makes it indestructible.
+%%%%
+A wall of the weird stuff which makes up Pandemonium
+
+A wall made from the weird stuff which makes up Pandemonium. It seems to be
+like rock in most other aspects.
+%%%%
+A crystal wall
+
+A wall made from polished crystal and imbued with arcane magics. They prevent
+its easy destruction, and make it reflect heat and cold.
+%%%%
+A translucent rock wall
+
+A rock wall made from a mineral as translucent as good quality glass. Whether
+it is natural or magical, you cannot tell.
+%%%%
+A translucent stone wall
+
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone
+walls. It has been imbued with arcane magics which render it translucent.
+%%%%
+A translucent unnaturally hard rock wall
+
+A wall imbued with magic that not only makes it indestructible but also makes
+it translucent like glass.
+%%%%
+A stone wall
+
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone
+walls.
+%%%%
+A slime covered rock wall
+
+A rock wall coated with bright green slime. It is acidic to the touch.
+%%%%
+A metal wall
+
+A wall of bluish-grey metal. As every dungeon electrician knows, it will ground
+even magical bolts of lightning.
+%%%%
+A rock wall
+
+A wall consisting of simple rock.
+%%%%
+########################################################################
+### Features
+########################################################################
+A shop
+
+A shop in the dungeon, beyond sight of the world above, manned by a secretive
+and reclusive shopkeeper who cannot be bargained with, grants no refunds, and
+is interested in nothing you may have to sell. Some shops hawk antiques of
+unknown provenance, and offer little hint as to the quality or nature of their
+goods.
+%%%%
+A stone staircase leading down
+
+A staircase leading further down.
+%%%%
+A stone staircase leading up
+
+A staircase leading back up.
+%%%%
+A short-range portal
+
+A portal that will send you to a nearby location.
+%%%%
+A tree
+
+A large tree. While in most places the dim light of the dungeon is not bright
+enough to sustain large plants, there are spots where, with the grace of
+Fedhas, trees as big as those on the surface can grow underground. It is
+susceptible to bolts of lightning and to sufficiently intense sources of fire.
+%%%%
+An awoken tree
+
+A large tree that has been enchanted to grant it some limited motility,
+allowing it to lash out out at any adjacent enemies of the creature who awoke
+it. It is susceptible to bolts of lightning and to sufficiently intense sources
+of fire.
+%%%%
+An abandoned shop
+
+A shop that has been abandoned.
+%%%%
+An orcish idol
+
+An idol of the orc god Beogh.
+%%%%
+An iron grate
+
+A rusted iron grate, brittle enough to be disrupted with a spell or a wand
+quite easily. It is too strong to be breakable by hand, however.
+%%%%
+An escape hatch in the floor
+
+A spring-loaded one-way escape hatch set in the dungeon floor, allowing the
+adventurer beset by adversaries to exchange the perils of this level for the
+perils of the next.
+%%%%
+An escape hatch in the ceiling
+
+A spring-loaded one-way escape hatch set in the ceiling.
+%%%%
+A shaft
+
+A hole in the ground, leading to a dungeon level one or more floors deeper.
+%%%%
+A sealed passage leading down
+
+A descending passage sealed tightly by a magical barricade. It is impossible to
+climb through it so long as the magic holds.
+%%%%
+A sealed passage leading up
+
+An ascending passage sealed tightly by a magical barricade. It is impossible to
+climb through it so long as the magic holds.
+%%%%
+An empty arch of ancient stone
+
+A stone archway that seems to lead to nowhere in particular.
 %%%%
 # mmap/antennae/etc
 A detected shop or portal
 
 A gateway of some kind. You cannot tell where it leads without approaching it.
 %%%%
+A passage of Golubria
+
+An unstable gateway that allows instantaneous travel to another nearby passage
+of Golubria, and will close behind anything passing through it.
+%%%%
+A portal to somewhere
+
+A gash-like tear in reality that looks into some terrifying, starry otherworld.
+Thankfully, the magic that opened it also prevents its vacuum from consuming
+and swallowing everything in sight.
+%%%%
+A granite statue
+
+A stone statue whose features have long since withered away.
+%%%%
+A gleaming silver wall
+
+A wall made of pure silver, formed by the power of Zin to temporarily imprison
+a monster within its confines.
+%%%%
 A dry fountain
 
 A dried-up fountain that has seen better days.
-%%%%
-A faded altar to an unknown god
-
-An ancient altar, stripped of all identifying characteristics by the passage of
-aeons. Praying at it will convert you to an unknown god, and the altar's deity
-will greatly appreciate conversion at so ancient a site of worship.
 %%%%
 A fountain of clear blue water
 
@@ -97,6 +337,14 @@ A fountain of sparkling water
 
 A decorative fountain, flowing with brightly sparkling water.
 %%%%
+# column_ruins
+A broken pillar
+
+A ruined and crumbled stone pillar.
+%%%%
+########################################################################
+### Branch entrances and exits
+########################################################################
 A gate leading back out of this place
 
 A gate that will let you return whence you came.
@@ -160,165 +408,22 @@ A gateway to the freezing wastes of Cocytus
 
 A gateway leading to Cocytus.
 %%%%
-A gleaming silver wall
 
-A wall made of pure silver, formed by the power of Zin to temporarily imprison
-a monster within its confines.
-%%%%
-A glowing golden altar of the Shining One
-
-An altar to the Shining One, made from the purest gold and almost blinding in
-its radiance.
-%%%%
-A glowing silver altar of Zin
-
-An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers
-are expected to be, and glowing gently.
-%%%%
-A granite statue
-
-A stone statue whose features have long since withered away.
-%%%%
 A hole to the Spider Nest
 
 A passage leading to the Spider Nest.
-%%%%
-A labyrinth entrance
-
-A portal leading to a labyrinth.
-%%%%
-A mechanical trap
-
-A mechanical contraption designed to harm trespassers.
-%%%%
-A metal wall
-
-A wall of bluish-grey metal. As every dungeon electrician knows, it will ground
-even magical bolts of lightning.
-%%%%
-A needle trap
-
-A mechanical contraption that shoots poisoned needles.
-%%%%
-A net trap
-
-A large concealed net hanging from the dungeon's ceiling, rigged to fall onto
-anyone who steps beneath it.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
 A gateway leading to the Abyss.
 %%%%
-A passage of Golubria
+A crawl-hole back to the Lair
 
-An unstable gateway that allows instantaneous travel to another nearby passage
-of Golubria, and will close behind anything passing through it.
+A passage leading back to the Lair of Beasts.
 %%%%
-A portal to somewhere
+An exit through the horrors of the Abyss
 
-A gash-like tear in reality that looks into some terrifying, starry otherworld.
-Thankfully, the magic that opened this portal prevents its vacuum from
-consuming and swallowing everything in sight.
-%%%%
-A pressure plate
-
-A trigger of some sort. You cannot tell what kind of trap it is attached to.
-Its complicated detection system will trigger the trap even when someone flies
-over it.
-%%%%
-A radiant altar of Vehumet
-
-An altar, ablaze in the lights of Iskenderun and promising great destructive
-powers to those who would follow Vehumet.
-%%%%
-A rock wall
-
-A wall consisting of simple rock.
-%%%%
-A rock-blocked tunnel
-
-A tunnel which is no longer passable.
-%%%%
-A rocky tunnel leading out of this place
-
-An unstable passage in the volcanic rock, admitting a draft of cool air from
-beyond. It leads back to the place you came from. You will be unable to return
-here once you pass through it.
-%%%%
-A roughly hewn altar of Beogh
-
-An altar to Beogh, unmistakably roughly hewn by orcish artisans.
-%%%%
-A runed door
-
-A door, covered in runic writing. It looks like there is something special
-behind it — perhaps danger, perhaps treasure. You may break the runes by
-opening it like any other door.
-%%%%
-A sacrificial altar of Ru
-
-An altar to Ru the Awakened in the shape of a scales with a heart in
-one scale and a pictogram representing power and enlightenment in the other.
-%%%%
-A sealed door
-
-A door sealed tightly by arcane runes. It refuses to open for any creature not
-recognised by its magic.
-%%%%
-A sealed passage leading down
-
-A descending passage sealed tightly by a magical barricade. Forcing your way
-through it looks impossible, so long as the magic holds.
-%%%%
-A sealed passage leading up
-
-An ascending passage sealed tightly by a magical barricade. Forcing your way
-through it looks impossible, so long as the magic holds.
-%%%%
-A shaft
-
-A deep hole. Who knows where you might end up if you were to fall through it?
-%%%%
-A shadowy altar of Dithmenos
-
-An altar to Dithmenos the Shadowed. It seems to absorb light from its
-surroundings.
-%%%%
-A shattered altar of Ashenzari
-
-A crystal altar which shattered to pieces when Ashenzari was cursed. There is
-still a great power remaining within it: a dark aura holds the shards in
-mid-explosion, suspended in time and space much like the god they herald.
-%%%%
-A shimmering altar of Xom
-
-An altar constantly shimmering in all visible colours, and probably some
-invisible ones, matching the whims of Xom the Unpredictable.
-%%%%
-A shop
-
-A shop in the dungeon, beyond sight of the world above, manned by a secretive
-and reclusive shopkeeper who cannot be bargained with, grants no refunds, and
-is interested in nothing you may have to sell. Some shops hawk antiques of
-unknown provenance, and offer little hint as to the quality or nature of their
-goods.
-%%%%
-A slime covered rock wall
-
-A rock wall coated with bright green slime. It is acidic to the touch.
-%%%%
-A snail-covered altar of Cheibriados
-
-A timeless altar to Cheibriados the Contemplative.
-%%%%
-A sparkling altar of Nemelex Xobeh
-
-An altar sparkling with a lightshow brighter than any gambling den's, to
-attract followers for Nemelex Xobeh.
-%%%%
-A spear trap
-
-A mechanical contraption that shoots long sharp poles to skewer tresspassers.
+A gateway leading back to the dungeon via the madness of the Abyss.
 %%%%
 A staircase back to the Dungeon
 
@@ -391,202 +496,28 @@ A gate to the Vaults
 
 A gateway leading to the Vaults.
 %%%%
-A stone staircase leading down
-
-A staircase leading further down.
-%%%%
-A stone staircase leading up
-
-A staircase leading back up.
-%%%%
-A stone wall
-
-A harder obstacle than rock walls. Only the mightiest magic can shatter stone
-walls.
-%%%%
-A stormy altar of Qazlal
-
-An altar dedicated to Qazlal Stormbringer, surrounded by fierce winds,
-electrical discharges, puffs of fire and magma, and the occasional tremor.
-%%%%
-A short-range portal
-
-A portal that will send you to a nearby location.
-%%%%
-A teleport trap
-
-A magical trap which will displace anyone passing over it to a random place on
-the same dungeon level. It is worn with age, and will dissipate on use.
-%%%%
-A permanent teleport trap
-
-A magical trap which will displace anyone passing over it to a random place on
-the same dungeon level.
-%%%%
-A translucent rock wall
-
-A rock wall made from a mineral as translucent as good quality glass. Whether
-it is natural or magical, you cannot tell.
-%%%%
-A translucent stone wall
-
-A harder obstacle than rock walls. Only the mightiest magic can shatter stone
-walls. It has been imbued with arcane magics which render it translucent.
-%%%%
-A translucent unnaturally hard rock wall
-
-A wall imbued with magic that not only makes it indestructible but also makes
-it translucent like glass.
-%%%%
-A tree
-
-A large tree. While in most places the dim light of the dungeon is not bright
-enough to sustain large plants, there are spots where, with the grace of
-Fedhas, trees as big as those on the surface can grow underground. It is
-susceptible to bolts of lightning and to sufficiently intense sources of fire.
-%%%%
-A viscous altar of Jiyva
-
-A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and
-you don't really want to know.
-%%%%
-A crystal wall
-
-A wall made from polished crystal and imbued with arcane magics. They prevent
-its easy destruction, and make it reflect heat and cold.
-%%%%
-A wall of the weird stuff which makes up Pandemonium
-
-A wall made from the weird stuff which makes up Pandemonium. It seems to be
-like rock in most other aspects.
-%%%%
-A white marble altar of Elyvilon
-
-An altar to Elyvilon the Healer, made from purest white marble and topped by a
-sculpture of the Chalice of Purification.
-%%%%
-A web
-
-A spider's web. The spider who left it must have been huge, as it seems to be
-made for trapping {{ return you.genus(true) }} rather than flies.
-%%%%
-An abandoned shop
-
-A shop that has been abandoned.
-%%%%
-An alarm trap
-
-A trap that creates a loud noise to attract nearby monsters. In addition to the
-noise it creates, it will apply an enchantment making monsters all over the
-level aware of your location.
-%%%%
-An ancient bone altar of Kikubaaqudgha
-
-An altar created from piles of ancient bones, dedicated to the terrible
-Demon-God Kikubaaqudgha.
-%%%%
-An arrow trap
-
-A mechanical trap that will fire an arrow when triggered.
-%%%%
-An empty arch of ancient stone
-
-A stone archway that seems to lead to nowhere in particular.
-%%%%
-An escape hatch in the ceiling
-
-A spring-loaded one-way escape hatch set in the ceiling.
-%%%%
-An escape hatch in the floor
-
-A spring-loaded one-way escape hatch set in the dungeon floor, allowing the
-adventurer beset by adversaries to exchange the perils of this level for the
-perils of the next.
-%%%%
-An exit through the horrors of the Abyss
-
-A gateway leading back to the dungeon via the madness of the Abyss.
-%%%%
-# shown if the player is an orc
-An idol of Beogh
-
-{{
-  if you.god() == "Beogh"
-    then
-      return "A crude but majestic statue representing Beogh in his glory. "
-          .. "May foul non-orcs all be smitten!";
-    else
-      return "A crude statue depicting Beogh, the god of the primitive orcs "
-          .. "living here. Their religion calls for the murder of all "
-          .. "non-believers. Beogh is known to be vengeful to those who dare "
-          .. "damage such idols.";
-  end
-}}
-%%%%
-An iron altar of Okawaru
-
-An altar of iron and steel dedicated to the Warmaster Okawaru. Its edges are
-surprisingly sharp.
-%%%%
-An iron grate
-
-A rusted iron grate, brittle enough to be disrupted with a spell or a wand
-quite easily. It is too strong to be breakable by hand, however.
-%%%%
-An oddly glowing altar of Pakellas
-
-Strange half-completed devices, tools beyond your comprehension, and a
-persistent light glowing in odd colours all adorn this altar to Pakellas the
-Inventive.
-%%%%
+########################################################################
+## Doors
+########################################################################
 An open door
 
 A wooden door.
 %%%%
-An opulent altar of Gozag
+A closed door
 
-A glittering golden and bejewelled altar to Gozag Ym Sagoz the Greedy, gleaming
-brightly even in the dim dungeon light.
+A wooden door.
 %%%%
-An orcish idol
+A sealed door
 
-An idol of the orc god Beogh. Destroying it is likely to incur Beogh's wrath.
+A door sealed tightly by arcane runes. It refuses to open for any creature not
+recognised by its magic.
 %%%%
-An unnaturally hard rock wall
+A runed door
 
-A wall imbued with magic that makes it indestructible.
+A door, covered in runic writing. It looks like there is something special
+behind it — perhaps danger, perhaps treasure. You may break the runes by
+opening it like any other door.
 %%%%
-The endless lava
-
-A sea of fire and brimstone as far as the eye can see. Floating above this
-inferno would roast you in no time.
-%%%%
-The floor
-
-The floor.
-%%%%
-Some deep water
-
-A pool of deep water. The unexpected end of flight whilst above deep water has
-been the death of many careless adventurers.
-%%%%
-Some lava
-
-An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
-%%%%
-Some shallow water
-
-A pool of cloudy, waist-deep water. It makes movement and combat cumbersome for
-landlubbers — this is sometimes dangerous, but never directly fatal.
-%%%%
-The open sea
-
-An expanse of endless wind and waves, with not a lighthouse in sight. You'd be
-lost beyond all hope in short order — better not risk it.
-%%%%
-########################
-## Big doors
-########################
 A large open door
 
 <An open door>
@@ -635,9 +566,156 @@ A huge sealed gate
 
 <A sealed door>
 %%%%
-########################
+########################################################################
+### Traps
+########################################################################
+An alarm trap
+
+A trap that creates a loud noise to attract nearby monsters. In addition to the
+noise it creates, it will apply an enchantment making monsters all over the
+level aware of your location.
+%%%%
+An arrow trap
+
+A mechanical trap that will fire an arrow when triggered.
+%%%%
+A blade trap
+
+A massive scythe-like blade hidden in a slit, with a counterweight that acts as
+a pendulum.
+%%%%
+A bolt trap
+
+A well-concealed hole containing a crossbow-like contraption with a
+self-loading mechanism.
+%%%%
+A mechanical trap
+
+A mechanical contraption designed to harm trespassers.
+%%%%
+A needle trap
+
+A mechanical contraption that shoots poisoned needles.
+%%%%
+A net trap
+
+A large concealed net hanging from the dungeon's ceiling, rigged to fall onto
+anyone who steps beneath it.
+%%%%
+A pressure plate
+
+A trigger of some sort. You cannot tell what kind of trap it is attached to.
+Its complicated detection system will trigger the trap even when someone flies
+over it.
+%%%%
+A spear trap
+
+A mechanical contraption that shoots long sharp poles to skewer tresspassers.
+%%%%
+A teleport trap
+
+A magical trap which will displace anyone passing over it to a random place on
+the same dungeon level. It is worn with age, and will dissipate on use.
+%%%%
+A permanent teleport trap
+
+A magical trap which will displace anyone passing over it to a random place on
+the same dungeon level.
+%%%%
+A web
+
+A spider's web. The spider who left it must have been huge, as it seems to be
+made for trapping {{ return you.genus(true) }} rather than flies.
+
+Any creature caught in it will send out telltale vibrations, alerting and
+attracting spiders nearby.
+%%%%
+A Zot trap
+
+A trap which inflicts dangerously unpredictable magical effects on those
+unlucky enough to step on it. You may find yourself thrown into the Abyss,
+contaminated with enormous amounts of wild magic, have mighty fiends summoned
+against you, or the like. The monsters of the dungeon may even trigger it
+themselves to invoke its effects against you.
+%%%%
+########################################################################
+### Portal vault entrances
+########################################################################
+A flagged portal
+
+A portal leading to a bailey, gradually fading away as the standard is lowered
+to the ground.
+%%%%
+A labyrinth entrance
+
+A portal leading to a labyrinth.
+%%%%
+# timed bazaar
+A flickering gateway to a bazaar
+
+A portal leading to a bazaar, where itinerant merchants gather to sell their
+wares. They never stay in one place for very long.
+%%%%
+# permanent bazaar
+A gateway to a bazaar
+
+A portal leading to a bazaar, where itinerant merchants gather to sell their
+wares. They will wait for you, but once you get a chance to browse their
+inventory, the merchants will depart in search of other customers.
+%%%%
+A frozen archway
+
+A portal leading to an ice cave. The archway is gradually melting away.
+%%%%
+A sand-covered staircase
+
+A staircase leading to an ossuary. Sand is continuously pouring onto it,
+gradually blocking the entrance.
+%%%%
+A glowing drain
+
+A passage leading to a sewer. It is gradually rusting away.
+%%%%
+A portal to a secret trove of treasure
+
+A portal leading to a treasure trove.
+%%%%
+A dark tunnel
+
+A portal leading to the heart of a volcano. Rocks are falling from the roof and
+sides of the tunnel, filling the entry.
+%%%%
+A ruined gateway
+
+A salt-encrusted arch, covered with carved entreaties to the good gods to
+contain the evils sealed therein. Whatever protections this arch once offered
+have finally succumbed to the ravages of time, and a bitter breeze pours forth
+from the distant land beyond.
+%%%%
+A magical portal
+
+A portal leading to a wizard's laboratory. It is fading away.
+%%%%
+# These should get custom names instead. Currently used by: IceCv, Ossuary,
+# Sewer, Trove, Volcano.
+A collapsed entrance
+
+A collapsed passage which cannot be used anymore.
+%%%%
+########################################################################
 ### Vault redefinitions
-########################
+########################################################################
+# volcanos
+A rock-blocked tunnel
+
+A tunnel which is no longer passable.
+%%%%
+A rocky tunnel leading out of this place
+
+An unstable passage in the volcanic rock, admitting a draft of cool air from
+beyond. It leads back to the place you came from. You will be unable to return
+here once you pass through it.
+%%%%
 # wizlabs
 A portal leading out of this place
 
@@ -741,29 +819,36 @@ A tree, as dead as everything else here.
 # Dis:7
 An iron statue
 
-A statue with no mouth. Creepy!
+A statue of an ancient warrior, festooned with trophies from fallen victims.
+Some dark substance oozes from the gaps in its visor; surely it must be oil..?
 %%%%
 # Geh:7
 Ashen ground
 
-Ashen ground. It is warm and almost comfortable.
+Ash and embers, littered with broken treasures and worthless coins from realms
+long fallen.
 %%%%
 A tempered metal wall
 
-A metal wall, emitting heat.
+Walls of brass and nickel, covered in a thin golden foil steadily peeling away
+in the constant, oppressive heat. Designs depict mortals dealing with devils,
+but the former rarely seem to come out ahead on the exchange.
 %%%%
 # Coc:7
 An ice-covered rock wall
 
-A rock wall coated in a thick layer of ice.
+A rock wall coated in a thick layer of ice. Twisted faces glower beneath the
+surface, locked in perpetual grimaces of rage and betrayal.
 %%%%
 An ice-covered stone wall
 
-A stone wall coated in a thick layer of ice.
+A stone wall coated in a thick layer of ice. Twisted faces glower beneath the
+surface, locked in perpetual grimaces of rage and betrayal.
 %%%%
 Frost-covered floor
 
-Frost-covered floor. It crunches satisfyingly underfoot.
+Earth locked within perpetual frost and cold. It seems ageless and changeless,
+as though it has existed in this state for an eternity.
 %%%%
 # Pan: the holy level
 A golden statue
@@ -775,10 +860,16 @@ A silver wall
 A wall made of pure silver.
 %%%%
 # Slime:$
-A rune carved stone wall
+A rune-carved stone wall
 
-A strangely slime-free stone wall, carved all over with countless mystical
-runes. One often repeated set of runes seems to refer to 'the Royal Jelly.'
+A strangely slime-free stone wall, carved all over with countless protective
+runes.
+%%%%
+A rune-carved clear stone wall
+
+A strangely slime-free stone wall, with strange lights twinkling within its
+airy confines. Mystical runes are scattered across its surface, seemingly
+referring to a 'Royal Jelly'.
 %%%%
 # Tomb:1
 A sarcophagus
@@ -789,14 +880,12 @@ An ancient sarcophagus. It appears to be empty.
 A heavily etched metal wall
 
 A metal wall etched with murals depicting, in great and gruesome detail,
-exactly what will be done to anyone caught stealing from the Vaults. It makes
-you feel queasy.
+exactly what will be done to anyone caught stealing from the Vaults.
 %%%%
 A heavily etched crystal wall
 
 A crystal wall etched with murals depicting, in great and gruesome detail,
-exactly what will be done to anyone caught stealing from the Vaults. It makes
-you feel queasy.
+exactly what will be done to anyone caught stealing from the Vaults.
 %%%%
 # moated_graveyard_entry (D:1)
 An adventurer's gravestone
@@ -851,56 +940,21 @@ A sealed sarcophagus
 
 An ancient sarcophagus. It is sealed shut.
 %%%%
-###########################
-### Portal vault entrances
-###########################
-A flagged portal
+# Desolation
+An endless expanse of salt
 
-A portal leading to a bailey, gradually fading away as the standard is lowered
-to the ground.
+A seemingly endless, flat plain, wracked by blinding salt-storms. Anyone
+venturing across it would be lost beyond all hope in short order.
 %%%%
-# timed bazaar
-A flickering gateway to a bazaar
+# Desolation
+A ruined idol
 
-A portal leading to a bazaar, where itinerant merchants gather to sell their
-wares. They never stay in one place for very long.
+A monument to the glory of a dead god. The statue has been methodically
+defaced; not a single distinguishing feature remains.
 %%%%
-# permanent bazaar
-A gateway to a bazaar
-
-A portal leading to a bazaar, where itinerant merchants gather to sell their
-wares. They will wait for you, but once you get a chance to browse their
-inventory, the merchants will depart in search of other customers.
-%%%%
-A frozen archway
-
-A portal leading to an ice cave. The archway is gradually melting away.
-%%%%
-A sand-covered staircase
-
-A staircase leading to an ossuary. Sand is continuously pouring onto it,
-gradually blocking the entrance.
-%%%%
-A glowing drain
-
-A passage leading to a sewer. It is gradually rusting away.
-%%%%
-A portal to a secret trove of treasure
-
-A portal leading to a treasure trove.
-%%%%
-A dark tunnel
-
-A portal leading to the heart of a volcano. Rocks are falling from the roof and
-sides of the tunnel, filling the entry.
-%%%%
-A magical portal
-
-A portal leading to a wizard's laboratory. It is fading away.
-%%%%
-###########
+########################################################################
 ### Sprint
-###########
+########################################################################
 # sprint_mu
 An open sea?
 
@@ -915,10 +969,36 @@ A spawn point
 
 An entrance that the opposition may appear from.
 %%%%
-############
+########################################################################
 ### Tutorial
-############
+########################################################################
 An exit from the tutorial
 
 A way out of the dungeon, letting you finish this lesson.
+%%%%
+########################################################################
+### Area effects
+########################################################################
+haloed
+
+This area is lit by a divine halo, decreasing your stealth, preventing
+invisibility, and increasing the accuracy of attacks against any illuminated
+creatures.
+%%%%
+umbraed
+
+This area is wreathed by an umbra, improving your stealth if you are attuned to
+the shadows, and decreasing the accuracy of attacks by those unattuned to the
+shadows.
+%%%%
+liquefied
+
+The ground here is liquefied, making movement slow and causing any attempts to
+attack in melee to sometimes fail.
+%%%%
+disjunction haloed
+
+This area is bathed in translocational energy, causing creatures to blink away
+from the originator of the energy with an increasing chance the closer they are
+to the caster.
 %%%%

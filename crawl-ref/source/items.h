@@ -29,6 +29,9 @@ enum item_source_type
 /// top-priority item override colour
 #define FORCED_ITEM_COLOUR_KEY "forced_item_colour"
 
+pair<bool, int> item_int(item_def &item);
+item_def& item_from_int(bool, int);
+
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
@@ -71,13 +74,14 @@ void lose_item_stack(const coord_def& where);
 
 void item_check();
 void request_autopickup(bool do_pickup = true);
+void id_floor_items();
 
 bool player_on_single_stack();
 void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-void item_list_on_square(vector<const item_def*>& items, int obj);
+vector<const item_def*> item_list_on_square(int obj);
 
 bool copy_item_to_grid(item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default

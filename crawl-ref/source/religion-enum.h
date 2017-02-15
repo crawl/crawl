@@ -20,4 +20,14 @@ enum nemelex_gift_types
 
 #define ACQUIRE_KEY "acquired" // acquirement source prop on acquired items
 
+/// the name of the ally hepliaklqana granted the player
+#define HEPLIAKLQANA_ALLY_NAME_KEY "hepliaklqana_ally_name"
+/// ancestor gender
+#define HEPLIAKLQANA_ALLY_GENDER_KEY "hepliaklqana_ally_gender"
+/// chosen ancestor class (monster_type)
+#define HEPLIAKLQANA_ALLY_TYPE_KEY "hepliaklqana_ally_type"
+
+/// custom monster gender
+#define MON_GENDER_KEY "mon_gender"
+
 #endif

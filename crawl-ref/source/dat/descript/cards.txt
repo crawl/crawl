@@ -1,21 +1,5 @@
 %%%%
-# Transport
-Warpwright card
-
-The card depicts a heavily engraved door swinging open. The landscape beyond
-appears upside down.
-
-Drawing this card creates a teleportation trap in an adjacent square, with a
-chance of its position being revealed at high power.
-%%%%
-Swap card
-
-The card depicts a hooded executioner with his head on the block, while the
-condemned gleefully raises the axe.
-
-Drawing this card swaps the user's position with that of a nearby creature, if
-possible.
-%%%%
+# Escape
 Velocity card
 
 The card depicts an empty, well-worn pair of boots. Sand, ashes, and turf
@@ -24,28 +8,12 @@ coat the boots' soles.
 Drawing this card can grant great speed or terrible slowness to foes and allies
 alike. The beneficial aspects depend on card power.
 %%%%
-Solitude card
-
-The card depicts a monk meditating atop a lonely mountain peak.
-
-Drawing this card randomly teleports creatures that are adjacent to the user.
-At high card power, the user will be surrounded by a field of translocational
-energy that blinks all creatures within.
-%%%%
-# Emergency
 the Tomb card
 
 The card depicts a royal crypt, its entrance sealed by a heavy stone slab.
 
 Drawing this card entombs its user in protective, temporary walls of solid rock.
 At lower power levels or with adjacent creatures, the tomb may be imperfect.
-%%%%
-the Banshee card
-
-The card depicts a figure silhouetted against the moon, wailing in despair.
-
-Drawing this card emits the wail of the Banshee, which instils fear and drains
-life from nearby creatures.
 %%%%
 Exile card
 
@@ -62,13 +30,6 @@ them.
 
 Drawing this card will create a shaft beneath the user, and possibly beneath
 their enemies.
-%%%%
-the Alchemist card
-
-The card depicts a bubbling flask left on a laboratory workbench.
-
-Drawing this card will transmute some of the user's gold into health and magical
-energy.
 %%%%
 the Elixir card
 
@@ -91,33 +52,11 @@ The card depicts an oklob plant, dripping with its distinctive corrosive sap.
 
 Drawing this card will unleash a corrosive attack spell.
 %%%%
-the Hammer card
-
-The card depicts a blacksmith raising a large hammer, shown from the
-perspective of the anvil.
-
-Drawing this card will unleash an earthen attack spell.
-%%%%
-Venom card
-
-The card depicts a snake peering out from a skull's eye sockets, dripping
-venom from its fangs.
-
-Drawing this card will unleash a poisonous attack spell. At lower power,
-attuning one's self with poison will also leave the user briefly vulnerable
-to it.
-%%%%
 the Storm card
 
 The card depicts a ship at sea sinking in a thunderstorm.
 
 Drawing it unleashes a storm of wind and thunder clouds.
-%%%%
-Water card
-
-The card depicts a tsunami destroying a peaceful coastal village.
-
-Drawing it floods the location and summons creatures of the deep.
 %%%%
 Pain card
 
@@ -137,79 +76,7 @@ The card depicts a dragon whose scales are sloughing off, revealing a sheep
 underneath.
 
 Drawing this card will attempt to polymorph and malmutate nearby enemies into
-weaker forms.
-%%%%
-# Battle
-the Potion card
-
-The card depicts a long-unvisited wine rack, with each bottle's label coated
-in dust.
-
-Drawing this card has the same effect, positive or negative, as drinking one
-of a select set of magical potions. Some particularly positive effects are
-possible at high power. Its effects will be shared with one's allies if
-possible.
-%%%%
-the Helm card
-
-The card depicts a heavily-armoured knight riding across a barren landscape,
-bearing a red pennant.
-
-Drawing this card increases the user's defences. It may provide boosts to
-armour, evasion, shielding and resistances. With high power, allies may also
-receive a mild defensive boost.
-%%%%
-the Blade card
-
-The card depicts a great sword, protruding from the back of a corpse in the
-middle of a battlefield.
-
-Drawing this card temporarily allows the user to cleave regardless of their
-method of melee, hitting all adjacent foes with each attack.
-%%%%
-the Shadow card
-
-The card depicts a pair of twins. One is dressed in royal finery while the
-other is in grey rags, with both of their hands entwined around the handle
-of a simple knife.
-
-Drawing this card lets the user blend into the shadows, granting one or both
-of additional stealth or sight-shrinking darkness.
-%%%%
-Fortitude card
-
-The card depicts a sword shattering against a bare outstretched hand.
-
-Drawing this card grants immense strength and the ability to ignore injury.
-%%%%
-# Wonders
-Focus card
-
-The card depicts a gnarled claw adjusting a slanted set of scales.
-
-Drawing this card permanently increases the user's highest attribute at the
-cost of their lowest.
-%%%%
-the Helix card
-
-The card depicts figures walking up and down a double spiral staircase, becoming
-deformed as they descend and perfected as they ascend.
-
-This card changes the user's mutations. Higher power levels make the change more
-likely to be beneficial.
-%%%%
-Dowsing card
-
-The card depicts a blindfolded, chained figure with a forehead tattoo of an eye.
-
-Drawing this card detects nearby traps and items, reveals their surroundings,
-provides short-lived telepathy, or some combination thereof.
-%%%%
-the Mercenary card
-
-The card depicts bloodied hands accepting a bag of gold.
-
-Drawing this card summons a mercenary to fight by the user's side, for a fee.
+weaker forms, and will briefly daze those that cannot be polymorphed.
 %%%%
 Wild Magic card
 
@@ -218,14 +85,7 @@ The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
 Drawing this card causes wild magic (as if from miscasting a spell) to act upon
 its user's enemies. Each creature affected will restore some of the user's
 magic.
-%%%%
-# deck of summonings
-the Crusade card
-
-The card depicts a winged soldier with a flaming sword, leading a vast army.
-
-Drawing this card will try to convert nearby creatures to the user's cause, and
-abjure hostile summons.
+# Summoning
 %%%%
 the Elements card
 
@@ -261,13 +121,6 @@ arrow.
 
 Drawing this card will summon several archers.
 %%%%
-Repulsiveness card
-
-The card depicts something the brain refuses to register.
-
-Drawing this card will summon an ugly, a very ugly thing, or both, with card
-power. They may be hostile, depending on card power. Yuck.
-%%%%
 the Illusion card
 
 The card depicts someone standing in a hall of mirrors, surrounded by their own
@@ -276,25 +129,13 @@ reflections.
 Drawing this card will summon an illusion of the user. Its power will depend
 upon one's own.
 %%%%
-# Oddities
+# Punishment
 Wrath card
 
 The card depicts the hand of the divine, reaching down from the heavens to hurl
 furious lightning.
 
 Drawing this card will draw a god's wrath against the user.
-%%%%
-Xom card
-
-The card depicts the ceaseless, shimmering, chromatic lights of an altar to Xom.
-
-Drawing this card draws Xom's attention to the user.
-%%%%
-the Feast card
-
-The card depicts lords and ladies gorging themselves in a lavish banquet hall.
-
-Drawing this card will leave its user completely full.
 %%%%
 Famine card
 
@@ -303,13 +144,6 @@ earth.
 
 Drawing this card will leave its user on the brink of starvation.
 %%%%
-the Curse card
-
-The card depicts unravelling bandages coated in sigils.
-
-Drawing this card places curses on the user's possessions.
-%%%%
-# Punishment
 the Wraith card
 
 The card depicts absolutely nothing.
@@ -326,8 +160,7 @@ Torment card
 
 The card depicts a screaming figure being tortured on the rack.
 
-Drawing this card will call on the powers of darkness, causing agonising injury
-to any nearby living creature.
+Drawing this card will cause agonising injury to the user.
 %%%%
 # cards for wizmode testing (&c)
 the Stairs card

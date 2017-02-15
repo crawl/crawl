@@ -15,7 +15,6 @@ msc += $danger:Space bends around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
-msc += $danger:Forgetting.* will destroy the book
 msc += $danger:The blast of calcifying dust hits you!
 msc += $danger:you are engulfed in calcifying dust
 msc += $danger:is moving more slowly
@@ -27,7 +26,7 @@ msc += $danger:constricts you
 msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
-msc += $danger:acid corrodes
+msc += $danger:corrodes you
 msc += $danger:rotting away
 
 # Less urgent, but still significant messages
@@ -55,6 +54,10 @@ msc += $warning:falling.*rocks
 msc += $warning:rumble.*avalanche of rocks
 msc += $warning:crackle.*arcane power
 msc += $warning:crackle.*magical portal
+msc += $warning:distant wind
+msc += $warning:whistling.*wind
+msc += $warning:rapidly growing quiet
+
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
@@ -68,7 +71,7 @@ msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
 msc += $boring:disappears? in a puff of smoke
 msc += $boring:dissolves? into (sparkling lights|shadows)
-msc += $boring:crumbles away
+msc += $boring:(crumbles|melts) away\.
 msc += $boring:returns to the deep
 msc += $boring:shimmers and vanishes
 #
@@ -79,6 +82,10 @@ msc += $boring:nimbly evade
 msc += $boring:waved at by a branch
 msc += $boring:lunges up near
 
+# Ignore Uskayaw *** and **** power loss messages by default; they're spammy.
+msc += mute:Uskayaw will no longer force your foes to helplessly watch your dance\.
+msc += mute:Uskayaw will no longer force your foes to share their pain\.
+
 ## Messages so important to require a --more--
 
 force_more_message += You have reached level
@@ -86,6 +93,7 @@ force_more_message += Your scales start
 force_more_message += You fall through a shaft
 force_more_message += You fall into the water!
 force_more_message += You fall into the lava!
+force_more_message += You focus on prolonging your flight
 force_more_message += Marking area around .* as unsafe
 force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy
@@ -94,7 +102,7 @@ force_more_message += You cannot cast spells when silenced
 force_more_message += You don't have the energy to cast that spell
 force_more_message += This is a scroll of acquirement
 
-## Reduce chance of drowning because flight or form runs out:
+## Reduce chance of draining because flight or form runs out:
 force_more_message += Careful!
 
 # Announcements of timed portal vaults:
@@ -106,21 +114,37 @@ force_more_message += hiss of flowing sand
 force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
+force_more_message += distant wind
 
 # Religion
 force_more_message += press .* to convert to Beogh
 force_more_message += welcomes you( back)?!
 force_more_message += You have lost your religion
 
+# Dangerous weapons
+force_more_message += is wielding.*distortion
+# dancing weapons require special handling...
+force_more_message += there is a.*distortion
+force_more_message += of distortion comes into view.
+
 # Banishment
 force_more_message += You are cast into the Abyss
 force_more_message += You are cast deeper into the Abyss
 force_more_message += The Abyss bends around you
 
+# Petrification
+force_more_message += You are slowing down
+
+# Sleep
+force_more_message += You fall asleep
+
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
 force_more_message += Found .* abyssal rune of Zot
+
+# Water nymph stair temp-drowning - people seem to miss these...
+force_more_message += watery aura .* (staircase|hatch)
 
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
@@ -135,6 +159,7 @@ force_more_message += With a loud hiss the gate opens wide
 force_more_message += grants you a gift
 force_more_message += offers you knowledge of
 force_more_message += believes you are ready to make a new sacrifice
+force_more_message += may now remember your ancestor
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock
@@ -145,7 +170,6 @@ force_more_message += You .* the altar of
 force_more_message += will bless one of your weapons
 force_more_message += will bloody your weapon with pain
 force_more_message += will brand one of your weapons
-force_more_message += will supercharge a wand or rod
 force_more_message += It is a scroll of amnesia
 force_more_message += It is a scroll of brand weapon
 force_more_message += It is a scroll of enchant armour

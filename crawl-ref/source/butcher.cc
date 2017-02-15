@@ -12,9 +12,9 @@
 #include "delay.h"
 #include "env.h"
 #include "food.h"
-#include "godconduct.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-conduct.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -33,21 +33,6 @@
 #include "menu.h"
 #endif
 
-static bool _should_butcher(const item_def& corpse)
-{
-    if (is_forbidden_food(corpse)
-        && (Options.confirm_butcher == CONFIRM_NEVER
-            || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
-                      false, 'n', true, false)))
-    {
-        if (Options.confirm_butcher != CONFIRM_NEVER)
-            canned_msg(MSG_OK);
-        return false;
-    }
-
-    return true;
-}
-
 /**
  * Start butchering a corpse.
  *
@@ -56,17 +41,22 @@ static bool _should_butcher(const item_def& corpse)
  */
 static bool _start_butchering(item_def& corpse)
 {
-    if (!_should_butcher(corpse))
-        return false;
-
     const bool bottle_blood =
         you.species == SP_VAMPIRE
         && can_bottle_blood_from_corpse(corpse.mon_type);
 
-    const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
+    if (is_forbidden_food(corpse))
+    {
+        mprf("It would be a sin to %sbutcher this!",
+             bottle_blood ? "bottle or " : "");
+        return false;
+    }
 
     // Yes, 0 is correct (no "continue butchering" stage).
-    start_delay(dtype, 0, corpse.index());
+    if (bottle_blood)
+        start_delay<BottleBloodDelay>(0, corpse);
+    else
+        start_delay<ButcherDelay>(0, corpse);
 
     you.turn_is_over = true;
     return true;
@@ -95,13 +85,6 @@ void finish_butchering(item_def& corpse, bool bottling)
              corpse.name(DESC_THE).c_str());
 
         butcher_corpse(corpse);
-
-        if (you.berserk()
-            && you.berserk_penalty != NO_BERSERK_PENALTY)
-        {
-            mpr("You enjoyed that.");
-            you.berserk_penalty = 0;
-        }
     }
 
     if (was_same_genus)
@@ -186,14 +169,6 @@ void butchery(item_def* specific_corpse)
         || corpses.size() == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
         || Options.confirm_butcher == CONFIRM_NEVER)
     {
-        if (Options.confirm_butcher == CONFIRM_NEVER
-            && !_should_butcher(*corpses[0].first))
-        {
-            mprf("It would be a sin to %sbutcher this!",
-                 bottle_blood ? "bottle or " : "");
-            return;
-        }
-
         //XXX: this assumes that we're not being called from a delay ourselves.
         if (_start_butchering(*corpses[0].first))
             handle_delay();
@@ -243,7 +218,7 @@ void butchery(item_def* specific_corpse)
             // * Ghouls relish the bad things.
             // * Vampires won't bottle bad corpses.
             if (you.undead_state() == US_ALIVE)
-                corpse_name = get_menu_colour_prefix_tags(*it, DESC_A);
+                corpse_name = menu_colour_item_name(*it, DESC_A);
 
             bool repeat_prompt = false;
             // Shall we butcher this corpse?
@@ -327,45 +302,6 @@ done:
     return;
 }
 
-
-static void _create_monster_hide(const item_def &corpse)
-{
-    // make certain sources of dragon hides less scummable
-    // (kiku's corpse drop, gozag ghoul corpse shops)
-    if (corpse.props.exists(MANGLED_CORPSE_KEY))
-        return;
-
-    const armour_type type = hide_for_monster(corpse.mon_type);
-    ASSERT(type != NUM_ARMOURS);
-
-    int o = items(false, OBJ_ARMOUR, type, 0);
-    squash_plusses(o);
-
-    if (o == NON_ITEM)
-        return;
-    item_def& item = mitm[o];
-
-    do_uncurse_item(item);
-
-    // Automatically identify the created hide.
-    set_ident_flags(item, ISFLAG_IDENT_MASK);
-
-    const monster_type montype =
-    static_cast<monster_type>(corpse.orig_monnum);
-    if (!invalid_monster_type(montype) && mons_is_unique(montype))
-        item.inscription = mons_type_name(montype, DESC_PLAIN);
-
-    const coord_def pos = item_pos(corpse);
-    if (!pos.origin())
-        move_item_to_grid(&o, pos);
-}
-
-void maybe_drop_monster_hide(const item_def &corpse)
-{
-    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
-        _create_monster_hide(corpse);
-}
-
 /** Skeletonise this corpse.
  *
  *  @param item the corpse to be turned into a skeleton.
@@ -398,8 +334,7 @@ static void _bleed_monster_corpse(const item_def &corpse)
     }
 }
 
-void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
-                             bool make_hide)
+void turn_corpse_into_chunks(item_def &item, bool bloodspatter)
 {
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(item.sub_type == CORPSE_BODY);
@@ -425,10 +360,6 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
 
     // Initialise timer depending on corpse age
     init_perishable_stack(item, item.freshness * ROT_TIME_FACTOR);
-
-    // Happens after the corpse has been butchered.
-    if (make_hide)
-        maybe_drop_monster_hide(corpse);
 }
 
 static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_chunks)
@@ -463,7 +394,6 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
         else
         {
             _bleed_monster_corpse(item);
-            maybe_drop_monster_hide(item);
             turn_corpse_into_skeleton(item);
         }
     }
@@ -474,7 +404,6 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
         else
         {
             _bleed_monster_corpse(item);
-            maybe_drop_monster_hide(item);
             destroy_item(item.index());
         }
     }
@@ -521,9 +450,6 @@ void turn_corpse_into_blood_potions(item_def &item)
     // Initialise timer depending on corpse age
     init_perishable_stack(item,
                           item.freshness * ROT_TIME_FACTOR + FRESHEST_BLOOD);
-
-    // Happens after the blood has been bottled.
-    maybe_drop_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)

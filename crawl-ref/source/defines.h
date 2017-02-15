@@ -26,8 +26,6 @@
     #endif
 #endif
 
-typedef uint32_t ucs_t;
-
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
 
@@ -125,7 +123,6 @@ const int LABYRINTH_BORDER = 4;
 
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
-const int HIGH_EXP_POOL = 20000;
 const int EXERCISE_QUEUE_SIZE = 100;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
@@ -133,9 +130,8 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 // grids that monsters can see
 const int MONSTER_LOS_RANGE = LOS_RADIUS;
 
-// Maximum charge level for rods
-const int MAX_ROD_CHARGE  = 17;
-const int ROD_CHARGE_MULT = 100;
+const int LIGHTNING_CHARGE_MULT = 100;
+const int LIGHTNING_MAX_CHARGE = 4;
 
 // evoker_debt for evoking one XP evoker
 const int XP_EVOKE_DEBT   = 10;
@@ -226,7 +222,7 @@ enum COLOURS
     LIGHTMAGENTA,
     YELLOW,
     WHITE,
-    MAX_TERM_COLOUR
+    NUM_TERM_COLOURS
 };
 
 // Many, MANY places currently hard-code this to 8 bits, but we need to
@@ -238,7 +234,7 @@ typedef uint8_t colour_t;
 
 // This is used to signal curses (which has seven base colours) to
 // try to get a brighter version using recommissioned attribute flags.
-#define COLFLAG_CURSES_BRIGHTEN          0x0080
+#define COLFLAG_CURSES_BRIGHTEN          0x0008
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
 #define COLFLAG_NEUTRAL_MONSTER          0x0200

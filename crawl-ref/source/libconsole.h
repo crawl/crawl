@@ -21,7 +21,7 @@ void cprintf(const char *format, ...);
 
 int wherex();
 int wherey();
-void putwch(ucs_t c);
+void putwch(char32_t c);
 int getchk();
 int getch_ck();
 bool kbhit();

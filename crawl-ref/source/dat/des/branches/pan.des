@@ -10,7 +10,6 @@
 #
 ##############################################################################
 
-
 ##############################################################################
 # Pan lua functions
 ###############################################################################
@@ -36,8 +35,8 @@ function pan_lord_epilogue(name)
 
     crawl.mpr(msgs[name], "warning")
     crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
-    -- Counterpart to branch_rune_desc from lookup_help.cc
-    crawl.mpr("He guards the " .. runes[name] .. " rune of Zot.")
+    -- Counterpart to branch_rune_desc from lookup-help.cc
+    crawl.mpr("It guards the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
@@ -50,12 +49,12 @@ function pan_lord_setup(_G, name)
                  "neqoxec w:200 / chaos spawn w:200 / " ..
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / " ..
-                 "giant eyeball / golden eye band / eye of devastation / " ..
+                 "floating eye / golden eye band / eye of devastation / " ..
                  "eye of draining / shining eye / very ugly thing band / "..
                  "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
-                 "green death w:200 / giant orange brain / rakshasa / " ..
+                 "green death w:200 / glowing orange brain / rakshasa / " ..
                  "wizard / draconian annihilator / deep elf annihilator / " ..
                  "titan w:5 / lich w:5 / gelid blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
@@ -185,6 +184,7 @@ end
 
 function pan_entry_feature(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
+-- Late D entries for save compat, remove when TAG_MAJOR_VERSION > 34
     e.depth("Depths, D:21-")
     e.depth_chance("Depths:3", 10000)
     e.depth_chance("D:24", 10000)
@@ -205,6 +205,42 @@ function pan_entry_vault_contents(e, glyph)
         e.subst("12 = .")
         e.kmons(glyph .. " = lesser demon")
     end
+end
+
+function pan_declare_demonic_rune(e)
+  crawl.mpr("The tension of great conflict fills the air!", "warning")
+  crawl.mpr("The demonic rune of Zot may be found here.")
+end
+
+function pan_highlights_setup(e)
+  -- Choose fixed demonic rune vaults.
+  local set = { "boxes", "hellions", "pain", "frozen", "disco" }
+  local vaultone = "_" .. util.random_from(set)
+  local vaulttwo = vaultone
+  while vaulttwo == vaultone do
+     vaulttwo = "_" .. util.random_from(set)
+  end
+  e.hook('post_place', function ()
+    dgn.place_maps{tag=("pan_fixed_rune" .. vaultone), count=1}
+    dgn.place_maps{tag=("pan_fixed_lure" .. vaulttwo), count=1}
+    dgn.place_maps{tag=("serial_pan" .. vaultone), count=3}
+    dgn.place_maps{tag=("serial_pan" .. vaulttwo), count=3}
+  end)
+end
+
+function demonic_rune_vault_is_decoy(e)
+  local params = dgn.map_parameters()
+  if params == nil then
+    return false
+  end
+
+  local tag, tag2 = unpack(params)
+  return tag ~= nil and string.find(tag, "lure")
+end
+
+function serial_pan_setup(e, set)
+  e.tags("serial_pan_" .. set .." unrand transparent allow_dup no_dump")
+  e.kfeat("m = iron_grate")
 end
 }}
 
@@ -592,7 +628,7 @@ TAGS:       mnoleg uniq_mnoleg
 NSUBST:     O = 1:O / *:|
 TILE:       c = dngn_stone_wall_yellow
 MONS:       patrolling mnoleg
-MONS:       giant eyeball / golden eye / eye of devastation / \
+MONS:       floating eye / golden eye / eye of devastation / \
             eye of draining / shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
 MONS:       cacodemon
@@ -705,7 +741,7 @@ NSUBST:  O = 1:O / *:|
 TILE:    c = dngn_stone_wall_yellow
 MONS:    patrolling Mnoleg, patrolling cacodemon
 MONS:    neqoxec, tentacled monstrosity, large abomination
-MONS:    very ugly thing band w:20 / giant eyeball / golden eye band / \
+MONS:    very ugly thing band w:20 / floating eye / golden eye band / \
          great orb of eyes / shining eye
 epilogue{{
   pan_lord_epilogue('Mnoleg')
@@ -754,7 +790,7 @@ NAME:      lom_lobon
 TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, giant orange brain, rakshasa
+MONS:      patrolling Lom Lobon, glowing orange brain, rakshasa
 MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
@@ -921,7 +957,7 @@ ORIENT:  north
 : pan_lord_setup(_G, 'Lom Lobon')
 MONS: patrolling Lom Lobon
 MONS: draconian annihilator / deep elf annihilator / \
-      wizard w:20 / rakshasa w:20 / giant orange brain / \
+      wizard w:20 / rakshasa w:20 / glowing orange brain / \
       blizzard demon / green death / titan w:5 / \
       spriggan air mage w:5 / lich w:5
 SUBST:   W = ww.
@@ -981,7 +1017,7 @@ SHUFFLE: O2
 MONS:    patrolling Lom Lobon, patrolling titan, patrolling wind drake
 MONS:    blizzard demon / titan / spriggan air mage / storm dragon
 MONS:    draconian annihilator / deep elf annihilator / \
-         wizard w:20 / rakshasa w:20 / giant orange brain / \
+         wizard w:20 / rakshasa w:20 / glowing orange brain / \
          blizzard demon / green death / titan w:5 / \
          spriggan air mage w:5 / lich w:5
 epilogue{{
@@ -2327,12 +2363,12 @@ ENDMAP
 NAME: nicolae_pan_performance_anxiety
 TAGS: no_trap_gen
 WEIGHT: 1
-KPROP: tb = no_tele_into
-NSUBST: t = 10:p / *:., b = 10:p / *:.
-KMONS: p = human / elf / orc / naga / centaur / draconian / \
-   ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
-   deep dwarf / felid / octopode / vampire / base draconian / demigod / \
-   demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+KMONS:  p = human / elf / orc / naga / centaur / draconian / ogre / \
+            minotaur / troll / kobold / mummy / ghoul / spriggan / felid / \
+            deep dwarf / octopode / vampire / base draconian / demigod / \
+            demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
+NSUBST: t = 10:p / *:', b = 10:p / *:'
+KPROP:  p' = no_tele_into
 : pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B<', 'C')
 MAP
@@ -2466,132 +2502,420 @@ cc..B..B..cc
 ENDMAP
 
 #############################################################################
-# Pandemonium lesser demon vaults: standalone.
+# Pandemonium lesser demon vaults: (announced) rune serial vaults
 #############################################################################
-# If the map is repeating (TAG: allow_dup) and features a rune, it does not
-# go here.
-#
 
-NAME:    lemuel_draining_boxes
-ORIENT:  float
-MONS:    pandemonium lord, eye of draining, any demon
-SHUFFLE: aA/bB/cC/dD/eE/fF, eE/gG, fF/hH, m(/nO
-SUBST:   a=m, b=m, c=m, d=m, e=m, f=m, g=., h=.
-SUBST:   A=2, B=2, C=2, D=2, E=2, F=2, G=., H=.
-# the two center boxes are granted;
-# of the six outer boxes, one or two may be missing
-SUBST:   n = m
-KFEAT:   m = iron_grate
-KMONS:   O( = eye of draining
-KITEM:   O = demonic rune of Zot
-KFEAT:   ( = (
-MAP
-                  ....bbb..
-.......           ....bBb..
-.aaa...           ....bbb..
-.aAa...           .........
-.aaa.......................
-...........................
-.............mmm.............
-    .........m(m..........ccc
-    .........mmm3.........cCc
-...............333........ccc
-..............33133nnn.......
-.fff...........333.nOn.......
-.fFf............3..nnn...
-.fff.....................
-.........................
-.............................
-  .........        ...ddd....
-  ...eee...        ...dDd....
-  ...eEe...        ...ddd....
-  ...eee...        ..........
-ENDMAP
-
-###################################
-
-NAME:   lemuel_hellion_island
+# Place (two) big, fancy demonic rune vaults, (with an announced guarantee of
+# the demonic rune's presence) in some fixed thematic threats and a few
+# essentially-decorative small vaults.
+# FIXME:
+#  * dgn.place_maps can't guarantee the double-up vault placement for
+#    these relatively large floating vaults (and die_on_error, aside
+#    from being insufficient, shows player-visible error messages) -
+#    some validator check is needed for the concept to work.
+#  * pan_declare_demonic_rune produces messages every time the level
+#    is rebuilt due to connectivity failures, and should also use
+#    the same validator check.
+NAME:   pan_demonic_rune_highlights
 ORIENT: float
-MONS:   hellion
-SUBST:  L=l.
-KMONS:  O = pandemonium lord
-KITEM:  O = demonic rune of Zot
-NSUBST: | = 1:( / *:|
-KITEM:  ( = |
-KFEAT:  ( = (
+WEIGHT: 0
+: pan_highlights_setup(_G)
+: pan_declare_demonic_rune(_G)
+
+# Concept inherited from lemuel_draining_boxes.
+NAME:   regret_index_pan_draining_boxed
+TAGS:   pan_fixed_rune_boxes pan_fixed_lure_boxes transparent
+ORIENT: float
+MONS:   pandemonium lord, eye of draining
+MONS:   black sun, lorocyproca, any demon
+KMONS:  6O = ghost moth
+: if demonic_rune_vault_is_decoy() then
+KITEM:  O = acquire any / demonic rune of zot mimic
+: else
+KITEM:  O = demonic rune of zot
+: end
+KFEAT:  m = iron_grate
+KFEAT:  { = {
+SUBST:  n : m.
+KMASK:  2O = opaque
 MAP
-    ..LlllL..
-  ..LlllllllL..
- .LlllllllllllL.
-.LlllllL1LlllllL.
-.LllllL1.1LllllL.
-LllllL1|1|1LllllL
-llllL1.1O1.1Lllll
-llllL.1|1|1.Lllll
-LllllL.1.1.LllllL
-.LllllL.1.LllllL.
-.LlllllLLLlllllL.
- .LlllllllllllL.
-  ..LlllllllL.
-    ..LlllL..
+  ...................
+  .............mmm...
+....vvvvvvvvvvvm2mvv...
+...vv.3.4......mmm*vv..
+..vv=mm6.5.........*v..
+..v.mOm.5..........*v..
+..v3mmm5.0.........mmm.
+..v.6.510.5........m2m.
+..v4.5.0{5.........mmm.
+..v.5.0.5...........v..
+..v....5............v..
+..v.........mmm.....v..
+..v.........m2m....vv..
+.mmm........mmm....v...
+.m2m...................
+.mmm...................
+..v*..............nnn..
+..vv**mmm.....vv..n2n..
+...vvvm2mvvvvvv...nnn..
+  ....mmm..............
+  .....................
+ENDMAP
+
+NAME:    serial_pan_draining_one
+MONS:    eye of draining, any demon
+SHUFFLE: CDE
+SUBST:   C : vv..., DE = .
+KMASK:   1 = opaque
+: serial_pan_setup(_G, "boxes")
+MAP
+  .D..EE
+  .D..EE
+...D.2..
+..mmm...
+CCm1mDDD
+..mmm...
+.2.C..
+...C..
+ENDMAP
+
+NAME:    serial_pan_draining_two
+MONS:    eye of draining, any demon
+SHUFFLE: CD
+SUBST:   C : vvv., D = .
+KMASK:   1 = opaque
+: serial_pan_setup(_G, "boxes")
+MAP
+  ..DvC
+  ..DvC
+....2..
+..mmm..
+..m1m..
+..mmm..
+..2....
+CvD..
+CvD..
+ENDMAP
+
+NAME:    serial_pan_draining_three
+WEIGHT:  4
+MONS:    eye of draining, any demon
+SUBST:   - : +.
+: serial_pan_setup(_G, "boxes")
+MAP
+.mmm+m
+.m1-2+
+.m-m-m
+.+2-1m
+.m+mmm
+......
 ENDMAP
 
 ###################################
-# XXX: Undiggable glass has been converted to grates.
-NAME:    lemuel_hall_of_pain
+
+NAME:    lemuel_hellion_island
+TAGS:    pan_fixed_rune_hellions pan_fixed_lure_hellions
 ORIENT:  float
-MONS:    pandemonium lord, any demon
-MONS:    smoke demon / brimstone fiend w:1
-SHUFFLE: xc
+MONS:    fire bat, hellion, hellephant
+KMONS:   O = pandemonium lord
+: if demonic_rune_vault_is_decoy() then
+KITEM:   O = acquire any / demonic rune of zot mimic
+: else
+KITEM:   O = demonic rune of zot
+: end
+KFEAT:   { = {
+SHUFFLE: Aa / Bb / Cc / Dd / Ee / Ff / Gg / Hh
+SUBST:   ABCabc = l, DEFdef = .
+SUBST:   G : l., g : l., H : l., h : l.
+MAP
+    1.AlllB..
+  ..FlllllllA..
+ .ElllllllllllB.
+.Flllllh2alllllC1
+.Ellllg2{2bllllD.
+Dllllf2.2.2cllllC
+lllle2.2O||.dllll
+lllld.||32.2ellll
+Cllllc2.2.2fllllD
+.Dllllb2.2gllllE.
+1Cllllla2hlllllF.
+ .BlllllllllllE.
+  ..AlllllllF.
+    ..BlllA.1
+ENDMAP
+
+NAME:    serial_pan_hellions_one
+MONS:    hellion, any demon
+SHUFFLE: 12
+: serial_pan_setup(_G, "hellions")
+MAP
+  ....
+ .ll...
+.ll.l..
+.l12.l.
+.ll1ll.
+..lll.
+ ....
+ENDMAP
+
+NAME:    serial_pan_hellions_two
+MONS:    hellion, any demon
+SHUFFLE: 12
+: serial_pan_setup(_G, "hellions")
+MAP
+  ...l.
+ .lll.l.
+.ll12.1l
+ .lll.l.
+  ...l.
+ENDMAP
+
+NAME:    serial_pan_hellions_three
+MONS:    hellion, any demon
+SHUFFLE: 12
+: serial_pan_setup(_G, "hellions")
+MAP
+   .l.
+  ...l.
+ .l.ll.
+...l.ll
+l.l.12l
+.lll2ll
+ ..lll
+ENDMAP
+
+########################################
+
+NAME:    lemuel_hall_of_pain
+TAGS:    pan_fixed_rune_pain pan_fixed_lure_pain
+ORIENT:  float
+MONS:    pandemonium lord, brimstone fiend
+MONS:    tormentor, smoke demon, any demon
+: if demonic_rune_vault_is_decoy() then
+KITEM:   O = acquire any / demonic rune of zot mimic
+: else
+KITEM:   O = demonic rune of zot
+: end
 KFEAT:   m = iron_grate
-SHUFFLE: O1/(|
-KITEM:   ( = |
-KFEAT:   ( = (
-KITEM:   O = demonic rune of Zot
+KFEAT:   { = {
+NSUBST:  3 = 6:3 / *:.
+NSUBST:  4 = 16:4 / 4 = 4. / 2 = 234 / *:.
 MAP
 .......@.......
-xxxxxx+++xxxxxx
-xOx.xl...lx.x(x
-x1x3xl.2.lx3x|x
-x.x.ml...lm.x.x
-x2x.xl...lx.x2x
-x.x3xl...lx3x.x
-x2x.ml...lm.x2x
-x.x3xl...lx3x.x
-x2x.xl.2.lx.x2x
-x.x.ml...lm.x.x
-x.x3xl...lx3x.x
-x2x.xl...lx.x2x
-x.x.ml...lm.x.x
-x.x3xl.2.lx3x.x
-x2xxxl2.2lxxx2x
-x....2.2.2....x
-xxxxxxxxxxxxxxx
+cccccc+++cccccc
+cOc4cl...lc4c|c
+c1c4cl.5.lc4c|c
+c0c4cl...lc4c0c
+c5c4cl...lc4c5c
+c3c4cl...lc4c3c
+c5c4ml...lm4c5c
+c3c4cl...lc4c3c
+c5c4cl.5.lc4c5c
+c3c4ml...lm4c3c
+c3c4cl...lc4c3c
+c5c4cl...lc4c5c
+c.m4ml...lm4m.c
+c.c4cl.5.lc4c.c
+c.cccl5.5lccc.c
+c.+..5.5.5..+.c
+ccccccccccccccc
 ENDMAP
 
-###################################
+NAME:    serial_pan_pain_one
+MONS:    smoke demon, tormentor, any demon
+KMASK:   1' = opaque
+: serial_pan_setup(_G, "pain")
+MAP
+ xxxxxxxx
+ x1''''1x
+ xxmxxmxx
+ xll32llx
+ @......@
+xxxxxxxxxx
+ENDMAP
 
-NAME:    grunt_pan_frozen_over
-TAGS:    no_pool_fixup no_monster_gen
-ORIENT:  float
-SUBST:   W = wWW.
-KMONS:   O = ice statue
-KITEM:   O = demonic rune of Zot
-KMONS:   P = pandemonium lord
-KFEAT:   P = (
-MONS:    blizzard demon, ice devil
-: set_random_mon_list("blizzard demon / ice devil")
+NAME:    serial_pan_pain_two
+MONS:    smoke demon, tormentor, any demon
+KMASK:   1 = opaque
+: serial_pan_setup(_G, "pain")
+MAP
+ xxxxxxx
+ x11m2xx
+ xmmx3xx
+ xllx.xx
+ @.....@
+xxxxxxxxx
+ENDMAP
+
+########################################
+
+NAME:   grunt_pan_frozen_over
+TAGS:   pan_fixed_rune_frozen pan_fixed_lure_frozen
+TAGS:   no_pool_fixup no_monster_gen transparent
+ORIENT: float
+MONS:   blizzard demon, nonbase gelid demonspawn
+MONS:   juggernaut simulacrum, ice devil
+KMONS:  56 = ice statue
+KMONS:  P = pandemonium lord
+: if demonic_rune_vault_is_decoy() then
+KITEM:  O = acquire any / demonic rune of zot mimic
+: else
+KITEM:  O = demonic rune of zot
+: end
+KFEAT: 5 = W
+KFEAT: 6 = w
+KFEAT: { = {
+SUBST: A : wWW., B : wWW., C : WW., D : WW.
 MAP
 ccccccccccccccccccc
-.WwcwW1.1O1.1WwcwW.
-2WwcwW.1.P.1.WwcwW2
-.WwccwW.1.1.WwccwW.
- .WwccwW.1.WwccwW.
- .WwwccwWWWwccwwW.
-  2WWwWWwwwWWwWW2
-   ..WWwwwwwWW.
-     ..WWWWW..
-       .2.2.
+.AwcwA1*1O1*1AwcwA.
+4AwcwB%12P21%BwcwA4
+.AwccwB%1.1%BwccwA.
+ .BwccwA%1%AwccwB.
+ .Bwwcc65556ccwwB.
+  3CCwDDwwwDDwCC3
+   ..CwwwwwwwC.
+     ..DDDDD..
+       .4.4.
+ENDMAP
+
+NAME:   serial_pan_frozen_one
+TAGS:   no_pool_fixup
+MONS:   any demon
+KMONS:  2 = blizzard demon
+KFEAT:  2 = w
+: serial_pan_setup(_G, "frozen")
+MAP
+  ...ccccc
+ ..wwccccc
+ .wwwccccc
+ .ww2ccccc
+1ccccGcccc
+ .ww2c2ww.
+ .wwwcwww.
+ ..wwcww..
+  ...c...
+     1
+ENDMAP
+
+NAME:   serial_pan_frozen_two
+TAGS:   no_pool_fixup
+MONS:   any demon
+KMONS:  2 = blizzard demon
+KFEAT:  2 = w
+: serial_pan_setup(_G, "frozen")
+MAP
+   cccccc
+    .w2Gc
+c   .wwwc
+c1....wwc
+cww....1c
+cwww.   c
+cG2w.
+cccccc
+ENDMAP
+
+NAME:   serial_pan_frozen_three
+TAGS:   no_pool_fixup
+MONS:   any demon
+KMONS:  2 = patrolling blizzard demon
+KFEAT:  2 = w
+: serial_pan_setup(_G, "frozen")
+MAP
+ccccc
+.ww2c
+.wwwc
+.1wwcc
+....Gcccc
+   ..ww2c
+    .wwwc
+    .1wwc
+    ...c
+ENDMAP
+
+########################################
+
+NAME:    pan_disco_hall
+TAGS:    pan_fixed_rune_disco pan_fixed_lure_disco no_rotate
+ORIENT:  southeast
+MONS:    rakshasa, corrupter, blood saint
+MONS:    dancing weapon ; demon trident good_item ego:distortion
+MONS:    dancing weapon ; lajatang good_item ego:distortion
+MONS:    dancing weapon ; demon blade good_item ego:distortion
+MONS:    brimstone fiend / ice fiend / tzitzimitl / hell sentinel
+KMONS:   p = demonic plant
+KMONS:   P = pandemonium lord
+ITEM:    any potion
+: if demonic_rune_vault_is_decoy() then
+KITEM:   O = acquire any / demonic rune of zot mimic
+: else
+KITEM:   O = demonic rune of zot
+: end
+KFEAT:   D = granite_statue
+KFEAT:   X = rock_wall
+KFEAT:   _ = floor
+KFEAT: { = {
+# Previously a raw average of 9.2 place:Pan spawns.
+NSUBST:  - = 2:7 / 8:0 / 4 = 00. / *:.
+SHUFFLE: 123, 456
+COLOUR:  D = random
+COLOUR:  P.xp01234567dO = disco
+# WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases
+# for disco-coloured variants of the tiles thereof.
+RTILE:   x = wall_zot_blue
+FTILE:   D.xp01234567dO = floor_pebble
+FTILE:   _{+ = floor_hall
+TILE:    D = dngn_disco_ball
+: set_feature_name("granite_statue", "weirdly glowing ball")
+MARKER:  D = lua:props_marker { veto_fragmentation="veto", \
+                                veto_disintegrate="veto", \
+                                veto_shatter="veto" }
+MAP
+               xx+xx
+               xp.px
+               x...x
+   xxxxxxxxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxx
+   x....................x1-------------3x
+   x.x.x.x.x.x.x.x.x.x..x-------------2-x
+   x.0...............0..x---------------xxxxxxXXX
+   x.x.x.x.x.x.x.x.x.x..x---------------_....xXXX
+xxxx.....................---------------_.d4.xXXX
+xp.x.....................---------------_....xXXX
++.._.........{..........D-------P-------_.O5.xXXX
+xp.x.....................---------------_....xXXX
+xxxx.....................---------------_.d6.xXXX
+   x.xxxxxxxxxxxxxxxxx..x---------------_....xXXX
+   x.x0d0x.d0x0d.x0d0x..x---------------xxxxxxXXX
+   x.x0..x0..x..0x..0x..x-------------1-x
+   x._..............._..x2-------------3x
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: serial_pan_fixed_disco_one
+MONS: demonic plant
+: serial_pan_setup(_G, "disco")
+MAP
+xxxxxxx
+x.0...x
+x.....x
+@..1..@
+x.....x
+x...0.x
+xxxxxxx
+ENDMAP
+
+NAME:   serial_pan_fixed_disco_two
+WEIGHT: 8
+TILE:   x : wall_zot_white / wall_zot_darkgray
+: serial_pan_setup(_G, "disco")
+MAP
+    .........
+    .x.x0x.x.
+.............
+.x.x0x.x.
+.........
 ENDMAP
 
 #############################################################################
@@ -2752,54 +3076,6 @@ x222x
 x222x
 xxoxx
 @..1@
-ENDMAP
-
-###################################
-
-NAME:   pan_disco_hall
-TAGS:   no_rotate
-ORIENT: float
-COLOUR: D = random
-COLOUR: .x-0123456789P = disco
-# WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases for coloured variants of the
-# tiles thereof.
-RTILE:  x = wall_zot_blue
-FTILE:  D.-0123456789 = floor_pebble
-SUBST:  - = 0:1 / .:10
-KFEAT:  D = granite_statue
-TILE:   D = dngn_disco_ball
-: set_feature_name("granite_statue", "weirdly glowing ball")
-MARKER: D = lua:props_marker { veto_fragmentation="veto", \
-                               veto_disintegrate="veto", \
-                               veto_shatter="veto" }
-MONS:   demonic plant
-MONS:   red devil ; demon trident good_item ego:distortion ident:type
-MONS:   red devil ; lajatang good_item ego:distortion ident:type
-MONS:   red devil ; demon blade good_item ego:distortion ident:type
-KMONS:  P = pandemonium lord
-KFEAT:  P = (
-FTILE:  P = floor_hall
-KFEAT:  _ = floor
-FTILE:  _ = floor_hall
-MAP
-                   xx@xx
-                   x1.1x
-                   x...x
-   xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-   x........................x---------------x
-   x.x.x.x.x.x.x.x.x.x.x.x..x---------------x
-   x........................x---------------xxxxxx
-   x.x.x.x.x.x.x.x.x.x.x.x..x---------------_....x
-xxxx.........................---------------_..2.x
-x1.x.........................---------------_....x
-@...........................D-------P-------_..3.x
-x1.x.........................---------------_....x
-xxxx.........................---------------_..4.x
-   x.xxxxxxxxxxxxxxxxxxxxx..x---------------_....x
-   x.x0.0x..0x0.0x0.0x..0x..x---------------xxxxxx
-   x.x0..x0..x...x0..x...x..x---------------x
-   x........................x---------------x
-   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###################################
@@ -3406,7 +3682,6 @@ MAP
 .........bbbbbbbbccccccccddddddddeeeeeeee
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_acedia
 TAGS: unrand sub_strange_glyph allow_dup
 SHUFFLE: abcde
@@ -3421,7 +3696,6 @@ x.x.a.b
 ..c.d.e
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_angst
 TAGS: unrand sub_strange_glyph allow_dup
 SHUFFLE: AaBbCc/dd-D-E/-E-Ddd
@@ -3435,7 +3709,6 @@ ABC...x
 ABC...x
 abc..Xx
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_contempt
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3452,7 +3725,6 @@ ba...x.
 .bxxx..
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_despair
 TAGS: unrand sub_strange_glyph allow_dup
 SHUFFLE: Aa, Bb
@@ -3466,7 +3738,6 @@ Axxxxxx
 .x...xb
 xxX..Bx
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_disappointment
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3482,7 +3753,6 @@ x.Q.S.U
 x.Q.S.U
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_disgust
 TAGS: unrand sub_strange_glyph allow_dup
 NSUBST: X = Y / x, Y = 2:x... / 1:x. / *:x
@@ -3495,7 +3765,6 @@ x..YxY.
 .x..X..
 ..xxxxx
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_envy
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3510,7 +3779,6 @@ x.....x
 x..a..x
 .xxbxx.
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_fear
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3527,7 +3795,6 @@ x2xBBBx
 115QQQQ
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_humiliation
 TAGS: unrand sub_strange_glyph allow_dup
 SUBST: A : ..x, B : xx., C : xx.
@@ -3540,7 +3807,6 @@ x.x...x
 xx....x
 xCCxxx.
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_loneliness
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3556,7 +3822,6 @@ x...X.x
 X.xxx.X
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_melancholia
 TAGS: unrand sub_strange_glyph allow_dup
 SHUFFLE: pq, rs, tu, vw, yz
@@ -3570,7 +3835,6 @@ xpqxrsx
 xqpxsrx
 x..x..x
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_rage
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3587,7 +3851,6 @@ x...Q..
 xPPPPSS
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_regret
 TAGS: unrand sub_strange_glyph allow_dup
 SUBST: X : .x, Y : ..x, Z : ...x
@@ -3600,7 +3863,6 @@ X....x.
 ...xx..
 xxx....
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_schadenfreude
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3616,7 +3878,6 @@ x.d...x
 d.xxx..
 ENDMAP
 
-
 NAME: nicolae_pan_strange_glyph_spite
 TAGS: unrand sub_strange_glyph allow_dup
 SHUFFLE: ab, cd, ef, gh
@@ -3630,7 +3891,6 @@ x....ax
 e.gh.cx
 fxxxxxd
 ENDMAP
-
 
 NAME: nicolae_pan_strange_glyph_worry
 TAGS: unrand sub_strange_glyph allow_dup
@@ -3657,8 +3917,7 @@ ENDMAP
 # This level has a lot of open space where it mostly is up to the RNG to place
 # monsters.
 #
-# Four exits are given, with one placed randomly and the others in a room safe
-# to teleport into.
+# Four exits are given, with one placed randomly and the others in a room.
 #
 # My opinion is that in the long term this concept would work better as a
 # portal vault (for pan, even).
@@ -3670,12 +3929,13 @@ NSUBST: . = > / .
 : if you.have_rune("demonic") then
 KFEAT:  O = exit_pandemonium
 : else
+: pan_declare_demonic_rune(_G)
 KITEM:  O = demonic rune of Zot
 : end
 ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   acquire any
-ITEM:   potion of cure mutation
+ITEM:   potion of mutation
 ITEM:   potion of might / potion of brilliance / potion of agility
 ITEM:   any
 NSUBST: i = 2=ghh / 3=ghhiii / *:i
@@ -3707,8 +3967,7 @@ FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
-: set_random_mon_list("angel / cherub / ophan / daeva /" ..
-:                     "apis / apis / angel")
+: set_random_mon_list("angel w:20 / cherub / ophan / daeva / apis w:20")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx

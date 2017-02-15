@@ -26,7 +26,7 @@ function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
         dgn.persist.grunt_iron_hall_animated = true
         for slave in iter.slave_iterator("trap_statue", 1) do
         if crawl.one_chance_in(4) then
-            dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+            dgn.terrain_changed(slave.x, slave.y, "floor", false)
             dgn.create_monster(slave.x, slave.y,
                                "patrolling iron golem generate_awake")
         end
@@ -385,6 +385,48 @@ MAP
     ...ihg.ghi...
        lkj.jkl
          ...
+ENDMAP
+
+NAME:   lightli_tower_of_babel
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Dis, !Dis:$
+ORIENT: float
+MONS:   flying skull
+KMONS:  2 = patrolling iron giant
+KFEAT:  2 = )
+TILE:   c = wall_marble
+MAP
+            vvvvv
+       vvvvvv...vvvvv
+    vvvvv...........vvvvv
+ vvvv........1.1........vvvv
+vv.........c.....c.........vv
+v..2.cc....1..c..1....cc....v
+v....cc.......1.......cc....v
+v......v.............v......v
+v.......v...vv.vv...v.......v
+v........vvvv...vvvv........v
+v........vvvv...vvvv........v
+v.......vvvvv...vvvvv.......v
+v..c1...vvvvvv.vvvvvv...1c..v
+v......vvvvvvv+vvvvvvv......v
+v.1....v...vv...vv...v....1.v
+v...c1......+.(.+......1c...v
+v.1....v...vv...vv...v....1.v
+v......vvvvvvv+vvvvvvv......v
+v..c1...vvvvvv.vvvvvv...1...v
+v.......vvvvv...vvvvv....c..v
+v........vvvv...vvvv........v
+v........vvvv...vvvv........v
+v.......v...vv.vv...v.......v
+v......v.............v......v
+v....cc.......1.......cc....v
+v....cc....1..c..1....cc....v
+vv.........c.....c.........vv
+ vvvv........1.1........vvvv
+    vvvvv...........vvvvv
+        vvvvv...vvvvv
+            vvvvv
 ENDMAP
 
 NAME:    hangedman_dis_decor_blocks_mantle
@@ -958,7 +1000,8 @@ ENDMAP
 NAME:    dis_st
 ORIENT:  encompass
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
-MONS:    iron troll, iron dragon / iron giant w:4, cacodemon
+MONS:    iron troll, iron dragon / iron giant w:2
+MONS:    cacodemon / ancient champion w:8
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 # four hell sentinels in Dispater's building

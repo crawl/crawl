@@ -16,14 +16,14 @@
 #include "directn.h"
 #include "env.h"
 #include "fight.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -33,7 +33,7 @@
 #include "output.h"
 #include "player-equip.h"
 #include "player.h"
-#include "ranged_attack.h"
+#include "ranged-attack.h"
 #include "skills.h"
 #include "species.h"
 #include "state.h"
@@ -281,9 +281,8 @@ static monster* _init_fsim()
                 you.unique_creatures.set(mtype, false);
         }
 
-        mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,
-                                               you.pos(), MG_DONT_COME);
-
+        mgen_data temp = mgen_data::hostile_at(mtype, false, you.pos());
+        temp.flags |= MG_DONT_COME;
         temp.extra_flags |= MF_HARD_RESET | MF_NO_REWARD;
         mon = create_monster(temp);
         if (!mon)
@@ -409,6 +408,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
         for (int i = 0; i < iter_limit; i++)
         {
             you.hp = you.hp_max = 999; // again, arbitrary
+            mon.hit_points = mon.max_hit_points;
             bool did_hit = false;
             you.shield_blocks = 0; // no blocks this round
             fight_melee(&mon, &you, &did_hit, true);

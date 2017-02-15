@@ -1271,6 +1271,31 @@ Z...x.......2x
  xxxxxxxxxxxxx
 ENDMAP
 
+NAME:    minmay_guarded_unrand_folly
+DEPTH:   Elf
+ORIENT:  float
+: if you.unrands("robe_of_folly") then
+ITEM:    robe randart no_pickup
+: else
+ITEM:    robe_of_folly no_pickup
+: end
+MONS:    deep elf sorcerer / deep elf annihilator
+NSUBST:  1 = 2:2 / 5=1.. / .
+SUBST:   2 = 1.
+MAP
+ccccccc@ccccccc
+c.1...c.c...1.c
+c.c..cc.cc..c.c
+c.c.cc...cc.c.c
+c.c1...1...1c.c
+c.cc.1.c.1.cc.c
+c..ccccccccc..c
+c.1..c*2*c..1.c
+cc.1..2d2..1.cc
+ cc..c*2*c..cc
+  ccccccccccc
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
@@ -1751,7 +1776,7 @@ ENDMAP
 #
 # Elf:$ branch endings
 #
-# Total weight: 190.
+# Total weight: 230.
 ##############################################################################
 ##############################################################################
 
@@ -1833,29 +1858,30 @@ KFEAT:   A = |
 KMONS:   B = deep elf blademaster
 KFEAT:   B = |
 MAP
-cccccccccccccccccccccccccc
-c2ccccccc........ccccccccc
-c.cccc2...5....5...2cccccc
-c.cc..................cccc
-c.c....3....45....3....c3c
-c.+........U..U........+.c
-c.c......2.2..2.2......c.c
-c.cc......3....4......cc.c
-c.ccc4cccccc..cccccc.cc..c
-c2ccc.c.3.ww..ww.4.ccc...c
-c.ccc..3..ww..ww..5......c
-c$$$ccc...ww..ww...ccccc.c
-c$$$ccc.1.ww..ww.5.ccccc.c
-c$$$cccccccc2.cccccc1262.c
-ccc+cccccccc..cccccccccc.c
-cB*|*|**|*cc..cc$|$*$|$|.c
-c**|*|||||cc..cc|$|$*$*$.c
-c*|*|||**|cc..cc$*$*$*$|.c
-c|**|*|||Acc..ccA$|$|$|$2c
-ccccccccccccWWcccccccccccc
-ccccccccccccWWcccccccccccc
-ccccccccccccWWcccccccccccc
-xxxxxxxxxxxx@@xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccccccccccccccccccccccccx
+xc2ccccccc........cccccccccx
+xc.cccc2...5....5...2ccccccx
+xc.cc..................ccccx
+xc.c....3....45....3....c3cx
+xc.+........U..U........+.cx
+xc.c......2.2..2.2......c.cx
+xc.cc......3....4......cc.cx
+xc.ccc4cccccc..cccccc.cc..cx
+xc2ccc.c.3.ww..ww.4.ccc...cx
+xc.ccc..3..ww..ww..5......cx
+xc$$$ccc...ww..ww...ccccc.cx
+xc$$$ccc.1.ww..ww.5.ccccc.cx
+xc$$$cccccccc2.cccccc1262.cx
+xccc+cccccccc..cccccccccc.cx
+xcB*|*|**|*cc..cc$|$*$|$|.cx
+xc**|*|||||cc..cc|$|$*$*$.cx
+xc*|*|||**|cc..cc$*$*$*$|.cx
+xc|**|*|||Acc..ccA$|$|$|$2cx
+xccccccccccccWWccccccccccccx
+xccccccccccccWWccccccccccccx
+xccccccccccccWWccccccccccccx
+xxxxxxxxxxxxx@@xxxxxxxxxxxxx
 ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
@@ -1885,30 +1911,31 @@ KITEM:   7 = |
 KFEAT:   6 = 6
 KFEAT:   7 = 7
 MAP
-ccccccccccccccccccccccccc
-c2ccccccc.......ccccccccc
-c.cccc2...5...5...2cccccc
-c.cc.................cc6c
-c.c....3....45...3....c3c
-c.+.........U.........+.c
-c.c......2.2.2.2......c.c
-c.cc......3...4......cc.c
-c.ccc4cccccc.cccccc.cc..c
-c2ccc.c.3.ww.ww.4.ccc...c
-c.ccc..3..ww.ww..5......c
-c$$$ccc...ww.ww...ccccc.c
-c$$$ccc.1.ww.ww.5.ccccc.c
-c$$$cccccccc.ccccccc122.c
-ccc+cccccccc2cccccccccc.c
-c6*|*|**|*cc.cc$|$*$|$|.c
-c**|*|||||cc.cc|$|$*$*$.c
-c||*||***|cc.cc$*$*$*$|.c
-c|**|*||7*cc.cc7$|$|$|$2c
-cccccccccccc.cccccccccccc
-ccccccccccc...ccccccccccc
-cccccccccc..c..cccccccccc
-Yyyyyyyyyy.ccc.zzzzzzzzzZ
-xxxxxxxxxxNncnNxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccx
+xc2ccccccc.......cccccccccx
+xc.cccc2...5...5...2ccccccx
+xc.cc.................cc6cx
+xc.c....3....45...3....c3cx
+xc.+.........U.........+.cx
+xc.c......2.2.2.2......c.cx
+xc.cc......3...4......cc.cx
+xc.ccc4cccccc.cccccc.cc..cx
+xc2ccc.c.3.ww.ww.4.ccc...cx
+xc.ccc..3..ww.ww..5......cx
+xc$$$ccc...ww.ww...ccccc.cx
+xc$$$ccc.1.ww.ww.5.ccccc.cx
+xc$$$cccccccc.ccccccc122.cx
+xccc+cccccccc2cccccccccc.cx
+xc6*|*|**|*cc.cc$|$*$|$|.cx
+xc**|*|||||cc.cc|$|$*$*$.cx
+xc||*||***|cc.cc$*$*$*$|.cx
+xc|**|*||7*cc.cc7$|$|$|$2cx
+xcccccccccccc.ccccccccccccx
+xccccccccccc...cccccccccccx
+xcccccccccc..c..ccccccccccx
+Yyyyyyyyyyy.ccc.zzzzzzzzzzZ
+xxxxxxxxxxxNncnNxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -1925,41 +1952,42 @@ SHUFFLE: 12, 34, 67
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
-xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxx
-xccc...cccxxxxxccc.cccxxxxxccc...cccx
-cc.......cccxccc.....cccxccc.......cc
-c3.........ccc.........ccc.........4c
-c....6......5...........5......6....c
-c3.................................4c
-cc......3.........7.........3......cc
-xcc...............n...............ccx
-xxc5............6nnn6............5cxx
-xcc...............n...............ccx
-cc.......4........7........4.......cc
-c1.................................2c
-c....7......5...........5......7....c
-c1.........ccc.........ccc.........2c
-cc.......cccxccc.....cccxccc.......cc
-xccc...cccxxxxxccc.cccxxxxxccc...cccx
-xxxcc+ccxxxxxxxxxc.cxxxxxxxxxcc+ccxxx
-xxxc$*|cxxxxxxxxxc.cxxxxxxxxxc|*$cxxx
-xxxc|*$cxxxxxxxxxc.cxxxxxxxxxc$*|cxxx
-xxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxcccccxxxccc.cccxxxcccccxxxxxxx
-xxxxcccc|$*ccccc6...6ccccc*||ccccxxxx
-xxccc*|$*|$$|+....U....+|$$|*$*$cccxx
-xcc*$$*|$$|$$ccc7...7ccc|*|$$$||*$ccx
-cc$*|*|*|*|cccxcccccccxccc$*$$*$$$|cc
-c|*|$$|*ccccxxxxxxxxxxxxxcccc|*$||$*c
-cccccccccxxxxxxxxxxxxxxxxxxxccccccccc
+xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxxx
+xxccc...cccxxxxxccc.cccxxxxxccc...cccxx
+xcc.......cccxccc.....cccxccc.......ccx
+xc3.........ccc.........ccc.........4cx
+xc....6......5...........5......6....cx
+xc3.................................4cx
+xcc......3.........7.........3......ccx
+xxcc...............n...............ccxx
+xxxc5............6nnn6............5cxxx
+xxcc...............n...............ccxx
+xcc.......4........7........4.......ccx
+xc1.................................2cx
+xc....7......5...........5......7....cx
+xc1.........ccc.........ccc.........2cx
+xcc.......cccxccc.....cccxccc.......ccx
+xxccc...cccxxxxxccc.cccxxxxxccc...cccxx
+xxxxcc+ccxxxxxxxxxc.cxxxxxxxxxcc+ccxxxx
+xxxxc$*|cxxxxxxxxxc.cxxxxxxxxxc|*$cxxxx
+xxxxc|*$cxxxxxxxxxc.cxxxxxxxxxc$*|cxxxx
+xxxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxxxxxcccccxxxccc.cccxxxcccccxxxxxxxx
+xxxxxcccc|$*ccccc6...6ccccc*||ccccxxxxx
+xxxccc*|$*|$$|+....U....+|$$|*$*$cccxxx
+xxcc*$$*|$$|$$ccc7...7ccc|*|$$$||*$ccxx
+xcc$*|*|*|*|cccxcccccccxccc$*$$*$$$|ccx
+xc|*|$$|*ccccxxxxxxxxxxxxxcccc|*$||$*cx
+xcccccccccxxxxxxxxxxxxxxxxxxxcccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
@@ -2082,30 +2110,31 @@ SHUFFLE: 12, 34, 67
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
-cccccccccccccccccccccccccccccc
-ccccccccccc4....5..ccccccccccc
-cccccccc..............cccccccc
-cccccc......1....3......cccccc
-ccccc...............5....ccccc
-cccc....2....bbbb3........cccc
-cccc..2.....bbbbbb........cccc
-ccc4.......bbbbbbbb........ccc
-ccc........bbbbbbbb3..1....ccc
-ccc..5.U..2bbbbbbbb...U....ccc
-cc.........bbbbbbbb.1.......cc
-cc....1.....bbbbbb..........cc
-cc.......3..3bbbb.....4.....cc
-cc.........................5cc
-c5...............5...........c
-c.c3..c..5c...1....c...c...c.c
-c.cc..cc..cc......cc..cc..cc3c
-c.ccc6ccc6ccc....ccc7ccc7ccc.c
-c+cccccccccccc..cccccccccccc+c
-c$**cc*$cc*$cc..cc$|cc$|cc||$c
-c*$*$***$*$**c.4c||$|$|$|||$|c
-c**$*$***$*$*c3.c|||$|||$|$||c
-cc**cc$*cc$*cc..cc|$cc|$cc|$cc
-cccccccccccccc@@cccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccccccccccccccccccccccccccccx
+xccccccccccc4....5..cccccccccccx
+xcccccccc..............ccccccccx
+xcccccc......1....3......ccccccx
+xccccc...............5....cccccx
+xcccc....2....bbbb3........ccccx
+xcccc..2.....bbbbbb........ccccx
+xccc4.......bbbbbbbb........cccx
+xccc........bbbbbbbb3..1....cccx
+xccc..5.U..2bbbbbbbb...U....cccx
+xcc.........bbbbbbbb.1.......ccx
+xcc....1.....bbbbbb..........ccx
+xcc.......3..3bbbb.....4.....ccx
+xcc.........................5ccx
+xc5...............5...........cx
+xc.c3..c..5c...1....c...c...c.cx
+xc.cc..cc..cc......cc..cc..cc3cx
+xc.ccc6ccc6ccc....ccc7ccc7ccc.cx
+xc+cccccccccccc..cccccccccccc+cx
+xc$**cc*$cc*$cc..cc$|cc$|cc||$cx
+xc*$*$***$*$**c.4c||$|$|$|||$|cx
+xc**$*$***$*$*c3.c|||$|||$|$||cx
+xcc**cc$*cc$*cc..cc|$cc|$cc|$ccx
+xcccccccccccccc@@ccccccccccccccx
 ENDMAP
 
 # Before transforms: 32x$, 27x*, 27x|, 4x1, 8x2, 9x3, 2x4, 10x5, 2x6, 2x7
@@ -2163,74 +2192,81 @@ SHUFFLE: 12, 34, 67
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
-xxxxxxxxxxcccccccccccxxxxxxxxxxx
-xxxxxxxxccc*|*|+...1cccxxxxxxxxx
-xxxxxxccc*$|*||c.....6cccxxxxxxx
-xxxxxcc$*|*|cccc........ccxxxxxx
-xxxxcc*|$|ccc*|c....3....ccxxxxx
-xxxcc|$*ccc|$*$+......5...ccxxxx
-xxcc$||cc*$*|$*c..6........ccxxx
-xxc|$$cc*$**cccc............cxxx
-xcc$*cc$**ccc1....3...U.....ccxx
-xc$||c*|$cc.................2cxx
-cc*|cc**cc...5bbb7.......4...ccx
-c$|*c|**c..1bbbbbbb..........2cx
-c|$cc*|cc..bbbbbbbbb..4.......cx
-c*|c|**c..6bbbbbbbbb..........cx
-c|*c$$|c..bbbbbbbbbbb..........@
-c+ccc+cc6.bbbbbbbbbbb...1..3cccx
-c..1......bbbbbbbbbbb......2cxxx
-c..........bbbbbbbbb.......ccxxx
-c.7..5....4bbbbbbbbb.......cxxxx
-c...........bbbbbbb...5...1cxxxx
-cc.5.........5bbb..3.......cxxxx
-xc........2.............1.ccxxxx
-xcc..3..U...........5....ccxxxxx
-xxc........4.............cxxxxxx
-xxcc.............5......ccxxxxxx
-xxxcc.................cccxxxxxxx
-xxxxcc......1........ccxxxxxxxxx
-xxxxxcc3........3cccccxxxxxxxxxx
-xxxxxxccc......cccxxxxxxxxxxxxxx
-xxxxxxxxccc3...cxxxxxxxxxxxxxxxx
-xxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccccxxxxxxxxxxx
+xxxxxxxxxccc*|*|+...1cccxxxxxxxxx
+xxxxxxxccc*$|*||c.....6cccxxxxxxx
+xxxxxxcc$*|*|cccc........ccxxxxxx
+xxxxxcc*|$|ccc*|c....3....ccxxxxx
+xxxxcc|$*ccc|$*$+......5...ccxxxx
+xxxcc$||cc*$*|$*c..6........ccxxx
+xxxc|$$cc*$**cccc............cxxx
+xxcc$*cc$**ccc1....3...U.....ccxx
+xxc$||c*|$cc.................2cxx
+xcc*|cc**cc...5bbb7.......4...ccx
+xc$|*c|**c..1bbbbbbb..........2cx
+xc|$cc*|cc..bbbbbbbbb..4.......cx
+xc*|c|**c..6bbbbbbbbb..........cx
+xc|*c$$|c..bbbbbbbbbbb..........@
+xc+ccc+cc6.bbbbbbbbbbb...1..3cccx
+xc..1......bbbbbbbbbbb......2cxxx
+xc..........bbbbbbbbb.......ccxxx
+xc.7..5....4bbbbbbbbb.......cxxxx
+xc...........bbbbbbb...5...1cxxxx
+xcc.5.........5bbb..3.......cxxxx
+xxc........2.............1.ccxxxx
+xxcc..3..U...........5....ccxxxxx
+xxxc........4.............cxxxxxx
+xxxcc.............5......ccxxxxxx
+xxxxcc.................cccxxxxxxx
+xxxxxcc......1........ccxxxxxxxxx
+xxxxxxcc3........3cccccxxxxxxxxxx
+xxxxxxxccc......cccxxxxxxxxxxxxxx
+xxxxxxxxxccc3...cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
 ENDMAP
 
 # The elves have created golems to guard their treasure.
+# XXX: Possibly too much of a outlier in the vault roster.
+# Lowered weight for now, should be addressed some time.
+#
 # Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
 NAME:    minmay_elf_hall_golems
 TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
+WEIGHT:  2
 : elf_setup(_G)
 : elf_monsters(_G)
 KMONS:   8 = crystal guardian
-SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77., 8=8.
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+NSUBST:  8 = 2:. / 1:8 / * = 8.
 SHUFFLE: 12, 34, 67
 SUBST:   b : bc
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxcccccccccccccccccccccccccxxxxx
 xxxxxc$*|$$$|*$$*$$*$|$|$|$*$cxxxxx
 xxxxcc+cc|*$$*$$$$|$$$|$*$cc+ccxxxx
-xxxcc8.8ccccccccccccccccccc8.8ccxxx
-xccc8.......4.......6......4..8cccx
+xxxcc..8ccccccccccccccccccc8..ccxxx
+xccc.2......4.......6......4...cccx
 xc$+....3.............1......2.+$cx
 xc*c8..4.......2..4.....1.....8c*cx
-xc|cc5....................2...cc*cx
+xc|cc5....................2..4cc*cx
 xc$$cccc......5.......7...5cccc$|cx
 xc*|$*|cc..2.......2......cc|*||$cx
 xc|*$|$*c.........2.....5.c*$$|**cx
 xc*|**|cc.....1...........cc$|*|$cx
 xc$*cccc........1....3.....cccc||cx
 xc$cc4.....bb1........bb.4....cc*cx
-xc|c8.....3bbbbb...3bbbb......8c|cx
+xc|c......3bbbbb...3bbbb.......c|cx
 xc*+....2....bbbb7bbbb....2....+$cx
 xccc8..........bbbbb..........8cccx
-xxxcc4.......4...b.....6......ccxxx
-xxxxcccc...4..............5ccccxxxx
+xxxcc4.......4...b.....6.....3ccxxx
+xxxxcccc1..4..............5ccccxxxx
 xxxxxxxcccc.........1...ccccxxxxxxx
 xxxxxxxxxxccc5........cccxxxxxxxxxx
 xxxxxxxxxxxxccc....4cccxxxxxxxxxxxx
@@ -2254,6 +2290,7 @@ SHUFFLE: 12, 34, 67
 : elf_loot_randomisation(_G)
 SUBST:   n : nnnb
 MAP
+xxxxxxxxxxxxxxxxxxxxxxx
 xxccccccccccccccccccccx
 xcc||*$**cc||$|*$|*|ccx
 xc*|*|$|**cc$|$*$||$|cx
@@ -2297,39 +2334,40 @@ SHUFFLE: 12, 34, 67
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
-xxxcccccccccccccccccccccccccccccxxxx
-xxxc$||*$|$$|*$+c2c+*$|*$$$|*||cxxxx
-xxccc|$|*$*|*|cc4..cc*|*|**|$*cccxxx
-xcc.cc|*||*|$cc...3.cc*|$|||*cc4ccxx
-cc...cc||*||cc.......cc*||$|cc...ccx
-c..5..cc*$$cc..6...5..cc*|*cc.....cx
-cc.....cc*cc...........cc$cc.7...ccx
-xcc7....ccc5.....b.....2ccc.....ccxx
-xxcc4....c......bbb.1....c....4ccxxx
-xxxcc.3.....4..bbbbb..........ccxxxx
-xxxxcc...2......bbb...5...3..ccxxxxx
-xxxxxcc..........b..........ccxxxxxx
-xxxxcc....5....4.........7...ccxxxxx
-xxxcc.2...b.........2...b.....ccxxxx
-xxcc.....bbb...........bbb.....ccxxx
-xxc..5..bbbbb.3..6.2..bbbbb...1.cxxx
-xxcc.....bbb...........bbb...5.ccxxx
-xxxcc.1...b..........3..b.....ccxxxx
-xxxxcc......7................ccxxxxx
-xxxxxcc..........b...4......ccxxxxxx
-xxxxcc..4....1..bbb.......5..ccxxxxx
-xxxcc..........bbbbb..........ccxxxx
-xxcc3....c......bbb......c.....ccxxx
-xcc.....ccc......b...2..ccc.1...ccxx
-cc.....ccxcc.5.........ccxcc...5.ccx
-c..5..ccxxxcc......4..ccxxxcc.....cx
-cc...ccxxxxxcc.......ccxxxxxcc4..ccx
-xcc1ccxxxxxxxcc.....ccxxxxxxxcc.ccxx
-xxcccxxxxxxxxxcc3..ccxxxxxxxxxcccxxx
-xxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxc2cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxcccccccccccccccccccccccccccccxxxx
+xxxxc$||*$|$$|*$+c2c+*$|*$$$|*||cxxxx
+xxxccc|$|*$*|*|cc4..cc*|*|**|$*cccxxx
+xxcc.cc|*||*|$cc...3.cc*|$|||*cc4ccxx
+xcc...cc||*||cc.......cc*||$|cc...ccx
+xc..5..cc*$$cc..6...5..cc*|*cc.....cx
+xcc.....cc*cc...........cc$cc.7...ccx
+xxcc7....ccc5.....b.....2ccc.....ccxx
+xxxcc4....c......bbb.1....c....4ccxxx
+xxxxcc.3.....4..bbbbb..........ccxxxx
+xxxxxcc...2......bbb...5...3..ccxxxxx
+xxxxxxcc..........b..........ccxxxxxx
+xxxxxcc....5....4.........7...ccxxxxx
+xxxxcc.2...b.........2...b.....ccxxxx
+xxxcc.....bbb...........bbb.....ccxxx
+xxxc..5..bbbbb.3..6.2..bbbbb...1.cxxx
+xxxcc.....bbb...........bbb...5.ccxxx
+xxxxcc.1...b..........3..b.....ccxxxx
+xxxxxcc......7................ccxxxxx
+xxxxxxcc..........b...4......ccxxxxxx
+xxxxxcc..4....1..bbb.......5..ccxxxxx
+xxxxcc..........bbbbb..........ccxxxx
+xxxcc3....c......bbb......c.....ccxxx
+xxcc.....ccc......b...2..ccc.1...ccxx
+xcc.....ccxcc.5.........ccxcc...5.ccx
+xc..5..ccxxxcc......4..ccxxxcc.....cx
+xcc...ccxxxxxcc.......ccxxxxxcc4..ccx
+xxcc1ccxxxxxxxcc.....ccxxxxxxxcc.ccxx
+xxxcccxxxxxxxxxcc3..ccxxxxxxxxxcccxxx
+xxxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc2cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Before transform: 31x$, 26x*, 31x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
@@ -2589,4 +2627,175 @@ xxxxxxcc.AAcBB.ccxxxxxxxx
 xxxxxxxccAA.BBccxxxxxxxxx
 xxxxxxxxcc...ccxxxxxxxxxx
 xxxxxxxxxcc@ccxxxxxxxxxxx
+ENDMAP
+
+# Before transforms: 27x*, 31x|, 6x1, 8x2, 8x3, 4x4, 8x5, 2x6, 2x7
+NAME:    minmay_elf_hall_curves
+PLACE:   Elf:$
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+SUBST:   v = v .:2
+SUBST:   v : xvb
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxcccccccccccccccxxxxxxxx
+xxxxxxcccc........1....ccccxxxxx
+xxxxccc....vvv.4.5........cccxxx
+xxxcc....vvv2.......1.......ccxx
+xxxc..2.vv.....ccccc...v.....cxx
+xxcc....v...cccc...c..vvv..3.ccx
+xxc.......ccc......c...vvv....cx
+xxc2.vv............c....vv....cx
+xcc.vv..2.......1..cc...vvv.5.cc
+xc..v..c............c..2.vv....c
+xc.vv..c....bbbb..3.c....vvv...c
+xc.v5.cc...bbbbbb...cc....vvv..c
+xc.v..c....bbbbbb....c..3..v...c
+xc....c..3.bbbbbb....cc......5.c
+xc.5.cc....bbbbbb.....ccc......c
+xc...c......bbbb..2.....cccc...@
+xc...c................6...7ccccc
+xc.1.c......1...4..bbbb..U.+||*c
+xc...ccccc........bbbbbb.3.c**|c
+xc.......cccc..3..bbbbbb...c|*|c
+xc...5.4....ccc...bbbbbb...c**|c
+xc....v.....5.cc..bbbbbb.2cc||*c
+xcc..vvv.......c.6.bbbb...c||*cc
+xxc...vvvv.2...cc........cc**|cx
+xxc....vvvvv....c.U...4.cc||*|cx
+xxcc.....vvvv...c..3.7ccc***|ccx
+xxxc..5....vvv..cc+cccc|*||**cxx
+xxxcc.......v....c**||**|*|*ccxx
+xxxxccc..1....3..c|**|*|||cccxxx
+xxxxxxcccc.......c|||*|ccccxxxxx
+xxxxxxxxxccccccc@cccccccxxxxxxxx
+ENDMAP
+
+# Before transforms: 42x$, 27x*, 27x|, 10x1, 8x2, 4x3, 4x4, 6x5, 4x6, 2x7
+NAME:    minmay_elf_hall_not_hex
+PLACE:   Elf:$
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+SUBST:   v = v .:2
+SUBST:   v : xvb
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxcccccccccccxxxxxxxxx
+xxxxxxxccc$|+..4+|*cccxxxxxxx
+xxxxxccc*|*|c2..c*$||cccxxxxx
+xxxccc$*|$$cc6..cc|**|*cccxxx
+xccc$*|**ccc..v.1ccc$*$*|cccx
+xc*|*|*ccc.6.vvv.2.ccc|$*||cx
+xc|*$ccc24.vvv.vvv...ccc|**cx
+xc+ccc.5....5......1...ccc+cx
+xc.2.....bbb.2...bbb5.....6cx
+xc6...1.bbbbb...bbbbb..1.3.cx
+xc..U...bbbbb.3.bbbbb...U..cx
+xc1.....bbbbb...bbbbb..5..7cx
+xc.7.1...bbb.....bbb..1..2.cx
+xc+ccc..4.....1.....5..ccc+cx
+xc$$$ccc..1.....2..1.ccc$$$cx
+xc|$*$$ccc....4...5ccc|$$*$cx
+xccc|*$|$ccc.2...ccc$*$||cccx
+xxxccc|$$$|ccc.ccc$$|$*cccxxx
+xxxxxccc$*$$c3.3c$$*$cccxxxxx
+xxxxxxxccc$$c...c$$cccxxxxxxx
+xxxxxxxxxcccc...ccccxxxxxxxxx
+xxxxxxxxxxxxcc@ccxxxxxxxxxxxx
+ENDMAP
+
+# Before transforms: 44x|, 4x1, 4x2, 4x3, 4x4, 12x5, 4x6, 4x7
+NAME:    minmay_elf_hall_statues
+TAGS:    nolayout_halls
+PLACE:   Elf:$
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34
+: elf_loot_defenders(_G)
+SUBST:   v = v .:2
+SUBST:   v : xvb G:1
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxcccccccccccccccxxxxxxxxx
+xxxxxxxxxccnnn..........cccccxxxxx
+xxxxxxxxxcnnGn.v.v.v3v......cccxxx
+xxxxxxxxccnnnn................ccxx
+xxxxxxxxcnnnncccc+cccc.....v...cxx
+xxxxxxxxcnGncc.......ccc...vv3.ccx
+xxxxxxxccnnnn..........ccc..vv..cx
+xxxxccccnnnnn.7..v.......cc..v..cx
+xxcccnnnnGnnn....vv.1.....cc....cx
+xccnnnGnnnnnb+b...vv..v....c....cc
+xcnnnnnnnnnbb.bb.4.vv.vv...cc5...c
+xcnGnncnnnbb...bb...v..vv...c....c
+xcnnncc...+..U.6b..1....vv..cc..5c
+xc...c..7.bb....bn.......v...c.G.c
+xc.v.c.....bb6...nnbbb.....G1c5..c
+xc...c......bbb.G.bb6bbb..1..c...c
+xc.v.+..vv....nn..|||||bb....+.G.c
+xc.4.c..2vv....nb|||||||b...4c..5c
+xc.v.c....vv...bb|||||||bb.G.c...c
+xc...c.....vv..b6|||U|||7b...c.G.c
+xc.v.cc......2.bb|||||||bb..cc...c
+xc....c...vv..3.b|||||||b...c5...c
+xc....cc...vv...bb|||||bb..cc....c
+xcc....c....vv...bbb7bbb...c...5.c
+xxc....cc....vv....bbb....cc.v...c
+xxc..3..cc2.........2....cc..vv..c
+xxcc.vv..ccc...G.4.G...ccc....vv.c
+xxxc..vv...ccc.......ccc....5..v.c
+xxxcc..vv....cccc+cccc.5.vv......c
+xxxxcc.........5..........vv.....c
+xxxxxccc......G..G..G.....5vv.....
+xxxxxxxcccc..5.....5.............@
+xxxxxxxxxxccccccccccccccccccccc.@c
+ENDMAP
+
+# Before transforms: 36x$, 28x|, 26x*, 4x1, 4x2, 8x3, 8x4, 4x5, 4x6, 4x7
+NAME:    minmay_elf_hall_furrowed
+TAGS:    nolayout_halls
+PLACE:   Elf:$
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+SUBST:   v = v .:2
+SUBST:   v : xvb
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcccccccccxxxxxxxxxxxxx
+xxxxxxxxxxcccc|*|*|*|ccccxxxxxxxxxx
+xxxxxxxxxxc|*|*|*v*|*|*|cxxxxxxxxxx
+xxxxccccccc*|v|*|*|*|v|*cccccccxxxx
+xxxxc$|$+3cc*|*cc+cc*|*cc4+$$|cxxxx
+xxxxc$v$c.7ccccc4.3ccccc6.c|v$cxxxx
+xxxcc*$$c..c.6.c...c.7.c..c*$$ccxxx
+xxxc$$|cc2.......5.......1cc$|*cxxx
+xxxc$v$c....1v.......v2....c*v$cxxx
+xxcc$*$c5.vvvvv..U..vvvvv.5c$$|ccxx
+xxc|$|cc..3v2..3...4..1v4..cc$$$cxx
+xxc$v*c4.....4..1.2..3.....3c*v$cxx
+xcc*$$c..ccc7.ccccccc.6ccc..c$$|ccx
+xc$$|cc....cccc3...4cccc....cc$$$cx
+xccccc6.....................7cccccx
+xxxxxccc1......v.5.v......2cccxxxxx
+xxxxxxxcccc.............ccccxxxxxxx
+xxxxxxxxxxcccc4.....3ccccxxxxxxxxxx
+xxxxxxxxxxxxxcccc@ccccxxxxxxxxxxxxx
 ENDMAP

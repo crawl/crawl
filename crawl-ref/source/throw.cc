@@ -17,17 +17,17 @@
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "fight.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "macro.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "output.h"
 #include "prompt.h"
@@ -160,6 +160,7 @@ void fire_target_behaviour::set_prompt()
         case LRET_FUMBLED:  msg << "Tossing away "; break;
         case LRET_LAUNCHED: msg << "Firing ";             break;
         case LRET_THROWN:   msg << "Throwing ";           break;
+        case LRET_BUGGY:    msg << "Bugging "; break;
         }
     }
 
@@ -324,8 +325,7 @@ static int _fire_prompt_for_item()
 
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_FIRE);
+                                   OSEL_THROWABLE, OPER_FIRE);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
@@ -534,7 +534,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         const monster* mon = agent->as_monster();
 
-        beam.attitude      = mons_attitude(mon);
+        beam.attitude      = mons_attitude(*mon);
         beam.thrower       = KILL_MON_MISSILE;
     }
 
@@ -630,7 +630,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 1;
         msg   = "You hear a whirring sound.";
         break;
-    case WPN_GREATSLING:
+    case WPN_FUSTIBALUS:
         level = 3;
         msg   = "You hear a loud whirring sound.";
         break;
@@ -778,7 +778,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, false))
             return false;
 
         if (!thrown.quantity)
@@ -816,7 +816,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     {
         const item_def *launcher = you.weapon();
         ASSERT(launcher);
-        practise(EX_WILL_LAUNCH, item_attack_skill(*launcher));
+        practise_launching(*launcher);
         if (is_unrandom_artefact(*launcher)
             && get_unrand_entry(launcher->unrand_idx)->type_name)
         {
@@ -827,11 +827,13 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         break;
     }
     case LRET_THROWN:
-        practise(EX_WILL_THROW_MSL, wepType);
+        practise_throwing((missile_type)wepType);
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
     case LRET_FUMBLED:
-        practise(EX_WILL_THROW_OTHER);
+        break;
+    case LRET_BUGGY:
+        dprf("Unknown launch type for weapon."); // should never happen :)
         break;
     }
 
@@ -1135,14 +1137,8 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     const int mult = 2;
     int chance = base_chance * mult;
 
-    switch (brand)
-    {
-        case SPMSL_FLAME:
-        case SPMSL_FROST:
-        case SPMSL_CURARE:
-            chance /= 2;
-            break;
-    }
+    if (brand == SPMSL_CURARE)
+        chance /= 2;
 
     dprf("mulch chance: %d in %d", mult, chance);
 

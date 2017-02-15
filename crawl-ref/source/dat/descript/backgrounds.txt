@@ -40,8 +40,8 @@ Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to increase the
-spell's power. More earthen spells are in their book of Geomancy.
+Earth Elementalists know the Sandblast spell, and carry stones to fuel the
+spell. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
@@ -75,8 +75,8 @@ other spells are quite versatile.
 %%%%
 Monk
 
-Monks are ready to take on the dungeon wearing just a robe and using their
-body. They will gain additional piety with the first god they worship.
+Monks start with a simple weapon of their choice, and gain additional piety
+with the first god they worship.
 %%%%
 Necromancer
 

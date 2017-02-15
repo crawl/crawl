@@ -78,7 +78,7 @@ Il porte certains pouvoirs de l'archi-démon Asmodeus. Brandir ce puissant
 sceptre peut convoquer des rejetons infernaux de leur domicile et les asservir
 à votre volonté. Evidemment, ils ne vont pas vous aimer quand le sort expirera.
 %%%%
-faerie dragon armour
+faerie dragon scales
 
 Les dragons fées étaient un peuple de la même espèce que les dragons tachetés.
 Malheureusement, leurs couleurs vives firent leur perte, car elles alertaient
@@ -138,7 +138,7 @@ glaive of the Guard
 Cette arme a appartenu à Gar Dogh, le gardien du trésor d'un roi. D'après la
 légende, elle avait été perdue quelque part dans le donjon.
 %%%%
-sword of Jihad
+zealot's sword
 
 Une épée longue taillée dans un énorme bloc de cristal. La légende raconte
 qu'elle aurait été un cadeau accordé par L’Étincelant à un de ses fidèles.

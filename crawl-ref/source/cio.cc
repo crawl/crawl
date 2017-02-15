@@ -53,6 +53,26 @@ static keycode_type _numpad2vi(keycode_type key)
     return key;
 }
 
+// Save and restore the cursor region.
+class unwind_cursor
+{
+public:
+    unwind_cursor()
+        : region(get_cursor_region()), pos(cgetpos(get_cursor_region()))
+    { }
+    unwind_cursor(int x, int y, GotoRegion reg) : unwind_cursor()
+    {
+        cgotoxy(x, y, reg);
+    }
+    ~unwind_cursor()
+    {
+        cgotoxy(pos.x, pos.y, region);
+    }
+private:
+    GotoRegion region;
+    coord_def pos;
+};
+
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
                             bool fake_ctrl, bool fake_shift)
 {
@@ -63,12 +83,16 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     /* can we say yuck? -- haranp */
     if (fake_ctrl && keyin == '*')
     {
+        unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
+        cprintf("CTRL");
         keyin = getchm(keymap);
         // return control-key
         keyin = CONTROL(toupper(_numpad2vi(keyin)));
     }
     else if (fake_shift && keyin == '/')
     {
+        unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
+        cprintf("SHIFT");
         keyin = getchm(keymap);
         // return shift-key
         keyin = toupper(_numpad2vi(keyin));
@@ -409,7 +433,7 @@ int line_reader::read_line(bool clear_previous)
     int cpos = 0;
     while (*cur && cpos < pos)
     {
-        ucs_t c;
+        char32_t c;
         int s = utf8towc(&c, cur);
         cur += s;
         cpos += wcwidth(c);
@@ -476,7 +500,7 @@ void line_reader::backspace()
 
     char *np = prev_glyph(cur, buffer);
     ASSERT(np);
-    ucs_t ch;
+    char32_t ch;
     utf8towc(&ch, np);
     buffer[length] = 0;
     length -= cur - np;
@@ -494,7 +518,7 @@ void line_reader::backspace()
     cursorto(pos);
 }
 
-bool line_reader::is_wordchar(ucs_t c)
+bool line_reader::is_wordchar(char32_t c)
 {
     return iswalnum(c) || c == '_' || c == '-';
 }
@@ -529,7 +553,7 @@ void line_reader::killword()
         if (!np)
             break;
 
-        ucs_t c;
+        char32_t c;
         utf8towc(&c, np);
         if (is_wordchar(c))
             foundwc = true;
@@ -553,7 +577,7 @@ void line_reader::calc_pos()
 {
     int p = 0;
     const char *cp = buffer;
-    ucs_t c;
+    char32_t c;
     int s;
     while (cp < cur && (s = utf8towc(&c, cp)))
     {

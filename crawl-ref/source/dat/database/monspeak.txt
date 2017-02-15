@@ -210,7 +210,7 @@ VISUAL:@The_monster@ shimmers violently.
 
 VISUAL:@The_monster@ glows brightly for a moment.
 
-VISUAL:@The_monster@'s fingertips start to glow.
+VISUAL:@The_monster@'s @hands@ start to glow.
 
 VISUAL:You feel disoriented. @player_only@
 
@@ -924,7 +924,7 @@ default confused 'r'
 
 VISUAL:@The_monster@ runs around in a circle.
 %%%%
-# Bees and wasps - moths and giant fireflies have separate speech.
+# Bees and hornets - moths and giant fireflies have separate speech.
 default confused 'y'
 
 SOUND:@The_monster@ buzzes around in tight circles.
@@ -1303,8 +1303,6 @@ VISUAL:@The_monster@ prays.
 %%%%
 Evocations player ghost
 
-@The_monster@ says @to_foe@, "How about a game of cards?"
-
 @The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
 
 @The_monster@ says, "I could kill you with a [stone|fan|lamp]."
@@ -1413,8 +1411,6 @@ Nemelex Xobeh player ghost
 @The_monster@ tells you, "The cards don't hold a good future for you."
 
 @The_monster@ says @to_foe@, "I will deal out your death!"
-
-@The_monster@ tells you, "It seems you just drew Damnation."
 %%%%
 Okawaru player ghost
 
@@ -1650,7 +1646,7 @@ w:5
 %%%%
 _Aizul_common_
 
-VISUAL:@The_monster@ yawns, and then pretends he didn't.
+VISUAL:@The_monster@ yawns, and then pretends @subjective@ didn't.
 
 @The_monster@ says, "Feeling sleepy?"
 
@@ -1743,7 +1739,7 @@ _Asterion_common_
 
 VISUAL:@The_monster@ snorts and paws the ground.
 
-VISUAL:@The_monster@ slowly taps his weapon in his hand.
+VISUAL:@The_monster@ slowly taps @possessive@ weapon in @possessive@ hand.
 
 @The_monster@ says, "Soon your soul will belong to Makhleb." @player_only@
 
@@ -1854,6 +1850,49 @@ end
 }}
 ## END Azrael ##
 %%%%
+
+############ BAI SUZHEN ### Dragon-lady of famed tragic folklore
+Bai Suzhen
+
+@Bai Suzhen@
+%%%%
+Bai Suzhen
+
+@_Bai_Suzhen_common_@
+
+w:6
+@_Bai_Suzhen_rare_@
+%%%%
+_Bai_Suzhen_common_
+
+@The_monster@ grumbles, "Damn that jealous turtle monk."
+
+@The_monster@ pines for @possessive@ lost husband.
+
+@The_monster@ roars, "Even the heavens can't separate us forever!"
+
+@The_monster@ inspects @possessive@ gathered herbal reagents.
+
+VISUAL:@The_monster@ twists and twirls @possessive@ body through the storm.
+%%%%
+_Bai_Suzhen_rare_
+
+@The_monster@ grouses about [the pranks of immortal alchemists|immature sisters].
+
+@The_monster@ hisses, "Days like this make me miss drinking."
+
+@The_monster@ affirms to @reflexive@, "Our love will make it through this."
+
+@The_monster@ wonders wistfully, "Should I have meditated another thousand years?"
+
+w:5
+@The_monster@ whispers to @reflexive@, "Everyone I saved... Everyone I doomed..."
+
+w:5
+VISUAL:@The_monster@'s form shimmers in the rain.
+## END Bai Suzhen ##
+%%%%
+
 ############ BLORK ### In case Blork ends up polymorphed.
 Blork
 
@@ -1895,7 +1934,7 @@ VISUAL:@The_monster@ looks angry.
 %%%%
 _Blork_rare_
 
-@The_monster@ screams @at_foe@, "I'll cut your head off!"
+@The_monster@ screams @at_foe@, "I'll rip your head off!"
 
 @The_monster@ screams @at_foe@, "I'll break your legs!"
 
@@ -2311,6 +2350,8 @@ Liver
 Mugger
 
 Walk
+
+Earwax
 %%%%
 # Lowercase words
 _crazy_yiuf_wordlist2_
@@ -2454,6 +2495,13 @@ pizzabubble
 noodlescoop
 
 mumblescurry
+
+alas
+
+rumpyflump
+
+sizzlefizz
+
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
@@ -2522,7 +2570,7 @@ w:50
 
 @The_monster@ says, "You've already taken the rune from here, haven't you?"
 
-@The_monster@ says, "So-called 'good' gods are just as evil as the rest. I hate hypocrisy."
+@The_monster@ says, "The so-called 'good' gods are just as evil as the rest. I hate hypocrisy."
 
 @The_monster@ says, "I hate temples."
 
@@ -2551,8 +2599,6 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "Why is it so dark? Have they never heard of torches?"
 
-@The_monster@ says, "I bought a lantern at a shop, but it didn't work. I hate that."
-
 @The_monster@ ponders, "They're ugly as hell, too!"
 
 @The_monster@ says, "I ran into an orc. He called himself a warlord, and I asked what war?"
@@ -2579,8 +2625,6 @@ w:50
 @The_monster@ says, "Really pretty, but really, really boring. I hate that."
 
 @The_monster@ says, "What's with all the gesturing? I hate that."
-
-@The_monster@ says, "I don't get the difference between high elves and deep elves."
 
 @The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
@@ -2694,11 +2738,7 @@ Slime Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Those amoebas look tasty."
-
 @The_monster@ says, "Where's all the loot?"
-
-@The_monster@ says, "A jelly ate my lunch. I hate jellies."
 
 @The_monster@ says, "I feel like a jelly sandwich, now."
 
@@ -2712,11 +2752,7 @@ w:50
 
 @The_monster@ says, "I keep getting this feeling like someone's watching me. Creepy."
 
-@The_monster@ says, "I used up all my cure mutation potions. I hate that."
-
 @The_monster@ says, "I always freeze up when I think I'm being watched."
-
-@The_monster@ says, "I dropped a potion and a jelly ate it. I hate jellies!"
 
 @The_monster@ says, "A death ooze jiggled at me. That's naff."
 
@@ -2727,12 +2763,6 @@ w:50
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
 @The_monster@ says, "I hope the rune isn't sticky."
-
-@The_monster@ says, "I bet a jelly ate the rune."
-
-@The_monster@ says, "I hate that slurping noise."
-
-@The_monster@ says, "I hate that squelching noise."
 %%%%
 Snake Donald
 
@@ -2789,11 +2819,9 @@ w:50
 
 @The_monster@ says, "Don't bother, there's only junk at the bottom."
 
-@The_monster@ says, "I asked the warden where the rune was. He slammed the door in my face."
+@The_monster@ says, "I asked the warden where the rune was. She slammed the door in my face."
 
 @The_monster@ says, "I don't remember getting an invitation to a convocation."
-
-@The_monster@ says, "What kind of idiots hire shapeshifters to protect treasure?"
 
 @The_monster@ says, "Who designed this place? It's just a bunch of weird little rooms stuck together."
 
@@ -2868,29 +2896,6 @@ w:50
 
 @The_monster@ says, "All these vampires have me hopping mad!"
 %%%%
-Lab Donald
-
-w:50
-@_generic_Donald_@
-
-@The_monster@ says, "Spare a ration?"
-
-@The_monster@ says, "I'm as lost as you are, buddy."
-
-@The_monster@ says, "I hate being hungry."
-
-@The_monster@ says, "I had breadcrumbs, but I ate them."
-
-@The_monster@ says, "I tried to follow the left wall; it didn't work."
-
-@The_monster@ says, "What do you think the minotaur eats?"
-
-@The_monster@ says, "So who maintains these gears?"
-
-@The_monster@ says, "What a crowded place."
-
-@The_monster@ says, "Mazes, puzzles. I hate puzzles."
-%%%%
 Abyss Donald
 
 w:50
@@ -2906,7 +2911,7 @@ w:50
 
 @The_monster@ says, "I've never heard of a star spawning anything."
 
-@The_monster@ throws up his hands and says, "Alright, I admit it, I'm lost!"
+@The_monster@ throws up @possessive@ hands and says, "Alright, I admit it, I'm lost!"
 
 @The_monster@ says, "I hate wrenching sensations."
 
@@ -3068,11 +3073,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-w:2
-@The_monster@ says, "Bone dragons? Death cobs? Does your god just put random words together and see what pops into existence?"
-
-@The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
-
 @The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
 
 @The_monster@ says, "Angels painted black are so last century."
@@ -3175,8 +3175,6 @@ w:50
 
 @The_monster@ says, "Hey, I thought wands weren't allowed!"
 
-@The_monster@ says, "What about rods?"
-
 @The_monster@ says, "If I tell you I hate magic, will you worship me?"
 
 @The_monster@ says, "I hate ogres."
@@ -3245,7 +3243,7 @@ w:50
 
 @The_monster@ says, "Beogh's pretty racist."
 
-@The_monster@ says, "One of the priests looked like he was going to ask me to join... I guess he changed his mind."
+@The_monster@ says, "One of the priests looked like she was going to ask me to join... I guess she changed her mind."
 
 @The_monster@ says, "You think walking on water is cool? I can swim."
 
@@ -3442,8 +3440,6 @@ w:50
 
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
-@The_monster@ says, "I bet you can make some really great dragon armour out of gold."
-
 @The_monster@ says, "What do potions have to do with a god of gold, anyway?"
 %%%%
 Qazlal Donald
@@ -3499,7 +3495,7 @@ w:50
 
 @The_monster@ says, "Bet you can't [analyse|invent] your way out of this one."
 
-@The_monster@ says, "Can I borrow that [wand|rod|lamp|fan] for a second? You must have some to spare."
+@The_monster@ says, "Can I borrow that [wand|lamp|fan] for a second? You must have some to spare."
 %%%%
 No God Donald
 
@@ -5006,53 +5002,6 @@ VISUAL:@The_monster@ looks very self-confident.
 @The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!" @player_only@
 ## END Margery
 %%%%
-############ MAUD ### A warrior princess looking for the sword "Entarex".
-Maud
-
-@_Maud_common_@
-
-w:5
-@_Maud_rare_@
-%%%%
-_Maud_common_
-
-VISUAL:@The_monster@ frowns.
-
-VISUAL:@The_monster@ looks upset.
-
-@The_monster@ screams @at_foe@, "'Entarex' is mine!"
-
-@The_monster@ screams @at_foe@, "You can't face my power!"
-
-@The_monster@ screams @at_foe@, "Give me that sword! Immediately!"
-
-@The_monster@ screams @at_foe@, "Your life or 'Entarex'! You must choose!"
-
-@The_monster@ screams @at_foe@, "I want it!"
-
-@The_monster@ screams @at_foe@, "Die, you thief!"
-%%%%
-_Maud_rare_
-
-@The_monster@ screams @at_foe@, "Submit or die!"
-
-@The_monster@ screams @at_foe@, "Give me 'Entarex'!"
-
-@The_monster@ screams @at_foe@, "If you give me 'Entarex', I'll let you live!"
-
-@The_monster@ asks @foe,@ "Will you think of me as you die?"
-%%%%
-confused Maud
-
-@The_monster@ thinks out loud, "I seem to be forgetting something..."
-
-@The_monster@ asks @foe,@ "What was I looking for, again?"
-
-@The_monster@ thinks out loud, "Enter... Enterror?"
-
-@The_monster@ wonders, "Who am I anyway?"
-## END Maud ##
-%%%%
 ############ MAURICE ### A thief.
 Maurice
 
@@ -5288,6 +5237,8 @@ w:1
 %%%%
 _Natasha_death_common_
 
+@The_monster@ yowls pathetically as @subjective@ dies!
+
 @The_monster@ screams in fury as @subjective@ dies!
 
 @The_monster@ screams in pain as @subjective@ dies!
@@ -5471,94 +5422,6 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
-############ NORRIS ### An enlightened but crazy man
-Norris
-
-@_Norris_common_@
-
-w:5
-@_Norris_rare_@
-%%%%
-_Norris_common_
-
-@The_monster@ mumbles some mantras.
-
-VISUAL:@The_monster@ is surrounded with an aura of peace.
-
-VISUAL:@The_monster@ smiles @at_foe@.
-
-VISUAL:@The_monster@ looks relaxed.
-
-@The_monster@ sings, "Peace now, freedom now! Peace now, freedom now!"
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Life is just suffering. I'll help you."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Death is just a liberation!"
-
-@The_monster@ says @to_foe@, "Feel free to die. It's a great thing."
-
-@The_monster@ says @to_foe@, "Breathe deeply."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Peace! I bring you eternal peace!"
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Free your soul! Die!"
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Let's die."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Why delay the inevitable?"
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Personally, I think you are better off dead."
-
-@The_monster@ looks @at_foe@ and intones, "So much life I see, so little death. Pity that!"
-%%%%
-_Norris_rare_
-
-VISUAL:@The_monster@ looks very balanced.
-
-@The_monster@ happily suggests, "Let's all die!"
-
-@The_monster@ @_Norris_verb_@, "I think I should really try this state of death once."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Aren't you the least bit curious about what happens next?"
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "You know, I get a bit tired of life. Don't you?"
-
-@The_monster@ @_Norris_verb_@, "Personally, I might be better off dead."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Only fools fear death. I embrace it."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "After death you'll find inner peace."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "Don't resist. I'll do it for you."
-
-@The_monster@ says @to_foe@, "The ORB is only a myth. Forget about it." @player_only@
-
-@The_monster@ sighs @at_foe@, "Enlightenment is such responsibility."
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "If we die together, will our souls be bonded? Icky!"
-
-@The_monster@ @_Norris_verb_@ @to_foe@, "I've seen so many of you coming here and die. I'd rather die at home."
-%%%%
-_Norris_verb_
-
-hums
-
-laughs
-
-murmurs
-
-softly says
-
-sighs
-
-mumbles
-
-absently says
-
-whispers
-
-## END Norris ##
-%%%%
 ############ Pikel ######## A big kobold slaver!
 Pikel
 
@@ -5688,13 +5551,13 @@ mosquito
 w:2
 spider
 
-wasp
-
 centipede
 
 millipede
 
 w:1
+hornet
+
 small bird
 
 mouse
@@ -5872,6 +5735,8 @@ w:5
 %%%%
 _Rupert_common_
 
+VISUAL:@The_monster@ looks as if @subjective@ doubts whether @foe@ exists.
+
 VISUAL:@The_monster@ looks excited.
 
 VISUAL:@The_monster@ looks confused.
@@ -6014,7 +5879,7 @@ _Sigmund_rare_
 VISUAL:@The_monster@ smiles chillingly.
 ## END Sigmund ##
 %%%%
-############ SOJOBO ### tengu king
+############ SOJOBO ### tengu queen
 Sojobo
 
 @_Sojobo_common_@
@@ -6026,7 +5891,7 @@ _Sojobo_common_
 
 VISUAL:@The_monster@ strikes a fencing pose.
 
-@The_monster@ barks orders to his subordinates.
+@The_monster@ barks orders to @possessive@ subordinates.
 
 VISUAL:@The_monster@ grins devilishly.
 
@@ -6119,9 +5984,9 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
-##################### A coarse and lanky orc. Urug lost his eye in a fight with a harpy,
+##################### A coarse and lanky orc. Urug lost her eye in a fight with a harpy,
 ############ URUG ### and has sworn to slay every last one of them. Unfortunately, the
-##################### vision in his remaining eye is not very good, and he has mistaken you for one.
+##################### vision in her remaining eye is not very good, and she has mistaken you for one.
 Urug
 
 @_Urug_common_@
@@ -6242,74 +6107,12 @@ _Vashnia_nonnaga_
 @The_monster@ says to @possessive@ squad, "Do not let the @foe_genus@ escape!"
 ## END Vashnia ##
 %%%%
-############ WIGLAF ### A dwarf. Nuff said.
-Wiglaf
-
-@_Wiglaf_common_@
-
-w:5
-@_Wiglaf_rare_@
-
-@_Wiglaf_nondwarf_@
-%%%%
-related Wiglaf
-
-@_Wiglaf_common_@
-
-w:5
-@_Wiglaf_rare_@
-%%%%
-_Wiglaf_common_
-
-@The_monster@ says @to_foe@, "Ma axe will split yer heid!"
-
-@The_monster@ says @to_foe@, "By thae beards o' ma forefathars, ye wilnae live tae see tha morn'!"
-
-@The_monster@ yells out a battle-cry.
-%%%%
-_Wiglaf_rare_
-
-VISUAL:@The_monster@ eyes you carefully - or perhaps drunkenly.
-
-@The_monster@ says, "This cannae be beer, 'tis yak urine! I want ma dwarven ale!"
-
-@The_monster@ says, "Good veins're in thae mountains, nae this deep doon!"
-
-@The_monster@ says, "All thae talk aboot mithril tae mine, an' none's tae be seen."
-
-@The_monster@ says, "Aye, ma liver's dead parched."
-
-@The_monster@ says, "Och nae, elf-lovers an' halflin'-fanciers!"
-
-@The_monster@ says, "Haw, ya cannae be tha' daft tae fight me!"
-
-@The_monster@ says @to_foe@, "Ye've the look of an eejit tae ye."
-
-@The_monster@ says, "Have ya seen ma piece?"
-
-w:1
-@The_monster@ says, "Dae ya ken?"
-
-w:1
-@The_monster@ says, "I'm nae pished! Nae yet."
-%%%%
-_Wiglaf_nondwarf_
-
-w:5
-@The_monster@ says, "Orcs, orcs, elves an' a glaikit @player_genus@." @player_only@
-
-@The_monster@ says @to_foe@, "Thae axes o' dwarves be upon ye!"
-
-@The_monster@ says @to_foe@, "Ye cannae match a dwarf in combat."
-
-@The_monster@ says @to_foe@, "Have ye nae fought a dwarf yet?"
-## END Wiglaf ##
-%%%%
 ############ XTAHUA ### An ancient fire dragon
 Xtahua
 
 @_Xtahua_common_@
 
+w:5
 @_Xtahua_rare_@
 %%%%
 _Xtahua_common_
@@ -6354,17 +6157,9 @@ orb spider charge
 
 @The_monster@ begins to weave its threads into a brightly glowing ball.
 %%%%
-salamander stormcaller charge
+floating eye charge
 
-@The_monster@ gathers magical energy.
-
-@The_monster@ heats up noticeably.
-
-@The_monster@ prepares to call down a storm.
-%%%%
-giant eyeball charge
-
-@The_monster@ view fixates on @foe@.
+@The_monster@'s view fixates on @foe@.
 
 @The_monster@'s stare focuses on @foe@.
 
@@ -6397,6 +6192,15 @@ confused Bennu killed
 confused Bennu permanently killed
 
 @Bennu permanently killed@
+%%%%
+################## Bullfrog ################################
+bullfrog
+
+@The_monster@ swells and bulges.
+
+@The_monster@ releases a deep croak.
+
+@The_monster@ snags a nearby @_frog_food_@ with @possessive@ tongue.
 %%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
@@ -6457,10 +6261,24 @@ deep elf sorcerer
 
 @_wizard_@
 %%%%
+################## Dream sheep ###################################
+dream sheep
+
+@The_monster@ "Baaaas" balefully.
+
+@The_monster@ "Baaaas" sleepily.
+%%%%
 ################## Electric golem ##########################
 default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
+%%%%
+################## Frilled lizard ##############################
+frilled lizard
+
+@The_monster@ unfolds @possessive@ giant frill.
+
+@The_monster@ hisses @at_foe@.
 %%%%
 ################## Ice statue ##############################
 default ice statue
@@ -6593,11 +6411,6 @@ VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 default obsidian statue
 
 VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
-%%%%
-################## Sheep ###################################
-sheep
-
-@The_monster@ "Baaaas" balefully.
 %%%%
 ################## Silent spectre ##########################
 silenced silent spectre
@@ -6765,6 +6578,9 @@ w:1
 
 w:1
 @The_monster@ screams @at_foe@, "@Foe_god@ is but a nuisance to me, mortal!"
+
+w:1
+@The_monster@ screams @at_foe@, "@Foe_god@ will weep as I flay your corpse!"
 %%%%
 ##############################################
 # Special orc speech
@@ -7353,7 +7169,7 @@ avoiding mutations.
 just saying no to mutations.
 
 # respecting intelligent beings
-proper burial practise.
+proper burial practice.
 
 # demons
 not dealing with demons.

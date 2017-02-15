@@ -23,29 +23,29 @@
 # For any of them, if a wizard has no arms, it will use "non-humanoid wizard"
 # instead of "wizard."
 #
-# For example, a greater naga casting Teleport Self:
-# * Teleport Self greater naga cast
+# For example, a nagaraja casting Teleport Self:
+# * Teleport Self nagaraja cast
 # * Teleport Self naga cast
 # * Teleport Self naga cast
 # * Teleport Self wizard cast
 # * Teleport Self cast real
 # * Teleport Self cast gestures
 # * Teleport Self cast
-# * greater naga cast
+# * nagaraja cast
 # * naga cast
 # * naga cast
 # * wizard cast
 #
 # And one "casting" Spit Poison:
-# * Spit Poison greater naga cast
+# * Spit Poison nagaraja cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison naga cast
 # * Spit Poison natural cast
 # * Spit Poison cast gestures
 # * Spit Poison cast
-# * greater naga cast targeted
-# * greater naga cast
+# * nagaraja cast targeted
+# * nagaraja cast
 # * naga cast targeted
 # * naga cast
 # * naga cast targeted
@@ -381,22 +381,6 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
-Wiglaf cast
-
-@The_monster@ raises a hand and says an invocation.
-
-@The_monster@'s eyes glow as he invokes the power of @possessive_God@.
-
-@The_monster@ prays in loud words.
-%%%%
-unseen Wiglaf cast
-
-You hear an invocation said in the dwarven tongue.
-
-You see a slight glow in a spot of thin air.
-
-Someone prays in loud words.
-%%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
 
@@ -434,10 +418,16 @@ Mennas cast
 
 VISUAL:@The_monster@ gestures frantically.
 %%%%
+Paralyse Xtahua cast
+
+@The_monster@ roars overwhelmingly @at@ @target@!
+
+@The_monster@ thunders ferociously @at@ @target@!
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
-giant orange brain cast
+glowing orange brain cast
 
 @The_monster@ pulsates.
 %%%%
@@ -496,7 +486,11 @@ eidolon cast targeted
 %%%%
 basilisk cast targeted
 
-@giant eyeball cast targeted@
+@floating eye cast targeted@
+%%%%
+basilisk cast
+
+@floating eye cast@
 %%%%
 wretched star cast
 
@@ -538,6 +532,10 @@ Sleep satyr cast
 
 @The_monster@ plays a lulling melody on his pipes!
 %%%%
+Sleep dream sheep cast
+
+@The_monster@ suddenly materializes a large amount of dream dust!
+%%%%
 Metal Splinters war gargoyle cast
 
 @The_monster@ launches @beam@ @at@ @target@.
@@ -560,7 +558,7 @@ Bolt of Magma molten gargoyle cast
 %%%%
 Primal Wave elemental wellspring cast
 
-A great wave of water rises up through @the_monster@!
+A torrent of water rises up through @the_monster@!
 %%%%
 Invisibility shadow cast
 
@@ -582,13 +580,21 @@ golden eye cast targeted
 
 @The_monster@ blinks @at@ @target@.
 %%%%
-ushabti cast
+Death Rattle ushabti cast
 
 @The_monster@ shakes and rattles.
 %%%%
-Bolt of Draining anubis guard cast
+Warning Cry ushabti cast
 
-@The_monster@ breathes @beam@ @at@ @target@.
+@The_monster@ shakes and rattles deafeningly!
+%%%%
+unseen Warning Cry ushabti cast
+
+You hear a deafening rattling sound!
+%%%%
+ushabti cast targeted
+
+@The_monster@ gestures slowly @at@ @target@.
 %%%%
 Ghostly Fireball revenant cast
 
@@ -654,6 +660,10 @@ Fireball hell hog cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
+Throw Barbs peacekeeper cast
+
+@The_monster@ hurls a @beam@ @at@ @target@.
+%%%%
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -694,15 +704,15 @@ unseen curse skull cast
 
 You hear the clattering of teeth.
 %%%%
-giant eyeball cast targeted
+floating eye cast targeted
 
 @The_monster@ gazes @at@ @target@.
 %%%%
-giant eyeball cast
+floating eye cast
 
 @The_monster@ looks around.
 %%%%
-unseen giant eyeball cast targeted
+unseen floating eye cast targeted
 
 You feel something staring at you. @player_only@
 %%%%

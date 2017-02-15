@@ -1,7 +1,6 @@
-define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn", "./util"],
-function ($, cr, map_knowledge, options, dngn, util) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn", "./util", "./view_data", "./enums"],
+function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
     "use strict";
-
     var global_anim_counter = 0;
 
     function is_torch(basetile)
@@ -15,7 +14,7 @@ function ($, cr, map_knowledge, options, dngn, util) {
     {
         if (cell == null || cell.bg == null) return false;
         var base_bg = dngn.basetile(cell.bg.value);
-        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.DNGN_ENTER_ZOT_CLOSED)
+        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.FLOOR_MAX)
             return options.get("tile_water_anim");
         else if (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.BLOOD
                  || is_torch(base_bg))
@@ -59,14 +58,67 @@ function ($, cr, map_knowledge, options, dngn, util) {
     $.extend(DungeonViewRenderer.prototype, {
         init: function (element)
         {
-            $(element).off("update_cells");
-            $(element).on("update_cells", function (ev, cells) {
-                $.each(cells, function (i, loc) {
-                    renderer.render_loc(loc.x, loc.y);
-                });
-            });
+            var renderer = this;
+            $(element)
+                .off("update_cells mousemove mouseleave mousedown")
+                .on("update_cells", function (ev, cells) {
+                    $.each(cells, function (i, loc) {
+                        renderer.render_loc(loc.x, loc.y);
+                    });
+                })
+                .on("mousemove mouseleave mousedown", function (ev) {
+                    renderer.handle_mouse(ev);
+                })
 
             cr.DungeonCellRenderer.prototype.init.call(this, element);
+        },
+
+        handle_mouse: function (ev)
+        {
+            if (!options.get("tile_web_mouse_control"))
+                return;
+            if (ev.type === "mouseleave")
+            {
+                if (this.tooltip_timeout)
+                {
+                    clearTimeout(this.tooltip_timeout);
+                    this.tooltip_timeout = null;
+                }
+
+                view_data.remove_cursor(enums.CURSOR_MOUSE);
+            }
+            else
+            {
+                var loc = {
+                    x: Math.round(ev.clientX / this.cell_width + this.view.x - 0.5),
+                    y: Math.round(ev.clientY / this.cell_height + this.view.y - 0.5)
+                };
+
+                view_data.place_cursor(enums.CURSOR_MOUSE, loc);
+
+                if (ev.type === "mousemove")
+                {
+                    if (this.tooltip_timeout)
+                        clearTimeout(this.tooltip_timeout);
+
+                    var element = this.element;
+                    this.tooltip_timeout = setTimeout(function () {
+                        var new_ev = $.extend({}, ev, {
+                            type: "cell_tooltip",
+                            cell: loc
+                        });
+                        $(element).trigger(new_ev);
+                    }, 500);
+                }
+                else if (ev.type === "mousedown")
+                {
+                    var new_ev = $.extend({}, ev, {
+                        type: "cell_click",
+                        cell: loc
+                    });
+                    $(this.element).trigger(new_ev);
+                }
+            }
         },
 
         set_size: function (c, r)

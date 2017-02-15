@@ -213,7 +213,7 @@ mset(spec_fn(function ()
   local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
   local e = math.max(1, you.depth() + you.zigs_completed() - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
-         "greater naga w:" .. d .. " / quicksilver dragon w:" .. e
+         "nagaraja w:" .. d .. " / quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
@@ -245,11 +245,11 @@ mset(spec_fn(function ()
          "moth of wrath w:" .. f
 end))
 
-mset(with_props(spec_fn(function ()
+mset(spec_fn(function ()
   local d = 5 + 5 * you.zigs_completed()
-  return "place:Slime:$ w:1500 / giant eyeball w:" .. d .. " / " ..
+  return "place:Slime:$ w:1500 / floating eye w:" .. d .. " / " ..
          "azure jelly w:" .. d * 5 .. " / acid blob w:" .. d * 14
-end), { jelly_protect = true }))
+end))
 
 mset(spec_fn(function ()
   local d = math.max(2, 290 - 10 * you.depth() - you.zigs_completed())
@@ -340,10 +340,10 @@ end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 2
-  local e = 12 + you.zigs_completed() * 3
-  return "fire elemental / hell hound / efreet / " ..
+  local e = 10 + you.zigs_completed() * 3
+  return "fire elemental / hell hound / efreet / fire crab / " ..
          "fire dragon w:" .. d .. " / fire giant w:" .. d .. " / " ..
-         "salamander stormcaller w:" .. d .. " / orb of fire w:" .. e
+         "balrug w:" .. d .. " / orb of fire w:" .. e
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -368,7 +368,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
   local f = 20 + you.zigs_completed() * 4
-  return "gargoyle w:20 / earth elemental w:20 / boulder beetle w:20 / " ..
+  return "gargoyle w:30 / earth elemental w:30 / " ..
          "torpor snail w:" .. d .. " / iron golem w:" .. d .. " / " ..
          "war gargoyle w:" .. d .. " / stone giant w:" .. d .. " / " ..
          "caustic shrike w:" .. d .. " / entropy weaver w:" .. d .. " / " ..
@@ -402,7 +402,7 @@ mset(spec_fn(function ()
   return "chaos spawn w:" .. d .. " / ugly thing w:" .. d .. " / " ..
          "very ugly thing w:4 / apocalypse crab w:4 / " ..
          "shapeshifter hd:16 w:" .. e .. " / glowing shapeshifter w:" .. e .. " / " ..
-         "killer klown w:8 / chaos champion w:2 / " ..
+         "killer klown w:8 / " ..
          "greater demon w:2 / pandemonium lord w:" .. f
 end))
 
@@ -410,7 +410,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 3
   local e = 20 + you.zigs_completed() * 4
   local f = 20 + you.zigs_completed() * 5
-  return "hill giant w:20 / cyclops w:20 / ettin w:20 / " ..
+  return "cyclops w:20 / ettin w:20 / " ..
          "stone giant w:" .. d .. " / " .. "fire giant w:" .. d .. " / " ..
          "frost giant w:" .. d .. " / titan w:" .. f .. " / " ..
          "juggernaut w:" .. e .. " / iron giant w:" .. e
@@ -420,7 +420,7 @@ mset(with_props(spec_fn(function ()
   local d = 20 + you.zigs_completed() * 2
   local e = 20 + you.zigs_completed() * 3
   return "swamp drake w:20 / rime drake w:20 / wind drake / death drake w:20 / " ..
-         "wyvern / hydra / steam dragon w:20 / mottled dragon w:20 / " ..
+         "wyvern / hydra / steam dragon w:20 / acid dragon w:20 / " ..
          "swamp dragon w:" .. d .. " / fire dragon w:" .. d .. " / " ..
          "ice dragon w:" .. d .. " / storm dragon w:" .. d .. " / " ..
          "iron dragon w:" .. e .. " / quicksilver dragon w:" .. e .. " / " ..
@@ -448,7 +448,7 @@ mset(with_props(spec_fn(function ()
   local e = 10 + you.zigs_completed() * 4
   return "wizard / necromancer / ogre mage w:5 / orc sorcerer w:5 / " ..
          "naga mage / salamander mystic w:5 / merfolk aquamancer w:5 / " ..
-         "spriggan air mage w:" .. d - 5 .. " / greater naga w:" .. d .. " / " ..
+         "spriggan air mage w:" .. d - 5 .. " / nagaraja w:" .. d .. " / " ..
          "deep elf annihilator w:" .. d .. " / deep elf sorcerer w:" .. d .. " / " ..
          "tengu reaver w:" .. d .. " / draconian knight w:" .. d - 5 .. " / " ..
          "draconian scorcher w:" .. d - 5 .. " / lich w:" .. d - 5 .. " / " ..
@@ -476,7 +476,7 @@ mset_if(depth_ge(14), with_props(spec_fn(function ()
   local e = 10 + you.zigs_completed()
   return "place:Snake:$ w:" .. d .. " / place:Swamp:$ w:" .. d .. " / " ..
          "place:Shoals:$ w:" .. d .. " / place:Spider:$ w:" .. d .. " / " ..
-         "greater naga w:" .. e + 2 .. " / guardian serpent w:8 / " ..
+         "nagaraja w:" .. e + 2 .. " / guardian serpent w:8 / " ..
          "hydra w:5 / swamp dragon w:5 / tentacled monstrosity w:" .. e .. " / " ..
          "merfolk aquamancer w:6 / merfolk javelineer w:" .. e - 2 .. " / " ..
          "alligator snapping turtle w:6 / ghost moth w:" .. e - 2 .. " / " ..
@@ -587,11 +587,11 @@ local function ziggurat_create_loot_at(c)
                                   dgn.good_scrolls)
   local super_loot = dgn.item_spec("| no_pickup w:7000 /" ..
                                    "potion of experience no_pickup w:190 q:1 /" ..
-                                   "potion of cure mutation no_pickup w:190 /" ..
-                                   "potion of beneficial mutation no_pickup w:40 q:1 /" ..
+                                   "potion of mutation no_pickup w:190 /" ..
+                                   "potion of mutation no_pickup w:40 q:1 /" ..
                                    "royal jelly q:3 no_pickup w:80 /" ..
-                                   "wand of heal wounds no_pickup / " ..
-                                   "wand of hasting no_pickup / " ..
+                                   "potion of heal wounds q:5 no_pickup / " ..
+                                   "potion of haste q:5 no_pickup / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)
@@ -622,83 +622,6 @@ local function ziggurat_create_loot_at(c)
     else
       place_loot(super_loot)
     end
-  end
-end
-
--- Suitable for use in loot vaults.
-function ziggurat_loot_spot(e, key)
-  e.lua_marker(key, portal_desc { ziggurat_loot = "X" })
-  e.kfeat(key .. " = .")
-  e.marker("@ = lua:props_marker({ door_restrict=\"veto\" })")
-  e.kfeat("@ = +")
-end
-
-local has_loot_chamber = false
-
-local function ziggurat_create_loot_vault(entry, exit)
-  local inc = (exit - entry):sgn()
-
-  local connect_point = exit - inc * 3
-  local map = dgn.map_by_tag("ziggurat_loot_chamber")
-
-  if not map then
-    return exit
-  end
-
-  local function place_loot_chamber()
-    local res = dgn.place_map(map, true, true)
-    if res then
-      has_loot_chamber = true
-    end
-    return res
-  end
-
-  local function good_loot_bounds(map, px, py, xs, ys)
-    local vc = dgn.point(px + math.floor(xs / 2),
-                         py + math.floor(ys / 2))
-
-
-    local function safe_area()
-      local p = dgn.point(px, py)
-      local sz = dgn.point(xs, ys)
-      local floor = dgn.fnum("floor")
-      return dgn.rectangle_forall(p, p + sz - 1,
-                                  function (c)
-                                    return dgn.grid(c.x, c.y) == floor
-                                  end)
-    end
-
-    local linc = (exit - vc):sgn()
-    -- The map's positions should be at the same increment to the exit
-    -- as the exit is to the entrance, else reject the place.
-    return (inc == linc) and safe_area()
-  end
-
-  local function connect_loot_chamber()
-    return dgn.with_map_bounds_fn(good_loot_bounds, place_loot_chamber)
-  end
-
-  local res = dgn.with_map_anchors(connect_point.x, connect_point.y,
-                                   connect_loot_chamber)
-  if not res then
-    return exit
-  else
-    -- Find the square to drop the loot.
-    local lootx, looty = dgn.find_marker_position_by_prop("ziggurat_loot")
-
-    if lootx and looty then
-      return dgn.point(lootx, looty)
-    else
-      return exit
-    end
-  end
-end
-
-local function ziggurat_locate_loot(entrance, exit, jelly_protect)
-  if jelly_protect then
-    return ziggurat_create_loot_vault(entrance, exit)
-  else
-    return exit
   end
 end
 
@@ -783,24 +706,15 @@ end
 local function ziggurat_furnish(centre, entry, exit)
   ziggurat_stairs(entry, exit)
 
-  has_loot_chamber = false
   local monster_generation = choose_monster_set()
 
   if type(monster_generation.spec) == "string" then
     dgn.set_random_mon_list(monster_generation.spec)
   end
 
-  -- Identify where we're going to place loot, but don't actually put
-  -- anything down until we've placed pillars.
-  local lootspot = ziggurat_locate_loot(entry, exit,
-    monster_generation.jelly_protect)
+  ziggurat_place_pillars(centre)
 
-  if not has_loot_chamber then
-    -- Place pillars if we did not create a loot chamber.
-    ziggurat_place_pillars(centre)
-  end
-
-  ziggurat_create_loot_at(lootspot)
+  ziggurat_create_loot_at(exit)
 
   ziggurat_create_monsters(entry, exit, monster_generation.fn)
 

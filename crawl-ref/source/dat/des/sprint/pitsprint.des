@@ -9,35 +9,35 @@
 {{
 
 function base_monster_setup(e)
-  e.kmons("A = goblin / giant newt / giant cockroach / ooze / ball python /\
-           bat / kobold / rat / giant gecko / gnoll band /\
+  e.kmons("A = goblin / frilled lizard / giant cockroach / ooze / ball python /\
+           bat / kobold / rat / leopard gecko / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
            gnoll shaman band / orc band / orc priest band / worker ant /\
-           giant eyeball / hound / iguana / ogre / orc wizard band /\
+           floating eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
            necrophage / quasit / zombie / sky beast / deep elf mage /\
-           giant frog / mummy / orc warrior band / wight band /\
+           bullfrog / mummy / orc warrior band / wight band /\
            hungry ghost / big kobold band /\
            warg / wolf / porcupine / black bear /\
            river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = steam dragon / crocodile / hippogriff /\
-           killer bee band / wasp / eye of draining / manticore /\
+           killer bee band / hornet / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
-           hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
+           komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
-           mottled dragon / blink frog band / vampire mosquito band /\
-           griffon / gargoyle / molten gargoyle /\
+           acid dragon / blink frog band / vampire mosquito band /\
+           gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
-           deep elf mage / boulder beetle / hornet /\
+           deep elf mage /\
            orc high priest band w:5 / orc sorcerer band w:5 / orc knight band /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            redback w:20 / phantasmal warrior / spiny frog / hell rat /\
            black mamba / rime drake / hydra w:5 / polar bear / lindwurm /\
-           elephant / death yak / wolf band / sheep band /\
-           swamp drake / bog body / giant leech / swamp dragon w:3 /\
-           merfolk band w:5 / siren w:3 / sea snake / snapping turtle /\
+           elephant / death yak / wolf band / dream sheep band /\
+           swamp drake / bog body / tyrant leech / swamp dragon w:3 /\
+           merfolk band w:5 / merfolk siren w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
@@ -56,7 +56,7 @@ function base_monster_setup(e)
            wind drake / deep elf mage w:3 / shapeshifter / zombie /\
            skeleton / death knight / eidolon / elephant band w:5 /\
            death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
-           merfolk avatar / alligator snapping turtle / anaconda / greater naga /\
+           merfolk avatar / alligator snapping turtle / anaconda / nagaraja /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
@@ -73,8 +73,8 @@ function base_monster_setup(e)
            deep elf death mage / deep elf high priest /\
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
            titan w:5 / death knight / ettin /\
-           greater naga / dancing weapon / dire elephant band /\
-           eye of draining / giant eyeball / vault guard / ghoul band w:5 /\
+           nagaraja / dancing weapon / dire elephant band /\
+           eye of draining / floating eye / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
            spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
            base draconian band w:5 / lorocyproca / daeva / angel /\
@@ -96,11 +96,11 @@ function base_monster_setup(e)
   e.kmons("F = orb of fire / electric golem / ancient lich / greater mummy /\
            hell sentinel / brimstone fiend / ice fiend / tzitzimitl /\
            pandemonium lord w:20 / pearl dragon / titan")
-  e.kmons("G = goblin / giant newt / giant cockroach / ooze /\
+  e.kmons("G = goblin / frilled lizard / giant cockroach / ooze /\
            ball python /\
-           bat / kobold / rat / giant gecko / gnoll /\
+           bat / kobold / rat / leopard gecko / gnoll /\
            hobgoblin / jackal band /  adder / quokka /\
-           orc / worker ant / giant eyeball / skeleton /\
+           orc / worker ant / floating eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
@@ -108,15 +108,15 @@ function base_monster_setup(e)
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
            Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
   e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
-           Maud / Nergalle / Nessos / Ilsuiw band / Arachne /\
-           Polyphemus / Rupert / Saint Roka band / Snorg / Wiglaf")
-  e.kmons("K = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
+           Nergalle / Nessos / Ilsuiw band / Arachne / Polyphemus / Rupert /\
+           Saint Roka band / Snorg")
+  e.kmons("K = Louise / Nikola / Frederick / Boris / Margery band /\
            Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
            Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
-  e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
+  e.kmons("M = stone giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
   e.kmons("O = deep elf mage w:30 /\
@@ -141,12 +141,12 @@ function base_monster_setup(e)
   e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
            lorocyproca / brimstone fiend / ice fiend / tzitzimitl /\
            hell sentinel / executioner")
-  e.kmons("U = place:Slime:6 / slime creature band /\
+  e.kmons("U = place:Slime:$ / slime creature band /\
            death ooze / azure jelly / acid blob /\
-           giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
+           floating eye w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
-  e.kmons("W = mottled dragon / steam dragon / fire dragon / ice dragon /\
+  e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
            storm dragon / swamp drake / lindwurm / rime drake /\
            shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
@@ -164,12 +164,11 @@ end
 
 function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
-          wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
-          potion of heal wounds ident:all q:2 w:2 /\
+          potion of heal wounds ident:all q:4 w:3 /\
+          potion of haste ident:all q:4 w:3 /\
           scroll of recharging ident:all w:1 /\
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
           potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-          potion of haste q:2 ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
@@ -183,7 +182,7 @@ function general_item_setup(e)
           potion of haste ident:all /\
           potion of resistance ident:all w:5 / potion of brilliance ident:all /\
           potion of berserk rage ident:all /\
-          potion of cure mutation ident:all")
+          potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all /\
           scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of recharging ident:all /\
@@ -227,19 +226,19 @@ function general_item_setup(e)
     chain mail plus:8 not_cursed ident:all /\
     chain mail plus:6 good_item not_cursed ident:all /\
     robe plus:4 ego:resistance not_cursed ident:all /\
-    fire dragon armour plus:10 not_cursed ident:all /\
-    ice dragon armour plus:10 not_cursed ident:all /\
-    swamp dragon armour plus:9 not_cursed ident:all /\
-    swamp dragon armour plus:5 good_item not_cursed ident:all /\
-    mottled dragon armour plus:8 not_cursed ident:all /\
-    mottled dragon armour plus:4 good_item not_cursed ident:all /\
-    quicksilver dragon armour good_item not_cursed ident:all w:5 /\
-    storm dragon armour plus:12 not_cursed ident:all w:5 /\
-    storm dragon armour plus:8 good_item not_cursed ident:all w:5 /\
-    shadow dragon armour plus:12 not_cursed ident:all w:5 /\
-    shadow dragon armour plus:8 good_item not_cursed ident:all w:5 /\
-    gold dragon armour plus:14 not_cursed ident:all /\
-    gold dragon armour plus:10 good_item not_cursed ident:all /\
+    fire dragon scales plus:10 not_cursed ident:all /\
+    ice dragon scales plus:10 not_cursed ident:all /\
+    swamp dragon scales plus:9 not_cursed ident:all /\
+    swamp dragon scales plus:5 good_item not_cursed ident:all /\
+    acid dragon scales plus:8 not_cursed ident:all /\
+    acid dragon scales plus:4 good_item not_cursed ident:all /\
+    quicksilver dragon scales good_item not_cursed ident:all w:5 /\
+    storm dragon scales plus:12 not_cursed ident:all w:5 /\
+    storm dragon scales plus:8 good_item not_cursed ident:all w:5 /\
+    shadow dragon scales plus:12 not_cursed ident:all w:5 /\
+    shadow dragon scales plus:8 good_item not_cursed ident:all w:5 /\
+    gold dragon scales plus:14 not_cursed ident:all /\
+    gold dragon scales plus:10 good_item not_cursed ident:all /\
     pair of gloves plus:4 not_cursed ident:all /\
     pair of gloves plus:2 good_item not_cursed ident:all /\
     pair of boots plus:4 not_cursed ident:all /\
@@ -292,14 +291,14 @@ function general_item_setup(e)
     chain mail plus:4 good_item not_cursed ident:all w:20 /\
     robe plus:4 not_cursed ident:all /\
     robe plus:1 good_item not_cursed ident:all /\
-    fire dragon armour plus:7 not_cursed ident:all /\
-    ice dragon armour plus:7 not_cursed ident:all /\
-    swamp dragon armour plus:5 not_cursed ident:all /\
-    mottled dragon armour plus:5 not_cursed ident:all /\
-    quicksilver dragon armour not_cursed ident:all w:5 /\
-    storm dragon armour plus:6 not_cursed ident:all w:5 /\
-    shadow dragon armour plus:6 not_cursed ident:all w:5 /\
-    gold dragon armour plus:8 not_cursed ident:all /\
+    fire dragon scales plus:7 not_cursed ident:all /\
+    ice dragon scales plus:7 not_cursed ident:all /\
+    swamp dragon scales plus:5 not_cursed ident:all /\
+    acid dragon scales plus:5 not_cursed ident:all /\
+    quicksilver dragon scales not_cursed ident:all w:5 /\
+    storm dragon scales plus:6 not_cursed ident:all w:5 /\
+    shadow dragon scales plus:6 not_cursed ident:all w:5 /\
+    gold dragon scales plus:8 not_cursed ident:all /\
     pair of gloves plus:2 not_cursed ident:all /\
     pair of gloves plus:0 good_item not_cursed ident:all /\
     pair of boots plus:2 not_cursed ident:all /\
@@ -442,13 +441,13 @@ function armoury_setup(e)
           ring mail plus:4 ident:all not_cursed /\
           scale mail plus:7 ident:all not_cursed /\
           plate armour plus:5 ident:all not_cursed /\
-          fire dragon armour plus:4 not_cursed ident:all /\
-          ice dragon armour plus:4 not_cursed ident:all /\
-          swamp dragon armour plus:2 not_cursed ident:all /\
-          mottled dragon armour plus:2 not_cursed ident:all /\
-          storm dragon armour plus:3 not_cursed ident:all w:5 /\
-          shadow dragon armour plus:3 not_cursed ident:all w:5 /\
-          gold dragon armour plus:2 not_cursed ident:all /\
+          fire dragon scales plus:4 not_cursed ident:all /\
+          ice dragon scales plus:4 not_cursed ident:all /\
+          swamp dragon scales plus:2 not_cursed ident:all /\
+          acid dragon scales plus:2 not_cursed ident:all /\
+          storm dragon scales plus:3 not_cursed ident:all w:5 /\
+          shadow dragon scales plus:3 not_cursed ident:all w:5 /\
+          gold dragon scales plus:2 not_cursed ident:all /\
           large shield plus:1 not_cursed ident:all /\
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")
@@ -475,8 +474,8 @@ function coven_setup(e)
   e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
         deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
         sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
-        naga mage / greater naga / base draconian w:20")
-  e.kmons("9 = Frederick / Margery band / Boris / Norris / Frances")
+        naga mage / nagaraja / base draconian w:20")
+  e.kmons("9 = Frederick / Margery band / Boris / Frances")
   e.kfeat("v = crystal_wall")
   e.colour("v = green")
   e.tile("v = wall_emerald")
@@ -488,7 +487,6 @@ function coven_setup(e)
           amulet of rage randart not_cursed ident:all /\
           amulet of reflection randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
-          amulet of dismissal randart not_cursed ident:all /\
           amulet of regeneration randart ident:all not_cursed /\
           ring of slaying plus:5 randart ident:all not_cursed /\
           any jewellery randart level:27 not_cursed ident:all w:40")
@@ -508,13 +506,13 @@ function coven_setup(e)
           ring of intelligence plus:6 randart ident:all not_cursed /\
           ring of dexterity plus:6 randart ident:all not_cursed /\
           ring of wizardry ident:all randart not_cursed")
-  e.kitem("d = wand of heal wounds charges:5 ident:all")
-  e.kitem("e = wand of hasting charges:5 ident:all")
+  e.kitem("d = potion of heal wounds q:5 ident:all")
+  e.kitem("e = potion of haste q:5 ident:all")
   e.kitem("f = any wand good_item ident:all")
   e.kitem("g = staff of energy ident:all")
   e.kitem("h = staff of power ident:all")
   e.kitem("i = crystal ball of energy")
-  e.kitem("j = potion of cure mutation ident:all")
+  e.kitem("j = potion of mutation ident:all")
   e.lua_marker('~', props_marker {
            door_description_suffix=" to the Coven (Very Hard)",
            })
@@ -696,10 +694,10 @@ MAP
 vvvvvvvvvvvv
 vTTTTTTTTTTv
 vTTTTTTTTTTv
-vTvvvvv~vvvv
-vTvUUU+@+adv
-vTvUUUv.vbcv
-vvvvvvv+vvvv
+vTTTTvvvvv~v
+vvvvvvUUUv@v
+vabcd+UUU+.v
+vvvvvvvvvv.v
 v.........G@
 v+vvvvv&vvvv
 v.vZZZZZZZZv
@@ -976,38 +974,37 @@ ENDMAP
 
 NAME:    temple_room_1
 TAGS:    the_temple
-KFEAT:   a = altar_zin
-KFEAT:   b = altar_the_shining_one
-KFEAT:   c = altar_ashenzari
-KFEAT:   d = altar_kikubaaqudgha
-KFEAT:   e = altar_yredelemnul
-KFEAT:   f = altar_xom
-KFEAT:   g = altar_vehumet
-KFEAT:   h = altar_okawaru
-KFEAT:   i = altar_makhleb
-KFEAT:   j = altar_sif_muna
-KFEAT:   k = altar_trog
-KFEAT:   l = altar_nemelex_xobeh
-KFEAT:   m = altar_elyvilon
-KFEAT:   n = altar_lugonu
-KFEAT:   o = altar_beogh
-KFEAT:   p = altar_jiyva
-KFEAT:   q = altar_fedhas
-KFEAT:   r = altar_cheibriados
-KFEAT:   s = altar_dithmenos
-KFEAT:   t = altar_gozag
-KFEAT:   u = altar_qazlal
-KFEAT:   v = altar_ru
-KFEAT:   w = altar_pakellas
+KFEAT:   a = altar_ashenzari
+KFEAT:   b = altar_beogh
+KFEAT:   c = altar_cheibriados
+KFEAT:   d = altar_dithmenos
+KFEAT:   e = altar_elyvilon
+KFEAT:   f = altar_fedhas
+KFEAT:   g = altar_gozag
+KFEAT:   h = altar_hepliaklqana
+KFEAT:   j = altar_jiyva
+KFEAT:   k = altar_kikubaaqudgha
+KFEAT:   l = altar_lugonu
+KFEAT:   m = altar_makhleb
+KFEAT:   n = altar_nemelex_xobeh
+KFEAT:   o = altar_okawaru
+KFEAT:   q = altar_qazlal
+KFEAT:   r = altar_ru
+KFEAT:   s = altar_sif_muna
+KFEAT:   t = altar_trog
+KFEAT:   u = altar_uskayaw
+KFEAT:   v = altar_vehumet
+KFEAT:   x = altar_xom
+KFEAT:   y = altar_yredelemnul
+KFEAT:   z = altar_zin
+KFEAT:   ' = altar_the_shining_one
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-hopnlfjida
-gqrmksvebc
-w
-u
-t
+abcdefghjk
+lmnoqrstuv
+xyz'
 ENDMAP
 
 
@@ -2034,19 +2031,18 @@ NSUBST: + = 1:& / *:v
 KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
         orc sorcerer / orc high priest
 KMONS:  A = orc warlord
-KMONS:  b = hill giant /\
-        ogre / two-headed ogre / troll / deep troll /\
-        iron troll w:5 / deep troll/ ogre mage w:5 /\
+KMONS:  b = ogre / two-headed ogre / troll / deep troll /\
+        iron troll w:5 / deep troll / ogre mage w:5 /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
-KMONS:  C = Frederick, Norris, Louise, Rupert
+KMONS:  C = Frederick, Louise, Rupert
 KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         vampire / vampire mage / vampire knight / ghoul w:5 /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
         freezing wraith w:3 / flayed ghost
 KMONS:  D = lich
-KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
+KMONS:  e = hydra w:20 / swamp dragon / acid dragon / steam dragon /\
         catoblepas / dire elephant / rime drake / lindwurm / komodo dragon /\
         basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
 KMONS:  E = golden dragon
@@ -2081,8 +2077,7 @@ TAGS:   the_golden_pit
 KITEM:  2ABCD = golden rune of zot
 KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
         any ident:all w:33
-KMONS:  a = stone giant / frost giant / fire giant / ettin / titan /\
-        cyclops / hill giant
+KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
 KMONS:  A = titan
 # I'm sorry if you get an undead pit here
 KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\

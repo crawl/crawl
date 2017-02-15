@@ -8,8 +8,8 @@ enum monclass_flag_type : uint64_t
 {
     M_NO_FLAGS = 0,
 
-    /// monster eats items off the floor
-    M_EAT_ITEMS         = BIT(0),
+    /// monster eats doors
+    M_EAT_DOORS         = BIT(0),
 
     /// monster crashes through doors rather than opening
     M_CRASH_DOORS       = BIT(1),
@@ -47,8 +47,7 @@ enum monclass_flag_type : uint64_t
     /// monster can split
     M_SPLITS            = BIT(12),
 
-    /// monster glows with light
-    M_GLOWS             = BIT(13),
+                        //BIT(13), // was M_GLOWS
 
     /// monster is stationary
     M_STATIONARY        = BIT(14),
@@ -112,7 +111,8 @@ enum monclass_flag_type : uint64_t
     /// not a valid polymorph target (but can be polymorphed)
     M_NO_POLY_TO        = BIT(34),
 
-                        //BIT(35),
+    /// An ancestor granted by Hepliaklqana
+    M_ANCESTOR          = BIT(35),
 
     /// always leaves a corpse
     M_ALWAYS_CORPSE     = BIT(36),
@@ -120,8 +120,7 @@ enum monclass_flag_type : uint64_t
     /// mostly doesn't try to melee
     M_DONT_MELEE        = BIT(37),
 
-    /// is an artificial being
-    M_ARTIFICIAL        = BIT(38),
+                        //BIT(38), // was M_ARTIFICIAL
 
     /// can survive without breathing; immune to asphyxiation and Mephitic Cloud
     M_UNBREATHING       = BIT(39),

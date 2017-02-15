@@ -3,18 +3,19 @@
 #include "ng-setup.h"
 
 #include "ability.h"
+#include "adjust.h"
 #include "decks.h"
 #include "dungeon.h"
 #include "end.h"
 #include "files.h"
 #include "food.h"
-#include "godcompanions.h"
+#include "god-companions.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "mutation.h"
 #include "ng-init.h"
@@ -179,8 +180,11 @@ item_def* newgame_make_item(object_class_type base,
     if (item.base_type == OBJ_BOOKS && you.char_class != JOB_WANDERER)
     {
         spell_type which_spell = spells_in_book(item)[0];
-        if (!spell_is_useless(which_spell, false, true))
+        if (!spell_is_useless(which_spell, false, true)
+            && spell_difficulty(which_spell) <= 1)
+        {
             add_spell_to_memory(which_spell);
+        }
     }
 
     return &item;
@@ -295,10 +299,6 @@ static void _give_items_skills(const newgame_def& ng)
 
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
-
-    // Deep Dwarves get a wand of heal wounds (5).
-    if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
 
     if (you.species == SP_FELID)
     {
@@ -442,6 +442,19 @@ static void _setup_hints()
     init_hints();
 }
 
+static void _free_up_slot(char letter)
+{
+    for (int slot = 0; slot < ENDOFPACK; ++slot)
+    {
+        if (!you.inv[slot].defined())
+        {
+            swap_inv_slots(letter_to_index(letter),
+                           slot, false);
+            break;
+        }
+    }
+}
+
 static void _setup_generic(const newgame_def& ng)
 {
     _init_player();
@@ -481,6 +494,13 @@ static void _setup_generic(const newgame_def& ng)
 
     if (crawl_state.game_is_sprint())
         _give_bonus_items();
+
+    // Leave the a/b slots open so if the first thing you pick up is a weapon,
+    // you can use ' to swap between your items.
+    if (you.char_class == JOB_EARTH_ELEMENTALIST)
+        _free_up_slot('a');
+    if (you.char_class == JOB_ARCANE_MARKSMAN && ng.weapon != WPN_THROWN)
+        _free_up_slot('b');
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())

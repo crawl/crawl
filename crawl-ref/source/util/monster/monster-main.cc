@@ -23,8 +23,8 @@
 #include "maps.h"
 #include "initfile.h"
 #include "libutil.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "act-iter.h"
 #include "mon-death.h"
 #include "random.h"
@@ -37,8 +37,6 @@
 #include <sstream>
 #include <set>
 #include <unistd.h>
-
-extern const spell_type serpent_of_hell_breaths[4][3];
 
 const coord_def MONSTER_PLACE(20, 20);
 
@@ -143,7 +141,7 @@ static void monster_action_cost(string& qual, int cost, const char* desc)
 static string monster_int(const monster& mon)
 {
     string intel = "???";
-    switch (mons_intel(&mon))
+    switch (mons_intel(mon))
     {
     case I_BRAINLESS:
         intel = "brainless";
@@ -195,7 +193,7 @@ static string monster_speed(const monster& mon, const monsterentry* me,
     else
         speed += to_string(speed_max);
 
-    const mon_energy_usage& cost = mons_energy(&mon);
+    const mon_energy_usage& cost = mons_energy(mon);
     string qualifiers;
 
     bool skip_action = false;
@@ -334,28 +332,57 @@ static string mi_calc_vampiric_drain_damage(monster* mons)
     return make_stringf("%d-%d", min, max);
 }
 
+static string mi_calc_major_healing(monster* mons)
+{
+    const int min = 50;
+    const int max = min + mons->spell_hd(SPELL_MAJOR_HEALING) * 10;
+    return make_stringf("%d-%d", min, max);
+}
+
+/**
+ * @return e.g.: "2d6", "5-12".
+ */
 static string mons_human_readable_spell_damage_string(monster* monster,
-                                                           spell_type sp)
+                                                      spell_type sp)
 {
     bolt spell_beam = mons_spell_beam(
         monster, sp, mons_power_for_hd(sp, monster->spell_hd(sp), false), true);
-    // Fake damage beam
-    if (sp == SPELL_PORTAL_PROJECTILE || sp == SPELL_LRD)
-        return "";
-    if (sp == SPELL_SMITING)
-        return mi_calc_smiting_damage(monster);
-    if (sp == SPELL_AIRSTRIKE)
-        return mi_calc_airstrike_damage(monster);
-    if (sp == SPELL_WATERSTRIKE)
-        spell_beam.damage = dice_def(3, 7 + monster->spell_hd(sp));
-    if (sp == SPELL_GLACIATE)
-        return mi_calc_glaciate_damage(monster);
-    if (sp == SPELL_IOOD || spell_beam.origin_spell == SPELL_IOOD)
+    switch (sp)
+    {
+        case SPELL_PORTAL_PROJECTILE:
+        case SPELL_LRD:
+            return ""; // Fake damage beam
+        case SPELL_SMITING:
+            return mi_calc_smiting_damage(monster);
+        case SPELL_AIRSTRIKE:
+            return mi_calc_airstrike_damage(monster);
+        case SPELL_GLACIATE:
+            return mi_calc_glaciate_damage(monster);
+        case SPELL_CHAIN_LIGHTNING:
+            return mi_calc_chain_lightning_damage(monster);
+        case SPELL_WATERSTRIKE:
+            spell_beam.damage = waterstrike_damage(*monster);
+            break;
+        case SPELL_RESONANCE_STRIKE:
+            return dice_def_string(resonance_strike_base_damage(*monster))
+                   + "+"; // could clarify further?
+        case SPELL_IOOD:
+            spell_beam.damage = mi_calc_iood_damage(monster);
+            break;
+        case SPELL_VAMPIRIC_DRAINING:
+            return mi_calc_vampiric_drain_damage(monster);
+        case SPELL_MAJOR_HEALING:
+            return mi_calc_major_healing(monster);
+        case SPELL_MINOR_HEALING:
+        case SPELL_HEAL_OTHER:
+            return dice_def_string(spell_beam.damage) + "+3";
+        default:
+            break;
+    }
+
+    if (spell_beam.origin_spell == SPELL_IOOD)
         spell_beam.damage = mi_calc_iood_damage(monster);
-    if (sp == SPELL_CHAIN_LIGHTNING)
-        return mi_calc_chain_lightning_damage(monster);
-    if (sp == SPELL_VAMPIRIC_DRAINING)
-        return mi_calc_vampiric_drain_damage(monster);
+
     if (spell_beam.damage.size && spell_beam.damage.num)
         return dice_def_string(spell_beam.damage);
     return "";
@@ -384,7 +411,16 @@ static string shorten_spell_name(string name)
         }
     }
     if ((pos = name.find(" of ")) != string::npos)
-        name = name.substr(0, 1) + "." + name.substr(pos + 4);
+    {
+        istringstream words { name.substr(0, pos) };
+        string abbrev, word;
+        while (words >> word)
+        {
+            abbrev += word[0];
+            abbrev += '.';
+        }
+        name = abbrev + name.substr(pos + 4);
+    }
     if (starts_with(name, "summon "))
         name = "sum." + name.substr(7);
     if (ends_with(name, " bolt"))
@@ -433,21 +469,15 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
         spell_type sp = slot.spell;
         if (!ret.empty())
             ret += ", ";
-        if (sp == SPELL_SERPENT_OF_HELL_BREATH)
+        if (spell_is_soh_breath(sp))
         {
-            const int idx =
-                mp->type == MONS_SERPENT_OF_HELL ?              0 :
-                    mp->type == MONS_SERPENT_OF_HELL_COCYTUS ?  1 :
-                    mp->type == MONS_SERPENT_OF_HELL_DIS ?      2 :
-                    mp->type == MONS_SERPENT_OF_HELL_TARTARUS ? 3 :
-                                                               -1;
-            ASSERT(idx >= 0 && idx <= 3);
-            ASSERT(mp->number == ARRAYSZ(serpent_of_hell_breaths[idx]));
+            const vector<spell_type> *breaths = soh_breath_spells(sp);
+            ASSERT(breaths);
 
             ret += "{";
             for (unsigned int k = 0; k < mp->number; ++k)
             {
-                const spell_type breath = serpent_of_hell_breaths[idx][k];
+                const spell_type breath = (*breaths)[k];
                 const string rawname = spell_title(breath);
                 ret += k == 0 ? "" : ", ";
                 ret += make_stringf("head %d: ", k + 1)
@@ -458,25 +488,24 @@ static void record_spell_set(monster* mp, set<string>& spell_lists,
             ret += "}";
 
             ret += _spell_flag_string(slot);
+            continue;
         }
-        else
-        {
-            string spell_name = spell_title(sp);
-            spell_name = shorten_spell_name(spell_name);
-            ret += spell_name;
-            ret += _spell_flag_string(slot);
 
-            for (int j = 0; j < 100; j++)
+        string spell_name = spell_title(sp);
+        spell_name = shorten_spell_name(spell_name);
+        ret += spell_name;
+        ret += _spell_flag_string(slot);
+
+        for (int j = 0; j < 100; j++)
+        {
+            string damage =
+            mons_human_readable_spell_damage_string(mp, sp);
+            const auto range = damages.equal_range(spell_name);
+            if (!damage.empty()
+                && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
             {
-                string damage =
-                    mons_human_readable_spell_damage_string(mp, sp);
-                const auto range = damages.equal_range(spell_name);
-                if (!damage.empty()
-                    && none_of(range.first, range.second, [&](const pair<string,string>& entry){ return entry.first == spell_name && entry.second == damage; }))
-                {
-                    // TODO: use emplace once we drop g++ 4.7 support
-                    damages.insert(make_pair(spell_name, damage));
-                }
+                // TODO: use emplace once we drop g++ 4.7 support
+                damages.insert(make_pair(spell_name, damage));
             }
         }
     }
@@ -567,7 +596,6 @@ static void rebind_mspec(string* requested_name,
             || requested_name->find("blood saint") == 0
             || requested_name->find("corrupter") == 0
             || requested_name->find("warmonger") == 0
-            || requested_name->find("chaos champion") == 0
             || requested_name->find("black sun") == 0))
     {
         // If the user requested a drac, the game might generate a
@@ -636,7 +664,7 @@ static mons_spec _get_vault_monster(string monster_name, string* vault_spec)
                     this_spec = true;
             }
 
-            mons_remove_from_grid(mp);
+            mons_remove_from_grid(*mp);
 
             if (this_spec)
             {
@@ -786,7 +814,7 @@ int main(int argc, char* argv[])
     {
         monster* mp = &menv[index];
         const string mname = mp->name(DESC_PLAIN, true);
-        exper += exper_value(mp);
+        exper += exper_value(*mp);
         mac += mp->armour_class();
         mev += mp->evasion();
         set_min_max(mp->speed, speed_min, speed_max);
@@ -834,7 +862,7 @@ int main(int argc, char* argv[])
         shapeshifter ? get_monster_data(spec_type) : mon.find_monsterentry();
 
     const monsterentry* mbase =
-        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(&mon)) :
+        nonbase ? get_monster_data(draco_or_demonspawn_subspecies(mon)) :
                   (monsterentry*)0;
 
     if (me)
@@ -876,7 +904,7 @@ int main(int argc, char* argv[])
         string defenses;
         if (mon.is_spiny() > 0)
             defenses += colour(YELLOW, "(spiny 5d4)");
-        if (mons_species(mons_base_type(&mon)) == MONS_MINOTAUR)
+        if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
             defenses += colour(LIGHTRED, "(headbutt: d20-1)");
         if (defenses != "")
             printf(" %s", defenses.c_str());
@@ -888,7 +916,7 @@ int main(int argc, char* argv[])
             int attack_num = x;
             if (mon.has_hydra_multi_attack())
                 attack_num = x == 0 ? x : x + mon.number - 1;
-            mon_attack_def attk = mons_attack_spec(&mon, attack_num);
+            mon_attack_def attk = mons_attack_spec(mon, attack_num);
             if (attk.type)
             {
                 if (monsterattacks.empty())
@@ -979,7 +1007,7 @@ int main(int argc, char* argv[])
                 case AF_MUTATE:
                     monsterattacks += colour(LIGHTGREEN, "(mutation)");
                     break;
-                case AF_PARALYSE:
+                case AF_POISON_PARALYSE:
                     monsterattacks += colour(LIGHTRED, "(paralyse)");
                     break;
                 case AF_POISON:
@@ -993,9 +1021,6 @@ int main(int argc, char* argv[])
                     break;
                 case AF_ROT:
                     monsterattacks += colour(LIGHTRED, "(rot)");
-                    break;
-                case AF_MIASMATA:
-                    monsterattacks += colour(LIGHTRED, "(miasmata)");
                     break;
                 case AF_VAMPIRIC:
                     monsterattacks += colour(RED, "(vampiric)");
@@ -1071,6 +1096,7 @@ int main(int argc, char* argv[])
                 case AF_POISON_INT:
                 case AF_POISON_STAT:
                 case AF_FIREBRAND:
+                case AF_MIASMATA:
                     monsterattacks += colour(LIGHTRED, "(?\?\?)");
                     break;
 #endif
@@ -1097,7 +1123,7 @@ int main(int argc, char* argv[])
                         monsterflags, colour(RED, "demonic"));
         mons_check_flag((bool)(me->holiness & MH_NONLIVING),
                         monsterflags, colour(LIGHTCYAN, "non-living"));
-        mons_check_flag(mons_is_plant(&mon), monsterflags,
+        mons_check_flag(mons_is_plant(mon), monsterflags,
                         colour(GREEN, "plant"));
 
         switch (me->gmon_use)
@@ -1119,12 +1145,12 @@ int main(int argc, char* argv[])
             break;
         }
 
-        mons_check_flag(bool(me->bitfields & M_EAT_ITEMS), monsterflags,
-                        colour(LIGHTRED, "eats items"));
+        mons_check_flag(bool(me->bitfields & M_EAT_DOORS), monsterflags,
+                        colour(LIGHTRED, "eats doors"));
         mons_check_flag(bool(me->bitfields & M_CRASH_DOORS), monsterflags,
                         colour(LIGHTRED, "breaks doors"));
 
-        mons_check_flag(mons_wields_two_weapons(&mon), monsterflags,
+        mons_check_flag(mons_wields_two_weapons(mon), monsterflags,
                         "two-weapon");
         mons_check_flag(mon.is_fighter(), monsterflags, "fighter");
         if (mon.is_archer())
@@ -1139,8 +1165,7 @@ int main(int argc, char* argv[])
         mons_check_flag(me->habitat == HT_AMPHIBIOUS, monsterflags,
                         "amphibious");
 
-        mons_check_flag(mon.is_evil(), monsterflags, "evil");
-        mons_check_flag(mon.is_unholy(), monsterflags, "unholy");
+        mons_check_flag(mon.evil(), monsterflags, "evil");
         mons_check_flag(mon.is_actual_spellcaster(), monsterflags,
                         "spellcaster");
         mons_check_flag(bool(me->bitfields & M_COLD_BLOOD), monsterflags,
@@ -1196,7 +1221,7 @@ int main(int argc, char* argv[])
         }
 
         const resists_t res(shapeshifter ? me->resists :
-                                           get_mons_resists(&mon));
+                                           get_mons_resists(mon));
 #define res(c, x)                                                              \
     do                                                                         \
     {                                                                          \
@@ -1211,12 +1236,8 @@ int main(int argc, char* argv[])
     } while (false)
 
         // Don't record regular rF as damnation vulnerability.
-        int rfire = get_resist(res, MR_RES_FIRE);
-        bool rdamnation = rfire >= 4;
-        if (rfire > 3)
-            rfire = 3;
-        res2(RED, damnation, (int)rdamnation);
-        res2(RED, fire, rfire);
+        res(RED, FIRE);
+        res(RED, DAMNATION);
         res(BLUE, COLD);
         res(CYAN, ELEC);
         res(GREEN, POISON);
@@ -1229,7 +1250,7 @@ int main(int argc, char* argv[])
         res2(LIGHTBLUE, drown, mon.res_water_drowning());
         res2(LIGHTRED, rot, mon.res_rotting());
         res2(LIGHTMAGENTA, neg, mon.res_negative_energy(true));
-        res2(YELLOW, holy, mon.res_holy_energy(&you));
+        res2(YELLOW, holy, mon.res_holy_energy());
         res2(LIGHTMAGENTA, torm, mon.res_torment());
         res2(LIGHTBLUE, wind, mon.res_wind());
         res2(LIGHTRED, napalm, mon.res_sticky_flame());

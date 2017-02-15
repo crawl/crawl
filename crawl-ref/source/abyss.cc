@@ -24,9 +24,10 @@
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
-#include "godpassive.h" // passive_t::slow_abyss
+#include "god-companions.h" // hep stuff
+#include "god-passive.h" // passive_t::slow_abyss
 #include "hiscores.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -50,7 +51,7 @@
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -114,8 +115,7 @@ static dungeon_feature_type _abyss_proto_feature()
                                    600, DNGN_ROCK_WALL,
                                    300, DNGN_STONE_WALL,
                                    100, DNGN_METAL_WALL,
-                                     1, DNGN_CLOSED_DOOR,
-                                     0);
+                                     1, DNGN_CLOSED_DOOR);
 }
 
 static void _write_abyssal_features()
@@ -584,6 +584,12 @@ static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_abyss_transit())
         mons.set_transit(level_id(BRANCH_ABYSS));
+    // make sure we don't end up with an invalid hep ancestor
+    else if (hepliaklqana_ancestor() == mons.mid)
+    {
+        remove_companion(&mons);
+        you.duration[DUR_ANCESTOR_DELAY] = random_range(50, 150); //~5-15 turns
+    }
 
     mons.destroy_inventory();
     monster_cleanup(&mons);
@@ -621,7 +627,7 @@ static void _place_displaced_monsters()
             maybe_bloodify_square(mon->pos());
             if (you.can_see(*mon))
             {
-                simple_monster_message(mon, " is pulled into the Abyss.",
+                simple_monster_message(*mon, " is pulled into the Abyss.",
                         MSGCH_BANISHMENT);
             }
             _abyss_lose_monster(*mon);
@@ -1097,7 +1103,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_SLIMY_WALL:
         case DNGN_STONE_WALL:
         case DNGN_PERMAROCK_WALL:
-            return coinflip() ? CLOUD_BLUE_SMOKE : CLOUD_PURPLE_SMOKE;
+            return random_choose(CLOUD_BLUE_SMOKE, CLOUD_PURPLE_SMOKE);
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_CLEAR_STONE_WALL:
         case DNGN_CLEAR_PERMAROCK_WALL:
@@ -1449,7 +1455,7 @@ void destroy_abyss()
 
 static colour_t _roll_abyss_floor_colour()
 {
-    return random_choose_weighted(
+    return random_choose_weighted<colour_t>(
          108, BLUE,
          632, GREEN,
          // no CYAN (silence)
@@ -1465,13 +1471,12 @@ static colour_t _roll_abyss_floor_colour()
          313, LIGHTMAGENTA,
          // no YELLOW (halo)
          890, WHITE,
-          50, ETC_FIRE,
-    0);
+          50, ETC_FIRE);
 }
 
 static colour_t _roll_abyss_rock_colour()
 {
-    return random_choose_weighted(
+    return random_choose_weighted<colour_t>(
          130, BLUE,
          409, GREEN,
          // no CYAN (metal)
@@ -1487,8 +1492,7 @@ static colour_t _roll_abyss_rock_colour()
          377, LIGHTMAGENTA,
          105, YELLOW,
          101, WHITE,
-          60, ETC_FIRE,
-    0);
+          60, ETC_FIRE);
 }
 
 static void _abyss_generate_new_area()
@@ -1626,6 +1630,7 @@ void abyss_teleport()
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+    stop_delay(true);
     forget_map(false);
     clear_excludes();
     more();
@@ -1687,15 +1692,8 @@ static bool _incorruptible(monster_type mt)
 // more monsters can fit in.
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
-    const beh_type beh =
-        x_chance_in_y(100,
-                      player_adjust_invoc_power(
-                          200 + you.skill(SK_INVOCATIONS, 25)))
-        ? BEH_HOSTILE : BEH_NEUTRAL;
-
-    // [ds] No longer summon hostiles -- don't create the monster if
-    // it would be hostile.
-    if (beh == BEH_HOSTILE)
+    // Chance to fail to place a monster (but allow continued attempts).
+    if (x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)))
         return true;
 
     // Thirty tries for a place.
@@ -1703,8 +1701,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
     {
         const int offsetX = random2avg(4, 3) + random2(3);
         const int offsetY = random2avg(4, 3) + random2(3);
-        const coord_def p(pos.x + (coinflip()? offsetX : -offsetX),
-                          pos.y + (coinflip()? offsetY : -offsetY));
+        const coord_def p(pos.x + random_choose(offsetX, -offsetX),
+                          pos.y + random_choose(offsetY, -offsetY));
         if (!in_bounds(p) || actor_at(p))
             continue;
 
@@ -1712,8 +1710,8 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         ASSERT(mons);
         if (!monster_habitable_grid(mons, grd(p)))
             continue;
-        mgen_data mg(mons, beh, 0, 5, 0, p);
-        mg.non_actor_summoner = "Lugonu's corruption";
+        mgen_data mg(mons, BEH_NEUTRAL, p);
+        mg.set_summoned(0, 5, 0).set_non_actor_summoner("Lugonu's corruption");
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);
     }

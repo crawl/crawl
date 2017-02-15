@@ -18,7 +18,7 @@
 #include "env.h"
 #include "hints.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mon-util.h"
 #include "options.h"
 #include "stringutil.h"
@@ -68,9 +68,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
 // only makes sense. This is only possible because it's a permanent
-// mutation; the lantern of Shadows should not have this effect.
-// TODO: update the radiuses on wield/unwield, we already need to do that
-// when gaining/losing nightstalker.
+// mutation; other sources of LOS reduction should not have this effect.
 static int _get_full_exclusion_radius()
 {
     return LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
@@ -119,34 +117,6 @@ void remove_auto_exclude(const monster* mon, bool sleepy)
 #endif
     }
 }
-
-static opacity_type _feat_opacity(dungeon_feature_type feat)
-{
-    return feat_is_opaque(feat) ? OPC_OPAQUE
-         : feat_is_tree(feat)   ? OPC_HALF : OPC_CLEAR;
-}
-
-// A cell is considered clear unless the player knows it's
-// opaque.
-class opacity_excl : public opacity_func
-{
-public:
-    CLONE(opacity_excl)
-
-    opacity_type operator()(const coord_def& p) const override
-    {
-        map_cell& cell = env.map_knowledge(p);
-        if (!cell.seen())
-            return OPC_CLEAR;
-        else if (!cell.changed())
-            return _feat_opacity(env.grid(p));
-        else if (cell.feat() != DNGN_UNSEEN)
-            return _feat_opacity(cell.feat());
-        else
-            return OPC_CLEAR;
-    }
-};
-static opacity_excl opc_excl;
 
 travel_exclude::travel_exclude(const coord_def &p, int r,
                                bool autoexcl, string dsc, bool vaultexcl)

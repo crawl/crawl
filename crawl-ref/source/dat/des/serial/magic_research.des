@@ -95,8 +95,8 @@ dcbadabcd
 ENDMAP
 
 NAME:   hangedman_research_electronics
-MONS:   air elemental / raiju / shock serpent
-MONS:   sky beast, ball lightning / lightning spire
+MONS:   air elemental / raiju / sky beast
+MONS:   lightning spire, ball lightning / shock serpent
 COLOUR: .v0123D = cyan
 FTILE:  .+v0123D = floor_rough_cyan
 TILE:   v = dngn_metal_wall_cyan
@@ -114,7 +114,7 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_geology
-MONS:    basilisk, earth elemental, boulder beetle / catoblepas
+MONS:    basilisk, earth elemental, gargoyle / catoblepas
 KMONS:   D = iron dragon
 COLOUR:  .x012345D = brown
 FTILE:   .+x012345D = floor_pebble_brown
@@ -134,7 +134,7 @@ ENDMAP
 
 NAME:    hangedman_research_toxicology
 MONS:    spiny frog / black mamba, redback
-MONS:    sea snake / redback, hornet / wasp
+MONS:    sea snake / redback, hornet
 MONS:    mana viper / tarantella
 KMONS:   D = death drake
 KITEM:   E = potion of degeneration ident:type / \
@@ -157,7 +157,7 @@ ENDMAP
 
 NAME:    hangedman_research_thanatology
 MONS:    macabre mass hd:4 / small abomination
-MONS:    zombie / skeleton, spectral thing, place:Depths:$ simulacrum
+MONS:    place:Depths:$ skeleton, ghost crab, place:Depths:$ simulacrum
 KMONS:   D = bone dragon
 MARKER:  % = lua:fog_machine { cloud_type = "black smoke", pow_min = 10, \
                 pow_max = 20, delay = 40, size = 1, walk_dist = 0 }
@@ -220,7 +220,7 @@ ENDMAP
 
 NAME:    hangedman_research_convocations
 MONS:    boggart, worldbinder
-KMONS:   D = giant orange brain
+KMONS:   D = glowing orange brain
 MARKER:  ' = lua:fog_machine { cloud_type = "purple smoke", pow_min = 4, \
                 pow_max = 10, delay = 40, size = 2, walk_dist = 1 }
 # Note: these colours are to match the Hellbinder wizlab.

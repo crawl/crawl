@@ -68,7 +68,100 @@ function callback.vampire_church_blood(data, triggerable, triggerer, marker, ev)
   crawl.god_speaks("Kikubaaqudgha", "As you approach the altar, the fountains"
                                  .. " begin to flow with blood!")
   for i, slave in ipairs(slaves) do
-    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false, false)
+    dgn.terrain_changed(slave.x, slave.y, "fountain_blood", false)
+  end
+end
+
+function callback.hep_ancestral_shrine_los(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.hep_ancestral_shrine_reborn and you.god() == "Hepliaklqana" then
+    local trees = dgn.find_marker_positions_by_prop("dead_tree", 1)
+    for i, slave in ipairs(trees) do
+      dgn.tile_feat_changed(slave.x, slave.y, "DNGN_TREE")
+    end
+    dgn.reset_feature_name_for(trees[1].x, trees[1].y, "tree")
+    local slime = dgn.find_marker_positions_by_prop("green_water", 1)
+    for i, slave in ipairs(slime) do
+      dgn.colour_at(slave.x, slave.y, "blue")
+    end
+    crawl.god_speaks("Hepliaklqana", "Let the past return from memory!")
+    dgn.persist.hep_ancestral_shrine_reborn = true
+  end
+end
+
+function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
+  if not dgn.persist.xom_gg_heard and you.god() == "Xom" then
+    dgn.persist.xom_gg_heard = true
+    dgn.persist.xom_gg_granted = true
+  elseif not dgn.persist.xom_gg_heard and you.god() ~= "Xom" then
+    crawl.god_speaks("Xom", '"WORSHIP ME, MORTAL," Xom booms, "AND I SHALL'
+                            .. ' GRANT YOU THE GREATEST GIFT OF ALL."')
+    dgn.persist.xom_gg_heard = true
+  elseif not dgn.persist.xom_gg_granted and you.god() == "Xom" then
+    local pos = dgn.find_marker_positions_by_prop("gift", "altar")
+    dgn.create_monster(pos[1].x, pos[1].y, "generate_awake att:good_neutral goblin")
+    crawl.god_speaks("Xom", 'A goblin pops into existence! It looks at you'
+                     .. ' with admiration.')
+    crawl.god_speaks("Xom", '"Friendship. The greatest gift is friendship!"')
+
+    dgn.persist.xom_gg_granted = true
+  end
+end
+
+function species_mock(e)
+  if you.race() == "Barachian" then
+    e.kmons("1 = bullfrog")
+  elseif you.race() == "Centaur" then
+    e.kmons("1 = dart slug")
+  elseif you.race() == "Demigod" then
+    e.kmons("1 = titan simulacrum")
+  elseif you.race() == "Demonspawn" then
+    e.kmons("1 = hell beast")
+  elseif you.race():find("Draconian") then
+    e.kmons("1 = wyvern")
+  elseif you.race() == "Deep Dwarf" then
+    e.kmons("1 = deep dwarf zombie")
+  elseif you.race() == "Deep Elf" then
+    e.kmons("1 = insubstantial wisp")
+  elseif you.race() == "Halfling" then
+    e.kmons("1 = hobgoblin ; mundane hunting sling")
+  elseif you.race() == "Hill Orc" then
+    e.kmons("1 = goblin ; mundane hand axe . mundane ring mail")
+  elseif you.race() == "Human" then
+    e.kmons("1 = killer klown")
+  elseif you.race() == "Felid" then
+    e.kmons("1 = sphinx zombie")
+  elseif you.race() == "Formicid" then
+    e.kmons("1 = soldier ant")
+  elseif you.race() == "Gargoyle" then
+    e.kmons("1 = earth elemental")
+  elseif you.race() == "Ghoul" then
+    e.kmons("1 = death ooze")
+  elseif you.race() == "Kobold" then
+    e.kmons("1 = boggart")
+  elseif you.race() == "Merfolk" then
+    e.kmons("1 = bullfrog")
+  elseif you.race() == "Minotaur" then
+    e.kmons("1 = yak")
+  elseif you.race() == "Mummy" then
+    e.kmons("1 = human zombie")
+  elseif you.race() == "Naga" then
+    e.kmons("1 = torpor snail")
+  elseif you.race() == "Octopode" then
+    e.kmons("1 = tentacled monstrosity")
+  elseif you.race() == "Ogre" then
+    e.kmons("1 = ettin skeleton")
+  elseif you.race() == "Spriggan" then
+    e.kmons("1 = unseen horror")
+  elseif you.race() == "Tengu" then
+    e.kmons("1 = caustic shrike")
+  elseif you.race() == "Troll" then
+    e.kmons("1 = hungry ghost")
+  elseif you.race() == "Vampire" then
+    e.kmons("1 = tyrant leech")
+  elseif you.race() == "Vine Stalker" then
+    e.kmons("1 = thorn hunter")
+  else
+    e.kmons("1 = spectral ugly thing")
   end
 end
 }}
@@ -256,28 +349,6 @@ x.....x
 x.....x
 x.._..x
 xxxxxxx
-ENDMAP
-
-NAME:   cheibriados_altar_wand_db
-TAGS:   uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
-TAGS:   patrolling
-DEPTH:  D:3-9
-WEIGHT: 5
-KFEAT:  _ = altar_cheibriados
-MONS:   goblin; wand of slowing ident:type / \
-        hobgoblin; wand of slowing ident:type / \
-        gnoll; wand of slowing ident:type / \
-        orc; wand of slowing ident:type / \
-        kobold; wand of slowing ident:type
-MONS:   goblin / hobgoblin / gnoll / orc / kobold
-NSUBST: 2 = 1:1 / *:2
-MAP
-ccccccc
-c.2.2.c
-c2._.2c
-c.....c
-c.....c
-ccc+ccc
 ENDMAP
 
 NAME:   chei_slow_surprise
@@ -898,6 +969,45 @@ d_d
 ddd
 ENDMAP
 
+### Hepliaklqana overflow altars #############################################
+
+NAME: worldfamousw_hep_ancestral_shrine
+TAGS: uniq_overflow_hepliaklqana temple_overflow_hepliaklqana
+TAGS: no_monster_gen no_item_gen no_pool_fixup
+KFEAT: _ = altar_hepliaklqana
+COLOUR: w = green
+TILE: G = dngn_gravestone
+TILE: t = DNGN_TREE_DEAD
+{{
+set_feature_name("granite_statue", "a gravestone")
+set_feature_name("tree", "dead tree")
+dgn.persist.hep_ancestral_shrine_reborn = false
+
+local los_marker = TriggerableFunction:new {
+  func="callback.hep_ancestral_shrine_los",
+  repeated=true
+}
+los_marker:add_triggerer(DgnTriggerer:new {
+  type="player_los"})
+
+lua_marker('_', los_marker)
+lua_marker("t", portal_desc { dead_tree=1 })
+lua_marker("w", portal_desc { green_water=1 })
+}}
+MAP
+ xxxxx
+xxwwwxx
+xwwwwwx
+xwwwwwx
+xwtGtwx
+xt...tx
+x.._..x
+xt...tx
+xxt.txx
+ xx+xx
+   @
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -1173,16 +1283,6 @@ MAP
 U@U
 @_@
 U@U
-ENDMAP
-
-NAME:  nemelex_deck
-TAGS:  temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
-TAGS:  transparent
-KFEAT: _ = altar_nemelex_xobeh
-KITEM: _ = plain deck
-: interest_check(_G)
-MAP
-_
 ENDMAP
 
 ###################################################################
@@ -1491,181 +1591,6 @@ MAP
       vvvvvvv
 ENDMAP
 
-### Pakellas overflow altars ###################################################
-NAME:   grunt_pakellas_salt
-DEPTH:  D:2-
-TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
-TAGS:   no_vmirror
-KFEAT:  _ = altar_pakellas
-SUBST:  c : cvb
-: interest_check(_G)
-MAP
-  .....
- ..ccc..
-..c...c..
-.ccc_ccc.
-..c...c..
- ..ccc..
-  .....
-ENDMAP
-
-NAME:   grunt_pakellas_sulfur
-DEPTH:  D:2-
-TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
-TAGS:   no_vmirror
-KFEAT:  _ = altar_pakellas
-SUBST:  c : cvb
-: interest_check(_G)
-MAP
-     ...
-    ..c..
-   ..c.c..
-  ..c...c..
- ..c.._..c..
-..c.......c..
-.ccccccccccc.
-......l......
-   ...l...
-   .lllll.
-   ...l...
-     .l.
-     ...
-ENDMAP
-
-NAME:   grunt_pakellas_mercury
-DEPTH:  D:2-
-TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   temple_overflow_pakellas uniq_altar_pakellas no_rotate no_hmirror
-TAGS:   no_vmirror
-KFEAT:  _ = altar_pakellas
-SUBST:  c : cvb
-: interest_check(_G)
-MAP
- .....
-.c...c.
-.c...c.
-..ccc..
-.c...c.
-.c._.c.
-.c...c.
-..ccc..
- ..c..
- .ccc.
- ..c..
-  ...
-ENDMAP
-
-NAME:   grunt_pakellas_basics
-DEPTH:  D:2-
-WEIGHT: 20
-TAGS:   transparent no_monster_gen no_item_gen no_trap_gen temple_overflow_1
-TAGS:   no_rotate no_hmirror temple_overflow_pakellas uniq_altar_pakellas
-KFEAT:  _ = altar_pakellas
-SUBST:  d : c.
-SUBST:  c : cvb
-: interest_check(_G)
-MAP
-     ...
-    ..c..
- ....c.c....
-..ddcdddcdd..
- ..c.._..c..
-..c.......c..
-.ccccccccccc.
-.............
-ENDMAP
-
-# high evo !apt band takes down filthy low evo !apt brute
-# 25% chance of live kobold with wand; otherwise empty wand
-# 12.5% chance of troll corpse (early troll hide)
-NAME:    johnstein_pakellas_death_squad
-DEPTH:   D:3-
-TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
-KFEAT:   _ = altar_pakellas
-KPROP:   cvb' = bloody / nothing w:80
-NSUBST:  ' = 2:g / 1:G / 1:h / *:.
-SHUFFLE: cvb
-: interest_check(_G)
-{{
-  local  mon = crawl.random_element({
-    ['kobold']   = 1,
-    ['spriggan'] = 1,
-  })
-  local corpse = mon .. ' corpse'
-  local wands   = 'wand of flame charges:0 ident:pluses / ' ..
-                  'wand of confusion charges:0 ident:pluses / ' ..
-                  'wand of slowing charges:0 ident:pluses '
-
-  if (mon == 'kobold' and crawl.coinflip()) then
-    kmons("G = kobold; wand of flame | wand of confusion | wand of slowing")
-    dgn.delayed_decay_extra(_G, 'h', 'troll corpse / ogre corpse' )
-  else
-    dgn.delayed_decay_extra(_G, 'G', corpse, wands )
-    dgn.delayed_decay_extra(_G, 'h', 'ogre corpse' )
-  end
-
-  dgn.delayed_decay_extra(_G, 'g', corpse )
-}}
-: interest_check(_G)
-MAP
-.........
-.ccc+ccc.
-.c'''''c.
-.c'''''c.
-.+''_''+.
-.c'''''c.
-.c'''''c.
-.ccc+ccc.
-.........
-ENDMAP
-
-# dig wand with a single charge that could be used to get to P's altar
-NAME:    johnstein_pakellas_dig
-DEPTH:   D:2-
-TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
-KFEAT:   _ = altar_pakellas
-KPROP:   _ = no_tele_into
-KITEM:   ' = wand of digging ident:all charges:1 / \
-             wand of disintegration ident:all charges:1 w:2
-: interest_check(_G)
-MAP
-.......
-.xxxxx.
-.xcccx.
-.xc_cx.
-.xcmcx.
-.x.'.x.
-.x...x.
-.xx+xx.
-.......
-ENDMAP
-
-# P altar with gadget shop
-# 90% basic wands (frost, confusion, slowing). ~150 to 250 gold
-# 10% any wand and will be expensive
-NAME:    johnstein_pakellas_shop
-DEPTH:   D:2-
-TAGS:    temple_overflow_1 temple_overflow_pakellas uniq_altar_pakellas
-KFEAT:   _ = altar_pakellas
-KFEAT:   S = gadget shop name:Pakellas type:Prime suffix:Provisions \
-             greed:30 count:3 ;\
-             wand of flame charges:15 w:30 |\
-             wand of confusion charges:15 w:30 |\
-             wand of slowing charges:15 w:30 |\
-             any wand
-: interest_check(_G)
-MAP
- .......
-.mxxxxxm.
-.xx.S.xx.
-.x.._..x.
-.xx...xx.
- .xx+xx.
- .......
-ENDMAP
-
 ### Qazlal overflow altars ####################################################
 
 # There's always a safe path to the altar.
@@ -1830,14 +1755,14 @@ DEPTH: D:2-9
 SHUFFLE: MCSBP
 KFEAT: _ = altar_ru
 KMONS: P = ball python perm_ench:paralysis / rat perm_ench:paralysis / \
-  giant newt perm_ench:paralysis / giant cockroach perm_ench:paralysis / \
+  frilled lizard perm_ench:paralysis / giant cockroach perm_ench:paralysis / \
   quokka perm_ench:paralysis / kobold w:5 perm_ench:paralysis / \
   goblin w:5 perm_ench:paralysis / hobgoblin w:5 perm_ench:paralysis
 KMONS: C = bat perm_ench:corona / adder perm_ench:corona / \
   kobold perm_ench:corona / goblin perm_ench:corona / hobgoblin perm_ench:corona
 KMONS: S = jackal perm_ench:slow / bat perm_ench:slow / adder perm_ench:slow / \
   kobold perm_ench:slow / goblin perm_ench:slow / hobgoblin perm_ench:slow
-KMONS: B = ball python perm_ench:blind / giant newt perm_ench:blind / \
+KMONS: B = ball python perm_ench:blind / frilled lizard perm_ench:blind / \
   giant cockroach perm_ench:blind / bat perm_ench:blind
 KMONS: M = orc wizard perm_ench:mute
 MAP
@@ -2157,18 +2082,18 @@ TAGS:   overflow_altar_trog
 DEPTH:  D:2-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
-MONS:   giant gecko / rat / giant newt / quokka
+MONS:   leopard gecko / rat / frilled lizard / quokka
 {{
   dgn.delayed_decay(_G, 'd',
-                    'giant gecko chunk q:1 / rat chunk q:1 / ' ..
-                    'giant newt chunk q:1 / quokka chunk q:1')
+                    'leopard gecko chunk q:1 / rat chunk q:1 / ' ..
+                    'frilled lizard chunk q:1 / quokka chunk q:1')
 }}
 : else
 MONS:   orc warrior ; war axe . animal skin
-MONS:   sheep / iguana / worker ant
+MONS:   iguana / worker ant
 {{
   dgn.delayed_decay(_G, 'd',
-                    'sheep chunk q:1 / iguana chunk q:1 / ' ..
+                    'yak chunk q:1 / iguana chunk q:1 / ' ..
                     'worker ant chunk q:1')
 }}
 : end
@@ -2233,6 +2158,46 @@ MAP
    ..yxxy..
    ...yy...
     ......
+ENDMAP
+
+### Uskayaw overflow altars ###################################################
+
+NAME:   dancing_weapons_uskayaw
+DEPTH:  D:2-9
+TAGS:   temple_overflow_1 temple_overflow_uskayaw
+MONS:   generate_awake dancing weapon ; dagger | hand axe
+KFEAT:  _ = altar_uskayaw
+NSUBST: ' = 2:1 / *:'
+KMASK:  1' = no_monster_gen
+KMASK:  1' = no_item_gen
+KMASK:  1' = no_trap_gen
+KPROP:  1' = no_tele_into
+MAP
+.......
+.mmmmm.
+.m'''m.
+.m'''m.
+.mmmmm.
+.......
+..._...
+ .....
+ENDMAP
+
+NAME:   eat_drink_and_be_merry_uskayaw
+DEPTH:  D:2-9
+TAGS:   temple_overflow_1 temple_overflow_uskayaw
+KFEAT:  _ = altar_uskayaw
+ITEM:   any potion q:1, any weapon
+ITEM:   fruit q:3 / fruit q:2 / royal jelly q:1
+MAP
+...........
+.G.......G.
+...........
+.G.......G.
+....def....
+.G..._...G.
+....ccc....
+  .......
 ENDMAP
 
 ### Vehumet overflow altars ###################################################
@@ -2488,6 +2453,50 @@ MAP
   .......
 ENDMAP
 
+NAME:    brannock_xom_greatest_gift
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
+DEPTH:   D:2-
+WEIGHT:  2
+KFEAT:   _ = altar_xom
+MARKER:  _ = lua:portal_desc {gift="altar"}
+{{
+    dgn.persist.xom_gg_granted = false
+
+    local los_marker = TriggerableFunction:new {
+      func="callback.xom_greatest_gift",
+      repeated=true
+    }
+    los_marker:add_triggerer(DgnTriggerer:new {
+      type="player_los"})
+
+    lua_marker('_', los_marker)
+}}
+MAP
+...
+._.
+...
+ENDMAP
+
+NAME:   doesnt_xom_only_xom
+TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
+KFEAT:  _ = altar_xom
+KFEAT:  C = C mimic
+MAP
+xxxxxxxxxxx
+x.G.G.G.G.x
+xGC..C..CGx
+x.........x
+x.........x
+xG.......Gx
+x.C.._..C.x
+xG.......Gx
+xxxx...xxxx
+   x...x
+   x...x
+   xG.Gx
+   xx+xx
+ENDMAP
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_generic
@@ -2621,7 +2630,7 @@ DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
         greed:30 ; \
-        potion of curing | potion of cure mutation w:1
+        potion of curing
 COLOUR: c = white
 COLOUR: ' = white
 TILE:   c = wall_church
@@ -3316,6 +3325,38 @@ cc....T....cc
    ccc@ccc
 ENDMAP
 
+# Xom seems to not think much of Hepliaklqana's ancestral focus,
+# and mocks the species roots of incoming pilgrims.
+# This will probably go over most players' heads, but it's neat anyway -- PF
+NAME:    regret_index_temple_of_mockery
+TAGS:    temple_overflow_2 temple_overflow_xom temple_overflow_hepliaklqana
+DEPTH:   D:2-9
+: species_mock(_G)
+KMONS:   2 = spectral ugly thing
+KFEAT:   A = altar_xom
+KFEAT:   B = altar_hepliaklqana
+SHUFFLE: AB
+SUBST:   G = G...
+KPROP:   12' = no_tele_into
+KMASK:   12' = no_item_gen
+KMASK:   12' = no_trap_gen
+KMASK:   ' = no_monster_gen
+MARKER:  2 = lua:fog_machine { cloud_type = "thin mist", \
+             pow_min = 100, pow_max = 100, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1 }
+MAP
+cccccc
+ccb'bccccc
+cb2n1bc.+.
+c'nnnnc.c.
+cb1nA...cc
+ccbn.G.bc
+cccc..Bcc
+ c...bcc
+ c+cccc
+ c..c
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
@@ -3865,4 +3906,52 @@ MAP
  xxG...G...Gxx
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   chequers_temple_overflow_statue_of_worship
+TAGS:   temple_overflow_generic_2 ttemple_overflow_generic_3
+TAGS:   temple_overflow_generic_4
+{{
+  local altarcount = get_overflow_altar_count(_G)
+  if altarcount == nil then
+    altarcount = "2"
+  end
+  if altarcount == "2" then
+    subst("C = .")
+  else
+    subst("C = B")
+  end
+  nsubst("B = " .. altarcount .. ":B / *:.")
+}}
+MAP
+.....
+..C..
+.BGB.
+..C..
+.....
+ENDMAP
+
+NAME:  chequers_temple_overflow_minitemple
+TAGS:  temple_overflow_generic_5 temple_overflow_generic_4
+TAGS:  temple_overflow_generic_3
+{{
+  local altarcount = 5
+  if not is_validating() then
+    altarcount = get_overflow_altar_count(_G)
+  end
+  nsubst("O = " .. altarcount .. ":B / *:l")
+}}
+KFEAT: l = altar_ecumenical
+MAP
+        @
+       c+c
+   ccccc.ccccc
+  cc.........cc
+ccc..ccccccc..ccc
+cO..cccO.Occc..Oc
+ccc..cc...cc..ccc
+  cc.........cc
+   cccc...cccc
+      ccOcc
+       ccc
 ENDMAP

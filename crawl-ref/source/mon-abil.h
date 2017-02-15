@@ -9,7 +9,7 @@
 class monster;
 struct bolt;
 
-bool mon_special_ability(monster* mons, bolt & beem);
+bool mon_special_ability(monster* mons);
 
 void draconian_change_colour(monster* drac);
 

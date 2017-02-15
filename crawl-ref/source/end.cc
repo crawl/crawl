@@ -16,10 +16,10 @@
 #include "database.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "los.h"
 #include "macro.h"
 #include "message.h"
@@ -219,7 +219,7 @@ NORETURN void screen_end_game(string text)
     game_ended();
 }
 
-NORETURN void end_game(scorefile_entry &se)
+NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 {
     for (auto &item : you.inv)
         if (item.defined() && item_type_unknown(item))
@@ -313,8 +313,6 @@ NORETURN void end_game(scorefile_entry &se)
         if (crawl_state.game_is_hints())
             hints_death_screen();
     }
-    else
-        you.delay_queue.clear(); // don't lose ev for taking the exit...
 
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
@@ -366,7 +364,8 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list(get_number_of_lines() - lines - 5);
+    hiscores_print_list(get_number_of_lines() - lines - 5, SCORE_TERSE,
+                        hiscore_index);
 
 #ifndef DGAMELAUNCH
     cprintf("\nYou can find your morgue file in the '%s' directory.",

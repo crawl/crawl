@@ -30,6 +30,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "syscalls.h"
+#include "unicode.h"
 #include "version.h"
 #include "windowmanager.h"
 
@@ -406,9 +407,11 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
 
     if (flags & SDL_WINDOW_FULLSCREEN)
     {
+        const int x = Options.tile_window_width;
+        const int y = Options.tile_window_height;
         // By default, fill the whole screen.
-        m_windowsz->x = _desktop_width;
-        m_windowsz->y = _desktop_height;
+        m_windowsz->x = (x > 0) ? x : _desktop_width + x;
+        m_windowsz->y = (y > 0) ? y : _desktop_height + y;
     }
     else
     {
@@ -684,10 +687,14 @@ int SDLWrapper::wait_event(wm_event *event)
 
         break;
     case SDL_TEXTINPUT:
+    {
         event->type = WME_KEYPRESS;
         // XXX: handle multiple keys?
-        event->key.keysym.sym = sdlevent.text.text[0];
+        char32_t wc;
+        utf8towc(&wc, sdlevent.text.text);
+        event->key.keysym.sym = wc;
         break;
+    }
     case SDL_MOUSEMOTION:
         event->type = WME_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);

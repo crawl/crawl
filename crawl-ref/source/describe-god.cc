@@ -16,10 +16,10 @@
 #include "describe.h"
 #include "english.h"
 #include "food.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godprayer.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-prayer.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -61,6 +61,28 @@ static int _gold_level()
                                : 1;
 }
 
+static int _invocations_level()
+{
+    int invo = you.skills[SK_INVOCATIONS];
+    return (invo == 27) ? 7 :
+           (invo >= 24) ? 6 :
+           (invo >= 20) ? 5 :
+           (invo >= 16) ? 4 :
+           (invo >= 12) ? 3 :
+           (invo >= 8)  ? 2
+                        : 1;
+}
+
+int god_favour_rank(god_type which_god)
+{
+    if (which_god == GOD_GOZAG)
+        return _gold_level();
+    else if (which_god == GOD_USKAYAW)
+        return _invocations_level();
+    else
+        return _piety_level(you.piety);
+}
+
 static string _describe_favour(god_type which_god)
 {
     if (player_under_penance())
@@ -75,11 +97,9 @@ static string _describe_favour(god_type which_god)
     if (which_god == GOD_XOM)
         return uppercase_first(describe_xom_favour());
 
-    const int rank = which_god == GOD_GOZAG ? _gold_level()
-    : _piety_level(you.piety);
 
     const string godname = god_name(which_god);
-    switch (rank)
+    switch (god_favour_rank(which_god))
     {
         case 7:  return "A prized avatar of " + godname;
         case 6:  return "A favoured servant of " + godname + ".";
@@ -97,8 +117,8 @@ static string _describe_favour(god_type which_god)
             else
                 return "A rising star in the eyes of " + godname + ".";
 
-        case 3:  return uppercase_first(godname) + " is most pleased with you.";
-        case 2:  return uppercase_first(godname) + " is pleased with you.";
+        case 3:  return uppercase_first(godname) + " is pleased with you.";
+        case 2:  return uppercase_first(godname) + " is aware of your devotion.";
         default: return uppercase_first(godname) + " is noncommittal.";
     }
 }
@@ -203,6 +223,14 @@ static const char *divine_title[][8] =
     // Pakellas -- inventor theme
     {"Reactionary",       "Apprentice",             "Inquisitive",              "Experimenter",
         "Inventor",           "Pioneer",               "Brilliant",                "Grand Gadgeteer"},
+
+    // Uskayaw -- reveler theme
+    {"Prude",             "Wallflower",             "Party-goer",              "Dancer",
+        "Impassioned",        "Rapturous",             "Ecstatic",                "Rhythm of Life and Death"},
+
+    // Hepliaklqana -- memory/ancestry theme
+    {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
+        "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
@@ -211,6 +239,8 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
+    else if (which_god == GOD_USKAYAW)
+        title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
     else
@@ -299,6 +329,50 @@ static string _describe_ash_skill_boost()
     }
 
     return desc.str();
+}
+
+/// Build & return a table of Hep's upgrades for your chosen ancestor type.
+static string _describe_ancestor_upgrades()
+{
+    if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
+        return "";
+
+    // TODO: don't hardcode this
+    // TODO: higlight upgrades taken
+    // XXX: maybe it'd be nice to let you see other ancestor types'...?
+    switch (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int())
+    {
+    case MONS_ANCESTOR_KNIGHT:
+        return "XL                      Knight\n"
+               "                        Flail\n"
+               "                        Shield\n"
+               "                   Splint Mail (+AC)\n"
+               "15                 Broad Axe (flame)\n"
+               "19              Large Shield (reflect)\n"
+               "19                      Haste\n"
+               "24                Speed (weapon ego)\n";
+    case MONS_ANCESTOR_BATTLEMAGE:
+        return "XL                    Battlemage\n"
+               "                     Quarterstaff\n"
+               "                      Throw Frost\n"
+               "                      Stone Arrow\n"
+               "                     +Melee Damage\n"
+               "15                    Magma Bolt\n"
+               "19                  Lajatang (freeze)\n"
+               "19                       Haste\n"
+               "24                   Crystal Spear\n";
+    case MONS_ANCESTOR_HEXER:
+        return "XL                       Hexer\n"
+               "                     Dagger (drain)\n"
+               "                         Slow\n"
+               "                        Confuse\n"
+               "15                     Paralyse\n"
+               "19                   Mass Confusion\n"
+               "19                       Haste\n"
+               "24                Quickblade (antimagic)\n";
+    default:
+        return "";
+    }
 }
 
 // from dgn-overview.cc
@@ -444,18 +518,18 @@ static string _describe_god_wrath_causes(god_type which_god)
         case GOD_SHINING_ONE:
         case GOD_ELYVILON:
             return uppercase_first(god_name(which_god)) +
-                   " forgives followers who leave " + god_name(which_god)+"'s"
-                   " service; however, those who take up the worship of evil"
-                   " gods will be punished. (" +
+                   " forgives followers for abandonment; however, those who"
+                   " later take up the worship of an evil god will be"
+                   " punished. (" +
                    comma_separated_fn(begin(evil_gods), end(evil_gods),
                                       bind(god_name, placeholders::_1, false)) +
                    " are evil gods.)";
 
         case GOD_ZIN:
             return uppercase_first(god_name(which_god)) +
-                   " does not punish followers who leave "+god_name(which_god)+
-                   "'s service; however, those who take up the worship of evil"
-                   " or chaotic gods will be scourged. (" +
+                   " forgives followers for abandonment; however, those who"
+                   " later take up the worship of an evil or chaotic god will"
+                   " be scourged. (" +
                    comma_separated_fn(begin(evil_gods), end(evil_gods),
                                       bind(god_name, placeholders::_1, false)) +
                    " are evil, and " +
@@ -502,6 +576,15 @@ static void _god_wrath_description(god_type which_god)
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
+
+    if (which_god != GOD_RU) // Permanent wrath.
+    {
+        const bool long_wrath = initial_wrath_penance_for(which_god) > 30;
+        _print_string_wrapped(apostrophise(uppercase_first(god_name(which_god)))
+                              + " wrath lasts for a relatively " +
+                              (long_wrath ? "long" : "short") + " duration.",
+                              width);
+    }
 }
 
 /**
@@ -543,17 +626,15 @@ static string _get_god_misc_info(god_type which_god)
                    "you gain half of the monster's experience value. Pacified "
                    "monsters try to leave the level.";
 
-        case GOD_NEMELEX_XOBEH:
-            return "The power of Nemelex Xobeh's abilities and of the "
-                   "cards' effects is governed by Evocations skill "
-                   "instead of Invocations.";
-
         case GOD_GOZAG:
             return _describe_branch_bribability();
 
         case GOD_PAKELLAS:
             return "The power of Pakellas' abilities is governed by "
                    "Evocations skill instead of Invocations.";
+
+        case GOD_HEPLIAKLQANA:
+            return _describe_ancestor_upgrades();
 
         default:
             return "";
@@ -586,34 +667,47 @@ static void _detailed_god_description(god_type which_god)
  * Player may or may not be currently under penance.
  *
  * @param which_god     The god in question.
+ * @return              A format string, describing the god's ire (or lack of).
+ */
+static string _raw_penance_message(god_type which_god)
+{
+    const int penance = you.penance[which_god];
+
+    // Give more appropriate message for the good gods.
+    if (penance > 0 && is_good_god(which_god))
+    {
+        if (is_good_god(you.religion))
+            return "%s is ambivalent towards you.";
+        if (!god_hates_your_god(which_god))
+        {
+            return "%s is almost ready to forgive your sins.";
+                 // == "Come back to the one true church!"
+        }
+    }
+
+    const int initial_penance = initial_wrath_penance_for(which_god);
+    // could do some math tricks to turn this into a table, but it seems fiddly
+    if (penance > initial_penance * 3 / 4)
+        return "%s's wrath is upon you!";
+    if (penance > initial_penance / 2)
+        return "%s is annoyed with you.";
+    if (penance > initial_penance / 4)
+        return "%s is almost ready to forgive your sins.";
+    return "%s is neutral towards you.";
+}
+
+/**
+ * Describe the given god's level of irritation at the player.
+ *
+ * Player may or may not be currently under penance.
+ *
+ * @param which_god     The god in question.
  * @return              A description of the god's ire (or lack thereof).
  */
 static string _god_penance_message(god_type which_god)
 {
-    int which_god_penance = you.penance[which_god];
-
-    // Give more appropriate message for the good gods.
-    // XXX: ^ this is a hack
-    if (which_god_penance > 0 && is_good_god(which_god))
-    {
-        if (is_good_god(you.religion))
-            which_god_penance = 0;
-        else if (!god_hates_your_god(which_god) && which_god_penance >= 5)
-            which_god_penance = 2; // == "Come back to the one true church!"
-    }
-
-    const string penance_message =
-        (which_god == GOD_NEMELEX_XOBEH
-         && which_god_penance > 0 && which_god_penance <= 100)
-            ? "%s doesn't play fair with you." :
-        (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
-        (which_god_penance >= 20)   ? "%s is annoyed with you." :
-        (which_god_penance >=  5)   ? "%s well remembers your sins." :
-        (which_god_penance >   0)   ? "%s is ready to forgive your sins." :
-        (you.worshipped[which_god]) ? "%s is ambivalent towards you."
-                                    : "%s is neutral towards you.";
-
-    return make_stringf(penance_message.c_str(),
+    const string message = _raw_penance_message(which_god);
+    return make_stringf(message.c_str(),
                         uppercase_first(god_name(which_god)).c_str());
 }
 
@@ -658,13 +752,15 @@ static void _describe_god_powers(god_type which_god)
         {
             switch (elyvilon_lifesaving())
             {
-                case 1:
+                case lifesaving_chance::sometimes:
                     when = ", especially when called upon";
                     prot_chance += 100 - 3000/piety;
                     break;
-                case 2:
+                case lifesaving_chance::always:
                     when = ", and always does so when called upon";
                     prot_chance = 100;
+                    break;
+                default:
                     break;
             }
         }
@@ -699,6 +795,8 @@ static void _describe_god_powers(god_type which_god)
     case GOD_SHINING_ONE:
     {
         have_any = true;
+        cprintf("%s prevents you from stabbing unaware foes.\n",
+                uppercase_first(god_name(which_god)).c_str());
         if (piety < piety_breakpoint(1))
             textcolour(DARKGREY);
         else
@@ -759,7 +857,12 @@ static void _describe_god_powers(god_type which_god)
             textcolour(god_colour(which_god));
         else
             textcolour(DARKGREY);
-        cprintf("%s supports your attributes (+%d).\n",
+        cprintf("%s %sslows your movement.\n",
+                uppercase_first(god_name(which_god)).c_str(),
+                piety >= piety_breakpoint(5) ? "greatly " :
+                piety >= piety_breakpoint(2) ? "" :
+                                               "slightly ");
+        cprintf("%s supports your attributes. (+%d)\n",
                 uppercase_first(god_name(which_god)).c_str(),
                 chei_stat_boost(piety));
         break;
@@ -804,9 +907,16 @@ static void _describe_god_powers(god_type which_god)
         cprintf("Your enemies may become distracted by gold.\n");
         break;
 
+    case GOD_HEPLIAKLQANA:
+        have_any = true;
+        cprintf("Your life essence is reduced. (-10% HP)\n");
+        break;
+
     case GOD_PAKELLAS:
     {
         have_any = true;
+        cprintf("%s prevents your magic from regenerating.\n",
+                uppercase_first(god_name(which_god)).c_str());
         cprintf("%s identifies device charges for you.\n",
                 uppercase_first(god_name(which_god)).c_str());
         if (!you_foodless_normally())

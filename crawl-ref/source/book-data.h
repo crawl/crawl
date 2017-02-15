@@ -6,7 +6,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_MAGIC_DART,
     SPELL_BLINK,
     SPELL_CALL_IMP,
-    SPELL_REPEL_MISSILES,
     SPELL_SLOW,
     SPELL_CONJURE_FLAME,
     SPELL_MEPHITIC_CLOUD,
@@ -17,8 +16,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SEARING_RAY,
     SPELL_DAZZLING_SPRAY,
     SPELL_FULMINANT_PRISM,
+    SPELL_FORCE_LANCE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_BATTLESPHERE,
 },
 
 {   // Book of Flames
@@ -51,8 +50,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_IGNITE_POISON,
     SPELL_FIREBALL,
     SPELL_BOLT_OF_FIRE,
-    SPELL_DELAYED_FIREBALL,
     SPELL_RING_OF_FLAMES,
+    SPELL_IGNITION,
 },
 
 {   // Book of Ice
@@ -65,9 +64,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Spatial Translocations
-    SPELL_APPORTATION,
     SPELL_BLINK,
     SPELL_SHROUD_OF_GOLUBRIA,
+    SPELL_BECKONING,
     SPELL_PORTAL_PROJECTILE,
     SPELL_TELEPORT_OTHER,
     SPELL_GOLUBRIAS_PASSAGE,
@@ -78,13 +77,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
-    SPELL_HASTE,
     SPELL_DISCORD,
 },
 
 {   // Young Poisoner's Handbook
     SPELL_STING,
-    SPELL_CURE_POISON,
+    SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_VENOM_BOLT,
@@ -93,7 +91,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Tempests
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
-    SPELL_FIREBALL,
+    SPELL_IGNITION,
     SPELL_TORNADO,
     SPELL_SHATTER,
 },
@@ -150,9 +148,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 #endif
 {   // Book of Clouds
+    SPELL_POISONOUS_VAPOURS,
     SPELL_MEPHITIC_CLOUD,
     SPELL_CONJURE_FLAME,
-    SPELL_POISONOUS_CLOUD,
     SPELL_FREEZING_CLOUD,
     SPELL_RING_OF_FLAMES,
 },
@@ -186,14 +184,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Air
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
-    SPELL_REPEL_MISSILES,
     SPELL_DISCHARGE,
+    SPELL_AIRSTRIKE,
     SPELL_LIGHTNING_BOLT,
 },
 
 {   // Book of the Sky
     SPELL_SUMMON_LIGHTNING_SPIRE,
-    SPELL_AIRSTRIKE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_CONJURE_BALL_LIGHTNING,
@@ -201,19 +198,21 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Warp
-    SPELL_RECALL,
     SPELL_GRAVITAS,
+    SPELL_PORTAL_PROJECTILE,
     SPELL_FORCE_LANCE,
-    SPELL_WARP_BRAND,
-    SPELL_SUMMON_FOREST,
+    SPELL_DISPERSAL,
+    SPELL_CONTROLLED_BLINK,
+    SPELL_DISJUNCTION,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Envenomations
     SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_INTOXICATE,
-    SPELL_POISONOUS_CLOUD,
 },
+#endif
 
 {   // Book of Unlife
     SPELL_RECALL,
@@ -259,15 +258,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Wizardry
     SPELL_FORCE_LANCE,
     SPELL_AGONY,
-    SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
 #endif
 
 {   // Book of Power
-    SPELL_FULMINANT_PRISM,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_BATTLESPHERE,
     SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
@@ -276,7 +273,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_CORONA,
+    SPELL_CONFUSING_TOUCH,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
@@ -285,17 +282,20 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
+    SPELL_BECKONING,
     SPELL_TUKIMAS_DANCE,
     SPELL_INTOXICATE,
     SPELL_INVISIBILITY
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Akashic Record
     SPELL_DISPERSAL,
     SPELL_MALIGN_GATEWAY,
     SPELL_DISJUNCTION,
     SPELL_CONTROLLED_BLINK,
 },
+#endif
 
 {   // Book of Debilitation
     SPELL_CORONA,
@@ -365,6 +365,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_HAUNT,
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_DEATHS_DOOR,
+    SPELL_INFESTATION,
     SPELL_NECROMUTATION,
 },
 

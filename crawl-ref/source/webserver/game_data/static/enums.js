@@ -28,6 +28,17 @@ define(function () {
     exports.mouse_mode.YESNO = val++;
     exports.mouse_mode.MAX = val++;
 
+    // Textures
+    val = 0;
+    exports.texture = {};
+    exports.texture.FLOOR = val++;   // floor.png
+    exports.texture.WALL = val++;    // wall.png
+    exports.texture.FEAT = val++;    // feat.png
+    exports.texture.PLAYER = val++;  // player.png
+    exports.texture.DEFAULT = val++; // main.png
+    exports.texture.GUI = val++;     // gui.png
+    exports.texture.ICONS = val++;   // icons.png
+
     // Cursors
     exports.CURSOR_MOUSE = 0;
     exports.CURSOR_TUTORIAL = 1;
@@ -37,8 +48,7 @@ define(function () {
     // Halo flags
     exports.HALO_NONE = 0;
     exports.HALO_RANGE = 1;
-    exports.HALO_MONSTER = 2;
-    exports.HALO_UMBRA = 3;
+    exports.HALO_UMBRA = 2;
 
     // equipment_type
     exports.equip = {};
@@ -189,6 +199,9 @@ define(function () {
     fg_flags.flags.DEATHS_DOOR  = [0, 0x20000];
     fg_flags.flags.RECALL       = [0, 0x40000];
     fg_flags.flags.DRAIN        = [0, 0x80000];
+    fg_flags.flags.IDEALISED    = [0, 0x100000];
+    fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
+    fg_flags.flags.INFESTED     = [0, 0x400000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
@@ -208,14 +221,6 @@ define(function () {
         DEMON_3    : [0, 0x06],
         DEMON_2    : [0, 0x08],
         DEMON_1    : [0, 0x0E],
-    });
-
-    // Mimics, 2 bits.
-    fg_flags.exclusive_flags.push({
-        mask        : [0, 0x60],
-        MIMIC_INEPT : [0, 0x20],
-        MIMIC       : [0, 0x40],
-        MIMIC_RAVEN : [0, 0x60],
     });
 
     fg_flags.mask             = 0x0000FFFF;

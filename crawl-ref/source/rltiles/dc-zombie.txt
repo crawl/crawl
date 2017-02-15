@@ -5,12 +5,11 @@ zombie_large MONS_ZOMBIE_LARGE
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
 zombie_quadruped_large MONS_ZOMBIE_QUADRUPED_LARGE
 zombie_ogre MONS_ZOMBIE_OGRE
-zombie_toad MONS_ZOMBIE_TOAD
+zombie_frog MONS_ZOMBIE_FROG
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
 zombie_beetle MONS_ZOMBIE_BEETLE
 zombie_bug MONS_ZOMBIE_BUG
-zombie_rat MONS_ZOMBIE_RAT
 zombie_hound MONS_ZOMBIE_HOUND
 zombie_fish MONS_ZOMBIE_FISH
 zombie_centaur MONS_ZOMBIE_CENTAUR
@@ -18,7 +17,7 @@ zombie_naga MONS_ZOMBIE_NAGA
 zombie_snake MONS_ZOMBIE_SNAKE
 zombie_worm MONS_ZOMBIE_WORM
 zombie_lizard MONS_ZOMBIE_LIZARD
-zombie_spider MONS_ZOMBIE_SPIDER
+zombie_spider_large MONS_ZOMBIE_SPIDER_LARGE
 zombie_dragon MONS_ZOMBIE_DRAGON
 zombie_kraken_head MONS_ZOMBIE_KRAKEN
 zombie_drake MONS_ZOMBIE_DRAKE
@@ -29,7 +28,6 @@ zombie_hydra4
 zombie_hydra5
 zombie_troll MONS_ZOMBIE_TROLL
 zombie_draconian MONS_ZOMBIE_DRACONIAN
-zombie_griffon MONS_ZOMBIE_GRIFFON
 zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
@@ -44,23 +42,54 @@ zombie_lernaean_hydra07
 zombie_lernaean_hydra08
 zombie_lernaean_hydra09
 zombie_lernaean_hydra10
+zombie_elf MONS_ZOMBIE_ELF
+zombie_fawn MONS_ZOMBIE_FAUN
+zombie_guardian_serpent MONS_ZOMBIE_GUARDIAN_SERPENT
+zombie_lindwurm MONS_ZOMBIE_LINDWURM
+zombie_merfolk MONS_ZOMBIE_MERFOLK
+zombie_minotaur MONS_ZOMBIE_MINOTAUR
+zombie_salamander MONS_ZOMBIE_SALAMANDER
+zombie_spriggan MONS_ZOMBIE_SPRIGGAN
+zombie_wyvern MONS_ZOMBIE_WYVERN
+zombie_yaktaur MONS_ZOMBIE_YAKTAUR
 %rim 0
 zombie_ugly_thing MONS_ZOMBIE_UGLY_THING
 zombie_turtle MONS_ZOMBIE_TURTLE
 zombie_crab MONS_ZOMBIE_CRAB
-%rim 1
+zombie_adder MONS_ZOMBIE_ADDER
+zombie_gnoll MONS_ZOMBIE_GNOLL
+zombie_goblin MONS_ZOMBIE_GOBLIN
+zombie_hobgoblin MONS_ZOMBIE_HOBGOBLIN
+zombie_human MONS_ZOMBIE_HUMAN
+zombie_jackal MONS_ZOMBIE_JACKAL
+zombie_kobold MONS_ZOMBIE_KOBOLD
+zombie_orc MONS_ZOMBIE_ORC
+zombie_quokka MONS_ZOMBIE_QUOKKA
+zombie_rat MONS_ZOMBIE_RAT
+zombie_roach MONS_ZOMBIE_ROACH
+zombie_scorpion MONS_ZOMBIE_SCORPION
+zombie_spider_small MONS_ZOMBIE_SPIDER_SMALL
+zombie_bird MONS_ZOMBIE_BIRD
+zombie_monkey MONS_ZOMBIE_MONKEY
+zombie_elephant MONS_ZOMBIE_ELEPHANT
+zombie_quicksilver_dragon MONS_ZOMBIE_QUICKSILVER_DRAGON
+zombie_golden_dragon MONS_ZOMBIE_GOLDEN_DRAGON
+zombie_iron_dragon MONS_ZOMBIE_IRON_DRAGON
 
 %sdir mon/undead/skeletons
 ## Skeletons
 skeleton_humanoid_small MONS_SKELETON_SMALL
+skeleton_humanoid_medium MONS_SKELETON_MEDIUM
 skeleton_humanoid_large MONS_SKELETON_LARGE
 skeleton_quadruped_small MONS_SKELETON_QUADRUPED_SMALL
 skeleton_quadruped_large MONS_SKELETON_QUADRUPED_LARGE
 skeleton_quadruped_winged MONS_SKELETON_QUADRUPED_WINGED
-skeleton_toad MONS_SKELETON_TOAD
+skeleton_troll MONS_SKELETON_TROLL
+skeleton_frog MONS_SKELETON_FROG
 skeleton_lizard MONS_SKELETON_LIZARD
 skeleton_turtle MONS_SKELETON_TURTLE
 skeleton_bat MONS_SKELETON_BAT
+skeleton_bird MONS_SKELETON_BIRD
 skeleton_fish MONS_SKELETON_FISH
 skeleton_centaur MONS_SKELETON_CENTAUR
 skeleton_naga MONS_SKELETON_NAGA
@@ -76,7 +105,6 @@ skeleton_ugly_thing MONS_SKELETON_UGLY_THING
 
 ## Simulacra
 %sdir mon/undead/simulacra
-%rim 0
 simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
 simulacrum_quadruped_small MONS_SIMULACRUM_QUADRUPED_SMALL
@@ -105,7 +133,7 @@ spectral_small MONS_SPECTRAL_SMALL
 spectral_large MONS_SPECTRAL_LARGE
 spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL
 spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
-spectral_toad MONS_SPECTRAL_TOAD
+spectral_frog MONS_SPECTRAL_FROG
 spectral_bat MONS_SPECTRAL_BAT
 spectral_bee MONS_SPECTRAL_BEE
 spectral_ant MONS_SPECTRAL_BUG

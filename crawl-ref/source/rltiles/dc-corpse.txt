@@ -43,8 +43,8 @@ cat1 CORPSE_FELID
 %sdir mon/animals
 
 ## Lizards ('l')
-giant_newt CORPSE_GIANT_NEWT
-giant_gecko CORPSE_GIANT_GECKO
+frilled_lizard CORPSE_FRILLED_LIZARD
+leopard_gecko CORPSE_LEOPARD_GECKO
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
@@ -86,7 +86,7 @@ apocalypse_crab CORPSE_APOCALYPSE_CRAB
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 worm CORPSE_WORM
 ../aquatic/swamp_worm CORPSE_SWAMP_WORM
-giant_leech CORPSE_GIANT_LEECH
+tyrant_leech CORPSE_TYRANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
 elephant_slug CORPSE_ELEPHANT_SLUG
 dart_slug CORPSE_DART_SLUG
@@ -95,11 +95,12 @@ dart_slug CORPSE_DART_SLUG
 killer_bee CORPSE_KILLER_BEE
 queen_bee CORPSE_QUEEN_BEE
 vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
-wasp CORPSE_WASP
 hornet CORPSE_HORNET
 spark_wasp CORPSE_SPARK_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
+%sdir mon/demihumanoids
+meliai CORPSE_MELIAI
 
 ## Aquatics (';')
 %sdir mon/aquatic
@@ -110,15 +111,13 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 
 ## Beetles ('B')
-%sdir mon/animals
-boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
 
 ## Frogs ('F')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-giant_frog CORPSE_GIANT_FROG
+bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
@@ -132,7 +131,7 @@ sea_snake CORPSE_SEA_SNAKE
 shock_serpent CORPSE_SHOCK_SERPENT
 
 ## Yaks, sheep and elephants ('Y')
-sheep CORPSE_SHEEP
+dream_sheep CORPSE_DREAM_SHEEP
 yak CORPSE_YAK
 death_yak CORPSE_DEATH_YAK
 elephant CORPSE_ELEPHANT
@@ -144,19 +143,22 @@ sky_beast CORPSE_SKY_BEAST
 apis CORPSE_APIS
 
 ### Non-animals
-%sdir mon
 
 ## Formicids ('a;)
+%sdir mon/demihumanoids
 formicid CORPSE_FORMICID
 
 ## Centaurs ('c')
-centaur CORPSE_CENTAUR
-yaktaur CORPSE_YAKTAUR
 faun CORPSE_FAUN
 satyr CORPSE_SATYR
+%sdir mon/demihumanoids/taurs
+centaur CORPSE_CENTAUR
+yaktaur CORPSE_YAKTAUR
+
+%sdir mon/humanoids
 
 ## Elves ('e')
-elf CORPSE_ELF
+elves/elf CORPSE_ELF
 
 ## Goblins ('g')
 goblin CORPSE_GOBLIN
@@ -164,7 +166,7 @@ hobgoblin CORPSE_HOBGOBLIN
 gnoll CORPSE_GNOLL
 
 ## Spriggans ('i')
-mon/spriggan/spriggan CORPSE_SPRIGGAN
+spriggans/spriggan CORPSE_SPRIGGAN
 
 ## Drakes ('k')
 %sdir mon/dragons
@@ -175,8 +177,8 @@ death_drake CORPSE_DEATH_DRAKE
 wind_drake CORPSE_WIND_DRAKE
 
 ## Merfolk ('m')
-%sdir mon
-merfolk_water CORPSE_MERFOLK
+mon/demihumanoids/merfolk/merfolk_water CORPSE_MERFOLK
+%sdir mon/humanoids
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
 
@@ -189,29 +191,32 @@ ghoul CORPSE_GHOUL
 
 ## Orcs ('o')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-%sdir mon
-orc CORPSE_ORC
+%sdir mon/humanoids
+orcs/orc CORPSE_ORC
 
 ## Human shaped ('p')
-human CORPSE_HUMAN
-entropy_weaver CORPSE_ENTROPY_WEAVER
 halfling CORPSE_HALFLING
+%sdir mon/humanoids/humans
+human CORPSE_HUMAN
 killer_klown_blue CORPSE_KILLER_KLOWN
 killer_klown_green
 killer_klown_purple
 killer_klown_red
 killer_klown_yellow
+mon/demihumanoids/entropy_weaver CORPSE_ENTROPY_WEAVER
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
+%sdir mon/amorphous
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
 ## Dwarves ('q')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
-unique/wiglaf CORPSE_DWARF
+%sdir mon/humanoids
+dwarf CORPSE_DWARF
 deep_dwarf CORPSE_DEEP_DWARF
 
 ## Ugly things ('u')
-%sdir mon/aberr
+%sdir mon/aberrations
 ugly_thing CORPSE_UGLY_THING
 ugly_thing1
 ugly_thing2
@@ -226,8 +231,7 @@ very_ugly_thing4
 very_ugly_thing5
 
 ## Giants ('C')
-%sdir mon
-hill_giant CORPSE_HILL_GIANT
+%sdir mon/humanoids/giants
 ettin CORPSE_ETTIN
 cyclops CORPSE_CYCLOPS
 fire_giant CORPSE_FIRE_GIANT
@@ -245,7 +249,7 @@ hydra5 CORPSE_HYDRA
 steam_dragon CORPSE_STEAM_DRAGON
 ice_dragon CORPSE_ICE_DRAGON
 swamp_dragon CORPSE_SWAMP_DRAGON
-mottled_dragon CORPSE_MOTTLED_DRAGON
+acid_dragon CORPSE_ACID_DRAGON
 quicksilver_dragon CORPSE_QUICKSILVER_DRAGON
 iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON
@@ -254,31 +258,33 @@ shadow_dragon CORPSE_SHADOW_DRAGON
 mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 
 ## Hybrids ('H')
-%sdir mon
+%sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 hippogriff CORPSE_HIPPOGRIFF
-griffon CORPSE_GRIFFON
 manticore CORPSE_MANTICORE
+%sdir mon/demihumanoids
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
-anubis_guard CORPSE_ANUBIS_GUARD
-unique/arachne_staveless CORPSE_ARACHNE
-mutant_beast CORPSE_MUTANT_BEAST
+mon/unique/arachne_staveless CORPSE_ARACHNE
+%sdir mon/mutantbeast
+base3 CORPSE_MUTANT_BEAST
 
 ## Kobolds ('K')
-%sdir mon/
+%sdir mon/humanoids
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
 
 ## Nagas ('N')
-naga CORPSE_NAGA
+%sdir mon/demihumanoids
+naga/naga CORPSE_NAGA
 guardian_serpent CORPSE_GUARDIAN_SERPENT
 salamander CORPSE_SALAMANDER
 
 ## Ogres ('O')
+%sdir mon/humanoids
 ogre CORPSE_OGRE
 two_headed_ogre CORPSE_TWO_HEADED_OGRE
 
@@ -288,10 +294,10 @@ iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
 ## Cephalopods ('x')
-../player/base/octopode1 CORPSE_OCTOPODE
+%sdir player
+base/octopode1 CORPSE_OCTOPODE
 
 ## Draconians ('d')
-%sdir player
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black
@@ -316,12 +322,6 @@ deep_troll CORPSE_DEEP_TROLL
 %compose base/draconian_gray_f
 %compose drchead/drchead_grey
 %finish CORPSE_DRACONIAN_GREY
-
-%start
-%compose drcwing/drcwing_mottled
-%compose base/draconian_mottled_m
-%compose drchead/drchead_mottled
-%finish CORPSE_DRACONIAN_MOTTLED
 
 %start
 %compose drcwing/drcwing_pale
@@ -354,12 +354,11 @@ deep_troll CORPSE_DEEP_TROLL
 %finish CORPSE_DRACONIAN_YELLOW
 
 # Demonspawn ('6')
-%sdir mon/demonspawn
+%sdir mon/humanoids/demonspawn
 demonspawn CORPSE_DEMONSPAWN
 monstrous CORPSE_MONSTROUS_DEMONSPAWN
 gelid CORPSE_GELID_DEMONSPAWN
 infernal CORPSE_INFERNAL_DEMONSPAWN
-putrid CORPSE_PUTRID_DEMONSPAWN
 torturous CORPSE_TORTUROUS_DEMONSPAWN
 
 %corpse 0

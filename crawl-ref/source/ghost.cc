@@ -1,4 +1,3 @@
-
 /**
  * @file
  * @brief Player ghost and random Pandemonium demon handling.
@@ -14,8 +13,8 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-transit.h"
@@ -23,6 +22,7 @@
 #include "skills.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "unwind.h"
 
 #define MAX_GHOST_DAMAGE     50
 #define MAX_GHOST_HP        400
@@ -39,15 +39,10 @@ static spell_type search_order_aoe_conj[] =
     SPELL_CHAIN_LIGHTNING,
     SPELL_SHATTER,
     SPELL_FREEZING_CLOUD,
-    SPELL_STEAM_BALL,
-    SPELL_DAZZLING_SPRAY,
-    SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_METAL_SPLINTERS,
     SPELL_ENERGY_BOLT,
     SPELL_ORB_OF_ELECTRICITY,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord conjuration spell list.
@@ -65,9 +60,7 @@ static spell_type search_order_conj[] =
     SPELL_IRON_SHOT,
     SPELL_POISON_ARROW,
     SPELL_BOLT_OF_DRAINING,
-    SPELL_LRD,
     SPELL_LIGHTNING_BOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord self-enchantment spell list.
@@ -75,12 +68,9 @@ static spell_type search_order_selfench[] =
 {
     SPELL_HASTE,
     SPELL_SILENCE,
-    SPELL_BATTLESPHERE,
-    SPELL_SPELLFORGED_SERVITOR,
     SPELL_INVISIBILITY,
     SPELL_BLINK,
     SPELL_BLINKBOLT,
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord summoning spell list.
@@ -94,7 +84,6 @@ static spell_type search_order_summon[] =
     SPELL_SUMMON_EYEBALLS,
     SPELL_SUMMON_VERMIN, // funny
     SPELL_SUMMON_BUTTERFLIES, // funny
-    SPELL_NO_SPELL, // end of list
 };
 
 // Pan lord misc spell list.
@@ -109,10 +98,7 @@ static spell_type search_order_misc[] =
     SPELL_POLYMORPH,
     SPELL_FORCE_LANCE,
     SPELL_SLOW,
-    SPELL_NO_SPELL, // end of list
 };
-
-// Last slot (emergency) can only be Teleport Self or Blink.
 
 ghost_demon::ghost_demon()
 {
@@ -161,8 +147,7 @@ static brand_type _random_special_pan_lord_brand()
                                   20, SPWPN_PAIN,
                                   20, SPWPN_ANTIMAGIC,
                                   20, SPWPN_DISTORTION,
-                                  20, SPWPN_CHAOS,
-                                  0);
+                                  20, SPWPN_CHAOS);
 }
 
 #define ADD_SPELL(which_spell) \
@@ -178,16 +163,14 @@ static int _panlord_random_resist_level()
                                   3,  0,
                                   3,  1,
                                   2,  2,
-                                  1,  3,
-                                  0);
+                                  1,  3);
 }
 
 static int _panlord_random_elec_resist_level()
 {
     return random_choose_weighted(3, 0,
                                   6, 1,
-                                  1, 3,
-                                  0);
+                                  1, 3);
 }
 
 void ghost_demon::init_pandemonium_lord()
@@ -206,9 +189,9 @@ void ghost_demon::init_pandemonium_lord()
 
     // Panlord AC/EV should tend to be weighted towards one or the other.
     int total_def = 10 + random2avg(40, 3);
-    int split = biased_random2(5, 2);
+    int split = 1 + biased_random2(4, 2);
     ac = div_rand_round(total_def * split, 10);
-    ev = total_def - ev;
+    ev = total_def - ac;
     if (coinflip())
         swap(ac, ev);
 
@@ -256,16 +239,16 @@ void ghost_demon::init_pandemonium_lord()
 
     if (spellcaster)
     {
-        // This bit uses the list of player spells to find appropriate
-        // spells for the demon, then converts those spells to the monster
-        // spell indices. Some special monster-only spells are at the end.
+        if (!one_chance_in(10))
+            ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
 
-        ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
-
-        if (coinflip())
-            ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
-        else
-            ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        if (!one_chance_in(10))
+        {
+            if (coinflip())
+                ADD_SPELL(RANDOM_ELEMENT(search_order_summon));
+            else
+                ADD_SPELL(RANDOM_ELEMENT(search_order_aoe_conj));
+        }
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_selfench));
@@ -275,7 +258,7 @@ void ghost_demon::init_pandemonium_lord()
 
         // Demon-summoning should be fairly common.
         if (coinflip())
-            ADD_SPELL(coinflip() ? SPELL_SUMMON_DEMON : SPELL_SUMMON_GREATER_DEMON);
+            ADD_SPELL(random_choose(SPELL_SUMMON_DEMON, SPELL_SUMMON_GREATER_DEMON));
 
         normalize_spell_freq(spells, xl);
     }
@@ -309,10 +292,17 @@ static int _player_ghost_movement_energy()
 
 void ghost_demon::init_player_ghost(bool actual_ghost)
 {
+    // don't preserve transformations for ghosty purposes
+    unwind_var<transformation> form(you.form, transformation::none);
+    unwind_var<FixedBitVector<NUM_EQUIP>> melded(you.melded,
+                                                 FixedBitVector<NUM_EQUIP>());
+    unwind_var<bool> fishtail(you.fishtail, false);
+
     name   = you.your_name;
     max_hp = min(get_real_hp(false), MAX_GHOST_HP);
     ev     = min(you.evasion(EV_IGNORE_HELPLESS), MAX_GHOST_EVASION);
     ac     = you.armour_class();
+    dprf("ghost ac: %d, ev: %d", ac, ev);
 
     see_invis      = you.can_see_invisible();
     resists        = 0;
@@ -695,10 +685,14 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     {
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         return SPELL_FIREBALL;
+#endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
+    case SPELL_SWIFTNESS:
+        return SPELL_SPRINT;
     default:
         break;
     }

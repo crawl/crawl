@@ -60,6 +60,7 @@ enum attack_type
 #endif
     AT_WEAP_ONLY,   // AT_HIT if wielding a melee weapon, AT_NONE otherwise
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
+    NUM_ATTACK_TYPES,
 };
 
 // When adding an attack flavour, give it a short description in
@@ -83,7 +84,7 @@ enum attack_flavour
     AF_FIRE,
     AF_HUNGER,
     AF_MUTATE,
-    AF_PARALYSE,
+    AF_POISON_PARALYSE,
     AF_POISON,
 #if TAG_MAJOR_VERSION == 34
     AF_POISON_NASTY,
@@ -132,7 +133,9 @@ enum attack_flavour
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
     AF_WEAKNESS,
+#if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
+#endif
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -245,16 +248,15 @@ enum shout_type
     S_GURGLE,               // gurgle
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
-    S_HISS,                 // for snakes and lizards
+    S_HISS,                 // for reptiles & arachnids. quiet!
     S_DEMON_TAUNT,          // for pandemonium lords
-#if TAG_MAJOR_VERSION == 34
-    S_CAW,                  // for ravens
-#endif
     S_CHERUB,               // for cherubs
-    S_RUMBLE,               // for ushabti
+    S_SQUEAL,               // pigs
+    S_LOUD_ROAR,            // dragons, &c. loud!
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
+    // Only used for the verb/volume of random demon taunts
     S_VERY_SOFT,
     S_SOFT,
     S_NORMAL,
@@ -293,6 +295,7 @@ enum mon_body_shape
     MON_SHAPE_QUADRUPED_TAILLESS,
     MON_SHAPE_QUADRUPED_WINGED,
     MON_SHAPE_BAT,
+    MON_SHAPE_BIRD,
     MON_SHAPE_SNAKE, // Including eels and worms
     MON_SHAPE_FISH,
     MON_SHAPE_INSECT,

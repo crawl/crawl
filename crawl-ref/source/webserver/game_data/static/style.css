@@ -241,6 +241,14 @@ body {
 }
 
 
+#tooltip {
+    position: absolute;
+    background: rgba(40, 40, 40, 0.5);
+    padding: 5px;
+    border: 1px solid lightgray;
+}
+
+
 /* monster list */
 #monster_list {
     display: inline-block;

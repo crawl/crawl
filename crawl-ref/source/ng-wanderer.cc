@@ -2,7 +2,7 @@
 
 #include "ng-wanderer.h"
 
-#include "itemprop.h"
+#include "item-prop.h"
 #include "ng-setup.h"
 #include "randbook.h"
 #include "random.h"
@@ -267,7 +267,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_SUMMONINGS:
-        book = coinflip() ? BOOK_MINOR_MAGIC : BOOK_CALLINGS;
+        book = random_choose(BOOK_MINOR_MAGIC, BOOK_CALLINGS);
         break;
 
     case SK_NECROMANCY:
@@ -279,7 +279,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_TRANSMUTATIONS:
-        book = coinflip() ? BOOK_GEOMANCY : BOOK_CHANGES;
+        book = random_choose(BOOK_GEOMANCY, BOOK_CHANGES);
         break;
 
     case SK_FIRE_MAGIC:
@@ -390,39 +390,34 @@ static void _give_wanderer_minor_book(skill_type skill)
                       forced_book_theme(school), 2);
 }
 
-// Players can get some consumables as a "good item".
+/**
+ * Create a consumable as a "good item".
+ *
+ * Shouldn't ever create an useless consumable for the player's species.
+ * e.g., potions for Mu, heal wounds for VS, blinking for Fo.
+ */
 static void _good_potion_or_scroll()
 {
-    int base_rand = 5;
-    // No berserk rage for ghouls.
-    if (you.is_lifeless_undead(false))
-        base_rand--;
-    // No potions for mummies.
-    if (you.undead_state(false) == US_UNDEAD)
-        base_rand -= 2;
+    // vector of weighted {object_class_type, subtype} pairs
+    // xxx: could we use is_useless_item here? (not without dummy items...?)
+    const vector<pair<pair<object_class_type, int>, int>> options = {
+        { { OBJ_SCROLLS, SCR_FEAR }, 1 },
+        { { OBJ_SCROLLS, SCR_BLINKING },
+            you.species == SP_FORMICID ? 0 : 1 },
+        { { OBJ_POTIONS, POT_HEAL_WOUNDS },
+            (you.species == SP_MUMMY
+             || you.species == SP_VINE_STALKER) ? 0 : 1 },
+        { { OBJ_POTIONS, POT_HASTE },
+            you.species == SP_MUMMY ? 0 : 1 },
+        { { OBJ_POTIONS, POT_BERSERK_RAGE },
+            (you.species == SP_FORMICID
+             || you.is_lifeless_undead(false)) ? 0 : 1},
+    };
 
-    switch (random2(base_rand))
-    {
-    case 0:
-        newgame_make_item(OBJ_SCROLLS, SCR_FEAR);
-        break;
-
-    case 1:
-        newgame_make_item(OBJ_SCROLLS, SCR_BLINKING);
-        break;
-
-    case 2:
-        newgame_make_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
-        break;
-
-    case 3:
-        newgame_make_item(OBJ_POTIONS, POT_HASTE);
-        break;
-
-    case 4:
-        newgame_make_item(OBJ_POTIONS, POT_BERSERK_RAGE);
-        break;
-    }
+    const pair<object_class_type, int> *option
+        = random_choose_weighted(options);
+    ASSERT(option);
+    newgame_make_item(option->first, option->second);
 }
 
 /**
@@ -438,7 +433,7 @@ static void _decent_potion_or_scroll()
         { { OBJ_SCROLLS, SCR_TELEPORTATION },
             you.species == SP_FORMICID ? 0 : 1 },
         { { OBJ_POTIONS, POT_CURING },
-            you.undead_state(false) == US_UNDEAD ? 0 : 1 },
+            you.species == SP_MUMMY ? 0 : 1 },
         { { OBJ_POTIONS, POT_LIGNIFY },
             you.is_lifeless_undead(false) ? 0 : 1 },
     };
@@ -456,8 +451,7 @@ static void _wanderer_random_evokable()
     {
         int selected_evoker =
               random_choose(MISC_BOX_OF_BEASTS, MISC_LAMP_OF_FIRE,
-                            MISC_STONE_OF_TREMORS, MISC_FAN_OF_GALES,
-                            MISC_PHIAL_OF_FLOODS);
+                            MISC_FAN_OF_GALES, MISC_PHIAL_OF_FLOODS);
         int charges = 0;
         if (selected_evoker == MISC_BOX_OF_BEASTS)
             charges = random_range(10, 15, 2);

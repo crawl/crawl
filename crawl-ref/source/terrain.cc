@@ -8,6 +8,7 @@
 #include "terrain.h"
 
 #include <algorithm>
+#include <functional>
 #include <sstream>
 
 #include "areas.h"
@@ -15,7 +16,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -23,16 +24,16 @@
 #include "fight.h"
 #include "feature.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godpassive.h" // passive_t::water_walk
-#include "itemprop.h"
+#include "god-abil.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
@@ -317,6 +318,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
         return CMD_GO_UPSTAIRS;
     }
 
+    if (feat_is_altar(feat))
+        return CMD_GO_UPSTAIRS; // arbitrary; consistent with shops
+
     switch (feat)
     {
     case DNGN_ENTER_HELL:
@@ -422,6 +426,15 @@ bool feat_is_permarock(dungeon_feature_type feat)
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
+/** Can this feature be dug?
+ */
+bool feat_is_diggable(dungeon_feature_type feat)
+{
+    return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+           || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
+           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
+}
+
 /** Is this feature a type of trap?
  *
  *  @param feat the feature.
@@ -485,6 +498,8 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
     { GOD_RU, DNGN_ALTAR_RU },
     { GOD_PAKELLAS, DNGN_ALTAR_PAKELLAS },
+    { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
+    { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -599,7 +614,8 @@ bool feat_is_valid_border(dungeon_feature_type feat)
     return feat_is_wall(feat)
            || feat_is_tree(feat)
            || feat == DNGN_OPEN_SEA
-           || feat == DNGN_LAVA_SEA;
+           || feat == DNGN_LAVA_SEA
+           || feat == DNGN_ENDLESS_SALT;
 }
 
 /** Can this feature be a mimic?
@@ -627,6 +643,19 @@ bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
         return true;
 
     return false;
+}
+
+/** Can creatures on this feature be shafted?
+ *
+ * @param feat The feature in question.
+ * @returns Whether creatures standing on this feature can be shafted (by
+ *          magical effects, Formicid digging, etc).
+ */
+bool feat_is_shaftable(dungeon_feature_type feat)
+{
+    return feat_has_dry_floor(feat)
+           && !feat_is_stair(feat)
+           && !feat_is_portal(feat);
 }
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
@@ -757,21 +786,32 @@ bool slime_wall_neighbour(const coord_def& c)
     if (_slime_wall_precomputed_neighbour_mask.get())
         return (*_slime_wall_precomputed_neighbour_mask)(c);
 
+    // Not using count_adjacent_slime_walls because the early return might
+    // be relevant for performance here. TODO: profile it and find out.
     for (adjacent_iterator ai(c); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
             return true;
     return false;
 }
 
+int count_adjacent_slime_walls(const coord_def &pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            count++;
+
+    return count;
+}
+
 void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
-    int walls = 0;
-    for (adjacent_iterator ai(act->pos()); ai; ++ai)
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            walls++;
+    if (actor_slime_wall_immune(act))
+        return;
 
+    const int walls = count_adjacent_slime_walls(act->pos());
     if (!walls)
         return;
 
@@ -779,20 +819,13 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
-        {
-            you.splash_with_acid(nullptr, strength, false,
-                                (walls > 1) ? "The walls burn you!"
-                                            : "The wall burns you!");
-        }
+        you.splash_with_acid(nullptr, strength, false,
+                            (walls > 1) ? "The walls burn you!"
+                                        : "The wall burns you!");
     }
     else
     {
         monster* mon = act->as_monster();
-
-        // Slime native monsters are immune to slime walls.
-        if (mons_is_slime(mon))
-            return;
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,
                                              roll_dice(2, strength));
@@ -1169,6 +1202,8 @@ void dungeon_terrain_changed(const coord_def &pos,
     _dgn_check_terrain_monsters(pos);
     if (!wizmode)
         _dgn_check_terrain_player(pos);
+    if (!temporary && feature_mimic_at(pos))
+        env.level_map_mask(pos) &= ~MMT_MIMIC;
 
     set_terrain_changed(pos);
 
@@ -1531,7 +1566,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
 {
     if (terrain == DNGN_DEEP_WATER)
     {
-        if (have_passive(passive_t::water_walk) || form_likes_water())
+        if (you.can_water_walk() || form_likes_water())
             return;
 
         if (species_likes_water(you.species) && !you.transform_uncancellable)
@@ -1560,7 +1595,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
     {
         mpr("You sink like a stone!");
 
-        if (you.is_artificial() || you.undead_state())
+        if (you.is_nonliving() || you.undead_state())
             mpr("You fall apart...");
         else
             mpr("You drown...");

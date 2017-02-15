@@ -68,6 +68,13 @@ function c_interrupt_activity(aname, iname, cause, extra)
         return false
     end
 
+    if chk_interrupt_activities then
+        local retval = chk_interrupt_activities(iname, cause, extra)
+        if retval ~= false then
+            return retval
+        end
+    end
+
     -- No activity name? Bail!
     if not aname or not chk_interrupt_activity[aname] then
         return false

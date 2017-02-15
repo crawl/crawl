@@ -12,16 +12,16 @@
 #include "database.h"
 #include "directn.h"
 #include "env.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "fight.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
@@ -30,6 +30,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "traps.h"
@@ -37,7 +38,7 @@
 #include "viewchar.h"
 
 static void _print_holy_pacification_speech(const string &key,
-                                            monster* mon,
+                                            const monster &mon,
                                             msg_channel_type channel)
 {
     string full_key = "holy_being_pacification";
@@ -59,94 +60,173 @@ static bool _mons_hostile(const monster* mon)
     return !mon->wont_attack() && !mon->neutral();
 }
 
-// Check whether it is possible at all to pacify this monster.
-// Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep).
-// Returns 0, if it's possible to pacify this monster.
-int is_pacifiable(const monster* mon)
+/**
+ * Is it possible for the player to pacify this monster, independent of their
+ * total 'heal power'? If not, why not?
+ *
+ * @param mon   The monster to be checked for pacifiability.
+ * @return      A description of why the monster can't be pacified, if it can't;
+ *              e.g. "You cannot pacify this monster while she is sleeping!"
+ *              If the monster *can* be pacified, returns the empty string.
+ */
+string unpacifiable_reason(const monster &mon)
 {
-    if (!you_worship(GOD_ELYVILON))
-        return -1;
+    // XXX: be more specific?
+    const string generic_reason = "You cannot pacify this monster!";
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_BRAINLESS // no self-awareness
-        || mons_is_tentacle_or_tentacle_segment(mon->type)) // body part
+        || mons_is_tentacle_or_tentacle_segment(mon.type)) // body part
     {
-        return -1;
+        return generic_reason;
     }
 
-    const mon_holy_type holiness = mon->holiness();
+    const mon_holy_type holiness = mon.holiness();
 
     if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
-        return -1;
+        return generic_reason;
 
-    if (mon->is_stationary()) // not able to leave the level
-        return -1;
+    if (mon.is_stationary()) // not able to leave the level
+        return generic_reason;
 
-    if (mon->asleep()) // not aware of what is happening
-        return -2;
-
-    return 0;
-}
-
-// Check whether this monster might be pacified.
-// Returns 0, if monster can be pacified but the attempt failed.
-// Returns 1, if monster is pacified.
-// Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep).
-// Returns -3, if monster can be pacified but the attempt narrowly failed.
-// Returns -4, if monster can currently not be pacified (too much hp).
-static int _can_pacify_monster(const monster* mon, const int healed,
-                               const int max_healed)
-{
-    int pacifiable = is_pacifiable(mon);
-    if (pacifiable < 0)
-        return pacifiable;
-
-    if (healed < 1)
-        return 0;
-
-    const int factor = (mons_intel(mon) < I_HUMAN) ? 3  // animals
-                                                   : 1; // other
-
-    int divisor = 3;
-
-    const mon_holy_type holiness = mon->holiness();
-    if (mon->is_holy())
-        divisor--;
-    else if (holiness & MH_UNDEAD)
-        divisor++;
-    else if (holiness & MH_DEMONIC)
-        divisor += 2;
-
-    if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
-                                         + max_healed) / divisor))
+    if (mon.asleep()) // not aware of what is happening
     {
-        return -4;
+        return make_stringf("You cannot pacify this monster while %s is "
+                            "sleeping!",
+                            mon.pronoun(PRONOUN_SUBJECTIVE).c_str());
     }
 
-    int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
-                                / divisor);
-
-    dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
-         mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
-         you.skill(SK_INVOCATIONS), healed, random_factor);
-
-    if (mon->max_hit_points < factor * random_factor)
-        return 1;
-    if (mon->max_hit_points < factor * random_factor * 1.15)
-        return -3;
-
-    return 0;
+    // pacifiable, maybe!
+    return "";
 }
 
-static vector<string> _desc_mindless(const monster_info& mi)
+/**
+ * By what factor should a monster of the given holiness have healing divided,
+ * when calculating its vulnerability to Elyvilon's pacification?
+ * A larger divisor means the monster is less vulnerable.
+ *
+ * @param holiness  The holiness of the mon to be pacified; e.g. MH_UNDEAD.
+ * @return          A value to divide the healing the player does against the
+ *                  monster by; e.g. 3.
+ */
+static int _pacification_heal_div(mon_holy_type holiness)
 {
-    if (mi.intel() <= I_BRAINLESS)
-        return { "mindless" };
+    if (holiness & MH_HOLY)
+        return 2;
+    if (holiness & MH_UNDEAD)
+        return 4;
+    if (holiness & MH_DEMONIC)
+        return 5;
+    return 3;
+}
+
+/**
+ * What's the highest MHP version of the given monster that the player can
+ * potentially pacify, with the given 'healing' roll?
+ *
+ * @param mon       The monster in question.
+ * @param healing   The player's 'healing' roll.
+ * @return          How much HP the player can pacify in the best case.
+ */
+static int _pacifiable_hp(const monster &mon, int healing)
+{
+    const int heal_mult = (mons_intel(mon) < I_HUMAN) ? 3  // animals
+                                                      : 1; // other
+    const int heal_div = _pacification_heal_div(mon.holiness());
+    // ignoring monster holiness & int
+    const int base_hp = you.skill(SK_INVOCATIONS, healing) + healing;
+    const int hp = heal_mult * base_hp / heal_div;
+
+    dprf("pacifying %s? factor: %d, Inv: %d, healed: %d, pacify hp pre-roll %d",
+         mon.name(DESC_PLAIN).c_str(), heal_mult, you.skill(SK_INVOCATIONS),
+         healing, hp);
+
+    return hp;
+}
+
+/**
+ * Try to pacify the given monster. Aborts if that's clearly impossible.
+ *
+ * @param mon           The monster to be pacified, potentially.
+ * @param healed        The amount of healing the pacification attempt uses.
+ * @param max_healed    The most healing the player could have rolled.
+ * @param fail          Whether the healing invocation has failed (and will
+ *                      return SPRET_FAILED after targeting checks finish).
+ * @return              Whether the pacification effect was aborted
+ *                      (SPRET_ABORT) or the invocation failed (SPRET_FAIL);
+ *                      returns SPRET_SUCCESS otherwise, regardless of whether
+ *                      the target was actually pacified.
+ */
+static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
+                                 bool fail)
+{
+    const string illegal_reason = unpacifiable_reason(mon);
+    if (!illegal_reason.empty())
+    {
+        mpr(illegal_reason);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    const int mon_hp = mon.max_hit_points;
+
+    if (_pacifiable_hp(mon, max_healed) < mon_hp)
+    {
+        // monster mhp too high to ever be pacified with your invo skill.
+        dprf("mon hp %d", mon_hp);
+        mprf("%s is completely unfazed by your meager offer of peace.",
+             mon.name(DESC_THE).c_str());
+        return SPRET_SUCCESS;
+    }
+
+    const int pacified_hp = random2(_pacifiable_hp(mon, healed));
+    dprf("pacified hp: %d, mon hp %d", pacified_hp, mon_hp);
+    if (pacified_hp * 23 / 20 < mon_hp)
+    {
+        // not even close.
+        mprf("The light of Elyvilon fails to reach %s.",
+             mon.name(DESC_THE).c_str());
+        return SPRET_SUCCESS;
+    }
+
+    if (pacified_hp < mon_hp)
+    {
+        // closer! ...but not quite.
+        mprf("The light of Elyvilon almost touches upon %s.",
+             mon.name(DESC_THE).c_str());
+        return SPRET_SUCCESS;
+    }
+
+    // we did it!
+    // let the player know.
+    if (mon.is_holy())
+    {
+        string key;
+
+        // Quadrupeds can't salute, etc.
+        if (mon_shape_is_humanoid(get_mon_shape(mon)))
+            key = "_humanoid";
+
+        _print_holy_pacification_speech(key, mon,
+                                        MSGCH_FRIEND_ENCHANT);
+
+        if (!one_chance_in(3)
+            && mon.can_speak()
+            && mon.type != MONS_MENNAS) // Mennas is mute and only has visual speech
+        {
+            _print_holy_pacification_speech("_speech", mon, MSGCH_TALK);
+        }
+    }
     else
-        return {};
+        simple_monster_message(mon, " turns neutral.");
+
+    record_monster_defeat(&mon, KILL_PACIFIED);
+    mons_pacify(mon, ATT_NEUTRAL);
+
+    heal_monster(mon, healed);
+    return SPRET_SUCCESS;
 }
 
 /**
@@ -165,11 +245,20 @@ bool heal_monster(monster& patient, int amount)
     mprf("You heal %s.", patient.name(DESC_THE).c_str());
 
     if (patient.hit_points == patient.max_hit_points)
-        simple_monster_message(&patient, " is completely healed.");
+        simple_monster_message(patient, " is completely healed.");
     else
-        print_wounds(&patient);
+        print_wounds(patient);
 
     return true;
+}
+
+
+static vector<string> _desc_mindless(const monster_info& mi)
+{
+    if (mi.intel() <= I_BRAINLESS)
+        return { "mindless" };
+    else
+        return {};
 }
 
 spret_type cast_healing(int pow, int max_pow, bool fail)
@@ -206,83 +295,13 @@ spret_type cast_healing(int pow, int max_pow, bool fail)
         return SPRET_SUCCESS;
     }
 
-    bool did_something = false;
-
     if (_mons_hostile(mons))
-    {
-        const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-        if (can_pacify == -1)
-        {
-            mpr("You cannot pacify this monster!");
-            return SPRET_ABORT;
-        }
-        if (can_pacify == -2)
-        {
-            mprf("You cannot pacify this monster while %s is sleeping!",
-                 mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-            return SPRET_ABORT;
-        }
-        fail_check();
-
-        switch (can_pacify)
-        {
-        case 0:
-            mprf("The light of Elyvilon fails to reach %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_SUCCESS;
-
-        case -3:
-            mprf("The light of Elyvilon almost touches upon %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_SUCCESS;
-
-        case -4:
-            mprf("%s is completely unfazed by your meager offer of peace.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_SUCCESS;
-
-        case 1:
-            did_something = true;
-
-            if (mons->is_holy())
-            {
-                string key;
-
-                // Quadrupeds can't salute, etc.
-                if (mon_shape_is_humanoid(get_mon_shape(mons)))
-                    key = "_humanoid";
-
-                _print_holy_pacification_speech(key, mons,
-                                                MSGCH_FRIEND_ENCHANT);
-
-                if (!one_chance_in(3)
-                    && mons->can_speak()
-                    && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
-                {
-                    _print_holy_pacification_speech("_speech", mons, MSGCH_TALK);
-                }
-            }
-            else
-                simple_monster_message(mons, " turns neutral.");
-
-            record_monster_defeat(mons, KILL_PACIFIED);
-            mons_pacify(mons, ATT_NEUTRAL);
-            break;
-
-        default:
-            die("bad _can_pacify_monster return type %d", can_pacify);
-        }
-    }
+        return _try_to_pacify(*mons, healed, max_healed, fail);
 
     fail_check();
-    if (heal_monster(*mons, healed))
-        did_something = true;
 
-    if (!did_something)
-    {
+    if (!heal_monster(*mons, healed))
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_SUCCESS;
-    }
 
     return SPRET_SUCCESS;
 }
@@ -294,8 +313,6 @@ struct player_debuff_effects
     vector<attribute_type> attributes;
     /// Durations removed by a debuff.
     vector<duration_type> durations;
-    /// Whether there's any contam to be removed by a debuff.
-    bool contam;
 };
 
 /**
@@ -308,8 +325,11 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
 {
     // attributes
     static const attribute_type dispellable_attributes[] = {
-        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
-        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+#if TAG_MAJOR_VERSION == 34
+        ATTR_DELAYED_FIREBALL,
+#endif
+        ATTR_REPEL_MISSILES,
+        ATTR_DEFLECT_MISSILES,
     };
 
     for (auto attribute : dispellable_attributes)
@@ -322,15 +342,13 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
         const int dur = you.duration[i];
         if (dur <= 0 || !duration_dispellable((duration_type) i))
             continue;
-        if (i == DUR_TRANSFORMATION && you.form == TRAN_SHADOW)
+        if (i == DUR_TRANSFORMATION && you.form == transformation::shadow)
             continue;
         buffs.durations.push_back((duration_type) i);
         // this includes some buffs that won't be reduced in duration -
         // anything already at 1 aut, or flight/transform while <= 11 aut
         // that's probably not an actual problem
     }
-
-    buffs.contam = get_contamination_level() > 0;
 }
 
 /**
@@ -342,9 +360,8 @@ bool player_is_debuffable()
 {
     player_debuff_effects buffs;
     _dispellable_player_buffs(buffs);
-    return buffs.contam
-            || !buffs.durations.empty()
-            || !buffs.attributes.empty();
+    return !buffs.durations.empty()
+           || !buffs.attributes.empty();
 }
 
 /**
@@ -355,7 +372,7 @@ bool player_is_debuffable()
  */
 void debuff_player()
 {
-    bool need_msg = false, danger = false;
+    bool need_msg = false;
 
     // find the list of debuffable effects currently active
     player_debuff_effects buffs;
@@ -364,23 +381,18 @@ void debuff_player()
     for (auto attr : buffs.attributes)
     {
         you.attribute[attr] = 0;
+#if TAG_MAJOR_VERSION == 34
         if (attr == ATTR_DELAYED_FIREBALL)
             mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         else
+#endif
             need_msg = true;
     }
 
     for (auto duration : buffs.durations)
     {
         int &len = you.duration[duration];
-        if ((duration == DUR_FLIGHT || duration == DUR_TRANSFORMATION)
-            && len > 11)
-        {
-            len = 11;
-            need_msg = true;
-            danger = need_expiration_warning(you.pos());
-        }
-        else if (duration == DUR_TELEPORT)
+        if (duration == DUR_TELEPORT)
         {
             len = 0;
             mprf(MSGCH_DURATION, "You feel strangely stable.");
@@ -391,6 +403,11 @@ void debuff_player()
             mprf(MSGCH_DURATION, "You feel limber!");
             you.redraw_evasion = true;
         }
+        else if (duration == DUR_FLAYED)
+        {
+            len = 0;
+            heal_flayed_effect(&you);
+        }
         else if (len > 1)
         {
             len = 1;
@@ -399,16 +416,7 @@ void debuff_player()
     }
 
     if (need_msg)
-    {
-        mprf(danger ? MSGCH_DANGER : MSGCH_WARN,
-             "%sYour magical effects are unravelling.",
-             danger ? "Careful! " : "");
-    }
-
-    const int old_contam_level = get_contamination_level();
-    contaminate_player(-1 * (1000 + random2(4000)));
-    if (old_contam_level && old_contam_level == get_contamination_level())
-        mpr("You feel slightly less contaminated with magical energies.");
+        mprf(MSGCH_WARN, "Your magical effects are unravelling.");
 }
 
 
@@ -470,16 +478,7 @@ void debuff_monster(monster &mon)
     for (enchant_type buff : buffs)
         mon.del_ench(buff, true, true);
 
-    simple_monster_message(&mon, "'s magical effects unravel!");
-}
-
-int detect_traps(int pow)
-{
-    pow = min(50, pow);
-
-    // Trap detection moved to traps.cc. -am
-    const int range = 8 + random2(8) + pow;
-    return reveal_traps(range);
+    simple_monster_message(mon, "'s magical effects unravel!");
 }
 
 // pow -1 for passive
@@ -626,7 +625,8 @@ static bool _selectively_remove_curse(const string &pre_msg)
         }
 
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
-                                           OSEL_CURSED_WORN, true, true, false);
+                                           OSEL_CURSED_WORN, OPER_ANY,
+                                           invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
             return used;
 
@@ -705,7 +705,7 @@ static bool _selectively_curse_item(bool armour, const string &pre_msg)
         int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR
                                                   : OSEL_UNCURSED_WORN_JEWELLERY,
-                                           true, true, false);
+                                           OPER_ANY, invprompt_flag::escape_only);
         if (prompt_failed(item_slot))
             return false;
 
@@ -1010,24 +1010,18 @@ bool cast_smiting(int pow, monster* mons)
         int damage_increment = div_rand_round(pow, 8);
         mons->hurt(&you, 6 + roll_dice(3, damage_increment));
         if (mons->alive())
-            print_wounds(mons);
+            print_wounds(*mons);
     }
 
     return success;
 }
 
-static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
+void holy_word_player(holy_word_source_type source)
 {
     if (!you.undead_or_demonic())
         return;
 
-    int hploss;
-
-    // Holy word won't kill its user.
-    if (attacker && attacker->is_player())
-        hploss = max(0, you.hp / 2 - 1);
-    else
-        hploss = roll_dice(3, 15) + (random2(pow) / 3);
+    int hploss = max(0, you.hp / 2 - 1);
 
     if (!hploss)
         return;
@@ -1043,7 +1037,7 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
     switch (source)
     {
     case HOLY_WORD_SCROLL:
-        aux = "scroll of holy word";
+        aux = "a scroll of holy word";
         break;
 
     case HOLY_WORD_ZIN:
@@ -1052,6 +1046,10 @@ static void _holy_word_player(int pow, holy_word_source_type source, actor *atta
 
     case HOLY_WORD_TSO:
         aux = "the Shining One's holy word";
+        break;
+
+    case HOLY_WORD_CARD:
+        aux = "the Torment card";
         break;
     }
 
@@ -1067,50 +1065,42 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     // Is the player in this cell?
     if (where == you.pos())
-        _holy_word_player(pow, source, attacker);
+        holy_word_player(source);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
     if (!mons || !mons->alive() || !mons->undead_or_demonic())
         return;
 
-    int hploss;
-
-    // Holy word won't kill its user.
-    if (attacker == mons)
-        hploss = max(0, mons->hit_points / 2 - 1);
-    else
-        hploss = roll_dice(3, 15) + (random2(pow) / 5);
+    int hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
     {
         if (source == HOLY_WORD_ZIN)
-            simple_monster_message(mons, " is blasted by Zin's holy word!");
+            simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
-            simple_monster_message(mons, " convulses!");
+            simple_monster_message(*mons, " convulses!");
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
     if (!hploss || !mons->alive())
         return;
-    // Holy word won't annoy or daze its user.
-    if (attacker != mons)
-    {
-        // Currently, holy word annoys the monsters it affects
-        // because it can kill them, and because hostile
-        // monsters don't use it.
-        // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-        if (attacker != nullptr
-            && (attacker != &you
-                || source != HOLY_WORD_SCROLL
-                || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
-        {
-            behaviour_event(mons, ME_ANNOY, attacker);
-        }
 
-        mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
-                                   (10 + random2(10)) * BASELINE_DELAY));
+    // Currently, holy word annoys the monsters it affects
+    // because it can kill them, and because hostile
+    // monsters don't use it.
+    // Tolerate unknown scroll, to not annoy Yred worshippers too much.
+    if (attacker != nullptr
+        && attacker != mons
+        && (attacker != &you
+            || source != HOLY_WORD_SCROLL
+            || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
+    {
+        behaviour_event(mons, ME_ANNOY, attacker);
     }
+
+    mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
+                               (10 + random2(10)) * BASELINE_DELAY));
 }
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
@@ -1138,7 +1128,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         // Negative energy resistance can alleviate torment.
         hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
         // Statue form is only partial petrification.
-        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
             hploss /= 2;
     }
 
@@ -1186,8 +1176,12 @@ void torment_player(actor *attacker, torment_source_type taux)
         aux = "Symbol of Torment";
         break;
 
+    case TORMENT_AGONY:
+        aux = "Agony";
+        break;
+
     case TORMENT_SCEPTRE:
-        aux = "Sceptre of Torment";
+        aux = "sceptre of Torment";
         break;
 
     case TORMENT_SCROLL:
@@ -1213,7 +1207,7 @@ void torment_player(actor *attacker, torment_source_type taux)
         break;
     }
 
-    ouch(hploss, type, attacker? attacker->mid : MID_NOBODY, aux);
+    ouch(hploss, type, attacker ? attacker->mid : MID_NOBODY, aux);
 
     return;
 }
@@ -1234,7 +1228,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
     if (hploss)
     {
-        simple_monster_message(mons, " convulses!");
+        simple_monster_message(*mons, " convulses!");
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
@@ -1294,4 +1288,31 @@ void cleansing_flame(int pow, int caster, coord_def where,
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
+}
+
+spret_type cast_random_effects(int pow, bolt& beam, bool fail)
+{
+    bolt tracer = beam;
+    if (!player_tracer(ZAP_DEBUGGING_RAY, 200, tracer, LOS_RADIUS))
+        return SPRET_ABORT;
+
+    fail_check();
+
+    // Extremely arbitrary list of possible effects.
+    zap_type zap = random_choose(ZAP_THROW_FLAME,
+                                 ZAP_THROW_FROST,
+                                 ZAP_SLOW,
+                                 ZAP_HASTE,
+                                 ZAP_PARALYSE,
+                                 ZAP_CONFUSE,
+                                 ZAP_TELEPORT_OTHER,
+                                 ZAP_INVISIBILITY,
+                                 ZAP_ICEBLAST,
+                                 ZAP_FIREBALL,
+                                 ZAP_BOLT_OF_DRAINING,
+                                 ZAP_VENOM_BOLT);
+
+    zapping(zap, pow, beam, false);
+
+    return SPRET_SUCCESS;
 }

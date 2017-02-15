@@ -65,30 +65,6 @@ int random_range(int low, int high, int nrolls)
     return low + roll;
 }
 
-const char* random_choose_weighted(int weight, const char* first, ...)
-{
-    va_list args;
-    va_start(args, first);
-    const char* chosen = first;
-    int cweight = weight, nargs = 100;
-
-    while (nargs-- > 0)
-    {
-        const int nweight = va_arg(args, int);
-        if (!nweight)
-            break;
-
-        const char* choice = va_arg(args, const char*);
-        if (random2(cweight += nweight) < nweight)
-            chosen = choice;
-    }
-
-    va_end(args);
-    ASSERT(nargs > 0);
-
-    return chosen;
-}
-
 static int _random2(int max, int rng)
 {
     if (max <= 1)
@@ -209,6 +185,14 @@ int div_rand_round(int num, int den)
         return num / den + (random2(den) < rem);
     else
         return num / den;
+}
+
+// Converts a double to an integer by randomly rounding.
+// Currently does not handle negative inputs.
+int rand_round(double x)
+{
+    ASSERT(x >= 0);
+    return int(x) + decimal_chance(fmod(x, 1.0));
 }
 
 int div_round_up(int num, int den)

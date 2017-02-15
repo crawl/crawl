@@ -15,7 +15,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-abil.h"
@@ -184,7 +184,15 @@ void mirror_damage_fineff::fire()
 
     if (att == MID_PLAYER)
     {
-        mpr("Your damage is reflected back at you!");
+        const monster* reflector = defender() ?
+                                   defender()->as_monster() : nullptr;
+        if (reflector)
+        {
+            mprf("%s reflects your damage back at you!",
+                 reflector->name(DESC_THE).c_str());
+        }
+        else
+            mpr("Your damage is reflected back at you!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
     else if (def == MID_PLAYER)
@@ -197,13 +205,13 @@ void mirror_damage_fineff::fire()
         attack->hurt(&you, damage);
 
         if (attack->alive())
-            print_wounds(monster_by_mid(att));
+            print_wounds(*monster_by_mid(att));
 
         lose_piety(isqrt_ceil(damage));
     }
     else
     {
-        simple_monster_message(monster_by_mid(att), " suffers a backlash!");
+        simple_monster_message(*monster_by_mid(att), " suffers a backlash!");
         attack->hurt(defender(), damage);
     }
 }
@@ -281,8 +289,9 @@ void trj_spawn_fineff::fire()
             continue;
 
         if (monster *mons = mons_place(
-                              mgen_data(jelly, spawn_beh, trj, 0, 0, jpos,
-                                        foe, MG_DONT_COME, GOD_JIYVA)))
+                              mgen_data(jelly, spawn_beh, jpos, foe,
+                                        MG_DONT_COME, GOD_JIYVA)
+                              .set_summoned(trj, 0, 0)))
         {
             // Don't allow milking the Royal Jelly.
             mons->flags |= MF_NO_REWARD;
@@ -383,7 +392,7 @@ void starcursed_merge_fineff::fire()
         monster* mergee = monster_at(*ai);
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
-            simple_monster_message(mon,
+            simple_monster_message(*mon,
                     " shudders and is absorbed by its neighbour.");
             _do_merge_masses(mon, mergee);
             return;
@@ -427,7 +436,7 @@ void starcursed_merge_fineff::fire()
 
             if (moved)
             {
-                simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
+                simple_monster_message(*mon, " shudders and withdraws towards its neighbour.");
                 mon->speed_increment -= 10;
             }
         }
@@ -478,7 +487,7 @@ void kirke_death_fineff::fire()
     delayed_action_fineff::fire();
 
     // Revert the player last
-    if (you.form == TRAN_PIG)
+    if (you.form == transformation::pig)
         untransform();
 }
 
@@ -513,11 +522,30 @@ void bennu_revive_fineff::fire()
     bool res_visible = you.see_cell(posn);
 
 
-    monster *newmons = create_monster(mgen_data(MONS_BENNU,
-                                                attitude, 0, 0, 0, posn, foe,
-                                                res_visible ? MG_DONT_COME : MG_NONE));
+    monster *newmons = create_monster(mgen_data(MONS_BENNU, attitude, posn, foe,
+                                                res_visible ? MG_DONT_COME
+                                                            : MG_NONE));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;
+}
+
+void infestation_death_fineff::fire()
+{
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, posn,
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_INFESTATION),
+                                         false))
+    {
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+        if (you.see_cell(posn) || you.can_see(*scarab))
+        {
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       name.c_str());
+        }
+    }
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

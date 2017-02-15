@@ -64,6 +64,7 @@ mangrove2
 %weight 5
 mangrove3
 
+
 ## doors
 %sdir dngn/doors
 closed_door DNGN_CLOSED_DOOR
@@ -392,11 +393,12 @@ bazaar_portal DNGN_PORTAL_BAZAAR
 bazaar_gone DNGN_PORTAL_BAZAAR_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
+desolation_portal DNGN_PORTAL_DESOLATION
+desolation_portal_closed DNGN_PORTAL_DESOLATION_GONE
 
 portal_unknown DNGN_UNKNOWN_PORTAL
 
 %sdir dngn/altars
-generic DNGN_UNSEEN_ALTAR
 zin DNGN_ALTAR_ZIN
 shining_one DNGN_ALTAR_SHINING_ONE
 kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
@@ -458,6 +460,14 @@ pakellas0 DNGN_ALTAR_PAKELLAS
 pakellas1
 pakellas2
 pakellas3
+uskayaw DNGN_ALTAR_USKAYAW
+hep0 DNGN_ALTAR_HEPLIAKLQANA
+hep1
+hep2
+hep3
+hep4
+hep5
+ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
@@ -596,7 +606,6 @@ wall_old_blood07
 wall_old_blood08
 wall_old_blood09
 %sdir misc
-halo HALO
 effect/halo_range HALO_RANGE
 effect/umbra0 UMBRA
 effect/umbra1
@@ -613,6 +622,9 @@ landing LANDING
 effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
+halo_friendly HALO_FRIENDLY
+halo_gd_neutral HALO_GD_NEUTRAL
+halo_neutral HALO_NEUTRAL
 ray RAY
 ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE

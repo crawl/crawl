@@ -99,9 +99,9 @@
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
-    Can of Worms
     Edgar Carballo
     Cedor
+    Cerol
     Rahul Chandra
     Gregory Chereshnev
     Thom Chiovoloni
@@ -131,6 +131,7 @@
     Chris Galardi
     Benoît Giannangeli
     Ben Goetter
+    Aaron Golden
     Ed Gonzalez
     Rob Grant
     John Greenberg
@@ -177,6 +178,7 @@
     Dom 'Bodrick' Light
     Mark Lodato
     Rob Lund
+    Lynn
     Michael Lynn
     Peter McLarnan
     Lain I. W. Madreisz
@@ -195,6 +197,7 @@
     Eva Myers
     nagdon
     Naruni
+    neofelis
     nicolae
     Erkki Nurmi
     Mattias Nyberg
@@ -227,8 +230,10 @@
     Sandman25
     Brett Scarborough
     Roman Sêk
+    Brennan Shacklett
     ShadyAmish
     Evan Shaw
+    Aditya Shevade
     Robert Shimmin
     Sigurd
     Edgar Simo
@@ -255,7 +260,6 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
-    Mauris Van Hauwe
     Mikko Vepsäläinen
     waylon531
     Steven Wheeler
@@ -272,6 +276,7 @@ The Dungeon Crawl Stone Soup development team is:
     Adam Borowski
     Samuel Bronson
     Jude Brown
+    CanOfWorms
     Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
@@ -305,6 +310,7 @@ The Dungeon Crawl Stone Soup development team is:
     Aaron Pixton
     David Ploog
     Sage
+    Isaac Sloat
     Marc H. Thoben
     Chris West
     Samuel Wilson

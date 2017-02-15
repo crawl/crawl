@@ -63,8 +63,8 @@ enemies.
 %%%%
 sceptre of Torment
 
-An accursed golden sceptre, created by some unknown hellish power. It
-frequently causes agonising pain in all those unfortunate enough to gaze upon
+An accursed golden sceptre, created by some unknown hellish power. When used in
+combat, it causes agonising pain in all those unfortunate enough to gaze upon
 it.
 %%%%
 sword of Zonguldrok
@@ -88,7 +88,7 @@ A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
 Evoking it can summon fiery demons from their infernal home to do your bidding,
 although they will not remain enslaved for long.
 %%%%
-faerie dragon armour
+faerie dragon scales
 
 An enchanted suit of armour created from the scales of a rare breed of dragon,
 now thought to be extinct. This prized relic is now one of the last proofs that
@@ -104,6 +104,7 @@ scimitar of Flaming Death
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
 covering opponents in magical flame.
 %%%%
+# TAG_MAJOR_VERSION == 34
 eveningstar "Brilliance"
 
 A brightly shining eveningstar. It illuminates the dungeon's recesses, but its
@@ -127,12 +128,16 @@ called Boris. He got lost in the Dungeon while seeking the Orb.
 %%%%
 scythe "Finisher"
 
-A long and sharp scythe, specially modified to be quickly swung in combat.
-%%%%
-greatsling "Punk"
+A long and exceedingly sharp scythe. Its extraordinary speed is the work of a
+mad wizard, who spent years refining it before discarding it in a fit of rage.
 
-A sling made of weird blue leather. Originally the weapon of a notorious
-mischief-maker and general scamp, it's since fallen into less savoury hands.
+The blade looses a low keen as it cuts through the air.
+%%%%
+sling "Punk"
+
+A sling made of weird green leather, oozing corrosive slime. Originally the
+weapon of a notorious mischief-maker and general scamp, it's since fallen into
+less savoury hands.
 %%%%
 bow of Krishna "Sharnga"
 
@@ -155,7 +160,7 @@ It was stolen a few months later, along with the rest of the queen's treasury;
 the guard, it transpired, had been caught napping. Still, it should serve more
 than adequately in the hands of a waking user.
 %%%%
-sword of Jihad
+zealot's sword
 
 A sword made of one huge piece of crystal. Legend says it was the Shining One's
 gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
@@ -166,6 +171,7 @@ arbalest "Damnation"
 An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
 fires with the raw power of its namesake, irresistible by any mortal armour.
 %%%%
+# TAG_MINOR_VERSION == 34
 sword of the Doom Knight
 
 An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
@@ -175,7 +181,9 @@ limitations.
 %%%%
 morningstar "Eos"
 
-A jewelled morningstar, glowing with the light of the dawn.
+A jewelled morningstar, glowing brightly with the light of the dawn. It
+illuminates the dungeon's recesses, revealing the machinations of those who
+would prefer to stay invisible.
 %%%%
 # TAG_MAJOR_VERSION == 34
 spear of the Botono
@@ -201,8 +209,9 @@ it.
 %%%%
 heavy crossbow "Sniper"
 
-A huge crossbow made of some black material. It is highly damaging, but
-extremely cumbersome to load. It is enchanted to never miss its target.
+The sacred weapon of Toth-Mos, first apostle of the god Ashenzari. It grants
+the wielder a fraction of Ashenzari's own vision, ensuring that every shot will
+land true.
 %%%%
 longbow "Piercer"
 
@@ -281,8 +290,9 @@ hours to decipher it, and in time, a translation was finally settled on:
 %%%%
 robe of Augmentation
 
-A silk robe, woven with enchantments to enhance the wearer's physical and
-mental abilities.
+A variegated robe, woven with enchantments to enhance the wearer's physical and
+mental abilities. Its creators wove in strands of hair from a hundred different
+animals, each chosen for the unique strengths it could grant the robe's wearer.
 %%%%
 cloak of the Thief
 
@@ -296,7 +306,10 @@ Just in case you had trouble getting hit.
 %%%%
 crown of Dyrovepreva
 
-A large crown of dull bronze, set with a dazzling array of gemstones.
+A large circlet of dull bronze, set with a dazzling array of gemstones. It was
+first worn by a prince of the Titans, who sought protection from the incessant
+warfare between his fellow princes. In practice, the main effect of the
+artefact was to unite his rivals against him.
 %%%%
 hat of the Bear Spirit
 
@@ -334,7 +347,10 @@ The {{
 %%%%
 salamander hide armour
 
-A leather armour made of a salamander's skin.
+Most salamanders' bodies are consigned to the fiery depths from which they
+sprang. Rarely, though, salamanders instead preserve the skins of those that
+passed. The runes and decorations on this hide suggest it once belonged to a
+respected warrior or priest - perhaps even a king.
 %%%%
 gauntlets of War
 
@@ -362,8 +378,10 @@ refund.
 %%%%
 mask of the Dragon
 
-A strange blue mask made of hard, flexible leather, resembling a dragon's
-visage.
+The mask of the High Priest of ancient Erebora. In ancient times, the gods of
+the Ereborans ceased to answer their prayers, and in desperation, the people
+turned to the forbidden worship of dragons. Now, of their works, only this mask
+remains.
 %%%%
 robe of Night
 
@@ -386,8 +404,9 @@ alchemy experiments.
 %%%%
 fencer's gloves
 
-A pair of gloves made of white silk. They greatly enhance their wearer's
-skill with blades.
+A pair of gloves made of white silk. They have a natural affinity with the
+riposte, allowing their wielder to retaliate against some missed attacks with
+any weapon, or to retaliate against most attacks when using a long blade.
 %%%%
 cloak of Starlight
 
@@ -416,6 +435,7 @@ A black ring that can make its wearer one with the shadows. It creates a dark
 umbra that surrounds the wearer and increases stealth greatly, and reduces the
 accuracy of all those within it.
 %%%%
+# TAG_MAJOR_VERSION == 34
 amulet of Cekugob
 
 A strange-looking piece of crystal on an ordinary-looking string, with an odd
@@ -484,7 +504,10 @@ slows the wearer somewhat.
 %%%%
 amulet of Vitality
 
-A jewelled amulet famed for its powers of resilience and recuperation.
+A jewelled amulet famed for its powers of resilience and recuperation. Its
+greatest notoriety came from its use by the dread necromancer Borgnjor, who
+relied upon it to maintain her slender hold on life. After her final demise,
+the amulet vanished from the pages of history.
 %%%%
 autumn katana
 
@@ -533,6 +556,7 @@ A large, iron-shod maul specialised for dealing massively powerful blows. Such
 power comes at a price: the maul's head is so heavy it takes a great length of
 time to lift it up for another swing.
 %%%%
+# TAG_MAJOR_VERSION == 34
 hat of the High Council
 
 A relic of some ancient wizarding war. Centuries later, it still crackles with
@@ -560,7 +584,8 @@ destroyed, it fell into disuse and vanished from history.
 great mace "Firestarter"
 
 A huge mace imbued with potent fire magic. It fills those it strikes with
-inner flame, and offers protection against the resulting devastation.
+inner flame, and offers protection against the resulting devastation as well
+as immunity to clouds of flame.
 %%%%
 orange crystal plate armour
 
@@ -607,22 +632,16 @@ Kryia's mail coat
 A coat of armour said to have been forged for Queen Kryia in her old age. She
 continued to insist on leading her armies from the front even into her dotage,
 and as her aging body failed her, this coat helped to enhance the healing
-draughts that kept her alive.
-
-{{
-    if you.race() == "Deep Dwarf" then
-        return "Sadly, it cannot assist deep dwarves' healing."
-    else
-        return "The wearer of this garment will have significantly increased healing from devices."
-    end
-}}
+draughts that kept her alive. The wearer of this garment will have
+significantly increased healing from potions.
 %%%%
 frozen axe "Frostbite"
 
 A massive axe that looks like it was carved from a glacier, or possibly calved
 from one. It leaves ice crystals in its wake as it swings through the air, and
-grants its wielder protection from freezing vapours.
+grants its wielder immunity to freezing vapours.
 %%%%
+# TAG_MAJOR_VERSION == 34
 armour of Talos
 
 A huge and weighty suit of bronze plate armour. Only one with a correspondingly
@@ -634,4 +653,8 @@ A handheld array of hexagonal mirrors, synthesized from a truly exotic
 substance and polished to a blinding sheen. A skilled user will find that it
 can reflect almost anything, even spells that pierce through lesser materials
 and hexes with no physical manifestation at all.
+%%%%
+amulet of invisibility
+
+An amulet that can be activated to render its wearer invisible.
 %%%%

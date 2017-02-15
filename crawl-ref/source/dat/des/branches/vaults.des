@@ -53,7 +53,7 @@
 #
 NAME:    david_vaults_1
 TAGS:    vaults_entry
-MONS:    hill giant / troll / two-headed ogre
+MONS:    troll / two-headed ogre
 MONS:    necromancer / wizard / vampire w:4 / deep elf mage w:4
 SHUFFLE: !-
 SUBST:   ! = x, - = +, c : cxv
@@ -98,9 +98,9 @@ ENDMAP
 NAME:    david_vaults_3
 TAGS:    vaults_entry
 MONS:    human
-KMONS:   2 = orc knight / Donald, orc knight
-KMONS:   3 = skeletal warrior w:20 / Norris, skeletal warrior
-KMONS:   4 = hill giant / Rupert, hill giant
+KMONS:   2 = orc knight / Urug, orc knight
+KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
+KMONS:   4 = two-headed ogre / Rupert, two-headed ogre
 SHUFFLE: 2349
 KFEAT:   O = enter_vaults
 MAP
@@ -124,7 +124,7 @@ TAGS:    vaults_entry
 MONS:    fire dragon / ice dragon / hydra / lindwurm
 MONS:    freezing wraith / shadow wraith / wraith / phantasmal warrior
 MONS:    deep troll / iron troll / troll
-MONS:    two-headed ogre / cyclops / ettin / hill giant
+MONS:    two-headed ogre / cyclops / ettin
 MONS:    necromancer / glowing shapeshifter / vault guard / wizard
 MONS:    shapeshifter
 NSUBST:  1 = 1:1 / 1:2 / 1:3. / 1 : 4 .:30 / 1:5 .:70
@@ -566,39 +566,37 @@ ENDMAP
 
 ############################################################
 # about 5 |
-NAME: vaults_end_classical_stripes
-TAGS: vaults_end_quadrant unrand
-# double use of Y=Y. and Z=Z. for decreasing variance
-SUBST:   Y = Y ., Z = Z ., Y = Y ., Z = Z .
-SUBST:   Y = 9:30 8:10 .:40
-SUBST:   Z = 9:10 8:30 .:40
+NAME:    vaults_end_classical_stripes
+TAGS:    vaults_end_quadrant unrand
+NSUBST:  Y = 4 = 9:30 8 / 8 = 9:30 8 .:40 / *:.
+NSUBST:  Z = 5 = 8:30 9 / 7 = 8:30 9 .:40 / *:.
 SUBST:   a : x ., b : x ., c : x .
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
 MAP
   axaxxaaxaxxxxxxxxxxxxbx
-  ........................
-a................Y..Z.....x
-x..Y..Y..Y..Y..Y..Z..Y..Y.b
-a...Y..Y..Y..Z..Y..Y..Z...x
-x.Y..Y..Y..Y..Z..Y..Z..Y..x
-x..Y..Y..Z..Z..Y..Y..Y..Z.x
-a...Y..Z..Y..Y..Z..Y..Y...x
-a.Y..Y..Z..Z??Y..Y..Y..Z..x
-x..Z..Y..Y??Y??Z..Y..Y..Y.x
-x...Y..Y??Z??Y??Z..Z..Y...x
-x.Z..Z..Y??YO?Z??Y..Z..Z..x
-x..Y..Z..Y??Z??Z?.Y..Z..Z.x
-x...Z..Z..Z??Y?.Z..Z..Y...x
-x.Y..Z..Y..Z?.Z..Z..Z..Z..x
-x..Z..Y..Z..Y..Z..Z..Z..Z.x
-x...Y..Z..Z..Z..Z..Z..Z...x
-x....Z..Y..Z..Y..Z..Z..Z..x
-x..Z..Z..Y..Z..Z..........x
-b...Z..Y..Z..Z............c
-x....Y..Z..Z..Z..Z........x
+  .......x................
+a.......x.................x
+x..Z..Yx.Y..Y..Yx.Yx.Y....b
+a...Z.xY..Y..Y..Yx.Zx.Y...x
+x....x..Y..Y..Y..Y..Yx.Y..x
+x..Yx.Y..Y..Y..Y..Y..Zx.Y.x
+a..xY..Y..Y..Zx.Y..Y..Yx..x
+a.x..Y..Y..Y.?Zx.Y..Y..Zx.x
+xx.Y..Y..Y??Y??Zx.Y..Y..Y.x
+a...Y..Z??Y??Y??Zx.Y..Yx..x
+x....Y.xZ??YO?Y??Zx.Y..Yx.x
+x..Y..Y.xZ??Y??Y??Z..Y..Y.x
+x..xY..Y.xZ??Y?.Y..Y..Z...x
+x...xY..Y.xZ?.Y..Y..Y..Y..x
+x..Y..Y..Y.xZ..Y..Y..Yx.Y.c
+x..xY..Y..Y..Y..Y..Y..Zx..c
+x...xZ..Y..Y..Y..Y..Z..Y..x
+x..Y.xZ..Y..Y..Y..Y..Z..Y.x
+b...Z.xY.xY..Y..Z.xZ..Z...c
+x....Y.xY.xY..Y..Y.xY..Y..x
  .........................
-  xbxxxxxxxxxxxxxxxxxxxcx
+  xbxxxxxxxxxxxxxxxccxxcx
 ENDMAP
 
 ############################################################

@@ -7,11 +7,13 @@
 
 #include "randbook.h"
 
+#include <functional>
+
 #include "artefact.h"
 #include "database.h"
 #include "english.h"
-#include "goditem.h"
-#include "itemname.h"
+#include "god-item.h"
+#include "item-name.h"
 #include "items.h"
 #include "religion.h"
 #include "spl-book.h"
@@ -953,7 +955,7 @@ static string _gen_randbook_owner(god_type god, spschool_flag_type disc1,
 // that includes Statue Form and is named after her.
 void make_book_roxanne_special(item_def *book)
 {
-    spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
+    spschool_flag_type disc = random_choose(SPTYP_TRANSMUTATION, SPTYP_EARTH);
     vector<spell_type> forced_spell = {SPELL_STATUE_FORM};
     build_themed_book(*book,
                       forced_spell_filter(forced_spell,
@@ -1061,7 +1063,7 @@ static int _randbook_spell_weight(spell_type spell, int agent)
 
     // prefer spells roughly approximating the player's overall spellcasting
     // ability (?????)
-    const int Spc = you.skills[SK_SPELLCASTING];
+    const int Spc = div_rand_round(you.skill(SK_SPELLCASTING, 256, true), 256);
     const int difficult_weight = 5 - abs(3 * spell_difficulty(spell) - Spc) / 7;
 
     // prefer spells in disciplines the player is skilled with
@@ -1072,7 +1074,8 @@ static int _randbook_spell_weight(spell_type spell, int agent)
     {
         if (disciplines & disc)
         {
-            total_skill += you.skills[spell_type2skill(disc)];
+            const skill_type sk = spell_type2skill(disc);
+            total_skill += div_rand_round(you.skill(sk, 256, true), 256);
             num_skills++;
         }
     }

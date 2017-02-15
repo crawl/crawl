@@ -7,7 +7,7 @@
 #define RELIGION_H
 
 #include "enum.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "player.h"
 #include "religion-enum.h"
 
@@ -19,6 +19,13 @@
 #define NUM_VEHUMET_GIFTS 13
 
 #define NUM_PIETY_STARS 6
+
+enum class lifesaving_chance
+{
+    never,
+    sometimes,
+    always,
+};
 
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
@@ -37,6 +44,7 @@ string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 
+int initial_wrath_penance_for(god_type god);
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
@@ -88,51 +96,56 @@ int piety_rank(int piety = you.piety);
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);
 bool god_hates_your_god(god_type god, god_type your_god = you.religion);
-bool god_hates_killing(god_type god, const monster* mon);
+bool god_hates_killing(god_type god, const monster& mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spellcasting(god_type god);
-bool god_hates_spell(spell_type spell, god_type god,
-                     bool rod_spell = false);
+bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
-int elyvilon_lifesaving();
+lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
-bool fedhas_protects(const monster* target);
-bool fedhas_neutralises(const monster* target);
+bool fedhas_protects(const monster& target);
+bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
 
-bool tso_unchivalric_attack_safe_monster(const monster* mon);
-
-void mons_make_god_gift(monster* mon, god_type god = you.religion);
-bool mons_is_god_gift(const monster* mon, god_type god = you.religion);
+void mons_make_god_gift(monster& mon, god_type god = you.religion);
+bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 
 int yred_random_servants(unsigned int threshold, bool force_hostile = false);
-bool is_yred_undead_slave(const monster* mon);
-bool is_orcish_follower(const monster* mon);
-bool is_fellow_slime(const monster* mon);
-bool is_follower(const monster* mon);
+bool is_yred_undead_slave(const monster& mon);
+bool is_orcish_follower(const monster& mon);
+bool is_fellow_slime(const monster& mon);
+bool is_follower(const monster& mon);
 
 // Vehumet gift interface.
 bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
-bool god_hates_attacking_friend(god_type god, const monster *fr);
+mgen_data hepliaklqana_ancestor_gen_data();
+string hepliaklqana_ally_name();
+int hepliaklqana_ally_hp();
+
+void upgrade_hepliaklqana_ancestor(bool quiet_force = false);
+void upgrade_hepliaklqana_weapon(monster_type mtyp, item_def &item);
+void upgrade_hepliaklqana_shield(const monster& ancestor, item_def &item);
+
+bool god_hates_attacking_friend(god_type god, const monster& fr);
 
 void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion);
-int get_monster_tension(const monster* mons, god_type god = you.religion);
-int get_fuzzied_monster_difficulty(const monster *mons);
+int get_monster_tension(const monster& mons, god_type god = you.religion);
+int get_fuzzied_monster_difficulty(const monster& mons);
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 
 void delayed_monster(const mgen_data &mg, delayed_callback callback = nullptr);
-void delayed_monster_done(string success, string failure,
+void delayed_monster_done(string success,
                           delayed_callback callback = nullptr);
 
 bool do_god_gift(bool forced = false);

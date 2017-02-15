@@ -7,11 +7,12 @@
 #define INVENT_H
 
 #include <cstddef>
+#include <functional>
 #include <vector>
 
 #include "enum.h"
-#include "itemname.h"
-#include "itemprop-enum.h"
+#include "item-name.h"
+#include "item-prop-enum.h"
 #include "menu.h"
 
 enum object_selector
@@ -21,7 +22,7 @@ enum object_selector
     OSEL_UNIDENT                 =  -3,
 //  OSEL_EQUIP                   =  -4,
     OSEL_RECHARGE                =  -5,
-    OSEL_ENCH_ARM                =  -6,
+    OSEL_ENCHANTABLE_ARMOUR      =  -6,
     OSEL_BEOGH_GIFT              =  -7,
     OSEL_DRAW_DECK               =  -8,
     OSEL_THROWABLE               =  -9,
@@ -29,8 +30,10 @@ enum object_selector
     OSEL_WORN_ARMOUR             = -11,
 //  OSEL_FRUIT                   = -12,
     OSEL_CURSED_WORN             = -13,
+#if TAG_MAJOR_VERSION == 34
     OSEL_UNCURSED_WORN_ARMOUR    = -14,
     OSEL_UNCURSED_WORN_JEWELLERY = -15,
+#endif
     OSEL_BRANDABLE_WEAPON        = -16,
     OSEL_ENCHANTABLE_WEAPON      = -17,
     OSEL_BLESSABLE_WEAPON        = -18,
@@ -39,7 +42,25 @@ enum object_selector
                                         // known-cursed. Unknown-cursed items
                                         // are included, to prevent information
                                         // leakage.
+    OSEL_DIVINE_RECHARGE         = -21,
 };
+
+/// Behaviour flags for prompt_invent_item().
+enum class invprompt_flag
+{
+    none               = 0,
+    /// Warning inscriptions are not checked & the player will not be warned.
+    no_warning         = 1 << 0,
+    /// '\' will be ignored, instead of switching to the known item list.
+    hide_known         = 1 << 1,
+    /// Allow selecting items that do not exist.
+    unthings_ok        = 1 << 2,
+    /// Don't start in the '?' list InvMenu.
+    manual_list        = 1 << 3,
+    /// Only allow exiting with escape, not also space.
+    escape_only        = 1 << 4,
+};
+DEF_BITFIELD(invent_prompt_flags, invprompt_flag);
 
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
@@ -150,19 +171,19 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Make sure this menu does not outlive items, or mayhem will ensue!
     menu_letter load_items(const vector<item_def>& items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
+                           function<MenuEntry* (MenuEntry*)> procfn = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
-                        MenuEntry *(*procfn)(MenuEntry *me) = nullptr);
+                        function<MenuEntry* (MenuEntry*)> procfn = nullptr);
 
     vector<SelItem> get_selitems() const;
 
@@ -185,7 +206,7 @@ protected:
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool item_is_selected(const item_def &item, int selector);
-bool any_items_of_type(int type_expect, int excluded_slot = -1);
+bool any_items_of_type(int type_expect, int excluded_slot = -1, bool inspect_floor = false);
 string no_selectables_message(int item_selector);
 
 string slot_description();
@@ -193,15 +214,9 @@ string slot_description();
 int prompt_invent_item(const char *prompt,
                        menu_type type,
                        int type_expect,
-                       bool must_exist = true,
-                       bool auto_list = true,
-                       bool allow_easy_quit = true,
-                       const char other_valid_char = '\0',
-                       int excluded_slot = -1,
-                       int *const count = nullptr,
                        operation_types oper = OPER_ANY,
-                       bool allow_list_known = false,
-                       bool do_warning = true);
+                       invent_prompt_flags flags = invprompt_flag::none,
+                       const char other_valid_char = '\0');
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
@@ -209,17 +224,7 @@ vector<SelItem> select_items(
                         menu_type mtype = MT_PICKUP,
                         invtitle_annotator titlefn = nullptr);
 
-vector<SelItem> prompt_invent_items(
-                        const char *prompt,
-                        menu_type type,
-                        int type_expect,
-                        invtitle_annotator titlefn = nullptr,
-                        bool auto_list = true,
-                        bool allow_easy_quit = true,
-                        const char other_valid_char = '\0',
-                        vector<text_pattern> *filter = nullptr,
-                        Menu::selitem_tfn fn = nullptr,
-                        const vector<SelItem> *pre_select = nullptr);
+vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);
 
 void display_inventory();
 
@@ -243,7 +248,8 @@ bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool reach = true,
                       bool known = false, bool all_wands = false,
                       bool msg = false, bool equip = true);
-bool nasty_stasis(const item_def &item, operation_types oper);
+bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
+int digit_inscription_to_inv_index(char digit, operation_types oper);
 #endif

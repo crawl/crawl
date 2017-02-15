@@ -15,7 +15,7 @@ struct skill_state
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<int, NUM_SKILLS>          real_skills;    // Those two are
     FixedVector<int, NUM_SKILLS>          changed_skills; // scaled by 10.
-    FixedVector<int8_t, NUM_SKILLS>       train;
+    FixedVector<training_status, NUM_SKILLS>       train;
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
@@ -37,6 +37,7 @@ string skill_names(const skill_set &skills);
 
 int skill_cost_baseline();
 int one_level_cost(skill_type sk);
+float scaled_skill_cost(skill_type sk);
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);

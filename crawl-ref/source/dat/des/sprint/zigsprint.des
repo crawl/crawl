@@ -48,7 +48,7 @@ end
 
 function callback.make_hatch(data, triggerable, triggerer, marker, ev)
     for slave in iter.slave_iterator("hatch", 1) do
-        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false)
+        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false)
         dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
     end
     crawl.mpr("<magenta>An exit appears before you!</magenta>")
@@ -87,11 +87,12 @@ function setup_room(e, id)
 
     -- Create items
 e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
-            wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
-            potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
+            potion of heal wounds ident:all q:4 w:3 /\
+            potion of haste ident:all q:4 w:3 /\
+            scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-            potion of haste q:2 ident:all w:2 / scroll of acquirement q:1 w:1 ident:all /\
+            scroll of acquirement q:1 w:1 ident:all /\
             scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")
@@ -115,15 +116,15 @@ function choose_mset_1(e)
   local rnd = crawl.random2(132)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / slime creature w:5 / giant eyeball w:5 / golden eye w:5 /\
+    e.kmons("1 = jelly w:15 / ooze / slime creature w:5 / floating eye w:5 / golden eye w:5 /\
                eye of draining w:5")
 -- Snake
   elseif rnd < 19 then
     e.kmons("1 = ball python / adder / water moccasin w:5 / naga w:2")
 -- Lair
   elseif rnd < 29 then
-    e.kmons("1 = river rat / sheep / iguana / porcupine / yak w:5 /\
-               jackal / wolf w:5 / giant frog w:5")
+    e.kmons("1 = river rat / iguana / porcupine / yak w:5 /\
+               jackal / wolf w:5 / bullfrog w:5")
 -- Spider
   elseif rnd < 39 then
     e.kmons("1 = scorpion w:15 / jumping spider w:5 / tarantella w:5")
@@ -203,7 +204,7 @@ function choose_mset_2(e)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:15 / ooze / slime creature /\
-               giant eyeball w:5 / golden eye w:5 / eye of draining w:5 /\
+               floating eye w:5 / golden eye w:5 / eye of draining w:5 /\
                eye of devastation w:5 / shining eye w:5")
 -- Snake
   elseif rnd < 19 then
@@ -211,8 +212,8 @@ function choose_mset_2(e)
                black mamba w:5 / naga mage w:5")
 -- Lair
   elseif rnd < 29 then
-    e.kmons("1 =  river rat / sheep / iguana / porcupine / yak /\
-               jackal / wolf / giant frog / spiny frog w:5 /\
+    e.kmons("1 =  river rat / iguana / porcupine / yak /\
+               jackal / wolf / bullfrog / spiny frog w:5 /\
                komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30")
 -- Spider
   elseif rnd < 34 then
@@ -230,13 +231,13 @@ function choose_mset_2(e)
                spriggan druid w:2")
 -- Shoals
   elseif rnd < 74 then
-    e.kmons("1 = merfolk w:20 / hippogriff / centaur / sheep / cyclops w:3")
+    e.kmons("1 = merfolk w:20 / hippogriff / centaur / cyclops w:3")
 -- Hell
   elseif rnd < 80 then
     e.kmons("1 =  zombie / skeleton / lesser demon / hell hound")
 -- Giant
   elseif rnd < 82 then
-    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5")
+    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5")
 -- Fire
   elseif rnd < 84 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
@@ -253,7 +254,7 @@ function choose_mset_2(e)
     e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
 -- Dragon
   elseif rnd < 92 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon / wyvern")
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon / wyvern")
 -- Ranged
   elseif rnd < 94 then
     e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior w:3 /\
@@ -298,21 +299,21 @@ function choose_mset_3(e)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:15 / ooze / slime creature w:30 /\
-               giant eyeball w:2 / golden eye w:5 / eye of draining w:2 /\
+               floating eye w:2 / golden eye w:5 / eye of draining w:2 /\
                eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
                death ooze / azure jelly w:5 / great orb of eyes w:5 /\
-               giant orange brain w:2")
+               glowing orange brain w:2")
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = ball python / adder / water moccasin / naga /\
-               black mamba / naga mage / naga warrior / greater naga w:5 /\
+               black mamba / naga mage / naga warrior / nagaraja w:5 /\
                anaconda w:5 / guardian serpent")
 -- Lair
   elseif rnd < 19 then
-    e.kmons("1 =  place:Lair:2 / place:Lair:5 / place:Lair:8 w:5")
+    e.kmons("1 =  place:Lair:2 / place:Lair:4 / place:Lair:$ w:5")
 -- Spider
   elseif rnd < 24 then
-    e.kmons("1 = place:Spider:$ w:70 / wasp / hornet")
+    e.kmons("1 = place:Spider:$ w:70 / hornet")
 -- Crypt
   elseif rnd < 34 then
     e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
@@ -347,7 +348,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Dis:1")
 -- Giant
   elseif rnd < 71 then
-    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops / hill giant w:5 /\
+    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops /\
                stone giant w:5 / fire giant w:2 / frost giant w:2")
 -- Fire
   elseif rnd < 73 then
@@ -369,7 +370,7 @@ function choose_mset_3(e)
                quicksilver dragon w:5")
 -- Dragon
   elseif rnd < 81 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon / wyvern /\
                hydra")
 -- Ranged
@@ -410,10 +411,10 @@ function choose_mset_3(e)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
-               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
-               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
-               Rupert / Saint Roka / Snorg / Wiglaf")
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
+               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
+               Rupert / Saint Roka / Snorg")
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
@@ -427,21 +428,21 @@ local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
     e.kmons("1 = jelly w:5 / slime creature w:30 /\
-               giant eyeball w:2 / golden eye w:4 / eye of draining w:2 /\
+               floating eye w:2 / golden eye w:4 / eye of draining w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
                death ooze / azure jelly / great orb of eyes w:4 /\
-               giant orange brain w:2")
+               glowing orange brain w:2")
 -- Snake
   elseif rnd < 14 then
     e.kmons("1 = ball python w:5 / adder w:5 / water moccasin / naga /\
-               black mamba / naga mage / naga warrior / greater naga /\
+               black mamba / naga mage / naga warrior / nagaraja /\
                anaconda / guardian serpent")
 -- Lair
   elseif rnd < 19 then
     e.kmons("1 = place:Lair:$ w:300 / hydra / catoblepas / dire elephant")
 -- Spider
   elseif rnd < 26 then
-    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / wasp / hornet /\
+    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / hornet /\
                  moth of wrath w:5")
 -- Crypt
   elseif rnd < 34 then
@@ -480,7 +481,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
 -- Giant
   elseif rnd < 75 then
-    e.kmons("1 = hill giant / cyclops / stone giant / fire giant /\
+    e.kmons("1 = cyclops / stone giant / fire giant /\
                frost giant / ettin / titan")
 -- Fire
   elseif rnd < 78 then
@@ -502,7 +503,7 @@ local rnd = crawl.random2(142)
                quicksilver dragon")
 -- Dragon
   elseif rnd < 90 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
                golden dragon / wyvern / hydra")
@@ -544,13 +545,13 @@ local rnd = crawl.random2(142)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
-               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
-               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
-               Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug /\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise /\
+               Nergalle / Nessos / Nikola / Polyphemus / Roxanne /\
+               Rupert / Saint Roka / Snorg / Antaeus / Asmodeus /\
                Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\
-               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
-               Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
+               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory / Khufu /\
+               Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray / Sojobo /\
                the Enchantress / the Lernaean hydra / the Serpent of Hell /\
                the Royal Jelly / Tiamat / Xtahua / Nellie / Chuck")
 -- Holy
@@ -627,9 +628,9 @@ xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxxxxxxxxxxxxxxxxxxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
 xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
-xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
-xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
-xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
 xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxSSSSSSSSSSSSSxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
 xYYYYYYYYYYYYYYYYYxxxxxxxxxxxxxxxxxSSSSSSSSSSSSSxOOOOOOOOOOOxxxxxxxxxxxxxxxxxxxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
@@ -646,8 +647,8 @@ xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxxxxxxxxxxxxxxxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
-xxxxxxxxxxxxxxxxxxxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
-xZZZZZZZZZZZZZZZZZxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
 xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
@@ -690,35 +691,36 @@ ENDMAP
 NAME:  room_start
 TAGS:  no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 : setup_room(_G, 1)
-KFEAT:  a = altar_zin
-KFEAT:  b = altar_the_shining_one
-KFEAT:  c = altar_ashenzari
-KFEAT:  d = altar_kikubaaqudgha
-KFEAT:  e = altar_yredelemnul
-KFEAT:  f = altar_xom
-KFEAT:  g = altar_vehumet
-KFEAT:  h = altar_okawaru
-KFEAT:  i = altar_makhleb
-KFEAT:  j = altar_sif_muna
-KFEAT:  k = altar_trog
-KFEAT:  l = altar_nemelex_xobeh
-KFEAT:  m = altar_elyvilon
-KFEAT:  n = altar_lugonu
-KFEAT:  o = altar_beogh
-KFEAT:  p = altar_jiyva
-KFEAT:  q = altar_fedhas
-KFEAT:  r = altar_cheibriados
-KFEAT:  s = altar_dithmenos
-KFEAT:  t = altar_gozag
-KFEAT:  u = altar_qazlal
-KFEAT:  v = altar_ru
-KFEAT:  w = altar_pakellas
+KFEAT:  a = altar_ashenzari
+KFEAT:  b = altar_beogh
+KFEAT:  c = altar_cheibriados
+KFEAT:  d = altar_dithmenos
+KFEAT:  e = altar_elyvilon
+KFEAT:  f = altar_fedhas
+KFEAT:  g = altar_gozag
+KFEAT:  h = altar_hepliaklqana
+KFEAT:  j = altar_jiyva
+KFEAT:  k = altar_kikubaaqudgha
+KFEAT:  l = altar_lugonu
+KFEAT:  m = altar_makhleb
+KFEAT:  n = altar_nemelex_xobeh
+KFEAT:  o = altar_okawaru
+KFEAT:  q = altar_qazlal
+KFEAT:  r = altar_ru
+KFEAT:  s = altar_sif_muna
+KFEAT:  t = altar_trog
+KFEAT:  u = altar_uskayaw
+KFEAT:  v = altar_vehumet
+KFEAT:  x = altar_xom
+KFEAT:  y = altar_yredelemnul
+KFEAT:  z = altar_zin
+KFEAT:  1 = altar_the_shining_one
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
-              fire dragon armour mundane not_cursed ident:all plus:5, \
-              ice dragon armour mundane not_cursed ident:all plus:5, \
-              storm dragon armour mundane not_cursed ident:all plus:5, \
-              shadow dragon armour mundane not_cursed ident:all plus:5, \
-              gold dragon armour mundane not_cursed ident:all plus:5, \
+              fire dragon scales mundane not_cursed ident:all plus:5, \
+              ice dragon scales mundane not_cursed ident:all plus:5, \
+              storm dragon scales mundane not_cursed ident:all plus:5, \
+              shadow dragon scales mundane not_cursed ident:all plus:5, \
+              gold dragon scales mundane not_cursed ident:all plus:5, \
               crystal plate armour mundane not_cursed ident:all plus:5
 KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
               shield mundane not_cursed ident:all plus:3, \
@@ -748,7 +750,7 @@ KITEM:    J = hand crossbow mundane not_cursed ident:all plus:5, \
               arrow q:1000 mundane ident:all, \
               longbow mundane not_cursed ident:all plus:5, \
               hunting sling mundane not_cursed ident:all plus:5, \
-              greatsling mundane not_cursed ident:all plus:5, \
+              fustibalus mundane not_cursed ident:all plus:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \
@@ -798,22 +800,24 @@ KITEM:    T = piercer ident:all, \
               plutonium_sword ident:all, \
               devastator ident:all, \
               firestarter ident:all
-KITEM:    S = disc of storms ident:all
+KITEM:    S = lightning rod ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
 MAP
-^f^g^h&A&i^j^k^
-e.........RT..l
-^..HG.........^
-d..IF.........m
-^..JE.....S...^
-c...D..M..P...n
-^......L..O...^
-b...C..K..N...o
-^...B.{.......^
-a.............p
-^w^v^u^t^s^r^q^
+^g^h^j&A&k^l^m^
+f.............n
+^.........RT..^
+e..HG.........o
+^..IF.........^
+d..JE.....S...q
+^...D..M..P...^
+c......L..O...r
+^...C..K..N...^
+b...B.{.......s
+^.............^
+a.............t
+^^1^z^y^x^v^u^^
 ENDMAP
 
 NAME:  room_1
@@ -1153,7 +1157,6 @@ MAP
 .................
 .................
 .................
-.................
 ...z.........z...
 ..zZz.......zZz..
 ...z.........z...
@@ -1168,7 +1171,6 @@ MAP
 ..1111111111111..
 ..1111111111111..
 ..1111111111111..
-.................
 .................
 .................
 .................

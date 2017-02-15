@@ -26,15 +26,15 @@
 #include "dungeon.h"
 #include "fight.h"
 #include "files.h"
-#include "godprayer.h"
+#include "god-prayer.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mutation.h"
 #include "notes.h"
@@ -228,7 +228,7 @@ static void _sdump_hunger(dump_params &par)
 static void _sdump_transform(dump_params &par)
 {
     string &text(par.text);
-    if (you.form)
+    if (you.form != transformation::none)
         text += get_form()->get_description(par.se) + "\n\n";}
 
 static branch_type single_portals[] =
@@ -241,6 +241,7 @@ static branch_type single_portals[] =
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
+    BRANCH_DESOLATION,
 };
 
 static void _sdump_visits(dump_params &par)
@@ -545,8 +546,9 @@ static void _sdump_notes(dump_params &par)
     if (note_list.empty())
         return;
 
-    text += "Notes\nTurn   | Place    | Note\n";
-    text += "--------------------------------------------------------------\n";
+    text += "Notes\n";
+    text += "Turn   | Place    | Note\n";
+    text += "-------+----------+-------------------------------------------\n";
     for (const Note &note : note_list)
     {
         if (note.hidden())
@@ -638,9 +640,6 @@ static bool _dump_item_origin(const item_def &item)
         return true;
 
     if (fs(IODS_RUNES) && item.base_type == OBJ_RUNES)
-        return true;
-
-    if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
         return true;
 
     if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES)
@@ -1042,6 +1041,8 @@ static string _describe_action(caction_type type)
         return " Stab";
     case CACT_EAT:
         return "  Eat";
+    case CACT_RIPOSTE:
+        return "Rpst.";
     default:
         return "Error";
     }
@@ -1093,6 +1094,7 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     }
     case CACT_MELEE:
     case CACT_FIRE:
+    case CACT_RIPOSTE:
         if (subtype == -1)
         {
             if (auxtype == -1)
@@ -1163,8 +1165,10 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         {
         case EVOC_WAND:
             return "Wand";
+#if TAG_MAJOR_VERSION == 34
         case EVOC_ROD:
             return "Rod";
+#endif
         case EVOC_DECK:
             return "Deck";
 #if TAG_MAJOR_VERSION == 34
@@ -1179,8 +1183,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
     case CACT_USE:
         return uppercase_first(base_type_string((object_class_type)subtype));
     case CACT_STAB:
-        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STAB);
-        ASSERT_RANGE(subtype, 1, NUM_STAB);
+        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
+        ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
     case CACT_EAT:
         return subtype >= 0 ? uppercase_first(food_type_name(subtype))

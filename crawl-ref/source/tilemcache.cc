@@ -9,6 +9,7 @@
 #include "misc.h"
 #include "mon-info.h"
 #include "mon-util.h"
+#include "mutant-beast.h"
 #include "options.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
@@ -23,6 +24,7 @@ enum mcache_type
     MCACHE_DRACO,
     MCACHE_GHOST,
     MCACHE_DEMON,
+    MCACHE_MBEAST,
     MCACHE_MAX,
 
     MCACHE_nullptr,
@@ -75,6 +77,19 @@ protected:
     tileidx_t m_equ_tile;
     tileidx_t m_shd_tile;
     bool draco;
+};
+
+class mcache_mbeast : public mcache_entry
+{
+public:
+    mcache_mbeast(const monster_info& mon);
+
+    virtual int info(tile_draw_info *dinfo) const override;
+
+    static bool valid(const monster_info& mon);
+
+protected:
+    vector<tileidx_t> layers;
 };
 
 class mcache_ghost : public mcache_entry
@@ -154,6 +169,8 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
     }
     else if (mcache_demon::valid(minf))
         entry = new mcache_demon(minf);
+    else if (mcache_mbeast::valid(minf))
+        entry = new mcache_mbeast(minf);
     else if (mcache_ghost::valid(minf))
         entry = new mcache_ghost(minf);
     else if (mcache_draco::valid(minf))
@@ -306,23 +323,22 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CRIMSON_IMP:
     case TILEP_MONS_IRON_IMP:
     case TILEP_MONS_SHADOW_IMP:
-    case TILEP_MONS_NORRIS:
-    case TILEP_MONS_MAUD:
     case TILEP_MONS_HAROLD:
     case TILEP_MONS_JOSEPHINE:
     case TILEP_MONS_JOSEPH:
     case TILEP_MONS_TERENCE:
-    case TILEP_MONS_WIGLAF:
     case TILEP_MONS_RAKSHASA:
     case TILEP_MONS_VAMPIRE_KNIGHT:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
-    case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
-    case TILEP_MONS_ANUBIS_GUARD:
+    case TILEP_MONS_ANCESTOR:
+    case TILEP_MONS_ANCESTOR_KNIGHT:
+    case TILEP_MONS_ANCESTOR_BATTLEMAGE:
+    case TILEP_MONS_RAGGED_HIEROPHANT:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -333,8 +349,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GRUM:
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
-    case TILEP_MONS_SPRIGGAN_DEFENDER:
-    case TILEP_MONS_SPRIGGAN_BERSERKER:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
@@ -348,7 +362,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TIAMAT_5:
     case TILEP_MONS_TIAMAT_6:
     case TILEP_MONS_TIAMAT_7:
-    case TILEP_MONS_TIAMAT_8:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
     case TILEP_MONS_TENGU_WARRIOR:
@@ -360,6 +373,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SKELETON_LARGE:
     case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_BIG_KOBOLD:
+    case TILEP_MONS_EFREET:
+    case TILEP_MONS_VAMPIRE_MAGE:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -369,10 +384,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_SENTINEL:
     case TILEP_MONS_IRONBRAND_CONVOKER:
     case TILEP_MONS_IRONHEART_PRESERVER:
-    case TILEP_MONS_DONALD:
     case TILEP_MONS_GARGOYLE:
     case TILEP_MONS_MOLTEN_GARGOYLE:
     case TILEP_MONS_WAR_GARGOYLE:
+    case TILEP_MONS_SERVANT_OF_WHISPERS:
         *ofs_x = 1;
         *ofs_y = 0;
         break;
@@ -403,7 +418,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     case TILEP_MONS_SALAMANDER_MYSTIC:
-    case TILEP_MONS_SALAMANDER_STORMCALLER:
         *ofs_x = 0;
         *ofs_y = -2;
         break;
@@ -423,7 +437,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     // Shift downwards.
     case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_GUARDIAN_SERPENT:
-    case TILEP_MONS_THE_ENCHANTRESS:
     case TILEP_MONS_DEEP_DWARF:
     case TILEP_MONS_RUST_DEVIL:
         *ofs_x = 0;
@@ -434,6 +447,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_JORGRUN:
     case TILEP_MONS_DIMME:
     case TILEP_MONS_HALFLING:
+    case TILEP_MONS_IMPERIAL_MYRMIDON:
         *ofs_x = 0;
         *ofs_y = 2;
         break;
@@ -466,6 +480,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -2;
         break;
+    case TILEP_MONS_SPRIGGAN_BERSERKER:
+        *ofs_x = -3;
+        *ofs_y = -2;
+        break;
     case TILEP_MONS_SPRIGGAN_AIR_MAGE:
         *ofs_x = -3;
         *ofs_y = -5;
@@ -476,10 +494,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     case TILEP_MONS_FANNAR:
+    case TILEP_MONS_DONALD:
         *ofs_x = -2;
         *ofs_y = -4;
         break;
-    case TILEP_MONS_GREATER_NAGA:
+    case TILEP_MONS_NAGARAJA:
         *ofs_x = -2;
         *ofs_y = -5;
         break;
@@ -492,7 +511,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
     case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
-    case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_MERFOLK_SIREN_WATER:
     case TILEP_MONS_MERFOLK_AVATAR_WATER:
     case TILEP_MONS_ILSUIW_WATER:
         *ofs_x = -1;
@@ -510,10 +529,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_JESSICA:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_DAEVA:
+    case TILEP_MONS_ANCESTOR_HEXER:
         *ofs_x = 1;
         *ofs_y = -1;
         break;
-    case TILEP_MONS_AGNES:
+    case TILEP_MONS_AGNES_STAVELESS:
         *ofs_x = 0;
         *ofs_y = 1;
         break;
@@ -537,10 +557,15 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 2;
         *ofs_y = -2;
         break;
-    case TILEP_MONS_HUMAN:
     case TILEP_MONS_ELF:
         *ofs_x = 2;
         *ofs_y = -3;
+        break;
+    case TILEP_MONS_HUMAN:
+    case TILEP_MONS_HUMAN_1:
+    case TILEP_MONS_HUMAN_2:
+        *ofs_x = -1;
+        *ofs_y = -2;
         break;
     case TILEP_MONS_GHOST:
         *ofs_x = 3;
@@ -550,7 +575,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_AQUAMANCER:
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_MERFOLK_JAVELINEER:
-    case TILEP_MONS_SIREN:
+    case TILEP_MONS_MERFOLK_SIREN:
     case TILEP_MONS_MERFOLK_AVATAR:
     case TILEP_MONS_ILSUIW:
         *ofs_x = 1;
@@ -571,6 +596,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_URUG:
     case TILEP_MONS_ORC_PRIEST:
     case TILEP_MONS_ORC_HIGH_PRIEST:
+    case TILEP_MONS_SPRIGGAN:
+    case TILEP_MONS_SPRIGGAN_DEFENDER:
         *ofs_x = -1;
         *ofs_y = 1;
         break;
@@ -579,10 +606,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_SORCERER:
     case TILEP_MONS_NERGALLE:
     case TILEP_MONS_ETTIN:
-    case TILEP_MONS_HILL_GIANT:
     case TILEP_MONS_FROST_GIANT:
     case TILEP_MONS_FIRE_GIANT:
     case TILEP_MONS_IRON_GIANT:
+    case TILEP_MONS_THE_ENCHANTRESS:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
@@ -794,7 +821,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_SAINT_ROKA:
     case TILEP_MONS_MINOTAUR:
-    case TILEP_MONS_NORRIS:
         *ofs_x = 3;
         *ofs_y = 0;
         break;
@@ -815,6 +841,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_HUMAN:
+    case TILEP_MONS_HUMAN_1:
+    case TILEP_MONS_HUMAN_2:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER: // second weapon
     case TILEP_MONS_LOUISE:
     case TILEP_MONS_TENGU:
@@ -832,14 +860,9 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_DONALD:
+    case TILEP_MONS_ANCESTOR_KNIGHT:
         *ofs_x = -1;
         *ofs_y = -1;
-        break;
-
-    case TILEP_MONS_WIGLAF:
-    case TILEP_MONS_ANUBIS_GUARD:
-        *ofs_x = -1;
-        *ofs_y = 1;
         break;
 
     case TILEP_MONS_TWO_HEADED_OGRE: // second weapon
@@ -849,7 +872,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_NAGA:
     case TILEP_MONS_NAGA_WARRIOR:
-    case TILEP_MONS_GREATER_NAGA:
+    case TILEP_MONS_NAGARAJA:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -918,7 +941,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_AQUAMANCER:
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_MERFOLK_JAVELINEER:
-    case TILEP_MONS_SIREN:
+    case TILEP_MONS_MERFOLK_SIREN:
     case TILEP_MONS_MERFOLK_AVATAR:
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_WRAITH:
@@ -930,7 +953,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
     case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
-    case TILEP_MONS_SIREN_WATER:
+    case TILEP_MONS_MERFOLK_SIREN_WATER:
     case TILEP_MONS_MERFOLK_AVATAR_WATER:
     case TILEP_MONS_ILSUIW_WATER:
         *ofs_x = -5;
@@ -1423,7 +1446,7 @@ bool mcache_ghost::transparent() const
 
 mcache_demon::mcache_demon(const monster_info& minf)
 {
-    ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
+    ASSERT(mcache_demon::valid(minf));
 
     const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
 
@@ -1464,6 +1487,57 @@ int mcache_demon::info(tile_draw_info *dinfo) const
 bool mcache_demon::valid(const monster_info& mon)
 {
     return mon.type == MONS_PANDEMONIUM_LORD;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// mcache_mbeast
+
+mcache_mbeast::mcache_mbeast(const monster_info& minf)
+{
+    ASSERT(mcache_mbeast::valid(minf));
+
+    // the layer order should be:
+    // base < fire < bwing < ox < weird < sting < twing < shock < horn
+    // (lowest to highest)
+
+    const int tier
+        = mutant_beast_tier(minf.props[MUTANT_BEAST_TIER].get_short()) - 1;
+    ASSERT(tier >= 0);
+    ASSERT(tier < (short)tile_player_count(TILEP_MUTANT_BEAST_BASE));
+    layers.push_back(TILEP_MUTANT_BEAST_BASE + tier);
+
+    int facets = 0; // bitfield
+    for (auto facet : minf.props[MUTANT_BEAST_FACETS].get_vector())
+        facets |= (1 << facet.get_int());
+
+    // an ordered list of tiers and corresponding tiles to add.
+    // tiers may appear repeatedly, if they have multiple layers.
+    static const vector<pair<beast_facet, tileidx_t>> facet_layers = {
+        { BF_FIRE,  TILEP_MUTANT_BEAST_FIRE },
+        { BF_BAT,   TILEP_MUTANT_BEAST_WING_BASE },
+        { BF_OX,    TILEP_MUTANT_BEAST_OX },
+        { BF_WEIRD, TILEP_MUTANT_BEAST_WEIRD },
+        { BF_STING, TILEP_MUTANT_BEAST_STING },
+        { BF_BAT,   TILEP_MUTANT_BEAST_WING_TOP },
+        { BF_SHOCK, TILEP_MUTANT_BEAST_SHOCK },
+        { BF_OX,    TILEP_MUTANT_BEAST_HORN },
+    };
+
+    for (auto &facet_layer : facet_layers)
+        if (facets & (1 << facet_layer.first))
+            layers.emplace_back(facet_layer.second + tier);
+}
+
+int mcache_mbeast::info(tile_draw_info *dinfo) const
+{
+    for (int i = 0; i < (int)layers.size(); ++i)
+        dinfo[i].set(layers[i]);
+    return layers.size();
+}
+
+bool mcache_mbeast::valid(const monster_info& mon)
+{
+    return mon.type == MONS_MUTANT_BEAST;
 }
 
 #endif

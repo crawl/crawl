@@ -3,7 +3,7 @@ welcome
 
 <white>Welcome to Dungeon Crawl!</white>
 
-Your objective is to lead a <w>{{ return you.race() }} {{ return you.class()
+Your objective is to lead your <w>{{ return you.race() }} {{ return you.class()
 }}</w> safely through the depths of the dungeon, retrieving the fabled Orb of
 Zot and returning it to the surface. In the beginning, however, let discovery
 be your main goal. Try to delve as deeply as possible but beware; death lurks
@@ -72,18 +72,17 @@ death random 2
 
 Rest between encounters, if possible in an area already explored and cleared of
 monsters. Pressing <input>$cmd[CMD_REST]</input><localtiles>, or
-<input>clicking into the stat area</input></localtiles> will let you rest for
-a moment (you will stop resting after 100 turns, or when fully healed).
+<input>clicking on the 'rest' button in the command bar'</input></localtiles>
+will rest for 100 turns, or until fully healed.
 %%%%
 death random 3
 
-Remember to use those scrolls, potions or wands you've found. Very often, you
-cannot expect to identify everything with the scroll only. Learn to improvise:
-identify through usage.
+Remember to use those scrolls, potions or wands you've found. Learn to
+improvise: identify your items by using them.
 %%%%
 death random 4
 
-If a particular encounter feels overwhelming don't forget to use emergency
+If a particular encounter feels overwhelming, don't forget to use emergency
 items early on. A scroll of teleportation or a potion of haste can really save
 your bacon.
 %%%%
@@ -110,7 +109,7 @@ minimap.</localtiles>
 %%%%
 finished travel
 
-There is a convenient way for travelling between far away dungeon levels: press
+There is a convenient way to travel between distant dungeon levels: press
 <input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> and enter the desired destination.
 If your travel gets interrupted, issuing <input>$cmd[CMD_INTERLEVEL_TRAVEL]
 Enter</input> will continue it.
@@ -119,18 +118,17 @@ finished stashes
 
 You can search among all items existing in the dungeon with the
 <input>$cmd[CMD_SEARCH_STASHES]</input> command. For example,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“dagger”</w> will list all daggers.
-You can then travel to one of the spots. It is even possible to enter words
-like <w>“shop”</w> or <w>“altar”</w>.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“dagger”</w> will list all daggers,
+and allow you to travel to them. You can even search for dungeon features, like
+<w>“shop”</w> or <w>“altar”</w>.
 %%%%
 finished random 0
 
-The game keeps an automated logbook for your characters. Use
-<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> to read it. You can enter notes
-manually with the <input>$cmd[CMD_MAKE_NOTE]</input> command. Once your
-character perishes, two morgue files are left in the <w>morgue/</w> directory.
-The one ending in .txt contains a copy of your logbook. During play, you can
-create a dump file with <input>$cmd[CMD_CHARACTER_DUMP]</input>.
+The game keeps an automated log for your characters. Use
+<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> to read it. Once your character
+perishes, two morgue files are left in the <w>morgue/</w> directory. The one
+ending in .txt contains a copy of your log. During play, you can create a dump
+file with <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
 
@@ -155,52 +153,57 @@ You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
 %%%%
 dissection reminder
 
-If you don't want to eat it, consider offering this corpse up under prayer
-(<input>$cmd[CMD_PRAY]</input>) as a sacrifice to {{ return you.god() }}.
-<localtiles>You can also chop up any corpse that shows in the floor part of
-your inventory tiles by clicking on it with your <input>left mouse
-button</input>. </localtiles>Whenever you view a corpse while in hint mode you
-can reread this information.
+Don't forget that you can butcher corpses with <input>$cmd[CMD_BUTCHER]</input>
+<localtiles>, or by clicking on corspes in the floor part of your inventory
+with the <input>left mouse button</input></localtiles>.
 %%%%
 HINT_CONVERT Xom
 
 You've just converted to worshipping <w>Xom</w>. You can keep Xom happy by
-keeping him amused; you do absolutely not want this god to grow bored with you!
+keeping him amused; you absolutely do not want this god to grow bored with you!
 
 If you keep Xom amused he'll treat you like a plaything, randomly helping and
 harming you for his own amusement; otherwise he'll treat you like a disfavoured
 plaything.
 %%%%
+HINT_CONVERT Gozag
+
+You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
+cares about gold; each divine power costs gold, and they grow more expensive
+with use. Still, that gold won't do you any good if you're dead, and Gozag's
+Potion Petition can be a huge help in combat! If you run short on food, you can
+use Call Merchant to buy a food shop.
+%%%%
+HINT_CONVERT Ru
+
+You've just converted to worshipping <w>Ru</w>. Unlike other gods, Ru grants
+piety (divine favour) in exchange for personal sacrifices, like giving up your
+ability to drink potions while endangered; the more piety you have, the more
+abilities Ru will grant, and the more powerful those abilities will become.
+Ru will offer sacrifices as you explore the depths of the dungeon.
+%%%%
 HINT_CONVERT
 
-#
-# Not the case for Chei, but not sure if we need to go into that much
-# detail here.
-#
 You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
-(divine favour) will gradually decrease over time, and if it runs out {{ return
-you.god() }} will excommunicate you and punish you. You can prevent this,
-however, and even gain enough piety to get powers and divine gifts, by doing
-things to please {{ return you.god() }}. But don't panic: you start out with a
-decent amount of piety, so any danger of excommunication is far off.
+(divine favour) will increase as you do things to please your new god, and will
+gradually decrease over time.
 
 You can check your god's likes and dislikes, as well as your current standing
 and divine abilities, by typing
-<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (alternatively press
-<input>Shift-right-click</input> on your avatar)</localtiles>.
+<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles>, or by pressing
+<input>Shift-right-click</input> on your avatar</localtiles>.
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
 That <console>$1 </console>is an item. If you move there and press
-<input>$cmd[CMD_PICKUP]</input>, you will pick it up.<console> Generally, items
-are shown by non-letter symbols like <w>%?!"=()[</w>.</console><tiles> You can
-also pick up an item by clicking on your <input>left mouse button</input> while
-standing on its square.</tiles> Also, several types of objects will usually be
-picked up automatically. <tiles>These will be marked with a green frame around
-them.</tiles>
+<input>$cmd[CMD_PICKUP]</input><tiles>, or <input>left-click</input> on it in
+your inventory</tiles>, you will pick it up.<console> Generally, items
+are shown by non-letter symbols like <w>%?!"=()[</w>.</console> Some
+objects<tiles>, marked with a green frame,</tiles> will be picked up
+automatically.
 
 Once it is in your inventory, you can drop it again with <tiles>a
-<input>Shift-leftclick</input>. Whenever you <input>right-click</input> on an
+<input>Shift-left-click</input>. Whenever you <input>right-click</input> on an
 item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
 item in your inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>,
 you can read about its properties and its description.

@@ -15,24 +15,24 @@
 #include "state.h"
 
 // Add a monster to the list of beholders.
-void player::add_beholder(const monster* mon, bool axe)
+void player::add_beholder(const monster& mon, bool axe)
 {
     if (is_sanctuary(pos()) && !axe)
     {
         if (mons_is_siren_beholder(mon))
         {
-            if (can_see(*mon))
+            if (can_see(mon))
             {
                 mprf("%s's singing sounds muted, and has no effect on you.",
-                     mon->name(DESC_THE).c_str());
+                     mon.name(DESC_THE).c_str());
             }
             else
                 mpr("The melody is strangely muted, and has no effect on you.");
         }
         else
         {
-            if (can_see(*mon))
-                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
+            if (can_see(mon))
+                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
             else
                 mpr("Your mesmeriser suddenly seems less interesting!");
         }
@@ -43,18 +43,18 @@ void player::add_beholder(const monster* mon, bool axe)
     if (!duration[DUR_MESMERISED])
     {
         set_duration(DUR_MESMERISED, random_range(7, 15), 15);
-        beholders.push_back(mon->mid);
+        beholders.push_back(mon.mid);
         if (!axe)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
-                             mon->name(DESC_THE).c_str());
+                             mon.name(DESC_THE).c_str());
         }
     }
     else
     {
         increase_duration(DUR_MESMERISED, random_range(5, 8), 15);
         if (!beheld_by(mon))
-            beholders.push_back(mon->mid);
+            beholders.push_back(mon.mid);
     }
 }
 
@@ -66,9 +66,9 @@ bool player::beheld() const
 }
 
 // Whether player is mesmerised by the given monster.
-bool player::beheld_by(const monster* mon) const
+bool player::beheld_by(const monster &mon) const
 {
-    return find(begin(beholders), end(beholders), mon->mid) != end(beholders);
+    return find(begin(beholders), end(beholders), mon.mid) != end(beholders);
 }
 
 // Checks whether a beholder keeps you from moving to
@@ -99,10 +99,10 @@ monster* player::get_any_beholder() const
 }
 
 // Removes a monster from the list of beholders if present.
-void player::remove_beholder(const monster* mon)
+void player::remove_beholder(const monster& mon)
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mid)
+        if (beholders[i] == mon.mid)
         {
             beholders.erase(beholders.begin() + i);
             _removed_beholder();
@@ -118,24 +118,14 @@ void player::clear_beholders()
     you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
 }
 
-// Possibly end mesmerisation if a loud noise happened.
-void player::beholders_check_noise(int loudness, bool axe)
+static void _removed_beholder_msg(const monster *mons)
 {
-    if (axe)
+    if (!mons)
         return;
 
-    if (loudness >= 20 && beheld())
-    {
-        mpr("Jolted by the loud noise, you snap out of your trance!");
-        clear_beholders();
-        _removed_beholder();
-    }
-}
-
-static void _removed_beholder_msg(const monster* mon)
-{
-    if (!mon || !mon->alive() || !mons_is_siren_beholder(mon)
-        || mon->submerged() || !you.see_cell(mon->pos()))
+    const monster &mon = *mons;
+    if (!mon.alive() || !mons_is_siren_beholder(mon)
+        || mon.submerged() || !you.see_cell(mon.pos()))
     {
         return;
     }
@@ -144,18 +134,18 @@ static void _removed_beholder_msg(const monster* mon)
     {
         if (mons_is_siren_beholder(mon))
         {
-            if (you.can_see(*mon))
+            if (you.can_see(mon))
             {
                 mprf("%s's singing becomes strangely muted.",
-                     mon->name(DESC_THE).c_str());
+                     mon.name(DESC_THE).c_str());
             }
             else
                 mpr("Something's singing becomes strangely muted.");
         }
         else
         {
-            if (you.can_see(*mon))
-                mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
+            if (you.can_see(mon))
+                mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
             else
                 mpr("Your mesmeriser suddenly seems less interesting!");
         }
@@ -163,14 +153,14 @@ static void _removed_beholder_msg(const monster* mon)
         return;
     }
 
-    if (you.can_see(*mon))
+    if (you.can_see(mon))
     {
-        if (silenced(you.pos()) || silenced(mon->pos()))
+        if (silenced(you.pos()) || silenced(mon.pos()))
         {
             if (mons_is_siren_beholder(mon))
             {
                 mprf("You can no longer hear %s's singing!",
-                     mon->name(DESC_THE).c_str());
+                     mon.name(DESC_THE).c_str());
             }
             else
                 mpr("The silence clears your mind.");
@@ -178,9 +168,9 @@ static void _removed_beholder_msg(const monster* mon)
         }
 
         if (mons_is_siren_beholder(mon))
-            mprf("%s stops singing.", mon->name(DESC_THE).c_str());
+            mprf("%s stops singing.", mon.name(DESC_THE).c_str());
         else
-            mprf("%s is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
+            mprf("%s is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
 
         return;
     }
@@ -263,12 +253,12 @@ bool player::possible_beholder(const monster* mon) const
         && !mon->wont_attack() && !mon->pacified()
         && ((mons_is_siren_beholder(mon->type)
              || mon->has_spell(SPELL_MESMERISE))
-            && !silenced(pos()) && !silenced(mon->pos())
-            && !mon->has_ench(ENCH_MUTE)
+            && !silenced(pos())
+            && !mon->is_silenced()
             && !mon->confused()
             && !mon->asleep() && !mon->cannot_move()
             && !mon->berserk_or_insane()
-            && !mons_is_fleeing(mon)
+            && !mons_is_fleeing(*mon)
             && !is_sanctuary(pos())
           || player_equip_unrand(UNRAND_DEMON_AXE));
 }

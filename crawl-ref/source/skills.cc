@@ -18,10 +18,10 @@
 #include "describe-god.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "godabil.h"
-#include "godconduct.h"
+#include "god-abil.h"
+#include "god-conduct.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -29,7 +29,7 @@
 #include "output.h"
 #include "random.h"
 #include "religion.h"
-#include "skill_menu.h"
+#include "skill-menu.h"
 #include "sprint.h"
 #include "state.h"
 #include "stringutil.h"
@@ -105,6 +105,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 
     // These titles apply to atheists only, worshippers of the various gods
     // use the god titles instead, depending on piety or, in Gozag's case, gold.
+    // or, in U's case, invocations skill.
     {"Invocations",    "Unbeliever",    "Agnostic",        "Dissident",       "Heretic",        "Apostate"},
     {"Evocations",     "Charlatan",     "Prestidigitator", "Fetichist",       "Evocator",       "Talismancer"},
 };
@@ -187,6 +188,25 @@ int one_level_cost(skill_type sk)
         return 0;
     return skill_exp_needed(you.skills[sk] + 1, sk)
            - skill_exp_needed(you.skills[sk], sk);
+}
+
+/**
+ * The number displayed in the 'cost' interface on the m screen.
+ *
+ * @param sk the skill to compute the cost of
+ * @returns the cost of raising sk from floor(level) to ceiling(level),
+ *          as a multiple of skill_cost_baseline()
+ */
+float scaled_skill_cost(skill_type sk)
+{
+    if (you.skills[sk] == MAX_SKILL_LEVEL || is_useless_skill(sk))
+        return 0;
+    int baseline = skill_cost_baseline();
+    int next_level = one_level_cost(sk);
+    if (skill_has_manual(sk))
+        baseline *= 2;
+
+    return (float)next_level / baseline;
 }
 
 // Characters are actually granted skill points, not skill levels.
@@ -289,7 +309,7 @@ static void _change_skill_level(skill_type exsk, int n)
 
     if (you.skills[exsk] - n == MAX_SKILL_LEVEL)
     {
-        you.train[exsk] = 1;
+        you.train[exsk] = TRAINING_ENABLED;
         need_reset = true;
     }
 
@@ -570,12 +590,12 @@ void init_train()
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.can_train[i] && you.skill_points[i])
-            you.train[i] = you.train_alt[i] = true;
+            you.train[i] = you.train_alt[i] = TRAINING_ENABLED;
         else
         {
             // Skills are on by default in auto mode and off in manual.
-            you.train[i] = you.auto_training;
-            you.train_alt[i] = !you.auto_training;
+            you.train[i] = (training_status)you.auto_training;
+            you.train_alt[i] = (training_status)!you.auto_training;
         }
 }
 
@@ -802,8 +822,8 @@ static bool _level_up_check(skill_type sk, bool simu)
         you.training[sk] = 0;
         if (!simu)
         {
-            you.train[sk] = 0;
-            you.train_alt[sk] = 0;
+            you.train[sk] = TRAINING_DISABLED;
+            you.train_alt[sk] = TRAINING_DISABLED;
         }
         return true;
     }
@@ -1283,7 +1303,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_EVOCATIONS:
-            if (god == GOD_NEMELEX_XOBEH || god == GOD_PAKELLAS)
+            if (god == GOD_PAKELLAS)
                 result = god_title(god, species, piety);
             break;
 

@@ -1,7 +1,7 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "random-var.h"
 #include "ouch.h"
 
@@ -155,9 +155,6 @@ public:
     {
         return true;
     }
-    // Returns true if the actor has no way to attack (plants, statues).
-    // (statues have only indirect attacks).
-    virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other, bool ranged = false) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
@@ -223,8 +220,8 @@ public:
     virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
                                   bool allow_corrosion = true,
                                   const char* hurt_msg = nullptr) = 0;
-    virtual void corrode_equipment(const char* corrosion_source = "the acid",
-                                    int degree = 1) = 0;
+    virtual bool corrode_equipment(const char* corrosion_source = "the acid",
+                                   int degree = 1) = 0;
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
@@ -274,12 +271,11 @@ public:
 
     virtual mon_holy_type holiness(bool temp = true) const = 0;
     virtual bool undead_or_demonic() const = 0;
-    virtual bool holy_wrath_susceptible() const = 0;
+    virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy(bool spells = true) const = 0;
-    virtual bool is_unholy(bool spells = true) const = 0;
-    virtual bool is_evil(bool spells = true) const = 0;
+    virtual bool is_nonliving(bool temp = true) const = 0;
+    bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
-    virtual bool is_artificial(bool temp = true) const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;
@@ -292,7 +288,7 @@ public:
     virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
-    virtual int res_holy_energy(const actor *attacker) const = 0;
+    virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
     virtual bool res_wind() const = 0;
@@ -310,15 +306,13 @@ public:
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
     bool has_notele_item(bool calc_unid = true,
                          vector<item_def> *matches = nullptr) const;
-    virtual bool stasis(bool calc_unid = true, bool items = true) const;
+    virtual bool stasis() const = 0;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
-    virtual bool dismissal(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
-    virtual int spec_invoc(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
     virtual bool reflection(bool calc_unid = true, bool items = true) const;
     virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
@@ -374,8 +368,6 @@ public:
     virtual int heat_radius() const = 0;
 #endif
 
-    virtual bool glows_naturally() const { return false; };
-
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
 
@@ -396,6 +388,7 @@ public:
 
     virtual bool wont_attack() const = 0;
     virtual mon_attitude_type temp_attitude() const = 0;
+    virtual mon_attitude_type real_attitude() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;
 

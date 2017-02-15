@@ -14,17 +14,18 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "command.h"
 #include "coord.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"
@@ -90,6 +91,9 @@ TilesFramework::~TilesFramework()
 
 void TilesFramework::shutdown()
 {
+    if (m_sock_name.empty())
+        return;
+
     close(m_sock);
     remove(m_sock_name.c_str());
 }
@@ -100,6 +104,16 @@ void TilesFramework::draw_doll_edit()
 
 bool TilesFramework::initialise()
 {
+    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
+    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
+    m_cursor[CURSOR_MAP] = NO_CURSOR;
+
+    // Initially, switch to CRT.
+    cgotoxy(1, 1, GOTO_CRT);
+
+    if (m_sock_name.empty())
+        return true;
+
     // Init socket
     m_sock = socket(PF_UNIX, SOCK_DGRAM, 0);
     if (m_sock < 0)
@@ -130,13 +144,6 @@ bool TilesFramework::initialise()
     _send_options();
     _send_layout();
 
-    m_cursor[CURSOR_MOUSE] = NO_CURSOR;
-    m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
-    m_cursor[CURSOR_MAP] = NO_CURSOR;
-
-    // Initially, switch to CRT.
-    cgotoxy(1, 1, GOTO_CRT);
-
     return true;
 }
 
@@ -165,6 +172,12 @@ void TilesFramework::finish_message()
 {
     if (m_msg_buf.size() == 0)
         return;
+
+    if (m_sock_name.empty())
+    {
+        m_msg_buf.clear();
+        return;
+    }
 
     m_msg_buf.append("\n");
     const char* fragment_start = m_msg_buf.data();
@@ -252,12 +265,18 @@ void TilesFramework::flush_messages()
 
 void TilesFramework::_await_connection()
 {
+    if (m_sock_name.empty())
+        return;
+
     while (m_dest_addrs.size() == 0)
         _receive_control_message();
 }
 
 wint_t TilesFramework::_receive_control_message()
 {
+    if (m_sock_name.empty())
+        return 0;
+
     char buf[4096]; // Should be enough for client->server messages
     sockaddr_un srcaddr;
     socklen_t srcaddr_len;
@@ -345,6 +364,24 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         if (Options.note_chat_messages)
             take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0, content->string_));
     }
+    else if (msgtype == "click_travel" &&
+             mouse_control::current_mode() == MOUSE_MODE_COMMAND)
+    {
+        JsonWrapper x = json_find_member(obj.node, "x");
+        JsonWrapper y = json_find_member(obj.node, "y");
+        x.check(JSON_NUMBER);
+        y.check(JSON_NUMBER);
+        JsonWrapper force = json_find_member(obj.node, "force");
+
+        coord_def gc = coord_def((int) x->number_, (int) y->number_) + m_origin;
+        c = click_travel(gc, force.node && force->tag == JSON_BOOL && force->bool_);
+        if (c != CK_MOUSE_CMD)
+        {
+            clear_messages();
+            process_command((command_type) c);
+        }
+        c = CK_MOUSE_CMD;
+    }
 
     return c;
 }
@@ -353,7 +390,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
 {
     int result;
     fd_set fds;
-    int maxfd = m_sock;
+    int maxfd = m_sock_name.empty() ? STDIN_FILENO : m_sock;
 
     while (true)
     {
@@ -361,7 +398,8 @@ bool TilesFramework::await_input(wint_t& c, bool block)
         {
             FD_ZERO(&fds);
             FD_SET(STDIN_FILENO, &fds);
-            FD_SET(m_sock, &fds);
+            if (!m_sock_name.empty())
+                FD_SET(m_sock, &fds);
 
             if (block)
             {
@@ -383,7 +421,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             return false;
         else if (result > 0)
         {
-            if (FD_ISSET(m_sock, &fds))
+            if (!m_sock_name.empty() && FD_ISSET(m_sock, &fds))
             {
                 c = _receive_control_message();
 
@@ -607,7 +645,7 @@ static bool _update_statuses(player_info& c)
         {
             if (!you.duration[status])
                 continue;
-            inf.short_text = "shielded";
+            inf.short_text = "divine shield";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
@@ -822,7 +860,7 @@ void TilesFramework::_send_player(bool force_full)
     json_close_object(true);
 
     json_open_object("equip");
-    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
+    for (unsigned int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
     {
         const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
         _update_int(force_full, c.equip[i], equip, to_string(i));
@@ -1093,7 +1131,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
         json_write_int("mf", mf);
 
     // Glyph and colour
-    ucs_t glyph = next_sc.glyph;
+    char32_t glyph = next_sc.glyph;
     if (current_sc.glyph != glyph)
     {
         char buf[5];
@@ -1176,6 +1214,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.mangrove_water != current_pc.mangrove_water)
             json_write_bool("mangrove_water", next_pc.mangrove_water);
+
+        if (next_pc.awakened_forest != current_pc.awakened_forest)
+            json_write_bool("awakened_forest", next_pc.awakened_forest);
 
         if (next_pc.blood_rotation != current_pc.blood_rotation)
             json_write_int("blood_rotation", next_pc.blood_rotation);
@@ -1865,7 +1906,7 @@ void TilesFramework::textbackground(int col)
     m_print_bg = col;
 }
 
-void TilesFramework::put_ucs_string(ucs_t *str)
+void TilesFramework::put_ucs_string(char32_t *str)
 {
     if (m_print_area == nullptr)
         return;

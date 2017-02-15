@@ -20,18 +20,18 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
       return
     end
 
-  local weapon = util.random_from({"short sword", "rapier",
+    local weapon = util.random_from({"short sword", "rapier",
                  "long sword", "scimitar", "glaive", "bardiche",
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
-  local item = {["No God"]="amulet of faith ident:type",
+    local item = {
+         ["No God"]="amulet of faith ident:type",
          Ashenzari="ring of see invisible ident:type",
          Beogh="scroll of fear ident:type q:3-6 /\
-              disc of storms",
-         Cheibriados="wand of hasting ident:type w:5 /\
-              potion of haste ident:type q:2-4 /\
+              scroll of immolation ident:type q:3-6",
+         Cheibriados="potion of haste ident:type q:2-4 /\
               good_item quick blade",
-         Dithmenos="lamp of fire w:5 / rod of ignition w:5 /\
+         Dithmenos="lamp of fire w:5 /\
               good_item " .. weapon .. " ego:flaming ident:type",
          Elyvilon="book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
@@ -44,16 +44,8 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Kikubaaqudgha="randbook owner:Lugonu spells:control_undead&dispel_undead \
                        numspells:2 /\
               rat corpse w:5 / kobold corpse w:5",
-         Lugonu="no",
-         Makhleb="no",
-         ["Nemelex Xobeh"]="no",
-         Okawaru="no",
          Pakellas="staff of energy / crystal ball of energy w:5",
-         Qazlal="no",
-         Ru="no",
-         ["Sif Muna"]="no",
-         ["the Shining One"]="book of Envenomations /\
-              Young Poisoner's Handbook /\
+         ["the Shining One"]="Young Poisoner's Handbook /\
               potion of invisibility ident:type q:3-6",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
@@ -68,13 +60,13 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               good_item " .. weapon .. " ego:pain ident:type /\
               good_item " .. weapon .. " ego:chaos ident:type /\
               wand of polymorph ident:type",
-       }
-         data.triggered = true
-         if item[you.god()] == "no" then return else
-            dgn.place_cloud(x, y, "purple smoke", 1)
-            dgn.create_item(x, y, item[you.god()])
-            crawl.god_speaks("Lugonu", "An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?")
-         end
+    }
+    data.triggered = true
+    if item[you.god()] ~= nil then
+      dgn.place_cloud(x, y, "purple smoke", 1)
+      dgn.create_item(x, y, item[you.god()])
+      crawl.god_speaks("Lugonu", "An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?")
+    end
   end
 end
 }}

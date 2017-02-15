@@ -119,7 +119,7 @@ DEPTH:  D:8-11, Orc:1, Lair:1-2
 : place_unique(_G, "Erica")
 
 NAME:   uniq_erolcha
-DEPTH:  D:8-13, Orc, !Orc:$
+DEPTH:  D:9-13, Orc
 : place_unique(_G, "Erolcha")
 
 NAME:   uniq_eustachio
@@ -168,16 +168,12 @@ DEPTH:  D:10-, Orc, Lair:4-, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Josephine band")
 
 NAME:   uniq_kirke
-DEPTH:  D:12-, Lair:5-, Elf:1, Swamp, Snake, Shoals, Spider
+DEPTH:  D:12-, Lair:4-, Elf:1, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Kirke band")
 
 NAME:   uniq_louise
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Louise")
-
-NAME:   uniq_maud
-DEPTH:  D:10-14, Lair:3-, Orc
-: place_unique(_G, "Maud")
 
 NAME:   uniq_maurice
 DEPTH:  D:8-13, Orc
@@ -196,7 +192,7 @@ DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
-DEPTH:  D:12-, Orc:$, Lair:5-
+DEPTH:  D:12-, Orc:$, Lair:4-
 : place_unique(_G, "Nessos")
 
 NAME:   uniq_pikel
@@ -223,6 +219,10 @@ NAME:   uniq_purgy
 DEPTH:  D:3-4
 WEIGHT: 1
 : place_unique(_G, "Purgy")
+
+NAME:   uniq_robin
+DEPTH:  D:2-4
+: place_unique(_G, "Robin band")
 
 NAME:   uniq_roxanne
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
@@ -254,12 +254,8 @@ NAME:   uniq_terence
 DEPTH:  D:2-3
 : place_unique(_G, "Terence")
 
-NAME:   uniq_robin
-DEPTH:  D:2-4
-: place_unique(_G, "Robin band")
-
 NAME:   uniq_urug
-DEPTH:  D:10-, Orc, !Orc:$, Lair:1-4
+DEPTH:  D:10-, Orc, !Orc:$, Lair:2-5
 : place_unique(_G, "Urug")
 
 NAME:   uniq_agnes
@@ -275,6 +271,13 @@ DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-4, Crypt:1
 WEIGHT: 50(Snake), 10
 : place_unique(_G, "Aizul")
 
+NAME:   uniq_asterion
+DEPTH:  Depths:1-3, Elf, Snake, Spider, Vaults:1-3
+: place_unique(_G, "Asterion")
+
+NAME:   uniq_bai_suzhen
+DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt
+: place_unique(_G, "Bai Suzhen")
 
 # Do *not* change the name of this vault (uniq_boris) without changing the
 # relevant section in monstuff.cc:monster_die. If you wish to alter Boris'
@@ -329,14 +332,6 @@ NAME:   uniq_nikola
 DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
 
-NAME:   uniq_asterion
-DEPTH:  Depths:1-3, Elf, Snake, Spider, Vaults:1-3
-: place_unique(_G, "Asterion")
-
-NAME:   uniq_norris
-DEPTH:  Depths:1-3, Elf:2-, Snake:2-, Spider:2-, Vaults:1-3
-: place_unique(_G, "Norris")
-
 NAME:   uniq_saint_roka
 DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
 : place_unique(_G, "Saint Roka band")
@@ -344,10 +339,6 @@ DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
 NAME:   uniq_sojobo
 DEPTH:  Depths, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Sojobo band")
-
-NAME:   uniq_wiglaf
-DEPTH:  Depths:1-3, Elf:2-, Snake:2-, Spider:2-, Vaults, Crypt
-: place_unique(_G, "Wiglaf")
 
 NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
@@ -359,14 +350,8 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 ################################################################################
 
 NAME:   uniq_donald
-TAGS:   lab
-DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults:1-4, Crypt, Elf, Orc:$, Lab
+DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults:1-4, Crypt:1-2, Elf, Orc:$
 : place_unique(_G, "Donald")
-
-NAME:   uniq_dissolution
-DEPTH:  Slime:2-
-WEIGHT: 100
-: place_unique(_G, "Dissolution")
 
 NAME:   uniq_vashnia
 DEPTH:  Snake:2-
@@ -386,6 +371,11 @@ NAME:   uniq_arachne
 DEPTH:  Spider:2-
 WEIGHT: 50
 : place_unique(_G, "Arachne")
+
+NAME:   uniq_dissolution
+DEPTH:  Slime:2-
+WEIGHT: 100
+: place_unique(_G, "Dissolution")
 
 NAME:   uniq_khufu
 DEPTH:  Tomb, Crypt
@@ -499,20 +489,18 @@ SUBST:   A:AAA+, A=x
 : else
 SUBST:   A:;;;x, a=;
 : end
-# Randomisation 2: Rarely, the cottage will have a door.
-SUBST:   C = +''''
-# Randomisation 3: Plants might be in the way -- Yiuf seems to be a bad
+# Randomisation 2: Plants might be in the way -- Yiuf seems to be a bad
 #                  gardener. Sometimes.
-SUBST:   P:PQ;; , Q=2;
+SUBST:   P:PQQ;;;; , Q=2;
 NSUBST:  P=1:t / *:2;
-# Randomisation 4: Maces. Maces. Maces.
+# Randomisation 3: Maces. Maces. Maces.
 SUBST:   ; : .:100 ;:10 d:2
 SUBST:   ; = .:10 d:2
 : if crawl.one_chance_in(300) then
 SUBST:   t="
 : end
 SUBST:   ':.......' , "=' , ':d' , '=..d
-# Randomisation 5: trees or rock
+# Randomisation 4: trees or rock
 SUBST:   t : ttx
 MAP
  xxxxxxxxxxxxxxxx
@@ -520,7 +508,7 @@ MAP
  xxtttttttttttttx
  BAP't'tttccccctx
 ;baPP't''tc'''ctx
-@baPPtttt'C''1ctx
+@baPPtttt'=''1ctx
 ;BAPttttttc''dctx
  xxtttttttccccctx
  xxtttttttttttttx

@@ -248,12 +248,6 @@ En genial videnskabsmand besat af elektricitet. I forsøget på at fuldende sin
 elektriske golem kom han ud for en forfærdelig ulykke, og nu faser han ind og
 ud af virkeligheden.
 %%%%
-Norris
-
-En afsluttet fred i døden-kultist med en sund kulør og en mild røst. Han er ret
-ligeglad med, om det bliver dig eller ham, der dør. "Begge" ville nok være det
-allerbedste.
-%%%%
 Polyphemus
 
 En kyklophyrde. Han er særdeles beskyttende over for sin hjord, som han vogter
@@ -309,14 +303,6 @@ synderligt godt, så han har forvekslet dig med en harpy.
 {{
     if you.can_smell() then
         return "Han lufter forfærdeligt."
-    end
-}}
-%%%%
-Wiglaf
-
-En fed dværg med en tåbeligt udseende hat. {{
-    if you.can_smell() then
-        return "Han stinker af sprit."
     end
 }}
 %%%%

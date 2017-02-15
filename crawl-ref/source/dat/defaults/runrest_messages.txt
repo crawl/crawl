@@ -1,4 +1,4 @@
-stop := runrest_stop_message
+    stop := runrest_stop_message
 ignore := runrest_ignore_message
 
 ignore += Jiyva gurgles merrily
@@ -8,12 +8,11 @@ ignore += You hear.*splatter
 
 ignore += You feel.*sick
 ignore += disappears in a puff of smoke
-ignore += engulfed in a cloud of smoke
 ignore += standing in the rain
-ignore += engulfed in white fluffiness
 ignore += A.*toadstool withers and dies
 ignore += toadstools? grows
 ignore += You walk carefully through the
+ignore += Fedhas appreciates ongoing decay
 ignore += Eating .*chunk
 ignore += This .*flesh tastes
 ignore += You .* eating
@@ -24,6 +23,7 @@ ignore += (crumbles|melts) away\.
 
 stop += You feel you are being watched
 stop += [Ss]omething.* misses you.
+stop += emerges from the mists of memory
 
 # Traps
 #
@@ -33,16 +33,19 @@ stop += You have blundered into a Zot trap
 stop += You fall through a shaft
 stop += A sentinel's mark forms upon you\.
 
-# Ailments
-#
-stop += flesh start
-
 # Enchantments
 #
 ignore += Your skin is crawling a little less now.
 ignore += of your corpse armour falls away.
 
-ignore += pray:
+# Uskayaw -- ignore all Uskayaw power gain/loss messages since they happen constantly
+#
+ignore += .*stomp with the beat.*
+ignore += .*pass through a line of other dancers.*
+ignore += .*force your foes to helplessly watch your dance\.
+ignore += .*force your foes to share their pain\.
+ignore += .*merge with and destroy a victim.*
+
 ignore += talk:
 ignore += talk_visual:
 ignore += friend_spell:

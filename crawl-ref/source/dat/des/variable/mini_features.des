@@ -1351,8 +1351,8 @@ NAME:    roderic_nine_men_s_morris
 TAGS:    transparent extra decor
 DEPTH:   D, Depths, Elf
 WEIGHT:  1
-SHUFFLE: defgh
-ITEM:    q:1 $, beef jerky, fruit q:1, royal jelly q:1, stone q:1
+SHUFFLE: defg
+ITEM:    q:1 $, fruit q:1, royal jelly q:1, stone q:1
 NSUBST:  ' = 9:d / *:.
 MAP
 '.......'.......'
@@ -2665,6 +2665,37 @@ xx.xxxx
    xxx
 ENDMAP
 
+# A big river that often divides most of the map, with a guaranteed path
+# across. This would ideally be done by a layout, but this vault seems to place
+# well in testing and has the intended effect.
+NAME: chequers_big_river
+TAGS: no_pool_fixup transparent extra decor
+SUBST: - = W:30 w P, ' = W . P:2
+KMONS: P = plant
+KFEAT: P = W / .
+MAP
+xxxxxxxxxxx
+xxxxxxxxxxx
+xxwwxxxxxxx
+xxxwwxxxxxx
+@.xxwwxxx.@
+ .xwwwxx..
+ .xxwwwx...
+ .'-wwww''..
+ .''-ww--''.@
+ ..''-www-''....
+  @.''--w--''''...@
+   ..''-ww----''''....
+    ..'--wwww----''''...@.......@.....
+     .''---wwwww----W''''''''''''..''.@xxxxxxxx
+     ..'''---wwwwwwW---'--------''''xxxxxxxxxxx
+      @..'''-wwwwwwwWWWwwwwwwww----wwwxxxxxxxxx
+        ..''------wwwWWW---wwwwwwwwwwwwwwwxxxxx
+         ..'''''''--''''W''----wwwwwwwwwwxxxxxx
+          @......''''.....'''''''''xxxxxxxxxxxx
+                @.....   @......@......@xxxxxxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2823,7 +2854,7 @@ ENDMAP
 NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
-ITEM:   ring of teleportation / scroll of teleportation q:3
+ITEM:   scroll of teleportation ident:type q:3
 DEPTH:  D:5-, Depths
 MAP
    wwwwwwwww
@@ -2875,7 +2906,7 @@ WEIGHT: 1
 DEPTH:  D:5-, Depths, Lair, Elf, !Elf:$, Orc
 SUBST:  X = m.
  : dgn.delayed_decay(_G,'B', 'human skeleton')
-KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
+KITEM:  A : wand of digging charges:0
 # Prevent random teleportation getting you stuck
 KPROP:  AB = no_tele_into
 KFEAT:  AB = floor
@@ -2910,17 +2941,6 @@ x+xx
 xddx
 xddx
 xxxx
-ENDMAP
-
-NAME:  minmay_bad_closet
-TAGS:  extra
-DEPTH: D:2-12
-ITEM:  scroll of immolation / potion of degeneration w:20
-MAP
-xxxx
-xddx
-xddx
-xx+x
 ENDMAP
 
 NAME:    minmay_variable_closet
@@ -3019,7 +3039,7 @@ SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.f
-ITEM:   beef jerky / w:5 minotaur chunk
+ITEM:   meat ration / w:5 minotaur chunk
 : dgn.delayed_decay(_G, 'e', 'minotaur corpse')
 ITEM:   hand axe
 SUBST:  ' = .

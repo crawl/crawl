@@ -32,11 +32,13 @@
 #include "feature.h"
 #include "files.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-wrath.h"
 #include "hints.h"
+#include "item-name.h" // item_type_known
+#include "item-prop.h" // get_weapon_brand
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -46,6 +48,7 @@
 #include "mon-poly.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -127,7 +130,7 @@ void seen_monsters_react(int stealth)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if ((mi->asleep() || mons_is_wandering(*mi))
+        if ((mi->asleep() || mons_is_wandering(**mi))
             && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
@@ -136,7 +139,7 @@ void seen_monsters_react(int stealth)
             if (!(*mi)->alive())
                 continue;
 
-            handle_monster_shouts(*mi);
+            monster_consider_shouting(**mi);
         }
 
         if (!mi->visible_to(&you))
@@ -256,20 +259,39 @@ static void _genus_factoring(map<monster_type, int> &types,
     types[genus] = num;
 }
 
-/// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
-static void _divine_headsup(const vector<monster*> monsters,
-                            map<monster_type, int> &types)
+static bool _is_weapon_worth_listing(const item_def *wpn)
 {
-    string warning_msg = " warns you:";
-    bool warning = false;
+    return wpn && (wpn->base_type == OBJ_STAVES
+                   || is_unrandom_artefact(*wpn)
+                   || get_weapon_brand(*wpn) != SPWPN_NORMAL);
+}
+
+/// Return a warning for the player about newly-seen monsters, as appropriate.
+static string _monster_headsup(const vector<monster*> &monsters,
+                               map<monster_type, int> &types,
+                               bool divine)
+{
+    string warning_msg = "";
     for (const monster* mon : monsters)
     {
-        if (!mon->props.exists("ash_id") && !mon->props.exists("zin_id"))
+        const bool ash_ided = mon->props.exists("ash_id");
+        const bool zin_ided = mon->props.exists("zin_id");
+        const bool has_branded_weapon
+            = _is_weapon_worth_listing(mon->weapon())
+              || _is_weapon_worth_listing(mon->weapon(1));
+        if ((divine && !ash_ided && !zin_ided)
+            || (!divine && !has_branded_weapon))
+        {
             continue;
+        }
+
+        if (!divine && (ash_ided || monsters.size() == 1))
+            continue; // don't give redundant warnings for enemies
 
         monster_info mi(mon);
 
-        warning_msg += " ";
+        if (warning_msg.size())
+            warning_msg += " ";
 
         string monname;
         if (monsters.size() == 1)
@@ -283,6 +305,13 @@ static void _divine_headsup(const vector<monster*> monsters,
         warning_msg += uppercase_first(monname);
 
         warning_msg += " is";
+        if (!divine)
+        {
+            warning_msg += get_monster_equipment_desc(mi, DESC_WEAPON_WARNING,
+                                                      DESC_NONE) + ".";
+            continue;
+        }
+
         if (you_worship(GOD_ZIN))
         {
             warning_msg += " a foul ";
@@ -292,22 +321,42 @@ static void _divine_headsup(const vector<monster*> monsters,
         }
         else
         {
-            warning_msg += " "
-            + get_monster_equipment_desc(mi, DESC_IDENTIFIED,
-                                         DESC_NONE);
+            // TODO: deduplicate
+            if (mon->type != MONS_DANCING_WEAPON)
+                warning_msg += " ";
+            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                      DESC_NONE);
         }
         warning_msg += ".";
-        warning = true;
     }
 
-    if (warning)
-    {
-        simple_god_message(warning_msg.c_str());
+    return warning_msg;
+}
+
+/// Let Ash/Zin warn the player about newly-seen monsters, as appropriate.
+static void _divine_headsup(const vector<monster*> &monsters,
+                            map<monster_type, int> &types)
+{
+    const string warnings = _monster_headsup(monsters, types, true);
+    if (!warnings.size())
+        return;
+
+    const string warning_msg = " warns you: " + warnings;
+    simple_god_message(warning_msg.c_str());
 #ifndef USE_TILE_LOCAL
-        if (you_worship(GOD_ZIN))
-            update_monster_pane();
+    // XXX: should this really be here...?
+    if (you_worship(GOD_ZIN))
+        update_monster_pane();
 #endif
-    }
+}
+
+static void _secular_headsup(const vector<monster*> &monsters,
+                             map<monster_type, int> &types)
+{
+    const string warnings = _monster_headsup(monsters, types, false);
+    if (!warnings.size())
+        return;
+    mprf(MSGCH_MONSTER_WARNING, "%s", warnings.c_str());
 }
 
 /**
@@ -344,6 +393,7 @@ static void _handle_comes_into_view(const vector<string> &msgs,
     }
 
     _divine_headsup(monsters, types);
+    _secular_headsup(monsters, types);
 }
 
 /// If the player has the shout mutation, maybe shout at newly-seen monsters.
@@ -354,7 +404,9 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
 
     for (const monster* mon : monsters)
     {
-        if (x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        if (!mons_is_tentacle_or_tentacle_segment(mon->type)
+            && !mons_is_conjured(mon->type)
+            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
         {
             yell(mon);
             return;
@@ -485,7 +537,7 @@ void mark_mon_equipment_seen(const monster *mons)
 
         // ID brands of weapons held by enemies.
         if (slot == MSLOT_WEAPON
-            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(*mons))
         {
             if (is_artefact(item))
                 artefact_learn_prop(item, ARTP_BRAND);
@@ -756,7 +808,7 @@ string screenshot()
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
                                      coord_def(x, y));
-            ucs_t ch =
+            char32_t ch =
                   (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;
@@ -873,7 +925,7 @@ bool view_update()
     return false;
 }
 
-void flash_view(use_animation_type a, colour_t colour, targetter *where)
+void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (Options.use_animations & a)
     {
@@ -884,7 +936,7 @@ void flash_view(use_animation_type a, colour_t colour, targetter *where)
 }
 
 void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
-                      targetter *where)
+                      targeter *where)
 {
     if (Options.use_animations & a)
     {

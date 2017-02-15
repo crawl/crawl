@@ -9,18 +9,19 @@ A broken pillar
 %%%%
 A gateway to Hell
 
-„Ich bin auf dem Weg in die Stadt des Wehs.
- bin ich der Weg zu verlassene Leute.
- bin ich der Weg in den ewigen Kummer.
+„Durch mich geht's ein zur Stadt der ew'gen Qualen,
+ Durch mich geht's ein zum wehevollen Schlund,
+ Durch mich geht's ein zu der Verdammniß Thalen.
 
- Heilige Justiz hat meinen Architekten bewegt.
- wurde ich hier durch die Gottesomnipotenz,
- Primordiale Liebe und äußerstes Intellekt erzogen.
- Nur jene Elemente kann Zeit nicht halten
- Wurden vor mir gemacht, und außer der Zeit stehe ich.
- Hemmungslosigkeit die ganze Hoffnung, Sie, die hier hereingehen.“
-    -Dante Alighieri, _The Gotteskomödie _, „Inferno“, Gesang III. ca. 1315.
-     trans. John Ciardi, 1954.
+ Gerechtigkeit war der Bewegungsgrund
+ Deß, der mich schuf; mich gründend, that er offen
+ Allmacht, Allweisheit, erste Liebe kund.
+
+ Nicht ward vor mir Geschaffnes angetroffen,
+ Als Ewiges; und ewig daur' auch ich.
+ Ihr, die ihr eingeht, laßt hier jedes Hoffen.“
+    -Dante Alighieri, _Göttliche Komödie_, „Die Hölle“, III. Gesang, ca. 1315.
+     Übersetzung Karl Streckfuß, 1876.
 %%%%
 A gateway to a ziggurat
 
@@ -70,17 +71,18 @@ Verwirrung, Einheit und Vielfältigkeit, Künstlertum und Verwirrung.“
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
-„Und wenn Sie lange in einen Abgrund, die Abgrund-Blicke auch in Sie starren. “
-    -Friedrich Nietzsche, _Beyond Gut und Evil_, Sprichwort 146. 1886.
+„Und wenn du lange in einen Abgrund blickst, blickt der Abgrund auch in
+dich hinein.“
+    -Friedrich Nietzsche, _Jenseits von Gut und Böse_, Sprichwort 146. 1886.
 
-„so, In unserem Land,“ hat Alice gesagt, noch etwas keuchend, „würden Sie
-allgemein zu sonst wohin kommen — wenn Sie sehr schnell seit langem laufen
-würden, wie wir getan haben.“ „Eine langsame Sorte des Landes!“ hat die Königin
-gesagt. „Jetzt hier sehen Sie, man braucht das ganze Führen von Ihnen können
-tun, um in demselben Platz zu behalten. Wenn Sie sonst wohin kommen wollen,
-müssen Sie mindestens zweimal so schnell wie das führen!“
-    -Lewis Carroll, _Through der Spiegel, und Was Alice Found There _, ch. 2
-    „Der Garten von Lebenden Blumen“. 1871.
+„Na, in unserem Land,“ sagte Alice, noch ein bißchen außer Atem, „kommt man
+im allgemeinen irgendwoanders hin – wenn man lange Zeit sehr schnell rennt,
+so wie wir es gemacht haben.“
+„Ein langsames Land!“ sagte die Königin. „Nun, hier muß man nämlich so schnell
+rennen, wie man kann, um auf der Stelle zu bleiben. Wenn man irgendwo anders
+hin will, muß man mindestens doppelt so schnell rennen!“
+    -Lewis Carroll, _Hinter dem Spiegel und was Alice dort fand_, Kap. 2
+    „Der Tränenteich“. 1871. Übersetzung Jörg Karau, 2008.
 %%%%
 A portal to a secret trove of treasure
 
@@ -756,11 +758,6 @@ short sword
 „Wer hat bloß als erster die schrecklichen Schwerter erfunden?
  Wie grausam und wahrhaft hartherzig war der!“
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 v.Chr.
-%%%%
-slice of pizza
-
-„Wenn der Mond deine Augen berührt wie ein Pizzastück, das ist Liebe.“
-    -Jack Brooks, „That’s Amore“. 1952.
 %%%%
 sling
 

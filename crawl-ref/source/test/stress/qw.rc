@@ -164,7 +164,7 @@ df += scrolls? of (blinking|amnesia)
 df += scrolls? of (curse armour|curse jewellery|curse weapon)
 df += scrolls? of (immolation|noise|random uselessness|torment)
 # keep: curing,heal wounds,haste,cancellation,resistance,experience,
-#       might,beneficial mutation,cure mutation,restore abilities
+#       might,restore abilities
 ae += potions? of (brilliance|magic|berserk rage)
 ae += potions? of (flight|invisibility|agility)
 ae += potions? of (ambrosia|decay|degeneration|mutation)
@@ -1065,14 +1065,13 @@ local scary_monsters = {
   {10, "Crazy Yiuf"},
   {10, "Sigmund"},
   {10, "ogre"},
-  {10, "two-headed ogre"},
   {10, "decayed bog body"},
 
   {12, "orc priest"},
   {12, "orc warrior"},
   {12, "troll"},
   {12, "cyclops"},
-  {12, "hill giant"},
+  {12, "two-headed ogre"},
   {12, "spiny frog"},
   {12, "black mamba"},
   {12, "Snorg"},
@@ -1094,7 +1093,6 @@ local scary_monsters = {
   {13, "blink frog"},
 
   {15, "death yak"},
-  {15, "Maud"},
   {15, "Erica"},
   {15, "catoblepas"},
   {15, "orc knight"},
@@ -1118,10 +1116,9 @@ local scary_monsters = {
   {17, "white ugly thing"},
   {17, "white very ugly thing"},
 
-  {20, "greater naga"},
+  {20, "nagaraja"},
   {20, "naga sharpshooter"},
   {20, "emperor scorpion"},
-  {20, "Wiglaf"},
   {20, "Rupert"},
   {20, "Aizul"},
   {20, "desc", "hydra"},
@@ -1153,7 +1150,6 @@ local scary_monsters = {
   {100, "Sojobo"},
   {100, "desc", "berserk[^e]"},
   {100, "Roxanne"},
-  {100, "Norris"},
   {100, "Erolcha"},
   {100, "desc", "statue"},
   {100, "Nessos"},
@@ -1221,7 +1217,6 @@ local bia_monsters = {
   {20, "Saint Roka"},
   {20, "Agnes"},
   {20, "Jory"},
-  {20, "Norris"},
   {20, "Arachne"},
   {20, "Nikola"},
   {20, "Vashnia"},
@@ -2269,7 +2264,7 @@ function on_valuable_corpse()
     return false
   end
   for it in at_feet() do
-    if it.name() == "mottled dragon corpse" or
+    if it.name() == "acid dragon corpse" or
        it.name() == "steam dragon corpse" then
       return true
     end
@@ -2364,7 +2359,7 @@ function should_rest()
           (you.race() ~= "Deep Dwarf" and you.hunger_name() ~= "bloodless"
            or you.regenerating())
           or you.slowed() or you.exhausted() or you.teleporting()
-          or you.status("manticore barbs")
+          or you.status("barbed spikes")
           or you.silencing() or you.corrosion() > 0
           or you.god() == "Makhleb" and you.turns() <= sgd_timer + 100)
 end
@@ -3595,7 +3590,7 @@ function plan_use_good_consumables()
         ac = armour_ac()
         if body and not body.artefact and body.plus < ac
            and body_armour_is_great(body)
-           and not body.name():find("quicksilver dragon armour") then
+           and not body.name():find("quicksilver dragon scales") then
           oldname = body.name()
           if read2(it, letter(body)) then
             say("ENCHANTING " .. oldname .. ".")
@@ -3625,7 +3620,7 @@ function plan_use_good_consumables()
         end
         if body and not body.artefact and body.plus < ac
            and body_armour_is_good(body)
-           and not body.name():find("quicksilver dragon armour") then
+           and not body.name():find("quicksilver dragon scales") then
           oldname = body.name()
           if read2(it, letter(body)) then
             say("ENCHANTING " .. oldname .. ".")

@@ -39,16 +39,16 @@ public:
 
     // Object's method
     void clear_to_end_of_line();
-    void putwch(ucs_t chr);
+    void putwch(char32_t chr);
 
-    ucs_t   *cbuf; //text backup
+    char32_t *cbuf; //text backup
     uint8_t *abuf; //textcolour backup
 
     int cx_ofs; //cursor x offset
     int cy_ofs; //cursor y offset
 
     void addstr(const char *buffer);
-    void addstr_aux(const ucs_t *buffer, int len);
+    void addstr_aux(const char32_t *buffer, int len);
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
 

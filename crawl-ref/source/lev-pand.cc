@@ -57,8 +57,7 @@ void init_pandemonium()
                                                     1, MONS_LOROCYPROCA,
                                                     1, MONS_HELLION,
                                                     1, MONS_TORMENTOR,
-                                                    1, MONS_REAPER,
-                                                    0);
+                                                    1, MONS_REAPER);
 
         // The last three slots have a good chance of big badasses.
         if (pc == 7 && one_chance_in(8)
@@ -74,8 +73,7 @@ void init_pandemonium()
                   2, MONS_BLOOD_SAINT,
                   2, MONS_WARMONGER,
                   2, MONS_CORRUPTER,
-                  2, MONS_BLACK_SUN,
-                  0);
+                  2, MONS_BLACK_SUN);
         }
     }
 
@@ -90,9 +88,6 @@ void init_pandemonium()
 
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_HELL_SENTINEL;
-
-    if (one_chance_in(10))
-        env.mons_alloc[7 + random2(3)] = MONS_CHAOS_CHAMPION;
 
     env.floor_colour = _pan_floor_colour();
     env.rock_colour  = _pan_rock_colour();

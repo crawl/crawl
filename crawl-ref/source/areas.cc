@@ -15,8 +15,8 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::umbra
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::umbra
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
@@ -333,7 +333,7 @@ bool remove_sanctuary(bool did_attack)
     // Now that the sanctuary is gone, monsters aren't afraid of it
     // anymore.
     for (monster_iterator mi; mi; ++mi)
-        mons_stop_fleeing_from_sanctuary(*mi);
+        mons_stop_fleeing_from_sanctuary(**mi);
 
     if (is_resting())
         stop_running();
@@ -449,12 +449,12 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->behaviour = BEH_SEEK;
                 behaviour_event(mon, ME_EVAL, &you);
             }
-            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
+            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(*mon))
             {
-                mons_start_fleeing_from_sanctuary(mon);
+                mons_start_fleeing_from_sanctuary(*mon);
 
                 // Check to see that monster is actually fleeing.
-                if (mons_is_fleeing(mon) && you.can_see(*mon))
+                if (mons_is_fleeing(*mon) && you.can_see(*mon))
                 {
                     scare_count++;
                     seen_mon = mon;
@@ -489,7 +489,7 @@ void create_sanctuary(const coord_def& center, int time)
         mprf(MSGCH_GOD, "By Zin's power, all blood is cleared from the sanctuary.");
 
     if (scare_count == 1 && seen_mon != nullptr)
-        simple_monster_message(seen_mon, " turns to flee the light!");
+        simple_monster_message(*seen_mon, " turns to flee the light!");
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
 }
@@ -566,7 +566,7 @@ int player::halo_radius() const
                                                     / piety_breakpoint(5);
     }
 
-    if (player_equip_unrand(UNRAND_BRILLIANCE))
+    if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
 
     return size;
@@ -603,7 +603,7 @@ int monster::halo_radius() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && is_unrandom_artefact(*weap, UNRAND_BRILLIANCE))
+    if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
 
     if (!(holiness() & MH_HOLY))
@@ -740,7 +740,7 @@ int monster::umbra_radius() const
         return -1;
 
     // Enslaved holies get an umbra.
-    if (mons_enslaved_soul(this))
+    if (mons_enslaved_soul(*this))
         return _mons_class_halo_radius(base_monster);
 
     switch (type)

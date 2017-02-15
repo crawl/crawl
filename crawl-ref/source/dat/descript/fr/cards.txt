@@ -1,18 +1,4 @@
 %%%%
-the Portal card
-
-Cette carte vous téléporte aléatoirement ailleurs, vous permettant un contrôle
-de la destination à forte puissance.
-%%%%
-the Warp card
-
-Cette carte vous téléporte sur une courte distance, soit aléatoirement, soit,
-avec un haut niveau de pouvoir, où vous désirez.
-%%%%
-Swap card
-
-Cette carte change votre position avec celle d'une créature à proximité.
-%%%%
 Velocity card
 
 Cette carte vous permet de vous déplacer et agir encore plus rapidement.
@@ -22,131 +8,20 @@ the Tomb card
 Cette carte entoure l'aventurier de murs de pierre protecteurs. A bas niveau,
 cette tombe pourra s'avérer imparfaite. A utiliser avec précaution !
 %%%%
-the Banshee card
-
-Le cri de la Banshee insuffle la peur dans toutes les créatures à proximité.
-%%%%
-Damnation card
+Exile card
 
 Cette carte bannit une ou plusieurs créatures dans les Abysses, vous même
 pouvant être inclus dans le processus.
-%%%%
-Solitude card
-
-Cette carte téléporte aléatoirement les créatures qui vous sont adjacentes.
-%%%%
-Warpwright card
-
-Cette carte crée un piège téléporteur à coté de vous, avec une chance de vous
-indiquer sa position exacte si la puissance est assez grande.
-%%%%
-Flight card
-
-Cette carte vous permet de fuir en vous transformant ou en vous accordant le
-vol et un déplacement rapide. A forte puissance, elle pourra en outre créer un
-gouffre en dessous de vous, voir même vous rendre temporairement invisible.
 %%%%
 the Elixir card
 
 Cette carte rétablie votre santé ou votre énergie magique ou les deux à
 puissance élevée.
 %%%%
-Battlelust card
-
-Cette carte vous rend plus puissant en combat physique, causant l'état
-Berserker à faible puissance ou vous apporte plus de force et d'agilité à une
-puissance supérieure.
-%%%%
-the Helm card
-
-Cette carte accroit votre défense. Elle peut augmenter votre armure, votre
-esquive, votre blocage, et vos résistances.
-%%%%
-the Blade card
-
-Cette carte enchante temporairement, voir anime, votre arme.
-%%%%
-the Shadow card
-
-Cette carte vous permet de vous fondre dans les ombres, vous rendant invisible.
-La puissance augmentant, elle accorde des bonus substantiels à votre furtivité.
-%%%%
-the Mercenary card
-
-Cette carte convoque des mercenaires pour combattre à vos côtés... mais à un
-certain prix.
-%%%%
-the Potion card
-
-Cette carte a le même effet, positif ou négatif, que boire une potion magique
-inconnu. Plus la puissance est élevée, plus la chance que l'effet soit
-bénéfique augmente.
-%%%%
-Focus card
-
-Cette carte améliore votre attribut le plus puissant au prix du plus faible.
-%%%%
-Shuffle card
-
-Cette carte inter-change vos trois attributs. A utiliser avec modération !
-%%%%
-Experience card
-
-Cette carte vous rend plus expérimenté.
-%%%%
 Wild Magic card
 
 Cette carte provoque une magie sauvage contre vous, comme si vous aviez mal
 lancé un sortilège.
-%%%%
-the Helix card
-
-Cette carte change vos mutations. Plus la puissance est élevée, plus ces
-changements peuvent être bénéfiques.
-%%%%
-the Sage card
-
-Cette carte va concentrer votre expérience gagnée vers une compétence
-spécifique afin de l'entrainer plu rapidement qu'elle ne devrait normalement. A
-haute puissance, elle plus de chance de concerner une compétence dans laquelle
-vous êtes déjà expérimenté.
-%%%%
-the Alchemist card
-
-Cette carte transforme un peu de votre or en vitalité et énergie magique.
-%%%%
-Water card
-
-Cette carte transforme le sol autour de vous en eau.
-%%%%
-Vitrification card
-
-Cette carte rend les murs translucides.
-%%%%
-Dowsing card
-
-Cette carte vous permet de détecter les pièges et les passages secrets ou,
-pendant un court instant,  les créatures proches, ou une combinaison d'un peu
-tout cela.
-%%%%
-the Trowel card
-
-Cette carte crée un portail mystique vers un autre endroit. Elle un nombre de
-destination limité, et n'aura plus d'effet une fois que tous auront été
-atteint.
-%%%%
-the Minefield card
-
-Cette carte rend votre environnement proche plus dangereux.
-%%%%
-the Crusade card
-
-Cette carte tente de convertir les créatures à proximité à votre cause et
-abjure les créatures convoquées hostiles.
-%%%%
-the Herd card
-
-Cette carte convoque des animaux.
 %%%%
 the Pentagram card
 
@@ -160,38 +35,9 @@ Foxfire card
 
 Cette carte invoque des créatures volantes.
 %%%%
-the Bones card
-
-Cette carte convoque une créature squelettique.
-%%%%
-Repulsiveness card
-
-Cette carte convoque une chose hideuse ou très hideuse.
-%%%%
 Vitriol card
 
 Cette carte déchaine un sort d'attaque corrosif.
-%%%%
-Flame card
-
-Cette carte déclenche un sort d'attaque de feu, qui peut être explosif.
-%%%%
-Frost card
-
-Cette carte libère un sort d'attaque glaciale.
-%%%%
-Venom card
-
-Cette carte libère un sort d'attaque venimeux.
-%%%%
-the Spark card
-
-Cette carte libère un sort d'attaque électrique qui peut, à grande puissance,
-affecter une grande zone.
-%%%%
-the Hammer card
-
-Cette carte libère un sort d'attaque physique.
 %%%%
 Pain card
 
@@ -215,14 +61,6 @@ the Wraith card
 
 Cette carte vous drainera.
 %%%%
-the Curse card
-
-Cette carte place une malédiction sur vos possessions.
-%%%%
-Xom card
-
-Cette carte attire l'attention de Xom sur vous.
-%%%%
 Famine card
 
 Cette carte vous rend affamé.
@@ -230,14 +68,6 @@ Cette carte vous rend affamé.
 the Swine card
 
 Cette carte vous rendra tout rose et avide de truffes.
-%%%%
-the Genie card
-
-Ce Génie pourrait vous faire un don ou vous punir pour avoir essayé.
-%%%%
-the Feast card
-
-Cette carte vous nourrit.
 %%%%
 the Stairs card
 

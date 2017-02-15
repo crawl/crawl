@@ -20,6 +20,7 @@ const opacity_immob opc_immob = opacity_immob();
 const opacity_solid opc_solid = opacity_solid();
 const opacity_solid_see opc_solid_see = opacity_solid_see();
 const opacity_no_actor opc_no_actor = opacity_no_actor();
+const opacity_excl opc_excl = opacity_excl();
 
 opacity_type opacity_default::operator()(const coord_def& p) const
 {
@@ -59,6 +60,15 @@ opacity_type opacity_immob::operator()(const coord_def& p) const
     return (mons && mons->is_stationary()) ? OPC_OPAQUE : opc_no_trans(p);
 }
 
+opacity_type opacity_mons_immob::operator()(const coord_def& p) const
+{
+    const monster* other_mons = monster_at(p);
+    const bool impassable = other_mons
+                            && other_mons->is_stationary()
+                            && mons_aligned(mon, other_mons);
+    return impassable ? OPC_OPAQUE : opc_no_trans(p);
+}
+
 opacity_type opacity_solid::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = env.grid(p);
@@ -96,6 +106,25 @@ opacity_type opacity_no_actor::operator()(const coord_def& p) const
 {
     if (feat_is_solid(env.grid(p)) || actor_at(p))
         return OPC_OPAQUE;
+    else
+        return OPC_CLEAR;
+}
+
+static opacity_type _feat_opacity(dungeon_feature_type feat)
+{
+    return feat_is_opaque(feat) ? OPC_OPAQUE
+         : feat_is_tree(feat)   ? OPC_HALF : OPC_CLEAR;
+}
+
+opacity_type opacity_excl::operator()(const coord_def& p) const
+{
+    map_cell& cell = env.map_knowledge(p);
+    if (!cell.seen())
+        return OPC_CLEAR;
+    else if (!cell.changed())
+        return _feat_opacity(env.grid(p));
+    else if (cell.feat() != DNGN_UNSEEN)
+        return _feat_opacity(cell.feat());
     else
         return OPC_CLEAR;
 }

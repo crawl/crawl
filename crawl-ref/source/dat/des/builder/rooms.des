@@ -1,4 +1,17 @@
+###############################################################################
+# Special rooms code.
+# A simple rectangular box filled to the walls with a fair bit of a themed
+# monster set, the contents of which are usually scaled versus depth.
+# This file contains the monster selection for said boxes: the special_room
+# box creation and placement code is off in mini_monsters.des.
+#
+# Current sets: Kobolds, Orcs, Bees, Undead, Slimes,
+# Mythological Zoo, Greater Demons.
+#
+
 lua {{
+
+require('dlua/vault.lua')
 
 function fill_special_room(e, mon, lord_mon, pack)
     if type(mon) == "table" then
@@ -30,26 +43,19 @@ function sroom_kobold_lair(e)
     -- Return early if we're being called during map validation.
     if e.is_validating() then return end
 
-    local level_mons = 3
+    local level_mons = 6
 
-    if level < 4 then
-        level_mons = 0
-    elseif level < 6 then
-        level_mons = 1
-    elseif level < 9 then
+    if level < 6 then
         level_mons = 2
+    elseif level < 9 then
+        level_mons = 4
     end
 
     local big_freq   = 3 + level_mons
-    local small_freq = 10 - big_freq
-
+    local small_freq = 12 - big_freq
     local mon = "kobold w:" .. small_freq .. " / big kobold w:" .. big_freq
 
-    if level > 11 or you.in_branch("Orc") then
-       lord_mon = "kobold demonologist / big kobold"
-    else
-       lord_mon = "big kobold"
-    end
+    lord_mon = "kobold demonologist"
 
     fill_special_room(e, mon, lord_mon)
 end
@@ -61,28 +67,21 @@ function sroom_orc_lair(e)
     if e.is_validating() then return end
 
     local mon
-    -- Buff Orc:Foo rooms despite depth to be harder than regular floors in Orc.
-    if you.in_branch("Orc") then
-        mon = "orc w:12 / orc warrior w:5 / orc priest w:2 / "
-              .. "orc knight w:1"
-        lord_mon = "orc sorcerer w:1 / orc high priest w:9 / "
-                   .. "orc warlord w:5 / orc knight"
+
+    if level > 20 or you.in_branch("Elf") then
+        mon = "orc priest w:7 / orc warrior w:12 / orc knight w:8 / "
+              .. " orc high priest w:2 / two-headed ogre w:1"
+        lord_mon = "orc warlord"
+    elseif level > 14 or you.in_branch("Orc") then
+        mon = "orc w:6 / orc warrior w:8 / orc priest w:2 /  "
+              .. "orc knight w:3 / troll w:1 "
+        lord_mon = "orc knight / orc high priest w:6 / orc warlord w:4"
+    elseif level > 9 then
+        mon = "orc w:25 / orc warrior / orc priest w:3 / ogre w:2"
+        lord_mon = "orc priest w:7 / orc knight w:3"
     else
-        if level > 20 or you.in_branch("Elf") then
-            mon = "orc w:5 / orc priest w:4 / orc warrior / orc knight w:8 / "
-                  .. " orc high priest w:1 / ogre w:1 / troll w:1"
-            lord_mon = "orc warlord w:9 / orc high priest w:1"
-        elseif level > 14 then
-            mon = "orc w:9 / orc warrior w:5 / orc priest w:2 /  "
-                  .. "orc knight w:3 / ogre w:1 "
-            lord_mon = "orc knight / orc high priest w:9 / orc warlord w:1"
-        elseif level > 9 then
-            mon = "orc w:35 / orc warrior / orc priest w:3 / ogre w:2"
-            lord_mon = "orc warrior w:1 / orc priest w:7 / orc knight w:2"
-        else
-            mon = "orc w:44 / orc warrior w:5 / ogre w:1"
-            lord_mon = "orc warrior / orc priest w:5"
-        end
+        mon = "orc w:44 / orc warrior w:5 / ogre w:1"
+        lord_mon = "orc priest"
     end
 
     fill_special_room(e, mon, lord_mon, true)
@@ -96,10 +95,21 @@ end
 function sroom_beehive(e)
     if e.is_validating() then return end
 
+    local level = you.absdepth()
+
+    if you.in_branch("Lair") then
+        level = you.absdepth() - 2
+    end
+
     fill_special_room(e, "patrolling killer bee",
                       "patrolling queen bee", true)
 
-    e.kitem('12 = royal jelly / nothing')
+    e.kmons('M = meliai')
+    if level > 11 then
+        e.nsubst('1 = 3:M / *:1')
+    end
+
+    e.kitem('12M = royal jelly / nothing')
 end
 
 function sroom_morgue(e)
@@ -121,12 +131,12 @@ function sroom_morgue(e)
 
     local mons = {}
 
-    mons[1] = "zombie w:14 / skeleton w:5 / spectral thing w:1"
-    mons[2] = "shadow wraith w:2 / soul eater w:2 / vampire w:2 / "
-              .. "flayed ghost w:2 / shadow w:2"
+    mons[1] = "zombie w:9 / skeleton w:5 / spectral thing w:1"
+    mons[2] = "shadow wraith w:3 / soul eater w:4 / vampire mage w:3 / "
+              .. "flayed ghost w:4 / death knight w:1"
     mons[3] = "skeletal warrior w:15 ; great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
-    mons[4] = "vampire knight w:5 ; great mace" .. weap
+    mons[4] = "vampire knight ; chain mail . great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     if you.in_branch("Geh") then
         mons[5] = "fire giant zombie w:3 / fire giant skeleton w:3 / "
@@ -155,40 +165,39 @@ function sroom_morgue(e)
         bodies_chance = 40
     elseif you.in_branch("Tar") or you.in_branch("Crypt") then
         mons[5] = "eidolon w:6 / jiangshi w:6"
-        mons[6] = "mummy priest w:2 / death knight w:2 / revenant w:2"
+        mons[6] = "mummy priest w:2 / revenant w:6"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse"
         bodies_chance = 33
     else
-        mons[5] = "necromancer / deep elf death mage w:5"
-        mons[6] = "shadow dragon w:5"
+        mons[5] = "necromancer w:5 / deep elf death mage w:5"
+        mons[6] = "shadow dragon"
         bodies = "any corpse / any skeleton"
         bodies_chance = 33
     end
 
     if you.absdepth() > 27 then
-        mons[7] = "reaper w:9 / bone dragon w:1"
+        mons[7] = "reaper w:16 / bone dragon w:4"
     end
 
     if you.absdepth() > 24 or crawl.x_chance_in_y(you.absdepth() - 20, 5) then
-        lord_mon = "lich"
+        lord_mon = "ancient lich"
     else
-        lord_mon = "vampire mage"
+        lord_mon = "lich"
     end
 
     fill_special_room(e, mons, lord_mon, true)
     if you.in_branch("Depths") or you.in_branch("Crypt") then
          e.kitem('2 = randbook disc:necromancy')
     else
-         -- XXX: Any better ways to place the stair?
-         e.kfeat('> = stone_stairs_down_i / stone_stairs_down_ii / '
-         .. 'stone_stairs_down_iii / escape_hatch_down / floor')
-         e.nsubst('1 = 1:> / *:1')
+         e.nsubst('1. = 1:})]>.')
     end
 
     e.subst(". = .:" .. (100 - bodies_chance) .. " _:" .. bodies_chance)
     e.subst("1 = 1:" .. (100 - bodies_chance) .. " !:" .. bodies_chance)
-    e.kmons("! = " .. mons[1])
+    -- XXX: Clean up this dirty hack.
+    e.kmons("! = " .. mons[1] .. " / " .. mons[2] .. " / " .. mons[3] ..
+            " / " .. mons[4] .. " / " .. mons[5] .. " / " .. mons[6])
     e.kfeat("_ = .")
 
     dgn.delayed_decay(e, '!_', bodies)
@@ -199,28 +208,27 @@ function sroom_jelly_pit(e)
     -- Return early if we're being called during map validation.
     if e.is_validating() then return end
 
-    local level = you.absdepth() - 1
+    local level = you.absdepth()
 
-    if you.in_branch("Slime") then
+    if you.in_branch("Lair") then
+        level = you.absdepth() - 7
+    elseif you.in_branch("Slime") then
         level = you.absdepth() + 10
     end
 
     local mons = {}
 
-    mons[1] = "ooze w:" .. (27 - math.floor(level / 3))
-    mons[2] = "jelly w:15"
-    mons[3] = "great orb of eyes w:" .. (3 + level)
-    mons[4] = "death ooze w:" .. (2 + (2 * math.floor(level / 3)))
+    mons[1] = "ooze w:" .. math.max(72 - level * 2, 1)
+    mons[2] = "jelly w:54"
+    mons[3] = "great orb of eyes w:" .. (1 + level)
+    mons[4] = "large slime creature w:" .. (2 + level)
+    mons[5] = "death ooze w:" .. (9 + level * 2)
+    mons[6] = "azure jelly w:" .. math.max(level * 2 - 13, 1)
+    mons[7] = "acid blob w:" .. math.max(level * 2 - 16, 1)
 
-    if level >= 12 then
-        mons[5] = "azure jelly w:" .. (1 + math.floor((level - 12)/3))
-    end
+    lord_mon = "death ooze w:6 / azure jelly / acid blob"
 
-    if level >= 15 then
-        mons[6] = "acid blob w:" .. (1 + math.floor((level - 15) / 4))
-    end
-
-    fill_special_room(e, mons, nil, true)
+    fill_special_room(e, mons, lord_mon, true)
 
     e.nsubst('1. = 2 = x1')
 
@@ -249,22 +257,21 @@ function sroom_mythical_zoo(e)
     mons[3] = "wyvern w:" .. math.max(44 - Z * 2, 1)
     mons[4] = "hippogriff w:" .. math.max(44 - Z * 2, 1)
     mons[5] = "hell hound w:" .. math.max(Z - 11, 1)
-    mons[6] = "griffon w:" .. math.max(Z * 2 - 28, 1)
-    mons[7] = "hydra w:" .. math.max(Z * 2 - 26, 1)
+    mons[6] = "hydra w:" .. math.max(Z * 2 - 26, 1)
 
     if Z >= 16 then
-        mons[8] = "manticore w:" .. (Z * 2 - 24)
-        mons[9] = "harpy w:" .. (Z - 15)
+        mons[7] = "manticore w:" .. (Z * 2 - 24)
+        mons[8] = "harpy w:" .. (Z - 15)
     end
     if Z >= 19 then
-        mons[10] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[11] = "sphinx w:" .. (Z - 18)
+        mons[9] = "fire dragon w:" .. (Z * 2 - 37)
+        mons[10] = "sphinx w:" .. (Z - 16)
     end
 
     if Z >= 21 then
-       lord_mon = "catoblepas / sphinx w:40 / hell beast w:20 / apis w:20"
+       lord_mon = "catoblepas / sphinx w:60 / hell beast w:20"
     elseif Z >= 16 then
-       lord_mon = "catoblepas / hydra w:40 / fire dragon w:35 / apis w:5"
+       lord_mon = "catoblepas / hydra w:40 / hell beast w:40"
     else
        lord_mon = "catoblepas / manticore w:40 / hydra w:40"
     end
@@ -274,12 +281,61 @@ function sroom_mythical_zoo(e)
     e.kitem('2 = gold good_item w:' .. Z - 7 .. ' / gold w:' .. Z + 7 .. ', ' ..
             'box of beasts w:3 / nothing w:17')
 end
+
+function sroom_demon_pit(e)
+
+    -- Return early if we're being called during map validation.
+    if e.is_validating() then return end
+
+    local runes = count_pan_runes()
+    local weight_a = 30 - runes * 5
+    local weight_b = 20 - runes * 2
+    local weight_c = 10 + runes * 2
+    local weight_d = 5 + runes
+
+    local tier_twos = {
+        hell_beast = weight_a,
+        green_death = weight_a,
+        reaper = weight_b,
+        lorocyproca = weight_b,
+        balrug = weight_c,
+        blizzard_demon = weight_c,
+        hellion = weight_d,
+        tormentor = weight_d,
+        cacodemon = 5,
+    }
+
+    -- Choose three demons as weighted above,
+    -- and don't choose the same one twice.
+    local mons = {}
+    for mon_num=1,3 do
+        local mon = nil
+        local cweight = 0
+        for k,wt in pairs(tier_twos) do
+            cweight = cweight + wt
+            if crawl.random2(cweight) < wt then
+                mon = k
+            end
+        end
+        mons[mon_num] = mon
+        tier_twos[mon] = 0
+    end
+
+    lord_mon = "brimstone fiend / ice fiend / tzitzimitl / " ..
+               "hell sentinel / nonbase demonspawn w:20"
+
+    fill_special_room(e, mons, lord_mon, true)
+
+    e.kitem('2 = *')
+    e.kfeat('2 = transit_pandemonium')
+end
+
 }}
 
 ###########################
 
 NAME:   special_room_kobold
-DEPTH:  D:7-12, Orc, !Orc:$
+DEPTH:  D:7-11, Orc, !Orc:$
 TAGS:   special_room unrand
 WEIGHT: 11
 : sroom_kobold_lair(_G)
@@ -287,7 +343,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_orc
-DEPTH:  D:9-, Orc, !Orc:$, Elf, Vaults
+DEPTH:  D:8-, Orc, !Orc:$, Elf, Vaults
 TAGS:   special_room allow_dup unrand
 WEIGHT: 59 (D:8-12, Orc), 40 (D:13-, Elf:1), 32
 : sroom_orc_lair(_G)
@@ -296,8 +352,8 @@ ENDMAP
 
 NAME:   special_room_bee
 DEPTH:  D:9-, Lair, Orc, !Orc:$, Spider
-TAGS:   special_room unrand
-WEIGHT: 30 (D:9-12, Orc, Lair:1-4), 24 (D:13-, Lair:5-7), 20
+TAGS:   special_room unrand uniq_beehive
+WEIGHT: 30 (D:9-12, Orc, Lair:1-3), 24 (D:13-, Lair:4-), 20
 : sroom_beehive(_G)
 MAP
 ENDMAP
@@ -321,7 +377,15 @@ ENDMAP
 NAME:   special_room_mythical_zoo
 DEPTH:  D:14-, Depths, Lair:4-, Elf
 TAGS:   special_room allow_dup unrand
-WEIGHT: 20 (D:14-, Lair:4-6), 25 (Depths:1-3, Lair:7-, Elf), 28
+WEIGHT: 20 (D:14-, Lair:4-5), 25 (Depths:1-3, Lair:$, Elf), 28
 : sroom_mythical_zoo(_G)
+MAP
+ENDMAP
+
+NAME:   special_room_demon_pit
+DEPTH:  Pan
+TAGS:   special_room allow_dup unrand
+WEIGHT: 20
+: sroom_demon_pit(_G)
 MAP
 ENDMAP

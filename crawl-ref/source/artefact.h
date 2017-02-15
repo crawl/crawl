@@ -22,7 +22,7 @@ enum unrand_flag_type
     UNRAND_FLAG_NONE             = 0x00,
     UNRAND_FLAG_SPECIAL          = 0x01,
     UNRAND_FLAG_HOLY             = 0x02,
-    UNRAND_FLAG_UNHOLY           = 0x04,
+                              // = 0x04,  // was UNRAND_FLAG_UNHOLY
     UNRAND_FLAG_EVIL             = 0x08,
     UNRAND_FLAG_UNCLEAN          = 0x10,
     UNRAND_FLAG_CHAOTIC          = 0x20,
@@ -66,8 +66,7 @@ struct unrandart_entry
                           actor* defender, bool mondied, int damage);
     setup_missile_type (*launch)(item_def* item, bolt* beam,
                                  string* ammo_name, bool* returning);
-    bool (*evoke_func)(item_def *item, int* pract, bool* did_work,
-                       bool* unevokable);
+    bool (*evoke_func)(item_def *item, bool* did_work, bool* unevokable);
 };
 
 bool is_known_artefact(const item_def &item);
@@ -137,6 +136,7 @@ enum artp_value_type
 {
     ARTP_VAL_BOOL,
     ARTP_VAL_POS,
+    ARTP_VAL_BRAND,
     ARTP_VAL_ANY,
 };
 artp_value_type artp_potential_value_types(artefact_prop_type prop);

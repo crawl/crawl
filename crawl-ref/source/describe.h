@@ -6,6 +6,7 @@
 #ifndef DESCRIBE_H
 #define DESCRIBE_H
 
+#include <functional>
 #include <sstream>
 #include <string>
 
@@ -27,13 +28,6 @@ enum item_description_type
 #endif
     IDESC_STAVES,
     NUM_IDESC
-};
-
-enum book_mem_or_forget
-{
-    BOOK_MEM,
-    BOOK_FORGET,
-    BOOK_NEITHER
 };
 
 struct describe_info
@@ -63,8 +57,9 @@ int describe_monsters(const monster_info &mi, bool force_seen = false,
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
+string serpent_of_hell_flavour(monster_type m);
 
-string player_spell_desc(spell_type spell, const item_def* item = nullptr);
+string player_spell_desc(spell_type spell);
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled,
                     const monster_info *mon_owner = nullptr,
@@ -95,6 +90,9 @@ string full_trap_name(trap_type trap);
 int str_to_trap(const string &s);
 
 int count_desc_lines(const string& _desc, const int width);
+
+string extra_cloud_info(cloud_type cloud_type);
+
 
 class alt_desc_proc
 {

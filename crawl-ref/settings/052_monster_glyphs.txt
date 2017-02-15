@@ -38,7 +38,7 @@ mon_glyph += Azrael : lightred E
 mon_glyph += acid blob : lightgreen
 # not in 0.5, but it would conflict with acid blobs
 mon_glyph += merged slime creature : green
-mon_glyph += giant spore : G
+mon_glyph += ballistomycete spore : G
 
 # insubstantials
 mon_glyph += insubstantial wisp : lightgrey p

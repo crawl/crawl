@@ -134,7 +134,7 @@ ENDMAP
 
 NAME:   sprint2_early_2
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   siren
+MONS:   merfolk siren
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -178,7 +178,7 @@ ENDMAP
 
 NAME:   sprint2_early_7
 TAGS:   sprint2_early no_item_gen no_trap_gen no_pool_fixup
-MONS:   boulder beetle
+MONS:   tyrant leech
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
@@ -211,38 +211,38 @@ ENDMAP
 
 NAME:   sprint2_temple
 TAGS:   sprint2_temple no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-SHUFFLE: abdefghijklmnopqrstuvw
-KFEAT:  a = altar_zin
-KFEAT:  b = altar_the_shining_one
-KFEAT:  d = altar_kikubaaqudgha
-KFEAT:  e = altar_yredelemnul
-KFEAT:  f = altar_xom
-KFEAT:  g = altar_vehumet
-KFEAT:  h = altar_okawaru
-KFEAT:  i = altar_makhleb
-KFEAT:  j = altar_sif_muna
-KFEAT:  k = altar_trog
-KFEAT:  l = altar_nemelex_xobeh
-KFEAT:  m = altar_elyvilon
-KFEAT:  n = altar_lugonu
-KFEAT:  o = altar_beogh
-KFEAT:  p = altar_jiyva
-KFEAT:  q = altar_fedhas
-KFEAT:  r = altar_cheibriados
-KFEAT:  s = altar_dithmenos
-KFEAT:  t = altar_gozag
-KFEAT:  u = altar_qazlal
-KFEAT:  v = altar_ru
-KFEAT:  w = altar_pakellas
+KFEAT:  b = altar_beogh
+KFEAT:  c = altar_cheibriados
+KFEAT:  d = altar_dithmenos
+KFEAT:  e = altar_elyvilon
+KFEAT:  f = altar_fedhas
+KFEAT:  g = altar_gozag
+KFEAT:  h = altar_hepliaklqana
+KFEAT:  j = altar_jiyva
+KFEAT:  k = altar_kikubaaqudgha
+KFEAT:  l = altar_lugonu
+KFEAT:  m = altar_makhleb
+KFEAT:  n = altar_nemelex_xobeh
+KFEAT:  o = altar_okawaru
+KFEAT:  q = altar_qazlal
+KFEAT:  r = altar_ru
+KFEAT:  s = altar_sif_muna
+KFEAT:  t = altar_trog
+KFEAT:  u = altar_uskayaw
+KFEAT:  v = altar_vehumet
+KFEAT:  x = altar_xom
+KFEAT:  y = altar_yredelemnul
+KFEAT:  z = altar_zin
+KFEAT:  1 = altar_the_shining_one
 MAP
-..u.d...
-.t.g.h..
-..k.l.s.
-.w.o.p.v
-..a.i.m.
-...r.q.j
-....n.f.
-.....b.e
+..q.x...
+.h.r.y..
+b.j.s.z.
+.c.k.t.1
+..d.l.u.
+...e.m.v
+....f.n.
+.....g.o
 ENDMAP
 
 NAME:   sprint2_shoproom
@@ -423,7 +423,7 @@ MARKER: z = lua: timed_marker {  \
                  low=4000, high=4400, msg=messager, floor = 'floor' }
 KFEAT:  z = stone_wall
 MONS:   patrolling polar bear, patrolling swamp drake, patrolling crystal guardian, patrolling toenail golem, patrolling iron golem
-KMONS:  a = patrolling wasp
+KMONS:  a = patrolling hornet
 KITEM:  m = gold q:81
 KMONS:  m = patrolling yaktaur
 KMONS:  b = patrolling death drake
@@ -523,7 +523,7 @@ NAME:   sprint2_smallroom_final_cluster_1
 TAGS:   sprint2_smallroom_final_cluster no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
 NSUBST: * = 1:a / 1:b / *:|
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
+KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 SUBVAULT: D : sprint2_smallroom
 SUBVAULT: E : sprint2_smallroom
@@ -635,7 +635,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_11
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   griffon
+MONS:   manticore
 KITEM:  $ = gold q:81
 MAP
 11
@@ -726,7 +726,7 @@ KFEAT:  , = book shop
 KFEAT:  f = any shop
 NSUBST: | = 1:a / 2:b / 1:d / 6:$ / *:|
 KITEM:  $ = gold q:81
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
+KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  d = potion of flight q:3
 SUBVAULT: A : sprint2_smallroom
@@ -758,7 +758,7 @@ NSUBST: g = 4:g / *:|
 KMONS:  g = orc priest
 NSUBST: b = 2:i / 1:b / *:|
 NSUBST: f = 1:a / 2:b / 1:h / 9:$ / *:|
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
+KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KITEM:  $ = gold q:81
 KITEM:  b = scroll of acquirement q:1 / potion of magic q:9 / potion of haste q:3
 KITEM:  h = potion of flight q:3
@@ -781,7 +781,7 @@ NAME:   sprint2_heavy_combat_area_1
 TAGS:   sprint2_heavy_combat_area no_item_gen no_trap_gen no_pool_fixup
 MARKER: + = lua:restrict_door()
 NSUBST: . = 1:1 / 1:2 / 1:3 / 1:4 / 3:$ / *:.
-MONS:   hellephant, Sonja, draconian shifter, giant orange brain
+MONS:   hellephant, Sonja, draconian shifter, glowing orange brain
 KITEM:  $ = gold q:243
 COLOUR: X = red
 COLOUR: + = red
@@ -802,7 +802,7 @@ ENDMAP
 NAME:   sprint2_mutation_trap_area_1
 TAGS:   sprint2_mutation_trap_area no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MARKER: + = lua:restrict_door()
-MONS:   giant eyeball, shining eye
+MONS:   floating eye, shining eye
 NSUBST: | = 1:a / *:|
 KITEM:  a = potion of mutation q:27
 MAP
@@ -844,7 +844,7 @@ NSUBST: a = 3:1 / 3:2 / 27:$ / *:'
 SUBST:  ' = '........
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
 KITEM:  $ = gold q:27
-MONS:   quicksilver dragon, Lorocyproca, giant spore
+MONS:   quicksilver dragon, Lorocyproca, ballistomycete spore
 COLOUR: X = magenta
 COLOUR: + = magenta
 COLOUR: o = magenta
@@ -864,7 +864,7 @@ TAGS:   sprint2_light_combat_area no_item_gen no_trap_gen no_pool_fixup no_rotat
 MARKER: + = lua:restrict_door()
 NSUBST: 1 = 1:1 / *:e
 NSUBST: f = 1:f / 1:3 / *:4
-KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of experience q:1
+KITEM:  a = scroll of acquirement q:3 / potion of mutation q:3 / potion of experience q:1
 KFEAT:  e = any shop
 KITEM:  f = potion of flight q:3
 SHUFFLE: 12

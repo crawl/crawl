@@ -9,11 +9,12 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "delay.h"
 #include "directn.h"
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -162,7 +163,7 @@ static bool _mons_is_unmovable(const monster *mons)
         return true;
     // we'd have to rotate everything
     if (mons_is_tentacle_or_tentacle_segment(mons->type)
-        || mons_is_tentacle_head(mons_base_type(mons)))
+        || mons_is_tentacle_head(mons_base_type(*mons)))
     {
         return true;
     }
@@ -423,6 +424,8 @@ void tornado_damage(actor *caster, int dur)
             if (mgrd(act->pos()) == act->mindex())
                 mgrd(act->pos()) = NON_MONSTER;
             act->moveto(coord_def());
+            if (act->is_player())
+                stop_delay(true);
         }
 
     // Need to check available positions again, as the damage call could

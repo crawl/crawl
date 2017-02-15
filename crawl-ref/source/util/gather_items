@@ -1,4 +1,6 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
+
+use warnings;
 
 my $db = grep /^-d$/, @ARGV;
 my %jewellery_prefixes;
@@ -11,7 +13,7 @@ sub jewellery_name($$)
     return "$type of $prefix$name";
 }
 
-open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
+open IN, "util/cpp_version item-name.cc|" or die "Can't read item-name.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
@@ -35,10 +37,9 @@ unless ($db)
 $items{$_} = 1 for /MISC_[A-Z_]+: *return "([^"]+)";/g;
 $items{"book of $_"} = 1 for /BOOK_[A-Z_]+: *return "([^"]+)";/g;
 $items{"staff of $_"} = 1 for /STAFF_[A-Z_]+: *return "([^"]+)";/g;
-$items{"rod of $_"} = 1 for /ROD_[A-Z_]+: *return "([^"]+)";/g;
 $items{$_} = 1 for /FOOD_[A-Z_]+: buff << "([^"]+)";/g;
 
-open IN, "util/cpp_version itemprop.cc|" or die "Can't read itemprop.cc\n";
+open IN, "util/cpp_version item-prop.cc|" or die "Can't read item-prop.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
@@ -70,9 +71,6 @@ Young Poisoner's Handbook
 Grand Grimoire
 Necronomicon
 Fen Folio
-Akashic Record
-lightning rod
-iron rod
 END
 
 $items{"decaying skeleton"} = 1 if $db;
@@ -80,8 +78,6 @@ $items{"decaying skeleton"} = 1 if $db;
 delete $items{$_} for (split /\n/, <<END);
 boots
 gloves
-rod of lightning
-rod of iron
 END
 
 for (sort keys %items)

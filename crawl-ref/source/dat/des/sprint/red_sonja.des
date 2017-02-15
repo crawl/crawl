@@ -23,21 +23,21 @@ MARKER: H = lua:fog_machine { \
              pow_min = 2, pow_max = 3, delay = 4, \
              size = 10, walk_dist = 6, spread_rate= 4, \
              cloud_type= "foul pestilence" }
-MONS:   Ijyb, ogre, Sigmund, centaur warrior, Sonja, deep troll, wasp
+MONS:   Ijyb, ogre, Sigmund, centaur warrior, Sonja, deep troll, hornet
 SUBST:  r = r.
 SUBST:  r = ~.
 KITEM:  I = potion of curing
 KITEM:  $ = gold q:27
 KMONS:  D = kobold demonologist
-KMONS:  E = giant eyeball
+KMONS:  E = floating eye
 KMONS:  F = oklob plant
-KMONS:  I = giant spore
+KMONS:  I = ballistomycete spore
 KMONS:  J = unseen horror
 KMONS:  P = jelly
 KMONS:  Q = necrophage
 KMONS:  R = demonic crawler
 KMONS:  S = gargoyle
-KMONS:  b = Norris
+KMONS:  b = meliai
 KMONS:  d = Lorocyproca
 KMONS:  f = lindwurm
 KMONS:  g = hog
@@ -47,7 +47,7 @@ KMONS:  k = golden dragon
 KMONS:  l = shadow dragon
 KMONS:  n = hellwing
 KMONS:  o = deep elf annihilator
-KMONS:  p = siren
+KMONS:  p = merfolk siren
 KMONS:  q = mummy priest
 KMONS:  s = Tiamat
 KMONS:  t = fire giant
@@ -99,33 +99,36 @@ ENDMAP
 
 NAME: red_sonja_temple_1
 TAGS: red_sonja_temple no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+# No Ashenzari or Beogh.
 MONS: jelly, yak
 KITEM: $ = gold q:27
-KFEAT: A = altar_zin
-KFEAT: B = altar_the_shining_one
-KFEAT: C = altar_elyvilon
-KFEAT: D = altar_yredelemnul
-KFEAT: E = altar_kikubaaqudgha
-KFEAT: F = altar_xom
-KFEAT: G = altar_nemelex_xobeh
-KFEAT: H = altar_okawaru
-KFEAT: I = altar_trog
-KFEAT: J = altar_makhleb
-KFEAT: K = altar_vehumet
-KFEAT: L = altar_sif_muna
-KFEAT: M = altar_gozag
-KFEAT: N = altar_qazlal
-KFEAT: O = altar_ru
-KFEAT: P = altar_pakellas
-KFEAT: Y = any shop
+KFEAT: C = altar_cheibriados
+KFEAT: D = altar_dithmenos
+KFEAT: E = altar_elyvilon
+KFEAT: F = altar_fedhas
+KFEAT: G = altar_gozag
+KFEAT: H = altar_hepliaklqana
+KFEAT: K = altar_kikubaaqudgha
+KFEAT: N = altar_nemelex_xobeh
+KFEAT: O = altar_okawaru
+KFEAT: Q = altar_qazlal
+KFEAT: R = altar_ru
+KFEAT: S = altar_sif_muna
+KFEAT: T = altar_trog
+KFEAT: U = altar_uskayaw
+KFEAT: V = altar_vehumet
+KFEAT: Y = altar_yredelemnul
+KFEAT: Z = altar_zin
+KFEAT: ' = altar_the_shining_one
+KFEAT: s = any shop
 MAP
 xxxxx+xxxxx+x
 xxxx$$c$$$c*c
-xAMxxxc$$cc*c
-xB.POJcc+c..+
-xC.Y..2+...Lc
-xD...NccK1x+x
-cEFGHIccx+x*x
+xEZxxxc$$cc*c
+x'OTFQcc+c..+
+xK.s..2+...Sc
+xY..UHccV1x+x
+cDRCGNccx+x*x
 ccccccccx.xxx
 ENDMAP
 
@@ -134,12 +137,12 @@ TAGS: red_sonja_temple_small no_item_gen no_trap_gen no_pool_fixup no_rotate no_
 MONS: slime creature
 SUBST: r = r.
 SUBST: r = ~.
-KFEAT: A = altar_jiyva
-KFEAT: B = altar_fedhas
-KFEAT: C = altar_cheibriados
-KFEAT: D = altar_dithmenos
+KFEAT: J = altar_jiyva
+KFEAT: L = altar_lugonu
+KFEAT: M = altar_makhleb
+KFEAT: X = altar_xom
 MAP
-AB
+JL
 r1
-CD
+MX
 ENDMAP

@@ -684,7 +684,7 @@ TAGS:    arrival no_monster_gen no_pool_fixup no_rotate
 ORIENT:  southeast
 WEIGHT:  3
 SUBST:   z = W., I = IG, r : cccvt., E = wW, ' : @x', ' = @x
-MONS:    rat w:20 / ball python / giant newt / bat / nothing w:25
+MONS:    rat w:20 / ball python / frilled lizard / bat / nothing w:25
 SHUFFLE: {[(
 SUBST:   ([ = G
 MAP

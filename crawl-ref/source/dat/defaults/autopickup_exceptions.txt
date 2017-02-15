@@ -35,8 +35,7 @@ ae += [^n]identified.*spellbook
 :  if string.find(itname, "lamp of fire")
 :  or string.find(itname, "phial of floods")
 :  or string.find(itname, "fan of gales")
-:  or string.find(itname, "stone of tremors")
-:  or string.find(itname, "disc of storms")
+:  or string.find(itname, "lightning rod")
 :  or string.find(itname, "crystal ball of energy") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
 :      if itname == inv.name() then
@@ -55,7 +54,6 @@ ae += [^n]identified.*spellbook
 :  and (itsubtype == "ring of positive energy"
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
-:   or itsubtype == "ring of sustain attributes"
 :   or itsubtype == "ring of wizardry"
 :   or itsubtype == "ring of stealth"
 :   or itsubtype == "ring of teleportation"
@@ -83,11 +81,8 @@ ae += [^n]identified.*spellbook
 # Excluding amulets as you only need one of each. (If you know the subtype
 # that means you already have one of it.). Some items may already be excluded
 # as bad_item, e.g. inaccuracy.
-ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|dismissal|harm)
+ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|harm)
 ae += amulet of (rage|guardian spirit|faith|magic regeneration)
 
-# Likewise for some rings. Rings of teleportation are not redundant: double
-# *Tele # is pretty good in the Abyss. Still, they're more in line with
-# lanterns of shadow, so you can pick up the second one by hand.
-ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (sustain attributes|resist corrosion)
+# Likewise for some rings.
+ae += ring of (see invisible|flight|poison resistance|resist corrosion)

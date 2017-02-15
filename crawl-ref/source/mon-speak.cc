@@ -344,11 +344,15 @@ void maybe_mons_speaks(monster* mons)
     // might move into their LOS and the monster move back out before
     // the player's view has a chance to update) so prevent them
     // from speaking.
-    if (mons->is_patrolling() || mons_is_wandering(mons))
+    if (mons->is_patrolling() || mons_is_wandering(*mons))
         return;
 
     // per ef44f8a14, this seems to be handled elsewhere?
     if (mons->attitude == ATT_NEUTRAL)
+        return;
+
+    // too annoying for a permanent companion without more thought put into it
+    if (mons_is_hepliaklqana_ancestor(mons->type))
         return;
 
     int chance = 21; // this is a very old number; no idea why it was chosen
@@ -366,7 +370,7 @@ void maybe_mons_speaks(monster* mons)
     }
 
     // Confused and fleeing monsters are more interesting.
-    if (mons_is_fleeing(mons))
+    if (mons_is_fleeing(*mons))
         chance /= 2;
     if (mons->has_ench(ENCH_CONFUSION))
         chance /= 2;
@@ -384,7 +388,7 @@ void maybe_mons_speaks(monster* mons)
         // So does Donald.
         mons_speaks(mons);
     }
-    else if (get_mon_shape(mons) >= MON_SHAPE_QUADRUPED)
+    else if (get_mon_shape(*mons) >= MON_SHAPE_QUADRUPED)
     {
         // Non-humanoid-ish monsters have a low chance of speaking
         // without the M_SPEAKS flag, to give the dungeon some
@@ -429,22 +433,15 @@ bool mons_speaks(monster* mons)
             return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
-        // unless they're normally silent (S_SILENT). Use
-        // get_monster_data(mons->type) to bypass mon_shouts()
-        // replacing S_RANDOM with a random value.
-        if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
-            && get_monster_data(mons->type)->shouts != S_SILENT)
+        // unless they're normally silent (S_SILENT).
+        if (mons->is_silenced() && mons_can_shout(mons->type)
+            && !one_chance_in(3))
         {
-            if (!one_chance_in(3))
-                return false;
+            return false;
         }
 
         // Berserk monsters just want your hide.
         if (mons->berserk_or_insane())
-            return false;
-
-        // Rolling beetles shouldn't twitch antennae
-        if (mons->rolling())
             return false;
 
         // Charmed monsters aren't too expressive.
@@ -465,7 +462,7 @@ bool mons_speaks(monster* mons)
     else
         prefixes.emplace_back("hostile");
 
-    if (mons_is_fleeing(mons))
+    if (mons_is_fleeing(*mons))
         prefixes.emplace_back("fleeing");
 
     bool silence = silenced(you.pos());
@@ -691,10 +688,10 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    if (mons_intel(mons) < I_HUMAN)
+    if (mons_intel(*mons) < I_HUMAN)
         prefixes.insert(prefixes.begin(), "stupid");
 
-    const mon_body_shape shape = get_mon_shape(mons);
+    const mon_body_shape shape = get_mon_shape(*mons);
     if (msg.empty() || msg == "__NEXT")
     {
         msg = _get_speak_string(prefixes, get_mon_shape_str(shape), mons,
@@ -785,7 +782,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     mon_acting mact(mons);
 
     // We have a speech string, now parse and act on it.
-    const string _msg = do_mon_str_replacements(msg, mons);
+    const string _msg = do_mon_str_replacements(msg, *mons);
     const vector<string> lines = split_string("\n", _msg);
 
     bool noticed = false;       // Any messages actually printed?

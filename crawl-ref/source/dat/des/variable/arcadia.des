@@ -24,7 +24,7 @@ MONS:    spriggan air mage, spriggan defender, the Enchantress
 KMONS:   0 = centaur warrior / manticore w:5 / yaktaur captain w:5 / \
              tengu warrior band / tengu conjurer band / deep elf knight / \
              boggart band / rakshasa / ogre mage / cyclops / \
-             hill giant w:5 / shapeshifter w:5 / death yak band
+             two-headed ogre w:5 / shapeshifter w:5 / death yak band
 KMONS:   9 = ettin ; giant club randart . giant club randart / \
              glowing shapeshifter hd:13 w:5 / stone giant / \
              sphinx / tengu reaver w:5 / deep elf high priest w:5
@@ -37,7 +37,7 @@ KMONS:   O = dire elephant / death yak / emperor scorpion / anaconda w:5
 KMONS:   Q = bush
 KMONS:   R = plant
 ITEM:    dagger / short sword / rapier / flail / whip / blowgun / shortbow
-ITEM:    robe / cloak / hat / buckler / steam dragon armour w:1
+ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
 ITEM:    bread ration q:3
 KFEAT:   _ = altar_trog
 NSUBST:  . = 10:0 / 8 = 00... / 2:O / 1:3 / 1:5 / *:.
@@ -129,7 +129,7 @@ ORIENT: north
 KMONS:  O = the Enchantress patrolling
 MONS:   spriggan defender, spriggan berserker, spriggan rider, spriggan air mage
 MONS:   faun / centaur warrior / manticore w:5 / yaktaur captain w:5
-MONS:   tengu warrior / hill giant / deep elf knight w:5 / \
+MONS:   tengu warrior / two-headed ogre / deep elf knight w:5 / \
         deep elf archer w:5 / shapeshifter w:5
 MONS:   tengu conjurer w:20 / ogre mage w:15 / boggart band / rakshasa / \
         cyclops w:5

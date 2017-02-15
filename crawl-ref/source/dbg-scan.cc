@@ -23,11 +23,11 @@
 #include "dungeon.h"
 #include "end.h"
 #include "env.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "initfile.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "maps.h"
@@ -379,7 +379,7 @@ void debug_mons_scan()
         {
             mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
                               "midx = %d",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
         }
         else if (mgrd(pos) != i)
@@ -389,7 +389,7 @@ void debug_mons_scan()
 
             _announce_level_prob(warned);
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d), midx = %d",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  pos.x, pos.y, i);
             warned = true;
             for (int j = 0; j < MAX_MONSTERS; ++j)
@@ -402,7 +402,7 @@ void debug_mons_scan()
                 if (m2->pos() != m->pos())
                     continue;
 
-                string full = m2->full_name(DESC_PLAIN, true);
+                string full = m2->full_name(DESC_PLAIN);
                 if (m2->alive())
                 {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
@@ -424,7 +424,7 @@ void debug_mons_scan()
             env.pgrid(pos) |= FPROP_HIGHLIGHT;
 #endif
             mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
-                 m->full_name(DESC_PLAIN, true).c_str(),
+                 m->full_name(DESC_PLAIN).c_str(),
                  dungeon_feature_name(grd(pos)),
                  pos.x, pos.y,
                  _vault_desc(pos).c_str());
@@ -440,7 +440,7 @@ void debug_mons_scan()
             {
                 mprf(MSGCH_ERROR, "Monster %s (%d, %d) has invalid item "
                                   "index %d in slot %d.",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, idx, j);
                 continue;
             }
@@ -452,7 +452,7 @@ void debug_mons_scan()
                 warned = true;
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) holding invalid item in "
                                  "slot %d (midx = %d)",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      pos.x, pos.y, j, i);
                 continue;
             }
@@ -467,7 +467,7 @@ void debug_mons_scan()
                             idx, item,
                            "Monster %s (%d, %d) holding non-monster "
                            "item (midx = %d)",
-                           m->full_name(DESC_PLAIN, true).c_str(),
+                           m->full_name(DESC_PLAIN).c_str(),
                            pos.x, pos.y, i);
                 continue;
             }
@@ -479,10 +479,10 @@ void debug_mons_scan()
                 mprf(MSGCH_WARN, "Monster %s (%d, %d) [midx = %d] holding "
                                  "item %s, but item thinks it's held by "
                                  "monster %s (%d, %d) [midx = %d]",
-                     m->full_name(DESC_PLAIN, true).c_str(),
+                     m->full_name(DESC_PLAIN).c_str(),
                      m->pos().x, m->pos().y, i,
                      item.name(DESC_PLAIN).c_str(),
-                     holder->full_name(DESC_PLAIN, true).c_str(),
+                     holder->full_name(DESC_PLAIN).c_str(),
                      holder->pos().x, holder->pos().y, holder->mindex());
 
                 bool found = false;

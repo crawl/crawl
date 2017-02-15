@@ -8,6 +8,7 @@
 function hell_entry_feature(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
     e.depth_chance("Depths", 10000)
+-- D:21-27 entries for save compat, remove when TAG_MAJOR_VERSION > 34
     e.depth_chance("D:21-", 10000)
     e.kfeat(glyph .. " = enter_hell")
 end
@@ -42,8 +43,7 @@ end
 
 function hell_lava_spawns(e)
     e.kmons("~ = patrolling molten gargoyle w:5 / patrolling smoke demon w:5 / \
-                 patrolling fire elemental w:60 / \
-                 patrolling salamander stormcaller w:30")
+                 patrolling fire elemental w:60")
     e.kfeat("~l = l")
     e.kmask("l = no_monster_gen")
     e.nsubst("l = 6:~ / 4 = ~l / *:l")
@@ -783,7 +783,7 @@ NAME:   vestibule_tar_nicolae_necropolis
 TAGS:   vestibule_tar
 KFEAT:  T = enter_tartarus
 SUBST:  d = ccc., z = zzz..
-KMONS:  z = place:Depths:1 zombie / lost soul
+KMONS:  z = place:Depths:1 zombie
 KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
            curse skull
 TILE:   c = dngn_stone_dark

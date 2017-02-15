@@ -115,18 +115,18 @@ static bool _is_explore_horizon(const coord_def& c)
 #endif
 
 #ifndef USE_TILE_LOCAL
-static ucs_t _get_sightmap_char(dungeon_feature_type feat)
+static char32_t _get_sightmap_char(dungeon_feature_type feat)
 {
     return get_feature_def(feat).symbol();
 }
 
-static ucs_t _get_magicmap_char(dungeon_feature_type feat)
+static char32_t _get_magicmap_char(dungeon_feature_type feat)
 {
     return get_feature_def(feat).magic_symbol();
 }
 #endif
 
-static bool _is_player_defined_feature(ucs_t feature)
+static bool _is_player_defined_feature(char32_t feature)
 {
     return feature == 'E' || feature == 'F' || feature == 'W';
 }
@@ -139,7 +139,7 @@ static bool _is_player_defined_feature(ucs_t feature)
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(ucs_t feature, const coord_def& where)
+bool is_feature(char32_t feature, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !you.see_cell(where) && !_is_player_defined_feature(feature))
         return false;
@@ -162,11 +162,15 @@ bool is_feature(ucs_t feature, const coord_def& where)
         return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP
                || grid == DNGN_UNKNOWN_PORTAL;
     case '<':
+        // DNGN_UNKNOWN_ALTAR doesn't need to be excluded here, because
+        // feat_is_altar doesn't include it in the first place.
         return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
+                && !feat_is_altar(grid)
                 && !feat_is_portal_exit(grid)
                 && grid != DNGN_ENTER_SHOP;
     case '>':
         return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
+                && !feat_is_altar(grid)
                 && !feat_is_portal_entrance(grid)
                 && grid != DNGN_ENTER_SHOP;
     case '^':
@@ -176,7 +180,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
     }
 }
 
-static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
+static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !_is_player_defined_feature(glyph))
         return false;
@@ -200,14 +204,14 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
     return false;
 }
 
-static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
+static int _find_feature(char32_t glyph, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
-                         int ignore_count, int *move_x, int *move_y, bool forward)
+                         int ignore_count, int *move_x, int *move_y)
 {
     int cx = anchor_x,
         cy = anchor_y;
 
-    int firstx = -1, firsty = -1, firstmatch = -1;
+    int firstx = -1, firsty = -1;
     int matchcount = 0;
 
     // Find the first occurrence of given glyph, spiralling around (x,y)
@@ -234,22 +238,62 @@ static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
                 if (_is_feature_fudged(glyph, coord_def(x, y)))
                 {
                     ++matchcount;
-                    if (forward? !ignore_count-- : --ignore_count == 1)
+                    if (!ignore_count--)
                     {
                         // We want to cursor to (x,y)
                         *move_x = x - (start_x + curs_x - 1);
                         *move_y = y - (start_y + curs_y - 1);
                         return matchcount;
                     }
-                    else if (!forward || firstx == -1)
+                    else if (firstx == -1)
                     {
                         firstx = x;
                         firsty = y;
-                        firstmatch = matchcount;
                     }
                 }
             }
         }
+
+    // We found something, but ignored it because of an ignorecount
+    if (firstx != -1)
+    {
+        *move_x = firstx - (start_x + curs_x - 1);
+        *move_y = firsty - (start_y + curs_y - 1);
+        return 1;
+    }
+    return 0;
+}
+
+static int _find_feature(const vector<coord_def>& features,
+                         char32_t feature, int curs_x, int curs_y,
+                         int start_x, int start_y,
+                         int ignore_count,
+                         int *move_x, int *move_y,
+                         bool forward)
+{
+    int firstx = -1, firsty = -1, firstmatch = -1;
+    int matchcount = 0;
+
+    for (coord_def coord : features)
+    {
+        if (_is_feature_fudged(feature, coord))
+        {
+            ++matchcount;
+            if (forward? !ignore_count-- : --ignore_count == 1)
+            {
+                // We want to cursor to (x,y)
+                *move_x = coord.x - (start_x + curs_x - 1);
+                *move_y = coord.y - (start_y + curs_y - 1);
+                return matchcount;
+            }
+            else if (!forward || firstx == -1)
+            {
+                firstx = coord.x;
+                firsty = coord.y;
+                firstmatch = matchcount;
+            }
+        }
+    }
 
     // We found something, but ignored it because of an ignorecount
     if (firstx != -1)
@@ -322,16 +366,13 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 // If we've a waypoint on the current square, *and* the
                 // square is a normal floor square with nothing on it,
                 // show the waypoint number.
-                if (Options.show_waypoints)
+                // XXX: This is a horrible hack.
+                char32_t bc   = cell->glyph;
+                uint8_t ch = is_waypoint(c);
+                if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
+                           || bc == _get_magicmap_char(DNGN_FLOOR)))
                 {
-                    // XXX: This is a horrible hack.
-                    ucs_t bc   = cell->glyph;
-                    uint8_t ch = is_waypoint(c);
-                    if (ch && (bc == _get_sightmap_char(DNGN_FLOOR)
-                               || bc == _get_magicmap_char(DNGN_FLOOR)))
-                    {
-                        cell->glyph = ch;
-                    }
+                    cell->glyph = ch;
                 }
 
                 if (Options.show_travel_trail && travel_trail_index(c) >= 0)
@@ -763,7 +804,7 @@ bool show_map(level_pos &lpos,
 
             c_input_reset(true);
 #ifdef USE_TILE_LOCAL
-            const int key = tiles.getch_ck();
+            const int key = getchm(KMC_LEVELMAP);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
@@ -811,8 +852,16 @@ bool show_map(level_pos &lpos,
 
             if (key == CK_REDRAW)
             {
-                viewwindow();
-                display_message_window();
+                if (Options.messages_at_top)
+                {
+                    display_message_window();
+                    viewwindow();
+                }
+                else
+                {
+                    viewwindow();
+                    display_message_window();
+                }
                 continue;
             }
 
@@ -825,7 +874,7 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_CLEAR_MAP:
-                clear_map();
+                clear_map_or_travel_trail();
                 break;
 
             case CMD_MAP_FORGET:
@@ -1046,7 +1095,7 @@ bool show_map(level_pos &lpos,
             {
                 bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
 
-                ucs_t getty;
+                char32_t getty;
                 switch (cmd)
                 {
                 case CMD_MAP_FIND_UPSTAIR:
@@ -1082,11 +1131,23 @@ bool show_map(level_pos &lpos,
                     anchor_x = lpos.pos.x;
                     anchor_y = lpos.pos.y;
                 }
-                search_found = _find_feature(getty, curs_x, curs_y,
-                                             start_x, start_y,
-                                             anchor_x, anchor_y,
-                                             search_found,
-                                             &move_x, &move_y, forward);
+                if (travel_mode && !_is_player_defined_feature(getty))
+                {
+                    search_found = _find_feature(features, getty,
+                                                 curs_x, curs_y,
+                                                 start_x, start_y,
+                                                 search_found,
+                                                 &move_x, &move_y,
+                                                 forward);
+                }
+                else
+                {
+                    search_found = _find_feature(getty, curs_x, curs_y,
+                                                 start_x, start_y,
+                                                 anchor_x, anchor_y,
+                                                 search_found,
+                                                 &move_x, &move_y);
+                }
                 break;
             }
 
@@ -1165,7 +1226,7 @@ bool show_map(level_pos &lpos,
             case CMD_MAP_DESCRIBE:
                 if (map_bounds(lpos.pos) && env.map_knowledge(lpos.pos).known())
                 {
-                    full_describe_square(lpos.pos);
+                    full_describe_square(lpos.pos, false);
                     redraw_map = true;
                 }
                 break;

@@ -26,11 +26,10 @@ ENDMAP
 
 # In the buggy case, the monster oscillates between 1 and 2.
 NAME: monster_plant_pathfind
+TAGS: monster_plant_pathfind
 ORIENT: encompass
 MONS: generate_awake hippogriff, nothing
 KMONS: P = plant
-# Just to shut up level compiler sanity checks.
-TAGS: monster_plant_pathfind
 MAP
 xxxxx
 xxP{x
@@ -39,9 +38,10 @@ x.1xx
 xxxxx
 ENDMAP
 
+# I_HUMAN monsters of insufficient hd and resistance
+# should avoid wandering into the clouds.
 NAME:    monster_avoids_cloud
-DEPTH:   D:1
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen monster_avoids_cloud unrand
 KMONS:   1 = generate_awake goblin
 MARKER:  F = lua:fog_machine { cloud_type = "flame", \
              pow_min = 1000, pow_max = 1000, delay = 1, \

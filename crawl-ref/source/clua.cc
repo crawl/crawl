@@ -9,7 +9,7 @@
 #include "end.h"
 #include "files.h"
 #include "libutil.h"
-#include "l_libs.h"
+#include "l-libs.h"
 #include "misc.h" // erase_val
 #include "options.h"
 #include "state.h"
@@ -51,7 +51,7 @@ static string _get_persist_file();
 
 CLua::CLua(bool managed)
     : error(), managed_vm(managed), shutting_down(false),
-      throttle_unit_lines(10000),
+      throttle_unit_lines(50000),
       throttle_sleep_ms(0), throttle_sleep_start(2),
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),

@@ -32,7 +32,7 @@ function general_item_setup(e)
           potion of haste ident:all /\
           potion of resistance ident:all w:5 / potion of brilliance ident:all /\
           potion of berserk rage ident:all /\
-          potion of cure mutation ident:all")
+          potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all /\
           scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of recharging ident:all /\
@@ -93,16 +93,15 @@ KMONS:     a = Erica / Erolcha / Eustachio / Gastronok / Grum band /\
                Sonja / Urug
 NSUBST:    a = 1:a. / 1:a.. / 1:a... / 1:a.... / * = .:70 a:1
 KMONS:     b = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
-               Maud / Nergalle / Nessos / Rupert / Saint Roka band / Snorg /\
-               Wiglaf
+               Nergalle / Nessos / Rupert / Saint Roka band / Snorg
 NSUBST:    b = 1:b. / 1:b.. / 1:ba.. / 1:baa.. / * = .:70 b:1
-KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
-               Xtahua / Jory / Mennas / Mara
+KMONS:     c = Louise / Nikola / Frederick / Boris / Margery band /\
+               Sojobo band / Xtahua / Jory / Mennas / Mara
 NSUBST:    c = 2:c. / 2:cb. / 2:cb.. / 2:cbb.. / * = .:69 c:2
 MAP
-xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
-x{..AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
-xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
+xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx
+x{..AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&..x
+xxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxx.x
 x..........a.........a..........a.........a.............a............x
 x.xxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxxxx
 x.......EEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHH&....x
@@ -179,36 +178,38 @@ ENDMAP
 
 NAME:     line_temple
 TAGS:     line_temple
-KFEAT:    a = altar_zin
-KFEAT:    b = altar_the_shining_one
-KFEAT:    c = altar_kikubaaqudgha
-KFEAT:    d = altar_yredelemnul
-KFEAT:    e = altar_xom
-KFEAT:    f = altar_vehumet
-KFEAT:    g = altar_okawaru
-KFEAT:    h = altar_makhleb
-KFEAT:    i = altar_sif_muna
-KFEAT:    j = altar_trog
-KFEAT:    k = altar_nemelex_xobeh
-KFEAT:    l = altar_elyvilon
-KFEAT:    m = altar_beogh
-KFEAT:    n = altar_jiyva
-KFEAT:    o = altar_lugonu
-KFEAT:    p = altar_fedhas
-KFEAT:    q = altar_cheibriados
-KFEAT:    r = altar_dithmenos
-KFEAT:    s = altar_qazlal
-KFEAT:    t = altar_gozag
-KFEAT:    u = altar_ru
-KFEAT:    v = altar_pakellas
+# No Ashenzari.
+KFEAT:    b = altar_beogh
+KFEAT:    c = altar_cheibriados
+KFEAT:    d = altar_dithmenos
+KFEAT:    e = altar_elyvilon
+KFEAT:    f = altar_fedhas
+KFEAT:    g = altar_gozag
+KFEAT:    h = altar_hepliaklqana
+KFEAT:    j = altar_jiyva
+KFEAT:    k = altar_kikubaaqudgha
+KFEAT:    l = altar_lugonu
+KFEAT:    m = altar_makhleb
+KFEAT:    n = altar_nemelex_xobeh
+KFEAT:    o = altar_okawaru
+KFEAT:    q = altar_qazlal
+KFEAT:    r = altar_ru
+KFEAT:    s = altar_sif_muna
+KFEAT:    t = altar_trog
+KFEAT:    u = altar_uskayaw
+KFEAT:    v = altar_vehumet
+KFEAT:    X = altar_xom
+KFEAT:    y = altar_yredelemnul
+KFEAT:    z = altar_zin
+KFEAT:    1 = altar_the_shining_one
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
-xxxxxxxxxxxxxxxxxxxxxxx
-~abcdefghijklmnopqrstuv
-xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+~bcdefghjklmnoqrstuvXyz1.
+xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -301,8 +302,8 @@ ENDMAP
 NAME:     lair_1
 TAGS:     lair_1
 KMONS:    1 = place:Lair:1
-KMONS:    2 = place:Lair:4
-KMONS:    3 = place:Lair:7
+KMONS:    2 = place:Lair:3
+KMONS:    3 = place:Lair:5
 COLOUR:   123 = green
 : line_setup(_G)
 : general_item_setup(_G)
@@ -320,17 +321,17 @@ NAME:     lair_end
 TAGS:     lair_end
 KMONS:    1 = wolf w:15 / warg / hell hound w:8
 KMONS:    2 = yak / death yak w:15 / catoblepas w:5
-KMONS:    3 = worm w:15 / lindwurm / giant leech
+KMONS:    3 = worm w:15 / lindwurm / tyrant leech
 KMONS:    4 = black bear / polar bear
-KMONS:    5 = spiny frog / blink frog / vampire mosquito / giant frog /\
-              giant leech
+KMONS:    5 = spiny frog / blink frog / vampire mosquito / bullfrog /\
+              tyrant leech
 KMONS:    6 = elephant / dire elephant w:2
 COLOUR:   123456 = green
 SHUFFLE:  123456
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Lair:8",
+:           door_description_suffix=" to Lair:6",
 :           })
 MAP
 xxxxxxxxxxxxx
@@ -385,7 +386,7 @@ KMONS:    1 = orc knight / orc warrior
 KMONS:    2 = orc sorcerer / orc wizard
 KMONS:    3 = orc high priest / orc priest
 KMONS:    4 = ogre / two-headed ogre / ogre mage w:7
-KMONS:    5 = troll / deep troll / hill giant / ogre mage w:7 / stone giant w:1 /\
+KMONS:    5 = troll / deep troll / ogre mage w:7 / stone giant w:1 /\
               ettin w:1 / iron troll w:1
 KMONS:    6 = orc knight / orc sorcerer / orc high priest / orc w:25
 KMONS:    7 = orc knight / orc high priest
@@ -443,12 +444,12 @@ KITEM:    d = any armour level:27 ident:all /\
           ring mail plus:2 ident:all not_cursed /\
           scale mail plus:3 ident:all not_cursed /\
           plate armour plus:2 ident:all not_cursed /\
-          fire dragon armour plus:1 not_cursed ident:all /\
-          ice dragon armour plus:1 not_cursed ident:all /\
-          swamp dragon armour plus:0 not_cursed ident:all /\
-          mottled dragon armour plus:0 not_cursed ident:all /\
-          storm dragon armour plus:0 not_cursed ident:all w:5 /\
-          shadow dragon armour plus:0 not_cursed ident:all w:5 /\
+          fire dragon scales plus:1 not_cursed ident:all /\
+          ice dragon scales plus:1 not_cursed ident:all /\
+          swamp dragon scales plus:0 not_cursed ident:all /\
+          acid dragon scales plus:0 not_cursed ident:all /\
+          storm dragon scales plus:0 not_cursed ident:all w:5 /\
+          shadow dragon scales plus:0 not_cursed ident:all w:5 /\
           large shield plus:1 not_cursed ident:all /\
           any armour good_item ident:all w:20
 KITEM:    e = any weapon good_item ident:all
@@ -549,7 +550,7 @@ ENDMAP
 NAME:     d_20
 TAGS:     d_20
 KMONS:    1 = place:Depths:2
-KMONS:    2 = place:Depths:5
+KMONS:    2 = place:Depths:4
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
@@ -629,13 +630,13 @@ KITEM:    d = plate armour plus:5 not_cursed ident:all /\
     chain mail plus:2 good_item not_cursed ident:all w:20 /\
     robe plus:4 not_cursed ident:all /\
     robe plus:1 good_item not_cursed ident:all /\
-    fire dragon armour plus:3 not_cursed ident:all /\
-    ice dragon armour plus:3 not_cursed ident:all /\
-    swamp dragon armour plus:1 not_cursed ident:all /\
-    mottled dragon armour plus:1 not_cursed ident:all /\
-    storm dragon armour plus:2 not_cursed ident:all w:5 /\
-    shadow dragon armour plus:2 not_cursed ident:all w:5 /\
-    gold dragon armour plus:0 not_cursed ident:all /\
+    fire dragon scales plus:3 not_cursed ident:all /\
+    ice dragon scales plus:3 not_cursed ident:all /\
+    swamp dragon scales plus:1 not_cursed ident:all /\
+    acid dragon scales plus:1 not_cursed ident:all /\
+    storm dragon scales plus:2 not_cursed ident:all w:5 /\
+    shadow dragon scales plus:2 not_cursed ident:all w:5 /\
+    gold dragon scales plus:0 not_cursed ident:all /\
     pair of gloves plus:1 not_cursed ident:all /\
     pair of gloves plus:0 good_item not_cursed ident:all /\
     pair of boots plus:1 not_cursed ident:all /\
@@ -667,7 +668,7 @@ KITEM:    2 = decaying rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Swamp:5",
+:           door_description_suffix=" to Swamp:4",
 :           })
 MAP
 tttttttttttttt
@@ -686,7 +687,7 @@ KITEM:    2 = barnacled rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Shoals:5",
+:           door_description_suffix=" to Shoals:4",
 :           })
 MAP
 xxxxxxxxxxxxxx
@@ -706,7 +707,7 @@ KITEM:    2 = gossamer rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Spider:5",
+:           door_description_suffix=" to Spider:4",
 :           })
 MAP
 xxxxxxxxxxxxxx
@@ -717,16 +718,16 @@ ENDMAP
 
 NAME:     snake_end
 TAGS:     snake_end
-KMONS:    1 = naga / naga warrior / naga mage / greater naga w:20 /\
+KMONS:    1 = naga / naga warrior / naga mage / nagaraja w:20 /\
               guardian serpent
-KMONS:    2 = greater naga
+KMONS:    2 = nagaraja
 COLOUR:   12 = lightgreen
 KITEM:    2 = serpentine rune of zot
 COLOUR:   # = yellow
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Snake:5",
+:           door_description_suffix=" to Snake:4",
 :           })
 MAP
 ##############
@@ -764,9 +765,9 @@ ENDMAP
 
 NAME:     d_27
 TAGS:     d_27
-KMONS:    1 = place:D:$
+KMONS:    1 = place:Depths:$
 KMONS:    2 = fire dragon w:20 / ice dragon w:20 / storm dragon /\
-              bone dragon / golden dragon / mottled dragon
+              bone dragon / golden dragon / acid dragon
 KMONS:    3 = base draconian
 SUBST:    2 = 2223, 3 = 3332
 : line_setup(_G)
@@ -790,7 +791,6 @@ KITEM:    a = amulet of faith randart not_cursed ident:all /\
     amulet of rage randart not_cursed ident:all /\
     amulet of reflection randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\
-    amulet of dismissal randart not_cursed ident:all /\
     amulet of regeneration randart ident:all not_cursed /\
     ring of slaying plus:3 randart ident:all not_cursed /\
     any jewellery randart level:27 not_cursed ident:all w:40 /\
@@ -846,19 +846,19 @@ KITEM:    d = plate armour plus:6 not_cursed ident:all /\
     chain mail plus:6 not_cursed ident:all /\
     chain mail plus:4 good_item not_cursed ident:all /\
     robe plus:4 ego:resistance not_cursed ident:all /\
-    fire dragon armour plus:6 not_cursed ident:all /\
-    ice dragon armour plus:6 not_cursed ident:all /\
-    swamp dragon armour plus:4 not_cursed ident:all /\
-    swamp dragon armour plus:2 good_item not_cursed ident:all /\
-    mottled dragon armour plus:4 not_cursed ident:all /\
-    mottled dragon armour plus:2 good_item not_cursed ident:all /\
-    quicksilver dragon armour not_cursed ident:all w:5 /\
-    storm dragon armour plus:5 not_cursed ident:all w:5 /\
-    storm dragon armour plus:3 good_item not_cursed ident:all w:5 /\
-    shadow dragon armour plus:5 not_cursed ident:all w:5 /\
-    shadow dragon armour plus:3 good_item not_cursed ident:all w:5 /\
-    gold dragon armour plus:4 not_cursed ident:all /\
-    gold dragon armour plus:0 good_item not_cursed ident:all /\
+    fire dragon scales plus:6 not_cursed ident:all /\
+    ice dragon scales plus:6 not_cursed ident:all /\
+    swamp dragon scales plus:4 not_cursed ident:all /\
+    swamp dragon scales plus:2 good_item not_cursed ident:all /\
+    acid dragon scales plus:4 not_cursed ident:all /\
+    acid dragon scales plus:2 good_item not_cursed ident:all /\
+    quicksilver dragon scales not_cursed ident:all w:5 /\
+    storm dragon scales plus:5 not_cursed ident:all w:5 /\
+    storm dragon scales plus:3 good_item not_cursed ident:all w:5 /\
+    shadow dragon scales plus:5 not_cursed ident:all w:5 /\
+    shadow dragon scales plus:3 good_item not_cursed ident:all w:5 /\
+    gold dragon scales plus:4 not_cursed ident:all /\
+    gold dragon scales plus:0 good_item not_cursed ident:all /\
     pair of gloves plus:2 not_cursed ident:all /\
     pair of gloves plus:0 good_item not_cursed ident:all /\
     pair of boots plus:2 not_cursed ident:all /\
@@ -873,7 +873,7 @@ KITEM:    d = plate armour plus:6 not_cursed ident:all /\
     large shield plus:3 good_item not_cursed ident:all /\
     naga barding plus:4 not_cursed ident:all w:5 /\
     centaur barding plus:4 not_cursed ident:all w:5
-KITEM:     e = wand of hasting charges:5 ident:all
+KITEM:     e = potion of haste q:5 ident:all
 KITEM:     f = crystal ball of energy ident:all
 : line_setup(_G)
 : general_item_setup(_G)
@@ -1001,7 +1001,7 @@ ENDMAP
 
 NAME:     slime_end
 TAGS:     slime_end
-KMONS:    1 = azure jelly / acid blob w:20 / death ooze / giant eyeball w:4 /\
+KMONS:    1 = azure jelly / acid blob w:20 / death ooze / floating eye w:4 /\
               golden eye w:4 / eye of draining w:2
 KMONS:    2 = the Royal Jelly
 KITEM:    2 = slimy rune of zot

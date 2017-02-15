@@ -10,7 +10,7 @@
 
 #include "acquire.h"
 #include "decks.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "libutil.h"
 #include "state.h"
 #include "unwind.h"
@@ -58,10 +58,12 @@ void run_uncancels()
                 return;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case UNC_MERCENARY:
             if (!recruit_mercenary(arg) && crawl_state.seen_hups)
                 return;
             break;
+#endif
 
         case UNC_POTION_PETITION:
             if (!gozag_potion_petition() && crawl_state.seen_hups)

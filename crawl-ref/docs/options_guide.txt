@@ -15,17 +15,15 @@ The contents of this text are:
 0-d     List options.
 0-e     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, species, background,
-                combo, random_pick, good_random, restart_after_game,
-                restart_after_save, default_manual_training,
-                autopickup_starting_ammo
+                name, remember_name, weapon, species, background, combo,
+                restart_after_game, restart_after_save,
+                default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, assign_item_slot,
-                pickup_menu_limit, drop_filter
+                pickup_thrown, assign_item_slot, pickup_menu_limit, drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
@@ -33,7 +31,7 @@ The contents of this text are:
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
                 heap_brand, feature_item_brand, trap_item_brand
 3-d     Level Map Functions.
-                level_map_cursor_step, show_waypoints
+                level_map_cursor_step
 3-e     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
@@ -42,48 +40,48 @@ The contents of this text are:
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, explore_improved, auto_sacrifice,
-                travel_key_stop, tc_reachable, tc_dangerous, tc_disconnected,
-                tc_excluded, tc_exclude_circle,
-                runrest_ignore_message, runrest_stop_message,
-                runrest_safe_poison, runrest_ignore_monster,
-                rest_wait_both, rest_wait_percent, explore_auto_rest,
-                auto_exclude
+                explore_wall_bias, travel_key_stop,
+                tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
+                tc_exclude_circle, runrest_ignore_message,
+                runrest_stop_message, runrest_safe_poison,
+                runrest_ignore_monster, rest_wait_both, rest_wait_percent,
+                explore_auto_rest, auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
-                jewellery_prompt, easy_confirm, allow_self_target,
-                confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
-                easy_exit_menu, ability_menu, sort_menus, spell_slot,
-                item_slot, ability_slot, autofight_stop, autofight_warning,
-                autofight_hunger_stop, autofight_hunger_stop_undead,
-                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
-                autofight_caught, autofight_wait, autofight_prompt_range,
-                automagic_enable, automagic_slot, automagic_fight,
-                automagic_stop, fail_severity_to_confirm, easy_door,
-                warn_hatches, enable_recast_spell, confirm_action, regex_search
+                jewellery_prompt, easy_confirm, simple_targeting,
+                allow_self_target, auto_butcher, confirm_butcher,
+                easy_eat_chunks, easy_quit_item_prompts, easy_exit_menu,
+                ability_menu, sort_menus, spell_slot, item_slot, ability_slot,
+                autofight_stop, autofight_warning, autofight_hunger_stop,
+                autofight_hunger_stop_undead, autofight_throw,
+                autofight_throw_nomove, autofight_fire_stop, autofight_caught,
+                autofight_wait, autofight_prompt_range, automagic_enable,
+                automagic_slot, automagic_fight, automagic_stop,
+                fail_severity_to_confirm, easy_door, warn_hatches,
+                enable_recast_spell, confirm_action, regex_search,
+                autopickup_search
 3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
-                show_more, small_more, show_newturn_mark,
-                show_game_turns, item_stack_summary_minimum,
-                mlist_min_height, mlist_allow_alternate_layout,
-                mlist_targeting, msg_min_height, msg_max_height,
+                show_more, small_more, show_newturn_mark, show_game_time,
+                item_stack_summary_minimum, mlist_min_height,
+                mlist_allow_alternate_layout, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
                 view_delay, force_more_message, flash_screen_message,
-                use_animations, cloud_status
+                use_animations, darken_beyond_range
 3-i     Colours (messages and menus)
                 menu_colour, message_colour
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
-                plain, prompt, god, pray, duration, danger, food, warning,
-                recovery, talk, talk_visual, timed_portal, sound,
-                intrinsic_gain, mutation, monster_spell, monster_enchant,
-                monster_warning, friend_spell, friend_enchant, friend_action,
-                monster_damage, monster_target, banishment, rotten_meat,
-                equipment, floor, multiturn, examine, examine_filter,
-                diagnostic, error, tutorial, orb, hell_effect, dgl_message
+                plain, prompt, god, duration, danger, food, warning, recovery,
+                talk, talk_visual, timed_portal, sound, intrinsic_gain,
+                mutation, monster_spell, monster_enchant, monster_warning,
+                friend_spell, friend_enchant, friend_action, monster_damage,
+                monster_target, banishment, rotten_meat, equipment, floor,
+                multiturn, examine, examine_filter, diagnostic, error,
+                tutorial, orb, hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -112,7 +110,8 @@ The contents of this text are:
                 tile_realtime_anim, tile_show_player_species,
                 tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar,
-                tile_player_tile, tile_weapon_offsets, tile_shield_offsets
+                tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
+                tile_web_mouse_control
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -121,20 +120,24 @@ The contents of this text are:
                 dump_item_origins, dump_item_origin_price, dump_message_count,
                 dump_order, dump_book_spells
 4-c     Notes.
-                user_note_prefix, note_items, note_monsters,
-                note_hp_percent, note_skill_levels, note_all_skill_levels,
-                note_skill_max, note_xom_effects, note_messages,
-                note_chat_messages, note_dgl_messages
+                user_note_prefix, note_items, note_monsters, note_hp_percent,
+                note_skill_levels, note_all_skill_levels, note_skill_max,
+                note_xom_effects, note_messages, note_chat_messages,
+                note_dgl_messages
 5-  Miscellaneous.
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species, fake_lang, pizza
+                use_fake_player_cursor, show_player_species, fake_lang,
+                read_persist_options
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
 5-c     Unix.
-                background_colour, use_fake_cursor
+                blink_brightens_background, bold_brightens_foreground,
+                best_effort_brighten_background,
+                best_effort_brighten_foreground, allow_extended_colours,
+                background_colour, foreground_colour, use_fake_cursor
 
 6-  Lua.
 6-a     Including lua files.
@@ -349,16 +352,6 @@ combo += (HuFi . short sword | Human Monk | ...), <combo>, ...
         from the specified combos. The weapon, species, and background
         options are overriden by (and override) this option.
 
-random_pick = false
-        The random_pick option will randomly generate a character.
-        The above options (weapons and species/background options) will
-        override where appropriate.
-
-good_random = true
-        Whenever random_pick is used, species or background are set
-        random, or a remembered random choice is executed in the character
-        selection, the game will only pick good (viable) combinations.
-
 restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
         restart_after_game is set. This option is enabled by default
@@ -514,9 +507,6 @@ drop_filter += <regex>, <regex>, ...
         For instance, to quickly select items forbidden by your god, you could
         use:
              drop_filter += forbidden
-        Other choices can come in handy as well, e.g. if you want to
-        regularly sacrifice all weapons except axes, use:
-             drop_filter += axe, broadaxe
 
         drop_filter will match against the same keywords menu_colour uses,
         except that it lacks identification status and chunk information. It
@@ -607,10 +597,6 @@ trap_item_brand = reverse
 level_map_cursor_step = 7
         How many squares the cursor moves on the level map when using
         Shift-direction.
-
-show_waypoints = true
-        Whether to display a number on the level map to indicate
-        waypoints (placed with the Ctrl-W command).
 
 3-e     Viewport Display Options.
 ---------------------------------
@@ -800,17 +786,6 @@ explore_wall_bias = 0
         heavily favour visiting squares that are next to walls; at 0 it
         will not favour them at all.
 
-explore_improved = false
-        If set to true explore will attempt to reduce zig-zagging during
-        auto-explore. On average it increases the number of turns taken
-        by about 0.9%, sometimes actually speeding it up slightly and
-        sometimes increasing the turns taken by up to 5%, with
-        pathological cases causing a 13% increase.
-
-auto_sacrifice = false
-       If set to true, the player is worshipping Fedhas, and there are corpses
-       around when autoexplore is initiated, they will be sacrificed.
-
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
 
@@ -862,22 +837,21 @@ runrest_stop_message += <regex>, <regex>, ...
 interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
         (List option)
         Use this option to not interrupt a delayed action on a certain trigger.
-        The list of delay types is in delay.cc in the delay_names string array,
-        and the list of interruption types is in activity_interrupt_names.
+        To find the name of a delay type, look for the name() function in
+        delay.h. The list of interruption types is in activity_interrupt_names.
         For example, use
             interrupt_travel -= sense_monster
         to not interrupt autotravel when a monster is sensed but not seen.
 
-runrest_safe_poison = <% of hp>:<% of mhp>
+delay_safe_poison = <% of hp>:<% of mhp>
         Poison damage will be ignored if it is projected to drop your hp
         by less than x% of your current hp and less than y% of your max
-        hp if you have defined runrest_safe_poison = x:y. Running here
-        means shift-running and resting only. Only one runrest_safe_poison
-        line is considered. Note that for this to work, Crawl needs to
-        know to ignore the "You feel sick" messages as well as the
-        damage. For example,
+        hp if you have defined delay_safe_poison = x:y. This applies to all
+        delays. Only one delay_safe_poison line is considered. Note that for
+        this to work with running and resting, Crawl needs to know to ignore
+        the "You feel sick" messages as well as the damage. For example,
              runrest_ignore_message ^= You feel.*sick
-             runrest_safe_poison = 80:100
+             delay_safe_poison = 80:100
         are the defaults.
 
 runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
@@ -939,10 +913,6 @@ jewellery_prompt = false
         an item to remove, instead of skipping the prompt if only one item
         of jewellery is equipped.
 
-show_uncursed = true
-        Whether items that are known to be uncursed will contain "uncursed"
-        as part of their displayed name.
-
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:
            none = force capitals on Y/N questions
@@ -953,14 +923,26 @@ easy_confirm = (none | safe | all)
         to the letter 'y', which can result in accidentally answering
         yes to questions.
 
+simple_targeting =
+        If set to true, disables smart targeting for explosion and bouncing
+        bolt spells, making them automatically target the closest monster in
+        range rather than trying to find a spot that affects multiple monsters
+        while avoiding the player.
+
 allow_self_target = (yes | no | prompt)
-        Allow targeting yourself with risky magic (e.g., the spell
-        Bolt of Fire or a wand of slowing.)
-        When set to 'yes', you are a valid target. When set to 'no',
-        you cannot target yourself with such spells. When set to
-        'prompt' (the default), you will be required to confirm
-        self-targeting. This option has no effect on area-effect
-        spells, such as Mephitic Cloud, where you are always a valid target.
+        Allow targeting yourself with risky magic (e.g., the spell Bolt of Fire
+        or a wand of paralysis.)
+        When set to 'yes', you are a valid target. When set to 'no', you cannot
+        target yourself with such spells. When set to 'prompt' (the default),
+        you will be required to confirm self-targeting. This option has no
+        effect on area-effect spells, such as Mephitic Cloud, where you are
+        always a valid target.
+
+auto_butcher = false
+        If this is set to true, you will automatically travel to and attempt to
+        butcher edible corpses. Can also be set to a hunger threshold ('very
+        full', 'full', 'satiated', 'hungry', 'very hungry', or 'near starving')
+        to enable automatic butchery only when at that state or hungrier.
 
 confirm_butcher = (always | never | auto)
         If auto (default) you will be prompted for which corpses to butcher if
@@ -997,6 +979,14 @@ ability_menu = true
         in the message area, and the menu can be seen with '?' or '*'.
 
         Setting this option to false has no effect in Android tiles builds.
+
+easy_floor_use = true
+        If set to true, item interaction menus that allow using items from the
+        ground will respond to switching from inventory items to floor items by
+        pressing ',' whenever there is only one floor item, by selecting that
+        item rather than toggling the menu. For example, 'r,' will read the
+        scroll on the ground, if there is only one. This will work even if
+        there are no matching items in your inventory.
 
 sort_menus = [menu:](true | false | auto:X)[:sort_order]
         Controls if and how items are sorted in inventory and pickup
@@ -1165,7 +1155,7 @@ ability_slot ^= <regex>:<ability letters>
         Uses the same interface as spell_slot, but applies to abilities
         in the 'a' menu.
 
-autofight_stop = 30
+autofight_stop = 50
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
         you would want:
@@ -1298,6 +1288,13 @@ regex_search = false
         expression search and queries prefixed with = will be performed as a
         substring search.
 
+autopickup_search = false
+        If enabled, items are annotated with {autopickup} while searching
+        with ^F if they would be picked up by autopickup. This means that
+        searching for "autopickup" will list all such items. Note that this
+        option may slow down your game if you have a complicated custom
+        autopickup function.
+
 3-h     Messages and Display Enhancements.
 ------------------------------------------
 
@@ -1329,17 +1326,16 @@ stat_colour = 1:lightred, 3:red
         in the order of their definition. This check takes place before
         the ones for e.g. Might or degeneration.
         For normal grey colouring, set it to
-           stat_colour = 7
+           stat_colour -= 3:red
 
 status_caption_colour = brown
         Sets the colour that is used to display the captions in the status
         area (for instance the "Health:" in "Health: 10/10").
 
-enemy_hp_colour = green green brown brown magenta red lightgrey
+enemy_hp_colour = green green brown brown magenta red
         Colours enemy health appropriately in the monster pane. The
         colourings correspond to full health, lightly wounded, moderately
-        wounded, heavily wounded, severely wounded, almost dead, and
-        undead (or otherwise unable to be determined).
+        wounded, heavily wounded, severely wounded, and almost dead.
 
 clear_messages = false
         Setting this option to true will cause messages to cleared
@@ -1363,17 +1359,16 @@ show_newturn_mark = true
         When set to false, this option disables the underscore (_) displayed in
         front of the first line of a turn.
 
-show_game_turns = true
-        By default, the turn counter in the stat area displays game turns, which
-        means absolute turns of constant duration. Most actions take one turn,
-        but some are quicker (putting a ring, wielding a weapon, ...) and
-        others are slower (ending a transformation, changing armour,...). The
-        duration of the last action is displayed in parenthesis, after the turn
-        count.
-        When set to false, the turn counter will display player turns instead,
-        which is the number of actions done, regardless of their duration. It
-        is this turn count which is used for scoring (and this turn count is
-        always visible on the % overview screen).
+show_game_time = true
+        By default, the counter in the stat area displays elapsed game time.
+        Most actions take one unit of time, but some are quicker (putting on a
+        ring, wielding a weapon, ...) and others are slower (swinging a weapon
+        with low skill, changing armour, ...). The duration of the last action
+        is displayed in parenthesis, after the time display.
+        When set to false, the counter will display player turns instead, which
+        is the number of actions taken regardless of their duration. It is this
+        turn count which is used for scoring (and this turn count is always
+        visible on the % overview screen).
 
 item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in
@@ -1396,12 +1391,6 @@ mlist_allow_alternate_layout = false
         your console display, usually to the left of the map, rather
         than using the fixed position below the stat area.
         This option is not supported in the tiles build.
-
-mlist_targeting = false
-        Using the monster list you can directly target monsters in targeting
-        mode. This can be toggled during a game with Ctrl-L while in targeting
-        mode, and this option controls the initial setting at game start or
-        reload.
 
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
@@ -1504,6 +1493,11 @@ use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
                              ability or casts a spell.
           branch_entry     - Animations that run when you enter a new branch.
                              Currently only the Abyss and Zot have animations.
+
+darken_beyond_range = true
+        If set to true, everything beyond range when targeting will be
+        coloured grey. Setting this to false will also disable the "range"
+        category of the use_animations option.
 
 force_more_message += <regex>, <regex>
         (List option)
@@ -1672,7 +1666,6 @@ CHANNEL_NAME can currently be one of these:
    plain           = regular text (and things "uncoloured")
    prompt          = input prompts to the player
    god             = messages from the gods
-   pray            = standard praying messages
    duration        = messages about character spells/effects wearing off
    danger          = serious threats to the character's existence
    food            = warnings about food
@@ -1916,10 +1909,11 @@ tile_tag_pref = (none| named | enemy | tutorial )
                        and of named enemy monsters
         Examples for named monsters are uniques and ghosts.
 
-tile_window_width  = 0
-tile_window_height = 0
+tile_window_width  = -90
+tile_window_height = -90
         The width and height of the window, in pixels. If set to zero, it
-        will auto-size the window.
+        will auto-size the window. If set to a negative number (default), it
+        will use the screen's resolution, minus the given value.
 
 tile_map_pixels = 0
         The maximum number of pixels each minimap square should take up. If you
@@ -2074,6 +2068,11 @@ tile_shield_offsets = (<x>,<y> | reset)
 
         Using the value "reset" will clear any previously defined offset, which
         is using for in-game tile changes via lua.
+
+tile_web_mouse_control = false
+        Whether to enable the experimental mouse control for tooltips/cursor/
+        interaction on Webtiles. Regardless of the value of the setting, the
+        minimap will respond to mouse control.
 
 4-  Character Dump.
 ===================
@@ -2470,9 +2469,6 @@ item_glyph -= <regexp>
         Removing a rule with -= removes all rules using the exact regexp
         provided; do not specify a colour or glyph in that case.
 
-pizza = <topping name>
-        A comma-separated list of the player's preferred pizza toppings.
-
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the
         terminal cursor. This means it won't flicker when the cursor
@@ -2493,6 +2489,10 @@ fake_lang = <lang1>[,<lang2>[,...]]
         Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt:<n>)
         Experiment to find out what they do!
 
+read_persist_options = false
+        When set to true, the game will read additional options from
+        the lua variable c_persist.options if it contains a string.
+
 5-b     DOS and Windows.
 ------------------------
 
@@ -2506,12 +2506,90 @@ dos_use_background_intensity = false
 
 5-c     Unix.
 -------------
+blink_brightens_background = false
+        For 8-colour mode, assume that a blink text attribute will end up
+        brightening the background colour.
+
+        If enabled on a terminal where this assumption does not hold, this will
+        result in invisible glyphs for normal/bright colour combos of the same
+        base colour.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+bold_brightens_foreground = false
+        For 8-colour mode, assume that a bold text attribute will end up
+        brightening the foreground colour.
+
+        See blink_brightens_background for more information.
+
+best_effort_brighten_background = true
+        If set to true, try to brighten a background colour using blink even if
+        it is not assumed to be successful.
+
+        This option only affects colours which are safe to brighten. If the
+        blink_brightens_background option is set to true, this option is
+        effectively ignored.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+best_effort_brighten_foreground = true
+        If set to true, try to brighten a foreground colour using bold even if
+        it is not assumed to be successful.
+
+        This option only affects colours which are safe to brighten. If the
+        bold_brightens_foreground option is set to true, this option is
+        effectively ignored.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+allow_extended_colours = false
+        Allow an *attempt* to use more than the eight basic terminal colours
+        for crawl's bright colours.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        An appropriate TERM environment variable must be set for this option to
+        function as expected for capable terminals. For example:
+          * XTerm: xterm-256color
+          * gnome-terminal: vte-256color
+          * PuTTY: putty-256color
+            (set in 'Connection->Data->Terminal-type string')
+
+        If these conditions are not met, crawl will fall back to 8-colour mode
+        and use character attributes to render bright colours.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).
         This may be useful if you're using a terminal with a background
-        colour other than black (such as an xterm), but this option is
-        still experimental and the results may not be very good.
+        colour other than black and wish to retain the colour scheme for crawl.
+
+        Internally, black is mapped to the the passed background colour and
+        vice-versa.
+
+        This option requires extended support by the terminal library as well
+        as the terminal itself. Additionally, bright default colours are not
+        available unless extended colour support is present and explicitly
+        enabled via allow_extended_colours. If support is not present, either
+        outright or for the selected colour, this option will have an effective
+        value of black.
+
+        See the allow_extended_colours option for more information on enabling
+        use of bright default colours. Beware of buggy or misleading terminfo
+        files.
+
+foreground_colour = lightgrey
+        Sets the default foreground colour by name (defaults to LIGHTGREY).
+
+        Internally, lightgrey is mapped to the passed foreground colour and
+        vice-versa.
+
+        This option comes with the same baggage as the background_colour option.
+        See its documentation for more details.
 
 use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and

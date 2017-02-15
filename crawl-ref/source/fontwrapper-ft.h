@@ -30,7 +30,7 @@ public:
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
-                                  ucs_t *chars, uint8_t *colours,
+                                  char32_t *chars, uint8_t *colours,
                                   unsigned int width, unsigned int height,
                                   bool drop_shadow = false) override;
 
@@ -50,7 +50,7 @@ public:
                        const string &s, const VColour &c) override;
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs) override;
-    virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
+    virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,
                        const VColour &col) override;
 
     virtual unsigned int char_width() const override;
@@ -78,9 +78,9 @@ protected:
 
     int find_index_before_width(const char *str, int max_width);
 
-    unsigned int map_unicode(ucs_t uchar, bool update);
-    unsigned int map_unicode(ucs_t uchar);
-    void load_glyph(unsigned int c, ucs_t uchar);
+    unsigned int map_unicode(char32_t uchar, bool update);
+    unsigned int map_unicode(char32_t uchar);
+    void load_glyph(unsigned int c, char32_t uchar);
     void draw_m_buf(unsigned int x_pos, unsigned int y_pos, bool drop_shadow);
 
     struct GlyphInfo
@@ -106,16 +106,16 @@ protected:
         // index of prev/next glyphs in LRU
         unsigned int prev; unsigned int next;
         // charcode of glyph
-        ucs_t uchar;
+        char32_t uchar;
     };
     GlyphInfo *m_glyphs;
-    map<ucs_t, unsigned int> m_glyphmap;
+    map<char32_t, unsigned int> m_glyphmap;
     // index of least recently used glyph
-    ucs_t m_glyphs_lru;
+    char32_t m_glyphs_lru;
     // index of most recently used glyph
-    ucs_t m_glyphs_mru;
+    char32_t m_glyphs_mru;
     // index of last populated glyph until m_glyphs[] is full
-    ucs_t m_glyphs_top;
+    char32_t m_glyphs_top;
 
     // count of glyph loads in the current text block
     int n_subst;

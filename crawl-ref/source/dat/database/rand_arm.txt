@@ -119,6 +119,10 @@ Sparrow
 
 Swan
 
+Robin
+
+Shrike
+
 # mammals
 Hare
 
@@ -155,7 +159,8 @@ Okapi
 # not strictly an animal... :)
 Monkey's Uncle
 
-Circus Animals
+Circus Animal
+
 #classical mythical animals
 Cockatrice
 
@@ -240,6 +245,8 @@ Vexation
 Disappointment
 
 Entitlement
+
+Bad Feelings
 
 # inaction
 Lifelessness
@@ -382,6 +389,8 @@ the Untouchables
 
 the Armoured One
 
+the Unbroken
+
 Exclusion
 
 Repulsion
@@ -426,6 +435,8 @@ Impressiveness
 Gravitas
 
 Resonance
+
+Polish
 %%%%
 _wacky_armour_name_
 
@@ -518,6 +529,11 @@ Poor Excuses
 Dramatic Exits
 
 Thank Me Later
+
+the True Pharaoh
+
+the Unemployed Unperson
+
 %%%%
 # Lemuel's suggestions
 _celestial_bodies_
@@ -538,6 +554,8 @@ Evening Star
 
 Comet
 
+Constellations
+
 w:5
 Midnight Sun
 
@@ -551,6 +569,12 @@ Harvest Moon
 Black Moon
 %%%%
 _instrument_name_
+
+the Fiddle
+
+the Fife
+
+Pan-Flutes
 
 Trumpets
 
@@ -571,8 +595,18 @@ the Flute
 the Harp
 
 the Gusle
+
+the Trombone
 %%%%
 _evil_being_
+
+Tempters
+
+the Tormentor
+
+Vampiric Thralls
+
+the Lich-sworn
 
 the Devil
 
@@ -585,6 +619,8 @@ Greater Demons
 the Iron Devil
 
 the Devil's Advocate
+
+the Devil's Team
 
 the Demon Prince
 
@@ -624,6 +660,10 @@ Pleasant Breezes
 the Blizzard
 
 Chill Winds
+
+Spring Thaw
+
+Cloud Cover
 %%%%
 _profession_name_
 
@@ -688,6 +728,9 @@ Thinker
 Learner
 
 Teacher
+
+Monk
+
 %%%%
 # something for Xom
 _game_name_
@@ -709,7 +752,7 @@ Spin the Turtle
 
 You Go First
 
-Over Soon
+It's Over Quickly
 
 # children's games
 Never Talk to Strangers
@@ -812,6 +855,9 @@ the Failed Coup
 Sovereignty
 
 the Greedy
+
+Democracy
+
 %%%%
 _other_armour_name_
 
@@ -899,6 +945,10 @@ Time Monsters
 the Sacrificial Victim
 
 Undesirable Species
+
+Going Fast
+
+Insurance
 %%%%
 _card_
 
@@ -948,4 +998,5 @@ Forget-Me-Not
 Hero's Friend
 
 Trusted Companion
+
 %%%%

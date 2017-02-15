@@ -13,9 +13,9 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
-#include "misc.h"
-#include "process_desc.h"
-#include "process_desc.h"
+#include "nearby-danger.h"
+#include "process-desc.h"
+#include "process-desc.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "terrain.h"
@@ -108,7 +108,7 @@ bool CommandRegion::update_tip_text(string& tip)
     if (command_to_key(cmd) != '\0')
     {
         tip += " (%)";
-        insert_commands(tip, cmd, 0);
+        insert_commands(tip, { cmd });
     }
 
     // tip += "\n[R-Click] Describe";
@@ -185,9 +185,6 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
-    case CMD_PRAY:
-        return you_worship(GOD_NO_GOD)
-               && !feat_is_altar(grd(you.pos()));
     case CMD_USE_ABILITY:
         return your_talents(false).empty();
     case CMD_BUTCHER:
@@ -199,14 +196,7 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
             return false;
         return true;
     case CMD_CAST_SPELL:
-        return // shamefully copied from _can_cast in spl-cast.cc
-            (you.form == TRAN_BAT || you.form == TRAN_PIG) ||
-            (you.duration[DUR_BRAINLESS]) ||
-            (you.no_cast()) ||
-            (!you.spell_no) ||
-            (you.berserk()) ||
-            (you.confused()) ||
-            (silenced(you.pos()));
+        return can_cast_spells(true);
     case CMD_DISPLAY_MAP:
         return tiles.get_map_display();
     case CMD_MAP_GOTO_TARGET:

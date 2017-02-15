@@ -8,12 +8,13 @@
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "god-passive.h"
+#include "item-prop.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
+#include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
@@ -115,6 +116,20 @@ static void _mark_expiring(status_info* inf, bool expiring)
     }
 }
 
+static string _ray_text()
+{
+    // i feel like we could do this with math instead...
+    switch (you.attribute[ATTR_SEARING_RAY])
+    {
+        case 2:
+            return "Ray+";
+        case 3:
+            return "Ray++";
+        default:
+            return "Ray";
+    }
+}
+
 /**
  * Populate a status_info struct from the duration_data struct corresponding
  * to the given duration_type.
@@ -178,6 +193,23 @@ bool fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case STATUS_DIVINE_ENERGY:
+        if (you.duration[DUR_NO_CAST])
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "-Cast";
+            inf->short_text   = "no casting";
+            inf->long_text    = "You are unable to cast spells.";
+        }
+        else if (you.attribute[ATTR_DIVINE_ENERGY])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "+Cast";
+            inf->short_text   = "divine energy";
+            inf->long_text    = "You are calling on Sif Muna for divine "
+                                "energy.";
+        }
+        break;
 
     case DUR_CORROSION:
         inf->light_text = make_stringf("Corr (%d)",
@@ -195,7 +227,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "-Swift";
             inf->light_colour = RED;
             inf->short_text   = "sluggish";
-            inf->long_text    = "You are moving sluggishly";
+            inf->long_text    = "You are moving sluggishly.";
         }
         if (you.in_liquid())
             inf->light_colour = DARKGREY;
@@ -360,6 +392,7 @@ bool fill_status_info(int status, status_info* inf)
         _describe_stat_zero(inf, STAT_DEX);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case STATUS_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -369,6 +402,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "You have a stored fireball ready to release.";
         }
         break;
+#endif
 
     case STATUS_BONE_ARMOUR:
         if (you.attribute[ATTR_BONE_ARMOUR] > 0)
@@ -473,7 +507,7 @@ bool fill_status_info(int status, status_info* inf)
         if (you.attribute[ATTR_SEARING_RAY])
         {
             inf->light_colour = WHITE;
-            inf->light_text   = "Ray";
+            inf->light_text   = _ray_text().c_str();
         }
         break;
 
@@ -630,12 +664,25 @@ bool fill_status_info(int status, status_info* inf)
     {
         if (player_has_orb())
         {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text = "Orb";
+        }
+        else if (orb_limits_translocation())
+        {
             inf->light_colour = MAGENTA;
             inf->light_text = "Orb";
         }
 
         break;
     }
+
+    case STATUS_STILL_WINDS:
+        if (env.level_state & LSTATE_STILL_WINDS)
+        {
+            inf->light_colour = BROWN;
+            inf->light_text = "-Clouds";
+        }
+        break;
 
     default:
         if (!found)
@@ -659,7 +706,7 @@ static void _describe_hunger(status_info* inf)
     switch (you.hunger_state)
     {
     case HS_ENGORGED:
-        inf->light_colour = LIGHTGREEN;
+        inf->light_colour = (vamp ? GREEN : LIGHTGREEN);
         inf->light_text   = (vamp ? "Alive" : "Engorged");
         break;
     case HS_VERY_FULL:
@@ -705,9 +752,15 @@ static void _describe_glow(status_info* inf)
         return;
 
     const unsigned int cont = signed_cont; // so we don't get compiler warnings
-    inf->light_colour = DARKGREY;
-    if (cont > 1)
-        inf->light_colour = _bad_ench_colour(cont, 3, 4);
+    if (player_severe_contamination())
+    {
+        inf->light_colour = _bad_ench_colour(cont, SEVERE_CONTAM_LEVEL + 1,
+                                                   SEVERE_CONTAM_LEVEL + 2);
+    }
+    else if (cont > 1)
+        inf->light_colour = LIGHTGREY;
+    else
+        inf->light_colour = DARKGREY;
 #if TAG_MAJOR_VERSION == 34
     if (cont > 1 || you.species != SP_DJINNI)
 #endif
@@ -718,6 +771,7 @@ static void _describe_glow(status_info* inf)
     {
         "",
         "very slightly ",
+        "slightly ",
         "",
         "heavily ",
         "very heavily ",
@@ -778,10 +832,8 @@ static void _describe_regen(status_info* inf)
 
         if (you.hunger_state < HS_SATIATED)
             inf->short_text += " slowly";
-        else if (you.hunger_state < HS_ENGORGED)
-            inf->short_text += " quickly";
         else
-            inf->short_text += " very quickly";
+            inf->short_text += " quickly";
     }
 }
 
@@ -836,11 +888,12 @@ static void _describe_airborne(status_info* inf)
     if (!you.airborne())
         return;
 
-    const bool perm     = you.permanent_flight();
-    const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
+    const bool perm      = you.permanent_flight();
+    const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
+    const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
     const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
 
-    inf->light_colour = perm ? WHITE : BLUE;
+    inf->light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf->light_text   = "Fly";
     inf->short_text   = "flying" + desc;
     inf->long_text    = "You are flying" + desc + ".";
@@ -896,7 +949,7 @@ static void _describe_sickness(status_info* inf)
  */
 static void _describe_transform(status_info* inf)
 {
-    if (you.form == TRAN_NONE)
+    if (you.form == transformation::none)
         return;
 
     const Form * const form = get_form();
@@ -904,7 +957,8 @@ static void _describe_transform(status_info* inf)
     inf->short_text = form->get_long_name();
     inf->long_text = form->get_description();
 
-    const bool vampbat = (you.species == SP_VAMPIRE && you.form == TRAN_BAT);
+    const bool vampbat = (you.species == SP_VAMPIRE
+                          && you.form == transformation::bat);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
     inf->light_colour = _dur_colour(GREEN, expire);
@@ -964,6 +1018,7 @@ static void _describe_missiles(status_info* inf)
     else
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
                     || you.scan_artefacts(ARTP_RMSL)
                     || have_passive(passive_t::upgraded_storm_shield);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
@@ -975,10 +1030,10 @@ static void _describe_missiles(status_info* inf)
 
 static void _describe_invisible(status_info* inf)
 {
-    if (!you.duration[DUR_INVIS] && you.form != TRAN_SHADOW)
+    if (!you.duration[DUR_INVIS] && you.form != transformation::shadow)
         return;
 
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
     {
         inf->light_colour = _dur_colour(WHITE,
                                         dur_expiring(DUR_TRANSFORMATION));
@@ -995,7 +1050,7 @@ static void _describe_invisible(status_info* inf)
         inf->short_text += " (but backlit and visible)";
     }
     inf->long_text = "You are " + inf->short_text + ".";
-    _mark_expiring(inf, dur_expiring(you.form == TRAN_SHADOW
+    _mark_expiring(inf, dur_expiring(you.form == transformation::shadow
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
 }

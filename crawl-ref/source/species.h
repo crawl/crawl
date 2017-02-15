@@ -2,7 +2,7 @@
 #define SPECIES_H
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
@@ -50,7 +50,6 @@ void give_level_mutations(species_type species, int xp_level);
 int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);
 int species_mp_modifier(species_type species);
-int species_stealth_modifier(species_type species);
 int species_mr_modifier(species_type species);
 
 void species_stat_init(species_type species);

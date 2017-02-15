@@ -8,7 +8,7 @@
 #include "orb.h"
 
 #include "areas.h"
-#include "godpassive.h" // passive_t::slow_orb_run
+#include "god-passive.h" // passive_t::slow_orb_run
 #include "shout.h"
 #include "view.h"
 #include "religion.h"
@@ -73,6 +73,15 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
         else
             mprf(MSGCH_ORB, "The Orb lets out a furious burst of light!");
     }
+}
+
+/**
+ * Is the Orb interfering with translocations?
+ * @return True if the player is in Zot or is carrying the Orb.
+ */
+bool orb_limits_translocation()
+{
+    return player_in_branch(BRANCH_ZOT) || player_has_orb();
 }
 
 void start_orb_run(game_chapter chapter, const char* message)

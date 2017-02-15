@@ -58,10 +58,13 @@ end
 
 function callback.badplayer_boxes_open_up(data, triggerable, triggerer, marker,
                                           ev)
-  for slave in iter.slave_iterator("disappearing_wall", 1) do
-    dgn.terrain_changed(slave.x, slave.y, "floor", false, false)
+  if not data.triggered then
+    data.triggered = true
+    for slave in iter.slave_iterator("disappearing_wall", 1) do
+      dgn.terrain_changed(slave.x, slave.y, "floor", false)
+    end
+    crawl.mpr("There is a click, and some walls slide away!", 'warning')
   end
-  crawl.mpr("There is a click, and some walls slide away!", 'warning')
 end
 }}
 
@@ -633,7 +636,6 @@ c**E~..........<..........~Deec
 ccccccccccccccccccccccccccccccc
 ENDMAP
 
-# Bog bodies might be a bit too hard, but with HD of 3 they seem to be fine.
 NAME:    ossuary_zaba_flooded
 WEIGHT:  20
 ORIENT:  encompass
@@ -684,9 +686,9 @@ SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    w:15 withered plant /\
-         bog body hd:3 \
-         spells:throw_frost.18.wizard;slow.18.wizard \
-         name:decayed n_adj n_noc /\
+         mummy \
+         spells:throw_frost.18.wizard;slow.27.wizard \
+         name:bog n_adj col:green/\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)
@@ -1186,8 +1188,9 @@ NSUBST: I  = 1:+ / *:c , J = 1:+ / *:c , K = 1:+ / *:c , L = 1:+ / *:c
 NSUBST: M  = 1:+ / *:c
 {{
 lua_marker(":", Triggerable.synchronized_markers(
-  function_at_spot( "callback.badplayer_boxes_open_up", {}, true,
-                    { only_at_slave = true, listen_to_slaves = true})))
+  function_at_spot( "callback.badplayer_boxes_open_up",
+                    { triggered = false }, true,
+                    { only_at_slave = true, listen_to_slaves = true })))
 
 lua_marker('ab', props_marker {disappearing_wall = 1})
 }}

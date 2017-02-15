@@ -18,10 +18,10 @@
 #include "env.h"
 #include "files.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
-#include "lookup_help.h"
+#include "lookup-help.h"
 #include "macro.h"
 #include "message.h"
 #include "output.h"
@@ -312,9 +312,6 @@ static const char *targeting_help_1 =
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
-#ifndef USE_TILE_LOCAL
-    "<w>Ctrl-L</w> : targeting via monster list\n"
-#endif
     "<w>Ctrl-P</w> : repeat prompt\n"
 ;
 #ifdef WIZARD
@@ -858,7 +855,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Rest/Search:\n");
+            "<h>Rest:\n");
 
     _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
@@ -926,7 +923,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, item_types,
                          CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                          CMD_FORCE_CAST_SPELL, 0);
-    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
+    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves (<w>%</w>ield and e<w>%</w>oke)",
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
     _add_insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
                          CMD_EVOKE, 0);
@@ -945,8 +942,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
                          CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
-    _add_insert_commands(cols, 0, 2, "Pray (<w>%</w> and <w>%!</w> for help)",
-                         CMD_PRAY, CMD_DISPLAY_RELIGION, CMD_DISPLAY_RELIGION, 0);
     _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
     _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
     _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
@@ -999,7 +994,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
     _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
-    _add_command(cols, 1, CMD_RESISTS_SCREEN, "show resistances", 2);
+    _add_command(cols, 1, CMD_RESISTS_SCREEN, "character overview", 2);
     _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
     _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
@@ -1106,10 +1101,11 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
-    insert_commands(text, CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
-                    CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
-                    CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS, CMD_USE_ABILITY,
-                    0);
+    insert_commands(text, { CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
+                            CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
+                            CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS,
+                            CMD_USE_ABILITY
+                          });
     linebreak_string(text, 40);
 
     cols.add_formatted(
@@ -1146,7 +1142,7 @@ static void _add_formatted_hints_help(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Rest/Search:\n");
+            "<h>Rest:\n");
 
     _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
@@ -1177,7 +1173,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_CAST_SPELL, CMD_FORCE_CAST_SPELL, CMD_CAST_SPELL,
                          CMD_DISPLAY_SPELLS, 0);
     _add_command(cols, 0, CMD_MEMORISE_SPELL, "Memorise a new spell", 2);
-    _add_command(cols, 0, CMD_READ, "read a book to forget a spell", 2);
+    _add_command(cols, 0, CMD_READ, "read a book to see spell descriptions", 2);
 
     // Second column.
     cols.add_formatted(
@@ -1237,7 +1233,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
     item_types +=
         "</brown> : </console>"
-        "staves and rods (<w>%</w>ield and e<w>%</w>oke)";
+        "staves (<w>%</w>ield and e<w>%</w>oke)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
@@ -1305,14 +1301,13 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>A</w>      set all skills to level\n"
                        "<w>Ctrl-D</w> change enchantments/durations\n"
                        "<w>g</w>      exercise a skill\n"
+                       "<w>k</w>      change experience level and skills\n"
                        "<w>l</w>      change experience level\n"
                        "<w>Ctrl-P</w> list props\n"
                        "<w>r</w>      change character's species\n"
-                       "<w>s</w>      gain 20000 skill points\n"
-                       "<w>S</w>      set skill to level\n"
+                       "<w>s</w>      set skill to level\n"
                        "<w>x</w>      gain an experience level\n"
-                       "<w>$</w>      get 1000 gold\n"
-                       "<w>n</w>      lose all gold\n"
+                       "<w>$</w>      set gold to a specified value\n"
                        "<w>]</w>      get a mutation\n"
                        "<w>_</w>      gain religion\n"
                        "<w>^</w>      set piety to a value\n"
@@ -1334,7 +1329,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>b</w>      controlled blink\n"
                        "<w>B</w>      controlled teleport\n"
                        "<w>Ctrl-B</w> banish yourself to the Abyss\n"
-                       "<w>k</w>      shift section of a labyrinth\n"
+                       "<w>K</w>      shift section of a labyrinth\n"
                        "<w>R</w>      change monster spawn rate\n"
                        "<w>Ctrl-S</w> change Abyss speed\n"
                        "<w>u</w>/<w>d</w>    shift up/down one level\n"
@@ -1368,9 +1363,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>E</w>      (un)freeze time\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
+                       "<w>m</w>/<w>M</w>    create specified monster\n"
                        "<w>D</w>      detect all monsters\n"
                        "<w>G</w>      dismiss all monsters\n"
-                       "<w>m</w>/<w>M</w>    create monster by name/number\n"
                        "<w>\"</w>      list monsters\n"
                        "\n"
                        "<yellow>Item related commands</yellow>\n"
@@ -1380,7 +1375,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>y</w>/<w>Y</w>    id/unid item types+level items\n"
                        "<w>o</w>/<w>%</w>    create an object\n"
                        "<w>t</w>      tweak object properties\n"
-                       "<w>v</w>      show gold value of an item\n"
+                       "<w>v</w>      recharge all XP evokers\n"
+                       "<w>Ctrl-V</w> show gold value of an item\n"
                        "<w>-</w>      get a god gift\n"
                        "<w>|</w>      create all unrand artefacts\n"
                        "<w>+</w>      make randart from item\n"

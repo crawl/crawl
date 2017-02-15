@@ -247,6 +247,10 @@ Xom grants you a minor favour.
 
 Xom smiles on you.
 %%%%
+Xom cleaving
+
+@Xom potion effect@
+%%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
 
@@ -271,17 +275,6 @@ Xom colour smoke trail
 "Go forth and redecorate, my child!"
 
 "This place needs a little more atmosphere."
-%%%%
-# turns walls into glass
-Xom vitrification
-
-You feel watched.
-
-Everything around you seems to assume a strange transparency.
-
-The walls suddenly lose part of their structure.
-
-Xom alters the dungeon around you.
 %%%%
 # strengthens friendlies, weakens hostiles
 Xom good monster polymorph
@@ -502,42 +495,6 @@ else
 end
 }}
 %%%%
-############################################
-# Beogh rants on destroying an orcish idol #
-############################################
-# Beogh's messiah has destroyed an idol
-Beogh idol follower
-
-Beogh fumes, "This is no small sin, orc. Repent!"
-
-Beogh whispers, "You will suffer for this misdeed."
-
-Beogh rages, "An eye for an eye..."
-%%%%
-# an unbelieving orc has destroyed an idol
-Beogh idol orc
-
-Beogh's voice booms out: "Heretic, die!"
-
-You hear Beogh's thundering voice: "Suffer, infidel!"
-
-Beogh roars, "Feel my power, apostate!"
-%%%%
-# a character of another species has destroyed an idol
-Beogh idol other
-
-Beogh is not amused by that idol's destruction.
-
-Beogh seems highly displeased.
-
-Your arrogance infuriates Beogh.
-
-Beogh utters a curse on your species.
-
-Beogh curses everyone not orcish, especially @player_genus_plural@.
-
-Beogh swears eternal hatred towards @player_god@.
-%%%%
 recite_closure
 
 "Amen!"
@@ -559,151 +516,6 @@ w:5
 
 w:3
 "In fire! In pain!"
-%%%%
-##########################
-# Xom's response to prayer
-##########################
-Xom prayer
-
-Xom slaps you with @_trout_species_@ trout!
-
-Xom toots happily.
-
-Xom says: I'm watching you, my @_xom_child_@ child.
-
-You hear crickets chirping.
-
-w:1
-You feel someone pinching you. As you turn, you see no one.
-
-w:1
-Xom says: Amen!
-
-w:1
-Xom says: Aww... shucks!
-%%%%
-_trout_species_
-
-a rainbow
-
-a flathead
-
-a cutthroat
-
-a bull
-
-a silver
-
-w:3
-@_trout_species_rare_@
-%%%%
-_trout_species_rare_
-
-a complex
-
-a polygonal
-
-an imaginary
-
-an inverse
-
-an unlikely
-
-a used
-
-a second-hand
-
-a prohibited
-
-a challenging
-
-a delicious
-
-a moldy
-
-a fake
-
-w:2
-a kilgore
-%%%%
-_xom_child_
-
-misbegotten
-
-bastard
-
-ugly
-
-red-headed step
-
-silly
-
-worthless
-
-prodigal
-
-insane
-
-naughty
-%%%%
-############################
-# Gozag's response to prayer
-############################
-Gozag prayer
-
-Gozag says: Bring me some gold!
-
-Gozag says: Wasting time is wasting money!
-
-Gozag says: I'm waiting for your next payment.
-
-Gozag says: All you need is greed!
-
-Gozag says: A full purse beats having friends.
-
-Gozag says: The world belongs to the rich.
-
-Gozag says: [Eat|Kill|Defeat|Leverage|Tread upon] the poor!
-
-Gozag says: No better sound than the ting-a-ling of coins.
-
-Gozag says: Be generous to yourself!
-
-Gozag says: The golden calf was only the first half.
-
-Gozag says: Gold is the grease of nations.
-
-Gozag says: Pecunia non olet.
-
-Gozag says: Take care of the pence!
-
-Gozag says: I promise an afterlife to those who can afford it!
-
-Gozag says: The indulgence fee is not free!
-
-Gozag says: Money talks!
-
-Gozag says: Cash is king!
-
-Gozag says: I have no interest in the poor.
-
-w:5
-Gozag says: I guarantee the gold standard.
-
-w:5
-Gozag says: Gold! Gold! Gold!
-
-w:5
-Gozag says: Don't bother me unless you have something to purchase.
-
-w:5
-Gozag says: Only money gets you out of stagnation and depression.
-
-w:1
-Gozag says: Let them eat cake!
-
-w:1
-Gozag says: I want my money back!
 %%%%
 ######################################
 # Welcome messages on game restoration

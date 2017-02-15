@@ -62,7 +62,7 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-void putwch(ucs_t chr)
+void putwch(char32_t chr)
 {
     if (!chr)
         chr = ' ';

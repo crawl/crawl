@@ -14,7 +14,8 @@
 #include "delay.h"
 #include "english.h"
 #include "env.h"
-#include "itemprop.h"
+#include "god-conduct.h"
+#include "item-prop.h"
 #include "items.h"
 #include "player-equip.h"
 #include "religion.h"
@@ -203,7 +204,11 @@ static void _rot_corpse(item_def &it, int mitm_index, int rot_time)
         destroy_item(mitm_index);
     }
     else
+    {
         turn_corpse_into_skeleton(it);
+        const int piety = x_chance_in_y(2, 5) ? 2 : 1; // match fungal_bloom()
+        did_god_conduct(DID_ROT_CARRION, piety);
+    }
 }
 
 /**
@@ -262,6 +267,11 @@ static int _rot_stack(item_def &it, int slot, bool in_inv)
     ASSERT(!stack_timer.empty());
 
     _update_freshness(it); // for external consumption
+
+    // after initializing everything, skip the actual decay if we're eating
+    // this stack - this will preserve it a little longer but that's ok.
+    if (current_delay() && current_delay()->is_being_used(&it, OPER_EAT))
+        return 0;
 
     int destroyed_count = 0;    // # of items decayed away entirely
     // will be filled in ascending (reversed) order.

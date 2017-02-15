@@ -208,12 +208,6 @@ Una grácil y flexible hechicera. Apenas está vestida, aunque lo poco que lleva
 parece armadura de dragón de la más alta calidad, garantizando alta protección.
 Y distraer a humanoides masculinos también tiene su valor en combate, además.
 %%%%
-Maud
-
-Una misteriosa princesa guerrera de un reino muy lejano, en pos de recuperar la
-legendaria espada “Entarex”. Incontables han sido los admiradores que, pensando
-en Maud, olvidaron todo lo demás.
-%%%%
 Maurice
 
 Un astuto y conspirador ladrón.
@@ -253,12 +247,6 @@ Nikola
 Un científico brillante obsesionado con la electricidad. En su tentativa de
 perfeccionar su golem eléctrico, se vio envuelto en un terrible accidente, y
 ahora fluctúa en diferentes fases de la realidad.
-%%%%
-Norris
-
-Un relajado cultista en paz con la muerte, con un saludable bronceado y una voz
-sosegada. No le importa si eres tú o él quien muera — ambos posiblemente sería
-la mejor opción.
 %%%%
 Polyphemus
 
@@ -326,25 +314,6 @@ que le queda no es muy buena y te ha confundido con una de ellas.
         return ""
     end
 }}
-%%%%
-Wiglaf
-
-Un enano gordinflón que lleva un estúpido sombrero. {{
-    if you.can_smell() then
-        return "Apesta a alcohol. "
-    else
-        return ""
-    end
-}}Hay algo extraño en su forma de caminar. Su paso es irregular. Es como si él
-estuviera acostumbrado a moverse a una velocidad muy superior a la que un
-simple enano borracho podría jamás llegar a alcanzar. En su mano derecha puedes
-ver una terrible quemadura. Por su extensión, dirías que debe haber sido
-causada por algo bastante grande.
-
-Luce una ajustada camiseta de lino que parece demasiado larga para su
-corpulenta figura. La palabra "Wiglaf" esta bordada en la parte de atrás. No
-obstante, parece que previamente ponía otra cosa, y luego las letras fueron
-enmendadas y cambiadas.
 %%%%
 Xtahua
 

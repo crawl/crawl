@@ -17,15 +17,14 @@
 
 #include "artefact.h"
 #include "art-enum.h"
-#include "decks.h"
 #include "dungeon.h"
 #include "food.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -46,6 +45,22 @@ static armour_type _acquirement_shield_type();
 static armour_type _acquirement_body_armour(bool);
 static armour_type _useless_armour_type();
 
+
+/**
+ * Get a randomly rounded value for the player's specified skill, unmodified
+ * by crosstraining, draining, etc.
+ *
+ * @param skill     The skill in question; e.g. SK_ARMOUR.
+ * @param mult      A multiplier to the skill, for higher precision.
+ * @return          A rounded value of that skill; e.g. _skill_rdiv(SK_ARMOUR)
+ *                  for a value of 10.1 will return 11 90% of the time &
+ *                  10 the remainder.
+ */
+static int _skill_rdiv(skill_type skill, int mult = 1)
+{
+    const int scale = 256;
+    return div_rand_round(you.skill(skill, mult * scale, true), scale);
+}
 
 /**
  * Choose a random subtype of armour to generate through acquirement/divine
@@ -144,7 +159,9 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
     switch (slot_type)
     {
         case EQ_CLOAK:
-            return ARM_CLOAK;
+            if (you_can_wear(EQ_CLOAK) == MB_TRUE)
+                return random_choose(ARM_CLOAK, ARM_SCARF);
+            return ARM_SCARF;
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_BOOTS:
@@ -158,8 +175,8 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
                     return ARM_BOOTS;
             }
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_MAYBE)
-                return coinflip() ? ARM_HELMET : ARM_HAT;
+            if (you_can_wear(EQ_HELMET) == MB_TRUE)
+                return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
             return _acquirement_shield_type();
@@ -188,12 +205,14 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
  */
 static armour_type _acquirement_shield_type()
 {
+    const int scale = 256;
     vector<pair<armour_type, int>> weights = {
-        { ARM_BUCKLER,       player_shield_racial_factor() * 4
-                                - you.skills[SK_SHIELDS] },
-        { ARM_SHIELD,        10 },
-        { ARM_LARGE_SHIELD,  20 - player_shield_racial_factor() * 4
-                                + div_rand_round(you.skills[SK_SHIELDS], 2) },
+        { ARM_BUCKLER,       player_shield_racial_factor() * 4 * scale
+                                - _skill_rdiv(SK_SHIELDS, scale) },
+        { ARM_SHIELD,        10 * scale },
+        { ARM_LARGE_SHIELD,  20 * scale
+                             - player_shield_racial_factor() * 4 * scale
+                             + _skill_rdiv(SK_SHIELDS, scale / 2) },
     };
 
     return filtered_vector_select(weights, [] (armour_type shtyp) {
@@ -229,7 +248,7 @@ static int _body_acquirement_weight(armour_type armour,
 
     // highest chance when armour skill = (displayed) evp - 3
     const int evp = armour_prop(armour, PARM_EVASION);
-    const int skill = min(27, you.skills[SK_ARMOUR] + 3);
+    const int skill = min(27, _skill_rdiv(SK_ARMOUR) + 3);
     const int sk_diff = skill + evp / 10;
     const int inv_diff = max(1, 27 - sk_diff);
     // armour closest to ideal evp is 27^3 times as likely as the furthest away
@@ -247,9 +266,9 @@ static armour_type _acquirement_body_armour(bool divine)
 {
     // Using an arbitrary legacy formula, do we think the player doesn't care
     // about armour EVP?
-    const bool warrior = random2(you.skills[SK_SPELLCASTING] * 3
-                            + you.skills[SK_DODGING])
-                         < random2(you.skills[SK_ARMOUR] * 2);
+    const bool warrior = random2(_skill_rdiv(SK_SPELLCASTING, 3)
+                                + _skill_rdiv(SK_DODGING))
+                         < random2(_skill_rdiv(SK_ARMOUR, 2));
 
     vector<pair<armour_type, int>> weights;
     for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
@@ -303,7 +322,7 @@ static armour_type _useless_armour_type()
             // Boots-wearers get bardings, bardings-wearers get the wrong
             // barding, everyone else gets boots.
             if (you_can_wear(EQ_BOOTS) == MB_TRUE)
-                return coinflip() ? ARM_CENTAUR_BARDING : ARM_NAGA_BARDING;
+                return random_choose(ARM_CENTAUR_BARDING, ARM_NAGA_BARDING);
             if (you.species == SP_NAGA)
                 return ARM_CENTAUR_BARDING;
             if (you.species == SP_CENTAUR)
@@ -314,7 +333,7 @@ static armour_type _useless_armour_type()
         case EQ_HELMET:
             if (you_can_wear(EQ_HELMET))
                 return ARM_HELMET;
-            return coinflip() ? ARM_HELMET : ARM_HAT;
+            return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
             return ARM_CLOAK;
         case EQ_SHIELD:
@@ -415,23 +434,24 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
     return type_wanted;
 }
 
-static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
+/**
+ * Randomly choose a class of weapons (those using a specific weapon skill)
+ * for acquirement to give the player. Weight toward the player's skills.
+ *
+ * @param divine    Whether this is a god gift, which are less strongly
+ *                  tailored to the player's skills.
+ * @return          An appropriate weapon skill; e.g. SK_LONG_BLADES.
+ */
+static skill_type _acquirement_weapon_skill(bool divine)
 {
-    // Asking for a weapon is biased towards your skills.
-    // First pick a skill, weighting towards those you have.
+    // reservoir sample.
     int count = 0;
     skill_type skill = SK_FIGHTING;
-    int best_sk = 0;
-
-    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
-        if (you.skills[i] > best_sk)
-            best_sk = you.skills[i];
-
     for (skill_type sk = SK_FIRST_WEAPON; sk <= SK_LAST_WEAPON; ++sk)
     {
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
-        int weight = you.skills[sk] + 1;
+        int weight = _skill_rdiv(sk) + 1;
         // Exaggerate the weighting if it's a scroll acquirement.
         if (!divine)
             weight = (weight + 1) * (weight + 2);
@@ -440,12 +460,22 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (x_chance_in_y(weight, count))
             skill = sk;
     }
-    if (you.skills[SK_UNARMED_COMBAT] > best_sk)
-        best_sk = you.skills[SK_UNARMED_COMBAT];
+
+    return skill;
+}
+
+static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
+{
+    const skill_type skill = _acquirement_weapon_skill(divine);
+
+    int best_sk = 0;
+    for (int i = SK_FIRST_WEAPON; i <= SK_LAST_WEAPON; i++)
+        best_sk = max(best_sk, _skill_rdiv((skill_type)i));
+    best_sk = max(best_sk, _skill_rdiv(SK_UNARMED_COMBAT));
 
     // Now choose a subtype which uses that skill.
     int result = OBJ_RANDOM;
-    count = 0;
+    int count = 0;
     item_def item_considered;
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
@@ -454,7 +484,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     // shield skill is 0 so they always weight towards 2H.
     const int shield_sk = you.species == SP_FORMICID
         ? 0
-        : you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
+        : _skill_rdiv(SK_SHIELDS) * species_apt_factor(SK_SHIELDS);
     const int want_shield = min(2 * shield_sk, best_sk) + 10;
     const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
@@ -467,10 +497,6 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (wskill != skill)
             continue;
         item_considered.sub_type = i;
-
-        // Can't get blessed weapons through acquirement, only from TSO
-        if (is_blessed(item_considered))
-            continue;
 
         int acqweight = property(item_considered, PWPN_ACQ_WEIGHT) * 100;
 
@@ -505,6 +531,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (!you.seen_weapon[i])
             acqweight *= 5; // strong emphasis on type variety, brands go only second
 
+        // reservoir sampling
         if (x_chance_in_y(acqweight, count += acqweight))
             result = i;
     }
@@ -518,12 +545,10 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
 
     for (int i = SK_SLINGS; i <= SK_THROWING; i++)
     {
-        if (you.skills[i])
-        {
-            count += you.skills[i];
-            if (x_chance_in_y(you.skills[i], count))
-                skill = i;
-        }
+        const int sk = _skill_rdiv((skill_type)i);
+        count += sk;
+        if (x_chance_in_y(sk, count))
+            skill = i;
     }
 
     missile_type result = MI_TOMAHAWK;
@@ -581,24 +606,12 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static bool _want_rod(int agent)
-{
-    if (agent == GOD_PAKELLAS)
-        return true;
-
-    // First look at skills to determine whether the player gets a rod.
-    int spell_skills = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
-        spell_skills += you.skills[i];
-
-    return random2(spell_skills) < you.skills[SK_EVOCATIONS] + 3
-           && !one_chance_in(5);
-}
 
 static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Try to pick an enhancer staff matching the player's best skill.
-    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
+    skill_type best_spell_skill = best_skill(SK_FIRST_MAGIC_SCHOOL,
+                                             SK_LAST_MAGIC);
     bool found_enhancer = false;
     int result = 0;
     do
@@ -635,18 +648,6 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
-static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
-{
-    int result;
-    do
-    {
-        result = random2(NUM_RODS);
-    }
-    while (player_mutation_level(MUT_NO_LOVE) && result == ROD_SHADOWS
-           || item_type_removed(OBJ_RODS, result));
-    return result;
-}
-
 /**
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
@@ -655,82 +656,40 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
-    int skills = you.skills[SK_EVOCATIONS]
-        * max(you.skills[SK_SPELLCASTING], you.skills[SK_INVOCATIONS]);
+    int skills = _skill_rdiv(SK_EVOCATIONS)
+        * max(_skill_rdiv(SK_SPELLCASTING), _skill_rdiv(SK_INVOCATIONS));
     if (x_chance_in_y(skills, MAX_SKILL_LEVEL * MAX_SKILL_LEVEL)
         && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
     {
         return MISC_CRYSTAL_BALL_OF_ENERGY;
     }
 
-    // Total weight if none have been seen is 100.
+    const bool NO_LOVE = player_mutation_level(MUT_NO_LOVE);
+
     const vector<pair<int, int> > choices =
     {
-        // Decks have lowest weight.
-        {MISC_DECK_OF_WONDERS,                             1 },
-        {MISC_DECK_OF_CHANGES,                             2 },
-        {MISC_DECK_OF_DEFENCE,                             2 },
         // These have charges, so give them a constant weight.
         {MISC_BOX_OF_BEASTS,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+                                       (NO_LOVE ?     0 :  7)},
         {MISC_SACK_OF_SPIDERS,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+                                       (NO_LOVE ?     0 :  7)},
         {MISC_PHANTOM_MIRROR,
-            (player_mutation_level(MUT_NO_LOVE) ?     0 :  7)},
+                                       (NO_LOVE ?     0 :  7)},
         // The player never needs more than one.
-        {MISC_DISC_OF_STORMS,
-            (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7)},
+        {MISC_LIGHTNING_ROD,
+            (you.seen_misc[MISC_LIGHTNING_ROD] ?      0 : 17)},
         {MISC_LAMP_OF_FIRE,
-            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 15)},
+            (you.seen_misc[MISC_LAMP_OF_FIRE] ?       0 : 17)},
         {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 15)},
+            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    0 : 17)},
         {MISC_FAN_OF_GALES,
-            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 15)},
-        {MISC_STONE_OF_TREMORS,
-            (you.seen_misc[MISC_STONE_OF_TREMORS] ?   0 : 15)}
+            (you.seen_misc[MISC_FAN_OF_GALES] ?       0 : 17)},
     };
 
-    int result = *random_choose_weighted(choices);
+    const int * const choice = random_choose_weighted(choices);
 
-    return result;
-}
-
-/**
- * What weight should wands of Heal Wounds be given in wand acquirement, based
- * on their utility to the player? (More utile -> higher weight -> more likely)
- */
-static int _hw_wand_weight()
-{
-    if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
-        return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
-        return 5; // can be used on allies...? XXX: should be weight 1?
-    return 0; // with no allies, totally useless
-}
-
-/**
- * What weight should wands of Haste be given in wand acquirement, based on
- * their utility to the player? (More utile -> higher weight -> more likely)
- */
-static int _haste_wand_weight()
-{
-    if (you.species != SP_FORMICID)
-        return 25; // quite powerful
-    if (!player_mutation_level(MUT_NO_LOVE))
-        return 5; // can be used on allies...? XXX: should be weight 1?
-    return 0; // with no allies, totally useless
-}
-
-/**
- * What weight should wands of Teleportation be given in wand acquirement,
- * based on their utility to the player? (More utile -> higher weight -> more
- * likely)
- */
-static int _tele_wand_weight()
-{
-    if (you.species == SP_FORMICID || crawl_state.game_is_sprint())
-        return 1; // can only be used to tele away enemies
-    return 15;
+    // Could be nullptr if all the weights were 0.
+    return choice ? *choice : MISC_CRYSTAL_BALL_OF_ENERGY;
 }
 
 /**
@@ -743,13 +702,10 @@ static int _tele_wand_weight()
  */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    // basic total: 140
+    // basic total: 120
     vector<pair<wand_type, int>> weights = {
-        // normally 25
-        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
-        { WAND_HASTING,         _haste_wand_weight() },
-        // normally 15
-        { WAND_TELEPORTATION,   _tele_wand_weight() },
+        { WAND_SCATTERSHOT,     20 },
+        { WAND_CLOUDS,          20 },
         { WAND_LIGHTNING,       16 },
         { WAND_ACID,            16 },
         { WAND_ICEBLAST,        16 },
@@ -757,11 +713,10 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         { WAND_DIGGING,         5 },
         { WAND_POLYMORPH,       5 },
         { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_PARALYSIS,       5 },
+        { WAND_CONFUSION,       3 },
         { WAND_RANDOM_EFFECTS,  3 },
         { WAND_FLAME,           1 },
-        { WAND_CONFUSION,       1 },
-        { WAND_PARALYSIS,       1 },
-        { WAND_SLOWING,         1 },
     };
 
     // Unknown wands get a huge weight bonus.
@@ -791,7 +746,9 @@ static const acquirement_subtype_finder _subtype_finders[] =
     _acquirement_misc_subtype,
     0, // no corpses
     0, // gold handled elsewhere, and doesn't have subtypes anyway
-    _acquirement_rod_subtype,
+#if TAG_MAJOR_VERSION == 34
+    0, // no rods
+#endif
     0, // no runes either
 };
 
@@ -811,9 +768,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     do
     {
-        // Staves and rods have a common acquirement class.
-        if (class_wanted == OBJ_STAVES || class_wanted == OBJ_RODS)
-            class_wanted = _want_rod(agent) ? OBJ_RODS : OBJ_STAVES;
+        // Wands and misc have a common acquirement class.
+        if (class_wanted == OBJ_MISCELLANY)
+            class_wanted = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
         // Vampires acquire blood, not food.
         if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
@@ -853,9 +810,7 @@ static int _spell_weight(spell_type spell)
     {
         if (disciplines & disc)
         {
-            int skill = you.skills[spell_type2skill(disc)];
-
-            weight += skill;
+            weight += _skill_rdiv(spell_type2skill(disc));
             count++;
         }
     }
@@ -936,7 +891,7 @@ static bool _should_acquire_manual(int agent)
 
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        const int weight = you.skills[sk];
+        const int weight = _skill_rdiv(sk);
 
         if (_is_magic_skill(sk))
             magic_weights += weight;
@@ -955,24 +910,6 @@ static bool _should_acquire_manual(int agent)
 }
 
 /**
- * For the purposes of acquirement, does the player have any skill in magic,
- *
- * @return  true iff the player has any nonzero magic skill AND if they do not
- *          worship Trog.
- */
-static bool _knows_and_likes_magic()
-{
-    if (you_worship(GOD_TROG))
-        return false;
-
-    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        if (_is_magic_skill(sk) && you.skills[sk] >= 1)
-            return true;
-
-    return false;
-}
-
-/**
  * Turn a given book into an acquirement-quality manual.
  *
  * @param book[out]     The book to be turned into a manual.
@@ -983,11 +920,9 @@ static bool _acquire_manual(item_def &book)
     int weights[NUM_SKILLS] = { 0 };
     int total_weights = 0;
 
-    const bool knows_magic = _knows_and_likes_magic();
-
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        int skl = you.skills[sk];
+        const int skl = _skill_rdiv(sk);
 
         if (skl == 27 || is_useless_skill(sk))
             continue;
@@ -998,11 +933,6 @@ static bool _acquire_manual(item_def &book)
         // you couldn't use unless you switched your religion.
         if (_skill_useless_with_god(sk))
             w /= 2;
-
-        // If we don't have any magic skills, make non-magic skills
-        // more likely.
-        if (!knows_magic && !_is_magic_skill(sk))
-            w *= 2;
 
         weights[sk] = w;
         total_weights += w;
@@ -1030,7 +960,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     const int choice = random_choose_weighted(
                                     30, BOOK_RANDART_THEME,
        agent == GOD_SIF_MUNA ? 10 : 40, NUM_BOOKS, // normal books
-                                     1, BOOK_RANDART_LEVEL, 0);
+                                     1, BOOK_RANDART_LEVEL);
 
     switch (choice)
     {
@@ -1070,7 +1000,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     {
         const int level = agent == GOD_XOM ?
             random_range(1, 9) :
-            max(1, (you.skills[SK_SPELLCASTING] + 2) / 3);
+            max(1, (_skill_rdiv(SK_SPELLCASTING) + 2) / 3);
 
         book.sub_type  = BOOK_RANDART_LEVEL;
         if (!make_book_level_randart(book, level))
@@ -1108,7 +1038,7 @@ static int _weapon_brand_quality(int brand, bool range)
     case SPWPN_NORMAL:
         return 0;
     case SPWPN_PAIN:
-        return you.skills[SK_NECROMANCY] / 2;
+        return _skill_rdiv(SK_NECROMANCY) / 2;
     case SPWPN_VORPAL:
         return range ? 5 : 1;
     }
@@ -1264,16 +1194,14 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying sif-gifted rarebook!";
     }
 
-    // Pakellas doesn't gift decks (that's Nemelex's turf).
     // The crystal ball case should be handled elsewhere, but just in
     // case, it's also handled here.
     if (agent == GOD_PAKELLAS)
     {
         if (item.base_type == OBJ_MISCELLANY
-            && (is_deck(item)
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY))
+            && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY)
         {
-            return "Destroying deck or CBoE that Pakellas hates!";
+            return "Destroying CBoE that Pakellas hates!";
         }
     }
 
@@ -1298,7 +1226,7 @@ int acquirement_create_item(object_class_type class_wanted,
             type_wanted = _useless_armour_type();
         else
         {
-            // This may clobber class_wanted (e.g. staves/rods, or vampire food)
+            // This may clobber class_wanted (e.g. staves or vampire food)
             type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
         }
@@ -1377,7 +1305,7 @@ int acquirement_create_item(object_class_type class_wanted,
             && acq_item.base_type == OBJ_WEAPONS && !is_range_weapon(acq_item)
             && !is_unrandom_artefact(acq_item))
         {
-            // ... but he loves the antimagic brand specially.
+            // ... but Trog loves the antimagic brand specially.
             set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 
@@ -1456,6 +1384,10 @@ int acquirement_create_item(object_class_type class_wanted,
             default:
                 break;
             }
+
+            // bump jewel acq power up a bit
+            if (one_chance_in(2) && !is_artefact(acq_item))
+                make_item_randart(acq_item);
         }
         else if (acq_item.base_type == OBJ_WEAPONS
                  && !is_unrandom_artefact(acq_item))
@@ -1478,12 +1410,6 @@ int acquirement_create_item(object_class_type class_wanted,
                 // On a weapon, an enchantment of less than 0 is never viable.
                 acq_item.plus = max(static_cast<int>(acq_item.plus), random2(2));
             }
-        }
-        else if (is_deck(acq_item))
-        {
-            // Non-legendary decks aren't very useful for non-nemelexites
-            // and nemelexites get plenty of lower-quality decks anyway.
-            acq_item.deck_rarity = DECK_RARITY_LEGENDARY;
         }
 
         // Last check: don't acquire items your god hates.
@@ -1508,6 +1434,8 @@ int acquirement_create_item(object_class_type class_wanted,
 
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
+
+    item_set_appearance(mitm[thing_created]); // cleanup
 
     ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
     ASSERT(!god_hates_item(mitm[thing_created]));
@@ -1550,13 +1478,9 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_MISSILES);
         bad_class.set(OBJ_ARMOUR);
         bad_class.set(OBJ_STAVES);
-        bad_class.set(OBJ_RODS);
     }
     if (player_mutation_level(MUT_NO_ARTIFICE))
-    {
         bad_class.set(OBJ_MISCELLANY);
-        bad_class.set(OBJ_WANDS);
-    }
 
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
@@ -1566,15 +1490,13 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_ARMOUR,     "Armour" },
         { OBJ_JEWELLERY,  "Jewellery" },
         { OBJ_BOOKS,      "Book" },
-        { OBJ_STAVES,     "Staff" },
-        { OBJ_WANDS,      "Wand" },
-        { OBJ_MISCELLANY, "Miscellaneous" },
+        { OBJ_STAVES,     "Staff " },
+        { OBJ_MISCELLANY, "Evocables" },
         { OBJ_FOOD,       0 }, // amended below
         { OBJ_GOLD,       "Gold" },
-        { OBJ_MISSILES,   "Ammunition" },
     };
-    ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you_worship(GOD_FEDHAS) ? "Fruit":
+    ASSERT(acq_classes[6].type == OBJ_FOOD);
+    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "Fruit":
                           you.species == SP_VAMPIRE  ? "Blood":
                                                        "Food";
 

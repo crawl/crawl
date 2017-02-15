@@ -15,10 +15,10 @@ enum aff_type // sign and non-zeroness matters
     AFF_MULTIPLE,    // Passes through multiple times
 };
 
-class targetter
+class targeter
 {
 public:
-    virtual ~targetter() {};
+    virtual ~targeter() {};
 
     coord_def origin;
     coord_def aim;
@@ -28,7 +28,6 @@ public:
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
     virtual bool can_affect_outside_range();
-    virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool has_additional_sites(coord_def a);
@@ -37,10 +36,10 @@ protected:
     bool anyone_there(coord_def loc);
 };
 
-class targetter_beam : public targetter
+class targeter_beam : public targeter
 {
 public:
-    targetter_beam(const actor *act, int range, zap_type zap, int pow,
+    targeter_beam(const actor *act, int range, zap_type zap, int pow,
                    int min_expl_rad, int max_expl_rad);
     bolt beam;
     virtual bool set_aim(coord_def a) override;
@@ -59,17 +58,17 @@ private:
     explosion_map exp_map_min, exp_map_max;
 };
 
-class targetter_unravelling : public targetter_beam
+class targeter_unravelling : public targeter_beam
 {
 public:
-    targetter_unravelling(const actor *act, int range, int pow);
+    targeter_unravelling(const actor *act, int range, int pow);
     bool set_aim(coord_def a) override;
 };
 
-class targetter_imb : public targetter_beam
+class targeter_imb : public targeter_beam
 {
 public:
-    targetter_imb(const actor *act, int pow, int range);
+    targeter_imb(const actor *act, int pow, int range);
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 private:
@@ -77,18 +76,18 @@ private:
     vector<coord_def> splash2;
 };
 
-class targetter_view : public targetter
+class targeter_view : public targeter
 {
 public:
-    targetter_view();
+    targeter_view();
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 };
 
-class targetter_smite : public targetter
+class targeter_smite : public targeter
 {
 public:
-    targetter_smite(const actor *act, int range = LOS_RADIUS,
+    targeter_smite(const actor *act, int range = LOS_RADIUS,
                     int exp_min = 0, int exp_max = 0, bool wall_ok = false,
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a) override;
@@ -105,40 +104,47 @@ private:
     bool (*affects_pos)(const coord_def &);
 };
 
-class targetter_fragment : public targetter_smite
+class targeter_transference : public targeter_smite
 {
 public:
-    targetter_fragment(const actor *act, int power, int range = LOS_RADIUS);
+    targeter_transference(const actor *act, int aoe);
+    bool valid_aim(coord_def a) override;
+};
+
+
+class targeter_fragment : public targeter_smite
+{
+public:
+    targeter_fragment(const actor *act, int power, int range = LOS_RADIUS);
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
-    bool can_affect_walls() override;
 private:
     int pow;
 };
 
-class targetter_reach : public targetter
+class targeter_reach : public targeter
 {
 public:
-    targetter_reach(const actor* act, reach_type ran = REACH_NONE);
+    targeter_reach(const actor* act, reach_type ran = REACH_NONE);
     reach_type range;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
 };
 
-class targetter_cleave : public targetter
+class targeter_cleave : public targeter
 {
 public:
-    targetter_cleave(const actor* act, coord_def target);
+    targeter_cleave(const actor* act, coord_def target);
     aff_type is_affected(coord_def loc) override;
     bool valid_aim(coord_def a) override { return false; }
 private:
     set<coord_def> targets;
 };
 
-class targetter_cloud : public targetter
+class targeter_cloud : public targeter
 {
 public:
-    targetter_cloud(const actor* act, int range = LOS_RADIUS,
+    targeter_cloud(const actor* act, int range = LOS_RADIUS,
                     int count_min = 8, int count_max = 10);
     bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
@@ -151,18 +157,21 @@ public:
     bool avoid_clouds;
 };
 
-class targetter_splash : public targetter
+// TODO: this should be based on targeter_beam instead
+class targeter_splash : public targeter
 {
 public:
-    targetter_splash(const actor *act);
+    targeter_splash(const actor *act, int ran);
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+private:
+    int range;
 };
 
-class targetter_los : public targetter
+class targeter_los : public targeter
 {
 public:
-    targetter_los(const actor *act, los_type los = LOS_DEFAULT,
+    targeter_los(const actor *act, los_type los = LOS_DEFAULT,
                   int ran = LOS_RADIUS, int ran_max = 0);
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
@@ -171,10 +180,10 @@ private:
     int range, range_max;
 };
 
-class targetter_thunderbolt : public targetter
+class targeter_thunderbolt : public targeter
 {
 public:
-    targetter_thunderbolt(const actor *act, int r, coord_def _prev);
+    targeter_thunderbolt(const actor *act, int r, coord_def _prev);
 
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
@@ -186,10 +195,10 @@ private:
     int range;
 };
 
-class targetter_spray : public targetter
+class targeter_spray : public targeter
 {
 public:
-    targetter_spray(const actor* act, int range, zap_type zap);
+    targeter_spray(const actor* act, int range, zap_type zap);
 
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
@@ -211,10 +220,10 @@ enum shadow_step_block_reason
     BLOCKED_MOBILE,
 };
 
-class targetter_shadow_step : public targetter
+class targeter_shadow_step : public targeter
 {
 public:
-    targetter_shadow_step(const actor* act, int r);
+    targeter_shadow_step(const actor* act, int r);
 
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
@@ -233,20 +242,10 @@ private:
     int range;
 };
 
-class targetter_explosive_bolt : public targetter_beam
+class targeter_cone : public targeter
 {
 public:
-    targetter_explosive_bolt(const actor *act, int pow, int range);
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-private:
-    explosion_map exp_map;
-};
-
-class targetter_cone : public targetter
-{
-public:
-    targetter_cone(const actor *act, int r);
+    targeter_cone(const actor *act, int r);
 
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
@@ -259,10 +258,10 @@ private:
 
 #define CLOUD_CONE_BEAM_COUNT 11
 
-class targetter_shotgun : public targetter
+class targeter_shotgun : public targeter
 {
 public:
-    targetter_shotgun(const actor* act, size_t beam_count, int r);
+    targeter_shotgun(const actor* act, size_t beam_count, int r);
     bool valid_aim(coord_def a) override;
     bool set_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
@@ -271,5 +270,16 @@ public:
 private:
     size_t num_beams;
     int range;
+};
+
+class targeter_monster_sequence : public targeter_beam
+{
+public:
+    targeter_monster_sequence(const actor *act, int pow, int range);
+    bool set_aim(coord_def a);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    explosion_map exp_map;
 };
 #endif

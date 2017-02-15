@@ -71,6 +71,14 @@ Pakellas lastname
 
 Pakellas the Inventive
 %%%%
+Uskayaw lastname
+
+Uskayaw the Reveler
+%%%%
+Hepliaklqana lastname
+
+Hepliaklqana the Forgotten
+%%%%
 Xom lastname
 
 w:280

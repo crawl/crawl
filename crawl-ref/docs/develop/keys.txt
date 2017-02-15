@@ -27,7 +27,6 @@ y       move northwest (same as 7)
 u       move northeast (same as 9)
 i       inventory
 o       autoexplore
-p       pray
 [       view worn armour
 ]       view inventory armour
 \       view unidentified items

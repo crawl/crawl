@@ -6,9 +6,9 @@
 #include "clua.h"
 #include "delay.h"
 #include "files.h"
-#include "godpassive.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #ifdef TOUCH_UI
@@ -100,13 +100,16 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
+    const string stat_gain_message = make_stringf("Your experience leads to a%s "
+                                                  "increase in your attributes!",
+                                                  you.species == SP_DEMIGOD ?
+                                                  " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);
     Popup *pop = new Popup("Increase Attributes");
     MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry("Your experience leads to an increase in "
-                                  "your attributes! Increase:", MEL_TITLE));
+    pop->push_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
     pop->push_entry(status);
     MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
     me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
@@ -118,7 +121,7 @@ bool attribute_increase()
     me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
     pop->push_entry(me);
 #else
-    mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
+    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
         || innate_stat(STAT_INT) != you.intel()
@@ -204,19 +207,19 @@ bool attribute_increase()
 */
 void jiyva_stat_action()
 {
-    int cur_stat[3];
+    int cur_stat[NUM_STATS];
     int stat_total = 0;
-    int target_stat[3];
-    for (int x = 0; x < 3; ++x)
+    int target_stat[NUM_STATS];
+    for (int x = 0; x < NUM_STATS; ++x)
     {
         cur_stat[x] = you.stat(static_cast<stat_type>(x), false);
         stat_total += cur_stat[x];
     }
 
     int evp = you.unadjusted_body_armour_penalty();
-    target_stat[0] = max(9, evp);
-    target_stat[1] = 9;
-    target_stat[2] = 9;
+    target_stat[STAT_STR] = max(9, evp);
+    target_stat[STAT_INT] = 9;
+    target_stat[STAT_DEX] = 9;
     int remaining = stat_total - 18 - target_stat[0];
 
     // Divide up the remaining stat points between Int and either Str or Dex,
@@ -242,7 +245,7 @@ void jiyva_stat_action()
         magic_weights = div_rand_round(remaining * magic_weights,
                                        magic_weights + other_weights);
         other_weights = remaining - magic_weights;
-        target_stat[1] += magic_weights;
+        target_stat[STAT_INT] += magic_weights;
 
         // Heavy armour weights towards Str, Dodging skill towards Dex.
         int str_weight = 10 * evp;
@@ -251,37 +254,37 @@ void jiyva_stat_action()
         // Now apply the Str and Dex weighting.
         const int str_adj = div_rand_round(other_weights * str_weight,
                                            str_weight + dex_weight);
-        target_stat[0] += str_adj;
-        target_stat[2] += (other_weights - str_adj);
+        target_stat[STAT_STR] += str_adj;
+        target_stat[STAT_DEX] += (other_weights - str_adj);
     }
     // Add a little fuzz to the target.
-    for (int x = 0; x < 3; ++x)
+    for (int x = 0; x < NUM_STATS; ++x)
         target_stat[x] += random2(5) - 2;
     int choices = 0;
     int stat_up_choice = 0;
     int stat_down_choice = 0;
     // Choose a random stat shuffle that doesn't increase the l^2 distance to
     // the (fuzzed) target.
-    for (int x = 0; x < 3; ++x)
-        for (int y = 0; y < 3; ++y)
+    for (int gain = 0; gain < NUM_STATS; ++gain)
+        for (int lose = 0; lose < NUM_STATS; ++lose)
         {
-            if (x != y && cur_stat[y] > 1
-                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y]
-                && cur_stat[x] < MAX_STAT_VALUE)
+            if (gain != lose && cur_stat[lose] > 1
+                && target_stat[gain] - cur_stat[gain] > target_stat[lose] - cur_stat[lose]
+                && cur_stat[gain] < MAX_STAT_VALUE && you.base_stats[lose] > 1)
             {
                 choices++;
                 if (one_chance_in(choices))
                 {
-                    stat_up_choice = x;
-                    stat_down_choice = y;
+                    stat_up_choice = gain;
+                    stat_down_choice = lose;
                 }
             }
         }
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true);
-        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true);
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, false);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, false);
     }
 }
 
@@ -368,9 +371,6 @@ static int _strength_modifier(bool innate_only)
     {
         if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
             result += 5;
-
-        if (you.duration[DUR_FORTITUDE])
-            result += 10;
 
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
@@ -465,9 +465,9 @@ static int _dex_modifier(bool innate_only)
 #if TAG_MAJOR_VERSION == 34
     result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
               - _mut_level(MUT_STRONG_STIFF, innate_only);
+    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 #endif
     result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
-    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 
     return result;
 }
@@ -510,11 +510,12 @@ int stat_loss_roll()
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
+    if (stat_loss <= 0)
+        return false;
+
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    // scale modifier by player_sust_attr() - right-shift
-    // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
         if (you.duration[DUR_DIVINE_STAMINA] > 0)
@@ -523,28 +524,16 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
                  _stat_name(which_stat).c_str());
             return false;
         }
-
-        int sust = player_sust_attr();
-        stat_loss >>= sust;
     }
 
-    mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
-         "You feel %s%s%s.",
-         stat_loss > 0 && player_sust_attr(false) ? "somewhat " : "",
-         stat_desc(which_stat, SD_LOSS),
-         stat_loss > 0 ? "" : " for a moment");
+    mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
 
-    if (stat_loss > 0)
-    {
-        you.stat_loss[which_stat] = min<int>(100,
-                                        you.stat_loss[which_stat] + stat_loss);
-        if (!you.attribute[ATTR_STAT_LOSS_XP])
-            you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
-        _handle_stat_change(which_stat);
-        return true;
-    }
-    else
-        return false;
+    you.stat_loss[which_stat] = min<int>(100,
+                                         you.stat_loss[which_stat] + stat_loss);
+    if (!you.attribute[ATTR_STAT_LOSS_XP])
+        you.attribute[ATTR_STAT_LOSS_XP] = stat_loss_roll();
+    _handle_stat_change(which_stat);
+    return true;
 }
 
 stat_type random_lost_stat()

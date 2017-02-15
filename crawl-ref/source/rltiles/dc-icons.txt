@@ -26,7 +26,7 @@ cobweb_none_0 TRAP_WEB
 %resetcol
 %rim 0
 %sdir misc/icons
-heart HEART
+friendly FRIENDLY
 good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
@@ -51,6 +51,9 @@ pain_mirror PAIN_MIRROR
 deaths_door DEATHS_DOOR
 recall RECALL
 drain DRAIN
+idealised IDEALISED
+bound_soul BOUND_SOUL
+infested INFESTED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR

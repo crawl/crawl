@@ -3,7 +3,7 @@
 
 #include "beam.h"
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
 #include "spl-cast.h"
 
 //Bitfield for animate dead messages
@@ -116,6 +116,8 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 bool trigger_spectral_weapon(actor* agent, const actor* target);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
 void reset_spectral_weapon(monster* mons);
+
+spret_type cast_infestation(int pow, bolt &beam, bool fail);
 
 void summoned_monster(const monster* mons, const actor* caster,
                       spell_type spell);

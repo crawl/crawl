@@ -104,8 +104,8 @@ ENDMAP
 NAME:    hangedman_hellfire_club
 TAGS:    transparent no_monster_gen
 DEPTH:   Geh, !Geh:$, Zot:1-4
-MONS:    red draconian scorcher / mottled draconian scorcher w:7
-MONS:    red draconian zealot / mottled draconian zealot w:7
+MONS:    red draconian scorcher
+MONS:    red draconian stormcaller
 MONS:    hellion
 ITEM:    any potion good_item
 KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
@@ -486,15 +486,14 @@ NAME:   geh_mu
 ORIENT: encompass
 TAGS:   no_rotate
 MONS:   patrolling Asmodeus, brimstone fiend
-MONS:   Balrug, sun demon, hellion, fire giant
+MONS:   balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
-KMONS:  8 = crimson imp
+KMONS:  8 = red devil
 # Place one Serpent in the inner circle.
 : serpent_of_hell_setup(_G)
 KFEAT:  D = lava
 NSUBST: X = 1:D / *:l
-SUBST:  4 = 344567788
-SUBST:  % = $ |
+SUBST:  4 = 34456778, % = $|
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
 : geh_setup(_G)
@@ -505,33 +504,33 @@ x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
 x.(.."llv......+......................................+......vllll".{x
 x..."lllv.vvvv.v....4....llllllllllllllllllll.........v.vvvv.vllll".'x
 x..."lllv.v2|v.v.......llllllllllllllllllllllll...4...v.v|2v.vlll"..'x
-x'."llllv.v+vv.v.....llllllllllllllllllllllllllll.....v.vv+v.vll"..'xx
-x'."llllv.v....v...lllllllllcccccclccccccccccllllll...v....v.vll".'xxx
-x'."llllv.vvvvvv..llllllllllcc..ccccccccccccclllllll..vvvvvv.vll".'xxx
-x'."llllv.v......lllllllllllc....cc...c....ccllllllll......v.vll".'xxx
-x'.."lllv.v.4...llllllllllllc.4..++...+.4..cccccccllll.....v.vll"..'xx
-x'.."lllv.v.....llllllllllllc....cc...c....cccccccllll..4..v.vlll".'xx
-x'."llllv.v....llllccccccccccc....ccccccc+cccccccclllll....v.vlll".'xx
-x'."llllv.v....llllc%%%%%.cccccc..ccccccc+cccccccclllll....v.vlll"..'x
-x'."llllv.v...lllllc%%%%%.c.%%%c..c..........cccccllllll...v.vllll".'x
-x'.."lllv.v...lllllc%%%%%.+.%%%c..c.vvvv.....+...cllllll...v.vllll".[x
-xx."llllv.v...lllllc%%%%%.c.%%%c..c.+||n..4..ccc.cllllll...v.vllll".'x
-x'.."lllv.v...lllllc%%%%%.c....c..c.+||n.....ccc.cllllll...v.vllll".'x
-x'.."lllv.v...lllllc......cc++cc..c.vvvv..4..+.c+cccclll...v.vlll"..'x
-x'.."lllv.v...lllllcln.|||c....c..c..........+.c...$clll...v.vll"...'x
-x'."llllv.v...lllllc.n.|||c....c..cccccccccccc.c..2$clll...v.vll"...'x
-x'.."lllv.v...lllllcOn.|||c.2.2c..c.44....44.c.c$$$$clll...v.vll"...'x
-x'.."lllv.v...lllllcccccccc....c..c..........+.c$$$$clll...v.vll"...'x
-xx.."lllv.v....lllllllllccc.1..+..c..........+.ccccccll....v.vll"...'x
-xx.."lllv.v....lllllllllccc....c..c..........ccclllllll....v.vll"...'x
-xx.."lllv.v.....llllllllccccccccccc..........cccllllll.....v.vl"...'xx
-x'.."lllv.v.....llllllllccccccccccc..........cccllllll.....v.vl".4.'xx
-x'.."lllv.v......llllllllllllllllcc+cccccccccccclllll......v.vl"...'xx
-x'.."lllv.v.4.....lllllllllllllllc...cllllllllllllll.......v.vll"...'x
-x'4."lllv.v........lllllllllllXllc.4.cllXllllllllll........v.vll"..4'x
-x'.."lllv.v..........llllllllllllc...clllllllllll......4...v.vlll"..'x
-xx.."lllv.v.....4......llllllllllcc+cclllllllll............v.vlll"..'x
-xx.4"lllv.v..............llllllllllllllllllll......4.......v.vllll".'x
+x'."llllv.v+vv.v.....lllllllllllcc+ccllllllllllll.....v.vv+v.vll"..'xx
+x'."llllv.v....v...lllllllllllllc...cllllllllllllll...v....v.vll".'xxx
+x'."llllv.vvvvvv..lllllllllllXllc.4.cllXllllllllllll..vvvvvv.vll".'xxx
+x'."llllv.v......lllllllllllllllc...cllllllllllllllll......v.vll".'xxx
+x'.."lllv.v.4...llllllcccccccccccc+cclllllllllllllllll.....v.vll"..'xx
+x'.."lllv.v.....llllllccc..........cccccccccccllllllll..4..v.vlll".'xx
+x'."llllv.v....lllllllccc..........ccccccccccclllllllll....v.vlll".'xx
+x'."llllv.v....lllllllccc..........c..c....ccclllllllll....v.vlll"..'x
+x'."llllv.v...lllcccccc.+..........c..+..1.cccllllllllll...v.vllll".'x
+x'.."lllv.v...lllc$$$$c.+..........c..c....cccccccclllll...v.vllll".[x
+xx."llllv.v...lllc$$$$c.c.44....44.c..c2.2.c|||.nOclllll...v.vllll".'x
+x'.."lllv.v...lllc$2..c.cccccccccccc..c....c|||.n.clllll...v.vllll".'x
+x'.."lllv.v...lllc$...c.+..........c..c....c|||.nlclllll...v.vlll"..'x
+x'.."lllv.v...lllcccc+c.+..4..vvvv.c..cc++cc......clllll...v.vll"...'x
+x'."llllv.v...llllllc.ccc.....n||+.c..c....c.%%%%%clllll...v.vll"...'x
+x'.."lllv.v...llllllc.ccc..4..n||+.c..c%%%.c.%%%%%clllll...v.vll"...'x
+x'.."lllv.v...llllllc...+.....vvvv.c..c%%%.+.%%%%%clllll...v.vll"...'x
+xx.."lllv.v....lllllccccc..........c..c%%%.c.%%%%%cllll....v.vll"...'x
+xx.."lllv.v....lllllcccccccc+ccccccc..cccccc.%%%%%cllll....v.vll"...'x
+xx.."lllv.v.....llllcccccccc+ccccccc....ccccccccccclll.....v.vl"...'xx
+x'.."lllv.v.....llllccccccc....c...cc....cllllllllllll.....v.vl".4.'xx
+x'.."lllv.v......lllccccccc..4.+...++..4.clllllllllll......v.vl"...'xx
+x'.."lllv.v.4.....lllllllcc....c...cc....cllllllllll.......v.vll"...'x
+x'4."lllv.v........llllllccccccccccccc..cclllllllll........v.vll"..4'x
+x'.."lllv.v..........llllcccccccccclcccccclllllll......4...v.vlll"..'x
+xx.."lllv.v........4...llllllllllllllllllllllll............v.vlll"..'x
+xx.4"lllv.v..............llllllllllllllllllll....4.........v.vllll".'x
 x'.."llvv+vv..............................................vv+vvlll".'x
 x'.."lvvv+vvv............................................vvv+vvvll".'x
 x'.."lvv...vvvvvvvvvvvvvvvvvvvvvvv+++vvvvvvvvvvvvvvvvvvvvvv...vvll".'x
@@ -830,8 +829,8 @@ ENDMAP
 
 NAME:    geh_hangedman
 ORIENT:  encompass
-MONS:    patrolling Asmodeus, brimstone fiend, balrug, hellion
-MONS:    fire giant, salamander stormcaller, hell knight
+MONS:    patrolling Asmodeus, brimstone fiend, balrug
+MONS:    hellion, fire giant, hell knight, hell hog
 KMONS:   y = red devil w:20 / fire elemental / salamander
 KMONS:   Y = molten gargoyle
 KMONS:   zZ = sun demon / efreet / smoke demon w:5 / \
@@ -839,8 +838,11 @@ KMONS:   zZ = sun demon / efreet / smoke demon w:5 / \
 KITEM:   $ = $ no_pickup
 KFEAT:   yYZ = lava
 KFEAT:   L = endless_lava
-SHUFFLE: 56, O1 / |0, =- / =- / -=, !? / !? / ?!
+# Swap trios of hell knights with fire giants.
+SHUFFLE: 5A6B / 5A6B / 6B5A
+SUBST:   A = ., B = 6
 # Just some pillar, door, and floor/wall/lava edge randomization.
+SHUFFLE: O1 / |0, =- / =- / -=, !? / !? / ?!
 SHUFFLE: ef, hi, def / def / edf / fed, ghi / ghi / hgi / ihg
 SHUFFLE: EF / EF / FE, GH / GH / HG, IJ / IJ / JI
 SHUFFLE: PQ / PQ / QP, RS / RS / SR, TU / TU / UT
@@ -857,9 +859,9 @@ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 LLllllllllllllllllllllllllllllccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxLL
 LLllllllllllllll..............+....4....ccxXXXXXXXXXXXXXXXXXXXXXXXxxLL
-LLlll.........................c++cc+cc++cccX..................[..XXxLL
+LLlll.B.......................c++cc+cc++cccX..................[..XXxLL
 LLll.6...........ll````````llcc.........ccc..```````x```````x...{.XxLL
-LLll..vv-vvvvvvvvllllllllllll+...vd3dv...cc..llllllllllllllllll...XxLL
+LLllB.vv-vvvvvvvvllllllllllll+...vd3dv...cc..llllllllllllllllll...XxLL
 LLll..v...v$$$.vvYlllllllllllc..f..e..f..cc..lllllllllllllllllll.(XxLL
 LLll..-.$..$.2$vvllllllFFllllc..f..e..f..cc..lllllllllllllllllll..XxLL
 LLll..v...v$..$vvYlllllxxllll+...vd.dv...cc.xlllllll.xllllllllllx.XxLL
@@ -875,32 +877,32 @@ LLl..lllllllllll.**.Zlllllllllccc..v..cccc..lllllll.lllyllllllll`.XxLL
 LLl..`llllllllll3..2lllllllllllccv+++vccc7..lllllxxlllllxxllllll`.XxLL
 LLl..`llllll.xxlllZllllllllllllc...v...cc..llllllxxlllllxxllllll`.XxLL
 LLl..`llllll.xxllllllllllllllll+...v...cc..lllllllllllllllllllll`.XxLL
-LLl..`lllllll..lllllllEElllllll+..v7v..cc..llxxxllll.xlllllxllll`.XxLL
+LLl..`lllllll..lllllllEElllllll+..vzv..cc..llxxxllll.xlllllxllll`.XxLL
 LLl..`llFxElllllllllllExFllllllc...v...cc.xllxxxllll.xllllllllll`.XxLL
 LLl..`llFxEllllllllllllFFllllllccc.v.cccc..llxxxllllllllllllllll`.XxLL
 LLl..`llllllllGxHlllllllllllllllcc+v+ccc7..lllllllllllllll..x.....XxLL
-LLl..`llllllllGxHlllllllllllllllc..5..cc..llllllll..x............XXxLL
+LLl..`llllllllGxHlllllllllllllllc.A5A.cc..llllllll..x............XXxLL
 LLl..lllllllllllllllllllllllllll+..v..cc..ll..x..........7ccccccccxxLL
 LLl..lllllllllllllllllllllllllllc.....cc.........7ccccccccccccccccccLL
 LLl..c+cc+cclllyllllllllllllllllccc.ccc....7ccccccccccccccc.....ccccLL
-LLc+cc.....ccc+c+cclllllllllllxxxzc+c....ccccccccccc..7..cc......+.cLL
-LLc.+......cc.....ccc++cclllllx6........cccccc....cc.ivh.+...ii..c.cLL
-LLc.c..ii...+.ivh.cc....ccc+ccx.........c...cc.hg.+..*g*.c..v..v.+.cLL
-LLc.+.v..v..c.*g*..+.gh.cc...cz..d..e..cc...+..iv.c..hvi.+..g..g.c.cLL
-LLc.c.g..g..+.hvi..c.iv..+.v.cc....f...+..v5c...7.+...z..c...hh3.+4cLL
-LLc4+.3hh...c..z...+.7...c5...+...f....cc...+..iv.c..ivh.+..g..g.c.cLL
-LLc.c.g..g..+.ivh..c.iv..+.v.cc..e..d..zc...cc.hg.+..*g*.c..v..v.+.cLL
-LLc.+.v..v..c.*g*..+.gh.cc...c.........xcc+ccc....cc.hvi.+...ii..c.cLL
-LLc.c..ii...+.hvi.cc....ccc+ccxD......6xlllllcc++ccc.....cc......+.cLL
+LLc+cc.....ccc+c+cclllllllllllxxxzc+c....ccccccccccc.....cc......+.cLL
+LLc.+......cc.....ccc++cclllllx6B.......cccccc....cc.ivh.+...ii..c.cLL
+LLc.c..ii...+.ivh.cc....ccc+ccxB........c...cc.hg.+..*g*.c..v..v.+.cLL
+LLc.+.v..v..c.*g*..+.gh.cc...cz..d..e..cc..A+..iv.c..hvi.+..g..g.c.cLL
+LLc.c.g..g..+.hvi..c.iv..+Av.cc....f...+..v5c...z.+...z..c...hh3.+4cLL
+LLc4+.3hh...c..z...+.z...c5...+...f....cc..A+..iv.c..ivh.+..g..g.c.cLL
+LLc.c.g..g..+.ivh..c.iv..+Av.cc..e..d..zc...cc.hg.+..*g*.c..v..v.+.cLL
+LLc.+.v..v..c.*g*..+.gh.cc...c........Bxcc+ccc....cc.hvi.+...ii..c.cLL
+LLc.c..ii...+.hvi.cc....ccc+ccxD.....B6xlllllcc++ccc.....cc......+.cLL
 LLc.+......cc.....ccc++cclllllxx.c+czxxxlllllllllllcc+c+ccc.....cc+cLL
 LLc+cc.....ccc+c+ccllllllllllllccc.cccllllllllllllllllylllcc+cc+c..lLL
 LLl..c+cc+cclllylllllllllllllllc.....clllllllllllllllllllllllllll..lLL
 LLl..llllllllllllllllllllllllll+.v.v.+lllllllllllllllllllllllllll..lLL
-LLl..`llldlllllllllllllllllllllc..5..clllllllllllllllSxRllllllll`..lLL
+LLl..`llldlllllllllllllllllllllc.A5A.clllllllllllllllSxRllllllll`..lLL
 LLl..`lldllllllllllllllllllllllcc+v+cclllllllllllllllSxRllllllll`..lLL
 LLll..llllllllllllllllllllllllccc.v.cccllllllUUllllllllllllPxQll`..lLL
 LLll..`llellllllllllllllllllllc...v...cllllllUxTlllllllllllPxQll`..lLL
-LLll..`lelllllllllllllllllllll+..v7v..+lllllllTTlllllll..lllllll`..lLL
+LLll..`lelllllllllllllllllllll+..vzv..+lllllllTTlllllll..lllllll`..lLL
 LLll..`lllllllllllllllllllllll+...v...+llllllllllllllllxx.llllll`..lLL
 LLlll..lllflllllllllllllllllllc...v...cllllllllllllZlllxx.llllll`..lLL
 LLlll..`lfllllllllllllllllllllccv+++vcclllllllllll2..3llllllllll`..lLL
@@ -916,9 +918,9 @@ LLllll..`lillhlllgllflllllllc.....v.....cllllPPllllllvv$$$.vv.vv..llLL
 LLlllll..lllllllgllflllelldl+...vd.dv...+llllxxlllllYvv$..$v...v..llLL
 LLlllll.2.`````lllllllelldllc..f..e..f..cllllQQllllllvv$2.$..$.?..llLL
 LLllv+vv........````llllllllc..f..e..f..clllllllllllYvv.$$$v...v..llLL
-LLllv..vll...........```llll+...vd3dv...+llllllllllllvvvvvvvv?vv..llLL
+LLllv..vll...........```llll+...vd3dv...+llllllllllllvvvvvvvv?vv.BllLL
 LLllv*.+llllllll.........``lcc.........ccll````````ll...........6.llLL
-LLllvvvvlllllllllllll........cc++c+c++cc.........................lllLL
+LLllvvvvlllllllllllll........cc++c+c++cc.......................B.lllLL
 LLlllllllllllllllllllllll....+....4....+..............llllllllllllllLL
 LLlllllllllllllllllllllllllllcccccccccccllllllllllllllllllllllllllllLL
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL

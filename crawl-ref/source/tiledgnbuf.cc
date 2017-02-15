@@ -271,9 +271,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
             }
         }
 
-        if (cell.halo == HALO_MONSTER)
-            m_buf_feat.add(TILE_HALO, x, y);
-
         if (!(bg & TILE_FLAG_UNSEEN))
         {
             if (cell.is_sanctuary)
@@ -295,6 +292,19 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_QUAD_GLOW, x, y);
             if (cell.disjunct)
                 m_buf_feat.add(TILE_DISJUNCT + cell.disjunct - 1, x, y);
+            if (cell.awakened_forest)
+                m_buf_icons.add(TILEI_BERSERK, x, y);
+
+            if (cell.fg)
+            {
+                const tileidx_t att_flag = cell.fg & TILE_FLAG_ATT_MASK;
+                if (att_flag == TILE_FLAG_PET)
+                    m_buf_feat.add(TILE_HALO_FRIENDLY, x, y);
+                else if (att_flag == TILE_FLAG_GD_NEUTRAL)
+                    m_buf_feat.add(TILE_HALO_GD_NEUTRAL, x, y);
+                else if (att_flag == TILE_FLAG_NEUTRAL)
+                    m_buf_feat.add(TILE_HALO_NEUTRAL, x, y);
+            }
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible. It will be applied later if the cell is unseen.
@@ -350,33 +360,26 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
-    int status_shift = 0;
-
-    //The berserk icon is in the lower right, so status_shift doesn't need changing.
-    if (fg & TILE_FLAG_BERSERK)
-        m_buf_icons.add(TILEI_BERSERK, x, y);
-
     // Pet mark
     if (fg & TILE_FLAG_ATT_MASK)
     {
         const tileidx_t att_flag = fg & TILE_FLAG_ATT_MASK;
         if (att_flag == TILE_FLAG_PET)
-        {
-            m_buf_icons.add(TILEI_HEART, x, y);
-            status_shift += 10;
-        }
+            m_buf_icons.add(TILEI_FRIENDLY, x, y);
         else if (att_flag == TILE_FLAG_GD_NEUTRAL)
-        {
             m_buf_icons.add(TILEI_GOOD_NEUTRAL, x, y);
-            status_shift += 7;
-        }
         else if (att_flag == TILE_FLAG_NEUTRAL)
-        {
             m_buf_icons.add(TILEI_NEUTRAL, x, y);
-            status_shift += 7;
-        }
     }
 
+    //The berserk icon is in the lower right, so status_shift doesn't need changing.
+    if (fg & TILE_FLAG_BERSERK)
+        m_buf_icons.add(TILEI_BERSERK, x, y);
+    // ditto ideal
+    if (fg & TILE_FLAG_IDEALISED)
+        m_buf_icons.add(TILEI_IDEALISED, x, y);
+
+    int status_shift = 0;
     if (fg & TILE_FLAG_BEH_MASK)
     {
         const tileidx_t beh_flag = fg & TILE_FLAG_BEH_MASK;
@@ -469,6 +472,16 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     {
         m_buf_icons.add(TILEI_DEATHS_DOOR, x, y, -status_shift, 0);
         status_shift += 10;
+    }
+    if (fg & TILE_FLAG_BOUND_SOUL)
+    {
+        m_buf_icons.add(TILEI_BOUND_SOUL, x, y, -status_shift, 0);
+        status_shift += 6;
+    }
+    if (fg & TILE_FLAG_INFESTED)
+    {
+        m_buf_icons.add(TILEI_INFESTED, x, y, -status_shift, 0);
+        status_shift += 6;
     }
     if (fg & TILE_FLAG_RECALL)
     {

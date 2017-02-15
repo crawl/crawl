@@ -142,6 +142,13 @@ static feature_def feat_defs[] =
 },
 
 {
+    DNGN_ENDLESS_SALT, "endless expanse of salt", "endless_salt",
+    DCHAR_WALL, NUM_DCHAR_TYPES,
+    COLOUR_IS(WHITE),
+    FFT_SOLID, MF_FLOOR,
+},
+
+{
     DNGN_ORCISH_IDOL, "orcish idol", "orcish_idol",
     DCHAR_STATUE, NUM_DCHAR_TYPES,
     COLOUR_IS(BROWN),
@@ -369,8 +376,8 @@ PORTAL_ENTRANCE(DNGN_ENTER_BAILEY, "flagged portal", "enter_bailey", LIGHTRED),
 PORTAL_ENTRANCE(DNGN_ENTER_ICE_CAVE, "frozen archway", "enter_ice_cave", WHITE),
 PORTAL_ENTRANCE(DNGN_ENTER_VOLCANO, "dark tunnel", "enter_volcano", RED),
 PORTAL_ENTRANCE(DNGN_ENTER_WIZLAB, "magical portal", "enter_wizlab", ETC_SHIMMER_BLUE),
+PORTAL_ENTRANCE(DNGN_ENTER_DESOLATION, "ruined gateway", "enter_desolation", WHITE),
 #if TAG_MAJOR_VERSION == 34
-PORTAL_ENTRANCE(DNGN_UNUSED_ENTER_PORTAL_1, "", "enter_unused", ETC_SHIMMER_BLUE),
 PORTAL_EXIT(DNGN_EXIT_PORTAL_VAULT, "gate leading back out of this place", "exit_portal_vault", ETC_SHIMMER_BLUE),
 #endif
 PORTAL_EXIT(DNGN_EXIT_ZIGGURAT, "gate leading back out of this place", "exit_ziggurat", ETC_SHIMMER_BLUE),
@@ -382,9 +389,7 @@ PORTAL_EXIT(DNGN_EXIT_BAILEY, "gate leading back out of this place", "exit_baile
 PORTAL_EXIT(DNGN_EXIT_ICE_CAVE, "ice covered gate leading back out of this place", "exit_ice_cave", WHITE),
 PORTAL_EXIT(DNGN_EXIT_VOLCANO, "rocky tunnel leading out of this place", "exit_volcano", RED),
 PORTAL_EXIT(DNGN_EXIT_WIZLAB, "portal leading out of this place", "exit_wizlab", ETC_SHIMMER_BLUE),
-#if TAG_MAJOR_VERSION == 34
-PORTAL_EXIT(DNGN_UNUSED_EXIT_PORTAL_1, "", "exit_unused", ETC_SHIMMER_BLUE),
-#endif
+PORTAL_EXIT(DNGN_EXIT_DESOLATION, "gate leading back out of this place", "exit_desolation", WHITE),
 
 #define BRANCH_ENTRANCE(enum, name, vaultname)\
 {\
@@ -495,15 +500,17 @@ ALTAR(DNGN_ALTAR_DITHMENOS, "shadowy altar of Dithmenos", "altar_dithmenos", ETC
 ALTAR(DNGN_ALTAR_GOZAG, "opulent altar of Gozag", "altar_gozag", ETC_GOLD), // for the Gold God!
 ALTAR(DNGN_ALTAR_QAZLAL, "stormy altar of Qazlal", "altar_qazlal", ETC_ELEMENTAL),
 ALTAR(DNGN_ALTAR_RU, "sacrificial altar of Ru", "altar_ru", BROWN),
-ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar to an unknown god", "altar_ecumenical", ETC_DARK),
+ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar of an unknown god", "altar_ecumenical", ETC_DARK),
 ALTAR(DNGN_ALTAR_PAKELLAS, "oddly glowing altar of Pakellas", "altar_pakellas", ETC_PAKELLAS),
+ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
+ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\
     enum, name, vaultname,\
     DCHAR_FOUNTAIN, NUM_DCHAR_TYPES,\
     COLOUR_IS(colour),\
-    FFT_NONE, MF_FEATURE,\
+    FFT_NONE, MF_FLOOR,\
 }
 FOUNTAIN(DNGN_FOUNTAIN_BLUE, "fountain of clear blue water", "fountain_blue", BLUE),
 FOUNTAIN(DNGN_FOUNTAIN_SPARKLING, "fountain of sparkling water", "fountain_sparkling", LIGHTBLUE),

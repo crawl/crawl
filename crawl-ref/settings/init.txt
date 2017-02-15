@@ -74,7 +74,6 @@
 
 # And to revert monster glyph and colouring changes:
 
-# include                 = 034_monster_glyphs.txt
 # include                 = 052_monster_glyphs.txt
 # include                 = 060_monster_glyphs.txt
 # include                 = 071_monster_glyphs.txt

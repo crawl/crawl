@@ -284,10 +284,10 @@ degree than the Spellcasting skill, and only the highest contribution is used.
 %%%%
 Evocations
 
-Evocations skill affects your ability to use magical items like wands, rods,
-decks or other uncommon objects. High skill may increase the power or success
-rate of such items, and may also let you determine the amount of charges a
-zapped wand has left.
+Evocations skill affects your ability to use magical items like wands and other
+uncommon objects. High skill may increase the power or success rate of such
+items, and may also let you determine the amount of charges a zapped wand has
+left.
 
 The Evocations skill also affects your magical reserves, but to a lesser degree
 than the Spellcasting skill, and only the highest contribution is used.

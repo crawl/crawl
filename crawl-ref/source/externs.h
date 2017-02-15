@@ -60,10 +60,6 @@ protected:
 
 #define MAX_NAME_LENGTH 30
 
-// This value is used to mark that the current berserk is free from
-// penalty (used for Xom's special berserk).
-#define NO_BERSERK_PENALTY    -1
-
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned int, GXM, GYM> map_mask;
 typedef FixedBitArray<GXM, GYM> map_bitmask;
@@ -79,9 +75,16 @@ class ghost_demon;
 
 typedef pair<coord_def, int> coord_weight;
 
-template <typename Z> static inline Z sgn(Z x)
+// Constexpr sign.
+template <typename Z> static constexpr Z sgn(Z x)
 {
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
+}
+
+// Constexpr absolute value.
+template <typename Z> static constexpr Z abs_ce(Z x)
+{
+    return x < 0 ? -x : x;
 }
 
 struct coord_def
@@ -89,8 +92,8 @@ struct coord_def
     int         x;
     int         y;
 
-    coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
-    coord_def() : coord_def(0,0) { }
+    constexpr coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
+    constexpr coord_def() : coord_def(0,0) { }
 
     void set(int xi, int yi)
     {
@@ -103,24 +106,27 @@ struct coord_def
         set(0, 0);
     }
 
-    int distance_from(const coord_def &b) const PURE;
+    constexpr int distance_from(const coord_def &b) const
+    {
+        return (b - *this).rdist();
+    }
 
-    bool operator == (const coord_def &other) const
+    constexpr bool operator == (const coord_def &other) const
     {
         return x == other.x && y == other.y;
     }
 
-    bool operator != (const coord_def &other) const
+    constexpr bool operator != (const coord_def &other) const
     {
         return !operator == (other);
     }
 
-    bool operator <  (const coord_def &other) const
+    constexpr bool operator <  (const coord_def &other) const
     {
         return x < other.x || (x == other.x && y < other.y);
     }
 
-    bool operator >  (const coord_def &other) const
+    constexpr bool operator >  (const coord_def &other) const
     {
         return x > other.x || (x == other.x && y > other.y);
     }
@@ -167,80 +173,87 @@ struct coord_def
         return *this;
     }
 
-    coord_def operator + (const coord_def &other) const
+    constexpr coord_def operator + (const coord_def &other) const
     {
-        coord_def copy = *this;
-        return copy += other;
+        return { x + other.x, y + other.y };
     }
 
-    coord_def operator + (int other) const
+    constexpr coord_def operator + (int other) const
     {
-        coord_def copy = *this;
-        return copy += other;
+        return *this + coord_def(other, other);
     }
 
-    coord_def operator - (const coord_def &other) const
+    constexpr coord_def operator - (const coord_def &other) const
     {
-        coord_def copy = *this;
-        return copy -= other;
+        return { x - other.x, y - other.y };
     }
 
-    coord_def operator -() const
+    constexpr coord_def operator -() const
     {
-        return coord_def(0, 0) - *this;
+        return { -x, -y };
     }
 
-    coord_def operator - (int other) const
+    constexpr coord_def operator - (int other) const
     {
-        coord_def copy = *this;
-        return copy -= other;
+        return *this - coord_def(other, other);
     }
 
-    coord_def operator / (int div) const
+    constexpr coord_def operator / (int div) const
     {
-        coord_def copy = *this;
-        return copy /= div;
+        return { x / div, y / div };
     }
 
-    coord_def operator * (int mul) const
+    constexpr coord_def operator * (int mul) const
     {
-        coord_def copy = *this;
-        return copy *= mul;
+        return { x * mul, y * mul };
     }
 
-    coord_def sgn() const
+    constexpr coord_def sgn() const
     {
         return coord_def(::sgn(x), ::sgn(y));
     }
 
-    int abs() const
+    constexpr int abs() const
     {
         return x * x + y * y;
     }
 
-    int rdist() const
+    constexpr int rdist() const
     {
-        return max(::abs(x), ::abs(y));
+        // Replace with max(abs_ce(x), abs_ce(y) when we require C++14.
+        return abs_ce(x) > abs_ce(y) ? abs_ce(x) : abs_ce(y);
     }
 
-    bool origin() const
+    constexpr bool origin() const
     {
         return !x && !y;
     }
 
-    bool zero() const
+    constexpr bool zero() const
     {
         return origin();
     }
 
-    bool equals(const int xi, const int yi) const
+    constexpr bool equals(const int xi, const int yi) const
     {
-        return xi == x && yi == y;
+        return *this == coord_def(xi, yi);
     }
 };
 
-extern const coord_def INVALID_COORD;
-extern const coord_def NO_CURSOR;
+namespace std {
+    template <>
+    struct hash<coord_def>
+    {
+        constexpr size_t operator()(const coord_def& c) const
+        {
+            // lazy assumption: no coordinate will ever be bigger than 2^16
+            return (c.x << 16) + c.y;
+        }
+    };
+}
+
+constexpr coord_def INVALID_COORD {-1, -1};
+constexpr coord_def NO_CURSOR { INVALID_COORD };
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
@@ -303,19 +316,14 @@ struct cloud_struct
     kill_category whose;
     killer_type   killer;
     mid_t         source;
-    int           colour;
-    string        name;
-    string        tile;
     int           excl_rad;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
-                     whose(KC_OTHER), killer(KILL_NONE), colour(-1),
-                     name(""), tile(""), excl_rad(-1)
+                     whose(KC_OTHER), killer(KILL_NONE), excl_rad(-1)
     {
     }
     cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
-                 killer_type kt, mid_t src, int clr, string name_, string tile_,
-                 int excl);
+                 killer_type kt, mid_t src, int excl);
 
     bool defined() const { return type != CLOUD_NONE; }
     bool temporary() const { return excl_rad == -1; }
@@ -356,16 +364,6 @@ struct shop_struct
     bool defined() const { return type != SHOP_UNASSIGNED; }
 };
 
-struct delay_queue_item
-{
-    delay_type  type;
-    int         duration;
-    int         parm1;
-    int         parm2;
-    int         parm3;
-    bool        started;
-};
-
 /// Exception indicating a bad level_id, level_range, or depth_range.
 struct bad_level_id : public runtime_error
 {
@@ -381,7 +379,7 @@ struct bad_level_id : public runtime_error
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
-// stack in l_dgn.cc)
+// stack in l-dgn.cc)
 class level_id
 {
 public:
@@ -519,7 +517,7 @@ typedef uint32_t iflags_t;
 
 struct item_def
 {
-    object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
+    object_class_type base_type; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
     union
@@ -529,7 +527,6 @@ struct item_def
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
-                                    // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
         short net_durability;       ///< damage dealt to a net
     };
@@ -542,7 +539,6 @@ struct item_def
                             // info (e.g. "recharged", "empty", "unknown")
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
-        short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
     };
 #pragma pack(pop)
@@ -552,7 +548,6 @@ struct item_def
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
-        int rod_plus;           ///< rate at which a rod recharges; +slay
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()
@@ -569,12 +564,15 @@ struct item_def
     /// pos (-1, -1), items in monster inventory by (-2, -2), and items
     /// in shops by (0, y) for y >= 5.
     coord_def pos;
-    /// Index in the mitm array of the next item in the stack. NON_ITEM for
-    /// the last item in a stack. For items in player inventory, instead
-    /// equal to slot. For items in monster inventory, equal to
-    /// NON_ITEM + 1 + mindex. For items in shops, equal to ITEM_IN_SHOP.
+    /// For floor items, index in the mitm array of the next item in the
+    /// pile. NON_ITEM for the last item in a pile. For items in player
+    /// inventory, instead the index into you.inv. For items in monster
+    /// inventory, equal to NON_ITEM + 1 + mindex. For items in shops,
+    /// equal to ITEM_IN_SHOP.
     short  link;
-    // Inventory letter of the item.
+    /// Inventory letter of the item. For items in player inventory, equal
+    /// to index_to_letter(link). For other items, equal to the slot letter
+    /// the item had when it was last in player inventory.
     short  slot;
 
     level_id orig_place;
@@ -599,7 +597,6 @@ public:
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
-    zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
     bool is_type(int base, int sub) const
     {
@@ -713,7 +710,7 @@ public:
     void clear();
 
     // Stops running.
-    void stop();
+    void stop(bool clear_delays = true);
 
     // Take one off the rest counter.
     void rest();
@@ -726,8 +723,6 @@ private:
     void set_run_check(int index, int compass_dir);
     bool run_should_stop() const;
 };
-
-typedef vector<delay_queue_item> delay_queue_type;
 
 enum mon_spell_slot_flag
 {
@@ -880,10 +875,10 @@ private:
 
 struct cglyph_t
 {
-    ucs_t ch;
+    char32_t ch;
     unsigned short col; // XXX: real or unreal depending on context...
 
-    cglyph_t(ucs_t _ch = 0, unsigned short _col = LIGHTGREY)
+    cglyph_t(char32_t _ch = 0, unsigned short _col = LIGHTGREY)
         : ch(_ch), col(_col)
     {
     }

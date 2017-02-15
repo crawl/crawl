@@ -189,11 +189,12 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = beef jerky / nothing / animal skin / potion of degeneration w:20 /\
-             w:2 potion of haste / w:2 potion of might
+KITEM:   1 = meat ration w:5 / nothing / animal skin / \
+             potion of degeneration w:20 / potion of haste w:2 / \
+             potion of might w:2
 KFEAT:   1 = 1
-ITEM:    club, potion of degeneration ident:type, slice of pizza
-ITEM:    beef jerky / weight:40 nothing, potion of degeneration ident:type
+ITEM:    club, potion of degeneration ident:type, royal jelly
+ITEM:    meat ration w:2 / nothing, potion of degeneration ident:type
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
 MAP
@@ -382,7 +383,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
@@ -421,7 +422,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3 / two-headed ogre zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
@@ -932,10 +933,10 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Orc
-MONS:   orc ; hunting sling . stone q:30, boulder beetle
+MONS:   orc ; hunting sling . stone q:30
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
-NSUBST: b = 1:2 / 5:1 / *:d
+NSUBST: b = 6:1 / *:d
 SUBST:  1 = 1 .
 MAP
      . .
@@ -957,112 +958,115 @@ ENDMAP
 #
 # Memorial with eternal flame.
 NAME:   nicolae_orc_accident_1
+TAGS:   uniq_orcaccident
 DEPTH:  Orc
 ORIENT: southeast
-TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_smooth
-COLOUR: X = lightgrey
+MONS:   patrolling orc warrior / patrolling orc knight w:2
 KITEM:  W = gold q:1 / gold q:2 / gold q:3 / nothing w:100
 KFEAT:  W = shallow_water
-KPROP:  e = no_tele_into
-MONS:   patrolling orc warrior / patrolling orc knight w:2
-SUBST:  e = xx...
+KFEAT:  X = x
+SUBST:  e = xx..., f = xx"""
 MARKER: P = lua:fog_machine { cloud_type = "flame", \
             pow_min = 10000, pow_max = 10000, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
+KPROP:  " = no_tele_into
+TILE:   X = wall_spider
+TILE:   c = wall_stone_smooth
+COLOUR: X = yellow
 MAP
  e@@@@@@@exxxxxxxxxxxxxxxxx
-ee......exxxxeeeeeeexxxxxxx
+ee......exxxxfeeeeefxxxxxxx
 x......exxeeeee...eeeeeeexx
-x.....eeee..............eex
-xe....eee.......1.....1..ex
-xe....eee....ee..WWWWW...ex
+x.....efee..............eex
+xe....efe.......1.....1..ex
+xe....efe....ee..WWWWW...ex
 xe....eee....ee..WI.IW...ex
 xe.....e.....ee..W.P.W...ex
 xe..........eee..WI.IW...ex
-xee.........eee..WWWWW...ex
-xeee........exe.1.....1.eex
-xxeee......eexe.........exx
-xxxeeeeeeeeexxxx......xxxxx
-xxxxxxeeeexxxxXXXXXXXXXXxxx
-xxxxxxxxxxxxxxXXXXXXXXXXxxx
+xee.........efe..WWWWW...ex
+xfee........exe.1.....1.eex
+xxfee......eexe.........exx
+xxxfeeeeeeeexXXX......XXXxx
+xxxxxxffffxxxXccccccccccXxx
+xxxxxxxxxxxxxXccccccccccXxx
 ENDMAP
 
 # Memorial altar.
-NAME:   nicolae_orc_accident_2
-DEPTH:  Orc
-ORIENT: southeast
-TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_smooth
-COLOUR: X = lightgrey
-MONS:   patrolling orc warrior / patrolling orc knight w:2
-MONS:   patrolling orc priest
-KPROP:  e = no_tele_into
-SUBST:  e = xx...
+NAME:    nicolae_orc_accident_2
+TAGS:    uniq_orcaccident
+DEPTH:   Orc
+ORIENT:  southeast
+MONS:    patrolling orc warrior / patrolling orc knight w:2
+MONS:    patrolling orc priest
+KFEAT:   _ = altar_beogh
+KFEAT:   X = x
 SHUFFLE: AB
-SUBST:  A = @
-SUBST:  B = .@
-KFEAT:  _ = altar_beogh
+SUBST:   A = @, B = .@, e = xx..., f = xx"""
+KPROP:   " = no_tele_into
+TILE:    X = wall_spider
+TILE:    c = wall_stone_smooth
+COLOUR:  X = yellow
 MAP
           xxxxxxxxx
-          A.eeeexxx
-          A...eeexx
-          A....eexx
-          A..0.eeex
+          A.eeefxxx
+          A...eefxx
+          A....efxx
+          A..0.eefx
          xx.....eex
        xxxxe.....ex
        xxxxee....ex
-xBBBBBxxxeeeee..eex
-x.....eeeeeee....ex
+xBBBBBxxxfffee..eex
+x.....eeeefee....ex
 xe.......eee.....ex
 xee.............eex
-xee..1.....1....eex
-xe.............eeex
-xe.I.........I.eexx
-xe...I.....I...eexx
-xe......_......eexx
+xee..1.....1....efx
+xe.............eefx
+xe.I.........I.efxx
+xe...I.....I...efxx
+xe......_......efxx
 xee...........eexxx
-xeee..2...2..eeexxx
-xxxxxx......xxxxxxx
-xxxxXXXXXXXXXXxxxxx
-xxxxXXXXXXXXXXxxxxx
+xfee..2...2..eefxxx
+xxxXXX......XXXxxxx
+xxxXccccccccccXxxxx
+xxxXccccccccccXxxxx
 ENDMAP
 
 # Quarantine.
 NAME:   nicolae_orc_accident_3
+TAGS:   uniq_orcaccident
 DEPTH:  Orc
 ORIENT: southwest
-TAGS:   uniq_orcaccident
-RTILE:  X = wall_stone_smooth
-COLOUR: X = lightgrey
-KPROP:  e2q = no_tele_into
-SUBST:  e = xx...
-SUBST:  g = xm
-KFEAT:  m = iron_grate
-KFEAT:  q = web / floor
 MONS:   patrolling orc w:20 / patrolling orc warrior / patrolling orc knight w:2
 MONS:   tarantella / wolf spider / redback
+KFEAT:  m = iron_grate
+KFEAT:  q = web / floor
+KFEAT:  X = x
+SUBST:  e = xx..., f = xx""", g = xm
+KPROP:  "2q = no_tele_into
+TILE:   X = wall_spider
+TILE:   c = wall_stone_smooth
+COLOUR: X = yellow
 MAP
-x@@@@@@@eeee
-x.......eeexxxx
-x.......eeeeexxxx
-xe........eeeeexxx
-xee...1.....eeeexxx
-xee...........eeexx
+x@@@@@@@efff
+x.......effxxxx
+x.......eeeffxxxx
+xe........eeeffxxx
+xee...1.....eeefxxx
+xfe...........eefxx
 xxeeeeeee..1...eexx
-xxxxeexxxe......eex
-xxxxxxxxxe......eex
-xxxxeeeee...1...eex
+xxxxffxxxe......efx
+xxxxxxxxxe......efx
+xxxxfeeee...1...efx
 xxxeee.1.......eexx
-xxee..........eeexx
-xxe..1...1..eeeexx
-xxgmmmmmmmmgxxeexx
-xxeqqqqqqq2exxxxx
-xxeqq2qqqqqexxxxx
-xxeqqqqq2qeqxxxx
-xxxxq2qqqqxxxxxx
-xxXXXXXXXXXXxxxx
-xxXXXXXXXXXXxxxx
+xxee..........eefxx
+xxe..1...1..eeefxx
+xxgmmmmmmmmgxxffxx
+xxfqqqqqqq2fxxxxx
+xxfqq2qqqqqfxxxxx
+xxfqqqqq2qfqxxxx
+xXXXq2qqqqXXXxxx
+xXccccccccccXxxx
+xXccccccccccXxxx
 ENDMAP
 
 # luniq_orc_cave, a series of small vaults with things the orcs have dug into.
@@ -1562,7 +1566,7 @@ TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
-MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
+MONS:    ogre mage, two-headed ogre w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
 MAP
  .....
@@ -1922,8 +1926,8 @@ MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
 MONS: orc knight
 # non-monstrous demonspawn only (1/3 chance of none)
-MONS: gelid demonspawn / infernal demonspawn / putrid demonspawn /\
-      torturous demonspawn / nothing w:20
+MONS: gelid demonspawn / infernal demonspawn / \
+      torturous demonspawn / nothing w:15
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
 KFEAT: A = general shop / food shop / distillery shop / scroll shop

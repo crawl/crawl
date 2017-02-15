@@ -51,12 +51,12 @@ function ice_cave_portal(e)
   e.kfeat("X = x")
   e.rtile("X = wall_ice_block")
   e.colour(".1234 = blue")
-  e.ftile(".1234O+ = floor_ice")
+  e.ftile(".12345O+^ = floor_ice")
 end
 
 -- Figure out if an easy or a hard ice cave should be used. Players
 -- that enter the portal deeper in the dungeon end up in the hard ones.
--- Possible depths for easy ice caves are D:11-16, Lair, Orc. Hard ice caves
+-- Possible depths for easy ice caves are D:11-15, Lair, Orc. Hard ice caves
 -- are in Elf and the Lair roulette branches. Those depths are set in the entry
 -- vault default-depth.
 --
@@ -105,6 +105,7 @@ function place_fog(e, type, strength)
    e.lua_marker("!", fog_machine { pow_max = strength, cloud_type = type,
                      delay_min = 50, delay_max = 300, size = 12,
                      start_clouds = 1, excl_rad = -1 } )
+   e.kfeat("! = W")
 end
 
 -- Monster set functions.
@@ -136,7 +137,7 @@ end
 -- : ice_cave_random_monster_list_natural_giant(_G)
 function ice_cave_random_monster_list_natural_giant(e)
   e.set_random_mon_list("wolf w:35 / yak w:35 / polar bear w:15 / death yak / \
-                         frost giant w:5")
+                         rime drake w:5 / frost giant w:5")
 end
 
 -- : ice_cave_random_monster_list_undead_demon(_G)
@@ -158,6 +159,7 @@ function ice_cave_random_monster_list_undead_necromancer(e)
 end
 
 -- Currently, all the "caverns" maps use the same monster sets for placement.
+-- XXX: Sort the monster orders into something much more coherent and linear.
 -- : ice_cave_caverns_undead_demon_monster_set(_G)
 function ice_cave_caverns_undead_demon_monster_set(e)
   mocking_simulacrum(e)
@@ -179,11 +181,11 @@ function ice_cave_caverns_natural_giant_monster_set(e)
   e.mons("wolf w:5 / yak w:3 / nothing w:1")
   e.mons("polar bear / nothing w:5")
   e.mons("ice statue")
-  e.mons("polar bear / death yak w:5")
+  e.mons("polar bear w:8 / death yak w:4 / rime drake w:2")
   e.mons("polar bear / yak")
   e.mons("wolf / nothing w:3")
   e.mons("patrolling frost giant / patrolling white draconian w:1 ; \
-          battleaxe ego:freezing ident:type . cloak ")
+          battleaxe ego:freezing . cloak ")
 end
 
 function ice_cave_item_attributes(e)
@@ -221,12 +223,12 @@ end
 }}
 
 # Entries ##########################################
-
+# Not actually used, but useful for reference.
 default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
-NAME:   portal_ice_cave_entry_pillars_01
+# "Easy" ice cave entrances (D, Lair, Orc).
+NAME:   portal_ice_cave_entry_pillars_1
 TAGS:   transparent
-WEIGHT: 4
 : ice_cave_portal(_G)
 MAP
   ...
@@ -238,9 +240,9 @@ MAP
   ...
 ENDMAP
 
-NAME:   portal_ice_cave_entry_pillars_02
+NAME:   portal_ice_cave_entry_pillars_2
 TAGS:   transparent
-WEIGHT: 4
+WEIGHT: 6
 : ice_cave_portal(_G)
 MAP
   ...
@@ -252,9 +254,105 @@ MAP
   ...
 ENDMAP
 
-NAME:   portal_ice_cave_entry_pillars_03
+NAME:   portal_ice_cave_entry_imps
+TAGS:   patrolling no_monster_gen transparent
+DEPTH:  D:11-, Lair, Orc
+: ice_cave_portal(_G)
+MONS:   white imp
+MAP
+..1..
+.111.
+11O11
+.111.
+..1..
+ENDMAP
+
+NAME:   portal_ice_cave_entry_ice_beasts
+TAGS:   patrolling no_monster_gen transparent
+DEPTH:  D:11-, Lair, Orc
+: ice_cave_portal(_G)
+MONS:   ice beast
+MAP
+..1..
+.1.1.
+1.O.1
+.1.1.
+..1..
+ENDMAP
+
+NAME:   portal_ice_cave_entry_animals_and_master
+TAGS:   patrolling no_monster_gen no_trap_gen
+DEPTH:  D:11-, Lair:4-, Orc
+WEIGHT: 6
+: ice_cave_portal(_G)
+MONS:   wolf, yak, polar bear, rime drake, ice dragon
+SUBST:  A = 12 .:1, B = 2 3:5 .:1, C = 3 4:2, D = 4:2 5:8
+MAP
+xx    xxxxxxx
+XxxxxxxXXXXXxx
+XXxXXXXX...XXx
+@XXXXAX.B.C.Xx
+X.X..A...O.DXx
+XX.XXXA.B.C.Xx
+xXXXXX.X...XXx
+xxxxxXXXXXXXxx
+    xxxxxxxxx
+ENDMAP
+
+NAME:   portal_ice_cave_demonic_guard
+TAGS:   patrolling no_monster_gen no_trap_gen
+DEPTH:  D:11-, Lair, Orc
+: ice_cave_portal(_G)
+MONS:   ice devil
+MAP
+xxxxxxxxx
+xXXXXXXXx
+xX..O..Xx
+xX.....Xx
+xX.1.1.Xx
+xX.....Xx
+xXXX.XXXx
+xxXX.XXxx
+xxX...Xxx
+xxX+X+Xxx
+ENDMAP
+
+NAME:   portal_ice_cave_rime
+TAGS:   patrolling no_monster_gen no_pool_fixup
+DEPTH:  D:11-, Lair, Orc
+: ice_cave_portal(_G)
+MONS:   rime drake
+MAP
+  '''''
+ wwwww''
+'wXXXXX''
+'wXO1...'
+'wX1....w
+'wX...wX'
+''X..wXw
+ ''..Xw
+  ''w'
+ENDMAP
+
+# Hard ice cave entrances (Elf, Swamp, Shoals, Snake, Spider).
+NAME:   portal_ice_cave_entry_pillars_three
 TAGS:   transparent
-WEIGHT: 2
+DEPTH:  Elf, Swamp, Shoals, Snake, Spider
+: ice_cave_portal(_G)
+MAP
+   ...
+....X...
+.X...XX.
+..XXOXX..
+ .XX...X.
+ ...X....
+   ...
+ENDMAP
+
+NAME:   portal_ice_cave_entry_pillars_four
+TAGS:   transparent
+DEPTH:  Elf, Swamp, Shoals, Snake, Spider
+WEIGHT: 6
 : ice_cave_portal(_G)
 MAP
    ...
@@ -268,150 +366,95 @@ MAP
    ...
 ENDMAP
 
-NAME:   portal_ice_cave_entry_imps
-TAGS:   patrolling no_monster_gen transparent
-: ice_cave_portal(_G)
-MONS:   white imp
-MAP
-..1..
-.111.
-11O11
-.111.
-..1..
-ENDMAP
-
-NAME:   portal_ice_cave_entry_ice_beasts
-TAGS:   patrolling no_monster_gen transparent
-: ice_cave_portal(_G)
-MONS:   ice beast
-MAP
-..1..
-.1.1.
-1.O.1
-.1.1.
-..1..
-ENDMAP
-
-NAME:   portal_ice_cave_entry_animals_and_master
+NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-, Lair:6-, Orc, Elf
+DEPTH:  Elf, Snake
+WEIGHT: 6
 : ice_cave_portal(_G)
-MONS:   wolf / yak / nothing w:1
-MONS:   yak / polar bear w:5 / nothing w:1
-MONS:   polar bear / nothing w:2
-MONS:   ice dragon w:8 / nothing w:2
+MONS:   ice beast, freezing wraith, azure jelly
+SUBST:  A = 1 2:2 .:2, B = 2 .:3, C = 3:3 2:7
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+xxXXXXXxXXXXXXXXXXxxxxx
+xXX...XXX........XXxxxx
+xX.....X....B..A..XXXXX
+xX..O..+..C..A..A.....+
+xX.....X....B..A..XXXXX
+xXX...XXX........XXxxxx
+xxXXXXXxXXXXXXXXXXxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   portal_ice_cave_entry_ice_statue_one
+TAGS:   no_pool_fixup
+DEPTH:  Elf, Swamp, Shoals, Snake, Spider
+: ice_cave_portal(_G)
+MONS:   ice statue
+KFEAT:  ^ = known web trap
+: if you.in_branch("Swamp") then
+SUBST:  + = ., x = t
+: elseif you.in_branch("Shoals") then
+SUBST:  x = w
+: elseif you.in_branch("Spider") then
+SUBST:  + = ^
+: end
 MAP
  xxxxxxx
 xxXXXXXxx
-xXX.4.XXx
-xX.3.3.Xx
-xX..O..Xx
-xX.2.2.Xx
 xXX...XXx
-xxXX.1.Xx
- xX11XXXx
- xXX.XXxx
- xXX.XXx
- xxXX.Xx
-xxXX.XXx
-xXX@XXxx
-ENDMAP
-
-NAME:   portal_ice_cave_entry_horrid_things
-TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-, Elf, Snake
-: ice_cave_portal(_G)
-MONS:   ice beast / freezing wraith w:2 / nothing w:2
-MONS:   freezing wraith / nothing w:3
-MONS:   azure jelly w:3 / freezing wraith w:7
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxXXXXXxXXXXXXXXXXxxxxxx
-xXX...XXX........XXxxxxx
-xX.....X....2..1..XXXXXX
-xX..O..+..3..1..1......+
-xX.....X....2..1..XXXXXX
-xXX...XXX........XXxxxxx
-xxXXXXXxXXXXXXXXXXxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   portal_ice_cave_demonic_guard
-TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-, Elf, Snake
-: ice_cave_portal(_G)
-MONS:   ice devil
-MAP
-xxxxxxxxx
-xXXXXXXXx
-xX..O..Xx
-xX.....Xx
-xX.1.1.Xx
-xX.....Xx
-xXXX.XXXx
-xXXX.XXXx
-xXXX.XXXx
-xXXX.XXXx
-xxxx+xxxx
-ENDMAP
-
-NAME:   portal_ice_cave_entry_ice_statue_01
-WEIGHT: 5
-DEPTH:  D:11-, Elf, Snake
-: ice_cave_portal(_G)
-MONS:   ice statue
-MAP
-xxxxxxxxx
-xXXXXXXXx
-xX.....Xx
 xX..O..Xx
 xX.....Xx
 xX..1..Xx
 xX.....Xx
-xX.....Xx
-xXXX+XXXx
+xXX...XXx
+xxXX+XXxx
 ENDMAP
 
-NAME:   portal_ice_cave_entry_ice_statue_02
-WEIGHT: 5
-DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
+NAME:   portal_ice_cave_entry_ice_statue_two
+DEPTH:  Elf, Swamp, Snake, Shoals, Spider
+WEIGHT: 6
 : ice_cave_portal(_G)
-MONS:   ice statue, ice statue w:9 / patrolling ice dragon w:1
+MONS:   ice statue, patrolling ice dragon
+SUBST:  2 = 1:9 2:1
 MAP
    .....
  .........
 ...........
 .....1.....
 .....O.....
-.....1.....
+.....2.....
 ...........
  .........
    .....
 ENDMAP
 
 NAME:   portal_ice_cave_entry_dragon
-TAGS:   no_monster_gen
-WEIGHT: 4
-DEPTH:  D:14-, Lair:6-
+TAGS:   no_monster_gen no_pool_fixup
+DEPTH:  Swamp, Shoals, Snake, Spider
 MONS:   ice dragon
 : ice_cave_portal(_G)
+: if you.in_branch("Swamp") then
+SUBST:  x = t
+: elseif you.in_branch("Shoals") then
+SUBST:  x = w
+: end
 MAP
 xxxxxxxx
 xXXXXXxx
 xXO..XXx
 xX.1X.Xx
 xX.X..X@
-xXX..X..
-xxXXX...
-xxxx@...
+xXX..X.'
+xxXXX..'
+xxxx@'''
 ENDMAP
 
 NAME:   portal_ice_cave_entry_frozen_things
 TAGS:   no_monster_gen
-WEIGHT: 4
-DEPTH:  D:14-, Elf, Swamp, Shoals, Snake, Spider
-MONS:   freezing wraith
-MONS:   azure jelly / freezing wraith / nothing
+WEIGHT: 6
+DEPTH:  Elf, Swamp, Shoals, Snake, Spider
+MONS:   freezing wraith, azure jelly
+SUBST:  2 = 12.
 : ice_cave_portal(_G)
 MAP
   '''''
@@ -428,27 +471,27 @@ ENDMAP
 
 NAME:     portal_ice_cave_entry_ugly_swarm
 TAGS:     no_monster_gen no_item_gen transparent
-DEPTH:    D:14-, Elf, Swamp, Shoals, Snake, Spider
+DEPTH:    Elf, Swamp, Shoals, Snake, Spider
 WEIGHT:   2
-SUBST:    : = 1.
+MONS:     white ugly thing, white very ugly thing
+SHUFFLE:  ABC
+SUBST:    A = X, B = X., C = ., : = 1.
 NSUBST:   2 = 1:12 / 3 = 1. / *:.
 NSUBST:   1 = 7:1 / 1:1. / *:.
-MONS:     white ugly thing
-MONS:     white very ugly thing
 : ice_cave_portal(_G)
 MAP
     '''''''
    '''''''''
   '''.....'''
- '''..:.:..'''
+ '''.A:B:C.'''
 '''.:..:..:.'''
-''....111....''
+''.C..111..A.''
 ''.:.12221.:.''
-''..:12O21:..''
+''.B:12O21:B.''
 ''.:.12221.:.''
-''....111....''
+''.A..111..C.''
 '''.:..:..:.'''
- '''..:.:..'''
+ '''.C:B:A.'''
   '''.....'''
    '''''''''
     '''''''
@@ -462,9 +505,9 @@ ENDMAP
 # 30+15+10=55.
 #
 # For hard caves, there are currently two cave vaults (each of weight 6,
-# total 12), three cavern vaults (each of weight 5, total 15) and two ice
-# statue gardens (weight 5, total 10). Total weight of all types is
-# 12+15+10=37, so the latter types are more common in hard ice caves.
+# total 12), three cavern vaults (each of weight 5, total 15) and one ice
+# statue garden (weight 5). Total weight of all types is 12+15+10=37,
+# weighting away from the cave vaults.
 
 default-depth: IceCv
 
@@ -491,12 +534,12 @@ SUBST:   "=. , ':x .:1
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
 MONS:    yak / wolf / polar bear w:4
-MONS:    polar bear
-MONS:    frost giant / white draconian w:1
 MONS:    polar bear w:3 generate_awake / wolf generate_awake / \
          yak generate_awake
+MONS:    polar bear, rime drake
+MONS:    frost giant / white draconian w:1 ; \
+         battleaxe ego:freezing . cloak
 MONS:    ice statue
-SHUFFLE: defg
 ITEM:    giant club / giant spiked club / great mace w:9 / \
          battleaxe w:7 / glaive w:8 / halberd w:8 / great sword w:6 / \
          nothing w:58
@@ -508,36 +551,38 @@ ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
 :   " / battleaxe " .. goodfreezeweap .. " / glaive " .. goodfreezeweap ..
 :   " / halberd " .. goodfreezeweap .. " / great sword " .. goodfreezeweap ..
 :   " / nothing w:80")
-: item("hat " .. coldres .. " / cloak " .. coldres ..
+: item("cloak " .. coldres .. " w:15 / hat good_item " ..
 :   " / shield " .. coldres ..  " / large shield " .. coldres ..
-:   " / animal skin " .. coldres .. " / nothing w:60")
-ITEM:    potion of resistance w:5 / potion of beneficial mutation q:1 w:5 / \
+:   " / nothing w:60")
+ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
          potion of might / potion of flight / \
          potion of heal wounds w:5 / any potion w:1
+SHUFFLE: defg
+NSUBST:  3 = 2 = 3 6:3 / *:3
 MAP
                   xxxxx        xxxxxxxx
-                xxx...xxxx  xxxx12....xx
-         xxxxxxxx...x....xxxx...2.x....xxxx
-      xxxx......1..xxxx...x212.xxxxxxx...1xxxx
-     xx.......1..1.xxxxxx....xxxxxxxxxxxx21..xxx
-   xxx...xxxx.3.1....xxxxxxxxxxxxxwwwxxxxxx....xxx
+                xxx...xxxx  xxxx13....xx
+         xxxxxxxx...x....xxxx...3.x....xxxx
+      xxxx......1..xxxx...x313.xxxxxxx...1xxxx
+     xx.......1..1.xxxxxx....xxxxxxxxxxxx31..xxx
+   xxx...xxxx.5.1....xxxxxxxxxxxxxwwwxxxxxx....xxx
   xx...xxxfgxx.1..1...xxxxxxxxxxwwwwwxxxxxxxx....xxx
   x...xxdegefxx..1.....xxxxxwwwwwwwwwwwwwxxxxxx....x
   x...x$$$$gdex.......xxxxxwwwwwwwwwwwwwwwwwxxxxx..x
   x...x....$$xx.....xxxxwwwwxxwwwwwwwwwwwwxxxxxx11xx
-  xx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...2xx
+  xx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...3xx
    xx............xxxwwwwxxxxxxxxxxxwwwxxxx......xx
  xxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...x.xxxx
 xxwwwxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxxxx
  xxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xx
- xwwwwwwwwwwwwwwwww''xxxxxxxxxxxxxxx5...xxx
+ xwwwwwwwwwwwwwwwww''xxxxxxxxxxxxxxx6...xxx
  xwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxxx.......xxx
 xxwwxxxxxxxxxxxwwxxx'xxxxxxx"xxxxxxxx.......xxx
-x""xxxxxxxxxxxxxwxx''xxxxx"""xxxxxxxxx....2...xx
-xx""xxxxxxxxxxxxxx''xxxxxx"""""..xxxxxxx2......x
+x""xxxxxxxxxxxxxwxx''xxxxx"""xxxxxxxxx....3...xx
+xx""xxxxxxxxxxxxxx''xxxxxx"""""..xxxxxxx3......x
  xx""xxxxxxxxxxxx'x'xxxx"""xxx.......xxx.......x
-  x"x"xxxxxxxxxxx''xxxxx"xx'''xx......21x.....xx
-  xx"""xxxxxxxxxxx''xxx""x''x'''x....1..2....xx
+  x"x"xxxxxxxxxxx''xxxxx"xx'''xx......31x.....xx
+  xx"""xxxxxxxxxxx''xxx""x''x'''x....1..3....xx
    xxx""""xxxxxxxxx''xx"xx''xxwwxx.1......1.xx
      xxx"x"xxxxxxxxx'xx""xx''xxwwxx.x....x.xx
       xxx"xxxxxxxxx''x""xxxx''xxwwxxxx..xxxx
@@ -546,8 +591,8 @@ xx""xxxxxxxxxxxxxx''xxxxxx"""""..xxxxxxx2......x
    xx""x"xxxxxxxxxx''xxx""xxx''xxwxx..xx
   xx""x"xxxxxxxxxxxx'xxxx""x''xxxwwx...xx
   x""xxxxxxxxxxxxxx'x'xxxx""'xxxxwwxx...xx
-  x"x"xxxxxxxxxxxxxx'''xxxx2'xxxxwwxxx44.x
- xx""xxxxxxxxxxxxxxxx'x..x.'xxxxwwxxxx4.4x
+  x"x"xxxxxxxxxxxxxx'''xxxx3'xxxxwwxxx22.x
+ xx""xxxxxxxxxxxxxxxx'x..x.'xxxxwwxxxx2.2x
 xx""xxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xx
 x""xxxxxxxxxxxxxxxx.1xhxhx.xxxxwwwxxx...xx
 x"x"xxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xx
@@ -559,21 +604,19 @@ xx"x"xxxx""x"xxxxxx"1.....xx xxwwxx...A...x
                               xxx
 ENDMAP
 
-# Foes: ice beasts, ice dragons & ice statues.
+# Foes: ice beasts, rime drakes, ice dragons & ice statues.
 # Loot: some gold, jewellery (approximately three rings).
 NAME:    ice_cave_small_dragons
 veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
-# Randomize the layout slightly.
+# Randomize the winding tunnels.
 SHUFFLE: "'
-SUBST:   "=. , ':x .:1
+SUBST:   " = . , ' : x .:1
 : ice_cave_appearance(_G)
-MONS:    ice beast
-MONS:    ice dragon
-MONS:    ice beast generate_awake
-MONS:    ice statue
+MONS:    ice beast, ice beast generate_awake, rime drake
+MONS:    ice dragon, ice statue
 ITEM:    any jewellery
 ITEM:    any jewellery good_item
 NSUBST:  d = 1:d / * = d $:15 .:5, e = 1:e / * = e $:5 .:5
@@ -581,8 +624,8 @@ MAP
                          xxxxxxxx
                       xxxx......xxxx
                      xx......x.....xxx
-                     x...xx.xxx...2..xxx
-                   xxxxx..xxx$$.2....dexx
+                     x...xx.xxx...4..xxx
+                   xxxxx..xxx$$.4....dexx
                   xx...xx.xx$$$$....deddx
                   xx.x....x$$$$$$..deddxx
                  xx..xxx.xxxx$$$$$$$xx''x
@@ -598,18 +641,18 @@ MAP
 xx..............x""xxxxx"xxxxxxxxx''xx""xx
 x................xxxxxxxxxxxxxxxxxx''x"x"x
 x.................xxxxxxxxxxxxxxxxxx'xx"xx
-xx...1.111.1....x'''xxxxxxxxxxxxxx'''x""x
+xx...1.131.1....x'''xxxxxxxxxxxxxx'''x""x
  xx...1.1.1.....xxx''xx''xxxx'''x'x'xx"xx
   xx..........xxxxxx''''x''x''x''''xx""x
-   xx4x....x4xxxxxxxx'xxxx''$xxxxxx"""xx
+   xx5x....x5xxxxxxxx'xxxx''$xxxxxx"""xx
     xxxx..xxxxxxxxxxxxxxxxx$$$xxx""""xx
-      xx..xxxxxxxxxxxxx"""x$$$$xx"x"xx
+      xx..xxxxxxxxxxxxx"""x$3$$xx"x"xx
      xx..xxxxxxxxxxxxxx"x""x$$""xx"xx
      x..xxxx"xxxxxxxxx""xxxxxxx""""x
      x...x""x""xxxxxxxx"""x   xx"xxx
      xx..."x"x"""xxxxx"xx"x    xxx
-      xx33.xxxxx"""x"xx""xx
-      xx3.3x   xxx""""""xx
+      xx22.xxxxx"""x"xx""xx
+      xx2.2x   xxx""""""xx
       x...xx     xxxx"xxx
      xx...xx        xxx
     xx.....xx
@@ -638,25 +681,19 @@ MONS:    white imp
 MONS:    freezing wraith
 : mocking_simulacrum(_G)
 : mons(mocking_ice)
-: mons("necromancer / necromancer ; robe " .. coldres ..
-:   " / necromancer ; robe " .. coldres .. " . wand of lightning " ..
-:   " / necromancer ; robe " .. coldres .. " . wand of iceblast")
+: mons("necromancer / necromancer w:30 ; robe " .. coldres ..
+:   " . wand of lightning | wand of iceblast | nothing")
 : savage_simulacrum(_G)
 : mons(savage_ice)
 MONS:    ice statue
-ITEM:    wand of iceblast
-ITEM:    ring of ice / staff of cold
-: if crawl.coinflip() then
+ITEM:    wand of iceblast ident:type, ring of ice / staff of cold
+ITEM:    book of ice / book of frost / randbook disc:ice numspells:6 w:2
 ITEM:    manual of ice magic
-ITEM:    nothing
-: else
-KITEM:   de = book of ice / book of frost / randbook disc:ice numspells:6 w:2
-: end
-
-: item("hat " .. coldres .. " / pair of gloves " .. coldres ..
-:   " / cloak " .. coldres .. " / naga barding " .. coldres .. " w:5 " ..
-:   " / centaur barding " .. coldres .. " / buckler " .. coldres .. " w:5 " ..
-:   " / helmet " .. coldres)
+: item("cloak " .. coldres .. " w:15 / pair of gloves good_item " ..
+:   " / hat good_item / naga barding " .. coldres .. " w:5 " ..
+:   " / centaur barding " .. coldres .. " w:5 / buckler " .. coldres .. " w:5")
+SHUFFLE: fg
+KPROP:   l = no_tele_into
 MAP
                           xxxxxx
                         xxx....xx
@@ -679,7 +716,7 @@ xxxx..4...324xxwwxxx3..xxxxxxxxx............x
    xxxx+xxxx.....xxx.....xxx..xxwxx..xx
   xx444544xxx...xxxxx........xxxwwx...xx
  xx.444444.xxxxxxxxx..3..3...xxwwwxx...xx
-xx..xgdegx..xxxxxx*%...1.....xxwwwxxx.66x
+xx..x$de$x..xxxxxx*%...1.....xxwwwxxx.66x
 x...xxffxx...xxxxx*%....3....xwwwwwxx6.6x
 x....xxxx...xxxxxxxxx.......xxxwwwxx...xx
 xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
@@ -693,56 +730,52 @@ xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
                              xxxx
 ENDMAP
 
-# Foes: ice devils, white imps & ufetubi, an ice statue.
+# Foes: ice demons, an ice statue.
 # Loot: weapons and/or armour.
 NAME:    ice_cave_small_demon
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 NSUBST:  . = 9:1 / 1:2 / *:.
-SHUFFLE: Qq / Zz / Nn / Bb / Mm
-SUBST:   Q=2, Z=2, N=., B=., M=.
-SUBST:   q=!, z=!, n=., b=., m=.
-# Replaces '!'s with fog generators, then makes them floor.
+SHUFFLE: Oo / Pp / Qq / Rr / Ss
+SUBST:   OP = 2, op = !, QRSqrs = .
+# Replaces '!'s with fog generators.
 : if dgn.persist.ice_cave_hard then
 : place_fog(_G, "freezing vapour", 100)
 : else
 : place_fog(_G, "freezing vapour", 30)
 : end
-SUBST:   ! = .
-# Couple of more random, milder fog generators.
+# Couple of more random, milder fog generators away from the entrance
+# and in the water.
 NSUBST:  . = 3:! / *:.
 : place_fog(_G, "freezing vapour", 30)
-SUBST:   ! = .
-# The random ones weren't placed near the entrance, though.
+SUBST:   ! = W
 SUBST:   - = .
-# Still more fog, in the water this time.
 NSUBST:  w = 3:! / *:w
 : place_fog(_G, "freezing vapour", 50)
 SUBST:   ! = w
 {{
 ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / ice devil w:30")
-ice_cave_item_attributes(_G)
 }}
-: if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
-MONS:    ice devil w:13 / nothing w:2
-MONS:    ice statue
 MONS:    ice devil
-MONS:    ice fiend
+MONS:    ice statue
+MONS:    patrolling reaper ; scythe ego:freezing
 MONS:    blizzard demon
+MONS:    ice fiend
+: if dgn.persist.ice_cave_hard then
+# Swap out the reaper for the standard ice fiend or blizzard demons,
+# alongside making the ice devil placements stronger.
+SUBST:   2 = 1:2 2:13, 0 = 2, 4 = 5
 SHUFFLE: 5` / `6
 : else
-MONS:    white imp / ufetubus
-MONS:    ice devil w:12 / nothing w:5
-MONS:    ice statue
-MONS:    ice devil / nothing
-MONS:    ice devil
+SUBST:   2 = .:5 2:12, 0 = 21, ` = .
 : end
 SHUFFLE: dg, efh
 SUBST:   e = ed
 SUBST:   ` = .
+: ice_cave_item_attributes(_G)
 : item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
 :   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
 :   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
@@ -754,12 +787,11 @@ SUBST:   ` = .
 :   " / triple sword " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
 :   " / giant spiked club " .. goodfreezeweap)
 ITEM: demon whip good_item / demon blade good_item / demon trident good_item
-: item("hat " .. coldres .. " / pair of gloves " .. coldres ..
-:   " / cloak " .. coldres .. " / buckler " .. coldres ..
-:   " / pair of boots " .. coldres)
+: item("cloak " .. coldres .. " / hat good_item / pair of gloves good_item / " ..
+:   " / pair of boots good_item / buckler " .. coldres)
 : item("crystal plate armour " .. coldres ..
 :   " / troll leather armour " .. coldres ..
-:   " / ice dragon armour good_item / robe ego:resistance / " ..
+:   " / ice dragon scales good_item / robe ego:resistance ident:type / " ..
 :   " / naga barding " .. goodcoldres .. " w:5" ..
 :   " / centaur barding " .. goodcoldres .. " w:5" ..
 :   " / crystal plate armour " .. goodcoldres ..
@@ -769,29 +801,29 @@ MAP
                   xxx....xxx
                  xx........xxx
                 xx....xxx....xx
-  xxxxx         x...xxx4xxx...xxx
- xx...xxxxx     x...xx44..xxxx..xx
+  xxxxx         x...xxx0xxx...xxx
+ xx...xxxxx     x...xx00..xxxx..xx
 xx.1..1...xx xxxxxx..xx.....xx...x
 x1......1..xxx.x...........dxxx..x
 xx........1.x.........xx..dxx...xx
 x.1..1..1........xxxxxxxxxxx...xx
 xx............xxxxwwwwwwxxx...xx
- x..........xxxwwwwxxxxxxq..xxx
- x3x....x3xxxwwwxxxx....Q..xx
- xxxx..xxxxwwwxxx......QqQ..xxx
+ x..........xxxwwwwxxxxxxp..xxx
+ x3x....x3xxxwwwxxxx....P..xx
+ xxxx..xxxxwwwxxx......PpP..xxx
    xx..xxxwwxxx....xx.........xxx
-  xx..xxxwwxx.....xx..xxxx..z...xx
-  x..xxxwwxx4.b.x.....N..x...Z...xx
-  x...xxwwxx..B.xxx..n.N.xx.ZzZ..4xx
-  xx...xxwwx4BbB..xx..N...xx.......x
-   xx.-.xwwxx.........x.n........4xx
+  xx..xxxwwxx.....xx..xxxx..q...xx
+  x..xxxwwxx0.o.x.....S..x...Q...xx
+  x...xxwwxx..O.xxx..s.S.xx.QqQ..0xx
+  xx...xxwwx0OoO..xx..S...xx.......x
+   xx.-.xwwxx.........x.s........0xx
    xx---xxwwxx...xxx..x..xxx.....xx
    x---xxwwwwxxxxx....x.....x..xxx
-  xx---xxwwwwwwx.....mx.....xxxx
- xx-----xxwwwwwxx.xx.M.m..xxx
- x---A---xxwwwccccc.M.M.ccccc
+  xx---xxwwwwwwx...r..x.....xxxx
+ xx-----xxwwwwwxx.xx.R...rxxx
+ x---A---xxwwwccccc.R.R.ccccc
  x-------xwwwwc...ccc.ccc...c
- xx--<--xxwwwwc.e...`5`...f.c
+ xx--<--xxwwwwc.e...`4`...f.c
   xx---xxwwwwwc...cc*|*cc...c
    xxxxxxxwwwxccccccccccccccc
          xxxxx
@@ -826,7 +858,7 @@ KMONS:  3 = necromancer
 : end
 KITEM:  34 = any scroll q:3
 KITEM:  d` = any potion / any scroll / any weapon good_item / any armour good_item
-KFEAT:  ' = alarm trap / floor w:40
+KFEAT:  ' = known alarm trap / floor w:40
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_demon(_G)
 MAP
@@ -959,7 +991,6 @@ SUBST: ;` = .
 # Place the fog generators:
 SUBST: . = .:40 !:1
 : place_fog(_G, "freezing vapour", 25)
-KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
@@ -969,7 +1000,6 @@ KFEAT: ! = .
 # Place a few random, mild ones.
 SUBST: . = .:60 !:1
 : place_fog(_G, "freezing vapour", 10)
-KFEAT: ! = .
 SUBST: ;` = .
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
@@ -1034,10 +1064,8 @@ KFEAT: ! = .
 # Place fog generators.
 SUBST: 3 = 3!
 : place_fog(_G, "freezing vapour", 20)
-KFEAT: ! = .
 SUBST: . = .:100 !:1
 : place_fog(_G, "freezing vapour", 8)
-KFEAT: ! = .
 SUBST: ; = .
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
@@ -1097,13 +1125,14 @@ ENDMAP
 # These rely on devious placement of ice statues and forcing players to face
 # them (if they want loot, that is).
 
-NAME:   ice_cave_statue_garden_01
+NAME:   ice_cave_statue_garden_teleport
 veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
-MONS:   ice beast
-MONS:   ice statue
+MONS:   ice beast, ice statue
+KMONS:  34 = white ugly thing
+KITEM:  *! = *
 {{
 -- Lua marker magic!
 local m_marker = TriggerableFunction:new {
@@ -1119,19 +1148,19 @@ lua_marker('m', portal_desc { teleport_spot=1})
 }}
 KFEAT:  M = teleporter
 TILE:   M = dngn_teleporter_ice_cave
-KPROP:  -2!m_| = no_tele_into
+FTILE:  m = floor_pebble_lightblue
+KPROP:  -24!|m_| = no_tele_into
 SUBST:  m- = .
-SUBST:  ! = *
 SUBST:  _ = <
 : ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
-xxx...GMG...xxxxxxxxxxxccccccccccccc---------ccc
-xx...........xxxxxxxxxxcccccccccccc---G-|-G---cc
+xxx...GMG...xxxxxxxxxxxccccccccccccc---!-!---ccc
+xx...%.%.%...xxxxxxxxxxcccccccccccc---G-|-G---cc
 xx....*.*....xxxxxxxxxxcccccccccccc----!-!----cc
 x......*......xxxxxxxxxccccccccccc------!------c
-x.1..G.1.G..1.xxxxxxxxxccccccccccc----2---2----c
-x.............xxxxxxxxxccccccccccc-------------c
+x.1..G.3.G..1.xxxxxxxxxccccccccccc----2---2----c
+x.............xxxxxxxxxccccccccccc------4------c
 xx..1.....1..xxxxxxxxxxcccccccccccc-----------cc
 xx...........xxxxxxxxxxcccccccccccc-----------cc
 xx.1...A...1.xxxxxxxxxxcccccccccccc-----m-----cc
@@ -1141,34 +1170,44 @@ xxxxx.....xxxxxxxxxxxxxccccccccccccccc-----ccccc
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 
-NAME:   ice_cave_statue_garden_02
-veto {{ return dgn.persist.ice_cave_hard }}
+NAME:   ice_cave_statue_garden_chambered
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
-MONS:   ice beast, ice statue
+MONS:   ice beast, white ugly thing, ice statue, white very ugly thing
+: cruel_simulacrum(_G)
+: mons(cruel_ice)
+ITEM:   battleaxe ego:freezing good_item ident:type / book of frost w:5 / \
+        book of ice w:5 / ice dragon scales
+ITEM:   executioner's axe ego:freezing good_item ident:type / \
+        book of ice w:5 / manual of ice magic w:5 / ice dragon scales randart
+: if dgn.persist.ice_cave_hard then
+SUBST:  ! = 3, 2 = 4, ? = d
+: else
+SUBST:  !5 = ., ? = e
+: end
 : ice_cave_appearance(_G)
 MAP
 ccccccccccc
-c|*.....*|c
+c|*..?..*|c
 c*.......*c
+c%.......%c
 c.........c
 c.........c
-c.........c
+cc5.....5cc
+ccc5.2.5ccc
+ccccc3ccccc
+ccc..5..ccc
 cc.......cc
-ccc.....ccc
-ccccc2ccccc
-ccc.....ccc
-cc.......cc
+c!.......!c
+c....2....c
 c.........c
-c.........c
-c.........c
-c.........c
-c2.......2c
+c5.......5c
+c3.......3c
 ccccc.ccccc
-x$*.....*$x
+x%*.....*%x
+x%5.....5%x
 x*.......*x
-x.........x
 x...111...x
 x...111...x
 xx.......xx

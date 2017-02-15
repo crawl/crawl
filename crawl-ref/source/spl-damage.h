@@ -7,16 +7,18 @@
 struct bolt;
 class dist;
 
+#if TAG_MAJOR_VERSION == 34
 spret_type cast_delayed_fireball(bool fail);
+#endif
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_smitey_damnation(int pow, bolt &beam);
 spret_type cast_chain_spell(spell_type spell_cast, int pow,
                             const actor *caster, bool fail = false);
 
-spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
-                                 bool actual, bool added_effects = true,
-                                 bool fail = false, bool allow_cancel = true);
+spret_type trace_los_attack_spell(spell_type spell, int pow, const actor* agent);
+spret_type fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
+                                 bool fail = false, int* damage_done = nullptr);
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
@@ -26,7 +28,8 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail);
 spret_type cast_shatter(int pow, bool fail);
 spret_type cast_irradiate(int powc, actor* who, bool fail);
 bool ignite_poison_affects(const actor* act);
-spret_type cast_ignite_poison(actor *agent, int pow, bool fail, bool mon_tracer = false);
+spret_type cast_ignite_poison(actor *agent, int pow, bool fail,
+                              bool tracer = false);
 int discharge_monsters(coord_def where, int pow, actor *agent);
 spret_type cast_discharge(int pow, bool fail);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
@@ -36,7 +39,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               bool &should_destroy_wall, bool &hole);
 spret_type cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
-int wielding_rocks();
 spret_type cast_sandblast(int powc, bolt &beam, bool fail);
 spret_type cast_tornado(int powc, bool fail);
 void tornado_damage(actor *caster, int dur);
@@ -70,4 +72,6 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail = false);
 size_t shotgun_beam_count(int pow);
 spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
                             bool fail = false);
+
+spret_type cast_ignition(const actor *caster, int pow, bool fail = false);
 #endif

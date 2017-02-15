@@ -920,7 +920,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         switch (channel)
         {
         case MSGCH_GOD:
-        case MSGCH_PRAY:
             ret = (Options.channels[channel] == MSGCOL_DEFAULT)
                    ? msg_colour(god_colour(static_cast<god_type>(param)))
                    : msg_colour(god_message_altar_colour(static_cast<god_type>(param)));
@@ -1188,7 +1187,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     {
     case MSGCH_PROMPT:
     case MSGCH_GOD:
-    case MSGCH_PRAY:
     case MSGCH_DURATION:
     case MSGCH_FOOD:
     case MSGCH_RECOVERY:
@@ -1755,6 +1753,12 @@ void canned_msg(canned_message_type which_message)
         case MSG_GHOSTLY_OUTLINE:
             mpr("You see a ghostly outline there, and the spell fizzles.");
             break;
+        case MSG_FULL_HEALTH:
+            mpr("Your health is already full.");
+            break;
+        case MSG_FULL_MAGIC:
+            mpr("Your reserves of magic are already full.");
+            break;
         case MSG_GAIN_HEALTH:
             mpr("You feel better.");
             break;
@@ -1764,6 +1768,11 @@ void canned_msg(canned_message_type which_message)
         case MSG_MAGIC_DRAIN:
             mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             break;
+        case MSG_SOMETHING_IN_WAY:
+            mpr("There's something in the way.");
+        case MSG_CANNOT_SEE:
+            mpr("You can't see that place.");
+            break;
     }
 }
 
@@ -1771,19 +1780,19 @@ void canned_msg(canned_message_type which_message)
 // distant or invisible to the player ... look elsewhere for a function
 // permitting output of "It" messages for the invisible {dlb}
 // Intentionally avoids info and str_pass now. - bwr
-bool simple_monster_message(const monster* mons, const char *event,
+bool simple_monster_message(const monster& mons, const char *event,
                             msg_channel_type channel,
                             int param,
                             description_level_type descrip)
 {
-    if (you.see_cell(mons->pos())
+    if (you.see_cell(mons.pos())
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
-            || mons->visible_to(&you)))
+            || mons.visible_to(&you)))
     {
-        string msg = mons->name(descrip);
+        string msg = mons.name(descrip);
         msg += event;
 
-        if (channel == MSGCH_PLAIN && mons->wont_attack())
+        if (channel == MSGCH_PLAIN && mons.wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
         mprf(channel, param, "%s", msg.c_str());
