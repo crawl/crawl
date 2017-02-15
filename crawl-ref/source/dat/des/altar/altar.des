@@ -448,17 +448,19 @@ COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
 SUBST: t : bt x:5
 : end
 MAP
-  ---  ..
-------@.--.
-  tttttt.--.
- -t-...t.---.
- tt.-tt.-t--.
+ ......
+ .-.-.@..
+--.-..-.--.
+ .tttttt.--.
+.-t-...t.---.
+.tt.-tt.-t--.
 -t--.-t--t-.
   tt-.ttt-t-.
 -t.t.-.-t-t.
  -tt_tttt-@.
--ttttt--tt
--ttt-- ---
+-ttttt--tt.
+-ttt--.---.
+...........
 ENDMAP
 
 NAME: chequers_ecumenical_altar_lobes
