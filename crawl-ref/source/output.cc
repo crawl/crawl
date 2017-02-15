@@ -628,7 +628,7 @@ static void _print_stats_noise(int x, int y)
     colour_t noisecolour;
 
     // This is calibrated roughly so that in an open-ish area:
-    //   LIGHTGREY = not very likely to carry outside of your los 
+    //   LIGHTGREY = not very likely to carry outside of your los
     //               (though it is possible depending on terrain).
     //   YELLOW = likely to carry outside of your los, up to double.
     //   RED = likely to carry at least 16 spaces, up to much further.
@@ -641,8 +641,8 @@ static void _print_stats_noise(int x, int y)
     {
         noisecolour = LIGHTGREY;
         adjusted_level = (level == 0) ? 0 : ((level < 4) ? 1 : 2);
-    } 
-    else if (level < 14) 
+    }
+    else if (level < 14)
     {
         noisecolour = YELLOW;
         adjusted_level = (level < 10) ? 3 : 4;
@@ -662,8 +662,8 @@ static void _print_stats_noise(int x, int y)
         CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
         textcolour(noisecolour);
         CPRINTF("%2d", level);  // adjusted noise level that the player heard.
-                               // The exact value is too hard to interpret to show 
-                               // outside of wizmode, because noise propagation 
+                               // The exact value is too hard to interpret to show
+                               // outside of wizmode, because noise propagation
                                // is very complicated
     }
     Noise_Bar.horiz_bar_width = 6;
@@ -679,12 +679,25 @@ static void _print_stats_noise(int x, int y)
         // use the previous color for negative change in console; there's a
         // visual difference in bar width. Negative change doesn't get shown
         // in local tiles.
-        Noise_Bar.m_change_neg = Noise_Bar.m_default; 
+        Noise_Bar.m_change_neg = Noise_Bar.m_default;
 #endif
         Noise_Bar.m_default = noisecolour;
         Noise_Bar.m_change_pos = noisecolour;
         Noise_Bar.draw(x + bar_position, y, min(adjusted_level, 6), 6);
     }
+}
+
+static void _print_stats_gold(int x, int y, colour_t colour)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("Gold:");
+    CGOTOXY(x+6, y, GOTO_STAT);
+    if (you.duration[DUR_GOZAG_GOLD_AURA])
+        textcolour(LIGHTBLUE);
+    else
+        textcolour(colour);
+    CPRINTF("%-6d", you.gold);
 }
 
 static void _print_stats_mp(int x, int y)
@@ -1291,17 +1304,20 @@ static void _redraw_title()
 
         string piety = _god_asterisks();
         textcolour(_god_status_colour(YELLOW));
-        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-            <= WIDTH)
-        {
+        const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
+        if (textwidth <= WIDTH)
             NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
-        }
-        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-                  == (WIDTH + 1))
+        else if (textwidth == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
             //so we remove leading space.
             NOWRAP_EOL_CPRINTF("%s", piety.c_str());
+        }
+        clear_to_end_of_line();
+        if (you_worship(GOD_GOZAG))
+        {
+            // "Mottled Draconian of Gozag  Gold: 99999" just fits
+            _print_stats_gold(textwidth + 2, 2, _god_status_colour(god_colour(you.religion)));
         }
     }
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
@@ -1311,9 +1327,9 @@ static void _redraw_title()
         textcolour(DARKGREY);
         if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
             NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
+        clear_to_end_of_line();
     }
 
-    clear_to_end_of_line();
 
     textcolour(LIGHTGREY);
 }
@@ -1434,21 +1450,7 @@ void print_stats()
     int yhack = 0;
 #endif
 
-    // Line 9 is Gold and Turns
-#ifdef USE_TILE_LOCAL
-    if (!tiles.is_using_small_layout())
-#endif
-    {
-        // Increase y-value for all following lines.
-        yhack++;
-        CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
-        if (you.duration[DUR_GOZAG_GOLD_AURA])
-            textcolour(LIGHTBLUE);
-        else
-            textcolour(HUD_VALUE_COLOUR);
-        CPRINTF("%-6d", you.gold);
-    }
-
+    // Line 9 is Noise and Turns
 #ifdef USE_TILE_LOCAL
     if (!tiles.is_using_small_layout())
 #endif
@@ -1580,7 +1582,6 @@ void draw_border()
 #else
     int yhack = 0;
 #endif
-    CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
     CGOTOXY(19, 9 + yhack, GOTO_STAT);
     CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level

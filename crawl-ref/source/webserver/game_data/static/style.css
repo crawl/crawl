@@ -44,7 +44,7 @@ body {
 #stats_titleline, #stats_species_god {
     color: #fce94f; /* yellow */
 }
-#stats_piety {
+#stats_piety, #stats_gozag_gold {
     color: #fce94f; /* yellow */
 }
 #stats_piety.penance {

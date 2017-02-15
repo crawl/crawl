@@ -163,7 +163,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats_noise").css("color", noise_color);
         }
 
-        $("#stats_noise_bar_full").css("background-color", noise_color); 
+        $("#stats_noise_bar_full").css("background-color", noise_color);
 
         $("#stats_noise_bar_full").css("width", (full_bar / 100) + "%");
         if (adjusted_level < old_value)
@@ -347,7 +347,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats_" + name).addClass("colour_" + colour);
     }
 
-    var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress", "gold"];
+    var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress"];
     /**
      * Update the stats pane area based on the player's current properties.
      */
@@ -410,14 +410,25 @@ function ($, comm, enums, map_knowledge, messages, options) {
         }
         else
             $("#stats_piety").text("");
+
+        if (player.god == "Gozag")
+        {
+            $("#stats_gozag_gold_label").text(" Gold: ");
+            $("#stats_gozag_gold_label").css("padding-left", "0.5em");
+            $("#stats_gozag_gold").text(player.gold);
+        } else {
+            $("#stats_gozag_gold_label").text("");
+            $("#stats_gozag_gold").text("");
+            $("#stats_gozag_gold_label").css("padding-left", "0");
+        }
+        $("#stats_gozag_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
+
         $("#stats_species_god").text(species_god);
         $("#stats_piety").toggleClass("penance", !!player.penance);
         $("#stats_piety").toggleClass("monk", player.god == "");
 
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
-
-        $("#stats_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
 
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");

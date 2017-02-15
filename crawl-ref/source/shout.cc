@@ -1132,7 +1132,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
                            noise_travel_distance);
 
         // The next bit stores noise heard at the player's position for
-        // display in the HUD.  A more interesting (and much more complicated)
+        // display in the HUD. A more interesting (and much more complicated)
         // way of doing this might be to sample from the noise grid at
         // selected distances from the player. Dealing with terrain is a bit
         // nightmarish for this alternative, though, so I'm going to keep it
