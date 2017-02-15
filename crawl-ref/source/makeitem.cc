@@ -1372,13 +1372,13 @@ static void _generate_potion_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight is 1065
+            // total weight: 1045
             stype = random_choose_weighted(192, POT_CURING,
                                            105, POT_HEAL_WOUNDS,
-                                            86, POT_MUTATION,
                                             73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
                                             73, POT_HASTE,
+                                            66, POT_MUTATION,
                                             66, POT_MIGHT,
                                             66, POT_AGILITY,
                                             66, POT_BRILLIANCE,
@@ -1391,6 +1391,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             35, POT_AMBROSIA,
                                              2, POT_EXPERIENCE);
         }
+        // if created by Xom, keep going until an approved potion is chosen
         while (agent == GOD_XOM
                && _is_boring_item(OBJ_POTIONS, stype)
                && --tries > 0);
