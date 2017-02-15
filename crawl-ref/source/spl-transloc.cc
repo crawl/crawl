@@ -350,6 +350,7 @@ spret_type frog_hop(bool fail)
     if (!cell_is_solid(you.pos())) // should be safe.....
         place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
     move_player_to_grid(target, false);
+    handle_player_barbed_move("hop");
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
     mpr("Boing!");

@@ -6261,6 +6261,8 @@ bool ru_power_leap()
 
     move_player_to_grid(beam.target, false);
 
+    handle_player_barbed_move();
+
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
@@ -6643,6 +6645,7 @@ bool uskayaw_line_pass()
         line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
+        handle_player_barbed_move();
     }
 
     crawl_state.cancel_cmd_again();
