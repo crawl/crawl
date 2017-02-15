@@ -1370,6 +1370,9 @@ static void _generate_potion_item(item_def& item, int force_type,
     {
         int stype;
         int tries = 500;
+
+        // If created by Xom, keep going until an approved potion is chosen
+        // Currently does nothing, until we come up with a boring potion.
         do
         {
             // total weight: 1045
@@ -1391,7 +1394,6 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             35, POT_AMBROSIA,
                                              2, POT_EXPERIENCE);
         }
-        // if created by Xom, keep going until an approved potion is chosen
         while (agent == GOD_XOM
                && _is_boring_item(OBJ_POTIONS, stype)
                && --tries > 0);
@@ -1413,6 +1415,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
     {
         const int depth_mod = random2(1 + item_level);
         int tries = 500;
+
+        // If this item is created by Xom, keep looping until an
+        // interesting scroll is discovered (as determined by
+        // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
             // total weight:    789  if depth_mod < 4
