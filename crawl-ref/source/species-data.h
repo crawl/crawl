@@ -72,7 +72,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     7, 8, 9, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
-    { {MUT_STRONG_NOSE, 1, 1}, {MUT_STRONG_NOSE, 1, 11}, {MUT_STRONG_NOSE, 1, 22}, },
+    { {MUT_STRONG_NOSE, 1, 1}, {MUT_STRONG_NOSE, 1, 12}, {MUT_STRONG_NOSE, 1, 24}, },
     {"You have a short attention span."},
     {"short attention span"},
     { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
