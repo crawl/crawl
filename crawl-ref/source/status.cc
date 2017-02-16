@@ -427,8 +427,6 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_SILENCE:
         if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
         {
-            inf->light_colour = LIGHTRED;
-            inf->light_text   = "Sil";
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
         }
