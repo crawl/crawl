@@ -255,7 +255,8 @@ ancestor male name
 
 @_zulu_male_name_@
 
-@_arabic_male_name_@
+w:5
+@_arabic_male_name_@ # not many names
 
 w:5
 @_slavic_male_name_@ # not many names
@@ -274,7 +275,8 @@ ancestor female name
 
 @_zulu_female_name_@
 
-@_arabic_female_name_@
+w:5
+@_arabic_female_name_@ # not many names
 
 w:5
 @_slavic_female_name_@ # not many names
@@ -530,31 +532,15 @@ Vusi
 Xolani
 %%%%
 _arabic_male_name_
-Adnan
-
 Arif
-
-Bahir
 
 Ferran
 
 Hamal
 
-Jibril
-
 Kateb
 
 Lufti
-
-Matin
-
-Musad
-
-Nur
-
-Omer
-
-Qadir
 
 w:1
 Rigel
@@ -567,12 +553,8 @@ Sofian
 
 Tawil
 
-Yasin
-
 w:1
 Zero
-
-Zuhayr
 %%%%
 _slavic_male_name_
 
@@ -794,16 +776,9 @@ Atia
 
 Caliana
 
-Fatin
-
-Hasna
-
 Jaydra
 
 Khalidah
-
-w:5
-Manal
 
 w:5
 Manar
@@ -819,10 +794,6 @@ Qitarah
 Rabi
 
 Rana
-
-Sabirah
-
-Samar
 
 Shunnareh
 
