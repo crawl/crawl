@@ -275,7 +275,10 @@ void Stash::update()
 
         // Now, grab all items on that square and fill our vector
         for (stack_iterator si(pos, true); si; ++si)
+        {
+            god_id_item(*si);
             add_item(*si);
+        }
 
         verified = true;
     }
