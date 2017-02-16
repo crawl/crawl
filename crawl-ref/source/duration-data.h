@@ -273,7 +273,7 @@ static const duration_def duration_data[] =
       {{ "", []() { invalidate_agrid(true); }},
         { "Quad Damage is wearing off."}}, 3 }, // per client.qc
     { DUR_SILENCE,
-      MAGENTA, "Sil",
+      0, "",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
