@@ -356,7 +356,7 @@ static const map<species_type, species_def> species_data =
     0, 0, 0, 3,
     MONS_BARACHIAN,
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
-    6, 6, 6, // 18
+    9, 8, 7, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_SLOW, 1, 1 }, { MUT_HOP, 1, 1}, {MUT_HOP, 1, 13}, },
     { "You can swim through water.", },
