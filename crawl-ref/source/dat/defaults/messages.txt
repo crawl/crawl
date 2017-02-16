@@ -26,6 +26,7 @@ msc += $danger:constricts you
 msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
+msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
 msc += $danger:rotting away
 
