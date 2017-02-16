@@ -602,29 +602,6 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (you.duration[DUR_DIVINE_SHIELD] > 0)
-    {
-        if (you.duration[DUR_DIVINE_SHIELD] > 1)
-        {
-            you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 1;
-                mprf(MSGCH_DURATION, "Your divine shield starts to fade.");
-            }
-        }
-
-        if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
-        {
-            you.redraw_armour_class = true;
-            if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 0;
-                mprf(MSGCH_DURATION, "Your divine shield fades away.");
-            }
-        }
-    }
-
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
         && you.form != transformation::none)
