@@ -1631,8 +1631,7 @@ Barachians
 
   Barachians' most remarkable trait is their grossly overmuscled legs, which
   allow them to leap remarkable distances. When not leaping, they are somewhat
-  slow-moving and their attributes are poor, but they do have considerable
-  flexibility in skill choice.
+  slow-moving, but they do have considerable flexibility in skill choice.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
