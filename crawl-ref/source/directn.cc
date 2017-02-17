@@ -3104,7 +3104,10 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is clinging to the wall.\n";
 
     if (mi.is(MB_MESMERIZING))
-        text += "You are mesmerised by its song.\n";
+    {
+        text += string("You are mesmerised by ")
+              + mi.pronoun(PRONOUN_POSSESSIVE) + " song.\n";
+    }
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
     {
