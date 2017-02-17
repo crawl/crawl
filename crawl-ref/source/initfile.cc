@@ -1012,7 +1012,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = CONFIRM_AUTO;
-    auto_butcher           = HS_STARVING;
+    auto_butcher           = HS_VERY_HUNGRY;
     easy_confirm           = CONFIRM_SAFE_EASY;
     allow_self_target      = CONFIRM_PROMPT;
     skill_focus            = SKM_FOCUS_ON;
