@@ -1517,7 +1517,8 @@ bool attack::apply_damage_brand(const char *what)
             special_damage_message =
                 defender->is_player()?
                    "You are electrocuted!"
-                :  "There is a sudden explosion of sparks!";
+                :  make_stringf("Lightning courses through %s!",
+                                defender->name(DESC_THE).c_str());
             special_damage = 8 + random2(13);
             special_damage_flavour = BEAM_ELECTRICITY;
             defender->expose_to_element(BEAM_ELECTRICITY, 2);
