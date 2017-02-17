@@ -394,7 +394,9 @@ cloak3
 cloak4
 
 scarf1 ARM_SCARF
-scarf2
+scarf2_1
+scarf2_2
+scarf2_3
 scarf3
 
 %sdir item/armour/bardings

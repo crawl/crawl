@@ -3441,6 +3441,7 @@ colour_t item_def::armour_colour() const
     switch (sub_type)
     {
         case ARM_CLOAK:
+        case ARM_SCARF:
             return WHITE;
         case ARM_NAGA_BARDING:
         case ARM_CENTAUR_BARDING:

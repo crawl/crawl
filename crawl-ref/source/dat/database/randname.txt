@@ -213,7 +213,7 @@ of @_game_name_@
 w:15
 of @_other_armour_name_@
 
-w:1
+w:2
 "@_plain_armour_name_@"
 
 # weapon specific keywords (see rand_arm.txt)
@@ -288,7 +288,7 @@ of @_good_or_divine_@
 w:12
 of @_politics_name_armour_@
 
-w:1
+w:2
 "@_plain_armour_name_@"
 
 # same for all three types (see rand_all.txt)

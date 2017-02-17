@@ -7,6 +7,8 @@
 
 #include "mon-tentacle.h"
 
+#include <functional>
+
 #include "act-iter.h"
 #include "coordit.h"
 #include "delay.h"
@@ -639,32 +641,13 @@ static void _purge_connectors(monster* tentacle)
     ASSERT(tentacle->alive());
 }
 
-struct complicated_sight_check
-{
-    coord_def base_position;
-    bool operator()(monster* mons, actor * test)
-    {
-        return test->visible_to(mons)
-               && cell_see_cell(base_position, test->pos(), LOS_SOLID_SEE);
-    }
-};
-
-static bool _basic_sight_check(monster* mons, actor * test)
-{
-    ASSERT(mons); // XXX: change to monster &mons
-    ASSERT(test); // XXX: change to actor &test
-    // honestly this whole thing should be a closure
-    return mons->can_see(*test);
-}
-
-template<typename T>
-static void _collect_foe_positions(monster* mons,
-                                   vector<coord_def> & foe_positions,
-                                   T & sight_check)
+static void _collect_foe_positions(monster *mons,
+                                   vector<coord_def> &foe_positions,
+                                   function<bool(const actor *)> sight_check)
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
-    if (foe && sight_check(mons, foe))
+    if (foe && sight_check(foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
         foe_pos = foe_positions.back();
@@ -672,11 +655,11 @@ static void _collect_foe_positions(monster* mons,
 
     for (monster_iterator mi; mi; ++mi)
     {
-        monster* test = *mi;
+        const monster * const test = *mi;
         if (!mons_is_firewood(*test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
-            && sight_check(mons, test))
+            && sight_check(test))
         {
             foe_positions.push_back(test->pos());
         }
@@ -750,9 +733,13 @@ void move_solo_tentacle(monster* tentacle)
 
     if (!severed)
     {
-        complicated_sight_check base_sight;
-        base_sight.base_position = base_position;
-        _collect_foe_positions(tentacle, foe_positions, base_sight);
+        _collect_foe_positions(tentacle, foe_positions,
+                [tentacle, base_position](const actor *test) -> bool
+                {
+                    return test->visible_to(tentacle)
+                        && cell_see_cell(base_position, test->pos(),
+                                         LOS_SOLID_SEE);
+                });
         attack_foe = !foe_positions.empty();
     }
 
@@ -961,6 +948,8 @@ void move_solo_tentacle(monster* tentacle)
 
 void move_child_tentacles(monster* mons)
 {
+    ASSERT(mons);
+
     if (!mons_is_tentacle_head(mons_base_type(*mons))
         || mons->asleep())
     {
@@ -970,7 +959,11 @@ void move_child_tentacles(monster* mons)
     bool no_foe = false;
 
     vector<coord_def> foe_positions;
-    _collect_foe_positions(mons, foe_positions, _basic_sight_check);
+    _collect_foe_positions(mons, foe_positions,
+                           [mons](const actor *test) -> bool
+                           {
+                               return mons->can_see(*test);
+                           });
 
     //if (!kraken->near_foe())
     if (foe_positions.empty()

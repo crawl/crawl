@@ -1365,22 +1365,20 @@ void tso_divine_shield()
     else
         mpr("Your divine shield is renewed.");
 
-    you.redraw_armour_class = true;
-
-    // duration of complete shield bonus from 35 to 80 turns
+    // Duration from 35-80 turns.
     you.set_duration(DUR_DIVINE_SHIELD,
-                     35 + you.skill_rdiv(SK_INVOCATIONS, 4, 3));
+                     35 + you.skill_rdiv(SK_INVOCATIONS, 5, 3));
 
-    // affects size of SH bonus, decreases near end of duration
+    // Size of SH bonus.
     you.attribute[ATTR_DIVINE_SHIELD] =
-        3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5);
+        12 + you.skill_rdiv(SK_INVOCATIONS, 4, 5);
 
     you.redraw_armour_class = true;
 }
 
 void tso_remove_divine_shield()
 {
-    mprf(MSGCH_DURATION, "Your divine shield disappears!");
+    mprf(MSGCH_DURATION, "Your divine shield fades away.");
     you.duration[DUR_DIVINE_SHIELD] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     you.redraw_armour_class = true;

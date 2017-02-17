@@ -15,7 +15,6 @@ msc += $danger:Space bends around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
-msc += $danger:Forgetting.* will destroy the book
 msc += $danger:The blast of calcifying dust hits you!
 msc += $danger:you are engulfed in calcifying dust
 msc += $danger:is moving more slowly
@@ -27,7 +26,8 @@ msc += $danger:constricts you
 msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
-msc += $danger:acid corrodes
+msc += $danger:cause instant excommunication
+msc += $danger:corrodes you
 msc += $danger:rotting away
 
 # Less urgent, but still significant messages
@@ -171,7 +171,6 @@ force_more_message += You .* the altar of
 force_more_message += will bless one of your weapons
 force_more_message += will bloody your weapon with pain
 force_more_message += will brand one of your weapons
-force_more_message += will supercharge a wand
 force_more_message += It is a scroll of amnesia
 force_more_message += It is a scroll of brand weapon
 force_more_message += It is a scroll of enchant armour

@@ -22,6 +22,7 @@
 #include "items.h"
 #include "losglobal.h"
 #include "message.h"
+#include "mon-behv.h" // ME_WHACK
 #include "ouch.h"
 #include "prompt.h"
 #include "random-pick.h"
@@ -164,6 +165,8 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
         place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
         mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
     }
+
+    behaviour_event(mons, ME_WHACK, &you);
 
     return SPRET_SUCCESS;
 }

@@ -1370,15 +1370,18 @@ static void _generate_potion_item(item_def& item, int force_type,
     {
         int stype;
         int tries = 500;
+
+        // If created by Xom, keep going until an approved potion is chosen
+        // Currently does nothing, until we come up with a boring potion.
         do
         {
-            // total weight is 1065
+            // total weight: 1045
             stype = random_choose_weighted(192, POT_CURING,
                                            105, POT_HEAL_WOUNDS,
-                                            86, POT_MUTATION,
                                             73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
                                             73, POT_HASTE,
+                                            66, POT_MUTATION,
                                             66, POT_MIGHT,
                                             66, POT_AGILITY,
                                             66, POT_BRILLIANCE,
@@ -1412,6 +1415,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
     {
         const int depth_mod = random2(1 + item_level);
         int tries = 500;
+
+        // If this item is created by Xom, keep looping until an
+        // interesting scroll is discovered (as determined by
+        // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
             // total weight:    789  if depth_mod < 4

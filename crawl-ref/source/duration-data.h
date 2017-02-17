@@ -264,7 +264,7 @@ static const duration_def duration_data[] =
     { DUR_DEATHS_DOOR,
       LIGHTGREY, "DDoor",
       "death's door", "deaths door",
-      "", D_EXPIRES,
+      "You are standing in death's doorway.", D_EXPIRES,
       {{ "Your life is in your own hands again!", []() {
             you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
       }}, { "Your time is quickly running out!", 5 }}, 10},
@@ -506,7 +506,8 @@ static const duration_def duration_data[] =
     { DUR_DIVINE_SHIELD,
       0, "",
       "divine shield", "",
-      "You are shielded by the power of the Shining One.", D_NO_FLAGS},
+      "You are shielded by the power of the Shining One.", D_NO_FLAGS,
+      {{ "", tso_remove_divine_shield }}},
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",

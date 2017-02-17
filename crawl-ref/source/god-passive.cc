@@ -1078,14 +1078,13 @@ int qazlal_sh_boost(int piety)
 }
 
 // Not actually passive, but placing it here so that it can be easily compared
-// with Qazlal's boost. Here you.attribute[ATTR_DIVINE_SHIELD] was set
-// to 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5) (and decreases at end of dur).
+// with Qazlal's boost.
 int tso_sh_boost()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
         return 0;
 
-    return you.attribute[ATTR_DIVINE_SHIELD] * 4;
+    return you.attribute[ATTR_DIVINE_SHIELD];
 }
 
 void qazlal_storm_clouds()

@@ -602,29 +602,6 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (you.duration[DUR_DIVINE_SHIELD] > 0)
-    {
-        if (you.duration[DUR_DIVINE_SHIELD] > 1)
-        {
-            you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 1;
-                mprf(MSGCH_DURATION, "Your divine shield starts to fade.");
-            }
-        }
-
-        if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
-        {
-            you.redraw_armour_class = true;
-            if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 0;
-                mprf(MSGCH_DURATION, "Your divine shield fades away.");
-            }
-        }
-    }
-
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
         && you.form != transformation::none)
@@ -935,6 +912,7 @@ static void _regenerate_hp_and_mp(int delay)
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
 
+    // HP Regeneration
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
@@ -958,19 +936,14 @@ static void _regenerate_hp_and_mp(int delay)
 
     update_regen_amulet_attunement();
 
+    // MP Regeneration
     if (!player_regenerates_mp())
         return;
 
     if (you.magic_points < you.max_magic_points)
     {
-        const int base_val = 7 + you.max_magic_points / 2;
+        const int base_val = player_mp_regen();
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
-
-        if (player_mutation_level(MUT_MANA_REGENERATION))
-            mp_regen_countup *= 2;
-        if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
-            mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
-
         you.magic_points_regeneration += mp_regen_countup;
     }
 

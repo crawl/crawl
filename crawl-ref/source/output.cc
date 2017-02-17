@@ -212,7 +212,7 @@ static void _cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf(you.your_name.c_str());
+            cprintf("%s", you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
@@ -228,11 +228,11 @@ static void _cprintf_touchui(const char *format, ...)
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
@@ -242,7 +242,7 @@ static void _cprintf_touchui(const char *format, ...)
 
         default:
 //            printf("p: %s\n",buf.c_str());
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
     }
     va_end(args);
 }
@@ -1880,7 +1880,7 @@ static string _stealth_bar(int sw)
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);
-    bar += "Stlth  ";
+    bar += "Stlth    ";
     const int stealth_num = _stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
@@ -2337,10 +2337,10 @@ static string _resist_composer(
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, bool calc_unid, int sw)
 {
-    // 3 columns, splits at columns 19, 33
-    column_composer cols(3, 19, 33);
-    // First column, resist name is 7 chars
-    int cwidth = 7;
+    // 3 columns, splits at columns 20, 33
+    column_composer cols(3, 20, 33);
+    // First column, resist name is up to 9 chars
+    int cwidth = 9;
     string out;
 
     const int rfire = player_res_fire(calc_unid);
@@ -2379,7 +2379,10 @@ static vector<formatted_string> _get_overview_resistances(
     out += _stealth_bar(get_number_of_cols()) + "\n";
 
     const int regen = (player_regen() + 9) / 10; // round up
-    out += make_stringf("Regen  %d.%d/turn\n", regen/10, regen % 10);
+    out += make_stringf("Regen    %d.%d/turn\n", regen/10, regen % 10);
+
+    const int mp_regen = (player_mp_regen() + 9) / 10; // round up
+    out += make_stringf("MPRegen  %d.%d/turn\n", mp_regen/10, mp_regen % 10);
 
     cols.add_formatted(0, out, false);
 

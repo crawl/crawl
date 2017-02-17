@@ -938,7 +938,7 @@ allow_self_target = (yes | no | prompt)
         effect on area-effect spells, such as Mephitic Cloud, where you are
         always a valid target.
 
-auto_butcher = false
+auto_butcher = very hungry
         If this is set to true, you will automatically travel to and attempt to
         butcher edible corpses. Can also be set to a hunger threshold ('very
         full', 'full', 'satiated', 'hungry', 'very hungry', or 'near starving')
@@ -2523,7 +2523,7 @@ bold_brightens_foreground = false
 
         See blink_brightens_background for more information.
 
-best_effort_brighten_background = true
+best_effort_brighten_background = false
         If set to true, try to brighten a background colour using blink even if
         it is not assumed to be successful.
 
