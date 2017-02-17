@@ -1,7 +1,11 @@
 #ifndef SPL_GODITEM_H
 #define SPL_GODITEM_H
 
+#include "enchant-type.h"
+#include "holy-word-source-type.h"
+#include "spell-type.h"
 #include "spl-cast.h"
+#include "torment-source-type.h"
 
 spret_type cast_healing(int pow, int max_pow, bool fail);
 bool heal_monster(monster& patient, int amount);

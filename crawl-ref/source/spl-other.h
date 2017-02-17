@@ -1,6 +1,7 @@
 #ifndef SPL_OTHER_H
 #define SPL_OTHER_H
 
+#include "god-type.h"
 #include "spl-cast.h"
 
 spret_type cast_sublimation_of_blood(int pow, bool fail);

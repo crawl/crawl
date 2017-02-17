@@ -1,6 +1,9 @@
 #ifndef PLAYER_STATS_H
 #define PLAYER_STATS_H
 
+#include "duration-type.h"
+#include "stat-type.h"
+
 enum stat_desc_type
 {
     SD_NAME,

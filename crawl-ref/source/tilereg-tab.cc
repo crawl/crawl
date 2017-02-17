@@ -4,6 +4,7 @@
 
 #include "tilereg-tab.h"
 
+#include "command-type.h"
 #include "cio.h"
 #include "english.h"
 #include "libutil.h"

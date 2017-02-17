@@ -10,6 +10,7 @@
 #include "cluautil.h"
 #include "coord.h"
 #include "dungeon.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "stash.h"
 #include "stringutil.h"

@@ -6,6 +6,8 @@
 #ifndef ACT_ITER_H
 #define ACT_ITER_H
 
+#include "los-type.h"
+
 class actor_near_iterator
 {
 public:

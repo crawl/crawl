@@ -1,6 +1,8 @@
 #ifndef PLAYER_EQUIP_H
 #define PLAYER_EQUIP_H
 
+#include "equipment-type.h"
+
 // Any code that equips or melds items should go through these, to
 // make sure equip/unequip effects are done the right amount of
 // times, and to make sure melded flags don't get out of sync.

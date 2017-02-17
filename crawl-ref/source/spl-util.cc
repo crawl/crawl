@@ -22,6 +22,7 @@
 #include "god-passive.h"
 #include "god-abil.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"

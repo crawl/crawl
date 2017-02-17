@@ -2,6 +2,8 @@
 #define NG_RESTR_H
 
 #include "item-prop-enum.h"
+#include "job-type.h"
+#include "species-type.h"
 
 struct newgame_def;
 

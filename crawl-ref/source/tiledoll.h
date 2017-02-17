@@ -2,6 +2,8 @@
 #ifndef TILEDOLL_H
 #define TILEDOLL_H
 
+#include "tile-player-flags.h"
+
 struct dolls_data
 {
     dolls_data();

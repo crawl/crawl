@@ -6,6 +6,9 @@
 #ifndef STATUS_H
 #define STATUS_H
 
+#include "duration-type.h"
+#include "mpr.h"
+
 enum status_type
 {
     STATUS_AIRBORNE = NUM_DURATIONS + 1,

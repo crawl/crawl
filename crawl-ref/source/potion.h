@@ -6,6 +6,8 @@
 #ifndef POTION_H
 #define POTION_H
 
+#include "potion-type.h"
+
 class PotionEffect
 {
 private:

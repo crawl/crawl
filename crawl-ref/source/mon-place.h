@@ -6,7 +6,10 @@
 #ifndef MONPLACE_H
 #define MONPLACE_H
 
+#include "conduct-type.h"
+#include "dungeon-char-type.h"
 #include "mgen-enum.h"
+#include "trap-type.h"
 
 class mons_spec;
 struct mgen_data;

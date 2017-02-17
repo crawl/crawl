@@ -13,6 +13,7 @@
 #include "monster.h"
 #include "output.h"
 #include "process-desc.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-player.h"

@@ -50,6 +50,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapmark.h"

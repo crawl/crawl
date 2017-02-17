@@ -25,6 +25,7 @@
 #include "env.h"
 #include "god-menu.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-name.h"
 #include "items.h"
 #include "libutil.h" // map_find
@@ -43,6 +44,7 @@
 #include "spl-util.h"
 #include "terrain.h"
 #ifdef USE_TILE
+#include "tile-flags.h"
 #include "tilepick.h"
 #include "tileview.h"
 #endif

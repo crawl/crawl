@@ -2,7 +2,13 @@
 #define SPECIES_H
 
 #include "enum.h"
+#include "ability-type.h"
 #include "item-prop-enum.h"
+#include "job-type.h"
+#include "size-part-type.h"
+#include "size-type.h"
+#include "species-type.h"
+#include "undead-state-type.h"
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);

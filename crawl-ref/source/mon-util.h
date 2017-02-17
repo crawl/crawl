@@ -9,7 +9,9 @@
 #include <functional>
 
 #include "enum.h"
+#include "los-type.h"
 #include "mon-enum.h"
+#include "mon-inv-type.h"
 #include "player.h"
 
 struct bolt;

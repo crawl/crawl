@@ -8,7 +8,10 @@
 
 #include <memory>
 
+#include "command-type.h"
 #include "enum.h"
+#include "god-type.h"
+#include "terrain-change-type.h"
 
 class  actor;
 struct coord_def;

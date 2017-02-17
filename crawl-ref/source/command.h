@@ -6,6 +6,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "command-type.h"
 #include "enum.h"
 
 void list_armour();

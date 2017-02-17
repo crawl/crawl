@@ -79,6 +79,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "wizard-option-type.h"
 #include "xom.h"
 
 #if TAG_MAJOR_VERSION == 34

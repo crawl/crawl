@@ -27,6 +27,7 @@
 #include "god-abil.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "map-knowledge.h"
 #include "mapmark.h"

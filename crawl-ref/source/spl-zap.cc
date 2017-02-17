@@ -4,6 +4,7 @@
 
 #include "beam.h"
 #include "stepdown.h"
+#include "zap-type.h"
 
 static pair<spell_type, zap_type> _spl_zaps[] =
 {

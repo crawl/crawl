@@ -90,6 +90,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "lookup-help.h"
@@ -159,6 +160,7 @@
 #ifdef TOUCH_UI
 #include "windowmanager.h"
 #endif
+#include "wizard-option-type.h"
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
 #include "wiz-fsim.h"

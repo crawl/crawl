@@ -22,6 +22,7 @@
 #include "english.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "los.h"
 #include "losglobal.h"

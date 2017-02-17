@@ -3,8 +3,10 @@
 
 #include "artefact.h"
 #include "item-prop-enum.h"
+#include "item-status-flag-type.h"
 #include "mon-enum.h"
 #include "ouch.h"
+#include "pronoun-type.h"
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;

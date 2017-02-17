@@ -2,6 +2,8 @@
 #define TARGET_H
 
 #include "beam.h"
+#include "los-type.h"
+#include "reach-type.h"
 
 enum aff_type // sign and non-zeroness matters
 {

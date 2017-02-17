@@ -4,7 +4,12 @@
 #include <functional>
 
 #include "actor.h"
+#include "beh-type.h"
+#include "enchant-type.h"
 #include "mon-ench.h"
+#include "montravel-target-type.h"
+#include "potion-type.h"
+#include "seen-context-type.h"
 #include "spl-util.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;

@@ -1,6 +1,7 @@
 #ifndef DGN_ACTIONS_H
 #define DGN_ACTIONS_H
 
+#include "daction-type.h"
 #include "travel.h"
 
 void add_daction(daction_type act);

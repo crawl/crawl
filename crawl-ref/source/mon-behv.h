@@ -6,7 +6,9 @@
 #ifndef MONBEHV_H
 #define MONBEHV_H
 
+#include "beh-type.h"
 #include "enum.h"
+#include "mon-attitude-type.h"
 
 enum mon_event_type
 {

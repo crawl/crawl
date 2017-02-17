@@ -1,6 +1,8 @@
 #ifndef TRAP_DEF_H
 #define TRAP_DEF_H
 
+#include "trap-type.h"
+
 struct trap_def
 {
     /// The position of the trap on the map

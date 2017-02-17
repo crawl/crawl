@@ -21,10 +21,24 @@
 #include <vector>
 
 #include "bitary.h"
+#include "deck-rarity-type.h"
+#include "description-level-type.h"
+#include "dungeon-feature-type.h"
 #include "enum.h"
+#include "spell-type.h"
+#include "monster-type.h"
+#include "branch-type.h"
 #include "fixedarray.h"
-#include "mpr.h"
+#include "kill-category.h"
+#include "killer-type.h"
+#include "map-marker-type.h"
+#include "menu-type.h"
+
+#include "object-class-type.h"
 #include "pattern.h"
+#include "skill-type.h"
+#include "shop-type.h"
+#include "cloud-type.h"
 #include "store.h"
 #include "tiledef_defines.h"
 

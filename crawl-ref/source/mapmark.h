@@ -12,8 +12,11 @@
 #include <string>
 #include <vector>
 
+#include "beh-type.h"
 #include "clua.h"
 #include "dgn-event.h"
+#include "map-marker-type.h"
+#include "terrain-change-type.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers

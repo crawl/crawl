@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include "command-type.h"
+#include "tile-inventory-flags.h"
 #include "tilereg-grid.h"
 
 static const command_type ct_system_commands[] =

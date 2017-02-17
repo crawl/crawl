@@ -7,6 +7,7 @@
 #define MISC_H
 
 #include "coord.h"
+#include "maybe-bool.h"
 
 #include <algorithm>
 #include <chrono>

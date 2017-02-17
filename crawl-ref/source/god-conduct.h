@@ -6,6 +6,9 @@
 #ifndef GODCONDUCT_H
 #define GODCONDUCT_H
 
+#include "conduct-type.h"
+#include "god-type.h"
+
 // Calls did_god_conduct() when the object goes out of scope.
 struct god_conduct_trigger
 {

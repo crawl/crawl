@@ -19,6 +19,7 @@
 #include "english.h"
 #include "god-conduct.h"
 #include "god-passive.h"
+#include "level-state-type.h"
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"

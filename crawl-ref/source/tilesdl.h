@@ -7,6 +7,8 @@
 #ifndef TILESDL_H
 #define TILESDL_H
 
+#include "cursor-type.h"
+#include "text-tag-type.h"
 #include "tilereg.h"
 
 class Popup;

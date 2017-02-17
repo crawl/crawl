@@ -3,6 +3,7 @@
 #include "actor.h"
 
 #include "coord.h"
+#include "los-type.h"
 #include "losglobal.h"
 #include "state.h"
 
