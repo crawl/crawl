@@ -148,8 +148,7 @@ bool melee_attack::handle_phase_attempted()
     {
         // Set delay now that we know the attack won't be cancelled.
         if (!is_riposte 
-             && (ieoh_jian_attack == IEOH_JIAN_ATTACK_NONE
-                 || ieoh_jian_attack == IEOH_JIAN_ATTACK_TRIGGERED_AUX))
+             && (ieoh_jian_attack == IEOH_JIAN_ATTACK_NONE))
         {
             you.time_taken = you.attack_delay().roll();
         }
