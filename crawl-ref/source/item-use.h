@@ -10,6 +10,7 @@
 #include <string>
 
 #include "enum.h"
+#include "operation-types.h"
 
 item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
                       function<bool ()> allowcancel = [](){ return true; });

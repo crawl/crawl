@@ -32,6 +32,7 @@
 #include "files.h"
 #include "initfile.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"

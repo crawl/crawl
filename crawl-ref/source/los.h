@@ -7,6 +7,7 @@
 #define LOS_H
 
 #include "coord-circle.h"
+#include "los-type.h"
 #include "losparam.h"
 
 class circle_def;

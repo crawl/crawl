@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "hash.h"
+#include "rng-type.h"
 
 void seed_rng();
 void seed_rng(uint32_t seed);

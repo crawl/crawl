@@ -44,6 +44,7 @@
 #include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"

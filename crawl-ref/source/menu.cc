@@ -34,6 +34,8 @@
  #include "tilebuf.h"
 #endif
 #ifdef USE_TILE
+ #include "tile-flags.h"
+ #include "tile-player-flag-cut.h"
  #include "tiledef-dngn.h"
  #include "tiledef-icons.h"
  #include "tiledef-main.h"

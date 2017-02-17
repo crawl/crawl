@@ -1,7 +1,10 @@
 #ifndef NEWGAME_DEF_H
 #define NEWGAME_DEF_H
 
+#include "game-type.h"
 #include "item-prop-enum.h"
+#include "job-type.h"
+#include "species-type.h"
 
 // Either a character definition, with real species, job, and
 // weapon, book, wand as appropriate.

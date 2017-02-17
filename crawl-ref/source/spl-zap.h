@@ -1,6 +1,8 @@
 #ifndef SPELL_ZAP_H
 #define SPELL_ZAP_H
 
+#include "zap-type.h"
+
 zap_type spell_to_zap(spell_type spell);
 spell_type zap_to_spell(zap_type zap);
 

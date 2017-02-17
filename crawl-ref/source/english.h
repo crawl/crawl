@@ -10,6 +10,8 @@
 #include <string>
 
 #include "enum.h"
+#include "gender-type.h"
+#include "pronoun-type.h"
 
 extern const char * const standard_plural_qualifiers[];
 

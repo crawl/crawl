@@ -23,6 +23,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
+#include "confirm-butcher-type.h"
 #include "defines.h"
 #include "delay.h"
 #include "directn.h"
@@ -47,6 +48,7 @@
 #include "playable.h"
 #include "player.h"
 #include "prompt.h"
+#include "slot-select-mode.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -60,6 +62,7 @@
 #include "version.h"
 #include "viewchar.h"
 #include "view.h"
+#include "wizard-option-type.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #include "tiledef-player.h"
@@ -67,6 +70,7 @@
 #include "tileweb.h"
 #endif
 #endif
+
 
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS

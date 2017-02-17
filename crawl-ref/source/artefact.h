@@ -6,6 +6,9 @@
 #ifndef RANDART_H
 #define RANDART_H
 
+#include "artefact-prop-type.h"
+#include "unique-item-status-type.h"
+
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
 #define KNOWN_PROPS_KEY     "artefact_known_props"

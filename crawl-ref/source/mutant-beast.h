@@ -6,6 +6,8 @@
 #ifndef MUTANT_BEAST_H
 #define MUTANT_BEAST_H
 
+#include "god-type.h"
+
 #define MUTANT_BEAST_TIER "mutant_beast_tier"
 #define MUTANT_BEAST_FACETS "mutant_beast_facets"
 #define MUTANT_BEAST_AVOID_FACETS "mutant_beast_avoid_facets"

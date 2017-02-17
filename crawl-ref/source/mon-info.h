@@ -3,6 +3,7 @@
 
 #include <functional>
 
+#include "enchant-type.h"
 #include "mon-util.h"
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"

@@ -7,6 +7,8 @@
 #ifndef UNCANCEL_H
 #define UNCANCEL_H
 
+#include "uncancellable-type.h"
+
 void add_uncancel(uncancellable_type kind, int arg = 0);
 void run_uncancels();
 

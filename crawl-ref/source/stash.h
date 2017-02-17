@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "shopping.h"
+#include "trap-type.h"
 
 class input_history;
 class reader;

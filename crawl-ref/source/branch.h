@@ -7,6 +7,7 @@
 #define BRANCH_H
 
 #include "enum.h"
+#include "branch-type.h"
 #include "item-prop-enum.h"
 #include "player.h"
 

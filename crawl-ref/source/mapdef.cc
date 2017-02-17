@@ -28,6 +28,7 @@
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
+#include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
 #include "mapmark.h"

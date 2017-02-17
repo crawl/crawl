@@ -20,6 +20,7 @@
 #include "fight.h"
 #include "god-conduct.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h" // ME_WHACK

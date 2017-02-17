@@ -6,6 +6,9 @@
 #ifndef NEWGAME_H
 #define NEWGAME_H
 
+#include "job-type.h"
+#include "species-type.h"
+
 class MenuFreeform;
 struct menu_letter;
 struct newgame_def;

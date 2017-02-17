@@ -3,6 +3,7 @@
 
 #include "enum.h"
 #include "mon-info.h"
+#include "trap-type.h"
 
 struct cloud_info
 {

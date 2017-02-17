@@ -21,6 +21,7 @@
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
+#include "tile-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tilemcache.h"

@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
@@ -23,6 +24,7 @@
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "makeitem.h"
 #include "message.h"

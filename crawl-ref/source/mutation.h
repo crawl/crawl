@@ -8,6 +8,9 @@
 
 #include <string>
 
+#include "equipment-type.h"
+#include "mutation-type.h"
+
 class formatted_string;
 
 enum mutation_activity_type

@@ -51,6 +51,8 @@
 #include "god-companions.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
+#include "item-type-id-state-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "mapmark.h"

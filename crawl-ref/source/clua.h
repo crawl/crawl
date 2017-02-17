@@ -13,6 +13,8 @@ extern "C" {
 #include <set>
 #include <string>
 
+#include "maybe-bool.h"
+
 class CLua;
 
 class lua_stack_cleaner

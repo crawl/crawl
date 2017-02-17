@@ -22,6 +22,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "hints.h"
+#include "item-status-flag-type.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"

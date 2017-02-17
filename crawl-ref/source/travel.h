@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include "command-type.h"
+#include "daction-type.h"
 #include "exclude.h"
 #include "travel-defs.h"
 

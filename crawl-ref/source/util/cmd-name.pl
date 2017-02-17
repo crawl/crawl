@@ -4,19 +4,19 @@ use strict;
 
 my ($infile, $outfile);
 
-if (-e "enum.h")
+if (-e "command-type.h")
 {
-    $infile = "enum.h";
+    $infile = "command-type.h";
     $outfile = "cmd-name.h";
 }
-elsif (-e "../enum.h")
+elsif (-e "../command-type.h")
 {
-    $infile = "../enum.h";
+    $infile = "../command-type.h";
     $outfile = "../cmd-name.h";
 }
 else
 {
-    die "Can't find 'enum.h'";
+    die "Can't find 'command-type.h'";
 }
 
 unless (open(INFILE, "<$infile"))

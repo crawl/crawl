@@ -7,6 +7,7 @@
 #define TRAPS_H
 
 #include "enum.h"
+#include "trap-type.h"
 
 #define NEWLY_TRAPPED_KEY "newly_trapped"
 

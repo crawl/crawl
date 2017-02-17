@@ -38,6 +38,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"

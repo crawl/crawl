@@ -6,10 +6,15 @@
 #ifndef BEAM_H
 #define BEAM_H
 
+#include "ac-type.h"
+#include "beam-type.h"
+#include "enchant-type.h"
+#include "mon-attitude-type.h"
 #include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
+#include "zap-type.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
