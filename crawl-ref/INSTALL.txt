@@ -139,6 +139,18 @@ ccache can be installed with:
 dnf install ccache
 
 
+Prerequisites (Void):
+
+On Void Linux you can get all dependencies by running the following as root:
+xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel \
+  sqlite-devel zlib-devel pngcrush dejavu-fonts-ttf SDL2-devel \
+  SDL2_mixer-devel SDL2_image-devel freetype-devel
+(the last six are needed only for tile builds).
+
+ccache can be installed with:
+xbps-install ccache
+
+
 Prerequisites (other systems):
 
 GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
