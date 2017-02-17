@@ -3179,8 +3179,8 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (!text.empty() && text[text.size() - 1] == '\n')
-        text = text.substr(0, text.size() - 1);
+    if (!text.empty() && text.back() == '\n')
+        text.pop_back();
     return text;
 }
 
