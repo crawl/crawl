@@ -1624,12 +1624,15 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
            mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
     }
 
-    melee_attack lunge(&you, mons);
-    lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
 
     for (int i = 0; i < number_of_attacks; i++)
-        if (mons->alive())
-            lunge.attack();
+    {
+        if (!mons->alive())
+            break;
+        melee_attack lunge(&you, mons);
+        lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
+        lunge.attack();
+    }
 }
 
 static void _ieoh_jian_whirlwind(const coord_def& old_pos)
@@ -1686,12 +1689,15 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
                mprf("You spin and attack %s.", mons->name(DESC_THE).c_str());
         }
 
-        melee_attack whirlwind(&you, mons);
-        whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
-        whirlwind.ieoh_jian_number_of_targets = common_targets.size();
         for (int i = 0; i < number_of_attacks; i++)
-            if (mons->alive())
-                whirlwind.attack();
+        {
+            if (!mons->alive())
+               break;
+            melee_attack whirlwind(&you, mons);
+            whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
+            whirlwind.ieoh_jian_number_of_targets = common_targets.size();
+            whirlwind.attack();
+        }
     }
 }
 
@@ -1775,12 +1781,16 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
                 mprf("You attack %s from above.", target->name(DESC_THE).c_str());
          }
 
-         melee_attack aerial(&you, target);
-         aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
-         aerial.ieoh_jian_number_of_targets = targets.size();
          for (int i = 0; i < number_of_attacks; i++)
-             if (target->alive())
-                 aerial.attack();
+         {
+             if (!target->alive())
+                break;
+
+             melee_attack aerial(&you, target);
+             aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
+             aerial.ieoh_jian_number_of_targets = targets.size();
+             aerial.attack();
+         }
     }
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
