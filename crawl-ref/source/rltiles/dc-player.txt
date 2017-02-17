@@ -199,6 +199,13 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+
+###Scarf
+scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
+scarf_red SCARF_RED
+scarf_white SCARF_WHITE
+scarf_magenta SCARF_MAGENTA
+scarf_green SCARF_GREEN SCARF_LAST_NORM
 %end_ctg
 
 ###Boots
