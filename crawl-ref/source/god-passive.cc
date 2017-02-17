@@ -4,9 +4,7 @@
 
 #include <algorithm>
 #include <cmath>
-#include <sstream>
 
-#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -22,7 +20,6 @@
 #include "god-item.h"
 #include "god-prayer.h"
 #include "invent.h" // in_inventory
-#include "item-use.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
@@ -33,7 +30,6 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "output.h"
-#include "player-equip.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"

@@ -13,8 +13,6 @@
 #include <sstream>
 
 #include "act-iter.h"
-#include "art-enum.h"
-#include "artefact.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
@@ -87,8 +85,6 @@
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
-#include "transform.h"
-#include "throw.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "viewchar.h"

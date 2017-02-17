@@ -15,7 +15,6 @@
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
-#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
@@ -36,7 +35,6 @@
 #include "mon-poly.h"
 #include "mutation.h"
 #include "notes.h"
-#include "output.h"
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
@@ -53,7 +51,6 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
-#include "traps.h"
 #include "view.h"
 #include "xom.h"
 

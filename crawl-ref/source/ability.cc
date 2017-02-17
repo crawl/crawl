@@ -35,7 +35,6 @@
 #include "god-abil.h"
 #include "god-companions.h"
 #include "god-conduct.h"
-#include "god-passive.h"
 #include "god-prayer.h"
 #include "god-wrath.h"
 #include "hints.h"
