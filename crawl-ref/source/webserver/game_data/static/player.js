@@ -99,8 +99,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
     function update_bar_noise()
     {
-        player.noise_max = 30;
-        var level = player.noise, max = player.noise_max;
+        player.noise_max = 1000;
+        var level = player.adjusted_noise, max = player.noise_max;
         var old_value;
         if ("old_noise" in player)
             old_value = player.old_noise
@@ -111,27 +111,23 @@ function ($, comm, enums, map_knowledge, messages, options) {
         if (old_value > max)
             old_value = max;
 
-        // See output.cc for documentation of these cutoff points
-        // `adjusted_noise` is `noise` rescaled so that the three
-        // categories each take up 1/3 of the bar.
+        // The adjusted_noise value has already been rescaled in
+        // player.cc:get_adjusted_noise. It ranges from 0 to 1000.
         var noise_color = "", adjusted_level = 0;
-        if (level <= 6)
+        if (level <= 333)
         {
             noise_color = "#D3D3D3"; // lightgray
-            adjusted_level = level * 10 / 6;
         }
-        else if (level <= 13)
+        else if (level <= 666)
         {
             noise_color = "#FFD700"; // gold
-            adjusted_level = (level - 6) * 10 / 7 + 10;
         }
-        else if (level <= 29)
+        else if (level < 1000)
         {
             noise_color = "#FF0000"; // red
-            adjusted_level = (level - 13) * 10 / 16 + 20;
         } else {
+            $("#stats_noise_status").text(level);
             noise_color = "#FF00FF"; // magenta
-            adjusted_level = 30;
         }
 
         if (player.has_status("silence"))
@@ -147,11 +143,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats_noise_status").css("width", 0);
         }
 
-        player.old_noise = adjusted_level;
+        player.old_noise = level;
 
 
-        var full_bar = Math.round(10000 * adjusted_level / max);
-        var change_bar = Math.round(10000 * Math.abs(old_value - adjusted_level) / max);
+        var full_bar = Math.round(10000 * level / max);
+        var change_bar = Math.round(10000 * Math.abs(old_value - level) / max);
         if (full_bar + change_bar > 10000)
         {
             change_bar = 10000 - full_bar;
@@ -161,6 +157,26 @@ function ($, comm, enums, map_knowledge, messages, options) {
         {
             $("#stats_noise").text(player.noise);
             $("#stats_noise").css("color", noise_color);
+            if (level == 1000)
+            {
+                // go to 11
+                $("#stats_noise_container").css("width", "95%");
+                $("#stats_noise_bar").css("width", "46.312%"); // This comes from solving -15 - .85 * 40 = -5 - .95 * x
+            } else {
+                $("#stats_noise_container").css("width", "85%");
+                $("#stats_noise_bar").css("width", "40%");
+            }
+        } else {
+            $("#stats_noise").text("");
+            if (level == 1000)
+            {
+                // go to 11
+                $("#stats_noise_container").css("width", "95%");
+                $("#stats_noise_bar").css("width", "60.632%"); // This comes from solving -15 - .85 * 56 = -5 - .95 * x
+            } else {
+                $("#stats_noise_container").css("width", "85%");
+                $("#stats_noise_bar").css("width", "56%");
+            }
         }
 
         $("#stats_noise_bar_full").css("background-color", noise_color);
@@ -570,7 +586,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 depth: 0, place: "",
                 contam: 0,
                 heat: 0,
-                noise: 0
+                noise: 0,
+                adjusted_noise: 0
             });
             delete player["old_hp"];
             delete player["old_mp"];

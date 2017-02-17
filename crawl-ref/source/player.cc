@@ -5648,23 +5648,42 @@ int calc_hunger(int food_cost)
     return food_cost;
 }
 
-// Return an approximation of the loudest noise the player heard in the last
-// turn, adjusted (roughly) for branch ambient noise. This gets updated every
-// `world_reacts`.
-int player::adjusted_noise_perception() const
+/*
+ * Approximate the loudest noise the player heard in the last
+ * turn, possibly rescaling. This gets updated every
+ * `world_reacts`. If `adjusted` is set to true, this rescales
+ * noise on a 0-1000 scale according to some breakpoints that
+ * I have hand-calibrated. Otherwise, it returns the raw noise
+ * value (approximately from 0 to 40). The breakpoints aim to
+ * approximate 1x los radius, 2x los radius, and 3x los radius
+ * relative to an open area.
+ *
+ * @param adjusted      Whether to rescale the noise level.
+ *
+ * @return The (scaled or unscaled) noise level heard by the player.
+ */
+int player::get_noise_perception(bool adjusted) const
 {
     // los_noise_last_turn is already normalized for the branch's ambient
-    // noise, depending on distance, but this doesn't give an accurate measure
-    // of how likely the sound is to be heard. To approximate this, subtract
-    // half the ambient noise level for the branch.  (which is one of -6, 0, 6
-    // -- so for crypt/tomb this adds extra loudness, for shoals it
-    // subtracts.) The choice of /2 was found via calibration of various cases
-    // (such as qazlal at full piety in shoals). This adjustment makes the
-    // most sense for sounds close to the player. To do an exact version of
-    // this you would need to run the full noise propagation algorithm in
-    // shout.cc.
-    int ambient_adjustment = ambient_noise() / 2;
-    return max(los_noise_last_turn - ambient_adjustment, 0);
+    // noise.
+    int level = los_noise_last_turn;
+    int adjusted_level;
+    if (adjusted)
+    {
+        if (level <= 6000)
+            adjusted_level = level * 333 / 6000;
+        else if (level <= 13000)
+            adjusted_level = (level - 6000) * 333 / 7000 + 333;
+        else if (level <= 29000)
+        {
+            adjusted_level = (level - 13000) * 333 / 16000 + 666;
+        } else {
+            adjusted_level = 1000;
+        }
+        return adjusted_level;
+    } else {
+        return div_rand_round(level, 1000);
+    }
 }
 
 bool player::paralysed() const

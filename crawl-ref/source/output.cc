@@ -419,27 +419,6 @@ public:
         textbackground(BLACK);
     }
 
-    // NOTE: this doesn't behave exactly as you might expect on console, because BLACK
-    // prints as dark blue.
-    void blank(int ox, int oy, int max_val)
-    {
-        colour_t old_change_col = m_change_neg;
-        colour_t old_change_pos = m_change_pos;
-        colour_t old_empty = m_empty;
-        m_old_disp = 0;
-
-        m_change_neg = BLACK;
-        m_change_pos = BLACK;
-        m_empty = BLACK;
-
-        draw(ox, oy, 0, max_val);
-
-        m_change_neg = old_change_col;
-        m_change_pos = old_change_pos;
-        m_empty = old_empty;
-
-    }
-
     void vdraw(int ox, int oy, int val, int max_val)
     {
         // ox is width from l/h edge; oy is height from top
@@ -619,12 +598,12 @@ static void _print_stats_temperature(int x, int y)
 
 /*
  * Print the noise bar to the HUD with appropriate coloring.
- * if in wizmode, also print the adjusted noise value.
+ * if in wizmode, also print the numeric noise value.
  */
 static void _print_stats_noise(int x, int y)
 {
     bool silence = silenced(you.pos());
-    int level = silence ? 0 : you.adjusted_noise_perception();
+    int level = silence ? 0 : you.get_noise_perception(true);
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     cprintf("Noise: ");
@@ -638,46 +617,57 @@ static void _print_stats_noise(int x, int y)
     //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
     // In more enclosed areas, these values will be attenuated,
     // and this isn't represented.
-    // NOTE: This logic is duplicated in player.js.
-    int adjusted_level;
-    if (level < 7)
-    {
+    // See player::get_noise_perception for the mapping from internal noise
+    // values to this 0-1000 scale.
+    // NOTE: This color scheme is duplicated in player.js.
+    if (level <= 333)
         noisecolour = LIGHTGREY;
-        adjusted_level = (level == 0) ? 0 : ((level < 4) ? 1 : 2);
-    }
-    else if (level < 14)
-    {
+    else if (level <= 666)
         noisecolour = YELLOW;
-        adjusted_level = (level < 10) ? 3 : 4;
-    }
-    else if (level < 30)
+    else if (level < 1000)
     {
-        adjusted_level = (level < 22) ? 5 : 6;
         noisecolour = RED;
     } else {
-        adjusted_level = 6;
         noisecolour = LIGHTMAGENTA;
     }
 
-    int bar_position = 10;
+    int bar_position;
     if (you.wizard)
     {
+        Noise_Bar.horiz_bar_width = 6;
+        bar_position = 10;
+
+        // numeric noise level, basically the internal value used by noise
+        // propagation (see shout.cc:noisy). The exact value is too hard to
+        // interpret to show outside of wizmode, because noise propagation is
+        // very complicated.
         CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
         textcolour(noisecolour);
-        CPRINTF("%2d", level);  // adjusted noise level that the player heard.
-                               // The exact value is too hard to interpret to show
-                               // outside of wizmode, because noise propagation
-                               // is very complicated
+        CPRINTF("%2d", you.get_noise_perception(false));
+    } else {
+        Noise_Bar.horiz_bar_width = 9;
+        bar_position = 7;
     }
-    Noise_Bar.horiz_bar_width = 6;
     if (silence)
     {
-        Noise_Bar.blank(x + bar_position, y, 6);
         CGOTOXY(x + bar_position, y, GOTO_STAT);
         textcolour(LIGHTMAGENTA);
-        CPRINTF("(Sil) ");
-
+        if (you.wizard)
+        {
+            CPRINTF("(Sil)  ");
+        } else {
+            CPRINTF("(Sil)     "); // These need to be one extra wide in case silence happens
+                                   // immediately after super-loud (magenta) noise
+        }
     } else {
+        if (level == 1000)
+        {
+            // the bar goes up to 11 for extra loud sounds. (Well, it's really 10.)
+            Noise_Bar.horiz_bar_width += 1;
+        } else {
+            CGOTOXY(x + 16, y, GOTO_STAT);
+            CPRINTF(" "); // clean up after the extra wide bar
+        }
 #ifndef USE_TILE_LOCAL
         // use the previous color for negative change in console; there's a
         // visual difference in bar width. Negative change doesn't get shown
@@ -686,7 +676,7 @@ static void _print_stats_noise(int x, int y)
 #endif
         Noise_Bar.m_default = noisecolour;
         Noise_Bar.m_change_pos = noisecolour;
-        Noise_Bar.draw(x + bar_position, y, min(adjusted_level, 6), 6);
+        Noise_Bar.draw(x + bar_position, y, div_round_up((level * Noise_Bar.horiz_bar_width), 1000), Noise_Bar.horiz_bar_width);
     }
 }
 

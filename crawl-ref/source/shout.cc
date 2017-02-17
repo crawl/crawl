@@ -1127,6 +1127,11 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
 {
     if (you.pos() == pos)
     {
+        // The bizarre arrangement of those code into two functions that each
+        // check whether the actor is the player, but work at different types,
+        // probably ought to be refactored. I put the noise updating code here
+        // because the type is correct here.
+
         _actor_apply_noise(&you, noise.noise_source,
                            noise_intensity_millis, noise,
                            noise_travel_distance);
@@ -1144,8 +1149,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
         {
             you.los_noise_level = 0;
         } else {
-            you.los_noise_level = max(you.los_noise_level,
-                                      div_rand_round(noise_intensity_millis, 1000));
+            you.los_noise_level = max(you.los_noise_level, noise_intensity_millis);
         }
         ++affected_actor_count;
     }
