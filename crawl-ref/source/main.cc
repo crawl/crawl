@@ -1511,9 +1511,12 @@ static void _input()
         _do_searing_ray();
 
         world_reacts();
-    } else {
+    }
+    else
+    {
         // Make sure to do a full view update even when the turn isn't over.
-        // This else will be triggered by instantaneous actions, such as Chei's temporal distortion.
+        // This else will be triggered by instantaneous actions, such as
+        // Chei's temporal distortion.
         viewwindow();
     }
 
