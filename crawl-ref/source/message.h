@@ -10,6 +10,7 @@
 #include <streambuf>
 #include <string>
 
+#include "canned-message-type.h"
 #include "enum.h"
 #include "player.h"
 

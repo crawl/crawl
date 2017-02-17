@@ -39,6 +39,7 @@
 #include "hints.h"
 #include "item-name.h" // item_type_known
 #include "item-prop.h" // get_weapon_brand
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -64,6 +65,7 @@
 #include "terrain.h"
 #include "tilemcache.h"
 #ifdef USE_TILE
+ #include "tile-flags.h"
  #include "tilepick.h"
  #include "tilepick-p.h"
  #include "tileview.h"

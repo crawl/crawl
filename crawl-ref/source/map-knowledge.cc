@@ -7,6 +7,7 @@
 #include "directn.h"
 #include "env.h"
 #include "god-passive.h" // passive_t::auto_map
+#include "level-state-type.h"
 #include "notes.h"
 #include "religion.h"
 #include "terrain.h"

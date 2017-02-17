@@ -6,6 +6,9 @@
 #ifndef TILEPICK_H
 #define TILEPICK_H
 
+#include "ability-type.h"
+#include "command-type.h"
+#include "game-type.h"
 #include "tiledef_defines.h"
 
 #define TILE_NUM_KEY "tile_num"

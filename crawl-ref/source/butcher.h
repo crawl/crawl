@@ -6,6 +6,8 @@
 #ifndef BUTCHER_H
 #define BUTCHER_H
 
+#include "maybe-bool.h"
+
 void butchery(item_def* specific_corpse = nullptr);
 void finish_butchering(item_def& corpse, bool bottling);
 

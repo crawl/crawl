@@ -32,6 +32,7 @@
 #include "god-wrath.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"

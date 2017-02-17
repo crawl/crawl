@@ -1,6 +1,8 @@
 #ifndef LOSGLOBAL_H
 #define LOSGLOBAL_H
 
+#include "los-type.h"
+
 void invalidate_los_around(const coord_def& p);
 void invalidate_los();
 

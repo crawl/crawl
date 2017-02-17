@@ -24,6 +24,7 @@
 #include "env.h"
 #include "errors.h"
 #include "fprop.h"
+#include "gender-type.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss, slow_orb_run

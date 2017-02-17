@@ -7,6 +7,7 @@
 #define GODPASSIVE_H
 
 #include "enum.h"
+#include "ieoh-jian-attack-type.h"
 #include "player.h"
 
 class monster;

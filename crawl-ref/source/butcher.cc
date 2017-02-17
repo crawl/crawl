@@ -8,6 +8,7 @@
 #include "butcher.h"
 
 #include "bloodspatter.h"
+#include "confirm-butcher-type.h"
 #include "command.h"
 #include "delay.h"
 #include "env.h"
@@ -15,6 +16,7 @@
 #include "god-conduct.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"

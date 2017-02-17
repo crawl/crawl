@@ -9,6 +9,7 @@
 #include <list>
 
 #include "target.h"
+#include "ieoh-jian-attack-type.h"
 
 enum stab_type
 {

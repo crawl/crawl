@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "ability-type.h"
 #include "enum.h"
 #include "player.h"
 

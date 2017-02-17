@@ -2,6 +2,7 @@
 #ifndef TILEREG_MAP_H
 #define TILEREG_MAP_H
 
+#include "map-feature.h"
 #include "tilebuf.h"
 #include "tilereg.h"
 

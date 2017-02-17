@@ -2,7 +2,9 @@
 #define SPL_SUMMONING_H
 
 #include "beam.h"
+#include "beh-type.h"
 #include "enum.h"
+#include "god-type.h"
 #include "item-prop-enum.h"
 #include "spl-cast.h"
 

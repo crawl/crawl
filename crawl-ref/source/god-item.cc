@@ -20,6 +20,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
+#include "potion-type.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"

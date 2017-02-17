@@ -3,9 +3,22 @@
 
 #include <algorithm>
 
+#include "activity-interrupt-type.h"
+#include "char-set-type.h"
+#include "confirm-level-type.h"
+#include "confirm-prompt-type.h"
 #include "feature.h"
+#include "flang-t.h"
+#include "flush-reason-type.h"
+#include "hunger-state-t.h"
+#include "lang-t.h"
+#include "maybe-bool.h"
+#include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
+#include "screen-mode.h"
+#include "skill-focus-mode.h"
+#include "tag-pref.h"
 
 enum autosac_type
 {

@@ -6,6 +6,7 @@
 #ifndef GODPRAYER_H
 #define GODPRAYER_H
 
+#include "god-type.h"
 #include "religion-enum.h"
 
 string god_prayer_reaction();

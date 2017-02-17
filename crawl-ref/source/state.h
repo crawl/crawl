@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include "command-type.h"
+#include "disable-type.h"
 #include "player.h"
 
 class monster;

@@ -7,9 +7,12 @@
 #define GHOST_H
 
 #include "enum.h"
+#include "god-type.h"
 #include "item-prop-enum.h"
+#include "job-type.h"
 #include "mon-enum.h"
 #include "mutant-beast.h"
+#include "species-type.h"
 
 class ghost_demon
 {

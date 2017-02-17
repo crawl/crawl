@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "hints.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"

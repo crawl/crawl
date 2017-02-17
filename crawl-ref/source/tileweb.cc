@@ -37,6 +37,8 @@
 #include "state.h"
 #include "stringutil.h"
 #include "throw.h"
+#include "tile-flags.h"
+#include "tile-player-flag-cut.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-icons.h"

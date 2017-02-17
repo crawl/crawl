@@ -8,7 +8,9 @@
 
 #include <deque>
 
+#include "command-type.h"
 #include "enum.h"
+#include "KeymapContext.h"
 
 class key_recorder;
 typedef deque<int> keyseq;

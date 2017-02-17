@@ -8,6 +8,8 @@
 
 #include <vector>
 #include "enum.h"
+#include "job-type.h"
+#include "species-type.h"
 
 struct combo_type
 {

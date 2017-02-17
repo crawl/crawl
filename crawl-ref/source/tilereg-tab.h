@@ -2,6 +2,7 @@
 #ifndef TILEREG_TAB_H
 #define TILEREG_TAB_H
 
+#include "command-type.h"
 #include "tilereg-grid.h"
 
 // A region that contains multiple region, selectable by tabs.

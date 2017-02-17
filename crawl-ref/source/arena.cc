@@ -16,6 +16,7 @@
 #include "end.h"
 #include "food.h"
 #include "item-name.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "los.h"

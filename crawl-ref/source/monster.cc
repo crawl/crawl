@@ -34,6 +34,7 @@
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"

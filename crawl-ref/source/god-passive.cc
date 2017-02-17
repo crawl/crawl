@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "eq-type-flags.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -22,6 +23,7 @@
 #include "invent.h" // in_inventory
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "melee-attack.h"
