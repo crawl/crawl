@@ -78,11 +78,11 @@ void play_sound(const char *file, bool interrupt_game)
         if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
             && shell_safe(file))
         {
-#if defined(HOLD_SOUND_PLAY_COMMAND)
+ #if defined(HOLD_SOUND_PLAY_COMMAND)
             if (interrupt_game)
                 snprintf(command, sizeof command, HOLD_SOUND_PLAY_COMMAND, file);
             else
-#endif
+ #endif
                 snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
 
             system(OUTS(command));

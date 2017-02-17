@@ -1115,7 +1115,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
     case CMD_TOGGLE_TRAVEL_SPEED:
-    case CMD_TOGGLE_SOUND:
     case CMD_ADJUST_INVENTORY:
     case CMD_QUIVER_ITEM:
     case CMD_REPLAY_MESSAGES:
@@ -2055,13 +2054,6 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-#ifdef USE_SOUND
-    case CMD_TOGGLE_SOUND:
-        Options.sounds_on = !Options.sounds_on;
-        mprf("Sound effects are now %s.", Options.sounds_on ? "on" : "off");
-        break;
-#endif
- 
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
