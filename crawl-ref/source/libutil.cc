@@ -16,9 +16,9 @@
 #include "colour.h"
 #include "files.h"
 #include "message.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
-#include "sound.h"
 #include "unicode.h"
 #include "viewgeom.h"
 

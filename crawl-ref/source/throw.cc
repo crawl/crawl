@@ -465,7 +465,7 @@ bool is_pproj_active()
 void fire_thing(int item)
 {
 #ifdef USE_SOUND
-    play_sound_from_pattern(FIRE_PROMPT_SOUND);
+    parse_sound(FIRE_PROMPT_SOUND);
 #endif
 
     dist target;

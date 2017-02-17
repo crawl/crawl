@@ -17,8 +17,9 @@
 
 #ifdef USE_SOUND
 
-
-void play_sound_from_pattern(const string& message)
+// Plays a sound based on the given message; it must match a regex pattern
+// in an option file for a sound to be played.
+void parse_sound(const string& message)
 {
     play_sound(check_sound_patterns(message));
 }
