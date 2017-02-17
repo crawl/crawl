@@ -72,7 +72,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(is_cleaving), is_riposte(false),
-    ieoh_jian_attack(IEOH_JIAN_ATTACK_NONE)
+    ieoh_jian_attack(IEOH_JIAN_ATTACK_NONE),
+    ieoh_jian_number_of_targets(1) 
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -561,7 +562,9 @@ bool melee_attack::handle_phase_damaged()
 
 bool melee_attack::handle_phase_aux()
 {
-    if (attacker->is_player() && !cleaving)
+    if (attacker->is_player() 
+        && !cleaving 
+        && ieoh_jian_attack != IEOH_JIAN_ATTACK_TRIGGERED_AUX)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
@@ -3497,6 +3500,14 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         && you.strength() + you.dex() <= random2(50))
     {
         return false;
+    }
+
+    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE 
+        && !x_chance_in_y(1, ieoh_jian_number_of_targets)) 
+    {
+       // Reduces aux chance proportionally to number of 
+       // enemies attacked with a martial attack
+       return false; 
     }
 
     switch (atk)

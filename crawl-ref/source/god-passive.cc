@@ -1693,6 +1693,7 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
 
         melee_attack whirlwind(&you, mons);
         whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
+        whirlwind.ieoh_jian_number_of_targets = common_targets.size();
         for (int i = 0; i < number_of_attacks; i++)
             if (mons->alive())
                 whirlwind.attack();
@@ -1740,46 +1741,51 @@ bool ieoh_jian_can_wall_jump(const coord_def& target)
 
 void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
 {
+    vector<monster*> targets;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
-        {
-            if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-                you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
-
-            int number_of_attacks = _ieoh_jian_number_of_attacks();
-            if (number_of_attacks == 0)
-            {
-                if (you.weapon())
-                    mprf("You attack %s from above, but the weight of your weapon causes you to whiff.", 
-                         target->name(DESC_THE).c_str());
-                continue;
-            }
-            else if (number_of_attacks > 1)
-            {
-                if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
-                   mprf("You repeatedly attack %s from above with incredible momentum!", target->name(DESC_THE).c_str());
-                else
-                   mprf("You repeteadly attack %s from above!", target->name(DESC_THE).c_str());
-            }
-            else
-            {
-                if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
-                   mprf("You attack %s from above with incredible momentum!", target->name(DESC_THE).c_str());
-                else
-                   mprf("You attack %s from above.", target->name(DESC_THE).c_str());
-            }
-
-            melee_attack aerial(&you, target);
-            aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
-            for (int i = 0; i < number_of_attacks; i++)
-                if (target->alive())
-                    aerial.attack();
-        }
+           targets.push_back(target);
 
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
+    }
+
+    for (auto target : targets)
+    {
+         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+         int number_of_attacks = _ieoh_jian_number_of_attacks();
+         if (number_of_attacks == 0)
+         {
+             if (you.weapon())
+                 mprf("You attack %s from above, but the weight of your weapon causes you to whiff.", 
+                      target->name(DESC_THE).c_str());
+             continue;
+         }
+         else if (number_of_attacks > 1)
+         {
+             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+                mprf("You repeatedly attack %s from above with incredible momentum!", target->name(DESC_THE).c_str());
+             else
+                mprf("You repeteadly attack %s from above!", target->name(DESC_THE).c_str());
+         }
+         else
+         {
+             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+                mprf("You attack %s from above with incredible momentum!", target->name(DESC_THE).c_str());
+             else
+                mprf("You attack %s from above.", target->name(DESC_THE).c_str());
+         }
+
+         melee_attack aerial(&you, target);
+         aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
+         aerial.ieoh_jian_number_of_targets = targets.size();
+         for (int i = 0; i < number_of_attacks; i++)
+             if (target->alive())
+                 aerial.attack();
     }
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
