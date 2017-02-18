@@ -336,7 +336,7 @@ static const ability_def Ability_List[] =
     { ABIL_HEAL_WOUNDS, "Heal Wounds",
       0, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-      0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::exhaustion },
+      0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {fail_basis::evo, 60, 2}, abflag::none },
@@ -435,7 +435,7 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_BERSERK, "Berserk",
-      0, 0, 600, 0, {fail_basis::invo}, abflag::exhaustion },
+      0, 0, 600, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
       0, 0, 200, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",

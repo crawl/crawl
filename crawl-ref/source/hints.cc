@@ -458,7 +458,7 @@ void hints_death_screen()
         print_hint("death conjurer melee");
     }
     else if (you_worship(GOD_TROG) && Hints.hints_berserk_counter <= 3
-             && !you.berserk() && !you.duration[DUR_EXHAUSTED])
+             && !you.berserk() && !you.duration[DUR_BERSERK_COOLDOWN])
     {
         print_hint("death berserker unberserked");
     }
