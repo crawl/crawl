@@ -16,6 +16,7 @@ private:
 protected:
     PotionEffect(potion_type);
     bool check_known_quaff() const;
+    void begin_quaff(bool was_known) const;
 public:
     virtual bool can_quaff(string *reason = nullptr) const;
 
@@ -34,6 +35,12 @@ public:
      */
     virtual bool effect(bool was_known = true, int pow = 40,
                         bool is_potion = true) const = 0;
+
+    /**
+     * Effects that should occur after quaffing an actual potion.
+     * XXX: can this be moved into effect()?
+     */
+    virtual void post_quaff_effect(bool was_known) const { };
 
     // Quaff also handles god-conduct and potion-specific
     // uncancellability

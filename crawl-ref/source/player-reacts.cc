@@ -554,10 +554,12 @@ static void _drink_delayed_potions()
         CrawlVector &potion = queue[queue.size() - 1].get_vector();
         const potion_type ptyp = (potion_type)potion[0].get_int();
         const int effect_time = potion[1].get_int();
+        const bool was_known = potion[2].get_bool();
         if (effect_time > you.elapsed_time)
             return;
 
-        get_potion_effect(ptyp)->effect();
+        if (get_potion_effect(ptyp)->effect(was_known))
+            get_potion_effect(ptyp)->post_quaff_effect(was_known);
         queue.pop_back();
     }
 

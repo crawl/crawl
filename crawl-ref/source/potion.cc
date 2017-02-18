@@ -46,19 +46,26 @@ bool PotionEffect::quaff(bool was_known) const
     if (was_known && !check_known_quaff())
         return false;
 
+    begin_quaff(was_known);
+    return true;
+}
+
+void PotionEffect::begin_quaff(bool was_known) const
+{
     const int delay_mut = player_mutation_level(MUT_SEMIPERMEABLE_SKIN);
-    if (delay_mut > 0)
+    if (!delay_mut)
     {
-        CrawlVector potionState;
-        const int delay = BASELINE_DELAY * (delay_mut + random2(delay_mut));
-        potionState.push_back(kind);
-        potionState.push_back(you.elapsed_time + delay);
-        you.props[POTION_QUEUE_KEY].get_vector().insert(0, potionState);
-        return true;
+        if (effect(was_known))
+            post_quaff_effect(was_known);
+        return;
     }
 
-    effect();
-    return true;
+    CrawlVector potionState;
+    const int delay = BASELINE_DELAY * (delay_mut + random2(delay_mut));
+    potionState.push_back(kind);
+    potionState.push_back(you.elapsed_time + delay);
+    potionState.push_back(was_known);
+    you.props[POTION_QUEUE_KEY].get_vector().insert(0, potionState);
 }
 
 bool PotionEffect::check_known_quaff() const
@@ -242,7 +249,7 @@ public:
         static PotionBlood inst; return inst;
     }
 
-    bool effect(bool=true, int pow = 40, bool=true) const override
+    bool effect(bool=true, int pow = 1000, bool=true) const override
     {
         if (you.species == SP_VAMPIRE)
         {
@@ -263,15 +270,6 @@ public:
                 *reason = "You are much too full right now.";
             return false;
         }
-        return true;
-    }
-
-    bool quaff(bool was_known) const override
-    {
-        if (was_known && !check_known_quaff())
-            return false;
-
-        effect(was_known, 1000);
         return true;
     }
 };
@@ -304,14 +302,9 @@ public:
         return haste_player(40 + random2(pow));
     }
 
-    bool quaff(bool was_known) const override
+    void post_quaff_effect(bool was_known) const override
     {
-        if (was_known && !check_known_quaff())
-            return false;
-
-        if (effect())
-            did_god_conduct(DID_HASTY, 10, was_known);
-        return true;
+        did_god_conduct(DID_HASTY, 10, was_known);
     }
 };
 
@@ -440,6 +433,7 @@ public:
 
     bool quaff(bool was_known) const override
     {
+        // XXX: if this potion ever comes back, use begin_quaff() instead
         if (player_res_poison() >= 1)
             mpr("You feel slightly nauseous.");
         else if (effect(was_known))
@@ -560,9 +554,13 @@ public:
         if (was_known && !invis_allowed())
             return false;
 
-        effect();
-        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+        begin_quaff(was_known);
         return true;
+    }
+
+    void post_quaff_effect(bool) const override
+    {
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
     }
 };
 
@@ -680,9 +678,13 @@ public:
             return false;
         }
 
-        if (effect(was_known))
-            xom_is_stimulated(50);
+        begin_quaff(was_known);
         return true;
+    }
+
+    void post_quaff_effect(bool) const override
+    {
+        xom_is_stimulated(50);
     }
 };
 
@@ -743,7 +745,10 @@ public:
 
     bool effect(bool was_known = true, int=40, bool=true) const override
     {
-        return transform(30, transformation::tree, !was_known);
+        const bool success = transform(30, transformation::tree, !was_known);
+        if (!success)
+            mpr("You feel woody for a moment.");
+        return success;
     }
 
     bool quaff(bool was_known) const override
@@ -770,14 +775,14 @@ public:
             }
         }
 
-        if (effect(was_known))
-        {
-            you.transform_uncancellable = true;
-            did_god_conduct(DID_CHAOS, 10, was_known);
-        }
-        else
-            mpr("You feel woody for a moment.");
+        begin_quaff(was_known);
         return true;
+    }
+
+    void post_quaff_effect(bool was_known) const override
+    {
+        you.transform_uncancellable = true;
+        did_god_conduct(DID_CHAOS, 10, was_known);
     }
 };
 
@@ -840,10 +845,14 @@ public:
             return false;
         }
 
-        effect();
+        begin_quaff(was_known);
+        return true;
+    }
+
+    void post_quaff_effect(bool was_known) const override
+    {
         // Zin conduct is violated even if you get lucky and don't mutate
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
-        return true;
     }
 };
 
@@ -868,11 +877,9 @@ public:
         return success;
     }
 
-    bool quaff(bool was_known) const override
+    void post_quaff_effect(bool was_known) const override
     {
-        if (effect())
-            xom_is_stimulated( 50 / _xom_factor(was_known));
-        return true;
+        xom_is_stimulated( 50 / _xom_factor(was_known));
     }
 };
 
@@ -1350,13 +1357,6 @@ bool quaff_potion(item_def &potion)
 {
     const bool was_known = item_type_known(potion);
 
-
-    if (player_mutation_level(MUT_SEMIPERMEABLE_SKIN))
-    {
-        mprf("You pour %s over your skin and begin to absorb it.",
-             potion.name(DESC_THE).c_str());
-    }
-
     if (!was_known)
     {
         set_ident_flags(potion, ISFLAG_IDENT_MASK);
@@ -1365,7 +1365,15 @@ bool quaff_potion(item_def &potion)
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
-    return get_potion_effect(ptyp)->quaff(was_known);
+    if (!get_potion_effect(ptyp)->quaff(was_known))
+        return false;
+
+    if (player_mutation_level(MUT_SEMIPERMEABLE_SKIN))
+    {
+        mprf("You pour %s over your skin and begin to absorb it.",
+             quant_name(potion, 1, DESC_THE).c_str());
+    }
+    return true;
 }
 
 /**
