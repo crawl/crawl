@@ -479,9 +479,11 @@ void wizard_set_gold()
     }
 
     if (buf[0] == '\0')
-        you.gold = default_gold;
+        you.set_gold(default_gold);
     else
-        you.gold = atoi(buf);
+        you.set_gold(max(atoi(buf), 0));
+
+    mprf("You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
 }
 
 void wizard_set_piety()
