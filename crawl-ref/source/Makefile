@@ -1439,6 +1439,10 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
+install-linux-desktop:
+	[ -d $(prefix_fp)/share/applications ] || mkdir -p $(prefix_fp)/share/applications
+	$(COPY) linux/crawl.desktop $(prefix_fp)/share/applications
+
 clean: clean-rltiles clean-webserver clean-android clean-monster
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
