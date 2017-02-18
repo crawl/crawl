@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>crawl.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>Dungeon Crawl Stone Soup </name>
+  <summary>Roguelike dungeon exploration game</summary>
+  <description>
+    <p>
+      Dungeon Crawl Stone Soup is a free roguelike game of exploration and treasure-hunting in dungeons filled with dangerous and unfriendly monsters in a quest for the mystifyingly fabulous Orb of Zot.
+    </p>
+    <p>
+      Dungeon Crawl Stone Soup has diverse species and many different character backgrounds to choose from, deep tactical game-play, sophisticated magic, religion and skill systems, and a grand variety of monsters to fight and run from, making each game unique and challenging.
+    </p>
+    <p>
+      Dungeon Crawl Stone Soup can be played offline, or online on a public telnet/ssh server. These public servers allow you to meet other players’ ghosts, watch other people playing, and, in general, have a blast!
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://crawl.develz.org/wordpress/wp-content/uploads/2014/05/sonja.png</image>
+    </screenshot>
+    <screenshot>
+      <image>http://crawl.develz.org/wordpress/wp-content/uploads/2014/05/roxanne.png</image>
+    </screenshot>
+    <screenshot>
+      <image>http://crawl.develz.org/wordpress/wp-content/uploads/2014/05/ashenzari.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">http://crawl.develz.org/</url>
+  <update_contact>crawl-ref-discuss@lists.sourceforge.net</update_contact>
+</component>

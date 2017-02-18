@@ -1447,6 +1447,10 @@ install-linux-desktop:
 	[ -d $(prefix_fp)/share/icons/hicolor/48x48/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/48x48/apps
 	$(COPY) linux/crawl.png $(prefix_fp)/share/icons/hicolor/48x48/apps
 
+install-linux-appdata:
+	[ -d $(prefix_fp)/share/appdata ] || mkdir -p $(prefix_fp)/share/appdata
+	$(COPY) linux/crawl.appdata.xml $(prefix_fp)/share/appdata
+
 clean: clean-rltiles clean-webserver clean-android clean-monster
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
