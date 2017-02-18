@@ -3643,16 +3643,9 @@ bool cheibriados_slouch()
     return true;
 }
 
-// A low-duration step from time, allowing monsters to get closer
-// to the player safely.
-void cheibriados_temporal_distortion()
+static void _run_time_step()
 {
-    const coord_def old_pos = you.pos();
-
-    const int time = 3 + random2(3);
-    you.moveto(coord_def(0, 0));
-    you.duration[DUR_TIME_STEP] = time;
-
+    ASSERT(you.duration[DUR_TIME_STEP] > 0);
     do
     {
         run_environment_effects();
@@ -3660,6 +3653,18 @@ void cheibriados_temporal_distortion()
         manage_clouds();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
+}
+
+// A low-duration step from time, allowing monsters to get closer
+// to the player safely.
+void cheibriados_temporal_distortion()
+{
+    const coord_def old_pos = you.pos();
+
+    you.moveto(coord_def(0, 0));
+    you.duration[DUR_TIME_STEP] = 3 + random2(3);
+
+    _run_time_step();
 
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0;
@@ -3689,13 +3694,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     you.duration[DUR_TIME_STEP] = pow;
 
     you.time_taken = 10;
-    do
-    {
-        run_environment_effects();
-        handle_monsters();
-        manage_clouds();
-    }
-    while (--you.duration[DUR_TIME_STEP] > 0);
+    _run_time_step();
     // Update corpses, etc. This does also shift monsters, but only by
     // a tiny bit.
     update_level(pow * 10);
