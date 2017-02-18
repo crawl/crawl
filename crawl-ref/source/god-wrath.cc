@@ -392,7 +392,6 @@ static bool _cheibriados_retribution()
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
         {
             mprf(MSGCH_WARN, "You feel the world leave you behind!");
-            you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
         break;
@@ -780,8 +779,7 @@ static bool _trog_retribution()
         case 5:
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mprf(MSGCH_WARN, "You suddenly feel exhausted!");
-                you.set_duration(DUR_EXHAUSTED, 200);
+                mprf(MSGCH_WARN, "You suddenly feel lethargic!");
                 slow_player(100);
             }
             break;

@@ -4551,21 +4551,21 @@ void dec_slow_player(int delay)
     }
 }
 
-// Exhaustion should last as long as slowing.
-void dec_exhaust_player(int delay)
+void dec_berserk_recovery_player(int delay)
 {
-    if (!you.duration[DUR_EXHAUSTED])
+    if (!you.duration[DUR_BERSERK_COOLDOWN])
         return;
 
-    if (you.duration[DUR_EXHAUSTED] > BASELINE_DELAY)
+    if (you.duration[DUR_BERSERK_COOLDOWN] > BASELINE_DELAY)
     {
-        you.duration[DUR_EXHAUSTED] -= you.duration[DUR_HASTE]
-                                       ? haste_mul(delay) : delay;
+        you.duration[DUR_BERSERK_COOLDOWN] -= you.duration[DUR_HASTE]
+                                              ? haste_mul(delay) : delay;
     }
-    if (you.duration[DUR_EXHAUSTED] <= BASELINE_DELAY)
+
+    if (you.duration[DUR_BERSERK_COOLDOWN] <= BASELINE_DELAY)
     {
-        mprf(MSGCH_DURATION, "You feel less exhausted.");
-        you.duration[DUR_EXHAUSTED] = 0;
+        mprf(MSGCH_DURATION, "You recover from your berserk rage.");
+        you.duration[DUR_BERSERK_COOLDOWN] = 0;
     }
 }
 
@@ -8099,7 +8099,7 @@ void player_end_berserk()
     const int dur = 12 + roll_dice(2, 12);
     // Slow durations are multiplied by haste_mul (3/2), exhaustion lasts
     // slightly longer.
-    you.increase_duration(DUR_EXHAUSTED, dur * 2);
+    you.increase_duration(DUR_BERSERK_COOLDOWN, dur * 2);
 
     notify_stat_change(STAT_STR, -5, true);
 

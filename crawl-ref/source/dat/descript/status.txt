@@ -143,7 +143,7 @@ as breath weapons or Zin's recite invocation) until the Breath status expires.
 %%%%
 Exh status
 
-You are too exhausted to use certain tiring abilities; notably, Berserk.
+You are too exhausted to activate any powers granted by Ru.
 %%%%
 Slow status
 
