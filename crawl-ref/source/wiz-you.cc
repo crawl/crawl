@@ -482,6 +482,7 @@ void wizard_set_gold()
         you.gold = default_gold;
     else
         you.gold = atoi(buf);
+    you.redraw_title = true; // for Gozag worshippers
 }
 
 void wizard_set_piety()
