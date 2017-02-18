@@ -5661,7 +5661,7 @@ int player::get_noise_perception(bool adjusted) const
 {
     // los_noise_last_turn is already normalized for the branch's ambient
     // noise.
-    const int level = los_noise_last_turn;
+    int level = los_noise_last_turn;
     static const int BAR_MAX = 1000; // TODO: export to output.cc & webtiles
     if (!adjusted)
          return div_rand_round(level, BAR_MAX);
@@ -5671,11 +5671,12 @@ int player::get_noise_perception(bool adjusted) const
     for (size_t i = 1; i < NOISE_BREAKPOINTS.size(); ++i)
     {
         const int breakpoint = NOISE_BREAKPOINTS[i];
+        const int prev_break = NOISE_BREAKPOINTS[i-1];
+        level -= prev_break;
         if (level > breakpoint)
             continue;
-        const int prev_break = NOISE_BREAKPOINTS[i-1];
         // what fragment of this breakpoint does the noise fill up?
-        const int within_segment = (level - prev_break) * BAR_FRAC / breakpoint;
+        const int within_segment = level * BAR_FRAC / breakpoint;
         // that fragment + previous breakpoints passed is our total noise.
         return within_segment + (i - 1) * BAR_FRAC;
         // example: 10k noise. that's 4k past the 6k breakpoint and into the 7k
