@@ -397,9 +397,10 @@ Renders the caster nigh invulnerable to harm for a brief period, but brings
 them dangerously close to death in the process. So close, in fact, that the
 body believes itself to be dead — healing effects will do nothing.
 
-The caster will receive one warning shortly before the spell expires. With high
-power, the caster will be left more resilient when the effect ends. It has no
-effect on those who are already undead.
+The caster will receive one warning shortly before the spell expires. After
+expiry, the spell cannot immediately be recast, but with high power the caster
+will be left more resilient when the effect ends. It has no effect on those who
+are already undead.
 %%%%
 Debugging Ray spell
 
@@ -504,7 +505,7 @@ Dragon's Call spell
 Issues a powerful call to a draconic realm, beckoning forth dragon after dragon
 to engage the summoner's enemies. The spell is taxing to maintain, and each new
 dragon which answers the call will further drain the summoner's magical
-reserves.
+reserves. After the call ends, it cannot be issued again for a short time.
 %%%%
 Drain Life spell
 
@@ -1558,7 +1559,8 @@ Tornado spell
 Turns the air around the caster into a mighty vortex, doing tremendous damage
 to everyone caught in it. Those affected will also be swept up into the air and
 tossed around. Only the eye of the storm is a safe place, and it follows the
-caster. The spell's effectiveness is greatly diminished in closed areas.
+caster. The spell's effectiveness is greatly diminished in closed areas. After
+the tornado fades, it cannot be called forth again for a short time.
 %%%%
 Trog's Hand spell
 

@@ -319,7 +319,8 @@ You are covering ground slowly.
 DDoor status
 
 You are temporarily invulnerable to harm, but are brought close to death in the
-process and cannot be affected by healing while the effect is active.
+process and cannot be affected by healing while the effect is active. After the
+spell expires, it cannot be immediately recast.
 %%%%
 Quad status
 
@@ -346,7 +347,8 @@ You have astral vision, allowing you to see through walls.
 %%%%
 Tornado status
 
-You are in the eye of a mighty hurricane.
+You are in the eye of a mighty hurricane. After the tornado fades, it cannot be
+called forth again for a short time.
 %%%%
 Liquid status
 
@@ -422,7 +424,8 @@ trees to damage your foes.
 Dragoncall status
 
 You are calling forth mighty dragons to attack your foes. Each dragon which
-answers the call will drain your magical energy.
+answers the call will drain your magical energy. After the call ends, it cannot
+be issued again for a short time.
 %%%%
 Abj status
 
