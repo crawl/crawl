@@ -3661,6 +3661,9 @@ void cheibriados_temporal_distortion()
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
 
+    you.los_noise_level = 0;
+    you.los_noise_last_turn = 0;
+
     if (monster *mon = monster_at(old_pos))
     {
         mon->props[FAKE_BLINK_KEY].get_bool() = true;
