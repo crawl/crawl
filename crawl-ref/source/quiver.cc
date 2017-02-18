@@ -162,7 +162,7 @@ void quiver_item(int slot)
     you.m_quiver.set_quiver(you.inv[slot], t);
 
 #ifdef USE_SOUND
-    parse_sound("CHANGE_QUIVER_SOUND");
+    parse_sound(CHANGE_QUIVER_SOUND);
 #endif
     mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
          t == AMMO_THROW    ? "throwing" :
