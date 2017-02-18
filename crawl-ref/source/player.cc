@@ -4681,8 +4681,8 @@ bool slow_player(int turns)
         return false;
     }
 
-    // Doubling these values because moving while slowed takes twice the
-    // usual delay.
+    // Multiplying these values because moving while slowed takes longer than
+    // the usual delay.
     turns = haste_mul(turns);
     int threshold = haste_mul(100);
 
@@ -4707,7 +4707,7 @@ void dec_slow_player(int delay)
     if (!you.duration[DUR_SLOW])
         return;
 
-    if (you.duration    [DUR_SLOW] > BASELINE_DELAY)
+    if (you.duration[DUR_SLOW] > BASELINE_DELAY)
     {
         // Make slowing and hasting effects last as long.
         you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
@@ -8556,8 +8556,8 @@ void player_end_berserk()
     you.berserk_penalty = 0;
 
     const int dur = 12 + roll_dice(2, 12);
-    // For consistency with slow give exhaustion 2 times the nominal
-    // duration.
+    // Slow durations are multiplied by haste_mul (3/2), exhaustion lasts
+    // slightly longer.
     you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
     notify_stat_change(STAT_STR, -5, true);
