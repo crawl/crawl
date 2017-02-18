@@ -1286,7 +1286,24 @@ static void _redraw_title()
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
-    if (!you_worship(GOD_NO_GOD))
+    if (you_worship(GOD_NO_GOD))
+    {
+        if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+            && !had_gods())
+        {
+            string godpiety = "**....";
+            textcolour(DARKGREY);
+            if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+                NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
+            clear_to_end_of_line();
+        }
+        else
+        {
+            // Still need to clear in case the player was excommunicated
+            clear_to_end_of_line();
+        }
+    }
+    else
     {
         string god = " of ";
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
@@ -1312,16 +1329,6 @@ static void _redraw_title()
                               _god_status_colour(god_colour(you.religion)));
         }
     }
-    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
-             && !had_gods())
-    {
-        string godpiety = "**....";
-        textcolour(DARKGREY);
-        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
-            NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
-        clear_to_end_of_line();
-    }
-
 
     textcolour(LIGHTGREY);
 }
