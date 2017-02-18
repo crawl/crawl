@@ -237,10 +237,10 @@ Place
 Noise
   This is a colored bar indicating the loudness of noise that you heard on your
   last turn. The color provides a rough guide to how far away the noise it
-  indicates might be audible.  If the bar is gray, the sound is less likely to
+  indicates might be audible. If the bar is gray, the sound is less likely to
   be audible outside of your line of sight (at least in an open area); if it is
   yellow, the sound is likely to be audible outside of your line of sight; and
-  if it is red, the sound will be audible at a substantial distance.  If the bar
+  if it is red, the sound will be audible at a substantial distance. If the bar
   turns magenta, you have made one of the loudest noises in the dungeon. N.b.:
   terrain can reduce or block the spread of noise.
 
