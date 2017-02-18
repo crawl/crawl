@@ -16,6 +16,7 @@
 #include "options.h"
 #include "orb.h" // orb_limits_translocation in fill_status_info
 #include "player-stats.h"
+#include "potion.h" // POTION_QUEUE_KEY
 #include "random.h" // for midpoint_msg.offset() in duration-data
 #include "religion.h"
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
@@ -170,6 +171,7 @@ static void _describe_stat_zero(status_info* inf, stat_type st);
 static void _describe_terrain(status_info* inf);
 static void _describe_missiles(status_info* inf);
 static void _describe_invisible(status_info* inf);
+static void _describe_drink(status_info* inf);
 
 bool fill_status_info(int status, status_info* inf)
 {
@@ -365,6 +367,10 @@ bool fill_status_info(int status, status_info* inf)
 
     case STATUS_INVISIBLE:
         _describe_invisible(inf);
+        break;
+
+    case STATUS_DRINK:
+        _describe_drink(inf);
         break;
 
     case STATUS_MANUAL:
@@ -1051,6 +1057,17 @@ static void _describe_invisible(status_info* inf)
     _mark_expiring(inf, dur_expiring(you.form == transformation::shadow
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
+}
+
+static void _describe_drink(status_info* inf)
+{
+    if (!you.props.exists(POTION_QUEUE_KEY))
+        return;
+
+    inf->light_colour = YELLOW;
+    inf->light_text   = "Drink";
+    inf->short_text   = "drinking";
+    inf->long_text    = "You are absorbing potion(s) through your skin.";
 }
 
 /**

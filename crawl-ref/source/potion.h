@@ -6,6 +6,8 @@
 #ifndef POTION_H
 #define POTION_H
 
+static const string POTION_QUEUE_KEY = "potion_queue"; // semipermeable skin
+
 class PotionEffect
 {
 private:

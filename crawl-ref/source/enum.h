@@ -3867,6 +3867,7 @@ enum mutation_type
     MUT_SANGUINE_ARMOUR,
 #endif
     MUT_HOP,
+    MUT_SEMIPERMEABLE_SKIN,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

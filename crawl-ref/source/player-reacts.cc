@@ -93,6 +93,7 @@
 #include "output.h"
 #include "player.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -541,6 +542,28 @@ static void _try_to_respawn_ancestor()
                       ancestor); // ;)
 }
 
+/**
+ * Check to see if any potions delayed by MUT_SEMIPERMEABLE_SKIN are ready
+ * to take effect; if so, remove them from the potion queue.
+ */
+static void _drink_delayed_potions()
+{
+    CrawlVector &queue = you.props[POTION_QUEUE_KEY].get_vector();
+    while (!queue.empty())
+    {
+        CrawlVector &potion = queue[queue.size() - 1].get_vector();
+        const potion_type ptyp = (potion_type)potion[0].get_int();
+        const int effect_time = potion[1].get_int();
+        if (effect_time > you.elapsed_time)
+            return;
+
+        get_potion_effect(ptyp)->effect();
+        queue.pop_back();
+    }
+
+    you.props.erase(POTION_QUEUE_KEY);
+}
+
 
 /**
  * Take a 'simple' duration, decrement it, and print messages as appropriate
@@ -829,6 +852,9 @@ static void _decrement_durations()
         activate_sanguine_armour();
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+
+    if (you.props.exists(POTION_QUEUE_KEY))
+        _drink_delayed_potions();
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)

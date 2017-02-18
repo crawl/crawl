@@ -46,6 +46,17 @@ bool PotionEffect::quaff(bool was_known) const
     if (was_known && !check_known_quaff())
         return false;
 
+    const int delay_mut = player_mutation_level(MUT_SEMIPERMEABLE_SKIN);
+    if (delay_mut > 0)
+    {
+        CrawlVector potionState;
+        const int delay = BASELINE_DELAY * (delay_mut + random2(delay_mut));
+        potionState.push_back(kind);
+        potionState.push_back(you.elapsed_time + delay);
+        you.props[POTION_QUEUE_KEY].get_vector().insert(0, potionState);
+        return true;
+    }
+
     effect();
     return true;
 }
@@ -1338,6 +1349,13 @@ const PotionEffect* get_potion_effect(potion_type pot)
 bool quaff_potion(item_def &potion)
 {
     const bool was_known = item_type_known(potion);
+
+
+    if (player_mutation_level(MUT_SEMIPERMEABLE_SKIN))
+    {
+        mprf("You pour %s over your skin and begin to absorb it.",
+             potion.name(DESC_THE).c_str());
+    }
 
     if (!was_known)
     {

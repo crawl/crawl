@@ -902,6 +902,21 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_SEMIPERMEABLE_SKIN, 0, 3, mutflag::BAD, true, // should be false?
+  "semipermeable skin",
+
+  {"You absorb potions through your skin, after a short delay.",
+   "You absorb potions through your skin, after a delay.",
+   "You absorb potions through your skin, after a long delay."},
+
+  {"Your skin begins to absorb moisture.",
+   "Your skin takes longer to absorb potions.",
+   "Your skin takes longer to absorb potions."},
+
+  {"Your skin no longer absorbs moisture.",
+   "Your skin absorbs potions more quickly.",
+   "Your skin absorbs potions more quickly."},
+},
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::GOOD, true,
   "shaggy fur",
