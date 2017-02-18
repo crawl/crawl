@@ -5360,6 +5360,10 @@ player::player()
         game_seeds[i] = get_uint32();
 
     old_hunger          = hunger;
+
+    los_noise_level     = 0;            // temporary slot for loud noise levels
+    los_noise_last_turn = 0;            // loudest noise heard on the last turn, for displaying in the HUD
+
     transit_stair       = DNGN_UNSEEN;
     entering_level      = false;
 
@@ -5636,6 +5640,44 @@ int calc_hunger(int food_cost)
         return food_cost/2;
     }
     return food_cost;
+}
+
+/*
+ * Approximate the loudest noise the player heard in the last
+ * turn, possibly rescaling. This gets updated every
+ * `world_reacts`. If `adjusted` is set to true, this rescales
+ * noise on a 0-1000 scale according to some breakpoints that
+ * I have hand-calibrated. Otherwise, it returns the raw noise
+ * value (approximately from 0 to 40). The breakpoints aim to
+ * approximate 1x los radius, 2x los radius, and 3x los radius
+ * relative to an open area.
+ *
+ * @param adjusted      Whether to rescale the noise level.
+ *
+ * @return The (scaled or unscaled) noise level heard by the player.
+ */
+int player::get_noise_perception(bool adjusted) const
+{
+    // los_noise_last_turn is already normalized for the branch's ambient
+    // noise.
+    int level = los_noise_last_turn;
+    int adjusted_level;
+    if (adjusted)
+    {
+        if (level <= 6000)
+            adjusted_level = level * 333 / 6000;
+        else if (level <= 13000)
+            adjusted_level = (level - 6000) * 333 / 7000 + 333;
+        else if (level <= 29000)
+        {
+            adjusted_level = (level - 13000) * 333 / 16000 + 666;
+        } else {
+            adjusted_level = 1000;
+        }
+        return adjusted_level;
+    } else {
+        return div_rand_round(level, 1000);
+    }
 }
 
 bool player::paralysed() const
@@ -7355,7 +7397,10 @@ void player::awaken()
 void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
+    {
         awaken();
+        dprf("Disturbance of intensity %d awoke player", disturbance);
+    }
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
@@ -7499,6 +7544,7 @@ void player::set_gold(int amount)
                 else if (old_gold >= cost && gold < cost)
                     power.display(false, "You no longer have enough gold to %s.");
             }
+            you.redraw_title = true;
         }
     }
 }
