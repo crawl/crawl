@@ -1586,7 +1586,7 @@ static int _ieoh_jian_number_of_attacks()
 {
     int move_delay = player_movement_speed();
     int attack_delay = you.attack_delay().roll();
-    return div_rand_round(move_delay, attack_delay);
+    return div_rand_round(move_delay * move_delay, 10 * attack_delay);
 }
 
 static void _ieoh_jian_lunge(const coord_def& old_pos)
@@ -1594,13 +1594,14 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
-    int number_of_attacks = _ieoh_jian_number_of_attacks();
 
     if (!mons || _dont_attack_martial(mons) || !mons->alive())
         return;
 
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
         you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+    int number_of_attacks = _ieoh_jian_number_of_attacks();
 
     if (number_of_attacks == 0) 
     {
