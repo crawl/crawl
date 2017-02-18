@@ -687,7 +687,7 @@ static void _print_stats_gold(int x, int y, colour_t colour)
     if (you.duration[DUR_GOZAG_GOLD_AURA])
         textcolour(LIGHTBLUE);
     else
-        textcolour(colour);
+        textcolour(HUD_VALUE_COLOUR);
     CPRINTF("%-6d", you.gold);
 }
 
@@ -1308,7 +1308,8 @@ static void _redraw_title()
         if (you_worship(GOD_GOZAG))
         {
             // "Mottled Draconian of Gozag  Gold: 99999" just fits
-            _print_stats_gold(textwidth + 2, 2, _god_status_colour(god_colour(you.religion)));
+            _print_stats_gold(textwidth + 2, 2,
+                              _god_status_colour(god_colour(you.religion)));
         }
     }
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
