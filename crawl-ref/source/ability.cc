@@ -2720,7 +2720,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();
-        cheibriados_time_step(you.skill(SK_INVOCATIONS, 10) * you.piety / 100);
+        cheibriados_time_step(max(1, you.skill(SK_INVOCATIONS, 10)
+                                     * you.piety / 100));
         break;
 
     case ABIL_CHEIBRIADOS_TIME_BEND:
