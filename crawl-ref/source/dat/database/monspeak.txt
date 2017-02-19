@@ -5107,7 +5107,7 @@ _Menkaure_rare_
 
 @The_monster@'s ankle releases a plume of dust as @subjective@ confides, "I'm not really a mummy, you know."
 
-VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
+VISUAL:@The_monster@ forgets how to speak, silenced by the ages.
 
 VISUAL:@The_monster@ gestures ominously @at_foe@.
 
