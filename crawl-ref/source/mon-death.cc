@@ -66,6 +66,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
@@ -439,6 +440,19 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         { MONS_BAI_SUZHEN, 3 },
         { MONS_BAI_SUZHEN_DRAGON, 3 },
     };
+
+    if (mtyp == MONS_DEEP_TROLL)
+    {
+        item.props["item_tile_name"] = "deep_troll_leather";
+        item.props["worn_tile_name"] = "deep_troll_leather";
+        bind_item_tile(item);
+    }
+    else if (mtyp == MONS_IRON_TROLL)
+    {
+        item.props["item_tile_name"] = "iron_troll_leather";
+        item.props["worn_tile_name"] = "iron_troll_leather";
+        bind_item_tile(item);
+    }
 
     const int* bonus_plus = map_find(hide_avg_plusses, montype);
     if (bonus_plus)
