@@ -651,12 +651,10 @@ static void _print_stats_noise(int x, int y)
     {
         CGOTOXY(x + bar_position, y, GOTO_STAT);
         textcolour(LIGHTMAGENTA);
+
         // These need to be one extra wide in case silence happens
         // immediately after super-loud (magenta) noise
-        if (you.wizard)
-            CPRINTF("(Sil)  ");
-        else
-            CPRINTF("(Sil)     ");
+        CPRINTF("%-*s", Noise_Bar.horiz_bar_width + 1, "(Sil)");
     }
     else
     {

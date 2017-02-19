@@ -617,7 +617,7 @@ static like_response _on_kill(const char* desc, mon_holy_type holiness,
                               special_piety_t special = nullptr,
                               bool really_like = false)
 {
-    like_response response = {
+    return {
         desc,
         really_like,
         _piety_bonus_for_holiness(holiness),
@@ -626,7 +626,6 @@ static like_response _on_kill(const char* desc, mon_holy_type holiness,
         " accepts your kill.",
         special
     };
-    return response;
 }
 
 /// Response for gods that like killing the living.
