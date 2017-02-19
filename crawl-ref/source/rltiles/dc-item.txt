@@ -387,6 +387,9 @@ gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
+deep_troll_leather DEEP_TROLL_LEATHER
+iron_troll_leather IRON_TROLL_LEATHER
+
 %rim 1
 cloak1_leather ARM_CLOAK
 cloak2
