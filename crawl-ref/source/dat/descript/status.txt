@@ -676,3 +676,14 @@ maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
 including recasting the spell, will end it.
 
 # XXX: also cover Ray+, Ray++?
+%%%%
+Serp status
+
+You are moving at supernatural speed, causing any movement actions to become
+instant.
+%%%%
+Hevn status
+
+Heavenly clouds are boosting your damage and precision. Performing martial 
+attacks against multiple enemies will prevent the storm from settling.
+%%%%

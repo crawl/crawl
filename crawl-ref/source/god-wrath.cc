@@ -9,6 +9,7 @@
 
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "coordit.h"
@@ -85,6 +86,7 @@ static const char *_god_wrath_adjectives[] =
     "progress",         // Pakellas
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
+    "rancor",           // Ieoh Jian
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -1612,6 +1614,124 @@ static bool _choose_hostile_monster(const monster& mon)
     return mon.attitude == ATT_HOSTILE;
 }
 
+enum _ijc_pattern
+{
+    PATTERN_SHORT_CIRCLE,
+    PATTERN_LONG_CIRCLE,
+    PATTERN_CHECKERBOARD,
+};
+
+static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype,
+                                                _ijc_pattern pattern)
+{
+    vector<coord_def> positions;
+
+    switch (pattern)
+    {
+        case PATTERN_SHORT_CIRCLE:
+            positions.push_back(you.pos() + coord_def(1,0));
+            positions.push_back(you.pos() + coord_def(-1,0));
+            positions.push_back(you.pos() + coord_def(0,1));
+            positions.push_back(you.pos() + coord_def(0,-1));
+            break;
+        case PATTERN_LONG_CIRCLE:
+            positions.push_back(you.pos() + coord_def(2,0));
+            positions.push_back(you.pos() + coord_def(-2,0));
+            positions.push_back(you.pos() + coord_def(0,2));
+            positions.push_back(you.pos() + coord_def(0,-2));
+            break;
+        case PATTERN_CHECKERBOARD:
+            positions.push_back(you.pos() + coord_def(1,1));
+            positions.push_back(you.pos() + coord_def(-1,1));
+            positions.push_back(you.pos() + coord_def(1,-1));
+            positions.push_back(you.pos() + coord_def(-1,-1));
+    }
+
+    for (auto& position : positions)
+    {
+        mgen_data mg = mgen_data::hostile_at(MONS_DANCING_WEAPON, true, position)
+                        .set_summoned(nullptr, 0, 0, GOD_IEOH_JIAN)
+                        .set_non_actor_summoner(_god_wrath_name(GOD_IEOH_JIAN));
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        mg.flags |= MG_FORCE_PLACE;
+        // Now create monster.
+        if (monster *mon =
+            create_monster(mg))
+        {
+            ASSERT(mon->weapon() != nullptr);
+            item_def& wpn(*mon->weapon());
+
+            switch (subtype)
+            {
+                case WPN_DIRE_FLAIL:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_FLAMING);
+                    break;
+                case WPN_QUARTERSTAFF:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
+                    break;
+                case WPN_DAGGER:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+                    break;
+                default:
+                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
+                    break;
+            }
+
+            wpn.plus  = random2(5);
+            wpn.sub_type = subtype;
+
+            set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+
+            item_colour(wpn);
+
+            ghost_demon newstats;
+            newstats.init_dancing_weapon(wpn, you.experience_level * 50 / 9);
+
+            mon->set_ghost(newstats);
+            mon->ghost_demon_init();
+        }
+    }
+}
+
+static bool _ieoh_jian_retribution()
+{
+    switch (random2(4))
+    {
+        case 0:
+            ieoh_jian_sifu_message(" whispers, \"Die by a thousand cuts...\"");
+            mpr("You feel the sudden stab of multiple needles!");
+            _summon_hostile_weapons_ijc_flavour(WPN_DAGGER,
+                                                PATTERN_LONG_CIRCLE);
+            you.set_duration(DUR_BARBS, random_range(5, 10));
+            break;
+        case 1:
+            ieoh_jian_sifu_message(" whispers, \"Nowhere to run...\"");
+            mpr("Your limbs feel heavy!");
+            _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF,
+                                                PATTERN_LONG_CIRCLE);
+            you.set_duration(DUR_SLOW, random_range(5, 10));
+            break;
+        case 2:
+            ieoh_jian_sifu_message(" whispers, \"These will loosen your "
+                                   "tongue...\"");
+            _summon_hostile_weapons_ijc_flavour(WPN_DIRE_FLAIL,
+                                                PATTERN_SHORT_CIRCLE);
+            you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
+            invalidate_agrid(true);
+            break;
+        case 3:
+            ieoh_jian_sifu_message(" whispers, \"Suffer, mortal...\"");
+            mpr("You feel a burning poison under your skin!");
+            you.corrode_equipment("The poison", 4);
+            lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
+            lose_stat(STAT_DEX, 1 + random2(you.dex() / 8));
+            break;
+        default:
+            break;
+    }
+
+    return true;
+}
 
 static bool _uskayaw_retribution()
 {
@@ -1698,6 +1818,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
+    case GOD_IEOH_JIAN:     do_more = _ieoh_jian_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:
