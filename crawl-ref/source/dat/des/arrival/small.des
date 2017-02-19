@@ -3177,3 +3177,44 @@ xtttttttt'...'''ttttttx
 xtttttttttt.ttttttttttx
 xtttttttttttttttttttttx
 ENDMAP
+
+###############################################################################
+# This arrival vault represents a confrontation between the faithful zealots
+# of The Shining One and Yredelemnul.
+ 
+NAME:    chereshnev_arrival_zealots
+TAGS:    arrival no_monster_gen no_item_gen no_pool_fixup generate awake \
+         no_trap_gen
+ORIENT:  float
+KMONS:   A = angel god:the_shining_one att:neutral ench:haste ench:berserk
+KMONS:   B = profane servitor god:yredelemnul att:neutral ench:berserk \
+         ench:haste
+KMONS:   C = quicksilver dragon zombie
+KMONS:   D = quicksilver dragon
+KMONS:   E = water elemental
+KMONS:   F = fire elemental
+KMONS:   G = balrug; nothing
+KMONS:   H = cherub; nothing
+KFEAT:   A = w
+KFEAT:   B = l
+KFEAT:   C = w
+KFEAT:   D = l
+KFEAT:   E = w
+KFEAT:   F = l
+KFEAT:   G = w
+KFEAT:   H = l
+SUBST:   ? = UV, ! = YV 
+SHUFFLE: ACU/BDY, xm/cn, CD/EF/GH
+MAP
+xxx+xxx
+x!m.m?x
+xmm.mmx
+xDm.mCx
+xBm.mAx
+xDm.mCx
+xmm.mmx
+x!m{m?x
+xxxxxxx
+ENDMAP
+
+###############################################################################
