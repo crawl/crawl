@@ -1148,9 +1148,9 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
                           // to be shown.
         {
             you.los_noise_level = 0;
-        } else {
-            you.los_noise_level = max(you.los_noise_level, noise_intensity_millis);
         }
+        else
+            you.los_noise_level = max(you.los_noise_level, noise_intensity_millis);
         ++affected_actor_count;
     }
 

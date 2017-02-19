@@ -216,7 +216,9 @@ struct plus_range
     int min, max;
     int nrolls; ///< min 1
 };
-struct mon_weapon_spec {
+
+struct mon_weapon_spec
+{
     /// weighted list of weapon types; NUM_WEAPONS -> no weapon
     weapon_list types;
     /// range of possible weapon enchant plusses; if nonzero, sets force_item

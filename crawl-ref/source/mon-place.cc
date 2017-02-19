@@ -2008,7 +2008,8 @@ bool downgrade_zombie_to_skeleton(monster* mon)
 }
 
 /// Under what conditions should a band spawn with a monster?
-struct band_conditions {
+struct band_conditions
+{
     int chance_denom; ///< A 1/x chance for the band to appear.
     int min_depth; ///< The minimum absdepth for the band.
     function<bool()> custom_condition; ///< Additional conditions.
@@ -2023,7 +2024,8 @@ struct band_conditions {
 };
 
 /// Information about a band of followers that may spawn with some monster.
-struct band_info {
+struct band_info
+{
     /// The type of the band; used to determine the type of followers.
     band_type type;
     /// The min & max # of followers; doesn't count the leader.
@@ -2033,7 +2035,8 @@ struct band_info {
 };
 
 /// One or more band_infos, with conditions.
-struct band_set {
+struct band_set
+{
     /// When should the band actually be generated?
     band_conditions conditions;
     /// The bands to be selected between, with equal weight.

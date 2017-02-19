@@ -53,7 +53,8 @@ struct midpoint_msg
                     ///< reduced by after the message prints?
 
     /// Randomly, much should the duration actually be reduced by?
-    int offset() const {
+    int offset() const
+    {
         return max_offset ? random2(max_offset+1) : 0;
     }
 };

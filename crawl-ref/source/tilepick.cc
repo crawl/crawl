@@ -1244,7 +1244,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR, },
     };
 
-    struct shape_size_tiles {
+    struct shape_size_tiles
+    {
         tileidx_t small; ///< Z_SMALL and default tile
         tileidx_t big;   ///< Z_BIG tile
     };
