@@ -677,13 +677,14 @@ including recasting the spell, will end it.
 
 # XXX: also cover Ray+, Ray++?
 %%%%
-Serp status
+Lash status
 
-You are moving at supernatural speed, causing any movement actions to become
-instant.
+You are moving at supernatural speed, causing movement actions to become
+instant. Any martial attacks made while moving in this way are increased in
+effectiveness.
 %%%%
 Hevn status
 
 Heavenly clouds are boosting your damage and precision. Performing martial
-attacks against multiple enemies will prevent the storm from settling.
+attacks against multiple enemies prevents the storm from settling.
 %%%%
