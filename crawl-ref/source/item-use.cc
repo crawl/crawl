@@ -2185,9 +2185,9 @@ static void _rebrand_weapon(item_def& wpn)
     convert2bad(wpn);
 }
 
-static string _item_name(item_def &item) {
-    return item.name(in_inventory(item) ? DESC_YOUR
-                                        : DESC_THE);
+static string _item_name(item_def &item)
+{
+    return item.name(in_inventory(item) ? DESC_YOUR : DESC_THE);
 }
 
 static void _brand_weapon(item_def &wpn)

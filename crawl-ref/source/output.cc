@@ -623,11 +623,9 @@ static void _print_stats_noise(int x, int y)
     else if (level <= 666)
         noisecolour = YELLOW;
     else if (level < 1000)
-    {
         noisecolour = RED;
-    } else {
+    else
         noisecolour = LIGHTMAGENTA;
-    }
 
     int bar_position;
     if (you.wizard)
@@ -642,27 +640,33 @@ static void _print_stats_noise(int x, int y)
         CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
         textcolour(noisecolour);
         CPRINTF("%2d", you.get_noise_perception(false));
-    } else {
+    }
+    else
+    {
         Noise_Bar.horiz_bar_width = 9;
         bar_position = 7;
     }
+
     if (silence)
     {
         CGOTOXY(x + bar_position, y, GOTO_STAT);
         textcolour(LIGHTMAGENTA);
+        // These need to be one extra wide in case silence happens
+        // immediately after super-loud (magenta) noise
         if (you.wizard)
-        {
             CPRINTF("(Sil)  ");
-        } else {
-            CPRINTF("(Sil)     "); // These need to be one extra wide in case silence happens
-                                   // immediately after super-loud (magenta) noise
-        }
-    } else {
+        else
+            CPRINTF("(Sil)     ");
+    }
+    else
+    {
         if (level == 1000)
         {
-            // the bar goes up to 11 for extra loud sounds! (Well, it's really 10.)
+            // the bar goes up to 11 for extra loud sounds! (Well, really 10.)
             Noise_Bar.horiz_bar_width += 1;
-        } else {
+        }
+        else
+        {
             CGOTOXY(x + 16, y, GOTO_STAT);
             CPRINTF(" "); // clean up after the extra wide bar
         }
@@ -674,7 +678,9 @@ static void _print_stats_noise(int x, int y)
 #endif
         Noise_Bar.m_default = noisecolour;
         Noise_Bar.m_change_pos = noisecolour;
-        Noise_Bar.draw(x + bar_position, y, div_round_up((level * Noise_Bar.horiz_bar_width), 1000), Noise_Bar.horiz_bar_width);
+        Noise_Bar.draw(x + bar_position, y,
+                       div_round_up((level * Noise_Bar.horiz_bar_width), 1000),
+                       Noise_Bar.horiz_bar_width);
     }
 }
 

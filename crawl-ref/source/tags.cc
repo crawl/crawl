@@ -1340,7 +1340,8 @@ static void tag_construct_char(writer &th)
 }
 
 /// is a custom scoring mechanism being stored?
-static bool _calc_score_exists() {
+static bool _calc_score_exists()
+{
     lua_stack_cleaner clean(dlua);
     dlua.pushglobal("dgn.persist.calc_score");
     return !lua_isnil(dlua, -1);

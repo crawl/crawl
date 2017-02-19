@@ -82,7 +82,8 @@ class opacity_mons_immob : public opacity_func
 {
 public:
     opacity_mons_immob(const monster* mons) : mon(mons) {}
-    opacity_func* clone() const override {
+    opacity_func* clone() const override
+    {
         return new opacity_mons_immob(mon);
     }
 
