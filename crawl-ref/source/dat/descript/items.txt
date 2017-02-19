@@ -377,6 +377,11 @@ deck of summoning
 
 A deck of magical cards, depicting a range of weird and wonderful creatures.
 %%%%
+deep troll leather armour
+
+The stiff and knobbly skin of a deep troll. It magically regenerates its
+wearer's flesh.
+%%%%
 demon blade
 
 A terrible weapon, forged in the fires of Hell.
@@ -1184,6 +1189,11 @@ trishula
 A blessed trident moulded by cleansing flame, with three points symbolising the
 combined might of the three holy gods. It is a favoured weapon of the Shining
 One's servants.
+%%%%
+troll iron armour
+
+The heavy and metallic skin of an iron troll. It magically regenerates its
+wearer's flesh.
 %%%%
 troll leather armour
 

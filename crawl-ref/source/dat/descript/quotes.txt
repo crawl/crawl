@@ -455,6 +455,10 @@ Darkness spell
      And hug it in my arms.”
     -William Shakespeare, “Measure for Measure”
 %%%%
+deep troll leather armour
+
+<troll hide>
+%%%%
 Dispater
 
 “Hoc idem magis ostendit antiquius Iovis nomen: nam olim Diovis et Diespiter
@@ -3119,6 +3123,10 @@ troll hide
  Never go back, as you tell me plainly —
  That is a thing that I'll not submit to.”
     -Henrik Ibsen, _Peer Gynt_ . 1867.
+%%%%
+troll iron armour
+
+<troll hide>
 %%%%
 troll leather armour
 
