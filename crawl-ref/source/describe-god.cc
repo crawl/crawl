@@ -600,49 +600,49 @@ static void _god_wrath_description(god_type which_god)
  */
 static string _get_god_misc_info(god_type which_god)
 {
+    string info = "";
+    skill_type skill = invo_skill(which_god);
+
+    switch (skill)
+    {
+        case SK_INVOCATIONS:
+            break;
+        case SK_NONE:
+            if (which_god == GOD_GOZAG) // XXX: No piety, but there's no space
+                break;                  // for details due to the bribe table.
+            info += uppercase_first(apostrophise(god_name(which_god))) +
+                    " powers are based on piety instead of Invocations skill.";
+            break;
+        default:
+            info += uppercase_first(apostrophise(god_name(which_god))) +
+                    " powers are based on " + skill_name(skill) + " instead"
+                    " of Invocations skill.";
+            break;
+    }
+
+    if (!info.empty())
+        info += "\n\n";
+
     switch (which_god)
     {
         case GOD_ASHENZARI:
-        case GOD_JIYVA:
-        case GOD_TROG:
-        {
-            const string piety_only = "Note that " + god_name(which_god) +
-                                      " does not demand training of the"
-                                      " Invocations skill. All abilities are"
-                                      " purely based on piety.";
-
             if (have_passive(passive_t::bondage_skill_boost))
-                return piety_only + "\n\n" + _describe_ash_skill_boost();
-
-            return piety_only;
-        }
-
-        case GOD_KIKUBAAQUDGHA:
-            return "The power of Kikubaaqudgha's abilities is governed by "
-                   "Necromancy skill instead of Invocations.";
-
-        case GOD_ELYVILON:
-            return "Healing hostile monsters may pacify them, turning them "
-                   "neutral. Pacification works best on natural beasts, "
-                   "worse on monsters of your species, worse on other "
-                   "species, worst of all on demons and undead, and not at "
-                   "all on sleeping or mindless monsters. If it succeeds, "
-                   "you gain half of the monster's experience value. Pacified "
-                   "monsters try to leave the level.";
+                info += _describe_ash_skill_boost();
+            break;
 
         case GOD_GOZAG:
-            return _describe_branch_bribability();
-
-        case GOD_PAKELLAS:
-            return "The power of Pakellas' abilities is governed by "
-                   "Evocations skill instead of Invocations.";
+            info += _describe_branch_bribability();
+            break;
 
         case GOD_HEPLIAKLQANA:
-            return _describe_ancestor_upgrades();
+            info += _describe_ancestor_upgrades();
+            break;
 
         default:
-            return "";
+            break;
     }
+
+    return info;
 }
 
 /**
