@@ -74,8 +74,7 @@ The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
 after battling their way out of the afterlife. Disciples of the Council are
 able to execute acrobatic martial maneuvers, such as wall jumps, spinning
 attacks and punishing lunges. They will eventually become able to request
-help in the form of a storm of heavenly clouds. Followers unlock these
-abilities through practice, so they do not benefit from training Invocations.
+help in the form of a storm of heavenly clouds.
 %%%%
 Jiyva
 

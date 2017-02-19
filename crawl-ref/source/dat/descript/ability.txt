@@ -873,9 +873,9 @@ gender. This does not take any time.
 %%%%
 Serpent's Lash ability
 
-Move at supernatural speeds for a short distance. After using this ability,
-the next two movement actions are instant. Martial attacks performed under the
-effect of Serpent's Lash are more effective.
+Allows you to move at supernatural speeds for a short distance, causing the
+next two movement actions taken to be instant. Martial attacks performed under
+the effect of Serpent's Lash are more effective.
 %%%%
 Heaven On Earth ability
 

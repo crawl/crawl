@@ -439,7 +439,7 @@ bool fill_status_info(int status, status_info* inf)
         {
             inf->light_colour = WHITE;
             inf->light_text
-               = make_stringf("Serp (%u)",
+               = make_stringf("Lash (%u)",
                               you.attribute[ATTR_SERPENTS_LASH]);
             inf->short_text = "serpent's lash";
             inf->long_text = "You are moving at supernatural speed.";
@@ -454,7 +454,8 @@ bool fill_status_info(int status, status_info* inf)
                = make_stringf("Hevn (%u)",
                               you.attribute[ATTR_HEAVEN_ON_EARTH]);
             inf->short_text = "heaven on earth";
-            inf->long_text = "Heavenly clouds increase your damage and precision.";
+            inf->long_text = "Heavenly clouds are increasing your damage and "
+                             "accuracy.";
         }
         break;
 
