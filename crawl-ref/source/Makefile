@@ -1442,6 +1442,10 @@ endif
 install-linux-desktop:
 	[ -d $(prefix_fp)/share/applications ] || mkdir -p $(prefix_fp)/share/applications
 	$(COPY) linux/crawl.desktop $(prefix_fp)/share/applications
+	[ -d $(prefix_fp)/share/icons/hicolor/scalable/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/scalable/apps
+	$(COPY) linux/crawl.svg $(prefix_fp)/share/icons/hicolor/scalable/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/48x48/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/48x48/apps
+	$(COPY) linux/crawl.png $(prefix_fp)/share/icons/hicolor/48x48/apps
 
 clean: clean-rltiles clean-webserver clean-android clean-monster
 	+$(MAKE) -C $(UTIL) clean
