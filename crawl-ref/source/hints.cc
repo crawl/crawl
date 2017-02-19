@@ -3453,7 +3453,7 @@ void hints_inscription_info(string prompt)
     {
         text << "\n"
          "Inscriptions are a powerful concept of Dungeon Crawl.\n"
-         "You can inscribe items to to comment on them \n"
+         "You can inscribe items to comment on them \n"
          "or to set rules for item interaction. If you are new to Crawl, \n"
          "you can safely ignore this feature.";
 

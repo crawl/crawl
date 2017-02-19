@@ -614,7 +614,7 @@ void list_spellset(const spellset &spells, const monster_info *mon_owner,
 
     description.cprintf("Select a spell to read its description");
     if (can_memorise)
-        description.cprintf(" or to to memorise it");
+        description.cprintf(" or to memorise it");
     description.cprintf(".\n");
 
     spell_scroller ssc(spells, mon_owner, source_item);

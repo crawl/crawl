@@ -492,7 +492,7 @@ F.     Master and slaves
 ========================
 
 Multiple Triggerables can be combined together in a master/slave setup. There
-are multiple methods of doing this. The simplest is to to provide a
+are multiple methods of doing this. The simplest is to provide a
 "master_name" parameter to the main marker, and then provide "slave_to" at all
 of the individual slave markers, setting the same value for each.
 
