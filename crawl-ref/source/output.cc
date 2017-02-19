@@ -628,7 +628,7 @@ static void _print_stats_noise(int x, int y)
         noisecolour = LIGHTMAGENTA;
 
     int bar_position;
-    if (you.wizard)
+    if (you.wizard && !silence)
     {
         Noise_Bar.horiz_bar_width = 6;
         bar_position = 10;
@@ -639,7 +639,7 @@ static void _print_stats_noise(int x, int y)
         // very complicated.
         CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
         textcolour(noisecolour);
-        CPRINTF("%2d", you.get_noise_perception(false));
+        CPRINTF("%2d ", you.get_noise_perception(false));
     }
     else
     {
@@ -652,11 +652,11 @@ static void _print_stats_noise(int x, int y)
         CGOTOXY(x + bar_position, y, GOTO_STAT);
         textcolour(LIGHTMAGENTA);
 
-        // These need to be one extra wide in case silence happens
+        // This needs to be one extra wide in case silence happens
         // immediately after super-loud (magenta) noise
-        CPRINTF("%-*s", Noise_Bar.horiz_bar_width + 1, "(Sil)");
-    }
-    else
+        CPRINTF("Silenced  ");
+    } 
+    else 
     {
         if (level == 1000)
         {
