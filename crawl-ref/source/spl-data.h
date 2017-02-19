@@ -3665,7 +3665,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
-    SPTYP_TRANSLOCATION | SPTYP_HEXES,
+    SPTYP_TRANSLOCATION,
     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     3,
     200,
