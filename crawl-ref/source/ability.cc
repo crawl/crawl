@@ -164,16 +164,16 @@ enum fail_basis
  * chance?
  *
  * XXX: deduplicate this with the similar code for divine titles, etc
- * (skills.cc:skill_title_by_rank, describe-god.cc:_get_god_misc_invo)
+ * (skills.cc:skill_title_by_rank)
  *
  * IMPORTANT NOTE: functions that depend on this will be wrong if you aren't
  * currently worshipping a god that grants the given ability (e.g. in ?/A)!
  *
  * @return      The appropriate skill type; e.g. SK_INVOCATIONS.
  */
-static skill_type _invo_skill()
+skill_type invo_skill(god_type god)
 {
-    switch (you.religion)
+    switch (god)
     {
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
@@ -222,8 +222,8 @@ struct failure_info
             return base_chance - you.skill(SK_EVOCATIONS, variable_fail_mult);
         case FAIL_INVO:
         {
-            const int sk_mod = _invo_skill() == SK_NONE ? 0 :
-                                 you.skill(_invo_skill(), variable_fail_mult);
+            const int sk_mod = invo_skill() == SK_NONE ? 0 :
+                                 you.skill(invo_skill(), variable_fail_mult);
             const int piety_mod
                 = piety_fail_denom ? you.piety / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
@@ -241,7 +241,7 @@ struct failure_info
         case FAIL_EVO:
             return SK_EVOCATIONS;
         case FAIL_INVO:
-            return _invo_skill();
+            return invo_skill();
         case FAIL_XL:
         default:
             return SK_NONE;
