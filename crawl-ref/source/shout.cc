@@ -1142,15 +1142,13 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
         // selected distances from the player. Dealing with terrain is a bit
         // nightmarish for this alternative, though, so I'm going to keep it
         // simple.
-        if (you.asleep()) // noise may awaken the player but this should be
-                          // dealt with in `_actor_apply_noise`. We want only
-                          // noises after awakening (or the awakening noise)
-                          // to be shown.
-        {
-            you.los_noise_level = 0;
-        }
-        else
-            you.los_noise_level = max(you.los_noise_level, noise_intensity_millis);
+        you.los_noise_level = you.asleep()
+                            // noise may awaken the player but this should be
+                            // dealt with in `_actor_apply_noise`. We want only
+                            // noises after awakening (or the awakening noise)
+                            // to be shown.
+                            ? 0
+                            : max(you.los_noise_level, noise_intensity_millis);
         ++affected_actor_count;
     }
 
