@@ -1673,7 +1673,7 @@ Formicids
   and magical sides. Their abilities have been used to tunnel immense underground
   communities and structures, many of which are tens of thousands of years old.
 
-  Perhaps unfortunately, their strong ties to to earth have left them completely
+  Perhaps unfortunately, their strong ties to earth have left them completely
   impervious to being teleported or hasted; Formicids are tied to the earth with
   a complete sense of stasis. While this is a seemingly bad property for a
   dungeon adventurer, stasis has the beneficial effect of preventing many types
