@@ -465,6 +465,11 @@ public:
         textbackground(BLACK);
     }
 
+    void reset()
+    {
+        m_old_disp = -1;
+    }
+
  private:
     int m_old_disp;
     int m_request_redraw_after; // force a redraw at this turn count
@@ -655,6 +660,7 @@ static void _print_stats_noise(int x, int y)
         // This needs to be one extra wide in case silence happens
         // immediately after super-loud (magenta) noise
         CPRINTF("Silenced  ");
+        Noise_Bar.reset(); // so it doesn't display a change bar after silence ends
     }
     else
     {
