@@ -291,13 +291,13 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
 		
-		//Send a status message about 'aptitude' increases/decreases if species is Cyno
-		if (you.species == SP_CYNO && you.skills[exsk] < 21)
+		//Send a status message about 'aptitude' increases/decreases if species is Cyno (skill levels 6/12/18)
+		if (you.species == SP_CYNO && you.skills[exsk] < 19)
 		{
-			if (n > 0 && you.skills[exsk] % 5 == 0)
+			if (n > 0 && you.skills[exsk] % 6 == 0)
 				mprf(MSGCH_MUTATION, "You become less interested in %s.",
 					 skill_name(exsk));
-			else if (n < 0 && you.skills[exsk] % 5 == 4)
+			else if (n < 0 && you.skills[exsk] % 6 == 5)
 				mprf(MSGCH_MUTATION, "You become more interested in %s.",
 					 skill_name(exsk));
 		}
@@ -311,23 +311,23 @@ static void _change_skill_level(skill_type exsk, int n)
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
 		
-		//Send a status message about 'aptitude' increases/decreases if species is Cyno
+		//Send a status message about 'aptitude' increases/decreases if species is Cyno (skill levels 6/12/18)
 		if (you.species == SP_CYNO)
 		{
-			if (n > 0 && (you.skills[exsk] - n) < 21)
+			if (n > 0 && (you.skills[exsk] - n) < 19)
 			{
 				for (int sk_level = you.skills[exsk] - n + 1; sk_level <= you.skills[exsk]; sk_level++)
 				{
-					if(sk_level % 5 == 0 && sk_level < 21)
+					if(sk_level % 6 == 0 && sk_level < 19)
 						mprf(MSGCH_MUTATION, "You become less interested in %s.",
 							 skill_name(exsk));
 				}
 			}
-			else if (n < 0 && you.skills[exsk] < 21)
+			else if (n < 0 && you.skills[exsk] < 19)
 			{
 				for (int sk_level = you.skills[exsk] + n - 1; sk_level >= you.skills[exsk]; sk_level--)
 				{
-					if(sk_level % 5 == 4)
+					if(sk_level % 6 == 5)
 						mprf(MSGCH_MUTATION, "You become more interested in %s.",
 							 skill_name(exsk));
 				}
@@ -1539,12 +1539,12 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 		15750, 17700, 19800, 22050, 24450,	// 21-25
 		27000, 29750 };
 	const int cyno_exp[28] = 
-	  { 0, 29, 89, 178, 297, 445,			// 0-5
-		697, 992, 1328, 1707, 2169,			// 6-10
-		2942, 3834, 4845, 5975, 7223,		// 11-15
-		9157, 11259, 13530, 16053, 18828,	// 16-20
-		23110, 27747, 32742, 38094, 43802,	// 21-25
-		49867, 56407 };
+	  { 0, 25, 75, 150, 250, 375,			// 0-5
+		525, 875, 1275, 1725, 2275,			// 6-10
+		2925, 3675, 5375, 7275, 9375,		// 11-15
+		11675, 14175, 16875, 22875, 29475,	// 16-20
+		36675, 44475, 52875, 61875, 71475,	// 21-25
+		81675, 92675 };
 
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
 	if(sp == SP_CYNO)

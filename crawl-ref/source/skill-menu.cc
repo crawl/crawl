@@ -362,12 +362,12 @@ void SkillMenuEntry::set_aptitude()
 		if(you.species == SP_CYNO)
 		{
 			//Divide aptitude skill to get "current" Cyno aptitude to display
-			int cyno_apt = you.skill(m_sk, 1, true) / 5;
-			cyno_bonus = 3 - cyno_apt * 2;
+			int cyno_apt = you.skill(m_sk, 1, true) / 6;
+			cyno_bonus = 4 - cyno_apt * 4;
 			
-			//Set the floor aptitude to -5
-			if(cyno_bonus < -5)
-				cyno_bonus = -5;
+			//Set the floor aptitude to -8
+			if(cyno_bonus < -8)
+				cyno_bonus = -8;
 		}
 		manual_bonus = manual_bonus + cyno_bonus;
 		
