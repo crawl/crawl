@@ -66,7 +66,7 @@ void play_sound(sound_mapping sound_data)
 // TODO: Add in-game option for disabling interrupt sounds (and sounds in general)
 void play_sound(const char *file, bool interrupt_game)
 {
-    if(Options.sounds_on)
+    if (Options.sounds_on)
     {
 #if defined(WINMM_PLAY_SOUNDS)
         // Check whether file exists, is readable, etc.?

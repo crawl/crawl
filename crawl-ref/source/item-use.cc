@@ -544,12 +544,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 return false;
 
             if (show_unwield_msg)
-	    {
+            {
 #ifdef USE_SOUND
                 parse_sound(WIELD_NOTHING_SOUND);
 #endif
                 canned_msg(MSG_EMPTY_HANDED_NOW);
-	    }
+            }
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;

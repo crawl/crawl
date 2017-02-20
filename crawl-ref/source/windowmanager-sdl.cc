@@ -5,7 +5,7 @@
 
 #include "windowmanager-sdl.h"
 
-#include "sound.h"	// Needs to be here because WINMM_PLAY_SOUNDS is used below
+#include "sound.h"      // Needs to be here because WINMM_PLAY_SOUNDS is used below
 
 #ifdef __ANDROID__
 # include <SDL.h>

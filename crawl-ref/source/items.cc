@@ -4866,7 +4866,7 @@ static void _identify_last_item(item_def &item)
     mprf("You have identified the last %s.", class_name.c_str());
 
     if (in_inventory(item))
-    {	    
+    {
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
         auto_assign_item_slot(item);
     }
