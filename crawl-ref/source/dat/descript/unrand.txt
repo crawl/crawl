@@ -658,3 +658,7 @@ amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
 %%%%
+ring of Woe
+
+A simple obsidian ring that makes its wearer exceedingly deadly in combat.
+%%%%

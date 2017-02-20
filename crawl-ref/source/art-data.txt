@@ -1289,6 +1289,13 @@ COLOUR:   WHITE
 TILE:     urand_cekugob
 BOOL:     inv, nogen
 
+ENUM:    RING_OF_WOE
+NAME:    ring of Woe
+OBJ:     OBJ_JEWELLERY/RING_SLAYING
+PLUS:    +8
+COLOUR:  ETC_DEATH
+TILE:    urand_ring_of_woe
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
