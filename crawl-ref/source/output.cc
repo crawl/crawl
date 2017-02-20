@@ -655,8 +655,8 @@ static void _print_stats_noise(int x, int y)
         // This needs to be one extra wide in case silence happens
         // immediately after super-loud (magenta) noise
         CPRINTF("Silenced  ");
-    } 
-    else 
+    }
+    else
     {
         if (level == 1000)
         {
