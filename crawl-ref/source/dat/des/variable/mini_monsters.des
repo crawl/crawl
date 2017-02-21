@@ -6502,6 +6502,37 @@ MAP
    @@     ccccccc
 ENDMAP
 
+####
+# Maxwell's Thermic Engine
+#
+# Use demon blade as fallback here instead of double sword, to keep
+# consistency with the Maxwell's demon reference.
+#
+NAME:   brannock_guarded_unrand_thermic_engine
+DEPTH:  Depths, Pan
+TAGS:   no_monster_gen no_item_gen transparent
+: if you.unrands("maxwell's_thermic_engine") then
+ITEM:   demon blade randart no_pickup
+: else
+ITEM:   maxwell's_thermic_engine no_pickup
+: end
+MONS:   ice devil, blizzard demon
+MONS:   sun demon, balrug
+MONS:   ice fiend, brimstone fiend
+SUBST:  1 = 1., 2 = 2., 3 = 3., 4 = 4.
+MAP
+       @@@
+ bbbbbb...bbbbbb
+bb....bb+bb....bb
+b..11..b.b..33..b
+b.2111.=.=.3334.b
+b52111.b.b.33346b
+b.2111.bnb.3334.b
+b..11..+d+..33..b
+bb.....bbb.....bb
+ bbbbbbb bbbbbbb
+ENDMAP
+
 ###################################################################
 #
 # <<9>> The classics.
