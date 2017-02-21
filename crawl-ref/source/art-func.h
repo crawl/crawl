@@ -1380,7 +1380,11 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
 {
     if (weapon->plus < 14)
     {
-        weapon->plus++;
+        weapon->plus += 2;
+
+        if (weapon->plus > 14)
+            weapon->plus = 14;
+
         you.wield_change = true;
     }
 
