@@ -187,7 +187,7 @@ skill_type invo_skill(god_type god)
         case GOD_GOZAG:
         case GOD_RU:
         case GOD_TROG:
-        case GOD_IEOH_JIAN:
+        case GOD_WU_JIAN:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -631,10 +631,10 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
-    // Ieoh Jian
-    { ABIL_IEOH_JIAN_SERPENTS_LASH, "Serpent's Lash",
+    // Wu Jian
+    { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
         0, 0, 0, 4, {FAIL_INVO}, abflag::EXHAUSTION | abflag::INSTANT },
-    { ABIL_IEOH_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
+    { ABIL_WU_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
         0, 0, 0, 20, {FAIL_INVO, piety_breakpoint(5), 0, 1}, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -3076,7 +3076,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         hepliaklqana_choose_identity();
         break;
 
-    case ABIL_IEOH_JIAN_SERPENTS_LASH:
+    case ABIL_WU_JIAN_SERPENTS_LASH:
         if (you.attribute[ATTR_SERPENTS_LASH])
         {
             mpr("You're already lashing out.");
@@ -3093,14 +3093,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.redraw_status_lights = true;
         return SPRET_SUCCESS;
 
-    case ABIL_IEOH_JIAN_HEAVEN_ON_EARTH:
+    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
         fail_check();
         mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds! You feel the urge to strike!");
-        ieoh_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
+        wu_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
         for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
             big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
         you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
-        you.duration[DUR_HEAVEN_ON_EARTH] = IEOH_JIAN_HEAVEN_TICK_TIME;
+        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
         break;
 

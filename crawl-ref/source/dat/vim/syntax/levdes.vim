@@ -57,10 +57,10 @@ syn region desNameline start=/^NAME:/ end=/$/ contains=desDec,desVaultname keepe
 syn match desVaultname /\w*/ contained
 
 syn match desGod contained /ashenzari\|beogh\|cheibriados\|dithmenos\|elyvilon/
-syn match desGod contained /fedhas\|gozag\|hepliaklqana\|ieoh_jian\|jiyva\|kikubaaqudgha/
+syn match desGod contained /fedhas\|gozag\|hepliaklqana\|jiyva\|kikubaaqudgha/
 syn match desGod contained /lugonu\|makhleb\|nemelex_xobeh\|okawaru\|pakellas/
-syn match desGod contained /qazlal\|ru\|sif_muna\|trog\|uskayaw\|vehumet\|xom/
-syn match desGod contained /yredelemnul\|zin\|the_shining_one/
+syn match desGod contained /qazlal\|ru\|sif_muna\|trog\|uskayaw\|vehumet\|wu_jian\
+syn match desGod contained /xom\|yredelemnul\|zin\|the_shining_one/
 
 syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
 syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME:

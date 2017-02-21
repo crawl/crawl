@@ -72,8 +72,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(is_cleaving), is_riposte(false),
-    ieoh_jian_attack(IEOH_JIAN_ATTACK_NONE),
-    ieoh_jian_number_of_targets(1)
+    wu_jian_attack(WU_JIAN_ATTACK_NONE),
+    wu_jian_number_of_targets(1)
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
@@ -149,7 +149,7 @@ bool melee_attack::handle_phase_attempted()
     {
         // Set delay now that we know the attack won't be cancelled.
         if (!is_riposte
-             && (ieoh_jian_attack == IEOH_JIAN_ATTACK_NONE))
+             && (wu_jian_attack == WU_JIAN_ATTACK_NONE))
         {
             you.time_taken = you.attack_delay().roll();
         }
@@ -465,7 +465,7 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player()
         && defender->alive()
-        && ieoh_jian_attack == IEOH_JIAN_ATTACK_WHIRLWIND)
+        && wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND)
     {
        player_strike_pressure_points(defender->as_monster());
     }
@@ -475,7 +475,7 @@ bool melee_attack::handle_phase_hit()
     // triggers when the victim is both slowed AND distracted?
     if (!defender->alive()
         && defender->as_monster()->can_bleed()
-        && ieoh_jian_attack == IEOH_JIAN_ATTACK_LUNGE
+        && wu_jian_attack == WU_JIAN_ATTACK_LUNGE
         && defender->as_monster()->has_ench(ENCH_SLOW)
         && defender_ijc_distracted())
     {
@@ -573,7 +573,7 @@ bool melee_attack::handle_phase_aux()
 {
     if (attacker->is_player()
         && !cleaving
-        && ieoh_jian_attack != IEOH_JIAN_ATTACK_TRIGGERED_AUX)
+        && wu_jian_attack != WU_JIAN_ATTACK_TRIGGERED_AUX)
     {
         // returns whether an aux attack successfully took place
         // additional attacks from cleave don't get aux
@@ -601,7 +601,7 @@ static int _pressure_point_slow_chance(int hd)
 {
     // XXX: unify with _walljump_distract_chance()
     const int base_chance = div_rand_round(8 * you.experience_level, hd);
-    if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+    if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
         return div_rand_round(base_chance * 15, 10);
     return min(base_chance, 50); // Capped if you don't have momentum.
 }
@@ -770,7 +770,7 @@ bool melee_attack::handle_phase_end()
     if (!cleave_targets.empty())
     {
         attack_cleave_targets(*attacker, cleave_targets, attack_number,
-                              effective_attack_number, ieoh_jian_attack);
+                              effective_attack_number, wu_jian_attack);
     }
 
     // Check for passive mutation effects.
@@ -1246,8 +1246,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
 
-    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE)
-        ieoh_jian_attack = IEOH_JIAN_ATTACK_TRIGGERED_AUX;
+    if (wu_jian_attack != WU_JIAN_ATTACK_NONE)
+        wu_jian_attack = WU_JIAN_ATTACK_TRIGGERED_AUX;
 
     if (atk == UNAT_BITE
         && _vamp_wants_blood_from_monster(defender->as_monster()))
@@ -1545,7 +1545,7 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (cleaving)
         damage = cleave_damage_mod(damage);
 
-    // martial damage modifier (ieoh jian)
+    // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
     // not additive, statues are supposed to be bad with tiny toothpicks but
@@ -3444,16 +3444,16 @@ int melee_attack::cleave_damage_mod(int dam)
 // Martial strikes get modified by momentum and maneuver specific damage mods.
 int melee_attack::martial_damage_mod(int dam)
 {
-    if (ieoh_jian_has_momentum(ieoh_jian_attack))
+    if (wu_jian_has_momentum(wu_jian_attack))
         dam = div_rand_round(dam * 15, 10);
 
-    switch (ieoh_jian_attack)
+    switch (wu_jian_attack)
     {
-    case IEOH_JIAN_ATTACK_NONE:
-    case IEOH_JIAN_ATTACK_TRIGGERED_AUX:
+    case WU_JIAN_ATTACK_NONE:
+    case WU_JIAN_ATTACK_TRIGGERED_AUX:
         return dam;
 
-    case IEOH_JIAN_ATTACK_LUNGE:
+    case WU_JIAN_ATTACK_LUNGE:
     {
         const bool slow = defender->as_monster()->has_ench(ENCH_SLOW);
         const bool distracted = defender_ijc_distracted();
@@ -3516,8 +3516,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return false;
     }
 
-    if (ieoh_jian_attack != IEOH_JIAN_ATTACK_NONE
-        && !x_chance_in_y(1, ieoh_jian_number_of_targets))
+    if (wu_jian_attack != WU_JIAN_ATTACK_NONE
+        && !x_chance_in_y(1, wu_jian_number_of_targets))
     {
        // Reduces aux chance proportionally to number of
        // enemies attacked with a martial attack

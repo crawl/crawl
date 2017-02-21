@@ -239,9 +239,9 @@ enum ability_type
     ABIL_HEPLIAKLQANA_HEXER_ENGLACIATION,
 #endif
 
-    // Ieoh Jian
-    ABIL_IEOH_JIAN_SERPENTS_LASH = 1280,
-    ABIL_IEOH_JIAN_HEAVEN_ON_EARTH,
+    // Wu Jian
+    ABIL_WU_JIAN_SERPENTS_LASH = 1280,
+    ABIL_WU_JIAN_HEAVEN_ON_EARTH,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

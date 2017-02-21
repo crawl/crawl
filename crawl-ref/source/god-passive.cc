@@ -410,11 +410,11 @@ static const vector<god_passive> god_passives[] =
               "drain nearby creatures when transferring your ancestor" },
     },
 
-    // Ieoh Jian
+    // Wu Jian
     {
-        { 1, passive_t::ieoh_jian_whirlwind, "attack and slow monsters by moving around them." },
-        { 2, passive_t::ieoh_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
-        { 3, passive_t::ieoh_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
+        { 1, passive_t::wu_jian_whirlwind, "attack and slow monsters by moving around them." },
+        { 2, passive_t::wu_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
+        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1501,7 +1501,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-void ieoh_jian_trigger_serpents_lash(const coord_def& old_pos)
+void wu_jian_trigger_serpents_lash(const coord_def& old_pos)
 {
     if (you.attribute[ATTR_SERPENTS_LASH] == 0)
        return;
@@ -1525,7 +1525,7 @@ void ieoh_jian_trigger_serpents_lash(const coord_def& old_pos)
         check_place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
 }
 
-void ieoh_jian_heaven_tick()
+void wu_jian_heaven_tick()
 {
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
         return;
@@ -1550,13 +1550,13 @@ void ieoh_jian_heaven_tick()
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
         mprf(MSGCH_GOD, "The heavenly storm settles...");
     else
-        you.duration[DUR_HEAVEN_ON_EARTH] = IEOH_JIAN_HEAVEN_TICK_TIME;
+        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
 }
 
-bool ieoh_jian_has_momentum(ieoh_jian_attack_type attack_type)
+bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 {
-    if (attack_type == IEOH_JIAN_ATTACK_NONE ||
-        attack_type == IEOH_JIAN_ATTACK_TRIGGERED_AUX)
+    if (attack_type == WU_JIAN_ATTACK_NONE ||
+        attack_type == WU_JIAN_ATTACK_TRIGGERED_AUX)
     {
         return false;
     }
@@ -1578,7 +1578,7 @@ static bool _dont_attack_martial(const monster* mons)
 // any particular martial attack to be doubled, tripled, or
 // not happen at all. Given enough time moving, you would have
 // made the same amount of attacks as tabbing.
-static int _ieoh_jian_number_of_attacks()
+static int _wu_jian_number_of_attacks()
 {
     const int move_delay = player_movement_speed();
     const int attack_delay = you.attack_delay().roll();
@@ -1590,7 +1590,7 @@ static int _ieoh_jian_number_of_attacks()
                           attack_delay * BASELINE_DELAY);
 }
 
-static void _ieoh_jian_lunge(const coord_def& old_pos)
+static void _wu_jian_lunge(const coord_def& old_pos)
 {
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
     coord_def potential_target = you.pos() + lunge_direction;
@@ -1602,7 +1602,7 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
         you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
 
-    const int number_of_attacks = _ieoh_jian_number_of_attacks();
+    const int number_of_attacks = _wu_jian_number_of_attacks();
 
     if (number_of_attacks == 0)
     {
@@ -1612,14 +1612,14 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
     }
     else if (number_of_attacks > 1)
     {
-        if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_LUNGE))
+        if (wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
            mprf("You lunge at %s in a momentous flurry of attacks!", mons->name(DESC_THE).c_str());
         else
            mprf("You lunge at %s in a flurry of attacks!", mons->name(DESC_THE).c_str());
     }
     else
     {
-        if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_LUNGE))
+        if (wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
            mprf("You lunge at %s with incredible momentum!", mons->name(DESC_THE).c_str());
         else
            mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
@@ -1631,7 +1631,7 @@ static void _ieoh_jian_lunge(const coord_def& old_pos)
         if (!mons->alive())
             break;
         melee_attack lunge(&you, mons);
-        lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
+        lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
         lunge.attack();
     }
 }
@@ -1647,7 +1647,7 @@ static vector<monster*> _get_whirlwind_targets(coord_def pos)
     return targets;
 }
 
-static void _ieoh_jian_whirlwind(const coord_def& old_pos)
+static void _wu_jian_whirlwind(const coord_def& old_pos)
 {
     const vector<monster*> targets = _get_whirlwind_targets(you.pos());
     if (targets.empty())
@@ -1667,7 +1667,7 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
 
-        const int number_of_attacks = _ieoh_jian_number_of_attacks();
+        const int number_of_attacks = _wu_jian_number_of_attacks();
         if (number_of_attacks == 0)
         {
             mprf("You spin to attack %s, but your attack speed is too slow for "
@@ -1677,7 +1677,7 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
 
         if (number_of_attacks > 1)
         {
-            if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WHIRLWIND))
+            if (wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND))
             {
                mprf("You spin and attack %s repeatedly with incredible momentum!",
                     mons->name(DESC_THE).c_str());
@@ -1687,7 +1687,7 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         }
         else
         {
-            if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WHIRLWIND))
+            if (wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND))
             {
                mprf("You spin and attack %s with incredible momentum!",
                     mons->name(DESC_THE).c_str());
@@ -1701,28 +1701,28 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
             if (!mons->alive())
                break;
             melee_attack whirlwind(&you, mons);
-            whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
-            whirlwind.ieoh_jian_number_of_targets = common_targets.size();
+            whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
+            whirlwind.wu_jian_number_of_targets = common_targets.size();
             whirlwind.attack();
         }
     }
 }
 
-void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
+void wu_jian_trigger_martial_arts(const coord_def& old_pos)
 {
     if (you.pos() == old_pos || you.duration[DUR_CONF])
         return;
 
-    if (have_passive(passive_t::ieoh_jian_lunge))
-        _ieoh_jian_lunge(old_pos);
+    if (have_passive(passive_t::wu_jian_lunge))
+        _wu_jian_lunge(old_pos);
 
-    if (have_passive(passive_t::ieoh_jian_whirlwind))
-        _ieoh_jian_whirlwind(old_pos);
+    if (have_passive(passive_t::wu_jian_whirlwind))
+        _wu_jian_whirlwind(old_pos);
 }
 
-bool ieoh_jian_can_wall_jump(const coord_def& target)
+bool wu_jian_can_wall_jump(const coord_def& target)
 {
-    if (!have_passive(passive_t::ieoh_jian_wall_jump)
+    if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(grd(target))
         || you.is_stationary()
         || you.digging)
@@ -1753,12 +1753,12 @@ static int _walljump_distract_chance(int target_hd)
     // XXX: unify with _walljump_distract_chance()
     const int base_chance = div_rand_round(12 * you.experience_level,
                                            target_hd);
-    if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+    if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
         return div_rand_round(base_chance * 15, 10);
     return min(base_chance, 50); // Capped if you don't have momentum.
 }
 
-void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
+void wu_jian_wall_jump_effects(const coord_def& old_pos)
 {
     vector<monster*> targets;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
@@ -1776,7 +1776,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
          if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
              you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
 
-         const int number_of_attacks = _ieoh_jian_number_of_attacks();
+         const int number_of_attacks = _wu_jian_number_of_attacks();
          if (number_of_attacks == 0)
          {
              mprf("You attack %s from above, but your attack speed is too slow"
@@ -1786,7 +1786,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
 
          if (number_of_attacks > 1)
          {
-             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+             if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
              {
                 mprf("You repeatedly attack %s from above with incredible momentum!",
                      target->name(DESC_THE).c_str());
@@ -1799,7 +1799,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
          }
          else
          {
-             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+             if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
              {
                 mprf("You attack %s from above with incredible momentum!",
                      target->name(DESC_THE).c_str());
@@ -1817,8 +1817,8 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
                 break;
 
              melee_attack aerial(&you, target);
-             aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
-             aerial.ieoh_jian_number_of_targets = targets.size();
+             aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
+             aerial.wu_jian_number_of_targets = targets.size();
              aerial.attack();
          }
     }

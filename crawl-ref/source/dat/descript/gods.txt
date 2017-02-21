@@ -68,9 +68,9 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
-Ieoh Jian
+Wu Jian
 
-The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
 after battling their way out of the afterlife. Disciples of the Council are
 able to execute acrobatic martial maneuvers, such as wall jumps, spinning
 attacks and punishing lunges. They will eventually become able to request
@@ -308,7 +308,7 @@ mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
-Ieoh Jian powers
+Wu Jian powers
 
 Disciples of the Council learn to perform three martial techniques:
 
@@ -548,7 +548,7 @@ too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
 %%%%
-Ieoh Jian wrath
+Wu Jian wrath
 
 Those who turn against the Council must be prepared to endure death by a
 thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
