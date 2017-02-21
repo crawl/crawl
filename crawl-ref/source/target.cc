@@ -237,6 +237,11 @@ bool targeter_beam::affects_monster(const monster_info& mon)
         return false;
     }
 
+    // beckoning is useless against adjacent mons!
+    // XXX: this should probably be somewhere else
+    if (beam.flavour == BEAM_BECKONING)
+        return grid_distance(mon.pos, you.pos()) > 1;
+
     return !beam.is_harmless(m) || beam.nice_to(mon)
     // Inner flame affects allies without harming or helping them.
            || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();

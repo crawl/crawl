@@ -10,6 +10,8 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "player.h"
+#include "tile-flags.h"
+#include "tile-player-flag-cut.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
 #include "tiledoll.h"

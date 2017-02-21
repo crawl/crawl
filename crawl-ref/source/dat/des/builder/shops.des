@@ -413,8 +413,8 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
    tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    any weapon ego:holy_wrath | scroll of holy word |\
-   amulet of faith w:2 | potion of cure mutation | \
-   ring of positive energy w:5 | any armour ego:positive_energy w:5
+   amulet of faith w:2 | ring of positive energy w:5 |\
+   any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 KPROP: 1 = no_tele_into
 MONS: angel
@@ -618,7 +618,6 @@ DEPTH: D:8-, Depths, Zot
 COLOUR: m = magenta
 TILE: m = dngn_transparent_wall_magenta
 KFEAT: S = general shop type:Changing suffix:Room count:7 ; \
-   potion of cure mutation q:1 w:5 | potion of beneficial mutation q:1 w:5 | \
    potion of mutation | potion of lignification | book of changes w:5 | \
    wand of polymorph | ugly thing chunk | book of transfigurations w:5 | \
    book of alchemy w:5 | randbook disc:transmutation w:5 | \

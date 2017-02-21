@@ -3,6 +3,7 @@
 
 #include <functional>
 
+#include "enchant-type.h"
 #include "mon-util.h"
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"
@@ -171,6 +172,7 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
+    MB_DISTRACTED_ACROBATICS,
     NUM_MB_FLAGS
 };
 

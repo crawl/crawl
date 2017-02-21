@@ -199,6 +199,13 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+
+###Scarf
+scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
+scarf_red SCARF_RED
+scarf_white SCARF_WHITE
+scarf_magenta SCARF_MAGENTA
+scarf_green SCARF_GREEN SCARF_LAST_NORM
 %end_ctg
 
 ###Boots
@@ -443,6 +450,9 @@ pj PJ
 sam SAM
 vanhel1 VANHEL
 
+deep_troll_leather DEEP_TROLL_LEATHER
+iron_troll_leather IRON_TROLL_LEATHER
+
 maxwell MAXWELL
 lears_hauberk LEARS_HAUBERK
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
@@ -504,6 +514,7 @@ spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
+thermic_engine THERMIC_ENGINE
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY

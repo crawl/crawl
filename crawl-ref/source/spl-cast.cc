@@ -32,6 +32,7 @@
 #include "god-wrath.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -822,8 +823,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
-            "<lightred>Casting this spell will cause instant excommunication!"
-                "</lightred> Really cast?" :
+            "Casting this spell will cause instant excommunication! "
+            "Really cast?" :
             "Casting this spell will place you under penance. Really cast?",
             true, 'n'))
         {

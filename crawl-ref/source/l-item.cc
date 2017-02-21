@@ -20,6 +20,7 @@
 #include "food.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "l-defs.h"

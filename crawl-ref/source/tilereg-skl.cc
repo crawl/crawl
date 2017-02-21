@@ -10,6 +10,7 @@
 #include "output.h"
 #include "process-desc.h"
 #include "skills.h"
+#include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"

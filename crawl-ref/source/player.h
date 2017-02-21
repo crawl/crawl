@@ -13,16 +13,34 @@
 #include <vector>
 
 #include "actor.h"
+#include "attribute-type.h"
 #include "beam.h"
 #include "bitary.h"
+#include "book-type.h"
+#include "caction-type.h"
+#include "daction-type.h"
+#include "duration-type.h"
+#include "eq-type.h"
+#include "equipment-type.h"
+#include "flush-reason-type.h"
+#include "game-chapter.h"
 #include "kills.h"
+#include "mon-holy-type.h"
+#include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
+#include "seed-type.h"
+#include "skill-menu-state.h"
 #include "species.h"
+#include "stat-type.h"
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif
+#include "timed-effect-type.h"
+#include "transformation.h"
+#include "uncancellable-type.h"
+#include "unique-item-status-type.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
@@ -409,6 +427,10 @@ public:
 
     int old_hunger;            // used for hunger delta-meter (see output.cc)
 
+    // the loudest noise level the player has experienced in los this turn
+    int los_noise_level;
+    int los_noise_last_turn;
+
     // Set when the character is going to a new level, to guard against levgen
     // failures
     dungeon_feature_type transit_stair;
@@ -729,6 +751,7 @@ public:
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
+    int get_noise_perception(bool adjusted = true) const;
 
     bool paralysed() const override;
     bool cannot_move() const override;
@@ -936,6 +959,7 @@ int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
 int player_regen();
+int player_mp_regen();
 void update_regen_amulet_attunement();
 void update_mana_regen_amulet_attunement();
 

@@ -331,6 +331,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_CORROSION] = 0;
         you.duration[DUR_DOOM_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
+        you.duration[DUR_NO_HOP] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         while (delete_temp_mutation());
@@ -478,9 +479,11 @@ void wizard_set_gold()
     }
 
     if (buf[0] == '\0')
-        you.gold = default_gold;
+        you.set_gold(default_gold);
     else
-        you.gold = atoi(buf);
+        you.set_gold(max(atoi(buf), 0));
+
+    mprf("You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
 }
 
 void wizard_set_piety()

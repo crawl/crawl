@@ -319,7 +319,8 @@ You are covering ground slowly.
 DDoor status
 
 You are temporarily invulnerable to harm, but are brought close to death in the
-process and cannot be affected by healing while the effect is active.
+process and cannot be affected by healing while the effect is active. After the
+spell expires, it cannot be immediately recast.
 %%%%
 Quad status
 
@@ -346,7 +347,8 @@ You have astral vision, allowing you to see through walls.
 %%%%
 Tornado status
 
-You are in the eye of a mighty hurricane.
+You are in the eye of a mighty hurricane. After the tornado fades, it cannot be
+called forth again for a short time.
 %%%%
 Liquid status
 
@@ -428,7 +430,8 @@ trees to damage your foes.
 Dragoncall status
 
 You are calling forth mighty dragons to attack your foes. Each dragon which
-answers the call will drain your magical energy.
+answers the call will drain your magical energy. After the call ends, it cannot
+be issued again for a short time.
 %%%%
 Abj status
 
@@ -508,7 +511,7 @@ slightly reduced, and you are unable to evoke wands.
 Blade status
 
 Long, scythe-shaped blades have grown from your hands, increasing your melee
-damage to a degree depending on strength and dexterity.
+damage significantly.
 
 Any equipped weapons are melded. Your success rate with spells is somewhat
 reduced, and you are unable to evoke wands.
@@ -516,10 +519,9 @@ reduced, and you are unable to evoke wands.
 Statue status
 
 You have been transformed into a slow but extremely robust stone statue.
-Your unarmed damage is increased to a degree depending on strength, and in
-addition all of your melee attacks are substantially more powerful. Your stone
-body is insulated from electricity and gains resistance to poison, rotting and
-negative energy.
+Your melee damage, both unarmed and with weapons, is substantially increased.
+Your stone body is insulated from electricity and gains resistance to poison,
+rotting and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -562,8 +564,8 @@ Dragon status
     desc = desc .. "."
 
     return desc
-}} Your melee damage is substantially increased to a degree depending on
-strength, and you are much more robust but less evasive.
+}} Your melee attacks deal incredible damage, and you are much more robust but
+less evasive.
 
 Any equipped weapons and armour are melded.
 %%%%
@@ -679,3 +681,15 @@ maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
 including recasting the spell, will end it.
 
 # XXX: also cover Ray+, Ray++?
+%%%%
+Lash status
+
+You are moving at supernatural speed, causing movement actions to become
+instant. Any martial attacks made while moving in this way are increased in
+effectiveness.
+%%%%
+Hevn status
+
+Heavenly clouds are boosting your damage and precision. Performing martial
+attacks against multiple enemies prevents the storm from settling.
+%%%%

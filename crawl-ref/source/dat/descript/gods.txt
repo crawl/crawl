@@ -68,6 +68,14 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
+Ieoh Jian
+
+The Ieoh Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
+%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -300,6 +308,26 @@ mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
+Ieoh Jian powers
+
+Disciples of the Council learn to perform three martial techniques:
+
+  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Strike by moving between two tiles
+  ...<lightred>@</lightred>O..  -->  ....O.. adjacent to an enemy. May slow down foes.
+  .......       .......
+
+  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Moving into a wall jumps away from
+  ..x<lightred>@</lightred>...  -->  ..x..<lightred>@</lightred>. it, striking all enemies adjacent to the landing spot.
+  ..x....       ..x.... May distract any witnessing foes.
+
+  .......       ....... (***) <lightred>Lunge</lightred>: Moving towards enemies in one of the eight
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. cardinal directions deals extra damage, especially
+  .......       ....... if it they are slowed or distracted.
+
+Disciples of the Council will also be taught to move at unfathomable speeds for
+short distances, and become able to summon a storm of golden clouds to increase
+their precision and damage for as long as they keep using their martial attacks.
+%%%%
 Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
@@ -519,6 +547,13 @@ offend Jiyva, and Jiyva ensures a plentiful supply of further slimes. Victims,
 too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
+%%%%
+Ieoh Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
 %%%%
 Kikubaaqudgha wrath
 

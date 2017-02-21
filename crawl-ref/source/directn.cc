@@ -31,6 +31,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -3104,7 +3105,10 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is clinging to the wall.\n";
 
     if (mi.is(MB_MESMERIZING))
-        text += "You are mesmerised by her song.\n";
+    {
+        text += string("You are mesmerised by ")
+              + mi.pronoun(PRONOUN_POSSESSIVE) + " song.\n";
+    }
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
     {
@@ -3176,8 +3180,8 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (!text.empty() && text[text.size() - 1] == '\n')
-        text = text.substr(0, text.size() - 1);
+    if (!text.empty() && text.back() == '\n')
+        text.pop_back();
     return text;
 }
 

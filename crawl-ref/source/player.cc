@@ -79,6 +79,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "wizard-option-type.h"
 #include "xom.h"
 
 #if TAG_MAJOR_VERSION == 34
@@ -1179,6 +1180,19 @@ int player_regen()
         rr += 100;
 
     return rr;
+}
+
+int player_mp_regen()
+{
+    int regen_amount = 7 + you.max_magic_points / 2;
+
+    int multiplier = 100;
+    if (player_mutation_level(MUT_MANA_REGENERATION))
+        multiplier += 100;
+    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
+        multiplier += 50;
+
+    return regen_amount * multiplier / 100;
 }
 
 // Amulet of regeneration needs to be worn while at full health before it begins
@@ -3315,15 +3329,6 @@ bool dur_expiring(duration_type dur)
     return value <= duration_expire_point(dur);
 }
 
-static void _output_expiring_message(duration_type dur, const char* msg)
-{
-    if (you.duration[dur])
-    {
-        const bool expires = dur_expiring(dur);
-        mprf("%s%s", expires ? "Expiring: " : "", msg);
-    }
-}
-
 static void _display_char_status(int value, const char *fmt, ...)
 {
     va_list argp;
@@ -3485,21 +3490,6 @@ static string _constriction_description();
 
 void display_char_status()
 {
-    if (you.undead_state() == US_SEMI_UNDEAD
-        && you.hunger_state == HS_ENGORGED)
-    {
-        mpr("You feel almost alive.");
-    }
-    else if (you.undead_state())
-        mpr("You are undead.");
-    else if (you.duration[DUR_DEATHS_DOOR])
-    {
-        _output_expiring_message(DUR_DEATHS_DOOR,
-                                 "You are standing in death's doorway.");
-    }
-    else
-        mpr("You are alive.");
-
     const int halo_size = you.halo_radius();
     if (halo_size >= 0)
     {
@@ -3660,6 +3650,8 @@ int slaying_bonus(bool ranged)
 
     if (you.duration[DUR_HORROR])
         ret -= you.props[HORROR_PENALTY_KEY].get_int();
+
+    ret += you.attribute[ATTR_HEAVEN_ON_EARTH];
 
     return ret;
 }
@@ -4692,8 +4684,8 @@ bool slow_player(int turns)
         return false;
     }
 
-    // Doubling these values because moving while slowed takes twice the
-    // usual delay.
+    // Multiplying these values because moving while slowed takes longer than
+    // the usual delay.
     turns = haste_mul(turns);
     int threshold = haste_mul(100);
 
@@ -4718,7 +4710,7 @@ void dec_slow_player(int delay)
     if (!you.duration[DUR_SLOW])
         return;
 
-    if (you.duration    [DUR_SLOW] > BASELINE_DELAY)
+    if (you.duration[DUR_SLOW] > BASELINE_DELAY)
     {
         // Make slowing and hasting effects last as long.
         you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
@@ -5371,6 +5363,11 @@ player::player()
         game_seeds[i] = get_uint32();
 
     old_hunger          = hunger;
+
+    los_noise_level     = 0;        ///< temporary slot for loud noise levels
+    los_noise_last_turn = 0;
+    ///< loudest noise heard on the last turn, for HUD display
+
     transit_stair       = DNGN_UNSEEN;
     entering_level      = false;
 
@@ -5647,6 +5644,49 @@ int calc_hunger(int food_cost)
         return food_cost/2;
     }
     return food_cost;
+}
+
+/*
+ * Approximate the loudest noise the player heard in the last
+ * turn, possibly rescaling. This gets updated every
+ * `world_reacts`. If `adjusted` is set to true, this rescales
+ * noise on a 0-1000 scale according to some breakpoints that
+ * I have hand-calibrated. Otherwise, it returns the raw noise
+ * value (approximately from 0 to 40). The breakpoints aim to
+ * approximate 1x los radius, 2x los radius, and 3x los radius
+ * relative to an open area.
+ *
+ * @param adjusted      Whether to rescale the noise level.
+ *
+ * @return The (scaled or unscaled) noise level heard by the player.
+ */
+int player::get_noise_perception(bool adjusted) const
+{
+    // los_noise_last_turn is already normalized for the branch's ambient
+    // noise.
+    const int level = los_noise_last_turn;
+    static const int BAR_MAX = 1000; // TODO: export to output.cc & webtiles
+    if (!adjusted)
+         return div_rand_round(level, BAR_MAX);
+
+    static const vector<int> NOISE_BREAKPOINTS = { 0, 6000, 13000, 29000 };
+    const int BAR_FRAC = BAR_MAX / (NOISE_BREAKPOINTS.size() - 1);
+    for (size_t i = 1; i < NOISE_BREAKPOINTS.size(); ++i)
+    {
+        const int breakpoint = NOISE_BREAKPOINTS[i];
+        if (level > breakpoint)
+            continue;
+        // what fragment of this breakpoint does the noise fill up?
+        const int prev_break = NOISE_BREAKPOINTS[i-1];
+        const int break_width = breakpoint - prev_break;
+        const int in_segment = (level - prev_break) * BAR_FRAC / break_width;
+        // that fragment + previous breakpoints passed is our total noise.
+        return in_segment + (i - 1) * BAR_FRAC;
+        // example: 10k noise. that's 4k past the 6k breakpoint
+        // ((10k-6k) * 333 / (13k - 6k)) + 333, or a bit more than half the bar
+    }
+
+    return BAR_MAX;
 }
 
 bool player::paralysed() const
@@ -7366,7 +7406,10 @@ void player::awaken()
 void player::check_awaken(int disturbance)
 {
     if (asleep() && x_chance_in_y(disturbance + 1, 50))
+    {
         awaken();
+        dprf("Disturbance of intensity %d awoke player", disturbance);
+    }
 }
 
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
@@ -7510,6 +7553,7 @@ void player::set_gold(int amount)
                 else if (old_gold >= cost && gold < cost)
                     power.display(false, "You no longer have enough gold to %s.");
             }
+            you.redraw_title = true;
         }
     }
 }
@@ -8515,8 +8559,8 @@ void player_end_berserk()
     you.berserk_penalty = 0;
 
     const int dur = 12 + roll_dice(2, 12);
-    // For consistency with slow give exhaustion 2 times the nominal
-    // duration.
+    // Slow durations are multiplied by haste_mul (3/2), exhaustion lasts
+    // slightly longer.
     you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
     notify_stat_change(STAT_STR, -5, true);

@@ -2752,8 +2752,6 @@ w:50
 
 @The_monster@ says, "I keep getting this feeling like someone's watching me. Creepy."
 
-@The_monster@ says, "I used up all my cure mutation potions. I hate that."
-
 @The_monster@ says, "I always freeze up when I think I'm being watched."
 
 @The_monster@ says, "A death ooze jiggled at me. That's naff."
@@ -5103,7 +5101,7 @@ _Menkaure_rare_
 
 @The_monster@'s ankle releases a plume of dust as @subjective@ confides, "I'm not really a mummy, you know."
 
-VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
+VISUAL:@The_monster@ forgets how to speak, silenced by the ages.
 
 VISUAL:@The_monster@ gestures ominously @at_foe@.
 

@@ -34,7 +34,9 @@
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -1031,7 +1033,6 @@ bool wear_armour(int item)
     }
 
     item_def &invitem = you.inv[item];
-    const equipment_type slot = get_armour_slot(invitem);
     // First, let's check for any conditions that would make it impossible to
     // equip the given item
     if (!invitem.defined())
@@ -1071,6 +1072,7 @@ bool wear_armour(int item)
     }
 
     bool swapping = false;
+    const equipment_type slot = get_armour_slot(invitem);
     if ((slot == EQ_CLOAK
            || slot == EQ_HELMET
            || slot == EQ_GLOVES
@@ -2185,9 +2187,9 @@ static void _rebrand_weapon(item_def& wpn)
     convert2bad(wpn);
 }
 
-static string _item_name(item_def &item) {
-    return item.name(in_inventory(item) ? DESC_YOUR
-                                        : DESC_THE);
+static string _item_name(item_def &item)
+{
+    return item.name(in_inventory(item) ? DESC_YOUR : DESC_THE);
 }
 
 static void _brand_weapon(item_def &wpn)

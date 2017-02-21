@@ -9,7 +9,9 @@
 #include <string>
 #include <vector>
 
+#include "ability-type.h"
 #include "enum.h"
+#include "player.h"
 
 struct talent
 {
@@ -19,6 +21,7 @@ struct talent
     bool is_invocation;
 };
 
+skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);

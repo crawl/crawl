@@ -6,8 +6,12 @@
 #ifndef DIRECT_H
 #define DIRECT_H
 
+#include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
+#include "targ-mode-type.h"
+#include "targeting-type.h"
+#include "trap-type.h"
 
 struct describe_info;
 

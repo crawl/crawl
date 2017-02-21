@@ -20,12 +20,15 @@
 #include "god-passive.h"
 #include "invent.h"
 #include "items.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h" // map_find
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
+#include "orb-type.h"
+#include "potion-type.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -751,6 +754,8 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_POTIONS,   POT_DECAY },
     { OBJ_POTIONS,   POT_POISON },
     { OBJ_POTIONS,   POT_RESTORE_ABILITIES },
+    { OBJ_POTIONS,   POT_CURE_MUTATION },
+    { OBJ_POTIONS,   POT_BENEFICIAL_MUTATION },
     { OBJ_BOOKS,     BOOK_WIZARDRY },
     { OBJ_BOOKS,     BOOK_CONTROL },
     { OBJ_BOOKS,     BOOK_BUGGY_DESTRUCTION },

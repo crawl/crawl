@@ -10,8 +10,10 @@
 #include <map>
 #include <sys/un.h>
 
+#include "cursor-type.h"
 #include "map-knowledge.h"
 #include "status.h"
+#include "text-tag-type.h"
 #include "tiledoll.h"
 #include "tileweb-text.h"
 #include "viewgeom.h"
@@ -51,6 +53,8 @@ struct player_info
     int mp, mp_max;
     int contam;
     int heat;
+    int noise;
+    int adjusted_noise;
 
     int armour_class;
     int evasion;

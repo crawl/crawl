@@ -554,7 +554,7 @@ ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
 : item("cloak " .. coldres .. " w:15 / hat good_item " ..
 :   " / shield " .. coldres ..  " / large shield " .. coldres ..
 :   " / nothing w:60")
-ITEM:    potion of resistance w:5 / potion of beneficial mutation q:1 w:5 / \
+ITEM:    potion of resistance w:5 / potion of mutation q:2 w:5 / \
          potion of might / potion of flight / \
          potion of heal wounds w:5 / any potion w:1
 SHUFFLE: defg

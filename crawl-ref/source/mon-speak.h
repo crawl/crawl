@@ -6,6 +6,8 @@
 #ifndef MONSPEAK_H
 #define MONSPEAK_H
 
+#include "mpr.h"
+
 void maybe_mons_speaks(monster* mons);
 bool mons_speaks(monster* mons);
 bool mons_speaks_msg(monster* mons, const string &msg,

@@ -2,6 +2,7 @@
 #define SHOW_H
 
 #include "enum.h"
+#include "dungeon-feature-type.h"
 
 // same order as DCHAR_*
 enum show_item_type

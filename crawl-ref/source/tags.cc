@@ -51,6 +51,8 @@
 #include "god-companions.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
+#include "item-type-id-state-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "mapmark.h"
@@ -1340,7 +1342,8 @@ static void tag_construct_char(writer &th)
 }
 
 /// is a custom scoring mechanism being stored?
-static bool _calc_score_exists() {
+static bool _calc_score_exists()
+{
     lua_stack_cleaner clean(dlua);
     dlua.pushglobal("dgn.persist.calc_score");
     return !lua_isnil(dlua, -1);
@@ -4276,6 +4279,13 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.sub_type = POT_DEGENERATION;
     }
+
+    if (item.is_type(OBJ_POTIONS, POT_CURE_MUTATION)
+        || item.is_type(OBJ_POTIONS, POT_BENEFICIAL_MUTATION))
+    {
+        item.sub_type = POT_MUTATION;
+    }
+
     if (item.is_type(OBJ_STAVES, STAFF_CHANNELING))
         item.sub_type = STAFF_ENERGY;
 
@@ -6021,6 +6031,11 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
 #if TAG_MAJOR_VERSION == 34
+    // Forget seen spells if the monster doesn't have any, most likely because
+    // of a polymorph that happened before polymorph began removing this key.
+    if (m.spells.empty())
+        m.props.erase(SEEN_SPELLS_KEY);
+
     // Battlespheres that don't know their creator's mid must have belonged
     // to the player pre-monster-battlesphere.
     if (th.getMinorVersion() < TAG_MINOR_BATTLESPHERE_MID

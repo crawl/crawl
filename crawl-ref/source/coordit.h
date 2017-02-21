@@ -2,6 +2,7 @@
 #define COORDIT_H
 
 #include "coord-circle.h"
+#include "los-type.h"
 
 class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 {

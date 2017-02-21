@@ -10,8 +10,10 @@
 #include <sstream>
 #include <string>
 
+#include "command-type.h"
 #include "enum.h"
 #include "mon-util.h"
+#include "trap-type.h"
 
 struct monster_info;
 

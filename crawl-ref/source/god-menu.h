@@ -3,6 +3,7 @@
  * @brief Declarations for the god menu.
  */
 
+#include "god-type.h"
 #include "menu.h"
 
 class GodMenuEntry : public MenuEntry

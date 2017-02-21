@@ -6,8 +6,14 @@
 #ifndef GODABIL_H
 #define GODABIL_H
 
+#include "ability-type.h"
+#include "beh-type.h"
 #include "enum.h"
+#include "god-type.h"
 #include "item-prop-enum.h" // brand_type
+#include "los-type.h"
+#include "recite-eligibility.h"
+#include "recite-type.h"
 #include "spl-cast.h"
 
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"

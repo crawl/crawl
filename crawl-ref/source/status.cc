@@ -5,12 +5,14 @@
 #include "areas.h"
 #include "branch.h"
 #include "cloud.h"
+#include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
@@ -227,7 +229,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "-Swift";
             inf->light_colour = RED;
             inf->short_text   = "sluggish";
-            inf->long_text    = "You are moving sluggishly";
+            inf->long_text    = "You are moving sluggishly.";
         }
         if (you.in_liquid())
             inf->light_colour = DARKGREY;
@@ -429,10 +431,33 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_SILENCE:
         if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
         {
-            inf->light_colour = LIGHTRED;
-            inf->light_text   = "Sil";
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
+        }
+        break;
+
+    case STATUS_SERPENTS_LASH:
+        if (you.attribute[ATTR_SERPENTS_LASH] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text
+               = make_stringf("Lash (%u)",
+                              you.attribute[ATTR_SERPENTS_LASH]);
+            inf->short_text = "serpent's lash";
+            inf->long_text = "You are moving at supernatural speed.";
+        }
+        break;
+
+    case STATUS_HEAVEN_ON_EARTH:
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text
+               = make_stringf("Hevn (%u)",
+                              you.attribute[ATTR_HEAVEN_ON_EARTH]);
+            inf->short_text = "heaven on earth";
+            inf->long_text = "Heavenly clouds are increasing your damage and "
+                             "accuracy.";
         }
         break;
 

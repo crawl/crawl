@@ -1,9 +1,22 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
+#include "artefact-prop-type.h"
+#include "beam-type.h"
+#include "conduct-type.h"
+#include "energy-use-type.h"
+#include "equipment-type.h"
+#include "god-type.h"
+#include "held-type.h"
 #include "item-prop-enum.h"
+#include "mon-holy-type.h"
 #include "random-var.h"
 #include "ouch.h"
+#include "pronoun-type.h"
+#include "reach-type.h"
+#include "size-part-type.h"
+#include "size-type.h"
+#include "stat-type.h"
 
 #define CLING_KEY "clinging" // 'is creature clinging' property key
 

@@ -7,6 +7,7 @@
 #ifndef FINEFF_H
 #define FINEFF_H
 
+#include "beh-type.h"
 #include "mon-util.h"
 
 class final_effect

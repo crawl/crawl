@@ -1,6 +1,10 @@
 #ifndef VIEWCHAR_H
 #define VIEWCHAR_H
 
+#include "char-set-type.h"
+#include "dungeon-char-type.h"
+#include "dungeon-feature-type.h"
+
 void init_char_table(char_set_type set);
 
 dungeon_char_type get_feature_dchar(dungeon_feature_type feat);

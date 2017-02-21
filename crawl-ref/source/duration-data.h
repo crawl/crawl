@@ -2,6 +2,8 @@
  * Status defaults for durations.
  */
 
+#include "god-passive.h"
+
 static void _end_weapon_brand()
 {
     you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
@@ -51,7 +53,8 @@ struct midpoint_msg
                     ///< reduced by after the message prints?
 
     /// Randomly, much should the duration actually be reduced by?
-    int offset() const {
+    int offset() const
+    {
         return max_offset ? random2(max_offset+1) : 0;
     }
 };
@@ -262,7 +265,7 @@ static const duration_def duration_data[] =
     { DUR_DEATHS_DOOR,
       LIGHTGREY, "DDoor",
       "death's door", "deaths door",
-      "", D_EXPIRES,
+      "You are standing in death's doorway.", D_EXPIRES,
       {{ "Your life is in your own hands again!", []() {
             you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
       }}, { "Your time is quickly running out!", 5 }}, 10},
@@ -273,7 +276,7 @@ static const duration_def duration_data[] =
       {{ "", []() { invalidate_agrid(true); }},
         { "Quad Damage is wearing off."}}, 3 }, // per client.qc
     { DUR_SILENCE,
-      MAGENTA, "Sil",
+      0, "",
       "silence", "",
       "You radiate silence.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your hearing returns.", []() { invalidate_agrid(true); }}}, 5 },
@@ -504,7 +507,8 @@ static const duration_def duration_data[] =
     { DUR_DIVINE_SHIELD,
       0, "",
       "divine shield", "",
-      "You are shielded by the power of the Shining One.", D_NO_FLAGS},
+      "You are shielded by the power of the Shining One.", D_NO_FLAGS,
+      {{ "", tso_remove_divine_shield }}},
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
@@ -541,6 +545,11 @@ static const duration_def duration_data[] =
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
+    { DUR_HEAVEN_ON_EARTH,
+      0, "", "", "", "", D_NO_FLAGS,
+      {{ "", []() {
+          ieoh_jian_heaven_tick();
+      }}}},
     { DUR_PIERCING_SHOT, LIGHTBLUE, "Pierce",
       "piercing shot", "",
       "Your projectiles penetrate their targets.", D_DISPELLABLE,
@@ -586,7 +595,7 @@ static const duration_def duration_data[] =
         {{"", trog_remove_trogs_hand},
           {"You feel the effects of Trog's Hand fading.", 1}}, 6},
     { DUR_GOZAG_GOLD_AURA, 0, "", "gold aura", "", "", D_NO_FLAGS,
-        {{ "", []() { you.props[GOZAG_GOLD_AURA_KEY] = 0; }}}},
+        {{ "", []() { you.props[GOZAG_GOLD_AURA_KEY] = 0; you.redraw_title = true;}}}},
     { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
     { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
     { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },

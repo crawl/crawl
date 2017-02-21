@@ -15,6 +15,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "mon-place.h"
 #include "options.h"

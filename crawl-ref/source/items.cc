@@ -48,6 +48,7 @@
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -69,6 +70,7 @@
 #include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "slot-select-mode.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -3441,6 +3443,7 @@ colour_t item_def::armour_colour() const
     switch (sub_type)
     {
         case ARM_CLOAK:
+        case ARM_SCARF:
             return WHITE;
         case ARM_NAGA_BARDING:
         case ARM_CENTAUR_BARDING:

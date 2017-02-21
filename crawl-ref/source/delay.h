@@ -6,8 +6,13 @@
 #ifndef DELAY_H
 #define DELAY_H
 
+#include "activity-interrupt-type.h"
+#include "command-type.h"
 #include "enum.h"
 #include "item-prop-enum.h"
+#include "mpr.h"
+#include "operation-types.h"
+#include "seen-context-type.h"
 
 class monster;
 struct ait_hp_loss;

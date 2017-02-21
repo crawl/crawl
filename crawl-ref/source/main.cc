@@ -90,6 +90,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "lookup-help.h"
@@ -159,6 +160,7 @@
 #ifdef TOUCH_UI
 #include "windowmanager.h"
 #endif
+#include "wizard-option-type.h"
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
 #include "wiz-fsim.h"
@@ -1061,6 +1063,9 @@ static void _start_running(int dir, int mode)
         return;
     }
 
+    if (ieoh_jian_can_wall_jump(next_pos))
+       return; // Do not wall jump while running.
+
     you.running.initialise(dir, mode);
 }
 
@@ -1512,6 +1517,13 @@ static void _input()
 
         world_reacts();
     }
+    else
+    {
+        // Make sure to do a full view update even when the turn isn't over.
+        // This else will be triggered by instantaneous actions, such as
+        // Chei's temporal distortion.
+        viewwindow();
+    }
 
     update_can_train();
 
@@ -1520,6 +1532,7 @@ static void _input()
     _update_place_info();
 
     crawl_state.clear_god_acting();
+
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
@@ -2566,6 +2579,13 @@ void world_reacts()
             save_game(false);
         }
     }
+    // End of a turn.
+    //
+    // `los_noise_last_turn` is the value for display -- it needs to persist
+    // for any calls to print_stats during the next turn. Meanwhile, reset
+    // the loudest noise tracking for the next world_reacts cycle.
+    you.los_noise_last_turn = you.los_noise_level;
+    you.los_noise_level = 0;
 }
 
 static command_type _get_next_cmd()
@@ -3153,6 +3173,8 @@ static void _move_player(coord_def move)
         return;
     }
 
+    const coord_def initial_position = you.pos();
+
     // When confused, sometimes make a random move.
     if (you.confused())
     {
@@ -3210,9 +3232,10 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-
+    bool can_wall_jump = ieoh_jian_can_wall_jump(targ);
+    bool did_wall_jump = false;
     // You can't walk out of bounds!
-    if (!in_bounds(targ))
+    if (!in_bounds(targ) && !can_wall_jump)
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -3353,7 +3376,8 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder && !fmonger)
+    if (!attacking && (targ_pass || can_wall_jump)
+        && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -3429,8 +3453,18 @@ static void _move_player(coord_def move)
         you.stop_being_constricted();
 
         // Don't trigger traps when confusion causes no move.
-        if (you.pos() != targ)
+        if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
+        else if (can_wall_jump && !running)
+        {
+            did_wall_jump = true;
+            auto wall_jump_direction = (you.pos() - targ).sgn();
+            auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                           + wall_jump_direction);
+            move_player_to_grid(wall_jump_landing_spot, false);
+            ieoh_jian_wall_jump_effects(initial_position);
+        }
+
         // Now it is safe to apply the swappee's location effects. Doing
         // so earlier would allow e.g. shadow traps to put a monster
         // at the player's location.
@@ -3492,7 +3526,7 @@ static void _move_player(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking)
+    else if (!targ_pass && !attacking && !can_wall_jump)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -3509,14 +3543,14 @@ static void _move_player(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking)
+    else if (beholder && !attacking && !can_wall_jump)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking)
+    else if (fmonger && !attacking && !can_wall_jump)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
@@ -3537,6 +3571,13 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+
+    // Ieoh Jian's lunge and whirlwind.
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && !did_wall_jump)
+        ieoh_jian_trigger_martial_arts(initial_position);
+
+    if (you_worship(GOD_IEOH_JIAN) && !attacking && you.turn_is_over)
+        ieoh_jian_trigger_serpents_lash(initial_position);
 }
 
 static int _get_num_and_char_keyfun(int &ch)

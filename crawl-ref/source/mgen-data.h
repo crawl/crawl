@@ -1,7 +1,9 @@
 #ifndef MGEN_DATA_H
 #define MGEN_DATA_H
 
+#include "beh-type.h"
 #include "coord.h"
+#include "god-type.h"
 #include "mgen-enum.h"
 #include "mon-flags.h"
 

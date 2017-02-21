@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "enum.h"
+#include "KeymapContext.h"
 
 class input_history
 {

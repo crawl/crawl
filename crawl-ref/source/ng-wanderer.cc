@@ -4,6 +4,7 @@
 
 #include "item-prop.h"
 #include "ng-setup.h"
+#include "potion-type.h"
 #include "randbook.h"
 #include "random.h"
 #include "skills.h"

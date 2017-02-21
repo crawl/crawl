@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "eq-type-flags.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -22,19 +23,25 @@
 #include "invent.h" // in_inventory
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "output.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "spl-clouds.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "view.h"
 
 // TODO: template out the differences between this and god_power.
 // TODO: use the display method rather than dummy powers in god_powers.
@@ -401,6 +408,13 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain,
               "drain nearby creatures when transferring your ancestor" },
+    },
+
+    // Ieoh Jian
+    {
+        { 1, passive_t::ieoh_jian_whirlwind, "attack and slow monsters by moving around them." },
+        { 2, passive_t::ieoh_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
+        { 3, passive_t::ieoh_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1062,14 +1076,13 @@ int qazlal_sh_boost(int piety)
 }
 
 // Not actually passive, but placing it here so that it can be easily compared
-// with Qazlal's boost. Here you.attribute[ATTR_DIVINE_SHIELD] was set
-// to 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5) (and decreases at end of dur).
+// with Qazlal's boost.
 int tso_sh_boost()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
         return 0;
 
-    return you.attribute[ATTR_DIVINE_SHIELD] * 4;
+    return you.attribute[ATTR_DIVINE_SHIELD];
 }
 
 void qazlal_storm_clouds()
@@ -1486,6 +1499,364 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
+}
+
+void ieoh_jian_trigger_serpents_lash(const coord_def& old_pos)
+{
+    if (you.attribute[ATTR_SERPENTS_LASH] == 0)
+       return;
+
+    you.turn_is_over = false;
+    you.elapsed_time_at_last_input = you.elapsed_time;
+    you.attribute[ATTR_SERPENTS_LASH]--;
+    you.redraw_status_lights = true;
+    update_turn_count();
+
+    // these messages are a little silly...
+    if (you.attribute[ATTR_SERPENTS_LASH] == 0)
+    {
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        mpr(coinflip() ? "ZOOOM!" : "SWOOSH!");
+    }
+    else
+        mpr(coinflip() ? "Zoom!" : "Swooosh!");
+
+    if (!cell_is_solid(old_pos))
+        check_place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
+}
+
+void ieoh_jian_heaven_tick()
+{
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
+        return;
+
+    // TODO: this is ridiculous. REWRITEME!
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 10)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 1;
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 15)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 2;
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 20)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 3;
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 30)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 5;
+    else
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 10;
+
+    for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
+        big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
+
+    noisy(15, you.pos());
+
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
+        mprf(MSGCH_GOD, "The heavenly storm settles...");
+    else
+        you.duration[DUR_HEAVEN_ON_EARTH] = IEOH_JIAN_HEAVEN_TICK_TIME;
+}
+
+bool ieoh_jian_has_momentum(ieoh_jian_attack_type attack_type)
+{
+    if (attack_type == IEOH_JIAN_ATTACK_NONE ||
+        attack_type == IEOH_JIAN_ATTACK_TRIGGERED_AUX)
+    {
+        return false;
+    }
+
+    if (you.attribute[ATTR_SERPENTS_LASH] > 0)
+        return true;
+
+    return false;
+}
+
+static bool _dont_attack_martial(const monster* mons)
+{
+    return mons->wont_attack()
+           || mons_is_firewood(*mons)
+           || !you.can_see(*mons);
+}
+
+// A mismatch between attack speed and move speed may cause
+// any particular martial attack to be doubled, tripled, or
+// not happen at all. Given enough time moving, you would have
+// made the same amount of attacks as tabbing.
+static int _ieoh_jian_number_of_attacks()
+{
+    const int move_delay = player_movement_speed();
+    const int attack_delay = you.attack_delay().roll();
+    // we square move_delay here because attack_delay is *multiplied* by
+    // move_delay / BASELINE_DELAY as a crude hack to make DUR_SLOW/DUR_HASTE
+    // affect attack speed.
+    // FIXME: apply DUR_HASTE/DUR_SLOW directly to attack_delay instead!
+    return div_rand_round(move_delay * move_delay,
+                          attack_delay * BASELINE_DELAY);
+}
+
+static void _ieoh_jian_lunge(const coord_def& old_pos)
+{
+    coord_def lunge_direction = (you.pos() - old_pos).sgn();
+    coord_def potential_target = you.pos() + lunge_direction;
+    monster* mons = monster_at(potential_target);
+
+    if (!mons || _dont_attack_martial(mons) || !mons->alive())
+        return;
+
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+    const int number_of_attacks = _ieoh_jian_number_of_attacks();
+
+    if (number_of_attacks == 0)
+    {
+        mprf("You lunge at %s, but your attack speed is too slow for a blow to land.",
+             mons->name(DESC_THE).c_str());
+        return;
+    }
+    else if (number_of_attacks > 1)
+    {
+        if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_LUNGE))
+           mprf("You lunge at %s in a momentous flurry of attacks!", mons->name(DESC_THE).c_str());
+        else
+           mprf("You lunge at %s in a flurry of attacks!", mons->name(DESC_THE).c_str());
+    }
+    else
+    {
+        if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_LUNGE))
+           mprf("You lunge at %s with incredible momentum!", mons->name(DESC_THE).c_str());
+        else
+           mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
+    }
+
+
+    for (int i = 0; i < number_of_attacks; i++)
+    {
+        if (!mons->alive())
+            break;
+        melee_attack lunge(&you, mons);
+        lunge.ieoh_jian_attack = IEOH_JIAN_ATTACK_LUNGE;
+        lunge.attack();
+    }
+}
+
+/// Monsters adjacent to the given pos that are valid targets for whirlwind.
+static vector<monster*> _get_whirlwind_targets(coord_def pos)
+{
+    vector<monster*> targets;
+    for (adjacent_iterator ai(pos, true); ai; ++ai)
+        if (monster_at(*ai) && !_dont_attack_martial(monster_at(*ai)))
+            targets.push_back(monster_at(*ai));
+    sort(targets.begin(), targets.end());
+    return targets;
+}
+
+static void _ieoh_jian_whirlwind(const coord_def& old_pos)
+{
+    const vector<monster*> targets = _get_whirlwind_targets(you.pos());
+    if (targets.empty())
+        return;
+
+    const vector<monster*> old_targets = _get_whirlwind_targets(old_pos);
+    vector<monster*> common_targets;
+    set_intersection(targets.begin(), targets.end(),
+                     old_targets.begin(), old_targets.end(),
+                     back_inserter(common_targets));
+
+    for (auto mons : common_targets)
+    {
+        if (!mons->alive())
+            continue;
+
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+        const int number_of_attacks = _ieoh_jian_number_of_attacks();
+        if (number_of_attacks == 0)
+        {
+            mprf("You spin to attack %s, but your attack speed is too slow for "
+                 "a blow to land.", mons->name(DESC_THE).c_str());
+            continue;
+        }
+
+        if (number_of_attacks > 1)
+        {
+            if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WHIRLWIND))
+            {
+               mprf("You spin and attack %s repeatedly with incredible momentum!",
+                    mons->name(DESC_THE).c_str());
+            }
+            else
+               mprf("You spin and attack %s repeatedly!", mons->name(DESC_THE).c_str());
+        }
+        else
+        {
+            if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WHIRLWIND))
+            {
+               mprf("You spin and attack %s with incredible momentum!",
+                    mons->name(DESC_THE).c_str());
+            }
+            else
+               mprf("You spin and attack %s.", mons->name(DESC_THE).c_str());
+        }
+
+        for (int i = 0; i < number_of_attacks; i++)
+        {
+            if (!mons->alive())
+               break;
+            melee_attack whirlwind(&you, mons);
+            whirlwind.ieoh_jian_attack = IEOH_JIAN_ATTACK_WHIRLWIND;
+            whirlwind.ieoh_jian_number_of_targets = common_targets.size();
+            whirlwind.attack();
+        }
+    }
+}
+
+void ieoh_jian_trigger_martial_arts(const coord_def& old_pos)
+{
+    if (you.pos() == old_pos || you.duration[DUR_CONF])
+        return;
+
+    if (have_passive(passive_t::ieoh_jian_lunge))
+        _ieoh_jian_lunge(old_pos);
+
+    if (have_passive(passive_t::ieoh_jian_whirlwind))
+        _ieoh_jian_whirlwind(old_pos);
+}
+
+bool ieoh_jian_can_wall_jump(const coord_def& target)
+{
+    if (!have_passive(passive_t::ieoh_jian_wall_jump)
+        || !feat_can_wall_jump_against(grd(target))
+        || you.is_stationary()
+        || you.digging)
+    {
+        return false;
+    }
+
+    auto wall_jump_direction = (you.pos() - target).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                   + wall_jump_direction);
+
+    const actor* landing_actor = actor_at(wall_jump_landing_spot);
+    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
+        || !in_bounds(wall_jump_landing_spot)
+        || !you.is_habitable(wall_jump_landing_spot)
+        || landing_actor)
+    {
+        mprf("You have no room to wall jump.");
+        return false;
+    }
+
+    return true;
+}
+
+/// Percent chance for an IJC walljump to distract a target of the given HD.
+static int _walljump_distract_chance(int target_hd)
+{
+    // XXX: unify with _walljump_distract_chance()
+    const int base_chance = div_rand_round(12 * you.experience_level,
+                                           target_hd);
+    if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+        return div_rand_round(base_chance * 15, 10);
+    return min(base_chance, 50); // Capped if you don't have momentum.
+}
+
+void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
+{
+    vector<monster*> targets;
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
+    {
+        monster* target = monster_at(*ai);
+        if (target && !_dont_attack_martial(target) && target->alive())
+           targets.push_back(target);
+
+        if (!cell_is_solid(*ai))
+            check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
+    }
+
+    for (auto target : targets)
+    {
+         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+         const int number_of_attacks = _ieoh_jian_number_of_attacks();
+         if (number_of_attacks == 0)
+         {
+             mprf("You attack %s from above, but your attack speed is too slow"
+                  " for a blow to land.", target->name(DESC_THE).c_str());
+             continue;
+         }
+
+         if (number_of_attacks > 1)
+         {
+             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+             {
+                mprf("You repeatedly attack %s from above with incredible momentum!",
+                     target->name(DESC_THE).c_str());
+             }
+             else
+             {
+                mprf("You repeatedly attack %s from above!",
+                     target->name(DESC_THE).c_str());
+             }
+         }
+         else
+         {
+             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WALL_JUMP))
+             {
+                mprf("You attack %s from above with incredible momentum!",
+                     target->name(DESC_THE).c_str());
+             }
+             else
+             {
+                mprf("You attack %s from above.",
+                     target->name(DESC_THE).c_str());
+             }
+         }
+
+         for (int i = 0; i < number_of_attacks; i++)
+         {
+             if (!target->alive())
+                break;
+
+             melee_attack aerial(&you, target);
+             aerial.ieoh_jian_attack = IEOH_JIAN_ATTACK_WALL_JUMP;
+             aerial.ieoh_jian_number_of_targets = targets.size();
+             aerial.attack();
+         }
+    }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && mon->alive()
+            && you.can_see(*mon)
+            && mon->behaviour != BEH_SLEEP
+            && !_dont_attack_martial(mon))
+        {
+            const int distract_chance
+                = _walljump_distract_chance(mon->get_hit_dice());
+
+            const monsterentry* entry = get_monster_data(mon->type);
+
+            dprf("Attempting distract with chance %d", distract_chance);
+            if (!entry || !x_chance_in_y(distract_chance, 100))
+                continue;
+
+            if (mon->holiness() == MH_NONLIVING)
+               simple_monster_message(*mon, " loses track of your position.");
+            else
+               simple_monster_message(*mon, " is distracted by your jump.");
+
+            mon->add_ench(
+                mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
+                            random_range(2, 4) * BASELINE_DELAY));
+            mon->foe = MHITNOT;
+            mon->target = mon->pos();
+            const int non_move_energy = min(entry->energy_usage.move,
+                                            entry->energy_usage.swim);
+
+            mon->speed_increment -= non_move_energy;
+        }
+    }
 }
 
 /**

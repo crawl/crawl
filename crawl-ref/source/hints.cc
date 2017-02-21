@@ -23,6 +23,7 @@
 #include "fprop.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -2048,8 +2049,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Mutations can be obtained from several sources, among them "
                 "potions, spell miscasts, and overuse of strong enchantments "
                 "like invisibility. The gods Zin and Jiyva will cure your "
-                "mutations, but otherwise, your only recourse is to potions "
-                "of cure mutation. Check your mutations with <w>%</w>.";
+                "mutations. Check your mutations with <w>%</w>.";
         cmd.push_back(CMD_DISPLAY_MUTATIONS);
         break;
 
@@ -3454,7 +3454,7 @@ void hints_inscription_info(string prompt)
     {
         text << "\n"
          "Inscriptions are a powerful concept of Dungeon Crawl.\n"
-         "You can inscribe items to to comment on them \n"
+         "You can inscribe items to comment on them \n"
          "or to set rules for item interaction. If you are new to Crawl, \n"
          "you can safely ignore this feature.";
 

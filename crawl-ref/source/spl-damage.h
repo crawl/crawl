@@ -2,6 +2,7 @@
 #define SPL_DAMAGE_H
 
 #include "enum.h"
+#include "mpr.h"
 #include "spl-cast.h"
 
 struct bolt;

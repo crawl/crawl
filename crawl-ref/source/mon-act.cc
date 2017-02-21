@@ -31,7 +31,9 @@
 #include "hints.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "los.h"
@@ -1673,7 +1675,8 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->has_ench(ENCH_GOLD_LUST))
+    if (mons->has_ench(ENCH_GOLD_LUST)
+        || mons->has_ench(ENCH_DISTRACTED_ACROBATICS))
     {
         mons->speed_increment -= non_move_energy;
         return;

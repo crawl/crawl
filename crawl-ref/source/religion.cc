@@ -45,7 +45,9 @@
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
@@ -328,6 +330,16 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
+    },
+    // Ieoh Jian
+    { { 1, "attack and slow monsters by moving around them",
+           "no longer perform spinning attacks" },
+      { 2, "perform a distracting airborne attack by moving against a solid obstacle",
+           "no longer perform airborne attacks" },
+      { 3, "strike by moving towards foes, devastating them if slowed or distracted",
+           "no longer perform lunging strikes" },
+      { 4, ABIL_IEOH_JIAN_SERPENTS_LASH, "move short distances at supernatural speeds" },
+      { 5, ABIL_IEOH_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
     },
 };
 
@@ -2046,6 +2058,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_PAKELLAS:      return "Pakellas";
     case GOD_USKAYAW:       return "Uskayaw";
     case GOD_HEPLIAKLQANA:  return "Hepliaklqana";
+    case GOD_IEOH_JIAN:     return "Ieoh Jian";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -2060,6 +2073,21 @@ string god_name_jiyva(bool second_name)
         name += " " + you.jiyva_second_name;
 
     return name;
+}
+
+string ieoh_jian_random_sifu_name()
+{
+    switch (random2(7))
+    {
+        case 0: return "Deng Ai";
+        case 1: return "Jiang Wei";
+        case 2: return "Zhang Bao";
+        case 3: return "Ma Yunglu";
+        case 4: return "Sun Luban";
+        case 5: return "Gene Jian Bin";
+        case 6: return "Cai Fang";
+        default: return "Bug";
+    }
 }
 
 god_type str_to_god(const string &_name, bool exact)
@@ -2873,6 +2901,12 @@ void excommunication(bool voluntary, god_type new_god)
         you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
                                     - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        break;
+
+    case GOD_IEOH_JIAN:
+        you.attribute[ATTR_SERPENTS_LASH] = 0;
+        you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+        _set_penance(old_god, 25);
         break;
 
     default:
@@ -3974,6 +4008,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_ZIN:
         case GOD_PAKELLAS:
         case GOD_JIYVA:
+        case GOD_IEOH_JIAN:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4048,6 +4083,7 @@ int god_colour(god_type god) // mv - added
     case GOD_BEOGH:
     case GOD_LUGONU:
     case GOD_ASHENZARI:
+    case GOD_IEOH_JIAN:
         return LIGHTRED;
 
     case GOD_GOZAG:
@@ -4144,6 +4180,7 @@ colour_t god_message_altar_colour(god_type god)
         return BLUE;
 
     case GOD_LUGONU:
+    case GOD_IEOH_JIAN:
         return LIGHTRED;
 
     case GOD_CHEIBRIADOS:

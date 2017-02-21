@@ -26,6 +26,7 @@
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -470,7 +471,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
-#endif
             case POT_BENEFICIAL_MUTATION:
                 valued += 350;
                 break;
@@ -478,6 +478,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_CURE_MUTATION:
                 valued += 250;
                 break;
+#endif
 
             case POT_RESISTANCE:
             case POT_HASTE:
@@ -488,6 +489,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_INVISIBILITY:
             case POT_CANCELLATION:
             case POT_AMBROSIA:
+            case POT_MUTATION:
                 valued += 80;
                 break;
 
@@ -509,10 +511,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_LIGNIFY:
             case POT_FLIGHT:
                 valued += 30;
-                break;
-
-            case POT_MUTATION:
-                valued += 25;
                 break;
 
 #if TAG_MAJOR_VERSION == 34

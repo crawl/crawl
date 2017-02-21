@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "areas.h"
 #include "branch.h"
 #include "colour.h"
 #include "describe.h"
@@ -212,7 +213,7 @@ static void _cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf(you.your_name.c_str());
+            cprintf("%s", you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
@@ -228,11 +229,11 @@ static void _cprintf_touchui(const char *format, ...)
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
@@ -242,7 +243,7 @@ static void _cprintf_touchui(const char *format, ...)
 
         default:
 //            printf("p: %s\n",buf.c_str());
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
     }
     va_end(args);
 }
@@ -301,6 +302,7 @@ public:
     colour_t m_change_pos;
     colour_t m_change_neg;
     colour_t m_empty;
+    int horiz_bar_width;
 
     colour_bar(colour_t default_colour,
                colour_t change_pos,
@@ -309,6 +311,7 @@ public:
                bool round = false)
         : m_default(default_colour), m_change_pos(change_pos),
           m_change_neg(change_neg), m_empty(empty),
+          horiz_bar_width(-1),
           m_old_disp(-1),
           m_request_redraw_after(0)
     {
@@ -336,7 +339,9 @@ public:
 #if TAG_MAJOR_VERSION == 34
         const colour_t temp_colour = temperature_colour(temperature());
 #endif
-        const int width = crawl_view.hudsz.x - (ox - 1);
+        const int width = (horiz_bar_width != -1) ?
+                                  horiz_bar_width :
+                                  crawl_view.hudsz.x - (ox - 1);
         const int sub_disp = (width * val / max_val);
         int disp  = width * max(0, val - sub_val) / max_val;
         const int old_disp = (m_old_disp < 0) ? sub_disp : m_old_disp;
@@ -460,6 +465,11 @@ public:
         textbackground(BLACK);
     }
 
+    void reset()
+    {
+        m_old_disp = -1;
+    }
+
  private:
     int m_old_disp;
     int m_request_redraw_after; // force a redraw at this turn count
@@ -476,6 +486,13 @@ static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 
 colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
 colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
+
+#ifdef USE_TILE_LOCAL
+static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
+#else
+static colour_bar Noise_Bar(LIGHTGREY, LIGHTGREY, MAGENTA, DARKGREY);
+#endif
+
 
 // ----------------------------------------------------------------------
 // Status display
@@ -581,6 +598,108 @@ static void _print_stats_temperature(int x, int y)
     Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
 }
 #endif
+
+/*
+ * Print the noise bar to the HUD with appropriate coloring.
+ * if in wizmode, also print the numeric noise value.
+ */
+static void _print_stats_noise(int x, int y)
+{
+    bool silence = silenced(you.pos());
+    int level = silence ? 0 : you.get_noise_perception(true);
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    cprintf("Noise: ");
+    colour_t noisecolour;
+
+    // This is calibrated roughly so that in an open-ish area:
+    //   LIGHTGREY = not very likely to carry outside of your los
+    //               (though it is possible depending on terrain).
+    //   YELLOW = likely to carry outside of your los, up to double.
+    //   RED = likely to carry at least 16 spaces, up to much further.
+    //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
+    // In more enclosed areas, these values will be attenuated,
+    // and this isn't represented.
+    // See player::get_noise_perception for the mapping from internal noise
+    // values to this 0-1000 scale.
+    // NOTE: This color scheme is duplicated in player.js.
+    if (level <= 333)
+        noisecolour = LIGHTGREY;
+    else if (level <= 666)
+        noisecolour = YELLOW;
+    else if (level < 1000)
+        noisecolour = RED;
+    else
+        noisecolour = LIGHTMAGENTA;
+
+    int bar_position;
+    if (you.wizard && !silence)
+    {
+        Noise_Bar.horiz_bar_width = 6;
+        bar_position = 10;
+
+        // numeric noise level, basically the internal value used by noise
+        // propagation (see shout.cc:noisy). The exact value is too hard to
+        // interpret to show outside of wizmode, because noise propagation is
+        // very complicated.
+        CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
+        textcolour(noisecolour);
+        CPRINTF("%2d ", you.get_noise_perception(false));
+    }
+    else
+    {
+        Noise_Bar.horiz_bar_width = 9;
+        bar_position = 7;
+    }
+
+    if (silence)
+    {
+        CGOTOXY(x + bar_position, y, GOTO_STAT);
+        textcolour(LIGHTMAGENTA);
+
+        // This needs to be one extra wide in case silence happens
+        // immediately after super-loud (magenta) noise
+        CPRINTF("Silenced  ");
+        Noise_Bar.reset(); // so it doesn't display a change bar after silence ends
+    }
+    else
+    {
+        if (level == 1000)
+        {
+            // the bar goes up to 11 for extra loud sounds! (Well, really 10.)
+            Noise_Bar.horiz_bar_width += 1;
+        }
+        else
+        {
+            CGOTOXY(x + 16, y, GOTO_STAT);
+            CPRINTF(" "); // clean up after the extra wide bar
+        }
+#ifndef USE_TILE_LOCAL
+        // use the previous color for negative change in console; there's a
+        // visual difference in bar width. Negative change doesn't get shown
+        // in local tiles.
+        Noise_Bar.m_change_neg = Noise_Bar.m_default;
+#endif
+        Noise_Bar.m_default = noisecolour;
+        Noise_Bar.m_change_pos = noisecolour;
+        Noise_Bar.draw(x + bar_position, y,
+                       div_round_up((level * Noise_Bar.horiz_bar_width), 1000),
+                       Noise_Bar.horiz_bar_width);
+    }
+}
+
+static void _print_stats_gold(int x, int y, colour_t colour)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("Gold:");
+    CGOTOXY(x+6, y, GOTO_STAT);
+    if (you.duration[DUR_GOZAG_GOLD_AURA])
+        textcolour(LIGHTBLUE);
+    else
+        textcolour(HUD_VALUE_COLOUR);
+    CPRINTF("%-6d", you.gold);
+}
 
 static void _print_stats_mp(int x, int y)
 {
@@ -1005,6 +1124,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_DEATHS_DOOR,
         DUR_EXHAUSTED,
         DUR_QUAD_DAMAGE,
+        STATUS_SERPENTS_LASH,
     };
 
     bitset<STATUS_LAST_STATUS + 1> done;
@@ -1177,7 +1297,24 @@ static void _redraw_title()
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
-    if (!you_worship(GOD_NO_GOD))
+    if (you_worship(GOD_NO_GOD))
+    {
+        if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+            && !had_gods())
+        {
+            string godpiety = "**....";
+            textcolour(DARKGREY);
+            if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+                NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
+            clear_to_end_of_line();
+        }
+        else
+        {
+            // Still need to clear in case the player was excommunicated
+            clear_to_end_of_line();
+        }
+    }
+    else
     {
         string god = " of ";
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
@@ -1186,29 +1323,23 @@ static void _redraw_title()
 
         string piety = _god_asterisks();
         textcolour(_god_status_colour(YELLOW));
-        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-            <= WIDTH)
-        {
+        const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
+        if (textwidth <= WIDTH)
             NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
-        }
-        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-                  == (WIDTH + 1))
+        else if (textwidth == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
             //so we remove leading space.
             NOWRAP_EOL_CPRINTF("%s", piety.c_str());
         }
+        clear_to_end_of_line();
+        if (you_worship(GOD_GOZAG))
+        {
+            // "Mottled Draconian of Gozag  Gold: 99999" just fits
+            _print_stats_gold(textwidth + 2, 2,
+                              _god_status_colour(god_colour(you.religion)));
+        }
     }
-    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
-             && !had_gods())
-    {
-        string godpiety = "**....";
-        textcolour(DARKGREY);
-        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
-            NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
-    }
-
-    clear_to_end_of_line();
 
     textcolour(LIGHTGREY);
 }
@@ -1329,19 +1460,13 @@ void print_stats()
     int yhack = 0;
 #endif
 
-    // Line 9 is Gold and Turns
+    // Line 9 is Noise and Turns
 #ifdef USE_TILE_LOCAL
     if (!tiles.is_using_small_layout())
 #endif
     {
-        // Increase y-value for all following lines.
         yhack++;
-        CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
-        if (you.duration[DUR_GOZAG_GOLD_AURA])
-            textcolour(LIGHTBLUE);
-        else
-            textcolour(HUD_VALUE_COLOUR);
-        CPRINTF("%-6d", you.gold);
+        _print_stats_noise(1, 8+yhack);
     }
 
     if (you.wield_change)
@@ -1467,7 +1592,6 @@ void draw_border()
 #else
     int yhack = 0;
 #endif
-    CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
     CGOTOXY(19, 9 + yhack, GOTO_STAT);
     CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
@@ -1879,7 +2003,7 @@ static string _stealth_bar(int sw)
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);
-    bar += "Stlth  ";
+    bar += "Stlth    ";
     const int stealth_num = _stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
@@ -2336,10 +2460,10 @@ static string _resist_composer(
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, bool calc_unid, int sw)
 {
-    // 3 columns, splits at columns 19, 33
-    column_composer cols(3, 19, 33);
-    // First column, resist name is 7 chars
-    int cwidth = 7;
+    // 3 columns, splits at columns 20, 33
+    column_composer cols(3, 20, 33);
+    // First column, resist name is up to 9 chars
+    int cwidth = 9;
     string out;
 
     const int rfire = player_res_fire(calc_unid);
@@ -2378,7 +2502,10 @@ static vector<formatted_string> _get_overview_resistances(
     out += _stealth_bar(get_number_of_cols()) + "\n";
 
     const int regen = (player_regen() + 9) / 10; // round up
-    out += make_stringf("Regen  %d.%d/turn\n", regen/10, regen % 10);
+    out += make_stringf("Regen    %d.%d/turn\n", regen/10, regen % 10);
+
+    const int mp_regen = (player_mp_regen() + 9) / 10; // round up
+    out += make_stringf("MPRegen  %d.%d/turn\n", mp_regen/10, mp_regen % 10);
 
     cols.add_formatted(0, out, false);
 

@@ -11,9 +11,11 @@
 #include <vector>
 
 #include "enum.h"
+#include "equipment-type.h"
 #include "item-name.h"
 #include "item-prop-enum.h"
 #include "menu.h"
+#include "operation-types.h"
 
 enum object_selector
 {

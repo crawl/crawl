@@ -19,6 +19,7 @@
 #include "english.h"
 #include "god-conduct.h"
 #include "god-passive.h"
+#include "level-state-type.h"
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
@@ -277,6 +278,13 @@ static const cloud_data clouds[] = {
     { "salt",  nullptr,                           // terse, verbose name
       ETC_AIR,                                    // colour
       { TILE_CLOUD_WHITE_SMOKE, CTVARY_NONE },    // tile
+      BEAM_NONE, {},                              // beam & damage
+      true,                                       // opacity
+    },
+    // CLOUD_GOLD_DUST,
+    { "gold",  nullptr,                           // terse, verbose name
+      ETC_HOLY,                                   // colour
+      { TILE_CLOUD_GOLD_DUST, CTVARY_DUR },       // tile
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },

@@ -6,6 +6,9 @@
 #ifndef HISCORES_H
 #define HISCORES_H
 
+#include "god-type.h"
+#include "score-format-type.h"
+
 class scorefile_entry;
 
 int hiscores_new_entry(const scorefile_entry &se);

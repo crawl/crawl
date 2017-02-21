@@ -97,6 +97,78 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_bar("heat");
     }
 
+    function update_bar_noise()
+    {
+        player.noise_max = 1000;
+        var level = player.adjusted_noise, max = player.noise_max;
+        var old_value;
+        if ("old_noise" in player)
+            old_value = player.old_noise
+        else
+            old_value = level;
+        if (level < 0)
+            level = 0;
+        if (old_value > max)
+            old_value = max;
+
+        // The adjusted_noise value has already been rescaled in
+        // player.cc:get_adjusted_noise. It ranges from 0 to 1000.
+        var adjusted_level = 0, noise_cat = "";
+
+        // colors are set in `style.css` via the selector `data-level`.
+        if (level <= 333)
+            noise_cat = "quiet";
+        else if (level <= 666)
+            noise_cat = "loud";
+        else if (level < 1000)
+            noise_cat = "veryloud";
+        else
+            noise_cat = "superloud";
+
+        var silenced = player.has_status("silence")
+        if (silenced)
+        {
+            level = 0;
+            old_value = 0;
+            noise_cat = "blank";
+            // I couldn't get this to work just directly putting the text in #stats_noise_bar,
+            // because clearing the text later will adjust the span width.
+            $("#stats_noise_status").text("Silenced");
+        } else {
+            $("#stats_noise_status").text("");
+        }
+        $("#stats_noise").attr("data-level", noise_cat);
+
+        player.old_noise = level;
+
+
+        var full_bar = Math.round(10000 * level / max);
+        var change_bar = Math.round(10000 * Math.abs(old_value - level) / max);
+        if (full_bar + change_bar > 10000)
+        {
+            change_bar = 10000 - full_bar;
+        }
+
+        if (player.wizard && !silenced)
+        {
+            // the exact value is too hard to interpret to show outside of
+            // wizmode, because noise propagation is very complicated.
+            $("#stats_noise").attr("data-shownum", true);
+            $("#stats_noise_num").text(player.noise);
+        }
+        else
+        {
+            $("#stats_noise").attr("data-shownum", null);
+            $("#stats_noise_num").text("");
+        }
+
+        $("#stats_noise_bar_full").css("width", (full_bar / 100) + "%");
+        if (adjusted_level < old_value)
+            $("#stats_noise_bar_decrease").css("width", (change_bar / 100) + "%");
+        else
+            $("#stats_noise_bar_decrease").css("width", 0);
+    }
+
     function repeat_string(s, n)
     {
         return Array(n+1).join(s);
@@ -272,7 +344,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats_" + name).addClass("colour_" + colour);
     }
 
-    var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress", "gold"];
+    var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress"];
     /**
      * Update the stats pane area based on the player's current properties.
      */
@@ -335,14 +407,25 @@ function ($, comm, enums, map_knowledge, messages, options) {
         }
         else
             $("#stats_piety").text("");
+
+        if (player.god == "Gozag")
+        {
+            $("#stats_gozag_gold_label").text(" Gold: ");
+            $("#stats_gozag_gold_label").css("padding-left", "0.5em");
+            $("#stats_gozag_gold").text(player.gold);
+        } else {
+            $("#stats_gozag_gold_label").text("");
+            $("#stats_gozag_gold").text("");
+            $("#stats_gozag_gold_label").css("padding-left", "0");
+        }
+        $("#stats_gozag_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
+
         $("#stats_species_god").text(species_god);
         $("#stats_piety").toggleClass("penance", !!player.penance);
         $("#stats_piety").toggleClass("monk", player.god == "");
 
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
-
-        $("#stats_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
 
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
@@ -366,6 +449,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_stat("str");
         update_stat("int");
         update_stat("dex");
+        update_bar_noise();
 
         if (options.get("show_game_time") === true)
         {
@@ -482,7 +566,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
                 wizard: 0,
                 depth: 0, place: "",
                 contam: 0,
-                heat: 0
+                heat: 0,
+                noise: 0,
+                adjusted_noise: 0
             });
             delete player["old_hp"];
             delete player["old_mp"];

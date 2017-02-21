@@ -39,8 +39,10 @@
 #include "hiscores.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -1361,22 +1363,20 @@ void tso_divine_shield()
     else
         mpr("Your divine shield is renewed.");
 
-    you.redraw_armour_class = true;
-
-    // duration of complete shield bonus from 35 to 80 turns
+    // Duration from 35-80 turns.
     you.set_duration(DUR_DIVINE_SHIELD,
-                     35 + you.skill_rdiv(SK_INVOCATIONS, 4, 3));
+                     35 + you.skill_rdiv(SK_INVOCATIONS, 5, 3));
 
-    // affects size of SH bonus, decreases near end of duration
+    // Size of SH bonus.
     you.attribute[ATTR_DIVINE_SHIELD] =
-        3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5);
+        12 + you.skill_rdiv(SK_INVOCATIONS, 4, 5);
 
     you.redraw_armour_class = true;
 }
 
 void tso_remove_divine_shield()
 {
-    mprf(MSGCH_DURATION, "Your divine shield disappears!");
+    mprf(MSGCH_DURATION, "Your divine shield fades away.");
     you.duration[DUR_DIVINE_SHIELD] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     you.redraw_armour_class = true;
@@ -3645,16 +3645,9 @@ bool cheibriados_slouch()
     return true;
 }
 
-// A low-duration step from time, allowing monsters to get closer
-// to the player safely.
-void cheibriados_temporal_distortion()
+static void _run_time_step()
 {
-    const coord_def old_pos = you.pos();
-
-    const int time = 3 + random2(3);
-    you.moveto(coord_def(0, 0));
-    you.duration[DUR_TIME_STEP] = time;
-
+    ASSERT(you.duration[DUR_TIME_STEP] > 0);
     do
     {
         run_environment_effects();
@@ -3662,6 +3655,21 @@ void cheibriados_temporal_distortion()
         manage_clouds();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
+}
+
+// A low-duration step from time, allowing monsters to get closer
+// to the player safely.
+void cheibriados_temporal_distortion()
+{
+    const coord_def old_pos = you.pos();
+
+    you.moveto(coord_def(0, 0));
+    you.duration[DUR_TIME_STEP] = 3 + random2(3);
+
+    _run_time_step();
+
+    you.los_noise_level = 0;
+    you.los_noise_last_turn = 0;
 
     if (monster *mon = monster_at(old_pos))
     {
@@ -3688,13 +3696,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     you.duration[DUR_TIME_STEP] = pow;
 
     you.time_taken = 10;
-    do
-    {
-        run_environment_effects();
-        handle_monsters();
-        manage_clouds();
-    }
-    while (--you.duration[DUR_TIME_STEP] > 0);
+    _run_time_step();
     // Update corpses, etc. This does also shift monsters, but only by
     // a tiny bit.
     update_level(pow * 10);
@@ -6736,7 +6738,8 @@ spret_type uskayaw_grand_finale(bool fail)
     // kill the target
     mprf("%s explodes violently!", mons->name(DESC_THE, false).c_str());
     mons->flags |= MF_EXPLODE_KILL;
-    if (!mons->is_insubstantial()) {
+    if (!mons->is_insubstantial())
+    {
         blood_spray(mons->pos(), mons->mons_species(), mons->hit_points / 5);
         throw_monster_bits(*mons); // have some fun while we're at it
     }

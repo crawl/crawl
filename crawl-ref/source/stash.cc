@@ -26,6 +26,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "menu.h"
@@ -275,7 +276,10 @@ void Stash::update()
 
         // Now, grab all items on that square and fill our vector
         for (stack_iterator si(pos, true); si; ++si)
+        {
+            god_id_item(*si);
             add_item(*si);
+        }
 
         verified = true;
     }

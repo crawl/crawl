@@ -7,6 +7,7 @@
 #define GODPASSIVE_H
 
 #include "enum.h"
+#include "ieoh-jian-attack-type.h"
 #include "player.h"
 
 class monster;
@@ -248,6 +249,11 @@ enum class passive_t
 
     // TSO prevents you from stabbing
     no_stabbing,
+
+    /// Martial attacks
+    ieoh_jian_lunge,
+    ieoh_jian_whirlwind,
+    ieoh_jian_wall_jump,
 };
 
 enum ru_interference
@@ -286,5 +292,12 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
+
+void ieoh_jian_trigger_martial_arts(const coord_def& old_pos);
+bool ieoh_jian_can_wall_jump(const coord_def& target);
+void ieoh_jian_wall_jump_effects(const coord_def& old_pos);
+void ieoh_jian_trigger_serpents_lash(const coord_def& old_pos);
+bool ieoh_jian_has_momentum(ieoh_jian_attack_type);
+void ieoh_jian_heaven_tick();
 
 #endif

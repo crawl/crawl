@@ -17,6 +17,7 @@
 #include "dungeon.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "randbook.h"
@@ -110,8 +111,6 @@ static bool _is_boring_item(int type, int sub_type)
 {
     switch (type)
     {
-    case OBJ_POTIONS:
-        return sub_type == POT_CURE_MUTATION;
     case OBJ_SCROLLS:
         // These scrolls increase knowledge and thus reduce risk.
         switch (sub_type)
@@ -1372,27 +1371,28 @@ static void _generate_potion_item(item_def& item, int force_type,
     {
         int stype;
         int tries = 500;
+
+        // If created by Xom, keep going until an approved potion is chosen
+        // Currently does nothing, until we come up with a boring potion.
         do
         {
-            // total weight is 1065
+            // total weight: 1045
             stype = random_choose_weighted(192, POT_CURING,
                                            105, POT_HEAL_WOUNDS,
                                             73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
                                             73, POT_HASTE,
+                                            66, POT_MUTATION,
                                             66, POT_MIGHT,
                                             66, POT_AGILITY,
                                             66, POT_BRILLIANCE,
                                             53, POT_DEGENERATION,
-                                            46, POT_MUTATION,
                                             35, POT_INVISIBILITY,
                                             35, POT_RESISTANCE,
                                             35, POT_MAGIC,
                                             35, POT_BERSERK_RAGE,
                                             35, POT_CANCELLATION,
                                             35, POT_AMBROSIA,
-                                            29, POT_CURE_MUTATION,
-                                            11, POT_BENEFICIAL_MUTATION,
                                              2, POT_EXPERIENCE);
         }
         while (agent == GOD_XOM
@@ -1416,6 +1416,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
     {
         const int depth_mod = random2(1 + item_level);
         int tries = 500;
+
+        // If this item is created by Xom, keep looping until an
+        // interesting scroll is discovered (as determined by
+        // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
             // total weight:    789  if depth_mod < 4

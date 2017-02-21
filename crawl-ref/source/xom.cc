@@ -29,6 +29,7 @@
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "losglobal.h"
@@ -1820,10 +1821,12 @@ static void _xom_enchant_monster(bool helpful)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
-static void _xom_good_enchant_monster(int /*sever*/) {
+static void _xom_good_enchant_monster(int /*sever*/)
+{
     _xom_enchant_monster(true);
 }
-static void _xom_bad_enchant_monster(int /*sever*/) {
+static void _xom_bad_enchant_monster(int /*sever*/)
+{
     _xom_enchant_monster(false);
 }
 

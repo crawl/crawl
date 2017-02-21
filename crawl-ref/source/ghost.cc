@@ -13,6 +13,7 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
+#include "god-type.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "mon-book.h"

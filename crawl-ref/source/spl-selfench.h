@@ -3,6 +3,7 @@
 #define SPL_SELFENCH_H
 
 #include "spl-cast.h"
+#include "transformation.h"
 
 int allowed_deaths_door_hp();
 spret_type cast_deaths_door(int pow, bool fail);

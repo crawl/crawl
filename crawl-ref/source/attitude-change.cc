@@ -165,12 +165,8 @@ bool yred_slaves_abandon_you()
             const int hd = mons->get_experience_level();
 
             // During penance, followers get a saving throw.
-            if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                + random2(you.skill(SK_INVOCATIONS) - 6)
-                > random2(hd) + hd + random2(5))
-            {
+            if (random2(20) > random2(hd))
                 continue;
-            }
 
             mons->attitude = ATT_HOSTILE;
             behaviour_event(mons, ME_ALERT, &you);
@@ -223,12 +219,8 @@ bool beogh_followers_abandon_you()
                 const int hd = mons->get_experience_level();
 
                 // During penance, followers get a saving throw.
-                if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                    + random2(you.skill(SK_INVOCATIONS) - 6)
-                    > random2(hd) + hd + random2(5))
-                {
+                if (random2(20) > random2(hd))
                     continue;
-                }
 
                 mons->attitude = ATT_HOSTILE;
                 behaviour_event(mons, ME_ALERT, &you);

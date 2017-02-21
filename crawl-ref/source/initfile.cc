@@ -23,6 +23,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
+#include "confirm-butcher-type.h"
 #include "defines.h"
 #include "delay.h"
 #include "directn.h"
@@ -47,6 +48,7 @@
 #include "playable.h"
 #include "player.h"
 #include "prompt.h"
+#include "slot-select-mode.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -60,6 +62,7 @@
 #include "version.h"
 #include "viewchar.h"
 #include "view.h"
+#include "wizard-option-type.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #include "tiledef-player.h"
@@ -67,6 +70,7 @@
 #include "tileweb.h"
 #endif
 #endif
+
 
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS
@@ -163,7 +167,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
-        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), true),
+        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
@@ -1012,7 +1016,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = CONFIRM_AUTO;
-    auto_butcher           = HS_STARVING;
+    auto_butcher           = HS_VERY_HUNGRY;
     easy_confirm           = CONFIRM_SAFE_EASY;
     allow_self_target      = CONFIRM_PROMPT;
     skill_focus            = SKM_FOCUS_ON;

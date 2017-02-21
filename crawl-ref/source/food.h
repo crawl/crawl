@@ -6,6 +6,7 @@
 #ifndef FOOD_H
 #define FOOD_H
 
+#include "hunger-state-t.h"
 #include "mon-enum.h"
 
 #define HUNGER_FAINTING       400

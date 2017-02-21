@@ -1,6 +1,9 @@
 #ifndef FEATURE_H
 #define FEATURE_H
 
+#include "dungeon-char-type.h"
+#include "dungeon-feature-type.h"
+#include "map-feature.h"
 #include "show.h"
 
 enum feature_flag_type

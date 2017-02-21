@@ -6,6 +6,9 @@
 #ifndef STATUS_H
 #define STATUS_H
 
+#include "duration-type.h"
+#include "mpr.h"
+
 enum status_type
 {
     STATUS_AIRBORNE = NUM_DURATIONS + 1,
@@ -52,7 +55,9 @@ enum status_type
     STATUS_DIVINE_ENERGY,
     STATUS_STILL_WINDS,
     STATUS_MISSILES,
-    STATUS_LAST_STATUS = STATUS_MISSILES
+    STATUS_SERPENTS_LASH,
+    STATUS_HEAVEN_ON_EARTH,
+    STATUS_LAST_STATUS = STATUS_HEAVEN_ON_EARTH
 };
 
 struct status_info

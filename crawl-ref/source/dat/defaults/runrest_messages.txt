@@ -6,10 +6,6 @@ ignore += Jiyva appreciates your sacrifice
 ignore += Jiyva says: Divide and consume
 ignore += You hear.*splatter
 
-ignore += You.*stomp with the beat.
-ignore += You.*pass through a line of other dancers.
-ignore += You.*merge with and destroy a victim.
-
 ignore += You feel.*sick
 ignore += disappears in a puff of smoke
 ignore += standing in the rain
