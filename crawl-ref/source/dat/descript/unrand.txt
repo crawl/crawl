@@ -658,3 +658,9 @@ amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
 %%%%
+Maxwell's thermic engine
+
+A strange sword, one blade blistering hot and the other icy cold. When it hits
+its target the thermal gradient increases. What causes this effect is unknown
+but it is rumored that otherworldly forces are involved.
+%%%%
