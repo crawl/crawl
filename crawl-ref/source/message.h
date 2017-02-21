@@ -33,7 +33,7 @@ bool simple_monster_message(const monster& mons, const char *event,
                             int param = 0,
                             description_level_type descrip = DESC_THE);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
-void ieoh_jian_sifu_message(const char *event);
+void wu_jian_sifu_message(const char *event);
 
 class formatted_string;
 

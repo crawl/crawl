@@ -1806,7 +1806,7 @@ bool simple_monster_message(const monster& mons, const char *event,
 void simple_god_message(const char *event, god_type which_deity)
 {
     string msg;
-    if (which_deity == GOD_IEOH_JIAN)
+    if (which_deity == GOD_WU_JIAN)
        msg = uppercase_first(string("The Council") + event);
     else
        msg = uppercase_first(god_name(which_deity)) + event;
@@ -1814,11 +1814,11 @@ void simple_god_message(const char *event, god_type which_deity)
     god_speaks(which_deity, msg.c_str());
 }
 
-void ieoh_jian_sifu_message(const char *event)
+void wu_jian_sifu_message(const char *event)
 {
     string msg;
-    msg = uppercase_first(string("Sifu ") + ieoh_jian_random_sifu_name() + event);
-    god_speaks(GOD_IEOH_JIAN, msg.c_str());
+    msg = uppercase_first(string("Sifu ") + wu_jian_random_sifu_name() + event);
+    god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)

@@ -548,7 +548,7 @@ static const duration_def duration_data[] =
     { DUR_HEAVEN_ON_EARTH,
       0, "", "", "", "", D_NO_FLAGS,
       {{ "", []() {
-          ieoh_jian_heaven_tick();
+          wu_jian_heaven_tick();
       }}}},
 
     // The following are visible in wizmode only, or are handled

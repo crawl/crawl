@@ -1063,7 +1063,7 @@ static void _start_running(int dir, int mode)
         return;
     }
 
-    if (ieoh_jian_can_wall_jump(next_pos))
+    if (wu_jian_can_wall_jump(next_pos))
        return; // Do not wall jump while running.
 
     you.running.initialise(dir, mode);
@@ -3232,7 +3232,7 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-    bool can_wall_jump = ieoh_jian_can_wall_jump(targ);
+    bool can_wall_jump = wu_jian_can_wall_jump(targ);
     bool did_wall_jump = false;
     // You can't walk out of bounds!
     if (!in_bounds(targ) && !can_wall_jump)
@@ -3462,7 +3462,7 @@ static void _move_player(coord_def move)
             auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                            + wall_jump_direction);
             move_player_to_grid(wall_jump_landing_spot, false);
-            ieoh_jian_wall_jump_effects(initial_position);
+            wu_jian_wall_jump_effects(initial_position);
         }
 
         // Now it is safe to apply the swappee's location effects. Doing
@@ -3572,12 +3572,12 @@ static void _move_player(coord_def move)
         did_god_conduct(DID_HASTY, 1, true);
     }
 
-    // Ieoh Jian's lunge and whirlwind.
-    if (you_worship(GOD_IEOH_JIAN) && !attacking && !did_wall_jump)
-        ieoh_jian_trigger_martial_arts(initial_position);
+    // Wu Jian's lunge and whirlwind.
+    if (you_worship(GOD_WU_JIAN) && !attacking && !did_wall_jump)
+        wu_jian_trigger_martial_arts(initial_position);
 
-    if (you_worship(GOD_IEOH_JIAN) && !attacking && you.turn_is_over)
-        ieoh_jian_trigger_serpents_lash(initial_position);
+    if (you_worship(GOD_WU_JIAN) && !attacking && you.turn_is_over)
+        wu_jian_trigger_serpents_lash(initial_position);
 }
 
 static int _get_num_and_char_keyfun(int &ch)

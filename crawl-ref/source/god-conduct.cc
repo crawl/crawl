@@ -468,7 +468,7 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_HEPLIAKLQANA,
     peeve_map(),
-    // GOD_IEOH_JIAN,
+    // GOD_WU_JIAN,
     peeve_map(),
 };
 
@@ -982,7 +982,7 @@ static like_map divine_likes[] =
     {
         { DID_EXPLORATION, EXPLORE_RESPONSE },
     },
-    // GOD_IEOH_JIAN
+    // GOD_WU_JIAN
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },

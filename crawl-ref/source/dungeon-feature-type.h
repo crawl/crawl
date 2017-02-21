@@ -245,7 +245,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_HEPLIAKLQANA,
 
     DNGN_ENDLESS_SALT,
-    DNGN_ALTAR_IEOH_JIAN,
+    DNGN_ALTAR_WU_JIAN,
 #endif
 
     NUM_FEATURES

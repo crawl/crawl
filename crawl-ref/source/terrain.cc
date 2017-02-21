@@ -367,7 +367,7 @@ bool feat_is_solid(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_SOLID;
 }
 
-/** Can you wall jump against this feature? (Ieoh Jian)?
+/** Can you wall jump against this feature? (Wu Jian)?
  */
 bool feat_can_wall_jump_against(dungeon_feature_type feat)
 {
@@ -511,7 +511,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_PAKELLAS, DNGN_ALTAR_PAKELLAS },
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
-    { GOD_IEOH_JIAN, DNGN_ALTAR_IEOH_JIAN },
+    { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 

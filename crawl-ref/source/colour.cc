@@ -656,7 +656,7 @@ void init_element_colours()
                             40, LIGHTGREEN,
                         0));
     add_element_colour(_create_random_element_colour_calc(
-                            ETC_IEOH_JIAN, "ieoh_jian",
+                            ETC_WU_JIAN, "wu_jian",
                             40, LIGHTRED,
                             40, YELLOW,
                             10, WHITE,

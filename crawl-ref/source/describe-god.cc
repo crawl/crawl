@@ -234,7 +234,7 @@ static const char *divine_title[][8] =
     {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
         "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
 
-    // Ieoh Jian -- animal/chinese martial arts monk theme
+    // Wu Jian -- animal/chinese martial arts monk theme
     {"Wooden Rat",          "Young Dog",             "Young Crane",              "Young Tiger",
         "Young Dragon",     "Red Sash",               "Golden Sash",              "Sifu"},
 };

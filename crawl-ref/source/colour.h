@@ -63,7 +63,7 @@ enum element_type
     ETC_SHINING,        // shining gold (Gozag)
 #endif
     ETC_PAKELLAS,       // Pakellas altar colours
-    ETC_IEOH_JIAN,       // Ieoh Jian Chinese takeaway colours
+    ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128

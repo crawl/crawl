@@ -33,9 +33,9 @@ public:
 
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool         is_riposte;            // long blade retaliation attack
-    ieoh_jian_attack_type ieoh_jian_attack;
-    int ieoh_jian_number_of_targets;
+    bool         is_riposte;      // long blade retaliation attack
+    wu_jian_attack_type wu_jian_attack;
+    int wu_jian_number_of_targets;
     coord_def attack_position;
 
 public:
@@ -86,7 +86,7 @@ private:
     /* Long blade riposte */
     void riposte();
 
-    /* Ieoh Jian martial attacks*/
+    /* Wu Jian martial attacks*/
     int martial_damage_mod(int dam);
 
     /* Mutation Effects */

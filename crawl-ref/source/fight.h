@@ -9,7 +9,7 @@
 #include <list>
 
 #include "target.h"
-#include "ieoh-jian-attack-type.h"
+#include "wu-jian-attack-type.h"
 
 enum stab_type
 {
@@ -50,8 +50,8 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0,
-                           ieoh_jian_attack_type ieoh_jian_attack
-                               = IEOH_JIAN_ATTACK_NONE);
+                           wu_jian_attack_type wu_jian_attack
+                               = WU_JIAN_ATTACK_NONE);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);

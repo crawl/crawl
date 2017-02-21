@@ -88,7 +88,7 @@ static const char *_god_wrath_adjectives[] =
     "progress",         // Pakellas
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
-    "rancor",           // Ieoh Jian
+    "rancor",           // Wu Jian
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -1647,8 +1647,8 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype,
     for (auto& position : positions)
     {
         mgen_data mg = mgen_data::hostile_at(MONS_DANCING_WEAPON, true, position)
-                        .set_summoned(nullptr, 0, 0, GOD_IEOH_JIAN)
-                        .set_non_actor_summoner(_god_wrath_name(GOD_IEOH_JIAN));
+                        .set_summoned(nullptr, 0, 0, GOD_WU_JIAN)
+                        .set_non_actor_summoner(_god_wrath_name(GOD_WU_JIAN));
         mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
         mg.flags |= MG_FORCE_PLACE;
         // Now create monster.
@@ -1692,26 +1692,26 @@ static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype,
     }
 }
 
-static bool _ieoh_jian_retribution()
+static bool _wu_jian_retribution()
 {
     switch (random2(4))
     {
         case 0:
-            ieoh_jian_sifu_message(" whispers, \"Die by a thousand cuts...\"");
+            wu_jian_sifu_message(" whispers, \"Die by a thousand cuts...\"");
             mpr("You feel the sudden stab of multiple needles!");
             _summon_hostile_weapons_ijc_flavour(WPN_DAGGER,
                                                 PATTERN_LONG_CIRCLE);
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
-            ieoh_jian_sifu_message(" whispers, \"Nowhere to run...\"");
+            wu_jian_sifu_message(" whispers, \"Nowhere to run...\"");
             mpr("Your limbs feel heavy!");
             _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF,
                                                 PATTERN_LONG_CIRCLE);
             you.set_duration(DUR_SLOW, random_range(5, 10));
             break;
         case 2:
-            ieoh_jian_sifu_message(" whispers, \"These will loosen your "
+            wu_jian_sifu_message(" whispers, \"These will loosen your "
                                    "tongue...\"");
             _summon_hostile_weapons_ijc_flavour(WPN_DIRE_FLAIL,
                                                 PATTERN_SHORT_CIRCLE);
@@ -1719,7 +1719,7 @@ static bool _ieoh_jian_retribution()
             invalidate_agrid(true);
             break;
         case 3:
-            ieoh_jian_sifu_message(" whispers, \"Suffer, mortal...\"");
+            wu_jian_sifu_message(" whispers, \"Suffer, mortal...\"");
             mpr("You feel a burning poison under your skin!");
             you.corrode_equipment("The poison", 4);
             lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
@@ -1817,7 +1817,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
-    case GOD_IEOH_JIAN:     do_more = _ieoh_jian_retribution(); break;
+    case GOD_WU_JIAN:     do_more = _wu_jian_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:
