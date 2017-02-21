@@ -1406,11 +1406,11 @@ static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
 
 static void _THERMIC_ENGINE_world_reacts(item_def *item)
 {
-    if (item->plus > 2 && one_chance_in(3))
+    if (item->plus > 2)
     {
         item->plus--;
         you.wield_change = true;
-        if (item->plus == 2 && one_chance_in(4))
+        if (item->plus == 2 && one_chance_in(3))
             mpr("The engine shudders to a halt.");
     }
 }
