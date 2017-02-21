@@ -1106,8 +1106,7 @@ static int _player_bonus_regen()
     return rr;
 }
 
-// Inhibited regeneration mutation: stops regeneration when monsters are
-// visible at level 1, and completely at level 2.
+// Inhibited regeneration: stops regeneration when monsters are visible
 bool regeneration_is_inhibited()
 {
     switch (player_mutation_level(MUT_INHIBITED_REGENERATION))
