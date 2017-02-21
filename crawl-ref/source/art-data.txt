@@ -1295,8 +1295,8 @@ OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
 INSCRIP:  freeze,
 PLUS:     +2
 COLOUR:   ETC_VEHUMET
-#TILE:     urand_thermic_engine
-#TILE_EQ:  thermic_engine
+TILE:     urand_thermic_engine
+TILE_EQ:  thermic_engine
 BRAND:    SPWPN_FLAMING
 FIRE:     -1
 COLD:     -1

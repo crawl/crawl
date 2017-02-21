@@ -514,6 +514,7 @@ spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
+thermic_engine THERMIC_ENGINE
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
