@@ -1807,7 +1807,7 @@ void simple_god_message(const char *event, god_type which_deity)
 {
     string msg;
     if (which_deity == GOD_IEOH_JIAN)
-       msg = uppercase_first(string("The council") + event);
+       msg = uppercase_first(string("The Council") + event);
     else
        msg = uppercase_first(god_name(which_deity)) + event;
 
