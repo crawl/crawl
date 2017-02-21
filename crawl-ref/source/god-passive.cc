@@ -1679,11 +1679,11 @@ static void _ieoh_jian_whirlwind(const coord_def& old_pos)
         {
             if (ieoh_jian_has_momentum(IEOH_JIAN_ATTACK_WHIRLWIND))
             {
-               mprf("You spin and attack %s repeteadly with incredible momentum!",
+               mprf("You spin and attack %s repeatedly with incredible momentum!",
                     mons->name(DESC_THE).c_str());
             }
             else
-               mprf("You spin and attack %s repeteadly!", mons->name(DESC_THE).c_str());
+               mprf("You spin and attack %s repeatedly!", mons->name(DESC_THE).c_str());
         }
         else
         {
@@ -1793,7 +1793,7 @@ void ieoh_jian_wall_jump_effects(const coord_def& old_pos)
              }
              else
              {
-                mprf("You repeteadly attack %s from above!",
+                mprf("You repeatedly attack %s from above!",
                      target->name(DESC_THE).c_str());
              }
          }
