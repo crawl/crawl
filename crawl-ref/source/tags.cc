@@ -2710,16 +2710,13 @@ static void tag_read_you(reader &th)
         you.sacrifices[j]       = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
         }
-#endif
 
-#if TAG_MAJOR_VERSION == 34
         if (you.innate_mutation[j] + you.temp_mutation[j] > you.mutation[j])
         {
             mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
             you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
         }
-#endif
-#if TAG_MAJOR_VERSION == 34
+
         // Slow regeneration split into two single-level muts:
         // * Inhibited regeneration (no regen in los of monsters)
         // * No regeneration (what DDs get)
