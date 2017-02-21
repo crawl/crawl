@@ -505,7 +505,7 @@ slightly reduced, and you are unable to evoke wands.
 Blade status
 
 Long, scythe-shaped blades have grown from your hands, increasing your melee
-damage to a significant degree.
+damage significantly.
 
 Any equipped weapons are melded. Your success rate with spells is somewhat
 reduced, and you are unable to evoke wands.
@@ -513,9 +513,9 @@ reduced, and you are unable to evoke wands.
 Statue status
 
 You have been transformed into a slow but extremely robust stone statue.
-Your unarmed damage is increased to a moderate degree. Your stone body is
-is insulated from electricity and gains resistance to poison, rotting and
-negative energy.
+Your melee damage, both unarmed and with weapons, is substantially increased.
+Your stone body is insulated from electricity and gains resistance to poison,
+rotting and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -558,8 +558,8 @@ Dragon status
     desc = desc .. "."
 
     return desc
-}} Your melee damage is increased incredibly, and you are much more robust
-(though less evasive).
+}} Your melee attacks deal incredible damage, and you are much more robust but
+less evasive.
 
 Any equipped weapons and armour are melded.
 %%%%
