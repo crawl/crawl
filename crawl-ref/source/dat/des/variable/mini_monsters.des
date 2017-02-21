@@ -6509,7 +6509,7 @@ ENDMAP
 # consistency with the Maxwell's demon reference.
 #
 NAME:   brannock_guarded_unrand_thermic_engine
-DEPTH:  Depths, Pan
+DEPTH:  Depths
 TAGS:   no_monster_gen no_item_gen transparent
 : if you.unrands("maxwell's_thermic_engine") then
 ITEM:   demon blade randart no_pickup
