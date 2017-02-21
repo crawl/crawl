@@ -14,6 +14,11 @@ Arcane Marksman
 Arcane Marksmen carry ranged weapons, and use magic to make their foes more
 vulnerable to attacks from afar.
 %%%%
+Archaeologist
+
+Thoroughly inept at fighting but well dressed, archaeologists enter the dungeon 
+looking to cast light over the origins of ancient relics.
+%%%%
 Artificer
 
 Artificers start with a few magical devices and are competent at using such

@@ -32,6 +32,7 @@
 #include "english.h"
 #include "env.h"
 #include "errors.h"
+#include "evoke.h"
 #include "exercise.h"
 #include "food.h"
 #include "god-abil.h"
@@ -47,6 +48,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "makeitem.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-place.h"
@@ -3088,6 +3090,22 @@ void level_change(bool skip_attribute_increase)
             upgrade_hepliaklqana_ancestor();
 
         learned_something_new(HINT_NEW_LEVEL);
+    }
+
+    if (you.char_class == JOB_ARCHAEOLOGIST && you.experience_level >= 3)
+    {
+        int tome_index = -1;
+        for (int i = 0; i < ENDOFPACK; i++)
+            if (you.inv[i].defined() && you.inv[i].is_type(OBJ_MISCELLANY, MISC_DUSTY_TOME))
+                tome_index = i;
+
+        if (tome_index != -1) 
+            archaeologist_read_tome(you.inv[tome_index]);
+        else if(!you.props.exists(ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP))
+            mprf("You suddenly remember the dusty tome you brought into the dungeon! You feel able"
+                 " to decipher it now. If only you could remember where you put it..."); 
+
+        you.props[ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP] = true;
     }
 
     while (you.experience >= exp_needed(you.max_level + 1))

@@ -178,12 +178,18 @@ const int AGILITY_BONUS = 5;
 
 #define TORNADO_RADIUS 5
 
+#define ARCHAEOLOGIST_CRATE_ITEM "archaeologist-crate-item"
+#define ARCHAEOLOGIST_TOME_SKILL "archaeologist-crate-manual"
+#define ARCHAEOLOGIST_TRIGGER_TOME_ON_PICKUP "archaeologist-trigger-tome-on-pickup"
+#define ARCHAEOLOGIST_TRIGGER_CRATE_ON_PICKUP "archaeologist-trigger-crate-on-pickup"
+
 #define VAULTS_ENTRY_RUNES 1
 #define ZOT_ENTRY_RUNES 3
 #define ZIG_ENTRY_RUNES 2
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 150
+
 
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)

@@ -2372,6 +2372,7 @@ enum job_type
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
+    JOB_ARCHAEOLOGIST,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

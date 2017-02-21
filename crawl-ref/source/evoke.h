@@ -25,6 +25,9 @@ bool evoke_item(int slot = -1, bool check_range = false);
 int wand_mp_cost();
 void zap_wand(int slot = -1);
 
+void archaeologist_open_crate(item_def& crate);
+void archaeologist_read_tome(item_def& tome);
+
 void black_drac_breath();
 
 #endif
