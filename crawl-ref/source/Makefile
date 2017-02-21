@@ -18,7 +18,8 @@
 # Typical parameters:
 #    TILES         -- set to anything to enable tiles build
 #
-#    SOUND         -- set to anything to enable sound
+#    SOUND         -- set to anything to enable sound; note that you will need to
+#                     uncomment some lines in sound.h if not building tiles
 #
 #    CROSSHOST     -- target system, eg, i386-pc-msdosdjgpp or i586-mingw32msvc
 #

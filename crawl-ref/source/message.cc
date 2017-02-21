@@ -25,6 +25,7 @@
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE_WEB
@@ -731,12 +732,30 @@ public:
 
     void add(const message_line& msg)
     {
-        if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
-            return;
-        flush_prev();
-        prev_msg = msg;
-        if (msg.channel == MSGCH_PROMPT || _temporary)
+        string orig_full_text = msg.full_text();
+
+        if (!(msg.channel != MSGCH_PROMPT && prev_msg.merge(msg)))
+        {
             flush_prev();
+            prev_msg = msg;
+            if (msg.channel == MSGCH_PROMPT || _temporary)
+                flush_prev();
+            }
+
+            // If we play sound, wait until the corresponding message is printed
+            // in case we intend on holding up output that comes after.
+            //
+            // FIXME This doesn't work yet, and causes the game to play the sound,
+            // THEN display the text. This appears to only be solvable by reworking
+            // the way the game outputs messages, as the game it prints messages
+            // one line at a time, not one message at a time.
+            //
+            // However, it should only print one message at a time when it really
+            // needs to, i.e. an sound that interrupts the game. Otherwise it is
+            // more efficent to print text together.
+#ifdef USE_SOUND
+            play_sound(check_sound_patterns(orig_full_text));
+#endif
     }
 
     void store_msg(const message_line& msg)
@@ -1350,6 +1369,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         more(true);
     if (do_flash_screen)
         flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
+
 }
 
 static string show_prompt(string prompt)
@@ -1465,19 +1485,6 @@ static void mpr_check_patterns(const string& message,
 
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
-
-#ifdef USE_SOUND
-    for (const sound_mapping &sound : Options.sound_mappings)
-    {
-        // Maybe we should allow message channel matching as for
-        // force_more_message?
-        if (sound.pattern.matches(message))
-        {
-            play_sound(sound.soundfile.c_str());
-            break;
-        }
-    }
-#endif
 }
 
 static bool channel_message_history(msg_channel_type channel)

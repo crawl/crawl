@@ -27,6 +27,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "showsymb.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -65,8 +66,8 @@ static const char *features[] =
     "Glob patterns",
 #endif
 
-#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS)
-    "Sound support",
+#if defined(USE_SOUND) && defined(SOUND_BACKEND)
+    SOUND_BACKEND,
 #endif
 
 #ifdef DGL_MILESTONES

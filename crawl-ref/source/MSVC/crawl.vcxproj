@@ -468,6 +468,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\skills.cc" />
     <ClCompile Include="..\skill-menu.cc" />
     <ClCompile Include="..\species.cc" />
+    <ClCompile Include="..\sound.cc" />
     <ClCompile Include="..\spl-book.cc" />
     <ClCompile Include="..\spl-cast.cc" />
     <ClCompile Include="..\spl-clouds.cc" />

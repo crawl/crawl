@@ -46,9 +46,13 @@ struct sound_mapping
 {
     text_pattern pattern;
     string       soundfile;
+    bool         interrupt_game;
+
     bool operator== (const sound_mapping &o) const
     {
-        return pattern == o.pattern && soundfile == o.soundfile;
+        return pattern == o.pattern
+                && soundfile == o.soundfile
+                && interrupt_game == o.interrupt_game;
     }
 };
 
@@ -258,6 +262,9 @@ public:
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
+    bool        sounds_on;              // Allow sound effects to play
+    bool        one_SDL_sound_channel;  // Limit to one SDL sound at once
+
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 
@@ -352,6 +359,7 @@ public:
     bool        travel_key_stop;   // Travel stops on keypress.
 
     vector<sound_mapping> sound_mappings;
+    string sound_file_path;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
 

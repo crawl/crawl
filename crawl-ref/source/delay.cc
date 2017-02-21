@@ -56,6 +56,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "sound.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-util.h"
@@ -723,6 +724,9 @@ void JewelleryOnDelay::finish()
             return;
     }
 
+#ifdef USE_SOUND
+    parse_sound(WEAR_JEWELLERY_SOUND);
+#endif
     puton_ring(jewellery.link, false);
 }
 
@@ -736,6 +740,9 @@ void ArmourOnDelay::finish()
 
     const equipment_type eq_slot = get_armour_slot(armour);
 
+#ifdef USE_SOUND
+    parse_sound(EQUIP_ARMOUR_SOUND);
+#endif
     mprf("You finish putting on %s.", armour.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
@@ -757,12 +764,18 @@ void ArmourOffDelay::finish()
     const equipment_type slot = get_armour_slot(armour);
     ASSERT(you.equip[slot] == armour.link);
 
+#ifdef USE_SOUND
+    parse_sound(DEQUIP_ARMOUR_SOUND);
+#endif
     mprf("You finish taking off %s.", armour.name(DESC_YOUR).c_str());
     unequip_item(slot);
 }
 
 void MemoriseDelay::finish()
 {
+#ifdef USE_SOUND
+    parse_sound(MEMORISE_SPELL_SOUND);
+#endif
     mpr("You finish memorising.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);

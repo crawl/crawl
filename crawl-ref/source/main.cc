@@ -123,6 +123,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
+#include "sound.h"
 #include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"
