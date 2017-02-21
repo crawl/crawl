@@ -270,6 +270,7 @@
     Rob Young
     Zannick
     Zooko
+    advil
 
 The Dungeon Crawl Stone Soup development team is:
     Peter Berger
