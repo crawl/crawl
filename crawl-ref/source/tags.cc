@@ -2716,22 +2716,6 @@ static void tag_read_you(reader &th)
             mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
             you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
         }
-
-        // Slow regeneration split into two single-level muts:
-        // * Inhibited regeneration (no regen in los of monsters)
-        // * No regeneration (what DDs get)
-        if (you.mutation[MUT_INHIBITED_REGENERATION] > 1)
-        {
-            if (you.species == SP_DEEP_DWARF)
-            {
-                you.mutation[MUT_NO_REGENERATION] = 1;
-            }
-            else
-            {
-                you.mutation[MUT_NO_REGENERATION] = 0;
-                you.mutation[MUT_INHIBITED_REGENERATION] = 1;
-            }
-        }
 #endif
     }
 
@@ -2993,6 +2977,31 @@ static void tag_read_you(reader &th)
     {
         if (you.mutation[MUT_SPIT_POISON] > 1)
             you.mutation[MUT_SPIT_POISON] -= 1;
+    }
+
+    // Slow regeneration split into two single-level muts:
+    // * Inhibited regeneration (no regen in los of monsters, what Gh get)
+    // * No regeneration (what DDs get)
+    {
+        if (you.species == SP_DEEP_DWARF
+            && (you.mutation[MUT_INHIBITED_REGENERATION] > 0
+                || you.mutation[MUT_NO_REGENERATION] != 1))
+        {
+            you.innate_mutation[MUT_INHIBITED_REGENERATION] = 0;
+            you.mutation[MUT_INHIBITED_REGENERATION] = 0;
+            you.innate_mutation[MUT_NO_REGENERATION] = 1;
+            you.mutation[MUT_NO_REGENERATION] = 1;
+        }
+        else if (you.species == SP_GHOUL
+                 && you.mutation[MUT_INHIBITED_REGENERATION] > 1)
+        {
+            you.innate_mutation[MUT_INHIBITED_REGENERATION] = 1;
+            you.mutation[MUT_INHIBITED_REGENERATION] = 1;
+        }
+        else if (you.mutation[MUT_INHIBITED_REGENERATION] > 1)
+        {
+            you.mutation[MUT_INHIBITED_REGENERATION] = 1;
+        }
     }
 
     // Fixup for Sacrifice XP from XL 27 (#9895). No minor tag, but this
