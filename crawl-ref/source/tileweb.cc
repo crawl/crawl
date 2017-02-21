@@ -796,7 +796,8 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.experience_level, you.experience_level, "xl");
     _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
     _update_int(force_full, c.gold, you.gold, "gold");
-    _update_int(force_full, c.noise, you.get_noise_perception(false), "noise");
+    _update_int(force_full, c.noise,
+                (you.wizard ? you.get_noise_perception(false) : -1), "noise");
     _update_int(force_full, c.adjusted_noise, you.get_noise_perception(true), "adjusted_noise");
 
     if (you.running == 0) // Don't update during running/resting

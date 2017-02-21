@@ -44,8 +44,11 @@ body {
 #stats_titleline, #stats_species_god {
     color: #fce94f; /* yellow */
 }
-#stats_piety, #stats_gozag_gold {
+#stats_piety {
     color: #fce94f; /* yellow */
+}
+#stats_gozag_gold{
+    color: #babdb6; /* lightgray */
 }
 #stats_piety.penance {
     color: #a40000; /* red */
@@ -147,20 +150,72 @@ body {
     background-color: #ee4f45; /* lightred */
 }
 
-#stats_noise_bar {
-    background-color: #000000; /* dark slate gray */
-}
+/* default color when showing "Silenced" */
 #stats_noise_status {
     color: #FF00FF; /* magenta */
 }
-#stats_noise_bar_full {
-    background-color: #00D300; /* lightgray */
+
+/* default bar background color */
+#stats_noise_bar {
+    background-color: #2F2F2F; /* dark slate gray */
 }
+
+/* default bar change color */
 #stats_noise_bar_decrease {
     background-color: #555753; /* darkgray */
 }
-#stats_noise_bar_increase {
-    background-color: #555753; /* darkgray */
+
+/* clear the bar entirely */
+#stats_noise[data-level="blank"] #stats_noise_bar,
+#stats_noise[data-level="blank"] #stats_noise_bar_full {
+    background-color: #000000; /* black */
+}
+
+/* noise number is printed here in wizmode */
+#stats_noise_num {
+    color: #D3D3D3; /* default gray */
+    width: 0;
+}
+#stats_noise[data-shownum] #stats_noise_num {
+    width: 2em;
+}
+
+/* use attribute selectors to adjust the bar and number (wizmode) color depending on `data-level`. */
+#stats_noise[data-level="quiet"] #stats_noise_bar_full {
+    background-color: #D3D3D3; /* lightgray */
+}
+#stats_noise[data-level="quiet"] #stats_noise_num {
+    color: #D3D3D3;
+}
+#stats_noise[data-level="loud"] #stats_noise_bar_full {
+    background-color: #FFD700; /* gold */
+}
+#stats_noise[data-level="loud"] #stats_noise_num {
+    color: #FFD700;
+}
+#stats_noise[data-level="veryloud"] #stats_noise_bar_full {
+    background-color: #FF0000; /* red */
+}
+#stats_noise[data-level="veryloud"] #stats_noise_num {
+    color: #FF0000;
+}
+#stats_noise[data-level="superloud"]  #stats_noise_bar_full {
+    background-color: #FF00FF; /* magenta */
+}
+#stats_noise[data-level="superloud"] #stats_noise_num {
+    color: #FF00FF;
+}
+
+/* make the bar go to eleven on superloud sounds. */
+#stats_noise_bar { width: 82%; }
+#stats_noise[data-level="superloud"] #stats_noise_bar {
+    width: 100%;
+}
+
+/* shrink the bar to the right in wizmode (if `data-shownum` is set). */
+#stats_noise_inter { width: 61%; }
+#stats_noise[data-shownum] #stats_noise_inter {
+     width: 45%;
 }
 
 #stats[data-species="Djinni"] #stats_hp_bar_full {
