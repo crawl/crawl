@@ -495,8 +495,8 @@ Dragon Form spell
     desc = desc .. "."
 
     return desc
-}} The caster will find this form offers incredible melee damage and greatly
-increased robustness (though reduced evasiveness).
+}} The caster becomes able to deal incredible damage in melee combat, and
+they become much more robust, although their evasiveness is reduced.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -1298,10 +1298,9 @@ the target may have.
 Statue Form spell
 
 Transforms the caster into a slow but extremely robust stone statue. The
-caster's unarmed damage will be increased a moderate degree, and all melee
-attacks will be substantially more powerful. The caster's stone body is
-insulated from electricity and gains resistance to poison, rotting and
-negative energy.
+caster's melee damage, both unarmed and with weapons, is substantially
+increased. The caster's stone body is insulated from electricity and gains
+resistance to poison, rotting and negative energy.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
