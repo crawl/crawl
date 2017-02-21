@@ -1412,9 +1412,14 @@ static void _THERMIC_ENGINE_world_reacts(item_def *item)
 {
     if (item->plus > 2)
     {
-        item->plus--;
+        item->plus -= div_rand_round(you.time_taken, BASELINE_DELAY);
+
+        if (item->plus < 2)
+            item->plus = 2;
+
         you.wield_change = true;
-        if (item->plus == 2 && one_chance_in(3))
+
+        if (item->plus == 2)
             mpr("The engine shudders to a halt.");
     }
 }
