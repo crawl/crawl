@@ -21,8 +21,12 @@ enum ability_type
 #if TAG_MAJOR_VERSION == 34
     ABIL_DELAYED_FIREBALL,
 #endif
+
+    // Abort duration-based spells
     ABIL_END_TRANSFORMATION,
     ABIL_STOP_SINGING, // From song of slaying
+    ABIL_CANCEL_PPROJ,
+    ABIL_CANCEL_PIERCE,
 
     // Species-specific abilities.
     // Demonspawn-only
