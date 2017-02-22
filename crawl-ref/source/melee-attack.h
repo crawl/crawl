@@ -145,7 +145,7 @@ private:
     void player_weapon_upsets_god();
     void player_strike_pressure_points(monster* mons);
     void _defender_die();
-    bool defender_ijc_distracted() const;
+    bool defender_wjc_distracted() const;
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);

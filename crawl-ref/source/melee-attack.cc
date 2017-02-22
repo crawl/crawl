@@ -342,8 +342,8 @@ void melee_attack::apply_black_mark_effects()
     }
 }
 
-// For IJC, does the defender count as being distracted?
-bool melee_attack::defender_ijc_distracted() const
+// For WJC, does the defender count as being distracted?
+bool melee_attack::defender_wjc_distracted() const
 {
     ASSERT(defender->is_monster());
     return defender->as_monster()->has_ench(ENCH_DISTRACTED_ACROBATICS)
@@ -477,7 +477,7 @@ bool melee_attack::handle_phase_hit()
         && defender->as_monster()->can_bleed()
         && wu_jian_attack == WU_JIAN_ATTACK_LUNGE
         && defender->as_monster()->has_ench(ENCH_SLOW)
-        && defender_ijc_distracted())
+        && defender_wjc_distracted())
     {
         blood_spray(defender->pos(), defender->as_monster()->type,
                     damage_done / 5);
@@ -596,7 +596,7 @@ bool melee_attack::handle_phase_aux()
     return true;
 }
 
-/// Percentage chance for an IJC effect to slow a target of the given HD.
+/// Percentage chance for an WJC effect to slow a target of the given HD.
 static int _pressure_point_slow_chance(int hd)
 {
     // XXX: unify with _walljump_distract_chance()
@@ -3456,7 +3456,7 @@ int melee_attack::martial_damage_mod(int dam)
     case WU_JIAN_ATTACK_LUNGE:
     {
         const bool slow = defender->as_monster()->has_ench(ENCH_SLOW);
-        const bool distracted = defender_ijc_distracted();
+        const bool distracted = defender_wjc_distracted();
         if (slow && distracted)
         {
             mprf("%s is thoroughly helpless against your lunge!",

@@ -1747,7 +1747,7 @@ bool wu_jian_can_wall_jump(const coord_def& target)
     return true;
 }
 
-/// Percent chance for an IJC walljump to distract a target of the given HD.
+/// Percent chance for an WJC walljump to distract a target of the given HD.
 static int _walljump_distract_chance(int target_hd)
 {
     // XXX: unify with _walljump_distract_chance()
