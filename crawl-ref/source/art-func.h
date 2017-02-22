@@ -1419,7 +1419,7 @@ static void _THERMIC_ENGINE_world_reacts(item_def *item)
 
         you.wield_change = true;
 
-        if (item->plus == 2)
+        if (item->plus == 2 && one_chance_in(4))
             mpr("The engine shudders to a halt.");
     }
 }
