@@ -355,7 +355,7 @@ static const map<monster_type, vector<ancestor_upgrade> > ancestor_data =
       { { 1,  "Quarterstaff" },
         { 1,  "Throw Frost" },
         { 1,  "Stone Arrow" },
-        { 1,  "Increase melee damage" },
+        { 1,  "Increased melee damage" },
         { 15, "Bolt of Magma" },
         { 19, "Lajatang (freeze)" },
         { 19, "Haste" },
