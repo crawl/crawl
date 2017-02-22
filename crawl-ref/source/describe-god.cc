@@ -337,48 +337,72 @@ static string _describe_ash_skill_boost()
     return desc.str();
 }
 
+typedef pair<int, string> ancestor_upgrade;
+
+static const map<monster_type, vector<ancestor_upgrade> > ancestor_data =
+{
+    { MONS_ANCESTOR_KNIGHT,
+      { { 1,  "Flail" },
+        { 1,  "Shield" },
+        { 1,  "Chain mail (+AC)" },
+        { 15, "Broad axe (flame)" },
+        { 19, "Large shield (reflect)" },
+        { 19, "Haste" },
+        { 24, "Broad axe (speed)" },
+      }
+    },
+    { MONS_ANCESTOR_BATTLEMAGE,
+      { { 1,  "Quarterstaff" },
+        { 1,  "Throw Frost" },
+        { 1,  "Stone Arrow" },
+        { 1,  "Increase melee damage" },
+        { 15, "Bolt of Magma" },
+        { 19, "Lajatang (freeze)" },
+        { 19, "Haste" },
+        { 24, "Lehudib's Crystal Spear" },
+      }
+    },
+    { MONS_ANCESTOR_HEXER,
+      { { 1,  "Dagger (drain)" },
+        { 1,  "Slow" },
+        { 1,  "Confuse" },
+        { 15, "Paralyse" },
+        { 19, "Mass Confusion" },
+        { 19, "Haste" },
+        { 24, "Quick blade (antimagic)" },
+      }
+    },
+};
+
 /// Build & return a table of Hep's upgrades for your chosen ancestor type.
 static string _describe_ancestor_upgrades()
 {
     if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
         return "";
 
-    // TODO: don't hardcode this
-    // TODO: higlight upgrades taken
-    // XXX: maybe it'd be nice to let you see other ancestor types'...?
-    switch (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int())
+    string desc;
+    const monster_type ancestor =
+        static_cast<monster_type>(you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int());
+    const vector<ancestor_upgrade> *upgrades = map_find(ancestor_data,
+                                                        ancestor);
+
+    if (upgrades)
     {
-    case MONS_ANCESTOR_KNIGHT:
-        return "XL                      Knight\n"
-               "                        Flail\n"
-               "                        Shield\n"
-               "                   Splint Mail (+AC)\n"
-               "15                 Broad Axe (flame)\n"
-               "19              Large Shield (reflect)\n"
-               "19                      Haste\n"
-               "24                Speed (weapon ego)\n";
-    case MONS_ANCESTOR_BATTLEMAGE:
-        return "XL                    Battlemage\n"
-               "                     Quarterstaff\n"
-               "                      Throw Frost\n"
-               "                      Stone Arrow\n"
-               "                     +Melee Damage\n"
-               "15                    Magma Bolt\n"
-               "19                  Lajatang (freeze)\n"
-               "19                       Haste\n"
-               "24                   Crystal Spear\n";
-    case MONS_ANCESTOR_HEXER:
-        return "XL                       Hexer\n"
-               "                     Dagger (drain)\n"
-               "                         Slow\n"
-               "                        Confuse\n"
-               "15                     Paralyse\n"
-               "19                   Mass Confusion\n"
-               "19                       Haste\n"
-               "24                Quickblade (antimagic)\n";
-    default:
-        return "";
+        desc = "<white>XL              Upgrade\n</white>";
+        for (auto &entry : *upgrades)
+        {
+            desc += make_stringf("%s%2d              %s%s\n",
+                                 you.experience_level < entry.first
+                                     ? "<darkgrey>" : "",
+                                 entry.first,
+                                 entry.second.c_str(),
+                                 you.experience_level < entry.first
+                                     ? "</darkgrey>" : "");
+        }
     }
+
+    // XXX: maybe it'd be nice to let you see other ancestor types'...?
+   return desc;
 }
 
 // from dgn-overview.cc
