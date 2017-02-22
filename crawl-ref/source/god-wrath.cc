@@ -1617,14 +1617,14 @@ static bool _choose_hostile_monster(const monster& mon)
 }
 
 // XXX: this whole pattern approach can probably be dropped
-enum _ijc_pattern
+enum _wjc_pattern
 {
     PATTERN_SHORT_CIRCLE,
     PATTERN_LONG_CIRCLE,
 };
 
-static void _summon_hostile_weapons_ijc_flavour(weapon_type subtype,
-                                                _ijc_pattern pattern)
+static void _summon_hostile_weapons_wjc_flavour(weapon_type subtype,
+                                                _wjc_pattern pattern)
 {
     vector<coord_def> positions;
 
@@ -1699,21 +1699,21 @@ static bool _wu_jian_retribution()
         case 0:
             wu_jian_sifu_message(" whispers, \"Die by a thousand cuts...\"");
             mpr("You feel the sudden stab of multiple needles!");
-            _summon_hostile_weapons_ijc_flavour(WPN_DAGGER,
+            _summon_hostile_weapons_wjc_flavour(WPN_DAGGER,
                                                 PATTERN_LONG_CIRCLE);
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
             wu_jian_sifu_message(" whispers, \"Nowhere to run...\"");
             mpr("Your limbs feel heavy!");
-            _summon_hostile_weapons_ijc_flavour(WPN_QUARTERSTAFF,
+            _summon_hostile_weapons_wjc_flavour(WPN_QUARTERSTAFF,
                                                 PATTERN_LONG_CIRCLE);
             you.set_duration(DUR_SLOW, random_range(5, 10));
             break;
         case 2:
             wu_jian_sifu_message(" whispers, \"These will loosen your "
                                    "tongue...\"");
-            _summon_hostile_weapons_ijc_flavour(WPN_DIRE_FLAIL,
+            _summon_hostile_weapons_wjc_flavour(WPN_DIRE_FLAIL,
                                                 PATTERN_SHORT_CIRCLE);
             you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
             invalidate_agrid(true);

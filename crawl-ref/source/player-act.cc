@@ -302,7 +302,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     }
 
     // XXX: this is supposed to compensate for DUR_SLOW/DUR_FAST, but behaves
-    // incorrectly if attacking while moving/etc (as with IJC)
+    // incorrectly if attacking while moving/etc (as with WJC)
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }
