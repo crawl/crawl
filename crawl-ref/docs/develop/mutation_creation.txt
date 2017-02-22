@@ -5,7 +5,7 @@ cover mutations and abilities first. All of a species innate abilities
 are handled by mutations. Some grant stat changes, others grant
 abilities, but they all use the same framework.
 
-We start off as before, by editing enum.h to add the entry for our new
+We start off by editing mutation-type.h to add the entry for our new
 mutation. This time, we're updating mutation_data.h in the same way,
 putting our new entry right above the NUM_MUTATIONS magic entry. Note
 that if you're adding multiple mutations (or anything, really) it
@@ -94,10 +94,10 @@ versions, so we can ignore it for our new mutations. Were we editing
 levels of an existing mutation, we might want to update tags.cc as well
 to handle saves to keep them in line with the current range of levels.
 
-For our laser eyes active ability, we need add an entry in enum.h again,
-this time to the ability_type enum. This list is nicely organized right
-now, but we should add our entry to the end right before NUM_ABILITIES
-to minimize any possible save compatibility issue. I'll skip cutting and
+For the laser eyes ability, we need to add an entry in ability-type.h
+for an activated ability. This list is nicely organized right now, but
+we should add our entry to the end right before NUM_ABILITIES to
+minimize any possible save compatibility issue. I'll skip cutting and
 pasting yet another block of code, but our name is ABIL_LASER_EYES.
 
 Next, in ability.cc, we find that there's an array called Ability_List[].
@@ -270,9 +270,8 @@ along with the other auxilliary attacks:
         //REST OF THE FUNCTION TRIMMED FOR SPACE
 
 Now we have to go back to melee_attack.h and add in the new UNAT_BEARD
-enum entry to unarmed_attack_type, since we didn't see that until
-etting to the code above (also note, this enum is NOT in enums.h like
-every other one so far):
+enum entry to unarmed_attack_type, since we didn't see that until getting
+to the code above:
 
     enum unarmed_attack_type
     {
@@ -307,8 +306,9 @@ most complexity comes from when a mutation gets referenced on something
 else, like how our beard ended up needed a new class to work correctly.
 
 Summary Notes:
-   - enum.h for mutation_type entry (and ability entries if applicable)
-   - mutation-data.h to fill in the basics of the mutation.
+   - mutation-type.h for mutation_type enum entry
+   - mutation-data.h to fill in the basics of the mutation
+   - ability-type.h for ability_type enum entry
    - mutation.cc for any conflicting mutations or mutations sharing the
      same 'slot'.
    - ability.cc for mutations that have an activatable component (talents).
