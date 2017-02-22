@@ -4,7 +4,7 @@ Species are the biggest factor you choose when creating a character in Crawl, an
 
 Because there are so many options for species, theming a new species can be difficult to make them unique. In today's example, we're simply going to revise a classic, the Mountain Dwarf.
 
-First, we go back to enum.h and update the species_type enum with a new value. This is going to be a common step in most any addition to the game.
+First, we go to species-type.h and update the species enums with a new value. Adding enums is going to be a common step in most any addition to the game.
 
         #if TAG_MAJOR_VERSION == 34
         SP_DJINNI,
@@ -130,7 +130,7 @@ The last step for this race will be to add them to the menu on startup in newgam
 That's all it takes to create a basic species in Crawl. Simpler races might not have any mutations at all, just aptitudes and stat mods. More complex races have checks all over the code for special cases, like felids. Searching for a species by its enum name will show you every place that species gets special consideration. Humans get none, felids and vampires get tons.
 
 Summary:
-    - enum.h to update species_type
+    - species-type.h to update species_type
     - species-data.h to add in core information
     - aptitudes.h to fill in skill aptitudes.
     - newgame.cc to update the species_order array.
