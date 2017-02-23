@@ -3920,6 +3920,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_PIERCING_SHOT, "Piercing Shot",
+    SPTYP_CHARMS,
+    SPFLAG_NONE,
+    5,
+    200,
+    -1, -1,
+    3, 0,
+    TILEG_PIERCING_SHOT,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

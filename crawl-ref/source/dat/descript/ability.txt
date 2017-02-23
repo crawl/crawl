@@ -91,6 +91,14 @@ Stop Singing ability
 
 Stops singing your Song of Slaying.
 %%%%
+Cancel Portal Projectile ability
+
+Ends your Portal Projectile status.
+%%%%
+Cancel Piercing Shot ability
+
+Ends your Piercing Shot status.
+%%%%
 Heal Wounds ability
 
 Heals the user significantly, with a chance of permanently reducing the user's

@@ -192,5 +192,6 @@ enum duration_type
     DUR_SPWPN_PROTECTION,
     DUR_NO_HOP,
     DUR_HEAVEN_ON_EARTH,
+    DUR_PIERCING_SHOT,
     NUM_DURATIONS
 };
