@@ -740,10 +740,10 @@ bool zin_check_able_to_recite(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_BREATH_WEAPON])
+    if (you.duration[DUR_RECITE_COOLDOWN])
     {
         if (!quiet)
-            mpr("You're too short of breath to recite.");
+            mpr("You're not ready to recite again yet.");
         return false;
     }
 

@@ -139,7 +139,8 @@ Reverts you to your normal form.
 # Zin
 Recite ability
 
-Preaches to nearby monsters about Zin's laws for a short duration.
+Preaches to nearby monsters about Zin's laws for a short duration. After
+finishing a recitation, it cannot be repeated for a short time.
 
 The recitation will have different effects depending on the target: the chaotic
 and unclean will be affected by powerful and damaging effects, undead and
