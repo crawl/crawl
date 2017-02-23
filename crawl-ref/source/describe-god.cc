@@ -402,7 +402,7 @@ static string _describe_ancestor_upgrades()
     }
 
     // XXX: maybe it'd be nice to let you see other ancestor types'...?
-   return desc;
+    return desc;
 }
 
 // from dgn-overview.cc
