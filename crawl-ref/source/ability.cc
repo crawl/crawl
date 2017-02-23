@@ -357,7 +357,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_RECITE, "Recite",
-      0, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::breath },
+      0, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_ZIN_VITALISATION, "Vitalisation",
       2, 0, 0, 1, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_ZIN_IMPRISON, "Imprison",
@@ -2145,7 +2145,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
             mprf("You clear your throat and prepare to recite.");
-            you.increase_duration(DUR_BREATH_WEAPON,
+            you.increase_duration(DUR_RECITE_COOLDOWN,
                                   3 + random2(10) + random2(30));
         }
         else
