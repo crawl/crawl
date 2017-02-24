@@ -938,31 +938,31 @@ static species_group species_groups[] =
             SP_HILL_ORC,
             SP_MINOTAUR,
             SP_MERFOLK,
-            SP_TROLL,
             SP_GARGOYLE,
             SP_BASE_DRACONIAN,
-            SP_DEEP_DWARF,
+            SP_HALFLING,
+            SP_TROLL,
             SP_GHOUL,
         }
     },
     {
-        "Normal",
+        "Intermediate",
         coord_def(30, 0),
         20,
         {
             SP_HUMAN,
             SP_KOBOLD,
-            SP_HALFLING,
             SP_DEMONSPAWN,
             SP_CENTAUR,
             SP_SPRIGGAN,
             SP_TENGU,
             SP_DEEP_ELF,
             SP_OGRE,
+            SP_DEEP_DWARF,
         }
     },
     {
-        "Complex",
+        "Advanced",
         coord_def(60, 0),
         20,
         {
