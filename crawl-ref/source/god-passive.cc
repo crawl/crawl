@@ -1773,6 +1773,9 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
 
     for (auto target : targets)
     {
+        if (!target->alive())
+            continue;
+
          if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
              you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
 
