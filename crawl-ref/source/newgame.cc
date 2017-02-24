@@ -68,6 +68,12 @@ enum MenuOptions
     M_DEFAULT_CHOICE = -9,
 };
 
+enum MenuChoices
+{
+    C_SPECIES = 0,
+    C_JOB = 1,
+};
+
 static bool _is_random_species(species_type sp)
 {
     return sp == SP_RANDOM || sp == SP_VIABLE;
@@ -347,9 +353,7 @@ static string _highlight_pattern(const newgame_def& ng)
     return ret;
 }
 
-static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
-                            const newgame_def& defaults);
-static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
+static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_choice,
                         const newgame_def& defaults);
 
 static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
@@ -360,14 +364,14 @@ static void _choose_species_job(newgame_def& ng, newgame_def& ng_choice,
     while (ng_choice.species == SP_UNKNOWN || ng_choice.job == JOB_UNKNOWN)
     {
         // Slightly non-obvious behaviour here is due to the fact that
-        // both _prompt_species and _prompt_job can ask for an entirely
+        // both types of _prompt_choice can ask for an entirely
         // random character to be rolled. They will reset relevant fields
         // in ng for this purpose.
         if (ng_choice.species == SP_UNKNOWN)
-            _prompt_species(ng, ng_choice, defaults);
+            _prompt_choice(C_SPECIES, ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
         if (ng_choice.job == JOB_UNKNOWN)
-            _prompt_job(ng, ng_choice, defaults);
+            _prompt_choice(C_JOB, ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
     }
 
@@ -857,155 +861,6 @@ static void _construct_species_menu(const newgame_def& ng,
     }
 }
 
-// Prompt the player for a choice of species.
-// ng should be const, but we need to reset it for _resolve_species_job
-// to work correctly in view of fully random characters.
-static void _prompt_species(newgame_def& ng, newgame_def& ng_choice,
-                            const newgame_def& defaults)
-{
-    PrecisionMenu menu;
-    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-    MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(0,0), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
-    menu.attach_object(freeform);
-    menu.set_active_object(freeform);
-
-    int keyn;
-
-    clrscr();
-
-    // TODO: attach these to the menu in a NoSelectTextItem
-    textcolour(BROWN);
-    cprintf("%s", _welcome(ng).c_str());
-
-    textcolour(YELLOW);
-    cprintf(" Please select your species.");
-
-    _construct_species_menu(ng, defaults, freeform);
-    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
-                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y
-                                                     + CHAR_DESC_HEIGHT),
-                     "descriptor");
-    menu.attach_object(descriptor);
-
-    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
-    menu.attach_object(highlighter);
-
-    // Did we have a previous species?
-    if (menu.get_active_item() == nullptr)
-        freeform->activate_first_item();
-
-#ifdef USE_TILE_LOCAL
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
-    freeform->set_visible(true);
-    descriptor->set_visible(true);
-    highlighter->set_visible(true);
-
-    textcolour(LIGHTGREY);
-    // Poll input until we have a conclusive escape or pick
-    while (true)
-    {
-        menu.draw_menu();
-
-        keyn = getch_ck();
-
-        // First process all the menu entries available
-        if (!menu.process_key(keyn))
-        {
-            // Process all the other keys that are not assigned to the menu
-            switch (keyn)
-            {
-            case 'X':
-            case CONTROL('Q'):
-                cprintf("\nGoodbye!");
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
-                end(0);
-                return;
-            CASE_ESCAPE
-            case CK_MOUSE_CMD:
-#ifdef USE_TILE_WEB
-                tiles.send_exit_reason("cancel");
-#endif
-                game_ended();
-            case CK_BKSP:
-                ng_choice.species = SP_UNKNOWN;
-                return;
-            default:
-                // if we get this far, we did not get a significant selection
-                // from the menu, nor did we get an escape character
-                // continue the while loop from the beginning and poll a new key
-                continue;
-            }
-        }
-        // We have had a significant input key event
-        // construct the return vector
-        vector<MenuItem*> selection = menu.get_selected_items();
-        if (!selection.empty())
-        {
-            // we have a selection!
-            // we only care about the first selection (there should be only one)
-            int selection_key = selection.at(0)->get_id();
-
-            bool viable = false;
-            switch (selection_key)
-            {
-            case M_VIABLE_CHAR:
-                viable = true;
-                // intentional fall-through
-            case M_RANDOM_CHAR:
-                _mark_fully_random(ng, ng_choice, viable);
-                return;
-            case M_DEFAULT_CHOICE:
-                if (_char_defined(defaults))
-                {
-                    _set_default_choice(ng, ng_choice, defaults);
-                    return;
-                }
-                else
-                {
-                    // ignore Tab because we don't have previous start options
-                    continue;
-                }
-            case M_ABORT:
-                ng.species = ng_choice.species = SP_UNKNOWN;
-                ng.job     = ng_choice.job     = JOB_UNKNOWN;
-                return;
-            case M_HELP:
-                 // access to the help files
-                list_commands('1');
-                return _prompt_species(ng, ng_choice, defaults);
-            case M_APTITUDES:
-                list_commands('%', false, _highlight_pattern(ng));
-                return _prompt_species(ng, ng_choice, defaults);
-            case M_VIABLE:
-                ng_choice.species = SP_VIABLE;
-                return;
-            case M_RANDOM:
-                ng_choice.species = SP_RANDOM;
-                return;
-            default:
-                // we have a species selection
-                species_type species = static_cast<species_type> (selection_key);
-                if (ng.job == JOB_UNKNOWN
-                    || species_allowed(ng.job, species) != CC_BANNED)
-                {
-                    ng_choice.species = species;
-                    return;
-                }
-                else
-                    continue;
-            }
-        }
-    }
-}
-
 void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
                        MenuFreeform* menu, menu_letter &letter)
 {
@@ -1268,13 +1123,13 @@ static void _construct_backgrounds_menu(const newgame_def& ng,
 }
 
 /**
- * _prompt_job menu
+ * Prompt for job or species menu
  * Saves the choice to ng_choice, doesn't resolve random choices.
  *
  * ng should be const, but we need to reset it for _resolve_species_job
  * to work correctly in view of fully random characters.
  */
-static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
+static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_choice,
                         const newgame_def& defaults)
 {
     PrecisionMenu menu;
@@ -1294,13 +1149,25 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
     cprintf("%s", _welcome(ng).c_str());
 
     textcolour(YELLOW);
-    cprintf(" Please select your background.");
 
-    _construct_backgrounds_menu(ng, defaults, freeform);
+    if (choice_type == C_JOB)
+    {
+        cprintf(" Please select your background.");
+        _construct_backgrounds_menu(ng, defaults, freeform);
+    }
+    else
+    {
+        cprintf(" Please select your species.");
+        _construct_species_menu(ng, defaults, freeform);
+    }
+
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
-                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 3),
-                     "descriptor");
+    descriptor->init(
+        coord_def(X_MARGIN, CHAR_DESC_START_Y),
+        coord_def(get_number_of_cols(),
+        CHAR_DESC_START_Y + CHAR_DESC_HEIGHT),
+        "descriptor"
+    );
     menu.attach_object(descriptor);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
@@ -1349,7 +1216,10 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
 #endif
                 game_ended();
             case CK_BKSP:
-                ng_choice.job = JOB_UNKNOWN;
+                if (choice_type == C_JOB)
+                    ng_choice.job = JOB_UNKNOWN;
+                else
+                    ng_choice.species = SP_UNKNOWN;
                 return;
             default:
                 // if we get this far, we did not get a significant selection
@@ -1393,30 +1263,55 @@ static void _prompt_job(newgame_def& ng, newgame_def& ng_choice,
                 return;
             case M_HELP:
                  // access to the help files
-                list_commands('2');
-                return _prompt_job(ng, ng_choice, defaults);
+                if (choice_type == C_JOB)
+                    list_commands('2');
+                else
+                    list_commands('1');
+
+                return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_APTITUDES:
                 list_commands('%', false, _highlight_pattern(ng));
-                return _prompt_job(ng, ng_choice, defaults);
+                return _prompt_choice(choice_type, ng, ng_choice, defaults);
             case M_VIABLE:
-                ng_choice.job = JOB_VIABLE;
+                if (choice_type == C_JOB)
+                    ng_choice.job = JOB_VIABLE;
+                else
+                    ng_choice.species = SP_VIABLE;
                 return;
             case M_RANDOM:
-                ng_choice.job = JOB_RANDOM;
+                if (choice_type == C_JOB)
+                    ng_choice.job = JOB_RANDOM;
+                else
+                    ng_choice.species = SP_RANDOM;
                 return;
             default:
-                // we have a job selection
-                job_type job = static_cast<job_type> (selection_key);
-                if (ng.species == SP_UNKNOWN
-                    || job_allowed(ng.species, job) != CC_BANNED)
+                // we have a selection
+                if (choice_type == C_JOB)
                 {
-                    ng_choice.job = job;
-                    return;
+                    job_type job = static_cast<job_type> (selection_key);
+                    if (ng.species == SP_UNKNOWN
+                        || job_allowed(ng.species, job) != CC_BANNED)
+                    {
+                        ng_choice.job = job;
+                        return;
+                    }
+                    else
+                    {
+                        selection.at(0)->select(false);
+                        continue;
+                    }
                 }
                 else
                 {
-                    selection.at(0)->select(false);
-                    continue;
+                    species_type species = static_cast<species_type> (selection_key);
+                    if (ng.job == JOB_UNKNOWN
+                        || species_allowed(ng.job, species) != CC_BANNED)
+                    {
+                        ng_choice.species = species;
+                        return;
+                    }
+                    else
+                        continue;
                 }
             }
         }
