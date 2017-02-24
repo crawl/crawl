@@ -933,7 +933,7 @@ static species_group species_groups[] =
     {
         "Simple",
         coord_def(0, 0),
-        20,
+        10,
         {
             SP_HILL_ORC,
             SP_MINOTAUR,
@@ -947,7 +947,7 @@ static species_group species_groups[] =
     },
     {
         "Intermediate",
-        coord_def(30, 0),
+        coord_def(25, 0),
         20,
         {
             SP_HUMAN,
@@ -963,7 +963,7 @@ static species_group species_groups[] =
     },
     {
         "Advanced",
-        coord_def(60, 0),
+        coord_def(50, 0),
         20,
         {
             SP_VINE_STALKER,
