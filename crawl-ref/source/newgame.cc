@@ -74,6 +74,13 @@ enum MenuChoices
     C_JOB = 1,
 };
 
+enum MenuItemStatuses
+{
+    ITEM_STATUS_UNKNOWN,
+    ITEM_STATUS_RESTRICTED,
+    ITEM_STATUS_ALLOWED
+};
+
 static bool _is_random_species(species_type sp)
 {
     return sp == SP_RANDOM || sp == SP_VIABLE;
@@ -163,6 +170,8 @@ void choose_tutorial_character(newgame_def& ng_choice)
 // March 2008: change order of species and jobs on character selection
 // screen as suggested by Markus Maier.
 // We have subsequently added a few new categories.
+// Replacing this with named groups, but leaving because a bunch of code
+// still depends on it and I don't want to unwind that now. -2/24/2017 CBH
 static const species_type species_order[] =
 {
     // comparatively human-like looks
@@ -813,73 +822,10 @@ static void _add_choice_menu_options(int choice_type,
     }
 }
 
-static void _construct_species_menu(const newgame_def& ng,
-                                    const newgame_def& defaults,
-                                    MenuFreeform* menu)
-{
-    ASSERT(menu != nullptr);
-    int items_in_column = ARRAYSZ(species_order);
-    items_in_column = (items_in_column + 2) / 3;
-    // Construct the menu, 3 columns
-    TextItem* tmp = nullptr;
-    string text;
-    coord_def min_coord(0,0);
-    coord_def max_coord(0,0);
-    int pos = 0;
-
-    for (const species_type species : species_order)
-    {
-        if (ng.job != JOB_UNKNOWN
-            && species_allowed(ng.job, species) == CC_BANNED)
-        {
-            continue;
-        }
-
-        tmp = new TextItem();
-        text.clear();
-
-        if (ng.job == JOB_UNKNOWN)
-        {
-            tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
-        else if (species_allowed(ng.job, species) == CC_RESTRICTED)
-        {
-            tmp->set_fg_colour(DARKGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
-        else
-        {
-            tmp->set_fg_colour(WHITE);
-            tmp->set_highlight_colour(GREEN);
-        }
-        text = index_to_letter(pos);
-        text += " - ";
-        text += species_name(species);
-        tmp->set_text(text);
-        ASSERT(pos < items_in_column * 3);
-        min_coord.x = X_MARGIN + (pos / items_in_column) * COLUMN_WIDTH;
-        min_coord.y = 3 + pos % items_in_column;
-        max_coord.x = min_coord.x + text.size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-
-        tmp->add_hotkey(index_to_letter(pos));
-        tmp->set_id(species);
-        tmp->set_description_text(unwrap_desc(getGameStartDescription(species_name(species))));
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-        if (defaults.species == species)
-            menu->set_active_item(tmp);
-
-        ++pos;
-    }
-
-    _add_choice_menu_options(C_SPECIES, ng, defaults, menu);
-}
-
-void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
-                       MenuFreeform* menu, menu_letter &letter)
+static void _add_group_title(MenuFreeform* menu,
+                             const char* name,
+                             coord_def position,
+                             int width)
 {
     TextItem* tmp = new NoSelectTextItem();
     string text;
@@ -890,6 +836,181 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
     tmp->set_bounds(min_coord, max_coord);
     menu->attach_item(tmp);
     tmp->set_visible(true);
+}
+
+static void _attach_group_item(MenuFreeform* menu,
+                               menu_letter &letter,
+                               int id,
+                               int item_status,
+                               string item_name,
+                               bool is_active_item,
+                               coord_def min_coord,
+                               coord_def max_coord)
+
+{
+    TextItem* tmp = new TextItem();
+
+    if (item_status == ITEM_STATUS_UNKNOWN)
+    {
+        tmp->set_fg_colour(LIGHTGRAY);
+        tmp->set_highlight_colour(BLUE);
+    }
+    else if (item_status = ITEM_STATUS_RESTRICTED)
+    {
+        tmp->set_fg_colour(DARKGRAY);
+        tmp->set_highlight_colour(BLUE);
+    }
+    else
+    {
+        tmp->set_fg_colour(WHITE);
+        tmp->set_highlight_colour(GREEN);
+    }
+
+    string text;
+    text += letter;
+    text += " - ";
+    text += item_name;
+    tmp->set_text(text);
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->add_hotkey(letter);
+    tmp->set_id(id);
+    tmp->set_description_text(unwrap_desc(getGameStartDescription(item_name)));
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+    if (is_active_item)
+        menu->set_active_item(tmp);
+}
+
+void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
+                       MenuFreeform* menu, menu_letter &letter)
+{
+    _add_group_title(menu, name, position, width);
+
+    coord_def min_coord(2 + position.x, 3 + position.y);
+    coord_def max_coord(min_coord.x + width, min_coord.y + 1);
+
+    for (species_type &this_species : species_list)
+    {
+        if (this_species == SP_UNKNOWN)
+            break;
+
+        if (ng.job != JOB_UNKNOWN
+            && species_allowed(ng.job, this_species) == CC_BANNED)
+        {
+            continue;
+        }
+
+        int item_status;
+        if (ng.job == JOB_UNKNOWN)
+            item_status = ITEM_STATUS_UNKNOWN;
+        else if (species_allowed(ng.job, this_species) == CC_RESTRICTED)
+            item_status = ITEM_STATUS_RESTRICTED;
+        else
+            item_status = ITEM_STATUS_ALLOWED;
+
+        const bool is_active_item = defaults.species == this_species;
+
+        ++min_coord.y;
+        ++max_coord.y;
+
+        _attach_group_item(
+            menu,
+            letter,
+            this_species,
+            item_status,
+            species_name(this_species),
+            is_active_item,
+            min_coord,
+            max_coord
+        );
+
+        ++letter;
+    }
+}
+
+static species_group species_groups[] =
+{
+    {
+        "Beginner",
+        coord_def(0, 0),
+        20,
+        {
+            SP_HILL_ORC,
+            SP_MINOTAUR,
+            SP_MERFOLK,
+            SP_TROLL,
+            SP_GARGOYLE,
+            SP_BASE_DRACONIAN,
+            SP_DEEP_DWARF,
+            SP_HUMAN,
+            SP_GHOUL,
+        }
+    },
+    {
+        "Intermediate",
+        coord_def(30, 0),
+        20,
+        {
+            SP_KOBOLD,
+            SP_HALFLING,
+            SP_DEMONSPAWN,
+            SP_CENTAUR,
+            SP_SPRIGGAN,
+            SP_TENGU,
+            SP_DEEP_ELF,
+            SP_OGRE,
+            SP_VAMPIRE,
+        }
+    },
+    {
+        "Advanced",
+        coord_def(60, 0),
+        20,
+        {
+            SP_VINE_STALKER,
+            SP_DEMIGOD,
+            SP_FORMICID,
+            SP_NAGA,
+            SP_OCTOPODE,
+            SP_FELID,
+            SP_BARACHIAN,
+            SP_MUMMY,
+        }
+    },
+};
+
+static void _construct_species_menu(const newgame_def& ng,
+                                    const newgame_def& defaults,
+                                    MenuFreeform* menu)
+{
+    ASSERT(menu != nullptr);
+
+    menu_letter letter = 'a';
+    // Add entries for any species groups with at least one playable species.
+    for (species_group& group : species_groups)
+    {
+        if (ng.job == JOB_UNKNOWN
+            ||  any_of(begin(group.species_list),
+                      end(group.species_list),
+                      [&ng](species_type species)
+                      { return species_allowed(ng.job, species) != CC_BANNED; }
+                )
+        )
+        {
+            group.attach(ng, defaults, menu, letter);
+        }
+    }
+
+    _add_choice_menu_options(C_SPECIES, ng, defaults, menu);
+}
+
+void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
+                       MenuFreeform* menu, menu_letter &letter)
+{
+    _add_group_title(menu, name, position, width);
+
+    coord_def min_coord(2 + position.x, 3 + position.y);
+    coord_def max_coord(min_coord.x + width, min_coord.y + 1);
 
     for (job_type &job : jobs)
     {
@@ -902,37 +1023,32 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
             continue;
         }
 
-        tmp = new TextItem();
+        int item_status;
         if (ng.species == SP_UNKNOWN)
-        {
-            tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
+            item_status = ITEM_STATUS_UNKNOWN;
         else if (job_allowed(ng.species, job) == CC_RESTRICTED)
-        {
-            tmp->set_fg_colour(DARKGRAY);
-            tmp->set_highlight_colour(BLUE);
-        }
+            item_status = ITEM_STATUS_RESTRICTED;
         else
-        {
-            tmp->set_fg_colour(WHITE);
-            tmp->set_highlight_colour(GREEN);
-        }
+            item_status = ITEM_STATUS_ALLOWED;
 
-        text = letter;
-        text += " - ";
-        text += get_job_name(job);
-        tmp->set_text(text);
+        string job_name = get_job_name(job);
+        const bool is_active_item = defaults.job == job;
+
         ++min_coord.y;
         ++max_coord.y;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->add_hotkey(letter++);
-        tmp->set_id(job);
-        tmp->set_description_text(unwrap_desc(getGameStartDescription(get_job_name(job))));
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-        if (defaults.job == job)
-            menu->set_active_item(tmp);
+
+        _attach_group_item(
+            menu,
+            letter,
+            job,
+            item_status,
+            job_name,
+            is_active_item,
+            min_coord,
+            max_coord
+        );
+
+        ++letter;
     }
 }
 
