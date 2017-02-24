@@ -317,6 +317,8 @@ static const ability_def Ability_List[] =
 #endif
     { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, {}, abflag::NONE },
+    { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
+      0, 0, 0, 0, {}, abflag::INSTANT },
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
@@ -1634,6 +1636,7 @@ bool activate_talent(const talent& tal)
         case ABIL_DELAYED_FIREBALL:
 #endif
         case ABIL_STOP_SINGING:
+        case ABIL_CANCEL_PPROJ:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
@@ -2096,6 +2099,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         you.duration[DUR_SONG_OF_SLAYING] = 0;
         mpr("You stop singing.");
+        break;
+
+    case ABIL_CANCEL_PPROJ:
+        fail_check();
+        you.duration[DUR_PORTAL_PROJECTILE] = 0;
+        you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
+        mpr("You are no longer teleporting projectiles to their destination.");
         break;
 
     case ABIL_STOP_FLYING:
@@ -3451,6 +3461,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
+    if (you.duration[DUR_PORTAL_PROJECTILE])
+        _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
 
     // Evocations from items.
     if (you.scan_artefacts(ARTP_BLINK)
