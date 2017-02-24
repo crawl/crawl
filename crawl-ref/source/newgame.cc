@@ -931,7 +931,7 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
 static species_group species_groups[] =
 {
     {
-        "Beginner",
+        "Simple",
         coord_def(0, 0),
         20,
         {
@@ -942,15 +942,15 @@ static species_group species_groups[] =
             SP_GARGOYLE,
             SP_BASE_DRACONIAN,
             SP_DEEP_DWARF,
-            SP_HUMAN,
             SP_GHOUL,
         }
     },
     {
-        "Intermediate",
+        "Normal",
         coord_def(30, 0),
         20,
         {
+            SP_HUMAN,
             SP_KOBOLD,
             SP_HALFLING,
             SP_DEMONSPAWN,
@@ -959,15 +959,15 @@ static species_group species_groups[] =
             SP_TENGU,
             SP_DEEP_ELF,
             SP_OGRE,
-            SP_VAMPIRE,
         }
     },
     {
-        "Advanced",
+        "Complex",
         coord_def(60, 0),
         20,
         {
             SP_VINE_STALKER,
+            SP_VAMPIRE,
             SP_DEMIGOD,
             SP_FORMICID,
             SP_NAGA,
