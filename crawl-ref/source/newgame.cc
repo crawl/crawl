@@ -855,7 +855,7 @@ static void _attach_group_item(MenuFreeform* menu,
         tmp->set_fg_colour(LIGHTGRAY);
         tmp->set_highlight_colour(BLUE);
     }
-    else if (item_status = ITEM_STATUS_RESTRICTED)
+    else if (item_status == ITEM_STATUS_RESTRICTED)
     {
         tmp->set_fg_colour(DARKGRAY);
         tmp->set_highlight_colour(BLUE);
