@@ -1,8 +1,8 @@
 %%%%
 Barachian
 
-Barachians are amphibious humanoids with an exceptionally vicious disposition.
-They can hop long distances, though their movement is otherwise somewhat slow.
+Barachians are amphibious humanoids who rebelled against the gods. They're fast
+learners and can hop long distances, but are otherwise slow and easily seen.
 %%%%
 Centaur
 

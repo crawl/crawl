@@ -656,6 +656,13 @@ void update_vision_range()
     int nom   = 1;
     int denom = 1;
 
+    // Barachians have +1 base LOS.
+    if (you.species == SP_BARACHIAN)
+    {
+        nom *= LOS_DEFAULT_RANGE + 1;
+        denom *= LOS_DEFAULT_RANGE;
+    }
+
     // Nightstalker gives -1/-2/-3.
     if (player_mutation_level(MUT_NIGHTSTALKER))
     {

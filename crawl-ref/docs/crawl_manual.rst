@@ -1631,13 +1631,15 @@ Felids
   resurrected in a safe place, losing an experience level in the process.
 
 Barachians
-  Barachians are an amphibious humanoid race, said to be distantly related to
-  the Elves. Spawned in great numbers beneath the southern ice, their
-  Mother-Father sends them forth to destroy and pillage the civilized lands.
+  Barachians are an amphibious humanoid race, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
 
   Barachians' most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap remarkable distances. When not leaping, they are somewhat
-  slow-moving, but they do have considerable flexibility in skill choice.
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
