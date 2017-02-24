@@ -71,6 +71,7 @@
     Mike Adams
     Aj Adamson
     Nikhil Addleman
+    advil
     Brandon Allbery
     Warwick Allison
     Austin Appleby
@@ -186,6 +187,7 @@
     MainiacJoe
     Arien Malec
     Paul Maloney
+    Pablo Mansanet
     Wille Mäntylä
     James 'Eronarn' Meickle
     mikee
@@ -270,8 +272,6 @@
     Rob Young
     Zannick
     Zooko
-    advil
-    Pablo Mansanet
 
 The Dungeon Crawl Stone Soup development team is:
     Peter Berger
