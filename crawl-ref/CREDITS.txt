@@ -103,7 +103,7 @@
     Cedor
     Cerol
     Rahul Chandra
-    Gregory Chereshnev
+    Gregory D. Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
