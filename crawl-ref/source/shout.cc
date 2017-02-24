@@ -486,7 +486,7 @@ static void _set_allies_patrol_point(bool clear = false)
 static void _set_allies_withdraw(const coord_def &target)
 {
     coord_def delta = target - you.pos();
-    float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
+    float mult = float(LOS_DEFAULT_RANGE * 2) / (float)max(abs(delta.x), abs(delta.y));
     coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)

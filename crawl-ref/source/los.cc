@@ -108,7 +108,7 @@ void clear_rays_on_exit()
 }
 
 // LOS radius.
-int los_radius = LOS_RADIUS;
+int los_radius = LOS_DEFAULT_RANGE;
 
 static void _handle_los_change();
 

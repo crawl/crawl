@@ -652,15 +652,15 @@ monster_type player_mons(bool transform)
 
 void update_vision_range()
 {
-    you.normal_vision = LOS_RADIUS;
+    you.normal_vision = LOS_DEFAULT_RANGE;
     int nom   = 1;
     int denom = 1;
 
     // Nightstalker gives -1/-2/-3.
     if (player_mutation_level(MUT_NIGHTSTALKER))
     {
-        nom *= LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
-        denom *= LOS_RADIUS;
+        nom *= LOS_DEFAULT_RANGE - player_mutation_level(MUT_NIGHTSTALKER);
+        denom *= LOS_DEFAULT_RANGE;
     }
 
     // the Darkness spell.
@@ -5272,8 +5272,8 @@ player::player()
 
     octopus_king_rings = 0;
 
-    normal_vision    = LOS_RADIUS;
-    current_vision   = LOS_RADIUS;
+    normal_vision    = LOS_DEFAULT_RANGE;
+    current_vision   = LOS_DEFAULT_RANGE;
 
     real_time_ms     = chrono::milliseconds::zero();
     real_time_delta  = chrono::milliseconds::zero();

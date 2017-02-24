@@ -840,7 +840,7 @@ static bool _sack_of_spiders(item_def &sack)
     {
         mpr("...and things crawl out!");
         // Also generate webs on hostile monsters and trap them.
-        const int rad = LOS_RADIUS / 2 + 2;
+        const int rad = LOS_DEFAULT_RANGE / 2 + 2;
         for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
         {
             trap_def *trap = trap_at((*mi)->pos());

@@ -218,7 +218,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomised and
         // may be shifted by one.
-        int min_dist = MONSTER_LOS_RANGE - 1;
+        int min_dist = LOS_DEFAULT_RANGE - 1;
 
         int dist;
         int count = 0;
@@ -3080,7 +3080,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
             if (entry.second <= 0)
                 continue;
 
-            const int eff_range = max(3, (6 * i / LOS_RADIUS));
+            const int eff_range = max(3, (6 * i / LOS_DEFAULT_RANGE));
 
             // At or within range 3, this is equivalent to the old Ice Storm
             // damage.

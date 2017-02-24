@@ -2861,7 +2861,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (mons->type == MONS_WANDERING_MUSHROOM
         || mons->type == MONS_DEATHCAP
         || (mons->type == MONS_LURKING_HORROR
-            && mons->foe_distance() > random2(LOS_RADIUS + 1)))
+            && mons->foe_distance() > random2(LOS_DEFAULT_RANGE + 1)))
     {
         if (!mons->wont_attack() && is_sanctuary(mons->pos()))
             return true;
