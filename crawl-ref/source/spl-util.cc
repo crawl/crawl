@@ -1400,7 +1400,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_INTOXICATE:
     case SPELL_IGNITION:
-        return minRange > LOS_RADIUS;
+        return minRange > you.current_vision;
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:

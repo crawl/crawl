@@ -71,7 +71,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 // mutation; other sources of LOS reduction should not have this effect.
 static int _get_full_exclusion_radius()
 {
-    return LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
+    return LOS_DEFAULT_RANGE - player_mutation_level(MUT_NIGHTSTALKER);
 }
 
 // If the monster is in the auto_exclude list, automatically set an

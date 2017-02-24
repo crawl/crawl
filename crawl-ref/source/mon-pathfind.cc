@@ -41,7 +41,7 @@ int mons_tracking_range(const monster* mon)
         range = 5;
         break;
     case I_HUMAN:
-        range = LOS_RADIUS;
+        range = LOS_DEFAULT_RANGE;
         break;
     }
 

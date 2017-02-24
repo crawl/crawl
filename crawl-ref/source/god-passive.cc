@@ -918,7 +918,7 @@ int ash_detect_portals(bool all)
         return 0;
 
     int portals_found = 0;
-    const int map_radius = LOS_RADIUS + 1;
+    const int map_radius = LOS_DEFAULT_RANGE + 1;
 
     if (all)
     {

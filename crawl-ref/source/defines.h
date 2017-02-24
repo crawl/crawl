@@ -97,8 +97,11 @@ const int LABYRINTH_BORDER = 4;
 #define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
-// maximal LOS radius
-#define LOS_RADIUS 7
+// maximal LOS radius.
+// XXX: a noble soul should find-replace this with LOS_MAX_RANGE
+#define LOS_RADIUS 8
+// LOS radius for 'normal' characters
+#define LOS_DEFAULT_RANGE 7
 
 // maximal horizontal or vertical LOS range:
 //   a quadrant needs to fit inside an 2D array with
@@ -126,9 +129,6 @@ const int MAX_EXP_TOTAL = 8999999;
 const int EXERCISE_QUEUE_SIZE = 100;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
-
-// grids that monsters can see
-const int MONSTER_LOS_RANGE = LOS_RADIUS;
 
 const int LIGHTNING_CHARGE_MULT = 100;
 const int LIGHTNING_MAX_CHARGE = 4;

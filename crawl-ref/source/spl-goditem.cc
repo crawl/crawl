@@ -493,7 +493,7 @@ int detect_items(int pow)
     {
         if (have_passive(passive_t::detect_items))
         {
-            map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
+            map_radius = min(you.piety / 20 - 1, LOS_DEFAULT_RANGE);
             if (map_radius <= 0)
                 return 0;
         }

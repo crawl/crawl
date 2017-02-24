@@ -215,8 +215,8 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
          chunks_made < nchunks && ntries < 10000; ++ntries)
     {
         coord_def cp = where;
-        cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
-        cp.y += random_range(-LOS_RADIUS, LOS_RADIUS);
+        cp.x += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
+        cp.y += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
 
         dprf("Trying to scatter chunk to %d, %d...", cp.x, cp.y);
 
