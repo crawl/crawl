@@ -3751,8 +3751,10 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
 
 #if TAG_MAJOR_VERSION == 34
     int br = unmarshallInt(th);
+    // This is for extremely old saves that predate NUM_BRANCHES, probably only
+    // a very small window of time in the 34 major version.
     if (br == -1)
-        br = NUM_BRANCHES;
+        br = GLOBAL_BRANCH_INFO;
     ASSERT(br >= 0);
     // at the time NUM_BRANCHES was one above BRANCH_DEPTHS, so we check that
     if (th.getMinorVersion() < TAG_MINOR_GLOBAL_BR_INFO && br == BRANCH_DEPTHS+1)
@@ -3917,10 +3919,23 @@ static void tag_read_you_dungeon(reader &th)
     for (int i = 0; i < count_p; i++)
     {
         place_info = unmarshallPlaceInfo(th);
-        ASSERT(!place_info.is_global());
+        if (place_info.is_global() && th.getMinorVersion() <= TAG_MINOR_DESOLATION_GLOBAL)
+        {
+            // This is to fix some crashing saves that didn't import
+            // correctly, where the desolation slot occasionally gets marked
+            // as global on conversion from pre-0.19 to post-0.19a. Is setting
+            // the place info for branch `i` really a good idea? There's
+            // actually no guarantee that the save order will match the
+            // current branch order; this is really more of a best guess.
+            // HOWEVER, in all the instances I have, this works, and the place
+            // order hasn't changed since the iterator was introduced. (advil)
+            place_info.branch = static_cast<branch_type>(i);
+        } else {
+            // These should all be branch-specific, not global
+            ASSERT(!place_info.is_global());
+        }
         you.set_place_info(place_info);
     }
-
     typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
                          (ssipair (string_set::*)(const string &))
