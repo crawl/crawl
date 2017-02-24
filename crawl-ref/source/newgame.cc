@@ -933,7 +933,7 @@ static species_group species_groups[] =
     {
         "Simple",
         coord_def(0, 0),
-        10,
+        20,
         {
             SP_HILL_ORC,
             SP_MINOTAUR,
