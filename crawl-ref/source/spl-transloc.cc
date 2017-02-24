@@ -319,7 +319,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
  */
 spret_type frog_hop(bool fail)
 {
-    const int hop_range = 3 + player_mutation_level(MUT_HOP); // 4-5
+    const int hop_range = 2 + player_mutation_level(MUT_HOP) * 2; // 4-6
     coord_def target;
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     while (true)

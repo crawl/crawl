@@ -193,6 +193,8 @@ void wizard_change_species_to(species_type sp)
         }
     }
 
+    update_vision_range(); // for Ba, and for DS with Nightstalker
+
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
     {
         _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
