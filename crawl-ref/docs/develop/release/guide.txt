@@ -38,7 +38,15 @@ for those the list begins with step 3.
        -- should be the version number followed by the tagline in quotes.
 
 
-3. Wait and fix some bugs
+3. Update servers
+
+   Contact the server admins to ask them to add the new version, and
+   preferably to make it the default until the end of the tournament.
+   This will increase the amount of playtesting the branch gets before
+   release.
+
+
+4. Wait and fix some bugs
 
    Wait at least 2-3 weeks for bug reports, and fix all severe old ones. When
    fixing bugs concentrate on the important ones (crashes and game-breakers),
@@ -55,7 +63,7 @@ for those the list begins with step 3.
    (on stone_soup.0.X) git cherry-pick -x 0123456789abc
 
 
-4. Sanity testing
+5. Sanity testing
 
    Build the binaries (preferably on all platforms) to see if the code compiles
    correctly, then run some basic sanity tests including at least the
@@ -69,7 +77,7 @@ for those the list begins with step 3.
        * accessing all help screens (including the ? submenus)
 
 
-5. Update documentation files
+6. Update documentation files
 
    Update the release date in the changelog. This is a good time to make a
    final check of the Crawl manual to make sure it's updated for any relevant
@@ -82,7 +90,7 @@ for those the list begins with step 3.
    version.
 
 
-6. Tag the release
+7. Tag the release
 
    In the branch you're about to tag:
    git tag -a 0.X.y
@@ -90,7 +98,7 @@ for those the list begins with step 3.
    Don't push the tag yet so you can make final amendments.
 
 
-7. Package the source tarball, produce final builds and Debian packages
+8. Package the source tarball, produce final builds and Debian packages
 
    "make package-source" will create three source tar/zipballs.
 
@@ -119,7 +127,7 @@ for those the list begins with step 3.
    repository, see the debian.txt guide in this directory.
 
 
-8. Push the tag
+9. Push the tag
 
    Until the moment you push it to the official repository, you can delete it
    and re-tag:
@@ -131,27 +139,28 @@ for those the list begins with step 3.
    changes make it into the next minor version.
 
 
-9. Upload the files to CDO
+10. Upload the files to CDO
 
-   Use the crawl login on CDO to upload the binaries to ~/website/release/ over
-   scp or sftp. The links on the download page currently at
-   ~/website/download.htm must then be updated.
+    Use the crawl login on CDO to upload the binaries to ~/website/release/
+    over scp or sftp. The links on the download page currently at
+    ~/website/download.htm must then be updated.
 
-   Presently there's a repository that manages the web files for non-wordpress
-   pages on CDO like the splash and download pages. This repo is cloned to
-   ~/dcss-website, and the origin repo on github is maintained by chequers, who
-   can grant push access to new users. It's best to update the files in the
-   dcss-website/site in the repo, make a commit for the change, and then copy
-   the download.htm file to the live ~/website directory.
+    Presently there's a repository that manages the web files for non-wordpress
+    pages on CDO like the splash and download pages. This repo is cloned to
+    ~/dcss-website, and the origin repo on github is maintained by chequers,
+    who can grant push access to new users. It's best to update the files in
+    the dcss-website/site in the repo, make a commit for the change, and then
+    copy the download.htm file to the live ~/website directory.
 
-   Ideally you'll also push the commit to chequers' origin repo. In the future
-   we'll probably move the website repo to the github crawl group and better
-   integrate it to the CDO website directory to avoid manual copying.
+    Ideally you'll also push the commit to chequers' origin repo. In the future
+    we'll probably move the website repo to the github crawl group and better
+    integrate it to the CDO website directory to avoid manual copying.
 
-   Building and installing the Debian packages is covered in the debian.txt
-   guide in this directory.
+    Building and installing the Debian packages is covered in the debian.txt
+    guide in this directory.
 
-10. Update Sourceforge
+
+11. Update Sourceforge
 
     We currently use Sourceforge only for the CRD mailing list. Until CRD is
     moved somewhere else, we want to keep the Sourceforge release binaries
@@ -163,12 +172,12 @@ for those the list begins with step 3.
     most, .exe installer for Windows).
 
 
-11. Announce the release
+12. Announce the release
 
     Post a release announcement to the CDO blog and send an email over
     crawl-ref-discuss. If you want you can also write a news item on
     Sourceforge.
 
 
-12. Lean back and enjoy the excitement
+13. Lean back and enjoy the excitement
     ...until the first bug reports roll in. ;)
