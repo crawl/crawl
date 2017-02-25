@@ -180,14 +180,14 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
 
 static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
-    if (!enough_hp(11, true))
+    if (!enough_hp(14, true))
     {
         mpr("You're too close to death to use this item.");
         *unevokable = true;
         return true;
     }
 
-    if (!enough_mp(5, false))
+    if (!enough_mp(4, false))
     {
         *unevokable = true;
         return true;
@@ -203,8 +203,8 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
     }
 
     mpr("You feel the staff feeding on your energy!");
-    dec_hp(5 + random2avg(19, 2), false);
-    dec_mp(2 + random2avg(5, 2));
+    dec_hp(14, false);
+    dec_mp(4);
     make_hungry(100, false, true);
     practise_evoking(random_range(1, 2));
 
