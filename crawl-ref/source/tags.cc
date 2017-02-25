@@ -3933,24 +3933,29 @@ static void tag_read_you_dungeon(reader &th)
     you.set_place_info(place_info);
 
     unsigned short count_p = (unsigned short) unmarshallShort(th);
+    
+    auto places = you.get_all_place_info();
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
-    ASSERT(count_p <= you.get_all_place_info().size());
+    ASSERT(count_p <= places.size());
 
     for (int i = 0; i < count_p; i++)
     {
         place_info = unmarshallPlaceInfo(th);
-        if (place_info.is_global() && th.getMinorVersion() <= TAG_MINOR_DESOLATION_GLOBAL)
+        if (place_info.is_global()
+            && th.getMinorVersion() <= TAG_MINOR_DESOLATION_GLOBAL)
         {
             // This is to fix some crashing saves that didn't import
             // correctly, where the desolation slot occasionally gets marked
             // as global on conversion from pre-0.19 to post-0.19a.   This
             // assumes that the order in `logical_branch_order` (branch.cc)
             // hasn't changed since the save version (which is moderately safe).
-            const branch_type branch_to_fix = you.get_all_place_info()[i].branch;
+            const branch_type branch_to_fix = places[i].branch;
             ASSERT(branch_to_fix == BRANCH_DESOLATION);
             place_info.branch = branch_to_fix;
-        } else {
+        }
+        else
+        {
             // These should all be branch-specific, not global
             ASSERT(!place_info.is_global());
         }
