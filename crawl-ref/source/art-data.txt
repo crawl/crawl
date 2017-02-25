@@ -875,6 +875,7 @@ PLUS:     +2
 COLOUR:   ETC_BEOGH
 TILE:     urand_ratskin_cloak
 TILE_EQ:  ratskin
+INSCRIP:  +Rats
 STR:      -1
 INT:      -1
 DEX:      1
