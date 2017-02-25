@@ -3933,7 +3933,7 @@ static void tag_read_you_dungeon(reader &th)
     you.set_place_info(place_info);
 
     unsigned short count_p = (unsigned short) unmarshallShort(th);
-    
+
     auto places = you.get_all_place_info();
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
