@@ -41,7 +41,7 @@ staff of Olgreb
 A staff which was once wielded by the mighty wizard Olgreb. It increases the
 power of its wielder's poison magic, and can be evoked to activate its own
 venomous spells. Its touch may poison even resistant creatures, and it grants
-protection from all venoms while wielded.
+immunity to all venoms while wielded.
 %%%%
 staff of Wucad Mu
 
