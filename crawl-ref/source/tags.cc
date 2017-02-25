@@ -3863,15 +3863,31 @@ static void tag_read_you_dungeon(reader &th)
     ASSERT(place_info.is_global());
     you.set_place_info(place_info);
 
+    auto places = you.get_all_place_info();
     unsigned short count_p = (unsigned short) unmarshallShort(th);
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
-    ASSERT(count_p <= you.get_all_place_info().size());
+    ASSERT(count_p <= places.size());
 
     for (int i = 0; i < count_p; i++)
     {
         place_info = unmarshallPlaceInfo(th);
-        ASSERT(!place_info.is_global());
+        if (place_info.is_global()) // This check is different outside of the stone-soup-0.19 branch, and there uses a minor tag to time-limit its effect.
+        {
+            // This is to fix some crashing saves that didn't import
+            // correctly, where the desolation slot occasionally gets marked
+            // as global on conversion from pre-0.19 to post-0.19a.   This
+            // assumes that the order in `logical_branch_order` (branch.cc)
+            // hasn't changed since the save version (which is moderately safe).
+            const branch_type branch_to_fix = places[i].branch;
+            ASSERT(branch_to_fix == BRANCH_DESOLATION);
+            place_info.branch = branch_to_fix;
+        }
+        else
+        {
+            // These should all be branch-specific, not global
+            ASSERT(!place_info.is_global());
+        }
         you.set_place_info(place_info);
     }
 
