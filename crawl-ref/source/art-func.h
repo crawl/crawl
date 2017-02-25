@@ -275,7 +275,7 @@ static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
 
 static void _power_pluses(item_def *item)
 {
-    item->plus  = min(you.hp / 10, 27);
+    item->plus = min(you.hp / 10, 27);
 }
 
 static void _POWER_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -873,11 +873,6 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _DAMNATION_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    _equip_mpr(show_msgs, you.hands_act("smoulder", "for a moment.").c_str());
-}
-
 static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
                                            string* ammo_name, bool* returning)
 {
@@ -1227,20 +1222,6 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
-static void _CAPTAIN_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    if (you_worship(GOD_SHINING_ONE))
-    {
-        _equip_mpr(show_msgs,
-                   "You feel dishonourable wielding this.");
-    }
-    else
-    {
-        _equip_mpr(show_msgs,
-                   "You feel a cutthroat vibe.");
-    }
-}
-
 static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
                                 actor* defender, bool mondied, int dam)
 {
@@ -1418,9 +1399,6 @@ static void _THERMIC_ENGINE_world_reacts(item_def *item)
             item->plus = 2;
 
         you.wield_change = true;
-
-        if (item->plus == 2 && one_chance_in(4))
-            mpr("The engine shudders to a halt.");
     }
 }
 
