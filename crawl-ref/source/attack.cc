@@ -950,8 +950,8 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     if (flavour == NUM_BEAMS)
         flavour = special_damage_flavour;
     // Auxes temporarily clear damage_brand so we don't need to check
-    if (damage_brand == SPWPN_REAPING ||
-        damage_brand == SPWPN_CHAOS && one_chance_in(100))
+    if (damage_brand == SPWPN_REAPING
+        || damage_brand == SPWPN_CHAOS && one_chance_in(100))
     {
         defender->props["reaping_damage"].get_int() += dam;
         // With two reapers of different friendliness, the most recent one
