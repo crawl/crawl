@@ -417,6 +417,9 @@ ratskin cloak
 A cloak stitched from the hides of hundreds of hell rats, by an enchantress
 with a magic loom and too much time on her hands. It provides excellent
 protection from rats of all kinds.
+
+It can be evoked to summon rats from the Dungeon to accompany the wearer,
+for a time.
 %%%%
 shield of the Gong
 
