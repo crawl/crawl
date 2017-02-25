@@ -3923,13 +3923,12 @@ static void tag_read_you_dungeon(reader &th)
         {
             // This is to fix some crashing saves that didn't import
             // correctly, where the desolation slot occasionally gets marked
-            // as global on conversion from pre-0.19 to post-0.19a. Is setting
-            // the place info for branch `i` really a good idea? There's
-            // actually no guarantee that the save order will match the
-            // current branch order; this is really more of a best guess.
-            // HOWEVER, in all the instances I have, this works, and the place
-            // order hasn't changed since the iterator was introduced. (advil)
-            place_info.branch = static_cast<branch_type>(i);
+            // as global on conversion from pre-0.19 to post-0.19a.   This
+            // assumes that the order in `logical_branch_order` (branch.cc)
+            // hasn't changed since the save version (which is moderately safe).
+            const branch_type branch_to_fix = you.get_all_place_info()[i].branch;
+            ASSERT(branch_to_fix == BRANCH_DESOLATION);
+            place_info.branch = branch_to_fix;
         } else {
             // These should all be branch-specific, not global
             ASSERT(!place_info.is_global());
