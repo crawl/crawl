@@ -5384,11 +5384,7 @@ player::player()
     constricting = 0;
 
     // Protected fields:
-    for (branch_iterator it; it; ++it)
-    {
-        branch_info[it->id].branch = it->id;
-        branch_info[it->id].assert_validity();
-    }
+    clear_place_info();
 }
 
 void player::init_skills()

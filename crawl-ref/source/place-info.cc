@@ -128,5 +128,9 @@ void player::clear_place_info()
 {
     global_info = PlaceInfo();
     for (branch_iterator it; it; ++it)
+    {
         branch_info[it->id] = PlaceInfo();
+        branch_info[it->id].branch = it->id;
+        branch_info[it->id].assert_validity();
+    }
 }
