@@ -354,7 +354,6 @@ static void _reset_game()
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     clear_level_target();
-    you.clear_place_info();
     overview_clear();
     clear_message_window();
     note_list.clear();
