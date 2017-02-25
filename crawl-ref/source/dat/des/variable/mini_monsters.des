@@ -6441,21 +6441,22 @@ ITEM:   demon blade randart no_pickup
 : else
 ITEM:   maxwell's_thermic_engine no_pickup
 : end
-MONS:   ice devil, blizzard demon
-MONS:   sun demon, balrug
-MONS:   ice fiend, brimstone fiend
-SUBST:  1 = 1., 2 = 2., 3 = 3., 4 = 4.
+MONS:   ice devil, blizzard demon, ice fiend
+MONS:   sun demon, balrug, brimstone fiend
+# 7-2-1, 9 total demons for each side
+NSUBST: 1 = 6:1 / *:., 2 = 2:2 / *:., 3 = 1:3 / *:.
+NSUBST: 4 = 6:4 / *:., 5 = 2:5 / *:., 6 = 1:6 / *:.
 MAP
        @@@
  bbbbbb...bbbbbb
 bb....bb+bb....bb
-b..11..b.b..33..b
-b.2111.=.=.3334.b
-b52111.b.b.33346b
-b.2111.bnb.3334.b
-b..11..+d+..33..b
-bb.....bbb.....bb
- bbbbbbb bbbbbbb
+b32111.=.=.44456b
+b32111.=.=.44456b
+b32111.=.=.44456b
+b32111.bnb.44456b
+b32111.+d+.44456b
+bb....bbbbb....bb
+ bbbbbb   bbbbbb
 ENDMAP
 
 ###################################################################
