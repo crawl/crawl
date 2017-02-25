@@ -1592,9 +1592,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
     if (temp)
     {
-        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-            return 3;
-
         if (you.duration[DUR_RESISTANCE])
             re++;
 
