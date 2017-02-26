@@ -58,6 +58,8 @@ msc += $warning:crackle.*magical portal
 msc += $warning:distant wind
 msc += $warning:whistling.*wind
 msc += $warning:rapidly growing quiet
+msc += $warning:slides
+msc += $warning:settles down
 
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
