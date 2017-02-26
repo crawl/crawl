@@ -40,6 +40,7 @@ Gods
   - 4*: Active 'Serpent's Lash' abilitiy, granting two free movement actions.
   - 5*: Active 'Heaven on Earth' ability, creating opaque clouds and increasing
     your martial prowess while you continue to use 'martial' attacks.
+  - Piety is gained through defeating foes.
 * The Shining One:
   - Cleansing Flame is more effective against non-evil enemies.
   - All bonus-damage 'stab' attacks are prevented.
