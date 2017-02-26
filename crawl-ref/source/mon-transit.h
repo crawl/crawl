@@ -3,8 +3,7 @@
  * @brief Tracking monsters in transit between levels.
 **/
 
-#ifndef MON_TRANSIT_H
-#define MON_TRANSIT_H
+#pragma once
 
 #include <list>
 #include <map>
@@ -54,5 +53,3 @@ void untag_followers();
 
 void apply_daction_to_transit(daction_type act);
 int count_daction_in_transit(daction_type act);
-
-#endif

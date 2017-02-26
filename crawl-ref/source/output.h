@@ -3,8 +3,7 @@
  * @brief Functions used to print player related info.
 **/
 
-#ifndef OUTPUT_H
-#define OUTPUT_H
+#pragma once
 
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status();
@@ -27,5 +26,3 @@ int equip_name_to_slot(const char *s);
 void print_overview_screen();
 
 string dump_overview_screen(bool full_id);
-
-#endif

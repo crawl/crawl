@@ -3,8 +3,7 @@
  * @brief Functions used to print simple messages.
 **/
 
-#ifndef MPR_H
-#define MPR_H
+#pragma once
 
 // if you mess with this list, you'll need to make changes in initfile.cc
 // to message_channel_names, and probably also to message.cc to colour
@@ -116,6 +115,4 @@ void dprf(PRINTF(0, ));
 void dprf(diag_type param, PRINTF(1, ));
 #else
 # define dprf(...) ((void)0)
-#endif
-
 #endif

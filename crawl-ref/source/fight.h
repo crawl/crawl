@@ -3,8 +3,7 @@
  * @brief Functions used during combat.
 **/
 
-#ifndef FIGHT_H
-#define FIGHT_H
+#pragma once
 
 #include <list>
 
@@ -74,5 +73,3 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim) = 0,
                         bool *prompted = nullptr);
-
-#endif

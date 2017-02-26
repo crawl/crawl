@@ -3,8 +3,7 @@
  * @brief Passive god effects.
 **/
 
-#ifndef GODPASSIVE_H
-#define GODPASSIVE_H
+#pragma once
 
 #include "enum.h"
 #include "wu-jian-attack-type.h"
@@ -299,5 +298,3 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos);
 void wu_jian_trigger_serpents_lash(const coord_def& old_pos);
 bool wu_jian_has_momentum(wu_jian_attack_type);
 void wu_jian_heaven_tick();
-
-#endif

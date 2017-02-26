@@ -1,5 +1,4 @@
-#ifndef ITEMPROP_ENUM_H
-#define ITEMPROP_ENUM_H
+#pragma once
 
 enum armour_type
 {
@@ -769,5 +768,3 @@ enum food_type
 #endif
     NUM_FOODS
 };
-
-#endif

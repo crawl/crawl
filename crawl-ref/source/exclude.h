@@ -1,5 +1,4 @@
-#ifndef EXCLUDE_H
-#define EXCLUDE_H
+#pragma once
 
 #include "los-def.h"
 
@@ -102,5 +101,3 @@ class writer;
 class reader;
 void marshallExcludes(writer& outf, const exclude_set& excludes);
 void unmarshallExcludes(reader& inf, int minorVersion, exclude_set& excludes);
-
-#endif

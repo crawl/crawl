@@ -1,5 +1,4 @@
-#ifndef LIBCONSOLE_H
-#define LIBCONSOLE_H
+#pragma once
 
 #include "defines.h"
 
@@ -45,4 +44,3 @@ struct coord_def;
 coord_def cgetpos(GotoRegion region = GOTO_CRT);
 void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
 GotoRegion get_cursor_region();
-#endif

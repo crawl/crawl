@@ -3,8 +3,7 @@
  * @brief Misc functions.
 **/
 
-#ifndef MISC_H
-#define MISC_H
+#pragma once
 
 #include "coord.h"
 #include "maybe-bool.h"
@@ -38,4 +37,3 @@ struct counted_monster_list
     string describe(description_level_type desc = DESC_THE,
                     bool force_article = false);
 };
-#endif

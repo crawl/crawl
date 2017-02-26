@@ -3,8 +3,7 @@
  * @brief Misc religion related functions.
 **/
 
-#ifndef RELIGION_H
-#define RELIGION_H
+#pragma once
 
 #include "enum.h"
 #include "mgen-data.h"
@@ -195,5 +194,3 @@ struct god_power
 
 void set_god_ability_slots();
 vector<god_power> get_god_powers(god_type god);
-
-#endif

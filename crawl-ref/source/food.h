@@ -3,8 +3,7 @@
  * @brief Functions for eating and butchering.
 **/
 
-#ifndef FOOD_H
-#define FOOD_H
+#pragma once
 
 #include "hunger-state-t.h"
 #include "mon-enum.h"
@@ -67,4 +66,3 @@ bool you_foodless_normally();
 void handle_starvation();
 int hunger_bars(const int hunger);
 string hunger_cost_string(const int hunger);
-#endif

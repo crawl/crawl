@@ -1,5 +1,4 @@
-#ifndef NEWGAME_DEF_H
-#define NEWGAME_DEF_H
+#pragma once
 
 #include "game-type.h"
 #include "item-prop-enum.h"
@@ -40,5 +39,3 @@ struct newgame_def
     newgame_def();
     void clear_character();
 };
-
-#endif

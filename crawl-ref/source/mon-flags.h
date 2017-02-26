@@ -1,5 +1,4 @@
-#ifndef MON_CLASS_FLAGS_H
-#define MON_CLASS_FLAGS_H
+#pragma once
 
 #define BIT(x) ((uint64_t)1<<(x))
 
@@ -276,4 +275,3 @@ DEF_BITFIELD(monster_flags_t, monster_flag_type);
 constexpr monster_flags_t MF_NAME_MASK = MF_NAME_REPLACE;
 constexpr monster_flags_t MF_MELEE_MASK = MF_FIGHTER | MF_TWO_WEAPONS
                                         | MF_ARCHER;
-#endif

@@ -3,8 +3,7 @@
  * @brief Menus and associated malarkey.
 **/
 
-#ifndef __MENU_H__
-#define __MENU_H__
+#pragma once
 
 #include <algorithm>
 #include <cstdio>
@@ -1202,6 +1201,4 @@ protected:
 private:
     unsigned int m_curr;
 };
-#endif
-
 #endif

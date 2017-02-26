@@ -1,5 +1,4 @@
-#ifndef MAP_KNOWLEDGE_H
-#define MAP_KNOWLEDGE_H
+#pragma once
 
 #include "enum.h"
 #include "mon-info.h"
@@ -348,5 +347,3 @@ void clear_map_or_travel_trail();
 map_feature get_cell_map_feature(const map_cell& cell);
 
 void reautomap_level();
-
-#endif

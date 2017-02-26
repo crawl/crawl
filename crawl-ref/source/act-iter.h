@@ -3,8 +3,7 @@
  * @brief Provide a way to iterator over all actors, subject to a few common restrictions.
 **/
 
-#ifndef ACT_ITER_H
-#define ACT_ITER_H
+#pragma once
 
 #include "los-type.h"
 
@@ -67,5 +66,3 @@ protected:
     int i;
     void advance();
 };
-
-#endif

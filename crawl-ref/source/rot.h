@@ -3,8 +3,7 @@
  * @brief Functions for blood & chunk rot.
  **/
 
-#ifndef ROT_H
-#define ROT_H
+#pragma once
 
 // aut / rot_time_factor = units on corpse "special" property
 #define ROT_TIME_FACTOR 20
@@ -25,6 +24,3 @@ void merge_perishable_stacks(const item_def &source, item_def &dest, int quant);
 
 void rot_inventory_food(int time_delta);
 void rot_floor_items(int elapsedTime);
-
-
-#endif

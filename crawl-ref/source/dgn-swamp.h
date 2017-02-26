@@ -1,6 +1,3 @@
-#ifndef DGN_SWAMP_H
-#define DGN_SWAMP_H
+#pragma once
 
 void dgn_build_swamp_level();
-
-#endif

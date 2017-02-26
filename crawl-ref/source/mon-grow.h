@@ -3,8 +3,7 @@
  * @brief Monster level-up code.
 **/
 
-#ifndef __MGROW_H__
-#define __MGROW_H__
+#pragma once
 
 #include "fixedvector.h"
 
@@ -37,5 +36,3 @@ public:
 private:
     FixedVector<unsigned, MAX_MONS_HD + 1> mexp;
 };
-
-#endif

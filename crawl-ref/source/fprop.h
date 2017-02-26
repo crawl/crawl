@@ -1,5 +1,4 @@
-#ifndef FPROP_H
-#define FPROP_H
+#pragma once
 
 struct coord_def;
 
@@ -40,5 +39,3 @@ bool glowing_mold(const coord_def & p);
 void remove_mold(const coord_def & p);
 feature_property_type str_to_fprop(const string &str);
 char blood_rotation(const coord_def & p);
-
-#endif

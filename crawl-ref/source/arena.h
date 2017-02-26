@@ -3,8 +3,7 @@
  * @brief Functions related to the monster arena (stage and watch fights).
 **/
 
-#ifndef ARENA_H
-#define ARENA_H
+#pragma once
 
 #include "enum.h"
 
@@ -31,4 +30,3 @@ void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, const item_def* corpse);
 
 int arena_cull_items();
-#endif

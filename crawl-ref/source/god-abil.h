@@ -3,8 +3,7 @@
  * @brief God-granted abilities.
 **/
 
-#ifndef GODABIL_H
-#define GODABIL_H
+#pragma once
 
 #include "ability-type.h"
 #include "beh-type.h"
@@ -192,4 +191,3 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();
-#endif

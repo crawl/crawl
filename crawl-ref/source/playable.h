@@ -3,8 +3,7 @@
  * @brief Report which species, jobs and combos are playable.
 **/
 
-#ifndef PLAYABLE_H
-#define PLAYABLE_H
+#pragma once
 
 #include <vector>
 #include "enum.h"
@@ -27,5 +26,3 @@ vector<string> playable_species_names();
 vector<string> playable_combo_names();
 
 string playable_metadata_json();
-
-#endif

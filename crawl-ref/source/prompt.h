@@ -3,8 +3,7 @@
  * @brief Prompts.
  **/
 
-#ifndef PROMPT_H
-#define PROMPT_H
+#pragma once
 
 bool yes_or_no(PRINTF(0, ));
 typedef map<int, int> explicit_keymap;
@@ -25,5 +24,3 @@ double prompt_for_float(const char* prompt);
 char index_to_letter(int the_index);
 
 int letter_to_index(int the_letter);
-
-#endif

@@ -3,8 +3,7 @@
  * @brief Functions used when starting a new game.
 **/
 
-#ifndef NEWGAME_H
-#define NEWGAME_H
+#pragma once
 
 #include "job-type.h"
 #include "species-type.h"
@@ -47,5 +46,3 @@ struct species_group
     void attach(const newgame_def& ng, const newgame_def& defaults,
                 MenuFreeform* menu, menu_letter &letter);
 };
-
-#endif

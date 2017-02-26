@@ -3,8 +3,7 @@
  * @brief Simple reading of init file.
 **/
 
-#ifndef INITFILE_H
-#define INITFILE_H
+#pragma once
 
 #include <cstdio>
 #include <string>
@@ -107,5 +106,3 @@ private:
     const string &str;
     string::size_type pos;
 };
-
-#endif

@@ -3,8 +3,7 @@
  * @brief Webtiles implementation of the tiles interface
 **/
 
-#ifndef TILEWEB_H
-#define TILEWEB_H
+#pragma once
 
 #include <bitset>
 #include <map>
@@ -370,5 +369,3 @@ private:
     WebtilesUIState m_new_state;
     WebtilesUIState m_old_state;
 };
-
-#endif

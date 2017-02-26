@@ -3,8 +3,7 @@
  * @brief Handle shutdown.
  **/
 
-#ifndef END_H
-#define END_H
+#pragma once
 
 #include "hiscores.h" // scorefile_entry
 
@@ -20,6 +19,3 @@ struct game_ended_condition : public exception
     game_ended_condition(bool saved = false) : was_saved(saved) {}
     bool was_saved;
 };
-
-
-#endif

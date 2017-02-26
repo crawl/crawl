@@ -1,5 +1,4 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#pragma once
 
 #include "artefact-prop-type.h"
 #include "beam-type.h"
@@ -460,5 +459,3 @@ private:
 };
 
 bool actor_slime_wall_immune(const actor *actor);
-
-#endif

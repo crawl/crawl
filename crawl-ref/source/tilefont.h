@@ -1,5 +1,4 @@
-#ifndef TILEFONT_H
-#define TILEFONT_H
+#pragma once
 
 #include "defines.h"
 #include "glwrapper.h"
@@ -64,5 +63,3 @@ public:
 
    virtual const GenericTexture *font_tex() const = 0;
 };
-
-#endif

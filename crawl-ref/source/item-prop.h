@@ -3,8 +3,7 @@
  * @brief Misc functions.
 **/
 
-#ifndef ITEMPROP_H
-#define ITEMPROP_H
+#pragma once
 
 #include <set>
 
@@ -252,5 +251,3 @@ static inline bool is_weapon(const item_def &item)
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
-
-#endif

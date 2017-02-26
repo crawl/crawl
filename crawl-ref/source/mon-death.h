@@ -3,8 +3,7 @@
  * @brief Monster death functionality.
 **/
 
-#ifndef MONDEATH_H
-#define MONDEATH_H
+#pragma once
 
 #define ORIG_MONSTER_KEY "orig_monster_key"
 #define ELVEN_ENERGIZE_KEY "elven_twin_energize"
@@ -79,4 +78,3 @@ bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
 bool mons_bennu_can_revive(const monster* mons);
-#endif

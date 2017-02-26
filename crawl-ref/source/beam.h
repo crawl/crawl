@@ -3,8 +3,7 @@
  * @brief Functions related to ranged attacks.
 **/
 
-#ifndef BEAM_H
-#define BEAM_H
+#pragma once
 
 #include "ac-type.h"
 #include "beam-type.h"
@@ -346,4 +345,3 @@ bool shoot_through_monster(const bolt& beam, const monster* victim);
 int omnireflect_chance_denom(int SH);
 
 bolt setup_targetting_beam(const monster &mons);
-#endif

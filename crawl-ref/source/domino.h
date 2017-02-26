@@ -39,8 +39,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-#ifndef __DOMINO_H__
-#define __DOMINO_H__
+#pragma once
 
 #include <algorithm>
 #include <cstdlib>
@@ -618,5 +617,3 @@ class DominoSet
 };
 
 }  // namespace domino
-
-#endif // __DOMINO_H__

@@ -3,8 +3,7 @@
  * @brief Misc function used to render the dungeon.
 **/
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "defines.h"
 #include "options.h"
@@ -79,5 +78,3 @@ void toggle_show_terrain();
 void reset_show_terrain();
 
 void handle_terminal_resize(bool redraw = true);
-
-#endif

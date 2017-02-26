@@ -3,8 +3,7 @@
  * @brief Collects information for output of status effects.
 **/
 
-#ifndef STATUS_H
-#define STATUS_H
+#pragma once
 
 #include "duration-type.h"
 #include "mpr.h"
@@ -85,5 +84,3 @@ const char *duration_mid_message(duration_type dur);
 int duration_mid_offset(duration_type dur);
 int duration_expire_point(duration_type dur);
 msg_channel_type duration_mid_chan(duration_type dur);
-
-#endif

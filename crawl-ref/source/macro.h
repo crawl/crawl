@@ -3,8 +3,7 @@
  * @brief Crude macro-capability
 **/
 
-#ifndef MACRO_H
-#define MACRO_H
+#pragma once
 
 #include <deque>
 
@@ -102,4 +101,3 @@ void insert_commands(string &desc, vector<command_type> cmds,
 
 // Let rc files declare macros:
 string read_rc_file_macro(const string& field);
-#endif

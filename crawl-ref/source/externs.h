@@ -3,8 +3,7 @@
  * @brief Definitions for common structs.
 **/
 
-#ifndef EXTERNS_H
-#define EXTERNS_H
+#pragma once
 
 #define __STDC_FORMAT_MACROS
 #include <cinttypes>
@@ -899,5 +898,3 @@ struct cglyph_t
 };
 
 typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
-
-#endif // EXTERNS_H

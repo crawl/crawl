@@ -1,6 +1,3 @@
-#ifndef NG_WANDERER_H
-#define NG_WANDERER_H
+#pragma once
 
 void create_wanderer();
-
-#endif

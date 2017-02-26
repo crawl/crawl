@@ -1,5 +1,4 @@
-#ifndef COORDIT_H
-#define COORDIT_H
+#pragma once
 
 #include "coord-circle.h"
 #include "los-type.h"
@@ -155,4 +154,3 @@ public:
 # ifdef DEBUG_TESTS
 void coordit_tests();
 # endif
-#endif

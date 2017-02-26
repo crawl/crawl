@@ -3,8 +3,7 @@
  * @brief Monster related wizard functions.
 **/
 
-#ifndef WIZMON_H
-#define WIZMON_H
+#pragma once
 
 #ifdef WIZARD
 
@@ -29,7 +28,5 @@ void wizard_polymorph_monster(monster* mon);
 void debug_make_monster_shout(monster* mon);
 
 void debug_pathfind(int mid);
-
-#endif
 
 #endif

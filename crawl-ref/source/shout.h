@@ -1,5 +1,4 @@
-#ifndef SHOUT_H
-#define SHOUT_H
+#pragma once
 
 #include "noise.h"
 #include "sense-type.h"
@@ -24,5 +23,3 @@ void monster_shout(monster *mons, int s_type);
 bool check_awaken(monster* mons, int stealth);
 
 void apply_noises();
-
-#endif
