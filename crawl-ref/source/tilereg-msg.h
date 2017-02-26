@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_MSG_H
-#define TILEREG_MSG_H
+#pragma once
 
 #include "tilereg-text.h"
 
@@ -21,5 +20,4 @@ protected:
     bool m_overlay;
 };
 
-#endif
 #endif

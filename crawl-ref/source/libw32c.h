@@ -1,5 +1,4 @@
-#ifndef LIBW32C_H
-#define LIBW32C_H
+#pragma once
 
 #ifndef USE_TILE
 
@@ -10,4 +9,3 @@ void w32_insert_escape();
 
 #endif
 
-#endif

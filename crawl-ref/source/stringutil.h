@@ -3,8 +3,7 @@
  * @brief String manipulation functions that don't fit elsewhere.
  **/
 
-#ifndef STRINGS_H
-#define STRINGS_H
+#pragma once
 
 #include "config.h"
 #include "libutil.h" // always_true
@@ -284,4 +283,3 @@ namespace std
 }
 #endif
 
-#endif

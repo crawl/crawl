@@ -1,5 +1,4 @@
-#ifndef VIEWGEOM_H
-#define VIEWGEOM_H
+#pragma once
 
 #include "tilecell.h"
 
@@ -200,4 +199,3 @@ static inline bool in_los_bounds_g(const coord_def& pos)
     return crawl_view.in_los_bounds_g(pos);
 }
 
-#endif

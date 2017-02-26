@@ -3,8 +3,7 @@
  * @brief Misc (mostly) inventory related functions.
 **/
 
-#ifndef ITEMS_H
-#define ITEMS_H
+#pragma once
 
 #include "equipment-type.h"
 #include "god-type.h"
@@ -198,4 +197,3 @@ private:
     monster& mon;
     mon_inv_type type;
 };
-#endif

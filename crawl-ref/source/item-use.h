@@ -3,8 +3,7 @@
  * @brief Functions for making use of inventory items.
 **/
 
-#ifndef ITEM_USE_H
-#define ITEM_USE_H
+#pragma once
 
 #include <functional>
 #include <string>
@@ -66,4 +65,3 @@ void tile_item_use(int idx);
 void tile_item_use_secondary(int idx);
 #endif
 
-#endif

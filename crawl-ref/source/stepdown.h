@@ -3,8 +3,7 @@
  * @brief Stepdown functions.
 **/
 
-#ifndef STEPDOWN_H
-#define STEPDOWN_H
+#pragma once
 
 // stepdowns
 
@@ -20,4 +19,3 @@ int stepdown(int value, int step, rounding_type = ROUND_CLOSE, int max = 0);
 int stepdown_value(int base_value, int stepping, int first_step,
                    int /*last_step*/, int ceiling_value);
 
-#endif

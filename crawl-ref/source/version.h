@@ -3,8 +3,7 @@
  * @brief Contains version information
 **/
 
-#ifndef VERSION_H
-#define VERSION_H
+#pragma once
 
 #define CRAWL "Dungeon Crawl Stone Soup"
 
@@ -55,4 +54,3 @@ namespace Version
 
 extern const char* compilation_info;
 
-#endif

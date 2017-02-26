@@ -3,8 +3,7 @@
  * @brief Wrappers for sys/libc calls, mostly for charset purposes.
 **/
 
-#ifndef SYSCALLS_H
-#define SYSCALLS_H
+#pragma once
 
 #include <sys/types.h>
 
@@ -38,4 +37,3 @@ FILE *fopen_u(const char *path, const char *mode);
 int mkdir_u(const char *pathname, mode_t mode);
 int open_u(const char *pathname, int flags, mode_t mode);
 
-#endif

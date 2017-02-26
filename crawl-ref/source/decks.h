@@ -3,8 +3,7 @@
  * @brief Functions with decks of cards.
 **/
 
-#ifndef DECKS_H
-#define DECKS_H
+#pragma once
 
 #include "enum.h"
 
@@ -185,4 +184,3 @@ card_type get_card_and_flags(const item_def& deck, int idx,
 
 const vector<card_type> get_drawn_cards(const item_def& deck);
 
-#endif

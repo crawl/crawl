@@ -3,8 +3,7 @@
  * @brief Skill exercising functions.
 **/
 
-#ifndef SKILLS_H
-#define SKILLS_H
+#pragma once
 
 #include "player.h"
 
@@ -142,4 +141,3 @@ static inline bool is_invalid_skill(skill_type skill)
     return skill < SK_FIRST_SKILL || skill >= NUM_SKILLS;
 }
 
-#endif

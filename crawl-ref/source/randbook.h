@@ -3,8 +3,7 @@
  * @brief Functions for generating random spellbooks.
 **/
 
-#ifndef RANDBOOK_H
-#define RANDBOOK_H
+#pragma once
 
 #include <functional>
 
@@ -62,4 +61,3 @@ void make_book_roxanne_special(item_def *book);
 void make_book_kiku_gift(item_def &book, bool first);
 void acquire_themed_randbook(item_def &book, int agent);
 
-#endif

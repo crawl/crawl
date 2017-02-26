@@ -1,5 +1,4 @@
-#ifndef MGEN_ENUM_H
-#define MGEN_ENUM_H
+#pragma once
 
 enum band_type
 {
@@ -148,4 +147,3 @@ enum mgen_flag
 };
 DEF_BITFIELD(mgen_flags, mgen_flag);
 
-#endif

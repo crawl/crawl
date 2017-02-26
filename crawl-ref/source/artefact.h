@@ -3,8 +3,7 @@
  * @brief Random and unrandom artefact functions.
 **/
 
-#ifndef RANDART_H
-#define RANDART_H
+#pragma once
 
 #include "artefact-prop-type.h"
 #include "unique-item-status-type.h"
@@ -152,4 +151,3 @@ int get_unrandart_num(const char *name);
 
 void unrand_reacts();
 
-#endif

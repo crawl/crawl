@@ -6,8 +6,7 @@
  * for the moment.
 **/
 
-#ifndef BITARY_H
-#define BITARY_H
+#pragma once
 
 #include <bitset>
 
@@ -189,4 +188,3 @@ public:
     }
 };
 
-#endif

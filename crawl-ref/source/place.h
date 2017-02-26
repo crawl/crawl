@@ -3,8 +3,7 @@
  * @brief Place related functions.
 **/
 
-#ifndef PLACE_H
-#define PLACE_H
+#pragma once
 
 #include "enum.h"
 
@@ -29,4 +28,3 @@ vector<level_id> all_dungeon_ids();
 
 bool is_level_on_stack(level_id id);
 
-#endif

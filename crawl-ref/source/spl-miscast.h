@@ -3,8 +3,7 @@
  * @brief Spell miscast class.
 **/
 
-#ifndef SPL_MISCAST_H
-#define SPL_MISCAST_H
+#pragma once
 
 #include "enum.h"
 #include "monster.h"
@@ -146,4 +145,3 @@ private:
     void _zot();
 };
 
-#endif

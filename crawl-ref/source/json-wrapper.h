@@ -1,5 +1,4 @@
-#ifndef JSON_WRAPPER_H
-#define JSON_WRAPPER_H
+#pragma once
 
 #include "json.h"
 
@@ -39,4 +38,3 @@ struct JsonWrapper
     static class MalformedException { } malformed;
 };
 
-#endif

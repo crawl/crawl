@@ -3,8 +3,7 @@
  * @brief Gametime related functions.
 **/
 
-#ifndef TIME_H
-#define TIME_H
+#pragma once
 
 void change_labyrinth(bool msg = false);
 
@@ -24,4 +23,3 @@ void setup_environment_effects();
 void run_environment_effects();
 int speed_to_duration(int speed);
 
-#endif

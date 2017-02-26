@@ -1,6 +1,5 @@
 #ifdef USE_TILE
-#ifndef TILEDOLL_H
-#define TILEDOLL_H
+#pragma once
 
 #include "tile-player-flags.h"
 
@@ -45,5 +44,4 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
 class SubmergedTileBuffer;
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost);
 
-#endif
 #endif

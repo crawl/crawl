@@ -1,5 +1,4 @@
-#ifndef COORD_CIRCLE_H
-#define COORD_CIRCLE_H
+#pragma once
 
 enum circle_type
 {
@@ -69,4 +68,3 @@ private:
     void init_bbox();
 };
 
-#endif

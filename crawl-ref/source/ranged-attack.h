@@ -1,5 +1,4 @@
-#ifndef RANGED_ATTACK_H
-#define RANGED_ATTACK_H
+#pragma once
 
 #include "attack.h"
 
@@ -60,4 +59,3 @@ private:
     launch_retval launch_type;
 };
 
-#endif

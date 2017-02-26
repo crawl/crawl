@@ -1,5 +1,4 @@
-#ifndef MON_MOVE_TARGET_H
-#define MON_MOVE_TARGET_H
+#pragma once
 
 struct level_exit;
 
@@ -16,4 +15,3 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index);
 bool can_go_straight(const monster* mon, const coord_def& p1,
                      const coord_def& p2);
 
-#endif

@@ -3,8 +3,7 @@
  * @brief Player quiver functionality
 **/
 
-#ifndef QUIVER_H
-#define QUIVER_H
+#pragma once
 
 #include <vector>
 
@@ -80,4 +79,3 @@ private:
 void quiver_item(int slot);
 void choose_item_for_quiver();
 
-#endif

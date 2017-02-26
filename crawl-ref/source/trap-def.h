@@ -1,5 +1,4 @@
-#ifndef TRAP_DEF_H
-#define TRAP_DEF_H
+#pragma once
 
 #include "trap-type.h"
 
@@ -35,4 +34,3 @@ private:
     int shot_damage(actor& act);
 };
 
-#endif

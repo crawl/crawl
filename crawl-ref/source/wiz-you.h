@@ -3,8 +3,7 @@
  * @brief Player related wizard functions.
 **/
 
-#ifndef WIZYOU_H
-#define WIZYOU_H
+#pragma once
 
 #include "enum.h"
 #include "job-type.h"
@@ -45,4 +44,3 @@ void wizard_change_job_to(job_type job);
 void wizard_xom_acts();
 #endif
 
-#endif

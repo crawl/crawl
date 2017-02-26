@@ -3,8 +3,7 @@
  * @brief Notetaking stuff
 **/
 
-#ifndef NOTES_H
-#define NOTES_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -109,4 +108,3 @@ struct no_notes
     bool saved;
 };
 
-#endif

@@ -3,8 +3,7 @@
  * @brief Templates used in describe.cc and in some tiles-only sources
  */
 
-#ifndef DESCRIBE_TEMPLATES_H
-#define DESCRIBE_TEMPLATES_H
+#pragma once
 
 #include "describe.h"
 #include "lang-fake.h"
@@ -147,4 +146,3 @@ void process_quote(T &proc, const describe_info &inf)
     }
 }
 
-#endif

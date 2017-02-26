@@ -1,5 +1,4 @@
-#ifndef GL_WRAPPER_H
-#define GL_WRAPPER_H
+#pragma once
 
 #ifdef USE_TILE_LOCAL
 
@@ -191,4 +190,3 @@ public:
 extern GLStateManager *glmanager;
 
 #endif // use_tile
-#endif // include guard

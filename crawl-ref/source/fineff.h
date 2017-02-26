@@ -4,8 +4,7 @@
  *             unexpected way.
 **/
 
-#ifndef FINEFF_H
-#define FINEFF_H
+#pragma once
 
 #include "beh-type.h"
 #include "mon-util.h"
@@ -340,4 +339,3 @@ protected:
 
 void fire_final_effects();
 
-#endif

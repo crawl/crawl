@@ -3,8 +3,7 @@
  * @brief Functions used when placing monsters in the dungeon.
 **/
 
-#ifndef MONPLACE_H
-#define MONPLACE_H
+#pragma once
 
 #include "conduct-type.h"
 #include "dungeon-char-type.h"
@@ -132,4 +131,3 @@ extern band_type active_monster_band;
 #define VAULT_MON_BANDS_KEY   "vault_mon_bands"
 #endif
 
-#endif  // MONPLACE_H

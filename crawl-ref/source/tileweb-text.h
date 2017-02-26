@@ -1,6 +1,5 @@
 #ifdef USE_TILE_WEB
-#ifndef TILEWEB_TEXT_H
-#define TILEWEB_TEXT_H
+#pragma once
 
 #include <string>
 
@@ -34,5 +33,4 @@ protected:
     virtual void on_resize();
 };
 
-#endif
 #endif

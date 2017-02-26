@@ -3,8 +3,7 @@
  * @brief Functions used to print information about various game objects.
 **/
 
-#ifndef DESCRIBE_H
-#define DESCRIBE_H
+#pragma once
 
 #include <functional>
 #include <sstream>
@@ -121,4 +120,3 @@ protected:
     ostringstream ostr;
 };
 
-#endif

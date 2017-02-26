@@ -3,8 +3,7 @@
  * @brief Misc abyss specific functions.
 **/
 
-#ifndef ABYSS_H
-#define ABYSS_H
+#pragma once
 
 // When shifting areas in the abyss, shift the square containing player LOS
 // plus a little extra so that the player won't be disoriented by taking a
@@ -48,4 +47,3 @@ void run_corruption_effects(int duration);
 void set_abyss_state(coord_def coord, uint32_t depth);
 void destroy_abyss();
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef DGN_IREREGULAR_BOX_H
-#define DGN_IREREGULAR_BOX_H
+#pragma once
 
 class map_lines;
 
@@ -76,4 +75,3 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
                         char floor_glyph = '.', char wall_glyph = 'x',
                         char door_glyph = '+',  int door_count = 1);
 
-#endif

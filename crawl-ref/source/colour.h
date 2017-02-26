@@ -1,5 +1,4 @@
-#ifndef COLOUR_H
-#define COLOUR_H
+#pragma once
 
 struct monster_info;
 
@@ -120,4 +119,3 @@ colour_t rune_colour(int type);
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
 
-#endif

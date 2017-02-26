@@ -1,5 +1,4 @@
-#ifndef SDL_WINDOWMANAGER_H
-#define SDL_WINDOWMANAGER_H
+#pragma once
 
 #ifdef USE_TILE_LOCAL
 #ifdef USE_SDL
@@ -73,4 +72,3 @@ private:
 #endif // USE_SDL
 #endif // USE_TILE_LOCAL
 
-#endif // SDL_WINDOWMANAGER_H

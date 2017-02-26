@@ -3,8 +3,7 @@
  * @brief Misc monster related functions.
 **/
 
-#ifndef MONUTIL_H
-#define MONUTIL_H
+#pragma once
 
 #include <functional>
 
@@ -575,4 +574,3 @@ bool apply_visible_monsters(monster_func mf,
 
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
 
-#endif

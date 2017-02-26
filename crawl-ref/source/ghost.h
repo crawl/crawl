@@ -3,8 +3,7 @@
  * @brief Player ghost and random Pandemonium demon handling.
 **/
 
-#ifndef GHOST_H
-#define GHOST_H
+#pragma once
 
 #include "enum.h"
 #include "god-type.h"
@@ -73,4 +72,3 @@ int ghost_rank_to_level(const int rank);
 
 extern vector<ghost_demon> ghosts;
 
-#endif

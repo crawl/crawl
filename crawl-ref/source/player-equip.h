@@ -1,5 +1,4 @@
-#ifndef PLAYER_EQUIP_H
-#define PLAYER_EQUIP_H
+#pragma once
 
 #include "equipment-type.h"
 
@@ -21,4 +20,3 @@ void unequip_effect(equipment_type slot, int item_slot, bool meld, bool msg);
 
 bool unwield_item(bool showMsgs = true);
 
-#endif

@@ -3,8 +3,7 @@
  * @brief Monsters' initial equipment.
 **/
 
-#ifndef MON_GEAR_H
-#define MON_GEAR_H
+#pragma once
 
 void give_specific_item(monster* mon, const item_def& tpl);
 void give_specific_item(monster* mon, int thing);
@@ -14,4 +13,3 @@ void give_weapon(monster *mon, int level_number);
 int make_mons_armour(monster_type mtyp, int level);
 void give_armour(monster *mon, int level_number);
 void give_shield(monster *mon);
-#endif

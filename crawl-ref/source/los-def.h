@@ -1,5 +1,4 @@
-#ifndef LOS_DEF_H
-#define LOS_DEF_H
+#pragma once
 
 #include "los.h"
 
@@ -30,4 +29,3 @@ public:
     bool see_cell(const coord_def& p) const;
 };
 
-#endif

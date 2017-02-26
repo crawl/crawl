@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_TAB_H
-#define TILEREG_TAB_H
+#pragma once
 
 #include "command-type.h"
 #include "tilereg-grid.h"
@@ -81,5 +80,4 @@ private:
     int _push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_tab);
 };
 
-#endif
 #endif

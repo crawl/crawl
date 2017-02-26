@@ -1,5 +1,4 @@
-#ifndef DGN_HEIGHT_H
-#define DGN_HEIGHT_H
+#pragma once
 
 #include <vector>
 
@@ -98,4 +97,3 @@ private:
     void build_island();
 };
 
-#endif

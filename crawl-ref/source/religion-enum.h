@@ -1,5 +1,4 @@
-#ifndef RELIGION_ENUM_H
-#define RELIGION_ENUM_H
+#pragma once
 
 enum piety_gain_t
 {
@@ -30,4 +29,3 @@ enum nemelex_gift_types
 /// custom monster gender
 #define MON_GENDER_KEY "mon_gender"
 
-#endif

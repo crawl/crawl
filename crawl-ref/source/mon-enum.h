@@ -6,8 +6,7 @@
  * dependencies.
 **/
 
-#ifndef MON_ENUM_H
-#define MON_ENUM_H
+#pragma once
 
 #define HERD_COMFORT_RANGE 6
 
@@ -310,4 +309,3 @@ enum mon_body_shape
     MON_SHAPE_MISC,
 };
 
-#endif

@@ -3,8 +3,7 @@
  * @brief Dungeon-builder Lua interface.
 **/
 
-#ifndef DLUA_H
-#define DLUA_H
+#pragma once
 
 #include "clua.h"
 
@@ -75,4 +74,3 @@ public:
 
 void init_dungeon_lua();
 
-#endif

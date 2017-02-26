@@ -3,8 +3,7 @@
  * @brief Terrain related functions.
 **/
 
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#pragma once
 
 #include <memory>
 
@@ -150,4 +149,3 @@ bool is_temp_terrain(coord_def pos);
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only = false);
 
-#endif

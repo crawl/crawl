@@ -3,8 +3,7 @@
  * @brief Line-of-sight algorithm.
 **/
 
-#ifndef LOS_H
-#define LOS_H
+#pragma once
 
 #include "coord-circle.h"
 #include "los-type.h"
@@ -52,4 +51,3 @@ void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
 void los_changed();
 opacity_type mons_opacity(const monster* mon, los_type how);
-#endif

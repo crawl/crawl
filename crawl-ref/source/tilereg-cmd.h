@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_CMD_H
-#define TILEREG_CMD_H
+#pragma once
 
 #include <vector>
 
@@ -88,5 +87,4 @@ private:
     string m_help;
 };
 
-#endif
 #endif

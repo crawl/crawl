@@ -1,5 +1,4 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#pragma once
 
 #include <functional>
 
@@ -612,4 +611,3 @@ private:
     bool is_cloud_safe(const coord_def &place) const;
 };
 
-#endif

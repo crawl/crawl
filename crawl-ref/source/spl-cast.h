@@ -3,8 +3,7 @@
  * @brief Spell casting functions.
 **/
 
-#ifndef SPL_CAST_H
-#define SPL_CAST_H
+#pragma once
 
 #include "enum.h"
 
@@ -124,4 +123,3 @@ void spell_skills(spell_type spell, set<skill_type> &skills);
 
 bool spell_removed(spell_type spell);
 
-#endif
