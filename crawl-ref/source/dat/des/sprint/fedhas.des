@@ -117,6 +117,7 @@ KFEAT:  s = altar_sif_muna
 KFEAT:  t = altar_trog
 KFEAT:  u = altar_uskayaw
 KFEAT:  v = altar_vehumet
+KFEAT:  w = altar_wu_jian
 KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
@@ -128,5 +129,5 @@ MAP
 ..g.h.j.k.l..
 ...m.nPo.q...
 ..r.s.t.u.v..
-.T.x.y.z.1.T.
+.w.x.y.z.1.T.
 ENDMAP

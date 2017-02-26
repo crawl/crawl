@@ -694,8 +694,8 @@ MAP
 vvvvvvvvvvvv
 vTTTTTTTTTTv
 vTTTTTTTTTTv
-vTTTTvvvvv~v
-vvvvvvUUUv@v
+vTTTTTvvvv~v
+vvvvvvvUUv@v
 vabcd+UUU+.v
 vvvvvvvvvv.v
 v.........G@
@@ -726,14 +726,14 @@ KITEM: b = hand axe plus:2 ident:all not_cursed
 KITEM: c = mace plus:2 ident:all not_cursed
 KITEM: d = trident plus:2 ident:all not_cursed
 KITEM: e = quarterstaff plus:2 ident:all not_cursed
-KITEM: f = falchion plus:2 ident:all not_cursed
-SHUFFLE: abcdef
+KITEM: e = falchion plus:2 ident:all not_cursed
+SHUFFLE: abcde
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-eda
-fcb
+ da
+ecb
 ENDMAP
 
 NAME:  equipment_2
@@ -994,6 +994,7 @@ KFEAT:   s = altar_sif_muna
 KFEAT:   t = altar_trog
 KFEAT:   u = altar_uskayaw
 KFEAT:   v = altar_vehumet
+KFEAT:   w = altar_wu_jian
 KFEAT:   x = altar_xom
 KFEAT:   y = altar_yredelemnul
 KFEAT:   z = altar_zin
@@ -1004,9 +1005,11 @@ KFEAT:   ' = altar_the_shining_one
 MAP
 abcdefghjk
 lmnoqrstuv
-xyz'
+wxyz'
 ENDMAP
-
+# NB: If you want to add an altar, you'll need to resize this
+# vault in storerooms_1. Best thing to do is rob some space from
+# equipment_1, stacking items on top of each other.
 
 ################################################################################
 # Safe places
