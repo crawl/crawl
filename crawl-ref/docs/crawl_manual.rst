@@ -1637,9 +1637,9 @@ Barachians
   approach, remembering those who they once served.
 
   Barachians' most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. When not leaping, they are somewhat
-  slow-moving, and the long sight-lines that their heritage creates can be a
-  major disadvantage, but they can master almost any skill.
+  allow them to leap great distances. They can be seen and attacked from a great
+  distance, but can do the same in return. When not leaping, they are somewhat
+  slow-moving, but they can master almost any skill.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
