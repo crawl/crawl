@@ -1,5 +1,4 @@
-#ifndef MGEN_DATA_H
-#define MGEN_DATA_H
+#pragma once
 
 #include "beh-type.h"
 #include "coord.h"
@@ -210,5 +209,3 @@ struct mgen_data
         return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT);
     }
 };
-
-#endif

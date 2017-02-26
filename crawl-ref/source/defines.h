@@ -5,8 +5,7 @@
  * A variety of miscellaneous constant values are found here.
 **/
 
-#ifndef DEFINES_H
-#define DEFINES_H
+#pragma once
 
 // Minimum terminal size allowed.
 #define MIN_COLS  79
@@ -322,6 +321,4 @@ const int DEFAULT_VIEW_DELAY = 600;
 
 #ifdef __ANDROID__
 #define ANDROID_ASSETS "ANDROID_ASSETS"
-#endif
-
 #endif

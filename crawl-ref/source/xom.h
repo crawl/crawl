@@ -3,8 +3,7 @@
  * @brief Misc Xom related functions.
 **/
 
-#ifndef XOM_H
-#define XOM_H
+#pragma once
 
 #include "ouch.h"
 
@@ -113,5 +112,3 @@ bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
 void validate_xom_events();
-
-#endif

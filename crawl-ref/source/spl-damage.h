@@ -1,5 +1,4 @@
-#ifndef SPL_DAMAGE_H
-#define SPL_DAMAGE_H
+#pragma once
 
 #include "enum.h"
 #include "mpr.h"
@@ -75,4 +74,3 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
                             bool fail = false);
 
 spret_type cast_ignition(const actor *caster, int pow, bool fail = false);
-#endif

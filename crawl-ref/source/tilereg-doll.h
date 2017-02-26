@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_DOLL_H
-#define TILEREG_DOLL_H
+#pragma once
 
 #include "tilebuf.h"
 #include "tiledoll.h"
@@ -44,5 +43,4 @@ protected:
     SubmergedTileBuffer m_cur_buf;
 };
 
-#endif
 #endif

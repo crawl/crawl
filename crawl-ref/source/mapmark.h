@@ -3,8 +3,7 @@
  * @brief Level markers (annotations).
 **/
 
-#ifndef __MAPMARK_H__
-#define __MAPMARK_H__
+#pragma once
 
 #include <map>
 #include <memory>
@@ -330,5 +329,3 @@ public:
 public:
     coord_def dest;
 };
-
-#endif

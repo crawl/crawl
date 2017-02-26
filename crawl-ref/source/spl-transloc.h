@@ -1,5 +1,4 @@
-#ifndef SPL_TRANSLOC_H
-#define SPL_TRANSLOC_H
+#pragma once
 
 #include "spl-cast.h"
 
@@ -31,4 +30,3 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
 spret_type cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
-#endif

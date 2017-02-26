@@ -1,5 +1,4 @@
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#pragma once
 
 #include <algorithm>
 
@@ -631,5 +630,3 @@ static inline short macro_colour(short col)
     ASSERT(col < NUM_TERM_COLOURS);
     return col < 0 ? col : Options.colour[ col ];
 }
-
-#endif

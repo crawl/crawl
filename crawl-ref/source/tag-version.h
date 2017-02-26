@@ -1,5 +1,4 @@
-#ifndef TAG_VERSION_H
-#define TAG_VERSION_H
+#pragma once
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
@@ -211,5 +210,3 @@ enum tag_minor_version
 
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
-
-#endif

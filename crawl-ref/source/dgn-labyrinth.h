@@ -1,6 +1,3 @@
-#ifndef DGN_LABYRINTH_H
-#define DGN_LABYRINTH_H
+#pragma once
 
 void dgn_build_labyrinth_level();
-
-#endif

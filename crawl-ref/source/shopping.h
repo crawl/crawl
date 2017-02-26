@@ -3,8 +3,7 @@
  * @brief Shop keeper functions.
 **/
 
-#ifndef SHOPPING_H
-#define SHOPPING_H
+#pragma once
 
 int artefact_value(const item_def &item);
 
@@ -117,6 +116,4 @@ extern ShoppingList shopping_list;
 
 #if TAG_MAJOR_VERSION == 34
 #define REMOVED_DEAD_SHOPS_KEY "removed_dead_shops"
-#endif
-
 #endif

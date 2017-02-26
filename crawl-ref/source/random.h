@@ -1,5 +1,4 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#pragma once
 
 #include <algorithm>  // iter_swap
 #include <iterator>   // advance
@@ -251,5 +250,3 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     ASSERT(result >= 0);
     return result;
 }
-
-#endif

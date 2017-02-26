@@ -23,8 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-#ifndef _DOMINO_DATA_H_
-#define _DOMINO_DATA_H_
+#pragma once
 
 #include "domino.h"
 
@@ -111,5 +110,3 @@ static CornerDomino periodic_set[16] = {
   {1, 1, 1, 1},
 };
 } // namespace wang
-
-#endif // _DOMINO_DATA_H_

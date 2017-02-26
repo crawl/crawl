@@ -3,8 +3,7 @@
  * @brief Functions for handling player mutations.
 **/
 
-#ifndef MUTATION_H
-#define MUTATION_H
+#pragma once
 
 #include <string>
 
@@ -76,5 +75,3 @@ int augmentation_amount();
 void reset_powered_by_death_duration();
 
 bool delete_temp_mutation();
-
-#endif

@@ -5,8 +5,7 @@
 
 // TODO enne - slowly morph this into tilesdl.h
 
-#ifndef LIBGUI_H
-#define LIBGUI_H
+#pragma once
 #ifdef USE_TILE
 
 #include <cstdio>
@@ -27,4 +26,3 @@ static inline constexpr bool is_tiles() { return true; }
 #endif
 
 #endif // USE_TILE
-#endif // LIBGUI_H

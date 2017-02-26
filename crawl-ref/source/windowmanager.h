@@ -1,5 +1,4 @@
-#ifndef WINDOWMANAGER_H
-#define WINDOWMANAGER_H
+#pragma once
 
 #ifdef USE_TILE_LOCAL
 
@@ -139,4 +138,3 @@ public:
 extern WindowManager *wm;
 
 #endif //USE_TILE_LOCAL
-#endif //include guard

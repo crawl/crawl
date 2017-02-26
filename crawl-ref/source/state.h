@@ -3,8 +3,7 @@
  * @brief Game state.
 **/
 
-#ifndef STATE_H
-#define STATE_H
+#pragma once
 
 #include <vector>
 
@@ -250,5 +249,3 @@ private:
 
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
                           const activity_interrupt_data &at);
-
-#endif

@@ -13,8 +13,7 @@
 **/
 
 
-#ifndef APPHDR_H
-#define APPHDR_H
+#pragma once
 
 /* Fix annoying precompiled header compile errors caused by unused Objective-C variant. */
 #if !defined(__OBJC__)
@@ -469,5 +468,3 @@ static inline void UNUSED(const volatile T &)
 #endif
 
 #endif // !defined __OBJC__
-
-#endif // APPHDR_H

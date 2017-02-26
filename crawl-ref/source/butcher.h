@@ -3,8 +3,7 @@
  * @brief Functions for corpse butchering & bottling.
  **/
 
-#ifndef BUTCHER_H
-#define BUTCHER_H
+#pragma once
 
 #include "maybe-bool.h"
 
@@ -20,5 +19,3 @@ bool can_bottle_blood_from_corpse(monster_type mons_class);
 int num_blood_potions_from_corpse(monster_type mons_class);
 void turn_corpse_into_blood_potions(item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
-
-#endif

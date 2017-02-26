@@ -3,8 +3,7 @@
  * @brief Library definitions for dlua.
 **/
 
-#ifndef L_LIBS_H
-#define L_LIBS_H
+#pragma once
 
 #include "clua.h"
 
@@ -83,5 +82,3 @@ int dgn_map_add_transform(lua_State *ls,
 
 struct monster_info;
 void lua_push_moninf(lua_State *ls, monster_info *mi);
-
-#endif

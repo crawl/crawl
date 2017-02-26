@@ -3,9 +3,6 @@
  * @brief Functions used in Pandemonium.
 **/
 
-#ifndef LEVPAND_H
-#define LEVPAND_H
+#pragma once
 
 void init_pandemonium();
-
-#endif

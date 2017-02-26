@@ -3,8 +3,7 @@
  * @brief Monster tentacle-related code.
 **/
 
-#ifndef MONTENTACLE_H
-#define MONTENTACLE_H
+#pragma once
 
 bool mons_is_tentacle_head(monster_type mc);
 bool mons_is_child_tentacle(monster_type mc);
@@ -27,5 +26,3 @@ bool destroy_tentacle(monster* head);
 
 int mons_available_tentacles(monster* head);
 void mons_create_tentacles(monster* head);
-
-#endif

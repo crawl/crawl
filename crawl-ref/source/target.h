@@ -1,5 +1,4 @@
-#ifndef TARGET_H
-#define TARGET_H
+#pragma once
 
 #include "beam.h"
 #include "los-type.h"
@@ -284,4 +283,3 @@ public:
 private:
     explosion_map exp_map;
 };
-#endif

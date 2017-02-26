@@ -1,5 +1,4 @@
-#ifndef SPL_GODITEM_H
-#define SPL_GODITEM_H
+#pragma once
 
 #include "enchant-type.h"
 #include "holy-word-source-type.h"
@@ -85,5 +84,3 @@ void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = nullptr);
 
 spret_type cast_random_effects(int pow, bolt& beam, bool fail);
-
-#endif

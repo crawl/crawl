@@ -1,5 +1,4 @@
-#ifndef __CLUA_H__
-#define __CLUA_H__
+#pragma once
 
 extern "C" {
 #include <lua.h>
@@ -243,5 +242,3 @@ private:
 extern CLua clua;
 
 string quote_lua_string(const string &s);
-
-#endif

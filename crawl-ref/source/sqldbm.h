@@ -3,8 +3,7 @@
  * @brief dbm wrapper for SQLite
 **/
 
-#ifndef SQLDBM_H
-#define SQLDBM_H
+#pragma once
 
 #ifdef USE_SQLITE_DBM
 
@@ -102,7 +101,5 @@ int dbm_store(SQL_DBM *db, const sql_datum &key,
 
 typedef sql_datum datum;
 typedef SQL_DBM DBM;
-
-#endif
 
 #endif

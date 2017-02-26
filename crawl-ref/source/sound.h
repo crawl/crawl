@@ -3,12 +3,10 @@
  * @brief Functions used to manage sounds, but see libutil for actually playing them.
 **/
 
-#ifndef SOUNDS_H
-#define SOUNDS_H
-
-#include "options.h"
+#pragma once
 
 #ifdef USE_SOUND
+#include "options.h"
 
 /*************************************
  * CONFIGURABLE CONSTANTS START HERE *
@@ -83,4 +81,3 @@ void play_sound(const char *file, bool interrupt_game = false);
 
 
 #endif  // End ifdef USE_SOUND
-#endif  // End ifndef SOUNDS_H

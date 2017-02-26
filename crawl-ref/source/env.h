@@ -1,5 +1,4 @@
-#ifndef ENV_H
-#define ENV_H
+#pragma once
 
 #include <set>
 #include <memory> // unique_ptr
@@ -150,5 +149,3 @@ static const struct menv_range_proxy
     monster *begin() const { return &menv[0]; }
     monster *end()   const { return &menv[MAX_MONSTERS]; }
 } menv_real;
-
-#endif

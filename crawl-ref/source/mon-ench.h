@@ -1,5 +1,4 @@
-#ifndef MON_ENCH_H
-#define MON_ENCH_H
+#pragma once
 
 #include "enchant-type.h"
 
@@ -56,5 +55,3 @@ private:
 };
 
 enchant_type name_to_ench(const char *name);
-
-#endif

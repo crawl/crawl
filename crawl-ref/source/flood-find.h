@@ -3,8 +3,7 @@
  * @brief flood_find template
 **/
 
-#ifndef FLOOD_FIND_H
-#define FLOOD_FIND_H
+#pragma once
 
 #include "terrain.h"
 #include "travel.h"
@@ -169,5 +168,3 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
     return false;
 }
-
-#endif

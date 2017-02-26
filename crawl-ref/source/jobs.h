@@ -1,5 +1,4 @@
-#ifndef JOBS_H
-#define JOBS_H
+#pragma once
 
 #include "item-prop-enum.h"
 #include "job-type.h"
@@ -20,4 +19,3 @@ void give_job_skills(job_type job);
 void job_stat_init(job_type job);
 
 void debug_jobdata();
-#endif

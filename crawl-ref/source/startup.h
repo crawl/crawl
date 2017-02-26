@@ -3,9 +3,6 @@
  * @brief Collection of startup related functions and objects
 **/
 
-#ifndef STARTUP_H
-#define STARTUP_H
+#pragma once
 
 bool startup_step();
-
-#endif
