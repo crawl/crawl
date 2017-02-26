@@ -1571,6 +1571,7 @@ static bool _dont_attack_martial(const monster* mons)
 {
     return mons->wont_attack()
            || mons_is_firewood(*mons)
+           || mons_is_projectile(mons->type)
            || !you.can_see(*mons);
 }
 
