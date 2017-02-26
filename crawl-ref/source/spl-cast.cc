@@ -639,6 +639,13 @@ bool can_cast_spells(bool quiet)
         return false;
     }
 
+    if (grd(you.pos()) == DNGN_DEEP_WATER
+        && !you.can_swim())
+    {
+        mpr("You cannot cast spells while swimming in deep water!");
+        return false;
+    }
+
     return true;
 }
 

@@ -454,21 +454,33 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
             if (!you.can_swim() && !you.can_water_walk())
             {
+                ASSERT(new_grid == DNGN_SHALLOW_WATER
+                       || new_grid == DNGN_DEEP_WATER);
+                const bool shallow = new_grid == DNGN_SHALLOW_WATER;
+
                 if (stepped)
                 {
-                    you.time_taken *= 13 + random2(8);
-                    you.time_taken /= 10;
+                    const int penalty = shallow ? 3 : 5;
+                    you.time_taken = div_rand_round(you.time_taken * penalty, 2);
                 }
 
                 if (!feat_is_water(old_feat))
                 {
                     mprf("You %s the %s water.",
                          stepped ? "enter" : "fall into",
-                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                         shallow ? "shallow" : "deep");
                 }
 
-                if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
-                    mpr("You sink to the bottom.");
+                if (new_grid == DNGN_DEEP_WATER
+                    && old_feat != DNGN_DEEP_WATER)
+                {
+                    mpr("You start swimming.");
+                }
+                if (new_grid != DNGN_DEEP_WATER
+                    && old_feat == DNGN_DEEP_WATER)
+                {
+                    mprf("The water is shallow enough to stand again.");
+                }
 
                 if (!feat_is_water(old_feat))
                 {
@@ -554,11 +566,8 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
     {
         return false;
     }
-    else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA && !player_likes_lava(permanently))
-    {
+    else if (grid == DNGN_LAVA && !player_likes_lava(permanently))
         return true;
-    }
     else
         return false;
 }
@@ -5533,12 +5542,8 @@ bool player::can_water_walk() const
 
 int player::visible_igrd(const coord_def &where) const
 {
-    if (grd(where) == DNGN_LAVA
-        || (grd(where) == DNGN_DEEP_WATER
-            && !species_likes_water(species)))
-    {
+    if (grd(where) == DNGN_LAVA)
         return NON_ITEM;
-    }
 
     return igrd(where);
 }
