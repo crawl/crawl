@@ -238,6 +238,7 @@ KFEAT: B = altar_beogh
 KFEAT: O = altar_okawaru
 KFEAT: T = altar_trog
 KFEAT: U = altar_uskayaw
+KFEAT: o = altar_wu_jian
 KMONS: o = patrolling human ; potion of might ident:all
 KITEM: o = any armour
 KMONS: t = patrolling human ; potion of berserk rage ident:all
