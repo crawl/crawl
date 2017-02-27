@@ -1,5 +1,4 @@
-#ifndef SPL_CLOUDS_H
-#define SPL_CLOUDS_H
+#pragma once
 
 #include "spl-cast.h"
 
@@ -27,4 +26,3 @@ void holy_flames(monster* caster, actor* defender);
 
 spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                            bool fail = false);
-#endif

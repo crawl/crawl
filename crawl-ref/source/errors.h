@@ -1,5 +1,4 @@
-#ifndef ERRORS_H
-#define ERRORS_H
+#pragma once
 
 #include <stdexcept>
 
@@ -22,4 +21,3 @@ struct corrupted_save : public ext_fail_exception
 
 extern bool CrawlIsCrashing;
 
-#endif

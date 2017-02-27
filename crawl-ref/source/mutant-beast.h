@@ -3,8 +3,7 @@
  * @brief Mutant beast-related enums & values, plus small util functions.
  **/
 
-#ifndef MUTANT_BEAST_H
-#define MUTANT_BEAST_H
+#pragma once
 
 #include "god-type.h"
 
@@ -58,4 +57,3 @@ COMPILE_CHECK(ARRAYSZ(mutant_beast_tier_names) == NUM_BEAST_TIERS);
 
 bool god_hates_beast_facet(god_type god, beast_facet facet);
 
-#endif

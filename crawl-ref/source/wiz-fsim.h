@@ -3,8 +3,7 @@
  * @brief Fight simulation wizard functions.
 **/
 
-#ifndef WIZFSIM_H
-#define WIZFSIM_H
+#pragma once
 
 struct fight_data
 {
@@ -20,4 +19,3 @@ struct fight_data
 void wizard_quick_fsim();
 void wizard_fight_sim(bool double_scale);
 
-#endif

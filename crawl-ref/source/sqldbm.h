@@ -3,8 +3,7 @@
  * @brief dbm wrapper for SQLite
 **/
 
-#ifndef SQLDBM_H
-#define SQLDBM_H
+#pragma once
 
 #ifdef USE_SQLITE_DBM
 
@@ -105,4 +104,3 @@ typedef SQL_DBM DBM;
 
 #endif
 
-#endif

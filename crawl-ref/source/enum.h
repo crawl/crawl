@@ -3,8 +3,7 @@
  * @brief Global (ick) enums.
 **/
 
-#ifndef ENUM_H
-#define ENUM_H
+#pragma once
 
 #include <iterator>
 #include <type_traits> // underlying_type<>, enable_if<>
@@ -194,4 +193,3 @@ enum
     NUM_MAX_DOLLS = 10,
 };
 
-#endif

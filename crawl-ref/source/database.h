@@ -3,8 +3,7 @@
  * database.h
 **/
 
-#ifndef DATABASE_H
-#define DATABASE_H
+#pragma once
 
 #include <list>
 
@@ -50,4 +49,3 @@ string getHintString(const string &key);
 vector<string> getAllFAQKeys();
 string getFAQ_Question(const string &key);
 string getFAQ_Answer(const string &question);
-#endif

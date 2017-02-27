@@ -1,5 +1,4 @@
-#ifndef SPL_SUMMONING_H
-#define SPL_SUMMONING_H
+#pragma once
 
 #include "beam.h"
 #include "beh-type.h"
@@ -127,4 +126,3 @@ bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
 int count_summons(const actor *summoner, spell_type spell);
 
-#endif

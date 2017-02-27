@@ -3,8 +3,7 @@
  * @brief General dungeon events.
 **/
 
-#ifndef __DGNEVENT_H__
-#define __DGNEVENT_H__
+#pragma once
 
 #include <list>
 
@@ -134,5 +133,3 @@ private:
 };
 
 extern dgn_event_dispatcher dungeon_events;
-
-#endif

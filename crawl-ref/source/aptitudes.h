@@ -1,5 +1,4 @@
-#ifndef APTITUDES_H
-#define APTITUDES_H
+#pragma once
 
 #include "enum.h"
 
@@ -1523,4 +1522,3 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 };
 COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);
 
-#endif

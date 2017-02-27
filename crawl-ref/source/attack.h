@@ -1,5 +1,4 @@
-#ifndef ATTACK_H
-#define ATTACK_H
+#pragma once
 
 #include "artefact.h"
 #include "item-prop-enum.h"
@@ -203,4 +202,3 @@ protected:
     virtual void player_stab_check();
 };
 
-#endif

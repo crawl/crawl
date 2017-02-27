@@ -3,8 +3,7 @@
  * @brief Map generation statistics/testing.
 **/
 
-#ifndef DBGDGN_H
-#define DBGDGN_H
+#pragma once
 
 #ifdef DEBUG_STATISTICS
 
@@ -19,4 +18,3 @@ void mapstat_generate_stats();
 bool mapstat_build_levels();
 #endif
 
-#endif

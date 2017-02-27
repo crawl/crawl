@@ -4,8 +4,7 @@
  *            easier changes to the training modell.
 **/
 
-#ifndef EXERCISE_H
-#define EXERCISE_H
+#pragma once
 
 #include "ability-type.h"
 #include "item-prop-enum.h" // missile_type
@@ -30,4 +29,3 @@ void practise_sneaking(bool invis);
 void practise_waiting();
 
 
-#endif

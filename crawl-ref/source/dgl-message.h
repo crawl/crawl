@@ -1,5 +1,4 @@
-#ifndef DGL_MESSAGE_H
-#define DGL_MESSAGE_H
+#pragma once
 
 #ifdef DGL_SIMPLE_MESSAGING
 
@@ -8,4 +7,3 @@ void check_messages();
 
 #endif
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef FEATURE_H
-#define FEATURE_H
+#pragma once
 
 #include "dungeon-char-type.h"
 #include "dungeon-feature-type.h"
@@ -70,4 +69,3 @@ static inline bool is_notable_terrain(dungeon_feature_type ftype)
 
 dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat);
 
-#endif

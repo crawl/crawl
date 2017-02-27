@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_H
-#define TILEREG_H
+#pragma once
 
 class ImageManager;
 struct MouseEvent;
@@ -100,5 +99,4 @@ public:
     virtual void run() = 0;
 };
 
-#endif
 #endif

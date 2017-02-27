@@ -3,8 +3,7 @@
  * @brief System independent console IO functions
 **/
 
-#ifndef CIO_H
-#define CIO_H
+#pragma once
 
 #include <cctype>
 #include <string>
@@ -277,4 +276,3 @@ protected:
 
 typedef int keycode_type;
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef TILEBUF_H
-#define TILEBUF_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -118,4 +117,3 @@ public:
     void add_square(float sx, float sy, float ex, float ey, const VColour &c);
 };
 
-#endif

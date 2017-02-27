@@ -3,8 +3,7 @@
  * @brief Misc function related to player transformations.
 **/
 
-#ifndef TRANSFOR_H
-#define TRANSFOR_H
+#pragma once
 
 #include <set>
 
@@ -304,4 +303,3 @@ void merfolk_check_swimming(bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 
-#endif

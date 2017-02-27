@@ -3,8 +3,7 @@
  * @brief Functions used to print messages.
 **/
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#pragma once
 
 #include <iostream>
 #include <streambuf>
@@ -178,4 +177,3 @@ ostream& operator<<(ostream& os, const msg::capitalisation& cap);
 
 void set_msg_dump_file(FILE* file);
 
-#endif

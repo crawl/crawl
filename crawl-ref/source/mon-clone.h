@@ -1,5 +1,4 @@
-#ifndef MON_CLONE_H
-#define MON_CLONE_H
+#pragma once
 
 #define CLONE_MASTER_KEY "mcloneorig"
 #define CLONE_SLAVE_KEY "mclonedupe"
@@ -15,4 +14,3 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
 
 bool actor_is_illusion_cloneable(actor *target);
 
-#endif

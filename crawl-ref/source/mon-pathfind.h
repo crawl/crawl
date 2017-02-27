@@ -1,5 +1,4 @@
-#ifndef MON_PATHFIND_H
-#define MON_PATHFIND_H
+#pragma once
 
 class monster;
 
@@ -68,4 +67,3 @@ protected:
     FixedVector<vector<coord_def>, GXM * GYM> hash;
 };
 
-#endif

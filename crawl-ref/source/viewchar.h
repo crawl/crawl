@@ -1,5 +1,4 @@
-#ifndef VIEWCHAR_H
-#define VIEWCHAR_H
+#pragma once
 
 #include "char-set-type.h"
 #include "dungeon-char-type.h"
@@ -14,4 +13,3 @@ string stringize_glyph(char32_t glyph);
 
 dungeon_char_type dchar_by_name(const string &name);
 
-#endif

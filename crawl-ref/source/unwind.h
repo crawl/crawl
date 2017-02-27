@@ -1,5 +1,4 @@
-#ifndef UNWIND_H
-#define UNWIND_H
+#pragma once
 
 #include <functional>
 
@@ -95,4 +94,3 @@ private:
  */
 #define ON_UNWIND unwinder CONCAT_TOK(_gensym_uw_, __LINE__) = [&] () -> void
 
-#endif

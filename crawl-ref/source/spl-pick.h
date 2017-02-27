@@ -3,8 +3,7 @@
  * @brief Functions for picking from lists of spells.
 **/
 
-#ifndef SPL_PICK_H
-#define SPL_PICK_H
+#pragma once
 
 #include "random-pick.h"
 
@@ -27,4 +26,3 @@ protected:
     spell_pick_vetoer veto_func;
 };
 
-#endif

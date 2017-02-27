@@ -3,8 +3,7 @@
  * @brief Tracking permaallies granted by Yred and Beogh.
 **/
 
-#ifndef GOD_COMPANION_H
-#define GOD_COMPANION_H
+#pragma once
 
 #include <list>
 #include <map>
@@ -47,4 +46,3 @@ monster* hepliaklqana_ancestor_mon();
 void fixup_bad_companions();
 #endif
 
-#endif

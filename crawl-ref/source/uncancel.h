@@ -4,8 +4,7 @@
  *        saved (via SIGHUP/window close).
 **/
 
-#ifndef UNCANCEL_H
-#define UNCANCEL_H
+#pragma once
 
 #include "uncancellable-type.h"
 
@@ -18,4 +17,3 @@ static inline void run_uncancel(uncancellable_type kind, int arg = 0)
     run_uncancels();
 }
 
-#endif

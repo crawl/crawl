@@ -3,8 +3,7 @@
  * @brief Monster abilities.
 **/
 
-#ifndef MONABIL_H
-#define MONABIL_H
+#pragma once
 
 class monster;
 struct bolt;
@@ -24,4 +23,3 @@ void check_grasping_roots(actor* act, bool quiet = false);
 
 void guardian_golem_bond(monster* mons);
 
-#endif

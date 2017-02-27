@@ -3,8 +3,7 @@
  * @brief Functions used to print information about spells, spellbooks, etc.
  **/
 
-#ifndef DESCRIBE_SPELLS_H
-#define DESCRIBE_SPELLS_H
+#pragma once
 
 #include <map>
 
@@ -56,4 +55,3 @@ string describe_item_spells(const item_def &item);
 void list_spellset(const spellset &spells, const monster_info *mon_owner,
                    const item_def *source_item, formatted_string &initial_desc);
 
-#endif

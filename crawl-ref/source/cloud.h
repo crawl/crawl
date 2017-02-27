@@ -3,8 +3,7 @@
  * @brief Functions related to clouds.
 **/
 
-#ifndef CLOUD_H
-#define CLOUD_H
+#pragma once
 
 enum cloud_tile_variation
 {
@@ -62,4 +61,3 @@ const cloud_tile_info& cloud_type_tile_info(cloud_type type);
 void start_still_winds();
 void end_still_winds();
 
-#endif

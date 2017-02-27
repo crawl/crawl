@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_DGN_H
-#define TILEREG_DGN_H
+#pragma once
 
 #include <vector>
 
@@ -73,5 +72,4 @@ protected:
     vector<tile_overlay> m_overlays;
 };
 
-#endif
 #endif

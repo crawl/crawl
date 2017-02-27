@@ -1,5 +1,4 @@
-#ifndef SHOWSYMB_H
-#define SHOWSYMB_H
+#pragma once
 
 #include "show.h"
 
@@ -16,4 +15,3 @@ show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monste
 cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters = false, int colour_mode = 0);
 cglyph_t get_cell_glyph(const map_cell& cell, const coord_def& loc, bool only_stationary_monsters = false, int colour_mode = 0);
 
-#endif

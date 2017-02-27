@@ -3,8 +3,7 @@
  * @brief Functions used to save and load levels/games.
 **/
 
-#ifndef FILES_H
-#define FILES_H
+#pragma once
 
 #include <cstdio>
 #include <set>
@@ -132,4 +131,3 @@ private:
 };
 
 FILE *fopen_replace(const char *name);
-#endif

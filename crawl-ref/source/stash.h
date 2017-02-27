@@ -3,8 +3,7 @@
  * @brief Classes tracking player stashes
 **/
 
-#ifndef STASH_H
-#define STASH_H
+#pragma once
 
 #include <map>
 #include <string>
@@ -340,4 +339,3 @@ string stash_annotate_item(const char *s, const item_def *item,
 #define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"
 
-#endif

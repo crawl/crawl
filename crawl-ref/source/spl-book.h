@@ -3,8 +3,7 @@
  * @brief Spellbook contents array and management functions
 **/
 
-#ifndef SPL_BOOK_H
-#define SPL_BOOK_H
+#pragma once
 
 #define RANDBOOK_SIZE 8
 #include "item-prop-enum.h"
@@ -46,4 +45,3 @@ bool has_spells_to_memorise(bool silent = true);
 vector<spell_type> get_mem_spell_list();
 
 void destroy_spellbook(const item_def &book);
-#endif

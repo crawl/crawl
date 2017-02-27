@@ -23,8 +23,7 @@
 
 // Downloaded from the CCAN at http://ccodearchive.net/info/json.html
 
-#ifndef CCAN_JSON_H
-#define CCAN_JSON_H
+#pragma once
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -120,4 +119,3 @@ void json_remove_from_parent(JsonNode *node);
  */
 bool json_check(const JsonNode *node, char errmsg[256]);
 
-#endif

@@ -3,8 +3,7 @@
  * @brief What's near the player?
 **/
 
-#ifndef NEARBY_DANGER_H
-#define NEARBY_DANGER_H
+#pragma once
 
 #include "coord.h"
 #include "random.h" // shuffle_array
@@ -232,4 +231,3 @@ void search_astar(const coord_def & start,
     search_astar(start, valid_target, connect, visited, candidates);
 }
 
-#endif // NEARBY_DANGER_H

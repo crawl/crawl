@@ -1,5 +1,4 @@
-#ifndef HASH_H
-#define HASH_H
+#pragma once
 
 static inline uint64_t hash3(uint64_t x, uint64_t y, uint64_t z)
 {
@@ -19,4 +18,3 @@ static inline uint64_t hash3(uint64_t x, uint64_t y, uint64_t z)
 uint32_t hash32(const void *data, int len) PURE;
 unsigned int hash_rand(int x, uint32_t seed, uint32_t id = 0);
 
-#endif

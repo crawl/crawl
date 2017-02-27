@@ -3,8 +3,7 @@
  * @brief Ray definition
 **/
 
-#ifndef RAY_H
-#define RAY_H
+#pragma once
 
 #include "fixedarray.h"
 #include "geom2d.h"
@@ -30,4 +29,3 @@ struct ray_def
     bool _valid() const;
 };
 
-#endif

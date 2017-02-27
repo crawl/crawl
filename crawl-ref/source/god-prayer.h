@@ -3,8 +3,7 @@
  * @brief Prayer and sacrifice.
 **/
 
-#ifndef GODPRAYER_H
-#define GODPRAYER_H
+#pragma once
 
 #include "god-type.h"
 #include "religion-enum.h"
@@ -16,4 +15,3 @@ void jiyva_slurp_item_stack(const item_def& item, int quant = 0);
 int zin_tithe(const item_def& item, int quant, bool quiet,
               bool converting = false);
 
-#endif

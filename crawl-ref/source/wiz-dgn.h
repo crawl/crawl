@@ -3,8 +3,7 @@
  * @brief Dungeon related wizard functions.
 **/
 
-#ifndef WIZDGN_H
-#define WIZDGN_H
+#pragma once
 
 #include <string>
 
@@ -27,4 +26,3 @@ void wizard_primary_vault();
 void debug_test_explore();
 void wizard_abyss_speed();
 
-#endif

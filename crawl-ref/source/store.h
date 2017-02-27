@@ -4,8 +4,7 @@
  *             multiple types of data.
 **/
 
-#ifndef STORE_H
-#define STORE_H
+#pragma once
 
 #include <climits>
 #include <map>
@@ -392,4 +391,3 @@ inline const CrawlStoreValue &CrawlStoreValue::operator [](const vec_size &index
     return get_vector().get_value(index);
 }
 
-#endif

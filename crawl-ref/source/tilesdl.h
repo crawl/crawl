@@ -4,8 +4,7 @@
 **/
 
 #ifdef USE_TILE
-#ifndef TILESDL_H
-#define TILESDL_H
+#pragma once
 
 #include "cursor-type.h"
 #include "text-tag-type.h"
@@ -290,5 +289,4 @@ protected:
 // Main interface for tiles functions
 extern TilesFramework tiles;
 
-#endif
 #endif

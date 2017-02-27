@@ -3,8 +3,7 @@
  * @brief Functions used to create vaults.
 **/
 
-#ifndef MAPS_H
-#define MAPS_H
+#pragma once
 
 #include <vector>
 
@@ -95,4 +94,3 @@ private:
 void mapstat_report_random_maps(FILE *outf, const level_id &place);
 #endif
 
-#endif

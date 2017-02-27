@@ -3,8 +3,7 @@
  * @brief Functions for gods blessing followers.
 **/
 
-#ifndef BLESS_H
-#define BLESS_H
+#pragma once
 
 #include "player.h"
 
@@ -14,4 +13,3 @@ bool bless_follower(monster* follower = nullptr,
                     god_type god = you.religion,
                     bool force = false);
 
-#endif

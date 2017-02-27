@@ -3,8 +3,7 @@
  * @brief Functions for picking random entries from weighted, gradiated lists
 **/
 
-#ifndef RANDOMPICK_H
-#define RANDOMPICK_H
+#pragma once
 
 #include "random.h"
 
@@ -116,4 +115,3 @@ int random_picker<T, max>::rarity_at(const random_pick_entry<T> *pop, int depth)
     die("bad distrib");
 }
 
-#endif

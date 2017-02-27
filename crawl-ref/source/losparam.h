@@ -3,8 +3,7 @@
  * @brief Parameters for the LOS algorithm
 **/
 
-#ifndef LOSPARAM_H
-#define LOSPARAM_H
+#pragma once
 
 // Note: find_ray relies on the fact that 2*OPC_HALF == OPC_OPAQUE.
 // On the other hand, losight tracks this explicitly.
@@ -167,4 +166,3 @@ public:
     virtual opacity_type opacity(const coord_def& p) const = 0;
 };
 
-#endif

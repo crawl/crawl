@@ -3,8 +3,7 @@
  * @brief Functions used when building new levels.
 **/
 
-#ifndef DUNGEON_H
-#define DUNGEON_H
+#pragma once
 
 #include <algorithm>
 #include <set>
@@ -288,4 +287,3 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
 bool door_vetoed(const coord_def pos);
 
 void fixup_misplaced_items();
-#endif

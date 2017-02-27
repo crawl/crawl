@@ -1,5 +1,4 @@
-#ifndef DGN_SHOALS_H
-#define DGN_SHOALS_H
+#pragma once
 
 void dgn_build_shoals_level();
 void dgn_shoals_generate_flora();
@@ -14,4 +13,3 @@ void shoals_release_tide(monster* caller);
 void wizard_mod_tide();
 #endif
 
-#endif

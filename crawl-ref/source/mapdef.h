@@ -10,8 +10,7 @@
  * level or a minivault that occupies just a portion of the level.
  */
 
-#ifndef __MAPDEF_H__
-#define __MAPDEF_H__
+#pragma once
 
 #include <cstdio>
 #include <memory>
@@ -1326,4 +1325,3 @@ const char *map_section_name(int msect);
 int store_tilename_get_index(const string& tilename);
 
 int str_to_ego(object_class_type item_type, string ego_str);
-#endif

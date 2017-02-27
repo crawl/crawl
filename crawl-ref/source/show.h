@@ -1,5 +1,4 @@
-#ifndef SHOW_H
-#define SHOW_H
+#pragma once
 
 #include "enum.h"
 #include "dungeon-feature-type.h"
@@ -91,4 +90,3 @@ void update_item_at(const coord_def &gp, bool detected = false, bool wizard = fa
 void show_update_at(const coord_def &gp, layers_type layers = LAYERS_ALL);
 void show_update_emphasis();
 
-#endif

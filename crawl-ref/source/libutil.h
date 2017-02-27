@@ -3,8 +3,7 @@
  * @brief System independent functions
 **/
 
-#ifndef LIBUTIL_H
-#define LIBUTIL_H
+#pragma once
 
 #include <cctype>
 #include <map>
@@ -299,4 +298,3 @@ private:
 
 void init_signals();
 void release_cli_signals();
-#endif

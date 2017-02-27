@@ -1,7 +1,6 @@
 // Private header for shout.h.
 
-#ifndef NOISE_H
-#define NOISE_H
+#pragma once
 
 // [ds] The old noise system was pretty simple: noise level (loudness) ==
 // distance covered. Since the new system considers terrain when propagating
@@ -141,4 +140,3 @@ private:
     int affected_actor_count;
 };
 
-#endif

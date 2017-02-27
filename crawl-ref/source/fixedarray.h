@@ -3,8 +3,7 @@
  * @brief Fixed size 2D vector class that asserts if you do something bad.
 **/
 
-#ifndef FIXARY_H
-#define FIXARY_H
+#pragma once
 
 #include <algorithm>
 
@@ -134,4 +133,3 @@ protected:
     FixedArray<TYPE, 2*RADIUS+1, 2*RADIUS+1> data;
 };
 
-#endif    // FIXARY_H

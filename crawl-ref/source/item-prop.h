@@ -3,8 +3,7 @@
  * @brief Misc functions.
 **/
 
-#ifndef ITEMPROP_H
-#define ITEMPROP_H
+#pragma once
 
 #include <set>
 
@@ -253,4 +252,3 @@ void remove_whitespace(string &str);
 
 void auto_id_inventory();
 
-#endif

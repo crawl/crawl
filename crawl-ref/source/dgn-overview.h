@@ -3,8 +3,7 @@
  * @brief "Overview" functionality
 **/
 
-#ifndef OVERMAP_H
-#define OVERMAP_H
+#pragma once
 
 #include <vector>
 
@@ -47,4 +46,3 @@ class reader;
 void marshallUniqueAnnotations(writer& outf);
 void unmarshallUniqueAnnotations(reader& inf);
 bool connected_branch_can_exist(branch_type br);
-#endif

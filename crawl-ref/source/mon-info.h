@@ -1,5 +1,4 @@
-#ifndef MON_INFO_H
-#define MON_INFO_H
+#pragma once
 
 #include <functional>
 
@@ -386,4 +385,3 @@ void clear_monster_list_colours();
 void get_monster_info(vector<monster_info>& mons);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
-#endif

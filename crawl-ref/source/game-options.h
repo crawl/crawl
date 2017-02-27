@@ -3,8 +3,7 @@
  *  @brief Global game options controlled by the rcfile.
  */
 
-#ifndef GAME_OPTIONS_H
-#define GAME_OPTIONS_H
+#pragma once
 
 #include <functional>
 #include <string>
@@ -203,4 +202,3 @@ private:
 
 bool read_bool(const std::string &field, bool def_value);
 
-#endif // GAME_OPTION_H

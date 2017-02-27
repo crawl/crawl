@@ -3,8 +3,7 @@
  * @brief Stuff needed for hints mode
 **/
 
-#ifndef HINTS_H
-#define HINTS_H
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -207,4 +206,3 @@ struct hints_state
 extern hints_state Hints;
 
 void tutorial_msg(const char *text, bool end = false);
-#endif

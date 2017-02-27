@@ -1,5 +1,4 @@
-#ifndef SPL_MONENCH_H
-#define SPL_MONENCH_H
+#pragma once
 
 #include "spl-cast.h"
 
@@ -10,4 +9,3 @@ bool backlight_monster(monster* mons);
 //returns true if it slowed the monster
 bool do_slow_monster(monster& mon, const actor *agent, int dur = 0);
 
-#endif

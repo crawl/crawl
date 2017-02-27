@@ -3,8 +3,7 @@
  * @brief Divine retribution.
 **/
 
-#ifndef GODWRATH_H
-#define GODWRATH_H
+#pragma once
 
 #include "god-type.h"
 
@@ -14,4 +13,3 @@ void reduce_xp_penance(god_type god, int amount);
 void gozag_incite(monster *mon);
 
 bool drain_wands();
-#endif
