@@ -3734,7 +3734,7 @@ static bool _short_target_range(const monster *mons)
  * Are we a long distance from our target?
  *
  * @param  mons The monster checking distance from its target.
- * @return true if we have a target and are outside LOS_DEFAULT_RANGE / 2 of 
+ * @return true if we have a target and are outside LOS_DEFAULT_RANGE / 2 of
  *          that target, or false otherwise.
  */
 static bool _long_target_range(const monster *mons)
