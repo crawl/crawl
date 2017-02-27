@@ -9,7 +9,7 @@
 #ifdef USE_SOUND
 
 #if defined(WINMM_PLAY_SOUNDS)
-#    include <mmsystem.h>
+#    include <windows.h>
 #    ifndef SND_ASYNC
 #        define SND_ASYNC 0x0001
 #    endif
