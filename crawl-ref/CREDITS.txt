@@ -269,6 +269,7 @@
     Evan Williams
     Jeremey Wilson
     Yelve Yakut
+    Edward Z. Yang
     Rob Young
     Zannick
     Zooko
