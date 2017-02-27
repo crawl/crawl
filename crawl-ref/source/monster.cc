@@ -5001,12 +5001,6 @@ bool monster::is_shapeshifter() const
     return has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER);
 }
 
-void monster::forget_random_spell()
-{
-    if (!spells.empty())
-        spells.erase(spells.begin() + random2(spells.size()));
-}
-
 void monster::scale_hp(int num, int den)
 {
     // Without the +1, we lose maxhp on every berserk (the only use) if the

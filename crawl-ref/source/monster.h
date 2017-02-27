@@ -200,8 +200,6 @@ public:
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
     void maybe_degrade_bone_armour();
 
-    void forget_random_spell();
-
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments();
