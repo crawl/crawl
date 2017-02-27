@@ -198,6 +198,7 @@ KFEAT:    s = altar_sif_muna
 KFEAT:    t = altar_trog
 KFEAT:    u = altar_uskayaw
 KFEAT:    v = altar_vehumet
+KFEAT:    w = altar_wu_jian
 KFEAT:    X = altar_xom
 KFEAT:    y = altar_yredelemnul
 KFEAT:    z = altar_zin
@@ -208,7 +209,7 @@ KFEAT:    1 = altar_the_shining_one
 :           })
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
-~bcdefghjklmnoqrstuvXyz1.
+~bcdefghjklmnoqrstuvwXyz1
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
