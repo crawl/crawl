@@ -64,7 +64,6 @@ values that could not change without breaking compatibility.
 3. Maintaining save compatibility
 ---------------------------------
 
-[note added by galehar]
 First, if you're adding a property to one of the actor, player or monster
 class, consider storing it in the props hash (declared in actor.h). Especially
 if the property is temporary or not applied to all monsters. Also, it won't
@@ -145,8 +144,6 @@ should be incremented on all incompatible changes.
 When TAG_MAJOR_VERSION is incremented, all existing TAG_MINOR_ checks
 are no longer necessary and can be removed, along with deleting the
 values of TAG_MINOR_ and restarting minor numbering from 1.
-
-Thank you for listening, I hope this was useful.
 
 
 4. A few comments on tiles
