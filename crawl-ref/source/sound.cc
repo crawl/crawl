@@ -6,16 +6,24 @@
 #include "options.h"
 #include "unicode.h"
 
-#if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
-    #ifdef __ANDROID__
-        #include <SDL_mixer.h>
-    #else
-        #include <SDL2/SDL_mixer.h>
-    #endif
+#ifdef USE_SOUND
+
+#if defined(WINMM_PLAY_SOUNDS)
+#    include <mmsystem.h>
+#    ifndef SND_ASYNC
+#        define SND_ASYNC 0x0001
+#    endif
+#    ifndef SND_NODEFAULT
+#        define SND_NODEFAULT 0x0002
+#    endif
+#elif defined(USE_SDL)
+#    ifdef __ANDROID__
+#        include <SDL_mixer.h>
+#    else
+#        include <SDL2/SDL_mixer.h>
+#    endif
     Mix_Chunk* sdl_sound_to_play = nullptr;
 #endif
-
-#ifdef USE_SOUND
 
 // Plays a sound based on the given message; it must match a regex pattern
 // in an option file for a sound to be played.
