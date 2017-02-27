@@ -1,12 +1,3 @@
-Date: Mon, 9 Nov 2009 14:17:28 -0800
-From: Stefan O'Rear <stefanor@cox.net>
-To: crawl-ref-discuss@lists.sourceforge.net
-Message-ID: <20091109221728.GA7668@localhost.localdomain>
-Subject: [Crawl-ref-discuss] Savefile compatibility: how and why
-
-Robert asked me to write something for the list on the subject of
-savefile compatibility, so here goes.
-
 1. Why
 ------
 
@@ -25,8 +16,6 @@ crawl.develz.org), since it can only be updated site-wide; it cannot
 be updated between games as there are almost always saved games on
 the server, so it is simply updated (with loss of saves) rarely. And
 rarely is bad.
-
-Stefan
 
 
 2. Save compatibility architecture
@@ -70,8 +59,6 @@ The minor tag is reset to zero whenever the major tag changes. A major bump
 provides an opportunity to clean up the old save-compatibility code, since the
 old saves won’t be loadable anyway; and to remove or rearrange enumeration
 values that could not change without breaking compatibility.
-
-neil
 
 
 3. Maintaining save compatibility
@@ -161,8 +148,6 @@ values of TAG_MINOR_ and restarting minor numbering from 1.
 
 Thank you for listening, I hope this was useful.
 
-Stefan
-
 
 4. A few comments on tiles
 --------------------------
@@ -182,8 +167,6 @@ said tiles replace the same amount of existing ones.
 If we expect that we might have to add new tiles in a stable branch later
 on, we should add placeholder tiles before the official release, that can
 later be replaced without affecting saved games.
-
-Johanna
 
 
 5. A few comments on map caches and Lua markers
@@ -209,8 +192,6 @@ never get to a stage of being able to look for it.
 
 All Lua markers will need to be checked for minor-version checks when updating
 the major version.
-
-due
 
 
 6. Scheduling compatibility code for removal
@@ -293,8 +274,6 @@ required:
     if (major == 34 && (minor >= 121 && minor < 130))
         you.explore = unmarshallBoolean(th);
 
-neil
-
 
 7. Git merges
 -------------
@@ -317,5 +296,3 @@ trunk. You can look at the overall changes, with intervening history squashed,
 using a command like:
 
     ~$ git diff master..HEAD enum.h
-
-neil
