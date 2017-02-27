@@ -11,11 +11,10 @@ If it is impossible to upgrade in the middle of a game, then all bugs
 for late-game features will be reported against old versions, need-
 lessly complicating the bug fixing process.
 
-The situation is exacerbated by the public beta server (Marc Thoben's
-crawl.develz.org), since it can only be updated site-wide; it cannot
-be updated between games as there are almost always saved games on
-the server, so it is simply updated (with loss of saves) rarely. And
-rarely is bad.
+The situation is exacerbated by public servers that support trunk
+games, since compatibility-breaking changes prevent players from
+upgrading to receive future bugfixes, and result in bug reports
+against obsolete versions.
 
 
 2. Save compatibility architecture
@@ -25,7 +24,7 @@ For save compatibility purposes, the actual version number (for example, 0.12.2
 or 0.13-a0-2578-ged92a99) makes almost no difference. Instead, there are three
 version numbers (which we call “tags” for historic reasons) associated with
 each save and with each version of crawl: the character format, major version,
-and minor version. In current trunk these are 0, 34, and 44.
+and minor version.
 
 The character format tag is stored in the “character info” section of the save:
 the basic information such as species and level that is displayed in the save
