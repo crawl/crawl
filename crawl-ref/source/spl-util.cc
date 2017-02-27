@@ -791,8 +791,6 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype)
         return "Necr";
     case SPTYP_SUMMONING:
         return "Summ";
-    case SPTYP_DIVINATION:
-        return "Divn";
     case SPTYP_TRANSLOCATION:
         return "Tloc";
     case SPTYP_POISON:
@@ -828,8 +826,6 @@ const char* spelltype_long_name(spschool_flag_type which_spelltype)
         return "Necromancy";
     case SPTYP_SUMMONING:
         return "Summoning";
-    case SPTYP_DIVINATION:
-        return "Divination";
     case SPTYP_TRANSLOCATION:
         return "Translocation";
     case SPTYP_POISON:
@@ -863,7 +859,6 @@ skill_type spell_type2skill(spschool_flag_type spelltype)
     case SPTYP_AIR:            return SK_AIR_MAGIC;
 
     default:
-    case SPTYP_DIVINATION:
         dprf("spell_type2skill: called with spelltype %u", spelltype);
         return SK_NONE;
     }
@@ -1514,7 +1509,6 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_TRANSMUTATION_MAGIC,
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
-    NUM_MUTATIONS, // SPTYP_DIVINATION
     MUT_NO_TRANSLOCATION_MAGIC,
     MUT_NO_POISON_MAGIC,
     MUT_NO_EARTH_MAGIC,
@@ -1542,7 +1536,7 @@ bool cannot_use_schools(spschools_type schools)
 
         // check if the player has this school locked out
         const mutation_type lockout_mut = arcana_sacrifice_map[i];
-        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+        if (player_mutation_level(lockout_mut))
             return true;
     }
 
