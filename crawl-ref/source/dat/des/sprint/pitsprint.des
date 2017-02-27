@@ -694,9 +694,9 @@ MAP
 vvvvvvvvvvvv
 vTTTTTTTTTTv
 vTTTTTTTTTTv
-vTTTTTvvvv~v
-vvvvvvvUUv@v
-vabcd+UUU+.v
+vTTTTTTTTTTv
+vvvvvvvvvv~v
+vabcd+UUU+@v
 vvvvvvvvvv.v
 v.........G@
 v+vvvvv&vvvv
@@ -721,19 +721,18 @@ ENDMAP
 
 NAME:  equipment_1
 TAGS:  equipment_1
-KITEM: a = dagger plus:2 ident:all not_cursed
-KITEM: b = hand axe plus:2 ident:all not_cursed
-KITEM: c = mace plus:2 ident:all not_cursed
-KITEM: d = trident plus:2 ident:all not_cursed
-KITEM: e = quarterstaff plus:2 ident:all not_cursed
-KITEM: e = falchion plus:2 ident:all not_cursed
-SHUFFLE: abcde
+KITEM: a = dagger plus:2 ident:all not_cursed, /\
+           falchion plus:2 ident:all not_cursed
+KITEM: b = hand axe plus:2 ident:all not_cursed, /\
+           mace plus:2 ident:all not_cursed
+KITEM: c = trident plus:2 ident:all not_cursed, /\
+           quarterstaff plus:2 ident:all not_cursed
+SHUFFLE: abc
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
- da
-ecb
+abc
 ENDMAP
 
 NAME:  equipment_2
@@ -1003,13 +1002,10 @@ KFEAT:   ' = altar_the_shining_one
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-abcdefghjk
-lmnoqrstuv
-wxyz'
+abcdefghj.
+klmnoqrst.
+uvwxyz'...
 ENDMAP
-# NB: If you want to add an altar, you'll need to resize this
-# vault in storerooms_1. Best thing to do is rob some space from
-# equipment_1, stacking items on top of each other.
 
 ################################################################################
 # Safe places
