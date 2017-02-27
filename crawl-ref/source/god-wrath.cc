@@ -933,21 +933,17 @@ static bool _sif_muna_retribution()
     {
     case 0:
     case 1:
+    case 2:
         lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
         break;
 
-    case 2:
     case 3:
     case 4:
+    case 5:
         confuse_player(5 + random2(3));
         break;
 
-    case 5:
     case 6:
-        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_DIVINATION, 9, 90,
-                      _god_wrath_name(god));
-        break;
-
     case 7:
     case 8:
         if (you.magic_points > 0

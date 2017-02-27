@@ -33,6 +33,7 @@
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"
+#include "player-stats.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
@@ -404,10 +405,40 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 
 ////////////////////////////////////////////////////
 
-static void _wucad_miscast(actor* victim, int power,int fail)
+static void _wucad_backfire()
 {
-    MiscastEffect(victim, nullptr, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
-                  "the staff of Wucad Mu", NH_NEVER);
+    switch (random2(7))
+    {
+    case 0:
+    case 1:
+        switch (random2(4))
+        {
+        case 0:
+            mpr("Weird images run through your mind.");
+            break;
+        case 1:
+            mpr("Your head hurts.");
+            break;
+        case 2:
+            mpr("You feel a strange surge of energy.");
+            break;
+        case 3:
+            mpr("You feel uncomfortable.");
+            break;
+        }
+        break;
+    case 2:
+    case 3:
+        confuse_player(2 + random2(4));
+        break;
+    case 4:
+    case 5:
+        drain_mp(5 + random2(20));
+        break;
+    case 6:
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+        break;
+    }
 }
 
 static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
@@ -433,7 +464,7 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 
     if (one_chance_in(4))
     {
-        _wucad_miscast(&you, random2(9), random2(70));
+        _wucad_backfire();
         did_god_conduct(DID_CHANNEL, 10, true);
         return false;
     }
