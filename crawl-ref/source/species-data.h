@@ -728,12 +728,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, },
-    { "You are immune to all types of fire, even holy and hellish.",
-      "You are vulnerable to cold.",
-      "You need no food.",
-      "You have no legs." },
-    { "fire immunity", "cold vulnerability" },
+    {},
+    {},
+    {},
     {}, // not a starting race
     {}, // not a starting race
 } },

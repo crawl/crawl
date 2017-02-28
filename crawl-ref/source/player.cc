@@ -82,10 +82,6 @@
 #include "wizard-option-type.h"
 #include "xom.h"
 
-#if TAG_MAJOR_VERSION == 34
-const int DJ_MP_RATE = 2;
-#endif
-
 static int _bone_armour_bonus();
 
 static void _moveto_maybe_repel_stairs()
@@ -797,9 +793,6 @@ bool player_has_feet(bool temp)
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI
-#endif
         || you.fishtail && temp)
     {
         return false;
@@ -1158,15 +1151,6 @@ int player_regen()
         else if (you.hunger_state >= HS_FULL)
             rr += 20; // Bonus regeneration for full vampires.
     }
-#if TAG_MAJOR_VERSION == 34
-
-    // Compared to other races, a starting djinni would have regen of 4 (hp)
-    // plus 17 (mp). So let's compensate them early; they can stand getting
-    // shafted on the total regen rates later on.
-    if (you.species == SP_DJINNI)
-        if (you.hp_max < 100)
-            rr += (100 - you.hp_max) / 6;
-#endif
 
     if (you.duration[DUR_COLLAPSE])
         rr /= 4;
@@ -1341,11 +1325,6 @@ int player_likes_chunks(bool permanently)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_fire(bool calc_unid, bool temp, bool items)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return 4; // full immunity
-
-#endif
     int rf = 0;
 
     if (items)
@@ -1493,11 +1472,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc++;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    // species:
-    if (you.species == SP_DJINNI)
-        rc--;
-#endif
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
     rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
@@ -2758,17 +2732,9 @@ static void _gain_and_note_hp_mp()
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        // Djinn don't HP/MP
-        sprintf(buf, "EP: %d/%d",
-                min(you.hp, note_maxhp + note_maxmp),
-                note_maxhp + note_maxmp);
-    else
-#endif
-        sprintf(buf, "HP: %d/%d MP: %d/%d",
-                min(you.hp, note_maxhp), note_maxhp,
-                min(you.magic_points, note_maxmp), note_maxmp);
+    sprintf(buf, "HP: %d/%d MP: %d/%d",
+            min(you.hp, note_maxhp), note_maxhp,
+            min(you.magic_points, note_maxmp), note_maxmp);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 }
 
@@ -3662,10 +3628,6 @@ void calc_hp()
 {
     int oldhp = you.hp, oldmax = you.hp_max;
     you.hp_max = get_real_hp(true, false);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        you.hp_max += get_real_mp(true);
-#endif
     deflate_hp(you.hp_max, false);
     if (oldhp != you.hp || oldmax != you.hp_max)
         dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
@@ -3698,14 +3660,6 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
 
 void calc_mp()
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        you.magic_points = you.max_magic_points = 0;
-        return calc_hp();
-    }
-#endif
-
     you.max_magic_points = get_real_mp(true);
     you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
@@ -3731,33 +3685,11 @@ void dec_mp(int mp_loss, bool silent)
     if (mp_loss < 1)
         return;
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return dec_hp(mp_loss * DJ_MP_RATE, false);
-#endif
-
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
     if (!silent)
         flush_mp();
-}
-
-void drain_mp(int loss)
-{
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-
-        if (loss <= 0)
-            return;
-
-        you.duration[DUR_ANTIMAGIC] = min(you.duration[DUR_ANTIMAGIC] + loss * 3,
-                                           1000); // so it goes away after one '5'
-    }
-    else
-#endif
-    return dec_mp(loss);
 }
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
@@ -3796,11 +3728,6 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
 
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
-#endif
-
     ASSERT(!crawl_state.game_is_arena());
 
     if (you.magic_points < minimum)
@@ -3836,11 +3763,6 @@ static bool _should_stop_resting(int cur, int max)
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return inc_hp(mp_gain * DJ_MP_RATE);
-#endif
 
     if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
         return;
@@ -5431,9 +5353,6 @@ bool player::airborne() const
         return false;
 
     if (duration[DUR_FLIGHT]
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI
-#endif
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
@@ -6280,13 +6199,6 @@ int player::res_water_drowning() const
         rw++;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    // A fiery lich/hot statue suffers from quenching but not drowning, so
-    // neutral resistance sounds ok.
-    if (species == SP_DJINNI)
-        rw--;
-#endif
-
     return rw;
 }
 
@@ -6535,19 +6447,12 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT]
-#if TAG_MAJOR_VERSION == 34
-        || species == SP_DJINNI
-#endif
-        ;
+    return attribute[ATTR_PERM_FLIGHT];
 }
 
 bool player::racial_permanent_flight() const
 {
     return player_mutation_level(MUT_TENGU_FLIGHT) >= 2
-#if TAG_MAJOR_VERSION == 34
-        || species == SP_DJINNI
-#endif
         || player_mutation_level(MUT_BIG_WINGS);
 }
 
@@ -7200,11 +7105,7 @@ bool player::can_bleed(bool allow_tran) const
     if (allow_tran && !form_can_bleed(form))
         return false;
 
-    if (is_lifeless_undead()
-#if TAG_MAJOR_VERSION == 34
-        || species == SP_DJINNI
-#endif
-        || is_nonliving())
+    if (is_lifeless_undead() || is_nonliving())
     {   // demonspawn and demigods have a mere drop of taint
         return false;
     }

@@ -350,22 +350,6 @@ int raw_spell_fail(spell_type spell)
     ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
     chance += difficulty_by_level[spell_level];
 
-#if TAG_MAJOR_VERSION == 34
-    // Only apply this penalty to Dj because other species lose nutrition
-    // rather than gaining contamination when casting spells.
-    // Also, this penalty gives fairly precise information about contam
-    // level, and only Dj already has such information (on the contam bar).
-    // Other species would have to check their failure rates all the time
-    // when at yellow glow.
-    if (you.species == SP_DJINNI)
-    {
-        int64_t contam = you.magic_contamination;
-        // Just +25 on the edge of yellow glow, +200 in the middle of yellow,
-        // forget casting when in orange.
-        chance += contam * contam * contam / 5000000000LL;
-    }
-#endif
-
     int chance2 = chance;
 
     const int chance_breaks[][2] =
@@ -847,18 +831,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         count_action(CACT_CAST, spell);
     }
 
-#if TAG_MAJOR_VERSION == 34
-    // Nasty special cases.
-    if (you.species == SP_DJINNI && cast_result == SPRET_SUCCESS
-        && (spell == SPELL_BORGNJORS_REVIVIFICATION
-         || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
-    {
-        // These spells have replenished essence to full.
-        inc_mp(cost, true);
-    }
-    else // Redraw MP
-#endif
-        flush_mp();
+    flush_mp();
 
     if (!staff_energy && you.undead_state() != US_UNDEAD)
     {

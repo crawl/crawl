@@ -606,10 +606,6 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-            return PotionHealWounds::instance().can_quaff(reason);
-#endif
         if (you.magic_points == you.max_magic_points)
         {
             if (reason)
@@ -621,14 +617,6 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
-#if TAG_MAJOR_VERSION == 34
-        // Allow repairing rot, disallow going through Death's Door.
-        if (you.species == SP_DJINNI
-            && PotionHealWounds::instance().can_quaff())
-        {
-            return PotionHealWounds::instance().effect(pow);
-        }
-#endif
         inc_mp(POT_MAGIC_MP);
         mpr("Magic courses through your body.");
         return true;

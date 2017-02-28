@@ -2307,10 +2307,6 @@ item_def* monster_die(monster* mons, killer_type killer,
                     }
                 }
 
-#if TAG_MAJOR_VERSION == 34
-                if (you.species == SP_DJINNI)
-                    hp_heal = max(hp_heal, mp_heal * 2), mp_heal = 0;
-#endif
                 if (hp_heal && you.hp < you.hp_max
                     && !you.duration[DUR_DEATHS_DOOR])
                 {

@@ -193,69 +193,6 @@ body {
      width: 45%;
 }
 
-#stats[data-species="Djinni"] #stats_hp_bar_full {
-    background-color: #ba2cde;
-}
-#stats[data-species="Djinni"] #stats_hp_bar_decrease {
-    background-color: #2d0bba;
-}
-#stats[data-species="Djinni"] #stats_hp_bar_increase {
-    background-color: #6c19e4;
-}
-
-/* Djinni contam bar */
-#stats_contamline {
-    display:none;
-    visibility:hidden;
-}
-
-#stats[data-species="Djinni"] #stats_contamline {
-    display:block;
-    visibility:visible;
-}
-/* Hide MP bar */
-#stats[data-species="Djinni"] #stats_mpline {
-    display:none;
-    visibility:hidden;
-}
-
-#stats_contam_bar {
-    background-color: #555753; /* darkgray */
-}
-
-#stats_contam_bar_full {
-    background-color: #343434;
-}
-
-#stats_contam_bar_decrease,
-#stats_contam_bar_increase {
-    background-color: #232323;
-}
-
-#stats_contamline[data-contam="2"] #stats_contam_bar_full {
-    background-color: yellow;
-}
-
-#stats_contamline[data-contam="2"] #stats_contam_bar_decrease,
-#stats_contamline[data-contam="2"] #stats_contam_bar_increase {
-    background-color: saddlebrown;
-}
-
-#stats_contamline[data-contam="3"] #stats_contam_bar_full {
-    background-color: red;
-}
-
-#stats_contamline[data-contam="3"] #stats_contam_bar_decrease,
-#stats_contamline[data-contam="3"] #stats_contam_bar_increase {
-    background-color: darkred;
-}
-
-#stats_contamline[data-contam="4"] #stats_contam_bar_full,
-#stats_contamline[data-contam="4"] #stats_contam_bar_decrease,
-#stats_contamline[data-contam="4"] #stats_contam_bar_increase {
-    background-color: darkred;
-}
-
 #message_pane {
     width: 100%;
 }
