@@ -40,6 +40,7 @@
 #include "end.h"
 #include "errors.h"
 #include "fineff.h"
+#include "food.h" //for HUNGER_MAXIMUM
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-conduct.h" // for fedhas_rot_all_corpses
@@ -2092,16 +2093,17 @@ bool get_save_version(reader &file, int &major, int &minor)
 
 static bool _convert_obsolete_species()
 {
+    // At this point the character has been loaded but not resaved, but the grid, lua, stashes, etc have not been.
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
-        if (!yes_or_no("This <red>lava orc</red> save game cannot be loaded as-is. If you "
-                   "load it now, your character will be converted to a <bold>hill orc</bold>. Continue?"))
+        if (!yes_or_no("This <red>Lava Orc</red> save game cannot be loaded as-is. If you "
+                       "load it now, your character will be converted to a Hill Orc. Continue?"))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
             you.save = 0;
-            end(0, false, "Please load the save in an earlier version if you want to keep it as a lava orc.\n");
+            end(0, false, "Please load the save in an earlier version if you want to keep it as a Lava Orc.\n");
         }
         wizard_change_species_to(SP_HILL_ORC);
         // No need for conservation
@@ -2112,6 +2114,24 @@ static bool _convert_obsolete_species()
         // addition, even if the player isn't over lava, they might still get
         // trapped.
         fly_player(100);
+        return true;
+    }
+    if (you.species == SP_DJINNI)
+    {
+        if (!yes_or_no("This <red>Djinni</red> save game cannot be loaded as-is. If you "
+                       "load it now, your character will be converted to a Vinestalker. Continue?"))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            end(0, false, "Please load the save in an earlier version if you want to keep it as a Djinni.\n");
+        }
+        wizard_change_species_to(SP_VINE_STALKER);
+        you.magic_contamination = 0;
+        // Djinni were flying, so give the player some time to land
+        fly_player(100);
+        // Give them some time to find food.  Creating food isn't safe as the grid doesn't exist yet, and may have water anyways.
+        you.hunger = HUNGER_MAXIMUM;
         return true;
     }
 #endif
