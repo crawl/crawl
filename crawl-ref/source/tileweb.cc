@@ -741,34 +741,11 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.hp, you.hp, "hp");
     _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
     int max_max_hp = get_real_hp(true, true);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        max_max_hp += get_real_mp(true); // compare _print_stats_hp
 
-    _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
-
-    if (you.species != SP_DJINNI)
-    {
-        _update_int(force_full, c.mp, you.magic_points, "mp");
-        _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
-    }
-
-    if (you.species == SP_DJINNI)
-    {
-        // Don't send more information than can be seen from the console HUD.
-        // Compare _print_stats_contam and get_contamination_level
-        int contam = you.magic_contamination;
-        if (contam >= 26000)
-            contam = 26000;
-        else if (contam >= 16000)
-            contam = 16000;
-        _update_int(force_full, c.contam, contam, "contam");
-    }
-#else
     _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
     _update_int(force_full, c.mp, you.magic_points, "mp");
     _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
-#endif
+
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
 

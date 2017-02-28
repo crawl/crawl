@@ -3689,4 +3689,3 @@ static void _mons_in_cloud(monster& mons)
 
     actor_apply_cloud(&mons);
 }
-

@@ -580,9 +580,7 @@ public:
     {
         // This only handles lava orcs going statue -> stoneskin.
         if (you.species == SP_GARGOYLE)
-        {
             return "You revert to a slightly less stony form.";
-        }
         return "You revert to your normal fleshy form.";
     }
 
@@ -1441,10 +1439,6 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (which_trans == transformation::ice_beast && you.species == SP_DJINNI)
-        return false; // melting is fatal...
-#endif
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
