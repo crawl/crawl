@@ -1,3 +1,15 @@
+Stone Soup 0.19.5 (20170228)
+--------------------------------------------
+
+Bugfix Release
+--------------
+
+* Fix save compatibility when loading games from version 0.18.
+* Macros now work in map mode in Tiles.
+* Autopickup is now smarter about whether items are permanently or temporarily
+  useless.
+* 22 other bug-fixes and cleanups.
+
 Stone Soup 0.19.4 (20170130)
 --------------------------------------------
 
