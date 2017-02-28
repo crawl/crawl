@@ -461,6 +461,16 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_REAP:
+        if (you.attribute[ATTR_REAPING] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text = "Reap";
+            inf->short_text = "reap";
+            inf->long_text = "You relentlessly reap the living.";
+        }
+        break;
+
     case DUR_SONG_OF_SLAYING:
         inf->light_text
             = make_stringf("Slay (%u)",

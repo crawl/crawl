@@ -93,5 +93,6 @@ enum attribute_type
     ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
     ATTR_SERPENTS_LASH,        // Remaining turns in which you can move instantly.
     ATTR_HEAVEN_ON_EARTH,      // Measures the strength of the Heaven on Earth effect.
+    ATTR_REAPING,              // Skeleton reaping.
     NUM_ATTRIBUTES
 };

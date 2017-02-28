@@ -9,15 +9,16 @@
 
 #include "areas.h"
 #include "art-enum.h"
+#include "spl-other.h"
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
 #include "state.h"
 
 // Add a monster to the list of beholders.
-void player::add_beholder(const monster& mon, bool axe)
+void player::add_beholder(const monster& mon, bool axe, bool reap)
 {
-    if (is_sanctuary(pos()) && !axe)
+    if (is_sanctuary(pos()) && !axe && !reap)
     {
         if (mons_is_siren_beholder(mon))
         {
@@ -44,7 +45,7 @@ void player::add_beholder(const monster& mon, bool axe)
     {
         set_duration(DUR_MESMERISED, random_range(7, 15), 15);
         beholders.push_back(mon.mid);
-        if (!axe)
+        if (!axe && !reap)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
                              mon.name(DESC_THE).c_str());
@@ -106,16 +107,22 @@ void player::remove_beholder(const monster& mon)
         {
             beholders.erase(beholders.begin() + i);
             _removed_beholder();
+            renew_reap();
             return;
         }
 }
 
 // Clear the list of beholders. Doesn't message.
-void player::clear_beholders()
-{
-    beholders.clear();
-    duration[DUR_MESMERISED] = 0;
-    you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
+void player::clear_beholders(bool ignore_reap, bool silent)
+{ 
+    if (ignore_reap || !renew_reap()) {
+       if (!silent)
+           mprf(MSGCH_DURATION, "You break out of your daze.");
+
+       beholders.clear();
+       duration[DUR_MESMERISED] = 0;
+       you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
+    }
 }
 
 static void _removed_beholder_msg(const monster *mons)
@@ -199,7 +206,9 @@ void player::update_beholders()
             // printing any subsequent messages, or a --more-- can
             // crash (#6547).
             _removed_beholder(true);
-            _removed_beholder_msg(mon);
+            if (!renew_reap()) {
+               _removed_beholder_msg(mon);
+            }
         }
     }
     if (removed)
@@ -217,9 +226,12 @@ void player::update_beholder(const monster* mon)
             beholders.erase(beholders.begin() + i);
             // Do this dance to clear the duration before printing messages
             // (#8844), but still print all messages in the right order.
+
             _removed_beholder(true);
-            _removed_beholder_msg(mon);
-            _removed_beholder();
+            if (!renew_reap()) {
+               _removed_beholder_msg(mon);
+               _removed_beholder();
+            }
             return;
         }
 }
@@ -232,7 +244,7 @@ void player::_removed_beholder(bool quiet)
     {
         duration[DUR_MESMERISED] = 0;
         you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
-        if (!quiet)
+        if (!quiet && !you.attribute[ATTR_REAPING])
         {
             mprf(MSGCH_DURATION,
                  coinflip() ? "You break out of your daze!"
@@ -260,5 +272,8 @@ bool player::possible_beholder(const monster* mon) const
             && !mon->berserk_or_insane()
             && !mons_is_fleeing(*mon)
             && !is_sanctuary(pos())
+          || (you.species == SP_SKELETON
+              && mon->holiness() != MH_NONLIVING 
+              && mon->holiness() != MH_UNDEAD)
           || player_equip_unrand(UNRAND_DEMON_AXE));
 }

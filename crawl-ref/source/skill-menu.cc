@@ -579,6 +579,9 @@ string SkillMenuSwitch::get_help()
             if (you.duration[DUR_HEROISM])
                 causes.push_back("Heroism");
 
+            if (you.attribute[ATTR_REAPING])
+                causes.push_back("Reaping");
+
             if (!you.skill_boost.empty()
                 && have_passive(passive_t::bondage_skill_boost))
             {

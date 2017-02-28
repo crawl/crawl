@@ -1519,5 +1519,44 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BARACHIAN,           SK_POISON_MAGIC,    1),
     APT(SP_BARACHIAN,           SK_INVOCATIONS,    -1),
     APT(SP_BARACHIAN,           SK_EVOCATIONS,      1),
+
+    // SP_SKELETON
+    APT(SP_SKELETON,           SK_FIGHTING,       -2),
+    APT(SP_SKELETON,           SK_SHORT_BLADES,    1),
+    APT(SP_SKELETON,           SK_LONG_BLADES,     1),
+    APT(SP_SKELETON,           SK_AXES,            1),
+    APT(SP_SKELETON,           SK_MACES_FLAILS,    1),
+    APT(SP_SKELETON,           SK_POLEARMS,        1),
+    APT(SP_SKELETON,           SK_STAVES,          1),
+    APT(SP_SKELETON,           SK_SLINGS,          1),
+    APT(SP_SKELETON,           SK_BOWS,            1),
+    APT(SP_SKELETON,           SK_CROSSBOWS,       1),
+    APT(SP_SKELETON,           SK_THROWING,       -2),
+    APT(SP_SKELETON,           SK_ARMOUR,          2),
+    APT(SP_SKELETON,           SK_DODGING,         0),
+    APT(SP_SKELETON,           SK_STEALTH,        -2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_SKELETON,           SK_STABBING,      UNUSABLE_SKILL),
+#endif
+    APT(SP_SKELETON,           SK_SHIELDS,         2),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_SKELETON,           SK_TRAPS,         UNUSABLE_SKILL),
+#endif
+    APT(SP_SKELETON,           SK_UNARMED_COMBAT, -1),
+    APT(SP_SKELETON,           SK_SPELLCASTING,    0),
+    APT(SP_SKELETON,           SK_CONJURATIONS,    1),
+    APT(SP_SKELETON,           SK_HEXES,          -3),
+    APT(SP_SKELETON,           SK_CHARMS,         -3),
+    APT(SP_SKELETON,           SK_SUMMONINGS,     -3),
+    APT(SP_SKELETON,           SK_NECROMANCY,     -3),
+    APT(SP_SKELETON,           SK_TRANSLOCATIONS, -3),
+    APT(SP_SKELETON,           SK_TRANSMUTATIONS, -3),
+    APT(SP_SKELETON,           SK_FIRE_MAGIC,     -1),
+    APT(SP_SKELETON,           SK_ICE_MAGIC,      -1),
+    APT(SP_SKELETON,           SK_AIR_MAGIC,      -1),
+    APT(SP_SKELETON,           SK_EARTH_MAGIC,    -1),
+    APT(SP_SKELETON,           SK_POISON_MAGIC,   -1),
+    APT(SP_SKELETON,           SK_INVOCATIONS,    -2),
+    APT(SP_SKELETON,           SK_EVOCATIONS,     -2),
 };
 COMPILE_CHECK(ARRAYSZ(species_skill_aptitudes) == NUM_SPECIES * NUM_SKILLS);

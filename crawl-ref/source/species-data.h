@@ -366,6 +366,28 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
+{ SP_SKELETON, {
+    "Sk",
+    "Skeleton", "Skeletal", "Skeleton",
+    SPF_NONE,
+    -1, -1, 0, 6,
+    MONS_SKELETON,
+    HT_LAND, US_UNDEAD, SIZE_MEDIUM,
+    10, 7, 7, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, 
+      { MUT_TORMENT_RESISTANCE, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 },
+      { MUT_FRAIL, 2, 1 } },
+    { "You do not eat or drink.",
+      "You can enter a trance state until all enemies are dead."},
+    { "no food or potions", "skeletal body", },
+    { JOB_FIGHTER, JOB_GLADIATOR,  JOB_CONJURER, JOB_FIRE_ELEMENTALIST, JOB_HUNTER,
+      JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES,
+      SK_BOWS, SK_CROSSBOWS},
+} },
+
 { SP_GHOUL, {
     "Gh",
     "Ghoul", "Ghoulish", nullptr,
