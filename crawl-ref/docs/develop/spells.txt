@@ -146,17 +146,6 @@ All summoned monsters are Abjurable; all transmuted monsters are not.
 Note that Summoning is not limited to the summoning of monsters; it can be used
 to summon surrounding terrain as well, as with Summon Forest.
 
-Divination
-==========
-
-Divination is the act of learning something through magical means. In these
-instances this information would be the location of a monster, or information
-about that monster, that is not otherwise attainable through natural means, or
-that is specifically obtained through an act of divination.
-
-There are no player-learnable Divination spells. The skill itself no longer
-exists, though the spell-type flag does for purposes of miscast effects.
-
 Translocation
 =============
 
