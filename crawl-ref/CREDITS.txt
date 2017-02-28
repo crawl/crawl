@@ -71,7 +71,6 @@
     Mike Adams
     Aj Adamson
     Nikhil Addleman
-    advil
     Brandon Allbery
     Warwick Allison
     Austin Appleby
@@ -275,6 +274,7 @@
     Zooko
 
 The Dungeon Crawl Stone Soup development team is:
+    advil
     Peter Berger
     Adam Borowski
     Samuel Bronson
