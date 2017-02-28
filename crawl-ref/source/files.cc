@@ -2119,7 +2119,7 @@ static bool _convert_obsolete_species()
     if (you.species == SP_DJINNI)
     {
         if (!yes_or_no("This <red>Djinni</red> save game cannot be loaded as-is. If you "
-                       "load it now, your character will be converted to a Vinestalker. Continue?"))
+                       "load it now, your character will be converted to a Vine Stalker. Continue?"))
         {
             you.save->abort(); // don't even rewrite the header
             delete you.save;
