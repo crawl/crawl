@@ -125,31 +125,6 @@ body {
     display: none;
 }
 
-/* Temperature bar, hidden normally */
-#stats_heatline {
-    display:none;
-    visibility:hidden;
-}
-
-/* Visible for Lava Orcs */
-#stats[data-species="Lava Orc"] #stats_heatline {
-    display:block;
-    visibility:visible;
-}
-
-#stats_heat_bar {
-    background-color: #555753; /* darkgray */
-}
-#stats_heat_bar_full {
-    background-color: #a40000; /* red */
-}
-#stats_heat_bar_decrease {
-    background-color: #729fcf; /* lightblue */
-}
-#stats_heat_bar_increase {
-    background-color: #ee4f45; /* lightred */
-}
-
 /* default color when showing "Silenced" */
 #stats_noise_status {
     color: #FF00FF; /* magenta */

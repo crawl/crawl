@@ -3467,11 +3467,6 @@ bool is_useless_item(const item_def &item, bool temp)
                 || (is_shield(item) && player_mutation_level(MUT_MISSING_HAND));
 
     case OBJ_SCROLLS:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-            return true;
-#endif
-
         if (temp && silenced(you.pos()))
             return true; // can't use scrolls while silenced
 
