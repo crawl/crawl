@@ -1046,32 +1046,9 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
     if (defender->antimagic_susceptible()
         && !mondied)
     {
-        spschools_type school = SPTYP_NONE;
-        if (defender->is_player())
-        {
-            for (int i = 0; i < you.spell_no; i++)
-                school |= get_spell_disciplines(you.spells[i]);
-        }
-        else
-        {
-            const monster* mons = defender->as_monster();
-            for (const mon_spell_slot &slot : mons->spells)
-                school |= get_spell_disciplines(slot.spell);
-        }
-        if (school != SPTYP_NONE)
-        {
-            vector<spschool_flag_type> schools;
-            for (const auto bit : spschools_type::range())
-                if (testbits(school, bit))
-                    schools.push_back(bit);
-
-            ASSERT(schools.size() > 0);
-            MiscastEffect(defender, attacker, MELEE_MISCAST,
-                          schools[random2(schools.size())],
-                          random2(9),
-                          random2(70), "the demon whip \"Spellbinder\"",
-                          NH_NEVER);
-        }
+        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_RANDOM,
+                      random2(9), random2(70),
+                      "the demon whip \"Spellbinder\"", NH_NEVER);
     }
 }
 
