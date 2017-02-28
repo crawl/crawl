@@ -381,7 +381,7 @@ static const map<species_type, species_def> species_data =
       { MUT_FRAIL, 2, 1 } },
     { "You do not eat or drink.",
       "You can enter a trance state until all enemies are dead."},
-    { "no food or potions", "skeletal body", },
+    { "no food or potions" },
     { JOB_FIGHTER, JOB_GLADIATOR,  JOB_CONJURER, JOB_FIRE_ELEMENTALIST, JOB_HUNTER,
       JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES,

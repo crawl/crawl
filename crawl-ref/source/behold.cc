@@ -112,7 +112,7 @@ void player::remove_beholder(const monster& mon)
         }
 }
 
-// Clear the list of beholders. Doesn't message.
+// Clear the list of beholders. 
 void player::clear_beholders(bool ignore_reap, bool silent)
 { 
     if (ignore_reap || !renew_reap()) {
