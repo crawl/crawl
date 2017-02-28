@@ -1634,12 +1634,12 @@ Barachians
   Barachians are an amphibious humanoid race, spawned at the dawn of time as
   servants for the gods. Inevitably, they rebelled and fled into the mortal
   world; but even uncounted years later, the darkness still flees at their
-  approach, remembering those who they once served.
+  approach, remembering those who they once served. They can be seen or attacked
+  from a great distance, but can easily return fire on distant targets.
 
   Barachians' most remarkable trait is their grossly overmuscled legs, which
-  allow them to leap great distances. They can be seen and attacked from a great
-  distance, but can do the same in return. When not leaping, they are somewhat
-  slow-moving, but they can master almost any skill.
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving. They're adaptable amphibians who can master almost any skill.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
