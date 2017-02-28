@@ -132,8 +132,6 @@ private:
     void _charms(int severity);
     void _translocation(int severity);
     void _summoning(int severity);
-    void _divination_you(int severity);
-    void _divination_mon(int severity);
     void _necromancy(int severity);
     void _transmutation(int severity);
     void _fire(int severity);
