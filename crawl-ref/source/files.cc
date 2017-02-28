@@ -79,6 +79,7 @@
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
+#include "wiz-you.h"
 #include "xom.h"
 
 #ifdef __ANDROID__
@@ -96,6 +97,8 @@ static bool _ghost_version_compatible(reader &ghost_reader);
 static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
+
+static bool _convert_obsolete_species();
 
 const short GHOST_SIGNATURE = short(0xDC55);
 
@@ -1911,6 +1914,8 @@ static bool _restore_game(const string& filename)
 
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
+    _convert_obsolete_species();
+
     const int minorVersion = crawl_state.minor_version;
 
     if (you.save->has_chunk(CHUNK("st", "stashes")))
@@ -2083,6 +2088,34 @@ bool get_save_version(reader &file, int &major, int &minor)
     minor = buf[1];
 
     return true;
+}
+
+static bool _convert_obsolete_species()
+{
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (!yes_or_no("This <red>lava orc</red> save game cannot be loaded as-is. If you "
+                   "load it now, your character will be converted to a <bold>hill orc</bold>. Continue?"))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            end(0, false, "Please load the save in an earlier version if you want to keep it as a lava orc.\n");
+        }
+        wizard_change_species_to(SP_HILL_ORC);
+        // No need for conservation
+        you.innate_mutation[MUT_CONSERVE_SCROLLS] = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
+        you.temperature = you.temperature_last = 1;
+        // This is not an elegant way to deal with lava, but at this point the
+        // level isn't loaded so we can't check the grid features. In
+        // addition, even if the player isn't over lava, they might still get
+        // trapped.
+        fly_player(100);
+        return true;
+    }
+#endif
+    return false;
 }
 
 static bool _read_char_chunk(package *save)
