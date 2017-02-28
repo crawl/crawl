@@ -508,14 +508,6 @@ static int _spell_enhancement(spell_type spell)
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
-        && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
-    {
-        enhanced++;
-    }
-#endif
-
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
         enhanced = 3;

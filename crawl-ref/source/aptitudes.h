@@ -1332,6 +1332,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_OCTOPODE,        SK_EVOCATIONS,      1),
 
 #if TAG_MAJOR_VERSION == 34
+    // Need to keep this as long as the species are still around
     // SP_DJINNI
     APT(SP_DJINNI,          SK_FIGHTING,       -1),
     APT(SP_DJINNI,          SK_SHORT_BLADES,   -2),
