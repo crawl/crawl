@@ -4,7 +4,7 @@ This document gives new team members some general guidance for DCSS development 
 
 ## Setup
 
-Other team members will help you get the items in the [*new dev checklist*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/git/config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
+Other team members will help you get the items in the [*new dev checklist*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/team/new_dev_checklist.txt) covered. Once you’ve been given commit access, configuring git properly so that you can make your first commit is a priority. See the [*git configuration doc*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/git/config.txt), especially the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
@@ -20,7 +20,7 @@ We value having reasonably correct, well-thought out code that doesn't break oth
 
 ## Documentation and Formatting
 
-The [*coding conventions*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/coding_conventions.txt) document describes how Crawl’s C++ source code should be formatted. For documenting C++ code, we use [*Doxygen*](http://www.stack.nl/~dimitri/doxygen/index.html) comments and the JavaDoc style, and example of which you can see [*here*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/source/ability.cc#l3497). It’s preferred that you document all new functions and data structures in this way, but not required.
+The [*coding conventions*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/coding_conventions.txt) document describes how Crawl’s C++ source code should be formatted. For documenting C++ code, we use [*Doxygen*](http://www.stack.nl/~dimitri/doxygen/index.html) comments and the JavaDoc style, and example of which you can see [*here*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/source/ability.cc#l3553). It’s preferred that you document all new functions and data structures in this way, but not required.
 
 Significant changes that affect the gameplay should be documented in the [*changelog*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/docs/changelog.txt;hb=HEAD). We try to be brief in these entries, giving players a simple description of the change without technical detail. It’s good to read previous entries or ask a team member if you’re not sure about including an item or how to word it.
 
