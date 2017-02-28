@@ -1109,25 +1109,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         if (spell == SPELL_LEDAS_LIQUEFACTION)
             return "you can't cast this while perpetually flying.";
     }
-
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (spell == SPELL_OZOCUBUS_ARMOUR)
-            return "your stony body would shatter the ice.";
-
-        if (temp && !temperature_effect(LORC_STONESKIN))
-        {
-            switch (spell)
-            {
-                case SPELL_STATUE_FORM:
-                case SPELL_ICE_FORM:
-                    return "you're too hot.";
-                default:
-                    break;
-            }
-        }
-
-    }
 #endif
 
     switch (spell)

@@ -365,10 +365,6 @@ public:
     virtual bool haloed() const;
     // Within an umbra?
     virtual bool umbraed() const;
-#if TAG_MAJOR_VERSION == 34
-    // Being heated by a heat aura?
-    virtual bool heated() const;
-#endif
     // Halo radius.
     virtual int halo_radius() const = 0;
     // Silence radius.
@@ -376,9 +372,6 @@ public:
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
-#if TAG_MAJOR_VERSION == 34
-    virtual int heat_radius() const = 0;
-#endif
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
