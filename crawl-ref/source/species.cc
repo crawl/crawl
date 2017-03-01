@@ -6,9 +6,11 @@
 #include "item-prop.h"
 #include "mon-enum.h"
 #include "mutation.h"
+#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
+#include "skills.h"
 #include "stringutil.h"
 
 #include "species-data.h"
@@ -369,4 +371,115 @@ void species_stat_gain(species_type species)
     const species_def& sd = _species_def(species);
     if (you.experience_level % sd.how_often == 0)
         modify_stat(*random_iterator(sd.level_stats), 1, false);
+}
+
+static void _swap_equip(equipment_type a, equipment_type b)
+{
+    swap(you.equip[a], you.equip[b]);
+    bool tmp = you.melded[a];
+    you.melded.set(a, you.melded[b]);
+    you.melded.set(b, tmp);
+}
+
+/**
+ * Change the player's species to something else.
+ *
+ * This is used primarily in wizmode, but is also used for extreme
+ * cases of save compatibility (see `files.cc:_convert_obsolete_species`).
+ * This does *not* check for obsoleteness -- as long as it's in
+ * species_data it'll do something.
+ *
+ * @param sp the new species.
+ */
+void change_species_to(species_type sp)
+{
+    ASSERT(sp != SP_UNKNOWN);
+
+    // Re-scale skill-points.
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
+        you.skill_points[sk] *= species_apt_factor(sk, sp)
+                                / species_apt_factor(sk);
+    }
+
+    species_type old_sp = you.species;
+    you.species = sp;
+    you.chr_species_name = species_name(sp);
+
+    // Change permanent mutations, but preserve non-permanent ones.
+    uint8_t prev_muts[NUM_MUTATIONS];
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (you.innate_mutation[i] > 0)
+        {
+            if (you.innate_mutation[i] > you.mutation[i])
+                you.mutation[i] = 0;
+            else
+                you.mutation[i] -= you.innate_mutation[i];
+
+            you.innate_mutation[i] = 0;
+        }
+        prev_muts[i] = you.mutation[i];
+    }
+    give_basic_mutations(sp);
+    for (int i = 2; i <= you.experience_level; ++i)
+        give_level_mutations(sp, i);
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (prev_muts[i] > you.innate_mutation[i])
+            you.innate_mutation[i] = 0;
+        else
+            you.innate_mutation[i] -= prev_muts[i];
+    }
+
+    if (sp == SP_DEMONSPAWN)
+    {
+        roll_demonspawn_mutations();
+        for (int i = 0; i < int(you.demonic_traits.size()); ++i)
+        {
+            mutation_type m = you.demonic_traits[i].mutation;
+
+            if (you.demonic_traits[i].level_gained > you.experience_level)
+                continue;
+
+            ++you.mutation[m];
+            ++you.innate_mutation[m];
+        }
+    }
+
+    update_vision_range(); // for Ba, and for DS with Nightstalker
+
+    if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
+    {
+        _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
+        _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
+        // All species allow exactly one amulet.
+    }
+
+    // FIXME: this checks only for valid slots, not for suitability of the
+    // item in question. This is enough to make assertions happy, though.
+    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
+        if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
+            && you.equip[i] != -1)
+        {
+            mprf("%s fall%s away.",
+                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
+                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
+            // Unwear items without the usual processing.
+            you.equip[i] = -1;
+            you.melded.set(i, false);
+        }
+
+    // Sanitize skills.
+    fixup_skills();
+
+    calc_hp();
+    calc_mp();
+
+    // The player symbol depends on species.
+    update_player_symbol();
+#ifdef USE_TILE
+    init_player_doll();
+#endif
+    redraw_screen();
 }

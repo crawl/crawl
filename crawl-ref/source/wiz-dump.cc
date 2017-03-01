@@ -474,8 +474,20 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
                 race = tokens[k-3].substr(1) + " " + tokens[k-2];
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
-            wizard_change_species_to(find_species_from_string(race));
-            wizard_change_job_to(find_job_from_string(role));
+            const species_type sp = find_species_from_string(race);
+            if (sp == SP_UNKNOWN)
+            {
+                mprf("Unknown species: %s", race.c_str());
+                return false;
+            }
+            const job_type job = find_job_from_string(role);
+            if (job == JOB_UNKNOWN)
+            {
+                mprf("Unknown job: %s", role.c_str());
+                return false;
+            }
+            change_species_to(sp);
+            wizard_change_job_to(job);
             return true;
         }
     }
