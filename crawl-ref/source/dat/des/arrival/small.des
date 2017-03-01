@@ -2436,7 +2436,7 @@ ENDMAP
 # This is considered harmless and not ASCII art. Don't hand
 # in other vaults where monsters spell other words, though :)
 NAME:    onia_arrival_zoo_common
-TAGS:    arrival
+TAGS:    arrival no_trap_gen
 ORIENT:  float
 : if crawl.one_chance_in(10) then
 SHUFFLE: 16
