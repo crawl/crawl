@@ -5097,12 +5097,6 @@ player::player()
     lives = 0;
     deaths = 0;
 
-#if TAG_MAJOR_VERSION == 34
-    // need to keep this field around for save compat, might as well initialize it
-    temperature = 1; // 1 is min; 15 is max.
-    temperature_last = 1;
-#endif
-
     xray_vision = false;
 
     init_skills();
