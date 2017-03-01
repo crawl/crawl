@@ -502,7 +502,8 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     if (dam_calc)
         pbolt.damage = (*dam_calc)(power);
 
-    pbolt.origin_spell = zap_to_spell(z_type);
+    if (pbolt.origin_spell == SPELL_NO_SPELL)
+        pbolt.origin_spell = zap_to_spell(z_type);
 
     if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN
         && !is_monster)
