@@ -63,6 +63,7 @@
 #include "output.h"
 #include "place.h"
 #include "prompt.h"
+#include "species.h"
 #include "spl-summoning.h"
 #include "stash.h"  // for fedhas_rot_all_corpses
 #include "state.h"
@@ -80,7 +81,6 @@
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
-#include "wiz-you.h"
 #include "xom.h"
 
 #ifdef __ANDROID__
@@ -2105,7 +2105,7 @@ static bool _convert_obsolete_species()
             you.save = 0;
             end(0, false, "Please load the save in an earlier version if you want to keep it as a Lava Orc.\n");
         }
-        wizard_change_species_to(SP_HILL_ORC);
+        change_species_to(SP_HILL_ORC);
         // No need for conservation
         you.innate_mutation[MUT_CONSERVE_SCROLLS] = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
         // This is not an elegant way to deal with lava, but at this point the
@@ -2125,7 +2125,7 @@ static bool _convert_obsolete_species()
             you.save = 0;
             end(0, false, "Please load the save in an earlier version if you want to keep it as a Djinni.\n");
         }
-        wizard_change_species_to(SP_VINE_STALKER);
+        change_species_to(SP_VINE_STALKER);
         you.magic_contamination = 0;
         // Djinni were flying, so give the player some time to land
         fly_player(100);
