@@ -199,11 +199,6 @@ public:
     bool pending_revival;
     int lives;
     int deaths;
-#if TAG_MAJOR_VERSION == 34
-    // Need to keep these fields for save compat reasons.
-    float temperature; // For lava orcs.
-    float temperature_last;
-#endif
 
     FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
     FixedVector<training_status, NUM_SKILLS> train; ///< see enum def

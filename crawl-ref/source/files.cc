@@ -2108,7 +2108,6 @@ static bool _convert_obsolete_species()
         wizard_change_species_to(SP_HILL_ORC);
         // No need for conservation
         you.innate_mutation[MUT_CONSERVE_SCROLLS] = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
-        you.temperature = you.temperature_last = 1;
         // This is not an elegant way to deal with lava, but at this point the
         // level isn't loaded so we can't check the grid features. In
         // addition, even if the player isn't over lava, they might still get
@@ -2130,7 +2129,7 @@ static bool _convert_obsolete_species()
         you.magic_contamination = 0;
         // Djinni were flying, so give the player some time to land
         fly_player(100);
-        // Give them some time to find food.  Creating food isn't safe as the grid doesn't exist yet, and may have water anyways.
+        // Give them some time to find food. Creating food isn't safe as the grid doesn't exist yet, and may have water anyways.
         you.hunger = HUNGER_MAXIMUM;
         return true;
     }

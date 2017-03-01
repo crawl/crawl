@@ -906,9 +906,7 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     }
 
     // Qazlalites get immunity to clouds.
-    if (player && have_passive(passive_t::cloud_immunity))
-        return true;
-    return false;
+    return player && have_passive(passive_t::cloud_immunity);
 }
 
 // Returns a numeric resistance value for the actor's resistance to
