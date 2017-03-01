@@ -134,7 +134,7 @@ NAME:    temple_doors_cd
 WEIGHT:  2
 SHUFFLE: Y'"C& / ZD~~~
 NSUBST:  XY = 1:+ / * = m+
-SUBST:   Z = m, cD : cxxx
+SUBST:   Z = m, cCD : cxxx
 SUBST:   ? : ?:40 T:30 U, ? = T:30 U
 CLEAR:   ~
 : temple_entry(_G)
