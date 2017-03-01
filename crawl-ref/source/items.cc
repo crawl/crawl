@@ -944,7 +944,7 @@ static bool _id_floor_item(item_def &item)
 {
     if (item.base_type == OBJ_BOOKS)
     {
-        if (fully_identified(item) && item.sub_type != BOOK_MANUAL)
+        if (fully_identified(item))
             return false;
 
         // fix autopickup for previously-unknown books (hack)
