@@ -2686,9 +2686,6 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_POISONOUS_CLOUD)
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
 
-    if (origin_spell == SPELL_POISONOUS_CLOUD)
-        place_cloud(CLOUD_POISON, p, random2(2) + 1, agent());
-
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY, p, random2(4) + 2, agent());
 
