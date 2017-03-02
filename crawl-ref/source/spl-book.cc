@@ -337,14 +337,6 @@ bool player_can_memorise(const item_def &book)
     return false;
 }
 
-static void _mark_book_known(item_def& book)
-{
-    // XXX: revise and check how much of this is needed (if any)
-    mark_had_book(book);
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-}
-
 /**
  * List all spells in the given book.
  *
@@ -373,45 +365,22 @@ static bool _get_book_spells(const item_def& book, spell_set &spells)
 
 /**
  * Populate the given list with all spells the player can currently memorize,
- * from books in inventory, on the ground, or offered by Vehumet. Does not
- * filter by currently known spells, spell levels, etc.
+ * from library or Vehumet. Does not filter by currently known spells, spell
+ * levels, etc.
  *
  * @param available_spells  A list to be populated with available spells.
- * @return                  Whether there were errors while looking for spells.
  */
-static bool _list_available_spells(spell_set &available_spells)
+static void _list_available_spells(spell_set &available_spells)
 {
-
-    bool          book_errors = false;
-
-    // Collect the list of all spells in all available spellbooks.
-    for (auto &book : you.inv)
+    for (spell_type st = SPELL_NO_SPELL; st < NUM_SPELLS; st++)
     {
-        if (!book.defined() || !item_is_spellbook(book))
-            continue;
-
-        _mark_book_known(book);
-        book_errors = _get_book_spells(book, available_spells) || book_errors;
-    }
-
-    // We also check the ground
-    auto items = item_list_on_square(you.visible_igrd(you.pos()));
-
-    for (const item_def *bptr : items)
-    {
-        item_def book(*bptr); // Copy
-        if (!item_is_spellbook(book))
-            continue;
-
-        _mark_book_known(book);
-        book_errors = _get_book_spells(book, available_spells) || book_errors;
+        if(you.spell_library[st])
+            available_spells.insert(st);
     }
 
     // Handle Vehumet gifts
     for (auto gift : you.vehumet_gifts)
         available_spells.insert(gift);
-
-    return book_errors;
 }
 
 /**
@@ -494,19 +463,13 @@ static void _get_mem_list(spell_list &mem_spells,
                           bool just_check = false)
 {
     spell_set     available_spells;
-    bool          book_errors      = _list_available_spells(available_spells);
-
-    if (book_errors)
-        more();
+    _list_available_spells(available_spells);
 
     if (available_spells.empty())
     {
         if (!just_check)
         {
-            if (book_errors)
-                mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
-            else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
+            mprf(MSGCH_PROMPT, "Your library has no spells.");
         }
         return;
     }
