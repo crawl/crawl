@@ -354,6 +354,7 @@ static void _reset_game()
     macro_clear_buffers();
     transit_lists_clear();
     you = player();
+    reset_hud();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     clear_level_target();

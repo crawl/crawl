@@ -9,6 +9,8 @@
 void update_message_status();
 #endif
 
+void reset_hud();
+
 void update_turn_count();
 
 void print_stats();
