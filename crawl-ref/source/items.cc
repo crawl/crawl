@@ -1828,6 +1828,40 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     return keep_going;
 }
 
+static void _get_book(const item_def& it, bool quiet)
+{
+    bool newspells = false;
+    if (!quiet)
+        mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
+    for (spell_type st : spells_in_book(it))
+    {
+        if (!you.spell_library[st])
+        {
+            you.spell_library.set(st, true);
+            newspells = true;
+            if (!quiet && you_can_memorise(st))
+                mprf("You add the spell %s to your library.", spell_title(st));
+        }
+    }
+    if (!newspells && !quiet)
+        mpr("Unfortunately, it added no spells to the library.");
+}
+
+// Adds all books in the player's inventory to library.
+// Declared here for use by tags to load old saves.
+// Outside of loading old saves, only used at character creation.
+void add_held_books_to_library()
+{
+    for (item_def& it : you.inv)
+    {
+        if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+        {
+            _get_book(it, true);
+            destroy_item(it);
+        }
+    }
+}
+
 /**
  * Place a rune into the player's inventory.
  *
@@ -2133,7 +2167,11 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
         get_gold(it, quant_got, quiet);
         return true;
     }
-
+    if (it.base_type == OBJ_BOOKS && it.sub_type != BOOK_MANUAL)
+    {
+        _get_book(it, quiet);
+        return true;
+    }
     // Runes are also massless.
     if (it.base_type == OBJ_RUNES)
     {
