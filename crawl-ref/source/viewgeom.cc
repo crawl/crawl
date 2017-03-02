@@ -361,12 +361,7 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
-    hudsz  = coord_def(HUD_WIDTH,
-                       HUD_HEIGHT
-#if TAG_MAJOR_VERSION == 34
-                                  + ((you.species == SP_LAVA_ORC) ? 1 : 0)
-#endif
-                                  );
+    hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT);
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);

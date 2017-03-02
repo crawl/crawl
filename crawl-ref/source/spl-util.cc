@@ -1100,36 +1100,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
-            return "you're too hot.";
-
-        if (spell == SPELL_LEDAS_LIQUEFACTION)
-            return "you can't cast this while perpetually flying.";
-    }
-
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (spell == SPELL_OZOCUBUS_ARMOUR)
-            return "your stony body would shatter the ice.";
-
-        if (temp && !temperature_effect(LORC_STONESKIN))
-        {
-            switch (spell)
-            {
-                case SPELL_STATUE_FORM:
-                case SPELL_ICE_FORM:
-                    return "you're too hot.";
-                default:
-                    break;
-            }
-        }
-
-    }
-#endif
-
     switch (spell)
     {
     case SPELL_BLINK:

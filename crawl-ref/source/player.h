@@ -200,10 +200,6 @@ public:
     bool pending_revival;
     int lives;
     int deaths;
-#if TAG_MAJOR_VERSION == 34
-    float temperature; // For lava orcs.
-    float temperature_last;
-#endif
 
     FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
     FixedVector<training_status, NUM_SKILLS> train; ///< see enum def
@@ -411,9 +407,6 @@ public:
     bool redraw_title;
     bool redraw_hit_points;
     bool redraw_magic_points;
-#if TAG_MAJOR_VERSION == 34
-    bool redraw_temperature;
-#endif
     FixedVector<bool, NUM_STATS> redraw_stats;
     bool redraw_experience;
     bool redraw_armour_class;
@@ -764,9 +757,6 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
-#if TAG_MAJOR_VERSION == 34
-    int heat_radius() const override;
-#endif
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;
@@ -1050,7 +1040,6 @@ void recalc_and_scale_hp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
-void drain_mp(int mp_loss);
 
 void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);
@@ -1141,44 +1130,3 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
-
-#if TAG_MAJOR_VERSION == 34
-enum temperature_level
-{
-    TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
-    TEMP_COLD = 3,
-    TEMP_COOL = 5,
-    TEMP_ROOM = 7,
-    TEMP_WARM = 9, // Warmer than most creatures.
-    TEMP_HOT = 11,
-    TEMP_FIRE = 13, // Hot enough to ignite paper around you.
-    TEMP_MAX = 15, // Maximum temperature. As hot as lava!
-};
-
-enum temperature_effect
-{
-    LORC_LAVA_BOOST,
-    LORC_FIRE_BOOST,
-    LORC_STONESKIN,
-    LORC_COLD_VULN,
-    LORC_PASSIVE_HEAT,
-    LORC_HEAT_AURA,
-    LORC_NO_SCROLLS,
-    LORC_FIRE_RES_I,
-    LORC_FIRE_RES_II,
-    LORC_FIRE_RES_III,
-};
-
-int temperature();
-int temperature_last();
-void temperature_check();
-void temperature_increment(float degree);
-void temperature_decrement(float degree);
-void temperature_changed(float change);
-void temperature_decay();
-bool temperature_tier(int which);
-bool temperature_effect(int which);
-int temperature_colour(int temp);
-string temperature_string(int temp);
-string temperature_text(int temp);
-#endif

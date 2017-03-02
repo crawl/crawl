@@ -433,7 +433,7 @@ static void _wucad_backfire()
         break;
     case 4:
     case 5:
-        drain_mp(5 + random2(20));
+        dec_mp(5 + random2(20));
         break;
     case 6:
         lose_stat(STAT_INT, 1 + random2avg(5, 2));
@@ -443,15 +443,6 @@ static void _wucad_backfire()
 
 static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        mpr("The staff is unable to affect your essence.");
-        *unevokable = true;
-        return true;
-    }
-
-#endif
     if (you.magic_points == you.max_magic_points)
     {
         mpr("Your reserves of magic are full.");

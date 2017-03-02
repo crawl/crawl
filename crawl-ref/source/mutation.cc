@@ -542,17 +542,6 @@ static const string _vampire_Ascreen_footer = (
     " to toggle between mutations and properties depending on your blood\n"
     "level.\n");
 
-#if TAG_MAJOR_VERSION == 34
-static const string _lava_orc_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
-#else
-    "<w>Right-click</w>"
-#endif
-    " to toggle between mutations and properties depending on your\n"
-    "temperature.\n");
-#endif
-
 static void _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
@@ -638,88 +627,6 @@ static void _display_vampire_attributes()
     }
 }
 
-#if TAG_MAJOR_VERSION == 34
-static void _display_temperature()
-{
-    ASSERT(you.species == SP_LAVA_ORC);
-
-    clrscr();
-    cgotoxy(1,1);
-
-    string result;
-
-    string title = "Temperature Effects";
-
-    // center title
-    int offset = 39 - strwidth(title) / 2;
-    if (offset < 0) offset = 0;
-
-    result += string(offset, ' ');
-
-    result += "<white>";
-    result += title;
-    result += "</white>\n\n";
-
-    const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
-    string column[lines];
-
-    for (int t = 1; t <= TEMP_MAX; t++)  // lines
-    {
-        string text;
-        ostringstream ostr;
-
-        string colourname = temperature_string(t);
-#define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
-        if (t == TEMP_MAX)
-            text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);
-        else if (t == TEMP_MIN)
-            text = "  " + F(BL) + F(HORIZ) + F(HORIZ) + "MIN" + F(HORIZ) + F(BR);
-        else if (temperature() < t)
-            text = "  " + F(VERT) + "      " + F(VERT);
-        else if (temperature() == t)
-            text = "  " + F(VERT) + "~~~~~~" + F(VERT);
-        else
-            text = "  " + F(VERT) + "######" + F(VERT);
-        text += "    ";
-#undef F
-
-        ostr << '<' << colourname << '>' << text
-             << "</" << colourname << '>';
-
-        colourname = (temperature() >= t) ? "lightred" : "darkgrey";
-        text = temperature_text(t);
-        ostr << '<' << colourname << '>' << text
-             << "</" << colourname << '>';
-
-       column[t] = ostr.str();
-    }
-
-    for (int y = TEMP_MAX; y >= TEMP_MIN; y--)  // lines
-    {
-        result += column[y];
-        result += "\n";
-    }
-
-    result += "\n";
-
-    result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
-    result += "\n";
-    result += "\n";
-
-    result += _lava_orc_Ascreen_footer;
-
-    formatted_scroller temp_menu;
-    temp_menu.add_text(result);
-
-    temp_menu.show();
-    if (temp_menu.getkey() == '!'
-        || temp_menu.getkey() == CK_MOUSE_CMD)
-    {
-        display_mutations();
-    }
-}
-#endif
-
 void display_mutations()
 {
     string mutation_s = describe_mutations(true);
@@ -738,16 +645,6 @@ void display_mutations()
 
         extra += _vampire_Ascreen_footer;
     }
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (!extra.empty())
-            extra += "\n";
-
-        extra += _lava_orc_Ascreen_footer;
-    }
-#endif
 
     if (!extra.empty())
     {
@@ -768,14 +665,6 @@ void display_mutations()
     {
         _display_vampire_attributes();
     }
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC
-        && (mutation_menu.getkey() == '!'
-            || mutation_menu.getkey() == CK_MOUSE_CMD))
-    {
-        _display_temperature();
-    }
-#endif
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
@@ -1125,18 +1014,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
             return true;
         }
     }
-#if TAG_MAJOR_VERSION == 34
-
-    // Heat doesn't hurt fire, djinn don't care about hunger.
-    if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
-        || mutat == MUT_HEAT_VULNERABILITY
-        || mutat == MUT_BERSERK
-        || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
-        || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
-    {
-        return true;
-    }
-#endif
 
     // Already immune.
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)

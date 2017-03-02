@@ -82,10 +82,6 @@
 #include "wizard-option-type.h"
 #include "xom.h"
 
-#if TAG_MAJOR_VERSION == 34
-const int DJ_MP_RATE = 2;
-#endif
-
 static int _bone_armour_bonus();
 
 static void _moveto_maybe_repel_stairs()
@@ -223,8 +219,6 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
         mpr(msg);
     else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
         mpr("You cannot enter water in your current form.");
-    else if (species_likes_lava(you.species) && feat_is_lava(env.grid(p)))
-        mpr("You cannot enter lava in your current form.");
     else
         canned_msg(MSG_UNTHINKING_ACT);
     return false;
@@ -431,13 +425,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 // Extra time if you stepped in.
                 if (stepped)
                     you.time_taken *= 2;
-#if TAG_MAJOR_VERSION == 34
-                // This gets called here because otherwise you wouldn't heat
-                // until your second turn in lava.
-                if (temperature() < TEMP_FIRE)
-                    mpr("The lava instantly superheats you.");
-                you.temperature = TEMP_MAX;
-#endif
             }
 
             else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
@@ -806,9 +793,6 @@ bool player_has_feet(bool temp)
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI
-#endif
         || you.fishtail && temp)
     {
         return false;
@@ -1167,15 +1151,6 @@ int player_regen()
         else if (you.hunger_state >= HS_FULL)
             rr += 20; // Bonus regeneration for full vampires.
     }
-#if TAG_MAJOR_VERSION == 34
-
-    // Compared to other races, a starting djinni would have regen of 4 (hp)
-    // plus 17 (mp). So let's compensate them early; they can stand getting
-    // shafted on the total regen rates later on.
-    if (you.species == SP_DJINNI)
-        if (you.hp_max < 100)
-            rr += (100 - you.hp_max) / 6;
-#endif
 
     if (you.duration[DUR_COLLAPSE])
         rr /= 4;
@@ -1350,11 +1325,6 @@ int player_likes_chunks(bool permanently)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_fire(bool calc_unid, bool temp, bool items)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return 4; // full immunity
-
-#endif
     int rf = 0;
 
     if (items)
@@ -1392,18 +1362,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     // species:
     if (you.species == SP_MUMMY)
         rf--;
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (temperature_effect(LORC_FIRE_RES_I))
-            rf++;
-        if (temperature_effect(LORC_FIRE_RES_II))
-            rf++;
-        if (temperature_effect(LORC_FIRE_RES_III))
-            rf++;
-    }
-#endif
 
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
@@ -1483,11 +1441,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             else if (you.hunger_state < HS_SATIATED)
                 rc++;
         }
-
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_COLD_VULN))
-            rc--;
-#endif
     }
 
     if (items)
@@ -1519,11 +1472,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc++;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    // species:
-    if (you.species == SP_DJINNI)
-        rc--;
-#endif
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
     rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
@@ -1787,11 +1735,6 @@ int player_spec_fire()
     // rings of fire:
     sf += you.wearing(EQ_RINGS, RING_FIRE);
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_FIRE_BOOST))
-        sf++;
-#endif
-
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
 
@@ -1807,15 +1750,6 @@ int player_spec_cold()
 
     // rings of ice:
     sc += you.wearing(EQ_RINGS, RING_ICE);
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC
-        && (temperature_effect(LORC_LAVA_BOOST)
-            || temperature_effect(LORC_FIRE_BOOST)))
-    {
-        sc--;
-    }
-#endif
 
     return sc;
 }
@@ -2798,17 +2732,9 @@ static void _gain_and_note_hp_mp()
     const int note_maxmp = get_real_mp(false);
 
     char buf[200];
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        // Djinn don't HP/MP
-        sprintf(buf, "EP: %d/%d",
-                min(you.hp, note_maxhp + note_maxmp),
-                note_maxhp + note_maxmp);
-    else
-#endif
-        sprintf(buf, "HP: %d/%d MP: %d/%d",
-                min(you.hp, note_maxhp), note_maxhp,
-                min(you.magic_points, note_maxmp), note_maxmp);
+    sprintf(buf, "HP: %d/%d MP: %d/%d",
+            min(you.hp, note_maxhp), note_maxhp,
+            min(you.magic_points, note_maxmp), note_maxmp);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 }
 
@@ -3702,10 +3628,6 @@ void calc_hp()
 {
     int oldhp = you.hp, oldmax = you.hp_max;
     you.hp_max = get_real_hp(true, false);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        you.hp_max += get_real_mp(true);
-#endif
     deflate_hp(you.hp_max, false);
     if (oldhp != you.hp || oldmax != you.hp_max)
         dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
@@ -3738,14 +3660,6 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
 
 void calc_mp()
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        you.magic_points = you.max_magic_points = 0;
-        return calc_hp();
-    }
-#endif
-
     you.max_magic_points = get_real_mp(true);
     you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
@@ -3771,33 +3685,11 @@ void dec_mp(int mp_loss, bool silent)
     if (mp_loss < 1)
         return;
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return dec_hp(mp_loss * DJ_MP_RATE, false);
-#endif
-
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
     if (!silent)
         flush_mp();
-}
-
-void drain_mp(int loss)
-{
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-
-        if (loss <= 0)
-            return;
-
-        you.duration[DUR_ANTIMAGIC] = min(you.duration[DUR_ANTIMAGIC] + loss * 3,
-                                           1000); // so it goes away after one '5'
-    }
-    else
-#endif
-    return dec_mp(loss);
 }
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
@@ -3836,11 +3728,6 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
 
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
-#endif
-
     ASSERT(!crawl_state.game_is_arena());
 
     if (you.magic_points < minimum)
@@ -3876,11 +3763,6 @@ static bool _should_stop_resting(int cur, int max)
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return inc_hp(mp_gain * DJ_MP_RATE);
-#endif
 
     if (mp_gain < 1 || you.magic_points >= you.max_magic_points)
         return;
@@ -5216,11 +5098,6 @@ player::player()
     lives = 0;
     deaths = 0;
 
-#if TAG_MAJOR_VERSION == 34
-    temperature = 1; // 1 is min; 15 is max.
-    temperature_last = 1;
-#endif
-
     xray_vision = false;
 
     init_skills();
@@ -5349,9 +5226,6 @@ player::player()
     redraw_status_lights = false;
     redraw_hit_points    = false;
     redraw_magic_points  = false;
-#if TAG_MAJOR_VERSION == 34
-    redraw_temperature   = false;
-#endif
     redraw_stats.init(false);
     redraw_experience    = false;
     redraw_armour_class  = false;
@@ -5474,9 +5348,6 @@ bool player::airborne() const
         return false;
 
     if (duration[DUR_FLIGHT]
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI
-#endif
         || you.props[EMERGENCY_FLIGHT_KEY].get_bool()
         || attribute[ATTR_PERM_FLIGHT]
         || get_form()->enables_flight())
@@ -6323,13 +6194,6 @@ int player::res_water_drowning() const
         rw++;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    // A fiery lich/hot statue suffers from quenching but not drowning, so
-    // neutral resistance sounds ok.
-    if (species == SP_DJINNI)
-        rw--;
-#endif
-
     return rw;
 }
 
@@ -6578,19 +6442,12 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT]
-#if TAG_MAJOR_VERSION == 34
-        || species == SP_DJINNI
-#endif
-        ;
+    return attribute[ATTR_PERM_FLIGHT];
 }
 
 bool player::racial_permanent_flight() const
 {
     return player_mutation_level(MUT_TENGU_FLIGHT) >= 2
-#if TAG_MAJOR_VERSION == 34
-        || species == SP_DJINNI
-#endif
         || player_mutation_level(MUT_BIG_WINGS);
 }
 
@@ -7243,11 +7100,7 @@ bool player::can_bleed(bool allow_tran) const
     if (allow_tran && !form_can_bleed(form))
         return false;
 
-    if (is_lifeless_undead()
-#if TAG_MAJOR_VERSION == 34
-        || species == SP_DJINNI
-#endif
-        || is_nonliving())
+    if (is_lifeless_undead() || is_nonliving())
     {   // demonspawn and demigods have a mere drop of taint
         return false;
     }
@@ -7848,263 +7701,6 @@ int player::scale_potion_healing(int healing_amount)
     return div_rand_round(healing_amount * _get_potion_heal_factor(), 3);
 }
 
-#if TAG_MAJOR_VERSION == 34
-// Lava orcs!
-int temperature()
-{
-    return (int) you.temperature;
-}
-
-int temperature_last()
-{
-    return (int) you.temperature_last;
-}
-
-void temperature_check()
-{
-    // Whether to ignore caps on incrementing temperature
-    bool ignore_cap = you.duration[DUR_BERSERK];
-
-    // These numbers seem to work pretty well, but they're definitely experimental:
-    int tension = get_tension(GOD_NO_GOD); // Raw tension
-
-    // It would generally be better to handle this at the tension level and have temperature much more closely tied to tension.
-
-    // For testing, but super handy for that!
-    // mprf("Tension value: %d", tension);
-
-    // Increment temp to full if you're in lava.
-    if (feat_is_lava(env.grid(you.pos())) && you.ground_level())
-    {
-        // If you're already very hot, no message,
-        // but otherwise it lets you know you're being
-        // brought up to max temp.
-        if (temperature() <= TEMP_FIRE)
-            mpr("The lava instantly superheats you.");
-        you.temperature = TEMP_MAX;
-        ignore_cap = true;
-        // Otherwise, your temperature naturally decays.
-    }
-    else
-        temperature_decay();
-
-    // Follow this up with 1 additional decrement each turn until
-    // you're not hot enough to boil water.
-    if (feat_is_water(env.grid(you.pos())) && you.ground_level()
-        && temperature_effect(LORC_PASSIVE_HEAT))
-    {
-        temperature_decrement(1);
-
-        for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        {
-            const coord_def p(*ai);
-            if (in_bounds(p)
-                && !cloud_at(p)
-                && !cell_is_solid(p)
-                && one_chance_in(5))
-            {
-                place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
-            }
-        }
-    }
-
-    // Next, add temperature from tension. Can override temperature loss from water!
-    temperature_increment(tension);
-
-    // Cap net temperature change to 1 per turn if no exceptions.
-    float tempchange = you.temperature - you.temperature_last;
-    if (!ignore_cap && tempchange > 1)
-        you.temperature = you.temperature_last + 1;
-    else if (tempchange < -1)
-        you.temperature = you.temperature_last - 1;
-
-    // Handle any effects that change with temperature.
-    temperature_changed(tempchange);
-
-    // Save your new temp as your new 'old' temperature.
-    you.temperature_last = you.temperature;
-}
-
-void temperature_increment(float degree)
-{
-    // No warming up while you're exhausted!
-    if (you.duration[DUR_EXHAUSTED])
-        return;
-
-    you.temperature += sqrt(degree);
-    if (temperature() >= TEMP_MAX)
-        you.temperature = TEMP_MAX;
-}
-
-void temperature_decrement(float degree)
-{
-    // No cooling off while you're angry!
-    if (you.duration[DUR_BERSERK])
-        return;
-
-    you.temperature -= degree;
-    if (temperature() <= TEMP_MIN)
-        you.temperature = TEMP_MIN;
-}
-
-void temperature_changed(float change)
-{
-    // Arbitrary - how big does a swing in a turn have to be?
-    float pos_threshold = .25;
-    float neg_threshold = -1 * pos_threshold;
-
-    // For INCREMENTS:
-
-    // Check these no-nos every turn.
-    if (you.temperature >= TEMP_WARM)
-    {
-        // Handles condensation shield, ozo's armour, icemail.
-        // 10 => 100aut reduction in duration.
-        maybe_melt_player_enchantments(BEAM_FIRE, 10);
-
-        // Handled separately because normally heat doesn't affect this.
-        if (you.form == transformation::ice_beast
-            || you.form == transformation::statue)
-        {
-            untransform(false);
-        }
-    }
-
-    // Just reached the temp that kills off stoneskin.
-    if (change > pos_threshold && temperature_tier(TEMP_WARM))
-    {
-        mprf(MSGCH_DURATION, "Your stony skin melts.");
-        you.redraw_armour_class = true;
-    }
-
-    // Passive heat stuff.
-    if (change > pos_threshold && temperature_tier(TEMP_FIRE))
-        mprf(MSGCH_DURATION, "You're getting fired up.");
-
-    // Heat aura stuff.
-    if (change > pos_threshold && temperature_tier(TEMP_MAX))
-    {
-        mprf(MSGCH_DURATION, "You blaze with the fury of an erupting volcano!");
-        invalidate_agrid(true);
-    }
-
-    // For DECREMENTS (reverse order):
-    if (change < neg_threshold && temperature_tier(TEMP_MAX))
-        mprf(MSGCH_DURATION, "The intensity of your heat diminishes.");
-
-    if (change < neg_threshold && temperature_tier(TEMP_FIRE))
-        mprf(MSGCH_DURATION, "You're cooling off.");
-
-    // Cooled down enough for stoneskin to kick in again.
-    if (change < neg_threshold && temperature_tier(TEMP_WARM))
-    {
-        mprf(MSGCH_DURATION, "Your skin cools and hardens.");
-        you.redraw_armour_class = true;
-    }
-
-    // If we're in this function, temperature changed, anyways.
-    you.redraw_temperature = true;
-
-#ifdef USE_TILE
-    init_player_doll();
-#endif
-
-    // Just do this every turn to be safe. Can be fixed later if there
-    // any performance issues.
-    invalidate_agrid(true);
-}
-
-void temperature_decay()
-{
-    temperature_decrement(you.temperature / 10);
-}
-
-// Just a helper function to save space. Returns true if a
-// threshold was crossed.
-bool temperature_tier (int which)
-{
-    if (temperature() > which && temperature_last() <= which)
-        return true;
-    else if (temperature() < which && temperature_last() >= which)
-        return true;
-    else
-        return false;
-}
-
-bool temperature_effect(int which)
-{
-    switch (which)
-    {
-        case LORC_FIRE_RES_I:
-            return true; // 1-15
-        case LORC_STONESKIN:
-            return temperature() < TEMP_WARM; // 1-8
-//      case nothing, right now:
-//            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
-        case LORC_LAVA_BOOST:
-            return temperature() >= TEMP_WARM && temperature() < TEMP_HOT; // 9-10
-        case LORC_FIRE_RES_II:
-            return temperature() >= TEMP_WARM; // 9-15
-        case LORC_FIRE_RES_III:
-        case LORC_FIRE_BOOST:
-        case LORC_COLD_VULN:
-            return temperature() >= TEMP_HOT; // 11-15
-        case LORC_PASSIVE_HEAT:
-            return temperature() >= TEMP_FIRE; // 13-15
-        case LORC_HEAT_AURA:
-            if (you_worship(GOD_BEOGH))
-                return false;
-            // Deliberate fall-through.
-        case LORC_NO_SCROLLS:
-            return temperature() >= TEMP_MAX; // 15
-
-        default:
-            return false;
-    }
-}
-
-int temperature_colour(int temp)
-{
-    return (temp > TEMP_FIRE) ? LIGHTRED  :
-           (temp > TEMP_HOT)  ? RED       :
-           (temp > TEMP_WARM) ? YELLOW    :
-           (temp > TEMP_ROOM) ? WHITE     :
-           (temp > TEMP_COOL) ? LIGHTCYAN :
-           (temp > TEMP_COLD) ? LIGHTBLUE : BLUE;
-}
-
-string temperature_string(int temp)
-{
-    return (temp > TEMP_FIRE) ? "lightred"  :
-           (temp > TEMP_HOT)  ? "red"       :
-           (temp > TEMP_WARM) ? "yellow"    :
-           (temp > TEMP_ROOM) ? "white"     :
-           (temp > TEMP_COOL) ? "lightcyan" :
-           (temp > TEMP_COLD) ? "lightblue" : "blue";
-}
-
-string temperature_text(int temp)
-{
-    switch (temp)
-    {
-        case TEMP_MIN:
-            return "rF+";
-        case TEMP_COOL:
-            return "";
-        case TEMP_WARM:
-            return "rF++; lava magic boost; Stoneskin melts";
-        case TEMP_HOT:
-            return "rF+++; rC-; fire magic boost";
-        case TEMP_FIRE:
-            return "Burn attackers";
-        case TEMP_MAX:
-            return "Burn surroundings; cannot read scrolls";
-        default:
-            return "";
-    }
-}
-#endif
-
 void player_open_door(coord_def doorpos)
 {
     // Finally, open the closed door!
@@ -8552,11 +8148,6 @@ void player_end_berserk()
 
     if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         mprf(MSGCH_WARN, "You are exhausted.");
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        mpr("You feel less hot-headed.");
-#endif
 
     you.berserk_penalty = 0;
 

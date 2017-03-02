@@ -53,19 +53,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (crawl_state.disables[DIS_HUNGER])
         return;
 
-#if TAG_MAJOR_VERSION == 34
-    // Lich/tree form djinn don't get exempted from food costs: infinite
-    // healing from channeling would be just too good.
-    if (you.species == SP_DJINNI)
-    {
-        if (!magic)
-            return;
-
-        contaminate_player(hunger_amount * 4 / 3, true);
-        return;
-    }
-#endif
-
     if (you_foodless())
         return;
 
@@ -133,20 +120,12 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
 
 bool you_foodless(bool can_eat)
 {
-    return you.undead_state() == US_UNDEAD
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI && !can_eat
-#endif
-        ;
+    return you.undead_state() == US_UNDEAD;
 }
 
 bool you_foodless_normally()
 {
-    return you.undead_state(false) == US_UNDEAD
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI
-#endif
-        ;
+    return you.undead_state(false) == US_UNDEAD;
 }
 
 bool prompt_eat_item(int slot)
@@ -852,9 +831,7 @@ bool is_preferred_food(const item_def &food)
 
 #if TAG_MAJOR_VERSION == 34
     if (food.is_type(OBJ_POTIONS, POT_PORRIDGE)
-        && item_type_known(food)
-        && you.species != SP_DJINNI
-        )
+        && item_type_known(food))
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }

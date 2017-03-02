@@ -418,9 +418,6 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
-#if TAG_MAJOR_VERSION == 34
-    int heat_radius() const override;
-#endif
     bool petrified() const override;
     bool petrifying() const override;
     bool liquefied_ground() const override;

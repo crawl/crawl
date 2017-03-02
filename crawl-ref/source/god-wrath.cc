@@ -946,13 +946,9 @@ static bool _sif_muna_retribution()
     case 6:
     case 7:
     case 8:
-        if (you.magic_points > 0
-#if TAG_MAJOR_VERSION == 34
-                 || you.species == SP_DJINNI
-#endif
-                )
+        if (you.magic_points > 0)
         {
-            drain_mp(100);  // This should zero it.
+            dec_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;

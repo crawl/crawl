@@ -579,22 +579,9 @@ public:
     string get_untransform_message() const override
     {
         // This only handles lava orcs going statue -> stoneskin.
-        if (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
-            ||
-#endif
-            you.species == SP_GARGOYLE)
-        {
+        if (you.species == SP_GARGOYLE)
             return "You revert to a slightly less stony form.";
-        }
-#if TAG_MAJOR_VERSION == 34
-        if (you.species != SP_LAVA_ORC)
-#endif
-            return "You revert to your normal fleshy form.";
-#if TAG_MAJOR_VERSION == 34
-        return Form::get_untransform_message();
-#endif
+        return "You revert to your normal fleshy form.";
     }
 
     /**
@@ -625,12 +612,7 @@ public:
      */
     string get_untransform_message() const override
     {
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
-            return "Your icy form melts away into molten rock.";
-        else
-#endif
-            return "You warm up again.";
+        return "You warm up again.";
     }
 
     /**
@@ -1108,16 +1090,8 @@ bool form_likes_water(transformation form)
 
 bool form_likes_lava(transformation form)
 {
-#if TAG_MAJOR_VERSION == 34
-    // Lava orcs can only swim in non-phys-change forms.
-    // However, ice beast & statue form will melt back to lava, so they're OK
-    return you.species == SP_LAVA_ORC
-           && (!form_changed_physiology(form)
-               || form == transformation::ice_beast
-               || form == transformation::statue);
-#else
+    // No forms currently like lava
     return false;
-#endif
 }
 
 // Used to mark transformations which override species intrinsics.
@@ -1465,10 +1439,6 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (which_trans == transformation::ice_beast && you.species == SP_DJINNI)
-        return false; // melting is fatal...
-#endif
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
@@ -1705,15 +1675,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         msg = "You cannot become a lich while in Death's Door.";
         success = false;
     }
-#if TAG_MAJOR_VERSION == 34
-    else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
-             && (which_trans == transformation::ice_beast
-                 || which_trans == transformation::statue))
-    {
-        msg =  "Your temperature is too high to benefit from that spell.";
-        success = false;
-    }
-#endif
 
     if (!just_check && previous_trans != transformation::none)
         untransform(true);

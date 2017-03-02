@@ -1567,11 +1567,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
 
-#if TAG_MAJOR_VERSION == 34
-    marshallFloat(th, you.temperature);
-    marshallFloat(th, you.temperature_last);
-#endif
-
     CANARY;
 
     marshallInt(th, you.dactions.size());
@@ -2801,11 +2796,6 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_POISON_RESISTANCE] =
             you.innate_mutation[MUT_POISON_RESISTANCE] = 0;
         }
-        if (you.species == SP_DJINNI)
-        {
-            you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
-            you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        }
         if (you.species == SP_FORMICID)
         {
             you.mutation[MUT_ANTENNAE] = you.innate_mutation[MUT_ANTENNAE] = 3;
@@ -3285,15 +3275,13 @@ static void tag_read_you(reader &th)
     you.lives = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE)
+    if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE &&
+        th.getMinorVersion() < TAG_MINOR_NO_MORE_LORC)
     {
-        you.temperature = unmarshallFloat(th);
-        you.temperature_last = unmarshallFloat(th);
-    }
-    else
-    {
-        you.temperature = 0.0;
-        you.temperature_last = 0.0;
+        // These were once the temperature fields on player for lava orcs.
+        // Still need to unmarshall them from older saves.
+        unmarshallFloat(th); // was you.temperature
+        unmarshallFloat(th); // was you.temperature_last
     }
 #endif
 
