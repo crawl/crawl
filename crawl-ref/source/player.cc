@@ -5932,6 +5932,10 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
+
+    if (attribute[ATTR_REAPING])
+       level = level * 12 / 10;
+
     return level;
 }
 

@@ -558,7 +558,7 @@ static const duration_def duration_data[] =
         {{ "", _end_invis }, { "You flicker for a moment.", 1}}, 6},
     { DUR_SLOW, 0, "", "", "slow", "", D_DISPELLABLE},
     { DUR_MESMERISED, 0, "", "", "mesmerised", "", D_DISPELLABLE,
-      {{ "You break out of your daze.", []() { you.clear_beholders(); }},
+      {{ "", []() { you.clear_beholders(false, false); }},
          {}, true }},
     { DUR_MESMERISE_IMMUNE, 0, "", "", "mesmerisation immunity", "", D_NO_FLAGS, {{""}} },
     { DUR_HASTE, 0, "", "", "haste", "", D_DISPELLABLE, {}, 6},

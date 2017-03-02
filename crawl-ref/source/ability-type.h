@@ -50,7 +50,9 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachians
     ABIL_HOP,
-    ABIL_MAX_INTRINSIC = ABIL_HOP,
+    // Skeletons
+    ABIL_REAP,
+    ABIL_MAX_INTRINSIC = ABIL_REAP,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,

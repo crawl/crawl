@@ -102,6 +102,11 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_BANNED;
     }
 
+    // Skeletons are much better at Xbows and Bows than they are at throwing,
+    // so they shouldn't be recommended javelins.
+    if (wpn == WPN_THROWN && ng.species == SP_SKELETON)
+       return CC_RESTRICTED;
+
     // Javelins are always good, tomahawks not so much.
     if (wpn == WPN_THROWN)
     {

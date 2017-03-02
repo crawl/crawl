@@ -892,3 +892,10 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+Reap ability
+
+Enters a magically induced trance with a single purpose: Destroy all sentient
+life. Your combat ability is increased and you become able to ignore some 
+incoming damage, but you are forced to fight until no living being remains 
+nearby.

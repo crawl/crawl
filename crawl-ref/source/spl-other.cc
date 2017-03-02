@@ -9,6 +9,7 @@
 #include "spl-other.h"
 
 #include "act-iter.h"
+#include "coordit.h"
 #include "delay.h"
 #include "env.h"
 #include "food.h"
@@ -344,4 +345,75 @@ spret_type cast_darkness(int pow, bool fail)
     update_vision_range();
 
     return SPRET_SUCCESS;
+}
+
+spret_type cast_reap(bool fail)
+{
+    if (you.attribute[ATTR_REAPING]) {
+        mprf("You are already reaping!");
+        return SPRET_ABORT;
+    }
+
+    bool living_beings_nearby = false;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi) 
+        if (mi->holiness() != MH_NONLIVING && mi->holiness() != MH_UNDEAD)
+            living_beings_nearby = true;
+
+    if (!living_beings_nearby) {
+        mprf("There are no living beings to reap nearby!");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+    you.attribute[ATTR_REAPING] = 1;
+    if (renew_reap()) {
+        you.redraw_status_lights = true;
+        you.redraw_evasion = true;
+        you.redraw_armour_class = true;
+        return SPRET_SUCCESS;
+    } else {
+        mprf("There are no suitable enemies nearby!");
+        return SPRET_ABORT;
+    }
+}
+
+bool renew_reap()
+{
+    if (!you.attribute[ATTR_REAPING])
+       return false;
+
+    monster* mon = nullptr;
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di) {
+        mon = monster_at(*di);
+        if (mon && you.can_see(*mon)
+            && you.possible_beholder(mon)
+            && mons_is_threatening(*mon))
+        {
+            break;
+        }
+    }
+
+    if (!mon) {
+        you.attribute[ATTR_REAPING] = 0;
+        return false;
+    }
+
+    if (!you.beheld_by(*mon))
+    {
+        const char* message[4] = 
+        {
+           "You lay your malignant gaze on %s.",
+           "%s is next on your list.",
+           "You stare at %s eerily.",
+           "You swivel your skull at %s.",
+        };
+
+        mprf(message[random2(4)], mon->name(DESC_THE).c_str());
+        you.clear_beholders(true);
+    }
+
+    you.duration[DUR_MESMERISE_IMMUNE] = 0;
+    you.add_beholder(*mon, false, true);
+    you.duration[DUR_MESMERISED] = 30;
+    return true;
 }

@@ -29,6 +29,7 @@ frog2_f
 frog2_m
 gnome_f
 gnome_m
+skeleton SKELETON
 halfling_m HALFLING
 halfling_f
 orc_f ORC
