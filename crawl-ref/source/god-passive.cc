@@ -1602,6 +1602,7 @@ static void _wu_jian_lunge(const coord_def& old_pos)
 
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
         you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+    you.apply_berserk_penalty = false;
 
     const int number_of_attacks = _wu_jian_number_of_attacks();
 
@@ -1667,6 +1668,7 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
 
         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        you.apply_berserk_penalty = false;
 
         const int number_of_attacks = _wu_jian_number_of_attacks();
         if (number_of_attacks == 0)
@@ -1779,6 +1781,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
 
          if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
              you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        you.apply_berserk_penalty = false;
 
          const int number_of_attacks = _wu_jian_number_of_attacks();
          if (number_of_attacks == 0)
