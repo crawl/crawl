@@ -5446,11 +5446,11 @@ _Pikel_rare_
 
 VISUAL:@The_monster@ waves a pair of manacles at you. @player_only@
 
-@The_monster@ says @to_foe@, "Why not give it a go? You'll get fed. Maybe."
+@The_monster@ says @to_foe@, "Why not give up? You'll get fed. Maybe."
 
 @The_monster@ says, "Who am I kidding? They'll work you to death!"
 
-@The_monster@ says @to_foe@, "You strike me more as a bedroom slave."
+@The_monster@ says @to_foe@, "You will build my throne, and die beneath it!"
 
 # Greedy Pikel
 VISUAL:@The_monster@ checks @possessive@ coin pouch and frowns.
@@ -5467,10 +5467,21 @@ VISUAL:@The_monster@ checks @possessive@ coin pouch and frowns.
 
 VISUAL:@The_monster@ scowls and wipes @possessive@ hands on @possessive@ robe.
 
-# Kinky Pikel
-@The_monster@ says @to_foe@, "I'm sure you'll love being tied up!"
+# Collect-them-all Pikel
+@The_monster@ says @to_foe@, "Wow, you'd add a bit of variety to my gang!"
 
-@The_monster@ sighs. "I should go into elves; they're easier to handle. And prettier!"
+@The_monster@ sighs. "I should capture elves; my bodyguards all look the same!"
+
+@The_monster@ smiles. "{{
+    if you.race() == "Felid" then
+        return "I've always wanted a ferocious, fluffy guard-beast"
+    elseif you.race() == "Octopode" then
+        return "I have the most extravagant aquarium just for exotic specimens"
+    else
+        return "I know this place well. And it is filled with the corpses of daring fools"
+    end
+}} like you! Won't you join me?"
+
 %%%%
 ############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
