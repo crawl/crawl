@@ -754,7 +754,7 @@ const string make_cost_description(ability_type ability)
     if (abil.hp_cost)
         ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
 
-    if (abil.food_cost && !you_foodless(true)
+    if (abil.food_cost && !you_foodless()
         && (you.undead_state() != US_SEMI_UNDEAD
             || you.hunger_state > HS_STARVING))
     {
@@ -847,7 +847,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.hp_cost.cost(you.hp_max);
     }
 
-    if (abil.food_cost && !you_foodless(true)
+    if (abil.food_cost && !you_foodless()
         && (you.undead_state() != US_SEMI_UNDEAD
             || you.hunger_state > HS_STARVING))
     {
