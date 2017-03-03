@@ -1548,9 +1548,15 @@ void wu_jian_heaven_tick()
     noisy(15, you.pos());
 
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
-        mprf(MSGCH_GOD, "The heavenly storm settles...");
+        end_heaven_on_earth();
     else
         you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+}
+
+void end_heaven_on_earth()
+{
+    you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+    mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
