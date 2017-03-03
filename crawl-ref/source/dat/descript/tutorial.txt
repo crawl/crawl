@@ -686,14 +686,6 @@ tutorial5 piety_on_kill
 Some gods really like it if you kill monsters in their name. Let the slaughter
 begin!
 %%%%
-tutorial5 burn_book
-
-Trog will like it if you burn that book (with
-<input>$cmd[CMD_USE_ABILITY]</input><localtiles> or via the <w>command
-panel</w></localtiles>). Sometimes, you might want to wait (with
-<input>$cmd[CMD_WAIT]</input>) for a monster to step on it before doing
-so.
-%%%%
 tutorial5 berserk
 
 Against particularly tough foes, you may want to use Trog's Berserk power with
