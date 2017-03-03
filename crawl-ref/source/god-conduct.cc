@@ -1102,9 +1102,6 @@ string get_god_likes(god_type which_god)
     // Unique/unusual piety gain methods first.
     switch (which_god)
     {
-    case GOD_TROG:
-        likes.emplace_back("you destroy spellbooks via the <w>a</w> command");
-        break;
     case GOD_JIYVA:
         likes.emplace_back("you sacrifice items by allowing slimes to consume "
                            "them");
