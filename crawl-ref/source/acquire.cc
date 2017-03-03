@@ -790,6 +790,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         item_def dummy;
         dummy.base_type = class_wanted;
         dummy.sub_type = type_wanted;
+
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
         if (!is_useless_item(dummy, false) && !god_hates_item(dummy)
