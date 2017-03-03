@@ -3125,6 +3125,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
                                  ZAP_CRYSTAL_BOLT,
                                  ZAP_LIGHTNING_BOLT,
                                  ZAP_CORROSIVE_BOLT);
+    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
     zapping(zap, pow * 7 / 6 + 15, beam, false);
 
     return SPRET_SUCCESS;
