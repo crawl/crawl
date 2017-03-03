@@ -1015,6 +1015,21 @@ static bool _do_book_acquirement(item_def &book, int agent)
         break;
     }
     } // switch book choice
+
+    // If we couldn't make a useful book, try to make a manual instead.
+    // We have to temporarily identify the book for this.
+    int oldflags = book.flags;
+    book.flags |= ISFLAG_KNOW_TYPE;
+    bool useless = is_useless_item(book);
+    book.flags = oldflags;
+    if (useless && agent != GOD_SIF_MUNA)
+    {
+        destroy_item(book);
+        book.base_type = OBJ_BOOKS;
+        book.quantity = 1;
+        return _acquire_manual(book);
+    }
+
     return true;
 }
 
