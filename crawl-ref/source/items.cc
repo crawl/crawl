@@ -1839,7 +1839,7 @@ static void _get_book(const item_def& it, bool quiet)
         {
             you.spell_library.set(st, true);
             newspells = true;
-            useless = spell_is_useless(st, false, true);
+            useless = !you_can_memorise(st);
             if (!quiet && !useless)
                 mprf("You add the spell %s to your library.", spell_title(st));
         }

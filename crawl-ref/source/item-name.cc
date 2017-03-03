@@ -3767,10 +3767,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
         if (item_type_known(item) && item.sub_type != BOOK_MANUAL)
         {
-            //Spellbooks are useless if all spells are in the library already.
+            //Spellbooks are useless if all spells are either in the library
+            //already or are uncastable.
             bool useless = true;
             for (spell_type st : spells_in_book(item))
-                if (!you.spell_library[st])
+                if (!you.spell_library[st] && you_can_memorise(st))
                     useless = false;
             return useless;
         }
