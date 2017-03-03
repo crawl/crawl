@@ -6699,19 +6699,7 @@ spret_type uskayaw_grand_finale(bool fail)
             continue;
         }
 
-        if (grd(beam.target) == DNGN_OPEN_SEA)
-        {
-            clear_messages();
-            mpr("You would fall into the sea!");
-            continue;
-        }
-        else if (grd(beam.target) == DNGN_LAVA_SEA)
-        {
-            clear_messages();
-            mpr("You would fall into the sea of lava!");
-            continue;
-        }
-        else if (!check_moveto(beam.target, "move"))
+        if (!check_moveto(beam.target, "move"))
         {
             // try again (messages handled by check_moveto)
         }

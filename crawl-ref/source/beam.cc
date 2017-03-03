@@ -2309,6 +2309,10 @@ static void _unravelling_explode(bolt &beam)
 
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
+    // Don't bounce off open sea.
+    if (feat_is_endless(feat))
+        return false;
+
     if (real_flavour == BEAM_CHAOS
         && feat_is_solid(feat))
     {
