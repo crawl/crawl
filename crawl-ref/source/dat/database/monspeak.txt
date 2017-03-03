@@ -5471,6 +5471,17 @@ VISUAL:@The_monster@ scowls and wipes @possessive@ hands on @possessive@ robe.
 @The_monster@ says @to_foe@, "Wow, you'd add a bit of variety to my gang!"
 
 @The_monster@ sighs. "I should capture elves; my bodyguards all look the same!"
+
+@The_monster@ smiles. "{{
+    if you.race() == "Felid" then
+        return "I've always wanted a ferocious, fluffy guard-beast"
+    elseif you.race() == "Octopode" then
+        return "I have the most extravagant aquarium just for exotic specimens"
+    else
+        return "I know this place well. And it is filled with the corpses of daring fools"
+    end
+}} like you! Won't you join me?"
+
 %%%%
 ############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
