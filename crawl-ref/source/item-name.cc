@@ -3761,6 +3761,8 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
+        if(item.sub_type != BOOK_MANUAL && you_worship(GOD_TROG))
+            return true;
         if (!item_type_known(item) && item.sub_type != BOOK_MANUAL)
             return false;
         if (item_type_known(item) && item.sub_type != BOOK_MANUAL)

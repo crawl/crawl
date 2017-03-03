@@ -327,13 +327,6 @@ Forget Spell ability
 Removes a known spell from memory, so as to free memory to learn others.
 %%%%
 # Trog
-Burn Spellbooks ability
-
-Sets all spellbooks within your field of vision on fire. The fire is fuelled by
-Trog's hatred, and it burns hotter than mere parchment would — which can be
-useful if you throw the book under someone's feet first. Trog greatly
-appreciates the burning of spellbooks.
-%%%%
 Berserk ability
 
 Sends the user into a berserk rage. Going berserk temporarily increases health,

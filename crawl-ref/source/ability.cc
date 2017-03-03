@@ -430,8 +430,6 @@ static const ability_def Ability_List[] =
       0, 0, 200, 2, {FAIL_INVO, 60, 4, 25}, abflag::NONE },
 
     // Trog
-    { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
-      0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_TROG_BERSERK, "Berserk",
       0, 0, 600, 0, {FAIL_INVO}, abflag::EXHAUSTION },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
@@ -2461,12 +2459,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                                         MONS_CACODEMON),
                           20 + you.skill(SK_INVOCATIONS, 3),
                           GOD_MAKHLEB, 0, !fail);
-        break;
-
-    case ABIL_TROG_BURN_SPELLBOOKS:
-        fail_check();
-        if (!trog_burn_spellbooks())
-            return SPRET_ABORT;
         break;
 
     case ABIL_TROG_BERSERK:
