@@ -2815,7 +2815,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     const habitat_type habitat = mons_primary_habitat(*mons);
 
     // No monster may enter the open sea.
-    if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
+    if (feat_is_endless(target_grid))
         return false;
 
     if (mons_avoids_cloud(mons, targ))

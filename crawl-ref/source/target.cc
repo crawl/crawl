@@ -1028,8 +1028,7 @@ bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
     actor *act;
     ray_def ray;
 
-    if (grd(a) == DNGN_OPEN_SEA || grd(a) == DNGN_LAVA_SEA
-        || !agent->is_habitable(a))
+    if (!agent->is_habitable(a))
     {
         blocked_landing_reason = BLOCKED_MOVE;
         return false;
