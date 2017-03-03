@@ -1527,7 +1527,6 @@ bool trog_burn_spellbooks()
             }
 
             totalpiety += 2;
-            destroy_spellbook(*si);
             item_was_destroyed(*si);
             destroy_item(si.index());
             count++;

@@ -2299,11 +2299,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 
     if (feat_destroys_items(grd(p)))
     {
-        if (item_is_spellbook(item))
-            destroy_spellbook(item);
-
         item_was_destroyed(item);
-
         return true;
     }
 
