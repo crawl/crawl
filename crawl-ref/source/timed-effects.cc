@@ -752,21 +752,16 @@ static void _magic_contamination_effects()
 
         beam.flavour      = BEAM_RANDOM;
         beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, div_rand_round(contam, 2000 ));
+        beam.damage       = dice_def(3, div_rand_round(contam, 2000));
         beam.target       = you.pos();
         beam.name         = "magical storm";
         //XXX: Should this be MID_PLAYER?
         beam.source_id    = MID_NOBODY;
         beam.aux_source   = "a magical explosion";
-        beam.ex_size      = max(1, min(9, div_rand_round(contam, 15000)));
+        beam.ex_size      = max(1, min(LOS_RADIUS,
+                                       div_rand_round(contam, 15000)));
         beam.ench_power   = div_rand_round(contam, 200);
         beam.is_explosion = true;
-
-        // Undead enjoy extra contamination explosion damage because
-        // the magical contamination has a harder time dissipating
-        // through non-living flesh. :-)
-        if (you.undead_state() != US_ALIVE)
-            beam.damage.size *= 2;
 
         beam.explode();
     }
