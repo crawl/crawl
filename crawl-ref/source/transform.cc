@@ -1088,12 +1088,6 @@ bool form_likes_water(transformation form)
     return form_can_swim(form);
 }
 
-bool form_likes_lava(transformation form)
-{
-    // No forms currently like lava
-    return false;
-}
-
 // Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation form)
 {
@@ -1379,7 +1373,7 @@ bool feat_dangerous_for_form(transformation which_trans,
         return false;
 
     if (feat == DNGN_LAVA)
-        return !form_likes_lava(which_trans);
+        return true;
 
     if (feat == DNGN_DEEP_WATER)
         return !you.can_water_walk() && !form_likes_water(which_trans);

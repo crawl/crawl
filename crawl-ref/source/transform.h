@@ -268,7 +268,6 @@ bool form_can_wear(transformation form = you.form);
 bool form_can_fly(transformation form = you.form);
 bool form_can_swim(transformation form = you.form);
 bool form_likes_water(transformation form = you.form);
-bool form_likes_lava(transformation form = you.form);
 bool form_changed_physiology(transformation form = you.form);
 bool form_can_bleed(transformation form = you.form);
 bool form_can_use_wand(transformation form = you.form);

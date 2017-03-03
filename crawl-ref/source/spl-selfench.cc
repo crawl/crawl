@@ -235,7 +235,6 @@ spret_type cast_swiftness(int power, bool fail)
     {
         // Hint that the player won't be faster until they leave the liquid.
         mprf("The %s foams!", you.in_water() ? "water"
-                            : you.in_lava()  ? "lava"
                                              : "liquid ground");
     }
 
