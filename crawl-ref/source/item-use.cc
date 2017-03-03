@@ -2025,7 +2025,7 @@ static void _vampire_corpse_help()
 
 void drink(item_def* potion)
 {
-    if (you_foodless(true))
+    if (you_foodless())
     {
         mpr("You can't drink.");
         return;

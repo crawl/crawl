@@ -118,7 +118,7 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless(bool can_eat)
+bool you_foodless()
 {
     return you.undead_state() == US_UNDEAD;
 }
@@ -156,7 +156,7 @@ bool prompt_eat_item(int slot)
 
 static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
-    if (you_foodless(true))
+    if (you_foodless())
     {
         if (!silent)
         {
@@ -783,7 +783,7 @@ bool is_noxious(const item_def &food)
 bool is_inedible(const item_def &item)
 {
     // Mummies and liches don't eat.
-    if (you_foodless(true))
+    if (you_foodless())
         return true;
 
     if (item.base_type == OBJ_FOOD // XXX: removeme?
@@ -821,7 +821,7 @@ bool is_inedible(const item_def &item)
 bool is_preferred_food(const item_def &food)
 {
     // Mummies and liches don't eat.
-    if (you_foodless(true))
+    if (you_foodless())
         return false;
 
     // Vampires don't really have a preferred food type, but they really
@@ -1110,7 +1110,7 @@ int hunger_bars(const int hunger)
 
 string hunger_cost_string(const int hunger)
 {
-    if (you_foodless(true))
+    if (you_foodless())
         return "N/A";
 
 #ifdef WIZARD

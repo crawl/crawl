@@ -219,7 +219,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_NO_POTIONS:
-        if (you_foodless(true))
+        if (you_foodless())
             inf->light_colour = DARKGREY;
         break;
 
