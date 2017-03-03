@@ -412,28 +412,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (you.ground_level())
     {
-        if (player_likes_lava(false))
-        {
-            if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
-            {
-                if (!stepped)
-                    noisy(4, you.pos(), "Gloop!");
-
-                mprf("You %s lava.",
-                     (stepped) ? "slowly immerse yourself in the" : "fall into the");
-
-                // Extra time if you stepped in.
-                if (stepped)
-                    you.time_taken *= 2;
-            }
-
-            else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
-            {
-                mpr("You slowly pull yourself out of the lava.");
-                you.time_taken *= 2;
-            }
-        }
-
         if (feat_is_water(new_grid))
         {
             if (!stepped)
@@ -542,7 +520,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
         return false;
     }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA && !player_likes_lava(permanently))
+             || grid == DNGN_LAVA)
     {
         return true;
     }
@@ -581,12 +559,6 @@ bool player_likes_water(bool permanently)
     return !permanently && you.can_water_walk()
            || (species_likes_water(you.species) || !permanently)
                && form_likes_water();
-}
-
-bool player_likes_lava(bool permanently)
-{
-    return (species_likes_lava(you.species) || !permanently)
-           && form_likes_lava();
 }
 
 /**
@@ -5375,14 +5347,9 @@ bool player::in_water() const
     return ground_level() && !you.can_water_walk() && feat_is_water(grd(pos()));
 }
 
-bool player::in_lava() const
-{
-    return ground_level() && feat_is_lava(grd(pos()));
-}
-
 bool player::in_liquid() const
 {
-    return in_water() || in_lava() || liquefied_ground();
+    return in_water() || liquefied_ground();
 }
 
 bool player::can_swim(bool permanently) const
