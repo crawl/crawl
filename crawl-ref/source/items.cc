@@ -1829,6 +1829,7 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
 static void _get_book(const item_def& it, bool quiet)
 {
     bool newspells = false;
+    bool useless = false;
     if (!quiet)
         mprf("You pick up %s and begin reading...", 
              it.name(DESC_A).c_str());
@@ -1838,7 +1839,8 @@ static void _get_book(const item_def& it, bool quiet)
         {
             you.spell_library.set(st, true);
             newspells = true;
-            if (!quiet)
+            useless = spell_is_useless(st, false, true);
+            if (!quiet && !useless)
                 mprf("You add the spell %s to your library.", spell_title(st));
         }
 //        else if (!quiet)
