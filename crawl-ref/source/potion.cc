@@ -762,7 +762,7 @@ public:
 };
 
 const int MIN_REMOVED = 2;
-const int MAX_REMOVED = 6;
+const int MAX_REMOVED = 4;
 const int MIN_ADDED = 1;
 const int MAX_ADDED = 3;
 
