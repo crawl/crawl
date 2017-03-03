@@ -879,8 +879,7 @@ bool feat_destroys_items(dungeon_feature_type feat)
  */
 bool feat_eliminates_items(dungeon_feature_type feat)
 {
-    return feat_destroys_items(feat)
-           || feat == DNGN_DEEP_WATER && !species_likes_water(you.species);
+    return feat_destroys_items(feat);
 }
 
 static coord_def _dgn_find_nearest_square(
@@ -1576,6 +1575,7 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
  */
 void fall_into_a_pool(dungeon_feature_type terrain)
 {
+    ASSERT(terrain == DNGN_LAVA || terrain == DNGN_DEEP_WATER);
     if (terrain == DNGN_DEEP_WATER)
     {
         if (you.can_water_walk() || form_likes_water())
@@ -1588,10 +1588,7 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         }
     }
 
-    mprf("You fall into the %s!",
-         (terrain == DNGN_LAVA)       ? "lava" :
-         (terrain == DNGN_DEEP_WATER) ? "water"
-                                      : "programming rift");
+    mprf("You fall into the %s!", terrain == DNGN_LAVA ? "lava" : "water");
     // included in default force_more_message
 
     clear_messages();
@@ -1602,17 +1599,6 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         else
             mpr("The lava burns you to a cinder!");
         ouch(INSTANT_DEATH, KILLED_BY_LAVA);
-    }
-    else if (terrain == DNGN_DEEP_WATER)
-    {
-        mpr("You sink like a stone!");
-
-        if (you.is_nonliving() || you.undead_state())
-            mpr("You fall apart...");
-        else
-            mpr("You drown...");
-
-        ouch(INSTANT_DEATH, KILLED_BY_WATER);
     }
 }
 
