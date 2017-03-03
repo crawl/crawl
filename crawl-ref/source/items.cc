@@ -1830,7 +1830,7 @@ static void _get_book(const item_def& it, bool quiet)
 {
     bool newspells = false;
     if (!quiet)
-        mprf("You pick up %s and add it to your library.", 
+        mprf("You pick up %s and begin reading...", 
              it.name(DESC_A).c_str());
     for (spell_type& st : spells_in_book(it))
     {
@@ -1841,6 +1841,8 @@ static void _get_book(const item_def& it, bool quiet)
             if (!quiet)
                 mprf("You add the spell %s to your library.", spell_title(st));
         }
+//        else if (!quiet)
+//            mprf("Your library already contains %s.", spell_title(st));
     }
     if (!newspells && !quiet)
         mpr("Unfortunately, it added no spells to the library.");

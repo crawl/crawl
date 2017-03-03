@@ -730,6 +730,13 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     return *wand;
 }
 
+static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/)
+{
+    return BOOK_MINOR_MAGIC;
+    //this gets overwritten later, but needs to be a sane value
+    //or asserts will get set off
+}
+
 typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
@@ -741,7 +748,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no scrolls
     _acquirement_jewellery_subtype,
     _acquirement_food_subtype, // potion acquirement = food for vampires
-    0, // books handled elsewhere
+    _acquirement_book_subtype,
     _acquirement_staff_subtype,
     0, // no, you can't acquire the orb
     _acquirement_misc_subtype,
@@ -785,7 +792,6 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.sub_type = type_wanted;
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
-
         if (!is_useless_item(dummy, false) && !god_hates_item(dummy)
             && (agent >= NUM_GODS || god_likes_item_type(dummy,
                                                          (god_type)agent)))

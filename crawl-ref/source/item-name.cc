@@ -3761,8 +3761,18 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (!item_type_known(item) || item.sub_type != BOOK_MANUAL)
+        if (!item_type_known(item) && item.sub_type != BOOK_MANUAL)
             return false;
+        if (item_type_known(item) && item.sub_type != BOOK_MANUAL)
+        {
+            //Spellbooks are useless if all spells are in the library already.
+            bool useless = true;
+            for (spell_type st : spells_in_book(item))
+                if (!you.spell_library[st])
+                    useless = false;
+            return useless;
+        }
+        //If we're here, it's a manual.
         if (you.skills[item.plus] >= 27)
             return true;
         if (is_useless_skill((skill_type)item.plus))
