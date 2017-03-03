@@ -419,12 +419,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
             if (!you.can_swim() && !you.can_water_walk())
             {
-                if (stepped)
-                {
-                    you.time_taken *= 13 + random2(8);
-                    you.time_taken /= 10;
-                }
-
                 if (!feat_is_water(old_feat))
                 {
                     mprf("You %s the %s water.",
@@ -1904,6 +1898,10 @@ int player_movement_speed()
     else if (you.fishtail || you.form == transformation::hydra && you.in_water())
         mv = 6;
 
+    // Wading through water is very slow.
+    if (you.in_water() && !you.can_swim())
+        mv += 6;
+
     // moving on liquefied ground takes longer
     if (you.liquefied_ground())
         mv += 3;
@@ -3309,7 +3307,6 @@ static void _display_movement_speed()
           (fly)     ? "flying"
                     : "movement",
 
-          (water && !swim)  ? "uncertain and " :
           (!water && swift) ? "aided by the wind" :
           (!water && antiswift) ? "hindered by the wind" : "",
 
