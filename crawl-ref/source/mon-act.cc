@@ -2830,6 +2830,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
            && (mons_class_flag(mons->type, M_BURROWS) || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
+           && !feat_is_critical(target_grid)
         || feat_is_tree(target_grid) && mons_flattens_trees(*mons)
         || target_grid == DNGN_GRATE && digs)
     {
