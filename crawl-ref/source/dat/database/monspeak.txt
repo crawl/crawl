@@ -1,4 +1,4 @@
-############################################################
+############################################################ 
 # This file contains the messages of monsters that "talk"
 # to the player, or at least the biggest part there-of.
 #
