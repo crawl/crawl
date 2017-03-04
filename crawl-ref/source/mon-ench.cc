@@ -1273,6 +1273,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                          mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true);
+                stop_delay(true);
 
                 if (swapping)
                     mon->apply_location_effects(newpos);
