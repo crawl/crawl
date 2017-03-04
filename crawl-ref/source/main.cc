@@ -1540,29 +1540,6 @@ static void _input()
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
-    // Immobile
-    if (you.is_stationary())
-    {
-        canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-
-    // Mesmerized
-    if (you.beheld() && !you.confused())
-    {
-        const monster* beholder = you.get_any_beholder();
-        mprf("You cannot move away from %s!",
-             beholder->name(DESC_THE, true).c_str());
-        return false;
-    }
-
-    // Held
-    if (you.attribute[ATTR_HELD])
-    {
-        mprf("You can't do that while %s.", held_status());
-        return false;
-    }
-
     // Up and down both work for shops, portals, and altars.
     if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
@@ -1577,9 +1554,33 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
-    // bidirectional, but not actually a portal
+    // Immobile
+    if (you.is_stationary())
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+
+    // Held
+    if (you.attribute[ATTR_HELD])
+    {
+        mprf("You can't do that while %s.", held_status());
+        return false;
+    }
+
+    // Bidirectional, but not actually a portal - allowed while mesmerised, but
+    // not when otherwise unable to move.
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA)
         return true;
+
+    // Mesmerised
+    if (you.beheld() && !you.confused())
+    {
+        const monster* beholder = you.get_any_beholder();
+        mprf("You cannot move away from %s!",
+             beholder->name(DESC_THE, true).c_str());
+        return false;
+    }
 
     // If it's not bidirectional, check that the player is headed
     // in the right direction.
