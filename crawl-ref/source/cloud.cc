@@ -19,6 +19,7 @@
 #include "english.h"
 #include "god-conduct.h"
 #include "god-passive.h"
+#include "level-state-type.h"
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
@@ -80,7 +81,7 @@ static const cloud_data clouds[] = {
     { "?", "?",                                 // terse, verbose name
     },
     // CLOUD_FIRE,
-    { "flame", "roaring flames",                // terse, verbose name
+    { "flame", "blazing flames",                // terse, verbose name
        COLOUR_UNDEF,                            // colour
        { TILE_CLOUD_FIRE, CTVARY_DUR },         // tile
        BEAM_FIRE,                               // beam_effect
@@ -277,6 +278,13 @@ static const cloud_data clouds[] = {
     { "salt",  nullptr,                           // terse, verbose name
       ETC_AIR,                                    // colour
       { TILE_CLOUD_WHITE_SMOKE, CTVARY_NONE },    // tile
+      BEAM_NONE, {},                              // beam & damage
+      true,                                       // opacity
+    },
+    // CLOUD_GOLD_DUST,
+    { "gold",  nullptr,                           // terse, verbose name
+      ETC_HOLY,                                   // colour
+      { TILE_CLOUD_GOLD_DUST, CTVARY_DUR },       // tile
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },
@@ -898,19 +906,7 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
     }
 
     // Qazlalites get immunity to clouds.
-    if (player && have_passive(passive_t::cloud_immunity))
-        return true;
-#if TAG_MAJOR_VERSION == 34
-
-    if (player && you.species == SP_DJINNI
-        && (cloud.type == CLOUD_FIRE
-            || cloud.type == CLOUD_FOREST_FIRE))
-    {
-        return true;
-    }
-#endif
-
-    return false;
+    return player && have_passive(passive_t::cloud_immunity);
 }
 
 // Returns a numeric resistance value for the actor's resistance to

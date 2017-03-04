@@ -6,7 +6,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_MAGIC_DART,
     SPELL_BLINK,
     SPELL_CALL_IMP,
-    SPELL_REPEL_MISSILES,
     SPELL_SLOW,
     SPELL_CONJURE_FLAME,
     SPELL_MEPHITIC_CLOUD,
@@ -17,8 +16,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SEARING_RAY,
     SPELL_DAZZLING_SPRAY,
     SPELL_FULMINANT_PRISM,
+    SPELL_FORCE_LANCE,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
-    SPELL_BATTLESPHERE,
 },
 
 {   // Book of Flames
@@ -51,8 +50,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_IGNITE_POISON,
     SPELL_FIREBALL,
     SPELL_BOLT_OF_FIRE,
-    SPELL_DELAYED_FIREBALL,
     SPELL_RING_OF_FLAMES,
+    SPELL_IGNITION,
 },
 
 {   // Book of Ice
@@ -68,7 +67,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BLINK,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_BECKONING,
-    SPELL_PORTAL_PROJECTILE,
+    SPELL_GRAVITAS,
     SPELL_TELEPORT_OTHER,
     SPELL_GOLUBRIAS_PASSAGE,
 },
@@ -92,7 +91,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of the Tempests
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
-    SPELL_FIREBALL,
+    SPELL_IGNITION,
     SPELL_TORNADO,
     SPELL_SHATTER,
 },
@@ -185,14 +184,13 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Air
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
-    SPELL_REPEL_MISSILES,
     SPELL_DISCHARGE,
+    SPELL_AIRSTRIKE,
     SPELL_LIGHTNING_BOLT,
 },
 
 {   // Book of the Sky
     SPELL_SUMMON_LIGHTNING_SPIRE,
-    SPELL_AIRSTRIKE,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_CONJURE_BALL_LIGHTNING,
@@ -266,8 +264,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 {   // Book of Power
-    SPELL_FULMINANT_PRISM,
-    SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_BATTLESPHERE,
     SPELL_VENOM_BOLT,
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
@@ -303,8 +300,8 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Debilitation
     SPELL_CORONA,
     SPELL_SLOW,
-    SPELL_GRAVITAS,
     SPELL_INNER_FLAME,
+    SPELL_PORTAL_PROJECTILE,
     SPELL_CAUSE_FEAR,
     SPELL_LEDAS_LIQUEFACTION,
 },

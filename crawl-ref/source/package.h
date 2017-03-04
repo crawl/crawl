@@ -1,5 +1,4 @@
-#ifndef PACKAGE_H
-#define PACKAGE_H
+#pragma once
 
 #define USE_ZLIB
 
@@ -117,5 +116,3 @@ private:
     friend class chunk_writer;
     friend class chunk_reader;
 };
-
-#endif

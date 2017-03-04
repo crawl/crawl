@@ -3,9 +3,9 @@
  * @brief Misc commands.
 **/
 
-#ifndef COMMAND_H
-#define COMMAND_H
+#pragma once
 
+#include "command-type.h"
 #include "enum.h"
 
 void list_armour();
@@ -28,5 +28,3 @@ int list_wizard_commands(bool do_redraw_screen = false);
 
 // XXX: Actually defined in main.cc; we may want to move this to command.cc.
 void process_command(command_type cmd);
-
-#endif

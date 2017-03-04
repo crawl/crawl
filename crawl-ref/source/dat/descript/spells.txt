@@ -128,7 +128,7 @@ deplete magical power.
 Blade Hands spell
 
 Causes long, scythe-shaped blades to grow from the caster's hands, increasing
-melee damage to a degree depending on strength and dexterity.
+melee damage significantly.
 
 While transformed, any equipped weapons are melded. The caster also becomes
 unable to evoke wands, and casting spells becomes somewhat more difficult.
@@ -318,7 +318,7 @@ exploding.
 %%%%
 Conjure Flame spell
 
-Creates a column of roaring flame in a targeted empty location.
+Creates a blazing column of flame in a targeted empty location.
 %%%%
 Control Undead spell
 
@@ -397,9 +397,10 @@ Renders the caster nigh invulnerable to harm for a brief period, but brings
 them dangerously close to death in the process. So close, in fact, that the
 body believes itself to be dead — healing effects will do nothing.
 
-The caster will receive one warning shortly before the spell expires. With high
-power, the caster will be left more resilient when the effect ends. It has no
-effect on those who are already undead.
+The caster will receive one warning shortly before the spell expires. After
+expiry, the spell cannot immediately be recast, but with high power the caster
+will be left more resilient when the effect ends. It has no effect on those who
+are already undead.
 %%%%
 Debugging Ray spell
 
@@ -494,8 +495,8 @@ Dragon Form spell
     desc = desc .. "."
 
     return desc
-}} The caster's melee damage will be substantially increased to a degree
-depending on strength, and they become much more robust but less evasive.
+}} The caster becomes able to deal incredible damage in melee combat, and
+they become much more robust, although their evasiveness is reduced.
 
 While transformed, any equipped weapons and armour are melded.
 %%%%
@@ -504,7 +505,7 @@ Dragon's Call spell
 Issues a powerful call to a draconic realm, beckoning forth dragon after dragon
 to engage the summoner's enemies. The spell is taxing to maintain, and each new
 dragon which answers the call will further drain the summoner's magical
-reserves.
+reserves. After the call ends, it cannot be issued again for a short time.
 %%%%
 Drain Life spell
 
@@ -730,6 +731,13 @@ Ignite Poison spell
 Converts all nearby poison into liquid flame, burning poisoned creatures from
 within. It also turns clouds of poison and mephitic gases into flame. The
 caster is not affected directly.
+%%%%
+Ignition spell
+
+All foes in the caster's surroundings are engulfed in balls of fire. The caster
+and their allies are protected from the fire and will never be harmed by this
+spell.
+
 %%%%
 Infestation spell
 
@@ -1290,10 +1298,9 @@ the target may have.
 Statue Form spell
 
 Transforms the caster into a slow but extremely robust stone statue. The
-caster's unarmed damage will be increased to a degree depending on strength,
-and all melee attacks will be substantially more powerful. The caster's stone
-body is insulated from electricity and gains resistance to poison, rotting and
-negative energy.
+caster's melee damage, both unarmed and with weapons, is substantially
+increased. The caster's stone body is insulated from electricity and gains
+resistance to poison, rotting and negative energy.
 
 While transformed, any equipped body armour, gloves and boots are melded.
 %%%%
@@ -1551,7 +1558,8 @@ Tornado spell
 Turns the air around the caster into a mighty vortex, doing tremendous damage
 to everyone caught in it. Those affected will also be swept up into the air and
 tossed around. Only the eye of the storm is a safe place, and it follows the
-caster. The spell's effectiveness is greatly diminished in closed areas.
+caster. The spell's effectiveness is greatly diminished in closed areas. After
+the tornado fades, it cannot be called forth again for a short time.
 %%%%
 Trog's Hand spell
 

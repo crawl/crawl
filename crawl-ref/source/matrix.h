@@ -3,8 +3,7 @@
  * @brief Two-dimensional array class.
 **/
 
-#ifndef MATRIX_H
-#define MATRIX_H
+#pragma once
 
 template <typename Z>
 class Matrix
@@ -50,4 +49,3 @@ private:
     int mwidth, mheight, size;
     unique_ptr<Z[]> data;
 };
-#endif    // MATRIX_H

@@ -3,10 +3,11 @@
  * @brief Player related wizard functions.
 **/
 
-#ifndef WIZYOU_H
-#define WIZYOU_H
+#pragma once
 
 #include "enum.h"
+#include "job-type.h"
+#include "species-type.h"
 
 #ifdef WIZARD
 #define FREEZE_TIME_KEY "freeze_time"
@@ -37,10 +38,7 @@ void wizard_god_mollify();
 void wizard_transform();
 void wizard_join_religion();
 species_type find_species_from_string(const string &species_str);
-void wizard_change_species_to(species_type sp);
 job_type find_job_from_string(const string &job_str);
 void wizard_change_job_to(job_type job);
 void wizard_xom_acts();
-#endif
-
 #endif

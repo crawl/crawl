@@ -1,5 +1,4 @@
-#ifndef DGN_HEIGHT_H
-#define DGN_HEIGHT_H
+#pragma once
 
 #include <vector>
 
@@ -97,5 +96,3 @@ private:
     coord_def pick_island_spot();
     void build_island();
 };
-
-#endif

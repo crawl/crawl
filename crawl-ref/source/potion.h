@@ -3,8 +3,9 @@
  * @brief Potion and potion-like effects.
 **/
 
-#ifndef POTION_H
-#define POTION_H
+#pragma once
+
+#include "potion-type.h"
 
 class PotionEffect
 {
@@ -46,5 +47,3 @@ const PotionEffect* get_potion_effect(potion_type pot);
 
 bool quaff_potion(item_def &potion);
 void potionlike_effect(potion_type effect, int pow, bool was_known = true);
-
-#endif

@@ -1,9 +1,21 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#pragma once
 
+#include "artefact-prop-type.h"
+#include "beam-type.h"
+#include "conduct-type.h"
+#include "energy-use-type.h"
+#include "equipment-type.h"
+#include "god-type.h"
+#include "held-type.h"
 #include "item-prop-enum.h"
+#include "mon-holy-type.h"
 #include "random-var.h"
 #include "ouch.h"
+#include "pronoun-type.h"
+#include "reach-type.h"
+#include "size-part-type.h"
+#include "size-type.h"
+#include "stat-type.h"
 
 #define CLING_KEY "clinging" // 'is creature clinging' property key
 
@@ -353,10 +365,6 @@ public:
     virtual bool haloed() const;
     // Within an umbra?
     virtual bool umbraed() const;
-#if TAG_MAJOR_VERSION == 34
-    // Being heated by a heat aura?
-    virtual bool heated() const;
-#endif
     // Halo radius.
     virtual int halo_radius() const = 0;
     // Silence radius.
@@ -364,9 +372,6 @@ public:
     // Liquefying radius.
     virtual int liquefying_radius() const = 0;
     virtual int umbra_radius() const = 0;
-#if TAG_MAJOR_VERSION == 34
-    virtual int heat_radius() const = 0;
-#endif
 
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
@@ -447,5 +452,3 @@ private:
 };
 
 bool actor_slime_wall_immune(const actor *actor);
-
-#endif

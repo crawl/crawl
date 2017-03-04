@@ -33,6 +33,7 @@
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "player.h"
+#include "player-stats.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
 #include "spl-goditem.h"   // For Sceptre of Torment tormenting
@@ -180,14 +181,14 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
 
 static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
-    if (!enough_hp(11, true))
+    if (!enough_hp(14, true))
     {
         mpr("You're too close to death to use this item.");
         *unevokable = true;
         return true;
     }
 
-    if (!enough_mp(5, false))
+    if (!enough_mp(4, false))
     {
         *unevokable = true;
         return true;
@@ -203,8 +204,8 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
     }
 
     mpr("You feel the staff feeding on your energy!");
-    dec_hp(5 + random2avg(19, 2), false);
-    dec_mp(2 + random2avg(5, 2));
+    dec_hp(14, false);
+    dec_mp(4);
     make_hungry(100, false, true);
     practise_evoking(random_range(1, 2));
 
@@ -275,7 +276,7 @@ static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
 
 static void _power_pluses(item_def *item)
 {
-    item->plus  = min(you.hp / 10, 27);
+    item->plus = min(you.hp / 10, 27);
 }
 
 static void _POWER_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -404,23 +405,44 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 
 ////////////////////////////////////////////////////
 
-static void _wucad_miscast(actor* victim, int power,int fail)
+static void _wucad_backfire()
 {
-    MiscastEffect(victim, nullptr, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
-                  "the staff of Wucad Mu", NH_NEVER);
+    switch (random2(7))
+    {
+    case 0:
+    case 1:
+        switch (random2(4))
+        {
+        case 0:
+            mpr("Weird images run through your mind.");
+            break;
+        case 1:
+            mpr("Your head hurts.");
+            break;
+        case 2:
+            mpr("You feel a strange surge of energy.");
+            break;
+        case 3:
+            mpr("You feel uncomfortable.");
+            break;
+        }
+        break;
+    case 2:
+    case 3:
+        confuse_player(2 + random2(4));
+        break;
+    case 4:
+    case 5:
+        dec_mp(5 + random2(20));
+        break;
+    case 6:
+        lose_stat(STAT_INT, 1 + random2avg(5, 2));
+        break;
+    }
 }
 
 static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        mpr("The staff is unable to affect your essence.");
-        *unevokable = true;
-        return true;
-    }
-
-#endif
     if (you.magic_points == you.max_magic_points)
     {
         mpr("Your reserves of magic are full.");
@@ -433,7 +455,7 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 
     if (one_chance_in(4))
     {
-        _wucad_miscast(&you, random2(9), random2(70));
+        _wucad_backfire();
         did_god_conduct(DID_CHANNEL, 10, true);
         return false;
     }
@@ -873,11 +895,6 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _DAMNATION_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    _equip_mpr(show_msgs, you.hands_act("smoulder", "for a moment.").c_str());
-}
-
 static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
                                            string* ammo_name, bool* returning)
 {
@@ -1020,32 +1037,9 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
     if (defender->antimagic_susceptible()
         && !mondied)
     {
-        spschools_type school = SPTYP_NONE;
-        if (defender->is_player())
-        {
-            for (int i = 0; i < you.spell_no; i++)
-                school |= get_spell_disciplines(you.spells[i]);
-        }
-        else
-        {
-            const monster* mons = defender->as_monster();
-            for (const mon_spell_slot &slot : mons->spells)
-                school |= get_spell_disciplines(slot.spell);
-        }
-        if (school != SPTYP_NONE)
-        {
-            vector<spschool_flag_type> schools;
-            for (const auto bit : spschools_type::range())
-                if (testbits(school, bit))
-                    schools.push_back(bit);
-
-            ASSERT(schools.size() > 0);
-            MiscastEffect(defender, attacker, MELEE_MISCAST,
-                          schools[random2(schools.size())],
-                          random2(9),
-                          random2(70), "the demon whip \"Spellbinder\"",
-                          NH_NEVER);
-        }
+        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_RANDOM,
+                      random2(9), random2(70),
+                      "the demon whip \"Spellbinder\"", NH_NEVER);
     }
 }
 
@@ -1227,20 +1221,6 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
-static void _CAPTAIN_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    if (you_worship(GOD_SHINING_ONE))
-    {
-        _equip_mpr(show_msgs,
-                   "You feel dishonourable wielding this.");
-    }
-    else
-    {
-        _equip_mpr(show_msgs,
-                   "You feel a cutthroat vibe.");
-    }
-}
-
 static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
                                 actor* defender, bool mondied, int dam)
 {
@@ -1358,4 +1338,107 @@ static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
     else if (you.species != SP_VAMPIRE)
         _equip_mpr(show_msgs, "You feel very empty.");
     // else let player-equip.cc handle message
+}
+
+
+///////////////////////////////////////////////////
+
+static void _THERMIC_ENGINE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The engine hums to life!");
+    item->plus = 2;
+}
+
+static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The engine shudders to a halt.");
+    item->plus = 2;
+}
+
+static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    if (weapon->plus < 14)
+    {
+        weapon->plus += 2;
+
+        if (weapon->plus > 14)
+            weapon->plus = 14;
+
+        you.wield_change = true;
+    }
+
+    if (mondied)
+        return;
+
+    // the flaming brand has already been applied at this point
+    const int bonus_dam = resist_adjust_damage(defender, BEAM_COLD,
+                                               random2(dam) / 2 + 1);
+    if (bonus_dam > 0)
+    {
+        mprf("%s %s %s.",
+            attacker->name(DESC_THE).c_str(),
+            attacker->conj_verb("freeze").c_str(),
+            (attacker == defender ? defender->pronoun(PRONOUN_REFLEXIVE)
+                                : defender->name(DESC_THE)).c_str());
+
+        defender->hurt(attacker, bonus_dam, BEAM_COLD);
+        if (defender->alive())
+            defender->expose_to_element(BEAM_COLD, 2);
+    }
+}
+
+static void _THERMIC_ENGINE_world_reacts(item_def *item)
+{
+    if (item->plus > 2)
+    {
+        item->plus -= div_rand_round(you.time_taken, BASELINE_DELAY);
+
+        if (item->plus < 2)
+            item->plus = 2;
+
+        you.wield_change = true;
+    }
+}
+
+///////////////// Ratskin Cloak ///////////////////
+
+static bool _RATSKIN_CLOAK_evoke(item_def *item, bool* did_work, bool* unevokable)
+{
+    if (!enough_mp(3, false))
+    {
+        *unevokable = true;
+        return true;
+    }
+
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 1500))
+        return false;
+
+    bool success = false;
+    const int how_many = coinflip() + 1;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        monster_type mon = one_chance_in(3) ? MONS_HELL_RAT : MONS_RIVER_RAT;
+
+        mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
+        mg.set_summoned(&you, 0, 0);
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+        monster *m = create_monster(mg);
+
+        if (m)
+        {
+            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
+            success = true;
+        }
+    }
+
+    if (success)
+        mpr("You call out to the rats of the Dungeon...");
+
+    dec_mp(3);
+    make_hungry(50, false, true);
+    practise_evoking(1);
+
+    return true;
 }

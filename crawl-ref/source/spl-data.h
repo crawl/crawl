@@ -76,7 +76,7 @@ static const struct spell_desc spelldata[] =
     1, 0,
     TILEG_APPORTATION,
 },
-
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_DELAYED_FIREBALL, "Delayed Fireball",
     SPTYP_FIRE | SPTYP_CONJURATION,
@@ -85,9 +85,9 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     7, 0,
-    TILEG_DELAYED_FIREBALL,
+    TILEG_ERROR,
 },
-
+#endif
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
     SPTYP_CONJURATION | SPTYP_FIRE,
@@ -780,7 +780,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
     SPTYP_CHARMS | SPTYP_AIR,
-    SPFLAG_NONE,
+    SPFLAG_MONSTER,
     2,
     50,
     -1, -1,
@@ -1633,7 +1633,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
-    SPTYP_TRANSLOCATION,
+    SPTYP_TRANSLOCATION | SPTYP_HEXES,
     SPFLAG_NONE,
     3,
     50,
@@ -3242,7 +3242,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_TARGET | SPFLAG_NOT_SELF,
     6,
     100,
-    3, LOS_RADIUS,
+    3, LOS_DEFAULT_RANGE,
     6, 0,
     TILEG_CLOUD_CONE,
 },
@@ -3665,7 +3665,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
-    SPTYP_TRANSLOCATION | SPTYP_HEXES,
+    SPTYP_TRANSLOCATION,
     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     3,
     200,
@@ -3869,7 +3869,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     3,
     200,
-    2, LOS_RADIUS,
+    2, LOS_DEFAULT_RANGE,
     2, 0,
     TILEG_BECKONING,
 },
@@ -3906,6 +3906,17 @@ static const struct spell_desc spelldata[] =
     LOS_RADIUS, LOS_RADIUS,
     2, 0,
     TILEG_POISONOUS_VAPOURS,
+},
+
+{
+    SPELL_IGNITION, "Ignition",
+    SPTYP_FIRE,
+    SPFLAG_AREA,
+    8,
+    200,
+    -1, -1,
+    8, 0,
+    TILEG_IGNITION,
 },
 
 {

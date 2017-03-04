@@ -1,7 +1,8 @@
-#ifndef JOBS_H
-#define JOBS_H
+#pragma once
 
 #include "item-prop-enum.h"
+#include "job-type.h"
+#include "species-type.h"
 
 const char *get_job_abbrev(job_type which_job);
 job_type get_job_by_abbrev(const char *abbrev);
@@ -18,4 +19,3 @@ void give_job_skills(job_type job);
 void job_stat_init(job_type job);
 
 void debug_jobdata();
-#endif

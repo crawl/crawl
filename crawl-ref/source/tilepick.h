@@ -3,9 +3,11 @@
  * @brief Look-up functions for dungeon and item tiles.
 **/
 
-#ifndef TILEPICK_H
-#define TILEPICK_H
+#pragma once
 
+#include "ability-type.h"
+#include "command-type.h"
+#include "game-type.h"
 #include "tiledef_defines.h"
 
 #define TILE_NUM_KEY "tile_num"
@@ -73,4 +75,3 @@ void tile_init_props(monster* mon);
 tileidx_t tileidx_monster_base(int type, bool in_water = false, int colour = 0,
                                int number = 4, int tile_num_prop = 0);
 tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset);
-#endif

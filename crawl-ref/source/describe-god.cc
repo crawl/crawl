@@ -15,11 +15,13 @@
 #include "database.h"
 #include "describe.h"
 #include "english.h"
+#include "eq-type-flags.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "god-prayer.h"
+#include "god-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "menu.h"
@@ -231,6 +233,10 @@ static const char *divine_title[][8] =
     // Hepliaklqana -- memory/ancestry theme
     {"Damnatio Memoriae",       "Hazy",             "@Adj@ Child",              "Storyteller",
         "Brooding",           "Anamnesiscian",               "Grand Scion",                "Unforgettable"},
+
+    // Wu Jian -- animal/chinese martial arts monk theme
+    {"Wooden Rat",          "Young Dog",             "Young Crane",              "Young Tiger",
+        "Young Dragon",     "Red Sash",               "Golden Sash",              "Sifu"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
@@ -331,48 +337,72 @@ static string _describe_ash_skill_boost()
     return desc.str();
 }
 
+typedef pair<int, string> ancestor_upgrade;
+
+static const map<monster_type, vector<ancestor_upgrade> > ancestor_data =
+{
+    { MONS_ANCESTOR_KNIGHT,
+      { { 1,  "Flail" },
+        { 1,  "Shield" },
+        { 1,  "Chain mail (+AC)" },
+        { 15, "Broad axe (flame)" },
+        { 19, "Large shield (reflect)" },
+        { 19, "Haste" },
+        { 24, "Broad axe (speed)" },
+      }
+    },
+    { MONS_ANCESTOR_BATTLEMAGE,
+      { { 1,  "Quarterstaff" },
+        { 1,  "Throw Frost" },
+        { 1,  "Stone Arrow" },
+        { 1,  "Increased melee damage" },
+        { 15, "Bolt of Magma" },
+        { 19, "Lajatang (freeze)" },
+        { 19, "Haste" },
+        { 24, "Lehudib's Crystal Spear" },
+      }
+    },
+    { MONS_ANCESTOR_HEXER,
+      { { 1,  "Dagger (drain)" },
+        { 1,  "Slow" },
+        { 1,  "Confuse" },
+        { 15, "Paralyse" },
+        { 19, "Mass Confusion" },
+        { 19, "Haste" },
+        { 24, "Quick blade (antimagic)" },
+      }
+    },
+};
+
 /// Build & return a table of Hep's upgrades for your chosen ancestor type.
 static string _describe_ancestor_upgrades()
 {
     if (!you.props.exists(HEPLIAKLQANA_ALLY_TYPE_KEY))
         return "";
 
-    // TODO: don't hardcode this
-    // TODO: higlight upgrades taken
-    // XXX: maybe it'd be nice to let you see other ancestor types'...?
-    switch (you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int())
+    string desc;
+    const monster_type ancestor =
+        static_cast<monster_type>(you.props[HEPLIAKLQANA_ALLY_TYPE_KEY].get_int());
+    const vector<ancestor_upgrade> *upgrades = map_find(ancestor_data,
+                                                        ancestor);
+
+    if (upgrades)
     {
-    case MONS_ANCESTOR_KNIGHT:
-        return "XL                      Knight\n"
-               "                        Flail\n"
-               "                        Shield\n"
-               "                   Splint Mail (+AC)\n"
-               "15                 Broad Axe (flame)\n"
-               "19              Large Shield (reflect)\n"
-               "19                      Haste\n"
-               "24                Speed (weapon ego)\n";
-    case MONS_ANCESTOR_BATTLEMAGE:
-        return "XL                    Battlemage\n"
-               "                     Quarterstaff\n"
-               "                      Throw Frost\n"
-               "                      Stone Arrow\n"
-               "                     +Melee Damage\n"
-               "15                    Magma Bolt\n"
-               "19                  Lajatang (freeze)\n"
-               "19                       Haste\n"
-               "24                   Crystal Spear\n";
-    case MONS_ANCESTOR_HEXER:
-        return "XL                       Hexer\n"
-               "                     Dagger (drain)\n"
-               "                         Slow\n"
-               "                        Confuse\n"
-               "15                     Paralyse\n"
-               "19                   Mass Confusion\n"
-               "19                       Haste\n"
-               "24                Quickblade (antimagic)\n";
-    default:
-        return "";
+        desc = "<white>XL              Upgrade\n</white>";
+        for (auto &entry : *upgrades)
+        {
+            desc += make_stringf("%s%2d              %s%s\n",
+                                 you.experience_level < entry.first
+                                     ? "<darkgrey>" : "",
+                                 entry.first,
+                                 entry.second.c_str(),
+                                 you.experience_level < entry.first
+                                     ? "</darkgrey>" : "");
+        }
     }
+
+    // XXX: maybe it'd be nice to let you see other ancestor types'...?
+    return desc;
 }
 
 // from dgn-overview.cc
@@ -576,6 +606,15 @@ static void _god_wrath_description(god_type which_god)
     _print_string_wrapped(_describe_god_wrath_causes(which_god), width);
     _print_string_wrapped(getLongDescription(god_name(which_god) + " wrath"),
                           width);
+
+    if (which_god != GOD_RU) // Permanent wrath.
+    {
+        const bool long_wrath = initial_wrath_penance_for(which_god) > 30;
+        _print_string_wrapped(apostrophise(uppercase_first(god_name(which_god)))
+                              + " wrath lasts for a relatively " +
+                              (long_wrath ? "long" : "short") + " duration.",
+                              width);
+    }
 }
 
 /**
@@ -587,49 +626,49 @@ static void _god_wrath_description(god_type which_god)
  */
 static string _get_god_misc_info(god_type which_god)
 {
+    string info = "";
+    skill_type skill = invo_skill(which_god);
+
+    switch (skill)
+    {
+        case SK_INVOCATIONS:
+            break;
+        case SK_NONE:
+            if (which_god == GOD_GOZAG) // XXX: No piety, but there's no space
+                break;                  // for details due to the bribe table.
+            info += uppercase_first(apostrophise(god_name(which_god))) +
+                    " powers are based on piety instead of Invocations skill.";
+            break;
+        default:
+            info += uppercase_first(apostrophise(god_name(which_god))) +
+                    " powers are based on " + skill_name(skill) + " instead"
+                    " of Invocations skill.";
+            break;
+    }
+
+    if (!info.empty())
+        info += "\n\n";
+
     switch (which_god)
     {
         case GOD_ASHENZARI:
-        case GOD_JIYVA:
-        case GOD_TROG:
-        {
-            const string piety_only = "Note that " + god_name(which_god) +
-                                      " does not demand training of the"
-                                      " Invocations skill. All abilities are"
-                                      " purely based on piety.";
-
             if (have_passive(passive_t::bondage_skill_boost))
-                return piety_only + "\n\n" + _describe_ash_skill_boost();
-
-            return piety_only;
-        }
-
-        case GOD_KIKUBAAQUDGHA:
-            return "The power of Kikubaaqudgha's abilities is governed by "
-                   "Necromancy skill instead of Invocations.";
-
-        case GOD_ELYVILON:
-            return "Healing hostile monsters may pacify them, turning them "
-                   "neutral. Pacification works best on natural beasts, "
-                   "worse on monsters of your species, worse on other "
-                   "species, worst of all on demons and undead, and not at "
-                   "all on sleeping or mindless monsters. If it succeeds, "
-                   "you gain half of the monster's experience value. Pacified "
-                   "monsters try to leave the level.";
+                info += _describe_ash_skill_boost();
+            break;
 
         case GOD_GOZAG:
-            return _describe_branch_bribability();
-
-        case GOD_PAKELLAS:
-            return "The power of Pakellas' abilities is governed by "
-                   "Evocations skill instead of Invocations.";
+            info += _describe_branch_bribability();
+            break;
 
         case GOD_HEPLIAKLQANA:
-            return _describe_ancestor_upgrades();
+            info += _describe_ancestor_upgrades();
+            break;
 
         default:
-            return "";
+            break;
     }
+
+    return info;
 }
 
 /**
@@ -658,34 +697,47 @@ static void _detailed_god_description(god_type which_god)
  * Player may or may not be currently under penance.
  *
  * @param which_god     The god in question.
+ * @return              A format string, describing the god's ire (or lack of).
+ */
+static string _raw_penance_message(god_type which_god)
+{
+    const int penance = you.penance[which_god];
+
+    // Give more appropriate message for the good gods.
+    if (penance > 0 && is_good_god(which_god))
+    {
+        if (is_good_god(you.religion))
+            return "%s is ambivalent towards you.";
+        if (!god_hates_your_god(which_god))
+        {
+            return "%s is almost ready to forgive your sins.";
+                 // == "Come back to the one true church!"
+        }
+    }
+
+    const int initial_penance = initial_wrath_penance_for(which_god);
+    // could do some math tricks to turn this into a table, but it seems fiddly
+    if (penance > initial_penance * 3 / 4)
+        return "%s's wrath is upon you!";
+    if (penance > initial_penance / 2)
+        return "%s is annoyed with you.";
+    if (penance > initial_penance / 4)
+        return "%s is almost ready to forgive your sins.";
+    return "%s is neutral towards you.";
+}
+
+/**
+ * Describe the given god's level of irritation at the player.
+ *
+ * Player may or may not be currently under penance.
+ *
+ * @param which_god     The god in question.
  * @return              A description of the god's ire (or lack thereof).
  */
 static string _god_penance_message(god_type which_god)
 {
-    int which_god_penance = you.penance[which_god];
-
-    // Give more appropriate message for the good gods.
-    // XXX: ^ this is a hack
-    if (which_god_penance > 0 && is_good_god(which_god))
-    {
-        if (is_good_god(you.religion))
-            which_god_penance = 0;
-        else if (!god_hates_your_god(which_god) && which_god_penance >= 5)
-            which_god_penance = 2; // == "Come back to the one true church!"
-    }
-
-    const string penance_message =
-        (which_god == GOD_NEMELEX_XOBEH
-         && which_god_penance > 0 && which_god_penance <= 100)
-            ? "%s won't play fair with you." :
-        (which_god_penance >= 50)   ? "%s's wrath is upon you!" :
-        (which_god_penance >= 20)   ? "%s is annoyed with you." :
-        (which_god_penance >=  5)   ? "%s well remembers your sins." :
-        (which_god_penance >   0)   ? "%s is almost ready to forgive your sins." :
-        (you.worshipped[which_god]) ? "%s is ambivalent towards you."
-                                    : "%s is neutral towards you.";
-
-    return make_stringf(penance_message.c_str(),
+    const string message = _raw_penance_message(which_god);
+    return make_stringf(message.c_str(),
                         uppercase_first(god_name(which_god)).c_str());
 }
 

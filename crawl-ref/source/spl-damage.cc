@@ -31,6 +31,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"
@@ -45,6 +46,7 @@
 #include "viewchar.h"
 #include "view.h"
 
+#if TAG_MAJOR_VERSION == 34
 // This spell has two main advantages over Fireball:
 //
 // (1) The release is instantaneous, so monsters will not
@@ -79,6 +81,7 @@ spret_type cast_delayed_fireball(bool fail)
     you.attribute[ATTR_DELAYED_FIREBALL] = 1;
     return SPRET_SUCCESS;
 }
+#endif
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
@@ -215,7 +218,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomised and
         // may be shifted by one.
-        int min_dist = MONSTER_LOS_RANGE - 1;
+        int min_dist = LOS_DEFAULT_RANGE - 1;
 
         int dist;
         int count = 0;
@@ -781,6 +784,8 @@ void sonic_damage(bool scream)
         hurt = min(hurt, max(cap, 1));
         // not so much damage if you're a n00b
         hurt = div_rand_round(hurt * you.experience_level, 27);
+        // scale by time taken, so multiple quick actions don't hurt more
+        hurt = div_rand_round(hurt * you.time_taken, BASELINE_DELAY);
         /* per dpeg:
          * damage is universal (well, only to those who can hear, but not sure
            we can determine that in-game), i.e. smiting, no resists
@@ -1824,6 +1829,112 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         _ignite_poison_player(where, pow, agent);
         return 0; // ignored
     }, agent->pos());
+
+    return SPRET_SUCCESS;
+}
+
+static void _ignition_square(const actor *agent, bolt beam, coord_def square, bool center)
+{
+    // HACK: bypass visual effect
+    beam.target = square;
+    beam.in_explosion_phase = true;
+    beam.explosion_affect_cell(square);
+    if (center)
+        noisy(spell_effect_noise(SPELL_IGNITION),square);
+}
+
+spret_type cast_ignition(const actor *agent, int pow, bool fail)
+{
+    ASSERT(agent->is_player());
+
+    fail_check();
+
+    targeter_los hitfunc(agent, LOS_NO_TRANS);
+
+    // Ignition affects squares that had hostile monsters on them at the time
+    // of casting. This way nothing bad happens when monsters die halfway
+    // through the spell.
+    vector<coord_def> blast_sources;
+
+    for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS);
+         ai; ++ai)
+    {
+        if (ai->is_monster()
+            && !ai->as_monster()->wont_attack()
+            && !mons_is_firewood(*ai->as_monster())
+            && !mons_is_tentacle_segment(ai->as_monster()->type))
+        {
+            blast_sources.push_back(ai->position);
+        }
+    }
+
+    if (blast_sources.empty())
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else
+    {
+        mpr("The air bursts into flame!");
+
+        vector<coord_def> blast_adjacents;
+
+        // Used to draw explosion cells
+        bolt beam_visual;
+        beam_visual.set_agent(agent);
+        beam_visual.flavour       = BEAM_VISUAL;
+        beam_visual.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
+        beam_visual.colour        = RED;
+        beam_visual.ex_size       = 1;
+        beam_visual.is_explosion  = true;
+
+        // Used to deal damage; invisible
+        bolt beam_actual;
+        beam_actual.set_agent(agent);
+        beam_actual.flavour       = BEAM_FIRE;
+        beam_actual.real_flavour  = BEAM_FIRE;
+        beam_actual.glyph         = 0;
+        beam_actual.damage        = calc_dice(3, 10 + pow/3); // less than fireball
+        beam_actual.name          = "fireball";
+        beam_actual.colour        = RED;
+        beam_actual.ex_size       = 0;
+        beam_actual.is_explosion  = true;
+        beam_actual.loudness      = 0;
+
+#ifdef DEBUG_DIAGNOSTICS
+        dprf(DIAG_BEAM, "ignition dam=%dd%d",
+             beam_actual.damage.num, beam_actual.damage.size);
+#endif
+
+        // Fake "shaped" radius 1 explosions (skipping squares with friends).
+        for (coord_def pos : blast_sources)
+        {
+            for (adjacent_iterator ai(pos); ai; ++ai)
+            {
+                if (cell_is_solid(*ai))
+                    continue;
+
+                actor *act = actor_at(*ai);
+
+                // Friendly creature, don't blast this square.
+                if (act && (act == agent
+                            || (act->is_monster()
+                                && act->as_monster()->wont_attack())))
+                {
+                    continue;
+                }
+
+                blast_adjacents.push_back(*ai);
+                beam_visual.explosion_draw_cell(*ai);
+            }
+            beam_visual.explosion_draw_cell(pos);
+        }
+        update_screen();
+        scaled_delay(50);
+
+        // Real explosions on each individual square.
+        for (coord_def pos : blast_sources)
+            _ignition_square(agent, beam_actual, pos, true);
+        for (coord_def pos : blast_adjacents)
+            _ignition_square(agent, beam_actual, pos, false);
+    }
 
     return SPRET_SUCCESS;
 }
@@ -2969,7 +3080,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
             if (entry.second <= 0)
                 continue;
 
-            const int eff_range = max(3, (6 * i / LOS_RADIUS));
+            const int eff_range = max(3, (6 * i / LOS_DEFAULT_RANGE));
 
             // At or within range 3, this is equivalent to the old Ice Storm
             // damage.
@@ -3014,6 +3125,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
                                  ZAP_CRYSTAL_BOLT,
                                  ZAP_LIGHTNING_BOLT,
                                  ZAP_CORROSIVE_BOLT);
+    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
     zapping(zap, pow * 7 / 6 + 15, beam, false);
 
     return SPRET_SUCCESS;

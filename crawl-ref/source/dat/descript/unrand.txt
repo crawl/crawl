@@ -41,7 +41,7 @@ staff of Olgreb
 A staff which was once wielded by the mighty wizard Olgreb. It increases the
 power of its wielder's poison magic, and can be evoked to activate its own
 venomous spells. Its touch may poison even resistant creatures, and it grants
-protection from all venoms while wielded.
+immunity to all venoms while wielded.
 %%%%
 staff of Wucad Mu
 
@@ -128,7 +128,10 @@ called Boris. He got lost in the Dungeon while seeking the Orb.
 %%%%
 scythe "Finisher"
 
-A long and sharp scythe, specially modified to be quickly swung in combat.
+A long and exceedingly sharp scythe. Its extraordinary speed is the work of a
+mad wizard, who spent years refining it before discarding it in a fit of rage.
+
+The blade looses a low keen as it cuts through the air.
 %%%%
 sling "Punk"
 
@@ -206,8 +209,9 @@ it.
 %%%%
 heavy crossbow "Sniper"
 
-A huge crossbow made of some black material. It is highly damaging, but
-extremely cumbersome to load. It is enchanted to never miss its target.
+The sacred weapon of Toth-Mos, first apostle of the god Ashenzari. It grants
+the wielder a fraction of Ashenzari's own vision, ensuring that every shot will
+land true.
 %%%%
 longbow "Piercer"
 
@@ -286,8 +290,9 @@ hours to decipher it, and in time, a translation was finally settled on:
 %%%%
 robe of Augmentation
 
-A silk robe, woven with enchantments to enhance the wearer's physical and
-mental abilities.
+A variegated robe, woven with enchantments to enhance the wearer's physical and
+mental abilities. Its creators wove in strands of hair from a hundred different
+animals, each chosen for the unique strengths it could grant the robe's wearer.
 %%%%
 cloak of the Thief
 
@@ -301,7 +306,10 @@ Just in case you had trouble getting hit.
 %%%%
 crown of Dyrovepreva
 
-A large crown of dull bronze, set with a dazzling array of gemstones.
+A large circlet of dull bronze, set with a dazzling array of gemstones. It was
+first worn by a prince of the Titans, who sought protection from the incessant
+warfare between his fellow princes. In practice, the main effect of the
+artefact was to unite his rivals against him.
 %%%%
 hat of the Bear Spirit
 
@@ -339,7 +347,10 @@ The {{
 %%%%
 salamander hide armour
 
-A leather armour made of a salamander's skin.
+Most salamanders' bodies are consigned to the fiery depths from which they
+sprang. Rarely, though, salamanders instead preserve the skins of those that
+passed. The runes and decorations on this hide suggest it once belonged to a
+respected warrior or priest - perhaps even a king.
 %%%%
 gauntlets of War
 
@@ -367,8 +378,10 @@ refund.
 %%%%
 mask of the Dragon
 
-A strange blue mask made of hard, flexible leather, resembling a dragon's
-visage.
+The mask of the High Priest of ancient Erebora. In ancient times, the gods of
+the Ereborans ceased to answer their prayers, and in desperation, the people
+turned to the forbidden worship of dragons. Now, of their works, only this mask
+remains.
 %%%%
 robe of Night
 
@@ -404,6 +417,9 @@ ratskin cloak
 A cloak stitched from the hides of hundreds of hell rats, by an enchantress
 with a magic loom and too much time on her hands. It provides excellent
 protection from rats of all kinds.
+
+It can be evoked to summon rats from the Dungeon to accompany the wearer,
+for a time.
 %%%%
 shield of the Gong
 
@@ -491,7 +507,10 @@ slows the wearer somewhat.
 %%%%
 amulet of Vitality
 
-A jewelled amulet famed for its powers of resilience and recuperation.
+A jewelled amulet famed for its powers of resilience and recuperation. Its
+greatest notoriety came from its use by the dread necromancer Borgnjor, who
+relied upon it to maintain her slender hold on life. After her final demise,
+the amulet vanished from the pages of history.
 %%%%
 autumn katana
 
@@ -625,6 +644,7 @@ A massive axe that looks like it was carved from a glacier, or possibly calved
 from one. It leaves ice crystals in its wake as it swings through the air, and
 grants its wielder immunity to freezing vapours.
 %%%%
+# TAG_MAJOR_VERSION == 34
 armour of Talos
 
 A huge and weighty suit of bronze plate armour. Only one with a correspondingly
@@ -640,4 +660,10 @@ and hexes with no physical manifestation at all.
 amulet of invisibility
 
 An amulet that can be activated to render its wearer invisible.
+%%%%
+Maxwell's thermic engine
+
+A strange sword, one blade blistering hot and the other icy cold. When it hits
+its target the thermal gradient increases. What causes this effect is unknown
+but it is rumored that otherworldly forces are involved.
 %%%%

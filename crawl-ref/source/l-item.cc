@@ -20,6 +20,7 @@
 #include "food.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "l-defs.h"
@@ -147,7 +148,7 @@ static int l_item_do_wear(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    bool success = do_wear_armour(item->link, false);
+    bool success = wear_armour(item->link);
     lua_pushboolean(ls, success);
     return 1;
 }

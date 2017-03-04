@@ -10,6 +10,7 @@
 #include "files.h"
 #include "libutil.h"
 #include "l-libs.h"
+#include "maybe-bool.h"
 #include "misc.h" // erase_val
 #include "options.h"
 #include "state.h"

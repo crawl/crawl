@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "hints.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -679,7 +680,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
             if (!quiet)
                 simple_monster_message(*this, " breaks free.");
+            break;
         }
+
+        monster_web_cleanup(*this, true);
         break;
     }
     case ENCH_FAKE_ABJURATION:
@@ -1269,6 +1273,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                          mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true);
+                stop_delay(true);
 
                 if (swapping)
                     mon->apply_location_effects(newpos);
@@ -1445,6 +1450,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
+    case ENCH_DISTRACTED_ACROBATICS:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
@@ -2155,7 +2161,7 @@ static const char *enchant_names[] =
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
-    "stilling the winds", "thunder_ringed",
+    "stilling the winds", "thunder_ringed", "distracted by acrobatics",
     "buggy",
 };
 

@@ -8,6 +8,7 @@
 #include "xom.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "abyss.h"
 #include "acquire.h"
@@ -28,6 +29,7 @@
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "losglobal.h"
@@ -1463,14 +1465,10 @@ static void _xom_give_good_mutations(int) { _xom_give_mutations(true); }
 static void _xom_give_bad_mutations(int) { _xom_give_mutations(false); }
 
 /**
- * Have Xom throw divine lightning. May include the player as a victim.
+ * Have Xom throw divine lightning.
  */
 static void _xom_throw_divine_lightning(int /*sever*/)
 {
-    const bool protection = you.hp <= random2(201);
-    if (protection)
-        you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-
     god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
     bolt beam;
@@ -1487,25 +1485,9 @@ static void _xom_throw_divine_lightning(int /*sever*/)
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
-    beam.explode();
+    beam.explode(true, true);
 
-    if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-    {
-        mpr("Your divine protection wanes.");
-        you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
-    }
-
-    // Don't accidentally kill the player when doing a good act.
-    if (you.escaped_death_cause == KILLED_BY_WILD_MAGIC
-        && you.escaped_death_aux == "Xom's lightning strike")
-    {
-        set_hp(1);
-        you.reset_escaped_death();
-    }
-
-    const string note = make_stringf("divine lightning%s",
-                                     protection ? " (protected)" : "");
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divine lightning"), true);
 }
 
 /// What scenery nearby would Xom like to mess with, if any?
@@ -1819,10 +1801,12 @@ static void _xom_enchant_monster(bool helpful)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
-static void _xom_good_enchant_monster(int /*sever*/) {
+static void _xom_good_enchant_monster(int /*sever*/)
+{
     _xom_enchant_monster(true);
 }
-static void _xom_bad_enchant_monster(int /*sever*/) {
+static void _xom_bad_enchant_monster(int /*sever*/)
+{
     _xom_enchant_monster(false);
 }
 

@@ -7,6 +7,7 @@
 
 #include "spl-goditem.h"
 
+#include "cleansing-flame-source-type.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -326,8 +327,11 @@ static void _dispellable_player_buffs(player_debuff_effects &buffs)
 {
     // attributes
     static const attribute_type dispellable_attributes[] = {
-        ATTR_DELAYED_FIREBALL, ATTR_SWIFTNESS,
-        ATTR_REPEL_MISSILES, ATTR_DEFLECT_MISSILES,
+#if TAG_MAJOR_VERSION == 34
+        ATTR_DELAYED_FIREBALL,
+#endif
+        ATTR_REPEL_MISSILES,
+        ATTR_DEFLECT_MISSILES,
     };
 
     for (auto attribute : dispellable_attributes)
@@ -379,9 +383,11 @@ void debuff_player()
     for (auto attr : buffs.attributes)
     {
         you.attribute[attr] = 0;
+#if TAG_MAJOR_VERSION == 34
         if (attr == ATTR_DELAYED_FIREBALL)
             mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         else
+#endif
             need_msg = true;
     }
 
@@ -493,7 +499,7 @@ int detect_items(int pow)
 			if (map_radius <= 0 && you.mutation[MUT_STRONG_NOSE] == 0)
 				return 0;
 		}
-		else if(you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
+		else if (you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
 			map_radius = 5;
 		
 		//If player species is Cyno, choose higher of map_radius or radius given by MUT_STRONG_NOSE
@@ -1312,6 +1318,7 @@ spret_type cast_random_effects(int pow, bolt& beam, bool fail)
                                  ZAP_FIREBALL,
                                  ZAP_BOLT_OF_DRAINING,
                                  ZAP_VENOM_BOLT);
+    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
 
     zapping(zap, pow, beam, false);
 

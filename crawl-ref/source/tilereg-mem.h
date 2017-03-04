@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_MEM_H
-#define TILEREG_MEM_H
+#pragma once
 
 #include "tilereg-spl.h"
 
@@ -23,5 +22,4 @@ protected:
     virtual void activate() override;
 };
 
-#endif
 #endif

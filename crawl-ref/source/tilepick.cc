@@ -16,6 +16,7 @@
 #include "ghost.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
@@ -28,6 +29,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
+#include "tile-flags.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
@@ -441,6 +443,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_USKAYAW;
     case DNGN_ALTAR_HEPLIAKLQANA:
         return TILE_DNGN_ALTAR_HEPLIAKLQANA;
+    case DNGN_ALTAR_WU_JIAN:
+        return TILE_DNGN_ALTAR_WU_JIAN;
     case DNGN_ALTAR_ECUMENICAL:
         return TILE_DNGN_ALTAR_ECUMENICAL;
     case DNGN_FOUNTAIN_BLUE:
@@ -1242,7 +1246,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR, },
     };
 
-    struct shape_size_tiles {
+    struct shape_size_tiles
+    {
         tileidx_t small; ///< Z_SMALL and default tile
         tileidx_t big;   ///< Z_BIG tile
     };
@@ -2124,6 +2129,9 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
 
     case ARM_CLOAK:
         return TILE_ARM_CLOAK;
+
+    case ARM_SCARF:
+        return TILE_ARM_SCARF;
 
     case ARM_HAT:
         return TILE_THELM_HAT;
@@ -3190,14 +3198,18 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HOP;
 
     // Others
+#if TAG_MAJOR_VERSION == 34
     case ABIL_DELAYED_FIREBALL:
         return TILEG_ABILITY_DELAYED_FIREBALL;
+#endif
     case ABIL_END_TRANSFORMATION:
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;
     case ABIL_STOP_SINGING:
         return TILEG_ABILITY_STOP_SINGING;
+    case ABIL_CANCEL_PPROJ:
+        return TILEG_ABILITY_CANCEL_PPROJ;
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -3488,6 +3500,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_USKAYAW_LINE_PASS;
    case ABIL_USKAYAW_GRAND_FINALE:
         return TILEG_ABILITY_USKAYAW_GRAND_FINALE;
+     // Wu Jian
+    case ABIL_WU_JIAN_SERPENTS_LASH:
+        return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
+    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
+        return TILEG_ABILITY_WU_JIAN_HEAVEN_ON_EARTH;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

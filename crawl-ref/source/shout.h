@@ -1,7 +1,7 @@
-#ifndef SHOUT_H
-#define SHOUT_H
+#pragma once
 
 #include "noise.h"
+#include "sense-type.h"
 
 bool noisy(int loudness, const coord_def& where, mid_t who);
 bool noisy(int loudness, const coord_def& where, const char *msg = nullptr,
@@ -23,5 +23,3 @@ void monster_shout(monster *mons, int s_type);
 bool check_awaken(monster* mons, int stealth);
 
 void apply_noises();
-
-#endif

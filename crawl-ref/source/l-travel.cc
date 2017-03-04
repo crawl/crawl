@@ -22,6 +22,7 @@ LUAFN(l_set_exclude)
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
         return 0;
+    // XXX: dedup w/_get_full_exclusion_radius()?
     int r = LOS_RADIUS;
     if (lua_gettop(ls) > 2)
         r = luaL_checkint(ls, 3);

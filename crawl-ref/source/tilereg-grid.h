@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_GRID_H
-#define TILEREG_GRID_H
+#pragma once
 
 #include "tiledgnbuf.h"
 #include "tilereg.h"
@@ -65,5 +64,4 @@ protected:
     DungeonCellBuffer m_buf;
 };
 
-#endif
 #endif

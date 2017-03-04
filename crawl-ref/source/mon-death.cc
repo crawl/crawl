@@ -37,8 +37,10 @@
 #include "hiscores.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -66,6 +68,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
@@ -212,8 +215,8 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
          chunks_made < nchunks && ntries < 10000; ++ntries)
     {
         coord_def cp = where;
-        cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
-        cp.y += random_range(-LOS_RADIUS, LOS_RADIUS);
+        cp.x += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
+        cp.y += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
 
         dprf("Trying to scatter chunk to %d, %d...", cp.x, cp.y);
 
@@ -409,6 +412,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
     if (!x_chance_in_y(chance, chance + 9))
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
+    you.redraw_title = true;
 }
 
 static void _create_monster_hide(const item_def &corpse, bool silent)
@@ -438,6 +442,19 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         { MONS_BAI_SUZHEN, 3 },
         { MONS_BAI_SUZHEN_DRAGON, 3 },
     };
+
+    if (mtyp == MONS_DEEP_TROLL)
+    {
+        item.props["item_tile_name"] = "deep_troll_leather";
+        item.props["worn_tile_name"] = "deep_troll_leather";
+        bind_item_tile(item);
+    }
+    else if (mtyp == MONS_IRON_TROLL)
+    {
+        item.props["item_tile_name"] = "iron_troll_leather";
+        item.props["worn_tile_name"] = "iron_troll_leather";
+        bind_item_tile(item);
+    }
 
     const int* bonus_plus = map_find(hide_avg_plusses, montype);
     if (bonus_plus)
@@ -1902,6 +1919,9 @@ item_def* monster_die(monster* mons, killer_type killer,
     // ... and wind-stillers.
     mons->del_ench(ENCH_STILL_WINDS, true);
 
+    // and webbed monsters
+    monster_web_cleanup(*mons, true);
+
     // Clean up any blood from the flayed effect
     if (mons->has_ench(ENCH_FLAYED))
         heal_flayed_effect(mons, true, true);
@@ -2287,10 +2307,6 @@ item_def* monster_die(monster* mons, killer_type killer,
                     }
                 }
 
-#if TAG_MAJOR_VERSION == 34
-                if (you.species == SP_DJINNI)
-                    hp_heal = max(hp_heal, mp_heal * 2), mp_heal = 0;
-#endif
                 if (hp_heal && you.hp < you.hp_max
                     && !you.duration[DUR_DEATHS_DOOR])
                 {

@@ -34,6 +34,7 @@
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -4485,8 +4486,18 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
            did_hurt_conduct(DID_HURT_FOE, *this, amount);
         }
 
+        // Handle pain bond behavior here. Is technically passive damage.
+        // radiate_pain_bond may do additional damage by recursively looping
+        // back to the original trigger.
+        if (has_ench(ENCH_PAIN_BOND) && flavour != BEAM_SHARED_PAIN)
+        {
+            int hp_before_pain_bond = hit_points;
+            radiate_pain_bond(*this, amount, this);
+            amount += hp_before_pain_bond - hit_points;
+        }
+
         // Allow the victim to exhibit passive damage behaviour (e.g.
-        // the Royal Jelly).
+        // the Royal Jelly or Uskayaw's Pain Bond).
         react_to_damage(agent, amount, flavour);
 
         // Don't mirror Yredelemnul's effects (in particular don't mirror
@@ -4988,12 +4999,6 @@ bool monster::is_actual_spellcaster() const
 bool monster::is_shapeshifter() const
 {
     return has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER);
-}
-
-void monster::forget_random_spell()
-{
-    if (!spells.empty())
-        spells.erase(spells.begin() + random2(spells.size()));
 }
 
 void monster::scale_hp(int num, int den)
@@ -5993,9 +5998,6 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
 void monster::react_to_damage(const actor *oppressor, int damage,
                                beam_type flavour)
 {
-    if (has_ench(ENCH_PAIN_BOND))
-        radiate_pain_bond(*this, damage);
-
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
     // XXX: this might not be necessary anymore?

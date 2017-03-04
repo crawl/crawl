@@ -3,12 +3,14 @@
  * @brief Terrain related functions.
 **/
 
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#pragma once
 
 #include <memory>
 
+#include "command-type.h"
 #include "enum.h"
+#include "god-type.h"
+#include "terrain-change-type.h"
 
 class  actor;
 struct coord_def;
@@ -41,6 +43,8 @@ bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_sealed(dungeon_feature_type feat);
 bool feat_is_statuelike(dungeon_feature_type feat);
 bool feat_is_permarock(dungeon_feature_type feat);
+bool feat_is_endless(dungeon_feature_type feat);
+bool feat_can_wall_jump_against(dungeon_feature_type feat);
 bool feat_is_diggable(dungeon_feature_type feat);
 
 bool feat_is_stone_stair_down(dungeon_feature_type feat);
@@ -145,5 +149,3 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 bool is_temp_terrain(coord_def pos);
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only = false);
-
-#endif

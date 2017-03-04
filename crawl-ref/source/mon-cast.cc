@@ -9,12 +9,14 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <unordered_set>
 
 #include "act-iter.h"
 #include "areas.h"
 #include "bloodspatter.h"
 #include "branch.h"
+#include "cleansing-flame-source-type.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -29,6 +31,7 @@
 #include "fprop.h"
 #include "god-passive.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "mapmark.h"
@@ -1139,8 +1142,6 @@ int mons_spell_range(spell_type spell, int hd)
 {
     switch (spell)
     {
-        case SPELL_SANDBLAST:
-            return 2; // spell_range changes with player wielded items
         case SPELL_FLAME_TONGUE:
             // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
             // use the mighty Throw Flame for big ranges.
@@ -1296,6 +1297,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BLINKBOLT:
     case SPELL_STEAM_BALL:
     case SPELL_TELEPORT_OTHER:
+    case SPELL_SANDBLAST:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1303,11 +1305,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         zappy(ZAP_DAZZLING_SPRAY, power, true, beam);
         break;
 
-    case SPELL_SANDBLAST: // special-cased to avoid breaking battlesphere :(
-        zappy(ZAP_SANDBLAST, power, true, beam);
-        break;
-
-    case SPELL_FREEZING_CLOUD: // another battlesphere special-case
+    case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
         break;
 
@@ -2155,7 +2153,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
         return false;
 
     // The yell happens whether you happen to see it or not.
-    noisy(LOS_RADIUS, chief.pos(), chief.mid);
+    noisy(LOS_DEFAULT_RANGE, chief.pos(), chief.mid);
 
     if (!seen_affected.empty())
         _print_battlecry_announcement(chief, seen_affected);
@@ -3722,28 +3720,28 @@ static mon_spell_slot _pick_spell_from_list(const monster_spells &spells,
  * Are we a short distance from our target?
  *
  * @param  mons The monster checking distance from its target.
- * @return true if we have a target and are within LOS_RADIUS / 2 of that
+ * @return true if we have a target and are within LOS_DEFAULT_RANGE / 2 of that
  *         target, or false otherwise.
  */
 static bool _short_target_range(const monster *mons)
 {
     return mons->get_foe()
            && mons->pos().distance_from(mons->get_foe()->pos())
-              < LOS_RADIUS / 2;
+              < LOS_DEFAULT_RANGE / 2;
 }
 
 /**
  * Are we a long distance from our target?
  *
  * @param  mons The monster checking distance from its target.
- * @return true if we have a target and are outside LOS_RADIUS / 2 of that
- *         target, or false otherwise.
+ * @return true if we have a target and are outside LOS_DEFAULT_RANGE / 2 of
+ *          that target, or false otherwise.
  */
 static bool _long_target_range(const monster *mons)
 {
     return mons->get_foe()
            && mons->pos().distance_from(mons->get_foe()->pos())
-              > LOS_RADIUS / 2;
+              > LOS_DEFAULT_RANGE / 2;
 }
 
 /// Does the given monster think it's in an emergency situation?
@@ -5528,11 +5526,12 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
                                num_sheep == 1 ? "s its" : " their");
     }
 
-    if (!foe.is_player()) // Messaging for non-player targets
+    // Messaging for non-player targets
+    if (!foe.is_player() && you.see_cell(foe.pos()))
     {
         const char* pluralize = num_sheep == 1 ? "s": "";
         const string foe_name = foe.name(DESC_THE);
-        if (you.see_cell(foe.pos()) && sleep_pow)
+        if (sleep_pow)
         {
             mprf(foe.as_monster()->friendly() ? MSGCH_FRIEND_SPELL
                                               : MSGCH_MONSTER_SPELL,
@@ -5551,7 +5550,7 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
             mprf("%s is unaffected.", foe_name.c_str());
         }
     }
-    else
+    else if (foe.is_player())
     {
         mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(),
              sleep_pow ? " You feel drowsy..." : "");
@@ -7745,7 +7744,7 @@ static void _siren_sing(monster* mons, bool avatar)
                                                        : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(*mons);
 
-    noisy(LOS_RADIUS, mons->pos(), mons->mid);
+    noisy(LOS_DEFAULT_RANGE, mons->pos(), mons->mid);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));

@@ -48,6 +48,7 @@
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -69,6 +70,8 @@
 #include "rot.h"
 #include "shopping.h"
 #include "showsymb.h"
+#include "slot-select-mode.h"
+#include "sound.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -934,29 +937,44 @@ void item_check()
     }
 }
 
-/// If the given item is an unknown book, ID it; return whether we did.
-static bool _id_floor_book(item_def &book)
+// Identify the object the player stepped on.
+// Books and manuals are fully identified.
+// Wands are only type-identified.
+static bool _id_floor_item(item_def &item)
 {
-    if (book.base_type != OBJ_BOOKS)
-        return false;
+    if (item.base_type == OBJ_BOOKS)
+    {
+        if (fully_identified(item))
+            return false;
 
-    if (fully_identified(book) && book.sub_type != BOOK_MANUAL)
-        return false;
-
-    // fix autopickup for previously-unknown books (hack)
-    if (item_needs_autopickup(book))
-        book.props["needs_autopickup"] = true;
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
-    mark_had_book(book);
-    return true;
+        // fix autopickup for previously-unknown books (hack)
+        if (item_needs_autopickup(item))
+            item.props["needs_autopickup"] = true;
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+        mark_had_book(item);
+        return true;
+    }
+    else if (item.base_type == OBJ_WANDS)
+    {
+        if (!get_ident_type(item))
+        {
+            // If the player doesn't want unknown wands picked up, assume
+            // they won't want this wand after it is identified.
+            bool should_pickup = item_needs_autopickup(item);
+            set_ident_type(item, true);
+            if (!should_pickup)
+                you.force_autopickup[item.base_type][item.sub_type] = -1;
+            return true;
+        }
+    }
+    return false;
 }
 
-/// Auto-ID whatever spellbooks and manuals the player stands on.
-void id_floor_books()
+/// Auto-ID whatever stuff the player stands on.
+void id_floor_items()
 {
     for (stack_iterator si(you.pos()); si; ++si)
-        if (si->base_type == OBJ_BOOKS)
-            _id_floor_book(*si);
+        _id_floor_item(*si);
 }
 
 void pickup_menu(int item_link)
@@ -1895,6 +1913,9 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 
         if (!quiet)
         {
+#ifdef USE_SOUND
+            parse_sound(PICKUP_SOUND);
+#endif
             mprf_nocap("%s (gained %d)",
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
@@ -2030,7 +2051,12 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     if (const item_def* newitem = auto_assign_item_slot(item))
         return newitem->link;
     else if (!quiet)
+    {
+#ifdef USE_SOUND
+        parse_sound(PICKUP_SOUND);
+#endif
         mprf_nocap("%s", menu_colour_item_name(item, DESC_INVENTORY).c_str());
+    }
 
     return item.link;
 }
@@ -2231,7 +2257,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         maybe_identify_base_type(item);
     }
 
-    if (p == you.pos() && _id_floor_book(item))
+    if (p == you.pos() && _id_floor_item(item))
         mprf("You see here %s.", item.name(DESC_A).c_str());
 
     return true;
@@ -2273,11 +2299,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 
     if (feat_destroys_items(grd(p)))
     {
-        if (item_is_spellbook(item))
-            destroy_spellbook(item);
-
         item_was_destroyed(item);
-
         return true;
     }
 
@@ -2473,7 +2495,7 @@ bool drop_item(int item_dropped, int quant_drop)
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, true, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, true, true, false))
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
@@ -3426,6 +3448,7 @@ colour_t item_def::armour_colour() const
     switch (sub_type)
     {
         case ARM_CLOAK:
+        case ARM_SCARF:
             return WHITE;
         case ARM_NAGA_BARDING:
         case ARM_CENTAUR_BARDING:

@@ -3,11 +3,15 @@
  * @brief Functions for handling multi-turn actions.
 **/
 
-#ifndef DELAY_H
-#define DELAY_H
+#pragma once
 
+#include "activity-interrupt-type.h"
+#include "command-type.h"
 #include "enum.h"
 #include "item-prop-enum.h"
+#include "mpr.h"
+#include "operation-types.h"
+#include "seen-context-type.h"
 
 class monster;
 struct ait_hp_loss;
@@ -717,4 +721,3 @@ bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &a
                             = activity_interrupt_data(),
                         vector<string>* msgs_buf = nullptr);
-#endif

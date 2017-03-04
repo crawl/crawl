@@ -237,6 +237,11 @@ bool targeter_beam::affects_monster(const monster_info& mon)
         return false;
     }
 
+    // beckoning is useless against adjacent mons!
+    // XXX: this should probably be somewhere else
+    if (beam.flavour == BEAM_BECKONING)
+        return grid_distance(mon.pos, you.pos()) > 1;
+
     return !beam.is_harmless(m) || beam.nice_to(mon)
     // Inner flame affects allies without harming or helping them.
            || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();
@@ -1023,8 +1028,7 @@ bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
     actor *act;
     ray_def ray;
 
-    if (grd(a) == DNGN_OPEN_SEA || grd(a) == DNGN_LAVA_SEA
-        || !agent->is_habitable(a))
+    if (!agent->is_habitable(a))
     {
         blocked_landing_reason = BLOCKED_MOVE;
         return false;

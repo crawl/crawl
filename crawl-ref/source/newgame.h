@@ -3,8 +3,10 @@
  * @brief Functions used when starting a new game.
 **/
 
-#ifndef NEWGAME_H
-#define NEWGAME_H
+#pragma once
+
+#include "job-type.h"
+#include "species-type.h"
 
 class MenuFreeform;
 struct menu_letter;
@@ -33,4 +35,14 @@ struct job_group
                 MenuFreeform* menu, menu_letter &letter);
 };
 
-#endif
+struct species_group
+{
+    const char* name;   ///< Name of the group.
+    coord_def position; ///< Relative coordinates of the title.
+    int width;          ///< Column width.
+    vector<species_type> species_list; ///< List of species in the group.
+
+    /// A method to attach the group to a freeform.
+    void attach(const newgame_def& ng, const newgame_def& defaults,
+                MenuFreeform* menu, menu_letter &letter);
+};

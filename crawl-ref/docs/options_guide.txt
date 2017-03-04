@@ -19,7 +19,8 @@ The contents of this text are:
                 restart_after_game, restart_after_save,
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
-                crawl_dir, morgue_dir, save_dir, macro_dir, sound
+                crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
+                sound_file_path
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
@@ -75,13 +76,13 @@ The contents of this text are:
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
-                plain, prompt, god, pray, duration, danger, food, warning,
-                recovery, talk, talk_visual, timed_portal, sound,
-                intrinsic_gain, mutation, monster_spell, monster_enchant,
-                monster_warning, friend_spell, friend_enchant, friend_action,
-                monster_damage, monster_target, banishment, rotten_meat,
-                equipment, floor, multiturn, examine, examine_filter,
-                diagnostic, error, tutorial, orb, hell_effect, dgl_message
+                plain, prompt, god, duration, danger, food, warning, recovery,
+                talk, talk_visual, timed_portal, sound, intrinsic_gain,
+                mutation, monster_spell, monster_enchant, monster_warning,
+                friend_spell, friend_enchant, friend_action, monster_damage,
+                monster_target, banishment, rotten_meat, equipment, floor,
+                multiturn, examine, examine_filter, diagnostic, error,
+                tutorial, orb, hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -397,10 +398,36 @@ macro_dir = settings/
         It should end with the path delimiter.
 
 sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+        (Requires "Sound support"; check your version info)
         (Ordered list option)
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+        There are certain pre-defined regexes, as well, which can be
+        used to get a sound to trigger for something that cannot
+        otherwise be matched using a regex string. For example,
+        using FIRE_PROMPT_SOUND for the regex will cause Crawl to
+        play a sound whenever the fire prompt is opened. Check
+        sound.h for a full listing of all these pre-defined regex
+        strings.
+
+sound_file_path = <path>
+        When playing sounds (with the option above), the contents of
+        this variable is appended to the start of the path. This is
+        intended to make it easier to take one configuration across
+        several platforms. These two lines are equivalent to the
+        example above:
+             sound_file_path = sound\sounds2\
+             sound += LOW HITPOINT WARNING:danger3.wav
+        The most recent instance of this option is the one that
+        takes effect, and is not applied retroactively to previous
+        instances of the sound option.
+
+one_SDL_sound_channel = false
+        When true, only one sound can play at a time (if using SDL).
+        Is false by default since non-SDL sound backends don't
+        support such control.
+
 
 3-  Interface.
 ==============
@@ -938,7 +965,7 @@ allow_self_target = (yes | no | prompt)
         effect on area-effect spells, such as Mephitic Cloud, where you are
         always a valid target.
 
-auto_butcher = false
+auto_butcher = very hungry
         If this is set to true, you will automatically travel to and attempt to
         butcher edible corpses. Can also be set to a hunger threshold ('very
         full', 'full', 'satiated', 'hungry', 'very hungry', or 'near starving')
@@ -1666,7 +1693,6 @@ CHANNEL_NAME can currently be one of these:
    plain           = regular text (and things "uncoloured")
    prompt          = input prompts to the player
    god             = messages from the gods
-   pray            = standard praying messages
    duration        = messages about character spells/effects wearing off
    danger          = serious threats to the character's existence
    food            = warnings about food
@@ -2524,7 +2550,7 @@ bold_brightens_foreground = false
 
         See blink_brightens_background for more information.
 
-best_effort_brighten_background = true
+best_effort_brighten_background = false
         If set to true, try to brighten a background colour using blink even if
         it is not assumed to be successful.
 

@@ -387,11 +387,20 @@ gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
+deep_troll_leather DEEP_TROLL_LEATHER
+iron_troll_leather IRON_TROLL_LEATHER
+
 %rim 1
 cloak1_leather ARM_CLOAK
 cloak2
 cloak3
 cloak4
+
+scarf1 ARM_SCARF
+scarf2_1
+scarf2_2
+scarf2_3
+scarf3
 
 %sdir item/armour/bardings
 naga_barding_blue ARM_NAGA_BARDING
@@ -493,7 +502,8 @@ i-preservation BRAND_ARM_PRESERVATION
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
 i-archery BRAND_ARM_ARCHERY
-i-jumping BRAND_ARM_JUMPING BRAND_ARM_LAST
+i-jumping BRAND_ARM_JUMPING
+i-repulsion BRAND_ARM_REPULSION BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand
@@ -838,13 +848,15 @@ i-magic POT_MAGIC
 i-restore-abilities POT_REMOVEME6
 i-strong-poison POT_REMOVEME7
 i-berserk-rage POT_BERSERK_RAGE
-i-cure-mutation POT_CURE_MUTATION
+# please remove POT_CURE_MUTATION when TAG_MAJOR_VERSION is bumped
+i-cure-mutation POT_REMOVEME8
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
+# please remove POT_BENEFICIAL_MUTATION when TAG_MAJOR_VERSION is bumped
+i-good-mutation POT_REMOVEME9 POT_ID_LAST
 %back none
 %rim 1
 

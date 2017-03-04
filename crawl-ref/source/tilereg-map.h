@@ -1,7 +1,7 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_MAP_H
-#define TILEREG_MAP_H
+#pragma once
 
+#include "map-feature.h"
 #include "tilebuf.h"
 #include "tilereg.h"
 
@@ -38,5 +38,4 @@ protected:
     bool m_far_view;
 };
 
-#endif
 #endif

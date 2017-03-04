@@ -28,6 +28,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
@@ -40,13 +41,6 @@
 #include "xom.h"
 
 #ifdef WIZARD
-static void _swap_equip(equipment_type a, equipment_type b)
-{
-    swap(you.equip[a], you.equip[b]);
-    bool tmp = you.melded[a];
-    you.melded.set(a, you.melded[b]);
-    you.melded.set(b, tmp);
-}
 
 job_type find_job_from_string(const string &job)
 {
@@ -132,104 +126,6 @@ static xom_event_type _find_xom_event_from_string(const string &event_name)
     return x;
 }
 
-void wizard_change_species_to(species_type sp)
-{
-    // Means find_species_from_string couldn't interpret right.
-    if (sp == SP_UNKNOWN)
-    {
-        mpr("That species isn't available.");
-        return;
-    }
-
-    // Re-scale skill-points.
-    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-    {
-        you.skill_points[sk] *= species_apt_factor(sk, sp)
-                                / species_apt_factor(sk);
-    }
-
-    species_type old_sp = you.species;
-    you.species = sp;
-    you.chr_species_name = species_name(sp);
-
-    // Change permanent mutations, but preserve non-permanent ones.
-    uint8_t prev_muts[NUM_MUTATIONS];
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        if (you.innate_mutation[i] > 0)
-        {
-            if (you.innate_mutation[i] > you.mutation[i])
-                you.mutation[i] = 0;
-            else
-                you.mutation[i] -= you.innate_mutation[i];
-
-            you.innate_mutation[i] = 0;
-        }
-        prev_muts[i] = you.mutation[i];
-    }
-    give_basic_mutations(sp);
-    for (int i = 2; i <= you.experience_level; ++i)
-        give_level_mutations(sp, i);
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        if (prev_muts[i] > you.innate_mutation[i])
-            you.innate_mutation[i] = 0;
-        else
-            you.innate_mutation[i] -= prev_muts[i];
-    }
-
-    if (sp == SP_DEMONSPAWN)
-    {
-        roll_demonspawn_mutations();
-        for (int i = 0; i < int(you.demonic_traits.size()); ++i)
-        {
-            mutation_type m = you.demonic_traits[i].mutation;
-
-            if (you.demonic_traits[i].level_gained > you.experience_level)
-                continue;
-
-            ++you.mutation[m];
-            ++you.innate_mutation[m];
-        }
-    }
-
-    if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
-    {
-        _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
-        _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
-        // All species allow exactly one amulet. When (and knowing you guys,
-        // that's "when" not "if") ettins go in, you'll need handle the Macabre
-        // Finger Necklace on neck 2 here.
-    }
-
-    // FIXME: this checks only for valid slots, not for suitability of the
-    // item in question. This is enough to make assertions happy, though.
-    for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; ++i)
-        if (you_can_wear(static_cast<equipment_type>(i)) == MB_FALSE
-            && you.equip[i] != -1)
-        {
-            mprf("%s fall%s away.",
-                 you.inv[you.equip[i]].name(DESC_YOUR).c_str(),
-                 you.inv[you.equip[i]].quantity > 1 ? "" : "s");
-            // Unwear items without the usual processing.
-            you.equip[i] = -1;
-            you.melded.set(i, false);
-        }
-
-    // Sanitize skills.
-    fixup_skills();
-
-    calc_hp();
-    calc_mp();
-
-    // The player symbol depends on species.
-    update_player_symbol();
-#ifdef USE_TILE
-    init_player_doll();
-#endif
-    redraw_screen();
-}
-
 void wizard_change_job_to(job_type job)
 {
     you.char_class = job;
@@ -249,9 +145,16 @@ void wizard_change_species()
         return;
     }
 
-    species_type sp = find_species_from_string(specs);
+    const species_type sp = find_species_from_string(specs);
 
-    wizard_change_species_to(sp);
+    // Means find_species_from_string couldn't interpret `specs`.
+    if (sp == SP_UNKNOWN)
+    {
+        mpr("That species isn't available.");
+        return;
+    }
+
+    change_species_to(sp);
 }
 
 // Casts a specific spell by number or name.
@@ -331,6 +234,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_CORROSION] = 0;
         you.duration[DUR_DOOM_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
+        you.duration[DUR_NO_HOP] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         while (delete_temp_mutation());
@@ -478,9 +382,11 @@ void wizard_set_gold()
     }
 
     if (buf[0] == '\0')
-        you.gold = default_gold;
+        you.set_gold(default_gold);
     else
-        you.gold = atoi(buf);
+        you.set_gold(max(atoi(buf), 0));
+
+    mprf("You now have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
 }
 
 void wizard_set_piety()

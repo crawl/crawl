@@ -720,10 +720,6 @@ static void _handle_magic_contamination()
     if (you.duration[DUR_HASTE])
         added_contamination += 30;
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
-        added_contamination += 20;
-#endif
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
     // with messages about contamination oscillating near zero.
@@ -756,32 +752,21 @@ static void _magic_contamination_effects()
 
         beam.flavour      = BEAM_RANDOM;
         beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, div_rand_round(contam, 2000 ));
+        beam.damage       = dice_def(3, div_rand_round(contam, 2000));
         beam.target       = you.pos();
         beam.name         = "magical storm";
         //XXX: Should this be MID_PLAYER?
         beam.source_id    = MID_NOBODY;
         beam.aux_source   = "a magical explosion";
-        beam.ex_size      = max(1, min(9, div_rand_round(contam, 15000)));
+        beam.ex_size      = max(1, min(LOS_RADIUS,
+                                       div_rand_round(contam, 15000)));
         beam.ench_power   = div_rand_round(contam, 200);
         beam.is_explosion = true;
-
-        // Undead enjoy extra contamination explosion damage because
-        // the magical contamination has a harder time dissipating
-        // through non-living flesh. :-)
-        if (you.undead_state() != US_ALIVE)
-            beam.damage.size *= 2;
 
         beam.explode();
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const mutation_permanence_class mutclass = you.species == SP_DJINNI
-        ? MUTCLASS_TEMPORARY
-        : MUTCLASS_NORMAL;
-#else
     const mutation_permanence_class mutclass = MUTCLASS_NORMAL;
-#endif
 
     // We want to warp the player, not do good stuff!
     mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
@@ -916,7 +901,10 @@ static void _evolve(int time_delta)
                 && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
-                evol |= delete_mutation(MUT_EVOLUTION, "end of evolution", false);
+                const string reason = (you.mutation[MUT_EVOLUTION] == 1)
+                                    ? "end of evolution"
+                                    : "decline of evolution";
+                evol |= delete_mutation(MUT_EVOLUTION, reason, false);
             }
             // interrupt the player only if something actually happened
             if (evol)
@@ -1300,7 +1288,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
-        case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
+        case ENCH_BOUND_SOUL: case ENCH_DISTRACTED_ACROBATICS:
+        case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
             lose_ench_levels(entry.second, levels);
             break;
 

@@ -1,7 +1,8 @@
-#ifndef MGEN_DATA_H
-#define MGEN_DATA_H
+#pragma once
 
+#include "beh-type.h"
 #include "coord.h"
+#include "god-type.h"
 #include "mgen-enum.h"
 #include "mon-flags.h"
 
@@ -208,5 +209,3 @@ struct mgen_data
         return mgen_data(mt, BEH_HOSTILE, p, alert ? MHITYOU : MHITNOT);
     }
 };
-
-#endif

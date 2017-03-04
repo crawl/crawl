@@ -91,6 +91,10 @@ Stop Singing ability
 
 Stops singing your Song of Slaying.
 %%%%
+Cancel Portal Projectile ability
+
+Ends your Portal Projectile status.
+%%%%
 Heal Wounds ability
 
 Heals the user significantly, with a chance of permanently reducing the user's
@@ -182,8 +186,9 @@ Cures all your mutations — but only once.
 Divine Shield ability
 
 Grants a temporary divine shield. Because it is held aloft by the Shining One's
-power, it does not interfere with your equipment. The strength and duration
-of the shield are increased by Invocations skill.
+power, it does not interfere with your equipment, but it functions otherwise as
+a normal, physical shield. The strength and duration of the shield are increased
+by Invocations skill.
 %%%%
 Cleansing Flame ability
 
@@ -869,6 +874,18 @@ Ancestor Identity ability
 
 Recalls who your ancestor preferred to be known as, correcting their name and
 gender. This does not take any time.
+%%%%
+Serpent's Lash ability
+
+Allows you to move at supernatural speeds for a short distance, causing the
+next two movement actions taken to be instant. Martial attacks performed under
+the effect of Serpent's Lash are more effective.
+%%%%
+Heaven On Earth ability
+
+Beseeches the Council to flood the surroundings with a storm of heavenly
+clouds. The clouds inspire you to strike strong and true, and hitting enemies
+with martial attacks will keep the storm raging for longer.
 %%%%
 Hop ability
 

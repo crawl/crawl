@@ -13,6 +13,7 @@
 #include "jobs.h"
 #include "newgame.h"
 #include "newgame-def.h"
+#include "size-type.h"
 #include "species.h"
 
 static bool _banned_combination(job_type job, species_type species)

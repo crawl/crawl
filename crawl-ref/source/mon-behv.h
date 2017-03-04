@@ -3,10 +3,11 @@
  * @brief Monster behaviour functions.
 **/
 
-#ifndef MONBEHV_H
-#define MONBEHV_H
+#pragma once
 
+#include "beh-type.h"
 #include "enum.h"
+#include "mon-attitude-type.h"
 
 enum mon_event_type
 {
@@ -58,5 +59,3 @@ bool summon_can_attack(const monster* mons, const actor* targ);
 void shake_off_monsters(const actor* target);
 
 void set_nearest_monster_foe(monster* mon, bool near_player = false);
-
-#endif

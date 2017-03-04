@@ -18,7 +18,9 @@
 #include "god-conduct.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-death.h"
@@ -339,6 +341,9 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->mname = name;
     mons->props["no_annotate"] = slimified && old_mon_unique;
     mons->props.erase("dbname");
+
+    // Forget seen spells, since they are likely to have changed.
+    mons->props.erase(SEEN_SPELLS_KEY);
 
     mons->flags = flags;
     // Line above might clear melee and/or spell flags; restore.

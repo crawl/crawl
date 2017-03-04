@@ -1,5 +1,4 @@
-#ifndef RANGED_ATTACK_H
-#define RANGED_ATTACK_H
+#pragma once
 
 #include "attack.h"
 
@@ -59,5 +58,3 @@ private:
     bool should_alert_defender;
     launch_retval launch_type;
 };
-
-#endif

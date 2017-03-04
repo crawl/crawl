@@ -3,8 +3,7 @@
  * @brief Procedurally generated dungeon layouts.
  **/
 
-#ifndef PROC_LAYOUTS_H
-#define PROC_LAYOUTS_H
+#pragma once
 
 #include "dungeon.h"
 #include "enum.h"
@@ -313,5 +312,3 @@ class WorleyDistortFunction : public DistortFunction
     private:
         const WorleyFunction &wbase;
 };
-
-#endif /* PROC_LAYOUTS_H */

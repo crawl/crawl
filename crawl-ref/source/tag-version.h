@@ -1,5 +1,4 @@
-#ifndef TAG_VERSION_H
-#define TAG_VERSION_H
+#pragma once
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
@@ -203,6 +202,8 @@ enum tag_minor_version
     TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
     TAG_MINOR_FOOD_PURGE_RELOADED, // The exciting sequel, removing pizza/jerky.
     TAG_MINOR_ELYVILON_WRATH,      // Make Elyvilon wrath expire with XP gain.
+    TAG_MINOR_DESOLATION_GLOBAL,   // Recover from saves where desolation is incorrectly marked as global
+    TAG_MINOR_NO_MORE_LORC,        // Don't save lava orc temperature (or anything else). LO/Dj removal.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
@@ -210,5 +211,3 @@ enum tag_minor_version
 
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
-
-#endif

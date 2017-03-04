@@ -3,8 +3,10 @@
  * @brief Scorefile manipulation functions
 **/
 
-#ifndef HISCORES_H
-#define HISCORES_H
+#pragma once
+
+#include "god-type.h"
+#include "score-format-type.h"
 
 class scorefile_entry;
 
@@ -199,5 +201,3 @@ private:
 
     void init_from(const scorefile_entry &other);
 };
-
-#endif  // HISCORES_H

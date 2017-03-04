@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_TEXT_H
-#define TILEREG_TEXT_H
+#pragma once
 
 #include "tilereg.h"
 
@@ -57,5 +56,4 @@ protected:
     FontWrapper *m_font;
 };
 
-#endif
 #endif

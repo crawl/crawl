@@ -1,4 +1,4 @@
-Stone Soup 0.20 (up to 0.20-a0-484-g71649f8)
+Stone Soup 0.20 (up to 0.20-a0-770-g8c33442)
 --------------------------------------------
 
 Highlights
@@ -9,12 +9,14 @@ Highlights
 
 Branches, Environment
 ---------------------
-* The Slime treasure vault's walls disappear partially on their master's death.
+* The Slime treasure vault's walls are breached on their master's death.
+* Web traps created in play (by e.g. jumping spiders) are destroyed on
+  escape.
 
 Character
 ---------
-* New species: Barachians, with an powerful innate Hop ability, balanced by
-  slow movement and low attributes.
+* New species: Barachians, with an powerful innate Hop ability and good
+  aptitudes balanced by slow movement and an increased base LOS radius.
 * Ogre aptitudes have been adjusted, trading M&F skill for spells.
 * Mummies' spellcasting aptitude has been increased to +2, from -1.
 * Deep dwarves have an innate ability that heals them and has a chance of
@@ -27,19 +29,37 @@ Character
 
 Gods
 ----
+* New temple god: the Wu Jian Council.
+  - Grants free 'martial' attacks from certain movement actions:
+    * 1*: Moving between tiles adjacent to a monster triggers 'Whirlwind'.
+      Attacks all adjacent foes, and inflicts Slow.
+    * 2*: Moving against solid obstacles triggers Wall Jump. Moves two tiles in
+      the opposite direction, and attacks and distracts all adjacent enemies.
+    * 3*: Moving toward an enemy triggers 'Lunge'. Attacks the enemy, and does
+      extra damage to slowed or distracted enemies.
+  - 4*: Active 'Serpent's Lash' abilitiy, granting two free movement actions.
+  - 5*: Active 'Heaven on Earth' ability, creating opaque clouds and increasing
+    your martial prowess while you continue to use 'martial' attacks.
+  - Piety is gained through defeating foes.
 * The Shining One:
   - Cleansing Flame is more effective against non-evil enemies.
   - All bonus-damage 'stab' attacks are prevented.
   - Poison is no longer forbidden.
+* Minor Elyvilon wrath effects removed; enemy lifesaving strengthened.
 * Nemelex's wrath reclaims all decks, rather than sabotaging them.
 
 Interface
 ---------
+* Noise from the last turn is displayed in the top-right, replacing gold.
 * Monsters' melee attacks are now included in their descriptions.
 * The player's odds of succeeding with melee confusion attacks is displayed.
+* auto_butcher can be configured to trigger on different hunger levels.
 
 Items
 -----
+* New item type: scarves, occupying the cloak slot.
+  - Scarves give 0 AC and cannot be enchanted, but always have an ego.
+  - Scarf egos: rC+, Spirit Shield, Resistance, rMsl.
 * Evocations:
   - New wand types: Clouds and Scattershot.
   - New misc item: the Lightning Rod, a 4-charge XP evocable.
@@ -48,11 +68,23 @@ Items
   - Wands of disintegration no longer destroy terrain.
   - Wands of digging can now destroy statues.
   - Wand and miscellaneous acquirement merged into 'evocations'.
+* Unrandarts:
+  - New unrand: Maxwell's Thermic Engine, a freezing/flaming double sword that
+    increases in power with each swing taken.
+  - The Ratskin Cloak's stats have been tweaked, and it can now summon rats.
+  - Amulet of Bloodlust: Slay+6 (was +3), MR++ (was MR+).
+  - Shield of Ignorance: Now +10 {Int-4, rN+}. *Curse, AC+4 removed.
+  - Sword of Jihad: renamed to Zealot's Sword.
+  - Sceptre of Torment only torments on-hit, rather than randomly.
+* Potions of cure mutation, beneficial mutation, and mutation have been merged.
+* All types of food take one turn to eat.
 * Removed:
   - Wands of heal wounds, haste, teleportation, and slowing.
   - Rods.
   - Discs of Storms.
-  - The Hat of the High Council.
+  - The Hat of the High Council, the Scimitar of Flaming Death, and the Dagger
+    of Chilly Death.
+  - Beef jerky and pizza.
 
 Monsters
 --------
@@ -69,11 +101,21 @@ Monsters
 Spells
 ------
 * New spell: Poisonous Vapours (L2 Poison/Air); creates an extremely short-
-  duration poison cloud on a targeted creature.
+  duration poison cloud on a targeted creature. Appears in the VM book.
+* New spell: Ignition (L8 Fire). Drops a Fireball on every monster in line of
+  sight. The caster and their allies are unaffected.
+* Gell's Gravitas is now Translocations only (was Tloc/Hex).
+* Portal Projectile is now Tloc/Hex (was Translocations only).
+* Swapped Portal Projectile and Gell's Gravitas in the Wr/AM starting books.
+* Book of Conjurations: Battlesphere replaced with Force Lance.
+* Book of Air: Repel Missiles replaced with Airstrike.
 * Confusing Touch is less effective, especially against high-HD enemies.
 * Sandblast consumes stones directly from inventory, but no longer functions
   without ammo, and cannot consume large rocks.
-* Removed: Poisonous Cloud.
+* Removed:
+    - Delayed Fireball.
+    - Poisonous Cloud
+    - Repel Missiles.
 
 
 Stone Soup 0.19.1 (20161123)

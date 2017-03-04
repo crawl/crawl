@@ -32,6 +32,7 @@
 #include "god-wrath.h"
 #include "hints.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -349,22 +350,6 @@ int raw_spell_fail(spell_type spell)
     ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
     chance += difficulty_by_level[spell_level];
 
-#if TAG_MAJOR_VERSION == 34
-    // Only apply this penalty to Dj because other species lose nutrition
-    // rather than gaining contamination when casting spells.
-    // Also, this penalty gives fairly precise information about contam
-    // level, and only Dj already has such information (on the contam bar).
-    // Other species would have to check their failure rates all the time
-    // when at yellow glow.
-    if (you.species == SP_DJINNI)
-    {
-        int64_t contam = you.magic_contamination;
-        // Just +25 on the edge of yellow glow, +200 in the middle of yellow,
-        // forget casting when in orange.
-        chance += contam * contam * contam / 5000000000LL;
-    }
-#endif
-
     int chance2 = chance;
 
     const int chance_breaks[][2] =
@@ -506,14 +491,6 @@ static int _spell_enhancement(spell_type spell)
 
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
-        && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
-    {
-        enhanced++;
-    }
-#endif
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
@@ -822,8 +799,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
-            "<lightred>Casting this spell will cause instant excommunication!"
-                "</lightred> Really cast?" :
+            "Casting this spell will cause instant excommunication! "
+            "Really cast?" :
             "Casting this spell will place you under penance. Really cast?",
             true, 'n'))
         {
@@ -854,18 +831,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         count_action(CACT_CAST, spell);
     }
 
-#if TAG_MAJOR_VERSION == 34
-    // Nasty special cases.
-    if (you.species == SP_DJINNI && cast_result == SPRET_SUCCESS
-        && (spell == SPELL_BORGNJORS_REVIVIFICATION
-         || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
-    {
-        // These spells have replenished essence to full.
-        inc_mp(cost, true);
-    }
-    else // Redraw MP
-#endif
-        flush_mp();
+    flush_mp();
 
     if (!staff_energy && you.undead_state() != US_UNDEAD)
     {
@@ -1050,6 +1016,7 @@ static void _try_monster_cast(spell_type spell, int powc,
 
 static void _maybe_cancel_repeat(spell_type spell)
 {
+#if TAG_MAJOR_VERSION == 34
     switch (spell)
     {
     case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
@@ -1059,6 +1026,7 @@ static void _maybe_cancel_repeat(spell_type spell)
     default:
         break;
     }
+#endif
 }
 
 static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
@@ -1611,8 +1579,10 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_CALL_DOWN_DAMNATION:
         return cast_smitey_damnation(powc, beam) ? SPRET_SUCCESS : SPRET_ABORT;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         return cast_delayed_fireball(fail);
+#endif
 
     // LOS spells
 
@@ -1672,6 +1642,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CLOUD_CONE:
         return cast_cloud_cone(&you, powc, target, fail);
+
+    case SPELL_IGNITION:
+        return cast_ignition(&you, powc, fail);
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
@@ -1816,9 +1789,6 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     // General enhancement.
     case SPELL_REGENERATION:
         return cast_regen(powc, fail);
-
-    case SPELL_REPEL_MISSILES:
-        return missile_prot(powc, fail);
 
     case SPELL_DEFLECT_MISSILES:
         return deflection(powc, fail);

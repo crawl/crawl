@@ -20,6 +20,7 @@
 #include "branch.h"
 #include "butcher.h"
 #include "chardump.h"
+#include "cleansing-flame-source-type.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "database.h"
@@ -41,7 +42,9 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "maps.h"
@@ -164,16 +167,16 @@ enum fail_basis
  * chance?
  *
  * XXX: deduplicate this with the similar code for divine titles, etc
- * (skills.cc:skill_title_by_rank, describe-god.cc:_get_god_misc_invo)
+ * (skills.cc:skill_title_by_rank)
  *
  * IMPORTANT NOTE: functions that depend on this will be wrong if you aren't
  * currently worshipping a god that grants the given ability (e.g. in ?/A)!
  *
  * @return      The appropriate skill type; e.g. SK_INVOCATIONS.
  */
-static skill_type _invo_skill()
+skill_type invo_skill(god_type god)
 {
-    switch (you.religion)
+    switch (god)
     {
         case GOD_KIKUBAAQUDGHA:
             return SK_NECROMANCY;
@@ -184,6 +187,7 @@ static skill_type _invo_skill()
         case GOD_GOZAG:
         case GOD_RU:
         case GOD_TROG:
+        case GOD_WU_JIAN:
             return SK_NONE; // ugh
         default:
             return SK_INVOCATIONS;
@@ -221,8 +225,8 @@ struct failure_info
             return base_chance - you.skill(SK_EVOCATIONS, variable_fail_mult);
         case FAIL_INVO:
         {
-            const int sk_mod = _invo_skill() == SK_NONE ? 0 :
-                                 you.skill(_invo_skill(), variable_fail_mult);
+            const int sk_mod = invo_skill() == SK_NONE ? 0 :
+                                 you.skill(invo_skill(), variable_fail_mult);
             const int piety_mod
                 = piety_fail_denom ? you.piety / piety_fail_denom : 0;
             return base_chance - sk_mod - piety_mod;
@@ -240,7 +244,7 @@ struct failure_info
         case FAIL_EVO:
             return SK_EVOCATIONS;
         case FAIL_INVO:
-            return _invo_skill();
+            return invo_skill();
         case FAIL_XL:
         default:
             return SK_NONE;
@@ -307,10 +311,14 @@ static const ability_def Ability_List[] =
     { ABIL_DAMNATION, "Hurl Damnation",
         0, 150, 200, 0, {FAIL_XL, 50, 1}, abflag::NONE },
 
+#if TAG_MAJOR_VERSION == 34
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, {}, abflag::INSTANT },
+#endif
     { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, {}, abflag::NONE },
+    { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
+      0, 0, 0, 0, {}, abflag::INSTANT },
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
@@ -625,6 +633,12 @@ static const ability_def Ability_List[] =
     { ABIL_HEPLIAKLQANA_IDENTITY,  "Ancestor Identity",
         0, 0, 0, 0, {FAIL_INVO}, abflag::INSTANT },
 
+    // Wu Jian
+    { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
+        0, 0, 0, 4, {FAIL_INVO}, abflag::EXHAUSTION | abflag::INSTANT },
+    { ABIL_WU_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
+        0, 0, 0, 20, {FAIL_INVO, piety_breakpoint(5), 0, 1}, abflag::NONE },
+
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion",
       0, 0, 0, 0, {FAIL_INVO}, abflag::NONE },
@@ -740,7 +754,7 @@ const string make_cost_description(ability_type ability)
     if (abil.hp_cost)
         ret += make_stringf(", %d HP", abil.hp_cost.cost(you.hp_max));
 
-    if (abil.food_cost && !you_foodless(true)
+    if (abil.food_cost && !you_foodless()
         && (you.undead_state() != US_SEMI_UNDEAD
             || you.hunger_state > HS_STARVING))
     {
@@ -833,7 +847,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.hp_cost.cost(you.hp_max);
     }
 
-    if (abil.food_cost && !you_foodless(true)
+    if (abil.food_cost && !you_foodless()
         && (you.undead_state() != US_SEMI_UNDEAD
             || you.hunger_state > HS_STARVING))
     {
@@ -1618,8 +1632,11 @@ bool activate_talent(const talent& tal)
         case ABIL_STOP_FLYING:
         case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_END_TRANSFORMATION:
+#if TAG_MAJOR_VERSION == 34
         case ABIL_DELAYED_FIREBALL:
+#endif
         case ABIL_STOP_SINGING:
+        case ABIL_CANCEL_PPROJ:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
@@ -1806,6 +1823,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         return frog_hop(fail);
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_DELAYED_FIREBALL:
     {
         fail_check();
@@ -1830,6 +1848,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         viewwindow();
         break;
     }
+#endif
 
     case ABIL_SPIT_POISON:      // Naga poison spit
     {
@@ -2080,6 +2099,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         you.duration[DUR_SONG_OF_SLAYING] = 0;
         mpr("You stop singing.");
+        break;
+
+    case ABIL_CANCEL_PPROJ:
+        fail_check();
+        you.duration[DUR_PORTAL_PROJECTILE] = 0;
+        you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
+        mpr("You are no longer teleporting projectiles to their destination.");
         break;
 
     case ABIL_STOP_FLYING:
@@ -2513,10 +2539,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             pow = 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 6);
         else
             pow = 10 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-            pow /= 2;
-#endif
         pow = min(50, pow);
         const int healed = pow + roll_dice(2, pow) - 2;
         mpr("You are healed.");
@@ -2727,7 +2749,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_CHEIBRIADOS_TIME_STEP:
         fail_check();
-        cheibriados_time_step(you.skill(SK_INVOCATIONS, 10) * you.piety / 100);
+        cheibriados_time_step(max(1, you.skill(SK_INVOCATIONS, 10)
+                                     * you.piety / 100));
         break;
 
     case ABIL_CHEIBRIADOS_TIME_BEND:
@@ -3059,6 +3082,34 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         hepliaklqana_choose_identity();
         break;
 
+    case ABIL_WU_JIAN_SERPENTS_LASH:
+        if (you.attribute[ATTR_SERPENTS_LASH])
+        {
+            mpr("You're already lashing out.");
+            return SPRET_ABORT;
+        }
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to lash out.");
+            return SPRET_ABORT;
+        }
+        fail_check();
+        mprf(MSGCH_GOD, "Your muscles tense, ready for explosive movement...");
+        you.attribute[ATTR_SERPENTS_LASH] = 2;
+        you.redraw_status_lights = true;
+        return SPRET_SUCCESS;
+
+    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
+        fail_check();
+        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds! You feel the urge to strike!");
+        wu_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
+        for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
+            big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
+        you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
+        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+        invalidate_agrid(true);
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3348,11 +3399,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     if (player_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
-        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
-#if TAG_MAJOR_VERSION == 34
-           && you.species != SP_DJINNI
-#endif
-           )
+        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
     {
         // Tengu can fly, but only from the ground
         // (until level 14, when it becomes permanent until revoked).
@@ -3398,12 +3445,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BREATHE_FIRE, check_confused);
     }
 
+#if TAG_MAJOR_VERSION == 34
     // Checking for unreleased Delayed Fireball.
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
+#endif
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
+    if (you.duration[DUR_PORTAL_PROJECTILE])
+        _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
 
     // Evocations from items.
     if (you.scan_artefacts(ARTP_BLINK)

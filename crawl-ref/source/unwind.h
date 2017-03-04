@@ -1,5 +1,4 @@
-#ifndef UNWIND_H
-#define UNWIND_H
+#pragma once
 
 #include <functional>
 
@@ -94,5 +93,3 @@ private:
  * Defines a variable, with a generated name, to hold the unwinder.
  */
 #define ON_UNWIND unwinder CONCAT_TOK(_gensym_uw_, __LINE__) = [&] () -> void
-
-#endif

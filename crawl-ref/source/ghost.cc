@@ -13,6 +13,7 @@
 #include "colour.h"
 #include "database.h"
 #include "env.h"
+#include "god-type.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "mon-book.h"
@@ -685,8 +686,10 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     {
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         return SPELL_FIREBALL;
+#endif
     case SPELL_DRAGON_CALL:
         return SPELL_SUMMON_DRAGON;
     case SPELL_SWIFTNESS:

@@ -89,8 +89,8 @@ changes to the level compiler, you'll need the flex and bison/byacc tools
 (Other lex/yaccs may also work). More details are available below.
 
 Sound can be provided by SDL2_mixer (the default), by WINMM on Windows (defined
-by WINMM_PLAY_SOUNDS in AppHdr.h), or by an external command on Unix systems
-(SOUND_PLAY_COMMAND in AppHdr.h). To enable this, append SOUND=y to the make
+by WINMM_PLAY_SOUNDS in sound.h), or by an external command on Unix systems
+(SOUND_PLAY_COMMAND in sound.h). To enable this, append SOUND=y to the make
 invocation.
 
 Crawl includes Lua 5.1.4 in its submodules. Crawl uses Lua for dungeon
@@ -137,6 +137,18 @@ list avoids the need for the bundled "contribs".
 
 ccache can be installed with:
 dnf install ccache
+
+
+Prerequisites (Void):
+
+On Void Linux you can get all dependencies by running the following as root:
+xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel \
+  sqlite-devel zlib-devel pngcrush dejavu-fonts-ttf SDL2-devel \
+  SDL2_mixer-devel SDL2_image-devel freetype-devel
+(the last six are needed only for tile builds).
+
+ccache can be installed with:
+xbps-install ccache
 
 
 Prerequisites (other systems):

@@ -77,6 +77,8 @@ debuglog.txt
 dolls.txt
 macro.txt
 init.txt.persist
+# Default output file for -edit-save
+chunk
 
 # Valgrind logs from misc/grind.sh
 /source/grind.log

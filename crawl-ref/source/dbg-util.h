@@ -3,8 +3,7 @@
  * @brief Miscellaneous debugging functions.
 **/
 
-#ifndef DBGUTIL_H
-#define DBGUTIL_H
+#pragma once
 
 monster_type debug_prompt_for_monster();
 skill_type debug_prompt_for_skill(const char *prompt);
@@ -28,5 +27,3 @@ void debug_dump_mon(const monster* mon, bool recurse);
 string debug_mon_str(const monster* mon);
 
 void wizard_toggle_dprf();
-
-#endif

@@ -41,7 +41,7 @@ int mons_tracking_range(const monster* mon)
         range = 5;
         break;
     case I_HUMAN:
-        range = LOS_RADIUS;
+        range = LOS_DEFAULT_RANGE;
         break;
     }
 
@@ -223,10 +223,6 @@ bool monster_pathfind::calc_path_to_neighbours()
         // This is actually motivated by performance, as pathfinding
         // in mazes with see-through walls (e.g. plants) can otherwise
         // soak up a lot of CPU cycles.
-        //
-        // FIXME: This will still happen for monsters with >I_NORMAL
-        // intelligence, since they have range=0 and are therefore
-        // exempt. Should we cap total path length for them, too?
         if (range && distance > range * 2)
             continue;
 

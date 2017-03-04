@@ -1,5 +1,4 @@
-#ifndef ITEMPROP_ENUM_H
-#define ITEMPROP_ENUM_H
+#pragma once
 
 enum armour_type
 {
@@ -16,6 +15,9 @@ enum armour_type
 #endif
 
     ARM_CLOAK,
+#if TAG_MAJOR_VERSION > 34
+    ARM_SCARF,
+#endif
 
 #if TAG_MAJOR_VERSION == 34
     ARM_CAP,
@@ -90,6 +92,7 @@ enum armour_type
     ARM_QUICKSILVER_DRAGON_HIDE,
     ARM_QUICKSILVER_DRAGON_ARMOUR,
 #endif
+    ARM_SCARF,
 
     NUM_ARMOURS
 };
@@ -421,7 +424,7 @@ enum scroll_type
     NUM_SCROLLS
 };
 
-// Be sure to update _debug_acquirement_stats and _str_to_ego to match.
+// Be sure to update _debug_acquirement_stats and str_to_ego to match.
 enum special_armour_type
 {
     SPARM_FORBID_EGO = -1,
@@ -452,6 +455,7 @@ enum special_armour_type
 #if TAG_MAJOR_VERSION == 34
     SPARM_JUMPING,
 #endif
+    SPARM_REPULSION,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
@@ -764,5 +768,3 @@ enum food_type
 #endif
     NUM_FOODS
 };
-
-#endif

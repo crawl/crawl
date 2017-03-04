@@ -10,6 +10,7 @@
 #include "mon-info.h"
 #include "options.h"
 #include "syscalls.h"
+#include "tile-player-flag-cut.h"
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif

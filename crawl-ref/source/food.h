@@ -3,9 +3,9 @@
  * @brief Functions for eating and butchering.
 **/
 
-#ifndef FOOD_H
-#define FOOD_H
+#pragma once
 
+#include "hunger-state-t.h"
 #include "mon-enum.h"
 
 #define HUNGER_FAINTING       400
@@ -59,11 +59,10 @@ bool prompt_eat_item(int slot = -1);
 
 int you_max_hunger();
 int you_min_hunger();
-bool you_foodless(bool can_eat = false);
+bool you_foodless();
 // Is the player always foodless or just because of a temporary change?
 bool you_foodless_normally();
 
 void handle_starvation();
 int hunger_bars(const int hunger);
 string hunger_cost_string(const int hunger);
-#endif

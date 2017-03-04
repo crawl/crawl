@@ -2632,7 +2632,7 @@ DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
         greed:30 ; \
-        potion of curing | potion of cure mutation w:1
+        potion of curing
 COLOUR: c = white
 COLOUR: ' = white
 TILE:   c = wall_church

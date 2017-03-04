@@ -267,7 +267,7 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 3)
+        || grid_distance(mon->pos(), you.pos()) >= LOS_DEFAULT_RANGE * 3)
     {
         make_mons_leave_level(mon);
         return true;
@@ -565,7 +565,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         return true;
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (grid_distance(mon->pos(), mon->patrol_point) > 2 * LOS_RADIUS)
+    if (grid_distance(mon->pos(), mon->patrol_point) > 2 * LOS_DEFAULT_RANGE)
         return false;
 
     // Can the monster see the patrol point from its current position?
@@ -581,8 +581,8 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     // While the patrol point is in easy reach, monsters of brainless
     // intelligence will only use a range of 4 (distance from the patrol point).
     // Otherwise, try to get back using the full LOS.
-    const int  rad      = (intel > I_BRAINLESS || !patrol_seen) ? LOS_RADIUS
-                                                                : 4;
+    const int  rad = (intel > I_BRAINLESS || !patrol_seen) ? LOS_DEFAULT_RANGE
+                                                           : 4;
     const bool is_smart = (intel >= I_HUMAN);
 
     los_def patrol(mon->patrol_point, opacity_monmove(*mon),
@@ -762,7 +762,7 @@ static monster * _active_band_leader(monster * mon)
 // was set.
 static bool _band_wander_target(monster * mon)
 {
-    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+    int dist_thresh = LOS_DEFAULT_RANGE + HERD_COMFORT_RANGE;
     monster * band_leader = _active_band_leader(mon);
     if (band_leader == nullptr)
         return true;
@@ -820,7 +820,7 @@ static bool _herd_wander_target(monster * mon)
     vector<monster_iterator> friends;
     map<int, vector<coord_def> > distance_positions;
 
-    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+    int dist_thresh = LOS_DEFAULT_RANGE + HERD_COMFORT_RANGE;
 
     for (monster_iterator mit; mit; ++mit)
     {
@@ -871,7 +871,7 @@ static bool _herd_ok(monster * mon)
 {
     bool in_bounds = false;
     bool intermediate_range = false;
-    int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+    int intermediate_thresh = LOS_DEFAULT_RANGE + HERD_COMFORT_RANGE;
 
     // herdlings magically know others even out of LOS
     for (monster_iterator mit; mit; ++mit)
@@ -912,7 +912,7 @@ static bool _band_ok(monster * mon)
     // If in range, or sufficiently out of range we can just wander around for
     // a while longer.
     if (g_dist < HERD_COMFORT_RANGE && mon->see_cell_no_trans(leader->pos())
-        || g_dist >= (LOS_RADIUS + HERD_COMFORT_RANGE))
+        || g_dist >= (LOS_DEFAULT_RANGE + HERD_COMFORT_RANGE))
     {
         return true;
     }
@@ -1071,7 +1071,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
 
     // XXX: Hack to improve results for now. See FIXME above.
     ray_def ray;
-    if (!find_ray(p1, p2, ray, opc_immob))
+    if (!find_ray(p1, p2, ray, opacity_mons_immob(mon)))
         return false;
 
     while (ray.advance() && ray.pos() != p2)

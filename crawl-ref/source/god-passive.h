@@ -3,10 +3,10 @@
  * @brief Passive god effects.
 **/
 
-#ifndef GODPASSIVE_H
-#define GODPASSIVE_H
+#pragma once
 
 #include "enum.h"
+#include "wu-jian-attack-type.h"
 #include "player.h"
 
 class monster;
@@ -248,6 +248,11 @@ enum class passive_t
 
     // TSO prevents you from stabbing
     no_stabbing,
+
+    /// Martial attacks
+    wu_jian_lunge,
+    wu_jian_whirlwind,
+    wu_jian_wall_jump,
 };
 
 enum ru_interference
@@ -287,4 +292,10 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
-#endif
+void wu_jian_trigger_martial_arts(const coord_def& old_pos);
+bool wu_jian_can_wall_jump(const coord_def& target);
+void wu_jian_wall_jump_effects(const coord_def& old_pos);
+void wu_jian_trigger_serpents_lash(const coord_def& old_pos);
+bool wu_jian_has_momentum(wu_jian_attack_type);
+void wu_jian_heaven_tick();
+void end_heaven_on_earth();

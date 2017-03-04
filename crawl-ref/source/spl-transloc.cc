@@ -22,6 +22,7 @@
 #include "english.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "los.h"
 #include "losglobal.h"
@@ -318,7 +319,7 @@ static coord_def _fuzz_hop_destination(coord_def target)
  */
 spret_type frog_hop(bool fail)
 {
-    const int hop_range = 3 + player_mutation_level(MUT_HOP); // 4-5
+    const int hop_range = 2 + player_mutation_level(MUT_HOP) * 2; // 4-6
     coord_def target;
     targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
     while (true)
@@ -864,8 +865,8 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     int dist = beam.path_taken.size();
 
     // The maximum number of squares the item will actually move, always
-    // at least one square. Always has a chance to move the full LOS_RADIUS,
-    // but only becomes certain at max power (50).
+    // at least one square. Always has a chance to move the entirety of default
+    // LOS (7), but only becomes certain at max power (50).
     int max_dist = max(1, min(LOS_RADIUS, random2(8) + div_rand_round(pow, 7)));
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);

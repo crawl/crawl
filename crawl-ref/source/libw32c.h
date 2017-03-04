@@ -1,5 +1,4 @@
-#ifndef LIBW32C_H
-#define LIBW32C_H
+#pragma once
 
 #ifndef USE_TILE
 
@@ -7,7 +6,5 @@
 
 static inline constexpr bool is_tiles() { return false; }
 void w32_insert_escape();
-
-#endif
 
 #endif

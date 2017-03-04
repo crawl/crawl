@@ -90,6 +90,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "lookup-help.h"
@@ -123,6 +124,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
+#include "sound.h"
 #include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"
@@ -159,6 +161,7 @@
 #ifdef TOUCH_UI
 #include "windowmanager.h"
 #endif
+#include "wizard-option-type.h"
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
 #include "wiz-fsim.h"
@@ -351,10 +354,10 @@ static void _reset_game()
     macro_clear_buffers();
     transit_lists_clear();
     you = player();
+    reset_hud();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     clear_level_target();
-    you.clear_place_info();
     overview_clear();
     clear_message_window();
     note_list.clear();
@@ -1061,6 +1064,9 @@ static void _start_running(int dir, int mode)
         return;
     }
 
+    if (wu_jian_can_wall_jump(next_pos))
+       return; // Do not wall jump while running.
+
     you.running.initialise(dir, mode);
 }
 
@@ -1114,6 +1120,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
     case CMD_TOGGLE_TRAVEL_SPEED:
+    case CMD_TOGGLE_SOUND:
     case CMD_ADJUST_INVENTORY:
     case CMD_QUIVER_ITEM:
     case CMD_REPLAY_MESSAGES:
@@ -1512,6 +1519,13 @@ static void _input()
 
         world_reacts();
     }
+    else
+    {
+        // Make sure to do a full view update even when the turn isn't over.
+        // This else will be triggered by instantaneous actions, such as
+        // Chei's temporal distortion.
+        viewwindow();
+    }
 
     update_can_train();
 
@@ -1520,34 +1534,12 @@ static void _input()
     _update_place_info();
 
     crawl_state.clear_god_acting();
+
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
-    // Immobile
-    if (you.is_stationary())
-    {
-        canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-
-    // Mesmerized
-    if (you.beheld() && !you.confused())
-    {
-        const monster* beholder = you.get_any_beholder();
-        mprf("You cannot move away from %s!",
-             beholder->name(DESC_THE, true).c_str());
-        return false;
-    }
-
-    // Held
-    if (you.attribute[ATTR_HELD])
-    {
-        mprf("You can't do that while %s.", held_status());
-        return false;
-    }
-
     // Up and down both work for shops, portals, and altars.
     if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
@@ -1562,9 +1554,33 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
-    // bidirectional, but not actually a portal
+    // Immobile
+    if (you.is_stationary())
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+
+    // Held
+    if (you.attribute[ATTR_HELD])
+    {
+        mprf("You can't do that while %s.", held_status());
+        return false;
+    }
+
+    // Bidirectional, but not actually a portal - allowed while mesmerised, but
+    // not when otherwise unable to move.
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA)
         return true;
+
+    // Mesmerised
+    if (you.beheld() && !you.confused())
+    {
+        const monster* beholder = you.get_any_beholder();
+        mprf("You cannot move away from %s!",
+             beholder->name(DESC_THE, true).c_str());
+        return false;
+    }
 
     // If it's not bidirectional, check that the player is headed
     // in the right direction.
@@ -1891,21 +1907,6 @@ static void _do_rest()
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
 
-static void _do_clear_map()
-{
-    if (Options.show_travel_trail && env.travel_trail.size())
-    {
-        mpr("Clearing travel trail.");
-        clear_travel_trail();
-    }
-    else
-    {
-        mpr("Clearing level map.");
-        clear_map();
-        crawl_view.set_player_at(you.pos());
-    }
-}
-
 static void _do_display_map()
 {
     if (Hints.hints_events[HINT_MAP_VIEW])
@@ -2068,10 +2069,17 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
+#ifdef USE_SOUND
+    case CMD_TOGGLE_SOUND:
+        Options.sounds_on = !Options.sounds_on;
+        mprf("Sound effects are now %s.", Options.sounds_on ? "on" : "off");
+        break;
+#endif
+
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
-    case CMD_CLEAR_MAP:       _do_clear_map();   break;
+    case CMD_CLEAR_MAP:       clear_map_or_travel_trail(); break;
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
@@ -2581,6 +2589,13 @@ void world_reacts()
             save_game(false);
         }
     }
+    // End of a turn.
+    //
+    // `los_noise_last_turn` is the value for display -- it needs to persist
+    // for any calls to print_stats during the next turn. Meanwhile, reset
+    // the loudest noise tracking for the next world_reacts cycle.
+    you.los_noise_last_turn = you.los_noise_level;
+    you.los_noise_level = 0;
 }
 
 static command_type _get_next_cmd()
@@ -3168,6 +3183,8 @@ static void _move_player(coord_def move)
         return;
     }
 
+    const coord_def initial_position = you.pos();
+
     // When confused, sometimes make a random move.
     if (you.confused())
     {
@@ -3225,9 +3242,10 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-
+    bool can_wall_jump = wu_jian_can_wall_jump(targ);
+    bool did_wall_jump = false;
     // You can't walk out of bounds!
-    if (!in_bounds(targ))
+    if (!in_bounds(targ) && !can_wall_jump)
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -3368,7 +3386,8 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder && !fmonger)
+    if (!attacking && (targ_pass || can_wall_jump)
+        && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -3444,8 +3463,18 @@ static void _move_player(coord_def move)
         you.stop_being_constricted();
 
         // Don't trigger traps when confusion causes no move.
-        if (you.pos() != targ)
+        if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
+        else if (can_wall_jump && !running)
+        {
+            did_wall_jump = true;
+            auto wall_jump_direction = (you.pos() - targ).sgn();
+            auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                           + wall_jump_direction);
+            move_player_to_grid(wall_jump_landing_spot, false);
+            wu_jian_wall_jump_effects(initial_position);
+        }
+
         // Now it is safe to apply the swappee's location effects. Doing
         // so earlier would allow e.g. shadow traps to put a monster
         // at the player's location.
@@ -3507,7 +3536,7 @@ static void _move_player(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking)
+    else if (!targ_pass && !attacking && !can_wall_jump)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -3524,14 +3553,14 @@ static void _move_player(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking)
+    else if (beholder && !attacking && !can_wall_jump)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking)
+    else if (fmonger && !attacking && !can_wall_jump)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
@@ -3552,6 +3581,13 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+
+    // Wu Jian's lunge and whirlwind.
+    if (you_worship(GOD_WU_JIAN) && !attacking && !did_wall_jump)
+        wu_jian_trigger_martial_arts(initial_position);
+
+    if (you_worship(GOD_WU_JIAN) && !attacking && you.turn_is_over)
+        wu_jian_trigger_serpents_lash(initial_position);
 }
 
 static int _get_num_and_char_keyfun(int &ch)

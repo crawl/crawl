@@ -1,7 +1,8 @@
-#ifndef NG_RESTR_H
-#define NG_RESTR_H
+#pragma once
 
 #include "item-prop-enum.h"
+#include "job-type.h"
+#include "species-type.h"
 
 struct newgame_def;
 
@@ -18,5 +19,3 @@ bool is_good_combination(species_type spc, job_type job,
                          bool species_first, bool good = false);
 char_choice_restriction weapon_restriction(weapon_type wpn,
                                            const newgame_def &ng);
-
-#endif

@@ -502,7 +502,8 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
     if (dam_calc)
         pbolt.damage = (*dam_calc)(power);
 
-    pbolt.origin_spell = zap_to_spell(z_type);
+    if (pbolt.origin_spell == SPELL_NO_SPELL)
+        pbolt.origin_spell = zap_to_spell(z_type);
 
     if (z_type == ZAP_BREATHE_FIRE && you.species == SP_RED_DRACONIAN
         && !is_monster)
@@ -2308,6 +2309,10 @@ static void _unravelling_explode(bolt &beam)
 
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
+    // Don't bounce off open sea.
+    if (feat_is_endless(feat))
+        return false;
+
     if (real_flavour == BEAM_CHAOS
         && feat_is_solid(feat))
     {
@@ -2686,9 +2691,6 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_POISONOUS_CLOUD)
         place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
 
-    if (origin_spell == SPELL_POISONOUS_CLOUD)
-        place_cloud(CLOUD_POISON, p, random2(2) + 1, agent());
-
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY, p, random2(4) + 2, agent());
 
@@ -2999,12 +3001,6 @@ bool bolt::harmless_to_player() const
 
     case BEAM_COLD:
         return is_big_cloud() && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
-
-#if TAG_MAJOR_VERSION == 34
-    case BEAM_FIRE:
-    case BEAM_STICKY_FLAME:
-        return you.species == SP_DJINNI;
-#endif
 
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;
@@ -3566,7 +3562,7 @@ void bolt::affect_player_enchantment(bool resistible)
         if (!amount)
             break;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
-        drain_mp(amount);
+        dec_mp(amount);
         if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
                         || agent()->type == MONS_GHOST_MOTH))
         {
@@ -5782,7 +5778,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 {
     ASSERT(!special_explosion);
     ASSERT(!in_explosion_phase);
-    ASSERT(ex_size > 0);
+    ASSERT(ex_size >= 0);
 
     // explode() can be called manually without setting real_flavour.
     // FIXME: The entire flavour/real_flavour thing needs some
@@ -6046,47 +6042,37 @@ bool bolt::nasty_to(const monster* mon) const
     if (!is_enchantment())
         return true;
 
-    // Now for some non-hurtful enchantments.
-    if (flavour == BEAM_DIGGING)
-        return false;
-
     // Positive effects.
     if (nice_to(monster_info(mon)))
         return false;
 
-    // Co-aligned inner flame is fine.
-    if (flavour == BEAM_INNER_FLAME && mons_aligned(mon, agent()))
-        return false;
-
-    // Friendly and good neutral monsters don't mind being teleported.
-    if (flavour == BEAM_TELEPORT)
-        return !mon->wont_attack();
-
-    if (flavour == BEAM_ENSLAVE_SOUL || flavour == BEAM_INFESTATION)
-        return ench_flavour_affects_monster(flavour, mon);
-
-    // sleep
-    if (flavour == BEAM_HIBERNATION)
-        return mon->can_hibernate();
-
-    if (flavour == BEAM_SLOW || flavour == BEAM_PARALYSIS)
-        return !mon->stasis();
-
-    // dispel undead
-    if (flavour == BEAM_DISPEL_UNDEAD)
-        return bool(mon->holiness() & MH_UNDEAD);
-
-    if (flavour == BEAM_PAIN)
-        return mon->res_negative_energy() < 3;
-
-    if (flavour == BEAM_AGONY)
-        return !mon->res_torment();
-
-    if (flavour == BEAM_TUKIMAS_DANCE)
-        return tukima_affects(*mon);
-
-    if (flavour == BEAM_UNRAVELLING)
-        return monster_is_debuffable(*mon);
+    switch (flavour)
+    {
+        case BEAM_DIGGING:
+            return false;
+        case BEAM_INNER_FLAME:
+            // Co-aligned inner flame is fine.
+            return !mons_aligned(mon, agent());
+        case BEAM_TELEPORT:
+        case BEAM_BECKONING:
+            // Friendly and good neutral monsters don't mind being teleported.
+            return !mon->wont_attack();
+        case BEAM_ENSLAVE_SOUL:
+        case BEAM_INFESTATION:
+        case BEAM_SLOW:
+        case BEAM_PARALYSIS:
+        case BEAM_DISPEL_UNDEAD:
+        case BEAM_PAIN:
+        case BEAM_AGONY:
+        case BEAM_HIBERNATION:
+            return ench_flavour_affects_monster(flavour, mon);
+        case BEAM_TUKIMAS_DANCE:
+            return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
+        case BEAM_UNRAVELLING:
+            return monster_is_debuffable(*mon); // XXX: as tukima's
+        default:
+            break;
+    }
 
     // everything else is considered nasty by everyone
     return true;

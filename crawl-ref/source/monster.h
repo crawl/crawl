@@ -1,8 +1,14 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#pragma once
+
+#include <functional>
 
 #include "actor.h"
+#include "beh-type.h"
+#include "enchant-type.h"
 #include "mon-ench.h"
+#include "montravel-target-type.h"
+#include "potion-type.h"
+#include "seen-context-type.h"
 #include "spl-util.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
@@ -193,8 +199,6 @@ public:
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
     void maybe_degrade_bone_armour();
-
-    void forget_random_spell();
 
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
@@ -414,9 +418,6 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
-#if TAG_MAJOR_VERSION == 34
-    int heat_radius() const override;
-#endif
     bool petrified() const override;
     bool petrifying() const override;
     bool liquefied_ground() const override;
@@ -604,5 +605,3 @@ private:
     bool search_spells(function<bool (spell_type)> func) const;
     bool is_cloud_safe(const coord_def &place) const;
 };
-
-#endif

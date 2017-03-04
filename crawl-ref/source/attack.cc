@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 
 #include "art-enum.h"
 #include "chardump.h"
@@ -32,6 +33,7 @@
 #include "mon-death.h"
 #include "mon-poly.h"
 #include "nearby-danger.h"
+#include "pronoun-type.h"
 #include "religion.h"
 #include "spl-miscast.h"
 #include "state.h"
@@ -948,8 +950,8 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
     if (flavour == NUM_BEAMS)
         flavour = special_damage_flavour;
     // Auxes temporarily clear damage_brand so we don't need to check
-    if (damage_brand == SPWPN_REAPING ||
-        damage_brand == SPWPN_CHAOS && one_chance_in(100))
+    if (damage_brand == SPWPN_REAPING
+        || damage_brand == SPWPN_CHAOS && one_chance_in(100))
     {
         defender->props["reaping_damage"].get_int() += dam;
         // With two reapers of different friendliness, the most recent one
@@ -1516,7 +1518,8 @@ bool attack::apply_damage_brand(const char *what)
             special_damage_message =
                 defender->is_player()?
                    "You are electrocuted!"
-                :  "There is a sudden explosion of sparks!";
+                :  make_stringf("Lightning courses through %s!",
+                                defender->name(DESC_THE).c_str());
             special_damage = 8 + random2(13);
             special_damage_flavour = BEAM_ELECTRICITY;
             defender->expose_to_element(BEAM_ELECTRICITY, 2);

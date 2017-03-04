@@ -322,6 +322,7 @@ ANGRY:   5
 BOOL:    berserk
 STEALTH: -1
 
+# TAG_MAJOR_VERSION == 34
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
 INSCRIP: sticky flame,
@@ -332,7 +333,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison, skip_ego
+BOOL:    poison, skip_ego, nogen
 MAGIC:   1
 
 # TAG_MAJOR_VERSION == 34
@@ -359,6 +360,7 @@ AC:      -3
 EV:      -3
 LIFE:     1
 
+# TAG_MAJOR_VERSION == 34
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
 INSCRIP: flash freeze,
@@ -370,7 +372,7 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 MAGIC:   1
-BOOL:    poison, skip_ego
+BOOL:    poison, skip_ego, nogen
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -651,12 +653,11 @@ BRAND:    SPWPN_ELECTROCUTION
 
 NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
-PLUS:    +6
+PLUS:    +10
 COLOUR:  BROWN
 TILE:    urand_ignorance
 TILE_EQ: lshield_of_ignorance
-AC:      4
-INT:     -6
+INT:     -4
 LIFE:    1
 
 NAME:    robe of Augmentation
@@ -874,8 +875,10 @@ PLUS:     +2
 COLOUR:   ETC_BEOGH
 TILE:     urand_ratskin_cloak
 TILE_EQ:  ratskin
+INSCRIP:  +Rats
+STR:      -1
 INT:      -1
-DEX:      -1
+DEX:      1
 LIFE:     1
 BOOL:     poison
 
@@ -1289,6 +1292,18 @@ OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
 TILE:     urand_cekugob
 BOOL:     inv, nogen
+
+ENUM:     THERMIC_ENGINE
+NAME:     Maxwell's thermic engine
+OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
+INSCRIP:  freeze,
+PLUS:     +2
+COLOUR:   ETC_VEHUMET
+TILE:     urand_thermic_engine
+TILE_EQ:  thermic_engine
+BRAND:    SPWPN_FLAMING
+FIRE:     -1
+COLD:     -1
 
 # This entry must always be last.
 ENUM:   DUMMY2

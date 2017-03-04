@@ -18,6 +18,7 @@
 #include "hints.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"
@@ -875,6 +876,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_ARCHERY:
             mpr("You feel that your aim is more steady.");
             break;
+
+        case SPARM_REPULSION:
+            mpr("You are surrounded by a repulsion field.");
+            break;
         }
     }
 
@@ -1039,6 +1044,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         mpr("Your aim is not that steady anymore.");
         break;
 
+    case SPARM_REPULSION:
+        mpr("The haze of the repulsion field disappears.");
+        break;
+
     default:
         break;
     }
@@ -1092,7 +1101,7 @@ static void _remove_amulet_of_harm()
 
 static void _equip_amulet_of_regeneration()
 {
-    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+    if (player_mutation_level(MUT_NO_REGENERATION) > 0)
         mpr("The amulet feels cold and inert.");
     else if (you.hp == you.hp_max)
     {

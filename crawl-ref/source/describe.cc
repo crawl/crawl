@@ -39,6 +39,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
@@ -1413,12 +1414,12 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It protects its wearer from the effects "
                 "of both cold and heat.";
             break;
-
-        // These two are only for robes.
         case SPARM_POSITIVE_ENERGY:
             description += "It protects its wearer from "
                 "the effects of negative energy.";
             break;
+
+        // This is only for robes.
         case SPARM_ARCHMAGI:
             description += "It increases the power of its wearer's "
                 "magical spells.";
@@ -1450,6 +1451,11 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_ARCHERY:
             description += "It improves your effectiveness with ranged "
                            "weaponry, such as bows and javelins (Slay+4).";
+            break;
+
+        // This is only for scarves.
+        case SPARM_REPULSION:
+            description += "It protects its wearer by repelling missiles.";
             break;
         }
     }
@@ -2185,7 +2191,7 @@ static vector<command_type> _allowed_actions(const item_def& item)
             actions.push_back(CMD_WEAR_JEWELLERY);
         break;
     case OBJ_POTIONS:
-        if (!you_foodless(true)) // mummies and lich form forbidden
+        if (!you_foodless()) // mummies and lich form forbidden
             actions.push_back(CMD_QUAFF);
         break;
     default:

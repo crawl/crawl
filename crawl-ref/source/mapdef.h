@@ -10,8 +10,7 @@
  * level or a minivault that occupies just a portion of the level.
  */
 
-#ifndef __MAPDEF_H__
-#define __MAPDEF_H__
+#pragma once
 
 #include <cstdio>
 #include <memory>
@@ -22,11 +21,14 @@
 #include "dlua.h"
 #include "enum.h"
 #include "fprop.h"
+#include "god-type.h"
 #include "makeitem.h"
 #include "matrix.h"
+#include "mon-attitude-type.h"
 #include "mon-ench.h"
 #include "mon-flags.h"
 #include "tags.h"
+#include "trap-type.h"
 #include "travel-defs.h"
 
 #define NEVER_CORPSE_KEY "never_corpse"
@@ -1323,4 +1325,3 @@ const char *map_section_name(int msect);
 int store_tilename_get_index(const string& tilename);
 
 int str_to_ego(object_class_type item_type, string ego_str);
-#endif

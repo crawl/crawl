@@ -91,7 +91,6 @@ Player status
 -------------
 a         CMD_USE_ABILITY
 m         CMD_DISPLAY_SKILLS
-p         CMD_PRAY
 A         CMD_DISPLAY_MUTATIONS
 E         CMD_EXPERIENCE_CHECK
 I         CMD_DISPLAY_SPELLS
@@ -112,6 +111,7 @@ Meta-commands
 ^A        CMD_TOGGLE_AUTOPICKUP
 ^C        CMD_CLEAR_MAP
 ^D, ~     CMD_MACRO_ADD
+<unbound> CMD_TOGGLE_SOUND      (only when compiled with sound)
 ^Q        CMD_QUIT
 ^R        CMD_REDRAW_SCREEN
 S         CMD_SAVE_GAME

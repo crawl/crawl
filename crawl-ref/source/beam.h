@@ -3,13 +3,17 @@
  * @brief Functions related to ranged attacks.
 **/
 
-#ifndef BEAM_H
-#define BEAM_H
+#pragma once
 
+#include "ac-type.h"
+#include "beam-type.h"
+#include "enchant-type.h"
+#include "mon-attitude-type.h"
 #include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
+#include "zap-type.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -341,4 +345,3 @@ bool shoot_through_monster(const bolt& beam, const monster* victim);
 int omnireflect_chance_denom(int SH);
 
 bolt setup_targetting_beam(const monster &mons);
-#endif

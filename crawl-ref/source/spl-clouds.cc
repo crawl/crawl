@@ -20,8 +20,10 @@
 #include "fight.h"
 #include "god-conduct.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "losglobal.h"
 #include "message.h"
+#include "mon-behv.h" // ME_WHACK
 #include "ouch.h"
 #include "prompt.h"
 #include "random-pick.h"
@@ -90,7 +92,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
         if (you.see_cell(where))
-            mpr("The fire roars with new energy!");
+            mpr("The fire blazes with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         cloud->decay += extra_dur * 5;
         cloud->source = agent->mid;
@@ -106,9 +108,9 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         if (you.see_cell(where))
         {
             if (agent->is_player())
-                mpr("The fire roars!");
+                mpr("The fire ignites!");
             else
-                mpr("A cloud of flames roars to life!");
+                mpr("A cloud of flames bursts into life!");
         }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
@@ -164,6 +166,8 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
         place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
         mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
     }
+
+    behaviour_event(mons, ME_WHACK, &you);
 
     return SPRET_SUCCESS;
 }

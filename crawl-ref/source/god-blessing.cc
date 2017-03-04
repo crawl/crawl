@@ -10,6 +10,7 @@
 #include "artefact.h"
 #include "env.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "makeitem.h"

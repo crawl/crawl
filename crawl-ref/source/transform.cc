@@ -489,14 +489,6 @@ public:
     static const FormBlade &instance() { static FormBlade inst; return inst; }
 
     /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        return 8 + div_rand_round(you.strength() + you.dex(), 3);
-    }
-
-    /**
      * % screen description
      */
     string get_long_name() const override
@@ -560,14 +552,6 @@ public:
     static const FormStatue &instance() { static FormStatue inst; return inst; }
 
     /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        return 6 + div_rand_round(you.strength(), 3);
-    }
-
-    /**
      * Get a message for transforming into this form.
      */
     string transform_message(transformation previous_trans) const override
@@ -595,22 +579,9 @@ public:
     string get_untransform_message() const override
     {
         // This only handles lava orcs going statue -> stoneskin.
-        if (
-#if TAG_MAJOR_VERSION == 34
-            you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
-            ||
-#endif
-            you.species == SP_GARGOYLE)
-        {
+        if (you.species == SP_GARGOYLE)
             return "You revert to a slightly less stony form.";
-        }
-#if TAG_MAJOR_VERSION == 34
-        if (you.species != SP_LAVA_ORC)
-#endif
-            return "You revert to your normal fleshy form.";
-#if TAG_MAJOR_VERSION == 34
-        return Form::get_untransform_message();
-#endif
+        return "You revert to your normal fleshy form.";
     }
 
     /**
@@ -641,12 +612,7 @@ public:
      */
     string get_untransform_message() const override
     {
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
-            return "Your icy form melts away into molten rock.";
-        else
-#endif
-            return "You warm up again.";
+        return "You warm up again.";
     }
 
     /**
@@ -688,15 +654,6 @@ public:
         if (species_is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
-    }
-
-    /**
-     * Find the player's base unarmed damage in this form.
-     */
-    int get_base_unarmed_damage() const override
-    {
-        // You also get another 6 damage from claws.
-        return 12 + div_rand_round(you.strength() * 2, 3);
     }
 
     /**
@@ -1131,20 +1088,6 @@ bool form_likes_water(transformation form)
     return form_can_swim(form);
 }
 
-bool form_likes_lava(transformation form)
-{
-#if TAG_MAJOR_VERSION == 34
-    // Lava orcs can only swim in non-phys-change forms.
-    // However, ice beast & statue form will melt back to lava, so they're OK
-    return you.species == SP_LAVA_ORC
-           && (!form_changed_physiology(form)
-               || form == transformation::ice_beast
-               || form == transformation::statue);
-#else
-    return false;
-#endif
-}
-
 // Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation form)
 {
@@ -1430,7 +1373,7 @@ bool feat_dangerous_for_form(transformation which_trans,
         return false;
 
     if (feat == DNGN_LAVA)
-        return !form_likes_lava(which_trans);
+        return true;
 
     if (feat == DNGN_DEEP_WATER)
         return !you.can_water_walk() && !form_likes_water(which_trans);
@@ -1490,10 +1433,6 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (which_trans == transformation::ice_beast && you.species == SP_DJINNI)
-        return false; // melting is fatal...
-#endif
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
@@ -1730,15 +1669,6 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         msg = "You cannot become a lich while in Death's Door.";
         success = false;
     }
-#if TAG_MAJOR_VERSION == 34
-    else if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
-             && (which_trans == transformation::ice_beast
-                 || which_trans == transformation::statue))
-    {
-        msg =  "Your temperature is too high to benefit from that spell.";
-        success = false;
-    }
-#endif
 
     if (!just_check && previous_trans != transformation::none)
         untransform(true);
@@ -1839,15 +1769,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::spider:
-        if (you.attribute[ATTR_HELD])
-        {
-            trap_def *trap = trap_at(you.pos());
-            if (trap && trap->type == TRAP_WEB)
-            {
-                mpr("You disentangle yourself from the web.");
-                you.attribute[ATTR_HELD] = 0;
-            }
-        }
+        leave_web();
         break;
 
     case transformation::tree:
@@ -1876,7 +1798,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
                 destroy_item(net);
             }
 
-            you.attribute[ATTR_HELD] = 0;
+            stop_being_held();
         }
         break;
 

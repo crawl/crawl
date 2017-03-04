@@ -15,6 +15,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "mon-place.h"
 #include "options.h"
@@ -138,11 +139,6 @@ static void _update_feat_at(const coord_def &gp)
 
     if (disjunction_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_DISJUNCT;
-
-#if TAG_MAJOR_VERSION == 34
-    if (heated(gp))
-        env.map_knowledge(gp).flags |= MAP_HOT;
-#endif
 
     if (is_sanctuary(gp))
     {

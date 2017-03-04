@@ -5,12 +5,14 @@
 #include "areas.h"
 #include "branch.h"
 #include "cloud.h"
+#include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
@@ -217,7 +219,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_NO_POTIONS:
-        if (you_foodless(true))
+        if (you_foodless())
             inf->light_colour = DARKGREY;
         break;
 
@@ -227,7 +229,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "-Swift";
             inf->light_colour = RED;
             inf->short_text   = "sluggish";
-            inf->long_text    = "You are moving sluggishly";
+            inf->long_text    = "You are moving sluggishly.";
         }
         if (you.in_liquid())
             inf->light_colour = DARKGREY;
@@ -392,6 +394,7 @@ bool fill_status_info(int status, status_info* inf)
         _describe_stat_zero(inf, STAT_DEX);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case STATUS_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -401,6 +404,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "You have a stored fireball ready to release.";
         }
         break;
+#endif
 
     case STATUS_BONE_ARMOUR:
         if (you.attribute[ATTR_BONE_ARMOUR] > 0)
@@ -427,10 +431,33 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_SILENCE:
         if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
         {
-            inf->light_colour = LIGHTRED;
-            inf->light_text   = "Sil";
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
+        }
+        break;
+
+    case STATUS_SERPENTS_LASH:
+        if (you.attribute[ATTR_SERPENTS_LASH] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text
+               = make_stringf("Lash (%u)",
+                              you.attribute[ATTR_SERPENTS_LASH]);
+            inf->short_text = "serpent's lash";
+            inf->long_text = "You are moving at supernatural speed.";
+        }
+        break;
+
+    case STATUS_HEAVEN_ON_EARTH:
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text
+               = make_stringf("Hevn (%u)",
+                              you.attribute[ATTR_HEAVEN_ON_EARTH]);
+            inf->short_text = "heaven on earth";
+            inf->long_text = "Heavenly clouds are increasing your damage and "
+                             "accuracy.";
         }
         break;
 
@@ -759,9 +786,6 @@ static void _describe_glow(status_info* inf)
         inf->light_colour = LIGHTGREY;
     else
         inf->light_colour = DARKGREY;
-#if TAG_MAJOR_VERSION == 34
-    if (cont > 1 || you.species != SP_DJINNI)
-#endif
     inf->light_text = "Contam";
 
     /// Mappings from contamination levels to descriptions.
@@ -1016,6 +1040,7 @@ static void _describe_missiles(status_info* inf)
     else
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
                     || you.scan_artefacts(ARTP_RMSL)
                     || have_passive(passive_t::upgraded_storm_shield);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;

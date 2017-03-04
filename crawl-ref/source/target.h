@@ -1,7 +1,8 @@
-#ifndef TARGET_H
-#define TARGET_H
+#pragma once
 
 #include "beam.h"
+#include "los-type.h"
+#include "reach-type.h"
 
 enum aff_type // sign and non-zeroness matters
 {
@@ -282,4 +283,3 @@ public:
 private:
     explosion_map exp_map;
 };
-#endif

@@ -959,8 +959,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         }
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
-        fprintf(fp, "#ifndef TILEDEF_%s_H\n#define TILEDEF_%s_H\n\n",
-                ucname.c_str(), ucname.c_str());
+        fprintf(fp, "#pragma once\n\n");
         fprintf(fp, "#include \"tiledef_defines.h\"\n\n");
 
         for (const auto& include : m_include)
@@ -1093,8 +1092,6 @@ bool tile_list_processor::write_data(bool image, bool code)
             fprintf(fp, "extern tileidx_t tile_%s_part_start[%s];\n",
                     lcname.c_str(), ctg_max.c_str());
         }
-
-        fprintf(fp, "\n#endif\n\n");
 
         fclose(fp);
     }
