@@ -350,7 +350,7 @@ void SkillMenuEntry::set_aptitude()
 	
     if (manual_bonus || you.species == SP_CYNO)
     {
-		if(manual_bonus)
+		if (manual_bonus)
 		{
 			skm.set_flag(SKMF_MANUAL);
 			text += "<lightgreen>";
@@ -359,39 +359,35 @@ void SkillMenuEntry::set_aptitude()
 		int cyno_bonus = 0;
 		
 		//Determine Cyno skill bonus/malus to display if SP_CYNO 
-		if(you.species == SP_CYNO)
+		if (you.species == SP_CYNO)
 		{
 			//Divide aptitude skill to get "current" Cyno aptitude to display
 			int cyno_apt = you.skill(m_sk, 1, true) / 6;
 			cyno_bonus = 4 - cyno_apt * 4;
 			
 			//Set the floor aptitude to -8
-			if(cyno_bonus < -8)
+			if (cyno_bonus < -8)
 				cyno_bonus = -8;
 		}
 		manual_bonus = manual_bonus + cyno_bonus;
 		
         // Only room for two characters.
-		if(manual_bonus != 0)
+		if (manual_bonus != 0)
 		{
 			//Add before based on positive or negative bonus (can be different from bonus being > 10)
-			if(manual_bonus > 0)
+			if (manual_bonus > 0)
 				text += "<lightgreen>";
 			else
 				text += "<red>";
 			
 			//Add '+' if bonus is positive and below 10, otherwise don't
 			if (manual_bonus < 10 && manual_bonus > 0)
-			{
 				text += make_stringf("+%d", manual_bonus);
-			}
 			else
-			{
 				text += to_string(manual_bonus);
-			}
 			
 			//Close color tags based on same rules as above
-			if(manual_bonus > 0)
+			if (manual_bonus > 0)
 				text += "</lightgreen>";
 			else
 				text += "</red>";

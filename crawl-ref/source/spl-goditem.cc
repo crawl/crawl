@@ -503,7 +503,7 @@ int detect_items(int pow)
 			map_radius = 5;
 		
 		//If player species is Cyno, choose higher of map_radius or radius given by MUT_STRONG_NOSE
-		if(you.mutation[MUT_STRONG_NOSE] > 0)
+		if (you.mutation[MUT_STRONG_NOSE] > 0)
 			map_radius = max(map_radius, player_mutation_level(MUT_STRONG_NOSE) * 2 + 1);
     }
 

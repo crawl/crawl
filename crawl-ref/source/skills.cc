@@ -318,7 +318,7 @@ static void _change_skill_level(skill_type exsk, int n)
 			{
 				for (int sk_level = you.skills[exsk] - n + 1; sk_level <= you.skills[exsk]; sk_level++)
 				{
-					if(sk_level % 6 == 0 && sk_level < 19)
+					if (sk_level % 6 == 0 && sk_level < 19)
 						mprf(MSGCH_MUTATION, "You become less interested in %s.",
 							 skill_name(exsk));
 				}
@@ -327,7 +327,7 @@ static void _change_skill_level(skill_type exsk, int n)
 			{
 				for (int sk_level = you.skills[exsk] + n - 1; sk_level >= you.skills[exsk]; sk_level--)
 				{
-					if(sk_level % 6 == 5)
+					if (sk_level % 6 == 5)
 						mprf(MSGCH_MUTATION, "You become more interested in %s.",
 							 skill_name(exsk));
 				}
@@ -1547,7 +1547,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 		81675, 92675 };
 
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-	if(sp == SP_CYNO)
+	if (sp == SP_CYNO)
 		return cyno_exp[lev] * species_apt_factor(sk, sp);
 	else
 		return exp[lev] * species_apt_factor(sk, sp);
