@@ -492,19 +492,19 @@ int detect_items(int pow)
         map_radius = 7 + random2(7) + pow;
     else
     {
-		//Check which god may be providing detect_items and set map_radius
-		if (have_passive(passive_t::detect_items))
-		{
-			map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
-			if (map_radius <= 0 && you.mutation[MUT_STRONG_NOSE] == 0)
-				return 0;
-		}
-		else if (you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
-			map_radius = 5;
-		
-		//If player species is Cyno, choose higher of map_radius or radius given by MUT_STRONG_NOSE
-		if (you.mutation[MUT_STRONG_NOSE] > 0)
-			map_radius = max(map_radius, player_mutation_level(MUT_STRONG_NOSE) * 2 + 1);
+        //Check which god may be providing detect_items and set map_radius
+        if (have_passive(passive_t::detect_items))
+        {
+            map_radius = min(you.piety / 20 - 1, LOS_RADIUS);
+            if (map_radius <= 0 && you.mutation[MUT_STRONG_NOSE] == 0)
+                return 0;
+        }
+        else if (you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
+            map_radius = 5;
+        
+        //If player species is Cyno, choose higher of map_radius or radius given by MUT_STRONG_NOSE
+        if (you.mutation[MUT_STRONG_NOSE] > 0)
+            map_radius = max(map_radius, player_mutation_level(MUT_STRONG_NOSE) * 2 + 1);
     }
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)

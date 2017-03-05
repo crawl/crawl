@@ -1919,7 +1919,7 @@ static const mutation_def mut_data[] =
   {"Your sense of smell grows stronger.",
    "Your sense of smell grows stronger.",
    "Your sense of smell grows stronger."},
-	
+    
   {"Your sense of smell gets weaker."
    "Your sense of smell gets weaker."
    "Your sense of smell gets weaker."},
