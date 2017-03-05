@@ -1482,6 +1482,12 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     cell->flash_colour = BLACK;
 
+    // is this cell excluded from movement by mesmerise-related statuses?
+    // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
+    bool mesmerise_excluded = ((gc != you.pos()) // for fungus form
+                               && (env.map_knowledge(gc).flags & MAP_WITHHELD)
+                               && !feat_is_solid(grd(gc)));
+
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
@@ -1502,7 +1508,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
     else if (crawl_state.darken_range)
     {
-        if (!crawl_state.darken_range->valid_aim(gc))
+        if ((crawl_state.darken_range->obeys_mesmerise && mesmerise_excluded)
+            || (!crawl_state.darken_range->valid_aim(gc)))
         {
             cell->colour = DARKGREY;
 #ifdef USE_TILE
@@ -1528,25 +1535,23 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         if (!found)
             cell->colour = DARKGREY;
     }
+    else if (mesmerise_excluded) // but no range limits in place
+    {
+        cell->colour = DARKGREY;
+
 #ifdef USE_TILE_LOCAL
-    // Grey out grids that cannot be reached due to beholders.
-    else if (you.get_beholder(gc))
         cell->tile.bg |= TILE_FLAG_OOR;
-
-    else if (you.get_fearmonger(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
-
-    tile_apply_properties(gc, cell->tile);
 #elif defined(USE_TILE_WEB)
-    // For webtiles, we only grey out visible tiles
-    else if (you.get_beholder(gc) && you.see_cell(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
+        // For webtiles, we only grey out visible tiles
+        if (you.see_cell(gc))
+            cell->tile.bg |= TILE_FLAG_OOR;
+#endif
+    }
 
-    else if (you.get_fearmonger(gc) && you.see_cell(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
-
+#ifdef USE_TILE
     tile_apply_properties(gc, cell->tile);
 #endif
+
 #ifndef USE_TILE_LOCAL
     if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
         && you.on_current_level
