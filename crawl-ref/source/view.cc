@@ -1485,6 +1485,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // is this cell excluded from movement by mesmerise-related statuses?
     // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
     bool mesmerise_excluded = ((gc != you.pos()) // for fungus form
+                               && map_bounds(gc)
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
                                && !feat_is_solid(grd(gc)));
 
