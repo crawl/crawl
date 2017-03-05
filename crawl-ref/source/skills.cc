@@ -290,7 +290,7 @@ static void _change_skill_level(skill_type exsk, int n)
              specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
-        
+
         //Send a status message about 'aptitude' increases/decreases if species is Cyno (skill levels 6/12/18)
         if (you.species == SP_CYNO && you.skills[exsk] < 19)
         {
@@ -310,7 +310,7 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk),
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
-        
+
         //Send a status message about 'aptitude' increases/decreases if species is Cyno (skill levels 6/12/18)
         if (you.species == SP_CYNO)
         {

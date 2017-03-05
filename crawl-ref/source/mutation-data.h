@@ -1911,15 +1911,15 @@ static const mutation_def mut_data[] =
 
 { MUT_STRONG_NOSE, 0, 3, mutflag::GOOD, false,
   "strong nose",
-  
+
   {"You have a good sense of smell.", 
    "You have a very good sense of smell.", 
    "You have an uncanny sense of smell."},
-   
+
   {"Your sense of smell grows stronger.",
    "Your sense of smell grows stronger.",
    "Your sense of smell grows stronger."},
-    
+
   {"Your sense of smell gets weaker."
    "Your sense of smell gets weaker."
    "Your sense of smell gets weaker."},
