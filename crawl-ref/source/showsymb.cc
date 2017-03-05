@@ -58,12 +58,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             return colour;
         }
     }
-    else if (!feat_is_solid(feat) && cell.flags & MAP_WITHHELD)
-    {
-        // Colour grids that cannot be reached due to beholders
-        // dark grey.
-        colour = DARKGREY;
-    }
     else if (!feat_is_solid(feat)
              && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
     {
