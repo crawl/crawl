@@ -1717,7 +1717,7 @@ Cynos
 
   Cynos are quick to learn, picking up the basics of any skill within a short
   period of time.  This comes at the cost of a poor attention span, making
-  it more difficult to train a skill the higher it gets.  Thus, Cynos often 
+  it more difficult to learn a skill the higher it gets.  Thus, Cynos often 
   prefer to dabble in everything over mastering in one particular skill.
 
 The Undead
