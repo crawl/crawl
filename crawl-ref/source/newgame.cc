@@ -959,6 +959,7 @@ static species_group species_groups[] =
             SP_DEEP_ELF,
             SP_OGRE,
             SP_DEEP_DWARF,
+			SP_CYNO,
         }
     },
     {
