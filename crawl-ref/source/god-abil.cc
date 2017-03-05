@@ -6181,6 +6181,7 @@ bool ru_power_leap()
         args.self = CONFIRM_CANCEL;
         const int explosion_size = 1;
         targeter_smite tgt(&you, args.range, explosion_size, explosion_size);
+        tgt.obeys_mesmerise = true;
         args.hitfunc = &tgt;
         direction(beam, args);
         if (crawl_state.seen_hups)

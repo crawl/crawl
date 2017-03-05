@@ -19,12 +19,14 @@ enum aff_type // sign and non-zeroness matters
 class targeter
 {
 public:
+    targeter() :  agent(nullptr), obeys_mesmerise(false) {};
     virtual ~targeter() {};
 
     coord_def origin;
     coord_def aim;
     const actor* agent;
     string why_not;
+    bool obeys_mesmerise; // whether the rendering of ranges should take into account mesmerise effects
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
