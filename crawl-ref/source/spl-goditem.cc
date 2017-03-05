@@ -490,6 +490,10 @@ int detect_items(int pow)
     int map_radius = 0;
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
+    else if (you.mutation[MUT_STRONG_NOSE])
+    {
+        map_radius = LOS_RADIUS;
+    }
     else
     {
         //Check which god may be providing detect_items and set map_radius
@@ -501,10 +505,6 @@ int detect_items(int pow)
         }
         else if (you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
             map_radius = 5;
-
-        //If player species is Cyno, choose higher of map_radius or radius given by MUT_STRONG_NOSE
-        if (you.mutation[MUT_STRONG_NOSE] > 0)
-            map_radius = max(map_radius, player_mutation_level(MUT_STRONG_NOSE) * 2 + 1);
     }
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
