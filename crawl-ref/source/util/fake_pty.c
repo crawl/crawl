@@ -1,4 +1,9 @@
-#include <pty.h>
+#include "../platform.h"
+#if defined(TARGET_OS_MACOSX)
+  #include <util.h>
+#else
+  #include <pty.h>
+#endif
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
