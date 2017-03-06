@@ -3377,7 +3377,7 @@ static void _move_player(coord_def move)
     }
     else if (you.form == transformation::fungus && moving && !you.confused())
     {
-        if (you.made_nervous_by(targ))
+        if (you.is_nervous())
         {
             mpr("You're too terrified to move while being watched!");
             stop_running();
