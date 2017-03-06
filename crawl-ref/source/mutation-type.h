@@ -211,6 +211,7 @@ enum mutation_type
 #endif
     MUT_HOP,
     MUT_NO_REGENERATION,
+    MUT_STRONG_NOSE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

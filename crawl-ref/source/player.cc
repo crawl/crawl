@@ -5400,6 +5400,7 @@ bool player::cannot_speak() const
 static const string shout_verbs[] = {"shout", "yell", "scream"};
 static const string felid_shout_verbs[] = {"meow", "yowl", "caterwaul"};
 static const string frog_shout_verbs[] = {"ribbit", "croak", "bellow"};
+static const string dog_shout_verbs[] = {"bark", "howl", "screech"};
 
 /**
  * What verb should be used to describe the player's shouting?
@@ -5414,6 +5415,8 @@ string player::shout_verb(bool directed) const
 
     const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
 
+    if (species == SP_CYNO)
+        return dog_shout_verbs[screaminess];
     if (species == SP_BARACHIAN)
         return frog_shout_verbs[screaminess];
     if (species != SP_FELID)

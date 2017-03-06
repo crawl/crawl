@@ -290,6 +290,17 @@ static void _change_skill_level(skill_type exsk, int n)
              specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
+
+        //Send a status message about 'aptitude' increases/decreases if species is Cyno (skill levels 6/12/18)
+        if (you.species == SP_CYNO && you.skills[exsk] < 19)
+        {
+            if (n > 0 && you.skills[exsk] % 6 == 0)
+                mprf(MSGCH_MUTATION, "You become less interested in %s.",
+                     skill_name(exsk));
+            else if (n < 0 && you.skills[exsk] % 6 == 5)
+                mprf(MSGCH_MUTATION, "You become more interested in %s.",
+                     skill_name(exsk));
+        }
     }
     else if (you.num_turns)
     {
@@ -299,6 +310,29 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk),
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
+
+        //Send a status message about 'aptitude' increases/decreases if species is Cyno (skill levels 6/12/18)
+        if (you.species == SP_CYNO)
+        {
+            if (n > 0 && (you.skills[exsk] - n) < 19)
+            {
+                for (int sk_level = you.skills[exsk] - n + 1; sk_level <= you.skills[exsk]; sk_level++)
+                {
+                    if (sk_level % 6 == 0 && sk_level < 19)
+                        mprf(MSGCH_MUTATION, "You become less interested in %s.",
+                             skill_name(exsk));
+                }
+            }
+            else if (n < 0 && you.skills[exsk] < 19)
+            {
+                for (int sk_level = you.skills[exsk] + n - 1; sk_level >= you.skills[exsk]; sk_level--)
+                {
+                    if (sk_level % 6 == 5)
+                        mprf(MSGCH_MUTATION, "You become more interested in %s.",
+                             skill_name(exsk));
+                }
+            }
+        }
     }
 
     if (you.skills[exsk] == n && n > 0)
@@ -816,7 +850,7 @@ void exercise(skill_type exsk, int deg)
 // We look at skill points because actual level up comes later.
 static bool _level_up_check(skill_type sk, bool simu)
 {
-    // Don't train past level 27.
+    // Don't train past max_skill_training.
     if (you.skill_points[sk] >= skill_exp_needed(MAX_SKILL_LEVEL, sk))
     {
         you.training[sk] = 0;
@@ -1496,15 +1530,27 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
-                          1050, 1400, 1800, 2250, 2800,      // 6-10
-                          3450, 4200, 5050, 6000, 7050,      // 11-15
-                          8200, 9450, 10800, 12300, 13950,   // 16-20
-                          15750, 17700, 19800, 22050, 24450, // 21-25
-                          27000, 29750 };
+    //Choose between the normal exp table and the cyno exp table based on sp
+    const int exp[28] = 
+      { 0, 50, 150, 300, 500, 750,          // 0-5
+        1050, 1400, 1800, 2250, 2800,       // 6-10
+        3450, 4200, 5050, 6000, 7050,       // 11-15
+        8200, 9450, 10800, 12300, 13950,    // 16-20
+        15750, 17700, 19800, 22050, 24450,  // 21-25
+        27000, 29750 };
+    const int cyno_exp[28] = 
+      { 0, 25, 75, 150, 250, 375,           // 0-5
+        525, 875, 1275, 1725, 2275,         // 6-10
+        2925, 3675, 5375, 7275, 9375,       // 11-15
+        11675, 14175, 16875, 22875, 29475,  // 16-20
+        36675, 44475, 52875, 61875, 71475,  // 21-25
+        81675, 92675 };
 
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-    return exp[lev] * species_apt_factor(sk, sp);
+    if (sp == SP_CYNO)
+        return cyno_exp[lev] * species_apt_factor(sk, sp);
+    else
+        return exp[lev] * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)
