@@ -154,7 +154,7 @@ static void _update_feat_at(const coord_def &gp)
     if (you.get_fearmonger(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if (you.made_nervous_by(gp))
+    if (you.is_nervous() && you.see_cell(gp) && !monster_at(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if ((feat_is_stone_stair(feat)

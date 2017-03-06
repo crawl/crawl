@@ -7451,25 +7451,44 @@ void player::sentinel_mark(bool trap)
     }
 }
 
-bool player::made_nervous_by(const coord_def &p)
+/*
+ * Is the player too terrified to move (because of fungusform)?
+ *
+ * @return true iff there is an alarming monster anywhere near a fungusform player.
+ */
+bool player::is_nervous()
 {
     if (form != transformation::fungus)
         return false;
-    monster* mons = monster_at(p);
-    if (mons && mons_is_threatening(*mons))
-        return false;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (!mons_is_wandering(**mi)
-            && !mi->asleep()
-            && !mi->confused()
-            && !mi->cannot_act()
-            && mons_is_threatening(**mi)
-            && !mi->wont_attack()
-            && !mi->neutral())
-        {
+        if (made_nervous_by(*mi))
             return true;
-        }
+    }
+    return false;
+}
+
+/*
+ * Does monster `mons` make the player nervous (in fungusform)?
+ *
+ * @param mons  the monster to check
+ * @return      true iff mons is non-null, player is fungal, and `mons` is a threatening monster.
+ */
+bool player::made_nervous_by(const monster *mons)
+{
+    if (form != transformation::fungus)
+        return false;
+    if (!mons)
+        return false;
+    if (!mons_is_wandering(*mons)
+        && !mons->asleep()
+        && !mons->confused()
+        && !mons->cannot_act()
+        && mons_is_threatening(*mons)
+        && !mons->wont_attack()
+        && !mons->neutral())
+    {
+        return true;
     }
     return false;
 }

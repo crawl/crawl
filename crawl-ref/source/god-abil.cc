@@ -6166,6 +6166,11 @@ bool ru_power_leap()
         crawl_state.cancel_cmd_repeat();
         return false;
     }
+    if (you.is_nervous())
+    {
+        mpr("You are too terrified to leap around!");
+        return false;
+    }
 
     // query for location:
     dist beam;
