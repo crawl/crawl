@@ -534,7 +534,8 @@ public:
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
-    bool made_nervous_by(const coord_def &pos);
+    bool made_nervous_by(const monster *mons);
+    bool is_nervous();
 
     kill_category kill_alignment() const override;
 

@@ -938,7 +938,7 @@ void item_check()
 }
 
 // Identify the object the player stepped on.
-// Books and manuals are fully identified.
+// Books are fully identified.
 // Wands are only type-identified.
 static bool _id_floor_item(item_def &item)
 {
@@ -967,6 +967,7 @@ static bool _id_floor_item(item_def &item)
             return true;
         }
     }
+
     return false;
 }
 
