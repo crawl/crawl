@@ -27,6 +27,7 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
@@ -486,18 +487,19 @@ void debuff_monster(monster &mon)
 int detect_items(int pow)
 {
     int items_found = 0;
-    int map_radius;
+    int map_radius = 0;
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
     else
     {
-        if (have_passive(passive_t::detect_items))
+        //Check which god may be providing detect_items (Ashenzari or Jiyva) and set map_radius
+        if (have_passive(passive_t::detect_items)) //Ashenzari
         {
             map_radius = min(you.piety / 20 - 1, LOS_DEFAULT_RANGE);
             if (map_radius <= 0)
                 return 0;
         }
-        else // MUT_JELLY_GROWTH
+        else if (you.mutation[MUT_JELLY_GROWTH]) //Jiyva
             map_radius = 5;
     }
 
