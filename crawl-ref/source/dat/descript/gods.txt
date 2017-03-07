@@ -316,13 +316,13 @@ Disciples of the Council learn to perform three martial techniques:
   ...<lightred>@</lightred>O..  -->  ....O.. adjacent to an enemy. May slow down foes.
   .......       .......
 
-  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Moving into a wall jumps away from
+  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to jump away from
   ..x<lightred>@</lightred>...  -->  ..x..<lightred>@</lightred>. it, striking all enemies adjacent to the landing spot.
   ..x....       ..x.... May distract any witnessing foes.
 
-  .......       ....... (***) <lightred>Lunge</lightred>: Moving towards enemies in one of the eight
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. cardinal directions deals extra damage, especially
-  .......       ....... if it they are slowed or distracted.
+  .......       ....... (***) <lightred>Lunge</lightred>: Move towards enemies in one of the eight
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. cardinal directions to deal extra damage, and even more
+  .......       ....... if they are slowed or distracted.
 
 Disciples of the Council will also be taught to move at unfathomable speeds for
 short distances, and become able to summon a storm of golden clouds to increase
