@@ -5377,6 +5377,11 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
 
     switch (sacrifice)
     {
+        case ABIL_RU_SACRIFICE_HEALTH:
+            if (mut == MUT_FRAIL)
+                piety_gain += 20; // -health is pretty much always quite bad.
+            else if (mut == MUT_PHYSICAL_VULNERABILITY)
+                piety_gain += 5; // -AC is a bit worse than -EV
         case ABIL_RU_SACRIFICE_ESSENCE:
             if (mut == MUT_LOW_MAGIC)
             {
@@ -5406,6 +5411,10 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain += 21;
             else
                 piety_gain += 14;
+
+            if (mut == MUT_SCREAM)
+                piety_gain /= 2; // screaming just isn't that bad.
+
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
             if (player_mutation_level(MUT_NO_LOVE))
@@ -5426,12 +5435,12 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 && player_mutation_level(MUT_NO_ARTIFICE))
             {
                 // this is virtually useless, aside from zot_tub
-                piety_gain -= 19;
+                piety_gain = 1;
             }
             else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
                 || player_mutation_level(MUT_NO_ARTIFICE))
             {
-                piety_gain -= 10;
+                piety_gain /= 2;
             }
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
