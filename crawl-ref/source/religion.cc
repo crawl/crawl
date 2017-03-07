@@ -3016,6 +3016,21 @@ int gozag_service_fee()
     return fee;
 }
 
+static bool _god_rejects_loveless(god_type god)
+{
+    switch (god)
+    {
+    case GOD_BEOGH:
+    case GOD_JIYVA:
+    case GOD_HEPLIAKLQANA:
+    case GOD_FEDHAS:
+    case GOD_YREDELEMNUL:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool player_can_join_god(god_type which_god)
 {
     if (you.species == SP_DEMIGOD)
@@ -3037,15 +3052,8 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
-    if (player_mutation_level(MUT_NO_LOVE)
-        && (which_god == GOD_BEOGH
-            || which_god == GOD_JIYVA
-            || which_god == GOD_HEPLIAKLQANA
-            || which_god == GOD_FEDHAS
-            || which_god == GOD_YREDELEMNUL))
-    {
+    if (player_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
         return false;
-    }
 
     if (player_mutation_level(MUT_NO_ARTIFICE)
         && which_god == GOD_PAKELLAS)
@@ -3653,9 +3661,7 @@ void god_pitch(god_type which_god)
             }
         }
         else if (player_mutation_level(MUT_NO_LOVE)
-                 && (which_god == GOD_BEOGH
-                     || which_god == GOD_JIYVA
-                     || which_god == GOD_HEPLIAKLQANA))
+                 && _god_rejects_loveless(which_god))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
