@@ -824,8 +824,7 @@ acids, although not infallibly so.
 %%%%
 ring of loudness
 
-A ring that causes the wearer's actions to be much louder, and makes them
-less stealthy to nearby monsters.
+A ring that makes the player less stealthy.
 %%%%
 ring of magical power
 

@@ -810,8 +810,7 @@ bool noisy(int original_loudness, const coord_def& where,
                                     : loudness;
 
     // The multiplier converts to milli-auns which are used internally by noise propagation.
-    // Ring of loudness increases player noise: 1 ring is x2, 2 rings is x3, etc.
-    const int multiplier = (you.wearing(EQ_RINGS, RING_LOUDNESS) + 1) * 1000;
+    const int multiplier = 1000;
 
     // Add +1 to scaled_loudness so that all squares adjacent to a
     // sound of loudness 1 will hear the sound.
