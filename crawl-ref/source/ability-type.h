@@ -69,10 +69,9 @@ enum ability_type
 #if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_TELEPORT_CONTROL,
     ABIL_EVOKE_TWISTER,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_TWISTER,
-#else
-    ABIL_MAX_EVOKE = ABIL_EVOKE_FOG,
 #endif
+    ABIL_EVOKE_RATSKIN,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_RATSKIN,
 
     // Divine abilities
     // Zin
