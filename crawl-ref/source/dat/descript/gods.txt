@@ -310,7 +310,10 @@ and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
 Wu Jian powers
 
-Disciples of the Council learn to perform three martial techniques:
+Disciples of the Council learn to perform three martial techniques, shown
+below.  They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Strike by moving between two tiles
   ...<lightred>@</lightred>O..  -->  ....O.. adjacent to an enemy. May slow down foes.
@@ -323,10 +326,6 @@ Disciples of the Council learn to perform three martial techniques:
   .......       ....... (***) <lightred>Lunge</lightred>: Move towards enemies in one of the eight
   ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. cardinal directions to deal extra damage, and even more
   .......       ....... if they are slowed or distracted.
-
-Disciples of the Council will also be taught to move at unfathomable speeds for
-short distances, and become able to summon a storm of golden clouds to increase
-their precision and damage for as long as they keep using their martial attacks.
 %%%%
 Kikubaaqudgha powers
 
