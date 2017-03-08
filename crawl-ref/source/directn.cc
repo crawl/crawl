@@ -1791,9 +1791,6 @@ void direction_chooser::do_redraws()
 
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
-#ifdef USE_TILE_WEB
-        tiles_crt_control crt(false); // Don't switch UI modes in cursorxy.
-#endif
         cursorxy(crawl_view.grid2screen(target()));
 #ifdef USE_TILE_WEB
         // cursorxy doesn't place the cursor in Webtiles, we do it manually here
