@@ -1,0 +1,1389 @@
+###############################################################################
+# misc.txt
+# total miscellaneous words and sentence
+###############################################################################
+#
+# 
+# startup.cc
+%%%%
+Loading databases...
+
+데이터베이스 로딩 중...
+%%%%
+Loading spells and features...
+
+스펠하고 피쳐 로딩 중...
+%%%%
+Loading maps...
+
+맵 로딩 중...
+%%%%
+Loading complete, press any key to start.
+
+로딩 완료, 아무 키나 눌러서 시작하세요.
+%%%%
+Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS)
+
+비-디버그용 크롤은 테스트 실행이 안됩니다. 디버그 빌드를 이용하세요 (FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS를 정의하세요)
+%%%%
+Dismissing %s
+
+Dismissing %s
+%%%%
+Dungeon Crawl
+
+던전 크롤
+%%%%
+Dungeon Crawl: The main game: full of monsters, items, gods and danger!
+
+던전 크롤: 메인 게임: 모든 몬스터, 아이템, 신 그리고  위험까지!
+%%%%
+Tutorial for Dungeon Crawl
+
+던전크롤 튜토리얼
+%%%%
+Tutorial that covers the basics of Dungeon Crawl survival.
+
+던전크롤에서 살아남기 위한 기본 튜토리얼
+%%%%
+Hints Mode for Dungeon Crawl
+
+던전크롤을 위한 힌트모드
+%%%%
+A mostly normal game that provides more advanced hints than the tutorial.
+
+튜토리얼보다 고급 힌트를 제공하는 노멀모드와 거의 같은 게임.
+%%%%
+Dungeon Sprint
+
+던전 스프린트
+%%%%
+Hard, fixed single level game mode.
+
+어렵고, 고정된 단층짜리 게임 모드.
+%%%%
+Help menu.
+
+도움말 메뉴.
+%%%%
+The Arena
+
+아레나
+%%%%
+Pit computer controlled teams versus each other!
+
+컴퓨터가 조종하는 팀들을 서로 싸우게 하세요!
+%%%%
+High Scores
+
+고득점
+%%%%
+View the high score list.
+
+고득점 목록 보기
+%%%%
+New Game
+
+새 게임
+%%%%
+Enter your name:
+
+당신의 이름을 입력하세요:
+%%%%
+Choices:
+
+선택:
+%%%%
+Saved games:
+
+저장된 게임:
+%%%%
+Use the up/down keys to select the type of game or load a character.
+
+위/아래 방향키를 이용해서 게임 종류를 선택하거나 로드할 캐릭터를 선택하세요.
+%%%%
+You can type your name; if you leave it blank you will be asked later.\nPress Enter to start
+
+당신은 이름을 입력 할 수 있습니다. 빈칸으로 두고 넘어가면 나중에 물어봅니다.\n엔터를 쳐서 시작하세요
+%%%%
+, Tab to repeat the last game's choice
+
+, 탭 눌러서 마지막 게임 설정 반복하기
+%%%%
+That's a silly name
+
+거참 존나 웃긴 이름이군
+%%%%
+Enter your choice of teams:\n
+
+선택할 팀을 입력:\n
+%%%%
+Enter - %s\n
+
+Enter - %s\n
+%%%%
+Examples:\n
+
+예:\n
+%%%%
+# describe.cc
+It sustains your strength, intelligence and dexterity.
+
+이것은 당신의 힘, 지능과 손재주를 유지하게 해줍니다.
+%%%%
+It improves your spell success rate.
+
+It improves your spell success rate.
+%%%%
+It enhances your fire magic.
+
+It enhances your fire magic.
+%%%%
+It enhances your ice magic.
+
+It enhances your ice magic.
+%%%%
+It may teleport you next to monsters.
+
+It may teleport you next to monsters.
+%%%%
+It can be evoked for teleport control.
+
+It can be evoked for teleport control.
+%%%%
+It increases damage dealt and taken.
+
+It increases damage dealt and taken.
+%%%%
+It increases your magic regeneration.
+
+It increases your magic regeneration.
+%%%%
+It allows you to eat raw meat even when not hungry.
+
+It allows you to eat raw meat even when not hungry.
+%%%%
+It may teleport away creatures that harm you.
+
+It may teleport away creatures that harm you.
+%%%%
+It protects your inventory from destruction.
+
+It protects your inventory from destruction.
+%%%%
+It causes incoming damage to be split between your health and magic.
+
+It causes incoming damage to be split between your health and magic.
+%%%%
+It allows you to gain divine favour quickly.
+
+It allows you to gain divine favour quickly.
+%%%%
+It shields you and reflects attacks.
+
+It shields you and reflects attacks.
+%%%%
+It reduces the accuracy of all your attacks.
+
+It reduces the accuracy of all your attacks.
+%%%%
+It affects your AC (%d).
+
+이것은 당신의 방어력에 영향을 준다 (%d)
+%%%%
+It affects your evasion (%d).
+
+이것은 당신의 회피력에 영향을 준다 (%d)
+%%%%
+It affects your strength (%d).
+
+이것은 당신의 힘에 영향을 준다 (%d)
+%%%%
+It affects your intelligence (%d).
+
+이것은 당신의 지능에 영향을 준다 (%d).
+%%%%
+It affects your dexterity (%d).
+
+이것은 당신의 민첩에 영향을 준다 (%d).
+%%%%
+It affects your accuracy and damage with ranged weapons and melee attacks (%d).
+
+It affects your accuracy and damage with ranged weapons and melee attacks (%d).
+%%%%
+fire
+
+fire
+%%%%
+cold
+
+cold
+%%%%
+It insulates you from electricity.
+
+It insulates you from electricity.
+%%%%
+poison
+
+poison
+%%%%
+negative energy
+
+negative energy
+%%%%
+It affects your resistance to hostile enchantments.
+
+It affects your resistance to hostile enchantments.
+%%%%
+It affects your health (%d).
+
+이것은 당신의 생명력에 영향을 준다 (%d).
+%%%%
+It affects your magic capacity (%d).
+
+이것은 당신의 마력에 영향을 준다 (%d).
+%%%%
+It lets you see invisible.
+
+It lets you see invisible.
+%%%%
+It lets you turn invisible.
+
+이것은 당신이 투명화를 할 수 있게 해준다.
+%%%%
+It lets you fly.
+
+이것은 당신이 비행을 할 수 있게 해준다.
+%%%%
+It lets you blink.
+
+이것은 당신이 순간이동을 할 수 있게 해준다.
+%%%%
+It lets you go berserk.
+
+이것은 당신이 광폭화를 할 수 있게 해준다.
+%%%%
+It may make noises in combat.
+
+It may make noises in combat.
+%%%%
+It prevents spellcasting.
+
+이것은 당신의 주문시전을 방해한다.
+%%%%
+It may teleport you next to monsters.
+
+It may teleport you next to monsters.
+%%%%
+It prevents most forms of teleportation.
+
+이것은 대부분의 공간이동을 방해한다.
+%%%%
+It may make you go berserk in combat.
+
+It may make you go berserk in combat.
+%%%%
+It curses itself when equipped.
+
+It curses itself when equipped.
+%%%%
+It protects you against confusion.
+
+이것은 당신을 혼란으로부터 보호한다.
+%%%%
+It causes magical contamination when unequipped.
+
+이것을 해제할 경우, 마력 오염을 일으킬 것이다.
+%%%%
+It protects you from missiles.
+
+이것은 당신을 발사체로부터 보호한다.
+%%%%
+It can be evoked to emit clouds of fog.
+
+이것을 발동하여 안개 구름을 내뿜을 수 있다.
+%%%%
+It increases your rate of regeneration.
+
+이것은 당신의 재생력을 향상시킨다.
+%%%%
+It protects you from acid and corrosion.
+
+It protects you from acid and corrosion.
+%%%%
+It protects you from mutation.
+
+It protects you from mutation.
+%%%%
+It may corrode you when you take damage.
+
+It may corrode you when you take damage.
+%%%%
+It causes draining when unequipped.
+
+It causes draining when unequipped.
+%%%%
+It may slow you when you take damage.
+
+It may slow you when you take damage.
+%%%%
+It will be destroyed if unequipped.
+
+It will be destroyed if unequipped.
+%%%%
+It affects your SH (%d).
+
+It affects your SH (%d).
+%%%%
+It makes you extremely vulnerable to 
+
+It makes you extremely vulnerable to 
+%%%%
+It makes you very vulnerable to 
+
+It makes you very vulnerable to 
+%%%%
+It makes you vulnerable to 
+
+It makes you vulnerable to 
+%%%%
+Buggy descriptor!
+
+Buggy descriptor!
+%%%%
+It protects you from 
+
+It protects you from 
+%%%%
+It greatly protects you from 
+
+It greatly protects you from 
+%%%%
+It renders you almost immune to 
+
+It renders you almost immune to 
+%%%%
+\nIt makes you %s%s stealthy.
+
+\nIt makes you %s%s stealthy.
+%%%%
+a cubic structure in place of a head
+
+a cubic structure in place of a head
+%%%%
+a brain for a head
+
+a brain for a head
+%%%%
+It is of an unusually buggy age.
+
+It is of an unusually buggy age.
+%%%%
+It is larval and weak, freshly emerged from its mother's pouch.
+
+It is larval and weak, freshly emerged from its mother's pouch.
+%%%%
+It is a juvenile, no longer larval but below its mature strength.
+
+It is a juvenile, no longer larval but below its mature strength.
+%%%%
+It is mature, stronger than a juvenile but weaker than its elders.
+
+It is mature, stronger than a juvenile but weaker than its elders.
+%%%%
+It is an elder, stronger than mature beasts.
+
+It is an elder, stronger than mature beasts.
+%%%%
+It is a primal beast, the most powerful of its kind.
+
+It is a primal beast, the most powerful of its kind.
+%%%%
+ seems unusually buggy.
+
+ seems unusually buggy.
+%%%%
+ sports a set of venomous tails
+
+ sports a set of venomous tails
+%%%%
+\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
+
+\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
+%%%%
+\nFiring bullets:    Base damage: %d
+
+\nFiring bullets:    Base damage: %d
+%%%%
+It is a weapon for one hand-pair.
+
+It is a weapon for one hand-pair.
+%%%%
+It is a one handed weapon.
+
+이것은 한손 무기이다.
+%%%%
+It is a two handed weapon.
+
+이것은 양손 무기이다.
+%%%%
+\n\nIt can be evoked to extend its reach.
+
+\n\n이 무기는 발동을 통해 사거리를 늘려 공격하는 것이 가능하다.
+%%%%
+#"
+\n\nIt hits all enemies adjacent to the wielder, 
+
+\n\nIt hits all enemies adjacent to the wielder, 
+%%%%
+#"
+\n\nIt can be used to riposte, swiftly 
+
+\n\nIt can be used to riposte, swiftly 
+%%%%
+#"
+It causes projectiles fired from it to burn 
+
+It causes projectiles fired from it to burn 
+%%%%
+#"
+It has been specially enchanted to burn 
+
+It has been specially enchanted to burn 
+%%%%
+#"
+ causing extra injury to most foes and up to half 
+
+ causing extra injury to most foes and up to half 
+%%%%
+#"
+ Big, fiery blades are also staple 
+
+ Big, fiery blades are also staple 
+%%%%
+#"
+It causes projectiles fired from it to freeze 
+
+It causes projectiles fired from it to freeze 
+%%%%
+#"
+It has been specially enchanted to freeze 
+
+It has been specially enchanted to freeze 
+%%%%
+#"
+ causing extra injury to most foes 
+
+ causing extra injury to most foes 
+%%%%
+ can also slow down cold-blooded creatures.
+
+ 뱀과 같은 변온동물의 움직임을 느리게 할 수 있다.
+%%%%
+It has been blessed by the Shining One
+
+'샤이닝 원'의 축복을 받은 무기다.
+%%%%
+ cause great damage to the undead and demons.
+
+ cause great damage to the undead and demons.
+%%%%
+#"
+It charges the ammunition it shoots with 
+
+It charges the ammunition it shoots with 
+%%%%
+#"
+Occasionally, upon striking a foe, it will 
+
+Occasionally, upon striking a foe, it will 
+%%%%
+It poisons the ammo it fires.
+
+It poisons the ammo it fires.
+%%%%
+It poisons the flesh of those it strikes.
+
+It poisons the flesh of those it strikes.
+%%%%
+#"
+It protects the one who uses it against 
+
+It protects the one who uses it against 
+%%%%
+#"
+A truly terrible weapon, it drains the 
+
+A truly terrible weapon, it drains the 
+%%%%
+Attacks with this weapon are significantly faster.
+
+Attacks with this weapon are significantly faster.
+%%%%
+ fired from it inflicts extra damage.
+
+ fired from it inflicts extra damage.
+%%%%
+#"
+It inflicts extra damage upon your 
+
+It inflicts extra damage upon your 
+%%%%
+#"
+Each projectile launched from it has a 
+
+Each projectile launched from it has a 
+%%%%
+#"
+Each time it hits an enemy it has a 
+
+Each time it hits an enemy it has a 
+%%%%
+#"
+It inflicts no extra harm, but heals 
+
+It inflicts no extra harm, but heals 
+%%%%
+#"
+In the hands of one skilled in necromantic 
+
+In the hands of one skilled in necromantic 
+%%%%
+#"
+It warps and distorts space around it. 
+
+It warps and distorts space around it. 
+%%%%
+#"
+Ammo fired by it will pass through the 
+
+Ammo fired by it will pass through the 
+%%%%
+#"
+If a monster killed with it leaves a 
+
+If a monster killed with it leaves a 
+%%%%
+#"
+It reduces the magical energy of the wielder, 
+
+It reduces the magical energy of the wielder, 
+%%%%
+#"
+It has no special brand (it is not flaming, 
+
+It has no special brand (it is not flaming, 
+%%%%
+\nIt is temporarily rebranded; it is actually a
+
+\nIt is temporarily rebranded; it is actually a
+%%%%
+\nThis weapon may have some hidden properties.
+
+\nThis weapon may have some hidden properties.
+%%%%
+\nIt is too large for you to wield.
+
+\nIt is too large for you to wield.
+%%%%
+\nIt cannot be enchanted further.
+
+\nIt cannot be enchanted further.
+%%%%
+\nIt can be maximally enchanted to +
+
+\nIt can be maximally enchanted to +
+%%%%
+#"
+It burns those it strikes, causing extra injury 
+
+It burns those it strikes, causing extra injury 
+%%%%
+#"
+It freezes those it strikes, causing extra injury 
+
+It freezes those it strikes, causing extra injury 
+%%%%
+fired from an appropriate launcher, 
+
+fired from an appropriate launcher, 
+%%%%
+it has a random effect.
+
+it has a random effect.
+%%%%
+It is coated with poison.
+
+It is coated with poison.
+%%%%
+#"
+It is tipped with a substance that causes 
+
+It is tipped with a substance that causes 
+%%%%
+It is tipped with a paralysing substance.
+
+It is tipped with a paralysing substance.
+%%%%
+It is coated with a fast-acting tranquilizer.
+
+It is coated with a fast-acting tranquilizer.
+%%%%
+It is tipped with a substance that causes confusion.
+
+It is tipped with a substance that causes confusion.
+%%%%
+It has been contaminated by something likely to cause disease.
+
+It has been contaminated by something likely to cause disease.
+%%%%
+#"
+It is tipped with a substance that sends those it 
+
+It is tipped with a substance that sends those it 
+%%%%
+#"
+A skilled user can throw it in such a way that it 
+
+A skilled user can throw it in such a way that it 
+%%%%
+#"
+It will pass through any targets it hits, 
+
+It will pass through any targets it hits, 
+%%%%
+#"
+It will cause any target it hits to blink, with a 
+
+It will cause any target it hits to blink, with a 
+%%%%
+It deals increased damage compared to normal ammo.
+
+It deals increased damage compared to normal ammo.
+%%%%
+#"
+It deals substantially increased damage to chaotic 
+
+It deals substantially increased damage to chaotic 
+%%%%
+#"
+\nBase damage: %d  Base attack delay: %.1f
+
+\nBase damage: %d  Base attack delay: %.1f
+%%%%
+\nIt will always be destroyed on impact.
+
+\nIt will always be destroyed on impact.
+%%%%
+\nIt may be destroyed on impact.
+
+\nIt may be destroyed on impact.
+%%%%
+\nBase shield rating: 
+
+\nBase shield rating: 
+%%%%
+       Skill to remove penalty: 
+
+       Skill to remove penalty: 
+%%%%
+(Your skill: %.1f)
+
+(Your skill: %.1f)
+%%%%
+\n\nBase armour rating: 
+
+\n\nBase armour rating: 
+%%%%
+       Encumbrance rating: 
+
+       Encumbrance rating: 
+%%%%
+       Evasion: 
+
+       Evasion: 
+%%%%
+#"
+\nWearing mundane armour of this type 
+
+\nWearing mundane armour of this type 
+%%%%
+It allows its wearer to slither at a great speed.
+
+It allows its wearer to slither at a great speed.
+%%%%
+It allows its wearer to run at a great speed.
+
+It allows its wearer to run at a great speed.
+%%%%
+It protects its wearer from heat.
+
+It protects its wearer from heat.
+%%%%
+It protects its wearer from cold.
+
+It protects its wearer from cold.
+%%%%
+It protects its wearer from poison.
+
+It protects its wearer from poison.
+%%%%
+It allows its wearer to see invisible things.
+
+It allows its wearer to see invisible things.
+%%%%
+#"
+When activated it hides its wearer from 
+
+When activated it hides its wearer from 
+%%%%
+It increases the physical power of its wearer (+3 to strength).
+
+It increases the physical power of its wearer (+3 to strength).
+%%%%
+It increases the dexterity of its wearer (+3 to dexterity).
+
+It increases the dexterity of its wearer (+3 to dexterity).
+%%%%
+It makes you more clever (+3 to intelligence).
+
+It makes you more clever (+3 to intelligence).
+%%%%
+It is very cumbersome, thus slowing your movement.
+
+It is very cumbersome, thus slowing your movement.
+%%%%
+#"
+It can be activated to allow its wearer to 
+
+It can be activated to allow its wearer to 
+%%%%
+#"
+It increases its wearer's resistance 
+
+It increases its wearer's resistance 
+%%%%
+It protects its wearer from harm (+3 to AC).
+
+It protects its wearer from harm (+3 to AC).
+%%%%
+It enhances the stealth of its wearer.
+
+It enhances the stealth of its wearer.
+%%%%
+#"
+It protects its wearer from the effects 
+
+It protects its wearer from the effects 
+%%%%
+#"
+It protects its wearer from 
+
+It protects its wearer from 
+%%%%
+#"
+It increases the power of its wearer's 
+
+It increases the power of its wearer's 
+%%%%
+It does nothing special.
+
+It does nothing special.
+%%%%
+#"
+It reflects blocked things back in the 
+
+It reflects blocked things back in the 
+%%%%
+#"
+It shields its wearer from harm at the cost 
+
+It shields its wearer from harm at the cost 
+%%%%
+#"
+It has no special ego (it is not resistant to 
+
+It has no special ego (it is not resistant to 
+%%%%
+#"
+It improves your effectiveness with ranged 
+
+It improves your effectiveness with ranged 
+%%%%
+\nThis armour may have some hidden properties.
+
+\nThis armour may have some hidden properties.
+%%%%
+\n\nIt can be maximally enchanted to +
+
+\n\nIt can be maximally enchanted to +
+%%%%
+\n\nIt cannot be enchanted further.
+
+\n\nIt cannot be enchanted further.
+%%%%
+\nIt affects your AC (%+d).
+
+\nIt affects your AC (%+d).
+%%%%
+\nIt affects your evasion (%+d).
+
+\nIt affects your evasion (%+d).
+%%%%
+\nIt affects your strength (%+d).
+
+\nIt affects your strength (%+d).
+%%%%
+\nIt affects your intelligence (%+d).
+
+\nIt affects your intelligence (%+d).
+%%%%
+\nIt affects your dexterity (%+d).
+
+\nIt affects your dexterity (%+d).
+%%%%
+#"
+\nIt affects your accuracy and
+
+\nIt affects your accuracy and
+%%%%
+\nIt affects your shielding (%+d).
+
+\nIt affects your shielding (%+d).
+%%%%
+\nThis 
+
+\nThis 
+%%%%
+ring
+
+ring
+%%%%
+ may have hidden properties.
+
+ may have hidden properties.
+%%%%
+This isn't a deck at all!\n
+
+This isn't a deck at all!\n
+%%%%
+\nMost decks begin with %d to %d cards.
+
+\nMost decks begin with %d to %d cards.
+%%%%
+Drawn card(s): 
+
+Drawn card(s): 
+%%%%
+Next card(s): 
+
+Next card(s): 
+%%%%
+Seen card(s): 
+
+Seen card(s): 
+%%%%
+It is an ancient artefact.
+
+It is an ancient artefact.
+%%%%
+[ERROR: no desc for item name '
+
+[ERROR: no desc for item name '
+%%%%
+']. Perhaps this item has been removed?\n
+
+']. Perhaps this item has been removed?\n
+%%%%
+#"
+\nIf evoked without being fully identified,
+
+\nIf evoked without being fully identified,
+%%%%
+\nIt can have at most 
+
+\nIt can have at most 
+%%%%
+ charges.
+
+ charges.
+%%%%
+\nUnfortunately, it has no charges left.
+
+\nUnfortunately, it has no charges left.
+%%%%
+#"
+\n\nEating this meat will cause random 
+
+\n\nEating this meat will cause random 
+%%%%
+\n\nThis meat is toxic.
+
+\n\nThis meat is toxic.
+%%%%
+\n\nIt falls into the 'Staves' category. 
+
+\n\nIt falls into the 'Staves' category. 
+%%%%
+\nTimers not yet initialized.
+
+\nTimers not yet initialized.
+%%%%
+\nIt has a curse placed upon it.
+
+\nIt has a curse placed upon it.
+%%%%
+#"
+\nThis ancient artefact cannot be changed 
+
+\nThis ancient artefact cannot be changed 
+%%%%
+\nIt is an ancient artefact.
+
+\nIt is an ancient artefact.
+%%%%
+ disapproves of the use of such an item.
+
+ disapproves of the use of such an item.
+%%%%
+Stash search prefixes: 
+
+Stash search prefixes: 
+%%%%
+\nMenu/colouring prefixes: 
+
+\nMenu/colouring prefixes: 
+%%%%
+\n(Pray here with '%s' to learn more.)\n
+
+\n(Pray here with '%s' to learn more.)\n
+%%%%
+\n\nA cloud of 
+
+\n\nA cloud of 
+%%%%
+(w)ield
+
+(w)ield
+%%%%
+(u)nwield
+
+(u)nwield
+%%%%
+(q)uiver
+
+(q)uiver
+%%%%
+(w)ear
+
+(w)ear
+%%%%
+(t)ake off
+
+(t)ake off
+%%%%
+e(v)oke
+
+e(v)oke
+%%%%
+(e)at
+
+(e)at
+%%%%
+(r)ead
+
+(r)ead
+%%%%
+(p)ut on
+
+(p)ut on
+%%%%
+(r)emove
+
+(r)emove
+%%%%
+(q)uaff
+
+(q)uaff
+%%%%
+(d)rop
+
+(d)rop
+%%%%
+(i)nscribe
+
+(i)nscribe
+%%%%
+(=)adjust
+
+(=)adjust
+%%%%
+You can 
+
+You can 
+%%%%
+illegal inventory cmd %d
+
+illegal inventory cmd %d
+%%%%
+Replace inscription with what? 
+
+Replace inscription with what? 
+%%%%
+Inscribe with what? 
+
+Inscribe with what? 
+%%%%
+\nLevel: %d
+
+\nLevel: %d
+%%%%
+        School%s: %s
+
+        School%s: %s
+%%%%
+        Fail: %s
+
+        Fail: %s
+%%%%
+\n\nPower : 
+
+\n\nPower : 
+%%%%
+\nRange : 
+
+\nRange : 
+%%%%
+\nHunger: 
+
+\nHunger: 
+%%%%
+\nNoise : 
+
+\nNoise : 
+%%%%
+How on earth did you manage to pick this up?
+
+How on earth did you manage to pick this up?
+%%%%
+#"
+Note that Trog doesn't use Invocations, due to its 
+
+Note that Trog doesn't use Invocations, due to its 
+%%%%
+#"
+Keep in mind, though, that Trog will greatly 
+
+Keep in mind, though, that Trog will greatly 
+%%%%
+You'd be excommunicated if you dared to cast it!\n
+
+You'd be excommunicated if you dared to cast it!\n
+%%%%
+\nYou cannot memorise this spell because 
+
+\nYou cannot memorise this spell because 
+%%%%
+\nThis spell will have no effect right now because 
+
+\nThis spell will have no effect right now because 
+%%%%
+ (pow %d)
+
+ (pow %d)
+%%%%
+Chance to beat your MR: %d%%%s\n
+
+Chance to beat your MR: %d%%%s\n
+%%%%
+\n(M)emorise this spell.\n
+
+\n(M)emorise this spell.\n
+%%%%
+Sparks flare out of its mouth and nostrils.
+
+Sparks flare out of its mouth and nostrils.
+%%%%
+Acidic fumes swirl around it.
+
+Acidic fumes swirl around it.
+%%%%
+Venom drips from its jaws.
+
+Venom drips from its jaws.
+%%%%
+Its outline shimmers with magical energy.
+
+Its outline shimmers with magical energy.
+%%%%
+Smoke pours from its nostrils.
+
+Smoke pours from its nostrils.
+%%%%
+Frost pours from its nostrils.
+
+Frost pours from its nostrils.
+%%%%
+Its scales and tail are adapted to the water.
+
+Its scales and tail are adapted to the water.
+%%%%
+It is cloaked in a pall of superheated steam.
+
+It is cloaked in a pall of superheated steam.
+%%%%
+It weaves powerful and unpredictable spells of devastation.
+
+It weaves powerful and unpredictable spells of devastation.
+%%%%
+#"
+It is devoted to combat, disrupting the magic of its foes as 
+
+It is devoted to combat, disrupting the magic of its foes as 
+%%%%
+#"
+It corrupts space around itself, and can twist even the very 
+
+It corrupts space around itself, and can twist even the very 
+%%%%
+#"
+It shines with an unholy radiance, and wields powers of 
+
+It shines with an unholy radiance, and wields powers of 
+%%%%
+It is more beast now than whatever species it is descended from.
+
+It is more beast now than whatever species it is descended from.
+%%%%
+It is covered in icy armour.
+
+It is covered in icy armour.
+%%%%
+It gives off an intense heat.
+
+It gives off an intense heat.
+%%%%
+It menaces with bony spines.
+
+It menaces with bony spines.
+%%%%
+deal extra acid damage
+
+deal extra acid damage
+%%%%
+blink itself
+
+blink itself
+%%%%
+deal up to %d extra cold damage
+
+deal up to %d extra cold damage
+%%%%
+cause confusion
+
+cause confusion
+%%%%
+drain strength
+
+drain strength
+%%%%
+drain intelligence
+
+drain intelligence
+%%%%
+drain dexterity
+
+drain dexterity
+%%%%
+drain strength, intelligence or dexterity
+
+drain strength, intelligence or dexterity
+%%%%
+drain skills
+
+drain skills
+%%%%
+deal up to %d extra electric damage
+
+deal up to %d extra electric damage
+%%%%
+deal up to %d extra fire damage
+
+deal up to %d extra fire damage
+%%%%
+cause hunger
+
+cause hunger
+%%%%
+cause mutations
+
+cause mutations
+%%%%
+poison and cause paralysis or slowing
+
+poison and cause paralysis or slowing
+%%%%
+cause poisoning
+
+cause poisoning
+%%%%
+cause strong poisoning
+
+cause strong poisoning
+%%%%
+cause rotting
+
+cause rotting
+%%%%
+drain health from the living
+
+drain health from the living
+%%%%
+cause random powerful effects
+
+cause random powerful effects
+%%%%
+cause wild translocation effects
+
+cause wild translocation effects
+%%%%
+cause berserking
+
+cause berserking
+%%%%
+apply sticky flame
+
+apply sticky flame
+%%%%
+cause unpredictable effects
+
+cause unpredictable effects
+%%%%
+steal items
+
+steal items
+%%%%
+begin ongoing constriction
+
+begin ongoing constriction
+%%%%
+deal extra damage to undead and demons
+
+deal extra damage to undead and demons
+%%%%
+drain magic
+
+drain magic
+%%%%
+cause pain to the living
+
+cause pain to the living
+%%%%
+ensnare with webbing
+
+ensnare with webbing
+%%%%
+engulf with water
+
+engulf with water
+%%%%
+drain speed
+
+drain speed
+%%%%
+reduce resistance to hostile enchantments
+
+reduce resistance to hostile enchantments
+%%%%
+deal increased damage when unseen
+
+deal increased damage when unseen
+%%%%
+deal drowning damage
+
+deal drowning damage
+%%%%
+cause corrosion
+
+cause corrosion
+%%%%
+drain speed and drain health
+
+drain speed and drain health
+%%%%
+knock back the defender
+
+knock back the defender
+%%%%
+cause poisoning
+
+cause poisoning
+%%%%
+cause weakness
+
+cause weakness
+%%%%
+%s for up to %d fire damage
+
+%s for up to %d fire damage
+%%%%
+%sfor up to %d damage%s%s%s
+
+%sfor up to %d damage%s%s%s
+%%%%
+It may possess any of a vast number of diabolical powers.\n
+
+It may possess any of a vast number of diabolical powers.\n
+%%%%
+To read a description, press the key listed above.\n
+
+To read a description, press the key listed above.\n
+%%%%
+immune to 
+
+immune to 
+%%%%
+ is susceptible to 
+
+ is susceptible to 
+%%%%
+\nIt is quickly melting away.\n
+
+\nIt is quickly melting away.\n
+%%%%
+\nIt is quickly crumbling away.\n
+
+\nIt is quickly crumbling away.\n
+%%%%
+#"
+If this monster is a \"program bug\", then it's 
+
+If this monster is a \"program bug\", then it's 
+%%%%
+#"
+\nYou have summoned too many monsters of this kind to 
+
+\nYou have summoned too many monsters of this kind to 
+%%%%
+\n\nMonster Spells:\n
+
+\n\nMonster Spells:\n
+%%%%
+\n\nMonster Inventory:\n
+
+\n\nMonster Inventory:\n
+%%%%
+\n\nMonster blame chain:\n
+
+\n\nMonster blame chain:\n
+%%%%
+#"
+\nThis cloud is opaque; one tile will not block vision, but 
+
+\nThis cloud is opaque; one tile will not block vision, but 
+%%%%
+#"
+\nClouds of this kind an adventurer makes will vanish 
+
+\nClouds of this kind an adventurer makes will vanish 
+%%%%

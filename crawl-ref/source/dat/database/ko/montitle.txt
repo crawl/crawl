@@ -1,0 +1,297 @@
+###############################################################################
+# Monster titles.
+# Displayed when they first come into view and on their description screen.
+#########
+%%%%
+Agnes title
+
+아그네스, 방랑자
+%%%%
+Aizul title
+
+아이줄, 태만한 수호자
+%%%%
+Antaeus title
+
+안타이우스, 코큐투스의 수호자
+%%%%
+Arachne title
+
+아라크네, 실 짜는 자
+%%%%
+Asmodeus title
+
+아스모데우스, 게헨나의 대공
+%%%%
+Asterion title
+
+아스테리온, 타락한 왕
+%%%%
+Azrael title
+
+아즈라엘, 속박되지 않는 불꽃
+%%%%
+Boris title
+
+보리스, 생과 사의 주인
+%%%%
+Cerebov title
+
+세레보브, 불과 강철의 악마 군주
+%%%%
+Chuck title
+
+척, 수집가
+%%%%
+Crazy Yiuf title
+
+미치광이 이우프, 깨우친 자
+%%%%
+Dispater title
+
+디스페이터, 철의 도시의 지배자
+%%%%
+Dissolution title
+
+디졸루션, 지이바의 고위 사제
+%%%%
+Donald title
+
+도널드, 모험가
+%%%%
+Dowan title
+
+도완, 드뷔사의 오빠
+%%%%
+Duvessa title
+
+드뷔사, 도완의 여동생
+%%%%
+Edmund title
+
+에드문드, 작위없는 자
+%%%%
+Ereshkigal title
+
+에레쉬키갈, 타르타로스의 여왕
+%%%%
+Erica title
+
+에리카, 불같은 자
+%%%%
+Erolcha title
+
+에롤차, 교활한 오우거
+%%%%
+Eustachio title
+
+유스타키오, 고상한 자
+%%%%
+Fannar title
+
+판나르, 냉혹한 엘프
+%%%%
+Frances title
+
+프랜시스, 판데모니엄의 공작부인
+%%%%
+Frederick title
+
+프레데릭, 결점없는 자
+%%%%
+Gastronok title
+
+가스트로녹, 신중한 달팽이
+%%%%
+Geryon title
+
+게리욘, 지옥의 문지기
+%%%%
+Gloorx Vloq title
+
+그룩스 브루크, 어둠의 악마 군주
+%%%%
+Grum title
+
+그룸, 사냥꾼
+%%%%
+Harold title
+
+헤럴드, 견뎌낸 자
+%%%%
+Ignacio title
+
+이그나시오, 극심한 고통의 주인
+%%%%
+Ilsuiw title
+
+일스이우, 파도의 마녀
+%%%%
+Ijyb title
+
+이지브, 비뚤어진 고블린
+%%%%
+Jessica title
+
+제시카, 견습 마도사
+%%%%
+Jorgrun title
+
+요르그룬, 대지를 흔드는 자
+%%%%
+Jory title
+
+조리, 피투성이 백작
+%%%%
+Joseph title
+
+조셉, 용병
+%%%%
+Josephine title
+
+조세핀, 부패의 강령술사
+%%%%
+Khufu title
+
+쿠푸, 불사의 파라오
+%%%%
+Kirke title
+
+키르케, 신화의 방직공
+%%%%
+Lom Lobon title
+
+롬 로본, 금단의 지식의 악마 군주
+%%%%
+Louise title
+
+루이즈, 타락한 자
+%%%%
+Mara title
+
+마라, 환영의 제왕
+%%%%
+Margery title
+
+마저리, 용 사냥꾼
+%%%%
+Maud title
+
+마우드, 잊혀진 자
+%%%%
+Maurice title
+
+마우리스, 도둑
+%%%%
+Menkaure title
+
+멘카우레, 먼지쌓인 왕자
+%%%%
+Mennas title
+
+메나스, 진의 목소리
+%%%%
+Mnoleg title
+
+무노레그, 혼돈의 악마 군주
+%%%%
+Murray title
+
+머레이, 악마의 말하는 두개골
+%%%%
+Natasha title
+
+나타샤, 생과 사의 사역마
+%%%%
+Nellie title
+
+넬리, 쇼의 스타
+%%%%
+Nergalle title
+
+네르갈, 영혼포박자
+%%%%
+Nessos title
+
+네소스, 센타로스 명사수 
+%%%%
+Nikola title
+
+니콜라, 광기의 발명가
+%%%%
+Norris title
+
+노리스, 허무주의자
+%%%%
+Pikel title
+
+피켈, 노예상인
+%%%%
+Polyphemus title
+
+폴리페무스, 주의깊은 양치기
+%%%%
+Psyche title
+
+프시케, 정신나간 여마법사
+%%%%
+Purgy title
+
+퍼기, 기백없는 트롤
+%%%%
+Robin title
+
+로빈, 폭력배
+%%%%
+Roxanne title
+
+록산느, 명예 대지술사
+%%%%
+Rupert title
+
+루퍼트, 난폭한 자
+%%%%
+Saint Roka title
+
+세인트 로카, 메시아
+%%%%
+Sigmund title
+
+지그문트, 무서운 자
+%%%%
+Snorg title
+
+스노그, 욕심많은 트롤
+%%%%
+Sojobo title
+
+소조보, 텐구의 왕
+%%%%
+Sonja title
+
+소냐, 우아한 암살자
+%%%%
+Terence title
+
+테렌스, 경솔한 자
+%%%%
+Tiamat title
+
+티아마트, 드래곤 로드의 화신
+%%%%
+Urug title
+
+우룩, 오크 투척병
+%%%%
+Vashnia title
+
+바쉬니아, 정예 나가 명사수
+%%%%
+Wiglaf title
+
+위글라프, 드워프
+%%%%
+Xtahua title
+
+싸후아, 고대의 용
+%%%%

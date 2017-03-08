@@ -118,7 +118,7 @@ static void _initialize()
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
     {
         tiles.draw_title();
-        tiles.update_title_msg("Loading databases...");
+        tiles.update_title_msg(getMiscString("Loading databases..."));
     }
 #endif
 
@@ -126,7 +126,7 @@ static void _initialize()
     databaseSystemInit();
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        tiles.update_title_msg("Loading spells and features...");
+        tiles.update_title_msg(getMiscString("Loading spells and features..."));
 #endif
 
     init_feat_desc_cache();
@@ -134,7 +134,7 @@ static void _initialize()
     init_spell_rarities();
 #ifdef USE_TILE_LOCAL
     if (!crawl_state.tiles_disabled && crawl_state.title_screen)
-        tiles.update_title_msg("Loading maps...");
+        tiles.update_title_msg(getMiscString("Loading maps..."));
 #endif
 
     // Read special levels and vaults.
@@ -149,7 +149,7 @@ static void _initialize()
         && !Options.tile_skip_title
         && crawl_state.title_screen)
     {
-        tiles.update_title_msg("Loading complete, press any key to start.");
+        tiles.update_title_msg(getMiscString("Loading complete, press any key to start."));
         tiles.hide_title();
     }
 #endif
@@ -381,7 +381,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Dungeon Crawl";
+    text = getMiscString("Dungeon Crawl");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -389,8 +389,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Dungeon Crawl: The main game: full of monsters, "
-                              "items, gods and danger!");
+    tmp->set_description_text(getMiscString("Dungeon Crawl: The main game: full of monsters, "
+                              "items, gods and danger!"));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -400,7 +400,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Tutorial for Dungeon Crawl";
+    text = getMiscString("Tutorial for Dungeon Crawl");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -408,8 +408,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Tutorial that covers the basics of "
-                              "Dungeon Crawl survival.");
+    tmp->set_description_text(getMiscString("Tutorial that covers the basics of "
+                              "Dungeon Crawl survival."));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -419,7 +419,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Hints Mode for Dungeon Crawl";
+    text = getMiscString("Hints Mode for Dungeon Crawl");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -427,8 +427,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("A mostly normal game that provides more "
-                              "advanced hints than the tutorial.");
+    tmp->set_description_text(getMiscString("A mostly normal game that provides more "
+                              "advanced hints than the tutorial."));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -438,7 +438,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Dungeon Sprint";
+    text = getMiscString("Dungeon Sprint");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -446,7 +446,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Hard, fixed single level game mode.");
+    tmp->set_description_text(getMiscString("Hard, fixed single level game mode."));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -456,7 +456,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Instructions";
+    text = getMiscString("Instructions");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -464,7 +464,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Help menu.");
+    tmp->set_description_text(getMiscString("Help menu."));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -474,7 +474,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "The Arena";
+    text = getMiscString("The Arena");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -482,7 +482,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Pit computer controlled teams versus each other!");
+    tmp->set_description_text(getMiscString("Pit computer controlled teams versus each other!"));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -492,7 +492,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "High Scores";
+    text = getMiscString("High Scores");
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -500,7 +500,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("View the high score list.");
+    tmp->set_description_text(getMiscString("View the high score list."));
     menu->attach_item(tmp);
     tmp->set_visible(true);
 }
@@ -513,7 +513,7 @@ static void _add_newgame_button(MenuScroller* menu, int num_chars)
 #else
     TextItem* tmp = new TextItem();
 #endif
-    tmp->set_text("New Game");
+    tmp->set_text(getMiscString("New Game"));
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -626,14 +626,14 @@ again:
     _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
-    tmp->set_text("Enter your name:");
+    tmp->set_text(getMiscString("Enter your name:"));
     tmp->set_bounds(coord_def(1, NAME_START_Y),
                     coord_def(SCROLLER_MARGIN_X, NAME_START_Y + 1));
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
     tmp = new NoSelectTextItem();
-    tmp->set_text("Choices:");
+    tmp->set_text(getMiscString("Choices:"));
     tmp->set_bounds(coord_def(1, GAME_MODES_START_Y),
                     coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y + 1));
     freeform->attach_item(tmp);
@@ -642,7 +642,7 @@ again:
     if (num_saves)
     {
         tmp = new NoSelectTextItem();
-        tmp->set_text("Saved games:");
+        tmp->set_text(getMiscString("Saved games:"));
         tmp->set_bounds(coord_def(1, save_games_start_y),
                         coord_def(SCROLLER_MARGIN_X, save_games_start_y + 1));
         freeform->attach_item(tmp);
@@ -651,20 +651,20 @@ again:
 
     tmp = new NoSelectTextItem();
 
-    string text = "Use the up/down keys to select the type of game or load a "
-                  "character.";
+    string text = getMiscString("Use the up/down keys to select the type of game or load a "
+                  "character.");
 #ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
         text += " ";
     else
 #endif
         text += "\n";
-    text +=       "You can type your name; if you leave it blank you will be "
+    text +=       getMiscString("You can type your name; if you leave it blank you will be "
                   "asked later.\n"
-                  "Press Enter to start";
+                  "Press Enter to start");
     // TODO: this should include a description of that character.
     if (_game_defined(defaults))
-        text += ", Tab to repeat the last game's choice";
+        text += getMiscString(", Tab to repeat the last game's choice");
     text += ".\n";
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, help_start), coord_def(max_col - 1, help_end));
@@ -889,7 +889,7 @@ again:
                 cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
                 clear_to_end_of_line();
                 textcolour(RED);
-                cprintf("That's a silly name");
+                cprintf(getMiscString("That's a silly name").c_str());
                 // Don't make the next key re-enter the game.
                 menu.clear_selections();
             }
@@ -939,13 +939,13 @@ static void _choose_arena_teams(newgame_def& choice,
     clear_message_store();
     clrscr();
 
-    cprintf("Enter your choice of teams:\n");
+    cprintf(getMiscString("Enter your choice of teams:\n").c_str());
 
     cgotoxy(1, 4);
     if (!defaults.arena_teams.empty())
-        cprintf("Enter - %s\n", defaults.arena_teams.c_str());
+        cprintf(getMiscString("Enter - %s\n").c_str(), defaults.arena_teams.c_str());
     cprintf("\n");
-    cprintf("Examples:\n");
+    cprintf(getMiscString("Examples:\n").c_str());
     cprintf("  Sigmund v Jessica\n");
     cprintf("  99 orc v the Royal Jelly\n");
     cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming\n");

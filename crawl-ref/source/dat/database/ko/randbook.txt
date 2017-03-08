@@ -1,0 +1,1312 @@
+######################################################
+# Randart Names
+# -------------
+# randbook.txt: keywords for randart BOOKS
+#
+# This file contains the lists of keywords (and their
+# weights) for most of the keywords used for randart
+# books.
+# There are two types of randart books:
+#  - fixed theme, varying level (Conjurations, Summoning/Earth, ...)
+#  - fixed level, varying theme (level 2 spells etc.)
+#
+# The books are filled with spells matching their type in spl-book.cc,
+# either make_book_theme_randart() or make_book_level_randart().
+# The name should likewise take into account the book's type.
+#
+# Themed books use one of the following two naming schemes:
+#   a) @book_name@ @<secondary school> adj@ @<primary school>@
+#   b) @book_name@ @<primary school>@ and @<secondary school>@
+#
+# or, if there is no (obvious) secondary school, simply:
+#
+#   @book_name@ @<primary school>@
+#
+# Fixed level books are categorized into "starting" (level 1),
+# "easy" (level 2-4), "moderate" (level 4-6) and "difficult" (level 7-9),
+# a keyword that is used as a prefix for "level book".
+# @level@ is parsed to the word describing the spell level.
+#
+# Books also may get previous "owners" (or authors) that may be the gifting
+# god (if gifted), a name depending on school(s) as defined in this file,
+# a random name, or an appropriate god (if not a god gift).
+# The school dependent names consist of uniques or spell names that have a
+# strong connection to one or more schools. Pandemonium or hell lords' names
+# may only get used if a book is "highlevel", i.e. contains at least one
+# spell of level 6 or higher.
+# If the first and second school are different the two names are tested in
+# combination, in alphabetical order. If this is not the case or nothing is
+# found (or "__NONE" == the empty string was returned) and all spells match
+# the primary school try again with only that one.
+#
+# See the explanation in the main file, randname.txt, for more general
+# information on randart naming.
+######################################################
+# Book name should be set in make_book_level_randart() or
+# make_book_theme_randart(), so if this gets picked there's a bug.
+book
+
+Book of Bugginess
+%%%%
+book appearance
+
+@_book_adjective_@
+%%%%
+book_noun
+
+마법서
+
+주문서
+
+마도서
+
+고서
+
+연감
+
+전서
+
+서적
+
+책
+
+개요서
+
+논문
+
+핸드북
+
+파피루스
+
+카탈로그
+%%%%
+_book_noun_on_
+
+가이드
+
+전집
+
+논문
+
+참고서
+%%%%
+# C++: discipline books, including Kiku's gifts
+book_name
+
+w:9
+@book_noun@
+
+w:4
+@_book_noun_on_@
+%%%%
+# @book_noun@ of ...
+# C++: "totally random" books
+random_book_title
+
+w:15
+@_book_plant_animal_@
+
+w:20
+@_number_or_qualifier_@ @_thing_names_@
+
+w:4
+@_profession_name@
+
+w:13
+@_philosophy_or_science_@
+
+w:8
+@_wacky_armour_name_@
+
+w:2
+@_destiny_name_@
+
+w:6
+@_place_name_@
+
+w:1
+@_magic_name_@
+
+w:4
+@_substance_name_@
+
+w:2
+@_power_name_@
+
+w:2
+@_mental_illness_weapon_@
+%%%%
+_book_plant_animal_
+
+w:1
+@_jewellery_animal_@
+
+w:1
+@_critter_name_@
+
+w:1
+@_plant_name_@
+
+w:6
+@_weapon_animal_@
+
+@_armour_animal_@
+%%%%
+# C++: Xom (duh!)
+Xom_book_title
+
+w:30
+@random_book_title@
+
+# increased chances (obviously!)
+@_chaos_name_@
+
+w:1
+@_game_name_@
+
+w:2
+@player_death@
+
+w:8
+@_wacky_armour_name_@
+
+w:1
+@_politics_name_armour_@
+
+w:5
+@_power_name_@
+
+w:3
+@_discomfort_and_inaction_@
+
+w:3
+@_discomfort_weapon_@
+
+w:3
+@_mental_illness_weapon_@
+%%%%
+_book_adjective_
+
+말끔한
+
+반짝이는
+
+부유하는
+
+웅웅거리는
+
+눈에띄는
+
+눈에 띄지 않는는
+
+컬러풀한
+
+조각으로 장식된
+
+새김 장식된
+
+오래된
+
+누렇게 변한
+
+희귀한
+
+검은
+
+검게 변한
+
+찢겨진
+
+양장본
+%%%%
+_the_book_magic_
+
+w:9
+# capitalise later as needed
+the Arcane Arts
+
+w:1
+the Hermit's Heritage
+
+w:90
+@_book_magic_@
+%%%%
+_book_magic_
+
+마법
+
+종합 마법
+
+실전 마법
+
+다학파 마법
+
+기적
+
+마술
+
+주문
+
+마법학
+
+마도
+
+마도학
+
+마법 주문
+
+주문학
+
+위저드리
+
+소서리
+
+스펠캐스트
+%%%%
+_book_magic_suffix_
+
+종합 마법
+
+다학파 마법
+
+실전 마법
+
+위저드리
+
+스펠캐스팅
+
+소서리
+
+마법학
+
+마도학
+
+주문학
+%%%%
+_beginners_
+
+초보
+
+초보자
+
+초심자
+
+입문자
+
+w:5
+뉴비
+
+w:3
+바보
+%%%%
+# level 1
+starting level book
+
+@_beginners_@를 위한 @_the_book_magic_@ 입문
+
+@_the_book_magic_@ 입문
+
+@_book_magic_suffix_@ : 제 @level@장
+
+@_book_magic_suffix_@ @level@권
+
+@level@레벨 마법책
+
+@_the_book_magic_@ 개론
+
+@_the_book_magic_@ 시작하기
+
+초급 @_the_book_magic_@서
+
+따라해 보세요, @_book_magic_suffix_@!
+
+@_the_book_magic_@ 첫걸음
+
+@_the_book_magic_@ 길라잡이
+
+w:3
+@_the_book_magic_@ 가이드 : 초급편
+
+w:3
+1주일 만에 끝내는 @_the_book_magic_@ 가이드
+%%%%
+# level 2-4
+easy level book
+
+@_the_book_magic_@ 핵심 길라잡이
+
+예제로 배우는 @_book_magic_suffix_@
+
+실전 @_the_book_magic_@
+
+중급 @_the_book_magic_@서
+
+@_the_book_magic_@ 실전서
+
+중급자를 위한 @_book_magic_@서
+
+좀 더 쉽게 배워보자, @_book_magic_suffix_@
+
+@_book_magic_suffix_@ : 제 @level@장
+
+@_book_magic_suffix_@ @level@권
+
+@level@레벨 마법책
+
+@_the_book_magic_@ 실전 활용 가이드
+
+@_book_magic_@, 어떻게 사용할 것인가
+
+@_book_magic_@ 실력향상
+%%%%
+_book_elements_
+
+복잡성
+
+위험성
+
+본질
+
+구성 체계
+
+순환 체계
+
+비교 분석
+
+탐구
+
+연구 결과
+
+상관관계 추론
+
+해석
+
+유용성
+%%%%
+_book_elements_t_
+
+@_book_elements_@
+%%%%
+# level 4-6
+moderate level book
+
+마법학 교육자를 위한 @_the_book_magic_@ 지침서
+
+@_the_book_magic_@ 분석 및 고찰
+
+@_the_book_magic_@의 진정한 의미와 @_book_elements_@
+
+@_book_elements_@와(과) 깊은 고찰, @_the_book_magic_@에 대해
+
+@_the_book_magic_@ 교육자를 위한 가이드
+
+한발짝 더 나아가자, @_the_book_magic_@ 
+
+좀 더 깊이 있는 @_the_book_magic_@을(를) 위하여
+
+@_book_magic_suffix_@ : 제 @level@장
+
+@_book_magic_suffix_@ @level@권
+
+@level@레벨 마법책
+
+노련한 마법사를 위한 @_book_magic_suffix_@
+
+@_book_magic_suffix_@ 논문집
+
+@_book_magic_@와(과) 가치
+
+@_book_magic_@의 @_book_elements_@에 대한 연구서
+
+@_thing_names_@의 @_book_magic_suffix_@에 대한 @_book_elements_@
+
+평생 배우는 @_book_magic_suffix_@
+
+@_book_magic_@ 문제 직면
+
+@_book_magic_suffix_@ 철저 분석
+%%%%
+# powerful casters, used for high level books
+_powerful_caster_
+
+w:30
+아크메이지
+
+왕국 마법협회
+
+제국 마술사
+
+대마법사
+
+도서관장
+
+눈먼 점성술사
+
+예언자
+
+대 미이라
+%%%%
+_the_powerful_caster_
+
+@_powerful_caster_@
+
+w:3
+보리스
+
+w:1
+시프 무나
+%%%%
+_last_or_lost_
+
+마지막
+
+잃어버린
+%%%%
+# level 7-9, books in the form of "XYZ's <bookname>"
+# Prefixed articles will be filtered out.
+_difficult level book owner_
+
+w:20
+궁극의 @_book_magic_suffix_@
+
+@_book_magic_suffix_@ 해석
+
+@_the_book_magic_@ 전집
+
+@_book_magic_@ 바이블
+
+@_the_book_magic_@의 @_last_or_lost_@ 비밀
+
+@_book_magic_@ 비서
+
+@_book_magic_@ 금서
+
+어떤 @_book_magic_@의 @_book_elements_@
+
+@_book_magic_suffix_@ : 제 @level@장
+
+@_book_magic_suffix_@ @level@권
+
+@level@레벨 마법책
+
+@_the_book_magic_@의 궁극의 @_book_elements_@ 탐구
+
+@_book_magic_suffix_@의 @_book_elements_@와(과) 진리에 대한 연구
+
+진리의 @_book_magic_@
+
+@_book_magic_@에 대한 @_powerful_caster_@와의 연구
+
+@_powerful_caster_@을(를) 위한 @_book_elements_@ 연구서
+
+최고의 @_book_elements_@와(과) @_book_elements_t_@에 관한 @book_noun@
+
+@_book_magic_@ 마스터
+%%%%
+# level 7-9, books without being named after their owner/author
+difficult level book
+
+w:50
+@_difficult level book owner_@
+
+@_the_powerful_caster_@의 @_last_or_lost_@ @book_noun@
+
+w:1
+@_the_powerful_caster_@의 증거
+%%%%
+# synonyms for predominant spell schools
+# variants starting with the definite article will get "the" prepended
+# to the adjective version
+Conjuration
+
+Conjuration
+
+Confrontation
+
+Attacks
+
+w:20
+파괴학
+
+비전학
+
+전투 마법
+
+파괴 마법
+
+비전력 제어
+
+w:5
+순수 마력
+
+w:5
+대미지 딜링
+%%%%
+Charms
+
+w:20
+주술
+
+w:20
+지원 마법
+
+w:20
+보조 마법
+
+보호술
+
+고양술
+
+버프 마법
+
+w:3
+자가자양
+
+Aid
+
+Augmentations
+
+w:1
+축복
+
+부스트
+%%%%
+Fire
+
+화염 마법
+
+w:20
+불 마법
+
+w:20
+불꽃의 마법
+
+화염학
+
+용암 마법
+
+열역학
+
+화산 마법
+
+소각 마법
+
+방화법
+
+소각법
+%%%%
+Hexes
+
+w:20
+저주술
+
+w:20
+저주 마법
+
+w:20
+사술
+
+저주학
+
+부두술
+
+부두 마술
+
+주술
+
+악담서
+
+w:3
+매혹 마법
+
+w:3
+독설서
+
+w:3
+매혹술
+
+w:3
+유혹술
+%%%%
+Ice
+
+w:20
+얼음 마법
+
+w:20
+냉기 마법
+
+w:20
+빙설 마법
+
+냉기술
+
+냉기학
+
+서리 마법
+
+냉동술
+
+냉동학
+%%%%
+Transmutation
+
+w:20
+변이 마법
+
+w:20
+변이술
+
+w:20
+변이학
+
+변신 마법
+
+변신술
+
+변신학
+
+폴리모프
+
+신체 개조
+%%%%
+# for necromantic books
+_Evil_adjective_
+
+w:30
+사악한
+
+w:30
+어둠의
+
+검은
+
+불길한
+
+부정한
+
+고통의
+
+끔찍한
+
+괴로움의
+%%%%
+# also for necromantic books
+_Evil_noun_
+
+의식
+
+의례
+
+예술
+
+비술
+
+마법
+
+마술
+%%%%
+Necromancy
+
+w:30
+강령 마법
+
+w:30
+강령학
+
+w:30
+강령술
+
+사령 마법
+
+사령학
+
+사령술
+
+영혼 강탈
+
+어둠
+
+네크로맨시
+
+리치
+
+워록
+
+w:120
+@_Evil_adjective_@ @_Evil_noun_@
+%%%%
+Summoning
+
+w:25
+소환술
+
+w:25
+소환 마법
+
+w:25
+소환수 다루기
+
+창조술
+
+창조 마법
+
+동료 부리기
+
+동물 길들이기
+
+테이밍
+
+병법
+
+에스코트
+
+w:3
+분신술
+
+w:3
+노예 부리기
+%%%%
+Translocation
+
+w:30
+전이술
+
+w:30
+전이 마법
+
+w:30
+전이학
+
+이동술
+
+순간이동술
+
+방향학
+
+여행서
+%%%%
+Poison
+
+w:30
+독 마법
+
+w:30
+맹독 마법
+
+독살법
+
+유독물 취급법
+
+오염 마법
+
+화학
+
+독물 제조
+
+마법오염
+%%%%
+Earth
+
+w:30
+대지 마술
+
+w:30
+대지술
+
+w:30
+땅의 마법
+
+바위의 마법
+
+점토학
+
+고산학
+
+지형학
+
+지리학
+
+금속학
+%%%%
+Air
+
+w:25
+대기 마법
+
+w:25
+바람 마법
+
+대기술
+
+대기학
+
+w:15
+번개 마법
+
+w:15
+뇌전 마법
+
+비행술
+
+비행학
+%%%%
+# adjectives for secondary spell school
+Conjuration adj
+
+공격용
+
+절륜한
+
+위력적인
+
+강력한
+
+w:5
+치명적인
+%%%%
+Charms adj
+
+부가적
+
+행운의
+
+강화
+%%%%
+Hexes adj
+
+매혹적인
+
+홀호리는
+
+매력적인
+
+마음을 사로잡는
+
+멋진
+
+넋을 빼앗는
+%%%%
+Fire adj
+
+고온의
+
+맹렬한
+
+가연성
+
+뜨거운
+
+열렬한
+%%%%
+Ice adj
+
+빙하
+
+혹한의
+
+극저온
+
+응결성
+%%%%
+Transmutation adj
+
+쉬프팅
+
+유전자적
+
+w:5
+불안정한
+%%%%
+Necromancy adj
+
+어두운
+
+사악한
+
+w:5
+치명적인
+
+파멸의
+
+죄악의
+
+부정한
+
+왜곡된
+
+w:5
+뒤틀린
+%%%%
+Summoning adj
+
+창조적
+
+지원적
+%%%%
+Translocation adj
+
+공간성
+
+이동성
+
+전이된
+
+왜곡된
+
+w:5
+불안정한
+
+w:5
+공간 왜곡
+
+양자
+%%%%
+Poison adj
+
+유독한
+
+악의에 찬
+
+궤양의
+
+비로우스
+
+신랄한
+
+W : 1
+독사 같은
+%%%%
+Earth adj
+
+지구 기원
+
+잿빛
+
+먼지 투성이
+%%%%
+Air adj
+
+공중선
+
+비행
+
+부유
+
+깃털
+
+흐린
+
+활공
+%%%%
+# potential previous owners of books
+# __NONE is parsed to the empty string
+# First, combinations.
+Air Conjuration owner
+
+니콜라
+
+__NONE
+%%%%
+highlevel Conjuration Earth owner
+
+디스페이터
+
+@Conjuration Earth owner@
+%%%%
+Conjuration Earth owner
+
+리
+
+레후딥
+%%%%
+highlevel Conjuration Fire owner
+
+아스모데우스
+
+세레보브
+
+w:5
+@Conjuration Fire owner@
+%%%%
+Conjuration Fire owner
+
+아즈라엘
+
+마저리
+
+__NONE
+%%%%
+highlevel Conjuration Necromancy owner
+
+에레쉬키갈
+
+@Conjuration Necromancy owner@
+%%%%
+Conjuration Necromancy owner
+
+보리스
+
+네르갈
+
+__NONE
+%%%%
+Conjuration Poison owner
+
+w:5
+아이줄
+
+__NONE
+%%%%
+highlevel Conjuration Summoning owner
+
+아스모데우스
+
+디스페이터
+
+w:5
+__NONE
+%%%%
+Conjuration Translocation owner
+
+w:5
+루이즈
+
+__NONE
+%%%%
+highlevel Conjuration Translocation owner
+
+롬-로본
+
+__NONE
+%%%%
+Earth Transmutation owner
+
+록산느
+
+__NONE
+%%%%
+highlevel Earth Summoning owner
+
+디스페이터
+
+__NONE
+%%%%
+highlevel Fire Summoning owner
+
+아스모데우스
+
+__NONE
+%%%%
+highlevel Necromancy Poison owner
+
+그룩스-블록
+
+__NONE
+%%%%
+Necromancy Transmutation owner
+
+시고트비
+
+__NONE
+%%%%
+# Single spell schools.
+Air owner
+
+니콜라
+
+Sojobo
+
+__NONE
+%%%%
+highlevel Conjuration owner
+
+아스모데우스
+
+에레쉬키갈
+
+디스페이터
+
+세레보브
+
+롬-로본
+
+레후딥
+
+w:30
+@Conjuration owner@
+%%%%
+Conjuration owner
+
+w:2
+리
+
+레후딥
+
+이스켄데룬
+
+에롤차
+
+루이즈
+
+보리스
+
+네르갈
+
+조세핀
+
+프레드릭
+
+
+%%%%
+highlevel Earth owner
+
+디스페이터
+
+w:30
+@Earth owner@
+%%%%
+Earth owner
+
+레후딥
+
+리
+
+록산느
+
+__NONE
+%%%%
+Charms owner
+
+Nessos
+
+Gastronok
+
+Maurice
+
+__NONE
+%%%%
+rare Hexes owner
+
+지그문트
+
+w:2
+가스트로노크
+%%%%
+Hexes owner
+
+노리스
+
+키르케
+
+w:2
+@rare Hexes owner@
+
+__NONE
+%%%%
+highlevel Fire owner
+
+아스모데우스
+
+세레보브
+
+w:20
+@Fire owner@
+%%%%
+Fire owner
+
+아즈라엘
+
+마저리
+
+__NONE
+%%%%
+Ice owner
+
+오조크브
+
+판나르
+
+아일스이
+
+__NONE
+%%%%
+highlevel Necromancy owner
+
+에레쉬키갈
+
+그룩스-블록
+
+w:40
+@Necromancy owner@
+%%%%
+Necromancy owner
+
+보르그노르
+
+시고트비
+
+보리스
+
+프랜시스
+
+머리
+
+네르갈
+
+멘카우레
+
+쿠푸
+%%%%
+highlevel Poison owner
+
+그룩스-블록
+
+@Poison owner@
+%%%%
+Poison owner
+
+올그레브
+
+앨리스테이아
+
+__NONE
+%%%%
+highlevel Summoning owner
+
+아스모데우스
+
+디스페이터
+
+무노레그
+
+@Summoning owner@
+%%%%
+Summoning owner
+
+w:5
+유스타키오
+
+__NONE
+%%%%
+highlevel Translocation owner
+
+롬-로본
+
+@Translocation owner@
+%%%%
+Translocation owner
+
+w:5
+모리스
+
+__NONE
+%%%%
+Transmutation owner
+
+시고트비
+
+록산느
+
+__NONE
+%%%%

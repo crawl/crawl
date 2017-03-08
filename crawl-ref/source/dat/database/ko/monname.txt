@@ -1,0 +1,241 @@
+##########################################################
+# monname.txt: lookup monster names
+#
+# This file contains a list of names for monster names.
+# This is currently only used when one of your orcish followers as
+# Beogh's messiah gets named by Beogh.
+#
+# Some important syllables
+#   beogh, bog = referring to Beogh
+#   ork, orc, org, og, ok etc. = referring to orcs
+#
+# Other syllables may be borrowed from real life, or made up.
+#
+# To determine a name for an orcish follower, the game first looks
+# looks for this follower's specific type, followed by the key word
+# "name", e.g. "orc warrior name" or "orc sorcerer name". If no name
+# has been found, the genus "orc" is tried instead. Should that also
+# fail, plain orcs as well as followers of professions that have not
+# been defined, won't ever be named.
+#
+# A name, once chosen, is final. In particular, Blork and Urug cannot
+# be renamed. Also, note that plain orcs can grow up to be warriors
+# and follow the fighter route, or else be blessed by Beogh to become
+# priests. Either way, if already named, they will keep their name.
+#
+# Feel free to add to this list. Like for the other database lists,
+# you may add weights (defaults to w:10) to make certain names more
+# or less likely.
+#
+##########################################################
+%%%%
+orc name
+
+w:14
+@_beogh_name_@
+
+w:12
+@_orcish_name_@
+
+w:45
+@_other_orcish_name_@
+%%%%
+# some specials for orcish priests
+orc high priest name
+
+@orc priest name@
+%%%%
+orc priest name
+
+# Watch out! :p
+w:1
+주다스
+
+w:50
+@orc name@
+%%%%
+# Obvious references to Beogh
+# (17 at last count)
+_beogh_name_
+
+아르베오그
+
+보그바르스
+
+# slavic name, meaning "god's gift" :)
+보그단
+
+보그다르
+
+보그브란드
+
+보그프리드
+
+보그홀드
+
+보그마
+
+보그릭
+
+보그림
+
+보그왈드
+
+보그와드
+
+보그윅
+
+코르보크
+
+마르바우그
+
+모르베오그
+
+오르베오그
+
+와르베오그
+%%%%
+# Obvious references to orcs in general
+# (extremely subjective, and 16 at last count)
+_orcish_name_
+
+알로크
+
+보크
+
+보룩
+
+지오크
+
+호쿠드
+
+마보크
+
+밀로크
+
+오그릭
+
+오크리스트
+
+오레그
+
+오그림
+
+오릭
+
+오크룰
+
+오크윈
+
+오룩
+
+우르톡
+%%%%
+# Other
+# (52 at last count)
+_other_orcish_name_
+
+아그릭
+
+아볼트
+
+아그림
+
+아크워
+
+베오울프
+
+베롤드
+
+블라드와그
+
+블로드비히
+
+보데릭
+
+볼도
+
+볼그림
+
+보고스
+
+보오건
+
+브란도프
+
+브루놀프
+
+도로그
+
+갈볼드
+
+고바쉬
+
+고그
+
+곰
+
+그리몰드
+
+함
+
+하울
+
+헤록
+
+힐가
+
+조지
+
+코로나프
+
+레아룩
+
+마그림
+
+모구스
+
+모런
+
+머도
+
+노박
+
+노다그
+
+오그니안
+
+올픽
+
+올프룬
+
+오톨프
+
+로코
+
+스피록
+
+사이러스
+
+토록
+
+우그버트
+
+우그림
+
+워독
+
+워가스
+
+워그락
+
+워록
+
+우락
+
+울포크
+
+자토라크
+
+조러그
+%%%%

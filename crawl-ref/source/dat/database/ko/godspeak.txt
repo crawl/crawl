@@ -1,0 +1,912 @@
+############################################################
+# godspeak.txt contains the messages for divine speech.
+#
+# For an explanation of how to read godspeak.txt and how to
+# add new messages, see monster_speech.txt in the
+# docs/develop/ directory.
+############################################################
+%%%%
+# fall-back in case a keyword can't be found
+Xom general effect
+
+좀이 낄낄 웃었다.
+
+"이건 어때?"
+
+"실험을 해보자고, 흐으음?"
+
+w:1
+"난 궁금해... 이 버튼은 뭘까?"
+%%%%
+##############################
+# Xom throwing stuff at you.
+##############################
+Xom general gift
+
+좀이 당신에게 선물을 주었다!
+
+"여기."
+
+좀의 통큰 성향이 스스로를 증명하였다.
+
+좀이 당신에게 어떤 종류의 도구를 주었다.
+
+"이 뭔가의 물건을 가져라!"
+
+"내 호의의 증거를 받아라."
+
+좀이 당신을 향해 미소지었다.
+
+"잡아!"
+%%%%
+####################
+# friendly summons
+####################
+Xom single summon
+
+"내 아이야, 필멸자를 섬겨라!"
+
+"내 아이야, 내 장난감을 섬겨라!"
+
+좀이 문을 열었다.
+%%%%
+# several demons
+Xom multiple summons
+
+"내 아이들아, 필멸자를 섬겨라!"
+
+좀이 당신에게 약간의 일시적 지원을 주었다.
+
+좀이 잠깐동안 문을 열었다.
+%%%%
+# changing the scenery
+Xom scenery
+
+좀은 당신의 주변에 간단히 손을 댔다.
+
+좀은 당신의 주변에 개인적인 작업물을 덧붙였다.
+
+좀은 배경에 대해서 불평했다.
+
+좀은 당신 주변의 던전을 변형했다.
+
+"거기는, 이게 더 보기 좋지."
+
+"단지 약간의 개선인데..."
+%%%%
+##################
+# Xom nastiness
+##################
+# miscast strength 0, mostly harmless
+Xom zero miscast effect
+
+좀이 당신을 알아차린 것 같았다.
+
+순간 좀의 관심이 당신에게 향한 것 같았다.
+
+순간 좀의 힘이 당신에게 닿은 것 같았다.
+
+당신은 좀의 미친듯이 웃는 소리를 들은 것 같았다.
+%%%%
+# miscast strength random2(2), harmless/annoying
+Xom minor miscast effect
+
+좀이 당신을 알아차렸다.
+
+순간 좀의 관심이 당신에게 향했다.
+
+순간 좀의 힘이 당신에게 닿았다.
+
+당신은 좀의 미친듯이 웃는 소리를 들었다.
+%%%%
+# miscast strength random2(3), mostly annoying
+Xom medium miscast effect
+
+@Xom minor miscast effect@
+%%%%
+# miscast strength random2(4), up to really nasty
+Xom major miscast effect
+
+"이것을 받아라."
+
+좀의 관심이 당신에게 향했다.
+
+좀의 힘이 당신에게 닿았다.
+
+좀이 웃었다.
+
+w:1
+"장난감 충돌 실험을 해보는 중이다."
+%%%%
+Xom rearrange the pieces
+
+좀은 조각들을 재배치하기로 결정했다.
+
+"먼저 여기, 이젠 거기다."
+
+"이게 더 나은 것 같군!"
+%%%%
+Xom teleportation journey
+
+"야호!"
+
+"드라이브하자!"
+
+"어디서 멈출지는, 아무도 모른다!"
+
+좀이 당신 주변의 공간을 비틀었다.
+%%%%
+Xom confusion
+
+"헤 헤 헤..."
+
+좀의 힘이 잠깐 당신의 마음에 닿았다.
+
+좀이 낄낄댔다.
+%%%%
+# 50% stat loss, 25% draining, 25% torment
+Xom draining or torment
+
+"필멸자야, 넌 나를 불쾌하게 했어."
+
+"넌 너의 형편없는 가치를 너무 믿으면서 자랐어."
+
+좀의 힘이 잠깐 당신에게 닿았다.
+
+당신은 좀의 매니악한 웃음소리를 들었다.
+
+"고통받아라!"
+
+좀의 악의적인 관심이 잠깐 당신에게 닿았다.
+%%%%
+# 25% chance dancing weapon, else summon hostile monster
+Xom hostile monster
+
+"좀 즐겨볼 시간이군!"
+
+"필멸자여, 살아남기 위해 싸워라."
+
+"아직 살아남기에 충분히 강한지, 볼까?"
+
+당신은 좀의 매니악한 웃음소리를 들었다.
+%%%%
+Xom animate monster weapon
+
+@Xom hostile monster@
+%%%%
+Xom banishment
+
+"필멸자야, 넌 너의 작은 세계에서 너무 편하게 자라왔어!"
+
+좀은 당신을 어비스로 보내버렸다!
+
+세상이 당신의 귀에 울리는 좀의 매니악한 웃음소리처럼 돌아가는 것 같이 보인다.
+%%%%
+Xom revert own banishment
+
+w:30
+"농담!"
+
+"한번 더 생각해보면, 그렇지만..."
+
+"아니야. 난 마음이 바뀌었어."
+
+좀이 당신을 던전의 비교적 고요한 부분으로 되돌려보냈다.
+%%%%
+%%%%
+Xom revert other banishment
+
+"돌아와라!"
+
+"아니, 넌 아냐!"
+
+좀이 당신을 던전의 비교적 고요한 부분으로 되돌려보냈다.
+%%%%
+# Xom upgrades a nearby hostile monster's weapon to a chaos brand
+Xom chaos upgrade
+
+좀의 힘이 가까운 무기에 닿았다.
+
+"필멸자야, 혼돈을 맛보거라."
+
+좀이 깔깔거렸다.
+%%%%
+Xom noise
+
+좀이 갑자기 소음을 냈다! 당신은 @weapon_noise@ 하는 소리를 들었다.
+
+w:1
+"부우!"
+
+w:1
+좀이 북 울리는 소리를 냈다.
+%%%%
+Xom blink monsters
+
+"이제 그쪽이야!"
+
+"일로와!"
+
+좀은 주변의 것들을 조금 뒤바꾸기로 결정했다.
+%%%%
+#####################
+# other effects
+#####################
+Xom potion effect
+
+"나아가 파괴해라!"
+
+"필멸자여, 나아가 대혼란을 일으켜라!"
+
+좀이 당신에게 작은 호의를 베풀었다.
+
+좀이 당신을 향해 미소지었다.
+%%%%
+# random divination (magic mapping, detect items, detect creatures)
+Xom divination
+
+"내 아이야, 내가 뭘 봤는지 봐라!"
+
+좀이 당신에게 통찰력을 주었다.
+
+좀이 히죽히죽 웃었다.
+%%%%
+# cast a random spell
+Xom spell effect
+
+좀의 힘이 당신을 통해 흐른다!
+
+좀이 잠깐동안 현실을 가지고 놀았다.
+
+좀이 시끄럽게 웃었다.
+%%%%
+# multicoloured smoke trail
+Xom colour smoke trail
+
+"나아가 다시 꾸며봐라, 내 아이야!"
+
+"이곳은 좀더 나은 분위기가 필요하겠군."
+%%%%
+# turns walls into glass
+Xom vitrification
+
+당신은 지켜보는 느낌을 받았다.
+
+주변의 모든것이 강한 투명함을 띄는 듯 하다.
+
+벽이 갑자기 구조의 일부분을 잃었다.
+
+좀이 당신 주변의 던전을 바꿨다.
+%%%%
+# strengthens friendlies, weakens hostiles
+Xom good monster polymorph
+
+"이게 더 나을 것 같은데!"
+
+"흠, 디, 흠, 디, 흠..."
+
+좀의 힘이 근처의 몬스터에게 닿았다.
+
+당신은 좀이 친절하게 낄낄대는 것을 들었다.
+%%%%
+# weakens friendlies, strengthens hostiles
+Xom bad monster polymorph
+
+@Xom good monster polymorph@
+%%%%
+Xom good mutations
+
+"큰 조정이 필요할것 같구나, 필멸자!"
+
+"네 가냘픈 몸뚱이를 바꿔주지."
+
+좀의 힘이 순간 당신에게 닿았다.
+
+당신은 좀의 미친듯이 낄낄대는 소리를 들었다.
+%%%%
+Xom random mutations
+
+"큰 개선이 필요할것 같구나, 필멸자!"
+
+"네 몸뚱이를 바꿔주지."
+
+좀의 힘이 순간 당신에게 스쳤다.
+
+당신은 좀의 호의적인 웃음소리를 들었다.
+%%%%
+Xom snakes to sticks
+
+좀이 당신 주위의 것들을 바꿨다.
+
+"난 이것보단 그게 더 좋은데."
+
+"이런 구불구불한 것은 절대로 싫어."
+
+좀이 당신의 주변에 손을 댔다.
+
+@Xom good monster polymorph@
+%%%%
+Xom destruction
+
+"불타라, 애송아, 불타!"
+
+"콰광!"
+
+좀은 굉장한 폭발을 불러일으켰다.
+
+좀은 파괴를 쏟아냈다!
+
+@Xom fake destruction@
+%%%%
+Xom fake destruction
+
+"내 힘을 느껴라!"
+
+좀은 파괴적인 힘을 보여주었다.
+
+w:1
+"지옥불에서 끝나게 두겠다!"
+%%%%
+Xom accidental homicide
+
+"이런, *그걸* 하려는 의도는 아니었는데!"
+%%%%
+Xom weird death
+
+"어째서 *그런 일* 이 일어났지? 이상하군."
+%%%%
+Xom resurrection
+
+"네 몸을 고쳐주마."
+
+좀이 죽음을 속여 당신을 남겨두고 떠나게 만들었다.
+
+좀의 마니악한 웃음이 죽음을 겁주어 쫓아버렸다.
+
+좀의 힘이 당신을 부활시켰다.
+
+좀이 당신을 다시 삶으로 불러왔다.
+
+좀이 당신을 향해 미소지었다.
+%%%%
+Xom repel stairs
+
+좀이 풍경을 뒤바꿨다.
+
+좀이 근처의 @staircase@ 을(를) 찔렀다.
+
+"잡았다! 네 차례야!"
+
+좀이 당신 주변의 던전을 바꿨다.
+%%%%
+Xom good enchant monster
+
+@Xom good monster polymorph@
+%%%%
+Xom bad enchant monster
+
+@Xom good enchant monster@
+%%%%
+Xom stealth player
+
+좀이 눈에 띄게 당신을 조용히시켰다.
+
+좀이 속삭였다 "쉬이잇!"
+%%%%
+Xom cloud
+
+"여기 날씨는 너무 지루한데."
+
+좀이 콰즈랄에게 날씨를 흥미롭게 바꿔줄 것을 요구했다.
+
+"일기예보: 구름 많음."
+%%%%
+Xom life saving general
+
+"뭐? 잠깐, 안돼!"
+
+"이봐, 이제 막 재밌어지고 있다고!"
+
+"안돼에에에에, 내 @_xom_plaything_@은(는) 안돼!"
+
+"여기선 아냐, 아직은 안돼."
+
+"한번만 더 해보자,"
+
+좀은 관대한 기분이다.
+%%%%
+Xom life saving actor
+
+w:20
+@Xom life saving general@
+
+"이봐, 그건 내 @_xom_plaything_@(이)라고!"
+
+"오, 아냐, 그건 안 돼!"
+
+"그건 내 @_xom_plaything_@(이)라고, 가서 네 거나 찾아!"
+
+"내 @_xom_plaything_@을(를) 두고 그냥 가!"
+%%%%
+Xom boring death
+
+좀이 크게 하품했다!
+
+"살아서도 지루하고, 죽어서도 지루하고..."
+
+"뭐!? 이게 끝이야?"
+
+"이제 그만 새 장난감을 찾아야겠군."
+
+"허? 내가 뭘 놓쳤나?"
+
+"시간이 되었네."
+
+"이 장난감은 부서져버렸어."
+
+"누군가가 눈 하나를 잃기 전까지는 다 장난이고 게임이였는데."
+
+w:1
+"누군가가 눈 하나를 잃지 않는다면 장난도 게임도 아냐."
+%%%%
+# Xom laughing
+# (Currently only used post-game in response to "You die...")
+Xom laughter
+
+좀이 시끄럽게 웃었다!
+
+좀이 웃겨서 울부짖었다!
+
+좀은 이것이 우스꽝스럽다고 생각했다!
+
+좀이 매우 즐거워한다!
+
+좀이 큰 소리로 낄낄 웃었다!
+
+좀이 숨죽여 웃었다!
+
+좀이 불쾌하게 웃었다!
+
+좀이 웃으며 소리질렀다!
+
+좀이 폭발적으로 웃었다!
+
+좀이 미친듯이 킥킥거렸다!
+
+좀이 킥킥거렸다!
+
+좀이 진심으로 낄낄거렸다!
+
+좀이 깔깔거렸다!
+%%%%
+_xom_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "테디베어"
+elseif you.piety_rank() > 2 then
+    return "장난감"
+else
+    return "노리개"
+end
+}}
+%%%%
+############################################
+# Beogh rants on destroying an orcish idol #
+############################################
+# Beogh's messiah has destroyed an idol
+Beogh idol follower
+
+베오그가 씩씩댔다, "오크여, 이건 작은 죄가 아니다. 회개하라!"
+
+베오그가 속삭였다, "너는 이 악행으로 인하여 고통받을 것이다."
+
+베오그가 분노했다, "눈에는 눈..."
+%%%%
+# an unbelieving orc has destroyed an idol
+Beogh idol orc
+
+베오그의 목소리가 터져나왔다: "이단, 죽어라!"
+
+베오그가 천둥치는 목소리로 말했다: "고통받아라, 신앙심 없는 자여!"
+
+베오그가 울부짖었다, "내 힘을 느껴보아라, 배교자여!"
+%%%%
+# a character of another species has destroyed an idol
+Beogh idol other
+
+베오그는 그 우상의 파괴를 달가워하지 않는다.
+
+베오그는 매우 불쾌해하는 것처럼 보인다.
+
+당신의 오만이 베오그를 분노하게 했다.
+
+베오그가 당신의 종족을 저주했다.
+
+베오그가 오크가 아닌 모든 종족, 특히 @player_genus_plural@ 종족을 저주했다.
+
+베오그는 @player_god@을(를) 영원히 증오할것을 맹세했다.
+%%%%
+#################################################
+# The Shining One rants on killing a holy being #
+#################################################
+# an evil worshipper has killed a holy being
+the Shining One holy evil
+
+샤이닝 원이 천둥쳤다, "너의 신성에 대한 더러운 공격을 중지하여라!"
+
+샤이닝 원이 소리쳤다, "그 죽음의 원인이 복수되지 않도록 두지 않겠다!
+
+샤이닝 원이 소리쳤다, "너의 악행은 최후의 전투까지 기억될 것이다!"
+
+샤이닝 원이 속삭였다, "빛의 힘이 너를 바싹 태울 것이다."
+%%%%
+# a non-good worshipper or atheist has killed a holy being
+the Shining One holy other
+
+샤이닝 원이 말했다, "신성한 생명들이 거두어진 것처럼, 너도 그리될 것이다."
+
+샤이닝 원이 경고했다, "그런 살상으로 더 이상 너를 더럽히지 마라."
+
+샤이닝 원이 요구했다, "깨끗함과 더러움 중 선택할 시간이다."
+
+샤이닝 원이 말했다, "순교자는 영원히 기억된다."
+
+w:1
+샤이닝 원이 말했다, "눈에는 눈, 이에는 이"
+%%%%
+##########################################
+# Elyvilon hates you killing her animals #
+##########################################
+Elyvilon holy
+
+엘리빌론이 쉭쉭거렸다, "이 더러운 짐승! 네가 감히!"
+
+엘리빌론이 슬프게 물었다, "어떻게 이런 잔인한 일이 존재할 수 있는거지?"
+
+엘리빌론이 속삭였다: "누구도 남을 해칠 수 없어, 절대로!"
+%%%%
+recite_closure
+
+"아멘!"
+
+"진에게 영광을!"
+
+"그리하여 이것이 쓰여졌다."
+
+"이것이 진의 말씀이니라."
+
+"순수함이 너희 모두에게 있을지어다."
+%%%%
+##########################
+# Xom's response to prayer
+##########################
+Xom prayer
+
+좀이 당신을 @_trout_species_@ 숭어로 철썩 때렸다!
+
+좀이 행복함에 도취되었다.
+
+좀이 말했다: 나는 널 보고있다, 내 @_xom_ child_@ 아이야.
+
+당신은 귀뚜라미가 우는 소리를 들었다.
+
+w:1
+당신은 누군가가 당신을 찌르는 것을 느꼈다. 뒤돌아보았을 때, 거기엔 아무도 없었다.
+
+w:1
+좀이 말했다: 아멘!
+%%%%
+_trout_species_
+
+무지개
+
+머리가 평평한
+
+목 잘린
+
+황소
+
+은
+
+w:3
+@_trout_species_rare_@
+%%%%
+_trout_species_rare_
+
+복잡한
+
+다각형의
+
+상상의
+
+거꾸로 된
+
+닮지 않은
+
+사용된
+
+두번째 손의
+
+금지된
+
+도전하는
+
+w:2
+킬고어
+%%%%
+_xom_child_
+
+잘못 계획된
+
+사생아
+
+못생긴
+
+잘못 낳아진
+
+어리석은
+
+쓸모없는
+
+낭비하는
+
+정신나간
+
+버릇없는
+%%%%
+############################
+# Gozag's response to prayer
+############################
+Gozag prayer
+
+고자그가 말했다: 살 거 없으면 귀찮게 굴지 마라.
+
+고자그가 말했다: 내게 돈을 바쳐라!
+
+고자그가 말했다: 시간의 낭비는 돈의 낭비야!
+
+고자그가 말했다: 난 너의 다음 지불을 기다리고 있다.
+
+고자그가 말했다: 네게 필요한건 탐욕뿐이다!
+
+고자그가 말했다: 친구 따위보다는 두꺼운 지갑이 낫다.
+
+고자그가 말했다: 세상은 부자의 것이다!
+
+w:4
+고자그가 말했다: 가난한 자들을 먹어치워라!
+
+w:3
+고자그가 말했다: 가난한 자들을 죽여라!
+
+w:3
+고자그가 말했다: 가난한 자들을 쓰러뜨려라!
+
+고자그가 말했다: 동전 튕기는 소리보다 더 듣기좋은 소리는 없지.
+
+고자그가 말했다: 너 자신에게 관대해라!
+
+고자그가 말했다: 금송아지 우상은 전반전에 불과했다.
+
+고자그가 말했다: 금은 국가의 윤활유지.
+
+고자그가 말했다: Pecunia non olet.(돈은 냄새가 나지 않는다.)
+
+고자그가 말했다: 1골드도 놓치지 마라!
+
+고자그가 말했다: 난 돈이 있는 자에게만 내세를 약속한다!
+
+고자그가 말했다: 면죄부는 공짜가 아니다!
+
+고자그가 말했다: 돈은 말한다!
+
+고자그가 말했다: 현금이 왕이다!
+
+w:5
+고자그가 말했다: 돈! 돈! 돈!
+
+w:1
+고자그가 말했다: 너희 신도들의 기도는 중요하다. 계속 해나가도록해라.
+
+w:1
+고자그가 말했다: 대기열로 돌아가도록 해라.
+
+w:1
+고자그가 말했다: 이 기도는 품질 보증을 위해 감시당할수 있다.
+
+w:1
+고자그가 말했다: 포션을 원한다면, 1번을 눌러라.
+%%%%
+######################################
+# Welcome messages on game restoration
+######################################
+Ashenzari welcome
+
+아쉔자리가 말했다: 나의 시야를 나눠받아라. 나의 저주를 나눠받아라.
+%%%%
+Beogh penance
+
+베오그가 말했다: 너의 오크 신자들을 배신하지 말아라!
+%%%%
+Beogh welcome
+
+베오그가 말했다: 불신자들을 피의 바다에 익사시켜라!
+%%%%
+Cheibriados penance
+
+체이브리아도스가 말했다: 너무 서두르지 마라!
+%%%%
+Cheibriados welcome
+
+체이브리아도스가 말했다: 진정해라.
+%%%%
+Dithmenos penance
+
+디스메노스가 말했다: 어둠으로 돌아와라!
+%%%%
+Dithmenos welcome
+
+디스메노스가 말했다: 영원한 밤을 퍼뜨려라.
+%%%%
+Elyvilon penance
+
+엘리빌론이 말했다: 너의 봉사에 더 성실하여라.
+%%%%
+Elyvilon welcome
+
+엘리빌론이 말했다: 나아가서 약자를 도와라!
+%%%%
+Fedhas penance
+
+페다스는 당신의 자연에의 침해에 항의했다.
+%%%%
+Fedhas welcome
+
+페다스가 말했다: 삶과 죽음을 퍼뜨려라.
+%%%%
+Gozag welcome
+
+고자그가 말했다: 탐욕은 좋은 것이다.
+%%%%
+Ru welcome
+
+루가 말했다: 희생은 너에게 막대한 힘을 줄 것이다!
+%%%%
+Jiyva welcome
+
+슬라임 신에게 슬라임을!
+%%%%
+Kikubaaqudgha welcome
+
+키쿠바쿠드하가 말했다: 끝나지 않는 고통과 어둠을 퍼뜨려라!
+%%%%
+Lugonu welcome
+
+루고누가 말했다: 대학살과 타락을 퍼뜨려라!
+%%%%
+Lugonu newgame
+
+루고누가 말했다: 심연을 떠나 타락을 퍼드려라, 나의 종아!
+<lightgrey>(심연에서 나가려면 능력(<w>a</w>)을 사용하십시오.)</lightgrey>
+%%%%
+Makhleb welcome
+
+마크레브에게 피와 영혼을!
+%%%%
+Nemelex Xobeh welcome
+
+네멜렉스 죠베가 말했다: 삼라만상이 카드 안에 있다!
+%%%%
+Okawaru penance
+
+오카와루가 말했다: 전투에서 너의 명예를 되찾아라!
+%%%%
+Okawaru welcome
+
+오카와루가 말했다: 전투를 통해 나에게 영광을 바쳐라!
+%%%%
+Pakellas penance
+
+파켈라스가 말했다: 그런 접근 방식으로는 결과를 얻지 못할것이다.
+
+파켈라스가 말했다: 실망스러운 결과로구나.
+
+파켈라스가 말했다: 이런 식이라면 더 이상의 실험은 없다.
+
+파켈라스가 말했다: 발전의 길을 막지 마라!
+%%%%
+Pakellas welcome
+
+파켈라스가 말했다: 실험을 계속할 시간이다.
+
+파켈라스가 말했다: 실험체를 더 찾을 시간이다.
+
+파켈라스가 말했다: 장비들을 더 써볼 준비가 되었느냐?
+
+파켈라스가 말했다: 굉장히 흥미로운 결과들이 나오고 있구나.
+
+파켈라스가 말했다: 다음에는 어떤 해법이 나올까?
+
+파켈라스가 말했다: 발전이 아니면 죽음을!
+
+# nicolae-
+w:5
+파켈라스가 말했다: 신이 신을 연기하면 안 된다고는 아무도 말하지 않았지!
+
+w:1
+파켈라스가 말했다: 모두가 나를 미친놈이라고 불렀지... 그래, 그럼 보여주자!
+%%%%
+Qazlal penance
+
+콰즈랄이 천둥쳤다: 자연의 질서에 간섭하지 마라!
+%%%%
+Qazlal welcome
+
+콰즈랄이 말했다: 자연의 힘이 모든것을 찢어발기게 두어라!
+%%%%
+Sif Muna penance
+
+시프 무나가 말했다: 더 많은 지식과 지혜를 찾아내라.
+%%%%
+Sif Muna welcome
+
+시프 무나가 속삭였다: 난 많은 비밀을 알고있지...
+%%%%
+the Shining One penance
+
+샤이닝 원이 말했다: 순교자가 된다면 너의 원죄가 씻겨나갈 것이다!
+%%%%
+the Shining One welcome
+
+샤이닝 원이 말했다: 빛의 힘을 승리로 이끌어라!
+%%%%
+Trog penance
+
+트로그가 분노했다: 모두 죽여라!
+%%%%
+Trog welcome
+
+트로그가 말했다: 모두 죽여라!
+%%%%
+Vehumet welcome
+
+베후멧이 말했다: 지옥불로 종말을 일으켜라!
+%%%%
+Xom bored
+
+좀이 하품했다.
+
+"뭐 다른 것 없나..."
+
+@Xom welcome@
+%%%%
+Xom newgame
+
+좀이 말했다: 새 장난감이구나!
+%%%%
+Xom welcome
+
+좀이 낄낄거렸다.
+
+좀이 킥킥거렸다.
+%%%%
+Yredelemnul penance
+
+이레데렘눌이 말하였다: 죽음은 모두에게 평등하다! 신성한 순교는 의미없다!
+%%%%
+Yredelemnul welcome
+
+이레데렘눌이 말했다: 검은 횃불을 옮겨라! 게으른 망자들을 깨워라!
+%%%%
+Zin penance
+
+진은 당신이 규율에 불복종한 것을 크게 책망했다.
+
+진은 @_important_subject_@의 중요성을 준엄하게 설명했다.
+%%%%
+Zin welcome
+
+진이 말했다: 빛을 퍼뜨려라, 나의 아이야.
+%%%%
