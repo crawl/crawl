@@ -17,6 +17,7 @@
 #include "abyss.h"
 #include "acquire.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "butcher.h"
 #include "chardump.h"
@@ -337,17 +338,20 @@ static const ability_def Ability_List[] =
       1, 0, 50, 0, {FAIL_EVO, 40, 2}, abflag::NONE },
     { ABIL_HEAL_WOUNDS, "Heal Wounds",
       0, 0, 0, 0, {FAIL_XL, 45, 2}, abflag::NONE },
-
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
       0, 0, 600, 0, {FAIL_EVO, 50, 2}, abflag::EXHAUSTION },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {FAIL_EVO, 60, 2}, abflag::NONE },
-    { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, {}, abflag::NONE },
+    { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
+      0, 0, 0, 0, {}, abflag::NONE },
+
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
       1, 0, 100, 0, {FAIL_EVO, 40, 2}, abflag::NONE },
     { ABIL_EVOKE_FOG, "Evoke Fog",
       2, 0, 250, 0, {FAIL_EVO, 50, 2}, abflag::NONE },
+    { ABIL_EVOKE_RATSKIN, "Evoke Ratskin",
+      3, 0, 200, 0, {FAIL_EVO, 50, 2}, abflag::NONE },
 
     { ABIL_END_TRANSFORMATION, "End Transformation",
       0, 0, 0, 0, {}, abflag::NONE },
@@ -2089,10 +2093,28 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30));
         }
         break;
+
     case ABIL_EVOKE_FOG:     // cloak of the Thief
         fail_check();
         mpr("With a swish of your cloak, you release a cloud of fog.");
         big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
+        break;
+
+    case ABIL_EVOKE_RATSKIN: // ratskin cloak
+        fail_check();
+        mpr("The rats of the Dungeon answer your call.");
+
+        for (int i = 0; i < (coinflip() + 1); ++i)
+        {
+            monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
+
+            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
+            mg.set_summoned(&you, 0, 0);
+            mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+            monster *m = create_monster(mg);
+            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
+        }
+
         break;
 
     case ABIL_STOP_SINGING:
@@ -3467,6 +3489,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
+    }
+
+    if (player_equip_unrand(UNRAND_RATSKIN_CLOAK)
+        && !player_mutation_level(MUT_NO_ARTIFICE)
+        && !player_mutation_level(MUT_NO_LOVE))
+    {
+      _add_talent(talents, ABIL_EVOKE_RATSKIN, check_confused);
     }
 
     if (you.evokable_berserk() && !player_mutation_level(MUT_NO_ARTIFICE))
