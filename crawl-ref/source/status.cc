@@ -505,7 +505,14 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_DRAINED:
-        if (you.attribute[ATTR_XP_DRAIN] > 250)
+        if (you.attribute[ATTR_XP_DRAIN] > 450)
+        {
+            inf->light_colour = MAGENTA;
+            inf->light_text   = "Drain";
+            inf->short_text   = "extremely drained";
+            inf->long_text    = "Your life force is extremely drained.";
+        }
+        else if (you.attribute[ATTR_XP_DRAIN] > 250)
         {
             inf->light_colour = RED;
             inf->light_text   = "Drain";
