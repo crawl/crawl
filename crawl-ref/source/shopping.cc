@@ -178,10 +178,6 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_FRAGILE ])
         ret -= 8;
 
-    // extremely good
-    if (prop[ ARTP_FOG ])
-        ret += 50;
-
     if (prop[ ARTP_RMSL ])
         ret += 20;
 
