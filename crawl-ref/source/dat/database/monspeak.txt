@@ -3497,6 +3497,55 @@ w:50
 
 @The_monster@ says, "Can I borrow that [wand|lamp|fan] for a second? You must have some to spare."
 %%%%
+Hepliaklqana Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I went to a family reunion once. I hated it."
+
+@The_monster@ says, "Who would want to remember their ancestors? They're dead."
+
+@The_monster@ says, "If your ancestor was so tough and powerful, how come they're dead?"
+
+@The_monster@ says, "Would you happen to remember where the Orb is?"
+
+@The_monster@ says, "Ghost stories? Ooh, I'm so scared!"
+%%%%
+Uskayaw Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Dance? No thanks, I don't dance."
+
+@The_monster@ says, "I hate drums."
+
+@The_monster@ says, "I hate chants."
+
+@The_monster@ says, "Poetry of the foot? All you're doing is stomping around."
+
+@The_monster@ says, "You look ridiculous with all that flailing around."
+%%%%
+Wu Jian Council Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Path? I don't see a path anywhere."
+
+@The_monster@ says, "You're jumping off the walls? I hate that."
+
+@The_monster@ says, "Watching you spin around is making me dizzy. I hate that."
+
+@The_monster@ says, "Why not just HIT them without all this spinning and flipping nonsense?"
+
+@The_monster@ says, "Don't you get tired of all these old geezers telling you what to do?"
+
+@The_monster@ says, "Heaven on Earth? Sounds overrated."
+
+@The_monster@ says, "No way as a way? Sounds like nonsense."
+%%%%
 No God Donald
 
 w:50
