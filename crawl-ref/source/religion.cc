@@ -140,6 +140,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Xom
     { },
+
     // Vehumet
     { { 1, "gain magical power from killing" },
       { 3, "Vehumet is aiding your destructive magics.",
@@ -302,6 +303,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_RU_POWER_LEAP, "gather your power into a mighty leap" },
       { 5, ABIL_RU_APOCALYPSE, "wreak a terrible wrath on your foes" },
     },
+
     // Pakellas
     {
       { 0, "gain magical power from killing" },
@@ -313,6 +315,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Pakellas will now supercharge a wand... once.",
            "Pakellas is no longer ready to supercharge a wand." },
     },
+
     // Uskayaw
     {
       { 1, ABIL_USKAYAW_STOMP, "stomp with the beat" },
@@ -331,14 +334,15 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
+
     // Wu Jian
     { { 1, "attack and slow monsters by moving around them",
            "no longer perform spinning attacks" },
-      { 2, "perform a distracting airborne attack by moving against a solid obstacle",
+      { 2, "perform distracting airborne attacks by moving against a solid obstacle",
            "no longer perform airborne attacks" },
-      { 3, "strike by moving towards foes, devastating them if slowed or distracted",
+      { 3, "strike by moving towards foes, devastating slowed or distracted foes",
            "no longer perform lunging strikes" },
-      { 4, ABIL_WU_JIAN_SERPENTS_LASH, "move short distances at supernatural speeds" },
+      { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
       { 5, ABIL_WU_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
     },
 };
