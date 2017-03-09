@@ -351,7 +351,7 @@ static const map<species_type, species_def> species_data =
 
 { SP_BARACHIAN, {
     "Ba",
-    "Barachian", nullptr, "Frog",
+    "Barachi", "Barachian", "Frog",
     SPF_NO_HAIR,
     0, 0, 0, 3,
     MONS_BARACHIAN,
