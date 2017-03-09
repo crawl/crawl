@@ -413,7 +413,7 @@ static const vector<god_passive> god_passives[] =
     // Wu Jian
     {
         { 1, passive_t::wu_jian_whirlwind, "attack and slow monsters by moving around them." },
-        { 2, passive_t::wu_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
+        { 2, passive_t::wu_jian_wall_jump, "perform distracting airborne attacks by moving against a solid obstacle." },
         { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
     },
 };
