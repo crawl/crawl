@@ -199,7 +199,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_BERSERK,               PROPN_PLAIN },
         { ARTP_INVISIBLE,             PROPN_PLAIN },
         { ARTP_FLY,                   PROPN_PLAIN },
-        { ARTP_FOG,                   PROPN_PLAIN },
 
         // Resists, also really important
         { ARTP_ELECTRICITY,           PROPN_PLAIN },
@@ -451,7 +450,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
-        { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},

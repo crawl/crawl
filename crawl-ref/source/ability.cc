@@ -3485,7 +3485,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
     }
 
-    if (you.scan_artefacts(ARTP_FOG)
+    if (player_equip_unrand(UNRAND_THIEF)
         && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
