@@ -313,12 +313,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
-    if (!ignore_temporary_disability && you.berserk())
-    {
-        SAY(canned_msg(MSG_TOO_BERSERK));
-        return false;
-    }
-
     if (you.melded[EQ_WEAPON] && unwield)
     {
         SAY(mpr("Your weapon is melded into your body!"));
