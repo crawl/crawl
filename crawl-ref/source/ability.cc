@@ -2111,8 +2111,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
             mg.set_summoned(&you, 0, 0);
             mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-            monster *m = create_monster(mg);
-            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
+            if (monster *m = create_monster(mg))
+                m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
 
         break;
