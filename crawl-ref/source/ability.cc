@@ -158,7 +158,7 @@ struct scaling_cost
 enum class fail_basis
 {
     xl,
-    evo, 
+    evo,
     invo,
 };
 
