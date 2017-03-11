@@ -57,11 +57,6 @@ for (extract "describe.cc", "trap_names[] =", "};")
     $features{articled($_)} = 1;
 }
 
-for (extract "cloud.cc", "clouds[] =", "};", "per-line")
-{
-    $features{$_ . " cloud" } = 1 unless $_ eq "?";
-}
-
 
 for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 {
