@@ -84,15 +84,15 @@ static int file_unmarshall_string(lua_State *ls)
     return 1;
 }
 
-enum lua_persist_type
+enum class lua_persist
 {
-    LPT_NONE,
-    LPT_NUMBER,
-    LPT_STRING,
+    none,
+    number,
+    string,
     // [ds] No longer supported for save portability:
-    LPT_FUNCTION,
-    LPT_NIL,
-    LPT_BOOLEAN,
+    function,
+    nil,
+    boolean,
 };
 
 static int file_marshall_meta(lua_State *ls)
@@ -102,21 +102,21 @@ static int file_marshall_meta(lua_State *ls)
 
     writer &th(*static_cast<writer*>(lua_touserdata(ls, 1)));
 
-    lua_persist_type ptype = LPT_NONE;
+    auto ptype = lua_persist::none;
     if (lua_isnumber(ls, 2))
-        ptype = LPT_NUMBER;
+        ptype = lua_persist::number;
     else if (lua_isboolean(ls, 2))
-        ptype = LPT_BOOLEAN;
+        ptype = lua_persist::boolean;
     else if (lua_isstring(ls, 2))
-        ptype = LPT_STRING;
+        ptype = lua_persist::string;
     else if (lua_isnil(ls, 2))
-        ptype = LPT_NIL;
+        ptype = lua_persist::nil;
     else
         luaL_error(ls,
                    make_stringf("Cannot marshall %s",
                                 lua_typename(ls, lua_type(ls, 2))).c_str());
-    marshallByte(th, ptype);
-    if (ptype != LPT_NIL)
+    marshallByte(th, static_cast<int8_t>(ptype));
+    if (ptype != lua_persist::nil)
         file_marshall(ls);
     return 0;
 }
@@ -124,17 +124,16 @@ static int file_marshall_meta(lua_State *ls)
 static int file_unmarshall_meta(lua_State *ls)
 {
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
-    const lua_persist_type ptype =
-    static_cast<lua_persist_type>(unmarshallByte(th));
+    auto ptype = static_cast<lua_persist>(unmarshallByte(th));
     switch (ptype)
     {
-        case LPT_BOOLEAN:
+        case lua_persist::boolean:
             return file_unmarshall_boolean(ls);
-        case LPT_NUMBER:
+        case lua_persist::number:
             return file_unmarshall_number(ls);
-        case LPT_STRING:
+        case lua_persist::string:
             return file_unmarshall_string(ls);
-        case LPT_NIL:
+        case lua_persist::nil:
             lua_pushnil(ls);
             return 1;
         default:
