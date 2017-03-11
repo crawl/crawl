@@ -10,5 +10,6 @@ close IN;
 for (/\{\s*SPELL_\w+,\s*"([^"\n"]+)"/sg)
 {
     next if /^[a-z]/; # dummy spells start with lowercase
+    next if $_ eq "Random Effects"; # wand-only spell
     print "$_\n";
 }
