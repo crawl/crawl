@@ -376,6 +376,8 @@ animal_skin2
 animal_skin3
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
+deep_troll_leather_armour ARM_DEEP_TROLL_LEATHER_ARMOUR
+troll_iron_armour ARM_TROLL_IRON_ARMOUR
 red_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
 silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR

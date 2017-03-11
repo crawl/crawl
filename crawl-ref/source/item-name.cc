@@ -181,7 +181,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
     // no "a dragon scales"
     const bool always_plural = armour_is_hide(*this)
-                               && sub_type != ARM_TROLL_LEATHER_ARMOUR;
+                               && sub_type != ARM_TROLL_LEATHER_ARMOUR
+                               && sub_type != ARM_DEEP_TROLL_LEATHER_ARMOUR
+                               && sub_type != ARM_TROLL_IRON_ARMOUR;
 
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
          && !(((corpse_flags.flags = props[CORPSE_NAME_TYPE_KEY].get_int64())

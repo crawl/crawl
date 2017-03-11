@@ -386,6 +386,8 @@ karate2 KARATE2
 leather_heavy LEATHER_HEAVY
 troll_hide TROLL_HIDE
 troll_leather TROLL_LEATHER
+deep_troll_leather DEEP_TROLL_LEATHER
+troll_iron TROLL_IRON
 green_chain GREEN_CHAIN
 metal_blue METAL_BLUE
 green_susp GREEN_SUSP
