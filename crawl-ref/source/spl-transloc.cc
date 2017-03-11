@@ -473,13 +473,17 @@ void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
-    if (you.no_tele(true, true))
+    if (player_mutation_level(MUT_BLINKER) >= 1)
+        uncontrolled_blink();
+    else if (you.no_tele(true, true))
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
         mpr("You feel strangely stable.");
         you.duration[DUR_TELEPORT] = 0;
     }
+    if (player_mutation_level(MUT_BLINKER) >= 1)
+        uncontrolled_blink();
     else
     {
         mpr("You feel strangely unstable.");
