@@ -1286,7 +1286,7 @@ Spit Poison spell
 %%%%
 Sprint spell
 
-Causes the caster to cover ground more rapidly for a short duration.
+Causes the caster to move across terrain more rapidly for a short duration.
 %%%%
 Static Discharge spell
 
