@@ -482,8 +482,6 @@ void you_teleport()
         mpr("You feel strangely stable.");
         you.duration[DUR_TELEPORT] = 0;
     }
-    if (player_mutation_level(MUT_BLINKER) >= 1)
-        uncontrolled_blink();
     else
     {
         mpr("You feel strangely unstable.");
