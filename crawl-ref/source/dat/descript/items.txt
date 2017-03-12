@@ -171,12 +171,6 @@ book of enchantments
 A spellbook containing an assortment of powerful Hexes and Charms, which
 sparkles and shimmers as the pages are flipped.
 %%%%
-book of envenomations
-
-A book of advanced Poison magic, glowing with a sickly green light. Mages with
-a tendency to lick their fingers before turning a page will generally quit the
-habit soon after they begin reading this, one way or another.
-%%%%
 book of fire
 
 A book containing advanced spells in the elemental school of Fire, stolen from

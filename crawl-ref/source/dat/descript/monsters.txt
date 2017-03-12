@@ -585,7 +585,7 @@ balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
-barachian
+barachi
 
 An amphibious humanoid with a very ugly attitude.
 %%%%
@@ -2767,12 +2767,6 @@ fire elementalist statue
 An ornately worked statue of an orc holding a torch aloft, hewn from black
 basalt. The air around it shimmers.
 %%%%
-firespitter statue
-
-A statue of a large humanoid head, roughly cut from greyish gabbro. Its mouth
-is blackened with scorch-marks, and there is a faint ember glow in its empty
-eyes.
-%%%%
 flesh golem
 
 An animated mound of misshapen flesh, sculpted over an iron skeleton.
@@ -2800,10 +2794,6 @@ An undead creature in the shape of a bat, made of ice.
 kamikaze kobold
 
 A kobold that has been enchanted to explode in a blaze of fire.
-%%%%
-lasher statue
-
-A statue depicting a savage-looking slave driver with a vicious barbed whip.
 %%%%
 mad acolyte of Lugonu
 

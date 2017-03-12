@@ -1854,10 +1854,6 @@ end
 ############ BAI SUZHEN ### Dragon-lady of famed tragic folklore
 Bai Suzhen
 
-@Bai Suzhen@
-%%%%
-Bai Suzhen
-
 @_Bai_Suzhen_common_@
 
 w:6

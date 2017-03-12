@@ -324,11 +324,6 @@ Control Undead spell
 
 Enslaves any undead in the vicinity of the caster.
 %%%%
-Control Winds spell
-
-Allows limited powers over the flow of air in caster's sight, blowing away or
-dissipating any nearby clouds affecting the caster or their allies.
-%%%%
 Controlled Blink spell
 
 Translocates the caster a short distance, with precise control. Be wary that
@@ -351,12 +346,6 @@ Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.
 %%%%
-Corrupt Body spell
-
-Instills a corruption within a target, temporarily mutating their body in an
-adverse fashion. It cannot affect artificial beings, and the undead will
-decompose if affected.
-%%%%
 Corrupting Pulse spell
 
 Instills a corruption within all visible targets, temporarily mutating their
@@ -368,10 +357,6 @@ Crystal Bolt spell
 Projects a penetrating projectile with peculiar magical properties. It is
 randomly imbued with either fire or ice, and additionally will reflect from
 walls of any material due to the crystal embedded in the shot.
-%%%%
-Cure Poison spell
-
-Removes poison from the caster's system.
 %%%%
 Darkness spell
 
@@ -412,12 +397,6 @@ Protects the caster from all kinds of projectile attacks, making them
 significantly easier to dodge. It is highly effective against both
 single-target and penetrating attacks. Each time a missile is deflected the
 spell has a chance of expiring, with a lower chance of expiry at high power.
-%%%%
-Delayed Fireball spell
-
-Gives the caster the ability to instantaneously release a fireball at a later
-time. Knowing this spell allows the learner to memorise Fireball for no
-additional spell levels.
 %%%%
 Dig spell
 
@@ -1184,10 +1163,6 @@ redirecting their force to the air nearby. Ranged attacks cannot be diverted in
 this way. The shroud is highly unstable, and may fall apart unexpectedly under
 stress.
 %%%%
-Warning Cry spell
-
-Generates a loud noise, alerting nearby enemies.
-%%%%
 Silence spell
 
 Eliminates all sound near the caster. This makes reading scrolls, casting
@@ -1274,7 +1249,7 @@ difficult.
 %%%%
 Spit Acid spell
 
-<Spit Acid ability>
+Spits acid at a targeted creature.
 %%%%
 Spit Lava spell
 
@@ -1318,10 +1293,6 @@ Sticky Flame Range spell
 Launches a glob of sticky flame, covering a targeted creature with liquid fire
 for a short time.
 %%%%
-Sticky Flame Splash spell
-
-<Breathe Sticky Flame ability>
-%%%%
 Sticky Flame spell
 
 Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
@@ -1341,11 +1312,6 @@ Fires a magical dart of poison.
 Stone Arrow spell
 
 Fires a sharp spine of rock.
-%%%%
-Stoneskin spell
-
-Hardens the caster's skin. It has no effect on the undead or those under the
-effects of most types of transformation.
 %%%%
 Strip Resistance spell
 
@@ -1481,10 +1447,6 @@ Summon Spectral Orcs spell
 Summons between one and three spectral orcs, specialised for melee combat
 and equipped with spectral weaponry and armour.
 %%%%
-Summon Swarm spell
-
-Summons forth a pestilential swarm of insects.
-%%%%
 Summon Ufetubus spell
 
 Summons multiple ufetubi; small, annoying demons.
@@ -1520,10 +1482,6 @@ Randomly translocates a targeted creature.
 Teleport Self spell
 
 Teleports the caster to a random location.
-%%%%
-Throw spell
-
-Hurls an adjacent foe a considerable distance, injuring them.
 %%%%
 Throw Barbs spell
 

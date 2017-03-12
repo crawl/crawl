@@ -65,10 +65,6 @@ substantially weakening melee attacks.
 While tranformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to evoke wands or to cast spells.
 %%%%
-Spit Acid ability
-
-Spits acid at a targeted creature.
-%%%%
 Fly ability
 
 Starts flight. During flight you can safely cross water and similar obstacles.
@@ -81,11 +77,6 @@ Blasts a targeted enemy with damnation. These unholy forces harm the victim and
 anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
-%%%%
-Release Delayed Fireball ability
-
-Instantly releases a previously prepared (delayed) fireball without additional
-cost in terms of magic or hunger.
 %%%%
 Stop Singing ability
 
@@ -111,10 +102,6 @@ Shaft Self ability
 
 Sends you to a random position one to two floors down, as if you jumped into a
 shaft trap. It takes some time to dig the shaft.
-%%%%
-Evoke Teleportation ability
-
-Teleports the user to a random location on the level.
 %%%%
 Evoke Blink ability
 
@@ -550,12 +537,6 @@ while you're gone.
 Request Jelly ability
 
 Creates a neutral jelly that will wander the floor and digest items.
-%%%%
-Jelly Paralyse ability
-
-Calls on any nearby jellies to cease their item consumption and pray to Jiyva
-for a short duration, with a piety cost depending on the number of jellies that
-are affected.
 %%%%
 Slimify ability
 
