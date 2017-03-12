@@ -822,8 +822,11 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         {
             if ((event.mod & (MOD_CTRL | MOD_ALT)))
             {
-                if (_handle_zap_player(event))
-                    return 0;
+                _handle_zap_player(event);
+                // return either way -- everything else in this case
+                // needs non-ctrl (and we definitely don't want to
+                // trigger a wait in the next if)
+                return 0;
             }
 
             // if there's an item, pick it up, otherwise wait 1 turn
