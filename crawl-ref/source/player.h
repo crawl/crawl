@@ -481,7 +481,6 @@ public:
     int max_dex() const;
 
     bool in_water() const;
-    bool in_lava() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
@@ -536,7 +535,8 @@ public:
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
-    bool made_nervous_by(const coord_def &pos);
+    bool made_nervous_by(const monster *mons);
+    bool is_nervous();
 
     kill_category kill_alignment() const override;
 
@@ -963,7 +963,6 @@ bool player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
-bool player_likes_lava(bool permanently = false);
 
 int player_mutation_level(mutation_type mut, bool temp = true);
 

@@ -437,6 +437,14 @@ bool feat_is_permarock(dungeon_feature_type feat)
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
+/** Is this feature an open expanse used only as a map border?
+ */
+bool feat_is_endless(dungeon_feature_type feat)
+{
+    return feat == DNGN_OPEN_SEA || feat == DNGN_LAVA_SEA
+           || feat == DNGN_ENDLESS_SALT;
+}
+
 /** Can this feature be dug?
  */
 bool feat_is_diggable(dungeon_feature_type feat)

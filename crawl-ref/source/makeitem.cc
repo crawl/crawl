@@ -1518,6 +1518,9 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.skill = _choose_manual_skill();
         // Set number of bonus skill points.
         item.skill_points = random_range(2000, 3000);
+        // Preidentify.
+        set_ident_type(item, true);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
         return; // rare enough without being replaced with randarts
     }
 

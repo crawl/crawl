@@ -983,8 +983,8 @@ static void _debug_pane_bounds()
 
 enum class update_flag
 {
-    AFFECT_EXCLUDES = (1 << 0),
-    ADDED_EXCLUDE   = (1 << 1),
+    affect_excludes = (1 << 0),
+    added_exclude   = (1 << 1),
 };
 DEF_BITFIELD(update_flags, update_flag);
 
@@ -1015,7 +1015,7 @@ static update_flags player_view_update_at(const coord_def &gc)
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
             if (!did_exclude && !was_exclusion)
-                ret |= update_flag::ADDED_EXCLUDE;
+                ret |= update_flag::added_exclude;
         }
     }
 
@@ -1024,7 +1024,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
-        ret |= update_flag::AFFECT_EXCLUDES;
+        ret |= update_flag::affect_excludes;
 
     set_terrain_visible(gc);
 
@@ -1068,9 +1068,9 @@ static void player_view_update()
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         update_flags flags = player_view_update_at(*ri);
-        if (flags & update_flag::AFFECT_EXCLUDES)
+        if (flags & update_flag::affect_excludes)
             update_excludes.push_back(*ri);
-        if (flags & update_flag::ADDED_EXCLUDE)
+        if (flags & update_flag::added_exclude)
             need_update = true;
     }
     // Update exclusion LOS for possibly affected excludes.
@@ -1482,6 +1482,13 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     cell->flash_colour = BLACK;
 
+    // is this cell excluded from movement by mesmerise-related statuses?
+    // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
+    bool mesmerise_excluded = ((gc != you.pos()) // for fungus form
+                               && map_bounds(gc)
+                               && (env.map_knowledge(gc).flags & MAP_WITHHELD)
+                               && !feat_is_solid(grd(gc)));
+
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
@@ -1502,7 +1509,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
     else if (crawl_state.darken_range)
     {
-        if (!crawl_state.darken_range->valid_aim(gc))
+        if ((crawl_state.darken_range->obeys_mesmerise && mesmerise_excluded)
+            || (!crawl_state.darken_range->valid_aim(gc)))
         {
             cell->colour = DARKGREY;
 #ifdef USE_TILE
@@ -1528,25 +1536,23 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         if (!found)
             cell->colour = DARKGREY;
     }
+    else if (mesmerise_excluded) // but no range limits in place
+    {
+        cell->colour = DARKGREY;
+
 #ifdef USE_TILE_LOCAL
-    // Grey out grids that cannot be reached due to beholders.
-    else if (you.get_beholder(gc))
         cell->tile.bg |= TILE_FLAG_OOR;
-
-    else if (you.get_fearmonger(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
-
-    tile_apply_properties(gc, cell->tile);
 #elif defined(USE_TILE_WEB)
-    // For webtiles, we only grey out visible tiles
-    else if (you.get_beholder(gc) && you.see_cell(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
+        // For webtiles, we only grey out visible tiles
+        if (you.see_cell(gc))
+            cell->tile.bg |= TILE_FLAG_OOR;
+#endif
+    }
 
-    else if (you.get_fearmonger(gc) && you.see_cell(gc))
-        cell->tile.bg |= TILE_FLAG_OOR;
-
+#ifdef USE_TILE
     tile_apply_properties(gc, cell->tile);
 #endif
+
 #ifndef USE_TILE_LOCAL
     if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
         && you.on_current_level

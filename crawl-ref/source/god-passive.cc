@@ -413,7 +413,7 @@ static const vector<god_passive> god_passives[] =
     // Wu Jian
     {
         { 1, passive_t::wu_jian_whirlwind, "attack and slow monsters by moving around them." },
-        { 2, passive_t::wu_jian_wall_jump, "perform a distracting airborne attack by moving against a solid obstacle." },
+        { 2, passive_t::wu_jian_wall_jump, "perform distracting airborne attacks by moving against a solid obstacle." },
         { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
     },
 };
@@ -1039,12 +1039,12 @@ int ash_skill_boost(skill_type sk, int scale)
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
     int level = you.skills[sk];
-    while (level < 27 && skill_points >= skill_exp_needed(level + 1, sk))
+    while (level < MAX_SKILL_LEVEL && skill_points >= skill_exp_needed(level + 1, sk))
         ++level;
 
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
-    return min(level, 27 * scale);
+    return min(level, MAX_SKILL_LEVEL * scale);
 }
 
 int gozag_gold_in_los(actor *whom)
@@ -1548,9 +1548,15 @@ void wu_jian_heaven_tick()
     noisy(15, you.pos());
 
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
-        mprf(MSGCH_GOD, "The heavenly storm settles...");
+        end_heaven_on_earth();
     else
         you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+}
+
+void end_heaven_on_earth()
+{
+    you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+    mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)

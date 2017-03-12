@@ -1609,26 +1609,26 @@ static bool _choose_hostile_monster(const monster& mon)
 }
 
 // XXX: this whole pattern approach can probably be dropped
-enum _wjc_pattern
+enum class wjc_pattern
 {
-    PATTERN_SHORT_CIRCLE,
-    PATTERN_LONG_CIRCLE,
+    short_circle,
+    long_circle,
 };
 
 static void _summon_hostile_weapons_wjc_flavour(weapon_type subtype,
-                                                _wjc_pattern pattern)
+                                                wjc_pattern pattern)
 {
     vector<coord_def> positions;
 
     switch (pattern)
     {
-        case PATTERN_SHORT_CIRCLE:
+        case wjc_pattern::short_circle:
             positions.push_back(you.pos() + coord_def(1,0));
             positions.push_back(you.pos() + coord_def(-1,0));
             positions.push_back(you.pos() + coord_def(0,1));
             positions.push_back(you.pos() + coord_def(0,-1));
             break;
-        case PATTERN_LONG_CIRCLE:
+        case wjc_pattern::long_circle:
             positions.push_back(you.pos() + coord_def(2,0));
             positions.push_back(you.pos() + coord_def(-2,0));
             positions.push_back(you.pos() + coord_def(0,2));
@@ -1692,21 +1692,21 @@ static bool _wu_jian_retribution()
             wu_jian_sifu_message(" whispers, \"Die by a thousand cuts...\"");
             mpr("You feel the sudden stab of multiple needles!");
             _summon_hostile_weapons_wjc_flavour(WPN_DAGGER,
-                                                PATTERN_LONG_CIRCLE);
+                                                wjc_pattern::long_circle);
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
             wu_jian_sifu_message(" whispers, \"Nowhere to run...\"");
             mpr("Your limbs feel heavy!");
             _summon_hostile_weapons_wjc_flavour(WPN_QUARTERSTAFF,
-                                                PATTERN_LONG_CIRCLE);
+                                                wjc_pattern::long_circle);
             you.set_duration(DUR_SLOW, random_range(5, 10));
             break;
         case 2:
             wu_jian_sifu_message(" whispers, \"These will loosen your "
                                    "tongue...\"");
             _summon_hostile_weapons_wjc_flavour(WPN_DIRE_FLAIL,
-                                                PATTERN_SHORT_CIRCLE);
+                                                wjc_pattern::short_circle);
             you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
             invalidate_agrid(true);
             break;

@@ -140,6 +140,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Xom
     { },
+
     // Vehumet
     { { 1, "gain magical power from killing" },
       { 3, "Vehumet is aiding your destructive magics.",
@@ -301,6 +302,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_RU_POWER_LEAP, "gather your power into a mighty leap" },
       { 5, ABIL_RU_APOCALYPSE, "wreak a terrible wrath on your foes" },
     },
+
     // Pakellas
     {
       { 0, "gain magical power from killing" },
@@ -312,6 +314,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "Pakellas will now supercharge a wand... once.",
            "Pakellas is no longer ready to supercharge a wand." },
     },
+
     // Uskayaw
     {
       { 1, ABIL_USKAYAW_STOMP, "stomp with the beat" },
@@ -330,14 +333,15 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
       { 5, "drain nearby creatures when transferring your ancestor"},
     },
+
     // Wu Jian
     { { 1, "attack and slow monsters by moving around them",
            "no longer perform spinning attacks" },
-      { 2, "perform a distracting airborne attack by moving against a solid obstacle",
+      { 2, "perform distracting airborne attacks by moving against a solid obstacle",
            "no longer perform airborne attacks" },
-      { 3, "strike by moving towards foes, devastating them if slowed or distracted",
+      { 3, "strike by moving towards foes, devastating slowed or distracted foes",
            "no longer perform lunging strikes" },
-      { 4, ABIL_WU_JIAN_SERPENTS_LASH, "move short distances at supernatural speeds" },
+      { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
       { 5, ABIL_WU_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
     },
 };
@@ -3015,6 +3019,21 @@ int gozag_service_fee()
     return fee;
 }
 
+static bool _god_rejects_loveless(god_type god)
+{
+    switch (god)
+    {
+    case GOD_BEOGH:
+    case GOD_JIYVA:
+    case GOD_HEPLIAKLQANA:
+    case GOD_FEDHAS:
+    case GOD_YREDELEMNUL:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool player_can_join_god(god_type which_god)
 {
     if (you.species == SP_DEMIGOD)
@@ -3036,15 +3055,8 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
-    if (player_mutation_level(MUT_NO_LOVE)
-        && (which_god == GOD_BEOGH
-            || which_god == GOD_JIYVA
-            || which_god == GOD_HEPLIAKLQANA
-            || which_god == GOD_FEDHAS
-            || which_god == GOD_YREDELEMNUL))
-    {
+    if (player_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
         return false;
-    }
 
     if (player_mutation_level(MUT_NO_ARTIFICE)
         && which_god == GOD_PAKELLAS)
@@ -3652,9 +3664,7 @@ void god_pitch(god_type which_god)
             }
         }
         else if (player_mutation_level(MUT_NO_LOVE)
-                 && (which_god == GOD_BEOGH
-                     || which_god == GOD_JIYVA
-                     || which_god == GOD_HEPLIAKLQANA))
+                 && _god_rejects_loveless(which_god))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);

@@ -10,10 +10,10 @@ bool beogh_followers_abandon_you();
 void make_god_gifts_disappear();
 enum class conv_t
 {
-    SIGHT,
-    DEATHBED,
-    DEATHBED_FOLLOWER,
-    RESURRECTION,
+    sight,
+    deathbed,
+    deathbed_follower,
+    resurrection,
 };
 void beogh_convert_orc(monster* orc, conv_t conv);
 void gozag_set_bribe(monster* traitor);

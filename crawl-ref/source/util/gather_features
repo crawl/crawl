@@ -57,11 +57,6 @@ for (extract "describe.cc", "trap_names[] =", "};")
     $features{articled($_)} = 1;
 }
 
-for (extract "cloud.cc", "clouds[] =", "};", "per-line")
-{
-    $features{$_ . " cloud" } = 1 unless $_ eq "?";
-}
-
 
 for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 {
@@ -78,11 +73,16 @@ for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 }
 
 $features{articled("gleaming silver wall")} = 1;
+$features{articled("awoken tree")} = 1;
 for (qw(open closed runed sealed))
 {
     $features{articled("large $_ door")} = 1;
     $features{articled("$_ gate")} = 1;
     $features{articled("huge $_ gate")} = 1;
+}
+for (qw(haloed liquefied umbraed), "disjunction haloed")
+{
+    $features{$_} = 1;
 }
 
 print join("\n", sort keys %features), "\n";

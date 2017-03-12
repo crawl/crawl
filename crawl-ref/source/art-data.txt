@@ -672,6 +672,7 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+INSCRIP:  +Fog
 PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief

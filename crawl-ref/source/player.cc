@@ -412,28 +412,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (you.ground_level())
     {
-        if (player_likes_lava(false))
-        {
-            if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
-            {
-                if (!stepped)
-                    noisy(4, you.pos(), "Gloop!");
-
-                mprf("You %s lava.",
-                     (stepped) ? "slowly immerse yourself in the" : "fall into the");
-
-                // Extra time if you stepped in.
-                if (stepped)
-                    you.time_taken *= 2;
-            }
-
-            else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
-            {
-                mpr("You slowly pull yourself out of the lava.");
-                you.time_taken *= 2;
-            }
-        }
-
         if (feat_is_water(new_grid))
         {
             if (!stepped)
@@ -441,12 +419,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
             if (!you.can_swim() && !you.can_water_walk())
             {
-                if (stepped)
-                {
-                    you.time_taken *= 13 + random2(8);
-                    you.time_taken /= 10;
-                }
-
                 if (!feat_is_water(old_feat))
                 {
                     mprf("You %s the %s water.",
@@ -542,7 +514,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
         return false;
     }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA && !player_likes_lava(permanently))
+             || grid == DNGN_LAVA)
     {
         return true;
     }
@@ -581,12 +553,6 @@ bool player_likes_water(bool permanently)
     return !permanently && you.can_water_walk()
            || (species_likes_water(you.species) || !permanently)
                && form_likes_water();
-}
-
-bool player_likes_lava(bool permanently)
-{
-    return (species_likes_lava(you.species) || !permanently)
-           && form_likes_lava();
 }
 
 /**
@@ -1932,6 +1898,10 @@ int player_movement_speed()
     else if (you.fishtail || you.form == transformation::hydra && you.in_water())
         mv = 6;
 
+    // Wading through water is very slow.
+    if (you.in_water() && !you.can_swim())
+        mv += 6;
+
     // moving on liquefied ground takes longer
     if (you.liquefied_ground())
         mv += 3;
@@ -2149,7 +2119,7 @@ static int _player_evasion_bonuses()
 
     // transformation penalties/bonuses not covered by size alone:
     if (player_mutation_level(MUT_SLOW_REFLEXES))
-        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 3;
+        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
     return evbonus;
 }
@@ -3337,7 +3307,6 @@ static void _display_movement_speed()
           (fly)     ? "flying"
                     : "movement",
 
-          (water && !swim)  ? "uncertain and " :
           (!water && swift) ? "aided by the wind" :
           (!water && antiswift) ? "hindered by the wind" : "",
 
@@ -5376,14 +5345,9 @@ bool player::in_water() const
     return ground_level() && !you.can_water_walk() && feat_is_water(grd(pos()));
 }
 
-bool player::in_lava() const
-{
-    return ground_level() && feat_is_lava(grd(pos()));
-}
-
 bool player::in_liquid() const
 {
-    return in_water() || in_lava() || liquefied_ground();
+    return in_water() || liquefied_ground();
 }
 
 bool player::can_swim(bool permanently) const
@@ -5985,7 +5949,7 @@ int player::base_ac(int scale) const
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;
               // +2, +3, +4
     AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
-          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;
+          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
               // +3, +6, +9
 
     return AC * scale / 100;
@@ -7488,25 +7452,44 @@ void player::sentinel_mark(bool trap)
     }
 }
 
-bool player::made_nervous_by(const coord_def &p)
+/*
+ * Is the player too terrified to move (because of fungusform)?
+ *
+ * @return true iff there is an alarming monster anywhere near a fungusform player.
+ */
+bool player::is_nervous()
 {
     if (form != transformation::fungus)
         return false;
-    monster* mons = monster_at(p);
-    if (mons && mons_is_threatening(*mons))
-        return false;
     for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (!mons_is_wandering(**mi)
-            && !mi->asleep()
-            && !mi->confused()
-            && !mi->cannot_act()
-            && mons_is_threatening(**mi)
-            && !mi->wont_attack()
-            && !mi->neutral())
-        {
+        if (made_nervous_by(*mi))
             return true;
-        }
+    }
+    return false;
+}
+
+/*
+ * Does monster `mons` make the player nervous (in fungusform)?
+ *
+ * @param mons  the monster to check
+ * @return      true iff mons is non-null, player is fungal, and `mons` is a threatening monster.
+ */
+bool player::made_nervous_by(const monster *mons)
+{
+    if (form != transformation::fungus)
+        return false;
+    if (!mons)
+        return false;
+    if (!mons_is_wandering(*mons)
+        && !mons->asleep()
+        && !mons->confused()
+        && !mons->cannot_act()
+        && mons_is_threatening(*mons)
+        && !mons->wont_attack()
+        && !mons->neutral())
+    {
+        return true;
     }
     return false;
 }

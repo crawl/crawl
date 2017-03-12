@@ -21,7 +21,6 @@ bool species_is_undead(species_type species);
 bool species_is_unbreathing(species_type species);
 bool species_can_swim(species_type species);
 bool species_likes_water(species_type species);
-bool species_likes_lava(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
 bool species_recommends_job(species_type species, job_type job);

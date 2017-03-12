@@ -141,6 +141,9 @@ void cursorxy(int x, int y)
 #endif
 
 #ifndef USE_TILE_LOCAL
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt(false); // Don't switch UI modes in cgotoxy.
+#endif
 #if defined(UNIX)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);

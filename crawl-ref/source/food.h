@@ -59,7 +59,7 @@ bool prompt_eat_item(int slot = -1);
 
 int you_max_hunger();
 int you_min_hunger();
-bool you_foodless(bool can_eat = false);
+bool you_foodless();
 // Is the player always foodless or just because of a temporary change?
 bool you_foodless_normally();
 

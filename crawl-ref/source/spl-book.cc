@@ -899,10 +899,3 @@ bool book_has_title(const item_def &book)
     return book.props.exists(BOOK_TITLED_KEY)
            && book.props[BOOK_TITLED_KEY].get_bool() == true;
 }
-
-void destroy_spellbook(const item_def &book)
-{
-    int maxlevel = 0;
-    for (spell_type stype : spells_in_book(book))
-        maxlevel = max(maxlevel, spell_difficulty(stype));
-}

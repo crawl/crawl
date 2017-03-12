@@ -77,6 +77,7 @@ debuglog.txt
 dolls.txt
 macro.txt
 init.txt.persist
+/source/test/stress/qw.rc.persist
 # Default output file for -edit-save
 chunk
 

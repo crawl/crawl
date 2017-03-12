@@ -938,7 +938,7 @@ void item_check()
 }
 
 // Identify the object the player stepped on.
-// Books and manuals are fully identified.
+// Books are fully identified.
 // Wands are only type-identified.
 static bool _id_floor_item(item_def &item)
 {
@@ -967,6 +967,7 @@ static bool _id_floor_item(item_def &item)
             return true;
         }
     }
+
     return false;
 }
 
@@ -2346,11 +2347,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 
     if (feat_destroys_items(grd(p)))
     {
-        if (item_is_spellbook(item))
-            destroy_spellbook(item);
-
         item_was_destroyed(item);
-
         return true;
     }
 

@@ -18,19 +18,6 @@
 
 mcache_manager mcache;
 
-// Used internally for streaming.
-enum mcache_type
-{
-    MCACHE_MONSTER,
-    MCACHE_DRACO,
-    MCACHE_GHOST,
-    MCACHE_DEMON,
-    MCACHE_MBEAST,
-    MCACHE_MAX,
-
-    MCACHE_nullptr,
-};
-
 struct demon_data
 {
     demon_data() { head = body = wings = 0; }

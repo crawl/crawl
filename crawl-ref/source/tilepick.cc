@@ -1438,20 +1438,20 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     }
 }
 
-enum main_dir
+enum class main_dir
 {
-    NORTH = 0,
-    EAST,
-    SOUTH,
-    WEST
+    north = 0,
+    east,
+    south,
+    west
 };
 
-enum tentacle_type
+enum class tentacle_type
 {
-    TYPE_KRAKEN = 0,
-    TYPE_ELDRITCH = 1,
-    TYPE_STARSPAWN = 2,
-    TYPE_VINE = 3
+    kraken = 0,
+    eldritch = 1,
+    starspawn = 2,
+    vine = 3
 };
 
 static void _add_tentacle_overlay(const coord_def pos,
@@ -1463,18 +1463,18 @@ static void _add_tentacle_overlay(const coord_def pos,
          #.
         we need to add corners to the floor tiles since the tentacle
         will otherwise look weird. So when placing the upper tentacle
-        tile, this function is called with dir WEST, so the upper
+        tile, this function is called with dir main_dir::west, so the upper
         floor tile gets a corner in the south-east; and similarly,
         when placing the lower tentacle tile, we get called with dir
-        EAST to give the lower floor tile a NW overlay.
+        main_dir::east to give the lower floor tile a NW overlay.
      */
     coord_def next = pos;
     switch (dir)
     {
-        case NORTH: next += coord_def( 0, -1); break;
-        case EAST:  next += coord_def( 1,  0); break;
-        case SOUTH: next += coord_def( 0,  1); break;
-        case WEST:  next += coord_def(-1,  0); break;
+        case main_dir::north: next += coord_def( 0, -1); break;
+        case main_dir::east:  next += coord_def( 1,  0); break;
+        case main_dir::south: next += coord_def( 0,  1); break;
+        case main_dir::west:  next += coord_def(-1,  0); break;
         default:
             die("invalid direction");
     }
@@ -1488,19 +1488,19 @@ static void _add_tentacle_overlay(const coord_def pos,
     tile_flags flag;
     switch (dir)
     {
-        case NORTH: flag = TILE_FLAG_TENTACLE_SW; break;
-        case EAST: flag = TILE_FLAG_TENTACLE_NW; break;
-        case SOUTH: flag = TILE_FLAG_TENTACLE_NE; break;
-        case WEST: flag = TILE_FLAG_TENTACLE_SE; break;
+        case main_dir::north: flag = TILE_FLAG_TENTACLE_SW; break;
+        case main_dir::east: flag = TILE_FLAG_TENTACLE_NW; break;
+        case main_dir::south: flag = TILE_FLAG_TENTACLE_NE; break;
+        case main_dir::west: flag = TILE_FLAG_TENTACLE_SE; break;
         default: die("invalid direction");
     }
     env.tile_bg(next_showpos) |= flag;
 
     switch (type)
     {
-        case TYPE_ELDRITCH: flag = TILE_FLAG_TENTACLE_ELDRITCH; break;
-        case TYPE_STARSPAWN: flag = TILE_FLAG_TENTACLE_STARSPAWN; break;
-        case TYPE_VINE: flag = TILE_FLAG_TENTACLE_VINE; break;
+        case tentacle_type::eldritch: flag = TILE_FLAG_TENTACLE_ELDRITCH; break;
+        case tentacle_type::starspawn: flag = TILE_FLAG_TENTACLE_STARSPAWN; break;
+        case tentacle_type::vine: flag = TILE_FLAG_TENTACLE_VINE; break;
         default: flag = TILE_FLAG_TENTACLE_KRAKEN;
     }
     env.tile_bg(next_showpos) |= flag;
@@ -1516,51 +1516,51 @@ static void _handle_tentacle_overlay(const coord_def pos,
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW:
-        _add_tentacle_overlay(pos, NORTH, type);
+        _add_tentacle_overlay(pos, main_dir::north, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE:
-        _add_tentacle_overlay(pos, EAST, type);
+        _add_tentacle_overlay(pos, main_dir::east, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE:
-        _add_tentacle_overlay(pos, SOUTH, type);
+        _add_tentacle_overlay(pos, main_dir::south, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW:
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW:
-        _add_tentacle_overlay(pos, WEST, type);
+        _add_tentacle_overlay(pos, main_dir::west, type);
         break;
     // diagonals
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE:
-        _add_tentacle_overlay(pos, NORTH, type);
-        _add_tentacle_overlay(pos, SOUTH, type);
+        _add_tentacle_overlay(pos, main_dir::north, type);
+        _add_tentacle_overlay(pos, main_dir::south, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW:
-        _add_tentacle_overlay(pos, EAST, type);
-        _add_tentacle_overlay(pos, WEST, type);
+        _add_tentacle_overlay(pos, main_dir::east, type);
+        _add_tentacle_overlay(pos, main_dir::west, type);
         break;
     // other
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW:
-        _add_tentacle_overlay(pos, NORTH, type);
-        _add_tentacle_overlay(pos, EAST, type);
+        _add_tentacle_overlay(pos, main_dir::north, type);
+        _add_tentacle_overlay(pos, main_dir::east, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE:
-        _add_tentacle_overlay(pos, EAST, type);
-        _add_tentacle_overlay(pos, SOUTH, type);
+        _add_tentacle_overlay(pos, main_dir::east, type);
+        _add_tentacle_overlay(pos, main_dir::south, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW:
-        _add_tentacle_overlay(pos, SOUTH, type);
-        _add_tentacle_overlay(pos, WEST, type);
+        _add_tentacle_overlay(pos, main_dir::south, type);
+        _add_tentacle_overlay(pos, main_dir::west, type);
         break;
     case TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW:
-        _add_tentacle_overlay(pos, NORTH, type);
-        _add_tentacle_overlay(pos, WEST, type);
+        _add_tentacle_overlay(pos, main_dir::north, type);
+        _add_tentacle_overlay(pos, main_dir::west, type);
         break;
     }
 }
@@ -1571,20 +1571,20 @@ static tentacle_type _get_tentacle_type(const int mtype)
     {
         case MONS_KRAKEN_TENTACLE:
         case MONS_KRAKEN_TENTACLE_SEGMENT:
-            return TYPE_KRAKEN;
+            return tentacle_type::kraken;
         case MONS_ELDRITCH_TENTACLE:
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
-            return TYPE_ELDRITCH;
+            return tentacle_type::eldritch;
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
-            return TYPE_STARSPAWN;
+            return tentacle_type::starspawn;
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
-            return TYPE_VINE;
+            return tentacle_type::vine;
 
         default:
             die("Invalid tentacle type!");
-            return TYPE_KRAKEN; // Silence a warning
+            return tentacle_type::kraken; // Silence a warning
     }
 }
 
@@ -3245,6 +3245,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_FLIGHT;
     case ABIL_EVOKE_FOG:
         return TILEG_ABILITY_EVOKE_FOG;
+    case ABIL_EVOKE_RATSKIN:
+        return TILEG_ABILITY_EVOKE_RATSKIN;
 
     // Divine abilities
     // Zin

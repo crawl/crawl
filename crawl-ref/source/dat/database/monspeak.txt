@@ -1854,10 +1854,6 @@ end
 ############ BAI SUZHEN ### Dragon-lady of famed tragic folklore
 Bai Suzhen
 
-@Bai Suzhen@
-%%%%
-Bai Suzhen
-
 @_Bai_Suzhen_common_@
 
 w:6
@@ -3496,6 +3492,55 @@ w:50
 @The_monster@ says, "Bet you can't [analyse|invent] your way out of this one."
 
 @The_monster@ says, "Can I borrow that [wand|lamp|fan] for a second? You must have some to spare."
+%%%%
+Hepliaklqana Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I went to a family reunion once. I hated it."
+
+@The_monster@ says, "Who would want to remember their ancestors? They're dead."
+
+@The_monster@ says, "If your ancestor was so tough and powerful, how come they're dead?"
+
+@The_monster@ says, "Would you happen to remember where the Orb is?"
+
+@The_monster@ says, "Ghost stories? Ooh, I'm so scared!"
+%%%%
+Uskayaw Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Dance? No thanks, I don't dance."
+
+@The_monster@ says, "I hate drums."
+
+@The_monster@ says, "I hate chants."
+
+@The_monster@ says, "Poetry of the foot? All you're doing is stomping around."
+
+@The_monster@ says, "You look ridiculous with all that flailing around."
+%%%%
+Wu Jian Council Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Path? I don't see a path anywhere."
+
+@The_monster@ says, "You're jumping off the walls? I hate that."
+
+@The_monster@ says, "Watching you spin around is making me dizzy. I hate that."
+
+@The_monster@ says, "Why not just HIT them without all this spinning and flipping nonsense?"
+
+@The_monster@ says, "Don't you get tired of all these old geezers telling you what to do?"
+
+@The_monster@ says, "Heaven on Earth? Sounds overrated."
+
+@The_monster@ says, "No way as a way? Sounds like nonsense."
 %%%%
 No God Donald
 
@@ -5446,11 +5491,11 @@ _Pikel_rare_
 
 VISUAL:@The_monster@ waves a pair of manacles at you. @player_only@
 
-@The_monster@ says @to_foe@, "Why not give it a go? You'll get fed. Maybe."
+@The_monster@ says @to_foe@, "Why not give up? You'll get fed. Maybe."
 
 @The_monster@ says, "Who am I kidding? They'll work you to death!"
 
-@The_monster@ says @to_foe@, "You strike me more as a bedroom slave."
+@The_monster@ says @to_foe@, "You will build my throne, and die beneath it!"
 
 # Greedy Pikel
 VISUAL:@The_monster@ checks @possessive@ coin pouch and frowns.
@@ -5467,10 +5512,21 @@ VISUAL:@The_monster@ checks @possessive@ coin pouch and frowns.
 
 VISUAL:@The_monster@ scowls and wipes @possessive@ hands on @possessive@ robe.
 
-# Kinky Pikel
-@The_monster@ says @to_foe@, "I'm sure you'll love being tied up!"
+# Collect-them-all Pikel
+@The_monster@ says @to_foe@, "Wow, you'd add a bit of variety to my gang!"
 
-@The_monster@ sighs. "I should go into elves; they're easier to handle. And prettier!"
+@The_monster@ sighs. "I should capture elves; my bodyguards all look the same!"
+
+@The_monster@ smiles. "{{
+    if you.race() == "Felid" then
+        return "I've always wanted a ferocious, fluffy guard-beast"
+    elseif you.race() == "Octopode" then
+        return "I have the most extravagant aquarium just for exotic specimens"
+    else
+        return "I know this place well. And it is filled with the corpses of daring fools"
+    end
+}} like you! Won't you join me?"
+
 %%%%
 ############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
