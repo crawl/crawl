@@ -232,7 +232,7 @@ struct failure_info
             return base_chance - sk_mod - piety_mod;
         }
         default:
-            die("unknown failure basis %d!", basis);
+            die("unknown failure basis %d!", (int)basis);
         }
     }
 
