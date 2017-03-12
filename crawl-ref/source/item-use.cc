@@ -494,6 +494,17 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return true;
     }
 
+    // Switching weapons while berserk is usually a waste of time.
+    if (you.berserk())
+    {
+        string prompt = "Really switch weapons while berserk?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
@@ -547,6 +558,18 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     }
 
     item_def& new_wpn(you.inv[item_slot]);
+
+    // Switching to a launcher while berserk is almost certainly a mistake.
+    // They've already gone through the first prompt but just to make sure...
+    if (you.berserk() && is_range_weapon(new_wpn))
+    {
+        string prompt = "You can't shoot while berserk! Are you sure about this?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
 
     // Ensure wieldable
     if (!can_wield(&new_wpn, true))
