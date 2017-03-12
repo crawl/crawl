@@ -210,9 +210,7 @@ sub godspeak_keys()
         $keys{"$_ penance"}=1;
         $keys{"$_ prayer"}=1;
     }
-    $keys{"Beogh idol $_"}=1 for qw(follower orc other);
-    $keys{$_}=1 for ("the Shining One holy evil", "the Shining One holy other",
-                     "Elyvilon holy", "recite_closure");
+    $keys{$_}=1 for ("Pakellas death", "recite_closure");
     return keys %keys;
 }
 __________________________________________________________________________();
