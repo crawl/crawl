@@ -394,23 +394,9 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
-    // Most spells are blocked by transparent walls.
-    // XXX: deduplicate this with the other two? smitey spell lists
+    // All spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
-    {
-        switch (spell)
-        {
-        case SPELL_CALL_DOWN_DAMNATION:
-        case SPELL_SMITING:
-        case SPELL_HAUNT:
-        case SPELL_FIRE_STORM:
-        case SPELL_AIRSTRIKE:
-            break;
-
-        default:
-            return false;
-        }
-    }
+        return false;
 
     const bool helpful = flags & SPFLAG_HELPFUL;
 
