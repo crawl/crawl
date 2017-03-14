@@ -3268,17 +3268,17 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
 {
-    if (mons_is_sensed(mi.type) || mons_is_projectile(mi.type))
-        return "";
-
     ostringstream result;
 
-    _describe_monster_hp(mi, result);
-    _describe_monster_ac(mi, result);
-    _describe_monster_ev(mi, result);
-    _describe_monster_mr(mi, result);
+    if (!mons_is_sensed(mi.type))
+    {
+        _describe_monster_hp(mi, result);
+        _describe_monster_ac(mi, result);
+        _describe_monster_ev(mi, result);
+        _describe_monster_mr(mi, result);
 
-    result << "\n";
+        result << "\n";
+    }
 
     resists_t resist = mi.resists();
 
@@ -3369,12 +3369,6 @@ static string _monster_stat_description(const monster_info& mi)
                << ".\n";
     }
 
-    if (mi.is(MB_CHAOTIC))
-    {
-        result << uppercase_first(pronoun) << " is vulnerable to silver and"
-                                              " hated by Zin.\n";
-    }
-
     if (mons_class_flag(mi.type, M_STATIONARY)
         && !mons_is_tentacle_or_tentacle_segment(mi.type))
     {
@@ -3400,16 +3394,6 @@ static string _monster_stat_description(const monster_info& mi)
     // Might be better to have some place where players can see holiness &
     // information about holiness.......?
 
-    if (mi.intel() <= I_BRAINLESS)
-    {
-        // Matters for Ely.
-        result << uppercase_first(pronoun) << " is mindless.\n";
-    }
-    else if (mi.intel() >= I_HUMAN)
-    {
-        // Matters for Yred, Gozag, Zin, TSO, Alistair....
-        result << uppercase_first(pronoun) << " is intelligent.\n";
-    }
 
     // Unusual monster speed.
     const int speed = mi.base_speed();
@@ -3515,33 +3499,6 @@ static string _monster_stat_description(const monster_info& mi)
     {
         result << uppercase_first(pronoun) << " is "
         << sizes[mi.body_size()] << ".\n";
-    }
-
-    if (in_good_standing(GOD_ZIN, 0))
-    {
-        const int check = mi.hd - zin_recite_power();
-        if (check >= 0)
-        {
-            result << uppercase_first(pronoun) << " is too strong to be"
-                                                  " recited to.";
-        }
-        else if (check >= -5)
-        {
-            result << uppercase_first(pronoun) << " may be too strong to be"
-                                                  " recited to.";
-        }
-        else
-        {
-            result << uppercase_first(pronoun) << " is weak enough to be"
-                                                  " recited to.";
-        }
-
-        if (you.wizard)
-        {
-            result << " (Recite power:" << zin_recite_power()
-                   << ", Hit dice:" << mi.hd << ")";
-        }
-        result << "\n";
     }
 
     result << _monster_attacks_description(mi);
@@ -3736,6 +3693,38 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     {
         inf.body << It << " is incapable of using stairs.\n";
         stair_use = true;
+    }
+
+    if (mi.intel() <= I_BRAINLESS)
+    {
+        // Matters for Ely.
+        inf.body << It << " is mindless.\n";
+    }
+    else if (mi.intel() >= I_HUMAN)
+    {
+        // Matters for Yred, Gozag, Zin, TSO, Alistair....
+        inf.body << It << " is intelligent.\n";
+    }
+
+    if (mi.is(MB_CHAOTIC))
+        inf.body << It << " is vulnerable to silver and hated by Zin.\n";
+
+    if (in_good_standing(GOD_ZIN, 0))
+    {
+        const int check = mi.hd - zin_recite_power();
+        if (check >= 0)
+            inf.body << It << " is too strong to be recited to.";
+        else if (check >= -5)
+            inf.body << It << " may be too strong to be recited to.";
+        else
+            inf.body << It << " is weak enough to be recited to.";
+
+        if (you.wizard)
+        {
+            inf.body << " (Recite power:" << zin_recite_power()
+                     << ", Hit dice:" << mi.hd << ")";
+        }
+        inf.body << "\n";
     }
 
     if (mi.is(MB_SUMMONED))
