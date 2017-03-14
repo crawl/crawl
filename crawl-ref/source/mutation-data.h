@@ -1913,7 +1913,7 @@ static const mutation_def mut_data[] =
   "tele becomes blink",
 
   {"Whenever you would teleport, you blink instead.", "", ""},
-  {"You are afraid to teleport.", "", ""},
-  {"You feel confident about teleportation.", "", ""},
+  {"You feel unable to teleport farther than you can see.", "", ""},
+  {"You feel confident that you can teleport normally.", "", ""},
 },
 };
