@@ -1483,9 +1483,15 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     cell->flash_colour = BLACK;
 
-    // is this cell excluded from movement by mesmerise-related statuses?
+    // Don't hide important information by recolouring monsters.
+    bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
+        return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
+    });
+
+    // Is this cell excluded from movement by mesmerise-related statuses?
     // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
-    bool mesmerise_excluded = ((gc != you.pos()) // for fungus form
+    bool mesmerise_excluded = (gc != you.pos() // for fungus form
+                               && allow_mon_recolour
                                && map_bounds(gc)
                                && you.on_current_level
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
@@ -1500,12 +1506,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         else
             cell->colour = real_colour(flash_colour);
 #else
-        else if (gc != you.pos())
-        {
-            monster_type mons = env.map_knowledge(gc).monster();
-            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
-                cell->colour = real_colour(flash_colour);
-        }
+        else if (gc != you.pos() && allow_mon_recolour)
+            cell->colour = real_colour(flash_colour);
 #endif
         cell->flash_colour = cell->colour;
     }
