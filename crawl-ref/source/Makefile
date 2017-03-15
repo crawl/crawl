@@ -1018,7 +1018,7 @@ ifeq ($(strip $(YACC)),)
 NO_YACC = YesPlease
 endif
 
-ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifneq ($(findstring s,$(MAKEFLAGS)),s)
 ifndef V
         QUIET_CC       = @echo '   ' CC $@;
         QUIET_CXX      = @echo '   ' CXX $@;
