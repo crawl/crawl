@@ -3,7 +3,8 @@
 #include <set>
 #include <memory> // unique_ptr
 
-#include "map-knowledge.h"
+#include "coord.h"
+#include "map-cell.h"
 #include "monster.h"
 #include "trap-def.h"
 

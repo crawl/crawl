@@ -22,6 +22,7 @@
 #include "fprop.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "options.h"
 #include "output.h"

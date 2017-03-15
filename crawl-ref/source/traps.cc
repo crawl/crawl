@@ -29,6 +29,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "mon-enum.h"
 #include "mon-tentacle.h"
 #include "mgen-enum.h"
