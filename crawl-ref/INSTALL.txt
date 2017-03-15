@@ -195,6 +195,10 @@ Building:
   and DATADIR to share/crawl (relative to the prefix). SAVEDIR must be
   writeable and owned by the user running crawl, so except for special cases it
   should be inside "~" (home directory).
+  
+* To be specific, specifying a prefix means adding "prefix=foldername" to your
+  'make' command. Specifying a prefix is not mutually exclusive with specifying
+  a SAVEDIR; you can set them to completely unrelated directories if desired.
 
 * If you're installing Crawl for multiple users, run 'make install' as root.
   Crawl will be copied into the directory specified by 'prefix' (see above).
