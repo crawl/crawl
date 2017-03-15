@@ -313,12 +313,6 @@ bool can_wield(const item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
-    if (!ignore_temporary_disability && you.berserk())
-    {
-        SAY(canned_msg(MSG_TOO_BERSERK));
-        return false;
-    }
-
     if (you.melded[EQ_WEAPON] && unwield)
     {
         SAY(mpr("Your weapon is melded into your body!"));
@@ -553,6 +547,18 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     }
 
     item_def& new_wpn(you.inv[item_slot]);
+
+    // Switching to a launcher while berserk is likely a mistake.
+    if (you.berserk() && is_range_weapon(new_wpn))
+    {
+        string prompt = "You can't shoot while berserk! Really wield " +
+                        new_wpn.name(DESC_INVENTORY) + "?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
 
     // Ensure wieldable
     if (!can_wield(&new_wpn, true))
