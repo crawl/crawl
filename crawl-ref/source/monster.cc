@@ -2124,10 +2124,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
 {
     const bool msg = tobool(maybe_msg, observable());
 
-    // Don't let them swap weapons if berserk. ("You are too berserk!")
-    if (berserk())
-        return;
-
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
