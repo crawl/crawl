@@ -163,3 +163,7 @@ salt cloud
 A cloud of rapidly whirling dust and salt. It stings the eyes and skin of any
 creatures caught within, although it is ultimately harmless.
 %%%%
+golden dust cloud
+
+A cloud of shimmering golden dust. While within it, followers of the Council
+gain tremendous strength in combat.
