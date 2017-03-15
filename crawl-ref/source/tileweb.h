@@ -10,6 +10,8 @@
 #include <sys/un.h>
 
 #include "cursor-type.h"
+#include "equipment-type.h"
+#include "map-cell.h"
 #include "map-knowledge.h"
 #include "status.h"
 #include "text-tag-type.h"
