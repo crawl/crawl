@@ -176,6 +176,9 @@ Building:
   need to read any further. BSD and Solaris users may have to use 'gmake'
   instead of 'make'.
 
+* For information Makefile settings beyond what is here, see the documentation
+  in comments in the Makefile itself.
+
 * If you want a graphical (tiled) build, then you should add 'TILES=y' to the
   'make' command-line, like so:
 
