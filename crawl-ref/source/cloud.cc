@@ -23,6 +23,7 @@
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-behv.h"

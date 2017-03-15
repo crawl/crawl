@@ -795,6 +795,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\luaterp.h" />
     <ClInclude Include="..\macro.h" />
     <ClInclude Include="..\makeitem.h" />
+    <ClInclude Include="..\map-cell.h" />
     <ClInclude Include="..\map-feature.h" />
     <ClInclude Include="..\map-knowledge.h" />
     <ClInclude Include="..\map-marker-type.h" />

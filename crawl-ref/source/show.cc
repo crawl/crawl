@@ -17,6 +17,7 @@
 #include "item-prop.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mon-place.h"
 #include "options.h"
 #include "state.h"
