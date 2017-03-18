@@ -1543,8 +1543,11 @@ void wu_jian_heaven_tick()
     else
         you.attribute[ATTR_HEAVEN_ON_EARTH] -= 10;
 
-    for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
-        big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
+    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+    {
+        if (!cell_is_solid(*ai))
+            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+    }
 
     noisy(15, you.pos());
 

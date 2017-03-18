@@ -3122,10 +3122,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
         fail_check();
-        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds! You feel the urge to strike!");
-        wu_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
-        for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
-            big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
+        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
+        wu_jian_sifu_message(" says: The storm will not cease as long as you "
+                             "keep fighting, disciple!");
+
+        for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+        {
+            if (!cell_is_solid(*ai))
+                place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+        }
+
         you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
         you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
