@@ -1562,8 +1562,8 @@ void end_heaven_on_earth()
 
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 {
-    if (attack_type == WU_JIAN_ATTACK_NONE ||
-        attack_type == WU_JIAN_ATTACK_TRIGGERED_AUX)
+    if (attack_type == WU_JIAN_ATTACK_NONE
+        || attack_type == WU_JIAN_ATTACK_TRIGGERED_AUX)
     {
         return false;
     }
@@ -1675,6 +1675,7 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
 
         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
         you.apply_berserk_penalty = false;
 
         const int number_of_attacks = _wu_jian_number_of_attacks();
@@ -1684,32 +1685,19 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
                  "a blow to land.", mons->name(DESC_THE).c_str());
             continue;
         }
-
-        if (number_of_attacks > 1)
-        {
-            if (wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND))
-            {
-               mprf("You spin and attack %s repeatedly with incredible momentum!",
-                    mons->name(DESC_THE).c_str());
-            }
-            else
-               mprf("You spin and attack %s repeatedly!", mons->name(DESC_THE).c_str());
-        }
         else
         {
-            if (wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND))
-            {
-               mprf("You spin and attack %s with incredible momentum!",
-                    mons->name(DESC_THE).c_str());
-            }
-            else
-               mprf("You spin and attack %s.", mons->name(DESC_THE).c_str());
+            mprf("You spin and attack %s%s%s.",
+                 mons->name(DESC_THE).c_str(),
+                 number_of_attacks > 1 ? " repeatedly" : "",
+                 wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
+                     " with incredible momentum" : "");
         }
 
         for (int i = 0; i < number_of_attacks; i++)
         {
             if (!mons->alive())
-               break;
+                break;
             melee_attack whirlwind(&you, mons);
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
@@ -1798,55 +1786,37 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (!target->alive())
             continue;
 
-         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
         you.apply_berserk_penalty = false;
 
-         const int number_of_attacks = _wu_jian_number_of_attacks();
-         if (number_of_attacks == 0)
-         {
-             mprf("You attack %s from above, but your attack speed is too slow"
-                  " for a blow to land.", target->name(DESC_THE).c_str());
-             continue;
-         }
+        const int number_of_attacks = _wu_jian_number_of_attacks();
+        if (number_of_attacks == 0)
+        {
+            mprf("You attack %s from above, but your attack speed is too slow"
+                 " for a blow to land.", target->name(DESC_THE).c_str());
+            continue;
+        }
+        else
+        {
+            mprf("You %sattack %s from above%s.",
+                 number_of_attacks > 1 ? "repeatedly " : "",
+                 target->name(DESC_THE).c_str(),
+                 wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
+                     " with incredible momentum" : "");
+        }
 
-         if (number_of_attacks > 1)
-         {
-             if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-             {
-                mprf("You repeatedly attack %s from above with incredible momentum!",
-                     target->name(DESC_THE).c_str());
-             }
-             else
-             {
-                mprf("You repeatedly attack %s from above!",
-                     target->name(DESC_THE).c_str());
-             }
-         }
-         else
-         {
-             if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-             {
-                mprf("You attack %s from above with incredible momentum!",
-                     target->name(DESC_THE).c_str());
-             }
-             else
-             {
-                mprf("You attack %s from above.",
-                     target->name(DESC_THE).c_str());
-             }
-         }
-
-         for (int i = 0; i < number_of_attacks; i++)
-         {
-             if (!target->alive())
+        for (int i = 0; i < number_of_attacks; i++)
+        {
+            if (!target->alive())
                 break;
 
-             melee_attack aerial(&you, target);
-             aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
-             aerial.wu_jian_number_of_targets = targets.size();
-             aerial.attack();
-         }
+            melee_attack aerial(&you, target);
+            aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
+            aerial.wu_jian_number_of_targets = targets.size();
+            aerial.attack();
+        }
     }
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
