@@ -1826,7 +1826,8 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (mon && mon->alive()
             && you.can_see(*mon)
             && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon))
+            && !_dont_attack_martial(mon)
+            && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
         {
             const int distract_chance
                 = _walljump_distract_chance(mon->get_hit_dice());
@@ -1838,19 +1839,15 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
                 continue;
 
             if (mon->holiness() == MH_NONLIVING)
-               simple_monster_message(*mon, " loses track of your position.");
+                simple_monster_message(*mon, " loses track of your position.");
             else
-               simple_monster_message(*mon, " is distracted by your jump.");
+                simple_monster_message(*mon, " is distracted by your jump.");
 
             mon->add_ench(
                 mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
-                            random_range(2, 4) * BASELINE_DELAY));
+                            random_range(3, 5) * BASELINE_DELAY));
             mon->foe = MHITNOT;
             mon->target = mon->pos();
-            const int non_move_energy = min(entry->energy_usage.move,
-                                            entry->energy_usage.swim);
-
-            mon->speed_increment -= non_move_energy;
         }
     }
 }
