@@ -1750,11 +1750,23 @@ bool wu_jian_can_wall_jump(const coord_def& target)
         || !you.is_habitable(wall_jump_landing_spot)
         || landing_actor)
     {
-        mprf("You have no room to wall jump.");
+        mpr("You have no room to wall jump.");
         return false;
     }
 
-    return true;
+    for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && !_dont_attack_martial(mon) && mon->alive())
+            return true;
+    }
+
+    mpr("There is no target in range.");
+    targeter_walljump range;
+    range.set_aim(wall_jump_landing_spot);
+    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+
+    return false;
 }
 
 /// Percent chance for an WJC walljump to distract a target of the given HD.
@@ -1775,7 +1787,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
     {
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
-           targets.push_back(target);
+            targets.push_back(target);
 
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
