@@ -194,7 +194,7 @@ static const vector<god_passive> god_passives[] =
     // Vehumet
     {
         { -1, passive_t::mp_on_kill,
-              "have a chance to gain mana when you kill" },
+              "have a chance to gain magical power from killing" },
         {  3, passive_t::spells_success,
               "are NOW less likely to miscast destructive spells" },
         {  4, passive_t::spells_range,
@@ -284,7 +284,7 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW protects you from corrosion" },
         {  4, passive_t::slime_mp,
               "Items consumed by your fellow slimes NOW restore"
-              " your mana reserve"
+              " your magical power"
         },
         {  5, passive_t::slime_hp,
               "Items consumed by your fellow slimes NOW restore"
@@ -392,8 +392,9 @@ static const vector<god_passive> god_passives[] =
     // Pakellas
     {
         { -1, passive_t::no_mp_regen,
-              "GOD NOW prevents you from regenerating your mana reserve" },
-        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
+              "GOD NOW prevents you from regenerating your magical power" },
+        { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
+                                     " killing" },
         {  0, passive_t::identify_devices, "GOD NOW identifies your wands" },
         {  1, passive_t::bottle_mp,
               "GOD NOW collects and distills excess magic from your kills"

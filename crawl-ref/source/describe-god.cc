@@ -866,8 +866,8 @@ static void _describe_god_powers(god_type which_god)
         else
             textcolour(DARKGREY);
         cprintf("You gain nutrition%s when your fellow slimes consume items.\n",
-                have_passive(passive_t::slime_hp) ? ", power and health" :
-                have_passive(passive_t::slime_mp) ? " and power" :
+                have_passive(passive_t::slime_hp) ? ", magic and health" :
+                have_passive(passive_t::slime_mp) ? " and magic" :
                                                     "");
         break;
 
