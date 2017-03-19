@@ -3244,7 +3244,7 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
 
 // dummy for recolouring
 {
-    MONS_BARACHIAN, 'F', LIGHTCYAN, "barachian",
+    MONS_BARACHIAN, 'F', LIGHTCYAN, "barachi",
     M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     10, MONS_FROG, MONS_BARACHIAN, MH_NATURAL, 10,

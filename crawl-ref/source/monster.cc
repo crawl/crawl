@@ -2124,10 +2124,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
 {
     const bool msg = tobool(maybe_msg, observable());
 
-    // Don't let them swap weapons if berserk. ("You are too berserk!")
-    if (berserk())
-        return;
-
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
@@ -5702,7 +5698,7 @@ int monster::action_energy(energy_use_type et) const
     }
 
     if (has_ench(ENCH_SWIFT))
-        move_cost -= 2;
+        move_cost -= 3;
 
     if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
         move_cost += 1;

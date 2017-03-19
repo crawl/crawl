@@ -142,7 +142,6 @@ private:
     string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
-    void player_strike_pressure_points(monster* mons);
     void _defender_die();
     bool defender_wjc_distracted() const;
 

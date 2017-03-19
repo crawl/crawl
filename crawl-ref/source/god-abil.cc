@@ -723,7 +723,7 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
 int zin_recite_power()
 {
     // Resistance is now based on HD.
-    // You can affect up to (30+30)/2 = 30 'power' (HD).
+    // Anything at or above (30+30)/2 = 30 'power' (HD) is completely immune.
     const int power_mult = 10;
     const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
                            + 3 * power_mult;
@@ -811,23 +811,23 @@ int zin_check_recite_to_monsters(bool quiet)
         return 1; // We just recite against everything.
 }
 
-enum zin_eff
+enum class zin_eff
 {
-    ZIN_NOTHING,
-    ZIN_DAZE,
-    ZIN_CONFUSE,
-    ZIN_PARALYSE,
-    ZIN_SMITE,
-    ZIN_BLIND,
-    ZIN_SILVER_CORONA,
-    ZIN_ANTIMAGIC,
-    ZIN_MUTE,
-    ZIN_MAD,
-    ZIN_DUMB,
-    ZIN_IGNITE_CHAOS,
-    ZIN_SALTIFY,
-    ZIN_ROT,
-    ZIN_HOLY_WORD,
+    nothing,
+    daze,
+    confuse,
+    paralyse,
+    smite,
+    blind,
+    silver_corona,
+    antimagic,
+    mute,
+    mad,
+    dumb,
+    ignite_chaos,
+    saltify,
+    rot,
+    holy_word,
 };
 
 bool zin_recite_to_single_monster(const coord_def& where)
@@ -885,7 +885,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     const int degree = eligibility[prayertype];
     const bool minor = degree <= (prayertype == RECITE_HERETIC ? 2 : 1);
     const int spellpower = power * 2 + degree * 20;
-    zin_eff effect = ZIN_NOTHING;
+    zin_eff effect = zin_eff::nothing;
 
     switch (prayertype)
     {
@@ -902,22 +902,22 @@ bool zin_recite_to_single_monster(const coord_def& where)
             // This branch can't hit sleeping monsters - until they wake up.
 
             if (check < 5)
-                effect = ZIN_DAZE;
+                effect = zin_eff::daze;
             else if (check < 10)
             {
                 if (coinflip())
-                    effect = ZIN_CONFUSE;
+                    effect = zin_eff::confuse;
                 else
-                    effect = ZIN_DAZE;
+                    effect = zin_eff::daze;
             }
             else if (check < 15)
-                effect = ZIN_CONFUSE;
+                effect = zin_eff::confuse;
             else
             {
                 if (one_chance_in(3))
-                    effect = ZIN_PARALYSE;
+                    effect = zin_eff::paralyse;
                 else
-                    effect = ZIN_CONFUSE;
+                    effect = zin_eff::confuse;
             }
         }
         else
@@ -928,34 +928,34 @@ bool zin_recite_to_single_monster(const coord_def& where)
             if (check < 5)
             {
                 if (coinflip())
-                    effect = ZIN_CONFUSE;
+                    effect = zin_eff::confuse;
                 else
-                    effect = ZIN_SMITE;
+                    effect = zin_eff::smite;
             }
             else if (check < 10)
             {
                 if (one_chance_in(3))
-                    effect = ZIN_BLIND;
+                    effect = zin_eff::blind;
                 else if (mon->antimagic_susceptible())
-                    effect = ZIN_ANTIMAGIC;
+                    effect = zin_eff::antimagic;
                 else
-                    effect = ZIN_SILVER_CORONA;
+                    effect = zin_eff::silver_corona;
             }
             else if (check < 15)
             {
                 if (one_chance_in(3))
-                    effect = ZIN_BLIND;
+                    effect = zin_eff::blind;
                 else if (coinflip())
-                    effect = ZIN_PARALYSE;
+                    effect = zin_eff::paralyse;
                 else
-                    effect = ZIN_MUTE;
+                    effect = zin_eff::mute;
             }
             else
             {
                 if (coinflip())
-                    effect = ZIN_MAD;
+                    effect = zin_eff::mad;
                 else
-                    effect = ZIN_DUMB;
+                    effect = zin_eff::dumb;
             }
         }
         break;
@@ -965,26 +965,26 @@ bool zin_recite_to_single_monster(const coord_def& where)
         {
             // nastier -- fallthrough if immune
             if (coinflip() && mon->res_rotting() <= 1)
-                effect = ZIN_ROT;
+                effect = zin_eff::rot;
             else
-                effect = ZIN_SMITE;
+                effect = zin_eff::smite;
         }
         else if (check < 10)
         {
             if (coinflip())
-                effect = ZIN_SILVER_CORONA;
+                effect = zin_eff::silver_corona;
             else
-                effect = ZIN_SMITE;
+                effect = zin_eff::smite;
         }
         else if (check < 15)
         {
             if (coinflip())
-                effect = ZIN_IGNITE_CHAOS;
+                effect = zin_eff::ignite_chaos;
             else
-                effect = ZIN_SILVER_CORONA;
+                effect = zin_eff::silver_corona;
         }
         else
-            effect = ZIN_SALTIFY;
+            effect = zin_eff::saltify;
         break;
 
     case RECITE_IMPURE:
@@ -994,54 +994,54 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (check < 5)
         {
             if (coinflip() && mon->res_rotting() <= 1)
-                effect = ZIN_ROT;
+                effect = zin_eff::rot;
             else
-                effect = ZIN_SMITE;
+                effect = zin_eff::smite;
         }
         else if (check < 10)
         {
             if (coinflip())
-                effect = ZIN_SMITE;
+                effect = zin_eff::smite;
             else
-                effect = ZIN_SILVER_CORONA;
+                effect = zin_eff::silver_corona;
         }
         else if (check < 15)
         {
             if (mon->undead_or_demonic() && coinflip())
-                effect = ZIN_HOLY_WORD;
+                effect = zin_eff::holy_word;
             else
-                effect = ZIN_SILVER_CORONA;
+                effect = zin_eff::silver_corona;
         }
         else
-            effect = ZIN_SALTIFY;
+            effect = zin_eff::saltify;
         break;
 
     case RECITE_UNHOLY:
         if (check < 5)
         {
             if (coinflip())
-                effect = ZIN_DAZE;
+                effect = zin_eff::daze;
             else
-                effect = ZIN_CONFUSE;
+                effect = zin_eff::confuse;
         }
         else if (check < 10)
         {
             if (coinflip())
-                effect = ZIN_CONFUSE;
+                effect = zin_eff::confuse;
             else
-                effect = ZIN_SILVER_CORONA;
+                effect = zin_eff::silver_corona;
         }
         // Half of the time, the anti-unholy prayer will be capped at this
         // level of effect.
         else if (check < 15 || coinflip())
         {
             if (coinflip())
-                effect = ZIN_HOLY_WORD;
+                effect = zin_eff::holy_word;
             else
-                effect = ZIN_SILVER_CORONA;
+                effect = zin_eff::silver_corona;
         }
         else
-            effect = ZIN_SALTIFY;
+            effect = zin_eff::saltify;
         break;
 
     case NUM_RECITE_TYPES:
@@ -1051,10 +1051,10 @@ bool zin_recite_to_single_monster(const coord_def& where)
     // And the actual effects...
     switch (effect)
     {
-    case ZIN_NOTHING:
+    case zin_eff::nothing:
         break;
 
-    case ZIN_DAZE:
+    case zin_eff::daze:
         if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -1063,7 +1063,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_CONFUSE:
+    case zin_eff::confuse:
         if (!mon->check_clarity(false)
             && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
@@ -1076,7 +1076,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_PARALYSE:
+    case zin_eff::paralyse:
         if (mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -1087,7 +1087,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_SMITE:
+    case zin_eff::smite:
         if (minor)
             simple_monster_message(*mon, " is smitten by the wrath of Zin.");
         else
@@ -1099,7 +1099,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         affected = true;
         break;
 
-    case ZIN_BLIND:
+    case zin_eff::blind:
         if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is struck blind by the wrath of Zin!");
@@ -1107,7 +1107,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_SILVER_CORONA:
+    case zin_eff::silver_corona:
         if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -1116,7 +1116,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_ANTIMAGIC:
+    case zin_eff::antimagic:
         ASSERT(prayertype == RECITE_HERETIC);
         if (mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
@@ -1128,7 +1128,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_MUTE:
+    case zin_eff::mute:
         if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is struck mute by the wrath of Zin!");
@@ -1136,7 +1136,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_MAD:
+    case zin_eff::mad:
         if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is driven mad by the wrath of Zin!");
@@ -1144,7 +1144,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_DUMB:
+    case zin_eff::dumb:
         if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(*mon, " is left stupefied by the wrath of Zin!");
@@ -1152,7 +1152,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_IGNITE_CHAOS:
+    case zin_eff::ignite_chaos:
         ASSERT(prayertype == RECITE_CHAOTIC);
         {
             bolt beam;
@@ -1186,11 +1186,11 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_SALTIFY:
+    case zin_eff::saltify:
         _zin_saltify(mon);
         break;
 
-    case ZIN_ROT:
+    case zin_eff::rot:
         // FIXME: no message (other than "You kill X!") is produced if the
         // rotting kills the monster.
         if (mon->res_rotting() <= 1
@@ -1218,7 +1218,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         }
         break;
 
-    case ZIN_HOLY_WORD:
+    case zin_eff::holy_word:
         holy_word_monsters(where, spellpower, HOLY_WORD_ZIN, &you);
         affected = true;
         break;
@@ -1819,7 +1819,7 @@ bool beogh_resurrect()
     }
     mon->move_to_pos(pos);
     mon->timeout_enchantments(100);
-    beogh_convert_orc(mon, conv_t::RESURRECTION);
+    beogh_convert_orc(mon, conv_t::resurrection);
 
     return true;
 }
@@ -5377,6 +5377,11 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
 
     switch (sacrifice)
     {
+        case ABIL_RU_SACRIFICE_HEALTH:
+            if (mut == MUT_FRAIL)
+                piety_gain += 20; // -health is pretty much always quite bad.
+            else if (mut == MUT_PHYSICAL_VULNERABILITY)
+                piety_gain += 5; // -AC is a bit worse than -EV
         case ABIL_RU_SACRIFICE_ESSENCE:
             if (mut == MUT_LOW_MAGIC)
             {
@@ -5406,6 +5411,10 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain += 21;
             else
                 piety_gain += 14;
+
+            if (mut == MUT_SCREAM)
+                piety_gain /= 2; // screaming just isn't that bad.
+
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
             if (player_mutation_level(MUT_NO_LOVE))
@@ -5426,12 +5435,12 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 && player_mutation_level(MUT_NO_ARTIFICE))
             {
                 // this is virtually useless, aside from zot_tub
-                piety_gain -= 19;
+                piety_gain = 1;
             }
             else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
                 || player_mutation_level(MUT_NO_ARTIFICE))
             {
-                piety_gain -= 10;
+                piety_gain /= 2;
             }
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:

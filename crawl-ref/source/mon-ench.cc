@@ -467,7 +467,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (type == MONS_ALLIGATOR)
                 simple_monster_message(*this, " slows down.");
             else
-                simple_monster_message(*this, " is no longer moving somewhat quickly.");
+                simple_monster_message(*this, " is no longer moving quickly.");
         }
         break;
 

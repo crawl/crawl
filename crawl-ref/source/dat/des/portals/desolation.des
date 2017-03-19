@@ -171,6 +171,46 @@ aaabbbaaa
 aaaaaaaaa
 ENDMAP
 
+NAME: portal_desolation_entry_nicolae_nacl
+TAGS: transparent no_monster_gen
+: desolation_portal(_G)
+SUBST: C = c;, - = ; .:50
+KMONS: O = saltling band
+FTILE: ;Os = FLOOR_SALT
+MARKER: O = lua:fog_machine { cloud_type = "salt",  walk_dist = 4, size = 3, \
+                              pow_max = 6, delay = 10 }
+MAP
+...........
+.-;-;--;--.
+.;;c;Cc;C-.
+.-C;;;;;c-.
+.-c;;;;;;;.
+.;;;;O;;C-.
+.-c;;;;;c-.
+.-C;;;;;c-.
+.;;CccC;;;.
+.-;----;;-.
+...........
+ENDMAP
+
+# I wish there were more extant varieties of slug corpses to put here :(
+NAME: portal_desolation_entry_nicolae_slug
+TAGS: transparent no_monster_gen
+: desolation_portal(_G)
+SUBST: - = ;;;..
+NSUBST: ; = 1:s
+FTILE: ;Os = FLOOR_SALT
+: dgn.delayed_decay(_G, "s", "dart slug corpse")
+MAP
+.......
+.-----.
+.-;;;-.
+.-;O;-.
+.-;;;-.
+.-----.
+.......
+ENDMAP
+
 ##############################################################################
 # Desolation mini-ruins entries
 #
@@ -986,6 +1026,260 @@ MAP
 ............
 ............
 ............
+ENDMAP
+
+NAME: desolation_ruin_nicolae_dungeon
+TAGS: desolation_ruin transparent
+ORIENT: float
+NSUBST: F = M / .
+SUBST: M = m., X = x..., G = G., c = c:80 x
+KFEAT: m = iron_grate
+: desolation_ruins_setup(_G)
+MAP
+...XG..GXX..
+xccccFFccccX
+xM%%...cxxm.
+xc%%m..Mxxc.
+Xcccc2Xcc%cX
+..1%c..c%%m.
+Xc.%m..m%%cx
+.cccc2.ccc.x
+Xm%%c..c..mx
+Xc%%...m.1.X
+Xccccccc...X
+.X.X.X...XXX
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_bits
+TAGS: desolation_ruin transparent
+ORIENT: float
+NSUBST: % = 7:% / 2:1 / 2:2 / 2=x. / 2=G. / *:., X = 3:x / 3:. / *:X
+SUBST: X = x..., c = c:50 x .:5
+: desolation_ruins_setup(_G)
+MAP
+............
+.ccXcc.ccXcc
+.c%.%c.c%X%c
+.XX...X....X
+.c%.ccXcc.%c
+.cc.c%.%cXcc
+.XXX..X..X..
+.cc.c%.%c.cc
+.c%Xcc.cc.%c
+..XX..X.XX.X
+.c%.%c.c%.%c
+.cc.cc.cc.cc
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_hall_ruin
+TAGS: desolation_ruin transparent
+ORIENT: float
+SUBST: C = ccx, B = ccx.., D = cx..., X = x., G = G%, c = c:50 x
+NSUBST: % = 2:2
+: desolation_ruins_setup(_G)
+MAP
+XDBCccccCBDX
+............
+............
+.XDBC11CBDX.
+....C..C....
+....C..C....
+....C..C....
+..ccc..ccc..
+..cG%%%%Gc..
+..c%%%%%%c..
+..cG%%%%Gc..
+..cccccccc..
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_hilbert_intact
+TAGS: desolation_ruin transparent
+ORIENT: float
+NSUBST: q = 2:1 / 2:2 / *:.
+: desolation_ruins_setup(_G)
+MAP
+............
+.cccc..cccc.
+.c%%c.qc%%c.
+.c..c%%c..c.
+.c.qccccq.c.
+.c........c.
+.c........c.
+.cccc..cccc.
+..q%c..c%q..
+...%c..c%...
+.cccc..cccc.
+............
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_hilbert_wrecked
+TAGS: desolation_ruin transparent
+ORIENT: float
+SUBST: X = x...., c = c:70 x
+: desolation_ruins_setup(_G)
+MAP
+..X.....X...
+.ccccx.cccc.
+Xc%%c2.cxX..
+.c%%c%%cX.c.
+.c%%Xccc.1.X
+Xc%%..X...cX
+.c%%.2..X%cx
+.cccc..c.cc.
+.X.1.X.c..xX
+...%cxXc....
+..cccxxcccc.
+.........X..
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_blocks_intact
+TAGS: desolation_ruin transparent
+ORIENT: float
+NSUBST: 2 = 2:2 / *:., - = 3:% / *:.
+: desolation_ruins_setup(_G)
+MAP
+........cccc
+........c-%c
+..cccc..c2-c
+..c%-c...ccc
+..c-2c.1....
+..ccc.......
+.......ccc..
+....1.c2-c..
+ccc...c-%c..
+c-2c..cccc..
+c%-c........
+cccc........
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_blocks_wrecked
+TAGS: desolation_ruin transparent
+ORIENT: float
+NSUBST: D = . / 1:C / c, 1 = 3:1 / *:.
+SUBST: C = c., X = x., c = c:100 x
+: desolation_ruins_setup(_G)
+MAP
+....X...cccc
+.X1.....C%%c
+..DDDD..C1%c
+..D%%D...CCc
+X.D%1D.1....
+..DDDx...x.X
+...xx...cx..
+x.....c1..X.
+Xcc.1.C%%C..
+c%1c...c%cX.
+C%%Cx..xxx..
+ccCc..X.....
+ENDMAP
+
+
+# A tower for learning forbidden, blasphemous magicks. (The added k means extra
+# blasphemy.) The loot is magical books, jewellery, and staves.
+NAME: desolation_ruin_nicolae_wiztower_intact
+TAGS: desolation_ruin transparent uniq_salt_special
+ORIENT: float
+WEIGHT: 1
+NSUBST: - = 1:1 / 1=1. / 1:2 / 3:3 / 2=23.. / *:.
+KITEM: % = randbook w:50 / any jewellery randart / any magical staff
+MONS: peacekeeper / crystal guardian, ironbrand convoker, halazid warlock
+MAP
+.........ccc
+..ccccccc.1c
+.cc..G...c.c
+cc-------.c.
+c.-%c%c%-.c.
+c.-ccccc-.c.
+cG-%ccc%-Gc.
+c.-ccccc-.c.
+c.-%c%c%-.c.
+cc-------cc.
+.cc..G..cc..
+..ccccccc...
+ENDMAP
+
+
+NAME: desolation_ruin_nicolae_wiztower_wrecked
+TAGS: desolation_ruin transparent
+ORIENT: float
+SHUFFLE: AB
+SUBST: G = G., C = c., X = x., c = c:60 x
+: desolation_ruins_setup(_G)
+MAP
+.........cCC
+.XCcccccc.xc
+Xcc..G...c.c
+xc1.....1.c.
+x%.%c%c...cX
+c%.ccCCc..Cx
+cG.%cCc..GCx
+c%..cc.c..CX
+c%.1.xc.1..X
+cc%..x.X..X.
+.ccx.%.Xc..X
+..ccccCC.X..
+ENDMAP
+
+
+# Ancient vault of heretical loot, full of treasure and fat stacks of gold.
+NAME: desolation_ruin_nicolae_vault_intact
+TAGS: desolation_ruin transparent uniq_salt_special
+ORIENT: float
+WEIGHT: 1
+NSUBST: % = 4:% / 4:| / 1:%| / 4:$ / 2:b / 2:g / *:s
+KMONS: 1b = saltling band
+KMONS: 2 = imperial myrmidon / halazid warlock / crystal guardian
+KMONS: g = crystal guardian
+KMONS: C = ironbrand convoker
+KITEM: $ = gold good_item
+KITEM: gsb = gold q:1 / gold q:2 / gold q:3 / gold q:4 / gold q:5
+KITEM: % = any weapon good_item / any armour good_item / \
+           any jewellery randart w:5 / randbook w:5
+KFEAT: m = iron_grate
+MAP
+ccccG..Gcccc
+cG........Gc
+c...1..1...c
+c..GmmmmG..c
+c...2..2...c
+cG........Gc
+ccmcc..ccmcc
+c%%%c..c%%%c
+c%%%c..c%%%c
+c%%%....%%%c
+c%%%..C.%%%c
+cccccccccccc
+ENDMAP
+
+
+# The wrecked version of the vault has a few scattered coins remaining.
+NAME: desolation_ruin_nicolae_vault_wrecked
+TAGS: desolation_ruin transparent
+ORIENT: float
+NSUBST: s% = 5:$, Q = 2:1 / 2:2 / *:.
+SUBST: C = c., s = ., M = m., g = G., c = c:50 x
+KFEAT: m = iron_grate
+KITEM: $ = gold q:1 / gold q:2 / gold q:3 / gold q:4 / gold q:5
+: desolation_ruins_setup(_G)
+MAP
+.cccg.sgCccc
+cG%.s.Q...gc
+c%%.....s...
+c.sgmmM.GQ.C
+c...%...s.sc
+.G%.Q.s...%c
+.cMcC%.cC%cc
+.s.%c%.c%.s.
+c..sc..cs..C
+c%Q.%....Q.c
+c%%..s...s.c
+cccccCCcs.CC
 ENDMAP
 
 

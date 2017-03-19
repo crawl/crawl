@@ -5,4 +5,4 @@
 #
 # Use a future version tag, we remove descs immediately even though the item/
 # monster is fully removed only after a save compat bump.
-sed '/^ *# *include/d' "$1"|cpp -DTAG_MAJOR_VERSION=999 -
+sed '/^ *# *include/d ; /^ *# *pragma *once/d' "$1"|cpp -x c++ -DTAG_MAJOR_VERSION=999 --std=c++11 -

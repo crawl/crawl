@@ -265,7 +265,7 @@ other things do.”
 %%%%
 acid dragon scales
 
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 Agony spell
 
@@ -854,22 +854,10 @@ amulet of nothing
 
 <amulet>
 %%%%
-amulet of stasis
-
-<amulet>
-%%%%
 amulet of the gourmand
 
 “put a knife to thy throat, if thou be a man given to appetite.”
     -KJV Bible, Proverbs 23:2.
-%%%%
-amulet of warding
-
-[...] says a traveller in Central Borneo: “[...] When a company from the middle
-Mahakam River visited me among the Blu-u Kayans in the year 1897, no woman
-showed herself outside her house without a burning bundle of /plehiding/ bark,
-the stinking smoke of which drives away evil spirits.”
-    -Sir James George Frazer, _The Golden Bough_. 1922.
 %%%%
 animal skin
 
@@ -1336,11 +1324,7 @@ meat with.”
 %%%%
 fire dragon scales
 
-<steam dragon hide>
-%%%%
-fire dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 flail
 
@@ -1470,11 +1454,7 @@ goblin
 %%%%
 gold dragon scales
 
-<steam dragon hide>
-%%%%
-gold dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 gold piece
 
@@ -1637,11 +1617,7 @@ ice bat
 %%%%
 ice dragon scales
 
-<steam dragon hide>
-%%%%
-ice dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 iguana
 
@@ -1762,14 +1738,6 @@ large rock
 large shield
 
 <buckler>
-%%%%
-lasher statue
-
-“To be a slave for a moment
- The body offered up to cruelty
- To the lash which whips on the skin
- Which slashes the flesh, lacerates the back”
-    -Samael, “Flagellation”. 1994.
 %%%%
 leather armour
 
@@ -2111,11 +2079,7 @@ Passwall spell
 %%%%
 pearl dragon scales
 
-<steam dragon hide>
-%%%%
-pearl dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 phantom
 
@@ -2463,18 +2427,6 @@ scroll of blinking
 <scroll>
 %%%%
 scroll of brand weapon
-
-<scroll>
-%%%%
-scroll of curse armour
-
-<scroll>
-%%%%
-scroll of curse jewellery
-
-<scroll>
-%%%%
-scroll of curse weapon
 
 <scroll>
 %%%%
@@ -2903,10 +2855,6 @@ starcursed mass
 %%%%
 steam dragon scales
 
-<steam dragon hide>
-%%%%
-steam dragon hide
-
 “His scales are his pride, shut up together as with a close seal. One is so
 near to another, that no air can come between them. They are joined one to
 another, they stick together, that they cannot be sundered.”
@@ -2939,11 +2887,7 @@ rills of water, along the field.”
 %%%%
 storm dragon scales
 
-<steam dragon hide>
-%%%%
-storm dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 sun demon
 
@@ -2953,11 +2897,7 @@ sun demon
 %%%%
 swamp dragon scales
 
-<steam dragon hide>
-%%%%
-swamp dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 swamp drake
 
@@ -3094,7 +3034,7 @@ triple crossbow
 
 <arbalest>
 %%%%
-troll hide
+troll leather armour
 
 “THE TROLL KING: Now, listen, Prince Peer, and give way to reason!
  You're cut out for a Troll. Why, look, already
@@ -3119,10 +3059,6 @@ troll hide
  Never go back, as you tell me plainly —
  That is a thing that I'll not submit to.”
     -Henrik Ibsen, _Peer Gynt_ . 1867.
-%%%%
-troll leather armour
-
-<troll hide>
 %%%%
 ufetubus
 

@@ -809,11 +809,14 @@ bool noisy(int original_loudness, const coord_def& where,
         crawl_state.game_is_sprint()? max(1, div_rand_round(loudness, 2))
                                     : loudness;
 
+    // The multiplier converts to milli-auns which are used internally by noise propagation.
+    const int multiplier = 1000;
+
     // Add +1 to scaled_loudness so that all squares adjacent to a
     // sound of loudness 1 will hear the sound.
     const string noise_msg(msg? msg : "");
     _noise_grid.register_noise(
-        noise_t(where, noise_msg, (scaled_loudness + 1) * 1000, who));
+        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means

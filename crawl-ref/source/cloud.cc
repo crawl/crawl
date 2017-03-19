@@ -23,6 +23,7 @@
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -282,7 +283,7 @@ static const cloud_data clouds[] = {
       true,                                       // opacity
     },
     // CLOUD_GOLD_DUST,
-    { "gold",  nullptr,                           // terse, verbose name
+    { "golden dust",  nullptr,                    // terse, verbose name
       ETC_HOLY,                                   // colour
       { TILE_CLOUD_GOLD_DUST, CTVARY_DUR },       // tile
       BEAM_NONE, {},                              // beam & damage
@@ -348,9 +349,16 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 }
 #endif
 
-static void _los_cloud_changed(const coord_def& p, cloud_type t)
+/*
+ * The LOS may have changed based on cloud changes at position `p`.
+ *
+ * @param p   The position that may have changed.
+ * @param t   The cloud type now there; CLOUD_NONE if there is no cloud there now.
+ * @param old The cloud type that was there; CLOUD_NONE if the was none.
+ */
+static void _los_cloud_changed(const coord_def& p, const cloud_type t, const cloud_type old)
 {
-    if (is_opaque_cloud(t))
+    if (is_opaque_cloud(t) || is_opaque_cloud(old))
         los_terrain_changed(p);
 }
 
@@ -364,7 +372,6 @@ cloud_struct::cloud_struct(coord_def p, cloud_type c, int d, int spread,
 
     if (type == CLOUD_RANDOM_SMOKE)
         type = random_smoke_type();
-    _los_cloud_changed(pos, type);
 }
 
 static int _spread_cloud(const cloud_struct &cloud)
@@ -396,6 +403,7 @@ static int _spread_cloud(const cloud_struct &cloud)
         env.cloud[*ai] = cloud;
         env.cloud[*ai].pos = *ai;
         env.cloud[*ai].decay = newdecay;
+        _los_cloud_changed(env.cloud[*ai].pos, env.cloud[*ai].type, CLOUD_NONE);
 
         extra_decay += 8;
     }
@@ -464,9 +472,11 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             && !cloud_at(p)
             && one_chance_in(14))
         {
+            const cloud_type old = cloud_type_at(p);
             env.cloud[p] = cloud_struct(p, CLOUD_STEAM, 2 + random2(5),
                                         11, cloud.whose, cloud.killer,
                                         cloud.source, -1);
+            _los_cloud_changed(p, env.cloud[p].type, old);
         }
     }
 }
@@ -635,7 +645,7 @@ void delete_cloud(coord_def p)
     env.cloud.erase(p);
     if (type == CLOUD_RAIN)
         _maybe_leave_water(p);
-    _los_cloud_changed(p, type);
+    _los_cloud_changed(p, CLOUD_NONE, type);
 }
 
 void delete_all_clouds()
@@ -658,11 +668,13 @@ void move_cloud(coord_def src, coord_def newpos)
         return;
     ASSERT(!cell_is_solid(newpos));
 
+    const cloud_type old = cloud_type_at(newpos);
+
     env.cloud[newpos] = env.cloud[src];
     env.cloud.erase(src);
     env.cloud[newpos].pos = newpos;
-    _los_cloud_changed(src, env.cloud[newpos].type);
-    _los_cloud_changed(newpos, env.cloud[newpos].type);
+    _los_cloud_changed(src, CLOUD_NONE, env.cloud[newpos].type);
+    _los_cloud_changed(newpos, env.cloud[newpos].type, old);
 }
 
 void swap_clouds(coord_def p1, coord_def p2)
@@ -685,12 +697,8 @@ void swap_clouds(coord_def p1, coord_def p2)
     env.cloud[p2] = temp;
     env.cloud[p1].pos = p1;
     env.cloud[p2].pos = p2;
-    if (is_opaque_cloud(cloud_type_at(p1))
-        || is_opaque_cloud(cloud_type_at(p2)))
-    {
-        los_terrain_changed(p1);
-        los_terrain_changed(p2);
-    }
+    _los_cloud_changed(p1, env.cloud[p1].type, env.cloud[p2].type);
+    _los_cloud_changed(p2, env.cloud[p2].type, env.cloud[p1].type);
 }
 
 // Places a cloud with the given stats assuming one doesn't already
@@ -746,16 +754,20 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         source = agent->mid;
     }
 
-
     // There's already a cloud here. See if we can overwrite it.
     if (cloud_at(ctarget) && !_cloud_is_stronger(cl_type, *cloud_at(ctarget)))
         return;
+
+    // if the old cloud was opaque, may need to recalculate los.
+    // It *is* possible to overwrite an opaque cloud with a non-opaque one; OOD will do this.
+    const cloud_type old = cloud_type_at(ctarget);
 
     const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
 
     env.cloud[ctarget] = cloud_struct(ctarget, cl_type, cl_range * 10,
                                       spread_rate, whose, killer, source,
                                       excl_rad);
+    _los_cloud_changed(ctarget, env.cloud[ctarget].type, old);
 }
 
 bool is_opaque_cloud(cloud_type ctype)

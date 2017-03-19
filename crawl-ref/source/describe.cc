@@ -153,20 +153,20 @@ const char* jewellery_base_ability_string(int subtype)
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
 
 /// How to display props of a given type?
-enum prop_note_type
+enum class prop_note
 {
     /// The raw numeral; e.g "Slay+3", "Int-1"
-    PROPN_NUMERAL,
+    numeral,
     /// Plusses and minuses; "rF-", "rC++"
-    PROPN_SYMBOLIC,
+    symbolic,
     /// Don't note the number; e.g. "rMut"
-    PROPN_PLAIN,
+    plain,
 };
 
 struct property_annotators
 {
     artefact_prop_type prop;
-    prop_note_type spell_out;
+    prop_note spell_out;
 };
 
 static vector<string> _randart_propnames(const item_def& item,
@@ -183,52 +183,51 @@ static vector<string> _randart_propnames(const item_def& item,
     {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { ARTP_PREVENT_SPELLCASTING,  PROPN_PLAIN },
-        { ARTP_PREVENT_TELEPORTATION, PROPN_PLAIN },
-        { ARTP_CONTAM,                PROPN_PLAIN },
-        { ARTP_ANGRY,                 PROPN_PLAIN },
-        { ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
-        { ARTP_NOISE,                 PROPN_PLAIN },
-        { ARTP_CORRODE,               PROPN_PLAIN },
-        { ARTP_DRAIN,                 PROPN_PLAIN },
-        { ARTP_SLOW,                  PROPN_PLAIN },
-        { ARTP_FRAGILE,               PROPN_PLAIN },
+        { ARTP_PREVENT_SPELLCASTING,  prop_note::plain },
+        { ARTP_PREVENT_TELEPORTATION, prop_note::plain },
+        { ARTP_CONTAM,                prop_note::plain },
+        { ARTP_ANGRY,                 prop_note::plain },
+        { ARTP_CAUSE_TELEPORTATION,   prop_note::plain },
+        { ARTP_NOISE,                 prop_note::plain },
+        { ARTP_CORRODE,               prop_note::plain },
+        { ARTP_DRAIN,                 prop_note::plain },
+        { ARTP_SLOW,                  prop_note::plain },
+        { ARTP_FRAGILE,               prop_note::plain },
 
         // Evokable abilities come second
-        { ARTP_BLINK,                 PROPN_PLAIN },
-        { ARTP_BERSERK,               PROPN_PLAIN },
-        { ARTP_INVISIBLE,             PROPN_PLAIN },
-        { ARTP_FLY,                   PROPN_PLAIN },
-        { ARTP_FOG,                   PROPN_PLAIN },
+        { ARTP_BLINK,                 prop_note::plain },
+        { ARTP_BERSERK,               prop_note::plain },
+        { ARTP_INVISIBLE,             prop_note::plain },
+        { ARTP_FLY,                   prop_note::plain },
 
         // Resists, also really important
-        { ARTP_ELECTRICITY,           PROPN_PLAIN },
-        { ARTP_POISON,                PROPN_PLAIN },
-        { ARTP_FIRE,                  PROPN_SYMBOLIC },
-        { ARTP_COLD,                  PROPN_SYMBOLIC },
-        { ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
-        { ARTP_MAGIC_RESISTANCE,      PROPN_SYMBOLIC },
-        { ARTP_REGENERATION,          PROPN_SYMBOLIC },
-        { ARTP_RMUT,                  PROPN_PLAIN },
-        { ARTP_RCORR,                 PROPN_PLAIN },
+        { ARTP_ELECTRICITY,           prop_note::plain },
+        { ARTP_POISON,                prop_note::plain },
+        { ARTP_FIRE,                  prop_note::symbolic },
+        { ARTP_COLD,                  prop_note::symbolic },
+        { ARTP_NEGATIVE_ENERGY,       prop_note::symbolic },
+        { ARTP_MAGIC_RESISTANCE,      prop_note::symbolic },
+        { ARTP_REGENERATION,          prop_note::symbolic },
+        { ARTP_RMUT,                  prop_note::plain },
+        { ARTP_RCORR,                 prop_note::plain },
 
         // Quantitative attributes
-        { ARTP_HP,                    PROPN_NUMERAL },
-        { ARTP_MAGICAL_POWER,         PROPN_NUMERAL },
-        { ARTP_AC,                    PROPN_NUMERAL },
-        { ARTP_EVASION,               PROPN_NUMERAL },
-        { ARTP_STRENGTH,              PROPN_NUMERAL },
-        { ARTP_INTELLIGENCE,          PROPN_NUMERAL },
-        { ARTP_DEXTERITY,             PROPN_NUMERAL },
-        { ARTP_SLAYING,               PROPN_NUMERAL },
-        { ARTP_SHIELDING,             PROPN_NUMERAL },
+        { ARTP_HP,                    prop_note::numeral },
+        { ARTP_MAGICAL_POWER,         prop_note::numeral },
+        { ARTP_AC,                    prop_note::numeral },
+        { ARTP_EVASION,               prop_note::numeral },
+        { ARTP_STRENGTH,              prop_note::numeral },
+        { ARTP_INTELLIGENCE,          prop_note::numeral },
+        { ARTP_DEXTERITY,             prop_note::numeral },
+        { ARTP_SLAYING,               prop_note::numeral },
+        { ARTP_SHIELDING,             prop_note::numeral },
 
         // Qualitative attributes (and Stealth)
-        { ARTP_SEE_INVISIBLE,         PROPN_PLAIN },
-        { ARTP_STEALTH,               PROPN_SYMBOLIC },
-        { ARTP_CURSE,                 PROPN_PLAIN },
-        { ARTP_CLARITY,               PROPN_PLAIN },
-        { ARTP_RMSL,                  PROPN_PLAIN },
+        { ARTP_SEE_INVISIBLE,         prop_note::plain },
+        { ARTP_STEALTH,               prop_note::symbolic },
+        { ARTP_CURSE,                 prop_note::plain },
+        { ARTP_CLARITY,               prop_note::plain },
+        { ARTP_RMSL,                  prop_note::plain },
     };
 
     const unrandart_entry *entry = nullptr;
@@ -304,10 +303,10 @@ static vector<string> _randart_propnames(const item_def& item,
             ostringstream work;
             switch (ann.spell_out)
             {
-            case PROPN_NUMERAL: // e.g. AC+4
+            case prop_note::numeral: // e.g. AC+4
                 work << showpos << artp_name(ann.prop) << val;
                 break;
-            case PROPN_SYMBOLIC: // e.g. F++
+            case prop_note::symbolic: // e.g. F++
             {
                 work << artp_name(ann.prop);
 
@@ -320,7 +319,7 @@ static vector<string> _randart_propnames(const item_def& item,
 
                 break;
             }
-            case PROPN_PLAIN: // e.g. rPois or SInv
+            case prop_note::plain: // e.g. rPois or SInv
                 work << artp_name(ann.prop);
                 break;
             }
@@ -451,7 +450,6 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
-        { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
         { ARTP_RCORR, "It protects you from acid and corrosion.", false},
         { ARTP_RMUT, "It protects you from mutation.", false},
@@ -3270,17 +3268,17 @@ static void _describe_monster_mr(const monster_info& mi, ostringstream &result)
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
 {
+    if (mons_is_sensed(mi.type) || mons_is_projectile(mi.type))
+        return "";
+
     ostringstream result;
 
-    if (!mons_is_sensed(mi.type))
-    {
-        _describe_monster_hp(mi, result);
-        _describe_monster_ac(mi, result);
-        _describe_monster_ev(mi, result);
-        _describe_monster_mr(mi, result);
+    _describe_monster_hp(mi, result);
+    _describe_monster_ac(mi, result);
+    _describe_monster_ev(mi, result);
+    _describe_monster_mr(mi, result);
 
-        result << "\n";
-    }
+    result << "\n";
 
     resists_t resist = mi.resists();
 
@@ -3371,6 +3369,12 @@ static string _monster_stat_description(const monster_info& mi)
                << ".\n";
     }
 
+    if (mi.is(MB_CHAOTIC))
+    {
+        result << uppercase_first(pronoun) << " is vulnerable to silver and"
+                                              " hated by Zin.\n";
+    }
+
     if (mons_class_flag(mi.type, M_STATIONARY)
         && !mons_is_tentacle_or_tentacle_segment(mi.type))
     {
@@ -3396,6 +3400,16 @@ static string _monster_stat_description(const monster_info& mi)
     // Might be better to have some place where players can see holiness &
     // information about holiness.......?
 
+    if (mi.intel() <= I_BRAINLESS)
+    {
+        // Matters for Ely.
+        result << uppercase_first(pronoun) << " is mindless.\n";
+    }
+    else if (mi.intel() >= I_HUMAN)
+    {
+        // Matters for Yred, Gozag, Zin, TSO, Alistair....
+        result << uppercase_first(pronoun) << " is intelligent.\n";
+    }
 
     // Unusual monster speed.
     const int speed = mi.base_speed();
@@ -3501,6 +3515,33 @@ static string _monster_stat_description(const monster_info& mi)
     {
         result << uppercase_first(pronoun) << " is "
         << sizes[mi.body_size()] << ".\n";
+    }
+
+    if (in_good_standing(GOD_ZIN, 0))
+    {
+        const int check = mi.hd - zin_recite_power();
+        if (check >= 0)
+        {
+            result << uppercase_first(pronoun) << " is too strong to be"
+                                                  " recited to.";
+        }
+        else if (check >= -5)
+        {
+            result << uppercase_first(pronoun) << " may be too strong to be"
+                                                  " recited to.";
+        }
+        else
+        {
+            result << uppercase_first(pronoun) << " is weak enough to be"
+                                                  " recited to.";
+        }
+
+        if (you.wizard)
+        {
+            result << " (Recite power:" << zin_recite_power()
+                   << ", Hit dice:" << mi.hd << ")";
+        }
+        result << "\n";
     }
 
     result << _monster_attacks_description(mi);
@@ -3695,38 +3736,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     {
         inf.body << It << " is incapable of using stairs.\n";
         stair_use = true;
-    }
-
-    if (mi.intel() <= I_BRAINLESS)
-    {
-        // Matters for Ely.
-        inf.body << It << " is mindless.\n";
-    }
-    else if (mi.intel() >= I_HUMAN)
-    {
-        // Matters for Yred, Gozag, Zin, TSO, Alistair....
-        inf.body << It << " is intelligent.\n";
-    }
-
-    if (mi.is(MB_CHAOTIC))
-        inf.body << It << " is vulnerable to silver and hated by Zin.\n";
-
-    if (in_good_standing(GOD_ZIN, 0))
-    {
-        const int check = mi.hd - zin_recite_power();
-        if (check >= 0)
-            inf.body << It << " is too strong to be recited to.";
-        else if (check >= -5)
-            inf.body << It << " may be too strong to be recited to.";
-        else
-            inf.body << It << " is weak enough to be recited to.";
-
-        if (you.wizard)
-        {
-            inf.body << " (Recite power:" << zin_recite_power()
-                     << ", Hit dice:" << mi.hd << ")";
-        }
-        inf.body << "\n";
     }
 
     if (mi.is(MB_SUMMONED))

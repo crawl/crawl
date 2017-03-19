@@ -26,8 +26,12 @@ $jewellery_prefixes{$1} = $2
 $items{"wand of $_"} = 1 for /WAND_[A-Z_]+: *return "([^"]+)";/g;
 $items{"potion of $_"} = 1 for /POT_[A-Z_]+: *return "([^"]+)";/g;
 $items{"scroll of $_"} = 1 for /SCR_[A-Z_]+: *return "([^"]+)";/g;
-$items{jewellery_name($1, $2)} = 1
-    while /((?:RING|AMU)_[A-Z_]+): *return "([^"]+)";/g;
+my %seen_enums;
+while (/((?:RING|AMU)_[A-Z_]+): *return "([^"]+)";/g)
+{
+    next if $seen_enums{$1}++;
+    $items{jewellery_name($1, $2)} = 1
+}
 
 unless ($db)
 {
@@ -45,6 +49,7 @@ close IN;
 
 s/" "//g;
 $items{$_} = 1 for /\{ *ARM_[A-Z_]+, *"([^"]+)"/mg;
+$items{"$_ dragon scales"} = 1 for /^ *DRAGON_ARMOUR\([A-Z_]+, *"([^"]+)"/mg;
 $items{$_} = 1 for /^ *\{ *WPN_[A-Z_]+, *"([^"]+)"/mg;
 $items{$_} = 1 for /^ *\{ *MI_[A-Z_]+, *"([^"]+)"/mg;
 
@@ -53,7 +58,7 @@ open IN, "util/cpp_version decks.cc|" or die "Can't read decks.cc\n";
 close IN;
 my $data = $_;
 $data =~ s/.*all_decks =(.*?)};.*/$1/s or die "can't find all_decks\n";
-$items{"deck of $_"} = 1 for $data =~ /"([^"]+)"/mg;
+$items{"deck of $_"} = 1 for $data =~ /^\s+"([^"]+)"/mg;
 
 $items{$_} = 1 for (split /\n/, <<END);
 chunk of flesh

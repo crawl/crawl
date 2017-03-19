@@ -219,13 +219,24 @@ int get_spell_slot_by_letter(char letter)
 
 static int _get_spell_slot(spell_type spell)
 {
+    // you.spells is a FixedVector of spells in some arbitrary order. It
+    // doesn't corespond to letters.
     auto i = find(begin(you.spells), end(you.spells), spell);
     return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
 
+static int _get_spell_letter_from_slot(int slot)
+{
+    // you.spell_letter_table is a FixedVector that is basically a mapping
+    // from alpha char indices to spell slots (e.g. indices in you.spells).
+    auto letter = find(begin(you.spell_letter_table), end(you.spell_letter_table), slot);
+    return letter == end(you.spell_letter_table) ? -1 : letter - begin(you.spell_letter_table);
+}
+
 int get_spell_letter(spell_type spell)
 {
-    return index_to_letter(_get_spell_slot(spell));
+    int i = _get_spell_letter_from_slot(_get_spell_slot(spell));
+    return (i == -1) ? -1 : index_to_letter(i);
 }
 
 spell_type get_spell_by_letter(char letter)

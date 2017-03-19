@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+
+use warnings;
+
+# extract(fn, start, end[, per-line)
+#
+# Gather quoted strings from the file named fn, in the region between the first
+# occurrence of the start string and the next line that contains only the end
+# string. If per_line is true, take only the first string from each line.
+sub extract($$$;$)
+{
+    my ($fn, $start, $end, $per_line) = @_;
+    open my $in, "util/cpp_version $fn|" or die "Can't read $fn: $!\n";
+    undef local $/;
+    my $data = <$in>;
+    close $in;
+
+    $data =~ s/.*\Q$start\E(.*?)\Q$end\E.*/$1/s
+        or die "Can't find \"$start\" in $fn\n";
+    $data =~ s|//.*$||mg;
+    my $consume = $per_line ? '.*' : '';
+    return grep {
+        $_ ne "" and $_ !~ /^<.*>$/
+    } ($data =~ /"([^"\n]*)"$consume/g);
+}
+
+for (extract "cloud.cc", "clouds[] =", "};", "per-line")
+{
+    $features{$_ . " cloud" } = 1 unless $_ eq "?";
+}
+
+print join("\n", sort keys %features), "\n";

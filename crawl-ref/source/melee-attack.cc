@@ -463,20 +463,11 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    if (attacker->is_player()
-        && defender->alive()
-        && wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND)
-    {
-       player_strike_pressure_points(defender->as_monster());
-    }
-
-    // Fireworks when hitting slowed / distracted enemies.
-    // XXX: this seems massively overcomplicated. also, it currently only
-    // triggers when the victim is both slowed AND distracted?
+    // Fireworks when hitting distracted enemies.
+    // XXX: this seems massively overcomplicated.
     if (!defender->alive()
         && defender->as_monster()->can_bleed()
         && wu_jian_attack == WU_JIAN_ATTACK_LUNGE
-        && defender->as_monster()->has_ench(ENCH_SLOW)
         && defender_wjc_distracted())
     {
         blood_spray(defender->pos(), defender->as_monster()->type,
@@ -591,40 +582,6 @@ bool melee_attack::handle_phase_aux()
     }
 
     return true;
-}
-
-/// Percentage chance for an WJC effect to slow a target of the given HD.
-static int _pressure_point_slow_chance(int hd)
-{
-    // XXX: unify with _walljump_distract_chance()
-    const int base_chance = div_rand_round(8 * you.experience_level, hd);
-    if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-        return div_rand_round(base_chance * 15, 10);
-    return min(base_chance, 50); // Capped if you don't have momentum.
-}
-
-void melee_attack::player_strike_pressure_points(monster* mons)
-{
-    const int slow_chance = _pressure_point_slow_chance(mons->get_hit_dice());
-
-    dprf("Pressure point strike, %d%% chance to slow.", slow_chance);
-
-    if (mons->cannot_move() || !x_chance_in_y(slow_chance, 100))
-        return;
-
-    if (mons->holiness() == MH_NONLIVING)
-    {
-        simple_monster_message(*mons, " seems to slow down after your "
-                               "strike.");
-    }
-    else
-    {
-        simple_monster_message(*mons, " seems to slow down as you strike "
-                               "a pressure point.");
-    }
-
-    mons->add_ench(mon_enchant(ENCH_SLOW, 0, attacker,
-                               stepdown(5 * BASELINE_DELAY, 70)));
 }
 
 /**
@@ -3408,39 +3365,16 @@ int melee_attack::martial_damage_mod(int dam)
     if (wu_jian_has_momentum(wu_jian_attack))
         dam = div_rand_round(dam * 15, 10);
 
-    switch (wu_jian_attack)
+    if (wu_jian_attack == WU_JIAN_ATTACK_LUNGE)
     {
-    case WU_JIAN_ATTACK_NONE:
-    case WU_JIAN_ATTACK_TRIGGERED_AUX:
-        return dam;
-
-    case WU_JIAN_ATTACK_LUNGE:
-    {
-        const bool slow = defender->as_monster()->has_ench(ENCH_SLOW);
-        const bool distracted = defender_wjc_distracted();
-        if (slow && distracted)
+        if (defender_wjc_distracted())
         {
-            mprf("%s is thoroughly helpless against your lunge!",
+            mprf("%s is caught off-guard!",
                  defender->as_monster()->name(DESC_THE).c_str());
-            dam = div_rand_round(dam * 20, 10);
-        }
-        else if (slow)
-        {
-            mprf("%s can't react fast enough to your lunge!",
-                 defender->name(DESC_THE).c_str());
-            dam = div_rand_round(dam * 16, 10);
-        }
-        else if (distracted)
-        {
-            mprf("%s does not see your lunge coming!", defender->name(DESC_THE).c_str());
             dam = div_rand_round(dam * 16, 10);
         }
         else
             dam = div_rand_round(dam * 13, 10);
-        break;
-    }
-    default:
-        break;
     }
 
     return dam;

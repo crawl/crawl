@@ -1226,12 +1226,13 @@ static int l_item_get_items_at(lua_State *ls)
     s.x = luaL_checkint(ls, 1);
     s.y = luaL_checkint(ls, 2);
     coord_def p = player2grid(s);
-    if (!map_bounds(p))
-        return 0;
 
-    item_def* top = env.map_knowledge(p).item();
-    if (!top || !top->defined())
+    if (!query_map_knowledge(false, p, [](const map_cell& cell) {
+          return cell.item() && cell.item()->defined();
+        }))
+    {
         return 0;
+    }
 
     lua_newtable(ls);
 

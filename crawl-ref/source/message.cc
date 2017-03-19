@@ -305,15 +305,15 @@ static void readkey_more(bool user_forced=false);
 
 // Types of message prefixes.
 // Higher values override lower.
-enum prefix_type
+enum class prefix_type
 {
-    P_NONE,
-    P_TURN_START,
-    P_TURN_END,
-    P_NEW_CMD, // new command, but no new turn
-    P_NEW_TURN,
-    P_FULL_MORE,   // single-character more prompt (full window)
-    P_OTHER_MORE,  // the other type of --more-- prompt
+    none,
+    turn_start,
+    turn_end,
+    new_cmd, // new command, but no new turn
+    new_turn,
+    full_more,   // single-character more prompt (full window)
+    other_more,  // the other type of --more-- prompt
 };
 
 // Could also go with coloured glyphs.
@@ -322,24 +322,24 @@ static cglyph_t _prefix_glyph(prefix_type p)
     cglyph_t g;
     switch (p)
     {
-    case P_TURN_START:
+    case prefix_type::turn_start:
         g.ch = Options.show_newturn_mark ? '-' : ' ';
         g.col = LIGHTGRAY;
         break;
-    case P_TURN_END:
-    case P_NEW_TURN:
+    case prefix_type::turn_end:
+    case prefix_type::new_turn:
         g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = LIGHTGRAY;
         break;
-    case P_NEW_CMD:
+    case prefix_type::new_cmd:
         g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = DARKGRAY;
         break;
-    case P_FULL_MORE:
+    case prefix_type::full_more:
         g.ch = '+';
         g.col = channel_to_colour(MSGCH_PROMPT);
         break;
-    case P_OTHER_MORE:
+    case prefix_type::other_more:
         g.ch = '+';
         g.col = LIGHTRED;
         break;
@@ -494,7 +494,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), temp_line(0), input_line(0), prompt(P_NONE)
+        : next_line(0), temp_line(0), input_line(0), prompt(prefix_type::none)
     {
         clear_lines(); // initialize this->lines
     }
@@ -584,10 +584,10 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(string text, prefix_type first_col = P_NONE,
+    void add_item(string text, prefix_type first_col = prefix_type::none,
                   bool temporary = false)
     {
-        prompt = P_NONE; // reset prompt
+        prompt = prefix_type::none; // reset prompt
 
         vector<formatted_string> newlines;
         linebreak_string(text, out_width());
@@ -632,7 +632,7 @@ public:
 
     void new_cmdturn(bool new_turn)
     {
-        output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
+        output_prefix(new_turn ? prefix_type::new_turn : prefix_type::new_cmd);
     }
 
     bool any_messages()
@@ -654,7 +654,7 @@ public:
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            cglyph_t g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            cglyph_t g = _prefix_glyph(full ? prefix_type::full_more : prefix_type::other_more);
             formatted_string f;
             f.add_glyph(g);
             f.display();
@@ -760,7 +760,7 @@ public:
 
     void store_msg(const message_line& msg)
     {
-        prefix_type p = P_NONE;
+        prefix_type p = prefix_type::none;
         msgs.push_back(msg);
         if (_temporary)
             temp++;
@@ -1940,11 +1940,11 @@ void replay_messages()
             for (unsigned int j = 0; j < parts.size(); ++j)
             {
                 formatted_string line;
-                prefix_type p = P_NONE;
+                prefix_type p = prefix_type::none;
                 if (j == parts.size() - 1 && i + 1 < msgs.size()
                     && msgs[i+1].turn > msgs[i].turn)
                 {
-                    p = P_TURN_END;
+                    p = prefix_type::turn_end;
                 }
                 line.add_glyph(_prefix_glyph(p));
                 line += parts[j];

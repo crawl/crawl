@@ -672,6 +672,7 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+INSCRIP:  +Fog
 PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief
@@ -827,7 +828,7 @@ MAGIC:    1
 BOOL:     seeinv
 VALUE:    600
 
-NAME:    armour of the Dragon King
+NAME:    scales of the Dragon King
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
 PLUS:    +9
 COLOUR:  ETC_GOLD

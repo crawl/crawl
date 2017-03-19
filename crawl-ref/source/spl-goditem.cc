@@ -22,6 +22,7 @@
 #include "items.h"
 #include "mapdef.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
@@ -496,14 +497,14 @@ int detect_items(int pow)
 
     else
     {
-        //Check which god may be providing detect_items and set map_radius
-        if (have_passive(passive_t::detect_items))
+        //Check which god may be providing detect_items (Ashenzari or Jiyva) and set map_radius
+        if (have_passive(passive_t::detect_items)) //Ashenzari
         {
             map_radius = min(you.piety / 20 - 1, LOS_DEFAULT_RANGE);
             if (map_radius <= 0)
                 return 0;
         }
-        else if (you.mutation[MUT_JELLY_GROWTH]) // MUT_JELLY_GROWTH
+        else if (you.mutation[MUT_JELLY_GROWTH]) //Jiyva
             map_radius = 5;
     }
 
@@ -542,11 +543,9 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, monster* mon,
+static void _mark_detected_creature(coord_def where, const monster& mon,
                                     int fuzz_chance, int fuzz_radius)
 {
-    bool found_good = false;
-
     if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
     {
         const int fuzz_diam = 2 * fuzz_radius + 1;
@@ -559,35 +558,17 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
             place.set(where.x + random2(fuzz_diam) - fuzz_radius,
                       where.y + random2(fuzz_diam) - fuzz_radius);
 
-            if (!map_bounds(place))
-                continue;
-
-            // If the player would be able to see a monster at this location
-            // don't place it there.
-            if (you.see_cell(place))
-                continue;
-
-            // Try not to overwrite another detected monster.
-            if (env.map_knowledge(place).detected_monster())
-                continue;
-
-            // Don't print monsters on terrain they cannot pass through,
-            // not even if said terrain has since changed.
-            if (!env.map_knowledge(place).changed()
-                && mon->can_pass_through_feat(grd(place)))
+            // the player believes there is no monster there, and this one could be there
+            if (query_map_knowledge(false, place, [&mon](const map_cell& m) {
+                  return !m.detected_monster() && mon.can_pass_through_feat(m.feat());
+                }) && !you.see_cell(place))
             {
-                found_good = true;
-                break;
+                where = place;
             }
         }
-
-        if (found_good)
-            where = place;
     }
 
-    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
-
-    return found_good;
+    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon.type));
 }
 
 int detect_creatures(int pow, bool telepathic)
@@ -611,7 +592,7 @@ int detect_creatures(int pow, bool telepathic)
             if (!you.can_see(*mon))
             {
                 creatures_found++;
-                _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
+                _mark_detected_creature(*ri, *mon, fuzz_chance, fuzz_radius);
             }
         }
     }

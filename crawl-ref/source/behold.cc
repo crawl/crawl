@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
+#include "losglobal.h"
 #include "state.h"
 
 // Add a monster to the list of beholders.
@@ -249,7 +250,7 @@ bool player::possible_beholder(const monster* mon) const
         return false;
 
     return mon && mon->alive() && !mon->submerged()
-        && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
+        && cell_see_cell(pos(), mon->pos(), LOS_SOLID_SEE) && mon->see_cell_no_trans(pos())
         && !mon->wont_attack() && !mon->pacified()
         && ((mons_is_siren_beholder(mon->type)
              || mon->has_spell(SPELL_MESMERISE))

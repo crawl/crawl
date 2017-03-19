@@ -42,6 +42,7 @@
 #include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -983,8 +984,8 @@ static void _debug_pane_bounds()
 
 enum class update_flag
 {
-    AFFECT_EXCLUDES = (1 << 0),
-    ADDED_EXCLUDE   = (1 << 1),
+    affect_excludes = (1 << 0),
+    added_exclude   = (1 << 1),
 };
 DEF_BITFIELD(update_flags, update_flag);
 
@@ -1015,7 +1016,7 @@ static update_flags player_view_update_at(const coord_def &gc)
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
             if (!did_exclude && !was_exclusion)
-                ret |= update_flag::ADDED_EXCLUDE;
+                ret |= update_flag::added_exclude;
         }
     }
 
@@ -1024,7 +1025,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
-        ret |= update_flag::AFFECT_EXCLUDES;
+        ret |= update_flag::affect_excludes;
 
     set_terrain_visible(gc);
 
@@ -1068,9 +1069,9 @@ static void player_view_update()
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
     {
         update_flags flags = player_view_update_at(*ri);
-        if (flags & update_flag::AFFECT_EXCLUDES)
+        if (flags & update_flag::affect_excludes)
             update_excludes.push_back(*ri);
-        if (flags & update_flag::ADDED_EXCLUDE)
+        if (flags & update_flag::added_exclude)
             need_update = true;
     }
     // Update exclusion LOS for possibly affected excludes.
@@ -1482,10 +1483,17 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     cell->flash_colour = BLACK;
 
-    // is this cell excluded from movement by mesmerise-related statuses?
+    // Don't hide important information by recolouring monsters.
+    bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
+        return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
+    });
+
+    // Is this cell excluded from movement by mesmerise-related statuses?
     // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
-    bool mesmerise_excluded = ((gc != you.pos()) // for fungus form
+    bool mesmerise_excluded = (gc != you.pos() // for fungus form
+                               && allow_mon_recolour
                                && map_bounds(gc)
+                               && you.on_current_level
                                && (env.map_knowledge(gc).flags & MAP_WITHHELD)
                                && !feat_is_solid(grd(gc)));
 
@@ -1498,12 +1506,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         else
             cell->colour = real_colour(flash_colour);
 #else
-        else if (gc != you.pos())
-        {
-            monster_type mons = env.map_knowledge(gc).monster();
-            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
-                cell->colour = real_colour(flash_colour);
-        }
+        else if (gc != you.pos() && allow_mon_recolour)
+            cell->colour = real_colour(flash_colour);
 #endif
         cell->flash_colour = cell->colour;
     }

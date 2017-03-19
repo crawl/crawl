@@ -255,11 +255,13 @@ ancestor male name
 
 @_zulu_male_name_@
 
+# not many names
 w:5
-@_arabic_male_name_@ # not many names
+@_arabic_male_name_@
 
+# not many names
 w:5
-@_slavic_male_name_@ # not many names
+@_slavic_male_name_@
 %%%%
 ancestor female name
 
@@ -275,11 +277,13 @@ ancestor female name
 
 @_zulu_female_name_@
 
+# not many names
 w:5
-@_arabic_female_name_@ # not many names
+@_arabic_female_name_@
 
+# not many names
 w:5
-@_slavic_female_name_@ # not many names
+@_slavic_female_name_@
 %%%%
 _west_european_male_name_
 

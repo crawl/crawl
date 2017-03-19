@@ -147,6 +147,12 @@ string pluralise(const string &name, const char * const qualifiers[],
         // pluralisation.
         return name + "im";
     }
+    else if (ends_with(name, "arachi"))
+    {
+        // Barachi -> Barachim. Kind of Hebrew? Kind of goofy.
+        // (not sure if this is ever used...)
+        return name + "m";
+    }
     else if (name == "ushabti")
     {
         // ushabti -> ushabtiu (correct ancient Egyptian pluralisation)

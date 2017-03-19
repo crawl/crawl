@@ -62,15 +62,15 @@ typedef function<int (const string &, const string &, string)> key_describer;
 /// A set of optional functionality for lookup types.
 enum class lookup_type
 {
-    NONE            = 0,
+    none            = 0,
     /// append the 'type' to the db lookup (e.g. "<input> spell")
-    DB_SUFFIX       = 1<<0,
+    db_suffix       = 1<<0,
     /// whether the sorting functionality should be turned off
-    DISABLE_SORT    = 1<<1,
+    disable_sort    = 1<<1,
     /// whether the display menu for this supports tiles
-    SUPPORT_TILES   = 1<<2,
+    support_tiles   = 1<<2,
     /// whether the display menu for this has toggleable sorting
-    TOGGLEABLE_SORT = 1<<3,
+    toggleable_sort = 1<<3,
 };
 DEF_BITFIELD(lookup_type_flags, lookup_type);
 
@@ -132,7 +132,7 @@ private:
      */
     bool toggleable_sort() const
     {
-        return bool(flags & lookup_type::TOGGLEABLE_SORT);
+        return bool(flags & lookup_type::toggleable_sort);
     }
 
 private:
@@ -774,7 +774,7 @@ string LookupType::prompt_string() const
  */
 string LookupType::suffix() const
 {
-    if (flags & lookup_type::DB_SUFFIX)
+    if (flags & lookup_type::db_suffix)
         return " " + type;
     return "";
 }
@@ -816,7 +816,7 @@ void LookupType::display_keys(vector<string> &key_list) const
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
 #ifdef USE_TILE_LOCAL
-    !(flags & lookup_type::SUPPORT_TILES);
+    !(flags & lookup_type::support_tiles);
 #else
     true;
 #endif
@@ -1235,47 +1235,47 @@ static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
                _describe_monster,
-               lookup_type::SUPPORT_TILES | lookup_type::TOGGLEABLE_SORT),
+               lookup_type::support_tiles | lookup_type::toggleable_sort),
     LookupType('S', "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell,
-               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+               lookup_type::db_suffix | lookup_type::support_tiles),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
-               lookup_type::SUPPORT_TILES),
+               lookup_type::support_tiles),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
-               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+               lookup_type::db_suffix | lookup_type::support_tiles),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_card,
-               lookup_type::DB_SUFFIX),
+               lookup_type::db_suffix),
     LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _simple_menu_gen,
                _describe_item,
-               lookup_type::NONE),
+               lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
                _describe_generic,
-               lookup_type::SUPPORT_TILES),
+               lookup_type::support_tiles),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god,
-               lookup_type::SUPPORT_TILES),
+               lookup_type::support_tiles),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
                _describe_branch,
-               lookup_type::DISABLE_SORT),
+               lookup_type::disable_sort),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
-               lookup_type::DB_SUFFIX | lookup_type::SUPPORT_TILES),
+               lookup_type::db_suffix | lookup_type::support_tiles),
     LookupType('T', "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic,
-               lookup_type::DB_SUFFIX),
+               lookup_type::db_suffix),
 };
 
 /**
@@ -1444,7 +1444,7 @@ static bool _find_description(string &response)
     if (exact_match && ltype.describe(regex, true) != ' ')
         return true;
 
-    if (!(ltype.flags & lookup_type::DISABLE_SORT))
+    if (!(ltype.flags & lookup_type::disable_sort))
         sort(key_list.begin(), key_list.end());
 
     ltype.display_keys(key_list);

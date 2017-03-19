@@ -2119,7 +2119,7 @@ static int _player_evasion_bonuses()
 
     // transformation penalties/bonuses not covered by size alone:
     if (player_mutation_level(MUT_SLOW_REFLEXES))
-        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 3;
+        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
     return evbonus;
 }
@@ -5951,7 +5951,7 @@ int player::base_ac(int scale) const
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;
               // +2, +3, +4
     AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
-          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;
+          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
               // +3, +6, +9
 
     return AC * scale / 100;
