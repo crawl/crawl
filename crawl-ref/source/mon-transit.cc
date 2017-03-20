@@ -24,10 +24,7 @@
 
 monsters_in_transit the_lost_ones;
 
-static void level_place_lost_monsters(m_transit_list &m);
-static void level_place_followers(m_transit_list &m);
-
-static void cull_lost_mons(m_transit_list &mlist, int how_many)
+static void _cull_lost_mons(m_transit_list &mlist, int how_many)
 {
     // First pass, drop non-uniques.
     for (auto i = mlist.begin(); i != mlist.end();)
@@ -48,11 +45,21 @@ static void cull_lost_mons(m_transit_list &mlist, int how_many)
         mlist.erase(mlist.begin());
 }
 
+/**
+ * Get the monster transit list for the given level.
+ * @param lid    The level.
+ * @returns      The monster transit list.
+ **/
 m_transit_list *get_transit_list(const level_id &lid)
 {
     return map_find(the_lost_ones, lid);
 }
 
+/**
+ * Add a monster to a level's transit list.
+ * @param lid    The level.
+ * @param m      The monster to add.
+ **/
 void add_monster_to_transit(const level_id &lid, const monster& m)
 {
     ASSERT(m.alive());
@@ -68,9 +75,14 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
-        cull_lost_mons(mlist, how_many);
+        _cull_lost_mons(mlist, how_many);
 }
 
+/**
+ * Remove a monster from a level's transit list.
+ * @param lid    The level.
+ * @param mid    The mid_t of the monster to remove.
+ **/
 void remove_monster_from_transit(const level_id &lid, mid_t mid)
 {
     m_transit_list &mlist = the_lost_ones[lid];
@@ -81,6 +93,28 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid)
         {
             mlist.erase(i);
             return;
+        }
+    }
+}
+
+static void _level_place_followers(m_transit_list &m)
+{
+    for (auto i = m.begin(); i != m.end();)
+    {
+        auto mon = i++;
+        if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
+        {
+            if (mon->mons.is_divine_companion())
+            {
+                move_companion_to(monster_by_mid(mon->mons.mid),
+                                                 level_id::current());
+            }
+
+            // Now that the monster is onlevel, we can safely apply traps to it.
+            if (monster* new_mon = monster_by_mid(mon->mons.mid))
+                // old loc isn't really meaningful
+                new_mon->apply_location_effects(new_mon->pos());
+            m.erase(mon);
         }
     }
 }
@@ -97,23 +131,21 @@ static void _place_lost_ones(void (*placefn)(m_transit_list &ml))
         the_lost_ones.erase(i);
 }
 
-void place_transiting_monsters()
-{
-    _place_lost_ones(level_place_lost_monsters);
-}
-
+/**
+ * Place any followers transiting to this level.
+ **/
 void place_followers()
 {
-    _place_lost_ones(level_place_followers);
+    _place_lost_ones(_level_place_followers);
 }
 
-static bool place_lost_monster(follower &f)
+static bool _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
     return f.place(false);
 }
 
-static void level_place_lost_monsters(m_transit_list &m)
+static void _level_place_lost_monsters(m_transit_list &m)
 {
     for (auto i = m.begin(); i != m.end(); )
     {
@@ -124,9 +156,10 @@ static void level_place_lost_monsters(m_transit_list &m)
         if (player_in_branch(BRANCH_ABYSS) && coinflip())
             continue;
 
-        if (place_lost_monster(*mon))
+        if (_place_lost_monster(*mon))
         {
-            // Now that the monster is onlevel, we can safely apply traps to it.
+            // Now that the monster is on the level, we can safely apply traps
+            // to it.
             if (monster* new_mon = monster_by_mid(mon->mons.mid))
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
@@ -135,22 +168,12 @@ static void level_place_lost_monsters(m_transit_list &m)
     }
 }
 
-static void level_place_followers(m_transit_list &m)
+/**
+ * Place any monsters in transit to this level.
+ **/
+void place_transiting_monsters()
 {
-    for (auto i = m.begin(); i != m.end();)
-    {
-        auto mon = i++;
-        if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
-        {
-            if (mon->mons.is_divine_companion())
-                move_companion_to(monster_by_mid(mon->mons.mid), level_id::current());
-            // Now that the monster is onlevel, we can safely apply traps to it.
-            if (monster* new_mon = monster_by_mid(mon->mons.mid))
-                // old loc isn't really meaningful
-                new_mon->apply_location_effects(new_mon->pos());
-            m.erase(mon);
-        }
-    }
+    _place_lost_ones(_level_place_lost_monsters);
 }
 
 void apply_daction_to_transit(daction_type act)
@@ -326,7 +349,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     return true;
 }
 
-static int follower_tag_radius()
+static int _follower_tag_radius()
 {
     // If only friendlies are adjacent, we set a max radius of 5, otherwise
     // only adjacent friendlies may follow.
@@ -342,7 +365,7 @@ static int follower_tag_radius()
 
 void tag_followers()
 {
-    const int radius = follower_tag_radius();
+    const int radius = _follower_tag_radius();
     int n_followers = 18;
 
     vector<coord_def> places[2];
