@@ -24,10 +24,7 @@
 
 monsters_in_transit the_lost_ones;
 
-static void level_place_lost_monsters(m_transit_list &m);
-static void level_place_followers(m_transit_list &m);
-
-static void cull_lost_mons(m_transit_list &mlist, int how_many)
+static void _cull_lost_mons(m_transit_list &mlist, int how_many)
 {
     // First pass, drop non-uniques.
     for (auto i = mlist.begin(); i != mlist.end();)
@@ -68,7 +65,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
-        cull_lost_mons(mlist, how_many);
+        _cull_lost_mons(mlist, how_many);
 }
 
 void remove_monster_from_transit(const level_id &lid, mid_t mid)
@@ -85,57 +82,7 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid)
     }
 }
 
-static void _place_lost_ones(void (*placefn)(m_transit_list &ml))
-{
-    level_id c = level_id::current();
-
-    monsters_in_transit::iterator i = the_lost_ones.find(c);
-    if (i == the_lost_ones.end())
-        return;
-    placefn(i->second);
-    if (i->second.empty())
-        the_lost_ones.erase(i);
-}
-
-void place_transiting_monsters()
-{
-    _place_lost_ones(level_place_lost_monsters);
-}
-
-void place_followers()
-{
-    _place_lost_ones(level_place_followers);
-}
-
-static bool place_lost_monster(follower &f)
-{
-    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-    return f.place(false);
-}
-
-static void level_place_lost_monsters(m_transit_list &m)
-{
-    for (auto i = m.begin(); i != m.end(); )
-    {
-        auto mon = i++;
-
-        // Monsters transiting to the Abyss have a 50% chance of being
-        // placed, otherwise a 100% chance.
-        if (player_in_branch(BRANCH_ABYSS) && coinflip())
-            continue;
-
-        if (place_lost_monster(*mon))
-        {
-            // Now that the monster is onlevel, we can safely apply traps to it.
-            if (monster* new_mon = monster_by_mid(mon->mons.mid))
-                // old loc isn't really meaningful
-                new_mon->apply_location_effects(new_mon->pos());
-            m.erase(mon);
-        }
-    }
-}
-
-static void level_place_followers(m_transit_list &m)
+static void _level_place_followers(m_transit_list &m)
 {
     for (auto i = m.begin(); i != m.end();)
     {
@@ -151,6 +98,56 @@ static void level_place_followers(m_transit_list &m)
             m.erase(mon);
         }
     }
+}
+
+static void _place_lost_ones(void (*placefn)(m_transit_list &ml))
+{
+    level_id c = level_id::current();
+
+    monsters_in_transit::iterator i = the_lost_ones.find(c);
+    if (i == the_lost_ones.end())
+        return;
+    placefn(i->second);
+    if (i->second.empty())
+        the_lost_ones.erase(i);
+}
+
+void place_followers()
+{
+    _place_lost_ones(_level_place_followers);
+}
+
+static bool _place_lost_monster(follower &f)
+{
+    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
+    return f.place(false);
+}
+
+static void _level_place_lost_monsters(m_transit_list &m)
+{
+    for (auto i = m.begin(); i != m.end(); )
+    {
+        auto mon = i++;
+
+        // Monsters transiting to the Abyss have a 50% chance of being
+        // placed, otherwise a 100% chance.
+        if (player_in_branch(BRANCH_ABYSS) && coinflip())
+            continue;
+
+        if (_place_lost_monster(*mon))
+        {
+            // Now that the monster is onlevel, we can safely apply traps to it.
+            if (monster* new_mon = monster_by_mid(mon->mons.mid))
+                // old loc isn't really meaningful
+                new_mon->apply_location_effects(new_mon->pos());
+            m.erase(mon);
+        }
+    }
+}
+
+void place_transiting_monsters()
+{
+    _place_lost_ones(_level_place_lost_monsters);
 }
 
 void apply_daction_to_transit(daction_type act)
@@ -326,7 +323,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     return true;
 }
 
-static int follower_tag_radius()
+static int _follower_tag_radius()
 {
     // If only friendlies are adjacent, we set a max radius of 5, otherwise
     // only adjacent friendlies may follow.
@@ -342,7 +339,7 @@ static int follower_tag_radius()
 
 void tag_followers()
 {
-    const int radius = follower_tag_radius();
+    const int radius = _follower_tag_radius();
     int n_followers = 18;
 
     vector<coord_def> places[2];
