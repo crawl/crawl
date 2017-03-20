@@ -1909,7 +1909,7 @@ static const mutation_def mut_data[] =
   {"You start regenerating.", "", ""},
 },
 
-{ MUT_STRONG_NOSE, 0, 1, mutflag::GOOD, false,
+{ MUT_STRONG_NOSE, 0, 1, mutflag::good, false,
   "strong nose",
 
   {"Your uncanny sense of smell can sniff out nearby items.", "", ""},
