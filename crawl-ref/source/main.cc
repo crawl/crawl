@@ -352,7 +352,7 @@ static void _reset_game()
     crawl_state.updating_scores = false;
     clear_message_store();
     macro_clear_buffers();
-    transit_lists_clear();
+    the_lost_ones.clear();
     you = player();
     reset_hud();
     StashTrack = StashTracker();
