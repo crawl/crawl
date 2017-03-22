@@ -132,8 +132,12 @@ static void _give_wand(monster* mon, int level)
         return;
     }
 
-    if (!one_chance_in(5) && (mon->type != MONS_MAURICE || !one_chance_in(3)))
+    if (!(one_chance_in(5)
+          || mon->type == MONS_MAURICE && one_chance_in(3)
+          || mon->type == MONS_IJYB))
+    {
         return;
+    }
 
     // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
     const bool no_high_tier =
