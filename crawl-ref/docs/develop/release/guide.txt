@@ -116,7 +116,7 @@ for those the list begins with step 3.
    the installer and stand-alone zips respectively. Unless you're on msys, you
    need to specify CROSSHOST as well:
 
-   make LTO=y CROSSHOST=i686-w64-mingw32 package-windows
+   make CROSSHOST=i686-w64-mingw32 package-windows
 
    It's ideal to test the windows packages (both Tiles and console) under wine
    at the very least, assuming you've cross-compiled, and testing under a
