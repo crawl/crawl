@@ -1723,8 +1723,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
 
-    case MONS_IJYB:
-    case MONS_DUVESSA:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_DEATH_MAGE:
     case MONS_DEEP_ELF_DEMONOLOGIST:
@@ -1738,6 +1736,8 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ORC_PRIEST:
         if (x_chance_in_y(2, 5))
         {
+    case MONS_DUVESSA:
+    case MONS_IJYB:
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = random_choose_weighted(4, ARM_LEATHER_ARMOUR,
                                                     2, ARM_RING_MAIL,
