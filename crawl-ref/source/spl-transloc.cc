@@ -151,7 +151,6 @@ void blink_instead()
         mprf(MSGCH_WARN, "Beware!");
         more();
     }
-    return false;
 }
 
 /**
