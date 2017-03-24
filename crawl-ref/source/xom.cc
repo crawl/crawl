@@ -3105,13 +3105,11 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         && _teleportation_check())
     {
         const int explored = _exploration_estimate(true);
-        if (nasty && (explored >= 40 || tension > 10)
-            || explored >= 60 + random2(40))
+        if (!(nasty && (explored >= 40 || tension > 10)
+            || explored >= 60 + random2(40)))
         {
-            // TODO: invert this conditional
-        }
-        else
             return XOM_BAD_TELEPORT;
+        }
     }
     if (x_chance_in_y(16, sever))
         return XOM_BAD_POLYMORPH;
