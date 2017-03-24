@@ -124,14 +124,15 @@ static void _give_book(monster* mon, int level)
 static void _give_wand(monster* mon, int level)
 {
     bool wand_allowed = mons_is_unique(mon->type)
-                     && !mons_class_flag(mon->type, M_NO_WAND)
-                     && _should_give_unique_item(mon);
+                        && !mons_class_flag(mon->type, M_NO_WAND)
+                        && _should_give_unique_item(mon);
+
     if (!wand_allowed)
         return;
 
-    bool give_wand = mon->type == MONS_IJYB
-                  || mon->type == MONS_MAURICE && one_chance_in(3)
-                  || one_chance_in(5);
+    bool give_wand = mons_class_flag(mon->type, M_ALWAYS_WAND)
+                     || one_chance_in(5);
+
     if (!give_wand)
         return;
 
