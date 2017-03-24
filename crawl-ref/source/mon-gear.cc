@@ -47,12 +47,9 @@ void give_specific_item(monster* mon, int thing)
     mthing.pos.reset();
     mthing.link = NON_ITEM;
 
-    if ((mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
-        && (is_blessed(mthing)
-            || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
+    if (mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
     {
-        if (is_blessed(mthing))
-            convert2bad(mthing);
+        convert2bad(mthing);
         if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH)
             _strip_item_ego(mthing);
     }
