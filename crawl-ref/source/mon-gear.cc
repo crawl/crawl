@@ -126,18 +126,17 @@ static void _give_book(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-    if (!mons_is_unique(mon->type) || mons_class_flag(mon->type, M_NO_WAND)
-                || !_should_give_unique_item(mon))
-    {
+    bool wand_allowed = mons_is_unique(mon->type)
+                     && !mons_class_flag(mon->type, M_NO_WAND)
+                     && _should_give_unique_item(mon);
+    if (!wand_allowed)
         return;
-    }
 
-    if (!(one_chance_in(5)
-          || mon->type == MONS_MAURICE && one_chance_in(3)
-          || mon->type == MONS_IJYB))
-    {
+    bool give_wand = mon->type == MONS_IJYB
+                  || mon->type == MONS_MAURICE && one_chance_in(3)
+                  || one_chance_in(5);
+    if (!give_wand)
         return;
-    }
 
     // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
     const bool no_high_tier =
