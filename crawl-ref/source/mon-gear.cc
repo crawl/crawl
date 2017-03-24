@@ -161,7 +161,7 @@ static void _give_wand(monster* mon, int level)
         dprf(DIAG_MONPLACE,
              "Destroying %s because %s doesn't want a %s wand.",
              wand.name(DESC_A).c_str(),
-             mon->name(DESC_THE).c_str()
+             mon->name(DESC_THE).c_str(),
              rejection_reason);
         destroy_item(idx, true);
         return;
