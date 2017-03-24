@@ -174,6 +174,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
         new BoolGameOption(SIMPLE_NAME(show_game_time), true),
+        new BoolGameOption(SIMPLE_NAME(equip_bar), false),
         new BoolGameOption(SIMPLE_NAME(mouse_input), false),
         new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),

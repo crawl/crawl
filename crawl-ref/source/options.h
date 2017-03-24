@@ -216,6 +216,7 @@ public:
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_time; // Show game time instead of player turns.
+    bool        equip_bar; // Show equip bar instead of noise bar.
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
