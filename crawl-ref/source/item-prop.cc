@@ -1859,21 +1859,25 @@ bool is_blessed_convertible(const item_def &item)
                    || is_blessed(item)));
 }
 
+static map<weapon_type, weapon_type> _holy_upgrades =
+{
+    { WPN_DEMON_BLADE, WPN_EUDEMON_BLADE },
+    { WPN_DEMON_WHIP, WPN_SACRED_SCOURGE },
+    { WPN_DEMON_TRIDENT, WPN_TRISHULA },
+};
+
 bool convert2good(item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS)
         return false;
 
-    switch (item.sub_type)
+    if (auto repl = map_find(_holy_upgrades, (weapon_type) item.sub_type))
     {
-    default: return false;
-
-    case WPN_DEMON_BLADE:   item.sub_type = WPN_EUDEMON_BLADE; break;
-    case WPN_DEMON_WHIP:    item.sub_type = WPN_SACRED_SCOURGE; break;
-    case WPN_DEMON_TRIDENT: item.sub_type = WPN_TRISHULA; break;
+        item.sub_type = *repl;
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool convert2bad(item_def &item)
@@ -1881,16 +1885,18 @@ bool convert2bad(item_def &item)
     if (item.base_type != OBJ_WEAPONS)
         return false;
 
-    switch (item.sub_type)
+    auto it = find_if(begin(_holy_upgrades), end(_holy_upgrades),
+                      [&item](const pair<const weapon_type, weapon_type> elt)
+                      {
+                          return elt.second == item.sub_type;
+                      });
+    if  (it != end(_holy_upgrades))
     {
-    default: return false;
-
-    case WPN_EUDEMON_BLADE:        item.sub_type = WPN_DEMON_BLADE; break;
-    case WPN_SACRED_SCOURGE:       item.sub_type = WPN_DEMON_WHIP; break;
-    case WPN_TRISHULA:             item.sub_type = WPN_DEMON_TRIDENT; break;
+        item.sub_type = it->first;
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
