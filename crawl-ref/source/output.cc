@@ -595,7 +595,7 @@ static void _print_stats_equip(int x, int y)
             }
             else if (!you_can_wear(eqslot, true))
                 cprintf(" ");
-	    else
+            else
                 cprintf(".");
         }
     }
