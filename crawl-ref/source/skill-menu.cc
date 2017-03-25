@@ -361,13 +361,10 @@ void SkillMenuEntry::set_aptitude()
         //Determine Cyno skill bonus/malus to display if SP_CYNO 
         if (you.species == SP_CYNO)
         {
-            //Divide aptitude skill to get "current" Cyno aptitude to display
-            int cyno_apt = you.skill(m_sk, 1, true) / 6;
-            cyno_bonus = 4 - cyno_apt * 4;
+            int cyno_skill = you.skill(m_sk, 1, true);
 
-            //Set the floor aptitude to -8
-            if (cyno_bonus < -8)
-                cyno_bonus = -8;
+            //Cyno skill costs start at effective +4 and reduce by -2 for each level after reaching 7, floor of -6
+            cyno_bonus = max(4 - max((cyno_skill - 6) * 2, 0), -6);
         }
         manual_bonus = manual_bonus + cyno_bonus;
 
