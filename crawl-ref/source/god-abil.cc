@@ -1875,7 +1875,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     // Rebrand or drop any holy equipment, and keep wielding the rest. Also
     // remove any active avatars.
-    for (int slot = MSLOT_WEAPON; slot <= MSLOT_ALT_WEAPON; slot++) {
+    for (int slot = MSLOT_WEAPON; slot <= MSLOT_ALT_WEAPON; slot++)
+    {
         item_def *wpn = mon->mslot_item(static_cast<mon_inv_type>(slot));
         if (wpn && get_weapon_brand(*wpn) == SPWPN_HOLY_WRATH)
         {
