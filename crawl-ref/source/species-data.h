@@ -76,7 +76,7 @@ static const map<species_type, species_def> species_data =
     {"You have a short attention span."},
     {"short attention span"},
     { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
-      JOB_ICE_ELEMENTALIST },
+      JOB_WANDERER },
     { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
