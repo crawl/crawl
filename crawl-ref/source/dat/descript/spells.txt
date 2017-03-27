@@ -561,8 +561,7 @@ Summons demons of flame and damnation.
 %%%%
 Fireball spell
 
-Hurls an explosive ball of fire. This spell does not cost any spell levels if
-the learner already knows Delayed Fireball.
+Hurls an explosive ball of fire.
 %%%%
 Flame Tongue spell
 

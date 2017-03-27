@@ -244,12 +244,6 @@ plus facile à esquiver. Ce sort est extrêmement efficace contre les attaques
 mono-cible et pénétrantes. Chaque fois qu'un projectile est dévié, le sort
 risque d'expirer avec des chances plus faibles à haute puissance.
 %%%%
-Delayed Fireball spell
-
-Incanter avec succès ce sort donne au sorcier l'habilité de relâcher
-instantanément une boule de feu plus tard. Connaitre ce sortilège permet au
-sorcier d'apprendre Boule de feu sans coût additionnel de niveau de sort.
-%%%%
 Dig spell
 
 Ce sort forme des tunnels au travers la pierre brute.

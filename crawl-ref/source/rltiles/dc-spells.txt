@@ -57,6 +57,7 @@ violent_unravelling VIOLENT_UNRAVELLING
 bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
 conjure_flame CONJURE_FLAME
+# Remove when TAG_MAJOR_VERSION > 34
 delayed_fireball DELAYED_FIREBALL
 fire_storm FIRE_STORM
 fireball FIREBALL
