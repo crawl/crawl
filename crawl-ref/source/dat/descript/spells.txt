@@ -589,7 +589,8 @@ the Vaults, or the Crypt; the specific branch varies with the caster.
 %%%%
 Freeze spell
 
-Freezes an adjacent creature. This may temporarily slow cold-blooded creatures.
+Freezes an adjacent creature, dealing damage that bypasses any armour the
+target may have. This may temporarily slow cold-blooded creatures.
 %%%%
 Freezing Cloud spell
 
@@ -764,9 +765,10 @@ Hurls a large and heavy metal shot.
 Irradiate spell
 
 Transmutes an ultra-thin layer of the caster's skin (or equivalent) directly
-into pure magical energy, blasting and deforming adjacent creatures. The caster
-is not left entirely unaffected; some of the magic lingers, enough to leave
-them dangerously contaminated after a few castings.
+into pure magical energy, blasting adjacent creatures and bypassing any armour
+they may have. It heavily deforms its targets, weakening them and reducing
+their armour. The caster is not left entirely unaffected; some of the magic
+lingers, enough to leave them dangerously contaminated after a few castings.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -956,8 +958,8 @@ armour with an encumbrance rating of 5 or more).
 Ozocubu's Refrigeration spell
 
 Drains heat from the caster and their surroundings, causing harm to all
-creatures not resistant to cold and preventing the caster from using potions
-for a brief duration.
+creatures not resistant to cold and bypassing any armour the targets may have.
+It prevents the caster from using potions for a brief duration.
 %%%%
 Pain spell
 
