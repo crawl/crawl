@@ -414,9 +414,9 @@ static const vector<god_passive> god_passives[] =
 
     // Wu Jian
     {
-        { 1, passive_t::wu_jian_whirlwind, "attack monsters by moving around them." },
-        { 2, passive_t::wu_jian_wall_jump, "perform distracting airborne attacks by moving against a solid obstacle." },
-        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if distracted." },
+        { 1, passive_t::wu_jian_lunge, "strike by moving towards foes" },
+        { 2, passive_t::wu_jian_whirlwind, "attack monsters by moving around them" },
+        { 3, passive_t::wu_jian_wall_jump, "spend piety to perform an aerial attack, by moving against a wall" },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1595,6 +1595,12 @@ static int _wu_jian_number_of_attacks()
                           attack_delay * BASELINE_DELAY);
 }
 
+/// Percent chance for an WJC whirlwind to make a monster dizzy (lower movement speed)
+static int _whirlwind_dizzy_chance(int target_hd)
+{
+    return min(50, div_rand_round(15 * you.experience_level, target_hd));
+}
+
 static void _wu_jian_lunge(const coord_def& old_pos)
 {
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
@@ -1694,6 +1700,26 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
             whirlwind.wu_jian_number_of_targets = common_targets.size();
             whirlwind.attack();
         }
+
+        if (mons->alive()) {
+            const int dizzy_chance
+                = _whirlwind_dizzy_chance(mons->get_hit_dice());
+
+            const monsterentry* entry = get_monster_data(mons->type);
+
+            dprf("Attempting dizzy with chance %d", dizzy_chance);
+            if (!entry || !x_chance_in_y(dizzy_chance, 100))
+                break;;
+
+            if (mons->holiness() == MH_NONLIVING)
+                simple_monster_message(*mons, " slows down, unable to track your spinning motion.");
+            else
+                simple_monster_message(*mons, " is dizzied by your spinning.");
+
+            mons->add_ench(
+                mon_enchant(ENCH_DIZZY, 1, nullptr,
+                            random_range(9, 15) * BASELINE_DELAY));
+        }
     }
 }
 
@@ -1733,34 +1759,20 @@ bool wu_jian_can_wall_jump(const coord_def& target)
         return false;
     }
 
-    for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
-    {
-        monster* mon = monster_at(*ai);
-        if (mon && !_dont_attack_martial(mon) && mon->alive())
-            return true;
-    }
-
-    mpr("There is no target in range.");
-    targeter_walljump range;
-    range.set_aim(wall_jump_landing_spot);
-    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
-
-    return false;
+    return true;
 }
 
 /// Percent chance for an WJC walljump to distract a target of the given HD.
 static int _walljump_distract_chance(int target_hd)
 {
-    // XXX: unify with _walljump_distract_chance()
-    const int base_chance = div_rand_round(12 * you.experience_level,
-                                           target_hd);
-    if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-        return div_rand_round(base_chance * 15, 10);
-    return min(base_chance, 50); // Capped if you don't have momentum.
+    return min(50, div_rand_round(12 * you.experience_level, target_hd));
 }
 
 void wu_jian_wall_jump_effects(const coord_def& old_pos)
 {
+    mpr("You jump against the obstacle! You feel supported by a divine force.");
+    lose_piety(1);
+
     vector<monster*> targets;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {

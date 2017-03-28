@@ -471,6 +471,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_DIZZY:
+        if (!quiet)
+        {
+             simple_monster_message(*this, " is no longer dizzy.");
+        }
+        break;
+
     case ENCH_SILENCE:
         invalidate_agrid();
         if (!quiet && !silenced(pos()))
@@ -2161,7 +2168,7 @@ static const char *enchant_names[] =
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
-    "stilling the winds", "thunder_ringed", "distracted by acrobatics",
+    "stilling the winds", "thunder_ringed", "distracted by acrobatics","dizzy",
     "buggy",
 };
 
@@ -2318,6 +2325,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
+    case ENCH_DIZZY:
     case ENCH_CORROSION:
         cturn = 250 / (1 + modded_speed(mons, 10));
         break;

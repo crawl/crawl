@@ -316,15 +316,15 @@ distances, and become able to summon a storm of golden clouds to increase their
 precision and damage for as long as they keep using martial attacks.
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them and attempt to cause slowing.
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to deal a weak, dizzying strike.
   .......       .......
 
-  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault towards
-  ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. enemies, striking all enemies adjacent to the landing
-  ..x....       ..x.... spot. May distract any witnessing foes.
+  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to jump away from 
+  ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. it in exchange for some piety, distracting and
+  ..x....       ..x.... dealing some damage to nearby foes.
 
-  .......       ....... (***) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage, and even more if they are distracted.
+  .......       ....... (***) <lightred>Lunge</lightred>: Move directly towards an enemy to strike.
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. 
   .......       .......
 %%%%
 Kikubaaqudgha powers
