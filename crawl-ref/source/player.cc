@@ -609,8 +609,8 @@ void update_vision_range()
     int nom   = 1;
     int denom = 1;
 
-    // Barachians have +1 base LOS.
-    if (you.species == SP_BARACHIAN)
+    // Barachi have +1 base LOS.
+    if (you.species == SP_BARACHI)
     {
         nom *= LOS_DEFAULT_RANGE + 1;
         denom *= LOS_DEFAULT_RANGE;
@@ -5414,7 +5414,7 @@ string player::shout_verb(bool directed) const
 
     const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
 
-    if (species == SP_BARACHIAN)
+    if (species == SP_BARACHI)
         return frog_shout_verbs[screaminess];
     if (species != SP_FELID)
         return shout_verbs[screaminess];

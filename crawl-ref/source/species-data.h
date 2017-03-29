@@ -349,7 +349,7 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
-{ SP_BARACHIAN, {
+{ SP_BARACHI, {
     "Ba",
     "Barachi", "Barachian", "Frog",
     SPF_NO_HAIR,
