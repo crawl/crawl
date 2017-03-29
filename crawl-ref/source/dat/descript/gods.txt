@@ -315,17 +315,18 @@ below. They will also be taught to move at unfathomable speeds for short
 distances, and become able to summon a storm of golden clouds to increase their
 precision and damage for as long as they keep using martial attacks.
 
-  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  .......       ....... (*) <lightred>Lunge</lightred>: Move directly towards an enemy to strike.
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. 
+  .......       .......
+
+  .......       ...<lightred>@</lightred>... (**) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
   ...<lightred>@</lightred>O..  -->  ....O.. an enemy to deal a weak, dizzying strike.
   .......       .......
 
-  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to jump away from 
-  ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. it in exchange for some piety, distracting and
-  ..x....       ..x.... dealing some damage to nearby foes.
+  ..x....       ..x.... (***) <lightred>Wall Jump</lightred>: Move into a wall to jump away. It  
+  ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. isn't faster than walking, but will distract and deal 
+  ..x....       ..x.... damage to nearby enemies.
 
-  .......       ....... (***) <lightred>Lunge</lightred>: Move directly towards an enemy to strike.
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. 
-  .......       .......
 %%%%
 Kikubaaqudgha powers
 

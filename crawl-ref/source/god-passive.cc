@@ -416,7 +416,7 @@ static const vector<god_passive> god_passives[] =
     {
         { 1, passive_t::wu_jian_lunge, "strike by moving towards foes" },
         { 2, passive_t::wu_jian_whirlwind, "attack monsters by moving around them" },
-        { 3, passive_t::wu_jian_wall_jump, "spend piety to perform an aerial attack, by moving against a wall" },
+        { 3, passive_t::wu_jian_wall_jump, "perform a distracting aerial attack by moving against a wall" },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1770,15 +1770,14 @@ static int _walljump_distract_chance(int target_hd)
 
 void wu_jian_wall_jump_effects(const coord_def& old_pos)
 {
-    mpr("You jump against the obstacle! You feel supported by a divine force.");
-    lose_piety(1);
+    you.time_taken *= 2; // Wall jumping takes equivalent time to walking
 
-    vector<monster*> targets;
+    set<monster*> targets;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
-            targets.push_back(target);
+            targets.insert(target);
 
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
@@ -1822,37 +1821,54 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         }
     }
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    for (adjacent_iterator ai(old_pos, true); ai; ++ai)
     {
-        monster* mon = monster_at(*ri);
+        monster* target = monster_at(*ai);
+        if (target && !_dont_attack_martial(target) && target->alive())
+            targets.insert(target);
+    }
 
-        if (mon && mon->alive()
-            && you.can_see(*mon)
-            && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon)
-            && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
+    for (auto target : targets)
+    {
+        if (target && target->alive()
+            && you.can_see(*target)
+            && target->behaviour != BEH_SLEEP
+            && !_dont_attack_martial(target)
+            && !target->has_ench(ENCH_DISTRACTED_ACROBATICS))
         {
             const int distract_chance
-                = _walljump_distract_chance(mon->get_hit_dice());
+                = _walljump_distract_chance(target->get_hit_dice());
 
-            const monsterentry* entry = get_monster_data(mon->type);
+            const monsterentry* entry = get_monster_data(target->type);
 
             dprf("Attempting distract with chance %d", distract_chance);
-            if (!entry || !x_chance_in_y(distract_chance, 100))
+            if (!entry) {
                 continue;
+            }
 
-            if (mon->holiness() == MH_NONLIVING)
-                simple_monster_message(*mon, " loses track of your position.");
-            else
-                simple_monster_message(*mon, " is distracted by your jump.");
+            if (x_chance_in_y(distract_chance, 100)) {
+                if (target->holiness() == MH_NONLIVING)
+                    simple_monster_message(*target, " loses track of your position.");
+                else
+                    simple_monster_message(*target, " is distracted by your jump.");
 
-            mon->add_ench(
-                mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
-                            random_range(3, 5) * BASELINE_DELAY));
-            mon->foe = MHITNOT;
-            mon->target = mon->pos();
+                target->add_ench(
+                    mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
+                                random_range(4, 6) * BASELINE_DELAY));
+                target->foe = MHITNOT;
+                target->target = target->pos();
+            } else {
+                // targets are always at least set back for half of the
+                // wall jump time (the player movement speed).
+                target->speed_increment -= player_movement_speed();
+                if (target->holiness() == MH_NONLIVING)
+                    simple_monster_message(*target, " briefly loses track of your position.");
+                else
+                    simple_monster_message(*target, " is briefly distracted by your jump.");
+            }
         }
     }
+
 }
 
 /**

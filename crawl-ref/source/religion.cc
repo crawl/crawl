@@ -340,7 +340,7 @@ const vector<god_power> god_powers[NUM_GODS] =
            "no longer perform lunging strikes" },
       { 2, "attack monsters by moving around them",
            "no longer perform spinning attacks" },
-      { 3, "spend piety to perform an aerial attack, by moving against a wall",
+      { 3, "perform a distracting aerial attack by moving against a wall",
            "no longer perform airborne attacks" },
       { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
       { 5, ABIL_WU_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
