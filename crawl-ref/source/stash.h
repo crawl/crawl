@@ -135,11 +135,12 @@ struct stash_search_result
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
-    // Are there duplicates? This is updated after the initial search.
+    // Are there duplicates? This is updated only after the initial search.
     int duplicates;
+    int duplicate_piles;
 
     stash_search_result() : pos(), player_distance(0), match(), primary_sort(), item(),
-                            shop(nullptr), in_inventory(false), duplicates(0)
+                            shop(nullptr), in_inventory(false), duplicates(0), duplicate_piles(0)
     {
     }
 
