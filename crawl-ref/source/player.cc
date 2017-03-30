@@ -5956,6 +5956,9 @@ int player::base_ac(int scale) const
 
 int player::armour_class(bool /*calc_unid*/) const
 {
+    if (you.incapacitated())
+       return 0;
+ 
     const int scale = 100;
     int AC = base_ac(scale);
 
