@@ -91,7 +91,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_TARGET | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF,
     3,
     100,
     3, 3,
