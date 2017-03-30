@@ -1458,6 +1458,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
     case ENCH_DISTRACTED_ACROBATICS:
+    case ENCH_DIZZY:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
