@@ -23,13 +23,6 @@
 #define MAX_LOST 100
 
 monsters_in_transit the_lost_ones;
-items_in_transit    transiting_items;
-
-void transit_lists_clear()
-{
-    the_lost_ones.clear();
-    transiting_items.clear();
-}
 
 static void level_place_lost_monsters(m_transit_list &m);
 static void level_place_followers(m_transit_list &m);
@@ -53,53 +46,6 @@ static void cull_lost_mons(m_transit_list &mlist, int how_many)
     // the old ones.
     while (how_many-- > MAX_LOST && !mlist.empty())
         mlist.erase(mlist.begin());
-}
-
-static void cull_lost_items(i_transit_list &ilist, int how_many)
-{
-    // First pass, drop non-artefacts.
-    for (auto i = ilist.begin(); i != ilist.end();)
-    {
-        auto finger = i++;
-        if (!is_artefact(*finger))
-        {
-            ilist.erase(finger);
-
-            if (--how_many <= MAX_LOST)
-                return;
-        }
-    }
-
-    // Second pass, drop randarts.
-    for (auto i = ilist.begin(); i != ilist.end();)
-    {
-        auto finger = i++;
-        if (is_random_artefact(*finger))
-        {
-            ilist.erase(finger);
-
-            if (--how_many <= MAX_LOST)
-                return;
-        }
-    }
-
-    // Third pass, drop unrandarts.
-    for (auto i = ilist.begin(); i != ilist.end();)
-    {
-        auto finger = i++;
-        if (is_unrandom_artefact(*finger))
-        {
-            ilist.erase(finger);
-
-            if (--how_many <= MAX_LOST)
-                return;
-        }
-    }
-
-    // If we're still over the limit (unlikely), just lose
-    // the old ones.
-    while (how_many-- > MAX_LOST && !ilist.empty())
-        ilist.erase(ilist.begin());
 }
 
 m_transit_list *get_transit_list(const level_id &lid)
@@ -205,47 +151,6 @@ static void level_place_followers(m_transit_list &m)
             m.erase(mon);
         }
     }
-}
-
-void add_item_to_transit(const level_id &lid, const item_def &i)
-{
-    i_transit_list &ilist = transiting_items[lid];
-    ilist.push_back(i);
-
-    dprf("Item in transit: %s", i.name(DESC_PLAIN).c_str());
-
-    const int how_many = ilist.size();
-    if (how_many > MAX_LOST)
-        cull_lost_items(ilist, how_many);
-}
-
-void place_transiting_items()
-{
-    level_id c = level_id::current();
-
-    i_transit_list *transit = map_find(transiting_items, c);
-    if (!transit)
-        return;
-
-    i_transit_list keep;
-    for (item_def &item : *transit)
-    {
-        coord_def pos = item.pos;
-
-        if (!in_bounds(pos))
-            pos = random_in_bounds();
-
-        const coord_def where_to_go =
-            dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
-                                  pos, true);
-
-        // List of items we couldn't place.
-        if (!copy_item_to_grid(item, where_to_go, -1, false, true))
-            keep.push_back(item);
-    }
-
-    // Only unplaceable items are kept in list.
-    *transit = keep;
 }
 
 void apply_daction_to_transit(daction_type act)

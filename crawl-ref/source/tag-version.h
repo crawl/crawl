@@ -204,6 +204,7 @@ enum tag_minor_version
     TAG_MINOR_ELYVILON_WRATH,      // Make Elyvilon wrath expire with XP gain.
     TAG_MINOR_DESOLATION_GLOBAL,   // Recover from saves where desolation is incorrectly marked as global
     TAG_MINOR_NO_MORE_LORC,        // Don't save lava orc temperature (or anything else). LO/Dj removal.
+    TAG_MINOR_NO_ITEM_TRANSIT,     // Remove code to transit items across levels.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

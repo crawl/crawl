@@ -718,10 +718,6 @@ Reject Sacrifices ability
 연이은 거부는 희생 시간을 더 증가시킬 것입니다.
 만약 희생을 받아들인다면 이 시간은 표준적으로 되돌아갑니다.
 %%%%
-Release Delayed Fireball ability
-
-미리 준비해둔 (지연된) 화염구를 추가적인 마법이나 허기 없이 즉시 발사합니다.
-%%%%
 Sacrifice Arcana ability
 
 아르카나를 희생한다.

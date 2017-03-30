@@ -74,7 +74,7 @@ static int _get_full_exclusion_radius()
 {
     // XXX: dedup with update_vision_range()!
     return LOS_DEFAULT_RANGE - player_mutation_level(MUT_NIGHTSTALKER)
-                             + (you.species == SP_BARACHIAN ? 1 : 0);
+                             + (you.species == SP_BARACHI ? 1 : 0);
 }
 
 // If the monster is in the auto_exclude list, automatically set an

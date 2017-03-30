@@ -17,7 +17,6 @@ for (/SP_([A-Z_]+)/g)
 {
     s/_/ /g;
     s/\b([A-Z])([A-Z]+)/\u$1\L$2/g;
-    s/Barachian/Barachi/; # TODO: maybe we should rename the enum...
     if ($db)
     {
         print "Draconian\n" if /Base Draconian/;

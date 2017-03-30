@@ -427,12 +427,23 @@ bool fill_status_info(int status, status_info* inf)
         _describe_terrain(inf);
         break;
 
-    // Silenced by an external source.
+    // Also handled by DUR_SILENCE, see duration-data.h
     case STATUS_SILENCE:
         if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
         {
+            // Only display the status light if not using the noise bar.
+            if (Options.equip_bar)
+            {
+                inf->light_colour = LIGHTRED;
+                inf->light_text   = "Sil";
+            }
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
+        }
+        if (Options.equip_bar && you.duration[DUR_SILENCE])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text = "Sil";
         }
         break;
 

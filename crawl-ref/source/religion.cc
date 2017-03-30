@@ -336,11 +336,11 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
 
     // Wu Jian
-    { { 1, "attack and slow monsters by moving around them",
+    { { 1, "attack monsters by moving around them",
            "no longer perform spinning attacks" },
       { 2, "perform distracting airborne attacks by moving against a solid obstacle",
            "no longer perform airborne attacks" },
-      { 3, "strike by moving towards foes, devastating slowed or distracted foes",
+      { 3, "strike by moving towards foes, devastating them if distracted",
            "no longer perform lunging strikes" },
       { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
       { 5, ABIL_WU_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
@@ -3562,7 +3562,7 @@ void join_religion(god_type which_god)
     take_note(Note(NOTE_GET_GOD, you.religion));
     const bool returning = you.worshipped[which_god]
                            || is_good_god(which_god)
-                              && you.species == SP_BARACHIAN;
+                              && you.species == SP_BARACHI;
     simple_god_message(
         make_stringf(" welcomes you%s!",
                      returning ? " back" : "").c_str());

@@ -104,8 +104,9 @@ COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
  */
 static string _god_wrath_name(god_type god)
 {
-    const bool use_full_name = god == GOD_FEDHAS; // fedhas is very formal.
-                                                  // apparently.
+    const bool use_full_name = god == GOD_FEDHAS      // fedhas is very formal.
+                               || god == GOD_WU_JIAN; // apparently.
+
     return make_stringf("the %s of %s",
                         _god_wrath_adjectives[god],
                         god_name(god, use_full_name).c_str());
@@ -1608,66 +1609,30 @@ static bool _choose_hostile_monster(const monster& mon)
     return mon.attitude == ATT_HOSTILE;
 }
 
-// XXX: this whole pattern approach can probably be dropped
-enum class wjc_pattern
+static int _wu_jian_summon_weapons()
 {
-    short_circle,
-    long_circle,
-};
+    god_type god = GOD_WU_JIAN;
+    const int num = 3 + random2(3);
+    int created = 0;
 
-static void _summon_hostile_weapons_wjc_flavour(weapon_type subtype,
-                                                wjc_pattern pattern)
-{
-    vector<coord_def> positions;
-
-    switch (pattern)
+    for (int i = 0; i < num; ++i)
     {
-        case wjc_pattern::short_circle:
-            positions.push_back(you.pos() + coord_def(1,0));
-            positions.push_back(you.pos() + coord_def(-1,0));
-            positions.push_back(you.pos() + coord_def(0,1));
-            positions.push_back(you.pos() + coord_def(0,-1));
-            break;
-        case wjc_pattern::long_circle:
-            positions.push_back(you.pos() + coord_def(2,0));
-            positions.push_back(you.pos() + coord_def(-2,0));
-            positions.push_back(you.pos() + coord_def(0,2));
-            positions.push_back(you.pos() + coord_def(0,-2));
-            break;
-    }
+        const int subtype = random_choose(WPN_DIRE_FLAIL, WPN_QUARTERSTAFF,
+                                          WPN_BROAD_AXE, WPN_GREAT_SWORD,
+                                          WPN_RAPIER, WPN_GLAIVE);
+        const int ego = random_choose(SPWPN_VORPAL, SPWPN_FLAMING,
+                                      SPWPN_FREEZING, SPWPN_ELECTROCUTION,
+                                      SPWPN_SPEED);
 
-    for (auto& position : positions)
-    {
-        mgen_data mg = mgen_data::hostile_at(MONS_DANCING_WEAPON, true, position)
-                        .set_summoned(nullptr, 0, 0, GOD_WU_JIAN)
-                        .set_non_actor_summoner(_god_wrath_name(GOD_WU_JIAN));
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-        mg.flags |= MG_FORCE_PLACE;
-        // Now create monster.
         if (monster *mon =
-            create_monster(mg))
+            create_monster(_wrath_mon_data(MONS_DANCING_WEAPON, god)))
         {
             ASSERT(mon->weapon() != nullptr);
             item_def& wpn(*mon->weapon());
 
-            // XXX: this is absurdly over-specific. what the heck
-            switch (subtype)
-            {
-                case WPN_DIRE_FLAIL:
-                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_FLAMING);
-                    break;
-                case WPN_QUARTERSTAFF:
-                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
-                    break;
-                case WPN_DAGGER:
-                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
-                    break;
-                default:
-                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_SPEED);
-                    break;
-            }
+            set_item_ego_type(wpn, OBJ_WEAPONS, ego);
 
-            wpn.plus  = random2(5);
+            wpn.plus = random2(5);
             wpn.sub_type = subtype;
 
             set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
@@ -1675,51 +1640,47 @@ static void _summon_hostile_weapons_wjc_flavour(weapon_type subtype,
             item_colour(wpn);
 
             ghost_demon newstats;
-            const int power = div_rand_round(you.experience_level * 50, 9);
-            newstats.init_dancing_weapon(wpn, power);
+            newstats.init_dancing_weapon(wpn, you.experience_level * 50 / 9);
 
             mon->set_ghost(newstats);
             mon->ghost_demon_init();
+
+            created++;
         }
     }
+
+    return created;
 }
 
 static bool _wu_jian_retribution()
 {
-    switch (random2(4))
+    god_type god = GOD_WU_JIAN;
+
+    if (_wu_jian_summon_weapons())
     {
+        switch (random2(4))
+        {
         case 0:
-            wu_jian_sifu_message(" whispers, \"Die by a thousand cuts...\"");
-            mpr("You feel the sudden stab of multiple needles!");
-            _summon_hostile_weapons_wjc_flavour(WPN_DAGGER,
-                                                wjc_pattern::long_circle);
+            wu_jian_sifu_message(" says: Die by a thousand cuts!");
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
-            wu_jian_sifu_message(" whispers, \"Nowhere to run...\"");
-            mpr("Your limbs feel heavy!");
-            _summon_hostile_weapons_wjc_flavour(WPN_QUARTERSTAFF,
-                                                wjc_pattern::long_circle);
+            wu_jian_sifu_message(" whispers: Nowhere to run...");
             you.set_duration(DUR_SLOW, random_range(5, 10));
             break;
         case 2:
-            wu_jian_sifu_message(" whispers, \"These will loosen your "
-                                   "tongue...\"");
-            _summon_hostile_weapons_wjc_flavour(WPN_DIRE_FLAIL,
-                                                wjc_pattern::short_circle);
+            wu_jian_sifu_message(" whispers: These will loosen your tongue!");
             you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
             invalidate_agrid(true);
             break;
         case 3:
-            wu_jian_sifu_message(" whispers, \"Suffer, mortal...\"");
-            mpr("You feel a burning poison under your skin!");
-            you.corrode_equipment("The poison", 4);
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 8));
-            lose_stat(STAT_DEX, 1 + random2(you.dex() / 8));
+            wu_jian_sifu_message(" says: Suffer, mortal!");
+            you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
             break;
-        default:
-            break;
+        }
     }
+    else
+        simple_god_message("'s divine weapons fail to arrive.", god);
 
     return true;
 }
@@ -1809,7 +1770,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
-    case GOD_WU_JIAN:     do_more = _wu_jian_retribution(); break;
+    case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

@@ -123,6 +123,9 @@ struct stash_search_result
     // the first matching item in the stash or the name of the shop.
     string match;
 
+    // A string to use for a primary sort, if different from just `match`.
+    string primary_sort;
+
     // Item that was matched.
     item_def item;
 
@@ -132,26 +135,13 @@ struct stash_search_result
     // Whether the found items are in the player's inventory.
     bool in_inventory;
 
-    stash_search_result() : pos(), player_distance(0), match(), item(),
-                            shop(nullptr), in_inventory(false)
-    {
-    }
+    // Are there duplicates? This is updated only after the initial search.
+    int duplicates;
+    int duplicate_piles;
 
-    stash_search_result(const stash_search_result &o)
-        : pos(o.pos), player_distance(o.player_distance), match(o.match),
-          item(o.item), shop(o.shop), in_inventory(o.in_inventory)
+    stash_search_result() : pos(), player_distance(0), match(), primary_sort(), item(),
+                            shop(nullptr), in_inventory(false), duplicates(0), duplicate_piles(0)
     {
-    }
-
-    stash_search_result &operator = (const stash_search_result &o)
-    {
-        pos = o.pos;
-        player_distance = o.player_distance;
-        match = o.match;
-        item = o.item;
-        shop = o.shop;
-        in_inventory = o.in_inventory;
-        return *this;
     }
 
     bool operator < (const stash_search_result &ssr) const

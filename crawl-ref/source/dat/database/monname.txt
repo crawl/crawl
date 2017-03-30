@@ -12,7 +12,7 @@
 # Other syllables may be borrowed from real life, or made up.
 #
 # To determine a name for an orcish follower, the game first looks
-# looks for this follower's specific type, followed by the key word
+# for this follower's specific type, followed by the key word
 # "name", e.g. "orc warrior name" or "orc sorcerer name". If no name
 # has been found, the genus "orc" is tried instead. Should that also
 # fail, plain orcs as well as followers of professions that have not

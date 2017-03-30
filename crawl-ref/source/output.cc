@@ -569,6 +569,38 @@ static int _count_digits(int val)
     return 1;
 }
 
+static const equipment_type e_order[] =
+{
+    EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
+    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
+    EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
+    EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
+    EQ_RING_AMULET,
+};
+
+static void _print_stats_equip(int x, int y)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    textcolour(LIGHTGREY);
+    for (equipment_type eqslot : e_order)
+    {
+        if (you_can_wear(eqslot))
+        {
+            if (you.slot_item(eqslot))
+            {
+                cglyph_t g = get_item_glyph(*(you.slot_item(eqslot)));
+                formatted_string::parse_string(glyph_to_tagstr(g)).display();
+            }
+            else if (!you_can_wear(eqslot, true))
+                cprintf(" ");
+            else
+                cprintf(".");
+        }
+    }
+}
+
 /*
  * Print the noise bar to the HUD with appropriate coloring.
  * if in wizmode, also print the numeric noise value.
@@ -1328,7 +1360,10 @@ void print_stats()
 #endif
     {
         yhack++;
-        _print_stats_noise(1, 8+yhack);
+        if (Options.equip_bar)
+            _print_stats_equip(1, 8+yhack);
+        else
+            _print_stats_noise(1, 8+yhack);
     }
 
     if (you.wield_change)
@@ -1855,15 +1890,6 @@ static void _print_overview_screen_equip(column_composer& cols,
                                          vector<char>& equip_chars,
                                          int sw)
 {
-    const equipment_type e_order[] =
-    {
-        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
-        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-        EQ_RING_AMULET,
-    };
-
     sw = min(max(sw, 79), 640);
 
     for (equipment_type eqslot : e_order)
