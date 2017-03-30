@@ -103,9 +103,9 @@ void wizard_level_travel(bool down)
     }
 
     if (down)
-        down_stairs(stairs);
+        down_stairs(stairs, false, false);
     else
-        up_stairs(stairs);
+        up_stairs(stairs, false);
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
