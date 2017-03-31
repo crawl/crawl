@@ -6002,8 +6002,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         const int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
         {
-            shock_serpent_discharge_fineff::schedule(this, *oppressor, pos(),
-                                                     pow);
+            // we intentionally allow harming the oppressor in this case,
+            // so need to cast off its constness
+            shock_serpent_discharge_fineff::schedule(this,
+                                                     const_cast<actor&>(*oppressor),
+                                                     pos(), pow);
         }
     }
 
