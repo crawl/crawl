@@ -330,19 +330,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         // Setup species
         // TODO: Move to a proper initialisation task
         if ($("#stats").attr("data-species") != player.species)
-        {
             $("#stats").attr("data-species", player.species);
-            var hp_cap;
-            if (player.real_hp_max != player.hp_max)
-            {
-                hp_cap = "HP";
-            }
-            else
-            {
-                hp_cap = "Health";
-            }
-            $("#stats_hpline > .stats_caption").text(hp_cap+":");
-        }
 
         var species_god = player.species;
         if (player.god != "")
@@ -385,6 +373,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
         for (var i = 0; i < simple_stats.length; ++i)
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
 
+        $("#stats_hpline > .stats_caption").text(
+            (player.real_hp_max != player.hp_max) ? "HP:" : "Health:");
+        
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
