@@ -119,6 +119,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_RANDOM_SHOPS  5
 
 #define MAX_BRANCH_DEPTH 27
+COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500

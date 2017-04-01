@@ -1078,3 +1078,6 @@ enum monster_type                      // menv[].type
 
     WANDERING_MONSTER = 3500, // only used in monster placement routines - forced limit checks {dlb}
 };
+COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER);
+COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
+                                     // with untested signedness

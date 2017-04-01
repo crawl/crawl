@@ -6,6 +6,7 @@
 // the save browser across versions, possibly leading to overwritten games.
 // It's only there in case there's no way out.
 #define TAG_CHR_FORMAT 0
+COMPILE_CHECK(TAG_CHR_FORMAT < 256);
 
 // Let CDO updaters know if the syntax changes.
 // Really, really, REALLY _never_ ever bump this and clean up old #ifdefs
@@ -14,6 +15,7 @@
 #ifndef TAG_MAJOR_VERSION
 #define TAG_MAJOR_VERSION 34
 #endif
+COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
