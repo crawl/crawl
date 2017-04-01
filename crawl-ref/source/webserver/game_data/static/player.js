@@ -375,7 +375,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
         $("#stats_hpline > .stats_caption").text(
             (player.real_hp_max != player.hp_max) ? "HP:" : "Health:");
-        
+
         if (player.real_hp_max != player.hp_max)
             $("#stats_real_hp_max").text("(" + player.real_hp_max + ")");
         else
