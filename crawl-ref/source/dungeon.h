@@ -13,6 +13,8 @@
 #include "env.h"
 #include "mapdef.h"
 
+COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
+
 #define BUILD_METHOD_KEY "build_method_key"
 #define LAYOUT_TYPE_KEY  "layout_type_key"
 

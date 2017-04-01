@@ -45,3 +45,4 @@ enum job_type
     JOB_RANDOM,
     JOB_VIABLE,
 };
+COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN);

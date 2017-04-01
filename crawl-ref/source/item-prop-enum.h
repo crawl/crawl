@@ -161,6 +161,7 @@ enum brand_type // item_def.special
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
+COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND);
 
 enum corpse_type
 {
@@ -459,6 +460,8 @@ enum special_armour_type
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
+// We have space for 32 brands in the bitfield.
+COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND);
 
 // Be sure to update _str_to_ego to match.
 enum special_missile_type // to separate from weapons in general {dlb}

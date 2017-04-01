@@ -236,18 +236,21 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
 
-static void _compile_time_asserts();
-
 #ifdef WIZARD
 static void _handle_wizard_command();
 static void _enter_explore_mode();
 #endif
 
+static void _startup_asserts()
+{
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
+}
+
 //
 //  It all starts here. Some initialisations are run first, then straight
 //  to new_game and then input.
 //
-
 #ifdef USE_SDL
 # include <SDL_main.h>
 # if defined(__GNUC__) && !defined(__clang__)
@@ -257,7 +260,6 @@ static void _enter_explore_mode();
 __attribute__((externally_visible))
 # endif
 #endif
-
 int main(int argc, char *argv[])
 {
 #ifndef __ANDROID__
@@ -285,7 +287,7 @@ int main(int argc, char *argv[])
 #endif
     init_crash_handler();
 
-    _compile_time_asserts();  // Actually, not just compile time.
+    _startup_asserts();
 
     // Hardcoded initial keybindings.
     init_keybindings();
@@ -3832,42 +3834,4 @@ static void _update_replay_state()
     }
 
     repeat_again_rec.clear();
-}
-
-static void _compile_time_asserts()
-{
-    //jmf: NEW ASSERTS: we ought to do a *lot* of these
-    COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN);
-    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN);
-    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER);
-
-    // Make sure there's enough room in you.unique_items to hold all
-    // the unrandarts.
-    COMPILE_CHECK(NUM_UNRANDARTS < MAX_UNRANDARTS);
-
-    // Non-artefact brands and unrandart indexes both go into
-    // item.special, so make sure they don't overlap.
-    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START);
-
-    // We have space for 32 brands in the bitfield.
-    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
-    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
-    COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND);
-    COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND);
-    COMPILE_CHECK(sizeof(float) == sizeof(int32_t));
-    COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
-    // Travel cache, traversable_terrain.
-    COMPILE_CHECK(NUM_FEATURES <= 256);
-    COMPILE_CHECK(NUM_GODS <= NUM_GODS);
-    COMPILE_CHECK(TAG_CHR_FORMAT < 256);
-    COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
-    COMPILE_CHECK(NUM_TAG_MINORS < 256);
-    COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
-                                         // with untested signedness
-    COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
-
-    // Also some runtime stuff; I don't know if the order of branches[]
-    // needs to match the enum, but it currently does.
-    for (int i = 0; i < NUM_BRANCHES; ++i)
-        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
 }
