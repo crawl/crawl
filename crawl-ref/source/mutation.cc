@@ -858,18 +858,24 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     // and continue processing.
     for (const int (&confl)[3] : conflict)
     {
-        for (int j = 0; j < 2; ++j)
+        for (int j = 0; j <= 1; ++j)
         {
             const mutation_type a = (mutation_type)confl[j];
             const mutation_type b = (mutation_type)confl[1-j];
 
             if (mutation == a && you.mutation[b] > 0)
             {
-                if (you.innate_mutation[b] >= you.mutation[b])
+                // can never delete innate mutations.
+                if (you.innate_mutation[b]) // don't check count
+                {
+                    dprf("already have innate mutation %d at level %d, you.mutation at level %d", b, you.innate_mutation[b], you.mutation[b]);
                     return -1;
+                }
 
-                int res = confl[2];
-                switch (res)
+                const bool temp_b = you.temp_mutation[b] >= you.mutation[b];
+
+                // confl[2] indicates how the mutation resolution should proceed (see `conflict` a the beginning of this file):
+                switch (confl[2])
                 {
                 case -1:
                     // Fail if not forced, otherwise override.
@@ -889,8 +895,9 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     // other, and that's it.
                     //
                     // Temporary mutations can co-exist with things they would
-                    // ordinarily conflict with
-                    if (temp)
+                    // ordinarily conflict with. But if both a and b are temporary,
+                    // mark b for deletion.
+                    if ((temp || temp_b) && !(temp && temp_b))
                         return 0;       // Allow conflicting transient mutations
                     else
                     {
