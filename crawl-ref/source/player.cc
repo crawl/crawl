@@ -4631,7 +4631,6 @@ bool haste_player(int turns, bool rageext)
     else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
-        contaminate_player(750 + random2(500), true); // always deliberate
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
