@@ -69,7 +69,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
 // only makes sense. This is only possible because it's a permanent
 // mutation; other sources of LOS reduction should not have this effect.
-// Similarly, Barachians' LOS increase.
+// Similarly, Barachim's LOS increase.
 static int _get_full_exclusion_radius()
 {
     // XXX: dedup with update_vision_range()!
