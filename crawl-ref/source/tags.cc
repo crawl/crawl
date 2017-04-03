@@ -3935,6 +3935,16 @@ static void tag_read_you_dungeon(reader &th)
         }
         you.set_place_info(place_info);
     }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TOMB_HATCHES)
+    {
+        PlaceInfo pinfo = you.get_place_info(BRANCH_TOMB);
+        if (pinfo.levels_seen > 0)
+            you.props[TOMB_STONE_STAIRS_KEY] = true;
+    }
+#endif
+
     typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
                          (ssipair (string_set::*)(const string &))

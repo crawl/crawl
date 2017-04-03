@@ -25,6 +25,9 @@ COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 #define TEMPLE_MAP_KEY       "temple_map_key"
 #define TEMPLE_SIZE_KEY      "temple_size_key"
 
+#if TAG_MAJOR_VERSION == 34
+#define TOMB_STONE_STAIRS_KEY "tomb_stone_stairs_key"
+#endif
 #define HATCH_NAME_PROP "_hatch_name"
 #define HATCH_DEST_NAME_PROP "_hatch_dest_name"
 
