@@ -1865,7 +1865,8 @@ static bool _branch_entrances_are_connected()
 static bool _branch_needs_stairs()
 {
     // Irrelevant for branches with a single level and all encompass maps.
-    return !player_in_branch(BRANCH_ZIGGURAT);
+    return !player_in_branch(BRANCH_ZIGGURAT)
+        && !player_in_branch(BRANCH_TOMB);
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
@@ -5883,18 +5884,34 @@ static void _add_plant_clumps(int rarity,
     }
 }
 
-static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
+static coord_def _find_named_hatch_dest(string hatch_name)
+{
+    vector <map_marker *> markers;
+    markers = find_markers_by_prop(HATCH_DEST_NAME_PROP, hatch_name);
+    ASSERT(markers.size() == 1);
+    return markers[0]->pos;
+}
+
+static coord_def _get_hatch_dest(coord_def base_pos, bool shaft,
+                                 const string &hatch_name)
 {
     map_marker *marker = env.markers.find(base_pos, MAT_POSITION);
     if (!marker || shaft)
     {
         coord_def dest_pos;
-        do
+
+        if (!shaft and !hatch_name.empty())
+            dest_pos = _find_named_hatch_dest(hatch_name);
+        else
         {
-            dest_pos = random_in_bounds();
+            do
+            {
+                dest_pos = random_in_bounds();
+            }
+            while (grd(dest_pos) != DNGN_FLOOR
+                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         }
-        while (grd(dest_pos) != DNGN_FLOOR
-               || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
+
         if (!shaft)
         {
             env.markers.add(new map_position_marker(base_pos, dest_pos));
@@ -5964,7 +5981,8 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest)
+                                coord_def base_pos, bool find_closest,
+                                string hatch_name)
 {
     dprf(DIAG_DNGN, "Level entry point on %sstair: %d (%s)",
          find_closest ? "closest " : "",
@@ -5975,7 +5993,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
         || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT));
+        coord_def pos;
+        pos = _get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT,
+                              hatch_name);
         if (player_in_branch(BRANCH_SLIME))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))
