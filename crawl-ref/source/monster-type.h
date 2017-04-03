@@ -97,7 +97,7 @@ enum monster_type                      // menv[].type
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
-    MONS_BARACHIAN,
+    MONS_BARACHI,
     MONS_BEAR,                  // genus
 #endif
     MONS_GRIZZLY_BEAR,
@@ -1042,7 +1042,7 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
-    MONS_BARACHIAN,
+    MONS_BARACHI,
     MONS_CYNO,
 #endif
 
@@ -1079,3 +1079,6 @@ enum monster_type                      // menv[].type
 
     WANDERING_MONSTER = 3500, // only used in monster placement routines - forced limit checks {dlb}
 };
+COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER);
+COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
+                                     // with untested signedness

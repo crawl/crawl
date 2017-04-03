@@ -604,6 +604,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\wiz-item.cc" />
     <ClCompile Include="..\wiz-mon.cc" />
     <ClCompile Include="..\wiz-you.cc" />
+    <ClCompile Include="..\wizard.cc" />
     <ClCompile Include="..\worley.cc" />
     <ClCompile Include="..\xom.cc" />
     <ClCompile Include="..\zotdef.cc" />
@@ -1043,6 +1044,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\wiz-item.h" />
     <ClInclude Include="..\wiz-mon.h" />
     <ClInclude Include="..\wiz-you.h" />
+    <ClInclude Include="..\wizard.h" />
     <ClInclude Include="..\wizard-option-type.h" />
     <ClInclude Include="..\worley.h" />
     <ClInclude Include="..\xom.h" />

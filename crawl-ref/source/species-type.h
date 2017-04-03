@@ -59,3 +59,4 @@ enum species_type
     SP_RANDOM   = 101,
     SP_VIABLE   = 102,
 };
+COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN);

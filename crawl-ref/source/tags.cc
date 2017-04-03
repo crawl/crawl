@@ -795,12 +795,10 @@ static void _run_length_decode(reader &th, unmarshall um, grid &g,
 
 union float_marshall_kludge
 {
-    // [ds] Does ANSI C guarantee that sizeof(float) == sizeof(long)?
-    // [haranp] no, unfortunately
-    // [1KB] on 64 bit arches, long is 64 bits, while float is 32 bits.
     float    f_num;
     int32_t  l_num;
 };
+COMPILE_CHECK(sizeof(float) == sizeof(int32_t));
 
 // single precision float -- marshall in network order.
 void marshallFloat(writer &th, float data)

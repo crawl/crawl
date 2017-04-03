@@ -1484,7 +1484,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
     APT(SP_VINE_STALKER,    SK_EVOCATIONS,     -1),
 
-    // SP_BARACHIAN
+    // SP_BARACHI
     APT(SP_BARACHI,             SK_FIGHTING,        2),
     APT(SP_BARACHI,             SK_SHORT_BLADES,    1),
     APT(SP_BARACHI,             SK_LONG_BLADES,     2),

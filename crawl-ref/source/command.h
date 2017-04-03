@@ -1,12 +1,16 @@
 /**
  * @file
- * @brief Misc commands.
+ * @brief Misc commands, and functions for working with commands.
 **/
 
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "command-type.h"
 #include "enum.h"
+#include "format.h"
 
 void list_armour();
 void list_jewellery();
@@ -22,9 +26,10 @@ void show_skill_menu_help();
 
 void list_commands(int hotkey = 0, bool do_redraw_screen = false,
                    string highlight_string = "");
-#ifdef WIZARD
-int list_wizard_commands(bool do_redraw_screen = false);
-#endif
+
+int show_keyhelp_menu(const vector<formatted_string> &lines,
+                      bool with_manual, bool easy_exit = false,
+                      int hotkey = 0, string highlight_string = "");
 
 // XXX: Actually defined in main.cc; we may want to move this to command.cc.
 void process_command(command_type cmd);

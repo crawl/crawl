@@ -859,6 +859,8 @@ protected:
     void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
 };
+COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
+COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
 
 struct player_save_info
 {

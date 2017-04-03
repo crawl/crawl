@@ -15,7 +15,7 @@ Branches, Environment
 
 Character
 ---------
-* New species: Barachians, with an powerful innate Hop ability and good
+* New species: Barachim, with an powerful innate Hop ability and good
   aptitudes balanced by slow movement and an increased base LOS radius.
 * Ogre aptitudes have been adjusted, trading M&F skill for spells.
 * Mummies' spellcasting aptitude has been increased to +2, from -1.
