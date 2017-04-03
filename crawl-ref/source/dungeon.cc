@@ -1865,7 +1865,8 @@ static bool _branch_entrances_are_connected()
 static bool _branch_needs_stairs()
 {
     // Irrelevant for branches with a single level and all encompass maps.
-    return !player_in_branch(BRANCH_ZIGGURAT);
+    return !player_in_branch(BRANCH_ZIGGURAT)
+        && !player_in_branch(BRANCH_TOMB);
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
