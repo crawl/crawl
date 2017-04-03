@@ -1179,3 +1179,197 @@ cccccc.......1..............1.......ccccc
 cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
+
+##############
+# Save compat vaults for games started before stone stairs were changed to
+# hatches. These do need to be kept in working order for old games to transfer
+# smoothly. The only difference between these vaults and the original versions
+# is that they must place all three stone upstairs/downstairs (only upstairs
+# for Tomb:3)
+
+# Remove these vaults when TAG_MAJOR > 35
+NAME:     tomb_2_stone_stairs
+DEPTH:    Tomb:2
+# Can be rotated!
+ORIENT:   encompass
+TAGS:     tomb_stone_stairs unrand no_dump
+SUBVAULT: B : tomb_2_ambush_stone_stairs
+#
+NSUBST:   A = [ / '
+SHUFFLE:  Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
+SUBST:    W=', w=c, Y=T, y=+, Z=T, z=+
+SUBST:    U=', u=c, V=T, v=+
+SUBST:    Q=', q=c, R=T, r=+, S=T, s=+
+#
+SHUFFLE:  ])}def
+SUBST:    d=", e=", f="
+#
+SUBST:    T = ~ .
+SUBST:    ' = ~ ':100
+SUBST:    ' = 1:5 2:5 3:1 .:89
+SUBST:    " = ~ ":50
+SUBST:    " = 2:3 3:1 .:96
+MONS: mummy
+: tomb_guardian_set(_G)
+: tomb_mummy_priest_set(_G)
+: set_border_fill_type("permarock_wall")
+#
+MAP
+ccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccc
+cc""""c""""""c"""""{""""c""""""""c"""""""cc
+cc""""c"""""TcT""""""""TcT""""""TcT""""""cc
+cc""""c"""2"T+T""""""""T+T""2"""T+T""""""cc
+cc"""TcT""""TcT""""""""TcT""""""TcT""""""cc
+cc""TT+T"""""c""""""""""c""""""""c"""""""cc
+ccccc+ccccccccccccccccccccccccccccccc""""cc
+cc""TTcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"3""cc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""cc
+cc""3"cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"""fcc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""cc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc)""}cc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBccccccc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+cce"""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''cc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBB+T'''cc
+cc]""dcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''cc
+cccccccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+cc''''cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc'QQQcc
+cc'''TcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcccqccc
+cc'''T+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBc'QQQcc
+cc'''TcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+cc'ZZZcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+cccczccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+cc'ZZZcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+ccA'''cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+cc'YYYcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
+ccccyccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcRRRAcc
+cc'YYYcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBccrcccc
+cc''''ccccc+ccccccccccccccc+cccccccccRRR'cc
+cc''''''c'TTTc''''''''''''cTT''''''c'''''cc
+cc'''''WcW''UcU''''''''''VcV''''''ScS''''cc
+cc'''''WwW''UuU''''''''''VvV''''''SsS''''cc
+cc'''''WcW''UcU''''''''''VcV''''''ScS''''cc
+ccA'''''c''''cA'''''''''''c''''''''c''''Acc
+ccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME: tomb_2_ambush_old_stone_stairs
+TAGS: tomb_2_ambush_stone_stairs unrand
+MONS: mummy / skeletal warrior w:2
+: tomb_guardian_set(_G)
+: tomb_mummy_priest_set(_G)
+MAP
+.............................
+.............................
+..xxx4.................4xxx..
+..xxx...................xxx..
+..xxx.........1.........xxx..
+..xxx.....2.......2.....xxx..
+.............................
+.............................
+........x...........x........
+.............................
+.....3........(........3.....
+.............................
+........x...........x........
+.............................
+.............................
+..xxx.....2.......2.....xxx..
+..xxx.........1.........xxx..
+..xxx...................xxx..
+..xxx4.................4xxx..
+.............................
+.............................
+.............................
+ENDMAP
+NAME:     tomb_3_stone_stairs
+DEPTH:    Tomb:3
+ORIENT:   encompass
+TAGS:     tomb_stone_stairs unrand no_rotate no_dump
+SUBVAULT: A : tomb_3_rune_stone_stairs
+#
+SUBST:    ' : " $ ':80
+SUBST:    ' = " $
+SUBST:    " = ~:1 .
+SUBST:    $ = *:2 |:1 $:17
+#
+: tomb_guardian_set(_G)
+: set_border_fill_type("permarock_wall")
+#
+KITEM:    $ = $ no_pickup
+KITEM:    * = * no_pickup
+NSUBST:   | = 1:d / *:|
+ITEM:     figurine of a ziggurat no_pickup
+KITEM:    | = | no_pickup
+MAP
+ccccccccccccccccccccccccccccccccccccccccccc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
+cccccccc""""ccAAAAAAAAAAAAAAAAcc""""ccccccc
+cccccc"""""""cc11111111111111cc"""""'$ccccc
+cccc""""""""""cc............cc"""""""'$cccc
+cccc'""""""""""cc..........cc""""""""'$cccc
+ccc$''""""""""""cc........cc"""""""""'$$ccc
+ccc$$$'""""""""""cc111111cc""""""""''$$$ccc
+ccc|$$$''"""""""""c......c"""""""''$$$$$ccc
+ccc||$$$$'""""""""c......c""""""'$$$$$$$ccc
+ccc|||||$$'"""""""c......c"""""'$$$$$$$$ccc
+cccc|||||$'"""""""c......c""""'$$$$$$$$cccc
+ccccc||||$$'""""""c......c""""'$$$$$$$ccccc
+cccccc||||$'""""""c......c""""'$$$$$$cccccc
+ccccccc|||$$'"""""c......c"""'$$$$$$ccccccc
+cccccccc|||$'""""cc..{...cc""'$$$$$cccccccc
+ccccccccc||$'""""cc...(..cc"'$$$$$ccccccccc
+cccccccccc|$'""cccc..[...cccc$$$$cccccccccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:  tomb_3_rune_stone_stairs
+TAGS:  tomb_3_rune_stone_stairs unrand
+: tomb_guardian_set(_G)
+: tomb_mummy_priest_set(_G)
+KMASK: O = no_item_gen
+KITEM: O = golden rune of Zot
+KMONS: K = Khufu w:3 / greater mummy, greater mummy
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccc.............................cccccc
+ccc...............cccccc..............ccc
+cc...............cccccccc..............cc
+cc.......3......ccccOKcccc......3......cc
+cc............cccc......cccc...........cc
+c............cccc........cccc...........c
+c............cccc........cccc...........c
+c...........cccc..333333..cccc..........c
+c.......................................c
+c.......................................c
+c.................111111................c
+cc................112211...............cc
+cc...2............112211............2..cc
+ccc...............111111..............ccc
+ccc....1..........................1...ccc
+ccccc....1......................1....cccc
+ccccccc............................cccccc
+cccccccc+ccc..................ccc+ccccccc
+             ................
+ENDMAP
