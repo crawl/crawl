@@ -2629,6 +2629,21 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     const level_id lid = level_id::current();
 
+#if TAG_MAJOR_VERSION == 34
+    if (!minivault
+        && player_in_branch(BRANCH_TOMB)
+        && you.props[TOMB_STONE_STAIRS_KEY])
+    {
+        const map_def *vault = random_map_for_tag("tomb_stone_stairs", true);
+
+        if (vault)
+            return vault;
+
+        end(1, false, "Couldn't find map with tag tomb_stone_stairs for level "
+            "%s.", lid.describe().c_str());
+    }
+#endif
+
     const map_def *vault = 0;
 
     if (you.props.exists("force_map"))
