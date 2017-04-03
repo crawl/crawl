@@ -97,7 +97,7 @@ enum monster_type                      // menv[].type
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
 #if TAG_MAJOR_VERSION > 34
-    MONS_BARACHIAN,
+    MONS_BARACHI,
     MONS_BEAR,                  // genus
 #endif
     MONS_GRIZZLY_BEAR,
@@ -1042,7 +1042,7 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
-    MONS_BARACHIAN,
+    MONS_BARACHI,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

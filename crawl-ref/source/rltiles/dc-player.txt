@@ -23,7 +23,7 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
-frog_m BARACHIAN
+frog_m BARACHI
 frog_f
 frog2_f
 frog2_m
