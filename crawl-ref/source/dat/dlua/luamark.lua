@@ -28,6 +28,7 @@ require('dlua/lm_monst.lua')
 require('dlua/lm_trove.lua')
 require('dlua/lm_door.lua')
 require('dlua/lm_items.lua')
+require('dlua/lm_named_hatch.lua')
 require('dlua/fnwrap.lua')
 
 function dlua_marker_reader_name(table)
