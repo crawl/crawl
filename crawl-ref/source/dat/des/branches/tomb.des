@@ -71,6 +71,66 @@ function tomb_guardian_set(e, include_nothing)
     e.mons(sets[which_set])
   end
 end
+
+function tomb_1_centre_setup(e)
+  tomb_1_mummy_set(e)
+  tomb_guardian_set(e, true)
+  tomb_1_mummy_priest_set(e, true)
+  e.lua_marker(">", hatch_name("tomb2_entry"))
+  e.lua_marker(">", hatch_dest_name("tomb2_exit"))
+end
+
+--[[ Setup Tomb:1 hall stairs. Vaults should place an P glyph for the hallway
+entry destination, a Q glyph for the first hall exit (near P), and an R glyph
+for the second hall exit (to the second set of rooms on Tomb:2). Any ' glyphs
+have a small chance of placing a 3 guardian.]]
+function tomb_1_stairs_setup(e)
+  e.lua_marker("P", hatch_dest_name("tomb1_hall_entry"))
+  e.subst("P = .")
+
+  e.lua_marker("Q", hatch_name("tomb1_hall_exit_1"))
+  e.subst("Q = >")
+
+  e.lua_marker("R", hatch_name("tomb1_hall_exit_2"))
+  e.subst("R = >")
+
+  tomb_guardian_set(e, true)
+  tomb_1_mummy_priest_set(e)
+
+  e.subst("' = 3 .:200")
+end
+
+--[[ Setup Tomb:2 central ambush. Vaults should place an R glyph for the ambush
+entry and a nearby S glyph for an exit back to the Tomb:1 hatch. If more than
+one S glyph exists, one will be chosen at random for the exit hatch.]]
+function tomb_2_ambush_setup(e)
+  tomb_guardian_set(e)
+  tomb_mummy_priest_set(e)
+
+  e.lua_marker("R", hatch_dest_name("tomb2_entry"))
+  e.lua_marker("R", hatch_dest_name("tomb1_hall_exit_1"))
+  e.subst("R = .")
+
+  e.lua_marker("S", hatch_name("tomb2_exit"))
+  e.nsubst("S = 1:< / *:.")
+end
+
+function tomb_3_khufu(e, glyph)
+  e.kmons(glyph ..  " = Khufu w:3 / greater mummy, greater mummy")
+end
+
+--[[ Setup for Tomb:3 rune vaults. Vaults should place an O glyph for the
+golden rune and can optionally place a K glyph for a nearby guardian that has a
+chance of being Khufu. ]]
+function tomb_3_rune_setup(e)
+  tomb_guardian_set(e)
+  tomb_mummy_priest_set(e)
+
+  e.kmask("O = no_item_gen")
+  e.kitem("O = golden rune of Zot")
+  tomb_3_khufu(e, "K")
+end
+
 }}
 
 ##############################################################################
@@ -461,7 +521,7 @@ ENDMAP
 
 NAME:    tomb_1_centre_old
 TAGS:    tomb_1_centre unrand
-SHUFFLE: AB), _-
+SHUFFLE: AB>, _-
 SUBST:   A=|*, B=|*
 SUBST:   - = T
 SUBST:   _ = F 5 ~:30 .:30
@@ -470,14 +530,12 @@ TILE:    F = dngn_sarcophagus_pedestal_left
 COLOUR:  F = yellow
 SUBST:   F = G
 #
-: tomb_1_mummy_set(_G)
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G, true)
+: tomb_1_centre_setup(_G)
 SUBST:   t = ~ .:50
 #
 : set_feature_name("granite_statue", "sarcophagus")
 MAP
-..ttttttttttc................ctt)
+..ttttttttttc................ctt>
 ..ccccccccctc..3..........2..ct-t
 ..cA22c111ctc....3..........4c_tt
 ..c2c222ctttc......2.........+ccc
@@ -501,15 +559,13 @@ ENDMAP
 
 NAME:    tomb_1_centre_grunt_parallel
 TAGS:    tomb_1_centre unrand no_hmirror
-: tomb_1_mummy_set(_G)
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G, true)
 TILE:    F  = dngn_sarcophagus_pedestal_left
 TILE:    M  = dngn_sarcophagus_pedestal_right
 COLOUR:  FM = yellow
 SUBST:   FM = G
 SUBST:   _  = V:70 5
-NSUBST:  >  = ) / | / * / _
+NSUBST:  >  = > / | / * / _
+: tomb_1_centre_setup(_G)
 : set_feature_name("granite_statue", "sarcophagus")
 MAP
 >1..c..c.................c..c..1>
@@ -520,7 +576,7 @@ c++cc.3c....4.......4....c3.cc++c
 ....c..c..c...........c..c..c....
 ....c..c.3c...........c3.c..c....
 F...c..c..c..F.....M..c..c..c...M
-.2.....c..c...........c..c.....2.
+.2.....c..c......Z....c..c.....2.
 ..3..2.c..c...........c..c2...3..
 .2.....c..c..F.....M..c..c.....2.
 F...c..c..c.....3.....c..c..c...M
@@ -536,9 +592,6 @@ ENDMAP
 
 NAME:    tomb_1_centre_grunt_layered
 TAGS:    tomb_1_centre unrand no_hmirror
-: tomb_1_mummy_set(_G)
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G, true)
 TILE:    F  = dngn_sarcophagus_pedestal_left
 TILE:    M  = dngn_sarcophagus_pedestal_right
 COLOUR:  FM = yellow
@@ -547,7 +600,8 @@ SUBST:   _  = V:70 5
 SHUFFLE: ABCD, EHIJ, de, fg, hi, jk
 SHUFFLE: NOPQRSTU, WXYZ6789
 SUBST:   AEdfhjNW = c, egik = +, BCDHIJOPQRSTUXYZ6789 = .
-NSUBST:  >  = ) / | / * / _
+NSUBST:  >  = > / | / * / _
+: tomb_1_centre_setup(_G)
 : set_feature_name("granite_statue", "sarcophagus")
 MAP
 ...D............3............E...
@@ -558,7 +612,7 @@ CCCccccceeccccc...cccccffcccccHHH
 ...c.1.O..P.1.c...c.1.X..Y.1.c...
 ...c...O23P...c...c...X32Y...c...
 .3.cNNNccccQQQc.3.cWWWccccZZZc.3.
-...c..3c>.c...c...c...c.>c3..c...
+...c..3c>.c...c.Z.c...c.>c3..c...
 .F.d...c>4i.M.c.2.c.F.j4>c...g.M.
 ...c..3c..c...c...c...c..c3..c...
 .3.cRRRchhcUUUc.3.c666ckkc999c.3.
@@ -576,11 +630,9 @@ NAME: tomb_1_centre_nicolae_necropolis
 TAGS: tomb_1_centre unrand
 SHUFFLE: AaBbQqDd/EeFfGgHh/IiJjKkLl/MmNnOoPp/RrSsUuVv
 SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
-SUBST: AEIMR = +, a = ), ei = *|, mr = %, bq = 4, dhlpv = 3
+SUBST: AEIMR = +, a = >, ei = *|, mr = %, bq = 4, dhlpv = 3
 SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
-: tomb_1_mummy_set(_G)
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G, true)
+: tomb_1_centre_setup(_G)
 MAP
 .................................
 ..cccAccc.....2...2.....cccEccc..
@@ -596,7 +648,7 @@ MAP
 ..cccMccc....cc'r'cc....cccIccc..
 ..cc'o'cc....cccUccc....cc'k'cc..
 ..c'''''c...............c'''''c..
-..Pn'c'pN..3.........3..Lj'c'lJ..
+..Pn'c'pN..3....Z....3..Lj'c'lJ..
 ..c'''''c...............c'''''c..
 ..cc'm'cc...............cc'i'cc..
 ..cccOccc.....2...2.....cccKccc..
@@ -608,20 +660,20 @@ ENDMAP
 
 NAME:    tomb_1_hall_stairs_old
 TAGS:    tomb_1_hall_stairs unrand
-SHUFFLE: ]}
-SUBST:   ' = 3 .:200
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G)
+: tomb_1_mummy_set(_G)
+SHUFFLE: PQ / RS
+SUBST: S = '
+: tomb_1_stairs_setup(_G)
 MAP
 ''                                   ''
 ''c'''''''''''           '''''''''''c''
 ''c'''''''''''           '''''''''''c''
 ''c''ccccccc''           ''ccccccc''c''
 ''c''cc.211c''           ''c11.'cc''c''
-''c''c]'c11c''           ''c11c.}c''c''
+''c''cP'c11c''           ''c11c.Rc''c''
 ''c''cccc''c''           ''c2'cccc''c''
 ''c''''''''c''           ''c''''''''c''
-''c''''''''c''           ''c''''''''c''
+''cQ'''''''c''           ''c'''''''Sc''
 ''cccccccccc''           ''cccccccccc''
 ''''''''''''''           ''''''''''''''
 ''''''''''''''           ''''''''''''''
@@ -629,17 +681,15 @@ ENDMAP
 
 NAME:    tomb_1_hall_stairs_grunt_patterns
 TAGS:    tomb_1_hall_stairs unrand
-SHUFFLE: <>
+SHUFFLE: PR
 SHUFFLE: ABCD / ACBD / ACDB / CABD / CADB / CDAB
 SHUFFLE: EFGH / EGFH / EGHF / GEFH / GEHF / GHEF
 SUBST:   ABEF = c, CDGH = '
-SUBST:   ' = 3 .:200
-NSUBST:  < = } / ., > = ] / .
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G)
+NSUBST:  P = P / Q / ., R = R / .
+: tomb_1_stairs_setup(_G)
 MAP
 ''                                   ''
-''c'''D''''c.<           >.c''''G'''c''
+''c'''D''''c.P           R.c''''G'''c''
 ''c'''D''''c..           ..c''''G'''c''
 cc+''''''''+cc           cc+''''''''+cc
 ''''''A'''''''           '''''''E''''''
@@ -649,15 +699,14 @@ CC''BB2BB'''CC           HH'''FF2FF''HH
 ''''''A'''''''           '''''''E''''''
 cc+''''''''+cc           cc+''''''''+cc
 ..c'''D''''c..           ..c''''G'''c..
-<.c'''D''''c.<           >.c''''G'''c.>
+P.c'''D''''c.P           R.c''''G'''c.R
 ENDMAP
 
 NAME:    tomb_1_hall_stairs_grunt_snakey
 TAGS:    tomb_1_hall_stairs unrand
-SHUFFLE: ]}
-SUBST:   ' = 3 .:200
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G)
+SHUFFLE: PQ / RS
+SUBST: S = '
+: tomb_1_stairs_setup(_G)
 MAP
 ''                                   ''
 ''''''''''''''           ''''''''''''''
@@ -670,15 +719,14 @@ cccccccccccc''           '''ccccccccccc
 ''''''''''''''           ''''''''''''''
 cccccccccccc''           ''cccccccccccc
 ..211'''''''''           '''''''''112..
-]..11'''''''''           '''''''''11..}
+P..11''''''''Q           R''''''''11..S
 ENDMAP
 
 NAME: tomb_1_hall_stairs_nicolae_cartouches
 TAGS: tomb_1_hall_stairs unrand
-SHUFFLE: ]}
-SUBST: ' = 3 .:200
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G)
+SHUFFLE: PQ / RS
+SUBST: S = '
+: tomb_1_stairs_setup(_G)
 MAP
 ''                                   ''
 ''cc''''''cccc           cccc''''''cc''
@@ -686,7 +734,7 @@ MAP
 '''''cccc'''cc           cc'''cccc'''''
 ''''cc'''c'''c           c'''c'''cc''''
 '''cc''''1c'''           '''c1''''cc'''
-''cc]'''211c''           ''c112'''}cc''
+''ccP'''211c'Q           S'c112'''Rcc''
 '''cc''''1c'''           '''c1''''cc'''
 ''''cc'''c'''c           c'''c'''cc''''
 '''''cccc'''cc           cc'''cccc'''''
@@ -696,24 +744,25 @@ ENDMAP
 
 NAME: tomb_1_hall_stairs_nicolae_galleries
 TAGS: tomb_1_hall_stairs unrand
-SHUFFLE: AaZ/BbY, pq
-SUBST: ADp = ', Y = 2, ad = +, BbEeq = c, ' = 3 .:200
-NSUBST: Z = ] / }
-: tomb_guardian_set(_G, true)
-: tomb_1_mummy_priest_set(_G)
+WEIGHT: 10000
+# First shuffle randomizes which side is entry/exit, second two shuffles
+# randomizes gallery configurations shared by both sides.
+SHUFFLE: ABDF / HIJK, ACDHJa / BEFIKb, pq
+SUBST: CJp = ', a = +, EFKbq = c, A = P, D = Q, BI = 2, H = R
+: tomb_1_stairs_setup(_G)
 MAP
 ''                                   ''
-''BBBBBBBBBccc           cccBBBBBBBBB''
-''BBBBBBBBBccc           cccBBBBBBBBB''
-AAcccccccbbccc           cccbbcccccccAA
-AAc''qppq'Zccc           cccZ'qppq''cAA
-AAc''''1'''ccc           ccc'''1''''cAA
-AAcq'p''p'qccc           cccq'p''p'qcAA
-AAcp1'qq''pccc           cccp''qq'1pcAA
-AAcp''qq'1pccc           cccp1'qq''pcAA
-AAcq'p''p'qccc           cccq'p''p'qcAA
-AAa'''1''''ccc           ccc''''1'''aAA
-AAaY'qppq''ccc           ccc''qppq'YaAA
+''EEEEEEEEFccc           cccKEEEEEEEE''
+''EEEEEEEEEccc           cccEEEEEEEEE''
+CCcccccccbbccc           cccbbcccccccCC
+CCc''qppq'Accc           cccH'qppq''cCC
+CCc''''1'''ccc           ccc'''1''''cCC
+CCcq'p''p'qccc           cccq'p''p'qcCC
+CCcp1'qq''pccc           cccp''qq'1pcCC
+CCcp''qq'1pccc           cccp1'qq''pcCC
+CCcq'p''p'qccc           cccq'p''p'qcCC
+CCa'''1''''ccc           ccc''''1'''aCC
+DCaB'qppq''ccc           ccc''qppq'IaCJ
 ENDMAP
 
 ###############################################################################
@@ -725,15 +774,30 @@ PLACE:    Tomb:2
 ORIENT:   encompass
 TAGS:     no_dump
 SUBVAULT: B : tomb_2_ambush
-#
-NSUBST:   A = [ / '
+# Tomb:1 Hall entry hatch
+NSUBST:   A = A / '
+MARKER:   A = lua:hatch_name("tomb1_hall_entry")
+SUBST:    A = <
+# Tomb:1 Hall exit destination
+MARKER:   C = lua:hatch_dest_name("tomb1_hall_exit_2")
+SUBST:    C = .
+# Tomb:2 rooms exit hatch
+MARKER:   D = lua:hatch_name("tomb2_exit")
+SUBST:    D = <
+# Tomb:2 Room features
 SHUFFLE:  Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
 SUBST:    W=', w=c, Y=T, y=+, Z=T, z=+
 SUBST:    U=', u=c, V=T, v=+
 SUBST:    Q=', q=c, R=T, r=+, S=T, s=+
-#
-SHUFFLE:  ])}def
-SUBST:    d=", e=", f="
+# Tomb:3 ambush hatches
+SHUFFLE:  EH / FI
+MARKER:   E = lua:hatch_name("tomb3_entry_1")
+MARKER:   F = lua:hatch_name("tomb3_entry_2")
+SUBST:    EF = >
+# Tomb:3 exit destinations
+MARKER:   H = lua:hatch_dest_name("tomb3_exit_1")
+MARKER:   I = lua:hatch_dest_name("tomb3_exit_2")
+SUBST:    HI = .
 #
 SUBST:    T = ~ .
 SUBST:    ' = ~ ':100
@@ -758,22 +822,22 @@ MONS: mummy
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
-cc""""c""""""c"""""{""""c""""""""c"""""""cc
+cc""""c""""""c"""""C""""c""""""""c"""""""cc
 cc""""c"""""TcT""""""""TcT""""""TcT""""""cc
-cc""""c"""2"T+T""""""""T+T""2"""T+T""""""cc
+cc"H""c"""2"T+T""""""""T+T""2"""T+T"""I""cc
 cc"""TcT""""TcT""""""""TcT""""""TcT""""""cc
-cc""TT+T"""""c""""""""""c""""""""c"""""""cc
+cc""TT+T"""""c"""""D""""c""""""""c"""""""cc
 ccccc+ccccccccccccccccccccccccccccccc""""cc
 cc""TTcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"3""cc
 cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""cc
-cc""3"cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"""fcc
+cc""3"cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""cc
 cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""cc
-cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc)""}cc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"""Fcc
 cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBccccccc
 cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
-cce"""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''cc
+cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''cc
 cc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBB+T'''cc
-cc]""dcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''cc
+ccE"""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''cc
 cccccccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''cc
 cc''''cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc'QQQcc
 cc'''TcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcccqccc
@@ -799,8 +863,7 @@ ENDMAP
 NAME: tomb_2_ambush_old
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
+: tomb_2_ambush_setup(_G)
 MAP
 .............................
 .............................
@@ -808,15 +871,15 @@ MAP
 ..xxx...................xxx..
 ..xxx.........1.........xxx..
 ..xxx.....2.......2.....xxx..
-.............................
-.............................
-........x...........x........
-.............................
-.....3........(........3.....
+...S.....................S...
 .............................
 ........x...........x........
 .............................
+.....3........R........3.....
 .............................
+........x...........x........
+.............................
+...S.....................S...
 ..xxx.....2.......2.....xxx..
 ..xxx.........1.........xxx..
 ..xxx...................xxx..
@@ -829,23 +892,22 @@ ENDMAP
 NAME:    tomb_2_ambush_grunt_patterns
 TAGS:    tomb_2_ambush unrand
 MONS:    mummy / skeletal warrior w:2
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
+: tomb_2_ambush_setup(_G)
 SHUFFLE: AB / Ad / dA, CD / Ce / eC, EF / Ef / fE
 SUBST:   ABCDEF = x, def = .
 MAP
 .............................
 ............DD.CC............
-....EE.....DD.3.CC.....EE....
+....EES....DD.3.CC....SEE....
 ..FFEE.................EEFF..
-..FF4...................4FF..
+..FF4..................44FF..
 ........BB.........BB........
 ........BxA.......AxB........
 .........AA.......AA.........
 ......C....2.....2....D......
 .....CC...............DD.....
 .....C.................D.....
-.......1......(......1.......
+.......1......R......1.......
 .....D.................C.....
 .....DD...............CC.....
 ......D....2.....2....C......
@@ -854,19 +916,18 @@ MAP
 ........BB.........BB........
 ..FF4...................4FF..
 ..FFEE.....CC.3.DD.....EEFF..
-....EE......CC.DD......EE....
+....EES.....CC.DD.....SEE....
 .............................
 ENDMAP
 
 NAME: tomb_2_ambush_grunt_arcs
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
+: tomb_2_ambush_setup(_G)
 MAP
 .............................
 .............................
-.....4xxxx.........xxxx4.....
+....S4xxxx.........xxxx4S....
 ..........xxx...xxx..........
 .............xxx.............
 ............xx1xx............
@@ -874,7 +935,7 @@ MAP
 ........2x.........x2........
 ........x...........x........
 .......x.............x.......
-.......x3.....(.....3x.......
+.......x3.....R.....3x.......
 .......x.............x.......
 ........x...........x........
 ........2x.........x2........
@@ -882,7 +943,7 @@ MAP
 ............xx1xx............
 .............xxx.............
 ..........xxx...xxx..........
-.....4xxxx.........xxxx4.....
+....S4xxxx.........xxxx4S....
 .............................
 .............................
 .............................
@@ -891,26 +952,25 @@ ENDMAP
 NAME: tomb_2_ambush_grunt_hexed
 TAGS: tomb_2_ambush unrand
 MONS: mummy / skeletal warrior w:2
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
+: tomb_2_ambush_setup(_G)
 MAP
 .............................
 ..............x..............
 ........4.....x.....4........
 ......xx.............xx......
-.....xxx...xxxxxxx...xxx.....
+....Sxxx...xxxxxxx...xxxS....
 ....xxx....xxxxxxx....xxx....
 ...xxx..2.....1.....2..xxx...
 ...xx...................xx...
 .............................
 .............................
-..3.xx........(........xx.3..
+..3.xx........R........xx.3..
 .............................
 .............................
 ...xx...................xx...
 ...xxx..2.....1.....2..xxx...
 ....xxx....xxxxxxx....xxx....
-.....xxx...xxxxxxx...xxx.....
+....Sxxx...xxxxxxx...xxxS....
 ......xx.............xx......
 ........4.....x.....4........
 ..............x..............
@@ -940,6 +1000,12 @@ KITEM:    * = * no_pickup
 NSUBST:   | = 1:d / *:|
 ITEM:     figurine of a ziggurat no_pickup
 KITEM:    | = | no_pickup
+MARKER:   D = lua:hatch_dest_name("tomb3_entry_1")
+MARKER:   E = lua:hatch_dest_name("tomb3_entry_2")
+SUBST:    DE = .
+MARKER:   F = lua:hatch_name("tomb3_exit_1")
+MARKER:   H = lua:hatch_name("tomb3_exit_2")
+SUBST:    FH = <
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
@@ -964,19 +1030,19 @@ cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc
 cccccccc""""ccAAAAAAAAAAAAAAAAcc""""ccccccc
 cccccc"""""""cc11111111111111cc"""""'$ccccc
 cccc""""""""""cc............cc"""""""'$cccc
-cccc'""""""""""cc..........cc""""""""'$cccc
+cccc'"""""""""Fcc..........ccH"""""""'$cccc
 ccc$''""""""""""cc........cc"""""""""'$$ccc
 ccc$$$'""""""""""cc111111cc""""""""''$$$ccc
-ccc|$$$''"""""""""c......c"""""""''$$$$$ccc
+ccc|$$$''""""""""cc......cc""""""''$$$$$ccc
 ccc||$$$$'""""""""c......c""""""'$$$$$$$ccc
 ccc|||||$$'"""""""c......c"""""'$$$$$$$$ccc
-cccc|||||$'"""""""c......c""""'$$$$$$$$cccc
+cccc|||||$'"""""""+......+""""'$$$$$$$$cccc
 ccccc||||$$'""""""c......c""""'$$$$$$$ccccc
 cccccc||||$'""""""c......c""""'$$$$$$cccccc
-ccccccc|||$$'"""""c......c"""'$$$$$$ccccccc
-cccccccc|||$'""""cc..{...cc""'$$$$$cccccccc
-ccccccccc||$'""""cc...(..cc"'$$$$$ccccccccc
-cccccccccc|$'""cccc..[...cccc$$$$cccccccccc
+ccccccc|||$$'""""cc......cc""'$$$$$$ccccccc
+cccccccc|||$'""""cc......cc""'$$$$$cccccccc
+ccccccccc||$'"""ccc......ccc'$$$$$ccccccccc
+cccccccccc|$'""cccc.D..E.cccc$$$$cccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
@@ -984,11 +1050,7 @@ ENDMAP
 ####
 NAME:  tomb_3_rune_old
 TAGS:  tomb_3_rune unrand
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
-KMASK: O = no_item_gen
-KITEM: O = golden rune of Zot
-KMONS: K = Khufu w:3 / greater mummy, greater mummy
+: tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc.............................cccccc
@@ -1014,11 +1076,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_curves
 TAGS:  tomb_3_rune unrand
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
-KMASK: O = no_item_gen
-KITEM: O = golden rune of Zot
-KMONS: O = Khufu w:3 / greater mummy, greater mummy
+: tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc............ccccccc...........ccccc
@@ -1044,11 +1102,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_snapback
 TAGS:  tomb_3_rune unrand
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
-KMASK: O = no_item_gen
-KITEM: O = golden rune of Zot
-KMONS: K = Khufu w:3 / greater mummy, greater mummy
+: tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc......ccccccc.KO.ccccccc......ccccc
@@ -1074,11 +1128,7 @@ ENDMAP
 
 NAME:  tomb_3_rune_grunt_layered
 TAGS:  tomb_3_rune unrand
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
-KMASK: O = no_item_gen
-KITEM: O = golden rune of Zot
-KMONS: K = Khufu w:3 / greater mummy, greater mummy
+: tomb_3_rune_setup(_G)
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc..............1...............ccccc
@@ -1104,12 +1154,9 @@ ENDMAP
 
 NAME:   tomb_3_rune_grunt_doroklohe
 TAGS:   tomb_3_rune unrand
-: tomb_guardian_set(_G)
-: tomb_mummy_priest_set(_G)
+: tomb_3_rune_setup(_G)
+: tomb_3_khufu(_G, "O")
 NSUBST: 3 = 1:O / *:3
-KMASK:  O = no_item_gen
-KITEM:  O = golden rune of Zot
-KMONS:  O = Khufu w:3 / greater mummy, greater mummy
 MAP
 ccccccccccccccccccccccccccccccccccccccccc
 cccccc..........1.......1...........ccccc
