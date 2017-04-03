@@ -25,6 +25,9 @@ COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 #define TEMPLE_MAP_KEY       "temple_map_key"
 #define TEMPLE_SIZE_KEY      "temple_size_key"
 
+#define HATCH_NAME_PROP "_hatch_name"
+#define HATCH_DEST_NAME_PROP "_hatch_dest_name"
+
 const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM
@@ -226,7 +229,8 @@ object_class_type item_in_shop(shop_type shop_type);
 bool seen_destroy_feat(dungeon_feature_type old_feat);
 bool map_masked(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest);
+                                coord_def base_pos, bool find_closest,
+                                string hatch_name = "");
 
 class mons_spec;
 monster *dgn_place_monster(mons_spec &mspec, coord_def where,
