@@ -33,14 +33,18 @@
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "notes.h"
 #include "options.h"
+#include "orb-type.h"
 #include "output.h"
 #include "place.h"
+#include "player.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -560,6 +564,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_REPULSION:         return "repulsion";
         default:                      return "bugginess";
         }
     }
@@ -592,6 +597,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
         case SPARM_ARCHERY:           return "archery";
+        case SPARM_REPULSION:         return "repulsion";
         default:                      return "buggy";
         }
     }
@@ -676,7 +682,9 @@ const char* potion_type_name(int potiontype)
     case POT_RESTORE_ABILITIES: return "restore abilities";
 #endif
     case POT_BERSERK_RAGE:      return "berserk rage";
+#if TAG_MAJOR_VERSION == 34
     case POT_CURE_MUTATION:     return "cure mutation";
+#endif
     case POT_MUTATION:          return "mutation";
     case POT_BLOOD:             return "blood";
 #if TAG_MAJOR_VERSION == 34
@@ -684,7 +692,9 @@ const char* potion_type_name(int potiontype)
 #endif
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
+#if TAG_MAJOR_VERSION == 34
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
+#endif
     default:                    return "bugginess";
     }
 }
@@ -1562,7 +1572,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         // (since showing 'eudaemon blade' is unhelpful in the former case, and
         // showing 'broad axe' is misleading in the latter)
         // could be a flag, but doesn't seem worthwhile for only two items
-        if (is_unrandom_artefact(weap, UNRAND_JIHAD)
+        if (is_unrandom_artefact(weap, UNRAND_ZEALOT_SWORD)
             || is_unrandom_artefact(weap, UNRAND_DEMON_AXE))
         {
             return long_name;
@@ -1632,11 +1642,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         special_missile_type msl_brand = get_ammo_brand(*this);
 
-        if (!terse && !dbname)
+        if (!terse && !dbname && !basename)
         {
             if (props.exists(DAMNATION_BOLT_KEY)) // hack alert
                 buff << "damnation ";
-            else if (_missile_brand_is_prefix(msl_brand))
+            else if (_missile_brand_is_prefix(msl_brand)) // see below for postfix brands
                 buff << missile_brand_name(*this, MBN_NAME) << ' ';
         }
 
@@ -1646,7 +1656,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 #if TAG_MAJOR_VERSION == 34
             && msl_brand != SPMSL_BLINDING
 #endif
-            && !basename && !qualname && !dbname)
+            && !basename && !dbname)
         {
             if (terse)
             {
@@ -1655,7 +1665,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 else
                     buff << " (" <<  missile_brand_name(*this, MBN_TERSE) << ")";
             }
-            else if (_missile_brand_is_postfix(msl_brand))
+            else if (_missile_brand_is_postfix(msl_brand)) // see above for prefix brands
                 buff << " of " << missile_brand_name(*this, MBN_NAME);
         }
 
@@ -1680,8 +1690,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "enchanted ";
         }
 
-        // Don't list QDA as +0.
-        if (know_pluses && sub_type != ARM_QUICKSILVER_DRAGON_ARMOUR)
+        // Don't list unenchantable armor as +0.
+        if (know_pluses && armour_is_enchantable(*this))
             buff << make_stringf("%+d ", plus);
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
@@ -1702,6 +1712,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                     break;
                 if (item_typ == ARM_ROBE || item_typ == ARM_CLOAK
                     || item_typ == ARM_GLOVES || item_typ == ARM_BOOTS
+                    || item_typ == ARM_SCARF
                     || get_armour_slot(*this) == EQ_HELMET
                        && !is_hard_helmet(*this))
                 {
@@ -1845,8 +1856,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_BREAD_RATION: buff << "bread ration"; break;
         case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_FRUIT: buff << "fruit"; break;
-        case FOOD_PIZZA: buff << "slice of pizza"; break;
-        case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
         case FOOD_CHUNK:
             switch (determine_chunk_effect(*this))
             {
@@ -2374,9 +2383,6 @@ public:
             case FOOD_MEAT_RATION:
                 name = "meat rations";
                 break;
-            case FOOD_BEEF_JERKY:
-                name = "beef jerky";
-                break;
             case FOOD_BREAD_RATION:
                 name = "bread rations";
                 break;
@@ -2385,9 +2391,6 @@ public:
 #endif
             case FOOD_FRUIT:
                 name = "fruit";
-                break;
-            case FOOD_PIZZA:
-                name = "pizza";
                 break;
             case FOOD_ROYAL_JELLY:
                 name = "royal jellies";
@@ -2435,6 +2438,8 @@ public:
     {
         if (selected_qty >= 1)
             return WHITE;
+        else if (is_useless_item(*item))
+            return DARKGREY;
         else
             return MENU_ITEM_STOCK_COLOUR;
 
@@ -3212,16 +3217,18 @@ bool is_good_item(const item_def &item)
             return false;
         switch (item.sub_type)
         {
-        case POT_CURE_MUTATION:
 #if TAG_MAJOR_VERSION == 34
+        case POT_CURE_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
         case POT_EXPERIENCE:
             return true;
+#if TAG_MAJOR_VERSION == 34
         case POT_BENEFICIAL_MUTATION:
             return you.species != SP_GHOUL; // Mummies are already handled
+#endif
         default:
             return false;
         }
@@ -3417,7 +3424,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
-            if (!temp && you.form == TRAN_LICH
+            if (!temp && you.form == transformation::lich
                 && you.species != SP_DEMONSPAWN)
             {
                 return false;
@@ -3460,11 +3467,6 @@ bool is_useless_item(const item_def &item, bool temp)
                 || (is_shield(item) && player_mutation_level(MUT_MISSING_HAND));
 
     case OBJ_SCROLLS:
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-            return true;
-#endif
-
         if (temp && silenced(you.pos()))
             return true; // can't use scrolls while silenced
 
@@ -3499,7 +3501,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RECHARGING:
             return player_mutation_level(MUT_NO_ARTIFICE) > 0;
         case SCR_FOG:
-            return env.level_state & LSTATE_STILL_WINDS;
+            return temp && (env.level_state & LSTATE_STILL_WINDS);
         default:
             return false;
         }
@@ -3508,17 +3510,22 @@ bool is_useless_item(const item_def &item, bool temp)
         if (player_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
-        if (item.sub_type == WAND_ENSLAVEMENT
-            && item_type_known(item)
-            && player_mutation_level(MUT_NO_LOVE))
-        {
-            return true;
-        }
-
         if (you.magic_points < wand_mp_cost() && temp)
             return true;
 
-        return is_known_empty_wand(item);
+        if (is_known_empty_wand(item))
+            return true;
+
+        if (!item_type_known(item))
+            return false;
+
+        if (item.sub_type == WAND_ENSLAVEMENT)
+            return player_mutation_level(MUT_NO_LOVE);
+
+        if (item.sub_type == WAND_CLOUDS)
+            return temp && (env.level_state & LSTATE_STILL_WINDS);
+
+        return false;
 
     case OBJ_POTIONS:
     {
@@ -3543,14 +3550,14 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_HASTE:
             return you.species == SP_FORMICID;
 
-        case POT_CURE_MUTATION:
-        case POT_MUTATION:
-        case POT_BENEFICIAL_MUTATION:
 #if TAG_MAJOR_VERSION == 34
+        case POT_CURE_MUTATION:
+        case POT_BENEFICIAL_MUTATION:
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
+        case POT_MUTATION:
             return !you.can_safely_mutate(temp);
 
         case POT_LIGNIFY:
@@ -3559,7 +3566,8 @@ bool is_useless_item(const item_def &item, bool temp)
                        || temp && you.hunger_state < HS_SATIATED);
 
         case POT_FLIGHT:
-            return you.permanent_flight();
+            return you.permanent_flight()
+                   || you.racial_permanent_flight();
 
 #if TAG_MAJOR_VERSION == 34
         case POT_PORRIDGE:
@@ -3628,9 +3636,12 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
-                   || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state <= HS_STARVING;
+            return player_mutation_level(MUT_NO_REGENERATION) > 0
+                   || (temp
+                       && player_mutation_level(MUT_INHIBITED_REGENERATION) > 0
+                       && regeneration_is_inhibited())
+                   || (temp && you.species == SP_VAMPIRE
+                      && you.hunger_state <= HS_STARVING);
 
         case AMU_MANA_REGENERATION:
             return you_worship(GOD_PAKELLAS);
@@ -3650,6 +3661,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_FLIGHT:
             return you.permanent_flight()
+                   || you.racial_permanent_flight()
                    || player_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_STEALTH:
@@ -3693,10 +3705,10 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!is_inedible(item))
             return false;
 
-        if (!temp && you.form == TRAN_LICH)
+        if (!temp && you.form == transformation::lich)
         {
             // See what would happen if we were in our normal state.
-            unwind_var<transformation_type> formsim(you.form, TRAN_NONE);
+            unwind_var<transformation> formsim(you.form, transformation::none);
 
             if (!is_inedible(item))
                 return false;

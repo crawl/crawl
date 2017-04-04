@@ -3,8 +3,7 @@
  * @brief Monster spell casting.
 **/
 
-#ifndef MONCAST_H
-#define MONCAST_H
+#pragma once
 
 #include "enum.h"
 
@@ -53,4 +52,3 @@ void setup_breath_timeout(monster* mons);
 monster* cast_phantom_mirror(monster* mons, monster* targ,
                              int hp_perc = 35,
                              int summ_type = SPELL_PHANTOM_MIRROR);
-#endif

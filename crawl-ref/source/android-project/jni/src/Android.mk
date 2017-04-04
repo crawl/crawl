@@ -222,6 +222,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/showsymb.cc \
     $(CRAWL_PATH)/skill-menu.cc \
     $(CRAWL_PATH)/skills.cc \
+    $(CRAWL_PATH)/sound.cc \
     $(CRAWL_PATH)/species.cc \
     $(CRAWL_PATH)/spl-book.cc \
     $(CRAWL_PATH)/spl-cast.cc \
@@ -273,6 +274,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/wiz-item.cc \
     $(CRAWL_PATH)/wiz-mon.cc \
     $(CRAWL_PATH)/wiz-you.cc \
+    $(CRAWL_PATH)/wizard.cc \
     $(CRAWL_PATH)/worley.cc \
     $(CRAWL_PATH)/xom.cc \
     $(CRAWL_PATH)/tilepick.cc \

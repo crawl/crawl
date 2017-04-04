@@ -22,6 +22,7 @@
 #include "ghost.h"
 #include "god-abil.h"
 #include "hints.h"
+#include "item-status-flag-type.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -485,7 +486,7 @@ static void _set_allies_patrol_point(bool clear = false)
 static void _set_allies_withdraw(const coord_def &target)
 {
     coord_def delta = target - you.pos();
-    float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
+    float mult = float(LOS_DEFAULT_RANGE * 2) / (float)max(abs(delta.x), abs(delta.y));
     coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
@@ -779,8 +780,7 @@ void apply_noises()
 // noisy() has a messaging service for giving messages to the player
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
-           const char *msg, mid_t who, noise_flag_type flags,
-           bool fake_noise)
+           const char *msg, mid_t who, bool fake_noise)
 {
     ASSERT_IN_BOUNDS(where);
 
@@ -809,11 +809,14 @@ bool noisy(int original_loudness, const coord_def& where,
         crawl_state.game_is_sprint()? max(1, div_rand_round(loudness, 2))
                                     : loudness;
 
+    // The multiplier converts to milli-auns which are used internally by noise propagation.
+    const int multiplier = 1000;
+
     // Add +1 to scaled_loudness so that all squares adjacent to a
     // sound of loudness 1 will hear the sound.
     const string noise_msg(msg? msg : "");
     _noise_grid.register_noise(
-        noise_t(where, noise_msg, (scaled_loudness + 1) * 1000, who, flags));
+        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -833,16 +836,15 @@ bool noisy(int original_loudness, const coord_def& where,
     return false;
 }
 
-bool noisy(int loudness, const coord_def& where, mid_t who,
-           noise_flag_type flags)
+bool noisy(int loudness, const coord_def& where, mid_t who)
 {
-    return noisy(loudness, where, nullptr, who, flags);
+    return noisy(loudness, where, nullptr, who);
 }
 
 // This fakes noise even through silence.
 bool fake_noisy(int loudness, const coord_def& where)
 {
-    return noisy(loudness, where, nullptr, MID_NOBODY, NF_NONE, true);
+    return noisy(loudness, where, nullptr, MID_NOBODY, true);
 }
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
@@ -1129,9 +1131,28 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
 {
     if (you.pos() == pos)
     {
+        // The bizarre arrangement of those code into two functions that each
+        // check whether the actor is the player, but work at different types,
+        // probably ought to be refactored. I put the noise updating code here
+        // because the type is correct here.
+
         _actor_apply_noise(&you, noise.noise_source,
                            noise_intensity_millis, noise,
                            noise_travel_distance);
+
+        // The next bit stores noise heard at the player's position for
+        // display in the HUD. A more interesting (and much more complicated)
+        // way of doing this might be to sample from the noise grid at
+        // selected distances from the player. Dealing with terrain is a bit
+        // nightmarish for this alternative, though, so I'm going to keep it
+        // simple.
+        you.los_noise_level = you.asleep()
+                            // noise may awaken the player but this should be
+                            // dealt with in `_actor_apply_noise`. We want only
+                            // noises after awakening (or the awakening noise)
+                            // to be shown.
+                            ? 0
+                            : max(you.los_noise_level, noise_intensity_millis);
         ++affected_actor_count;
     }
 
@@ -1365,13 +1386,6 @@ static void _actor_apply_noise(actor *act,
         // will be jumping on top of them.
         if (grid_distance(apparent_source, you.pos()) <= 3)
             behaviour_event(mons, ME_ALERT, &you, apparent_source);
-        else if ((noise.noise_flags & NF_SIREN)
-                 && mons_secondary_habitat(*mons) == HT_WATER
-                 && !mons->friendly())
-        {
-            // Sirens/merfolk avatar call (hostile) aquatic monsters.
-            behaviour_event(mons, ME_ALERT, 0, apparent_source);
-        }
         else
             behaviour_event(mons, ME_DISTURB, 0, apparent_source);
     }

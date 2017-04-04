@@ -1,5 +1,4 @@
-#ifndef MON_CLASS_FLAGS_H
-#define MON_CLASS_FLAGS_H
+#pragma once
 
 #define BIT(x) ((uint64_t)1<<(x))
 
@@ -168,6 +167,9 @@ enum monclass_flag_type : uint64_t
 
     /// monster will never harm the player
     M_NO_THREAT         = BIT(55),
+
+    /// monster always receives a wand
+    M_ALWAYS_WAND       = BIT(56),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
@@ -276,4 +278,3 @@ DEF_BITFIELD(monster_flags_t, monster_flag_type);
 constexpr monster_flags_t MF_NAME_MASK = MF_NAME_REPLACE;
 constexpr monster_flags_t MF_MELEE_MASK = MF_FIGHTER | MF_TWO_WEAPONS
                                         | MF_ARCHER;
-#endif

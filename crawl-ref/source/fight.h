@@ -3,12 +3,12 @@
  * @brief Functions used during combat.
 **/
 
-#ifndef FIGHT_H
-#define FIGHT_H
+#pragma once
 
 #include <list>
 
 #include "target.h"
+#include "wu-jian-attack-type.h"
 
 enum stab_type
 {
@@ -48,7 +48,9 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number = 0,
-                           int effective_attack_number = 0);
+                           int effective_attack_number = 0,
+                           wu_jian_attack_type wu_jian_attack
+                               = WU_JIAN_ATTACK_NONE);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
@@ -71,5 +73,3 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim) = 0,
                         bool *prompted = nullptr);
-
-#endif

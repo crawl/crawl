@@ -70,7 +70,9 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
+#include "item-status-flag-type.h"
 #include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
@@ -602,39 +604,16 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
 
-    if (you.duration[DUR_DIVINE_SHIELD] > 0)
-    {
-        if (you.duration[DUR_DIVINE_SHIELD] > 1)
-        {
-            you.duration[DUR_DIVINE_SHIELD] -= delay;
-            if (you.duration[DUR_DIVINE_SHIELD] <= 1)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 1;
-                mprf(MSGCH_DURATION, "Your divine shield starts to fade.");
-            }
-        }
-
-        if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
-        {
-            you.redraw_armour_class = true;
-            if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
-            {
-                you.duration[DUR_DIVINE_SHIELD] = 0;
-                mprf(MSGCH_DURATION, "Your divine shield fades away.");
-            }
-        }
-    }
-
     // FIXME: [ds] Remove this once we've ensured durations can never go < 0?
     if (you.duration[DUR_TRANSFORMATION] <= 0
-        && you.form != TRAN_NONE)
+        && you.form != transformation::none)
     {
         you.duration[DUR_TRANSFORMATION] = 1;
     }
 
     // Vampire bat transformations are permanent (until ended), unless they
     // are uncancellable (polymorph wand on a full vampire).
-    if (you.species != SP_VAMPIRE || you.form != TRAN_BAT
+    if (you.species != SP_VAMPIRE || you.form != transformation::bat
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
@@ -853,6 +832,12 @@ static void _decrement_durations()
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
 
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH]
+        && !you.duration[DUR_HEAVEN_ON_EARTH])
+    {
+        end_heaven_on_earth(); // we shouldn't hit this, but just in case
+    }
+
     // these should be after decr_ambrosia, transforms, liquefying, etc.
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (duration_decrements_normally((duration_type) i))
@@ -935,6 +920,7 @@ static void _regenerate_hp_and_mp(int delay)
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
 
+    // HP Regeneration
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
@@ -958,19 +944,14 @@ static void _regenerate_hp_and_mp(int delay)
 
     update_regen_amulet_attunement();
 
+    // MP Regeneration
     if (!player_regenerates_mp())
         return;
 
     if (you.magic_points < you.max_magic_points)
     {
-        const int base_val = 7 + you.max_magic_points / 2;
+        const int base_val = player_mp_regen();
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
-
-        if (player_mutation_level(MUT_MANA_REGENERATION))
-            mp_regen_countup *= 2;
-        if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
-            mp_regen_countup += div_rand_round(15 * delay, BASELINE_DELAY);
-
         you.magic_points_regeneration += mp_regen_countup;
     }
 
@@ -995,11 +976,6 @@ void player_reacts()
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
-#endif
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        temperature_check();
 #endif
 
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
@@ -1041,7 +1017,7 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == TRAN_WISP && !you.stasis())
+        else if (you.form == transformation::wisp && !you.stasis())
             uncontrolled_blink();
     }
 

@@ -234,9 +234,15 @@ Place
   branch. The starting branch is called Dungeon, so that the place information
   will read "Dungeon:1" for a new character.
 
-Gold
-  Displays the number of gold pieces you have found. Gold is found scattered
-  around the dungeon, and is primarily used to buy items from shops.
+Noise
+  This is a colored bar indicating the loudness of noise that you heard on your
+  last turn. The color provides a rough guide to how far away the noise it
+  indicates might be audible. If the bar is gray, the sound is less likely to
+  be audible outside of your line of sight (at least in an open area); if it is
+  yellow, the sound is likely to be audible outside of your line of sight; and
+  if it is red, the sound will be audible at a substantial distance. If the bar
+  turns magenta, you have made one of the loudest noises in the dungeon. N.b.:
+  terrain can reduce or block the spread of noise.
 
 Time
   This indicates the amount of time that has passed since entering the dungeon,
@@ -361,8 +367,8 @@ a direction, will open/close doors, too.
 
 If there is no door in the indicated space, both Ctrl-direction and
 '*'-direction will attempt to attack any monster which may be standing there
-(this is the only way to attack a friendly creature hand-to-hand). If there is
-apparently nothing there, you will still attack it, just in case there's
+(this is the only way to attack a friendly creature with melee combat). If there
+is apparently nothing there, you will still attack it, just in case there's
 something invisible lurking around.
 
 A variety of dangerous and irritating traps are hidden around the dungeon. Traps
@@ -868,7 +874,7 @@ You can press '"' to quickly check what jewellery you're wearing.
 There are a number of types of magical staves. Some enhance your general
 spellcasting ability, while some greatly increase the power of a certain class
 of spells (and possibly reduce your effectiveness with others). Some can even be
-used in hand-to-hand combat, although with mediocre effectiveness unless you can
+used in melee combat, although with mediocre effectiveness unless you can
 harness their special power, using a combination of the Evocations skill and the
 skill specific to the staff's type. Staves which do not enhance a destructive
 magic school tend to have no combat powers at all.
@@ -1089,11 +1095,11 @@ Mutations can also be caused by specific potions, very rare trap effects, or
 spells cast by powerful enemies found deep in the dungeon. A few types of monsters
 have mutagenic corpses; these will appear in magenta by default.
 
-It is much more difficult to get rid of bad mutations than to get one. A lucky
-mutation attempt can actually remove mutations. However, the only sure-fire ways
-are to quaff a potion of cure mutation, which will attempt to remove one or more
-random mutations, or to join the gods Zin or Jivya, each of whom provides some
-remedy against mutations.
+It is more difficult to get rid of bad mutations than to get one. Using potions
+of mutations will remove a number of your current mutations, but will give you
+more mutations. These might be better to your taste. However, the only sure-fire
+ways is to join the gods Zin or Jiyva, each of whom provides some remedy against
+mutations.
 
 Demonspawn are a special case. Characters of this species get certain special
 mutations as they gain levels; these are listed in cyan. They are permanent and
@@ -1602,7 +1608,7 @@ Deep Elves
    underground. There, they developed their mental powers, evolving a natural
    gift for all forms of magic (including necromancy and earth magic), and
    adapted physically to their new environment, becoming shorter, weaker, and
-   losing all colouration. They are poor at hand-to-hand combat, but excellent
+   losing all colouration. They are poor at melee combat, but excellent
    at fighting from a distance.
 
 Felids
@@ -1623,6 +1629,17 @@ Felids
 
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
+
+Barachim
+  Barachim are an amphibious humanoid race, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
+
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
@@ -1658,7 +1675,7 @@ Formicids
   and magical sides. Their abilities have been used to tunnel immense underground
   communities and structures, many of which are tens of thousands of years old.
 
-  Perhaps unfortunately, their strong ties to to earth have left them completely
+  Perhaps unfortunately, their strong ties to earth have left them completely
   impervious to being teleported or hasted; Formicids are tied to the earth with
   a complete sense of stasis. While this is a seemingly bad property for a
   dungeon adventurer, stasis has the beneficial effect of preventing many types
@@ -1719,7 +1736,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
@@ -1953,7 +1971,7 @@ help menu using '?%', and during character choice with '%'.
 Fighting skills
 ========================================
 
-Fighting is the basic skill used in ranged and hand-to-hand combat, and applies no matter
+Fighting is the basic skill used in ranged and melee combat, and applies no matter
 which weapon your character is wielding (if any). Fighting is also the skill
 that determines the number of hit points your character gets as they increase in
 levels (note that this is calculated so that you don't get a long run advantage
@@ -2015,11 +2033,10 @@ There are a number of individual weapon skills for missile weapons:
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: tomahawks,
-javelins, tomahawks, nets, etc. The other skills refer to various types of
-missiles shot with a launcher. An exception to this are needles: these are
-launched using blowguns, an action which uses the Throwing skill. Since
-stones can be thrown without launchers to some effect, these skills
-crosstrain:
+javelins, nets, etc. The other skills refer to various types of missiles shot
+with a launcher. An exception to this are needles: these are launched using
+blowguns, an action which uses the Throwing skill. Since stones can be thrown
+without launchers to some effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2094,9 +2111,8 @@ Invocations
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
-  number of charges in a wand through usage. Similarly, all other items that
-  have certain powers (such as crystal balls, decks of cards, or elemental
-  summoners) work better for characters trained in this skill.
+  number of charges in a wand through usage. Similarly, various other items
+  that have evocable powers work better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The

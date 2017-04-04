@@ -1,5 +1,4 @@
-#ifndef MELEE_ATTACK_H
-#define MELEE_ATTACK_H
+#pragma once
 
 #include <list>
 
@@ -33,7 +32,9 @@ public:
 
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool      is_riposte;         // long blade retaliation attack
+    bool         is_riposte;      // long blade retaliation attack
+    wu_jian_attack_type wu_jian_attack;
+    int wu_jian_number_of_targets;
     coord_def attack_position;
 
 public:
@@ -83,6 +84,9 @@ private:
 
     /* Long blade riposte */
     void riposte();
+
+    /* Wu Jian martial attacks*/
+    int martial_damage_mod(int dam);
 
     /* Mutation Effects */
     void do_spines();
@@ -139,6 +143,7 @@ private:
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();
+    bool defender_wjc_distracted() const;
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
@@ -149,5 +154,3 @@ private:
 
     bool can_reach();
 };
-
-#endif

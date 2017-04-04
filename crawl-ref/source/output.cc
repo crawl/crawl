@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "ability.h"
+#include "areas.h"
 #include "branch.h"
 #include "colour.h"
 #include "describe.h"
@@ -212,7 +213,7 @@ static void _cprintf_touchui(const char *format, ...)
             TOUCH_UI_STATE = TOUCH_V_HP;
             break;
         case TOUCH_V_TITLE:
-            cprintf(you.your_name.c_str());
+            cprintf("%s", you.your_name.c_str());
             break;
         case TOUCH_V_HP:
         case TOUCH_V_MP:
@@ -228,11 +229,11 @@ static void _cprintf_touchui(const char *format, ...)
             break;
         case TOUCH_T_WP:
             TOUCH_UI_STATE = TOUCH_V_WP;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_T_QV:
             TOUCH_UI_STATE = TOUCH_V_QV;
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
             break;
         case TOUCH_V_WP:
         case TOUCH_V_QV:
@@ -242,7 +243,7 @@ static void _cprintf_touchui(const char *format, ...)
 
         default:
 //            printf("p: %s\n",buf.c_str());
-            cprintf(buf.c_str());
+            cprintf("%s", buf.c_str());
     }
     va_end(args);
 }
@@ -301,6 +302,7 @@ public:
     colour_t m_change_pos;
     colour_t m_change_neg;
     colour_t m_empty;
+    int horiz_bar_width;
 
     colour_bar(colour_t default_colour,
                colour_t change_pos,
@@ -309,6 +311,7 @@ public:
                bool round = false)
         : m_default(default_colour), m_change_pos(change_pos),
           m_change_neg(change_neg), m_empty(empty),
+          horiz_bar_width(-1),
           m_old_disp(-1),
           m_request_redraw_after(0)
     {
@@ -321,11 +324,7 @@ public:
                && you.num_turns >= m_request_redraw_after;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    void draw(int ox, int oy, int val, int max_val, bool temp = false, int sub_val = 0)
-#else
     void draw(int ox, int oy, int val, int max_val, int sub_val = 0)
-#endif
     {
         ASSERT(val <= max_val);
         if (max_val <= 0)
@@ -333,10 +332,9 @@ public:
             m_old_disp = -1;
             return;
         }
-#if TAG_MAJOR_VERSION == 34
-        const colour_t temp_colour = temperature_colour(temperature());
-#endif
-        const int width = crawl_view.hudsz.x - (ox - 1);
+        const int width = (horiz_bar_width != -1) ?
+                                  horiz_bar_width :
+                                  crawl_view.hudsz.x - (ox - 1);
         const int sub_disp = (width * val / max_val);
         int disp  = width * max(0, val - sub_val) / max_val;
         const int old_disp = (m_old_disp < 0) ? sub_disp : m_old_disp;
@@ -356,13 +354,7 @@ public:
             textcolour(BLACK + m_empty * 16);
 
             if (cx < disp)
-            {
-#if TAG_MAJOR_VERSION == 34
-                textcolour(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
-#else
                 textcolour(BLACK + m_default * 16);
-#endif
-            }
             else if (cx < sub_disp)
                 textcolour(BLACK + YELLOW * 16);
             else if (old_disp >= sub_disp && cx < old_disp)
@@ -371,11 +363,7 @@ public:
 #else
             if (cx < disp && cx < old_disp)
             {
-#if TAG_MAJOR_VERSION == 34
-                textcolour((temp) ? temp_colour : m_default);
-#else
                 textcolour(m_default);
-#endif
                 putwch('=');
             }
             else if (cx < disp)
@@ -460,13 +448,18 @@ public:
         textbackground(BLACK);
     }
 
+    void reset()
+    {
+        m_old_disp = -1;
+        m_request_redraw_after = 0;
+    }
+
  private:
     int m_old_disp;
     int m_request_redraw_after; // force a redraw at this turn count
 };
 
 static colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
-static colour_bar EP_Bar(LIGHTMAGENTA, MAGENTA, BLUE, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
 static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
@@ -474,8 +467,18 @@ static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
-colour_bar Contam_Bar(DARKGREY, DARKGREY, DARKGREY, DARKGREY);
-colour_bar Temp_Bar(RED, LIGHTRED, LIGHTBLUE, DARKGREY);
+#ifdef USE_TILE_LOCAL
+static colour_bar Noise_Bar(WHITE, LIGHTGREY, LIGHTGREY, DARKGREY);
+#else
+static colour_bar Noise_Bar(LIGHTGREY, LIGHTGREY, MAGENTA, DARKGREY);
+#endif
+
+void reset_hud()
+{
+    HP_Bar.reset();
+    MP_Bar.reset();
+    Noise_Bar.reset();
+}
 
 // ----------------------------------------------------------------------
 // Status display
@@ -539,12 +542,7 @@ void update_turn_count()
         return;
     }
 
-    const int yhack = 0
-#if TAG_MAJOR_VERSION == 34
-                    + (you.species == SP_LAVA_ORC)
-#endif
-                    ;
-    CGOTOXY(19+6, 9 + yhack, GOTO_STAT);
+    CGOTOXY(19+6, 9, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolour(HUD_VALUE_COLOUR);
@@ -571,24 +569,142 @@ static int _count_digits(int val)
     return 1;
 }
 
-#if TAG_MAJOR_VERSION == 34
-static void _print_stats_temperature(int x, int y)
+static const equipment_type e_order[] =
 {
-    cgotoxy(x, y, GOTO_STAT);
-    textcolour(HUD_CAPTION_COLOUR);
-    cprintf("Temperature: ");
+    EQ_WEAPON, EQ_SHIELD, EQ_BODY_ARMOUR, EQ_HELMET, EQ_CLOAK,
+    EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_LEFT_RING, EQ_RIGHT_RING,
+    EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
+    EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
+    EQ_RING_AMULET,
+};
 
-    Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
+static void _print_stats_equip(int x, int y)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    cprintf((you.species == SP_OCTOPODE) ? "Eq: " : "Equip: ");
+    textcolour(LIGHTGREY);
+    for (equipment_type eqslot : e_order)
+    {
+        if (you_can_wear(eqslot))
+        {
+            if (you.slot_item(eqslot))
+            {
+                cglyph_t g = get_item_glyph(*(you.slot_item(eqslot)));
+                formatted_string::parse_string(glyph_to_tagstr(g)).display();
+            }
+            else if (!you_can_wear(eqslot, true))
+                cprintf(" ");
+            else
+                cprintf(".");
+        }
+    }
 }
+
+/*
+ * Print the noise bar to the HUD with appropriate coloring.
+ * if in wizmode, also print the numeric noise value.
+ */
+static void _print_stats_noise(int x, int y)
+{
+    bool silence = silenced(you.pos());
+    int level = silence ? 0 : you.get_noise_perception(true);
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    cprintf("Noise: ");
+    colour_t noisecolour;
+
+    // This is calibrated roughly so that in an open-ish area:
+    //   LIGHTGREY = not very likely to carry outside of your los
+    //               (though it is possible depending on terrain).
+    //   YELLOW = likely to carry outside of your los, up to double.
+    //   RED = likely to carry at least 16 spaces, up to much further.
+    //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
+    // In more enclosed areas, these values will be attenuated,
+    // and this isn't represented.
+    // See player::get_noise_perception for the mapping from internal noise
+    // values to this 0-1000 scale.
+    // NOTE: This color scheme is duplicated in player.js.
+    if (level <= 333)
+        noisecolour = LIGHTGREY;
+    else if (level <= 666)
+        noisecolour = YELLOW;
+    else if (level < 1000)
+        noisecolour = RED;
+    else
+        noisecolour = LIGHTMAGENTA;
+
+    int bar_position;
+    if (you.wizard && !silence)
+    {
+        Noise_Bar.horiz_bar_width = 6;
+        bar_position = 10;
+
+        // numeric noise level, basically the internal value used by noise
+        // propagation (see shout.cc:noisy). The exact value is too hard to
+        // interpret to show outside of wizmode, because noise propagation is
+        // very complicated.
+        CGOTOXY(x + bar_position - 3, y, GOTO_STAT);
+        textcolour(noisecolour);
+        CPRINTF("%2d ", you.get_noise_perception(false));
+    }
+    else
+    {
+        Noise_Bar.horiz_bar_width = 9;
+        bar_position = 7;
+    }
+
+    if (silence)
+    {
+        CGOTOXY(x + bar_position, y, GOTO_STAT);
+        textcolour(LIGHTMAGENTA);
+
+        // This needs to be one extra wide in case silence happens
+        // immediately after super-loud (magenta) noise
+        CPRINTF("Silenced  ");
+        Noise_Bar.reset(); // so it doesn't display a change bar after silence ends
+    }
+    else
+    {
+        if (level == 1000)
+        {
+            // the bar goes up to 11 for extra loud sounds! (Well, really 10.)
+            Noise_Bar.horiz_bar_width += 1;
+        }
+        else
+        {
+            CGOTOXY(x + 16, y, GOTO_STAT);
+            CPRINTF(" "); // clean up after the extra wide bar
+        }
+#ifndef USE_TILE_LOCAL
+        // use the previous color for negative change in console; there's a
+        // visual difference in bar width. Negative change doesn't get shown
+        // in local tiles.
+        Noise_Bar.m_change_neg = Noise_Bar.m_default;
 #endif
+        Noise_Bar.m_default = noisecolour;
+        Noise_Bar.m_change_pos = noisecolour;
+        Noise_Bar.draw(x + bar_position, y,
+                       div_round_up((level * Noise_Bar.horiz_bar_width), 1000),
+                       Noise_Bar.horiz_bar_width);
+    }
+}
+
+static void _print_stats_gold(int x, int y, colour_t colour)
+{
+    CGOTOXY(x, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("Gold:");
+    CGOTOXY(x+6, y, GOTO_STAT);
+    if (you.duration[DUR_GOZAG_GOLD_AURA])
+        textcolour(LIGHTBLUE);
+    else
+        textcolour(HUD_VALUE_COLOUR);
+    CPRINTF("%-6d", you.gold);
+}
 
 static void _print_stats_mp(int x, int y)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return;
-
-#endif
     // Calculate colour
     short mp_colour = HUD_VALUE_COLOUR;
 
@@ -631,61 +747,9 @@ static void _print_stats_mp(int x, int y)
     MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
-#if TAG_MAJOR_VERSION == 34
-static void _print_stats_contam(int x, int y)
-{
-    if (you.species != SP_DJINNI)
-        return;
-
-    const int max_contam = 8000;
-    int contam = min(you.magic_contamination, max_contam);
-
-    // Calculate colour
-    if (you.magic_contamination > 15000)
-    {
-        Contam_Bar.m_default = RED;
-        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
-    }
-    else if (you.magic_contamination > 5000) // harmful
-    {
-        Contam_Bar.m_default = LIGHTRED;
-        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
-    }
-    else if (you.magic_contamination > 3333)
-    {
-        Contam_Bar.m_default = YELLOW;
-        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = BROWN;
-    }
-    else if (you.magic_contamination > 1666)
-    {
-        Contam_Bar.m_default = LIGHTGREY;
-        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
-    }
-    else
-    {
-#ifdef USE_TILE_LOCAL
-        Contam_Bar.m_default = LIGHTGREY;
-#else
-        Contam_Bar.m_default = DARKGREY;
-#endif
-        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
-    }
-
-#ifdef TOUCH_UI
-    if (tiles.is_using_small_layout())
-        Contam_Bar.vdraw(6, 10, contam, max_contam);
-    else
-#endif
-    Contam_Bar.draw(19, y, contam, max_contam);
-}
-#endif
 static void _print_stats_hp(int x, int y)
 {
     int max_max_hp = get_real_hp(true, true);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        max_max_hp += get_real_mp(true);
-#endif
 
     // Calculate colour
     short hp_colour = HUD_VALUE_COLOUR;
@@ -708,11 +772,6 @@ static void _print_stats_hp(int x, int y)
     // Health: xxx/yyy (zzz)
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        CPRINTF(player_rotted() ? "EP: " : "Essence: ");
-    else
-#endif
     CPRINTF(player_rotted() ? "HP: " : "Health: ");
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
@@ -730,24 +789,10 @@ static void _print_stats_hp(int x, int y)
 
 #ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
-    {
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-            EP_Bar.vdraw(2, 10, you.hp, you.hp_max);
-        else
-#endif
         HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
-    }
     else
 #endif
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        EP_Bar.draw(19, y, you.hp, you.hp_max);
-    else
-        HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - max(0, poison_survival()));
-#else
         HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
-#endif
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -1005,6 +1050,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_DEATHS_DOOR,
         DUR_EXHAUSTED,
         DUR_QUAD_DAMAGE,
+        STATUS_SERPENTS_LASH,
     };
 
     bitset<STATUS_LAST_STATUS + 1> done;
@@ -1177,7 +1223,24 @@ static void _redraw_title()
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
-    if (!you_worship(GOD_NO_GOD))
+    if (you_worship(GOD_NO_GOD))
+    {
+        if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+            && !had_gods())
+        {
+            string godpiety = "**....";
+            textcolour(DARKGREY);
+            if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+                NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
+            clear_to_end_of_line();
+        }
+        else
+        {
+            // Still need to clear in case the player was excommunicated
+            clear_to_end_of_line();
+        }
+    }
+    else
     {
         string god = " of ";
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
@@ -1186,44 +1249,31 @@ static void _redraw_title()
 
         string piety = _god_asterisks();
         textcolour(_god_status_colour(YELLOW));
-        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-            <= WIDTH)
-        {
+        const unsigned int textwidth = (unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1);
+        if (textwidth <= WIDTH)
             NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
-        }
-        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-                  == (WIDTH + 1))
+        else if (textwidth == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
             //so we remove leading space.
             NOWRAP_EOL_CPRINTF("%s", piety.c_str());
         }
+        clear_to_end_of_line();
+        if (you_worship(GOD_GOZAG))
+        {
+            // "Mottled Draconian of Gozag  Gold: 99999" just fits
+            _print_stats_gold(textwidth + 2, 2,
+                              _god_status_colour(god_colour(you.religion)));
+        }
     }
-    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
-             && !had_gods())
-    {
-        string godpiety = "**....";
-        textcolour(DARKGREY);
-        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
-            NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
-    }
-
-    clear_to_end_of_line();
 
     textcolour(LIGHTGREY);
 }
 
 void print_stats()
 {
-#if TAG_MAJOR_VERSION == 34
-    int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
-    int temp_pos = 5;
-    int ac_pos = temp_pos + temp;
-    int ev_pos = temp_pos + temp + 1;
-#else
     int ac_pos = 5;
     int ev_pos = ac_pos + 1;
-#endif
 
     cursor_control coff(false);
     textcolour(LIGHTGREY);
@@ -1239,10 +1289,6 @@ void print_stats()
         you.redraw_hit_points = true;
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
-#if TAG_MAJOR_VERSION == 34
-    if (Temp_Bar.wants_redraw() && you.species == SP_LAVA_ORC)
-        you.redraw_temperature = true;
-#endif
 
     // Poison display depends on regen rate, so should be redrawn every turn.
     if (you.duration[DUR_POISONING])
@@ -1270,14 +1316,7 @@ void print_stats()
         you.redraw_magic_points = false;
         _print_stats_mp(1, 4);
     }
-#if TAG_MAJOR_VERSION == 34
-    _print_stats_contam(1, 4);
-    if (you.redraw_temperature)
-    {
-        you.redraw_temperature = false;
-        _print_stats_temperature(1, temp_pos);
-    }
-#endif
+
     if (you.redraw_armour_class)
     {
         you.redraw_armour_class = false;
@@ -1291,22 +1330,12 @@ void print_stats()
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
-        {
-#if TAG_MAJOR_VERSION == 34
-            _print_stat(static_cast<stat_type>(i), 19, 5 + i + temp);
-#else
             _print_stat(static_cast<stat_type>(i), 19, 5 + i);
-#endif
-        }
     you.redraw_stats.init(false);
 
     if (you.redraw_experience)
     {
-#if TAG_MAJOR_VERSION == 34
-        CGOTOXY(1, 8 + temp, GOTO_STAT);
-#else
         CGOTOXY(1, 8, GOTO_STAT);
-#endif
         textcolour(Options.status_caption_colour);
         CPRINTF("XL: ");
         textcolour(HUD_VALUE_COLOUR);
@@ -1323,25 +1352,18 @@ void print_stats()
         you.redraw_experience = false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    int yhack = temp;
-#else
     int yhack = 0;
-#endif
 
-    // Line 9 is Gold and Turns
+    // Line 9 is Noise and Turns
 #ifdef USE_TILE_LOCAL
     if (!tiles.is_using_small_layout())
 #endif
     {
-        // Increase y-value for all following lines.
         yhack++;
-        CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
-        if (you.duration[DUR_GOZAG_GOLD_AURA])
-            textcolour(LIGHTBLUE);
+        if (Options.equip_bar)
+            _print_stats_equip(1, 8+yhack);
         else
-            textcolour(HUD_VALUE_COLOUR);
-        CPRINTF("%-6d", you.gold);
+            _print_stats_noise(1, 8+yhack);
     }
 
     if (you.wield_change)
@@ -1406,10 +1428,6 @@ static string _level_description_string_hud()
 void print_stats_level()
 {
     int ypos = 8;
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        ypos++;
-#endif
     cgotoxy(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
@@ -1429,31 +1447,17 @@ void draw_border()
 
     textcolour(Options.status_caption_colour);
 
-#if TAG_MAJOR_VERSION == 34
-    int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
-#endif
 //    int hp_pos = 3;
     int mp_pos = 4;
-#if TAG_MAJOR_VERSION == 34
-    int ac_pos = 5 + temp;
-    int ev_pos = 6 + temp;
-    int sh_pos = 7 + temp;
-#else
     int ac_pos = 5;
     int ev_pos = 6;
     int sh_pos = 7;
-#endif
     int str_pos = ac_pos;
     int int_pos = ev_pos;
     int dex_pos = sh_pos;
 
     //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
     CGOTOXY(1, mp_pos, GOTO_STAT);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        CPRINTF("Contam:");
-    else
-#endif
     CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("AC:");
     CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("EV:");
     CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("SH:");
@@ -1462,13 +1466,7 @@ void draw_border()
     CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF("Int:");
     CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
 
-#if TAG_MAJOR_VERSION == 34
-    int yhack = temp;
-#else
-    int yhack = 0;
-#endif
-    CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
-    CGOTOXY(19, 9 + yhack, GOTO_STAT);
+    CGOTOXY(19, 9, GOTO_STAT);
     CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
     // Line 8 is exp pool, Level
 }
@@ -1491,10 +1489,6 @@ void redraw_screen()
     you.redraw_title        = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        you.redraw_temperature = true;
-#endif
     you.redraw_stats.init(true);
     you.redraw_armour_class  = true;
     you.redraw_evasion       = true;
@@ -1879,7 +1873,7 @@ static string _stealth_bar(int sw)
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);
-    bar += "Stlth  ";
+    bar += "Stlth    ";
     const int stealth_num = _stealth_breakpoint(player_stealth());
     for (int i = 0; i < stealth_num; i++)
         bar += "+";
@@ -1896,15 +1890,6 @@ static void _print_overview_screen_equip(column_composer& cols,
                                          vector<char>& equip_chars,
                                          int sw)
 {
-    const equipment_type e_order[] =
-    {
-        EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
-        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
-        EQ_RING_AMULET,
-    };
-
     sw = min(max(sw, 79), 640);
 
     for (equipment_type eqslot : e_order)
@@ -1960,7 +1945,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             str = "  - Unarmed";
         }
         else if (eqslot == EQ_WEAPON
-                 && you.form == TRAN_BLADE_HANDS)
+                 && you.form == transformation::blade_hands)
         {
             const bool plural = !player_mutation_level(MUT_MISSING_HAND);
             str = string("  - Blade Hand") + (plural ? "s" : "");
@@ -2336,10 +2321,10 @@ static string _resist_composer(
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, bool calc_unid, int sw)
 {
-    // 3 columns, splits at columns 19, 33
-    column_composer cols(3, 19, 33);
-    // First column, resist name is 7 chars
-    int cwidth = 7;
+    // 3 columns, splits at columns 20, 33
+    column_composer cols(3, 20, 33);
+    // First column, resist name is up to 9 chars
+    int cwidth = 9;
     string out;
 
     const int rfire = player_res_fire(calc_unid);
@@ -2376,6 +2361,12 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
 
     out += _stealth_bar(get_number_of_cols()) + "\n";
+
+    const int regen = (player_regen() + 9) / 10; // round up
+    out += make_stringf("Regen    %d.%d/turn\n", regen/10, regen % 10);
+
+    const int mp_regen = (player_mp_regen() + 9) / 10; // round up
+    out += make_stringf("MPRegen  %d.%d/turn\n", mp_regen/10, mp_regen % 10);
 
     cols.add_formatted(0, out, false);
 
@@ -2531,7 +2522,8 @@ static string _annotate_form_based(string desc, bool suppressed)
 
 static string _dragon_abil(string desc)
 {
-    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    const bool supp = form_changed_physiology()
+                      && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp);
 }
 

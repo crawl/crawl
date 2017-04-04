@@ -1,5 +1,4 @@
-#ifndef TAG_VERSION_H
-#define TAG_VERSION_H
+#pragma once
 
 // Character info has its own top-level tag, mismatching majors don't break
 // compatibility there.
@@ -7,6 +6,7 @@
 // the save browser across versions, possibly leading to overwritten games.
 // It's only there in case there's no way out.
 #define TAG_CHR_FORMAT 0
+COMPILE_CHECK(TAG_CHR_FORMAT < 256);
 
 // Let CDO updaters know if the syntax changes.
 // Really, really, REALLY _never_ ever bump this and clean up old #ifdefs
@@ -15,6 +15,7 @@
 #ifndef TAG_MAJOR_VERSION
 #define TAG_MAJOR_VERSION 34
 #endif
+COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
@@ -203,12 +204,14 @@ enum tag_minor_version
     TAG_MINOR_SLIME_WALL_CLEAR,    // Turn existing Slime:$ walls clear, so they'll be removed on TRJ death.
     TAG_MINOR_MONSTER_TRACKING,    // Move monster turns spent tracking player into monster class
     TAG_MINOR_TRACKING_AMNESTY,    // Add the ability to defer bezotting on a monster for a while.
-#endif
+    TAG_MINOR_FOOD_PURGE_RELOADED, // The exciting sequel, removing pizza/jerky.
+    TAG_MINOR_ELYVILON_WRATH,      // Make Elyvilon wrath expire with XP gain.
+    TAG_MINOR_DESOLATION_GLOBAL,   // Recover from saves where desolation is incorrectly marked as global
+    TAG_MINOR_NO_MORE_LORC,        // Don't save lava orc temperature (or anything else). LO/Dj removal.
+    TAG_MINOR_NO_ITEM_TRANSIT,     // Remove code to transit items across levels.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
 
 // Marshalled as a byte in several places.
 COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
-
-#endif

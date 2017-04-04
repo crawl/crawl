@@ -1,5 +1,6 @@
-#ifndef MON_ENCH_H
-#define MON_ENCH_H
+#pragma once
+
+#include "enchant-type.h"
 
 #define INFINITE_DURATION  30000
 #define MAX_ENCH_DEGREE_DEFAULT  4
@@ -54,5 +55,3 @@ private:
 };
 
 enchant_type name_to_ench(const char *name);
-
-#endif

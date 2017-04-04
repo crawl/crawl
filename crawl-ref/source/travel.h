@@ -2,14 +2,15 @@
  * @file
  * @brief Travel stuff
 **/
-#ifndef TRAVEL_H
-#define TRAVEL_H
+#pragma once
 
 #include <cstdio>
 #include <map>
 #include <string>
 #include <vector>
 
+#include "command-type.h"
+#include "daction-type.h"
 #include "exclude.h"
 #include "travel-defs.h"
 
@@ -599,5 +600,3 @@ void clear_level_target();
 
 void clear_travel_trail();
 int travel_trail_index(const coord_def& gc);
-
-#endif // TRAVEL_H

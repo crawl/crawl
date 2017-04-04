@@ -49,11 +49,7 @@ level_id actor::shaft_dest(bool known = false) const
  */
 bool actor::ground_level() const
 {
-    return !airborne() && !is_wall_clinging()
-#if TAG_MAJOR_VERSION == 34
-        && mons_species() != MONS_DJINNI
-#endif
-        ;
+    return !airborne() && !is_wall_clinging();
 }
 
 bool actor::stand_on_solid_ground() const

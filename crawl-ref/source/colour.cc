@@ -655,6 +655,12 @@ void init_element_colours()
                             40, GREEN,
                             40, LIGHTGREEN,
                         0));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_WU_JIAN, "wu_jian",
+                            40, LIGHTRED,
+                            40, YELLOW,
+                            10, WHITE,
+                        0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

@@ -700,7 +700,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
 
     if (weap && item_attack_skill(*weap) == SK_AXES
             || attacker.is_player()
-               && (you.form == TRAN_HYDRA && you.heads() > 1
+               && (you.form == transformation::hydra && you.heads() > 1
                    || you.duration[DUR_CLEAVE]))
     {
         const coord_def atk = attacker.pos();
@@ -738,8 +738,16 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
  * @param effective_attack_number   ?
  */
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
-                           int attack_number, int effective_attack_number)
+                           int attack_number, int effective_attack_number,
+                           wu_jian_attack_type wu_jian_attack)
 {
+    if (wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND
+        || wu_jian_attack == WU_JIAN_ATTACK_WALL_JUMP
+        || wu_jian_attack == WU_JIAN_ATTACK_TRIGGERED_AUX)
+    {
+        return; // WJC AOE attacks don't cleave.
+    }
+
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
@@ -747,6 +755,8 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
+
+            attck.wu_jian_attack = wu_jian_attack;
             attck.attack();
         }
         targets.pop_front();

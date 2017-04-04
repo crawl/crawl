@@ -5,12 +5,14 @@
 #include "areas.h"
 #include "branch.h"
 #include "cloud.h"
+#include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
@@ -116,6 +118,20 @@ static void _mark_expiring(status_info* inf, bool expiring)
     }
 }
 
+static string _ray_text()
+{
+    // i feel like we could do this with math instead...
+    switch (you.attribute[ATTR_SEARING_RAY])
+    {
+        case 2:
+            return "Ray+";
+        case 3:
+            return "Ray++";
+        default:
+            return "Ray";
+    }
+}
+
 /**
  * Populate a status_info struct from the duration_data struct corresponding
  * to the given duration_type.
@@ -203,7 +219,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_NO_POTIONS:
-        if (you_foodless(true))
+        if (you_foodless())
             inf->light_colour = DARKGREY;
         break;
 
@@ -213,7 +229,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "-Swift";
             inf->light_colour = RED;
             inf->short_text   = "sluggish";
-            inf->long_text    = "You are moving sluggishly";
+            inf->long_text    = "You are moving sluggishly.";
         }
         if (you.in_liquid())
             inf->light_colour = DARKGREY;
@@ -378,6 +394,7 @@ bool fill_status_info(int status, status_info* inf)
         _describe_stat_zero(inf, STAT_DEX);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case STATUS_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -387,6 +404,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->long_text    = "You have a stored fireball ready to release.";
         }
         break;
+#endif
 
     case STATUS_BONE_ARMOUR:
         if (you.attribute[ATTR_BONE_ARMOUR] > 0)
@@ -409,14 +427,48 @@ bool fill_status_info(int status, status_info* inf)
         _describe_terrain(inf);
         break;
 
-    // Silenced by an external source.
+    // Also handled by DUR_SILENCE, see duration-data.h
     case STATUS_SILENCE:
         if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
         {
-            inf->light_colour = LIGHTRED;
-            inf->light_text   = "Sil";
+            // Only display the status light if not using the noise bar.
+            if (Options.equip_bar)
+            {
+                inf->light_colour = LIGHTRED;
+                inf->light_text   = "Sil";
+            }
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
+        }
+        if (Options.equip_bar && you.duration[DUR_SILENCE])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text = "Sil";
+        }
+        break;
+
+    case STATUS_SERPENTS_LASH:
+        if (you.attribute[ATTR_SERPENTS_LASH] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text
+               = make_stringf("Lash (%u)",
+                              you.attribute[ATTR_SERPENTS_LASH]);
+            inf->short_text = "serpent's lash";
+            inf->long_text = "You are moving at supernatural speed.";
+        }
+        break;
+
+    case STATUS_HEAVEN_ON_EARTH:
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text
+               = make_stringf("Hevn (%u)",
+                              you.attribute[ATTR_HEAVEN_ON_EARTH]);
+            inf->short_text = "heaven on earth";
+            inf->long_text = "Heavenly clouds are increasing your damage and "
+                             "accuracy.";
         }
         break;
 
@@ -464,7 +516,14 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case STATUS_DRAINED:
-        if (you.attribute[ATTR_XP_DRAIN] > 250)
+        if (you.attribute[ATTR_XP_DRAIN] > 450)
+        {
+            inf->light_colour = MAGENTA;
+            inf->light_text   = "Drain";
+            inf->short_text   = "extremely drained";
+            inf->long_text    = "Your life force is extremely drained.";
+        }
+        else if (you.attribute[ATTR_XP_DRAIN] > 250)
         {
             inf->light_colour = RED;
             inf->light_text   = "Drain";
@@ -491,7 +550,7 @@ bool fill_status_info(int status, status_info* inf)
         if (you.attribute[ATTR_SEARING_RAY])
         {
             inf->light_colour = WHITE;
-            inf->light_text   = "Ray";
+            inf->light_text   = _ray_text().c_str();
         }
         break;
 
@@ -745,9 +804,6 @@ static void _describe_glow(status_info* inf)
         inf->light_colour = LIGHTGREY;
     else
         inf->light_colour = DARKGREY;
-#if TAG_MAJOR_VERSION == 34
-    if (cont > 1 || you.species != SP_DJINNI)
-#endif
     inf->light_text = "Contam";
 
     /// Mappings from contamination levels to descriptions.
@@ -933,7 +989,7 @@ static void _describe_sickness(status_info* inf)
  */
 static void _describe_transform(status_info* inf)
 {
-    if (you.form == TRAN_NONE)
+    if (you.form == transformation::none)
         return;
 
     const Form * const form = get_form();
@@ -941,7 +997,8 @@ static void _describe_transform(status_info* inf)
     inf->short_text = form->get_long_name();
     inf->long_text = form->get_description();
 
-    const bool vampbat = (you.species == SP_VAMPIRE && you.form == TRAN_BAT);
+    const bool vampbat = (you.species == SP_VAMPIRE
+                          && you.form == transformation::bat);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
     inf->light_colour = _dur_colour(GREEN, expire);
@@ -1001,6 +1058,7 @@ static void _describe_missiles(status_info* inf)
     else
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
+                    || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
                     || you.scan_artefacts(ARTP_RMSL)
                     || have_passive(passive_t::upgraded_storm_shield);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
@@ -1012,10 +1070,10 @@ static void _describe_missiles(status_info* inf)
 
 static void _describe_invisible(status_info* inf)
 {
-    if (!you.duration[DUR_INVIS] && you.form != TRAN_SHADOW)
+    if (!you.duration[DUR_INVIS] && you.form != transformation::shadow)
         return;
 
-    if (you.form == TRAN_SHADOW)
+    if (you.form == transformation::shadow)
     {
         inf->light_colour = _dur_colour(WHITE,
                                         dur_expiring(DUR_TRANSFORMATION));
@@ -1032,7 +1090,7 @@ static void _describe_invisible(status_info* inf)
         inf->short_text += " (but backlit and visible)";
     }
     inf->long_text = "You are " + inf->short_text + ".";
-    _mark_expiring(inf, dur_expiring(you.form == TRAN_SHADOW
+    _mark_expiring(inf, dur_expiring(you.form == transformation::shadow
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
 }

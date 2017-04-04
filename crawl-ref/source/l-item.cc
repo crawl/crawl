@@ -20,6 +20,7 @@
 #include "food.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "l-defs.h"
@@ -147,7 +148,7 @@ static int l_item_do_wear(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    bool success = do_wear_armour(item->link, false);
+    bool success = wear_armour(item->link);
     lua_pushboolean(ls, success);
     return 1;
 }
@@ -1225,12 +1226,13 @@ static int l_item_get_items_at(lua_State *ls)
     s.x = luaL_checkint(ls, 1);
     s.y = luaL_checkint(ls, 2);
     coord_def p = player2grid(s);
-    if (!map_bounds(p))
-        return 0;
 
-    item_def* top = env.map_knowledge(p).item();
-    if (!top || !top->defined())
+    if (!query_map_knowledge(false, p, [](const map_cell& cell) {
+          return cell.item() && cell.item()->defined();
+        }))
+    {
         return 0;
+    }
 
     lua_newtable(ls);
 

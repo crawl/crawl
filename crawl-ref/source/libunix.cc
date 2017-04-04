@@ -789,9 +789,13 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen()
 {
-    // Refreshing the default colors helps keep colors synced in ttyrecs.
-    curs_set_default_colors();
-    refresh();
+    // In objstat and similar modes, there might not be a screen to update.
+    if (stdscr)
+    {
+        // Refreshing the default colors helps keep colors synced in ttyrecs.
+        curs_set_default_colors();
+        refresh();
+    }
 
 #ifdef USE_TILE_WEB
     tiles.set_need_redraw();

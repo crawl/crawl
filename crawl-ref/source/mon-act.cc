@@ -31,7 +31,9 @@
 #include "hints.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "los.h"
@@ -71,9 +73,6 @@
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster& mons);
-#if TAG_MAJOR_VERSION == 34
-static void _heated_area(monster& mons);
-#endif
 static bool _monster_move(monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
@@ -1134,6 +1133,7 @@ static bool _handle_wand(monster& mons)
         || mons.asleep()
         || mons_is_fleeing(mons)
         || mons.pacified()
+        || mons.confused()
         || mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT
         || mons.has_ench(ENCH_SUBMERGED)
         || x_chance_in_y(3, 4)
@@ -1184,14 +1184,7 @@ static bool _handle_wand(monster& mons)
         break;
     }
 
-    if (mons.confused())
-    {
-        beem.target = dgn_random_point_from(mons.pos(), LOS_RADIUS);
-        if (beem.target.origin())
-            return false;
-        zap = true;
-    }
-    else if (!niceWand)
+    if (!niceWand)
     {
         // Fire tracer, if necessary.
         fire_tracer(&mons, beem);
@@ -1502,9 +1495,6 @@ static void _pre_monster_move(monster& mons)
         // Update constriction durations
         mons.accum_has_constricted();
 
-#if TAG_MAJOR_VERSION == 34
-        _heated_area(mons);
-#endif
         if (mons.type == MONS_NO_MONSTER)
             return;
     }
@@ -1648,9 +1638,6 @@ void handle_monster_move(monster* mons)
     mons->shield_blocks = 0;
 
     _mons_in_cloud(*mons);
-#if TAG_MAJOR_VERSION == 34
-    _heated_area(*mons);
-#endif
     if (!mons->alive())
         return;
 
@@ -1682,7 +1669,8 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->has_ench(ENCH_GOLD_LUST))
+    if (mons->has_ench(ENCH_GOLD_LUST)
+        || mons->has_ench(ENCH_DISTRACTED_ACROBATICS))
     {
         mons->speed_increment -= non_move_energy;
         return;
@@ -2096,7 +2084,6 @@ void monster::struggle_against_net()
         trap_def *trap = trap_at(pos());
         if (trap && trap->type == TRAP_WEB)
         {
-
             if (coinflip())
             {
                 if (you.see_cell(pos()))
@@ -2109,9 +2096,8 @@ void monster::struggle_against_net()
                 }
                 return;
             }
-            simple_monster_message(*this, " pulls away from the web.");
-
         }
+        monster_web_cleanup(*this);
         del_ench(ENCH_HELD);
         return;
     }
@@ -2302,8 +2288,9 @@ static void _post_monster_move(monster* mons)
         }
     }
 
-    if (mons->type == MONS_BAI_SUZHEN_DRAGON)
+    if (mons->has_ench(ENCH_RING_OF_THUNDER))
     {
+        // TODO: deduplicate with mon-ench.cc
         cloud_type ctype = CLOUD_STORM;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
@@ -2831,7 +2818,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     const habitat_type habitat = mons_primary_habitat(*mons);
 
     // No monster may enter the open sea.
-    if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
+    if (feat_is_endless(target_grid))
         return false;
 
     if (mons_avoids_cloud(mons, targ))
@@ -2846,6 +2833,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
            && (mons_class_flag(mons->type, M_BURROWS) || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
+           && !feat_is_critical(target_grid)
         || feat_is_tree(target_grid) && mons_flattens_trees(*mons)
         || target_grid == DNGN_GRATE && digs)
     {
@@ -2868,7 +2856,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (mons->type == MONS_WANDERING_MUSHROOM
         || mons->type == MONS_DEATHCAP
         || (mons->type == MONS_LURKING_HORROR
-            && mons->foe_distance() > random2(LOS_RADIUS + 1)))
+            && mons->foe_distance() > random2(LOS_DEFAULT_RANGE + 1)))
     {
         if (!mons->wont_attack() && is_sanctuary(mons->pos()))
             return true;
@@ -3535,7 +3523,7 @@ static bool _monster_move(monster* mons)
     const bool flattens_trees = mons_flattens_trees(*mons);
     const bool digs = _mons_can_cast_dig(mons, false)
                       || _mons_can_zap_dig(mons);
-    // Take care of formicid/Dissolution burrowing, lerny, etc
+    // Take care of Dissolution burrowing, lerny, etc
     if (burrows || flattens_trees || digs)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
@@ -3588,19 +3576,9 @@ static bool _monster_move(monster* mons)
                 else
                     noisy(25, target, "You hear a crashing sound.");
             }
+            // Dissolution dissolves walls.
             else if (player_can_hear(mons->pos() + mmov))
-            {
-                // Formicids take extra time to dig.
-                if (mons_genus(mons->type) == MONS_FORMICID)
-                    mons->lose_energy(EUT_MOVE, 5);
-
-                // Message depends on whether caused by acid (Dissolution)
-                // or direct digging (formicids).
-                mprf(MSGCH_SOUND, (mons->type == MONS_DISSOLUTION) ?
-                     "You hear a sizzling sound." :
-                     "You hear a grinding noise."
-                     );
-            }
+                mprf(MSGCH_SOUND, "You hear a sizzling sound.");
         }
     }
 
@@ -3715,55 +3693,3 @@ static void _mons_in_cloud(monster& mons)
 
     actor_apply_cloud(&mons);
 }
-
-#if TAG_MAJOR_VERSION == 34
-static void _heated_area(monster& mons)
-{
-    if (!heated(mons.pos()))
-        return;
-
-    if (mons.is_fiery())
-        return;
-
-    // HACK: Currently this prevents even auras not caused by lava orcs...
-    if (you_worship(GOD_BEOGH) && mons.friendly() && mons.god == GOD_BEOGH)
-        return;
-
-    const int base_damage = random2(11);
-
-    // Timescale, like with clouds:
-    const int speed = mons.speed > 0 ? mons.speed : 10;
-    const int timescaled = max(0, base_damage) * 10 / speed;
-
-    // rF protects:
-    const int adjusted_damage = resist_adjust_damage(&mons,
-                                BEAM_FIRE, timescaled);
-    // So does AC:
-    const int final_damage = max(0, adjusted_damage
-                                 - random2(mons.armour_class()));
-
-    if (final_damage > 0)
-    {
-        if (mons.observable())
-        {
-            mprf("%s is %s by your radiant heat.",
-                 mons.name(DESC_THE).c_str(),
-                 (final_damage) > 10 ? "blasted" : "burned");
-        }
-
-        behaviour_event(&mons, ME_DISTURB, 0, mons.pos());
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from heat.",
-             mons.name(DESC_THE).c_str(),
-             mons.conj_verb("take").c_str(),
-             final_damage);
-#endif
-
-        mons.hurt(&you, final_damage, BEAM_MISSILE);
-
-        if (mons.alive() && mons.observable())
-            print_wounds(mons);
-    }
-}
-#endif

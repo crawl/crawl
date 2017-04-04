@@ -1,5 +1,4 @@
-#ifndef __FORMAT_H__
-#define __FORMAT_H__
+#pragma once
 
 #include <string>
 #include <vector>
@@ -97,5 +96,3 @@ int tagged_string_tag_length(const string& s);
 int printed_width(const string& s);
 
 void display_tagged_block(const string& s);
-
-#endif

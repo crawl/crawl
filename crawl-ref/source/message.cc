@@ -25,6 +25,7 @@
 #include "notes.h"
 #include "output.h"
 #include "religion.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE_WEB
@@ -304,15 +305,15 @@ static void readkey_more(bool user_forced=false);
 
 // Types of message prefixes.
 // Higher values override lower.
-enum prefix_type
+enum class prefix_type
 {
-    P_NONE,
-    P_TURN_START,
-    P_TURN_END,
-    P_NEW_CMD, // new command, but no new turn
-    P_NEW_TURN,
-    P_FULL_MORE,   // single-character more prompt (full window)
-    P_OTHER_MORE,  // the other type of --more-- prompt
+    none,
+    turn_start,
+    turn_end,
+    new_cmd, // new command, but no new turn
+    new_turn,
+    full_more,   // single-character more prompt (full window)
+    other_more,  // the other type of --more-- prompt
 };
 
 // Could also go with coloured glyphs.
@@ -321,24 +322,24 @@ static cglyph_t _prefix_glyph(prefix_type p)
     cglyph_t g;
     switch (p)
     {
-    case P_TURN_START:
+    case prefix_type::turn_start:
         g.ch = Options.show_newturn_mark ? '-' : ' ';
         g.col = LIGHTGRAY;
         break;
-    case P_TURN_END:
-    case P_NEW_TURN:
+    case prefix_type::turn_end:
+    case prefix_type::new_turn:
         g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = LIGHTGRAY;
         break;
-    case P_NEW_CMD:
+    case prefix_type::new_cmd:
         g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = DARKGRAY;
         break;
-    case P_FULL_MORE:
+    case prefix_type::full_more:
         g.ch = '+';
         g.col = channel_to_colour(MSGCH_PROMPT);
         break;
-    case P_OTHER_MORE:
+    case prefix_type::other_more:
         g.ch = '+';
         g.col = LIGHTRED;
         break;
@@ -493,7 +494,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), temp_line(0), input_line(0), prompt(P_NONE)
+        : next_line(0), temp_line(0), input_line(0), prompt(prefix_type::none)
     {
         clear_lines(); // initialize this->lines
     }
@@ -583,10 +584,10 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(string text, prefix_type first_col = P_NONE,
+    void add_item(string text, prefix_type first_col = prefix_type::none,
                   bool temporary = false)
     {
-        prompt = P_NONE; // reset prompt
+        prompt = prefix_type::none; // reset prompt
 
         vector<formatted_string> newlines;
         linebreak_string(text, out_width());
@@ -631,7 +632,7 @@ public:
 
     void new_cmdturn(bool new_turn)
     {
-        output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
+        output_prefix(new_turn ? prefix_type::new_turn : prefix_type::new_cmd);
     }
 
     bool any_messages()
@@ -653,7 +654,7 @@ public:
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            cglyph_t g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            cglyph_t g = _prefix_glyph(full ? prefix_type::full_more : prefix_type::other_more);
             formatted_string f;
             f.add_glyph(g);
             f.display();
@@ -731,17 +732,35 @@ public:
 
     void add(const message_line& msg)
     {
-        if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
-            return;
-        flush_prev();
-        prev_msg = msg;
-        if (msg.channel == MSGCH_PROMPT || _temporary)
+        string orig_full_text = msg.full_text();
+
+        if (!(msg.channel != MSGCH_PROMPT && prev_msg.merge(msg)))
+        {
             flush_prev();
+            prev_msg = msg;
+            if (msg.channel == MSGCH_PROMPT || _temporary)
+                flush_prev();
+            }
+
+            // If we play sound, wait until the corresponding message is printed
+            // in case we intend on holding up output that comes after.
+            //
+            // FIXME This doesn't work yet, and causes the game to play the sound,
+            // THEN display the text. This appears to only be solvable by reworking
+            // the way the game outputs messages, as the game it prints messages
+            // one line at a time, not one message at a time.
+            //
+            // However, it should only print one message at a time when it really
+            // needs to, i.e. an sound that interrupts the game. Otherwise it is
+            // more efficent to print text together.
+#ifdef USE_SOUND
+            play_sound(check_sound_patterns(orig_full_text));
+#endif
     }
 
     void store_msg(const message_line& msg)
     {
-        prefix_type p = P_NONE;
+        prefix_type p = prefix_type::none;
         msgs.push_back(msg);
         if (_temporary)
             temp++;
@@ -920,7 +939,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         switch (channel)
         {
         case MSGCH_GOD:
-        case MSGCH_PRAY:
             ret = (Options.channels[channel] == MSGCOL_DEFAULT)
                    ? msg_colour(god_colour(static_cast<god_type>(param)))
                    : msg_colour(god_message_altar_colour(static_cast<god_type>(param)));
@@ -1188,7 +1206,6 @@ static void _debug_channel_arena(msg_channel_type channel)
     {
     case MSGCH_PROMPT:
     case MSGCH_GOD:
-    case MSGCH_PRAY:
     case MSGCH_DURATION:
     case MSGCH_FOOD:
     case MSGCH_RECOVERY:
@@ -1352,6 +1369,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         more(true);
     if (do_flash_screen)
         flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
+
 }
 
 static string show_prompt(string prompt)
@@ -1467,19 +1485,6 @@ static void mpr_check_patterns(const string& message,
 
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
-
-#ifdef USE_SOUND
-    for (const sound_mapping &sound : Options.sound_mappings)
-    {
-        // Maybe we should allow message channel matching as for
-        // force_more_message?
-        if (sound.pattern.matches(message))
-        {
-            play_sound(sound.soundfile.c_str());
-            break;
-        }
-    }
-#endif
 }
 
 static bool channel_message_history(msg_channel_type channel)
@@ -1807,8 +1812,20 @@ bool simple_monster_message(const monster& mons, const char *event,
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    string msg = uppercase_first(god_name(which_deity)) + event;
+    string msg;
+    if (which_deity == GOD_WU_JIAN)
+       msg = uppercase_first(string("The Council") + event);
+    else
+       msg = uppercase_first(god_name(which_deity)) + event;
+
     god_speaks(which_deity, msg.c_str());
+}
+
+void wu_jian_sifu_message(const char *event)
+{
+    string msg;
+    msg = uppercase_first(string("Sifu ") + wu_jian_random_sifu_name() + event);
+    god_speaks(GOD_WU_JIAN, msg.c_str());
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
@@ -1923,11 +1940,11 @@ void replay_messages()
             for (unsigned int j = 0; j < parts.size(); ++j)
             {
                 formatted_string line;
-                prefix_type p = P_NONE;
+                prefix_type p = prefix_type::none;
                 if (j == parts.size() - 1 && i + 1 < msgs.size()
                     && msgs[i+1].turn > msgs[i].turn)
                 {
-                    p = P_TURN_END;
+                    p = prefix_type::turn_end;
                 }
                 line.add_glyph(_prefix_glyph(p));
                 line += parts[j];

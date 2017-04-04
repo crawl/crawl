@@ -31,10 +31,6 @@ bardiche
 
 Dlouhá tyč s obrovskou čepelí určenou k sekání na konci.
 %%%%
-beef jerky
-
-Proužek konzervované, mrtvé krávy či býka.
-%%%%
 blessed great sword
 
 Meč s velmi dlouhou a těžkou čepelí, a dlouhou rukojetí. Byl vylepšen silou

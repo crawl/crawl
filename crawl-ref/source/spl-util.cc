@@ -22,10 +22,12 @@
 #include "god-passive.h"
 #include "god-abil.h"
 #include "item-prop.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -217,13 +219,24 @@ int get_spell_slot_by_letter(char letter)
 
 static int _get_spell_slot(spell_type spell)
 {
+    // you.spells is a FixedVector of spells in some arbitrary order. It
+    // doesn't corespond to letters.
     auto i = find(begin(you.spells), end(you.spells), spell);
     return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
 
+static int _get_spell_letter_from_slot(int slot)
+{
+    // you.spell_letter_table is a FixedVector that is basically a mapping
+    // from alpha char indices to spell slots (e.g. indices in you.spells).
+    auto letter = find(begin(you.spell_letter_table), end(you.spell_letter_table), slot);
+    return letter == end(you.spell_letter_table) ? -1 : letter - begin(you.spell_letter_table);
+}
+
 int get_spell_letter(spell_type spell)
 {
-    return index_to_letter(_get_spell_slot(spell));
+    int i = _get_spell_letter_from_slot(_get_spell_slot(spell));
+    return (i == -1) ? -1 : index_to_letter(i);
 }
 
 spell_type get_spell_by_letter(char letter)
@@ -343,17 +356,7 @@ static void _remove_spell_attributes(spell_type spell)
                                  : "your spell is no longer protecting you");
         }
         break;
-    case SPELL_REPEL_MISSILES:
-        if (you.attribute[ATTR_REPEL_MISSILES])
-        {
-            const int orig_defl = you.missile_deflection();
-            you.attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel %s from missiles.",
-                                 you.missile_deflection() < orig_defl
-                                 ? "less protected"
-                                 : "your spell is no longer protecting you");
-        }
-        break;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
@@ -361,6 +364,7 @@ static void _remove_spell_attributes(spell_type spell)
             mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
         }
         break;
+#endif
     default:
         break;
     }
@@ -479,7 +483,7 @@ int spell_difficulty(spell_type which_spell)
 int spell_levels_required(spell_type which_spell)
 {
     int levels = spell_difficulty(which_spell);
-
+#if TAG_MAJOR_VERSION == 34
     if (which_spell == SPELL_DELAYED_FIREBALL
         && you.has_spell(SPELL_FIREBALL))
     {
@@ -490,6 +494,7 @@ int spell_levels_required(spell_type which_spell)
     {
         levels = 0;
     }
+#endif
 
     return levels;
 }
@@ -797,8 +802,6 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype)
         return "Necr";
     case SPTYP_SUMMONING:
         return "Summ";
-    case SPTYP_DIVINATION:
-        return "Divn";
     case SPTYP_TRANSLOCATION:
         return "Tloc";
     case SPTYP_POISON:
@@ -834,8 +837,6 @@ const char* spelltype_long_name(spschool_flag_type which_spelltype)
         return "Necromancy";
     case SPTYP_SUMMONING:
         return "Summoning";
-    case SPTYP_DIVINATION:
-        return "Divination";
     case SPTYP_TRANSLOCATION:
         return "Translocation";
     case SPTYP_POISON:
@@ -869,7 +870,6 @@ skill_type spell_type2skill(spschool_flag_type spelltype)
     case SPTYP_AIR:            return SK_AIR_MAGIC;
 
     default:
-    case SPTYP_DIVINATION:
         dprf("spell_type2skill: called with spelltype %u", spelltype);
         return SK_NONE;
     }
@@ -1010,6 +1010,7 @@ int spell_effect_noise(spell_type spell)
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_VIOLENT_UNRAVELLING:
+    case SPELL_IGNITION:
         expl_size = 1;
         break;
 
@@ -1037,7 +1038,7 @@ int spell_effect_noise(spell_type spell)
  * Does the given spell map to a player transformation?
  *
  * @param spell     The spell in question.
- * @return          Whether the spell, when cast, sets a TRAN_ on the player.
+ * @return          Whether the spell, when cast, puts the player in a form.
  */
 bool spell_is_form(spell_type spell)
 {
@@ -1110,36 +1111,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     if (!fake_spell && cannot_use_schools(get_spell_disciplines(spell)))
         return "you cannot use spells of this school.";
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-    {
-        if (spell == SPELL_ICE_FORM  || spell == SPELL_OZOCUBUS_ARMOUR)
-            return "you're too hot.";
-
-        if (spell == SPELL_LEDAS_LIQUEFACTION)
-            return "you can't cast this while perpetually flying.";
-    }
-
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (spell == SPELL_OZOCUBUS_ARMOUR)
-            return "your stony body would shatter the ice.";
-
-        if (temp && !temperature_effect(LORC_STONESKIN))
-        {
-            switch (spell)
-            {
-                case SPELL_STATUE_FORM:
-                case SPELL_ICE_FORM:
-                    return "you're too hot.";
-                default:
-                    break;
-            }
-        }
-
-    }
-#endif
-
     switch (spell)
     {
     case SPELL_BLINK:
@@ -1174,16 +1145,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // mere corona is not enough, but divine light blocks it completely
         if (temp && (you.haloed() || !prevent && have_passive(passive_t::halo)))
             return "darkness is useless against divine light.";
-        break;
-
-    case SPELL_REPEL_MISSILES:
-        if (temp && (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-                     || you.scan_artefacts(ARTP_RMSL, true)
-                     || you.attribute[ATTR_REPEL_MISSILES]
-                     || you.attribute[ATTR_DEFLECT_MISSILES]))
-        {
-            return "you're already repelling missiles.";
-        }
         break;
 
     case SPELL_DEFLECT_MISSILES:
@@ -1241,12 +1202,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you must stand on solid ground to cast this.";
         }
         break;
-
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DELAYED_FIREBALL:
         if (temp && you.attribute[ATTR_DELAYED_FIREBALL])
             return "you are already charged.";
         break;
-
+#endif
     case SPELL_BORGNJORS_REVIVIFICATION:
         if (temp && you.hp == you.hp_max)
             return "you cannot be healed further.";
@@ -1274,14 +1235,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_OZOCUBUS_ARMOUR:
         if (temp && !player_effectively_in_light_armour())
             return "your body armour is too heavy.";
-        if (temp && you.form == TRAN_STATUE)
+        if (temp && you.form == transformation::statue)
             return "the film of ice won't work on stone.";
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return "your ring of flames would instantly melt the ice.";
         break;
 
     case SPELL_CIGOTUVIS_EMBRACE:
-        if (temp && you.form == TRAN_STATUE)
+        if (temp && you.form == transformation::statue)
             return "the corpses won't embrace your stony flesh.";
         if (temp && you.duration[DUR_ICY_ARMOUR])
             return "the corpses won't embrace your icy flesh.";
@@ -1338,6 +1299,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_CORPSE_ROT:
+    case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
@@ -1347,7 +1309,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_GOLUBRIAS_PASSAGE:
-        if (player_on_orb_run())
+        if (orb_limits_translocation())
             return "the Orb prevents this spell from working.";
 
     default:
@@ -1356,7 +1318,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (get_spell_disciplines(spell) & SPTYP_SUMMONING
         && spell != SPELL_AURA_OF_ABJURATION
-        && spell != SPELL_RECALL
         && player_mutation_level(MUT_NO_LOVE))
     {
         return "you cannot coerce anything to answer your summons.";
@@ -1414,7 +1375,8 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_INTOXICATE:
-        return minRange > LOS_RADIUS;
+    case SPELL_IGNITION:
+        return minRange > you.current_vision;
 
     // Special handling for cloud spells.
     case SPELL_FREEZING_CLOUD:
@@ -1528,7 +1490,6 @@ static const mutation_type arcana_sacrifice_map[] = {
     MUT_NO_TRANSMUTATION_MAGIC,
     MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
-    NUM_MUTATIONS, // SPTYP_DIVINATION
     MUT_NO_TRANSLOCATION_MAGIC,
     MUT_NO_POISON_MAGIC,
     MUT_NO_EARTH_MAGIC,
@@ -1556,7 +1517,7 @@ bool cannot_use_schools(spschools_type schools)
 
         // check if the player has this school locked out
         const mutation_type lockout_mut = arcana_sacrifice_map[i];
-        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+        if (player_mutation_level(lockout_mut))
             return true;
     }
 

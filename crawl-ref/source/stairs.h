@@ -3,8 +3,7 @@
  * @brief Moving between levels.
 **/
 
-#ifndef STAIRS_H
-#define STAIRS_H
+#pragma once
 
 bool check_annotation_exclusion_warning();
 level_id stair_destination(dungeon_feature_type feat, const string &dst,
@@ -13,15 +12,12 @@ level_id stair_destination(coord_def pos, bool for_real = false);
 void floor_transition(dungeon_feature_type how,
                       const dungeon_feature_type whence, level_id whither,
                       bool forced, bool going_up = false, bool shaft = false,
-                      bool wizard = false);
+                      bool update_travel_cache = true);
 void take_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                  bool going_up = false, bool force_known_shaft = false,
-                 bool wizard = false);
+                 bool update_travel_cache = true);
 void down_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
-                 bool force_known_shaft = false,
-                 bool wizard = false);
-void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
-               bool wizard = false);
+                 bool force_known_shaft = false, bool update_travel_cache = true);
+void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN, bool update_travel_cache = true);
 void new_level(bool restore = false);
 void leaving_level_now(dungeon_feature_type stair_used);
-#endif

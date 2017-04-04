@@ -9,8 +9,10 @@
 
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "cleansing-flame-source-type.h"
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
@@ -22,6 +24,7 @@
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "makeitem.h"
 #include "message.h"
@@ -85,6 +88,7 @@ static const char *_god_wrath_adjectives[] =
     "progress",         // Pakellas
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
+    "rancor",           // Wu Jian
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -100,8 +104,9 @@ COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
  */
 static string _god_wrath_name(god_type god)
 {
-    const bool use_full_name = god == GOD_FEDHAS; // fedhas is very formal.
-                                                  // apparently.
+    const bool use_full_name = god == GOD_FEDHAS      // fedhas is very formal.
+                               || god == GOD_WU_JIAN; // apparently.
+
     return make_stringf("the %s of %s",
                         _god_wrath_adjectives[god],
                         god_name(god, use_full_name).c_str());
@@ -240,7 +245,7 @@ static void _tso_squelches()
  *
  * Holy warriors/cleansing theme.
  *
- * @return Whether to take further divine wrath actions afterward. (false.)
+ * @return Whether to take further divine wrath actions afterward.
  */
 static bool _tso_retribution()
 {
@@ -262,7 +267,7 @@ static bool _tso_retribution()
         _tso_squelches();
         break;
     }
-    return false;
+    return true;
 }
 
 static void _zin_remove_good_mutations()
@@ -291,10 +296,7 @@ static void _zin_remove_good_mutations()
     }
 
     if (success && !how_mutated())
-    {
         simple_god_message(" rids your body of chaos!", god);
-        dec_penance(god, 1);
-    }
 }
 
 static bool _zin_retribution()
@@ -324,7 +326,7 @@ static bool _zin_retribution()
             break;
         case 2:
             paralyse_player(_god_wrath_name(god));
-            break;
+            return false;
         }
         break;
     case 3:
@@ -341,84 +343,6 @@ static bool _zin_retribution()
         _zin_remove_good_mutations();
         break;
     }
-    return false;
-}
-
-static void _ely_dull_inventory_weapons()
-{
-    int chance = 50;
-    int num_dulled = 0;
-
-    for (auto &item : you.inv)
-    {
-        if (!item.defined())
-            continue;
-
-        if (item.base_type == OBJ_WEAPONS)
-        {
-            // Don't dull artefacts at all, or weapons below -1.
-            if (is_artefact(item) || item.plus <= -1)
-                continue;
-
-            // 2/3 of the time, don't do anything.
-            if (!one_chance_in(3))
-                continue;
-
-            bool wielded = false;
-
-            if (item.link == you.equip[EQ_WEAPON])
-                wielded = true;
-
-            // Dull the weapon.
-            if (item.plus > -1)
-                item.plus--;
-
-            // Update the weapon display, if necessary.
-            if (wielded)
-                you.wield_change = true;
-
-            chance += item_value(item, true) / 50;
-            num_dulled++;
-        }
-    }
-
-    if (num_dulled > 0)
-    {
-        if (x_chance_in_y(chance + 1, 100))
-            dec_penance(GOD_ELYVILON, 1);
-
-        simple_god_message(
-            make_stringf(" dulls %syour weapons.",
-                         num_dulled == 1 ? "one of " : "").c_str(),
-            GOD_ELYVILON);
-    }
-}
-
-static bool _elyvilon_retribution()
-{
-    // healing/interference with fighting theme
-    const god_type god = GOD_ELYVILON;
-
-    simple_god_message("'s displeasure finds you.", god);
-
-    switch (random2(5))
-    {
-    case 0:
-    case 1:
-        confuse_player(5 + random2(3));
-        break;
-
-    case 2: // mostly flavour messages
-        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_POISON,
-                      one_chance_in(3) ? 1 : 0, _god_wrath_name(god));
-        break;
-
-    case 3:
-    case 4: // Dull weapons in your inventory.
-        _ely_dull_inventory_weapons();
-        break;
-    }
-
     return true;
 }
 
@@ -432,8 +356,6 @@ static bool _cheibriados_retribution()
     int tension = get_tension(GOD_CHEIBRIADOS);
     int wrath_value = random2(tension);
 
-    bool glammer = false;
-
     // Determine the level of wrath
     int wrath_type = 0;
     if (wrath_value < 2)       { wrath_type = 0; }
@@ -443,29 +365,28 @@ static bool _cheibriados_retribution()
     else                       { wrath_type = 4; }
 
     // Strip away extra speed
-    if (one_chance_in(5 - wrath_type))
-        dec_haste_player(10000);
-
-    // Chance to be overwhelmed by the divine experience
-    if (one_chance_in(5 - wrath_type))
-        glammer = true;
+    dec_haste_player(10000);
 
     switch (wrath_type)
     {
     // Very high tension wrath
     case 4:
         simple_god_message(" adjusts the clock.", god);
-        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM, 8, 90,
-                      _god_wrath_name(god));
-        if (one_chance_in(wrath_type - 1))
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM,
+                      5 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
+        if (one_chance_in(3))
             break;
+        else
+            dec_penance(god, 1); // and fall-through.
     // High tension wrath
     case 3:
         mpr("You lose track of time.");
         you.put_to_sleep(nullptr, 30 + random2(20));
-        dec_penance(god, 1);
-        if (one_chance_in(wrath_type - 2))
+        if (coinflip())
             break;
+        else
+            dec_penance(god, 1); // and fall-through.
     // Medium tension
     case 2:
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
@@ -474,29 +395,21 @@ static bool _cheibriados_retribution()
             you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
-
-        if (one_chance_in(wrath_type - 2))
-            break;
-    // Low tension
+        break;
+    // Low/no tension
     case 1:
-        mpr("Time shudders.");
-        cheibriados_time_step(2+random2(4));
-        if (one_chance_in(3))
-            break;
-    // No tension wrath.
     case 0:
-        if (curse_an_item())
-            simple_god_message(" makes up for lost time.", god);
-        else
-            glammer = true;
+        mpr("Time shudders.");
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM,
+                      5 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
+        break;
 
     default:
         break;
     }
 
-    if (wrath_type > 2)
-        dec_penance(god, 1 + random2(wrath_type));
-    return glammer;
+    return true;
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
@@ -856,19 +769,17 @@ static bool _trog_retribution()
         case 3:
             if (!you.duration[DUR_PARALYSIS])
             {
-                dec_penance(god, 3);
                 mprf(MSGCH_WARN, "You suddenly pass out!");
                 const int turns = 2 + random2(6);
                 take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
                 you.increase_duration(DUR_PARALYSIS, turns, 13);
             }
-            break;
+            return false;
 
         case 4:
         case 5:
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                dec_penance(god, 1);
                 mprf(MSGCH_WARN, "You suddenly feel exhausted!");
                 you.set_duration(DUR_EXHAUSTED, 200);
                 slow_player(100);
@@ -882,7 +793,6 @@ static bool _trog_retribution()
         // -- actually, this function partially exists to remove that,
         //    we'll leave this effect in, but we'll remove the wild
         //    fire magic. -- bwr
-        dec_penance(god, 2);
         mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_FIRE,
                       8 + you.experience_level, random2avg(98, 3),
@@ -1019,36 +929,27 @@ static bool _sif_muna_retribution()
     const god_type god = GOD_SIF_MUNA;
 
     simple_god_message("'s wrath finds you.", god);
-    dec_penance(god, 1);
 
     switch (random2(10))
     {
     case 0:
     case 1:
+    case 2:
         lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
         break;
 
-    case 2:
     case 3:
     case 4:
+    case 5:
         confuse_player(5 + random2(3));
         break;
 
-    case 5:
     case 6:
-        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_DIVINATION, 9, 90,
-                      _god_wrath_name(god));
-        break;
-
     case 7:
     case 8:
-        if (you.magic_points > 0
-#if TAG_MAJOR_VERSION == 34
-                 || you.species == SP_DJINNI
-#endif
-                )
+        if (you.magic_points > 0)
         {
-            drain_mp(100);  // This should zero it.
+            dec_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;
@@ -1151,14 +1052,14 @@ static void _lugonu_minion_retribution()
 /**
  * Call down the wrath of Lugonu upon the player!
  *
- * @return Whether to take further divine wrath actions afterward. (false.)
+ * @return Whether to take further divine wrath actions afterward.
  */
 static bool _lugonu_retribution()
 {
     _lugonu_transloc_retribution();
     _lugonu_minion_retribution();
 
-    return false;
+    return true;
 }
 
 
@@ -1304,11 +1205,11 @@ static void _jiyva_transform()
     const god_type god = GOD_JIYVA;
     god_speaks(god, "Mutagenic energy floods into your body!");
 
-    const transformation_type form = random_choose(TRAN_BAT,
-                                                   TRAN_FUNGUS,
-                                                   TRAN_PIG,
-                                                   TRAN_TREE,
-                                                   TRAN_WISP);
+    const transformation form = random_choose(transformation::bat,
+                                              transformation::fungus,
+                                              transformation::pig,
+                                              transformation::tree,
+                                              transformation::wisp);
 
     if (transform(random2(you.penance[god]) * 2, form, true))
         you.transform_uncancellable = true;
@@ -1708,6 +1609,81 @@ static bool _choose_hostile_monster(const monster& mon)
     return mon.attitude == ATT_HOSTILE;
 }
 
+static int _wu_jian_summon_weapons()
+{
+    god_type god = GOD_WU_JIAN;
+    const int num = 3 + random2(3);
+    int created = 0;
+
+    for (int i = 0; i < num; ++i)
+    {
+        const int subtype = random_choose(WPN_DIRE_FLAIL, WPN_QUARTERSTAFF,
+                                          WPN_BROAD_AXE, WPN_GREAT_SWORD,
+                                          WPN_RAPIER, WPN_GLAIVE);
+        const int ego = random_choose(SPWPN_VORPAL, SPWPN_FLAMING,
+                                      SPWPN_FREEZING, SPWPN_ELECTROCUTION,
+                                      SPWPN_SPEED);
+
+        if (monster *mon =
+            create_monster(_wrath_mon_data(MONS_DANCING_WEAPON, god)))
+        {
+            ASSERT(mon->weapon() != nullptr);
+            item_def& wpn(*mon->weapon());
+
+            set_item_ego_type(wpn, OBJ_WEAPONS, ego);
+
+            wpn.plus = random2(5);
+            wpn.sub_type = subtype;
+
+            set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
+
+            item_colour(wpn);
+
+            ghost_demon newstats;
+            newstats.init_dancing_weapon(wpn, you.experience_level * 50 / 9);
+
+            mon->set_ghost(newstats);
+            mon->ghost_demon_init();
+
+            created++;
+        }
+    }
+
+    return created;
+}
+
+static bool _wu_jian_retribution()
+{
+    god_type god = GOD_WU_JIAN;
+
+    if (_wu_jian_summon_weapons())
+    {
+        switch (random2(4))
+        {
+        case 0:
+            wu_jian_sifu_message(" says: Die by a thousand cuts!");
+            you.set_duration(DUR_BARBS, random_range(5, 10));
+            break;
+        case 1:
+            wu_jian_sifu_message(" whispers: Nowhere to run...");
+            you.set_duration(DUR_SLOW, random_range(5, 10));
+            break;
+        case 2:
+            wu_jian_sifu_message(" whispers: These will loosen your tongue!");
+            you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
+            invalidate_agrid(true);
+            break;
+        case 3:
+            wu_jian_sifu_message(" says: Suffer, mortal!");
+            you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
+            break;
+        }
+    }
+    else
+        simple_god_message("'s divine weapons fail to arrive.", god);
+
+    return true;
+}
 
 static bool _uskayaw_retribution()
 {
@@ -1737,6 +1713,7 @@ static bool _uskayaw_retribution()
             simple_god_message(" booms out, \"Time for someone else to take a solo\"",
                                     god);
             paralyse_player(_god_wrath_name(god));
+            dec_penance(god, 1);
             return false;
         }
         // else we intentionally fall through
@@ -1787,15 +1764,16 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_VEHUMET:       do_more = _vehumet_retribution(); break;
     case GOD_NEMELEX_XOBEH: do_more = _nemelex_retribution(); break;
     case GOD_SIF_MUNA:      do_more = _sif_muna_retribution(); break;
-    case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
+    case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
 
     case GOD_ASHENZARI:
+    case GOD_ELYVILON:
     case GOD_GOZAG:
     case GOD_RU:
     case GOD_HEPLIAKLQANA:
@@ -1819,8 +1797,11 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
         if (coinflip())
         {
-            mprf(MSGCH_WARN, "The divine experience confuses you!");
-            confuse_player(5 + random2(3));
+            if (!you.confused())
+            {
+                mprf(MSGCH_WARN, "The divine experience confuses you!");
+                confuse_player(5 + random2(3));
+            }
         }
         else
         {
@@ -1888,7 +1869,6 @@ static void _god_smites_you(god_type god, const char *message,
 
     simple_god_message(" smites you!", god);
     ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
-    dec_penance(god, 1);
 }
 
 void reduce_xp_penance(god_type god, int amount)

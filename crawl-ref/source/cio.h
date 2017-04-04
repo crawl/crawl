@@ -3,14 +3,14 @@
  * @brief System independent console IO functions
 **/
 
-#ifndef CIO_H
-#define CIO_H
+#pragma once
 
 #include <cctype>
 #include <string>
 #include <vector>
 
 #include "enum.h"
+#include "KeymapContext.h"
 
 class input_history
 {
@@ -275,5 +275,3 @@ protected:
 };
 
 typedef int keycode_type;
-
-#endif

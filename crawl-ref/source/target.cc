@@ -237,6 +237,11 @@ bool targeter_beam::affects_monster(const monster_info& mon)
         return false;
     }
 
+    // beckoning is useless against adjacent mons!
+    // XXX: this should probably be somewhere else
+    if (beam.flavour == BEAM_BECKONING)
+        return grid_distance(mon.pos, you.pos()) > 1;
+
     return !beam.is_harmless(m) || beam.nice_to(mon)
     // Inner flame affects allies without harming or helping them.
            || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();
@@ -456,6 +461,26 @@ aff_type targeter_smite::is_affected(coord_def loc)
         return AFF_MAYBE;
 
     return AFF_NO;
+}
+
+targeter_walljump::targeter_walljump() :
+    targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+{
+}
+
+aff_type targeter_walljump::is_affected(coord_def loc)
+{
+    if (!valid_aim(aim))
+        return AFF_NO;
+
+    if ((loc - aim).rdist() > 9)
+        return AFF_NO;
+
+    coord_def centre(9,9);
+    if (exp_map_min(loc - aim + centre) < INT_MAX)
+        return AFF_NO;
+
+    return AFF_YES;
 }
 
 targeter_transference::targeter_transference(const actor* act, int aoe) :
@@ -1023,8 +1048,7 @@ bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
     actor *act;
     ray_def ray;
 
-    if (grd(a) == DNGN_OPEN_SEA || grd(a) == DNGN_LAVA_SEA
-        || !agent->is_habitable(a))
+    if (!agent->is_habitable(a))
     {
         blocked_landing_reason = BLOCKED_MOVE;
         return false;

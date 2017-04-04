@@ -154,16 +154,6 @@ Debugging Ray spell
 Czar który powoduje 1500 obrażeń i zawsze trafia. I nie jest dostępny w
 normalnej grze.
 %%%%
-Delayed Fireball spell
-
-Rzucenie tego czaru nie ma natychmiastowego efektu. Zgromadzoną w nim energię
-magiczną możesz w każdej chwili uwolnić w postaci ognistej kuli; wypuszczenie
-tej kuli nie zabiera ani chwili czasu. Jakkolwiek można w ten sposób
-przygotować tylko jedną kulę naraz, można ją trzymać bez limitu czasu.
-
-Znajomość tego czasu pozwala nauczyć się zwykłej Ognistej Kuli bez zajmowania
-miejsca w pamięci.
-%%%%
 Dig spell
 
 Ten czar pozwala drążyć tunele w niewzmocnionej skale. Nadaje on skale

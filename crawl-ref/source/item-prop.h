@@ -3,12 +3,14 @@
  * @brief Misc functions.
 **/
 
-#ifndef ITEMPROP_H
-#define ITEMPROP_H
+#pragma once
 
 #include <set>
 
+#include "equipment-type.h"
 #include "item-prop-enum.h"
+#include "reach-type.h"
+#include "size-type.h"
 
 struct bolt;
 
@@ -87,6 +89,7 @@ special_armour_type get_armour_ego_type(const item_def &item) PURE;
 special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // armour functions:
+bool armour_is_enchantable(const item_def &item) PURE;
 int armour_max_enchant(const item_def &item) PURE;
 bool armour_type_is_hide(armour_type type) PURE;
 bool armour_is_hide(const item_def &item) PURE;
@@ -197,7 +200,6 @@ bool food_is_meaty(const item_def &item) PURE;
 bool food_is_veggie(int food_type) PURE;
 bool food_is_veggie(const item_def &item) PURE;
 int food_value(const item_def &item) PURE;
-int food_turns(const item_def &item) PURE;
 bool is_fruit(const item_def &item) PURE;
 
 // generic item property functions:
@@ -210,6 +212,7 @@ int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_magic(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_corr(const item_def &arm) PURE;
+int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp) PURE;
@@ -248,5 +251,3 @@ static inline bool is_weapon(const item_def &item)
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
-
-#endif

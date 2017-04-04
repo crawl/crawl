@@ -9,12 +9,14 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <unordered_set>
 
 #include "act-iter.h"
 #include "areas.h"
 #include "bloodspatter.h"
 #include "branch.h"
+#include "cleansing-flame-source-type.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -29,6 +31,7 @@
 #include "fprop.h"
 #include "god-passive.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "mapmark.h"
@@ -184,7 +187,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         _selfench_beam_setup(BEAM_INVISIBILITY),
     } },
     { SPELL_HASTE, {
-        _should_selfench(ENCH_INVIS),
+        _should_selfench(ENCH_HASTE),
         _fire_simple_beam,
         _selfench_beam_setup(BEAM_HASTE),
     } },
@@ -422,7 +425,9 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_BANISHMENT, _hex_logic(SPELL_BANISHMENT) },
     { SPELL_PARALYSE, _hex_logic(SPELL_PARALYSE) },
     { SPELL_PETRIFY, _hex_logic(SPELL_PETRIFY) },
-    { SPELL_PAIN, _hex_logic(SPELL_PAIN) },
+    { SPELL_PAIN, _hex_logic(SPELL_PAIN, [](const monster& caster) {
+            return _torment_vulnerable(caster.get_foe());
+    }) },
     { SPELL_DISINTEGRATE, _hex_logic(SPELL_DISINTEGRATE) },
     { SPELL_CORONA, _hex_logic(SPELL_CORONA, [](const monster& caster) {
             return !caster.get_foe()->backlit();
@@ -451,6 +456,10 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
     { SPELL_VIRULENCE, _hex_logic(SPELL_VIRULENCE, [](const monster &caster) {
         return caster.get_foe()->res_poison(false) < 3;
     }, 6) },
+    { SPELL_RING_OF_THUNDER, { _should_selfench(ENCH_RING_OF_THUNDER),
+        [](monster &caster, mon_spell_slot, bolt&) {
+            caster.add_ench(ENCH_RING_OF_THUNDER);
+    } } },
 };
 
 /// Is the 'monster' actually a proxy for the player?
@@ -1133,8 +1142,6 @@ int mons_spell_range(spell_type spell, int hd)
 {
     switch (spell)
     {
-        case SPELL_SANDBLAST:
-            return 2; // spell_range changes with player wielded items
         case SPELL_FLAME_TONGUE:
             // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
             // use the mighty Throw Flame for big ranges.
@@ -1290,6 +1297,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_BLINKBOLT:
     case SPELL_STEAM_BALL:
     case SPELL_TELEPORT_OTHER:
+    case SPELL_SANDBLAST:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
@@ -1297,11 +1305,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
         zappy(ZAP_DAZZLING_SPRAY, power, true, beam);
         break;
 
-    case SPELL_SANDBLAST: // special-cased to avoid breaking battlesphere :(
-        zappy(ZAP_SANDBLAST, power, true, beam);
-        break;
-
-    case SPELL_FREEZING_CLOUD: // another battlesphere special-case
+    case SPELL_FREEZING_CLOUD: // battlesphere special-case
         zappy(ZAP_FREEZING_BLAST, power, true, beam);
         break;
 
@@ -2149,7 +2153,7 @@ static bool _battle_cry(const monster& chief, bool check_only = false)
         return false;
 
     // The yell happens whether you happen to see it or not.
-    noisy(LOS_RADIUS, chief.pos(), chief.mid);
+    noisy(LOS_DEFAULT_RANGE, chief.pos(), chief.mid);
 
     if (!seen_affected.empty())
         _print_battlecry_announcement(chief, seen_affected);
@@ -2579,14 +2583,14 @@ static bool _should_still_winds(const monster &caster)
         // clouds the player might hide in are worrying.
         if (grid_distance(*ri, you.pos()) <= 3 // decent margin
             && is_opaque_cloud(cloud->type)
-            && actor_cloud_immune(&you, *cloud))
+            && actor_cloud_immune(you, *cloud))
         {
             return true;
         }
 
         // so are hazardous clouds on allies.
         const monster* mon = monster_at(*ri);
-        if (mon && !actor_cloud_immune(mon, *cloud))
+        if (mon && !actor_cloud_immune(*mon, *cloud))
             return true;
     }
 
@@ -3716,28 +3720,28 @@ static mon_spell_slot _pick_spell_from_list(const monster_spells &spells,
  * Are we a short distance from our target?
  *
  * @param  mons The monster checking distance from its target.
- * @return true if we have a target and are within LOS_RADIUS / 2 of that
+ * @return true if we have a target and are within LOS_DEFAULT_RANGE / 2 of that
  *         target, or false otherwise.
  */
 static bool _short_target_range(const monster *mons)
 {
     return mons->get_foe()
            && mons->pos().distance_from(mons->get_foe()->pos())
-              < LOS_RADIUS / 2;
+              < LOS_DEFAULT_RANGE / 2;
 }
 
 /**
  * Are we a long distance from our target?
  *
  * @param  mons The monster checking distance from its target.
- * @return true if we have a target and are outside LOS_RADIUS / 2 of that
- *         target, or false otherwise.
+ * @return true if we have a target and are outside LOS_DEFAULT_RANGE / 2 of
+ *          that target, or false otherwise.
  */
 static bool _long_target_range(const monster *mons)
 {
     return mons->get_foe()
            && mons->pos().distance_from(mons->get_foe()->pos())
-              > LOS_RADIUS / 2;
+              > LOS_DEFAULT_RANGE / 2;
 }
 
 /// Does the given monster think it's in an emergency situation?
@@ -5522,11 +5526,12 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
                                num_sheep == 1 ? "s its" : " their");
     }
 
-    if (!foe.is_player()) // Messaging for non-player targets
+    // Messaging for non-player targets
+    if (!foe.is_player() && you.see_cell(foe.pos()))
     {
         const char* pluralize = num_sheep == 1 ? "s": "";
         const string foe_name = foe.name(DESC_THE);
-        if (you.see_cell(foe.pos()) && sleep_pow)
+        if (sleep_pow)
         {
             mprf(foe.as_monster()->friendly() ? MSGCH_FRIEND_SPELL
                                               : MSGCH_MONSTER_SPELL,
@@ -5545,7 +5550,7 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
             mprf("%s is unaffected.", foe_name.c_str());
         }
     }
-    else
+    else if (foe.is_player())
     {
         mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(),
              sleep_pow ? " You feel drowsy..." : "");
@@ -5670,7 +5675,7 @@ static void _mons_upheaval(monster& mons, actor& foe)
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
-                        random2(you.skill(SK_INVOCATIONS, BASELINE_DELAY)),
+                        random2(14) * BASELINE_DELAY,
                         TERRAIN_CHANGE_FLOOD);
                 }
                 break;
@@ -7329,7 +7334,6 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, mon_spell_slot_flags slot_flags)
 {
     bool force_silent = false;
-    noise_flag_type noise_flags = NF_NONE;
 
     if (mons->type == MONS_SHADOW_DRAGON)
         // Draining breath is silent.
@@ -7358,7 +7362,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
         if (silent)
             return;
 
-        noisy(noise, mons->pos(), mons->mid, noise_flags);
+        noisy(noise, mons->pos(), mons->mid);
         return;
     }
 
@@ -7394,7 +7398,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     if (silent || noise == 0)
         mons_speaks_msg(mons, msg, chan, true);
-    else if (noisy(noise, mons->pos(), mons->mid, noise_flags) || !unseen)
+    else if (noisy(noise, mons->pos(), mons->mid) || !unseen)
     {
         // noisy() returns true if the player heard the noise.
         mons_speaks_msg(mons, msg, chan);
@@ -7469,7 +7473,7 @@ static bool _will_throw_ally(const monster& thrower, const monster& throwee)
     case MONS_POLYPHEMUS:
         return mons_genus(throwee.type) == MONS_YAK;
     case MONS_IRON_GIANT:
-        return true;
+        return !mons_is_conjured(throwee.type);
     default:
         return false;
     }
@@ -7507,7 +7511,10 @@ static monster* _find_ally_to_throw(const monster &mons)
         }
     }
 
-    dprf("found a monster to toss");
+    if (best != nullptr)
+        dprf("found a monster to toss");
+    else
+        dprf("couldn't find anyone to toss");
     return best;
 }
 
@@ -7737,7 +7744,7 @@ static void _siren_sing(monster* mons, bool avatar)
                                                        : MSGCH_MONSTER_SPELL);
     const bool already_mesmerised = you.beheld_by(*mons);
 
-    noisy(LOS_RADIUS, mons->pos(), mons->mid, NF_SIREN);
+    noisy(LOS_DEFAULT_RANGE, mons->pos(), mons->mid);
 
     if (avatar && !mons->has_ench(ENCH_MERFOLK_AVATAR_SONG))
         mons->add_ench(mon_enchant(ENCH_MERFOLK_AVATAR_SONG, 0, mons, 70));

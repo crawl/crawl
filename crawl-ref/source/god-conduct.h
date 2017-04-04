@@ -3,8 +3,10 @@
  * @brief Stuff related to conducts.
 **/
 
-#ifndef GODCONDUCT_H
-#define GODCONDUCT_H
+#pragma once
+
+#include "conduct-type.h"
+#include "god-type.h"
 
 // Calls did_god_conduct() when the object goes out of scope.
 struct god_conduct_trigger
@@ -44,4 +46,3 @@ bool god_hates_cannibalism(god_type god);
 
 string get_god_likes(god_type which_god);
 string get_god_dislikes(god_type which_god);
-#endif

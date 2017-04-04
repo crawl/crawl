@@ -8,6 +8,7 @@
 #include "terrain.h"
 
 #include <algorithm>
+#include <functional>
 #include <sstream>
 
 #include "areas.h"
@@ -26,6 +27,7 @@
 #include "god-abil.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "map-knowledge.h"
 #include "mapmark.h"
@@ -365,6 +367,16 @@ bool feat_is_solid(dungeon_feature_type feat)
     return get_feature_def(feat).flags & FFT_SOLID;
 }
 
+/** Can you wall jump against this feature? (Wu Jian)?
+ */
+bool feat_can_wall_jump_against(dungeon_feature_type feat)
+{
+    return feat_is_wall(feat)
+           || feat == DNGN_GRATE
+           || feat_is_tree(feat)
+           || feat_is_statuelike(feat);
+}
+
 /** Can you move into this cell in normal play?
  */
 bool cell_is_solid(const coord_def &c)
@@ -425,13 +437,21 @@ bool feat_is_permarock(dungeon_feature_type feat)
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
+/** Is this feature an open expanse used only as a map border?
+ */
+bool feat_is_endless(dungeon_feature_type feat)
+{
+    return feat == DNGN_OPEN_SEA || feat == DNGN_LAVA_SEA
+           || feat == DNGN_ENDLESS_SALT;
+}
+
 /** Can this feature be dug?
  */
 bool feat_is_diggable(dungeon_feature_type feat)
 {
     return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
            || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
-           || feat == DNGN_ORCISH_IDOL || DNGN_GRANITE_STATUE;
+           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
 }
 
 /** Is this feature a type of trap?
@@ -499,6 +519,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_PAKELLAS, DNGN_ALTAR_PAKELLAS },
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
+    { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 

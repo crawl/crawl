@@ -20,6 +20,7 @@
 #include "item-name.h"
 #include "item-prop.h"
 #include "items.h"
+#include "potion-type.h"
 #include "religion.h"
 #include "skills.h"
 #include "spl-book.h"
@@ -233,7 +234,6 @@ bool is_chaotic_item(const item_def& item)
         break;
     case OBJ_POTIONS:
         retval = item.sub_type == POT_MUTATION
-                 || item.sub_type == POT_BENEFICIAL_MUTATION
                  || item.sub_type == POT_LIGNIFY;
         break;
     case OBJ_BOOKS:

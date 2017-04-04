@@ -41,6 +41,7 @@
 #include "spl-miscast.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "unwind.h"
 #include "view.h"
 #include "viewmap.h"
@@ -114,12 +115,6 @@ void wizard_create_spec_monster_name()
     if (!dgn_place_monster(mspec, place, true, false))
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
-        return;
-    }
-
-    if (mspec.type == MONS_KRAKEN && mgrd(place) >= MAX_MONSTERS)
-    {
-        mpr("Couldn't find player kraken!");
         return;
     }
 
@@ -750,7 +745,10 @@ void wizard_give_monster_item(monster* mon)
 static void _move_player(const coord_def& where)
 {
     if (!you.can_pass_through_feat(grd(where)))
+    {
         grd(where) = DNGN_FLOOR;
+        set_terrain_changed(where);
+    }
     move_player_to_grid(where, false);
     // If necessary, update the Abyss.
     if (player_in_branch(BRANCH_ABYSS))

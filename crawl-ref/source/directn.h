@@ -3,11 +3,14 @@
  * @brief Functions used when picking squares.
 **/
 
-#ifndef DIRECT_H
-#define DIRECT_H
+#pragma once
 
+#include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
+#include "targ-mode-type.h"
+#include "targeting-type.h"
+#include "trap-type.h"
 
 struct describe_info;
 
@@ -312,5 +315,3 @@ void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 
 extern const struct coord_def Compass[9];
-
-#endif

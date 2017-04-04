@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "hints.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -50,6 +51,19 @@
 #include "unwind.h"
 #include "view.h"
 #include "xom.h"
+
+static void _place_thunder_ring(const monster &mons)
+{
+    const cloud_type ctype = CLOUD_STORM;
+
+    for (adjacent_iterator ai(mons.pos()); ai; ++ai)
+        if (!cell_is_solid(*ai)
+            && (!cloud_at(*ai)
+                || cloud_at(*ai)->type == ctype))
+        {
+            place_cloud(ctype, *ai, 2 + random2(3), &mons);
+        }
+}
 
 #ifdef DEBUG_DIAGNOSTICS
 bool monster::has_ench(enchant_type ench) const
@@ -306,6 +320,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         start_still_winds();
         break;
 
+    case ENCH_RING_OF_THUNDER:
+        _place_thunder_ring(*this);
+        mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
+             name(DESC_THE).c_str());
+        break;
+
     default:
         break;
     }
@@ -447,7 +467,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (type == MONS_ALLIGATOR)
                 simple_monster_message(*this, " slows down.");
             else
-                simple_monster_message(*this, " is no longer moving somewhat quickly.");
+                simple_monster_message(*this, " is no longer moving quickly.");
         }
         break;
 
@@ -660,7 +680,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
             if (!quiet)
                 simple_monster_message(*this, " breaks free.");
+            break;
         }
+
+        monster_web_cleanup(*this, true);
         break;
     }
     case ENCH_FAKE_ABJURATION:
@@ -1250,6 +1273,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                          mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true);
+                stop_delay(true);
 
                 if (swapping)
                     mon->apply_location_effects(newpos);
@@ -1426,6 +1450,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
+    case ENCH_DISTRACTED_ACROBATICS:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
     case ENCH_BRILLIANCE_AURA:
@@ -1435,6 +1460,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INFESTATION:
     case ENCH_BLACK_MARK:
     case ENCH_STILL_WINDS:
+    case ENCH_RING_OF_THUNDER:
         decay_enchantment(en);
         break;
 
@@ -2135,7 +2161,7 @@ static const char *enchant_names[] =
 #endif
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
-    "stilling the winds",
+    "stilling the winds", "thunder_ringed", "distracted by acrobatics",
     "buggy",
 };
 
@@ -2279,6 +2305,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RESISTANCE:
     case ENCH_IDEALISED:
     case ENCH_BOUND_SOUL:
+    case ENCH_RING_OF_THUNDER:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:

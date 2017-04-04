@@ -4,8 +4,7 @@
 **/
 
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <chrono>
 #include <list>
@@ -13,16 +12,34 @@
 #include <vector>
 
 #include "actor.h"
+#include "attribute-type.h"
 #include "beam.h"
 #include "bitary.h"
+#include "book-type.h"
+#include "caction-type.h"
+#include "daction-type.h"
+#include "duration-type.h"
+#include "eq-type.h"
+#include "equipment-type.h"
+#include "flush-reason-type.h"
+#include "game-chapter.h"
 #include "kills.h"
+#include "mon-holy-type.h"
+#include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
+#include "seed-type.h"
+#include "skill-menu-state.h"
 #include "species.h"
+#include "stat-type.h"
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif
+#include "timed-effect-type.h"
+#include "transformation.h"
+#include "uncancellable-type.h"
+#include "unique-item-status-type.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
@@ -151,7 +168,7 @@ public:
 
     // PC's symbol (usually @) and colour.
     monster_type symbol;
-    transformation_type form;
+    transformation form;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
@@ -182,10 +199,6 @@ public:
     bool pending_revival;
     int lives;
     int deaths;
-#if TAG_MAJOR_VERSION == 34
-    float temperature; // For lava orcs.
-    float temperature_last;
-#endif
 
     FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
     FixedVector<training_status, NUM_SKILLS> train; ///< see enum def
@@ -393,9 +406,6 @@ public:
     bool redraw_title;
     bool redraw_hit_points;
     bool redraw_magic_points;
-#if TAG_MAJOR_VERSION == 34
-    bool redraw_temperature;
-#endif
     FixedVector<bool, NUM_STATS> redraw_stats;
     bool redraw_experience;
     bool redraw_armour_class;
@@ -408,6 +418,10 @@ public:
     int time_taken;
 
     int old_hunger;            // used for hunger delta-meter (see output.cc)
+
+    // the loudest noise level the player has experienced in los this turn
+    int los_noise_level;
+    int los_noise_last_turn;
 
     // Set when the character is going to a new level, to guard against levgen
     // failures
@@ -466,7 +480,6 @@ public:
     int max_dex() const;
 
     bool in_water() const;
-    bool in_lava() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
@@ -521,7 +534,8 @@ public:
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
-    bool made_nervous_by(const coord_def &pos);
+    bool made_nervous_by(const monster *mons);
+    bool is_nervous();
 
     kill_category kill_alignment() const override;
 
@@ -729,6 +743,7 @@ public:
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
+    int get_noise_perception(bool adjusted = true) const;
 
     bool paralysed() const override;
     bool cannot_move() const override;
@@ -741,9 +756,6 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
-#if TAG_MAJOR_VERSION == 34
-    int heat_radius() const override;
-#endif
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;
@@ -847,6 +859,8 @@ protected:
     void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
 };
+COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
+COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
 
 struct player_save_info
 {
@@ -935,7 +949,9 @@ int player_wizardry(spell_type spell);
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
+bool regeneration_is_inhibited();
 int player_regen();
+int player_mp_regen();
 void update_regen_amulet_attunement();
 void update_mana_regen_amulet_attunement();
 
@@ -948,7 +964,6 @@ bool player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
-bool player_likes_lava(bool permanently = false);
 
 int player_mutation_level(mutation_type mut, bool temp = true);
 
@@ -1025,7 +1040,6 @@ void recalc_and_scale_hp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
-void drain_mp(int mp_loss);
 
 void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);
@@ -1116,46 +1130,3 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
-
-#if TAG_MAJOR_VERSION == 34
-enum temperature_level
-{
-    TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
-    TEMP_COLD = 3,
-    TEMP_COOL = 5,
-    TEMP_ROOM = 7,
-    TEMP_WARM = 9, // Warmer than most creatures.
-    TEMP_HOT = 11,
-    TEMP_FIRE = 13, // Hot enough to ignite paper around you.
-    TEMP_MAX = 15, // Maximum temperature. As hot as lava!
-};
-
-enum temperature_effect
-{
-    LORC_LAVA_BOOST,
-    LORC_FIRE_BOOST,
-    LORC_STONESKIN,
-    LORC_COLD_VULN,
-    LORC_PASSIVE_HEAT,
-    LORC_HEAT_AURA,
-    LORC_NO_SCROLLS,
-    LORC_FIRE_RES_I,
-    LORC_FIRE_RES_II,
-    LORC_FIRE_RES_III,
-};
-
-int temperature();
-int temperature_last();
-void temperature_check();
-void temperature_increment(float degree);
-void temperature_decrement(float degree);
-void temperature_changed(float change);
-void temperature_decay();
-bool temperature_tier(int which);
-bool temperature_effect(int which);
-int temperature_colour(int temp);
-string temperature_string(int temp);
-string temperature_text(int temp);
-#endif
-
-#endif

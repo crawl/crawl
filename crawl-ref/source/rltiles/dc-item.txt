@@ -387,11 +387,20 @@ gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
+deep_troll_leather DEEP_TROLL_LEATHER
+iron_troll_leather IRON_TROLL_LEATHER
+
 %rim 1
 cloak1_leather ARM_CLOAK
 cloak2
 cloak3
 cloak4
+
+scarf1 ARM_SCARF
+scarf2_1
+scarf2_2
+scarf2_3
+scarf3
 
 %sdir item/armour/bardings
 naga_barding_blue ARM_NAGA_BARDING
@@ -493,7 +502,8 @@ i-preservation BRAND_ARM_PRESERVATION
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
 i-archery BRAND_ARM_ARCHERY
-i-jumping BRAND_ARM_JUMPING BRAND_ARM_LAST
+i-jumping BRAND_ARM_JUMPING
+i-repulsion BRAND_ARM_REPULSION BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand
@@ -557,9 +567,7 @@ snozzcumber
 strawberry FOOD_FRUIT_LAST
 fruit FOOD_FRUIT_INVENTORY
 
-beef_jerky FOOD_BEEF_JERKY
 lump_of_royal_jelly FOOD_ROYAL_JELLY
-pizza FOOD_PIZZA
 %rim 0
 bone_humanoid1 FOOD_BONE_HUMANOID
 bone_humanoid2
@@ -840,13 +848,15 @@ i-magic POT_MAGIC
 i-restore-abilities POT_REMOVEME6
 i-strong-poison POT_REMOVEME7
 i-berserk-rage POT_BERSERK_RAGE
-i-cure-mutation POT_CURE_MUTATION
+# please remove POT_CURE_MUTATION when TAG_MAJOR_VERSION is bumped
+i-cure-mutation POT_REMOVEME8
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 i-lignify POT_LIGNIFY
-i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
+# please remove POT_BENEFICIAL_MUTATION when TAG_MAJOR_VERSION is bumped
+i-good-mutation POT_REMOVEME9 POT_ID_LAST
 %back none
 %rim 1
 
@@ -971,14 +981,13 @@ misc_stone MISC_STONE_OF_TREMORS
 misc_stone_inert MISC_STONE_OF_TREMORS_INERT
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
+misc_lightning_rod MISC_LIGHTNING_ROD
+misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
 %rim 1
 # Remove when TAG_MAJOR_VERSION > 34
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
-%sdir misc
-error MISC_LIGHTNING_ROD
-%sdir item/misc
 %rim 0
 misc_sack MISC_SACK_OF_SPIDERS
 misc_phantom_mirror MISC_PHANTOM_MIRROR

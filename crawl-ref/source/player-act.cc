@@ -140,7 +140,7 @@ bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
     return species == SP_GREY_DRACONIAN
-              || form == TRAN_TREE
+              || form == transformation::tree
               || grid == DNGN_SHALLOW_WATER
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
@@ -191,7 +191,7 @@ int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return get_vorpal_type(*wp);
-    else if (form == TRAN_BLADE_HANDS)
+    else if (form == transformation::blade_hands)
         return DVORP_SLICING;
     else if (has_usable_claws())
         return DVORP_CLAWING;
@@ -301,8 +301,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    // see comment on player.cc:player_speed
-    return rv::max(div_rand_round(attk_delay * you.time_taken, 10),
+    // XXX: this is supposed to compensate for DUR_SLOW/DUR_FAST, but behaves
+    // incorrectly if attacking while moving/etc (as with WJC)
+    return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }
 
@@ -590,9 +591,9 @@ string player::arm_name(bool plural, bool *can_plural) const
     else if (species == SP_OCTOPODE)
         str = "tentacle";
 
-    if (form == TRAN_LICH)
+    if (form == transformation::lich)
         adj = "bony";
-    else if (form == TRAN_SHADOW)
+    else if (form == transformation::shadow)
         adj = "shadowy";
 
     if (!adj.empty())
@@ -749,16 +750,7 @@ bool player::go_berserk(bool intentional, bool potion)
 
     you.redraw_quiver = true; // Account for no firing.
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-    {
-        mpr("You burn with rage!");
-        // This will get sqrt'd later, so.
-        you.temperature = TEMP_MAX;
-    }
-#endif
-
-    if (player_equip_unrand(UNRAND_JIHAD))
+    if (player_equip_unrand(UNRAND_ZEALOT_SWORD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->friendly())
                 mi->go_berserk(false);
@@ -788,10 +780,6 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
         msg = "You are too mesmerised to rage.";
     else if (afraid())
         msg = "You are too terrified to rage.";
-#if TAG_MAJOR_VERSION == 34
-    else if (you.species == SP_DJINNI)
-        msg = "Only creatures of flesh and blood can berserk.";
-#endif
     else if (is_lifeless_undead())
         msg = "You cannot raise a blood rage in your lifeless body.";
     else if (stasis())
@@ -830,7 +818,7 @@ bool player::antimagic_susceptible() const
 bool player::is_web_immune() const
 {
     // Spider form
-    return form == TRAN_SPIDER;
+    return form == transformation::spider;
 }
 
 bool player::shove(const char* feat_name)

@@ -13,6 +13,7 @@
 #include "art-enum.h"
 #include "dungeon.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
@@ -46,12 +47,9 @@ void give_specific_item(monster* mon, int thing)
     mthing.pos.reset();
     mthing.link = NON_ITEM;
 
-    if ((mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
-        && (is_blessed(mthing)
-            || get_weapon_brand(mthing) == SPWPN_HOLY_WRATH))
+    if (mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
     {
-        if (is_blessed(mthing))
-            convert2bad(mthing);
+        convert2bad(mthing);
         if (get_weapon_brand(mthing) == SPWPN_HOLY_WRATH)
             _strip_item_ego(mthing);
     }
@@ -125,13 +123,17 @@ static void _give_book(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-    if (!mons_is_unique(mon->type) || mons_class_flag(mon->type, M_NO_WAND)
-                || !_should_give_unique_item(mon))
-    {
-        return;
-    }
+    bool wand_allowed = mons_is_unique(mon->type)
+                        && !mons_class_flag(mon->type, M_NO_WAND)
+                        && _should_give_unique_item(mon);
 
-    if (!one_chance_in(5) && (mon->type != MONS_MAURICE || !one_chance_in(3)))
+    if (!wand_allowed)
+        return;
+
+    bool give_wand = mons_class_flag(mon->type, M_ALWAYS_WAND)
+                     || one_chance_in(5);
+
+    if (!give_wand)
         return;
 
     // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
@@ -147,23 +149,18 @@ static void _give_wand(monster* mon, int level)
 
     item_def& wand = mitm[idx];
 
-    if (no_high_tier && is_high_tier_wand(wand.sub_type))
-    {
-        dprf(DIAG_MONPLACE,
-             "Destroying %s because %s doesn't want a high tier wand.",
-             wand.name(DESC_A).c_str(),
-             mon->name(DESC_THE).c_str());
-        destroy_item(idx, true);
-        return;
-    }
+    const char* rejection_reason =
+        (no_high_tier && is_high_tier_wand(wand.sub_type)) ? "high tier" :
+                                    !mon->likes_wand(wand) ?      "weak" :
+                                                                  nullptr;
 
-    if (!mon->likes_wand(wand))
+    if (rejection_reason)
     {
-        // XXX: deduplicate
         dprf(DIAG_MONPLACE,
-             "Destroying %s because %s doesn't want a weak wand.",
+             "Destroying %s because %s doesn't want a %s wand.",
              wand.name(DESC_A).c_str(),
-             mon->name(DESC_THE).c_str());
+             mon->name(DESC_THE).c_str(),
+             rejection_reason);
         destroy_item(idx, true);
         return;
     }
@@ -216,7 +213,9 @@ struct plus_range
     int min, max;
     int nrolls; ///< min 1
 };
-struct mon_weapon_spec {
+
+struct mon_weapon_spec
+{
     /// weighted list of weapon types; NUM_WEAPONS -> no weapon
     weapon_list types;
     /// range of possible weapon enchant plusses; if nonzero, sets force_item
@@ -1150,6 +1149,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         break;
 
     case MONS_CEREBOV:
+        if (you.props.exists(CEREBOV_DISARMED_KEY))
+            break;
         force_item = true;
         make_item_unrandart(item, UNRAND_CEREBOV);
         break;
@@ -1718,8 +1719,6 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
 
-    case MONS_IJYB:
-    case MONS_DUVESSA:
     case MONS_DEEP_ELF_ANNIHILATOR:
     case MONS_DEEP_ELF_DEATH_MAGE:
     case MONS_DEEP_ELF_DEMONOLOGIST:
@@ -1733,6 +1732,8 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ORC_PRIEST:
         if (x_chance_in_y(2, 5))
         {
+    case MONS_DUVESSA:
+    case MONS_IJYB:
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = random_choose_weighted(4, ARM_LEATHER_ARMOUR,
                                                     2, ARM_RING_MAIL,

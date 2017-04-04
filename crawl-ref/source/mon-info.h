@@ -1,6 +1,8 @@
-#ifndef MON_INFO_H
-#define MON_INFO_H
+#pragma once
 
+#include <functional>
+
+#include "enchant-type.h"
 #include "mon-util.h"
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"
@@ -169,6 +171,7 @@ enum monster_info_flags
     MB_NO_REWARD,
     MB_STILL_WINDS,
     MB_SLOWLY_DYING,
+    MB_DISTRACTED_ACROBATICS,
     NUM_MB_FLAGS
 };
 
@@ -382,4 +385,3 @@ void clear_monster_list_colours();
 void get_monster_info(vector<monster_info>& mons);
 
 typedef function<vector<string> (const monster_info& mi)> (desc_filter);
-#endif

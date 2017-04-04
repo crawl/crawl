@@ -9,6 +9,7 @@
 #include "mgen-data.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "abyss.h"
 #include "areas.h"
@@ -23,6 +24,7 @@
 #include "env.h"
 #include "errors.h"
 #include "fprop.h"
+#include "gender-type.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss, slow_orb_run
@@ -824,6 +826,13 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
+
+    const int mon_count = count_if(begin(menv), end(menv),
+                                   [] (const monster &mons) -> bool
+                                   { return mons.type != MONS_NO_MONSTER; });
+    // All monsters have been assigned? {dlb}
+    if (mon_count >= MAX_MONSTERS - 1)
+        return nullptr;
 
     int tries = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
@@ -2000,7 +2009,8 @@ bool downgrade_zombie_to_skeleton(monster* mon)
 }
 
 /// Under what conditions should a band spawn with a monster?
-struct band_conditions {
+struct band_conditions
+{
     int chance_denom; ///< A 1/x chance for the band to appear.
     int min_depth; ///< The minimum absdepth for the band.
     function<bool()> custom_condition; ///< Additional conditions.
@@ -2015,7 +2025,8 @@ struct band_conditions {
 };
 
 /// Information about a band of followers that may spawn with some monster.
-struct band_info {
+struct band_info
+{
     /// The type of the band; used to determine the type of followers.
     band_type type;
     /// The min & max # of followers; doesn't count the leader.
@@ -2025,7 +2036,8 @@ struct band_info {
 };
 
 /// One or more band_infos, with conditions.
-struct band_set {
+struct band_set
+{
     /// When should the band actually be generated?
     band_conditions conditions;
     /// The bands to be selected between, with equal weight.
@@ -2858,24 +2870,14 @@ monster* mons_place(mgen_data mg)
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in mons_place()");
 #endif
-    const int mon_count = count_if(begin(menv), end(menv),
-                                   [] (const monster &mons) -> bool
-                                   { return mons.type != MONS_NO_MONSTER; });
 
     if (mg.cls == WANDERING_MONSTER)
     {
-        if (mon_count > MAX_MONSTERS - 50)
-            return 0;
-
 #ifdef DEBUG_MON_CREATION
         mprf(MSGCH_DIAGNOSTICS, "Set class RANDOM_MONSTER");
 #endif
         mg.cls = RANDOM_MONSTER;
     }
-
-    // All monsters have been assigned? {dlb}
-    if (mon_count >= MAX_MONSTERS - 1)
-        return 0;
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
@@ -3078,7 +3080,7 @@ bool can_spawn_mushrooms(coord_def where)
     dummy.type = MONS_TOADSTOOL;
     define_monster(dummy);
 
-    return actor_cloud_immune(&dummy, *cloud);
+    return actor_cloud_immune(dummy, *cloud);
 }
 
 conduct_type player_will_anger_monster(monster_type type)

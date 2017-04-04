@@ -108,7 +108,9 @@ function callback.xom_greatest_gift(data, triggerable, triggerer, marker, ev)
 end
 
 function species_mock(e)
-  if you.race() == "Centaur" then
+  if you.race() == "Barachi" then
+    e.kmons("1 = bullfrog")
+  elseif you.race() == "Centaur" then
     e.kmons("1 = dart slug")
   elseif you.race() == "Demigod" then
     e.kmons("1 = titan simulacrum")
@@ -2186,7 +2188,7 @@ DEPTH:  D:2-9
 TAGS:   temple_overflow_1 temple_overflow_uskayaw
 KFEAT:  _ = altar_uskayaw
 ITEM:   any potion q:1, any weapon
-ITEM:   fruit q:3 / fruit q:2 / slice of pizza q:1 / royal jelly q:1
+ITEM:   fruit q:3 / fruit q:2 / royal jelly q:1
 MAP
 ...........
 .G.......G.
@@ -2479,6 +2481,7 @@ NAME:   doesnt_xom_only_xom
 TAGS:   temple_overflow_1 temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 KFEAT:  C = C mimic
+NSUBST: C = 1:_ / *:C
 MAP
 xxxxxxxxxxx
 x.G.G.G.G.x
@@ -2486,7 +2489,7 @@ xGC..C..CGx
 x.........x
 x.........x
 xG.......Gx
-x.C.._..C.x
+x.C..C..C.x
 xG.......Gx
 xxxx...xxxx
    x...x
@@ -2628,7 +2631,7 @@ DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
         greed:30 ; \
-        potion of curing | potion of cure mutation w:1
+        potion of curing
 COLOUR: c = white
 COLOUR: ' = white
 TILE:   c = wall_church

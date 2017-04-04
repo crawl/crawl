@@ -3,8 +3,7 @@
  * @brief Skill menu.
 **/
 
-#ifndef SKILLS_MENU_H
-#define SKILLS_MENU_H
+#pragma once
 
 #include "enum.h"
 #include "menu.h"
@@ -185,4 +184,3 @@ private:
     TextItem* find_closest_selectable(int start_ln, int col);
     void set_links();
 };
-#endif

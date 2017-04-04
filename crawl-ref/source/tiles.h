@@ -3,8 +3,7 @@
  * @brief Tiles interface, either for SDL or web tiles
 **/
 
-#ifndef TILES_H
-#define TILES_H
+#pragma once
 
 // The different texture types.
 enum TextureID
@@ -63,6 +62,4 @@ TextureID get_dngn_tex(tileidx_t idx);
  #include "tilesdl.h"
 #elif defined(USE_TILE_WEB)
  #include "tileweb.h"
-#endif
-
 #endif

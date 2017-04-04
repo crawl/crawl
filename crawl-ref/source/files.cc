@@ -40,6 +40,7 @@
 #include "end.h"
 #include "errors.h"
 #include "fineff.h"
+#include "food.h" //for HUNGER_MAXIMUM
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-conduct.h" // for fedhas_rot_all_corpses
@@ -50,6 +51,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapmark.h"
@@ -61,6 +63,7 @@
 #include "output.h"
 #include "place.h"
 #include "prompt.h"
+#include "species.h"
 #include "spl-summoning.h"
 #include "stash.h"  // for fedhas_rot_all_corpses
 #include "state.h"
@@ -95,6 +98,8 @@ static bool _ghost_version_compatible(reader &ghost_reader);
 static bool _restore_tagged_chunk(package *save, const string &name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
+
+static bool _convert_obsolete_species();
 
 const short GHOST_SIGNATURE = short(0xDC55);
 
@@ -1366,10 +1371,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
-    {
         place_transiting_monsters();
-        place_transiting_items();
-    }
 
     if (make_changes)
     {
@@ -1910,6 +1912,8 @@ static bool _restore_game(const string& filename)
 
     _restore_tagged_chunk(you.save, "you", TAG_YOU, "Save data is invalid.");
 
+    _convert_obsolete_species();
+
     const int minorVersion = crawl_state.minor_version;
 
     if (you.save->has_chunk(CHUNK("st", "stashes")))
@@ -2082,6 +2086,52 @@ bool get_save_version(reader &file, int &major, int &minor)
     minor = buf[1];
 
     return true;
+}
+
+static bool _convert_obsolete_species()
+{
+    // At this point the character has been loaded but not resaved, but the grid, lua, stashes, etc have not been.
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (!yes_or_no("This <red>Lava Orc</red> save game cannot be loaded as-is. If you "
+                       "load it now, your character will be converted to a Hill Orc. Continue?"))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            end(0, false, "Please load the save in an earlier version if you want to keep it as a Lava Orc.\n");
+        }
+        change_species_to(SP_HILL_ORC);
+        // No need for conservation
+        you.innate_mutation[MUT_CONSERVE_SCROLLS] = you.mutation[MUT_CONSERVE_SCROLLS] = 0;
+        // This is not an elegant way to deal with lava, but at this point the
+        // level isn't loaded so we can't check the grid features. In
+        // addition, even if the player isn't over lava, they might still get
+        // trapped.
+        fly_player(100);
+        return true;
+    }
+    if (you.species == SP_DJINNI)
+    {
+        if (!yes_or_no("This <red>Djinni</red> save game cannot be loaded as-is. If you "
+                       "load it now, your character will be converted to a Vine Stalker. Continue?"))
+        {
+            you.save->abort(); // don't even rewrite the header
+            delete you.save;
+            you.save = 0;
+            end(0, false, "Please load the save in an earlier version if you want to keep it as a Djinni.\n");
+        }
+        change_species_to(SP_VINE_STALKER);
+        you.magic_contamination = 0;
+        // Djinni were flying, so give the player some time to land
+        fly_player(100);
+        // Give them some time to find food. Creating food isn't safe as the grid doesn't exist yet, and may have water anyways.
+        you.hunger = HUNGER_MAXIMUM;
+        return true;
+    }
+#endif
+    return false;
 }
 
 static bool _read_char_chunk(package *save)

@@ -1402,7 +1402,7 @@ NAME:   beast_lair_carwin_2
 TAGS:   transparent luniq_beast_lair
 : beast_lair_populate_mons_small(_G)
 : beast_lair_randomise(_G)
-ITEM: w:7 meat ration / beef jerky
+ITEM:  meat ration
 SUBST: ? : .
 MAP
   ...
@@ -1829,7 +1829,7 @@ NAME:    lemuel_ratsnest
 ORIENT:  northeast
 DEPTH:   D:5-8, Lair:1-3
 MONS:    rat, quokka, river rat, hell rat
-ITEM:    slice of pizza w:80 / fruit
+ITEM:    fruit
 SUBST:   d = d$..., e = d$
 SHUFFLE: 234 / 324 / 243
 : if you.in_branch("Lair") then
@@ -2090,7 +2090,7 @@ TAGS:   no_monster_gen
 DEPTH:  Lair
 MONS:   river rat band, hell rat, river rat / rat
 KMONS:  P = plant / fungus w:2
-KITEM:  d = slice of pizza / beef jerky / bread ration
+KITEM:  d = fruit / bread ration
 NSUBST: ' = 1:1 / 2:P / 2:2 / 2:3 / 2:d
 MAP
  xxxx
@@ -2109,7 +2109,7 @@ NAME:   kennysheep_abandoned_house
 TAGS:   ruin
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
-KITEM:  d = slice of pizza / beef jerky / bread ration
+KITEM:  d = fruit / bread ration
 NSUBST: d = 1:d / 1:* / 1:9 / 1:3 / * = dd11223.......
 MAP
       .......
@@ -2203,7 +2203,7 @@ DEPTH:  Lair, !Lair:$
 MONS:   black bear / polar bear
 KFEAT:  " = W
 KMONS:  " = electric eel w:40 / nothing
-KITEM:  % = meat ration / w:1 beef jerky
+KITEM:  % = meat ration
 SUBST:  % = %., * = *:40 |, B = 1., E = tE
 CLEAR:  E
 MAP
@@ -2494,7 +2494,7 @@ MONS:    black bear, polar bear
 KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
-KITEM:   $ = any, any w:1 / nothing w:5, beef jerky q:3
+KITEM:   $ = any, any w:1 / nothing w:5, meat ration q:1
 KITEM:   % = any, any w:1 / nothing w:5, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
 NSUBST:  2 = 2:22334 / *:3

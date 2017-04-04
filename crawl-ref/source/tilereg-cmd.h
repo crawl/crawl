@@ -1,9 +1,10 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_CMD_H
-#define TILEREG_CMD_H
+#pragma once
 
 #include <vector>
 
+#include "command-type.h"
+#include "tile-inventory-flags.h"
 #include "tilereg-grid.h"
 
 static const command_type ct_system_commands[] =
@@ -86,5 +87,4 @@ private:
     string m_help;
 };
 
-#endif
 #endif

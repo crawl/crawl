@@ -3,8 +3,9 @@
  * @brief Mutant beast-related enums & values, plus small util functions.
  **/
 
-#ifndef MUTANT_BEAST_H
-#define MUTANT_BEAST_H
+#pragma once
+
+#include "god-type.h"
 
 #define MUTANT_BEAST_TIER "mutant_beast_tier"
 #define MUTANT_BEAST_FACETS "mutant_beast_facets"
@@ -55,5 +56,3 @@ const char* const mutant_beast_tier_names[] = {
 COMPILE_CHECK(ARRAYSZ(mutant_beast_tier_names) == NUM_BEAST_TIERS);
 
 bool god_hates_beast_facet(god_type god, beast_facet facet);
-
-#endif

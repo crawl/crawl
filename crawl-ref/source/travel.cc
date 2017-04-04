@@ -23,6 +23,7 @@
 #include "clua.h"
 #include "command.h"
 #include "coordit.h"
+#include "daction-type.h"
 #include "dactions.h"
 #include "directn.h"
 #include "delay.h"
@@ -39,6 +40,7 @@
 #include "hints.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -239,10 +241,6 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         {
             return true;
         }
-
-        // Likewise for lava
-        if (grid == DNGN_LAVA && player_likes_lava(true))
-            return true;
 
         // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)

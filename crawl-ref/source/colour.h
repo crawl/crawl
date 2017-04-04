@@ -1,5 +1,4 @@
-#ifndef COLOUR_H
-#define COLOUR_H
+#pragma once
 
 struct monster_info;
 
@@ -63,6 +62,7 @@ enum element_type
     ETC_SHINING,        // shining gold (Gozag)
 #endif
     ETC_PAKELLAS,       // Pakellas altar colours
+    ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
@@ -118,5 +118,3 @@ colour_t rune_colour(int type);
 
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
-
-#endif

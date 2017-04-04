@@ -3,8 +3,7 @@
  * @brief Monsters doing stuff (monsters acting).
 **/
 
-#ifndef MONACT_H
-#define MONACT_H
+#pragma once
 
 struct bolt;
 
@@ -31,5 +30,3 @@ void handle_monster_move(monster* mon);
 void queue_monster_for_action(monster* mons);
 
 #define ENERGY_SUBMERGE(entry) (max(entry->energy_usage.swim / 2, 1))
-
-#endif

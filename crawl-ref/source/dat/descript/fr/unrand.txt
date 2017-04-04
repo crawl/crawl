@@ -138,7 +138,7 @@ glaive of the Guard
 Cette arme a appartenu à Gar Dogh, le gardien du trésor d'un roi. D'après la
 légende, elle avait été perdue quelque part dans le donjon.
 %%%%
-sword of Jihad
+zealot's sword
 
 Une épée longue taillée dans un énorme bloc de cristal. La légende raconte
 qu'elle aurait été un cadeau accordé par L’Étincelant à un de ses fidèles.
@@ -332,7 +332,7 @@ robe of Night
 Une longue robe noire faite d'un étrange matériau brillant. Selon la légende,
 elle fut le don de Ratri la déesse de la Nuit à un de ses fidèles.
 %%%%
-armour of the Dragon King
+scales of the Dragon King
 
 Il y a plusieurs siècles, un puissant dragon doré prit la tête de tous les
 dragons de sa région. Cependant, son règne ne dura pas longtemps, abrégé par un

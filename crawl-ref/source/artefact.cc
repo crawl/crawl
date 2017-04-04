@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 
 #include "areas.h"
 #include "branch.h"
@@ -22,6 +23,7 @@
 #include "god-item.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -32,6 +34,15 @@
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
+
+// Putting this here since art-enum.h is generated.
+
+// Make sure there's enough room in you.unique_items to hold all
+// the unrandarts.
+COMPILE_CHECK(NUM_UNRANDARTS < MAX_UNRANDARTS);
+// Non-artefact brands and unrandart indexes both go into
+// item.special, so make sure they don't overlap.
+COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START);
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
@@ -69,7 +80,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
-                 || artefact_property(item, ARTP_CURSE) != 0))
+                 || artefact_property(item, ARTP_CURSE)))
     {
         return false;
     }
@@ -652,9 +663,6 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Fly", ARTP_VAL_BOOL, 15,    // ARTP_FLY,
         []() { return 1; }, nullptr, 0, 0 },
-#if TAG_MAJOR_VERSION > 34
-    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_FOG,
-#endif
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
         []() { return 1; }, nullptr, 0, 0 },
     { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
@@ -959,13 +967,14 @@ static bool _init_artefact_properties(item_def &item)
 
     for (int i = 0; i < ART_PROPERTIES; i++)
     {
-        if (i == ARTP_CURSE && prop[i] < 0)
+        if (i == ARTP_CURSE && prop[i])
         {
             do_curse_item(item);
             continue;
         }
         rap[i] = static_cast<short>(prop[i]);
     }
+
 
     return true;
 }
@@ -1067,9 +1076,9 @@ static int _artefact_num_props(const artefact_properties_t &proprt)
 {
     int num = 0;
 
-    // Count all properties, but exclude self-cursing.
+    // Count all properties.
     for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
-        if (i != ARTP_CURSE && proprt[i] != 0)
+        if (proprt[i] != 0)
             num++;
 
     return num;
@@ -1506,7 +1515,7 @@ static bool _randart_is_conflicting(const item_def &item,
     if (item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_HOLY_WRATH
         && (is_demonic(item)
-            || proprt[ARTP_CURSE] != 0))
+            || proprt[ARTP_CURSE]))
     {
         return true;
     }
@@ -1743,7 +1752,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     _artefact_setup_prop_vectors(item);
     _init_artefact_properties(item);
 
-    if (unrand->prpty[ARTP_CURSE] != 0)
+    if (unrand->prpty[ARTP_CURSE])
         do_curse_item(item);
 
     // get artefact appearance

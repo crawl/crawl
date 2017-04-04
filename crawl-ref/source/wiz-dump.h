@@ -3,11 +3,8 @@
  * @brief Wizmode character dump loading
 **/
 
-#ifndef WIZDUMP_H
-#define WIZDUMP_H
+#pragma once
 
 #ifdef WIZARD
 void wizard_load_dump_file();
-#endif
-
 #endif

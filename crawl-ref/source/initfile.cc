@@ -23,6 +23,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
+#include "confirm-butcher-type.h"
 #include "defines.h"
 #include "delay.h"
 #include "directn.h"
@@ -47,6 +48,7 @@
 #include "playable.h"
 #include "player.h"
 #include "prompt.h"
+#include "slot-select-mode.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -60,6 +62,7 @@
 #include "version.h"
 #include "viewchar.h"
 #include "view.h"
+#include "wizard-option-type.h"
 #ifdef USE_TILE
 #include "tilepick.h"
 #include "tiledef-player.h"
@@ -67,6 +70,7 @@
 #include "tileweb.h"
 #endif
 #endif
+
 
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS
@@ -159,18 +163,18 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(easy_door), true),
         new BoolGameOption(SIMPLE_NAME(warn_hatches), false),
         new BoolGameOption(SIMPLE_NAME(enable_recast_spell), true),
-        new BoolGameOption(SIMPLE_NAME(auto_butcher), false),
         new BoolGameOption(SIMPLE_NAME(easy_eat_chunks), false),
         new BoolGameOption(SIMPLE_NAME(auto_eat_chunks), true),
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new BoolGameOption(SIMPLE_NAME(bold_brightens_foreground), false),
-        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), true),
+        new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), false),
         new BoolGameOption(SIMPLE_NAME(regex_search), false),
         new BoolGameOption(SIMPLE_NAME(autopickup_search), false),
         new BoolGameOption(SIMPLE_NAME(show_newturn_mark), true),
         new BoolGameOption(SIMPLE_NAME(show_game_time), true),
+        new BoolGameOption(SIMPLE_NAME(equip_bar), false),
         new BoolGameOption(SIMPLE_NAME(mouse_input), false),
         new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
@@ -210,6 +214,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
+        new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
+        new BoolGameOption(SIMPLE_NAME(sounds_on), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -272,13 +278,13 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_items)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
-        new ListGameOption<string>(pizzas, {"pizza"}),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
+        new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), false),
 #endif
@@ -470,11 +476,11 @@ static msg_colour_type _str_to_channel_colour(const string &str)
 
 static const string message_channel_names[] =
 {
-    "plain", "friend_action", "prompt", "god", "pray", "duration", "danger",
-    "warning", "food", "recovery", "sound", "talk", "talk_visual",
-    "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
-    "friend_spell", "friend_enchant", "monster_damage", "monster_target",
-    "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
+    "plain", "friend_action", "prompt", "god", "duration", "danger", "warning",
+    "food", "recovery", "sound", "talk", "talk_visual", "intrinsic_gain",
+    "mutation", "monster_spell", "monster_enchant", "friend_spell",
+    "friend_enchant", "monster_damage", "monster_target", "banishment",
+    "rotten_meat", "equipment", "floor", "multiturn", "examine",
     "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal",
     "hell_effect", "monster_warning", "dgl_message",
 };
@@ -809,7 +815,6 @@ void game_options::set_default_activity_interrupts()
         "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
-        "interrupt_eat = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
         "interrupt_memorise = hp_loss, monster_attack, stat",
         "interrupt_butcher = interrupt_armour_on, teleport, stat",
@@ -1015,6 +1020,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_FOOD);
 
     confirm_butcher        = CONFIRM_AUTO;
+    auto_butcher           = HS_VERY_HUNGRY;
     easy_confirm           = CONFIRM_SAFE_EASY;
     allow_self_target      = CONFIRM_PROMPT;
     skill_focus            = SKM_FOCUS_ON;
@@ -2490,7 +2496,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "explore_stop_pickup_ignore"
-        && key != "stop_travel" && key != "sound"
+        && key != "stop_travel"
         && key != "force_more_message"
         && key != "flash_screen_message"
         && key != "confirm_action"
@@ -2509,6 +2515,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "spell_slot"
         && key != "item_slot"
         && key != "ability_slot"
+        && key != "sound" && key != "hold_sound" && key != "sound_file_path"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -2598,6 +2605,25 @@ void game_options::read_option_line(const string &str, bool runscript)
             confirm_butcher = CONFIRM_NEVER;
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
+    }
+    else if (key == "auto_butcher")
+    {
+        if (field == "true" || field == "engorged")
+            auto_butcher = HS_ENGORGED;
+        else if (field == "very full")
+            auto_butcher = HS_VERY_FULL;
+        else if (field == "full")
+            auto_butcher = HS_FULL;
+        else if (field == "satiated")
+            auto_butcher = HS_SATIATED;
+        else if (field == "hungry")
+            auto_butcher = HS_HUNGRY;
+        else if (field == "very hungry")
+            auto_butcher = HS_VERY_HUNGRY;
+        else if (field == "near starving")
+            auto_butcher = HS_NEAR_STARVING;
+        else if (field == "false" || field == "starving")
+            auto_butcher = HS_STARVING;
     }
     else if (key == "lua_file" && runscript)
     {
@@ -3106,7 +3132,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
-    else if (key == "sound")
+    else if (key == "sound" || key == "hold_sound")
     {
         if (plain)
             sound_mappings.clear();
@@ -3119,7 +3145,12 @@ void game_options::read_option_line(const string &str, bool runscript)
             {
                 sound_mapping entry;
                 entry.pattern = sub.substr(0, cpos);
-                entry.soundfile = sub.substr(cpos + 1);
+                entry.soundfile = sound_file_path + sub.substr(cpos + 1);
+                if (key == "hold_sound")
+                    entry.interrupt_game = true;
+                else
+                    entry.interrupt_game = false;
+
                 if (minus_equal)
                     remove_matching(sound_mappings, entry);
                 else

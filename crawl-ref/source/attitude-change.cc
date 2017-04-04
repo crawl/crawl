@@ -91,8 +91,8 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
-            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::DEATHBED
-                                                              : conv_t::SIGHT);
+            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
+                                                              : conv_t::sight);
             stop_running();
         }
     }
@@ -165,12 +165,8 @@ bool yred_slaves_abandon_you()
             const int hd = mons->get_experience_level();
 
             // During penance, followers get a saving throw.
-            if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                + random2(you.skill(SK_INVOCATIONS) - 6)
-                > random2(hd) + hd + random2(5))
-            {
+            if (random2(20) > random2(hd))
                 continue;
-            }
 
             mons->attitude = ATT_HOSTILE;
             behaviour_event(mons, ME_ALERT, &you);
@@ -223,12 +219,8 @@ bool beogh_followers_abandon_you()
                 const int hd = mons->get_experience_level();
 
                 // During penance, followers get a saving throw.
-                if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                    + random2(you.skill(SK_INVOCATIONS) - 6)
-                    > random2(hd) + hd + random2(5))
-                {
+                if (random2(20) > random2(hd))
                     continue;
-                }
 
                 mons->attitude = ATT_HOSTILE;
                 behaviour_event(mons, ME_ALERT, &you);
@@ -291,25 +283,25 @@ void beogh_convert_orc(monster* orc, conv_t conv)
 
     switch (conv)
     {
-    case conv_t::DEATHBED_FOLLOWER:
+    case conv_t::deathbed_follower:
         _print_converted_orc_speech("reaction_battle_follower", orc,
                                     MSGCH_FRIEND_ENCHANT);
         _print_converted_orc_speech("speech_battle_follower", orc,
                                     MSGCH_TALK);
         break;
-    case conv_t::DEATHBED:
+    case conv_t::deathbed:
         _print_converted_orc_speech("reaction_battle", orc,
                                     MSGCH_FRIEND_ENCHANT);
         _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
         break;
-    case conv_t::SIGHT:
+    case conv_t::sight:
         _print_converted_orc_speech("reaction_sight", orc,
                                     MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3))
             _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
         break;
-    case conv_t::RESURRECTION:
+    case conv_t::resurrection:
         _print_converted_orc_speech("resurrection", orc,
                                     MSGCH_FRIEND_ENCHANT);
         break;

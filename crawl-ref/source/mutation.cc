@@ -71,16 +71,16 @@ struct demon_mutation_info
 
 enum class mutflag
 {
-    GOOD    = 1 << 0, // used by benemut etc
-    BAD     = 1 << 1, // used by malmut etc
-    JIYVA   = 1 << 2, // jiyva-only muts
-    QAZLAL  = 1 << 3, // qazlal wrath
-    XOM     = 1 << 4, // xom being xom
+    good    = 1 << 0, // used by benemut etc
+    bad     = 1 << 1, // used by malmut etc
+    jiyva   = 1 << 2, // jiyva-only muts
+    qazlal  = 1 << 3, // qazlal wrath
+    xom     = 1 << 4, // xom being xom
 
-    LAST    = XOM
+    last    = xom
 };
 DEF_BITFIELD(mutflags, mutflag, 4);
-COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
+COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::last);
 
 #include "mutation-data.h"
 
@@ -121,36 +121,37 @@ static const body_facet_def _body_facets[] =
  */
 static const int conflict[][3] =
 {
-    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
-    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      0},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
-    { MUT_FAST,                MUT_SLOW,                   0},
+    { MUT_REGENERATION,        MUT_SLOW_METABOLISM,         0},
+    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  0},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,           0},
+    { MUT_FAST,                MUT_SLOW,                    0},
 #if TAG_MAJOR_VERSION == 34
-    { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,          1},
+    { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,           1},
 #endif
-    { MUT_STRONG,              MUT_WEAK,                   1},
-    { MUT_CLEVER,              MUT_DOPEY,                  1},
-    { MUT_AGILE,               MUT_CLUMSY,                 1},
-    { MUT_SLOW_REGENERATION,   MUT_NO_POTION_HEAL,         1},
-    { MUT_ROBUST,              MUT_FRAIL,                  1},
-    { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
-    { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,          1},
-    { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
-    { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
-    { MUT_REGENERATION,        MUT_SLOW_REGENERATION,      1},
-    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
-    { MUT_BERSERK,             MUT_CLARITY,                1},
-    { MUT_FAST,                MUT_SLOW,                   1},
-    { MUT_FANGS,               MUT_BEAK,                  -1},
-    { MUT_ANTENNAE,            MUT_HORNS,                 -1},
-    { MUT_HOOVES,              MUT_TALONS,                -1},
-    { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,            -1},
-    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,             -1},
-    { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,           -1},
-    { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,    -1},
-    { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,    -1},
-    { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,   -1},
-    { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY, -1},
+    { MUT_STRONG,              MUT_WEAK,                    1},
+    { MUT_CLEVER,              MUT_DOPEY,                   1},
+    { MUT_AGILE,               MUT_CLUMSY,                  1},
+    { MUT_ROBUST,              MUT_FRAIL,                   1},
+    { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,               1},
+    { MUT_WILD_MAGIC,          MUT_SUBDUED_MAGIC,           1},
+    { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,             1},
+    { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,         1},
+    { MUT_REGENERATION,        MUT_INHIBITED_REGENERATION,  1},
+    { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,           1},
+    { MUT_BERSERK,             MUT_CLARITY,                 1},
+    { MUT_FAST,                MUT_SLOW,                    1},
+    { MUT_FANGS,               MUT_BEAK,                   -1},
+    { MUT_ANTENNAE,            MUT_HORNS,                  -1},
+    { MUT_HOOVES,              MUT_TALONS,                 -1},
+    { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
+    { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
+    { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,            -1},
+    { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY,     -1},
+    { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY,     -1},
+    { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY,    -1},
+    { MUT_MAGIC_RESISTANCE,    MUT_MAGICAL_VULNERABILITY,  -1},
+    { MUT_NO_REGENERATION,     MUT_INHIBITED_REGENERATION, -1},
+    { MUT_NO_REGENERATION,     MUT_REGENERATION,           -1},
 };
 
 equipment_type beastly_slot(int mut)
@@ -177,19 +178,19 @@ static bool _mut_has_use(const mutation_def &mut, mutflag use)
     return bool(mut.uses & use);
 }
 
-#define MUT_BAD(mut) _mut_has_use((mut), mutflag::BAD)
-#define MUT_GOOD(mut) _mut_has_use((mut), mutflag::GOOD)
+#define MUT_BAD(mut) _mut_has_use((mut), mutflag::bad)
+#define MUT_GOOD(mut) _mut_has_use((mut), mutflag::good)
 
 static int _mut_weight(const mutation_def &mut, mutflag use)
 {
     switch (use)
     {
-        case mutflag::JIYVA:
-        case mutflag::QAZLAL:
-        case mutflag::XOM:
+        case mutflag::jiyva:
+        case mutflag::qazlal:
+        case mutflag::xom:
             return 1;
-        case mutflag::GOOD:
-        case mutflag::BAD:
+        case mutflag::good:
+        case mutflag::bad:
         default:
             return mut.weight;
     }
@@ -261,7 +262,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     // First make sure the player's form permits the mutation.
     if (!form_keeps_mutations())
     {
-        if (you.form == TRAN_DRAGON)
+        if (you.form == transformation::dragon)
         {
             monster_type drag = dragon_form_dragon_type();
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
@@ -274,7 +275,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
                 return MUTACT_FULL;
         }
         // Vampire bats keep their fangs.
-        if (you.form == TRAN_BAT
+        if (you.form == transformation::bat
             && you.species == SP_VAMPIRE
             && mut == MUT_FANGS)
         {
@@ -291,7 +292,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             return MUTACT_INACTIVE;
     }
 
-    if (you.form == TRAN_STATUE)
+    if (you.form == transformation::statue)
     {
         // Statues get all but the AC benefit from scales, but are not affected
         // by other changes in body material or speed.
@@ -322,7 +323,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
 
     //XXX: Should this make claws inactive too?
-    if (you.form == TRAN_BLADE_HANDS && mut == MUT_PAWS)
+    if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return MUTACT_INACTIVE;
 
     if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
@@ -335,6 +336,9 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
 
     if (!form_can_bleed(you.form) && mut == MUT_SANGUINE_ARMOUR)
+        return MUTACT_INACTIVE;
+
+    if (mut == MUT_DEMONIC_GUARDIAN && player_mutation_level(MUT_NO_LOVE))
         return MUTACT_INACTIVE;
 
     return MUTACT_FULL;
@@ -359,7 +363,7 @@ static string _annotate_form_based(string desc, bool suppressed)
 
 static string _dragon_abil(string desc)
 {
-    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    const bool supp = form_changed_physiology() && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp);
 }
 
@@ -415,7 +419,7 @@ string describe_mutations(bool center_title)
                        you.racial_ac(false) / 100),
                     player_is_shapechanged()
                     && !(species_is_draconian(you.species)
-                         && you.form == TRAN_DRAGON));
+                         && you.form == transformation::dragon));
     }
 
     if (you.species == SP_VAMPIRE)
@@ -539,17 +543,6 @@ static const string _vampire_Ascreen_footer = (
     " to toggle between mutations and properties depending on your blood\n"
     "level.\n");
 
-#if TAG_MAJOR_VERSION == 34
-static const string _lava_orc_Ascreen_footer = (
-#ifndef USE_TILE_LOCAL
-    "Press '<w>!</w>'"
-#else
-    "<w>Right-click</w>"
-#endif
-    " to toggle between mutations and properties depending on your\n"
-    "temperature.\n");
-#endif
-
 static void _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
@@ -635,88 +628,6 @@ static void _display_vampire_attributes()
     }
 }
 
-#if TAG_MAJOR_VERSION == 34
-static void _display_temperature()
-{
-    ASSERT(you.species == SP_LAVA_ORC);
-
-    clrscr();
-    cgotoxy(1,1);
-
-    string result;
-
-    string title = "Temperature Effects";
-
-    // center title
-    int offset = 39 - strwidth(title) / 2;
-    if (offset < 0) offset = 0;
-
-    result += string(offset, ' ');
-
-    result += "<white>";
-    result += title;
-    result += "</white>\n\n";
-
-    const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
-    string column[lines];
-
-    for (int t = 1; t <= TEMP_MAX; t++)  // lines
-    {
-        string text;
-        ostringstream ostr;
-
-        string colourname = temperature_string(t);
-#define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
-        if (t == TEMP_MAX)
-            text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);
-        else if (t == TEMP_MIN)
-            text = "  " + F(BL) + F(HORIZ) + F(HORIZ) + "MIN" + F(HORIZ) + F(BR);
-        else if (temperature() < t)
-            text = "  " + F(VERT) + "      " + F(VERT);
-        else if (temperature() == t)
-            text = "  " + F(VERT) + "~~~~~~" + F(VERT);
-        else
-            text = "  " + F(VERT) + "######" + F(VERT);
-        text += "    ";
-#undef F
-
-        ostr << '<' << colourname << '>' << text
-             << "</" << colourname << '>';
-
-        colourname = (temperature() >= t) ? "lightred" : "darkgrey";
-        text = temperature_text(t);
-        ostr << '<' << colourname << '>' << text
-             << "</" << colourname << '>';
-
-       column[t] = ostr.str();
-    }
-
-    for (int y = TEMP_MAX; y >= TEMP_MIN; y--)  // lines
-    {
-        result += column[y];
-        result += "\n";
-    }
-
-    result += "\n";
-
-    result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
-    result += "\n";
-    result += "\n";
-
-    result += _lava_orc_Ascreen_footer;
-
-    formatted_scroller temp_menu;
-    temp_menu.add_text(result);
-
-    temp_menu.show();
-    if (temp_menu.getkey() == '!'
-        || temp_menu.getkey() == CK_MOUSE_CMD)
-    {
-        display_mutations();
-    }
-}
-#endif
-
 void display_mutations()
 {
     string mutation_s = describe_mutations(true);
@@ -735,16 +646,6 @@ void display_mutations()
 
         extra += _vampire_Ascreen_footer;
     }
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-    {
-        if (!extra.empty())
-            extra += "\n";
-
-        extra += _lava_orc_Ascreen_footer;
-    }
-#endif
 
     if (!extra.empty())
     {
@@ -765,14 +666,6 @@ void display_mutations()
     {
         _display_vampire_attributes();
     }
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC
-        && (mutation_menu.getkey() == '!'
-            || mutation_menu.getkey() == CK_MOUSE_CMD))
-    {
-        _display_temperature();
-    }
-#endif
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
@@ -833,7 +726,7 @@ static mutation_type _get_mut_with_use(mutflag mt)
 
 static mutation_type _get_random_slime_mutation()
 {
-    return _get_mut_with_use(mutflag::JIYVA);
+    return _get_mut_with_use(mutflag::jiyva);
 }
 
 static mutation_type _delete_random_slime_mutation()
@@ -859,7 +752,7 @@ static mutation_type _delete_random_slime_mutation()
 
 bool is_slime_mutation(mutation_type mut)
 {
-    return _mut_has_use(mut_data[mut_index[mut]], mutflag::JIYVA);
+    return _mut_has_use(mut_data[mut_index[mut]], mutflag::jiyva);
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -873,7 +766,7 @@ static mutation_type _get_random_xom_mutation()
         if (one_chance_in(1000))
             return NUM_MUTATIONS;
         else if (one_chance_in(5))
-            mutat = _get_mut_with_use(mutflag::XOM);
+            mutat = _get_mut_with_use(mutflag::xom);
     }
     while (!_accept_mutation(mutat, false));
 
@@ -882,7 +775,7 @@ static mutation_type _get_random_xom_mutation()
 
 static mutation_type _get_random_qazlal_mutation()
 {
-    return _get_mut_with_use(mutflag::QAZLAL);
+    return _get_mut_with_use(mutflag::qazlal);
 }
 
 static mutation_type _get_random_mutation(mutation_type mutclass)
@@ -894,14 +787,14 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
             // maintain an arbitrary ratio of good to bad muts to allow easier
             // weight changes within categories - 60% good seems to be about
             // where things are right now
-            mt = x_chance_in_y(3, 5) ? mutflag::GOOD : mutflag::BAD;
+            mt = x_chance_in_y(3, 5) ? mutflag::good : mutflag::bad;
             break;
         case RANDOM_BAD_MUTATION:
         case RANDOM_CORRUPT_MUTATION:
-            mt = mutflag::BAD;
+            mt = mutflag::bad;
             break;
         case RANDOM_GOOD_MUTATION:
-            mt = mutflag::GOOD;
+            mt = mutflag::good;
             break;
         default:
             die("invalid mutation class: %d", mutclass);
@@ -920,11 +813,13 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 /**
  * Does the player have a mutation that conflicts with the given mutation?
  *
- * @param mut           A mutation. (E.g. MUT_SLOW_REGENERATION, MUT_REGENERATION...)
+ * @param mut           A mutation. (E.g. MUT_INHIBITED_REGENERATION, ...)
  * @param innate_only   Whether to only check innate mutations (from e.g. race)
  * @return              The level of the conflicting mutation.
- *                      E.g., if MUT_SLOW_REGENERATION is passed in and the player
- *                      has 2 levels of MUT_REGENERATION, 2 will be returned.)
+ *                      E.g., if MUT_INHIBITED_REGENERATION is passed in and the
+ *                      player has 2 levels of MUT_REGENERATION, 2 will be
+ *                      returned.
+ *
  *                      No guarantee is offered on ordering if there are
  *                      multiple conflicting mutations with different levels.
  */
@@ -963,18 +858,24 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     // and continue processing.
     for (const int (&confl)[3] : conflict)
     {
-        for (int j = 0; j < 2; ++j)
+        for (int j = 0; j <= 1; ++j)
         {
             const mutation_type a = (mutation_type)confl[j];
             const mutation_type b = (mutation_type)confl[1-j];
 
             if (mutation == a && you.mutation[b] > 0)
             {
-                if (you.innate_mutation[b] >= you.mutation[b])
+                // can never delete innate mutations.
+                if (you.innate_mutation[b]) // don't check count
+                {
+                    dprf("already have innate mutation %d at level %d, you.mutation at level %d", b, you.innate_mutation[b], you.mutation[b]);
                     return -1;
+                }
 
-                int res = confl[2];
-                switch (res)
+                const bool temp_b = you.temp_mutation[b] >= you.mutation[b];
+
+                // confl[2] indicates how the mutation resolution should proceed (see `conflict` a the beginning of this file):
+                switch (confl[2])
                 {
                 case -1:
                     // Fail if not forced, otherwise override.
@@ -994,8 +895,9 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     // other, and that's it.
                     //
                     // Temporary mutations can co-exist with things they would
-                    // ordinarily conflict with
-                    if (temp)
+                    // ordinarily conflict with. But if both a and b are temporary,
+                    // mark b for deletion.
+                    if ((temp || temp_b) && !(temp && temp_b))
                         return 0;       // Allow conflicting transient mutations
                     else
                     {
@@ -1086,7 +988,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
         && (mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS
-            || mutat == MUT_REGENERATION || mutat == MUT_SLOW_REGENERATION
+            || mutat == MUT_REGENERATION || mutat == MUT_INHIBITED_REGENERATION
             || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM))
     {
         return true;
@@ -1120,18 +1022,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
             return true;
         }
     }
-#if TAG_MAJOR_VERSION == 34
-
-    // Heat doesn't hurt fire, djinn don't care about hunger.
-    if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
-        || mutat == MUT_HEAT_VULNERABILITY
-        || mutat == MUT_BERSERK
-        || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
-        || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
-    {
-        return true;
-    }
-#endif
 
     // Already immune.
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
@@ -1927,7 +1817,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
             colourname = "darkgrey";
         else if (partially_active)
             colourname = "brown";
-        else if (you.form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == mut)
+        else if (you.form == transformation::appendage && you.attribute[ATTR_APPENDAGE] == mut)
             colourname = "lightgreen";
         else if (is_slime_mutation(mut))
             colourname = "green";

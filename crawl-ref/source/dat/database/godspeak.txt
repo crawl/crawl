@@ -270,7 +270,7 @@ Xom plays with reality for a moment.
 Xom guffaws.
 %%%%
 # multicoloured smoke trail
-Xom colour smoke trail
+Xom cloud trail
 
 "Go forth and redecorate, my child!"
 
@@ -568,9 +568,9 @@ Gozag welcome
 
 Gozag says: Greed is good.
 %%%%
-Ru welcome
+Hepliaklqana welcome
 
-Ru says: Sacrifice that you might gain great power!
+Hepliaklqana says: Through your memory, mortal, the past survives and persists.
 %%%%
 Jiyva welcome
 
@@ -656,6 +656,10 @@ Qazlal welcome
 
 Qazlal says: Let the forces of nature tear it all down!
 %%%%
+Ru welcome
+
+Ru says: Sacrifice that you might gain great power!
+%%%%
 Sif Muna penance
 
 Sif Muna says: Seek out more knowledge and wisdom.
@@ -680,9 +684,17 @@ Trog welcome
 
 Trog says: Kill them all!
 %%%%
+Uskayaw welcome
+
+Uskayaw says: Revel in the joy of movement!
+%%%%
 Vehumet welcome
 
 Vehumet says: Let it end in hellfire!
+%%%%
+Wu Jian welcome
+
+The Council says: Follow the Path!
 %%%%
 Xom bored
 

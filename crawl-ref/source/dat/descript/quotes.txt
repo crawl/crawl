@@ -59,7 +59,7 @@ Extant. With Introductions Historical, Critical, Or Humorous_. 1723.
 %%%%
 __cap-K_suffix
 
-“The Parts Septentrionall are with these Sp’ryts Much haunted.. About the
+“The Parts Septentrionall are with these Sp'ryts Much haunted.. About the
 places where they dig for Oare. The Greekes and Germans call them Cobali.”
     -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
 1635.
@@ -72,8 +72,8 @@ people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
 there-for they ate up everybody. Ogres are terrible people. When once they have
 tasted raw human flesh they will hardly eat anything else, and Tourmentine
 always knew how to make some body come their way, for she was half a fairy.”
-    -Marie-Catherine Le Jumel de Barneville, Baronne d’Aulnoy, “’Orangier et
-l’Abeille”. 1697.
+    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
+l'Abeille”. 1697.
 
 “NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
 it? We both have layers.”
@@ -157,11 +157,11 @@ A granite statue
 “I met a traveller from an antique land
  Who said: Two vast and trunkless legs of stone
  Stand in the desert. Near them on the sand,
- Half sunk, a shatter’d visage lies, whose frown
+ Half sunk, a shatter'd visage lies, whose frown
  And wrinkled lip and sneer of cold command
  Tell that its sculptor well those passions read
- Which yet survive, stamp’d on these lifeless things,
- The hand that mock’d them and the heart that fed.
+ Which yet survive, stamp'd on these lifeless things,
+ The hand that mock'd them and the heart that fed.
  And on the pedestal these words appear:
  ‘My name is Ozymandias, king of kings:
  Look on my works, ye Mighty, and despair!’
@@ -184,7 +184,7 @@ artistry and chaos.”
 “Since I emerged that day from the labyrinth,
  Dazed with the tall and echoing passages,
  The swift recoils, so many I almost feared
- I’d meet myself returning at some smooth corner,
+ I'd meet myself returning at some smooth corner,
  Myself or my ghost, for all there was unreal
  After the straw ceased rustling and the bull
  Lay dead upon the straw and I remained,
@@ -197,8 +197,8 @@ A one-way gate to the infinite horrors of the Abyss
 “And if you gaze for long into an abyss, the abyss gazes also into you.”
     -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
 
-“Well, in our country,” said Alice, still panting a little, “you’d generally
-get to somewhere else — if you ran very fast for a long time, as we’ve been
+“Well, in our country,” said Alice, still panting a little, “you'd generally
+get to somewhere else — if you ran very fast for a long time, as we've been
 doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
 all the running you can do, to keep in the same place. If you want to get
 somewhere else, you must run at least twice as fast as that!”
@@ -265,7 +265,7 @@ other things do.”
 %%%%
 acid dragon scales
 
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 Agony spell
 
@@ -286,7 +286,7 @@ which is receptive only to whatsoever is grand.”
 Aizul
 
 “I went to Heaven —
- ’Twas a small Town —
+ 'Twas a small Town —
  Lit — with a Ruby —
  Lathed — with Down —”
     -Emily Dickinson, _I went to Heaven_. ca. 1860.
@@ -342,7 +342,7 @@ Azrael
  ‘As thou the deed hast done, so now the office shall be thine, O Azrael,
   to gather up for me the souls of men and women when their time has come;
   the souls of saints and sinners, of beggars and of princes,
-  of the old or young, whate’er befall; and even though friends weep,
+  of the old or young, whate'er befall; and even though friends weep,
   and hearts of loved ones ache with sorrow and with anguish,
   when bereft of those they love.’
  So Azrael became the messenger of Death.”
@@ -480,7 +480,7 @@ Duvessa
  ‘Let him brag of his looks,’
  Father said; ‘mind your books!
  The best beauty is bred in the brain.’”
-    -Aesop & Walter Crane, _The Baby’s Own Aesop_, 36: “Brother & Sister”.
+    -Aesop & Walter Crane, _The Baby's Own Aesop_, 36: “Brother & Sister”.
 1887.
 %%%%
 Edmund
@@ -663,7 +663,7 @@ Orcish Mines
 Polyphemus
 
 “...as soon as he had got through with all his work, he clutched up two more of
-my men, and began eating them for his morning’s meal. Presently, with the
+my men, and began eating them for his morning's meal. Presently, with the
 utmost ease, he rolled the stone away from the door and drove out his sheep,
 but he at once put it back again—as easily as though he were merely clapping
 the lid on to a quiver full of arrows.”
@@ -683,7 +683,7 @@ Prince Ribbit
 %%%%
 Psyche
 
-“Let Psyche’s corpse be clad in mourning weed
+“Let Psyche's corpse be clad in mourning weed
  And set on rock of yonder hill aloft;
  Her husband is no wight of human seed,
  But serpent dire and fierce, as may be thought,
@@ -711,7 +711,7 @@ Shoals
 a wide sea. Especially these days, now that things are more difficult than
 before and the world appears to be harsher than we once imagined it to be.
 
-We are all like islands, the philosopher said. Perhaps it’s true. Yet I cannot
+We are all like islands, the philosopher said. Perhaps it's true. Yet I cannot
 help but remember an older saying scratched on a cave wall somewhere by a long-
 forgotten prophet: In the end the sea will claim everything.
 
@@ -854,22 +854,10 @@ amulet of nothing
 
 <amulet>
 %%%%
-amulet of stasis
-
-<amulet>
-%%%%
 amulet of the gourmand
 
 “put a knife to thy throat, if thou be a man given to appetite.”
     -KJV Bible, Proverbs 23:2.
-%%%%
-amulet of warding
-
-[...] says a traveller in Central Borneo: “[...] When a company from the middle
-Mahakam River visited me among the Blu-u Kayans in the year 1897, no woman
-showed herself outside her house without a burning bundle of /plehiding/ bark,
-the stinking smoke of which drives away evil spirits.”
-    -Sir James George Frazer, _The Golden Bough_. 1922.
 %%%%
 animal skin
 
@@ -1013,11 +1001,11 @@ in irons for serving him with one kind of bread and his guests with another...�
 broad axe
 
 “Weapon, shapely, naked, wan!
- Head from the mother’s bowels drawn!
+ Head from the mother's bowels drawn!
  Wooded flesh and metal bone! limb only one, and lip only one!
  Gray-blue leaf by red-heat grown! helve produced from a little seed sown!
  Resting the grass amid and upon,
- To be lean’d, and to lean on.”
+ To be lean'd, and to lean on.”
     -Walt Whitman, _Song of the Broad-Axe_, l. 1-6. 1867.
 %%%%
 buckler
@@ -1048,7 +1036,7 @@ grasp, but which, if you will sit down quietly, may alight upon you.”
 %%%%
 cacodemon
 
-“We’ll call him Cacodemon, with his black Gib there, his Succuba, his Devil’s
+“We'll call him Cacodemon, with his black Gib there, his Succuba, his Devil's
 Seed, his Spawn of Phlegethon, that o’ my Consience was bred o’ the Spume of
 Cocytus.”
     -John Fletcher, _The Knight of Malta_. 1647.
@@ -1066,7 +1054,7 @@ the bit, to bite at them, and that the white foam was engendered by the
 poisonous fury of the combat. His impresa was a Catoblepta, which so long lies
 dead as the moon (whereto it hath so natural a sympathy) wants her light. The
 word signified, that the moon wanted not the light, but the poor beast wanted
-the moon’s light.”
+the moon's light.”
     -Sir Philip Sidney
 %%%%
 chain mail
@@ -1077,7 +1065,7 @@ cherub
 
 “The glory of Yahweh mounted up from the cherub, and stood over the threshold
 of the house; and the house was filled with the cloud, and the court was full
-of the brightness of Yahweh’s glory.
+of the brightness of Yahweh's glory.
  The sound of the wings of the cherubim was heard even to the outer court, as
 the voice of God Almighty when he speaks.”
     -WEB Bible, Ezekiel 10:4-5
@@ -1094,8 +1082,8 @@ cloak
    Thou kens not clowns from gentlemen:
  They are clad in black, green, yellow and blue,
    So far above their own degree.
- Once in my life I’ll take a view;
-   For I’ll have a new cloak about me.”
+ Once in my life I'll take a view;
+   For I'll have a new cloak about me.”
     -Anonymous, “The Old Cloak”. 16th Century.
 %%%%
 club
@@ -1144,7 +1132,7 @@ dagger
    That fell deid at his feit.
 
  ‘Now stay for me, dear Annet,’ he sed,
-   ‘Now stay, my dear,’ he cry’d;
+   ‘Now stay, my dear,’ he cry'd;
  Then strake the dagger untill his heart,
    And fell deid by her side.”
     -English traditional ballad, “Lord Thomas and Fair Annet”, circa 1650.
@@ -1166,9 +1154,9 @@ demon blade
 demon trident
 
 “At these words he started up, and beheld—not his Sophia—no, nor a Circassian
-maid richly and elegantly attired for the grand Signior’s seraglio. No; without
+maid richly and elegantly attired for the grand Signior's seraglio. No; without
 a gown, in a shift that was somewhat of the coarsest, and none of the cleanest,
-bedewed likewise with some odoriferous effluvia, the produce of the day’s
+bedewed likewise with some odoriferous effluvia, the produce of the day's
 labour, with a pitchfork in her hand, Molly Seagrim approached.”
     -Henry Fielding, _The History of Tom Jones, a Foundling_, Book V, ch. X.
      1749.
@@ -1228,7 +1216,7 @@ been gettin' fresh wit tha locals.
 efreet
 
 “When the hoopoe returned to Solomon (he told him the news), and he responded
-(to Sheba’s people): “Are you giving me money? What GOD has given me is far
+(to Sheba's people): “Are you giving me money? What GOD has given me is far
 better than what He has given you. You are the ones to rejoice in such gifts.”
 (To the hoopoe, he said), “Go back to them (and let them know that) we will
 come to them with forces they cannot imagine. We will evict them, humiliated
@@ -1306,8 +1294,8 @@ carried her on over thorn and brier; she scratched herself till she bled; she
 danced away across the heath to a little lonely house. Here she knew the
 executioner dwelt; and she tapped with her fingers on the panes, and
 called,—‘Come out, come out! I cannot come in, for I must dance!’
- And the Executioner said,—‘You probably don’t know who I am? I cut off the bad
-people’s heads with my axe, and mark how my axe rings!’
+ And the Executioner said,—‘You probably don't know who I am? I cut off the bad
+people's heads with my axe, and mark how my axe rings!’
  ‘Do not strike off my head,’ said Karen, ‘for if you do I cannot repent of my
 sin. But strike off my feet with the red shoes?’
  And then she confessed all her sin, and the Executioner cut off her feet with
@@ -1332,15 +1320,11 @@ fire crab
 ate, smashing their shells with iron mallets; tall aspiring trees with
 breathtaking slenderness and colour which [they] cut down and burned the crab
 meat with.”
-    -Douglas Adams, The Hitch-hiker’s Guide to the Galaxy
+    -Douglas Adams, The Hitch-hiker's Guide to the Galaxy
 %%%%
 fire dragon scales
 
-<steam dragon hide>
-%%%%
-fire dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 flail
 
@@ -1357,7 +1341,7 @@ flying skull
 
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
 excellent fancy. He hath bore me on his back a thousand times, and now how
-abhorr’d in my imagination it is! My gorge rises at it.”
+abhorr'd in my imagination it is! My gorge rises at it.”
     -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
 1603.
 %%%%
@@ -1414,11 +1398,11 @@ bullfrog
  Baby, my hearts on fire
 
  If you refuse me
- Honey, you’ll lose me
- Then you’ll be left alone
+ Honey, you'll lose me
+ Then you'll be left alone
 
  Oh baby, telephone
- And tell me I’m your own.”
+ And tell me I'm your own.”
     -Ida Emerson and Joseph E. Howard, “Hello My Baby!”
 %%%%
 giant spiked club
@@ -1470,11 +1454,7 @@ goblin
 %%%%
 gold dragon scales
 
-<steam dragon hide>
-%%%%
-gold dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 gold piece
 
@@ -1499,7 +1479,7 @@ golden eye
    In thy bright golden eye,
  That calm and innocently turns
    On all below the sky.”
-    -Hannah Flagg Gould, _The Youth’s Coronal_
+    -Hannah Flagg Gould, _The Youth's Coronal_
 %%%%
 great mace
 
@@ -1581,7 +1561,7 @@ hell hound
 %%%%
 hell knight
 
-“Ok, let’s review. It’s up to the fair young maiden to rescue the dragon from
+“Ok, let's review. It's up to the fair young maiden to rescue the dragon from
 the fire breathing knights in shining armour.”
     -Exiern
 %%%%
@@ -1598,16 +1578,16 @@ hog
 approached her chair, the carton wobbled, and there was a scratching noise.
 Fern looked at her father. Then she lifted the lid of the carton. There,
 inside, looking up at her, was the newborn pig. It was a white one. The morning
-light shone through its ears, turning them pink. “He’s yours,” said Mr. Arable.
+light shone through its ears, turning them pink. “He's yours,” said Mr. Arable.
 “Saved from an untimely death. And may the good Lord forgive me for this
 foolishness.”
-    -E.B. White, _Charlotte’s Web_
+    -E.B. White, _Charlotte's Web_
 %%%%
 horn of Geryon
 
-‘So Joshua called together the priests and said, “Take up the Ark of the Lord’s
+‘So Joshua called together the priests and said, “Take up the Ark of the Lord's
 Covenant, and assign seven priests to walk in front of it, each carrying a
-ram’s horn.’
+ram's horn.’
 
 ‘When the people heard the sound of the rams’ horns, they shouted as loud as
 they could. Suddenly, the walls of Jericho collapsed, and the Israelites
@@ -1626,7 +1606,7 @@ human
 
 “Do you know
  Do I know
- What’s this thing called ‘man’?
+ What's this thing called ‘man’?
  God only knows what a man is!
  I only know his price.”
     -Bertolt Brecht, “The Measures Taken”. 1930.
@@ -1637,11 +1617,7 @@ ice bat
 %%%%
 ice dragon scales
 
-<steam dragon hide>
-%%%%
-ice dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 iguana
 
@@ -1748,7 +1724,7 @@ lajatang
 
 “A weapon that comes down as still
  As snowflakes fall upon the sod;
- But executes a freeman’s will,
+ But executes a freeman's will,
  As lightning does the will of God.”
     -John Pierpont, “The Ballot”. ca. 1850.
 %%%%
@@ -1762,14 +1738,6 @@ large rock
 large shield
 
 <buckler>
-%%%%
-lasher statue
-
-“To be a slave for a moment
- The body offered up to cruelty
- To the lash which whips on the skin
- Which slashes the flesh, lacerates the back”
-    -Samael, “Flagellation”. 1994.
 %%%%
 leather armour
 
@@ -1881,7 +1849,7 @@ merfolk avatar
 
 “Then up it raise the mermaiden,
  Wi the comb an glass in her hand:
- ‘Here’s a health to you, my merrie young men,
+ ‘Here's a health to you, my merrie young men,
  For you never will see dry land.’”
     -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
      Child, _The English and Scottish Popular Ballads_. 1898.
@@ -1954,11 +1922,11 @@ nothing but a club, which carried with it death and destruction.”
 mummy
 
 “I see Egypt and the Egyptians — I see the pyramids and obelisks;
- I look on chisel’d histories, songs, philosophies, cut in slabs
+ I look on chisel'd histories, songs, philosophies, cut in slabs
      of sand-stone, or on granite-blocks;
- I see at Memphis mummy-pits, containing mummies, embalm’d, swathed
+ I see at Memphis mummy-pits, containing mummies, embalm'd, swathed
      in linen cloth, lying there many centuries;
- I look on the fall’n Theban, the large-ball’d eyes, the side-drooping
+ I look on the fall'n Theban, the large-ball'd eyes, the side-drooping
      neck, the hands folded across the breast.”
     -Walt Whitman, “Salut au Monde”
 %%%%
@@ -2017,10 +1985,10 @@ to natural selection, but that many do not imply an actual improvement.”
 octopode
 
 “In their brief time together Slothrop forms the impression that this octopus
-is not in good mental health, though where’s his basis for comparing? But there
+is not in good mental health, though where's his basis for comparing? But there
 is a mad exhuberance, as with inanimate objects which fall off of tables when
-we are sensitive to noise and our own clumsiness and don’t want them to fall, a
-sort of wham! ha-ha you hear that? here it is again, WHAM! in the cephalopod’s
+we are sensitive to noise and our own clumsiness and don't want them to fall, a
+sort of wham! ha-ha you hear that? here it is again, WHAM! in the cephalopod's
 every movement, which Slothrop is glad to get away from as he finally scales
 the crab like a discus, with all his strength, out to sea, and the octopus,
 with an eager splash and gurgle, strikes out in pursuit, and is presently
@@ -2089,7 +2057,7 @@ orange demon
 %%%%
 orb of fire
 
-“There ’s not the smallest orb which thou behold’st
+“There 's not the smallest orb which thou behold'st
  But in his motion like an angel sings,
  Still quiring to the young-eyed cherubins.”
     -William Shakespeare, _The Merchant of Venice_, V, i. 1597.
@@ -2111,11 +2079,7 @@ Passwall spell
 %%%%
 pearl dragon scales
 
-<steam dragon hide>
-%%%%
-pearl dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 phantom
 
@@ -2154,13 +2118,13 @@ and have sometimes been with much difficulty repelled.”
 %%%%
 potion
 
-“Then gave I her, — so tutor’d by my art, —
+“Then gave I her, — so tutor'd by my art, —
  A sleeping potion; which so took effect
  As I intended, for it wrought on her
  The form of death: meantime I writ to Romeo
  That he should hither come as this dire night,
- To help to take her from her borrow’d grave,
- Being the time the potion’s force should cease.”
+ To help to take her from her borrow'd grave,
+ Being the time the potion's force should cease.”
     -William Shakespeare, _Romeo and Juliet_
 %%%%
 potion of blood
@@ -2205,7 +2169,7 @@ program bug
 
 “If builders built buildings the way programmers wrote programs, then the first
 woodpecker that came along would destroy civilization.”
-    -Gerald Weinberg, Weinberg’s Second Law
+    -Gerald Weinberg, Weinberg's Second Law
 %%%%
 quarterstaff
 
@@ -2237,7 +2201,7 @@ quarterstaff
 %%%%
 quasit
 
-“You’ll have to pay double reckoning; ’tis only fair you should pay for your
+“You'll have to pay double reckoning; 'tis only fair you should pay for your
 dexterity.”
     -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
      trans. Anna Swanwick, 1914.
@@ -2314,8 +2278,8 @@ ring of fire
 ring of flight
 
 “What surprised him the most, however, was the logic of his wings. They seemed
-so natural on that completely human organism that he couldn’t understand why
-other men didn’t have them too.”
+so natural on that completely human organism that he couldn't understand why
+other men didn't have them too.”
     -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
      trans. Gregory Rabassa. 1972
 %%%%
@@ -2436,7 +2400,7 @@ whose frozen crescents the wind and violence of battle seemed to be living on.�
 %%%%
 scorpion
 
-“Those poisonous fields, with rank luxuriance crown’d,
+“Those poisonous fields, with rank luxuriance crown'd,
  Where the dark scorpion gathers death around”
     -Oliver Goldsmith, “The Deserted Village”, l. 351-2. 1770.
 %%%%
@@ -2463,18 +2427,6 @@ scroll of blinking
 <scroll>
 %%%%
 scroll of brand weapon
-
-<scroll>
-%%%%
-scroll of curse armour
-
-<scroll>
-%%%%
-scroll of curse jewellery
-
-<scroll>
-%%%%
-scroll of curse weapon
 
 <scroll>
 %%%%
@@ -2603,9 +2555,9 @@ XIV in 18th century
 shadow wraith
 
 “Yesterday, upon the stair,
- I met a man who wasn’t there
- He wasn’t there again today
- I wish, I wish he’d go away...”
+ I met a man who wasn't there
+ He wasn't there again today
+ I wish, I wish he'd go away...”
     -Hughes Mearns ,_Antigonish_, 1-4. 1899.
 %%%%
 shapeshifter
@@ -2660,9 +2612,9 @@ is to say, the continuation of Nothingness.”
 sixfirhy
 
 “I saw a mouth jeering. A smile of melted red iron ran over it. Its laugh was
-full of nails rattling. It was a child’s dream of a mouth.
+full of nails rattling. It was a child's dream of a mouth.
  A fist hit the mouth: knuckles of gun-metal driven by an electric wrist and
-shoulder. It was a child’s dream of an arm.
+shoulder. It was a child's dream of an arm.
  The fist hit the mouth over and over, again and again. The mouth bled melted
 iron, and laughed its laughter of nails rattling.
  And I saw the more the fist pounded the more the mouth laughed. The fist is
@@ -2702,11 +2654,6 @@ slave
 “Who rebels? Who rises in arms? Rarely the slave, but almost always the
 oppressor turned slave.”
     -E.M. Cioran, _History and Utopia_. 1960.
-%%%%
-slice of pizza
-
-“When the moon hits your eye like a big pizza pie, that’s amore.”
-    -Jack Brooks, “That’s Amore”. 1952.
 %%%%
 slime creature
 
@@ -2848,9 +2795,9 @@ betook himself to his knowledge and learning, and therefore frankincense and
 myrrh and herbs were put around the body of Cermait, and he lifted Cermait on
 his back, and bearing Cermait he searched the world, and came to the great
 eastern world.
- He met three men going the road and the way with their father’s treasures. The
+ He met three men going the road and the way with their father's treasures. The
 Dagda asked news of them, and they said ‘We are three sons of one father and
-mother, and we are sharing our father’s treasures.’
+mother, and we are sharing our father's treasures.’
  ‘What have ye?’ said the Dagda.
  ‘A shirt and a staff and a cloak,’ said they.
  ‘What virtues have these?’ said the Dagda.
@@ -2908,10 +2855,6 @@ starcursed mass
 %%%%
 steam dragon scales
 
-<steam dragon hide>
-%%%%
-steam dragon hide
-
 “His scales are his pride, shut up together as with a close seal. One is so
 near to another, that no air can come between them. They are joined one to
 another, they stick together, that they cannot be sundered.”
@@ -2944,11 +2887,7 @@ rills of water, along the field.”
 %%%%
 storm dragon scales
 
-<steam dragon hide>
-%%%%
-storm dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 sun demon
 
@@ -2958,29 +2897,25 @@ sun demon
 %%%%
 swamp dragon scales
 
-<steam dragon hide>
-%%%%
-swamp dragon hide
-
-<steam dragon hide>
+<steam dragon scales>
 %%%%
 swamp drake
 
 “Sweet is the swamp with its secrets,
  Until we meet a snake;
- ’T is then we sigh for houses,
+ 'T is then we sigh for houses,
  And our departure take
 
  At that enthralling gallop
  That only childhood knows.
- A snake is summer’s treason,
+ A snake is summer's treason,
  And guile is where it goes.”
     -Emily Dickinson, “A Snake”. ca. 1865.
 %%%%
 swamp worm
 
-“The fool, as I think, at the chasm’s brink,
- Prone by the swamp or the marsh’s side,
+“The fool, as I think, at the chasm's brink,
+ Prone by the swamp or the marsh's side,
  Did, even as I, in the end rejoice,
  Since the voice of death must be His true voice.”
     -Arthur Edward Waite, “At The End of Things”. 1906.
@@ -2992,6 +2927,13 @@ tengu
  He bit an Angleworm in halves
  And ate the fellow, raw”
     -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
+%%%%
+tengu warrior
+
+“I can puff up my feathers, look real mean
+ Be the old man that this here's scene
+ I'm a struttin' preenin' bantam rooster looking for a fight.”
+    -Andrew Bird's Bowl of Fire, “Cock o' the Walk”. 1998.
 %%%%
 tentacled monstrosity
 
@@ -3046,7 +2988,7 @@ toadstool
 toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
-but my toes hardly notice. All they’re interested in is turning out
+but my toes hardly notice. All they're interested in is turning out
 toenails—semitransparent, flexible sheets of a hornlike material, as defense
 against—whom?”
     -Jorge Luis Borges, “Toenails”. 1960.
@@ -3099,7 +3041,7 @@ triple crossbow
 
 <arbalest>
 %%%%
-troll hide
+troll leather armour
 
 “THE TROLL KING: Now, listen, Prince Peer, and give way to reason!
  You're cut out for a Troll. Why, look, already
@@ -3124,10 +3066,6 @@ troll hide
  Never go back, as you tell me plainly —
  That is a thing that I'll not submit to.”
     -Henrik Ibsen, _Peer Gynt_ . 1867.
-%%%%
-troll leather armour
-
-<troll hide>
 %%%%
 ufetubus
 
@@ -3202,7 +3140,7 @@ displaced the eyeballs.”
 %%%%
 wand
 
-“[The principle of selection] is the magician’s wand, by means of which he may
+“[The principle of selection] is the magician's wand, by means of which he may
 summon into life whatever form and mould he pleases.”
     -William Youatt, _Sheep: their breeds, management, and diseases; to which
      is added the Mountain Shepherd's Manual_, ch. III. 1837.

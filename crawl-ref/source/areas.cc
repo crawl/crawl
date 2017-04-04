@@ -29,20 +29,17 @@
 
 enum class areaprop
 {
-    SANCTUARY_1   = (1 << 0),
-    SANCTUARY_2   = (1 << 1),
-    SILENCE       = (1 << 2),
-    HALO          = (1 << 3),
-    LIQUID        = (1 << 4),
-    ACTUAL_LIQUID = (1 << 5),
-    ORB           = (1 << 6),
-    UMBRA         = (1 << 7),
-    QUAD          = (1 << 8),
-    DISJUNCTION   = (1 << 9),
-    SOUL_AURA     = (1 << 10),
-#if TAG_MAJOR_VERSION == 34
-    HOT           = (1 << 11),
-#endif
+    sanctuary_1   = (1 << 0),
+    sanctuary_2   = (1 << 1),
+    silence       = (1 << 2),
+    halo          = (1 << 3),
+    liquid        = (1 << 4),
+    actual_liquid = (1 << 5),
+    orb           = (1 << 6),
+    umbra         = (1 << 7),
+    quad          = (1 << 8),
+    disjunction   = (1 << 9),
+    soul_aura     = (1 << 10),
 };
 DEF_BITFIELD(areaprops, areaprop);
 
@@ -85,11 +82,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius() > -1 || act->silence_radius() > -1
-         || act->liquefying_radius() > -1 || act->umbra_radius() > -1
-#if TAG_MAJOR_VERSION == 34
-         || act->heat_radius() > -1
-#endif
-         ))
+         || act->liquefying_radius() > -1 || act->umbra_radius() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -105,7 +98,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_SILENCE, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::SILENCE);
+            _set_agrid_flag(*ri, areaprop::silence);
         no_areas = false;
     }
 
@@ -114,7 +107,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_HALO, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::HALO);
+            _set_agrid_flag(*ri, areaprop::halo);
         no_areas = false;
     }
 
@@ -126,10 +119,10 @@ static void _actor_areas(actor *a)
         {
             dungeon_feature_type f = grd(*ri);
 
-            _set_agrid_flag(*ri, areaprop::LIQUID);
+            _set_agrid_flag(*ri, areaprop::liquid);
 
             if (feat_has_solid_floor(f) && !feat_is_water(f))
-                _set_agrid_flag(*ri, areaprop::ACTUAL_LIQUID);
+                _set_agrid_flag(*ri, areaprop::actual_liquid);
         }
         no_areas = false;
     }
@@ -139,20 +132,9 @@ static void _actor_areas(actor *a)
         _agrid_centres.emplace_back(AREA_UMBRA, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::UMBRA);
+            _set_agrid_flag(*ri, areaprop::umbra);
         no_areas = false;
     }
-
-#if TAG_MAJOR_VERSION == 34
-    if ((r = a->heat_radius()) >= 0)
-    {
-        _agrid_centres.emplace_back(AREA_HOT, a->pos(), r);
-
-        for (radius_iterator ri(a->pos(), r, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::HOT);
-        no_areas = false;
-    }
-#endif
 }
 
 /**
@@ -183,7 +165,7 @@ static void _update_agrid()
         const int r = 2;
         _agrid_centres.emplace_back(AREA_ORB, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_SQUARE, LOS_DEFAULT); ri; ++ri)
-            _set_agrid_flag(*ri, areaprop::ORB);
+            _set_agrid_flag(*ri, areaprop::orb);
         no_areas = false;
     }
 
@@ -195,7 +177,7 @@ static void _update_agrid()
              ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-                _set_agrid_flag(*ri, areaprop::QUAD);
+                _set_agrid_flag(*ri, areaprop::quad);
         }
         no_areas = false;
     }
@@ -208,7 +190,7 @@ static void _update_agrid()
              ri; ++ri)
         {
             if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-                _set_agrid_flag(*ri, areaprop::DISJUNCTION);
+                _set_agrid_flag(*ri, areaprop::disjunction);
         }
         no_areas = false;
     }
@@ -216,7 +198,7 @@ static void _update_agrid()
     if (!env.sunlight.empty())
     {
         for (const auto &entry : env.sunlight)
-            _set_agrid_flag(entry.first, areaprop::HALO);
+            _set_agrid_flag(entry.first, areaprop::halo);
         no_areas = false;
     }
 
@@ -228,24 +210,20 @@ static void _update_agrid()
 static area_centre_type _get_first_area(const coord_def& f)
 {
     areaprops a = _agrid(f);
-    if (a & areaprop::SANCTUARY_1)
+    if (a & areaprop::sanctuary_1)
         return AREA_SANCTUARY;
-    if (a & areaprop::SANCTUARY_2)
+    if (a & areaprop::sanctuary_2)
         return AREA_SANCTUARY;
-    if (a & areaprop::SILENCE)
+    if (a & areaprop::silence)
         return AREA_SILENCE;
-#if TAG_MAJOR_VERSION == 34
-    if (a & areaprop::HOT)
-        return AREA_HOT;
-#endif
-    if (a & areaprop::HALO)
+    if (a & areaprop::halo)
         return AREA_HALO;
-    if (a & areaprop::UMBRA)
+    if (a & areaprop::umbra)
         return AREA_UMBRA;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
-    if (a & areaprop::LIQUID)
+    if (a & areaprop::liquid)
         return AREA_LIQUID;
 
     return AREA_NONE;
@@ -535,7 +513,7 @@ bool silenced(const coord_def& p)
         return false;
     if (!_agrid_valid)
         _update_agrid();
-    return _check_agrid_flag(p, areaprop::SILENCE);
+    return _check_agrid_flag(p, areaprop::silence);
 }
 
 /////////////
@@ -547,7 +525,7 @@ bool haloed(const coord_def& p)
         return false;
     if (!_agrid_valid)
         _update_agrid();
-    return _check_agrid_flag(p, areaprop::HALO);
+    return _check_agrid_flag(p, areaprop::halo);
 }
 
 bool actor::haloed() const
@@ -562,12 +540,14 @@ int player::halo_radius() const
     if (have_passive(passive_t::halo))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS
+        size = min((int)piety, piety_breakpoint(5)) * LOS_DEFAULT_RANGE
                                                     / piety_breakpoint(5);
     }
 
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        size = max(size, 1);
 
     return size;
 }
@@ -645,10 +625,10 @@ bool liquefied(const coord_def& p, bool check_actual)
 
     // "actually" liquefied (ie, check for movement)
     if (check_actual)
-        return _check_agrid_flag(p, areaprop::ACTUAL_LIQUID);
+        return _check_agrid_flag(p, areaprop::actual_liquid);
     // just recoloured for consistency
     else
-        return _check_agrid_flag(p, areaprop::LIQUID);
+        return _check_agrid_flag(p, areaprop::liquid);
 }
 
 /////////////
@@ -662,7 +642,7 @@ bool orb_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, areaprop::ORB);
+    return _check_agrid_flag(p, areaprop::orb);
 }
 
 /////////////
@@ -676,7 +656,7 @@ bool quad_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, areaprop::QUAD);
+    return _check_agrid_flag(p, areaprop::quad);
 }
 
 /////////////
@@ -690,7 +670,7 @@ bool disjunction_haloed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, areaprop::DISJUNCTION);
+    return _check_agrid_flag(p, areaprop::disjunction);
 }
 
 /////////////
@@ -704,7 +684,7 @@ bool umbraed(const coord_def& p)
     if (!_agrid_valid)
         _update_agrid();
 
-    return _check_agrid_flag(p, areaprop::UMBRA);
+    return _check_agrid_flag(p, areaprop::umbra);
 }
 
 // Whether actor is in an umbra.
@@ -720,7 +700,7 @@ int player::umbra_radius() const
     if (have_passive(passive_t::umbra))
     {
         // The cap is reached at piety 160 = ******.
-        size = min((int)piety, piety_breakpoint(5)) * LOS_RADIUS
+        size = min((int)piety, piety_breakpoint(5)) * LOS_DEFAULT_RANGE
                                                     / piety_breakpoint(5);
     }
 
@@ -751,42 +731,3 @@ int monster::umbra_radius() const
         return -1;
     }
 }
-
-#if TAG_MAJOR_VERSION == 34
-/////////////
-// Heat aura (lava orcs).
-
-// Player radius
-int player::heat_radius() const
-{
-    if (species != SP_LAVA_ORC)
-        return -1;
-
-    if (!temperature_effect(LORC_HEAT_AURA))
-        return -1;
-
-    return 1; // Surrounds you to radius of 1.
-}
-
-// Stub for monster radius
-int monster::heat_radius() const
-{
-    return -1;
-}
-
-bool heated(const coord_def& p)
-{
-    if (!map_bounds(p))
-        return false;
-
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, areaprop::HOT);
-}
-
-bool actor::heated() const
-{
-    return ::heated(pos());
-}
-#endif

@@ -1,5 +1,4 @@
-#ifndef MGEN_ENUM_H
-#define MGEN_ENUM_H
+#pragma once
 
 enum band_type
 {
@@ -147,5 +146,3 @@ enum mgen_flag
     MG_NO_OOD       = 0x200, ///< don't choose out-of-depth random monsters
 };
 DEF_BITFIELD(mgen_flags, mgen_flag);
-
-#endif

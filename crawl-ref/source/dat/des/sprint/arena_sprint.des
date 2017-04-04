@@ -980,8 +980,10 @@ LROCKTILE:  wall_hall
 }}
 # No exploration gods. Positions are random, and you don't have enough time to
 # reach an altar before the game starts.
+# NB: At present, there are 24 slots in the map, that's enough to take
+# us to up to 'u'; if you want more you'll have to rejigger the map.
 NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / i / j / k / l / \
-            m / n / o / p / q / *:.
+            m / n / o / p / q / r / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -1002,6 +1004,7 @@ KFEAT:  n = altar_gozag
 KFEAT:  o = altar_qazlal
 KFEAT:  p = altar_ru
 KFEAT:  q = altar_uskayaw
+KFEAT:  r = altar_wu_jian
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of iceblast charges:5 ident:all, \
@@ -1036,7 +1039,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
 KFEAT:  FS = distillery shop use_all count:17 greed:7 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\
              potion of agility q:6 | potion of might q:6 | potion of brilliance q:6 |\
-             potion of cure mutation | potion of cure mutation q:2 | potion of cure mutation q:3 |\
+             potion of mutation | potion of mutation q:2 | potion of mutation q:3 |\
              potion of resistance q:6 | potion of resistance q:6 | potion of magic q:6 |\
              potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5
 KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:7 ; \

@@ -1,10 +1,10 @@
-#ifndef ENV_H
-#define ENV_H
+#pragma once
 
 #include <set>
 #include <memory> // unique_ptr
 
-#include "map-knowledge.h"
+#include "coord.h"
+#include "map-cell.h"
 #include "monster.h"
 #include "trap-def.h"
 
@@ -151,4 +151,24 @@ static const struct menv_range_proxy
     monster *end()   const { return &menv[MAX_MONSTERS]; }
 } menv_real;
 
-#endif
+/**
+ * Look up a property of a coordinate in the player's map_knowledge grid.
+ *
+ * @tparam T The type of the property being queried.
+ * @tparam F A callable type taking const map_cell& and returning T.
+ *
+ * @param default_value The value to return if pos is out of bounds.
+ * @param pos The position to query.
+ * @param f A function that will be passed a map_cell& representing what the
+ *     player knows about the map at the given position. Will only be called
+ *     if pos is in-bounds.
+ *
+ * @return Either the default value, or the result of f(env.map_knowledge(pos)).
+ */
+template<typename T, typename F>
+T query_map_knowledge(T default_value, const coord_def& pos, F f)
+{
+    if (!map_bounds(pos))
+        return default_value;
+    return f(env.map_knowledge(pos));
+}

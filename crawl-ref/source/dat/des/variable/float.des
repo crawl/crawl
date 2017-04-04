@@ -1548,7 +1548,7 @@ MARKER: F = lua:fog_machine { \
 MONS:   death yak w:5 / dream sheep w:3 / yak w:7
 MONS:   generate_awake human ; dagger | hand axe
 SUBST:  F=d, 2=2.
-ITEM:   meat ration w:5 / beef jerky / nothing
+ITEM:   meat ration w:5 / nothing
 MAP
  cccccc       ccccccc
  cddddcxxxxxxxxcddddc
@@ -1992,7 +1992,8 @@ ITEM:   nothing
 SUBST:  * = |**...
 SUBST:  * : *$
 SUBST:  L = ll.
-MONS:   molten gargoyle / hell hound / lindwurm / nothing w:20
+KFEAT:  1 = escape_hatch_down
+KMONS:  1 = molten gargoyle / hell hound / lindwurm / nothing w:20
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }

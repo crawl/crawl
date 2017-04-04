@@ -57,6 +57,7 @@ violent_unravelling VIOLENT_UNRAVELLING
 bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
 conjure_flame CONJURE_FLAME
+# Remove when TAG_MAJOR_VERSION > 34
 delayed_fireball DELAYED_FIREBALL
 fire_storm FIRE_STORM
 fireball FIREBALL
@@ -66,6 +67,7 @@ ring_of_flames RING_OF_FLAMES
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
 inner_flame INNER_FLAME
+ignition IGNITION
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -113,6 +115,7 @@ poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
+poisonous_vapours POISONOUS_VAPOURS
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION

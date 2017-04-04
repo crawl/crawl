@@ -23,6 +23,7 @@
 #include "god-passive.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"
@@ -159,7 +160,9 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
     switch (slot_type)
     {
         case EQ_CLOAK:
-            return ARM_CLOAK;
+            if (you_can_wear(EQ_CLOAK) == MB_TRUE)
+                return random_choose(ARM_CLOAK, ARM_SCARF);
+            return ARM_SCARF;
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_BOOTS:
@@ -945,6 +948,9 @@ static bool _acquire_manual(item_def &book)
                     choose_random_weighted(weights, end(weights)));
     // Set number of bonus skill points.
     book.skill_points = random_range(2000, 3000);
+    // Identify.
+    set_ident_type(book, true);
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
     return true;
 }
 
@@ -1432,6 +1438,8 @@ int acquirement_create_item(object_class_type class_wanted,
 
     if (thing_created == NON_ITEM)
         return _failed_acquirement(quiet);
+
+    item_set_appearance(mitm[thing_created]); // cleanup
 
     ASSERT(!is_useless_item(mitm[thing_created], false) || agent == GOD_XOM);
     ASSERT(!god_hates_item(mitm[thing_created]));

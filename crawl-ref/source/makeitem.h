@@ -3,15 +3,16 @@
  * @brief Item creation routines.
 **/
 
-#ifndef MAKEITEM_H
-#define MAKEITEM_H
+#pragma once
 
 #include "item-prop-enum.h"
+
+static const int NO_AGENT = -1;
 
 int create_item_named(string name, coord_def pos, string *error);
 
 int items(bool allow_uniques, object_class_type force_class, int force_type,
-          int item_level, int force_ego = 0, int agent = -1);
+          int item_level, int force_ego = 0, int agent = NO_AGENT);
 
 void item_colour(item_def &item);
 
@@ -34,5 +35,4 @@ bool is_high_tier_wand(int type);
 void squash_plusses(int item_slot);
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void makeitem_tests();
-#endif
 #endif

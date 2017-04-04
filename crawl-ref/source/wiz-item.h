@@ -3,8 +3,7 @@
  * @brief Item related wizard functions.
 **/
 
-#ifndef WIZITEM_H
-#define WIZITEM_H
+#pragma once
 
 void wizard_create_spec_object();
 void wizard_create_spec_object_by_name();
@@ -21,5 +20,3 @@ void wizard_identify_all_items();
 void wizard_unidentify_all_items();
 void debug_item_statistics();
 void wizard_recharge_evokers();
-
-#endif

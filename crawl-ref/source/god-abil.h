@@ -3,11 +3,16 @@
  * @brief God-granted abilities.
 **/
 
-#ifndef GODABIL_H
-#define GODABIL_H
+#pragma once
 
+#include "ability-type.h"
+#include "beh-type.h"
 #include "enum.h"
+#include "god-type.h"
 #include "item-prop-enum.h" // brand_type
+#include "los-type.h"
+#include "recite-eligibility.h"
+#include "recite-type.h"
 #include "spl-cast.h"
 
 #define BEOGH_RANGE_WPN_GIFT_KEY "given beogh range weapon"
@@ -186,4 +191,3 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_type);
 spret_type hepliaklqana_idealise(bool fail);
 spret_type hepliaklqana_transference(bool fail);
 void hepliaklqana_choose_identity();
-#endif

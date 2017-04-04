@@ -3,8 +3,7 @@
  * @brief Platform specific crash handling functions.
 **/
 
-#ifndef CRASH_H
-#define CRASH_H
+#pragma once
 
 #include <cstdio>
 
@@ -16,5 +15,3 @@ void disable_other_crashes();
 void do_crash_dump();
 
 void watchdog();
-
-#endif

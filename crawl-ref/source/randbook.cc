@@ -7,11 +7,14 @@
 
 #include "randbook.h"
 
+#include <functional>
+
 #include "artefact.h"
 #include "database.h"
 #include "english.h"
 #include "god-item.h"
 #include "item-name.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "religion.h"
 #include "spl-book.h"
@@ -38,8 +41,7 @@ spschool_flag_type random_book_theme()
 {
     vector<spschool_flag_type> disciplines;
     for (auto discipline : spschools_type::range())
-        if (!(discipline & SPTYP_DIVINATION))
-            disciplines.push_back(discipline);
+        disciplines.push_back(discipline);
     return disciplines[random2(disciplines.size())];
 }
 

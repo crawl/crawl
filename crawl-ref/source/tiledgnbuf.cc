@@ -4,6 +4,7 @@
 
 #include "env.h"
 #include "player.h"
+#include "tile-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"

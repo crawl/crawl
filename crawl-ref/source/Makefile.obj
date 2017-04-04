@@ -202,6 +202,7 @@ show.o \
 showsymb.o \
 skill-menu.o \
 skills.o \
+sound.o \
 species.o \
 spl-book.o \
 spl-cast.o \
@@ -253,6 +254,7 @@ wiz-fsim.o \
 wiz-item.o \
 wiz-mon.o \
 wiz-you.o \
+wizard.o \
 worley.o \
 xom.o \
 tilepick.o \

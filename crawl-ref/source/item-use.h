@@ -3,12 +3,13 @@
  * @brief Functions for making use of inventory items.
 **/
 
-#ifndef ITEM_USE_H
-#define ITEM_USE_H
+#pragma once
 
+#include <functional>
 #include <string>
 
 #include "enum.h"
+#include "operation-types.h"
 
 item_def* use_an_item(int item_type, operation_types oper, const char* prompt,
                       function<bool ()> allowcancel = [](){ return true; });
@@ -33,18 +34,16 @@ string cannot_read_item_reason(const item_def &item);
 
 bool remove_ring(int slot = -1, bool announce = false);
 
-void wear_armour(int slot = -1);
+bool wear_armour(int slot = -1);
 
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
-
-bool do_wear_armour(int item, bool quiet);
 
 bool can_wield(const item_def *weapon, bool say_why = false,
                bool ignore_temporary_disability = false, bool unwield = false,
                bool only_known = true);
 
 bool wield_weapon(bool auto_wield, int slot = -1,
-                  bool show_weff_messages = true, bool force = false,
+                  bool show_weff_messages = true,
                   bool show_unwield_msg = true,
                   bool show_wield_msg = true,
                   bool adjust_time_taken = true);
@@ -64,6 +63,4 @@ void tile_item_drop(int idx, bool partdrop);
 void tile_item_eat_floor(int idx);
 void tile_item_use(int idx);
 void tile_item_use_secondary(int idx);
-#endif
-
 #endif

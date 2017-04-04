@@ -3,16 +3,18 @@
  * @brief Functions for inventory related commands.
 **/
 
-#ifndef INVENT_H
-#define INVENT_H
+#pragma once
 
 #include <cstddef>
+#include <functional>
 #include <vector>
 
 #include "enum.h"
+#include "equipment-type.h"
 #include "item-name.h"
 #include "item-prop-enum.h"
 #include "menu.h"
+#include "operation-types.h"
 
 enum object_selector
 {
@@ -251,4 +253,3 @@ bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
 int digit_inscription_to_inv_index(char digit, operation_types oper);
-#endif

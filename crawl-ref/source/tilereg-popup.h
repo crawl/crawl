@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_POPUP_H
-#define TILEREG_POPUP_H
+#pragma once
 
 #include "tilereg-menu.h"
 
@@ -20,5 +19,4 @@ public:
 protected:
     int m_retval;
 };
-#endif
 #endif

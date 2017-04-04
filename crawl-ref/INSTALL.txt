@@ -89,8 +89,8 @@ changes to the level compiler, you'll need the flex and bison/byacc tools
 (Other lex/yaccs may also work). More details are available below.
 
 Sound can be provided by SDL2_mixer (the default), by WINMM on Windows (defined
-by WINMM_PLAY_SOUNDS in AppHdr.h), or by an external command on Unix systems
-(SOUND_PLAY_COMMAND in AppHdr.h). To enable this, append SOUND=y to the make
+by WINMM_PLAY_SOUNDS in sound.h), or by an external command on Unix systems
+(SOUND_PLAY_COMMAND in sound.h). To enable this, append SOUND=y to the make
 invocation.
 
 Crawl includes Lua 5.1.4 in its submodules. Crawl uses Lua for dungeon
@@ -139,6 +139,18 @@ ccache can be installed with:
 dnf install ccache
 
 
+Prerequisites (Void):
+
+On Void Linux you can get all dependencies by running the following as root:
+xbps-install make gcc perl flex bison pkg-config ncurses-devel lua51-devel \
+  sqlite-devel zlib-devel pngcrush dejavu-fonts-ttf SDL2-devel \
+  SDL2_mixer-devel SDL2_image-devel freetype-devel
+(the last six are needed only for tile builds).
+
+ccache can be installed with:
+xbps-install ccache
+
+
 Prerequisites (other systems):
 
 GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
@@ -164,6 +176,9 @@ Building:
   need to read any further. BSD and Solaris users may have to use 'gmake'
   instead of 'make'.
 
+* For information Makefile settings beyond what is here, see the documentation
+  in comments in the Makefile itself.
+
 * If you want a graphical (tiled) build, then you should add 'TILES=y' to the
   'make' command-line, like so:
 
@@ -183,6 +198,10 @@ Building:
   and DATADIR to share/crawl (relative to the prefix). SAVEDIR must be
   writeable and owned by the user running crawl, so except for special cases it
   should be inside "~" (home directory).
+
+* To be specific, specifying a prefix means adding "prefix=foldername" to your
+  'make' command. Specifying a prefix is not mutually exclusive with specifying
+  a SAVEDIR; you can set them to completely unrelated directories if desired.
 
 * If you're installing Crawl for multiple users, run 'make install' as root.
   Crawl will be copied into the directory specified by 'prefix' (see above).

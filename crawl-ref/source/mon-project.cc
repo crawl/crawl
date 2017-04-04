@@ -523,7 +523,8 @@ move_again:
 
             if (victim->is_player())
             {
-                if (shield && shield_reflects(*shield)) {
+                if (shield && shield_reflects(*shield))
+                {
                     mprf("Your %s reflects %s!",
                          shield->name(DESC_PLAIN).c_str(),
                          mon.name(DESC_THE, true).c_str());

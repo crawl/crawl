@@ -37,8 +37,10 @@
 #include "hiscores.h"
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "kills.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -66,6 +68,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "traps.h"
 #include "unwind.h"
@@ -212,8 +215,8 @@ static bool _explode_corpse(item_def& corpse, const coord_def& where)
          chunks_made < nchunks && ntries < 10000; ++ntries)
     {
         coord_def cp = where;
-        cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
-        cp.y += random_range(-LOS_RADIUS, LOS_RADIUS);
+        cp.x += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
+        cp.y += random_range(-LOS_DEFAULT_RANGE, LOS_DEFAULT_RANGE);
 
         dprf("Trying to scatter chunk to %d, %d...", cp.x, cp.y);
 
@@ -409,6 +412,7 @@ static void _gold_pile(item_def &corpse, monster_type corpse_class)
     const int chance = you.props[GOZAG_GOLD_AURA_KEY].get_int();
     if (!x_chance_in_y(chance, chance + 9))
         ++you.props[GOZAG_GOLD_AURA_KEY].get_int();
+    you.redraw_title = true;
 }
 
 static void _create_monster_hide(const item_def &corpse, bool silent)
@@ -438,6 +442,19 @@ static void _create_monster_hide(const item_def &corpse, bool silent)
         { MONS_BAI_SUZHEN, 3 },
         { MONS_BAI_SUZHEN_DRAGON, 3 },
     };
+
+    if (mtyp == MONS_DEEP_TROLL)
+    {
+        item.props["item_tile_name"] = "deep_troll_leather";
+        item.props["worn_tile_name"] = "deep_troll_leather";
+        bind_item_tile(item);
+    }
+    else if (mtyp == MONS_IRON_TROLL)
+    {
+        item.props["item_tile_name"] = "iron_troll_leather";
+        item.props["worn_tile_name"] = "iron_troll_leather";
+        bind_item_tile(item);
+    }
 
     const int* bonus_plus = map_find(hide_avg_plusses, montype);
     if (bonus_plus)
@@ -699,18 +716,24 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 {
     god_type god = GOD_ELYVILON;
 
-    if (!you.penance[god] || !god_hates_your_god(god))
+    if (!player_under_penance(god) || !god_hates_your_god(god))
         return false;
 
-    const int ely_penance = you.penance[god];
-
-    if (mons->friendly() || !one_chance_in(10))
+    if (mons->wont_attack()
+        || mons_is_firewood(*mons)
+        || mons_is_object(mons->type)
+        || mons_is_tentacle_or_tentacle_segment(mons->type)
+        || mons->props.exists("ely_wrath_healed")
+        || mons->get_experience_level() < random2(you.experience_level)
+        || !one_chance_in(3))
+    {
         return false;
+    }
 
     if (MON_KILL(killer) && !invalid_monster_index(i))
     {
         monster* mon = &menv[i];
-        if (!mon->friendly() || !one_chance_in(3))
+        if (!mon->friendly())
             return false;
 
         if (!you.see_cell(mons->pos()))
@@ -721,9 +744,10 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     dprf("monster hp: %d, max hp: %d", mons->hit_points, mons->max_hit_points);
 
-    mons->hit_points = min(1 + random2(ely_penance/3), mons->max_hit_points);
+    mons->hit_points = 1 + random2(mons->max_hit_points);
+    mons->props["ely_wrath_healed"] = true;
 
-    dprf("new hp: %d, ely penance: %d", mons->hit_points, ely_penance);
+    dprf("new hp: %d", mons->hit_points);
 
     const string msg = make_stringf("%s heals %s%s",
              god_name(god, false).c_str(),
@@ -731,7 +755,6 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
     god_speaks(god, msg.c_str());
-    dec_penance(god, 1);
 
     return true;
 }
@@ -778,8 +801,8 @@ static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
         // Bias beaten-up-conversion towards the stronger orcs.
         && random2(mons.get_experience_level()) > 2)
     {
-        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::DEATHBED_FOLLOWER :
-                                                    conv_t::DEATHBED);
+        beogh_convert_orc(&mons, MON_KILL(killer) ? conv_t::deathbed_follower :
+                                                    conv_t::deathbed);
         return true;
     }
 
@@ -1896,6 +1919,9 @@ item_def* monster_die(monster* mons, killer_type killer,
     // ... and wind-stillers.
     mons->del_ench(ENCH_STILL_WINDS, true);
 
+    // and webbed monsters
+    monster_web_cleanup(*mons, true);
+
     // Clean up any blood from the flayed effect
     if (mons->has_ench(ENCH_FLAYED))
         heal_flayed_effect(mons, true, true);
@@ -2281,10 +2307,6 @@ item_def* monster_die(monster* mons, killer_type killer,
                     }
                 }
 
-#if TAG_MAJOR_VERSION == 34
-                if (you.species == SP_DJINNI)
-                    hp_heal = max(hp_heal, mp_heal * 2), mp_heal = 0;
-#endif
                 if (hp_heal && you.hp < you.hp_max
                     && !you.duration[DUR_DEATHS_DOOR])
                 {
@@ -2417,6 +2439,12 @@ item_def* monster_die(monster* mons, killer_type killer,
                     // Sticks to Snakes
                     if (mons_genus(mons->type) == MONS_SNAKE)
                         simple_monster_message(*mons, " withers and dies!");
+                    // ratskin cloak
+                    else if (mons_genus(mons->type) == MONS_RAT)
+                    {
+                        simple_monster_message(*mons, " returns to the shadows"
+                                                      " of the Dungeon!");
+                    }
                     // Death Channel
                     else if (mons->type == MONS_SPECTRAL_THING)
                         simple_monster_message(*mons, " fades into mist!");

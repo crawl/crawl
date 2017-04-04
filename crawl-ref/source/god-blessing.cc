@@ -10,6 +10,7 @@
 #include "artefact.h"
 #include "env.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
 #include "makeitem.h"
@@ -89,9 +90,9 @@ static bool _upgrade_orc_weapon(monster* mon, item_def& wpn)
     const int old_weapon_type = wpn.sub_type;
 
     // lower chance of upgrading to very good weapon types
-    bool highlevel_ok = one_chance_in(mon->type == MONS_ORC_WARLORD ? 3 :
-                                      mon->type == MONS_ORC_KNIGHT ? 6 :
-                                      1000000); // it's one in a million!
+    bool highlevel_ok = mon->type == MONS_ORC_KNIGHT && one_chance_in(6)
+                        || mon->type == MONS_ORC_WARLORD && one_chance_in(3);
+
     wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
                                         mon->inv[MSLOT_SHIELD] != NON_ITEM,
                                         highlevel_ok);
@@ -382,8 +383,7 @@ static void _upgrade_body_armour(item_def &arm)
 static void _gift_armour_to_orc(monster* orc, bool shield = false)
 {
     const bool highlevel = orc->type == MONS_ORC_KNIGHT
-    || orc->type == MONS_ORC_WARLORD;
-
+                           || orc->type == MONS_ORC_WARLORD;
 
     item_def armour;
     armour.base_type = OBJ_ARMOUR;

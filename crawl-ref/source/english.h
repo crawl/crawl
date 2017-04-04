@@ -4,12 +4,13 @@
  *        morphology, and orthography of the English language.
 **/
 
-#ifndef ENGLISH_H
-#define ENGLISH_H
+#pragma once
 
 #include <string>
 
 #include "enum.h"
+#include "gender-type.h"
+#include "pronoun-type.h"
 
 extern const char * const standard_plural_qualifiers[];
 
@@ -39,4 +40,3 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
 
 string get_desc_quantity(const int quant, const int total,
                          string whose = "your");
-#endif

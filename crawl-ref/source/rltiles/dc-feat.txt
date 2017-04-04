@@ -467,6 +467,7 @@ hep2
 hep3
 hep4
 hep5
+wu_jian DNGN_ALTAR_WU_JIAN
 ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 

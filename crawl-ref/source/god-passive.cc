@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
+#include "eq-type-flags.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -22,19 +23,26 @@
 #include "invent.h" // in_inventory
 #include "item-name.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "map-knowledge.h"
+#include "melee-attack.h"
 #include "message.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-util.h"
+#include "output.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "spl-clouds.h"
 #include "state.h"
+#include "status.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "view.h"
 
 // TODO: template out the differences between this and god_power.
 // TODO: use the display method rather than dummy powers in god_powers.
@@ -46,7 +54,59 @@ struct god_passive
     // -1 means it is present even under penance;
     int rank;
     passive_t pasv;
+    /** Message to be given on gain of this passive.
+     *
+     * If the string begins with an uppercase letter, it is treated as
+     * a complete sentence. Otherwise, if it contains the substring " NOW ",
+     * the string "You " is prepended. Otherwise, the string "You NOW " is
+     * prepended to the message, with the " NOW " then being replaced.
+     *
+     * The substring "GOD" is replaced with the name of the god.
+     * The substring " NOW " is replaced with " now " for messages about
+     * gaining the ability, or " " for messages about having the ability.
+     *
+     * Examples:
+     *   "have super powers"
+     *     => "You have super powers", "You now have super powers."
+     *   "are NOW powerful"
+     *     => "You are powerful", "You are now powerful."
+     *   "Your power is NOW great"
+     *     => "Your power is great", "Your power is now great"
+     *   "GOD NOW makes you powerful"
+     *     => "Moloch makes you powerful", "Moloch now makes you powerful"
+     *   "GOD grants you a boon"
+     *     => "Moloch grants you a boon" (in all situations)
+     *
+     * FIXME: This member is currently unused.
+     *
+     * @see god_passive::loss.
+     */
     const char* gain;
+    /** Message to be given on loss of this passive.
+     *
+     * If empty, use the gain message. This makes sense only if the message
+     * contains " NOW ", either explicitly or implicitly through not
+     * beginning with a capital letter.
+     *
+     * The substring "GOD" is replaced with the name of the god.
+     * The substring " NOW " is replaced with " no longer ".
+     *
+     * Examples:
+     *   "have super powers"
+     *     => "You no longer have super powers"
+     *   "are NOW powerful"
+     *     => "You are no longer powerful"
+     *   "Your power is NOW great"
+     *     => "Your power is no longer great"
+     *   "GOD NOW makes you powerful"
+     *     => "Moloch no longer makes you powerful"
+     *   "GOD grants you a boon"
+     *     => "Moloch grants you a boon" (probably incorrect)
+     *
+     * FIXME: This member is currently unused.
+     *
+     * @see god_passive::gain.
+     */
     const char* loss;
 
     god_passive(int rank_, passive_t pasv_, const char* gain_,
@@ -68,49 +128,64 @@ struct god_passive
     }
 };
 
-static const vector<god_passive> god_passives[NUM_GODS] =
+static const vector<god_passive> god_passives[] =
 {
     // no god
     { },
 
     // Zin
     {
-        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
-        { -1, passive_t::resist_mutation, "GOD can shield you from mutations" },
+        { -1, passive_t::protect_from_harm,
+              "GOD sometimes watches over you",
+              "GOD no longer watches over you"
+        },
+        { -1, passive_t::resist_mutation,
+              "GOD can shield you from mutations",
+              "GOD NOW you from mutations"
+        },
         { -1, passive_t::resist_polymorph,
-              "GOD can protect you from unnatural transformations" },
+              "GOD can protect you from unnatural transformations",
+              "GOD NOW protects you from unnatural transformations",
+        },
         { -1, passive_t::resist_hell_effects,
-              "GOD can protect you from effects of Hell" },
+              "GOD can protect you from effects of Hell",
+              "GOD NOW protects you from effects of Hell"
+        },
         { -1, passive_t::warn_shapeshifter,
-              "GOD will warn you about shapeshifters" },
+              "GOD will NOW warn you about shapeshifters"
+        },
     },
 
     // TSO
     {
-        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
-        { -1, passive_t::abjuration_protection_hd,
-              "GOD protects your summons from abjuration" },
-        { -1, passive_t::bless_followers_vs_evil,
-              "GOD blesses your followers when they kill evil beings"
+        { -1, passive_t::protect_from_harm,
+              "GOD sometimes watches over you",
+              "GOD no longer watches over you"
         },
+        { -1, passive_t::abjuration_protection_hd,
+              "GOD NOW protects your summons from abjuration" },
+        { -1, passive_t::bless_followers_vs_evil,
+              "GOD NOW blesses your followers when they kill evil beings" },
         { -1, passive_t::restore_hp_mp_vs_evil,
               "gain health and magic from killing evil beings" },
         { -1, passive_t::no_stabbing,
-              "are prevented from stabbing unaware creatures" },
-        {  0, passive_t::halo, "are surrounded by divine halo" },
+              "are NOW prevented from stabbing unaware creatures" },
+        {  0, passive_t::halo, "are NOW surrounded by divine halo" },
     },
 
     // Kikubaaqudgha
     {
         {  2, passive_t::miscast_protection_necromancy,
-              "GOD protects you from necromancy miscasts and mummy death curses"
+              "GOD NOW protects you from necromancy miscasts"
+              " and mummy death curses"
         },
-        {  4, passive_t::resist_torment, "GOD protects you from torment" },
+        {  4, passive_t::resist_torment,
+              "GOD NOW protects you from torment" },
     },
 
     // Yredelemnul
     {
-        {  3, passive_t::nightvision, "can see well in the dark" },
+        {  3, passive_t::nightvision, "can NOW see well in the dark" },
     },
 
     // Xom
@@ -118,9 +193,12 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Vehumet
     {
-        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
-        {  3, passive_t::spells_success, "are less likely to miscast destructive spells" },
-        {  4, passive_t::spells_range, "can cast destructive spells farther" },
+        { -1, passive_t::mp_on_kill,
+              "have a chance to gain magical power from killing" },
+        {  3, passive_t::spells_success,
+              "are NOW less likely to miscast destructive spells" },
+        {  4, passive_t::spells_range,
+              "can NOW cast destructive spells farther" },
     },
 
     // Okawaru
@@ -135,15 +213,19 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Sif Muna
     {
-        {  2, passive_t::miscast_protection, "GOD protects you from miscasts" },
+        {  2, passive_t::miscast_protection,
+              "GOD NOW protects you from miscasts" },
     },
 
     // Trog
     {
         { -1, passive_t::abjuration_protection,
-              "GOD protects your allies from abjuration" },
-        {  0, passive_t::extend_berserk, "can maintain berserk longer and you "
-                                         "are less likely to pass out" },
+              "GOD NOW protects your allies from abjuration"
+        },
+        {  0, passive_t::extend_berserk,
+              "can NOW maintain berserk longer, and are less likely to pass out",
+              "can NOW maintain berserk as long, and are more likely to pass out"
+        },
     },
 
     // Nemelex
@@ -153,20 +235,24 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Elyvilon
     {
-        { -1, passive_t::protect_from_harm, "GOD sometimes watches over you" },
-        { -1, passive_t::protect_ally, "can protect the life of your allies" },
+        { -1, passive_t::protect_from_harm,
+              "GOD sometimes watches over you",
+              "GOD no longer watches over you"
+        },
+        { -1, passive_t::protect_ally,
+              "GOD can protect the life of your allies",
+              "GOD NOW protects the life of your allies"
+        },
     },
 
     // Lugonu
     {
         { -1, passive_t::safe_distortion,
-              "protected from distortion unwield effects" },
+              "are NOW protected from distortion unwield effects" },
         { -1, passive_t::map_rot_res_abyss,
               "remember the shape of the Abyss better" },
         {  5, passive_t::attract_abyssal_rune,
-              "GOD will help you find the Abyssal rune.",
-              "GOD will no longer help you find the Abyssal rune."
-        },
+              "GOD will NOW help you find the Abyssal rune" },
     },
 
     // Beogh
@@ -174,49 +260,67 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         { -1, passive_t::share_exp, "share experience with your followers" },
         {  3, passive_t::convert_orcs, "inspire orcs to join your side" },
         {  3, passive_t::bless_followers,
-              "GOD will bless your followers.",
-              "GOD will no longer bless your followers."
+              "GOD will bless your followers",
+              "GOD will no longer bless your followers"
         },
         {  5, passive_t::water_walk, "walk on water" },
     },
 
     // Jiyva
     {
-        { -1, passive_t::neutral_slimes, "slimes and eye monsters are neutral towards you" },
-        { -1, passive_t::jellies_army, "GOD summons jellies to protect you" },
-        { -1, passive_t::jelly_eating, "GOD allows jellies to devour items" },
-        { -1, passive_t::fluid_stats, "GOD adjusts your attributes periodically" },
-        {  0, passive_t::slime_wall_immune, "are immune to slime covered walls" },
-        {  2, passive_t::slime_feed, "items consumed by your fellow slimes feed you" },
-        {  3, passive_t::resist_corrosion, "GOD protects your from corrosion" },
-        {  4, passive_t::slime_mp, "items consumed by your fellow slimes restores your mana reserve" },
-        {  5, passive_t::slime_hp, "items consumed by your fellow slimes restores your health" },
-        {  6, passive_t::spawn_slimes_on_hit, "spawn slimes when struck by massive blows" },
-        {  6, passive_t::unlock_slime_vaults, "GOD grants you access to the hidden treasures of the Slime Pits" },
+        { -1, passive_t::neutral_slimes,
+              "Slimes and eye monsters are NOW neutral towards you" },
+        { -1, passive_t::jellies_army,
+              "GOD NOW summons jellies to protect you" },
+        { -1, passive_t::jelly_eating,
+              "GOD NOW allows jellies to devour items" },
+        { -1, passive_t::fluid_stats,
+              "GOD NOW adjusts your attributes periodically" },
+        {  0, passive_t::slime_wall_immune,
+              "are NOW immune to slime covered walls" },
+        {  2, passive_t::slime_feed,
+              "Items consumed by your fellow slimes NOW feed you" },
+        {  3, passive_t::resist_corrosion,
+              "GOD NOW protects you from corrosion" },
+        {  4, passive_t::slime_mp,
+              "Items consumed by your fellow slimes NOW restore"
+              " your magical power"
+        },
+        {  5, passive_t::slime_hp,
+              "Items consumed by your fellow slimes NOW restore"
+              " your health"
+        },
+        {  6, passive_t::spawn_slimes_on_hit,
+              "spawn slimes when struck by massive blows" },
+        {  6, passive_t::unlock_slime_vaults,
+              "GOD NOW grants you access to the hidden treasures"
+              " of the Slime Pits"
+        },
     },
 
     // Fedhas
     {
-        { -1, passive_t::pass_through_plants, "can walk through plants" },
-        { -1, passive_t::shoot_through_plants, "can safely fire through allied plants" },
-        {  0, passive_t::friendly_plants, "Allied plants are friendly towards you" },
+        { -1, passive_t::pass_through_plants,
+              "can NOW walk through plants" },
+        { -1, passive_t::shoot_through_plants,
+              "can NOW safely fire through allied plants" },
+        {  0, passive_t::friendly_plants,
+              "Allied plants are NOW friendly towards you" },
     },
 
     // Cheibriados
     {
-        { -1, passive_t::no_haste, "are protected from inadvertent hurry" },
+        { -1, passive_t::no_haste,
+              "are NOW protected from inadvertent hurry" },
         { -1, passive_t::slowed, "move less quickly" },
         {  0, passive_t::slow_orb_run,
-              "GOD will aid your escape with the Orb of Zot.",
-              "GOD will no longer aid your escape with the Orb of Zot."
+              "GOD will NOW aid your escape with the Orb of Zot",
         },
         {  0, passive_t::stat_boost,
-              "GOD supports your attributes",
-              "GOD no longer supports your attributes",
+              "GOD NOW supports your attributes"
         },
         {  0, passive_t::slow_abyss,
-              "GOD will slow the abyss.",
-              "GOD will no longer slow the abyss."
+              "GOD will NOW slow the Abyss"
         },
         // TODO: this one should work regardless of penance
         {  1, passive_t::slow_metabolism, "have a slowed metabolism" },
@@ -230,56 +334,71 @@ static const vector<god_passive> god_passives[NUM_GODS] =
         {  0, passive_t::auto_map, "have improved mapping abilities" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
-        {  0, passive_t::search_traps, "are better at searching for traps" },
+        {  0, passive_t::search_traps,
+              "are NOW better at searching for traps" },
         {  2, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
-        {  3, passive_t::sinv, "are clear of vision" },
-        {  4, passive_t::clarity, "are clear of mind" },
+        {  3, passive_t::sinv, "are NOW clear of vision" },
+        {  4, passive_t::clarity, "are NOW clear of mind" },
     },
 
     // Dithmenos
     {
-        {  1, passive_t::nightvision, "can see well in the dark" },
-        {  1, passive_t::umbra, "are surrounded by an umbra" },
+        {  1, passive_t::nightvision, "can NOW see well in the dark" },
+        {  1, passive_t::umbra, "are NOW surrounded by an umbra" },
         // TODO: this one should work regardless of penance.
         {  3, passive_t::hit_smoke, "emit smoke when hit" },
         {  4, passive_t::shadow_attacks,
-              "Your attacks are mimicked by a shadow.",
-              "Your attacks are no longer mimicked by a shadow."
-        },
+              "Your attacks are NOW mimicked by a shadow" },
         {  4, passive_t::shadow_spells,
-              "Your attack spells are mimicked by a shadow.",
-              "Your attack spells are no longer mimicked by a shadow."
-        },
+              "Your attack spells are NOW mimicked by a shadow" },
     },
 
     // Gozag
     {
         { -1, passive_t::detect_gold, "detect gold" },
-        {  0, passive_t::goldify_corpses, "GOD turns all corpses to gold." },
+        {  0, passive_t::goldify_corpses,
+              "GOD NOW turns all corpses to gold" },
         {  0, passive_t::gold_aura, "have a gold aura" },
     },
 
     // Qazlal
     {
-        {  0, passive_t::cloud_immunity, "clouds can't harm you" },
-        {  1, passive_t::storm_shield, "generate elemental clouds to protect you" },
-        {  4, passive_t::upgraded_storm_shield, "chances to be struck by projectiles are reduced" },
-        {  5, passive_t::elemental_adaptation, "elemental attacks leaves you somewhat more resistant to themxo" }
+        {  0, passive_t::cloud_immunity, "are ADV immune to clouds" },
+        {  1, passive_t::storm_shield,
+              "generate elemental clouds to protect yourself" },
+        {  4, passive_t::upgraded_storm_shield,
+              "Your chances to be struck by projectiles are NOW reduced" },
+        {  5, passive_t::elemental_adaptation,
+              "Elemental attacks NOW leave you somewhat more resistant"
+              " to them"
+        }
     },
 
     // Ru
     {
-        {  1, passive_t::aura_of_power, "your enemies will sometime fail their attack or even hit themselves" },
-        {  2, passive_t::upgraded_aura_of_power, "enemies that inflict damage upon you will sometime receive a detrimental status effect" },
+        {  1, passive_t::aura_of_power,
+              "Your enemies will sometimes fail their attack or even hit themselves",
+              "Your enemies will NOW fail their attack or hit themselves"
+        },
+        {  2, passive_t::upgraded_aura_of_power,
+              "Enemies that inflict damage upon you will sometimes receive"
+              " a detrimental status effect",
+              "Enemies that inflict damage upon you will NOW receive"
+              " a detrimental status effect"
+        },
     },
 
     // Pakellas
     {
-        { -1, passive_t::no_mp_regen, "GOD prevents you from regenerating your mana reserve" },
-        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
-        {  0, passive_t::identify_devices, "GOD identifies your wands" },
-        {  1, passive_t::bottle_mp, "GOD collects and distills excess magic from your kills" },
+        { -1, passive_t::no_mp_regen,
+              "GOD NOW prevents you from regenerating your magical power" },
+        { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
+                                     " killing" },
+        {  0, passive_t::identify_devices, "GOD NOW identifies your wands" },
+        {  1, passive_t::bottle_mp,
+              "GOD NOW collects and distills excess magic from your kills"
+        },
     },
 
     // Uskayaw
@@ -287,10 +406,20 @@ static const vector<god_passive> god_passives[NUM_GODS] =
 
     // Hepliaklqana
     {
-        { -1, passive_t::frail, "GOD siphons a part of your essence into your ancestor" },
-        {  5, passive_t::transfer_drain, "drain nearby creatures when transferring your ancestor" },
+        { -1, passive_t::frail,
+              "GOD NOW siphons a part of your essence into your ancestor" },
+        {  5, passive_t::transfer_drain,
+              "drain nearby creatures when transferring your ancestor" },
+    },
+
+    // Wu Jian
+    {
+        { 1, passive_t::wu_jian_whirlwind, "attack monsters by moving around them." },
+        { 2, passive_t::wu_jian_wall_jump, "perform distracting airborne attacks by moving against a solid obstacle." },
+        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if distracted." },
     },
 };
+COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
 bool have_passive(passive_t passive)
 {
@@ -791,7 +920,7 @@ int ash_detect_portals(bool all)
         return 0;
 
     int portals_found = 0;
-    const int map_radius = LOS_RADIUS + 1;
+    const int map_radius = LOS_DEFAULT_RANGE + 1;
 
     if (all)
     {
@@ -912,12 +1041,12 @@ int ash_skill_boost(skill_type sk, int scale)
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
     int level = you.skills[sk];
-    while (level < 27 && skill_points >= skill_exp_needed(level + 1, sk))
+    while (level < MAX_SKILL_LEVEL && skill_points >= skill_exp_needed(level + 1, sk))
         ++level;
 
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
-    return min(level, 27 * scale);
+    return min(level, MAX_SKILL_LEVEL * scale);
 }
 
 int gozag_gold_in_los(actor *whom)
@@ -949,14 +1078,13 @@ int qazlal_sh_boost(int piety)
 }
 
 // Not actually passive, but placing it here so that it can be easily compared
-// with Qazlal's boost. Here you.attribute[ATTR_DIVINE_SHIELD] was set
-// to 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5) (and decreases at end of dur).
+// with Qazlal's boost.
 int tso_sh_boost()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
         return 0;
 
-    return you.attribute[ATTR_DIVINE_SHIELD] * 4;
+    return you.attribute[ATTR_DIVINE_SHIELD];
 }
 
 void qazlal_storm_clouds()
@@ -1373,6 +1501,346 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
+}
+
+void wu_jian_trigger_serpents_lash(const coord_def& old_pos)
+{
+    if (you.attribute[ATTR_SERPENTS_LASH] == 0)
+       return;
+
+    you.turn_is_over = false;
+    you.elapsed_time_at_last_input = you.elapsed_time;
+    you.attribute[ATTR_SERPENTS_LASH]--;
+    you.redraw_status_lights = true;
+    update_turn_count();
+
+    // these messages are a little silly...
+    if (you.attribute[ATTR_SERPENTS_LASH] == 0)
+    {
+        you.increase_duration(DUR_EXHAUSTED, 12 + random2(5));
+        mpr(coinflip() ? "ZOOOM!" : "SWOOSH!");
+    }
+    else
+        mpr(coinflip() ? "Zoom!" : "Swooosh!");
+
+    if (!cell_is_solid(old_pos))
+        check_place_cloud(CLOUD_DUST, old_pos, 2 + random2(3) , &you, 1, -1);
+}
+
+void wu_jian_heaven_tick()
+{
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
+        return;
+
+    // TODO: this is ridiculous. REWRITEME!
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 10)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 1;
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 15)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 2;
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 20)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 3;
+    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 30)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 5;
+    else
+        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 10;
+
+    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+    {
+        if (!cell_is_solid(*ai))
+            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+    }
+
+    noisy(15, you.pos());
+
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
+        end_heaven_on_earth();
+    else
+        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+}
+
+void end_heaven_on_earth()
+{
+    you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+    mprf(MSGCH_GOD, "The heavenly storm settles.");
+}
+
+bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
+{
+    return you.attribute[ATTR_SERPENTS_LASH]
+           && attack_type != WU_JIAN_ATTACK_NONE
+           && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
+}
+
+static bool _dont_attack_martial(const monster* mons)
+{
+    return mons->wont_attack()
+           || mons_is_firewood(*mons)
+           || mons_is_projectile(mons->type)
+           || !you.can_see(*mons);
+}
+
+// A mismatch between attack speed and move speed may cause
+// any particular martial attack to be doubled, tripled, or
+// not happen at all. Given enough time moving, you would have
+// made the same amount of attacks as tabbing.
+static int _wu_jian_number_of_attacks()
+{
+    const int move_delay = player_movement_speed();
+    const int attack_delay = you.attack_delay().roll();
+    // we square move_delay here because attack_delay is *multiplied* by
+    // move_delay / BASELINE_DELAY as a crude hack to make DUR_SLOW/DUR_HASTE
+    // affect attack speed.
+    // FIXME: apply DUR_HASTE/DUR_SLOW directly to attack_delay instead!
+    return div_rand_round(move_delay * move_delay,
+                          attack_delay * BASELINE_DELAY);
+}
+
+static void _wu_jian_lunge(const coord_def& old_pos)
+{
+    coord_def lunge_direction = (you.pos() - old_pos).sgn();
+    coord_def potential_target = you.pos() + lunge_direction;
+    monster* mons = monster_at(potential_target);
+
+    if (!mons || _dont_attack_martial(mons) || !mons->alive())
+        return;
+
+    if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+        you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+    you.apply_berserk_penalty = false;
+
+    const int number_of_attacks = _wu_jian_number_of_attacks();
+
+    if (number_of_attacks == 0)
+    {
+        mprf("You lunge at %s, but your attack speed is too slow for a blow "
+             "to land.", mons->name(DESC_THE).c_str());
+        return;
+    }
+    else
+    {
+        mprf("You lunge%s at %s%s.",
+             wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
+                 " with incredible momentum" : "",
+             mons->name(DESC_THE).c_str(),
+             number_of_attacks > 1 ? " in a flurry of attacks" : "");
+    }
+
+    for (int i = 0; i < number_of_attacks; i++)
+    {
+        if (!mons->alive())
+            break;
+        melee_attack lunge(&you, mons);
+        lunge.wu_jian_attack = WU_JIAN_ATTACK_LUNGE;
+        lunge.attack();
+    }
+}
+
+/// Monsters adjacent to the given pos that are valid targets for whirlwind.
+static vector<monster*> _get_whirlwind_targets(coord_def pos)
+{
+    vector<monster*> targets;
+    for (adjacent_iterator ai(pos, true); ai; ++ai)
+        if (monster_at(*ai) && !_dont_attack_martial(monster_at(*ai)))
+            targets.push_back(monster_at(*ai));
+    sort(targets.begin(), targets.end());
+    return targets;
+}
+
+static void _wu_jian_whirlwind(const coord_def& old_pos)
+{
+    const vector<monster*> targets = _get_whirlwind_targets(you.pos());
+    if (targets.empty())
+        return;
+
+    const vector<monster*> old_targets = _get_whirlwind_targets(old_pos);
+    vector<monster*> common_targets;
+    set_intersection(targets.begin(), targets.end(),
+                     old_targets.begin(), old_targets.end(),
+                     back_inserter(common_targets));
+
+    for (auto mons : common_targets)
+    {
+        if (!mons->alive())
+            continue;
+
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+        you.apply_berserk_penalty = false;
+
+        const int number_of_attacks = _wu_jian_number_of_attacks();
+        if (number_of_attacks == 0)
+        {
+            mprf("You spin to attack %s, but your attack speed is too slow for "
+                 "a blow to land.", mons->name(DESC_THE).c_str());
+            continue;
+        }
+        else
+        {
+            mprf("You spin and attack %s%s%s.",
+                 mons->name(DESC_THE).c_str(),
+                 number_of_attacks > 1 ? " repeatedly" : "",
+                 wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
+                     " with incredible momentum" : "");
+        }
+
+        for (int i = 0; i < number_of_attacks; i++)
+        {
+            if (!mons->alive())
+                break;
+            melee_attack whirlwind(&you, mons);
+            whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
+            whirlwind.wu_jian_number_of_targets = common_targets.size();
+            whirlwind.attack();
+        }
+    }
+}
+
+void wu_jian_trigger_martial_arts(const coord_def& old_pos)
+{
+    if (you.pos() == old_pos || you.duration[DUR_CONF])
+        return;
+
+    if (have_passive(passive_t::wu_jian_lunge))
+        _wu_jian_lunge(old_pos);
+
+    if (have_passive(passive_t::wu_jian_whirlwind))
+        _wu_jian_whirlwind(old_pos);
+}
+
+bool wu_jian_can_wall_jump(const coord_def& target)
+{
+    if (!have_passive(passive_t::wu_jian_wall_jump)
+        || !feat_can_wall_jump_against(grd(target))
+        || you.is_stationary()
+        || you.digging)
+    {
+        return false;
+    }
+
+    auto wall_jump_direction = (you.pos() - target).sgn();
+    auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                   + wall_jump_direction);
+
+    const actor* landing_actor = actor_at(wall_jump_landing_spot);
+    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
+        || !in_bounds(wall_jump_landing_spot)
+        || !you.is_habitable(wall_jump_landing_spot)
+        || landing_actor)
+    {
+        mpr("You have no room to wall jump.");
+        return false;
+    }
+
+    for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && !_dont_attack_martial(mon) && mon->alive())
+            return true;
+    }
+
+    mpr("There is no target in range.");
+    targeter_walljump range;
+    range.set_aim(wall_jump_landing_spot);
+    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+
+    return false;
+}
+
+/// Percent chance for an WJC walljump to distract a target of the given HD.
+static int _walljump_distract_chance(int target_hd)
+{
+    // XXX: unify with _walljump_distract_chance()
+    const int base_chance = div_rand_round(12 * you.experience_level,
+                                           target_hd);
+    if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
+        return div_rand_round(base_chance * 15, 10);
+    return min(base_chance, 50); // Capped if you don't have momentum.
+}
+
+void wu_jian_wall_jump_effects(const coord_def& old_pos)
+{
+    vector<monster*> targets;
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
+    {
+        monster* target = monster_at(*ai);
+        if (target && !_dont_attack_martial(target) && target->alive())
+            targets.push_back(target);
+
+        if (!cell_is_solid(*ai))
+            check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
+    }
+
+    for (auto target : targets)
+    {
+        if (!target->alive())
+            continue;
+
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
+        you.apply_berserk_penalty = false;
+
+        const int number_of_attacks = _wu_jian_number_of_attacks();
+        if (number_of_attacks == 0)
+        {
+            mprf("You attack %s from above, but your attack speed is too slow"
+                 " for a blow to land.", target->name(DESC_THE).c_str());
+            continue;
+        }
+        else
+        {
+            mprf("You %sattack %s from above%s.",
+                 number_of_attacks > 1 ? "repeatedly " : "",
+                 target->name(DESC_THE).c_str(),
+                 wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
+                     " with incredible momentum" : "");
+        }
+
+        for (int i = 0; i < number_of_attacks; i++)
+        {
+            if (!target->alive())
+                break;
+
+            melee_attack aerial(&you, target);
+            aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
+            aerial.wu_jian_number_of_targets = targets.size();
+            aerial.attack();
+        }
+    }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && mon->alive()
+            && you.can_see(*mon)
+            && mon->behaviour != BEH_SLEEP
+            && !_dont_attack_martial(mon)
+            && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
+        {
+            const int distract_chance
+                = _walljump_distract_chance(mon->get_hit_dice());
+
+            const monsterentry* entry = get_monster_data(mon->type);
+
+            dprf("Attempting distract with chance %d", distract_chance);
+            if (!entry || !x_chance_in_y(distract_chance, 100))
+                continue;
+
+            if (mon->holiness() == MH_NONLIVING)
+                simple_monster_message(*mon, " loses track of your position.");
+            else
+                simple_monster_message(*mon, " is distracted by your jump.");
+
+            mon->add_ench(
+                mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
+                            random_range(3, 5) * BASELINE_DELAY));
+            mon->foe = MHITNOT;
+            mon->target = mon->pos();
+        }
+    }
 }
 
 /**

@@ -3,14 +3,16 @@
  * @brief Functions used to print information about various game objects.
 **/
 
-#ifndef DESCRIBE_H
-#define DESCRIBE_H
+#pragma once
 
+#include <functional>
 #include <sstream>
 #include <string>
 
+#include "command-type.h"
 #include "enum.h"
 #include "mon-util.h"
+#include "trap-type.h"
 
 struct monster_info;
 
@@ -117,5 +119,3 @@ protected:
     int h;
     ostringstream ostr;
 };
-
-#endif

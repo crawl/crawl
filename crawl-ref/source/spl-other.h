@@ -1,6 +1,6 @@
-#ifndef SPL_OTHER_H
-#define SPL_OTHER_H
+#pragma once
 
+#include "god-type.h"
 #include "spl-cast.h"
 
 spret_type cast_sublimation_of_blood(int pow, bool fail);
@@ -23,5 +23,3 @@ void end_recall();
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail);
 spret_type cast_intoxicate(int pow, bool fail);
 spret_type cast_darkness(int pow, bool fail);
-
-#endif

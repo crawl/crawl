@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <sstream>
 
 #include "act-iter.h"
@@ -30,6 +31,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -102,6 +104,8 @@ static bool _find_shadow_step_mons(const coord_def& where, targ_mode_type mode,
                                    targeter *hitfunc);
 static bool _find_object(const coord_def& where, bool need_path, int range,
                          targeter *hitfunc);
+static bool _find_autopickup_object(const coord_def& where, bool need_path,
+                                    int range, targeter *hitfunc);
 
 typedef function<bool (const coord_def& where)> target_checker;
 static bool _find_square_wrapper(coord_def &mfp, int direction,
@@ -1057,8 +1061,15 @@ coord_def direction_chooser::find_default_target() const
 
     if (targets_objects())
     {
-        // Try to find an object.
+        // First, try to find a particularly relevant item (autopickup).
+        // Barring that, just try anything.
         success = _find_square_wrapper(result, 1,
+                                       bind(_find_autopickup_object,
+                                            placeholders::_1,
+                                            needs_path, range, hitfunc),
+                                       hitfunc,
+                                       LS_FLIPVH)
+               || _find_square_wrapper(result, 1,
                                        bind(_find_object, placeholders::_1,
                                             needs_path, range, hitfunc),
                                        hitfunc,
@@ -2368,6 +2379,25 @@ static bool _find_monster_expl(const coord_def& where, targ_mode_type mode,
     return false;
 }
 
+static const item_def* const _item_at(const coord_def &where)
+{
+    // XXX: are we ever interacting with unseen items, anyway?
+    return you.see_cell(where)
+            ? top_item_at(where)
+            : env.map_knowledge(where).item();
+}
+
+static bool _find_autopickup_object(const coord_def& where, bool need_path,
+                                    int range, targeter *hitfunc)
+{
+    if (!_find_object(where, need_path, range, hitfunc))
+        return false;
+
+    const item_def * const item = _item_at(where);
+    ASSERT(item);
+    return item_needs_autopickup(*item);
+}
+
 static bool _find_object(const coord_def& where, bool need_path, int range,
                          targeter *hitfunc)
 {
@@ -2378,9 +2408,7 @@ static bool _find_object(const coord_def& where, bool need_path, int range,
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
         return false;
 
-    const item_def * const item = you.see_cell(where)
-                                      ? top_item_at(where)
-                                      : env.map_knowledge(where).item();
+    const item_def * const item = _item_at(where);
     return item && !item_is_stationary(*item);
 }
 
@@ -3014,7 +3042,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     _append_container(descs, _get_monster_behaviour_vector(mi));
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !you.weapon()
-        || you.form == TRAN_FUNGUS && !mons_is_unbreathing(mi.type))
+        || you.form == transformation::fungus && !mons_is_unbreathing(mi.type))
     {
         descs.emplace_back(make_stringf("confuse odds on hit: %d%%",
                                         melee_confuse_chance(mi.hd)));
@@ -3077,7 +3105,10 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is clinging to the wall.\n";
 
     if (mi.is(MB_MESMERIZING))
-        text += "You are mesmerised by her song.\n";
+    {
+        text += string("You are mesmerised by ")
+              + mi.pronoun(PRONOUN_POSSESSIVE) + " song.\n";
+    }
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
     {
@@ -3149,8 +3180,8 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (!text.empty() && text[text.size() - 1] == '\n')
-        text = text.substr(0, text.size() - 1);
+    if (!text.empty() && text.back() == '\n')
+        text.pop_back();
     return text;
 }
 

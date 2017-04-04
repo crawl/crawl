@@ -1,7 +1,8 @@
-#ifndef TARGET_H
-#define TARGET_H
+#pragma once
 
 #include "beam.h"
+#include "los-type.h"
+#include "reach-type.h"
 
 enum aff_type // sign and non-zeroness matters
 {
@@ -18,12 +19,14 @@ enum aff_type // sign and non-zeroness matters
 class targeter
 {
 public:
+    targeter() :  agent(nullptr), obeys_mesmerise(false) {};
     virtual ~targeter() {};
 
     coord_def origin;
     coord_def aim;
     const actor* agent;
     string why_not;
+    bool obeys_mesmerise; // whether the rendering of ranges should take into account mesmerise effects
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
@@ -104,13 +107,19 @@ private:
     bool (*affects_pos)(const coord_def &);
 };
 
+class targeter_walljump : public targeter_smite
+{
+public:
+    targeter_walljump();
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_transference : public targeter_smite
 {
 public:
     targeter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
 };
-
 
 class targeter_fragment : public targeter_smite
 {
@@ -282,4 +291,3 @@ public:
 private:
     explosion_map exp_map;
 };
-#endif

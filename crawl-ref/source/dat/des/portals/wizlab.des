@@ -891,9 +891,8 @@ KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-sting-weird mutant beast \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
-ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
-            potion of cure mutation
-ITEM:       potion of beneficial mutation q:1, potion of cure mutation
+ITEM:       potion of mutation
+ITEM:       potion of mutation q:1, potion of mutation
 : if you.unrands("hat of the alchemist") then
 ITEM:       any jewellery randart
 : else
@@ -1210,7 +1209,7 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience q:1, potion of beneficial mutation q:1
+ITEM:       potion of experience q:1
 ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
             manual of staves / manual of fighting / manual of dodging
 ITEM:       book of enchantments
@@ -1815,7 +1814,7 @@ set_random_mon_list ("rust devil w:20 / eye of devastation / stone giant " ..
                      "/ neqoxec w:5 / golden eye w:5 / very ugly thing w:5 " ..
                      "/ starcursed mass w:5 / cacodemon w:5")
 }}
-ITEM:       potion of cure mutation / potion of beneficial mutation
+ITEM:       potion of mutation q:3
 ITEM:       acquire any
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear\

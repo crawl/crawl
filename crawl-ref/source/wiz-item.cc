@@ -21,6 +21,7 @@
 #include "god-passive.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -31,6 +32,7 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "options.h"
+#include "orb-type.h"
 #include "output.h"
 #include "player-equip.h"
 #include "prompt.h"
@@ -1031,8 +1033,6 @@ static void _debug_acquirement_stats(FILE *ostat)
             for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
             {
                 const auto disc = spschools_type::exponent(d);
-                if (disc & SPTYP_DIVINATION)
-                    continue;
 
                 if (disciplines & disc)
                 {
@@ -1045,8 +1045,6 @@ static void _debug_acquirement_stats(FILE *ostat)
         for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
         {
             const auto disc = spschools_type::exponent(d);
-            if (disc & SPTYP_DIVINATION)
-                continue;
 
             fprintf(ostat, "%-13s:  %2d/%2d spells unseen\n",
                     spelltype_long_name(disc),
@@ -1158,6 +1156,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 #if TAG_MAJOR_VERSION == 34
             "jumping",
 #endif
+            "repulsion",
         };
 
         const int non_art = acq_calls - num_arts;
@@ -1189,7 +1188,6 @@ static void _debug_acquirement_stats(FILE *ostat)
                 "transmutation",
                 "necromancy",
                 "summoning",
-                "divination",
                 "translocation",
                 "poison magic",
                 "earth magic",
@@ -1459,9 +1457,6 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_SEE_INVISIBLE",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
-#if TAG_MAJOR_VERSION > 34
-        "ARTP_FOG",
-#endif
         "ARTP_BLINK",
         "ARTP_BERSERK",
         "ARTP_NOISE",

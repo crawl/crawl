@@ -1,5 +1,4 @@
-#ifndef OGL_GL_WRAPPER_H
-#define OGL_GL_WRAPPER_H
+#pragma once
 
 #ifdef USE_TILE_LOCAL
 #ifdef USE_GL
@@ -75,4 +74,3 @@ private:
 
 #endif // USE_GL
 #endif // USE_TILE_LOCAL
-#endif // OGL_GL_WRAPPER_H

@@ -127,7 +127,8 @@ LUARET1(you_gourmand, boolean, you.gourmand(false))
 LUARET1(you_res_corr, boolean, you.res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
 LUARET1(you_flying, boolean, you.airborne())
-LUARET1(you_transform, string, you.form ? transform_name() : "")
+LUARET1(you_transform, string, you.form == transformation::none
+                               ? "" : transform_name())
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_shrouded, boolean, you.duration[DUR_SHROUD_OF_GOLUBRIA])
@@ -197,6 +198,9 @@ LUARET1(you_see_cell_solid_see_rel, boolean,
                                  luaL_checkint(ls, 2)) + you.pos()),
                       LOS_SOLID_SEE))
 LUARET1(you_piety_rank, number, piety_rank())
+LUARET1(you_under_penance, boolean,
+        lua_isstring(ls, 1) ? player_under_penance(str_to_god(lua_tostring(ls, 1)))
+                            : player_under_penance())
 LUARET1(you_constricted, boolean, you.is_constricted())
 LUARET1(you_constricting, boolean, you.is_constricting())
 
@@ -372,7 +376,7 @@ static int you_can_consume_corpses(lua_State *ls)
 {
     lua_pushboolean(ls,
                      player_mutation_level(MUT_HERBIVOROUS) < 3
-                     && !you_foodless(true)
+                     && !you_foodless()
                   );
     return 1;
 }
@@ -617,6 +621,7 @@ static const struct luaL_reg you_clib[] =
     { "deaths",       you_deaths },
     { "lives",        you_lives },
     { "piety_rank",   you_piety_rank },
+    { "under_penance", you_under_penance },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
 #if TAG_MAJOR_VERSION == 34

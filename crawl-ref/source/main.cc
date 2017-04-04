@@ -90,6 +90,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "jobs.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "lookup-help.h"
@@ -123,6 +124,7 @@
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
+#include "sound.h"
 #include "species.h"
 #include "spl-book.h"
 #include "spl-cast.h"
@@ -159,13 +161,9 @@
 #ifdef TOUCH_UI
 #include "windowmanager.h"
 #endif
-#include "wiz-dgn.h"
-#include "wiz-dump.h"
-#include "wiz-fsim.h"
-#include "wiz-item.h"
-#include "wiz-mon.h"
-#include "wiz-you.h"
-#include "xom.h" // debug_xom_effects()
+#include "wiz-you.h" // FREEZE_TIME_KEY
+#include "wizard.h" // handle_wizard_command() and enter_explore_mode()
+#include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -233,18 +231,16 @@ static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
 
-static void _compile_time_asserts();
-
-#ifdef WIZARD
-static void _handle_wizard_command();
-static void _enter_explore_mode();
-#endif
+static void _startup_asserts()
+{
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
+}
 
 //
 //  It all starts here. Some initialisations are run first, then straight
 //  to new_game and then input.
 //
-
 #ifdef USE_SDL
 # include <SDL_main.h>
 # if defined(__GNUC__) && !defined(__clang__)
@@ -254,7 +250,6 @@ static void _enter_explore_mode();
 __attribute__((externally_visible))
 # endif
 #endif
-
 int main(int argc, char *argv[])
 {
 #ifndef __ANDROID__
@@ -282,7 +277,7 @@ int main(int argc, char *argv[])
 #endif
     init_crash_handler();
 
-    _compile_time_asserts();  // Actually, not just compile time.
+    _startup_asserts();
 
     // Hardcoded initial keybindings.
     init_keybindings();
@@ -349,12 +344,12 @@ static void _reset_game()
     crawl_state.updating_scores = false;
     clear_message_store();
     macro_clear_buffers();
-    transit_lists_clear();
+    the_lost_ones.clear();
     you = player();
+    reset_hud();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     clear_level_target();
-    you.clear_place_info();
     overview_clear();
     clear_message_window();
     note_list.clear();
@@ -692,353 +687,6 @@ static void _set_removed_types_as_identified()
             you.type_ids(entry) = true;
 }
 
-#ifdef WIZARD
-static void _do_wizard_command(int wiz_command)
-{
-    ASSERT(you.wizard);
-
-    switch (wiz_command)
-    {
-    case '?':
-    {
-        const int key = list_wizard_commands(true);
-        _do_wizard_command(key);
-        return;
-    }
-
-    case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE); break;
-    case 'A': wizard_set_all_skills(); break;
-    case CONTROL('A'):
-        if (player_in_branch(BRANCH_ABYSS))
-            wizard_set_abyss();
-        else
-            mpr("You can only abyss_teleport() inside the Abyss.");
-        break;
-
-    case 'b': wizard_blink(); break;
-    case 'B': you.teleport(true, true); break;
-    case CONTROL('B'):
-        if (!player_in_branch(BRANCH_ABYSS))
-            banished("wizard command");
-        else
-            down_stairs(DNGN_EXIT_ABYSS);
-        break;
-
-    case 'c': wizard_draw_card(); break;
-    case 'C': wizard_uncurse_item(); break;
-    case CONTROL('C'): die("Intentional crash");
-
-    case 'd': wizard_level_travel(true); break;
-    case 'D': wizard_detect_creatures(); break;
-    case CONTROL('D'): wizard_edit_durations(); break;
-
-    case 'e': wizard_set_hunger_state(); break;
-    case 'E': wizard_freeze_time(); break;
-    case CONTROL('E'): debug_dump_levgen(); break;
-
-    case 'f': wizard_quick_fsim(); break;
-    case 'F': wizard_fight_sim(false); break;
-    case CONTROL('F'): wizard_fight_sim(true); break;
-
-    case 'g': wizard_exercise_skill(); break;
-    case 'G': wizard_dismiss_all_monsters(); break;
-#ifdef DEBUG_BONES
-    case CONTROL('G'): debug_ghosts(); break;
-#endif
-
-    case 'h': wizard_heal(false); break;
-    case 'H': wizard_heal(true); break;
-    // case CONTROL('H'): break;
-
-    case 'i': wizard_identify_pack(); break;
-    case 'I': wizard_unidentify_pack(); break;
-    case CONTROL('I'): debug_item_statistics(); break;
-
-    // case 'j': break;
-    case 'J':
-        mpr("Running Jiyva off-level sacrifice.");
-        jiyva_eat_offlevel_items();
-        break;
-    // case CONTROL('J'): break;
-
-    case 'k': wizard_set_xl(true); break;
-    case 'K':
-        if (player_in_branch(BRANCH_LABYRINTH))
-            change_labyrinth(true);
-        else
-            mpr("This only makes sense in a labyrinth!");
-        break;
-    case CONTROL('K'): wizard_clear_used_vaults(); break;
-
-    case 'l': wizard_set_xl(); break;
-    case 'L': debug_place_map(false); break;
-    // case CONTROL('L'): break;
-
-    case 'M':
-    case 'm': wizard_create_spec_monster_name(); break;
-    // case CONTROL('M'): break; // XXX do not use, menu command
-
-    // case 'n': break;
-    // case 'N': break;
-    // case CONTROL('N'): break;
-
-    case 'o': wizard_create_spec_object(); break;
-    case 'O': debug_test_explore(); break;
-    // case CONTROL('O'): break;
-
-    case 'p': wizard_transform(); break;
-    case 'P': debug_place_map(true); break;
-    case CONTROL('P'): wizard_list_props(); break;
-
-    // case 'q': break;
-    // case 'Q': break;
-    case CONTROL('Q'): wizard_toggle_dprf(); break;
-
-    case 'r': wizard_change_species(); break;
-    case 'R': wizard_spawn_control(); break;
-    case CONTROL('R'): wizard_recreate_level(); break;
-
-    case 's':
-    case 'S': wizard_set_skill_level(); break;
-    case CONTROL('S'): wizard_abyss_speed(); break;
-
-    case 't': wizard_tweak_object(); break;
-    case 'T': debug_make_trap(); break;
-    case CONTROL('T'): debug_terp_dlua(); break;
-
-    case 'u': wizard_level_travel(false); break;
-    // case 'U': break;
-    case CONTROL('U'): debug_terp_dlua(clua); break;
-
-    case 'v': wizard_recharge_evokers(); break;
-    case 'V': wizard_toggle_xray_vision(); break;
-    case CONTROL('V'): wizard_value_item(); break;
-
-    case 'w': wizard_god_mollify(); break;
-    case 'W': wizard_god_wrath(); break;
-    case CONTROL('W'): wizard_mod_tide(); break;
-
-    case 'x':
-        you.experience = 1 + exp_needed(1 + you.experience_level);
-        level_change();
-        break;
-    case 'X': wizard_xom_acts(); break;
-    case CONTROL('X'): debug_xom_effects(); break;
-
-    case 'y': wizard_identify_all_items(); break;
-    case 'Y': wizard_unidentify_all_items(); break;
-    // case CONTROL('Y'): break;
-
-    case 'z': wizard_cast_spec_spell(); break;
-    // case 'Z': break;
-    // case CONTROL('Z'): break;
-
-    case '!': wizard_memorise_spec_spell(); break;
-    case '@': wizard_set_stats(); break;
-    case '#': wizard_load_dump_file(); break;
-    case '$': wizard_set_gold(); break;
-    case '%': wizard_create_spec_object_by_name(); break;
-    case '^': wizard_set_piety(); break;
-    case '&': wizard_list_companions(); break;
-    // case '*': break; // XXX do not use, this is the alternate control prefix
-    case '(': wizard_create_feature(); break;
-    // case ')': break;
-
-    // case '`': break;
-    case '~': wizard_interlevel_travel(); break;
-
-    case '-': wizard_get_god_gift(); break;
-    case '_': wizard_join_religion(); break;
-
-    case '=':
-        mprf("Cost level: %d  Total experience: %d  Next cost level: %d Skill cost: %d",
-              you.skill_cost_level, you.total_experience,
-              skill_cost_needed(you.skill_cost_level + 1),
-              calc_skill_cost(you.skill_cost_level));
-        break;
-    case '+': wizard_make_object_randart(); break;
-
-    // case '[': break;
-    case '{': wizard_map_level(); break;
-
-    case ']':
-        if (!wizard_add_mutation())
-            mpr("Failure to give mutation.");
-        break;
-    case '}': wizard_reveal_traps(); break;
-
-    case '\\': debug_make_shop(); break;
-    case '|': wizard_create_all_artefacts(); break;
-
-    case ';': wizard_list_levels(); break;
-    case ':': wizard_list_branches(); break;
-
-    case '\'': wizard_list_items(); break;
-    case '"': debug_list_monsters(); break;
-
-    case ',': wizard_place_stairs(true); break;
-    // case '>': break; // XXX do not use, menu command
-
-    case '.': wizard_place_stairs(false); break;
-    // case '<': break; // XXX do not use, menu command
-
-    // case '/': break;
-
-    case ' ':
-    case '\r':
-    case '\n':
-    case ESCAPE:
-        canned_msg(MSG_OK);
-        break;
-    default:
-        formatted_mpr(formatted_string::parse_string(
-                          "Not a <magenta>Wizard</magenta> Command."));
-        break;
-    }
-    // Force the placement of any delayed monster gifts.
-    you.turn_is_over = true;
-    religion_turn_end();
-
-    you.turn_is_over = false;
-}
-
-static void _log_wizmode_entrance()
-{
-    scorefile_entry se(INSTANT_DEATH, MID_NOBODY, KILLED_BY_WIZMODE, nullptr);
-    logfile_new_entry(se);
-}
-
-static void _handle_wizard_command()
-{
-    int wiz_command;
-
-    // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters. Also, and hackishly,
-    // it's used to prevent access for non-authorised users to wizard
-    // builds in dgamelaunch builds unless the game is started with the
-    // -wizard flag.
-    if (Options.wiz_mode == WIZ_NEVER)
-        return;
-
-    if (!you.wizard)
-    {
-        mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER WIZARD MODE!");
-
-#ifndef SCORE_WIZARD_CHARACTERS
-        if (!you.explore)
-            mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
-#endif
-
-        if (!yes_or_no("Do you really want to enter wizard mode?"))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
-
-#ifndef SCORE_WIZARD_CHARACTERS
-        if (!you.explore)
-            _log_wizmode_entrance();
-#endif
-
-        you.wizard = true;
-        save_game(false);
-        redraw_screen();
-
-        if (crawl_state.cmd_repeat_start)
-        {
-            crawl_state.cancel_cmd_repeat("Can't repeat entering wizard "
-                                          "mode.");
-            return;
-        }
-    }
-
-    {
-        mprf(MSGCH_PROMPT, "Enter Wizard Command (? - help): ");
-        cursor_control con(true);
-        wiz_command = getchm();
-        if (wiz_command == '*')
-            wiz_command = CONTROL(toupper(getchm()));
-    }
-
-    if (crawl_state.cmd_repeat_start)
-    {
-        // Easiest to list which wizard commands *can* be repeated.
-        switch (wiz_command)
-        {
-        case 'x':
-        case '$':
-        case 'a':
-        case 'c':
-        case 'h':
-        case 'H':
-        case 'm':
-        case 'M':
-        case 'X':
-        case ']':
-        case '^':
-        case '%':
-        case 'o':
-        case 'z':
-        case CONTROL('Z'):
-            break;
-
-        default:
-            crawl_state.cant_cmd_repeat("You cannot repeat that "
-                                        "wizard command.");
-            return;
-        }
-    }
-
-    _do_wizard_command(wiz_command);
-}
-
-static void _enter_explore_mode()
-{
-    // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters. Also, and hackishly,
-    // it's used to prevent access for non-authorised users to wizard
-    // builds in dgamelaunch builds unless the game is started with the
-    // -wizard flag.
-    if (Options.explore_mode == WIZ_NEVER)
-        return;
-
-    if (you.wizard)
-        _handle_wizard_command();
-    else if (!you.explore)
-    {
-        mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
-
-#ifndef SCORE_WIZARD_CHARACTERS
-        mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
-#endif
-
-        if (!yes_or_no("Do you really want to enter explore mode?"))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Entered explore mode."));
-
-#ifndef SCORE_WIZARD_CHARACTERS
-        _log_wizmode_entrance();
-#endif
-
-        you.explore = true;
-        save_game(false);
-        redraw_screen();
-
-        if (crawl_state.cmd_repeat_start)
-        {
-            crawl_state.cancel_cmd_repeat("Can't repeat entering explore mode");
-            return;
-        }
-    }
-}
-#endif
-
 // Set up the running variables for the current run.
 static void _start_running(int dir, int mode)
 {
@@ -1060,6 +708,9 @@ static void _start_running(int dir, int mode)
             mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
         return;
     }
+
+    if (wu_jian_can_wall_jump(next_pos))
+       return; // Do not wall jump while running.
 
     you.running.initialise(dir, mode);
 }
@@ -1114,6 +765,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
     case CMD_TOGGLE_TRAVEL_SPEED:
+    case CMD_TOGGLE_SOUND:
     case CMD_ADJUST_INVENTORY:
     case CMD_QUIVER_ITEM:
     case CMD_REPLAY_MESSAGES:
@@ -1512,6 +1164,13 @@ static void _input()
 
         world_reacts();
     }
+    else
+    {
+        // Make sure to do a full view update even when the turn isn't over.
+        // This else will be triggered by instantaneous actions, such as
+        // Chei's temporal distortion.
+        viewwindow();
+    }
 
     update_can_train();
 
@@ -1520,34 +1179,12 @@ static void _input()
     _update_place_info();
 
     crawl_state.clear_god_acting();
+
 }
 
 static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
-    // Immobile
-    if (you.is_stationary())
-    {
-        canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-
-    // Mesmerized
-    if (you.beheld() && !you.confused())
-    {
-        const monster* beholder = you.get_any_beholder();
-        mprf("You cannot move away from %s!",
-             beholder->name(DESC_THE, true).c_str());
-        return false;
-    }
-
-    // Held
-    if (you.attribute[ATTR_HELD])
-    {
-        mprf("You can't do that while %s.", held_status());
-        return false;
-    }
-
     // Up and down both work for shops, portals, and altars.
     if (ftype == DNGN_ENTER_SHOP || feat_is_altar(ftype))
     {
@@ -1562,9 +1199,33 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
-    // bidirectional, but not actually a portal
+    // Immobile
+    if (you.is_stationary())
+    {
+        canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+
+    // Held
+    if (you.attribute[ATTR_HELD])
+    {
+        mprf("You can't do that while %s.", held_status());
+        return false;
+    }
+
+    // Bidirectional, but not actually a portal - allowed while mesmerised, but
+    // not when otherwise unable to move.
     if (ftype == DNGN_PASSAGE_OF_GOLUBRIA)
         return true;
+
+    // Mesmerised
+    if (you.beheld() && !you.confused())
+    {
+        const monster* beholder = you.get_any_beholder();
+        mprf("You cannot move away from %s!",
+             beholder->name(DESC_THE, true).c_str());
+        return false;
+    }
 
     // If it's not bidirectional, check that the player is headed
     // in the right direction.
@@ -1891,21 +1552,6 @@ static void _do_rest()
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
 
-static void _do_clear_map()
-{
-    if (Options.show_travel_trail && env.travel_trail.size())
-    {
-        mpr("Clearing travel trail.");
-        clear_travel_trail();
-    }
-    else
-    {
-        mpr("Clearing level map.");
-        clear_map();
-        crawl_view.set_player_at(you.pos());
-    }
-}
-
 static void _do_display_map()
 {
     if (Hints.hints_events[HINT_MAP_VIEW])
@@ -2068,10 +1714,17 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
+#ifdef USE_SOUND
+    case CMD_TOGGLE_SOUND:
+        Options.sounds_on = !Options.sounds_on;
+        mprf("Sound effects are now %s.", Options.sounds_on ? "on" : "off");
+        break;
+#endif
+
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
-    case CMD_CLEAR_MAP:       _do_clear_map();   break;
+    case CMD_CLEAR_MAP:       clear_map_or_travel_trail(); break;
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
@@ -2252,8 +1905,8 @@ void process_command(command_type cmd)
     case CMD_CYCLE_QUIVER_BACKWARD: _do_cycle_quiver(-1);     break;
 
 #ifdef WIZARD
-    case CMD_WIZARD: _handle_wizard_command(); break;
-    case CMD_EXPLORE_MODE: _enter_explore_mode(); break;
+    case CMD_WIZARD: handle_wizard_command(); break;
+    case CMD_EXPLORE_MODE: enter_explore_mode(); break;
 #endif
 
         // Game commands.
@@ -2581,6 +2234,13 @@ void world_reacts()
             save_game(false);
         }
     }
+    // End of a turn.
+    //
+    // `los_noise_last_turn` is the value for display -- it needs to persist
+    // for any calls to print_stats during the next turn. Meanwhile, reset
+    // the loudest noise tracking for the next world_reacts cycle.
+    you.los_noise_last_turn = you.los_noise_level;
+    you.los_noise_level = 0;
 }
 
 static command_type _get_next_cmd()
@@ -3168,6 +2828,8 @@ static void _move_player(coord_def move)
         return;
     }
 
+    const coord_def initial_position = you.pos();
+
     // When confused, sometimes make a random move.
     if (you.confused())
     {
@@ -3225,9 +2887,10 @@ static void _move_player(coord_def move)
     }
 
     const coord_def targ = you.pos() + move;
-
+    bool can_wall_jump = wu_jian_can_wall_jump(targ);
+    bool did_wall_jump = false;
     // You can't walk out of bounds!
-    if (!in_bounds(targ))
+    if (!in_bounds(targ) && !can_wall_jump)
     {
         // Why isn't the border permarock?
         if (you.digging)
@@ -3237,11 +2900,11 @@ static void _move_player(coord_def move)
 
     const dungeon_feature_type targ_grid = grd(targ);
 
-    const string walkverb = you.airborne()              ? "fly"
-                          : you.form == TRAN_SPIDER     ? "crawl"
+    const string walkverb = you.airborne()                     ? "fly"
+                          : you.form == transformation::spider ? "crawl"
                           : (you.species == SP_NAGA
-                             && form_keeps_mutations()) ? "slither"
-                                                        : "walk";
+                             && form_keeps_mutations())        ? "slither"
+                                                               : "walk";
 
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst) && !you.is_stationary())
@@ -3357,9 +3020,9 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
-    else if (you.form == TRAN_FUNGUS && moving && !you.confused())
+    else if (you.form == transformation::fungus && moving && !you.confused())
     {
-        if (you.made_nervous_by(targ))
+        if (you.is_nervous())
         {
             mpr("You're too terrified to move while being watched!");
             stop_running();
@@ -3368,7 +3031,8 @@ static void _move_player(coord_def move)
         }
     }
 
-    if (!attacking && targ_pass && moving && !beholder && !fmonger)
+    if (!attacking && (targ_pass || can_wall_jump)
+        && moving && !beholder && !fmonger)
     {
         if (you.confused() && is_feat_dangerous(env.grid(targ)))
         {
@@ -3444,8 +3108,18 @@ static void _move_player(coord_def move)
         you.stop_being_constricted();
 
         // Don't trigger traps when confusion causes no move.
-        if (you.pos() != targ)
+        if (you.pos() != targ && targ_pass)
             move_player_to_grid(targ, true);
+        else if (can_wall_jump && !running)
+        {
+            did_wall_jump = true;
+            auto wall_jump_direction = (you.pos() - targ).sgn();
+            auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
+                                           + wall_jump_direction);
+            move_player_to_grid(wall_jump_landing_spot, false);
+            wu_jian_wall_jump_effects(initial_position);
+        }
+
         // Now it is safe to apply the swappee's location effects. Doing
         // so earlier would allow e.g. shadow traps to put a monster
         // at the player's location.
@@ -3477,6 +3151,9 @@ static void _move_player(coord_def move)
                                  div_round_up(100, you.running.travel_speed));
         }
 
+        if (you.duration[DUR_NO_HOP])
+            you.duration[DUR_NO_HOP] += you.time_taken;
+
         move.reset();
         you.turn_is_over = true;
         request_autopickup();
@@ -3504,7 +3181,7 @@ static void _move_player(coord_def move)
         _entered_malign_portal(&you);
         return;
     }
-    else if (!targ_pass && !attacking)
+    else if (!targ_pass && !attacking && !can_wall_jump)
     {
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
@@ -3521,14 +3198,14 @@ static void _move_player(coord_def move)
         crawl_state.cancel_cmd_repeat();
         return;
     }
-    else if (beholder && !attacking)
+    else if (beholder && !attacking && !can_wall_jump)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
-    else if (fmonger && !attacking)
+    else if (fmonger && !attacking && !can_wall_jump)
     {
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
@@ -3549,6 +3226,13 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+
+    // Wu Jian's lunge and whirlwind.
+    if (you_worship(GOD_WU_JIAN) && !attacking && !did_wall_jump)
+        wu_jian_trigger_martial_arts(initial_position);
+
+    if (you_worship(GOD_WU_JIAN) && !attacking && you.turn_is_over)
+        wu_jian_trigger_serpents_lash(initial_position);
 }
 
 static int _get_num_and_char_keyfun(int &ch)
@@ -3793,42 +3477,4 @@ static void _update_replay_state()
     }
 
     repeat_again_rec.clear();
-}
-
-static void _compile_time_asserts()
-{
-    //jmf: NEW ASSERTS: we ought to do a *lot* of these
-    COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN);
-    COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN);
-    COMPILE_CHECK(NUM_MONSTERS < MONS_NO_MONSTER);
-
-    // Make sure there's enough room in you.unique_items to hold all
-    // the unrandarts.
-    COMPILE_CHECK(NUM_UNRANDARTS < MAX_UNRANDARTS);
-
-    // Non-artefact brands and unrandart indexes both go into
-    // item.special, so make sure they don't overlap.
-    COMPILE_CHECK((int) NUM_SPECIAL_WEAPONS < (int) UNRAND_START);
-
-    // We have space for 32 brands in the bitfield.
-    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
-    COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
-    COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND);
-    COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND);
-    COMPILE_CHECK(sizeof(float) == sizeof(int32_t));
-    COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
-    // Travel cache, traversable_terrain.
-    COMPILE_CHECK(NUM_FEATURES <= 256);
-    COMPILE_CHECK(NUM_GODS <= NUM_GODS);
-    COMPILE_CHECK(TAG_CHR_FORMAT < 256);
-    COMPILE_CHECK(TAG_MAJOR_VERSION < 256);
-    COMPILE_CHECK(NUM_TAG_MINORS < 256);
-    COMPILE_CHECK(NUM_MONSTERS < 32768); // stored in a 16 bit field,
-                                         // with untested signedness
-    COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
-
-    // Also some runtime stuff; I don't know if the order of branches[]
-    // needs to match the enum, but it currently does.
-    for (int i = 0; i < NUM_BRANCHES; ++i)
-        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
 }

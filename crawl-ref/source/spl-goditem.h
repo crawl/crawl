@@ -1,7 +1,10 @@
-#ifndef SPL_GODITEM_H
-#define SPL_GODITEM_H
+#pragma once
 
+#include "enchant-type.h"
+#include "holy-word-source-type.h"
+#include "spell-type.h"
 #include "spl-cast.h"
+#include "torment-source-type.h"
 
 spret_type cast_healing(int pow, int max_pow, bool fail);
 bool heal_monster(monster& patient, int amount);
@@ -81,5 +84,3 @@ void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = nullptr);
 
 spret_type cast_random_effects(int pow, bolt& beam, bool fail);
-
-#endif

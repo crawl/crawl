@@ -65,7 +65,7 @@ static void _show_name_prompt(int where)
     cgotoxy(1, where);
     textcolour(CYAN);
 
-    cprintf("\nWhat is your name today? (Leave blank for a random name, or use Escape to go back.) ");
+    cprintf("\nWhat is your name today? (Leave blank for a random name, or use Escape to cancel this character.) ");
 
     textcolour(LIGHTGREY);
 }
@@ -149,7 +149,7 @@ void enter_player_name(newgame_def& ng)
 
         // If the player wants out, we bail out.
         if (!_read_player_name(ng.name))
-            end(0);
+            game_ended();
         trim_string(ng.name);
 
         if (ng.name.empty())

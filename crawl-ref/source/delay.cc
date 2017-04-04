@@ -38,6 +38,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "item-use.h"
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -56,6 +57,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "sound.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-util.h"
@@ -184,22 +186,6 @@ bool MacroDelay::try_interrupt()
     return true;
     // There's no special action needed for macros - if we don't call out
     // to the Lua function, it can't do damage.
-}
-
-bool EatDelay::try_interrupt()
-{
-    if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep eating?", true, 'N', false))
-        {
-            mpr("You stop eating.");
-            return true;
-        }
-        else
-            was_prompted = true;
-    }
-    return false;
 }
 
 bool ArmourOnDelay::try_interrupt()
@@ -579,20 +565,6 @@ void MacroDelay::handle()
         you.time_taken = 0;
 }
 
-bool EatDelay::invalidated()
-{
-    // Stop eating if something happens (chunk rots, you get teleported,
-    // you get polymorphed into a lich, etc.)
-    if (!can_eat(food, true)
-        || !in_inventory(food) && food.pos != you.pos())
-    {
-        mpr("You stop eating.");
-        return true;
-    }
-
-    return false;
-}
-
 static bool _check_corpse_gone(item_def& item, const char* action)
 {
     // A monster may have raised the corpse you're chopping up! -- bwr
@@ -753,6 +725,9 @@ void JewelleryOnDelay::finish()
             return;
     }
 
+#ifdef USE_SOUND
+    parse_sound(WEAR_JEWELLERY_SOUND);
+#endif
     puton_ring(jewellery.link, false);
 }
 
@@ -766,6 +741,9 @@ void ArmourOnDelay::finish()
 
     const equipment_type eq_slot = get_armour_slot(armour);
 
+#ifdef USE_SOUND
+    parse_sound(EQUIP_ARMOUR_SOUND);
+#endif
     mprf("You finish putting on %s.", armour.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
@@ -787,19 +765,18 @@ void ArmourOffDelay::finish()
     const equipment_type slot = get_armour_slot(armour);
     ASSERT(you.equip[slot] == armour.link);
 
+#ifdef USE_SOUND
+    parse_sound(DEQUIP_ARMOUR_SOUND);
+#endif
     mprf("You finish taking off %s.", armour.name(DESC_YOUR).c_str());
     unequip_item(slot);
 }
 
-void EatDelay::finish()
-{
-    if (food_turns(food) > 1) // If duration was just one turn, don't print.
-        mpr("You finish eating.");
-    finish_eating_item(food);
-}
-
 void MemoriseDelay::finish()
 {
+#ifdef USE_SOUND
+    parse_sound(MEMORISE_SPELL_SOUND);
+#endif
     mpr("You finish memorising.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
@@ -855,6 +832,16 @@ void PasswallDelay::finish()
     }
     else
         move_player_to_grid(dest, false);
+
+    // the last phase of the delay is a fake (0-time) turn, so world_reacts
+    // and player_reacts aren't triggered. Need to do a tiny bit of cleanup.
+    // This isn't very elegant, and perhaps a version of player_reacts that is
+    // triggered by changing location would be better (per Pleasingfungus),
+    // but player_reacts is very sensitive to order and can't be easily
+    // refactored in this way.
+    search_around();
+    you.update_beholders();
+    you.update_fearmongers();
 }
 
 void ShaftSelfDelay::finish()

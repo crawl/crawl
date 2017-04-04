@@ -27,6 +27,7 @@
 #include "god-item.h"
 #include "invent.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -878,7 +879,14 @@ bool learn_spell(spell_type specspell, bool wizard)
 
     if (!wizard)
     {
-        int severity = fail_severity(specspell);
+        if (specspell == SPELL_OZOCUBUS_ARMOUR
+            && !player_effectively_in_light_armour())
+        {
+            mprf(MSGCH_WARN,
+                 "Your armour is too heavy for you to cast this spell!");
+        }
+
+        const int severity = fail_severity(specspell);
 
         if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
             mprf(MSGCH_WARN, "This spell is impossible to cast!");
@@ -927,11 +935,4 @@ bool book_has_title(const item_def &book)
 
     return book.props.exists(BOOK_TITLED_KEY)
            && book.props[BOOK_TITLED_KEY].get_bool() == true;
-}
-
-void destroy_spellbook(const item_def &book)
-{
-    int maxlevel = 0;
-    for (spell_type stype : spells_in_book(book))
-        maxlevel = max(maxlevel, spell_difficulty(stype));
 }

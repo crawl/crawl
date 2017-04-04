@@ -43,7 +43,6 @@
 #include "transform.h"
 #include "xom.h"
 
-static void _eat_chunk(item_def& food);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(item_def& corpse);
 static void _heal_from_food(int hp_amt);
@@ -53,19 +52,6 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 {
     if (crawl_state.disables[DIS_HUNGER])
         return;
-
-#if TAG_MAJOR_VERSION == 34
-    // Lich/tree form djinn don't get exempted from food costs: infinite
-    // healing from channeling would be just too good.
-    if (you.species == SP_DJINNI)
-    {
-        if (!magic)
-            return;
-
-        contaminate_player(hunger_amount * 4 / 3, true);
-        return;
-    }
-#endif
 
     if (you_foodless())
         return;
@@ -132,22 +118,14 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-bool you_foodless(bool can_eat)
+bool you_foodless()
 {
-    return you.undead_state() == US_UNDEAD
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI && !can_eat
-#endif
-        ;
+    return you.undead_state() == US_UNDEAD;
 }
 
 bool you_foodless_normally()
 {
-    return you.undead_state(false) == US_UNDEAD
-#if TAG_MAJOR_VERSION == 34
-        || you.species == SP_DJINNI
-#endif
-        ;
+    return you.undead_state(false) == US_UNDEAD;
 }
 
 bool prompt_eat_item(int slot)
@@ -178,7 +156,7 @@ bool prompt_eat_item(int slot)
 
 static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
-    if (you_foodless(true))
+    if (you_foodless())
     {
         if (!silent)
         {
@@ -370,33 +348,6 @@ static void _describe_food_change(int food_increment)
     mpr(msg);
 }
 
-bool eat_item(item_def &food)
-{
-    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
-    {
-        if (you.species != SP_VAMPIRE)
-            return false;
-
-        if (_vampire_consume_corpse(food))
-        {
-            count_action(CACT_EAT, -1); // subtype Corpse
-            you.turn_is_over = true;
-            return true;
-        }
-
-        return false;
-    }
-
-    int eat_time = food_turns(food);
-    start_delay<EatDelay>(eat_time - 1, food);
-
-    mprf("You %s %s%s.", eat_time == 1 ? "eat" : "start eating",
-                         food.quantity > 1 ? "one of " : "",
-                         food.name(DESC_THE).c_str());
-    you.turn_is_over = true;
-    return true;
-}
-
 // Handle messaging at the end of eating.
 // Some food types may not get a message.
 static void _finished_eating_message(food_type type)
@@ -414,18 +365,10 @@ static void _finished_eating_message(food_type type)
     }
     else
     {
-        switch (type)
+        if (type == FOOD_MEAT_RATION)
         {
-        case FOOD_MEAT_RATION:
             mpr("That meat ration really hit the spot!");
             return;
-        case FOOD_BEEF_JERKY:
-            mprf("That beef jerky was %s!",
-                 one_chance_in(4) ? "jerk-a-riffic"
-                                  : "delicious");
-            return;
-        default:
-            break;
         }
     }
 
@@ -450,63 +393,15 @@ static void _finished_eating_message(food_type type)
             if (taste.empty())
                 taste = "Eugh, buggy fruit.";
             mpr(taste);
-            break;
+            return;
         }
         default:
             break;
         }
     }
 
-    switch (type)
-    {
-    case FOOD_ROYAL_JELLY:
+    if (type == FOOD_ROYAL_JELLY)
         mpr("That royal jelly was delicious!");
-        break;
-    case FOOD_PIZZA:
-    {
-        if (!Options.pizzas.empty())
-        {
-            const string za = Options.pizzas[random2(Options.pizzas.size())];
-            mprf("Mmm... %s.", trimmed_string(za).c_str());
-            break;
-        }
-
-        const string taste = getMiscString("eating_pizza");
-        if (taste.empty())
-        {
-            mpr("Bleh, bug pizza.");
-            break;
-        }
-
-        mprf("%s", taste.c_str());
-        break;
-    }
-    default:
-        break;
-    }
-}
-
-
-void finish_eating_item(item_def& food)
-{
-    if (food.sub_type == FOOD_CHUNK)
-        _eat_chunk(food);
-    else
-    {
-        int value = food_value(food);
-        ASSERT(value > 0);
-        lessen_hunger(value, true);
-        _finished_eating_message(static_cast<food_type>(food.sub_type));
-    }
-
-    count_action(CACT_EAT, food.sub_type);
-
-    if (is_perishable_stack(food)) // chunks
-        remove_oldest_perishable_item(food);
-    if (in_inventory(food))
-        dec_inv_item_quantity(food.link, 1);
-    else
-        dec_mitm_item_quantity(food.index(), 1);
 }
 
 // Returns which of two food items is older (true for first, else false).
@@ -817,6 +712,49 @@ static void _eat_chunk(item_def& food)
     }
 }
 
+bool eat_item(item_def &food)
+{
+    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
+    {
+        if (you.species != SP_VAMPIRE)
+            return false;
+
+        if (_vampire_consume_corpse(food))
+        {
+            count_action(CACT_EAT, -1); // subtype Corpse
+            you.turn_is_over = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    mprf("You eat %s%s.", food.quantity > 1 ? "one of " : "",
+                          food.name(DESC_THE).c_str());
+
+    if (food.sub_type == FOOD_CHUNK)
+        _eat_chunk(food);
+    else
+    {
+        int value = food_value(food);
+        ASSERT(value > 0);
+        lessen_hunger(value, true);
+        _finished_eating_message(static_cast<food_type>(food.sub_type));
+    }
+
+    count_action(CACT_EAT, food.sub_type);
+
+    if (is_perishable_stack(food)) // chunks
+        remove_oldest_perishable_item(food);
+    if (in_inventory(food))
+        dec_inv_item_quantity(food.link, 1);
+    else
+        dec_mitm_item_quantity(food.index(), 1);
+
+    you.turn_is_over = true;
+    return true;
+}
+
 bool is_bad_food(const item_def &food)
 {
     return is_mutagenic(food) || is_forbidden_food(food) || is_noxious(food);
@@ -845,7 +783,7 @@ bool is_noxious(const item_def &food)
 bool is_inedible(const item_def &item)
 {
     // Mummies and liches don't eat.
-    if (you_foodless(true))
+    if (you_foodless())
         return true;
 
     if (item.base_type == OBJ_FOOD // XXX: removeme?
@@ -883,7 +821,7 @@ bool is_inedible(const item_def &item)
 bool is_preferred_food(const item_def &food)
 {
     // Mummies and liches don't eat.
-    if (you_foodless(true))
+    if (you_foodless())
         return false;
 
     // Vampires don't really have a preferred food type, but they really
@@ -893,9 +831,7 @@ bool is_preferred_food(const item_def &food)
 
 #if TAG_MAJOR_VERSION == 34
     if (food.is_type(OBJ_POTIONS, POT_PORRIDGE)
-        && item_type_known(food)
-        && you.species != SP_DJINNI
-        )
+        && item_type_known(food))
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }
@@ -1139,19 +1075,17 @@ void handle_starvation()
             if (!you.duration[DUR_PARALYSIS])
                 take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "fainting"));
             you.increase_duration(DUR_PARALYSIS, turns, 13);
-            if (you_worship(GOD_XOM))
-                xom_is_stimulated(get_tension() > 0 ? 200 : 100);
+            xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
         if (you.hunger <= 0 && !you.duration[DUR_DEATHS_DOOR])
         {
-            auto it = min_element(begin(you.inv), end(you.inv),
-                [](const item_def& a, const item_def& b) -> bool
+            auto it = find_if(begin(you.inv), end(you.inv),
+                [](const item_def& food) -> bool
                 {
-                    return (can_eat(a, true) ? food_turns(a) : INT_MAX)
-                         < (can_eat(b, true) ? food_turns(b) : INT_MAX);
+                    return can_eat(food, true);
                 });
-            if (it != end(you.inv) && can_eat(*it, true))
+            if (it != end(you.inv))
             {
                 mpr("As you are about to starve, you manage to eat something.");
                 eat_item(*it);
@@ -1176,7 +1110,7 @@ int hunger_bars(const int hunger)
 
 string hunger_cost_string(const int hunger)
 {
-    if (you_foodless(true))
+    if (you_foodless())
         return "N/A";
 
 #ifdef WIZARD

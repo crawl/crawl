@@ -1,5 +1,6 @@
-#ifndef TRAP_DEF_H
-#define TRAP_DEF_H
+#pragma once
+
+#include "trap-type.h"
 
 struct trap_def
 {
@@ -7,7 +8,7 @@ struct trap_def
     coord_def pos;
     /// The type of trap
     trap_type type;
-    /// The amount of ammo remaining (also used for a horrible shadow trap hack)
+    /// The amount of ammo remaining. For web traps, if 1, destroy on exit.
     short     ammo_qty;
     /// How difficult the trap is to detect
     uint8_t   skill_rnd;
@@ -32,5 +33,3 @@ private:
     item_def generate_trap_item();
     int shot_damage(actor& act);
 };
-
-#endif

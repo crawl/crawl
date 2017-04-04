@@ -1,7 +1,7 @@
-#ifndef COORDIT_H
-#define COORDIT_H
+#pragma once
 
 #include "coord-circle.h"
+#include "los-type.h"
 
 class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 {
@@ -154,4 +154,3 @@ public:
 # ifdef DEBUG_TESTS
 void coordit_tests();
 # endif
-#endif
