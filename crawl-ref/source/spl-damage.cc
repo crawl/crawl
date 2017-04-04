@@ -1017,7 +1017,7 @@ static bool _player_hurt_monster(monster& m, int damage,
         }
         else
         {
-            monster_die(&m, KILL_YOU, NON_MONSTER);
+            monster_die(m, KILL_YOU, NON_MONSTER);
             return true;
         }
     }
@@ -1635,7 +1635,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     }
     else
     {
-        monster_die(mon,
+        monster_die(*mon,
                     agent->is_player() ? KILL_YOU : KILL_MON,
                     agent->mindex());
     }

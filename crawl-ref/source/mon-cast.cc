@@ -3580,7 +3580,7 @@ static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam)
         mprf("%s animating energy erupts into ghostly fire!",
              apostrophise(victim->name(DESC_THE)).c_str());
     }
-    monster_die(victim, &caster, true);
+    monster_die(*victim, &caster, true);
     return true;
 }
 

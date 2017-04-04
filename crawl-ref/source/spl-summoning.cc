@@ -1206,7 +1206,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
 
             // If we didn't find a valid spell set yet, just give up
             if (tries > 20)
-                monster_die(mons, KILL_RESET, NON_MONSTER);
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
             else
             {
                 // Choose a new duration based on HD.
@@ -1234,7 +1234,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                     && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
                 {
                     if (player_will_anger_monster(**mi))
-                        monster_die(*mi, KILL_RESET, NON_MONSTER);
+                        monster_die(**mi, KILL_RESET, NON_MONSTER);
 
                     mi->props["summon_id"].get_int() = mons->mid;
                 }
@@ -2625,7 +2625,7 @@ void end_battlesphere(monster* mons, bool killed)
         if (!cell_is_solid(mons->pos()))
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
 
-        monster_die(mons, KILL_RESET, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
     }
 }
 
@@ -3135,7 +3135,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     }
 
     if (!killed)
-        monster_die(mons, KILL_RESET, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
 }
 
 bool trigger_spectral_weapon(actor* agent, const actor* target)

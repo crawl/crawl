@@ -1350,7 +1350,7 @@ static void _xom_snakes_to_sticks(int sever)
 
         // Dismiss monster silently.
         move_item_to_grid(&item_slot, mi->pos());
-        monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
+        monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true, false);
     }
 }
 

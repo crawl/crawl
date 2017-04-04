@@ -1462,7 +1462,7 @@ void make_mons_leave_level(monster* mon)
         // Pacified monsters leaving the level take their stuff with
         // them.
         mon->flags |= MF_HARD_RESET;
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
     }
 }
 
