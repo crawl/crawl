@@ -1654,7 +1654,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // Assuming that the only mass charm is control undead.
     if (wh_enchant == ENCH_CHARM)
     {
-        if (player_mutation_level(MUT_NO_LOVE))
+        if (you.get_mutation_level(MUT_NO_LOVE))
             return true;
 
         if (mons->friendly())
@@ -2028,7 +2028,7 @@ int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
     {
         // For mutation damage, we want to count innate mutations for
         // demonspawn but not other species.
-        int multiplier = 5 * how_mutated(you.species == SP_DEMONSPAWN, true);
+        int multiplier = 5 * you.how_mutated(you.species == SP_DEMONSPAWN, true);
         if (multiplier == 0)
             return 0;
 
@@ -3000,7 +3000,7 @@ bool bolt::harmless_to_player() const
         return you.res_petrify() || you.petrified();
 
     case BEAM_COLD:
-        return is_big_cloud() && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
+        return is_big_cloud() && you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY);
 
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;
@@ -3786,7 +3786,7 @@ void bolt::affect_player()
             }
         }
 
-        if (you.mutation[MUT_JELLY_MISSILE]
+        if (you.has_mutation(MUT_JELLY_MISSILE)
             && you.hp < you.hp_max
             && !you.duration[DUR_DEATHS_DOOR]
             && item_is_jelly_edible(*item)

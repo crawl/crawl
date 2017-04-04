@@ -12,11 +12,11 @@
 
 class formatted_string;
 
-enum mutation_activity_type
+enum class mutation_activity_type
 {
-    MUTACT_INACTIVE, // form-based mutations in most forms
-    MUTACT_PARTIAL,  // scales on statues
-    MUTACT_FULL,     // other mutations
+    INACTIVE, // form-based mutations in most forms
+    PARTIAL,  // scales on statues
+    FULL,     // other mutations
 };
 
 enum mutation_permanence_class
@@ -54,7 +54,10 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 
 bool delete_all_mutations(const string &reason);
 
-const char* mutation_name(mutation_type mut);
+const char* mutation_name(mutation_type mut, bool allow_category = false);
+const char* category_mutation_name(mutation_type mut);
+mutation_type mutation_from_name(string name, bool allow_category, vector<mutation_type> *partial_matches = nullptr);
+
 string mut_upgrade_summary(mutation_type mut);
 int mutation_max_levels(mutation_type mut);
 string mutation_desc(mutation_type which_mutat, int level = -1,
@@ -65,7 +68,7 @@ void roll_demonspawn_mutations();
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
 bool temp_mutate(mutation_type which_mut, const string &reason);
 int temp_mutation_roll();
-int how_mutated(bool innate = false, bool levels = false, bool temp = true);
+bool temp_mutation_wanes();
 
 void check_demonic_guardian();
 void check_monster_detect();
@@ -74,4 +77,5 @@ bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
 void reset_powered_by_death_duration();
 
+bool delete_all_temp_mutations(const string &reason);
 bool delete_temp_mutation();

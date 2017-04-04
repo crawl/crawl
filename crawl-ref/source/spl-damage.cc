@@ -32,6 +32,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"
@@ -1726,7 +1727,7 @@ static int _ignite_ally_harm(const coord_def &where)
 static bool maybe_abort_ignite()
 {
     // Fire cloud immunity.
-    if (you.duration[DUR_FIRE_SHIELD] || you.mutation[MUT_IGNITE_BLOOD])
+    if (you.duration[DUR_FIRE_SHIELD] || you.has_mutation(MUT_IGNITE_BLOOD))
         return false;
 
     string prompt = "You are standing ";

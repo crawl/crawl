@@ -139,7 +139,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
                 threshold = threshold * 3 / 2;
             threshold = threshold * you.time_taken / BASELINE_DELAY;
             // Do prompt if we'd lose icemail, though.
-            if (you.hp > threshold && !you.mutation[MUT_ICEMAIL])
+            if (you.hp > threshold && !you.has_mutation(MUT_ICEMAIL))
                 return true;
         }
         // Don't prompt for meph if we have clarity, unless at very low HP.
@@ -617,9 +617,9 @@ void update_vision_range()
     }
 
     // Nightstalker gives -1/-2/-3.
-    if (player_mutation_level(MUT_NIGHTSTALKER))
+    if (you.get_mutation_level(MUT_NIGHTSTALKER))
     {
-        nom *= LOS_DEFAULT_RANGE - player_mutation_level(MUT_NIGHTSTALKER);
+        nom *= LOS_DEFAULT_RANGE - you.get_mutation_level(MUT_NIGHTSTALKER);
         denom *= LOS_DEFAULT_RANGE;
     }
 
@@ -654,14 +654,14 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     switch (eq)
     {
     case EQ_LEFT_RING:
-        if (player_mutation_level(MUT_MISSING_HAND))
+        if (you.get_mutation_level(MUT_MISSING_HAND))
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
         return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
 
     case EQ_RING_EIGHT:
-        if (player_mutation_level(MUT_MISSING_HAND))
+        if (you.get_mutation_level(MUT_MISSING_HAND))
             return MB_FALSE;
         // intentional fallthrough
     case EQ_RING_ONE:
@@ -764,8 +764,8 @@ bool player_has_feet(bool temp)
         return false;
     }
 
-    if (player_mutation_level(MUT_HOOVES, temp) == 3
-        || player_mutation_level(MUT_TALONS, temp) == 3)
+    if (you.get_mutation_level(MUT_HOOVES, temp) == 3
+        || you.get_mutation_level(MUT_TALONS, temp) == 3)
     {
         return false;
     }
@@ -1022,7 +1022,7 @@ int player_teleport(bool calc_unid)
     tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
 
     // mutations
-    tp += player_mutation_level(MUT_TELEPORT) * 4;
+    tp += you.get_mutation_level(MUT_TELEPORT) * 4;
 
     return tp;
 }
@@ -1053,7 +1053,7 @@ static int _player_bonus_regen()
         rr += REGEN_PIP;
 
     // Fast heal mutation.
-    rr += player_mutation_level(MUT_REGENERATION) * REGEN_PIP;
+    rr += you.get_mutation_level(MUT_REGENERATION) * REGEN_PIP;
 
     // Powered By Death mutation, boosts regen by variable strength
     // if the duration of the effect is still active.
@@ -1066,7 +1066,7 @@ static int _player_bonus_regen()
 // Inhibited regeneration: stops regeneration when monsters are visible
 bool regeneration_is_inhibited()
 {
-    switch (player_mutation_level(MUT_INHIBITED_REGENERATION))
+    switch (you.get_mutation_level(MUT_INHIBITED_REGENERATION))
     {
     case 0:
       return false;
@@ -1136,7 +1136,7 @@ int player_mp_regen()
     int regen_amount = 7 + you.max_magic_points / 2;
 
     int multiplier = 100;
-    if (player_mutation_level(MUT_MANA_REGENERATION))
+    if (you.get_mutation_level(MUT_MANA_REGENERATION))
         multiplier += 100;
     if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
         multiplier += 50;
@@ -1149,7 +1149,7 @@ int player_mp_regen()
 void update_regen_amulet_attunement()
 {
     if (you.wearing(EQ_AMULET, AMU_REGENERATION)
-        && player_mutation_level(MUT_NO_REGENERATION) == 0)
+        && you.get_mutation_level(MUT_NO_REGENERATION) == 0)
     {
         if (you.hp == you.hp_max
             && you.props[REGEN_AMULET_ACTIVE].get_int() == 0)
@@ -1221,8 +1221,8 @@ int player_hunger_rate(bool temp)
     }
     else
     {
-        hunger += player_mutation_level(MUT_FAST_METABOLISM)
-                - player_mutation_level(MUT_SLOW_METABOLISM);
+        hunger += you.get_mutation_level(MUT_FAST_METABOLISM)
+                - you.get_mutation_level(MUT_SLOW_METABOLISM);
     }
 
     // If Cheibriados has slowed your life processes, you will hunger less.
@@ -1285,7 +1285,7 @@ int player_spell_levels()
 int player_likes_chunks(bool permanently)
 {
     return you.gourmand(true, !permanently)
-           ? 3 : player_mutation_level(MUT_CARNIVOROUS);
+           ? 3 : you.get_mutation_level(MUT_CARNIVOROUS);
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -1330,10 +1330,10 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf--;
 
     // mutations:
-    rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
-    rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
-    rf -= player_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
-    rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
+    rf += you.get_mutation_level(MUT_HEAT_RESISTANCE, temp);
+    rf -= you.get_mutation_level(MUT_HEAT_VULNERABILITY, temp);
+    rf -= you.get_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
+    rf += you.get_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
     // spells:
     if (temp)
@@ -1439,11 +1439,11 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     }
 
     // mutations:
-    rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
-    rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
-    rc -= player_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
-    rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
-    rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
+    rc += you.get_mutation_level(MUT_COLD_RESISTANCE, temp);
+    rc -= you.get_mutation_level(MUT_COLD_VULNERABILITY, temp);
+    rc -= you.get_mutation_level(MUT_TEMPERATURE_SENSITIVITY, temp);
+    rc += you.get_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
+    rc += you.get_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 
     if (rc < -3)
         rc = -3;
@@ -1470,8 +1470,9 @@ bool player::res_corr(bool calc_unid, bool items) const
         return true;
     }
 
+    // TODO: why doesn't this use the usual form suppression mechanism?
     if (form_keeps_mutations()
-        && player_mutation_level(MUT_YELLOW_SCALES) >= 3)
+        && get_mutation_level(MUT_YELLOW_SCALES) >= 3)
     {
         return true;
     }
@@ -1507,9 +1508,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     }
 
     // mutations:
-    re += player_mutation_level(MUT_THIN_METALLIC_SCALES, temp) == 3 ? 1 : 0;
-    re += player_mutation_level(MUT_SHOCK_RESISTANCE, temp);
-    re -= player_mutation_level(MUT_SHOCK_VULNERABILITY, temp);
+    re += you.get_mutation_level(MUT_THIN_METALLIC_SCALES, temp) == 3 ? 1 : 0;
+    re += you.get_mutation_level(MUT_SHOCK_RESISTANCE, temp);
+    re -= you.get_mutation_level(MUT_SHOCK_VULNERABILITY, temp);
 
     if (temp)
     {
@@ -1539,11 +1540,11 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
  */
 bool player_res_torment(bool random)
 {
-    if (player_mutation_level(MUT_TORMENT_RESISTANCE))
+    if (you.get_mutation_level(MUT_TORMENT_RESISTANCE))
         return true;
 
     if (random
-        && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
+        && you.get_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
         && coinflip())
     {
         return true;
@@ -1617,8 +1618,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     }
 
     // mutations:
-    rp += player_mutation_level(MUT_POISON_RESISTANCE, temp);
-    rp += player_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
+    rp += you.get_mutation_level(MUT_POISON_RESISTANCE, temp);
+    rp += you.get_mutation_level(MUT_SLIMY_GREEN_SCALES, temp) == 3 ? 1 : 0;
 
     // Only thirsty vampires are naturally poison resistant.
     // XXX: && temp?
@@ -1682,7 +1683,7 @@ int player_spec_death()
     sd += you.wearing(EQ_STAFF, STAFF_DEATH);
 
     // species:
-    sd += player_mutation_level(MUT_NECRO_ENHANCER);
+    sd += you.get_mutation_level(MUT_NECRO_ENHANCER);
 
     // transformations:
     if (you.form == transformation::lich)
@@ -1869,7 +1870,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     }
 
     // undead/demonic power
-    pl += player_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE, temp);
+    pl += you.get_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE, temp);
 
     pl = min(3, pl);
 
@@ -1932,10 +1933,10 @@ int player_movement_speed()
         ++mv; // as ponderous
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
-    if (int fast = player_mutation_level(MUT_FAST))
+    if (int fast = you.get_mutation_level(MUT_FAST))
         mv -= fast + 1;
 
-    if (int slow = player_mutation_level(MUT_SLOW))
+    if (int slow = you.get_mutation_level(MUT_SLOW))
     {
         mv *= 10 + slow * 2;
         mv /= 10;
@@ -2003,27 +2004,6 @@ int player_speed()
     }
 
     return ps;
-}
-
-// Get level of player mutation, ignoring mutations with an activity level
-// less than minact.
-static int _mut_level(mutation_type mut, mutation_activity_type minact)
-{
-    const int mlevel = you.mutation[mut];
-
-    const mutation_activity_type active = mutation_activity_level(mut);
-
-    if (active >= minact)
-        return mlevel;
-
-    return 0;
-}
-
-// Output level of player mutation. If temp is true (the default), take into
-// account the suppression of mutations by changes of form.
-int player_mutation_level(mutation_type mut, bool temp)
-{
-    return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
 }
 
 bool is_effectively_light_armour(const item_def *item)
@@ -2112,14 +2092,14 @@ static int _player_evasion_bonuses()
     evbonus += you.scan_artefacts(ARTP_EVASION);
 
     // mutations
-    evbonus += player_mutation_level(MUT_GELATINOUS_BODY);
+    evbonus += you.get_mutation_level(MUT_GELATINOUS_BODY);
 
-    if (player_mutation_level(MUT_DISTORTION_FIELD))
-        evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
+    if (you.get_mutation_level(MUT_DISTORTION_FIELD))
+        evbonus += you.get_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
     // transformation penalties/bonuses not covered by size alone:
-    if (player_mutation_level(MUT_SLOW_REFLEXES))
-        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 5;
+    if (you.get_mutation_level(MUT_SLOW_REFLEXES))
+        evbonus -= you.get_mutation_level(MUT_SLOW_REFLEXES) * 5;
 
     return evbonus;
 }
@@ -2300,8 +2280,8 @@ int player_shield_class()
 
     // mutations
     // +4, +6, +8 (displayed values)
-    shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
+    shield += (you.get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
+               ? you.get_mutation_level(MUT_LARGE_BONE_PLATES) * 400 + 400
                : 0);
 
     shield += qazlal_sh_boost() * 100;
@@ -2383,24 +2363,6 @@ void forget_map(bool rot)
 #ifdef USE_TILE
     tiles.update_minimap_bounds();
 #endif
-}
-
-static void _remove_temp_mutation()
-{
-    int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
-        max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
-        1 + random2(3)));
-
-    if (num_remove >= you.attribute[ATTR_TEMP_MUTATIONS])
-        mprf(MSGCH_DURATION, "You feel the corruption within you wane completely.");
-    else
-        mprf(MSGCH_DURATION, "You feel the corruption within you wane somewhat.");
-
-    for (int i = 0; i < num_remove; ++i)
-        delete_temp_mutation();
-
-    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
-        you.attribute[ATTR_TEMP_MUT_XP] += temp_mutation_roll();
 }
 
 static void _recover_stat()
@@ -2546,7 +2508,7 @@ static void _handle_temp_mutation(int exp)
 
     you.attribute[ATTR_TEMP_MUT_XP] -= exp;
     if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
-        _remove_temp_mutation();
+        temp_mutation_wanes();
 }
 
 /// update stat loss
@@ -3078,7 +3040,7 @@ int player_stealth()
     // berserking, "clumsy" (0-dex), sacrifice stealth.
     if (you.berserk()
         || you.duration[DUR_CLUMSY]
-        || player_mutation_level(MUT_NO_STEALTH))
+        || you.get_mutation_level(MUT_NO_STEALTH))
     {
         return 0;
     }
@@ -3127,11 +3089,11 @@ int player_stealth()
     }
 
     // Mutations.
-    stealth += STEALTH_PIP * player_mutation_level(MUT_NIGHTSTALKER);
+    stealth += STEALTH_PIP * you.get_mutation_level(MUT_NIGHTSTALKER);
     stealth += (STEALTH_PIP / 2)
-                * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
-    stealth += STEALTH_PIP * player_mutation_level(MUT_CAMOUFLAGE);
-    const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
+                * you.get_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    stealth += STEALTH_PIP * you.get_mutation_level(MUT_CAMOUFLAGE);
+    const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
     if (how_transparent)
         stealth += 15 * (how_transparent);
 
@@ -3166,7 +3128,7 @@ int player_stealth()
         else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += STEALTH_PIP;
         else if (you.has_usable_hooves())
-            stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
+            stealth -= 5 + 5 * you.get_mutation_level(MUT_HOOVES);
         else if (you.species == SP_FELID
                  && (you.form == transformation::none
                      || you.form == transformation::appendage))
@@ -3434,7 +3396,7 @@ void display_char_status()
 
 bool player::clarity(bool calc_unid, bool items) const
 {
-    if (player_mutation_level(MUT_CLARITY))
+    if (you.get_mutation_level(MUT_CLARITY))
         return true;
 
     if (have_passive(passive_t::clarity))
@@ -3445,7 +3407,7 @@ bool player::clarity(bool calc_unid, bool items) const
 
 bool player::gourmand(bool calc_unid, bool items) const
 {
-    return player_mutation_level(MUT_GOURMAND) > 0
+    return you.get_mutation_level(MUT_GOURMAND) > 0
            || actor::gourmand(calc_unid, items);
 }
 
@@ -3904,11 +3866,11 @@ int get_real_hp(bool trans, bool rotted)
                           || player_under_penance(GOD_HEPLIAKLQANA);
 
     // Mutations that increase HP by a percentage
-    hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
+    hitp *= 100 + (you.get_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
-                   player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
-                - (player_mutation_level(MUT_FRAIL) * 10)
+                + (you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
+                   you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
+                - (you.get_mutation_level(MUT_FRAIL) * 10)
                 - (hep_frail ? 10 : 0);
 
     hitp /= 100;
@@ -3951,9 +3913,9 @@ int get_real_mp(bool include_items)
     enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
 
     // Analogous to ROBUST/FRAIL
-    enp *= 100  + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
+    enp *= 100  + (you.get_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-               - (player_mutation_level(MUT_LOW_MAGIC) * 10);
+               - (you.get_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
 //    enp = stepdown_value(enp, 9, 18, 45, 100)
     enp += species_mp_modifier(you.species);
@@ -3981,7 +3943,7 @@ int get_real_mp(bool include_items)
 
 bool player_regenerates_hp()
 {
-    if (player_mutation_level(MUT_NO_REGENERATION) > 0)
+    if (you.has_mutation(MUT_NO_REGENERATION))
         return false;
     if (you.species == SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         return false;
@@ -5410,7 +5372,7 @@ string player::shout_verb(bool directed) const
     if (!get_form()->shout_verb.empty())
         return get_form()->shout_verb;
 
-    const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
+    const int screaminess = max(get_mutation_level(MUT_SCREAM) - 1, 0);
 
     if (species == SP_BULTUNGIN)
         return dog_shout_verbs[screaminess];
@@ -5432,8 +5394,8 @@ int player::shout_volume() const
 {
     const int base_noise = 12 + get_form()->shout_volume_modifier;
 
-    if (player_mutation_level(MUT_SCREAM))
-        return base_noise + 2 * (player_mutation_level(MUT_SCREAM) - 1);
+    if (get_mutation_level(MUT_SCREAM))
+        return base_noise + 2 * (get_mutation_level(MUT_SCREAM) - 1);
 
     return base_noise;
 }
@@ -5575,7 +5537,7 @@ bool player::shielded() const
 {
     return shield()
            || duration[DUR_DIVINE_SHIELD]
-           || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
+           || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
            || qazlal_sh_boost() > 0
            || attribute[ATTR_BONE_ARMOUR] > 0
            || you.wearing(EQ_AMULET_PLUS, AMU_REFLECTION) > 0
@@ -5613,7 +5575,7 @@ int player::missile_deflection() const
     if (attribute[ATTR_DEFLECT_MISSILES])
         return 2;
 
-    if (player_mutation_level(MUT_DISTORTION_FIELD) == 3
+    if (get_mutation_level(MUT_DISTORTION_FIELD) == 3
         || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
         || scan_artefacts(ARTP_RMSL, true)
         || have_passive(passive_t::upgraded_storm_shield))
@@ -5666,7 +5628,7 @@ int player::adjusted_body_armour_penalty(int scale) const
 {
     const int base_ev_penalty =
         max(0, unadjusted_body_armour_penalty()
-                   - you.mutation[MUT_STURDY_FRAME] * 2);
+                   - get_mutation_level(MUT_STURDY_FRAME) * 2);
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty * (450 - skill(SK_ARMOUR, 10))
@@ -5772,7 +5734,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
 int player_icemail_armour_class()
 {
-    if (!you.mutation[MUT_ICEMAIL])
+    if (!you.has_mutation(MUT_ICEMAIL))
         return 0;
 
     return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 : ICEMAIL_MAX;
@@ -5806,7 +5768,7 @@ int sanguine_armour_bonus()
     if (!you.duration[DUR_SANGUINE_ARMOUR])
         return 0;
 
-    const int mut_lev = you.mutation[MUT_SANGUINE_ARMOUR];
+    const int mut_lev = you.get_mutation_level(MUT_SANGUINE_ARMOUR);
     // like iridescent, but somewhat moreso (when active)
     return 300 + mut_lev * 300;
 }
@@ -5831,8 +5793,8 @@ int player::base_ac_from(const item_def &armour, int scale) const
     // The deformed don't fit into body armour very well.
     // (This includes nagas and centaurs.)
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
-            && (player_mutation_level(MUT_DEFORMED)
-                || player_mutation_level(MUT_PSEUDOPODS)))
+            && (get_mutation_level(MUT_DEFORMED)
+                || get_mutation_level(MUT_PSEUDOPODS)))
     {
         return AC - base / 2;
     }
@@ -5914,41 +5876,41 @@ int player::base_ac(int scale) const
 
     // Scale mutations, etc. Statues don't get an AC benefit from scales,
     // since the scales are made of the same stone as everything else.
-    AC += player_mutation_level(MUT_TOUGH_SKIN)
-          ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;
+    AC += get_mutation_level(MUT_TOUGH_SKIN)
+          ? get_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;
               // +1, +2, +3
-    AC += player_mutation_level(MUT_SHAGGY_FUR)
-          ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;
+    AC += get_mutation_level(MUT_SHAGGY_FUR)
+          ? get_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;
               // +1, +2, +3
-    AC += player_mutation_level(MUT_GELATINOUS_BODY)
-          ? player_mutation_level(MUT_GELATINOUS_BODY) * 100 : 0;
+    AC += get_mutation_level(MUT_GELATINOUS_BODY)
+          ? get_mutation_level(MUT_GELATINOUS_BODY) * 100 : 0;
               // +1, +2, +3
-    AC += _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL) * 200;
+    AC += get_mutation_level(MUT_IRIDESCENT_SCALES, mutation_activity_type::FULL) * 200;
               // +2, +4, +6
 #if TAG_MAJOR_VERSION == 34
-    AC += _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL)
-          ? -100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;
+    AC += get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL)
+          ? -100 + get_mutation_level(MUT_ROUGH_BLACK_SCALES, mutation_activity_type::FULL) * 300 : 0;
               // +2, +5, +8
 #endif
-    AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) * 100;
+    AC += get_mutation_level(MUT_RUGGED_BROWN_SCALES, mutation_activity_type::FULL) * 100;
               // +1, +2, +3
-    AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 : 0;
+    AC += get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL)
+          ? 100 + get_mutation_level(MUT_ICY_BLUE_SCALES, mutation_activity_type::FULL) * 100 : 0;
               // +2, +3, +4
-    AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 : 0;
+    AC += get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL)
+          ? 100 + get_mutation_level(MUT_MOLTEN_SCALES, mutation_activity_type::FULL) * 100 : 0;
               // +2, +3, +4
-    AC += _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;
+    AC += get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL)
+          ? 100 + get_mutation_level(MUT_SLIMY_GREEN_SCALES, mutation_activity_type::FULL) * 100 : 0;
               // +2, +3, +4
-    AC += _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0;
+    AC += get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL)
+          ? 100 + get_mutation_level(MUT_THIN_METALLIC_SCALES, mutation_activity_type::FULL) * 100 : 0;
               // +2, +3, +4
-    AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
-          ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;
+    AC += get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL)
+          ? 100 + get_mutation_level(MUT_YELLOW_SCALES, mutation_activity_type::FULL) * 100 : 0;
               // +2, +3, +4
-    AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
-          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
+    AC -= get_mutation_level(MUT_PHYSICAL_VULNERABILITY)
+          ? get_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 500 : 0;
               // +3, +6, +9
 
     return AC * scale / 100;
@@ -5962,7 +5924,7 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_ICY_ARMOUR])
         AC += 500 + you.props[ICY_ARMOUR_KEY].get_int() * 8;
 
-    if (mutation[MUT_ICEMAIL])
+    if (has_mutation(MUT_ICEMAIL))
         AC += 100 * player_icemail_armour_class();
 
     if (duration[DUR_QAZLAL_AC])
@@ -6112,7 +6074,7 @@ int player::how_chaotic(bool /*check_spells_god*/) const
 bool player::is_unbreathing() const
 {
     return !get_form()->breathes || petrified()
-        || player_mutation_level(MUT_UNBREATHING);
+        || get_mutation_level(MUT_UNBREATHING);
 }
 
 bool player::is_insubstantial() const
@@ -6167,7 +6129,7 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (player_mutation_level(MUT_ROT_IMMUNITY)
+    if (get_mutation_level(MUT_ROT_IMMUNITY)
         || is_nonliving(temp)
         || temp && get_form()->res_rot())
     {
@@ -6227,7 +6189,7 @@ bool player::res_wind() const
 
 bool player::res_petrify(bool temp) const
 {
-    return player_mutation_level(MUT_PETRIFICATION_RESISTANCE)
+    return get_mutation_level(MUT_PETRIFICATION_RESISTANCE)
            || temp && get_form()->res_petrify();
 }
 
@@ -6236,7 +6198,7 @@ int player::res_constrict() const
     if (is_insubstantial())
         return 3;
 
-    if (player_mutation_level(MUT_SPINY))
+    if (get_mutation_level(MUT_SPINY))
         return 3;
 
     return 0;
@@ -6271,8 +6233,8 @@ int player_res_magic(bool calc_unid, bool temp)
     rm += MR_PIP * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
     // Mutations
-    rm += MR_PIP * player_mutation_level(MUT_MAGIC_RESISTANCE);
-    rm -= MR_PIP * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
+    rm += MR_PIP * you.get_mutation_level(MUT_MAGIC_RESISTANCE);
+    rm -= MR_PIP * you.get_mutation_level(MUT_MAGICAL_VULNERABILITY);
 
     // transformations
     if (you.form == transformation::lich && temp)
@@ -6410,8 +6372,8 @@ bool player::permanent_flight() const
 
 bool player::racial_permanent_flight() const
 {
-    return player_mutation_level(MUT_TENGU_FLIGHT) >= 2
-        || player_mutation_level(MUT_BIG_WINGS);
+    return get_mutation_level(MUT_TENGU_FLIGHT) >= 2
+        || get_mutation_level(MUT_BIG_WINGS);
 }
 
 bool player::tengu_flight() const
@@ -6745,7 +6707,7 @@ int player::has_claws(bool allow_tran) const
             return 0;
     }
 
-    return player_mutation_level(MUT_CLAWS, allow_tran);
+    return get_mutation_level(MUT_CLAWS, allow_tran);
 }
 
 bool player::has_usable_claws(bool allow_tran) const
@@ -6759,7 +6721,7 @@ int player::has_talons(bool allow_tran) const
     if (fishtail)
         return 0;
 
-    return player_mutation_level(MUT_TALONS, allow_tran);
+    return get_mutation_level(MUT_TALONS, allow_tran);
 }
 
 bool player::has_usable_talons(bool allow_tran) const
@@ -6773,7 +6735,7 @@ int player::has_hooves(bool allow_tran) const
     if (fishtail)
         return 0;
 
-    return player_mutation_level(MUT_HOOVES, allow_tran);
+    return get_mutation_level(MUT_HOOVES, allow_tran);
 }
 
 bool player::has_usable_hooves(bool allow_tran) const
@@ -6792,7 +6754,7 @@ int player::has_fangs(bool allow_tran) const
             return 3;
     }
 
-    return player_mutation_level(MUT_FANGS, allow_tran);
+    return get_mutation_level(MUT_FANGS, allow_tran);
 }
 
 int player::has_usable_fangs(bool allow_tran) const
@@ -6816,7 +6778,7 @@ int player::has_tail(bool allow_tran) const
     // XXX: Do merfolk in water belong under allow_tran?
     if (species_is_draconian(species)
         || fishtail
-        || player_mutation_level(MUT_STINGER, allow_tran))
+        || get_mutation_level(MUT_STINGER, allow_tran))
     {
         return 1;
     }
@@ -6833,7 +6795,7 @@ int player::has_usable_tail(bool allow_tran) const
 // purpose of punching.
 bool player::has_usable_offhand() const
 {
-    if (player_mutation_level(MUT_MISSING_HAND))
+    if (get_mutation_level(MUT_MISSING_HAND))
         return false;
     if (shield())
         return false;
@@ -6871,7 +6833,7 @@ int player::usable_tentacles() const
 
 int player::has_pseudopods(bool allow_tran) const
 {
-    return player_mutation_level(MUT_PSEUDOPODS, allow_tran);
+    return get_mutation_level(MUT_PSEUDOPODS, allow_tran);
 }
 
 int player::has_usable_pseudopods(bool allow_tran) const
@@ -6888,7 +6850,7 @@ int player::has_tentacles(bool allow_tran) const
             return 0;
     }
 
-    if (species == SP_OCTOPODE && player_mutation_level(MUT_MISSING_HAND))
+    if (species == SP_OCTOPODE && get_mutation_level(MUT_MISSING_HAND))
         return 7;
     else if (species == SP_OCTOPODE)
         return 8;
@@ -6945,17 +6907,17 @@ bool player::can_see_invisible(bool calc_unid) const
 bool player::innate_sinv() const
 {
     // Possible to have both with a temp mutation.
-    if (player_mutation_level(MUT_ACUTE_VISION)
-        && !player_mutation_level(MUT_BLURRY_VISION))
+    if (has_mutation(MUT_ACUTE_VISION)
+        && !has_mutation(MUT_BLURRY_VISION))
     {
         return true;
     }
 
     // antennae give sInvis at 3
-    if (player_mutation_level(MUT_ANTENNAE) == 3)
+    if (get_mutation_level(MUT_ANTENNAE) == 3)
         return true;
 
-    if (player_mutation_level(MUT_EYEBALLS) == 3)
+    if (get_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
     if (have_passive(passive_t::sinv))
@@ -7595,7 +7557,7 @@ static string _constriction_description()
 **/
 int player_monster_detect_radius()
 {
-    int radius = player_mutation_level(MUT_ANTENNAE) * 2;
+    int radius = you.get_mutation_level(MUT_ANTENNAE) * 2;
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);
@@ -8094,7 +8056,7 @@ int player::inaccuracy() const
     int degree = 0;
     if (wearing(EQ_AMULET, AMU_INACCURACY))
         degree++;
-    if (player_mutation_level(MUT_MISSING_EYE))
+    if (get_mutation_level(MUT_MISSING_EYE))
         degree++;
     return degree;
 }
@@ -8111,7 +8073,7 @@ void player_end_berserk()
     //       avoid the mutation being a "death sentence" to
     //       certain characters.
 
-    if (one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
+    if (one_chance_in(10 + you.get_mutation_level(MUT_BERSERK) * 25))
     {
         // Note the beauty of Trog! They get an extra save that's at
         // the very least 20% and goes up to 100%.
@@ -8163,8 +8125,9 @@ void player_end_berserk()
  */
 bool sanguine_armour_valid()
 {
+    // why does this need to specify the activity type explicitly?
     return you.hp <= you.hp_max * 2 / 3
-           && _mut_level(MUT_SANGUINE_ARMOUR, MUTACT_FULL);
+           && you.get_mutation_level(MUT_SANGUINE_ARMOUR, mutation_activity_type::FULL);
 }
 
 /// Trigger sanguine armour, updating the duration & messaging as appropriate.

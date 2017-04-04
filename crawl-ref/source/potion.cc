@@ -217,7 +217,7 @@ public:
  */
 static string _blood_flavour_message()
 {
-    if (player_mutation_level(MUT_HERBIVOROUS) < 3 && player_likes_chunks())
+    if (you.get_mutation_level(MUT_HERBIVOROUS) < 3 && player_likes_chunks())
         return "This tastes like blood.";
     return "Yuck - this tastes like blood.";
 }
@@ -666,23 +666,24 @@ public:
 };
 
 /**
- * Is the player unable to mutate (temporarily or permanently) & thus unable
- * to drink a mutation-causing potion?
+ * Is the player able to mutate (temporarily or permanently) & thus unable
+ * to drink a mutation-causing potion?  This is a wrapper on `you.can_safely_mutate`.
+ *
  * @param reason Pointer to a string where the reason will be stored if unable
  *               to mutate
- * @returns True if the player is able to mutate now.
+ * @returns true iff the player is able to mutate right now.
  */
-static bool _disallow_mutate(string *reason)
+static bool _can_mutate(string *reason)
 {
-    if (!undead_mutation_rot())
-        return false;
+    if (you.can_safely_mutate())
+        return true;
 
     if (reason)
     {
         *reason = make_stringf("You cannot mutate%s.",
-                               !you.undead_state(false) ? " at present" : "");
+                               you.can_safely_mutate(false) ? "" : " at present");
     }
-    return true;
+    return false;
 }
 
 class PotionResistance : public PotionEffect
@@ -778,7 +779,7 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (_disallow_mutate(reason))
+        if (!_can_mutate(reason))
             return false;
 
         return true;
@@ -1023,7 +1024,7 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         if (you.species == SP_VAMPIRE
-            || player_mutation_level(MUT_CARNIVOROUS) == 3)
+            || you.get_mutation_level(MUT_CARNIVOROUS) == 3)
         {
             mpr("Blech - that potion was really gluggy!");
         }
@@ -1133,15 +1134,15 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (_disallow_mutate(reason))
+        if (!_can_mutate(reason))
             return false;
 
-        if (!how_mutated(false, false, false))
+        if (!you.how_mutated(false, false, false))
         {
             if (reason)
             {
                 *reason = make_stringf("You have no %smutations to cure!",
-                                       how_mutated(false, false, true)
+                                       you.how_mutated(false, false, true)
                                        ? "permanent " : "");
             }
             return false;
@@ -1155,7 +1156,7 @@ public:
             return false;
 
         if (was_known
-            && how_mutated(false, true) > how_mutated(false, true, false)
+            && you.how_mutated(false, true) > you.how_mutated(false, true, false)
             && !yesno("Your transient mutations will not be cured; Quaff anyway?",
                       false, 'n'))
         {
@@ -1195,7 +1196,7 @@ public:
 
     bool can_quaff(string *reason = nullptr) const override
     {
-        if (_disallow_mutate(reason))
+        if (!_can_mutate(reason))
             return false;
         return true;
     }

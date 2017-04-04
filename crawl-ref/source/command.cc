@@ -285,7 +285,7 @@ void list_jewellery()
         item = colour_string(item, colour);
 
         if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
-                player_mutation_level(MUT_MISSING_HAND))
+                you.get_mutation_level(MUT_MISSING_HAND))
         {
             mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
         }

@@ -1052,7 +1052,7 @@ static int _pakellas_high_wand()
         WAND_ICEBLAST,
         WAND_ACID,
     };
-    if (!player_mutation_level(MUT_NO_LOVE))
+    if (!you.get_mutation_level(MUT_NO_LOVE))
         high_wands.emplace_back(WAND_ENSLAVEMENT);
 
     return _preferably_unseen_item(high_wands, _seen_wand);
@@ -1104,7 +1104,7 @@ static bool _give_pakellas_gift()
     {
         // All the evoker options here are summon-based, so give another
         // low-level wand instead under Sacrifice Love.
-        if (player_mutation_level(MUT_NO_LOVE))
+        if (you.get_mutation_level(MUT_NO_LOVE))
         {
             basetype = OBJ_WANDS;
             subtype = _pakellas_low_wand();
@@ -3056,10 +3056,10 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
-    if (player_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
         return false;
 
-    if (player_mutation_level(MUT_NO_ARTIFICE)
+    if (you.get_mutation_level(MUT_NO_ARTIFICE)
         && which_god == GOD_PAKELLAS)
     {
       return false;
@@ -3664,13 +3664,13 @@ void god_pitch(god_type which_god)
                      " have %d.", fee, you.gold);
             }
         }
-        else if (player_mutation_level(MUT_NO_LOVE)
+        else if (you.get_mutation_level(MUT_NO_LOVE)
                  && _god_rejects_loveless(which_god))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
         }
-        else if (player_mutation_level(MUT_NO_ARTIFICE)
+        else if (you.get_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_PAKELLAS)
         {
             simple_god_message(" does not accept worship from those who are "

@@ -1300,7 +1300,7 @@ void zin_remove_divine_stamina()
 
 bool zin_remove_all_mutations()
 {
-    ASSERT(how_mutated());
+    ASSERT(you.how_mutated());
     ASSERT(can_do_capstone_ability(you.religion));
 
     if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
@@ -1826,7 +1826,7 @@ bool beogh_resurrect()
 
 bool jiyva_remove_bad_mutation()
 {
-    if (!how_mutated())
+    if (!you.how_mutated())
     {
         mpr("You have no bad mutations to be cured!");
         return false;
@@ -4464,7 +4464,7 @@ bool gozag_call_merchant()
             continue;
         if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
             continue;
-        if (type == SHOP_EVOKABLES && player_mutation_level(MUT_NO_ARTIFICE))
+        if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;
         if (you.species == SP_FELID &&
             (type == SHOP_ARMOUR
@@ -5110,7 +5110,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
     for (auto mut : muts)
     {
         // can't give the player this if they're already at max
-        if (player_mutation_level(mut) >= mutation_max_levels(mut))
+        if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
             continue;
 
         // can't give the player this if they have an innate mut that conflicts
@@ -5204,7 +5204,7 @@ static bool _player_sacrificed_arcana()
                                     _arcane_sacrifice_lists)
     {
         for (mutation_type sacrifice : arcane_sacrifice_list)
-            if (player_mutation_level(sacrifice))
+            if (you.get_mutation_level(sacrifice))
                 return true;
     }
     return false;
@@ -5221,7 +5221,7 @@ static bool _player_sacrificed_arcana()
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
     if (sacrifice.mutation != MUT_NON_MUTATION
-        && player_mutation_level(sacrifice.mutation))
+        && you.get_mutation_level(sacrifice.mutation))
     {
         return false;
     }
@@ -5408,9 +5408,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             }
             // the other sacrifices get sharply worse if you already
             // have levels of them.
-            else if (player_mutation_level(mut) == 2)
+            else if (you.get_mutation_level(mut) == 2)
                 piety_gain += 28;
-            else if (player_mutation_level(mut) == 1)
+            else if (you.get_mutation_level(mut) == 1)
                 piety_gain += 21;
             else
                 piety_gain += 14;
@@ -5420,37 +5420,37 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
 
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            if (player_mutation_level(MUT_NO_LOVE))
+            if (you.get_mutation_level(MUT_NO_LOVE))
                 piety_gain -= 10; // You've already lost some value here
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (player_mutation_level(MUT_NO_ARMOUR))
+            if (you.get_mutation_level(MUT_NO_ARMOUR))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
-            if (player_mutation_level(MUT_NO_DODGING))
+            if (you.get_mutation_level(MUT_NO_DODGING))
                 piety_gain += 20;
             break;
         case ABIL_RU_SACRIFICE_LOVE:
-            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-                && player_mutation_level(MUT_NO_ARTIFICE))
+            if (you.get_mutation_level(MUT_NO_SUMMONING_MAGIC)
+                && you.get_mutation_level(MUT_NO_ARTIFICE))
             {
                 // this is virtually useless, aside from zot_tub
                 piety_gain = 1;
             }
-            else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-                || player_mutation_level(MUT_NO_ARTIFICE))
+            else if (you.get_mutation_level(MUT_NO_SUMMONING_MAGIC)
+                || you.get_mutation_level(MUT_NO_ARTIFICE))
             {
                 piety_gain /= 2;
             }
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
-            if (player_mutation_level(MUT_COWARDICE))
+            if (you.get_mutation_level(MUT_COWARDICE))
                 piety_gain += 15;
         case ABIL_RU_SACRIFICE_COURAGE:
-            if (player_mutation_level(MUT_INEXPERIENCED))
+            if (you.get_mutation_level(MUT_INEXPERIENCED))
                 piety_gain += 15;
 
         default:

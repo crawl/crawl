@@ -1294,7 +1294,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_DEATH_CHANNEL:
     case SPELL_SIMULACRUM:
     case SPELL_INFESTATION:
-        if (player_mutation_level(MUT_NO_LOVE))
+        if (you.get_mutation_level(MUT_NO_LOVE))
             return "you cannot coerce anything to obey you.";
         break;
 
@@ -1318,7 +1318,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     if (get_spell_disciplines(spell) & SPTYP_SUMMONING
         && spell != SPELL_AURA_OF_ABJURATION
-        && player_mutation_level(MUT_NO_LOVE))
+        && you.get_mutation_level(MUT_NO_LOVE))
     {
         return "you cannot coerce anything to answer your summons.";
     }
@@ -1517,7 +1517,7 @@ bool cannot_use_schools(spschools_type schools)
 
         // check if the player has this school locked out
         const mutation_type lockout_mut = arcana_sacrifice_map[i];
-        if (player_mutation_level(lockout_mut))
+        if (you.has_mutation(lockout_mut))
             return true;
     }
 

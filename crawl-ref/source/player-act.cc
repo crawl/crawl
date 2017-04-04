@@ -159,7 +159,7 @@ int player::get_experience_level() const
 
 int player::get_max_xl() const
 {
-    return 27 - player_mutation_level(MUT_INEXPERIENCED) * RU_SAC_XP_LEVELS;
+    return 27 - get_mutation_level(MUT_INEXPERIENCED) * RU_SAC_XP_LEVELS;
 }
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
@@ -353,7 +353,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 
     if (two_handed && (
         (!ignore_shield && shield())
-        || player_mutation_level(MUT_MISSING_HAND)))
+        || get_mutation_level(MUT_MISSING_HAND)))
     {
         return false;
     }
@@ -410,7 +410,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
-    if (player_mutation_level(MUT_MISSING_HAND)
+    if (get_mutation_level(MUT_MISSING_HAND)
         && you.hands_reqd(item) == HANDS_TWO)
     {
         return false;
@@ -500,7 +500,7 @@ string player::hand_name(bool plural, bool *can_plural) const
     bool _can_plural;
     if (can_plural == nullptr)
         can_plural = &_can_plural;
-    *can_plural = !player_mutation_level(MUT_MISSING_HAND);
+    *can_plural = !get_mutation_level(MUT_MISSING_HAND);
 
     const string singular = _hand_name_singular();
     if (plural && *can_plural)
@@ -520,7 +520,7 @@ static string _foot_name_singular(bool *can_plural)
     if (!get_form()->foot_name.empty())
         return get_form()->foot_name;
 
-    if (player_mutation_level(MUT_HOOVES) >= 3)
+    if (you.get_mutation_level(MUT_HOOVES) >= 3)
         return "hoof";
 
     if (you.has_usable_talons())
@@ -664,8 +664,8 @@ void player::attacking(actor *other, bool ranged)
     if (ranged || mons_is_firewood(*(monster*) other))
         return;
 
-    const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
-    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))
+    const int chance = pow(3, get_mutation_level(MUT_BERSERK) - 1);
+    if (has_mutation(MUT_BERSERK) && x_chance_in_y(chance, 100))
         go_berserk(false);
 }
 

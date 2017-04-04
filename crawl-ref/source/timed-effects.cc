@@ -881,7 +881,7 @@ static void _jiyva_effects(int /*time_delta*/)
 
 static void _evolve(int time_delta)
 {
-    if (int lev = player_mutation_level(MUT_EVOLUTION))
+    if (int lev = you.get_mutation_level(MUT_EVOLUTION))
         if (one_chance_in(2 / lev)
             && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
                > (int)exp_needed(you.experience_level + 1))
@@ -898,7 +898,7 @@ static void _evolve(int time_delta)
                 && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
-                const string reason = (you.mutation[MUT_EVOLUTION] == 1)
+                const string reason = (you.get_mutation_level(MUT_EVOLUTION) == 1)
                                     ? "end of evolution"
                                     : "decline of evolution";
                 evol |= delete_mutation(MUT_EVOLUTION, reason, false);

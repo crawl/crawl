@@ -2708,7 +2708,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                                                              killer_index);
 
     // Player Powered by Death
-    if (gives_player_xp && player_mutation_level(MUT_POWERED_BY_DEATH)
+    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF
@@ -2719,7 +2719,7 @@ item_def* monster_die(monster* mons, killer_type killer,
 
         // Maybe increase strength. The chance decreases with number
         // of existing stacks.
-        const int pbd_level = player_mutation_level(MUT_POWERED_BY_DEATH);
+        const int pbd_level = you.get_mutation_level(MUT_POWERED_BY_DEATH);
         const int pbd_str = you.props[POWERED_BY_DEATH_KEY].get_int();
         if (x_chance_in_y(10 - pbd_str, 10))
         {
@@ -3203,7 +3203,7 @@ void pikel_band_neutralise()
     string final_msg;
     if (visible_slaves > 0)
     {
-        if (player_mutation_level(MUT_NO_LOVE))
+        if (you.get_mutation_level(MUT_NO_LOVE))
         {
             const char *substr = visible_slaves > 1 ? "slaves" : "slave";
             final_msg = make_stringf("Pikel's spell is broken, but the former "
