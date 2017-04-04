@@ -274,9 +274,9 @@ static int _player_ghost_movement_energy()
 {
     int energy = 10;
 
-    if (int fast = player_mutation_level(MUT_FAST, false))
+    if (int fast = you.get_mutation_level(MUT_FAST, false))
         energy -= fast + 1;
-    if (int slow = player_mutation_level(MUT_SLOW, false))
+    if (int slow = you.get_mutation_level(MUT_SLOW, false))
         energy += slow + 2;
 
     if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
@@ -373,7 +373,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     else
     {
         // Unarmed combat.
-        if (you.innate_mutation[MUT_CLAWS])
+        if (you.has_innate_mutation(MUT_CLAWS))
             damage += you.experience_level;
 
         damage += you.skills[SK_UNARMED_COMBAT];

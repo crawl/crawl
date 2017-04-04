@@ -323,7 +323,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     }
 
     if (is_player())
-        ss += player_mutation_level(MUT_MANA_SHIELD);
+        ss += you.get_mutation_level(MUT_MANA_SHIELD);
 
     return ss;
 }

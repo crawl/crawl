@@ -280,7 +280,7 @@ bool check_awaken(monster* mons, int stealth)
         return true;
 
     // If you've sacrificed stealth, you always alert monsters.
-    if (player_mutation_level(MUT_NO_STEALTH))
+    if (you.get_mutation_level(MUT_NO_STEALTH))
         return true;
 
 

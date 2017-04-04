@@ -493,11 +493,11 @@ int detect_items(int pow)
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
 
-    else if (you.mutation[MUT_STRONG_NOSE])
+    else if (you.has_mutation(MUT_STRONG_NOSE))
         map_radius = get_los_radius();
     else
     {
-        if (you.mutation[MUT_JELLY_GROWTH])
+        if (you.has_mutation(MUT_JELLY_GROWTH))
             map_radius = 5;
         // Check which god may be providing detect_items and set map_radius
         if (have_passive(passive_t::detect_items))

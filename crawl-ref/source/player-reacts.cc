@@ -348,7 +348,7 @@ static void _end_horror()
  */
 static void _update_cowardice()
 {
-    if (!player_mutation_level(MUT_COWARDICE))
+    if (!you.has_mutation(MUT_COWARDICE))
     {
         // If the player somehow becomes sane again, handle that
         _end_horror();
@@ -465,7 +465,8 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (have_passive(passive_t::detect_items) || you.mutation[MUT_JELLY_GROWTH] || you.mutation[MUT_STRONG_NOSE] > 0)
+    if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH) 
+        || you.get_mutation_level(MUT_STRONG_NOSE) > 0)
         detect_items(-1);
 
     _decrement_paralysis(you.time_taken);
@@ -574,7 +575,7 @@ static void _decrement_durations()
     if (you.gourmand())
     {
         // Innate gourmand is always fully active.
-        if (player_mutation_level(MUT_GOURMAND) > 0)
+        if (you.has_mutation(MUT_GOURMAND))
             you.duration[DUR_GOURMAND] = GOURMAND_MAX;
         else if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
@@ -930,7 +931,7 @@ static void _regenerate_hp_and_mp(int delay)
     while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
-        if (player_mutation_level(MUT_MANA_LINK)
+        if (you.has_mutation(MUT_MANA_LINK)
             && !x_chance_in_y(you.magic_points, you.max_magic_points))
         {
             inc_mp(1);
@@ -978,7 +979,7 @@ void player_reacts()
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
 #endif
 
-    if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
+    if (you.has_mutation(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
 
     _check_equipment_conducts();

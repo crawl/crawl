@@ -403,24 +403,26 @@ void change_species_to(species_type sp)
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
+
+    // remove all innate mutations
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (you.innate_mutation[i] > 0)
+        if (you.has_innate_mutation(static_cast<mutation_type>(i)))
         {
-            if (you.innate_mutation[i] > you.mutation[i])
-                you.mutation[i] = 0;
-            else
-                you.mutation[i] -= you.innate_mutation[i];
-
+            you.mutation[i] -= you.innate_mutation[i];
+            ASSERT(you.mutation[i] >= 0);
             you.innate_mutation[i] = 0;
         }
         prev_muts[i] = you.mutation[i];
     }
+    // add the appropriate innate mutations for the new species and xl
     give_basic_mutations(sp);
     for (int i = 2; i <= you.experience_level; ++i)
         give_level_mutations(sp, i);
+
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
+        // TODO: why do previous non-innate mutations override innate ones?  Shouldn't this be the other way around?
         if (prev_muts[i] > you.innate_mutation[i])
             you.innate_mutation[i] = 0;
         else

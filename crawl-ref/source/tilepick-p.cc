@@ -639,7 +639,7 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base,
     *base = TILEP_BASE_DRACONIAN + colour_offset * 2;
     *head = tile_player_part_start[TILEP_PART_DRCHEAD] + colour_offset;
 
-    if (player_mutation_level(MUT_BIG_WINGS))
+    if (you.has_mutation(MUT_BIG_WINGS))
         *wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
 }
 

@@ -1233,8 +1233,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                 }
             }
         }
-        if (player_mutation_level(MUT_SCREAM)
-            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        if (you.has_mutation(MUT_SCREAM)
+            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
         {
             yell(mon);
         }

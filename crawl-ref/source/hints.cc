@@ -2647,7 +2647,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             listed.push_back("your <w>%</w>bilities");
             cmd.push_back(CMD_USE_ABILITY);
         }
-        if (Hints.hints_type != HINT_MAGIC_CHAR || how_mutated())
+        if (Hints.hints_type != HINT_MAGIC_CHAR || you.how_mutated())
         {
             listed.push_back("your set of mutations (<w>%</w>)");
             cmd.push_back(CMD_DISPLAY_MUTATIONS);

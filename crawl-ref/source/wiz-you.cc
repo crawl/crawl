@@ -237,8 +237,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_NO_HOP] = 0;
         you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
-        while (delete_temp_mutation());
-        you.attribute[ATTR_TEMP_MUT_XP] = 0;
+        delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
         you.redraw_stats = true;
@@ -511,7 +510,7 @@ bool wizard_add_mutation()
     bool success = false;
     char specs[80];
 
-    if (player_mutation_level(MUT_MUTATION_RESISTANCE) > 0)
+    if (you.has_mutation(MUT_MUTATION_RESISTANCE))
         mpr("Ignoring mut resistance to apply mutation.");
     unwind_var<uint8_t> mut_res(you.mutation[MUT_MUTATION_RESISTANCE], 0);
 
@@ -525,48 +524,11 @@ bool wizard_add_mutation()
         return true;
     }
 
-    string spec = lowercase_string(specs);
-
-    mutation_type mutat = NUM_MUTATIONS;
-
-    if (spec == "good")
-        mutat = RANDOM_GOOD_MUTATION;
-    else if (spec == "bad")
-        mutat = RANDOM_BAD_MUTATION;
-    else if (spec == "any")
-        mutat = RANDOM_MUTATION;
-    else if (spec == "xom")
-        mutat = RANDOM_XOM_MUTATION;
-    else if (spec == "slime")
-        mutat = RANDOM_SLIME_MUTATION;
-    else if (spec == "qazlal")
-        mutat = RANDOM_QAZLAL_MUTATION;
-
-    if (mutat != NUM_MUTATIONS)
-        return mutate(mutat, "wizard power", true, true);
-
     vector<mutation_type> partial_matches;
+    mutation_type mutat = mutation_from_name(specs, true, &partial_matches);
 
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        mutation_type mut = static_cast<mutation_type>(i);
-        const char* wizname = mutation_name(mut);
-        if (!wizname)
-            continue;
-
-        if (spec == wizname)
-        {
-            mutat = mut;
-            break;
-        }
-
-        if (strstr(wizname, spec.c_str()))
-            partial_matches.push_back(mut);
-    }
-
-    // If only one matching mutation, use that.
-    if (mutat == NUM_MUTATIONS && partial_matches.size() == 1)
-        mutat = partial_matches[0];
+    if (mutat >= CATEGORY_MUTATIONS)
+         return mutate(mutat, "wizard power", true, true);
 
     if (mutat == NUM_MUTATIONS)
     {
@@ -579,10 +541,13 @@ bool wizard_add_mutation()
             vector<string> matches;
 
             for (mutation_type mut : partial_matches)
-                matches.emplace_back(mutation_name(mut));
+            {
+                const char *mutname = mutation_name(mut, true);
+                ASSERT(mutname); // `mutation_name` returns nullptr if something went wrong getting the desc for `mut`.
+                matches.emplace_back(mutname);
+            }
 
-            string prefix = "No exact match for mutation '" +
-                            spec +  "', possible matches are: ";
+            string prefix = make_stringf("No exact match for mutation '%s', possible matches are: ", specs);
 
             // Use mpr_comma_separated_list() because the list
             // might be *LONG*.
