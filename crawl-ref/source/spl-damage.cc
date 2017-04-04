@@ -651,7 +651,8 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
         else if (you.see_cell(agent->pos()))
             mpr(mons_invis_msg);
 
-        flash_view_delay(UA_MONSTER, flash_colour, 300);
+        if (!agent || you.see_cell(agent->pos()))
+            flash_view_delay(UA_MONSTER, flash_colour, 300);
     }
 
     bool affects_you = false;
