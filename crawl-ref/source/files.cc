@@ -1225,7 +1225,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 
         dprf("%s under player and can't be moved anywhere; killing",
              mon->name(DESC_PLAIN).c_str());
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
     }
 }

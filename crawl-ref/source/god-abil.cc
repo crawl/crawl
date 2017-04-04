@@ -1180,7 +1180,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 {
                     simple_monster_message(*mon,
                         " melts away into a sizzling puddle of chaotic flesh.");
-                    monster_die(mon, KILL_YOU, NON_MONSTER);
+                    monster_die(*mon, KILL_YOU, NON_MONSTER);
                 }
             }
         }
@@ -1252,7 +1252,7 @@ static void _zin_saltify(monster* mon)
     simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
-    item_def* corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
+    item_def* corpse = monster_die(*mon, KILL_YOU, NON_MONSTER);
     if (corpse)
         destroy_item(corpse->index());
 
@@ -2506,7 +2506,7 @@ int fedhas_fungal_bloom()
 
                 const coord_def pos = target->pos();
                 const int colour = target->colour;
-                const item_def* corpse = monster_die(target, KILL_MISC,
+                const item_def* corpse = monster_die(*target, KILL_MISC,
                                                      NON_MONSTER, true);
 
                 // If a corpse didn't drop, create a toadstool.
@@ -6751,7 +6751,7 @@ spret_type uskayaw_grand_finale(bool fail)
         throw_monster_bits(*mons); // have some fun while we're at it
     }
 
-    monster_die(mons, KILL_YOU, NON_MONSTER, false);
+    monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
     if (!mons->alive())
         move_player_to_grid(beam.target, false);

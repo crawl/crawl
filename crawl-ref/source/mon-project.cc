@@ -233,7 +233,7 @@ static void _iood_stop(monster& mon, bool msg = true)
     if (msg)
         simple_monster_message(mon, " dissipates.");
     dprf("iood: dissipating");
-    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 }
 
 static void _fuzz_direction(const actor *caster, monster& mon, int pow)
@@ -325,7 +325,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.ex_size = 1;
     beam.loudness = 7;
 
-    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 
     if (big_boom)
         beam.explode(true, false);
@@ -463,7 +463,7 @@ move_again:
                 {
                     if (you.see_cell(pos))
                         mpr("The orb fizzles.");
-                    monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                    monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 }
 
                 // Return, if the acting orb fizzled.
@@ -471,7 +471,7 @@ move_again:
                 {
                     if (you.see_cell(pos))
                         mpr("The orb fizzles.");
-                    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+                    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
                     return true;
                 }
             }
@@ -482,7 +482,7 @@ move_again:
                 else
                     mpr("You hear a loud magical explosion!");
                 noisy(40, pos);
-                monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 _iood_hit(mon, pos, true);
                 return true;
             }

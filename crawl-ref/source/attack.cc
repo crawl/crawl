@@ -124,7 +124,7 @@ bool attack::handle_phase_killed()
 {
     monster* mon = defender->as_monster();
     if (!invalid_monster(mon))
-        monster_die(mon, attacker);
+        monster_die(*mon, attacker);
 
     return true;
 }

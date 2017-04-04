@@ -217,7 +217,7 @@ static int l_mons_do_dismiss(lua_State *ls)
     if (mons->alive())
     {
         mons->flags |= MF_HARD_RESET;
-        monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
     }
     return 0;
 }

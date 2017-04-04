@@ -1157,7 +1157,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     {
         // You might still see them disappear if you were quick
         if (turns > 2)
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         else
         {
             mon_enchant abj  = mon->get_ench(ENCH_ABJ);
@@ -1350,7 +1350,7 @@ void monster::timeout_enchantments(int levels)
         {
             const int actdur = speed_to_duration(speed) * levels;
             if (lose_ench_duration(entry.first, actdur))
-                monster_die(this, KILL_MISC, NON_MONSTER, true);
+                monster_die(*this, KILL_MISC, NON_MONSTER, true);
             break;
         }
 
