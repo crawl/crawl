@@ -179,7 +179,7 @@ vector<monster* > get_nearby_monsters(bool want_move,
     ASSERT(!crawl_state.game_is_arena());
 
     if (range == -1)
-        range = LOS_RADIUS;
+        range = you.current_vision;
 
     vector<monster* > mons;
 
