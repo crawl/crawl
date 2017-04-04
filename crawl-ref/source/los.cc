@@ -120,6 +120,11 @@ void set_los_radius(int r)
     _handle_los_change();
 }
 
+int get_los_radius()
+{
+    return los_radius;
+}
+
 bool double_is_zero(const double x)
 {
     return x > -EPSILON_VALUE && x < EPSILON_VALUE;
