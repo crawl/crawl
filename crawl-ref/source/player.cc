@@ -4629,9 +4629,7 @@ bool haste_player(int turns, bool rageext)
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
     else if (!rageext)
-    {
         mpr("You feel as though your hastened speed will last longer.");
-    }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
 
