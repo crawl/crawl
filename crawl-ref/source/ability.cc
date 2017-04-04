@@ -2108,8 +2108,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
 
             mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
-            mg.set_summoned(&you, 0, 0);
-            mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
             if (monster *m = create_monster(mg))
                 m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
