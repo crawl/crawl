@@ -97,7 +97,8 @@ const int LABYRINTH_BORDER = 4;
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
 // maximal LOS radius.
-// XXX: a noble soul should find-replace this with LOS_MAX_RANGE
+// XXX: uses of this should be replaced depending on the intended behaviour,
+// with LOS_DEFAULT_RANGE or LOS_MAX_RANGE or possibly you.current_vision
 #define LOS_RADIUS 8
 // LOS radius for 'normal' characters
 #define LOS_DEFAULT_RANGE 7
