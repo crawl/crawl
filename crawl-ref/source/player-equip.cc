@@ -270,6 +270,26 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 #undef unknown_proprt
 }
 
+/**
+ * If player removes evocable invis and we need to clean things up, set
+ * remaining Invis duration to 1 AUT and give the player contam equal to the
+ * amount the player would receive if they waited the invis out.
+ */
+static void _unequip_invis()
+{
+    if (you.duration[DUR_INVIS] > 1
+        && !you.evokable_invis()
+        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+    {
+        const int invis_duration_left = you.duration[DUR_INVIS];
+        const int remaining_contam = div_rand_round(
+            invis_duration_left * INVIS_CONTAM_PER_TURN, BASELINE_DELAY
+        );
+        contaminate_player(remaining_contam, true);
+        you.duration[DUR_INVIS] = 1;
+    }
+}
+
 static void _unequip_artefact_effect(item_def &item,
                                      bool *show_msgs, bool meld,
                                      equipment_type slot)
@@ -307,13 +327,8 @@ static void _unequip_artefact_effect(item_def &item,
         land_player();
     }
 
-    if (proprt[ARTP_INVISIBLE] != 0
-        && you.duration[DUR_INVIS] > 1
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-        && !you.evokable_invis())
-    {
-        you.duration[DUR_INVIS] = 1;
-    }
+    if (proprt[ARTP_INVISIBLE] != 0)
+        _unequip_invis();
 
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
@@ -974,12 +989,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_INVISIBILITY:
-        if (you.duration[DUR_INVIS]
-            && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !you.evokable_invis())
-        {
-            you.duration[DUR_INVIS] = 1;
-        }
+        _unequip_invis();
         break;
 
     case SPARM_STRENGTH:
