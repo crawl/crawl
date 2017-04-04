@@ -3350,7 +3350,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_TORMENT:
-            return !player_mutation_level(MUT_TORMENT_RESISTANCE)
+            return !you.get_mutation_level(MUT_TORMENT_RESISTANCE)
                    || !temp && you.species == SP_VAMPIRE;
         case SCR_HOLY_WORD:
             return you.undead_or_demonic();
@@ -3464,7 +3464,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_ARMOUR:
         return !can_wear_armour(item, false, true)
-                || (is_shield(item) && player_mutation_level(MUT_MISSING_HAND));
+                || (is_shield(item) && you.get_mutation_level(MUT_MISSING_HAND));
 
     case OBJ_SCROLLS:
         if (temp && silenced(you.pos()))
@@ -3497,9 +3497,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_BRAND_WEAPON:
             return you.species == SP_FELID;
         case SCR_SUMMONING:
-            return player_mutation_level(MUT_NO_LOVE) > 0;
+            return you.get_mutation_level(MUT_NO_LOVE) > 0;
         case SCR_RECHARGING:
-            return player_mutation_level(MUT_NO_ARTIFICE) > 0;
+            return you.get_mutation_level(MUT_NO_ARTIFICE) > 0;
         case SCR_FOG:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         default:
@@ -3507,7 +3507,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_WANDS:
-        if (player_mutation_level(MUT_NO_ARTIFICE))
+        if (you.get_mutation_level(MUT_NO_ARTIFICE))
             return true;
 
         if (you.magic_points < wand_mp_cost() && temp)
@@ -3520,7 +3520,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
 
         if (item.sub_type == WAND_ENSLAVEMENT)
-            return player_mutation_level(MUT_NO_LOVE);
+            return you.get_mutation_level(MUT_NO_LOVE);
 
         if (item.sub_type == WAND_CLOUDS)
             return temp && (env.level_state & LSTATE_STILL_WINDS);
@@ -3572,7 +3572,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_PORRIDGE:
             return you.species == SP_VAMPIRE
-                    || player_mutation_level(MUT_CARNIVOROUS) == 3;
+                    || you.get_mutation_level(MUT_CARNIVOROUS) == 3;
         case POT_BLOOD_COAGULATED:
 #endif
         case POT_BLOOD:
@@ -3613,15 +3613,15 @@ bool is_useless_item(const item_def &item, bool temp)
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state < HS_SATIATED)
                    || you.species == SP_FORMICID
-                   || player_mutation_level(MUT_NO_ARTIFICE);
+                   || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_RESIST_CORROSION:
             return you.res_corr(false, false);
 
         case AMU_THE_GOURMAND:
             return player_likes_chunks(true) == 3
-                   || player_mutation_level(MUT_GOURMAND) > 0
-                   || player_mutation_level(MUT_HERBIVOROUS) == 3
+                   || you.get_mutation_level(MUT_GOURMAND) > 0
+                   || you.get_mutation_level(MUT_HERBIVOROUS) == 3
                    || you.undead_state(temp);
 
         case AMU_FAITH:
@@ -3636,9 +3636,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_prot_life(false, temp, false) == 3;
 
         case AMU_REGENERATION:
-            return player_mutation_level(MUT_NO_REGENERATION) > 0
+            return you.get_mutation_level(MUT_NO_REGENERATION) > 0
                    || (temp
-                       && player_mutation_level(MUT_INHIBITED_REGENERATION) > 0
+                       && you.get_mutation_level(MUT_INHIBITED_REGENERATION) > 0
                        && regeneration_is_inhibited())
                    || (temp && you.species == SP_VAMPIRE
                       && you.hunger_state <= HS_STARVING);
@@ -3662,10 +3662,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_FLIGHT:
             return you.permanent_flight()
                    || you.racial_permanent_flight()
-                   || player_mutation_level(MUT_NO_ARTIFICE);
+                   || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         case RING_STEALTH:
-            return player_mutation_level(MUT_NO_STEALTH);
+            return you.get_mutation_level(MUT_NO_STEALTH);
 
         default:
             return false;
@@ -3753,11 +3753,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
         case MISC_PHANTOM_MIRROR:
-            return player_mutation_level(MUT_NO_LOVE)
-                   || player_mutation_level(MUT_NO_ARTIFICE);
+            return you.get_mutation_level(MUT_NO_LOVE)
+                   || you.get_mutation_level(MUT_NO_ARTIFICE);
 
         default:
-            return player_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);
+            return you.get_mutation_level(MUT_NO_ARTIFICE) && !is_deck(item);
         }
 
     case OBJ_BOOKS:

@@ -230,7 +230,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_PIKEL_SLAVES:
         {
             // monster changes attitude
-            bool hostile = player_mutation_level(MUT_NO_LOVE);
+            bool hostile = you.get_mutation_level(MUT_NO_LOVE);
             mon->attitude = hostile ? ATT_HOSTILE : ATT_GOOD_NEUTRAL;
             mons_att_changed(mon);
             mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR

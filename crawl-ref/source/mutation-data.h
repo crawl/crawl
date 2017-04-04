@@ -13,6 +13,12 @@ struct mutation_def
     const char* lose[3];    ///< Message when you lose the mutation.
 };
 
+struct mutation_category_def
+{
+  mutation_type mutation;
+  const char* short_desc;
+};
+
 static const mutation_def mut_data[] =
 {
 
@@ -1916,4 +1922,16 @@ static const mutation_def mut_data[] =
   {"Your sense of smell grows stronger.", "", ""},
   {"Your sense of smell gets weaker.", "", ""},
 },
+};
+
+static const mutation_category_def category_mut_data[] =
+{
+  { RANDOM_MUTATION, "any"},
+  { RANDOM_XOM_MUTATION, "xom"},
+  { RANDOM_GOOD_MUTATION, "good"},
+  { RANDOM_BAD_MUTATION, "bad"},
+  { RANDOM_SLIME_MUTATION, "slime"},
+  { RANDOM_NON_SLIME_MUTATION, "nonslime"},
+  { RANDOM_CORRUPT_MUTATION, "corrupt"},
+  { RANDOM_QAZLAL_MUTATION, "qazlal"},
 };

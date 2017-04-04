@@ -809,7 +809,7 @@ static void _animate_weapon(int pow, actor* target)
         wpn->flags |= ISFLAG_THROWN;
     }
     // If sac love, the weapon will go after you, not the target.
-    const bool sac_love = player_mutation_level(MUT_NO_LOVE);
+    const bool sac_love = you.get_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
     const bool friendly = !target_is_player && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);

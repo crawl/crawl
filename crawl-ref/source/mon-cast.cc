@@ -1947,7 +1947,7 @@ static bool _animate_dead_okay(spell_type spell)
         return false;
     }
 
-    if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
+    if (you.hunger_state < HS_SATIATED && you.get_base_mutation_level(MUT_HERBIVOROUS) < 3)
         return false;
 
     if (god_hates_spell(spell, you.religion))
