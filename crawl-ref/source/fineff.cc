@@ -375,7 +375,7 @@ static void _do_merge_masses(monster* initial_mass, monster* merge_to)
     behaviour_event(merge_to, ME_EVAL);
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+    monster_die(*initial_mass, KILL_DISMISSED, NON_MONSTER, true);
 }
 
 void starcursed_merge_fineff::fire()

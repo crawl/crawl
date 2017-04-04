@@ -443,7 +443,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
                          "", "", false);
 
         if (!mon_target->alive())
-            monster_die(mon_target, kt, actor_to_death_source(act_source));
+            monster_die(*mon_target, kt, actor_to_death_source(act_source));
     }
     else
     {

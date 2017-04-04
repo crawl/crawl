@@ -184,7 +184,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (mon->type == MONS_ZOMBIE)
             {
                 simple_monster_message(*mon, " crumbles into dust!");
-                monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
                 break;
             }
         case DACT_ALLY_UNHOLY_EVIL:
@@ -209,7 +209,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
         case DACT_ALLY_HEPLIAKLQANA:
             simple_monster_message(*mon, " returns to the mists of memory.");
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
         case DACT_UPGRADE_ANCESTOR:
@@ -220,7 +220,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_OLD_ENSLAVED_SOULS_POOF:
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:

@@ -29,10 +29,10 @@
 
 struct bolt;
 
-item_def* monster_die(monster* mons, const actor *killer, bool silent = false,
+item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
                       bool wizard = false, bool fake = false);
 
-item_def* monster_die(monster* mons, killer_type killer,
+item_def* monster_die(monster& mons, killer_type killer,
                       int killer_index, bool silent = false,
                       bool wizard = false, bool fake = false);
 

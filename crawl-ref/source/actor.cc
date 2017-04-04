@@ -709,7 +709,7 @@ void actor::handle_constriction()
         if (defender->is_monster()
             && defender->as_monster()->hit_points < 1)
         {
-            monster_die(defender->as_monster(), this);
+            monster_die(*defender->as_monster(), this);
         }
     }
 }

@@ -233,7 +233,7 @@ static void _zap_los_monsters(bool items_also)
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
         // player sees nothing.
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
 
