@@ -21,11 +21,11 @@
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 
-#define SAME_ATTITUDE(x) (x->friendly()       ? BEH_FRIENDLY : \
-                          x->good_neutral()   ? BEH_GOOD_NEUTRAL : \
-                          x->strict_neutral() ? BEH_STRICT_NEUTRAL : \
-                          x->neutral()        ? BEH_NEUTRAL \
-                                              : BEH_HOSTILE)
+#define SAME_ATTITUDE(x) ((x)->friendly()       ? BEH_FRIENDLY :   \
+                          (x)->good_neutral()   ? BEH_GOOD_NEUTRAL : \
+                          (x)->strict_neutral() ? BEH_STRICT_NEUTRAL :  \
+                          (x)->neutral()        ? BEH_NEUTRAL           \
+                                                : BEH_HOSTILE)
 
 struct bolt;
 
