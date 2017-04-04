@@ -138,6 +138,8 @@ const int LIGHTNING_MAX_CHARGE = 4;
 const int XP_EVOKE_DEBT   = 10;
 
 const int BASELINE_DELAY  = 10;
+const int INVIS_CONTAM_PER_TURN = 30;
+
 const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
 const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
 
