@@ -7600,7 +7600,7 @@ int player_monster_detect_radius()
         radius = max(radius, 4);
     if (have_passive(passive_t::detect_montier))
         radius = max(radius, you.piety / 20);
-    return min(radius, LOS_RADIUS);
+    return min(radius, LOS_DEFAULT_RANGE);
 }
 
 /**
