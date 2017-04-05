@@ -2488,6 +2488,36 @@ xxxxxvv"""""""""""#WWWWW#"""""""""""vvww#wv..v
         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME: cheibrodos_zot_enchanting_chambers
+TAGS: no_item_gen no_monster_gen
+DEPTH: Zot
+ORIENT: float
+MONS: purple draconian, purple draconian stormcaller \
+      / purple draconian scorcher / purple draconian monk \
+      / purple draconian knight / purple draconian shifter \
+      / purple draconian annihilator
+MONS: quicksilver dragon, killer klown
+NSUBST: - = 2:1 / 3=112.. / 1 = 3:1 ., " = 1:1 / 3=122. / 1=34
+NSUBST: ' = 2:1 / 2=12 / 2:3 / 1=34.., ; = 2:1 / 3=112.. / 1=3:1 .
+NSUBST: _ = 1:1 / 3=122. / 1=34, p = 2:1 / 2=12 / 2:3 / 1=34..
+SUBST: | = |*
+MAP
+      xxxxx xxxxx xxxxx
+     xxpppxxx___xxx;;;xx.
+     x|ppp.b____.b;;;;.b.
+     x|ppb.+_b_b.+;b;;.+@
+     x|ppp.b____.b;;;;.b.
+     xxpppxxm___xxx;;;xx.
+      xxxxxm...mxxxxxxx
+   xxxxxxxm...mxxxxx
+ .xx---xxx"""mxx'''xx
+ .b.----b.""""b.'''|x
+ @+.--b-+.b"b"+.b''|x
+ .b.----b.""""b.'''|x
+ .xx---xxx"""xxx'''xx
+   xxxxx xxxxx xxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

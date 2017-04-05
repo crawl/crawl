@@ -1296,6 +1296,31 @@ cc.1..2d2..1.cc
   ccccccccccc
 ENDMAP
 
+NAME: cheibrodos_elf_bladeworks
+TAGS: no_item_gen no_monster_gen
+DEPTH: Elf
+ORIENT: float
+MONS: deep elf knight / deep elf archer w:8, deep elf blademaster
+KMONS: P = plant
+ITEM: short sword w:15 / rapier / quick blade w:1
+ITEM: short sword good_item / rapier good_item w:5 / quick blade good_item w:2
+SUBST: x = xc
+SUBST: 3 = 3.
+NSUBST: - = 3:1 / 3=1., d = 1:e / 2=ddde / *:d
+MAP
+  xxxxxxxxx
+  xddddd+.xx
+.xxmmmmmx.1x
+.x3.-----..xx
+.+..-----..Px
+@+..-----.2Gx
+.+..-----..Px
+.x3.-----..xx
+.xxmmmmmx.1x
+  xddddd+.xx
+  xxxxxxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
