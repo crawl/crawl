@@ -271,6 +271,72 @@ vvvvWvWvWW
 ..........
 ENDMAP
 
+NAME: cheibrodos_sewer_entry_bend
+TAGS: no_monster_gen
+ORIENT: northeast
+KMONS: 1 = worm
+NSUBST: - = 1:1 / 1=1.. / 1=1...
+KFEAT: A = iron_grate
+: sewer_portal(_G)
+MAP
+xxxxxxxxxxxxxx
+xxAAxxxxxxxxxx
+xxWWxxxxx---xx
+...WWWWWWW--xx
+....WWWWWWW-xx
+ @..xxxxOWWxxx
+  .....mxWWxxx
+     @..xWWxxx
+      @.xWWxxx
+       .xWWxxx
+       ...WWAx
+       ....WAx
+        @..xxx
+         ..xxx
+ENDMAP
+
+NAME: cheibrodos_sewer_entry_drain
+TAGS: no_monster_gen
+ORIENT: float
+KMONS: 1 = rat / ball python / giant cockroach / worm
+NSUBST: 1 = 2:1 / 2=1.. / *:.
+: sewer_portal(_G)
+MAP
+  ...@...
+ ..x1.1x..
+...WWWWW...
+.xWWWWWWWx.
+.1WWWWWWW1.
+@.WWWOWWW.@
+.1WWWWWWW1.
+.xWWWWWWWx.
+...WWWWW...
+ ..x1.1x..
+  ...@...
+ENDMAP
+
+NAME: cheibrodos_sewer_entry_sluice
+TAGS: no_monster_gen
+ORIENT: float
+KMONS: 1 = ball python / worm / bat / w:5 river rat
+SHUFFLE: AB
+SUBST: A = w, B = .
+NSUBST: . = 2:1 / 2=1.
+: sewer_portal(_G)
+MAP
+.....@.....
+.xxwwAwwxx.
+.xxwwAwwxx.
+.ww.....ww.
+.ww.....ww.
+.ww..O....@
+.ww.....ww.
+.ww.....ww.
+.xxwwwwwxx.
+.xxwwwwwxx.
+...........
+ENDMAP
+
 # The actual portal vaults #####################################
 default-depth: Sewer
 
