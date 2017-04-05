@@ -97,7 +97,8 @@ const int LABYRINTH_BORDER = 4;
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
 // maximal LOS radius.
-// XXX: a noble soul should find-replace this with LOS_MAX_RANGE
+// XXX: uses of this should be replaced depending on the intended behaviour,
+// with LOS_DEFAULT_RANGE or LOS_MAX_RANGE or possibly you.current_vision
 #define LOS_RADIUS 8
 // LOS radius for 'normal' characters
 #define LOS_DEFAULT_RANGE 7
@@ -119,6 +120,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_RANDOM_SHOPS  5
 
 #define MAX_BRANCH_DEPTH 27
+COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
@@ -136,6 +138,8 @@ const int LIGHTNING_MAX_CHARGE = 4;
 const int XP_EVOKE_DEBT   = 10;
 
 const int BASELINE_DELAY  = 10;
+const int INVIS_CONTAM_PER_TURN = 30;
+
 const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
 const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
 

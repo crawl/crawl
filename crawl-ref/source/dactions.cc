@@ -16,6 +16,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"

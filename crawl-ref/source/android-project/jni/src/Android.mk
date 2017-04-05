@@ -274,6 +274,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/wiz-item.cc \
     $(CRAWL_PATH)/wiz-mon.cc \
     $(CRAWL_PATH)/wiz-you.cc \
+    $(CRAWL_PATH)/wizard.cc \
     $(CRAWL_PATH)/worley.cc \
     $(CRAWL_PATH)/xom.cc \
     $(CRAWL_PATH)/tilepick.cc \

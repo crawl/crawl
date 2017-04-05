@@ -474,7 +474,7 @@ static void _setup_generic(const newgame_def& ng)
     species_stat_init(you.species);     // must be down here {dlb}
 
     // Before we get into the inventory init, set light radius based
-    // on species vision. Currently, all species see out to 8 squares.
+    // on species vision.
     update_vision_range();
 
     job_stat_init(you.char_class);

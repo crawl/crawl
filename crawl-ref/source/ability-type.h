@@ -48,7 +48,7 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    // Barachians
+    // Barachim
     ABIL_HOP,
     ABIL_MAX_INTRINSIC = ABIL_HOP,
 

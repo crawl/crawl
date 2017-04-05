@@ -463,6 +463,26 @@ aff_type targeter_smite::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targeter_walljump::targeter_walljump() :
+    targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
+{
+}
+
+aff_type targeter_walljump::is_affected(coord_def loc)
+{
+    if (!valid_aim(aim))
+        return AFF_NO;
+
+    if ((loc - aim).rdist() > 9)
+        return AFF_NO;
+
+    coord_def centre(9,9);
+    if (exp_map_min(loc - aim + centre) < INT_MAX)
+        return AFF_NO;
+
+    return AFF_YES;
+}
+
 targeter_transference::targeter_transference(const actor* act, int aoe) :
     targeter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
 {

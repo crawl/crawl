@@ -295,7 +295,6 @@ static void tag_construct_you(writer &th);
 static void tag_construct_you_items(writer &th);
 static void tag_construct_you_dungeon(writer &th);
 static void tag_construct_lost_monsters(writer &th);
-static void tag_construct_lost_items(writer &th);
 static void tag_construct_companions(writer &th);
 static void tag_read_you(reader &th);
 static void tag_read_you_items(reader &th);
@@ -796,12 +795,10 @@ static void _run_length_decode(reader &th, unmarshall um, grid &g,
 
 union float_marshall_kludge
 {
-    // [ds] Does ANSI C guarantee that sizeof(float) == sizeof(long)?
-    // [haranp] no, unfortunately
-    // [1KB] on 64 bit arches, long is 64 bits, while float is 32 bits.
     float    f_num;
     int32_t  l_num;
 };
+COMPILE_CHECK(sizeof(float) == sizeof(int32_t));
 
 // single precision float -- marshall in network order.
 void marshallFloat(writer &th, float data)
@@ -1155,8 +1152,6 @@ void tag_write(tag_type tagID, writer &outf)
         CANARY;
         tag_construct_lost_monsters(th);
         CANARY;
-        tag_construct_lost_items(th);
-        CANARY;
         tag_construct_companions(th);
         break;
     case TAG_LEVEL:
@@ -1243,9 +1238,12 @@ void tag_read(reader &inf, tag_type tag_id)
         EAT_CANARY;
         tag_read_lost_monsters(th);
         EAT_CANARY;
-        tag_read_lost_items(th);
-        EAT_CANARY;
 #if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_NO_ITEM_TRANSIT)
+        {
+            tag_read_lost_items(th);
+            EAT_CANARY;
+        }
         if (th.getMinorVersion() >= TAG_MINOR_COMPANION_LIST)
 #endif
         tag_read_companions(th);
@@ -1837,14 +1835,6 @@ static void marshall_follower_list(writer &th, const m_transit_list &mlist)
         marshall_follower(th, follower);
 }
 
-static void marshall_item_list(writer &th, const i_transit_list &ilist)
-{
-    marshallShort(th, ilist.size());
-
-    for (const auto &item : ilist)
-        marshallItem(th, item);
-}
-
 static m_transit_list unmarshall_follower_list(reader &th)
 {
     m_transit_list mlist;
@@ -1867,6 +1857,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
     return mlist;
 }
 
+#if TAG_MAJOR_VERSION == 34
 static i_transit_list unmarshall_item_list(reader &th)
 {
     i_transit_list ilist;
@@ -1882,6 +1873,7 @@ static i_transit_list unmarshall_item_list(reader &th)
 
     return ilist;
 }
+#endif
 
 static void marshall_level_map_masks(writer &th)
 {
@@ -2137,12 +2129,6 @@ static void tag_construct_lost_monsters(writer &th)
 {
     marshallMap(th, the_lost_ones, marshall_level_id,
                  marshall_follower_list);
-}
-
-static void tag_construct_lost_items(writer &th)
-{
-    marshallMap(th, transiting_items, marshall_level_id,
-                 marshall_item_list);
 }
 
 static void tag_construct_companions(writer &th)
@@ -3985,13 +3971,15 @@ static void tag_read_lost_monsters(reader &th)
                   unmarshall_level_id, unmarshall_follower_list);
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void tag_read_lost_items(reader &th)
 {
-    transiting_items.clear();
+    items_in_transit transiting_items;
 
     unmarshallMap(th, transiting_items,
                   unmarshall_level_id, unmarshall_item_list);
 }
+#endif
 
 static void tag_read_companions(reader &th)
 {

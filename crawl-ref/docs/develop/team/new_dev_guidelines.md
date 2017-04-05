@@ -16,7 +16,7 @@ We also coordinate [*release plans*](https://crawl.develz.org/wiki/doku.php?id=d
 
 ## Coding Standards
 
-We value having reasonably correct, well-thought out code that doesn't break other aspects of the game over simply getting in content changes as fast as possible. If you're not sure how to implement something, please ask other team members who have more experience with the codebase. You can use a code pasting service like github gist, dpaste, or pastebin to share code snippets.
+We value having reasonably correct, well-thought out code that doesn't break other aspects of the game over simply getting in content changes as fast as possible. If you're not sure how to implement something, please ask other team members who have more experience with the codebase. You can use a code pasting service like github gist, dpaste, sprunge, or pastebin to share code snippets.
 
 ## Documentation and Formatting
 
@@ -24,9 +24,19 @@ The [*coding conventions*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-r
 
 Significant changes that affect the gameplay should be documented in the [*changelog*](http://s-z.org/neil/git/?p=crawl.git;a=blob;f=crawl-ref/docs/changelog.txt;hb=HEAD). We try to be brief in these entries, giving players a simple description of the change without technical detail. It’s good to read previous entries or ask a team member if you’re not sure about including an item or how to word it.
 
-## Save compatibility
+## Save Compatibility
 
 Each trunk commit creates a new version, and we try hard to not break trunk games when a save is transferred to a new version. Making changes that force users to abandon a game they have in-progress is frustrating for players and creates problems for server administrators as well. There’s a [*document*](http://git.develz.org/?p=crawl.git;a=blob;f=crawl-ref/docs/develop/save_compatibility.txt) in the source tree that discusses basic save compatibility and the technical reasons behind it. In general, if you’re not sure if a change will create a save compatibility issue or how to address it, ask another team member before pushing your changes.
+
+## Bug Reports and Community Contributions
+
+We handle these through our [*Mantis issue tracker*](https://crawl.develz.org/mantis/view_all_bug_page.php) and our [*GitHub page*](https://github.com/crawl/crawl).
+
+On Mantis, we can also assign issues to ourselves or to other developers. Self-assignment is used if the developer in question is working on the issue. Assigning to someone else is used if the issue in question is in their area of expertise, or if the assigner wants their opinion. Either way, the reason for assignment should be explained in the assigning message.
+
+Contributions and patches are submitted through both systems. Depending on quality of submission, concordance to design guidelines, and general suitability, comment and ask for improvement/clarification on these, then close/merge accordingly.
+
+Desired features and changes -- "Implementables" -- can be posted to either system, informally requesting that someone from the community takes up the project and completes them. Do not expect that this will be fulfilled within a short time frame. On GitHub, you can post these as an Issue asking for help, and on Mantis you will need to tag them explicitly as an implementable. If people are looking for things to work on, then we can point them towards these implementables.
 
 ## Release Schedule
 
@@ -44,6 +54,10 @@ Team members have varying levels of free time, and their availability fluctuates
 
 It's important to play Crawl if you want to design for it. Experiencing the content you create is very helpful in determining whether that content is enjoyable and creates the intended game-play experience. Playing a variety of characters in Crawl also helps you understand how the game does and does not succeed in being highly replayable, with an emphasis on combat, and where the player is generally not rewarded for tedious game-play. You can also help us uncover bugs and problems with existing code, and stay informed as to the current state of Crawl.
 
+#### Consensus and the Development Process
+
+While we strive towards a general consensus, it is not required. There will be occasional disagreement on how to improve Crawl, or what paths to take towards that goal. There are no formal rules or processes for resolving these disagreements. Developers are free, within reason, to make commits and changes to the game. Not requiring the full consensus of the dev team to make any particular change prevents design stagnation (it is much more likely that at least one person disagrees than it is that everyone agrees), but because members of the team are allowed to disagree with each other monopolies are also prevented (others are capable of having good ideas, even if someone might disagree initially or continuously).
+
 #### Player Feedback
 
-In addition to play-testing, it’s good to watch players through WebTiles, via console ttyrecs, videos and other online recordings . Likewise, it can be useful to see what players think about certain features by reading online discussion on [*Tavern*](https://crawl.develz.org/tavern/), Reddit (see [*/r/dcss*](http://www.reddit.com/r/dcss/) and [*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online discussion sites. However it’s important that player praise or criticism is always taken with a grain of salt. If in doubt, connect with other developers -- \#\#crawl-dev is always good for that.
+In addition to play-testing, it’s good to watch players through WebTiles, via console ttyrecs, videos and other online recordings. Likewise, it can be useful to see what players think about certain features by reading online discussion on [*Tavern*](https://crawl.develz.org/tavern/), Reddit (see [*/r/dcss*](http://www.reddit.com/r/dcss/) and [*/r/roguelikes*](http://www.reddit.com/r/roguelikes/)), and other online discussion sites. However it’s important that player praise or criticism is always taken with a grain of salt. If in doubt, get in touch with other developers for some grounding -- \#\#crawl-dev is always good for that.

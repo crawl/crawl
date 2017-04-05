@@ -26,6 +26,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-cast.h"
@@ -193,7 +194,7 @@ static const vector<god_passive> god_passives[] =
     // Vehumet
     {
         { -1, passive_t::mp_on_kill,
-              "have a chance to gain mana when you kill" },
+              "have a chance to gain magical power from killing" },
         {  3, passive_t::spells_success,
               "are NOW less likely to miscast destructive spells" },
         {  4, passive_t::spells_range,
@@ -283,7 +284,7 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW protects you from corrosion" },
         {  4, passive_t::slime_mp,
               "Items consumed by your fellow slimes NOW restore"
-              " your mana reserve"
+              " your magical power"
         },
         {  5, passive_t::slime_hp,
               "Items consumed by your fellow slimes NOW restore"
@@ -391,8 +392,9 @@ static const vector<god_passive> god_passives[] =
     // Pakellas
     {
         { -1, passive_t::no_mp_regen,
-              "GOD NOW prevents you from regenerating your mana reserve" },
-        { -1, passive_t::mp_on_kill, "have a chance to gain mana when you kill" },
+              "GOD NOW prevents you from regenerating your magical power" },
+        { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
+                                     " killing" },
         {  0, passive_t::identify_devices, "GOD NOW identifies your wands" },
         {  1, passive_t::bottle_mp,
               "GOD NOW collects and distills excess magic from your kills"
@@ -412,9 +414,9 @@ static const vector<god_passive> god_passives[] =
 
     // Wu Jian
     {
-        { 1, passive_t::wu_jian_whirlwind, "attack and slow monsters by moving around them." },
+        { 1, passive_t::wu_jian_whirlwind, "attack monsters by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform distracting airborne attacks by moving against a solid obstacle." },
-        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if slowed or distracted." },
+        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if distracted." },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1542,8 +1544,11 @@ void wu_jian_heaven_tick()
     else
         you.attribute[ATTR_HEAVEN_ON_EARTH] -= 10;
 
-    for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
-        big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
+    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+    {
+        if (!cell_is_solid(*ai))
+            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+    }
 
     noisy(15, you.pos());
 
@@ -1561,16 +1566,9 @@ void end_heaven_on_earth()
 
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
 {
-    if (attack_type == WU_JIAN_ATTACK_NONE ||
-        attack_type == WU_JIAN_ATTACK_TRIGGERED_AUX)
-    {
-        return false;
-    }
-
-    if (you.attribute[ATTR_SERPENTS_LASH] > 0)
-        return true;
-
-    return false;
+    return you.attribute[ATTR_SERPENTS_LASH]
+           && attack_type != WU_JIAN_ATTACK_NONE
+           && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
 }
 
 static bool _dont_attack_martial(const monster* mons)
@@ -1608,31 +1606,25 @@ static void _wu_jian_lunge(const coord_def& old_pos)
 
     if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
         you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
     you.apply_berserk_penalty = false;
 
     const int number_of_attacks = _wu_jian_number_of_attacks();
 
     if (number_of_attacks == 0)
     {
-        mprf("You lunge at %s, but your attack speed is too slow for a blow to land.",
-             mons->name(DESC_THE).c_str());
+        mprf("You lunge at %s, but your attack speed is too slow for a blow "
+             "to land.", mons->name(DESC_THE).c_str());
         return;
-    }
-    else if (number_of_attacks > 1)
-    {
-        if (wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
-           mprf("You lunge at %s in a momentous flurry of attacks!", mons->name(DESC_THE).c_str());
-        else
-           mprf("You lunge at %s in a flurry of attacks!", mons->name(DESC_THE).c_str());
     }
     else
     {
-        if (wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE))
-           mprf("You lunge at %s with incredible momentum!", mons->name(DESC_THE).c_str());
-        else
-           mprf("You lunge at %s.", mons->name(DESC_THE).c_str());
+        mprf("You lunge%s at %s%s.",
+             wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
+                 " with incredible momentum" : "",
+             mons->name(DESC_THE).c_str(),
+             number_of_attacks > 1 ? " in a flurry of attacks" : "");
     }
-
 
     for (int i = 0; i < number_of_attacks; i++)
     {
@@ -1674,6 +1666,7 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
 
         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
         you.apply_berserk_penalty = false;
 
         const int number_of_attacks = _wu_jian_number_of_attacks();
@@ -1683,32 +1676,19 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
                  "a blow to land.", mons->name(DESC_THE).c_str());
             continue;
         }
-
-        if (number_of_attacks > 1)
-        {
-            if (wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND))
-            {
-               mprf("You spin and attack %s repeatedly with incredible momentum!",
-                    mons->name(DESC_THE).c_str());
-            }
-            else
-               mprf("You spin and attack %s repeatedly!", mons->name(DESC_THE).c_str());
-        }
         else
         {
-            if (wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND))
-            {
-               mprf("You spin and attack %s with incredible momentum!",
-                    mons->name(DESC_THE).c_str());
-            }
-            else
-               mprf("You spin and attack %s.", mons->name(DESC_THE).c_str());
+            mprf("You spin and attack %s%s%s.",
+                 mons->name(DESC_THE).c_str(),
+                 number_of_attacks > 1 ? " repeatedly" : "",
+                 wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
+                     " with incredible momentum" : "");
         }
 
         for (int i = 0; i < number_of_attacks; i++)
         {
             if (!mons->alive())
-               break;
+                break;
             melee_attack whirlwind(&you, mons);
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
@@ -1749,11 +1729,23 @@ bool wu_jian_can_wall_jump(const coord_def& target)
         || !you.is_habitable(wall_jump_landing_spot)
         || landing_actor)
     {
-        mprf("You have no room to wall jump.");
+        mpr("You have no room to wall jump.");
         return false;
     }
 
-    return true;
+    for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon && !_dont_attack_martial(mon) && mon->alive())
+            return true;
+    }
+
+    mpr("There is no target in range.");
+    targeter_walljump range;
+    range.set_aim(wall_jump_landing_spot);
+    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+
+    return false;
 }
 
 /// Percent chance for an WJC walljump to distract a target of the given HD.
@@ -1774,7 +1766,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
     {
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
-           targets.push_back(target);
+            targets.push_back(target);
 
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
@@ -1785,55 +1777,37 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (!target->alive())
             continue;
 
-         if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-             you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+
         you.apply_berserk_penalty = false;
 
-         const int number_of_attacks = _wu_jian_number_of_attacks();
-         if (number_of_attacks == 0)
-         {
-             mprf("You attack %s from above, but your attack speed is too slow"
-                  " for a blow to land.", target->name(DESC_THE).c_str());
-             continue;
-         }
+        const int number_of_attacks = _wu_jian_number_of_attacks();
+        if (number_of_attacks == 0)
+        {
+            mprf("You attack %s from above, but your attack speed is too slow"
+                 " for a blow to land.", target->name(DESC_THE).c_str());
+            continue;
+        }
+        else
+        {
+            mprf("You %sattack %s from above%s.",
+                 number_of_attacks > 1 ? "repeatedly " : "",
+                 target->name(DESC_THE).c_str(),
+                 wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
+                     " with incredible momentum" : "");
+        }
 
-         if (number_of_attacks > 1)
-         {
-             if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-             {
-                mprf("You repeatedly attack %s from above with incredible momentum!",
-                     target->name(DESC_THE).c_str());
-             }
-             else
-             {
-                mprf("You repeatedly attack %s from above!",
-                     target->name(DESC_THE).c_str());
-             }
-         }
-         else
-         {
-             if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-             {
-                mprf("You attack %s from above with incredible momentum!",
-                     target->name(DESC_THE).c_str());
-             }
-             else
-             {
-                mprf("You attack %s from above.",
-                     target->name(DESC_THE).c_str());
-             }
-         }
-
-         for (int i = 0; i < number_of_attacks; i++)
-         {
-             if (!target->alive())
+        for (int i = 0; i < number_of_attacks; i++)
+        {
+            if (!target->alive())
                 break;
 
-             melee_attack aerial(&you, target);
-             aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
-             aerial.wu_jian_number_of_targets = targets.size();
-             aerial.attack();
-         }
+            melee_attack aerial(&you, target);
+            aerial.wu_jian_attack = WU_JIAN_ATTACK_WALL_JUMP;
+            aerial.wu_jian_number_of_targets = targets.size();
+            aerial.attack();
+        }
     }
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
@@ -1843,7 +1817,8 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (mon && mon->alive()
             && you.can_see(*mon)
             && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon))
+            && !_dont_attack_martial(mon)
+            && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
         {
             const int distract_chance
                 = _walljump_distract_chance(mon->get_hit_dice());
@@ -1855,19 +1830,15 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
                 continue;
 
             if (mon->holiness() == MH_NONLIVING)
-               simple_monster_message(*mon, " loses track of your position.");
+                simple_monster_message(*mon, " loses track of your position.");
             else
-               simple_monster_message(*mon, " is distracted by your jump.");
+                simple_monster_message(*mon, " is distracted by your jump.");
 
             mon->add_ench(
                 mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
-                            random_range(2, 4) * BASELINE_DELAY));
+                            random_range(3, 5) * BASELINE_DELAY));
             mon->foe = MHITNOT;
             mon->target = mon->pos();
-            const int non_move_energy = min(entry->energy_usage.move,
-                                            entry->energy_usage.swim);
-
-            mon->speed_increment -= non_move_energy;
         }
     }
 }

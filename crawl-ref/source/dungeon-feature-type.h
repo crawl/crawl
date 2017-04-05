@@ -250,3 +250,4 @@ enum dungeon_feature_type
 
     NUM_FEATURES
 };
+COMPILE_CHECK(NUM_FEATURES <= 256);

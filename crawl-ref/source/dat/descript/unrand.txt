@@ -389,7 +389,7 @@ A long black robe made of strange glossy material. It shrouds its wearer in
 darkness, reducing the range of vision. According to legend, it was the gift
 of Ratri the Goddess of the Night to one of her followers.
 %%%%
-armour of the Dragon King
+scales of the Dragon King
 
 A suit of armour created from the enchanted scales of a once-mighty king of
 dragons. In his time, titans and lesser dragons struggled with him in vain —
@@ -483,7 +483,7 @@ hat of Pondering
 
 The favourite hat of the slug wizard Gastronok, stained with reddish slime and
 enchanted to aid in his arcane pondering. It has been specially enchanted to
-protect against the effects of salt.
+protect against the desiccating effects of salt.
 %%%%
 obsidian axe
 
@@ -601,7 +601,7 @@ Majin-Bo
 
 A staff inhabited by a mighty demon, tricked and trapped in this form long
 ago. To survive, she now offers tremendous arcane power at a small price: a
-tiny portion of the caster’s life essence, taken alongside the magic used every
+tiny portion of the caster's life essence, taken alongside the magic used every
 time its wielder casts a spell.
 %%%%
 pair of quick blades "Gyre" and "Gimble"

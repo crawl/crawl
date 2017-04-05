@@ -23,6 +23,7 @@
 #include "libutil.h" // testbits
 #include "los.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -282,7 +283,7 @@ static const cloud_data clouds[] = {
       true,                                       // opacity
     },
     // CLOUD_GOLD_DUST,
-    { "gold",  nullptr,                           // terse, verbose name
+    { "golden dust",  nullptr,                    // terse, verbose name
       ETC_HOLY,                                   // colour
       { TILE_CLOUD_GOLD_DUST, CTVARY_DUR },       // tile
       BEAM_NONE, {},                              // beam & damage

@@ -609,8 +609,8 @@ void update_vision_range()
     int nom   = 1;
     int denom = 1;
 
-    // Barachians have +1 base LOS.
-    if (you.species == SP_BARACHIAN)
+    // Barachi have +1 base LOS.
+    if (you.species == SP_BARACHI)
     {
         nom *= LOS_DEFAULT_RANGE + 1;
         denom *= LOS_DEFAULT_RANGE;
@@ -4629,10 +4629,7 @@ bool haste_player(int turns, bool rageext)
     else if (you.duration[DUR_HASTE] > threshold * BASELINE_DELAY)
         mpr("You already have as much speed as you can handle.");
     else if (!rageext)
-    {
         mpr("You feel as though your hastened speed will last longer.");
-        contaminate_player(750 + random2(500), true); // always deliberate
-    }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
 
@@ -5415,7 +5412,7 @@ string player::shout_verb(bool directed) const
 
     const int screaminess = max(player_mutation_level(MUT_SCREAM) - 1, 0);
 
-    if (species == SP_BARACHIAN)
+    if (species == SP_BARACHI)
         return frog_shout_verbs[screaminess];
     if (species != SP_FELID)
         return shout_verbs[screaminess];
@@ -7602,7 +7599,7 @@ int player_monster_detect_radius()
         radius = max(radius, 4);
     if (have_passive(passive_t::detect_montier))
         radius = max(radius, you.piety / 20);
-    return min(radius, LOS_RADIUS);
+    return min(radius, LOS_DEFAULT_RANGE);
 }
 
 /**

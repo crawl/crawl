@@ -107,13 +107,19 @@ private:
     bool (*affects_pos)(const coord_def &);
 };
 
+class targeter_walljump : public targeter_smite
+{
+public:
+    targeter_walljump();
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_transference : public targeter_smite
 {
 public:
     targeter_transference(const actor *act, int aoe);
     bool valid_aim(coord_def a) override;
 };
-
 
 class targeter_fragment : public targeter_smite
 {

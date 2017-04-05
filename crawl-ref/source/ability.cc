@@ -342,9 +342,10 @@ static const ability_def Ability_List[] =
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {fail_basis::evo, 60, 2}, abflag::none },
+#if TAG_MAJOR_VERSION == 34
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible",
       0, 0, 0, 0, {}, abflag::none },
-
+#endif
     { ABIL_EVOKE_FLIGHT, "Evoke Flight",
       1, 0, 100, 0, {fail_basis::evo, 40, 2}, abflag::none },
     { ABIL_EVOKE_FOG, "Evoke Fog",
@@ -1631,7 +1632,9 @@ bool activate_talent(const talent& tal)
         case ABIL_RENOUNCE_RELIGION:
         case ABIL_CONVERT_TO_BEOGH:
         case ABIL_STOP_FLYING:
+#if TAG_MAJOR_VERSION == 34
         case ABIL_EVOKE_TURN_VISIBLE:
+#endif
         case ABIL_END_TRANSFORMATION:
 #if TAG_MAJOR_VERSION == 34
         case ABIL_DELAYED_FIREBALL:
@@ -2064,12 +2067,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         contaminate_player(1000 + random2(2000), true);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_EVOKE_TURN_VISIBLE:
         fail_check();
         ASSERT(!you.attribute[ATTR_INVIS_UNCANCELLABLE]);
         mpr("You feel less transparent.");
         you.duration[DUR_INVIS] = 1;
         break;
+#endif
 
     case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
         fail_check();
@@ -2106,8 +2111,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             monster_type mon = coinflip() ? MONS_HELL_RAT : MONS_RIVER_RAT;
 
             mgen_data mg(mon, BEH_FRIENDLY, you.pos(), MHITYOU);
-            mg.set_summoned(&you, 0, 0);
-            mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
             if (monster *m = create_monster(mg))
                 m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
@@ -3114,10 +3117,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
         fail_check();
-        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds! You feel the urge to strike!");
-        wu_jian_sifu_message(" says: The storm will not ease as long as you keep fighting, disciple!");
-        for (radius_iterator ai(you.pos(), 2, C_SQUARE); ai; ++ai)
-            big_cloud(CLOUD_GOLD_DUST, &you, *ai, 10 + random2(5), 50 + random2(30), 4);
+        mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
+        wu_jian_sifu_message(" says: The storm will not cease as long as you "
+                             "keep fighting, disciple!");
+
+        for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
+        {
+            if (!cell_is_solid(*ai))
+                place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
+        }
+
         you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
         you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
@@ -3486,22 +3495,17 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !player_mutation_level(MUT_NO_ARTIFICE)
         && !player_mutation_level(MUT_NO_LOVE))
     {
-      _add_talent(talents, ABIL_EVOKE_RATSKIN, check_confused);
+        _add_talent(talents, ABIL_EVOKE_RATSKIN, check_confused);
     }
 
     if (you.evokable_berserk() && !player_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-        && !player_mutation_level(MUT_NO_ARTIFICE))
+    if (you.evokable_invis()
+        && !player_mutation_level(MUT_NO_ARTIFICE)
+        && !you.duration[DUR_INVIS])
     {
-        // Now you can only turn invisibility off if you have an
-        // activatable item. Wands and potions will have to time
-        // out. -- bwr
-        if (you.duration[DUR_INVIS])
-            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
-        else
-            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
+        _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
     if (you.evokable_flight() && !player_mutation_level(MUT_NO_ARTIFICE))

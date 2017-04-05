@@ -167,6 +167,9 @@ enum monclass_flag_type : uint64_t
 
     /// monster will never harm the player
     M_NO_THREAT         = BIT(55),
+
+    /// monster always receives a wand
+    M_ALWAYS_WAND       = BIT(56),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 

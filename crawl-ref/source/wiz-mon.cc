@@ -41,6 +41,7 @@
 #include "spl-miscast.h"
 #include "state.h"
 #include "stringutil.h"
+#include "terrain.h"
 #include "unwind.h"
 #include "view.h"
 #include "viewmap.h"
@@ -742,7 +743,10 @@ void wizard_give_monster_item(monster* mon)
 static void _move_player(const coord_def& where)
 {
     if (!you.can_pass_through_feat(grd(where)))
+    {
         grd(where) = DNGN_FLOOR;
+        set_terrain_changed(where);
+    }
     move_player_to_grid(where, false);
     // If necessary, update the Abyss.
     if (player_in_branch(BRANCH_ABYSS))

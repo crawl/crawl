@@ -538,7 +538,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
  */
 void floor_transition(dungeon_feature_type how,
                       const dungeon_feature_type whence, level_id whither,
-                      bool forced, bool going_up, bool shaft)
+                      bool forced, bool going_up, bool shaft, bool update_travel_cache)
 {
     const level_id old_level = level_id::current();
 
@@ -769,7 +769,7 @@ void floor_transition(dungeon_feature_type how,
 
     you.clear_fearmongers();
 
-    if (!you.wizard && !shaft)
+    if (update_travel_cache && !shaft)
         _update_travel_cache(old_level, stair_pos);
 
     // Preventing obvious finding of stairs at your position.
@@ -795,7 +795,7 @@ void floor_transition(dungeon_feature_type how,
  * @param force_known_shaft true if the player is shafting themselves via ability
  */
 void take_stairs(dungeon_feature_type force_stair, bool going_up,
-                 bool force_known_shaft)
+                 bool force_known_shaft, bool update_travel_cache)
 {
     const dungeon_feature_type old_feat = orig_terrain(you.pos());
     dungeon_feature_type how = force_stair ? force_stair : old_feat;
@@ -816,12 +816,12 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         return;
 
     floor_transition(how, old_feat, whither,
-                     bool(force_stair), going_up, shaft);
+                     bool(force_stair), going_up, shaft, update_travel_cache);
 }
 
-void up_stairs(dungeon_feature_type force_stair)
+void up_stairs(dungeon_feature_type force_stair, bool update_travel_cache)
 {
-    take_stairs(force_stair, true, false);
+    take_stairs(force_stair, true, false, update_travel_cache);
 }
 
 // Find the other end of the stair or portal at location pos on the current
@@ -979,9 +979,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 }
 
 // TODO(Zannick): Fully merge with up_stairs into take_stairs.
-void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
+void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft, bool update_travel_cache)
 {
-    take_stairs(force_stair, false, force_known_shaft);
+    take_stairs(force_stair, false, force_known_shaft, update_travel_cache);
 }
 
 static bool _any_glowing_mold()

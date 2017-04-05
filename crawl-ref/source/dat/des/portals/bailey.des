@@ -239,6 +239,7 @@ WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
 KMASK:  d = no_item_gen
+KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -294,6 +295,7 @@ NAME:   enter_bailey_8
 WEIGHT: 3
 COLOUR: n = red
 KMASK:  d = no_item_gen
+KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then

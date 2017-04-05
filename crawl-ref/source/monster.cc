@@ -2124,10 +2124,6 @@ void monster::swap_weapons(maybe_bool maybe_msg)
 {
     const bool msg = tobool(maybe_msg, observable());
 
-    // Don't let them swap weapons if berserk. ("You are too berserk!")
-    if (berserk())
-        return;
-
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
@@ -6006,8 +6002,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         const int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
         {
-            shock_serpent_discharge_fineff::schedule(this, *oppressor, pos(),
-                                                     pow);
+            // we intentionally allow harming the oppressor in this case,
+            // so need to cast off its constness
+            shock_serpent_discharge_fineff::schedule(this,
+                                                     const_cast<actor&>(*oppressor),
+                                                     pos(), pow);
         }
     }
 

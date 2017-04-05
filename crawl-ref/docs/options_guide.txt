@@ -65,7 +65,7 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
-                item_stack_summary_minimum, mlist_min_height,
+                equip_bar, item_stack_summary_minimum, mlist_min_height,
                 mlist_allow_alternate_layout, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
@@ -1396,6 +1396,11 @@ show_game_time = true
         is the number of actions taken regardless of their duration. It is this
         turn count which is used for scoring (and this turn count is always
         visible on the % overview screen).
+
+equip_bar = false
+        When set to true, this option replaces the noise bar with an
+        "equipment bar" showing the glyphs of all currently equipped items,
+        with gaps for available but currently unfilled equipment slots.
 
 item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in

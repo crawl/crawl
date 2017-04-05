@@ -469,10 +469,9 @@ void shock_serpent_discharge_fineff::fire()
 
     int amount = roll_dice(3, 4 + power * 3 / 2);
     amount = oppressor.apply_ac(amount, 0, AC_HALF);
-    // hack
-    actor_at(oppressor.pos())->hurt(serpent, amount, BEAM_ELECTRICITY,
-                                    KILLED_BY_BEAM,
-                                    "a shock serpent", "electric aura");
+    oppressor.hurt(serpent, amount, BEAM_ELECTRICITY,
+                   KILLED_BY_BEAM,
+                   "a shock serpent", "electric aura");
 }
 
 void delayed_action_fineff::fire()

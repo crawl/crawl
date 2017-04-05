@@ -545,11 +545,6 @@ static const duration_def duration_data[] =
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
-    { DUR_HEAVEN_ON_EARTH,
-      0, "", "", "", "", D_NO_FLAGS,
-      {{ "", []() {
-          wu_jian_heaven_tick();
-      }}}},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -599,6 +594,8 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
       {{ "You regain access to your magic." }, {}, true }},
+    { DUR_HEAVEN_ON_EARTH, 0, "", "", "", "", D_NO_FLAGS,
+      {{ "",  wu_jian_heaven_tick }}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

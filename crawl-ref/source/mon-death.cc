@@ -2439,6 +2439,12 @@ item_def* monster_die(monster* mons, killer_type killer,
                     // Sticks to Snakes
                     if (mons_genus(mons->type) == MONS_SNAKE)
                         simple_monster_message(*mons, " withers and dies!");
+                    // ratskin cloak
+                    else if (mons_genus(mons->type) == MONS_RAT)
+                    {
+                        simple_monster_message(*mons, " returns to the shadows"
+                                                      " of the Dungeon!");
+                    }
                     // Death Channel
                     else if (mons->type == MONS_SPECTRAL_THING)
                         simple_monster_message(*mons, " fades into mist!");
