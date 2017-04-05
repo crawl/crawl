@@ -46,6 +46,7 @@ void display_mutations();
 int mut_check_conflict(mutation_type mut, bool innate_only = false);
 mutation_activity_type mutation_activity_level(mutation_type mut);
 string describe_mutations(bool center_title);
+void validate_mutations(bool debug_msg=false);
 
 bool delete_mutation(mutation_type which_mutation, const string &reason,
                      bool failMsg = true,

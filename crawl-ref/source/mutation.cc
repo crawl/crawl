@@ -505,9 +505,60 @@ bool player::has_mutation(mutation_type mut, bool check_form) const
     return get_mutation_level(mut, check_form) > 0;
 }
 
+void validate_mutations(bool debug_msg)
+{
+    dprf("Validating player mutations");
+    int total_temp = 0;
+
+    FixedVector<uint8_t, NUM_MUTATIONS> test_innate_mutation;
+    test_innate_mutation.init(0);
+
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (debug_msg && you.mutation[mut] > 0)
+        {
+            dprf("mutation %s: total %d innate %d temp %d",
+                mutation_name(mut), you.mutation[mut],
+                you.innate_mutation[mut], you.temp_mutation[mut]);
+        }
+        ASSERT(you.mutation[mut] >= 0);
+        ASSERT(you.innate_mutation[mut] >= 0);
+        ASSERT(you.temp_mutation[mut] >= 0);
+        ASSERT(you.get_base_mutation_level(mut) == you.mutation[mut]);
+        ASSERT(you.mutation[i] >= you.innate_mutation[mut] + you.temp_mutation[mut]);
+        total_temp += you.temp_mutation[mut];
+
+        const mutation_def& mdef = _get_mutation_def(mut);
+        ASSERT(you.mutation[mut] <= mdef.levels);
+
+        // reconstruct what the innate mutations should be based on Ds mutation schedule
+        // TODO generalize to all innate muts
+        if (you.species == SP_DEMONSPAWN)
+        {
+            for (player::demon_trait trait : you.demonic_traits)
+                if (trait.mutation == mut && you.get_experience_level() >= trait.level_gained)
+                    test_innate_mutation[mut] += 1;
+
+            if (debug_msg && test_innate_mutation[mut] > 0)
+            {
+                dprf("scheduled innate for %s: %d, actual %d", mutation_name(mut),
+                     test_innate_mutation[mut], you.innate_mutation[mut]);
+            }
+            ASSERT(you.innate_mutation[mut] == test_innate_mutation[mut]);
+        }
+    }
+    ASSERT(total_temp == you.attribute[ATTR_TEMP_MUTATIONS]);
+    ASSERT(you.attribute[ATTR_TEMP_MUT_XP] >=0);
+    if (total_temp > 0)
+        ASSERT(you.attribute[ATTR_TEMP_MUT_XP] > 0);
+}
 
 string describe_mutations(bool center_title)
 {
+#ifdef DEBUG
+    validate_mutations(true);
+#endif
     string result;
     const char *mut_title = "Innate Abilities, Weirdness & Mutations";
 
@@ -1437,6 +1488,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     while (count-- > 0)
     {
+        // no fail condition past this point, so it is safe to do bookkeeping
         you.mutation[mutat]++;
         if (mutclass == MUTCLASS_TEMPORARY)
         {
@@ -1444,6 +1496,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             you.temp_mutation[mutat]++;
             you.attribute[ATTR_TEMP_MUTATIONS]++;
         }
+        else if (mutclass == MUTCLASS_INNATE)
+            you.innate_mutation[mutat]++;
+
         const int cur_base_level = you.get_base_mutation_level(mutat);
 
         // More than three messages, need to give them by hand.
@@ -1615,6 +1670,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     {
         learned_something_new(HINT_NEW_ABILITY_MUT);
     }
+#ifdef DEBUG
+    validate_mutations(false);
+#endif
     return true;
 }
 
@@ -2412,12 +2470,17 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
         else if (you.get_base_mutation_level(which_mut) < cap
             && !mutate(which_mut, reason, false, true, false, false, MUTCLASS_INNATE))
         {
+#ifdef DEBUG
+            validate_mutations(false);
+#endif
             return levels; // a partial success was still possible
         }
         levels++;
     }
-    you.innate_mutation[which_mut] += levels;
 
+#ifdef DEBUG
+    validate_mutations(false);
+#endif
     return levels > 0;
 }
 
