@@ -884,6 +884,10 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
     if (!mons_can_use_stairs(*fol))
         return true;
 
+    // Any monsters that follow you out of the level get angry
+    if (!fol->friendly() && fol->foe == MHITYOU && fol->foe_memory > 0)
+        fol->bezot_monster();
+
     level_id dest = level_id::current();
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
@@ -894,6 +898,7 @@ static bool _grab_follower_at(const coord_def &pos, bool can_follow)
     monster_cleanup(fol);
     if (could_see)
         view_update_at(pos);
+
     return true;
 }
 
@@ -1006,6 +1011,10 @@ static void _grab_followers()
         if (mons.type == MONS_SPECTRAL_WEAPON)
             end_spectral_weapon(&mons, false);
         mons.flags &= ~MF_TAKING_STAIRS;
+
+        // Any monsters that know you're leaving the level get angry
+        if (!mons.friendly() && mons.foe == MHITYOU && mons.foe_memory > 0)
+            mons.bezot_monster(); //
     }
 }
 
