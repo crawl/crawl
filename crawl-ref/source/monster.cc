@@ -3332,8 +3332,7 @@ int monster::armour_class(bool calc_unid) const
 {
     int ac = base_armour_class();
 
-    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
-        ac = bezot(ac, false);
+    ac = bezot(ac, false);
 
     // check for protection-brand weapons
     ac += 5 * _weapons_with_prop(this, SPWPN_PROTECTION, calc_unid);
@@ -3450,8 +3449,7 @@ int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 
     int ev = base_evasion();
 
-    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
-        ev = bezot(ev, false);
+    ev = bezot(ev, false);
 
     // account for armour
     for (int slot = MSLOT_ARMOUR; slot <= MSLOT_SHIELD; slot++)
@@ -5054,8 +5052,7 @@ void monster::calc_speed()
 {
     speed = mons_base_speed(*this);
 
-    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
-        speed = bezot(speed, false);
+    speed = bezot(speed, false);
 
     if (has_ench(ENCH_BERSERK))
         speed = berserk_mul(speed);
@@ -6705,14 +6702,22 @@ bool monster::angered_by_attacks() const
  * @param is_percentage_increase Whether the upgrade should be a percentile
  *                               or an additive increase.
  *
- * return int The upgraded value.
+ * return int The new value, or the old one if the monster is not bezotted.
  */
 int monster::bezot(int i, bool is_percentage_increase) const
 {
+    int bezotting_level = 0;
+    if (props.exists(BEZOTTED_KEY))
+        bezotting_level = props[BEZOTTED_KEY].get_int();
+
+    // Exit early if not bezotted.
+    if (bezotting_level == 0)
+        return i;
+
     if (is_percentage_increase)
-        return i * 6 / 5;
+        return i * (5 + bezotting_level) / 5;
     else
-        return i += 2;
+        return i += 2 * bezotting_level;
 }
 
 /**
@@ -6725,16 +6730,43 @@ int monster::bezot(int i, bool is_percentage_increase) const
  */
 void monster::bezot_monster()
 {
+    int old_bezotting_level = 0;
+
+    if (props.exists(BEZOTTED_KEY))
+        old_bezotting_level = props[BEZOTTED_KEY].get_int();
+
+    // If we're already at the max level, do nothing.
+    if (old_bezotting_level == MAX_BEZOT_LEVEL)
+        return;
+
+    // Make sure we're within the acceptable range.
+    int bezotting_level = max(MIN_BEZOT_LEVEL,
+                            min(MAX_BEZOT_LEVEL, old_bezotting_level += 1));
+
+    // We probably want to eventually remove this, but it's good info for testing.
+    const string message = make_stringf("%s gained the power of zot (level %d).",
+                                                    name(DESC_A).c_str(),
+                                                    bezotting_level).c_str();
+    take_note(Note(NOTE_MESSAGE, 0, 0, message));
+
     if (visible_to(&you))
-        simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
-    props[BEZOTTED_KEY] = true;
+    {
+        if (bezotting_level > 1)
+            simple_monster_message(*this, " is increasingly filled with the power of Zot!", MSGCH_WARN);
+        else
+            simple_monster_message(*this, " is filled with the power of Zot!", MSGCH_WARN);
+    }
+
+    props[BEZOTTED_KEY] = bezotting_level;
     set_hit_dice(bezot(hit_dice, true));
     hit_points = bezot(hit_points, true);
     max_hit_points = bezot(max_hit_points, true);
+
     calc_speed();
 
-    // We probably want to eventually remove this, but it's good info for testing.
-    take_note(Note(NOTE_MESSAGE, 0, 0, name(DESC_A) + " gained the power of zot."));
+    // Reset the turns spent tracking to avoid rapid re-zotting
+    turns_spent_tracking_player = 0;
+
 }
 
 /**
@@ -6752,8 +6784,8 @@ void monster::track_player()
 
     turns_spent_tracking_player += 1;
 
-    if (x_chance_in_y(turns_spent_tracking_player, turns_spent_tracking_player + 2000)
-        && !(props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool()))
+    if (x_chance_in_y(turns_spent_tracking_player,
+        turns_spent_tracking_player + BEZOT_TRACKING_CONSTANT))
     {
         bezot_monster();
     }

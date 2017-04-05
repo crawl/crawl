@@ -945,8 +945,17 @@ string monster_info::common_name(description_level_type desc) const
     if (is(MB_SUBMERGED))
         ss << "submerged ";
 
-    if (props.exists(BEZOTTED_KEY) && props[BEZOTTED_KEY].get_bool())
-        ss << "bezotted ";
+    if (props.exists(BEZOTTED_KEY))
+    {
+        int bezotting_level = props[BEZOTTED_KEY].get_int();
+        if (bezotting_level == 3)
+            ss << "triply ";
+        else if (bezotting_level == 2)
+            ss << "doubly ";
+
+        if (bezotting_level > 0)
+            ss << "bezotted ";
+    }
 
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";

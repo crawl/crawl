@@ -13,6 +13,10 @@
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 const int DEFAULT_TRACKING_AMNESTY = 6; // defaults to the distance between a monster at edge of los and player.
+const int MAX_BEZOT_LEVEL = 3;
+const int MIN_BEZOT_LEVEL = 0;
+const int BEZOT_TRACKING_CONSTANT = 2000;
+
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
