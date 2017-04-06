@@ -143,6 +143,16 @@ void uncontrolled_blink(bool override_stasis)
     _place_tloc_cloud(origin);
 }
 
+void blink_instead()
+{
+    uncontrolled_blink();
+    if (!i_feel_safe(true,false,false))
+    {
+        mprf(MSGCH_WARN, "Beware!");
+        more();
+    }
+}
+
 /**
  * Let the player choose a destination for their controlled blink or similar
  * effect.
@@ -473,7 +483,9 @@ void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
-    if (you.no_tele(true, true))
+    if (player_mutation_level(MUT_BLINKER) >= 1)
+        blink_instead();
+    else if (you.no_tele(true, true))
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
@@ -554,6 +566,9 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 
 static bool _teleport_player(bool wizard_tele, bool teleportitis)
 {
+    if (player_mutation_level(MUT_BLINKER) >= 1 && !wizard_tele)
+        blink_instead();
+        return false;
     if (!wizard_tele && !teleportitis
         && (crawl_state.game_is_sprint() || you.no_tele(true, true))
             && !player_in_branch(BRANCH_ABYSS))

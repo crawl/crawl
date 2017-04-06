@@ -1908,4 +1908,12 @@ static const mutation_def mut_data[] =
   {"You stop regenerating.", "", ""},
   {"You start regenerating.", "", ""},
 },
+
+{ MUT_BLINKER, 3, 1, mutflag::bad | mutflag::xom, false,
+  "tele becomes blink",
+
+  {"Whenever you would teleport, you blink instead.", "", ""},
+  {"You feel unable to teleport farther than you can see.", "", ""},
+  {"You feel confident that you can teleport normally.", "", ""},
+},
 };
