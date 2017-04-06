@@ -39,6 +39,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "wiz-you.h"
 
 /*
 --- Player-related bindings.
@@ -883,6 +884,36 @@ LUAFN(you_delete_all_mutations)
     PLUARET(boolean, result);
 }
 
+LUAFN(you_change_species)
+{
+    string species = luaL_checkstring(ls, 1);
+    const species_type sp = find_species_from_string(species);
+
+    if (sp == SP_UNKNOWN)
+    {
+        mpr("That species isn't available.");
+        PLUARET(boolean, false);
+    }
+
+    change_species_to(sp);
+    PLUARET(boolean, true);
+}
+
+LUAFN(you_set_xl)
+{
+    const int newxl = luaL_checkint(ls, 1);
+    bool train = lua_toboolean(ls, 2); // whether to train skills
+    if (newxl < 1 || newxl > you.get_max_xl())
+    {
+        mprf("Can't change to invalid xl %d", newxl);
+        PLUARET(boolean, false);
+    }
+    if (newxl == you.experience_level)
+        PLUARET(boolean, true);
+    set_xl(newxl, train);
+    PLUARET(boolean, true);
+}
+
 /*
  * Init the player class.
  *
@@ -943,6 +974,8 @@ static const struct luaL_reg you_dlib[] =
 { "delete_mutation",    you_delete_mutation },
 { "delete_temp_mutations", you_delete_temp_mutations },
 { "delete_all_mutations", you_delete_all_mutations },
+{ "change_species",     you_change_species },
+{ "set_xl",             you_set_xl },
 
 { nullptr, nullptr }
 };
