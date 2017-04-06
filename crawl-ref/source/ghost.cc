@@ -660,17 +660,6 @@ void ghost_demon::add_spells(bool actual_ghost)
     }
 
     normalize_spell_freq(spells, xl);
-
-    // After normalizing the frequencies!
-    if (species_is_draconian(species)
-        && species != SP_BASE_DRACONIAN
-        && species != SP_GREY_DRACONIAN
-        // Don't give pillusions extra breath
-        && actual_ghost)
-    {
-        spells.emplace_back(SPELL_BOLT_OF_DRAINING, 33, // Not too common
-                            MON_SPELL_NATURAL | MON_SPELL_BREATH);
-    }
 }
 
 bool ghost_demon::has_spells() const
