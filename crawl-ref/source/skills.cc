@@ -1518,7 +1518,7 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    // Choose between the normal exp table and the Bultungin exp table
+    // Regular XP table:
     const int exp[28] =
       { 0, 50, 150, 300, 500, 750,          // 0-5
         1050, 1400, 1800, 2250, 2800,       // 6-10
@@ -1526,6 +1526,21 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
         8200, 9450, 10800, 12300, 13950,    // 16-20
         15750, 17700, 19800, 22050, 24450,  // 21-25
         27000, 29750 };
+
+    // This is a custom XP table for Bultungin, precalculated to match their
+    // dynamic aptitudes. Until SL 7, Bultungin have an effective aptitude of
+    // +4 (half as much XP needed). At 7 and after, their aptitude decreases by
+    // two for each skill level, reaching a floor of -6 at skill level 12. XP
+    // values are calculated accordingly, using the original XP table (above).
+    // At SL 7, standard +2 aptitude requires 283 XP to go from 7 to 8; thus
+    // Bultungin get their 8th level in any given skill by going from 700 total
+    // XP to 983. This pattern continues. -6 aptitude at SL 14 requires 2970 XP,
+    // so Bultungin go from 10723 total XP at SL 14 to 13963 at 15.
+    //
+    // There are ways to do this programmatically (such as to call this function
+    // inside of itself at runtime to dynamically calculate the needed XP), but
+    // they either cause strange interactions with wizard mode, or take up more
+    // resources than this implementation.
     const int bultungin_exp[28] =
       { 0, 25, 75, 150, 250, 375,           // 0-5
         525, 700, 983, 1433, 2211,          // 6-10
@@ -1534,6 +1549,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
         38300, 43816, 49755, 56119, 62908,  // 21-25
         70120, 77898 };
 
+    // Choose between normal exp table and Bultungin exp table
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
     if (sp == SP_BULTUNGIN)
         return bultungin_exp[lev] * species_apt_factor(sk, sp);
