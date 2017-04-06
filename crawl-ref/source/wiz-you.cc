@@ -747,6 +747,44 @@ void wizard_list_props()
          you.describe_props().c_str());
 }
 
+/*
+ * Hard reset Ds mutations for `xl` based on the trait schedule.
+ */
+static void reset_ds_muts_from_schedule(int xl)
+{
+    if (you.species != SP_DEMONSPAWN)
+        return;
+
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        mutation_type mut = static_cast<mutation_type>(i);
+        int innate_levels = 0;
+        bool is_trait = false;
+        for (player::demon_trait trait : you.demonic_traits)
+        {
+            if (trait.mutation == mut)
+            {
+                is_trait = true;
+                if (xl >= trait.level_gained)
+                    innate_levels += 1;
+            }
+        }
+        if (is_trait)
+        {
+            while (you.innate_mutation[mut] > innate_levels)
+            {
+                // first set it as non-innate, then delete the mutation from there.  delete_mutation won't delete mutations otherwise.
+                // this step doesn't affect temporary mutations.
+                you.innate_mutation[mut]--;
+                delete_mutation(mut, "level change", false, true, false, false);
+            }
+            if (you.innate_mutation[mut] < innate_levels)
+                perma_mutate(mut, innate_levels - you.innate_mutation[mut], "level change");
+        }
+    }
+}
+
+
 static void debug_uptick_xl(int newxl, bool train)
 {
     if (train)
@@ -755,7 +793,18 @@ static void debug_uptick_xl(int newxl, bool train)
         train_skills();
     }
     you.experience = exp_needed(newxl);
+    if (you.experience_level < you.max_level)
+    {
+        // Fixing up Ds muts needs to happen before the level change, so that the mutations validate correctly
+        if (newxl < you.max_level)
+            reset_ds_muts_from_schedule(newxl);
+        else
+            reset_ds_muts_from_schedule(you.max_level); // let level change handle the rest
+    }
     level_change(true);
+#ifdef DEBUG
+    validate_mutations();
+#endif
 }
 
 /**
@@ -769,6 +818,7 @@ static void debug_downtick_xl(int newxl)
     you.hp_max_adj_perm += 1000;
     you.experience = exp_needed(newxl);
     level_change();
+    reset_ds_muts_from_schedule(newxl); // needs to happen after the level change
     you.skill_cost_level = 0;
     check_skill_cost_change();
     // restore maxhp loss
@@ -783,6 +833,9 @@ static void debug_downtick_xl(int newxl)
     }
 
     set_hp(max(1, you.hp));
+#ifdef DEBUG
+    validate_mutations();
+#endif
 }
 
 void wizard_set_xl(bool change_skills)
