@@ -266,6 +266,7 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
+cyno CORPSE_CYNO
 tengu CORPSE_TENGU
 mon/unique/arachne_staveless CORPSE_ARACHNE
 %sdir mon/mutantbeast

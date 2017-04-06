@@ -491,6 +491,10 @@ int detect_items(int pow)
     int map_radius = 0;
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
+
+    else if (you.mutation[MUT_STRONG_NOSE])
+        map_radius = LOS_DEFAULT_RANGE;
+
     else
     {
         //Check which god may be providing detect_items (Ashenzari or Jiyva) and set map_radius
