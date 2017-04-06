@@ -507,11 +507,9 @@ bool player::has_mutation(mutation_type mut, bool check_form) const
 
 void validate_mutations(bool debug_msg)
 {
-    dprf("Validating player mutations");
+    if (debug_msg)
+        dprf("Validating player mutations");
     int total_temp = 0;
-
-    FixedVector<uint8_t, NUM_MUTATIONS> test_innate_mutation;
-    test_innate_mutation.init(0);
 
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
@@ -536,16 +534,25 @@ void validate_mutations(bool debug_msg)
         // TODO generalize to all innate muts
         if (you.species == SP_DEMONSPAWN)
         {
+            bool is_trait = false;
+            int trait_level = 0;
             for (player::demon_trait trait : you.demonic_traits)
-                if (trait.mutation == mut && you.get_experience_level() >= trait.level_gained)
-                    test_innate_mutation[mut] += 1;
+            {
+                if (trait.mutation == mut)
+                {
+                    is_trait = true;
+                    if (you.get_experience_level() >= trait.level_gained)
+                        trait_level += 1;
+                }
+            }
 
-            if (debug_msg && test_innate_mutation[mut] > 0)
+            if (debug_msg && is_trait)
             {
                 dprf("scheduled innate for %s: %d, actual %d", mutation_name(mut),
-                     test_innate_mutation[mut], you.innate_mutation[mut]);
+                     trait_level, you.innate_mutation[mut]);
             }
-            ASSERT(you.innate_mutation[mut] == test_innate_mutation[mut]);
+            if (is_trait)
+                ASSERT(you.innate_mutation[mut] == trait_level);
         }
     }
     ASSERT(total_temp == you.attribute[ATTR_TEMP_MUTATIONS]);
@@ -1671,7 +1678,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         learned_something_new(HINT_NEW_ABILITY_MUT);
     }
 #ifdef DEBUG
-    validate_mutations(false);
+    if (mutclass != MUTCLASS_INNATE) // taken care of in perma_mutate. Skipping this here avoids validation issues in doing repairs.
+        validate_mutations(false);
 #endif
     return true;
 }
@@ -2470,16 +2478,16 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
         else if (you.get_base_mutation_level(which_mut) < cap
             && !mutate(which_mut, reason, false, true, false, false, MUTCLASS_INNATE))
         {
-#ifdef DEBUG
-            validate_mutations(false);
-#endif
-            return levels; // a partial success was still possible
+            break;
         }
         levels++;
     }
 
 #ifdef DEBUG
-    validate_mutations(false);
+    // don't validate permamutate directly on level regain; this is so that wizmode level change
+    // functions can work correctly.
+    if (you.experience_level >= you.max_level)
+        validate_mutations(false);
 #endif
     return levels > 0;
 }

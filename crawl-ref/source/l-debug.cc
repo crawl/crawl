@@ -366,6 +366,17 @@ LUAFN(debug_disable)
     return 0;
 }
 
+// can be used to produce a crashlog from a lua test
+LUAFN(debug_cpp_assert)
+{
+    bool test = lua_toboolean(ls, 1);
+    string reason = luaL_checkstring(ls, 2);
+    if (!test)
+        dprf("ASSERT from lua failed: %s", reason.c_str());
+    ASSERT(test);
+    return 0;
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -391,5 +402,6 @@ const struct luaL_reg debug_dlib[] =
 { "viewwindow", debug_viewwindow },
 { "seen_monsters_react", debug_seen_monsters_react },
 { "disable", debug_disable },
+{ "cpp_assert", debug_cpp_assert },
 { nullptr, nullptr }
 };
