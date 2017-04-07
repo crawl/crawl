@@ -292,7 +292,7 @@ static void _change_skill_level(skill_type exsk, int n)
              you.skills[exsk]);
 
         // Send a status message about 'aptitude' increases/decreases if Bultungin
-        if (you.species == SP_BULTUNGIN)
+        if (you.species == SP_GNOLL)
         {
             if (n > 0 && you.skills[exsk] < 12 && you.skills[exsk] > 6)
             {
@@ -314,7 +314,7 @@ static void _change_skill_level(skill_type exsk, int n)
              abs(n), you.skills[exsk]);
 
         // Send a status message about 'aptitude' increases/decreases if Bultungin
-        if (you.species == SP_BULTUNGIN)
+        if (you.species == SP_GNOLL)
         {
             if (n > 0 && (you.skills[exsk] - n) < 12 && you.skills[exsk] > 6)
             {
@@ -1545,7 +1545,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
     // inside of itself at runtime to dynamically calculate the needed XP), but
     // they either cause strange interactions with wizard mode, or take up more
     // resources than this implementation.
-    const int bultungin_exp[28] =
+    const int gnoll_exp[28] =
       { 0, 25, 75, 150, 250, 375,           // 0-5
         525, 700, 983, 1433, 2211,          // 6-10
         3511, 5629, 8036, 10723, 13693,     // 11-15
@@ -1555,8 +1555,8 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 
     // Choose between normal exp table and Bultungin exp table
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-    if (sp == SP_BULTUNGIN)
-        return bultungin_exp[lev] * species_apt_factor(sk, sp);
+    if (sp == SP_GNOLL)
+        return gnoll_exp[lev] * species_apt_factor(sk, sp);
     else
         return exp[lev] * species_apt_factor(sk, sp);
 }
