@@ -20,6 +20,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "los.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "map-knowledge.h"
