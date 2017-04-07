@@ -1711,14 +1711,18 @@ Vine Stalkers
   spells' fuel with each voracious bite.
 
 Bultungins
-  Bultungins are humanoids with the head of a dog, with origins from the eastern
-  deserts. Bultungins are unusually attracted to the dungeon, with mentions of the
-  Orb often generating blank stares, tilted heads, and involuntary drooling.
+  Bultungins are a race of short-haired hyena-headed folk hailing from the arid
+  deserts and grasslands of the east. With a variety of lurid tales told of
+  them, others avoid the Bultungins. Despite their isolation, Bultungins are
+  unusually drawn to the Dungeon... yet mentions of the Orb often generate blank
+  stares, tilted heads, and involuntary drooling.
 
-  Bultungins are quick to learn, picking up the basics of any skill within a short
-  period of time. This comes at the cost of a poor attention span, making
-  it more difficult to learn a skill the higher it gets. Thus, Bultungins often
-  prefer to dabble in everything over mastering in one particular skill.
+  Bultungins are quick to learn, picking up the basics of any skill within a
+  short period of time. Their attention wanes quickly, though, and they find it
+  more and more difficult to train a given skill the more practised they become
+  at it. Thus, Bultungins often prefer to dabble in a wide variety of fresh
+  and interesting skills. Their powerful noses indicate to them where treasures
+  lay hidden in the Dungeon.
 
 The Undead
 ========================================
