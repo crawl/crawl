@@ -348,7 +348,7 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white> ";
 
-    if (manual_bonus || you.species == SP_BULTUNGIN)
+    if (manual_bonus || you.species == SP_GNOLL)
     {
         if (manual_bonus)
         {
@@ -356,18 +356,18 @@ void SkillMenuEntry::set_aptitude()
             text += "<lightgreen>";
         }
 
-        int bultungin_bonus = 0;
+        int gnoll_bonus = 0;
 
-        // Determine Bultungin aptitude bonus/malus to display if SP_BULTUNGIN
-        if (you.species == SP_BULTUNGIN)
+        // Determine Bultungin aptitude bonus/malus to display if SP_GNOLL
+        if (you.species == SP_GNOLL)
         {
-            int bultungin_skill = you.skill(m_sk, 1, true);
+            int gnoll_skill = you.skill(m_sk, 1, true);
 
             // Bultungin aptitude costs start at effective +4 and reduce by -2 for
             // each level after reaching 7, floor of -6
-            bultungin_bonus = max(4 - max((bultungin_skill - 6) * 2, 0), -6);
+            gnoll_bonus = max(4 - max((gnoll_skill - 6) * 2, 0), -6);
         }
-        manual_bonus = manual_bonus + bultungin_bonus;
+        manual_bonus = manual_bonus + gnoll_bonus;
 
         // Only room for two characters.
         if (manual_bonus != 0)

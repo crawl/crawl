@@ -62,12 +62,12 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
-{ SP_BULTUNGIN, {
-    "Bu",
-    "Bultungin", nullptr, nullptr,
+{ SP_GNOLL, {
+    "Gn",
+    "Gnoll", nullptr, nullptr,
     SPF_NONE,
     0, 0, 0, 2,
-    MONS_BULTUNGIN,
+    MONS_GNOLL,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     7, 8, 9, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 5,
