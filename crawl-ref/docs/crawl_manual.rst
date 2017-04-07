@@ -1714,8 +1714,7 @@ Bultungins
   Bultungins are a race of short-haired hyena-headed folk hailing from the arid
   deserts and grasslands of the east. With a variety of lurid tales told of
   them, others avoid the Bultungins. Despite their isolation, Bultungins are
-  unusually drawn to the Dungeon... yet mentions of the Orb often generate blank
-  stares, tilted heads, and involuntary drooling.
+  unusually drawn to the Dungeon.
 
   Bultungins are quick to learn, picking up the basics of any skill within a
   short period of time. Their attention wanes quickly, though, and they find it
