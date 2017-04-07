@@ -493,14 +493,14 @@ int detect_items(int pow)
         map_radius = 7 + random2(7) + pow;
 
     else if (you.mutation[MUT_STRONG_NOSE])
-        map_radius = LOS_DEFAULT_RANGE;
+        map_radius = get_los_radius();
 
     else
     {
-        //Check which god may be providing detect_items and set map_radius
+        // Check which god may be providing detect_items and set map_radius
         if (have_passive(passive_t::detect_items))
         {
-            map_radius = min(you.piety / 20 - 1, LOS_DEFAULT_RANGE);
+            map_radius = min(you.piety / 20 - 1, get_los_radius());
             if (map_radius <= 0)
                 return 0;
         }
