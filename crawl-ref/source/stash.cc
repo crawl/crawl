@@ -1235,6 +1235,34 @@ protected:
     }
 };
 
+static bool _is_potentially_boring(stash_search_result res)
+{
+    return res.item.defined() && !res.in_inventory && !res.shop
+           && (res.item.base_type == OBJ_WEAPONS
+               || res.item.base_type == OBJ_ARMOUR
+               || res.item.base_type == OBJ_MISSILES)
+           && (item_type_known(res.item) || !item_is_branded(res.item));
+}
+
+static bool _is_duplicate_for_search(stash_search_result l, stash_search_result r, bool ignore_missile_stacks=true)
+{
+    if (l.in_inventory || r.in_inventory)
+        return false;
+    if (ignore_missile_stacks &&
+        l.item.base_type == OBJ_MISSILES
+        && r.item.base_type == OBJ_MISSILES
+        && l.item.sub_type == r.item.sub_type
+        && l.item.brand == r.item.brand)
+    {
+        // special handling for missiles -- ignore stacking for deduplication
+        return true;
+    }
+    // Otherwise just use the search result description.
+    // TODO: better handling for items in shops (ideally, ignore price)
+    return l.match == r.match;
+}
+
+
 // helper for search_stashes
 static bool _compare_by_distance(const stash_search_result& lhs,
                                  const stash_search_result& rhs)
@@ -1271,7 +1299,7 @@ static bool _compare_by_name(const stash_search_result& lhs,
         // Sort first by DESC_QUALNAME for items
         return lhs.primary_sort < rhs.primary_sort;
     }
-    else if (lhs.match != rhs.match)
+    else if (!_is_duplicate_for_search(lhs, rhs, true)) // this fun checks whether the matches are equal for most cases
     {
         // Then sort by full stash description (which is DESC_A plus other stuff)
         return lhs.match < rhs.match;
@@ -1282,7 +1310,12 @@ static bool _compare_by_name(const stash_search_result& lhs,
         return lhs.player_distance < rhs.player_distance;
     }
     else
-        return false;
+    {
+        // If on the same level, sort by distance to player.
+        const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
+        const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
+        return lhs_dist < rhs_dist;
+    }
 }
 
 static vector<stash_search_result> _inventory_search(const base_pattern &search)
@@ -1315,31 +1348,6 @@ static vector<stash_search_result> _inventory_search(const base_pattern &search)
     return results;
 }
 
-static bool _is_potentially_boring(stash_search_result res)
-{
-    return res.item.defined() && !res.in_inventory && !res.shop
-           && (res.item.base_type == OBJ_WEAPONS
-               || res.item.base_type == OBJ_ARMOUR
-               || res.item.base_type == OBJ_MISSILES)
-           && (item_type_known(res.item) || !item_is_branded(res.item));
-}
-
-static bool _is_duplicate_for_search(stash_search_result l, stash_search_result r, bool ignore_missile_stacks=true)
-{
-    if (ignore_missile_stacks &&
-        l.item.base_type == OBJ_MISSILES
-        && r.item.base_type == OBJ_MISSILES
-        && l.item.sub_type == r.item.sub_type
-        && l.item.brand == r.item.brand)
-    {
-        // special handling for missiles -- ignore stacking for deduplication
-        return true;
-    }
-    // Otherwise just use the search result description.
-    // TODO: better handling for items in shops (ideally, ignore price)
-    return l.match == r.match;
-}
-
 /*
  * Eliminate boring duplicates from stash search results. Uses `match`
  * to determine whether something is a duplicate.
@@ -1360,7 +1368,8 @@ static vector<stash_search_result> _stash_filter_duplicates(vector<stash_search_
 
     for (const stash_search_result &res : in)
     {
-        if (out.size() && _is_potentially_boring(res) && _is_duplicate_for_search(out.back(), res))
+        if (out.size() && !out.back().in_inventory &&
+            _is_potentially_boring(res) && _is_duplicate_for_search(out.back(), res))
         {
             // don't push_back the duplicate
             out.back().duplicate_piles++;
