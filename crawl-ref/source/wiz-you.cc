@@ -859,9 +859,10 @@ void wizard_set_xl(bool change_skills)
     mprf("Experience level set to %d.", newxl);
 }
 
-void set_xl(const int newxl, const bool train)
+void set_xl(const int newxl, const bool train, const bool silent)
 {
-    no_messages mx;
+    no_messages mx(silent);
+
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);
     else

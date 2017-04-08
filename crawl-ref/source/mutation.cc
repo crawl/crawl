@@ -46,7 +46,7 @@
 #include "viewchar.h"
 #include "xom.h"
 
-static bool _delete_single_mutation_level(mutation_type mutat, const string &reason, bool transient = false);
+static bool _delete_single_mutation_level(mutation_type mutat, const string &reason, bool transient);
 
 struct body_facet_def
 {
@@ -1068,7 +1068,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     (confl[2] != 1
                      || you.get_base_mutation_level(b, true, false, false) == you.get_base_mutation_level(b)))
                 {
-                    dprf("already have innate mutation %d at level %d, you.mutation at level %d", b,
+                    dprf("Delete mutation failed: have innate mutation %d at level %d, you.mutation at level %d", b,
                         you.get_innate_mutation_level(b), you.get_base_mutation_level(b));
                     return -1;
                 }
@@ -1088,7 +1088,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     // All cases but regen:slowmeta will currently trade off.
                     if (override)
                     {
-                        while (delete_mutation(b, reason, true, true))
+                        while (_delete_single_mutation_level(b, reason, true))
                             ;
                     }
                     break;
@@ -1171,7 +1171,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // No feet.
-    if (!player_has_feet(false)
+    if (!player_has_feet(false, false)
         && (mutat == MUT_HOOVES || mutat == MUT_TALONS))
     {
         return true;
@@ -1436,6 +1436,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
     }
 
+
     if (!_is_valid_mutation(mutat))
         return false;
 
@@ -1448,27 +1449,30 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     const mutation_def& mdef = _get_mutation_def(mutat);
 
-    if (you.get_base_mutation_level(mutat) >= mdef.levels)
+    bool gain_msg = true;
+
+    if (mutclass == MUTCLASS_INNATE)
     {
-        bool found = false;
-        if (you.species == SP_DEMONSPAWN)
+        // are there any non-innate instances to replace?  Prioritize temporary mutations over normal.
+        // Temporarily decrement the mutation value so it can be silently regained in the while loop below.
+        if (you.mutation[mutat] > you.innate_mutation[mutat])
         {
-            for (player::demon_trait trait : you.demonic_traits)
-                if (trait.mutation == mutat)
-                {
-                    // This mutation is about to be re-gained, so there is
-                    // no need to redraw any stats or print any messages.
-                    found = true;
-                    // TODO: ?? I think this is for the case where a non-innate
-                    // mutation is being made innate? If that's true, the temp
-                    // mutation bookkeeping may be wrong. Is this code ever called?
-                    you.mutation[mutat]--;
-                    break;
-                }
+            if (you.temp_mutation[mutat] > 0)
+            {
+                you.temp_mutation[mutat]--;
+                you.attribute[ATTR_TEMP_MUTATIONS]--;
+                if (you.attribute[ATTR_TEMP_MUTATIONS] == 0)
+                    you.attribute[ATTR_TEMP_MUT_XP] = 0;
+            }
+            you.mutation[mutat]--;
+            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
+            take_note(Note(NOTE_PERM_MUTATION, mutat,
+                    you.get_base_mutation_level(mutat), reason.c_str()));
+            gain_msg = false;
         }
-        if (!found)
-            return false;
     }
+    if (you.mutation[mutat] >= mdef.levels)
+        return false;
 
     // God gifts and forced mutations clear away conflicting mutations.
     int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation,
@@ -1490,8 +1494,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     ASSERT(levels > 0); //TODO: is > too strong?
 
     int count = levels;
-
-    bool gain_msg = true;
 
     while (count-- > 0)
     {
@@ -1782,7 +1784,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
 /*
  * Delete a mutation level, accepting random mutation types and checking mutation resistance.
- * If the mutation type is random, this will not override temporary mutations.
+ * This will not delete temporary or innate mutations.
  *
  * @param which_mutation    a mutation, including random
  * @param reason            the reason for deletion
@@ -1888,7 +1890,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             return false;
     }
 
-    return _delete_single_mutation_level(mutat, reason);
+    return _delete_single_mutation_level(mutat, reason, false); // won't delete temp mutations
 }
 
 bool delete_all_mutations(const string &reason)
@@ -2462,22 +2464,12 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-        dprf("Perma Mutate: %d, %d, %d", cap,
+        dprf("Perma Mutate %s: cap %d, total %d, innate %d", mutation_name(which_mut), cap,
             you.get_base_mutation_level(which_mut), you.get_innate_mutation_level(which_mut));
-        if (you.get_base_mutation_level(which_mut) == cap && how_much == 0)
-        {
-            // [rpb] primarily for demonspawn, if the mutation level is already
-            // at the cap for this facet, we are permafying a temporary
-            // mutation. This would otherwise fail to produce any output in
-            // some situations.
-            // TODO: double check temp mutation bookkeeping, this looks like it doesn't do it
-            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
-            take_note(Note(NOTE_PERM_MUTATION, which_mut,
-                    you.get_base_mutation_level(which_mut), reason.c_str()));
-        }
-        else if (you.get_base_mutation_level(which_mut) < cap
+        if (you.get_base_mutation_level(which_mut, true, false, false) < cap
             && !mutate(which_mut, reason, false, true, false, false, MUTCLASS_INNATE))
         {
+            dprf("Innate mutation failed.");
             break;
         }
         levels++;
@@ -2521,6 +2513,8 @@ bool temp_mutation_wanes()
 
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
         you.attribute[ATTR_TEMP_MUT_XP] += temp_mutation_roll();
+    else
+        you.attribute[ATTR_TEMP_MUT_XP] = 0;
     ASSERT(you.attribute[ATTR_TEMP_MUTATIONS] < starting_tmuts);
     return true;
 }

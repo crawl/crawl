@@ -898,6 +898,13 @@ no_messages::no_messages() : msuppressed(suppress_messages)
     suppress_messages = true;
 }
 
+// Push useful RAII conditional logic into a constructor
+// Won't override an outer suppressing no_messages
+no_messages::no_messages(bool really_suppress) : msuppressed(suppress_messages)
+{
+    suppress_messages = suppress_messages || really_suppress;
+}
+
 no_messages::~no_messages()
 {
     suppress_messages = msuppressed;
