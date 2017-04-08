@@ -910,7 +910,7 @@ LUAFN(you_set_xl)
     }
     if (newxl == you.experience_level)
         PLUARET(boolean, true);
-    set_xl(newxl, train);
+    set_xl(newxl, train, newxl < you.experience_level); // most useful for testing if it's not silent on levelup
     PLUARET(boolean, true);
 }
 
