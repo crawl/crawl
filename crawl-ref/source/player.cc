@@ -754,7 +754,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return MB_FALSE;
 }
 
-bool player_has_feet(bool temp)
+bool player_has_feet(bool temp, bool include_mutations)
 {
     if (you.species == SP_NAGA
         || you.species == SP_FELID
@@ -764,8 +764,9 @@ bool player_has_feet(bool temp)
         return false;
     }
 
-    if (you.get_mutation_level(MUT_HOOVES, temp) == 3
-        || you.get_mutation_level(MUT_TALONS, temp) == 3)
+    if (include_mutations &&
+        (you.get_mutation_level(MUT_HOOVES, temp) == 3
+         || you.get_mutation_level(MUT_TALONS, temp) == 3))
     {
         return false;
     }
