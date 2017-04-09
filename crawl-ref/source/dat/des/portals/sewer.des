@@ -13,6 +13,11 @@
 ##############################################################################
 
 {{
+
+-- Sewer entry vaults should call this function to place the portal and have a
+-- single `O' glyph for the portal location. Additionally, if they want the `1'
+-- glyph to place a monster, they should define the `1' through KMONS (and not
+-- the usual MONS statement).
 function sewer_portal(e)
   local timeout_turns = crawl.random_range(600, 800)
 
@@ -57,6 +62,7 @@ end
 }}
 
 # Basic sewer entries ##########################################
+# NOTE: See comments above regarding KMONS for the 1 glyph in these vaults.
 default-depth: D:3-6
 
 NAME:   portal_sewer_entry_a
@@ -245,7 +251,7 @@ ENDMAP
 NAME: lightli_sewer_entry_pipes
 NSUBST: o = 1:O / *:W
 SUBST: W = WWWWW1
-MONS: river rat / adder / rat / worm
+KMONS: 1 = river rat / adder / rat / worm
 : sewer_portal(_G)
 MAP
 vvvvvvvvvv
