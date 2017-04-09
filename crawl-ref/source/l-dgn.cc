@@ -1289,6 +1289,19 @@ LUAFN(dgn_noisy)
     return 0;
 }
 
+static int dgn_place_transporter(lua_State *ls)
+{
+    const coord_def tele_pos = coord_def(luaL_checkint(ls, 1),
+                                         luaL_checkint(ls, 2));
+    const coord_def dest_pos = coord_def(luaL_checkint(ls, 3),
+                                        luaL_checkint(ls, 4));
+    env.markers.add(new map_position_marker(tele_pos, DNGN_TRANSPORTER,
+                                            dest_pos));
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(tele_pos, DNGN_TRANSPORTER, false, true);
+    return 0;
+}
+
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -1803,6 +1816,7 @@ const struct luaL_reg dgn_dlib[] =
 { "place_cloud", dgn_place_cloud },
 { "noisy", dgn_noisy },
 { "reset_feature_name_for", dgn_reset_feature_name_for },
+{ "place_transporter", dgn_place_transporter},
 
 { "is_passable", _dgn_is_passable },
 
