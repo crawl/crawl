@@ -831,6 +831,7 @@ struct feature_spec
     unique_ptr<shop_spec> shop;    /**> A pointer to a shop_spec. */
     unique_ptr<trap_spec> trap;    /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
+    int trans_dest_glyph;          /**> Transporter destination glyph */
     int mimic;                     /**> 1 chance in x to be a feature mimic. */
     bool no_mimic;                 /**> Prevents random feature mimic here. */
 
@@ -914,6 +915,7 @@ private:
     feature_spec_list parse_feature(const string &s);
     feature_spec parse_shop(string s, int weight, int mimic, bool no_mimic);
     feature_spec parse_trap(string s, int weight);
+    feature_spec parse_transporter(string s, int weight);
 };
 
 class dlua_set_map

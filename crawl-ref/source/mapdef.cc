@@ -5995,6 +5995,33 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     return fspec;
 }
 
+/**
+ * Convert a transporter string into a feature_spec
+ *
+ * This function converts an transporter specification string from a vault
+ * into a feature_spec.
+ *
+ * @param s        The string to be parsed.
+ * @param weight   The weight of this string.
+ * @return         A feature_spec.
+**/
+feature_spec keyed_mapspec::parse_transporter(string s, int weight)
+{
+    string orig(s);
+
+    strip_tag(s, "teleporter");
+    trim_string(s);
+
+    feature_spec fspec(DNGN_TRANSPORTER, weight, 0, true);
+    if (s.empty())
+        fspec.trans_dest_glyph = 0;
+    else if (s.length() == 1)
+        fspec.trans_dest_glyph = s[0];
+    else
+        err = make_stringf("not a glyph for transporter dest: '%s'", s.c_str());
+    return fspec;
+}
+
 feature_spec_list keyed_mapspec::parse_feature(const string &str)
 {
     string s = str;
@@ -6020,6 +6047,8 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         list.push_back(parse_trap(s, weight));
     else if (strip_tag(s, "shop"))
         list.push_back(parse_shop(s, weight, mimic, no_mimic));
+    else if (strip_tag(s, "transporter"))
+        list.push_back(parse_transporter(s, weight));
     else if (auto ftype = dungeon_feature_by_name(s)) // DNGN_UNSEEN == 0
         list.emplace_back(ftype, weight, mimic, no_mimic);
     else
@@ -6127,6 +6156,7 @@ feature_spec::feature_spec()
     genweight = 0;
     feat = 0;
     glyph = -1;
+    trans_dest_glyph = -1;
     shop.reset(nullptr);
     trap.reset(nullptr);
     mimic = 0;
@@ -6138,6 +6168,7 @@ feature_spec::feature_spec(int f, int wt, int _mimic, bool _no_mimic)
     genweight = wt;
     feat = f;
     glyph = -1;
+    trans_dest_glyph = -1;
     shop.reset(nullptr);
     trap.reset(nullptr);
     mimic = _mimic;
@@ -6161,6 +6192,7 @@ void feature_spec::init_with(const feature_spec& other)
     genweight = other.genweight;
     feat = other.feat;
     glyph = other.glyph;
+    trans_dest_glyph = other.trans_dest_glyph;
     mimic = other.mimic;
     no_mimic = other.no_mimic;
 
