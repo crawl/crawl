@@ -346,6 +346,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_TRANSPORTER:
         return CMD_GO_DOWNSTAIRS;
 
     default:
@@ -2080,7 +2081,7 @@ static bool _revert_terrain_to_floor(coord_def pos)
     }
 
     if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
-        opened_runed_door();
+        explored_keyed_feature(DNGN_RUNED_DOOR);
 
     grd(pos) = newfeat;
     set_terrain_changed(pos);

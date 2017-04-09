@@ -4888,7 +4888,21 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
             _place_specific_trap(where, spec, 0, known);
     }
     else if (f.feat >= 0)
-        grd(where) = static_cast<dungeon_feature_type>(f.feat);
+    {
+        const dungeon_feature_type feat =
+            static_cast<dungeon_feature_type>(f.feat);
+        grd(where) = feat;
+        if (f.feat == DNGN_TRANSPORTER && f.trans_dest_glyph > 0)
+        {
+            vector<coord_def> dests = place.map.find_glyph(f.trans_dest_glyph);
+            ASSERT(!dests.empty());
+            coord_def dest = dests[random2(dests.size())] + place.pos;
+            // XXX A bit ugly, but we have to place this through map due to env
+            // marker clearing that gets done in wizmode &L.
+            place.map.map.add_marker(
+                    new map_position_marker(where - place.pos, feat, dest));
+        }
+    }
     else if (f.glyph >= 0)
         _vault_grid_glyph(place, where, f.glyph);
     else if (f.shop.get())
@@ -5883,10 +5897,15 @@ static void _add_plant_clumps(int rarity,
     }
 }
 
-static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
+static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat)
 {
-    map_marker *marker = env.markers.find(base_pos, MAT_POSITION);
-    if (!marker || shaft)
+    const bool shaft = feat == DNGN_TRAP_SHAFT;
+    map_position_marker *marker = nullptr;
+
+    if (!shaft)
+        marker = get_position_marker_at(base_pos, feat);
+
+    if (!marker)
     {
         coord_def dest_pos;
         do
@@ -5897,16 +5916,13 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
                || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         if (!shaft)
         {
-            env.markers.add(new map_position_marker(base_pos, dest_pos));
+            env.markers.add(new map_position_marker(base_pos, feat, dest_pos));
             env.markers.clear_need_activate();
         }
         return dest_pos;
     }
     else
-    {
-        map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
-        return posm->dest;
-    }
+        return marker->dest;
 }
 
 double dgn_degrees_to_radians(int degrees)
@@ -5975,7 +5991,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
         || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT));
+        coord_def pos(_get_feat_dest(base_pos, stair_to_find));
         if (player_in_branch(BRANCH_SLIME))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))

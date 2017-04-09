@@ -1215,7 +1215,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
 
     // Bidirectional, but not actually a portal - allowed while mesmerised, but
     // not when otherwise unable to move.
-    if (ftype == DNGN_PASSAGE_OF_GOLUBRIA)
+    if (ftype == DNGN_PASSAGE_OF_GOLUBRIA || ftype == DNGN_TRANSPORTER)
         return true;
 
     // Mesmerised
@@ -1399,6 +1399,55 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     return true;
 }
 
+static void _take_transporter()
+{
+    map_position_marker *marker = get_position_marker_at(you.pos(),
+                                                         DNGN_TRANSPORTER);
+    const coord_def old_pos = you.pos();
+    coord_def dest = INVALID_COORD;
+
+    if (marker)
+        dest = marker->dest;
+    ASSERT(dest != old_pos);
+
+    if (dest == INVALID_COORD || !you.is_habitable(dest))
+    {
+        mpr("The transporter is blocked on the other side!");
+        return;
+    }
+
+    monster *mon = monster_at(dest);
+    if (mon)
+    {
+        // Generally the monster won't fail to relocate unless the destination
+        // is in a very poor location. If this somehow becomes both common and
+        // important to prevent, this can be changed to swap the player and the
+        // monsters. -gammafunk
+        if (!mon->find_home_near_place(dest))
+        {
+            mpr("The transporter is blocked by a creature on the other side!");
+            return;
+        }
+    }
+
+    if (you.move_to_pos(dest, true))
+        you.turn_is_over = true;
+
+    if (you.turn_is_over)
+    {
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+        transport_followers_from(old_pos);
+        if (is_unknown_transporter(old_pos))
+        {
+            LevelInfo *li = travel_cache.find_level_info(level_id::current());
+            ASSERT(li);
+            li->update_transporter(old_pos, you.pos());
+            explored_keyed_feature(DNGN_TRANSPORTER);
+        }
+        mpr("You enter the transporter and appear at another place.");
+    }
+}
+
 static void _take_stairs(bool down)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1421,6 +1470,8 @@ static void _take_stairs(bool down)
 
     if (shaft)
         start_delay<DescendingStairsDelay>(0);
+    else if (ygrd == DNGN_TRANSPORTER)
+        _take_transporter();
     else if (get_trap_type(you.pos()) == TRAP_GOLUBRIA)
     {
         coord_def old_pos = you.pos();

@@ -251,63 +251,71 @@ void follower::restore_mons_items(monster& m)
     }
 }
 
-static bool _is_religious_follower(const monster* mon)
+static bool _is_religious_follower(const monster &mon)
 {
     return (you_worship(GOD_YREDELEMNUL)
             || will_have_passive(passive_t::convert_orcs)
             || you_worship(GOD_FEDHAS))
-                && is_follower(*mon);
+                && is_follower(mon);
 }
 
-static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
+static bool _mons_can_follow_player_from(const monster &mons,
+                                         const coord_def from,
+                                         bool within_level = false)
 {
-    if (!in_bounds(pos) || pos == you.pos())
+    if (!mons.alive()
+        || mons.speed_increment < 50
+        || mons.incapacitated()
+        || mons.is_stationary())
+    {
+        return false;
+    }
+
+    if (!monster_habitable_grid(&mons, DNGN_FLOOR))
+        return false;
+
+    // Only non-wandering friendly monsters or those actively
+    // seeking the player will follow up/down stairs.
+    if (!mons.friendly()
+          && (!mons_is_seeking(mons) || mons.foe != MHITYOU)
+        || mons.foe == MHITNOT)
+    {
+        return false;
+    }
+
+    // Unfriendly monsters must be directly adjacent to follow.
+    if (!mons.friendly() && (mons.pos() - from).rdist() > 1)
+        return false;
+
+    // Monsters that can't use stairs can still be marked as followers
+    // (though they'll be ignored for transit), so any adjacent real
+    // follower can follow through. (jpeg)
+    if (within_level && !mons_class_can_use_transporter(mons.type)
+        || !within_level && !mons_can_use_stairs(mons, grd(from)))
+    {
+        if (_is_religious_follower(mons))
+            return true;
+
+        return false;
+    }
+    return true;
+}
+
+// Tag any monster following the player
+static bool _tag_follower_at(const coord_def &pos, const coord_def &from,
+                             bool &real_follower)
+{
+    if (!in_bounds(pos) || pos == from)
         return false;
 
     monster* fol = monster_at(pos);
     if (fol == nullptr)
         return false;
 
-    if (!fol->alive()
-        || fol->speed_increment < 50
-        || fol->incapacitated()
-        || fol->is_stationary())
-    {
+    if (!_mons_can_follow_player_from(*fol, from))
         return false;
-    }
-
-    if (!monster_habitable_grid(fol, DNGN_FLOOR))
-        return false;
-
-    // Only non-wandering friendly monsters or those actively
-    // seeking the player will follow up/down stairs.
-    if (!fol->friendly()
-          && (!mons_is_seeking(*fol) || fol->foe != MHITYOU)
-        || fol->foe == MHITNOT)
-    {
-        return false;
-    }
-
-    // Unfriendly monsters must be directly adjacent to follow.
-    if (!fol->friendly() && (pos - you.pos()).rdist() > 1)
-        return false;
-
-    // Monsters that can't use stairs can still be marked as followers
-    // (though they'll be ignored for transit), so any adjacent real
-    // follower can follow through. (jpeg)
-    if (!mons_can_use_stairs(*fol, grd(you.pos())))
-    {
-        if (_is_religious_follower(fol))
-        {
-            fol->flags |= MF_TAKING_STAIRS;
-            return true;
-        }
-        return false;
-    }
 
     real_follower = true;
-
-    // Monster is chasing player through stairs.
     fol->flags |= MF_TAKING_STAIRS;
 
     // Clear patrolling/travel markers.
@@ -317,17 +325,15 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
 
     fol->clear_clinging();
 
-    dprf("%s is marked for following.",
-         fol->name(DESC_THE, true).c_str());
-
+    dprf("%s is marked for following.", fol->name(DESC_THE, true).c_str());
     return true;
 }
 
-static int _follower_tag_radius()
+static int _follower_tag_radius(const coord_def &from)
 {
     // If only friendlies are adjacent, we set a max radius of 5, otherwise
     // only adjacent friendlies may follow.
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(from); ai; ++ai)
     {
         if (const monster* mon = monster_at(*ai))
             if (!mon->friendly())
@@ -337,15 +343,17 @@ static int _follower_tag_radius()
     return 5;
 }
 
-void tag_followers()
+void handle_followers(const coord_def &from,
+                      bool (*handler)(const coord_def &pos,
+                                      const coord_def &from, bool &real))
 {
-    const int radius = _follower_tag_radius();
+    const int radius = _follower_tag_radius(from);
     int n_followers = 18;
 
     vector<coord_def> places[2];
     int place_set = 0;
 
-    places[place_set].push_back(you.pos());
+    places[place_set].push_back(from);
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     while (!places[place_set].empty())
     {
@@ -353,7 +361,7 @@ void tag_followers()
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {
-                if ((*ai - you.pos()).rdist() > radius
+                if ((*ai - from).rdist() > radius
                     || travel_point_distance[ai->x][ai->y])
                 {
                     continue;
@@ -361,7 +369,7 @@ void tag_followers()
                 travel_point_distance[ai->x][ai->y] = 1;
 
                 bool real_follower = false;
-                if (_tag_follower_at(*ai, real_follower))
+                if (handler(*ai, from, real_follower))
                 {
                     // If we've run out of our follower allowance, bail.
                     if (real_follower && --n_followers <= 0)
@@ -375,8 +383,40 @@ void tag_followers()
     }
 }
 
+void tag_followers()
+{
+    handle_followers(you.pos(), _tag_follower_at);
+}
+
 void untag_followers()
 {
     for (auto &mons : menv_real)
         mons.flags &= ~MF_TAKING_STAIRS;
+}
+
+static bool _transport_follower_at(const coord_def &pos, const coord_def &from,
+                                   bool &real_follower)
+{
+    if (!in_bounds(pos) || pos == from)
+        return false;
+
+    monster* fol = monster_at(pos);
+    if (fol == nullptr)
+        return false;
+
+    if (!_mons_can_follow_player_from(*fol, from, true))
+        return false;
+
+    if (fol->find_place_to_live(true))
+    {
+        real_follower = true;
+        dprf("%s is transported.", fol->name(DESC_THE, true).c_str());
+    }
+
+    return true;
+}
+
+void transport_followers_from(const coord_def &from)
+{
+    handle_followers(from, _transport_follower_at);
 }

@@ -664,14 +664,34 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
 }
 
 #define SEEN_RUNED_DOOR_KEY "num_runed_doors"
+#define SEEN_TRANSPORTER_KEY "num_transporters"
 
-static void _update_runed_door_count(int old_num)
+static const char *_get_feature_count_key(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+        case DNGN_RUNED_DOOR:
+            return SEEN_RUNED_DOOR_KEY;
+            break;
+        case DNGN_TRANSPORTER:
+            return SEEN_TRANSPORTER_KEY;
+            break;
+        default:
+            // XXX
+            die("Unknown keyed feature");
+            return nullptr;
+    }
+}
+
+static void _update_keyed_feature_count(dungeon_feature_type feat, int old_num)
 {
     const level_id li = level_id::current();
-    const int new_num = env.properties[SEEN_RUNED_DOOR_KEY];
-    const string new_string = make_stringf("%d runed door%s", new_num,
+    const char *feat_key = _get_feature_count_key(feat);
+    const int new_num = env.properties[feat_key];
+    const char *feat_desc = get_feature_def(feat).name;
+    const string new_string = make_stringf("%d %s%s", new_num, feat_desc,
                                            new_num == 1 ? "" : "s");
-    const string old_string = make_stringf("%d runed door%s", old_num,
+    const string old_string = make_stringf("%d %s%s", old_num, feat_desc,
                                            old_num == 1 ? "" : "s");
 
     //TODO: regexes
@@ -695,25 +715,28 @@ static void _update_runed_door_count(int old_num)
     }
 }
 
-void seen_runed_door()
+void seen_keyed_feature(dungeon_feature_type feat)
 {
-    if (!env.properties.exists(SEEN_RUNED_DOOR_KEY))
-        env.properties[SEEN_RUNED_DOOR_KEY] = 0;
+    const char *feat_key = _get_feature_count_key(feat);
 
-    _update_runed_door_count(env.properties[SEEN_RUNED_DOOR_KEY].get_int()++);
+    if (!env.properties.exists(feat_key))
+        env.properties[feat_key] = 0;
+
+    _update_keyed_feature_count(feat, env.properties[feat_key].get_int()++);
 }
 
-void opened_runed_door()
+void explored_keyed_feature(dungeon_feature_type feat)
 {
+    const char *feat_key = _get_feature_count_key(feat);
 #if TAG_MAJOR_VERSION > 34
-    ASSERT(env.properties.exists(SEEN_RUNED_DOOR_KEY));
+    ASSERT(env.properties.exists(feat_key));
 #endif
 
     // Opening a runed door we haven't seen (because of door_vault, probably).
-    if (env.properties[SEEN_RUNED_DOOR_KEY].get_int() == 0)
+    if (env.properties[feat_key].get_int() == 0)
         return;
 
-    _update_runed_door_count(env.properties[SEEN_RUNED_DOOR_KEY].get_int()--);
+    _update_keyed_feature_count(feat, env.properties[feat_key].get_int()--);
 }
 
 void enter_branch(branch_type branch, level_id from)

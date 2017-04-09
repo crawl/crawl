@@ -489,7 +489,7 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
-teleporter DNGN_TELEPORTER
+transporter DNGN_TRANSPORTER
 
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.

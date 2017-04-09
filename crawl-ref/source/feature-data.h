@@ -524,10 +524,10 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
 #endif
 
 {
-    DNGN_TELEPORTER, "short-range portal", "teleporter",
-    DCHAR_TELEPORTER, NUM_DCHAR_TYPES,
-    COLOUR_AND_MAP(YELLOW),
-    FFT_NONE, MF_FEATURE,
+    DNGN_TRANSPORTER, "transporter", "transporter",
+    DCHAR_TRANSPORTER, NUM_DCHAR_TYPES,
+    RED, RED, RED, WHITE, WHITE,
+    FFT_NONE, MF_TRANSPORTER,
 },
 
 {

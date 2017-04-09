@@ -77,6 +77,10 @@ enum dungeon_feature_type
     DNGN_STONE_STAIRS_UP_III,
     DNGN_ESCAPE_HATCH_UP,
 
+#if TAG_MAJOR_VERSION > 34
+    DNGN_TRANSPORTER,
+#endif
+
     // Various gates
     DNGN_ENTER_DIS,
     DNGN_ENTER_GEHENNA,
@@ -93,8 +97,8 @@ enum dungeon_feature_type
     DNGN_EXIT_HELL,
     DNGN_ENTER_HELL,
     DNGN_ENTER_LABYRINTH,
-    DNGN_TELEPORTER,
 #if TAG_MAJOR_VERSION == 34
+    DNGN_TRANSPORTER,
     DNGN_ENTER_PORTAL_VAULT,
     DNGN_EXIT_PORTAL_VAULT,
 #endif
