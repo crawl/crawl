@@ -843,7 +843,7 @@ LUAFN(you_mutate)
     const mutation_permanence_class mutclass = temp ? MUTCLASS_TEMPORARY : MUTCLASS_NORMAL;
     mutation_type mut = mutation_from_name(mutname, true); // requires exact match
     if (mut != NUM_MUTATIONS)
-        PLUARET(boolean, mutate(mut, reason, true, true, false, false, mutclass, false));
+        PLUARET(boolean, mutate(mut, reason, true, true, false, false, mutclass));
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());

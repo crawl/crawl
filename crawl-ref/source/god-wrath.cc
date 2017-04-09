@@ -1544,7 +1544,7 @@ static void _qazlal_elemental_vulnerability()
     const god_type god = GOD_QAZLAL;
 
     if (mutate(RANDOM_QAZLAL_MUTATION, _god_wrath_name(god), false,
-               false, true, false, MUTCLASS_TEMPORARY, true))
+               false, true, false, MUTCLASS_TEMPORARY))
     {
         simple_god_message(" strips away your elemental protection.",
                            god);

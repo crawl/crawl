@@ -465,9 +465,11 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH) 
+    if (have_passive(passive_t::detect_items) || you.has_mutation(MUT_JELLY_GROWTH)
         || you.get_mutation_level(MUT_STRONG_NOSE) > 0)
+    {
         detect_items(-1);
+    }
 
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);

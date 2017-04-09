@@ -65,7 +65,7 @@ local function test_random_mutations_species(species, tries, iterations, chance_
     end
 end
 
-species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul", 
+species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
             "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
             "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
             "mummy"}
@@ -81,4 +81,3 @@ end
 you.delete_all_mutations("Species mutation test")
 assert(you.change_species("human")) -- should clean up any innate mutatinos
 assert(you.set_xl(1, false))
-
