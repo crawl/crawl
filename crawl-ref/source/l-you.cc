@@ -421,9 +421,15 @@ LUAFN(you_caught)
 LUAFN(you_get_base_mutation_level)
 {
     string mutname = luaL_checkstring(ls, 1);
-    bool innate = lua_toboolean(ls, 2);
-    bool temp = lua_toboolean(ls, 3);
-    bool normal = lua_toboolean(ls, 4);
+    bool innate = true;
+    bool temp = true;
+    bool normal = true;
+    if (!lua_isnoneornil(ls, 2))
+        innate = lua_toboolean(ls, 2);
+    if (!lua_isnoneornil(ls, 3))
+        temp = lua_toboolean(ls, 3);
+    if (!lua_isnoneornil(ls, 4))
+        normal = lua_toboolean(ls, 4);
     mutation_type mut = mutation_from_name(mutname, false);
     if (mut != NUM_MUTATIONS)
         PLUARET(integer, you.get_base_mutation_level(mut, innate, temp, normal)); // includes innate mutations
@@ -839,11 +845,16 @@ LUAFN(you_mutate)
 {
     string mutname = luaL_checkstring(ls, 1);
     string reason = luaL_checkstring(ls, 2);
-    bool temp = lua_toboolean(ls, 3);
+    bool temp = false;
+    bool force = true;
+    if (!lua_isnoneornil(ls, 3))
+        temp = lua_toboolean(ls, 3);
+    if (!lua_isnoneornil(ls, 4))
+        force = lua_toboolean(ls, 4);
     const mutation_permanence_class mutclass = temp ? MUTCLASS_TEMPORARY : MUTCLASS_NORMAL;
     mutation_type mut = mutation_from_name(mutname, true); // requires exact match
     if (mut != NUM_MUTATIONS)
-        PLUARET(boolean, mutate(mut, reason, true, true, false, false, mutclass));
+        PLUARET(boolean, mutate(mut, reason, true, force, false, false, mutclass));
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());

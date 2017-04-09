@@ -1,4 +1,4 @@
-local silent = false -- change to false to look at the result of stress tests
+local silent = true -- change to false to look at the result of stress tests
 local mut_iterations = 500 -- mutate each try this many times
 local tries = 40
 
@@ -7,16 +7,81 @@ local chance_clear = 2 -- in 100. Chance to clear some temporary mutations. Note
 
 local eol = string.char(13)
 
--- mostly for show at the moment -- should add more things here.
+local function print_mutstate(prefix)
+    if not silent then
+        crawl.stderr(prefix ..
+                you.how_mutated(true, true, true) .. " mutations. result: " ..
+                you.mutation_overview() .. eol)
+    end
+end
+
+-- could still add more things in here.
+-- see mut_species.lua for testing of innate mutations & their interactions
 local function test_basic_mutation_stuff()
     you.delete_all_mutations("mutation test")
+    ------------------
+    -- test some mutation interactions (see mutation.cc:conflict)
+    -- test trading off (type 1)
     you.mutate("robust", "basic mutation test", false)
     you.mutate("frail", "basic mutation test", false)
-    assert(you.get_base_mutation_level("robust") == 0)
+    assert(you.get_base_mutation_level("robust", true, true, true) == 0)
     for i=1, 10 do
         you.mutate("robust", "basic mutation test", false)
     end
     assert(you.get_base_mutation_level("robust", true, true, true) == 3)
+    you.mutate("frail", "basic mutation test", true) -- should now have robust 3, temp frail 1
+    assert(you.get_base_mutation_level("robust", true, true, true) == 3)
+    assert(you.get_base_mutation_level("frail", true, true, true) == 1)
+    -- quick test of the lua binding while we're here since default args with booleans are a bit tricky
+    assert(you.get_base_mutation_level("frail") == you.get_base_mutation_level("frail", true, true, true))
+    assert(you.get_base_mutation_level("frail") == you.get_base_mutation_level("frail", false, true, false))
+    assert(you.get_base_mutation_level("frail", false, true) == you.get_base_mutation_level("frail", false, true))
+
+    -- test forced clearing for mutations that can coexist (type 0)
+    assert(you.mutate("regeneration", "basic mutation test", false))
+    assert(you.mutate("regeneration", "basic mutation test", false))
+    assert(you.mutate("slow metabolism", "basic mutation test", false))
+    assert(you.get_base_mutation_level("regeneration", true, true, true) == 0)
+    assert(you.get_base_mutation_level("slow metabolism", true, true, true) == 1)
+    assert(you.mutate("regeneration", "basic mutation test", false, false)) -- not forced, should end up with both?
+    assert(you.get_base_mutation_level("regeneration") == 1)
+
+    -- test forced clearing for mutations that can't coexist (type -1)
+    assert(you.mutate("fire resistance", "basic mutation test", false))
+    assert(you.mutate("fire resistance", "basic mutation test", false))
+    assert(not you.mutate("heat vulnerability", "basic mutation test", false, false)) -- non-forced mutation should fail
+    assert(you.get_base_mutation_level("fire resistance") == 2)
+    assert(you.get_base_mutation_level("heat vulnerability") == 0)
+    assert(you.mutate("heat vulnerability", "basic mutation test", false, true)) -- forced mutation should fully clear hooves
+    assert(you.get_base_mutation_level("fire resistance") == 0)
+    assert(you.get_base_mutation_level("heat vulnerability") == 1)
+
+    -- test mutations that can simply coexist
+    assert(you.mutate("fire resistance", "basic mutation test", false))
+    assert(you.mutate("fire resistance", "basic mutation test", false))
+    assert(you.mutate("cold resistance", "basic mutation test", false, false))
+    assert(you.get_base_mutation_level("fire resistance") == 2)
+    assert(you.get_base_mutation_level("cold resistance") == 1)
+    assert(you.mutate("cold resistance", "basic mutation test", false, true))
+    assert(you.get_base_mutation_level("fire resistance") == 2)
+    assert(you.get_base_mutation_level("cold resistance") == 2)
+
+    ------------------
+    -- test some physiology conflicts interactions (see mutation.cc:physiology_mutation_conflict)
+    -- this isn't exhaustive
+    assert(you.mutate("icy blue scales", "basic mutation test"))
+    assert(you.mutate("iridescent scales", "basic mutation test"))
+    assert(you.mutate("large bone plates", "basic mutation test"))
+    assert(not you.mutate("molten scales", "basic mutation test")) -- three scale limit
+
+    assert(not you.mutate("spit poison", "basic mutation test")) -- only for nagas
+    -- could add other species conditions here using you.change_species
+
+    assert(you.mutate("talons", "basic mutation test"))
+    assert(not you.mutate("hooves", "basic mutation test")) -- covered by physiology conflict
+
+    print_mutstate("basic results: ")
+    you.delete_all_mutations("mutation test")
 end
 
 
@@ -58,15 +123,8 @@ local function test_potion(tries, iterations)
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
         for j=1, iterations do
             simulate_mutation_pot()
-            -- crawl.stderr("iter " .. j .. ", " ..
-            --  you.how_mutated(true, true, true) ..
-            --  " mutations. result: " .. you.mutation_overview() .. eol)
         end
-        if not silent then
-            crawl.stderr("Potion test try " .. i .. ", " ..
-                you.how_mutated(true, true, true) .. " mutations. result: " ..
-                you.mutation_overview() .. eol)
-        end
+        print_mutstate("Potion test try " .. i .. ", ")
     end
 end
 
@@ -88,15 +146,8 @@ local function test_random_mutations(tries, iterations, chance_temporary, chance
                 end
             end
             give_random_mutation(chance_temporary)
-            -- crawl.stderr("iter " .. j .. ", " ..
-            --  you.how_mutated(true, true, true) ..
-            --  " mutations. result: " .. you.mutation_overview() .. eol)
         end
-        if not silent then
-            crawl.stderr("Random test try " .. i .. ", " ..
-                you.how_mutated(true, true, true) .. " mutations. result: " ..
-                you.mutation_overview() .. eol)
-        end
+        print_mutstate("Random test try " .. i .. ", ")
     end
 end
 
