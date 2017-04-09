@@ -241,6 +241,16 @@ static const mutation_def& _get_mutation_def(mutation_type mut)
     return mut_data[mut_index[mut]];
 }
 
+/*
+ * Get the max number of possible levels for mutation `mut`. This is typically 1 or 3.
+ *
+ * @return the mutation cap.
+ */
+int get_mutation_cap(mutation_type mut)
+{
+    return _get_mutation_def(mut).levels;
+}
+
 static const mutation_category_def& _get_category_mutation_def(mutation_type mut)
 {
     ASSERT_RANGE(mut, CATEGORY_MUTATIONS, MUT_NON_MUTATION);
@@ -420,14 +430,14 @@ bool player::has_innate_mutation(mutation_type mut) const
 }
 
 /*
- * How much of mutation `mut` does the player have?
+ * How much of mutation `mut` does the player have? This ignores form changes.
  * If all three bool arguments are false, this should always return 0.
  *
  * @param temp   include temporary mutation levels. defaults to true.
  * @param innate include innate mutation levels. defaults to true.
  * @param normal include normal (non-temp, non-innate) mutation levels. defaults to true.
  *
- * @return the total levels of the mutation
+ * @return the total levels of the mutation.
  */
 int player::get_base_mutation_level(mutation_type mut, bool innate, bool temp, bool normal) const
 {
@@ -466,7 +476,7 @@ int player::get_temp_mutation_level(mutation_type mut) const
 
 /*
  * Get the current player mutation level for `mut`, possibly incorporating information about forms.
- * See `get_mutation_level` for the canonical usage of `minact`; some forms such as scale mutations
+ * See the other version of this function for the canonical usage of `minact`; some forms such as scale mutations
  * have different thresholds depending on the purpose and form and so will call this directly (e.g. ac
  * but not resistances are suppressed in statueform.)
  *
@@ -505,6 +515,12 @@ bool player::has_mutation(mutation_type mut, bool check_form) const
     return get_mutation_level(mut, check_form) > 0;
 }
 
+/*
+ * Test the validity of the player mutation structures, using ASSERTs.
+ * Will crash on a failure.
+ *
+ * @debug_msg whether to output diagnostic `dprf`s in the process.
+ */
 void validate_mutations(bool debug_msg)
 {
     if (debug_msg)
@@ -1339,9 +1355,31 @@ bool undead_mutation_rot()
     return !you.can_safely_mutate();
 }
 
+/*
+ * Try to mutate the player, along with associated bookkeeping. This accepts mutation categories as well as particular mutations.
+ *
+ * In many cases this will produce only 1 level of mutation at a time, but it may mutate more than one level if the mutation category is corrupt or qazlal.
+ *
+ * If the player is at the mutation cap, this may fail.
+ *   1. If mutclass is innate, this will attempt to replace temporary and normal mutations (in that order) and will fail if this isn't possible (e.g. there are only innate levels).
+ *   2. Otherwise, this will fail. This means that a temporary mutation can block a permanent mutation of the same type in some circumstances.
+ *
+ * If the mutation conflicts with an existing one it may fail. See `_handle_conflicting_mutations`.
+ *
+ * If the player is undead, this may rot instead. Rotting counts as success.
+ *
+ * @param which_mutation    the mutation to use.
+ * @param reason            the explanation for how the player got mutated.
+ * @param failMsg           whether to do any messaging if this fails.
+ * @param force_mutation    whether to override mutation protection and the like.
+ * @param god_gift          is this a god gift? Entails overriding mutation resistance if not forced.
+ * @param mutclass          is the mutation temporary, regular, or permanent (innate)? permanent entails force_mutation.
+ *
+ * @return whether the mutation succeeded.
+ */
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool beneficial,
-            mutation_permanence_class mutclass, bool no_rot)
+            mutation_permanence_class mutclass)
 {
     if (which_mutation == RANDOM_BAD_MUTATION
         && mutclass == MUTCLASS_NORMAL
@@ -1686,6 +1724,18 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     return true;
 }
 
+/*
+ * Delete a single mutation level of fixed type `mutat`.
+ * If `transient` is set, allow deleting temporary mutations, and prioritize them.
+ * Note that if `transient` is true and there are no temporary mutations, this can delete non-temp mutations.
+ * If `transient` is false, and there are only temp mutations, this will fail; otherwise it will delete a non-temp mutation.
+ *
+ * @mutat     the mutation to delete
+ * @reason    why is it being deleted
+ * @transient whether to allow (and prioritize) deletion of temporary mutations
+ *
+ * @return whether a mutation was deleted.
+ */
 static bool _delete_single_mutation_level(mutation_type mutat,
                                           const string &reason,
                                           bool transient)
@@ -1699,10 +1749,11 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     {
         if (transient)
             was_transient = true;
-        else
+        else if (you.get_base_mutation_level(mutat, false, false, true) == 0) // there are only temporary mutations to delete
             return false;
-    }
 
+        // fall through: there is a non-temporary mutation level that can be deleted.
+    }
 
     const mutation_def& mdef = _get_mutation_def(mutat);
 
@@ -1893,6 +1944,15 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
     return _delete_single_mutation_level(mutat, reason, false); // won't delete temp mutations
 }
 
+/*
+ * Delete all (non-innate) mutations.
+ *
+ * If you really need to delete innate mutations as well, have a look at `change_species_to` in species.cc.
+ * Changing species to human, for example, is a safe way to clear innate mutations entirely. For a
+ * demonspawn, you could also use wizmode code to set the level to 1.
+ *
+ * @return  Whether the function found mutations to delete.
+ */
 bool delete_all_mutations(const string &reason)
 {
     for (int i = 0; i < NUM_MUTATIONS; ++i)
@@ -2451,7 +2511,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 {
     ASSERT(_is_valid_mutation(which_mut));
 
-    int cap = _get_mutation_def(which_mut).levels;
+    int cap = get_mutation_cap(which_mut);
     how_much = min(how_much, cap);
 
     int rc = 1;
@@ -2486,8 +2546,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 
 bool temp_mutate(mutation_type which_mut, const string &reason)
 {
-    return mutate(which_mut, reason, false, false, false, false,
-                  MUTCLASS_TEMPORARY, false);
+    return mutate(which_mut, reason, false, false, false, false, MUTCLASS_TEMPORARY);
 }
 
 int temp_mutation_roll()
@@ -2523,7 +2582,7 @@ bool temp_mutation_wanes()
  * How mutated is the player?
  *
  * @param innate Whether to count innate mutations (default false).
- * @param levels Whether to add up mutation levels (default false).
+ * @param levels Whether to add up mutation levels, as opposed to just counting number of mutations (default false).
  * @param temp Whether to count temporary mutations (default true).
  * @return Either the number of matching mutations, or the sum of their
  *         levels, depending on \c levels
