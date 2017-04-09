@@ -366,13 +366,17 @@ LUAFN(debug_disable)
     return 0;
 }
 
-// can be used to produce a crashlog from a lua test
+// call crawl's ASSERT with a boolean.
+// swap out regular lua `assert` with this (debug.cpp_assert) to easily produce a crashlog from a lua test
+// the optional 2nd argument will print a dprf to the log before crashing.
 LUAFN(debug_cpp_assert)
 {
     bool test = lua_toboolean(ls, 1);
-    string reason = luaL_checkstring(ls, 2);
+    string reason = "";
+    if (!lua_isnoneornil(ls, 2))
+        reason = reason + ": (" + luaL_checkstring(ls, 2) + ")";
     if (!test)
-        dprf("ASSERT from lua failed: %s", reason.c_str());
+        dprf("ASSERT from lua failed%s", reason.c_str());
     ASSERT(test);
     return 0;
 }
