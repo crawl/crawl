@@ -31,6 +31,9 @@ COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 #define HATCH_NAME_PROP "_hatch_name"
 #define HATCH_DEST_NAME_PROP "_hatch_dest_name"
 
+#define TRANSPORTER_NAME_PROP "_transporter_name"
+#define TRANSPORTER_DEST_NAME_PROP "_transporter_dest_name"
+
 const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM
@@ -296,3 +299,6 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
 bool door_vetoed(const coord_def pos);
 
 void fixup_misplaced_items();
+
+void dgn_place_transporter(const coord_def &pos, const coord_def &dest);
+bool dgn_make_transporters_from_markers();

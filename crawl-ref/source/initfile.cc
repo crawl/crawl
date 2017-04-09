@@ -338,6 +338,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_trap_col), "#aa6644"),
         new TileColGameOption(SIMPLE_NAME(tile_unseen_col), "black"),
         new TileColGameOption(SIMPLE_NAME(tile_upstairs_col), "cyan"),
+        new TileColGameOption(SIMPLE_NAME(tile_transporter_col), "ffa500"),
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
@@ -1040,7 +1041,7 @@ void game_options::reset_options()
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
-                              | ES_GREEDY_PICKUP_SMART
+                              | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
     dump_kill_places       = KDO_ONE_PLACE;
@@ -2102,6 +2103,8 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ALTAR;
         else if (c == "runed_door")
             conditions |= ES_RUNED_DOOR;
+        else if (c == "transporter")
+            conditions |= ES_TRANSPORTER;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
         else if (c == "greedy_visited_item_stack")
@@ -4072,6 +4075,7 @@ static void _write_minimap_colours()
     _write_vcolour("tile_door_col", Options.tile_door_col);
     _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
     _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
+    _write_vcolour("tile_transporter_col", Options.tile_transporter_col);
     _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
     _write_vcolour("tile_portal_col", Options.tile_portal_col);
     _write_vcolour("tile_feature_col", Options.tile_feature_col);

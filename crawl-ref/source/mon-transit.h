@@ -45,9 +45,12 @@ void remove_monster_from_transit(const level_id &lid, mid_t mid);
 // Places (some of the) monsters eligible to be placed on this level.
 void place_transiting_monsters();
 void place_followers();
-
+void handle_followers(const coord_def &from,
+                      bool (*handler)(const coord_def &pos,
+                                      const coord_def &from, bool &real));
 void tag_followers();
 void untag_followers();
+void transport_followers_from(const coord_def &from);
 
 void apply_daction_to_transit(daction_type act);
 int count_daction_in_transit(daction_type act);

@@ -54,10 +54,14 @@ void tile_new_level(bool first_time, bool init_unseen)
         for (unsigned int y = 0; y < GYM; y++)
         {
             unsigned int tile = env.tile_bk_bg[x][y];
-            if (!(tile & TILE_FLAG_NEW_STAIR))
-                continue;
-            if (!is_unknown_stair(coord_def(x,y)))
+            if ((tile & TILE_FLAG_NEW_STAIR)
+                && !is_unknown_stair(coord_def(x,y)))
+            {
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
+            }
+            else if ((tile & TILE_FLAG_NEW_TRANSPORTER)
+                     && !is_unknown_transporter(coord_def(x,y)))
+                env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_TRANSPORTER;
         }
 
     tiles.clear_minimap();
@@ -820,6 +824,8 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
+        else if (is_unknown_transporter(gc))
+            bg |= TILE_FLAG_NEW_TRANSPORTER;
     }
 
     return bg;

@@ -243,6 +243,7 @@ define(function () {
     bg_flags.flags.OOR        = 0x02000000;
     bg_flags.flags.WATER      = 0x04000000;
     bg_flags.flags.NEW_STAIR  = 0x08000000;
+    bg_flags.flags.NEW_TRANSPORTER = 0x10000000;
 
     // Kraken tentacle overlays.
     bg_flags.flags.KRAKEN_NW  = 0x20000000;

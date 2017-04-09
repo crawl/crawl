@@ -455,6 +455,84 @@ static void _builder_assertions()
 #endif
 }
 
+/**
+ * Place a transporter and set its destination.
+ *
+ * @param pos     The position of the transporter
+ * @param dest    The position the transporter destination.
+ **/
+void dgn_place_transporter(const coord_def &pos, const coord_def &dest)
+{
+    env.markers.add(new map_position_marker(pos, DNGN_TRANSPORTER, dest));
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(pos, DNGN_TRANSPORTER, false, true);
+}
+
+/**
+ * Create transporters on the current level based on transporter markers. This
+ * does checks for duplicate transporter destinations, transporters with no
+ * destinations, and unused transporter destinations.
+ *
+ * @returns True if no transporter placement errors were found, false
+ *          otherwise.
+ **/
+bool dgn_make_transporters_from_markers()
+{
+    bool no_errors = true;
+
+    // Find transporter destination markers and ensure no duplicates.
+    const vector<map_marker*> dest_markers =
+        find_markers_by_prop(TRANSPORTER_DEST_NAME_PROP);
+    map<string, map_marker *> dest_map;
+    for (auto dm : dest_markers)
+    {
+        const string name = dm->property(TRANSPORTER_DEST_NAME_PROP);
+        if (dest_map.find(name) != dest_map.end())
+        {
+            mprf(MSGCH_ERROR, "Multiple locations with transporter "
+                 "destination name %s.", name.c_str());
+            no_errors = false;
+            continue;
+        }
+        dest_map[name] = dm;
+    }
+
+    // Place transporters.
+    const vector<map_marker*> trans_markers =
+        find_markers_by_prop(TRANSPORTER_NAME_PROP);
+    map<string, bool> used_dest_map;
+    for (auto tm : trans_markers)
+    {
+        const string name = tm->property(TRANSPORTER_NAME_PROP);
+        if (dest_map.find(name) == dest_map.end())
+        {
+            mprf(MSGCH_ERROR, "Transporter with name %s has no corresponding "
+                 "destination marker.", name.c_str());
+            no_errors = false;
+            continue;
+        }
+        dgn_place_transporter(tm->pos, dest_map[name]->pos);
+        env.markers.remove(tm);
+        used_dest_map[name] = true;
+    }
+
+    // Clean up any destination markers.
+    for (auto dm : dest_markers)
+    {
+        const string name = dm->property(TRANSPORTER_DEST_NAME_PROP);
+        if (used_dest_map[name])
+            env.markers.remove(dm);
+        else
+        {
+            mprf(MSGCH_ERROR, "Unused transporter destination with name %s.",
+                 name.c_str());
+            no_errors = false;
+        }
+    }
+
+    return no_errors;
+}
+
 // Should be called after a level is constructed to perform any final
 // fixups.
 static void _dgn_postprocess_level()
@@ -2364,8 +2442,11 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _fixup_pandemonium_stairs();
 
     _fixup_branch_stairs();
-    fixup_misplaced_items();
 
+    if (!dgn_make_transporters_from_markers())
+        throw dgn_veto_exception("Transporter placement failed.");
+
+    fixup_misplaced_items();
     link_items();
 
     if (!player_in_branch(BRANCH_COCYTUS)
@@ -5907,15 +5988,20 @@ static coord_def _find_named_hatch_dest(string hatch_name)
     return markers[0]->pos;
 }
 
-static coord_def _get_hatch_dest(coord_def base_pos, bool shaft,
-                                 const string &hatch_name)
+static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
+                                const string &hatch_name)
 {
-    map_marker *marker = env.markers.find(base_pos, MAT_POSITION);
-    if (!marker || shaft)
+    const bool shaft = feat == DNGN_TRAP_SHAFT;
+    map_position_marker *marker = nullptr;
+
+    if (!shaft)
+        marker = get_position_marker_at(base_pos, feat);
+
+    if (!marker)
     {
         coord_def dest_pos;
 
-        if (!shaft and !hatch_name.empty())
+        if (feat_is_escape_hatch(feat) and !hatch_name.empty())
             dest_pos = _find_named_hatch_dest(hatch_name);
         else
         {
@@ -5929,16 +6015,13 @@ static coord_def _get_hatch_dest(coord_def base_pos, bool shaft,
 
         if (!shaft)
         {
-            env.markers.add(new map_position_marker(base_pos, dest_pos));
+            env.markers.add(new map_position_marker(base_pos, feat, dest_pos));
             env.markers.clear_need_activate();
         }
         return dest_pos;
     }
     else
-    {
-        map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
-        return posm->dest;
-    }
+        return marker->dest;
 }
 
 double dgn_degrees_to_radians(int degrees)
@@ -6008,9 +6091,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
         || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos;
-        pos = _get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT,
-                              hatch_name);
+        coord_def pos(_get_feat_dest(base_pos, stair_to_find, hatch_name));
         if (player_in_branch(BRANCH_SLIME))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))

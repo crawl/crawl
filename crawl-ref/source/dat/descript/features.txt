@@ -513,6 +513,11 @@ A gate to the Vaults
 
 A gateway leading to the Vaults.
 %%%%
+A transporter
+
+A one-way portal to another place on this level. When using a transporter,
+adjacent allies and monsters will travel with you to the other side.
+%%%%
 ########################################################################
 ## Doors
 ########################################################################
