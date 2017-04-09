@@ -569,4 +569,9 @@ void show_update_emphasis()
     for (const stair_info &stair : stairs)
         if (stair.destination.is_valid())
             env.map_knowledge(stair.position).flags &= ~MAP_EMPHASIZE;
+
+    vector<transporter_info> transporters = level_info.get_transporters();
+    for (const transporter_info &transporter: transporters)
+        if (!transporter.destination.origin())
+            env.map_knowledge(transporter.position).flags &= ~MAP_EMPHASIZE;
 }

@@ -7793,7 +7793,7 @@ void player_open_door(coord_def doorpos)
 #endif
         }
         if (grd(dc) == DNGN_RUNED_DOOR)
-            opened_runed_door();
+            explored_tracked_feature(grd(dc));
         grd(dc) = DNGN_OPEN_DOOR;
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);

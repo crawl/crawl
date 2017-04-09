@@ -218,8 +218,12 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_SHAFT;
     case DNGN_TRAP_WEB:
         return TILE_DNGN_TRAP_WEB;
+#if TAG_MAJOR_VERSION == 34
     case DNGN_TELEPORTER:
         return TILE_DNGN_TRAP_GOLUBRIA;
+#endif
+    case DNGN_TRANSPORTER:
+        return TILE_DNGN_TRANSPORTER;
     case DNGN_ENTER_SHOP:
         return TILE_SHOP_GENERAL;
     case DNGN_ABANDONED_SHOP:

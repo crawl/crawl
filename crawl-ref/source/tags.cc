@@ -1019,7 +1019,7 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
     return x;
 }
 
-static dungeon_feature_type unmarshallFeatureType(reader &th)
+dungeon_feature_type unmarshallFeatureType(reader &th)
 {
     dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUByte(th));
     return rewrite_feature(x, th.getMinorVersion());

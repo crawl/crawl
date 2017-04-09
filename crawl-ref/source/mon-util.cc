@@ -1711,6 +1711,11 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_ROYAL_JELLY;
 }
 
+bool mons_class_can_use_transporter(monster_type mc)
+{
+    return !mons_is_tentacle_or_tentacle_segment(mc);
+}
+
 bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 {
     if (!mons_class_can_use_stairs(mon.type))

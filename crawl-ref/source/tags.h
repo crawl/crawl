@@ -145,6 +145,7 @@ void        unmarshallString4 (reader &, string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monster& item);
+dungeon_feature_type unmarshallFeatureType(reader &);
 level_id    unmarshall_level_id(reader& th);
 
 uint64_t unmarshallUnsigned(reader& th);

@@ -29,11 +29,19 @@ static int mapmarker_remove(lua_State *ls)
     return 0;
 }
 
+static int mapmarker_property(lua_State *ls)
+{
+    MAPMARKER(ls, 1, mark);
+    lua_pushstring(ls, mark->property(luaL_checkstring(ls, 2)).c_str());
+    return 1;
+}
+
 const struct luaL_reg mapmarker_dlib[] =
 {
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },
 { "remove", mapmarker_remove },
+{ "property", mapmarker_property },
 { nullptr, nullptr }
 };
 

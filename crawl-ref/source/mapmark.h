@@ -316,8 +316,10 @@ public:
 
 class map_position_marker : public map_marker
 {
+
 public:
     map_position_marker(const coord_def &pos = coord_def(0, 0),
+                        dungeon_feature_type feat = DNGN_UNSEEN,
                         const coord_def _dest = INVALID_COORD);
     map_position_marker(const map_position_marker &other);
     void write(writer &) const override;
@@ -327,5 +329,10 @@ public:
     static map_marker *read(reader &, map_marker_type);
 
 public:
+    dungeon_feature_type feat;
     coord_def dest;
+
 };
+
+map_position_marker *get_position_marker_at(const coord_def &pos,
+                                            dungeon_feature_type feat);

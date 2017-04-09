@@ -730,7 +730,7 @@ void full_describe_view()
             desc += "</" + colour_str +">) ";
 #endif
             desc += feature_description_at(c, false, DESC_A, false);
-            if (is_unknown_stair(c))
+            if (is_unknown_stair(c) || is_unknown_transporter(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
             me->tag        = "description";

@@ -23,9 +23,12 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
 #if TAG_MAJOR_VERSION == 34
          '\\',
 #endif
-         '}', U'†', U'÷',  '$',  '"', U'§', U'♣', U'©',
-         ' ',  '#',  '*', U'÷',  'X',  '`',  '#',  // space .. explosion
-        U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
+         '}', U'†', U'÷',  '$',  '"', U'§', U'♣',
+#if TAG_MAJOR_VERSION == 34
+         U'©',
+#endif
+         U'©', ' ',  '#',  '*', U'÷',  'X',  '`',  '#', // transporter .. explosion
+         U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
         '\\', U'┌', U'┐', U'└', U'┘',  'V', U'Λ',  '>',  '<',
     },
     // CSET_ASCII
@@ -33,8 +36,11 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
         '#', '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
         '{', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '|', '}', '%', '%', '$', '"', '0', '7', '^', // book .. teleporter
-        ' ', '#', '*', '+', 'X', '`', '#', // space .. explosion
+        ':', '|', '|', '}', '%', '%', '$', '"', '0', '7', // book .. tree
+#if TAG_MAJOR_VERSION == 34
+        '^',
+#endif
+        '^', ' ', '#', '*', '+', 'X', '`', '#', // transporter .. explosion
         '-', '|', '+', '+', '+', '+', '-', '|', '/',
         '\\', '*', '*', '*', '*', 'V', '^', '>', '<'
     }
@@ -51,20 +57,24 @@ dungeon_char_type dchar_by_name(const string &name)
         "door_closed", "trap", "stairs_down", "stairs_up",
         "grate", "altar", "arch", "fountain", "wavy", "statue",
         "invis_exposed", "item_detected",
-        "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand", "item_food",
-        "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
-        "item_staff",
+        "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand",
+        "item_food", "item_scroll", "item_ring", "item_potion", "item_missile",
+        "item_book", "item_staff",
 #if TAG_MAJOR_VERSION == 34
         "item_rod",
 #endif
-        "item_miscellany", "item_corpse", "item_skeleton",
-        "item_gold", "item_amulet", "cloud", "tree", "teleporter",
-        "space", "fired_bolt", "fired_zap", "fired_burst", "fired_debug",
-        "fired_missile", "explosion", "frame_horiz", "frame_vert",
-        "frame_top_left", "frame_top_right", "frame_bottom_left",
-        "frame_bottom_right", "draw_horiz", "draw_vert", "draw_slash", "draw_backslash",
-        "draw_top_left", "draw_top_right", "draw_bottom_left", "draw_bottom_right",
-        "draw_down", "draw_up", "draw_right", "draw_left",
+        "item_miscellany", "item_corpse", "item_skeleton", "item_gold",
+        "item_amulet", "cloud", "tree",
+#if TAG_MAJOR_VERSION == 34
+        "teleporter",
+#endif
+        "transporter", "space", "fired_bolt", "fired_zap", "fired_burst",
+        "fired_debug", "fired_missile", "explosion", "frame_horiz",
+        "frame_vert", "frame_top_left", "frame_top_right", "frame_bottom_left",
+        "frame_bottom_right", "draw_horiz", "draw_vert", "draw_slash",
+        "draw_backslash", "draw_top_left", "draw_top_right",
+        "draw_bottom_left", "draw_bottom_right", "draw_down", "draw_up",
+        "draw_right", "draw_left",
     };
     COMPILE_CHECK(ARRAYSZ(dchar_names) == NUM_DCHAR_TYPES);
 

@@ -44,6 +44,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mon-death.h"
 #include "nearby-danger.h"
@@ -225,6 +226,20 @@ bool is_unknown_stair(const coord_def &p)
            && feat != DNGN_EXIT_DUNGEON;
 }
 
+/**
+ * Does the player know this transporter's destination?
+ *
+ * @param p    The location of the transporter.
+ * @returns    True if the feature is a transporter with an unknown
+ *             destination, false otherwise.
+ **/
+bool is_unknown_transporter(const coord_def &p)
+{
+    dungeon_feature_type feat = env.map_knowledge(p).feat();
+
+    return feat == DNGN_TRANSPORTER && !travel_cache.know_transporter(p);
+}
+
 // Returns true if the character can cross this dungeon feature, and
 // the player hasn't requested that travel avoid the feature.
 bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
@@ -260,11 +275,15 @@ bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
             return !(feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_TELEPORT);
         return false;
     }
+#if TAG_MAJOR_VERSION == 34
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
-    else if (feat_has_solid_floor(feat) || feat == DNGN_RUNED_DOOR
+#endif
+    else if (feat_has_solid_floor(feat)
+             || feat == DNGN_RUNED_DOOR
              || feat == DNGN_CLOSED_DOOR
-             || (feat == DNGN_SEALED_DOOR && try_fallback))
+             || (feat == DNGN_SEALED_DOOR && try_fallback)
+             || (feat == DNGN_TRANSPORTER))
     {
         return true;
     }
@@ -544,6 +563,7 @@ static bool _is_branch_stair(const coord_def& pos)
 #define ES_rune   (Options.explore_stop & ES_RUNE)
 #define ES_shop   (Options.explore_stop & ES_SHOP)
 #define ES_stair  (Options.explore_stop & ES_STAIR)
+#define ES_transporter (Options.explore_stop & ES_TRANSPORTER)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 #define ES_branch (Options.explore_stop & ES_BRANCH)
@@ -643,6 +663,20 @@ enum explore_status_type
     EST_GREED_UNFULFILLED = 2,
 };
 
+static bool _level_has_unknown_transporters()
+{
+    LevelInfo *li = travel_cache.find_level_info(level_id::current());
+    ASSERT(li);
+
+    vector<transporter_info> transporters = li->get_transporters();
+    for (auto ti : transporters)
+    {
+        if (ti.destination.origin())
+            return true;
+    }
+    return false;
+}
+
 // Determines if the level is fully explored.
 static int _find_explore_status(const travel_pathfind &tp)
 {
@@ -716,23 +750,34 @@ static void _explore_find_target_square()
         {
             // No place to go? Report to the player.
             const int estatus = _find_explore_status(tp);
+            const bool unknown_trans = _level_has_unknown_transporters();
 
-            if (!estatus)
+            if (!estatus && !unknown_trans)
             {
                 mpr("Done exploring.");
                 learned_something_new(HINT_DONE_EXPLORE);
             }
             else
             {
+                string explore_desc = "";
                 vector<const char *> inacc;
+
+                if (unknown_trans)
+                    explore_desc = "unvisited transporter";
+
                 if (estatus & EST_GREED_UNFULFILLED)
                     inacc.push_back("items");
                 if (estatus & EST_PARTLY_EXPLORED)
                     inacc.push_back("places");
 
-                mprf("Partly explored, can't reach some %s.",
-                    comma_separated_line(inacc.begin(),
-                                        inacc.end()).c_str());
+                if (!inacc.empty())
+                {
+                    explore_desc += make_stringf("%scan't reach some %s",
+                         unknown_trans ? " and " : "",
+                         comma_separated_line(inacc.begin(),
+                                              inacc.end()).c_str());
+                }
+                mprf("Partly explored, %s.", explore_desc.c_str());
             }
         }
         stop_running();
@@ -3002,6 +3047,13 @@ void level_pos::load(reader& inf)
     pos = unmarshallCoord(inf);
 }
 
+void transporter_info::save(writer& outf) const
+{
+    marshallCoord(outf, position);
+    marshallCoord(outf, destination);
+    marshallByte(outf, type);
+}
+
 void stair_info::save(writer& outf) const
 {
     marshallCoord(outf, position);
@@ -3009,6 +3061,13 @@ void stair_info::save(writer& outf) const
     destination.save(outf);
     marshallByte(outf, guessed_pos? 1 : 0);
     marshallByte(outf, type);
+}
+
+void transporter_info::load(reader& inf)
+{
+    position = unmarshallCoord(inf);
+    destination = unmarshallCoord(inf);
+    type = static_cast<transporter_type>(unmarshallByte(inf));
 }
 
 void stair_info::load(reader& inf)
@@ -3073,6 +3132,10 @@ void LevelInfo::update()
     precompute_travel_safety_grid travel_safety_calc;
     update_stair_distances();
 
+    vector<coord_def> transporter_positions;
+    get_transporters(transporter_positions);
+    correct_transporter_list(transporter_positions);
+
     update_daction_counters(this);
 }
 
@@ -3110,6 +3173,17 @@ void LevelInfo::update_stair_distances()
     }
     if (nstairs)
         set_distance_between_stairs(nstairs - 1, nstairs - 1, 0);
+}
+
+void LevelInfo::update_transporter(const coord_def& transpos,
+                                   const coord_def& dest)
+{
+    transporter_info *si = get_transporter(transpos);
+    if (si)
+        si->destination = dest;
+    else
+        transporters.push_back(transporter_info(transpos, dest,
+                               transporter_info::PHYSICAL));
 }
 
 void LevelInfo::update_stair(const coord_def& stairpos, const level_pos &p,
@@ -3213,10 +3287,13 @@ void LevelInfo::clear_stairs(dungeon_feature_type grid)
     }
 }
 
-stair_info *LevelInfo::get_stair(int x, int y)
+bool LevelInfo::know_transporter(const coord_def &c) const
 {
-    const coord_def c(x, y);
-    return get_stair(c);
+    const int index = get_transporter_index(c);
+    if (index == -1)
+        return false;
+
+    return !transporters[index].destination.origin();
 }
 
 bool LevelInfo::know_stair(const coord_def &c) const
@@ -3229,10 +3306,25 @@ bool LevelInfo::know_stair(const coord_def &c) const
     return lp.is_valid();
 }
 
+transporter_info *LevelInfo::get_transporter(const coord_def &pos)
+{
+    int index = get_transporter_index(pos);
+    return index != -1 ? &transporters[index] : nullptr;
+}
+
 stair_info *LevelInfo::get_stair(const coord_def &pos)
 {
     int index = get_stair_index(pos);
     return index != -1? &stairs[index] : nullptr;
+}
+
+int LevelInfo::get_transporter_index(const coord_def &pos) const
+{
+    for (int i = static_cast<int>(transporters.size()) - 1; i >= 0; --i)
+        if (transporters[i].position == pos)
+            return i;
+
+    return -1;
 }
 
 int LevelInfo::get_stair_index(const coord_def &pos) const
@@ -3313,6 +3405,49 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
     resize_stair_distances();
 }
 
+void LevelInfo::correct_transporter_list(const vector<coord_def> &t)
+{
+    // First we kill any transporters in 'transporters' that aren't there in 't'.
+    for (int i = ((int) transporters.size()) - 1; i >= 0; --i)
+    {
+        bool found = false;
+        for (int j = t.size() - 1; j >= 0; --j)
+        {
+            if (t[j] == transporters[i].position)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+            transporters.erase(transporters.begin() + i);
+    }
+
+    // For each transporter in 't', make sure we have a corresponding stair
+    // in 'transporters'.
+    for (coord_def pos : t)
+    {
+        int found = -1;
+        for (int j = transporters.size() - 1; j >= 0; --j)
+        {
+            if (pos == transporters[j].position)
+            {
+                found = j;
+                break;
+            }
+        }
+
+        transporter_info::transporter_type type =
+            env.map_knowledge(pos).seen() ? transporter_info::PHYSICAL
+                                          : transporter_info::MAPPED;
+        if (found == -1)
+            transporters.push_back(transporter_info(pos, coord_def(), type));
+        else
+            transporters[found].type = type;
+    }
+}
+
 void LevelInfo::resize_stair_distances()
 {
     const int nstairs = stairs.size();
@@ -3334,6 +3469,20 @@ int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2)
         return 0;
 
     return stair_distances[ i1 * stairs.size() + i2 ];
+}
+
+void LevelInfo::get_transporters(vector<coord_def> &tr)
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const dungeon_feature_type feat = grd(*ri);
+
+        if ((*ri == you.pos() || env.map_knowledge(*ri).known())
+            && feat == DNGN_TRANSPORTER)
+        {
+            tr.push_back(*ri);
+        }
+    }
 }
 
 void LevelInfo::get_stairs(vector<coord_def> &st)
@@ -3387,6 +3536,11 @@ void LevelInfo::save(writer& outf) const
         }
     }
 
+    int transporter_count = transporters.size();
+    marshallShort(outf, transporter_count);
+    for (int i = 0; i < transporter_count; ++i)
+        transporters[i].save(outf);
+
     marshallExcludes(outf, excludes);
 
     marshallByte(outf, NUM_DACTION_COUNTERS);
@@ -3420,6 +3574,22 @@ void LevelInfo::load(reader& inf, int minorVersion)
         for (int i = stair_count * stair_count - 1; i >= 0; --i)
             stair_distances.push_back(unmarshallShort(inf));
     }
+
+    transporters.clear();
+#if TAG_MAJOR_VERSION == 34
+    if (minorVersion >= TAG_MINOR_TRANSPORTERS)
+    {
+#endif
+    int transporter_count = unmarshallShort(inf);
+    for (int i = 0; i < transporter_count; ++i)
+    {
+        transporter_info ti;
+        ti.load(inf);
+        transporters.push_back(ti);
+    }
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     unmarshallExcludes(inf, minorVersion, excludes);
 
@@ -3489,10 +3659,38 @@ void TravelCache::update_stone_stair(const coord_def &c)
     }
 }
 
+void TravelCache::update_transporter(const coord_def &c)
+{
+    const dungeon_feature_type feat = grd(c);
+    ASSERT(feat == DNGN_TRANSPORTER);
+
+    if (!env.map_knowledge(c).seen())
+        return;
+
+    LevelInfo *li = find_level_info(level_id::current());
+    if (!li)
+        return;
+
+    transporter_info *ti = li->get_transporter(c);
+    if (!ti)
+    {
+        li->transporters.push_back(transporter_info(c, coord_def(),
+                                   transporter_info::transporter_type::PHYSICAL));
+    }
+}
+
+bool TravelCache::know_transporter(const coord_def &c)
+{
+    if (grd(c) == DNGN_TRANSPORTER)
+        update_transporter(c);
+    auto i = levels.find(level_id::current());
+    return i == levels.end() ? false : i->second.know_transporter(c);
+}
+
 bool TravelCache::know_stair(const coord_def &c)
 {
-    if (feat_is_stone_stair(grd(c)))
-        update_stone_stair(c);
+     if (feat_is_stone_stair(grd(c)))
+         update_stone_stair(c);
     auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
 }
@@ -4085,7 +4283,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (feat == DNGN_RUNED_DOOR)
     {
-        seen_runed_door();
+        seen_tracked_feature(feat);
         if (ES_rdoor)
         {
             for (orth_adjacent_iterator ai(pos); ai; ++ai)
@@ -4105,6 +4303,30 @@ void explore_discoveries::found_feature(const coord_def &pos,
                 desc = cleaned_feature_description(pos);
             runed_doors.emplace_back(desc, 1);
             es_flags |= ES_RUNED_DOOR;
+        }
+    }
+    else if (feat == DNGN_TRANSPORTER)
+    {
+        seen_tracked_feature(feat);
+        if (ES_transporter)
+        {
+            for (orth_adjacent_iterator ai(pos); ai; ++ai)
+            {
+                // If any neighbours have been seen (and thus announced) before,
+                // skip. For parts seen for the first time this turn, announce
+                // only the upper leftmost cell.
+                if (env.map_knowledge(*ai).feat() == DNGN_TRANSPORTER
+                    && (env.map_seen(*ai) || *ai < pos))
+                {
+                    return;
+                }
+            }
+
+            string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
+            if (desc.empty())
+                desc = cleaned_feature_description(pos);
+            transporters.emplace_back(desc, 1);
+            es_flags |= ES_TRANSPORTER;
         }
     }
     else if (feat_is_altar(feat) && ES_altar)
@@ -4306,6 +4528,7 @@ bool explore_discoveries::stop_explore() const
     say_any(apply_quantities(altars), "altar");
     say_any(apply_quantities(portals), "portal");
     say_any(apply_quantities(stairs), "stair");
+    say_any(apply_quantities(transporters), "transporter");
     say_any(apply_quantities(runed_doors), "runed door");
 
     return true;

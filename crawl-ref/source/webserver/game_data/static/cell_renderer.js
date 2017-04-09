@@ -926,6 +926,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (bg.NEW_STAIR && status_shift == 0)
                 this.draw_icon(icons.NEW_STAIR, x, y);
 
+            if (bg.NEW_TRANSPORTER && status_shift == 0)
+                this.draw_icon(icons.NEW_TRANSPORTER, x, y);
+
             if (bg.EXCL_CTR && bg.UNSEEN)
                 this.draw_icon(icons.TRAVEL_EXCLUSION_CENTRE_FG, x, y);
             else if (bg.TRAV_EXCL && bg.UNSEEN)

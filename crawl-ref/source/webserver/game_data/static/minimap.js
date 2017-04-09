@@ -139,12 +139,13 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_mapped_wall_col"),    // MF_MAP_WALL
             options.get("tile_door_col"),           // MF_DOOR
             options.get("tile_item_col"),           // MF_ITEM
-            options.get("tile_monster_col"),       // MF_MONS_FRIENDLY
-            options.get("tile_monster_col"),       // MF_MONS_PEACEFUL
+            options.get("tile_monster_col"),        // MF_MONS_FRIENDLY
+            options.get("tile_monster_col"),        // MF_MONS_PEACEFUL
             options.get("tile_monster_col"),        // MF_MONS_NEUTRAL
             options.get("tile_monster_col"),        // MF_MONS_HOSTILE
             options.get("tile_plant_col"),          // MF_MONS_NO_EXP
             options.get("tile_upstairs_col"),       // MF_STAIR_UP
+            options.get("tile_transporter_col"),    // MF_TRANSPORTER
             options.get("tile_downstairs_col"),     // MF_STAIR_DOWN
             options.get("tile_branchstairs_col"),   // MF_STAIR_BRANCH
             options.get("tile_feature_col"),        // MF_FEATURE
