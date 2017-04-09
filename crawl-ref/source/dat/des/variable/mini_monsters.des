@@ -1995,17 +1995,22 @@ MAP
 ENDMAP
 
 NAME:  cheibrodos_gnoll_hut
-DEPTH: D:2-5
 TAGS:  no_item_gen no_monster_gen
-MONS:  gnoll, hound, bush
+DEPTH: D:2-5
+KMONS: P = bush
+: if you.depth() <= 2 then
+MONS: jackal, gnoll
+: else
+MONS: hound, gnoll
+: end
 KFEAT: S = known shaft trap
 MAP
 ...@...
-..3.3..
+..P.P..
 xxx+xxx
 x%+...x
-xxx2.2x
-xS+.1.x
+xxx1.1x
+xS+.2.x
 xxxxxxx
 ENDMAP
 
