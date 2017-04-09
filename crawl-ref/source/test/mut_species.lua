@@ -1,7 +1,7 @@
 -- test mutation + species. Requires debug mode to fully validate mutation states.
 -- the most important case to test here is demonspawn.
 
-local silent = false -- change to false to look at the result of stress tests
+local silent = true -- change to false to look at the result of stress tests
 local ds_mut_iterations = 1000 -- mutate each try this many times
 local ds_tries = 30
 local mut_iterations = 500
@@ -18,8 +18,11 @@ local function give_random_mutation(chance_temporary)
 end
 
 local function random_level_change(species, tries, iterations, chance_temporary, chance_clear)
+    if not silent then
+        crawl.stderr("###### begin random level change test for " .. species .. eol)
+    end
     for i=1, tries do
-        crawl.dpr("############ Ds random level test try " .. i .. ", resetting to level 1")
+        crawl.dpr("############ " .. species .. " random level test try " .. i .. ", resetting to level 1")
         you.delete_all_mutations(species .. " random level test")
         assert(you.set_xl(1, false))
         assert(you.change_species(species))
@@ -42,9 +45,12 @@ local function random_level_change(species, tries, iterations, chance_temporary,
 end
 
 local function test_random_mutations_species(species, tries, iterations, chance_temporary, chance_clear)
+    if not silent then
+        crawl.stderr("###### begin species test for " .. species .. eol)
+    end
     for i=1, tries do
         crawl.dpr("############ " .. species .. " mutation test try " .. i .. ", resetting to level 1")
-        you.delete_all_mutations("Ds mutation test")
+        you.delete_all_mutations("species mutation test")
         assert(you.set_xl(1, false))
         assert(you.change_species(species))
         for j=1, iterations do
@@ -65,6 +71,42 @@ local function test_random_mutations_species(species, tries, iterations, chance_
     end
 end
 
+local function test_random_mutations_slime(species, tries, iterations, chance_temporary, chance_clear)
+    if not silent then
+        crawl.stderr("###### begin slime test for " .. species .. eol)
+    end
+    for i=1, tries do
+        crawl.dpr("############ " .. species .. " slime test try " .. i .. ", resetting to level 1")
+        you.delete_all_mutations("slime test")
+        assert(you.set_xl(1, false))
+        assert(you.change_species(species))
+        for j=1, iterations do
+            if you.xl() < 27 and crawl.x_chance_in_y(iterations / 27, iterations) then
+                assert(you.set_xl(you.xl() + 1, false))
+            end
+            if crawl.x_chance_in_y(chance_clear, 100) then
+                if crawl.coinflip() then
+                    you.delete_temp_mutations(crawl.coinflip(), species .. " slime test")
+                else
+                    you.delete_mutation("slime", "mutation test")
+                end
+            else
+                if crawl.coinflip() then
+                    you.mutate("slime", "slime tests", false)
+                else
+                    you.mutate("any", "slime tests", crawl.x_chance_in_y(chance_temporary, 100))
+                end
+            end
+        end
+        if not silent then
+            crawl.stderr(species .. " slime test try " .. i .. " final xl: " .. you.xl() ..
+                " " .. you.how_mutated(true, true, true) ..
+                " final mutations: " .. you.mutation_overview() .. eol)
+        end
+    end
+end
+
+
 species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
             "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
             "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
@@ -72,6 +114,8 @@ species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling
 
 test_random_mutations_species("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
 random_level_change("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
+test_random_mutations_slime("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
+
 
 for i, sp_name in ipairs(species) do
     test_random_mutations_species(sp_name, tries, mut_iterations, chance_temporary, chance_clear)
