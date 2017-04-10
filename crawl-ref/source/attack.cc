@@ -1595,7 +1595,7 @@ bool attack::apply_damage_brand(const char *what)
     {
         // If a monster with a chaos weapon gets this brand, act like
         // AF_CONFUSE.
-        if (defender->is_player())
+        if (attacker->is_monster())
         {
             if (one_chance_in(3))
             {
