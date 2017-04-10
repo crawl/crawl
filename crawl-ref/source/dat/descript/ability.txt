@@ -867,9 +867,11 @@ the effect of Serpent's Lash are more effective.
 %%%%
 Heaven On Earth ability
 
-Beseeches the Council to flood the surroundings with a storm of heavenly
-clouds. The clouds inspire you to strike strong and true, and hitting enemies
-with martial attacks will keep the storm raging for longer.
+Invokes a storm of heavenly clouds. While the storm rages, striking enemies
+with martial attacks provides an increasing bonus to melee damage and accuracy.
+The bonus fades over time, and the storm lasts until it has faded completely.
+The heavenly clouds prevent invisibility, and obscure the vision of those
+outside the storm.
 %%%%
 Hop ability
 
