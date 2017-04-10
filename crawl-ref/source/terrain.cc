@@ -1387,7 +1387,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.markers.move(pos1, temp);
     dungeon_events.move_listeners(pos1, temp);
     grd(pos1) = DNGN_UNSEEN;
-    env.pgrid(pos1) = 0;
+    env.pgrid(pos1) = terrain_property_t{};
 
     (void) move_notable_thing(pos2, pos1);
     env.markers.move(pos2, pos1);

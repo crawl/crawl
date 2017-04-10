@@ -103,7 +103,7 @@ static void _initialize()
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
 
     you.unique_creatures.reset();
     you.unique_items.init(UNIQ_NOT_EXISTS);

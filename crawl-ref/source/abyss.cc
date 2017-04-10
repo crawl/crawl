@@ -714,7 +714,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     // Delete cloud.
     delete_cloud(p);
 
-    env.pgrid(p)        = 0;
+    env.pgrid(p)        = terrain_property_t{};
     env.grid_colours(p) = 0;
 #ifdef USE_TILE
     env.tile_bk_fg(p)   = 0;
