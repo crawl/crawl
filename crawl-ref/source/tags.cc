@@ -4012,7 +4012,7 @@ static void tag_construct_level(writer &th)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallMapCell(th, env.map_knowledge[count_x][count_y]);
-            marshallInt(th, env.pgrid[count_x][count_y]);
+            marshallInt(th, env.pgrid[count_x][count_y].flags);
         }
 
     marshallBoolean(th, !!env.map_forgotten.get());
@@ -5459,7 +5459,7 @@ static void tag_read_level(reader &th)
             env.map_knowledge[i][j].flags &= ~MAP_VISIBLE_FLAG;
             if (env.map_knowledge[i][j].seen())
                 env.map_seen.set(i, j);
-            env.pgrid[i][j] = unmarshallInt(th);
+            env.pgrid[i][j].flags = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
         }

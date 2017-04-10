@@ -4,12 +4,12 @@
 #include <memory> // unique_ptr
 
 #include "coord.h"
+#include "fprop.h"
 #include "map-cell.h"
 #include "monster.h"
 #include "trap-def.h"
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
-typedef uint32_t terrain_property_t;
 
 typedef set<string> string_set;
 

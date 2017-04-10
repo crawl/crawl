@@ -1157,7 +1157,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
@@ -2079,7 +2079,7 @@ struct coord_feat
     unsigned int mask;
 
     coord_feat(const coord_def &c, dungeon_feature_type f)
-        : pos(c), feat(f), prop(0), mask(0)
+        : pos(c), feat(f), prop(), mask(0)
     {
     }
 
@@ -6631,7 +6631,7 @@ void vault_placement::apply_grid()
             if (clear)
             {
                 env.grid_colours(*ri) = 0;
-                env.pgrid(*ri) = 0;
+                env.pgrid(*ri) = terrain_property_t{};
                 // what about heightmap?
                 tile_clear_flavour(*ri);
             }
