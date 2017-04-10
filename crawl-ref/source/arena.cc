@@ -737,17 +737,17 @@ namespace arena
                 // We have no members left, so to prevent the round
                 // from ending attempt to displace whatever is in
                 // our position.
-                monster* other = monster_at(pos);
+                monster& other = *monster_at(pos);
 
-                if (to_respawn[other->mindex()] == -1)
+                if (to_respawn[other.mindex()] == -1)
                 {
                     // The other monster isn't a respawner itself, so
                     // just get rid of it.
                     mprf(MSGCH_DIAGNOSTICS,
                          "Dismissing non-respawner %s to make room for "
                          "respawner whose side has 0 active members.",
-                         other->name(DESC_PLAIN, true).c_str());
-                    monster_die(*other, KILL_DISMISSED, NON_MONSTER);
+                         other.name(DESC_PLAIN, true).c_str());
+                    monster_die(other, KILL_DISMISSED, NON_MONSTER);
                 }
                 else
                 {
@@ -755,8 +755,8 @@ namespace arena
                     mprf(MSGCH_DIAGNOSTICS,
                          "Teleporting respawner %s to make room for "
                          "other respawner whose side has 0 active members.",
-                         other->name(DESC_PLAIN, true).c_str());
-                    monster_teleport(other, true);
+                         other.name(DESC_PLAIN, true).c_str());
+                    monster_teleport(&other, true);
                 }
 
                 mon = dgn_place_monster(spec, pos, false, true);
