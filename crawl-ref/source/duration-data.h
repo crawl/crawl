@@ -158,9 +158,9 @@ static const duration_def duration_data[] =
       "You are confused.", D_DISPELLABLE,
       {{ "You feel less confused." }}},
     { DUR_CONFUSING_TOUCH,
-      BLUE, "Touch",
+      LIGHTBLUE, "Touch",
       "confusing touch", "",
-      "" , D_DISPELLABLE | D_EXPIRES,
+      "" , D_DISPELLABLE,
       {{ "", []() {
           mprf(MSGCH_DURATION, "%s",
                you.hands_act("stop", "glowing.").c_str());
