@@ -115,6 +115,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
     { ENCH_DISTRACTED_ACROBATICS,     MB_DISTRACTED },
+    { ENCH_DIZZY,            MB_SLOWED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -122,6 +123,7 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     // Suppress silly-looking combinations, even if they're
     // internally valid.
     if (mons.paralysed() && (ench == ENCH_SLOW || ench == ENCH_HASTE
+                      || ench == ENCH_DIZZY
                       || ench == ENCH_SWIFT
                       || ench == ENCH_PETRIFIED
                       || ench == ENCH_PETRIFYING))

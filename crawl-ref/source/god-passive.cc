@@ -414,9 +414,9 @@ static const vector<god_passive> god_passives[] =
 
     // Wu Jian
     {
-        { 1, passive_t::wu_jian_whirlwind, "attack monsters by moving around them." },
-        { 2, passive_t::wu_jian_wall_jump, "perform distracting airborne attacks by moving against a solid obstacle." },
-        { 3, passive_t::wu_jian_lunge, "strike by moving towards foes, devastating them if distracted." },
+        { 1, passive_t::wu_jian_lunge, "strike by moving towards foes" },
+        { 2, passive_t::wu_jian_whirlwind, "attack monsters by moving around them" },
+        { 3, passive_t::wu_jian_wall_jump, "perform a distracting aerial attack by moving against a wall" },
     },
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
@@ -1595,6 +1595,12 @@ static int _wu_jian_number_of_attacks()
                           attack_delay * BASELINE_DELAY);
 }
 
+/// Percent chance for an WJC whirlwind to make a monster dizzy (lower movement speed)
+static int _whirlwind_dizzy_chance(int target_hd)
+{
+    return min(50, div_rand_round(15 * you.experience_level, target_hd));
+}
+
 static void _wu_jian_lunge(const coord_def& old_pos)
 {
     coord_def lunge_direction = (you.pos() - old_pos).sgn();
@@ -1694,6 +1700,26 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
             whirlwind.wu_jian_number_of_targets = common_targets.size();
             whirlwind.attack();
         }
+
+        if (mons->alive()) {
+            const int dizzy_chance
+                = _whirlwind_dizzy_chance(mons->get_hit_dice());
+
+            const monsterentry* entry = get_monster_data(mons->type);
+
+            dprf("Attempting dizzy with chance %d", dizzy_chance);
+            if (!entry || !x_chance_in_y(dizzy_chance, 100))
+                break;;
+
+            if (mons->holiness() == MH_NONLIVING)
+                simple_monster_message(*mons, " slows down, unable to track your spinning motion.");
+            else
+                simple_monster_message(*mons, " is dizzied by your spinning.");
+
+            mons->add_ench(
+                mon_enchant(ENCH_DIZZY, 1, nullptr,
+                            random_range(9, 15) * BASELINE_DELAY));
+        }
     }
 }
 
@@ -1733,40 +1759,25 @@ bool wu_jian_can_wall_jump(const coord_def& target)
         return false;
     }
 
-    for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
-    {
-        monster* mon = monster_at(*ai);
-        if (mon && !_dont_attack_martial(mon) && mon->alive())
-            return true;
-    }
-
-    mpr("There is no target in range.");
-    targeter_walljump range;
-    range.set_aim(wall_jump_landing_spot);
-    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
-
-    return false;
+    return true;
 }
 
 /// Percent chance for an WJC walljump to distract a target of the given HD.
 static int _walljump_distract_chance(int target_hd)
 {
-    // XXX: unify with _walljump_distract_chance()
-    const int base_chance = div_rand_round(12 * you.experience_level,
-                                           target_hd);
-    if (wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP))
-        return div_rand_round(base_chance * 15, 10);
-    return min(base_chance, 50); // Capped if you don't have momentum.
+    return min(50, div_rand_round(12 * you.experience_level, target_hd));
 }
 
 void wu_jian_wall_jump_effects(const coord_def& old_pos)
 {
-    vector<monster*> targets;
+    you.time_taken *= 2; // Wall jumping takes equivalent time to walking
+
+    set<monster*> targets;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         monster* target = monster_at(*ai);
         if (target && !_dont_attack_martial(target) && target->alive())
-            targets.push_back(target);
+            targets.insert(target);
 
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
@@ -1810,37 +1821,54 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         }
     }
 
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    for (adjacent_iterator ai(old_pos, true); ai; ++ai)
     {
-        monster* mon = monster_at(*ri);
+        monster* target = monster_at(*ai);
+        if (target && !_dont_attack_martial(target) && target->alive())
+            targets.insert(target);
+    }
 
-        if (mon && mon->alive()
-            && you.can_see(*mon)
-            && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon)
-            && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
+    for (auto target : targets)
+    {
+        if (target && target->alive()
+            && you.can_see(*target)
+            && target->behaviour != BEH_SLEEP
+            && !_dont_attack_martial(target)
+            && !target->has_ench(ENCH_DISTRACTED_ACROBATICS))
         {
             const int distract_chance
-                = _walljump_distract_chance(mon->get_hit_dice());
+                = _walljump_distract_chance(target->get_hit_dice());
 
-            const monsterentry* entry = get_monster_data(mon->type);
+            const monsterentry* entry = get_monster_data(target->type);
 
             dprf("Attempting distract with chance %d", distract_chance);
-            if (!entry || !x_chance_in_y(distract_chance, 100))
+            if (!entry) {
                 continue;
+            }
 
-            if (mon->holiness() == MH_NONLIVING)
-                simple_monster_message(*mon, " loses track of your position.");
-            else
-                simple_monster_message(*mon, " is distracted by your jump.");
+            if (x_chance_in_y(distract_chance, 100)) {
+                if (target->holiness() == MH_NONLIVING)
+                    simple_monster_message(*target, " loses track of your position.");
+                else
+                    simple_monster_message(*target, " is distracted by your jump.");
 
-            mon->add_ench(
-                mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
-                            random_range(3, 5) * BASELINE_DELAY));
-            mon->foe = MHITNOT;
-            mon->target = mon->pos();
+                target->add_ench(
+                    mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
+                                random_range(4, 6) * BASELINE_DELAY));
+                target->foe = MHITNOT;
+                target->target = target->pos();
+            } else {
+                // targets are always at least set back for half of the
+                // wall jump time (the player movement speed).
+                target->speed_increment -= player_movement_speed();
+                if (target->holiness() == MH_NONLIVING)
+                    simple_monster_message(*target, " briefly loses track of your position.");
+                else
+                    simple_monster_message(*target, " is briefly distracted by your jump.");
+            }
         }
     }
+
 }
 
 /**

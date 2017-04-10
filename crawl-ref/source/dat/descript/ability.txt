@@ -863,7 +863,7 @@ Serpent's Lash ability
 
 Allows you to move at supernatural speeds for a short distance, causing the
 next two movement actions taken to be instant. Martial attacks performed under
-the effect of Serpent's Lash are more effective.
+the effect of Serpent's Lash deal increased damage.
 %%%%
 Heaven On Earth ability
 
