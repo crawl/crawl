@@ -293,7 +293,8 @@ void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
 void wu_jian_trigger_martial_arts(const coord_def& old_pos);
-bool wu_jian_can_wall_jump(const coord_def& target);
+bool wu_jian_can_wall_jump_in_principle(const coord_def& target);
+bool wu_jian_can_wall_jump(const coord_def& target, bool messaging=false);
 void wu_jian_wall_jump_effects(const coord_def& old_pos);
 void wu_jian_trigger_serpents_lash(const coord_def& old_pos);
 bool wu_jian_has_momentum(wu_jian_attack_type);

@@ -295,8 +295,10 @@ static void _change_skill_level(skill_type exsk, int n)
         if (you.species == SP_BULTUNGIN)
         {
             if (n > 0 && you.skills[exsk] < 12 && you.skills[exsk] > 6)
+            {
                 mprf(MSGCH_MUTATION, "You become less interested in %s.",
                      skill_name(exsk));
+            }
             else if (n < 0 && you.skills[exsk] < 11 && you.skills[exsk] > 5)
                 mprf(MSGCH_MUTATION, "You become more interested in %s.",
                      skill_name(exsk));
@@ -315,8 +317,10 @@ static void _change_skill_level(skill_type exsk, int n)
         if (you.species == SP_BULTUNGIN)
         {
             if (n > 0 && (you.skills[exsk] - n) < 12 && you.skills[exsk] > 6)
+            {
                 mprf(MSGCH_MUTATION, "You become less interested in %s.",
                      skill_name(exsk));
+            }
             else if (n < 0 && you.skills[exsk] < 11 && (you.skills[exsk] - n) > 5)
                 mprf(MSGCH_MUTATION, "You become more interested in %s.",
                      skill_name(exsk));
