@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -1709,7 +1710,7 @@ void wu_jian_trigger_martial_arts(const coord_def& old_pos)
         _wu_jian_whirlwind(old_pos);
 }
 
-bool wu_jian_can_wall_jump(const coord_def& target)
+bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(grd(target))
@@ -1718,6 +1719,13 @@ bool wu_jian_can_wall_jump(const coord_def& target)
     {
         return false;
     }
+    return true;
+}
+
+bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
+{
+    if (!wu_jian_can_wall_jump_in_principle(target))
+        return false;
 
     auto wall_jump_direction = (you.pos() - target).sgn();
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
@@ -1729,21 +1737,33 @@ bool wu_jian_can_wall_jump(const coord_def& target)
         || !you.is_habitable(wall_jump_landing_spot)
         || landing_actor)
     {
-        mpr("You have no room to wall jump.");
+        if (messaging)
+        {
+            monster_near_iterator mon_in_los(you.pos(), LOS_NO_TRANS);
+            if (mon_in_los)
+                mpr("You have no room to wall jump.");
+        }
         return false;
     }
 
     for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
-        if (mon && !_dont_attack_martial(mon) && mon->alive())
+        if (mon && mon->alive() && !_dont_attack_martial(mon))
             return true;
     }
 
-    mpr("There is no target in range.");
-    targeter_walljump range;
-    range.set_aim(wall_jump_landing_spot);
-    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+    if (messaging)
+    {
+        monster_near_iterator mon_in_los(you.pos(), LOS_NO_TRANS);
+        if (mon_in_los)
+        {
+            mpr("There is no target in range.");
+            targeter_walljump range;
+            range.set_aim(wall_jump_landing_spot);
+            flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+        }
+    }
 
     return false;
 }
