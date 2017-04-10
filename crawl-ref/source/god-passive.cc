@@ -1530,20 +1530,20 @@ void wu_jian_trigger_serpents_lash(const coord_def& old_pos)
 
 void wu_jian_heaven_tick()
 {
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
+    if (you.attribute[ATTR_HEAVENLY_STORM] == 0)
         return;
 
-    // TODO: this is ridiculous. REWRITEME!
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 10)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 1;
-    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 15)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 2;
-    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 20)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 3;
-    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 30)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 5;
+    // TODO: this is still ridiculous. REWRITEME!
+    if (you.attribute[ATTR_HEAVENLY_STORM] <= 10)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 1;
+    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 15)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 2;
+    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 20)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 3;
+    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 30)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 5;
     else
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 10;
+        you.attribute[ATTR_HEAVENLY_STORM] -= 10;
 
     for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
     {
@@ -1553,15 +1553,15 @@ void wu_jian_heaven_tick()
 
     noisy(15, you.pos());
 
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
-        end_heaven_on_earth();
+    if (you.attribute[ATTR_HEAVENLY_STORM] == 0)
+        end_heavenly_storm();
     else
-        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+        you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
 }
 
-void end_heaven_on_earth()
+void end_heavenly_storm()
 {
-    you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+    you.attribute[ATTR_HEAVENLY_STORM] = 0;
     mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 
@@ -1605,8 +1605,8 @@ static void _wu_jian_lunge(const coord_def& old_pos)
     if (!mons || _dont_attack_martial(mons) || !mons->alive())
         return;
 
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+    if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+        you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
     you.apply_berserk_penalty = false;
 
@@ -1665,8 +1665,8 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
         if (!mons->alive())
             continue;
 
-        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+            you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
         you.apply_berserk_penalty = false;
 
@@ -1797,8 +1797,8 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (!target->alive())
             continue;
 
-        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+            you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
         you.apply_berserk_penalty = false;
 

@@ -835,10 +835,10 @@ static void _decrement_durations()
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
 
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH]
-        && !you.duration[DUR_HEAVEN_ON_EARTH])
+    if (you.attribute[ATTR_HEAVENLY_STORM]
+        && !you.duration[DUR_HEAVENLY_STORM])
     {
-        end_heaven_on_earth(); // we shouldn't hit this, but just in case
+        end_heavenly_storm(); // we shouldn't hit this, but just in case
     }
 
     // these should be after decr_ambrosia, transforms, liquefying, etc.

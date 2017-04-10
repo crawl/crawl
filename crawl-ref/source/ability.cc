@@ -638,7 +638,7 @@ static const ability_def Ability_List[] =
     // Wu Jian
     { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
         0, 0, 0, 4, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
-    { ABIL_WU_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
+    { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::none },
@@ -3114,7 +3114,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.redraw_status_lights = true;
         return SPRET_SUCCESS;
 
-    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
+    case ABIL_WU_JIAN_HEAVENLY_STORM:
         fail_check();
         mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
         wu_jian_sifu_message(" says: The storm will not cease as long as you "
@@ -3126,8 +3126,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
         }
 
-        you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
-        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+        you.attribute[ATTR_HEAVENLY_STORM] = 12;
+        you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
         break;
 

@@ -459,14 +459,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case STATUS_HEAVEN_ON_EARTH:
-        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+    case STATUS_HEAVENLY_STORM:
+        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
         {
             inf->light_colour = WHITE;
             inf->light_text
-               = make_stringf("Hevn (%u)",
-                              you.attribute[ATTR_HEAVEN_ON_EARTH]);
-            inf->short_text = "heaven on earth";
+               = make_stringf("Storm (%u)",
+                              you.attribute[ATTR_HEAVENLY_STORM]);
+            inf->short_text = "heavenly storm";
             inf->long_text = "Heavenly clouds are increasing your damage and "
                              "accuracy.";
         }

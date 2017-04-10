@@ -343,7 +343,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "strike by moving towards foes, devastating them if distracted",
            "no longer perform lunging strikes" },
       { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
-      { 5, ABIL_WU_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
+      { 5, ABIL_WU_JIAN_HEAVENLY_STORM, "summon a storm of heavenly clouds to empower your attacks" },
     },
 };
 
@@ -2909,7 +2909,7 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_WU_JIAN:
         you.attribute[ATTR_SERPENTS_LASH] = 0;
-        you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+        you.attribute[ATTR_HEAVENLY_STORM] = 0;
         _set_penance(old_god, 25);
         break;
 
