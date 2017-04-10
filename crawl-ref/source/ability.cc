@@ -315,8 +315,6 @@ static const ability_def Ability_List[] =
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, {}, abflag::instant },
 #endif
-    { ABIL_STOP_SINGING, "Stop Singing",
-      0, 0, 0, 0, {}, abflag::none },
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
       0, 0, 0, 0, {}, abflag::instant },
 
@@ -1641,7 +1639,6 @@ bool activate_talent(const talent& tal)
 #if TAG_MAJOR_VERSION == 34
         case ABIL_DELAYED_FIREBALL:
 #endif
-        case ABIL_STOP_SINGING:
         case ABIL_CANCEL_PPROJ:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
@@ -2117,12 +2114,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
 
-        break;
-
-    case ABIL_STOP_SINGING:
-        fail_check();
-        you.duration[DUR_SONG_OF_SLAYING] = 0;
-        mpr("You stop singing.");
         break;
 
     case ABIL_CANCEL_PPROJ:
@@ -3481,8 +3472,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 #endif
 
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        _add_talent(talents, ABIL_STOP_SINGING, check_confused);
     if (you.duration[DUR_PORTAL_PROJECTILE])
         _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
 

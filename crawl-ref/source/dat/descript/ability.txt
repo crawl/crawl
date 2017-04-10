@@ -78,10 +78,6 @@ anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
 %%%%
-Stop Singing ability
-
-Stops singing your Song of Slaying.
-%%%%
 Cancel Portal Projectile ability
 
 Ends your Portal Projectile status.

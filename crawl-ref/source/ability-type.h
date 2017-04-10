@@ -23,7 +23,9 @@ enum ability_type
 #endif
     // Abort duration-based spells
     ABIL_END_TRANSFORMATION,
+#if TAG_MAJOR_VERSION == 34
     ABIL_STOP_SINGING, // From song of slaying
+#endif
     ABIL_CANCEL_PPROJ,
 
     // Species-specific abilities.
