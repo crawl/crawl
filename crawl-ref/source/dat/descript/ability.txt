@@ -861,13 +861,13 @@ Allows you to move at supernatural speeds for a short distance, causing the
 next two movement actions taken to be instant. Martial attacks performed under
 the effect of Serpent's Lash are more effective.
 %%%%
-Heaven On Earth ability
+Heavenly Storm ability
 
 Invokes a storm of heavenly clouds. While the storm rages, striking enemies
 with martial attacks provides an increasing bonus to melee damage and accuracy.
-The bonus fades over time, and the storm lasts until it has faded completely.
-The heavenly clouds prevent invisibility, and obscure the vision of those
-outside the storm.
+The bonus fades over time, and the storm lasts until the bonus has faded
+completely. The heavenly clouds prevent invisibility, and obscure the vision of
+those outside the storm.
 %%%%
 Hop ability
 

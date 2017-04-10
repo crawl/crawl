@@ -299,4 +299,4 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos);
 void wu_jian_trigger_serpents_lash(const coord_def& old_pos);
 bool wu_jian_has_momentum(wu_jian_attack_type);
 void wu_jian_heaven_tick();
-void end_heaven_on_earth();
+void end_heavenly_storm();

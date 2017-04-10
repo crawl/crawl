@@ -3503,8 +3503,8 @@ tileidx_t tileidx_ability(const ability_type ability)
      // Wu Jian
     case ABIL_WU_JIAN_SERPENTS_LASH:
         return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
-    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
-        return TILEG_ABILITY_WU_JIAN_HEAVEN_ON_EARTH;
+    case ABIL_WU_JIAN_HEAVENLY_STORM:
+        return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
