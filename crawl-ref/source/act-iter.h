@@ -40,12 +40,17 @@ public:
     monster* operator->() const;
     monster_near_iterator& operator++();
     monster_near_iterator operator++(int);
+    bool operator==(const monster_near_iterator &other);
+    bool operator!=(const monster_near_iterator &other);
+    monster_near_iterator begin();
+    monster_near_iterator end();
 
 protected:
     const coord_def center;
     los_type _los;
     const actor* viewer;
     int i;
+    int begin_point;
 
     bool valid(const monster* a) const;
     void advance();
