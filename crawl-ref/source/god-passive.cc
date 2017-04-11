@@ -1741,7 +1741,15 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
         {
             monster_near_iterator mi(&you, LOS_NO_TRANS);
             if (find_if(mi, mi.end(), _can_attack_martial))
-                mpr("You have no room to wall jump.");
+            {
+                if (landing_actor)
+                {
+                    mprf("You have no room to wall jump; %s is in the way.",
+                            landing_actor->name(DESC_THE).c_str()); // right now landing_actor must be visible because of _can_attack_martial
+                }
+                else
+                    mpr("You have no room to wall jump.");
+            }
         }
         return false;
     }
