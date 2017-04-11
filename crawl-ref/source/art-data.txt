@@ -938,11 +938,11 @@ ANGRY:   5
 SLAY:    6
 BOOL:    curse
 
-NAME:    ring of Shaolin
+NAME:    ring of Avoidance
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    urand_shaolin
+TILE:    urand_avoidance
 
 NAME:    ring of Robustness
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
