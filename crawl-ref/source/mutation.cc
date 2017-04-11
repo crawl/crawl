@@ -1692,7 +1692,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
         else
         {
-            ASSERT(levels == 1 || which_mutation == RANDOM_CORRUPT_MUTATION); // shouldn't ever increment a temp mutation by more than 1 at a time
             // only do this once regardless of how many levels got added
             you.attribute[ATTR_TEMP_MUT_XP] = temp_mutation_roll();
         }
