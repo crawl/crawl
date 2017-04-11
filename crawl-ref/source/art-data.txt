@@ -635,7 +635,8 @@ BOOL:     nogen
 
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
-OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+OBJ:      OBJ_WEAPONS/WPN_RAPIER
+TYPE:     cutlass
 INSCRIP:  disarm
 PLUS:     +7
 COLOUR:   DARKGREY

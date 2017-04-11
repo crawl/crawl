@@ -560,9 +560,6 @@ enum weapon_type
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
     WPN_RAPIER,
-#if TAG_MAJOR_VERSION > 34
-    WPN_CUTLASS,
-#endif
 
     WPN_FALCHION,
     WPN_LONG_SWORD,
