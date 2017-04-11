@@ -1572,12 +1572,12 @@ bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
            && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
 }
 
-static bool _dont_attack_martial(const monster* mons)
+static bool _can_attack_martial(const monster* mons)
 {
-    return mons->wont_attack()
+    return !(mons->wont_attack()
            || mons_is_firewood(*mons)
            || mons_is_projectile(mons->type)
-           || !you.can_see(*mons);
+           || !you.can_see(*mons));
 }
 
 // A mismatch between attack speed and move speed may cause
@@ -1602,7 +1602,7 @@ static void _wu_jian_lunge(const coord_def& old_pos)
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
-    if (!mons || _dont_attack_martial(mons) || !mons->alive())
+    if (!mons || !_can_attack_martial(mons) || !mons->alive())
         return;
 
     if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
@@ -1642,7 +1642,7 @@ static vector<monster*> _get_whirlwind_targets(coord_def pos)
 {
     vector<monster*> targets;
     for (adjacent_iterator ai(pos, true); ai; ++ai)
-        if (monster_at(*ai) && !_dont_attack_martial(monster_at(*ai)))
+        if (monster_at(*ai) && _can_attack_martial(monster_at(*ai)))
             targets.push_back(monster_at(*ai));
     sort(targets.begin(), targets.end());
     return targets;
@@ -1739,8 +1739,8 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
     {
         if (messaging)
         {
-            monster_near_iterator mon_in_los(you.pos(), LOS_NO_TRANS);
-            if (mon_in_los)
+            monster_near_iterator mi(&you, LOS_NO_TRANS);
+            if (find_if(mi, mi.end(), _can_attack_martial))
                 mpr("You have no room to wall jump.");
         }
         return false;
@@ -1749,14 +1749,14 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
     for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
-        if (mon && mon->alive() && !_dont_attack_martial(mon))
+        if (mon && mon->alive() && _can_attack_martial(mon))
             return true;
     }
 
     if (messaging)
     {
-        monster_near_iterator mon_in_los(you.pos(), LOS_NO_TRANS);
-        if (mon_in_los)
+        monster_near_iterator mi(&you, LOS_NO_TRANS);
+        if (find_if(mi, mi.end(), _can_attack_martial))
         {
             mpr("There is no target in range.");
             targeter_walljump range;
@@ -1785,7 +1785,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         monster* target = monster_at(*ai);
-        if (target && !_dont_attack_martial(target) && target->alive())
+        if (target && _can_attack_martial(target) && target->alive())
             targets.push_back(target);
 
         if (!cell_is_solid(*ai))
@@ -1837,7 +1837,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (mon && mon->alive()
             && you.can_see(*mon)
             && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon)
+            && _can_attack_martial(mon)
             && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
         {
             const int distract_chance

@@ -3827,8 +3827,8 @@ bool can_convert_to_beogh()
     if (silenced(you.pos()))
         return false;
 
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (mons_allows_beogh_now(**mi))
+    for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
+        if (mons_allows_beogh_now(*m))
             return true;
 
     return false;
