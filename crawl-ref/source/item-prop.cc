@@ -471,9 +471,6 @@ static const weapon_def Weapon_prop[] =
     { WPN_RAPIER,           "rapier",               8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 10, 40, SBL_BRANDS },
-    { WPN_CUTLASS,          "cutlass",              8,  4, 12,
-        SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
 
 
     // Long Blades
@@ -501,6 +498,9 @@ static const weapon_def Weapon_prop[] =
     { WPN_TRIPLE_SWORD,          "triple sword",          17, -4, 19,
         SK_LONG_BLADES,  SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
         DAMV_SLICING, 0, 2, 100, LBL_BRANDS },
+    { WPN_CUTLASS,          "cutlass",              8,  4, 12,
+        SK_LONG_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
+        DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
 #if TAG_MAJOR_VERSION == 34
     { WPN_BLESSED_FALCHION,      "old falchion",         7,  2, 13,
         SK_LONG_BLADES,  SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
