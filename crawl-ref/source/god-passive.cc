@@ -1739,8 +1739,16 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
     {
         if (messaging)
         {
-            monster_near_iterator mi(&you, LOS_NO_TRANS);
-            if (find_if(mi, mi.end(), _can_attack_martial))
+            bool mon_in_los = false;
+            for (monster *m : monster_near_iterator(&you, LOS_NO_TRANS))
+            {
+                if (_can_attack_martial(m))
+                {
+                    mon_in_los = true;
+                    break;
+                }
+            }
+            if (mon_in_los)
             {
                 if (landing_actor)
                 {
@@ -1764,8 +1772,16 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
 
     if (messaging)
     {
-        monster_near_iterator mi(&you, LOS_NO_TRANS);
-        if (find_if(mi, mi.end(), _can_attack_martial))
+        bool mon_in_los = false;
+        for (monster *m : monster_near_iterator(&you, LOS_NO_TRANS))
+        {
+            if (_can_attack_martial(m))
+            {
+                mon_in_los = true;
+                break;
+            }
+        }
+        if (mon_in_los)
         {
             mpr("There is no target in range.");
             targeter_walljump range;
