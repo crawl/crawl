@@ -471,9 +471,11 @@ static const weapon_def Weapon_prop[] =
     { WPN_RAPIER,           "rapier",               8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 10, 40, SBL_BRANDS },
+#if TAG_MAJOR_VERSION == 34
     { WPN_CUTLASS,          "cutlass",              8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
+#endif
 
 
     // Long Blades
