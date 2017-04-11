@@ -402,16 +402,14 @@ TILE_EQ: punk
 BRAND:   SPWPN_ACID
 BOOL:    rCorr
 
-ENUM:     KRISHNA
-NAME:     bow of Krishna "Sharnga"
+NAME:     longbow "The First Bow"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8
 COLOUR:   ETC_GOLD
-TILE:     urand_krishna
-TILE_EQ:  krishna
+TILE:     urand_firstbow
+TILE_EQ:  firstbow
 BRAND:    SPWPN_SPEED
 DEX:      3
-BOOL:     seeinv
 
 NAME:    giant club "Skullcrusher"
 OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
