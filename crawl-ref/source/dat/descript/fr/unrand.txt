@@ -395,11 +395,6 @@ Vous vous demandez quelle genre de brute épaisse pourrait bien porter un
 collier sanguinolent de dents humaines et animales et, ce qui ressemble à un
 morceau de colonne vertébrale.
 %%%%
-ring of Shaolin
-
-Un anneau de jade sans fioriture qui accorde à son porteur une étonnante
-conscience de son corps, lui permettant des exploits d'agilité incroyables.
-%%%%
 ring of Robustness
 
 Un anneau d'acier.
