@@ -544,8 +544,8 @@ A lightweight spear, designed for throwing.
 %%%%
 lajatang
 
-A very rare and extremely effective imported weapon, featuring a pole with
-half-moon blades at both ends.
+A very rare and extremely effective weapon, featuring a pole with half-moon
+blades at both ends.
 %%%%
 lamp of fire
 
