@@ -1745,7 +1745,8 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
                 if (landing_actor)
                 {
                     mprf("You have no room to wall jump; %s is in the way.",
-                            landing_actor->name(DESC_THE).c_str()); // right now landing_actor must be visible because of _can_attack_martial
+                        landing_actor->observable() ? landing_actor->name(DESC_THE).c_str()
+                                    : "something you can't see");
                 }
                 else
                     mpr("You have no room to wall jump.");
