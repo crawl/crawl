@@ -743,7 +743,6 @@ ENDMAP
 
 NAME: tomb_1_hall_stairs_nicolae_galleries
 TAGS: tomb_1_hall_stairs unrand
-WEIGHT: 10000
 # First shuffle randomizes which side is entry/exit, second two shuffles
 # randomizes gallery configurations shared by both sides.
 SHUFFLE: ABDF / HIJK, ACDHJa / BEFIKb, pq
