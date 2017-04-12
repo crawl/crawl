@@ -552,7 +552,7 @@ blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
 sniper SNIPER
 crossbow_fire FIERY_DEVIL
-firstbow FIRSTBOW
+krishna KRISHNA
 
 %sdir player/hand1
 # blades

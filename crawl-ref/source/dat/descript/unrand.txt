@@ -139,11 +139,11 @@ A sling made of weird green leather, oozing corrosive slime. Originally the
 weapon of a notorious mischief-maker and general scamp, it's since fallen into
 less savoury hands.
 %%%%
-longbow "The First Bow"
+bow of Krishna "Sharnga"
 
-One of the earliest longbows created, though not literally the first. It was
-named so by its owner, so enamoured were they with its construction. That owner
-is long gone, but the bow remains in pristine condition.
+A wonderful golden longbow that once belonged to a god of distant lands. It can
+fire as fast as thought and hurl divine arrows of terrible power — though,
+sadly, none seem to be available here.
 %%%%
 giant club "Skullcrusher"
 
