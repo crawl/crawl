@@ -576,7 +576,7 @@ c++cc.3c....4.......4....c3.cc++c
 ....c..c..c...........c..c..c....
 ....c..c.3c...........c3.c..c....
 F...c..c..c..F.....M..c..c..c...M
-.2.....c..c......Z....c..c.....2.
+.2.....c..c...........c..c.....2.
 ..3..2.c..c...........c..c2...3..
 .2.....c..c..F.....M..c..c.....2.
 F...c..c..c.....3.....c..c..c...M
@@ -612,7 +612,7 @@ CCCccccceeccccc...cccccffcccccHHH
 ...c.1.O..P.1.c...c.1.X..Y.1.c...
 ...c...O23P...c...c...X32Y...c...
 .3.cNNNccccQQQc.3.cWWWccccZZZc.3.
-...c..3c>.c...c.Z.c...c.>c3..c...
+...c..3c>.c...c...c...c.>c3..c...
 .F.d...c>4i.M.c.2.c.F.j4>c...g.M.
 ...c..3c..c...c...c...c..c3..c...
 .3.cRRRchhcUUUc.3.c666ckkc999c.3.
@@ -648,7 +648,7 @@ MAP
 ..cccMccc....cc'r'cc....cccIccc..
 ..cc'o'cc....cccUccc....cc'k'cc..
 ..c'''''c...............c'''''c..
-..Pn'c'pN..3....Z....3..Lj'c'lJ..
+..Pn'c'pN..3.........3..Lj'c'lJ..
 ..c'''''c...............c'''''c..
 ..cc'm'cc...............cc'i'cc..
 ..cccOccc.....2...2.....cccKccc..
@@ -660,7 +660,6 @@ ENDMAP
 
 NAME:    tomb_1_hall_stairs_old
 TAGS:    tomb_1_hall_stairs unrand
-: tomb_1_mummy_set(_G)
 SHUFFLE: PQ / RS
 SUBST: S = '
 : tomb_1_stairs_setup(_G)
