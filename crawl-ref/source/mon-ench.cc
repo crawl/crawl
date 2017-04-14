@@ -867,7 +867,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         // Done here to avoid duplicate messages
         if (you.duration[DUR_GRASPING_ROOTS])
-            check_grasping_roots(&you, true);
+            check_grasping_roots(you, true);
 
         break;
 
@@ -1920,7 +1920,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_GRASPING_ROOTS:
-        check_grasping_roots(this);
+        check_grasping_roots(*this);
         break;
 
     case ENCH_TORNADO_COOLDOWN:
