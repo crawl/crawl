@@ -454,10 +454,10 @@ necklace of Bloodlust
 A necklace made of bloodstained human and animal teeth, and something that
 appears to be a piece of spine.
 %%%%
-ring of Avoidance
+ring of Phasing
 
-An unadorned jade ring. Its wearer will find themselves able to predict (and
-dodge) the actions of others with uncanny precision.
+An unadorned jade ring. Its wearer may momentarily phase out of reality in order
+to evade attacks.
 %%%%
 ring of Robustness
 

@@ -938,11 +938,11 @@ ANGRY:   5
 SLAY:    6
 BOOL:    curse
 
-NAME:    ring of Avoidance
+NAME:    ring of Phasing
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    urand_avoidance
+TILE:    urand_phasing
 
 NAME:    ring of Robustness
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
