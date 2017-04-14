@@ -402,13 +402,13 @@ TILE_EQ: punk
 BRAND:   SPWPN_ACID
 BOOL:    rCorr
 
-ENUM:     KRISHNA
-NAME:     bow of Krishna "Sharnga"
+ENUM:     ZEPHYR
+NAME:     longbow "Zephyr"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8
 COLOUR:   ETC_GOLD
-TILE:     urand_krishna
-TILE_EQ:  krishna
+TILE:     urand_zephyr
+TILE_EQ:  zephyr
 BRAND:    SPWPN_SPEED
 DEX:      3
 BOOL:     seeinv

@@ -139,11 +139,13 @@ A sling made of weird green leather, oozing corrosive slime. Originally the
 weapon of a notorious mischief-maker and general scamp, it's since fallen into
 less savoury hands.
 %%%%
-bow of Krishna "Sharnga"
+longbow "Zephyr"
 
-A wonderful golden longbow that once belonged to a god of distant lands. It can
-fire as fast as thought and hurl divine arrows of terrible power — though,
-sadly, none seem to be available here.
+This bow was woven from the air itself by Eiolaiphi the air mage as a gift for
+one of the children of Uskayaw. The bow can be pulled with incredible speed,
+and it launches swift and true. It is also nearly indestructable, which is
+fortunate given that the original owner was ripped to pieces by jealous
+celebrants.
 %%%%
 giant club "Skullcrusher"
 
