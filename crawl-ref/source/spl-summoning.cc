@@ -985,7 +985,7 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
     if (mons)
     {
         // Immediately apply injury bond
-        guardian_golem_bond(mons);
+        guardian_golem_bond(*mons);
 
         mpr("A guardian golem appears, shielding your allies.");
     }

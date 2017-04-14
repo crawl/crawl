@@ -858,7 +858,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
 
     // Before the hp check since this should not care about the power of the
     // finishing blow
-    if (lost_soul_revive(mons, killer))
+    if (lost_soul_revive(*mons, killer))
         return true;
 
     // Yredelemnul special.
@@ -2661,7 +2661,7 @@ item_def* monster_die(monster& mons, killer_type killer,
              && !mons.pacified() && (!summoned || duration > 0) && !wizard
              && !mons_reset)
     {
-        treant_release_fauna(&mons);
+        treant_release_fauna(mons);
     }
     else if (!mons.is_summoned() && mummy_curse_power(mons.type) > 0)
         _mummy_curse(&mons, mummy_curse_power(mons.type), killer, killer_index);

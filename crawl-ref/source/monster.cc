@@ -5298,7 +5298,7 @@ bool monster::malmutate(const string &/*reason*/)
     // Ugly things merely change colour.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_mutate(this);
+        ugly_thing_mutate(*this);
         return true;
     }
 
@@ -5331,7 +5331,7 @@ bool monster::polymorph(int pow)
     // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_mutate(this);
+        ugly_thing_mutate(*this);
         return true;
     }
 
@@ -5346,7 +5346,7 @@ bool monster::polymorph(int pow)
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_polymorph(this);
+        slime_creature_polymorph(*this);
         return true;
     }
 

@@ -2269,7 +2269,7 @@ static void _post_monster_move(monster* mons)
     }
 
     if (mons->type == MONS_GUARDIAN_GOLEM)
-        guardian_golem_bond(mons);
+        guardian_golem_bond(*mons);
 
     // A rakshasa that has regained full health dismisses its emergency clones
     // (if they're somehow still alive) and regains the ability to summon new ones.
