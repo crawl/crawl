@@ -402,7 +402,6 @@ TILE_EQ: punk
 BRAND:   SPWPN_ACID
 BOOL:    rCorr
 
-ENUM:     ZEPHYR
 NAME:     longbow "Zephyr"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8
