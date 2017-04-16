@@ -54,15 +54,6 @@ bindkey = [G] CMD_MAP_JUMP_UP_RIGHT
 bindkey = [X] CMD_MAP_JUMP_DOWN_LEFT
 bindkey = [B] CMD_MAP_JUMP_DOWN_RIGHT
 
-bindkey = [^D] CMD_OPEN_DOOR_LEFT
-bindkey = [^H] CMD_OPEN_DOOR_DOWN
-bindkey = [^T] CMD_OPEN_DOOR_UP
-bindkey = [^N] CMD_OPEN_DOOR_RIGHT
-bindkey = [^F] CMD_OPEN_DOOR_UP_LEFT
-bindkey = [^G] CMD_OPEN_DOOR_UP_RIGHT
-bindkey = [^X] CMD_OPEN_DOOR_DOWN_LEFT
-bindkey = [^B] CMD_OPEN_DOOR_DOWN_RIGHT
-
 # drop -> (j)unk
 bindkey = [j] CMD_DROP
 # tell -> (y)ell
@@ -82,8 +73,6 @@ bindkey = [L] CMD_DISPLAY_MAP
 
 # ^D, add macro -> ^M for macro
 bindkey = [^M] CMD_MACRO_ADD
-# ^T, toggle friendly pickup -> ^Y to keep with (y)ell
-bindkey = [^Y] CMD_TOGGLE_FRIENDLY_PICKUP
 # ^F, search stashes -> ^K for no reason
 bindkey = [^K] CMD_SEARCH_STASHES
 # ^G, interlevel travel -> ^J for no reason
@@ -91,8 +80,6 @@ bindkey = [^J] CMD_INTERLEVEL_TRAVEL
 # ^X, list items and feature -> (^L)ist items and features
 bindkey = [^L] CMD_FULL_VIEW
 
-# map (F)ind -> K for no reason
-bindkey = [K] CMD_MAP_FIND_F
 # map (G)oto level -> J for no reason
 bindkey = [J] CMD_MAP_GOTO_LEVEL
 
