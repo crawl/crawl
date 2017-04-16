@@ -326,13 +326,16 @@ int raw_spell_fail(spell_type spell)
 
     // Don't cap power for failure rate purposes.
     // scale by 6, which I guess was chosen because it seems to work.
-    chance -= calc_spell_power(spell, false, true, false, 6); // realistic range: -6 to -366 (before scale -1 to -61)
+    // realistic range for spellpower: -6 to -366 (before scale -1 to -61)
+    chance -= calc_spell_power(spell, false, true, false, 6);
     chance -= (you.intel() * 2); // realistic range: -2 to -70
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
     dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
-    chance += armour_shield_penalty; // realistic range: 0 to 500 in extreme cases.
-                                     // A midlevel melee character in plate might have 40 or 50, and a caster in a robe would usually have 0.
+    chance += armour_shield_penalty; // range: 0 to 500 in extreme cases.
+                                     // A midlevel melee character in plate
+                                     // might have 40 or 50, and a caster in a
+                                     // robe would usually have 0.
 
     static const int difficulty_by_level[] =
     {
@@ -360,20 +363,16 @@ int raw_spell_fail(spell_type spell)
     // the history.)  It was calculated by |amethyst (based on one from minmay
     // in that thread) and converted to integer values using 262144 as a
     // convenient power of 2 denominator, then converted to its current form
-    // by Horner's rule.
+    // by Horner's rule, and then tweaked slightly.
     //
     // The regular (integer) polynomial form before Horner's rule is:
-    //          (x*x*x + 426*x*x + 82670*x + 6983254) / 262144
+    //          (x*x*x + 426*x*x + 82670*x + 7245398) / 262144
     //
-    // Following the old calculation, it is linear above 43.  (In fact, the
-    // old version was linear above 45, but 43 is where this version
-    // converges.) This hits 0 at a `chance` of -173, 10 at a `chance` of -72,
-    // and of course 43 at a `chance` of 43.
-    //
-    // https://www.wolframalpha.com/input/?i=graph+of+(((x+%2B+426)*x+%2B+82670)*x+%2B+6983254)+%2F+262144+with+x+from+-200+to+100
+    // https://www.wolframalpha.com/input/?i=graph+of+y%3D(((x+%2B+426)*x+%2B+82670)*x+%2B+7245398)+%2F+262144+and+y%3D100+and+x%3D125.1+with+x+from+-192+to+126.1
     //
     // If you think this is weird, you should see what was here before.
-    int chance2 = chance > 43 ? chance : max((((chance + 426) * chance + 82670) * chance + 6983254) / 262144, 0);
+    int chance2 = max((((chance + 426) * chance + 82670) * chance + 7245398)
+                      / 262144, 0);
 
     chance2 += get_form()->spellcasting_penalty;
 
@@ -393,17 +392,21 @@ int raw_spell_fail(spell_type spell)
 }
 
 /*
- * Given some spellpower in centis, do a stepdown at around 50 (5000 in centis) and return a rescaled value.
+ * Given some spellpower in centis, do a stepdown at around 50 (5000 in centis)
+ * and return a rescaled value.
  *
  * @param power the input spellpower in centis.
- * @param scale a value to scale the result by, between 1 and 1000. Default is 1, which returns a regular spellpower.  1000 gives you millis, 100 centis.
+ * @param scale a value to scale the result by, between 1 and 1000. Default is
+ *        1, which returns a regular spellpower.  1000 gives you millis, 100
+ *        centis.
  */
 int stepdown_spellpower(int power, int scale)
 {
     // use millis internally
     ASSERT_RANGE(scale, 1, 1000);
     const int divisor = 1000 / scale;
-    int result = stepdown_value(power * 10, 50000, 50000, 150000, 200000) / divisor;
+    int result = stepdown_value(power * 10, 50000, 50000, 150000, 200000)
+                    / divisor;
     return result;
 }
 
@@ -412,9 +415,14 @@ int stepdown_spellpower(int power, int scale)
  *
  * @param spell         the spell to check
  * @param apply_intel   whether to include intelligence in the calculation
- * @param fail_rate_check is this just a plain failure rate check or should it incorporate situational facts and mutations?
- * @param cap_power     whether to apply the power cap for the spell (from `spell_power_cap(spell)`)
- * @param scale         what scale to apply to the result internally?  This function has higher internal resolution than the default argument, so use this rather than dividing. This must be between 1 and 1000.
+ * @param fail_rate_check is this just a plain failure rate check or should it
+ *                      incorporate situational facts and mutations?
+ * @param cap_power     whether to apply the power cap for the spell (from
+ *                      `spell_power_cap(spell)`)
+ * @param scale         what scale to apply to the result internally?  This
+ *                      function has higher internal resolution than the default
+ *                      argument, so use this rather than dividing. This must be
+ *                      between 1 and 1000.
  *
  * @return the resulting spell power.
  */
