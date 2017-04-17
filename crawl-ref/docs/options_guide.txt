@@ -950,7 +950,7 @@ easy_confirm = (none | safe | all)
         to the letter 'y', which can result in accidentally answering
         yes to questions.
 
-simple_targeting =
+simple_targeting = false
         If set to true, disables smart targeting for explosion and bouncing
         bolt spells, making them automatically target the closest monster in
         range rather than trying to find a spot that affects multiple monsters
