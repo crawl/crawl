@@ -694,13 +694,10 @@ vector<ghost_demon> ghost_demon::find_ghosts()
 {
     vector<ghost_demon> gs;
 
-    if (you.undead_state(false) == US_ALIVE)
-    {
-        ghost_demon player;
-        player.init_player_ghost();
-        announce_ghost(player);
-        gs.push_back(player);
-    }
+    ghost_demon player;
+    player.init_player_ghost();
+    announce_ghost(player);
+    gs.push_back(player);
 
     // Pick up any other ghosts that happen to be on the level if we
     // have space. If the player is undead, add one to the ghost quota

@@ -2357,8 +2357,7 @@ static FILE* _make_bones_file(string * return_gfilename)
 /**
  * Attempt to save all ghosts from the current level.
  *
- * Including the player, if they're not undead. Doesn't save ghosts from D:1-2
- * or Temple.
+ * Including the player. Doesn't save ghosts from D:1-2 or Temple.
  *
  * @param force   Forces ghost generation even in otherwise-disallowed levels.
  **/
