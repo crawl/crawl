@@ -1135,9 +1135,8 @@ static bool _pick_db_name(const item_def &item)
     {
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
-        return coinflip();
     case OBJ_JEWELLERY:
-        return one_chance_in(5);
+        return x_chance_in_y(2, 3);
     default:
         return false;
     }
@@ -1145,7 +1144,18 @@ static bool _pick_db_name(const item_def &item)
 
 static string _artefact_name_lookup(const item_def &item, const string &lookup)
 {
-    const string name = getRandNameString(lookup);
+    string key = lookup;
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        string brand = brand_type_name(get_weapon_brand(item), false);
+        if (brand != "")
+        {
+            key.append("_");
+            key.append(brand);
+        }
+    }
+    dprf("string _artefact_name_lookup %s", key.c_str());
+    const string name = getRandNameString(key);
     return name.empty() ? name : replace_name_parts(name, item);
 }
 
