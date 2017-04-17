@@ -948,6 +948,11 @@ Orb of Electricity spell
 Hurls a crackling orb of electrical energy, creating a huge explosion on
 impact. Its damage partially bypasses armour.
 %%%%
+Overwhelming Strike spell
+
+Channels the caster's entire magical reserves to be released in a single
+intense strike upon their next successful melee attack.
+%%%%
 Ozocubu's Armour spell
 
 Envelops the caster's body in a protective layer of thick ice. This will slow

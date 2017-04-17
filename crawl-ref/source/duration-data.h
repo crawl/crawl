@@ -545,6 +545,13 @@ static const duration_def duration_data[] =
       "can't hop", "",
       "", D_NO_FLAGS,
       {{ "You are ready to hop once more." }}},
+    { DUR_OVERWHELMING_STRIKE, 
+      BLUE, "Strike",
+      "readied strike", "overwhelming strike", 
+      "You are prepared to strike with all of your magical energy.",
+      D_DISPELLABLE | D_EXPIRES,
+      {{ "You are no longer prepared to strike." },
+        { "Your ability to strike is fading." }}, 3},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

@@ -413,6 +413,25 @@ bool melee_attack::handle_phase_hit()
             }
         }
     }
+    else if (attacker->is_player() && you.duration[DUR_OVERWHELMING_STRIKE])
+    {
+        if (enough_mp(1, true, false))
+        {
+            // strike_power is set when the overwhelming strike spell is cast
+            const int pow = you.props["strike_power"].get_int();
+            const int dmg = roll_dice(you.magic_points, div_rand_round(pow, 10));
+            const int hurt = defender->apply_ac(dmg);
+
+            dprf(DIAG_COMBAT, "Overwhelming Strike: dmg = %d hurt = %d", dmg, hurt);
+
+            if (hurt > 0)
+            {
+                damage_done = hurt;
+                dec_mp(you.magic_points);
+                you.duration[DUR_OVERWHELMING_STRIKE] = 0;
+            }
+        }
+    }
 
     // This does more than just calculate the damage, it also sets up
     // messages, etc. It also wakes nearby creatures on a failed stab,

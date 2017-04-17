@@ -25,6 +25,7 @@ spret_type cast_silence(int pow, bool fail = false);
 
 spret_type cast_infusion(int pow, bool fail);
 spret_type cast_song_of_slaying(int pow, bool fail);
+spret_type cast_overwhelming_strike(int pow, bool fail);
 
 spret_type cast_liquefaction(int pow, bool fail);
 spret_type cast_shroud_of_golubria(int pow, bool fail);

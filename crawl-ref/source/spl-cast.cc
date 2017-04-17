@@ -1761,6 +1761,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_EXCRUCIATING_WOUNDS:
         return cast_excruciating_wounds(powc, fail);
 
+    case SPELL_OVERWHELMING_STRIKE:
+        return cast_overwhelming_strike(powc, fail);
+
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
         return cast_transform(powc, transformation::appendage, fail);

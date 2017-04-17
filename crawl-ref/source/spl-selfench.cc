@@ -308,6 +308,10 @@ int cast_selective_amnesia(const string &pre_msg)
 spret_type cast_infusion(int pow, bool fail)
 {
     fail_check();
+
+    if(you.duration[DUR_OVERWHELMING_STRIKE])
+        you.duration[DUR_OVERWHELMING_STRIKE] = 0;
+
     if (!you.duration[DUR_INFUSION])
         mpr("You begin infusing your attacks with magical energy.");
     else
@@ -331,6 +335,24 @@ spret_type cast_song_of_slaying(int pow, bool fail)
     you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
 
     you.props[SONG_OF_SLAYING_KEY] = 0;
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_overwhelming_strike(int pow, bool fail)
+{
+    fail_check();
+
+    if(you.duration[DUR_INFUSION])
+        you.duration[DUR_INFUSION] = 0;
+
+    if (you.duration[DUR_OVERWHELMING_STRIKE])
+        mpr("You re-prepare yourself to strike.");
+    else
+        mpr("You prepare to strike with all of your magical energy.");
+
+    you.set_duration(DUR_OVERWHELMING_STRIKE, 7 + random2(4));
+    you.props["strike_power"] = pow;
+
     return SPRET_SUCCESS;
 }
 

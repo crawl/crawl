@@ -52,6 +52,7 @@ song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
+overwhelming_strike OVERWHELMING_STRIKE
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE

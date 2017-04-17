@@ -77,6 +77,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
+    SPELL_OVERWHELMING_STRIKE,
     SPELL_DISCORD,
 },
 
