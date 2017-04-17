@@ -693,11 +693,11 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             if (emphasise(*ri))
                 env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
 
+            if (is_notable_terrain(feat) && (wizard_map || !feat_is_mimicable(feat)))
+                seen_notable_thing(feat, *ri);
+
             if (wizard_map)
             {
-                if (is_notable_terrain(feat))
-                    seen_notable_thing(feat, *ri);
-
                 set_terrain_seen(*ri);
 #ifdef USE_TILE
                 tile_wizmap_terrain(*ri);
