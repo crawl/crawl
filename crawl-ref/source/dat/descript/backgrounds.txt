@@ -75,8 +75,8 @@ other spells are quite versatile.
 %%%%
 Monk
 
-Monks start with little aside from their physical skills, developed through
-dedicated training. They gain additional piety with the first god they worship.
+Monks start with a simple weapon of their choice, and gain additional piety
+with the first god they worship.
 %%%%
 Necromancer
 
