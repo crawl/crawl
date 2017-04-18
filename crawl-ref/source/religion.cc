@@ -1045,6 +1045,168 @@ static int _preferably_unseen_item(const vector<int> &item_types,
     return item_types[random2(item_types.size())];
 }
 
+static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
+                                   int placed)
+{
+    if (placed <= 0)
+        return;
+    ASSERT(mon);
+
+    // Make sure monsters are shown.
+    viewwindow();
+    more();
+    _inc_gift_timeout(4 + random2avg(7, 2));
+    you.num_current_gifts[you.religion]++;
+    you.num_total_gifts[you.religion]++;
+    string gift;
+    if (placed == 1)
+        gift = mon->name(DESC_A);
+    else
+    {
+        gift = make_stringf("%d %s", placed,
+                            pluralise(mon->name(DESC_PLAIN)).c_str());
+    }
+
+    take_note(Note(NOTE_GOD_GIFT, you.religion, 0, gift));
+}
+
+static bool _jiyva_mutate()
+{
+    simple_god_message(" alters your body.");
+
+    const int rand = random2(100);
+
+    if (rand < 5)
+        return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
+    else if (rand < 30)
+        return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
+    else if (rand < 55)
+        return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
+    else if (rand < 75)
+        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
+    else
+        return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
+}
+
+bool vehumet_is_offering(spell_type spell)
+{
+    return you.vehumet_gifts.count(spell);
+}
+
+void vehumet_accept_gift(spell_type spell)
+{
+    if (vehumet_is_offering(spell))
+    {
+        you.vehumet_gifts.erase(spell);
+        you.seen_spell.set(spell);
+        you.duration[DUR_VEHUMET_GIFT] = 0;
+    }
+}
+
+static void _add_to_old_gifts(spell_type spell)
+{
+    you.old_vehumet_gifts.insert(spell);
+}
+
+static bool _is_old_gift(spell_type spell)
+{
+    return you.old_vehumet_gifts.count(spell);
+}
+
+static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_spells)
+{
+    set<spell_type> eligible_spells;
+
+    const int gifts = you.num_total_gifts[you.religion];
+    if (gifts >= NUM_VEHUMET_GIFTS)
+        return eligible_spells;
+
+    const int min_lev[] = {1,1,2,3,3,4,4,5,5,6,6,6,8};
+    const int max_lev[] = {1,2,3,4,5,7,7,7,7,7,7,7,9};
+    COMPILE_CHECK(ARRAYSZ(min_lev) == NUM_VEHUMET_GIFTS);
+    COMPILE_CHECK(ARRAYSZ(max_lev) == NUM_VEHUMET_GIFTS);
+    int min_level = min_lev[gifts];
+    int max_level = max_lev[gifts];
+
+    if (min_level > you.experience_level)
+        return eligible_spells;
+
+    set<spell_type> backup_spells;
+    for (int i = 0; i < NUM_SPELLS; ++i)
+    {
+        spell_type spell = static_cast<spell_type>(i);
+        if (!is_valid_spell(spell))
+            continue;
+
+        if (excluded_spells.count(spell))
+            continue;
+
+        if (vehumet_supports_spell(spell)
+            && !you.has_spell(spell)
+            && is_player_spell(spell)
+            && spell_difficulty(spell) <= max_level
+            && spell_difficulty(spell) >= min_level)
+        {
+            if (!you.seen_spell[spell] && !_is_old_gift(spell))
+                eligible_spells.insert(spell);
+            else
+                backup_spells.insert(spell);
+        }
+    }
+    // Don't get stuck just because all spells have been seen/offered.
+    if (eligible_spells.empty())
+    {
+        if (backup_spells.empty())
+        {
+            // This is quite improbable to happen, but in this case just
+            // skip the gift and increment the gift counter.
+            if (gifts <= 12)
+            {
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
+            }
+        }
+        return backup_spells;
+    }
+    return eligible_spells;
+}
+
+static int _vehumet_weighting(spell_type spell)
+{
+    int bias = 100 + elemental_preference(spell, 10);
+    return bias;
+}
+
+static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
+{
+    set<spell_type> eligible_spells = _vehumet_eligible_gift_spells(excluded_spells);
+    spell_type spell = SPELL_NO_SPELL;
+    int total_weight = 0;
+    int this_weight = 0;
+    for (auto elig : eligible_spells)
+    {
+        this_weight = _vehumet_weighting(elig);
+        total_weight += this_weight;
+        if (x_chance_in_y(this_weight, total_weight))
+            spell = elig;
+    }
+    return spell;
+}
+
+static set<spell_type> _vehumet_get_spell_gifts()
+{
+    set<spell_type> offers;
+    unsigned int num_offers = you.num_total_gifts[you.religion] == 12 ? 3 : 1;
+    while (offers.size() < num_offers)
+    {
+        spell_type offer = _vehumet_find_spell_gift(offers);
+        if (offer == SPELL_NO_SPELL)
+            break;
+        offers.insert(offer);
+    }
+    return offers;
+}
+
 /// Has the player ID'd the given type of wand?
 static bool _seen_wand(int wand)
 {
@@ -1185,6 +1347,257 @@ static bool _give_pakellas_gift()
     return false;
 }
 
+static bool _give_trog_oka_gift(bool forced)
+{
+    bool success = false;
+    // Break early if giving a gift now means it would be lost.
+    if (!(feat_has_solid_floor(grd(you.pos()))
+        || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
+    {
+        return false;
+    }
+
+    // Should gift catnip instead.
+    if (you.species == SP_FELID)
+        return false;
+
+    const bool need_missiles = _need_missile_gift(forced);
+    object_class_type gift_type;
+
+    if (forced && coinflip()
+        || (!forced && you.piety >= piety_breakpoint(4)
+            && random2(you.piety) > 120
+            && one_chance_in(4)))
+    {
+        if (you_worship(GOD_TROG)
+            || (you_worship(GOD_OKAWARU) && coinflip()))
+        {
+            gift_type = OBJ_WEAPONS;
+        }
+        else
+            gift_type = OBJ_ARMOUR;
+    }
+    else if (need_missiles)
+        gift_type = OBJ_MISSILES;
+    else
+        return false;
+
+    success = acquirement(gift_type, you.religion);
+    if (success)
+    {
+        if (gift_type == OBJ_MISSILES)
+        {
+            simple_god_message(" grants you ammunition!");
+            _inc_gift_timeout(4 + roll_dice(2, 4));
+        }
+        else
+        {
+            if (gift_type == OBJ_WEAPONS)
+                simple_god_message(" grants you a weapon!");
+            else
+                simple_god_message(" grants you armour!");
+            // Okawaru charges extra for armour acquirements.
+            if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
+                _inc_gift_timeout(30 + random2avg(15, 2));
+
+            _inc_gift_timeout(30 + random2avg(19, 2));
+        }
+        you.num_current_gifts[you.religion]++;
+        you.num_total_gifts[you.religion]++;
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+    }
+		return success;
+}
+
+static bool _give_yred_gift(bool forced)
+{
+    bool success = false;
+    if (forced || (random2(you.piety) >= piety_breakpoint(2)
+                   && one_chance_in(4)))
+    {
+        unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
+                                 + you.num_current_gifts[you.religion] / 2;
+        threshold = max(threshold,
+            static_cast<unsigned int>(MIN_YRED_SERVANT_THRESHOLD));
+        threshold = min(threshold,
+            static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
+
+        if (yred_random_servants(threshold) != -1)
+        {
+            delayed_monster_done(" grants you @servant@!",
+                                 _delayed_gift_callback);
+            success = true;
+        }
+    }
+    return success;
+}
+
+static bool _gift_jiyva_gift(bool forced)
+{
+    if (forced || you.piety >= piety_breakpoint(2)
+                  && random2(you.piety) > 50
+                  && one_chance_in(4) && !you.gift_timeout
+                  && you.can_safely_mutate())
+    {
+        if (_jiyva_mutate())
+        {
+            _inc_gift_timeout(15 + roll_dice(2, 4));
+            you.num_current_gifts[you.religion]++;
+            you.num_total_gifts[you.religion]++;
+            return true;
+        }
+        else
+            mpr("You feel as though nothing has changed.");
+    }
+    return false;
+}
+
+static bool _handle_uskayaw_ability_unlocks()
+{
+    bool success = false;
+    // Uskayaw's triggered abilities trigger if you set the timer to -1.
+    // We do this so that we trigger at the end of the round instead of
+    // at the time we deal damage.
+    if (you.piety == piety_breakpoint(2)
+        && you.props[USKAYAW_AUDIENCE_TIMER].get_int() == 0)
+    {
+        you.props[USKAYAW_AUDIENCE_TIMER] = -1;
+        success = true;
+    }
+    else if (you.piety == piety_breakpoint(3)
+        && you.props[USKAYAW_BOND_TIMER].get_int() == 0)
+    {
+        you.props[USKAYAW_BOND_TIMER] = -1;
+        success = true;
+    }
+    return success;
+}
+
+static bool _gift_sif_kiku_gift(bool forced)
+{
+    bool success = false;
+    book_type gift = NUM_BOOKS;
+    // Break early if giving a gift now means it would be lost.
+    if (!feat_has_solid_floor(grd(you.pos())))
+        return false;
+
+    // Kikubaaqudgha gives the lesser Necromancy books in a quick
+    // succession.
+    if (you_worship(GOD_KIKUBAAQUDGHA))
+    {
+        if (you.piety >= piety_breakpoint(0)
+            && you.num_total_gifts[you.religion] == 0)
+        {
+            gift = BOOK_NECROMANCY;
+        }
+        else if (you.piety >= piety_breakpoint(2)
+                 && you.num_total_gifts[you.religion] == 1)
+        {
+            gift = BOOK_DEATH;
+        }
+    }
+    else if (forced || you.piety >= piety_breakpoint(4)
+                       && random2(you.piety) > 100)
+    {
+        // Sif Muna special: Keep quiet if acquirement fails
+        // because the player already has seen all spells.
+        if (you_worship(GOD_SIF_MUNA))
+            success = acquirement(OBJ_BOOKS, you.religion, true);
+    }
+
+    if (gift != NUM_BOOKS)
+    {
+        int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
+                                  you.religion);
+        // Replace a Kiku gift by a custom-random book.
+        if (you_worship(GOD_KIKUBAAQUDGHA))
+        {
+            make_book_kiku_gift(mitm[thing_created],
+                                gift == BOOK_NECROMANCY);
+        }
+        if (thing_created == NON_ITEM)
+            return false;
+
+        // Mark the book type as known to avoid duplicate
+        // gifts if players don't read their gifts for some
+        // reason.
+        mark_had_book(gift);
+
+        move_item_to_grid(&thing_created, you.pos(), true);
+
+        if (thing_created != NON_ITEM)
+            success = true;
+    }
+
+    if (success)
+    {
+        simple_god_message(" grants you a gift!");
+        // included in default force_more_message
+
+        you.num_current_gifts[you.religion]++;
+        you.num_total_gifts[you.religion]++;
+        // Timeouts are meaningless for Kiku.
+        if (!you_worship(GOD_KIKUBAAQUDGHA))
+            _inc_gift_timeout(40 + random2avg(19, 2));
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+    }
+
+    return success;
+}
+
+static bool _handle_veh_gift(bool forced)
+{
+    bool success = false;
+    const int gifts = you.num_total_gifts[you.religion];
+    if (forced || !you.duration[DUR_VEHUMET_GIFT]
+                  && (you.piety >= piety_breakpoint(0) && gifts == 0
+                      || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
+                      || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
+                      || you.piety >= piety_breakpoint(5) && gifts <= 12 && one_chance_in(20)))
+    {
+        set<spell_type> offers = _vehumet_get_spell_gifts();
+        if (!offers.empty())
+        {
+            you.vehumet_gifts = offers;
+            string prompt = " offers you knowledge of ";
+            for (auto it = offers.begin(); it != offers.end(); ++it)
+            {
+                if (it != offers.begin())
+                {
+                    if (offers.size() > 2)
+                        prompt += ",";
+                    prompt += " ";
+                    auto next = it;
+                    next++;
+                    if (next == offers.end())
+                        prompt += "and ";
+                }
+                prompt += spell_title(*it);
+                _add_to_old_gifts(*it);
+                take_note(Note(NOTE_OFFERED_SPELL, *it));
+            }
+            prompt += ".";
+            if (gifts >= NUM_VEHUMET_GIFTS - 1)
+            {
+                prompt += " These spells will remain available"
+                          " as long as you worship Vehumet.";
+            }
+
+            you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
+            if (gifts >= 5)
+                _inc_gift_timeout(30 + random2avg(30, 2));
+            you.num_current_gifts[you.religion]++;
+            you.num_total_gifts[you.religion]++;
+
+            simple_god_message(prompt.c_str());
+            // included in default force_more_message
+
+            success = true;
+        }
+    }
+    return success;
+}
+
 static bool _give_zin_gift()
 {
     if (!you.how_mutated())
@@ -1195,8 +1608,11 @@ static bool _give_zin_gift()
     {
         mpr("Zin's grace purifies you.");
         _inc_gift_timeout(15 + roll_dice(2, 4));
+        success = true;
     }
-    return true;
+    else
+        success = false;
+    return success;
 }
 
 void mons_make_god_gift(monster& mon, god_type god)
@@ -1276,50 +1692,6 @@ bool is_follower(const monster& mon)
         return _is_plant_follower(&mon);
     else
         return mon.alive() && mon.attitude == ATT_FRIENDLY;
-}
-
-
-static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
-                                   int placed)
-{
-    if (placed <= 0)
-        return;
-    ASSERT(mon);
-
-    // Make sure monsters are shown.
-    viewwindow();
-    more();
-    _inc_gift_timeout(4 + random2avg(7, 2));
-    you.num_current_gifts[you.religion]++;
-    you.num_total_gifts[you.religion]++;
-    string gift;
-    if (placed == 1)
-        gift = mon->name(DESC_A);
-    else
-    {
-        gift = make_stringf("%d %s", placed,
-                            pluralise(mon->name(DESC_PLAIN)).c_str());
-    }
-
-    take_note(Note(NOTE_GOD_GIFT, you.religion, 0, gift));
-}
-
-static bool _jiyva_mutate()
-{
-    simple_god_message(" alters your body.");
-
-    const int rand = random2(100);
-
-    if (rand < 5)
-        return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 30)
-        return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 55)
-        return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
-    else if (rand < 75)
-        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
-    else
-        return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
 
 /**
@@ -1641,125 +2013,6 @@ void upgrade_hepliaklqana_shield(const monster &ancestor, item_def &item)
     item.quantity = 1;
 }
 
-bool vehumet_is_offering(spell_type spell)
-{
-    return you.vehumet_gifts.count(spell);
-}
-
-void vehumet_accept_gift(spell_type spell)
-{
-    if (vehumet_is_offering(spell))
-    {
-        you.vehumet_gifts.erase(spell);
-        you.seen_spell.set(spell);
-        you.duration[DUR_VEHUMET_GIFT] = 0;
-    }
-}
-
-static void _add_to_old_gifts(spell_type spell)
-{
-    you.old_vehumet_gifts.insert(spell);
-}
-
-static bool _is_old_gift(spell_type spell)
-{
-    return you.old_vehumet_gifts.count(spell);
-}
-
-static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_spells)
-{
-    set<spell_type> eligible_spells;
-
-    const int gifts = you.num_total_gifts[you.religion];
-    if (gifts >= NUM_VEHUMET_GIFTS)
-        return eligible_spells;
-
-    const int min_lev[] = {1,1,2,3,3,4,4,5,5,6,6,6,8};
-    const int max_lev[] = {1,2,3,4,5,7,7,7,7,7,7,7,9};
-    COMPILE_CHECK(ARRAYSZ(min_lev) == NUM_VEHUMET_GIFTS);
-    COMPILE_CHECK(ARRAYSZ(max_lev) == NUM_VEHUMET_GIFTS);
-    int min_level = min_lev[gifts];
-    int max_level = max_lev[gifts];
-
-    if (min_level > you.experience_level)
-        return eligible_spells;
-
-    set<spell_type> backup_spells;
-    for (int i = 0; i < NUM_SPELLS; ++i)
-    {
-        spell_type spell = static_cast<spell_type>(i);
-        if (!is_valid_spell(spell))
-            continue;
-
-        if (excluded_spells.count(spell))
-            continue;
-
-        if (vehumet_supports_spell(spell)
-            && !you.has_spell(spell)
-            && is_player_spell(spell)
-            && spell_difficulty(spell) <= max_level
-            && spell_difficulty(spell) >= min_level)
-        {
-            if (!you.seen_spell[spell] && !_is_old_gift(spell))
-                eligible_spells.insert(spell);
-            else
-                backup_spells.insert(spell);
-        }
-    }
-    // Don't get stuck just because all spells have been seen/offered.
-    if (eligible_spells.empty())
-    {
-        if (backup_spells.empty())
-        {
-            // This is quite improbable to happen, but in this case just
-            // skip the gift and increment the gift counter.
-            if (gifts <= 12)
-            {
-                you.num_current_gifts[you.religion]++;
-                you.num_total_gifts[you.religion]++;
-            }
-        }
-        return backup_spells;
-    }
-    return eligible_spells;
-}
-
-static int _vehumet_weighting(spell_type spell)
-{
-    int bias = 100 + elemental_preference(spell, 10);
-    return bias;
-}
-
-static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
-{
-    set<spell_type> eligible_spells = _vehumet_eligible_gift_spells(excluded_spells);
-    spell_type spell = SPELL_NO_SPELL;
-    int total_weight = 0;
-    int this_weight = 0;
-    for (auto elig : eligible_spells)
-    {
-        this_weight = _vehumet_weighting(elig);
-        total_weight += this_weight;
-        if (x_chance_in_y(this_weight, total_weight))
-            spell = elig;
-    }
-    return spell;
-}
-
-static set<spell_type> _vehumet_get_spell_gifts()
-{
-    set<spell_type> offers;
-    unsigned int num_offers = you.num_total_gifts[you.religion] == 12 ? 3 : 1;
-    while (offers.size() < num_offers)
-    {
-        spell_type offer = _vehumet_find_spell_gift(offers);
-        if (offer == SPELL_NO_SPELL)
-            break;
-        offers.insert(offer);
-    }
-    return offers;
-}
-
 ///////////////////////////////
 bool do_god_gift(bool forced)
 {
@@ -1797,245 +2050,28 @@ bool do_god_gift(bool forced)
 
         case GOD_OKAWARU:
         case GOD_TROG:
-        {
-            // Break early if giving a gift now means it would be lost.
-            if (!(feat_has_solid_floor(grd(you.pos()))
-                || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
-            {
-                break;
-            }
-
-            // Should gift catnip instead.
-            if (you.species == SP_FELID)
-                break;
-
-            const bool need_missiles = _need_missile_gift(forced);
-            object_class_type gift_type;
-
-            if (forced && coinflip()
-                || (!forced && you.piety >= piety_breakpoint(4)
-                    && random2(you.piety) > 120
-                    && one_chance_in(4)))
-            {
-                if (you_worship(GOD_TROG)
-                    || (you_worship(GOD_OKAWARU) && coinflip()))
-                {
-                    gift_type = OBJ_WEAPONS;
-                }
-                else
-                    gift_type = OBJ_ARMOUR;
-            }
-            else if (need_missiles)
-                gift_type = OBJ_MISSILES;
-            else
-                break;
-
-            success = acquirement(gift_type, you.religion);
-            if (success)
-            {
-                if (gift_type == OBJ_MISSILES)
-                {
-                    simple_god_message(" grants you ammunition!");
-                    _inc_gift_timeout(4 + roll_dice(2, 4));
-                }
-                else
-                {
-                    if (gift_type == OBJ_WEAPONS)
-                        simple_god_message(" grants you a weapon!");
-                    else
-                        simple_god_message(" grants you armour!");
-                    // Okawaru charges extra for armour acquirements.
-                    if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
-                        _inc_gift_timeout(30 + random2avg(15, 2));
-
-                    _inc_gift_timeout(30 + random2avg(19, 2));
-                }
-                you.num_current_gifts[you.religion]++;
-                you.num_total_gifts[you.religion]++;
-                take_note(Note(NOTE_GOD_GIFT, you.religion));
-            }
+            success = _give_trog_oka_gift(forced);
             break;
-        }
 
         case GOD_YREDELEMNUL:
-            if (forced || (random2(you.piety) >= piety_breakpoint(2)
-                           && one_chance_in(4)))
-            {
-                unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
-                                         + you.num_current_gifts[you.religion] / 2;
-                threshold = max(threshold,
-                    static_cast<unsigned int>(MIN_YRED_SERVANT_THRESHOLD));
-                threshold = min(threshold,
-                    static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
-
-                if (yred_random_servants(threshold) != -1)
-                {
-                    delayed_monster_done(" grants you @servant@!",
-                                         _delayed_gift_callback);
-                    success = true;
-                }
-            }
+            success = _give_yred_gift(forced);
             break;
 
         case GOD_JIYVA:
-            if (forced || you.piety >= piety_breakpoint(2)
-                          && random2(you.piety) > 50
-                          && one_chance_in(4) && !you.gift_timeout
-                          && you.can_safely_mutate())
-            {
-                if (_jiyva_mutate())
-                {
-                    _inc_gift_timeout(15 + roll_dice(2, 4));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                }
-                else
-                    mpr("You feel as though nothing has changed.");
-            }
+            success = _gift_jiyva_gift(forced);
             break;
 
         case GOD_USKAYAW:
-            // Uskayaw's triggered abilities trigger if you set the timer to -1.
-            // We do this so that we trigger at the end of the round instead of
-            // at the time we deal damage.
-            if (you.piety == piety_breakpoint(2)
-                && you.props[USKAYAW_AUDIENCE_TIMER].get_int() == 0)
-            {
-                you.props[USKAYAW_AUDIENCE_TIMER] = -1;
-                success = true;
-            }
-            else if (you.piety == piety_breakpoint(3)
-                && you.props[USKAYAW_BOND_TIMER].get_int() == 0)
-            {
-                you.props[USKAYAW_BOND_TIMER] = -1;
-                success = true;
-            }
-            else
-                success = false;
-
+            success = _handle_uskayaw_ability_unlocks();
             break;
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-        {
-            book_type gift = NUM_BOOKS;
-            // Break early if giving a gift now means it would be lost.
-            if (!feat_has_solid_floor(grd(you.pos())))
-                break;
-
-            // Kikubaaqudgha gives the lesser Necromancy books in a quick
-            // succession.
-            if (you_worship(GOD_KIKUBAAQUDGHA))
-            {
-                if (you.piety >= piety_breakpoint(0)
-                    && you.num_total_gifts[you.religion] == 0)
-                {
-                    gift = BOOK_NECROMANCY;
-                }
-                else if (you.piety >= piety_breakpoint(2)
-                         && you.num_total_gifts[you.religion] == 1)
-                {
-                    gift = BOOK_DEATH;
-                }
-            }
-            else if (forced || you.piety >= piety_breakpoint(4)
-                               && random2(you.piety) > 100)
-            {
-                // Sif Muna special: Keep quiet if acquirement fails
-                // because the player already has seen all spells.
-                if (you_worship(GOD_SIF_MUNA))
-                    success = acquirement(OBJ_BOOKS, you.religion, true);
-            }
-
-            if (gift != NUM_BOOKS)
-            {
-                int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
-                                          you.religion);
-                // Replace a Kiku gift by a custom-random book.
-                if (you_worship(GOD_KIKUBAAQUDGHA))
-                {
-                    make_book_kiku_gift(mitm[thing_created],
-                                        gift == BOOK_NECROMANCY);
-                }
-                if (thing_created == NON_ITEM)
-                    return false;
-
-                // Mark the book type as known to avoid duplicate
-                // gifts if players don't read their gifts for some
-                // reason.
-                mark_had_book(gift);
-
-                move_item_to_grid(&thing_created, you.pos(), true);
-
-                if (thing_created != NON_ITEM)
-                    success = true;
-            }
-
-            if (success)
-            {
-                simple_god_message(" grants you a gift!");
-                // included in default force_more_message
-
-                you.num_current_gifts[you.religion]++;
-                you.num_total_gifts[you.religion]++;
-                // Timeouts are meaningless for Kiku.
-                if (!you_worship(GOD_KIKUBAAQUDGHA))
-                    _inc_gift_timeout(40 + random2avg(19, 2));
-                take_note(Note(NOTE_GOD_GIFT, you.religion));
-            }
+            success = _gift_sif_kiku_gift(forced);
             break;
-        }              // End of book gods.
 
         case GOD_VEHUMET:
-            const int gifts = you.num_total_gifts[you.religion];
-            if (forced || !you.duration[DUR_VEHUMET_GIFT]
-                          && (you.piety >= piety_breakpoint(0) && gifts == 0
-                              || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
-                              || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
-                              || you.piety >= piety_breakpoint(5) && gifts <= 12 && one_chance_in(20)))
-            {
-                set<spell_type> offers = _vehumet_get_spell_gifts();
-                if (!offers.empty())
-                {
-                    you.vehumet_gifts = offers;
-                    string prompt = " offers you knowledge of ";
-                    for (auto it = offers.begin(); it != offers.end(); ++it)
-                    {
-                        if (it != offers.begin())
-                        {
-                            if (offers.size() > 2)
-                                prompt += ",";
-                            prompt += " ";
-                            auto next = it;
-                            next++;
-                            if (next == offers.end())
-                                prompt += "and ";
-                        }
-                        prompt += spell_title(*it);
-                        _add_to_old_gifts(*it);
-                        take_note(Note(NOTE_OFFERED_SPELL, *it));
-                    }
-                    prompt += ".";
-                    if (gifts >= NUM_VEHUMET_GIFTS - 1)
-                    {
-                        prompt += " These spells will remain available"
-                                  " as long as you worship Vehumet.";
-                    }
-
-                    you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
-                    if (gifts >= 5)
-                        _inc_gift_timeout(30 + random2avg(30, 2));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-
-                    simple_god_message(prompt.c_str());
-                    // included in default force_more_message
-
-                    success = true;
-                }
-                else
-                    success = false;
-            }
+            success = _handle_veh_gift(forced);
             break;
         }                       // switch (you.religion)
     }                           // End of gift giving.
