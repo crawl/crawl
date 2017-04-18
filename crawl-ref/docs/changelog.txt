@@ -9,14 +9,18 @@ Highlights
 
 Branches, Environment
 ---------------------
-* The Slime treasure vault's walls are breached on their master's death.
+* The Slime Pits treasure vault walls are breached when the Royal Jelly dies.
 * Web traps created in play (by e.g. jumping spiders) are destroyed on
   escape.
+* The Tomb of Ancients now has one-way escape hatches with return hatches
+  nearby instead of stairs.
 
 Character
 ---------
 * New species: Barachim, with an powerful innate Hop ability and good
   aptitudes balanced by slow movement and an increased base LOS radius.
+* New species: Gnoll, which learns all skills rapidly at first, learning much more
+  slowly later on, and which can sense nearby items.
 * Ogre aptitudes have been adjusted, trading M&F skill for spells.
 * Mummies' spellcasting aptitude has been increased to +2, from -1.
 * Deep dwarves have an innate ability that heals them and has a chance of
@@ -31,14 +35,15 @@ Gods
 ----
 * New temple god: the Wu Jian Council.
   - Grants free 'martial' attacks from certain movement actions:
-    * 1*: Moving between tiles adjacent to a monster triggers 'Whirlwind'.
-      Attacks all adjacent foes, and inflicts Slow.
-    * 2*: Moving against solid obstacles triggers Wall Jump. Moves two tiles in
-      the opposite direction, and attacks and distracts all adjacent enemies.
+    * 1*: Moving between tiles adjacent to a monster triggers 'Whirlwind',
+      which attacks all adjacent foes.
+    * 2*: Moving against solid obstacles triggers a Wall Jump attack to a
+      nearby monster. Moves two tiles in the opposite direction, and attacks
+      and distracts all adjacent enemies.
     * 3*: Moving toward an enemy triggers 'Lunge'. Attacks the enemy, and does
       extra damage to slowed or distracted enemies.
-  - 4*: Active 'Serpent's Lash' abilitiy, granting two free movement actions.
-  - 5*: Active 'Heaven on Earth' ability, creating opaque clouds and increasing
+  - 4*: Active 'Serpent's Lash' ability, granting two free movement actions.
+  - 5*: Active 'Heavenly Storm' ability, creating opaque clouds and increasing
     your martial prowess while you continue to use 'martial' attacks.
   - Piety is gained through defeating foes.
 * The Shining One:
@@ -51,9 +56,13 @@ Gods
 Interface
 ---------
 * Noise from the last turn is displayed in the top-right, replacing gold.
+* New equip_bar option that replaces the noise display with a display of the
+  glyphs of your equipped items.
 * Monsters' melee attacks are now included in their descriptions.
 * The player's odds of succeeding with melee confusion attacks is displayed.
 * auto_butcher can be configured to trigger on different hunger levels.
+* Stash searches now hide distant duplicate matches of weapons, armour, and
+  ammo by default.
 
 Items
 -----
@@ -76,8 +85,12 @@ Items
   - Shield of Ignorance: Now +10 {Int-4, rN+}. *Curse, AC+4 removed.
   - Sword of Jihad: renamed to Zealot's Sword.
   - Sceptre of Torment only torments on-hit, rather than randomly.
+  - The Captain's Cutlass no longer chops off hydra heads.
+  - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of Krishna
+    "Shargna" is renamed to the longbow "Zephyr".
 * Potions of cure mutation, beneficial mutation, and mutation have been merged.
 * All types of food take one turn to eat.
+* All types of manuals are pre-identified.
 * Removed:
   - Wands of heal wounds, haste, teleportation, and slowing.
   - Rods.
@@ -93,6 +106,10 @@ Monsters
 * Two-headed ogres are significantly stronger.
 * The 'draining' effect once again lowers monsters' MR.
 * Various unique monsters give better rewards for defeating them.
+* Monsters such as alligators get a larger movement speed increase when using
+  their Sprint ability.
+* Maurice and Ijyb now always have wands, and Ijyb first appears a bit deeper
+  in the Dungeon.
 * Removed:
   - Mottled draconians.
   - Draconian zealots.
