@@ -813,6 +813,7 @@ public:
 
         string msg = "Really drink that potion of mutation";
         msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
+        msg += you_worship(GOD_ZIN) ? " (Zin will be displeased!)" : "";
         if (was_known && (you_worship(GOD_ZIN) || you.rmut_from_item())
             && !yesno(msg.c_str(), false, 'n'))
         {
