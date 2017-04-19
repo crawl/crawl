@@ -81,9 +81,10 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 const string &title = "Your Spells",
                 spell_selector selector = nullptr);
 int raw_spell_fail(spell_type spell);
-int stepdown_spellpower(int power);
+int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,
-                     bool fail_rate_chk = false, bool cap_power = true);
+                     bool fail_rate_chk = false, bool cap_power = true,
+                     int scale = 1);
 int calc_spell_range(spell_type spell, int power = 0);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);

@@ -89,9 +89,13 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
             }
             else
             {
+                // The canvas is scaled by devicePixelRatio (see util.js), so the
+                // cell dimensions need to be similarly scaled for purposes of
+                // getting the selected cell.
+                var ratio = window.devicePixelRatio;
                 var loc = {
-                    x: Math.round(ev.clientX / this.cell_width + this.view.x - 0.5),
-                    y: Math.round(ev.clientY / this.cell_height + this.view.y - 0.5)
+                    x: Math.round(ev.clientX / (this.cell_width / ratio) + this.view.x - 0.5),
+                    y: Math.round(ev.clientY / (this.cell_height / ratio) + this.view.y - 0.5)
                 };
 
                 view_data.place_cursor(enums.CURSOR_MOUSE, loc);

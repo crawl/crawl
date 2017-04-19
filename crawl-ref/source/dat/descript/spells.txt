@@ -642,8 +642,7 @@ Speeds the actions of a nearby ally.
 %%%%
 Haste spell
 
-Speeds the actions of a targeted creature. While hasted you will gain magical
-contamination.
+Speeds the actions of a targeted creature.
 %%%%
 Haunt spell
 
