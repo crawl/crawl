@@ -1710,6 +1710,19 @@ Vine Stalkers
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
+Gnolls
+  Gnolls are a race of caniform humanoids hailing from the arid deserts and
+  grasslands of the east. With a variety of lurid tales told of them, others
+  avoid the Gnolls. Despite their isolation, Gnolls are unusually drawn to
+  the Dungeon.
+
+  Gnolls are quick to learn, picking up the basics of any skill within a
+  short period of time. Their attention wanes quickly, though, and they find it
+  more and more difficult to train a given skill the more practised they become
+  at it. Thus, Gnolls often prefer to dabble in a wide variety of fresh
+  and interesting skills. Their powerful noses indicate to them where treasures
+  lay hidden in the Dungeon.
+
 The Undead
 ========================================
 

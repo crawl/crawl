@@ -315,8 +315,6 @@ static const ability_def Ability_List[] =
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, {}, abflag::instant },
 #endif
-    { ABIL_STOP_SINGING, "Stop Singing",
-      0, 0, 0, 0, {}, abflag::none },
     { ABIL_CANCEL_PPROJ, "Cancel Portal Projectile",
       0, 0, 0, 0, {}, abflag::instant },
 
@@ -638,7 +636,7 @@ static const ability_def Ability_List[] =
     // Wu Jian
     { ABIL_WU_JIAN_SERPENTS_LASH, "Serpent's Lash",
         0, 0, 0, 4, {fail_basis::invo}, abflag::exhaustion | abflag::instant },
-    { ABIL_WU_JIAN_HEAVEN_ON_EARTH, "Heaven On Earth",
+    { ABIL_WU_JIAN_HEAVENLY_STORM, "Heavenly Storm",
         0, 0, 0, 20, {fail_basis::invo, piety_breakpoint(5), 0, 1}, abflag::none },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, {fail_basis::invo}, abflag::none },
@@ -977,7 +975,7 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        if (player_mutation_level(MUT_NO_LOVE))
+        if (you.get_mutation_level(MUT_NO_LOVE))
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -1009,7 +1007,7 @@ static int _adjusted_failure_chance(ability_type ability, int base_chance)
         return base_chance;
 
     case ABIL_BLINK:
-        return 48 - (17 * player_mutation_level(MUT_BLINK))
+        return 48 - (17 * you.get_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
         break;
 
@@ -1147,8 +1145,8 @@ void no_ability_msg()
             mpr("Sorry, you're too full to transform right now.");
         }
     }
-    else if (player_mutation_level(MUT_TENGU_FLIGHT)
-             || player_mutation_level(MUT_BIG_WINGS))
+    else if (you.get_mutation_level(MUT_TENGU_FLIGHT)
+             || you.get_mutation_level(MUT_BIG_WINGS))
     {
         if (you.airborne())
             mpr("You're already flying!");
@@ -1342,7 +1340,7 @@ static bool _check_ability_possible(const ability_def& abil,
     }
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
-        if (!how_mutated())
+        if (!you.how_mutated())
         {
             if (!quiet)
                 mpr("You have no mutations to be cured!");
@@ -1639,7 +1637,6 @@ bool activate_talent(const talent& tal)
 #if TAG_MAJOR_VERSION == 34
         case ABIL_DELAYED_FIREBALL:
 #endif
-        case ABIL_STOP_SINGING:
         case ABIL_CANCEL_PPROJ:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
@@ -2115,12 +2112,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 3));
         }
 
-        break;
-
-    case ABIL_STOP_SINGING:
-        fail_check();
-        you.duration[DUR_SONG_OF_SLAYING] = 0;
-        mpr("You stop singing.");
         break;
 
     case ABIL_CANCEL_PPROJ:
@@ -3115,7 +3106,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.redraw_status_lights = true;
         return SPRET_SUCCESS;
 
-    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
+    case ABIL_WU_JIAN_HEAVENLY_STORM:
         fail_check();
         mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
         wu_jian_sifu_message(" says: The storm will not cease as long as you "
@@ -3127,8 +3118,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                 place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
         }
 
-        you.attribute[ATTR_HEAVEN_ON_EARTH] = 12;
-        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+        you.attribute[ATTR_HEAVENLY_STORM] = 12;
+        you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
         invalidate_agrid(true);
         break;
 
@@ -3395,13 +3386,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
     }
 
-    if (player_mutation_level(MUT_HOP))
+    if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
-    if (player_mutation_level(MUT_SPIT_POISON) == 2)
+    if (you.get_mutation_level(MUT_SPIT_POISON) == 2)
         _add_talent(talents, ABIL_BREATHE_POISON, check_confused);
-    else if (player_mutation_level(MUT_SPIT_POISON))
+    else if (you.get_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
 
     if (species_is_draconian(you.species)
@@ -3420,7 +3411,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
-    if (player_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
+    if (you.get_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
         || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
     {
         // Tengu can fly, but only from the ground
@@ -3436,13 +3427,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
 
     // Mutations
-    if (player_mutation_level(MUT_HURL_DAMNATION))
+    if (you.get_mutation_level(MUT_HURL_DAMNATION))
         _add_talent(talents, ABIL_DAMNATION, check_confused);
 
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
 
-    if (player_mutation_level(MUT_BLINK))
+    if (you.get_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
@@ -3473,42 +3464,40 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 #endif
 
-    if (you.duration[DUR_SONG_OF_SLAYING])
-        _add_talent(talents, ABIL_STOP_SINGING, check_confused);
     if (you.duration[DUR_PORTAL_PROJECTILE])
         _add_talent(talents, ABIL_CANCEL_PPROJ, check_confused);
 
     // Evocations from items.
     if (you.scan_artefacts(ARTP_BLINK)
-        && !player_mutation_level(MUT_NO_ARTIFICE))
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
     }
 
     if (player_equip_unrand(UNRAND_THIEF)
-        && !player_mutation_level(MUT_NO_ARTIFICE))
+        && !you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
     }
 
     if (player_equip_unrand(UNRAND_RATSKIN_CLOAK)
-        && !player_mutation_level(MUT_NO_ARTIFICE)
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_ARTIFICE)
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         _add_talent(talents, ABIL_EVOKE_RATSKIN, check_confused);
     }
 
-    if (you.evokable_berserk() && !player_mutation_level(MUT_NO_ARTIFICE))
+    if (you.evokable_berserk() && !you.get_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
     if (you.evokable_invis()
-        && !player_mutation_level(MUT_NO_ARTIFICE)
+        && !you.get_mutation_level(MUT_NO_ARTIFICE)
         && !you.duration[DUR_INVIS])
     {
         _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
-    if (you.evokable_flight() && !player_mutation_level(MUT_NO_ARTIFICE))
+    if (you.evokable_flight() && !you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         // Has no effect on permanently flying Tengu.
         if (!you.permanent_flight() || !you.racial_permanent_flight())

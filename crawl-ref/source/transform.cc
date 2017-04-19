@@ -511,7 +511,7 @@ public:
      */
     string transform_message(transformation previous_trans) const override
     {
-        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
 
         // XXX: a little ugly
         return make_stringf("Your %s turn%s into%s razor-sharp scythe blade%s.",
@@ -524,7 +524,7 @@ public:
      */
     string get_untransform_message() const override
     {
-        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
 
         // XXX: a little ugly
         return make_stringf("Your %s revert%s to %s normal proportions.",
@@ -594,7 +594,7 @@ public:
         if (you.has_usable_tentacles(true))
             return "Stone tentacles";
 
-        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
         return make_stringf("Stone fist%s", singular ? "" : "s");
     }
 };
@@ -620,7 +620,7 @@ public:
      */
     string get_uc_attack_name(string default_name) const override
     {
-        const bool singular = player_mutation_level(MUT_MISSING_HAND);
+        const bool singular = you.get_mutation_level(MUT_MISSING_HAND);
         return make_stringf("Ice fist%s", singular ? "" : "s");
     }
 };
@@ -1306,7 +1306,7 @@ string blade_parts(bool terse)
     else
         str = "hand";
 
-    if (!player_mutation_level(MUT_MISSING_HAND))
+    if (!you.get_mutation_level(MUT_MISSING_HAND))
         str = pluralise(str);
 
     return str;
@@ -1405,7 +1405,7 @@ static bool _slot_conflict(equipment_type eq)
     }
 
     for (int mut = 0; mut < NUM_MUTATIONS; mut++)
-        if (you.mutation[mut] && eq == beastly_slot(mut))
+        if (you.has_mutation(static_cast<mutation_type>(mut)) && eq == beastly_slot(mut))
             return true;
 
     return false;
@@ -1926,24 +1926,24 @@ void untransform(bool skip_move)
 
     if (old_form == transformation::appendage)
     {
-        int app = you.attribute[ATTR_APPENDAGE];
+        mutation_type app = static_cast<mutation_type>(you.attribute[ATTR_APPENDAGE]);
         ASSERT(beastly_slot(app) != EQ_NONE);
-        const int levels = you.mutation[app];
+        const int levels = you.get_base_mutation_level(app);
         // Preserve extra mutation levels acquired after transforming.
         const int beast_levels = _beastly_appendage_level(app);
-        const int extra = max(0, levels - you.innate_mutation[app]
+        const int extra = max(0, levels - you.get_innate_mutation_level(app)
                                         - beast_levels);
-        you.mutation[app] = you.innate_mutation[app] + extra;
+        you.mutation[app] = you.get_innate_mutation_level(app) + extra;
         you.attribute[ATTR_APPENDAGE] = 0;
 
         // The mutation might have been removed already by a conflicting
         // demonspawn innate mutation; no message then.
         if (levels)
         {
-            const char * const verb = you.mutation[app] ? "shrink"
-                                                        : "disappear";
+            const char * const verb = you.has_mutation(app) ? "shrink"
+                                                            : "disappear";
             mprf(MSGCH_DURATION, "Your %s %s%s.",
-                 mutation_name(static_cast<mutation_type>(app)), verb,
+                 mutation_name(app), verb,
                  app == MUT_TENTACLE_SPIKE ? "s" : "");
         }
     }

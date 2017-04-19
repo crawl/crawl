@@ -584,8 +584,8 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             if (colour)
                 dgn_set_grid_colour_at(gc, colour);
 
-            const int property = (*overlay)(x, y).property;
-            if (property >= FPROP_BLOODY)
+            const terrain_property_t property = (*overlay)(x, y).property;
+            if (property.flags >= FPROP_BLOODY)
             {
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;

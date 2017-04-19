@@ -853,6 +853,11 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
 
+    case TILEP_MONS_GNOLL:
+        *ofs_x = -1;
+        *ofs_y = 1;
+        break;
+
     case TILEP_MONS_TWO_HEADED_OGRE: // second weapon
         *ofs_x = 0;
         *ofs_y = 2;

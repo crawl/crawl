@@ -53,6 +53,12 @@ Gargoyle
 Made of living stone, Gargoyles have a preternatural affinity for the earth.
 They have low health, but their stone bodies are incredibly tough.
 %%%%
+Gnoll
+
+Gnolls are canine-like humanoids. They are quick to learn the basics of any
+skill, but struggle to master any. Their strong noses can sniff out treasure
+from afar.
+%%%%
 Halfling
 
 Small but hardy, Halflings excel with slings. They have an increased resistance

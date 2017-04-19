@@ -45,6 +45,41 @@ struct species_def
 static const map<species_type, species_def> species_data =
 {
 
+{ SP_BARACHI, {
+    "Ba",
+    "Barachi", "Barachian", "Frog",
+    SPF_NO_HAIR,
+    0, 0, 0, 3,
+    MONS_BARACHI,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    9, 8, 7, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_SLOW, 1, 1 }, { MUT_HOP, 1, 1}, {MUT_HOP, 1, 13}, },
+    { "Shadows flee at your approach. (+LOS)", "You can swim through water.", },
+    { "+LOS", "swims", },
+    { JOB_FIGHTER, JOB_BERSERKER, JOB_SKALD, JOB_SUMMONER, JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
+{ SP_GNOLL, {
+    "Gn",
+    "Gnoll", nullptr, nullptr,
+    SPF_NONE,
+    0, 0, 0, 2,
+    MONS_GNOLL,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 8, 9, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, },
+    {"You have a short attention span."},
+    {"short attention span"},
+    { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
+      JOB_WANDERER },
+    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_CENTAUR, {
     "Ce",
     "Centaur", nullptr, nullptr,
@@ -349,21 +384,24 @@ static const map<species_type, species_def> species_data =
       SK_CROSSBOWS, SK_SLINGS },
 } },
 
-{ SP_BARACHI, {
-    "Ba",
-    "Barachi", "Barachian", "Frog",
+{ SP_GARGOYLE, {
+    "Gr",
+    "Gargoyle", nullptr, nullptr,
     SPF_NO_HAIR,
-    0, 0, 0, 3,
-    MONS_BARACHI,
-    HT_WATER, US_ALIVE, SIZE_MEDIUM,
-    9, 8, 7, // 24
-    { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    { { MUT_SLOW, 1, 1 }, { MUT_HOP, 1, 1}, {MUT_HOP, 1, 13}, },
-    { "Shadows flee at your approach. (+LOS)", "You can swim through water.", },
-    { "+LOS", "swims", },
-    { JOB_FIGHTER, JOB_BERSERKER, JOB_SKALD, JOB_SUMMONER, JOB_ICE_ELEMENTALIST },
-    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
-      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+    0, -2, 0, 3,
+    MONS_GARGOYLE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    11, 8, 5, // 24
+    { STAT_STR, STAT_INT }, 4,
+    { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
+      { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
+    { "You are resistant to torment." },
+    {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
 { SP_GHOUL, {
@@ -385,26 +423,6 @@ static const map<species_type, species_def> species_data =
     { JOB_WARPER, JOB_GLADIATOR, JOB_MONK, JOB_NECROMANCER,
       JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
     { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
-} },
-
-{ SP_GARGOYLE, {
-    "Gr",
-    "Gargoyle", nullptr, nullptr,
-    SPF_NO_HAIR,
-    0, -2, 0, 3,
-    MONS_GARGOYLE,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    11, 8, 5, // 24
-    { STAT_STR, STAT_INT }, 4,
-    { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
-      { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
-      { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
-    { "You are resistant to torment." },
-    {},
-    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER,
-      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
-      JOB_VENOM_MAGE },
-    { SK_MACES_FLAILS, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
 { SP_HALFLING, {

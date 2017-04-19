@@ -25,7 +25,7 @@ void wizard_set_skill_level(skill_type skill = SK_NONE);
 void wizard_set_all_skills();
 void wizard_change_species();
 void wizard_set_xl(bool change_skills = false);
-void set_xl(const int newxl, const bool train);
+void set_xl(const int newxl, const bool train, const bool silent=true);
 bool wizard_add_mutation();
 void wizard_set_stats();
 void wizard_edit_durations();

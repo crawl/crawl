@@ -809,7 +809,7 @@ static void _animate_weapon(int pow, actor* target)
         wpn->flags |= ISFLAG_THROWN;
     }
     // If sac love, the weapon will go after you, not the target.
-    const bool sac_love = player_mutation_level(MUT_NO_LOVE);
+    const bool sac_love = you.get_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
     const bool friendly = !target_is_player && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);
@@ -985,7 +985,7 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
     if (mons)
     {
         // Immediately apply injury bond
-        guardian_golem_bond(mons);
+        guardian_golem_bond(*mons);
 
         mpr("A guardian golem appears, shielding your allies.");
     }
@@ -1206,7 +1206,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
 
             // If we didn't find a valid spell set yet, just give up
             if (tries > 20)
-                monster_die(mons, KILL_RESET, NON_MONSTER);
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
             else
             {
                 // Choose a new duration based on HD.
@@ -1234,7 +1234,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                     && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
                 {
                     if (player_will_anger_monster(**mi))
-                        monster_die(*mi, KILL_RESET, NON_MONSTER);
+                        monster_die(**mi, KILL_RESET, NON_MONSTER);
 
                     mi->props["summon_id"].get_int() = mons->mid;
                 }
@@ -2625,7 +2625,7 @@ void end_battlesphere(monster* mons, bool killed)
         if (!cell_is_solid(mons->pos()))
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
 
-        monster_die(mons, KILL_RESET, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
     }
 }
 
@@ -3135,7 +3135,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     }
 
     if (!killed)
-        monster_die(mons, KILL_RESET, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
 }
 
 bool trigger_spectral_weapon(actor* agent, const actor* target)

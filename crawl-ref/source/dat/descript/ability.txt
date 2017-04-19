@@ -78,10 +78,6 @@ anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
 %%%%
-Stop Singing ability
-
-Stops singing your Song of Slaying.
-%%%%
 Cancel Portal Projectile ability
 
 Ends your Portal Projectile status.
@@ -858,11 +854,13 @@ Allows you to move at supernatural speeds for a short distance, causing the
 next two movement actions taken to be instant. Martial attacks performed under
 the effect of Serpent's Lash are more effective.
 %%%%
-Heaven On Earth ability
+Heavenly Storm ability
 
-Beseeches the Council to flood the surroundings with a storm of heavenly
-clouds. The clouds inspire you to strike strong and true, and hitting enemies
-with martial attacks will keep the storm raging for longer.
+Invokes a storm of heavenly clouds. While the storm rages, striking enemies
+with martial attacks provides an increasing bonus to melee damage and accuracy.
+The bonus fades over time, and the storm lasts until the bonus has faded
+completely. The heavenly clouds prevent invisibility, and obscure the vision of
+those outside the storm.
 %%%%
 Hop ability
 

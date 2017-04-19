@@ -158,9 +158,9 @@ static const duration_def duration_data[] =
       "You are confused.", D_DISPELLABLE,
       {{ "You feel less confused." }}},
     { DUR_CONFUSING_TOUCH,
-      BLUE, "Touch",
+      LIGHTBLUE, "Touch",
       "confusing touch", "",
-      "" , D_DISPELLABLE | D_EXPIRES,
+      "" , D_DISPELLABLE,
       {{ "", []() {
           mprf(MSGCH_DURATION, "%s",
                you.hands_act("stop", "glowing.").c_str());
@@ -594,7 +594,7 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
       {{ "You regain access to your magic." }, {}, true }},
-    { DUR_HEAVEN_ON_EARTH, 0, "", "", "", "", D_NO_FLAGS,
+    { DUR_HEAVENLY_STORM, 0, "", "", "", "", D_NO_FLAGS,
       {{ "",  wu_jian_heaven_tick }}},
 
 #if TAG_MAJOR_VERSION == 34

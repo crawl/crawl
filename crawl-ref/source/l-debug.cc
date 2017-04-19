@@ -186,7 +186,7 @@ LUAFN(debug_cull_monsters)
             continue;
 
         mi->flags |= MF_HARD_RESET;
-        monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
+        monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
     }
 
     return 0;
@@ -201,7 +201,7 @@ LUAFN(debug_dismiss_adjacent)
         if (mon)
         {
             mon->flags |= MF_HARD_RESET;
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         }
     }
 
@@ -215,7 +215,7 @@ LUAFN(debug_dismiss_monsters)
         if (mi)
         {
             mi->flags |= MF_HARD_RESET;
-            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
+            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
 
@@ -366,6 +366,21 @@ LUAFN(debug_disable)
     return 0;
 }
 
+// call crawl's ASSERT with a boolean.
+// swap out regular lua `assert` with this (debug.cpp_assert) to easily produce a crashlog from a lua test
+// the optional 2nd argument will print a dprf to the log before crashing.
+LUAFN(debug_cpp_assert)
+{
+    bool test = lua_toboolean(ls, 1);
+    string reason = "";
+    if (!lua_isnoneornil(ls, 2))
+        reason = reason + ": (" + luaL_checkstring(ls, 2) + ")";
+    if (!test)
+        dprf("ASSERT from lua failed%s", reason.c_str());
+    ASSERT(test);
+    return 0;
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -391,5 +406,6 @@ const struct luaL_reg debug_dlib[] =
 { "viewwindow", debug_viewwindow },
 { "seen_monsters_react", debug_seen_monsters_react },
 { "disable", debug_disable },
+{ "cpp_assert", debug_cpp_assert },
 { nullptr, nullptr }
 };

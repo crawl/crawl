@@ -3031,6 +3031,8 @@ static void _move_player(coord_def move)
         }
     }
 
+    const bool running = you_are_delayed() && current_delay()->is_run();
+
     if (!attacking && (targ_pass || can_wall_jump)
         && moving && !beholder && !fmonger)
     {
@@ -3097,7 +3099,6 @@ static void _move_player(coord_def move)
             }
         }
 
-        const bool running = you_are_delayed() && current_delay()->is_run();
         if (running && env.travel_trail.empty())
             env.travel_trail.push_back(you.pos());
         else if (!running)
@@ -3157,6 +3158,14 @@ static void _move_player(coord_def move)
         move.reset();
         you.turn_is_over = true;
         request_autopickup();
+    }
+
+    if (!attacking && !targ_pass && !can_wall_jump && !running
+        && moving && !beholder && !fmonger
+        && wu_jian_can_wall_jump_in_principle(targ))
+    {
+        // do messaging for a failed wall jump
+        wu_jian_can_wall_jump(targ, true);
     }
 
     // BCR - Easy doors single move

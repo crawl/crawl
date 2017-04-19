@@ -103,7 +103,7 @@ static void _initialize()
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
 
     you.unique_creatures.reset();
     you.unique_items.init(UNIQ_NOT_EXISTS);
@@ -233,7 +233,7 @@ static void _zap_los_monsters(bool items_also)
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
         // player sees nothing.
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
 

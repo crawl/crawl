@@ -110,6 +110,8 @@ end
 function species_mock(e)
   if you.race() == "Barachi" then
     e.kmons("1 = bullfrog")
+  elseif you.race() == "Bultungin" then
+    e.kmons("1 = jackal")
   elseif you.race() == "Centaur" then
     e.kmons("1 = dart slug")
   elseif you.race() == "Demigod" then
@@ -1189,6 +1191,8 @@ NAME:  makhleb_altar_promises_db
 TAGS:  uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 DEPTH: D:2-
 KFEAT: _ = altar_makhleb
+KPROP: 12 = no_tele_into
+KMASK: 12 = no_trap_gen
 MONS:  executioner / balrug / green death / cacodemon / blizzard demon
 MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
 : interest_check(_G)

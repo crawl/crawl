@@ -702,13 +702,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (berserk())
             simple_monster_message(*this, " is no longer berserk.");
 
-        monster_die(this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
+        monster_die(*this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
                             (quiet) ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
         break;
     case ENCH_SHORT_LIVED:
         // Conjured ball lightnings explode when they time out.
         suicide();
-        monster_die(this, KILL_TIMEOUT, NON_MONSTER);
+        monster_die(*this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
         if (mons_is_wandering(*this))
@@ -867,7 +867,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         // Done here to avoid duplicate messages
         if (you.duration[DUR_GRASPING_ROOTS])
-            check_grasping_roots(&you, true);
+            check_grasping_roots(you, true);
 
         break;
 
@@ -1618,7 +1618,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 }
             }
 
-            monster_die(this, KILL_MISC, NON_MONSTER, true);
+            monster_die(*this, KILL_MISC, NON_MONSTER, true);
         }
         break;
 
@@ -1920,7 +1920,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_GRASPING_ROOTS:
-        check_grasping_roots(this);
+        check_grasping_roots(*this);
         break;
 
     case ENCH_TORNADO_COOLDOWN:

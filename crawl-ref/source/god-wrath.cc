@@ -272,7 +272,7 @@ static bool _tso_retribution()
 
 static void _zin_remove_good_mutations()
 {
-    if (!how_mutated())
+    if (!you.how_mutated())
         return;
 
     const god_type god = GOD_ZIN;
@@ -295,7 +295,7 @@ static void _zin_remove_good_mutations()
             failMsg = false;
     }
 
-    if (success && !how_mutated())
+    if (success && !you.how_mutated())
         simple_god_message(" rids your body of chaos!", god);
 }
 
@@ -307,7 +307,7 @@ static bool _zin_retribution()
     int punishment = random2(8);
 
     // If not mutated, do something else instead.
-    if (punishment > 7 && !how_mutated())
+    if (punishment > 7 && !you.how_mutated())
         punishment = random2(6);
 
     switch (punishment)
@@ -1182,7 +1182,7 @@ static void _jiyva_remove_slime_mutation()
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (is_slime_mutation(static_cast<mutation_type>(i))
-            && you.mutation[i] > 0)
+            && you.has_mutation(static_cast<mutation_type>(i)))
         {
             slimy = true;
         }
@@ -1544,7 +1544,7 @@ static void _qazlal_elemental_vulnerability()
     const god_type god = GOD_QAZLAL;
 
     if (mutate(RANDOM_QAZLAL_MUTATION, _god_wrath_name(god), false,
-               false, true, false, MUTCLASS_TEMPORARY, true))
+               false, true, false, MUTCLASS_TEMPORARY))
     {
         simple_god_message(" strips away your elemental protection.",
                            god);

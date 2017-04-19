@@ -20,6 +20,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "los.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "map-knowledge.h"
@@ -491,17 +492,22 @@ int detect_items(int pow)
     int map_radius = 0;
     if (pow >= 0)
         map_radius = 7 + random2(7) + pow;
+
+    else if (you.has_mutation(MUT_STRONG_NOSE))
+        map_radius = get_los_radius();
     else
     {
-        //Check which god may be providing detect_items (Ashenzari or Jiyva) and set map_radius
-        if (have_passive(passive_t::detect_items)) //Ashenzari
+        if (you.has_mutation(MUT_JELLY_GROWTH))
+            map_radius = 5;
+        // Check which god may be providing detect_items and set map_radius
+        if (have_passive(passive_t::detect_items))
         {
-            map_radius = min(you.piety / 20 - 1, LOS_DEFAULT_RANGE);
+            map_radius = max(map_radius,
+                             min(you.piety / 20 - 1, get_los_radius()));
+
             if (map_radius <= 0)
                 return 0;
         }
-        else if (you.mutation[MUT_JELLY_GROWTH]) //Jiyva
-            map_radius = 5;
     }
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)

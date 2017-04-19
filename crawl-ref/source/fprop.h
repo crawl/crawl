@@ -1,5 +1,6 @@
 #pragma once
 
+#include "enum.h" // DEF_BITFIELD
 struct coord_def;
 
 enum feature_property_type
@@ -30,6 +31,7 @@ enum feature_property_type
     FPROP_BLOOD_EAST    = FPROP_BLOOD_WEST | FPROP_BLOOD_NORTH,
     FPROP_OLD_BLOOD     = (1 << 18),
 };
+DEF_BITFIELD(terrain_property_t, feature_property_type);
 
 bool is_sanctuary(const coord_def& p);
 bool is_bloodcovered(const coord_def& p);

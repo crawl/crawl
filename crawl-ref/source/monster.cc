@@ -2877,7 +2877,7 @@ void monster::banish(actor *agent, const string &, const int, bool force)
                             true /*possibly wrong*/, this);
         }
     }
-    monster_die(this, KILL_BANISHED, NON_MONSTER);
+    monster_die(*this, KILL_BANISHED, NON_MONSTER);
 
     if (!cell_is_solid(old_pos))
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
@@ -4511,11 +4511,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         && type != MONS_NO_MONSTER)
     {
         if (agent == nullptr)
-            monster_die(this, KILL_MISC, NON_MONSTER);
+            monster_die(*this, KILL_MISC, NON_MONSTER);
         else if (agent->is_player())
-            monster_die(this, KILL_YOU, NON_MONSTER);
+            monster_die(*this, KILL_YOU, NON_MONSTER);
         else
-            monster_die(this, KILL_MON, agent->mindex());
+            monster_die(*this, KILL_MON, agent->mindex());
     }
 
     return amount;
@@ -5298,7 +5298,7 @@ bool monster::malmutate(const string &/*reason*/)
     // Ugly things merely change colour.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_mutate(this);
+        ugly_thing_mutate(*this);
         return true;
     }
 
@@ -5331,7 +5331,7 @@ bool monster::polymorph(int pow)
     // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_mutate(this);
+        ugly_thing_mutate(*this);
         return true;
     }
 
@@ -5346,7 +5346,7 @@ bool monster::polymorph(int pow)
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_polymorph(this);
+        slime_creature_polymorph(*this);
         return true;
     }
 
@@ -5523,7 +5523,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
 void monster::self_destruct()
 {
     suicide();
-    monster_die(as_monster(), KILL_MON, mindex());
+    monster_die(*as_monster(), KILL_MON, mindex());
 }
 
 /** A higher-level moving method than moveto().

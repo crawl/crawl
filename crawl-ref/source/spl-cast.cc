@@ -367,9 +367,9 @@ int raw_spell_fail(spell_type spell)
 
     chance2 += get_form()->spellcasting_penalty;
 
-    chance2 -= 2 * player_mutation_level(MUT_SUBDUED_MAGIC);
-    chance2 += 4 * player_mutation_level(MUT_WILD_MAGIC);
-    chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
+    chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
+    chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
+    chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
 
     if (you.props.exists(SAP_MAGIC_KEY))
         chance2 += you.props[SAP_MAGIC_KEY].get_int() * 12;
@@ -424,8 +424,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
     // Wild magic boosts spell power but decreases success rate.
     if (!fail_rate_check)
     {
-        power *= (10 + 3 * player_mutation_level(MUT_WILD_MAGIC));
-        power /= (10 + 3 * player_mutation_level(MUT_SUBDUED_MAGIC));
+        power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
+        power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
     }
 
     // Augmentation boosts spell power at high HP.

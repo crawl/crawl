@@ -767,7 +767,7 @@ static void _magic_contamination_effects()
 
     // We want to warp the player, not do good stuff!
     mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-           "mutagenic glow", true, coinflip(), false, false, mutclass, false);
+           "mutagenic glow", true, coinflip(), false, false, mutclass);
 
     // we're meaner now, what with explosions and whatnot, but
     // we dial down the contamination a little faster if its actually
@@ -881,7 +881,7 @@ static void _jiyva_effects(int /*time_delta*/)
 
 static void _evolve(int time_delta)
 {
-    if (int lev = player_mutation_level(MUT_EVOLUTION))
+    if (int lev = you.get_mutation_level(MUT_EVOLUTION))
         if (one_chance_in(2 / lev)
             && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
                > (int)exp_needed(you.experience_level + 1))
@@ -891,14 +891,13 @@ static void _evolve(int time_delta)
             bool evol = one_chance_in(5) ?
                 delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
                 mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
-                       "evolution", false, false, false, false, MUTCLASS_NORMAL,
-                       true);
+                       "evolution", false, false, false, false, MUTCLASS_NORMAL);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
                 && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
-                const string reason = (you.mutation[MUT_EVOLUTION] == 1)
+                const string reason = (you.get_mutation_level(MUT_EVOLUTION) == 1)
                                     ? "end of evolution"
                                     : "decline of evolution";
                 evol |= delete_mutation(MUT_EVOLUTION, reason, false);
@@ -1158,7 +1157,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     {
         // You might still see them disappear if you were quick
         if (turns > 2)
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         else
         {
             mon_enchant abj  = mon->get_ench(ENCH_ABJ);
@@ -1351,7 +1350,7 @@ void monster::timeout_enchantments(int levels)
         {
             const int actdur = speed_to_duration(speed) * levels;
             if (lose_ench_duration(entry.first, actdur))
-                monster_die(this, KILL_MISC, NON_MONSTER, true);
+                monster_die(*this, KILL_MISC, NON_MONSTER, true);
             break;
         }
 

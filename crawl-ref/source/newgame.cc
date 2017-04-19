@@ -187,7 +187,7 @@ static const species_type species_order[] =
     SP_MERFOLK,        SP_MINOTAUR,
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
-    SP_BARACHI,
+    SP_BARACHI,        SP_GNOLL,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
@@ -959,6 +959,7 @@ static species_group species_groups[] =
             SP_DEEP_ELF,
             SP_OGRE,
             SP_DEEP_DWARF,
+            SP_GNOLL,
         }
     },
     {

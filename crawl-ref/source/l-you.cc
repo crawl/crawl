@@ -25,6 +25,7 @@
 #include "newgame-def.h"
 #include "ng-setup.h"
 #include "ouch.h"
+#include "output.h"
 #include "place.h"
 #include "prompt.h"
 #include "religion.h"
@@ -38,6 +39,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "wiz-you.h"
 
 /*
 --- Player-related bindings.
@@ -182,6 +184,8 @@ LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_spell_levels, number, player_spell_levels())
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
+LUARET1(you_temp_mutations, number, you.attribute[ATTR_TEMP_MUTATIONS])
+LUARET1(you_mutation_overview, string, mutation_overview().c_str())
 
 LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
@@ -375,7 +379,7 @@ static int you_gold(lua_State *ls)
 static int you_can_consume_corpses(lua_State *ls)
 {
     lua_pushboolean(ls,
-                     player_mutation_level(MUT_HERBIVOROUS) < 3
+                     you.get_mutation_level(MUT_HERBIVOROUS) < 3
                      && !you_foodless()
                   );
     return 1;
@@ -414,17 +418,42 @@ LUAFN(you_caught)
     return 1;
 }
 
+LUAFN(you_get_base_mutation_level)
+{
+    string mutname = luaL_checkstring(ls, 1);
+    bool innate = true;
+    bool temp = true;
+    bool normal = true;
+    if (!lua_isnoneornil(ls, 2))
+        innate = lua_toboolean(ls, 2);
+    if (!lua_isnoneornil(ls, 3))
+        temp = lua_toboolean(ls, 3);
+    if (!lua_isnoneornil(ls, 4))
+        normal = lua_toboolean(ls, 4);
+    mutation_type mut = mutation_from_name(mutname, false);
+    if (mut != NUM_MUTATIONS)
+        PLUARET(integer, you.get_base_mutation_level(mut, innate, temp, normal)); // includes innate mutations
+
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
+LUAFN(you_how_mutated)
+{
+    bool innate = lua_toboolean(ls, 1); // whether to include innate mutations
+    bool levels = lua_toboolean(ls, 2); // whether to count levels
+    bool temp = lua_toboolean(ls, 3); // whether to include temporary mutations
+    int result = you.how_mutated(innate, levels, temp);
+    PLUARET(number, result);
+}
+
+// these two are still here for compatibility with old scripts, but superseded by you_get_base_mutation_level.
 LUAFN(you_mutation)
 {
     string mutname = luaL_checkstring(ls, 1);
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        const char *wizname = mutation_name(static_cast<mutation_type>(i));
-        if (!wizname)
-            continue;
-        if (!strcmp(mutname.c_str(), wizname))
-            PLUARET(integer, you.mutation[i]);
-    }
+    mutation_type mut = mutation_from_name(mutname, false);
+    if (mut != NUM_MUTATIONS)
+        PLUARET(integer, you.get_base_mutation_level(mut, true, true, true)); // includes innate, temp mutations. I'm not sure if this is what was intended but this was the old behavior.
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
@@ -433,14 +462,9 @@ LUAFN(you_mutation)
 LUAFN(you_temp_mutation)
 {
     string mutname = luaL_checkstring(ls, 1);
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-    {
-        const char *wizname = mutation_name(static_cast<mutation_type>(i));
-        if (!wizname)
-            continue;
-        if (!strcmp(mutname.c_str(), wizname))
-            PLUARET(integer, you.temp_mutation[i]);
-    }
+    mutation_type mut = mutation_from_name(mutname, false);
+    if (mut != NUM_MUTATIONS)
+        PLUARET(integer, you.get_base_mutation_level(mut, false, true, false));
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
@@ -651,8 +675,12 @@ static const struct luaL_reg you_clib[] =
     { "see_cell_solid",    you_see_cell_solid_rel },
     { "see_cell_solid_see",you_see_cell_solid_see_rel },
 
-    { "mutation",          you_mutation },
-    { "temp_mutation",     you_temp_mutation },
+    { "get_base_mutation_level", you_get_base_mutation_level },
+    { "mutation",                you_mutation }, // still here for compatibility
+    { "temp_mutation",           you_temp_mutation }, // still here for compatibility
+    { "how_mutated",             you_how_mutated },
+    { "temp_mutations",          you_temp_mutations },
+    { "mutation_overview",       you_mutation_overview},
 
     { "num_runes",          you_num_runes },
     { "have_rune",          _you_have_rune },
@@ -813,6 +841,90 @@ LUAFN(_you_at_branch_bottom)
 
 LUAWRAP(you_gain_exp, gain_exp(luaL_checkint(ls, 1)))
 
+LUAFN(you_mutate)
+{
+    string mutname = luaL_checkstring(ls, 1);
+    string reason = luaL_checkstring(ls, 2);
+    bool temp = false;
+    bool force = true;
+    if (!lua_isnoneornil(ls, 3))
+        temp = lua_toboolean(ls, 3);
+    if (!lua_isnoneornil(ls, 4))
+        force = lua_toboolean(ls, 4);
+    const mutation_permanence_class mutclass = temp ? MUTCLASS_TEMPORARY : MUTCLASS_NORMAL;
+    mutation_type mut = mutation_from_name(mutname, true); // requires exact match
+    if (mut != NUM_MUTATIONS)
+        PLUARET(boolean, mutate(mut, reason, true, force, false, false, mutclass));
+
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
+LUAFN(you_delete_mutation)
+{
+    string mutname = luaL_checkstring(ls, 1);
+    string reason = luaL_checkstring(ls, 2);
+    mutation_type mut = mutation_from_name(mutname, true); // requires exact match
+    if (mut != NUM_MUTATIONS)
+        PLUARET(boolean, delete_mutation(mut, reason, false));
+
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
+}
+
+
+// clear one or all temporary mutations.
+LUAFN(you_delete_temp_mutations)
+{
+    bool result;
+    bool clear_all = lua_toboolean(ls, 1);
+    string reason = luaL_checkstring(ls, 2);
+    if (clear_all)
+        result = delete_all_temp_mutations(reason);
+    else
+        result = temp_mutation_wanes();
+    PLUARET(boolean, result);
+}
+
+// clear one or all temporary mutations.
+LUAFN(you_delete_all_mutations)
+{
+    bool result;
+    string reason = luaL_checkstring(ls, 1);
+    result = delete_all_mutations(reason);
+    PLUARET(boolean, result);
+}
+
+LUAFN(you_change_species)
+{
+    string species = luaL_checkstring(ls, 1);
+    const species_type sp = find_species_from_string(species);
+
+    if (sp == SP_UNKNOWN)
+    {
+        mpr("That species isn't available.");
+        PLUARET(boolean, false);
+    }
+
+    change_species_to(sp);
+    PLUARET(boolean, true);
+}
+
+LUAFN(you_set_xl)
+{
+    const int newxl = luaL_checkint(ls, 1);
+    bool train = lua_toboolean(ls, 2); // whether to train skills
+    if (newxl < 1 || newxl > you.get_max_xl())
+    {
+        mprf("Can't change to invalid xl %d", newxl);
+        PLUARET(boolean, false);
+    }
+    if (newxl == you.experience_level)
+        PLUARET(boolean, true);
+    set_xl(newxl, train, newxl < you.experience_level); // most useful for testing if it's not silent on levelup
+    PLUARET(boolean, true);
+}
+
 /*
  * Init the player class.
  *
@@ -869,6 +981,12 @@ static const struct luaL_reg you_dlib[] =
 { "skill_cost_level",   you_skill_cost_level },
 { "skill_points",       you_skill_points },
 { "zigs_completed",     you_zigs_completed },
+{ "mutate",             you_mutate },
+{ "delete_mutation",    you_delete_mutation },
+{ "delete_temp_mutations", you_delete_temp_mutations },
+{ "delete_all_mutations", you_delete_all_mutations },
+{ "change_species",     you_change_species },
+{ "set_xl",             you_set_xl },
 
 { nullptr, nullptr }
 };

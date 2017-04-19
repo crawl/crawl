@@ -29,7 +29,7 @@ bool is_bloodcovered(const coord_def& p)
 
 bool is_tide_immune(const coord_def &p)
 {
-    return env.pgrid(p) & FPROP_NO_TIDE;
+    return bool(env.pgrid(p) & FPROP_NO_TIDE);
 }
 
 bool is_moldy(const coord_def & p)
@@ -40,7 +40,7 @@ bool is_moldy(const coord_def & p)
 
 bool glowing_mold(const coord_def & p)
 {
-    return env.pgrid(p) & FPROP_GLOW_MOLD;
+    return bool(env.pgrid(p) & FPROP_GLOW_MOLD);
 }
 
 void remove_mold(const coord_def & p)
@@ -73,5 +73,5 @@ feature_property_type str_to_fprop(const string &str)
 
 char blood_rotation(const coord_def & p)
 {
-    return (env.pgrid(p) & FPROP_BLOOD_EAST) >> 16;
+    return (env.pgrid(p) & FPROP_BLOOD_EAST).flags >> 16;
 }

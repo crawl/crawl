@@ -1350,7 +1350,7 @@ static void _xom_snakes_to_sticks(int sever)
 
         // Dismiss monster silently.
         move_item_to_grid(&item_slot, mi->pos());
-        monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
+        monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true, false);
     }
 }
 
@@ -2140,7 +2140,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
         plural_vec.push_back(true);
     }
     else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
-             && !player_mutation_level(MUT_BEAK)
+             && !you.get_mutation_level(MUT_BEAK)
           || form_changed_physiology())
     {
         hand_vec.emplace_back("nose");
@@ -2957,7 +2957,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > random2(5) && x_chance_in_y(7, sever)
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_SINGLE_ALLY;
     }
@@ -2971,13 +2971,13 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_SNAKES;
 
     if (tension > random2(10) && x_chance_in_y(10, sever)
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_ALLIES;
     }
     if (tension > random2(8) && x_chance_in_y(11, sever)
         && _find_monster_with_animateable_weapon()
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_ANIMATE_MON_WPN;
     }
@@ -3032,7 +3032,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (random2(tension) < 5 && x_chance_in_y(19, sever)
-        && x_chance_in_y(16, how_mutated())
+        && x_chance_in_y(16, you.how_mutated())
         && you.can_safely_mutate())
     {
         return XOM_GOOD_MUTATION;

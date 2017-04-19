@@ -1430,7 +1430,7 @@ static void _pre_monster_move(monster& mons)
         if (awakener && !awakener->can_see(mons))
         {
             simple_monster_message(mons, " falls limply to the ground.");
-            monster_die(&mons, KILL_RESET, NON_MONSTER);
+            monster_die(mons, KILL_RESET, NON_MONSTER);
             return;
         }
     }
@@ -1440,7 +1440,7 @@ static void _pre_monster_move(monster& mons)
     if (mons.type == MONS_BALL_LIGHTNING && mons.summoner == MID_PLAYER
         && !cell_see_cell(you.pos(), mons.pos(), LOS_SOLID))
     {
-        monster_die(&mons, KILL_RESET, NON_MONSTER);
+        monster_die(mons, KILL_RESET, NON_MONSTER);
         return;
     }
 
@@ -1978,7 +1978,7 @@ void handle_monster_move(monster* mons)
             if (outward)
                 outward->props["inwards"].get_int() = mons->mid;
 
-            monster_die(targ, KILL_MISC, NON_MONSTER, true);
+            monster_die(*targ, KILL_MISC, NON_MONSTER, true);
             targ = nullptr;
         }
 
@@ -2269,7 +2269,7 @@ static void _post_monster_move(monster* mons)
     }
 
     if (mons->type == MONS_GUARDIAN_GOLEM)
-        guardian_golem_bond(mons);
+        guardian_golem_bond(*mons);
 
     // A rakshasa that has regained full health dismisses its emergency clones
     // (if they're somehow still alive) and regains the ability to summon new ones.
@@ -2300,7 +2300,7 @@ static void _post_monster_move(monster* mons)
     }
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
-        monster_die(mons, KILL_MISC, NON_MONSTER);
+        monster_die(*mons, KILL_MISC, NON_MONSTER);
 }
 
 priority_queue<pair<monster *, int>,
@@ -2334,7 +2334,7 @@ static void _clear_monster_flags()
 **/
 static void _update_monster_attitude(monster *mon)
 {
-    if (player_mutation_level(MUT_NO_LOVE)
+    if (you.get_mutation_level(MUT_NO_LOVE)
         && !mons_is_conjured(mon->type))
     {
         mon->attitude = ATT_HOSTILE;
