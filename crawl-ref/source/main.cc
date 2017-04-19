@@ -3045,7 +3045,10 @@ static void _move_player(coord_def move)
             return;
         }
 
-        if (!you.confused() && !check_moveto(targ, walkverb))
+        // can_wall_jump means `targ` is solid and can be walljumped off of,
+        // so the player will never enter `targ`. Therefore, we don't want to
+        // check exclusions at `targ`.
+        if (!you.confused() && !can_wall_jump && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
@@ -3113,10 +3116,15 @@ static void _move_player(coord_def move)
             move_player_to_grid(targ, true);
         else if (can_wall_jump && !running)
         {
-            did_wall_jump = true;
             auto wall_jump_direction = (you.pos() - targ).sgn();
             auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                            + wall_jump_direction);
+            if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+            {
+                you.turn_is_over = false;
+                return;
+            }
+            did_wall_jump = true;
             move_player_to_grid(wall_jump_landing_spot, false);
             wu_jian_wall_jump_effects(initial_position);
         }
