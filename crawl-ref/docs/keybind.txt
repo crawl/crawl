@@ -80,7 +80,6 @@ C         CMD_CLOSE_DOOR
 ^F        CMD_SEARCH_STASHES
 G, ^G     CMD_INTERLEVEL_TRAVEL
 O         CMD_OPEN_DOOR
-^T        CMD_TOGGLE_FRIENDLY_PICKUP
 ^W        CMD_FIX_WAYPOINT
 <         CMD_GO_UPSTAIRS
 >         CMD_GO_DOWNSTAIRS
@@ -208,7 +207,6 @@ Find a particular feature
 ^         CMD_MAP_FIND_TRAP
 _         CMD_MAP_FIND_ALTAR
 E         CMD_MAP_FIND_EXCLUDED
-F         CMD_MAP_FIND_F
 W         CMD_MAP_FIND_WAYPOINT
 I         CMD_MAP_FIND_STASH
 O         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)
