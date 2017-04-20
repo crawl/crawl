@@ -291,7 +291,7 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
 
-        // Send a status message about 'aptitude' increases/decreases if Bultungin
+        // Send a status message about 'aptitude' increases/decreases if Gnoll
         if (you.species == SP_GNOLL)
         {
             if (n > 0 && you.skills[exsk] < 12 && you.skills[exsk] > 6)
@@ -313,7 +313,7 @@ static void _change_skill_level(skill_type exsk, int n)
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
 
-        // Send a status message about 'aptitude' increases/decreases if Bultungin
+        // Send a status message about 'aptitude' increases/decreases if Gnoll
         if (you.species == SP_GNOLL)
         {
             if (n > 0 && (you.skills[exsk] - n) < 12 && you.skills[exsk] > 6)
@@ -1531,15 +1531,15 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
         15750, 17700, 19800, 22050, 24450,  // 21-25
         27000, 29750 };
 
-    // This is a custom XP table for Bultungin, precalculated to match their
-    // dynamic aptitudes. Until SL 7, Bultungin have an effective aptitude of
+    // This is a custom XP table for Gnolls, precalculated to match their
+    // dynamic aptitudes. Until SL 7, Gnolls have an effective aptitude of
     // +4 (half as much XP needed). At 7 and after, their aptitude decreases by
     // two for each skill level, reaching a floor of -6 at skill level 12. XP
     // values are calculated accordingly, using the original XP table (above).
     // At SL 7, standard +2 aptitude requires 283 XP to go from 7 to 8; thus
-    // Bultungin get their 8th level in any given skill by going from 700 total
+    // Gnolls get their 8th level in any given skill by going from 700 total
     // XP to 983. This pattern continues. -6 aptitude at SL 14 requires 2970 XP,
-    // so Bultungin go from 10723 total XP at SL 14 to 13963 at 15.
+    // so Gnolls go from 10723 total XP at SL 14 to 13963 at 15.
     //
     // There are ways to do this programmatically (such as to call this function
     // inside of itself at runtime to dynamically calculate the needed XP), but
@@ -1553,7 +1553,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
         38300, 43816, 49755, 56119, 62908,  // 21-25
         70120, 77898 };
 
-    // Choose between normal exp table and Bultungin exp table
+    // Choose between normal exp table and Gnoll exp table
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
     if (sp == SP_GNOLL)
         return gnoll_exp[lev] * species_apt_factor(sk, sp);
