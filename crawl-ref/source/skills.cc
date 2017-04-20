@@ -1531,15 +1531,15 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
         15750, 17700, 19800, 22050, 24450,  // 21-25
         27000, 29750 };
 
-    // This is a custom XP table for Gnoll, precalculated to match their
-    // dynamic aptitudes. Until SL 7, Gnoll have an effective aptitude of
+    // This is a custom XP table for Gnolls, precalculated to match their
+    // dynamic aptitudes. Until SL 7, Gnolls have an effective aptitude of
     // +4 (half as much XP needed). At 7 and after, their aptitude decreases by
     // two for each skill level, reaching a floor of -6 at skill level 12. XP
     // values are calculated accordingly, using the original XP table (above).
     // At SL 7, standard +2 aptitude requires 283 XP to go from 7 to 8; thus
-    // Gnoll get their 8th level in any given skill by going from 700 total
+    // Gnolls get their 8th level in any given skill by going from 700 total
     // XP to 983. This pattern continues. -6 aptitude at SL 14 requires 2970 XP,
-    // so Gnoll go from 10723 total XP at SL 14 to 13963 at 15.
+    // so Gnolls go from 10723 total XP at SL 14 to 13963 at 15.
     //
     // There are ways to do this programmatically (such as to call this function
     // inside of itself at runtime to dynamically calculate the needed XP), but
