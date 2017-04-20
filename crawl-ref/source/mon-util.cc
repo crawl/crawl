@@ -5708,7 +5708,7 @@ static bool _apply_to_monsters(monster_func f, radius_iterator&& ri)
     for (; ri; ri++)
     {
         monster* mons = monster_at(*ri);
-        if (mons)
+        if (!invalid_monster(mons))
             affected_any = f(*mons) || affected_any;
     }
 
