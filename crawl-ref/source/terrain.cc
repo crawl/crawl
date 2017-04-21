@@ -2020,6 +2020,10 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                     if (mon)
                         tmarker->mon_num = mon->mid;
                 }
+                // ensure that terrain change happens. Sometimes a terrain
+                // change marker can get stuck; this allows re-doing such
+                // cases. Also probably needed by the else case above.
+                dungeon_terrain_changed(pos, newfeat, false, true, true);
                 return;
             }
             else
