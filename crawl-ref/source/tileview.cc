@@ -506,6 +506,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
                                    : TILE_DNGN_SHOALS_STAIRS_DOWN;
     }
 
+    if (feat_is_escape_hatch(grd(gc)) && player_in_branch(BRANCH_TOMB))
+    {
+        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        env.tile_flv(gc).feat = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
+                                   : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
+    }
+
     if (feat_is_door(grd(gc)))
     {
         // Check for gates.

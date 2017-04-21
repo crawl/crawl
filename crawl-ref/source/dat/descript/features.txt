@@ -347,6 +347,18 @@ A broken pillar
 
 A ruined and crumbled stone pillar.
 %%%%
+A one-way staircase leading down
+
+A cursed staircase leading further down, imbued with magic to prevent any
+return back up the stairs. Adventurers taking this passage will need to find a
+return stairway somewhere else on the level where they arrive.
+%%%%
+A one-way staircase leading up
+
+A cursed staircase leading up, imbued with magic to prevent any return back
+down the stairs. Adventurers taking this passage will need to find a return
+stairway somewhere else on the level where they arrive.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################
