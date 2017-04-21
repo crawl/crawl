@@ -792,7 +792,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                         none_vis = false;
                     break;
                 }
-                else
+                else // the new position of the monster is now an additional veto spot for monsters
                     veto_spots.push_back(newpos);
             }
 
@@ -843,6 +843,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 get_push_space(*ai, newpos, act, true, &veto_spots);
                 ASSERT(!newpos.origin());
                 act->move_to_pos(newpos);
+                // the new position of the monster is now an additional veto spot for monsters
                 veto_spots.push_back(newpos);
             }
         }
@@ -866,7 +867,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (igrd(*ai) != NON_ITEM)
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, nullptr, true);
+                get_push_space(*ai, newpos, nullptr, true, &adj_spots);
                 if (zin) // zin should've checked for this earlier
                     ASSERT(!newpos.origin());
                 else if (newpos.origin())  // tomb just skips the tile
