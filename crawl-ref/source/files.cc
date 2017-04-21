@@ -1035,8 +1035,9 @@ static void _do_lost_items()
 static void _fedhas_rot_all_corpses(const level_id& old_level)
 {
     bool messaged = false;
-    for (auto &item : mitm)
+    for (size_t mitm_index = 0; mitm_index < mitm.size(); ++mitm_index)
     {
+        item_def &item = mitm[mitm_index];
         if (!item.defined()
             || !item.is_type(OBJ_CORPSES, CORPSE_BODY)
             || item.props.exists(CORPSE_NEVER_DECAYS))
@@ -1044,7 +1045,13 @@ static void _fedhas_rot_all_corpses(const level_id& old_level)
             continue;
         }
 
-        turn_corpse_into_skeleton(item);
+        if (mons_skeleton(item.mon_type))
+            ASSERT(turn_corpse_into_skeleton(item));
+        else
+        {
+            item_was_destroyed(item);
+            destroy_item(mitm_index);
+        }
 
         if (!messaged)
         {
