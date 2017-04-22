@@ -1766,16 +1766,15 @@ cccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
-# Lehudib's Moon Base (on the moon) by gammafunk
+# Lehudib's Moon Base by gammafunk
 
-# Lehudib, whose famous writings on earth magic left few personal details, is
-# said to have studied the power of magical crystal with single-minded devotion
-# and in the most distant location imaginable. After traveling to some
-# forgotten Moon and carving a fortress into its very surface, the wizard
-# somehow convinced the bizarre surface creatures there to stand guard. Who can
-# say what other knowledge this self-described Lunar Mage learned in such
-# isolation? Adventurers who manage to reach the remote Moon Base of Lehudib
-# may indeed find powers beyond their comprehension.
+# Lehudib, who penned many writings on earth magic, eventually tired of
+# studying this world and sought to uncover the secrets of our moon. After
+# arriving there through unknown means, the wizard carved out a fortress on the
+# moon's surface, filling it with bizarre monstrosities. Who can say what
+# mysteries the self-described Lunar Mage uncovered in such isolation?
+# Adventurers who manage to reach the remote Moon Base of Lehudib may indeed
+# find powers beyond their comprehension!
 
 NAME:       wizlab_lehudib
 KPROP:      ` = no_tele_into
