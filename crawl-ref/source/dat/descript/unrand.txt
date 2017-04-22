@@ -170,8 +170,9 @@ both the wielder and all of his or her mortal followers.
 %%%%
 arbalest "Damnation"
 
-An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
-fires with the raw power of its namesake, irresistible by any mortal armour.
+An unholy crossbow, forged in the fires of Gehenna. It imbues the bolts it
+fires with the raw power of its namesake, causing a burst of damnation on
+impact irresistible by any mortal armour.
 %%%%
 # TAG_MINOR_VERSION == 34
 sword of the Doom Knight
