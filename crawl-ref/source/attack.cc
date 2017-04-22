@@ -1652,11 +1652,7 @@ bool attack::apply_damage_brand(const char *what)
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
-        {
-            calc_elemental_brand_damage(BEAM_DAMNATION, "damn", what);
-            defender->expose_to_element(BEAM_DAMNATION);
             attacker->god_conduct(DID_EVIL, 2 + random2(3));
-        }
         break;
     }
 
