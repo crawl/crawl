@@ -2219,64 +2219,78 @@ static level_pos _find_entrance(const level_pos &from)
     }
 }
 
-static level_pos _parse_travel_target(string s, level_pos &targ)
+/*
+ * Given a string and a starting target, find a `level_pos` to travel to.
+ *
+ * @param s a string consisting of a number representing depth, or 0 to go to
+ *          the branch entrance.
+ * @param targ an initial default `level_pos` to potentially modify.
+ *
+ * @return the resulting `level_pos`.
+ */
+static level_pos _parse_travel_target(string s, const level_pos &targ)
 {
     trim_string(s);
+    level_pos result(targ);
 
     if (!s.empty())
     {
-        targ.id.depth = atoi(s.c_str());
-        targ.pos.x = targ.pos.y = -1;
+        result.id.depth = atoi(s.c_str());
+        result.pos.x = result.pos.y = -1;
     }
 
-    if (!targ.id.depth)
-        targ = _find_entrance(targ);
+    if (!result.id.depth)
+        result = _find_entrance(result);
 
-    return targ;
+    return result;
 }
 
-static void _travel_depth_munge(int munge_method, const string &s,
-                                level_pos &targ)
+/*
+ * Interpret the player's input to the interlevel travel prompt.
+ * This input consists either of a numeric string, or one of several special
+ * characters that manipulate a destination that can be triggered by enter.
+ * This function can process both at the same time, though simple numeric input
+ * without a special key is handled separately in `_prompt_travel_depth`.
+ *
+ * @param munge_method  a non-level special key input at the prompt to process.
+ * @param s             a numeric depth input at the prompt to process.
+ * @param targ          an input `level_pos` representing the current default
+ *                      target.
+ *
+ * @return a `level_pos` indicating the resulting target, potentially the same
+ *                       as `targ`.
+ */
+static level_pos _travel_depth_munge(int munge_method, const string &s,
+                                const level_pos &targ)
 {
-    _parse_travel_target(s, targ);
-    level_id lid(targ.id);
+    level_pos result(targ.id); // drop any coords in `targ`.
+    result = _parse_travel_target(s, result);
+
     switch (munge_method)
     {
     case '?':
         show_interlevel_travel_depth_help();
         redraw_screen();
-        return;
+        return level_pos(targ); // no change
     case '<':
-        lid = find_up_level(lid);
+        result.id = find_up_level(result.id);
         break;
     case '>':
-        lid = find_down_level(lid);
+        result.id = find_down_level(result.id);
         break;
     case '-':
-        lid = find_up_level(lid, true);
+        result.id = find_up_level(result.id, true);
         break;
     case '$':
-        lid = find_deepest_explored(lid);
+        result.id = find_deepest_explored(result.id);
         break;
     case '^':
-        if (targ.pos.x != -1)
-        {
-            LevelInfo &li = travel_cache.get_level_info(lid);
-            stair_info *si = li.get_stair(targ.pos);
-            if (si && si->destination.id.branch != lid.branch)
-            {
-                targ = si->destination;
-                targ.pos.x = targ.pos.y = -1;
-                return;
-            }
-        }
-        targ = _find_entrance(targ);
-        return;
+        result = _find_entrance(result);
         break;
     }
-    targ.id = lid;
-    if (targ.id.depth < 1)
-        targ.id.depth = 1;
+    if (result.id.depth < 1)
+        result.id.depth = 1;
+    return result;
 }
 
 static level_pos _prompt_travel_depth(const level_id &id)
@@ -2307,7 +2321,7 @@ static level_pos _prompt_travel_depth(const level_id &id)
         if (key_is_escape(response))
             return level_pos(level_id(BRANCH_DUNGEON, 0));
 
-        _travel_depth_munge(response, buf, target);
+        target = _travel_depth_munge(response, buf, target);
     }
 }
 
