@@ -1407,7 +1407,7 @@ cccccccnccc
        @
 ENDMAP
 
-# Inspired by the Jorge Luis Borges' story "The Library of Babel".
+# Inspired by the Jorge Luis Borges story "The Library of Babel".
 NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
