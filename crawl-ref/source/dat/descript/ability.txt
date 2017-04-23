@@ -876,3 +876,9 @@ Hop ability
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
+%%%%
+Fearsome Bark ability
+
+Allows you to bark in a loud and fear-inducing manner at all enemies in sight,
+even if you are confused. The power of your bark is increased by your 
+experience level.

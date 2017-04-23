@@ -60,6 +60,7 @@
 #include "potion.h"
 #include "prompt.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
@@ -322,6 +323,9 @@ static const ability_def Ability_List[] =
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::delay },
 
     { ABIL_HOP, "Hop", 0, 0, 0, 0, {}, abflag::none },
+
+    { ABIL_FEARSOME_BARK, "Fearsome Bark",
+      0, 0, 125, 0, {fail_basis::xl, 30, 1}, {abflag::breath, abflag::conf_ok} },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1825,6 +1829,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
         return frog_hop(fail);
+
+    case ABIL_FEARSOME_BARK:
+        fail_check();
+        noisy(25, you.pos(), "You bark in a fearsome manner!");
+        mass_enchantment(ENCH_FEAR, (you.experience_level * 5) + 50);
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
+        break;
 
 #if TAG_MAJOR_VERSION == 34
     case ABIL_DELAYED_FIREBALL:
@@ -3396,6 +3408,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.get_mutation_level(MUT_HOP))
         _add_talent(talents, ABIL_HOP, check_confused);
+
+    if (you.get_mutation_level(MUT_FEARSOME_BARK))
+        _add_talent(talents, ABIL_FEARSOME_BARK, check_confused);
 
     // Spit Poison, possibly upgraded to Breathe Poison.
     if (you.get_mutation_level(MUT_SPIT_POISON) == 2)
