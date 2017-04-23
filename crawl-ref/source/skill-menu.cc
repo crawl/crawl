@@ -358,12 +358,12 @@ void SkillMenuEntry::set_aptitude()
 
         int gnoll_bonus = 0;
 
-        // Determine Bultungin aptitude bonus/malus to display if SP_GNOLL
+        // Determine Gnoll aptitude bonus/malus to display if SP_GNOLL
         if (you.species == SP_GNOLL)
         {
             int gnoll_skill = you.skill(m_sk, 1, true);
 
-            // Bultungin aptitude costs start at effective +4 and reduce by -2 for
+            // Gnoll aptitude costs start at effective +4 and reduce by -2 for
             // each level after reaching 7, floor of -6
             gnoll_bonus = max(4 - max((gnoll_skill - 6) * 2, 0), -6);
         }
