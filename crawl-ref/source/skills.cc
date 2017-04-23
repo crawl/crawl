@@ -1522,15 +1522,22 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    // Regular XP table:
-    const int exp[28] =
-      { 0, 50, 150, 300, 500, 750,          // 0-5
-        1050, 1400, 1800, 2250, 2800,       // 6-10
-        3450, 4200, 5050, 6000, 7050,       // 11-15
-        8200, 9450, 10800, 12300, 13950,    // 16-20
-        15750, 17700, 19800, 22050, 24450,  // 21-25
-        27000, 29750 };
+    ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
 
+    // Choose between normal exp table and Gnoll exp table
+    // Regular XP table:
+    if (!(sp == SP_GNOLL))
+    {
+        const int exp[28] =
+          { 0, 50, 150, 300, 500, 750,          // 0-5
+            1050, 1400, 1800, 2250, 2800,       // 6-10
+            3450, 4200, 5050, 6000, 7050,       // 11-15
+            8200, 9450, 10800, 12300, 13950,    // 16-20
+            15750, 17700, 19800, 22050, 24450,  // 21-25
+            27000, 29750 };
+
+            return exp[lev] * species_apt_factor(sk, sp);
+    }
     // This is a custom XP table for Gnolls, precalculated to match their
     // dynamic aptitudes. Until SL 7, Gnolls have an effective aptitude of
     // +4 (half as much XP needed). At 7 and after, their aptitude decreases by
@@ -1545,20 +1552,19 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
     // inside of itself at runtime to dynamically calculate the needed XP), but
     // they either cause strange interactions with wizard mode, or take up more
     // resources than this implementation.
-    const int gnoll_exp[28] =
-      { 0, 25, 75, 150, 250, 375,           // 0-5
-        525, 700, 983, 1433, 2211,          // 6-10
-        3511, 5629, 8036, 10723, 13693,     // 11-15
-        16946, 20481, 24300, 28542, 33209,  // 16-20
-        38300, 43816, 49755, 56119, 62908,  // 21-25
-        70120, 77898 };
-
-    // Choose between normal exp table and Gnoll exp table
-    ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-    if (sp == SP_GNOLL)
-        return gnoll_exp[lev] * species_apt_factor(sk, sp);
     else
-        return exp[lev] * species_apt_factor(sk, sp);
+    {
+        const int gnoll_exp[28] =
+          { 0, 25, 75, 150, 250, 375,           // 0-5
+            525, 700, 983, 1433, 2211,          // 6-10
+            3511, 5629, 8036, 10723, 13693,     // 11-15
+            16946, 20481, 24300, 28542, 33209,  // 16-20
+            38300, 43816, 49755, 56119, 62908,  // 21-25
+            70120, 77898 };
+
+        //Species_apt_factor is unnecessary for Gnoll
+        return gnoll_exp[lev];
+    }
 }
 
 int species_apt(skill_type skill, species_type species)
