@@ -6531,6 +6531,21 @@ static bool _get_stomped(monster& mons)
 
 bool uskayaw_stomp()
 {
+    // Demonic guardians are immune but check for other friendlies
+    bool friendlies = apply_monsters_around_square([] (monster& mons) {
+        return !testbits(mons.flags, MF_DEMONIC_GUARDIAN)
+            && mons_att_wont_attack(mons.attitude);
+    }, you.pos());
+
+
+    if (friendlies
+        && !yesno("There are friendlies around, are you sure you want to hurt them?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
     mpr("You stomp with the beat, sending a shockwave through the revelers "
             "around you!");
     apply_monsters_around_square(_get_stomped, you.pos());
