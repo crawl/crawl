@@ -1032,7 +1032,7 @@ static armour_type _get_random_armour_type(int item_level)
         armtype = random_choose_weighted(6, ARM_BOOTS,
                                          6, ARM_GLOVES,
                                          // Cloak slot
-                                         5, ARM_CLOAK,
+                                         3, ARM_CLOAK,
                                          1, ARM_SCARF,
                                          // Head slot
                                          5, ARM_HELMET,
