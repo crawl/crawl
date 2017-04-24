@@ -101,8 +101,9 @@
     Policarpo Caballero
     Edgar Carballo
     Cedor
+    Cerol
     Rahul Chandra
-    Gregory Chereshnev
+    Gregory D. Chereshnev
     Thom Chiovoloni
     Henry Cipolla
     Nicholas Connelly
@@ -185,6 +186,7 @@
     MainiacJoe
     Arien Malec
     Paul Maloney
+    Pablo Mansanet
     Wille Mäntylä
     James 'Eronarn' Meickle
     mikee
@@ -266,11 +268,13 @@
     Evan Williams
     Jeremey Wilson
     Yelve Yakut
+    Edward Z. Yang
     Rob Young
     Zannick
     Zooko
 
 The Dungeon Crawl Stone Soup development team is:
+    advil
     Peter Berger
     Adam Borowski
     Samuel Bronson

@@ -3,8 +3,7 @@
  * @brief Definitions for common structs.
 **/
 
-#ifndef EXTERNS_H
-#define EXTERNS_H
+#pragma once
 
 #define __STDC_FORMAT_MACROS
 #include <cinttypes>
@@ -21,10 +20,24 @@
 #include <vector>
 
 #include "bitary.h"
+#include "deck-rarity-type.h"
+#include "description-level-type.h"
+#include "dungeon-feature-type.h"
 #include "enum.h"
+#include "spell-type.h"
+#include "monster-type.h"
+#include "branch-type.h"
 #include "fixedarray.h"
-#include "mpr.h"
+#include "kill-category.h"
+#include "killer-type.h"
+#include "map-marker-type.h"
+#include "menu-type.h"
+
+#include "object-class-type.h"
 #include "pattern.h"
+#include "skill-type.h"
+#include "shop-type.h"
+#include "cloud-type.h"
 #include "store.h"
 #include "tiledef_defines.h"
 
@@ -379,7 +392,7 @@ struct bad_level_id : public runtime_error
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua
-// stack in l_dgn.cc)
+// stack in l-dgn.cc)
 class level_id
 {
 public:
@@ -527,7 +540,6 @@ struct item_def
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
         short charges;              ///< # of charges held by a wand, etc
-                                    // for rods, is charge * ROD_CHARGE_MULT
         short initial_cards;        ///< the # of cards a deck *started* with
         short net_durability;       ///< damage dealt to a net
     };
@@ -540,7 +552,6 @@ struct item_def
                             // info (e.g. "recharged", "empty", "unknown")
         short net_placed;   ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
-        short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
         short stash_freshness; ///< where stash.cc stores corpse freshness
     };
 #pragma pack(pop)
@@ -550,7 +561,6 @@ struct item_def
         int special;            ///< legacy/generic name
         int unrand_idx;         ///< unrandart index (for get_unrand_entry)
         deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
-        int rod_plus;           ///< rate at which a rod recharges
         uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
                                 /// jewellery, scroll, staff, wand, potions
                                 // see comment in item_colour()
@@ -600,7 +610,6 @@ public:
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
-    zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
     bool is_type(int base, int sub) const
     {
@@ -889,5 +898,3 @@ struct cglyph_t
 };
 
 typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
-
-#endif // EXTERNS_H

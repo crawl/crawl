@@ -189,11 +189,12 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = beef jerky / nothing / animal skin / potion of degeneration w:20 /\
-             w:2 potion of haste / w:2 potion of might
+KITEM:   1 = meat ration w:5 / nothing / animal skin / \
+             potion of degeneration w:20 / potion of haste w:2 / \
+             potion of might w:2
 KFEAT:   1 = 1
-ITEM:    club, potion of degeneration ident:type, slice of pizza
-ITEM:    beef jerky / weight:40 nothing, potion of degeneration ident:type
+ITEM:    club, potion of degeneration ident:type, royal jelly
+ITEM:    meat ration w:2 / nothing, potion of degeneration ident:type
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
 MAP
@@ -382,7 +383,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
@@ -421,7 +422,7 @@ TAGS:   orc_entry
 ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
-MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   ogre zombie / troll zombie w:3 / two-headed ogre zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
@@ -1345,6 +1346,54 @@ xxxxX..cc..C..XCx
          xxxxC@
 ENDMAP
 
+NAME: cheibrodos_orc_arena
+TAGS: no_item_gen no_monster_gen
+DEPTH: Orc
+ORIENT: float
+MONS: orc / w:5 orc warrior
+MONS: orc knight ; great mace . morningstar | chain mail . plate armour \
+      / w:3 orc warlord ; great mace . morningstar | chain mail . plate armour
+KFEAT: - = iron_grate
+KFEAT: A = floor
+KPROP: A = bloody
+NSUBST: ' = 5:1 / 4=1., " = 5:1 / 4=1., _ = 3:A / 4=A.
+MAP
+  xxxxxxxxxxx
+ xxxx$$$$$xxxx
+xx..+$$$$$+..xx
+x'''x--+--x"""x
+x''xx_____xx""x
+x''m_______m""x
+x''m_2___2_m""x
+x''m_______m""x
+x''xx_____xx""x
+x'''x-----x"""x
+xx...........xx
+ xx.........xx
+  xxxG...Gxxx
+     .@@@.
+ENDMAP
+
+NAME: cheibrodos_orc_guarddog
+TAGS: no_monster_gen
+DEPTH: Orc
+ORIENT: float
+MONS: warg
+NSUBST: 1 = 3:1 / 4=1..
+MAP
+xxx..@..xxx
+x1...1...1x
+x.........x
+...IxxxI...
+...x$$$x...
+@1.x$$$+..@
+...x$$$x...
+...IxxxI...
+x.........x
+x1...1...1x
+xxx..@..xxx
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #
@@ -1565,7 +1614,7 @@ TAGS:    no_item_gen no_monster_gen
 PLACE:   Orc:$
 ORIENT:  float
 MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
-MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
+MONS:    ogre mage, two-headed ogre w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
 MAP
  .....

@@ -19,7 +19,7 @@ The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 <h>Category shortcuts</h>
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
-<w>/</w>   wands        <w>\</w>   rods           <w>|</w>   magical staves  <w>?</w>   scrolls
+<w>/</w>   wands        <w>|</w>   magical staves  <w>?</w>   scrolls
 <w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>:</w>   books
 <w>%</w>   food
 Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
@@ -33,11 +33,12 @@ known-menu
 Pressing an item type's letter key selects that item.
 
 <h>Selecting item types</h>
-Items types displayed in grey use the default autopickup options set in your
-configuration file. Selecting a type of item overrides those options
+Item types displayed in grey use the default autopickup options set in your
+configuration file. (Items that are useless to your character are displayed
+in <darkgrey>dark grey</darkgrey>.) Selecting a type of item overrides those options
 (indicated by <w>white</w> text), and toggles the item between the states:
  <w>+</w>  Items of this type will be picked up automatically.
- <w>-</w>  Items of this type will will not be picked up automatically.
+ <w>-</w>  Items of this type will not be picked up automatically.
 Autopickup can also be toggled for all unknown items of a given category.
 
 <h>Category shortcuts</h>
@@ -75,7 +76,7 @@ name). In the list of search results, you can select a search result by its
 hotkey to travel to its location.
 
 Some examples of search strings:
-<w>cure mutation</w> find all potions of cure mutation, including potions in shops.
+<w>mutation</w>      find all potions of mutation, including potions in shops.
 <w>royal</w>         finds every single royal jelly and heaps of royal jellies.
 <w>shop</w>          lists all shops. Press <w>?</w> and a shop's letter for the stock.
 <w>Lair:2</w>        find everything known to be on Lair:2.
@@ -255,11 +256,11 @@ Training can be done in two modes, which are toggled with the <w>/</w> key.
 How fast you train a skill is governed by the following factors:
 - aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that less
             experience is needed to advance a skill. Depends on species.
-- skill manuals: Rare books giving an aptitude bonus of <lightgreen>+4</lightgreen> in one skill.
+- skill manuals: Rare books giving an aptitude bonus of <lightred>+4</lightred> in one skill.
 
 On top of that, there are some effects which directly modify a skill, for
 example draining, having trained a related skill (crosstraining), or certain
-god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <blue>blue</blue>.
+god powers. Reduced skills are shown in <magenta>magenta</magenta>, and enhanced skills in <green>green</green>.
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
 which will be used to train this skill.
 
@@ -276,7 +277,7 @@ can always be trained. For the rest:
 - Weapon skills require carrying a weapon of the appropriate type.
 - Shields requires that you either be carrying a shield, or worship a deity
       who can offer one through divine means (The Shining One).
-- Evocations requires carrying an evocable item, or worshipping Nemelex Xobeh.
+- Evocations requires carrying an evocable item.
 - Spell schools require knowing a spell of the school.
 - Necromancy can also be trained when worshipping Kikubaaqudgha.
 - Invocations requires worshipping a god whose abilities require it.

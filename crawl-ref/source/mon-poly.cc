@@ -15,10 +15,12 @@
 #include "dungeon.h"
 #include "exclude.h"
 #include "fineff.h"
-#include "godconduct.h"
+#include "god-conduct.h"
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-death.h"
@@ -324,12 +326,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
     mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
 
-    monster_spells spl    = mons->spells;
-    const bool need_save_spells
-            =  old_mon_unique && !slimified
-               && mons_class_intel(targetc) >= I_HUMAN
-               && (!mons->has_spells() || mons->is_actual_spellcaster());
-
     mons->number       = 0;
 
     // Note: define_monster(*) will clear out all enchantments! - bwr
@@ -346,6 +342,9 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props["no_annotate"] = slimified && old_mon_unique;
     mons->props.erase("dbname");
 
+    // Forget seen spells, since they are likely to have changed.
+    mons->props.erase(SEEN_SPELLS_KEY);
+
     mons->flags = flags;
     // Line above might clear melee and/or spell flags; restore.
     mons->bind_melee_flags();
@@ -353,17 +352,6 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Forget various speech/shout Lua functions.
     mons->props.erase("speech_prefix");
-
-    // Keep spells for named monsters, but don't override innate ones
-    // for dragons and the like. This means that Sigmund polymorphed
-    // into a goblin will still cast spells, but if he ends up as a
-    // swamp drake he'll breathe fumes and, if polymorphed further,
-    // won't remember his spells anymore.
-    if (need_save_spells
-        && (!mons->has_spells() || mons->is_actual_spellcaster()))
-    {
-        mons->spells = spl;
-    }
 
     // Make sure we have a god if we've been polymorphed into a priest.
     mons->god = mons->is_priest() ? GOD_NAMELESS : god;
@@ -586,7 +574,7 @@ void slimify_monster(monster* mon, bool hostile)
 {
     monster_type target = MONS_JELLY;
 
-    const int x = mon->get_hit_dice() + (coinflip() ? 1 : -1) * random2(5);
+    const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
 
     if (x < 3)
         target = MONS_OOZE;

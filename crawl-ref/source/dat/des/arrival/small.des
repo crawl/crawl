@@ -2123,7 +2123,7 @@ NAME:    onia_arrival_mini_maze
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    fruit q:1 / beef jerky / nothing / stone
+ITEM:    fruit q:1 / nothing w:20 / stone
 SHUFFLE: Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
@@ -2149,7 +2149,7 @@ NAME:    onia_arrival_mini_maze_b
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    fruit q:1 / beef jerky / nothing / stone / w:30 nothing
+ITEM:    fruit q:1 / nothing w:50 / stone
 SHUFFLE: AB
 SUBST:   A : x , B = +., X = x+
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
@@ -2436,7 +2436,7 @@ ENDMAP
 # This is considered harmless and not ASCII art. Don't hand
 # in other vaults where monsters spell other words, though :)
 NAME:    onia_arrival_zoo_common
-TAGS:    arrival
+TAGS:    arrival no_trap_gen
 ORIENT:  float
 : if crawl.one_chance_in(10) then
 SHUFFLE: 16
@@ -2445,7 +2445,7 @@ MONS:    rat / river rat / hell rat / quokka
 MONS:    worker ant / soldier ant / queen ant
 MONS:    worm / tyrant leech
 MONS:    komodo dragon / iguana / basilisk
-MONS:    ettin / frost giant / hill giant / stone giant / fire giant
+MONS:    ettin / frost giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
 MONS:    frilled lizard / leopard gecko / iguana / crocodile / komodo dragon

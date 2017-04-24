@@ -30,8 +30,8 @@ or standing in shallow water).
 Tele status
 
 You are about to teleport. While waiting to teleport, attempting to apply the
-status again (such as by using a scroll or wand of teleportation) will cancel
-the teleportation.
+status again (such as by using a scroll of teleportation) will cancel the
+teleportation.
 %%%%
 Fly status
 
@@ -319,7 +319,8 @@ You are covering ground slowly.
 DDoor status
 
 You are temporarily invulnerable to harm, but are brought close to death in the
-process and cannot be affected by healing while the effect is active.
+process and cannot be affected by healing while the effect is active. After the
+spell expires, it cannot be immediately recast.
 %%%%
 Quad status
 
@@ -346,7 +347,8 @@ You have astral vision, allowing you to see through walls.
 %%%%
 Tornado status
 
-You are in the eye of a mighty hurricane.
+You are in the eye of a mighty hurricane. After the tornado fades, it cannot be
+called forth again for a short time.
 %%%%
 Liquid status
 
@@ -422,7 +424,8 @@ trees to damage your foes.
 Dragoncall status
 
 You are calling forth mighty dragons to attack your foes. Each dragon which
-answers the call will drain your magical energy.
+answers the call will drain your magical energy. After the call ends, it cannot
+be issued again for a short time.
 %%%%
 Abj status
 
@@ -490,4 +493,197 @@ You are channeling magical energy.
 
 You may cast spells with insufficient reserves of magic, but doing so will
 cause you to briefly lose access to your magic after the spell is cast.
+%%%%
+Spider status
+
+You have been transformed into a venomous, spider-like creature. You become
+highly evasive and gain a poisonous bite, but gain vulnerability to poison.
+
+Any equipped weapons and armour are melded. Your success rate with spells is
+slightly reduced, and you are unable to evoke wands.
+%%%%
+Blade status
+
+Long, scythe-shaped blades have grown from your hands, increasing your melee
+damage significantly.
+
+Any equipped weapons are melded. Your success rate with spells is somewhat
+reduced, and you are unable to evoke wands.
+%%%%
+Statue status
+
+You have been transformed into a slow but extremely robust stone statue.
+Your melee damage, both unarmed and with weapons, is substantially increased.
+Your stone body is insulated from electricity and gains resistance to poison,
+rotting and negative energy.
+
+Any equipped body armour, gloves and boots are melded.
+%%%%
+Ice status
+
+You have been transformed into a frozen ice-creature, light enough to float on
+water. You gain a freezing melee attack, and are incredibly resistant to cold
+and resistant to poison, but vulnerable to fire.
+
+Any equipped weapons and armour are melded, and you are unable to evoke wands.
+%%%%
+Dragon status
+
+{{
+    local desc = "You have been transformed into a mighty"
+
+    if you.race():find("Draconian") then
+        desc = desc .. " dragon"
+        if you.race() ~= "Grey Draconian" then
+            desc = desc .. ", increasing the power of any innate breath attacks"
+        end
+        if you.race() == "Red Draconian" then
+            desc = desc .. ". You are highly resistant to fire and " ..
+                           "resistant to poison, but vulnerable to cold"
+        elseif you.race() == "White Draconian" then
+            desc = desc .. ". You are highly resistant to cold and " ..
+                           "resistant to poison, but vulnerable to fire"
+        elseif you.race() == "Green Draconian" then
+            desc = desc .. " and retaining your innate colour"
+        else
+            desc = desc .. ". You retain your innate colour, and are " ..
+                           "also resistant to poison"
+        end
+    else
+        desc = desc .. ", fire-breathing dragon. You are highly resistant " ..
+                       "to fire and resistant to poison, but vulnerable to " ..
+                       "cold"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}} Your melee attacks deal incredible damage, and you are much more robust but
+less evasive.
+
+Any equipped weapons and armour are melded.
+%%%%
+Lich status
+
+You have been transformed into a lich. You are resistant to cold and hostile
+enchantments and completely immune to poison, rotting, negative energy and
+torment, and require no food at all for the duration of the transformation.
+Your necromancy spells are increased in power, and you gain a draining melee
+attack. However, you are also vulnerable to holy damage and Dispel Undead,
+and are unable to consume potions.
+%%%%
+Bat status
+
+You have been transformed into a swift-moving bat, increasing your evasion but
+substantially weakening your melee attacks.
+
+Any equipped weapons, armour and rings are melded, and you are unable to evoke
+wands or cast spells. {{
+    if you.race() ~= "Vampire" then
+        return "The effectiveness of your melee attacks while " ..
+               "in this form is based on experience level instead of on " ..
+               "Unarmed Combat skill."
+    end
+}}
+%%%%
+Pig status
+
+You have been transformed into a pig. You move quickly but are less effective
+in melee.
+
+Any equipped weapons, armour and rings are melded, and you are unable to evoke
+wands or cast spells. The effectiveness of your melee attacks while in this
+form is based on experience level instead of on Unarmed Combat skill.
+%%%%
+App status
+
+{{
+    if you.race() == "Octopode" then
+        return "A vicious spike has grown from one of your tentacles, " ..
+               "increasing the damage of your extra tentacle attacks."
+    else
+        return "Monstrous horns or talons have grown from your body, " ..
+               "granting a chance of making an extra attack in melee."
+    end
+}}
+%%%%
+Tree status
+
+You have been transformed into a tree and are rooted to the ground, unable to
+move or teleport. You have minimal evasion but increased health and natural
+armour, and are resistant to poison and immune to negative energy.
+
+Any equipped cloak, helmet, gloves, boots and body armour are melded.
+%%%%
+Wisp status
+
+You have been transformed into an insubstantial wisp of gas. You move quickly
+and are highly evasive, and you occasionally blink at random. You are resistant
+to fire, cold, electricity and acid, and immune to poison, rotting and
+negative energy.
+
+Any equipped weapons, armour and jewellery are melded, and you are unable to
+evoke wands or cast spells. The effectiveness of your melee attacks while in
+this form is based on experience level instead of on Unarmed Combat skill.
+%%%%
+Fungus status
+
+You have been transformed into a sentient fungus. You are highly evasive and
+can release spores to cause confusion when attacking in melee, but are unable
+to move when hostile creatures are present. You are resistant to poison and
+immune to negative energy.
+
+Any equipped cloak, gloves, boots, shield, body armour and weapons are melded,
+and you are unable to evoke wands or cast spells. The effectiveness of your
+melee attacks while in this form is based on experience level instead of on
+Unarmed Combat skill.
+%%%%
+Shadow status
+
+You have been transformed into a swirling mass of dark shadows. You are
+permanently invisible and are immune to poison, draining, torment, and hostile
+enchantments. All incoming damage is halved, and you bleed smoke on any
+incoming attack. However, your ability to deal damage in melee and with ranged
+attacks is halved, your spellcasting power is greatly hampered, and your skills
+are further drained when taking damage.
+%%%%
+Hydra status
+
+You have been transformed into an amphibious, many-headed hydra. Your multiple
+heads strike in all directions when attacking, and edible foes that are slain
+are instantly consumed for nutrition and health. You are naturally robust, and
+resistant to poison.
+
+Any equipped weapons and armour are melded, and you are unable to evoke wands.
+%%%%
+Orb status
+
+You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
+translocation magic. Teleportation will take longer, all blinks will become
+uncontrolled, and Passage of Golubria will completely fail to work.
+%%%%
+-Hop status
+
+Your legs are tired, and you are unable to hop. This status will only recover
+after you spend several turns not moving. (Other actions, such as attacking or
+casting spells, are fine.)
+%%%%
+Ray status
+
+You are currently channeling a ray of searing magical energy. Pressing . will
+maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
+including recasting the spell, will end it.
+
+# XXX: also cover Ray+, Ray++?
+%%%%
+Lash status
+
+You are moving at supernatural speed, causing movement actions to become
+instant. Any martial attacks made while moving in this way are increased in
+effectiveness.
+%%%%
+Hevn status
+
+Heavenly clouds are boosting your damage and precision. Performing martial
+attacks against multiple enemies prevents the storm from settling.
 %%%%

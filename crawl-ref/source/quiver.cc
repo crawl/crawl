@@ -15,11 +15,12 @@
 
 #include "env.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
+#include "sound.h"
 #include "stringutil.h"
 #include "tags.h"
 #include "throw.h"
@@ -159,6 +160,10 @@ void quiver_item(int slot)
         t = _get_weapon_ammo_type(weapon);
 
     you.m_quiver.set_quiver(you.inv[slot], t);
+
+#ifdef USE_SOUND
+    parse_sound(CHANGE_QUIVER_SOUND);
+#endif
     mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
          t == AMMO_THROW    ? "throwing" :
          t == AMMO_BLOWGUN  ? "blowguns" :
@@ -176,9 +181,8 @@ void choose_item_for_quiver()
     }
 
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
-                                  MT_INVLIST,
-                                  OSEL_THROWABLE, true, true, true, '-',
-                                  -1, nullptr, OPER_QUIVER, false);
+                                  MT_INVLIST, OSEL_THROWABLE, OPER_QUIVER,
+                                  invprompt_flag::hide_known, '-');
 
     if (prompt_failed(slot))
         return;

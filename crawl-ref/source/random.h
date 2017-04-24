@@ -1,5 +1,4 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#pragma once
 
 #include <algorithm>  // iter_swap
 #include <iterator>   // advance
@@ -7,6 +6,7 @@
 #include <vector>
 
 #include "hash.h"
+#include "rng-type.h"
 
 void seed_rng();
 void seed_rng(uint32_t seed);
@@ -158,10 +158,12 @@ struct dice_def
     int num;
     int size;
 
-    dice_def() : num(0), size(0) {}
-    dice_def(int n, int s) : num(n), size(s) {}
+    constexpr dice_def() : num(0), size(0) {}
+    constexpr dice_def(int n, int s) : num(n), size(s) {}
     int roll() const;
 };
+
+constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
 dice_def calc_dice(int num_dice, int max_damage);
 
@@ -248,5 +250,3 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     ASSERT(result >= 0);
     return result;
 }
-
-#endif

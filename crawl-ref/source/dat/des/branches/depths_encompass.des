@@ -8,7 +8,7 @@
         if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
             e.kmons('1 = base draconian / nothing w:25')
             e.kmons('2 = nonbase draconian / base draconian w:20')
-            e.kmons('3 = draconian zealot / draconian monk w:2')
+            e.kmons('3 = draconian stormcaller / draconian monk w:2')
         else
             e.kmons('1 = tengu warrior / tengu conjurer / '
                     .. 'glowing orange brain / spriggan berserker w:5 / '
@@ -53,11 +53,10 @@
         e.shuffle("JH")
         e.shuffle("34")
         e.shuffle("m6")
-        e.kitem("p = w:60 potion of mutation / " ..
-                "w:1 potion of cure mutation")
+        e.kitem("p = potion of mutation")
         e.kitem("P = any jewellery good_item")
-        e.kitem("Q = potion of cure mutation")
-        e.kitem("R = potion of cure mutation / nothing")
+        e.kitem("Q = potion of mutation")
+        e.kitem("R = potion of mutation / nothing")
         e.nsubst("u = 2:Q / 1:P / 1:R / *:u")
         e.nsubst("G = 1:G / *:2")
         e.nsubst("H = 2:8 / 2:3")

@@ -103,9 +103,9 @@ void wizard_level_travel(bool down)
     }
 
     if (down)
-        down_stairs(stairs, false, true);
+        down_stairs(stairs, false, false);
     else
-        up_stairs(stairs, true);
+        up_stairs(stairs, false);
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
@@ -591,6 +591,9 @@ static void debug_load_map_by_name(string name, bool primary)
             // Fix up doors from vaults and any changes to the default walls
             // and floors from the vault.
             tile_init_flavour();
+            // Transporters would normally be made from map markers by the
+            // builder.
+            dgn_make_transporters_from_markers();
         }
         else
             mprf("Failed to place %s.", toplace->name.c_str());

@@ -7,6 +7,8 @@
 
 #include "mon-tentacle.h"
 
+#include <functional>
+
 #include "act-iter.h"
 #include "coordit.h"
 #include "delay.h"
@@ -14,7 +16,7 @@
 #include "fprop.h"
 #include "libutil.h" // map_find
 #include "losglobal.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h"
@@ -633,38 +635,19 @@ static void _purge_connectors(monster* tentacle)
             if (hp > 0 && hp < tentacle->hit_points)
                 tentacle->hit_points = hp;
 
-            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
+            monster_die(**mi, KILL_MISC, NON_MONSTER, true);
         }
     }
     ASSERT(tentacle->alive());
 }
 
-struct complicated_sight_check
-{
-    coord_def base_position;
-    bool operator()(monster* mons, actor * test)
-    {
-        return test->visible_to(mons)
-               && cell_see_cell(base_position, test->pos(), LOS_SOLID_SEE);
-    }
-};
-
-static bool _basic_sight_check(monster* mons, actor * test)
-{
-    ASSERT(mons); // XXX: change to monster &mons
-    ASSERT(test); // XXX: change to actor &test
-    // honestly this whole thing should be a closure
-    return mons->can_see(*test);
-}
-
-template<typename T>
-static void _collect_foe_positions(monster* mons,
-                                   vector<coord_def> & foe_positions,
-                                   T & sight_check)
+static void _collect_foe_positions(monster *mons,
+                                   vector<coord_def> &foe_positions,
+                                   function<bool(const actor *)> sight_check)
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
-    if (foe && sight_check(mons, foe))
+    if (foe && sight_check(foe))
     {
         foe_positions.push_back(mons->get_foe()->pos());
         foe_pos = foe_positions.back();
@@ -672,11 +655,11 @@ static void _collect_foe_positions(monster* mons,
 
     for (monster_iterator mi; mi; ++mi)
     {
-        monster* test = *mi;
+        const monster * const test = *mi;
         if (!mons_is_firewood(*test)
             && !mons_aligned(test, mons)
             && test->pos() != foe_pos
-            && sight_check(mons, test))
+            && sight_check(test))
         {
             foe_positions.push_back(test->pos());
         }
@@ -750,9 +733,13 @@ void move_solo_tentacle(monster* tentacle)
 
     if (!severed)
     {
-        complicated_sight_check base_sight;
-        base_sight.base_position = base_position;
-        _collect_foe_positions(tentacle, foe_positions, base_sight);
+        _collect_foe_positions(tentacle, foe_positions,
+                [tentacle, base_position](const actor *test) -> bool
+                {
+                    return test->visible_to(tentacle)
+                        && cell_see_cell(base_position, test->pos(),
+                                         LOS_SOLID_SEE);
+                });
         attack_foe = !foe_positions.empty();
     }
 
@@ -950,7 +937,7 @@ void move_solo_tentacle(monster* tentacle)
              old_pos.x, old_pos.y, tentacle->mid, visited_count);
 
         // Is it ok to purge the tentacle here?
-        monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
+        monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
         return;
     }
 
@@ -961,6 +948,8 @@ void move_solo_tentacle(monster* tentacle)
 
 void move_child_tentacles(monster* mons)
 {
+    ASSERT(mons);
+
     if (!mons_is_tentacle_head(mons_base_type(*mons))
         || mons->asleep())
     {
@@ -970,7 +959,11 @@ void move_child_tentacles(monster* mons)
     bool no_foe = false;
 
     vector<coord_def> foe_positions;
-    _collect_foe_positions(mons, foe_positions, _basic_sight_check);
+    _collect_foe_positions(mons, foe_positions,
+                           [mons](const actor *test) -> bool
+                           {
+                               return mons->can_see(*test);
+                           });
 
     //if (!kraken->near_foe())
     if (foe_positions.empty()
@@ -1038,7 +1031,7 @@ void move_child_tentacles(monster* mons)
             // Drop the tentacle if no enemies are in sight and it is
             // adjacent to the main body. This is to prevent players from
             // just sniping tentacles while outside the kraken's fov.
-            monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
+            monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
             continue;
         }
 
@@ -1132,7 +1125,7 @@ void move_child_tentacles(monster* mons)
         if (!connected)
         {
             mgrd(tentacle->pos()) = tentacle->mindex();
-            monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
+            monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
 
             continue;
         }
@@ -1175,14 +1168,14 @@ bool destroy_tentacle(monster* mons)
         {
             any = true;
             //mi->hurt(*mi, INSTANT_DEATH);
-            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
+            monster_die(**mi, KILL_MISC, NON_MONSTER, true);
         }
     }
 
     if (mons != head)
     {
         any = true;
-        monster_die(head, KILL_MISC, NON_MONSTER, true);
+        monster_die(*head, KILL_MISC, NON_MONSTER, true);
     }
 
     return any;
@@ -1198,7 +1191,7 @@ bool destroy_tentacles(monster* head)
             any |= destroy_tentacle(*mi);
             if (!mi->is_child_tentacle_segment())
             {
-                monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
+                monster_die(*mi->as_monster(), KILL_MISC, NON_MONSTER, true);
                 any = true;
             }
         }

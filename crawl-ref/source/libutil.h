@@ -3,8 +3,7 @@
  * @brief System independent functions
 **/
 
-#ifndef LIBUTIL_H
-#define LIBUTIL_H
+#pragma once
 
 #include <cctype>
 #include <map>
@@ -80,10 +79,6 @@ bool parse_int(const char *s, int &i);
 description_level_type description_type_by_name(const char *desc);
 
 bool shell_safe(const char *file);
-
-#ifdef USE_SOUND
-void play_sound(const char *file);
-#endif
 
 string unwrap_desc(string desc);
 
@@ -299,4 +294,3 @@ private:
 
 void init_signals();
 void release_cli_signals();
-#endif

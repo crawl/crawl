@@ -400,24 +400,26 @@ ENDMAP
 
 ### Ecumenical altars ########################################################
 
-NAME:   ecumenical_altar_1
+NAME:   chequers_ecumenical_altar_simple
 DEPTH:  D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
-CHANCE: 50 : 10%
+SUBST: G : Gbt x:5
 MAP
 .....
-..x..
-.x_x.
-..x..
+..G..
+.G_G.
+..G..
 .....
 ENDMAP
 
-NAME: ecumenical_altar_2
+NAME: chequers_ecumenical_altar_simple_redux
 DEPTH: D:2-3
 TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+CHANCE: 10%
 KFEAT:  _ = altar_ecumenical
-CHANCE: 50 : 10%
+SUBST: G : Gbt x:5
 MAP
 .......
 ...G...
@@ -426,4 +428,109 @@ MAP
 ..G.G..
 ...G...
 .......
+ENDMAP
+
+NAME:   chequers_ecumenical_altar_grove
+DEPTH:  D:2-3
+TAGS:   uniq_ecumenical_altar chance_ecumenical_altar
+# Disconnected regions can spawn in the trees
+CHANCE: 10%
+WEIGHT: 5
+KFEAT:  _ = altar_ecumenical
+KMASK:  - = no_item_gen
+KMASK:  - = no_monster_gen
+SUBST:  - = tt.
+: if crawl.coinflip() then
+: set_feature_name("tree", "dead tree")
+TILE:    t = dngn_tree_dead
+COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+: else
+SUBST: t : bt x:5
+: end
+MAP
+ ......
+ .-.-.@..
+--.-..-.--.
+ .tttttt.--.
+.-t-...t.---.
+.tt.-tt.-t--.
+-t--.-t--t-.
+  tt-.ttt-t-.
+-t.t.-.-t-t.
+ -tt_tttt-@.
+-ttttt--tt.
+-ttt--.---.
+...........
+ENDMAP
+
+NAME: chequers_ecumenical_altar_lobes
+DEPTH: D:2-3
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+CHANCE: 10%
+WEIGHT: 5
+KFEAT:  _ = altar_ecumenical
+KPROP:  tG = no_tele_into
+KMASK:  tGp = no_item_gen
+KMASK:  tG = no_monster_gen
+NSUBST: + = 1:.
+SUBST:  ' : tGp, t = t:2 ., G = G:3 ., p = p:5 ., - = T U V .
+KMONS: p = plant
+MAP
+   xxxxx    xxxxx
+ xxx'-'xxxxxx'-'xxx
+xxtGp_pGtxxtGp.pGtxx
+xxtGp.pGtxxtGp.pGtxx
+xxtGp.pGtxxtGp.pGtxx
+xxxxx+xxxxxxxx+xxxxx
+xtGpp..........ppGtx
+xxxtGpppp..ppppGtxxx
+  xxxxxtG..Gtxxxxx
+      xxx..xxx
+        x..x
+         @@
+ENDMAP
+
+NAME: chequers_ecumenical_altar_twisty
+DEPTH: D:2-3
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+CHANCE: 10%
+WEIGHT: 5
+KFEAT:  _ = altar_ecumenical
+SUBST: x : x:30 c t:1
+MAP
+ x@x
+ x.xx
+ xx.x
+xx.xx
+x.xx
+xx_xx
+ xx.x
+xx.xx
+x.xx
+xx.x
+ x@x
+ENDMAP
+
+NAME: chequers_ecumenical_altar_island
+DEPTH: D:2-3
+TAGS:  uniq_ecumenical_altar chance_ecumenical_altar
+CHANCE: 10%
+KFEAT: _ = altar_ecumenical
+SUBST: - = W:5 . t:5
+SUBST: s = W:5 .
+SUBST: S = w.
+MAP
+sssssssssssss
+sSSSSSSSSSSSs
+sSwwwwwwwwwSs
+sSwwwwwwwwwSs
+sSwWWWWwwwwSs
+sSWww--WwwwSs
+sSwWw-_-wwwSs
+sSwWw---wwwSs
+@.WwwwwwwwwSs
+sSwwwwwwwwwSs
+sSwwwwwwwwwSs
+sSSSSSSSSSSSs
+sssssssssssss
 ENDMAP

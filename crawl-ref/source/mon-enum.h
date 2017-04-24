@@ -6,8 +6,7 @@
  * dependencies.
 **/
 
-#ifndef MON_ENUM_H
-#define MON_ENUM_H
+#pragma once
 
 #define HERD_COMFORT_RANGE 6
 
@@ -60,6 +59,7 @@ enum attack_type
 #endif
     AT_WEAP_ONLY,   // AT_HIT if wielding a melee weapon, AT_NONE otherwise
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
+    NUM_ATTACK_TYPES,
 };
 
 // When adding an attack flavour, give it a short description in
@@ -308,5 +308,3 @@ enum mon_body_shape
     MON_SHAPE_BLOB,
     MON_SHAPE_MISC,
 };
-
-#endif

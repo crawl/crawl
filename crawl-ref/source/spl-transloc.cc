@@ -20,14 +20,15 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -42,6 +43,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
+#include "target.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
@@ -142,92 +144,104 @@ void uncontrolled_blink(bool override_stasis)
 }
 
 /**
- * Let the player choose a destination for their controlled blink.
+ * Let the player choose a destination for their controlled blink or similar
+ * effect.
  *
  * @param target[out]   The target found, if any.
  * @param safe_cancel   Whether it's OK to let the player cancel the control
  *                      of the blink (or whether there should be a prompt -
  *                      for e.g. ?blink with blurryvis)
+ * @param verb          What kind of movement is this, exactly?
+ *                      (E.g. 'blink', 'hop'.)
+ * @param hitfunc       A hitfunc passed to the direction_chooser.
  * @return              True if a target was found; false if the player aborted.
  */
-static bool _find_cblink_target(coord_def &target, bool safe_cancel)
+static bool _find_cblink_target(coord_def &target, bool safe_cancel,
+                                string verb, targeter *hitfunc = nullptr)
 {
-    // query for location {dlb}:
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.needs_path = false;
-    args.top_prompt = "Blink to where?";
-    dist beam;
-    direction(beam, args);
-
-    if (crawl_state.seen_hups)
+    while (true)
     {
-        mpr("Cancelling blink due to HUP.");
-        return false;
-    }
+        // query for location {dlb}:
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.needs_path = false;
+        args.top_prompt = uppercase_first(verb) + " to where?";
+        args.hitfunc = hitfunc;
+        dist beam;
+        direction(beam, args);
 
-    if (!beam.isValid || beam.target == you.pos())
-    {
-        if (!safe_cancel
-            && !yesno("Are you sure you want to cancel this blink?",
-                      false, 'n'))
+        if (crawl_state.seen_hups)
         {
-            clear_messages();
-            return _find_cblink_target(target, safe_cancel);
+            mprf("Cancelling %s due to HUP.", verb.c_str());
+            return false;
         }
 
-        canned_msg(MSG_OK);
-        return false;
-    }
+        if (!beam.isValid || beam.target == you.pos())
+        {
+            const string prompt =
+                "Are you sure you want to cancel this " + verb + "?";
+            if (!safe_cancel && !yesno(prompt.c_str(), false, 'n'))
+            {
+                clear_messages();
+                continue;
+            }
 
-    const monster* beholder = you.get_beholder(beam.target);
-    if (beholder)
-    {
-        mprf("You cannot blink away from %s!",
-             beholder->name(DESC_THE, true).c_str());
-        return _find_cblink_target(target, safe_cancel);
-    }
+            canned_msg(MSG_OK);
+            return false;
+        }
 
-    const monster* fearmonger = you.get_fearmonger(beam.target);
-    if (fearmonger)
-    {
-        mprf("You cannot blink closer to %s!",
-             fearmonger->name(DESC_THE, true).c_str());
-        return _find_cblink_target(target, safe_cancel);
-    }
+        const monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            mprf("You cannot %s away from %s!",
+                 verb.c_str(),
+                 beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
 
-    if (cell_is_solid(beam.target))
-    {
-        clear_messages();
-        mpr("You can't blink into that!");
-        return _find_cblink_target(target, safe_cancel);
-    }
+        const monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            mprf("You cannot %s closer to %s!",
+                 verb.c_str(),
+                 fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
 
-    monster* target_mons = monster_at(beam.target);
-    if (target_mons && you.can_see(*target_mons))
-    {
-        mprf("You can't blink onto %s!", target_mons->name(DESC_THE).c_str());
-        return _find_cblink_target(target, safe_cancel);
-    }
+        if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            mprf("You can't %s into that!", verb.c_str());
+            continue;
+        }
 
-    if (!check_moveto(beam.target, "blink"))
-    {
-        return _find_cblink_target(target, safe_cancel);
-        // try again (messages handled by check_moveto)
-    }
+        monster* target_mons = monster_at(beam.target);
+        if (target_mons && you.can_see(*target_mons))
+        {
+            mprf("You can't %s onto %s!", verb.c_str(),
+                 target_mons->name(DESC_THE).c_str());
+            continue;
+        }
 
-    if (you.see_cell_no_trans(beam.target))
-    {
+        if (!check_moveto(beam.target, verb))
+        {
+            continue;
+            // try again (messages handled by check_moveto)
+        }
+
+        if (!you.see_cell_no_trans(beam.target))
+        {
+            clear_messages();
+            if (you.trans_wall_blocking(beam.target))
+                canned_msg(MSG_SOMETHING_IN_WAY);
+            else
+                canned_msg(MSG_CANNOT_SEE);
+            continue;
+        }
+
         target = beam.target; // Grid in los, no problem.
         return true;
     }
-
-    clear_messages();
-    if (you.trans_wall_blocking(beam.target))
-        canned_msg(MSG_SOMETHING_IN_WAY);
-    else
-        canned_msg(MSG_CANNOT_SEE);
-    return _find_cblink_target(target, safe_cancel);
 }
 
 void wizard_blink()
@@ -236,6 +250,10 @@ void wizard_blink()
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.needs_path = false;
+    targeter_smite tgt(&you, LOS_RADIUS);
+    tgt.obeys_mesmerise = false;
+    args.hitfunc = &tgt;
+
     args.top_prompt = "Blink to where?";
     dist beam;
     direction(beam, args);
@@ -274,6 +292,78 @@ void wizard_blink()
     move_player_to_grid(beam.target, false);
 }
 
+static const int HOP_FUZZ_RADIUS = 2;
+
+/**
+ * Randomly choose one of the spaces near the given target for the player's hop
+ * to land on.
+ *
+ * @param target    The tile the player wants to land on.
+ * @return          A nearby, unoccupied, inhabitable tile.
+ */
+static coord_def _fuzz_hop_destination(coord_def target)
+{
+    coord_def chosen;
+    int seen = 0;
+    for (radius_iterator ri(target, HOP_FUZZ_RADIUS, C_SQUARE, LOS_NO_TRANS);
+         ri; ++ri)
+    {
+        if (valid_blink_destination(&you, *ri) && one_chance_in(++seen))
+            chosen = *ri;
+    }
+    return chosen;
+}
+
+/**
+ * Attempt to hop the player to a space near a tile of their choosing.
+ *
+ * @param fail          Whether this came from a mis-invoked ability (& should
+ *                      therefore fail after selecting a target)
+ * @return              Whether the hop succeeded, aborted, or was miscast.
+ */
+spret_type frog_hop(bool fail)
+{
+    const int hop_range = 2 + you.get_mutation_level(MUT_HOP) * 2; // 4-6
+    coord_def target;
+    targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
+    tgt.obeys_mesmerise = true;
+    while (true)
+    {
+        if (!_find_cblink_target(target, true, "hop", &tgt))
+            return SPRET_ABORT;
+        if (grid_distance(you.pos(), target) > hop_range)
+        {
+            mpr("That's out of range!"); // ! targeting
+            continue;
+        }
+        break;
+    }
+    target = _fuzz_hop_destination(target);
+
+    fail_check();
+
+    if (!you.attempt_escape(2)) // XXX: 1?
+        return SPRET_SUCCESS; // of a sort
+
+    // invisible monster that the targeter didn't know to avoid, or similar
+    if (target.origin())
+    {
+        mpr("You tried to hop, but there was no room to land!");
+        // TODO: what to do here?
+        return SPRET_SUCCESS; // of a sort
+    }
+
+    if (!cell_is_solid(you.pos())) // should be safe.....
+        place_cloud(CLOUD_DUST, you.pos(), 2 + random2(3), &you);
+    move_player_to_grid(target, false);
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+    mpr("Boing!");
+    you.increase_duration(DUR_NO_HOP, 12 + random2(13));
+
+    return SPRET_SUCCESS; // TODO
+}
+
 /**
  * Attempt to blink the player to a nearby tile of their choosing.
  *
@@ -287,7 +377,9 @@ void wizard_blink()
 spret_type controlled_blink(bool fail, bool safe_cancel)
 {
     coord_def target;
-    if (!_find_cblink_target(target, safe_cancel))
+    targeter_smite tgt(&you, LOS_RADIUS);
+    tgt.obeys_mesmerise = true;
+    if (!_find_cblink_target(target, safe_cancel, "blink", &tgt))
         return SPRET_ABORT;
 
     fail_check();
@@ -780,8 +872,9 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     int dist = beam.path_taken.size();
 
     // The maximum number of squares the item will actually move, always
-    // at least one square.
-    int max_dist = max(pow * 2 / 5, 1);
+    // at least one square. Always has a chance to move the entirety of default
+    // LOS (7), but only becomes certain at max power (50).
+    int max_dist = max(1, min(LOS_RADIUS, random2(8) + div_rand_round(pow, 7)));
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 

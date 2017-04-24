@@ -3,11 +3,11 @@
  * @brief Dungeon branch classes
 **/
 
-#ifndef BRANCH_H
-#define BRANCH_H
+#pragma once
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "branch-type.h"
+#include "item-prop-enum.h"
 #include "player.h"
 
 #define BRANCH_NOISE_AMOUNT 6
@@ -114,4 +114,3 @@ int runes_for_branch(branch_type branch);
 string branch_noise_desc(branch_type br);
 string branch_rune_desc(branch_type br, bool remaining_only);
 branch_type rune_location(rune_type rune);
-#endif

@@ -28,7 +28,7 @@ function ready()
                    "debug.disable('death')" .. eol ..
                    "debug.disable('spawns')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
-    crawl.sendkeys("&l27" .. eol .. "N")
+    crawl.sendkeys("&l27" .. eol)
     crawl.sendkeys("&" .. string.char(2))
     crawl.sendkeys("&G" .. eol)
   end

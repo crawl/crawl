@@ -3,8 +3,7 @@
  * @brief Stuff needed for hints mode
 **/
 
-#ifndef HINTS_H
-#define HINTS_H
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -144,7 +143,9 @@ enum hints_event_type
 #endif
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
+#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_ROD,
+#endif
     HINT_EVENTS_NUM
 };
 
@@ -205,4 +206,3 @@ struct hints_state
 extern hints_state Hints;
 
 void tutorial_msg(const char *text, bool end = false);
-#endif

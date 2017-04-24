@@ -16,6 +16,7 @@
 #include "colour.h"
 #include "files.h"
 #include "message.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
@@ -38,15 +39,6 @@
 #ifdef DGL_ENABLE_CORE_DUMP
     #include <sys/time.h>
     #include <sys/resource.h>
-#endif
-
-#if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
-    #ifdef __ANDROID__
-        #include <SDL_mixer.h>
-    #else
-        #include <SDL2/SDL_mixer.h>
-    #endif
-    Mix_Chunk* sdl_sound_to_play = nullptr;
 #endif
 
 unsigned int isqrt(unsigned int a)
@@ -106,34 +98,6 @@ bool shell_safe(const char *file)
     int match = strcspn(file, "\\`$*?|><&\n!;");
     return match < 0 || !file[match];
 }
-
-#ifdef USE_SOUND
-void play_sound(const char *file)
-{
-#if defined(WINMM_PLAY_SOUNDS)
-    // Check whether file exists, is readable, etc.?
-    if (file && *file)
-        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
-
-#elif defined(SOUND_PLAY_COMMAND)
-    char command[255];
-    command[0] = 0;
-    if (file && *file && (strlen(file) + strlen(SOUND_PLAY_COMMAND) < 255)
-        && shell_safe(file))
-    {
-        snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(OUTS(command));
-    }
-#elif defined(USE_SDL)
-    if (Mix_Playing(0))
-        Mix_HaltChannel(0);
-    if (sdl_sound_to_play != nullptr)
-        Mix_FreeChunk(sdl_sound_to_play);
-    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
-    Mix_PlayChannel(0, sdl_sound_to_play, 0);
-#endif
-}
-#endif
 
 bool key_is_escape(int key)
 {

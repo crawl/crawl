@@ -1,5 +1,4 @@
-#ifndef LIBUNIX_H
-#define LIBUNIX_H
+#pragma once
 
 #ifndef O_BINARY
 #define O_BINARY 0
@@ -21,5 +20,4 @@ static inline constexpr bool is_tiles() { return false; }
 
 extern int unixcurses_get_vi_key(int keyin);
 
-#endif
 #endif

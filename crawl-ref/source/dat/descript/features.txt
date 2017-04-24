@@ -136,6 +136,11 @@ A glowing silver altar of Zin
 An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers
 are expected to be, and glowing gently.
 %%%%
+An ornate altar of the Wu Jian Council
+
+An red and gold altar to the Wu Jian Council. Sharp slivers of steel drift
+through the quiet air surrounding it.
+%%%%
 ########################################################################
 ### Terrain
 ########################################################################
@@ -342,6 +347,18 @@ A broken pillar
 
 A ruined and crumbled stone pillar.
 %%%%
+A one-way staircase leading down
+
+A cursed staircase leading further down, imbued with magic to prevent any
+return back up the stairs. Adventurers taking this passage will need to find a
+return stairway somewhere else on the level where they arrive.
+%%%%
+A one-way staircase leading up
+
+A cursed staircase leading up, imbued with magic to prevent any return back
+down the stairs. Adventurers taking this passage will need to find a return
+stairway somewhere else on the level where they arrive.
+%%%%
 ########################################################################
 ### Branch entrances and exits
 ########################################################################
@@ -495,6 +512,11 @@ A staircase leading to the Tomb of the Ancients.
 A gate to the Vaults
 
 A gateway leading to the Vaults.
+%%%%
+A transporter
+
+A one-way portal to another place on this level. When using a transporter,
+adjacent allies and monsters will travel with you to the other side.
 %%%%
 ########################################################################
 ## Doors
@@ -819,29 +841,36 @@ A tree, as dead as everything else here.
 # Dis:7
 An iron statue
 
-A statue with no mouth. Creepy!
+A statue of an ancient warrior, festooned with trophies from fallen victims.
+Some dark substance oozes from the gaps in its visor; surely it must be oil..?
 %%%%
 # Geh:7
 Ashen ground
 
-Ashen ground. It is warm and almost comfortable.
+Ash and embers, littered with broken treasures and worthless coins from realms
+long fallen.
 %%%%
 A tempered metal wall
 
-A metal wall, emitting heat.
+Walls of brass and nickel, covered in a thin golden foil steadily peeling away
+in the constant, oppressive heat. Designs depict mortals dealing with devils,
+but the former rarely seem to come out ahead on the exchange.
 %%%%
 # Coc:7
 An ice-covered rock wall
 
-A rock wall coated in a thick layer of ice.
+A rock wall coated in a thick layer of ice. Twisted faces glower beneath the
+surface, locked in perpetual grimaces of rage and betrayal.
 %%%%
 An ice-covered stone wall
 
-A stone wall coated in a thick layer of ice.
+A stone wall coated in a thick layer of ice. Twisted faces glower beneath the
+surface, locked in perpetual grimaces of rage and betrayal.
 %%%%
 Frost-covered floor
 
-Frost-covered floor. It crunches satisfyingly underfoot.
+Earth locked within perpetual frost and cold. It seems ageless and changeless,
+as though it has existed in this state for an eternity.
 %%%%
 # Pan: the holy level
 A golden statue
@@ -853,10 +882,16 @@ A silver wall
 A wall made of pure silver.
 %%%%
 # Slime:$
-A rune carved stone wall
+A rune-carved stone wall
 
-A strangely slime-free stone wall, carved all over with countless mystical
-runes. One often repeated set of runes seems to refer to 'the Royal Jelly.'
+A strangely slime-free stone wall, carved all over with countless protective
+runes.
+%%%%
+A rune-carved clear stone wall
+
+A strangely slime-free stone wall, with strange lights twinkling within its
+airy confines. Mystical runes are scattered across its surface, seemingly
+referring to a 'Royal Jelly'.
 %%%%
 # Tomb:1
 A sarcophagus

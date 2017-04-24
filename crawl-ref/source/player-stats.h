@@ -1,5 +1,7 @@
-#ifndef PLAYER_STATS_H
-#define PLAYER_STATS_H
+#pragma once
+
+#include "duration-type.h"
+#include "stat-type.h"
 
 enum stat_desc_type
 {
@@ -33,4 +35,3 @@ bool have_stat_zero();
 void update_stat_zero(int time);
 
 int innate_stat(stat_type s);
-#endif

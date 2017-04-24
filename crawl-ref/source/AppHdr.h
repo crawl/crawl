@@ -13,8 +13,7 @@
 **/
 
 
-#ifndef APPHDR_H
-#define APPHDR_H
+#pragma once
 
 /* Fix annoying precompiled header compile errors caused by unused Objective-C variant. */
 #if !defined(__OBJC__)
@@ -148,12 +147,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // uncomment the line below and add -lpcre to your makefile.
     // #define REGEX_PCRE
 
-    // Uncomment (and edit as appropriate) to play sounds.
-    //
-    // WARNING: Filenames passed to this command *are not validated in any way*.
-    //
-    // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
-
     #include "libunix.h"
 
 #elif defined(TARGET_OS_WINDOWS)
@@ -171,9 +164,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
     #define ALT_FILE_SEPARATOR '\\'
-
-    // Uncomment to play sounds. winmm must be linked in if this is uncommented.
-    // #define WINMM_PLAY_SOUNDS
 
     // Use Perl-compatible regular expressions. libpcre must be available and
     // linked in. Required in the absence of POSIX regexes.
@@ -373,6 +363,9 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 //  Game Play Defines
 // =========================================================================
 
+// Current TAG_MAJOR_VERSION
+#include "tag-version.h"
+
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
@@ -475,5 +468,3 @@ static inline void UNUSED(const volatile T &)
 #endif
 
 #endif // !defined __OBJC__
-
-#endif // APPHDR_H

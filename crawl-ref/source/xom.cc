@@ -8,6 +8,7 @@
 #include "xom.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "abyss.h"
 #include "acquire.h"
@@ -25,13 +26,15 @@
 #include "english.h"
 #include "env.h"
 #include "errors.h"
-#include "goditem.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-item.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "losglobal.h"
 #include "makeitem.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -86,41 +89,23 @@ static bool _action_is_bad(xom_event_type action)
     return action > XOM_LAST_GOOD_ACT && action <= XOM_LAST_BAD_ACT;
 }
 
-// Spells to be cast at tension 0 (no or only low-level monsters around),
-// mostly flavour.
-static const vector<spell_type> _xom_nontension_spells =
-{
-    SPELL_SUMMON_BUTTERFLIES,
-    SPELL_SPIDER_FORM,
-    SPELL_ICE_FORM,
-    SPELL_STATUE_FORM,
-    SPELL_HYDRA_FORM,
-    SPELL_DRAGON_FORM,
-    SPELL_NECROMUTATION
-};
-
 // Spells to be cast at tension > 0, i.e. usually in battle situations.
 // Spells later in the list require higher severity to have a chance of being
 // selected.
-static const vector<spell_type> _xom_tension_spells =
+static const vector<spell_type> _xom_random_spells =
 {
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SMALL_MAMMAL,
-    SPELL_CONFUSING_TOUCH,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_SPIDER_FORM,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
-    SPELL_ICE_FORM,
     SPELL_RING_OF_FLAMES,
     SPELL_SHADOW_CREATURES,
-    SPELL_EXCRUCIATING_WOUNDS,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
-    SPELL_HYDRA_FORM,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
@@ -128,8 +113,6 @@ static const vector<spell_type> _xom_tension_spells =
     SPELL_MONSTROUS_MENAGERIE,
     SPELL_DISCORD,
     SPELL_DISJUNCTION,
-    SPELL_CONJURE_BALL_LIGHTNING,
-    SPELL_DRAGON_FORM,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
     SPELL_NECROMUTATION,
@@ -507,35 +490,35 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
 
 static bool _transformation_check(const spell_type spell)
 {
-    transformation_type tran = TRAN_NONE;
+    transformation tran = transformation::none;
     switch (spell)
     {
     case SPELL_BEASTLY_APPENDAGE:
-        tran = TRAN_APPENDAGE;
+        tran = transformation::appendage;
         break;
     case SPELL_SPIDER_FORM:
-        tran = TRAN_SPIDER;
+        tran = transformation::spider;
         break;
     case SPELL_STATUE_FORM:
-        tran = TRAN_STATUE;
+        tran = transformation::statue;
         break;
     case SPELL_ICE_FORM:
-        tran = TRAN_ICE_BEAST;
+        tran = transformation::ice_beast;
         break;
     case SPELL_HYDRA_FORM:
-        tran = TRAN_HYDRA;
+        tran = transformation::hydra;
         break;
     case SPELL_DRAGON_FORM:
-        tran = TRAN_DRAGON;
+        tran = transformation::dragon;
         break;
     case SPELL_NECROMUTATION:
-        tran = TRAN_LICH;
+        tran = transformation::lich;
         break;
     default:
         break;
     }
 
-    if (tran == TRAN_NONE)
+    if (tran == transformation::none)
         return true;
 
     // Check whether existing enchantments/transformations, cursed
@@ -545,16 +528,15 @@ static bool _transformation_check(const spell_type spell)
 }
 
 /// Try to choose a random player-castable spell.
-static spell_type _choose_random_spell(int sever, int tense)
+static spell_type _choose_random_spell(int sever)
 {
     const int spellenum = max(1, sever);
     vector<spell_type> ok_spells;
-    const vector<spell_type> &spell_list = tense ? _xom_tension_spells
-                                                 : _xom_nontension_spells;
+    const vector<spell_type> &spell_list = _xom_random_spells;
     for (int i = 0; i < min(spellenum, (int)spell_list.size()); ++i)
     {
         const spell_type spell = spell_list[i];
-        if (!spell_is_useless(spell, true, true, false, true)
+        if (!spell_is_useless(spell, true, true, true)
              && _transformation_check(spell))
         {
             ok_spells.push_back(spell);
@@ -567,9 +549,9 @@ static spell_type _choose_random_spell(int sever, int tense)
 }
 
 /// Cast a random spell 'through' the player.
-static void _xom_makes_you_cast_random_spell(int sever, bool tense)
+static void _xom_random_spell(int sever)
 {
-    const spell_type spell = _choose_random_spell(sever, tense);
+    const spell_type spell = _choose_random_spell(sever);
     if (spell == SPELL_NO_SPELL)
         return;
 
@@ -581,21 +563,9 @@ static void _xom_makes_you_cast_random_spell(int sever, bool tense)
          spell);
 #endif
 
-    your_spells(spell, sever, false, false, true);
+    your_spells(spell, sever, false);
     const string note = make_stringf("cast spell '%s'", spell_title(spell));
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
-}
-
-/// Cast a random spell appropriate for tense/dangerous situations.
-static void _xom_tension_spell(int sever)
-{
-    _xom_makes_you_cast_random_spell(sever, true);
-}
-
-/// Cast a random spell appropriate for non-tense, calm situations.
-static void _xom_calm_spell(int sever)
-{
-    _xom_makes_you_cast_random_spell(sever, false);
 }
 
 /// Map out the level.
@@ -763,10 +733,16 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_unrandom_artefact(item))
         return false;
 
-    // Staves and rods can't be changed either, since they don't have brands
-    // in the way other weapons do.
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
+    // Staves can't be changed either, since they don't have brands in the way
+    // other weapons do.
+    if (item.base_type == OBJ_STAVES
+#if TAG_MAJOR_VERSION == 34
+        || item.base_type == OBJ_RODS
+#endif
+       )
+{
         return false;
+}
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.
@@ -1374,7 +1350,7 @@ static void _xom_snakes_to_sticks(int sever)
 
         // Dismiss monster silently.
         move_item_to_grid(&item_slot, mi->pos());
-        monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
+        monster_die(**mi, KILL_DISMISSED, NON_MONSTER, true, false);
     }
 }
 
@@ -1490,14 +1466,10 @@ static void _xom_give_good_mutations(int) { _xom_give_mutations(true); }
 static void _xom_give_bad_mutations(int) { _xom_give_mutations(false); }
 
 /**
- * Have Xom throw divine lightning. May include the player as a victim.
+ * Have Xom throw divine lightning.
  */
 static void _xom_throw_divine_lightning(int /*sever*/)
 {
-    const bool protection = you.hp <= random2(201);
-    if (protection)
-        you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-
     god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
     bolt beam;
@@ -1514,25 +1486,9 @@ static void _xom_throw_divine_lightning(int /*sever*/)
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
-    beam.explode();
+    beam.explode(true, true);
 
-    if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-    {
-        mpr("Your divine protection wanes.");
-        you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
-    }
-
-    // Don't accidentally kill the player when doing a good act.
-    if (you.escaped_death_cause == KILLED_BY_WILD_MAGIC
-        && you.escaped_death_aux == "Xom's lightning strike")
-    {
-        set_hp(1);
-        you.reset_escaped_death();
-    }
-
-    const string note = make_stringf("divine lightning%s",
-                                     protection ? " (protected)" : "");
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "divine lightning"), true);
 }
 
 /// What scenery nearby would Xom like to mess with, if any?
@@ -1846,10 +1802,12 @@ static void _xom_enchant_monster(bool helpful)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 }
 
-static void _xom_good_enchant_monster(int /*sever*/) {
+static void _xom_good_enchant_monster(int /*sever*/)
+{
     _xom_enchant_monster(true);
 }
-static void _xom_bad_enchant_monster(int /*sever*/) {
+static void _xom_bad_enchant_monster(int /*sever*/)
+{
     _xom_enchant_monster(false);
 }
 
@@ -2011,8 +1969,8 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     {
         string str = "A monocle briefly appears over your ";
-        str += coinflip() ? "right" : "left";
-        if (you.form == TRAN_SPIDER)
+        str += random_choose("right", "left");
+        if (you.form == transformation::spider)
         {
             if (coinflip())
                 str += " primary";
@@ -2138,7 +2096,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         item_def &item = **random_iterator(inv_items);
 
         string name = item.name(DESC_YOUR, false, false, false);
-        string verb = coinflip() ? "glow" : "vibrate";
+        string verb = random_choose("glow", "vibrate");
 
         if (item.quantity == 1)
             verb += "s";
@@ -2176,20 +2134,20 @@ static void _get_hand_type(string &hand, bool &can_plural)
         plural_vec.push_back(plural);
     }
 
-    if (you.form == TRAN_SPIDER)
+    if (you.form == transformation::spider)
     {
         hand_vec.emplace_back("mandible");
         plural_vec.push_back(true);
     }
     else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
-             && !player_mutation_level(MUT_BEAK)
+             && !you.get_mutation_level(MUT_BEAK)
           || form_changed_physiology())
     {
         hand_vec.emplace_back("nose");
         plural_vec.push_back(false);
     }
 
-    if (you.form == TRAN_BAT
+    if (you.form == transformation::bat
         || you.species != SP_MUMMY && you.species != SP_OCTOPODE
            && !form_changed_physiology())
     {
@@ -2846,7 +2804,7 @@ static void _xom_cleaving(int sever)
 {
     god_speaks(GOD_XOM, _get_xom_speech("cleaving").c_str());
 
-    you.increase_duration(DUR_CLEAVE, 10 + random2(sever) * 10);
+    you.increase_duration(DUR_CLEAVE, 10 + random2(sever));
 
     if (const item_def* const weapon = you.weapon())
     {
@@ -2868,7 +2826,7 @@ static void _xom_cleaving(int sever)
 
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
-    const transformation_type orig_form)
+    const transformation orig_form)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -2974,10 +2932,10 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
             return divination;
     }
 
-    if (x_chance_in_y(4, sever) && (tension > 0 || one_chance_in(3))
-        && _choose_random_spell(sever, tension > 0) != SPELL_NO_SPELL)
+    if (x_chance_in_y(4, sever) && tension > 0
+        && _choose_random_spell(sever) != SPELL_NO_SPELL)
     {
-        return tension > 0 ? XOM_GOOD_SPELL_TENSION : XOM_GOOD_SPELL_CALM;
+        return XOM_GOOD_SPELL;
     }
 
     if (tension <= 0 && x_chance_in_y(5, sever)
@@ -2999,7 +2957,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > random2(5) && x_chance_in_y(7, sever)
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_SINGLE_ALLY;
     }
@@ -3013,13 +2971,13 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_SNAKES;
 
     if (tension > random2(10) && x_chance_in_y(10, sever)
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_ALLIES;
     }
     if (tension > random2(8) && x_chance_in_y(11, sever)
         && _find_monster_with_animateable_weapon()
-        && !player_mutation_level(MUT_NO_LOVE))
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_ANIMATE_MON_WPN;
     }
@@ -3074,7 +3032,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (random2(tension) < 5 && x_chance_in_y(19, sever)
-        && x_chance_in_y(16, how_mutated())
+        && x_chance_in_y(16, you.how_mutated())
         && you.can_safely_mutate())
     {
         return XOM_GOOD_MUTATION;
@@ -3147,13 +3105,11 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         && _teleportation_check())
     {
         const int explored = _exploration_estimate(true);
-        if (nasty && (explored >= 40 || tension > 10)
-            || explored >= 60 + random2(40))
+        if (!(nasty && (explored >= 40 || tension > 10)
+            || explored >= 60 + random2(40)))
         {
-            // TODO: invert this conditional
-        }
-        else
             return XOM_BAD_TELEPORT;
+        }
     }
     if (x_chance_in_y(16, sever))
         return XOM_BAD_POLYMORPH;
@@ -3290,7 +3246,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 void xom_take_action(xom_event_type action, int sever)
 {
     const int  orig_hp       = you.hp;
-    const transformation_type orig_form = you.form;
+    const transformation orig_form = you.form;
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation = you.mutation;
     const bool was_bored = _xom_is_bored();
 
@@ -3677,8 +3633,7 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_MAGIC_MAPPING, { "magic mapping", _xom_magic_mapping }},
     { XOM_GOOD_DETECT_CREATURES, { "detect creatures", _xom_detect_creatures }},
     { XOM_GOOD_DETECT_ITEMS, { "detect items", _xom_detect_items }},
-    { XOM_GOOD_SPELL_TENSION, { "tension spell", _xom_tension_spell }},
-    { XOM_GOOD_SPELL_CALM, { "calm spell", _xom_calm_spell }},
+    { XOM_GOOD_SPELL, { "tension spell", _xom_random_spell }},
     { XOM_GOOD_CONFUSION, { "confuse monsters", _xom_confuse_monsters }},
     { XOM_GOOD_SINGLE_ALLY, { "single ally", _xom_send_one_ally }},
     { XOM_GOOD_ANIMATE_MON_WPN, { "animate monster weapon",

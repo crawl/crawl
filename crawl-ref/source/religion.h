@@ -3,11 +3,10 @@
  * @brief Misc religion related functions.
 **/
 
-#ifndef RELIGION_H
-#define RELIGION_H
+#pragma once
 
 #include "enum.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "player.h"
 #include "religion-enum.h"
 
@@ -19,6 +18,13 @@
 #define NUM_VEHUMET_GIFTS 13
 
 #define NUM_PIETY_STARS 6
+
+enum class lifesaving_chance
+{
+    never,
+    sometimes,
+    always,
+};
 
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
@@ -35,8 +41,10 @@ god_type random_god();
 int piety_breakpoint(int i);
 string god_name(god_type which_god, bool long_name = false);
 string god_name_jiyva(bool second_name = false);
+string wu_jian_random_sifu_name();
 god_type str_to_god(const string &name, bool exact = true);
 
+int initial_wrath_penance_for(god_type god);
 bool active_penance(god_type god);
 bool xp_penance(god_type god);
 void dec_penance(int val);
@@ -93,19 +101,16 @@ bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spellcasting(god_type god);
-bool god_hates_spell(spell_type spell, god_type god,
-                     bool rod_spell = false);
+bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 bool god_hates_ability(ability_type ability, god_type god);
-int elyvilon_lifesaving();
+lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
 void set_penance_xp_timeout();
 bool fedhas_protects(const monster& target);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
-
-bool tso_unchivalric_attack_safe_monster(const monster& mon);
 
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
@@ -189,5 +194,3 @@ struct god_power
 
 void set_god_ability_slots();
 vector<god_power> get_god_powers(god_type god);
-
-#endif

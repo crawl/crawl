@@ -18,14 +18,15 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h" // passive_t::shadow_attacks
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h" // passive_t::shadow_attacks
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -36,6 +37,7 @@
 #include "shout.h"
 #include "showsymb.h"
 #include "skills.h"
+#include "sound.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -325,8 +327,7 @@ static int _fire_prompt_for_item()
 
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, 0, -1,
-                                   nullptr, OPER_FIRE);
+                                   OSEL_THROWABLE, OPER_FIRE);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
@@ -464,6 +465,10 @@ bool is_pproj_active()
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
 {
+#ifdef USE_SOUND
+    parse_sound(FIRE_PROMPT_SOUND);
+#endif
+
     dist target;
     item = get_ammo_to_shoot(item, target, is_pproj_active());
     if (item == -1)
@@ -779,7 +784,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, false))
             return false;
 
         if (!thrown.quantity)

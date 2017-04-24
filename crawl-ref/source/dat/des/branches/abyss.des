@@ -200,24 +200,24 @@ default-depth: Abyss
 # Dummy vaults
 NAME: abyss_furniture_dummy
 TAGS: dummy
-CHANCE: 0 : 90% (Abyss:1)
-CHANCE: 0 : 80% (Abyss:2)
-CHANCE: 0 : 70% (Abyss:3)
-CHANCE: 0 : 60% (Abyss:4)
-CHANCE: 0 : 50% (Abyss:5)
+CHANCE: 90% (Abyss:1)
+CHANCE: 80% (Abyss:2)
+CHANCE: 70% (Abyss:3)
+CHANCE: 60% (Abyss:4)
+CHANCE: 50% (Abyss:5)
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune unrand dummy
-CHANCE: 0 : 10%
+CHANCE: 10%
 
 # FIXME: the tag name is inaccurate with abyssal stairs placed by these vaults.
 NAME: abyss_exit_dummy
 TAGS: abyss_exit unrand dummy
-CHANCE: 0 : 95% (Abyss:1)
-CHANCE: 0 : 90% (Abyss:2)
-CHANCE: 0 : 85% (Abyss:3)
-CHANCE: 0 : 80% (Abyss:4)
-CHANCE: 0 : 75% (Abyss:5)
+CHANCE: 95% (Abyss:1)
+CHANCE: 90% (Abyss:2)
+CHANCE: 85% (Abyss:3)
+CHANCE: 80% (Abyss:4)
+CHANCE: 75% (Abyss:5)
 
 NAME:    abyss_fake_exit
 TAGS:    allow_dup
@@ -723,10 +723,9 @@ TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
 ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
-         wand of lightning / wand of acid / wand of slowing w:5 / \
-         wand of confusion w:5 / ring mail good_item / \
-         chain mail good_item w:12 / shield / spear good_item / \
-         trident good_item / any weapon w:12 / any w:2
+         wand of lightning / wand of acid / wand of confusion / \
+         ring mail good_item / chain mail good_item w:12 / shield / \
+         spear good_item / trident good_item / any weapon w:12 / any w:2
 SUBST:   x = ccccvbb
 MAP
      .x.x
@@ -1454,8 +1453,8 @@ KMONS:   6 = lurking horror
 KITEM:   4d = scroll of random uselessness w:15 q:1 / fruit q:1 w:4 / \
          club w:6 / stone q:1 / needle q:1 ego:confusion / \
          mundane animal skin / mundane ring mail / gold q:1
-KITEM:   5 = wand of slowing / wand of confusion / wand of flame w:5 / \
-         whip not_cursed w:2 / hat not_cursed mundane w:5
+KITEM:   5 = wand of confusion / wand of flame / whip not_cursed w:2 / \
+         hat not_cursed mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
@@ -1586,6 +1585,50 @@ nn.......nn
   nn...nn
 ENDMAP
 
+NAME:    gammafunk_abyss_rune_reverse_zot
+TAGS:    abyss_rune unrand
+MONS:    draconian
+MONS:    draconian annihilator / draconian scorcher / draconian shifter \
+         / draconian knight / draconian monk / draconian stormcaller w:5
+MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
+         / very ugly thing / quicksilver dragon / shadow dragon
+MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
+         / blizzard demon / executioner / angel / daeva
+MONS:    hellephant / ancient lich / hell sentinel / profane servitor
+KITEM:   O = abyssal rune of Zot
+MARKER:  P = lua:transp_loc("reverse_zot_entry")
+MARKER:  P = lua:transp_dest_loc("reverse_zot_exit")
+MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
+MARKER:  R = lua:transp_loc("reverse_zot_exit")
+SHUFFLE: AB, CD
+# Make a classed draconian and band in each lung.
+NSUBST:  A = 2 / 2=112 / 2=1' / ', C = 2 / 2=112 / 2=1" / "
+NSUBST:  B = 3 / 0 / ', D = 3 / 0 / "
+SHUFFLE: hi' / jk"
+SUBST:   hk = c, i = ', j = -, R = 5
+NSUBST:  ' = 003 / 003... / ., " = 003 / 003... / .
+NSUBST:  - = 2=4 / 2=34.. / .
+COLOUR:  c = lightmagenta
+COLOUR:  n@OQ012345. = magenta
+FTILE:   nc+@OPQ012345. = floor_rough_magenta
+MAP
+         .@.
+ccccccccc.P.ccccccccc
+ccAAAAcccnnncccCCCCcc
+cAAAAAAccnnnccCCCCCCc
+cAAAAAAc.....cCCCCCCc
+ccAAAAA+..Q..+CCCCCcc
+cAAAAAAc.....cCCCCCCc
+ccAAAAccccnccccCCCCCc
+cccBccccccOccccccDccc
+ccBBBcc--c+c--ccDDDcc
+cBBBBBcc-----ccDDDDDc
+cBBBBBcc-----ccDDDDDc
+cBBBBBchhh-jjjcDDDDDc
+cBBBBB+''cnc""+DDDDDc
+ccBBBccc'iRk"cccDDDcc
+ccccccccccccccccccccc
+ENDMAP
 
 ###############################################################################
 # Abyss Exit Vaults
@@ -2189,4 +2232,27 @@ x00........
 x<0......>.
 x00........
 xxxxxxxxxxx
+ENDMAP
+
+NAME:   gammafunk_abyss_exit_x_factor
+TAGS:   abyss_exit unrand transparent
+MONS:   large abomination / thrashing horror / tentacled starspawn \
+        / starcursed mass / tentacled monstrosity
+MONS:   orange crystal statue
+NSUBST: E = E / -
+NSUBST: - = 2=0 / 1 / 2=01.. / .
+SUBST:  c : cvb
+MARKER: D = lua:transp_loc("x_factor")
+MARKER: E = lua:transp_dest_loc("x_factor")
+: init_abyss_exit(_G, "O")
+MAP
+ccccc     ccccc
+nn--cc   cc-Ecc
+.nn--ccccc--cc
+..nn--c-c--cc
+@.DnO--2---c
+..nn--c-c--cc
+.nn--ccccc--cc
+nn--cc   cc-Ecc
+ccccc     ccccc
 ENDMAP

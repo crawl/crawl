@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_MENU_H
-#define TILEREG_MENU_H
+#pragma once
 
 #include <vector>
 
@@ -67,5 +66,4 @@ protected:
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
 
-#endif
 #endif

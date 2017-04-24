@@ -17,9 +17,9 @@
 #include "cloud.h"
 #include "directn.h"
 #include "env.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "ouch.h"
@@ -233,7 +233,7 @@ static void _iood_stop(monster& mon, bool msg = true)
     if (msg)
         simple_monster_message(mon, " dissipates.");
     dprf("iood: dissipating");
-    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 }
 
 static void _fuzz_direction(const actor *caster, monster& mon, int pow)
@@ -247,7 +247,7 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 
     if (pow < 10)
         pow = 10;
-    const float off = (coinflip() ? -1 : 1) * 0.25;
+    const float off = random_choose(-0.25, 0.25);
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
     int inaccuracy = caster->inaccuracy();
@@ -325,7 +325,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.ex_size = 1;
     beam.loudness = 7;
 
-    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 
     if (big_boom)
         beam.explode(true, false);
@@ -463,7 +463,7 @@ move_again:
                 {
                     if (you.see_cell(pos))
                         mpr("The orb fizzles.");
-                    monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                    monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 }
 
                 // Return, if the acting orb fizzled.
@@ -471,7 +471,7 @@ move_again:
                 {
                     if (you.see_cell(pos))
                         mpr("The orb fizzles.");
-                    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+                    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
                     return true;
                 }
             }
@@ -482,7 +482,7 @@ move_again:
                 else
                     mpr("You hear a loud magical explosion!");
                 noisy(40, pos);
-                monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 _iood_hit(mon, pos, true);
                 return true;
             }
@@ -523,7 +523,8 @@ move_again:
 
             if (victim->is_player())
             {
-                if (shield && shield_reflects(*shield)) {
+                if (shield && shield_reflects(*shield))
+                {
                     mprf("Your %s reflects %s!",
                          shield->name(DESC_PLAIN).c_str(),
                          mon.name(DESC_THE, true).c_str());

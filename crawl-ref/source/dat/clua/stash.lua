@@ -90,7 +90,6 @@ function ch_stash_search_annotate_item(it)
       ["fire"] = "rF+",
       ["poison"] = "rPois",
       ["power"] = "MP+",
-      ["summoning"] = "Ward",
       ["wizardry"] = "Wiz"
     }
     if props[it.subtype()] then
@@ -102,7 +101,7 @@ function ch_stash_search_annotate_item(it)
     local props = {
       ["troll"] = "Regen+",
       ["steam"] = "rSteam",
-      ["mottled"] = "rNapalm",
+      ["acid"] = "rCorr",
       ["quicksilver"] = "MR+",
       ["swamp"] = "rPois",
       ["fire"] = "rF++ rC-",

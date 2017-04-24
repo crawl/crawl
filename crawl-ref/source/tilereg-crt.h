@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_CRT_H
-#define TILEREG_CRT_H
+#pragma once
 
 #include "tilereg-text.h"
 
@@ -49,5 +48,4 @@ public:
     virtual int handle_mouse(MouseEvent& event) override;
 };
 
-#endif
 #endif

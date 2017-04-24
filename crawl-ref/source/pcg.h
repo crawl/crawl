@@ -1,5 +1,4 @@
-#ifndef __LIB_PCG_HEADER__
-#define __LIB_PCG_HEADER__
+#pragma once
 
 class PcgRNG
 {
@@ -18,4 +17,3 @@ class PcgRNG
         uint64_t state_;
         uint64_t inc_;
 };
-#endif

@@ -10,6 +10,7 @@
 #include "mon-info.h"
 #include "options.h"
 #include "syscalls.h"
+#include "tile-player-flag-cut.h"
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
@@ -271,7 +272,7 @@ void fill_doll_equipment(dolls_data &result)
     // Equipment-using forms
     switch (you.form)
     {
-    case TRAN_TREE:
+    case transformation::tree:
         result.parts[TILEP_PART_BASE]    = TILEP_TRAN_TREE;
         result.parts[TILEP_PART_HELM]    = 0; // fixme, should show up
         result.parts[TILEP_PART_DRCHEAD] = 0;
@@ -281,7 +282,7 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_LEG]     = 0;
         result.parts[TILEP_PART_SHADOW]  = 0;
         break;
-    case TRAN_STATUE:
+    case transformation::statue:
         tileidx_t ch;
         switch (you.species)
         {
@@ -296,7 +297,7 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_LEG]     = 0;
         break;
-    case TRAN_LICH:
+    case transformation::lich:
         switch (you.species)
         {
         case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
@@ -344,7 +345,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
         const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
-        if (you.form == TRAN_BLADE_HANDS)
+        if (you.form == transformation::blade_hands)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
@@ -361,7 +362,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
         const int item = you.melded[EQ_SHIELD] ? -1 : you.equip[EQ_SHIELD];
-        if (you.form == TRAN_BLADE_HANDS)
+        if (you.form == transformation::blade_hands)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_OP;
@@ -398,7 +399,7 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.melded[EQ_HELMET] ? -1 : you.equip[EQ_HELMET];
         if (item != -1)
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
-        else if (player_mutation_level(MUT_HORNS) > 0)
+        else if (you.get_mutation_level(MUT_HORNS) > 0)
         {
             if (you.species == SP_FELID)
             {
@@ -416,7 +417,7 @@ void fill_doll_equipment(dolls_data &result)
                 }
             }
             else
-                switch (player_mutation_level(MUT_HORNS))
+                switch (you.get_mutation_level(MUT_HORNS))
                 {
                     case 1:
                         result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS1;
@@ -442,7 +443,7 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.melded[EQ_BOOTS] ? -1 : you.equip[EQ_BOOTS];
         if (item != -1)
             result.parts[TILEP_PART_BOOTS] = tilep_equ_boots(you.inv[item]);
-        else if (player_mutation_level(MUT_HOOVES) >= 3)
+        else if (you.get_mutation_level(MUT_HOOVES) >= 3)
             result.parts[TILEP_PART_BOOTS] = TILEP_BOOTS_HOOVES;
         else
             result.parts[TILEP_PART_BOOTS] = 0;
@@ -453,7 +454,7 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.melded[EQ_GLOVES] ? -1 : you.equip[EQ_GLOVES];
         if (item != -1)
             result.parts[TILEP_PART_ARM] = tilep_equ_gloves(you.inv[item]);
-        else if (player_mutation_level(MUT_TENTACLE_SPIKE))
+        else if (you.has_mutation(MUT_TENTACLE_SPIKE))
             result.parts[TILEP_PART_ARM] = TILEP_ARM_OCTOPODE_SPIKE;
         else if (you.has_claws(false) >= 3)
             result.parts[TILEP_PART_ARM] = TILEP_ARM_CLAWS;

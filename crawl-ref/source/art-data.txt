@@ -73,7 +73,7 @@
 # * chaotic:  Is treated as a chaotic item.
 # * clarity:  Provides clarity.
 # * corrode:  Randomly causes corrosion when taking damage.
-# * cursed:   Item is generated cursed.
+# * curse:    Item curses itself on equip, and is generated cursed.
 # * drain:    Causes draining when unequipped.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
@@ -92,9 +92,11 @@
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
 # * poison:   Grants poison resistance.
+# * rcorr:    Grants corrosion resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
 # * rmsl:     Passively repels missiles.
+# * rmut:     Grants mutation resistance.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * skip_ego: The item's ego is skipped in its inscription, to be replaced by
@@ -133,8 +135,6 @@
 # COLOUR:   The colour of the artefact, either as listed in defines.h
 #           (e.g., LIGHTRED) or as listed under element_type in view.h
 #           (e.g., ETC_FIRE)
-# CURSED:   The artefact has a one-in-num chance of becoming cursed each
-#           time it's equipped (and is generated cursed).
 # SLAY:     Slaying modifier (for non-weapon artefacts).
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
@@ -171,7 +171,7 @@ PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
-VALUE:   1200
+VALUE:   1000
 BOOL:    special
 
 NAME:    Wrath of Trog
@@ -180,7 +180,7 @@ PLUS:    +8
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
-VALUE:   1000
+VALUE:   800
 ANGRY:   50
 BRAND:   SPWPN_ANTIMAGIC
 
@@ -190,7 +190,7 @@ PLUS:    +0   # Set on generation
 COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
-VALUE:   700
+VALUE:   600
 BOOL:    special, no_upgrade
 BRAND:   SPWPN_CHAOS
 
@@ -200,7 +200,6 @@ PLUS:    +12
 COLOUR:  LIGHTMAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
-VALUE:   1000
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
 
@@ -210,7 +209,7 @@ PLUS:    +0 # Set on wield
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
-VALUE:   1000
+VALUE:   800
 BOOL:    special, no_upgrade
 
 NAME:    staff of Olgreb
@@ -239,7 +238,7 @@ COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRISM
-VALUE:   1000
+VALUE:   600
 
 NAME:    scythe of Curses
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
@@ -249,7 +248,7 @@ TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
 BRAND:   SPWPN_DRAINING
 VALUE:   800
-CURSED:  3
+BOOL:    curse
 
 NAME:    sceptre of Torment
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -267,7 +266,7 @@ COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
 BRAND:   SPWPN_REAPING
-VALUE:   1250
+VALUE:   800
 BOOL:    evil, corpse_violating
 
 NAME:    sword of Cerebov
@@ -280,7 +279,6 @@ PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
-VALUE:   2000
 BRAND:   SPWPN_FLAMING
 BOOL:    evil, nogen
 
@@ -291,7 +289,6 @@ PLUS:    +4
 COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
-VALUE:   1200
 BOOL:    evil, nogen
 
 NAME:    sceptre of Asmodeus
@@ -301,14 +298,13 @@ PLUS:    +7
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
-VALUE:   1500
 BOOL:    evil, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
 ENUM:    FAERIE
 NAME:    faerie dragon scales
-OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
+OBJ:     OBJ_ARMOUR/ARM_ACID_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
@@ -326,6 +322,7 @@ ANGRY:   5
 BOOL:    berserk
 STEALTH: -1
 
+# TAG_MAJOR_VERSION == 34
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
 INSCRIP: sticky flame,
@@ -336,7 +333,7 @@ TILE_EQ: flaming_death
 BRAND:   SPWPN_FLAMING
 FIRE:    2
 COLD:    -1
-BOOL:    poison, skip_ego
+BOOL:    poison, skip_ego, nogen
 MAGIC:   1
 
 # TAG_MAJOR_VERSION == 34
@@ -363,6 +360,7 @@ AC:      -3
 EV:      -3
 LIFE:     1
 
+# TAG_MAJOR_VERSION == 34
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
 INSCRIP: flash freeze,
@@ -374,7 +372,7 @@ BRAND:   SPWPN_FREEZING
 FIRE:    -1
 COLD:    2
 MAGIC:   1
-BOOL:    poison, skip_ego
+BOOL:    poison, skip_ego, nogen
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -404,13 +402,12 @@ TILE_EQ: punk
 BRAND:   SPWPN_ACID
 BOOL:    rCorr
 
-ENUM:     KRISHNA
-NAME:     bow of Krishna "Sharnga"
+NAME:     longbow "Zephyr"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8
 COLOUR:   ETC_GOLD
-TILE:     urand_krishna
-TILE_EQ:  krishna
+TILE:     urand_zephyr
+TILE_EQ:  zephyr
 BRAND:    SPWPN_SPEED
 DEX:      3
 BOOL:     seeinv
@@ -434,12 +431,13 @@ BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 BOOL:     seeinv, berserk
 
-NAME:     sword of Jihad
+ENUM:     ZEALOT_SWORD
+NAME:     zealot's sword
 OBJ:      OBJ_WEAPONS/WPN_EUDEMON_BLADE
 PLUS:     +10
 COLOUR:   ETC_HOLY
-TILE:     urand_jihad
-TILE_EQ:  jihad
+TILE:     unrand_zealot_sword
+TILE_EQ:  zealot_sword
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    5
@@ -452,6 +450,7 @@ PLUS:    +6
 COLOUR:  ETC_FIRE
 TILE:    urand_damnation
 TILE_EQ: crossbow_fire
+VALUE:   800
 BOOL:    evil
 
 # TAG_MAJOR_VERSION == 34
@@ -533,7 +532,7 @@ TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
 BOOL:     seeinv
-INSCRIP:  nevermiss,
+INSCRIP:  Acc+∞
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
@@ -584,12 +583,13 @@ STEALTH:  1
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
-PLUS:    +14
+PLUS:    +11
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
 BOOL:    mutate, chaotic
 STEALTH: -1
+VALUE:   1000
 
 NAME:     great mace "Undeadhunter"
 INSCRIP:  disrupt,
@@ -634,7 +634,8 @@ BOOL:     nogen
 
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
-OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+OBJ:      OBJ_WEAPONS/WPN_RAPIER
+TYPE:     cutlass
 INSCRIP:  disarm
 PLUS:     +7
 COLOUR:   DARKGREY
@@ -652,14 +653,12 @@ BRAND:    SPWPN_ELECTROCUTION
 
 NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
-PLUS:    +6
+PLUS:    +10
 COLOUR:  BROWN
 TILE:    urand_ignorance
 TILE_EQ: lshield_of_ignorance
-AC:      4
-INT:     -6
+INT:     -4
 LIFE:    1
-CURSED:  3
 
 NAME:    robe of Augmentation
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -673,6 +672,7 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+INSCRIP:  +Fog
 PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief
@@ -718,9 +718,8 @@ COLOUR:   LIGHTMAGENTA
 TILE:     urand_misfortune
 TILE_EQ:  robe_misfortune
 EV:       -5
-CURSED:   1
 STEALTH:  -2
-BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain
+BOOL:     nospell, rnd_tele, randapp, unided, mutate, drain, curse
 
 # TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
@@ -735,12 +734,13 @@ BOOL:     fly, nogen
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
-INSCRIP:  DetectMon Stab+
+INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
 TILE_EQ:  middle_gray
 STEALTH:  2
+VALUE:    600
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
@@ -826,8 +826,9 @@ TILE:     urand_night
 TILE_EQ:  robe_of_night
 MAGIC:    1
 BOOL:     seeinv
+VALUE:    600
 
-NAME:    armour of the Dragon King
+NAME:    scales of the Dragon King
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
 PLUS:    +9
 COLOUR:  ETC_GOLD
@@ -856,6 +857,7 @@ COLOUR:  WHITE
 TILE:    urand_fencer
 TILE_EQ: glove_white
 DEX:     3
+VALUE:   400
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -874,8 +876,10 @@ PLUS:     +2
 COLOUR:   ETC_BEOGH
 TILE:     urand_ratskin_cloak
 TILE_EQ:  ratskin
+INSCRIP:  +Rats
+STR:      -1
 INT:      -1
-DEX:      -1
+DEX:      1
 LIFE:     1
 BOOL:     poison
 
@@ -903,6 +907,7 @@ OBJ:     OBJ_JEWELLERY/RING_STEALTH
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
 BOOL:    inv
+VALUE:   400
 
 # TAG_MAJOR_VERSION == 34
 NAME:    amulet of Cekugob
@@ -927,16 +932,16 @@ OBJ:     OBJ_JEWELLERY/AMU_RAGE
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
 INT:     -3
-MAGIC:   1
+MAGIC:   2
 ANGRY:   5
-SLAY:    3
-CURSED:  3
+SLAY:    6
+BOOL:    curse
 
-NAME:    ring of Shaolin
+NAME:    ring of Phasing
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    urand_shaolin
+TILE:    urand_phasing
 
 NAME:    ring of Robustness
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
@@ -985,8 +990,7 @@ COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
-CURSED:   1
-BOOL:     evil, seeinv, fly
+BOOL:     evil, seeinv, fly, curse
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1038,6 +1042,7 @@ BASE_DAM: +3
 BOOL:     special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
 COLOUR:   WHITE
+VALUE:    600
 
 # Worn by Tiamat.
 ENUM:     DRAGONSKIN
@@ -1089,6 +1094,7 @@ OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 TILE:     urand_finger
 COLOUR:   ETC_BONE
 LIFE:     1
+VALUE:    400
 
 # TAG_MAJOR_VERSION == 34
 ENUM:     SPIDER
@@ -1114,6 +1120,7 @@ BASE_DAM: +35
 BASE_DELAY: +13
 BRAND:    SPWPN_VORPAL
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    HIGH_COUNCIL
 NAME:    hat of the High Council
 INSCRIP: Wiz-
@@ -1124,6 +1131,7 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -1
+BOOL:    nogen
 
 NAME:     arc blade
 INSCRIP:  discharge,
@@ -1133,6 +1141,7 @@ COLOUR:   ETC_ELECTRICITY
 TILE:     urand_arc_blade
 TILE_EQ:  arc_blade
 BOOL:     elec
+VALUE:    600
 
 ENUM:     SPELLBINDER
 NAME:     demon whip "Spellbinder"
@@ -1208,6 +1217,7 @@ INSCRIP: RegenMP+
 PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec, chaotic
+VALUE:   400
 
 # TAG_MAJOR_VERSION == 34
 ENUM:    ETERNAL_TORMENT
@@ -1219,8 +1229,7 @@ TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
 INSCRIP: rTorment HP--
 LIFE:    3
-CURSED:  1
-BOOL:    evil, seeinv, nogen
+BOOL:    evil, seeinv, nogen, curse
 
 ENUM:    VINES
 NAME:    robe of Vines
@@ -1229,8 +1238,9 @@ PLUS:    +2
 COLOUR:  GREEN
 TILE:    urand_vines
 TILE_EQ: vines
-INSCRIP: NoDeviceHeal
+INSCRIP: NoPotionHeal
 REGEN:   7
+VALUE:   800
 
 ENUM:    KRYIAS
 NAME:    Kryia's mail coat
@@ -1239,8 +1249,9 @@ PLUS:    +7
 COLOUR:  LIGHTCYAN
 TILE:    urand_kryias
 TILE_EQ: kryias
-INSCRIP: DeviceHeal*2
+INSCRIP: PotionHeal*2
 COLD:    1
+VALUE:   600
 
 ENUM:    FROSTBITE
 NAME:    frozen axe "Frostbite"
@@ -1274,6 +1285,7 @@ TILE:     urand_warlock
 TILE_EQ:  buckler_warlock
 COLOUR:   ETC_SILVER
 BRAND:    SPARM_REFLECTION
+VALUE:    400
 
 # Fedhas sprint, to allow all species access to evocable invisibility.
 NAME:     amulet of invisibility
@@ -1281,6 +1293,18 @@ OBJ:      OBJ_JEWELLERY/AMU_NOTHING
 COLOUR:   WHITE
 TILE:     urand_cekugob
 BOOL:     inv, nogen
+
+ENUM:     THERMIC_ENGINE
+NAME:     Maxwell's thermic engine
+OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
+INSCRIP:  freeze,
+PLUS:     +2
+COLOUR:   ETC_VEHUMET
+TILE:     urand_thermic_engine
+TILE_EQ:  thermic_engine
+BRAND:    SPWPN_FLAMING
+FIRE:     -1
+COLD:     -1
 
 # This entry must always be last.
 ENUM:   DUMMY2

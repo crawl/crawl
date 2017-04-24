@@ -3,16 +3,17 @@
  * @brief Game state.
 **/
 
-#ifndef STATE_H
-#define STATE_H
+#pragma once
 
 #include <vector>
 
+#include "command-type.h"
+#include "disable-type.h"
 #include "player.h"
 
 class monster;
 class mon_acting;
-class targetter;
+class targeter;
 struct activity_interrupt_data;
 
 struct god_act_state
@@ -104,7 +105,7 @@ struct game_state
     bool invisible_targeting;
 
     // Area beyond which view should be darkened,  0 = disabled.
-    targetter *darken_range;
+    targeter *darken_range;
 
     // Monsters to highlight on the screen, 0 = disabled.
     vector<monster *> *flash_monsters;
@@ -248,5 +249,3 @@ private:
 
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
                           const activity_interrupt_data &at);
-
-#endif

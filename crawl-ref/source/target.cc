@@ -12,7 +12,7 @@
 #include "env.h"
 #include "fight.h"
 #include "libutil.h"
-#include "los_def.h"
+#include "los-def.h"
 #include "losglobal.h"
 #include "mon-tentacle.h"
 #include "spl-damage.h"
@@ -28,7 +28,7 @@ static string _wallmsg(coord_def c)
     return "There is " + article_a(wall) + " there.";
 }
 
-bool targetter::set_aim(coord_def a)
+bool targeter::set_aim(coord_def a)
 {
     // This matches a condition in direction_chooser::move_is_ok().
     if (agent && !cell_see_cell(agent->pos(), a, LOS_NO_TRANS))
@@ -38,12 +38,12 @@ bool targetter::set_aim(coord_def a)
     return true;
 }
 
-bool targetter::can_affect_outside_range()
+bool targeter::can_affect_outside_range()
 {
     return false;
 }
 
-bool targetter::anyone_there(coord_def loc)
+bool targeter::anyone_there(coord_def loc)
 {
     if (!map_bounds(loc))
         return false;
@@ -52,17 +52,17 @@ bool targetter::anyone_there(coord_def loc)
     return actor_at(loc);
 }
 
-bool targetter::has_additional_sites(coord_def loc)
+bool targeter::has_additional_sites(coord_def loc)
 {
     return false;
 }
 
-bool targetter::affects_monster(const monster_info& mon)
+bool targeter::affects_monster(const monster_info& mon)
 {
     return true; //TODO: false
 }
 
-targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
+targeter_beam::targeter_beam(const actor *act, int r, zap_type zap,
                                int pow, int min_ex_rad, int max_ex_rad) :
                                min_expl_rad(min_ex_rad),
                                max_expl_rad(max_ex_rad),
@@ -91,9 +91,9 @@ targetter_beam::targetter_beam(const actor *act, int r, zap_type zap,
     penetrates_targets = beam.pierce;
 }
 
-bool targetter_beam::set_aim(coord_def a)
+bool targeter_beam::set_aim(coord_def a)
 {
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     bolt tempbeam = beam;
@@ -109,7 +109,7 @@ bool targetter_beam::set_aim(coord_def a)
     return true;
 }
 
-void targetter_beam::set_explosion_aim(bolt tempbeam)
+void targeter_beam::set_explosion_aim(bolt tempbeam)
 {
     set_explosion_target(tempbeam);
     tempbeam.use_target_as_pos = true;
@@ -121,7 +121,7 @@ void targetter_beam::set_explosion_aim(bolt tempbeam)
                                       max_expl_rad, true, true);
 }
 
-void targetter_beam::set_explosion_target(bolt &tempbeam)
+void targeter_beam::set_explosion_target(bolt &tempbeam)
 {
     tempbeam.target = origin;
     for (auto c : path_taken)
@@ -134,7 +134,7 @@ void targetter_beam::set_explosion_target(bolt &tempbeam)
     }
 }
 
-bool targetter_beam::valid_aim(coord_def a)
+bool targeter_beam::valid_aim(coord_def a)
 {
     if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -147,13 +147,13 @@ bool targetter_beam::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_beam::can_affect_outside_range()
+bool targeter_beam::can_affect_outside_range()
 {
     // XXX is this everything?
     return max_expl_rad > 0;
 }
 
-aff_type targetter_beam::is_affected(coord_def loc)
+aff_type targeter_beam::is_affected(coord_def loc)
 {
     bool on_path = false;
     int visit_count = 0;
@@ -222,7 +222,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
                               AFF_MULTIPLE;
 }
 
-bool targetter_beam::affects_monster(const monster_info& mon)
+bool targeter_beam::affects_monster(const monster_info& mon)
 {
     //XXX: this is a disgusting hack that probably leaks information!
     //     bolt::is_harmless (and transitively, bolt::nasty_to) should
@@ -237,13 +237,18 @@ bool targetter_beam::affects_monster(const monster_info& mon)
         return false;
     }
 
+    // beckoning is useless against adjacent mons!
+    // XXX: this should probably be somewhere else
+    if (beam.flavour == BEAM_BECKONING)
+        return grid_distance(mon.pos, you.pos()) > 1;
+
     return !beam.is_harmless(m) || beam.nice_to(mon)
     // Inner flame affects allies without harming or helping them.
            || beam.flavour == BEAM_INNER_FLAME && !m->is_summoned();
 }
 
-targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)
-    : targetter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
+targeter_unravelling::targeter_unravelling(const actor *act, int r, int pow)
+    : targeter_beam(act, r, ZAP_UNRAVELLING, pow, 1, 1)
 {
 }
 
@@ -263,9 +268,9 @@ static bool unravelling_explodes_at(const coord_def c)
     return mi && mi->debuffable();
 }
 
-bool targetter_unravelling::set_aim(coord_def a)
+bool targeter_unravelling::set_aim(coord_def a)
 {
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     bolt tempbeam = beam;
@@ -287,14 +292,14 @@ bool targetter_unravelling::set_aim(coord_def a)
     return true;
 }
 
-targetter_imb::targetter_imb(const actor *act, int pow, int r) :
-               targetter_beam(act, r, ZAP_ISKENDERUNS_MYSTIC_BLAST, pow, 0, 0)
+targeter_imb::targeter_imb(const actor *act, int pow, int r) :
+               targeter_beam(act, r, ZAP_ISKENDERUNS_MYSTIC_BLAST, pow, 0, 0)
 {
 }
 
-bool targetter_imb::set_aim(coord_def a)
+bool targeter_imb::set_aim(coord_def a)
 {
-    if (!targetter_beam::set_aim(a))
+    if (!targeter_beam::set_aim(a))
         return false;
 
     vector<coord_def> cur_path;
@@ -342,9 +347,9 @@ bool targetter_imb::set_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_imb::is_affected(coord_def loc)
+aff_type targeter_imb::is_affected(coord_def loc)
 {
-    aff_type from_path = targetter_beam::is_affected(loc);
+    aff_type from_path = targeter_beam::is_affected(loc);
     if (from_path != AFF_NO)
         return from_path;
 
@@ -359,17 +364,17 @@ aff_type targetter_imb::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_view::targetter_view()
+targeter_view::targeter_view()
 {
     origin = aim = you.pos();
 }
 
-bool targetter_view::valid_aim(coord_def a)
+bool targeter_view::valid_aim(coord_def a)
 {
     return true; // don't reveal map bounds
 }
 
-aff_type targetter_view::is_affected(coord_def loc)
+aff_type targeter_view::is_affected(coord_def loc)
 {
     if (loc == aim)
         return AFF_YES;
@@ -377,7 +382,7 @@ aff_type targetter_view::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_smite::targetter_smite(const actor* act, int ran,
+targeter_smite::targeter_smite(const actor* act, int ran,
                                  int exp_min, int exp_max, bool wall_ok,
                                  bool (*affects_pos_func)(const coord_def &)):
     exp_range_min(exp_min), exp_range_max(exp_max), range(ran),
@@ -391,7 +396,7 @@ targetter_smite::targetter_smite(const actor* act, int ran,
     origin = aim = act->pos();
 }
 
-bool targetter_smite::valid_aim(coord_def a)
+bool targeter_smite::valid_aim(coord_def a)
 {
     if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -407,14 +412,13 @@ bool targetter_smite::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_smite::set_aim(coord_def a)
+bool targeter_smite::set_aim(coord_def a)
 {
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     if (exp_range_max > 0)
     {
-        coord_def centre(9,9);
         bolt beam;
         beam.target = a;
         beam.use_target_as_pos = true;
@@ -428,13 +432,13 @@ bool targetter_smite::set_aim(coord_def a)
     return true;
 }
 
-bool targetter_smite::can_affect_outside_range()
+bool targeter_smite::can_affect_outside_range()
 {
     // XXX is this everything?
     return exp_range_max > 0;
 }
 
-aff_type targetter_smite::is_affected(coord_def loc)
+aff_type targeter_smite::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
         return AFF_NO;
@@ -459,14 +463,34 @@ aff_type targetter_smite::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_transference::targetter_transference(const actor* act, int aoe) :
-    targetter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
+targeter_walljump::targeter_walljump() :
+    targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
 {
 }
 
-bool targetter_transference::valid_aim(coord_def a)
+aff_type targeter_walljump::is_affected(coord_def loc)
 {
-    if (!targetter_smite::valid_aim(a))
+    if (!valid_aim(aim))
+        return AFF_NO;
+
+    if ((loc - aim).rdist() > 9)
+        return AFF_NO;
+
+    coord_def centre(9,9);
+    if (exp_map_min(loc - aim + centre) < INT_MAX)
+        return AFF_NO;
+
+    return AFF_YES;
+}
+
+targeter_transference::targeter_transference(const actor* act, int aoe) :
+    targeter_smite(act, LOS_RADIUS, aoe, aoe, false, nullptr)
+{
+}
+
+bool targeter_transference::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
         return false;
 
     const actor *victim = actor_at(a);
@@ -486,15 +510,15 @@ bool targetter_transference::valid_aim(coord_def a)
     return true;
 }
 
-targetter_fragment::targetter_fragment(const actor* act, int power, int ran) :
-    targetter_smite(act, ran, 1, 1, true, nullptr),
+targeter_fragment::targeter_fragment(const actor* act, int power, int ran) :
+    targeter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)
 {
 }
 
-bool targetter_fragment::valid_aim(coord_def a)
+bool targeter_fragment::valid_aim(coord_def a)
 {
-    if (!targetter_smite::valid_aim(a))
+    if (!targeter_smite::valid_aim(a))
         return false;
 
     bolt tempbeam;
@@ -507,9 +531,9 @@ bool targetter_fragment::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_fragment::set_aim(coord_def a)
+bool targeter_fragment::set_aim(coord_def a)
 {
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     bolt tempbeam;
@@ -543,7 +567,7 @@ bool targetter_fragment::set_aim(coord_def a)
     return true;
 }
 
-targetter_reach::targetter_reach(const actor* act, reach_type ran) :
+targeter_reach::targeter_reach(const actor* act, reach_type ran) :
     range(ran)
 {
     ASSERT(act);
@@ -551,7 +575,7 @@ targetter_reach::targetter_reach(const actor* act, reach_type ran) :
     origin = aim = act->pos();
 }
 
-bool targetter_reach::valid_aim(coord_def a)
+bool targeter_reach::valid_aim(coord_def a)
 {
     if (!cell_see_cell(origin, a, LOS_DEFAULT))
         return notify_fail("You cannot see that place.");
@@ -566,7 +590,7 @@ bool targetter_reach::valid_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_reach::is_affected(coord_def loc)
+aff_type targeter_reach::is_affected(coord_def loc)
 {
     if (!valid_aim(loc))
         return AFF_NO;
@@ -583,7 +607,7 @@ aff_type targetter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_cleave::targetter_cleave(const actor* act, coord_def target)
+targeter_cleave::targeter_cleave(const actor* act, coord_def target)
 {
     ASSERT(act);
     agent = act;
@@ -598,12 +622,12 @@ targetter_cleave::targetter_cleave(const actor* act, coord_def target)
     }
 }
 
-aff_type targetter_cleave::is_affected(coord_def loc)
+aff_type targeter_cleave::is_affected(coord_def loc)
 {
     return targets.count(loc) ? AFF_YES : AFF_NO;
 }
 
-targetter_cloud::targetter_cloud(const actor* act, int r,
+targeter_cloud::targeter_cloud(const actor* act, int r,
                                  int count_min, int count_max) :
     range(r), cnt_min(count_min), cnt_max(count_max), avoid_clouds(true)
 {
@@ -622,7 +646,7 @@ static bool _cloudable(coord_def loc, bool avoid_clouds)
            && !(avoid_clouds && cloud_at(loc));
 }
 
-bool targetter_cloud::valid_aim(coord_def a)
+bool targeter_cloud::valid_aim(coord_def a)
 {
     if (agent && (origin - a).rdist() > range)
         return notify_fail("Out of range.");
@@ -647,9 +671,9 @@ bool targetter_cloud::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_cloud::set_aim(coord_def a)
+bool targeter_cloud::set_aim(coord_def a)
 {
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     seen.clear();
@@ -682,12 +706,12 @@ bool targetter_cloud::set_aim(coord_def a)
     return true;
 }
 
-bool targetter_cloud::can_affect_outside_range()
+bool targeter_cloud::can_affect_outside_range()
 {
     return true;
 }
 
-aff_type targetter_cloud::is_affected(coord_def loc)
+aff_type targeter_cloud::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
         return AFF_NO;
@@ -700,7 +724,7 @@ aff_type targetter_cloud::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targetter_splash::targetter_splash(const actor* act, int ran)
+targeter_splash::targeter_splash(const actor* act, int ran)
     : range(ran)
 {
     ASSERT(act);
@@ -708,14 +732,14 @@ targetter_splash::targetter_splash(const actor* act, int ran)
     origin = aim = act->pos();
 }
 
-bool targetter_splash::valid_aim(coord_def a)
+bool targeter_splash::valid_aim(coord_def a)
 {
     if (agent && grid_distance(origin, a) > range)
         return notify_fail("Out of range.");
     return true;
 }
 
-aff_type targetter_splash::is_affected(coord_def loc)
+aff_type targeter_splash::is_affected(coord_def loc)
 {
     if (!valid_aim(aim) || !valid_aim(loc))
         return AFF_NO;
@@ -741,7 +765,7 @@ aff_type targetter_splash::is_affected(coord_def loc)
     return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
 }
 
-targetter_los::targetter_los(const actor *act, los_type _los,
+targeter_los::targeter_los(const actor *act, los_type _los,
                              int ran, int ran_max):
     range(ran), range_max(ran_max)
 {
@@ -754,7 +778,7 @@ targetter_los::targetter_los(const actor *act, los_type _los,
     ASSERT(range_max >= range);
 }
 
-bool targetter_los::valid_aim(coord_def a)
+bool targeter_los::valid_aim(coord_def a)
 {
     if ((a - origin).rdist() > range_max)
         return notify_fail("Out of range.");
@@ -766,7 +790,7 @@ bool targetter_los::valid_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_los::is_affected(coord_def loc)
+aff_type targeter_los::is_affected(coord_def loc)
 {
     if (loc == aim)
         return AFF_YES;
@@ -780,7 +804,7 @@ aff_type targetter_los::is_affected(coord_def loc)
     return (loc - origin).rdist() > range_max ? AFF_MAYBE : AFF_YES;
 }
 
-targetter_thunderbolt::targetter_thunderbolt(const actor *act, int r,
+targeter_thunderbolt::targeter_thunderbolt(const actor *act, int r,
                                              coord_def _prev)
 {
     ASSERT(act);
@@ -792,7 +816,7 @@ targetter_thunderbolt::targetter_thunderbolt(const actor *act, int r,
     range = r;
 }
 
-bool targetter_thunderbolt::valid_aim(coord_def a)
+bool targeter_thunderbolt::valid_aim(coord_def a)
 {
     if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -819,7 +843,7 @@ static bool left_of(coord_def a, coord_def b)
     return a.x * b.y > a.y * b.x;
 }
 
-bool targetter_thunderbolt::set_aim(coord_def a)
+bool targeter_thunderbolt::set_aim(coord_def a)
 {
     aim = a;
     zapped.clear();
@@ -886,7 +910,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_thunderbolt::is_affected(coord_def loc)
+aff_type targeter_thunderbolt::is_affected(coord_def loc)
 {
     if (loc == aim)
         return zapped[loc] ? AFF_YES : AFF_TRACER;
@@ -897,7 +921,7 @@ aff_type targetter_thunderbolt::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targetter_spray::targetter_spray(const actor* act, int range, zap_type zap)
+targeter_spray::targeter_spray(const actor* act, int range, zap_type zap)
 {
     ASSERT(act);
     agent = act;
@@ -905,7 +929,7 @@ targetter_spray::targetter_spray(const actor* act, int range, zap_type zap)
     _range = range;
 }
 
-bool targetter_spray::valid_aim(coord_def a)
+bool targeter_spray::valid_aim(coord_def a)
 {
     if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -918,9 +942,9 @@ bool targetter_spray::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_spray::set_aim(coord_def a)
+bool targeter_spray::set_aim(coord_def a)
 {
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     if (a == origin)
@@ -935,7 +959,7 @@ bool targetter_spray::set_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_spray::is_affected(coord_def loc)
+aff_type targeter_spray::is_affected(coord_def loc)
 {
     aff_type affected = AFF_NO;
 
@@ -969,7 +993,7 @@ aff_type targetter_spray::is_affected(coord_def loc)
     return affected;
 }
 
-targetter_shadow_step::targetter_shadow_step(const actor* act, int r) :
+targeter_shadow_step::targeter_shadow_step(const actor* act, int r) :
     range(r)
 {
     ASSERT(act);
@@ -978,7 +1002,7 @@ targetter_shadow_step::targetter_shadow_step(const actor* act, int r) :
     step_is_blocked = false;
 }
 
-bool targetter_shadow_step::valid_aim(coord_def a)
+bool targeter_shadow_step::valid_aim(coord_def a)
 {
     coord_def c, shadow_step_pos;
     ray_def ray;
@@ -1019,13 +1043,12 @@ bool targetter_shadow_step::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_shadow_step::valid_landing(coord_def a, bool check_invis)
+bool targeter_shadow_step::valid_landing(coord_def a, bool check_invis)
 {
     actor *act;
     ray_def ray;
 
-    if (grd(a) == DNGN_OPEN_SEA || grd(a) == DNGN_LAVA_SEA
-        || !agent->is_habitable(a))
+    if (!agent->is_habitable(a))
     {
         blocked_landing_reason = BLOCKED_MOVE;
         return false;
@@ -1072,7 +1095,7 @@ bool targetter_shadow_step::valid_landing(coord_def a, bool check_invis)
     return true;
 }
 
-aff_type targetter_shadow_step::is_affected(coord_def loc)
+aff_type targeter_shadow_step::is_affected(coord_def loc)
 {
     aff_type aff = AFF_NO;
 
@@ -1086,11 +1109,11 @@ aff_type targetter_shadow_step::is_affected(coord_def loc)
 // If something unseen either occupies the aim position or blocks the shadow_step path,
 // indicate that with step_is_blocked, but still return true so long there is at
 // least one valid landing position from the player's perspective.
-bool targetter_shadow_step::set_aim(coord_def a)
+bool targeter_shadow_step::set_aim(coord_def a)
 {
     if (a == origin)
         return false;
-    if (!targetter::set_aim(a))
+    if (!targeter::set_aim(a))
         return false;
 
     step_is_blocked = false;
@@ -1110,7 +1133,7 @@ bool targetter_shadow_step::set_aim(coord_def a)
 }
 
 // Determine the set of valid landing sites
-void targetter_shadow_step::set_additional_sites(coord_def a)
+void targeter_shadow_step::set_additional_sites(coord_def a)
 {
     get_additional_sites(a);
     additional_sites = temp_sites;
@@ -1120,7 +1143,7 @@ void targetter_shadow_step::set_additional_sites(coord_def a)
 // in the private set variable temp_sites. This uses valid_aim(), so it looks
 // for uninhabited squares that are habitable by the player, but doesn't check
 // against e.g. harmful clouds
-void targetter_shadow_step::get_additional_sites(coord_def a)
+void targeter_shadow_step::get_additional_sites(coord_def a)
 {
     bool agent_adjacent = a.distance_from(agent->pos()) == 1;
     temp_sites.clear();
@@ -1162,68 +1185,13 @@ void targetter_shadow_step::get_additional_sites(coord_def a)
 }
 
 // See if we can find at least one valid landing position for the given monster.
-bool targetter_shadow_step::has_additional_sites(coord_def a)
+bool targeter_shadow_step::has_additional_sites(coord_def a)
 {
     get_additional_sites(a);
     return temp_sites.size();
 }
 
-targetter_explosive_bolt::targetter_explosive_bolt(const actor *act, int pow, int r) :
-                          targetter_beam(act, r, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
-{
-}
-
-bool targetter_explosive_bolt::set_aim(coord_def a)
-{
-    if (!targetter_beam::set_aim(a))
-        return false;
-
-    bolt tempbeam = beam;
-    tempbeam.target = origin;
-    for (auto c : path_taken)
-    {
-        if (cell_is_solid(c))
-            break;
-
-        tempbeam.target = c;
-        if (anyone_there(c))
-        {
-            tempbeam.use_target_as_pos = true;
-            exp_map.init(INT_MAX);
-            tempbeam.determine_affected_cells(exp_map, coord_def(), 0,
-                                              1, true, true);
-        }
-    }
-
-    return true;
-}
-
-aff_type targetter_explosive_bolt::is_affected(coord_def loc)
-{
-    bool on_path = false;
-    for (auto c : path_taken)
-    {
-        if (cell_is_solid(c))
-            break;
-        if (c == loc)
-            on_path = true;
-        if (anyone_there(c)
-            && !beam.ignores_monster(monster_at(c))
-            && (loc - c).rdist() <= 9)
-        {
-            coord_def centre(9,9);
-            if (exp_map(loc - c + centre) < INT_MAX
-                && !cell_is_solid(loc))
-            {
-                return AFF_MAYBE;
-            }
-        }
-    }
-
-    return on_path ? AFF_TRACER : AFF_NO;
-}
-
-targetter_cone::targetter_cone(const actor *act, int r)
+targeter_cone::targeter_cone(const actor *act, int r)
 {
     ASSERT(act);
     agent = act;
@@ -1233,7 +1201,7 @@ targetter_cone::targetter_cone(const actor *act, int r)
     range = r;
 }
 
-bool targetter_cone::valid_aim(coord_def a)
+bool targeter_cone::valid_aim(coord_def a)
 {
     if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -1252,8 +1220,8 @@ static bool left_of_eq(coord_def a, coord_def b)
     return a.x * b.y >= a.y * b.x;
 }
 
-// Ripped off from targetter_thunderbolt::set_aim.
-bool targetter_cone::set_aim(coord_def a)
+// Ripped off from targeter_thunderbolt::set_aim.
+bool targeter_cone::set_aim(coord_def a)
 {
     aim = a;
     zapped.clear();
@@ -1304,7 +1272,7 @@ bool targetter_cone::set_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_cone::is_affected(coord_def loc)
+aff_type targeter_cone::is_affected(coord_def loc)
 {
     if (loc == aim)
         return zapped[loc] ? AFF_YES : AFF_TRACER;
@@ -1315,7 +1283,7 @@ aff_type targetter_cone::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targetter_shotgun::targetter_shotgun(const actor* act, size_t beam_count,
+targeter_shotgun::targeter_shotgun(const actor* act, size_t beam_count,
                                      int r)
 {
     ASSERT(act);
@@ -1327,7 +1295,7 @@ targetter_shotgun::targetter_shotgun(const actor* act, size_t beam_count,
     range = r;
 }
 
-bool targetter_shotgun::valid_aim(coord_def a)
+bool targeter_shotgun::valid_aim(coord_def a)
 {
     if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -1340,18 +1308,18 @@ bool targetter_shotgun::valid_aim(coord_def a)
     return true;
 }
 
-bool targetter_shotgun::set_aim(coord_def a)
+bool targeter_shotgun::set_aim(coord_def a)
 {
     zapped.clear();
 
     // confused monster targeting might be fuzzed across a wall, so
     // skip the validation in the parent function and set aim directly.
-    // N.B. We assume this targetter can actually handle an invalid aim
-    // (not all targetters can).
+    // N.B. We assume this targeter can actually handle an invalid aim
+    // (not all targeters can).
     if (!agent || agent->is_monster())
         aim = a;
     // ... but for UI consistency, players should be restricted to LOS.
-    else if (!targetter::set_aim(a))
+    else if (!targeter::set_aim(a))
         return false;
 
     if (a == origin)
@@ -1390,7 +1358,7 @@ bool targetter_shotgun::set_aim(coord_def a)
     return true;
 }
 
-aff_type targetter_shotgun::is_affected(coord_def loc)
+aff_type targeter_shotgun::is_affected(coord_def loc)
 {
     if ((loc - origin).rdist() > range)
         return AFF_NO;
@@ -1400,14 +1368,14 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
                                       : AFF_NO;
 }
 
-targetter_monster_sequence::targetter_monster_sequence(const actor *act, int pow, int r) :
-                          targetter_beam(act, r, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
+targeter_monster_sequence::targeter_monster_sequence(const actor *act, int pow, int r) :
+                          targeter_beam(act, r, ZAP_DEBUGGING_RAY, pow, 0, 0)
 {
 }
 
-bool targetter_monster_sequence::set_aim(coord_def a)
+bool targeter_monster_sequence::set_aim(coord_def a)
 {
-    if (!targetter_beam::set_aim(a))
+    if (!targeter_beam::set_aim(a))
         return false;
 
     bolt tempbeam = beam;
@@ -1438,9 +1406,9 @@ bool targetter_monster_sequence::set_aim(coord_def a)
     return passed_through_mons;
 }
 
-bool targetter_monster_sequence::valid_aim(coord_def a)
+bool targeter_monster_sequence::valid_aim(coord_def a)
 {
-    if (!targetter_beam::set_aim(a))
+    if (!targeter_beam::set_aim(a))
         return false;
 
     bool last_cell_has_mons = true;
@@ -1462,7 +1430,7 @@ bool targetter_monster_sequence::valid_aim(coord_def a)
     return passed_through_mons;
 }
 
-aff_type targetter_monster_sequence::is_affected(coord_def loc)
+aff_type targeter_monster_sequence::is_affected(coord_def loc)
 {
     bool on_path = false;
     for (auto c : path_taken)

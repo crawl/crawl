@@ -12,14 +12,15 @@
 #include "english.h" // conjugate_verb
 #include "evoke.h"
 #include "food.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h"
 #include "hints.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h" // command_to_string
 #include "message.h"
@@ -244,11 +245,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (unknown_proprt(ARTP_CONTAM) && msg)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE] > 0
-         && one_chance_in(proprt[ARTP_CURSE]))
-    {
+    if (!unmeld && !item.cursed() && proprt[ARTP_CURSE])
         do_curse_item(item, !msg);
-    }
 
     if (!alreadyknown && dangerous)
     {
@@ -270,6 +268,26 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 #undef unknown_proprt
+}
+
+/**
+ * If player removes evocable invis and we need to clean things up, set
+ * remaining Invis duration to 1 AUT and give the player contam equal to the
+ * amount the player would receive if they waited the invis out.
+ */
+static void _unequip_invis()
+{
+    if (you.duration[DUR_INVIS] > 1
+        && !you.evokable_invis()
+        && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+    {
+        const int invis_duration_left = you.duration[DUR_INVIS];
+        const int remaining_contam = div_rand_round(
+            invis_duration_left * INVIS_CONTAM_PER_TURN, BASELINE_DELAY
+        );
+        contaminate_player(remaining_contam, true);
+        you.duration[DUR_INVIS] = 1;
+    }
 }
 
 static void _unequip_artefact_effect(item_def &item,
@@ -309,13 +327,8 @@ static void _unequip_artefact_effect(item_def &item,
         land_player();
     }
 
-    if (proprt[ARTP_INVISIBLE] != 0
-        && you.duration[DUR_INVIS] > 1
-        && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-        && !you.evokable_invis())
-    {
-        you.duration[DUR_INVIS] = 1;
-    }
+    if (proprt[ARTP_INVISIBLE] != 0)
+        _unequip_invis();
 
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
@@ -365,8 +378,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a chaotic item like this.");
     else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
         mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_poisoned_item(item) && you_worship(GOD_SHINING_ONE))
-        mpr("You really shouldn't be using a poisoned item like this.");
     else if (is_fiery_item(item) && you_worship(GOD_DITHMENOS))
         mpr("You really shouldn't be using a fiery item like this.");
     else if (is_channeling_item(item) && you_worship(GOD_PAKELLAS))
@@ -416,13 +427,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             calc_mp();
         }
 
-        _wield_cursed(item, known_cursed, unmeld);
-        break;
-    }
-
-    case OBJ_RODS:
-    {
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
         _wield_cursed(item, known_cursed, unmeld);
         break;
     }
@@ -762,7 +766,7 @@ static void _spirit_shield_message(bool unmeld)
             mpr("Now linked to your health, your magic stops regenerating.");
         }
     }
-    else if (!unmeld && player_mutation_level(MUT_MANA_SHIELD))
+    else if (!unmeld && you.get_mutation_level(MUT_MANA_SHIELD))
         mpr("You feel the presence of a powerless spirit.");
     else // unmeld or already spirit-shielded
         mpr("You feel spirits watching over you.");
@@ -824,7 +828,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
         case SPARM_FLYING:
             // If you weren't flying when you took off the boots, don't restart.
             if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
-                || player_mutation_level(MUT_NO_ARTIFICE))
+                || you.has_mutation(MUT_NO_ARTIFICE))
             {
                 if (you.airborne())
                 {
@@ -837,9 +841,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
                     float_player();
                 }
             }
-            if (!unmeld && !player_mutation_level(MUT_NO_ARTIFICE))
+            if (!unmeld && !you.has_mutation(MUT_NO_ARTIFICE))
             {
-                if (player_mutation_level(MUT_NO_ARTIFICE))
+                if (you.has_mutation(MUT_NO_ARTIFICE))
                     mpr("Take it off to stop flying.");
                 else
                 {
@@ -861,7 +865,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_STEALTH:
-            if (!player_mutation_level(MUT_NO_STEALTH))
+            if (!you.get_mutation_level(MUT_NO_STEALTH))
                 mpr("You feel stealthy.");
             break;
 
@@ -886,6 +890,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
 
         case SPARM_ARCHERY:
             mpr("You feel that your aim is more steady.");
+            break;
+
+        case SPARM_REPULSION:
+            mpr("You are surrounded by a repulsion field.");
             break;
         }
     }
@@ -981,12 +989,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_INVISIBILITY:
-        if (you.duration[DUR_INVIS]
-            && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !you.evokable_invis())
-        {
-            you.duration[DUR_INVIS] = 1;
-        }
+        _unequip_invis();
         break;
 
     case SPARM_STRENGTH:
@@ -1022,7 +1025,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_STEALTH:
-        if (!player_mutation_level(MUT_NO_STEALTH))
+        if (!you.get_mutation_level(MUT_NO_STEALTH))
             mpr("You feel less stealthy.");
         break;
 
@@ -1049,6 +1052,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 
     case SPARM_ARCHERY:
         mpr("Your aim is not that steady anymore.");
+        break;
+
+    case SPARM_REPULSION:
+        mpr("The haze of the repulsion field disappears.");
         break;
 
     default:
@@ -1104,7 +1111,7 @@ static void _remove_amulet_of_harm()
 
 static void _equip_amulet_of_regeneration()
 {
-    if (player_mutation_level(MUT_SLOW_REGENERATION) == 3)
+    if (you.get_mutation_level(MUT_NO_REGENERATION) > 0)
         mpr("The amulet feels cold and inert.");
     else if (you.hp == you.hp_max)
     {
@@ -1364,13 +1371,6 @@ bool unwield_item(bool showMsgs)
 {
     if (!you.weapon())
         return false;
-
-    if (you.berserk())
-    {
-        if (showMsgs)
-            canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
 
     item_def& item = *you.weapon();
 

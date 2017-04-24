@@ -3,13 +3,17 @@
  * @brief Functions related to ranged attacks.
 **/
 
-#ifndef BEAM_H
-#define BEAM_H
+#pragma once
 
+#include "ac-type.h"
+#include "beam-type.h"
+#include "enchant-type.h"
+#include "mon-attitude-type.h"
 #include "options.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
+#include "zap-type.h"
 
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
@@ -99,8 +103,6 @@ struct bolt
                                         // itself.
     bool   was_missile = false;   // For determining if this was SPMSL_FLAME /
                                   // FROST etc so that we can change mulch rate
-    bool   evoked = false;        // Was this beam evoked from a wand?
-
     // Do we draw animations?
     bool   animate = bool(Options.use_animations & UA_BEAM);
     ac_type ac_rule = AC_NORMAL;   // How defender's AC affects damage.
@@ -246,7 +248,6 @@ private:
     void affect_wall();
     void digging_wall_effect();
     void burn_wall_effect();
-    void destroy_wall_effect();
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
@@ -344,4 +345,3 @@ bool shoot_through_monster(const bolt& beam, const monster* victim);
 int omnireflect_chance_denom(int SH);
 
 bolt setup_targetting_beam(const monster &mons);
-#endif

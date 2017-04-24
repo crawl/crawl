@@ -683,6 +683,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.QUAD_GLOW, x, y);
                     if (cell.disjunct)
                         this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
+                    if (cell.awakened_forest)
+                        this.draw_icon(icons.BERSERK, x, y);
 
                     if (cell.fg)
                     {
@@ -923,6 +925,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             // draw it otherwise.
             if (bg.NEW_STAIR && status_shift == 0)
                 this.draw_icon(icons.NEW_STAIR, x, y);
+
+            if (bg.NEW_TRANSPORTER && status_shift == 0)
+                this.draw_icon(icons.NEW_TRANSPORTER, x, y);
 
             if (bg.EXCL_CTR && bg.UNSEEN)
                 this.draw_icon(icons.TRAVEL_EXCLUSION_CENTRE_FG, x, y);

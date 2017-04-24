@@ -19,7 +19,8 @@ The contents of this text are:
                 restart_after_game, restart_after_save,
                 default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
-                crawl_dir, morgue_dir, save_dir, macro_dir, sound
+                crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
+                sound_file_path
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
@@ -64,7 +65,7 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
-                item_stack_summary_minimum, mlist_min_height,
+                equip_bar, item_stack_summary_minimum, mlist_min_height,
                 mlist_allow_alternate_layout, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus, msg_condense_repeats,
                 msg_condense_short, show_travel_trail, monster_list_colour,
@@ -75,13 +76,13 @@ The contents of this text are:
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
-                plain, prompt, god, pray, duration, danger, food, warning,
-                recovery, talk, talk_visual, timed_portal, sound,
-                intrinsic_gain, mutation, monster_spell, monster_enchant,
-                monster_warning, friend_spell, friend_enchant, friend_action,
-                monster_damage, monster_target, banishment, rotten_meat,
-                equipment, floor, multiturn, examine, examine_filter,
-                diagnostic, error, tutorial, orb, hell_effect, dgl_message
+                plain, prompt, god, duration, danger, food, warning, recovery,
+                talk, talk_visual, timed_portal, sound, intrinsic_gain,
+                mutation, monster_spell, monster_enchant, monster_warning,
+                friend_spell, friend_enchant, friend_action, monster_damage,
+                monster_target, banishment, rotten_meat, equipment, floor,
+                multiturn, examine, examine_filter, diagnostic, error,
+                tutorial, orb, hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -128,13 +129,16 @@ The contents of this text are:
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species, fake_lang, pizza,
+                use_fake_player_cursor, show_player_species, fake_lang,
                 read_persist_options
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
 5-c     Unix.
-                background_colour, use_fake_cursor
+                blink_brightens_background, bold_brightens_foreground,
+                best_effort_brighten_background,
+                best_effort_brighten_foreground, allow_extended_colours,
+                background_colour, foreground_colour, use_fake_cursor
 
 6-  Lua.
 6-a     Including lua files.
@@ -394,10 +398,36 @@ macro_dir = settings/
         It should end with the path delimiter.
 
 sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+        (Requires "Sound support"; check your version info)
         (Ordered list option)
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+        There are certain pre-defined regexes, as well, which can be
+        used to get a sound to trigger for something that cannot
+        otherwise be matched using a regex string. For example,
+        using FIRE_PROMPT_SOUND for the regex will cause Crawl to
+        play a sound whenever the fire prompt is opened. Check
+        sound.h for a full listing of all these pre-defined regex
+        strings.
+
+sound_file_path = <path>
+        When playing sounds (with the option above), the contents of
+        this variable is appended to the start of the path. This is
+        intended to make it easier to take one configuration across
+        several platforms. These two lines are equivalent to the
+        example above:
+             sound_file_path = sound\sounds2\
+             sound += LOW HITPOINT WARNING:danger3.wav
+        The most recent instance of this option is the one that
+        takes effect, and is not applied retroactively to previous
+        instances of the sound option.
+
+one_SDL_sound_channel = false
+        When true, only one sound can play at a time (if using SDL).
+        Is false by default since non-SDL sound backends don't
+        support such control.
+
 
 3-  Interface.
 ==============
@@ -920,24 +950,26 @@ easy_confirm = (none | safe | all)
         to the letter 'y', which can result in accidentally answering
         yes to questions.
 
-simple_targeting =
+simple_targeting = false
         If set to true, disables smart targeting for explosion and bouncing
         bolt spells, making them automatically target the closest monster in
         range rather than trying to find a spot that affects multiple monsters
         while avoiding the player.
 
 allow_self_target = (yes | no | prompt)
-        Allow targeting yourself with risky magic (e.g., the spell
-        Bolt of Fire or a wand of slowing.)
-        When set to 'yes', you are a valid target. When set to 'no',
-        you cannot target yourself with such spells. When set to
-        'prompt' (the default), you will be required to confirm
-        self-targeting. This option has no effect on area-effect
-        spells, such as Mephitic Cloud, where you are always a valid target.
+        Allow targeting yourself with risky magic (e.g., the spell Bolt of Fire
+        or a wand of paralysis.)
+        When set to 'yes', you are a valid target. When set to 'no', you cannot
+        target yourself with such spells. When set to 'prompt' (the default),
+        you will be required to confirm self-targeting. This option has no
+        effect on area-effect spells, such as Mephitic Cloud, where you are
+        always a valid target.
 
-auto_butcher = false
+auto_butcher = very hungry
         If this is set to true, you will automatically travel to and attempt to
-        butcher edible corpses.
+        butcher edible corpses. Can also be set to a hunger threshold ('very
+        full', 'full', 'satiated', 'hungry', 'very hungry', or 'near starving')
+        to enable automatic butchery only when at that state or hungrier.
 
 confirm_butcher = (always | never | auto)
         If auto (default) you will be prompted for which corpses to butcher if
@@ -1150,7 +1182,7 @@ ability_slot ^= <regex>:<ability letters>
         Uses the same interface as spell_slot, but applies to abilities
         in the 'a' menu.
 
-autofight_stop = 30
+autofight_stop = 50
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
         you would want:
@@ -1364,6 +1396,11 @@ show_game_time = true
         is the number of actions taken regardless of their duration. It is this
         turn count which is used for scoring (and this turn count is always
         visible on the % overview screen).
+
+equip_bar = false
+        When set to true, this option replaces the noise bar with an
+        "equipment bar" showing the glyphs of all currently equipped items,
+        with gaps for available but currently unfilled equipment slots.
 
 item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in
@@ -1661,7 +1698,6 @@ CHANNEL_NAME can currently be one of these:
    plain           = regular text (and things "uncoloured")
    prompt          = input prompts to the player
    god             = messages from the gods
-   pray            = standard praying messages
    duration        = messages about character spells/effects wearing off
    danger          = serious threats to the character's existence
    food            = warnings about food
@@ -2465,9 +2501,6 @@ item_glyph -= <regexp>
         Removing a rule with -= removes all rules using the exact regexp
         provided; do not specify a colour or glyph in that case.
 
-pizza = <topping name>
-        A comma-separated list of the player's preferred pizza toppings.
-
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the
         terminal cursor. This means it won't flicker when the cursor
@@ -2505,12 +2538,90 @@ dos_use_background_intensity = false
 
 5-c     Unix.
 -------------
+blink_brightens_background = false
+        For 8-colour mode, assume that a blink text attribute will end up
+        brightening the background colour.
+
+        If enabled on a terminal where this assumption does not hold, this will
+        result in invisible glyphs for normal/bright colour combos of the same
+        base colour.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+bold_brightens_foreground = false
+        For 8-colour mode, assume that a bold text attribute will end up
+        brightening the foreground colour.
+
+        See blink_brightens_background for more information.
+
+best_effort_brighten_background = false
+        If set to true, try to brighten a background colour using blink even if
+        it is not assumed to be successful.
+
+        This option only affects colours which are safe to brighten. If the
+        blink_brightens_background option is set to true, this option is
+        effectively ignored.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+best_effort_brighten_foreground = true
+        If set to true, try to brighten a foreground colour using bold even if
+        it is not assumed to be successful.
+
+        This option only affects colours which are safe to brighten. If the
+        bold_brightens_foreground option is set to true, this option is
+        effectively ignored.
+
+        This option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+allow_extended_colours = false
+        Allow an *attempt* to use more than the eight basic terminal colours
+        for crawl's bright colours.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        An appropriate TERM environment variable must be set for this option to
+        function as expected for capable terminals. For example:
+          * XTerm: xterm-256color
+          * gnome-terminal: vte-256color
+          * PuTTY: putty-256color
+            (set in 'Connection->Data->Terminal-type string')
+
+        If these conditions are not met, crawl will fall back to 8-colour mode
+        and use character attributes to render bright colours.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).
         This may be useful if you're using a terminal with a background
-        colour other than black (such as an xterm), but this option is
-        still experimental and the results may not be very good.
+        colour other than black and wish to retain the colour scheme for crawl.
+
+        Internally, black is mapped to the the passed background colour and
+        vice-versa.
+
+        This option requires extended support by the terminal library as well
+        as the terminal itself. Additionally, bright default colours are not
+        available unless extended colour support is present and explicitly
+        enabled via allow_extended_colours. If support is not present, either
+        outright or for the selected colour, this option will have an effective
+        value of black.
+
+        See the allow_extended_colours option for more information on enabling
+        use of bright default colours. Beware of buggy or misleading terminfo
+        files.
+
+foreground_colour = lightgrey
+        Sets the default foreground colour by name (defaults to LIGHTGREY).
+
+        Internally, lightgrey is mapped to the passed foreground colour and
+        vice-versa.
+
+        This option comes with the same baggage as the background_colour option.
+        See its documentation for more details.
 
 use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and

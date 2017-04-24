@@ -48,10 +48,6 @@ bardiche
 
 Broń z ogromnym ostrzem topora sięgającym do połowy długiego drzewca.
 %%%%
-beef jerky
-
-Suszony i solony pasek wycięty z wnętrza ciała martwej krowy lub byka.
-%%%%
 blessed great sword
 
 Wielki dwuręczny miecz, pobłogosławiony przez moc Świetlistego.
@@ -223,12 +219,6 @@ Straszliwa broń, wypleciona na dnie piekieł.
 dire flail
 
 Cep z kolczastymi odważnikami po obu stronach.
-%%%%
-disc of storms
-
-Ten potężny przedmiot potrafi wypuścić niszczące elektryczne wyładowanie,
-zwłaszcza w rękach kogoś kto potrafi dobrze posługiwać się magicznymi
-przedmiotami.
 %%%%
 eudemon blade
 
@@ -654,10 +644,6 @@ Kawał metalu, z uchwytem i paskami umożliwiającymi przyczepienie do ramienia.
 Pozwala blokować ciosy, jednak utrudnia ruchy co spowalnia szybkość ataków oraz
 przeszkadza w rzucaniu czarów.
 %%%%
-slice of pizza
-
-Kawałek płaskiego wyrobu chlebopodobnego z sosem pomidorowym, serem i bazylią.
-%%%%
 sling
 
 Kawałek tkaniny i skóry, dobry do strzelania kamykami, które zadają w miarę
@@ -777,16 +763,6 @@ wand of fireball
 Magiczny przedmiot który strzela kulami ognia które wybuchają w żądanym
 miejscu.
 %%%%
-wand of hasting
-
-Magiczny przedmiot który rzuca czar który przyspiesza wszystkie działania
-istoty na którą został skierowany.
-%%%%
-wand of heal wounds
-
-Magiczny przedmiot który leczy rany stworzenia na które został skierowany.
-Działa to nawet na nieumarłych zdolnych do zdrowienia.
-%%%%
 wand of invisibility
 
 Magiczny przedmiot który czyni stworzenie na które został skierowany
@@ -812,16 +788,6 @@ wand of random effects
 
 Magiczny przedmiot który w nieprzewidywalny sposób produkuje efekty
 jakiejkolwiek innej różdżki.
-%%%%
-wand of slowing
-
-Magiczny przedmiot który rzuca czar który spowalnia wszystkie działa istoty na
-którą został skierowany.
-%%%%
-wand of teleportation
-
-Magiczny przedmiot który przemieszcza stworzenie na które został skierowane w
-przypadkowe miejsce. Nie działa to natychmiastowo.
 %%%%
 whip
 

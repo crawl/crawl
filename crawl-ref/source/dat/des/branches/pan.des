@@ -35,7 +35,7 @@ function pan_lord_epilogue(name)
 
     crawl.mpr(msgs[name], "warning")
     crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
-    -- Counterpart to branch_rune_desc from lookup_help.cc
+    -- Counterpart to branch_rune_desc from lookup-help.cc
     crawl.mpr("It guards the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
@@ -3935,7 +3935,7 @@ KITEM:  O = demonic rune of Zot
 ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   acquire any
-ITEM:   potion of cure mutation
+ITEM:   potion of cancellation
 ITEM:   potion of might / potion of brilliance / potion of agility
 ITEM:   any
 NSUBST: i = 2=ghh / 3=ghhiii / *:i

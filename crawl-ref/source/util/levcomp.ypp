@@ -5,7 +5,7 @@
 #include <map>
 #include <algorithm>
 #include "end.h"
-#include "l_defs.h"
+#include "l-defs.h"
 #include "mapdef.h"
 #include "maps.h"
 #include "stringutil.h"
@@ -35,7 +35,6 @@ static NORETURN void yyerror(const char *e)
     int i;
     double f;
     const char *text;
-    map_chance_pair chance;
 }
 
 /* Two harmless shift/reduce conflicts */
@@ -52,7 +51,6 @@ static NORETURN void yyerror(const char *e)
 
 %token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
 %token <text>   LUA_LINE
-%type <chance>  chance_num
 %type <i>       chance_roll
 
 %%
@@ -599,32 +597,18 @@ chance_roll     : NUMBER PERC
                     $$ = $1;
                 }
 
-chance_num      : NUMBER COLON chance_roll
+chance_specifier : chance_roll STRING
                 {
-                    $$.priority = $1;
-                    $$.chance   = $3;
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("depth_chance(\"%s\", %d)",
+                                     quote_lua_string($2).c_str(), (int)$1));
                 }
                 | chance_roll
                 {
-                    $$.priority = DEFAULT_CHANCE_PRIORITY;
-                    $$.chance   = $1;
-                }
-                ;
-
-chance_specifier : chance_num STRING
-                {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("depth_chance(\"%s\", %d, %d)",
-                                     quote_lua_string($2).c_str(),
-                                     $1.priority, $1.chance));
-                }
-                | chance_num
-                {
-                    lc_map.main.add(
-                        yylineno,
-                        make_stringf("chance(%d, %d)",
-                                     $1.priority, $1.chance));
+                        make_stringf("chance(%d)", (int)$1));
                 }
                 ;
 

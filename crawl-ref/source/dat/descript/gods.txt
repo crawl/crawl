@@ -68,6 +68,14 @@ ancestor into the world; as they explore and form new experiences, they will
 find themselves able to shape and control their ancestor's memory, eventually
 bringing them into the ranks of the mythical heroes.
 %%%%
+Wu Jian
+
+The Wu Jian Council is a congregation of martial monks, ascended to divinity
+after battling their way out of the afterlife. Disciples of the Council are
+able to execute acrobatic martial maneuvers, such as wall jumps, spinning
+attacks and punishing lunges. They will eventually become able to request
+help in the form of a storm of heavenly clouds.
+%%%%
 Jiyva
 
 Jiyva is the ancient deity of the slimes. Followers are expected to
@@ -300,6 +308,25 @@ mutations. As their piety grows, Jiyva will, with increasing frequency, drop
 jellies into the dungeon; rearrange followers' attributes based on their skills
 and armour; and mutate followers to better reflect Jiyva's image.
 %%%%
+Wu Jian powers
+
+Disciples of the Council learn to perform three martial techniques, shown
+below. They will also be taught to move at unfathomable speeds for short
+distances, and become able to summon a storm of golden clouds to increase their
+precision and damage for as long as they keep using martial attacks.
+
+  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them and attempt to cause slowing.
+  .......       .......
+
+  ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault towards
+  ..x<lightred>@</lightred>O..  -->  ..x.O<lightred>@</lightred>. enemies, striking all enemies adjacent to the landing
+  ..x....       ..x.... spot. May distract any witnessing foes.
+
+  .......       ....... (***) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage, and even more if they are distracted.
+  .......       .......
+%%%%
 Kikubaaqudgha powers
 
 Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
@@ -331,11 +358,10 @@ grant followers renewed health in return for killing beings of all kinds.
 Nemelex Xobeh powers
 
 The Trickster's followers gain various ways to influence fate when playing
-cards. They will quickly find that the effects of cards will be more powerful
-for them, increasingly so with higher piety. Later, followers will gain
-powerful abilities to manipulate the cards, allowing them to choose one of
-three drawn cards, to gain the effects of multiple cards at once, and finally
-to stack decks and re-order their contents.
+their cards. The effects of the cards will be more powerful with higher piety.
+Later, followers will gain powerful abilities to manipulate the cards, allowing
+them to choose one of three drawn cards, to gain the effects of multiple cards
+at once, and finally to stack decks and re-order their contents.
 %%%%
 Okawaru powers
 
@@ -470,33 +496,30 @@ deserting them.
 Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
-the attention of Cheibriados remains upon them. They may also find themselves
-slowed and exhausted, forced to step from time at unexpected moments, or even
-put to sleep. In very dangerous situations, Cheibriados may unleash wild and
-unpredictable magical effects from the depths of time.
+the attention of Cheibriados remains upon them, and will frequently have any
+magical hasting stripped away. They may also become further slowed and
+exhausted, be put to sleep, or have wild and unpredictable magical effects from
+the depths of time unleashed upon them.
 %%%%
 Dithmenos wrath
 
-When angered, Dithmenos turns the shadows against victims. Monsters emerge
-from the darkness, both illusions woven from shadow and the very shadows
-themselves turning against sinners. Dithmenos's subtle punishments are, if
-anything, more dangerous: victims find the shadows ripped away from them,
-hunted with nowhere to hide; or find themselves smothered in shadow and
-sleeping, perhaps forever.
+When angered, Dithmenos turns the shadows against victims. Monsters emerge from
+the darkness, both illusions woven from shadow and the very shadow themselves
+turning against sinners. Dithmenos's subtle punishments are, if anything, more
+dangerous: victims find the shadows ripped away from them, hunted with nowhere
+to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 %%%%
 Elyvilon wrath
 
 Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
-find themselves hampered in various ways; their weapons will be blunted and
-their blows in combat may be blocked, and they may be afflicted with poison or
-confusion.
+find the Healer occasionally protecting their foes from death.
 %%%%
 Fedhas wrath
 
 Those who offend Fedhas will have forces of nature invoked against them in the
-form of pure elemental destruction. Waves of ballistomycete spores will rise from nearby
-corpses, and the worst offenders will be surrounded by animate mushrooms and
-acid-spitting oklob plants.
+form of pure elemental destruction. Waves of ballistomycete spores will rise
+from nearby corpses, and the worst offenders will be surrounded by animate
+mushrooms and acid-spitting oklob plants.
 %%%%
 Hepliaklqana wrath
 
@@ -524,6 +547,13 @@ too, will find their own bodies becoming unstable; regularly transmuting into
 strange forms and acquiring debilitating mutations, as well as having any gifts
 of slime mutations stripped away from them.
 %%%%
+Wu Jian wrath
+
+Those who turn against the Council must be prepared to endure death by a
+thousand cuts. No hiding place is secure, no disguise perfect enough to avoid
+the sudden spring of traps, the flying daggers and the armies of animated
+weapons that will ambush the betrayer.
+%%%%
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
@@ -550,10 +580,11 @@ deserving!
 %%%%
 Nemelex Xobeh wrath
 
-Nemelex Xobeh forces sinners to rely on the luck of the draw. Stacked decks are
-immediately shuffled, and offenders are regularly forced to draw from the deck
-of Punishment, inflicting a range of unpleasant effects. Further, attempting to
-draw from other decks may instead lead to drawing from the deck of Punishment.
+Those who abandon Nemelex Xobeh have all of their gifted decks revoked
+immediately. They are also regularly forced to draw from the deck of
+Punishment, inflicting a range of unpleasant effects including draining,
+hunger, torment and polymorphing, as well as calling upon other gods to assist
+in inflicting wrath.
 %%%%
 Okawaru wrath
 

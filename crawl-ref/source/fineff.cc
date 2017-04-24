@@ -15,7 +15,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-abil.h"
@@ -356,7 +356,7 @@ void deferred_damage_fineff::fire()
 static void _do_merge_masses(monster* initial_mass, monster* merge_to)
 {
     // Combine enchantment durations.
-    merge_ench_durations(initial_mass, merge_to);
+    merge_ench_durations(*initial_mass, *merge_to);
 
     merge_to->blob_size += initial_mass->blob_size;
     merge_to->max_hit_points += initial_mass->max_hit_points;
@@ -375,7 +375,7 @@ static void _do_merge_masses(monster* initial_mass, monster* merge_to)
     behaviour_event(merge_to, ME_EVAL);
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+    monster_die(*initial_mass, KILL_DISMISSED, NON_MONSTER, true);
 }
 
 void starcursed_merge_fineff::fire()
@@ -469,10 +469,9 @@ void shock_serpent_discharge_fineff::fire()
 
     int amount = roll_dice(3, 4 + power * 3 / 2);
     amount = oppressor.apply_ac(amount, 0, AC_HALF);
-    // hack
-    actor_at(oppressor.pos())->hurt(serpent, amount, BEAM_ELECTRICITY,
-                                    KILLED_BY_BEAM,
-                                    "a shock serpent", "electric aura");
+    oppressor.hurt(serpent, amount, BEAM_ELECTRICITY,
+                   KILLED_BY_BEAM,
+                   "a shock serpent", "electric aura");
 }
 
 void delayed_action_fineff::fire()
@@ -487,7 +486,7 @@ void kirke_death_fineff::fire()
     delayed_action_fineff::fire();
 
     // Revert the player last
-    if (you.form == TRAN_PIG)
+    if (you.form == transformation::pig)
         untransform();
 }
 
@@ -527,6 +526,25 @@ void bennu_revive_fineff::fire()
                                                             : MG_NONE));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;
+}
+
+void infestation_death_fineff::fire()
+{
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, posn,
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_INFESTATION),
+                                         false))
+    {
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+        if (you.see_cell(posn) || you.can_see(*scarab))
+        {
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       name.c_str());
+        }
+    }
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

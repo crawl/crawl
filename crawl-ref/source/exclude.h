@@ -1,7 +1,6 @@
-#ifndef EXCLUDE_H
-#define EXCLUDE_H
+#pragma once
 
-#include "los_def.h"
+#include "los-def.h"
 
 void set_auto_exclude(const monster* mon);
 void remove_auto_exclude(const monster* mon, bool sleepy = false);
@@ -102,5 +101,3 @@ class writer;
 class reader;
 void marshallExcludes(writer& outf, const exclude_set& excludes);
 void unmarshallExcludes(reader& inf, int minorVersion, exclude_set& excludes);
-
-#endif

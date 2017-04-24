@@ -9,13 +9,13 @@
 #include "end.h"
 #include "files.h"
 #include "food.h"
-#include "godcompanions.h"
+#include "god-companions.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
 #include "jobs.h"
 #include "mutation.h"
 #include "ng-init.h"
@@ -300,10 +300,6 @@ static void _give_items_skills(const newgame_def& ng)
     if (job_gets_ranged_weapons(you.char_class))
         _give_ammo(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
 
-    // Deep Dwarves get a wand of heal wounds (5).
-    if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(OBJ_WANDS, WAND_HEAL_WOUNDS, 1, 5);
-
     if (you.species == SP_FELID)
     {
         you.skills[SK_THROWING] = 0;
@@ -333,11 +329,11 @@ static void _give_starting_food()
         base_type = OBJ_POTIONS;
         sub_type  = POT_BLOOD;
     }
-    else if (player_mutation_level(MUT_CARNIVOROUS))
+    else if (you.get_mutation_level(MUT_CARNIVOROUS))
         sub_type = FOOD_MEAT_RATION;
 
     // Give another one for hungry species.
-    if (player_mutation_level(MUT_FAST_METABOLISM))
+    if (you.get_mutation_level(MUT_FAST_METABOLISM))
         quantity = 2;
 
     newgame_make_item(base_type, sub_type, quantity);
@@ -478,7 +474,7 @@ static void _setup_generic(const newgame_def& ng)
     species_stat_init(you.species);     // must be down here {dlb}
 
     // Before we get into the inventory init, set light radius based
-    // on species vision. Currently, all species see out to 8 squares.
+    // on species vision.
     update_vision_range();
 
     job_stat_init(you.char_class);

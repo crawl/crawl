@@ -6,9 +6,9 @@ It has been enchanted to dance through the air and attack under its own power.
 # Uniques
 Agnes
 
-This spriggan is aged and weathered from years of travel in distant lands. Her
-exotic weapon and astonishing speed both speak to the training she received
-there. Underestimate her at your peril!
+This spriggan is aged and weathered from years of travel away from the forests
+and swamps that are home to her kin. Her choice of weapon and astonishing speed
+both speak to the training she underwent. Underestimate her at your peril!
 %%%%
 Aizul
 
@@ -19,9 +19,11 @@ spellcaster, but no more deadly in melee combat than others of her kind.
 %%%%
 Antaeus
 
-Once a mighty and renowned titan, his arrogance was his undoing. Now he is
-corrupt and tainted, a powerful demon who lords over the frozen wastes of
-Cocytus. His strength is legendary.
+Once a hero among the titans, Antaeus grew jealous of the titan queen. In
+single combat he challenged and slew her, and for this crime he was exiled and
+descended into the Hells. Finding the inhabitants of that place no match for his
+might, Antaeus tore from its substance a fourth Hell, Cocytus, a realm born of
+frozen spite.
 %%%%
 Arachne
 
@@ -32,7 +34,9 @@ them.
 %%%%
 Asmodeus
 
-One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
+Greatest and most cunning of the Lords of Hell, Asmodeus was born when the twin
+fires of greed and treachery first sparked to life within a mortal's heart.
+His hideous body is perpetually wreathed in flame.
 %%%%
 Asterion
 
@@ -82,7 +86,9 @@ on to his ears with hooks?
 %%%%
 Dispater
 
-The lord of the Iron City of Dis.
+Greatest of the Lords of Hell, Dispater was born when first an iron sword drank
+mortal blood. It despises mortal vanities, the pursuit of ‘reason’ and ‘beauty’
+- the only art it enjoys is the art of war.
 %%%%
 Dissolution
 
@@ -111,14 +117,16 @@ Donald
 %%%%
 Dowan
 
-A beautiful but vain elf with an aptitude for magic and little else. His skills
-are the perfect complement of his twin sister Duvessa's fighting prowess.
+A beautiful but vain deep elf with an aptitude for magic and little else. His
+skills are the perfect complement of his twin sister Duvessa's fighting prowess.
+In search of more powerful spells, he journeys to the surface with his sister.
 %%%%
 Duvessa
 
-A plain-looking elven fighter who is technically brilliant in many forms of
+A plain-looking deep elven fighter who is technically brilliant in many forms of
 combat, but over-confident because of it. She is complemented by the magical
-skills of her twin brother, Dowan.
+skills of her twin brother, Dowan. She journeys to the surface to challenge
+its greatest champions.
 %%%%
 Edmund
 
@@ -135,7 +143,9 @@ with many colours.
 %%%%
 Ereshkigal
 
-A fearsome arch-fiend who rules the deathly netherworld of Tartarus.
+Greatest and most inexorable of the Lords of Hell, Ereshkigal was born when
+first a mortal breathed her last. Noiselessly she laughs at lives cut short and
+loved ones separated by untimely death, enwreathed in the silence of the grave.
 %%%%
 Erica
 
@@ -482,6 +492,11 @@ acid blob
 
 A lump of sickly pustulent flesh, dripping with lethal acid.
 %%%%
+acid dragon
+
+A small dragon with brilliant yellow scales, its mouth dripping with
+corrosive slime.
+%%%%
 adder
 
 A common dungeon snake, a species of troglodytic reptile commonly found in
@@ -569,6 +584,10 @@ the slightest disturbance.
 balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
+%%%%
+barachi
+
+An amphibious humanoid with a very ugly attitude.
 %%%%
 basilisk
 
@@ -925,10 +944,6 @@ draconian annihilator
 A draconian that uses powerful conjurations to destroy anyone who dares to
 stand in its way.
 %%%%
-draconian caller
-
-A draconian that specializes in summoning hordes of drakes and dragons.
-%%%%
 draconian knight
 
 A draconian protected by thick scales, skillful weapon use, and complementary
@@ -950,10 +965,10 @@ draconian shifter
 A draconian master of the warp, who can translocate both itself and anyone else
 to any place, either on this world or outside of it.
 %%%%
-draconian zealot
+draconian stormcaller
 
-A draconian deriving its hellish powers and demonic allies from the worship of
-some unknown dark god.
+A draconian deriving its thunderous powers and draconic allies from the worship
+of Qazlal.
 %%%%
 dream sheep
 
@@ -1093,7 +1108,7 @@ entire world to cinders.
 %%%%
 fire vortex
 
-A swirling cloud of flame.
+A swirling cloud of flame. After striking a foe, it disintegrates.
 %%%%
 flayed ghost
 
@@ -1241,8 +1256,8 @@ A muscular grey-scaled humanoid with a reptilian tail and small wings.
 guardian golem
 
 A large construct, designed to protect. It can take the blows dealt to others
-upon itself, though it is prone to becoming unstable and overheating after
-heavy punishment.
+upon itself, though it is prone to becoming explosively unstable after heavy
+punishment.
 %%%%
 guardian mummy
 
@@ -1319,12 +1334,6 @@ A humanoid construct of insubstantial memory, floating through the air. Though
 perhaps somewhat changed in shape and bearing few discernable features, still
 it seems somehow to resemble a warrior from the distantly remembered past,
 ready with debilitating spells and deadly knifework.
-%%%%
-hill giant
-
-A massive, burly humanoid standing taller even than an ogre. It is uncivilized
-in every sense of the word, and has few recreational interests beyond smashing
-adventurers.
 %%%%
 hippogriff
 
@@ -1625,6 +1634,10 @@ merfolk javelineer
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
 %%%%
+merfolk siren
+
+A beguiling merfolk whose voice can mesmerize listeners.
+%%%%
 minotaur
 
 A large muscular human with the head of a bull. It makes its home in secluded
@@ -1644,15 +1657,6 @@ moth of wrath
 A moth known for its ability to inspire insane rages by touching its foes, or
 merely gazing at its friends. For some inexplicable reason, it was eradicated
 from the surface centuries ago.
-%%%%
-mottled draconian
-
-A muscular humanoid with mottled scales, a reptilian tail and small wings.
-%%%%
-mottled dragon
-
-A small purple dragon with curiously mottled scales, its mouth dripping with a
-strange liquid flame.
 %%%%
 mummy
 
@@ -2101,10 +2105,6 @@ simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
 %%%%
-siren
-
-A beguiling merfolk whose voice can mesmerize listeners.
-%%%%
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with
@@ -2131,8 +2131,9 @@ as its master does, and it would surely appreciate being freed.
 %%%%
 slime creature
 
-An icky glob of slime that slithers along the ground, occasionally merging with
-other nearby globs.
+An icky glob of slime that slithers along the ground. It can merge with other
+slime creatures to become dramatically more dangerous, and is especially likely
+to do so in confined spaces.
 %%%%
 small abomination
 
@@ -2471,7 +2472,7 @@ pursuit no matter where they flee.
 %%%%
 vault warden
 
-A veteran commanders, able to seal nearby doorways and staircases to prevent
+A veteran commander, able to seal nearby doorways and staircases to prevent
 intruders from either trespassing further or escaping alive.
 %%%%
 very ugly thing
@@ -2766,12 +2767,6 @@ fire elementalist statue
 An ornately worked statue of an orc holding a torch aloft, hewn from black
 basalt. The air around it shimmers.
 %%%%
-firespitter statue
-
-A statue of a large humanoid head, roughly cut from greyish gabbro. Its mouth
-is blackened with scorch-marks, and there is a faint ember glow in its empty
-eyes.
-%%%%
 flesh golem
 
 An animated mound of misshapen flesh, sculpted over an iron skeleton.
@@ -2799,10 +2794,6 @@ An undead creature in the shape of a bat, made of ice.
 kamikaze kobold
 
 A kobold that has been enchanted to explode in a blaze of fire.
-%%%%
-lasher statue
-
-A statue depicting a savage-looking slave driver with a vicious barbed whip.
 %%%%
 mad acolyte of Lugonu
 
@@ -2903,7 +2894,7 @@ rotten bat
 
 A bat that is well past its sell-by date.
 %%%%
-sickly siren
+sickly merfolk siren
 
 A young merfolk that looks quite sick, but still has the power to mesmerize its
 victims.

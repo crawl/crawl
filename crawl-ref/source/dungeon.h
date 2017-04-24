@@ -3,8 +3,7 @@
  * @brief Functions used when building new levels.
 **/
 
-#ifndef DUNGEON_H
-#define DUNGEON_H
+#pragma once
 
 #include <algorithm>
 #include <set>
@@ -13,6 +12,8 @@
 
 #include "env.h"
 #include "mapdef.h"
+
+COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 
 #define BUILD_METHOD_KEY "build_method_key"
 #define LAYOUT_TYPE_KEY  "layout_type_key"
@@ -23,6 +24,15 @@
 #define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
 #define TEMPLE_MAP_KEY       "temple_map_key"
 #define TEMPLE_SIZE_KEY      "temple_size_key"
+
+#if TAG_MAJOR_VERSION == 34
+#define TOMB_STONE_STAIRS_KEY "tomb_stone_stairs_key"
+#endif
+#define HATCH_NAME_PROP "_hatch_name"
+#define HATCH_DEST_NAME_PROP "_hatch_dest_name"
+
+#define TRANSPORTER_NAME_PROP "_transporter_name"
+#define TRANSPORTER_DEST_NAME_PROP "_transporter_dest_name"
 
 const unsigned short INVALID_MAP_INDEX = 10000;
 
@@ -225,7 +235,8 @@ object_class_type item_in_shop(shop_type shop_type);
 bool seen_destroy_feat(dungeon_feature_type old_feat);
 bool map_masked(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest);
+                                coord_def base_pos, bool find_closest,
+                                string hatch_name = "");
 
 class mons_spec;
 monster *dgn_place_monster(mons_spec &mspec, coord_def where,
@@ -288,4 +299,6 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
 bool door_vetoed(const coord_def pos);
 
 void fixup_misplaced_items();
-#endif
+
+void dgn_place_transporter(const coord_def &pos, const coord_def &dest);
+bool dgn_make_transporters_from_markers();

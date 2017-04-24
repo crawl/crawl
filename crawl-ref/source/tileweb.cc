@@ -20,12 +20,12 @@
 #include "english.h"
 #include "env.h"
 #include "files.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "json.h"
 #include "json-wrapper.h"
 #include "lang-fake.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"
@@ -37,6 +37,8 @@
 #include "state.h"
 #include "stringutil.h"
 #include "throw.h"
+#include "tile-flags.h"
+#include "tile-player-flag-cut.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-icons.h"
@@ -645,7 +647,7 @@ static bool _update_statuses(player_info& c)
         {
             if (!you.duration[status])
                 continue;
-            inf.short_text = "shielded";
+            inf.short_text = "divine shield";
         }
         else if (status == DUR_ICEMAIL_DEPLETED)
         {
@@ -739,41 +741,13 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.hp, you.hp, "hp");
     _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
     int max_max_hp = get_real_hp(true, true);
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        max_max_hp += get_real_mp(true); // compare _print_stats_hp
 
-    _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
-
-    if (you.species != SP_DJINNI)
-    {
-        _update_int(force_full, c.mp, you.magic_points, "mp");
-        _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
-    }
-
-    if (you.species == SP_DJINNI)
-    {
-        // Don't send more information than can be seen from the console HUD.
-        // Compare _print_stats_contam and get_contamination_level
-        int contam = you.magic_contamination;
-        if (contam >= 26000)
-            contam = 26000;
-        else if (contam >= 16000)
-            contam = 16000;
-        _update_int(force_full, c.contam, contam, "contam");
-    }
-#else
     _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
     _update_int(force_full, c.mp, you.magic_points, "mp");
     _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
-#endif
+
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        _update_int(force_full, c.heat, temperature(), "heat");
-#endif
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
     _update_int(force_full, c.evasion, you.evasion(), "ev");
@@ -796,6 +770,9 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.experience_level, you.experience_level, "xl");
     _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
     _update_int(force_full, c.gold, you.gold, "gold");
+    _update_int(force_full, c.noise,
+                (you.wizard ? you.get_noise_perception(false) : -1), "noise");
+    _update_int(force_full, c.adjusted_noise, you.get_noise_perception(true), "adjusted_noise");
 
     if (you.running == 0) // Don't update during running/resting
     {
@@ -1215,16 +1192,14 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.mangrove_water != current_pc.mangrove_water)
             json_write_bool("mangrove_water", next_pc.mangrove_water);
 
+        if (next_pc.awakened_forest != current_pc.awakened_forest)
+            json_write_bool("awakened_forest", next_pc.awakened_forest);
+
         if (next_pc.blood_rotation != current_pc.blood_rotation)
             json_write_int("blood_rotation", next_pc.blood_rotation);
 
         if (next_pc.travel_trail != current_pc.travel_trail)
             json_write_int("travel_trail", next_pc.travel_trail);
-
-#if TAG_MAJOR_VERSION == 34
-        if (next_pc.heat_aura != current_pc.heat_aura)
-            json_write_int("heat_aura", next_pc.heat_aura);
-#endif
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

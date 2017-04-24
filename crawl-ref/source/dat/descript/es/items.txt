@@ -49,10 +49,6 @@ bardiche
 
 Una larga garrocha con una enorme cuchilla en uno de sus extremos.
 %%%%
-beef jerky
-
-Una tira de carne seca de vaca o toro.
-%%%%
 blessed great sword
 
 Una espada con una larguísima y pesada cuchilla y un gran mango. Ha sido
@@ -218,13 +214,6 @@ Un arma terrible, moldeada por el fuego y el azufre.
 demon whip
 
 Un arma terrible, fabricada en las profundidades del Hades.
-%%%%
-disc of storms
-
-Este objeto extremadamente poderoso es capaz de de desencadenar una destructiva
-tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
-manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
-imposible su uso por parte de alguien que no sea conductivo.
 %%%%
 eudemon blade
 
@@ -588,11 +577,6 @@ shield
 
 Una pieza de metal diseñada para llevarse atada en un brazo. Es pesada de
 llevar y hace algo más lenta la velocidad a la que se puede atacar.
-%%%%
-slice of pizza
-
-Un trozo de pizza: un pan plano con salsa de tomate, mozzarela de búfala y
-orégano.
 %%%%
 sling
 

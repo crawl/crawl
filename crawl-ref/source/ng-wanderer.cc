@@ -2,8 +2,9 @@
 
 #include "ng-wanderer.h"
 
-#include "itemprop.h"
+#include "item-prop.h"
 #include "ng-setup.h"
+#include "potion-type.h"
 #include "randbook.h"
 #include "random.h"
 #include "skills.h"
@@ -267,7 +268,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_SUMMONINGS:
-        book = coinflip() ? BOOK_MINOR_MAGIC : BOOK_CALLINGS;
+        book = random_choose(BOOK_MINOR_MAGIC, BOOK_CALLINGS);
         break;
 
     case SK_NECROMANCY:
@@ -279,7 +280,7 @@ static void _give_wanderer_book(skill_type skill)
         break;
 
     case SK_TRANSMUTATIONS:
-        book = coinflip() ? BOOK_GEOMANCY : BOOK_CHANGES;
+        book = random_choose(BOOK_GEOMANCY, BOOK_CHANGES);
         break;
 
     case SK_FIRE_MAGIC:
@@ -452,11 +453,8 @@ static void _wanderer_random_evokable()
         int selected_evoker =
               random_choose(MISC_BOX_OF_BEASTS, MISC_LAMP_OF_FIRE,
                             MISC_FAN_OF_GALES, MISC_PHIAL_OF_FLOODS);
-        int charges = 0;
-        if (selected_evoker == MISC_BOX_OF_BEASTS)
-            charges = random_range(10, 15, 2);
 
-        newgame_make_item(OBJ_MISCELLANY, selected_evoker, 1, charges);
+        newgame_make_item(OBJ_MISCELLANY, selected_evoker, 1);
     }
     else
     {

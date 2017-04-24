@@ -15,8 +15,9 @@
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
 #include "randbook.h"
@@ -110,8 +111,6 @@ static bool _is_boring_item(int type, int sub_type)
 {
     switch (type)
     {
-    case OBJ_POTIONS:
-        return sub_type == POT_CURE_MUTATION;
     case OBJ_SCROLLS:
         // These scrolls increase knowledge and thus reduce risk.
         switch (sub_type)
@@ -186,12 +185,12 @@ static weapon_type _determine_weapon_subtype(int item_level)
 
 static bool _try_make_item_unrand(item_def& item, int force_type, int agent)
 {
-    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == -1)
+    if (player_in_branch(BRANCH_PANDEMONIUM) && agent == NO_AGENT)
         return false;
 
     int idx = find_okay_unrandart(item.base_type, force_type,
                                   player_in_branch(BRANCH_ABYSS)
-                                      && agent == -1);
+                                      && agent == NO_AGENT);
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return true;
@@ -388,7 +387,7 @@ int determine_nice_weapon_plusses(int item_level)
 
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = -1)
+                                  int agent = NO_AGENT)
 {
     // Determine weapon type.
     if (force_type != OBJ_RANDOM)
@@ -730,8 +729,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // 10% of boots become barding.
         if (item.sub_type == ARM_BOOTS && one_chance_in(10))
         {
-            item.sub_type = coinflip() ? ARM_NAGA_BARDING
-                                       : ARM_CENTAUR_BARDING;
+            item.sub_type = random_choose(ARM_NAGA_BARDING,
+                                          ARM_CENTAUR_BARDING);
         }
 
         // Determine enchantment and cursedness.
@@ -763,8 +762,8 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // bardings named Boots of xy.
         make_item_randart(item);
 
-        // Don't let quicksilver dragon armour get minuses.
-        if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+        // Don't let unenchantable armour get minuses.
+        if (!armour_is_enchantable(item))
             item.plus = 0;
 
         return true;
@@ -791,13 +790,19 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
     case ARM_SHIELD:
     case ARM_LARGE_SHIELD:
     case ARM_BUCKLER:
-        return random_choose_weighted(40, SPARM_RESISTANCE,
-                                      120, SPARM_FIRE_RESISTANCE,
-                                      120, SPARM_COLD_RESISTANCE,
-                                      120, SPARM_POISON_RESISTANCE,
-                                      120, SPARM_POSITIVE_ENERGY,
-                                      240, SPARM_REFLECTION,
-                                      480, SPARM_PROTECTION);
+        return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      3, SPARM_FIRE_RESISTANCE,
+                                      3, SPARM_COLD_RESISTANCE,
+                                      3, SPARM_POISON_RESISTANCE,
+                                      3, SPARM_POSITIVE_ENERGY,
+                                      6, SPARM_REFLECTION,
+                                      12, SPARM_PROTECTION);
+
+    case ARM_SCARF:
+        return random_choose_weighted(3, SPARM_COLD_RESISTANCE,
+                                      1, SPARM_SPIRIT_SHIELD,
+                                      1, SPARM_RESISTANCE,
+                                      1, SPARM_REPULSION);
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
@@ -805,14 +810,13 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                              SPARM_MAGIC_RESISTANCE);
 
     case ARM_HAT:
-        return random_choose_weighted(8, SPARM_NORMAL,
+        return random_choose_weighted(7, SPARM_NORMAL,
                                       3, SPARM_MAGIC_RESISTANCE,
                                       2, SPARM_INTELLIGENCE,
-                                      2, SPARM_SEE_INVISIBLE,
-                                      1, SPARM_SPIRIT_SHIELD);
+                                      2, SPARM_SEE_INVISIBLE);
 
     case ARM_HELMET:
-        return coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
+        return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
 
     case ARM_GLOVES:
         return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);
@@ -826,11 +830,8 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                              SPARM_COLD_RESISTANCE, SPARM_FIRE_RESISTANCE);
 
     case ARM_ROBE:
-        // Archmagi depends on depth, unlike everything else, because ???
-        if (x_chance_in_y(12, 100) && x_chance_in_y(11 + item_level, 50))
-            return SPARM_ARCHMAGI;
-
         return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      1, SPARM_ARCHMAGI,
                                       2, SPARM_NORMAL,
                                       2, SPARM_COLD_RESISTANCE,
                                       2, SPARM_FIRE_RESISTANCE,
@@ -860,11 +861,11 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
         return SPARM_NORMAL;
     }
 
-    return random_choose_weighted(28, SPARM_FIRE_RESISTANCE,
-                                  28, SPARM_COLD_RESISTANCE,
-                                  20, SPARM_POISON_RESISTANCE,
-                                  16, SPARM_MAGIC_RESISTANCE,
-                                   8, SPARM_POSITIVE_ENERGY);
+    return random_choose_weighted(7, SPARM_FIRE_RESISTANCE,
+                                  7, SPARM_COLD_RESISTANCE,
+                                  5, SPARM_POISON_RESISTANCE,
+                                  4, SPARM_MAGIC_RESISTANCE,
+                                  2, SPARM_POSITIVE_ENERGY);
 }
 
 /**
@@ -965,18 +966,24 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
             return false; // contradictory or redundant
 
         return slot == EQ_BODY_ARMOUR || slot == EQ_SHIELD || slot == EQ_CLOAK
-               || !strict;
+                       || !strict;
 
     case SPARM_SPIRIT_SHIELD:
         return type == ARM_HAT ||
 #if TAG_MAJOR_VERSION == 34
                type == ARM_CAP ||
 #endif
-               slot == EQ_SHIELD || !strict;
+               slot == EQ_SHIELD ||
+               type == ARM_SCARF || !strict;
+
+    case SPARM_REPULSION:
+        return type == ARM_SCARF;
+
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
     }
+
 
     return true;
 }
@@ -1023,8 +1030,10 @@ static armour_type _get_random_armour_type(int item_level)
     {
         // Total weight is 30, each slot has a weight of 6
         armtype = random_choose_weighted(6, ARM_BOOTS,
-                                         6, ARM_CLOAK,
                                          6, ARM_GLOVES,
+                                         // Cloak slot
+                                         5, ARM_CLOAK,
+                                         1, ARM_SCARF,
                                          // Head slot
                                          5, ARM_HELMET,
                                          1, ARM_HAT,
@@ -1035,9 +1044,9 @@ static armour_type _get_random_armour_type(int item_level)
     }
     else if (x_chance_in_y(11 + item_level, 10000))
     {
-        // High level dragon armours
+        // High level dragon scales
         armtype = random_choose(ARM_STEAM_DRAGON_ARMOUR,
-                                ARM_MOTTLED_DRAGON_ARMOUR,
+                                ARM_ACID_DRAGON_ARMOUR,
                                 ARM_STORM_DRAGON_ARMOUR,
                                 ARM_GOLD_DRAGON_ARMOUR,
                                 ARM_SWAMP_DRAGON_ARMOUR,
@@ -1090,7 +1099,7 @@ static armour_type _get_random_armour_type(int item_level)
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
-                                  int agent = -1)
+                                  int agent = NO_AGENT)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -1153,6 +1162,12 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
+    // Non-randart scarves always get an ego
+    else if (item.sub_type == ARM_SCARF)
+    {
+        set_item_ego_type(item, OBJ_ARMOUR,
+                          _generate_armour_ego(item, item_level));
+    }
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
                 && !item.is_mundane() || force_good)
@@ -1191,8 +1206,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     if (item.plus > armour_max_enchant(item))
         item.plus = armour_max_enchant(item);
 
-    // Don't let quicksilver dragon armour get minuses.
-    if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
+    // Don't let unenchantable armour get minuses.
+    if (!armour_is_enchantable(item))
         item.plus = 0;
 
     // Never give brands to scales or hides, in case of misbehaving vaults.
@@ -1232,22 +1247,20 @@ static monster_type _choose_random_monster_corpse()
  */
 static int _random_wand_subtype()
 {
-    // total weight 84 [historical]
-    return random_choose_weighted(10, WAND_FLAME,
-                                  10, WAND_LIGHTNING,
-                                  10, WAND_ICEBLAST,
-                                  6, WAND_SLOWING,
+    // total weight 80 [arbitrary]
+    return random_choose_weighted(9, WAND_FLAME,
+                                  9, WAND_LIGHTNING,
+                                  9, WAND_ICEBLAST,
+                                  8, WAND_RANDOM_EFFECTS,
+                                  8, WAND_CONFUSION,
+                                  8, WAND_POLYMORPH,
                                   6, WAND_PARALYSIS,
-                                  6, WAND_CONFUSION,
-                                  6, WAND_POLYMORPH,
-                                  6, WAND_RANDOM_EFFECTS,
                                   6, WAND_ACID,
                                   5, WAND_DISINTEGRATION,
                                   5, WAND_DIGGING,
                                   3, WAND_ENSLAVEMENT,
-                                  3, WAND_TELEPORTATION,
-                                  1, WAND_HASTING,
-                                  1, WAND_HEAL_WOUNDS);
+                                  2, WAND_CLOUDS,
+                                  2, WAND_SCATTERSHOT);
 }
 
 /**
@@ -1269,6 +1282,8 @@ bool is_high_tier_wand(int type)
     case WAND_ACID:
     case WAND_ICEBLAST:
     case WAND_DISINTEGRATION:
+    case WAND_CLOUDS:
+    case WAND_SCATTERSHOT:
         return true;
     default:
         return false;
@@ -1302,12 +1317,10 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     // Determine sub_type:
     if (force_type == OBJ_RANDOM)
     {
-        item.sub_type = random_choose_weighted( 30, FOOD_BREAD_RATION,
-                                                10, FOOD_FRUIT,
-                                                30, FOOD_MEAT_RATION,
-                                                15, FOOD_BEEF_JERKY,
-                                                10, FOOD_PIZZA,
-                                                 5, FOOD_ROYAL_JELLY);
+        item.sub_type = random_choose_weighted(30, FOOD_MEAT_RATION,
+                                               30, FOOD_BREAD_RATION,
+                                               25, FOOD_ROYAL_JELLY,
+                                               15, FOOD_FRUIT);
     }
     else
         item.sub_type = force_type;
@@ -1336,7 +1349,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                 item.quantity += random2(3);
 
             if (is_fruit(item))
-                item.quantity += random2avg(5,2);
+                item.quantity += random2(4);
         }
     }
 }
@@ -1358,27 +1371,28 @@ static void _generate_potion_item(item_def& item, int force_type,
     {
         int stype;
         int tries = 500;
+
+        // If created by Xom, keep going until an approved potion is chosen
+        // Currently does nothing, until we come up with a boring potion.
         do
         {
-            // total weight is 1065
+            // total weight: 1045
             stype = random_choose_weighted(192, POT_CURING,
-                                            95, POT_HEAL_WOUNDS,
-                                            73, POT_DEGENERATION,
+                                           105, POT_HEAL_WOUNDS,
                                             73, POT_LIGNIFY,
                                             73, POT_FLIGHT,
+                                            73, POT_HASTE,
+                                            66, POT_MUTATION,
                                             66, POT_MIGHT,
                                             66, POT_AGILITY,
                                             66, POT_BRILLIANCE,
-                                            63, POT_HASTE,
-                                            46, POT_MUTATION,
+                                            53, POT_DEGENERATION,
                                             35, POT_INVISIBILITY,
                                             35, POT_RESISTANCE,
                                             35, POT_MAGIC,
                                             35, POT_BERSERK_RAGE,
                                             35, POT_CANCELLATION,
                                             35, POT_AMBROSIA,
-                                            29, POT_CURE_MUTATION,
-                                            11, POT_BENEFICIAL_MUTATION,
                                              2, POT_EXPERIENCE);
         }
         while (agent == GOD_XOM
@@ -1402,6 +1416,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
     {
         const int depth_mod = random2(1 + item_level);
         int tries = 500;
+
+        // If this item is created by Xom, keep looping until an
+        // interesting scroll is discovered (as determined by
+        // _is_boring_item). Otherwise just weighted-choose a scroll.
         do
         {
             // total weight:    789  if depth_mod < 4
@@ -1411,8 +1429,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                 200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
-                 80, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
-
+                100, (crawl_state.game_is_sprint() ? NUM_SCROLLS
+                                                   : SCR_TELEPORTATION),
                  45, SCR_AMNESIA,
                  40, SCR_ENCHANT_ARMOUR,
                  40, SCR_ENCHANT_WEAPON,
@@ -1420,11 +1438,11 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  40, SCR_MAGIC_MAPPING,
                  32, SCR_FEAR,
                  32, SCR_FOG,
-                 32, SCR_RANDOM_USELESSNESS,
                  32, SCR_BLINKING,
-                 // [Cha] don't generate noise scrolls if in sprint
-                 32, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
                  32, SCR_IMMOLATION,
+                 // [Cha] don't generate noise scrolls if in sprint
+                 22, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
+                 22, SCR_RANDOM_USELESSNESS,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
                  17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
@@ -1440,10 +1458,9 @@ static void _generate_scroll_item(item_def& item, int force_type,
                   && --tries > 0);
     }
 
-    if (one_chance_in(24))
-        item.quantity = (coinflip() ? 2 : 3);
-    else
-        item.quantity = 1;
+    item.quantity = random_choose_weighted(46, 1,
+                                            1, 2,
+                                            1, 3);
 
     item.plus = 0;
 }
@@ -1501,6 +1518,9 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         item.skill = _choose_manual_skill();
         // Set number of bonus skill points.
         item.skill_points = random_range(2000, 3000);
+        // Preidentify.
+        set_ident_type(item, true);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
         return; // rare enough without being replaced with randarts
     }
 
@@ -1554,29 +1574,10 @@ static void _generate_staff_item(item_def& item, bool allow_uniques,
         // staves of energy are 25% less common, wizardry/power
         // are more common
         if (item.sub_type == STAFF_ENERGY && one_chance_in(4))
-            item.sub_type = coinflip() ? STAFF_WIZARDRY : STAFF_POWER;
+            item.sub_type = random_choose(STAFF_WIZARDRY, STAFF_POWER);
     }
     else
         item.sub_type = force_type;
-
-    if (one_chance_in(16))
-        do_curse_item(item);
-}
-
-static void _generate_rod_item(item_def& item, int force_type, int item_level)
-{
-    if (force_type == OBJ_RANDOM)
-    {
-        do
-        {
-            item.sub_type = random2(NUM_RODS);
-        }
-        while (item_type_removed(OBJ_RODS, item.sub_type));
-    }
-    else
-        item.sub_type = force_type;
-
-    init_rod_mp(item, -1, item_level);
 
     if (one_chance_in(16))
         do_curse_item(item);
@@ -1747,7 +1748,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         item.sub_type = random_choose(MISC_FAN_OF_GALES,
                                       MISC_LAMP_OF_FIRE,
                                       MISC_PHIAL_OF_FLOODS,
-                                      MISC_DISC_OF_STORMS,
+                                      MISC_LIGHTNING_ROD,
                                       MISC_BOX_OF_BEASTS,
                                       MISC_SACK_OF_SPIDERS,
                                       MISC_CRYSTAL_BALL_OF_ENERGY,
@@ -1853,8 +1854,7 @@ int items(bool allow_uniques,
         ASSERT(force_type == OBJ_RANDOM);
         // Total weight: 1960
         item.base_type = random_choose_weighted(
-                                     1, OBJ_RODS,
-                                     9, OBJ_STAVES,
+                                    10, OBJ_STAVES,
                                     30, OBJ_BOOKS,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,
@@ -1873,11 +1873,10 @@ int items(bool allow_uniques,
         if (item_level < 7
             && (item.base_type == OBJ_BOOKS
                 || item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_RODS
                 || item.base_type == OBJ_WANDS)
             && random2(7) >= item_level)
         {
-            item.base_type = coinflip() ? OBJ_POTIONS : OBJ_SCROLLS;
+            item.base_type = random_choose(OBJ_POTIONS, OBJ_SCROLLS);
         }
     }
 
@@ -1887,7 +1886,7 @@ int items(bool allow_uniques,
 
     // make_item_randart() might do things differently based upon the
     // acquirement agent, especially for god gifts.
-    if (agent != -1 && !is_stackable_item(item))
+    if (agent != NO_AGENT && !is_stackable_item(item))
         origin_acquired(item, agent);
 
     item.quantity = 1;          // generally the case
@@ -1977,11 +1976,7 @@ int items(bool allow_uniques,
     case OBJ_STAVES:
         // Don't generate unrand staves this way except through acquirement,
         // since they also generate as OBJ_WEAPONS.
-        _generate_staff_item(item, (agent != -1), force_type, item_level, agent);
-        break;
-
-    case OBJ_RODS:
-        _generate_rod_item(item, force_type, item_level);
+        _generate_staff_item(item, (agent != NO_AGENT), force_type, item_level, agent);
         break;
 
     case OBJ_ORBS:              // always forced in current setup {dlb}
@@ -2053,44 +2048,6 @@ void reroll_brand(item_def &item, int item_level)
         die("can't reroll brands of this type");
     }
     item_set_appearance(item);
-}
-
-static int _roll_rod_enchant(int item_level)
-{
-    int value = 0;
-
-    if (one_chance_in(4))
-        value -= random_range(1, 3);
-
-    if (item_level >= ISPEC_GIFT)
-        value += 2;
-
-    int pr = 20 + item_level * 2;
-
-    if (pr > 80)
-        pr = 80;
-
-    while (random2(100) < pr) value++;
-
-    return stepdown_value(value, 4, 4, 4, 9);
-}
-
-void init_rod_mp(item_def &item, int ncharges, int item_level)
-{
-    ASSERT(item.base_type == OBJ_RODS);
-
-    if (ncharges != -1)
-    {
-        item.charge_cap = ncharges * ROD_CHARGE_MULT;
-        item.rod_plus = 0;
-    }
-    else
-    {
-        item.charge_cap = random_range(9, 14) * ROD_CHARGE_MULT;
-        item.rod_plus = _roll_rod_enchant(item_level);
-    }
-
-    item.charges = item.charge_cap;
 }
 
 static bool _weapon_is_visibly_special(const item_def &item)
@@ -2183,20 +2140,14 @@ void item_set_appearance(item_def &item)
     {
     case OBJ_WEAPONS:
         if (_weapon_is_visibly_special(item))
-        {
-            set_equip_desc(item,
-                           (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED));
-        }
+            set_equip_desc(item, random_choose(ISFLAG_GLOWING, ISFLAG_RUNED));
         break;
 
     case OBJ_ARMOUR:
         if (_armour_is_visibly_special(item))
         {
-            const item_status_flag_type descs[] = { ISFLAG_GLOWING,
-                                                    ISFLAG_RUNED,
-                                                    ISFLAG_EMBROIDERED_SHINY };
-
-            set_equip_desc(item, RANDOM_ELEMENT(descs));
+            set_equip_desc(item, random_choose(ISFLAG_GLOWING, ISFLAG_RUNED,
+                                               ISFLAG_EMBROIDERED_SHINY));
         }
         break;
 
@@ -2234,10 +2185,8 @@ void makeitem_tests()
         item.clear();
         level = _test_item_level();
         item.base_type = OBJ_WEAPONS;
-        if (coinflip())
-            item.brand = SPWPN_NORMAL;
-        else
-            item.brand = random2(NUM_REAL_SPECIAL_WEAPONS);
+        item.brand = coinflip() ? SPWPN_NORMAL
+                                : random2(NUM_REAL_SPECIAL_WEAPONS);
 #if TAG_MAJOR_VERSION == 34
         if (item.brand == SPWPN_ORC_SLAYING
             || item.brand == SPWPN_REACHING
@@ -2260,10 +2209,8 @@ void makeitem_tests()
         item.clear();
         level = _test_item_level();
         item.base_type = OBJ_ARMOUR;
-        if (coinflip())
-            item.brand = SPARM_NORMAL;
-        else
-            item.brand = random2(NUM_REAL_SPECIAL_ARMOURS);
+        item.brand = coinflip() ? SPARM_NORMAL
+                                : random2(NUM_REAL_SPECIAL_ARMOURS);
         int type = coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS);
 #if TAG_MAJOR_VERSION == 34
         if (type == ARM_CAP)

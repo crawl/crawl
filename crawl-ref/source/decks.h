@@ -3,8 +3,7 @@
  * @brief Functions with decks of cards.
 **/
 
-#ifndef DECKS_H
-#define DECKS_H
+#pragma once
 
 #include "enum.h"
 
@@ -156,8 +155,8 @@ bool deck_triple_draw();
 bool deck_deal();
 string which_decks(card_type card);
 bool deck_stack();
-void nemelex_shuffle_decks();
-void shuffle_all_decks_on_level();
+void nemelex_reclaim_decks();
+void reclaim_decks_on_level();
 
 bool draw_three(int slot);
 bool stack_five(int slot);
@@ -184,5 +183,3 @@ card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
 
 const vector<card_type> get_drawn_cards(const item_def& deck);
-
-#endif

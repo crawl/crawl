@@ -23,6 +23,10 @@ deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
+frog_m BARACHI
+frog_f
+frog2_f
+frog2_m
 gnome_f
 gnome_m
 halfling_m HALFLING
@@ -89,8 +93,6 @@ draconian_gray_f DRACONIAN_GREY
 draconian_gray_m
 draconian_green_f DRACONIAN_GREEN
 draconian_green_m
-draconian_mottled_f DRACONIAN_MOTTLED
-draconian_mottled_m
 draconian_pale_f DRACONIAN_PALE
 draconian_pale_m
 draconian_purple_f DRACONIAN_PURPLE
@@ -197,6 +199,13 @@ white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
 dragonskin DRAGONSKIN_CLOAK
+
+###Scarf
+scarf_cyan SCARF_CYAN SCARF_FIRST_NORM
+scarf_red SCARF_RED
+scarf_white SCARF_WHITE
+scarf_magenta SCARF_MAGENTA
+scarf_green SCARF_GREEN SCARF_LAST_NORM
 %end_ctg
 
 ###Boots
@@ -418,7 +427,7 @@ armour_mummy ARMOUR_MUMMY
 ##cloth_u_sail SAILOR
 dragonarm_red DRAGONARM_RED
 dragonarm_white DRAGONARM_WHITE
-dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_yellow DRAGONARM_YELLOW
 dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
@@ -440,6 +449,9 @@ isildur ISILDUR
 pj PJ
 sam SAM
 vanhel1 VANHEL
+
+deep_troll_leather DEEP_TROLL_LEATHER
+iron_troll_leather IRON_TROLL_LEATHER
 
 maxwell MAXWELL
 lears_hauberk LEARS_HAUBERK
@@ -492,7 +504,7 @@ flaming_death FLAMING_DEATH
 leech LEECH
 morg MORG
 plutonium_sword PLUTONIUM_SWORD
-jihad JIHAD
+zealot_sword ZEALOT_SWORD
 singing_sword SINGING_SWORD
 zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
@@ -502,6 +514,7 @@ spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
+thermic_engine THERMIC_ENGINE
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -539,7 +552,7 @@ blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
 sniper SNIPER
 crossbow_fire FIERY_DEVIL
-krishna KRISHNA
+zephyr ZEPHYR
 
 %sdir player/hand1
 # blades
@@ -687,6 +700,7 @@ staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
 ## rods
+# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -752,7 +766,6 @@ bottle BOTTLE
 box BOX
 crystal CRYSTAL
 deck DECK
-disc DISC
 horn HORN
 lantern LANTERN
 orb ORB
@@ -1131,7 +1144,6 @@ drcwing_black BLACK
 drcwing_yellow YELLOW
 drcwing_grey GREY
 drcwing_green GREEN
-drcwing_mottled MOTTLED
 drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
@@ -1145,7 +1157,6 @@ drchead_black BLACK
 drchead_yellow YELLOW
 drchead_grey GREY
 drchead_green GREEN
-drchead_mottled MOTTLED
 drchead_pale PALE
 drchead_purple PURPLE
 drchead_red RED

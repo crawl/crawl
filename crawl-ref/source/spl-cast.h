@@ -3,8 +3,7 @@
  * @brief Spell casting functions.
 **/
 
-#ifndef SPL_CAST_H
-#define SPL_CAST_H
+#pragma once
 
 #include "enum.h"
 
@@ -82,26 +81,27 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 const string &title = "Your Spells",
                 spell_selector selector = nullptr);
 int raw_spell_fail(spell_type spell);
-int stepdown_spellpower(int power);
+int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
-                     bool rod = false);
-int calc_spell_range(spell_type spell, int power = 0, bool rod = false);
+                     int scale = 1);
+int calc_spell_range(spell_type spell, int power = 0);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 
 int apply_enhancement(const int initial_power, const int enhancer_levels);
 
 void inspect_spells();
+bool can_cast_spells(bool quiet = false);
 void do_cast_spell_cmd(bool force);
 
 int hex_success_chance(const int mr, int powc, int scale,
                        bool round_up = false);
-class targetter;
+class targeter;
 vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
-                                   targetter* hitfunc);
+                                   targeter* hitfunc);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-    bool evoked = false, bool fake_spell = false);
+                       const item_def* const evoked_item = nullptr);
 
 extern const char *fail_severity_adjs[];
 
@@ -113,13 +113,13 @@ string failure_rate_to_string(int fail);
 
 int power_to_barcount(int power);
 
-string spell_power_string(spell_type spell, bool rod = false);
-string spell_range_string(spell_type spell, bool rod = false);
+string spell_power_string(spell_type spell);
+string spell_range_string(spell_type spell);
 string range_string(int range, int maxrange, char32_t caster_char);
 string spell_schools_string(spell_type spell);
-string spell_hunger_string(spell_type spell, bool rod = false);
+string spell_hunger_string(spell_type spell);
 string spell_noise_string(spell_type spell, int chop_wiz_display_width = 0);
 
 void spell_skills(spell_type spell, set<skill_type> &skills);
 
-#endif
+bool spell_removed(spell_type spell);

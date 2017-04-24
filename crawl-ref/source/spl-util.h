@@ -3,8 +3,9 @@
  * @brief data handlers for player spell list
 **/
 
-#ifndef SPL_UTIL_H
-#define SPL_UTIL_H
+#pragma once
+
+#include <functional>
 
 #include "enum.h"
 #include "mon-info.h"
@@ -20,15 +21,14 @@ enum spschool_flag_type
   SPTYP_TRANSMUTATION  = 1<<5,
   SPTYP_NECROMANCY     = 1<<6,
   SPTYP_SUMMONING      = 1<<7,
-  SPTYP_DIVINATION     = 1<<8,
-  SPTYP_TRANSLOCATION  = 1<<9,
-  SPTYP_POISON         = 1<<10,
-  SPTYP_EARTH          = 1<<11,
-  SPTYP_AIR            = 1<<12,
+  SPTYP_TRANSLOCATION  = 1<<8,
+  SPTYP_POISON         = 1<<9,
+  SPTYP_EARTH          = 1<<10,
+  SPTYP_AIR            = 1<<11,
   SPTYP_LAST_SCHOOL    = SPTYP_AIR,
   SPTYP_RANDOM         = SPTYP_LAST_SCHOOL << 1,
 };
-DEF_BITFIELD(spschools_type, spschool_flag_type, 12);
+DEF_BITFIELD(spschools_type, spschool_flag_type, 11);
 const int SPTYP_LAST_EXPONENT = spschools_type::last_exponent;
 COMPILE_CHECK(spschools_type::exponent(SPTYP_LAST_EXPONENT)
               == SPTYP_LAST_SCHOOL);
@@ -62,7 +62,7 @@ bool add_spell_to_memory(spell_type spell);
 bool del_spell_from_memory_by_slot(int slot);
 bool del_spell_from_memory(spell_type spell);
 
-int spell_hunger(spell_type which_spell, bool rod = false);
+int spell_hunger(spell_type which_spell);
 int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
@@ -95,8 +95,9 @@ const char* spelltype_short_name(spschool_flag_type which_spelltype);
 const char* spelltype_long_name(spschool_flag_type which_spelltype);
 
 typedef function<int (coord_def where)> cell_func;
-typedef int cloud_func(coord_def where, int pow, int spreadrate,
-                       cloud_type type, const actor* agent, int excl_rad);
+typedef function<int (coord_def where, int pow, int spreadrate,
+                       cloud_type type, const actor* agent, int excl_rad)>
+        cloud_func;
 
 int apply_area_visible(cell_func cf, const coord_def& where);
 
@@ -120,19 +121,15 @@ bool cannot_use_schools(spschools_type schools);
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true,
-                      bool prevent = false, bool evoked = false,
-                      bool fake_spell = false) PURE;
+                      bool prevent = false, bool fake_spell = false) PURE;
 string spell_uselessness_reason(spell_type spell, bool temp = true,
-                                bool prevent = false, bool evoked = false,
+                                bool prevent = false,
                                 bool fake_spell = false) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
                                 int default_colour = COL_UNKNOWN,
-                                bool transient = false,
-                                bool rod_spell = false);
-bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
+                                bool transient = false);
+bool spell_no_hostile_in_range(spell_type spell);
 
 bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
-
-#endif

@@ -3,8 +3,7 @@
  * @brief Level markers (annotations).
 **/
 
-#ifndef __MAPMARK_H__
-#define __MAPMARK_H__
+#pragma once
 
 #include <map>
 #include <memory>
@@ -12,8 +11,11 @@
 #include <string>
 #include <vector>
 
+#include "beh-type.h"
 #include "clua.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
+#include "map-marker-type.h"
+#include "terrain-change-type.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers
@@ -235,8 +237,8 @@ public:
     map_cloud_spreader_marker(const coord_def &pos = coord_def(0, 0),
                               cloud_type type = CLOUD_NONE,
                               int speed = 10, int amount = 35,
-                              int max_radius = LOS_RADIUS, int dur = 10,
-                              actor* agent = nullptr);
+                              int max_radius = LOS_DEFAULT_RANGE,
+                              int dur = 10, actor* agent = nullptr);
 
     void write(writer &) const override;
     void read(reader &) override;
@@ -314,8 +316,10 @@ public:
 
 class map_position_marker : public map_marker
 {
+
 public:
     map_position_marker(const coord_def &pos = coord_def(0, 0),
+                        dungeon_feature_type feat = DNGN_UNSEEN,
                         const coord_def _dest = INVALID_COORD);
     map_position_marker(const map_position_marker &other);
     void write(writer &) const override;
@@ -325,7 +329,10 @@ public:
     static map_marker *read(reader &, map_marker_type);
 
 public:
+    dungeon_feature_type feat;
     coord_def dest;
+
 };
 
-#endif
+map_position_marker *get_position_marker_at(const coord_def &pos,
+                                            dungeon_feature_type feat);

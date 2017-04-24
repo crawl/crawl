@@ -14,9 +14,9 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
-#include "godabil.h"
-#include "godcompanions.h"
-#include "godpassive.h" // passive_t::convert_orcs
+#include "god-abil.h"
+#include "god-companions.h"
+#include "god-passive.h" // passive_t::convert_orcs
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -91,8 +91,8 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
-            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::DEATHBED
-                                                              : conv_t::SIGHT);
+            beogh_convert_orc(mons, orc_hit || !mons->alive() ? conv_t::deathbed
+                                                              : conv_t::sight);
             stop_running();
         }
     }
@@ -101,7 +101,6 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 void slime_convert(monster* mons)
 {
     if (have_passive(passive_t::neutral_slimes) && mons_is_slime(*mons)
-        && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
@@ -129,29 +128,22 @@ void fedhas_neutralise(monster* mons)
 }
 
 // Make summoned (temporary) god gifts disappear on penance or when
-// abandoning the god in question (Trog or TSO).
-bool make_god_gifts_disappear()
+// abandoning the god in question.
+void make_god_gifts_disappear()
 {
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
-    int count = 0;
-
     for (monster_iterator mi; mi; ++mi)
     {
         if (is_follower(**mi)
             && mi->has_ench(ENCH_ABJ)
             && mons_is_god_gift(**mi, god))
         {
-            if (simple_monster_message(**mi, " abandons you!"))
-                count++;
-
             // The monster disappears.
-            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
+            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
-
-    return count;
 }
 
 // When under penance, Yredelemnulites can lose all nearby undead slaves.
@@ -173,12 +165,8 @@ bool yred_slaves_abandon_you()
             const int hd = mons->get_experience_level();
 
             // During penance, followers get a saving throw.
-            if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                + random2(you.skill(SK_INVOCATIONS) - 6)
-                > random2(hd) + hd + random2(5))
-            {
+            if (random2(20) > random2(hd))
                 continue;
-            }
 
             mons->attitude = ATT_HOSTILE;
             behaviour_event(mons, ME_ALERT, &you);
@@ -231,12 +219,8 @@ bool beogh_followers_abandon_you()
                 const int hd = mons->get_experience_level();
 
                 // During penance, followers get a saving throw.
-                if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                    + random2(you.skill(SK_INVOCATIONS) - 6)
-                    > random2(hd) + hd + random2(5))
-                {
+                if (random2(20) > random2(hd))
                     continue;
-                }
 
                 mons->attitude = ATT_HOSTILE;
                 behaviour_event(mons, ME_ALERT, &you);
@@ -299,25 +283,25 @@ void beogh_convert_orc(monster* orc, conv_t conv)
 
     switch (conv)
     {
-    case conv_t::DEATHBED_FOLLOWER:
+    case conv_t::deathbed_follower:
         _print_converted_orc_speech("reaction_battle_follower", orc,
                                     MSGCH_FRIEND_ENCHANT);
         _print_converted_orc_speech("speech_battle_follower", orc,
                                     MSGCH_TALK);
         break;
-    case conv_t::DEATHBED:
+    case conv_t::deathbed:
         _print_converted_orc_speech("reaction_battle", orc,
                                     MSGCH_FRIEND_ENCHANT);
         _print_converted_orc_speech("speech_battle", orc, MSGCH_TALK);
         break;
-    case conv_t::SIGHT:
+    case conv_t::sight:
         _print_converted_orc_speech("reaction_sight", orc,
                                     MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3))
             _print_converted_orc_speech("speech_sight", orc, MSGCH_TALK);
         break;
-    case conv_t::RESURRECTION:
+    case conv_t::resurrection:
         _print_converted_orc_speech("resurrection", orc,
                                     MSGCH_FRIEND_ENCHANT);
         break;

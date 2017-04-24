@@ -413,9 +413,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (player_under_penance(god)
             && (xp_penance(god) || active_penance(god)))
         {
-            // Active Nemelex penance starts at 101, not 1.
-            colour = (you.penance[god] > (god == GOD_NEMELEX_XOBEH ? 110 : 10))
-                      ? "red" : "lightred";
+            colour = (you.penance[god] > 10) ? "red" : "lightred";
         }
         // Indicate good gods that you've abandoned, though.
         else if (player_under_penance(god))
@@ -666,14 +664,42 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
 }
 
 #define SEEN_RUNED_DOOR_KEY "num_runed_doors"
+#define SEEN_TRANSPORTER_KEY "num_transporters"
 
-static void _update_runed_door_count(int old_num)
+// Get the env prop key we use to track discoveries of this feature.
+static const char *_get_tracked_feature_key(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+        case DNGN_RUNED_DOOR:
+            return SEEN_RUNED_DOOR_KEY;
+            break;
+        case DNGN_TRANSPORTER:
+            return SEEN_TRANSPORTER_KEY;
+            break;
+        default:
+            die("Unknown tracked feature: %s", get_feature_def(feat).name);
+            return nullptr;
+    }
+}
+
+/**
+ * Update the level annotations for a feature we track in travel cache.
+ *
+ * @param feat       The type of feature we're updating.
+ * @param old_num    The previous count of the feature, so we can determine
+ *                   whether we need to remove the annotation entirely.
+ **/
+static void _update_tracked_feature_annot(dungeon_feature_type feat,
+                                          int old_num)
 {
     const level_id li = level_id::current();
-    const int new_num = env.properties[SEEN_RUNED_DOOR_KEY];
-    const string new_string = make_stringf("%d runed door%s", new_num,
+    const char *feat_key = _get_tracked_feature_key(feat);
+    const int new_num = env.properties[feat_key];
+    const char *feat_desc = get_feature_def(feat).name;
+    const string new_string = make_stringf("%d %s%s", new_num, feat_desc,
                                            new_num == 1 ? "" : "s");
-    const string old_string = make_stringf("%d runed door%s", old_num,
+    const string old_string = make_stringf("%d %s%s", old_num, feat_desc,
                                            old_num == 1 ? "" : "s");
 
     //TODO: regexes
@@ -697,25 +723,40 @@ static void _update_runed_door_count(int old_num)
     }
 }
 
-void seen_runed_door()
+/**
+ * Update the count for a newly discovered feature whose discovery/exploration
+ * we track for travel cache purposes.
+ *
+ * @param feat    The type of feature we've just seen.
+ **/
+void seen_tracked_feature(dungeon_feature_type feat)
 {
-    if (!env.properties.exists(SEEN_RUNED_DOOR_KEY))
-        env.properties[SEEN_RUNED_DOOR_KEY] = 0;
+    const char *feat_key = _get_tracked_feature_key(feat);
 
-    _update_runed_door_count(env.properties[SEEN_RUNED_DOOR_KEY].get_int()++);
+    if (!env.properties.exists(feat_key))
+        env.properties[feat_key] = 0;
+
+    _update_tracked_feature_annot(feat, env.properties[feat_key].get_int()++);
 }
 
-void opened_runed_door()
+/**
+ * Update the count for an explored feature whose discovery/exploration we track
+ * for travel cache purposes.
+ *
+ * @param feat    The type of feature we've just explored.
+ **/
+void explored_tracked_feature(dungeon_feature_type feat)
 {
+    const char *feat_key = _get_tracked_feature_key(feat);
 #if TAG_MAJOR_VERSION > 34
-    ASSERT(env.properties.exists(SEEN_RUNED_DOOR_KEY));
+    ASSERT(env.properties.exists(feat_key));
 #endif
 
     // Opening a runed door we haven't seen (because of door_vault, probably).
-    if (env.properties[SEEN_RUNED_DOOR_KEY].get_int() == 0)
+    if (env.properties[feat_key].get_int() == 0)
         return;
 
-    _update_runed_door_count(env.properties[SEEN_RUNED_DOOR_KEY].get_int()--);
+    _update_tracked_feature_annot(feat, env.properties[feat_key].get_int()--);
 }
 
 void enter_branch(branch_type branch, level_id from)

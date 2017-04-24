@@ -3,8 +3,10 @@
  * @brief Collects information for output of status effects.
 **/
 
-#ifndef STATUS_H
-#define STATUS_H
+#pragma once
+
+#include "duration-type.h"
+#include "mpr.h"
 
 enum status_type
 {
@@ -21,7 +23,9 @@ enum status_type
     STATUS_STR_ZERO,
     STATUS_INT_ZERO,
     STATUS_DEX_ZERO,
+#if TAG_MAJOR_VERSION == 34
     STATUS_FIREBALL,
+#endif
     STATUS_BACKLIT,
     STATUS_UMBRA,
     STATUS_CONSTRICTED,
@@ -29,7 +33,6 @@ enum status_type
     STATUS_AUGMENTED,
     STATUS_TERRAIN,
     STATUS_SILENCE,
-    STATUS_MISSILES,
 #if TAG_MAJOR_VERSION == 34
     STATUS_NO_CTELE,
 #endif
@@ -50,7 +53,10 @@ enum status_type
     STATUS_ORB,
     STATUS_DIVINE_ENERGY,
     STATUS_STILL_WINDS,
-    STATUS_LAST_STATUS = STATUS_STILL_WINDS
+    STATUS_MISSILES,
+    STATUS_SERPENTS_LASH,
+    STATUS_HEAVENLY_STORM,
+    STATUS_LAST_STATUS = STATUS_HEAVENLY_STORM
 };
 
 struct status_info
@@ -78,5 +84,3 @@ const char *duration_mid_message(duration_type dur);
 int duration_mid_offset(duration_type dur);
 int duration_expire_point(duration_type dur);
 msg_channel_type duration_mid_chan(duration_type dur);
-
-#endif

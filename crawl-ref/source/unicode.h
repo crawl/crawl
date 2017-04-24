@@ -3,8 +3,7 @@
  * @brief Conversions between Unicode and local charsets, string
  *        manipulation functions that act on character types.
 **/
-#ifndef UNICODE_H
-#define UNICODE_H
+#pragma once
 
 int strwidth(const char *s);
 int strwidth(const string &s);
@@ -99,4 +98,3 @@ public:
     bool error() override { return !f; };
     string get_line() override;
 };
-#endif

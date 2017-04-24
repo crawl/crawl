@@ -1,8 +1,13 @@
-#ifndef SPECIES_H
-#define SPECIES_H
+#pragma once
 
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "ability-type.h"
+#include "item-prop-enum.h"
+#include "job-type.h"
+#include "size-part-type.h"
+#include "size-type.h"
+#include "species-type.h"
+#include "undead-state-type.h"
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
@@ -16,7 +21,6 @@ bool species_is_undead(species_type species);
 bool species_is_unbreathing(species_type species);
 bool species_can_swim(species_type species);
 bool species_likes_water(species_type species);
-bool species_likes_lava(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
 bool species_recommends_job(species_type species, job_type job);
@@ -55,4 +59,5 @@ int species_mr_modifier(species_type species);
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);
 bool species_has_low_str(species_type species);
-#endif
+
+void change_species_to(species_type sp);

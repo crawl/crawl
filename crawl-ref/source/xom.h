@@ -3,8 +3,7 @@
  * @brief Misc Xom related functions.
 **/
 
-#ifndef XOM_H
-#define XOM_H
+#pragma once
 
 #include "ouch.h"
 
@@ -28,8 +27,7 @@ enum xom_event_type
     XOM_GOOD_MAGIC_MAPPING,
     XOM_GOOD_DETECT_CREATURES,
     XOM_GOOD_DETECT_ITEMS,
-    XOM_GOOD_SPELL_TENSION,
-    XOM_GOOD_SPELL_CALM,
+    XOM_GOOD_SPELL,
     XOM_GOOD_CONFUSION,
     XOM_GOOD_SINGLE_ALLY,
     XOM_GOOD_ANIMATE_MON_WPN,
@@ -114,5 +112,3 @@ bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
 void validate_xom_events();
-
-#endif

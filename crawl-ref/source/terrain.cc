@@ -8,6 +8,7 @@
 #include "terrain.h"
 
 #include <algorithm>
+#include <functional>
 #include <sstream>
 
 #include "areas.h"
@@ -15,7 +16,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -23,11 +24,12 @@
 #include "fight.h"
 #include "feature.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -344,6 +346,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_TRANSPORTER:
         return CMD_GO_DOWNSTAIRS;
 
     default:
@@ -363,6 +366,16 @@ bool feat_is_opaque(dungeon_feature_type feat)
 bool feat_is_solid(dungeon_feature_type feat)
 {
     return get_feature_def(feat).flags & FFT_SOLID;
+}
+
+/** Can you wall jump against this feature? (Wu Jian)?
+ */
+bool feat_can_wall_jump_against(dungeon_feature_type feat)
+{
+    return feat_is_wall(feat)
+           || feat == DNGN_GRATE
+           || feat_is_tree(feat)
+           || feat_is_statuelike(feat);
 }
 
 /** Can you move into this cell in normal play?
@@ -423,6 +436,23 @@ bool feat_is_statuelike(dungeon_feature_type feat)
 bool feat_is_permarock(dungeon_feature_type feat)
 {
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
+}
+
+/** Is this feature an open expanse used only as a map border?
+ */
+bool feat_is_endless(dungeon_feature_type feat)
+{
+    return feat == DNGN_OPEN_SEA || feat == DNGN_LAVA_SEA
+           || feat == DNGN_ENDLESS_SALT;
+}
+
+/** Can this feature be dug?
+ */
+bool feat_is_diggable(dungeon_feature_type feat)
+{
+    return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+           || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE
+           || feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
 }
 
 /** Is this feature a type of trap?
@@ -490,6 +520,7 @@ static const pair<god_type, dungeon_feature_type> _god_altars[] =
     { GOD_PAKELLAS, DNGN_ALTAR_PAKELLAS },
     { GOD_USKAYAW, DNGN_ALTAR_USKAYAW },
     { GOD_HEPLIAKLQANA, DNGN_ALTAR_HEPLIAKLQANA },
+    { GOD_WU_JIAN, DNGN_ALTAR_WU_JIAN },
     { GOD_ECUMENICAL, DNGN_ALTAR_ECUMENICAL },
 };
 
@@ -776,21 +807,32 @@ bool slime_wall_neighbour(const coord_def& c)
     if (_slime_wall_precomputed_neighbour_mask.get())
         return (*_slime_wall_precomputed_neighbour_mask)(c);
 
+    // Not using count_adjacent_slime_walls because the early return might
+    // be relevant for performance here. TODO: profile it and find out.
     for (adjacent_iterator ai(c); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
             return true;
     return false;
 }
 
+int count_adjacent_slime_walls(const coord_def &pos)
+{
+    int count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            count++;
+
+    return count;
+}
+
 void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);
 
-    int walls = 0;
-    for (adjacent_iterator ai(act->pos()); ai; ++ai)
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            walls++;
+    if (actor_slime_wall_immune(act))
+        return;
 
+    const int walls = count_adjacent_slime_walls(act->pos());
     if (!walls)
         return;
 
@@ -798,20 +840,13 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
-        {
-            you.splash_with_acid(nullptr, strength, false,
-                                (walls > 1) ? "The walls burn you!"
-                                            : "The wall burns you!");
-        }
+        you.splash_with_acid(nullptr, strength, false,
+                            (walls > 1) ? "The walls burn you!"
+                                        : "The wall burns you!");
     }
     else
     {
         monster* mon = act->as_monster();
-
-        // Slime native monsters are immune to slime walls.
-        if (mons_is_slime(*mon))
-            return;
 
         const int dam = resist_adjust_damage(mon, BEAM_ACID,
                                              roll_dice(2, strength));
@@ -1353,7 +1388,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     env.markers.move(pos1, temp);
     dungeon_events.move_listeners(pos1, temp);
     grd(pos1) = DNGN_UNSEEN;
-    env.pgrid(pos1) = 0;
+    env.pgrid(pos1) = terrain_property_t{};
 
     (void) move_notable_thing(pos2, pos1);
     env.markers.move(pos2, pos1);
@@ -1986,6 +2021,10 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                     if (mon)
                         tmarker->mon_num = mon->mid;
                 }
+                // ensure that terrain change happens. Sometimes a terrain
+                // change marker can get stuck; this allows re-doing such
+                // cases. Also probably needed by the else case above.
+                dungeon_terrain_changed(pos, newfeat, false, true, true);
                 return;
             }
             else
@@ -2046,7 +2085,7 @@ static bool _revert_terrain_to_floor(coord_def pos)
     }
 
     if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
-        opened_runed_door();
+        explored_tracked_feature(DNGN_RUNED_DOOR);
 
     grd(pos) = newfeat;
     set_terrain_changed(pos);

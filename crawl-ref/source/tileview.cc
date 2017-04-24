@@ -9,7 +9,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "domino.h"
-#include "domino_data.h"
+#include "domino-data.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
@@ -21,6 +21,7 @@
 #include "player.h"
 #include "state.h"
 #include "terrain.h"
+#include "tile-flags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tilemcache.h"
@@ -53,10 +54,14 @@ void tile_new_level(bool first_time, bool init_unseen)
         for (unsigned int y = 0; y < GYM; y++)
         {
             unsigned int tile = env.tile_bk_bg[x][y];
-            if (!(tile & TILE_FLAG_NEW_STAIR))
-                continue;
-            if (!is_unknown_stair(coord_def(x,y)))
+            if ((tile & TILE_FLAG_NEW_STAIR)
+                && !is_unknown_stair(coord_def(x,y)))
+            {
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
+            }
+            else if ((tile & TILE_FLAG_NEW_TRANSPORTER)
+                     && !is_unknown_transporter(coord_def(x,y)))
+                env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_TRANSPORTER;
         }
 
     tiles.clear_minimap();
@@ -505,6 +510,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
                                    : TILE_DNGN_SHOALS_STAIRS_DOWN;
     }
 
+    if (feat_is_escape_hatch(grd(gc)) && player_in_branch(BRANCH_TOMB))
+    {
+        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        env.tile_flv(gc).feat = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
+                                   : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
+    }
+
     if (feat_is_door(grd(gc)))
     {
         // Check for gates.
@@ -812,6 +824,8 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
+        else if (is_unknown_transporter(gc))
+            bg |= TILE_FLAG_NEW_TRANSPORTER;
     }
 
     return bg;
@@ -1407,7 +1421,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         {
             cell.is_bloody = true;
             cell.blood_rotation = blood_rotation(gc);
-            cell.old_blood = env.pgrid(gc) & FPROP_OLD_BLOOD;
+            cell.old_blood = bool(env.pgrid(gc) & FPROP_OLD_BLOOD);
         }
     }
 
@@ -1423,6 +1437,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP))
         cell.mangrove_water = true;
+    cell.awakened_forest = feat_is_tree(feat) && env.forest_awoken_until;
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;

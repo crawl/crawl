@@ -20,15 +20,19 @@
 #include "fight.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "itemname.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "invent.h"
+#include "item-name.h"
 #include "items.h"
 #include "losglobal.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-tentacle.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"
@@ -43,6 +47,7 @@
 #include "viewchar.h"
 #include "view.h"
 
+#if TAG_MAJOR_VERSION == 34
 // This spell has two main advantages over Fireball:
 //
 // (1) The release is instantaneous, so monsters will not
@@ -77,27 +82,18 @@ spret_type cast_delayed_fireball(bool fail)
     you.attribute[ATTR_DELAYED_FIREBALL] = 1;
     return SPRET_SUCCESS;
 }
+#endif
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
-    beam.name         = "great blast of fire";
+    zappy(ZAP_FIRE_STORM, pow, source->is_monster(), beam);
     beam.ex_size      = 2 + (random2(1000) < pow);
-    beam.flavour      = BEAM_LAVA;
-    beam.real_flavour = beam.flavour;
-    beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
-    beam.colour       = RED;
     beam.source_id    = source->mid;
     // XXX: Should this be KILL_MON_MISSILE?
     beam.thrower      =
         source->is_player() ? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
-    beam.obvious_effect = false;
-    beam.pierce       = false;
     beam.is_tracer    = false;
-    beam.is_explosion = true;
-    beam.ench_power   = pow;      // used for radius
-    beam.hit          = 20 + pow / 10;
-    beam.damage       = calc_dice(8, 5 + pow);
     beam.origin_spell = SPELL_FIRE_STORM;
 }
 
@@ -223,7 +219,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomised and
         // may be shifted by one.
-        int min_dist = MONSTER_LOS_RANGE - 1;
+        int min_dist = LOS_DEFAULT_RANGE - 1;
 
         int dist;
         int count = 0;
@@ -634,7 +630,7 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
     if (agent && agent->is_player())
     {
         ASSERT(actual);
-        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
                 return SPRET_ABORT;
@@ -656,7 +652,8 @@ static spret_type _cast_los_attack_spell(spell_type spell, int pow, const
         else if (you.see_cell(agent->pos()))
             mpr(mons_invis_msg);
 
-        flash_view_delay(UA_MONSTER, flash_colour, 300);
+        if (!agent || you.see_cell(agent->pos()))
+            flash_view_delay(UA_MONSTER, flash_colour, 300);
     }
 
     bool affects_you = false;
@@ -789,6 +786,8 @@ void sonic_damage(bool scream)
         hurt = min(hurt, max(cap, 1));
         // not so much damage if you're a n00b
         hurt = div_rand_round(hurt * you.experience_level, 27);
+        // scale by time taken, so multiple quick actions don't hurt more
+        hurt = div_rand_round(hurt * you.time_taken, BASELINE_DELAY);
         /* per dpeg:
          * damage is universal (well, only to those who can hear, but not sure
            we can determine that in-game), i.e. smiting, no resists
@@ -1018,7 +1017,7 @@ static bool _player_hurt_monster(monster& m, int damage,
         }
         else
         {
-            monster_die(&m, KILL_YOU, NON_MONSTER);
+            monster_die(m, KILL_YOU, NON_MONSTER);
             return true;
         }
     }
@@ -1073,7 +1072,7 @@ static int _shatter_mon_dice(const monster *mon)
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
-            return coinflip() ? 5 : 4;
+            return random_range(4, 5);
         // Double damage to bone.
         else if (mon->is_skeletal())
             return 6;
@@ -1199,10 +1198,10 @@ static int _shatter_player_dice()
     // flyers get no extra damage.
     else if (you.airborne())
         return 1;
-    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+    else if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         return 6;
-    else if (you.form == TRAN_ICE_BEAST)
-        return coinflip() ? 5 : 4;
+    else if (you.form == transformation::ice_beast)
+        return random_range(4, 5);
     else
         return 3;
 }
@@ -1223,7 +1222,7 @@ static bool _shatterable(const actor *act)
 spret_type cast_shatter(int pow, bool fail)
 {
     {
-        targetter_los hitfunc(&you, LOS_ARENA);
+        targeter_los hitfunc(&you, LOS_ARENA);
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
     }
@@ -1594,7 +1593,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     // clouds where it's standing!
 
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon == agent)
+    if (invalid_monster(mon) || mon == agent)
         return 0;
 
     // how poisoned is the victim?
@@ -1619,7 +1618,6 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
             return mons_aligned(mon, agent) ? 0 : 1;
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
-
     simple_monster_message(*mon, " seems to burn from within!");
 
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
@@ -1633,12 +1631,6 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
         // Monster survived, remove any poison.
         mon->del_ench(ENCH_POISON, true); // suppress spam
         print_wounds(*mon);
-    }
-    else
-    {
-        monster_die(mon,
-                    agent->is_player() ? KILL_YOU : KILL_MON,
-                    agent->mindex());
     }
 
     return 1;
@@ -1728,7 +1720,7 @@ static int _ignite_ally_harm(const coord_def &where)
 static bool maybe_abort_ignite()
 {
     // Fire cloud immunity.
-    if (you.duration[DUR_FIRE_SHIELD] || you.mutation[MUT_IGNITE_BLOOD])
+    if (you.duration[DUR_FIRE_SHIELD] || you.has_mutation(MUT_IGNITE_BLOOD))
         return false;
 
     string prompt = "You are standing ";
@@ -1811,7 +1803,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         fail_check();
     }
 
-    targetter_los hitfunc(agent, LOS_NO_TRANS);
+    targeter_los hitfunc(agent, LOS_NO_TRANS);
     flash_view_delay(
         agent->is_player()
             ? UA_PLAYER
@@ -1832,6 +1824,112 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
         _ignite_poison_player(where, pow, agent);
         return 0; // ignored
     }, agent->pos());
+
+    return SPRET_SUCCESS;
+}
+
+static void _ignition_square(const actor *agent, bolt beam, coord_def square, bool center)
+{
+    // HACK: bypass visual effect
+    beam.target = square;
+    beam.in_explosion_phase = true;
+    beam.explosion_affect_cell(square);
+    if (center)
+        noisy(spell_effect_noise(SPELL_IGNITION),square);
+}
+
+spret_type cast_ignition(const actor *agent, int pow, bool fail)
+{
+    ASSERT(agent->is_player());
+
+    fail_check();
+
+    targeter_los hitfunc(agent, LOS_NO_TRANS);
+
+    // Ignition affects squares that had hostile monsters on them at the time
+    // of casting. This way nothing bad happens when monsters die halfway
+    // through the spell.
+    vector<coord_def> blast_sources;
+
+    for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS);
+         ai; ++ai)
+    {
+        if (ai->is_monster()
+            && !ai->as_monster()->wont_attack()
+            && !mons_is_firewood(*ai->as_monster())
+            && !mons_is_tentacle_segment(ai->as_monster()->type))
+        {
+            blast_sources.push_back(ai->position);
+        }
+    }
+
+    if (blast_sources.empty())
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else
+    {
+        mpr("The air bursts into flame!");
+
+        vector<coord_def> blast_adjacents;
+
+        // Used to draw explosion cells
+        bolt beam_visual;
+        beam_visual.set_agent(agent);
+        beam_visual.flavour       = BEAM_VISUAL;
+        beam_visual.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
+        beam_visual.colour        = RED;
+        beam_visual.ex_size       = 1;
+        beam_visual.is_explosion  = true;
+
+        // Used to deal damage; invisible
+        bolt beam_actual;
+        beam_actual.set_agent(agent);
+        beam_actual.flavour       = BEAM_FIRE;
+        beam_actual.real_flavour  = BEAM_FIRE;
+        beam_actual.glyph         = 0;
+        beam_actual.damage        = calc_dice(3, 10 + pow/3); // less than fireball
+        beam_actual.name          = "fireball";
+        beam_actual.colour        = RED;
+        beam_actual.ex_size       = 0;
+        beam_actual.is_explosion  = true;
+        beam_actual.loudness      = 0;
+
+#ifdef DEBUG_DIAGNOSTICS
+        dprf(DIAG_BEAM, "ignition dam=%dd%d",
+             beam_actual.damage.num, beam_actual.damage.size);
+#endif
+
+        // Fake "shaped" radius 1 explosions (skipping squares with friends).
+        for (coord_def pos : blast_sources)
+        {
+            for (adjacent_iterator ai(pos); ai; ++ai)
+            {
+                if (cell_is_solid(*ai))
+                    continue;
+
+                actor *act = actor_at(*ai);
+
+                // Friendly creature, don't blast this square.
+                if (act && (act == agent
+                            || (act->is_monster()
+                                && act->as_monster()->wont_attack())))
+                {
+                    continue;
+                }
+
+                blast_adjacents.push_back(*ai);
+                beam_visual.explosion_draw_cell(*ai);
+            }
+            beam_visual.explosion_draw_cell(pos);
+        }
+        update_screen();
+        scaled_delay(50);
+
+        // Real explosions on each individual square.
+        for (coord_def pos : blast_sources)
+            _ignition_square(agent, beam_actual, pos, true);
+        for (coord_def pos : blast_adjacents)
+            _ignition_square(agent, beam_actual, pos, false);
+    }
 
     return SPRET_SUCCESS;
 }
@@ -1906,7 +2004,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
         mpr("The lightning arcs!");
-        pow /= (coinflip() ? 2 : 3);
+        pow /= random_range(2, 3);
         damage += apply_random_around_square([pow, agent] (coord_def where2) {
             return discharge_monsters(where2, pow, agent);
         }, where, true, 1);
@@ -1976,8 +2074,9 @@ spret_type cast_discharge(int pow, bool fail)
                  plural ? "Some" : "A",
                  plural ? "s" : "",
                  plural ? " themselves" : "s itself",
-                 plural ? "around" : (coinflip() ? "beside" :
-                                      coinflip() ? "behind" : "before"));
+                 plural ? "around" : random_choose_weighted(2, "beside",
+                                                            1, "behind",
+                                                            1, "before"));
         }
     }
     return SPRET_SUCCESS;
@@ -2012,11 +2111,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     {
         const bool petrified = (you.petrified() || you.petrifying());
 
-        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        if (you.form == transformation::statue || you.species == SP_GARGOYLE)
         {
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.form == TRAN_STATUE ? 3 : 2;
+            beam.damage.num = you.form == transformation::statue ? 3 : 2;
             return true;
         }
         else if (petrified)
@@ -2026,7 +2125,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.damage.num = 3;
             return true;
         }
-        else if (you.form == TRAN_ICE_BEAST) // blast of ice
+        else if (you.form == transformation::ice_beast) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
@@ -2344,38 +2443,36 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     return SPRET_SUCCESS;
 }
 
-int wielding_rocks()
-{
-    const item_def* wpn = you.weapon();
-    if (!wpn || wpn->base_type != OBJ_MISSILES)
-        return 0;
-    else if (wpn->sub_type == MI_STONE)
-        return 1;
-    else if (wpn->sub_type == MI_LARGE_ROCK)
-        return 2;
-    else
-        return 0;
-}
-
 spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 {
-    zap_type zap = ZAP_SMALL_SANDBLAST;
-    switch (wielding_rocks())
+    item_def *stone = nullptr;
+    int num_stones = 0;
+    for (item_def& i : you.inv)
     {
-    case 1:
-        zap = ZAP_SANDBLAST;
-        break;
-    case 2:
-        zap = ZAP_LARGE_SANDBLAST;
-        break;
-    default:
-        break;
+        if (i.is_type(OBJ_MISSILES, MI_STONE)
+            && check_warning_inscriptions(i, OPER_DESTROY))
+        {
+            num_stones += i.quantity;
+            stone = &i;
+        }
     }
 
+    if (num_stones == 0)
+    {
+        mpr("You don't have any stones to cast with.");
+        return SPRET_ABORT;
+    }
+
+    zap_type zap = ZAP_SANDBLAST;
     const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
-    if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
-        dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
+    if (ret == SPRET_SUCCESS)
+    {
+        if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
+            mpr("You now have no stones remaining.");
+        else
+            mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
+    }
 
     return ret;
 }
@@ -2394,30 +2491,32 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         prev = caster->props["thunderbolt_aim"].get_coord();
     }
 
-    targetter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
-                                  prev);
+    targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+                                 prev);
     hitfunc.set_aim(aim);
 
-    if (caster->is_player())
+    if (caster->is_player()
+        && stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
     {
-        if (stop_attack_prompt(hitfunc, "zap", _elec_not_immune))
-            return SPRET_ABORT;
+        return SPRET_ABORT;
     }
 
     fail_check();
 
-    int juice = prev.origin() ? 2 * ROD_CHARGE_MULT
-                              : caster->props["thunderbolt_mana"].get_int();
+    const int juice = (spell_mana(SPELL_THUNDERBOLT)
+                       + caster->props["thunderbolt_charge"].get_int())
+                      * LIGHTNING_CHARGE_MULT;
+
+    dprf("juice: %d", juice);
+
     bolt beam;
-    beam.name              = "lightning";
-    beam.aux_source        = "rod of lightning";
+    beam.name              = "thunderbolt";
+    beam.aux_source        = "lightning rod";
     beam.flavour           = BEAM_ELECTRICITY;
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
-    // Dodging a horizontal arc is nearly impossible: you'd have to fall prone
-    // or jump high.
-    beam.hit               = prev.origin() ? 10 + pow / 20 : 1000;
+    beam.hit               = AUTOMATIC_HIT;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
 #ifdef USE_TILE
@@ -2453,15 +2552,14 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = entry.first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(div_rand_round(juice, ROD_CHARGE_MULT),
+        beam.damage = dice_def(div_rand_round(juice, LIGHTNING_CHARGE_MULT),
                                div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }
 
     caster->props["thunderbolt_last"].get_int() = you.num_turns;
     caster->props["thunderbolt_aim"].get_coord() = aim;
-
-    noisy(15 + div_rand_round(juice, ROD_CHARGE_MULT), hitfunc.origin);
+    caster->props["thunderbolt_charge"].get_int()++;
 
     return SPRET_SUCCESS;
 }
@@ -2680,7 +2778,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 {
     int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
 
-    targetter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
+    targeter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
     hitfunc.set_aim(aim);
     if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
         return SPRET_ABORT;
@@ -2715,7 +2813,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
 {
     if (agent->is_player())
     {
-        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        targeter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
                 return SPRET_ABORT;
@@ -2755,7 +2853,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
                                         (5 + random2avg(pow/15, 2)) * BASELINE_DELAY));
 
-        targetter_los hitfunc(mon_agent, LOS_NO_TRANS);
+        targeter_los hitfunc(mon_agent, LOS_NO_TRANS);
         flash_view_delay(UA_MONSTER, GREEN, 300, &hitfunc);
 
         return SPRET_SUCCESS;
@@ -2829,6 +2927,9 @@ spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
         you.attribute[ATTR_SEARING_RAY] = -1;
         you.props["searing_ray_target"].get_coord() = beam.target;
         you.props["searing_ray_aimed_at_spot"].get_bool() = beam.aimed_at_spot;
+        string msg = "(Press <w>%</w> to maintain the ray.)";
+        insert_commands(msg, { CMD_WAIT });
+        mpr(msg);
     }
 
     return ret;
@@ -2916,7 +3017,7 @@ static bool _player_glaciate_affects(const actor *victim)
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
-    targetter_cone hitfunc(caster, range);
+    targeter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
 
     if (caster->is_player()
@@ -2974,7 +3075,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
             if (entry.second <= 0)
                 continue;
 
-            const int eff_range = max(3, (6 * i / LOS_RADIUS));
+            const int eff_range = max(3, (6 * i / LOS_DEFAULT_RANGE));
 
             // At or within range 3, this is equivalent to the old Ice Storm
             // damage.
@@ -3019,6 +3120,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
                                  ZAP_CRYSTAL_BOLT,
                                  ZAP_LIGHTNING_BOLT,
                                  ZAP_CORROSIVE_BOLT);
+    beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
     zapping(zap, pow * 7 / 6 + 15, beam, false);
 
     return SPRET_SUCCESS;
@@ -3035,7 +3137,7 @@ spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
     const size_t range = spell_range(SPELL_SCATTERSHOT, pow);
     const size_t beam_count = shotgun_beam_count(pow);
 
-    targetter_shotgun hitfunc(caster, beam_count, range);
+    targeter_shotgun hitfunc(caster, beam_count, range);
 
     hitfunc.set_aim(pos);
 

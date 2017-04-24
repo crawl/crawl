@@ -14,7 +14,7 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
@@ -24,9 +24,10 @@
 #include "nearby-danger.h"
 #include "options.h"
 #include "output.h"
-#include "process_desc.h"
+#include "process-desc.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-zap.h"
 #include "stash.h"
@@ -393,23 +394,9 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
-    // Most spells are blocked by transparent walls.
-    // XXX: deduplicate this with the other two? smitey spell lists
+    // All spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
-    {
-        switch (spell)
-        {
-        case SPELL_CALL_DOWN_DAMNATION:
-        case SPELL_SMITING:
-        case SPELL_HAUNT:
-        case SPELL_FIRE_STORM:
-        case SPELL_AIRSTRIKE:
-            break;
-
-        default:
-            return false;
-        }
-    }
+        return false;
 
     const bool helpful = flags & SPFLAG_HELPFUL;
 
@@ -455,9 +442,7 @@ static bool _is_appropriate_evokable(const item_def& item,
     if (item.sub_type == WAND_RANDOM_EFFECTS)
         return true;
 
-    spell_type spell = zap_to_spell(item.zap());
-    if (spell == SPELL_TELEPORT_OTHER && target->is_player())
-        spell = SPELL_TELEPORT_SELF;
+    spell_type spell = spell_in_wand(static_cast<wand_type>(item.sub_type));
 
     return _is_appropriate_spell(spell, target);
 }
@@ -823,8 +808,11 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         {
             if ((event.mod & (MOD_CTRL | MOD_ALT)))
             {
-                if (_handle_zap_player(event))
-                    return 0;
+                _handle_zap_player(event);
+                // return either way -- everything else in this case
+                // needs non-ctrl (and we definitely don't want to
+                // trigger a wait in the next if)
+                return 0;
             }
 
             // if there's an item, pick it up, otherwise wait 1 turn
@@ -886,8 +874,13 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     // else not on player...
     if (event.button == MouseEvent::RIGHT)
     {
-        full_describe_square(gc);
-        return CK_MOUSE_CMD;
+        if (map_bounds(gc) && env.map_knowledge(gc).known())
+        {
+            full_describe_square(gc);
+            return CK_MOUSE_CMD;
+        }
+        else
+            return 0;
     }
 
     if (event.button != MouseEvent::LEFT)

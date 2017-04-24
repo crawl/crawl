@@ -3,8 +3,7 @@
  * @brief Monster death functionality.
 **/
 
-#ifndef MONDEATH_H
-#define MONDEATH_H
+#pragma once
 
 #define ORIG_MONSTER_KEY "orig_monster_key"
 #define ELVEN_ENERGIZE_KEY "elven_twin_energize"
@@ -22,18 +21,18 @@
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
 
-#define SAME_ATTITUDE(x) (x->friendly()       ? BEH_FRIENDLY : \
-                          x->good_neutral()   ? BEH_GOOD_NEUTRAL : \
-                          x->strict_neutral() ? BEH_STRICT_NEUTRAL : \
-                          x->neutral()        ? BEH_NEUTRAL \
-                                              : BEH_HOSTILE)
+#define SAME_ATTITUDE(x) ((x)->friendly()       ? BEH_FRIENDLY :   \
+                          (x)->good_neutral()   ? BEH_GOOD_NEUTRAL : \
+                          (x)->strict_neutral() ? BEH_STRICT_NEUTRAL :  \
+                          (x)->neutral()        ? BEH_NEUTRAL           \
+                                                : BEH_HOSTILE)
 
 struct bolt;
 
-item_def* monster_die(monster* mons, const actor *killer, bool silent = false,
+item_def* monster_die(monster& mons, const actor *killer, bool silent = false,
                       bool wizard = false, bool fake = false);
 
-item_def* monster_die(monster* mons, killer_type killer,
+item_def* monster_die(monster& mons, killer_type killer,
                       int killer_index, bool silent = false,
                       bool wizard = false, bool fake = false);
 
@@ -79,4 +78,3 @@ bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
 bool mons_bennu_can_revive(const monster* mons);
-#endif

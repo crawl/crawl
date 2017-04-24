@@ -31,16 +31,16 @@
 #include "food.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godabil.h"
-#include "goditem.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-abil.h"
+#include "god-item.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -64,7 +64,7 @@
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"
@@ -1323,7 +1323,7 @@ monster_type mons_detected_base(monster_type mc)
  */
 bool mons_is_siren_beholder(monster_type mc)
 {
-    return mc == MONS_SIREN || mc == MONS_MERFOLK_AVATAR;
+    return mc == MONS_MERFOLK_SIREN || mc == MONS_MERFOLK_AVATAR;
 }
 
 /** Does this monster behold opponents like a siren?
@@ -1711,6 +1711,11 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_ROYAL_JELLY;
 }
 
+bool mons_class_can_use_transporter(monster_type mc)
+{
+    return !mons_is_tentacle_or_tentacle_segment(mc);
+}
+
 bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 {
     if (!mons_class_can_use_stairs(mon.type))
@@ -1800,7 +1805,8 @@ static int _downscale_zombie_damage(int damage)
 }
 
 static mon_attack_def _downscale_zombie_attack(const monster& mons,
-                                               mon_attack_def attk)
+                                               mon_attack_def attk,
+                                               bool random)
 {
     switch (attk.type)
     {
@@ -1814,7 +1820,7 @@ static mon_attack_def _downscale_zombie_attack(const monster& mons,
 
     if (mons.type == MONS_SIMULACRUM)
         attk.flavour = AF_COLD;
-    else if (mons.type == MONS_SPECTRAL_THING && coinflip())
+    else if (mons.type == MONS_SPECTRAL_THING && (!random || coinflip()))
         attk.flavour = AF_DRAIN_XP;
     else if (attk.flavour != AF_REACH && attk.flavour != AF_CRUSH)
         attk.flavour = AF_PLAIN;
@@ -1914,7 +1920,8 @@ static mon_attack_def _hepliaklqana_ancestor_attack(const monster &mon,
  *                     random flavours.
  * @return  A mon_attack_def for the specified attack.
  */
-mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_flavour)
+mon_attack_def mons_attack_spec(const monster& m, int attk_number,
+                                bool base_flavour)
 {
     monster_type mc = m.type;
 
@@ -1932,12 +1939,11 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_fla
     {
         if (attk_number == 0)
         {
-            return mon_attack_def::attk(mon.ghost->damage,
-                                        mon.ghost->att_type,
-                                        mon.ghost->att_flav);
+            return { mon.ghost->att_type, mon.ghost->att_flav,
+                     mon.ghost->damage };
         }
 
-        return mon_attack_def::attk(0, AT_NONE);
+        return { AT_NONE, AF_PLAIN, 0 };
     }
     else if (mc == MONS_MUTANT_BEAST)
         return _mutant_beast_attack(mon, attk_number);
@@ -2013,7 +2019,7 @@ mon_attack_def mons_attack_spec(const monster& m, int attk_number, bool base_fla
     if (mon.type == MONS_SLIME_CREATURE && mon.blob_size > 1)
         attk.damage *= mon.blob_size;
 
-    return zombified ? _downscale_zombie_attack(mon, attk) : attk;
+    return zombified ? _downscale_zombie_attack(mon, attk, !base_flavour) : attk;
 }
 
 static int _mons_damage(monster_type mc, int rt)
@@ -2022,6 +2028,116 @@ static int _mons_damage(monster_type mc, int rt)
         rt = 0;
     ASSERT_smc();
     return smc->attack[rt].damage;
+}
+
+/**
+ * A short description of the given monster attack type.
+ *
+ * @param attack    The attack to be described; e.g. AT_HIT, AT_SPORE.
+ * @return          A short description; e.g. "hit", "release spores at".
+ */
+string mon_attack_name(attack_type attack)
+{
+    static const char *attack_types[] =
+    {
+        "hit",         // including weapon attacks
+        "bite",
+        "sting",
+
+        // spore
+        "release spores at",
+
+        "touch",
+        "engulf",
+        "claw",
+        "peck",
+        "headbutt",
+        "punch",
+        "kick",
+        "tentacle-slap",
+        "tail-slap",
+        "gore",
+        "constrict",
+        "trample",
+        "trunk-slap",
+#if TAG_MAJOR_VERSION == 34
+        "snap closed at",
+        "splash",
+#endif
+        "pounce on",
+#if TAG_MAJOR_VERSION == 34
+        "sting",
+#endif
+        "hit", // AT_CHERUB
+#if TAG_MAJOR_VERSION == 34
+        "hit", // AT_SHOOT
+#endif
+        "hit", // AT_WEAP_ONLY,
+        "hit", // AT_RANDOM
+    };
+    COMPILE_CHECK(ARRAYSZ(attack_types) == NUM_ATTACK_TYPES - AT_FIRST_ATTACK);
+
+    const int verb_index = attack - AT_FIRST_ATTACK;
+    dprf("verb index: %d", verb_index);
+    ASSERT(verb_index < (int)ARRAYSZ(attack_types));
+    return attack_types[verb_index];
+}
+
+/**
+ * Does this monster attack flavour trigger even if the base attack does no
+ * damage?
+ *
+ * @param flavour   The attack flavour in question; e.g. AF_COLD.
+ * @return          Whether the flavour attack triggers on a successful hit
+ *                  regardless of damage done.
+ */
+bool flavour_triggers_damageless(attack_flavour flavour)
+{
+    return flavour == AF_CRUSH
+        || flavour == AF_ENGULF
+        || flavour == AF_PURE_FIRE
+        || flavour == AF_SHADOWSTAB
+        || flavour == AF_DROWN
+        || flavour == AF_CORRODE
+        || flavour == AF_HUNGER;
+}
+
+/**
+ * How much special damage does the given attack flavour do for an attack from
+ * a monster of the given hit dice?
+ *
+ * Various effects (e.g. acid) currently go through more complex codepaths. :(
+ *
+ * @param flavour       The attack flavour in question; e.g. AF_FIRE.
+ * @param HD            The HD to calculate damage for.
+ * @param random        Whether to roll damage, or (if false) just return
+ *                      the top of the range.
+ * @return              The damage that the given attack flavour does, before
+ *                      resists and other effects are applied.
+ */
+int flavour_damage(attack_flavour flavour, int HD, bool random)
+{
+    switch (flavour)
+    {
+        case AF_FIRE:
+            if (random)
+                return HD + random2(HD);
+            return HD * 2;
+        case AF_COLD:
+            if (random)
+                return HD + random2(HD*2);
+            return HD * 3;
+        case AF_ELEC:
+            if (random)
+                return HD + random2(HD/2);
+            return HD * 3 / 2;
+        case AF_PURE_FIRE:
+            if (random)
+                return HD * 3 / 2 + random2(HD);
+            return HD * 5 / 2;
+        default:
+            return 0;
+    }
 }
 
 bool mons_immune_magic(const monster& mon)
@@ -2382,48 +2498,41 @@ int exper_value(const monster& mon, bool real)
     return x_val;
 }
 
+static monster_type _random_mons_between(monster_type min, monster_type max)
+{
+    monster_type mc = MONS_PROGRAM_BUG;
+
+    do // skip removed monsters
+    {
+        mc = static_cast<monster_type>(random_range(min, max));
+    }
+    while (mons_is_removed(mc));
+
+    return mc;
+}
+
 monster_type random_draconian_monster_species()
 {
-    const int num_drac = MONS_LAST_SPAWNED_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
-    return static_cast<monster_type>(MONS_FIRST_BASE_DRACONIAN + random2(num_drac));
+    return _random_mons_between(MONS_FIRST_BASE_DRACONIAN,
+                                MONS_LAST_SPAWNED_DRACONIAN);
 }
 
-// TODO: Clean up special cases when save compatibility is broken.
+monster_type random_draconian_job()
+{
+    return _random_mons_between(MONS_FIRST_NONBASE_DRACONIAN,
+                                MONS_LAST_NONBASE_DRACONIAN);
+}
+
 monster_type random_demonspawn_monster_species()
 {
-    const int num_demons = MONS_LAST_BASE_DEMONSPAWN
-                            - MONS_FIRST_BASE_DEMONSPAWN + 1;
-
-#if TAG_MAJOR_VERSION > 34
-    int select_demon = random2(num_demons);
-#endif
-#if TAG_MAJOR_VERSION == 34
-    // Special case to skip putrid demonspawn
-    int select_demon = 3;
-    while (select_demon == 3)
-        select_demon = random2(num_demons);
-#endif
-
-    return static_cast<monster_type>(MONS_FIRST_BASE_DEMONSPAWN + select_demon);
+    return _random_mons_between(MONS_FIRST_BASE_DEMONSPAWN,
+                                MONS_LAST_BASE_DEMONSPAWN);
 }
 
-// TODO: Clean up special cases when save compatibility is broken.
 monster_type random_demonspawn_job()
 {
-    const int num_demons = MONS_LAST_NONBASE_DEMONSPAWN
-                            - MONS_FIRST_NONBASE_DEMONSPAWN + 1;
-
-#if TAG_MAJOR_VERSION > 34
-    int select_demon = random2(num_demons);
-#endif
-#if TAG_MAJOR_VERSION == 34
-    // Special case to skip chaos champions
-    int select_demon = 1;
-    while (select_demon == 1)
-        select_demon = random2(num_demons);
-#endif
-
-    return static_cast<monster_type>(MONS_FIRST_NONBASE_DEMONSPAWN + select_demon);
+    return _random_mons_between(MONS_FIRST_NONBASE_DEMONSPAWN,
+                                MONS_LAST_NONBASE_DEMONSPAWN);
 }
 
 // Note: For consistent behavior in player_will_anger_monster(), all
@@ -2584,8 +2693,7 @@ mon_spell_slot drac_breath(monster_type drac_type)
     switch (drac_type)
     {
     case MONS_BLACK_DRACONIAN:   sp = SPELL_LIGHTNING_BOLT; break;
-    case MONS_MOTTLED_DRACONIAN: sp = SPELL_STICKY_FLAME_SPLASH; break;
-    case MONS_YELLOW_DRACONIAN:  sp = SPELL_SPIT_ACID; break;
+    case MONS_YELLOW_DRACONIAN:  sp = SPELL_ACID_SPLASH; break;
     case MONS_GREEN_DRACONIAN:   sp = SPELL_POISONOUS_CLOUD; break;
     case MONS_PURPLE_DRACONIAN:  sp = SPELL_QUICKSILVER_BOLT; break;
     case MONS_RED_DRACONIAN:     sp = SPELL_SEARING_BREATH; break;
@@ -2914,9 +3022,27 @@ int ugly_thing_colour_offset(colour_t colour)
     return -1;
 }
 
+void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
+    const monster_type *band_monsters, size_t num_monsters_in_band)
+{
+    // Verify that the whole band is ugly.
+    for (size_t i = 0; i < num_monsters_in_band; i++)
+    {
+        if (!(band_monsters[i] == MONS_UGLY_THING
+            || band_monsters[i] == MONS_VERY_UGLY_THING))
+        {
+            return;
+        }
+    }
+
+    // Apply a uniform colour to a fully-ugly band.
+    if (ugly_thing_colour_offset(mg.colour) == -1)
+        mg.colour = ugly_thing_random_colour();
+}
+
 static const char *drac_colour_names[] =
 {
-    "black", "mottled", "yellow", "green", "purple", "red", "white", "grey", "pale"
+    "black", "", "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 
 string draconian_colour_name(monster_type mon_type)
@@ -3302,6 +3428,19 @@ bool mons_is_seeking(const monster& m)
     return m.behaviour == BEH_SEEK;
 }
 
+bool mons_is_unbreathing(monster_type mc)
+{
+    const mon_holy_type holi = mons_class_holiness(mc);
+
+    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
+        return true;
+
+    if (mons_class_is_slime(mc))
+        return true;
+
+    return mons_class_flag(mc, M_UNBREATHING);
+}
+
 // Either running in fear, or trapped and unable to do so (but still wishing to)
 bool mons_is_fleeing(const monster& m)
 {
@@ -3352,15 +3491,20 @@ bool mons_is_batty(const monster& m)
     return mons_class_flag(m.type, M_BATTY) || m.has_facet(BF_BAT);
 }
 
+bool mons_is_removed(monster_type mc)
+{
+    return mc != MONS_PROGRAM_BUG && mons_species(mc) == MONS_PROGRAM_BUG;
+}
+
 bool mons_looks_stabbable(const monster& m)
 {
-    const stab_type st = find_stab_type(&you, m);
+    const stab_type st = find_stab_type(&you, m, false);
     return !m.friendly() && stab_bonus_denom(st) == 1; // top-tier stab
 }
 
 bool mons_looks_distracted(const monster& m)
 {
-    const stab_type st = find_stab_type(&you, m);
+    const stab_type st = find_stab_type(&you, m, false);
     return !m.friendly()
            && st != STAB_NO_STAB
            && !mons_looks_stabbable(m);
@@ -4070,7 +4214,9 @@ mon_inv_type item_to_mslot(const item_def &item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+#if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
+#endif
         return MSLOT_WEAPON;
     case OBJ_MISSILES:
         return MSLOT_MISSILE;
@@ -4752,8 +4898,9 @@ const char* mons_class_name(monster_type mc)
 
 mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
+    const monster& threat = get_tentacle_head(mon);
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(mon, real) / (1 + factor);
+    const int tension = exper_value(threat, real) / (1 + factor);
 
     if (tension <= 0)
     {
@@ -5116,6 +5263,12 @@ bool mons_is_player_shadow(const monster& mon)
            && mon.mname.empty();
 }
 
+bool mons_has_attacks(const monster& mon)
+{
+    const mon_attack_def attk = mons_attack_spec(mon, 0);
+    return attk.type != AT_NONE && attk.damage > 0;
+}
+
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monster& mon)
 {
@@ -5299,6 +5452,9 @@ bool mons_is_notable(const monster& mons)
     // If it's never going to attack us, then not interesting
     if (mons.friendly())
         return false;
+    // tentacles aren't real monsters.
+    if (mons_is_tentacle_or_tentacle_segment(mons.type))
+        return false;
     // Hostile ghosts and illusions are always interesting.
     if (mons.type == MONS_PLAYER_GHOST
         || mons.type == MONS_PLAYER_ILLUSION
@@ -5307,7 +5463,7 @@ bool mons_is_notable(const monster& mons)
         return true;
     }
     // Jellies are never interesting to Jiyva.
-    if (mons.type == MONS_JELLY && you_worship(GOD_JIYVA))
+    if (mons.type == MONS_JELLY && have_passive(passive_t::jellies_army))
         return false;
     if (mons_threat_level(mons) == MTHRT_NASTY)
         return true;
@@ -5415,7 +5571,7 @@ int max_mons_charge(monster_type m)
 }
 
 // Deal out damage to nearby pain-bonded monsters based on the distance between them.
-void radiate_pain_bond(const monster& mon, int damage)
+void radiate_pain_bond(const monster& mon, int damage, const monster* original_target)
 {
     for (actor_near_iterator ai(mon.pos(), LOS_NO_TRANS); ai; ++ai)
     {
@@ -5440,7 +5596,16 @@ void radiate_pain_bond(const monster& mon, int damage)
         if (damage > 0)
         {
             behaviour_event(target, ME_ANNOY, &you, you.pos());
-            target->hurt(&you, damage, BEAM_SHARED_PAIN);
+
+            // save any potential cleanup of the original target for later
+            // (in `monster::hurt`).
+            if (target == original_target)
+                damage = target->hurt(&you, damage, BEAM_SHARED_PAIN, KILLED_BY_MONSTER, "", "", false);
+            else
+                damage = target->hurt(&you, damage, BEAM_SHARED_PAIN);
+
+            if (damage > 0)
+                radiate_pain_bond(*target, damage, original_target);
         }
     }
 }
@@ -5548,7 +5713,7 @@ static bool _apply_to_monsters(monster_func f, radius_iterator&& ri)
     for (; ri; ri++)
     {
         monster* mons = monster_at(*ri);
-        if (mons)
+        if (!invalid_monster(mons))
             affected_any = f(*mons) || affected_any;
     }
 

@@ -28,6 +28,7 @@
 #include "english.h"
 #include "files.h"
 #include "initfile.h"
+#include "item-status-flag-type.h"
 #include "invent.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -583,8 +584,8 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             if (colour)
                 dgn_set_grid_colour_at(gc, colour);
 
-            const int property = (*overlay)(x, y).property;
-            if (property >= FPROP_BLOODY)
+            const terrain_property_t property = (*overlay)(x, y).property;
+            if (property.flags >= FPROP_BLOODY)
             {
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
@@ -2079,7 +2080,7 @@ dlua_set_map::~dlua_set_map()
 
 string map_chance::describe() const
 {
-    return make_stringf("%d:%d", chance_priority, chance);
+    return make_stringf("%d", chance);
 }
 
 bool map_chance::roll() const
@@ -2089,13 +2090,15 @@ bool map_chance::roll() const
 
 void map_chance::write(writer &outf) const
 {
-    marshallInt(outf, chance_priority);
     marshallInt(outf, chance);
 }
 
 void map_chance::read(reader &inf)
 {
-    chance_priority = unmarshallInt(inf);
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() < TAG_MINOR_NO_PRIORITY)
+        unmarshallInt(inf); // was chance_priority
+#endif
     chance = unmarshallInt(inf);
 }
 
@@ -2462,7 +2465,7 @@ void map_def::write_index(writer& outf) const
     marshallString4(outf, place_loaded_from.filename);
     marshallInt(outf, place_loaded_from.lineno);
     marshallShort(outf, orient);
-    // XXX: This is a hack. See the comment in l_dgn.cc.
+    // XXX: This is a hack. See the comment in l-dgn.cc.
     marshallShort(outf, static_cast<short>(border_fill_type));
     _chance.write(outf, _marshall_map_chance);
     _weight.write(outf, marshallInt);
@@ -2484,7 +2487,7 @@ void map_def::read_index(reader& inf)
     unmarshallString4(inf, place_loaded_from.filename);
     place_loaded_from.lineno = unmarshallInt(inf);
     orient = static_cast<map_section_type>(unmarshallShort(inf));
-    // XXX: Hack. See the comment in l_dgn.cc.
+    // XXX: Hack. See the comment in l-dgn.cc.
     border_fill_type =
         static_cast<dungeon_feature_type>(unmarshallShort(inf));
 
@@ -4852,6 +4855,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
 #if TAG_MAJOR_VERSION == 34
         "jumping",
 #endif
+        "repulsion",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);

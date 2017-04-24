@@ -3,12 +3,12 @@
  * @brief Functions used during combat.
 **/
 
-#ifndef FIGHT_H
-#define FIGHT_H
+#pragma once
 
 #include <list>
 
 #include "target.h"
+#include "wu-jian-attack-type.h"
 
 enum stab_type
 {
@@ -34,17 +34,23 @@ int resist_adjust_damage(const actor *defender, beam_type flavour,
 
 int apply_chunked_AC(int dam, int ac);
 
+int melee_confuse_chance(int HD);
+
 bool wielded_weapon_check(item_def *weapon);
 
 stab_type find_stab_type(const actor *attacker,
-                         const actor &defender);
+                         const actor &defender,
+                         bool actual = true);
+
 int stab_bonus_denom(stab_type stab);
 
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number = 0,
-                           int effective_attack_number = 0);
+                           int effective_attack_number = 0,
+                           wu_jian_attack_type wu_jian_attack
+                               = WU_JIAN_ATTACK_NONE);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
@@ -64,8 +70,6 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def attack_pos = coord_def(0, 0),
                         bool check_landing_only = false);
 
-bool stop_attack_prompt(targetter &hitfunc, const char* verb,
+bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim) = 0,
                         bool *prompted = nullptr);
-
-#endif

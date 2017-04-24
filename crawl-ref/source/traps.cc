@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "traps.h"
-#include "trap_def.h"
+#include "trap-def.h"
 
 #include <algorithm>
 #include <cmath>
@@ -23,15 +23,16 @@
 #include "dungeon.h"
 #include "english.h"
 #include "exercise.h"
-#include "godpassive.h" // passive_t::search_traps
+#include "god-passive.h" // passive_t::search_traps
 #include "hints.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "mon-enum.h"
 #include "mon-tentacle.h"
-#include "mgen_enum.h"
+#include "mgen-enum.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mon-transit.h"
@@ -398,6 +399,7 @@ bool player_caught_in_net()
 
 void check_net_will_hold_monster(monster* mons)
 {
+    ASSERT(mons); // XXX: should be monster &mons
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
         int net = get_trapping_net(mons->pos());
@@ -615,7 +617,7 @@ void trap_def::trigger(actor& triggerer)
             mid_t source = !m ? MID_PLAYER :
                             mons_intel(*m) >= I_HUMAN ? m->mid : MID_NOBODY;
 
-            noisy(40, pos, msg.c_str(), source, NF_MESSAGE_IF_UNSEEN);
+            noisy(40, pos, msg.c_str(), source);
         }
 
         if (you_trigger)
@@ -1016,7 +1018,7 @@ int trap_def::shot_damage(actor& act)
     return random2(dam) + 1;
 }
 
-int trap_def::difficulty()
+int trap_def::to_hit_bonus()
 {
     switch (type)
     {
@@ -1128,6 +1130,41 @@ void search_around()
 }
 
 /**
+ * End the ATTR_HELD state & redraw appropriate UI.
+ *
+ * Do NOT call without clearing up nets, webs, etc first!
+ */
+void stop_being_held()
+{
+    you.attribute[ATTR_HELD] = 0;
+    you.redraw_quiver = true;
+    you.redraw_evasion = true;
+}
+
+/**
+ * Exit a web that's currently holding you.
+ *
+ * @param quiet     Whether to squash messages.
+ */
+void leave_web(bool quiet)
+{
+    const trap_def *trap = trap_at(you.pos());
+    if (!trap || trap->type != TRAP_WEB)
+        return;
+
+    if (trap->ammo_qty == 1) // temp web from e.g. jumpspider/spidersack
+    {
+        if (!quiet)
+            mpr("The web tears apart.");
+        destroy_trap(you.pos());
+    }
+    else if (!quiet)
+        mpr("You disentangle yourself.");
+
+    stop_being_held();
+}
+
+/**
  * Let the player attempt to unstick themself from a web.
  */
 static void _free_self_from_web()
@@ -1144,18 +1181,16 @@ static void _free_self_from_web()
             return;
         }
 
-        mpr("You disentangle yourself.");
+        leave_web();
     }
 
     // whether or not there was a web trap there, you're free now.
-    you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
-    you.redraw_evasion = true;
+    stop_being_held();
 }
 
 void free_self_from_net()
 {
-    int net = get_trapping_net(you.pos());
+    const int net = get_trapping_net(you.pos());
 
     if (net == NON_ITEM)
     {
@@ -1167,7 +1202,7 @@ void free_self_from_net()
     int hold = mitm[net].net_durability;
     dprf("net.net_durability: %d", hold);
 
-    int damage = 1 + random2(4);
+    const int damage = 1 + random2(4);
 
     hold -= damage;
     mitm[net].net_durability = hold;
@@ -1177,10 +1212,7 @@ void free_self_from_net()
         mprf("You %s the net and break free!", damage > 3 ? "shred" : "rip");
 
         destroy_item(net);
-
-        you.attribute[ATTR_HELD] = 0;
-        you.redraw_quiver = true;
-        you.redraw_evasion = true;
+        stop_being_held();
         return;
     }
 
@@ -1188,6 +1220,30 @@ void free_self_from_net()
         mpr("You tear a large gash into the net.");
     else
         mpr("You struggle against the net.");
+}
+
+/**
+ * Deals with messaging & cleanup for temporary web traps. Does not actually
+ * delete ENCH_HELD!
+ *
+ * @param mons      The monster leaving a web.
+ * @param quiet     Whether to suppress messages.
+ */
+void monster_web_cleanup(const monster &mons, bool quiet)
+{
+    trap_def *trap = trap_at(mons.pos());
+    if (trap && trap->type == TRAP_WEB)
+    {
+        if (trap->ammo_qty == 1)
+        {
+            // temp web from e.g. jumpspider/spidersack
+            if (!quiet)
+                simple_monster_message(mons, " tears the web.");
+            destroy_trap(mons.pos());
+        }
+        else if (!quiet)
+            simple_monster_message(mons, " pulls away from the web.");
+    }
 }
 
 void mons_clear_trapping_net(monster* mon)
@@ -1234,12 +1290,12 @@ void clear_trapping_net()
         return;
 
     const int net = get_trapping_net(you.pos());
-    if (net != NON_ITEM)
+    if (net == NON_ITEM)
+        leave_web(true);
+    else
         free_stationary_net(net);
 
-    you.attribute[ATTR_HELD] = 0;
-    you.redraw_quiver = true;
-    you.redraw_evasion = true;
+    stop_being_held();
 }
 
 item_def trap_def::generate_trap_item()
@@ -1291,18 +1347,15 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         return;
     }
 
-    bool force_hit = (env.markers.property_at(pos, MAT_ANY,
-                            "force_hit") == "true");
-
     if (act.is_player())
     {
-        if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
+        if (one_chance_in(5) || was_known && !one_chance_in(4))
         {
             mprf("You avoid triggering %s.", name(DESC_A).c_str());
             return;
         }
     }
-    else if (!force_hit && one_chance_in(5))
+    else if (one_chance_in(5))
     {
         if (was_known && you.see_cell(pos) && you.can_see(act))
         {
@@ -1314,7 +1367,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     item_def shot = generate_trap_item();
 
-    int trap_hit = (20 + (difficulty()*2)) * random2(200) / 100;
+    int trap_hit = (20 + (to_hit_bonus()*2)) * random2(200) / 100;
     if (int defl = act.missile_deflection())
         trap_hit = random2(trap_hit / defl);
 
@@ -1324,7 +1377,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
          trap_hit, act.evasion(), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.evasion())
+    if (trap_hit < act.evasion())
     {
         if (act.is_player())
             mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
@@ -1334,8 +1387,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                  act.name(DESC_THE).c_str());
         }
     }
-    else if (!force_hit
-             && pro_block >= con_block
+    else if (pro_block >= con_block
              && you.see_cell(act.pos()))
     {
         string owner;
@@ -1352,12 +1404,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else // OK, we've been hit.
     {
-        bool force_poison = (env.markers.property_at(pos, MAT_ANY,
-                                "poisoned_needle_trap") == "true");
-
-        bool poison = (type == TRAP_NEEDLE
-                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
-                            || force_poison));
+        bool poison = type == TRAP_NEEDLE
+                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100));
 
         int damage_taken = act.apply_ac(shot_damage(act));
 
@@ -1720,7 +1768,7 @@ bool ensnare(actor *fly)
     // fail to attach and you'll be released after a single turn.
     if (grd(fly->pos()) == DNGN_FLOOR)
     {
-        place_specific_trap(fly->pos(), TRAP_WEB);
+        place_specific_trap(fly->pos(), TRAP_WEB, 1); // 1 ammo = destroyed on exit (hackish)
         if (grd(fly->pos()) == DNGN_UNDISCOVERED_TRAP
             && you.see_cell(fly->pos()))
         {

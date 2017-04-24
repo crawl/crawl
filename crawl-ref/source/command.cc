@@ -18,15 +18,16 @@
 #include "env.h"
 #include "files.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
-#include "lookup_help.h"
+#include "lookup-help.h"
 #include "macro.h"
 #include "message.h"
 #include "output.h"
 #include "prompt.h"
 #include "showsymb.h"
+#include "sound.h"
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -65,8 +66,8 @@ static const char *features[] =
     "Glob patterns",
 #endif
 
-#if defined(SOUND_PLAY_COMMAND) || defined(WINMM_PLAY_SOUNDS)
-    "Sound support",
+#if defined(USE_SOUND) && defined(SOUND_BACKEND)
+    SOUND_BACKEND,
 #endif
 
 #ifdef DGL_MILESTONES
@@ -284,7 +285,7 @@ void list_jewellery()
         item = colour_string(item, colour);
 
         if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
-                player_mutation_level(MUT_MISSING_HAND))
+                you.get_mutation_level(MUT_MISSING_HAND))
         {
             mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
         }
@@ -589,10 +590,9 @@ string help_highlighter::get_species_key() const
 }
 ////////////////////////////////////////////////////////////////////////////
 
-static int _show_keyhelp_menu(const vector<formatted_string> &lines,
-                              bool with_manual, bool easy_exit = false,
-                              int hotkey = 0,
-                              string highlight_string = "")
+int show_keyhelp_menu(const vector<formatted_string> &lines,
+                      bool with_manual, bool easy_exit,
+                      int hotkey, string highlight_string)
 {
     formatted_scroller cmd_help;
 
@@ -711,7 +711,7 @@ void show_specific_help(const string &key)
     vector<formatted_string> formatted_lines;
     for (const string &line : split_string("\n", help, false, true))
         formatted_lines.push_back(formatted_string::parse_string(line));
-    _show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
+    show_keyhelp_menu(formatted_lines, false, Options.easy_exit_menu);
 }
 
 void show_levelmap_help()
@@ -731,7 +731,7 @@ void show_targeting_help()
         cols.add_formatted(0, targeting_help_wiz, true);
 #endif
     cols.add_formatted(1, targeting_help_2, true);
-    _show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
+    show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
 }
 void show_interlevel_travel_branch_help()
 {
@@ -923,7 +923,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, item_types,
                          CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                          CMD_FORCE_CAST_SPELL, 0);
-    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves and rods (<w>%</w>ield and e<w>%</w>oke)",
+    _add_insert_commands(cols, 0, "<brown>\\</brown> : staves (<w>%</w>ield and e<w>%</w>oke)",
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
     _add_insert_commands(cols, 0, "<lightgreen>}</lightgreen> : miscellaneous items (e<w>%</w>oke)",
                          CMD_EVOKE, 0);
@@ -1026,6 +1026,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+#ifdef USE_SOUND
+    _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
+#endif
     _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
     cols.add_formatted(1, "         slowest ally\n",
                            false);
@@ -1233,7 +1236,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
     item_types +=
         "</brown> : </console>"
-        "staves and rods (<w>%</w>ield and e<w>%</w>oke)";
+        "staves (<w>%</w>ield and e<w>%</w>oke)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
 
@@ -1278,7 +1281,7 @@ void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
     else
         _add_formatted_keyhelp(cols);
 
-    _show_keyhelp_menu(cols.formatted_lines(), true, Options.easy_exit_menu,
+    show_keyhelp_menu(cols.formatted_lines(), true, Options.easy_exit_menu,
                        hotkey, highlight_string);
 
     if (do_redraw_screen)
@@ -1287,124 +1290,3 @@ void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
         redraw_screen();
     }
 }
-
-#ifdef WIZARD
-int list_wizard_commands(bool do_redraw_screen)
-{
-    // 2 columns
-    column_composer cols(2, 44);
-    // Page size is number of lines - one line for --more-- prompt.
-    cols.set_pagesize(get_number_of_lines());
-
-    cols.add_formatted(0,
-                       "<yellow>Player stats</yellow>\n"
-                       "<w>A</w>      set all skills to level\n"
-                       "<w>Ctrl-D</w> change enchantments/durations\n"
-                       "<w>g</w>      exercise a skill\n"
-                       "<w>l</w>      change experience level\n"
-                       "<w>Ctrl-P</w> list props\n"
-                       "<w>r</w>      change character's species\n"
-                       "<w>s</w>      set skill to level\n"
-                       "<w>x</w>      gain an experience level\n"
-                       "<w>$</w>      set gold to a specified value\n"
-                       "<w>]</w>      get a mutation\n"
-                       "<w>_</w>      gain religion\n"
-                       "<w>^</w>      set piety to a value\n"
-                       "<w>@</w>      set Str Int Dex\n"
-                       "<w>#</w>      load character from a dump file\n"
-                       "<w>&</w>      list all divine followers\n"
-                       "<w>=</w>      show info about skill points\n"
-                       "\n"
-                       "<yellow>Create level features</yellow>\n"
-                       "<w>L</w>      place a vault by name\n"
-                       "<w>T</w>      make a trap\n"
-                       "<w>,</w>/<w>.</w>    create up/down staircase\n"
-                       "<w>(</w>      turn cell into feature\n"
-                       "<w>\\</w>      make a shop\n"
-                       "<w>Ctrl-K</w> mark all vaults as unused\n"
-                       "\n"
-                       "<yellow>Other level related commands</yellow>\n"
-                       "<w>Ctrl-A</w> generate new Abyss area\n"
-                       "<w>b</w>      controlled blink\n"
-                       "<w>B</w>      controlled teleport\n"
-                       "<w>Ctrl-B</w> banish yourself to the Abyss\n"
-                       "<w>k</w>      shift section of a labyrinth\n"
-                       "<w>R</w>      change monster spawn rate\n"
-                       "<w>Ctrl-S</w> change Abyss speed\n"
-                       "<w>u</w>/<w>d</w>    shift up/down one level\n"
-                       "<w>~</w>      go to a specific level\n"
-                       "<w>:</w>      find branches and overflow\n"
-                       "       temples in the dungeon\n"
-                       "<w>;</w>      list known levels and counters\n"
-                       "<w>{</w>      magic mapping\n"
-                       "<w>}</w>      detect all traps on level\n"
-                       "<w>Ctrl-W</w> change Shoals' tide speed\n"
-                       "<w>Ctrl-E</w> dump level builder information\n"
-                       "<w>Ctrl-R</w> regenerate current level\n"
-                       "<w>P</w>      create a level based on a vault\n",
-                       true);
-
-    cols.add_formatted(1,
-                       "<yellow>Other player related effects</yellow>\n"
-                       "<w>c</w>      card effect\n"
-#ifdef DEBUG_BONES
-                       "<w>Ctrl-G</w> save/load ghost (bones file)\n"
-#endif
-                       "<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n"
-                       "<w>e</w>      set hunger state\n"
-                       "<w>X</w>      make Xom do something now\n"
-                       "<w>z</w>      cast spell by number/name\n"
-                       "<w>!</w>      memorise spell\n"
-                       "<w>W</w>      god wrath\n"
-                       "<w>w</w>      god mollification\n"
-                       "<w>p</w>      polymorph into a form\n"
-                       "<w>V</w>      toggle xray vision\n"
-                       "<w>E</w>      (un)freeze time\n"
-                       "\n"
-                       "<yellow>Monster related commands</yellow>\n"
-                       "<w>m</w>/<w>M</w>    create specified monster\n"
-                       "<w>D</w>      detect all monsters\n"
-                       "<w>g</w>/<w>G</w>    dismiss all monsters\n"
-                       "<w>\"</w>      list monsters\n"
-                       "\n"
-                       "<yellow>Item related commands</yellow>\n"
-                       "<w>a</w>      acquirement\n"
-                       "<w>C</w>      (un)curse item\n"
-                       "<w>i</w>/<w>I</w>    identify/unidentify inventory\n"
-                       "<w>y</w>/<w>Y</w>    id/unid item types+level items\n"
-                       "<w>o</w>/<w>%</w>    create an object\n"
-                       "<w>t</w>      tweak object properties\n"
-                       "<w>v</w>      show gold value of an item\n"
-                       "<w>-</w>      get a god gift\n"
-                       "<w>|</w>      create all unrand artefacts\n"
-                       "<w>+</w>      make randart from item\n"
-                       "<w>'</w>      list items\n"
-                       "<w>J</w>      Jiyva off-level sacrifice\n"
-                       "\n"
-                       "<yellow>Debugging commands</yellow>\n"
-                       "<w>f</w>      quick fight simulation\n"
-                       "<w>F</w>      single scale fsim\n"
-                       "<w>Ctrl-F</w> double scale fsim\n"
-                       "<w>Ctrl-I</w> item generation stats\n"
-                       "<w>O</w>      measure exploration time\n"
-                       "<w>Ctrl-T</w> dungeon (D)Lua interpreter\n"
-                       "<w>Ctrl-U</w> client (C)Lua interpreter\n"
-                       "<w>Ctrl-X</w> Xom effect stats\n"
-#ifdef DEBUG_DIAGNOSTICS
-                       "<w>Ctrl-Q</w> make some debug messages quiet\n"
-#endif
-                       "<w>Ctrl-C</w> force a crash\n"
-                       "\n"
-                       "<yellow>Other wizard commands</yellow>\n"
-                       "(not prefixed with <w>&</w>!)\n"
-                       "<w>x?</w>     list targeted commands\n"
-                       "<w>X?</w>     list map-mode commands\n",
-                       true);
-
-    int key = _show_keyhelp_menu(cols.formatted_lines(), false,
-                                 Options.easy_exit_menu);
-    if (do_redraw_screen)
-        redraw_screen();
-    return key;
-}
-#endif

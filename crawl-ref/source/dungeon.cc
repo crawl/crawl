@@ -38,12 +38,13 @@
 #include "end.h"
 #include "english.h"
 #include "files.h"
-#include "flood_find.h"
+#include "flood-find.h"
 #include "food.h"
 #include "ghost.h"
-#include "godpassive.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "lev-pand.h"
 #include "libutil.h"
@@ -68,7 +69,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "traps.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -249,7 +250,8 @@ static void _count_gold()
         }
     }
 
-    you.attribute[ATTR_GOLD_GENERATED] += gold;
+    if (!player_in_branch(BRANCH_ABYSS))
+        you.attribute[ATTR_GOLD_GENERATED] += gold;
 
     if (have_passive(passive_t::detect_gold))
     {
@@ -451,6 +453,84 @@ static void _builder_assertions()
                     dungeon_feature_name(grd(*ri)));
             }
 #endif
+}
+
+/**
+ * Place a transporter and set its destination.
+ *
+ * @param pos     The position of the transporter
+ * @param dest    The position the transporter destination.
+ **/
+void dgn_place_transporter(const coord_def &pos, const coord_def &dest)
+{
+    env.markers.add(new map_position_marker(pos, DNGN_TRANSPORTER, dest));
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(pos, DNGN_TRANSPORTER, false, true);
+}
+
+/**
+ * Create transporters on the current level based on transporter markers. This
+ * does checks for duplicate transporter destinations, transporters with no
+ * destinations, and unused transporter destinations.
+ *
+ * @returns True if no transporter placement errors were found, false
+ *          otherwise.
+ **/
+bool dgn_make_transporters_from_markers()
+{
+    bool no_errors = true;
+
+    // Find transporter destination markers and ensure no duplicates.
+    const vector<map_marker*> dest_markers =
+        find_markers_by_prop(TRANSPORTER_DEST_NAME_PROP);
+    map<string, map_marker *> dest_map;
+    for (auto dm : dest_markers)
+    {
+        const string name = dm->property(TRANSPORTER_DEST_NAME_PROP);
+        if (dest_map.find(name) != dest_map.end())
+        {
+            mprf(MSGCH_ERROR, "Multiple locations with transporter "
+                 "destination name %s.", name.c_str());
+            no_errors = false;
+            continue;
+        }
+        dest_map[name] = dm;
+    }
+
+    // Place transporters.
+    const vector<map_marker*> trans_markers =
+        find_markers_by_prop(TRANSPORTER_NAME_PROP);
+    map<string, bool> used_dest_map;
+    for (auto tm : trans_markers)
+    {
+        const string name = tm->property(TRANSPORTER_NAME_PROP);
+        if (dest_map.find(name) == dest_map.end())
+        {
+            mprf(MSGCH_ERROR, "Transporter with name %s has no corresponding "
+                 "destination marker.", name.c_str());
+            no_errors = false;
+            continue;
+        }
+        dgn_place_transporter(tm->pos, dest_map[name]->pos);
+        env.markers.remove(tm);
+        used_dest_map[name] = true;
+    }
+
+    // Clean up any destination markers.
+    for (auto dm : dest_markers)
+    {
+        const string name = dm->property(TRANSPORTER_DEST_NAME_PROP);
+        if (used_dest_map[name])
+            env.markers.remove(dm);
+        else
+        {
+            mprf(MSGCH_ERROR, "Unused transporter destination with name %s.",
+                 name.c_str());
+            no_errors = false;
+        }
+    }
+
+    return no_errors;
 }
 
 // Should be called after a level is constructed to perform any final
@@ -1155,7 +1235,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
@@ -1863,7 +1943,8 @@ static bool _branch_entrances_are_connected()
 static bool _branch_needs_stairs()
 {
     // Irrelevant for branches with a single level and all encompass maps.
-    return !player_in_branch(BRANCH_ZIGGURAT);
+    return !player_in_branch(BRANCH_ZIGGURAT)
+        && !player_in_branch(BRANCH_TOMB);
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
@@ -2077,7 +2158,7 @@ struct coord_feat
     unsigned int mask;
 
     coord_feat(const coord_def &c, dungeon_feature_type f)
-        : pos(c), feat(f), prop(0), mask(0)
+        : pos(c), feat(f), prop(), mask(0)
     {
     }
 
@@ -2209,9 +2290,9 @@ static void _ruin_level(Iterator iter,
             && !plant_forbidden_at(p))
         {
             mgen_data mg;
-            mg.cls = one_chance_in(20) ? MONS_BUSH  :
-                     coinflip()        ? MONS_PLANT :
-                     MONS_FUNGUS;
+            mg.cls = random_choose_weighted( 2, MONS_BUSH,
+                                            19, MONS_PLANT,
+                                            19, MONS_FUNGUS);
             mg.pos = p;
             mg.flags = MG_FORCE_PLACE;
             mons_place(mgen_data(mg));
@@ -2361,8 +2442,11 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _fixup_pandemonium_stairs();
 
     _fixup_branch_stairs();
-    fixup_misplaced_items();
 
+    if (!dgn_make_transporters_from_markers())
+        throw dgn_veto_exception("Transporter placement failed.");
+
+    fixup_misplaced_items();
     link_items();
 
     if (!player_in_branch(BRANCH_COCYTUS)
@@ -2625,6 +2709,21 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     }
 
     const level_id lid = level_id::current();
+
+#if TAG_MAJOR_VERSION == 34
+    if (!minivault
+        && player_in_branch(BRANCH_TOMB)
+        && you.props[TOMB_STONE_STAIRS_KEY])
+    {
+        const map_def *vault = random_map_for_tag("tomb_stone_stairs", true);
+
+        if (vault)
+            return vault;
+
+        end(1, false, "Couldn't find map with tag tomb_stone_stairs for level "
+            "%s.", lid.describe().c_str());
+    }
+#endif
 
     const map_def *vault = 0;
 
@@ -4199,7 +4298,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         corpse = place_monster_corpse(*mon, true, true);
         // Dismiss the monster we used to place the corpse.
         mon->flags |= MF_HARD_RESET;
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, false, true);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, false, true);
     }
 
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))
@@ -4358,8 +4457,7 @@ static object_class_type _superb_object_class()
             10, OBJ_ARMOUR,
             10, OBJ_JEWELLERY,
             10, OBJ_BOOKS,
-            9, OBJ_STAVES,
-            1, OBJ_RODS,
+            10, OBJ_STAVES,
             10, OBJ_MISCELLANY);
 }
 
@@ -5260,7 +5358,7 @@ static dungeon_feature_type _pick_an_altar()
         switch (you.where_are_you)
         {
         case BRANCH_CRYPT:
-            god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
+            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL);
             break;
 
         case BRANCH_ORC: // There are a few heretics
@@ -5656,9 +5754,7 @@ object_class_type item_in_shop(shop_type shop_type)
         return OBJ_JEWELLERY;
 
     case SHOP_EVOKABLES:
-        if (one_chance_in(10))
-            return OBJ_RODS;
-        return coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+        return random_choose(OBJ_WANDS, OBJ_MISCELLANY);
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
@@ -5884,30 +5980,48 @@ static void _add_plant_clumps(int rarity,
     }
 }
 
-static coord_def _get_hatch_dest(coord_def base_pos, bool shaft)
+static coord_def _find_named_hatch_dest(string hatch_name)
 {
-    map_marker *marker = env.markers.find(base_pos, MAT_POSITION);
-    if (!marker || shaft)
+    vector <map_marker *> markers;
+    markers = find_markers_by_prop(HATCH_DEST_NAME_PROP, hatch_name);
+    ASSERT(markers.size() == 1);
+    return markers[0]->pos;
+}
+
+static coord_def _get_feat_dest(coord_def base_pos, dungeon_feature_type feat,
+                                const string &hatch_name)
+{
+    const bool shaft = feat == DNGN_TRAP_SHAFT;
+    map_position_marker *marker = nullptr;
+
+    if (!shaft)
+        marker = get_position_marker_at(base_pos, feat);
+
+    if (!marker)
     {
         coord_def dest_pos;
-        do
+
+        if (feat_is_escape_hatch(feat) and !hatch_name.empty())
+            dest_pos = _find_named_hatch_dest(hatch_name);
+        else
         {
-            dest_pos = random_in_bounds();
+            do
+            {
+                dest_pos = random_in_bounds();
+            }
+            while (grd(dest_pos) != DNGN_FLOOR
+                   || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
         }
-        while (grd(dest_pos) != DNGN_FLOOR
-               || env.pgrid(dest_pos) & FPROP_NO_TELE_INTO);
+
         if (!shaft)
         {
-            env.markers.add(new map_position_marker(base_pos, dest_pos));
+            env.markers.add(new map_position_marker(base_pos, feat, dest_pos));
             env.markers.clear_need_activate();
         }
         return dest_pos;
     }
     else
-    {
-        map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
-        return posm->dest;
-    }
+        return marker->dest;
 }
 
 double dgn_degrees_to_radians(int degrees)
@@ -5954,10 +6068,7 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
     {
         if (!feat_is_traversable(env.grid(*ai)))
             continue;
-        int walls = 0;
-        for (adjacent_iterator bi(*ai); bi && walls < max_walls; ++bi)
-            if (env.grid(*bi) == DNGN_SLIMY_WALL)
-                walls++;
+        const int walls = count_adjacent_slime_walls(*ai);
         if (walls < max_walls)
         {
             *pos = *ai;
@@ -5968,7 +6079,8 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest)
+                                coord_def base_pos, bool find_closest,
+                                string hatch_name)
 {
     dprf(DIAG_DNGN, "Level entry point on %sstair: %d (%s)",
          find_closest ? "closest " : "",
@@ -5979,7 +6091,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
         || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT));
+        coord_def pos(_get_feat_dest(base_pos, stair_to_find, hatch_name));
         if (player_in_branch(BRANCH_SLIME))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))
@@ -6213,8 +6325,8 @@ coord_def dgn_region::random_edge_point() const
 {
     return x_chance_in_y(size.x, size.x + size.y) ?
                   coord_def(pos.x + random2(size.x),
-                             coinflip()? pos.y : pos.y + size.y - 1)
-                : coord_def(coinflip()? pos.x : pos.x + size.x - 1,
+                             random_choose(pos.y, pos.y + size.y - 1))
+                : coord_def(random_choose(pos.x, pos.x + size.x - 1),
                              pos.y + random2(size.y));
 }
 
@@ -6635,7 +6747,7 @@ void vault_placement::apply_grid()
             if (clear)
             {
                 env.grid_colours(*ri) = 0;
-                env.pgrid(*ri) = 0;
+                env.pgrid(*ri) = terrain_property_t{};
                 // what about heightmap?
                 tile_clear_flavour(*ri);
             }

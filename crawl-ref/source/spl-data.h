@@ -71,12 +71,12 @@ static const struct spell_desc spelldata[] =
     SPTYP_TRANSLOCATION,
     SPFLAG_TARGET | SPFLAG_OBJ | SPFLAG_NOT_SELF,
     1,
-    1000,
+    50,
     LOS_RADIUS, LOS_RADIUS,
     1, 0,
     TILEG_APPORTATION,
 },
-
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_DELAYED_FIREBALL, "Delayed Fireball",
     SPTYP_FIRE | SPTYP_CONJURATION,
@@ -85,13 +85,13 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     7, 0,
-    TILEG_DELAYED_FIREBALL,
+    TILEG_ERROR,
 },
-
+#endif
 {
     SPELL_CONJURE_FLAME, "Conjure Flame",
     SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_TARGET | SPFLAG_NOT_SELF,
+    SPFLAG_TARGET | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF,
     3,
     100,
     3, 3,
@@ -314,6 +314,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_RING_OF_THUNDER, "Ring of Thunder",
+    SPTYP_CHARMS | SPTYP_AIR,
+    SPFLAG_AREA,
+    7,
+    200,
+    -1, -1,
+    6, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_VENOM_BOLT, "Venom Bolt",
     SPTYP_CONJURATION | SPTYP_POISON,
     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
@@ -449,6 +460,7 @@ static const struct spell_desc spelldata[] =
     TILEG_LEHUDIBS_CRYSTAL_SPEAR,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_BOLT_OF_INACCURACY, "Bolt of Inaccuracy",
     SPTYP_CONJURATION,
@@ -457,8 +469,9 @@ static const struct spell_desc spelldata[] =
     1000,
     6, 6,
     3, 0,
-    TILEG_BOLT_OF_INACCURACY,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_TORNADO, "Tornado",
@@ -475,7 +488,7 @@ static const struct spell_desc spelldata[] =
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
     SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
     SPFLAG_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
-    6,
+    5,
     200,
     5, 5,
     6, 2,
@@ -767,7 +780,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_REPEL_MISSILES, "Repel Missiles",
     SPTYP_CHARMS | SPTYP_AIR,
-    SPFLAG_NONE,
+    SPFLAG_MONSTER,
     2,
     50,
     -1, -1,
@@ -1152,7 +1165,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
     6,
     200,
-    5, 5,
+    LOS_RADIUS, LOS_RADIUS,
     6, 0,
     TILEG_DISINTEGRATE,
 },
@@ -1545,7 +1558,7 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     1,
     50,
-    2, 2, // more with wielded stones
+    3, 3,
     1, 0,
     TILEG_SANDBLAST,
 },
@@ -1620,7 +1633,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
-    SPTYP_TRANSLOCATION,
+    SPTYP_TRANSLOCATION | SPTYP_HEXES,
     SPFLAG_NONE,
     3,
     50,
@@ -1938,6 +1951,16 @@ static const struct spell_desc spelldata[] =
     TILEG_SPIT_ACID,
 },
 
+{ SPELL_ACID_SPLASH, "Acid Splash",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_SPIT_ACID,
+},
+
 // Monster version of the spell (with full range)
 {
     SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
@@ -1948,17 +1971,6 @@ static const struct spell_desc spelldata[] =
     4, 4,
     4, 0,
     TILEG_STICKY_FLAME_RANGE,
-},
-
-{
-    SPELL_STICKY_FLAME_SPLASH, "Sticky Flame Splash",
-    SPTYP_CONJURATION | SPTYP_FIRE,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
-    4,
-    100,
-    4, 4,
-    4, 0,
-    TILEG_STICKY_FLAME_SPLASH,
 },
 
 {
@@ -2557,11 +2569,11 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_THUNDERBOLT, "Thunderbolt",
     SPTYP_CONJURATION | SPTYP_AIR,
-    SPFLAG_DIR_OR_TARGET,
-    2, // 2-5
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+    2, // 2-5, sort of
     200,
     5, 5,
-    2, 0,
+    15, 0,
     TILEG_THUNDERBOLT,
 },
 
@@ -2963,6 +2975,7 @@ static const struct spell_desc spelldata[] =
     TILEG_ORB_OF_ELECTRICITY,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EXPLOSIVE_BOLT, "Explosive Bolt",
     SPTYP_CONJURATION | SPTYP_FIRE,
@@ -2971,8 +2984,9 @@ static const struct spell_desc spelldata[] =
     200,
     LOS_RADIUS, LOS_RADIUS,
     6, 0,
-    TILEG_EXPLOSIVE_BOLT,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_FLASH_FREEZE, "Flash Freeze",
@@ -3228,11 +3242,12 @@ static const struct spell_desc spelldata[] =
     SPFLAG_TARGET | SPFLAG_NOT_SELF,
     6,
     100,
-    3, LOS_RADIUS,
+    3, LOS_DEFAULT_RANGE,
     6, 0,
     TILEG_CLOUD_CONE,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_WEAVE_SHADOWS, "Weave Shadows",
     SPTYP_SUMMONING,
@@ -3241,8 +3256,9 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     4, 0,
-    TILEG_WEAVE_SHADOWS,
+    TILEG_ERROR,
 },
+#endif
 
 {
     SPELL_DRAGON_CALL, "Dragon's Call",
@@ -3649,7 +3665,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
-    SPTYP_TRANSLOCATION | SPTYP_HEXES,
+    SPTYP_TRANSLOCATION,
     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     3,
     200,
@@ -3853,9 +3869,54 @@ static const struct spell_desc spelldata[] =
     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
     3,
     200,
-    2, LOS_RADIUS,
+    2, LOS_DEFAULT_RANGE,
     2, 0,
     TILEG_BECKONING,
+},
+
+// Monster-only, players can use Qazlal's ability
+{
+    SPELL_UPHEAVAL, "Upheaval",
+    SPTYP_CONJURATION,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_MONSTER,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_RANDOM_EFFECTS, "Random Effects",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+    4,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    4, 0,
+    TILEG_ERROR,
+},
+
+{
+    SPELL_POISONOUS_VAPOURS, "Poisonous Vapours",
+    SPTYP_POISON | SPTYP_AIR,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF,
+    2,
+    50,
+    LOS_RADIUS, LOS_RADIUS,
+    2, 0,
+    TILEG_POISONOUS_VAPOURS,
+},
+
+{
+    SPELL_IGNITION, "Ignition",
+    SPTYP_FIRE,
+    SPFLAG_AREA,
+    8,
+    200,
+    -1, -1,
+    8, 0,
+    TILEG_IGNITION,
 },
 
 {

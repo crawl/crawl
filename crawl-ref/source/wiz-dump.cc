@@ -15,8 +15,9 @@
 #include "dbg-util.h"
 #include "describe.h"
 #include "env.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
@@ -271,40 +272,6 @@ static int _find_ego_type(object_class_type type, const string &s)
     return 0;
 }
 
-/**
- * Take a partially initialized rod and set its charge value, rate & max charge
-*  correctly.
- *
- * @param rod[in,out]   The rod in question. Its charge rate is expected to be
- *                      incorrectly stored in the 'plus' field, and its
- *                      current/max charge shouldn't yet be set.
- * @param s             The remainder of the rod name after the main body;
- *                      e.g. " (3/16) {foo}".
- */
-static void _set_rod_plusses(item_def &rod, const string &s)
-{
-    // first, move the charge rate to the correct field
-    rod.rod_plus = rod.plus; // these are different fields. obviously!
-    // then grab the charge values from the input str.
-    const size_t open_paren = s.find("(");
-    const size_t slash = s.find("/");
-    const size_t close_paren = s.find(")");
-    if (open_paren == string::npos
-        || slash == string::npos
-        || close_paren == string::npos)
-    {
-        dprf("bad rod string '%s'!", s.c_str());
-        return;
-    }
-
-    // pray that the rest of the format is reasonable
-    // XXX: this would be much simpler as (\d+)/(\d+)...
-    rod.charges = atoi(s.substr(open_paren + 1, slash).c_str())
-                    * ROD_CHARGE_MULT;
-    rod.charge_cap = atoi(s.substr(slash + 1, close_paren).c_str())
-                    * ROD_CHARGE_MULT;
-}
-
 static item_def _item_from_string(string s)
 {
     item_def ret;
@@ -356,13 +323,10 @@ static item_def _item_from_string(string s)
     {
         ret.base_type = parsed.base_type;
         ret.sub_type  = parsed.sub_type;
-        if (ret.base_type == OBJ_RODS)
-            _set_rod_plusses(ret, s.substr(end));
-        else
-            ret.brand = _find_ego_type(ret.base_type, s.substr(end));
+        ret.brand = _find_ego_type(ret.base_type, s.substr(end));
 
-        /* pluses for non-rod item_kinds are only valid for manuals and runes
-         * so we can skip them here for now */
+        // pluses for item_kinds are only valid for manuals and runes so we can
+        // skip them here for now
     }
 
     ret.quantity = 1;
@@ -510,8 +474,20 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
                 race = tokens[k-3].substr(1) + " " + tokens[k-2];
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
-            wizard_change_species_to(find_species_from_string(race));
-            wizard_change_job_to(find_job_from_string(role));
+            const species_type sp = find_species_from_string(race);
+            if (sp == SP_UNKNOWN)
+            {
+                mprf("Unknown species: %s", race.c_str());
+                return false;
+            }
+            const job_type job = find_job_from_string(role);
+            if (job == JOB_UNKNOWN)
+            {
+                mprf("Unknown job: %s", role.c_str());
+                return false;
+            }
+            change_species_to(sp);
+            wizard_change_job_to(job);
             return true;
         }
     }

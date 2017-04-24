@@ -22,6 +22,7 @@
 #include "fprop.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "options.h"
 #include "output.h"
@@ -167,12 +168,14 @@ bool is_feature(char32_t feature, const coord_def& where)
         return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
                 && !feat_is_altar(grid)
                 && !feat_is_portal_exit(grid)
-                && grid != DNGN_ENTER_SHOP;
+                && grid != DNGN_ENTER_SHOP
+                && grid != DNGN_TRANSPORTER;
     case '>':
         return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
                 && !feat_is_altar(grid)
                 && !feat_is_portal_entrance(grid)
-                && grid != DNGN_ENTER_SHOP;
+                && grid != DNGN_ENTER_SHOP
+                && grid != DNGN_TRANSPORTER;
     case '^':
         return feat_is_trap(grid);
     default:
@@ -198,7 +201,8 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     else if (glyph == '>')
     {
         return feat_is_portal_entrance(grd(where))
-               || grd(where) == DNGN_TRANSIT_PANDEMONIUM;
+               || grd(where) == DNGN_TRANSIT_PANDEMONIUM
+               || grd(where) == DNGN_TRANSPORTER;
     }
 
     return false;
@@ -804,7 +808,7 @@ bool show_map(level_pos &lpos,
 
             c_input_reset(true);
 #ifdef USE_TILE_LOCAL
-            const int key = tiles.getch_ck();
+            const int key = getchm(KMC_LEVELMAP);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
 #else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
@@ -874,7 +878,7 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_CLEAR_MAP:
-                clear_map();
+                clear_map_or_travel_trail();
                 break;
 
             case CMD_MAP_FORGET:
@@ -1297,8 +1301,8 @@ bool show_map(level_pos &lpos,
 
 bool emphasise(const coord_def& where)
 {
-    return is_unknown_stair(where)
-           && !player_in_branch(BRANCH_VESTIBULE);
+    return is_unknown_stair(where) && !player_in_branch(BRANCH_VESTIBULE)
+           || is_unknown_transporter(where);
 }
 
 #ifndef USE_TILE_LOCAL

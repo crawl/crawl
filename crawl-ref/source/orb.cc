@@ -8,7 +8,7 @@
 #include "orb.h"
 
 #include "areas.h"
-#include "godpassive.h" // passive_t::slow_orb_run
+#include "god-passive.h" // passive_t::slow_orb_run
 #include "shout.h"
 #include "view.h"
 #include "religion.h"

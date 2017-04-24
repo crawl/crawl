@@ -1,9 +1,10 @@
-#ifndef SPL_SUMMONING_H
-#define SPL_SUMMONING_H
+#pragma once
 
 #include "beam.h"
+#include "beh-type.h"
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "god-type.h"
+#include "item-prop-enum.h"
 #include "spl-cast.h"
 
 //Bitfield for animate dead messages
@@ -94,7 +95,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 monster_type pick_random_wraith();
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 
-spret_type cast_aura_of_abjuration(int pow, bool fail = false);
+spret_type cast_aura_of_abjuration(int pow, bool fail);
 void do_aura_of_abjuration(int delay);
 
 monster* find_battlesphere(const actor* agent);
@@ -124,5 +125,3 @@ void summoned_monster(const monster* mons, const actor* caster,
 bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
 int count_summons(const actor *summoner, spell_type spell);
-
-#endif

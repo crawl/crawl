@@ -3,8 +3,7 @@
  * @brief Monster spell casting.
 **/
 
-#ifndef MONCAST_H
-#define MONCAST_H
+#pragma once
 
 #include "enum.h"
 
@@ -29,6 +28,8 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 dice_def waterstrike_damage(const monster &caster);
 dice_def resonance_strike_base_damage(const monster &caster);
 
+void flay(const monster &caster, actor &defender, int damage);
+
 bool handle_mon_spell(monster* mons);
 
 static const int ENCH_POW_FACTOR = 3;
@@ -51,4 +52,3 @@ void setup_breath_timeout(monster* mons);
 monster* cast_phantom_mirror(monster* mons, monster* targ,
                              int hp_perc = 35,
                              int summ_type = SPELL_PHANTOM_MIRROR);
-#endif

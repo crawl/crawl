@@ -239,6 +239,7 @@ WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
 KMASK:  d = no_item_gen
+KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -294,6 +295,7 @@ NAME:   enter_bailey_8
 WEIGHT: 3
 COLOUR: n = red
 KMASK:  d = no_item_gen
+KMASK:  d = no_monster_gen
 KPROP:  d = no_tele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -466,10 +468,9 @@ TAGS:   bailey_axe no_rotate
 MONS:   gnoll ; mundane halberd | halberd ego:electrocution ident:type
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
-ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
+ITEM:   potion of curing / potion of heal wounds / potion of magic / potion of mutation /\
         potion of might w:5 / potion of haste w:2 / potion of berserk rage w:3
-ITEM:   potion of experience q:1 w:30 / potion of cure mutation w:30 /\
-        potion of beneficial mutation q:2 w:30
+ITEM:   potion of experience q:1 / scroll of acquirement q:1
 : bailey_setup(_G)
 MAP
 ccc ccc ccccc ccc ccc
@@ -637,8 +638,7 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of magic w:5 / potion of haste w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon w:5 / scroll of enchant armour w:5
-ITEM:   potion of beneficial mutation q:1 w:30 / potion of cure mutation / \
-        potion of experience q:1 / scroll of acquirement q:1
+ITEM:   potion of experience q:1 / scroll of acquirement q:1
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
 MONS:   orc warlord
@@ -916,7 +916,7 @@ ENDMAP
 NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-ITEM:   potion of beneficial mutation q:1 / potion of experience q:1
+ITEM:   scroll of acquirement q:1 / potion of experience q:1
 ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
         potion of berserk rage w:3 / potion of haste w:2 /\
         potion of invisibility w:3 / potion of resistance w:2
@@ -1081,7 +1081,6 @@ KITEM:  f = potion of curing / potion of might / potion of brilliance / \
 KITEM:  F = scroll of enchant weapon q:2 / scroll of enchant armour q:2 /\
             potion of heal wounds q:3 / potion of resistance q:2 /\
             scroll of blinking q:2 / scroll of fog q:2 / potion of ambrosia q:2 /\
-            potion of cure mutation q:1 / potion of beneficial mutation q:1 / \
             any good_item book w:30
 KITEM:  g = any food
 KITEM:  | = scroll of acquirement ident:type
@@ -1155,8 +1154,7 @@ ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
             potion of magic w:5 / potion of haste w:5 / \
             scroll of teleportation / scroll of blinking / scroll of identify / \
             scroll of enchant weapon w:5 / scroll of enchant armour w:5
-ITEM:   potion of beneficial mutation q:1 w:30 / potion of cure mutation / \
-            potion of experience q:1 / scroll of acquirement q:1
+ITEM:   potion of experience q:1 / scroll of acquirement q:1
 : easy_axe_fighter(_G)
 : kobold_axe_returning(_G)
 : hard_axe_fighter(_G)

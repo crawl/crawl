@@ -4,8 +4,7 @@
 **/
 
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <chrono>
 #include <list>
@@ -13,16 +12,34 @@
 #include <vector>
 
 #include "actor.h"
+#include "attribute-type.h"
 #include "beam.h"
 #include "bitary.h"
+#include "book-type.h"
+#include "caction-type.h"
+#include "daction-type.h"
+#include "duration-type.h"
+#include "eq-type.h"
+#include "equipment-type.h"
+#include "flush-reason-type.h"
+#include "game-chapter.h"
 #include "kills.h"
+#include "mon-holy-type.h"
+#include "mutation-type.h"
 #include "place-info.h"
 #include "quiver.h"
 #include "religion-enum.h"
+#include "seed-type.h"
+#include "skill-menu-state.h"
 #include "species.h"
+#include "stat-type.h"
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif
+#include "timed-effect-type.h"
+#include "transformation.h"
+#include "uncancellable-type.h"
+#include "unique-item-status-type.h"
 
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
@@ -62,10 +79,12 @@ static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // Min delay for thrown projectiles.
 static const int FASTEST_PLAYER_THROWING_SPEED = 7;
 
-class targetter;
+class targeter;
 class Delay;
 
 int player_stealth();
+
+enum class mutation_activity_type; // in mutation.h
 
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
@@ -151,7 +170,7 @@ public:
 
     // PC's symbol (usually @) and colour.
     monster_type symbol;
-    transformation_type form;
+    transformation form;
 
     FixedVector< item_def, ENDOFPACK > inv;
     FixedBitVector<NUM_RUNE_TYPES> runes;
@@ -182,10 +201,6 @@ public:
     bool pending_revival;
     int lives;
     int deaths;
-#if TAG_MAJOR_VERSION == 34
-    float temperature; // For lava orcs.
-    float temperature_last;
-#endif
 
     FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
     FixedVector<training_status, NUM_SKILLS> train; ///< see enum def
@@ -393,9 +408,6 @@ public:
     bool redraw_title;
     bool redraw_hit_points;
     bool redraw_magic_points;
-#if TAG_MAJOR_VERSION == 34
-    bool redraw_temperature;
-#endif
     FixedVector<bool, NUM_STATS> redraw_stats;
     bool redraw_experience;
     bool redraw_armour_class;
@@ -403,11 +415,15 @@ public:
     bool redraw_status_lights;
 
     colour_t flash_colour;
-    targetter *flash_where;
+    targeter *flash_where;
 
     int time_taken;
 
     int old_hunger;            // used for hunger delta-meter (see output.cc)
+
+    // the loudest noise level the player has experienced in los this turn
+    int los_noise_level;
+    int los_noise_last_turn;
 
     // Set when the character is going to a new level, to guard against levgen
     // failures
@@ -466,7 +482,6 @@ public:
     int max_dex() const;
 
     bool in_water() const;
-    bool in_lava() const;
     bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     bool can_water_walk() const;
@@ -496,7 +511,6 @@ public:
     bool tengu_flight() const;
     int heads() const override;
 
-    int spell_hp_cost() const;
     bool spellcasting_unholy() const;
 
     // Dealing with beholders. Implemented in behold.cc.
@@ -507,7 +521,6 @@ public:
     monster* get_any_beholder() const;
     void remove_beholder(const monster& mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
     bool possible_beholder(const monster* mon) const;
@@ -520,11 +533,11 @@ public:
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
-    bool made_nervous_by(const coord_def &pos);
+    bool made_nervous_by(const monster *mons);
+    bool is_nervous();
 
     kill_category kill_alignment() const override;
 
@@ -595,6 +608,19 @@ public:
     int       has_usable_pseudopods(bool allow_tran = true) const;
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
+
+    // Information about player mutations. Implemented in mutation.cc
+    int       get_base_mutation_level(mutation_type mut, bool innate=true, bool temp=true, bool normal=true) const;
+    int       get_mutation_level(mutation_type mut, bool check_form=true) const;
+    int       get_mutation_level(mutation_type mut, mutation_activity_type minact) const;
+    int       get_innate_mutation_level(mutation_type mut) const;
+    int       get_temp_mutation_level(mutation_type mut) const;
+
+    bool      has_temporary_mutation(mutation_type mut) const;
+    bool      has_innate_mutation(mutation_type mut) const;
+    bool      has_mutation(mutation_type mut, bool check_form=true) const;
+
+    int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
 
     int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const
         override;
@@ -695,7 +721,6 @@ public:
 
     mon_holy_type holiness(bool temp = true) const override;
     bool undead_or_demonic() const override;
-    bool holy_wrath_susceptible() const override;
     bool is_holy(bool spells = true) const override;
     bool is_nonliving(bool temp = true) const override;
     int how_chaotic(bool check_spells_god) const override;
@@ -711,7 +736,7 @@ public:
     int res_rotting(bool temp = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
-    int res_holy_energy(const actor *) const override;
+    int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     bool res_wind() const override;
@@ -727,12 +752,13 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
-    bool stasis(bool calc_unid = true, bool items = true) const override;
+    bool stasis() const override;
 
     bool airborne() const override;
     bool cancellable_flight() const;
     bool permanent_flight() const;
     bool racial_permanent_flight() const;
+    int get_noise_perception(bool adjusted = true) const;
 
     bool paralysed() const override;
     bool cannot_move() const override;
@@ -745,9 +771,6 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
-#if TAG_MAJOR_VERSION == 34
-    int heat_radius() const override;
-#endif
     bool petrifying() const override;
     bool petrified() const override;
     bool liquefied_ground() const override;
@@ -803,8 +826,8 @@ public:
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
-    bool can_device_heal();
-    int scale_device_healing(int healing_amount);
+    bool can_potion_heal();
+    int scale_potion_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
@@ -851,6 +874,8 @@ protected:
     void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
 };
+COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_weapon[0]));
+COMPILE_CHECK((int) SP_UNKNOWN_BRAND < 8*sizeof(you.seen_armour[0]));
 
 struct player_save_info
 {
@@ -939,7 +964,9 @@ int player_wizardry(spell_type spell);
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
+bool regeneration_is_inhibited();
 int player_regen();
+int player_mp_regen();
 void update_regen_amulet_attunement();
 void update_mana_regen_amulet_attunement();
 
@@ -952,9 +979,6 @@ bool player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
-bool player_likes_lava(bool permanently = false);
-
-int player_mutation_level(mutation_type mut, bool temp = true);
 
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);
@@ -990,6 +1014,7 @@ const int player_adjust_evoc_power(const int power, int enhancers = 0);
 int player_speed();
 
 int player_spell_levels();
+int player_total_spell_levels();
 
 int player_teleport(bool calc_unid = true);
 
@@ -1017,7 +1042,7 @@ void update_player_symbol();
 void update_vision_range();
 
 maybe_bool you_can_wear(equipment_type eq, bool temp = false);
-bool player_has_feet(bool temp = true);
+bool player_has_feet(bool temp = true, bool include_mutations = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
@@ -1028,7 +1053,6 @@ void recalc_and_scale_hp();
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
-void drain_mp(int mp_loss);
 
 void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);
@@ -1063,7 +1087,7 @@ void set_mp(int new_amount);
 bool player_regenerates_hp();
 bool player_regenerates_mp();
 
-void print_device_heal_message();
+void print_potion_heal_message();
 
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 
@@ -1119,46 +1143,3 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 bool player_has_orb();
 bool player_on_orb_run();
-
-#if TAG_MAJOR_VERSION == 34
-enum temperature_level
-{
-    TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
-    TEMP_COLD = 3,
-    TEMP_COOL = 5,
-    TEMP_ROOM = 7,
-    TEMP_WARM = 9, // Warmer than most creatures.
-    TEMP_HOT = 11,
-    TEMP_FIRE = 13, // Hot enough to ignite paper around you.
-    TEMP_MAX = 15, // Maximum temperature. As hot as lava!
-};
-
-enum temperature_effect
-{
-    LORC_LAVA_BOOST,
-    LORC_FIRE_BOOST,
-    LORC_STONESKIN,
-    LORC_COLD_VULN,
-    LORC_PASSIVE_HEAT,
-    LORC_HEAT_AURA,
-    LORC_NO_SCROLLS,
-    LORC_FIRE_RES_I,
-    LORC_FIRE_RES_II,
-    LORC_FIRE_RES_III,
-};
-
-int temperature();
-int temperature_last();
-void temperature_check();
-void temperature_increment(float degree);
-void temperature_decrement(float degree);
-void temperature_changed(float change);
-void temperature_decay();
-bool temperature_tier(int which);
-bool temperature_effect(int which);
-int temperature_colour(int temp);
-string temperature_string(int temp);
-string temperature_text(int temp);
-#endif
-
-#endif

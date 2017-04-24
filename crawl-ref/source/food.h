@@ -3,9 +3,9 @@
  * @brief Functions for eating and butchering.
 **/
 
-#ifndef FOOD_H
-#define FOOD_H
+#pragma once
 
+#include "hunger-state-t.h"
 #include "mon-enum.h"
 
 #define HUNGER_FAINTING       400
@@ -50,7 +50,6 @@ mon_intel_type corpse_intelligence(const item_def &corpse);
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger = true);
 
 bool eat_item(item_def &food);
-void finish_eating_item(item_def &food);
 
 int prompt_eat_chunks(bool only_auto = false);
 
@@ -58,15 +57,12 @@ bool food_change(bool initial = false);
 
 bool prompt_eat_item(int slot = -1);
 
-void vampire_nutrition_per_turn(const item_def &corpse, int feeding = 0);
-
 int you_max_hunger();
 int you_min_hunger();
-bool you_foodless(bool can_eat = false);
+bool you_foodless();
 // Is the player always foodless or just because of a temporary change?
 bool you_foodless_normally();
 
 void handle_starvation();
 int hunger_bars(const int hunger);
 string hunger_cost_string(const int hunger);
-#endif

@@ -28,25 +28,25 @@
 #include "colour.h"
 #include "delay.h"
 #include "describe.h"
-#include "dgnevent.h"
+#include "dgn-event.h"
 #include "end.h"
 #include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -80,7 +80,7 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_STICKY_FLAME || flavour == BEAM_STEAM)
     {
-        if (you.mutation[MUT_ICEMAIL])
+        if (you.has_mutation(MUT_ICEMAIL))
         {
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
                 mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
@@ -122,11 +122,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
-        else if (hurted > original && doEffects)
-        {
-            mpr("The water douses you terribly!");
-            xom_is_stimulated(200);
-        }
         break;
 
     case BEAM_STEAM:
@@ -170,11 +165,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original && doEffects)
-        {
-            mpr("You are shocked senseless!");
-            xom_is_stimulated(200);
-        }
         break;
 
     case BEAM_POISON:
@@ -183,7 +173,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.
-            // See also melee_attack.cc:_print_resist_messages() which cannot be
+            // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
             int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
@@ -200,7 +190,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.
-            // See also melee_attack.cc:_print_resist_messages() which cannot be
+            // See also melee-attack.cc:_print_resist_messages() which cannot be
             // used with this beam type (as it does not provide a valid beam).
             ASSERT(beam);
             int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
@@ -221,11 +211,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         if (doEffects)
         {
             // drain_player handles the messaging here
-            if (hurted > original)
-            {
-                mpr("The negative energy saps you greatly!");
-                xom_is_stimulated(200);
-            }
             drain_player(min(75, 35 + original * 2 / 3), true);
         }
         break;
@@ -271,17 +256,14 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_HOLY:
     {
-        // Cleansing flame.
-        const int rhe = you.res_holy_energy(nullptr);
-        if (rhe > 0)
-            hurted = 0;
-        else if (rhe == 0)
-            hurted /= 2;
-        else if (rhe < -1)
-            hurted = hurted * 3 / 2;
-
-        if (hurted == 0 && doEffects)
+        hurted = resist_adjust_damage(&you, flavour, hurted);
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
+        else if (hurted > original && doEffects)
+        {
+            mpr("You writhe in agony!");
+            xom_is_stimulated(200);
+        }
         break;
     }
 
@@ -327,7 +309,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     qazlal_element_adapt(flavour, strength);
 
     if (flavour == BEAM_COLD && slow_cold_blooded
-        && player_mutation_level(MUT_COLD_BLOODED)
+        && you.get_mutation_level(MUT_COLD_BLOODED)
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
@@ -510,14 +492,6 @@ static void _xom_checks_damage(kill_method_type death_type,
         if (mons->speed < 100/player_movement_speed())
             amusementvalue += 7;
 
-        if (death_type != KILLED_BY_BEAM
-            && you.skill(SK_THROWING) <= (you.experience_level / 4))
-        {
-            amusementvalue += 2;
-        }
-        else if (you.skill(SK_FIGHTING) <= (you.experience_level / 4))
-            amusementvalue += 2;
-
         if (player_in_a_dangerous_place())
             amusementvalue += 2;
 
@@ -578,8 +552,7 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
     monster_type mon;
     int how_many = 0;
 
-    if (you_worship(GOD_JIYVA)
-        && you.piety >= piety_breakpoint(5))
+    if (have_passive(passive_t::spawn_slimes_on_hit))
     {
         mon = royal_jelly_ejectable_monster();
         if (dam >= you.hp_max * 3 / 4)
@@ -629,9 +602,9 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
 
 static void _powered_by_pain(int dam)
 {
-    const int level = player_mutation_level(MUT_POWERED_BY_PAIN);
+    const int level = you.get_mutation_level(MUT_POWERED_BY_PAIN);
 
-    if (you.mutation[MUT_POWERED_BY_PAIN]
+    if (level > 0
         && (random2(dam) > 4 + div_rand_round(you.experience_level, 4)
             || dam >= you.hp_max / 2))
     {
@@ -674,7 +647,7 @@ static void _maybe_fog(int dam)
                                   * (you.piety - minpiety)
                                   / (MAX_PIETY - minpiety);
     if (have_passive(passive_t::hit_smoke)
-        && (dam > 0 && you.form == TRAN_SHADOW
+        && (dam > 0 && you.form == transformation::shadow
             || dam >= lower_threshold
                && x_chance_in_y(dam - lower_threshold,
                                 upper_threshold - lower_threshold)))
@@ -692,7 +665,7 @@ static void _maybe_fog(int dam)
 
 static void _deteriorate(int dam)
 {
-    if (x_chance_in_y(player_mutation_level(MUT_DETERIORATION), 4)
+    if (x_chance_in_y(you.get_mutation_level(MUT_DETERIORATION), 4)
         && dam > you.hp_max / 10)
     {
         mprf(MSGCH_WARN, "Your body deteriorates!");
@@ -736,7 +709,7 @@ static void _place_player_corpse(bool explode)
     if (explode)
         dummy.flags &= MF_EXPLODE_KILL;
 
-    if (you.form != TRAN_NONE)
+    if (you.form != transformation::none)
         mpr("Your shape twists and changes as you die.");
 
     place_monster_corpse(dummy, false);
@@ -842,7 +815,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.form == TRAN_SHADOW)
+        if (you.form == transformation::shadow)
         {
             drain_amount = (dam - (dam / 2));
             dam /= 2;
@@ -855,7 +828,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
-    if (dam > 0 && death_type != KILLED_BY_POISON)
+    // Don't wake the player with fatal or poison damage.
+    if (dam > 0 && dam < you.hp && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
     const bool non_death = death_type == KILLED_BY_QUITTING
@@ -883,7 +857,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         // Check _is_damage_threatening separately for read and drink so they
         // don't always trigger in unison when you have both.
-        if (player_mutation_level(MUT_NO_READ))
+        if (you.get_mutation_level(MUT_NO_READ))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -894,7 +868,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             }
         }
 
-        if (player_mutation_level(MUT_NO_DRINK))
+        if (you.get_mutation_level(MUT_NO_DRINK))
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
@@ -920,6 +894,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             dam -= mp;
             dec_mp(mp);
+
+            // Wake players who took fatal damage exactly equal to current HP,
+            // but had it reduced below fatal threshhold by spirit shield.
+            if (dam < you.hp)
+                you.check_awaken(500);
+
             if (dam <= 0 && you.hp > 0)
                 return;
         }
@@ -927,6 +907,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
+            // Ensure divine intervention wakes sleeping players. Necessary
+            // because we otherwise don't wake players who take fatal damage.
+            you.check_awaken(500);
             return;
         }
 

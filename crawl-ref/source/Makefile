@@ -18,7 +18,8 @@
 # Typical parameters:
 #    TILES         -- set to anything to enable tiles build
 #
-#    SOUND         -- set to anything to enable sound
+#    SOUND         -- set to anything to enable sound; note that you will need to
+#                     uncomment some lines in sound.h if not building tiles
 #
 #    CROSSHOST     -- target system, eg, i386-pc-msdosdjgpp or i586-mingw32msvc
 #
@@ -285,7 +286,13 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-	SQLITE_INCLUDE_DIR := /usr/include
+	# FreeBSD keeps all of its userland includes in /usr/local so
+	# look there
+	ifeq ($(uname_S),FreeBSD)
+		SQLITE_INCLUDE_DIR := /usr/local/include
+	else
+		SQLITE_INCLUDE_DIR := /usr/include
+	endif
 else
 	# This is totally wrong, works only with some old-style setups, and
 	# on some architectures of Debian/new FHS multiarch -- excluding, for
@@ -323,10 +330,10 @@ endif
 #
 # Check for an Apple-released compiler.
 #
-ifndef NO_APPLE_GCC
+ifndef NO_APPLE_PLATFORM
 ifeq ($(uname_S),Darwin)
 ifneq ($(shell gcc -v 2>&1 | grep Apple),)
-APPLE_GCC = YesPlease
+APPLE_PLATFORM = YesPlease
 endif
 endif
 endif
@@ -370,9 +377,6 @@ MCHMOD_LOGS := 664
 INSTALL_UGRP := games:games
 endif
 
-chroot_prefix :=
-prefix        :=
-
 ifeq ($(patsubst %/local,%,$(patsubst %/,%,$(prefix))),/usr)
 FHS := yes
 endif
@@ -405,73 +409,7 @@ endif
 
 INCLUDES_L += -Iutil -I.
 
-ifdef APPLE_GCC
-
-MARCH := $(uname_M)
-
-
-ifndef NO_AUTO_SDK
-
-# The SDK locations were moved in 10.8; this snippet tries to find them
-# there first, then reverts to the original location.
-XCODE_SDK_SUFFIX := Platforms/MacOSX.platform/Developer
-# Try to use xcode-select -p to find the current user-configured Xcode.app.
-XCODE_SELECT_PATH := $(shell xcode-select -p 2>/dev/null | sed 's/\/$$//')
-ifeq ($(shell test -e "$(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
-DEVELOPER_PATH := $(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)
-else
-# Otherwise, try /Applications/Xcode.app.
-XCODE_DEFAULT_PATH := /Applications/Xcode.app/Contents/Developer
-ifeq ($(shell test -e "$(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
-DEVELOPER_PATH := $(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)
-else
-# If all else fails, maybe it's in /Developer.
-DEVELOPER_PATH := /Developer
-endif
-endif
-
-# Find the oldest SDK available, in attempt to make this build as
-# backward-compatible as we possibly can.
-SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | grep -v "MacOSX.sdk" | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
-
-ifeq ($(SDK_VER),10.4u)
-SDK_VER := 10.4
-endif
-
-ifndef SDK_VER
-$(error You do not seem to have any Mac OS X SDKs installed! This build is doomed to fail)
-endif
-
-endif
-
-ifndef SDK_VER
-ifeq ($(MARCH),ppc)
-SDK_VER := 10.4
-endif
-ifeq ($(MARCH),i386)
-SDK_VER := 10.4
-endif
-ifeq ($(MARCH),x86_64)
-ifdef TILES
-SDK_VER := 10.6
-else
-SDK_VER := 10.5
-endif
-endif
-endif
-
-# Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
-# else is much easier to predict the name of.
-ifeq ($(SDK_VER),10.4)
-GCC_VER := 4.0
-SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER)u.sdk
-else
-SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER).sdk
-endif
-
-ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
-$(error The Mac OS X $(SDK_VER) SDK seems missing)
-endif
+ifdef APPLE_PLATFORM
 
 ifdef BUILD_UNIVERSAL
 # [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
@@ -479,13 +417,14 @@ CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
 CFLAGS_DEPCC_ARCH := -arch i386
 NO_INLINE_DEPGEN := YesPlease
 else
-CFLAGS_ARCH := -arch $(MARCH)
+CFLAGS_ARCH := -arch $(uname_M)
 endif
 
-CC = $(GCC) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GXX) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+MACOSX_MIN_VERSION=10.7
+CC = $(GCC) $(CFLAGS_ARCH) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
@@ -1079,7 +1018,7 @@ ifeq ($(strip $(YACC)),)
 NO_YACC = YesPlease
 endif
 
-ifneq ($(findstring $(MAKEFLAGS),s),s)
+ifneq ($(findstring s,$(MAKEFLAGS)),s)
 ifndef V
         QUIET_CC       = @echo '   ' CC $@;
         QUIET_CXX      = @echo '   ' CXX $@;
@@ -1658,7 +1597,7 @@ $(RLTILES)/dc-unrand.txt: art-data.h
 artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
-l_moninf.o: mi-enum.h
+l-moninf.o: mi-enum.h
 macro.o: cmd-name.h
 
 #############################################################################

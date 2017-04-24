@@ -1,6 +1,5 @@
 #ifdef USE_TILE_LOCAL
-#ifndef TILEREG_TITLE_H
-#define TILEREG_TITLE_H
+#pragma once
 
 #include "tilebuf.h"
 #include "tilereg.h"
@@ -26,5 +25,4 @@ protected:
     FontBuffer m_font_buf;
 };
 
-#endif
 #endif

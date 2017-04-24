@@ -14,7 +14,7 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
     {
         if (cell == null || cell.bg == null) return false;
         var base_bg = dngn.basetile(cell.bg.value);
-        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.DNGN_ENTER_ZOT_CLOSED)
+        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.FLOOR_MAX)
             return options.get("tile_water_anim");
         else if (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.BLOOD
                  || is_torch(base_bg))
@@ -89,9 +89,13 @@ function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
             }
             else
             {
+                // The canvas is scaled by devicePixelRatio (see util.js), so the
+                // cell dimensions need to be similarly scaled for purposes of
+                // getting the selected cell.
+                var ratio = window.devicePixelRatio;
                 var loc = {
-                    x: Math.round(ev.clientX / this.cell_width + this.view.x - 0.5),
-                    y: Math.round(ev.clientY / this.cell_height + this.view.y - 0.5)
+                    x: Math.round(ev.clientX / (this.cell_width / ratio) + this.view.x - 0.5),
+                    y: Math.round(ev.clientY / (this.cell_height / ratio) + this.view.y - 0.5)
                 };
 
                 view_data.place_cursor(enums.CURSOR_MOUSE, loc);

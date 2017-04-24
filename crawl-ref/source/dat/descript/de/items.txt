@@ -54,10 +54,6 @@ bardiche
 
 Eine lange Stange mit einer enormen, spaltenden Klinge an einem Ende.
 %%%%
-beef jerky
-
-Ein Streifen konservierten Kuh- oder Bullenfleisches.
-%%%%
 blessed great sword
 
 Ein Schwert mit einer sehr langen, schweren Klinge und einem langen Griff. Es
@@ -287,12 +283,6 @@ Eine schreckliche dreizackige Waffe, geschmiedet aus Feuer und Schwefel.
 demon whip
 
 Eine schreckliche Waffe, hergestellt in den Tiefen des Infernos.
-%%%%
-disc of storms
-
-Dieser äußerst starke Artikel kann einen zerstörenden Sturm der Elektrizität
-loslassen. Seine Wirksamkeit verbessert sich außerordentlich in den Händen
-eines erfahrenen im Verwenden magischer Geräte.
 %%%%
 eudemon blade
 
@@ -694,11 +684,6 @@ Ein Stück von Holz und Metall, um auf einem Arm für die Verteidigung
 festgeschnallt zu werden. Es ist beschwerlich, um, und ohne Ausbildung zu
 halten, verlangsamt die Rate, an der ein Krieger angreift.
 %%%%
-slice of pizza
-
-Ein Stück Pizza: Ein Fladenbrot mit Tomatensoße, Büffelmozzarella und
-Basilikum.
-%%%%
 sling
 
 Ein Stück von Stoff und Leder, um Steine zu starten, die einen kleinen Betrag
@@ -810,15 +795,6 @@ wand of fireball
 
 Ein magisches Gerät welches explodierende Feuerstöße wirft.
 %%%%
-wand of hasting
-
-Ein magisches Gerät welches Verzauberungen wirkt um die Aktion einer Kreatur
-beschleunigt in welche sie sich bewegt.
-%%%%
-wand of heal wounds
-
-Ein magisches Gerät welchen die Wunden einer Kreatur heilt.
-%%%%
 wand of invisibility
 
 Ein magisches Gerät welches eine Kreatur vor den Blicken Anderer versteckt.
@@ -840,15 +816,6 @@ zu werden. Es ist gegen Gestalt ändernde Wesen besonders wirksam.
 wand of random effects
 
 Ein magisches Gerät welches eine Menge verschiedener Effekte erzeugen kann.
-%%%%
-wand of slowing
-
-Ein magisches Gerät welches Verzauberungen auf Kreaturen in seiner Richtung
-wirft, welche dadurch verlangsamt werden.
-%%%%
-wand of teleportation
-
-Ein magisches Gerät, das ein Wesen veranlasst, zufällig verlagert zu werden.
 %%%%
 whip
 

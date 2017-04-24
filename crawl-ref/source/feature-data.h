@@ -504,6 +504,7 @@ ALTAR(DNGN_ALTAR_ECUMENICAL, "faded altar of an unknown god", "altar_ecumenical"
 ALTAR(DNGN_ALTAR_PAKELLAS, "oddly glowing altar of Pakellas", "altar_pakellas", ETC_PAKELLAS),
 ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
 ALTAR(DNGN_ALTAR_HEPLIAKLQANA, "hazy altar of Hepliaklqana", "altar_hepliaklqana", LIGHTGREEN),
+ALTAR(DNGN_ALTAR_WU_JIAN, "ornate altar of the Wu Jian Council", "altar_wu_jian", ETC_WU_JIAN),
 
 #define FOUNTAIN(enum, name, vaultname, colour)\
 {\
@@ -522,11 +523,19 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_SPARKLING, "dry fountain", "non-fountain_sparkling", 
 FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGREY),
 #endif
 
+#if TAG_MAJOR_VERSION == 34
 {
     DNGN_TELEPORTER, "short-range portal", "teleporter",
     DCHAR_TELEPORTER, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(YELLOW),
     FFT_NONE, MF_FEATURE,
+},
+#endif
+{
+    DNGN_TRANSPORTER, "transporter", "transporter",
+    DCHAR_TRANSPORTER, NUM_DCHAR_TYPES,
+    RED, RED, RED, WHITE, WHITE,
+    FFT_NONE, MF_TRANSPORTER,
 },
 
 {

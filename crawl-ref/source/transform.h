@@ -3,8 +3,7 @@
  * @brief Misc function related to player transformations.
 **/
 
-#ifndef TRANSFOR_H
-#define TRANSFOR_H
+#pragma once
 
 #include <set>
 
@@ -74,7 +73,7 @@ private:
     DISALLOW_COPY_AND_ASSIGN(Form);
     Form(const form_entry &fe);
 protected:
-    Form(transformation_type tran);
+    Form(transformation tran);
 public:
     bool slot_available(int slot) const;
     bool can_wield() const { return slot_available(EQ_WEAPON); }
@@ -113,7 +112,7 @@ public:
     virtual string get_transform_description() const { return description; }
 
     virtual string get_description(bool past_tense = false) const;
-    virtual string transform_message(transformation_type previous_trans) const;
+    virtual string transform_message(transformation previous_trans) const;
     virtual string get_untransform_message() const;
 
     virtual int res_fire() const;
@@ -253,7 +252,7 @@ private:
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
 };
-const Form* get_form(transformation_type form = you.form);
+const Form* get_form(transformation form = you.form);
 
 enum undead_form_reason
 {
@@ -261,26 +260,26 @@ enum undead_form_reason
     UFR_GOOD      = 0, // Must be 0, so we convert to bool sanely.
     UFR_TOO_ALIVE = 1,
 };
-undead_form_reason lifeless_prevents_form(transformation_type form = you.form);
+undead_form_reason lifeless_prevents_form(transformation form = you.form,
+                                          bool involuntary = false);
 
-bool form_can_wield(transformation_type form = you.form);
-bool form_can_wear(transformation_type form = you.form);
-bool form_can_fly(transformation_type form = you.form);
-bool form_can_swim(transformation_type form = you.form);
-bool form_likes_water(transformation_type form = you.form);
-bool form_likes_lava(transformation_type form = you.form);
-bool form_changed_physiology(transformation_type form = you.form);
-bool form_can_bleed(transformation_type form = you.form);
-bool form_can_use_wand(transformation_type form = you.form);
+bool form_can_wield(transformation form = you.form);
+bool form_can_wear(transformation form = you.form);
+bool form_can_fly(transformation form = you.form);
+bool form_can_swim(transformation form = you.form);
+bool form_likes_water(transformation form = you.form);
+bool form_changed_physiology(transformation form = you.form);
+bool form_can_bleed(transformation form = you.form);
+bool form_can_use_wand(transformation form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
-bool form_keeps_mutations(transformation_type form = you.form);
+bool form_keeps_mutations(transformation form = you.form);
 
-bool feat_dangerous_for_form(transformation_type which_trans,
+bool feat_dangerous_for_form(transformation which_trans,
                              dungeon_feature_type feat);
 
-bool check_form_stat_safety(transformation_type new_form);
+bool check_form_stat_safety(transformation new_form);
 
-bool transform(int pow, transformation_type which_trans,
+bool transform(int pow, transformation which_trans,
                bool involuntary = false, bool just_check = false,
                string *fail_reason = nullptr);
 
@@ -294,7 +293,7 @@ void unmeld_one_equip(equipment_type eq);
 monster_type transform_mons();
 string blade_parts(bool terse = false);
 void set_hydra_form_heads(int heads);
-const char* transform_name(transformation_type form = you.form);
+const char* transform_name(transformation form = you.form);
 
 int form_hp_mod();
 
@@ -302,5 +301,3 @@ void emergency_untransform();
 void merfolk_check_swimming(bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-
-#endif

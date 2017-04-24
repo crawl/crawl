@@ -1,5 +1,4 @@
-#ifndef CMD_KEYS_H
-#define CMD_KEYS_H
+#pragma once
 
 // If there are several keys assigned to the same command, the last one
 // will be the one displayed on the command help screen. Keys assigned
@@ -380,5 +379,3 @@
 #endif
 
 {'\0', CMD_NO_CMD}
-
-#endif // CMD_KEY_H

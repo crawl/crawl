@@ -164,7 +164,7 @@ df += scrolls? of (blinking|amnesia)
 df += scrolls? of (curse armour|curse jewellery|curse weapon)
 df += scrolls? of (immolation|noise|random uselessness|torment)
 # keep: curing,heal wounds,haste,cancellation,resistance,experience,
-#       might,beneficial mutation,cure mutation,restore abilities
+#       might,restore abilities
 ae += potions? of (brilliance|magic|berserk rage)
 ae += potions? of (flight|invisibility|agility)
 ae += potions? of (ambrosia|decay|degeneration|mutation)
@@ -1065,14 +1065,13 @@ local scary_monsters = {
   {10, "Crazy Yiuf"},
   {10, "Sigmund"},
   {10, "ogre"},
-  {10, "two-headed ogre"},
   {10, "decayed bog body"},
 
   {12, "orc priest"},
   {12, "orc warrior"},
   {12, "troll"},
   {12, "cyclops"},
-  {12, "hill giant"},
+  {12, "two-headed ogre"},
   {12, "spiny frog"},
   {12, "black mamba"},
   {12, "Snorg"},
@@ -2265,7 +2264,7 @@ function on_valuable_corpse()
     return false
   end
   for it in at_feet() do
-    if it.name() == "mottled dragon corpse" or
+    if it.name() == "acid dragon corpse" or
        it.name() == "steam dragon corpse" then
       return true
     end

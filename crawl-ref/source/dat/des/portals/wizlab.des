@@ -187,7 +187,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                 end
             elseif data.count < 28 or data.account > 1 or crawl.x_chance_in_y(6, 7) then
                 if data.swcount > 5 or crawl.coinflip() then
-                    spawn_zombie(x, y, "generate_awake hill giant zombie")
+                    spawn_zombie(x, y, "generate_awake two-headed ogre zombie")
                 else
                     spawn_zombie(x, y, "generate_awake skeletal warrior")
                 data.swcount = data.swcount + 1
@@ -343,6 +343,7 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
 end
 
+-- Remove this function when TAG_MAJOR > 34
 function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
@@ -891,9 +892,8 @@ KMONS:      0 = col:red iron golem name:flesh_golem name_replace \
                 tile:mons_flesh_golem name_descriptor
 KMONS:      & = col:mutagenic primal ox-sting-weird mutant beast \
                 name:Cigotuvi's_Monster name_replace tile:mons_cigotuvis_monster
-ITEM:       potion of mutation w:60 / potion of beneficial mutation q:1 / \
-            potion of cure mutation
-ITEM:       potion of beneficial mutation q:1, potion of cure mutation
+ITEM:       potion of mutation
+ITEM:       potion of mutation q:1, potion of mutation
 : if you.unrands("hat of the alchemist") then
 ITEM:       any jewellery randart
 : else
@@ -1138,7 +1138,7 @@ SUBST:      LZ = '
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
-:           set_random_mon_list([[ ogre zombie / troll zombie / hill giant zombie / ]]
+:           set_random_mon_list([[ ogre zombie / troll zombie / two-headed ogre zombie / ]]
 :           .. [[ wight w:20 / vampire w:5 / skeletal warrior w:15 / ]])
 epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")
@@ -1210,7 +1210,7 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience q:1, potion of beneficial mutation q:1
+ITEM:       potion of experience q:1
 ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
             manual of staves / manual of fighting / manual of dodging
 ITEM:       book of enchantments
@@ -1357,8 +1357,8 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
-KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
-             wand of teleportation w:5 / any scroll w:1
+KITEM:   d = scroll of blinking / scroll of teleportation q:3 w:15 / \
+             any scroll w:1
 KITEM:   e = any ring
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
@@ -1371,7 +1371,7 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
-KITEM:   i = wand of disintegration w:5 / wand of digging w:5 / any wand w:1
+KITEM:   i = wand of digging / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / \
@@ -1380,7 +1380,6 @@ KFEAT:   m = iron_grate
 KFEAT:   ~ = deep_water
 KFEAT:   ^ = known permanent teleport trap
 KFEAT:   8_ = altar_lugonu
-KFEAT:   OPQRSTUVW&{( = teleporter
 KFEAT:   opqsrtuvw@}) = floor
 KPROP:   a"_~ = no_tele_into
 MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy", pow_max = 25, \
@@ -1392,7 +1391,7 @@ NSUBST:  a = 1:_ / 1:_" / *:a, + = 1:+ / *:c, ( = 1:} / 1:( / *:<
 NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / * = 2:9 3:1 9:2, 1 = 2:0 / *:1, 0 = 2:9 / *:0
 NSUBST:  [ = 1:< / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj
 NSUBST:  7 = 1:7 / *:`, A = 1:) / 1:< / 1:{ / 1:A
-SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W, ? = &
+SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W
 SUBST:   a = ":70 x:40 ccCC~, - = ':50 x:40 ccCC~, E = nccCC, c = cccb, C = cb
 SUBST:   B = ccbn..., e = de, j = jjjjg., k = kkj
 COLOUR:  n = lightgreen
@@ -1414,22 +1413,12 @@ FTILE:   OPQRSTUVW&{( = floor_rough_green
 TILE:    opqrstuvw@}) = floor_black_cobalt
 
 {{
--- This isn't the prettiest way of handling the teleporters, but it guarantees
--- they behave exactly the same way as in HangedMan's original version. All I've
--- done is remove some massive code duplication. [evilmike]
-
-local teleporter_glyph = "OPQRSTUVW&?{("
-local teleport_spot_glyph = "opqrstuvw@!})"
-local tele_marker = {}
-
-for i = 1, #teleporter_glyph do
-    tele_marker[i] = TriggerableFunction:new {
-                     func="teleporter_golubria_switch_fn",
-                     data = {teleport_spot=i},
-                     repeated=true }
-    tele_marker[i]:add_triggerer(DgnTriggerer:new { type="player_move" })
-    lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
-    lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
+local trans_glyph = "OPQRSTUVW&{("
+local trans_dest_glyph = "opqrstuvw@})"
+for i = 1, #trans_glyph do
+    lua_marker(trans_glyph:sub(i,i), transp_loc("loc_" .. tostring(i)))
+    lua_marker(trans_dest_glyph:sub(i,i),
+               transp_dest_loc("loc_" .. tostring(i)))
 end
 
 set_random_mon_list([[rakshasa w:15 / deep elf mage w:15 / wizard w:15 / spatial vortex w:15 /
@@ -1686,7 +1675,7 @@ wizname = crawl.make_name()
 kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
 }}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
-KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
+KITEM:      i = ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of iceblast /\
             wand of acid / staff of summoning / any book w:30 / any good_item w:15
@@ -1767,16 +1756,15 @@ cccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
-# Lehudib's Moon Base (on the moon) by gammafunk
+# Lehudib's Moon Base by gammafunk
 
-# Lehudib, whose famous writings on earth magic left few personal details, is
-# said to have studied the power of magical crystal with single-minded devotion
-# and in the most distant location imaginable. After traveling to some
-# forgotten Moon and carving a fortress into its very surface, the wizard
-# somehow convinced the bizarre surface creatures there to stand guard. Who can
-# say what other knowledge this self-described Lunar Mage learned in such
-# isolation? Adventurers who manage to reach the remote Moon Base of Lehudib
-# may indeed find powers beyond their comprehension.
+# Lehudib, who penned many writings on earth magic, eventually tired of
+# studying this world and sought to uncover the secrets of our moon. After
+# arriving there through unknown means, the wizard carved out a fortress on the
+# moon's surface, filling it with bizarre monstrosities. Who can say what
+# mysteries the self-described Lunar Mage uncovered in such isolation?
+# Adventurers who manage to reach the remote Moon Base of Lehudib may indeed
+# find powers beyond their comprehension!
 
 NAME:       wizlab_lehudib
 KPROP:      ` = no_tele_into
@@ -1815,7 +1803,7 @@ set_random_mon_list ("rust devil w:20 / eye of devastation / stone giant " ..
                      "/ neqoxec w:5 / golden eye w:5 / very ugly thing w:5 " ..
                      "/ starcursed mass w:5 / cacodemon w:5")
 }}
-ITEM:       potion of cure mutation / potion of beneficial mutation
+ITEM:       potion of mutation q:3
 ITEM:       acquire any
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear\
@@ -1823,7 +1811,10 @@ ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
                      spells:lehudib's_crystal_spear\
             / randbook owner:Lehudib disc:earth disc2:conjuration \
                      spells:lehudib's_crystal_spear
-KFEAT:      PQ = teleporter
+MARKER:     P = lua:transp_loc("moon_troll_entry")
+MARKER:     J = lua:transp_dest_loc("moon_troll_entry")
+MARKER:     Q = lua:transp_loc("moon_troll_exit")
+MARKER:     & = lua:transp_dest_loc("moon_troll_exit")
 KFEAT:      K = crystal_wall
 TILE:       c = wall_volcanic_blue
 TILE:       v = dngn_metal_wall_magenta
@@ -1836,22 +1827,7 @@ COLOUR:     b = silver
 COLOUR:     K = disjunction
 COLOUR:     cn = blue
 COLOUR:     m = magenta
-{{
--- Uses the same teleporter lua as from golubria
-local teleporter_glyph = "PQ"
-local teleport_spot_glyph = "J&"
-local tele_marker = {}
-for i = 1, #teleporter_glyph do
-    tele_marker[i] = TriggerableFunction:new {
-                     func="teleporter_golubria_switch_fn",
-                     data = {teleport_spot=i},
-                     repeated=true }
-    tele_marker[i]:add_triggerer(DgnTriggerer:new { type="player_move" })
-    lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
-    lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
-end
-wizlab_setup(_G)
-}}
+:           wizlab_setup(_G)
 epilogue {{
             wizlab_milestone(_G, "Lehudib's Moon Base")
 }}

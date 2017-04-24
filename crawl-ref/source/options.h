@@ -1,11 +1,23 @@
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#pragma once
 
 #include <algorithm>
 
+#include "activity-interrupt-type.h"
+#include "char-set-type.h"
+#include "confirm-level-type.h"
+#include "confirm-prompt-type.h"
 #include "feature.h"
-#include "newgame_def.h"
+#include "flang-t.h"
+#include "flush-reason-type.h"
+#include "hunger-state-t.h"
+#include "lang-t.h"
+#include "maybe-bool.h"
+#include "mpr.h"
+#include "newgame-def.h"
 #include "pattern.h"
+#include "screen-mode.h"
+#include "skill-focus-mode.h"
+#include "tag-pref.h"
 
 enum autosac_type
 {
@@ -46,9 +58,13 @@ struct sound_mapping
 {
     text_pattern pattern;
     string       soundfile;
+    bool         interrupt_game;
+
     bool operator== (const sound_mapping &o) const
     {
-        return pattern == o.pattern && soundfile == o.soundfile;
+        return pattern == o.pattern
+                && soundfile == o.soundfile
+                && interrupt_game == o.interrupt_game;
     }
 };
 
@@ -200,6 +216,7 @@ public:
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_game_time; // Show game time instead of player turns.
+    bool        equip_bar; // Show equip bar instead of noise bar.
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
@@ -211,7 +228,7 @@ public:
     bool        warn_hatches;    // offer a y/n prompt when the player uses an escape hatch
     bool        enable_recast_spell; // Allow recasting spells with 'z' Enter.
     int         confirm_butcher; // When to prompt for butchery
-    bool        auto_butcher;    // auto-butcher corpses while travelling
+    hunger_state_t auto_butcher; // auto-butcher corpses while travelling
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
@@ -230,6 +247,7 @@ public:
 
     int         colour[16];      // macro fg colours to other colours
     unsigned    background_colour; // select default background colour
+    unsigned    foreground_colour; // select default foreground colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
@@ -241,7 +259,11 @@ public:
     bool        small_more;       // Show one-char more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
-    bool        no_dark_brand;    // Attribute for branding friendly monsters
+    bool        blink_brightens_background; // Assume blink will brighten bg.
+    bool        bold_brightens_foreground; // Assume bold will brighten fg.
+    bool        best_effort_brighten_background; // Allow bg brighten attempts.
+    bool        best_effort_brighten_foreground; // Allow fg brighten attempts.
+    bool        allow_extended_colours; // Use more than 8 terminal colours.
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
     int         autofight_warning;      // Amount of real time required between
@@ -253,12 +275,11 @@ public:
 
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
+    bool        sounds_on;              // Allow sound effects to play
+    bool        one_SDL_sound_channel;  // Limit to one SDL sound at once
+
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
-
-    int         num_colours;     // used for setting up curses colour table (8 or 16)
-
-    vector<string> pizzas;
 
 #ifdef WIZARD
     int            wiz_mode;      // no, never, start in wiz mode
@@ -351,6 +372,7 @@ public:
     bool        travel_key_stop;   // Travel stops on keypress.
 
     vector<sound_mapping> sound_mappings;
+    string sound_file_path;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
 
@@ -455,6 +477,7 @@ public:
     VColour     tile_door_col;
     VColour     tile_downstairs_col;
     VColour     tile_upstairs_col;
+    VColour     tile_transporter_col;
     VColour     tile_branchstairs_col;
     VColour     tile_portal_col;
     VColour     tile_feature_col;
@@ -609,5 +632,3 @@ static inline short macro_colour(short col)
     ASSERT(col < NUM_TERM_COLOURS);
     return col < 0 ? col : Options.colour[ col ];
 }
-
-#endif

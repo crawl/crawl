@@ -11,7 +11,7 @@
 
 #include "colour.h"
 #include "env.h"
-#include "itemname.h"
+#include "item-name.h"
 #include "libutil.h" // map_find
 #include "options.h"
 #include "religion.h"
@@ -57,12 +57,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
                 colour |= COLFLAG_REVERSE;
             return colour;
         }
-    }
-    else if (!feat_is_solid(feat) && cell.flags & MAP_WITHHELD)
-    {
-        // Colour grids that cannot be reached due to beholders
-        // dark grey.
-        colour = DARKGREY;
     }
     else if (!feat_is_solid(feat)
              && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))

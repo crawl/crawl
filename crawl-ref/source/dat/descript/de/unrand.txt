@@ -187,7 +187,7 @@ Maxwell's patent armour
 
 Eine seltsam aussehende Rüstung.
 %%%%
-armour of the Dragon King
+scales of the Dragon King
 
 Vor langer Zeit ergriff ein mächtiger goldener Drache die Herrschaft über alle
 Drachen in seinem Teil der Welt. Jedoch war seine Herrschaft von kurzer Dauer,
@@ -209,12 +209,6 @@ Ein Paar Handschuhe aus weißer Seide.
 cloak of Starlight
 
 Ein phosphoreszierender Umhang, aus puren Lichtstrahlen gewebt.
-%%%%
-ring of Shaolin
-
-Ein schmuckloser Jade Ring welcher seinem Träger ein unglaubliches Wissen über
-jemandes Körper gibt, was ihm erlaubt beeindruckende und geschickte Kunststücke
-zu vollziehen.
 %%%%
 ring of Robustness
 

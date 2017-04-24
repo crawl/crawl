@@ -3,11 +3,15 @@
  * @brief Functions for handling multi-turn actions.
 **/
 
-#ifndef DELAY_H
-#define DELAY_H
+#pragma once
 
+#include "activity-interrupt-type.h"
+#include "command-type.h"
 #include "enum.h"
-#include "itemprop-enum.h"
+#include "item-prop-enum.h"
+#include "mpr.h"
+#include "operation-types.h"
+#include "seen-context-type.h"
 
 class monster;
 struct ait_hp_loss;
@@ -204,69 +208,6 @@ public:
      * @return the delay's name; used in debugging and for the interrupt_ option family.
      */
     virtual const char* name() const = 0;
-};
-
-class EatDelay : public Delay
-{
-    item_def& food;
-    bool was_prompted = false;
-
-    bool invalidated() override;
-
-    void tick() override
-    {
-        mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
-    }
-
-    bool try_interrupt() override;
-
-    void finish() override;
-public:
-    EatDelay(int dur, item_def& item) :
-             Delay(dur), food(item)
-    {
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_EAT && (!item || &food == item);
-    }
-
-    const char* name() const override
-    {
-        return "eat";
-    }
-};
-
-class FeedVampireDelay : public Delay
-{
-    item_def& corpse;
-
-    bool invalidated() override;
-    void tick() override;
-
-    void finish() override;
-public:
-    FeedVampireDelay(int dur, item_def& item) :
-                     Delay(dur), corpse(item)
-    { }
-
-    bool try_interrupt() override;
-
-    bool is_butcher() const override
-    {
-        return true;
-    }
-
-    bool is_being_used(const item_def* item, operation_types oper) const override
-    {
-        return oper == OPER_EAT && (!item || &corpse == item);
-    }
-
-    const char* name() const override
-    {
-        return "vampire_feed";
-    }
 };
 
 class ArmourOnDelay : public Delay
@@ -780,4 +721,3 @@ bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &a
                             = activity_interrupt_data(),
                         vector<string>* msgs_buf = nullptr);
-#endif

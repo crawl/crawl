@@ -67,6 +67,13 @@ function random_stair(e, symbol)
   end
   e.subst(symbol .. " = " .. valid)
 end
+
+-- Transporter entry and exit setup. Note that only one exit glyph is used.
+function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
+    e.lua_marker(entry_glyph, transp_dest_loc("the_bubble_entry"))
+    e.nsubst(exit_glyph .. " = " .. exit_glyph .. " / .")
+    e.lua_marker(exit_glyph, transp_loc("the_bubble_exit"))
+end
 }}
 
 default-depth: D:9-, Depths, Elf
@@ -461,26 +468,6 @@ MAP
 .............
 ENDMAP
 
-NAME:  minmay_rats_cheesy_pizza
-DEPTH: D:2-3
-MONS:  rat
-ITEM:  slice of pizza
-MAP
-xxxxx+xxxxxxx
-x1....xd1111x
-x.1..xxx1111x
-x..1xxxxx111x
-x..xxxxxxx11x
-x.xxxxxxxxx1x
-x+xxxxxxxxx+x
-x.xxxxxxxxx1x
-x1.xxxxxxx1.x
-x.1.xxxxx1.1x
-x1.1.xxx1.1.x
-x.1.1.+1.1.1x
-xxxxxxxxxxxxx
-ENDMAP
-
 NAME:  minmay_rat_hole
 DEPTH: D:2-4
 MONS:  rat, quokka
@@ -862,10 +849,10 @@ WEIGHT: 3
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -917,10 +904,10 @@ DEPTH:  D:8-13
 ITEM:   any potion
 ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook disc:Poison disc2:Transmutation slevels:8 w:5 / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&summon_small_mammal&sticks_to_snakes&call_canine_familiar&spider_form / \
-        randbook numspells:5 title:Nature \
-        spells:beastly_appendage&sting&sticks_to_snakes&cure_poison&spider_form w:245
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&summon_small_mammal&call_canine_familiar&spider_form / \
+        randbook numspells:4 title:Nature \
+        spells:beastly_appendage&sting&sticks_to_snakes&spider_form
 : if crawl.coinflip() then
 KITEM:  f = javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
@@ -1427,7 +1414,7 @@ cccccccnccc
        @
 ENDMAP
 
-# Inspired by the Jorge Luis Borges' story "The Library of Babel".
+# Inspired by the Jorge Luis Borges story "The Library of Babel".
 NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
@@ -1715,7 +1702,7 @@ MONS:    shadow demon, deep elf demonologist, vampire mage
 KMONS:   8 = mummy priest
 ITEM:    book of callings w:5 / book of summonings / grand grimoire w:5 / \
          book of beasts / randbook disc:summoning numspells:6
-ITEM:    staff of summoning w:20 / rod of shadows
+ITEM:    staff of summoning
 ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    fan of gales / lamp of fire / phial of floods
@@ -1752,8 +1739,7 @@ TAGS:    no_monster_gen
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
-KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
-                   wand of flame w:55 . \
+KMONS:   0 = orc ; robe . wand of confusion | wand of flame . \
                    potion of invisibility | potion of haste | nothing w:980
 KMONS:   89 = deep elf mage
 KITEM:   8d = robe, hat w:40 / hat good_item, \
@@ -2016,17 +2002,22 @@ MAP
 ENDMAP
 
 NAME:  cheibrodos_gnoll_hut
-DEPTH: D:2-5
 TAGS:  no_item_gen no_monster_gen
-MONS:  gnoll, hound, bush
+DEPTH: D:2-5
+KMONS: P = bush
+: if you.depth() <= 2 then
+MONS: jackal, gnoll
+: else
+MONS: hound, gnoll
+: end
 KFEAT: S = known shaft trap
 MAP
 ...@...
-..3.3..
+..P.P..
 xxx+xxx
 x%+...x
-xxx2.2x
-xS+.1.x
+xxx1.1x
+xS+.2.x
 xxxxxxx
 ENDMAP
 
@@ -2936,18 +2927,16 @@ TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes, eye of draining
 KITEM:   R = royal jelly
-ITEM:    scroll of teleportation q:2
-ITEM:    wand of digging
-ITEM:    wand of disintegration
-ITEM:    scroll of teleportation q:2 w:20 / \
+ITEM:    scroll of teleportation q:2 / wand of digging
+ITEM:    scroll of teleportation q:2 w:20 / wand of digging w:20 / \
          dagger ego:distortion ident:type
 SUBST:   J = 1111111123
 SUBST:   m : xxxm
 SHUFFLE: %!'"
 NSUBST:  % = 1:d / * = %$
-NSUBST:  ! = 1:e / * = %$
-NSUBST:  ' = 1:f / * = %$
-NSUBST:  " = 1:g / * = %$
+NSUBST:  ! = 1:d / * = %$
+NSUBST:  ' = 1:d / * = %$
+NSUBST:  " = 1:e / * = %$
 MAP
 ...................
 ..J.............J..
@@ -3009,21 +2998,6 @@ MAP
 ..nn1112111nn..
  ..nnnnnnnnn..
   ...........
-ENDMAP
-
-NAME:   hangedman_glaring_trap
-TAGS:   extra transparent
-DEPTH:  D:12-, Depths
-WEIGHT: 5
-KMASK:  m = no_wall_fixup
-KMONS:  1 = eye of devastation
-KMONS:  8 = 8
-KITEM:  18 = star_item w:9 / any w:1
-MAP
-xxx@x
-x8m.xxxxxx
-xxm....=1x
-xxx@xxxxxx
 ENDMAP
 
 NAME:   hangedman_incinerator
@@ -3117,7 +3091,7 @@ MONS:    lightning spire, sky beast, electric eel
 KMONS:   E = insubstantial wisp w:10 / ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
 KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
-              disc of storms w:4 / lightning rod ident:type w:1
+              lightning rod
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = known permanent teleport trap
@@ -3158,6 +3132,34 @@ x........x
 xww....llx
 xWw....lFx
 xxxx==xxxx
+ENDMAP
+
+# So he drove out the man; and he placed at the east of the garden of Eden
+# Cherubim, and a flaming sword which turned every way, to keep the way of the
+# tree of life.
+NAME:    pf_eden
+TAGS:    no_monster_gen
+DEPTH:   D:13-
+MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
+KMONS:   p = plant
+ITEM:    fruit tile:food_apple
+NSUBST:  1 = 2:1 / *:.
+NSUBST:  d = 3:d / *:.
+SUBST:   3 = 33.
+RTILE:   x = wall_lair
+FTILE:   12p.dt@ = floor_lair
+MAP
+       xxx
+  xxx xxpxx
+ xxpxxxp.1xxx
+xxppp2.1...px
+xppp..ppx1.1x
+xpdddpxxxp..xx
+xpdtdpxxxx...@
+xpddd.px xxp.@
+xp...pxx  xxxx
+xxpppxx
+ xxxxx
 ENDMAP
 
 ###################################################################
@@ -3482,7 +3484,7 @@ SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
 KMASK:   x = no_wall_fixup
-ITEM:    wand of digging / wand of disintegration
+ITEM:    wand of digging ident:type
 ITEM:    scroll of teleportation q:2
 MAP
 ...........
@@ -4995,7 +4997,7 @@ DEPTH:  Depths, Elf, Zot
 : if not you.in_branch("Zot") then
 MONS:   deep elf high priest, deep elf mage
 :else
-MONS:   draconian zealot, base draconian
+MONS:   draconian stormcaller, base draconian
 :end
 COLOUR: x = white
 TILE:   x = wall_church
@@ -5828,6 +5830,169 @@ MAP
        ........
 ENDMAP
 
+# A set of loot vaults that show the player the reword, but requires them to
+# transport into the vault.
+NAME: gammafunk_the_bubble
+TAGS: no_monster_gen no_item_gen
+DEPTH: Crypt, D:7-, Depths, Elf, Vaults, Zot
+SUBVAULT: A : the_bubble
+MARKER: D = lua:transp_loc("the_bubble_entry")
+MARKER: E = lua:transp_dest_loc("the_bubble_exit")
+SUBST: c : bcv
+MAP
+  ...............
+ ..ccccc.G.ccccc..
+..cccAAcccccAAAcc..
+.nn$xAAAAAAAAAAAcc.
+.n*$xAAAAAAAAAAAAc.
+.n|*+AAAAAAAAAAAAc.
+.n*$xAAAAAAAAAAAAc.
+.nn$xAAAAAAAAAAAcc.
+..cccAAAAAAAAAAAc..
+@DcccAAAAAAAAAAAcE@
+..cccAAAAAAAAAAAc..
+.nn$xAAAAAAAAAAAcc.
+.n*$xAAAAAAAAAAAAc.
+.n|*+AAAAAAAAAAAAc.
+.n*$xAAAAAAAAAAAAc.
+.nn$xAAAAAAAAAAAcc.
+..cccAAcccccAAAcc..
+ ..ccccc.G.ccccc..
+  ...............
+ENDMAP
+
+NAME: the_bubble_gammafunk_split
+DEPTH: Crypt, D:7-, Depths, Elf, Vaults, Zot
+TAGS: the_bubble unrand
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+SUBST: x : bcvx
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0S     ...
+.....0..x..
+.xx..x......
+.0xx0.0xx.x.
+...xx.xx0...
+0x.x0.0xxx.
+..0xx.xx...
+S.xx0.0xx.R
+..0xx.xx...
+0x.x0.0xxx.
+...xx.xx0...
+.0xx0.0xx.x.
+.xx..x......
+.....0..x..
+0S     ...
+ENDMAP
+
+NAME: the_bubble_gammafunk_plus_minus
+TAGS: the_bubble unrand
+DEPTH: Crypt, D:7-, Depths, Elf, Vaults, Zot
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+SUBST: x : bcvx
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0S     0..
+...........
+.0x0.x.0x...
+.xxx0x.xxx..
+.0x0.x..x...
+...........
+..x.0x0.x..
+S0x.xxx.x.R
+..x.0x0.x..
+...........
+.0x0.x..x...
+.xxx0x.xxx..
+.0x0.x.0x...
+...........
+0S     0..
+ENDMAP
+
+NAME: the_bubble_gammafunk_crates
+TAGS: the_bubble unrand
+DEPTH: Crypt, D:7-, Depths, Elf, Vaults, Zot
+SUBST: A = a0, D = d0, E = e0, F = f0, H = h0, J = j0,  P = p0, Q = q0, R = r0
+SUBST: S = s0, a : bcvx, d : bcvx, e : bcvx, f : bcvx, h : bcvx, j : bcvx
+SUBST: k : bcvx, p : bcvx, q : bcvx, r : bcvx, s : bcvx, u = u.., u = bcvx
+NSUBST: 0 = Z / 6=0 / 2=9 / 8=009. / .
+: gammafunk_the_bubble_setup(_G, "y", "Z")
+MAP
+uu     u0.
+0.0.u...Ee.
+.a.a.Dd0ee.u
+0.Aa.dd.S..u
+.Aaa.0..ss.u
+u..0.hHh.s.
+0fFf.hhh..u
+.Fff......y
+u....kk.r.u
+.jj0.Kk.rr.
+0Jjj.kk.Rr.u
+.Jj.P.0.0..u
+0jj.ppp.qq.u
+..0u.0..Qq.
+uu     u0.
+ENDMAP
+
+NAME: the_bubble_gammafunk_roulette
+TAGS: the_bubble unrand
+DEPTH: Crypt, D:7-, Depths, Elf, Vaults, Zot
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+SUBST:  x : bcvx
+NSUBST: S = S / D / E / F
+{{
+-- Each transporter goes to the next glyph in the string.
+glyphs = "DEFD"
+for i = 1, #glyphs - 1 do
+  lua_marker(glyphs:sub(i,i), transp_loc("roulette_" .. tostring(i)))
+  lua_marker(glyphs:sub(i+1,i+1), transp_dest_loc("roulette_" .. tostring(i)))
+end
+}}
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0.     ...
+....xxx...0
+.....S.....0
+.00.....00.0
+.00x...x00..
+..xx...xx..
+...........
+S....R....S
+...........
+..xx...xx..
+.00x...x00..
+.00.....00.0
+.....S.....0
+....xxx...0
+0.     ...
+ENDMAP
+
+NAME: the_bubble_gammafunk_grid
+TAGS: the_bubble unrand
+DEPTH: Crypt, D:7-, Depths, Elf, Vaults, Zot
+SHUFFLE: AB
+SUBST: A = b, B = 0, C : 0b, D : 0b, E : 0b
+SHUFFLE: bv
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0S     0v0
+.v0v.v0v.vE
+0.v.v.v.vDv0
+.v.vAv.vCv.v
+0.vAAAv.v.v0
+.vBvAvBv.v.
+vAvBvBvAv.v
+AAAvBvAAAvR
+vAvBvBvAv.v
+.vBvAvBv.v.
+0.vAAAv.v.v0
+.v.vAv.vCv.v
+0.v.v.v.vDv0
+.v0v.v0v.vE
+0S     0v0
+ENDMAP
 
 ################################################################
 #
@@ -5966,38 +6131,6 @@ MAP
       ...bb.......bb...
        ...............
         .............
-ENDMAP
-
-# Flaming Death
-#
-NAME:   minmay_guarded_unrand_flaming_death
-TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:10-, Depths, !Depths:$
-WEIGHT: 3
-# Fire elementals are speed 13, but can't open the doors.
-# The player may kill the efreet over the lava, losing the scimitar.
-# However, the player *can see* that the efreet is wielding an artefact.
-KMONS:  l = fire elemental / nothing w:40
-KFEAT:  l = l
-KMONS:  1 = patrolling Azrael; scimitar_of_flaming_death, \
-            patrolling efreet; scimitar_of_flaming_death
-KPROP:  1' = no_tele_into
-SUBST:  v : vc
-SUBST:  ' = .
-MAP
- ...........
-..vvvv+vvvv..
-.vvlllllllvv.
-.vlllllllllv.
-.vlllvvvlllv.
-.vllvv'vvllv.
-.vll+'1'+llv.
-.vllvv'vvllv.
-.vlllvvvlllv.
-.vlllllllllv.
-.vvlllllllvv.
-..vvvv+vvvv..
- ...........
 ENDMAP
 
 # Ring of the Mage
@@ -6324,49 +6457,6 @@ MAP
   ....   ....
 ENDMAP
 
-NAME:    minmay_guarded_unrand_chilly_death
-DEPTH:   D:9-13, Lair
-MONS:    ice beast, rime drake, ice dragon
-: if you.unrands("dagger_of_chilly_death") then
-# note: randart is an especially big nerf here since it means you can't rebrand
-# to something good like pain/distortion/etc. This is intended.
-ITEM:    quick blade randart ego:freezing ident:type no_pickup
-: else
-ITEM:    dagger_of_chilly_death no_pickup
-: end
-NSUBST:  1 = 12:1 / 12=1... / .
-SUBST:   2 = 2., 3 = 3..
-MAP
-      .1.             .1.
-      .x.             .x.
-     .1x..1.       .1..x1.
-   ..1xx..x.       .x..xx1..
-   1xxxxx1x.       .x1xxxxx1
-   ....xxxx.       .xxxx....
-     ..1xxx1.     .1xxx1..
-     1xxxxxx1.....1xxxxxx1
-     ....1xxxxx2xxxxx1....
-   .......1xdxx.xx*x1......
-...1xx....xxx3...3xxx....xx1...
-1xx..xx1..2....x....2..1xx..xx1
-..xx.1xx1xxx.x...x.xxx1xx1.xx..
-..1xxxxxxxx....x....xxxxxxxx1.
-..1xxxxxxxx....x....xxxxxxxx1.
-..xx.1xx1xxx.x...x.xxx1xx1.xx..
-1xx..xx1..2....x....2..1xx..xx1
-...1xx....xxx3...3xxx....xx1...
-   .......1x*xx.xx*x1.......
-     ....1xxxxx2xxxxx1....
-     1xxxxxx1.....1xxxxxx1
-     ..1xxx1.     .1xxx1..
-   ....xxxx.       .xxxx....
-   1xxxxx1x.       .x1xxxxx1
-   ..1xx..x.       .x..xx1..
-     .1x..1.       .1..x1.
-      .x.             .x.
-      .1.             .1.
-ENDMAP
-
 NAME:    minmay_guarded_unrand_skullcrusher
 DEPTH:   D:12-, Crypt
 MONS:    flying skull
@@ -6461,6 +6551,87 @@ MAP
 .nwwn2...n.
 .vnnv=vnnv.
 ...........
+ENDMAP
+
+NAME:    chequers_guarded_unrand_ignorance
+DEPTH:   D:7-12, Orc
+TAGS:    no_monster_gen no_item_gen
+: if you.unrands("large_shield_of_ignorance") then
+ITEM:    large shield randart no_pickup
+: else
+ITEM:    large_shield_of_ignorance no_pickup
+: end
+MONS:    orange crystal statue
+MAP
+...........
+.cccc=cccc.
+.c1.....1c.
+.c.c...c.c.
+.c.......c.
+.n...d...n.
+.c.......c.
+.c.c...c.c.
+.c1.....1c.
+.cncc=cccc.
+...........
+ENDMAP
+
+NAME:    chequers_guarded_unrand_mask_of_the_dragon
+DEPTH:   Zot, !Zot:$
+TAGS:    no_monster_gen no_item_gen transparent
+: if you.unrands("mask_of_the_dragon") then
+ITEM:    hat randart no_pickup
+: else
+ITEM:    mask_of_the_dragon no_pickup
+: end
+MONS:    nonbase draconian, storm dragon, shadow dragon, golden dragon, ghost moth
+NSUBST:  . = 6:1 / 4:5 / 2:2 / 2:3 / 2:4
+MAP
+   @@     ccccccc
+  c==cccccc.....c
+  cc.........c..cc
+    c.......ccc..cc
+     c.....cccc...cc
+     c.....cc......c
+     c......cd.....n
+     c.....cc......c
+     c.....cccc...cc
+    c.......ccc..cc
+  cc.........c..cc
+  c==cccccc.....c
+   @@     ccccccc
+ENDMAP
+
+####
+# Maxwell's Thermic Engine
+#
+# Use demon blade as fallback here instead of double sword, to keep
+# consistency with the Maxwell's demon reference.
+#
+NAME:   brannock_guarded_unrand_thermic_engine
+DEPTH:  Depths
+TAGS:   no_monster_gen no_item_gen transparent
+: if you.unrands("maxwell's_thermic_engine") then
+ITEM:   demon blade randart no_pickup
+: else
+ITEM:   maxwell's_thermic_engine no_pickup
+: end
+MONS:   ice devil, blizzard demon, ice fiend
+MONS:   sun demon, balrug, brimstone fiend
+# 6-2-1, 9 total demons for each side
+NSUBST: 1 = 6:1 / *:., 2 = 2:2 / *:., 3 = 1:3 / *:.
+NSUBST: 4 = 6:4 / *:., 5 = 2:5 / *:., 6 = 1:6 / *:.
+MAP
+       @@@
+ bbbbbb...bbbbbb
+bb....bb+bb....bb
+b32111.=.=.44456b
+b32111.=.=.44456b
+b32111.=.=.44456b
+b32111.bnb.44456b
+b32111.+d+.44456b
+bb....bbbbb....bb
+ bbbbbb   bbbbbb
 ENDMAP
 
 ###################################################################

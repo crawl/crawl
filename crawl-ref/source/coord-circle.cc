@@ -103,11 +103,12 @@ bool circle_def::contains(const coord_def &p) const
         return false;
     if (is_square)
     {
-        int r = global_los_radius ? los_radius : radius;
+        int r = global_los_radius ? get_los_radius() : radius;
         return (p - origin).rdist() <= r;
     }
     else
     {
+        int los_radius = get_los_radius();
         int r_sq = global_los_radius ? los_radius * los_radius + 1 : radius_sq;
         return (p - origin).abs() <= r_sq;
     }

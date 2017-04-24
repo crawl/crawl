@@ -53,6 +53,8 @@ Superiority
 Magnificence
 
 Hubris
+
+Big Damage
 %%%%
 _conflict_name_
 
@@ -79,6 +81,12 @@ Resumed Hostilities
 Fighting Over It
 
 a Spat
+
+Kerfluffle
+
+Brawl
+
+Melee
 %%%%
 _anger_name_
 
@@ -107,6 +115,10 @@ Scorn
 Disproportionate Response
 
 No More Talking
+
+the Extremely Mad
+
+the Absolute Madman
 %%%%
 _battle_or_war_
 
@@ -152,6 +164,8 @@ Joyful Slaughter
 Wounding
 
 Blood
+
+Diet Blood
 
 Fear
 
@@ -466,6 +480,8 @@ Eel
 
 Salmon
 
+Big Fish
+
 # birds
 Penguin
 
@@ -484,6 +500,8 @@ Owl
 Stork
 
 Vulture
+
+Shrike
 
 # mammals
 w:5
@@ -537,6 +555,9 @@ Whelk
 
 #fungus and similar
 Mushroom
+
+w:5
+Magic Mushroom
 
 Toadstool
 
@@ -1339,9 +1360,27 @@ Hard Scrabble
 
 Red Wine
 
+Vodka
+
+Gin and Tonic
+
 Undoing
 
 the Unkillable
+
+Checkmate
+
+Traps
+
+Doors
+
+Butchery
+
+the Real Monster
+
+False Hope
+
+the Pharaoh's Fist
 
 # akrasiac patch
 Irrepressible Laughter

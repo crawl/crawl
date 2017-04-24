@@ -53,7 +53,7 @@
 #
 NAME:    david_vaults_1
 TAGS:    vaults_entry
-MONS:    hill giant / troll / two-headed ogre
+MONS:    troll / two-headed ogre
 MONS:    necromancer / wizard / vampire w:4 / deep elf mage w:4
 SHUFFLE: !-
 SUBST:   ! = x, - = +, c : cxv
@@ -100,7 +100,7 @@ TAGS:    vaults_entry
 MONS:    human
 KMONS:   2 = orc knight / Urug, orc knight
 KMONS:   3 = centaur warrior w:20 / Nessos, centaur warrior
-KMONS:   4 = hill giant / Rupert, hill giant
+KMONS:   4 = two-headed ogre / Rupert, two-headed ogre
 SHUFFLE: 2349
 KFEAT:   O = enter_vaults
 MAP
@@ -124,7 +124,7 @@ TAGS:    vaults_entry
 MONS:    fire dragon / ice dragon / hydra / lindwurm
 MONS:    freezing wraith / shadow wraith / wraith / phantasmal warrior
 MONS:    deep troll / iron troll / troll
-MONS:    two-headed ogre / cyclops / ettin / hill giant
+MONS:    two-headed ogre / cyclops / ettin
 MONS:    necromancer / glowing shapeshifter / vault guard / wizard
 MONS:    shapeshifter
 NSUBST:  1 = 1:1 / 1:2 / 1:3. / 1 : 4 .:30 / 1:5 .:70

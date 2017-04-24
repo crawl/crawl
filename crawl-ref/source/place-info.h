@@ -1,5 +1,4 @@
-#ifndef PLACE_INFO_H
-#define PLACE_INFO_H
+#pragma once
 
 class PlaceInfo
 {
@@ -40,5 +39,3 @@ public:
     PlaceInfo operator + (const PlaceInfo &other) const;
     PlaceInfo operator - (const PlaceInfo &other) const;
 };
-
-#endif

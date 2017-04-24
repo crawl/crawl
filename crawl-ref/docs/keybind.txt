@@ -80,7 +80,6 @@ C         CMD_CLOSE_DOOR
 ^F        CMD_SEARCH_STASHES
 G, ^G     CMD_INTERLEVEL_TRAVEL
 O         CMD_OPEN_DOOR
-^T        CMD_TOGGLE_FRIENDLY_PICKUP
 ^W        CMD_FIX_WAYPOINT
 <         CMD_GO_UPSTAIRS
 >         CMD_GO_DOWNSTAIRS
@@ -91,7 +90,6 @@ Player status
 -------------
 a         CMD_USE_ABILITY
 m         CMD_DISPLAY_SKILLS
-p         CMD_PRAY
 A         CMD_DISPLAY_MUTATIONS
 E         CMD_EXPERIENCE_CHECK
 I         CMD_DISPLAY_SPELLS
@@ -112,6 +110,7 @@ Meta-commands
 ^A        CMD_TOGGLE_AUTOPICKUP
 ^C        CMD_CLEAR_MAP
 ^D, ~     CMD_MACRO_ADD
+<unbound> CMD_TOGGLE_SOUND      (only when compiled with sound)
 ^Q        CMD_QUIT
 ^R        CMD_REDRAW_SCREEN
 S         CMD_SAVE_GAME
@@ -208,7 +207,6 @@ Find a particular feature
 ^         CMD_MAP_FIND_TRAP
 _         CMD_MAP_FIND_ALTAR
 E         CMD_MAP_FIND_EXCLUDED
-F         CMD_MAP_FIND_F
 W         CMD_MAP_FIND_WAYPOINT
 I         CMD_MAP_FIND_STASH
 O         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)

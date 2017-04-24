@@ -3,28 +3,24 @@
  * @brief Misc monster related functions.
 **/
 
-#ifndef MONUTIL_H
-#define MONUTIL_H
+#pragma once
+
+#include <functional>
 
 #include "enum.h"
+#include "los-type.h"
 #include "mon-enum.h"
+#include "mon-inv-type.h"
 #include "player.h"
 
 struct bolt;
+struct mgen_data;
 
 struct mon_attack_def
 {
     attack_type     type;
     attack_flavour  flavour;
     int             damage;
-
-    static mon_attack_def attk(int dam,
-                               attack_type typ = AT_HIT,
-                               attack_flavour flav = AF_PLAIN)
-    {
-        mon_attack_def def = { typ, flav, dam };
-        return def;
-    }
 };
 
 // Amount of mons->speed_increment used by different actions; defaults
@@ -249,6 +245,9 @@ bool mons_class_sees_invis(monster_type type, monster_type base);
 bool mons_immune_magic(const monster& mon);
 
 mon_attack_def mons_attack_spec(const monster& mon, int attk_number, bool base_flavour = false);
+string mon_attack_name(attack_type attack);
+bool flavour_triggers_damageless(attack_flavour flavour);
+int flavour_damage(attack_flavour flavour, int HD, bool random = true);
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 
@@ -314,6 +313,7 @@ bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster& mon);
 bool mons_class_can_use_stairs(monster_type mc);
+bool mons_class_can_use_transporter(monster_type mc);
 bool mons_can_use_stairs(const monster& mon,
                          dungeon_feature_type stair = DNGN_UNSEEN);
 bool mons_enslaved_body_and_soul(const monster& mon);
@@ -330,6 +330,7 @@ int mons_class_colour(monster_type mc);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
+monster_type random_draconian_job();
 monster_type random_demonspawn_monster_species();
 monster_type random_demonspawn_job();
 
@@ -389,6 +390,8 @@ monster_type mons_detected_base(monster_type mt);
 bool mons_is_siren_beholder(monster_type mc);
 bool mons_is_siren_beholder(const monster& mons);
 
+bool mons_is_removed(monster_type mc);
+
 bool mons_looks_stabbable(const monster& m);
 bool mons_looks_distracted(const monster& m);
 
@@ -402,6 +405,7 @@ bool mons_is_active_ballisto(const monster& mon);
 bool mons_has_body(const monster& mon);
 bool mons_has_flesh(const monster& mon);
 bool mons_is_abyssal_only(monster_type mc);
+bool mons_is_unbreathing(monster_type mc);
 
 bool herd_monster(const monster& mon);
 
@@ -434,6 +438,23 @@ colour_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const string &s);
 colour_t random_monster_colour();
 int ugly_thing_colour_offset(colour_t colour);
+
+/**
+ * @brief
+ *  Apply uniform colour when generating a band containing only ugly things.
+ *
+ * If the passed band does not contain only ugly things, @p mg is not modified.
+ *
+ * @param mg
+ *  The generation data to adjust.
+ * @param band_monsters
+ *  The array of monsters types comprising the band.
+ * @param num_monsters_in_band
+ *  The number of elements in @p band_monsters.
+ */
+void ugly_thing_apply_uniform_band_colour(mgen_data &mg,
+    const monster_type *band_monsters, size_t num_monsters_in_band);
+
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
 string  demonspawn_base_name(monster_type mon_type);
@@ -491,6 +512,8 @@ bool mons_stores_tracking_data(const monster& mons);
 
 bool mons_is_player_shadow(const monster& mon);
 
+bool mons_has_attacks(const monster& mon);
+
 void reset_all_monsters();
 void debug_mondata();
 void debug_monspells();
@@ -539,7 +562,7 @@ int max_mons_charge(monster_type m);
 
 void init_mutant_beast(monster &mon, short HD, vector<int> beast_facets,
                        set<int> avoid_facets);
-void radiate_pain_bond(const monster& mon, int damage);
+void radiate_pain_bond(const monster& mon, int damage, const monster* original_target);
 void throw_monster_bits(const monster& mon);
 void set_ancestor_spells(monster &ancestor, bool notify = false);
 
@@ -551,5 +574,3 @@ bool apply_visible_monsters(monster_func mf,
                             los_type los = LOS_NO_TRANS);
 
 int derived_undead_avg_hp(monster_type mtype, int hd, int scale = 10);
-
-#endif

@@ -3,18 +3,21 @@
  * @brief Functions used when picking squares.
 **/
 
-#ifndef DIRECT_H
-#define DIRECT_H
+#pragma once
 
+#include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
+#include "targ-mode-type.h"
+#include "targeting-type.h"
+#include "trap-type.h"
 
 struct describe_info;
 
 class range_view_annotator
 {
 public:
-    range_view_annotator(targetter *range);
+    range_view_annotator(targeter *range);
     virtual ~range_view_annotator();
 };
 
@@ -79,7 +82,7 @@ public:
 
 struct direction_chooser_args
 {
-    targetter *hitfunc;
+    targeter *hitfunc;
     targeting_type restricts;
     targ_mode_type mode;
     int range;
@@ -244,7 +247,7 @@ private:
     string top_prompt;          // Shown at the top of the message window
     targeting_behaviour *behaviour; // Can be nullptr for default
     bool show_floor_desc;       // Describe the floor of the current target
-    targetter *hitfunc;         // Determine what would be hit.
+    targeter *hitfunc;         // Determine what would be hit.
     coord_def default_place;    // Start somewhere other than you.pos()?
 
     // Internal data.
@@ -312,5 +315,3 @@ void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 
 extern const struct coord_def Compass[9];
-
-#endif

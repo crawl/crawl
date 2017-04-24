@@ -145,17 +145,10 @@ function trove.get_trove_item(e, value, base_item)
     if you.race() ~= "Formicid" then
       table.insert(pots, {base="potion", type="haste", quant=4+d(3)+d(2)})
     end
-    if you.race() ~= "Ghoul" then
-      table.insert(pots, {base="potion", type="cure mutation", quant=1+d(4)})
-    end
 
     for _, toll in ipairs(pots) do
       table.insert(prices, toll)
     end
-  end
-
-  if you.race() ~= "Vine Stalker" and you.mutation("inability to use devices") ~= 1 then
-    table.insert(prices, {base="wand", type="heal wounds", quant=9})
   end
 
   local stasis_tolls = {
@@ -163,9 +156,6 @@ function trove.get_trove_item(e, value, base_item)
        {base="scroll", type="teleportation", quant=10+d(4)+d(4)} }
 
   if you.race() ~= "Formicid" then
-    if you.mutation("inability to use devices") ~= 1 then
-      table.insert(prices, {base="wand", type="hasting", quant=9})
-    end
     for _, toll in ipairs(stasis_tolls) do
       table.insert(prices, toll)
     end
@@ -583,7 +573,6 @@ KITEM:   f = acquire armour w:5 / any useful armour good_item / any armour w:2
 KITEM:   F = acquire weapon w:5 / any useful weapon good_item / any weapon w:2
 KITEM:   B = acquire book / acquire:sif_muna book / any book
 KITEM:   g = potion of curing / potion of heal wounds / potion of experience / \
-             potion of cure mutation q:1 / potion of beneficial mutation q:1 / \
              potion of might / potion of agility / potion of brilliance / \
              potion of resistance / potion of magic / potion of haste
 KFEAT:   w = W
@@ -845,7 +834,7 @@ MONS:   ynoxinul
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   wand of disintegration ident:all
+ITEM:   wand of digging ident:all
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 MAP
@@ -871,11 +860,11 @@ COLOUR: x = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = generate_awake shining eye
 # 21 items, 'cos this one is *nasty*.
-# There are 4 extra potions of cure/beneficial mutation, anyway.
+# There are 4 extra potions of cure/mutation, anyway.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   potion of cure mutation ident:type / potion of beneficial mutation ident:type
+ITEM:   potion of mutation q:3 ident:type
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
 MAP
@@ -922,7 +911,7 @@ SUBST:  d = dde
 FTILE:  ' : floor_limestone
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup
-ITEM:   any misc / any rod w:4
+ITEM:   any misc
 ITEM:   acquire wand w:15 / any misc w:3 / acquire magical staff w:2
 ITEM:   scroll of recharging / scroll of recharging q:3 w:5
 : trove.setup_features(_G)
@@ -953,12 +942,12 @@ WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of curing / potion of heal wounds / \
          potion of curing q:2 / potion of heal wounds q:2
-ITEM:    potion of experience q:1 / potion of beneficial mutation q:1 w:30
+ITEM:    potion of experience q:1
 ITEM:    potion of might / potion of resistance / \
          potion of magic / potion of haste / \
          potion of might q:2 / potion of resistance q:2 / \
          potion of magic q:2 / potion of haste q:2
-ITEM:    potion of cure mutation / potion of beneficial mutation
+ITEM:    potion of mutation
 SHUFFLE: df
 SHUFFLE: eg
 : trove.setup_features(_G)
@@ -985,7 +974,7 @@ ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 ITEM:    any useful armour good_item / any useful weapon good_item / \
          any useful jewellery good_item
 : trove.good_scroll(_G)
-KITEM:   h = wand of disintegration ident:all, wand of disintegration ident:all
+KITEM:   h = wand of digging ident:all, wand of digging ident:all
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP

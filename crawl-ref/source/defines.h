@@ -5,8 +5,7 @@
  * A variety of miscellaneous constant values are found here.
 **/
 
-#ifndef DEFINES_H
-#define DEFINES_H
+#pragma once
 
 // Minimum terminal size allowed.
 #define MIN_COLS  79
@@ -97,8 +96,12 @@ const int LABYRINTH_BORDER = 4;
 #define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
-// maximal LOS radius
-#define LOS_RADIUS 7
+// maximal LOS radius.
+// XXX: uses of this should be replaced depending on the intended behaviour,
+// with LOS_DEFAULT_RANGE or LOS_MAX_RANGE or possibly you.current_vision
+#define LOS_RADIUS 8
+// LOS radius for 'normal' characters
+#define LOS_DEFAULT_RANGE 7
 
 // maximal horizontal or vertical LOS range:
 //   a quadrant needs to fit inside an 2D array with
@@ -117,6 +120,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_RANDOM_SHOPS  5
 
 #define MAX_BRANCH_DEPTH 27
+COMPILE_CHECK(MAX_BRANCH_DEPTH < 256); // 8 bits
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
@@ -127,17 +131,15 @@ const int EXERCISE_QUEUE_SIZE = 100;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
-// grids that monsters can see
-const int MONSTER_LOS_RANGE = LOS_RADIUS;
-
-// Maximum charge level for rods
-const int MAX_ROD_CHARGE  = 17;
-const int ROD_CHARGE_MULT = 100;
+const int LIGHTNING_CHARGE_MULT = 100;
+const int LIGHTNING_MAX_CHARGE = 4;
 
 // evoker_debt for evoking one XP evoker
 const int XP_EVOKE_DEBT   = 10;
 
 const int BASELINE_DELAY  = 10;
+const int INVIS_CONTAM_PER_TURN = 30;
+
 const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
 const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;
 
@@ -165,6 +167,8 @@ const int MAX_KNOWN_SPELLS = 21;
 const int INVALID_ABSDEPTH = -1000;
 
 const int UNUSABLE_SKILL = -99;
+
+const int WU_JIAN_HEAVEN_TICK_TIME = 10;
 
 //#define DEBUG_MIMIC
 #ifdef DEBUG_MIMIC
@@ -235,7 +239,7 @@ typedef uint8_t colour_t;
 
 // This is used to signal curses (which has seven base colours) to
 // try to get a brighter version using recommissioned attribute flags.
-#define COLFLAG_CURSES_BRIGHTEN          0x0080
+#define COLFLAG_CURSES_BRIGHTEN          0x0008
 
 #define COLFLAG_FRIENDLY_MONSTER         0x0100
 #define COLFLAG_NEUTRAL_MONSTER          0x0200
@@ -321,6 +325,4 @@ const int DEFAULT_VIEW_DELAY = 600;
 
 #ifdef __ANDROID__
 #define ANDROID_ASSETS "ANDROID_ASSETS"
-#endif
-
 #endif

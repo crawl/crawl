@@ -4,9 +4,9 @@
  *             unexpected way.
 **/
 
-#ifndef FINEFF_H
-#define FINEFF_H
+#pragma once
 
+#include "beh-type.h"
 #include "mon-util.h"
 
 class final_effect
@@ -218,7 +218,7 @@ public:
     void merge(const final_effect &a) override;
     void fire() override;
 
-    static void schedule(const actor *serpent, const actor &oppressor,
+    static void schedule(const actor *serpent, actor &oppressor,
                          coord_def pos, int pow)
     {
         final_effect::schedule(new shock_serpent_discharge_fineff(serpent,
@@ -226,14 +226,14 @@ public:
                                                                   pos, pow));
     }
 protected:
-    shock_serpent_discharge_fineff(const actor *serpent, const actor &rudedude,
+    shock_serpent_discharge_fineff(const actor *serpent, actor &rudedude,
                                    coord_def pos, int pow)
         : final_effect(0, serpent, coord_def()), oppressor(rudedude),
           position(pos), power(pow),
         attitude(mons_attitude(*serpent->as_monster()))
     {
     }
-    const actor &oppressor;
+    actor &oppressor;
     coord_def position;
     int power;
     mon_attitude_type attitude;
@@ -319,6 +319,22 @@ protected:
     unsigned short foe;
 };
 
-void fire_final_effects();
+class infestation_death_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &a) const override { return false; }
+    void fire() override;
 
-#endif
+    static void schedule(coord_def pos, const string &name)
+    {
+        final_effect::schedule(new infestation_death_fineff(pos, name));
+    }
+protected:
+    infestation_death_fineff(coord_def pos, const string &_name)
+        : final_effect(0, 0, pos), name(_name)
+    {
+    }
+    string name;
+};
+
+void fire_final_effects();

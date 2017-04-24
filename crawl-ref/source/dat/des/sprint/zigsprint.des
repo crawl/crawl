@@ -32,6 +32,7 @@
 ###############################################################################
 
 {{
+-- Remove this code when TAG_MAJOR > 34
 function callback.zig_tele(data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
@@ -42,6 +43,15 @@ function callback.zig_tele(data, triggerable, triggerer, marker, ev)
     crawl.mpr("Welcome to arena " .. data.teleport_spot .. ".")
     crawl.take_note("Entered arena " .. data.teleport_spot .. ".")
 --  crawl.mark_milestone("sprint", "entered arena " .. data.teleport_spot ..
+--                       " of Ziggurat Sprint.", "")
+  end
+end
+
+function callback.zig_message(data, triggerable, triggerer, marker, ev)
+  if data.arena_number > 1 then
+    crawl.mpr("Welcome to arena " .. data.arena_number - 1 .. ".")
+    crawl.take_note("Entered arena " .. data.arena_number .. ".")
+--  crawl.mark_milestone("sprint", "entered arena " .. data.arena_number ..
 --                       " of Ziggurat Sprint.", "")
   end
 end
@@ -64,19 +74,17 @@ function setup_room(e, id)
   -- Subvault tag
   e.tags(e.name())
 
-  -- Place the teleporter entrance
-  local m_marker = TriggerableFunction:new {
-    func="callback.zig_tele",
-    data = {teleport_spot=id},
-    repeated=true }
-  m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
-  e.lua_marker('A', m_marker)
+  -- Place the transporter entrance
+  e.lua_marker('A', transp_loc("arena_" .. tostring(id)))
   e.colour("A = lightmagenta")
-  e.kfeat("A = teleporter")
 
   if id > 1 then
-    -- Place the teleporter exit
-    e.lua_marker('a', portal_desc { teleport_spot = id-1})
+    -- Place the transporter exit
+    e.lua_marker('a', transp_dest_loc("arena_" .. tostring(id - 1)))
+    local m_marker = TriggerableFunction:new { func="callback.zig_message",
+                                             data = {arena_number = id} }
+    m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
+    e.lua_marker('a', m_marker)
     e.subst("a = .")
 
     -- Transform pillars
@@ -87,11 +95,12 @@ function setup_room(e, id)
 
     -- Create items
 e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
-            wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
-            potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
+            potion of heal wounds ident:all q:4 w:3 /\
+            potion of haste ident:all q:4 w:3 /\
+            scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-            potion of haste q:2 ident:all w:2 / scroll of acquirement q:1 w:1 ident:all /\
+            scroll of acquirement q:1 w:1 ident:all /\
             scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")
@@ -236,7 +245,7 @@ function choose_mset_2(e)
     e.kmons("1 =  zombie / skeleton / lesser demon / hell hound")
 -- Giant
   elseif rnd < 82 then
-    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5")
+    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5")
 -- Fire
   elseif rnd < 84 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
@@ -253,7 +262,7 @@ function choose_mset_2(e)
     e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
 -- Dragon
   elseif rnd < 92 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon / wyvern")
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon / wyvern")
 -- Ranged
   elseif rnd < 94 then
     e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior w:3 /\
@@ -347,7 +356,7 @@ function choose_mset_3(e)
     e.kmons("1 = place:Dis:1")
 -- Giant
   elseif rnd < 71 then
-    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops / hill giant w:5 /\
+    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops /\
                stone giant w:5 / fire giant w:2 / frost giant w:2")
 -- Fire
   elseif rnd < 73 then
@@ -369,7 +378,7 @@ function choose_mset_3(e)
                quicksilver dragon w:5")
 -- Dragon
   elseif rnd < 81 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon / wyvern /\
                hydra")
 -- Ranged
@@ -480,7 +489,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
 -- Giant
   elseif rnd < 75 then
-    e.kmons("1 = hill giant / cyclops / stone giant / fire giant /\
+    e.kmons("1 = cyclops / stone giant / fire giant /\
                frost giant / ettin / titan")
 -- Fire
   elseif rnd < 78 then
@@ -502,7 +511,7 @@ local rnd = crawl.random2(142)
                quicksilver dragon")
 -- Dragon
   elseif rnd < 90 then
-    e.kmons("1 = swamp drake / rime drake / mottled dragon / steam dragon /\
+    e.kmons("1 = swamp drake / rime drake / acid dragon / steam dragon /\
                death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
                golden dragon / wyvern / hydra")
@@ -600,7 +609,7 @@ SUBVAULT:  * : room_24
 SUBVAULT:  % : room_25
 SUBVAULT:  | : room_26
 SUBVAULT:  $ : room_27
-: lua_marker('a', portal_desc { teleport_spot=28})
+: lua_marker('a', transp_dest_loc("arena_28"))
 KFEAT: ^ = granite_statue
 COLOUR: .a^{ = magenta
 FTILE:  .a^{< = floor_rough_magenta
@@ -710,6 +719,7 @@ KFEAT:  s = altar_sif_muna
 KFEAT:  t = altar_trog
 KFEAT:  u = altar_uskayaw
 KFEAT:  v = altar_vehumet
+KFEAT:  w = altar_wu_jian
 KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
@@ -799,7 +809,7 @@ KITEM:    T = piercer ident:all, \
               plutonium_sword ident:all, \
               devastator ident:all, \
               firestarter ident:all
-KITEM:    S = disc of storms ident:all
+KITEM:    S = lightning rod ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta
@@ -816,7 +826,7 @@ c......L..O...r
 b...B.{.......s
 ^.............^
 a.............t
-^^1^z^y^x^v^u^^
+^1^z^y^x^w^v^u^
 ENDMAP
 
 NAME:  room_1

@@ -13,7 +13,7 @@
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
-#include "map_knowledge.h"
+#include "map-knowledge.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-util.h"
@@ -629,8 +629,7 @@ static unsigned int _timer_callback(unsigned int ticks, void *param)
 int TilesFramework::getch_ck()
 {
     wm_event event;
-    cursor_loc cur_loc;
-    cursor_loc last_loc;
+    cursor_loc last_redraw_loc = m_cur_loc;
 
     int key = 0;
 
@@ -656,7 +655,6 @@ int TilesFramework::getch_ck()
             return ESCAPE;
 
         unsigned int ticks = 0;
-        last_loc = m_cur_loc;
 
         if (wm->wait_event(&event))
         {
@@ -742,10 +740,10 @@ int TilesFramework::getch_ck()
 
                     event.mouse_event.held = m_buttons_held;
                     event.mouse_event.mod  = m_key_mod;
-                    int mouse_key = handle_mouse(event.mouse_event);
+                    key = handle_mouse(event.mouse_event);
 
                     m_region_msg->alt_text().clear();
-                    // find mouse location
+                    // Find the new mouse location
                     for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
                         if (reg->mouse_pos(m_mouse.x, m_mouse.y,
@@ -770,13 +768,6 @@ int TilesFramework::getch_ck()
                     if (count > 0)
                         continue;
 
-                    // Stay within this input loop until the mouse moves
-                    // to a semantically different location. Crawl doesn't
-                    // care about small mouse movements.
-                    if (!need_redraw() && last_loc == m_cur_loc)
-                        continue;
-
-                    key = mouse_key;
                 }
                break;
 
@@ -843,7 +834,7 @@ int TilesFramework::getch_ck()
             }
             else
             {
-                if (last_loc != m_cur_loc)
+                if (last_redraw_loc != m_cur_loc)
                     set_need_redraw();
 
                 m_tooltip.clear();
@@ -853,6 +844,7 @@ int TilesFramework::getch_ck()
                 || ticks > m_last_tick_redraw
                    && ticks - m_last_tick_redraw > ticks_per_screen_redraw)
             {
+                last_redraw_loc = m_cur_loc;
                 redraw();
             }
         }
@@ -1313,11 +1305,6 @@ void TilesFramework::layout_statcol()
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
-#if TAG_MAJOR_VERSION == 34
-        // Lava orc temperature bar
-        if (you.species == SP_LAVA_ORC)
-            ++crawl_view.hudsz.y;
-#endif
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
         m_statcol_top += m_region_stat->dy;
 

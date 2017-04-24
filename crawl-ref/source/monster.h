@@ -1,8 +1,14 @@
-#ifndef MONSTER_H
-#define MONSTER_H
+#pragma once
+
+#include <functional>
 
 #include "actor.h"
+#include "beh-type.h"
+#include "enchant-type.h"
 #include "mon-ench.h"
+#include "montravel-target-type.h"
+#include "potion-type.h"
+#include "seen-context-type.h"
 #include "spl-util.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
@@ -18,6 +24,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define VAULT_HD_KEY "vault_hd"
 
 #define FAKE_BLINK_KEY "fake_blink"
+#define CEREBOV_DISARMED_KEY "cerebov_disarmed"
 
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
@@ -193,8 +200,6 @@ public:
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
     void maybe_degrade_bone_armour();
 
-    void forget_random_spell();
-
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments();
@@ -354,7 +359,6 @@ public:
 
     mon_holy_type holiness(bool /*temp*/ = true) const override;
     bool undead_or_demonic() const override;
-    bool holy_wrath_susceptible() const override;
     bool is_holy(bool check_spells = true) const override;
     bool is_nonliving(bool /*temp*/ = true) const override;
     int how_unclean(bool check_god = true) const;
@@ -371,7 +375,7 @@ public:
     int res_rotting(bool /*temp*/ = true) const override;
     int res_water_drowning() const override;
     bool res_sticky_flame() const override;
-    int res_holy_energy(const actor *) const override;
+    int res_holy_energy() const override;
     int res_negative_energy(bool intrinsic_only = false) const override;
     bool res_torment() const override;
     int res_acid(bool calc_unid = true) const override;
@@ -384,7 +388,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool antimagic_susceptible() const override;
 
-    bool stasis(bool calc_unid = true, bool items = true) const override;
+    bool stasis() const override;
 
     bool airborne() const override;
     bool can_cling_to_walls() const override;
@@ -414,9 +418,6 @@ public:
     int silence_radius() const override;
     int liquefying_radius() const override;
     int umbra_radius() const override;
-#if TAG_MAJOR_VERSION == 34
-    int heat_radius() const override;
-#endif
     bool petrified() const override;
     bool petrifying() const override;
     bool liquefied_ground() const override;
@@ -534,7 +535,6 @@ public:
     bool has_usable_tentacle() const override;
 
     bool check_clarity(bool silent) const;
-    bool check_stasis(bool silent, bool calc_unid = true) const;
 
     bool is_child_tentacle() const;
     bool is_child_tentacle_of(const monster* mons) const;
@@ -571,7 +571,6 @@ private:
     bool pickup_launcher(item_def &launcher, bool msg, bool force = false);
     bool pickup_melee_weapon(item_def &item, bool msg);
     bool pickup_weapon(item_def &item, bool msg, bool force);
-    bool pickup_rod(item_def &item, bool msg, bool force);
     bool pickup_armour(item_def &item, bool msg, bool force);
     bool pickup_jewellery(item_def &item, bool msg, bool force);
     bool pickup_misc(item_def &item, bool msg, bool force);
@@ -606,5 +605,3 @@ private:
     bool search_spells(function<bool (spell_type)> func) const;
     bool is_cloud_safe(const coord_def &place) const;
 };
-
-#endif

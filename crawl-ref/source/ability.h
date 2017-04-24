@@ -3,13 +3,14 @@
  * @brief Functions related to special abilities.
 **/
 
-#ifndef ABLSHOW_H
-#define ABLSHOW_H
+#pragma once
 
 #include <string>
 #include <vector>
 
+#include "ability-type.h"
 #include "enum.h"
+#include "player.h"
 
 struct talent
 {
@@ -19,6 +20,7 @@ struct talent
     bool is_invocation;
 };
 
+skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
@@ -48,5 +50,3 @@ vector<ability_type> get_god_abilities(bool ignore_silence = true,
                                        bool ignore_piety = true,
                                        bool ignore_penance = true);
 void swap_ability_slots(int index1, int index2, bool silent = false);
-
-#endif

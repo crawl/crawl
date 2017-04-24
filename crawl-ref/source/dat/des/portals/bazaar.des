@@ -734,7 +734,7 @@ SHUFFLE: AB, def
 KFEAT:   A = scroll shop / book shop / book shop
 KFEAT:   B = jewellery shop
 ITEM:    any jewellery / good_item any jewellery
-ITEM:    any book / good_item any book, any magical staff / any rod w:2
+ITEM:    any book / good_item any book, any magical staff
 SUBST:   d=.d, e=.e, f=.f
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
@@ -1678,7 +1678,7 @@ TAGS:    no_rotate
 WEIGHT:  1
 ORIENT:  encompass
 SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
-KITEM:   ? = wand of disintegration ident:type
+KITEM:   ? = wand of digging ident:type
 KFEAT:   ? = gadget shop
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1

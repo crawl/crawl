@@ -34,6 +34,8 @@
  #include "tilebuf.h"
 #endif
 #ifdef USE_TILE
+ #include "tile-flags.h"
+ #include "tile-player-flag-cut.h"
  #include "tiledef-dngn.h"
  #include "tiledef-icons.h"
  #include "tiledef-main.h"
@@ -1088,6 +1090,9 @@ bool FeatureMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.emplace_back(TILEI_NEW_STAIR, TEX_ICONS);
+
+    if (in_bounds(pos) && is_unknown_transporter(pos))
+        tileset.emplace_back(TILEI_NEW_TRANSPORTER, TEX_ICONS);
 
     return true;
 }

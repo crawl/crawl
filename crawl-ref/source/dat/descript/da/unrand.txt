@@ -98,7 +98,7 @@ glaive of the Guard
 Dette våben har engang tilhørt Gar Dogh, som vogtede en konges skatte. I følge
 legenderne for han vild et sted i de underjordiske gange.
 %%%%
-sword of Jihad
+zealot's sword
 
 Et langsværd, som er lavet af et kæmpe stykke krystal. Legenderne vil vide, at
 det var en gave fra Den Strålende til en tilbeder. Klingen er berygtet for at
@@ -255,7 +255,7 @@ mask of the Dragon
 En sær, blå hjelm, som er lavet af hårdt, men fleksibelt læder, der får
 bærerens ansigt til at ligne en drages åsyn.
 %%%%
-armour of the Dragon King
+scales of the Dragon King
 
 Engang for længe siden tog en mægtig gulddrage magten over alle dragerne i hans
 del af verden. Men hans regeringstid blev kort, bragt til ende af et enkelt,
@@ -304,11 +304,6 @@ necklace of Bloodlust
 Du undrer dig over hvilket brutalt bæst, der ville gå med en blodindsmurt
 halskæde af menneske- og dyretænder og noget, der ser ud til at være en flækket
 ryghvirvel.
-%%%%
-ring of Shaolin
-
-En jadering uden udsmykning, som giver bæreren en forbløffende viden om sin
-egen krop, hvilket giver mulighed for imponerende behændighedspræstationer.
 %%%%
 ring of Robustness
 

@@ -3,16 +3,18 @@
  * @brief Functions for inventory related commands.
 **/
 
-#ifndef INVENT_H
-#define INVENT_H
+#pragma once
 
 #include <cstddef>
+#include <functional>
 #include <vector>
 
 #include "enum.h"
-#include "itemname.h"
-#include "itemprop-enum.h"
+#include "equipment-type.h"
+#include "item-name.h"
+#include "item-prop-enum.h"
 #include "menu.h"
+#include "operation-types.h"
 
 enum object_selector
 {
@@ -43,6 +45,23 @@ enum object_selector
                                         // leakage.
     OSEL_DIVINE_RECHARGE         = -21,
 };
+
+/// Behaviour flags for prompt_invent_item().
+enum class invprompt_flag
+{
+    none               = 0,
+    /// Warning inscriptions are not checked & the player will not be warned.
+    no_warning         = 1 << 0,
+    /// '\' will be ignored, instead of switching to the known item list.
+    hide_known         = 1 << 1,
+    /// Allow selecting items that do not exist.
+    unthings_ok        = 1 << 2,
+    /// Don't start in the '?' list InvMenu.
+    manual_list        = 1 << 3,
+    /// Only allow exiting with escape, not also space.
+    escape_only        = 1 << 4,
+};
+DEF_BITFIELD(invent_prompt_flags, invprompt_flag);
 
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
@@ -196,15 +215,9 @@ string slot_description();
 int prompt_invent_item(const char *prompt,
                        menu_type type,
                        int type_expect,
-                       bool must_exist = true,
-                       bool auto_list = true,
-                       bool allow_easy_quit = true,
-                       const char other_valid_char = '\0',
-                       int excluded_slot = -1,
-                       int *const count = nullptr,
                        operation_types oper = OPER_ANY,
-                       bool allow_list_known = false,
-                       bool do_warning = true);
+                       invent_prompt_flags flags = invprompt_flag::none,
+                       const char other_valid_char = '\0');
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
@@ -212,17 +225,7 @@ vector<SelItem> select_items(
                         menu_type mtype = MT_PICKUP,
                         invtitle_annotator titlefn = nullptr);
 
-vector<SelItem> prompt_invent_items(
-                        const char *prompt,
-                        menu_type type,
-                        int type_expect,
-                        invtitle_annotator titlefn = nullptr,
-                        bool auto_list = true,
-                        bool allow_easy_quit = true,
-                        const char other_valid_char = '\0',
-                        vector<text_pattern> *filter = nullptr,
-                        Menu::selitem_tfn fn = nullptr,
-                        const vector<SelItem> *pre_select = nullptr);
+vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items);
 
 void display_inventory();
 
@@ -246,8 +249,7 @@ bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool reach = true,
                       bool known = false, bool all_wands = false,
                       bool msg = false, bool equip = true);
-bool nasty_stasis(const item_def &item, operation_types oper);
+bool needs_notele_warning(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper,
                           bool &penance);
 int digit_inscription_to_inv_index(char digit, operation_types oper);
-#endif

@@ -109,7 +109,7 @@ KITEM:  " = club, quarterstaff, quarterstaff good_item
 : else
 KITEM:  " = club, quarterstaff, quarterstaff
 : end
-KITEM:  ' = club, any magical staff / any rod w:1
+KITEM:  ' = club, any magical staff
 MAP
 xxxxx
 x"']x
@@ -1548,7 +1548,7 @@ MARKER: F = lua:fog_machine { \
 MONS:   death yak w:5 / dream sheep w:3 / yak w:7
 MONS:   generate_awake human ; dagger | hand axe
 SUBST:  F=d, 2=2.
-ITEM:   meat ration w:5 / beef jerky / nothing
+ITEM:   meat ration w:5 / nothing
 MAP
  cccccc       ccccccc
  cddddcxxxxxxxxcddddc
@@ -1992,7 +1992,8 @@ ITEM:   nothing
 SUBST:  * = |**...
 SUBST:  * : *$
 SUBST:  L = ll.
-MONS:   molten gargoyle / hell hound / lindwurm / nothing w:20
+KFEAT:  1 = escape_hatch_down
+KMONS:  1 = molten gargoyle / hell hound / lindwurm / nothing w:20
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 2, walk_dist = 0, spread_rate= 0 }
@@ -2243,23 +2244,23 @@ SHUFFLE: {[(
 SUBST:   ( = (:70 <, [ = [:50 <
 MAP
   '''''''''''''''''
-  ''''''cnnnc''''''
+  ''''''ccccc''''''
 ''''ccccc.}.ccccc''''
 '''cc%.c..4..c.%cc'''
 ''cc%..+.cnc.+..%cc''
 ''c%.3%cnc6cnc%3.%c''
 ''c..%cc.....cc%..c''
 ''cc+cc.......cc+cc''
-'cc..n.........n..cc'
-'n..cc....<....cc..n'
-'n.1n2...[{(...2n1.n'
-'n..cc....>....cc..n'
-'cc..n.........n..cc'
+'cc..c.........c..cc'
+'n..+c....<....c+..n'
+'n.1+2...[{(...2+1.n'
+'n..+c....>....c+..n'
+'cc..c.........c..cc'
 ''cc+cc.......cc+cc''
 ''c..*cc.....cc*..c''
-''c*55*ccc.ccc*55*c''
-''cc*54n.+++.n45*cc''
-'''cc*.n..2..n.*cc'''
+''c*55*cnc.cnc*55*c''
+''cc*54+.cnc.+45*cc''
+'''cc*.+..2..+.*cc'''
 ''''ccccc...ccccc''''
   ''''..c+++c..''''
   ''''.........''''
@@ -2644,7 +2645,7 @@ PLACE:   Depths:$
 WEIGHT:  5 (Depths:$, Geh), 10
 MONS:    hell knight
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-MONS:    mottled draconian, black draconian, ettin
+MONS:    yellow draconian, black draconian, ettin
 NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334
 : elseif you.in_branch("Depths") then
 MONS:    deep troll
@@ -2997,8 +2998,7 @@ TAGS:    transparent patrolling
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
 MONS:    necromancer ; wand of iceblast . \
-         staff of fire w:15 | quarterstaff ego:flaming w:14 | \
-         rod of ignition w:1 ident:type . \
+         staff of fire w:15 | quarterstaff ego:flaming w:15 . \
          robe ego:fire_resistance w:14 | robe ego:cold_resistance w:15 | \
          robe ego:resistance w:1
 MONS:    necromancer ; wand of lightning . \
@@ -3187,8 +3187,8 @@ ORIENT: float
 MONS:   raiju / sixfirhy w:2
 KMONS:  2 = shock serpent / storm dragon
 ITEM:   book of air / book of the sky / manual of air magic / \
-        lightning rod ident:type / staff of air ident:type / \
-        disc of storms / fan of gales / storm dragon scales w:5
+        staff of air ident:type / lightning rod w:15 / fan of gales w:15 / \
+        storm dragon scales w:5
 : if you.unrands("arc blade") then
 KITEM:  2 = quick blade ego:electrocution randart ident:type
 : else
@@ -3216,12 +3216,11 @@ ENDMAP
 NAME:   minmay_roctagon
 DEPTH:  D:12-, Depths:1-2, Elf
 ORIENT: float
-MONS:   hill giant / troll
+MONS:   two-headed ogre / troll
 KMONS:  2 = stone giant / iron dragon
 ITEM:   book of geomancy / book of the earth / manual of earth magic / \
-        iron rod ident:type / staff of earth ident:type / \
-        ring of protection ident:type / wand of disintegration ident:type / \
-        crystal plate armour w:5
+        staff of earth ident:type / ring of protection ident:type / \
+        wand of scattershot ident:type / crystal plate armour w:5
 : if you.unrands("devastator") then
 KITEM:  2 = eveningstar randart
 : else
@@ -3288,8 +3287,8 @@ ORIENT: float
 MONS:   fire bat
 KMONS:  2 = fire giant / fire dragon
 ITEM:   book of flames / book of fire / manual of fire magic / \
-        rod of ignition ident:type / staff of fire ident:type / \
-        ring of fire ident:type / lamp of fire / fire dragon scales w:5
+        staff of fire ident:type / ring of fire ident:type / lamp of fire / \
+        fire dragon scales w:5
 : if you.unrands("firestarter") then
 KITEM:  2 = great mace ego:flaming randart ident:type
 : else
@@ -3656,7 +3655,7 @@ MONS: spark wasp
 MONS: w:5 anaconda / black mamba / water moccasin, mana viper, shock serpent
 : end
 ITEM: w:60 star_item / crystal ball of energy / staff of air / \
-      staff of energy / disc of storms / lightning rod / fan of gales
+      staff of energy / lightning rod w:15  / fan of gales w:15
 NSUBST: " = 1:2 / 1:1 / 3=12., ' = 1:2 / 1:1 / 3=12., - = 2:3, ` = 2=*% / *:%
 MAP
 @...........
@@ -3747,6 +3746,253 @@ MAP
   WW;;w;;Wxxxxxx"""xxx
    WWWWWWWWW   xxxxx
      WWW
+ENDMAP
+
+NAME: cheibrodos_fertilizer
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:2-8
+ORIENT: float
+: if you.absdepth() > 4 then
+MONS: kobold / big kobold w:6, ooze / jelly, slime creature
+: else
+MONS: kobold, ooze, jelly
+: end
+{{
+dgn.delayed_decay(_G, 'd', 'goblin skeleton / hobgoblin skeleton ' ..
+                           '/ rat skeleton / bat skeleton')
+dgn.delayed_decay_extra(_G, 'e', 'human skeleton', 'star_item')
+}}
+KMONS: A = fungus / toadstool
+KMONS: B = fungus / toadstool
+KMONS: C = fungus / toadstool
+KMONS: D = fungus / toadstool
+KFEAT: ` = floor
+FTILE: `ABCDd = floor_mud
+COLOUR: `ABCDd = brown
+NSUBST: ' = 4:1 / 4=1. / 1:% / 2=%.
+NSUBST: " = 6:2 / 4=2' / 1:3 / 1=33` / 1=3` / 2:d / 3=d` / *:`
+NSUBST: A = 2=dAA` / 1:`, B = 2=dAA. / 1:`, C = 2=dAA` / 1:`, D = 2=dAA` / 1:`
+MAP
+        xxxxxxxxxxxxx
+  xxxxxxxxxxxxxxxxxxx
+ xxxxxxxxxxxx""""""xx
+ xxx''''''xx+AAAAAAxx
+.xx'''''''x1x""""""xx
+.+.'''''''x.xBBBBBBxx
+@+.'''''''x.x""""""xx
+.+.'''''x+x.xCCCCCCxx
+.xx'''''x.x.x""""""xx
+ xxx''''x.x.xDDDDDDxx
+ xxxxxxxxx.xx"""""exx
+  xxxxxxxxxxxxxxxxxxx
+        xxxxxxxxxxxxx
+ENDMAP
+
+NAME: cheibrodos_monumental
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:12-
+ORIENT: float
+MONS: ogre / two-headed ogre
+MONS: stone giant / frost giant w:3 / fire giant w:3
+KMONS: P = plant
+KMONS: B = plant
+KMONS: C = cyclops
+KFEAT: A = granite_statue
+KFEAT: C = W
+FTILE:  2$|*%AB = floor_grass
+COLOUR:  2$|*%AB = green
+SUBST: P = PPP..
+NSUBST: " = 2:C / 2=CW / *:W, ' = 2:1 / 2=1., ` = 2:1 / 2=1.
+NSUBST: ; = 2:1 / 2=1., _ = 2:1 / 2=1., - = 1:| / 2=|* / 2:* / 1=*% / *:%
+MAP
+   ....._.c.'.....
+  @..c__c_G'c''c..@
+ @..c__c_PWP'c''c..@
+....____PWWWP''''....
+..c__c_GWW"WWG'c''c..
+.c__c_PWWWWWWWP'c''c.
+.____PWWWWWWWWWP''''.
+._c_GWW"WWAWW"WWG'c'.
+_c_PWWWWWB-BWWWWWP'c'
+._PWWWWWB-$-BWWWWWP'.
+cGWW"WWA-$2$-AWW"WWGc
+.;PWWWWWB-$-BWWWWWP`.
+;c;PWWWWWB-BWWWWWP`c`
+.;c;GWW"WWAWW"WWG`c`.
+.;;;;PWWWWWWWWWP````.
+.c;;c;PWWWWWWWP`c``c.
+..c;;c;GWW"WWG`c``c..
+....;;;;PWWWP````....
+ @..c;;c;PWP`c``c..@
+  @..c;;c;G`c``c..@
+   .....;.c.`.....
+ENDMAP
+
+NAME: cheibrodos_pilgrimage
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:2-4
+ORIENT: float
+MONS: orc priest band, orc
+SUBST: ' : cG.w
+MAP
+ ...........
+..ccccccccc.
+.ccc........
+.cc..'2..'..
+.c$........@
+@nT.1......@
+.c$........@
+.cc..'2..'..
+.ccc........
+..ccccccccc.
+ ...........
+ENDMAP
+
+NAME: cheibrodos_statue_roulette
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:7-
+ORIENT: float
+: if you.depth() > 12 then
+KMONS: ' = molten gargoyle
+KITEM: ' = % / w:2 *
+KFEAT: " = l
+: else
+KMONS: ' = gargoyle
+KITEM: ' = %
+: end
+NSUBST: - = 4:' / 2='GG / *:G
+MAP
+   .........
+ ...ccccccc...
+ .ccc-ccc-ccc.
+..c-cc+.+cc-c..
+.ccc+.....+ccc.
+.cGc.......c-c.
+......"""..+cc.
+@....."G"...cc.
+......"""..+cc.
+.cGc.......c-c.
+.ccc+.....+ccc.
+..c-cc+.+cc-c..
+ .ccc-ccc-ccc.
+ ...ccccccc...
+   .........
+ENDMAP
+
+NAME: cheibrodos_steamvent
+TAGS: no_monster_gen
+DEPTH: D:6-11
+ORIENT: float
+MONS: steam dragon
+SHUFFLE: VGA
+NSUBST: " = 1=1..
+SUBST: A = .
+MAP
+             .@.
+            xx.xx
+    xxxxxx xx...xx
+ xxxxwwwwxxx.....x
+xxwww.."""xx..V.lx
+xww1..x""""x..1llx
+xw.V..xx"""..lllxx
+x.....xxxllllxxxx
+xx...xx xxxxxx
+ xx.xx
+  .@.
+ENDMAP
+
+NAME: cheibrodos_wizards_tower
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+DEPTH: D:7-12, Elf
+ORIENT: float
+: if you.branch() == "Elf" then
+MONS: deep elf sorcerer / deep elf annihilator
+: else
+MONS: wizard / orc sorcerer
+: end
+SHUFFLE: AB / CD / EF
+SUBST: A = ., B = W, CDEF = w
+NSUBST: " = 2:1 / 2=1., - = 1=*| / 2=*% / 2=%.
+MAP
+ ....@....
+..wwFEFww..
+.wwxb.bxww.
+.wxx...xxw.
+.Bb"-"-"bW.
+@A.."-"...@
+.Bb"-"-"bW.
+.wxx...xxw.
+.wwxb.bxww.
+..wwDCDww..
+ ....@....
+ENDMAP
+
+NAME: cheibrodos_witchhunters_guild
+TAGS: no_item_gen no_monster_gen
+DEPTH: Depths
+ORIENT: float
+MONS: mana viper, orc knight ; battle axe | great mace | broad axe \
+          | w:3 battle axe ego:antimagic | w:3 great mace ego:antimagic \
+          | w:3 broad axe ego:antimagic . plate armour \
+          | plate armour ego:magic_resistance \
+      / w:2 orc warlord ; battle axe | great mace | broad axe \
+          | w:3 battle axe ego:antimagic | w:3 great mace ego:antimagic \
+          | w:3 broad axe ego:antimagic . plate armour \
+          | plate armour ego:magic_resistance
+MONS: stone giant / iron troll / w:5 ettin
+MONS: spriggan berserker ; rapier | quick blade | demon whip \
+          | w:3 rapier ego:antimagic | w:3 quick blade ego:antimagic \
+          | w:3 demon whip ego:antimagic
+MONS: spriggan defender ; quick blade ego:antimagic \
+          | demon whip ego:antimagic, quicksilver dragon
+KMONS: T = yaktaur captain
+KMONS: Y = orc knight ; battle axe | great mace | broad axe \
+               | w:3 battle axe ego:antimagic | w:3 great mace ego:antimagic \
+               | w:3 broad axe ego:antimagic . plate armour \
+               | plate armour ego:magic_resistance \
+           / w:2 orc warlord ; battle axe | great mace | broad axe \
+               | w:3 battle axe ego:antimagic | w:3 great mace ego:antimagic \
+               | w:3 broad axe ego:antimagic . plate armour \
+               | plate armour ego:magic_resistance
+KMONS: U = stone giant / iron troll / w:5 ettin
+KMONS: r = lich / w:5 ancient lich
+KMONS: E = w:3 plant / nothing
+KITEM: r = |
+KFEAT: H = iron_grate
+FTILE: s = floor_mud
+COLOUR: s = brown
+FTILE: uETYU_ = floor_grass
+COLOUR: uETYU_ = green
+SHUFFLE: AB, CD
+SUBST: A = ., B = x, C = ., D = x
+NSUBST: - = 1:| / 1=|* / 2=*$ / 3=*%, q = 3:* / 9=$$%%.
+NSUBST: _ = 2:T / 2:Y / 2=Yu / 1:U / 1=Uu / *:u, ; = 2:3 / 1=3. / 1:4 / 1=4.
+NSUBST: ' = 1:1 / 1=1. / 1:2 / 1=2. / 1:4, ` = 1:1 / 1=1. / 1:2 / 1=2. / 1:4
+NSUBST: p = 2:1 / 2=1.
+MAP
+ttttttttttttttttttttttttttttt
+txxxxxxxxxxxxxxxxxxxxxxxxxxxt
+txxxxHrHxxx-------xxxHrHxxxxt
+txxxmm=mmx+xHHHHHx+xmm=mmxxxt
+txxx..3..x.G..5..G.x..3..xxxt
+txxxp...px...6.6...xp...pxxxt
+txxxx...xx.........xx...xxxxt
+txtxxx+xxxx2.....2xxxx+xxxtxt
+txtEB...Buxx.....xxuA...BEtxt
+txtEA;;;Bu_xx+++xx_uA;;;BEtxt
+txtEA;;;Au_________uA;;;BEtxt
+txtEA;;;But__sss__tuA;;;AEtxt
+txtEA;;;But__sVs__tuB;;;AEtxt
+txtEB;;;Bu___sss___uB;;;AEtxt
+txtEB...Au_t__s__t_uB...BEtxt
+txtxx...xxuuu_s_uuuxx...xxtxt
+txxxq'''.xDDCxHxCCDx.```qxxxt
+txxxq'G'.m2...s...2m.`G`qxxxt
+txxxq'''.m....s....m.```qxxxt
+  xxxqqqxxCCCxHxDDCxxqqqxxx
+  .xxxxxx....sss....xxxxxx.
+  .........t.sss.t.........
+   ..........@@@..........
 ENDMAP
 
 ###############################################################################
@@ -7985,4 +8231,107 @@ cc```wwwcccncccwww'''cc
    ccc;;;9...9;;;ccc
      cccc;;8;;cccc
         ccccccc
+ENDMAP
+
+NAME: cheibrodos_barr_body
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:4-12
+ORIENT: float
+NSUBST: " = 1:9 / 2:0 / 2=0., ; = 2:0 / 2=0.
+NSUBST: ' = 2:0 / 2=0. , _ = 2:0 / 2=0.
+MAP
+.......@.......
+.xxxx.....xxxx.
+.x%;xx...xx"*x.
+.x;;;xx.xx"""x.
+.xx;;;x.x"""xx.
+..xx;+x.x+"xx..
+...xxx...xxx...
+@......G......@
+...xxx...xxx...
+..xx'+x.x+_xx..
+.xx'''x.x___xx.
+.x'''xx.xx___x.
+.x%'xx...xx_%x.
+.xxxx.....xxxx.
+.......@.......
+ENDMAP
+
+NAME: cheibrodos_old_hovel
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:2-4
+ORIENT: float
+KMONS: P = plant
+NSUBST: " = 1:0 / 1:%, - = 2:P / 4=P.
+SUBST: x = x:50 P.
+MAP
+..........
+.xxxxxxxx.
+.x------x.
+.x------x.
+.x--""--x.
+.x--""--x.
+.x----.-x.
+.x---.--x.
+.xxx++xxx.
+....@@....
+ENDMAP
+
+NAME: cheibrodos_fzero
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:5-
+ORIENT: float
+NSUBST: " = 3:0 / 3=0. / 1=9.., ` = 3:0 / 2=0. / 1=9..
+NSUBST: ' = 3:0 / 3=0. / 2:9 / 1=9.
+NSUBST: A = 1:% / 3=%., B = 2:* / 1=*%. / 1=%., C = 1:% / 3=%.
+MAP
+...................
+@..x...x'.'x...x..@
+..xAx...xBx...xCx..
+.x"."x...x...x`.`x.
+...................
+@..x...x'.'x...x..@
+..xAx...xBx...xCx..
+.x"."x...x...x`.`x.
+...................
+@..x...x'.'x...x..@
+..xAx...xBx...xCx..
+.x"."x...x...x`.`x.
+...................
+@..x...x'.'x...x..@
+..xAx...xBx...xCx..
+.x"."x...x...x`.`x.
+...................
+ENDMAP
+
+NAME: cheibrodos_ideogram_h
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:8-
+ORIENT: float
+KMONS: 9 = 9
+KMONS: - = 0
+KITEM: 9 = * / %
+KITEM: - = % / $
+SUBST: x : xc
+NSUBST: _ = 1:0 / 2=0., ` = 5:0 / 2=0., p = 1:0 / 3=0.
+NSUBST: " = 1:9 / 1=99-, ; = 1:* / 3=%$
+MAP
+ xwwwwwwwwwwwwwwwwx
+ wxxxxxxx00xxxxxxxw
+ wx`````x..+pppp.xw
+ wx`````x``xpppp.xw
+ wx.xx``x``xppxx.xw
+ wx;"x``x``xppx9|xw
+ wxxxx``+``xppxxxxw
+ w0.````xxxxpppp.0w
+ w0.````wwwxpppp.0w
+ wxxxx``wGwxpppp.0w
+ wx;.___wwwxxxxx+xw
+ wx-x____````````xw
+ wxxx____````````xw
+ w.______x``xxx``xw
+ w.___xx.x``x"x``xw
+ x.___x-;x..x;.``xw
+ .....xxxx00xxxxxxw
+ @.xwwwwwwwwwwwwwwx
 ENDMAP

@@ -177,8 +177,7 @@ Magic
   spellcasting, but is sometimes also used for the evoking and invoking of many
   other special abilities. They are displayed in the same way as hit points;
   nothing bad happens if these drop to zero, except, of course, that you can't
-  cast any spells. Resting restores these, too. It is difficult to have more than
-  50 magic points without using external devices.
+  cast any spells. Resting also restores your reserves of magic.
 
 Next come your defences. For all of them, more is better.
 
@@ -235,9 +234,15 @@ Place
   branch. The starting branch is called Dungeon, so that the place information
   will read "Dungeon:1" for a new character.
 
-Gold
-  Displays the number of gold pieces you have found. Gold is found scattered
-  around the dungeon, and is primarily used to buy items from shops.
+Noise
+  This is a colored bar indicating the loudness of noise that you heard on your
+  last turn. The color provides a rough guide to how far away the noise it
+  indicates might be audible. If the bar is gray, the sound is less likely to
+  be audible outside of your line of sight (at least in an open area); if it is
+  yellow, the sound is likely to be audible outside of your line of sight; and
+  if it is red, the sound will be audible at a substantial distance. If the bar
+  turns magenta, you have made one of the loudest noises in the dungeon. N.b.:
+  terrain can reduce or block the spread of noise.
 
 Time
   This indicates the amount of time that has passed since entering the dungeon,
@@ -362,8 +367,8 @@ a direction, will open/close doors, too.
 
 If there is no door in the indicated space, both Ctrl-direction and
 '*'-direction will attempt to attack any monster which may be standing there
-(this is the only way to attack a friendly creature hand-to-hand). If there is
-apparently nothing there, you will still attack it, just in case there's
+(this is the only way to attack a friendly creature with melee combat). If there
+is apparently nothing there, you will still attack it, just in case there's
 something invisible lurking around.
 
 A variety of dangerous and irritating traps are hidden around the dungeon. Traps
@@ -869,7 +874,7 @@ You can press '"' to quickly check what jewellery you're wearing.
 There are a number of types of magical staves. Some enhance your general
 spellcasting ability, while some greatly increase the power of a certain class
 of spells (and possibly reduce your effectiveness with others). Some can even be
-used in hand-to-hand combat, although with mediocre effectiveness unless you can
+used in melee combat, although with mediocre effectiveness unless you can
 harness their special power, using a combination of the Evocations skill and the
 skill specific to the staff's type. Staves which do not enhance a destructive
 magic school tend to have no combat powers at all.
@@ -1090,11 +1095,11 @@ Mutations can also be caused by specific potions, very rare trap effects, or
 spells cast by powerful enemies found deep in the dungeon. A few types of monsters
 have mutagenic corpses; these will appear in magenta by default.
 
-It is much more difficult to get rid of bad mutations than to get one. A lucky
-mutation attempt can actually remove mutations. However, the only sure-fire ways
-are to quaff a potion of cure mutation, which will attempt to remove one or more
-random mutations, or to join the gods Zin or Jivya, each of whom provides some
-remedy against mutations.
+It is more difficult to get rid of bad mutations than to get one. Using potions
+of mutations will remove a number of your current mutations, but will give you
+more mutations. These might be better to your taste. However, the only sure-fire
+ways is to join the gods Zin or Jiyva, each of whom provides some remedy against
+mutations.
 
 Demonspawn are a special case. Characters of this species get certain special
 mutations as they gain levels; these are listed in cyan. They are permanent and
@@ -1509,8 +1514,9 @@ Centaurs
   receive reduced protection from the body armour they wear.
 
 Ogres
-  Ogres are huge, chunky creatures who typically are strong rather than smart,
-  and not nimble at all. Ogres mature almost as quickly as Humans.
+  Ogres are huge, chunky creatures who are very strong and robust, but are not
+  nimble at all. Ogres mature almost as quickly as Humans. They possess a raw
+  talent for magic, but are poor at making use of magical devices.
 
   Their preferred methods of avoiding beatings are dodging and the use of
   shields. Many Ogres find it natural to wield some large and blunt weapon.
@@ -1518,19 +1524,15 @@ Ogres
   While all sophisticated forms of missile combat are too awkward for them, they
   are good at throwing things, in particular boulders.
 
-  Contrary to expectations, Ogres are not reduced to mindless brutes. They
-  possess a raw talent for witchcraft, letting them pick up the basics of
-  spellcasting at an amazing speed. However, the more arcane schools of magic
-  are foreign to them and are only learned at poor rates.
-
 Trolls
-  Trolls are like Ogres, but even nastier. They have thick, knobbly skins of any
-  colour from putrid green to mucky brown, which are covered in patches of thick
-  fur, and their mouths are full of ichor-dripping fangs.
+  Trolls are monstrous creatures with powerful claws. They have thick, knobbly
+  skins of any colour from putrid green to mucky brown, which are covered in
+  patches of thick fur.
 
-  They can rip creatures apart with their claws, and regenerate very quickly
-  from even the most terrible wounds. They learn slowly indeed - as slowly as
-  High Elves - and need a great amount of food to survive.
+  They are incredibly strong, and have a lightning-fast metabolism - requiring
+  a great deal of food to survive, but regenerating rapidly from even the most
+  terrible wounds. However, they are hopeless at spellcasting and learn most
+  skills very slowly.
 
 Minotaurs
   The Minotaurs are yet another species of hybrids - Human bodies with bovine
@@ -1585,26 +1587,29 @@ Demonspawn
 Deep Dwarves
   Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate on their
-  own, nor are they receptive to any effects which merely hasten regeneration.
-  On the other hand, Deep Dwarves have developed the ability to instantly
-  counteract small doses of damage. Their empathy with the earth makes them
-  sense their surroundings; this ability increases in power as they gain
-  experience levels.
-
-  Given their lack of innate healing, few Deep Dwarves venture out for
-  adventures or even combat. Those who do bring a wand of heal wounds, or rely
-  on divine assistance.
+  generations made them turn pale and lose all ability to regenerate health
+  over time, or to have their rate of regeneration hastened by any effects.
+  Deep Dwarves can instead draw on their magical essence to heal, but doing so
+  will gradually deplete their maximum reserves of magic. They are passively
+  able to reduce all incoming damage, and their empathy with the earth allows
+  them to sense their surroundings; these abilities increase in power as they
+  gain experience levels.
 
   Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
   damage. Offensively, they are skilled users of axes, crossbows, and slings.
   Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with invocations is great. They
-  are most at home with the magic of earth and death, eventually gaining some
-  resistance to the dark powers of necromancy.
+  by outsiders; because of this, their skill with invocations is great, and
+  they often rely on divine assistance for healing. They are most at home with
+  the magic of earth and death, eventually gaining some resistance to the dark
+  powers of necromancy.
 
-  Deep Dwarves can tinker with wands so as to recharge them. However, each time
-  they do so, they lose a bit of their magical essence.
+Deep Elves
+   This is an Elven species who long ago fled the overworld to live in darkness
+   underground. There, they developed their mental powers, evolving a natural
+   gift for all forms of magic (including necromancy and earth magic), and
+   adapted physically to their new environment, becoming shorter, weaker, and
+   losing all colouration. They are poor at melee combat, but excellent
+   at fighting from a distance.
 
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
@@ -1624,6 +1629,17 @@ Felids
 
   Felids gain extra lives as they increase in levels. Upon death, they will be
   resurrected in a safe place, losing an experience level in the process.
+
+Barachim
+  Barachim are an amphibious humanoid race, spawned at the dawn of time as
+  servants for the gods. Inevitably, they rebelled and fled into the mortal
+  world; but even uncounted years later, the darkness still flees at their
+  approach, remembering those who they once served.
+
+  Barachim's most remarkable trait is their grossly overmuscled legs, which
+  allow them to leap great distances. When not leaping, they are somewhat
+  slow-moving, and the long sight-lines that their heritage creates can be a
+  major disadvantage, but they can master almost any skill.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
@@ -1659,7 +1675,7 @@ Formicids
   and magical sides. Their abilities have been used to tunnel immense underground
   communities and structures, many of which are tens of thousands of years old.
 
-  Perhaps unfortunately, their strong ties to to earth have left them completely
+  Perhaps unfortunately, their strong ties to earth have left them completely
   impervious to being teleported or hasted; Formicids are tied to the earth with
   a complete sense of stasis. While this is a seemingly bad property for a
   dungeon adventurer, stasis has the beneficial effect of preventing many types
@@ -1684,7 +1700,7 @@ Vine Stalkers
   between their health and magical reserves. They also physically regenerate
   at an alarming rate. However these traits come at a price: the dual nature of
   their bodies makes them extremely frail, and they cannot benefit from potions
-  or wands to heal their wounds.
+  to heal their wounds.
 
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey
@@ -1694,36 +1710,18 @@ Vine Stalkers
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
-Elves
-========================================
+Gnolls
+  Gnolls are a race of caniform humanoids hailing from the arid deserts and
+  grasslands of the east. With a variety of lurid tales told of them, others
+  avoid the Gnolls. Despite their isolation, Gnolls are unusually drawn to
+  the Dungeon.
 
-There are a number of distinct species of Elf. Elves are all physically slight
-but long-lived people, quicker-witted than Humans, but sometimes slower to learn
-new things. Elves are especially good at using those skills which require a
-degree of finesse, such as stealth, sword-fighting and archery, but tend to be
-poor at using brute force and inelegant forms of combat. They find heavy armour
-to be uncomfortable.
-
-Due to their fey natures, all Elves are good at using magic in general and
-elemental magic in particular, while their affinity for other types of magic
-varies among the different sub-species.
-
-High Elves
-  This is a tall and powerful Elven species who advance in levels slowly,
-  requiring half again as much experience as Humans. They have good intelligence
-  and dexterity, but suffer in strength. Compared with Humans, they have fewer
-  HP but more magic. Among all races, they are best with blades and bows. They
-  are not very good with necromancy or with earth or poison magic, but are
-  highly skilled with most other forms of magic, especially Air and Charms.
-
-Deep Elves
-  This is an Elven species who long ago fled the overworld to live in darkness
-  underground. There, they developed their mental powers, evolving a natural
-  gift for all forms of magic (including necromancy and earth magic), and
-  adapted physically to their new environment, becoming shorter and weaker than
-  High Elves and losing all colouration. They are poor at hand-to-hand combat,
-  but excellent at fighting from a distance. They advance in levels at the same
-  speed as High Elves.
+  Gnolls are quick to learn, picking up the basics of any skill within a
+  short period of time. Their attention wanes quickly, though, and they find it
+  more and more difficult to train a given skill the more practised they become
+  at it. Thus, Gnolls often prefer to dabble in a wide variety of fresh
+  and interesting skills. Their powerful noses indicate to them where treasures
+  lay hidden in the Dungeon.
 
 The Undead
 ========================================
@@ -1751,7 +1749,8 @@ Ghouls
   Ghouls are horrible undead creatures, slowly rotting away. Although Ghouls can
   sleep in their graves for years on end, when they rise to walk among the
   living, they must eat flesh to survive. Raw flesh is preferred, and Ghouls
-  heal and reverse the effects of their eternal rotting by consuming it.
+  heal and reverse the effects of their eternal rotting by consuming it, but
+  they can never become truly full.
 
   They aren't very good at doing most things, although they make decent unarmed
   fighters with their claws and, due to their contact with the grave, can use
@@ -1812,10 +1811,6 @@ Black Draconians
   good at air magic but feel cumbersome with earth magic. Their wings will
   eventually grow larger, which allows them to fly continuously when combined
   with their natural skill with air magic.
-
-Mottled Draconians
-  are somewhat in touch with fire, yet are not weak with ice. They can spit
-  globs of sticky flame at those adjacent to them.
 
 Purple Draconians
   are highly adapted to all spellcasting in general, and to hexes and charms in
@@ -1989,7 +1984,7 @@ help menu using '?%', and during character choice with '%'.
 Fighting skills
 ========================================
 
-Fighting is the basic skill used in ranged and hand-to-hand combat, and applies no matter
+Fighting is the basic skill used in ranged and melee combat, and applies no matter
 which weapon your character is wielding (if any). Fighting is also the skill
 that determines the number of hit points your character gets as they increase in
 levels (note that this is calculated so that you don't get a long run advantage
@@ -2051,11 +2046,10 @@ There are a number of individual weapon skills for missile weapons:
   * Slings
 
 Throwing is the skill for all things hurled without a launcher: tomahawks,
-javelins, tomahawks, nets, etc. The other skills refer to various types of
-missiles shot with a launcher. An exception to this are needles: these are
-launched using blowguns, an action which uses the Throwing skill. Since
-stones can be thrown without launchers to some effect, these skills
-crosstrain:
+javelins, nets, etc. The other skills refer to various types of missiles shot
+with a launcher. An exception to this are needles: these are launched using
+blowguns, an action which uses the Throwing skill. Since stones can be thrown
+without launchers to some effect, these skills crosstrain:
 
   * Throwing and Slings
 
@@ -2130,9 +2124,8 @@ Invocations
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
-  number of charges in a wand through usage. Similarly, all other items that
-  have certain powers (such as crystal balls, decks of cards, or elemental
-  summoners) work better for characters trained in this skill.
+  number of charges in a wand through usage. Similarly, various other items
+  that have evocable powers work better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The

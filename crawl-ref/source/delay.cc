@@ -28,16 +28,17 @@
 #include "exercise.h"
 #include "food.h"
 #include "fprop.h"
-#include "godabil.h"
-#include "godconduct.h"
-#include "godpassive.h"
-#include "godprayer.h"
-#include "godwrath.h"
+#include "god-abil.h"
+#include "god-conduct.h"
+#include "god-passive.h"
+#include "god-prayer.h"
+#include "god-wrath.h"
 #include "hints.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
-#include "item_use.h"
+#include "item-use.h"
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -56,6 +57,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "sound.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-util.h"
@@ -184,56 +186,6 @@ bool MacroDelay::try_interrupt()
     return true;
     // There's no special action needed for macros - if we don't call out
     // to the Lua function, it can't do damage.
-}
-
-static void _interrupt_vampire_feeding(item_def& corpse, int dur)
-{
-    mpr("You stop draining the corpse.");
-
-    _xom_check_corpse_waste();
-
-    // Don't skeletonize a corpse if it's no longer there!
-    if (corpse.defined() && corpse.is_type(OBJ_CORPSES, CORPSE_BODY)
-        && corpse.pos == you.pos())
-    {
-        const item_def old_corpse = corpse;
-
-        mpr("All the blood oozes out of the corpse!");
-
-        bleed_onto_floor(you.pos(), corpse.mon_type, dur, false);
-
-        if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-            turn_corpse_into_skeleton(corpse);
-        else
-            dec_mitm_item_quantity(corpse.index(), 1);
-
-        if (mons_genus(old_corpse.mon_type) == MONS_ORC)
-            did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-        if (mons_class_holiness(old_corpse.mon_type) & MH_HOLY)
-            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
-    }
-}
-
-bool FeedVampireDelay::try_interrupt()
-{
-    _interrupt_vampire_feeding(corpse, duration);
-    return true;
-}
-
-bool EatDelay::try_interrupt()
-{
-    if (duration > 1 && !was_prompted)
-    {
-        if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep eating?", true, 'N', false))
-        {
-            mpr("You stop eating.");
-            return true;
-        }
-        else
-            was_prompted = true;
-    }
-    return false;
 }
 
 bool ArmourOnDelay::try_interrupt()
@@ -613,48 +565,6 @@ void MacroDelay::handle()
         you.time_taken = 0;
 }
 
-bool FeedVampireDelay::invalidated()
-{
-    // Vampires stop feeding if ...
-    // * engorged ("alive")
-    // * bat form runs out due to becoming full
-    // * corpse disappears for some reason (e.g. animated by a monster)
-    if (!corpse.defined()                                     // missing
-        || corpse.base_type != OBJ_CORPSES                    // noncorpse
-        || corpse.pos != you.pos()                            // elsewhere
-        || you.hunger_state == HS_ENGORGED
-        || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT)
-    {
-        // Messages handled in _food_change() in food.cc.
-        _interrupt_vampire_feeding(corpse, duration);
-        return true;
-    }
-    else if (corpse.is_type(OBJ_CORPSES, CORPSE_SKELETON))
-    {
-        mprf("The corpse has rotted away into a skeleton before "
-             "you could finish drinking it!");
-        _interrupt_vampire_feeding(corpse, duration);
-        return true;
-    }
-
-    return false;
-}
-
-bool EatDelay::invalidated()
-{
-    // Stop eating if something happens (chunk rots, you get teleported,
-    // you get polymorphed into a lich, etc.)
-    if (food.base_type != OBJ_FOOD
-        || !can_eat(food, true)
-        || !in_inventory(food) && food.pos != you.pos())
-    {
-        mpr("You stop eating.");
-        return true;
-    }
-
-    return false;
-}
-
 static bool _check_corpse_gone(item_def& item, const char* action)
 {
     // A monster may have raised the corpse you're chopping up! -- bwr
@@ -720,12 +630,6 @@ bool BlurryScrollDelay::invalidated()
         return true;
     }
     return false;
-}
-
-void FeedVampireDelay::tick()
-{
-    mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
-    vampire_nutrition_per_turn(corpse, 0);
 }
 
 void MultidropDelay::tick()
@@ -802,28 +706,28 @@ void handle_delay()
 
 void JewelleryOnDelay::finish()
 {
-    // recheck stasis here, since our condition may have changed since
-    // starting the amulet swap process
-    // just breaking here is okay because swapping jewellery is a one-turn
-    // action, so conceptually there is nothing to interrupt - in other
-    // words, this is equivalent to if the user took off the previous
-    // amulet and was slowed before putting the amulet of stasis on as a
-    // separate action on the next turn
+    // Recheck -Tele here, since our condition may have changed since starting
+    // the amulet swap process.
+    // Just breaking here is okay because swapping jewellery is a one-turn
+    // action, so conceptually there is nothing to interrupt - in other words,
+    // this is equivalent to if the user took off the previous amulet and was
+    // affected by tele other before putting the -Tele amulet on as a separate
+    // action on the next turn.
     // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
     if (!crawl_state.disables[DIS_CONFIRMATIONS]
-        && nasty_stasis(jewellery, OPER_PUTON)
+        && needs_notele_warning(jewellery, OPER_PUTON)
         && item_ident(jewellery, ISFLAG_KNOW_TYPE))
     {
         string prompt = "Really put on ";
         prompt += jewellery.name(DESC_INVENTORY);
-        prompt += string(" while ")
-                  + (you.duration[DUR_TELEPORT] ? "about to teleport" :
-                     you.duration[DUR_SLOW] ? "slowed" : "hasted");
-        prompt += "?";
+        prompt += " while about to teleport?";
         if (!yesno(prompt.c_str(), false, 'n'))
             return;
     }
 
+#ifdef USE_SOUND
+    parse_sound(WEAR_JEWELLERY_SOUND);
+#endif
     puton_ring(jewellery.link, false);
 }
 
@@ -837,6 +741,9 @@ void ArmourOnDelay::finish()
 
     const equipment_type eq_slot = get_armour_slot(armour);
 
+#ifdef USE_SOUND
+    parse_sound(EQUIP_ARMOUR_SOUND);
+#endif
     mprf("You finish putting on %s.", armour.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
@@ -858,41 +765,18 @@ void ArmourOffDelay::finish()
     const equipment_type slot = get_armour_slot(armour);
     ASSERT(you.equip[slot] == armour.link);
 
+#ifdef USE_SOUND
+    parse_sound(DEQUIP_ARMOUR_SOUND);
+#endif
     mprf("You finish taking off %s.", armour.name(DESC_YOUR).c_str());
     unequip_item(slot);
 }
 
-void EatDelay::finish()
-{
-    if (food_turns(food) > 1) // If duration was just one turn, don't print.
-        mpr("You finish eating.");
-    finish_eating_item(food);
-}
-
-void FeedVampireDelay::finish()
-{
-    mpr("You finish drinking.");
-
-    vampire_nutrition_per_turn(corpse, 1);
-
-    const item_def old_corpse = corpse;
-
-    if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-    {
-        turn_corpse_into_skeleton(corpse);
-        item_check();
-    }
-    else
-        dec_mitm_item_quantity(corpse.index(), 1);
-
-    if (mons_genus(old_corpse.mon_type) == MONS_ORC)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    if (mons_class_holiness(corpse.mon_type) & MH_HOLY)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
-}
-
 void MemoriseDelay::finish()
 {
+#ifdef USE_SOUND
+    parse_sound(MEMORISE_SPELL_SOUND);
+#endif
     mpr("You finish memorising.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
@@ -948,6 +832,16 @@ void PasswallDelay::finish()
     }
     else
         move_player_to_grid(dest, false);
+
+    // the last phase of the delay is a fake (0-time) turn, so world_reacts
+    // and player_reacts aren't triggered. Need to do a tiny bit of cleanup.
+    // This isn't very elegant, and perhaps a version of player_reacts that is
+    // triggered by changing location would be better (per Pleasingfungus),
+    // but player_reacts is very sensitive to order and can't be easily
+    // refactored in this way.
+    search_around();
+    you.update_beholders();
+    you.update_fearmongers();
 }
 
 void ShaftSelfDelay::finish()
@@ -1339,8 +1233,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                 }
             }
         }
-        if (player_mutation_level(MUT_SCREAM)
-            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        if (you.has_mutation(MUT_SCREAM)
+            && x_chance_in_y(3 + you.get_mutation_level(MUT_SCREAM) * 3, 100))
         {
             yell(mon);
         }

@@ -13,6 +13,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stringutil.h"
+#include "tile-inventory-flags.h"
 #include "tilepick.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)

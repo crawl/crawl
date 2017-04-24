@@ -3,8 +3,9 @@
  * @brief Provide a way to iterator over all actors, subject to a few common restrictions.
 **/
 
-#ifndef ACT_ITER_H
-#define ACT_ITER_H
+#pragma once
+
+#include "los-type.h"
 
 class actor_near_iterator
 {
@@ -39,12 +40,17 @@ public:
     monster* operator->() const;
     monster_near_iterator& operator++();
     monster_near_iterator operator++(int);
+    bool operator==(const monster_near_iterator &other);
+    bool operator!=(const monster_near_iterator &other);
+    monster_near_iterator begin();
+    monster_near_iterator end();
 
 protected:
     const coord_def center;
     los_type _los;
     const actor* viewer;
     int i;
+    int begin_point;
 
     bool valid(const monster* a) const;
     void advance();
@@ -65,5 +71,3 @@ protected:
     int i;
     void advance();
 };
-
-#endif

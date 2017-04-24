@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Spellbook/rod contents array and management functions
+ * @brief Spellbook contents array and management functions
 **/
 
 #include "AppHdr.h"
@@ -23,10 +23,11 @@
 #include "describe-spells.h"
 #include "end.h"
 #include "english.h"
-#include "godconduct.h"
-#include "goditem.h"
+#include "god-conduct.h"
+#include "god-item.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -53,45 +54,40 @@ typedef vector<spell_type>                     spell_list;
 typedef unordered_set<spell_type, hash<int>>   spell_set;
 static spell_type _choose_mem_spell(spell_list &spells, unsigned int num_misc);
 
-static const map<rod_type, spell_type> _rod_spells =
+static const map<wand_type, spell_type> _wand_spells =
 {
-    { ROD_LIGHTNING,   SPELL_THUNDERBOLT },
-#if TAG_MAJOR_VERSION == 34
-    { ROD_SWARM,       SPELL_SUMMON_SWARM },
-#endif
-    { ROD_IGNITION,    SPELL_EXPLOSIVE_BOLT },
-    { ROD_CLOUDS,      SPELL_CLOUD_CONE  },
-#if TAG_MAJOR_VERSION == 34
-    { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
-#endif
-    { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
-    { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
-    { ROD_IRON,        SPELL_SCATTERSHOT },
-#if TAG_MAJOR_VERSION == 34
-    { ROD_WARDING,     SPELL_NO_SPELL },
-    { ROD_VENOM,       SPELL_NO_SPELL },
-#endif
+    { WAND_FLAME, SPELL_THROW_FLAME },
+    { WAND_PARALYSIS, SPELL_PARALYSE },
+    { WAND_CONFUSION, SPELL_CONFUSE },
+    { WAND_DIGGING, SPELL_DIG },
+    { WAND_ICEBLAST, SPELL_ICEBLAST },
+    { WAND_LIGHTNING, SPELL_LIGHTNING_BOLT },
+    { WAND_POLYMORPH, SPELL_POLYMORPH },
+    { WAND_ENSLAVEMENT, SPELL_ENSLAVEMENT },
+    { WAND_ACID, SPELL_CORROSIVE_BOLT },
+    { WAND_DISINTEGRATION, SPELL_DISINTEGRATE },
+    { WAND_CLOUDS, SPELL_CLOUD_CONE },
+    { WAND_SCATTERSHOT, SPELL_SCATTERSHOT },
+    { WAND_RANDOM_EFFECTS, SPELL_RANDOM_EFFECTS },
 };
 
-spell_type spell_in_rod(rod_type rod)
+
+spell_type spell_in_wand(wand_type wand)
 {
-    if (const spell_type* const spl = map_find(_rod_spells, rod))
+    if (item_type_removed(OBJ_WANDS, wand))
+        return SPELL_NO_SPELL;
+
+    if (const spell_type* const spl = map_find(_wand_spells, wand))
         return *spl;
-    die("unknown rod type %d", rod);
+
+    die("Unknown wand: %d", wand);
 }
 
 vector<spell_type> spells_in_book(const item_def &book)
 {
-    ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_RODS);
+    ASSERT(book.base_type == OBJ_BOOKS);
 
     vector<spell_type> ret;
-    if (book.base_type == OBJ_RODS)
-    {
-        if (item_type_known(book))
-            ret.emplace_back(spell_in_rod(static_cast<rod_type>(book.sub_type)));
-        return ret;
-    }
-
     const CrawlHashTable &props = book.props;
     if (!props.exists(SPELL_LIST_KEY))
         return spellbook_template(static_cast<book_type>(book.sub_type));
@@ -822,6 +818,12 @@ string desc_cannot_memorise_reason(spell_type spell)
 */
 static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
+    if (spell_removed(specspell))
+    {
+        mpr("Sorry, this spell is gone!");
+        return false;
+    }
+
     if (!wizard && !can_learn_spell())
         return false;
 
@@ -877,7 +879,14 @@ bool learn_spell(spell_type specspell, bool wizard)
 
     if (!wizard)
     {
-        int severity = fail_severity(specspell);
+        if (specspell == SPELL_OZOCUBUS_ARMOUR
+            && !player_effectively_in_light_armour())
+        {
+            mprf(MSGCH_WARN,
+                 "Your armour is too heavy for you to cast this spell!");
+        }
+
+        const int severity = fail_severity(specspell);
 
         if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
             mprf(MSGCH_WARN, "This spell is impossible to cast!");
@@ -926,11 +935,4 @@ bool book_has_title(const item_def &book)
 
     return book.props.exists(BOOK_TITLED_KEY)
            && book.props[BOOK_TITLED_KEY].get_bool() == true;
-}
-
-void destroy_spellbook(const item_def &book)
-{
-    int maxlevel = 0;
-    for (spell_type stype : spells_in_book(book))
-        maxlevel = max(maxlevel, spell_difficulty(stype));
 }

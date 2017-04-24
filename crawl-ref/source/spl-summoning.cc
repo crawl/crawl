@@ -25,17 +25,17 @@
 #include "env.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "godconduct.h"
-#include "goditem.h"
+#include "god-conduct.h"
+#include "god-item.h"
 #include "invent.h"
-#include "itemprop.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "mapmark.h"
-#include "melee_attack.h"
+#include "melee-attack.h"
 #include "message.h"
-#include "mgen_data.h"
+#include "mgen-data.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
@@ -62,7 +62,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "timed_effects.h"
+#include "timed-effects.h"
 #include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -119,7 +119,7 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
     monster_type mon = MONS_PROGRAM_BUG;
 
     if (x_chance_in_y(10, pow + 1))
-        mon = coinflip() ? MONS_BAT : MONS_RAT;
+        mon = random_choose(MONS_BAT, MONS_RAT);
     else
         mon = MONS_QUOKKA;
 
@@ -366,13 +366,9 @@ static monster_type _choose_dragon_type(int pow, god_type god, bool player)
     else
         mon = random_choose(MONS_FIRE_DRAGON, MONS_ICE_DRAGON);
 
-    // For good gods, switch away from shadow dragons (and, for TSO,
-    // golden dragons, since they poison) to storm/iron dragons.
-    if (player && player_will_anger_monster(mon)
-        || (god == GOD_SHINING_ONE && mon == MONS_GOLDEN_DRAGON))
-    {
+    // For good gods, switch away from shadow dragons to storm/iron dragons.
+    if (player && player_will_anger_monster(mon))
         mon = random_choose(MONS_STORM_DRAGON, MONS_IRON_DRAGON);
-    }
 
     return mon;
 }
@@ -559,14 +555,6 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     if (pow >= 100 && (mon == MONS_FIRE_DRAGON || mon == MONS_ICE_DRAGON))
         how_many = 2;
 
-    // For good gods, switch away from shadow dragons (and, for TSO,
-    // golden dragons, since they poison) to storm/iron dragons.
-    if (player_will_anger_monster(mon)
-        || (god == GOD_SHINING_ONE && mon == MONS_GOLDEN_DRAGON))
-    {
-        mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
-    }
-
     for (int i = 0; i < how_many; ++i)
     {
         if (monster *dragon = create_monster(
@@ -633,12 +621,12 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         if (pow <= 100)
         {
             // bears
-            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_POLAR_BEAR;
+            mon = random_choose(MONS_BLACK_BEAR, MONS_POLAR_BEAR);
         }
         else if (pow <= 140)
         {
             // ogres
-            mon = (one_chance_in(3) ? MONS_TWO_HEADED_OGRE : MONS_OGRE);
+            mon = random_choose_weighted(1, MONS_TWO_HEADED_OGRE, 2, MONS_OGRE);
         }
         else if (pow <= 180)
         {
@@ -650,7 +638,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         else
         {
             // giants
-            mon = (coinflip()) ? MONS_HILL_GIANT : MONS_STONE_GIANT;
+            mon = random_choose(MONS_CYCLOPS, MONS_STONE_GIANT);
         }
     }
 
@@ -821,7 +809,7 @@ static void _animate_weapon(int pow, actor* target)
         wpn->flags |= ISFLAG_THROWN;
     }
     // If sac love, the weapon will go after you, not the target.
-    const bool sac_love = player_mutation_level(MUT_NO_LOVE);
+    const bool sac_love = you.get_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
     const bool friendly = !target_is_player && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);
@@ -997,7 +985,7 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
     if (mons)
     {
         // Immediately apply injury bond
-        guardian_golem_bond(mons);
+        guardian_golem_bond(*mons);
 
         mpr("A guardian golem appears, shielding your allies.");
     }
@@ -1218,7 +1206,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
 
             // If we didn't find a valid spell set yet, just give up
             if (tries > 20)
-                monster_die(mons, KILL_RESET, NON_MONSTER);
+                monster_die(*mons, KILL_RESET, NON_MONSTER);
             else
             {
                 // Choose a new duration based on HD.
@@ -1246,7 +1234,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
                     && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
                 {
                     if (player_will_anger_monster(**mi))
-                        monster_die(*mi, KILL_RESET, NON_MONSTER);
+                        monster_die(**mi, KILL_RESET, NON_MONSTER);
 
                     mi->props["summon_id"].get_int() = mons->mid;
                 }
@@ -1345,7 +1333,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
 spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
     fail_check();
-    if (one_chance_in(5))
+    if (god == GOD_NO_GOD && one_chance_in(5))
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss"));
@@ -1424,7 +1412,8 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         fail_check();
         // Replace some rock walls with trees, then scatter a smaller number
         // of trees on unoccupied floor (such that they do not break connectivity)
-        for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
+        for (distance_iterator di(caster->pos(), false, true,
+                                  LOS_DEFAULT_RANGE); di; ++di)
         {
             if ((feat_is_wall(grd(*di)) && !feat_is_permarock(grd(*di))
                  && x_chance_in_y(pow, 150))
@@ -1533,7 +1522,6 @@ static void _equip_undead(const coord_def &a, const item_def& corpse, monster *m
         // Stupid undead can't use most items.
         if (si->base_type != OBJ_WEAPONS
             && si->base_type != OBJ_STAVES
-            && si->base_type != OBJ_RODS
             && si->base_type != OBJ_ARMOUR
             || is_range_weapon(*si))
         {
@@ -2637,7 +2625,7 @@ void end_battlesphere(monster* mons, bool killed)
         if (!cell_is_solid(mons->pos()))
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
 
-        monster_die(mons, KILL_RESET, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
     }
 }
 
@@ -3147,7 +3135,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     }
 
     if (!killed)
-        monster_die(mons, KILL_RESET, NON_MONSTER);
+        monster_die(*mons, KILL_RESET, NON_MONSTER);
 }
 
 bool trigger_spectral_weapon(actor* agent, const actor* target)
@@ -3316,8 +3304,6 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_EXECUTIONERS,        { 3, 1 } },
     { SPELL_AWAKEN_EARTH,               { 9, 2 } },
     { SPELL_GREATER_SERVANT_MAKHLEB,    { 1, 2 } },
-    // Rod specials
-    { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -3335,7 +3321,6 @@ int summons_limit(spell_type spell)
 static bool _spell_has_variable_cap(spell_type spell)
 {
     return spell == SPELL_SHADOW_CREATURES
-           || spell == SPELL_WEAVE_SHADOWS
            || spell == SPELL_MONSTROUS_MENAGERIE;
 }
 

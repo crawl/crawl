@@ -86,11 +86,6 @@ Hellfire ability
 
 Hærger dine fjender med helvedesild.
 %%%%
-Release Delayed Fireball ability
-
-Udløser øjeblikkeligt en tidligere forberedt (forsinket) ildkugle, uden
-yderligere omkostninger i form af magi eller sult.
-%%%%
 Stop Singing ability
 
 Hold op med at synge dit slagskvad.

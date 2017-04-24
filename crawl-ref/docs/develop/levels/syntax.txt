@@ -206,10 +206,10 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           Lair, for instance (Lair is treated as depth 10 for this purpose.)
           In general, you should avoid using such unconstrained DEPTHs.
 
-CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
+CHANCE:   <roll> [ (<depth-ranges>) ]
 
-          CHANCE allows you to control the probability that your map
-          is used on any given level with an absolute roll.
+          CHANCE allows you to control the probability that your map is used on
+          any given level with an absolute roll.
 
           There are two ways to specify the CHANCE roll:
 
@@ -217,73 +217,68 @@ CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
           or
           CHANCE: 5.01%
 
-          If specified as a raw number, the chance of selecting the
-          vault is <number> in 10000. If specified as a percentage,
-          the chance of selecting the vault is <perc> * 100 in 10000.
+          If specified as a raw number, the chance of selecting the vault is
+          <number> in 10000. If specified as a percentage, the chance of
+          selecting the vault is <perc> * 100 in 10000.
 
-          CHANCE is useful for random vaults with a DEPTH (or
-          default-depth) setting that want to ensure a certain chance
-          of being placed per level.
+          CHANCE is useful for random vaults with a DEPTH (or default-depth)
+          setting that want to ensure a certain chance of being placed per
+          level.
 
-          If a map in the current depth range has a CHANCE, Crawl will
-          roll a random number in the range 1-10000, and select the
-          map if the CHANCE is >= the rolled random number.
+          If a map in the current depth range has a CHANCE, Crawl will roll a
+          random number in the range 1-10000, and select the map if the CHANCE
+          is >= the rolled random number.
 
-          Dummy vaults may also use CHANCE to specify an absolute chance
-          of using the dummy instead of a real map. For dummies, use
-          CHANCE with a priority of 0:
+          Dummy vaults (vaults with the "dummy" tag) use CHANCE to specify
+          an absolute chance of using the dummy instead of a real map. A CHANCE
+          of 80% means the dummy will be used in 80% of vault placement
+          attempts.
 
-             CHANCE: 0 : 80%
-
-          This specifies a CHANCE of 80%, which means the dummy will
-          be used in 80% of vault placement attempts.
-
-          The Lua equivalent of the two simple CHANCE forms is:
+          The Lua equivalent of CHANCE is:
 
           : chance(<number>)
-          : chance(<priority>, <number>)
 
           These lines are all equivalent:
           CHANCE: 5%
           CHANCE: 500
           : chance(500)
 
-          A common case when using CHANCE is to assign a CHANCE to a
-          set of maps. For instance, if you have a set of portal vault
-          entries, and you want one of the set to be used on 5% of all
-          levels, you can do this:
+          A common case when using CHANCE is to assign a CHANCE to a set of
+          maps. For instance, if you have a set of portal vault entries, and
+          you want one of the set to be used on 5% of all levels, you can do
+          this:
 
           NAME: portal_a
-          CHANCE: 50 : 5%
+          CHANCE: 5%
           TAGS: chance_portal_group
           ...
 
           NAME: portal_b
-          CHANCE: 50 : 5%
+          CHANCE: 5%
           TAGS: chance_portal_group
           ...
 
-          That is, if you have a set of maps that use CHANCE and are
-          tagged chance_xxx, then one map of that set will be used
-          when the chance is met.
+          That is, if you have a set of maps that use CHANCE and are tagged
+          chance_xxx, then one map of that set will be used when the chance is
+          met. You can combine use of CHANCE with WEIGHT (see below) to have
+          the same overall chance of selecting from the set while giving
+          different likelihoods to maps within the set.
 
-          In some cases you'd like to set a different CHANCE based on where
-          the vault is being placed. For instance:
+          In some cases you'd like to set a different CHANCE based on where the
+          vault is being placed. For instance:
 
-          NAME: ziggurat_portal
-          CHANCE: 5% (Pan), 2% (D:*, Lair:2-4), 3%
+          NAME: ziggurat_portal CHANCE: 5% (Pan), 2% (D:*, Lair:2-4), 3%
 
-          If you specify a depth range in parentheses after a chance
-          spec, that spec applies only in that depth range. Each
-          chance's depth range will be checked in the order specified,
-          with the exception of the default chance (3% in this example)
-          which is always checked last.
+          If you specify a depth range in parentheses after a chance spec, that
+          spec applies only in that depth range. Each chance's depth range will
+          be checked in the order specified, with the exception of the default
+          chance (3% in this example) which is always checked last.
 
           The Lua equivalent of depth-constrained CHANCE:
-          CHANCE: 2% (D:*, Lair:2-4), 0 : 50% (Geh)
+          CHANCE: 2% (D:*, Lair:2-4), 50% (Geh)
           is as:
           : depth_chance("D:*, Lair:2-4", 200)
-          : depth_chance("Geh", 0, 5000)
+          : depth_chance("Geh", 5000)
 
 
 WEIGHT:   (number with 10 being default)
@@ -339,7 +334,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
-             same depth / place.
+             same depth / place. These vaults should have a CHANCE statement to
+             define this probability; see CHANCE: above.
           * "arrival": this tag MUST be there for a vault to be pickable as a
              D:1 arrival vault.
           * "extra": requests that the dungeon builder treat this as
@@ -1322,6 +1318,10 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           In theory, this will create "Ploog's Wand Emporium", which has
           exactly three items, each of which is a randomly chosen wand.
 
+          Note: Transporters are placed in vaults via lua markers, and
+          shouldn't need placement via KFEAT. See the Transporters section
+          below.
+
 KMONS:    ? = orc priest / w:3 deep elf priest
 
           KMONS: allows you to specify a placeholder symbol that indicates
@@ -1685,3 +1685,25 @@ entire group of glyphs being assigned. For example:
     NSUBST: A = 1:. / *:x
     NSUBST: B = 1:. / *:x
     NSUBST: C = 1:. / *:x
+
+Transporters
+------------
+
+Transporters are placed in vaults via two lua marker classes, which can be
+created with the functions transp_loc(name) and transp_dest_loc(name). Here
+`name' is a string shared between the transporter marker and the the
+transporter destination marker. For example,
+
+    MARKER: E = lua:transp_loc("the_bubble_entry")
+    MARKER: F = lua:transp_dest_loc("the_bubble_entry")
+
+will place a transporter on any glyph E that leads to the location of glyph F.
+This form of placement works both within a vault and when the transporter and
+its destination are in different vaults/subvaults, since transporters are
+placed from the markers after the level is generated.
+
+You may have multiple glyphs with the same transporter markers name, and they
+will all lead to the same destination after placement. Note that it's not valid
+to have multiple glyphs with the same destination marker. Any randomization of
+destinations can be done through normal SUBST/NSUBST/SHUFFLE operations before
+the MARKER statements.

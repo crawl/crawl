@@ -3,8 +3,7 @@
  * @brief "Overview" functionality
 **/
 
-#ifndef OVERMAP_H
-#define OVERMAP_H
+#pragma once
 
 #include <vector>
 
@@ -21,8 +20,8 @@ bool unnotice_feature(const level_pos &pos);
 string overview_description_string(bool display);
 void enter_branch(branch_type branch, level_id from);
 void mark_corrupted_level(level_id li);
-void seen_runed_door();
-void opened_runed_door();
+void seen_tracked_feature(dungeon_feature_type feat);
+void explored_tracked_feature(dungeon_feature_type feat);
 
 ///////////////////////////////////////////////////////////
 void set_level_exclusion_annotation(string str,
@@ -47,4 +46,3 @@ class reader;
 void marshallUniqueAnnotations(writer& outf);
 void unmarshallUniqueAnnotations(reader& inf);
 bool connected_branch_can_exist(branch_type br);
-#endif

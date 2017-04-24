@@ -45,6 +45,41 @@ struct species_def
 static const map<species_type, species_def> species_data =
 {
 
+{ SP_BARACHI, {
+    "Ba",
+    "Barachi", "Barachian", "Frog",
+    SPF_NO_HAIR,
+    0, 0, 0, 3,
+    MONS_BARACHI,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
+    9, 8, 7, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 4,
+    { { MUT_SLOW, 1, 1 }, { MUT_HOP, 1, 1}, {MUT_HOP, 1, 13}, },
+    { "Shadows flee at your approach. (+LOS)", "You can swim through water.", },
+    { "+LOS", "swims", },
+    { JOB_FIGHTER, JOB_BERSERKER, JOB_SKALD, JOB_SUMMONER, JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
+{ SP_GNOLL, {
+    "Gn",
+    "Gnoll", nullptr, nullptr,
+    SPF_NONE,
+    0, 0, 0, 2,
+    MONS_GNOLL,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 8, 9, // 24
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
+    { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, },
+    {"You have a short attention span."},
+    {"short attention span"},
+    { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
+      JOB_WANDERER },
+    { SK_SHORT_BLADES, SK_MACES_FLAILS, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_CENTAUR, {
     "Ce",
     "Centaur", nullptr, nullptr,
@@ -72,12 +107,12 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 8, 8, // 27
     { STAT_STR, STAT_INT }, 4,
-    { { MUT_SLOW_REGENERATION, 3, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 },
+    { { MUT_NO_REGENERATION, 1, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 },
       { MUT_PASSIVE_MAPPING, 1, 9 }, { MUT_PASSIVE_MAPPING, 1, 18 },
       { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 14 }, },
     { "You are resistant to damage.",
-      "You can recharge devices by infusing magical energy." },
-    { "damage resistance", "recharge devices" },
+      "You can heal yourself by infusing magical energy." },
+    { "damage resistance", "heal wounds" },
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_NECROMANCER,
       JOB_EARTH_ELEMENTALIST },
     { SK_MACES_FLAILS, SK_AXES, SK_LONG_BLADES, SK_CROSSBOWS, SK_SLINGS },
@@ -253,6 +288,7 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
 } },
 
+#if TAG_MAJOR_VERSION == 34
 { SP_MOTTLED_DRACONIAN, {
     "Dr",
     "Mottled Draconian", "Draconian", "Draconian",
@@ -269,6 +305,7 @@ static const map<species_type, species_def> species_data =
     {}, // not a starting race
     {}, // not a starting race
 } },
+#endif
 
 { SP_PALE_DRACONIAN, {
     "Dr",
@@ -337,7 +374,7 @@ static const map<species_type, species_def> species_data =
     12, 7, 6, // 25
     { STAT_STR, STAT_INT }, 4,
     { { MUT_ANTENNAE, 3, 1 }, },
-    { "You are under a permanent stasis effect.",
+    { "You cannot be hasted, slowed, berserked, paralysed or teleported.",
       "You can dig through walls and to a lower floor.",
       "Your four strong arms can wield two-handed weapons with a shield." },
     { "permanent stasis", "dig shafts and tunnels", "four strong arms" },
@@ -345,27 +382,6 @@ static const map<species_type, species_def> species_data =
       JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
       SK_CROSSBOWS, SK_SLINGS },
-} },
-
-{ SP_GHOUL, {
-    "Gh",
-    "Ghoul", "Ghoulish", nullptr,
-    SPF_NO_HAIR,
-    0, 1, -1, 3,
-    MONS_GHOUL,
-    HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
-    11, 3, 4, // 18
-    { STAT_STR }, 5,
-    { { MUT_CARNIVOROUS, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
-      { MUT_TORMENT_RESISTANCE, 1, 1 },
-      { MUT_SLOW_REGENERATION, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
-      { MUT_CLAWS, 1, 1 }, { MUT_UNBREATHING, 1, 1 }, },
-    { "Your body is rotting away.",
-      "You thrive on raw meat." },
-    { "rotting body" },
-    { JOB_WARPER, JOB_GLADIATOR, JOB_MONK, JOB_NECROMANCER,
-      JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
-    { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_GARGOYLE, {
@@ -388,6 +404,27 @@ static const map<species_type, species_def> species_data =
     { SK_MACES_FLAILS, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
+{ SP_GHOUL, {
+    "Gh",
+    "Ghoul", "Ghoulish", nullptr,
+    SPF_NO_HAIR,
+    0, 1, -1, 3,
+    MONS_GHOUL,
+    HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
+    11, 3, 4, // 18
+    { STAT_STR }, 5,
+    { { MUT_CARNIVOROUS, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
+      { MUT_TORMENT_RESISTANCE, 1, 1 },
+      { MUT_INHIBITED_REGENERATION, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
+      { MUT_CLAWS, 1, 1 }, { MUT_UNBREATHING, 1, 1 }, },
+    { "Your body is rotting away.",
+      "You thrive on raw meat." },
+    { "rotting body" },
+    { JOB_WARPER, JOB_GLADIATOR, JOB_MONK, JOB_NECROMANCER,
+      JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
+} },
+
 { SP_HALFLING, {
     "Ha",
     "Halfling", nullptr, nullptr,
@@ -402,23 +439,6 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_SKALD },
     { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_SLINGS },
-} },
-
-{ SP_HIGH_ELF, {
-    "HE",
-    "High Elf", "Elven", "Elf",
-    SPF_ELVEN,
-    -1, -1, 1, 4,
-    MONS_ELF,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    7, 11, 10, // 28
-    { STAT_INT, STAT_DEX }, 3,
-    {},
-    {},
-    {},
-    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
-      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
-    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 
 { SP_HILL_ORC, {
@@ -464,7 +484,7 @@ static const map<species_type, species_def> species_data =
     MONS_KOBOLD,
     HT_LAND, US_ALIVE, SIZE_SMALL,
     5, 9, 10, // 24
-    { STAT_STR, STAT_DEX }, 5,
+    { STAT_STR, STAT_INT, STAT_DEX }, 5,
     { { MUT_CARNIVOROUS, 3, 1 }, },
     {},
     {},
@@ -559,14 +579,14 @@ static const map<species_type, species_def> species_data =
     0, 3, 0, 4,
     MONS_OGRE,
     HT_LAND, US_ALIVE, SIZE_LARGE,
-    12, 7, 5, // 24
+    11, 9, 4, // 24
     { STAT_STR }, 3,
     { { MUT_TOUGH_SKIN, 1, 1 }, },
     {},
     {},
     { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
       JOB_FIRE_ELEMENTALIST },
-    { SK_MACES_FLAILS },
+    { SK_MACES_FLAILS, SK_POLEARMS, SK_STAVES },
 } },
 
 { SP_OCTOPODE, {
@@ -675,7 +695,7 @@ static const map<species_type, species_def> species_data =
     { STAT_STR, STAT_DEX }, 4,
     { { MUT_FANGS, 2, 1 }, { MUT_FANGS, 1, 8 },
       { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
-      { MUT_NO_DEVICE_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
+      { MUT_NO_POTION_HEAL, 3, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
       { MUT_REGENERATION, 1, 4 }, { MUT_REGENERATION, 1, 12 }, },
     {},
     {},
@@ -726,14 +746,28 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     { STAT_STR, STAT_INT, STAT_DEX }, 4,
-    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, },
-    { "You are immune to all types of fire, even holy and hellish.",
-      "You are vulnerable to cold.",
-      "You need no food.",
-      "You have no legs." },
-    { "fire immunity", "cold vulnerability" },
+    {},
+    {},
+    {},
     {}, // not a starting race
     {}, // not a starting race
+} },
+
+{ SP_HIGH_ELF, {
+    "HE",
+    "High Elf", "Elven", "Elf",
+    SPF_ELVEN,
+    -1, -1, 1, 4,
+    MONS_ELF,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    7, 11, 10, // 28
+    { STAT_INT, STAT_DEX }, 3,
+    {},
+    {},
+    {},
+    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 #endif
 // Ideally this wouldn't be necessary...

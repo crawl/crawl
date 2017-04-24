@@ -3,8 +3,7 @@
  * @brief Misc function used to render the dungeon.
 **/
 
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include "defines.h"
 #include "options.h"
@@ -24,7 +23,7 @@ string screenshot();
 int viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
-class targetter;
+class targeter;
 
 static inline void scaled_delay(unsigned int ms)
 {
@@ -33,9 +32,9 @@ static inline void scaled_delay(unsigned int ms)
 
 // beware, flash_view is broken for USE_TILE_LOCAL
 void flash_view(use_animation_type a, colour_t colour,
-                targetter *where = nullptr);
+                targeter *where = nullptr);
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
-                      targetter *where = nullptr);
+                      targeter *where = nullptr);
 #ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
@@ -79,5 +78,3 @@ void toggle_show_terrain();
 void reset_show_terrain();
 
 void handle_terminal_resize(bool redraw = true);
-
-#endif

@@ -12,10 +12,11 @@
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
-#include "godcompanions.h" // hepliaklqana_ancestor
+#include "god-companions.h" // hepliaklqana_ancestor
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "map-knowledge.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -48,7 +49,7 @@ static const char *daction_names[] =
 #endif
     "holy beings go neutral",
     "Trog's gifts go hostile",
-    "shuffle decks",
+    "reclaim decks",
     "reapply passive mapping",
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
@@ -81,8 +82,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_HOLY:
-        return mon->wont_attack() && is_good_god(mon->god);
     case DACT_ALLY_UNHOLY_EVIL:
         return mon->wont_attack() && mon->evil();
     case DACT_ALLY_UNCLEAN_CHAOTIC:
@@ -105,15 +104,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mon->wont_attack() && mons_is_god_gift(*mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
-    case DACT_ALLY_TROG:
-        return mon->friendly() && mons_is_god_gift(*mon, GOD_TROG);
-    case DACT_ALLY_MAKHLEB:
-        return mon->friendly() && mons_is_god_gift(*mon, GOD_MAKHLEB);
-    case DACT_HOLY_PETS_GO_NEUTRAL:
-        return mon->friendly()
-               && !mon->has_ench(ENCH_CHARM)
-               && mon->is_holy()
-               && mons_is_god_gift(*mon, GOD_SHINING_ONE);
     case DACT_PIKEL_SLAVES:
         return mon->type == MONS_SLAVE
                && testbits(mon->flags, MF_BAND_MEMBER)
@@ -194,18 +184,15 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (mon->type == MONS_ZOMBIE)
             {
                 simple_monster_message(*mon, " crumbles into dust!");
-                monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
                 break;
             }
-        case DACT_ALLY_HOLY:
         case DACT_ALLY_UNHOLY_EVIL:
         case DACT_ALLY_UNCLEAN_CHAOTIC:
         case DACT_ALLY_SPELLCASTER:
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
-        case DACT_ALLY_TROG:
-        case DACT_ALLY_MAKHLEB:
             dprf("going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM, true);
@@ -218,18 +205,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             // love you again.
             if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
                 mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-
-            // No global message for Trog, Makhleb, or Ru.
-            if (local && (act == DACT_ALLY_TROG
-                          || act == DACT_ALLY_MAKHLEB))
-            {
-                simple_monster_message(*mon, " turns against you!");
-            }
             break;
 
         case DACT_ALLY_HEPLIAKLQANA:
             simple_monster_message(*mon, " returns to the mists of memory.");
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
         case DACT_UPGRADE_ANCESTOR:
@@ -240,29 +220,22 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_OLD_ENSLAVED_SOULS_POOF:
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
-            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
         case DACT_SLIME_NEW_ATTEMPT:
             mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
             break;
 
-        case DACT_HOLY_PETS_GO_NEUTRAL:
         case DACT_PIKEL_SLAVES:
         {
             // monster changes attitude
-            bool hostile = player_mutation_level(MUT_NO_LOVE);
+            bool hostile = you.get_mutation_level(MUT_NO_LOVE);
             mon->attitude = hostile ? ATT_HOSTILE : ATT_GOOD_NEUTRAL;
             mons_att_changed(mon);
-
-            if (act == DACT_PIKEL_SLAVES)
-            {
-                mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
-                                  | MF_NAME_NOCORPSE;
-                mon->mname = "freed slave";
-            }
-            else if (local)
-                simple_monster_message(*mon, hostile ? " turns on you!" : " becomes indifferent.");
+            mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
+                              | MF_NAME_NOCORPSE;
+            mon->mname = "freed slave";
             mon->behaviour = hostile ? BEH_SEEK : BEH_WANDER;
             break;
         }
@@ -299,7 +272,6 @@ static void _apply_daction(daction_type act)
 
     switch (act)
     {
-    case DACT_ALLY_HOLY:
     case DACT_ALLY_UNHOLY_EVIL:
     case DACT_ALLY_UNCLEAN_CHAOTIC:
     case DACT_ALLY_SPELLCASTER:
@@ -308,11 +280,8 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
-    case DACT_ALLY_TROG:
-    case DACT_ALLY_MAKHLEB:
     case DACT_OLD_ENSLAVED_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
-    case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_PIKEL_SLAVES:
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
@@ -324,8 +293,8 @@ static void _apply_daction(daction_type act)
         }
         break;
 
-    case DACT_SHUFFLE_DECKS:
-        shuffle_all_decks_on_level();
+    case DACT_RECLAIM_DECKS:
+        reclaim_decks_on_level();
         break;
     case DACT_REAUTOMAP:
         reautomap_level();
@@ -397,6 +366,10 @@ static void _apply_daction(daction_type act)
     case DACT_HOLY_NEW_ATTEMPT:
     case DACT_ALLY_SACRIFICE_LOVE:
     case DACT_TOMB_CTELE:
+    case DACT_ALLY_HOLY:
+    case DACT_HOLY_PETS_GO_NEUTRAL:
+    case DACT_ALLY_MAKHLEB:
+    case DACT_ALLY_TROG:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:

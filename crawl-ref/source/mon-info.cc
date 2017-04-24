@@ -19,10 +19,11 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
-#include "godabil.h"
+#include "god-abil.h"
 #include "ghost.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
@@ -113,6 +114,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_INFESTATION,     MB_INFESTATION },
     { ENCH_STILL_WINDS,     MB_STILL_WINDS },
     { ENCH_SLOWLY_DYING,    MB_SLOWLY_DYING },
+    { ENCH_DISTRACTED_ACROBATICS,     MB_DISTRACTED },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -393,10 +395,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     }
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
-    {
         attack[i] = get_monster_data(type)->attack[i];
-        attack[i].damage = 0;
-    }
 
     props.clear();
     // At least enough to keep from crashing. TODO: allow specifying these?
@@ -612,22 +611,6 @@ monster_info::monster_info(const monster* m, int milev)
     if (you.beheld_by(*m))
         mb.set(MB_MESMERIZING);
 
-    // Evilness of attacking
-    switch (attitude)
-    {
-    case ATT_NEUTRAL:
-    case ATT_HOSTILE:
-        if (you_worship(GOD_SHINING_ONE)
-            && !tso_unchivalric_attack_safe_monster(*m)
-            && find_stab_type(&you, *m) != STAB_NO_STAB)
-        {
-            mb.set(MB_EVIL_ATTACK);
-        }
-        break;
-    default:
-        break;
-    }
-
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);
 
@@ -659,7 +642,7 @@ monster_info::monster_info(const monster* m, int milev)
         i_ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
         i_ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         i_ghost.ac = quantise(ghost.ac, 5);
-        i_ghost.damage = quantise(ghost.damage, 5);
+        i_ghost.damage = ghost.damage;
         props[KNOWN_MAX_HP_KEY] = (int)ghost.max_hp;
 
         // describe abnormal (branded) ghost weapons
@@ -677,14 +660,15 @@ monster_info::monster_info(const monster* m, int milev)
         props["actual_spellcaster"] = true;
 
     // assumes spell hd modifying effects are always public
-    const int spell_hd = m->spell_hd();
-    if (spell_hd != hd)
-        props[SPELL_HD_KEY] = spell_hd;
+    const int spellhd = m->spell_hd();
+    if (spellhd != hd)
+        props[SPELL_HD_KEY] = spellhd;
 
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
-        attack[i] = mons_attack_spec(*m, i, true);
-        attack[i].damage = 0;
+        // hydras are a mess!
+        const int atk_index = m->has_hydra_multi_attack() ? 0 : i;
+        attack[i] = mons_attack_spec(*m, atk_index, true);
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -790,6 +774,9 @@ string monster_info::get_max_hp_desc() const
         const int base_xl = mons_class_hit_dice(type);
         mhp = base_avg_hp * xl / base_xl; // rounds down - close enough
     }
+
+    if (type == MONS_SLIME_CREATURE)
+        mhp *= slime_size;
 
     return make_stringf("about %d", mhp);
 }
@@ -1378,9 +1365,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
         break;
     }
 
-    if (count == 1 && is(MB_EVIL_ATTACK))
-        desc_colour = Options.evil_colour;
-    else if (colour_type < _NUM_MLC)
+    if (colour_type < _NUM_MLC)
         desc_colour = _monster_list_colours[colour_type];
 
     // We still need something, or we'd get the last entry's colour.

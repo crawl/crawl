@@ -13,7 +13,8 @@
 #include "env.h"
 #include "fight.h" // apply_chunked_ac
 #include "fprop.h"
-#include "itemprop.h"
+#include "god-passive.h"
+#include "item-prop.h"
 #include "los.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -48,11 +49,7 @@ level_id actor::shaft_dest(bool known = false) const
  */
 bool actor::ground_level() const
 {
-    return !airborne() && !is_wall_clinging()
-#if TAG_MAJOR_VERSION == 34
-        && mons_species() != MONS_DJINNI
-#endif
-        ;
+    return !airborne() && !is_wall_clinging();
 }
 
 bool actor::stand_on_solid_ground() const
@@ -213,7 +210,13 @@ bool actor::gourmand(bool calc_unid, bool items) const
 bool actor::res_corr(bool calc_unid, bool items) const
 {
     return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
+                     || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
                      || scan_artefacts(ARTP_RCORR, calc_unid));
+}
+
+bool actor::holy_wrath_susceptible() const
+{
+    return res_holy_energy() < 0;
 }
 
 // This is a bit confusing. This is not the function that determines whether or
@@ -223,11 +226,6 @@ bool actor::res_corr(bool calc_unid, bool items) const
 bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
 {
     return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
-}
-
-bool actor::stasis(bool calc_unid, bool items) const
-{
-    return false;
 }
 
 // permaswift effects like boots of running and lightning scales
@@ -325,7 +323,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     }
 
     if (is_player())
-        ss += player_mutation_level(MUT_MANA_SHIELD);
+        ss += you.get_mutation_level(MUT_MANA_SHIELD);
 
     return ss;
 }
@@ -380,9 +378,9 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return
-       act->is_player() && you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA]
-       || act->res_acid() == 3;
+    return act->is_player() && have_passive(passive_t::slime_wall_immune)
+        || act->res_acid() == 3
+        || act->is_monster() && mons_is_slime(*act->as_monster());
 }
 
 /**
@@ -711,7 +709,7 @@ void actor::handle_constriction()
         if (defender->is_monster()
             && defender->as_monster()->hit_points < 1)
         {
-            monster_die(defender->as_monster(), this);
+            monster_die(*defender->as_monster(), this);
         }
     }
 }
@@ -782,8 +780,7 @@ bool actor::torpor_slowed() const
 {
     if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
         || is_stationary()
-        || (is_monster() && as_monster()->check_stasis(true))
-        || (!is_monster() && stasis()))
+        || stasis())
     {
         return false;
     }

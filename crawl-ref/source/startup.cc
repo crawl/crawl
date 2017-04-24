@@ -21,12 +21,12 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
-#include "godabil.h"
-#include "godpassive.h"
+#include "god-abil.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "initfile.h"
-#include "itemname.h"
-#include "itemprop.h"
+#include "item-name.h"
+#include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -103,7 +103,7 @@ static void _initialize()
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
     env.map_knowledge.init(map_cell());
-    env.pgrid.init(0);
+    env.pgrid.init(terrain_property_t{});
 
     you.unique_creatures.reset();
     you.unique_items.init(UNIQ_NOT_EXISTS);
@@ -233,7 +233,7 @@ static void _zap_los_monsters(bool items_also)
         mon->flags |= MF_HARD_RESET;
         // Do a silent, wizard-mode monster_die() just to be extra sure the
         // player sees nothing.
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
 }
 
@@ -254,7 +254,7 @@ static void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
-    if (you.form != TRAN_LICH)
+    if (you.form != transformation::lich)
         food_change(true);
     shopping_list.refresh();
 
@@ -299,10 +299,6 @@ static void _post_init(bool newc)
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-        you.redraw_temperature = true;
-#endif
     you.redraw_quiver       = true;
     you.wield_change        = true;
 
@@ -571,8 +567,8 @@ static bool _game_defined(const newgame_def& ng)
 }
 
 static const int SCROLLER_MARGIN_X  = 18;
-static const int NAME_START_Y       = 5;
-static const int GAME_MODES_START_Y = 7;
+static const int NAME_START_Y       = 6;
+static const int GAME_MODES_START_Y = 8;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
 static const int NUM_MISC_LINES     = 5;

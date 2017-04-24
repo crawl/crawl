@@ -25,9 +25,9 @@ function base_monster_setup(e)
   e.kmons("B = steam dragon / crocodile / hippogriff /\
            killer bee band / hornet / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\
-           hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
+           komodo dragon / wraith / soldier ant / unseen horror /\
            basilisk / cyclops band / efreet /\
-           mottled dragon / blink frog band / vampire mosquito band /\
+           acid dragon / blink frog band / vampire mosquito band /\
            gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
            deep elf mage /\
@@ -37,7 +37,7 @@ function base_monster_setup(e)
            black mamba / rime drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / dream sheep band /\
            swamp drake / bog body / tyrant leech / swamp dragon w:3 /\
-           merfolk band w:5 / siren w:3 / sea snake / snapping turtle /\
+           merfolk band w:5 / merfolk siren w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler /\
            small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / ice devil /\
@@ -116,7 +116,7 @@ function base_monster_setup(e)
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
            Ereshkigal / Ignacio / Geryon / the Royal Jelly /\
            the Serpent of Hell")
-  e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
+  e.kmons("M = stone giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
   e.kmons("O = deep elf mage w:30 /\
@@ -146,7 +146,7 @@ function base_monster_setup(e)
            floating eye w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
-  e.kmons("W = mottled dragon / steam dragon / fire dragon / ice dragon /\
+  e.kmons("W = acid dragon / steam dragon / fire dragon / ice dragon /\
            storm dragon / swamp drake / lindwurm / rime drake /\
            shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
@@ -164,12 +164,11 @@ end
 
 function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
-          wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
-          potion of heal wounds ident:all q:2 w:2 /\
+          potion of heal wounds ident:all q:4 w:3 /\
+          potion of haste ident:all q:4 w:3 /\
           scroll of recharging ident:all w:1 /\
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
           potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-          potion of haste q:2 ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
@@ -183,7 +182,7 @@ function general_item_setup(e)
           potion of haste ident:all /\
           potion of resistance ident:all w:5 / potion of brilliance ident:all /\
           potion of berserk rage ident:all /\
-          potion of cure mutation ident:all")
+          potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all /\
           scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of recharging ident:all /\
@@ -231,8 +230,8 @@ function general_item_setup(e)
     ice dragon scales plus:10 not_cursed ident:all /\
     swamp dragon scales plus:9 not_cursed ident:all /\
     swamp dragon scales plus:5 good_item not_cursed ident:all /\
-    mottled dragon scales plus:8 not_cursed ident:all /\
-    mottled dragon scales plus:4 good_item not_cursed ident:all /\
+    acid dragon scales plus:8 not_cursed ident:all /\
+    acid dragon scales plus:4 good_item not_cursed ident:all /\
     quicksilver dragon scales good_item not_cursed ident:all w:5 /\
     storm dragon scales plus:12 not_cursed ident:all w:5 /\
     storm dragon scales plus:8 good_item not_cursed ident:all w:5 /\
@@ -295,7 +294,7 @@ function general_item_setup(e)
     fire dragon scales plus:7 not_cursed ident:all /\
     ice dragon scales plus:7 not_cursed ident:all /\
     swamp dragon scales plus:5 not_cursed ident:all /\
-    mottled dragon scales plus:5 not_cursed ident:all /\
+    acid dragon scales plus:5 not_cursed ident:all /\
     quicksilver dragon scales not_cursed ident:all w:5 /\
     storm dragon scales plus:6 not_cursed ident:all w:5 /\
     shadow dragon scales plus:6 not_cursed ident:all w:5 /\
@@ -445,7 +444,7 @@ function armoury_setup(e)
           fire dragon scales plus:4 not_cursed ident:all /\
           ice dragon scales plus:4 not_cursed ident:all /\
           swamp dragon scales plus:2 not_cursed ident:all /\
-          mottled dragon scales plus:2 not_cursed ident:all /\
+          acid dragon scales plus:2 not_cursed ident:all /\
           storm dragon scales plus:3 not_cursed ident:all w:5 /\
           shadow dragon scales plus:3 not_cursed ident:all w:5 /\
           gold dragon scales plus:2 not_cursed ident:all /\
@@ -507,13 +506,13 @@ function coven_setup(e)
           ring of intelligence plus:6 randart ident:all not_cursed /\
           ring of dexterity plus:6 randart ident:all not_cursed /\
           ring of wizardry ident:all randart not_cursed")
-  e.kitem("d = wand of heal wounds charges:5 ident:all")
-  e.kitem("e = wand of hasting charges:5 ident:all")
+  e.kitem("d = potion of heal wounds q:5 ident:all")
+  e.kitem("e = potion of haste q:5 ident:all")
   e.kitem("f = any wand good_item ident:all")
   e.kitem("g = staff of energy ident:all")
   e.kitem("h = staff of power ident:all")
   e.kitem("i = crystal ball of energy")
-  e.kitem("j = potion of cure mutation ident:all")
+  e.kitem("j = potion of mutation ident:all")
   e.lua_marker('~', props_marker {
            door_description_suffix=" to the Coven (Very Hard)",
            })
@@ -695,9 +694,9 @@ MAP
 vvvvvvvvvvvv
 vTTTTTTTTTTv
 vTTTTTTTTTTv
-vTTTTvvvvv~v
-vvvvvvUUUv@v
-vabcd+UUU+.v
+vTTTTTTTTTTv
+vvvvvvvvvv~v
+vabcd+UUU+@v
 vvvvvvvvvv.v
 v.........G@
 v+vvvvv&vvvv
@@ -722,19 +721,18 @@ ENDMAP
 
 NAME:  equipment_1
 TAGS:  equipment_1
-KITEM: a = dagger plus:2 ident:all not_cursed
-KITEM: b = hand axe plus:2 ident:all not_cursed
-KITEM: c = mace plus:2 ident:all not_cursed
-KITEM: d = trident plus:2 ident:all not_cursed
-KITEM: e = quarterstaff plus:2 ident:all not_cursed
-KITEM: f = falchion plus:2 ident:all not_cursed
-SHUFFLE: abcdef
+KITEM: a = dagger plus:2 ident:all not_cursed, /\
+           falchion plus:2 ident:all not_cursed
+KITEM: b = hand axe plus:2 ident:all not_cursed, /\
+           mace plus:2 ident:all not_cursed
+KITEM: c = trident plus:2 ident:all not_cursed, /\
+           quarterstaff plus:2 ident:all not_cursed
+SHUFFLE: abc
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-eda
-fcb
+abc
 ENDMAP
 
 NAME:  equipment_2
@@ -995,6 +993,7 @@ KFEAT:   s = altar_sif_muna
 KFEAT:   t = altar_trog
 KFEAT:   u = altar_uskayaw
 KFEAT:   v = altar_vehumet
+KFEAT:   w = altar_wu_jian
 KFEAT:   x = altar_xom
 KFEAT:   y = altar_yredelemnul
 KFEAT:   z = altar_zin
@@ -1003,11 +1002,10 @@ KFEAT:   ' = altar_the_shining_one
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
-abcdefghjk
-lmnoqrstuv
-xyz'
+abcdefghj.
+klmnoqrst.
+uvwxyz'...
 ENDMAP
-
 
 ################################################################################
 # Safe places
@@ -2032,9 +2030,8 @@ NSUBST: + = 1:& / *:v
 KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
         orc sorcerer / orc high priest
 KMONS:  A = orc warlord
-KMONS:  b = hill giant /\
-        ogre / two-headed ogre / troll / deep troll /\
-        iron troll w:5 / deep troll/ ogre mage w:5 /\
+KMONS:  b = ogre / two-headed ogre / troll / deep troll /\
+        iron troll w:5 / deep troll / ogre mage w:5 /\
         cyclops / stone giant w:5 / ettin w:5
 KMONS:  B = titan
 KMONS:  c = human / wizard / hell knight / vault guard / necromancer
@@ -2044,7 +2041,7 @@ KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
         freezing wraith w:3 / flayed ghost
 KMONS:  D = lich
-KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
+KMONS:  e = hydra w:20 / swamp dragon / acid dragon / steam dragon /\
         catoblepas / dire elephant / rime drake / lindwurm / komodo dragon /\
         basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
 KMONS:  E = golden dragon
@@ -2079,8 +2076,7 @@ TAGS:   the_golden_pit
 KITEM:  2ABCD = golden rune of zot
 KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
         any ident:all w:33
-KMONS:  a = stone giant / frost giant / fire giant / ettin / titan /\
-        cyclops / hill giant
+KMONS:  a = stone giant / frost giant / fire giant / ettin / titan / cyclops
 KMONS:  A = titan
 # I'm sorry if you get an undead pit here
 KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\

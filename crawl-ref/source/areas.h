@@ -1,5 +1,4 @@
-#ifndef AREAS_H
-#define AREAS_H
+#pragma once
 
 enum area_centre_type
 {
@@ -51,6 +50,4 @@ bool umbraed(const coord_def& p);
 #if TAG_MAJOR_VERSION == 34
 // ...or is the area hot?
 bool heated(const coord_def& p);
-#endif
-
 #endif
