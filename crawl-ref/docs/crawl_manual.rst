@@ -1854,9 +1854,8 @@ Gladiators
 Monks
   The Monk is a member of an ascetic order dedicated to the perfection of one's
   body and soul through the discipline of the martial arts. Monks start with
-  very little equipment, but can survive without the weighty weapons and
-  spellbooks needed by characters of other backgrounds. When they choose a god
-  for the first time, their spiritual training gives them a piety boost.
+  only a simple weapon and a robe. When they choose a god for the first time,
+  their spiritual training gives them a piety boost.
 
 Berserkers
   Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
