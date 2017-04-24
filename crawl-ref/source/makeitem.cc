@@ -799,8 +799,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       12, SPARM_PROTECTION);
 
     case ARM_SCARF:
-        return random_choose_weighted(3, SPARM_COLD_RESISTANCE,
-                                      1, SPARM_SPIRIT_SHIELD,
+        return random_choose_weighted(1, SPARM_SPIRIT_SHIELD,
                                       1, SPARM_RESISTANCE,
                                       1, SPARM_REPULSION);
 
