@@ -1049,6 +1049,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_SPEED,
         DUR_DEATHS_DOOR,
         DUR_EXHAUSTED,
+        DUR_DEATHS_DOOR_COOLDOWN,
         DUR_QUAD_DAMAGE,
         STATUS_SERPENTS_LASH,
     };
