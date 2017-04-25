@@ -199,8 +199,7 @@ lessens their resilience to injury, to a degree dependent on (and inversely
 related to) power.
 
 It is powerful enough to literally pull someone out of Death's Door, although
-the shock will briefly confuse and paralyse the caster. It has no effect on the
-undead.
+the shock will briefly paralyse the caster. It has no effect on the undead.
 %%%%
 Brain Feed spell
 
