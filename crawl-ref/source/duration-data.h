@@ -267,8 +267,13 @@ static const duration_def duration_data[] =
       "death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
       {{ "Your life is in your own hands again!", []() {
-            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
+            you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
       }}, { "Your time is quickly running out!", 5 }}, 10},
+    { DUR_DEATHS_DOOR_COOLDOWN,
+      YELLOW, "DDoor",
+      "", "death's door cooldown",
+      "", D_NO_FLAGS,
+      {{ "You step away from death's doorway." }}},
     { DUR_QUAD_DAMAGE,
       BLUE, "Quad",
       "quad damage", "",
