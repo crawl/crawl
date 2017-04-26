@@ -1044,6 +1044,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
+    case BOOK_BRIMSTONE:              return "Brimstone";
     case BOOK_SUMMONINGS:             return "Summonings";
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
