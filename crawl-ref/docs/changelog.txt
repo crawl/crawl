@@ -63,6 +63,7 @@ Interface
 * auto_butcher can be configured to trigger on different hunger levels.
 * Stash searches now hide distant duplicate matches of weapons, armour, and
   ammo by default.
+* The mouse can be used in webtiles.
 
 Items
 -----
