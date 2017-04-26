@@ -294,12 +294,12 @@ static void _change_skill_level(skill_type exsk, int n)
         // Send a status message about 'aptitude' increases/decreases if Gnoll
         if (you.species == SP_GNOLL)
         {
-            if (n > 0 && you.skills[exsk] < 12 && you.skills[exsk] > 6)
+            if (n > 0 && you.skills[exsk] < 13 && you.skills[exsk] > 5)
             {
                 mprf(MSGCH_MUTATION, "You become less interested in %s.",
                      skill_name(exsk));
             }
-            else if (n < 0 && you.skills[exsk] < 11 && you.skills[exsk] > 5)
+            else if (n < 0 && you.skills[exsk] < 12 && you.skills[exsk] > 4)
                 mprf(MSGCH_MUTATION, "You become more interested in %s.",
                      skill_name(exsk));
         }
@@ -316,12 +316,12 @@ static void _change_skill_level(skill_type exsk, int n)
         // Send a status message about 'aptitude' increases/decreases if Gnoll
         if (you.species == SP_GNOLL)
         {
-            if (n > 0 && (you.skills[exsk] - n) < 12 && you.skills[exsk] > 6)
+            if (n > 0 && (you.skills[exsk] - n) < 13 && you.skills[exsk] > 5)
             {
                 mprf(MSGCH_MUTATION, "You become less interested in %s.",
                      skill_name(exsk));
             }
-            else if (n < 0 && you.skills[exsk] < 11 && (you.skills[exsk] - n) > 5)
+            else if (n < 0 && you.skills[exsk] < 12 && (you.skills[exsk] - n) > 4)
                 mprf(MSGCH_MUTATION, "You become more interested in %s.",
                      skill_name(exsk));
         }
@@ -1539,14 +1539,14 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
             return exp[lev] * species_apt_factor(sk, sp);
     }
     // This is a custom XP table for Gnolls, precalculated to match their
-    // dynamic aptitudes. Until SL 7, Gnolls have an effective aptitude of
-    // +4 (half as much XP needed). At 7 and after, their aptitude decreases by
-    // two for each skill level, reaching a floor of -6 at skill level 12. XP
+    // dynamic aptitudes. Until SL 6, Gnolls have an effective aptitude of
+    // +5 (half as much XP needed). At 6 and after, their aptitude decreases by
+    // two for each skill level, reaching a floor of -9 at skill level 13. XP
     // values are calculated accordingly, using the original XP table (above).
-    // At SL 7, standard +2 aptitude requires 283 XP to go from 7 to 8; thus
-    // Gnolls get their 8th level in any given skill by going from 700 total
-    // XP to 983. This pattern continues. -6 aptitude at SL 14 requires 2970 XP,
-    // so Gnolls go from 10723 total XP at SL 14 to 13963 at 15.
+    // At SL 6, standard +3 aptitude requires 208 XP to go from 6 to 7; thus
+    // Gnolls get their 7th level in any given skill by going from 441 total
+    // XP to 649. This pattern continues. -9 aptitude at SL 14 requires 4995 XP,
+    // so Gnolls go from 15076 total XP at SL 14 to 20071 at 15.
     //
     // There are ways to do this programmatically (such as to call this function
     // inside of itself at runtime to dynamically calculate the needed XP), but
@@ -1555,12 +1555,12 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
     else
     {
         const int gnoll_exp[28] =
-          { 0, 25, 75, 150, 250, 375,           // 0-5
-            525, 700, 983, 1433, 2211,          // 6-10
-            3511, 5629, 8036, 10723, 13693,     // 11-15
-            16946, 20481, 24300, 28542, 33209,  // 16-20
-            38300, 43816, 49755, 56119, 62908,  // 21-25
-            70120, 77898 };
+          { 0, 21, 63, 126, 210, 315,           // 0-5
+            441, 649, 985, 1520, 2445,          // 6-10
+            3991, 6514, 10557, 15076, 20071,     // 11-15
+            25541, 31448, 37909, 45044, 52893,  // 16-20
+            61456, 70731, 80721, 91424, 102840,  // 21-25
+            114970, 128051 };
 
         //Species_apt_factor is unnecessary for Gnoll
         return gnoll_exp[lev];
