@@ -447,6 +447,8 @@ public:
 
     void collide(coord_def newpos, const actor *agent, int pow);
 
+    static actor *ensure_valid_actor(const actor *act);
+
 private:
     void end_constriction(mid_t whom, bool intentional, bool quiet);
 };

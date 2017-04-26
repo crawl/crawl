@@ -4503,9 +4503,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE)
             && crawl_state.which_god_acting() != GOD_YREDELEMNUL)
         {
-            if (!agent->is_player())
-                ASSERT(!invalid_monster(agent->as_monster()));
-            mirror_damage_fineff::schedule(agent, this, amount * 2 / 3);
+            // ensure that YOU_FAULTLESS is converted to `you`
+            actor *valid_agent = ensure_valid_actor(agent);
+            ASSERT(valid_agent);
+            mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
         blame_damage(agent, amount);
