@@ -4503,10 +4503,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE)
             && crawl_state.which_god_acting() != GOD_YREDELEMNUL)
         {
-            // ensure that YOU_FAULTLESS is converted to `you`
+            // ensure that YOU_FAULTLESS is converted to `you`. this may still
+            // fail e.g. when the damage is from a vault-created cloud
             actor *valid_agent = ensure_valid_actor(agent);
-            ASSERT(valid_agent);
-            mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
+            if (valid_agent)
+                mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
         blame_damage(agent, amount);
