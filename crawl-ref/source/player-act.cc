@@ -301,8 +301,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    // XXX: this is supposed to compensate for DUR_SLOW/DUR_FAST, but behaves
-    // incorrectly if attacking while moving/etc (as with WJC)
+    // TODO: does this really have to depend on `you.time_taken`?  In basic
+    // cases at least, `you.time_taken` is just `player_speed()`.  See
+    // `_prep_input`.
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }

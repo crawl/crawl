@@ -43,6 +43,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "unwind.h"
 #include "view.h"
 
 // TODO: template out the differences between this and god_power.
@@ -1586,14 +1587,20 @@ static bool _can_attack_martial(const monster* mons)
 // made the same amount of attacks as tabbing.
 static int _wu_jian_number_of_attacks()
 {
-    const int move_delay = player_movement_speed();
-    const int attack_delay = you.attack_delay().roll();
-    // we square move_delay here because attack_delay is *multiplied* by
-    // move_delay / BASELINE_DELAY as a crude hack to make DUR_SLOW/DUR_HASTE
-    // affect attack speed.
-    // FIXME: apply DUR_HASTE/DUR_SLOW directly to attack_delay instead!
-    return div_rand_round(move_delay * move_delay,
-                          attack_delay * BASELINE_DELAY);
+    const int move_delay = player_movement_speed() * player_speed();
+    int attack_delay;
+
+    {
+        // attack_delay() is dependent on you.time_taken, which won't be set
+        // appropriately during a movement turn. This temporarily resets
+        // you.time_taken to the initial value (see `_prep_input`) used for
+        // basic, simple, melee attacks.
+        // TODO: can `attack_delay` be changed to not depend on you.time_taken?
+        unwind_var<int> reset_speed(you.time_taken, player_speed());
+        attack_delay = you.attack_delay().roll();
+    }
+
+    return div_rand_round(move_delay, attack_delay * BASELINE_DELAY);
 }
 
 static void _wu_jian_lunge(const coord_def& old_pos)
