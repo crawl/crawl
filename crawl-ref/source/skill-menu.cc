@@ -363,9 +363,9 @@ void SkillMenuEntry::set_aptitude()
         {
             int gnoll_skill = you.skill(m_sk, 1, true);
 
-            // Gnoll aptitude costs start at effective +4 and reduce by -2 for
-            // each level after reaching 7, floor of -6
-            gnoll_bonus = max(4 - max((gnoll_skill - 6) * 2, 0), -6);
+            // Gnoll aptitude costs start at effective +5 and reduce by -2 for
+            // each level after reaching 6, floor of -9
+            gnoll_bonus = max(5 - max((gnoll_skill - 5) * 2, 0), -9);
         }
         manual_bonus = manual_bonus + gnoll_bonus;
 
