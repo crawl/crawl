@@ -890,3 +890,26 @@ bool actor::evil() const
 {
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
 }
+
+/*
+ * Ensures that `act` is valid if possible. If this isn't possible,
+ * return nullptr. This will convert YOU_FAULTLESS into `you`.
+ *
+ * @param act the actor to validate.
+ *
+ * @return an actor that is either the player or passes `!invalid_monster`, or
+ *         otherwise `nullptr`.
+ */
+/* static */ actor *actor::ensure_valid_actor(const actor *act)
+{
+    if (!act)
+        return nullptr;
+    if (act->is_player())
+        return (actor *) act;
+    const monster *mon = act->as_monster();
+    if (mon->mid == MID_YOU_FAULTLESS)
+        return &you;
+    if (invalid_monster(mon))
+        return nullptr;
+    return (actor *) mon;
+}
