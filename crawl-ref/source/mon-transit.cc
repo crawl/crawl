@@ -452,6 +452,7 @@ static bool _transport_follower_at(const coord_def &pos, const coord_def &from,
     if (fol->find_place_to_live(true))
     {
         real_follower = true;
+        env.map_knowledge(pos).clear_monster();
         dprf("%s is transported.", fol->name(DESC_THE, true).c_str());
     }
 
