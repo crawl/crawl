@@ -138,12 +138,13 @@ been drained by looking at the skills screen.
 %%%%
 Breath status
 
-You are catching your breath, and are unable to use certain abilities (such
-as breath weapons or Zin's recite invocation) until the Breath status expires.
+You are catching your breath, and are unable to use your innate breath ability
+until the status expires.
 %%%%
 Exh status
 
-You are too exhausted to activate any powers granted by Ru.
+You are exhausted, and are unable to activate divine powers that cause
+exhaustion until the status expires.
 %%%%
 Slow status
 
@@ -401,7 +402,8 @@ nearby creatures.
 Recite status
 
 You are reciting Zin's laws to nearby monsters, with a range of effects
-depending on the target.
+depending on the target. After finishing a recitation, it cannot be repeated
+for a short time.
 %%%%
 rF- status
 
