@@ -773,8 +773,9 @@ static void reset_ds_muts_from_schedule(int xl)
         {
             while (you.innate_mutation[mut] > innate_levels)
             {
-                // first set it as non-innate, then delete the mutation from there.  delete_mutation won't delete mutations otherwise.
-                // this step doesn't affect temporary mutations.
+                // First set it as non-innate, then delete the mutation from
+                // there. delete_mutation won't delete mutations otherwise.
+                // This step doesn't affect temporary mutations.
                 you.innate_mutation[mut]--;
                 delete_mutation(mut, "level change", false, true, false, false);
             }

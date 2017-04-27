@@ -357,7 +357,7 @@ stab_type find_stab_type(const actor *attacker,
         return STAB_NO_STAB;
     }
 
-    // No stabbing monsters that cannot fight (e.g.  plants) or monsters
+    // No stabbing monsters that cannot fight (e.g. plants) or monsters
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
     if (def && mons_is_firewood(*def))

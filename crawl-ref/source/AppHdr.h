@@ -29,7 +29,7 @@ using namespace std;
 #endif
 
 // Define COMPILE_CHECK before including any of our headers, so even things
-// like externs.h can use it.  platform.h a few lines up is standalone, so
+// like externs.h can use it. platform.h a few lines up is standalone, so
 // doesn't count.
 #ifndef _lint
 # define COMPILE_CHECK(expr) static_assert((expr), #expr)

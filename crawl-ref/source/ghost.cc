@@ -310,7 +310,7 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
     set_resist(resists, MR_RES_FIRE, player_res_fire());
     set_resist(resists, MR_RES_COLD, player_res_cold());
     set_resist(resists, MR_RES_ELEC, player_res_electricity());
-    // clones might lack innate rPois, copy it.  pghosts don't care.
+    // clones might lack innate rPois, copy it. pghosts don't care.
     set_resist(resists, MR_RES_POISON, player_res_poison());
     set_resist(resists, MR_RES_NEG, you.res_negative_energy());
     set_resist(resists, MR_RES_ACID, player_res_acid());

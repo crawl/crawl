@@ -1211,7 +1211,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
     const map_lines &vlines = vmap.map;
 
     // If vault is bigger than the mask region (mtl, mbr), then it gets
-    // randomly centered.  (vtl, vbr) stores the vault's region.
+    // randomly centered. (vtl, vbr) stores the vault's region.
     coord_def vtl = mtl;
     coord_def vbr = mbr;
 
@@ -1379,7 +1379,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
 
             // Finally, handle merging the cell itself.
 
-            // Glyph becomes SUBVAULT_GLYPH.  (The old glyph gets merged into a
+            // Glyph becomes SUBVAULT_GLYPH. (The old glyph gets merged into a
             // keyspec, above). This is so that the glyphs that are included
             // from a subvault are immutable by the parent vault. Otherwise,
             // latent transformations (like KMONS or KITEM) from the parent

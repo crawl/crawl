@@ -397,7 +397,7 @@ int raw_spell_fail(spell_type spell)
  *
  * @param power the input spellpower in centis.
  * @param scale a value to scale the result by, between 1 and 1000. Default is
- *        1, which returns a regular spellpower.  1000 gives you millis, 100
+ *        1, which returns a regular spellpower. 1000 gives you millis, 100
  *        centis.
  */
 int stepdown_spellpower(int power, int scale)

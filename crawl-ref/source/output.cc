@@ -619,7 +619,7 @@ static void _print_stats_noise(int x, int y)
     //               (though it is possible depending on terrain).
     //   YELLOW = likely to carry outside of your los, up to double.
     //   RED = likely to carry at least 16 spaces, up to much further.
-    //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
+    //   LIGHTMAGENTA = really f*cking loud. (Gong, etc.)
     // In more enclosed areas, these values will be attenuated,
     // and this isn't represented.
     // See player::get_noise_perception for the mapping from internal noise
