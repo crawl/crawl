@@ -891,7 +891,7 @@ bool actor::evil() const
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
 }
 
-/*
+/**
  * Ensures that `act` is valid if possible. If this isn't possible,
  * return nullptr. This will convert YOU_FAULTLESS into `you`.
  *
@@ -900,16 +900,24 @@ bool actor::evil() const
  * @return an actor that is either the player or passes `!invalid_monster`, or
  *         otherwise `nullptr`.
  */
-/* static */ actor *actor::ensure_valid_actor(const actor *act)
+/* static */ const actor *actor::ensure_valid_actor(const actor *act)
 {
     if (!act)
         return nullptr;
     if (act->is_player())
-        return (actor *) act;
+        return act;
     const monster *mon = act->as_monster();
     if (mon->mid == MID_YOU_FAULTLESS)
         return &you;
     if (invalid_monster(mon))
         return nullptr;
-    return (actor *) mon;
+    return mon;
+}
+
+/// @copydoc actor::ensure_valid_actor(const actor *act)
+/* static */ actor *actor::ensure_valid_actor(actor *act)
+{
+    // Defer to the other function. Since it returns only act, nullptr, or you,
+    // none of which points to a const object, the const_cast here is safe.
+    return const_cast<actor *>(ensure_valid_actor(static_cast<const actor *>(act)));
 }

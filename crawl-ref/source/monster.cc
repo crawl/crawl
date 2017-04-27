@@ -4505,8 +4505,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         {
             // ensure that YOU_FAULTLESS is converted to `you`. this may still
             // fail e.g. when the damage is from a vault-created cloud
-            actor *valid_agent = ensure_valid_actor(agent);
-            if (valid_agent)
+            if (auto valid_agent = ensure_valid_actor(agent))
                 mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
