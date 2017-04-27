@@ -151,6 +151,8 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Okawaru
     { { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
+      { 3, "Okawaru will gift you ammunition as your piety grows.",
+           "Okawaru will no longer gift you ammunition." },
       { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" },
       { 5, "Okawaru will gift you equipment as your piety grows.",
            "Okawaru will no longer gift you equipment." },
