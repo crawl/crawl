@@ -16,7 +16,7 @@ to run the unit tests. To run paricular unit tests, you can do
 and that will run all unit tests which have "foo" in their file name.
 
 If you want to write your own unit tests, take a look at the files in
-source/test for examples.  test/los_maps.lua and test/bounce.lua have
+source/test for examples. test/los_maps.lua and test/bounce.lua have
 examples which use vaults (maps) which are located in test/des. You
 might need to create new Lua functions in the source/l_*.cc files if none of
 the crawl.foo()/dgn.foo()/etc functions do what you need.

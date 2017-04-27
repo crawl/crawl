@@ -284,7 +284,7 @@ double random_real()
     return result - 1.0;
 }
 
-// Roll n_trials, return true if at least one succeeded.  n_trials might be
+// Roll n_trials, return true if at least one succeeded. n_trials might be
 // not integer.
 // [0, 1]
 bool bernoulli(double n_trials, double trial_prob)

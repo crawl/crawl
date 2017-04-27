@@ -30,7 +30,7 @@ struct mgen_data
     beh_type        behaviour;
 
     // Who summoned this monster?  Important to know for death accounting
-    // and the summon cap, if and when it goes in.  nullptr is no summoner.
+    // and the summon cap, if and when it goes in. nullptr is no summoner.
     const actor*    summoner;
 
     // For summoned monsters, this is a measure of how long the summon will

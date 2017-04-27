@@ -1521,8 +1521,8 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 
     if (mons_is_pghost(mon.type))
     {
-        // Beautification hack.  "Foo's ghost" is a little bit
-        // verbose as a tag.  "Foo" on its own should be sufficient.
+        // Beautification hack. "Foo's ghost" is a little bit
+        // verbose as a tag. "Foo" on its own should be sufficient.
         tiles.add_text_tag(TAG_NAMED_MONSTER, mon.mname, gc);
     }
     else

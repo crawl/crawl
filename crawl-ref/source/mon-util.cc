@@ -5276,7 +5276,7 @@ bool choose_any_monster(const monster& mon)
 }
 
 // Find a nearby monster and return its index, including you as a
-// possibility with probability weight.  suitable() should return true
+// possibility with probability weight. suitable() should return true
 // for the type of monster wanted.
 // If prefer_named is true, named monsters (including uniques) are twice
 // as likely to get chosen compared to non-named ones.

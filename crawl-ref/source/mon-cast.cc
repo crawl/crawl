@@ -1961,7 +1961,7 @@ static bool _animate_dead_okay(spell_type spell)
 }
 
 // Returns true if the spell is something you wouldn't want done if
-// you had a friendly target...  only returns a meaningful value for
+// you had a friendly target... only returns a meaningful value for
 // non-beam spells.
 static bool _ms_direct_nasty(spell_type monspell)
 {
