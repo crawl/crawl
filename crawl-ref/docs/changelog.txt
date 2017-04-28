@@ -95,6 +95,8 @@ Items
 * Potions of cure mutation, beneficial mutation, and mutation have been merged.
 * All types of food take one turn to eat.
 * All types of manuals are pre-identified.
+* Weapons:
+  - Giant Spiked Clubs have had their base delay lowered slightly.
 * Removed:
   - Wands of heal wounds, haste, teleportation, and slowing.
   - Rods.
