@@ -56,14 +56,17 @@ Gods
 Interface
 ---------
 * Noise from the last turn is displayed in the top-right, replacing gold.
+  (Gold can still be seen with % and $.)
 * New equip_bar option that replaces the noise display with a display of the
-  glyphs of your equipped items.
-* Monsters' melee attacks are now included in their descriptions.
+  glyphs of your equipped items (console only).
+* Monsters' melee attacks, including estimates of potential damage, are
+  now included in their descriptions.
 * The player's odds of succeeding with melee confusion attacks is displayed.
 * auto_butcher can be configured to trigger on different hunger levels.
-* Stash searches now hide distant duplicate matches of weapons, armour, and
-  ammo by default.
-* The mouse can be used in webtiles.
+* Stash searches now hide distant duplicate matches of more vanilla 
+  weapons, armour, and ammo by default.
+* The mouse can be used in webtiles (now enabled by default, previously a
+  secret option).
 
 Items
 -----
@@ -88,7 +91,7 @@ Items
   - Sceptre of Torment only torments on-hit, rather than randomly.
   - The Captain's Cutlass no longer chops off hydra heads.
   - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of Krishna
-    "Shargna" is renamed to the longbow "Zephyr".
+    "Sharnga" is renamed to the longbow "Zephyr".
 * Potions of cure mutation, beneficial mutation, and mutation have been merged.
 * All types of food take one turn to eat.
 * All types of manuals are pre-identified.
