@@ -143,9 +143,9 @@ static bool _do_build_level()
         magic_mapping(1000, 100, true, true, false,
                       coord_def(GXM/2, GYM/2));
     }
-    // This kind of error didn't cause builder() to reject the level, so it
-    // should be fine for objstat purposes.
-    if (_is_disconnected_level() && !crawl_state.obj_stat_gen)
+
+    // Dump the map of any disconnected level if this CLO is set.
+    if (_is_disconnected_level() && crawl_state.map_stat_dump_disconnect)
     {
         string vaults = comma_separated_fn(
                 begin(env.level_vaults), end(env.level_vaults),

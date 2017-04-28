@@ -3728,6 +3728,7 @@ enum commandline_option_type
     CLO_MORGUE,
     CLO_MACRO,
     CLO_MAPSTAT,
+    CLO_MAPSTAT_DUMP_DISCONNECT,
     CLO_OBJSTAT,
     CLO_ITERATIONS,
     CLO_ARENA,
@@ -3767,9 +3768,9 @@ static const char *cmd_ops[] =
 {
     "scores", "name", "species", "background", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "save-version", "sprint",
-    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "mapstat", "dump-disconnect", "objstat", "iters", "arena", "dump-maps",
+    "test", "script", "builddb", "help", "version", "seed", "save-version",
+    "sprint", "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
     "playable-json",
@@ -4186,6 +4187,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
 
+#ifndef DEBUG_STATISTICS
+    const char *dbg_stat_err = "mapstat and objstat are available only in "
+                               "DEBUG_STATISTICS builds.\n";
+#endif
+
     if (crawl_state.command_line_arguments.empty())
     {
         crawl_state.command_line_arguments.insert(
@@ -4356,8 +4362,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
             break;
 #else
-            fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_STATISTICS builds.\n");
+            fprintf(stderr, dbg_stat_err);
+            end(1);
+#endif
+        case CLO_MAPSTAT_DUMP_DISCONNECT:
+#ifdef DEBUG_STATISTICS
+            crawl_state.map_stat_dump_disconnect = true;
+#else
+            fprintf(stderr, dbg_stat_err);
             end(1);
 #endif
         case CLO_ITERATIONS:
@@ -4377,8 +4389,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 nextUsed = true;
             }
 #else
-            fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_STATISTICS builds.\n");
+            fprintf(stderr, dbg_stat_err);
             end(1);
 #endif
             break;
