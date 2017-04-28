@@ -544,6 +544,9 @@ static void _show_commandline_options_help()
     puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
          "syntax.");
     puts("      Examples: '-mapstat D,Depths' and '-mapstat Snake:1-4,Spider:1-4,Orc'");
+    puts("  -dump-disconnect    In mapstat when a disconnected level is "
+         "generated, dump");
+    puts("      map to map.dump and exit");
     puts("  -objstat [<levels>] run monster and item stats on the given range "
          "of levels");
     puts("      Defaults to entire dungeon; same level syntax as -mapstat.");

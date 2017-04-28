@@ -52,6 +52,8 @@ struct game_state
     int  seen_hups;         // Set to true if SIGHUP received.
 
     bool map_stat_gen;      // Set if we're generating stats on maps.
+    bool map_stat_dump_disconnect; // Set if we dump disconnected maps and exit
+                                   // under mapstat.
     bool obj_stat_gen;      // Set if we're generating object stats.
 
     game_type type;
