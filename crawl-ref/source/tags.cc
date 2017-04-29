@@ -2694,11 +2694,24 @@ static void tag_read_you(reader &th)
 
         if (you.innate_mutation[j] + you.temp_mutation[j] > you.mutation[j])
         {
-            mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
-            you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
+            if (th.getMinorVersion() >= TAG_MINOR_SPIT_POISON_AGAIN
+                && th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN_AGAIN
+                && j == MUT_SPIT_POISON)
+            {
+                // this special case needs to be handled diferently or
+                // the level will be set too high; innate is what's corrupted.
+                you.mutation[j] = you.innate_mutation[j] = 1;
+                you.temp_mutation[j] = 0;
+            }
+            else
+            {
+                mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
+                you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
+            }
         }
 #endif
     }
+
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_STAT_MUT)
@@ -2953,6 +2966,26 @@ static void tag_read_you(reader &th)
     {
         if (you.mutation[MUT_SPIT_POISON] > 1)
             you.mutation[MUT_SPIT_POISON] -= 1;
+        // Before TAG_MINOR_SPIT_POISON_AGAIN_AGAIN this second if was missing.
+        if (you.innate_mutation[MUT_SPIT_POISON] > 1)
+            you.innate_mutation[MUT_SPIT_POISON] -= 1;
+    }
+    else if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN_AGAIN)
+    {
+        // Between these two tags the value for you.innate_mutation could get
+        // corrupted. No valid save after TAG_MINOR_SPIT_POISON_AGAIN should
+        // have innate set to 2 for this for this mutation.
+
+        // this doesn't correct you.mutation, because the 2,2 configuration
+        // can result from two cases: (i) a save was upgraded across
+        // TAG_MINOR_SPIT_POISON_AGAIN, had its mutations corrupted, and
+        // then was fixed up to 2,2 on load, or (ii) a save-pre-
+        // TAG_MINOR_SPIT_POISON_AGAIN had exhale poison, had 1 subtracted
+        // from mutation, and ends up as 2,2. So, some lucky upgrades will get
+        // exhale poison.
+
+        if (you.innate_mutation[MUT_SPIT_POISON] == 2)
+            you.innate_mutation[MUT_SPIT_POISON] = 1;
     }
 
     // Slow regeneration split into two single-level muts:
