@@ -94,6 +94,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         display.invalidate(true);
         display.display();
         minimap.update_overlay();
+
+        var possible_input = $("#messages .game_message input");
+        if (possible_input)
+           possible_input.focus();
     }
 
     options.add_listener(function () {
