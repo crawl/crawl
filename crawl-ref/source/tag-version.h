@@ -209,6 +209,8 @@ enum tag_minor_version
     TAG_MINOR_NO_ITEM_TRANSIT,     // Remove code to transit items across levels.
     TAG_MINOR_TOMB_HATCHES,        // Use fixed-destination hatches in Tomb.
     TAG_MINOR_TRANSPORTERS,        // Transporters and position marker changes.
+    TAG_MINOR_SPIT_POISON_AGAIN_AGAIN, // save compat issues for TAG_MINOR_SPIT_POISON_AGAIN.
+
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
