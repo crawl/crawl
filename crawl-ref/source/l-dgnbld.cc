@@ -1827,7 +1827,8 @@ LUAFN(dgn_replace_random)
     if (loc.empty())
     {
         if (required)
-            return luaL_error(ls, "Could not find '%c'", find);
+            luaL_error(ls, "Could not find '%c'", find);
+        return 0;
     }
 
     int idx = random2(loc.size());
