@@ -720,8 +720,10 @@ static string _raw_penance_message(god_type which_god)
     if (penance > initial_penance * 3 / 4)
         return "%s's wrath is upon you!";
     if (penance > initial_penance / 2)
-        return "%s is annoyed with you.";
+        return "%s well remembers your sins.";
     if (penance > initial_penance / 4)
+        return "%s's wrath is beginning to cool.";
+    if (penance > 0)
         return "%s is almost ready to forgive your sins.";
     return "%s is neutral towards you.";
 }
