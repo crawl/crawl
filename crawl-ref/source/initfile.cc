@@ -4362,14 +4362,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
             break;
 #else
-            fprintf(stderr, dbg_stat_err);
+            fprintf(stderr, "%s", dbg_stat_err);
             end(1);
 #endif
         case CLO_MAPSTAT_DUMP_DISCONNECT:
 #ifdef DEBUG_STATISTICS
             crawl_state.map_stat_dump_disconnect = true;
 #else
-            fprintf(stderr, dbg_stat_err);
+            fprintf(stderr, "%s", dbg_stat_err);
             end(1);
 #endif
         case CLO_ITERATIONS:
@@ -4389,7 +4389,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 nextUsed = true;
             }
 #else
-            fprintf(stderr, dbg_stat_err);
+            fprintf(stderr, "%s", dbg_stat_err);
             end(1);
 #endif
             break;
