@@ -284,9 +284,6 @@ void mark_had_book(const item_def &book)
     if (!item_is_spellbook(book))
         return;
 
-    for (spell_type stype : spells_in_book(book))
-        you.seen_spell.set(stype);
-
     if (!book.props.exists(SPELL_LIST_KEY))
         mark_had_book(static_cast<book_type>(book.sub_type));
 }

@@ -279,7 +279,6 @@ public:
     int magic_contamination;
 
     FixedBitVector<NUM_FIXED_BOOKS> had_book;
-    FixedBitVector<NUM_SPELLS>      seen_spell;
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
