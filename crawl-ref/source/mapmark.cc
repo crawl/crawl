@@ -900,32 +900,40 @@ string map_cloud_spreader_marker::debug_describe() const
 
 map_position_marker::map_position_marker(
     const coord_def &p,
+    dungeon_feature_type _feat,
     const coord_def _dest)
-    : map_marker(MAT_POSITION, p), dest(_dest)
+    : map_marker(MAT_POSITION, p), feat(_feat), dest(_dest)
 {
 }
 
 map_position_marker::map_position_marker(
     const map_position_marker &other)
-    : map_marker(MAT_POSITION, other.pos), dest(other.dest)
+    : map_marker(MAT_POSITION, other.pos), feat(other.feat), dest(other.dest)
 {
 }
 
 void map_position_marker::write(writer &outf) const
 {
     map_marker::write(outf);
+    marshallUByte(outf, feat);
     marshallCoord(outf, dest);
 }
 
 void map_position_marker::read(reader &inf)
 {
     map_marker::read(inf);
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() < TAG_MINOR_TRANSPORTERS)
+        feat = DNGN_UNSEEN;
+    else
+#endif
+    feat = unmarshallFeatureType(inf);
     dest = (unmarshallCoord(inf));
 }
 
 map_marker *map_position_marker::clone() const
 {
-    return new map_position_marker(pos, dest);
+    return new map_position_marker(pos, feat, dest);
 }
 
 map_marker *map_position_marker::read(reader &inf, map_marker_type)
@@ -1282,4 +1290,35 @@ void remove_markers_and_listeners_at(coord_def p)
 
     env.markers.remove_markers_at(p);
     dungeon_events.clear_listeners_at(p);
+}
+
+/**
+ * Get any position marker at the given location for the given type of feature.
+ * Multiple position markers can exist at a given location, so the `feat`
+ * argument is used to select the desired one.
+ *
+ * @param pos     The position to check.
+ * @param feat    The type of feature for which we want a position marker.
+ * @returns       The position marker if one exists, otherwise nullptr.
+ **/
+map_position_marker *get_position_marker_at(const coord_def &pos,
+                                            dungeon_feature_type feat)
+{
+    for (map_marker *m : env.markers.get_markers_at(pos))
+    {
+        if (m->get_type() != MAT_POSITION)
+            continue;
+
+        map_position_marker *posm = dynamic_cast<map_position_marker*>(m);
+#if TAG_MAJOR_VERSION == 34
+        // Escape hatches were the only feature type using position markers
+        // before TAG_MINOR_TRANSPORTERS.
+        if (posm->feat == DNGN_UNSEEN && feat_is_escape_hatch(feat))
+            posm->feat = feat;
+#endif
+        if (posm->feat == feat)
+            return posm;
+    }
+
+    return nullptr;
 }

@@ -208,6 +208,8 @@ enum tag_minor_version
     TAG_MINOR_NO_MORE_LORC,        // Don't save lava orc temperature (or anything else). LO/Dj removal.
     TAG_MINOR_NO_ITEM_TRANSIT,     // Remove code to transit items across levels.
     TAG_MINOR_TOMB_HATCHES,        // Use fixed-destination hatches in Tomb.
+    TAG_MINOR_TRANSPORTERS,        // Transporters and position marker changes.
+    TAG_MINOR_SPIT_POISON_AGAIN_AGAIN, // save compat issues for TAG_MINOR_SPIT_POISON_AGAIN.
     TAG_MINOR_GOLDIFY_BOOKS,       // Spellbooks disintegrate when picked up, like gold/runes/orbs
 #endif
     NUM_TAG_MINORS,

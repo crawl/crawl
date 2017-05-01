@@ -295,7 +295,7 @@ static peeve_map divine_peeves[] =
             " forgives your inadvertent attack on a neutral, just this once."
         } },
         { DID_ATTACK_IN_SANCTUARY, {
-            "you attack monters in a sanctuary", false,
+            "you attack monsters in a sanctuary", false,
             1, 1
         } },
         { DID_UNCLEAN, {

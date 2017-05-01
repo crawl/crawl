@@ -248,7 +248,7 @@ static monster* _do_split(monster* thing, const coord_def & target)
     return new_slime;
 }
 
-// Cause a monster to lose a turn.  has_gone should be true if the
+// Cause a monster to lose a turn. has_gone should be true if the
 // monster has already moved this turn.
 static void _lose_turn(monster* mons, bool has_gone)
 {

@@ -301,8 +301,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    // XXX: this is supposed to compensate for DUR_SLOW/DUR_FAST, but behaves
-    // incorrectly if attacking while moving/etc (as with WJC)
+    // TODO: does this really have to depend on `you.time_taken`?  In basic
+    // cases at least, `you.time_taken` is just `player_speed()`. See
+    // `_prep_input`.
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }
@@ -772,8 +773,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
 
     if (berserk())
         msg = "You're already berserk!";
-    else if (duration[DUR_EXHAUSTED])
-         msg = "You're too exhausted to go berserk.";
+    else if (duration[DUR_BERSERK_COOLDOWN])
+         msg = "You're still recovering from your berserk rage.";
     else if (duration[DUR_DEATHS_DOOR])
         msg = "You can't enter a blood rage from death's door.";
     else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))

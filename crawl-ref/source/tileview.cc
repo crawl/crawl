@@ -54,10 +54,14 @@ void tile_new_level(bool first_time, bool init_unseen)
         for (unsigned int y = 0; y < GYM; y++)
         {
             unsigned int tile = env.tile_bk_bg[x][y];
-            if (!(tile & TILE_FLAG_NEW_STAIR))
-                continue;
-            if (!is_unknown_stair(coord_def(x,y)))
+            if ((tile & TILE_FLAG_NEW_STAIR)
+                && !is_unknown_stair(coord_def(x,y)))
+            {
                 env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_STAIR;
+            }
+            else if ((tile & TILE_FLAG_NEW_TRANSPORTER)
+                     && !is_unknown_transporter(coord_def(x,y)))
+                env.tile_bk_bg[x][y] &= ~TILE_FLAG_NEW_TRANSPORTER;
         }
 
     tiles.clear_minimap();
@@ -506,6 +510,13 @@ void tile_init_flavour(const coord_def &gc, const int domino)
                                    : TILE_DNGN_SHOALS_STAIRS_DOWN;
     }
 
+    if (feat_is_escape_hatch(grd(gc)) && player_in_branch(BRANCH_TOMB))
+    {
+        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        env.tile_flv(gc).feat = up ? TILE_DNGN_ONE_WAY_STAIRS_UP
+                                   : TILE_DNGN_ONE_WAY_STAIRS_DOWN;
+    }
+
     if (feat_is_door(grd(gc)))
     {
         // Check for gates.
@@ -813,6 +824,8 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
+        else if (is_unknown_transporter(gc))
+            bg |= TILE_FLAG_NEW_TRANSPORTER;
     }
 
     return bg;

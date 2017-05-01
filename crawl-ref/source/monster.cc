@@ -2268,6 +2268,8 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
 
     if (mon.type == MONS_NO_MONSTER)
         return "DEAD MONSTER";
+    else if (mon.mid == MID_YOU_FAULTLESS)
+        return "INVALID YOU_FAULTLESS";
     else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
         return _invalid_monster_str(mon.type);
 
@@ -4501,7 +4503,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE)
             && crawl_state.which_god_acting() != GOD_YREDELEMNUL)
         {
-            mirror_damage_fineff::schedule(agent, this, amount * 2 / 3);
+            // ensure that YOU_FAULTLESS is converted to `you`. this may still
+            // fail e.g. when the damage is from a vault-created cloud
+            if (auto valid_agent = ensure_valid_actor(agent))
+                mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
         blame_damage(agent, amount);

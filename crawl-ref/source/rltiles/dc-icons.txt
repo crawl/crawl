@@ -57,6 +57,7 @@ infested INFESTED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
+new_transporter NEW_TRANSPORTER
 
 %sdir misc
 out_of_sight MESH

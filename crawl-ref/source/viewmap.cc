@@ -168,12 +168,14 @@ bool is_feature(char32_t feature, const coord_def& where)
         return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
                 && !feat_is_altar(grid)
                 && !feat_is_portal_exit(grid)
-                && grid != DNGN_ENTER_SHOP;
+                && grid != DNGN_ENTER_SHOP
+                && grid != DNGN_TRANSPORTER;
     case '>':
         return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
                 && !feat_is_altar(grid)
                 && !feat_is_portal_entrance(grid)
-                && grid != DNGN_ENTER_SHOP;
+                && grid != DNGN_ENTER_SHOP
+                && grid != DNGN_TRANSPORTER;
     case '^':
         return feat_is_trap(grid);
     default:
@@ -199,7 +201,8 @@ static bool _is_feature_fudged(char32_t glyph, const coord_def& where)
     else if (glyph == '>')
     {
         return feat_is_portal_entrance(grd(where))
-               || grd(where) == DNGN_TRANSIT_PANDEMONIUM;
+               || grd(where) == DNGN_TRANSIT_PANDEMONIUM
+               || grd(where) == DNGN_TRANSPORTER;
     }
 
     return false;
@@ -1298,8 +1301,8 @@ bool show_map(level_pos &lpos,
 
 bool emphasise(const coord_def& where)
 {
-    return is_unknown_stair(where)
-           && !player_in_branch(BRANCH_VESTIBULE);
+    return is_unknown_stair(where) && !player_in_branch(BRANCH_VESTIBULE)
+           || is_unknown_transporter(where);
 }
 
 #ifndef USE_TILE_LOCAL

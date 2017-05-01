@@ -1603,7 +1603,7 @@ ENDMAP
 NAME:   kennysheep_goblin_castle
 TAGS:   no_monster_gen no_pool_fixup
 ORIENT: northwest
-DEPTH:  D:2-4
+DEPTH:  D:3-4
 ## this gives a chance for Ijyb and Robin to appear as the boss if they
 ## haven't been placed, selecting from who is available.
 {{

@@ -120,6 +120,7 @@
     Mike Drinen
     DrKe
     Kieron Dunbar
+    Russell Dunk
     John 'Elwin' Edwards
     elliott
     Micha Elsner
@@ -216,6 +217,7 @@
     Lemuel Pitkin
     Iago Porto
     pubby
+    Edward Randtke
     Derek Ray
     Terence Reeves
     Tobias Rehbein

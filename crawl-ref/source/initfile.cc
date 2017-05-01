@@ -338,6 +338,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_trap_col), "#aa6644"),
         new TileColGameOption(SIMPLE_NAME(tile_unseen_col), "black"),
         new TileColGameOption(SIMPLE_NAME(tile_upstairs_col), "cyan"),
+        new TileColGameOption(SIMPLE_NAME(tile_transporter_col), "#ffa500"),
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
@@ -1040,7 +1041,7 @@ void game_options::reset_options()
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
-                              | ES_GREEDY_PICKUP_SMART
+                              | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
     dump_kill_places       = KDO_ONE_PLACE;
@@ -2102,6 +2103,8 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ALTAR;
         else if (c == "runed_door")
             conditions |= ES_RUNED_DOOR;
+        else if (c == "transporter")
+            conditions |= ES_TRANSPORTER;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
         else if (c == "greedy_visited_item_stack")
@@ -3725,6 +3728,7 @@ enum commandline_option_type
     CLO_MORGUE,
     CLO_MACRO,
     CLO_MAPSTAT,
+    CLO_MAPSTAT_DUMP_DISCONNECT,
     CLO_OBJSTAT,
     CLO_ITERATIONS,
     CLO_ARENA,
@@ -3764,9 +3768,9 @@ static const char *cmd_ops[] =
 {
     "scores", "name", "species", "background", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "save-version", "sprint",
-    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "mapstat", "dump-disconnect", "objstat", "iters", "arena", "dump-maps",
+    "test", "script", "builddb", "help", "version", "seed", "save-version",
+    "sprint", "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
     "playable-json",
@@ -4072,6 +4076,7 @@ static void _write_minimap_colours()
     _write_vcolour("tile_door_col", Options.tile_door_col);
     _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
     _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
+    _write_vcolour("tile_transporter_col", Options.tile_transporter_col);
     _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
     _write_vcolour("tile_portal_col", Options.tile_portal_col);
     _write_vcolour("tile_feature_col", Options.tile_feature_col);
@@ -4181,6 +4186,11 @@ static bool _check_extra_opt(char* _opt)
 bool parse_args(int argc, char **argv, bool rc_only)
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
+
+#ifndef DEBUG_STATISTICS
+    const char *dbg_stat_err = "mapstat and objstat are available only in "
+                               "DEBUG_STATISTICS builds.\n";
+#endif
 
     if (crawl_state.command_line_arguments.empty())
     {
@@ -4352,8 +4362,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
             break;
 #else
-            fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_STATISTICS builds.\n");
+            fprintf(stderr, "%s", dbg_stat_err);
+            end(1);
+#endif
+        case CLO_MAPSTAT_DUMP_DISCONNECT:
+#ifdef DEBUG_STATISTICS
+            crawl_state.map_stat_dump_disconnect = true;
+#else
+            fprintf(stderr, "%s", dbg_stat_err);
             end(1);
 #endif
         case CLO_ITERATIONS:
@@ -4373,8 +4389,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 nextUsed = true;
             }
 #else
-            fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_STATISTICS builds.\n");
+            fprintf(stderr, "%s", dbg_stat_err);
             end(1);
 #endif
             break;

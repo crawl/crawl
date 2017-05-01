@@ -394,7 +394,7 @@ Xom stealth player
 
 Xom shushes you conspicuously.
 
-Xom whispers "Shhh!"
+Xom whispers: Shhh!
 %%%%
 Xom cloud
 
@@ -570,7 +570,7 @@ Gozag says: Greed is good.
 %%%%
 Hepliaklqana welcome
 
-Hepliaklqana says: Through your memory, mortal, the past survives and persists.
+Hepliaklqana says: Through your memory, the past survives and persists.
 %%%%
 Jiyva welcome
 
@@ -713,6 +713,79 @@ Xom welcome
 Xom snickers.
 
 Xom titters.
+
+w:3
+@_xom_welcome_rare_@
+%%%%
+_xom_welcome_rare_
+
+Xom says: I'm watching you, my @_xom_child_@ child.
+
+Xom slaps you with @_trout_species_@ trout!
+%%%%
+_xom_child_
+
+misbegotten
+
+bastard
+
+ugly
+
+red-headed step
+
+silly
+
+worthless
+
+prodigal
+
+insane
+
+naughty
+%%%%
+_trout_species_
+
+a rainbow
+
+a flathead
+
+a cutthroat
+
+a bull
+
+a silver
+
+w:3
+@_trout_species_rare_@
+%%%%
+_trout_species_rare_
+
+a complex
+
+a polygonal
+
+an imaginary
+
+an inverse
+
+an unlikely
+
+a used
+
+a second-hand
+
+a prohibited
+
+a challenging
+
+a delicious
+
+a mouldy
+
+a fake
+
+w:2
+a kilgore
 %%%%
 Yredelemnul penance
 

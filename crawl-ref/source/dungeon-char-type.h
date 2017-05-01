@@ -44,7 +44,10 @@ enum dungeon_char_type
     DCHAR_ITEM_AMULET,
     DCHAR_CLOUD,
     DCHAR_TREE,
+#if TAG_MAJOR_VERSION == 34
     DCHAR_TELEPORTER,
+#endif
+    DCHAR_TRANSPORTER,
 
     DCHAR_SPACE,
     DCHAR_FIRED_BOLT,

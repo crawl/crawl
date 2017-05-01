@@ -591,6 +591,9 @@ static void debug_load_map_by_name(string name, bool primary)
             // Fix up doors from vaults and any changes to the default walls
             // and floors from the vault.
             tile_init_flavour();
+            // Transporters would normally be made from map markers by the
+            // builder.
+            dgn_make_transporters_from_markers();
         }
         else
             mprf("Failed to place %s.", toplace->name.c_str());

@@ -346,6 +346,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_TRANSPORTER:
         return CMD_GO_DOWNSTAIRS;
 
     default:
@@ -2020,6 +2021,10 @@ void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                     if (mon)
                         tmarker->mon_num = mon->mid;
                 }
+                // ensure that terrain change happens. Sometimes a terrain
+                // change marker can get stuck; this allows re-doing such
+                // cases. Also probably needed by the else case above.
+                dungeon_terrain_changed(pos, newfeat, false, true, true);
                 return;
             }
             else
@@ -2080,7 +2085,7 @@ static bool _revert_terrain_to_floor(coord_def pos)
     }
 
     if (grd(pos) == DNGN_RUNED_DOOR && newfeat != DNGN_RUNED_DOOR)
-        opened_runed_door();
+        explored_tracked_feature(DNGN_RUNED_DOOR);
 
     grd(pos) = newfeat;
     set_terrain_changed(pos);

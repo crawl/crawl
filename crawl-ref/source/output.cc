@@ -619,7 +619,7 @@ static void _print_stats_noise(int x, int y)
     //               (though it is possible depending on terrain).
     //   YELLOW = likely to carry outside of your los, up to double.
     //   RED = likely to carry at least 16 spaces, up to much further.
-    //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
+    //   LIGHTMAGENTA = really f*cking loud. (Gong, etc.)
     // In more enclosed areas, these values will be attenuated,
     // and this isn't represented.
     // See player::get_noise_perception for the mapping from internal noise
@@ -1048,7 +1048,9 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SLOW,
         STATUS_SPEED,
         DUR_DEATHS_DOOR,
+        DUR_BERSERK_COOLDOWN,
         DUR_EXHAUSTED,
+        DUR_DEATHS_DOOR_COOLDOWN,
         DUR_QUAD_DAMAGE,
         STATUS_SERPENTS_LASH,
     };

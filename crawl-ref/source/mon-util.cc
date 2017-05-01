@@ -1711,6 +1711,11 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_ROYAL_JELLY;
 }
 
+bool mons_class_can_use_transporter(monster_type mc)
+{
+    return !mons_is_tentacle_or_tentacle_segment(mc);
+}
+
 bool mons_can_use_stairs(const monster& mon, dungeon_feature_type stair)
 {
     if (!mons_class_can_use_stairs(mon.type))
@@ -5271,7 +5276,7 @@ bool choose_any_monster(const monster& mon)
 }
 
 // Find a nearby monster and return its index, including you as a
-// possibility with probability weight.  suitable() should return true
+// possibility with probability weight. suitable() should return true
 // for the type of monster wanted.
 // If prefer_named is true, named monsters (including uniques) are twice
 // as likely to get chosen compared to non-named ones.
@@ -5708,7 +5713,7 @@ static bool _apply_to_monsters(monster_func f, radius_iterator&& ri)
     for (; ri; ri++)
     {
         monster* mons = monster_at(*ri);
-        if (mons)
+        if (!invalid_monster(mons))
             affected_any = f(*mons) || affected_any;
     }
 

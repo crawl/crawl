@@ -508,7 +508,7 @@ MAP
      .xxAAAAAAAxxBBBx..
     ..xAAAAAAAAAxxBxx.
     .xxAAAAAAAAAxxBx..
-    .x+x"xxxxxxx+x+x. 
+    .x+x"xxxxxxx+x+x.
    ..xCxxDDDDDDDDDxx.
    .xxCxxDDDDDDDDDx..
   ..xCCCxxDDDDDDDxx.
@@ -749,7 +749,7 @@ MAP
                    .xxnxx.
                    ..nnn..
                     .nnn.
-                    ..n.. 
+                    ..n..
                      .n.
                      ...
 ENDMAP
@@ -2505,11 +2505,11 @@ NAME:  minmay_the_grid_square_5x5_checkered
 TAGS:  the_grid_square_5x5 unrand
 SUBST: 9 = 9.
 MAP
- . . 
+ . .
 . . .
- 0 0 
+ 0 0
 . . .
- . . 
+ . .
 ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_z
@@ -2517,8 +2517,8 @@ TAGS:  the_grid_square_5x5 unrand
 SUBST: 9 = 9.
 MAP
 .....
-.  9 
-  .  
+.  9
+  .
  9  .
 .....
 ENDMAP
@@ -2526,19 +2526,19 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_plus
 TAGS: the_grid_square_5x5 unrand
 MAP
-  .  
-  .  
+  .
+  .
 ..9..
-  .  
-  .  
+  .
+  .
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_percent
 TAGS: the_grid_square_5x5 unrand
 MAP
 ..  %
-.. . 
-  9  
+.. .
+  9
  . ..
 %  ..
 ENDMAP
@@ -2557,10 +2557,10 @@ NAME: minmay_the_grid_square_5x5_lines
 TAGS: the_grid_square_5x5 unrand
 SUBST: 0 = 0.
 MAP
-. .. 
+. ..
  .0 .
 .0 0.
-. 0. 
+. 0.
  .. .
 ENDMAP
 
@@ -2568,9 +2568,9 @@ NAME: minmay_the_grid_square_5x5_tie
 TAGS: the_grid_square_5x5 unrand
 MAP
 %...%
-  .  
+  .
 ..9..
-  .  
+  .
 %...%
 ENDMAP
 
@@ -2589,7 +2589,7 @@ TAGS: the_grid_square_5x5 unrand
 SUBST: . = ....0%
 MAP
 . ...
-.... 
+....
  ....
 ... .
 . ...
@@ -2624,17 +2624,17 @@ MAP
 %....
     .
 ..9..
-.    
+.
 ....%
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_two_small
 TAGS: the_grid_square_5x5 unrand
 MAP
- %.. 
+ %..
     .
- .9. 
-.    
+ .9.
+.
  ..%
 ENDMAP
 
@@ -2651,11 +2651,11 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_three_small
 TAGS: the_grid_square_5x5 unrand
 MAP
-%... 
+%...
     .
-..9. 
+..9.
     .
-%... 
+%...
 ENDMAP
 
 
@@ -2674,18 +2674,18 @@ NAME: minmay_the_grid_square_5x5_eight_small
 TAGS: the_grid_square_5x5 unrand
 SUBST: 0 = 0...
 MAP
- 0.0 
+ 0.0
 0   0
- .%. 
+ .%.
 0   0
- 0.0 
+ 0.0
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_six
 TAGS: the_grid_square_5x5 unrand
 MAP
 ....%
-.    
+.
 ..9..
 .   .
 .....
@@ -2695,10 +2695,10 @@ NAME: minmay_the_grid_square_5x5_six_small
 TAGS: the_grid_square_5x5 unrand
 MAP
  ..%
-.    
- .9. 
+.
+ .9.
 .   .
- ... 
+ ...
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_seven
@@ -2706,9 +2706,9 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .....
 .   .
-   . 
-   . 
-  9  
+   .
+   .
+  9
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_longway
@@ -2724,31 +2724,31 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_tri_point
 TAGS: the_grid_square_5x5 unrand
 MAP
- ... 
+ ...
 . . .
 ..9..
 .. ..
-.. .. 
+.. ..
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_minimal
 TAGS: the_grid_square_5x5 unrand
 MAP
- .   
-. .  
-   . 
+ .
+. .
+   .
     .
-   . 
+   .
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_hourglass
 TAGS: the_grid_square_5x5 unrand
 MAP
-  .. 
+  ..
   . .
 ..9..
-. .  
- ..  
+. .
+ ..
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_comb
@@ -2765,8 +2765,8 @@ NAME: minmay_the_grid_square_5x5_shuriken
 TAGS: the_grid_square_5x5 unrand
 MAP
 0  .0
-..%. 
- % % 
+..%.
+ % %
  .%..
 0.  0
 ENDMAP
@@ -2784,11 +2784,11 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_spiral_small
 TAGS: the_grid_square_5x5 unrand
 MAP
- ... 
+ ...
 .   .
   * .
  .  .
-  .9 
+  .9
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_minivault
@@ -2805,7 +2805,7 @@ NAME: minmay_the_grid_square_5x5_half_checkered
 TAGS: the_grid_square_5x5 unrand
 MAP
 % . %
- . . 
+ . .
 . . .
 ..9..
 0...0
@@ -2814,21 +2814,21 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_misaligned
 TAGS: the_grid_square_5x5 unrand
 MAP
-0  . 
+0  .
 .....
  %  0
 .....
-0  . 
+0  .
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_broken_cross
 TAGS: the_grid_square_5x5 unrand
 MAP
-  .  
+  .
   9..
 .% %.
-..9  
-  .  
+..9
+  .
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_dogpile
@@ -2855,7 +2855,7 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_bite
 TAGS: the_grid_square_5x5 unrand
 MAP
-.... 
+....
 .  9.
 .   .
 .   .
@@ -2865,11 +2865,11 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_c
 TAGS: the_grid_square_5x5 unrand
 MAP
- ... 
+ ...
 .   .
-.    
+.
 .   .
- ... 
+ ...
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_slash
@@ -2878,9 +2878,9 @@ SUBST: 0 = 0.
 MAP
    .0
   .0.
- ... 
-.0.  
-0.   
+ ...
+.0.
+0.
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_checkered_statues
@@ -2897,19 +2897,19 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_v
 TAGS: the_grid_square_5x5 unrand
 MAP
- ... 
+ ...
 . . .
 . * .
 .9 9.
- . . 
+ . .
 ENDMAP
 
 
 NAME: minmay_the_grid_square_5x5_doubleslash
 TAGS: the_grid_square_5x5 unrand
 MAP
-.. .  
-.9 . 
+.. .
+.9 .
 . * .
  . 9.
  . ..
@@ -2922,7 +2922,7 @@ MAP
 .  ..
 .9*9.
 ..  .
-. .  
+. .
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_sharp_hourglass
@@ -2931,7 +2931,7 @@ SUBST: 0 = 0.
 MAP
 0...0
 .   .
- ... 
+ ...
 .   .
 0...0
 ENDMAP
@@ -2940,7 +2940,7 @@ NAME: minmay_the_grid_square_5x5_checkered_sparse
 TAGS: the_grid_square_5x5 unrand
 MAP
 .....
- . . 
+ . .
 .0%0.
 . . .
 .....
@@ -2959,10 +2959,10 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_n_small
 TAGS: the_grid_square_5x5 unrand
 MAP
-.  . 
+.  .
  9  .
 . * .
-.  9 
+.  9
  .  .
 ENDMAP
 
@@ -2973,7 +2973,7 @@ MAP
 .   .
 .....
 .  ..
-.. %0 
+.. %0
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_bracketed
@@ -2991,8 +2991,8 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 %.9..
   ...
-  .  
-...  
+  .
+...
 ..9.%
 ENDMAP
 
@@ -3000,8 +3000,8 @@ NAME: minmay_the_grid_square_5x5_gyroscope
 TAGS: the_grid_square_5x5 unrand
 MAP
 ..  .
-. ..  
- .9. 
+. ..
+ .9.
  .. .
 .  ..
 ENDMAP
@@ -3009,8 +3009,8 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_inverted_slash
 TAGS: the_grid_square_5x5 unrand
 MAP
-...  
-.9   
+...
+.9
 . * .
    9.
   ...
@@ -3021,7 +3021,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .....
 .....
-  9  
+  9
 .....
 .....
 ENDMAP
@@ -3042,7 +3042,7 @@ SUBST: 0 = 0.
 MAP
 .$ $.
 $0$0$
- $ $ 
+ $ $
 $0$0$
 .$ $.
 ENDMAP
@@ -3050,21 +3050,21 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_tetrominoes
 TAGS: the_grid_square_5x5 unrand
 MAP
- .   
+ .
  .. .
   . .
-.. .. 
-..   
+.. ..
+..
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_detours
 TAGS: the_grid_square_5x5 unrand
 MAP
-  .. 
-   . 
+  ..
+   .
 .....
- .   
- ..  
+ .
+ ..
 ENDMAP
 NAME: minmay_the_grid_square_5x5_inset
 TAGS: the_grid_square_5x5 unrand
@@ -3080,8 +3080,8 @@ NAME: minmay_the_grid_square_5x5_corner
 TAGS: the_grid_square_5x5 unrand
 MAP
 0.  %
-. .. 
- ... 
+. ..
+ ...
 . . .
 .. .0
 ENDMAP
@@ -3134,18 +3134,18 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_almost_minimal
 TAGS: the_grid_square_5x5 unrand
 MAP
-   .  
+   .
     .
- ... 
-.    
- .   
+ ...
+.
+ .
 ENDMAP
 NAME: minmay_the_grid_square_5x5_hollow_slash
 TAGS: the_grid_square_5x5 unrand
 SUBST: 0 = 0.
 MAP
-...  
-. 0. 
+...
+. 0.
 .0 0.
  .0 .
   ...
@@ -3157,7 +3157,7 @@ SUBST: 0 = 0.
 MAP
 .. ..
 .0.0.
- .%. 
+ .%.
 .0.0.
 .. ..
 ENDMAP
@@ -3169,7 +3169,7 @@ MAP
 .  ..
 .. ..
 ..  .
-.... 
+....
 ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_inner_v
@@ -3196,11 +3196,11 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_fancy_junction
 TAGS: the_grid_square_5x5 unrand
 MAP
-  .  
+  .
 .G.G.
 .....
 .G.G.
-  .  
+  .
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_prize_open
@@ -3252,9 +3252,9 @@ NAME: minmay_the_grid_square_5x5_prize_itemx
 TAGS: the_grid_square_5x5_prize unrand
 MAP
 * . *
- %8% 
+ %8%
 .8*8.
- %8% 
+ %8%
 * . *
 ENDMAP
 
@@ -3263,9 +3263,9 @@ NAME: minmay_the_grid_square_5x5_prize_monsterx
 TAGS: the_grid_square_5x5_prize unrand
 MAP
 0 . 0
- 9*9 
+ 9*9
 .|8|.
- 9*9 
+ 9*9
 0 . 0
 ENDMAP
 
@@ -3273,11 +3273,11 @@ NAME: minmay_the_grid_square_5x5_prize_snowflake
 TAGS: the_grid_square_5x5_prize unrand
 KITEM: | = |,|,*,*
 MAP
- . . 
+ . .
 .8 8.
-  |  
+  |
 .8 8.
- . . 
+ . .
 ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_prize_gold
@@ -3309,9 +3309,9 @@ NAME: minmay_the_grid_square_5x5_prize_waves
 TAGS: the_grid_square_5x5_prize unrand
 MAP
  8..|
-*8   
+*8
   ..8
-|8.  
+|8.
    .*
 ENDMAP
 
@@ -3333,33 +3333,33 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_megaprize_diamond
 TAGS: the_grid_square_5x5_megaprize unrand
 MAP
- |8| 
+ |8|
 |8 8|
 8   8
 |8 8|
- |8| 
+ |8|
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_megaprize_hollow
 TAGS: the_grid_square_5x5_megaprize unrand
 KITEM: 8 = *
 MAP
- 8*8 
+ 8*8
 8*.*8
 *...*
 8*.*8
- 8*8 
+ 8*8
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_megaprize_checkered
 TAGS: the_grid_square_5x5_megaprize unrand
 KITEM: | = |,|
 MAP
- 8 8 
+ 8 8
 8 | 8
- | | 
+ | |
 8 | 8
- 8 8 
+ 8 8
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_megaprize_crossed
@@ -3368,7 +3368,7 @@ MAP
 88.||
  88|.
 .| |.
-.|88 
+.|88
 ||.88
 ENDMAP
 
@@ -3397,14 +3397,14 @@ MAP
       9.
   ..    .
  .  ..   .
-.     .  . 
-9  .. . .  
-  .  *  .  
+.     .  .
+9  .. . .
+  .  *  .
   . . ..  9
  .  .     .
  .   ..  .
   .    ..
-   .9   
+   .9
 ENDMAP
 
 NAME: minmay_the_grid_octo_thin_diamonds
@@ -3415,7 +3415,7 @@ MAP
  .. ... ..
 .. .. .. ..
 . .. 9 .. .
- .. 9*9 .. 
+ .. 9*9 ..
 . .. 9 .. .
 .. .. .. ..
  .. ... ..
@@ -3435,9 +3435,9 @@ MAP
   .. . ..
  .c. . .c.
 %..9 9 9..%
-    9c9    
+    9c9
 ...9cbc9...
-    9c9    
+    9c9
 %..9 9 9..%
  .c. . .c.
   .. . ..
@@ -3453,15 +3453,15 @@ KMONS: 8 = 8
 KITEM: 8 = *
 MAP
    ..c..
-    ...  
-  *  .  * 
+    ...
+  *  .  *
 .  9 9 9  .
 ..  9c9  ..
 c..9cbc9..c
 ..  9c9  ..
 .  9 9 9  .
-  *  .  * 
-    ...  
+  *  .  *
+    ...
    ..c..
 ENDMAP
 
@@ -3478,7 +3478,7 @@ MAP
  .9     ..
 .9 9 *   ..
 9   9c9   .
-   *cbc*   
+   *cbc*
 .   9c9   .
 ..   *   ..
  ..     ..
@@ -3507,15 +3507,15 @@ TAGS: the_grid_octo unrand
 MAP
       ..
    .....9
-  .       
-   ..9.... 
+  .
+   ..9....
           .
- ....8.... 
-.          
- ....9...  
+ ....8....
+.
+ ....9...
          .
   9......
-   ..   
+   ..
 ENDMAP
 
 NAME: minmay_the_grid_octo_shrine
@@ -3551,7 +3551,7 @@ MAP
  . ..... .
 ...  9  ...
 9 . 9*9 . 9
-  .9*b*9.  
+  .9*b*9.
 9 . 9*9 . 9
 ...  9  ...
  . ..... .
@@ -3561,17 +3561,17 @@ ENDMAP
 NAME: minmay_the_grid_octo_teeth
 TAGS: the_grid_octo unrand
 MAP
-    . . 
+    . .
   * . . *
-  . . . . 
+  . . . .
 . . . . . .
 . . 8 8 . .
 .....|.....
 . . 8 8 . .
 . . . . . .
-  . . . . 
+  . . . .
   * . . *
-    . . 
+    . .
 ENDMAP
 
 # please don't add monsters or items to this one
@@ -3621,7 +3621,7 @@ MAP
 8   ..   ..
   ...9..  .
 ....9 9....
-.  ..9...  
+.  ..9...
 ..   ..   8
  ...    .*
   .......
@@ -3652,9 +3652,9 @@ MAP
   . . . .
  . . . . .
 . . . . . .
- . . . . . 
+ . . . . .
 9 . . . . 9
- . . . . . 
+ . . . . .
 . . . . . .
  . . . . .
   . . . .
@@ -3670,7 +3670,7 @@ MAP
  ..  .  ..
 .  .9 9.  .
 .  99 99  .
- ..  |  .. 
+ ..  |  ..
 .  99 99  .
 .  .9 9.  .
  ..  .  ..
@@ -3740,7 +3740,7 @@ MAP
  .  *|*  .
 .  88*88  .
 . .88*88* .
-.....b**|  
+.....b**|
 . .88*88* .
 .  88*88  .
  .  *|*  .
@@ -3791,9 +3791,9 @@ MAP
   .......
  .   8   .
 .. | 8 | ..
- .  888  . 
+ .  888  .
 ..888b888..
- .  888  . 
+ .  888  .
 .. | 8 | ..
  .   8   .
   .......
@@ -3810,7 +3810,7 @@ MAP
  ..  8  ..
 ..  888  ..
 9  8|||8  9
- .88|b|88. 
+ .88|b|88.
 9  8|||8  9
 ..  888  ..
  ..  8  ..
@@ -3831,7 +3831,7 @@ MAP
   .....
   .....
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -3840,13 +3840,13 @@ NAME: minmay_the_grid_triangle_9x9_minimal
 TAGS: the_grid_triangle_9x9 unrand
 MAP
 .       .
- .     . 
-  .   . 
-   . .  
-    .  
-    .  
-    . 
-    .  
+ .     .
+  .   .
+   . .
+    .
+    .
+    .
+    .
     .
     .
 ENDMAP
@@ -3858,11 +3858,11 @@ MAP
 ..     ..
 ...   ...
  ... ...
-  .999. 
-   .9. 
-    .  
-    . 
-    .  
+  .999.
+   .9.
+    .
+    .
+    .
     .
     .
 ENDMAP
@@ -3875,11 +3875,11 @@ MAP
 ....9....
         .
   ..9...
- .      
+ .
   ..9..
       .
     ..
-   9   
+   9
     .
     .
 ENDMAP
@@ -3895,7 +3895,7 @@ MAP
   .9.9.
   .. ..
    .9.
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -3911,7 +3911,7 @@ MAP
   9 . 9
   9 . 9
    9 9
-   . . 
+   . .
     .
     .
 ENDMAP
@@ -3921,13 +3921,13 @@ TAGS: the_grid_triangle_9x9 unrand
 SUBST: 9 = 9.
 MAP
 9 . . . 9
- . . . . 
-  . * . 
+ . . . .
+  . * .
  . . . .
   . . .
-   . . 
-    . 
-   9 9 
+   . .
+    .
+   9 9
     9
     9
 ENDMAP
@@ -3943,7 +3943,7 @@ MAP
   .n.n.
   . = .
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -3953,12 +3953,12 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 9.......9
 .   .   .
-  ..... 
+  .....
  *.....*
   .9 9.
   .9 9.
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -3969,12 +3969,12 @@ SUBST: 9 = 999.
 MAP
 9.. . ..9
 . . . . .
-  .9.9. 
+  .9.9.
  *.9.9.*
-    .  
+    .
   .....
    9 9
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -3985,12 +3985,12 @@ SUBST: 9 = 999.
 MAP
 9   %   9
 .9.....9.
-    .   
+    .
  %..9..%
-    .  
+    .
   %.9.%
-    . 
-   9.9 
+    .
+   9.9
     .
     .
 ENDMAP
@@ -4006,7 +4006,7 @@ MAP
   .   .
   .....
    9 9
-   .9. 
+   .9.
     .
     .
 ENDMAP
@@ -4022,7 +4022,7 @@ MAP
   0   0
   0   0
    0 0
-   0 0 
+   0 0
     0
     0
 ENDMAP
@@ -4038,7 +4038,7 @@ MAP
   . 8 .
   .   .
    . .
-   . . 
+   . .
     .
     8
 ENDMAP
@@ -4053,7 +4053,7 @@ MAP
   ... .
   . ...
     ..
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4063,12 +4063,12 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 ....... .
 ..    ...
- ....   
+ ....
  .. ....
       .
   .. ..
    . .
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4079,11 +4079,11 @@ MAP
 .  ......
 ...  ....
  ....  .
-   .... 
+   ....
   .  ..
-  ...  
+  ...
    ...
-     . 
+     .
     .
     .
 ENDMAP
@@ -4093,13 +4093,13 @@ TAGS: the_grid_triangle_9x9 unrand
 SUBST: 9 = 9.
 MAP
 .........
-.  .     
+.  .
  . ..99.
  .  9999
   . 99%
   .  %%
    . %
-   .   
+   .
     .
     .
 ENDMAP
@@ -4109,12 +4109,12 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 ...  ....
 .  . .  .
- . .  . 
+ . .  .
  .  . ..
   . . .
   .  ..
    . .
-   .   
+   .
     .
     .
 ENDMAP
@@ -4129,7 +4129,7 @@ MAP
   .....
   . . .
    ...
-   9 9 
+   9 9
     .
     .
 ENDMAP
@@ -4144,7 +4144,7 @@ MAP
   .....
   .....
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4155,13 +4155,13 @@ NAME: minmay_the_grid_triangle_9x9_fully_insulated_deathbox
 TAGS: the_grid_triangle_9x9 unrand
 MAP
 . nnnnn .
- .=888=. 
-  n888n 
-  n888n 
+ .=888=.
+  n888n
+  n888n
   n888n
   nn=nn
-    . 
-    .  
+    .
+    .
     .
     .
 ENDMAP
@@ -4191,7 +4191,7 @@ MAP
   .. ..
   .. ..
    . .
-   . . 
+   . .
     .
     .
 ENDMAP
@@ -4207,7 +4207,7 @@ MAP
    .. .
     .8.
      .
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4217,12 +4217,12 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 .........
 . . . . .
-  . . . 
+  . . .
  .. . ..
   . . .
   9 . 9
-    . 
-   9.9 
+    .
+   9.9
     .
     .
 ENDMAP
@@ -4232,13 +4232,13 @@ NAME: minmay_the_grid_triangle_9x9_corruption
 TAGS: the_grid_triangle_9x9 unrand
 MAP
 . . .. ..
-.. . . . 
+.. . . .
   . . ..
  .  .  .
    . ..
   . . .
     ..
-   .   
+   .
     .
     .
 ENDMAP
@@ -4249,12 +4249,12 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 .........
 .n n.n n.
-  8 . 8 
+  8 . 8
  . n.n .
   .....
   .....
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4270,7 +4270,7 @@ MAP
   .. 9.
   .....
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4285,9 +4285,9 @@ MAP
    n88n.
   .=88=.
   .n88n
-  .    
+  .
    ...
-     . 
+     .
     .
     .
 ENDMAP
@@ -4303,7 +4303,7 @@ MAP
   . . .
   .. ..
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4326,7 +4326,7 @@ G.......G
   ..'..
   G...G
    ...
-   G.G 
+   G.G
     .
     .
 ENDMAP
@@ -4342,7 +4342,7 @@ MAP
   .....
   . . .
    . .
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4355,10 +4355,10 @@ MAP
 ... . ...
  . ... .
  .. . ..
-   ... 
+   ...
   . . .
    ...
-    .  
+    .
     .
     .
 ENDMAP
@@ -4374,7 +4374,7 @@ MAP
   . . .
   .....
    . .
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4385,13 +4385,13 @@ KMONS: 8 = 8
 KITEM: 8 = |
 MAP
 ...   ...
-  .   .  
-   888  
-   8b8  
-   888 
-    .  
-    . 
-    .  
+  .   .
+   888
+   8b8
+   888
+    .
+    .
+    .
     .
     .
 ENDMAP
@@ -4404,11 +4404,11 @@ MAP
 .........
 . 88  ...
    88 ..
-    8    
+    8
   . 88.
   .  8.
    ...
-   ... 
+   ...
     .
     .
 ENDMAP
@@ -4425,7 +4425,7 @@ MAP
   n888n
   nn8nn
    n8n
-   n.n 
+   n.n
     .
     .
 ENDMAP
@@ -4443,7 +4443,7 @@ MAP
   .n|n.
   .nnn.
    .n.
-   .n. 
+   .n.
     .
     .
 ENDMAP
@@ -4460,7 +4460,7 @@ bb8bbb8bb
   bdbdb
   8bbb8
    .8.
-   b.b 
+   b.b
     .
     .
 ENDMAP

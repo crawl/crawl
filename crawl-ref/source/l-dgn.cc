@@ -1289,6 +1289,17 @@ LUAFN(dgn_noisy)
     return 0;
 }
 
+static int _dgn_place_transporter(lua_State *ls)
+{
+    const coord_def trans_pos = coord_def(luaL_checkint(ls, 1),
+                                         luaL_checkint(ls, 2));
+    const coord_def dest_pos = coord_def(luaL_checkint(ls, 3),
+                                        luaL_checkint(ls, 4));
+
+    dgn_place_transporter(trans_pos, dest_pos);
+    return 0;
+}
+
 static int _dgn_is_passable(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -1803,6 +1814,7 @@ const struct luaL_reg dgn_dlib[] =
 { "place_cloud", dgn_place_cloud },
 { "noisy", dgn_noisy },
 { "reset_feature_name_for", dgn_reset_feature_name_for },
+{ "place_transporter", _dgn_place_transporter},
 
 { "is_passable", _dgn_is_passable },
 

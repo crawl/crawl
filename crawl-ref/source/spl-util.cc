@@ -1218,10 +1218,10 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're too dead.";
         break;
     case SPELL_DEATHS_DOOR:
-        if (temp && you.duration[DUR_EXHAUSTED])
-            return "you are too exhausted to enter Death's door!";
         if (temp && you.duration[DUR_DEATHS_DOOR])
-            return "your appeal for an extension has been denied.";
+            return "you are already standing in death's doorway.";
+        if (temp && you.duration[DUR_DEATHS_DOOR_COOLDOWN])
+            return "you are still too close to death's doorway.";
         // Prohibited to all undead.
         if (you.undead_state(temp))
             return "you're too dead.";

@@ -222,7 +222,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
         ASSERT_RANGE(keysym.sym, SDLK_F1, SDLK_UNDO + 1);
         return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
 
-        // Hack.  libw32c overloads clear with '5' too.
+        // Hack. libw32c overloads clear with '5' too.
     case SDLK_KP_5:
         return CK_CLEAR + numpad_offset;
 

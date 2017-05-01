@@ -147,10 +147,11 @@ bool monster_habitable_grid(monster_type mt,
     if (!mons_class_can_pass(mt, actual_grid))
         return false;
 
+#if TAG_MAJOR_VERSION == 34
     // Monsters can't use teleporters, and standing there would look just wrong.
     if (actual_grid == DNGN_TELEPORTER)
         return false;
-
+#endif
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
     if (actual_grid == DNGN_SHALLOW_WATER && mt == MONS_KRAKEN)

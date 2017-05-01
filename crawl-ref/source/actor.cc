@@ -356,7 +356,7 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
         saved = random2(1 + ac) + random2(1 + ac) + random2(1 + ac);
         ac *= 3;
         // apply GDR only twice rather than thrice, that's probably still waaay
-        // too good.  50% gives 75% rather than 100%, too.
+        // too good. 50% gives 75% rather than 100%, too.
         gdr = 100 - gdr * gdr / 100;
         break;
     default:
@@ -889,4 +889,35 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 bool actor::evil() const
 {
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
+}
+
+/**
+ * Ensures that `act` is valid if possible. If this isn't possible,
+ * return nullptr. This will convert YOU_FAULTLESS into `you`.
+ *
+ * @param act the actor to validate.
+ *
+ * @return an actor that is either the player or passes `!invalid_monster`, or
+ *         otherwise `nullptr`.
+ */
+/* static */ const actor *actor::ensure_valid_actor(const actor *act)
+{
+    if (!act)
+        return nullptr;
+    if (act->is_player())
+        return act;
+    const monster *mon = act->as_monster();
+    if (mon->mid == MID_YOU_FAULTLESS)
+        return &you;
+    if (invalid_monster(mon))
+        return nullptr;
+    return mon;
+}
+
+/// @copydoc actor::ensure_valid_actor(const actor *act)
+/* static */ actor *actor::ensure_valid_actor(actor *act)
+{
+    // Defer to the other function. Since it returns only act, nullptr, or you,
+    // none of which points to a const object, the const_cast here is safe.
+    return const_cast<actor *>(ensure_valid_actor(static_cast<const actor *>(act)));
 }

@@ -740,10 +740,10 @@ bool zin_check_able_to_recite(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_BREATH_WEAPON])
+    if (you.duration[DUR_RECITE_COOLDOWN])
     {
         if (!quiet)
-            mpr("You're too short of breath to recite.");
+            mpr("You're not ready to recite again yet.");
         return false;
     }
 
@@ -6507,10 +6507,15 @@ int pakellas_surge_devices()
     return severity;
 }
 
-static bool _get_stomped(monster& mons)
+static bool _mons_stompable(const monster &mons)
 {
     // Don't hurt your own demonic guardians
-    if (testbits(mons.flags, MF_DEMONIC_GUARDIAN) && mons.friendly())
+    return !testbits(mons.flags, MF_DEMONIC_GUARDIAN) || !mons.friendly();
+}
+
+static bool _get_stomped(monster& mons)
+{
+    if (!_mons_stompable(mons))
         return false;
 
     behaviour_event(&mons, ME_ANNOY, &you);
@@ -6531,6 +6536,22 @@ static bool _get_stomped(monster& mons)
 
 bool uskayaw_stomp()
 {
+    // Demonic guardians are immune but check for other friendlies
+    const bool friendlies = apply_monsters_around_square([] (monster& mons) {
+        return _mons_stompable(mons) && mons_att_wont_attack(mons.attitude);
+    }, you.pos());
+
+    // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
+    // a few places already; see spl_tornado.cc, disaster area, etc.
+    if (friendlies
+        && !yesno("There are friendlies around, "
+                  "are you sure you want to hurt them?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
     mpr("You stomp with the beat, sending a shockwave through the revelers "
             "around you!");
     apply_monsters_around_square(_get_stomped, you.pos());

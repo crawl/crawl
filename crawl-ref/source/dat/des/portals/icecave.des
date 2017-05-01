@@ -71,6 +71,7 @@ function ice_cave_difficulty()
   return true
 end
 
+-- Remove this function when TAG_MAJOR > 34
 -- Find the slave of the teleporter and move to it.
 function callback.ice_cave_statue_garden_teleporter(data, triggerable,
                                                      triggerer, marker, ev)
@@ -1133,21 +1134,8 @@ ORIENT: encompass
 MONS:   ice beast, ice statue
 KMONS:  34 = white ugly thing
 KITEM:  *! = *
-{{
--- Lua marker magic!
-local m_marker = TriggerableFunction:new {
-  func="callback.ice_cave_statue_garden_teleporter",
-  data = {teleport_spot=1},
-  repeated=true }
-m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
-
-lua_marker('M', m_marker)
-
--- And the slave.
-lua_marker('m', portal_desc { teleport_spot=1})
-}}
-KFEAT:  M = teleporter
-TILE:   M = dngn_teleporter_ice_cave
+MARKER: M = lua:transp_loc("statue_garden")
+MARKER: m = lua:transp_dest_loc("statue_garden")
 FTILE:  m = floor_pebble_lightblue
 KPROP:  -24!|m_| = no_tele_into
 SUBST:  m- = .

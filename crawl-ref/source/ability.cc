@@ -336,7 +336,7 @@ static const ability_def Ability_List[] =
     { ABIL_HEAL_WOUNDS, "Heal Wounds",
       0, 0, 0, 0, {fail_basis::xl, 45, 2}, abflag::none },
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage",
-      0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::exhaustion },
+      0, 0, 600, 0, {fail_basis::evo, 50, 2}, abflag::none },
 
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, {fail_basis::evo, 60, 2}, abflag::none },
@@ -357,7 +357,7 @@ static const ability_def Ability_List[] =
     // INVOCATIONS:
     // Zin
     { ABIL_ZIN_RECITE, "Recite",
-      0, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::breath },
+      0, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_ZIN_VITALISATION, "Vitalisation",
       2, 0, 0, 1, {fail_basis::invo, 40, 5, 20}, abflag::none },
     { ABIL_ZIN_IMPRISON, "Imprison",
@@ -433,7 +433,7 @@ static const ability_def Ability_List[] =
 
     // Trog
     { ABIL_TROG_BERSERK, "Berserk",
-      0, 0, 600, 0, {fail_basis::invo}, abflag::exhaustion },
+      0, 0, 600, 0, {fail_basis::invo}, abflag::none },
     { ABIL_TROG_REGEN_MR, "Trog's Hand",
       0, 0, 200, 2, {fail_basis::invo, piety_breakpoint(2), 0, 1}, abflag::none },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
@@ -2143,7 +2143,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
             mprf("You clear your throat and prepare to recite.");
-            you.increase_duration(DUR_BREATH_WEAPON,
+            you.increase_duration(DUR_RECITE_COOLDOWN,
                                   3 + random2(10) + random2(30));
         }
         else

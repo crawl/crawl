@@ -27,9 +27,12 @@ Character
   permanently reducing their MP. Their old recharge ability has been removed.
 * Loud noises no longer break mesmerization or fear.
 * Various 'badform' (e.g. wispform) special cases have been removed.
+* Several abilities that triggered exhaustion now have their own cooldown timers.
 * Removed:
   - High elves.
   - Mottled draconians.
+  - Vestigial Lava Orcs/Djinni. Saves will load, but (after a prompt) will be
+    converted to Hill Orcs/Vinestalkers.
 
 Gods
 ----
@@ -55,14 +58,26 @@ Gods
 
 Interface
 ---------
+* The species selection menu has been reworked to have a more useful
+  conceptual organization, with species grouped into "simple", "intermediate",
+  and "advanced" categories.
 * Noise from the last turn is displayed in the top-right, replacing gold.
+  (Gold can still be seen with % and $.)
 * New equip_bar option that replaces the noise display with a display of the
-  glyphs of your equipped items.
-* Monsters' melee attacks are now included in their descriptions.
+  glyphs of your equipped items (console only).
+* Monsters' melee attacks, including estimates of potential damage, are
+  now included in their descriptions.
 * The player's odds of succeeding with melee confusion attacks is displayed.
 * auto_butcher can be configured to trigger on different hunger levels.
-* Stash searches now hide distant duplicate matches of weapons, armour, and
-  ammo by default.
+* Stash searches now hide distant duplicate matches of more vanilla 
+  weapons, armour, and ammo by default. Searches results are now first
+  ordered by items' descriptive names, rather than by the whole string
+  including determiners.
+* Red draining is now divided into red and magenta; magenta is the worst.
+* The mouse can be used in webtiles (now enabled by default, previously a
+  secret option).
+* Local versions have much-improved support for custom sounds; see
+  https://github.com/crawl/crawl/commit/4270d38ebf63 for details.
 
 Items
 -----
@@ -87,10 +102,12 @@ Items
   - Sceptre of Torment only torments on-hit, rather than randomly.
   - The Captain's Cutlass no longer chops off hydra heads.
   - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of Krishna
-    "Shargna" is renamed to the longbow "Zephyr".
+    "Sharnga" is renamed to the longbow "Zephyr".
 * Potions of cure mutation, beneficial mutation, and mutation have been merged.
 * All types of food take one turn to eat.
 * All types of manuals are pre-identified.
+* Weapons:
+  - Giant Spiked Clubs have had their base delay lowered slightly.
 * Removed:
   - Wands of heal wounds, haste, teleportation, and slowing.
   - Rods.
@@ -110,6 +127,7 @@ Monsters
   their Sprint ability.
 * Maurice and Ijyb now always have wands, and Ijyb first appears a bit deeper
   in the Dungeon.
+* Draconian ghosts will no longer have negative energy breath.
 * Removed:
   - Mottled draconians.
   - Draconian zealots.
@@ -134,6 +152,15 @@ Spells
     - Poisonous Cloud
     - Repel Missiles.
 
+Modding/contribution support
+----------------------------
+* A number of guides from contributor Cerol on how to change key components
+  of the game (first debuted in r/dcss and r/roguelikes) have been added to 
+  the documentation. These can be found at:
+    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/background_creation.txt
+    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/god_creation.txt
+    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt
+    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/species_creation.txt
 
 Stone Soup 0.19.1 (20161123)
 --------------------------------------------

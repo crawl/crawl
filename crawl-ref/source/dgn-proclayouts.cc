@@ -183,8 +183,14 @@ NewAbyssLayout::operator()(const coord_def &p, const uint32_t offset) const
 
 dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
 {
-    if (feat_is_gate(feature) || feature == DNGN_TELEPORTER)
+    if (feat_is_gate(feature)
+#if TAG_MAJOR_VERSION == 34
+        || feature == DNGN_TELEPORTER
+#endif
+        || feature == DNGN_TRANSPORTER)
+    {
         feature = DNGN_STONE_ARCH;
+    }
     if (feature == DNGN_SEALED_DOOR)
         feature = DNGN_CLOSED_DOOR;
     if (feat_is_stair(feature) || feat_is_sealed(feature))
