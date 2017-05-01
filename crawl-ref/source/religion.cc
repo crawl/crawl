@@ -1620,7 +1620,6 @@ void vehumet_accept_gift(spell_type spell)
     if (vehumet_is_offering(spell))
     {
         you.vehumet_gifts.erase(spell);
-        you.seen_spell.set(spell);
         you.duration[DUR_VEHUMET_GIFT] = 0;
     }
 }
@@ -1669,7 +1668,7 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
             && spell_difficulty(spell) <= max_level
             && spell_difficulty(spell) >= min_level)
         {
-            if (!you.seen_spell[spell] && !_is_old_gift(spell))
+            if (!you.spell_library[spell] && !_is_old_gift(spell))
                 eligible_spells.insert(spell);
             else
                 backup_spells.insert(spell);
