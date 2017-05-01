@@ -1906,6 +1906,13 @@ static bool _restore_game(const string& filename)
     if (Options.no_save)
         return false;
 
+#ifdef USE_TILE_WEB
+    // a more before the player is loaded will crash when it tries to send
+    // enough information to the webtiles client to render the display.
+    // TODO: is there a good way to do any mores in load_messages?
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
+#endif
+
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))
