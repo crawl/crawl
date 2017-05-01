@@ -480,6 +480,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     *densityDen = m_windowsz->x;
     SDL_SetWindowMinimumSize(m_window, MIN_SDL_WINDOW_SIZE_X,
                              MIN_SDL_WINDOW_SIZE_Y);
+
+    SDL_EnableScreenSaver();
+
     return true;
 }
 
