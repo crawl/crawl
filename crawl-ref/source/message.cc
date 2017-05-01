@@ -245,6 +245,9 @@ class circ_vec
     T data[SIZE];
 
     int end;   // first unfilled index
+    bool has_circled;
+    // TODO: properly track the tail, and make this into a real data
+    // structure with an iterator and whatnot
 
     static void inc(int* index)
     {
@@ -259,11 +262,12 @@ class circ_vec
     }
 
 public:
-    circ_vec() : end(0) {}
+    circ_vec() : end(0), has_circled(false) {}
 
     void clear()
     {
         end = 0;
+        has_circled = false;
         for (int i = 0; i < SIZE; ++i)
             data[i] = T();
     }
@@ -271,6 +275,14 @@ public:
     int size() const
     {
         return SIZE;
+    }
+
+    int filled_size() const
+    {
+        if (has_circled)
+            return SIZE;
+        else
+            return end;
     }
 
     T& operator[](int i)
@@ -289,6 +301,8 @@ public:
     {
         data[end] = item;
         inc(&end);
+        if (end == 0)
+            has_circled = true;
     }
 
     void roll_back(int n)
@@ -298,6 +312,19 @@ public:
             dec(&end);
             data[end] = T();
         }
+        // don't bother to worry about has_circled in this case
+        // TODO: properly track the tail
+    }
+
+    /**
+     * Append the contents of `buf` to the current buffer.
+     * If `buf` has cycled, this will overwrite the entire contents of `this`.
+     */
+    void append(const circ_vec<T, SIZE> buf)
+    {
+        const int buf_size = buf.filled_size();
+        for (int i = 0; i < buf_size; i++)
+            push_back(buf[i - buf_size]);
     }
 };
 
@@ -769,12 +796,9 @@ public:
 #ifdef USE_TILE_WEB
         // ignore this message until it's actually displayed in case we run out
         // of space and have to display --more-- instead
-        send_ignore_one = true;
+        unwind_bool dontsend(send_ignore_one, true);
 #endif
         msgwin.add_item(msg.full_text(), p, _temporary);
-#ifdef USE_TILE_WEB
-        send_ignore_one = false;
-#endif
     }
 
     void roll_back()
@@ -824,6 +848,17 @@ public:
     const store_t& get_store()
     {
         return msgs;
+    }
+
+    void append_store(store_t store)
+    {
+        msgs.append(store);
+        const int msgs_to_print = store.filled_size();
+#ifdef USE_TILE_WEB
+        unwind_bool dontsend(send_ignore_one, true);
+#endif
+        for (int i = 0; i < msgs_to_print; i++)
+            msgwin.add_item(msgs[i - msgs_to_print].full_text(), prefix_type::none, false);
     }
 
     void clear()
@@ -1908,6 +1943,11 @@ void load_messages(reader& inf)
 {
     unwind_bool save_more(crawl_state.show_more_prompt, false);
 
+    // assumes that the store was cleared at the beginning of _restore_game!
+    flush_prev_message();
+    store_t load_msgs = buffer.get_store(); // copy of messages during loading
+    clear_message_store();
+
     int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)
     {
@@ -1926,9 +1966,9 @@ void load_messages(reader& inf)
         if (msg)
             buffer.store_msg(msg);
     }
-    // With Options.message_clear, we don't want the message window
-    // pre-filled.
-    clear_messages();
+    flush_prev_message();
+    buffer.append_store(load_msgs);
+    clear_messages(); // check for Options.message_clear
 }
 
 void replay_messages()

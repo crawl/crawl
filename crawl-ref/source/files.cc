@@ -1913,6 +1913,8 @@ static bool _restore_game(const string& filename)
     unwind_bool save_more(crawl_state.show_more_prompt, false);
 #endif
 
+    clear_message_store();
+
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))
