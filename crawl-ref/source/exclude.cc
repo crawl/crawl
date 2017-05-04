@@ -542,7 +542,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
         // We don't want to remove excluded clouds, check exc desc
         // XXX: This conditional is a mess.
         string desc = exc->desc.c_str();
-        bool cloudy_exc = (desc.substr(desc.length() - 5) == "cloud");
+        bool cloudy_exc = ends_with(desc, "cloud");
         if ((!m || !you.can_see(*m)
                 || m->attitude != ATT_HOSTILE
                     && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
