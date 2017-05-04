@@ -6570,7 +6570,7 @@ bool monster::stasis() const
 
 bool monster::cloud_immune(bool calc_unid, bool items) const
 {
-    return false;
+    return type == MONS_CLOUD_MAGE;
 }
 
 bool monster::is_illusion() const
