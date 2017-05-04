@@ -541,7 +541,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
         const monster* m = monster_at(p);
         // We don't want to remove excluded clouds, check exc desc
         // XXX: This conditional is a mess.
-        string desc = exc->desc.c_str();
+        string desc = exc->desc;
         bool cloudy_exc = ends_with(desc, "cloud");
         if ((!m || !you.can_see(*m)
                 || m->attitude != ATT_HOSTILE
