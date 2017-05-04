@@ -553,9 +553,7 @@ void maybe_remove_autoexclusion(const coord_def &p)
             del_exclude(p);
         }
         else if (cloudy_exc && you.cloud_immune())
-        {
             del_exclude(p);
-        }
     }
 }
 
