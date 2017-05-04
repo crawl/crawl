@@ -216,7 +216,7 @@ bool actor::res_corr(bool calc_unid, bool items) const
 
 bool actor::cloud_immune(bool calc_unid, bool items) const
 {
-    return items && (wearing(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid));
+    return items && (wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid));
 }
 
 bool actor::holy_wrath_susceptible() const
