@@ -8,6 +8,7 @@ two other ways:
 - Read the species section in the manual about strengths and weaknesses.
 - Look at which combinations of species and background are recommended.
 
+ --  no aptitude (cannot learn this skill at all)
  -5  abysmal aptitude
  -4  terrible aptitude (learning half as fast as at 0 aptitude)
  -3  very poor aptitude
