@@ -484,8 +484,7 @@ void cancel_tornado(bool tloc)
             // make damn sure all ways of translocating are prevented from
             // landing you in water. Insta-kill due to an arrow of dispersal
             // is not nice.
-            you.duration[DUR_FLIGHT] = min(20,
-                you.duration[DUR_FLIGHT]);
+            you.duration[DUR_FLIGHT] = min(20, you.duration[DUR_FLIGHT]);
         }
         else
         {
