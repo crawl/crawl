@@ -457,6 +457,7 @@ enum special_armour_type
     SPARM_JUMPING,
 #endif
     SPARM_REPULSION,
+    SPARM_CLOUD_IMMUNE,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

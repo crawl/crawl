@@ -917,7 +917,8 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
-    // Qazlalites get immunity to clouds.
+    // Qazlalites and scarfwearers get immunity to clouds.
+    // and the Cloud Mage too!
     return act.cloud_immune();
 }
 
