@@ -6,6 +6,7 @@
 #include "mon-util.h"
 
 #define SPECIAL_WEAPON_KEY "special_weapon_name"
+#define CLOUD_IMMUNE_MB_KEY "cloud_immune"
 
 enum monster_info_flags
 {

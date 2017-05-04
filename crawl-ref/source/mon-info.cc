@@ -398,6 +398,10 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         attack[i] = get_monster_data(type)->attack[i];
 
     props.clear();
+    // Change this in sync with monster::cloud_immune()
+    if (type == MONS_CLOUD_MAGE)
+        props[CLOUD_IMMUNE_MB_KEY] = true;
+
     // At least enough to keep from crashing. TODO: allow specifying these?
     if (type == MONS_MUTANT_BEAST)
     {
@@ -549,6 +553,10 @@ monster_info::monster_info(const monster* m, int milev)
     mitemuse = mons_itemuse(*m);
     mbase_speed = mons_base_speed(*m, true);
     menergy = mons_energy(*m);
+
+    // Not an MB_ because it's rare.
+    if (m->cloud_immune(false))
+        props[CLOUD_IMMUNE_MB_KEY] = true;
 
     if (m->airborne())
         mb.set(MB_AIRBORNE);
