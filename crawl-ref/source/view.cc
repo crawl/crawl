@@ -1014,7 +1014,7 @@ static update_flags player_view_update_at(const coord_def &gc)
                 size = 0;
 
             bool was_exclusion = is_exclude_root(gc);
-            set_exclude(gc, size, false, false, true);
+            set_exclude(gc, size, true, false, true);
             if (!did_exclude && !was_exclusion)
                 ret |= update_flag::added_exclude;
         }
