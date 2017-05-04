@@ -2520,6 +2520,16 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
     return false;
 }
 
+int get_armour_cloud_immunity(const item_def &arm)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    if (get_armour_ego_type(arm) == SPARM_CLOUD_IMMUNE)
+        return true;
+
+    return false;
+}
+
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
 {
     ASSERT(ring.base_type == OBJ_JEWELLERY);
