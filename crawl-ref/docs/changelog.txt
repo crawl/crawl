@@ -69,7 +69,7 @@ Interface
   now included in their descriptions.
 * The player's odds of succeeding with melee confusion attacks is displayed.
 * auto_butcher can be configured to trigger on different hunger levels.
-* Stash searches now hide distant duplicate matches of more vanilla 
+* Stash searches now hide distant duplicate matches of more vanilla
   weapons, armour, and ammo by default. Searches results are now first
   ordered by items' descriptive names, rather than by the whole string
   including determiners.
@@ -155,7 +155,7 @@ Spells
 Modding/contribution support
 ----------------------------
 * A number of guides from contributor Cerol on how to change key components
-  of the game (first debuted in r/dcss and r/roguelikes) have been added to 
+  of the game (first debuted in r/dcss and r/roguelikes) have been added to
   the documentation. These can be found at:
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/background_creation.txt
     - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/god_creation.txt
