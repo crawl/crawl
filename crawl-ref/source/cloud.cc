@@ -1329,6 +1329,10 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
  */
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours)
 {
+    // If you're immune to clouds, then no clouds are damaging. Bing bong so simple!
+    if (you.cloud_immune())
+        return false;
+
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
     if (type == CLOUD_TORNADO)
         return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];
