@@ -753,6 +753,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
     bool stasis() const override;
+    bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
     bool cancellable_flight() const;

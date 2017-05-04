@@ -2955,7 +2955,7 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (have_passive(passive_t::cloud_immunity) && is_big_cloud())
+    if (you.cloud_immune() && is_big_cloud())
         return true;
 
     switch (flavour)

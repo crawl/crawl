@@ -6568,6 +6568,11 @@ bool monster::stasis() const
            || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID;
 }
 
+bool monster::cloud_immune(bool calc_unid, bool items) const
+{
+    return false;
+}
+
 bool monster::is_illusion() const
 {
     return type == MONS_PLAYER_ILLUSION
