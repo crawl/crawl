@@ -1157,6 +1157,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "jumping",
 #endif
             "repulsion",
+            "cloud immunity",
         };
 
         const int non_art = acq_calls - num_arts;
