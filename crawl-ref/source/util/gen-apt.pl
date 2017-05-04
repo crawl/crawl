@@ -147,7 +147,11 @@ sub aptitude_table
 
             my $fmt = "%+3d";
             $fmt = "%3d" if $skill == 0;
-            $fmt = " NA" if $skill == -99;
+            if ($skill == -99)
+            {
+                $skill = '--';
+                $fmt = "%3s";
+            }
             if ($abbr eq 'HP')
             {
                 $skill = $skill * 10;
@@ -221,7 +225,7 @@ sub load_aptitudes
         }
         else
         {
-            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+)\s*\)/)
+            if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+|UNUSABLE_SKILL)\s*\)/)
             {
                 $species = propercase_string(fix_underscores($1));
                 if (!$SEEN_SPECIES{$species})
@@ -231,6 +235,7 @@ sub load_aptitudes
                 }
 
                 my $apt = $3;
+                $apt = -99 if $apt eq "UNUSABLE_SKILL";
                 my $skill = skill_name($2);
                 next if $skill eq "Stabbing";
                 next if $skill eq "Traps";
