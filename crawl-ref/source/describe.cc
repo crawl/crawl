@@ -3327,6 +3327,9 @@ static string _monster_stat_description(const monster_info& mi)
         }
     }
 
+    if (mi.props.exists(CLOUD_IMMUNE_MB_KEY) && mi.props[CLOUD_IMMUNE_MB_KEY])
+        extreme_resists.emplace_back("clouds of all kinds");
+
     vector<string> resist_descriptions;
     if (!extreme_resists.empty())
     {
