@@ -3419,13 +3419,8 @@ bool player::stasis() const
 
 bool player::cloud_immune(bool calc_unid, bool items) const
 {
-    if (have_passive(passive_t::cloud_immunity))
-        return true;
-
-    if (you.wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE))
-        return true;
-
-    return false;
+    return have_passive(passive_t::cloud_immunity)
+        || actor::cloud_immune(calc_unid, items);
 }
 
 unsigned int exp_needed(int lev, int exp_apt)
