@@ -819,7 +819,7 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
         return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
 
     case ARM_GLOVES:
-        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);
+        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH);
 
     case ARM_BOOTS:
         return random_choose(SPARM_RUNNING, SPARM_FLYING, SPARM_STEALTH);
@@ -937,9 +937,12 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_DEXTERITY:
         if (!strict)
             return true;
-        // deliberate fall-through
+        return slot == EQ_GLOVES;
+
+#if TAG_MAJOR_VERSION == 34
     case SPARM_ARCHERY:
         return slot == EQ_GLOVES;
+#endif
 
     case SPARM_SEE_INVISIBLE:
     case SPARM_INTELLIGENCE:

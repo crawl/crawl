@@ -888,10 +888,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             _spirit_shield_message(unmeld);
             break;
 
-        case SPARM_ARCHERY:
-            mpr("You feel that your aim is more steady.");
-            break;
-
         case SPARM_REPULSION:
             mpr("You are surrounded by a repulsion field.");
             break;
@@ -1048,10 +1044,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
         }
-        break;
-
-    case SPARM_ARCHERY:
-        mpr("Your aim is not that steady anymore.");
         break;
 
     case SPARM_REPULSION:

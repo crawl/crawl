@@ -452,8 +452,8 @@ enum special_armour_type
 #endif
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
-    SPARM_ARCHERY,
 #if TAG_MAJOR_VERSION == 34
+    SPARM_ARCHERY,
     SPARM_JUMPING,
 #endif
     SPARM_REPULSION,

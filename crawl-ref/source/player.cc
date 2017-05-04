@@ -3503,8 +3503,6 @@ int slaying_bonus(bool ranged)
 
     ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
     ret += you.scan_artefacts(ARTP_SLAYING);
-    if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
-        ret += 4;
 
     ret += 3 * augmentation_amount();
 
