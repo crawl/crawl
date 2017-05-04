@@ -4095,7 +4095,7 @@ bool runrest::run_should_stop() const
 
     // XXX: probably this should ignore cosmetic clouds (non-opaque)
     if (tcell.cloud() != CLOUD_NONE
-        && !have_passive(passive_t::cloud_immunity))
+        && !you.cloud_immune())
     {
         return true;
     }

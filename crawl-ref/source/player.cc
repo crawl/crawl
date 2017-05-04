@@ -3417,6 +3417,11 @@ bool player::stasis() const
     return species == SP_FORMICID;
 }
 
+bool player::cloud_immune(bool calc_unid, bool items) const
+{
+    return have_passive(passive_t::cloud_immunity);
+}
+
 unsigned int exp_needed(int lev, int exp_apt)
 {
     unsigned int level = 0;
