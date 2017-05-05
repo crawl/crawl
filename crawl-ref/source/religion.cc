@@ -22,6 +22,7 @@
 #include "attitude-change.h"
 #include "branch.h"
 #include "chardump.h"
+#include "colour.h"
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
@@ -4149,31 +4150,25 @@ colour_t god_message_altar_colour(god_type god)
         return CYAN;
 
     case GOD_YREDELEMNUL:
-        return random_choose(DARKGREY, RED);
+        return ordered_choose(DARKGREY, RED);
 
     case GOD_BEOGH:
-        return random_choose(BROWN, LIGHTRED);
+        return ordered_choose(BROWN, LIGHTRED);
 
     case GOD_KIKUBAAQUDGHA:
         return DARKGREY;
 
     case GOD_FEDHAS:
-        return random_choose(BROWN, GREEN);
+        return ordered_choose(BROWN, GREEN);
 
     case GOD_XOM:
         return random2(15) + 1;
 
     case GOD_VEHUMET:
-        rnd = random2(3);
-        return (rnd == 0) ? LIGHTMAGENTA :
-               (rnd == 1) ? LIGHTRED
-                          : LIGHTBLUE;
+        return ordered_choose(LIGHTMAGENTA, LIGHTRED, LIGHTBLUE);
 
     case GOD_MAKHLEB:
-        rnd = random2(3);
-        return (rnd == 0) ? RED :
-               (rnd == 1) ? LIGHTRED
-                          : YELLOW;
+        return ordered_choose(RED, LIGHTRED, YELLOW);
 
     case GOD_TROG:
         return RED;
@@ -4192,26 +4187,26 @@ colour_t god_message_altar_colour(god_type god)
         return LIGHTCYAN;
 
     case GOD_JIYVA:
-        return random_choose(GREEN, LIGHTGREEN);
+        return ordered_choose(GREEN, LIGHTGREEN);
 
     case GOD_DITHMENOS:
         return MAGENTA;
 
     case GOD_GOZAG:
-        return random_choose(YELLOW, BROWN);
+        return ordered_choose(YELLOW, BROWN);
 
     case GOD_QAZLAL:
     case GOD_RU:
         return BROWN;
 
     case GOD_PAKELLAS:
-        return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
+        return ordered_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
 
     case GOD_USKAYAW:
-        return random_choose(RED, MAGENTA);
+        return ordered_choose(RED, MAGENTA);
 
     case GOD_HEPLIAKLQANA:
-        return random_choose(LIGHTGREEN, LIGHTBLUE);
+        return ordered_choose(LIGHTGREEN, LIGHTBLUE);
 
     default:
         return YELLOW;
