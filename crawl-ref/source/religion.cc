@@ -22,7 +22,6 @@
 #include "attitude-change.h"
 #include "branch.h"
 #include "chardump.h"
-#include "colour.h"
 #include "coordit.h"
 #include "dactions.h"
 #include "database.h"
@@ -4150,25 +4149,31 @@ colour_t god_message_altar_colour(god_type god)
         return CYAN;
 
     case GOD_YREDELEMNUL:
-        return ordered_choose(DARKGREY, RED);
+        return random_choose(DARKGREY, RED);
 
     case GOD_BEOGH:
-        return ordered_choose(BROWN, LIGHTRED);
+        return random_choose(BROWN, LIGHTRED);
 
     case GOD_KIKUBAAQUDGHA:
         return DARKGREY;
 
     case GOD_FEDHAS:
-        return ordered_choose(BROWN, GREEN);
+        return random_choose(BROWN, GREEN);
 
     case GOD_XOM:
         return random2(15) + 1;
 
     case GOD_VEHUMET:
-        return ordered_choose(LIGHTMAGENTA, LIGHTRED, LIGHTBLUE);
+        rnd = random2(3);
+        return (rnd == 0) ? LIGHTMAGENTA :
+               (rnd == 1) ? LIGHTRED
+                          : LIGHTBLUE;
 
     case GOD_MAKHLEB:
-        return ordered_choose(RED, LIGHTRED, YELLOW);
+        rnd = random2(3);
+        return (rnd == 0) ? RED :
+               (rnd == 1) ? LIGHTRED
+                          : YELLOW;
 
     case GOD_TROG:
         return RED;
@@ -4187,26 +4192,26 @@ colour_t god_message_altar_colour(god_type god)
         return LIGHTCYAN;
 
     case GOD_JIYVA:
-        return ordered_choose(GREEN, LIGHTGREEN);
+        return random_choose(GREEN, LIGHTGREEN);
 
     case GOD_DITHMENOS:
         return MAGENTA;
 
     case GOD_GOZAG:
-        return ordered_choose(YELLOW, BROWN);
+        return random_choose(YELLOW, BROWN);
 
     case GOD_QAZLAL:
     case GOD_RU:
         return BROWN;
 
     case GOD_PAKELLAS:
-        return ordered_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
+        return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
 
     case GOD_USKAYAW:
-        return ordered_choose(RED, MAGENTA);
+        return random_choose(RED, MAGENTA);
 
     case GOD_HEPLIAKLQANA:
-        return ordered_choose(LIGHTGREEN, LIGHTBLUE);
+        return random_choose(LIGHTGREEN, LIGHTBLUE);
 
     default:
         return YELLOW;
