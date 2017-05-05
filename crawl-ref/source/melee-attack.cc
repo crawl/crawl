@@ -37,6 +37,7 @@
 #include "mon-behv.h"
 #include "mon-poly.h"
 #include "mon-tentacle.h"
+#include "player.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-summoning.h"
@@ -1094,6 +1095,9 @@ public:
         if (you.form == transformation::blade_hands)
             return "slash";
 
+        if (you.form == transformation::hydra)
+            return "bite";
+
         if (you.has_usable_claws())
             return "claw";
 
@@ -1230,13 +1234,11 @@ bool melee_attack::player_gets_aux_punch()
     }
 
     // No punching with a shield or 2-handed wpn.
-    // Octopodes aren't affected by this, though!
-    if (you.species != SP_OCTOPODE && !you.has_usable_offhand())
+    // Octopodes aren't affected by this, though! + formicid is exeption too
+    if (you.species != SP_OCTOPODE && you.species != SP_FORMICID
+                                       && !you.has_usable_offhand())
         return false;
 
-    // Octopodes get more tentacle-slaps.
-    return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2,
-                         6);
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1291,35 +1293,46 @@ bool melee_attack::player_aux_unarmed()
         // Determine and set damage and attack words.
         player_aux_setup(atk);
 
-        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender))
+        int count = get_aux_count(atk);
+
+        if (!count)
             continue;
 
-        to_hit = random2(calc_your_to_hit_unarmed(atk));
-
-        handle_noise(defender->pos());
-        alert_nearby_monsters();
-
-        // [ds] kraken can flee when near death, causing the tentacle
-        // the player was beating up to "die" and no longer be
-        // available to answer questions beyond this point.
-        // handle_noise stirs up all nearby monsters with a stick, so
-        // the player may be beating up a tentacle, but the main body
-        // of the kraken still gets a chance to act and submerge
-        // tentacles before we get here.
-        if (!defender->alive())
-            return true;
-
-        if (player_aux_test_hit())
+        for(int j = 1; j <= count; ++j)
         {
-            // Upset the monster.
-            behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+            if(!aux_successful(atk))
+                continue;
+
+            if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender))
+                continue;
+
+            to_hit = random2(calc_your_to_hit_unarmed(atk));
+
+            handle_noise(defender->pos());
+            alert_nearby_monsters();
+
+            // [ds] kraken can flee when near death, causing the tentacle
+            // the player was beating up to "die" and no longer be
+            // available to answer questions beyond this point.
+            // handle_noise stirs up all nearby monsters with a stick, so
+            // the player may be beating up a tentacle, but the main body
+            // of the kraken still gets a chance to act and submerge
+            // tentacles before we get here.
             if (!defender->alive())
                 return true;
 
-            if (attack_shield_blocked(true))
-                continue;
-            if (player_aux_apply(atk))
-                return true;
+            if (player_aux_test_hit())
+            {
+                // Upset the monster.
+                behaviour_event(defender->as_monster(), ME_WHACK, attacker);
+                if (!defender->alive())
+                    return true;
+
+                if (attack_shield_blocked(true))
+                    continue;
+                if (player_aux_apply(atk))
+                    return true;
+            }
         }
     }
 
@@ -3405,12 +3418,6 @@ void melee_attack::chaos_affect_actor(actor *victim)
  */
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 {
-    if (atk != UNAT_CONSTRICT
-        && you.strength() + you.dex() <= random2(50))
-    {
-        return false;
-    }
-
     if (wu_jian_attack != WU_JIAN_ATTACK_NONE
         && !x_chance_in_y(1, wu_jian_number_of_targets))
     {
@@ -3431,25 +3438,24 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
                || you.get_mutation_level(MUT_TENTACLE_SPIKE);
 
     case UNAT_PECK:
-        return you.get_mutation_level(MUT_BEAK) && !one_chance_in(3);
+        return you.get_mutation_level(MUT_BEAK);
 
     case UNAT_HEADBUTT:
-        return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
+        return you.get_mutation_level(MUT_HORNS);
 
     case UNAT_TAILSLAP:
-        return you.has_usable_tail() && coinflip();
+        return you.has_usable_tail();
 
     case UNAT_PSEUDOPODS:
-        return you.has_usable_pseudopods() && !one_chance_in(3);
+        return you.has_usable_pseudopods();
 
     case UNAT_TENTACLES:
-        return you.has_usable_tentacles() && !one_chance_in(3);
+        return you.has_usable_tentacles();
 
     case UNAT_BITE:
         return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
                || (you.has_usable_fangs()
-                   || you.get_mutation_level(MUT_ACIDIC_BITE))
-                   && x_chance_in_y(2, 5);
+                   || you.get_mutation_level(MUT_ACIDIC_BITE));
 
     case UNAT_PUNCH:
         return player_gets_aux_punch();
@@ -3457,6 +3463,51 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     default:
         return false;
     }
+}
+
+bool melee_attack::aux_successful(unarmed_attack_type atk)
+{
+    if (atk != UNAT_CONSTRICT && you.strength() + you.dex() <= random2(50))
+        return false;    
+
+    switch (atk)
+    {
+    case UNAT_PECK:
+    case UNAT_HEADBUTT:
+    case UNAT_PSEUDOPODS:
+    case UNAT_TENTACLES:
+        return !one_chance_in(3);
+
+    case UNAT_TAILSLAP:
+        return coinflip();
+
+    case UNAT_BITE:
+        return x_chance_in_y(2,5);
+
+    case UNAT_PUNCH:
+        return x_chance_in_y(you.species == SP_OCTOPODE ? 3 : 2, 6);
+
+    default:
+        return true;
+    }
+}
+
+//maybe... this can be merged with _extra_aux_attack()
+int melee_attack::get_aux_count(unarmed_attack_type atk)
+{
+    int count = 1;
+    if (you.form == transformation::hydra && atk == UNAT_PUNCH) //can hydra use another aux?
+        return you.heads() - 1;
+
+    if (you.species == SP_FORMICID && atk == UNAT_PUNCH)
+    {
+        count = you.has_usable_offhand() ? 2 : 0;
+        item_def* wp = you.slot_item(EQ_WEAPON);
+        count += you.hands_reqd(*wp) == HANDS_TWO ? 0 : 1;
+    }
+
+
+    return count;
 }
 
 // TODO: Potentially move this, may or may not belong here (may not

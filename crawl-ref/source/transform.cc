@@ -952,17 +952,11 @@ public:
      * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const override
-    {
-        // 3 damage per head for 1-10
-        const int normal_heads_damage = min(you.heads(), 10) * 3;
-        // 3/2 damage per head for 11-20 (they get in each-other's way)
-            // (and also a 62-base-damage form scares me)
-        const int too_many_heads_damage = max(0, you.heads() - 10)
-                                            * 3 / 2;
-        // 2-47 (though more like 14-32 in practical ranges...)
-        return 2 + normal_heads_damage + too_many_heads_damage;
+    {      
+        return 3;
     }
 
+    bool can_offhand_punch() const override { return true; }
 };
 
 static const Form* forms[] =
