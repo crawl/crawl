@@ -1,7 +1,5 @@
 #pragma once
 
-#include "player.h" // for you.time_taken
-
 struct monster_info;
 
 // various elemental colour schemes... used for abstracting random
@@ -120,17 +118,3 @@ colour_t rune_colour(int type);
 
 // Applies ETC_ colour substitutions and brands.
 unsigned real_colour(unsigned raw_colour, const coord_def& loc = coord_def());
-
-/** Chooses one of the objects passed in by modulo turncount. Used for color
- *  progressions.
- *
- *  @return One of the arguments.
- *
- *  @note All the arguments must be convertible to the type of the first.
- */
-template <typename T, typename... Ts>
-T ordered_choose(T first, Ts... rest)
-{
-    const T elts[] = { first, rest... };
-    return elts[you.num_turns % sizeof...(rest)];
-}
