@@ -447,24 +447,24 @@ NAME:   minmay_lair_oklob_tunnel
 DEPTH:  Lair, !Lair:$
 ORIENT: southwest
 MONS:   plant, oklob plant
-NSUBST: 1 = 4:2 / 4 = 10 / *:1
+NSUBST: 1 = 4:2 / 4 = 10 / *=1..
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxllllllllxxxxxxxxxxxxxxxxxxx11xxx111.....
-xxlllllllxxxxxxxxxxxxxx111xxxx111xx111...@
-xxlllllxxxx111xxx11xxxxx111111111111111..x
-xxllxxxxxx11xxxx11xxxx111111111111111111xx
-xxllllxxxx1xxxxxx11111111111111111111x1xx
-xxllxxxxxx11xx1111111111111xxx11111xxxxxx
-xxllx11xx1111111111111111111xxxxxx111x
-xxlxxx1111111111111xx111xxx11xxxxxxxxx
-xxlx%+11111111111xxxxxx11xxxxx
-xxlx%xxx11111xxx11xxxxxxxxxx
-xxlx|xx11xxx11xxxxx
-xxlxxxxxxxxxx111xx
-xxllllllxxxxxxxxx
-xxxx>llxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx11xxx111.....
+xxxxxxxxxxxxxxxxxxxxxxx111xxxx111xx111...@
+xxxxxxxxxxx111xxx11xxxxx111111111111111..x
+xxxxxxxxxx11xxxx11xxxx111111111111111111xx
+xxxxxxxxxx1xxxxxx11111111111111111111x1xx
+xxxxxxxxxx11xx1111111111111xxx11111xxxxxx
+xxxxx11xx1111111111111111111xxxxxx111x
+xxxxxx1111111111111xx111xxx11xxxxxxxxx
+xxxx%+11111111111xxxxxx11xxxxx
+xxxx%xxx11111xxx11xxxxxxxxxx
+xxxx|xx11xxx11xxxxx
+xxxxxxxxxxxxx111xx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxx
 xxxxxxxxx
 ENDMAP
 
