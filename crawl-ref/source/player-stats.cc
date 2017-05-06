@@ -104,99 +104,107 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
-    const string stat_gain_message = make_stringf("Your experience leads to a%s "
-                                                  "increase in your attributes!",
-                                                  you.species == SP_DEMIGOD ?
-                                                  " dramatic" : "n");
-    crawl_state.stat_gain_prompt = true;
-#ifdef TOUCH_UI
-    learned_something_new(HINT_CHOOSE_STAT);
-    Popup *pop = new Popup("Increase Attributes");
-    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
-    pop->push_entry(status);
-    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
-    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
-    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
-    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
-    pop->push_entry(me);
-#else
-    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
-    learned_something_new(HINT_CHOOSE_STAT);
-    if (innate_stat(STAT_STR) != you.strength()
-        || innate_stat(STAT_INT) != you.intel()
-        || innate_stat(STAT_DEX) != you.dex())
+    // Gnolls don't get stat gains
+    if (you.species == SP_GNOLL)
     {
-        mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
-             innate_stat(STAT_STR),
-             innate_stat(STAT_INT),
-             innate_stat(STAT_DEX));
+        return true;
     }
-    mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
-#endif
-    mouse_control mc(MOUSE_MODE_PROMPT);
-
-    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
-
-    bool tried_lua = false;
-    int keyin;
-    while (true)
+    else
     {
-        // Calling a user-defined lua function here to let players reply to
-        // the prompt automatically. Either returning a string or using
-        // crawl.sendkeys will work.
-        if (!tried_lua && clua.callfn("choose_stat_gain", 0, 1))
-        {
-            string result;
-            clua.fnreturns(">s", &result);
-            keyin = result[0];
-        }
-        else
-        {
+        const string stat_gain_message = make_stringf("Your experience leads to a%s "
+                                                      "increase in your attributes!",
+                                                      you.species == SP_DEMIGOD ?
+                                                      " dramatic" : "n");
+        crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
-            keyin = pop->pop();
+        learned_something_new(HINT_CHOOSE_STAT);
+        Popup *pop = new Popup("Increase Attributes");
+        MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
+        pop->push_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
+        pop->push_entry(status);
+        MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
+        me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
+        pop->push_entry(me);
+        me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
+        me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
+        pop->push_entry(me);
+        me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
+        me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
+        pop->push_entry(me);
 #else
-            keyin = getchm();
-#endif
-        }
-        tried_lua = true;
-
-        switch (keyin)
+        mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
+        learned_something_new(HINT_CHOOSE_STAT);
+        if (innate_stat(STAT_STR) != you.strength()
+            || innate_stat(STAT_INT) != you.intel()
+            || innate_stat(STAT_DEX) != you.dex())
         {
-        CASE_ESCAPE
-            // It is unsafe to save the game here; continue with the turn
-            // normally, when the player reloads, the game will re-prompt
-            // for their level-up stat gain.
-            if (crawl_state.seen_hups)
-                return false;
-            break;
-
-        case 's':
-        case 'S':
-            for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_STR, 1, false);
-            return true;
-
-        case 'i':
-        case 'I':
-            for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_INT, 1, false);
-            return true;
-
-        case 'd':
-        case 'D':
-            for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_DEX, 1, false);
-            return true;
-#ifdef TOUCH_UI
-        default:
-            status->text = "Please choose an option below"; // too naggy?
-#endif
+            mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
+                 innate_stat(STAT_STR),
+                 innate_stat(STAT_INT),
+                 innate_stat(STAT_DEX));
         }
+        mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
+#endif
+        mouse_control mc(MOUSE_MODE_PROMPT);
+
+        const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
+
+        bool tried_lua = false;
+        int keyin;
+        while (true)
+        {
+            // Calling a user-defined lua function here to let players reply to
+            // the prompt automatically. Either returning a string or using
+            // crawl.sendkeys will work.
+            if (!tried_lua && clua.callfn("choose_stat_gain", 0, 1))
+            {
+                string result;
+                clua.fnreturns(">s", &result);
+                keyin = result[0];
+            }
+            else
+            {
+#ifdef TOUCH_UI
+                keyin = pop->pop();
+#else
+                keyin = getchm();
+#endif
+            }
+            tried_lua = true;
+
+            switch (keyin)
+            {
+            CASE_ESCAPE
+                // It is unsafe to save the game here; continue with the turn
+                // normally, when the player reloads, the game will re-prompt
+                // for their level-up stat gain.
+                if (crawl_state.seen_hups)
+                    return false;
+                break;
+
+            case 's':
+            case 'S':
+                for (int i = 0; i < statgain; i++)
+                    modify_stat(STAT_STR, 1, false);
+                return true;
+
+            case 'i':
+            case 'I':
+                for (int i = 0; i < statgain; i++)
+                    modify_stat(STAT_INT, 1, false);
+                return true;
+
+            case 'd':
+            case 'D':
+                for (int i = 0; i < statgain; i++)
+                    modify_stat(STAT_DEX, 1, false);
+                return true;
+#ifdef TOUCH_UI
+            default:
+                status->text = "Please choose an option below"; // too naggy?
+#endif
+            }
+        } 
     }
 }
 
@@ -339,6 +347,10 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     if (amount == 0)
         return;
 
+    // Gnolls don't change stats, so don't notify
+    if(you.species == SP_GNOLL)
+        return;
+
     // Stop delays if a stat drops.
     if (amount < 0)
         interrupt_activity(AI_STAT_CHANGE);
@@ -371,36 +383,40 @@ static int _strength_modifier(bool innate_only)
 {
     int result = 0;
 
-    if (!innate_only)
+    // Gnolls can't modify their stats
+    if (you.species != SP_GNOLL)
     {
-        if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
-            result += 5;
+        if (!innate_only)
+        {
+            if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
+                result += 5;
 
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
+            if (you.duration[DUR_DIVINE_STAMINA])
+                result += you.attribute[ATTR_DIVINE_STAMINA];
 
-        result += chei_stat_boost();
+            result += chei_stat_boost();
 
-        // ego items of strength
-        result += 3 * count_worn_ego(SPARM_STRENGTH);
+            // ego items of strength
+            result += 3 * count_worn_ego(SPARM_STRENGTH);
 
-        // rings of strength
-        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
+            // rings of strength
+            result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
 
-        // randarts of strength
-        result += you.scan_artefacts(ARTP_STRENGTH);
+            // randarts of strength
+            result += you.scan_artefacts(ARTP_STRENGTH);
 
-        // form
-        result += get_form()->str_mod;
-    }
+            // form
+            result += get_form()->str_mod;
+        }
 
-    // mutations
-    result += 2 * (_mut_level(MUT_STRONG, innate_only)
-                   - _mut_level(MUT_WEAK, innate_only));
+        // mutations
+        result += 2 * (_mut_level(MUT_STRONG, innate_only)
+                       - _mut_level(MUT_WEAK, innate_only));
 #if TAG_MAJOR_VERSION == 34
-    result += _mut_level(MUT_STRONG_STIFF, innate_only)
-              - _mut_level(MUT_FLEXIBLE_WEAK, innate_only);
+        result += _mut_level(MUT_STRONG_STIFF, innate_only)
+                  - _mut_level(MUT_FLEXIBLE_WEAK, innate_only);
 #endif
+    }
 
     return result;
 }
@@ -409,29 +425,33 @@ static int _int_modifier(bool innate_only)
 {
     int result = 0;
 
-    if (!innate_only)
+    // Gnolls can't modify their stats
+    if (you.species != SP_GNOLL)
     {
-        if (you.duration[DUR_BRILLIANCE])
-            result += 5;
+        if (!innate_only)
+        {
+            if (you.duration[DUR_BRILLIANCE])
+                result += 5;
 
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
+            if (you.duration[DUR_DIVINE_STAMINA])
+                result += you.attribute[ATTR_DIVINE_STAMINA];
 
-        result += chei_stat_boost();
+            result += chei_stat_boost();
 
-        // ego items of intelligence
-        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+            // ego items of intelligence
+            result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
-        // rings of intelligence
-        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+            // rings of intelligence
+            result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
-        // randarts of intelligence
-        result += you.scan_artefacts(ARTP_INTELLIGENCE);
+            // randarts of intelligence
+            result += you.scan_artefacts(ARTP_INTELLIGENCE);
+        }
+
+        // mutations
+        result += 2 * (_mut_level(MUT_CLEVER, innate_only)
+                       - _mut_level(MUT_DOPEY, innate_only));
     }
-
-    // mutations
-    result += 2 * (_mut_level(MUT_CLEVER, innate_only)
-                   - _mut_level(MUT_DOPEY, innate_only));
 
     return result;
 }
@@ -440,38 +460,42 @@ static int _dex_modifier(bool innate_only)
 {
     int result = 0;
 
-    if (!innate_only)
+    // Gnolls can't modify their stats
+    if (you.species != SP_GNOLL)
     {
-        if (you.duration[DUR_AGILITY])
-            result += 5;
+        if (!innate_only)
+        {
+            if (you.duration[DUR_AGILITY])
+                result += 5;
 
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
+            if (you.duration[DUR_DIVINE_STAMINA])
+                result += you.attribute[ATTR_DIVINE_STAMINA];
 
-        result += chei_stat_boost();
+            result += chei_stat_boost();
 
-        // ego items of dexterity
-        result += 3 * count_worn_ego(SPARM_DEXTERITY);
+            // ego items of dexterity
+            result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
-        // rings of dexterity
-        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
+            // rings of dexterity
+            result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
 
-        // randarts of dexterity
-        result += you.scan_artefacts(ARTP_DEXTERITY);
+            // randarts of dexterity
+            result += you.scan_artefacts(ARTP_DEXTERITY);
 
-        // form
-        result += get_form()->dex_mod;
-    }
+            // form
+            result += get_form()->dex_mod;
+        }
 
-    // mutations
-    result += 2 * (_mut_level(MUT_AGILE, innate_only)
-                  - _mut_level(MUT_CLUMSY, innate_only));
+        // mutations
+        result += 2 * (_mut_level(MUT_AGILE, innate_only)
+                      - _mut_level(MUT_CLUMSY, innate_only));
 #if TAG_MAJOR_VERSION == 34
-    result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
-              - _mut_level(MUT_STRONG_STIFF, innate_only);
-    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
+        result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
+                  - _mut_level(MUT_STRONG_STIFF, innate_only);
+        result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 #endif
-    result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
+        result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
+    }
 
     return result;
 }
@@ -514,6 +538,10 @@ int stat_loss_roll()
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
+    // Gnolls cannot be stat drained
+    if (you.species == SP_GNOLL)
+        return false;
+
     if (stat_loss <= 0)
         return false;
 

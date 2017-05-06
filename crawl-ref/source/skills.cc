@@ -290,19 +290,6 @@ static void _change_skill_level(skill_type exsk, int n)
              specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
-
-        // Send a status message about 'aptitude' increases/decreases if Gnoll
-        if (you.species == SP_GNOLL)
-        {
-            if (n > 0 && you.skills[exsk] < 13 && you.skills[exsk] > 5)
-            {
-                mprf(MSGCH_MUTATION, "You become less interested in %s.",
-                     skill_name(exsk));
-            }
-            else if (n < 0 && you.skills[exsk] < 12 && you.skills[exsk] > 4)
-                mprf(MSGCH_MUTATION, "You become more interested in %s.",
-                     skill_name(exsk));
-        }
     }
     else if (you.num_turns)
     {
@@ -312,19 +299,6 @@ static void _change_skill_level(skill_type exsk, int n)
              skill_name(exsk),
              (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
-
-        // Send a status message about 'aptitude' increases/decreases if Gnoll
-        if (you.species == SP_GNOLL)
-        {
-            if (n > 0 && (you.skills[exsk] - n) < 13 && you.skills[exsk] > 5)
-            {
-                mprf(MSGCH_MUTATION, "You become less interested in %s.",
-                     skill_name(exsk));
-            }
-            else if (n < 0 && you.skills[exsk] < 12 && (you.skills[exsk] - n) > 4)
-                mprf(MSGCH_MUTATION, "You become more interested in %s.",
-                     skill_name(exsk));
-        }
     }
 
     if (you.skills[exsk] == n && n > 0)
@@ -1522,13 +1496,7 @@ float apt_to_factor(int apt)
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-
-    // Choose between normal exp table and Gnoll exp table
-    // Regular XP table:
-    if (!(sp == SP_GNOLL))
-    {
-        const int exp[28] =
+    const int exp[28] =
           { 0, 50, 150, 300, 500, 750,          // 0-5
             1050, 1400, 1800, 2250, 2800,       // 6-10
             3450, 4200, 5050, 6000, 7050,       // 11-15
@@ -1536,35 +1504,8 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
             15750, 17700, 19800, 22050, 24450,  // 21-25
             27000, 29750 };
 
-            return exp[lev] * species_apt_factor(sk, sp);
-    }
-    // This is a custom XP table for Gnolls, precalculated to match their
-    // dynamic aptitudes. Until SL 6, Gnolls have an effective aptitude of
-    // +5 (half as much XP needed). At 6 and after, their aptitude decreases by
-    // two for each skill level, reaching a floor of -9 at skill level 13. XP
-    // values are calculated accordingly, using the original XP table (above).
-    // At SL 6, standard +3 aptitude requires 208 XP to go from 6 to 7; thus
-    // Gnolls get their 7th level in any given skill by going from 441 total
-    // XP to 649. This pattern continues. -9 aptitude at SL 14 requires 4995 XP,
-    // so Gnolls go from 15076 total XP at SL 14 to 20071 at 15.
-    //
-    // There are ways to do this programmatically (such as to call this function
-    // inside of itself at runtime to dynamically calculate the needed XP), but
-    // they either cause strange interactions with wizard mode, or take up more
-    // resources than this implementation.
-    else
-    {
-        const int gnoll_exp[28] =
-          { 0, 21, 63, 126, 210, 315,           // 0-5
-            441, 649, 985, 1520, 2445,          // 6-10
-            3991, 6514, 10557, 15076, 20071,     // 11-15
-            25541, 31448, 37909, 45044, 52893,  // 16-20
-            61456, 70731, 80721, 91424, 102840,  // 21-25
-            114970, 128051 };
-
-        //Species_apt_factor is unnecessary for Gnoll
-        return gnoll_exp[lev];
-    }
+    ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
+    return exp[lev] * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)
