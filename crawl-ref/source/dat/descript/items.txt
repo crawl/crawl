@@ -875,11 +875,11 @@ monsters.
 %%%%
 ring of wizardry
 
-A ring that increases its wearer's chance to attack with wearer's body parts.
+A ring that increases the ability of its wearer to use magical spells.
 %%%%
 ring of wild
 
-A ring that increases the ability of its wearer to use magical spells.
+A ring that increases its wearer's chance to attack with wearer's body parts.
 %%%%
 robe
 
