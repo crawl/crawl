@@ -2393,7 +2393,8 @@ static void _gain_piety_point()
         update_player_symbol();
 
     if (have_passive(passive_t::stat_boost)
-        && chei_stat_boost(old_piety) < chei_stat_boost())
+        && chei_stat_boost(old_piety) < chei_stat_boost()
+        && you.species != SP_GNOLL)
     {
         string msg = " raises the support of your attributes";
         if (have_passive(passive_t::slowed))
@@ -3524,15 +3525,23 @@ static void _join_pakellas()
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
 
+// Setup for joining the easygoing followers of Cheibriados.
+static void _join_cheibriados()
+{
+    // Gnolls don't gain attribute bonuses under Chei
+    if (you.species != SP_GNOLL)
+    {
+        simple_god_message(" begins to support your attributes as your "
+                           "movement slows.");
+        notify_stat_change();
+    }
+}
+
 /// What special things happen when you join a god?
 static const map<god_type, function<void ()>> on_join = {
     { GOD_ASHENZARI, []() { ash_check_bondage(); }},
     { GOD_BEOGH, update_player_symbol },
-    { GOD_CHEIBRIADOS, []() {
-        simple_god_message(" begins to support your attributes as your "
-                           "movement slows.");
-        notify_stat_change();
-    }},
+    { GOD_CHEIBRIADOS, _join_cheibriados },
     { GOD_FEDHAS, []() {
         mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon cease their "
              "hostilities.");

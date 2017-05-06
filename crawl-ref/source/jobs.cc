@@ -70,23 +70,27 @@ void job_stat_init(job_type job)
 {
     you.hp_max_adj_perm = 0;
 
-    you.base_stats[STAT_STR] += _job_def(job).s;
-    you.base_stats[STAT_INT] += _job_def(job).i;
-    you.base_stats[STAT_DEX] += _job_def(job).d;
-
-    if (job == JOB_WANDERER)
+    // Gnolls don't get stats from background
+    if(!(you.species == SP_GNOLL))
     {
-        for (int i = 0; i < 12; i++)
-        {
-            const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-            // Stats that are already high will be chosen half as often.
-            if (you.base_stats[stat] > 17 && coinflip())
-            {
-                i--;
-                continue;
-            }
+        you.base_stats[STAT_STR] += _job_def(job).s;
+        you.base_stats[STAT_INT] += _job_def(job).i;
+        you.base_stats[STAT_DEX] += _job_def(job).d;
 
-            you.base_stats[stat]++;
+        if (job == JOB_WANDERER)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                const stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
+                // Stats that are already high will be chosen half as often.
+                if (you.base_stats[stat] > 17 && coinflip())
+                {
+                    i--;
+                    continue;
+                }
+
+                you.base_stats[stat]++;
+            }
         }
     }
 }
