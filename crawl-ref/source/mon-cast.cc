@@ -2492,6 +2492,8 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     const bool success =
                         get_push_space(dc, newpos, act, false, &veto_spots)
                         || get_push_space(dc, newpos, act, true, &veto_spots);
+                    // this assert is only triggered if the code here is out of
+                    // sync with _can_force_door_shut.
                     ASSERTM(success, "No push space from (%d,%d)", dc.x, dc.y);
 
                     move_items(dc, newpos);
