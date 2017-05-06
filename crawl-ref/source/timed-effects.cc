@@ -868,9 +868,11 @@ static void _jiyva_effects(int /*time_delta*/)
         }
     }
 
+    // Gnolls can't shift stats
     if (have_passive(passive_t::fluid_stats)
         && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance() && one_chance_in(4))
+        && !player_under_penance() && one_chance_in(4)
+        && you.species != SP_GNOLL)
     {
         jiyva_stat_action();
     }
