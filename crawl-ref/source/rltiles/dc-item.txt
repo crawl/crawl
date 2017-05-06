@@ -729,7 +729,8 @@ i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
 i-ice RING_ICE
 # remove teleport control when TAG_MAJOR_VERSION > 34 and mark ice as last
-i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
+i-c-teleport RING_TELEPORT_CONTROL 
+i-wild RING_WILD RING_ID_LAST
 
 ############amulets
 %sdir item/amulet

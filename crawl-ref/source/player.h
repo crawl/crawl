@@ -867,6 +867,7 @@ public:
     bool form_uses_xl() const;
 
     bool clear_far_engulf() override;
+    int  wild_level() const;
 
 protected:
     void _removed_beholder(bool quiet = false);

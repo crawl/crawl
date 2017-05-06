@@ -8068,6 +8068,13 @@ int player::inaccuracy() const
     return degree;
 }
 
+int player::wild_level() const
+{
+	int degree = 0;    
+	degree += wearing(EQ_RINGS, RING_WILD);
+	degree += scan_artefacts(ARTP_WILD);
+    return degree;
+}
 /**
  * Handle effects that occur after the player character stops berserking.
  */

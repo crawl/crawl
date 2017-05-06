@@ -184,6 +184,9 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_CLARITY ])
         ret += 20;
 
+    if (prop[ ARTP_WILD ])
+        ret += 6;
+
     return (ret > 0) ? ret : 0;
 }
 
@@ -715,6 +718,9 @@ unsigned int item_value(item_def item, bool ident)
                 case AMU_INACCURACY:
                     valued -= 300;
                     break;
+				case RING_WILD:
+					valued += 150;
+					break;
                     // got to do delusion!
                 }
             }

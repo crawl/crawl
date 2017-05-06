@@ -2370,6 +2370,9 @@ static vector<formatted_string> _get_overview_resistances(
     const int mp_regen = (player_mp_regen() + 9) / 10; // round up
     out += make_stringf("MPRegen  %d.%d/turn\n", mp_regen/10, mp_regen % 10);
 
+	const int wild_level = you.wild_level();
+	out += make_stringf("WildLevel %d\n",you.wild_level());
+
     cols.add_formatted(0, out, false);
 
     // Second column, resist name is 9 chars
