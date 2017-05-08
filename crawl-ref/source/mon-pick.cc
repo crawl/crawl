@@ -168,26 +168,18 @@ monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
 
 bool branch_has_monsters(branch_type branch)
 {
-    COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
-
-    ASSERT(branch < NUM_BRANCHES);
-    return population[branch].count;
+    ASSERT_RANGE(branch, 0, NUM_BRANCHES);
+    return population[branch].count != 0;
 }
 
 const pop_entry* fish_population(branch_type br, bool lava)
 {
-    COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
-    COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
     ASSERT_RANGE(br, 0, NUM_BRANCHES);
-    if (lava)
-        return population_lava[br].pop;
-    else
-        return population_water[br].pop;
+    return (lava ? population_lava : population_water)[br].pop;
 }
 
 const pop_entry* zombie_population(branch_type br)
 {
-    COMPILE_CHECK(ARRAYSZ(population_zombie) == NUM_BRANCHES);
     ASSERT_RANGE(br, 0, NUM_BRANCHES);
     return population_zombie[br].pop;
 }
