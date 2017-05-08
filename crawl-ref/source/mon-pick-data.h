@@ -1056,13 +1056,19 @@ static const pop_entry pop_depths[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+struct population_list
+{
+    const pop_entry *pop;
+    int count;
+};
+
 // In C++ prior to C++11, we can't have an array of pointers to initialized
 // arrays of different sizes without declaring individual arrays as
 // standalone symbols first. Thus this fugly list.
 // Statically defined counts are merely an inconsequential nicety, no need
 // to preserve them.
 #define POP(x) { pop_##x, ARRAYSZ(pop_##x) - 1 }
-static const struct { const pop_entry *pop; int count; } population[] =
+static const population_list population[] =
 {
     POP(d),
     POP(temple),
@@ -1112,6 +1118,7 @@ static const struct { const pop_entry *pop; int count; } population[] =
 #endif
     POP(desolation),
 };
+COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
 
 // Lists for picking zombies from.
 
@@ -1169,7 +1176,7 @@ static const pop_entry pop_generic_late_zombie[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static const struct { const pop_entry *pop; int count; } population_zombie[] =
+static const population_list population_zombie[] =
 {
     POP(d),
     POP(temple),
@@ -1219,6 +1226,7 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
 #endif
     POP(desolation),
 };
+COMPILE_CHECK(ARRAYSZ(population_zombie) == NUM_BRANCHES);
 
 static const pop_entry pop_water_generic[] =
 { // Generic water monsters
@@ -1273,7 +1281,7 @@ static const pop_entry pop_water_hell[] =
 };
 
 // Shoals, Abyss, Pan, Zot, D:1-5 liquid monsters are blocked in dungeon.cc
-static const struct { const pop_entry *pop; int count; } population_water[] =
+static const population_list population_water[] =
 {
     POP(water_d),
     POP(water_generic),
@@ -1323,6 +1331,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
 #endif
     POP(water_generic),
 };
+COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
 static const pop_entry pop_lava_generic[] =
 { // Generic lava monsters
@@ -1375,7 +1384,7 @@ static const pop_entry pop_lava_hell[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static const struct { const pop_entry *pop; int count; } population_lava[] =
+static const population_list population_lava[] =
 {
     POP(lava_d),
     POP(lava_generic),
@@ -1425,3 +1434,4 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
 #endif
     POP(lava_generic),
 };
+COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
