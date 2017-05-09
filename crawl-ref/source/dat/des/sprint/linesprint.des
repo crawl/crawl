@@ -203,6 +203,8 @@ KFEAT:    X = altar_xom
 KFEAT:    y = altar_yredelemnul
 KFEAT:    z = altar_zin
 KFEAT:    1 = altar_the_shining_one
+# Disable Wu in the stable version.
+: if crawl.unavailable_god("Wu Jian") then _G.subst("w = .") end
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",

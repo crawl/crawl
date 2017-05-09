@@ -121,6 +121,8 @@ KFEAT: W = altar_wu_jian
 KFEAT: Y = altar_yredelemnul
 KFEAT: Z = altar_zin
 KFEAT: ' = altar_the_shining_one
+# Disable Wu in the stable version.
+: if crawl.unavailable_god("Wu Jian") then _G.subst("W = .") end
 KFEAT: s = any shop
 MAP
 xxxxx+xxxxx+x
