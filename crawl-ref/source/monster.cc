@@ -6002,7 +6002,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
     // XXX: this might not be necessary anymore?
-    if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor)
+    if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor && oppressor != this)
     {
         const int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
