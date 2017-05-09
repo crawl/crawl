@@ -122,6 +122,8 @@ KFEAT:  x = altar_xom
 KFEAT:  y = altar_yredelemnul
 KFEAT:  z = altar_zin
 KFEAT:  1 = altar_the_shining_one
+# Disable Wu in the stable version.
+: if crawl.unavailable_god("Wu Jian") then _G.subst("w = .") end
 KMONS:  P = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 MAP

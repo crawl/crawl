@@ -1005,6 +1005,8 @@ KFEAT:  o = altar_qazlal
 KFEAT:  p = altar_ru
 KFEAT:  q = altar_uskayaw
 KFEAT:  r = altar_wu_jian
+# Disable Wu in the stable version.
+: if crawl.unavailable_god("Wu Jian") then _G.subst("r = .") end
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of iceblast charges:5 ident:all, \
