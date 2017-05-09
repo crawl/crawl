@@ -421,13 +421,26 @@ bool is_unknown_god(god_type god)
     return god == GOD_NAMELESS;
 }
 
-bool is_unavailable_god(god_type god)
+// Not appearing in new games, but still extant.
+static bool _is_disabled_god(god_type god)
 {
-    if (god == GOD_JIYVA && jiyva_is_dead())
+    switch (god)
+    {
+    // Disabled, pending a rework.
+    case GOD_PAKELLAS:
         return true;
 
-    // Disabled, pending a rework.
-    if (god == GOD_PAKELLAS)
+    default:
+        return false;
+    }
+}
+
+bool is_unavailable_god(god_type god)
+{
+    if (_is_disabled_god(god))
+        return true;
+
+    if (god == GOD_JIYVA && jiyva_is_dead())
         return true;
 
     return false;
@@ -4537,13 +4550,6 @@ static void _place_delayed_monsters()
 static bool _is_god(god_type god)
 {
     return god > GOD_NO_GOD && god < NUM_GODS;
-}
-
-// Not appearing in new games, but still extant.
-static bool _is_disabled_god(god_type god)
-{
-    // Disabled, pending a rework.
-    return god == GOD_PAKELLAS;
 }
 
 static bool _is_temple_god(god_type god)
