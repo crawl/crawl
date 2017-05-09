@@ -268,18 +268,19 @@ KFEAT:   R = altar_gozag
 KFEAT:   S = altar_qazlal
 KFEAT:   T = altar_uskayaw
 KFEAT:   U = altar_hepliaklqana
+KFEAT:   V = altar_wu_jian
 MAP
-''''''...............
-''ccccccccccccccccc..
-''G'c"""D"""""P"""c..
-''''c"A"""I"L"""S"c..
-''G'c"""E"""""Q"""ct.
-''''+"B"""J"N"""T"c..
-''G'c"""F"""""R"""c..
-''''c"C"""K"O"""U"c.t
-''G'c"""H"""""S"""c..
-''ccccccccccccccccc..
-.......t......ttt....
+''''''.................
+''ccccccccccccccccccc..
+''G'c"""D"""""""P"""c..
+''''c"A"""I"""L"""S"c..
+''G'c"""E"""V"""Q"""ct.
+''''+"B"""J"""N"""T"c..
+''G'c"""F"""""""R"""c..
+''''c"C"""K"""O"""U"c.t
+''G'c"""H"""""""S"""c..
+''ccccccccccccccccccc..
+.......t........ttt....
 ENDMAP
 
 # <bh> I got the idea after I introduced a bug where the whole floor of
