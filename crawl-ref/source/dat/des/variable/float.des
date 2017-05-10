@@ -4002,6 +4002,87 @@ txxxq'''.m....s....m.```qxxxt
    ..........@@@..........
 ENDMAP
 
+NAME: gammafunk_sealed_library
+TAGS: no_monster_gen no_trap_gen
+DEPTH: Crypt, D:8-, Depths, Elf, Snake, Zot
+ORIENT: float
+ITEM: any book
+ITEM: magical staff / ring of magical power / ring of wizardry \
+      / ring of intelligence / amulet of mana regeneration \
+      / amulet of guardian spirit / w:5 crystal ball of energy
+ITEM: any jewellery good_item / robe good_item / cloak good_item \
+      / scarf good_item / hat good_item, any manual
+# Do this nsubst now so some branches can adjust monster placement.
+NSUBST: ' = 2 = d2 / 2, 2 = 2=112 / 6=2 / 3=3 / 4=23.. / ., 4 = 1=4 / 4...
+: if you.in_branch("Crypt") then
+MONS: phantasmal warrior
+MONS: necromancer / vampire mage / vampire knight / deep elf death mage \
+      / eidolon
+MONS: revenant / ancient champion / lich, ancient lich
+: elseif you.in_branch("D") then
+MONS: eye of draining
+MONS: boggart / kobold demonologist / deep elf mage / tengu conjurer
+MONS: wizard / necromancer / orc sorcerer / ogre mage
+MONS: deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
+:   if you.depth() <= 11 then
+SUBST: 4 = 3334
+:   else
+SUBST: 4 = 34
+:   end
+: elseif you.in_branch("Depths") then
+MONS: floating eye, boggart / ogre mage / wizard / necromancer
+MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
+      / deep elf elementalist / deep elf death mage / deep troll earth mage \
+      / spriggan air mage / vampire mage
+MONS: sphinx / tengu reaver / fire giant / frost giant, titan / ancient lich
+: elseif you.in_branch("Elf") then
+MONS: water elemental, deep elf mage / w:2 orc sorcerer
+MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
+      / deep elf elementalist / deep elf death mage
+SUBST: 4 = 3
+: elseif you.in_branch("Snake") then
+MONS: mana viper / guardian serpent
+MONS: naga mage / naga ritualist / salamander mystic, nagaraja
+SUBST: 3 = 23, 4 = 3
+: elseif you.in_branch("Vaults") then
+MONS: phantasmal warrior, boggart / ogre mage / wizard / necromancer
+MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
+      / deep elf elementalist, deep elf death mage / deep troll earth mage \
+      / spriggan air mage / vampire mage / hell knight
+MONS: sphinx / tengu reaver / fire giant / frost giant, titan / ancient lich
+: elseif you.in_branch("Zot") then
+MONS: ghost moth
+MONS: draconian annihilator / draconian scorcher / draconian shifter \
+      / draconian knight / draconian monk / draconian stormcaller
+MONS: ancient lich
+SUBST: 3 = 2, 4 = 3
+: end
+SHUFFLE: efg
+NSUBST: R = R / tGT
+MARKER: P = lua:transp_loc("sealed_library_entry")
+MARKER: Q = lua:transp_dest_loc("sealed_library_entry")
+MARKER: R = lua:transp_loc("sealed_library_exit")
+MARKER: S = lua:transp_dest_loc("sealed_library_exit")
+MAP
+  ccccccccccccccccccccccc
+  c2.'c.c'c.c'c.c'c....Rc
+  cG$..............2b4..c
+  cT*4bb2bb2bb2.....bb..c
+  cG$..........bbb.....Gc
+  c2...Gc'c.Tbbb.....b2.c
+  ccc+ccccccbb...bbbbb..c
+....nden...c......G.G.$tc
+@S.Pndfn.Q.+.........2|Uc
+....ndgn...c......G.G.$tc
+  ccc+ccccccbb...bbbbb..c
+  c2...Gc'c.Tbbb.....b2.c
+  cG$..........bbb.....Gc
+  cT*4bb2bb2bb2.....bb..c
+  cG$..............2b4..c
+  c2.'c.c'c.c'c.c'c....Rc
+  ccccccccccccccccccccccc
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
@@ -8503,4 +8584,35 @@ vAvBvBvAv.v
 0.v.v.v.vDv0
 .v0v.v0v.vE
 0S     0v0
+ENDMAP
+
+NAME: gammafunk_sealed_arena
+TAGS: no_monster_gen no_trap_gen
+DEPTH: Crypt, D:8-, Depths, Elf, Vaults, Zot
+KITEM: R = |
+MONS: orange crystal statue / obsidian statue
+: if you.in_branch("D") and you.depth() <= 11 then
+SUBST: 1 = 1...
+: elseif you.in_branch("D") then
+SUBST: 1 = 1.
+: end
+SUBST: 9 = 99., h : b., i : b., b : bcvx
+MARKER: P = lua:transp_loc("sealed_arena_entry")
+MARKER: Q = lua:transp_dest_loc("sealed_arena_entry")
+MARKER: R = lua:transp_loc("sealed_arena_exit")
+MARKER: S = lua:transp_dest_loc("sealed_arena_exit")
+MAP
+  ...........
+ ..nnnnnnnnn..
+ .nn9......nn.
+ .nG.hi9ih.Gn.
+ .n..ih.hi$*n.
+..n......8$|n..
+@Pn..Q.1..$RnS@
+..n......8$|n..
+ .n..ih.hi$*n.
+ .nG.hi9ih.Gn.
+ .nn9......nn.
+ ..nnnnnnnnn..
+  ...........
 ENDMAP
