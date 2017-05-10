@@ -275,6 +275,10 @@ public:
 
     vector<demon_trait> demonic_traits;
 
+    demigod_portfolio demigod_portifolio;
+    FixedVector<uint8_t, NUM_DEMIGOD_PORTFOLIO> demigod_portifolio_point;
+	
+
     int magic_contamination;
 
     FixedBitVector<NUM_FIXED_BOOKS> had_book;

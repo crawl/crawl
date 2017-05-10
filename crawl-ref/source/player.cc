@@ -5081,6 +5081,9 @@ player::player()
     demonic_traits.clear();
     sacrifices.init(0);
 
+	demigod_portifolio_point.init(0);
+	demigod_portifolio = DEMIGOD_PORTFOLIO_NO_PORTFOLIO;
+
     magic_contamination = 0;
 
     had_book.reset();

@@ -35,3 +35,11 @@ enum god_type
     GOD_NAMELESS,                      // for monsters with non-player gods
     GOD_ECUMENICAL,                    // Temporary
 };
+
+enum demigod_portfolio
+{
+	DEMIGOD_PORTFOLIO_NO_PORTFOLIO = 0,
+	DEMIGOD_PORTFOLIO_POISON,
+	DEMIGOD_PORTFOLIO_ARCHERY,
+	NUM_DEMIGOD_PORTFOLIO,
+};
