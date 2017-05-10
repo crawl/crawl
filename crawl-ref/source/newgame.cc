@@ -30,6 +30,7 @@
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
+#include "version.h"
 
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
@@ -202,6 +203,10 @@ COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
 
 bool is_starting_species(species_type species)
 {
+    // Trunk-only until we finish the species.
+    if (species == SP_GNOLL && Version::ReleaseType != VER_ALPHA)
+        return false;
+
     return find(species_order, species_order + ARRAYSZ(species_order),
                 species) != species_order + ARRAYSZ(species_order);
 }
@@ -893,6 +898,9 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
     {
         if (this_species == SP_UNKNOWN)
             break;
+
+        if (ng.job == JOB_UNKNOWN && !is_starting_species(this_species))
+            continue;
 
         if (ng.job != JOB_UNKNOWN
             && species_allowed(ng.job, this_species) == CC_BANNED)
