@@ -899,7 +899,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMIGOD,         SK_AIR_MAGIC,      -1),
     APT(SP_DEMIGOD,         SK_EARTH_MAGIC,    -1),
     APT(SP_DEMIGOD,         SK_POISON_MAGIC,   -1),
-    APT(SP_DEMIGOD,         SK_INVOCATIONS,   UNUSABLE_SKILL),
+    APT(SP_DEMIGOD,         SK_INVOCATIONS,     0),
     APT(SP_DEMIGOD,         SK_EVOCATIONS,     -1),
 
     // SP_SPRIGGAN
