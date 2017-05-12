@@ -643,13 +643,13 @@ static bool _kikubaaqudgha_retribution()
     else if (random2(you.experience_level) >= 4)
     {
         // necromancy miscast, 20% chance of additional miscast
-        do
-        {
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_NECROMANCY,
+                      2 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
+        if (one_chance_in(5))
             MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_NECROMANCY,
-                          2 + div_rand_round(you.experience_level, 9),
-                          random2avg(88, 3), _god_wrath_name(god));
-        }
-        while (one_chance_in(5));
+                      2 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
     }
 
     // Every act of retribution causes corpses in view to rise against
