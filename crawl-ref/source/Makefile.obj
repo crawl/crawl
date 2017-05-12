@@ -38,6 +38,7 @@ dbg-scan.o \
 dbg-util.o \
 decks.o \
 delay.o \
+demigod-portfolio.o \
 describe.o \
 describe-god.o \
 describe-spells.o \

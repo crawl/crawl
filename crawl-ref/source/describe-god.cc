@@ -14,6 +14,7 @@
 #include "cio.h"
 #include "database.h"
 #include "describe.h"
+#include "demigod-portfolio.h"
 #include "english.h"
 #include "eq-type-flags.h"
 #include "food.h"
@@ -1090,7 +1091,14 @@ void describe_demigod_portfolio()
 	const int numcols = min(80, get_number_of_cols()) - 1;
 	
 	textcolour(WHITE);
-	cprintf("Portfolio");
+	if (you.demigod_portifolio == DEMIGOD_PORTFOLIO_NO_PORTFOLIO)
+	{
+		cprintf("You have no divine portfolio.");
+	}
+	else
+	{
+		cprintf("Portfolio : %s", demigod_portfolio_type_name(you.demigod_portifolio));
+	}
 	textcolour(LIGHTGREY);	
 
 	getchm();

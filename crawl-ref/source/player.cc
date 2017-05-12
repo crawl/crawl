@@ -2753,6 +2753,11 @@ void level_change(bool skip_attribute_increase)
                      new_exp);
             }
 
+			if (you.species == SP_DEMIGOD && you.demigod_portifolio == DEMIGOD_PORTFOLIO_NO_PORTFOLIO)
+			{
+				gain_portfolio();
+			}
+
             const bool manual_stat_level = new_exp % 3 == 0;  // 3,6,9,12...
 
             // Must do this before actually changing experience_level,
