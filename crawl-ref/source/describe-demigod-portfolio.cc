@@ -79,7 +79,7 @@ static const char *demigod_portfolio_ability_desc(demigod_portfolio portfolio,in
 		case DEMIGOD_PORTFOLIO_POISON_LEVEL_WEAKEN_POISON:
 			return "Your poison also weakens target shortly.";
 		case DEMIGOD_PORTFOLIO_POISON_LEVEL_POTENT:
-			return "You can poison almost everything.";
+			return "You can poison almost everything with weapon or advanced spell.";
 		default:
 			break;
 		}		

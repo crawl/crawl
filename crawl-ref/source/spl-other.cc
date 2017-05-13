@@ -294,14 +294,28 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 
 static int _intoxicate_monsters(coord_def where, int pow)
 {
-    monster* mons = monster_at(where);
+    bool potent_poison_magic = you_have_demigod_portfolio_level(DEMIGOD_PORTFOLIO_POISON,DEMIGOD_PORTFOLIO_POISON_LEVEL_POTENT);
+    monster* mons = monster_at(where);	
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
-        || !(mons->holiness() & MH_NATURAL)
-        || mons->check_clarity(false)
-        || monster_resists_this_poison(*mons))
+        || mons->check_clarity(false))
     {
         return 0;
+    }
+
+    if (!potent_poison_magic)        
+    {
+        if (!(mons->holiness() & MH_NATURAL) || monster_resists_this_poison(*mons))
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        if (!(mons->holiness() & MH_NATURAL) && (mons->holiness() & MH_NONLIVING) )
+        {
+            return 0;
+        }
     }
 
     if (x_chance_in_y(40 + pow/3, 100))

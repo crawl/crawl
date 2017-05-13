@@ -270,6 +270,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\decks.cc" />
     <ClCompile Include="..\delay.cc" />
     <ClCompile Include="..\demigod-portfolio.cc" />
+    <ClCompile Include="..\describe-demigod-portfolio.cc" />
     <ClCompile Include="..\describe.cc" />
     <ClCompile Include="..\describe-god.cc" />
     <ClCompile Include="..\describe-spells.cc" />
@@ -683,6 +684,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\defines.h" />
     <ClInclude Include="..\delay.h" />
     <ClInclude Include="..\demigod-portfolio.h" />
+    <ClInclude Include="..\describe-demigod-portfolio.h" />
     <ClInclude Include="..\describe-god.h" />
     <ClInclude Include="..\describe-spells.h" />
     <ClInclude Include="..\describe.h" />
