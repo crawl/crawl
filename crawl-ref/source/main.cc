@@ -55,6 +55,7 @@
 #include "dbg-scan.h"
 #include "dbg-util.h"
 #include "delay.h"
+#include "describe-demigod-portfolio.h"
 #include "describe-god.h"
 #include "describe.h"
 #ifdef DGL_SIMPLE_MESSAGING

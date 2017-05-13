@@ -1882,12 +1882,40 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     if (!mons->alive() || levels <= 0)
         return false;
 
-    if (monster_resists_this_poison(*mons, force))
+    bool ignore_resist_check = false;
+    bool slow_poison = false;
+    bool weaken_poison = false;
+    if (who)
+    {
+        if (who->is_player())
+        {
+            int poisongod_level = your_demigod_portfolio_level(DEMIGOD_PORTFOLIO_POISON);
+            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_POTENT)			
+                ignore_resist_check = true;			
+			if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_SLOW_POISON)			
+                slow_poison = true;			
+            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_WEAKEN_POISON)			
+                weaken_poison = true;
+         }
+    }
+    if (!ignore_resist_check && monster_resists_this_poison(*mons, force))
         return false;
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
     mons->add_ench(mon_enchant(ENCH_POISON, levels, who));
     const mon_enchant new_pois = mons->get_ench(ENCH_POISON);
+
+    if (slow_poison)
+    {
+        int power = 25;
+        mons->add_ench(mon_enchant(ENCH_SLOW, 1, who, power));
+    }
+
+    if (weaken_poison)
+    {
+        int power = 25;
+        mons->add_ench(mon_enchant(ENCH_WEAK, 1, who, power));
+    }
 
     // Actually do the poisoning. The order is important here.
     if (new_pois.degree > old_pois.degree

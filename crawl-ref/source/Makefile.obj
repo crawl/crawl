@@ -40,6 +40,7 @@ decks.o \
 delay.o \
 demigod-portfolio.o \
 describe.o \
+describe-demigod-portfolio.o \
 describe-god.o \
 describe-spells.o \
 dgl-message.o \

@@ -1084,26 +1084,6 @@ static god_desc_type _describe_god_by_type(god_type which_god, bool give_title,
         return NUM_GDESCS;
 }
 
-void describe_demigod_portfolio()
-{
-	clrscr();
-
-	const int numcols = min(80, get_number_of_cols()) - 1;
-	
-	textcolour(WHITE);
-	if (you.demigod_portifolio == DEMIGOD_PORTFOLIO_NO_PORTFOLIO)
-	{
-		cprintf("You have no divine portfolio.");
-	}
-	else
-	{
-		cprintf("Portfolio : %s", demigod_portfolio_type_name(you.demigod_portifolio));
-	}
-	textcolour(LIGHTGREY);	
-
-	getchm();
-}
-
 void describe_god(god_type which_god, bool give_title)
 {
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
@@ -1117,3 +1097,4 @@ void describe_god(god_type which_god, bool give_title)
             != NUM_GDESCS)
     {}
 }
+

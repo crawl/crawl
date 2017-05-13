@@ -41,7 +41,7 @@ bool gain_portfolio()
 		return false;
 	}
 
-	mprf(MSGCH_PROMPT, "Choose your godly portfolio!");
+	mprf(MSGCH_PROMPT, "Choose your divine portfolio!");
 	string portrait_list_message;
 	string portrait_string;
 
@@ -51,7 +51,7 @@ bool gain_portfolio()
 		portrait_list_message.append(portrait_string.c_str());		
 	}
 
-	mprf(MSGCH_PROMPT, portrait_list_message.c_str());
+	mprf(MSGCH_PROMPT,"%s",portrait_list_message.c_str());
 
 	int keyin;
 	while (true)
@@ -67,18 +67,31 @@ bool gain_portfolio()
 			index = keyin - 'A';
 		}
 
-		if (index >= 0 && index < valid_portfolio.size())
+		if (index >= 0 && index < (int)valid_portfolio.size())
 		{
-			you.demigod_portifolio = valid_portfolio[index];
-			string portrait_got_string = make_stringf("You've got %s portfolio", demigod_portfolio_type_name(you.demigod_portifolio));
-			mprf(MSGCH_PROMPT, portrait_got_string.c_str());
+			you.demigod_portifolio = valid_portfolio[index];			
+			mprf(MSGCH_PLAIN, "You've got %s portfolio", demigod_portfolio_type_name(you.demigod_portifolio));
 			return true;
 		}
 		else
 		{
-			mprf(MSGCH_PROMPT, "invalid_input");
+			mprf(MSGCH_PLAIN, "invalid_input");
 		}		
 	}
 	return false;
+}
+
+int your_demigod_portfolio_level(demigod_portfolio type)
+{
+	if (you.species != SP_DEMIGOD || you.demigod_portifolio != type) 
+		return 0;
+	return you.skill(SK_INVOCATIONS);
+}
+
+bool you_have_demigod_portfolio_level(demigod_portfolio type, int level)
+{
+	if (your_demigod_portfolio_level(type) < level) 
+		return false;
+	return true;
 }
 

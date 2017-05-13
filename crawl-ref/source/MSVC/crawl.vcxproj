@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug Tiles|Win32">
@@ -269,6 +269,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\dbg-util.cc" />
     <ClCompile Include="..\decks.cc" />
     <ClCompile Include="..\delay.cc" />
+    <ClCompile Include="..\demigod-portfolio.cc" />
     <ClCompile Include="..\describe.cc" />
     <ClCompile Include="..\describe-god.cc" />
     <ClCompile Include="..\describe-spells.cc" />
@@ -681,6 +682,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\decks.h" />
     <ClInclude Include="..\defines.h" />
     <ClInclude Include="..\delay.h" />
+    <ClInclude Include="..\demigod-portfolio.h" />
     <ClInclude Include="..\describe-god.h" />
     <ClInclude Include="..\describe-spells.h" />
     <ClInclude Include="..\describe.h" />
