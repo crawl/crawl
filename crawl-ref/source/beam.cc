@@ -1907,13 +1907,13 @@ bool poison_monster(monster* mons, const actor *who, int levels,
 
     if (slow_poison)
     {
-        int power = 25;
+        int power = 50;
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, who, power));
     }
 
     if (weaken_poison)
     {
-        int power = 25;
+        int power = 50;
         mons->add_ench(mon_enchant(ENCH_WEAK, 1, who, power));
     }
 
