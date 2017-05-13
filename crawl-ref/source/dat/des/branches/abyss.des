@@ -244,10 +244,16 @@ TAGS:    no_rotate
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
 COLOUR:  " : white w:5 / none
-FTILE:   "ABCDEFGHIJKLMNOPRQSTU : floor_limestone w:5 / floor_nerves
+FTILE:   "ABCDEFGHIJKLMNOPRQSTUV : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
+# Disable Wu in the stable version.
+: if crawl.unavailable_god("Wu Jian") then
 SHUFFLE: ABCDEFHIJKLMNOPQRSTU
+SUBST:   V = .
+: else
+SHUFFLE: ABCDEFHIJKLMNOPQRSTUV
+: end
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
