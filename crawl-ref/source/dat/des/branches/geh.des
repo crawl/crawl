@@ -502,8 +502,8 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
 x.(.."llv......+......................................+......vllll".{x
-x..."lllv.vvvv.v....4....llllllllllllllllllll.........v.vvvv.vllll".'x
-x..."lllv.v2|v.v.......llllllllllllllllllllllll...4...v.v|2v.vlll"..'x
+x..."lllv.vvvv.v....4....lllllllll.llllllllll.........v.vvvv.vllll".'x
+x..."lllv.v2|v.v.......lllllllllll.llllllllllll...4...v.v|2v.vlll"..'x
 x'."llllv.v+vv.v.....lllllllllllcc+ccllllllllllll.....v.vv+v.vll"..'xx
 x'."llllv.v....v...lllllllllllllc...cllllllllllllll...v....v.vll".'xxx
 x'."llllv.vvvvvv..lllllllllllXllc.4.cllXllllllllllll..vvvvvv.vll".'xxx
@@ -516,7 +516,7 @@ x'."llllv.v...lllcccccc.+..........c..+..1.cccllllllllll...v.vllll".'x
 x'.."lllv.v...lllc$$$$c.+..........c..c....cccccccclllll...v.vllll".[x
 xx."llllv.v...lllc$$$$c.c.44....44.c..c2.2.c|||.nOclllll...v.vllll".'x
 x'.."lllv.v...lllc$2..c.cccccccccccc..c....c|||.n.clllll...v.vllll".'x
-x'.."lllv.v...lllc$...c.+..........c..c....c|||.nlclllll...v.vlll"..'x
+x'.."lllv.v...lllc$...c.+..........c..c....c|||.n+clllll...v.vlll"..'x
 x'.."lllv.v...lllcccc+c.+..4..vvvv.c..cc++cc......clllll...v.vll"...'x
 x'."llllv.v...llllllc.ccc.....n||+.c..c....c.%%%%%clllll...v.vll"...'x
 x'.."lllv.v...llllllc.ccc..4..n||+.c..c%%%.c.%%%%%clllll...v.vll"...'x
