@@ -1268,7 +1268,7 @@ int attack::calc_damage()
             wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
             if (wpn_damage_plus >= 0)
-                damage += random2(wpn_damage_plus);
+                damage += random2(1 + wpn_damage_plus);
             else
                 damage -= random2(1 - wpn_damage_plus);
 
