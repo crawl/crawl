@@ -4491,7 +4491,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         {
             int hp_before_pain_bond = hit_points;
             radiate_pain_bond(*this, amount, this);
-            amount += hp_before_pain_bond - hit_points;
+            amount += max(hp_before_pain_bond - hit_points, 0);
         }
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
