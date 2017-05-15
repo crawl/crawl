@@ -494,6 +494,10 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
     if (mons_is_tentacle_segment(mon_type))
         return true;
 
+    // Things summoned by the player to a specific spot shouldn't protest.
+    if (mon_type == MONS_FULMINANT_PRISM || mon_type == MONS_LIGHTNING_SPIRE)
+        return true;
+
     if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT
         || trap == TRAP_SHAFT)
     {
