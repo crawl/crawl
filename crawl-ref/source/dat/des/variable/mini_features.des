@@ -3983,3 +3983,23 @@ wx...xwx.xw
  @wxw   w
    w
 ENDMAP
+
+NAME: palyth_stone_intersect
+TAGS: decor extra transparent
+DEPTH: D, Elf, Crypt
+MAP
+..............
+..xx..xx..xx..
+.xxxx....xxxx.
+.xxxxx..xxxxx.
+..xxxx..xxxx..
+...xxx..xxx...
+.x..........x.
+.x..........x.
+...xxx..xxx...
+..xxxx..xxxx..
+.xxxxx..xxxxx.
+.xxxx....xxxx.
+..xx..xx..xx..
+..............
+ENDMAP
