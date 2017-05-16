@@ -3482,7 +3482,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_BERSERK:
-        you.go_berserk(blame_player, true);
+        you.go_berserk(blame_player);
         obvious_effect = true;
         break;
 
