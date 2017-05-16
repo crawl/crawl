@@ -1,11 +1,12 @@
-Stone Soup 0.20 (up to 0.20-a0-770-g8c33442)
---------------------------------------------
+Stone Soup 0.20 (up to 0.20-a0-1124-g2e29d97)
+---------------------------------------------
 
 Highlights
 ----------
-* Have you taken the survey yet?
-* http://crawl.develz.org/wordpress/dcss-player-survey
-* :)
+* New species: Barachim
+* New spells: Poisonous Vapours and Ignition
+* New scarf items: Armour for the cloak slot with new egos
+* New evocations: Wands and an evocable based on spells formerly found on rods
 
 Branches, Environment
 ---------------------
@@ -14,13 +15,13 @@ Branches, Environment
   escape.
 * The Tomb of Ancients now has one-way escape hatches with return hatches
   nearby instead of stairs.
+* New transporter dungeon feature: a one-way portal to elsewhere on the level.
+  Currently used in a number of new loot vaults.
 
 Character
 ---------
 * New species: Barachim, with an powerful innate Hop ability and good
   aptitudes balanced by slow movement and an increased base LOS radius.
-* New species: Gnoll, which learns all skills rapidly at first, learning much more
-  slowly later on, and which can sense nearby items.
 * Ogre aptitudes have been adjusted, trading M&F skill for spells.
 * Mummies' spellcasting aptitude has been increased to +2, from -1.
 * Deep dwarves have an innate ability that heals them and has a chance of
@@ -36,19 +37,6 @@ Character
 
 Gods
 ----
-* New temple god: the Wu Jian Council.
-  - Grants free 'martial' attacks from certain movement actions:
-    * 1*: Moving between tiles adjacent to a monster triggers 'Whirlwind',
-      which attacks all adjacent foes.
-    * 2*: Moving against solid obstacles triggers a Wall Jump attack to a
-      nearby monster. Moves two tiles in the opposite direction, and attacks
-      and distracts all adjacent enemies.
-    * 3*: Moving toward an enemy triggers 'Lunge'. Attacks the enemy, and does
-      extra damage to slowed or distracted enemies.
-  - 4*: Active 'Serpent's Lash' ability, granting two free movement actions.
-  - 5*: Active 'Heavenly Storm' ability, creating opaque clouds and increasing
-    your martial prowess while you continue to use 'martial' attacks.
-  - Piety is gained through defeating foes.
 * The Shining One:
   - Cleansing Flame is more effective against non-evil enemies.
   - All bonus-damage 'stab' attacks are prevented.
@@ -78,12 +66,13 @@ Interface
   secret option).
 * Local versions have much-improved support for custom sounds; see
   https://github.com/crawl/crawl/commit/4270d38ebf63 for details.
+* SDL Tiles now no longer disables screen savers.
 
 Items
 -----
 * New item type: scarves, occupying the cloak slot.
   - Scarves give 0 AC and cannot be enchanted, but always have an ego.
-  - Scarf egos: rC+, Spirit Shield, Resistance, rMsl.
+  - Scarf egos: Cloud Immunity, Spirit Shield, Resistance, rMsl.
 * Evocations:
   - New wand types: Clouds and Scattershot.
   - New misc item: the Lightning Rod, a 4-charge XP evocable.
