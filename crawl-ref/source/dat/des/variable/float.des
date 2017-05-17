@@ -4239,6 +4239,84 @@ MAP
  ......   ......@
 ENDMAP
 
+NAME:   gammafunk_steamed_eel
+TAGS:   no_monster_gen no_trap_gen no_pool_fixup
+ORIENT: float
+DEPTH:  D:3-9
+KMONS:  p = plant
+KMONS:  1 = electric eel
+ITEM:   wand of flame ident:type
+KFEAT:  1p = W
+NSUBST: 1 = 2:1 / 1WW
+SUBST:  - : D., D=WWWWp, t = ttTU
+MARKER: P = lua:transp_loc("steamed_eel_entry")
+MARKER: Q = lua:transp_dest_loc("steamed_eel_entry")
+MARKER: R = lua:transp_loc("steamed_eel_exit")
+MARKER: S = lua:transp_dest_loc("steamed_eel_exit")
+MAP
+ .................
+ .nnnnnnnnnnnnnnn.
+ .nGpnWWW1W1WnpGn.
+..n..n..-----n..n..
+@PnQd+..-t---+*RnS@
+..n..n..-----n..n..
+ .nGpnWWW1W1WnpGn.
+ .nnnnnnnnnnnnnnn.
+ .................
+ENDMAP
+
+NAME:   gammafunk_wand_slinger
+TAGS:   no_monster_gen no_trap_gen no_pool_fixup
+ORIENT: float
+DEPTH:  D:3-
+KPROP:  LM = no_tele_into
+ITEM:   wand of flame
+ITEM:   wand of lightning / wand of iceblast / wand of acid
+ITEM:   wand of confusion / wand of disintegration / wand of paralysis \
+        / wand of enslavement / wand of polymorph
+ITEM:   wand of clouds / wand of scattershot
+KMONS:  p = plant
+KFEAT:  p = W
+: if you.depth() <= 5 then
+MONS: dart slug / shadow imp
+MONS: orc priest / w:5 kobold demonologist
+NSUBST: L = 1:1 / 1=1NN / N, M = 1:1 / 1=1NN / N, N = 2... / .
+# Always place one wand, and make it more likely to be flame
+SUBST: D = d:20 e f g
+: elseif you.depth() <= 8 then
+MONS: shadow imp / orc priest
+MONS: kobold demonologist
+MONS: deep elf knight, fire crab, orc high priest, orc sorcerer
+NSUBST: L = 1:1 / 2=1NN / N, M = 1:1 / 2=1NN / N, N = 2=2.. / 3..... / .
+# 50% chance to place one, 50% chance to place two
+SHUFFLE: DEF / HJK
+: else
+MONS: orc priest / kobold demonologist
+MONS: deep elf knight, fire crab, orc high priest, orc sorcerer
+NSUBST: L = 2=1N / N, M = 2=1N / N, N = 2 / 2=2. / .
+# 25% chance to place one, 75% chance to place two
+SHUFFLE: DEF / HJK / HJK / HJK
+: end
+SHUFFLE: JK
+SUBST: D = defg, EFH = ., J = deg, K = ef, t = ttTU, W=WWWWWp
+MARKER: P = lua:transp_loc("wand_slinger_entry")
+MARKER: Q = lua:transp_dest_loc("wand_slinger_entry")
+MARKER: R = lua:transp_loc("wand_slinger_exit")
+MARKER: S = lua:transp_dest_loc("wand_slinger_exit")
+MAP
+ .................
+ .ccccccccccccccc.
+ .cGpcLLLLLLLxWGc.
+ .cp.cwwwwwwwc.pc.
+..c.Ec..WWW..c..c..
+@PnQD+..WtW..+*RcS@
+..c.Fc..WWW..c..c..
+ .cp.cwwwwwwwc.pc.
+ .cGpcMMMMMMMxWGc.
+ .ccccccccccccccc.
+ .................
+ENDMAP
+
 
 ###############################################################################
 #
