@@ -2419,6 +2419,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
 
         fail_check();
+        beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
 
         switch (random2(5))
         {
@@ -2457,6 +2458,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         fail_check();
         {
+            beam.origin_spell = SPELL_NO_SPELL; // let zapping reset this
             zap_type ztype =
                 random_choose(ZAP_BOLT_OF_FIRE,
                               ZAP_FIREBALL,
