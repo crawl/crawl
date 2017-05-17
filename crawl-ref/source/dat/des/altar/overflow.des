@@ -3362,6 +3362,60 @@ cccc..Bcc
  c..c
 ENDMAP
 
+NAME:   gammafunk_temple_of_torment
+DEPTH:  D
+TAGS:   no_monster_gen no_trap_gen temple_overflow_2
+TAGS:   temple_overflow_kikubaaqudgha temple_overflow_yredelemnul
+: if you.depth() <= 4 then
+MONS: zombie / skeleton
+MONS: mummy / wight / phantom / hungry ghost
+MONS: menkaure
+SUBST: 2 = 2---
+: elseif you.depth() <= 7 then
+MONS: mummy / wight / zombie / skeleton / phantom / hungry ghost
+MONS: wraith / vampire
+MONS: menkaure
+SUBST: 2 = 12--
+: else
+MONS: mummy / wight / zombie / skeleton / phantom / hungry ghost
+MONS: wraith / vampire / shadow / w:5 death knight / w:5 skeletal warrior
+MONS: flayed ghost
+NSUBST: 2 = 2 / 2-
+: end
+SUBST:  1 = 11-
+NSUBST: R = R / -
+KFEAT:  D = altar_kikubaaqudgha
+KFEAT:  E = altar_yredelemnul
+MARKER: P = lua:transp_loc("temple_of_torment_entry")
+MARKER: Q = lua:transp_dest_loc("temple_of_torment_entry")
+MARKER: R = lua:transp_loc("temple_of_torment_exit")
+MARKER: S = lua:transp_dest_loc("temple_of_torment_exit")
+TILE:   G = dngn_sarcophagus_pedestal_left
+TILE:   c = wall_tomb
+FTILE:  -QRVDE|*$123Gcn = floor_tomb
+COLOUR: G = yellow
+COLOUR: -QR|*$123 = brown
+: set_feature_name("granite_statue", "sarcophagus")
+veto {{ return you.depth() <= 7 and you.uniques("Menkaure") }}
+MAP
+ ...............
+ .nnnnnnnnnnnnn.
+ .nR----1----Rn.
+ .n-2-------2*n.
+ .n--ccc-ccc-$n.
+ .n--cGc-cGc-Dn.
+..n----------|n..
+@Pn1----Q---3YnS@
+..n----------*n..
+ .n--cGc-cGc-En.
+ .n--ccc-ccc-$n.
+ .n-2-------2|n.
+ .nR----1----Rn.
+ .nnnnnnnnnnnnn.
+ ...............
+ENDMAP
+
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
@@ -3959,4 +4013,45 @@ ccc..cc...cc..ccc
    cccc...cccc
       ccOcc
        ccc
+ENDMAP
+
+NAME: gammafunk_temple_overflow_arena
+TAGS: temple_overflow_generic_5 temple_overflow_generic_4
+TAGS: temple_overflow_generic_3 temple_overflow_generic_2
+TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen
+{{
+  local altarcount = 5
+  if not is_validating() then
+    altarcount = tonumber(get_overflow_altar_count(_G))
+  end
+  if altarcount == 1 then
+    subst("hi = a")
+  elseif altarcount == 2 then
+    subst("Bi = a")
+  elseif altarcount == 3 then
+    subst("h = a")
+  elseif altarcount == 4 then
+    subst("B = a")
+  end
+}}
+SUBST: hi = B, a = $*|......, j : b., k : b., b : bcvx, 0 = 09.
+NSUBST: R = R / .
+MARKER: P = lua:transp_loc("temple_overflow_arena_entry")
+MARKER: Q = lua:transp_dest_loc("temple_overflow_arena_entry")
+MARKER: R = lua:transp_loc("temple_overflow_arena_exit")
+MARKER: S = lua:transp_dest_loc("temple_overflow_arena_exit")
+MAP
+  ...........
+ ..nnnnnnnnn..
+ .nn0..R...nn.
+ .nG.jk0kj$Gn.
+ .n..kj.jk*in.
+..n......8|hn..
+@Pn..Q....$BnS@
+..n......9|hn..
+ .n..jk.kj*in.
+ .nG.kj0jk$Gn.
+ .nn0..R...nn.
+ ..nnnnnnnnn..
+  ...........
 ENDMAP
