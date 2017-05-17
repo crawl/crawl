@@ -4083,6 +4083,163 @@ MAP
   ccccccccccccccccccccccc
 ENDMAP
 
+NAME:   gammafunk_jiyva_shrine
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:8-, Depths
+ORIENT: float
+KFEAT:  _ = altar_jiyva
+NSUBST: " = R / '
+: if you.in_branch("Depths") then
+MONS: slime creature / acid blob / azure jelly / death ooze
+MONS: floating eye / glowing orange brain / shining eye / golden eye band \
+      / eye of devastation
+NSUBST: ' = 4=|*$ / 4=|*$... / 6:1 / 2:2 / 4=1112....
+: elseif you.depth() <= 9 then
+MONS: slime creature, glowing orange brain / great orb of eyes
+NSUBST: ' = 4:1 / 2=1. / 1=2...
+: elseif you.depth() <= 12 then
+MONS: slime creature
+MONS: glowing orange brain / great orb of eyes / w:5 eye of devastation
+NSUBST: ' = |*$ / |*$... / 5:1 / 4=1. / 2=2.
+: else
+MONS: slime creature
+MONS: glowing orange brain / great orb of eyes / w:5 shining eye \
+      / w:5 golden eye / w:5 eye of devastation
+MONS: azure gelly / death ooze
+NSUBST: ' = 2=|*$ / 2=|*$... / 6:1 / 4=1. / 1:2 / 2=2. / 2=3...
+: end
+MARKER: P = lua:transp_loc("jiyva_chamber_entry")
+MARKER: Q = lua:transp_dest_loc("jiyva_chamber_entry")
+MARKER: R = lua:transp_loc("jiyva_chamber_exit")
+MARKER: S = lua:transp_dest_loc("jiyva_chamber_exit")
+COLOUR: c = green
+COLOUR: n = lightgreen
+MAP
+   .........
+  ..ccccccc..
+ ..cc'ccc'cc..
+ .cc''c.c''cc.
+ .c''.....'"c.
+..ccc.$*|.ccc..
+@PnnQ.$_|..ccS@
+..ccc.$*|.ccc..
+ .c''.....'"c.
+ .cc''c.c''cc.
+ ..cc'ccc'cc..
+  ..ccccccc..
+   .........
+ENDMAP
+
+NAME:   gammafunk_beogh_shrine
+TAGS:   no_monster_gen no_trap_gen
+ORIENT: float
+DEPTH:  D:7-, Orc
+KFEAT:  _ = altar_beogh
+KITEM:  _ = $
+: if you.in_branch("Orc") then
+MONS: orc / orc wizard / orc priest
+MONS: orc warrior / two-headed ogre / w:5 orc knight
+MONS: orc high priest / orc sorcerer, ettin / orc warlord / stone giant
+NSUBST: 1 = 6=1 / 6=12.. / ., 3 = 2=2 / 2=3 / 2=23.. / 1=4 / 2=4... / .
+NSUBST: " = 3=|*$ / 3=|*$...
+: elseif you.depth() <= 9 then
+MONS: orc, ogre / w:40 orc warrior / w:5 troll / w:5 two-headed ogre
+MONS: orc wizard / orc priest
+MONS: cyclops / ogre mage / orc knight
+NSUBST: 1 = 6=1 / 3=2 / 2=112... / ., 3 = 4=3 / 2=3. / 1=4... / .
+: elseif you.depth() <= 12 then
+MONS: orc / orc wizard / orc priest
+MONS: ogre / w:30 orc warrior / two-headed ogre / cyclops / troll
+MONS: orc sorcerer / orc high priest / w:5 ogre mage
+MONS: w:20 orc knight / ettin / orc warlord / stone giant
+NSUBST: 1 = 6=1 / 4=12.. / ., 3 = 4=2 / 1=3 / 1=334... / .
+NSUBST: " = 1=|*$ / 1=|*$...
+: else
+MONS: orc warrior / two-headed ogre / troll / cyclops, orc knight
+MONS: orc sorcerer / orc high priest / w:5 ogre mage
+MONS: ettin / orc warlord / stone giant
+NSUBST: 1 = 6=1 / 4=12.. / ., 3 = 4=2 / 2=3 / 1=4 / 1=34.. / .
+NSUBST: " = 2=|*$ / 2=|*$...
+: end
+NSUBST: R = R / .
+MARKER: P = lua:transp_loc("beogh_ambush_entry")
+MARKER: Q = lua:transp_dest_loc("beogh_ambush_entry")
+MARKER: R = lua:transp_loc("beogh_ambush_exit")
+MARKER: S = lua:transp_dest_loc("beogh_ambush_exit")
+MAP
+  .............
+ ..ccccccccccc..
+ .cc...1R1..1cc.
+ .c...ccccc.11c.
+ .c...3c3c3...c.
+ .c.c."13""3c.c.
+..c.cc*I$I"cc1c..
+@PnQn|||_"33cRcS@
+..c.cc*I$I"cc1c..
+ .c.c."13""3c.c.
+ .c...3c3c3...c.
+ .c...ccccc.11c.
+ .cc...1R1..1cc.
+ ..ccccccccccc..
+  .............
+ENDMAP
+
+NAME:   gammafunk_corrupted_shrine
+TAGS:   no_monster_gen no_trap_gen
+ORIENT: float
+DEPTH:  Abyss, D:7-, Depths
+KFEAT:  _ = altar_lugonu
+: if you.in_branch("Abyss") then
+MONS: lurking horror / ancient zyme / worldbinder
+MONS: tentacled starspawn / starcursed mass / wretched star
+SUBST: " = R / 4=|*$ / 4=|*$... / ', ' = 6=0 / 4=0. / 1=1. / 2=3 / 4=3.
+: elseif you.in_branch("Depths") then
+MONS: very ugly thing / thrashing horror / large abomination
+MONS: lurking horror / ancient zyme / worldbinder
+MONS: tentacled starspawn / starcursed mass / wretched star
+NSUBST: " = R / 3=|*$ / 3=|*$... / '
+NSUBST: ' = 4=1 / 4=1. / 1=2 / 1=2. / 2=3 / 4=3. / 1=4 / 2=4...
+: elseif you.depth() <= 9 then
+MONS: small abomination, unseen horror, ugly thing, raiju / large abomination
+NSUBST: " = R / ', ' = 6=1 / 1=2. / 3=3 / 4=12.. / 1=4...
+: elseif you.depth() <= 12 then
+MONS: ugly thing, unseen horror / w:5 ancient zyme, large abomination / raiju
+MONS: thrashing horror / shapeshifter / very ugly thing / worldbinder
+NSUBST: " = R / |*$ / |*$... / ', ' = 4=1 / 4=1. / 1=2. / 2=3 / 2=3. / 1=4...
+: else
+MONS: ugly thing, unseen horror / ancient zyme , raiju / large abomination
+MONS: thrashing horror / very ugly thing / worldbinder / shapeshifter
+NSUBST: " = R / 2=|*$ / 2=|*$... / '
+NSUBST: ' = 6=1 / 4=1. / 1=2. / 3=3 / 4=3. / 1=4 / 2=4...
+: end
+NSUBST: R = R / .
+MARKER: P = lua:transp_loc("corrupted_shrine_entry")
+MARKER: Q = lua:transp_dest_loc("corrupted_shrine_entry")
+MARKER: R = lua:transp_loc("corrupted_shrine_exit")
+MARKER: S = lua:transp_dest_loc("corrupted_shrine_exit")
+COLOUR: bc = magenta
+COLOUR: n = lightmagenta
+MAP
+ ......   ......
+.@.ccc.. ..cccc..
+..Pc.cc. .cc""cc.
+.ccn..c...cbb""c.
+.c..Q.cc.cc''b"c.
+.cc....ccc'''bcc.
+..ccc....'''ccc..
+ ...cc.$$$.cc...
+   ..c.*_*.c..
+ ...cc'|||.cc...
+..ccc''....'ccc..
+.ccb'x'ccc'''bcc.
+.c"b''cc.cc''b"c.
+.c""bbc...cbb""c.
+.cc""cc. .cc""cc.
+..cccc.. ..ccccS.
+ ......   ......@
+ENDMAP
+
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
