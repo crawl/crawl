@@ -1024,7 +1024,7 @@ bool wear_armour(int item)
 
     if (item == -1)
     {
-        item = prompt_invent_item("Wear which item", MT_INVLIST, OBJ_ARMOUR,
+        item = prompt_invent_item("Wear which item?", MT_INVLIST, OBJ_ARMOUR,
                                   OPER_WEAR, invprompt_flag::no_warning);
         if (prompt_failed(item))
             return false;
