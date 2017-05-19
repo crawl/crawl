@@ -706,11 +706,13 @@ SUBVAULT:   G : the_grid_triangle_9x9
 SUBVAULT:   H : the_grid_triangle_9x9
 SUBVAULT:   I : the_grid_triangle_9x9
 : the_grid_main_setup(_G)
+SUBST:      y = n
+SUBST:      z = b
 MAP
 .............................................
-.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxnnnn.
-..xxxxxxxxxxxxxx..xxxxxxxxxxxx..xxxxxxxxxnn..
- .x+DDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHxn.
+.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyy.
+..xxxxxxxxxxxxxx..xxxxxxxxxxxx..xxxxxxxxxyy..
+ .x+DDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHxy.
  ..xDDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHx..
   .xxDDDDDDDxxEEExxFFFFFFFxxGGGxxHHHHHHHxx.
   ..xDDDDDDDxxEEExxFFFFFFFxxGGGxxHHHHHHHx..
@@ -720,9 +722,9 @@ MAP
     ..xDDDxxEEEEEEExxFFFxxGGGGGGGxxHHHx..
      .xxDxxEEEEEEEEExxFxxGGGGGGGGGxxHxx.
      ..xDxxEEEEEEEEExxFxxGGGGGGGGGxxHx..
-      .xx..xnxnxnxnxxxx..xnxnxnxnxx.xx.
-      ..xxxxbxbxbxbxxxxxxxbxbxbxbxx.x..
-       .xxxxnxnxnxnx..xxxxnxnxnxnx.xx.
+      .xx..xyxyxyxyxxxx..xyxyxyxyxx.xx.
+      ..xxxxzxzxzxzxxxxxxxzxzxzxzxx.x..
+       .xxxxyxyxyxyx..xxxxyxyxyxyx.xx.
        ..xxCCCCCCCCCxxAxxBBBBBBBBBxx..
         .xxCCCCCCCCCxxAxxBBBBBBBBBxx.
         ..xxCCCCCCCxxAAAxxBBBBBBBxx..
@@ -733,9 +735,9 @@ MAP
            .xxCCCxxAAAAAAAxxBBBxx.
            ..xxCxxAAAAAAAAAxxBxx..
             .xxCxxAAAAAAAAAxxBxx.
-            ..xx.xxnxnxbxnx..xx..
-             .xx.xxbxbxbxbxxxxx.
-             ..xx.xnxnxnxnxxxx..
+            ..xx.xxyxyxyxyx..xx..
+             .xx.xxzxzxzxzxxxxx.
+             ..xx.xyxyxyxyxxxx..
               .xxxDDDDDDDDDxxx.
               ..xxDDDDDDDDDxx..
                .xxxDDDDDDDxxx.
@@ -746,11 +748,11 @@ MAP
                  ..xxDDDxx..
                   .xxxDxxx.
                   ..xxDxx..
-                   .xxnxx.
-                   ..nnn..
-                    .nnn.
-                    ..n..
-                     .n.
+                   .xxyxx.
+                   ..yyy..
+                    .yyy.
+                    ..y..
+                     .y.
                      ...
 ENDMAP
 
