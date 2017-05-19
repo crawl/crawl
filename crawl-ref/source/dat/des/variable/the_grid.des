@@ -557,35 +557,6 @@ MAP
 ..............
 ENDMAP
 
-NAME:       minmay_the_grid_triangle_9x9_line_8
-ORIENT:     north
-SUBVAULT:   A : the_grid_triangle_9x9
-SUBVAULT:   B : the_grid_triangle_9x9
-SUBVAULT:   C : the_grid_triangle_9x9
-SUBVAULT:   D : the_grid_triangle_9x9
-SUBVAULT:   E : the_grid_triangle_9x9
-SUBVAULT:   F : the_grid_triangle_9x9
-SUBVAULT:   G : the_grid_triangle_9x9
-SUBVAULT:   H : the_grid_triangle_9x9_prize
-SUBST:      ' : '.
-: the_grid_main_setup(_G)
-MAP
-      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     xx..xxxxxxxxx''x..xxxxxxxxx..x''xxxxxxxxx..x''xxxxxxxxxx
-     xAxxBBBBBBBBBxxCxxDDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHx
-    xxAxxBBBBBBBBBxxCxxDDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHx
-    xAAAxxBBBBBBBxxCCCxxDDDDDDDxxEEExxFFFFFFFxxGGGxxHHHHHHHxx
-   xxAAAxxBBBBBBBxxCCCxxDDDDDDDxxEEExxFFFFFFFxxGGGxxHHHHHHHx
-   xAAAAAxxBBBBBxxCCCCCxxDDDDDxxEEEEExxFFFFFxxGGGGGxxHHHHHxx
-  xxAAAAAxxBBBBBxxCCCCCxxDDDDDxxEEEEExxFFFFFxxGGGGGxxHHHHHx
-  xAAAAAAAxxBBBxxCCCCCCCxxDDDxxEEEEEEExxFFFxxGGGGGGGxxHHHxx
- xxAAAAAAAxxBBBxxCCCCCCCxxDDDxxEEEEEEExxFFFxxGGGGGGGxxHHHx
- xAAAAAAAAAxxBxxCCCCCCCCCxxDxxEEEEEEEEExxFxxGGGGGGGGGxxHxx
-xxAAAAAAAAAxxBxxCCCCCCCCCxxDxxEEEEEEEEExxFxxGGGGGGGGGxxHx
-x+xxxxxxxxx''x..xxxxxxxxx..x''xxxxxxxxx..x''xxxxxxxxx..xx
-x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:       minmay_the_grid_triangle_9x9_line_8_mashed
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
