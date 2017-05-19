@@ -161,6 +161,7 @@ MAP
 ENDMAP
 
 NAME:     minmay_the_grid_plus
+ORIENT:   float
 WEIGHT:   5
 SUBVAULT: A : the_grid
 SUBVAULT: B : the_grid
@@ -205,6 +206,7 @@ MAP
 ENDMAP
 
 NAME:     minmay_the_grid_plus_closed
+ORIENT:   float
 WEIGHT:   5
 SUBVAULT: A : the_grid
 SUBVAULT: B : the_grid
@@ -250,6 +252,7 @@ ENDMAP
 
 NAME:     minmay_the_grid_3x2
 DEPTH:    D:9-, Depths, Elf
+ORIENT:   float
 SUBVAULT: A : the_grid
 SUBVAULT: B : the_grid
 SUBVAULT: C : the_grid
@@ -285,6 +288,7 @@ ENDMAP
 
 NAME:     minmay_the_grid_net
 DEPTH:    D:9-, Depths, Elf
+ORIENT:   float
 SUBVAULT: A : the_grid
 SUBVAULT: B : the_grid
 SUBVAULT: C : the_grid
@@ -330,6 +334,7 @@ ENDMAP
 
 NAME:     minmay_the_grid_4x2
 DEPTH:    D:9-, Depths, Elf
+ORIENT:   float
 SUBVAULT: A : the_grid
 SUBVAULT: B : the_grid
 SUBVAULT: C : the_grid
@@ -367,6 +372,7 @@ ENDMAP
 
 NAME:     minmay_the_grid_3x3
 DEPTH:    D:9-, Depths, Elf
+ORIENT:   float
 SUBVAULT: A : the_grid
 SUBVAULT: B : the_grid
 SUBVAULT: C : the_grid
@@ -417,6 +423,7 @@ ENDMAP
 # 9x9 triangle main vaults
 #
 NAME:       minmay_the_grid_triangle_9x9_recursive_2
+ORIENT:     float
 DEPTH:      D:7-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9_prize
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -456,6 +463,7 @@ ENDMAP
 
 
 NAME:       minmay_the_grid_triangle_9x9_recursive_2_mashed
+ORIENT:     float
 DEPTH:      D:9-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9_prize
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -490,6 +498,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_triangle_9x9_rhombus_thin
+ORIENT:     float
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9_prize
 SUBVAULT:   C : the_grid_triangle_9x9
@@ -524,6 +533,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_triangle_9x9_rhombus_thin_mashed
+ORIENT:     float
 DEPTH:      D:9-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9_prize
@@ -558,6 +568,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_triangle_9x9_line_8_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -586,6 +597,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_triangle_9x9_rhombus_full
+ORIENT:     float
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
 SUBVAULT:   C : the_grid_triangle_9x9
@@ -626,6 +638,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_triangle_9x9_rhombus_full_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -666,6 +679,7 @@ ENDMAP
 # This shows that you need a lot of wasted space to prevent the geometry from
 # degenerating...
 NAME:       minmay_the_grid_triangle_9x9_recursive_3
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -683,16 +697,16 @@ MAP
 .............................................
 .xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyy.
 ..xxxxxxxxxxxxxx..xxxxxxxxxxxx..xxxxxxxxxyy..
- .x+DDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHxy.
- ..xDDDDDDDDDxxExxFFFFFFFFFxxGxxHHHHHHHHHx..
-  .xxDDDDDDDxxEEExxFFFFFFFxxGGGxxHHHHHHHxx.
-  ..xDDDDDDDxxEEExxFFFFFFFxxGGGxxHHHHHHHx..
-   .xxDDDDDxxEEEEExxFFFFFxxGGGGGxxHHHHHxx.
-   ..xDDDDDxxEEEEExxFFFFFxxGGGGGxxHHHHHx..
-    .xxDDDxxEEEEEEExxFFFxxGGGGGGGxxHHHxx.
-    ..xDDDxxEEEEEEExxFFFxxGGGGGGGxxHHHx..
-     .xxDxxEEEEEEEEExxFxxGGGGGGGGGxxHxx.
-     ..xDxxEEEEEEEEExxFxxGGGGGGGGGxxHx..
+ .x+IIIIIIIIIxxExxFFFFFFFFFxxGxxHHHHHHHHHxy.
+ ..xIIIIIIIIIxxExxFFFFFFFFFxxGxxHHHHHHHHHx..
+  .xxIIIIIIIxxEEExxFFFFFFFxxGGGxxHHHHHHHxx.
+  ..xIIIIIIIxxEEExxFFFFFFFxxGGGxxHHHHHHHx..
+   .xxIIIIIxxEEEEExxFFFFFxxGGGGGxxHHHHHxx.
+   ..xIIIIIxxEEEEExxFFFFFxxGGGGGxxHHHHHx..
+    .xxIIIxxEEEEEEExxFFFxxGGGGGGGxxHHHxx.
+    ..xIIIxxEEEEEEExxFFFxxGGGGGGGxxHHHx..
+     .xxIxxEEEEEEEEExxFxxGGGGGGGGGxxHxx.
+     ..xIxxEEEEEEEEExxFxxGGGGGGGGGxxHx..
       .xx..xyxyxyxyxxxx..xyxyxyxyxx.xx.
       ..xxxxzxzxzxzxxxxxxxzxzxzxzxx.x..
        .xxxxyxyxyxyx..xxxxyxyxyxyx.xx.
@@ -728,6 +742,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_triangle_9x9_recursive_3_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -742,16 +757,16 @@ SUBVAULT:   I : the_grid_triangle_9x9
 MAP
 .................................
 ."xxxxxxxxxxxxxxxxxxxxxxxxxxxxx+.
-.xDDDDDDDDDEFFFFFFFFFGHHHHHHHHHx.
-.xDDDDDDDDDEFFFFFFFFFGHHHHHHHHHx.
-.xxDDDDDDDEEEFFFFFFFGGGHHHHHHHxx.
-..xDDDDDDDEEEFFFFFFFGGGHHHHHHHx..
- .xxDDDDDEEEEEFFFFFGGGGGHHHHHxx.
- ..xDDDDDEEEEEFFFFFGGGGGHHHHHx.
-  .xxDDDEEEEEEEFFFGGGGGGGHHHxx.
-  ..xDDDEEEEEEEFFFGGGGGGGHHHx..
-   .xxDEEEEEEEEEFGGGGGGGGGHxx.
-   ..xDEEEEEEEEEFGGGGGGGGGHx..
+.xIIIIIIIIIEFFFFFFFFFGHHHHHHHHHx.
+.xIIIIIIIIIEFFFFFFFFFGHHHHHHHHHx.
+.xxIIIIIIIEEEFFFFFFFGGGHHHHHHHxx.
+..xIIIIIIIEEEFFFFFFFGGGHHHHHHHx..
+ .xxIIIIIEEEEEFFFFFGGGGGHHHHHxx.
+ ..xIIIIIEEEEEFFFFFGGGGGHHHHHx.
+  .xxIIIEEEEEEEFFFGGGGGGGHHHxx.
+  ..xIIIEEEEEEEFFFGGGGGGGHHHx..
+   .xxIEEEEEEEEEFGGGGGGGGGHxx.
+   ..xIEEEEEEEEEFGGGGGGGGGHx..
     .xxCCCCCCCCCABBBBBBBBBxx.
     ..xCCCCCCCCCABBBBBBBBBx..
      .xxCCCCCCCAAABBBBBBBxx.
@@ -780,6 +795,7 @@ ENDMAP
 # Octo main vaults
 #
 NAME:       minmay_the_grid_octo_2x2
+ORIENT:     float
 SUBVAULT:   A : the_grid_octo
 SUBVAULT:   B : the_grid_octo
 SUBVAULT:   C : the_grid_octo
@@ -817,6 +833,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_octo_triangle
+ORIENT:     float
 SUBVAULT:   A : the_grid_octo
 SUBVAULT:   B : the_grid_octo_prize
 SUBVAULT:   C : the_grid_octo
@@ -855,6 +872,7 @@ ENDMAP
 # 5x5 square main vaults
 #
 NAME:       minmay_the_grid_square_5x5_5x5
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_square_5x5
 SUBVAULT:   B : the_grid_square_5x5
@@ -919,6 +937,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_square_5x5_4x4
+ORIENT:     float
 DEPTH:      D:9-, Depths, Elf
 SUBVAULT:   A : the_grid_square_5x5
 SUBVAULT:   B : the_grid_square_5x5
@@ -968,6 +987,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_square_5x5_3x3
+ORIENT:     float
 SUBVAULT:   A : the_grid_square_5x5
 SUBVAULT:   B : the_grid_square_5x5
 SUBVAULT:   C : the_grid_square_5x5
@@ -1003,6 +1023,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_square_5x5_5x5_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_square_5x5
 SUBVAULT:   B : the_grid_square_5x5
@@ -1069,6 +1090,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_square_5x5_4x4_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_square_5x5
 SUBVAULT:   B : the_grid_square_5x5
@@ -1164,6 +1186,7 @@ ENDMAP
 # Mixed main vaults
 #
 NAME:       minmay_the_grid_four_pointed_star
+ORIENT:     float
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
 SUBVAULT:   C : the_grid_triangle_9x9
@@ -1213,6 +1236,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_four_pointed_star_mashed
+ORIENT:     float
 DEPTH:      D:9-, Depths, Elf
 SUBVAULT:   A : the_grid_triangle_9x9
 SUBVAULT:   B : the_grid_triangle_9x9
@@ -1267,6 +1291,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_octo_tiled_squarecenter
+ORIENT:     float
 SUBVAULT:   A : the_grid_octo
 SUBVAULT:   B : the_grid_octo
 SUBVAULT:   C : the_grid_octo
@@ -1314,6 +1339,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_octo_tiled_octocenter
+ORIENT:     float
 SUBVAULT:   A : the_grid_octo
 SUBVAULT:   B : the_grid_octo
 SUBVAULT:   C : the_grid_octo
@@ -1361,6 +1387,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_octo_tiled_squarecenter_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_octo
 SUBVAULT:   B : the_grid_octo
@@ -1413,6 +1440,7 @@ MAP
 ENDMAP
 
 NAME:       minmay_the_grid_octo_tiled_octocenter_mashed
+ORIENT:     float
 DEPTH:      D:11-, Depths, Elf
 SUBVAULT:   A : the_grid_octo
 SUBVAULT:   B : the_grid_octo
@@ -1685,9 +1713,9 @@ TAGS:  the_grid unrand
 MONS:  orc knight band, orc warlord band
 MONS:  centaur warrior band / yaktaur captain band
 ITEM:  any weapon / any armour / any missile
-: if you.absdepth() < 10 then
+: if you.absdepth() < 12 then
 SUBST: 0 = 1
-: elseif you.absdepth() < 13 then
+: elseif you.absdepth() < 14 then
 SUBST: 0 = 2
 : else
 SUBST: 0 = 3
@@ -1706,7 +1734,7 @@ ENDMAP
 
 NAME:   minmay_the_grid_airy
 TAGS:   the_grid unrand
-DEPTH:  D:13-, Depths, Elf
+DEPTH:  Depths
 MONS:   spriggan air mage
 NSUBST: 1 = 2:1 / 3 = 11... / *:.
 MAP
@@ -1723,7 +1751,7 @@ ENDMAP
 
 NAME:   minmay_the_grid_artifice
 TAGS:   the_grid unrand
-DEPTH:  D:13-, Depths, Elf
+DEPTH:  Depths
 ITEM:   any misc
 MONS:   crystal guardian
 NSUBST: 1 = 2:1 / 4 = 1. / *:.
@@ -1758,14 +1786,14 @@ ENDMAP
 NAME:    minmay_the_grid_spin_star
 TAGS:    the_grid unrand
 SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
-SUBST:   9 = 9..
+SUBST:   0 = 0..
 MAP
  .... ..
 . .   . .
 .. ... ..
-  .999. .
-. .9b9. .
-. .999.
+  .000. .
+. .0b0. .
+. .000.
 .. ... ..
 . .   . .
  .. ....
@@ -1773,36 +1801,37 @@ ENDMAP
 
 NAME:    minmay_the_grid_expand
 TAGS:    the_grid unrand
-SUBST:   9 = 9..
+SUBST:   0 = 0..
 MAP
- .....999
-.  ....99
-. .  ...9
+ .....000
+.  ....00
+. .  ...0
 .. ..   .
 .. . ...
 ... .   .
-9.. . ..
-99. . . .
-999. . .*
+0.. . ..
+00. . . .
+000. . .*
 ENDMAP
 
 NAME:    minmay_the_grid_all_tris
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 0.
 MAP
-9.  .. .9
+0.  .. .0
  . . .  .
   ..  ..
  .  .. .
-..   9  .
+..   0  .
    ..  ..
  .  . .
-9. . .. .
-  ..   9.
+0. . .. .
+  ..   0.
 ENDMAP
 
 NAME:    minmay_the_grid_outer_diamond
 TAGS:    the_grid unrand
+SUBST:   0 = 0.
 MAP
    ...
   ..0..
@@ -1817,6 +1846,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_outer_circle
 TAGS:    the_grid unrand
+SUBST:   0 = 0.
 MAP
   .....
  ...0...
@@ -1831,6 +1861,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_diamond_grid
 TAGS:    the_grid unrand
+SUBST:   0 = 0.
 MAP
  . ... .
 ... . ...
@@ -1845,13 +1876,13 @@ ENDMAP
 
 NAME:    minmay_the_grid_spikes
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 0.
 MAP
 . . . ...
 ... . ..
-..9......
-  ...9
-... 9....
+..0......
+  ...0
+... 0....
 ... .....
  .. ...
 ... . ...
@@ -1865,7 +1896,7 @@ MAP
 . ...
 . ..  ..
 .  . ....
-..  8  ..
+..  9  ..
 .... .  .
  ..  .. .
     ... .
@@ -1874,29 +1905,29 @@ ENDMAP
 
 NAME:    minmay_the_grid_box_x
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 0.
 MAP
 .........
-.      9.
-. *   9 .
-.  . 9  .
-.   9   .
-.  9 .  .
-. 9   . .
-.9      .
+.      0.
+. *   0 .
+.  . 0  .
+.   0   .
+.  0 .  .
+. 0   . .
+.0      .
 .........
 ENDMAP
 
 NAME:    minmay_the_grid_stretched_grid
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 0.
 MAP
  ..  ..
 .  ..  ..
  ..  ..
 .  ..  ..
- .9  9.
-.  .9  ..
+ .0  0.
+.  .0  ..
  ..  ..
 .  ..  ..
  ..  ..
@@ -1918,13 +1949,13 @@ ENDMAP
 
 NAME:    minmay_the_grid_aliased_spiral
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 0.
 MAP
 ........
-9     ...
-  ..9  ..
- ...99  .
-...   9 .
+0     ...
+  ..0  ..
+ ...00  .
+...   0 .
 ... * . .
  ..  .  .
  ...   ..
@@ -1933,9 +1964,9 @@ ENDMAP
 
 NAME:    minmay_the_grid_tree
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 00.
 MAP
- ...9...
+ ...0...
  .......
  .......
   +   +
@@ -1943,20 +1974,20 @@ MAP
  ... ...
  + + + +
  . . . .
-9.......9
+0.......0
 ENDMAP
 
 NAME:    minmay_the_grid_zigzag_pyramid
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 00.
 MAP
 .........
 .       .
-.....9 ..
+.....0 ..
 ..     ..
-... 9....
+... 0....
 ...   ...
-...9. ...
+...0. ...
  ...  ..
  ... ...
 ENDMAP
@@ -1979,30 +2010,30 @@ ENDMAP
 
 NAME:    minmay_the_grid_slots
 TAGS:    the_grid unrand
-SUBST:   9 = 9:4 .:11 *:1
+SUBST:   0 = 0:3 9:1 .:11 *:1
 MAP
-.....9 9.
+.....0 0.
 .   .   .
-.9 9.9 9.
+.0 0.0 0.
 .   .   .
-.9 9.9 9.
+.0 0.0 0.
 .   .   .
-.9 9.9 9.
+.0 0.0 0.
 .   .   .
-.9 9.....
+.0 0.....
 ENDMAP
 
 NAME:    minmay_the_grid_odd_star
 TAGS:    the_grid unrand
-SUBST:   9 = 9.
+SUBST:   0 = 0.
 MAP
 ... . ...
 . ..... .
-..  9  ..
- . 9 9 .
-..9 * 9..
- . 9 9 .
-..  9  ..
+..  0  ..
+ . 0 0 .
+..0 * 0..
+ . 0 0 .
+..  0  ..
 . ..... .
 ... . ...
 ENDMAP
@@ -2010,7 +2041,7 @@ ENDMAP
 NAME:    minmay_the_grid_large_cup
 TAGS:    the_grid unrand
 SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
-NSUBST:  0 = 2 = 09 / 4 = 09.. / *:.
+NSUBST:  0 = 2 = 09 / 4 = 0. / *:.
 MAP
   .......
  ...    .
@@ -2026,7 +2057,7 @@ ENDMAP
 NAME:    minmay_the_grid_medium_cups
 TAGS:    the_grid unrand
 SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
-SUBST:   0 = 009..
+SUBST:   0 = 000..
 MAP
 0.......0
 .   .   .
@@ -2042,7 +2073,7 @@ ENDMAP
 NAME:    minmay_the_grid_small_cups
 TAGS:    the_grid unrand
 SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
-SUBST:   0 = 009.
+SUBST:   0 = 000.
 MAP
    .....
 ....   .
@@ -2106,14 +2137,15 @@ ENDMAP
 
 NAME:    minmay_the_grid_doors
 TAGS:    the_grid unrand
+SUBST:   0 = 00.
 MAP
 .........
 . +   + .
-. ..9.. .
+0 ..0.. 0
 .   +   .
-.+.9*9.+.
+.+.0*0.+.
 .   +   .
-. ..9.. .
+0 ..0.. 0
 . +   + .
 .........
 ENDMAP
@@ -2136,6 +2168,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_plusring
 TAGS:    the_grid unrand
+SUBST:   0 = 00.
 MAP
   .....
  .......
@@ -2155,7 +2188,7 @@ MAP
 .     . .
 ....... .
 . .   . .
-. ..9 . .
+. ... . .
 . . . . .
 . . .....
 . . .   .
@@ -2179,6 +2212,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_mess
 TAGS:    the_grid unrand
+SUBST:   0 = 00.
 MAP
 . . 0. ..
  ..  .. .
@@ -2193,7 +2227,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_minigrid_small
 TAGS:    the_grid unrand
-SUBST:   0 = 09..
+SUBST:   0 = 0.
 MAP
 .........
 . . . . .
@@ -2238,7 +2272,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_minigrid_large
 TAGS:    the_grid unrand
-SUBST:   0 = 000.
+SUBST:   0 = 00.
 MAP
 .........
 .   0   .
@@ -2253,6 +2287,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_x
 TAGS:    the_grid unrand
+SUBST:   0 = 00.
 MAP
  .......
 . ..... .
@@ -2267,6 +2302,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_zigzags
 TAGS:    the_grid unrand
+SUBST:   0 = 000.
 SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
 MAP
     ..
@@ -2282,7 +2318,7 @@ ENDMAP
 
 NAME:    minmay_the_grid_rooms
 TAGS:    the_grid unrand
-SUBST:   0 = 000.
+SUBST:   0 = 0.
 SUBST:   b : .:140 xcvbnGTUV09%* t:5 Y:5
 MAP
     .
@@ -2298,28 +2334,30 @@ ENDMAP
 
 NAME:    minmay_the_grid_embedded
 TAGS:    the_grid unrand
+SUBST:   0 = 0.
 MAP
     .
- 9. ...9
- .... ..
+ 0. ...0
+ .0.0 0.
  .    .
-....* ...
+..0.* 0..
   .    .
- .. ....
- 9... .9
+ .0 0.0.
+ 0... .0
     .
 ENDMAP
 
 NAME:    minmay_the_grid_square_x
 TAGS:    the_grid unrand
+SUBST:   0 = 0.
 MAP
 0... ...0
 .  ...  .
-.  .9.  .
+.  .0.  .
 ...   ...
- .9 *.9.
+ .0 *.0.
 ...   ...
-.  .9.  .
+.  .0.  .
 .  ...  .
 0... ...0
 ENDMAP
@@ -2330,33 +2368,32 @@ ENDMAP
 NAME:    minmay_the_grid_prize_trominoes
 TAGS:    the_grid_prize unrand allow_dup
 SUBST:   T : .TG
-: if you.absdepth() < 16 then
-SUBST:   8 = 8.
-: end
+SUBST:   9 = 999.
 MAP
   | . |
- 8  .  8
-| .8... |
-  . ..8
+ 9  .  9
+| .9... |
+  . ..9
 ..  T  ..
-  8.. .
-| ...8. |
- 8  .  8
+  9.. .
+| ...9. |
+ 9  .  9
   | . |
 ENDMAP
 
 NAME:  minmay_the_grid_prize_four_corners
 TAGS:  the_grid_prize unrand
-SUBST: Z = .:60 x:40 8Gcvbmt T:3 U:3 V:3 Y:1
+SUBST: Z = .:60 x:40 9Gcvbmt T:3 U:3 V:3 Y:1
 SUBST: A : +. A:2, B : +. A:2
 SUBST: A = +.W
+SUBST: 9 = 999.
 MAP
 **9 . 9**
 **. . .**
 9.B . B.9
-   A8A
-...8Z8...
-   A8A
+   A9A
+...9Z9...
+   A9A
 9.B . B.9
 **. . .**
 **9 . 9**
@@ -2366,96 +2403,93 @@ NAME:    minmay_the_grid_prize_four_corners_diamond_a
 TAGS:    the_grid_prize unrand
 WEIGHT:  5
 KITEM:   | = |, |
-SUBST:   8 = 88.
+SUBST:   9 = 999.
 MAP
-|8  .  8|
-8. ... .8
+|9  .  9|
+9. ... .9
   .. ..
  ..   ..
 ..     ..
  ..   ..
   .. ..
-8. ... .8
-|8  .  8|
+9. ... .9
+|9  .  9|
 ENDMAP
 
 NAME:    minmay_the_grid_prize_four_corners_diamond_b
 TAGS:    the_grid_prize unrand
 WEIGHT:  5
 KITEM:   | = |, |
-SUBST:   8 = 88.
+SUBST:   9 = 999.
 MAP
-|8  .  8|
-8. . . .8
+|9  .  9|
+9. . . .9
   . . .
  . . . .
 . . . . .
  . . . .
   . . .
-8. . . .8
-|8  .  8|
+9. . . .9
+|9  .  9|
 ENDMAP
 
 NAME:    minmay_the_grid_prize_shrinking_boxes
 TAGS:    the_grid_prize unrand
 KITEM:   | = |,|,|,|,|,|,|,|
-SUBST:   8 = 88.
+SUBST:   9 = 999.
 MAP
 .........
 .       .
-. 88.88 .
+. 99.99 .
 . . + . .
 . . | . .
 . .   . .
 . ..... .
 .   +   .
-..88.88..
+..99.99..
 ENDMAP
 
 NAME:    minmay_the_grid_prize_inner_circle
 TAGS:    the_grid_prize unrand
-SUBST:   b : xcvbnTG|8
-NSUBST:  8 = 2 = 8. / *:8
+SUBST:   9 = 999.
+SUBST:   b : xcvbnTG|9
 MAP
  .......
 ..     ..
 .  ***  .
 . ***** .
-. **b*8 .
-. ****8 .
-.  *888 .
-..     88
- ......8
+. **b*9 .
+. ****9 .
+.  *999 .
+..     99
+ ......9
 ENDMAP
 
 NAME:    minmay_the_grid_prize_big_room
 TAGS:    the_grid_prize unrand
-NSUBST:  8 = 4:8 / 8 = 8. / *:.
-SUBST:   b : xcvbnTG|8
+SUBST:   9 = 999.
+SUBST:   b : xcvbnTG|9
 MAP
 *** . ...
 ***  .. .
-**.888...
-  88888 .
-..88b88..
-  88888 .
-**.888...
+**...9...
+  ..9.9 .
+...9b9...
+  ..9.9 .
+**...9...
 ***  .. .
 *** . ...
 ENDMAP
 
 NAME:    minmay_the_grid_prize_diamond_cup
 TAGS:    the_grid_prize unrand
-SUBST:   b : xcvbnTG|8
-SUBST:   8 = 8..
-KMONS:   | = 8
-KITEM:   | = |
+SUBST:   b : xcvbnTG|
 MAP
    . .
   .   .
  .  8  .
 .  |||  .
- .8|b|8
+ ..|b|.
 .  |||  .
  .  8  .
   .   .
@@ -2477,7 +2511,7 @@ ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_checkered
 TAGS:  the_grid_square_5x5 unrand
-SUBST: 9 = 9.
+SUBST: 0 = 0.
 MAP
  . .
 . . .
@@ -2488,12 +2522,12 @@ ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_z
 TAGS:  the_grid_square_5x5 unrand
-SUBST: 9 = 9.
+SUBST: 0 = 0.
 MAP
 .....
-.  9
+.  0
   .
- 9  .
+ 0  .
 .....
 ENDMAP
 
@@ -2502,7 +2536,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
   .
   .
-..9..
+..0..
   .
   .
 ENDMAP
@@ -2512,7 +2546,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 ..  %
 .. .
-  9
+  0
  . ..
 %  ..
 ENDMAP
@@ -2522,13 +2556,13 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 % ...
 .   .
-..9..
+..0..
 .   .
 ... %
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_lines
-TAGS: the_grid_square_5x5 unrand
+NAME:  minmay_the_grid_square_5x5_lines
+TAGS:  the_grid_square_5x5 unrand
 SUBST: 0 = 0.
 MAP
 . ..
@@ -2543,7 +2577,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 %...%
   .
-..9..
+..0..
   .
 %...%
 ENDMAP
@@ -2597,7 +2631,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 %....
     .
-..9..
+..0..
 .
 ....%
 ENDMAP
@@ -2607,7 +2641,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
  %..
     .
- .9.
+ .0.
 .
  ..%
 ENDMAP
@@ -2617,7 +2651,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 %....
     .
-..9..
+..0..
     .
 %....
 ENDMAP
@@ -2627,7 +2661,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 %...
     .
-..9.
+..0.
     .
 %...
 ENDMAP
@@ -2660,7 +2694,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 ....%
 .
-..9..
+..0..
 .   .
 .....
 ENDMAP
@@ -2670,7 +2704,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
  ..%
 .
- .9.
+ .0.
 .   .
  ...
 ENDMAP
@@ -2682,7 +2716,7 @@ MAP
 .   .
    .
    .
-  9
+  0
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_longway
@@ -2690,7 +2724,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .....
 .   .
-  9 .
+  0 .
  %. .
    ..
 ENDMAP
@@ -2700,7 +2734,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
  ...
 . . .
-..9..
+..0..
 .. ..
 .. ..
 ENDMAP
@@ -2720,7 +2754,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
   ..
   . .
-..9..
+..0..
 . .
  ..
 ENDMAP
@@ -2750,9 +2784,9 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .....
     .
-..* .
+..% .
 .   .
-9....
+0....
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_spiral_small
@@ -2760,9 +2794,9 @@ TAGS: the_grid_square_5x5 unrand
 MAP
  ...
 .   .
-  * .
+  % .
  .  .
-  .9
+  .0
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_minivault
@@ -2772,7 +2806,7 @@ MAP
 .  ..
   . .
 %*  .
-8% ..
+9% ..
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_half_checkered
@@ -2781,7 +2815,7 @@ MAP
 % . %
  . .
 . . .
-..9..
+..0..
 0...0
 ENDMAP
 
@@ -2799,15 +2833,15 @@ NAME: minmay_the_grid_square_5x5_broken_cross
 TAGS: the_grid_square_5x5 unrand
 MAP
   .
-  9..
+  0..
 .% %.
-..9
+..0
   .
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_dogpile
-TAGS: the_grid_square_5x5 unrand
-SUBST: 0 = 0.
+NAME:  minmay_the_grid_square_5x5_dogpile
+TAGS:  the_grid_square_5x5 unrand
+SUBST: 0 = 0...
 MAP
 00000
 00000
@@ -2830,7 +2864,7 @@ NAME: minmay_the_grid_square_5x5_bite
 TAGS: the_grid_square_5x5 unrand
 MAP
 ....
-.  9.
+.  0.
 .   .
 .   .
 .....
@@ -2873,8 +2907,8 @@ TAGS: the_grid_square_5x5 unrand
 MAP
  ...
 . . .
-. * .
-.9 9.
+. % .
+.0 0.
  . .
 ENDMAP
 
@@ -2883,9 +2917,9 @@ NAME: minmay_the_grid_square_5x5_doubleslash
 TAGS: the_grid_square_5x5 unrand
 MAP
 .. .
-.9 .
-. * .
- . 9.
+.0 .
+. % .
+ . 0.
  . ..
 ENDMAP
 
@@ -2894,7 +2928,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
   . .
 .  ..
-.9*9.
+.0%0.
 ..  .
 . .
 ENDMAP
@@ -2924,9 +2958,9 @@ NAME: minmay_the_grid_square_5x5_n
 TAGS: the_grid_square_5x5 unrand
 MAP
 .  ..
-9.  .
-. * .
-.  .9
+0.  .
+. % .
+.  .0
 ..  .
 ENDMAP
 
@@ -2934,9 +2968,9 @@ NAME: minmay_the_grid_square_5x5_n_small
 TAGS: the_grid_square_5x5 unrand
 MAP
 .  .
- 9  .
-. * .
-.  9
+ 0  .
+. % .
+.  0
  .  .
 ENDMAP
 
@@ -2955,7 +2989,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .. ..
 .   .
-9.*.9
+0.%.0
 .   .
 .. ..
 ENDMAP
@@ -2963,11 +2997,11 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_intrusive_squares
 TAGS: the_grid_square_5x5 unrand
 MAP
-%.9..
+%.0..
   ...
   .
 ...
-..9.%
+..0.%
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_gyroscope
@@ -2975,7 +3009,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 ..  .
 . ..
- .9.
+ .0.
  .. .
 .  ..
 ENDMAP
@@ -2984,9 +3018,9 @@ NAME: minmay_the_grid_square_5x5_inverted_slash
 TAGS: the_grid_square_5x5 unrand
 MAP
 ...
-.9
-. * .
-   9.
+.0
+. % .
+   0.
   ...
 ENDMAP
 
@@ -2995,19 +3029,20 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .....
 .....
-  9
+  0
 .....
 .....
 ENDMAP
 
+# Remember, the 9s can usually escape without the door opening
 NAME: minmay_the_grid_square_5x5_megaminivault
 TAGS: the_grid_square_5x5 unrand
 MAP
 .....
 .=nn.
-.n8nn
-.nn|8
-..n8|
+.n9nn
+.nn|9
+..n9|
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_moneybag
@@ -3100,7 +3135,7 @@ TAGS: the_grid_square_5x5 unrand
 MAP
 .....
 .   .
-9* *9
+0% %0
 .   .
 .....
 ENDMAP
@@ -3148,23 +3183,21 @@ ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_inner_v
 TAGS:  the_grid_square_5x5 unrand
-SUBST: 9 = 9.
 MAP
 .....
-.  9.
+.  0.
 .%  .
-.  9.
+.  0.
 .....
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_pentomino_r
 TAGS: the_grid_square_5x5 unrand
-SUBST: 9 = 9.
 MAP
 .....
-.9  .
-.  *.
-.9 9.
+.0  .
+.  %.
+.0 0.
 .....
 ENDMAP
 NAME: minmay_the_grid_square_5x5_fancy_junction
@@ -3177,115 +3210,119 @@ MAP
   .
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_prize_open
-TAGS: the_grid_square_5x5_prize unrand allow_dup
+NAME:  minmay_the_grid_square_5x5_prize_open
+TAGS:  the_grid_square_5x5_prize unrand allow_dup
+SUBST: 9 = 999.
 MAP
 .....
-.8*8.
+.9*9.
 .*|*.
-.8*8.
+.9*9.
 .....
 ENDMAP
 
 # Mean if you get a mashed main vault, but that's intended.
-NAME: minmay_the_grid_square_5x5_prize_rear_guard
-TAGS: the_grid_square_5x5_prize unrand
+NAME:  minmay_the_grid_square_5x5_prize_rear_guard
+TAGS:  the_grid_square_5x5_prize unrand
+SUBST: 9 = 999.
 MAP
 .....
 .*| .
 .|* n
-.  88
-..n88
+.  99
+..n99
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_prize_pseudospiral
-TAGS: the_grid_square_5x5_prize unrand
-SUBST: 8 = 8.
+NAME:  minmay_the_grid_square_5x5_prize_pseudospiral
+TAGS:  the_grid_square_5x5_prize unrand
+SUBST: 9 = 9.
 MAP
-.8.8.
- || 8
+.9.9.
+ || 9
   | .
-8   8
-.8.8.
+9   9
+.9.9.
 ENDMAP
 
 NAME: minmay_the_grid_square_5x5_prize_deathbox
 TAGS: the_grid_square_5x5_prize unrand
-SUBST: 8 = 888.
-KMONS: | = 8
+SUBST: 9 = 999.
+KMONS: | = 9
 KITEM: | = |,|,*,*
 MAP
-.888.
-. 8 .
+.999.
+. 9 .
 . | .
 .   .
 .....
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_prize_itemx
-TAGS: the_grid_square_5x5_prize unrand
+NAME:  minmay_the_grid_square_5x5_prize_itemx
+TAGS:  the_grid_square_5x5_prize unrand
+SUBST: 9 = 999.
 MAP
 * . *
- %8%
-.8*8.
- %8%
+ %9%
+.9*9.
+ %9%
 * . *
 ENDMAP
 
-#you can change the name if youre afraid of a nicalis lawsuit
 NAME: minmay_the_grid_square_5x5_prize_monsterx
 TAGS: the_grid_square_5x5_prize unrand
 MAP
 0 . 0
- 9*9
+ 0*0
 .|8|.
- 9*9
+ 0*0
 0 . 0
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_prize_snowflake
-TAGS: the_grid_square_5x5_prize unrand
+NAME:  minmay_the_grid_square_5x5_prize_snowflake
+TAGS:  the_grid_square_5x5_prize unrand
 KITEM: | = |,|,*,*
+SUBST: 9 = 999.
 MAP
  . .
-.8 8.
+.9 9.
   |
-.8 8.
+.9 9.
  . .
 ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_prize_gold
 TAGS:  the_grid_square_5x5_prize unrand
 KITEM: $ = $,$,$
-KMONS: 8 = 8
-KITEM: 8 = $,$,$
+KMONS: 9 = 9
+KITEM: 9 = $,$,$
 MAP
 $$$$$
-$8$8$
+$9$9$
 $$$$$
-$8$8$
+$9$9$
 $$$$$
 ENDMAP
 
 NAME:  minmay_the_grid_square_5x5_prize_junk
 TAGS:  the_grid_square_5x5_prize unrand
-KITEM: 8 = %
-KMONS: 8 = 8
+KITEM: 9 = %
+KMONS: 9 = 9
 MAP
 %%%%%
-%8%8%
+%9%9%
 %%%%%
-%8%8%
+%9%9%
 %%%%%
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_prize_waves
-TAGS: the_grid_square_5x5_prize unrand
+NAME:  minmay_the_grid_square_5x5_prize_waves
+TAGS:  the_grid_square_5x5_prize unrand
+SUBST: 9 = 999.
 MAP
- 8..|
-*8
-  ..8
-|8.
+ 9..|
+*9
+  ..9
+|9.
    .*
 ENDMAP
 
@@ -3295,7 +3332,7 @@ ENDMAP
 NAME: minmay_the_grid_square_5x5_megaprize_open
 TAGS: the_grid_square_5x5_megaprize unrand allow_dup
 KITEM: | = |
-KMONS: | = 8
+KMONS: | = 9
 MAP
 .....
 .|||.
@@ -3304,46 +3341,49 @@ MAP
 .....
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_megaprize_diamond
-TAGS: the_grid_square_5x5_megaprize unrand
+NAME:  minmay_the_grid_square_5x5_megaprize_diamond
+TAGS:  the_grid_square_5x5_megaprize unrand
+SUBST: 9 = 999.
 MAP
- |8|
-|8 8|
-8   8
-|8 8|
- |8|
+ |9|
+|9 9|
+9   9
+|9 9|
+ |9|
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_megaprize_hollow
-TAGS: the_grid_square_5x5_megaprize unrand
-KITEM: 8 = *
+NAME:  minmay_the_grid_square_5x5_megaprize_hollow
+TAGS:  the_grid_square_5x5_megaprize unrand
+KITEM: 9 = *
 MAP
- 8*8
-8*.*8
+ 9*9
+9*.*9
 *...*
-8*.*8
- 8*8
+9*.*9
+ 9*9
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_megaprize_checkered
-TAGS: the_grid_square_5x5_megaprize unrand
+NAME:  minmay_the_grid_square_5x5_megaprize_checkered
+TAGS:  the_grid_square_5x5_megaprize unrand
 KITEM: | = |,|
+SUBST: 9 = 999.
 MAP
- 8 8
-8 | 8
+ 9 9
+9 | 9
  | |
-8 | 8
- 8 8
+9 | 9
+ 9 9
 ENDMAP
 
-NAME: minmay_the_grid_square_5x5_megaprize_crossed
-TAGS: the_grid_square_5x5_megaprize unrand
+NAME:  minmay_the_grid_square_5x5_megaprize_crossed
+TAGS:  the_grid_square_5x5_megaprize unrand
+SUBST: 9 = 999.
 MAP
-88.||
- 88|.
+99.||
+ 99|.
 .| |.
-.|88
-||.88
+.|99
+||.99
 ENDMAP
 
 ################################################################################
@@ -3368,17 +3408,17 @@ ENDMAP
 NAME: minmay_the_grid_octo_fan_narrow
 TAGS: the_grid_octo unrand
 MAP
-      9.
+      0.
   ..    .
  .  ..   .
 .     .  .
-9  .. . .
-  .  *  .
-  . . ..  9
+0  .. . .
+  .  %  .
+  . . ..  0
  .  .     .
  .   ..  .
   .    ..
-   .9
+   .0
 ENDMAP
 
 NAME: minmay_the_grid_octo_thin_diamonds
@@ -3388,9 +3428,9 @@ MAP
   .. . ..
  .. ... ..
 .. .. .. ..
-. .. 9 .. .
- .. 9*9 ..
-. .. 9 .. .
+. .. 0 .. .
+ .. 0%0 ..
+. .. 0 .. .
 .. .. .. ..
  .. ... ..
   .. . ..
@@ -3400,19 +3440,19 @@ ENDMAP
 NAME:  minmay_the_grid_octo_clover
 TAGS:  the_grid_octo unrand
 SUBST: c : b...
-SUBST: b : xcvbnGTUV8
-SUBST: 9 = 9.
-KMONS: 8 = 8
-KITEM: 8 = *
+SUBST: b : xcvbnGTUV9
+SUBST: 0 = 0.
+KMONS: 9 = 9
+KITEM: 9 = *
 MAP
    % . %
   .. . ..
  .c. . .c.
-%..9 9 9..%
-    9c9
-...9cbc9...
-    9c9
-%..9 9 9..%
+%..0 0 0..%
+    0c0
+...0cbc0...
+    0c0
+%..0 0 0..%
  .c. . .c.
   .. . ..
    % . %
@@ -3421,19 +3461,19 @@ ENDMAP
 NAME:  minmay_the_grid_octo_clover_2
 TAGS:  the_grid_octo unrand
 SUBST: c : b...
-SUBST: b : xcvbnGTUV8
-SUBST: 9 = 9.
-KMONS: 8 = 8
-KITEM: 8 = *
+SUBST: b : xcvbnGTUV9
+SUBST: 0 = 0.
+KMONS: 9 = 9
+KITEM: 9 = *
 MAP
    ..c..
     ...
   *  .  *
-.  9 9 9  .
-..  9c9  ..
-c..9cbc9..c
-..  9c9  ..
-.  9 9 9  .
+.  0 0 0  .
+..  0c0  ..
+c..0cbc0..c
+..  0c0  ..
+.  0 0 0  .
   *  .  *
     ...
    ..c..
@@ -3442,53 +3482,55 @@ ENDMAP
 NAME:  minmay_the_grid_octo_fat_diamond
 TAGS:  the_grid_octo unrand
 SUBST: c : b...
-SUBST: b : xcvbnGTUV8
-KMONS: 8 = 8
-KITEM: 8 = *
-SUBST: 9 = 9.
+SUBST: b : xcvbnGTUV9
+KMONS: 9 = 9
+KITEM: 9 = *
+SUBST: 0 = 0.
 MAP
-   .9 ..
-  .9   ..
- .9     ..
-.9 9 *   ..
-9   9c9   .
+   .0 ..
+  .0   ..
+ .0     ..
+.0 0 *   ..
+0   0c0   .
    *cbc*
-.   9c9   .
+.   0c0   .
 ..   *   ..
  ..     ..
   ..   ..
    .. ..
 ENDMAP
 
-NAME: minmay_the_grid_octo_horde
-TAGS: the_grid_octo unrand
+NAME:  minmay_the_grid_octo_horde
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 0.
 MAP
    .....
   .. . ..
  ..  .  ..
 .. ..0.. ..
-.  .090.  .
-...09890...
-.  .090.  .
+.  .000.  .
+...00000...
+.  .000.  .
 .. ..0.. ..
  ..  .  ..
   .. . ..
    .....
 ENDMAP
 
-NAME: minmay_the_grid_octo_toaster
-TAGS: the_grid_octo unrand
+NAME:  minmay_the_grid_octo_toaster
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 000.
 MAP
       ..
-   .....9
+   .....0
   .
-   ..9....
+   ..0....
           .
- ....8....
+ ....0....
 .
- ....9...
+ ....0...
          .
-  9......
+  0......
    ..
 ENDMAP
 
@@ -3515,33 +3557,35 @@ ENDMAP
 
 NAME:  minmay_the_grid_octo_focus
 TAGS:  the_grid_octo unrand
-SUBST: b : xcvbnGTUV8
-SUBST: 9 = 9.
-KITEM: 8 = |
-KMONS: 8 = 8
+SUBST: b : xcvbnGTUV9
+SUBST: 0 = 0.
+KITEM: 9 = |
+KMONS: 9 = 9
 MAP
-   .9 9.
+   .0 0.
   ..   ..
  . ..... .
-...  9  ...
-9 . 9*9 . 9
-  .9*b*9.
-9 . 9*9 . 9
-...  9  ...
+...  0  ...
+0 . 0%0 . 0
+  .0%b%0.
+0 . 0%0 . 0
+...  0  ...
  . ..... .
   ..   ..
-   .9 9.
+   .0 0.
 ENDMAP
-NAME: minmay_the_grid_octo_teeth
-TAGS: the_grid_octo unrand
+
+NAME:  minmay_the_grid_octo_teeth
+TAGS:  the_grid_octo unrand
+SUBST: 9 = 999.
 MAP
     . .
   * . . *
   . . . .
 . . . . . .
-. . 8 8 . .
+. . 9 9 . .
 .....|.....
-. . 8 8 . .
+. . 9 9 . .
 . . . . . .
   . . . .
   * . . *
@@ -3568,36 +3612,36 @@ MAP
    .....
 ENDMAP
 
-NAME: minmay_the_grid_octo_chip
-TAGS: the_grid_octo unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_octo_chip
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 0.
 MAP
-   ..9..
+   ..0..
   ... ...
  ..  .  ..
 ..  ...  ..
 ... ... ...
-.9  9*9  9.
+.0  0%0  0.
 ... ... ...
 ..  ...  ..
  ..  .  ..
   ... ...
-   ..9..
+   ..0..
 ENDMAP
 
-NAME: minmay_the_grid_octo_odd_swirl
-TAGS: the_grid_octo unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_octo_odd_swirl
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 0.
 MAP
    .....
   .......
- *.    ...
-8   ..   ..
-  ...9..  .
-....9 9....
-.  ..9...
-..   ..   8
- ...    .*
+ ..    ...
+0   ..   ..
+  ...0..  .
+....0 0....
+.  ..0...
+..   ..   0
+ ...    ..
   .......
    .....
 ENDMAP
@@ -3606,7 +3650,7 @@ NAME: minmay_the_grid_octo_77
 TAGS: the_grid_octo unrand
 SUBST: b : xcvbnGTUV .:90
 MAP
-   8  ..
+   9  ..
   ...  ..
  ..b..  ..
 .......  ..
@@ -3616,88 +3660,90 @@ MAP
 ..  .......
  ..  ..b..
   ..  ...
-   ..  8
+   ..  9
 ENDMAP
 
-NAME: minmay_the_grid_octo_checkered
-TAGS: the_grid_octo unrand
+NAME:  minmay_the_grid_octo_checkered
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 000.
 MAP
-   . 9 .
+   . 0 .
   . . . .
  . . . . .
 . . . . . .
  . . . . .
-9 . . . . 9
+0 . . . . 0
  . . . . .
 . . . . . .
  . . . . .
   . . . .
-   . 9 .
+   . 0 .
 ENDMAP
 
-NAME: minmay_the_grid_octo_checkerflower
-TAGS: the_grid_octo unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_octo_checkerflower
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 0.
 MAP
    .. ..
   .  .  .
  ..  .  ..
-.  .9 9.  .
-.  99 99  .
- ..  |  ..
-.  99 99  .
-.  .9 9.  .
+.  .0 0.  .
+.  00 00  .
+ ..  *  ..
+.  00 00  .
+.  .0 0.  .
  ..  .  ..
   .  .  .
    .. ..
 ENDMAP
 
-NAME: minmay_the_grid_octo_vomiting_pacman
-TAGS: the_grid_octo unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_octo_vomiting_pacman
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 0.
 SUBST: b = xcvbnG0%TC .:100
 MAP
    .....
-  *......
-    999...
+  %......
+    000...
 b.b    ....
-.b.b..   9.
-bbb.bb...9.
-.b.bbb   9.
+.b.b..   0.
+bbb.bb...0.
+.b.bbb   0.
 b.b    ....
-    999...
-  *......
+    000...
+  %......
    .....
 ENDMAP
 
-NAME: minmay_the_grid_octo_concentric
-TAGS: the_grid_octo unrand
+NAME:  minmay_the_grid_octo_concentric
+TAGS:  the_grid_octo unrand
+SUBST: 0 = 0.
 MAP
    .....
   .     .
  . ..... .
 . ..   .. .
-. . .9. . .
-. . 9 9 . .
-. . .9. . .
+. . .0. . .
+. . 0 0 . .
+. . .0. . .
 . ..   .. .
  . ..... .
   .     .
    .....
 ENDMAP
 
-NAME: minmay_the_grid_octo_pinwheel
-TAGS: the_grid_octo unrand
-SUBST: 8 = 8., 9 = 9.
+NAME:  minmay_the_grid_octo_pinwheel
+TAGS:  the_grid_octo unrand
+SUBST: 9 = 9., 0 = 0.
 MAP
    .....
   .... ..
  .. ..  ..
-..  98   ..
-.   * *9...
-...8   8...
-...9* *   .
-..   89  ..
+..  09   ..
+.   * *0...
+...9   9...
+...0* *   .
+..   90  ..
  ..  .. ..
   .. ....
    .....
@@ -3706,17 +3752,17 @@ ENDMAP
 
 NAME: minmay_the_grid_octo_prize_big_c
 TAGS: the_grid_octo_prize unrand allow_dup
-SUBST: 8 = 8.
+SUBST: 9 = 9.
 SUBST: b = xcvbnGTUV*
 MAP
    .. ..
   .     .
  .  *|*  .
-.  88*88  .
-. .88*88* .
+.  99*99  .
+. .99*99* .
 .....b**|
-. .88*88* .
-.  88*88  .
+. .99*99* .
+.  99*99  .
  .  *|*  .
   .     .
    .. ..
@@ -3724,72 +3770,73 @@ ENDMAP
 
 NAME: minmay_the_grid_octo_prize_single_spiral
 TAGS: the_grid_octo_prize unrand
-SUBST: 8 = 8|..
+SUBST: 9 = 9|..
 MAP
    .....
   .     .
- 8  888  .
-8  8   8  .
- 8  88  8 .
-  8 888 8 .
-. 8  8  8 .
-.  8   8  .
- .  888  .
+ 9  999  .
+9  9   9  .
+ 9  99  9 .
+  9 999 9 .
+. 9  9  9 .
+.  9   9  .
+ .  999  .
   .     .
    .....
 ENDMAP
 
-NAME: minmay_the_grid_octo_prize_ultimate_mussel_roller
-TAGS: the_grid_octo_prize unrand
+NAME:  minmay_the_grid_octo_prize_ultimate_mussel_roller
+TAGS:  the_grid_octo_prize unrand
+SUBST: 9 = 999.
 MAP
    .....
   . ... .
- .   9   .
-.  8   8  .
-. 888 888 .
-9.........9
+ .   0   .
+.  9   9  .
+. 999 999 .
+0.........0
 ....|||....
 .  |||||  .
  .       .
-  .. 9 ..
+  .. 0 ..
    .....
 ENDMAP
 
-NAME: minmay_the_grid_octo_prize_square_snowflake
-TAGS: the_grid_octo_prize unrand
+NAME:  minmay_the_grid_octo_prize_square_snowflake
+TAGS:  the_grid_octo_prize unrand
 KITEM: | = |,|
-SUBST: 8 = 8.
+SUBST: 9 = 9.
 SUBST: b = xcvbnGTUV*.
 MAP
    . . .
   .......
- .   8   .
-.. | 8 | ..
- .  888  .
-..888b888..
- .  888  .
-.. | 8 | ..
- .   8   .
+ .   9   .
+.. | 9 | ..
+ .  999  .
+..999b999..
+ .  999  .
+.. | 9 | ..
+ .   9   .
   .......
    . . .
 ENDMAP
 
 NAME: minmay_the_grid_octo_prize_star
 TAGS: the_grid_octo_prize unrand
-SUBST: 9 = 9., 8 = 8.
+SUBST: 0 = 0., 9 = 9.
 SUBST: b = xcvbnGTUV*.
 MAP
-   .9 9.
+   .0 0.
   .. . ..
- ..  8  ..
-..  888  ..
-9  8|||8  9
- .88|b|88.
-9  8|||8  9
-..  888  ..
- ..  8  ..
+ ..  9  ..
+..  999  ..
+0  9|||9  0
+ .99|b|99.
+0  9|||9  0
+..  999  ..
+ ..  9  ..
   .. . ..
-   .9 9.
+   .0 0.
 ENDMAP
 
 ################################################################################
@@ -3825,15 +3872,15 @@ MAP
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_sprig
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_sprig
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
 ..     ..
 ...   ...
  ... ...
-  .999.
-   .9.
+  .000.
+   .0.
     .
     .
     .
@@ -3842,78 +3889,78 @@ MAP
 ENDMAP
 
 # sorry that this looks like a poo when it gets vertically flipped
-NAME: minmay_the_grid_triangle_9x9_impossible_snake
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_impossible_snake
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
-....9....
+....0....
         .
-  ..9...
+  ..0...
  .
-  ..9..
+  ..0..
       .
     ..
-   9
+   0
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_negative_grid
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_negative_grid
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
-...9.9...
+...0.0...
 .. . . ..
- .9.*.9.
+ .0.%.0.
  .. . ..
-  .9.9.
+  .0.0.
   .. ..
-   .9.
+   .0.
    ...
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_stretched_checkered
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_stretched_checkered
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
 . % % % .
 . . . . .
  . . . .
- 9 . . 9
-  9 . 9
-  9 . 9
-   9 9
+ 0 . . 0
+  0 . 0
+  0 . 0
+   0 0
    . .
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_checkered
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_checkered
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
-9 . . . 9
+0 . . . 0
  . . . .
-  . * .
+  . % .
  . . . .
   . . .
    . .
     .
-   9 9
-    9
-    9
+   0 0
+    0
+    0
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_subtriangle
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 8 = 8..
+NAME:  minmay_the_grid_triangle_9x9_subtriangle
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 9 = 9..
 MAP
-.n|888|n.
-.  888  .
- .n888n.
- .  8  .
+.n*999*n.
+.  999  .
+ .n999n.
+ .  .  .
   .n.n.
   . = .
    ...
@@ -3922,72 +3969,73 @@ MAP
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_dagger
-TAGS: the_grid_triangle_9x9 unrand
+NAME:  minmay_the_grid_triangle_9x9_dagger
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 00.
 MAP
-9.......9
+0.......0
 .   .   .
   .....
- *.....*
-  .9 9.
-  .9 9.
+ %.....%
+  .0 0.
+  .0 0.
    ...
    ...
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_alien
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 999.
+NAME:  minmay_the_grid_triangle_9x9_alien
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
-9.. . ..9
+0.. . ..0
 . . . . .
-  .9.9.
- *.9.9.*
+  .0.0.
+ *.0.0.*
     .
   .....
-   9 9
+   0 0
    ...
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_skeleton
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 999.
+NAME:  minmay_the_grid_triangle_9x9_skeleton
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
-9   %   9
-.9.....9.
+0   %   0
+.0.....0.
     .
- %..9..%
+ %..0..%
     .
-  %.9.%
+  %.0.%
     .
-   9.9
+   0.0
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_steps
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_steps
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
 .       .
-....9....
- 9     9
- ...9...
+....0....
+ 0     0
+ ...0...
   .   .
   .....
-   9 9
-   .9.
+   0 0
+   .0.
     .
     .
 ENDMAP
 
 NAME: minmay_the_grid_triangle_9x9_thin_v
 TAGS: the_grid_triangle_9x9 unrand
-SUBST: 0 = 0.
+SUBST: 0 = 0...
 MAP
 0       0
 0       0
@@ -4001,20 +4049,20 @@ MAP
     0
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_windchime
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 8 = 88.
+NAME:  minmay_the_grid_triangle_9x9_windchime
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
-8.......8
+0.......0
 .   .   .
- . *.* .
+ . %.% .
  .  .  .
-  . 8 .
+  . 0 .
   .   .
    . .
    . .
     .
-    8
+    0
 ENDMAP
 
 NAME: minmay_the_grid_triangle_9x9_swiss_cheese
@@ -4062,15 +4110,15 @@ MAP
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_cache
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_cache
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0.
 MAP
 .........
 .  .
- . ..99.
- .  9999
-  . 99%
+ . ..00.
+ .  0000
+  . 00%
   .  %%
    . %
    .
@@ -4093,17 +4141,18 @@ MAP
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_sparse_checkered
-TAGS: the_grid_triangle_9x9 unrand
+NAME:  minmay_the_grid_triangle_9x9_sparse_checkered
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
-9...8...9
+0...0...0
 . . . . .
  .......
- % % % %
+ % . . %
   .....
   . . .
    ...
-   9 9
+   0 0
     .
     .
 ENDMAP
@@ -4111,7 +4160,7 @@ ENDMAP
 NAME: minmay_the_grid_triangle_9x9_intruding_spiral
 TAGS: the_grid_triangle_9x9 unrand
 MAP
-.. 8.....
+.. 9.....
 .. .   ..
  . ..* .
  .     .
@@ -4125,14 +4174,15 @@ ENDMAP
 
 # Ensures that the monsters don't escape even in mashed main vaults.
 # The reward for this one is the xp.
-NAME: minmay_the_grid_triangle_9x9_fully_insulated_deathbox
-TAGS: the_grid_triangle_9x9 unrand
+NAME:  minmay_the_grid_triangle_9x9_fully_insulated_deathbox
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 0 9:4 8:1
 MAP
 . nnnnn .
- .=888=.
-  n888n
-  n888n
-  n888n
+ .=000=.
+  n000n
+  n000n
+  n000n
   nn=nn
     .
     .
@@ -4140,17 +4190,18 @@ MAP
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_flanged_cone
-TAGS: the_grid_triangle_9x9 unrand
+NAME:  minmay_the_grid_triangle_9x9_flanged_cone
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
-....9....
+....0....
 .       .
- ...9...
+ ...0...
  .     .
-  ..9..
+  ..0..
   .   .
    ...
-   9 9
+   0 0
     .
     .
 ENDMAP
@@ -4158,8 +4209,8 @@ ENDMAP
 NAME: minmay_the_grid_triangle_9x9_wacky_v
 TAGS: the_grid_triangle_9x9 unrand
 MAP
-.. * * ..
-.. 8 8 ..
+.. % % ..
+.. 0 0 ..
  . . . .
  . . . .
   .. ..
@@ -4170,33 +4221,34 @@ MAP
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_semitri
-TAGS: the_grid_triangle_9x9 unrand
-SUBST: 9 = 9.
+NAME:  minmay_the_grid_triangle_9x9_semitri
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
-.  *9  ..
-..  99  .
- ..  9..
+.  %0  ..
+..  00  .
+ ..  0..
   ..  ..
    .. .
-    .8.
+    .0.
      .
    ...
     .
     .
 ENDMAP
 
-NAME: minmay_the_grid_triangle_9x9_from_above
-TAGS: the_grid_triangle_9x9 unrand
+NAME:  minmay_the_grid_triangle_9x9_from_above
+TAGS:  the_grid_triangle_9x9 unrand
+SUBST: 0 = 000.
 MAP
 .........
 . . . . .
   . . .
  .. . ..
   . . .
-  9 . 9
+  0 . 0
     .
-   9.9
+   0.0
     .
     .
 ENDMAP
@@ -4223,7 +4275,7 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 .........
 .n n.n n.
-  8 . 8
+  9 . 9
  . n.n .
   .....
   .....
@@ -4239,9 +4291,9 @@ TAGS: the_grid_triangle_9x9 unrand
 MAP
 .........
 .........
- ..  9..
- ..9  ..
-  .. 9.
+ ..  0..
+ ..0  ..
+  .. 0.
   .....
    ...
    ...
@@ -4252,13 +4304,13 @@ ENDMAP
 # No items, the reward is xp and getting through
 NAME: minmay_the_grid_triangle_9x9_tough_junction
 TAGS: the_grid_triangle_9x9 unrand
-SUBST: 8 = 8..
+SUBST: 9 = 9..
 MAP
 .........
         .
-   n88n.
-  .=88=.
-  .n88n
+   n99n.
+  .=99=.
+  .n99n
   .
    ...
      .
@@ -4355,14 +4407,14 @@ ENDMAP
 
 NAME: minmay_the_grid_triangle_9x9_prize_center
 TAGS: the_grid_triangle_9x9_prize unrand allow_dup
-KMONS: 8 = 8
-KITEM: 8 = |
+KMONS: 9 = 9
+KITEM: 9 = |
 MAP
 ...   ...
   .   .
-   888
-   8b8
-   888
+   999
+   9b9
+   999
     .
     .
     .
@@ -4372,15 +4424,15 @@ ENDMAP
 
 NAME: minmay_the_grid_triangle_9x9_prize_schism
 TAGS: the_grid_triangle_9x9_prize unrand
-KMONS: 8 = 8
-KITEM: 8 = |
+KMONS: 9 = 9
+KITEM: 9 = |
 MAP
 .........
-. 88  ...
-   88 ..
-    8
-  . 88.
-  .  8.
+. 99  ...
+   99 ..
+    9
+  . 99.
+  .  9.
    ...
    ...
     .
@@ -4390,15 +4442,15 @@ ENDMAP
 NAME: minmay_the_grid_triangle_9x9_prize_insulated
 TAGS: the_grid_triangle_9x9_prize unrand
 SUBST: b : xcvbnG.
-SUBST: 8 = 8|
+SUBST: 9 = 9|
 MAP
 .nnnnnnn.
-..88888..
- n88b88n
- nn8b8nn
-  n888n
-  nn8nn
-   n8n
+..99999..
+ n99b99n
+ nn9b9nn
+  n999n
+  nn9nn
+   n9n
    n.n
     .
     .
@@ -4410,7 +4462,7 @@ TAGS: the_grid_triangle_9x9_prize unrand
 KITEM: * = *,*,*,*
 KITEM: | = |,|,|,|
 MAP
-8888.8888
+9999.9999
 .nnn.nnn.
  .n*.*n.
  .nn.nn.
@@ -4427,13 +4479,13 @@ NAME: minmay_the_grid_triangle_9x9_prize_special
 TAGS: the_grid_triangle_9x9_prize unrand
 ITEM: any jewellery randart
 MAP
-..b.8.b..
-bb8bbb8bb
+..b.9.b..
+bb9bbb9bb
  .bdbdb.
- b8bbb8b
+ b9bbb9b
   bdbdb
-  8bbb8
-   .8.
+  9bbb9
+   .9.
    b.b
     .
     .
