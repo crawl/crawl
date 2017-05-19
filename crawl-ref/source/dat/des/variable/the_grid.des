@@ -1471,6 +1471,7 @@ ENDMAP
 # To read this vault I strongly recommend highlighting the character 'x' so you
 # can actually see the walls.
 NAME:       minmay_the_grid_ultimate
+TAGS:       no_monster_gen
 DEPTH:      Depths:2-4
 ORIENT:     encompass
 SUBVAULT:   A : the_grid_prize
