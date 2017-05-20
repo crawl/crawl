@@ -897,7 +897,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_CLOUD_IMMUNE:
-            mpr("You feel immmune to the effects of clouds.");
+            mpr("You feel immune to the effects of clouds.");
             break;
         }
     }
