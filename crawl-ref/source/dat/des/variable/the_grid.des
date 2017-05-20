@@ -80,14 +80,11 @@
 # those are a small minority of the total wall squares in the vault.
 #
 # Walls:
-# 45%: stone
-# 20%: metal
+# 50%: stone
+# 25%: metal
 # 15%: crystal
-# 10%: translucent stone
-# 6%:  amorphous mixture of two opaque materials (stone, metal, crystal)
-# 2%:  amorphous mixture of one opaque material and translucent stone
-# 2%:  amorphous mixture of stone, metal, crystal, translucent stone, plus the
-#      occasional statue. Xom thinks this is hilarious, etc.
+# 8%:  amorphous mixture of two of these materials
+# 2%:  amorphous mixture of all three materials
 #
 # Rock walls are never included, this is because a digging monster could ruin
 # the vault.
