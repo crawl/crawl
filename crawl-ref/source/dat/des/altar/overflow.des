@@ -4019,6 +4019,7 @@ NAME: gammafunk_temple_overflow_arena
 TAGS: temple_overflow_generic_5 temple_overflow_generic_4
 TAGS: temple_overflow_generic_3 temple_overflow_generic_2
 TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen
+WEIGHT: 5
 {{
   local altarcount = 5
   if not is_validating() then
@@ -4034,7 +4035,7 @@ TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen
     subst("B = a")
   end
 }}
-SUBST: hi = B, a = $*|......, j : b., k : b., b : bcvx, 0 = 09.
+SUBST: hi = B, a = |*%$ .:80, j : b., k : b., b : bcvx, 0 = 09.
 NSUBST: R = R / .
 MARKER: P = lua:transp_loc("temple_overflow_arena_entry")
 MARKER: Q = lua:transp_dest_loc("temple_overflow_arena_entry")
@@ -4045,11 +4046,11 @@ MAP
  ..nnnnnnnnn..
  .nn0..R...nn.
  .nG.jk0kj$Gn.
- .n..kj.jk*in.
-..n......8|hn..
+ .n..kj.jk%in.
+..n......8*hn..
 @Pn..Q....$BnS@
-..n......9|hn..
- .n..jk.kj*in.
+..n......9*hn..
+ .n..jk.kj%in.
  .nG.kj0jk$Gn.
  .nn0..R...nn.
  ..nnnnnnnnn..
