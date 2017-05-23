@@ -3368,18 +3368,19 @@ TAGS:   no_monster_gen no_trap_gen temple_overflow_2
 TAGS:   temple_overflow_kikubaaqudgha temple_overflow_yredelemnul
 : if you.depth() <= 4 then
 MONS: zombie / skeleton
-MONS: mummy / wight / phantom / hungry ghost
-MONS: menkaure
+MONS: mummy / shadow imp / wight / necrophage / phantom / hungry ghost
+KMONS: 3 = menkaure, necrophage / wight
 SUBST: 2 = 2---
 : elseif you.depth() <= 7 then
-MONS: mummy / wight / zombie / skeleton / phantom / hungry ghost
+MONS: zombie / skeleton / mummy / shadow imp / wight / necrophage / phantom \
+      / hungry ghost
 MONS: wraith / vampire
-MONS: menkaure
+KMONS: 3 = menkaure, wraith / vampire
 SUBST: 2 = 12--
 : else
 MONS: mummy / wight / zombie / skeleton / phantom / hungry ghost
 MONS: wraith / vampire / shadow / w:5 death knight / w:5 skeletal warrior
-MONS: flayed ghost
+MONS: flayed ghost / death knight
 NSUBST: 2 = 2 / 2-
 : end
 SUBST:  1 = 11-
@@ -3396,7 +3397,6 @@ FTILE:  -QRVDE|*$123Gcn = floor_tomb
 COLOUR: G = yellow
 COLOUR: -QR|*$123 = brown
 : set_feature_name("granite_statue", "sarcophagus")
-veto {{ return you.depth() <= 7 and you.uniques("Menkaure") }}
 MAP
  ...............
  .nnnnnnnnnnnnn.
