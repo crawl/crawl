@@ -21,4 +21,4 @@ cd "$(git rev-parse --show-toplevel)"
 [ $(find_files | wc -l) != 0 ] \
     || echo_exit "No changed .png files -- please 'git add' them first."
 find_files | xargs -d "\n" optipng -o4 -i0 -fix
-find_files | xargs -d "\n" advpng -z4
+find_files | xargs -d "\n" advpng -z2
