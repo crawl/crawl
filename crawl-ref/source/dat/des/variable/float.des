@@ -8682,3 +8682,38 @@ MAP
  ..nnnnnnnnn..
   ...........
 ENDMAP
+
+NAME: gammafunk_its_a_trap
+TAGS: no_monster_gen no_trap_gen no_tele_into
+DEPTH: Crypt, D:$, Depths, Elf, Shoals, Spider, Snake, Swamp, Zot
+KMASK: ^ = no_item_gen
+ITEM: any randart jewellery
+KFEAT: ^ = known zot trap
+SHUFFLE: FGHI / JKLM
+NSUBST: D = ^ / ., E = ^ / ., I = . / B
+SUBST: FGH = ., JKLM = B, A = ^., B = ^^.
+MARKER: P = lua:transp_loc("its_a_trap_entry")
+MARKER: Q = lua:transp_dest_loc("its_a_trap_entry")
+MARKER: R = lua:transp_loc("its_a_trap_exit")
+MARKER: S = lua:transp_dest_loc("its_a_trap_exit")
+MAP
+      ..........
+     ..cccccccc..
+    ..cccccccccc...
+ ....ccccDcc^ccccc......
+ .cccccc.D....ccccccccc.
+ .cccccB.c.ccc..ccccccc.
+ .cc.AA.BcBI.0AB.cd^$nn.
+ .ccAA.cBGHc.9AB.cA*Ann.
+..nn^..cFcBI.0AB^+|^$nn..
+@PnnQ.^.BBBc.8ABBcA*RnnS@
+..nn^..cJcBM.0AB^+|^$nn..
+ .ccAA.cBKLc.9AB.cA*Ann.
+ .cc.AA.BcBM.0AB.c|^dnn.
+ .cccccB.c.ccc..ccccccc.
+ .cccccc.E....ccccccccc.
+ ....ccccEcc^ccccc......
+    ..cccccccccc...
+     ..cccccccc..
+      ..........
+ENDMAP
