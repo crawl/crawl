@@ -1142,6 +1142,10 @@ MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).
 
 export SRC_VERSION
 
+# Update .ver file if SRC_VERSION has changed
+.ver: FORCE
+	@echo '$(SRC_VERSION)' | cmp -s - $@ || echo '$(SRC_VERSION)' > $@
+
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
@@ -1272,7 +1276,7 @@ endif
 compflag.h: $(OBJECTS:.o=.cc) main.cc util/gen-cflg.pl .cflags
 	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
-build.h: $(OBJECTS:.o=.cc) main.cc util/gen_ver.pl
+build.h: $(OBJECTS:.o=.cc) main.cc util/gen_ver.pl .ver
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.o: build.h compflag.h
