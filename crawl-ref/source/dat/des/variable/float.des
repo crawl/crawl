@@ -4098,7 +4098,7 @@ NSUBST: ' = |*$ / |*$... / 5:1 / 4=1. / 2=2.
 MONS: slime creature
 MONS: glowing orange brain / great orb of eyes / w:5 shining eye \
       / w:5 golden eye / w:5 eye of devastation
-MONS: azure gelly / death ooze
+MONS: azure jelly / death ooze
 NSUBST: ' = 2=|*$ / 2=|*$... / 6:1 / 4=1. / 1:2 / 2=2. / 2=3...
 : end
 MARKER: P = lua:transp_loc("jiyva_chamber_entry")
