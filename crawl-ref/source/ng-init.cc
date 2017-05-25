@@ -122,78 +122,113 @@ static void _use_overflow_temple(vector<god_type> temple_gods)
     level_temples.push_back(temple);
 }
 
+static bool _valid_size_for_range(int size, char range)
+{
+    switch (range)
+    {
+        case 1:
+            return size >= 9 && size <= 12;
+        case 2:
+            return size >= 13 && size <= 15;
+        case 3:
+            return size >= 16 && size <= 18;
+        case 4:
+            return size == 21;
+        default:
+            die("Unknown size range for temple.");
+	}
+
+}
+
 // Determine which altars go into the Ecumenical Temple, which go into
 // overflow temples, and on what level the overflow temples are.
 void initialise_temples()
 {
-    //////////////////////////////////////////
-    // First determine main temple map to use.
+    // Pick the temple size
+    // 1 = 9-12 altars
+    // 2 = 13-15 altars
+    // 3 = 16-18 altars
+    // 4 = 19+ altars
+	static int size_range = random_choose_weighted(25, 1,
+							                       35, 2,
+                                                   30, 3,
+                                                   10, 4,
+                                                   0);    
+    static string range_tag = make_stringf("temple_range_%d", size_range);
+    dprf("Picked temple size range %d, looking for tag %s", size_range, range_tag.c_str());
+
+    // Pick the temple map
     level_id ecumenical(BRANCH_TEMPLE, 1);
-
     map_def *main_temple = nullptr;
-    for (int i = 0; i < 10; i++)
+    int tries = 0;
+    do
     {
-        int altar_count = 0;
-
         main_temple
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
+    }
+    while (!main_temple->has_tag(range_tag) && tries++ < 200);
+    dprf("Picked temple map %s after %d tries",
+         main_temple->name.c_str(), tries);
 
-        if (main_temple == nullptr)
-            end(1, false, "No temples?!");
+    if (main_temple == nullptr)
+        end(1, false, "No temples?!");
 
-        if (main_temple->has_tag("temple_variable"))
+    int altar_count = 0;
+
+    if (main_temple->has_tag("temple_variable"))
+    {
+        vector<int> sizes;
+        for (string &tag : main_temple->get_tags())
         {
-            vector<int> sizes;
-            for (string &tag : main_temple->get_tags())
+            if (starts_with(tag, "temple_altars_"))
             {
-                if (starts_with(tag, "temple_altars_"))
+                int size = atoi(strip_tag_prefix(tag, "temple_altars_").c_str());
+                if (_valid_size_for_range(size, size_range))
                 {
-                    sizes.push_back(
-                        atoi(strip_tag_prefix(tag, "temple_altars_").c_str()));
+                    dprf("Variable temple size %d is a candidate for current size range",
+                         size);
+                    sizes.push_back(size);
                 }
             }
-            if (sizes.empty())
-            {
-                mprf(MSGCH_ERROR,
-                     "Temple %s set as variable but has no sizes.",
-                     main_temple->name.c_str());
-                main_temple = nullptr;
-                continue;
-            }
-            altar_count =
-                you.props[TEMPLE_SIZE_KEY].get_int() =
-                    sizes[random2(sizes.size())];
         }
+        if (sizes.empty())
+            end(1, false, make_stringf("Temple %s set as variable but has no sizes.",
+                            main_temple->name.c_str()).c_str());
 
-        dgn_map_parameters mp(make_stringf("temple_altars_%d", altar_count));
+        altar_count =
+            you.props[TEMPLE_SIZE_KEY].get_int() =
+                sizes[random2(sizes.size())];
+        dprf("Chose temple size %d", altar_count);
+    }
 
-        // Without all this find_glyph() returns 0.
-        string err;
-        main_temple->load();
-        main_temple->reinit();
-        err = main_temple->run_lua(true);
+    dgn_map_parameters mp(make_stringf("temple_altars_%d", altar_count));
 
-        if (!err.empty())
-        {
-            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
-                 err.c_str());
-            main_temple = nullptr;
-            you.props.erase(TEMPLE_SIZE_KEY);
-            continue;
-        }
+    // Without all this find_glyph() returns 0.
+    string err;
+    main_temple->load();
+    main_temple->reinit();
+    err = main_temple->run_lua(true);
 
-              main_temple->fixup();
-        err = main_temple->resolve();
+    if (!err.empty())
+    {
+        mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
+             err.c_str());
+        main_temple = nullptr;
+        you.props.erase(TEMPLE_SIZE_KEY);
+        // continue;
+    }
 
-        if (!err.empty())
-        {
-            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
-                 err.c_str());
-            main_temple = nullptr;
-            you.props.erase(TEMPLE_SIZE_KEY);
-            continue;
-        }
-        break;
+    main_temple->fixup();
+    err = main_temple->resolve();
+
+    if (!err.empty())
+    {
+
+        mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
+             err.c_str());
+        main_temple = nullptr;
+        you.props.erase(TEMPLE_SIZE_KEY);
+        // continue;
     }
 
     if (main_temple == nullptr)

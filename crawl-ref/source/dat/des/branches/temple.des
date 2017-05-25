@@ -738,6 +738,12 @@ ENDMAP
 # PLACE:  Temple
 # ORIENT: encompass
 #
+# Every temple should have one (or more) of the following tags as appropriate:
+# temple_range_1: Nine to twelve altars
+# temple_range_2: Thirteen to fifteen altars
+# temple_range_3: Sixteen to eighteen altars
+# temple_range_4: Twenty-one altars
+#
 # Altars are placed as B glyphs, and can (though do not need to) use
 # placement modifications with SUBST / SHUFFLE transformations (alongside
 # lua conditions or transformations) with
@@ -746,7 +752,8 @@ ENDMAP
 #
 # The temple_altars_[X|Z] tags must correspond to potential altar counts, and
 # Z refers to the highest of those given potential altar totals. Layouts should
-# stick to the range segments suited for 21 to 24 gods guaranteed in D:
+# stick to the range segments suited for 21 to 24 gods guaranteed in D. Please
+# keep this file sorted into the following sections:
 #
 # <<1>> Nine to twelve altars
 # <<2>> Thirteen to fifteen altars
@@ -770,20 +777,12 @@ ENDMAP
 # a fixed altar count and existing themes in some of the other vaults until
 # one knows what they are doing. While we have many maps as stands, variety
 # in altar count and themes is still welcome.
-#
-# XXX: For future-proofing and altar count regulating services, these
-# solidified ranges could be pre-assessed and weighted in the source to
-# some given chances (see the commit history). This way, new layouts don't
-# significantly alter altar counts and change only the chances of getting
-# other layouts of the same range. This might need some more temple maps in
-# the middle ranges if they're weighed up any higher than the most-common
-# bottom range, though.
-
 ##############################################################################
 # <<1>> Nine to twelve gods.
 
 # 10 gods
 NAME:    jpeg_temple_alley_garden
+TAGS:    temple_range_1
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -824,6 +823,7 @@ ENDMAP
 
 # 9 gods
 NAME:    jpeg_temple_island
+TAGS:    temple_range_1
 TAGS:    no_rotate no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
@@ -878,6 +878,7 @@ ENDMAP
 
 # 10 gods
 NAME:    cyrus_temple_forest
+TAGS:    temple_range_1
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -916,6 +917,7 @@ ENDMAP
 
 # 12 gods
 NAME:       minmay_temple_forest_path
+TAGS:       temple_range_1
 PLACE:      Temple
 ORIENT:     encompass
 WEIGHT:     5
@@ -968,6 +970,7 @@ ENDMAP
 
 # 11 gods
 NAME:   minmay_temple_curvy_loop
+TAGS:   temple_range_1
 TAGS:   no_rotate no_pool_fixup
 PLACE:  Temple
 WEIGHT: 10
@@ -1023,6 +1026,7 @@ ENDMAP
 
 # 12 gods
 NAME:   minmay_temple_bridge_abc
+TAGS:   temple_range_1
 TAGS:   no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
@@ -1074,6 +1078,7 @@ ENDMAP
 
 # 12 gods
 NAME:    nicolae_temple_hex_pool
+TAGS:   temple_range_1
 TAGS:    no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
@@ -1119,6 +1124,7 @@ ENDMAP
 
 # 9 gods
 NAME:    nicolae_temple_figure_zero
+TAGS:    temple_range_1
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  10
@@ -1161,6 +1167,7 @@ ENDMAP
 
 # 13 gods
 NAME:    dshaligram_water_room_temple
+TAGS:    temple_range_2
 TAGS:    no_pool_fixup no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -1189,6 +1196,7 @@ ENDMAP
 
 # 14 gods
 NAME:    eino_temple_water
+TAGS:    temple_range_2
 TAGS:    no_pool_fixup no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -1254,6 +1262,7 @@ ENDMAP
 
 # 13 gods
 NAME:    cyrus_circular_temple
+TAGS:    temple_range_2
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -1285,6 +1294,7 @@ ENDMAP
 
 # 14 gods
 NAME:    minmay_temple_curvy_branch
+TAGS:    temple_range_2
 PLACE:   Temple
 WEIGHT:  5
 ORIENT:  encompass
@@ -1334,6 +1344,7 @@ ENDMAP
 
 # 13 altars
 NAME:   oiseaux_autumnal_temple
+TAGS:   temple_range_2
 TAGS:   no_rotate no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
@@ -1404,6 +1415,7 @@ ENDMAP
 
 # 13 gods
 NAME:   nicolae_temple_figure_eight
+TAGS:   temple_range_2
 PLACE:  Temple
 WEIGHT: 10
 ORIENT: encompass
@@ -1442,6 +1454,7 @@ ENDMAP
 
 # 13 gods
 NAME:    nicolae_temple_god_jail
+TAGS:    temple_range_2
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  5
@@ -1466,6 +1479,7 @@ ENDMAP
 
 # 14 gods
 NAME:    nicolae_temple_great_sept
+TAGS:    temple_range_2
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  5
@@ -1532,6 +1546,7 @@ ENDMAP
 
 # 15 gods
 NAME:    regret_index_temple_waves
+TAGS:    temple_range_2
 TAGS:    no_rotate no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
@@ -1577,6 +1592,7 @@ ENDMAP
 
 # 15 gods
 NAME:    regret_index_temple_generic_petals
+TAGS:    temple_range_2
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -1627,6 +1643,7 @@ ENDMAP
 
 # 18 gods
 NAME:    dpeg_five_rooms_temple
+TAGS:    temple_range_3
 TAGS:    no_rotate
 PLACE:   Temple
 WEIGHT:  10
@@ -1668,6 +1685,7 @@ ENDMAP
 
 # 16 gods
 NAME:    eino_temple_scatter_basement
+TAGS:    temple_range_3
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -1714,6 +1732,7 @@ ENDMAP
 
 # 16 gods
 NAME:    eino_temple_rhombus
+TAGS:    temple_range_3
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  10
@@ -1770,6 +1789,7 @@ ENDMAP
 # 17 gods
 # XXX: Too large and enclosed?
 NAME:    minmay_crystal_spiral_temple
+TAGS:    temple_range_3
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  5
@@ -1821,6 +1841,7 @@ ENDMAP
 
 # 16 gods
 NAME:    nicolae_temple_elliptical
+TAGS:    temple_range_3
 PLACE:   Temple
 ORIENT:  encompass
 WEIGHT:  10
@@ -1863,6 +1884,7 @@ ENDMAP
 
 # 16 gods
 NAME:   lightli_temple_of_artemis
+TAGS:   temple_range_3
 TAGS:   no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
@@ -1903,6 +1925,7 @@ ENDMAP
 
 # 18 gods
 NAME:    regret_index_temple_chain_breaker
+TAGS:    temple_range_3
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -1940,6 +1963,7 @@ ENDMAP
 
 # 18 gods
 NAME:    regret_index_temple_mists
+TAGS:    temple_range_3
 TAGS:    no_rotate no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
@@ -1985,6 +2009,7 @@ ENDMAP
 
 # 16 gods
 NAME:    regret_index_temple_sphere_string
+TAGS:    temple_range_3
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -2029,6 +2054,7 @@ ENDMAP
 # <<4>> Twenty-one gods.
 
 NAME:    kilobyte_greek_temple
+TAGS:    temple_range_4
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -2063,6 +2089,7 @@ ENDMAP
 
 # 21 gods
 NAME:    minmay_crystal_snake_temple
+TAGS:    temple_range_4
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
@@ -2116,6 +2143,7 @@ ENDMAP
 
 # 21 gods
 NAME:   roderic_octagonal_lattice_temple
+TAGS:   temple_range_4
 PLACE:  Temple
 WEIGHT: 5
 ORIENT: encompass
@@ -2159,6 +2187,7 @@ ENDMAP
 
 # 21 gods
 NAME:    grunt_wide_crystal_templ
+TAGS:    temple_range_4
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -2189,6 +2218,7 @@ ENDMAP
 
 # 21 gods
 NAME:    nicolae_temple_the_god_donut
+TAGS:    temple_range_4
 TAGS:    no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
@@ -2255,6 +2285,7 @@ ENDMAP
 
 # 21 gods
 NAME:    regret_index_temple_sigil_plot
+TAGS:    temple_range_4
 TAGS:    no_cloud_gen
 PLACE:   Temple
 ORIENT:  encompass
@@ -2316,6 +2347,7 @@ ENDMAP
 
 # 10, 14, 18, 21 gods
 NAME:    compressed_dpeg_circular_temple
+TAGS:    temple_range_1 temple_range_2 temple_range_3 temple_range_4
 TAGS:    no_rotate no_pool_fixup temple_variable
 TAGS:    temple_altars_10 temple_altars_14 temple_altars_18 temple_altars_21
 PLACE:   Temple
@@ -2391,6 +2423,7 @@ ENDMAP
 
 # 9, 18 gods
 NAME:   dpeg_three_leaves_temple
+TAGS:   temple_range_1 temple_range_3
 TAGS:   no_rotate temple_variable temple_altars_9 temple_altars_18
 PLACE:  Temple
 ORIENT: encompass
@@ -2427,6 +2460,7 @@ ENDMAP
 
 # 10, 14 gods
 NAME:    dpeg_chambers_temple
+TAGS:    temple_range_1 temple_range_2
 TAGS:    no_rotate temple_variable temple_altars_10 temple_altars_14
 PLACE:   Temple
 ORIENT:  encompass
@@ -2466,6 +2500,7 @@ ENDMAP
 
 # 9, 13, 16, 21 gods.
 NAME:   compressed_dpeg_triangle_lava_temple
+TAGS:   temple_range_1 temple_range_2 temple_range_3 temple_range_4
 TAGS:   temple_variable no_rotate
 TAGS:   temple_altars_9 temple_altars_12 temple_altars_15 temple_altars_21
 PLACE:  Temple
@@ -2533,6 +2568,7 @@ ENDMAP
 
 # 10, 14 gods
 NAME:   zaba_magenta_temple
+TAGS:   temple_range_1 temple_range_2
 TAGS:   no_rotate temple_variable temple_altars_10 temple_altars_14
 PLACE:  Temple
 ORIENT: encompass
@@ -2558,6 +2594,7 @@ ENDMAP
 
 # 10, 14 gods
 NAME:    eino_temple_lava
+TAGS:    temple_range_1 temple_range_2
 TAGS:    temple_variable temple_altars_10 temple_altars_14
 PLACE:   Temple
 ORIENT:  encompass
@@ -2599,6 +2636,7 @@ ENDMAP
 
 # 11, 14 gods
 NAME:    jpeg_temple_clearing
+TAGS:    temple_range_1 temple_range_2
 TAGS:    no_rotate no_pool_fixup
 TAGS:    temple_variable temple_altars_11 temple_altars_14
 PLACE:   Temple
@@ -2651,6 +2689,7 @@ ENDMAP
 
 # 14, 18 gods
 NAME:    eino_narrow_crystal_temple
+TAGS:    temple_range_1 temple_range_2
 TAGS:    temple_variable temple_altars_14 temple_altars_18
 PLACE:   Temple
 ORIENT:  encompass
@@ -2701,6 +2740,7 @@ ENDMAP
 
 # 10, 15 gods
 NAME:    eino_wide_crystal_templ
+TAGS:    temple_range_1 temple_range_2
 TAGS:    no_rotate temple_variable temple_altars_10 temple_altars_15
 PLACE:   Temple
 ORIENT:  encompass
@@ -2738,6 +2778,7 @@ ENDMAP
 
 # 12, 16 gods
 NAME:   nicolae_temple_x_marks_the_god
+TAGS:   temple_range_1 temple_range_2
 TAGS:   no_pool_fixup
 TAGS:   temple_variable temple_altars_12 temple_altars_16
 PLACE:  Temple
@@ -2784,6 +2825,7 @@ ENDMAP
 
 # 12, 18 gods
 NAME:    hc_temple_tempest_star
+TAGS:    temple_range_1 temple_range_3
 TAGS:    no_rotate no_pool_fixup no_cloud_gen
 TAGS:    temple_variable temple_altars_12 temple_altars_18
 PLACE:   Temple
@@ -2865,6 +2907,7 @@ ENDMAP
 
 # 9 to 12 gods
 NAME:   chequers_temple_sunken
+TAGS:   temple_range_1 
 TAGS:   temple_variable
 TAGS:   temple_altars_9 temple_altars_10 temple_altars_11 temple_altars_12
 PLACE:  Temple
@@ -2939,6 +2982,7 @@ ENDMAP
 # 9, 11 gods,
 # plus 6 to 12 altars to Lugonu.
 NAME:     kb_corrupted_temple
+TAGS:     temple_range_1 
 TAGS:     no_pool_fixup temple_variable temple_altars_9 temple_altars_11
 PLACE:    Temple
 ORIENT:   encompass
@@ -2983,6 +3027,7 @@ ENDMAP
 
 # 11, 15 gods
 NAME:    minmay_freezing_vapour_temple
+TAGS:    temple_range_1 temple_range_2
 TAGS:    temple_variable temple_altars_11 temple_altars_15
 PLACE:   Temple
 ORIENT:  encompass
@@ -3017,6 +3062,7 @@ ENDMAP
 
 # 17, 18 gods
 NAME:   minmay_temple_bridge_d
+TAGS:   temple_range_3
 TAGS:   no_cloud_gen temple_variable temple_altars_17 temple_altars_18
 PLACE:  Temple
 ORIENT: encompass
@@ -3066,6 +3112,7 @@ ENDMAP
 
 # 9, 16 gods
 NAME:       kb_temple_of_zot
+TAGS:       temple_range_1 temple_range_2
 TAGS:       no_rotate temple_variable temple_altars_9 temple_altars_16
 PLACE:      Temple
 ORIENT:     encompass
@@ -3108,6 +3155,7 @@ ENDMAP
 
 # 9, 11 gods
 NAME:   grunt_temple_mini_profane
+TAGS:   temple_range_1
 TAGS:   no_rotate temple_variable temple_altars_9 temple_altars_11
 PLACE:  Temple
 ORIENT: encompass
@@ -3153,6 +3201,7 @@ ENDMAP
 # 11, 15, 17 gods,
 # shameless.
 NAME:    bh_familiar_temple
+TAGS:    temple_range_1 temple_range_2 temple_range_3
 TAGS:    no_rotate no_hmirror no_vmirror
 TAGS:    temple_variable temple_altars_11 temple_altars_15 temple_altars_17
 PLACE:   Temple
@@ -3196,6 +3245,7 @@ ENDMAP
 # plus 4 or 5 more altars to Jiyva.
 # Layout based on zaba_magenta_temple_12.
 NAME:      pf_slimified_temple
+TAGS:      temple_range_1
 TAGS:      no_rotate temple_variable temple_altars_9 temple_altars_11
 PLACE:     Temple
 ORIENT:    encompass
@@ -3225,6 +3275,7 @@ ENDMAP
 # 9, 11 gods,
 # plus 5 to 7 more altars to Jiyva.
 NAME:      pf_slime_end_temple
+TAGS:      temple_range_1
 TAGS:      temple_variable temple_altars_9 temple_altars_11
 PLACE:     Temple
 ORIENT:    encompass
@@ -3272,6 +3323,7 @@ ENDMAP
 
 # 12, 15, or 18 gods.
 NAME:    nicolae_temple_no_exploring_needed
+TAGS:    temple_range_1 temple_range_2 temple_range_3
 TAGS:    no_pool_fixup
 TAGS:    temple_variable temple_altars_12 temple_altars_15 temple_altars_18
 PLACE:   Temple
