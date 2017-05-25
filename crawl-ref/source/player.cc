@@ -6719,7 +6719,7 @@ int player::has_claws(bool allow_tran) const
 
 bool player::has_usable_claws(bool allow_tran) const
 {
-    return !slot_item(EQ_GLOVES) && has_claws(allow_tran);
+    return has_claws(allow_tran);
 }
 
 int player::has_talons(bool allow_tran) const
@@ -6733,7 +6733,7 @@ int player::has_talons(bool allow_tran) const
 
 bool player::has_usable_talons(bool allow_tran) const
 {
-    return !slot_item(EQ_BOOTS) && has_talons(allow_tran);
+    return has_talons(allow_tran);
 }
 
 int player::has_hooves(bool allow_tran) const
@@ -6747,9 +6747,7 @@ int player::has_hooves(bool allow_tran) const
 
 bool player::has_usable_hooves(bool allow_tran) const
 {
-    return has_hooves(allow_tran)
-           && (!slot_item(EQ_BOOTS)
-               || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
+    return has_hooves(allow_tran);
 }
 
 int player::has_fangs(bool allow_tran) const
