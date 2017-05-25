@@ -3177,3 +3177,25 @@ xtttttttt'...'''ttttttx
 xtttttttttt.ttttttttttx
 xtttttttttttttttttttttx
 ENDMAP
+
+###############################################################################
+ 
+NAME:    chereshnev_arrival_antagonism
+TAGS:    arrival no_monster_gen no_item_gen generate awake no_trap_gen
+ORIENT:  float
+KMONS:   A = ophan / cherub / angel / daeva / holy swine / pearl dragon / apis
+KMONS:   B = green death / reaper / balrug / hell beast / lich / \
+         shadow dragon / profane servitor
+SUBST:   ? = UV, ! = YV 
+SHUFFLE: AU/BY, xm/cn
+MAP
+xxx+xxx
+x!m.m?x
+xmm.mmx
+xBm.mAx
+xmm.mmx
+x!m{m?x
+xxxxxxx
+ENDMAP
+
+###############################################################################
