@@ -126,8 +126,8 @@ Spells
 ------
 * New spell: Poisonous Vapours (L2 Poison/Air); creates an extremely short-
   duration poison cloud on a targeted creature. Appears in the VM book.
-* New spell: Ignition (L8 Fire). Drops a Fireball on every monster in line of
-  sight. The caster and their allies are unaffected.
+* New spell: Ignition (L8 Fire). Drops a weakened Fireball on every monster in
+  line of sight. The caster and their allies are unaffected.
 * Gell's Gravitas is now Translocations only (was Tloc/Hex).
 * Portal Projectile is now Tloc/Hex (was Translocations only).
 * Swapped Portal Projectile and Gell's Gravitas in the Wr/AM starting books.
