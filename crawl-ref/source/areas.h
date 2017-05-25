@@ -11,9 +11,6 @@ enum area_centre_type
     AREA_UMBRA,
     AREA_QUAD,
     AREA_DISJUNCTION,
-#if TAG_MAJOR_VERSION == 34
-    AREA_HOT,
-#endif
 };
 
 void invalidate_agrid(bool recheck_new = false);

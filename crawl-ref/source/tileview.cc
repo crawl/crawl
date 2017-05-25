@@ -1442,11 +1442,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 
-#if TAG_MAJOR_VERSION == 34
-    if (mc.flags & MAP_HOT)
-        cell.heat_aura = 1 + random2(3);
-#endif
-
     if (mc.flags & MAP_QUAD_HALOED)
         cell.quad_glow = true;
 
