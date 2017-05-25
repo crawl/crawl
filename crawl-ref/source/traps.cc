@@ -935,6 +935,11 @@ void trap_def::trigger(actor& triggerer)
         // Known shafts don't trigger as traps.
         if (trig_knows)
             break;
+            
+        // FO are too tunnel-skilled and many-limbed to "fall" for shafts.
+        if (you.species == SP_FORMICID)
+            mpr("You detect a shaft and decide not to fall in.");
+            break;
 
         // A chance to escape.
         if (one_chance_in(4))
