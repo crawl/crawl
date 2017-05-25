@@ -51,6 +51,11 @@ Interface
   and "advanced" categories.
 * Noise from the last turn is displayed in the top-right, replacing gold.
   (Gold can still be seen with % and $.)
+* Terminal colors now work properly on a wider range of terminals by default.
+  However, as a consequence the default background map color is dark blue.
+  To get dark grey, depending on your terminal you can set
+  `bold_brightens_foreground=true` or `allow_extended_colours=true` in
+  your rc file.
 * New equip_bar option that replaces the noise display with a display of the
   glyphs of your equipped items (console only).
 * Monsters' melee attacks, including estimates of potential damage, are
