@@ -2756,6 +2756,7 @@ int augmentation_amount()
 
 void reset_powered_by_death_duration()
 {
-    const int pbd_dur = random_range(2, 5);
+    const int level = player_mutation_level(MUT_POWERED_BY_DEATH);
+    const int pbd_dur = random_range(2 * level, 5 * level);
     you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
 }
