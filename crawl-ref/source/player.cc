@@ -54,6 +54,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-reacts.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -292,7 +293,26 @@ bool check_moveto(const coord_def& p, const string &move_verb, const string &msg
     return check_moveto_terrain(p, move_verb, msg)
            && check_moveto_cloud(p, move_verb)
            && check_moveto_trap(p, move_verb)
-           && check_moveto_exclusion(p, move_verb);
+           && check_moveto_exclusion(p, move_verb)
+           && check_move_barbed(move_verb);
+}
+
+bool check_move_barbed(const string &move_verb)
+{
+    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+    {
+        string prompt = make_stringf("The barbs in your skin will harm you"
+                                     " if you %s. Continue?",
+                                     move_verb.c_str());
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        you.props[BARBS_MOVE_KEY] = true;
+    }
+    return true;
 }
 
 // Returns true if this is a valid swap for this monster. If true, then
@@ -4142,6 +4162,21 @@ bool confuse_player(int amount, bool quiet, bool force)
     return true;
 }
 
+void handle_player_barbed_move(const string &move_verb)
+{
+    if (you.duration[DUR_BARBS])
+    {
+        mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
+                         "as you %s.", move_verb.c_str());
+        ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
+        bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
+
+        // Sometimes decrease duration as a result of moving.
+        if (one_chance_in(3))
+            extract_manticore_spikes("The barbed spikes snap loose.");
+    }
+}
+
 void paralyse_player(string source, int amount)
 {
     if (!amount)
@@ -7230,6 +7265,42 @@ vector<PlaceInfo> player::get_all_place_info(bool visited_only,
     }
 
     return list;
+}
+
+bool player::can_do_hop_ability(bool quiet) const
+{
+    if (attribute[ATTR_HELD])
+    {
+        if (!quiet)
+            mprf("You can't hop while %s.", held_status());
+        return false;
+    }
+    else if (you.liquefied_ground())
+    {
+        if (!quiet)
+            mpr("You can't hop while stuck in liquid ground.");
+        return false;
+    }
+    else if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        if (!quiet)
+            mpr("The grasping roots prevent you from hopping.");
+        return false;
+    }
+    else if (you.duration[DUR_EXHAUSTED])
+    {
+        if (!quiet)
+            mpr("You're too exhausted to hop.");
+        return false;
+    }
+    else if (you.duration[DUR_NO_HOP])
+    {
+        if (!quiet)
+            mpr("Your legs are too worn out to hop.");
+        return false;
+    }
+
+    return true;
 }
 
 // Used for falling into traps and other bad effects, but is a slightly

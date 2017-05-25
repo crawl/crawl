@@ -2404,24 +2404,6 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-static bool _cancel_barbed_move()
-{
-    if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
-    {
-        string prompt = "The barbs in your skin will harm you if you move."
-                        " Continue?";
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return true;
-        }
-
-        you.props[BARBS_MOVE_KEY] = true;
-    }
-
-    return false;
-}
-
 static bool _cancel_confused_move(bool stationary)
 {
     dungeon_feature_type dangerous = DNGN_FLOOR;
@@ -2900,7 +2882,7 @@ static void _move_player(coord_def move)
         if (_cancel_confused_move(false))
             return;
 
-        if (_cancel_barbed_move())
+        if (!check_move_barbed())
             return;
 
         if (!one_chance_in(3))
@@ -3112,7 +3094,7 @@ static void _move_player(coord_def move)
 
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
-        if (!you.confused() && _cancel_barbed_move())
+        if (!you.confused() && !check_move_barbed())
             return;
 
         if (!you.attempt_escape()) // false means constricted and did not escape
@@ -3190,17 +3172,7 @@ static void _move_player(coord_def move)
         if (swap)
             targ_monst->apply_location_effects(targ);
 
-        if (you.duration[DUR_BARBS])
-        {
-            mprf(MSGCH_WARN, "The barbed spikes dig painfully into your body "
-                             "as you move.");
-            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), KILLED_BY_BARBS);
-            bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
-
-            // Sometimes decrease duration even when we move.
-            if (one_chance_in(3))
-                extract_manticore_spikes("The barbed spikes snap loose.");
-        }
+        handle_player_barbed_move();
 
         if (you_are_delayed() && current_delay()->is_run())
             env.travel_trail.push_back(you.pos());

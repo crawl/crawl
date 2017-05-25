@@ -822,6 +822,8 @@ public:
     int  skill(skill_type skill, int scale =1,
                bool real = false, bool drained = true) const override;
 
+    bool can_do_hop_ability(bool quiet = false) const;
+
     bool do_shaft() override;
 
     bool can_do_shaft_ability(bool quiet = false) const;
@@ -922,6 +924,8 @@ bool check_moveto_exclusion(const coord_def& p,
                             bool *prompted = nullptr);
 bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
         bool *prompted = nullptr);
+
+bool check_move_barbed(const string &move_verb = "move");
 
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
@@ -1093,6 +1097,8 @@ void print_potion_heal_message();
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 
 bool confuse_player(int amount, bool quiet = false, bool force = false);
+
+void handle_player_barbed_move(const string &move_verb = "move");
 
 bool poison_player(int amount, string source, string source_aux = "",
                    bool force = false);

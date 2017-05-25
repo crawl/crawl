@@ -1807,24 +1807,21 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_SHAFT_SELF:
         fail_check();
-        if (you.can_do_shaft_ability(false))
+        if (you.can_do_shaft_ability(false)
+            && check_move_barbed("dig")
+            && yesno("Are you sure you want to shaft yourself?", true, 'n'))
         {
-            if (yesno("Are you sure you want to shaft yourself?", true, 'n'))
-                start_delay<ShaftSelfDelay>(1);
-            else
-                return SPRET_ABORT;
+            start_delay<ShaftSelfDelay>(1);
         }
         else
             return SPRET_ABORT;
         break;
 
     case ABIL_HOP:
-        if (you.duration[DUR_NO_HOP])
-        {
-            mpr("Your legs are too worn out to hop.");
+        if (you.can_do_hop_ability(false) && check_move_barbed("hop"))
+            return frog_hop(fail);
+        else
             return SPRET_ABORT;
-        }
-        return frog_hop(fail);
 
 #if TAG_MAJOR_VERSION == 34
     case ABIL_DELAYED_FIREBALL:
@@ -2946,6 +2943,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         if (_abort_if_stationary())
             return SPRET_ABORT;
+        if (!check_move_barbed("power leap"))
+            return SPRET_ABORT;
 
         fail_check();
 
@@ -3067,6 +3066,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_USKAYAW_LINE_PASS:
         if (_abort_if_stationary())
+            return SPRET_ABORT;
+        if (!check_move_barbed("line pass"))
             return SPRET_ABORT;
         fail_check();
         if (!uskayaw_line_pass())
