@@ -1701,6 +1701,70 @@ xxcc-.i.5...""...h...."".......-"c
   xc----@-"-----x------""-@----ccx
 ENDMAP
 
+#Tomb flavoring, death scarabs
+NAME: floodkiller_spider_rune_tomb
+PLACE: Spider:$
+TAGS: no_monster_gen
+WEIGHT: 5000
+ORIENT: south
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
+KFEAT: C = stone_wall
+TILE: c = wall_sandstone
+TILE: C = wall_tomb
+TILE: G = dngn_sarcophagus_pedestal_left
+FTILE: 123+$O.EHG = floor_sandstone:20 / none
+MONS: death scarab
+MONS: wolf spider spectre / wolf spider zombie / demonic crawler / emperor scorpion spectre w:2
+MONS: jumping spider spectre w:20 / tarantella spectre w:20 / redback spectre w:20 / hornet spectre / jumping spider zombie / tarantella zombie / redback zombie / hornet zombie w:5
+MONS: wolf spider / emperor scorpion w:2 / ghost moth w:1 / moth of wrath w:1
+MONS: jumping spider / tarantella / redback / hornet w:5 / orb spider w:1 / spark wasp w:1
+SUBST: E = 3 5:25
+SUBST: H = 2 4:25
+: set_feature_name("granite_statue", "sarcophagus")
+MAP
+             @@@@@@@@@
+             E.WWWWW.E
+             .WWWWWWW.
+     xxxxxxxxcccWWWWccxxxxxxxx
+   xxxxxxxxxxccccWWcccxxxxxxxxxx
+ xxxxxxxxxxxxccccWWcccxxxxxxxxxxxx
+xxxxxxxxxxxxxcccWWccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxcccWWccccxxxxxxxxxxxxx
+xxcccccccccccccWWWWccccccccccccccxx
+xxcWW.E..x...WWWWWWWW..ExE.WWW..cxx
+xxcWW.x.......WWWWWx......WWWW..cxx
+xxcWW.E.....Wx........x...WWWWx.cxx
+xxcxWW.....................WW...cxx
+xxc.WW.......E.EHE.E.......x....cxx
+xxc.WWx.ccccccccccccccccccc....Wcxx
+xxcEWWW.c......x........x.c.E.WWcxx
+xxc..WW.c.x..E..E..E......c..WWWcxx
+xxcE..WWc...H....H....H...cE.WxWcxx
+xxc...Wxc...CCC+++++CCC...c..WWWcxx
+xxc.H.WWc...C.........C..xc.H.WWcxx
+xxc.xWWWc...C.3.....3.C...c..x.Wcxx
+xxc..WWWc...C..3...3..C...c....Wcxx
+xxc.EWWWc..xC23..3..32C...c..E..cxx
+xxc.WWW.c...C...2.2...Cx..c.....cxx
+xxcHWW.xc...C11.....11C...cW.x.Hcxx
+xxcEWW..c...C1xxxGxxx1C...cW...Ecxx
+xxcWxW..cx..C$1..O..1$C...cWW...cxx
+xxcWWW..c..ECCCCCCCCCCCEH.cxW...cxx
+xxcWW...c....E.c...cxE.E..cWW...cxx
+xxcW.x..c.H.E..c...c..E.x.cWWW.xcxx
+xxc.....c.x...Wc...c...EH.cWWWW.cxx
+xxc....xc.....Wc...cWW....c.WWW.cxx
+xxc.....cccccccWWWWWccccccc.WxWWcxx
+xxc.H........WWWWWWWW........WWWcxx
+xxc.....xWWWWWWxWWWWWWWx.......Hcxx
+xxc..WWWWWWWWWWWWWWxWWWW........cxx
+xxcWWxWWW..E..WWW.E......E.....xcxx
+xxcWWWWE..H.x.E.......E.H..xE...cxx
+xxcccccccccccccccccccccccccccccccxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##########################################
 #Arachne Lair Rune Vault
 NAME:   johnstein_spider_rune_arachne_lair
