@@ -3153,11 +3153,10 @@ int player_stealth()
             umbra_mul = you.piety + MAX_PIETY;
             umbra_div = MAX_PIETY;
         }
-        if (player_equip_unrand(UNRAND_SHADOWS)
-            && 2 * umbra_mul < 3 * umbra_div)
+        if (player_equip_unrand(UNRAND_SHADOWS))
         {
-            umbra_mul = 3;
-            umbra_div = 2;
+            umbra_mul *= 3;
+            umbra_div *= 2;
         }
         stealth *= umbra_mul;
         stealth /= umbra_div;
