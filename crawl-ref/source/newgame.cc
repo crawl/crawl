@@ -241,7 +241,11 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
     case SP_RANDOM:
         // any valid species will do
         if (ng.job == JOB_UNKNOWN)
-            ng.species = RANDOM_ELEMENT(species_order);
+        {
+            do {
+                ng.species = RANDOM_ELEMENT(species_order);
+            } while (!is_starting_species(ng.species));
+        }
         else
         {
             // Pick a random legal character.
