@@ -14,6 +14,11 @@ inv += $inedible:.*useless_item.*carrion.*
 # if mutagenic chunks are to show up red for Zin worshippers.
 inv += $forbidden:.*forbidden.*(chunk|corpse)
 
+# Quoth gammafunk.rc: menu_colour only cares for the first match.
+# Therefore, this line must come _before_ the line handling mutagenic food,
+# if mutagenic chunks are to show up red for Zin worshippers.
+inv += $forbidden:.*forbidden.*
+
 inv += $preferred:.*preferred.*
 
 inv += $inedible:.*inedible.*
