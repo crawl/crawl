@@ -1106,6 +1106,15 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         set_equip_desc(item, ISFLAG_GLOWING); // will never come up...
         break;
 
+    case MONS_MENNAS:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_TRISHULA,
+                                      WPN_SACRED_SCOURGE,
+                                      WPN_EUDEMON_BLADE);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
+        level = binomial(5, 50);
+        break;
+
     case MONS_DONALD:
     case MONS_FREDERICK:
     case MONS_URUG:
