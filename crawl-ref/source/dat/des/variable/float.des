@@ -4185,16 +4185,17 @@ KFEAT:  _ = altar_lugonu
 : if you.in_branch("Abyss") then
 MONS: lurking horror / ancient zyme / worldbinder
 MONS: tentacled starspawn / starcursed mass / wretched star
-SUBST: " = R / 4=|*$ / 4=|*$... / ', ' = 6=0 / 4=0. / 1=1. / 2=3 / 4=3.
+NSUBST: " = R / 4=|*$ / 4=|*$... / ', ' = 6=0 / 4=0. / 1=1. / 2=2 / 4=2.
 : elseif you.in_branch("Depths") then
 MONS: very ugly thing / thrashing horror / large abomination
 MONS: lurking horror / ancient zyme / worldbinder
-MONS: tentacled starspawn / starcursed mass / wretched star
+MONS: tentacled starspawn / glowing shapeshifter / w:5 rakshasa
+MONS: starcursed mass / wretched star
 NSUBST: " = R / 3=|*$ / 3=|*$... / '
-NSUBST: ' = 4=1 / 4=1. / 1=2 / 1=2. / 2=3 / 4=3. / 1=4 / 2=4...
+NSUBST: ' = 4=1 / 4=1. / 1=2 / 1=2. / 2=3 / 2=3. / 1=4 / 2=4...
 : elseif you.depth() <= 9 then
 MONS: small abomination, unseen horror, ugly thing, raiju / large abomination
-NSUBST: " = R / ', ' = 6=1 / 1=2. / 3=3 / 4=12.. / 1=4...
+NSUBST: " = R / ', ' = 6=1 / 1=2. / 3=3 / 4=13.. / 1=4...
 : elseif you.depth() <= 12 then
 MONS: ugly thing, unseen horror / w:5 ancient zyme, large abomination / raiju
 MONS: thrashing horror / shapeshifter / very ugly thing / worldbinder
@@ -4205,7 +4206,6 @@ MONS: thrashing horror / very ugly thing / worldbinder / shapeshifter
 NSUBST: " = R / 2=|*$ / 2=|*$... / '
 NSUBST: ' = 6=1 / 4=1. / 1=2. / 3=3 / 4=3. / 1=4 / 2=4...
 : end
-NSUBST: R = R / .
 MARKER: P = lua:transp_loc("corrupted_shrine_entry")
 MARKER: Q = lua:transp_dest_loc("corrupted_shrine_entry")
 MARKER: R = lua:transp_loc("corrupted_shrine_exit")
@@ -4218,13 +4218,13 @@ MAP
 ..Pc.cc. .cc""cc.
 .ccn..c...cbb""c.
 .c..Q.cc.cc''b"c.
-.cc....ccc'''bcc.
-..ccc....'''ccc..
+.cc....ccc.''bcc.
+..ccc.......ccc..
  ...cc.$$$.cc...
    ..c.*_*.c..
- ...cc'|||.cc...
-..ccc''....'ccc..
-.ccb'x'ccc'''bcc.
+ ...cc.|||.cc...
+..ccc.......ccc..
+.ccb''.ccc.''bcc.
 .c"b''cc.cc''b"c.
 .c""bbc...cbb""c.
 .cc""cc. .cc""cc.
