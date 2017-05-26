@@ -983,10 +983,10 @@ bool DungeonRegion::update_tip_text(string &tip)
 
     if (m_cursor[CURSOR_MOUSE] == NO_CURSOR)
         return false;
-    if (!map_bounds(m_cursor[CURSOR_MOUSE]))
+    const coord_def gc = m_cursor[CURSOR_MOUSE];
+    if (!map_bounds(gc) || !crawl_view.in_viewport_g(gc))
         return false;
 
-    const coord_def gc = m_cursor[CURSOR_MOUSE];
     bool ret = (tile_dungeon_tip(gc, tip));
 
 #ifdef WIZARD
