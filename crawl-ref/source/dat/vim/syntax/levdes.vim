@@ -253,51 +253,25 @@ hi link desBranchname  Special
 hi link desColour      Type
 hi link desTransparent Type
 
-" It would be really nice if this worked for people who switch bg
-" post-loading, like "normal" highlights do. Does someone know how?
-if &bg == "dark"
-  hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=white
-  hi desMapPermaWall guifg=#a0a000 gui=bold ctermfg=yellow
-  hi desMapStoneWall guifg=black gui=bold ctermfg=gray
-  hi desMapGlassWall guifg=lightcyan ctermfg=lightcyan
-  hi desMapMetalWall guifg=#004090 term=bold gui=bold ctermfg=lightblue
-  hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
-  hi desMapTree guifg=#00aa00 ctermfg=darkgreen
-  hi desMapFloor guifg=#008000 ctermfg=darkgray
-  hi desMapDoor guifg=brown gui=bold ctermfg=white
-  hi desMapShallow guifg=lightcyan ctermfg=darkcyan
-  hi desMapWater guifg=lightblue ctermfg=darkblue
-  hi desMapLava guifg=red gui=bold ctermfg=darkred
-
-  hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
-  hi desMapStairs guifg=orange gui=bold ctermfg=magenta
-  hi desMapTrap guifg=red gui=bold ctermfg=darkred
-
-  hi desMapGold guifg=#c09000 ctermfg=yellow
-  hi desMapValuable guifg=darkgreen gui=bold ctermfg=yellow
-  hi desMapMonst guifg=red ctermfg=red
-else
-  hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=brown
-  hi desMapPermaWall guifg=#a0a000 gui=bold ctermfg=yellow
-  hi desMapStoneWall guifg=black gui=bold ctermfg=darkgray
-  hi desMapGlassWall guifg=lightcyan ctermfg=lightcyan
-  hi desMapMetalWall guifg=#004090 term=bold gui=bold ctermfg=blue
-  hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green
-  hi desMapTree guifg=#00aa00 ctermfg=darkgreen
-  hi desMapFloor guifg=#008000 ctermfg=lightgray
-  hi desMapDoor guifg=brown gui=bold ctermfg=black ctermbg=brown
-  hi desMapShallow guifg=lightcyan ctermfg=darkcyan
-  hi desMapWater guifg=lightblue ctermfg=darkblue
-  hi desMapLava guifg=red gui=bold ctermfg=red
-
-  hi desMapEntry guifg=black guibg=white gui=bold ctermfg=white ctermbg=black
-  hi desMapStairs guifg=orange gui=bold ctermfg=white
-  hi desMapTrap guifg=red gui=bold ctermfg=red
-
-  hi desMapGold guifg=#c09000 ctermfg=yellow
-  hi desMapValuable guifg=darkgreen gui=bold ctermfg=lightgreen
-  hi desMapMonst guifg=red ctermfg=darkred
-endif
+" Highlight of MAP features.
+hi link desMapWall        Statement
+hi link desMapStoneWall   Type
+hi link desMapMetalWall   Type
+hi link desMapPermaWall   Define
+hi link desMapGlassWall   Constant
+hi link desMapCrystalWall Function
+hi link desMapTree        String
+hi link desMapFloor       Normal
+hi link desMapDoor        Special
+hi link desMapShallow     Identifier
+hi link desMapWater       Define
+hi link desMapLava        Error
+hi link desMapEntry       Special
+hi link desMapStairs      Special
+hi link desMapTrap        Special
+hi link desMapGold        Operator
+hi link desMapValuable    Operator
+hi link desMapMonst       String
 
 syn sync minlines=45
 
