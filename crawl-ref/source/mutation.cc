@@ -2066,14 +2066,15 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
         for (int i = CATEGORY_MUTATIONS; i < MUT_NON_MUTATION; ++i)
         {
             mutation_type mut = static_cast<mutation_type>(i);
-            const char* mut_name = category_mutation_name(mut);
-            if (!mut_name)
+            const char* mut_name_c = category_mutation_name(mut);
+            if (!mut_name_c)
                 continue;
+            const string mut_name = lowercase_string(mut_name_c);
 
             if (spec == mut_name)
                 return mut; // note, won't fully populate partial_matches
 
-            if (partial_matches && strstr(mut_name, spec.c_str()))
+            if (partial_matches && strstr(mut_name.c_str(), spec.c_str()))
                 partial_matches->push_back(mut);
         }
     }
@@ -2081,9 +2082,10 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         mutation_type mut = static_cast<mutation_type>(i);
-        const char* mut_name = mutation_name(mut);
-        if (!mut_name)
+        const char *mut_name_c = mutation_name(mut);
+        if (!mut_name_c)
             continue;
+        const string mut_name = lowercase_string(mut_name_c);
 
         if (spec == mut_name)
         {
@@ -2091,7 +2093,7 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
             break;
         }
 
-        if (partial_matches && strstr(mut_name, spec.c_str()))
+        if (partial_matches && strstr(mut_name.c_str(), spec.c_str()))
             partial_matches->push_back(mut);
     }
 
