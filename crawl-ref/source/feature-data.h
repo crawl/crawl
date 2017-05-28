@@ -535,7 +535,7 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
     DNGN_TRANSPORTER, "transporter", "transporter",
     DCHAR_TRANSPORTER, NUM_DCHAR_TYPES,
     RED, RED, RED, WHITE, WHITE,
-    FFT_NONE, MF_TRANSPORTER,
+    FFT_NOTABLE, MF_TRANSPORTER,
 },
 
 {
