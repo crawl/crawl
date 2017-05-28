@@ -8720,14 +8720,11 @@ ENDMAP
 
 NAME: gammafunk_dig_for_victory
 TAGS: no_monster_gen no_item_gen no_trap_gen
-DEPTH: D:13-, Depths, Dis, Pan, Zot
+# Must not place on a branch end so it can place downhatch
+DEPTH: D:13-, !D:$, Depths, !Depths:$, Pan, Zot, !Zot:$
 # DTEM can use LRD, so include stone tiles to be safe
 KPROP: -DEFH1|*$eRcmn = no_tele_into
-{{
-charges = crawl.random_range(12, 24, 2)
-item("wand of digging ident:all " .. "charges:" .. tostring(charges))
-}}
-ITEM: any randart jewellery
+ITEM: wand of digging ident:all, any randart jewellery
 : if you.in_branch("D") or you.in_branch("Depths") then
 KMONS: 1 = deep troll earth mage
 COLOUR: n = lightblue
@@ -8745,11 +8742,6 @@ MARKER: P = lua:transp_loc("dig_for_victory_entry")
 MARKER: Q = lua:transp_dest_loc("dig_for_victory_entry")
 MARKER: R = lua:transp_loc("dig_for_victory_exit")
 MARKER: S = lua:transp_dest_loc("dig_for_victory_exit")
-# Non-formicids of ru who've sacrificed evo would be trapped in this vault if
-# they entered and had no teleport, so just to be safe, veto it for them.
-veto {{ return crawl.game_started()
-          and not you.race() == "Formicid"
-          and you.mutation("inability to use devices") }}
 MAP
        ................
        .cnnnnccccccccc.
@@ -8759,9 +8751,9 @@ MAP
  .c.....mmmmmmmmmmmmmmem*men.
  .c.....mmmmmmmmmmmmnmmmmmmn.
  .c.....mmmmmmmmmmmmmm*m$m$n.
-..n.....mmnnnmmmmmmmnmmmmmmn..
-@PnQ.d..mmn1mmmmm1mmmm|mRm|nS@
-..n.....mmnnnmmmmmmmnmmmmmmn..
+..n..>..mmnnnmmmmmmmnmmmmmmn..
+@PnQ....mmn1mmmmm1mmmm|mRm|nS@
+..n..d..mmnnnmmmmmmmnmmmmmmn..
  .c.....mmmmmmmmmmmmmm*m$m$n.
  .c.....mmmmmmmmmmmmnmmmmmmn.
  .c.....mmmmmmmmmmmmmmem*men.
