@@ -2101,10 +2101,10 @@ tile_shield_offsets = (<x>,<y> | reset)
         Using the value "reset" will clear any previously defined offset, which
         is using for in-game tile changes via lua.
 
-tile_web_mouse_control = false
-        Whether to enable the experimental mouse control for tooltips/cursor/
-        interaction on Webtiles. Regardless of the value of the setting, the
-        minimap will respond to mouse control.
+tile_web_mouse_control = true
+        Whether to enable mouse control for tooltips/cursor interaction on
+        Webtiles. Regardless of the value of the setting, the minimap will
+        respond to mouse control.
 
 4-  Character Dump.
 ===================
