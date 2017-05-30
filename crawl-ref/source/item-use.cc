@@ -922,45 +922,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear any headgear with your large antennae!");
             return false;
         }
-
-        // Soft helmets (caps and wizard hats) always fit, otherwise.
-        if (is_hard_helmet(item))
-        {
-            if (you.get_mutation_level(MUT_HORNS, false))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your horns!");
-                return false;
-            }
-
-            if (you.get_mutation_level(MUT_BEAK, false))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your beak!");
-                return false;
-            }
-
-            if (you.get_mutation_level(MUT_ANTENNAE, false))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your antennae!");
-                return false;
-            }
-
-            if (species_is_draconian(you.species))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your reptilian head.");
-                return false;
-            }
-
-            if (you.species == SP_OCTOPODE)
-            {
-                if (verbose)
-                    mpr("You can't wear that!");
-                return false;
-            }
-        }
     }
 
     // Can't just use Form::slot_available because of shroom caps.

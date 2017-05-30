@@ -1651,15 +1651,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
             if (cur_base_level >= 3 && !you.melded[EQ_HELMET])
                 remove_one_equip(EQ_HELMET, false, true);
-            // Intentional fall-through
-        case MUT_BEAK:
-            // Horns, beaks, and antennae force hard helmets off.
-            if (you.equip[EQ_HELMET] != -1
-                && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
-                && !you.melded[EQ_HELMET])
-            {
-                remove_one_equip(EQ_HELMET, false, true);
-            }
             // Recheck Ashenzari bondage in case our available slots changed.
             ash_check_bondage();
             break;
