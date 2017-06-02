@@ -54,7 +54,6 @@ void opening_screen()
     }
 
     msg += "\n";
-    msg += "<lightgreen>Take part in the player survey at http://crawl.develz.org</lightgreen>\n";
 
     formatted_string::parse_string(msg).display();
     textcolour(LIGHTGREY);
