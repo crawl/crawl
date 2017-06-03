@@ -1839,8 +1839,9 @@ bool simple_monster_message(const monster& mons, const char *event,
             || mons.visible_to(&you)))
     {
         string msg = mons.name(descrip);
-        msg += josa(msg, event.substr(0, 3));
-        msg += event;
+        string events(event);
+        msg += josa(msg, events.substr(0, 3));
+        msg += events;
 
         if (channel == MSGCH_PLAIN && mons.wont_attack())
             channel = MSGCH_FRIEND_ACTION;
@@ -1856,11 +1857,12 @@ bool simple_monster_message(const monster& mons, const char *event,
 void simple_god_message(const char *event, god_type which_deity)
 {
     string msg;
+    string events(event);
     if (which_deity == GOD_WU_JIAN)
        msg = uppercase_first(string("The Council") + event); // wu zian in korean?
     else
        msg = uppercase_first(god_name(which_deity))
-                      + josa(god_name(which_deity), event.substr(0, 3)) + event;
+                      + josa(god_name(which_deity), events.substr(0, 3)) + event;
 
     god_speaks(which_deity, msg.c_str());
 }

@@ -78,7 +78,6 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         {
             if (!quiet)
             {
-                monster &mons = *this;
                 string message = "는 조이기를 벗어나 " + verb
                                  + "하기위해 발버둥쳤다.";
                 simple_monster_message(*this, message.c_str());

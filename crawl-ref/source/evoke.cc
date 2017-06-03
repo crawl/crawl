@@ -1409,7 +1409,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         const string message =
             make_stringf("%s%s은(는) 바람에 의해 날아갔다.",
                          affected_monsters.describe().c_str(),
-                         (affected_monsters.count() > 1 ? "들" : "").c_str());
+                         affected_monsters.count() > 1 ? "들" : "");
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message);
         else
