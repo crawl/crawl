@@ -443,3 +443,44 @@ string get_desc_quantity(const int quant, const int total, string whose)
     else
         return "Some of " + whose;
 }
+
+// find correct josa for name
+string josa(string name, string postposition)
+{
+    string array = "은는이가을를과와아야";
+    int num = -1;
+    
+    for (int i = 0; i < 10; ++i)
+    {
+        if (array.substr(3 * i, 3) == postposition)
+            {
+                num = i / 2;
+                break;
+            }
+    }
+
+    if (num < 0)
+        return "";
+
+    wstring name_16 = utf8_to_16(name);
+    wstring word = name_16.substr(name_16.length() - 1);
+    unsigned short last = *(unsigned short*)word.c_str();
+    int jongsung = (last - 0xAC00) % 28;
+
+    switch (num)
+    {
+    case 0:
+        return jongsung ? "은" : "는";
+    case 1:
+        return jongsung ? "이" : "가";
+    case 2:
+        return jongsung ? "을" : "를";
+    case 3:
+        return jongsung ? "과" : "와";
+    case 4:
+        return jongsung ? "아" : "야";
+    
+    default:
+        return "";
+    }
+}

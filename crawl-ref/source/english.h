@@ -40,3 +40,5 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
 
 string get_desc_quantity(const int quant, const int total,
                          string whose = "your");
+
+string josa(string name, string postposition = "은");
