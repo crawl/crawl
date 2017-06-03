@@ -13,6 +13,7 @@
 #include <string>
 
 #include "stringutil.h"
+#include "unicode.h"
 
 const char * const standard_plural_qualifiers[] =
 {

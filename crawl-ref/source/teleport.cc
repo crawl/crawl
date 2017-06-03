@@ -68,7 +68,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         return false;
 
     bool was_constricted = false;
-    const string verb = (jump ? "leap" : "blink");
+    const string verb = (jump ? "도약" : "순간이동");
 
     if (is_constricted())
     {
@@ -78,8 +78,9 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         {
             if (!quiet)
             {
-                string message = " struggles to " + verb
-                                 + " free from constriction.";
+                monster &mons = *this;
+                string message = "는 조이기를 벗어나 " + verb
+                                 + "하기위해 발버둥쳤다.";
                 simple_monster_message(*this, message.c_str());
             }
             return false;
@@ -88,8 +89,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
 
     if (!quiet)
     {
-        string message = " " + conj_verb(verb)
-                         + (was_constricted ? " free!" : "!");
+        string message = + (was_constricted ? "은 조이기를 벗어나 " : "은 ") + verb + "했다!";
         simple_monster_message(*this, message.c_str());
     }
 
@@ -234,12 +234,12 @@ void monster_teleport(monster* mons, bool instan, bool silent)
         if (mons->del_ench(ENCH_TP))
         {
             if (!silent)
-                simple_monster_message(*mons, " seems more stable.");
+                simple_monster_message(*mons, "의 모습이 좀 더 안정적으로 보인다.");
         }
         else
         {
             if (!silent)
-                simple_monster_message(*mons, " looks slightly unstable.");
+                simple_monster_message(*mons, "의 모습이 조금 불안정해 보인다.");
 
             mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
                                        random_range(20, 30)));
@@ -252,12 +252,12 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     if (!_monster_random_space(mons, newpos, !mons->wont_attack()))
     {
-        simple_monster_message(*mons, " flickers for a moment.");
+        simple_monster_message(*mons, "는 잠시 깜빡거렸다.");
         return;
     }
 
     if (!silent)
-        simple_monster_message(*mons, " disappears!");
+        simple_monster_message(*mons, "이 사라졌다!");
 
     const coord_def oldplace = mons->pos();
 
@@ -268,7 +268,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent && now_visible)
     {
         if (was_seen)
-            simple_monster_message(*mons, " reappears nearby!");
+            simple_monster_message(*mons, "가 근처에 다시 나타났다!");
         else
         {
             // Even if it doesn't interrupt an activity (the player isn't
@@ -276,7 +276,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
             // a message.
             activity_interrupt_data ai(mons, SC_TELEPORT_IN);
             if (!interrupt_activity(AI_SEE_MONSTER, ai))
-                simple_monster_message(*mons, " appears out of thin air!");
+                simple_monster_message(*mons, "가 갑자기 나타났다!");
         }
     }
 
