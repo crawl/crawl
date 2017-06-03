@@ -2029,24 +2029,3 @@ x.G.G.G.x
 x.......x
 xxxx+xxxx
 ENDMAP
-
-NAME:   doesnt_arrival_goblin_jail
-TAGS:   arrival no_monster_gen
-ORIENT: float
-KMASK:  ? = no_item_gen
-KPROP:  ? = no_tele_into
-KFEAT:  A = iron_grate
-MONS:   goblin ; nothing, hobgoblin ; nothing, kobold ; nothing
-MONS:   gnoll ; nothing, orc ; nothing
-NSUBST: ? = 7:1 / 7:2 / 4:3 / 2:4 / 2:5 / *= .:150 12345
-MAP
-xxxxxxxxxxxxxxxxxxx
-x>x???x???x???x???x
-x.x???x???x???x???x
-x+xAAAxAAAxAAAxAAAx
-x.................+
-x+xAAAxAAAxAAAxAAAx
-x.x???x???x???x???x
-x{x???x???x???x???x
-xxxxxxxxxxxxxxxxxxx
-ENDMAP
