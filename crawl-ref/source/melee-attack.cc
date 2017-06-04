@@ -1613,14 +1613,18 @@ void melee_attack::set_attack_verb(int damage)
             attack_verb = "carve";
             verb_degree = "like the proverbial ham";
         }
-        else if (defender_genus == MONS_TENGU && one_chance_in(3))
+        else if ((defender_genus == MONS_TENGU
+                  || get_mon_shape(defender_genus) == MON_SHAPE_BIRD)
+                 && one_chance_in(3))
         {
             attack_verb = "carve";
             verb_degree = "like a turkey";
         }
         else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
                  && Options.has_fake_lang(flang_t::grunt))
+        {
             attack_verb = "shave";
+        }
         else
         {
             static const char * const slice_desc[][2] =
