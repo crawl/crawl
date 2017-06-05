@@ -116,15 +116,27 @@ end
 -- simulate drinking `iterations` mutation potions in a row, a bunch of times
 -- (determined by `tries`) this is mostly useful when looking at the output,
 -- doesn't really do much that test_random_mutations doesn't
-local function test_potion(tries, iterations)
+local function test_potion(tries, iterations, premutate)
+    sum = 0
     for i=1, tries do
         you.delete_all_mutations("mutation test")
         assert(you.how_mutated(true, true, true) == 0,
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
+        for i=1, premutate do
+            -- note: won't guarantee `premutate` mutations, because some will
+            -- cancel each other out.  This tops out at around 10 mutation
+            -- levels by this method.
+            give_random_mutation(0.0)
+        end
         for j=1, iterations do
             simulate_mutation_pot()
         end
         print_mutstate("Potion test try " .. i .. ", ")
+        sum = sum + you.how_mutated(true, true, true)
+    end
+    mean = sum / tries
+    if not silent then
+        crawl.stderr("Mean resulting mutations: " .. mean .. eol)
     end
 end
 
@@ -153,6 +165,6 @@ end
 
 test_basic_mutation_stuff()
 try_all_mutation_categories()
-test_potion(5, mut_iterations)
+test_potion(5, mut_iterations, 0)
 test_random_mutations(tries, mut_iterations, chance_temporary, chance_clear)
 you.delete_all_mutations("Mutation test")
