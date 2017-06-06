@@ -120,6 +120,7 @@ l-spells.o \
 l-subvault.o \
 l-travel.o \
 l-view.o \
+l-wiz.o \
 l-you.o \
 lang-fake.o \
 lev-pand.o \
