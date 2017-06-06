@@ -70,34 +70,6 @@ job_type find_job_from_string(const string &job)
     return j;
 }
 
-species_type find_species_from_string(const string &species)
-{
-    string spec = lowercase_string(species);
-
-    species_type sp = SP_UNKNOWN;
-
-    for (int i = 0; i < NUM_SPECIES; ++i)
-    {
-        const species_type si = static_cast<species_type>(i);
-        const string sp_name = lowercase_string(species_name(si));
-
-        string::size_type pos = sp_name.find(spec);
-        if (pos != string::npos)
-        {
-            if (pos == 0)
-            {
-                // We prefer prefixes over partial matches.
-                sp = si;
-                break;
-            }
-            else
-                sp = si;
-        }
-    }
-
-    return sp;
-}
-
 static xom_event_type _find_xom_event_from_string(const string &event_name)
 {
     string spec = lowercase_string(event_name);

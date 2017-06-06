@@ -910,6 +910,7 @@ LUAFN(you_change_species)
     PLUARET(boolean, true);
 }
 
+#ifdef WIZARD
 LUAFN(you_set_xl)
 {
     const int newxl = luaL_checkint(ls, 1);
@@ -924,6 +925,7 @@ LUAFN(you_set_xl)
     set_xl(newxl, train, newxl < you.experience_level); // most useful for testing if it's not silent on levelup
     PLUARET(boolean, true);
 }
+#endif
 
 /*
  * Init the player class.
@@ -986,7 +988,9 @@ static const struct luaL_reg you_dlib[] =
 { "delete_temp_mutations", you_delete_temp_mutations },
 { "delete_all_mutations", you_delete_all_mutations },
 { "change_species",     you_change_species },
+#ifdef WIZARD
 { "set_xl",             you_set_xl },
+#endif
 
 { nullptr, nullptr }
 };
