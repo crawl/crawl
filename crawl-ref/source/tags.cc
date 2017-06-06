@@ -2713,6 +2713,10 @@ static void tag_read_you(reader &th)
     }
 
 
+    // mutation fixups happen below here.
+    // *REMINDER*: if you fix up an innate mutation, remember to adjust both
+    // `you.mutation` and `you.innate_mutation`.
+
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_STAT_MUT)
     {
@@ -2957,9 +2961,31 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_MUMMY_RESTORATION)
     {
         if (you.mutation[MUT_MUMMY_RESTORATION])
+        {
             you.mutation[MUT_MUMMY_RESTORATION] = 0;
+            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+        }
         if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
+        {
             you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+        }
+    }
+    else
+    {
+        // need another fixup due to save compat issues; the first version
+        // above forgot to deal with innate mutations.  The mutation might
+        // have been readded in the generic fixup code.
+        if (you.innate_mutation[MUT_MUMMY_RESTORATION])
+        {
+            you.mutation[MUT_MUMMY_RESTORATION] = 0;
+            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+        }
+        if (you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES])
+        {
+            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+            you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN)
