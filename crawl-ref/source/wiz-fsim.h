@@ -18,3 +18,4 @@ struct fight_data
 
 void wizard_quick_fsim();
 void wizard_fight_sim(bool double_scale);
+fight_data wizard_quick_fsim_raw(bool defend);

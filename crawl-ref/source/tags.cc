@@ -2974,7 +2974,7 @@ static void tag_read_you(reader &th)
     else
     {
         // need another fixup due to save compat issues; the first version
-        // above forgot to deal with innate mutations.  The mutation might
+        // above forgot to deal with innate mutations. The mutation might
         // have been readded in the generic fixup code.
         if (you.innate_mutation[MUT_MUMMY_RESTORATION])
         {
