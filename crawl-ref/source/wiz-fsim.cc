@@ -441,6 +441,18 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     return fdata;
 }
 
+fight_data wizard_quick_fsim_raw(bool defend)
+{
+    monster *mon = _init_fsim();
+    ASSERT(mon);
+
+    const int iter_limit = Options.fsim_rounds;
+    fight_data fdata = _get_fight_data(*mon, iter_limit, defend);
+
+    _uninit_fsim(mon);
+    return fdata;
+}
+
 // this is the skeletal simulator call, and the one that's easily accessed
 void wizard_quick_fsim()
 {
