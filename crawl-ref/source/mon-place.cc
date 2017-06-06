@@ -292,7 +292,8 @@ static void _apply_ood(level_id &place)
     if (x_chance_in_y(_scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
                       1000))
     {
-        const int fuzzspan = 5;
+        const int fuzzspan = (place.branch == BRANCH_DUNGEON && place.depth >= 1)
+        		? min(place.depth, 5) : 5;
         const int fuzz = max(0, random_range(-fuzzspan, fuzzspan, 2));
 
         // Quite bizarre logic: why should we fail in >50% cases here?
@@ -305,8 +306,7 @@ static void _apply_ood(level_id &place)
     }
 
     // On D:13 and deeper, and for those who tarry, something extreme:
-    if (env.turns_on_level > 1400 - place.absdepth() * 117
-        && x_chance_in_y(_scale_spawn_parameter(2, 10000, 10000, 3000, 9000),
+    if (x_chance_in_y(_scale_spawn_parameter(0, 10000, 10000, 3000, 9000),
                          10000))
     {
         // this maxes depth most of the time
