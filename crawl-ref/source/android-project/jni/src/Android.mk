@@ -139,6 +139,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/l-subvault.cc \
     $(CRAWL_PATH)/l-travel.cc \
     $(CRAWL_PATH)/l-view.cc \
+    $(CRAWL_PATH)/l-wiz.cc \
     $(CRAWL_PATH)/l-you.cc \
     $(CRAWL_PATH)/lang-fake.cc \
     $(CRAWL_PATH)/lev-pand.cc \
