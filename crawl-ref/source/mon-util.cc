@@ -2818,8 +2818,8 @@ void define_monster(monster& mons)
         break;
 
     case MONS_HYDRA:
-        // Hydras start off with 4 to 8 heads.
-        mons.num_heads = random_range(4, 8);
+        // Hydras start off with 5 to 9 heads.
+        mons.num_heads = random_range(5, 9);
         break;
 
     case MONS_LERNAEAN_HYDRA:
