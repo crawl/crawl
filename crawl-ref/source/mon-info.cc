@@ -867,7 +867,7 @@ string monster_info::_core_name() const
     {
         const char* slime_sizes[] = {"buggy ", "", "large ", "very large ",
                                                "enormous ", "titanic "};
-        s = get_monster_data(nametype)->name;
+        s = get_monster_data(nametype)->name_kor;
 
         if (mons_is_draconian_job(type) && base_type != MONS_NO_MONSTER)
             s = draconian_colour_name(base_type) + " " + s;

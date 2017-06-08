@@ -126,6 +126,7 @@ struct monsterentry
     char basechar;
     colour_t colour;
     const char *name;
+    const char *name_kor;
 
     monclass_flags_t bitfields;
     resists_t resists;
