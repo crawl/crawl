@@ -54,22 +54,22 @@ bindkey = [F] CMD_MAP_JUMP_UP_RIGHT
 bindkey = [K] CMD_MAP_JUMP_DOWN_LEFT
 bindkey = [L] CMD_MAP_JUMP_DOWN_RIGHT
 
-# replace (e) with (u)
-bindkey = [u] CMD_EAT
-bindkey = [u] CMD_TARGET_EXCLUDE
-bindkey = [u] CMD_MAP_EXCLUDE_AREA
-bindkey = [U] CMD_EXPERIENCE_CHECK
-bindkey = [U] CMD_MAP_FIND_EXCLUDED
-bindkey = [^U] CMD_TOGGLE_TRAVEL_SPEED
-bindkey = [^U] CMD_MAP_CLEAR_EXCLUDES
+# replace (e) with (b)
+bindkey = [b] CMD_EAT
+bindkey = [b] CMD_TARGET_EXCLUDE
+bindkey = [b] CMD_MAP_EXCLUDE_AREA
+bindkey = [B] CMD_EXPERIENCE_CHECK
+bindkey = [B] CMD_MAP_FIND_EXCLUDED
+bindkey = [^B] CMD_TOGGLE_TRAVEL_SPEED
+bindkey = [^B] CMD_MAP_CLEAR_EXCLUDES
 
-# replace (o) with (b)
-bindkey = [b] CMD_EXPLORE
-bindkey = [b] CMD_MAP_EXPLORE
-bindkey = [b] CMD_TARGET_WIZARD_GIVE_ITEM
-bindkey = [B] CMD_OPEN_DOOR
-bindkey = [B] CMD_MAP_FIND_STASH_REVERSE
-bindkey = [^B] CMD_DISPLAY_OVERMAP
+# replace (o) with (u)
+bindkey = [u] CMD_EXPLORE
+bindkey = [u] CMD_MAP_EXPLORE
+bindkey = [u] CMD_TARGET_WIZARD_GIVE_ITEM
+bindkey = [U] CMD_OPEN_DOOR
+bindkey = [U] CMD_MAP_FIND_STASH_REVERSE
+bindkey = [^U] CMD_DISPLAY_OVERMAP
 
 # replace (f) with (h)
 bindkey = [h] CMD_FIRE
