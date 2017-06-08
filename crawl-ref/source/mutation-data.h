@@ -1922,6 +1922,14 @@ static const mutation_def mut_data[] =
   {"Your sense of smell grows stronger.", "", ""},
   {"Your sense of smell gets weaker.", "", ""},
 },
+
+{ MUT_FEARSOME_BARK, 0, 1, mutflag::good, false,
+  "fearsome bark",
+
+  {"You can bark loudly to cause fear in enemies.", "", ""},
+  {"Your bark becomes more fearsome.", "", ""},
+  {"Your bark becomes less fearsome.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =
