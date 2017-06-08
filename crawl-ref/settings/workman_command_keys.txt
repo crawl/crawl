@@ -1,4 +1,4 @@
-# keymap with working vi keys for dvorak keyboards
+# keymap with working vi keys for workman keyboards
 
 bindkey = [y] CMD_MOVE_LEFT
 bindkey = [e] CMD_MOVE_DOWN
