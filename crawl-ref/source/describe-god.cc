@@ -186,9 +186,9 @@ static const char *divine_title[][8] =
     {"Pure",               "Abyss-Baptised",        "Unweaver",                 "Distorting @Genus@",
         "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
-    // Beogh -- messiah theme.
-    {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
-        "Missionary",         "Evangelist",            "Apostle",                  "Messiah"},
+    // Beogh -- generic religious titles
+    {"Apostate",           "Believer",             "Blessed Orc",             "Priest",
+        "Missionary",         "High Priest",            "Theocrat",                  "Saint"},
 
     // Jiyva -- slime and jelly theme.
     {"Scum",               "Squelcher",             "Ooze",                     "Jelly",
