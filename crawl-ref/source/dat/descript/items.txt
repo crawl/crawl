@@ -117,6 +117,11 @@ book of beasts
 A book of spells focused on the summoning of beasts. Its pages nip at careless
 readers' fingers.
 %%%%
+book of brimstone
+
+A book containing destructive spells involving the elements of Earth and Fire.
+Its pages smell of sulphur.
+%%%%
 book of burglary
 
 A book containing many diverse spells useful for theft, breaking and entering,

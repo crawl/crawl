@@ -369,6 +369,13 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_NECROMUTATION,
 },
 
+{   // Book of Brimstone
+    SPELL_MAGIC_DART,
+    SPELL_STONE_ARROW,
+    SPELL_STICKY_FLAME,
+    SPELL_BOLT_OF_MAGMA,
+},
+
 };
 
 COMPILE_CHECK(ARRAYSZ(spellbook_templates) == 1 + MAX_FIXED_BOOK);

@@ -83,6 +83,11 @@ Necromancer
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Pain spell.
 %%%%
+Reaver
+
+Reavers are trained in defensive arts and start with the book of Brimstone and
+a buckler.
+%%%%
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
