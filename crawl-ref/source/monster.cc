@@ -380,7 +380,7 @@ random_var monster::attack_delay(const item_def *projectile,
     const item_def* weap = weapon();
 
     const bool use_unarmed =
-        (projectile) ? is_launched(this, weap, *projectile) != LRET_LAUNCHED
+        (projectile) ? is_launched(this, weap, *projectile) != launch_retval::LAUNCHED
                      : !weap;
 
     if (use_unarmed || !weap)

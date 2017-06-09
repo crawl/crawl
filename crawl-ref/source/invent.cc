@@ -1023,7 +1023,7 @@ bool item_is_selected(const item_def &i, int selector)
 
         const launch_retval projected = is_launched(&you, you.weapon(), i);
 
-        if (projected == LRET_FUMBLED)
+        if (projected == launch_retval::FUMBLED)
             return false;
 
         return true;
