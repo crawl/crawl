@@ -153,3 +153,30 @@ xxxxxxx
 xxxxxxx
 xxxxxxx
 ENDMAP
+
+# Okawaru wants new followers to prove their worthiness by taking a plunge
+# into the unknown.
+NAME:   emtedronai_okawaru_leap_of_faith
+DEPTH:  D:2-13
+TAGS:   luniq_grate_trap
+TAGS:   uniq_altar_okawaru temple_overflow_okawaru
+TAGS:   no_monster_gen no_trap_gen no_item_gen
+WEIGHT: 5
+ITEM:   potion of curing w:20 / potion of heal wounds w:15 / potion of might / \
+        potion of agility / potion of haste w:5
+ITEM:   amulet of faith / amulet of harm w:5
+KFEAT:  _ = altar_okawaru
+SUBST:  c : bcv
+: place_grate_trap(_G, '^', 'm')
+MAP
+   ccc
+   c>c
+   c+c
+cccc_cccc
+cd+.e.+dc
+cccn.nccc
+...c^c...
+...cmc...
+...c=c...
+....@....
+ENDMAP
