@@ -330,7 +330,7 @@ bool ranged_attack::using_weapon()
 {
     return weapon && (launch_type == LRET_LAUNCHED
                      || launch_type == LRET_BUGGY // not initialized
-                         && is_launched(attacker, weapon, *projectile));
+                         && is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED);
 }
 
 int ranged_attack::weapon_damage()
