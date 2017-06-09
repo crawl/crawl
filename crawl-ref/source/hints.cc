@@ -3023,7 +3023,7 @@ string hints_describe_item(const item_def &item)
                 ostr << _hints_throw_stuff(item);
                 cmd.push_back(CMD_FIRE);
             }
-            else if (is_launched(&you, you.weapon(), item))
+            else if (is_launched(&you, you.weapon(), item) == launch_retval::LAUNCHED)
             {
                 ostr << "As you're already wielding the appropriate launcher, "
                         "you can simply ";

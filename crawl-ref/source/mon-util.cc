@@ -3820,7 +3820,7 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     if (!missile)
         return false;
 
-    return is_launched(mon, weapon, *missile);
+    return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
 }
 
 bool mons_has_ranged_attack(const monster& mon)

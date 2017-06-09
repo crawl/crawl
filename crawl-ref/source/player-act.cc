@@ -242,7 +242,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     const int DELAY_SCALE = 20;
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN)
+    if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
