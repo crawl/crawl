@@ -53,11 +53,11 @@ static bool _fire_validate_item(int selected, string& err);
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
 {
-    return is_launched(&attacker, weapon, projectile) != LRET_FUMBLED
+    return is_launched(&attacker, weapon, projectile) != launch_retval::FUMBLED
             && projectile.base_type == OBJ_MISSILES
             && get_ammo_brand(projectile) == SPMSL_PENETRATION
            || weapon
-              && is_launched(&attacker, weapon, projectile) == LRET_LAUNCHED
+              && is_launched(&attacker, weapon, projectile) == launch_retval::LAUNCHED
               && get_weapon_brand(*weapon) == SPWPN_PENETRATION;
 }
 
@@ -159,10 +159,10 @@ void fire_target_behaviour::set_prompt()
                                                     *active_item());
         switch (projected)
         {
-        case LRET_FUMBLED:  msg << "Tossing away "; break;
-        case LRET_LAUNCHED: msg << "Firing ";             break;
-        case LRET_THROWN:   msg << "Throwing ";           break;
-        case LRET_BUGGY:    msg << "Bugging "; break;
+        case launch_retval::FUMBLED:  msg << "Tossing away "; break;
+        case launch_retval::LAUNCHED: msg << "Firing ";             break;
+        case launch_retval::THROWN:   msg << "Throwing ";           break;
+        case launch_retval::BUGGY:    msg << "Bugging "; break;
         }
     }
 
@@ -476,7 +476,7 @@ void fire_thing(int item)
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE)
         && (!you.weapon()
-            || is_launched(&you, you.weapon(), you.inv[item]) != LRET_LAUNCHED
+            || is_launched(&you, you.weapon(), you.inv[item]) != launch_retval::LAUNCHED
             || check_warning_inscriptions(*you.weapon(), OPER_FIRE)))
     {
         bolt beam;
@@ -620,7 +620,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
         return;
 
-    if (is_launched(act, launcher, ammo) != LRET_LAUNCHED)
+    if (is_launched(act, launcher, ammo) != launch_retval::LAUNCHED)
         return;
 
     // Throwing and blowguns are silent...
@@ -811,14 +811,14 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (!teleport)
         pbolt.set_target(thr);
 
-    const int bow_brand = (projected == LRET_LAUNCHED)
+    const int bow_brand = (projected == launch_retval::LAUNCHED)
                           ? get_weapon_brand(*you.weapon())
                           : SPWPN_NORMAL;
     const int ammo_brand = get_ammo_brand(item);
 
     switch (projected)
     {
-    case LRET_LAUNCHED:
+    case launch_retval::LAUNCHED:
     {
         const item_def *launcher = you.weapon();
         ASSERT(launcher);
@@ -832,13 +832,13 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             count_action(CACT_FIRE, launcher->sub_type);
         break;
     }
-    case LRET_THROWN:
+    case launch_retval::THROWN:
         practise_throwing((missile_type)wepType);
         count_action(CACT_THROW, wepType, OBJ_MISSILES);
         break;
-    case LRET_FUMBLED:
+    case launch_retval::FUMBLED:
         break;
-    case LRET_BUGGY:
+    case launch_retval::BUGGY:
         dprf("Unknown launch type for weapon."); // should never happen :)
         break;
     }
@@ -847,10 +847,10 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (teleport)
         returning = false;
 
-    if (returning && projected != LRET_FUMBLED)
+    if (returning && projected != launch_retval::FUMBLED)
     {
         const skill_type sk =
-            projected == LRET_THROWN ? SK_THROWING
+            projected == launch_retval::THROWN ? SK_THROWING
                                      : item_attack_skill(*you.weapon());
         if (!one_chance_in(1 + skill_bump(sk)))
             did_return = true;
@@ -861,8 +861,8 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Create message.
     mprf("You %s%s %s.",
           teleport ? "magically " : "",
-          (projected == LRET_FUMBLED ? "toss away" :
-           projected == LRET_LAUNCHED ? "shoot" : "throw"),
+          (projected == launch_retval::FUMBLED ? "toss away" :
+           projected == launch_retval::LAUNCHED ? "shoot" : "throw"),
           ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
@@ -957,7 +957,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
         delete pbolt.special_explosion;
 
     if (!teleport
-        && projected
+        && projected != launch_retval::FUMBLED
         && will_have_passive(passive_t::shadow_attacks)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE)
@@ -1019,16 +1019,16 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         is_launched(mons, mons->mslot_item(MSLOT_WEAPON),
                     mitm[msl]);
 
-    if (projected == LRET_THROWN)
+    if (projected == launch_retval::THROWN)
         returning = returning && !teleport;
 
     // Identify before throwing, so we don't get different
     // messages for first and subsequent missiles.
     if (mons->observable())
     {
-        if (projected == LRET_LAUNCHED
+        if (projected == launch_retval::LAUNCHED
                && item_type_known(mitm[weapon])
-            || projected == LRET_THROWN
+            || projected == launch_retval::THROWN
                && mitm[msl].base_type == OBJ_MISSILES)
         {
             set_ident_flags(mitm[msl], ISFLAG_KNOW_TYPE);
@@ -1041,9 +1041,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     string msg = mons->name(DESC_THE);
     if (teleport)
         msg += " magically";
-    msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
+    msg += ((projected == launch_retval::LAUNCHED) ? " shoots " : " throws ");
 
-    if (!beam.name.empty() && projected == LRET_LAUNCHED)
+    if (!beam.name.empty() && projected == launch_retval::LAUNCHED)
         msg += article_a(beam.name);
     else
     {

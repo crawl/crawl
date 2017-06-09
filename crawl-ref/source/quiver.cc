@@ -242,7 +242,7 @@ void player_quiver::on_item_fired(const item_def& item, bool explicitly_chosen)
                                                     item);
 
         // Don't do anything if this item is not really fit for throwing.
-        if (projected == LRET_FUMBLED)
+        if (projected == launch_retval::FUMBLED)
             return;
 
 #ifdef DEBUG_QUIVER
@@ -344,7 +344,7 @@ void player_quiver::_maybe_fill_empty_slot()
 #endif
 
     const launch_retval desired_ret =
-         (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
+         (weapon && is_range_weapon(*weapon)) ? launch_retval::LAUNCHED : launch_retval::THROWN;
 
     vector<int> order;
     _get_fire_order(order, false, weapon, false);
@@ -414,7 +414,7 @@ void player_quiver::_get_fire_order(vector<int>& order,
             continue;
 
         // Don't do anything if this item is not really fit for throwing.
-        if (is_launched(&you, you.weapon(), item) == LRET_FUMBLED)
+        if (is_launched(&you, you.weapon(), item) == launch_retval::FUMBLED)
             continue;
 
         // =f prevents item from being in fire order.

@@ -29,7 +29,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
       projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true), launch_type(LRET_BUGGY)
+      should_alert_defender(true), launch_type(launch_retval::BUGGY)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
@@ -45,7 +45,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if (launch_type == LRET_LAUNCHED)
+    else if (launch_type == launch_retval::LAUNCHED)
     {
         aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
@@ -304,7 +304,7 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon() || launch_type == LRET_THROWN)
+    if (using_weapon() || launch_type == launch_retval::THROWN)
     {
         if (using_weapon()
             && apply_damage_brand(projectile->name(DESC_THE).c_str()))
@@ -328,14 +328,15 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return weapon && (launch_type == LRET_LAUNCHED
-                     || launch_type == LRET_BUGGY // not initialized
-                         && is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED);
+    return weapon && (launch_type == launch_retval::LAUNCHED
+                     || launch_type == launch_retval::BUGGY // not initialized
+                         && is_launched(attacker, weapon, *projectile)
+                            == launch_retval::LAUNCHED);
 }
 
 int ranged_attack::weapon_damage()
 {
-    if (launch_type == LRET_FUMBLED)
+    if (launch_type == launch_retval::FUMBLED)
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
@@ -361,7 +362,7 @@ int ranged_attack::weapon_damage()
 int ranged_attack::calc_base_unarmed_damage()
 {
     // No damage bonus for throwing non-throwing weapons.
-    if (launch_type == LRET_FUMBLED)
+    if (launch_type == launch_retval::FUMBLED)
         return 0;
 
     int damage = you.skill_rdiv(wpn_skill);

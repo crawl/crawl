@@ -237,12 +237,12 @@ enum jewellery_type
     NUM_JEWELLERY
 };
 
-enum launch_retval
+enum class launch_retval
 {
-    LRET_BUGGY = -1, // could be 0 maybe? TODO: test
-    LRET_FUMBLED,
-    LRET_LAUNCHED,
-    LRET_THROWN,
+    BUGGY = -1, // could be 0 maybe? TODO: test
+    FUMBLED,
+    LAUNCHED,
+    THROWN,
 };
 
 enum misc_item_type
