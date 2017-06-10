@@ -695,8 +695,8 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     // If the player has species chosen, use VIABLE, otherwise use RANDOM
-    if ((choice_type == C_SPECIES && ng.species != SP_UNKNOWN)
-       || (choice_type == C_JOB && ng.job != JOB_UNKNOWN))
+    if ((choice_type == C_SPECIES && ng.job != JOB_UNKNOWN)
+       || (choice_type == C_JOB && ng.species != SP_UNKNOWN))
     {
         tmp->set_id(M_VIABLE);
     }
