@@ -607,6 +607,10 @@ public:
                 bool ident = false, bool with_inscription = true,
                 bool quantity_in_words = false,
                 iflags_t ignore_flags = 0x0) const;
+    string name(string postposition, description_level_type descrip = DESC_PLAIN,
+                bool terse = false, bool ident = false,
+                bool with_inscription = true, bool quantity_in_words = false,
+                iflags_t ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;

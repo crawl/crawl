@@ -193,9 +193,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             mpr("공격이 도달했다!");
         else
         {
-            mprf("%s이(가) 가로막고 있다.",
-                 mons->observable() ? mons->name(DESC_THE).c_str()
-                                    : "보이지 않는 무언가");
+            mprf("%s 가로막고 있다.",
+                 mons->observable() ? mons->name("이").c_str()
+                                    : "보이지 않는 무언가가");
         }
     }
 
@@ -601,8 +601,8 @@ int recharge_wand(bool known, const string &pre_msg, int num, int den)
         if (known && !pre_msg.empty())
             mpr(pre_msg);
 
-        mprf("%s이(가) 잠깐 %s다.%s.",
-             wand.name(DESC_YOUR).c_str(),
+        mprf("%s 잠시 %s다.%s.",
+             wand.name("가").c_str(),
              charged ? "빛났" : "깜빡거렸",
              desc.c_str());
 
@@ -768,8 +768,8 @@ static bool _box_of_beasts(item_def &box)
         return false;
     }
 
-    mprf("...그러자 %s이(가) %s나왔다!",
-         mons->name(DESC_A).c_str(), mons->airborne() ? "날아" : "튀어");
+    mprf("...그러자 %s %s나왔다!",
+         mons->name("가").c_str(), mons->airborne() ? "날아" : "튀어");
     did_god_conduct(DID_CHAOS, random_range(5,10));
 
     // After unboxing a beast, chance to break.
@@ -1169,7 +1169,7 @@ static bool _lamp_of_fire()
             beam.source_id  = MID_PLAYER;
             beam.thrower    = KILL_YOU;
             beam.pierce     = true;
-            beam.name       = "불꽃의 자취";
+            beam.name       = "불꽃의 궤도";
             beam.hit        = 10 + (pow/8);
             beam.damage     = dice_def(2, 5 + pow/4);
             beam.ench_power = 3 + (pow/5);
@@ -1407,9 +1407,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     if (!affected_monsters.empty())
     {
         const string message =
-            make_stringf("%s%s은(는) 바람에 의해 날아갔다.",
-                         affected_monsters.describe().c_str(),
-                         affected_monsters.count() > 1 ? "들" : "");
+            make_stringf("%s은(는) 바람에 의해 날아갔다.",
+                         affected_monsters.describe().c_str());
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message);
         else
@@ -1580,8 +1579,8 @@ static spret_type _phantom_mirror()
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
 
-    mprf("당신은 %s을(를) 거울에 비추었다, 거울이 산산조각났다!",
-         victim->name(DESC_THE).c_str());
+    mprf("당신은 %s 거울에 비추었다, 거울이 산산조각났다!",
+         victim->name("을").c_str());
 
     return SPRET_SUCCESS;
 }

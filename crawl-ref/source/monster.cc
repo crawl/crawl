@@ -789,8 +789,8 @@ void monster::equip_weapon(item_def &item, bool msg)
     if (msg)
     {
         const string str = "는 " + 
-                         item.name(DESC_A, false, false, true, false,
-                                   ISFLAG_CURSED) + "을(를) 들었다.";
+                         item.name("을", DESC_A, false, false, true, false,
+                                   ISFLAG_CURSED) + " 들었다.";
         msg = simple_monster_message(*this, str.c_str());
     }
 
@@ -887,7 +887,7 @@ void monster::equip_armour(item_def &item, bool msg)
     if (msg)
     {
         const string str = "은 " +
-                           item.name(DESC_A) + "을(를) 입었다.";
+                           item.name("을") + " 입었다.";
         simple_monster_message(*this, str.c_str());
     }
 }
@@ -899,7 +899,7 @@ void monster::equip_jewellery(item_def &item, bool msg)
     if (msg)
     {
         const string str = "는 " +
-                           item.name(DESC_A) + "을(를) 끼웠다.";
+                           item.name("를") + " 끼웠다.";
         simple_monster_message(*this, str.c_str());
     }
 }
@@ -931,8 +931,8 @@ void monster::unequip_weapon(item_def &item, bool msg)
     if (msg)
     {
         const string str = "는 " +
-                           item.name(DESC_A, false, false, true, false,
-                                     ISFLAG_CURSED) + "을(를) 내려놓았다.";
+                           item.name("을", DESC_A, false, false, true, false,
+                                     ISFLAG_CURSED) + " 내려놓았다.";
         msg = simple_monster_message(*this, str.c_str());
     }
 
@@ -984,7 +984,7 @@ void monster::unequip_armour(item_def &item, bool msg)
     if (msg)
     {
         const string str = "는 " +
-                           item.name(DESC_A) + "을(를) 벗었다.";
+                           item.name("을") + " 벗었다.";
         simple_monster_message(*this, str.c_str());
     }
 }
@@ -996,7 +996,7 @@ void monster::unequip_jewellery(item_def &item, bool msg)
     if (msg)
     {
         const string str = "는 " +
-                           item.name(DESC_A) + "을(를) 벗었다.";
+                           item.name("을") + " 벗었다.";
         simple_monster_message(*this, str.c_str());
     }
 }
@@ -1058,10 +1058,10 @@ void monster::pickup_message(const item_def &item)
         flags |= MF_SEEN_RANGED;
     }
 
-    mprf("%s은(는) %s을(를) 주웠다.",
-         name(DESC_THE).c_str(),
+    mprf("%s %s 주웠다.",
+         name("은").c_str(),
          item.base_type == OBJ_GOLD ? "골드"
-                                    : item.name(DESC_A).c_str());
+                                    : item.name("를").c_str());
 }
 
 bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
@@ -1076,31 +1076,31 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         {
             if (inv[slot] == item.index())
             {
-                mprf(MSGCH_DIAGNOSTICS, "%s은(는) 이미 %s을(를) 가지고 있다.",
-                     name(DESC_PLAIN, true).c_str(),
-                     item.name(DESC_PLAIN, false, true).c_str());
+                mprf(MSGCH_DIAGNOSTICS, "%s 이미 %s 가지고 있다.",
+                     name("은", DESC_PLAIN, true).c_str(),
+                     item.name("를", DESC_PLAIN, false, true).c_str());
                 return false;
             }
             else
             {
-                mprf(MSGCH_DIAGNOSTICS, "%s은(는) 이미 %s가 가지고 있는것 같다.",
-                     item.name(DESC_PLAIN, false, true).c_str(),
-                     name(DESC_PLAIN, true).c_str());
+                mprf(MSGCH_DIAGNOSTICS, "%s 이미 %s 가지고 있는것 같다.",
+                     item.name("은", DESC_PLAIN, false, true).c_str(),
+                     name("가", DESC_PLAIN, true).c_str());
             }
         }
         else if (other_mon->type == MONS_NO_MONSTER)
         {
-            mprf(MSGCH_DIAGNOSTICS, "죽은 몬스터가 가지고 있던 %s을(를) "
-                                    "%s이(가) 주웠다.",
-                 item.name(DESC_PLAIN, false, true).c_str(),
-                 name(DESC_PLAIN, true).c_str());
+            mprf(MSGCH_DIAGNOSTICS, "죽은 몬스터가 가지고 있던 %s "
+                                    "%s 주웠다.",
+                 item.name("을", DESC_PLAIN, false, true).c_str(),
+                 name("가", DESC_PLAIN, true).c_str());
         }
         else
         {
-            mprf(MSGCH_DIAGNOSTICS, "%s이(가) 가지고 있던 %s을(를) %s이(가) 주음.",
-                 other_mon->name(DESC_PLAIN, true).c_str(),
-                 item.name(DESC_PLAIN, false, true).c_str(),
-                 name(DESC_PLAIN, true).c_str());
+            mprf(MSGCH_DIAGNOSTICS, "%s 가지고 있던 %s %s 주음.",
+                 other_mon->name("가", DESC_PLAIN, true).c_str(),
+                 item.name("를", DESC_PLAIN, false, true).c_str(),
+                 name("가", DESC_PLAIN, true).c_str());
         }
     }
 
@@ -1198,9 +1198,9 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     {
         if (msg)
         {
-            mprf("%s이(가) %s를 떨어트리자 그것%s이 %s!",
-                 name(DESC_THE).c_str(),
-                 pitem.name(DESC_THE).c_str(),
+            mprf("%s %s 떨어트리자 그것%s이 %s!",
+                 name("가").c_str(),
+                 pitem.name("를").c_str(),
                  pitem.quantity > 1 ? "들" : "",
                  summoned_poof_msg(this, pitem).c_str());
         }
@@ -1212,8 +1212,8 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
     {
         if (msg)
         {
-            mprf("%s은(는) %s을(를) 떨어트렸다.", name(DESC_THE).c_str(),
-                 pitem.name(DESC_A).c_str());
+            mprf("%s은 %s 떨어트렸다.", name("은").c_str(),
+                 pitem.name("을").c_str());
         }
         pitem.props[DROPPER_MID_KEY].get_int() = mid;
 
@@ -2313,6 +2313,14 @@ string monster::name(description_level_type desc, bool force_vis,
     ;
 }
 
+string monster::name(string postposition, description_level_type desc,
+                     bool force_vis, bool force_article) const
+{
+    string monname = name(desc, force_vis, force_article);
+    monname += josa(monname, postposition);
+    return monname;
+}
+
 string monster::base_name(description_level_type desc, bool force_vis) const
 {
     string s = _mon_special_name(*this, desc, force_vis);
@@ -2696,7 +2704,7 @@ bool monster::fumbles_attack()
     {
         if (you.can_see(*this))
         {
-            mprf("%s은(는) %s", name(DESC_THE).c_str(), liquefied(pos())
+            mprf("%s %s", name("은").c_str(), liquefied(pos())
                  ? "잠시 끈적끈적한 지면에 갇혔다."
                  : "물 위에서 첨벙거린다.");
         }
@@ -4341,9 +4349,9 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 
     if (you.see_cell(pos()))
     {
-        mprf("%s은(는) %s를 부식시켰다!",
+        mprf("%s은(는) %s 부식시켰다!",
              corrosion_source,
-             name(DESC_THE).c_str());
+             name("를").c_str());
     }
 
     add_ench(mon_enchant(ENCH_CORROSION, 0));
@@ -5463,12 +5471,12 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
         if (!monster_habitable_grid(this, grd(pos())))
-            simple_monster_message(*this, "은 마른 땅 위에서 !");
+            simple_monster_message(*this, "은 마른 땅 위에서 퍼덕거렸다!");
         else if (!monster_habitable_grid(this, grd(oldpos)))
         {
             if (you.can_see(*this))
             {
-                mprf("%s이(가) %s 속으로 뛰어들었다!", name(DESC_THE).c_str(),
+                mprf("%s %s 속으로 뛰어들었다!", name("가").c_str(),
                                                    feat_type_name(grd(pos())));
             }
             del_ench(ENCH_AQUATIC_LAND);
@@ -5968,7 +5976,7 @@ bool monster::evoke_jewellery_effect(jewellery_type jtype)
     if (jtype == AMU_RAGE)
         wield_melee_weapon();
 
-    mprf("%s은(는) %s %s를 발동시켰다.", name(DESC_THE).c_str(),
+    mprf("%s %s %s를 발동시켰다.", name("는").c_str(),
          pronoun(PRONOUN_POSSESSIVE).c_str(),
          jewellery_is_amulet(jtype) ? "목걸이" : "반지");
 
@@ -6102,9 +6110,9 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 hit_points = 0;
                 if (observable())
                 {
-                    mprf("%s 탈것이 죽은 %s은(는) %s!",
+                    mprf("%s 탈것이 죽은 %s %s!",
                          pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         name(DESC_THE).c_str(),
+                         name("는").c_str(),
                          grd(pos()) == DNGN_LAVA ?
                              "용암속으로 떨어져 불타올랐다" :
                              "깊은 물 속으로 떨어져 익사했다");
@@ -6112,8 +6120,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
             else if (fly_died && observable())
             {
-                mprf("%s은(는) %s 죽을 탈것에서 떨어졌다.",
-                     name(DESC_THE).c_str(),
+                mprf("%s %s 죽은 탈것에서 떨어졌다.",
+                     name("는").c_str(),
                      pronoun(PRONOUN_POSSESSIVE).c_str());
             }
         }
@@ -6313,8 +6321,8 @@ void monster::steal_item_from_player()
             new_item.set_holding_monster(*this);
         }
         mitm[inv[MSLOT_GOLD]].flags |= ISFLAG_THROWN;
-        mprf("%s이(가) 당신의 골드를 %s 훔쳤다!",
-             name(DESC_THE).c_str(),
+        mprf("%s 당신의 골드를 %s 훔쳤다!",
+             name("가").c_str(),
              stolen_amount == you.gold ? "전부" : "조금");
 
         you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
@@ -6329,9 +6337,9 @@ void monster::steal_item_from_player()
 
     const int orig_qty = you.inv[steal_what].quantity;
 
-    mprf("%s이(가) %s을(를) 훔쳤다!",
-         name(DESC_THE).c_str(),
-         you.inv[steal_what].name(DESC_YOUR).c_str());
+    mprf("%s %s 훔쳤다!",
+         name("이").c_str(),
+         you.inv[steal_what].name("를", DESC_YOUR).c_str());
 
     item_def* tmp = take_item(steal_what, mslot);
     if (!tmp)

@@ -148,6 +148,16 @@ string trap_def::name(description_level_type desc) const
         return basename;
 }
 
+string trap_def::name(string postposition) const
+{
+    if (type >= NUM_TRAPS)
+        return "buggy";
+
+    string basename = full_trap_name(type);
+    basename += josa(basename, postposition);
+    return basename;
+}
+
 bool trap_def::is_known(const actor* act) const
 {
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
