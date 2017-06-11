@@ -169,14 +169,14 @@ KFEAT:  _ = altar_okawaru
 SUBST:  c : bcv
 : place_grate_trap(_G, '^', 'm')
 MAP
-   ccc
-   c>c
-   c+c
-cccc_cccc
-cd+.e.+dc
-cccn.nccc
-...c^c...
-...cmc...
-...c=c...
-....@....
+  ccc
+  c>c
+  c+c
+ccceccc
+cd._.dc
+ccn.ncc
+..c^c..
+..cmc..
+..c=c..
+...@...
 ENDMAP
