@@ -1018,7 +1018,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 static int _failed_acquirement(bool quiet)
 {
     if (!quiet)
-        mpr("The demon of the infinite void smiles upon you.");
+        mpr("무한한 공허의 악마가 당신을 향해 미소 짓는다.");
     return NON_ITEM;
 }
 

@@ -103,7 +103,7 @@ class Delay
      */
     virtual void finish()
     {
-        mpr("You finish doing something buggy.");
+		mpr("당신은 무언가 버그에 관련된 일을 해냈다.");
     }
 protected:
     bool started = false;

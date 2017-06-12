@@ -314,7 +314,7 @@ void tornado_damage(actor *caster, int dur)
                 grd(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
-                    mpr("A tree falls to the hurricane!");
+					mpr("나무가 허리케인 안으로 빨려갔다!");
                 if (caster->is_player())
                     did_god_conduct(DID_KILL_PLANT, 1);
             }
@@ -363,7 +363,7 @@ void tornado_damage(actor *caster, int dur)
                     {
                         bool standing = !you.airborne();
                         if (standing)
-                            mpr("The vortex of raging winds lifts you up.");
+							mpr("맹렬한 바람의 소용돌이가 당신을 들어올렸다.");
                         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
                         you.duration[DUR_FLIGHT]
                             = max(you.duration[DUR_FLIGHT], 20);

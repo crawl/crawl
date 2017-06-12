@@ -742,7 +742,7 @@ bool check_selected_skills()
 
     if (trainable_skill)
     {
-        mpr("You need to enable at least one skill for training.");
+		mpr("당신은 최소한 하나의 기술은 수련해야 한다.");
         more();
         reset_training();
         skill_menu();
@@ -753,7 +753,7 @@ bool check_selected_skills()
     if (could_train && !you.received_noskill_warning)
     {
         you.received_noskill_warning = true;
-        mpr("You cannot train any new skill.");
+		mpr("당신이 수련할 기술이 없다.");
     }
 
     return false;

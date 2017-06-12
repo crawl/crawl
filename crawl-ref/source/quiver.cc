@@ -176,7 +176,7 @@ void choose_item_for_quiver()
 {
     if (you.species == SP_FELID)
     {
-        mpr("You can't grasp things well enough to throw them.");
+		mpr("당신은 그것들을 던질 수 있을 만큼 꽉 잡고 있을 수 없다.");
         return;
     }
 
@@ -206,7 +206,7 @@ void choose_item_for_quiver()
         {
             if (you.equip[i] == slot)
             {
-                mpr("You can't quiver worn items.");
+				mpr("당신은 입고 있는 물건을 손에 들 수 없다.");
                 return;
             }
         }

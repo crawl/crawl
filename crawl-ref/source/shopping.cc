@@ -1480,7 +1480,7 @@ void shop()
     if (menu.bought_something)
         mprf("Thank you for shopping at %s!", shopname.c_str());
     if (any_on_list)
-        mpr("You can access your shopping list by pressing '$'.");
+		mpr("당신은 '$' 를 눌러 당신의 구매 리스트에 접근 할 수 있다.");
 }
 
 void shop(shop_struct& shop, const level_pos& pos)
@@ -2164,7 +2164,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 
         mpr_comma_separated_list("You now have enough gold to ", descs,
                                  ", or ");
-        mpr("You can access your shopping list by pressing '$'.");
+		mpr("당신은 '$' 를 눌러 당신의 구매 리스트에 접근 할 수 있다.");
 
         // Our gold has changed, maybe we can buy different things now.
         refresh();
@@ -2384,7 +2384,7 @@ void ShoppingList::display()
             del_thing_at_index(index);
             if (list->empty())
             {
-                mpr("Your shopping list is now empty.");
+				mpr("지금 당신의 구매 리스트에는 아무 것도 없다.");
                 break;
             }
 

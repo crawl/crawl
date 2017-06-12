@@ -610,7 +610,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
     {
         if (!any_items_of_type(OSEL_CURSED_WORN) && used)
         {
-            mpr("You have uncursed all your worn items.");
+			mpr("당신은 당신이 입은 모든 물건의 저주를 해제했다.");
             return used;
         }
 
@@ -626,7 +626,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
             || !item_is_equipped(item)
             || &item == you.weapon() && !is_weapon(item))
         {
-            mpr("Choose a cursed equipped item, or Esc to abort.");
+			mpr("저주받은 착용한 물건을 고르시오. 또는 Esc 를 눌러 취소하시오.");
             more();
             continue;
         }
@@ -672,7 +672,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
     {
         if (!pre_msg.empty())
             mpr(pre_msg);
-        mpr("You feel as if something is helping you.");
+		mpr("당신은 무언가가 당신을 도와준 듯한 기분이 들었다.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
     else if (alreadyknown)
@@ -681,7 +681,7 @@ bool remove_curse(bool alreadyknown, const string &pre_msg)
     {
         if (!pre_msg.empty())
             mpr(pre_msg);
-        mpr("You feel blessed for a moment.");
+		mpr("당신은 순간 축복받은 기분이 들었다.");
     }
 
     return success;
@@ -926,7 +926,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                  targname.c_str());
         }
         else
-            mpr("Walls emerge from the floor!");
+			mpr("벽이 바닥으로부터 솟아올랐다!");
 
         you.update_beholders();
         you.update_fearmongers();
@@ -1017,7 +1017,7 @@ void holy_word_player(holy_word_source_type source)
     if (!hploss)
         return;
 
-    mpr("You are blasted by holy energy!");
+	mpr("당신은 신성한 에너지에 피폭당했다!");
 
     const char *aux = "holy word";
 
@@ -1145,11 +1145,11 @@ void torment_player(actor *attacker, torment_source_type taux)
 
     if (!hploss)
     {
-        mpr("You feel a surge of unholy energy.");
-        return;
-    }
+		mpr("당신은 몰아닥치는 불경한 에너지의 파도를 느꼈다.");
+		return;
+	}
 
-    mpr("Your body is wracked with pain!");
+	mpr("당신의 육체가 고통으로 파멸하고 있다!");
 
 
     kill_method_type type = KILLED_BY_BEAM;

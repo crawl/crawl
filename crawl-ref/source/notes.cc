@@ -166,7 +166,7 @@ static bool _is_noteworthy(const Note& note)
             break;
 
         default:
-            mpr("Buggy note passed: unknown note type");
+			mpr("버그성 주석 감지: 알 수 없는 주석");
             // Return now, rather than give a "Buggy note passed" message
             // for each note of the matching type in the note list.
             return true;

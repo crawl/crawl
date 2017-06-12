@@ -3245,7 +3245,7 @@ monster* create_monster(mgen_data mg, bool fail_msg)
             fail_msg = false;
 
         if (!summd && fail_msg && you.see_cell(mg.pos))
-            mpr("You see a puff of smoke.");
+            mpr("당신은 연기가 나는 것을 보았다.");
     }
 
     return summd;
