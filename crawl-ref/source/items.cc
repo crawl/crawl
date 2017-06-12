@@ -3138,7 +3138,11 @@ static void _do_autopickup()
 
             const bool pickup_result = move_item_to_inv(o, mi.quantity);
             if (mi.is_type(OBJ_FOOD, FOOD_CHUNK))
+            {
                 mi.flags |= ISFLAG_DROPPED;
+                o = next;
+                continue;
+            }
 
             if (pickup_result)
             {
