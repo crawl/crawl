@@ -8767,14 +8767,13 @@ ENDMAP
 NAME:    emtedronai_trogs_sanctum
 TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
 DEPTH:   D:$, Depths
-KFEAT:   T_ = altar_trog
-KITEM:    _ = potion of berserk rage ident:type
+KFEAT:   _ = altar_trog
 : if not you.unrands("necklace_of_bloodlust") then
-KITEM:   T  = necklace of bloodlust no_pickup
+KITEM:   _ = necklace of bloodlust no_pickup
 : elseif not you.unrands("wrath_of_trog") then
-KITEM:   T  = wrath of trog no_pickup
+KITEM:   _ = wrath of trog no_pickup
 : else
-KITEM:   T  = nothing
+KITEM:   _ = nothing
 : end
 KFEAT:   # = iron_grate
 ITEM:    manual of armour w:30 / manual of fighting w:30 / \
@@ -8794,17 +8793,16 @@ ITEM:    executioner's axe good_item no_pickup w:5 / \
 ITEM:    plate armour good_item randart w:20 no_pickup / \
          crystal plate armour good_item no_pickup / \
          chain mail good_item randart no_pickup
+ITEM:    potion of berserk rage ident:type
 SHUFFLE: def
-KPROP:   $*.123456defv = bloody / nothing
+KPROP:   $*.123456defgv = bloody / nothing
 : if you.in_branch("Depths") then
-MONS:    ancient lich
 MONS:    patrolling juggernaut
 MONS:    deep troll w:15 / spriggan berserker w:15 / stone giant / \
          iron troll w:5 / ettin w:5
 MONS:    deep elf annihilator / deep elf demonologist / titan / boggart / \
          deep elf sorcerer / spriggan air mage / lich / vampire mage
 : else
-MONS:    lich
 MONS:    patrolling ettin / patrolling iron troll
 MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
 MONS:    ogre mage / wizard / deep elf mage / boggart / necromancer
@@ -8827,23 +8825,23 @@ vvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvv5vvvvv5vvvvvvvv
+vvvvvvvv4vvvvv4vvvvvvvv
 vvvvvvvv#vvvvv#vvvvvvvv
 vvvvvvv..+.Q.+..vvvvvvv
 vvvvvv...+.s.+...vvvvvv
-vvvvv....v._.v....vvvvv
+vvvvv....v.g.v....vvvvv
 vvvF#..v#vnvnv#v..#Fvvv
-vvvvv..#5vvSvv5#..vvvvv
-vvv4#33v#vn=nv#v33#4vvv
-vvv5v...$$eTf$$...v5vvv
-vvv4v....$*d*$....v4vvv
-vvv6#..Y..$$$..Y..#6vvv
-vvvvv......2......vvvvv
-vvvF#33.........33#Fvvv
+vvvvv..#4vvSvv4#..vvvvv
+vvv4#22v#vn=nv#v22#4vvv
+vvv3v...$$e_f$$...v3vvv
+vvv3#....$*d*$....#3vvv
+vvv3v..Y..$$$..Y..v3vvv
+vvv5#......1......#5vvv
+vvvvv22.........22vvvvv
 vvvvv#v#vvnnnvv#v#vvvvv
-vvvvv5vFvvnnnvvFv5vvvvv
+vvvvv4vFvvnnnvvFv4vvvvv
 vvvvvvvvv..P..vvvvvvvvv
-vvvvvvv1#.....#6vvvvvvv
+vvvvvvv4n.....n4vvvvvvv
       vvv.....vvv
            @
 ENDMAP
