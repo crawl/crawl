@@ -2364,11 +2364,11 @@ static vector<formatted_string> _get_overview_resistances(
 
     out += _stealth_bar(get_number_of_cols()) + "\n";
 
-    const int regen = (player_regen() + 9) / 10; // round up
-    out += make_stringf("Regen    %d.%d/turn\n", regen/10, regen % 10);
+    const int regen = player_regen(); // round up
+    out += make_stringf("HPRegen  %d.%d%d/turn\n", regen/100, regen/10%10, regen%10);
 
-    const int mp_regen = (player_mp_regen() + 9) / 10; // round up
-    out += make_stringf("MPRegen  %d.%d/turn\n", mp_regen/10, mp_regen % 10);
+    const int mp_regen = player_mp_regen(); // round up
+    out += make_stringf("MPRegen  %d.%d%d/turn\n", mp_regen/100, mp_regen/10%10, mp_regen%10);
 
     cols.add_formatted(0, out, false);
 
