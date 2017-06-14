@@ -714,7 +714,7 @@ string describe_mutations(bool center_title)
     if (have_passive(passive_t::frail)
         || player_under_penance(GOD_HEPLIAKLQANA))
     {
-        result += "<lightred>Your life essence is reduced. (-10% HP)"
+        result += "<lightred>Your life essence is reduced to manifest your ancestor. (-10% HP)"
                   "</lightred>\n";
     }
 
