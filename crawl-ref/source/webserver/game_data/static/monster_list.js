@@ -54,6 +54,20 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
         else if (m1.type > m2.type)
             return -1;
 
+        // don't sort two same-name monsters together
+        var m1Named = m1.hasOwnProperty("clientid");
+        var m2Named = m2.hasOwnProperty("clientid");
+        if (m1Named || m2Named)
+        {
+            if (!m2Named)
+                return -1;
+            if (!m1Named)
+                return 1;
+            if (m1.clientid < m2.clientid)
+                return -1;
+            return 1;
+        }
+
         if (m1.name < m2.name)
             return 1;
         else if (m1.name > m2.name)
