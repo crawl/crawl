@@ -2831,9 +2831,10 @@ static void _handle_accidental_death(const int orig_hp,
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
     // Xom bored?
-    if (!you.did_escape_death()
-        && you.escaped_death_aux.empty()
-        && !_player_is_dead())
+    if ((!you.did_escape_death()
+         && you.escaped_death_aux.empty()
+         && !_player_is_dead())
+        || you.pending_revival) // don't let xom take credit for felid revival
     {
         // The player is fine.
         return;
@@ -3176,7 +3177,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
 {
     sever = max(1, sever);
 
-    if (_player_is_dead())
+    if (_player_is_dead() && !you.pending_revival)
     {
         // This should only happen if the player used wizard mode to
         // escape death from deep water or lava.
