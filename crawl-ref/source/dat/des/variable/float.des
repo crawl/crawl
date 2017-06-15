@@ -8763,3 +8763,85 @@ MAP
        .cnnnnccccccccc.
        ................
 ENDMAP
+
+NAME:    emtedronai_trogs_sanctum
+TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
+DEPTH:   D:$, Depths
+KFEAT:   _ = altar_trog
+: if not you.unrands("necklace_of_bloodlust") then
+KITEM:   _ = necklace of bloodlust no_pickup
+: elseif not you.unrands("wrath_of_trog") then
+KITEM:   _ = wrath of trog no_pickup
+: else
+KITEM:   _ = nothing
+: end
+KFEAT:   # = iron_grate
+ITEM:    manual of armour w:30 / manual of fighting w:30 / \
+         manual of long blades / manual of axes / manual of maces & flails / \
+         manual of polearms / manual of dodging / manual of shields
+ITEM:    executioner's axe good_item no_pickup w:5 / \
+         battleaxe good_item randart no_pickup / \
+         broad axe good_item no_pickup / \
+         triple sword good_item no_pickup w:5 / \
+         great sword good_item randart no_pickup / \
+         double sword good_item no_pickup / \
+         great mace good_item no_pickup / \
+         evening star good_item no_pickup / \
+         bardiche good_item no_pickup w:5 / \
+         glaive good_item randart no_pickup / \
+         demon trident good_item no_pickup
+ITEM:    plate armour good_item randart w:20 no_pickup / \
+         crystal plate armour good_item no_pickup / \
+         chain mail good_item randart no_pickup
+ITEM:    potion of berserk rage ident:type
+SHUFFLE: def
+KPROP:   $*.123456defgv = bloody / nothing
+: if you.in_branch("Depths") then
+MONS:    patrolling juggernaut
+MONS:    deep troll w:15 / spriggan berserker w:15 / stone giant / \
+         iron troll w:5 / ettin w:5
+MONS:    deep elf annihilator / deep elf demonologist / titan / boggart / \
+         deep elf sorcerer / spriggan air mage / lich / vampire mage
+: else
+MONS:    patrolling ettin / patrolling iron troll
+MONS:    troll w:15 / two-headed ogre w:15 / cyclops w:5 / deep troll w:5
+MONS:    ogre mage / wizard / deep elf mage / boggart / necromancer
+: end
+MONS:    generate_awake moth of wrath
+MONS:    deep troll earth mage
+KMONS:   S = silent spectre
+MARKER:  P = lua:transp_loc("trogsanc_entry")
+MARKER:  Q = lua:transp_dest_loc("trogsanc_entry")
+MARKER:  S = lua:transp_loc("trogsanc_exit")
+MARKER:  P = lua:transp_dest_loc("trogsanc_exit")
+FTILE:   F = floor_rough_lightred
+MARKER:  F = lua:fog_machine { \
+               cloud_type = "flame", pow_min = 10, pow_max = 10, delay = 10, \
+               size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+: dgn.delayed_decay(_G, 's', 'human skeleton')
+SUBST:   F : s
+MAP
+vvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvv4vvvvv4vvvvvvvv
+vvvvvvvv#vvvvv#vvvvvvvv
+vvvvvvv..+.Q.+..vvvvvvv
+vvvvvv...+.s.+...vvvvvv
+vvvvv....v.g.v....vvvvv
+vvvF#..v#vnvnv#v..#Fvvv
+vvvvv..#4vvSvv4#..vvvvv
+vvv4#22v#vn=nv#v22#4vvv
+vvv3v...$$e_f$$...v3vvv
+vvv3#....$*d*$....#3vvv
+vvv3v..Y..$$$..Y..v3vvv
+vvv5#......1......#5vvv
+vvvvv22.........22vvvvv
+vvvvv#v#vvnnnvv#v#vvvvv
+vvvvv4vFvvnnnvvFv4vvvvv
+vvvvvvvvv..P..vvvvvvvvv
+vvvvvvv4n.....n4vvvvvvv
+      vvv.....vvv
+           @
+ENDMAP
