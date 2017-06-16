@@ -83,7 +83,7 @@ static const mon_spellbook mspell_list[] =
     // ('a') Ants and formicids.
     {  MST_ENTROPY_WEAVER,
       {
-       { SPELL_ENTROPIC_WEAVE, 40, MON_SPELL_WIZARD },
+       { SPELL_ENTROPIC_WEAVE, 25, MON_SPELL_WIZARD },
       }
     },
 
