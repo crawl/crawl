@@ -44,8 +44,10 @@ setlocal iskeyword+=:
 setlocal iskeyword+=-
 
 " These have extra matching going on, so not in desDeclarator (global)
-syn keyword desDec NAME: COLOUR: SUBST: NSUBST: SHUFFLE: CLEAR: LROCKCOL: LFLOORCOL: contained
+syn keyword desDec CLEAR: COLOUR: NAME: NSUBST: MARKER: SHUFFLE: LROCKCOL: LFLOORCOL: SUBST: contained
 
+syn region desMark start=/^MARKER:/ end=/$/ contains=desDec keepend
+syn region desMark start=/^MARKER:\s*\S\+\s*[=:]\s*lua:/ skip=/\\\s*/ end=/$/ contains=desDec,@desLuagroup,@deslua keepend
 syn region desSubst start=/^SUBST:\s*/ end=/$/ contains=desDec,desSubstArg,desSubstSep,@desMapElements keepend
 syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desDec,desSubstArg,desSubstSep,@desMapElements keepend
 syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desDec,desMapFrag keepend
@@ -63,7 +65,7 @@ syn match desGod contained /qazlal\|ru\|sif_muna\|trog\|uskayaw\|vehumet\|wu_jia
 syn match desGod contained /xom\|yredelemnul\|zin\|the_shining_one/
 
 syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
-syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME:
+syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: WELCOME:
 syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC: ORDER:
 
 " keywords
