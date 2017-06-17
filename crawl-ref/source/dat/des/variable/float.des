@@ -4081,7 +4081,7 @@ TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:8-, Depths
 ORIENT: float
 KFEAT:  _ = altar_jiyva
-NSUBST: " = R / '
+NSUBST: " = R / ', * = 3:| / 2:* / $
 : if you.in_branch("Depths") then
 MONS: slime creature / acid blob / azure jelly / death ooze
 MONS: floating eye / glowing orange brain / shining eye / golden eye band \
@@ -4108,19 +4108,19 @@ MARKER: S = lua:transp_dest_loc("jiyva_chamber_exit")
 COLOUR: c = green
 COLOUR: n = lightgreen
 MAP
-   .........
-  ..ccccccc..
- ..cc'ccc'cc..
- .cc''c.c''cc.
- .c''.....'"c.
-..ccc.$*|.ccc..
-@PnnQ.$_|..ccS@
-..ccc.$*|.ccc..
- .c''.....'"c.
- .cc''c.c''cc.
- ..cc'ccc'cc..
-  ..ccccccc..
-   .........
+    ccccccccc
+   ccccccccccc
+  cccc'ccc'cccc
+  ccc''c.c''ccc
+  cc''.....'"cc
+ .cccc.***.cccc.
+@PnnnQ.*_*..nnnS@
+ .cccc.***.cccc.
+  cc''.....'"cc
+  ccc''c.c''ccc
+  cccc'ccc'cccc
+   ccccccccccc
+    ccccccccc
 ENDMAP
 
 NAME:   gammafunk_beogh_shrine
@@ -4160,21 +4160,21 @@ MARKER: Q = lua:transp_dest_loc("beogh_ambush_entry")
 MARKER: R = lua:transp_loc("beogh_ambush_exit")
 MARKER: S = lua:transp_dest_loc("beogh_ambush_exit")
 MAP
-  .............
- ..ccccccccccc..
- .cc...1R1..1cc.
- .c...ccccc.11c.
- .c...3c3c3...c.
- .c.c."13""3c.c.
-..c.cc*I$I"cc1c..
-@PnQn|||_"33cRcS@
-..c.cc*I$I"cc1c..
- .c.c."13""3c.c.
- .c...3c3c3...c.
- .c...ccccc.11c.
- .cc...1R1..1cc.
- ..ccccccccccc..
-  .............
+   ccccccccccccc
+  ccccccccccccccc
+  ccc...1R1..1ccc
+  cc...ccccc.11cc
+  cc...3c3c3...cc
+  cc.c."13""3c.cc
+ .cc.cc*I$I"cc1cc.
+@PnnQn|||_"33cRccS@
+ .cc.cc*I$I"cc1cc.
+  cc.c."13""3c.cc
+  cc...3c3c3...cc
+  cc...ccccc.11cc
+  ccc...1R1..1ccc
+  ccccccccccccccc
+   ccccccccccccc
 ENDMAP
 
 NAME:   gammafunk_corrupted_shrine
@@ -4213,23 +4213,23 @@ MARKER: S = lua:transp_dest_loc("corrupted_shrine_exit")
 COLOUR: bc = magenta
 COLOUR: n = lightmagenta
 MAP
- ......   ......
-.@.ccc.. ..cccc..
-..Pc.cc. .cc""cc.
-.ccn..c...cbb""c.
-.c..Q.cc.cc''b"c.
-.cc....ccc.''bcc.
-..ccc.......ccc..
- ...cc.$$$.cc...
-   ..c.*_*.c..
- ...cc.|||.cc...
-..ccc.......ccc..
-.ccb''.ccc.''bcc.
-.c"b''cc.cc''b"c.
-.c""bbc...cbb""c.
-.cc""cc. .cc""cc.
-..cccc.. ..ccccS.
- ......   ......@
+ cccccc.@.cccccc
+ccccccccPcccccccc
+ccc..nnn.ccc""ccc
+cc.Q..ccnccbb""cc
+cc....ccncc''b"cc
+ccc....cnc.''bccc
+ccccc.......ccccc
+ ccccc.$$$.ccccc
+   ccc.*_*.ccc
+ ccccc.|||.ccccc
+ccccc.......ccccc
+cccb''.cnc.''bccc
+cc"b''ccncc''b"cc
+cc""bbccnccbb""cc
+ccc""ccc.ccc""ccc
+ccccccccScccccccc
+ cccccc.@.cccccc
 ENDMAP
 
 NAME:   gammafunk_steamed_eel
@@ -8688,34 +8688,34 @@ TAGS: no_monster_gen no_trap_gen no_tele_into
 DEPTH: Crypt, D:$, Depths, Elf, Shoals, Spider, Snake, Swamp, Zot
 KMASK: ^ = no_item_gen
 ITEM: any randart jewellery
-KFEAT: ^ = known zot trap
 SHUFFLE: FGHI / JKLM
-NSUBST: D = ^ / ., E = ^ / ., I = . / B
-SUBST: FGH = ., JKLM = B, A = ^., B = ^^.
+NSUBST: D = ^ / ., E = ^ / ., I = . / "
+SUBST: FGH = ., JKLM = ", ' = ^., " = ^^.
+KFEAT: ^ = known zot trap
 MARKER: P = lua:transp_loc("its_a_trap_entry")
 MARKER: Q = lua:transp_dest_loc("its_a_trap_entry")
 MARKER: R = lua:transp_loc("its_a_trap_exit")
 MARKER: S = lua:transp_dest_loc("its_a_trap_exit")
 MAP
-      ..........
-     ..cccccccc..
-    ..cccccccccc...
- ....ccccDcc^ccccc......
- .cccccc.D....ccccccccc.
- .cccccB.c.ccc..ccccccc.
- .cc.AA.BcBI.0AB.cd^$nn.
- .ccAA.cBGHc.9AB.cA*Ann.
-..nn^..cFcBI.0AB^+|^$nn..
-@PnnQ.^.BBBc.8ABBcA*RnnS@
-..nn^..cJcBM.0AB^+|^$nn..
- .ccAA.cBKLc.9AB.cA*Ann.
- .cc.AA.BcBM.0AB.c|^dnn.
- .cccccB.c.ccc..ccccccc.
- .cccccc.E....ccccccccc.
- ....ccccEcc^ccccc......
-    ..cccccccccc...
-     ..cccccccc..
-      ..........
+       cccccccccc
+      cccccccccccc
+     ccccccccccccccc
+  ccccccccDcc^ccccccccccc
+  ccccccc.D....cccccccccc
+  cccccc".c.ccc..cccccccc
+  ccc.''."c"I.0'".cd^$ccc
+  ccc''.c"GHc.9'".c'*'nnn
+..nnn^..cFc"I.0'"^+|^$nnn..
+@PnnnQ.^."""c.8'""c'*RnnnS@
+..nnn^..cJc"M.0'"^+|^$nnn..
+  ccc''.c"KLc.9'".c'*'nnn
+  ccc.''."c"M.0'".c|^dccc
+  cccccc".c.ccc..cccccccc
+  ccccccc.E....cccccccccc
+  ccccccccEcc^ccccccccccc
+     ccccccccccccccc
+      cccccccccccc
+       cccccccccc
 ENDMAP
 
 NAME: gammafunk_dig_for_victory
@@ -8743,25 +8743,25 @@ MARKER: Q = lua:transp_dest_loc("dig_for_victory_entry")
 MARKER: R = lua:transp_loc("dig_for_victory_exit")
 MARKER: S = lua:transp_dest_loc("dig_for_victory_exit")
 MAP
-       ................
-       .cnnnnccccccccc.
-      ..cDDDDEEccccccc..
- ......ccDDDDEE--cm1ccc......
- .ccccccnnnnnnnnnmnnnncccccc.
- .c.....mmmmmmmmmmmmmmem*men.
- .c.....mmmmmmmmmmmmnmmmmmmn.
- .c.....mmmmmmmmmmmmmm*m$m$n.
+        ..@...
+        cnnnnccccccccc
+        cDDDDEEccccccc
+       ccDDDDEE--cm1ccc
+  ccccccnnnnnnnnnmnnnncccccc
+  c.....mmmmmmmmmmmmmmem*mec
+  c.....mmmmmmmmmmmmnmmmmmmn
+ .c.....mmmmmmmmmmmmmm*m$m$n
 ..n..>..mmnnnmmmmmmmnmmmmmmn..
 @PnQ....mmn1mmmmm1mmmm|mRm|nS@
 ..n..d..mmnnnmmmmmmmnmmmmmmn..
- .c.....mmmmmmmmmmmmmm*m$m$n.
- .c.....mmmmmmmmmmmmnmmmmmmn.
- .c.....mmmmmmmmmmmmmmem*men.
- .ccccccnnnnnnnnnmnnnncccccc.
- ......ccFFFFHH--cm1ccc......
-      ..cFFFFHHccccccc.
-       .cnnnnccccccccc.
-       ................
+ .c.....mmmmmmmmmmmmmm*m$m$n
+  c.....mmmmmmmmmmmmnmmmmmmn
+  c.....mmmmmmmmmmmmmmem*mec
+  ccccccnnnnnnnnnmnnnncccccc
+       ccFFFFHH--cm1ccc
+        cFFFFHHccccccc
+        cnnnnccccccccc
+        ..@...
 ENDMAP
 
 NAME:    emtedronai_trogs_sanctum
