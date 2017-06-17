@@ -8655,14 +8655,21 @@ ENDMAP
 NAME: gammafunk_sealed_arena
 TAGS: no_monster_gen no_trap_gen
 DEPTH: Crypt, D:8-, Depths, Elf, Vaults, Zot
+ITEM:  any jewellery good_item
+ITEM:  cloak good_item / scarf good_item / helmet good_item / hat good_item \
+       / gloves good_item / pair of boots good_item
 KITEM: R = |
 MONS: orange crystal statue / obsidian statue
-: if you.in_branch("D") and you.depth() <= 11 then
-SUBST: 1 = 1...
+# In earlier Dungeon depths, one d item and remove 1/3 of the 9 spawns
+# on-average.  Elsewhere place one d item and one e item and don't reduce the 9
+# spawns.
+: if you.in_branch("D") and you.depth() < 12 then
+SUBST: 1 = 1..., 9 = 99., " = d, ' = $
 : elseif you.in_branch("D") then
 SUBST: 1 = 1.
 : end
-SUBST: 9 = 99., h : b., i : b., b : bcvx
+SUBST:  " = $, h : b., i : b., b : bcvx
+NSUBST: ' = d / e / $
 MARKER: P = lua:transp_loc("sealed_arena_entry")
 MARKER: Q = lua:transp_dest_loc("sealed_arena_entry")
 MARKER: R = lua:transp_loc("sealed_arena_exit")
@@ -8673,9 +8680,9 @@ MAP
  .nn9......nn.
  .nG.hi9ih.Gn.
  .n..ih.hi$*n.
-..n......8$|n..
-@Pn..Q.1..$RnS@
-..n......8$|n..
+..n9.....8'|n..
+@Pn..Q.1.."RnS@
+..n9.....8'|n..
  .n..ih.hi$*n.
  .nG.hi9ih.Gn.
  .nn9......nn.
