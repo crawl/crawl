@@ -2554,6 +2554,9 @@ static int _target_distance_from(const coord_def &pos)
  * This function relies on the travel_point_distance array being correctly
  * populated with a floodout call to find_travel_pos starting from the player's
  * location.
+ *
+ * This function has undefined behavior when the target position is not
+ * traversable.
  */
 static int _find_transtravel_stair(const level_id &cur,
                                     const level_pos &target,
@@ -2785,9 +2788,20 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
 
     find_travel_pos(you.pos(), nullptr, nullptr, nullptr);
 
-    _find_transtravel_stair(current, target,
-                            0, cur_stair, closest_level,
-                            best_level_distance, best_stair);
+    // either off-level, or traversable and on-level
+    // TODO: actually check this when the square is off-level? The current
+    // behavior is that it will go to the level and then fail.
+    const bool maybe_traversable = (target.id != current
+                                    || feat_is_traversable_now(env.map_knowledge(target.pos).feat()));
+
+    if (maybe_traversable)
+    {
+        _find_transtravel_stair(current, target,
+                                0, cur_stair, closest_level,
+                                best_level_distance, best_stair);
+    }
+    // even without _find_transtravel_stair called, the values are initalized
+    // enough for the rest of this to go forward.
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
@@ -2840,7 +2854,10 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         if (target.id != current
             || target.pos.x != -1 && target.pos != you.pos())
         {
-            mpr("Sorry, I don't know how to get there.");
+            if (!maybe_traversable)
+                mpr("Sorry, I don't know how to traverse that place.");
+            else
+                mpr("Sorry, I don't know how to get there.");
         }
     }
 
