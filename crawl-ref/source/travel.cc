@@ -2792,7 +2792,8 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     // TODO: actually check this when the square is off-level? The current
     // behavior is that it will go to the level and then fail.
     const bool maybe_traversable = (target.id != current
-                                    || feat_is_traversable_now(env.map_knowledge(target.pos).feat()));
+                                    || (in_bounds(target.pos)
+                                        && feat_is_traversable_now(env.map_knowledge(target.pos).feat())));
 
     if (maybe_traversable)
     {
