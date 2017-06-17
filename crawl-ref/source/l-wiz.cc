@@ -30,7 +30,7 @@ module "crawl"
 
 LUAFN(wiz_quick_fsim)
 {
-    // quick and dirty, get av effective damage.  Will crash if
+    // quick and dirty, get av effective damage. Will crash if
     // monster can't be placed.
     string mon_name = luaL_checkstring(ls, 1);
     monster_type mtype = get_monster_by_name(mon_name, true);
@@ -43,7 +43,7 @@ LUAFN(wiz_quick_fsim)
 
     Options.fsim_mons = mon_name;
     Options.fsim_rounds = fsim_rounds;
-    
+
     fight_data fdata = wizard_quick_fsim_raw(false);
     PLUARET(number, fdata.av_eff_dam);
 }
