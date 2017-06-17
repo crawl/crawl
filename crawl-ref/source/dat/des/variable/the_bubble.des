@@ -21,25 +21,25 @@ MARKER: D = lua:transp_loc("the_bubble_entry")
 MARKER: E = lua:transp_dest_loc("the_bubble_exit")
 SUBST: c : bcv
 MAP
-  ...............
- ..ccccc.G.ccccc..
-..cccAAcccccAAAcc..
-.nn$xAAAAAAAAAAAcc.
-.n*$xAAAAAAAAAAAAc.
-.n|*+AAAAAAAAAAAAc.
-.n*$xAAAAAAAAAAAAc.
-.nn$xAAAAAAAAAAAcc.
-..cccAAAAAAAAAAAc..
-@DcccAAAAAAAAAAAcE@
-..cccAAAAAAAAAAAc..
-.nn$xAAAAAAAAAAAcc.
-.n*$xAAAAAAAAAAAAc.
-.n|*+AAAAAAAAAAAAc.
-.n*$xAAAAAAAAAAAAc.
-.nn$xAAAAAAAAAAAcc.
-..cccAAcccccAAAcc..
- ..ccccc.G.ccccc..
-  ...............
+   ccccccc ccccccc
+  ccccccccccccccccc
+ cccccAAcccccAAAcccc
+.nnn$xAAAAAAAAAAAccc
+.nn*$xAAAAAAAAAAAAcc
+.nn|*+AAAAAAAAAAAAcc
+.nn*$xAAAAAAAAAAAAcc
+.nnn$xAAAAAAAAAAAccc
+.cccccAAAAAAAAAAAccc.
+@DccccAAAAAAAAAAAccE@
+.cccccAAAAAAAAAAAccc.
+.nnn$xAAAAAAAAAAAccc
+.nn*$xAAAAAAAAAAAAcc
+.nn|*+AAAAAAAAAAAAcc
+.nn*$xAAAAAAAAAAAAcc
+.nnn$xAAAAAAAAAAAccc
+ cccccAAcccccAAAcccc
+  ccccccccccccccccc
+   ccccccc ccccccc
 ENDMAP
 
 NAME: the_bubble_gammafunk_split
