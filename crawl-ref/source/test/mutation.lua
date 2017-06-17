@@ -124,7 +124,7 @@ local function test_potion(tries, iterations, premutate)
                 "Clearing mutations failed, currently: " .. you.mutation_overview())
         for i=1, premutate do
             -- note: won't guarantee `premutate` mutations, because some will
-            -- cancel each other out.  This tops out at around 10 mutation
+            -- cancel each other out. This tops out at around 10 mutation
             -- levels by this method.
             give_random_mutation(0.0)
         end
