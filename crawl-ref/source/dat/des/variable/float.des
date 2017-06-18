@@ -3997,59 +3997,55 @@ ENDMAP
 
 NAME: gammafunk_sealed_library
 TAGS: no_monster_gen no_trap_gen
-DEPTH: Crypt, D:8-, Depths, Elf, Snake, Zot
+DEPTH: Crypt, D:12-, Depths, Elf, Snake, Zot
 ORIENT: float
-ITEM: any book
-ITEM: magical staff / ring of magical power / ring of wizardry \
-      / ring of intelligence / amulet of mana regeneration \
-      / amulet of guardian spirit / w:5 crystal ball of energy
-ITEM: any jewellery good_item / robe good_item / cloak good_item \
-      / scarf good_item / hat good_item, any manual
+ITEM: any book, any manual, any jewellery good_item
+ITEM: robe good_item / cloak good_item / scarf good_item \
+      pair of boots good_item / hat good_item
 # Do this nsubst now so some branches can adjust monster placement.
-NSUBST: ' = 2 = d2 / 2, 2 = 2=112 / 6=2 / 3=3 / 4=23.. / ., 4 = 1=4 / 4...
+NSUBST: 4 = 1:4 / 2=433 / 2=53 / 3, 3 = 3:3 / 3=3222 / 2
+NSUBST: ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
+# Monster glyph counts after these nsubst:
+# 1:0-2 (ave 1.0), 2:6-12 (ave 7.5), 3:3-6 (ave 3.75), 4:1-3 (ave 1.66)
+# 5:0-2 (ave 1)
 : if you.in_branch("Crypt") then
 MONS: phantasmal warrior
 MONS: necromancer / vampire mage / vampire knight / deep elf death mage \
       / eidolon
 MONS: revenant / ancient champion / lich, ancient lich
+SUBST: 4 = 23, 5 = 4
 : elseif you.in_branch("D") then
 MONS: eye of draining
 MONS: boggart / kobold demonologist / deep elf mage / tengu conjurer
 MONS: wizard / necromancer / orc sorcerer / ogre mage
 MONS: deep elf annihilator / deep troll earth mage / sphinx / tengu reaver
-:   if you.depth() <= 11 then
-SUBST: 4 = 3334
-:   else
-SUBST: 4 = 34
-:   end
+SUBST: 4 = 23, 5 = 4
 : elseif you.in_branch("Depths") then
-MONS: floating eye, boggart / ogre mage / wizard / necromancer
+MONS: floating eye / phantasmal warrior
+MONS: boggart / ogre mage / wizard / necromancer
 MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
-      / deep elf elementalist / deep elf death mage / deep troll earth mage \
-      / spriggan air mage / vampire mage
-MONS: sphinx / tengu reaver / fire giant / frost giant, titan / ancient lich
+      / deep elf death mage / deep troll earth mage / spriggan air mage \
+      / vampire mage / hell knight
+MONS: sphinx / tengu reaver / lich / fire giant / frost giant
+MONS: titan / ancient lich
 : elseif you.in_branch("Elf") then
-MONS: water elemental, deep elf mage / w:2 orc sorcerer
+MONS: water elemental / shapeshifter, deep elf mage / w:1 orc sorcerer
 MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
-      / deep elf elementalist / deep elf death mage
-SUBST: 4 = 3
+      / deep elf death mage
+MONS: glowing shapeshifter
+SUBST: 4 = 23, 5 = 4
 : elseif you.in_branch("Snake") then
 MONS: mana viper / guardian serpent
 MONS: naga mage / naga ritualist / salamander mystic, nagaraja
-SUBST: 3 = 23, 4 = 3
-: elseif you.in_branch("Vaults") then
-MONS: phantasmal warrior, boggart / ogre mage / wizard / necromancer
-MONS: deep elf sorcerer / deep elf annihilator / deep elf demonologist \
-      / deep elf elementalist, deep elf death mage / deep troll earth mage \
-      / spriggan air mage / vampire mage / hell knight
-MONS: sphinx / tengu reaver / fire giant / frost giant, titan / ancient lich
+SUBST: 5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
-MONS: ghost moth
+MONS: ghost moth / death cob / curse toe
 MONS: draconian annihilator / draconian scorcher / draconian shifter \
       / draconian knight / draconian monk / draconian stormcaller
-MONS: ancient lich
-SUBST: 3 = 2, 4 = 3
+MONS: ancient lich, orb of fire
+SUBST: 3 = 2, 4 = 3, 5 = 4
 : end
+KFEAT: _ = altar_sif_muna / altar_vehumet
 SHUFFLE: efg
 NSUBST: R = R / tGT
 MARKER: P = lua:transp_loc("sealed_library_entry")
@@ -4057,23 +4053,25 @@ MARKER: Q = lua:transp_dest_loc("sealed_library_entry")
 MARKER: R = lua:transp_loc("sealed_library_exit")
 MARKER: S = lua:transp_dest_loc("sealed_library_exit")
 MAP
-  ccccccccccccccccccccccc
-  c2.'c.c'c.c'c.c'c....Rc
-  cG$..............2b4..c
-  cT*4bb2bb2bb2.....bb..c
-  cG$..........bbb.....Gc
-  c2...Gc'c.Tbbb.....b2.c
-  ccc+ccccccbb...bbbbb..c
-....nden...c......G.G.$tc
-@S.Pndfn.Q.+.........2|Uc
-....ndgn...c......G.G.$tc
-  ccc+ccccccbb...bbbbb..c
-  c2...Gc'c.Tbbb.....b2.c
-  cG$..........bbb.....Gc
-  cT*4bb2bb2bb2.....bb..c
-  cG$..............2b4..c
-  c2.'c.c'c.c'c.c'c....Rc
-  ccccccccccccccccccccccc
+ ccccccccccccccccccccccccc
+ ccccccccccccccccccccccccc
+ ccc.3c'c'c'c'c'c'c3..$Rcc
+ ccG4...............b4$*cc
+ ccT..bb2bb2bb2.....bb..cc
+ ccG4..........bbb.....Gcc
+ cccc3.Gc'c2Tbbb...2.b3.cc
+ cccc+ccccccbb...bbbbb..cc
+...nnedUnG..c.....G.G.$tcc
+@SPnnfd_nQ..+........4|Ucc
+...nngdUnG..c.....G.G.$tcc
+ cccc+ccccccbb...bbbbb..cc
+ cccc3.Gc'c2Tbbb...2.b3.cc
+ ccG4..........bbb.....Gcc
+ ccT..bb2bb2bb2.....bb..cc
+ ccG4...............b4$*cc
+ cc..3c'c'c'c'c'c'c3..$Rcc
+ ccccccccccccccccccccccccc
+ ccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   gammafunk_jiyva_shrine
