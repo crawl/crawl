@@ -8773,7 +8773,7 @@ ENDMAP
 
 NAME:    emtedronai_trogs_sanctum
 TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen
-DEPTH:   D:$, Depths
+DEPTH:   D:13-, Depths
 : if not you.unrands("necklace_of_bloodlust") then
 KITEM:   _ = necklace of bloodlust no_pickup
 : elseif not you.unrands("wrath_of_trog") then
