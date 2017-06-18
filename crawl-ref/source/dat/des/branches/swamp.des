@@ -1853,7 +1853,7 @@ __ttt-v...ZZ.....ZZ...v-ttt__
             _____
 ENDMAP
 
-NAME: cheibrodos_swamp_sealed
+NAME: cheibrodos_swamp_monstrosity
 DEPTH: Swamp
 TAGS: no_item_gen no_monster_gen no_pool_fixup
 ORIENT: float
@@ -1865,7 +1865,7 @@ MAP
   'tttttttt'
  'ttttW--ttt'
  'tttWWWWW-tt
-'tttcc=cc-W-t'
+'tttcc+cc-W-t'
 'ttcc...ccW-t'
 'ttc"..."c-Wt'
 tttc".1."c-Wt'
