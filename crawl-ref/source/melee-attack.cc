@@ -843,8 +843,9 @@ bool melee_attack::attack()
             // Check for defender Spines
             do_spines();
 
-            // Spines can kill!
-            if (!attacker->alive())
+            // Spines can kill! With Usk's pain bond, they can even kill the
+            // defender.
+            if (!attacker->alive() || !defender->alive())
                 return false;
         }
 
