@@ -4259,32 +4259,33 @@ ENDMAP
 NAME:   gammafunk_wand_slinger
 TAGS:   no_monster_gen no_trap_gen no_pool_fixup
 ORIENT: float
-DEPTH:  D:3-
+DEPTH:  D:3-13
 KPROP:  LM = no_tele_into
+KMASK:  LM = no_item_gen
 ITEM:   wand of flame
 ITEM:   wand of lightning / wand of iceblast / wand of acid
 ITEM:   wand of confusion / wand of disintegration / wand of paralysis \
         / wand of enslavement / wand of polymorph
 ITEM:   wand of clouds / wand of scattershot
+MONS: shadow imp, orc priest, kobold demonologist
+MONS: deep elf knight / fire crab / orc high priest / orc sorcerer
 KMONS:  p = plant
 KFEAT:  p = W
+KFEAT:  - = iron_grate
 : if you.depth() <= 5 then
-MONS: dart slug / shadow imp
-MONS: orc priest / w:5 kobold demonologist
-NSUBST: L = 1:1 / 1=1NN / N, M = 1:1 / 1=1NN / N, N = 2... / .
+NSUBST: L = 1:1 / 1=12N / N, M = 1:1 / 1=12N / N, N = 1:2 / 3..... / .
+SUBST: * = ., | = *
 # Always place one wand, and make it more likely to be flame
 SUBST: D = d:20 e f g
 : elseif you.depth() <= 8 then
-MONS: shadow imp / orc priest
-MONS: kobold demonologist
-MONS: deep elf knight, fire crab, orc high priest, orc sorcerer
-NSUBST: L = 1:1 / 2=1NN / N, M = 1:1 / 2=1NN / N, N = 2=2.. / 3..... / .
+NSUBST: L = 1:1 / 1:2 / 2=12N / N, M = 1:1 / 1:2 / 2=12N / N
+NSUBST: N = 1:3 / 1=3. / 4..... / .
+SUBST: | = .
 # 50% chance to place one, 50% chance to place two
 SHUFFLE: DEF / HJK
 : else
-MONS: orc priest / kobold demonologist
-MONS: deep elf knight, fire crab, orc high priest, orc sorcerer
-NSUBST: L = 2=1N / N, M = 2=1N / N, N = 2 / 2=2. / .
+NSUBST: L = 1:2 / 1:3 / 2=23N / N, M = 1:2 / 1:3 / 2=23N / N
+NSUBST: N = 1:4 / 2=4. / .
 # 25% chance to place one, 75% chance to place two
 SHUFFLE: DEF / HJK / HJK / HJK
 : end
@@ -4296,15 +4297,15 @@ MARKER: R = lua:transp_loc("wand_slinger_exit")
 MARKER: S = lua:transp_dest_loc("wand_slinger_exit")
 MAP
  .................
- .ccccccccccccccc.
- .cGpcLLLLLLLxWGc.
- .cp.cwwwwwwwc.pc.
-..c.Ec..WWW..c..c..
-@PnQD+..WtW..+*RcS@
-..c.Fc..WWW..c..c..
- .cp.cwwwwwwwc.pc.
- .cGpcMMMMMMMxWGc.
- .ccccccccccccccc.
+ .nnnnnnnnnnnnnnn.
+ .nGpnLLLLLLL-WGn.
+ .np.nwwwwwwwn.pn.
+..n.En..WWW..n*$n..
+@PnQD+..WtW..+|RnS@
+..n.Fn..WWW..n*$n..
+ .np.nwwwwwwwn.pn.
+ .nGpnMMMMMMM-WGn.
+ .nnnnnnnnnnnnnnn.
  .................
 ENDMAP
 
