@@ -3593,6 +3593,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        case POT_DEGENERATION:
+            return you.species == SP_GNOLL;
         }
 
         return false;
