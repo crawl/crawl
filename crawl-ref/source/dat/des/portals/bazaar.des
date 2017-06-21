@@ -1784,6 +1784,62 @@ x.......x     x.......x
 xxxxxxxxx     xxxxxxxxx
 ENDMAP
 
+# 3 to 4 shops, with an average of 3.5
+NAME:       bazaar_kenran_forest_clearing
+TAGS:       no_rotate no_vmirror
+ORIENT:     encompass
+WEIGHT:     5
+KITEM:      h = human skeleton
+KFEAT:      $ = any shop
+KFEAT:      A = abandoned_shop
+: if crawl.one_chance_in(4) then
+KFEAT:      F = V
+TILE:       t = dngn_tree_dead w:10 / dngn_tree_red w:3 / \
+                dngn_tree_lightred w:2
+COLOUR:     . = brown, t = brown w:10 / red w:3 / lightred w:2
+: else
+TILE:       t = dngn_tree w:3 / dngn_tree_yellow w:2 / \
+                dngn_tree_lightred w:2 / dngn_tree_red w:3
+KFEAT:      F = T
+COLOUR:     . = green, t = green w:3 / lightgreen w:2 / \
+                lightred w:3 / red w:2 / brown w:1
+: end
+NSUBST:     $ = 1=$A
+:           bazaar_setup(_G)
+MAP
+ttttttttttttttttttttttttt
+tttttttttttttttttttttt>tt
+ttttttttttttttttttttt.ttt
+ttttttttttttttttttttt.ttt
+ttttttttttttttGttt.t..ttt
+ttttttttttttttt.ttt..tttt
+tttt$.ttttttttt.....ttttt
+tt.t...ttttttt..t.ttttttt
+tt...ttttttt..ttttttt..tt
+tttt....ttt...tt..tt....t
+tttttt.t.t....t..t...t.$t
+ttttt..t..t.F..tttttttttt
+tttttt........t..Attttttt
+tttttttt.tt..t.t..ttttttt
+tttttt....t..t..htt.$tttt
+tttttt.t...t..t.tt...tttt
+ttt......t.....t....ttttt
+ttG.t..tt....tt...ttttttt
+t......tttt..tttttttttttt
+t$..t.tttttt....ttttttttt
+ttt....ttt...ttGttttttttt
+ttttttttt...ttttttttttttt
+ttttttttt..tttttttttttttt
+tttttttttt...tttttttttttt
+ttttttttttt..tttttttttttt
+ttttttttttt.t.ttttttttttt
+tttttttttt..ttttttttttttt
+ttttt.tt...tttttttttttttt
+ttt<.....tttttttttttttttt
+ttttttt.ttttttttttttttttt
+ttttttttttttttttttttttttt
+ENDMAP
+
 ##########################################################################
 # Generated maps
 ##########################################################################
