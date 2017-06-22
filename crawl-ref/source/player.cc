@@ -6322,7 +6322,8 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (problems.empty())
         return ""; // no problem
 
-    return make_stringf("You cannot teleport because you are %s.",
+    return make_stringf("You cannot %s because you are %s.",
+                        blinking ? "blink" : "teleport",
                         comma_separated_line(problems.begin(),
                                              problems.end()).c_str());
 }
