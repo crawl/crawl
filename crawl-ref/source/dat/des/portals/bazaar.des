@@ -57,13 +57,26 @@ function random_bazaar_colour()
   return ret
 end
 
-function bazaar_setup(e)
+function bazaar_setup(e, shop_halo)
+  if shop_halo == nil then
+    shop_halo = true
+  end
+
   e.tags('no_monster_gen')
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
+  if shop_halo then
+    dgn.set_branch_epilogue("Bazaar", "fixup_bazaar")
+  else
+    dgn.set_branch_epilogue("Bazaar", "fixup_bazaar_without_halo")
+  end
 end
 
-function fixup_bazaar()
+function set_bazaar_tiles(shop_halo)
+  if shop_halo == nil then
+    shop_halo = true
+  end
+
   dgn.change_floor_colour(random_bazaar_colour())
 
   local default = {rock="wall_vault", floor="floor_vault", halo="halo_vault"}
@@ -83,10 +96,18 @@ function fixup_bazaar()
   dgn.change_floor_tile(tile.floor)
   dgn.change_rock_tile(tile.rock)
 
-  dgn.floor_halo("enter_shop", "yellow", tile.halo)
+  if shop_halo then
+    dgn.floor_halo("enter_shop", "yellow", tile.halo)
+  end
 end
 
-dgn.set_branch_epilogue("Bazaar", "fixup_bazaar")
+function fixup_bazaar()
+  set_bazaar_tiles()
+end
+
+function fixup_bazaar_without_halo()
+  set_bazaar_tiles(false)
+end
 
 }}
 
