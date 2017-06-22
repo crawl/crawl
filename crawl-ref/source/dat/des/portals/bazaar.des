@@ -1569,6 +1569,67 @@ xT.xxxxxxxxxxx.Tx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 3 to 4 shops, with an average of 3.5
+NAME:       bazaar_kenran_forest_clearing
+ORIENT:     encompass
+WEIGHT:     5
+KITEM:      h = human skeleton
+KITEM:      c = black bear skeleton
+KFEAT:      $ = any shop
+KFEAT:      # = antique weapon shop / antique armour shop / \
+                antiques shop / book shop
+KFEAT:      A = abandoned_shop
+NSUBST:     $ = 1=$A
+NSUBST:     H = 1=h / *=.
+SUBST:      $ = #:20 $
+SUBST:      R = t:20 .
+: if crawl.one_chance_in(4) then
+KFEAT:      F = V
+TILE:       t = dngn_tree_dead w:10 / dngn_tree_red w:3 / \
+                dngn_tree_lightred w:2
+COLOUR:     . = brown, t = brown w:10 / red w:3 / lightred w:2
+: else
+TILE:       t = dngn_tree w:3 / dngn_tree_yellow w:2 / \
+                dngn_tree_lightred w:2 / dngn_tree_red w:3
+KFEAT:      F = T
+COLOUR:     . = green, t = green w:3 / lightgreen w:2 / \
+                lightred w:3 / red w:2 / brown w:1
+: end
+:           bazaar_setup(_G)
+MAP
+ttttttttttttttttttttttttt
+tttttttttttttttttttttt>tt
+ttttttttttttttttttttt.ttt
+ttttttttttttttttttttt.ttt
+ttttttttttttttcttt.t..Rtt
+ttttttttttttttt.ttt..tttt
+tttt$.ttttttttt.....ttttt
+tt.t...ttttttt..t.ttRtttt
+tt...tRttttt..ttRtttt..tt
+tttt....ttt...tt..tt....t
+ttttRt.t.t....t..t...t.$t
+ttttt..t..t.F..ttttRttttt
+tttttt........tH.Attttttt
+tttttttt.tt..tHt..ttttttt
+tttttR....t..t.HHtR.$tttt
+tttttt.t...t..t.tt...tttt
+ttt......t.....t....ttttt
+ttG.t..tt....tt...ttttttt
+t......tttt..tRtttttttttt
+t$..t.tttttt....ttttttttt
+ttt....ttt...ttGttttttttt
+ttttttttt...ttttttttttttt
+ttttttttt..tttttttttttttt
+tttttttttt...tttttttttttt
+ttttttttttt..tttttttttttt
+ttttttttttt.t.ttttttttttt
+tttttttttt..ttttttttttttt
+ttttt.tt...tttttttttttttt
+ttt<.....tttttttttttttttt
+ttttttt.ttttttttttttttttt
+ttttttttttttttttttttttttt
+ENDMAP
+
 ##########################################################################
 # Very rare maps, including dangerous maps (weight 1)
 ##########################################################################
