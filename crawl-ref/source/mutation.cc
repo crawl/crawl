@@ -368,6 +368,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return mutation_activity_type::INACTIVE;
 
+    if (you.form == transformation::tree
+        && (mut == MUT_BLINK || mut == MUT_TELEPORT))
+    {
+        return mutation_activity_type::INACTIVE;
+    }
+
     if (you_worship(GOD_DITHMENOS) && mut == MUT_IGNITE_BLOOD)
         return mutation_activity_type::INACTIVE;
 
