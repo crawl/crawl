@@ -234,14 +234,22 @@ void initialise_temples()
     mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
 #endif
 
-    CrawlVector &temple_gods
-        = you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
+
+    if (you.props.exists(TEMPLE_GODS_KEY))
+         you.props[TEMPLE_GODS_KEY].get_vector().clear();
+    else
+         you.props[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
+    CrawlVector &temple_gods = you.props[TEMPLE_GODS_KEY].get_vector();
 
     for (unsigned int i = 0; i < god_list.size(); i++)
         temple_gods.push_back((char) god_list[i]);
 
-    CrawlVector &overflow_temples
-        = you.props[OVERFLOW_TEMPLES_KEY].new_vector(SV_VEC);
+    if (you.props.exists(OVERFLOW_TEMPLES_KEY))
+         you.props[OVERFLOW_TEMPLES_KEY].get_vector().clear();
+    else
+         you.props[OVERFLOW_TEMPLES_KEY].new_vector(SV_VEC);
+    CrawlVector &overflow_temples =
+        you.props[OVERFLOW_TEMPLES_KEY].get_vector();
     overflow_temples.resize(MAX_OVERFLOW_LEVEL);
 
     // Count god overflow temple weights.

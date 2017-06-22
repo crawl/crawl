@@ -259,6 +259,7 @@ bool mapstat_build_levels()
         you.uniq_map_names.clear();
         you.unique_creatures.reset();
         initialise_branch_depths();
+        initialise_temples();
         init_level_connectivity();
         if (!_build_dungeon())
             return false;
