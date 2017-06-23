@@ -955,7 +955,7 @@ void MiscastEffect::_hexes(int severity)
         case 2:
             if (target->is_player())
             {
-                mpr("You feel dizzy.");
+				mpr("당신은 혼란스러워졌다.");
                 you.increase_duration(DUR_VERTIGO, 10 + random2(11), 50);
                 break;
             }
@@ -3113,7 +3113,7 @@ void MiscastEffect::_zot()
             lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         case 12:
-            mpr("An unnatural silence engulfs you.");
+			mpr("부자연스러운 침묵이 당신을 감싼다.");
             you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
             invalidate_agrid(true);
             break;

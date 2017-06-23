@@ -1978,7 +1978,7 @@ bool is_level_incorruptible(bool quiet)
     if (_is_level_corrupted())
     {
         if (!quiet)
-            mpr("This place is already infused with evil and corruption.");
+            mpr("이 공간은 이미 악과 부패로 가득 차 있다.");
         return true;
     }
 

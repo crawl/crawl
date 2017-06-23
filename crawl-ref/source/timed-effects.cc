@@ -442,7 +442,7 @@ void change_labyrinth(bool msg)
     if (targets.empty())
     {
         if (msg)
-            mpr("No unexplored wall grids found!");
+			mpr("탐사되지 않은 벽면이 없다!");
         return;
     }
 
@@ -699,10 +699,10 @@ void change_labyrinth(bool msg)
                                            : random2(4));
     switch (which)
     {
-    case 0: mpr("You hear an odd grinding sound!"); break;
-    case 1: mpr("You hear the creaking of ancient gears!"); break;
-    case 2: mpr("The floor suddenly vibrates beneath you!"); break;
-    case 3: mpr("You feel a sudden draft!"); break;
+    case 0: mpr("당신은 기묘하게 갈아대는 소리를 들었다!"); break;
+    case 1: mpr("당신은 고대의 기계가 작동하는 듯한 소리를 들었다!"); break;
+    case 2: mpr("당신의 발 밑의 바닥이 순간적으로 흔들렸다!"); break;
+    case 3: mpr("당신은 순간적으로 무언가가 움직였음을 느꼈다!"); break;
     }
 }
 
@@ -887,7 +887,7 @@ static void _evolve(int time_delta)
                > (int)exp_needed(you.experience_level + 1))
         {
             you.attribute[ATTR_EVOL_XP] = 0;
-            mpr("You feel a genetic drift.");
+			mpr("당신은 움직임을 느꼈다.");
             bool evol = one_chance_in(5) ?
                 delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
                 mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
@@ -1496,7 +1496,7 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
             if (!silenced(you.pos()))
                 mprf(MSGCH_SOUND, "You hear a deep rumble.");
             else
-                mpr("You feel the ground shudder.");
+				mpr("당신은 땅이 떨리는 것을 느꼈다.");
         }
     }
 }
@@ -1656,9 +1656,9 @@ void timeout_terrain_changes(int duration, bool force)
     }
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
-        mpr("The runic seals fade away.");
+		mpr("룬 표식들이 사라졌다.");
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
-        mpr("The runic seal fades away.");
+		mpr("룬 표식이 사라졌다.");
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -150,7 +150,7 @@ void wizard_change_species()
     // Means find_species_from_string couldn't interpret `specs`.
     if (sp == SP_UNKNOWN)
     {
-        mpr("That species isn't available.");
+		mpr("그 종족으로는 불가능하다.");
         return;
     }
 
@@ -178,7 +178,7 @@ void wizard_cast_spec_spell()
     {
         if ((spell = spell_by_name(specs, true)) == SPELL_NO_SPELL)
         {
-            mpr("Cannot find that spell.");
+			mpr("그 주문을 찾을 수 없다.");
             crawl_state.cancel_cmd_repeat();
             return;
         }
@@ -208,7 +208,7 @@ void wizard_memorise_spec_spell()
     {
         if ((spell = spell_by_name(specs, true)) == SPELL_NO_SPELL)
         {
-            mpr("Cannot find that spell.");
+			mpr("그 주문을 찾을 수 없다.");
             crawl_state.cancel_cmd_repeat();
             return;
         }
@@ -222,7 +222,7 @@ void wizard_heal(bool super_heal)
 {
     if (super_heal)
     {
-        mpr("Super healing.");
+		mpr("완전하게 회복되었다.");
         // Clear more stuff.
         unrot_hp(9999);
         you.magic_contamination = 0;
@@ -243,7 +243,7 @@ void wizard_heal(bool super_heal)
         you.redraw_stats = true;
     }
     else
-        mpr("Healing.");
+		mpr("회복되었다.");
 
     // Clear most status ailments.
     you.disease = 0;
@@ -293,7 +293,7 @@ void wizard_set_hunger_state()
     food_change();
 
     if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
-        mpr("Ghouls can never be full or above!");
+		mpr("구울은 배부름 이상으로 만복도를 채울 수 없다!");
 }
 
 void wizard_set_piety_to(int newpiety, bool force)
@@ -338,7 +338,7 @@ void wizard_set_piety_to(int newpiety, bool force)
         if (newinterest >= 0 && newinterest < 256)
             you.gift_timeout = newinterest;
         else
-            mpr("Interest must be between 0 and 255.");
+			mpr("수치는 최소0 최대255 이여야만 한다.");
 
         mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
 
@@ -392,7 +392,7 @@ void wizard_set_piety()
 {
     if (you_worship(GOD_NO_GOD))
     {
-        mpr("You are not religious!");
+		mpr("당신은 믿는 종교가 없다!");
         return;
     }
 
@@ -420,10 +420,10 @@ void wizard_exercise_skill()
     skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
     if (skill == SK_NONE)
-        mpr("That skill doesn't seem to exist.");
+		mpr("그 스킬은 존재하는 것 같지 않다.");
     else
     {
-        mpr("Exercising...");
+		mpr("수련중...");
         exercise(skill, 10);
     }
 }
@@ -435,7 +435,7 @@ void wizard_set_skill_level(skill_type skill)
 
     if (skill == SK_NONE)
     {
-        mpr("That skill doesn't seem to exist.");
+		mpr("그 스킬은 존재하는 것 같지 않다.");
         return;
     }
 
@@ -511,7 +511,7 @@ bool wizard_add_mutation()
     char specs[80];
 
     if (you.has_mutation(MUT_MUTATION_RESISTANCE))
-        mpr("Ignoring mut resistance to apply mutation.");
+		mpr("돌연변이를 추가하려면 돌연변이 저항을 없애야 한다.");
     unwind_var<uint8_t> mut_res(you.mutation[MUT_MUTATION_RESISTANCE], 0);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
@@ -535,7 +535,7 @@ bool wizard_add_mutation()
         crawl_state.cancel_cmd_repeat();
 
         if (partial_matches.empty())
-            mpr("No matching mutation names.");
+			mpr("일치하는 돌연변이 명 없음.");
         else
         {
             vector<string> matches;
@@ -874,7 +874,7 @@ void wizard_get_god_gift()
 {
     if (you_worship(GOD_NO_GOD))
     {
-        mpr("You are not religious!");
+		mpr("당신은 믿는 종교가 없다!");
         return;
     }
 
@@ -885,7 +885,7 @@ void wizard_get_god_gift()
     }
 
     if (!do_god_gift(true))
-        mpr("Nothing happens.");
+		mpr("아무일도 일어나지 않았다.");
 }
 
 void wizard_toggle_xray_vision()
@@ -902,12 +902,12 @@ void wizard_freeze_time()
     if (props.exists(FREEZE_TIME_KEY))
     {
         props.erase(FREEZE_TIME_KEY);
-        mpr("You allow the flow of time to resume.");
+		mpr("당신은 시간의 흐름이 다시 흐르도록 하였다.");
     }
     else
     {
         props[FREEZE_TIME_KEY] = true;
-        mpr("You bring the flow of time to a stop.");
+		mpr("당신은 시간의 흐름을 멈췄다.");
     }
 }
 
@@ -915,9 +915,9 @@ void wizard_god_wrath()
 {
     const god_type god = choose_god(you.religion);
     if (god == NUM_GODS)
-        mpr("That god doesn't seem to exist!");
+		mpr("그 신은 존재하는 것 같지 않다!");
     else if (god == GOD_NO_GOD)
-        mpr("You suffer the terrible wrath of No God.");
+		mpr("당신은 어떤 신의 가공할 분노도 사고있지 않다.");
     else if (!divine_retribution(god, true, true))
     {
         // Dead Jiyva, or Ru/Gozag/Ashenzari.
@@ -937,7 +937,7 @@ void wizard_god_mollify()
         }
     }
     if (!mollified)
-        mpr("You are not under penance.");
+		mpr("당신은 참회 중이 아니다.");
 }
 
 void wizard_transform()
@@ -986,28 +986,28 @@ void wizard_transform()
 
     you.transform_uncancellable = false;
     if (!transform(200, form) && you.form != form)
-        mpr("Transformation failed.");
+		mpr("변신에 실패했다.");
 }
 
 void wizard_join_religion()
 {
     if (you.species == SP_DEMIGOD)
     {
-        mpr("Not even in wizmode may Demigods worship a god!");
+		mpr("위자드 모드도 반신족이 신을 섬기도록 할 수는 없다!");
         return;
     }
     god_type god = choose_god();
     if (god == NUM_GODS)
-        mpr("That god doesn't seem to exist!");
+		mpr("그 신은 존재하는 것 같지 않다!");
     else if (god == GOD_NO_GOD)
     {
         if (you_worship(GOD_NO_GOD))
-            mpr("You already have no god!");
+			mpr("당신은 이미 어떤 신도 믿고있지 않다!");
         else
             excommunication();
     }
     else if (you_worship(god))
-        mpr("You already worship that god!");
+		mpr("당신은 이미 그 신을 섬기고있다!");
     else
     {
         if (god == GOD_GOZAG)

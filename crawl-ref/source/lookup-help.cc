@@ -1473,5 +1473,5 @@ void keyhelp_query_descriptions()
     }
 
     viewwindow();
-    mpr("Okay, then.");
+	mpr("좋아, 그럼.");
 }

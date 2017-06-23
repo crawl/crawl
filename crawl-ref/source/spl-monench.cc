@@ -63,7 +63,7 @@ int englaciate(coord_def where, int pow, actor *agent)
 spret_type cast_englaciation(int pow, bool fail)
 {
     fail_check();
-    mpr("You radiate an aura of cold.");
+	mpr("당신은 한기를 내뿜고 있다.");
     apply_area_visible([pow] (coord_def where) {
         return englaciate(where, pow, &you);
     }, you.pos());

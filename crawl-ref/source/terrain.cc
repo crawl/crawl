@@ -1607,19 +1607,19 @@ void fall_into_a_pool(dungeon_feature_type terrain)
     if (terrain == DNGN_LAVA)
     {
         if (you.species == SP_MUMMY)
-            mpr("You burn to ash...");
+			mpr("당신은 재가 되었다...");
         else
-            mpr("The lava burns you to a cinder!");
+			mpr("용암이 당신을 잿더미로 만들어버렸다!");
         ouch(INSTANT_DEATH, KILLED_BY_LAVA);
     }
     else if (terrain == DNGN_DEEP_WATER)
     {
-        mpr("You sink like a stone!");
+		mpr("당신은 돌처럼 가라앉았다!");
 
         if (you.is_nonliving() || you.undead_state())
-            mpr("You fall apart...");
+			mpr("당신은 허물어져 내렸다...");
         else
-            mpr("You drown...");
+			mpr("당신은 가라앉았다...");
 
         ouch(INSTANT_DEATH, KILLED_BY_WATER);
     }

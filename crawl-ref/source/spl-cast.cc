@@ -590,14 +590,14 @@ bool can_cast_spells(bool quiet)
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
     {
         if (!quiet)
-            mpr("You cannot cast spells while unable to breathe!");
+			mpr("당신은 숨을 쉴 수 없을 때 주문을 외울 수 없다!");
         return false;
     }
 
     if (you.duration[DUR_BRAINLESS])
     {
         if (!quiet)
-            mpr("You lack the mental capacity to cast spells.");
+			mpr("당신은 정신적으로 모자라서 주문을 외울 수 없다.");
         return false;
     }
 
@@ -605,7 +605,7 @@ bool can_cast_spells(bool quiet)
     if (you.no_cast())
     {
         if (!quiet)
-            mpr("Something interferes with your magic!");
+			mpr("무언가가 당신의 주문을 방해하고 있다!");
         return false;
     }
 
@@ -626,14 +626,14 @@ bool can_cast_spells(bool quiet)
     if (you.confused())
     {
         if (!quiet)
-            mpr("You're too confused to cast spells.");
+			mpr("당신은 주문을 외우기엔 너무 혼란스러운 상태다.");
         return false;
     }
 
     if (silenced(you.pos()))
     {
         if (!quiet)
-            mpr("You cannot cast spells when silenced!");
+			mpr("당신은 침묵하는 동안에는 주문을 외울 수 없다!");
         // included in default force_more_message
         return false;
     }
@@ -641,7 +641,7 @@ bool can_cast_spells(bool quiet)
     if (you.duration[DUR_NO_CAST])
     {
         if (!quiet)
-            mpr("You are unable to access your magic!");
+			mpr("당신의 마력에 접근 할 수 없다!");
         return false;
     }
 
@@ -770,7 +770,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
         else if (!isaalpha(keyin))
         {
-            mpr("You don't know that spell.");
+			mpr("당신은 그 주문을 알고 있지 않다.");
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -780,7 +780,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     if (spell == SPELL_NO_SPELL)
     {
-        mpr("You don't know that spell.");
+		mpr("당신은 그 주문을 알고 있지 않다.");
         crawl_state.zero_turns_taken();
         return false;
     }
@@ -796,7 +796,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
         else
         {
-            mpr("You don't have enough magic to cast that spell.");
+			mpr("그 주문을 사용하기에는 당신의 마력이 부족하다.");
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -806,8 +806,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
-        mpr("You can't see any susceptible monsters within range! "
-            "(Use <w>Z</w> to cast anyway.)");
+		mpr("범위 안에 주문을 사용할 만한 몬스터가 존재하지 않는다! "
+            "(그래도 마법을 사용하려면 <w>Z</w> 을 캐스팅 하시오.)");
 
         if ((Options.use_animations & UA_RANGE) && Options.darken_beyond_range)
         {
@@ -884,7 +884,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     if (sifcast_amount)
     {
         simple_god_message(" grants you divine energy.");
-        mpr("You briefly lose access to your magic!");
+		mpr("당신은 순간 당신의 마력을 사용하는 데 실패했다!");
         you.set_duration(DUR_NO_CAST, 3 + random2avg(sifcast_amount * 2, 2));
     }
 
@@ -1005,20 +1005,19 @@ static void _try_monster_cast(spell_type spell, int powc,
 {
     if (monster_at(you.pos()))
     {
-        mpr("Couldn't try casting monster spell because you're "
-            "on top of a monster.");
+		mpr("당신이 몬스터의 위에 있어 몬스터의 주문을 시전하는 데 "
+			"실패했다.");
         return;
     }
 
     monster* mon = get_free_monster();
     if (!mon)
     {
-        mpr("Couldn't try casting monster spell because there is "
-            "no empty monster slot.");
+		mpr("빈 몬스터 칸이 없어 몬스터의 주문을 시전하는 데 실패했다.");
         return;
     }
 
-    mpr("Invalid player spell, attempting to cast it as monster spell.");
+	mpr("올바르지 못한 플레이어 주문이다. 몬스터 전용 주문으로 시전한다.");
 
     mon->mname      = "Dummy Monster";
     mon->type       = MONS_HUMAN;
@@ -1392,7 +1391,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
             if (spell == SPELL_TELEPORT_OTHER)
-                mpr("Sorry, this spell works on others only.");
+				mpr("유감이지만, 그 주문은 다른 대상에게만 작용한다.");
             else
                 canned_msg(MSG_UNTHINKING_ACT);
 
@@ -1425,7 +1424,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
     if (allow_fail && you.duration[DUR_ANTIMAGIC]
         && x_chance_in_y(you.duration[DUR_ANTIMAGIC] / 3, you.hp_max))
     {
-        mpr("You fail to access your magic.");
+		mpr("당신은 마력을 사용하는 데 실패했다.");
         fail = antimagic = true;
     }
     else
@@ -1923,7 +1922,7 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
     default:
         if (spell_removed(spell))
         {
-            mpr("Sorry, this spell is gone!");
+			mpr("유감이지만, 그 주문은 이제 더는 없다!");
             return SPRET_ABORT;
         }
         break;

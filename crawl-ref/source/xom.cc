@@ -588,7 +588,7 @@ static void _xom_detect_items(int sever)
     if (detect_items(sever) == 0)
         canned_msg(MSG_DETECT_NOTHING);
     else
-        mpr("You detect items!");
+		mpr("당신은 아이템을 발견했다!");
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                    "divination: detect items"), true);
@@ -611,10 +611,10 @@ static void _xom_detect_creatures(int sever)
         // still on the map when the original one has been killed. Then
         // another one is spawned, so the number is the same as before.
         // There's no way we can check this, however.
-        mpr("You detect no further creatures.");
+		mpr("당신은 더 이상의 생명체를 발견하지 못했다.");
     }
     else
-        mpr("You detect creatures!");
+		mpr("당신은 생명체를 발견했다!");
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                    "divination: detect creatures"), true);
@@ -1258,7 +1258,7 @@ static void _xom_rearrange_pieces(int sever)
             {
                 if (!did_message)
                 {
-                    mpr("Some monsters swap places.");
+					mpr("일부 몬스터들의 위치가 뒤바뀌었다.");
                     did_message = true;
                 }
                 if (one_chance_in(4))
@@ -1447,7 +1447,7 @@ static void _xom_give_mutations(bool good)
              num_tries > 1 ? "s" : "");
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
-    mpr("Your body is suffused with distortional energy.");
+	mpr("당신의 몸에 뒤틀린 기운이 만연하다.");
 
     bool failMsg = true;
 
@@ -2538,7 +2538,7 @@ static void _xom_repel_stairs(bool unclimbable)
     if (!count_moved)
     {
         if (one_chance_in(8))
-            mpr("Nothing appears to happen... Ominous!");
+			mpr("아무일도 없는 것 같다.... 불길하게도!");
         else
             canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -3521,8 +3521,8 @@ void xom_new_level_noise_or_stealth()
         if (!player_under_penance(GOD_XOM) && coinflip())
         {
             god_speaks(GOD_XOM, _get_xom_speech("stealth player").c_str());
-            mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
-                                          : "You feel stealthy.");
+            mpr(you.duration[DUR_STEALTH] ? "당신은 더 고양이스러워진 기분이 든다."
+                                          : "당신은 은밀해진 느낌이 들었다.");
             you.increase_duration(DUR_STEALTH, 10 + random2(80));
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                            "stealth player"), true);

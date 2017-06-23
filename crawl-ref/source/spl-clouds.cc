@@ -41,7 +41,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         || !in_bounds(where))
     {
         if (agent->is_player())
-            mpr("That's too far away.");
+			mpr("그건 너무 멀리 떨어져 있다.");
         return SPRET_ABORT;
     }
 
@@ -60,7 +60,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
     if (cloud && cloud->type != CLOUD_FIRE)
     {
         if (agent->is_player())
-            mpr("There's already a cloud there!");
+			mpr("그곳엔 이미 구름이 있다!");
         return SPRET_ABORT;
     }
 
@@ -70,7 +70,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         if (agent->can_see(*victim))
         {
             if (agent->is_player())
-                mpr("You can't place the cloud on a creature.");
+				mpr("당신은 생물이 있는 지형에 구름을 만들 수 없다.");
             return SPRET_ABORT;
         }
 
@@ -92,7 +92,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
         if (you.see_cell(where))
-            mpr("The fire blazes with new energy!");
+			mpr("화염이 새로운 에너지로 타올랐다!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         cloud->decay += extra_dur * 5;
         cloud->source = agent->mid;
@@ -108,9 +108,9 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
         if (you.see_cell(where))
         {
             if (agent->is_player())
-                mpr("The fire ignites!");
+				mpr("화염이 타오른다!");
             else
-                mpr("A cloud of flames bursts into life!");
+				mpr("화염구름이 생명을 가진듯 타올랐다!");
         }
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
@@ -129,7 +129,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     monster* mons = monster_at(beam.target);
     if (!mons || mons->submerged() || !you.can_see(*mons))
     {
-        mpr("You can't see any monster there!");
+		mpr("그곳엔 몬스터가 보이지 않는다!");
         return SPRET_ABORT;
     }
 
@@ -147,7 +147,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     if (cloud && cloud->type != CLOUD_POISON)
     {
         // XXX: consider replacing the cloud instead?
-        mpr("There's already a cloud there!");
+		mpr("그곳엔 이미 구름이 있다!");
         return SPRET_ABORT;
     }
 
@@ -157,7 +157,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     if (cloud)
     {
         // Reinforce the cloud.
-        mpr("The poisonous vapours increase!");
+		mpr("맹독 구름이 그 범위를 넓혔다!");
         cloud->decay += cloud_duration * 10; // in this case, we're using auts
         cloud->set_whose(KC_YOU);
     }
@@ -178,7 +178,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     if (grid_distance(beam.target, you.pos()) > beam.range
         || !in_bounds(beam.target))
     {
-        mpr("That is beyond the maximum range.");
+		mpr("그곳은 최대 사거리 밖이다.");
         return SPRET_ABORT;
     }
 
@@ -209,7 +209,7 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
             cty = CLOUD_COLD;
             break;
         default:
-            mpr("That kind of cloud doesn't exist!");
+			mpr("그런 종류의 구름은 존재하지 않는다!");
             return SPRET_ABORT;
     }
 
@@ -361,7 +361,7 @@ void holy_flames(monster* caster, actor* defender)
     if (cloud_count)
     {
         if (defender->is_player())
-            mpr("Blessed fire suddenly surrounds you!");
+			mpr("신성한 구름이 갑자기 당신을 둘러쌌다!");
         else
             simple_monster_message(*defender->as_monster(),
                                    " is surrounded by blessed fire!");
@@ -386,7 +386,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         if (caster->is_player())
-            mpr("The air is too still to form clouds.");
+			mpr("구름을 만들기엔 대기가 너무 조용하다.");
         return SPRET_ABORT;
     }
 

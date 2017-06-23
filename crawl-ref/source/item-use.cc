@@ -315,13 +315,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
 #define SAY(x) {if (say_reason) { x; }}
     if (you.melded[EQ_WEAPON] && unwield)
     {
-        SAY(mpr("Your weapon is melded into your body!"));
+		SAY(mpr("무기가 당신의 몸에 녹아들었다!"));
         return false;
     }
 
     if (!ignore_temporary_disability && !form_can_wield(you.form))
     {
-        SAY(mpr("You can't wield anything in your present form."));
+		SAY(mpr("당신의 형태로는 어떤 것도 들 수 없다."));
         return false;
     }
 
@@ -342,7 +342,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (you.get_mutation_level(MUT_MISSING_HAND)
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        SAY(mpr("You can't wield that without your missing limb."));
+		SAY(mpr("당신의 잃어버린 팔 없이는 그걸 들 수 없다."));
         return false;
     }
 
@@ -350,7 +350,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     {
         if (you.equip[i] != -1 && &you.inv[you.equip[i]] == weapon)
         {
-            SAY(mpr("You are wearing that object!"));
+			SAY(mpr("당신은 이미 그것을 착용하고 있다!"));
             return false;
         }
     }
@@ -363,7 +363,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     {
         if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
         {
-            SAY(mpr("You can't wield that with a shield."));
+			SAY(mpr("그것은 방패와 함께 들 수 없다."));
             return false;
         }
         else
@@ -377,7 +377,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     {
         if (say_reason)
         {
-            mpr("This weapon is holy and will not allow you to wield it.");
+			mpr("그 신성한 무기는 당신이 착용하는 것을 허락하지 않는다!");
             id_brand = true;
         }
         else
@@ -392,7 +392,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     {
         if (say_reason)
         {
-            mpr("This weapon is vampiric, and you must be Full or above to equip it.");
+			mpr("그 흡혈 무기를 착용하기 위해서는 배가 부른 상태여야 한다.");
             id_brand = true;
         }
         else
@@ -415,7 +415,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
     {
-        SAY(mpr("You can't wield that with a shield."));
+		SAY(mpr("그것은 방패와 함께 들 수 없다."));
         return false;
     }
 
@@ -490,7 +490,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return false;
     else if (item_slot == you.equip[EQ_WEAPON])
     {
-        mpr("You are already wielding that!");
+		mpr("당신은 이미 그것을 착용하고 있다!");
         return true;
     }
 
@@ -689,7 +689,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
     {
         if (verbose)
-            mpr("You can't wear that.");
+			mpr("그것을 입을 수 없다.");
 
         return false;
     }
@@ -700,7 +700,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (you.species == SP_OCTOPODE && slot != EQ_HELMET && slot != EQ_SHIELD)
     {
         if (verbose)
-            mpr("You can't wear that!");
+			mpr("그것을 입을 수 없다.");
         return false;
     }
 
@@ -722,10 +722,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (ignore_temporary || !player_is_shapechanged())
                 return true;
             else if (verbose)
-                mpr("You can wear that only in your normal form.");
+				mpr("당신의 몸이 정상적인 형태일때만 그것을 입을 수 있다.");
         }
         else if (verbose)
-            mpr("You can't wear that!");
+			mpr("그것을 입을 수 없다!");
         return false;
     }
 
@@ -734,7 +734,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (verbose)
         {
             if (you.species == SP_OCTOPODE)
-                mpr("You need the rest of your tentacles for walking.");
+				mpr("나머지 촉수는 이동을 위해 사용해야 한다.");
             else
                 mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
         }
@@ -748,7 +748,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (verbose)
         {
             if (you.species == SP_OCTOPODE)
-                mpr("You need the rest of your tentacles for walking.");
+				mpr("나머지 촉수는 이동을 위해 사용해야 한다.");
             else
             {
                 // Singular hand should have already been handled above.
@@ -765,7 +765,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (!player_has_feet(!ignore_temporary))
         {
             if (verbose)
-                mpr("You have no feet.");
+				mpr("당신은 발이 없다.");
             return false;
         }
 
@@ -783,7 +783,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             || you.get_mutation_level(MUT_ANTENNAE, !ignore_temporary) >= 3)
         {
             if (verbose)
-                mpr("The hauberk won't fit your head.");
+				mpr("그 갑옷은 당신의 머리조차 통과하지 못할 것이다.");
             return false;
         }
 
@@ -826,7 +826,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         // The explanation is iffy for loose headgear, especially crowns:
         // kings loved hooded hauberks, according to portraits.
         if (verbose)
-            mpr("You can't wear this over your hauberk.");
+			mpr("그것을 당신의 갑옷 위에 입을 수 없다.");
         return false;
     }
 
@@ -880,28 +880,28 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.get_mutation_level(MUT_HOOVES, false) == 3)
         {
             if (verbose)
-                mpr("You can't wear boots with hooves!");
+				mpr("발굽 때문에 신발을 착용할 수 없다!");
             return false;
         }
 
         if (you.has_talons(false) == 3)
         {
             if (verbose)
-                mpr("Boots don't fit your talons!");
+				mpr("발톱 때문에 신발이 맞지 않는다!");
             return false;
         }
 
         if (you.species == SP_NAGA)
         {
             if (verbose)
-                mpr("You have no legs!");
+				mpr("당신에겐 다리가 없다!");
             return false;
         }
 
         if (!ignore_temporary && you.fishtail)
         {
             if (verbose)
-                mpr("You don't currently have feet!");
+				mpr("당신에겐 발이 없다!");
             return false;
         }
     }
@@ -912,14 +912,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.get_mutation_level(MUT_HORNS, false) == 3)
         {
             if (verbose)
-                mpr("You can't wear any headgear with your large horns!");
+				mpr("당신의 거대한 뿔 때문에 머리 위에 아무것도 쓸 수 없다!");
             return false;
         }
 
         if (you.get_mutation_level(MUT_ANTENNAE, false) == 3)
         {
             if (verbose)
-                mpr("You can't wear any headgear with your large antennae!");
+				mpr("당신의 거대한 더듬이 때문에 머리 위에 아무것도 쓸 수 없다!");
             return false;
         }
 
@@ -929,35 +929,35 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (you.get_mutation_level(MUT_HORNS, false))
             {
                 if (verbose)
-                    mpr("You can't wear that with your horns!");
+					mpr("뿔 때문에 그것을 입을 수 없다!");
                 return false;
             }
 
             if (you.get_mutation_level(MUT_BEAK, false))
             {
                 if (verbose)
-                    mpr("You can't wear that with your beak!");
+					mpr("부리 때문에 그것을 입을 수 없다!");
                 return false;
             }
 
             if (you.get_mutation_level(MUT_ANTENNAE, false))
             {
                 if (verbose)
-                    mpr("You can't wear that with your antennae!");
+					mpr("더듬이 때문에 그것을 입을 수 없다!");
                 return false;
             }
 
             if (species_is_draconian(you.species))
             {
                 if (verbose)
-                    mpr("You can't wear that with your reptilian head.");
+					mpr("당신의 파충류형 머리엔 그것이 맞지 않는다.");
                 return false;
             }
 
             if (you.species == SP_OCTOPODE)
             {
                 if (verbose)
-                    mpr("You can't wear that!");
+					mpr("그것을 입을 수 없다!");
                 return false;
             }
         }
@@ -967,7 +967,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (!ignore_temporary && !get_form()->can_wear_item(item))
     {
         if (verbose)
-            mpr("You can't wear that in your present form.");
+			mpr("지금 당신의 모습으로는 그것을 착용할 수 없다.");
         return false;
     }
 
@@ -985,7 +985,7 @@ static bool _can_equip_armour(const item_def &item)
     const object_class_type base_type = item.base_type;
     if (base_type != OBJ_ARMOUR)
     {
-        mpr("You can't wear that.");
+		mpr("그것을 입을 수 없다.");
         return false;
     }
 
@@ -1006,13 +1006,13 @@ bool wear_armour(int item)
     // are cursed. Same with jewellery.
     if (you.species == SP_FELID)
     {
-        mpr("You can't wear anything.");
+		mpr("당신은 그 무엇도 입을 수 없다.");
         return false;
     }
 
     if (!form_can_wear())
     {
-        mpr("You can't wear anything in your present form.");
+		mpr("지금 당신의 모습으로는 어떤것도 착용할 수 없다.");
         return false;
     }
 
@@ -1035,13 +1035,13 @@ bool wear_armour(int item)
     // equip the given item
     if (!invitem.defined())
     {
-        mpr("You don't have any such object.");
+		mpr("당신은 그런 종류의 물건을 가지고 있지 않다.");
         return false;
     }
 
     if (item == you.equip[EQ_WEAPON])
     {
-        mpr("You are wielding that object!");
+		mpr("당신은 이미 그것을 들고 있다!");
         return false;
     }
 
@@ -1052,7 +1052,7 @@ bool wear_armour(int item)
             return !takeoff_armour(item);
         else
         {
-            mpr("You're already wearing that object!");
+			mpr("당신은 이미 그것을 착용하고 있다!");
             return false;
         }
     }
@@ -1104,7 +1104,7 @@ static bool _can_takeoff_armour(int item)
     item_def& invitem = you.inv[item];
     if (invitem.base_type != OBJ_ARMOUR)
     {
-        mpr("You aren't wearing that!");
+		mpr("당신은 그것을 입고 있지 않다!");
         return false;
     }
 
@@ -1124,7 +1124,7 @@ static bool _can_takeoff_armour(int item)
 
     if (!item_is_worn(item))
     {
-        mpr("You aren't wearing that object!");
+		mpr("당신은 그 물건을 착용하고 있지 않다!");
         return false;
     }
 
@@ -1167,7 +1167,7 @@ bool takeoff_armour(int item)
     case EQ_BOOTS:
         if (item != you.equip[slot])
         {
-            mpr("You aren't wearing that!");
+			mpr("당신은 그것을 입고 있지 않다!");
             return false;
         }
         break;
@@ -1435,7 +1435,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
         && is_feat_dangerous(feat, false, true))
     {
         if (!quiet)
-            mpr("Losing flight right now would be fatal!");
+			mpr("지금 부양력을 잃는 것은 치명적인 결과를 초래할 것이다!");
         return false;
     }
 
@@ -1506,7 +1506,7 @@ static bool _swap_rings(int ring_slot)
     {
         // Shouldn't happen, because hogs and bats can't put on jewellery at
         // all and thus won't get this far.
-        mpr("You can't wear that in your present form.");
+		mpr("지금 당신의 모습으로는 그것을 착용할 수 없다.");
         return false;
     }
     else if (available == 0)
@@ -1617,13 +1617,13 @@ static bool _can_puton_jewellery(int item_slot)
     item_def& item = you.inv[item_slot];
     if (item_slot == you.equip[EQ_WEAPON])
     {
-        mpr("You are wielding that object.");
+		mpr("당신은 이미 그것을 들고 있다.");
         return false;
     }
 
     if (item.base_type != OBJ_JEWELLERY)
     {
-        mpr("You can only put on jewellery.");
+		mpr("당신은 장신구만을 착용할 수 있다.");
         return false;
     }
 
@@ -1632,7 +1632,7 @@ static bool _can_puton_jewellery(int item_slot)
     if (is_amulet && !you_can_wear(EQ_AMULET, true)
         || !is_amulet && !you_can_wear(EQ_RINGS, true))
     {
-        mpr("You can't wear that in your present form.");
+		mpr("지금 당신의 모습으로는 그것을 착용할 수 없다.");
         return false;
     }
 
@@ -1671,7 +1671,7 @@ static bool _can_puton_jewellery(int item_slot)
         }
         // If we got this far, there are no available slots.
         if (melded == (int)slots.size())
-            mpr("You can't wear that in your present form.");
+			mpr("지금 당신의 모습으로는 그것을 착용할 수 없다.");
         else
             mprf("You're already wearing %s cursed ring%s!%s",
                  number_in_words(cursed).c_str(),
@@ -1696,7 +1696,7 @@ static bool _puton_item(int item_slot, bool prompt_slot)
                 return !remove_ring(item_slot);
             else
             {
-                mpr("You're already wearing that object!");
+				mpr("당신은 이미 그것을 착용하고 있다!");
                 return false;
             }
         }
@@ -1879,9 +1879,9 @@ bool remove_ring(int slot, bool announce)
     if (!has_jewellery)
     {
         if (has_melded)
-            mpr("You aren't wearing any unmelded rings or amulets.");
+			mpr("당신과 동화된 목걸이나 반지가 없다.");
         else
-            mpr("You aren't wearing any rings or amulets.");
+			mpr("당신은 목걸이나 반지를 착용하고 있지 않다");
 
         return false;
     }
@@ -1911,24 +1911,24 @@ bool remove_ring(int slot, bool announce)
         hand_used = item_equip_slot(you.inv[equipn]);
         if (hand_used == EQ_NONE)
         {
-            mpr("You aren't wearing that.");
+			mpr("당신은 그것을 입고 있지 않다.");
             return false;
         }
         else if (you.inv[equipn].base_type != OBJ_JEWELLERY)
         {
-            mpr("That isn't a piece of jewellery.");
+			mpr("그건 장신구가 아니다.");
             return false;
         }
     }
 
     if (you.equip[hand_used] == -1)
     {
-        mpr("I don't think you really meant that.");
+		mpr("당신이 정말 그것을 의미했다고 생각하지 않는다.");
         return false;
     }
     else if (you.melded[hand_used])
     {
-        mpr("You can't take that off while it's melded.");
+		mpr("당신과 동화된 동안에는 그것을 벗을 수 없다.");
         return false;
     }
     else if (hand_used == EQ_AMULET
@@ -1937,7 +1937,7 @@ bool remove_ring(int slot, bool announce)
         // This can be removed in the future if more ring amulets are added.
         ASSERT(player_equip_unrand(UNRAND_FINGER_AMULET));
 
-        mpr("The amulet cannot be taken off without first removing the ring!");
+		mpr("반지를 빼기 전에는 그 목걸이를 벗을 수 없다!");
         return false;
     }
 
@@ -1956,7 +1956,7 @@ bool remove_ring(int slot, bool announce)
                  you.inv[you.equip[hand_used]].name(DESC_YOUR).c_str());
         }
         else
-            mpr("It's stuck to you!");
+			mpr("그것은 당신에게 단단히 달라붙어 있다!");
 
         set_ident_flags(you.inv[you.equip[hand_used]], ISFLAG_KNOW_CURSE);
         return false;
@@ -1994,7 +1994,7 @@ void prompt_inscribe_item()
 {
     if (inv_count() < 1)
     {
-        mpr("You don't have anything to inscribe.");
+		mpr("이름을 적어놓을 물건을 가지고 있지 않다.");
         return;
     }
 
@@ -2026,14 +2026,14 @@ static void _vampire_corpse_help()
         return;
 
     if (_check_blood_corpses_on_ground())
-        mpr("Use <w>e</w> to drain blood from corpses.");
+		mpr("시체를 흡혈하기 위해서는 <w>e</w> 를 눌러라.");
 }
 
 void drink(item_def* potion)
 {
     if (you_foodless())
     {
-        mpr("You can't drink.");
+		mpr("당신은 마실 수 없다.");
         return;
     }
 
@@ -2045,7 +2045,7 @@ void drink(item_def* potion)
 
     if (you.duration[DUR_NO_POTIONS])
     {
-        mpr("You cannot drink potions in your current state!");
+		mpr("지금 상태에서는 물약을 마실 수 없다!");
         return;
     }
 
@@ -2062,7 +2062,7 @@ void drink(item_def* potion)
 
     if (potion->base_type != OBJ_POTIONS)
     {
-        mpr("You can't drink that!");
+		mpr("당신은 그것을 마실 수 없다!");
         return;
     }
 
@@ -2510,22 +2510,22 @@ void random_uselessness()
 
     case 3:
         if (you.species == SP_MUMMY)
-            mpr("Your bandages flutter.");
+			mpr("감긴 붕대가 잠시 흔들렸다.");
         else // if (you.can_smell())
             mprf("You smell %s.", _weird_smell().c_str());
         break;
 
     case 4:
-        mpr("You experience a momentary feeling of inescapable doom!");
+		mpr("피할수 없는 파멸이 닥쳐오는 느낌을 받았다!");
         break;
 
     case 5:
         if (you.get_mutation_level(MUT_BEAK) || one_chance_in(3))
-            mpr("Your brain hurts!");
+			mpr("당신의 머리가 지끈거렸다!");
         else if (you.species == SP_MUMMY || coinflip())
-            mpr("Your ears itch!");
+			mpr("당신의 귀가 근질거렸다!");
         else
-            mpr("Your nose twitches suddenly!");
+			mpr("당신의 코가 갑자기 씰룩였다!");
         break;
 
     case 6:
@@ -2546,7 +2546,7 @@ static void _handle_read_book(item_def& book)
 
     if (you.duration[DUR_BRAINLESS])
     {
-        mpr("Reading books requires mental cohesion, which you lack.");
+		mpr("책을 읽기 위해서는 정신적인 이해가 필요하다. 당신에겐 무리겠지만.");
         return;
     }
 
@@ -2555,7 +2555,7 @@ static void _handle_read_book(item_def& book)
 #if TAG_MAJOR_VERSION == 34
     if (book.sub_type == BOOK_BUGGY_DESTRUCTION)
     {
-        mpr("This item has been removed, sorry!");
+		mpr("유감이지만 이 아이템은 지금은 존재하지 않는다!");
         return;
     }
 #endif
@@ -2789,8 +2789,7 @@ void read(item_def* scroll)
 
     if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
     {
-        mpr("You almost manage to decipher the scroll,"
-            " but fail in this attempt.");
+		mpr("당신은 두루마리를 읽는 데 성공할 뻔 했지만, 결국 실패했다.");
         return;
     }
 
@@ -2893,7 +2892,7 @@ void read_scroll(item_def& scroll)
 
     case SCR_ACQUIREMENT:
         if (!alreadyknown)
-            mpr("This is a scroll of acquirement!");
+			mpr("이것은 획득의 두루마리다!");
 
         // included in default force_more_message
         // Identify it early in case the player checks the '\' screen.
@@ -2901,7 +2900,7 @@ void read_scroll(item_def& scroll)
 
         if (feat_eliminates_items(grd(you.pos())))
         {
-            mpr("Anything you acquired here would fall and be lost!");
+			mpr("당신이 여기서 획득한 물건은 떨어져서 사라질 것이다!");
             cancel_scroll = true;
             break;
             // yes, we cancel out even if the scroll wasn't known beforehand.
@@ -2914,7 +2913,7 @@ void read_scroll(item_def& scroll)
         break;
 
     case SCR_FEAR:
-        mpr("You assume a fearsome visage.");
+		mpr("무시무시한 공포의 형상이 떠올랐다.");
         mass_enchantment(ENCH_FEAR, 1000);
         break;
 
@@ -2929,11 +2928,11 @@ void read_scroll(item_def& scroll)
     case SCR_FOG:
         if (alreadyknown && (env.level_state & LSTATE_STILL_WINDS))
         {
-            mpr("The air is too still for clouds to form.");
+			mpr("구름이 생기기에는 대기가 너무나도 고요하다.");
             cancel_scroll = true;
             break;
         }
-        mpr("The scroll dissolves into smoke.");
+		mpr("두루마리가 연기로 변해 흩어졌다.");
         big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
@@ -2941,7 +2940,7 @@ void read_scroll(item_def& scroll)
         if (alreadyknown && !is_map_persistent())
         {
             cancel_scroll = true;
-            mpr("It would have no effect in this place.");
+			mpr("그것은 여기서는 아무 효과도 없을 것이다.");
             break;
         }
         mpr(pre_succ_msg);
@@ -2972,9 +2971,9 @@ void read_scroll(item_def& scroll)
         }
 
         if (had_effect)
-            mpr("The creatures around you are filled with an inner flame!");
+			mpr("당신 주위의 존재들이 내면의 불꽃으로 타올랐다!");
         else
-            mpr("The air around you briefly surges with heat, but it dissipates.");
+			mpr("당신 주위의 공기가 열로 달아올랐지만, 금새 흩어졌다.");
 
         bad_effect = true;
         break;
@@ -3009,7 +3008,7 @@ void read_scroll(item_def& scroll)
         if (!alreadyknown)
         {
             mpr(pre_succ_msg);
-            mpr("It is a scroll of enchant weapon.");
+			mpr("이것은 무기 강화의 두루마리다.");
             // included in default force_more_message (to show it before menu)
         }
 
@@ -3020,7 +3019,7 @@ void read_scroll(item_def& scroll)
         if (!alreadyknown)
         {
             mpr(pre_succ_msg);
-            mpr("It is a scroll of brand weapon.");
+			mpr("이것은 무기 속성 부여의 두루마리다.");
             // included in default force_more_message (to show it before menu)
         }
 
@@ -3031,7 +3030,7 @@ void read_scroll(item_def& scroll)
         if (!alreadyknown)
         {
             mpr(pre_succ_msg);
-            mpr("It is a scroll of identify.");
+			mpr("이것은 감정의 두루마리다.");
             // included in default force_more_message (to show it before menu)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, true);
@@ -3043,7 +3042,7 @@ void read_scroll(item_def& scroll)
         if (!alreadyknown)
         {
             mpr(pre_succ_msg);
-            mpr("It is a scroll of recharging.");
+			mpr("이것은 충전의 두루마리다.");
             // included in default force_more_message (to show it before menu)
         }
         cancel_scroll = (recharge_wand(alreadyknown, pre_succ_msg) == -1);
@@ -3053,7 +3052,7 @@ void read_scroll(item_def& scroll)
         if (!alreadyknown)
         {
             mpr(pre_succ_msg);
-            mpr("It is a scroll of enchant armour.");
+			mpr("이것은 방어구 강화의 두루마리다.");
             // included in default force_more_message (to show it before menu)
         }
         cancel_scroll =
@@ -3094,11 +3093,11 @@ void read_scroll(item_def& scroll)
         if (!alreadyknown)
         {
             mpr(pre_succ_msg);
-            mpr("It is a scroll of amnesia.");
+			mpr("이것은 망각의 두루마리다.");
             // included in default force_more_message (to show it before menu)
         }
         if (you.spell_no == 0)
-            mpr("You feel forgetful for a moment.");
+			mpr("당신은 잠깐 뭔가 잊어버린 느낌이 들었다.");
         else if (!alreadyknown)
             cast_selective_amnesia();
         else
@@ -3106,7 +3105,7 @@ void read_scroll(item_def& scroll)
         break;
 
     default:
-        mpr("Read a buggy scroll, please report this.");
+		mpr("버그로 생성된 두루마리를 읽었습니다. 개발자에게 말해 주세요.");
         break;
     }
 
@@ -3167,7 +3166,7 @@ void tile_item_pickup(int idx, bool part)
 {
     if (item_is_stationary(mitm[idx]))
     {
-        mpr("You can't pick that up.");
+		mpr("그것을 주울 수 없다.");
         return;
     }
 
@@ -3284,7 +3283,7 @@ void tile_item_use(int idx)
         case OBJ_ARMOUR:
             if (!form_can_wear())
             {
-                mpr("You can't wear or remove anything in your present form.");
+				mpr("지금 당신의 모습으로는 어떤 것도 착용하거나 벗을 수 없다.");
                 return;
             }
             if (equipped && !equipped_weapon)

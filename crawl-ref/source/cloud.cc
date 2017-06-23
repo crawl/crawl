@@ -442,7 +442,7 @@ static void _spread_fire(const cloud_struct &cloud)
             continue;
 
         if (you.see_cell(*ai))
-            mpr("The forest fire spreads!");
+			mpr("산불이 퍼진다!");
         destroy_wall(*ai);
         env.cloud[*ai] = cloud;
         env.cloud[*ai].pos = *ai;
@@ -587,7 +587,7 @@ void manage_clouds()
         {
             const bool you_see = you.see_cell(cloud.pos);
             if (you_see && !you_worship(GOD_QAZLAL))
-                mpr("Lightning arcs down from a storm cloud!");
+				mpr("먹구름에서 번개줄기가 내려왔다!");
             noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
                   you_see || you_worship(GOD_QAZLAL) ? nullptr
                   : "You hear a mighty clap of thunder!");
@@ -631,7 +631,7 @@ static void _maybe_leave_water(const coord_def pos)
     if (grd(pos) != feat)
     {
         if (you.pos() == pos && you.ground_level())
-            mpr("The rain has left you waist-deep in water!");
+			mpr("비가 오고, 허리까지 오는 물웅덩이가 생겼다!");
         temp_change_terrain(pos, feat, random_range(500, 1000),
                             TERRAIN_CHANGE_FLOOD);
     }
@@ -997,7 +997,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         {
             if (1 + random2(27) >= you.experience_level)
             {
-                mpr("You choke on the stench!");
+				mpr("당신은 악취에 질식하고 있다!");
                 // effectively one or two turns, since it will be
                 // decremented right away
                 confuse_player(random_range(2, 3));
@@ -1068,7 +1068,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_MUTAGENIC:
         if (player)
         {
-            mpr("The mutagenic energy flows into you.");
+			mpr("돌연변이성 에너지가 당신에게 흘러들어왔다.");
             // It's possible that you got trampled into the mutagenic cloud
             // and it's not your fault... so we'll say it's not intentional.
             // (it's quite bad in any case, so players won't scum, probably.)
@@ -1221,7 +1221,7 @@ static int _actor_cloud_damage(const actor *act,
         }
 
         if (act->is_player())
-            mpr("You are struck by lightning!");
+			mpr("당신은 번개에 맞았다!");
         else if (you.can_see(*act))
         {
             simple_monster_message(*act->as_monster(),
@@ -1229,8 +1229,8 @@ static int _actor_cloud_damage(const actor *act,
         }
         else if (you.see_cell(act->pos()))
         {
-            mpr("Lightning from the thunderstorm strikes something you cannot "
-                "see.");
+			mpr("폭풍우로부터 번개가 내려쳤고, 당신이 볼수 없는 무언가를 "
+				"강타했다.");
         }
         noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), act->pos(),
               act->is_player() || you.see_cell(act->pos())
@@ -1804,5 +1804,5 @@ void start_still_winds()
 void end_still_winds()
 {
     env.level_state &= ~LSTATE_STILL_WINDS;
-    mpr("The air resumes its normal movements.");
+	mpr("대기가 다시 정상적으로 움직이기 시작했다.");
 }

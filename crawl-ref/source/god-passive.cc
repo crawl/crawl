@@ -522,7 +522,7 @@ void jiyva_eat_offlevel_items()
 
                 // Needs a message now to explain possible hp or mp
                 // gain from jiyva_slurp_bonus()
-                mpr("You hear a distant slurping noise.");
+                mpr("당신은 먼 곳에서 털썩거리는 소음을 들었다.");
                 jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
@@ -1764,7 +1764,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
                                     : "something you can't see");
                 }
                 else
-                    mpr("You have no room to wall jump.");
+                    mpr("뛰어 넘을 벽이 없다.");
             }
         }
         return false;
@@ -1790,7 +1790,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
         }
         if (mon_in_los)
         {
-            mpr("There is no target in range.");
+            mpr("범위 안에 대상이 없다.");
             targeter_walljump range;
             range.set_aim(wall_jump_landing_spot);
             flash_view_delay(UA_RANGE, DARKGREY, 100, &range);

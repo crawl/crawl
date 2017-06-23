@@ -745,7 +745,7 @@ static void _explore_find_target_square()
     else
     {
         if (runed_door_pause)
-            mpr("Partly explored, obstructed by runed door.");
+			mpr("탐사를 완료했지만, 룬으로 잠긴 문은 통과할 수 없었다.");
         else
         {
             // No place to go? Report to the player.
@@ -754,7 +754,7 @@ static void _explore_find_target_square()
 
             if (!estatus && !unknown_trans)
             {
-                mpr("Done exploring.");
+				mpr("탐사 완료.");
                 learned_something_new(HINT_DONE_EXPLORE);
             }
             else
@@ -2432,7 +2432,7 @@ static void _start_translevel_travel()
     if (level_id::current() == level_target.id
         && (level_target.pos.x == -1 || level_target.pos == you.pos()))
     {
-        mpr("You're already here!");
+		mpr("당신은 이미 그 곳에 있다!");
         return ;
     }
 
@@ -2457,15 +2457,15 @@ void start_translevel_travel(const level_pos &pos)
     if (!can_travel_to(pos.id))
     {
         if (!can_travel_interlevel())
-            mpr("Sorry, you can't auto-travel out of here.");
+			mpr("유감이지만, 당신은 자동탐사를 할 수 없다.");
         else
-            mpr("Sorry, I don't know how to get there.");
+			mpr("유감이지만 그 곳으로 가는 방법을 알지 못한다.");
         return;
     }
 
     if (pos.is_valid() && !in_bounds(pos.pos))
     {
-        mpr("Sorry, I don't know how to get there.");
+		mpr("유감이지만 그 곳으로 가는 방법을 알지 못한다.");
         return;
     }
 
@@ -2489,7 +2489,7 @@ void start_translevel_travel(const level_pos &pos)
         {
             if (!_loadlev_populate_stair_distances(pos))
             {
-                mpr("Level memory is imperfect, aborting.");
+				mpr("층에 대한 기억이 완벽하지 못하다. 취소한다.");
                 return ;
             }
         }
@@ -2840,7 +2840,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
         if (target.id != current
             || target.pos.x != -1 && target.pos != you.pos())
         {
-            mpr("Sorry, I don't know how to get there.");
+			mpr("유감이지만 그 곳으로 가는 방법을 알지 못한다.");
         }
     }
 
@@ -2906,11 +2906,11 @@ void start_explore(bool grab_items)
 void do_explore_cmd()
 {
     if (you.hunger_state <= HS_STARVING && !you_min_hunger())
-        mpr("You need to eat something NOW!");
+		mpr("당신은 지금 당장 먹을게 필요하다!");
     else if (you.berserk())
-        mpr("Calm down first, please.");
+		mpr("일단 진정하길.");
     else if (player_in_branch(BRANCH_LABYRINTH))
-        mpr("No exploration algorithm can help you here.");
+		mpr("이곳에서는 어떤 탐사 알고리즘도 당신을 도울 수 없다.");
     else                        // Start exploring
         start_explore(Options.explore_greedy);
 }
@@ -3753,7 +3753,7 @@ void TravelCache::delete_waypoint()
     while (get_waypoint_count())
     {
         clear_messages();
-        mpr("Existing waypoints:");
+		mpr("존재하는 목적지:");
         list_waypoints();
         mprf(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
 
@@ -3782,14 +3782,14 @@ void TravelCache::delete_waypoint()
     }
 
     clear_messages();
-    mpr("All waypoints deleted. Have a nice day!");
+	mpr("모든 목적지가 삭제되었다. 좋은 하루 보내시길!");
 }
 
 void TravelCache::add_waypoint(int x, int y)
 {
     if (!can_travel_interlevel())
     {
-        mpr("Sorry, you can't set a waypoint here.");
+		mpr("유감이지만, 이곳을 목적지로 설정할 수는 없다.");
         return;
     }
 
@@ -3798,7 +3798,7 @@ void TravelCache::add_waypoint(int x, int y)
     const bool waypoints_exist = get_waypoint_count();
     if (waypoints_exist)
     {
-        mpr("Existing waypoints:");
+		mpr("존재하는 목적지:");
         list_waypoints();
     }
 
@@ -4543,12 +4543,12 @@ void do_interlevel_travel()
     {
         if (you.running.pos == you.pos())
         {
-            mpr("You're already here!");
+			mpr("당신은 이미 그 곳에 있다!");
             return;
         }
         else if (!you.running.pos.x || !you.running.pos.y)
         {
-            mpr("Sorry, you can't auto-travel out of here.");
+			mpr("유감이지만, 당신은 자동탐사를 할 수 없다.");
             return;
         }
 

@@ -154,7 +154,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     if (valid_sticks.empty())
     {
-        mpr("You don't have anything to turn into a snake.");
+		mpr("뱀으로 바꿀만한 물건이 없다.");
         return SPRET_ABORT;
     }
     // Sort by the quantity if the player has no bow skill; this will
@@ -209,7 +209,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (count > 1)
             mprf("You create %d snakes!", count);
         else
-            mpr("You create a snake!");
+			mpr("뱀을 만들었다!");
 
         if (sticks_left)
         {
@@ -217,10 +217,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
                                              sticks_left > 1 ? "s" : "");
         }
         else
-            mpr("You now have no arrows remaining.");
+			mpr("남아있는 화살이 없다.");
     }
     else
-        mpr("You fail to create any snakes.");
+		mpr("당신은 뱀 만들기에 실패했다.");
 
     return SPRET_SUCCESS;
 }
@@ -257,7 +257,7 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
     if (create_monster(ice_beast))
-        mpr("A chill wind blows around you.");
+		mpr("당신 주위로 한기를 품은 바람이 몰아쳤다.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -378,13 +378,13 @@ spret_type cast_dragon_call(int pow, bool fail)
     if (you.duration[DUR_DRAGON_CALL]
         || you.duration[DUR_DRAGON_CALL_COOLDOWN])
     {
-        mpr("You cannot issue another dragon's call so soon.");
+		mpr("그렇게 빨리 다시 용을 부를 수는 없다.");
         return SPRET_ABORT;
     }
 
     fail_check();
 
-    mpr("You call out to the draconic realm, and the dragon horde roars back!");
+	mpr("당신은 용의 왕국에 소환 요청을 했고, 용 무리가 울부짖으며 답했다!");
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
     you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
@@ -431,8 +431,7 @@ static void _place_dragon()
         // remains, as the player might soon have enough again.
         if (!enough_mp(mp_cost, true))
         {
-            mpr("A dragon tries to answer your call, but you don't have enough "
-                "magical power!");
+			mpr("용이 당신의 부름에 답하려 했지만, 당신의 마력이 부족하다!");
             return;
         }
 
@@ -445,7 +444,7 @@ static void _place_dragon()
 
         dec_mp(mp_cost);
         if (you.see_cell(dragon->pos()))
-            mpr("A dragon arrives to answer your call!");
+			mpr("용이 당신의 부름에 응답했다!");
 
         // The dragon is allowed to act immediately here
         dragon->flags &= ~MF_JUST_SUMMONED;
@@ -561,7 +560,7 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
                 _summon_data(*caster, mon, 6, god, SPELL_SUMMON_DRAGON)))
         {
             if (you.see_cell(dragon->pos()))
-                mpr("A dragon appears.");
+				mpr("용이 나타났다.");
             success = true;
         }
     }
@@ -584,7 +583,7 @@ spret_type cast_summon_mana_viper(int pow, god_type god, bool fail)
     viper.hp = hit_points(495); // avg 50
 
     if (create_monster(viper))
-        mpr("A mana viper appears with a sibilant hiss.");
+		mpr("마력 독사가 쉿쉿하는 소리를 내며 나타났다.");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -688,7 +687,7 @@ bool summon_holy_warrior(int pow, bool punish)
     summon->flags |= MF_ATT_CHANGE_ATTEMPT;
 
     if (!punish)
-        mpr("You are momentarily dazzled by a brilliant light.");
+		mpr("당신은 밝은 빛에 순간적으로 눈이 멀었다.");
 
     player_angers_monster(summon);
     return true;
@@ -751,7 +750,7 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
-            mpr(you.hands_act("twitch", "."));
+            mpr(you.hands_act("휘익", "."));
         else
         {
             // FIXME: maybe move hands_act to class actor?
@@ -911,7 +910,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     }
 
     if (success)
-        mpr("You create some ball lightning!");
+		mpr("당신은 전기 구체를 생성했다!");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -926,13 +925,13 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
                                                       pow)
         || !in_bounds(where))
     {
-        mpr("That's too far away.");
+		mpr("너무 멀리 떨어져있다.");
         return SPRET_ABORT;
     }
 
     if (!monster_habitable_grid(MONS_HUMAN, grd(where)))
     {
-        mpr("You can't construct there.");
+		mpr("그 지점에 설치할 수 없다.");
         return SPRET_ABORT;
     }
 
@@ -941,14 +940,14 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
     {
         if (you.can_see(*mons))
         {
-            mpr("That space is already occupied.");
+			mpr("그 장소는 이미 꽉 차있다.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
         // invisible monster
-        mpr("Something you can't see is blocking your construction!");
+		mpr("당신이 볼 수 없는 무언가가 당신의 설치를 방해하고 있다!");
         return SPRET_SUCCESS;
     }
 
@@ -962,7 +961,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
     if (create_monster(spire))
     {
         if (!silenced(where))
-            mpr("An electric hum fills the air.");
+			mpr("전하가 웅웅거리는 소리가 대기를 가득 채웠다.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -987,7 +986,7 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
         // Immediately apply injury bond
         guardian_golem_bond(*mons);
 
-        mpr("A guardian golem appears, shielding your allies.");
+		mpr("당신의 아군 대신 피해를 입는 가디언 골렘이 나타났다.");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1071,12 +1070,12 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
     {
         success = true;
 
-        mpr("A demon appears!");
+		mpr("악마가 나타났다!");
 
         if (!player_angers_monster(demon) && !friendly)
         {
-            mpr(charmed ? "You don't feel so good about this..."
-                        : "It doesn't seem very happy.");
+			mpr(charmed ? "당신은 좋지 않은 예감이 들었다..."
+                        : "그것은 행복하지않은 것 같다. ...매우.");
         }
         else if (friendly)
         {
@@ -1149,7 +1148,7 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
 spret_type cast_summon_demon(int pow, god_type god, bool fail)
 {
     fail_check();
-    mpr("You open a gate to Pandemonium!");
+	mpr("판데모니엄으로 통하는 문을 열었다!");
 
     if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON, false))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1160,7 +1159,7 @@ spret_type cast_summon_demon(int pow, god_type god, bool fail)
 spret_type cast_summon_greater_demon(int pow, god_type god, bool fail)
 {
     fail_check();
-    mpr("You open a gate to Pandemonium!");
+	mpr("판데모니엄으로 통하는 문을 열었다!");
 
     if (!_summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON, false))
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1173,7 +1172,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
 {
     fail_check();
     const bool scroll = (st == MON_SUMM_SCROLL);
-    mpr("Wisps of shadow whirl around you...");
+	mpr("그림자의 조각이 당신 주위를 회전하기 시작했다...");
 
     int num = (scroll ? roll_dice(2, 2) : 1);
     int num_created = 0;
@@ -1245,7 +1244,7 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
     }
 
     if (!num_created)
-        mpr("The shadows disperse without effect.");
+		mpr("그림자가 아무 효과도 없이 흩어져 사라졌다.");
 
     return SPRET_SUCCESS;
 }
@@ -1325,7 +1324,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
     }
     // We don't care if monsters fail to cast it.
     if (is_player)
-        mpr("A gateway cannot be opened in this cramped space!");
+		mpr("이런 비좁은 장소에서는 문을 열 수 없다!");
 
     return SPRET_ABORT;
 }
@@ -1454,7 +1453,7 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
             }
         }
 
-        mpr("A forested plane collides here with a resounding crunch!");
+		mpr("숲으로 뒤덮인 평원이 엄청난 소리와 함께 충돌했다!");
         noisy(spell_effect_noise(SPELL_SUMMON_FOREST), caster->pos());
 
         mgen_data dryad_data = _pal_data(MONS_DRYAD, 1, god,
@@ -1478,7 +1477,7 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         return SPRET_SUCCESS;
     }
 
-    mpr("You need more open space to cast this spell.");
+	mpr("이 주문을 사용하기 위해선 더 넓은 공간이 필요하다.");
     return SPRET_ABORT;
 }
 
@@ -1554,7 +1553,7 @@ static void _display_undead_motions(int motions)
 
     // Prevents the message from getting too long and spammy.
     if (motions_list.size() > 3)
-        mpr("The dead have arisen!");
+		mpr("시체들이 일어났다!");
     else
     {
         mprf("The dead are %s!", comma_separated_line(motions_list.begin(),
@@ -1605,8 +1604,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         ASSERT(mons_skeleton(zombie_type));
         if (as == &you)
         {
-            mpr("The flesh is too rotten for a proper zombie; "
-                "only a skeleton remains.");
+			mpr("그 좀비를 일으키기엔 살이 너무 썩어있다; "
+                "오직 스켈레톤으로만 일으킬 수 있다.");
         }
         mon = MONS_SKELETON;
     }
@@ -1836,7 +1835,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
 
     if (!found)
     {
-        mpr("There is nothing here that can be animated!");
+		mpr("일으킬 수 있는 시체가 하나도 없다!");
         return SPRET_ABORT;
     }
 
@@ -1864,7 +1863,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             && mons_class_can_be_zombified(si->mon_type))
         {
             butcher_corpse(*si, MB_TRUE);
-            mpr("Before your eyes, flesh is ripped from the corpse!");
+			mpr("당신의 눈 앞에서, 살점이 시체로부터 떨어져 나왔다!");
             request_autopickup();
             // Only convert the top one.
             break;
@@ -1880,7 +1879,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     switch (animate_result)
     {
         case -1:
-            mpr("There is no skeleton here to animate!");
+			mpr("이 곳엔 일으킬 스켈레톤이 없다!");
             break;
         case 0:
             mpr(no_space);
@@ -1929,7 +1928,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 
     if (!found)
     {
-        mpr("There is nothing here that can be animated!");
+		mpr("일으킬만한 것이 없다!");
         return SPRET_ABORT;
     }
 
@@ -2255,12 +2254,12 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     if (m == nullptr)
     {
         fail_check();
-        mpr("An evil force gathers, but it quickly dissipates.");
+		mpr("사악한 기운이 모여들었지만, 금새 흩어져버렸다.");
         return SPRET_SUCCESS; // still losing a turn
     }
     else if (m->wont_attack())
     {
-        mpr("You cannot haunt those who bear you no hostility.");
+		mpr("당신에게 적대감을 표하지 않는 존재에게 유령을 출몰시킬 순 없다.");
         return SPRET_ABORT;
     }
 
@@ -2299,13 +2298,13 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
     if (success > 1)
     {
-        mpr(friendly ? "Insubstantial figures form in the air."
-                     : "You sense hostile presences.");
+		mpr(friendly ? "실체없는 물체들이 허공에 나타났다."
+                     : "당신은 적대적인 존재감을 감지했다.");
     }
     else if (success)
     {
-        mpr(friendly ? "An insubstantial figure forms in the air."
-                     : "You sense a hostile presence.");
+		mpr(friendly ? "실체없는 물체가 허공에 나타났다."
+                     : "당신은 적대적인 존재감을 감지했다.");
     }
     else
     {
@@ -2491,9 +2490,9 @@ spret_type cast_aura_of_abjuration(int pow, bool fail)
     fail_check();
 
     if (!you.duration[DUR_ABJURATION_AURA])
-        mpr("You begin to abjure the creatures around you!");
+		mpr("당신은 주위의 소환물을 돌려보내기 시작했다!");
     else
-        mpr("You extend your aura of abjuration.");
+		mpr("당신은 송환의 오라를 내뿜기 시작했다.");
 
     you.increase_duration(DUR_ABJURATION_AURA,  6 + roll_dice(2, pow / 12), 50);
     you.props["abj_aura_pow"].get_int() = pow;
@@ -2536,11 +2535,11 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 
         if (recalled)
         {
-            mpr("You recall your battlesphere and imbue it with additional"
-                " charge.");
+			mpr("당신은 당신의 전투 구체를 다시 불러냈고, 마력을 "
+                " 추가로 충전하였다.");
         }
         else
-            mpr("You imbue your battlesphere with additional charge.");
+			mpr("당신은 전투 구체의 충전량을 채웠다.");
 
         battlesphere->battlecharge = min(20, (int) battlesphere->battlecharge
                                               + 4 + random2(pow + 10) / 10);
@@ -2569,7 +2568,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
             agent->props["battlesphere"].get_int() = battlesphere->mid;
 
             if (agent->is_player())
-                mpr("You conjure a globe of magical energy.");
+				mpr("당신은 마력으로 이루어진 구를 소환했다.");
             else
             {
                 if (you.can_see(*agent) && you.can_see(*battlesphere))
@@ -2610,14 +2609,13 @@ void end_battlesphere(monster* mons, bool killed)
             {
                 if (mons->battlecharge == 0)
                 {
-                    mpr("Your battlesphere expends the last of its energy"
-                        " and dissipates.");
+					mpr("당신의 전투 구체가 마지막 에너지를 소모하고 소멸하였다.");
                 }
                 else
-                    mpr("Your battlesphere wavers and loses cohesion.");
+					mpr("당신의 전투 구체가 불안정하게 흔들리더니 결속력을 잃었다.");
             }
             else
-                mpr("You feel your bond with your battlesphere wane.");
+				mpr("당신과 전투 구체 간의 결속이 약해진 것이 느껴졌다.");
         }
         else if (you.can_see(*mons))
             simple_monster_message(*mons, " dissipates.");
@@ -2954,14 +2952,14 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         > spell_range(SPELL_FULMINANT_PRISM, pow))
     {
         if (caster->is_player())
-            mpr("That's too far away.");
+			mpr("너무 멀리 떨어져있다.");
         return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
     {
         if (caster->is_player())
-            mpr("You can't conjure that within a solid object!");
+			mpr("딱딱한 물체 내부에 시전할 수는 없다!");
         return SPRET_ABORT;
     }
 
@@ -2971,7 +2969,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         if (caster->can_see(*victim))
         {
             if (caster->is_player())
-                mpr("You can't place the prism on a creature.");
+				mpr("당신은 생물 위에 프리즘을 설치할 수는 없다.");
             return SPRET_ABORT;
         }
 
@@ -3055,7 +3053,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
                      wpn->quantity > 1 ? "" : "s");
             }
             else
-                mpr(you.hands_act("twitch", "."));
+                mpr(you.hands_act("휘익", "."));
         }
 
         return SPRET_ABORT;
@@ -3088,7 +3086,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
     }
 
     if (agent->is_player())
-        mpr("You draw out your weapon's spirit!");
+		mpr("당신은 무기의 영혼을 이끌어냈다!");
     else
     {
         if (you.can_see(*agent) && you.can_see(*mons))
@@ -3131,7 +3129,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
         }
         else if (owner && owner->is_player())
-            mpr("You feel your bond with your spectral weapon wane.");
+			mpr("당신과 혼령 무기 간의 결속이 약해진 것이 느껴졌다.");
     }
 
     if (!killed)
@@ -3241,7 +3239,7 @@ spret_type cast_infestation(int pow, bolt &beam, bool fail)
     fail_check();
 
     _setup_infestation(beam, pow);
-    mpr("You call forth a plague of scarabs!");
+	mpr("당신은 풍뎅이 떼를 불러냈다!");
     beam.explode();
 
     return SPRET_SUCCESS;

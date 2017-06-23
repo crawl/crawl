@@ -95,7 +95,7 @@ static void _adjust_spell()
 
     if (spell == SPELL_NO_SPELL)
     {
-        mpr("You don't know that spell.");
+        mpr("당신은 그 주문을 알지 못한다.");
         return;
     }
 
@@ -149,7 +149,7 @@ static void _adjust_ability()
 
     if (talents.empty())
     {
-        mpr("You don't currently have any abilities.");
+        mpr("현재 어떤 능력도 갖고 있지않다.");
         return;
     }
 
@@ -159,7 +159,7 @@ static void _adjust_ability()
     // If we couldn't find anything, cancel out.
     if (selected == -1)
     {
-        mpr("No such ability.");
+        mpr("능력을 찾을 수 없다.");
         return;
     }
 

@@ -90,16 +90,16 @@ static bool _evoke_sceptre_of_asmodeus()
 
     if (m)
     {
-        mpr("The sceptre summons one of its servants.");
+		mpr("홀이 자신의 시종 중 하나를 소환했다.");
         did_god_conduct(DID_EVIL, 3);
 
         m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
 
         if (!player_angers_monster(m))
-            mpr("You don't feel so good about this...");
+			mpr("당신은 별로 좋은 예감이 들지 않는다...");
     }
     else
-        mpr("The air shimmers briefly.");
+		mpr("대기가 잠시 어른거렸다.");
 
     return true;
 }
@@ -126,7 +126,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
             && defender->res_fire() <= 3
             && !you.duration[DUR_FIRE_VULN])
         {
-            mpr("The sword of Cerebov burns away your fire resistance.");
+			mpr("세레보브의 검이 당신의 화염 저항을 불태웠다.");
             you.increase_duration(DUR_FIRE_VULN, 3 + random2(dam), 50);
         }
         if (defender->is_monster()
@@ -149,7 +149,7 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
 
 static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "A shiver runs down your spine.");
+    _equip_mpr(show_msgs, "전율이 당신의 등골을 타고 흘렀다.");
     if (!unmeld)
     {
         MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
@@ -183,7 +183,7 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
     if (!enough_hp(14, true))
     {
-        mpr("You're too close to death to use this item.");
+		mpr("이 아이템을 사용하기엔 당신이 죽음에 너무 가깝다.");
         *unevokable = true;
         return true;
     }
@@ -203,7 +203,7 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
         return false;
     }
 
-    mpr("You feel the staff feeding on your energy!");
+	mpr("지팡이가 당신의 에너지를 빨아들였다!");
     dec_hp(14, false);
     dec_mp(4);
     make_hungry(100, false, true);
@@ -220,17 +220,17 @@ static bool _DISPATER_evoke(item_def *item, bool* did_work, bool* unevokable)
 static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     if (you.can_smell())
-        _equip_mpr(show_msgs, "You smell chlorine.");
+		_equip_mpr(show_msgs, "당신은 염소 냄새를 맡았다.");
     else
-        _equip_mpr(show_msgs, "The staff glows a sickly green.");
+		_equip_mpr(show_msgs, "지팡이가 병든 녹색으로 빛난다.");
 }
 
 static void _OLGREB_unequip(item_def *item, bool *show_msgs)
 {
     if (you.can_smell())
-        _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
+		_equip_mpr(show_msgs, "염소 냄새가 사라졌다.");
     else
-        _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
+		_equip_mpr(show_msgs, "지팡이의 병든 녹색빛이 사라졌다.");
 }
 
 static bool _OLGREB_evoke(item_def *item, bool* did_work, bool* unevokable)
@@ -281,7 +281,7 @@ static void _power_pluses(item_def *item)
 
 static void _POWER_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You sense an aura of extreme power.");
+	_equip_mpr(show_msgs, "당신은 엄청난 힘의 기운을 느꼈다.");
     _power_pluses(item);
 }
 
@@ -316,7 +316,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 {
     set_artefact_name(*item, "Singing Sword");
-    _equip_mpr(show_msgs, "The Singing Sword sighs.", MSGCH_TALK);
+	_equip_mpr(show_msgs, "노래하는 검이 한숨을 쉬었다.", MSGCH_TALK);
 }
 
 static void _SINGING_SWORD_world_reacts(item_def *item)
@@ -368,7 +368,7 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
 
 static void _PRUNE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You feel pruney.");
+	_equip_mpr(show_msgs, "자두가 된 기분이 들었다.");
 }
 
 static void _PRUNE_world_reacts(item_def *item)
@@ -381,7 +381,7 @@ static void _PRUNE_world_reacts(item_def *item)
 
 static void _TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "A terribly searing pain shoots up your arm!");
+	_equip_mpr(show_msgs, "타오르는 듯한 끔찍한 고통이 당신의 팔을 타고 올라왔다!");
 }
 
 static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
@@ -395,12 +395,12 @@ static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
 
 static void _TROG_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You feel bloodthirsty!");
+	_equip_mpr(show_msgs, "피에 대한 갈증이 끓어올랐다!");
 }
 
 static void _TROG_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "You feel less violent.");
+	_equip_mpr(show_msgs, "당신은 덜 폭력적으로 변했다.");
 }
 
 ////////////////////////////////////////////////////
@@ -414,16 +414,16 @@ static void _wucad_backfire()
         switch (random2(4))
         {
         case 0:
-            mpr("Weird images run through your mind.");
+			mpr("이상한 모습이 당신의 머릿속을 스쳐지나갔다.");
             break;
         case 1:
-            mpr("Your head hurts.");
+			mpr("당신의 머리가 아파온다.");
             break;
         case 2:
-            mpr("You feel a strange surge of energy.");
+			mpr("당신은 온몸을 휩싸는 기묘한 에너지를 느꼈다.");
             break;
         case 3:
-            mpr("You feel uncomfortable.");
+			mpr("당신은 불편한 기분이 들었다.");
             break;
         }
         break;
@@ -445,7 +445,7 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
 {
     if (you.magic_points == you.max_magic_points)
     {
-        mpr("Your reserves of magic are full.");
+		mpr("당신의 마력 용량이 가득 찼다.");
         *unevokable = true;
         return true;
     }
@@ -460,7 +460,7 @@ static bool _WUCAD_MU_evoke(item_def *item, bool* did_work, bool* unevokable)
         return false;
     }
 
-    mpr("Magical energy flows into your mind!");
+	mpr("마법 에너지가 당신의 내면 속으로 흘러들어왔다!");
 
     inc_mp(3 + random2(5) + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
     make_hungry(50, false, true);
@@ -482,10 +482,10 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (you.undead_state() == US_ALIVE && !you_foodless())
     {
         _equip_mpr(show_msgs,
-                   "You feel a strange hunger, and smell blood in the air...");
+                   "공중에 피냄새가 퍼지며, 기이한 갈증이 느껴진다...");
     }
     else if (you.species != SP_VAMPIRE)
-        _equip_mpr(show_msgs, "You feel strangely empty.");
+		_equip_mpr(show_msgs, "당신은 기이한 공허함을 느꼈다.");
     // else let player-equip.cc handle message
 }
 
@@ -508,7 +508,7 @@ static void _VARIABILITY_world_reacts(item_def *item)
 
 static void _ZONGULDROK_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You sense an extremely unholy aura.");
+	_equip_mpr(show_msgs, "당신은 엄청나게 불경한 기운을 느꼈다.");
 }
 
 static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
@@ -566,7 +566,7 @@ static void _RCLOUDS_world_reacts(item_def *item)
 
 static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "A thin mist springs up around you!");
+	_equip_mpr(show_msgs, "옅은 안개가 당신의 주위에 서린다!");
 }
 
 ///////////////////////////////////////////////////
@@ -628,7 +628,7 @@ static void _DEMON_AXE_world_reacts(item_def *item)
 
     if (you.confused())
     {
-        mpr("Your confusion fades away as the thirst for blood takes over your mind.");
+		mpr("피에 대한 갈증이 타오름에 따라 당신의 혼란함이 사라진다.");
         you.duration[DUR_CONF] = 0;
     }
 
@@ -644,7 +644,7 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
         // Since unwielding it costs scrolls of rem curse, we might say getting
         // the demon away is enough of a shock to get you back to senses.
         you.clear_beholders();
-        mpr("Your thirst for blood fades away.");
+		mpr("피에 대한 갈증이 사라졌다.");
     }
 }
 
@@ -655,8 +655,8 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs,
                species_is_draconian(you.species)
                 || you.form == transformation::dragon
-                   ? "You feel an overwhelming desire to commit suicide."
-                   : "You feel an overwhelming desire to slay dragons!");
+                   ? "자살하고픈 압도적인 욕망이 들끓는다."
+                   : "당신은 용을 살해하고픈 압도적인 욕망을 느꼈다!");
 }
 
 static bool is_dragonkind(const actor *act)
@@ -791,7 +791,7 @@ static void _SHADOWS_unequip(item_def *item, bool *show_msgs)
 ///////////////////////////////////////////////////
 static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "Time to lay down the shillelagh law.");
+	_equip_mpr(show_msgs, "거추장스런 법칙들을 내려놓을 시간이다.");
 }
 
 static void _DEVASTATOR_melee_effects(item_def* item, actor* attacker,
@@ -804,12 +804,12 @@ static void _DEVASTATOR_melee_effects(item_def* item, actor* attacker,
 ///////////////////////////////////////////////////
 static void _DRAGONSKIN_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You feel oddly protected from the elements.");
+	_equip_mpr(show_msgs, "당신은 원소로부터 불안정하게 보호받음을 느꼈다.");
 }
 
 static void _DRAGONSKIN_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "You no longer feel protected from the elements.");
+	_equip_mpr(show_msgs, "원소로부터 보호받던 느낌이 사라졌다.");
 }
 
 ///////////////////////////////////////////////////
@@ -823,13 +823,13 @@ static void _BLACK_KNIGHT_HORSE_world_reacts(item_def *item)
 static void _NIGHT_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     update_vision_range();
-    _equip_mpr(show_msgs, "The light fades from your surroundings.");
+	_equip_mpr(show_msgs, "당신의 주위에서 빛이 사라졌다.");
 }
 
 static void _NIGHT_unequip(item_def *item, bool *show_msgs)
 {
     update_vision_range();
-    _equip_mpr(show_msgs, "The light returns to your surroundings.");
+	_equip_mpr(show_msgs, "당신의 주위에 빛이 돌아온다.");
 }
 
 ///////////////////////////////////////////////////
@@ -842,7 +842,7 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
         && (!defender->is_monster()
              || !mons_immune_magic(*defender->as_monster())))
     {
-        mpr("Mutagenic energy flows through the plutonium sword!");
+		mpr("기묘한 에너지가 플루토늄 검을 타고 흘러들어왔다!");
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_TRANSMUTATION,
                       random2(9), random2(70), "the plutonium sword", NH_NEVER);
 
@@ -996,12 +996,12 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
 
 static void _ARC_BLADE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "The arc blade crackles to life.");
+	_equip_mpr(show_msgs, "전하의 칼날이 살아있는 것처럼 불꽃을 튀겼다.");
 }
 
 static void _ARC_BLADE_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "The arc blade stops crackling.");
+	_equip_mpr(show_msgs, "전하의 칼날에서 불꽃이 사라졌다.");
 }
 
 static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
@@ -1020,9 +1020,9 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
         else
         {
             if (you.can_see(*attacker))
-                mpr("The arc blade crackles.");
+				mpr("전하의 칼날에서 불꽃이 튀었다.");
             else
-                mpr("You hear the crackle of electricity.");
+				mpr("당신은 전기 불꽃이 튀는 소리를 들었다.");
         }
     }
 }
@@ -1065,12 +1065,12 @@ static void _ORDER_melee_effects(item_def* item, actor* attacker,
 
 static void _FIRESTARTER_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You are filled with an inner flame.");
+	_equip_mpr(show_msgs, "당신의 내부는 화염으로 타오른다.");
 }
 
 static void _FIRESTARTER_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "Your inner flame fades away.");
+	_equip_mpr(show_msgs, "당신 내부의 화염이 사라졌다.");
 }
 
 static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
@@ -1095,12 +1095,12 @@ static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
 
 static void _CHILLY_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "The dagger glows with an icy blue light!");
+	_equip_mpr(show_msgs, "단검이 시릴 듯한 파란 빛으로 타오른다!");
 }
 
 static void _CHILLY_DEATH_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "The dagger stops glowing.");
+	_equip_mpr(show_msgs, "단검의 빛이 사라졌다.");
 }
 
 static void _CHILLY_DEATH_melee_effects(item_def* weapon, actor* attacker,
@@ -1131,12 +1131,12 @@ static void _CHILLY_DEATH_melee_effects(item_def* weapon, actor* attacker,
 
 static void _FLAMING_DEATH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "The scimitar bursts into red hot flame!");
+	_equip_mpr(show_msgs, "시미터로부터 뜨거운 붉은 불길이 뿜어져 나온다!");
 }
 
 static void _FLAMING_DEATH_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "The scimitar stops flaming.");
+	_equip_mpr(show_msgs, "시미터로부터 나오던 불길이 사그라졌다.");
 }
 
 static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
@@ -1164,7 +1164,7 @@ static void _MAJIN_equip(item_def *item, bool *show_msgs, bool unmeld)
         return;
 
     const bool should_msg = !show_msgs || *show_msgs;
-    _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+	_equip_mpr(show_msgs, "어둠이 당신의 마법을 뒤덮는 느낌이 들었다.");
 
     if (!item->props.exists(MB_WELCOME_KEY) && should_msg)
     {
@@ -1180,7 +1180,7 @@ static void _MAJIN_unequip(item_def *item, bool *show_msgs)
     if (you.max_magic_points)
     {
         _equip_mpr(show_msgs,
-                   "The darkness slowly releases its grasp on your magic.");
+                   "어둠이 당신의 마법에서 천천히 풀려나간다.");
     }
 }
 
@@ -1208,9 +1208,9 @@ static void _OCTOPUS_KING_equip(item_def *item, bool *show_msgs, bool unmeld)
     int rings = _octorings_worn();
 
     if (rings == 8)
-        _equip_mpr(show_msgs, "You feel like a king!");
+		_equip_mpr(show_msgs, "당신은 왕이 된 듯한 느낌이 들었다!");
     else if (rings)
-        _equip_mpr(show_msgs, "You feel regal.");
+		_equip_mpr(show_msgs, "당신은 제왕이 된 듯한 느낌이 들었다.");
     item->plus = 8 + 2 * rings;
 }
 
@@ -1250,14 +1250,14 @@ static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
 
 static void _FENCERS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "En garde!");
+	_equip_mpr(show_msgs, "앙 가르드!");
 }
 
 ///////////////////////////////////////////////////
 
 static void _ETHERIC_CAGE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "You sense a greater flux of ambient magical fields.");
+	_equip_mpr(show_msgs, "당신은 웅장한 마력의 흐름을 느꼈다.");
 }
 
 static void _ETHERIC_CAGE_world_reacts(item_def *item)
@@ -1293,24 +1293,24 @@ static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
 
 static void _VINES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "The vines latch onto your body!");
+	_equip_mpr(show_msgs, "덩굴이 당신의 몸에 달라붙는다!");
 }
 
 static void _VINES_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "The vines fall away from your body!");
+	_equip_mpr(show_msgs, "덩굴이 당신의 몸으로부터 떨어져 나갔다!");
 }
 
 ///////////////////////////////////////////////////
 
 static void _KRYIAS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "Your attunement to healing potions increases.");
+	_equip_mpr(show_msgs, "당신의 몸에 대한 치료 물약의 효율이 증가했다.");
 }
 
 static void _KRYIAS_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "Your attunement to healing potions decreases.");
+	_equip_mpr(show_msgs, "당신의 몸에 대한 치료 물약의 효율이 감소했다.");
 }
 
 ///////////////////////////////////////////////////
@@ -1334,9 +1334,9 @@ static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
 static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     if (you.undead_state() == US_ALIVE && !you_foodless())
-        _equip_mpr(show_msgs, "You feel a powerful hunger.");
+		_equip_mpr(show_msgs, "당신은 강렬한 굶주림을 느꼈다.");
     else if (you.species != SP_VAMPIRE)
-        _equip_mpr(show_msgs, "You feel very empty.");
+		_equip_mpr(show_msgs, "당신은 텅 빈듯한 기분이 들었다.");
     // else let player-equip.cc handle message
 }
 
@@ -1345,13 +1345,13 @@ static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 static void _THERMIC_ENGINE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "The engine hums to life!");
+	_equip_mpr(show_msgs, "엔진이 살아 움직이기 시작했다!");
     item->plus = 2;
 }
 
 static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
 {
-    _equip_mpr(show_msgs, "The engine shudders to a halt.");
+	_equip_mpr(show_msgs, "엔진은 덜덜 떨리더니, 이내 멈추었다.");
     item->plus = 2;
 }
 

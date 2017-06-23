@@ -80,7 +80,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 static void _set_no_path_found(monster* mon)
 {
 #ifdef DEBUG_PATHFIND
-    mpr("No path found!");
+	mpr("찾은 경로가 없다!");
 #endif
 
     mon->travel_target = MTRAV_UNREACHABLE;
@@ -453,13 +453,13 @@ static bool _handle_monster_travelling(monster* mon)
     if (mon->pos() == mon->travel_path[0])
     {
 #ifdef DEBUG_PATHFIND
-        mpr("Arrived at first waypoint.");
+		mpr("첫번째 경유지에 도착했다.");
 #endif
         mon->travel_path.erase(mon->travel_path.begin());
         if (mon->travel_path.empty())
         {
 #ifdef DEBUG_PATHFIND
-            mpr("We reached the end of our path: stop travelling.");
+			mpr("경로의 목적지에 도착했다 : 이동을 중지한다.");
 #endif
             mon->travel_target = MTRAV_NONE;
             return true;
@@ -478,7 +478,7 @@ static bool _handle_monster_travelling(monster* mon)
     if (!can_go_straight(mon, mon->pos(), mon->travel_path[0]))
     {
 #ifdef DEBUG_PATHFIND
-        mpr("Can't see waypoint grid.");
+		mpr("경유지 목록을 찾을 수 없다.");
 #endif
         // Apparently we got sidetracked a bit.
         // Check the waypoints vector backwards and pick the first waypoint

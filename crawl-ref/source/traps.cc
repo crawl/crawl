@@ -339,7 +339,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         if (you.see_cell(mon->pos()))
         {
             if (!mon->visible_to(&you))
-                mpr("The net bounces off something gigantic!");
+				mpr("그물이 어떤 거대한 것에 맞고 튕겨져 나왔다!");
             else
                 simple_monster_message(*mon, " is too large for the net to hold!");
         }
@@ -356,7 +356,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
                      mon->name(DESC_THE).c_str());
             }
             else
-                mpr("The net is caught on something unseen!");
+				mpr("그물이 보이지 않는 무언가를 잡았다!");
         }
         return false;
     }
@@ -376,7 +376,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         if (you.see_cell(mon->pos()))
         {
             if (!mon->visible_to(&you))
-                mpr("Something gets caught in the net!");
+				mpr("무언가가 그물에 걸렸다!");
             else
                 simple_monster_message(*mon, " is caught in the net!");
         }
@@ -393,7 +393,7 @@ bool player_caught_in_net()
 
     if (!you.attribute[ATTR_HELD])
     {
-        mpr("You become entangled in the net!");
+		mpr("당신은 그물에 잡혀 얽혔다!");
         stop_running();
 
         // Set the attribute after the mpr, otherwise the screen updates
@@ -424,7 +424,7 @@ void check_net_will_hold_monster(monster* mons)
                      mons->name(DESC_THE).c_str());
             }
             else
-                mpr("All of a sudden the net rips apart!");
+				mpr("갑자기 그물이 찢어졌다!");
         }
     }
     else if (mons->is_insubstantial())
@@ -554,7 +554,7 @@ void trap_def::trigger(actor& triggerer)
         if (_find_other_passage_side(to))
         {
             if (you_trigger)
-                mpr("You enter the passage of Golubria.");
+				mpr("당신은 골루브리아의 통로에 들어갔다.");
             else
                 simple_monster_message(*m, " enters the passage of Golubria.");
 
@@ -568,7 +568,7 @@ void trap_def::trigger(actor& triggerer)
                 know_trap_destroyed = you_trigger;
             }
             else
-                mpr("But it is blocked!");
+				mpr("그러나 그것은 막혔다!");
         }
         break;
     }
@@ -638,15 +638,15 @@ void trap_def::trigger(actor& triggerer)
         if (you_trigger)
         {
             if (trig_knows && one_chance_in(3))
-                mpr("You avoid triggering a blade trap.");
+				mpr("당신은 칼날 함정을 작동시키는 것을 피해냈다.");
             else if (random2limit(you.evasion(), 40)
                      + random2(6) + (trig_knows ? 3 : 0) > 8)
             {
-                mpr("A huge blade swings just past you!");
+				mpr("거대한 칼날이 당신을 스쳐 지나갔다!");
             }
             else
             {
-                mpr("A huge blade swings out and slices into you!");
+				mpr("거대한 칼날이 당신을 갈랐다!");
                 const int damage = you.apply_ac(48 + random2avg(29, 2));
                 string n = name(DESC_A);
                 ouch(damage, KILLED_BY_TRAP, MID_NOBODY, n.c_str());
@@ -673,7 +673,7 @@ void trap_def::trigger(actor& triggerer)
                     && !simple_monster_message(*m,
                                             " avoids a huge, swinging blade."))
                 {
-                    mpr("A huge blade swings out!");
+					mpr("거대한 칼날이 튀어나왔다!");
                 }
             }
             else
@@ -706,7 +706,7 @@ void trap_def::trigger(actor& triggerer)
         if (you_trigger)
         {
             if (trig_knows && one_chance_in(3))
-                mpr("A net swings high above you.");
+				mpr("그물이 당신의 머리위를 스쳐 지나갔다.");
             else
             {
                 item_def item = generate_trap_item();
@@ -715,11 +715,11 @@ void trap_def::trigger(actor& triggerer)
                 if (random2limit(you.evasion(), 40)
                     + random2(4) + (trig_knows ? 3 : 0) > 12)
                 {
-                    mpr("A net drops to the ground!");
+					mpr("그물이 땅으로 떨어졌다!");
                 }
                 else
                 {
-                    mpr("A large net falls onto you!");
+					mpr("거대한 그물이 당신 위로 떨어졌다!");
                     if (player_caught_in_net())
                     {
                         if (player_in_a_dangerous_place())
@@ -758,7 +758,7 @@ void trap_def::trigger(actor& triggerer)
                                                 " nimbly jumps out of the way "
                                                 "of a falling net."))
                     {
-                        mpr("A large net falls down!");
+						mpr("거대한 그물이 떨어졌다!");
                     }
                 }
             }
@@ -775,7 +775,7 @@ void trap_def::trigger(actor& triggerer)
                              m->name(DESC_THE).c_str());
                     }
                     else
-                        mpr("A large net falls down!");
+						mpr("거대한 그물이 떨어졌다!");
                 }
 
                 // actually try to net the monster
@@ -826,10 +826,10 @@ void trap_def::trigger(actor& triggerer)
         if (you_trigger)
         {
             if (trig_knows && one_chance_in(3))
-                mpr("You pick your way through the web.");
+				mpr("당신은 거미줄을 통과했다.");
             else
             {
-                mpr("You are caught in the web!");
+				mpr("그물에 걸렸다!");
 
                 if (_player_caught_in_web())
                 {
@@ -857,7 +857,7 @@ void trap_def::trigger(actor& triggerer)
                     if (m->visible_to(&you))
                         simple_monster_message(*m, " is caught in a web!");
                     else
-                        mpr("A web moves frantically as something is caught in it!");
+						mpr("무언가가 걸리면서 거미줄이 미친듯이 흔들렸다!");
                 }
 
                 // If somehow already caught, make it worse.
@@ -875,8 +875,8 @@ void trap_def::trigger(actor& triggerer)
     case TRAP_ZOT:
         if (you_trigger)
         {
-            mpr((trig_knows) ? "You enter the Zot trap."
-                             : "Oh no! You have blundered into a Zot trap!");
+			mpr((trig_knows) ? "당신은 조트의 함정을 밟았다."
+                             : "오 안돼! 당신은 실수로 조트의 함정에 발을 디뎠다!");
             if (!trig_knows)
                 xom_is_stimulated(25);
 
@@ -930,7 +930,7 @@ void trap_def::trigger(actor& triggerer)
         if (!is_valid_shaft_level())
         {
             if (you_know && in_sight)
-                mpr("The shaft disappears in a puff of logic!");
+				mpr("구덩이가 마치 망상이었던 것처럼 사라졌다!");
 
             trap_destroyed = true;
             break;
@@ -975,7 +975,7 @@ void trap_def::trigger(actor& triggerer)
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
         if (in_sight && you_know)
-            mpr("The gas trap seems to be inoperative.");
+			mpr("이 가스 함정은 고장난 것 처럼 보인다.");
         trap_destroyed = true;
         break;
 #endif
@@ -1165,11 +1165,11 @@ void leave_web(bool quiet)
     if (trap->ammo_qty == 1) // temp web from e.g. jumpspider/spidersack
     {
         if (!quiet)
-            mpr("The web tears apart.");
+			mpr("그물이 갈갈이 찢겼다.");
         destroy_trap(you.pos());
     }
     else if (!quiet)
-        mpr("You disentangle yourself.");
+		mpr("당신은 스스로 그물에서 빠져나왔다.");
 
     stop_being_held();
 }
@@ -1186,7 +1186,7 @@ static void _free_self_from_web()
         // if so, roll a chance to escape the web.
         if (x_chance_in_y(3, 10))
         {
-            mpr("You struggle to detach yourself from the web.");
+			mpr("당신은 그물에서 벗어나기 위해 발버둥쳤다.");
             // but you actually accomplished nothing!
             return;
         }
@@ -1227,9 +1227,9 @@ void free_self_from_net()
     }
 
     if (damage > 3)
-        mpr("You tear a large gash into the net.");
+		mpr("당신은 그물을 깊이 쑤셔 찢었다.");
     else
-        mpr("You struggle against the net.");
+		mpr("당신은 그물 안에서 버둥거렸다.");
 }
 
 /**
@@ -1349,9 +1349,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     if (ammo_qty <= 0)
     {
         if (was_known && act.is_player())
-            mpr("The trap is out of ammunition!");
+			mpr("그 함정은 탄약을 모두 소진하였다!");
         else if (player_can_hear(pos) && you.see_cell(pos))
-            mpr("You hear a soft click.");
+			mpr("약하게 딸깍 하는 소리를 들었다.");
 
         destroy();
         return;
@@ -1763,7 +1763,7 @@ bool ensnare(actor *fly)
     {
         // currently webs are stateless so except for flavour it's a no-op
         if (fly->is_player())
-            mpr("You are even more entangled.");
+			mpr("당신은 점점 더 얽히고있다.");
         return false;
     }
 
@@ -1789,7 +1789,7 @@ bool ensnare(actor *fly)
     if (fly->is_player())
     {
         if (_player_caught_in_web()) // no fail, returns false if already held
-            mpr("You are caught in a web!");
+			mpr("그물에 걸렸다!");
     }
     else
     {

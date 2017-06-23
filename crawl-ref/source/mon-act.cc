@@ -2086,10 +2086,10 @@ void monster::struggle_against_net()
                 if (you.see_cell(pos()))
                 {
                     if (!visible_to(&you))
-                        mpr("Something you can't see is thrashing in a web.");
+						mpr("당신이 볼 수 없는 무언가가 거미줄에서 몸부림치고 있다.");
                     else
                         simple_monster_message(*this,
-                                           " struggles to get unstuck from the web.");
+                                           " 거미줄에서 벗어나기 위해 몸부림쳤다.");
                 }
                 return;
             }
@@ -2102,9 +2102,9 @@ void monster::struggle_against_net()
     if (you.see_cell(pos()))
     {
         if (!visible_to(&you))
-            mpr("Something wriggles in the net.");
+			mpr("무언가가 그물 안에서 움직이고 있다.");
         else
-            simple_monster_message(*this, " struggles against the net.");
+            simple_monster_message(*this, " 그물에서 벗어나기 위해 몸부림쳤다.");
     }
 
     int damage = 1 + random2(2);
@@ -2126,7 +2126,7 @@ void monster::struggle_against_net()
                      name(DESC_THE).c_str());
             }
             else
-                mpr("All of a sudden the net rips apart!");
+				mpr("갑자기 그물이 찢어졌다!");
         }
         destroy_item(net);
 
@@ -3263,7 +3263,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
                 if (!you.can_see(mons))
                 {
-                    mpr("The door bursts into shrapnel!");
+					mpr("문이 산산조각났다!");
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
@@ -3288,7 +3288,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
                 if (!you.can_see(mons))
                 {
-                    mpr("The door mysteriously vanishes.");
+					mpr("문이 신비하게도 사라져버렸다.");
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else

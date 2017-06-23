@@ -591,7 +591,7 @@ void full_describe_view()
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
-        mpr("No monsters, items or features are visible.");
+		mpr("몬스터, 아이템 또는 지형이 시야에 없다.");
         return;
     }
 
@@ -1740,7 +1740,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         m->hit_points = 1;
-        mpr("Brought monster down to 1 HP.");
+		mpr("몬스터의 체력을 1로 설정.");
         flush_prev_message();
         break;
 
@@ -1867,7 +1867,7 @@ bool direction_chooser::do_main_loop()
             break;
 
         if (!is_map_persistent())
-            mpr("You cannot set exclusions on this level.");
+			mpr("당신은 이 층에선 탐사 예외지역을 지정할 수 없다.");
         else
         {
             const bool was_excluded = is_exclude_root(target());
@@ -1876,11 +1876,11 @@ bool direction_chooser::do_main_loop()
             need_beam_redraw   = true;
             const bool is_excluded = is_exclude_root(target());
             if (!was_excluded && is_excluded)
-                mpr("Placed new exclusion.");
+				mpr("탐사 예외지역 지정.");
             else if (was_excluded && !is_excluded)
-                mpr("Removed exclusion.");
+				mpr("탐사 예외지역 해제.");
             else
-                mpr("Reduced exclusion size to a single square.");
+				mpr("탐사 예외지역을 한 칸으로 줄임.");
         }
 
         need_cursor_redraw = true;

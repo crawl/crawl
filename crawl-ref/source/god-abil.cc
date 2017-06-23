@@ -239,7 +239,7 @@ bool zin_donate_gold()
 {
     if (you.gold == 0)
     {
-        mpr("You don't have anything to sacrifice.");
+		mpr("당신은 희생할 것이 없다.");
         return false;
     }
 
@@ -279,9 +279,9 @@ bool zin_donate_gold()
     if (player_under_penance())
     {
         if (estimated_piety >= you.penance[GOD_ZIN])
-            mpr("You feel that you will soon be absolved of all your sins.");
+			mpr("곧 당신의 죄가 모두 용서받을 것 같은 느낌이 든다.");
         else
-            mpr("You feel that your burden of sins will soon be lighter.");
+			mpr("당신의 죄의 무게가 가벼워진 느낌이 든다.");
     }
     else
     {
@@ -736,21 +736,21 @@ bool zin_check_able_to_recite(bool quiet)
     if (you.duration[DUR_RECITE])
     {
         if (!quiet)
-            mpr("Finish your current sermon first, please.");
+			mpr("지금 하고 있는 설교를 먼저 끝내시오.");
         return false;
     }
 
     if (you.duration[DUR_RECITE_COOLDOWN])
     {
         if (!quiet)
-            mpr("You're not ready to recite again yet.");
+			mpr("당신은 아직 다시 설교할 준비가 되지 않았다.");
         return false;
     }
 
     if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
     {
         if (!quiet)
-            mpr("You cannot recite while unable to breathe!");
+			mpr("숨을 쉴 수 없을 때는 설교할 수 없다.");
         return false;
     }
 
@@ -1329,7 +1329,7 @@ void zin_sanctuary()
     if (!silenced(you.pos())) // How did you manage that?
         mprf(MSGCH_SOUND, "You hear a choir sing!");
     else
-        mpr("You are suddenly bathed in radiance!");
+		mpr("당신은 갑자기 광휘에 휩싸였다!");
 
     flash_view(UA_PLAYER, WHITE);
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
@@ -1358,10 +1358,10 @@ void tso_divine_shield()
                  apostrophise(god_name(GOD_SHINING_ONE)).c_str());
         }
         else
-            mpr("A divine shield forms around you!");
+			mpr("신성한 방패가 당신 주위에 형성되었다!");
     }
     else
-        mpr("Your divine shield is renewed.");
+		mpr("당신의 신성한 방패가 재생되었다.");
 
     // Duration from 35-80 turns.
     you.set_duration(DUR_DIVINE_SHIELD,
@@ -1384,7 +1384,7 @@ void tso_remove_divine_shield()
 
 void elyvilon_purification()
 {
-    mpr("You feel purified!");
+	mpr("당신은 정화되었음을 느꼈다!");
 
     you.disease = 0;
     you.duration[DUR_POISONING] = 0;
@@ -1537,7 +1537,7 @@ bool trog_burn_spellbooks()
             if (cloud)
             {
                 // Reinforce the cloud.
-                mpr("The fire blazes with new energy!");
+				mpr("불이 새로운 에너지로 타올랐다!");
                 const int extra_dur = count + random2(6);
                 cloud->decay += extra_dur * 5;
                 cloud->set_whose(KC_YOU);
@@ -1569,7 +1569,7 @@ bool trog_burn_spellbooks()
     }
     else
     {
-        mpr("You cannot see a spellbook to ignite!");
+		mpr("불태울 마법서가 보이지 않는다!");
         return false;
     }
 
@@ -1625,14 +1625,14 @@ bool beogh_can_gift_items_to(const monster* mons, bool quiet)
     if (!is_orcish_follower(*mons) || mons_genus(mons->type) != MONS_ORC)
     {
         if (!quiet)
-            mpr("That's not an orcish ally!");
+			mpr("저것은 오크 동료가 아니다!");
         return false;
     }
 
     if (!mons->is_named())
     {
         if (!quiet)
-            mpr("That orc has not proved itself worthy of your gift.");
+			mpr("저 오크는 당신의 선물을 받을 가치를 입증하지 못했다!");
         return false;
     }
 
@@ -1670,7 +1670,7 @@ bool beogh_gift_item()
 {
     if (!_valid_beogh_gift_targets_in_sight())
     {
-        mpr("No worthy followers in sight.");
+		mpr("시야에 가치있는 추종자가 없다.");
         return false;
     }
 
@@ -1797,7 +1797,7 @@ bool beogh_resurrect()
     }
     if (pos.origin())
     {
-        mpr("There's no room!");
+		mpr("공간이 없다!");
         return false;
     }
 
@@ -1828,7 +1828,7 @@ bool jiyva_remove_bad_mutation()
 {
     if (!you.how_mutated())
     {
-        mpr("You have no bad mutations to be cured!");
+		mpr("당신에게는 치료받을 나쁜 돌연변이가 없다!");
         return false;
     }
 
@@ -1839,7 +1839,7 @@ bool jiyva_remove_bad_mutation()
         return false;
     }
 
-    mpr("You feel cleansed.");
+	mpr("당신은 정화된 느낌이 든다.");
     return true;
 }
 
@@ -2368,11 +2368,11 @@ static int _spawn_corpse_mushrooms(item_def& corpse,
             corpse.freshness = 0;
 
             if (you.see_cell(corpse.pos))
-                mpr("A ring of toadstools grows before your very eyes.");
+				mpr("당신의 주위에 독버섯의 고리가 자라난다.");
             else if (ring_seen > 1)
-                mpr("Some toadstools grow in a peculiar arc.");
+				mpr("몇몇 독버섯들이 특이한 호를 그리며 자라난다.");
             else if (ring_seen > 0)
-                mpr("A toadstool grows.");
+				mpr("독버섯이 자라난다.");
 
             seen_targets = -1;
 
@@ -2580,7 +2580,7 @@ int fedhas_fungal_bloom()
         _mushroom_spawn_message(seen_mushrooms, seen_corpses);
 
     if (kills)
-        mpr("That felt like a moral victory.");
+		mpr("정당한 승리인 것 같다.");
 
     if (processed_count)
     {
@@ -2630,7 +2630,7 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
                      god_name(GOD_FEDHAS).c_str());
             }
             else
-                mpr("A plant grows up from the ground.");
+				mpr("땅으로부터 식물이 자라난다.");
         }
         return true;
     }
@@ -2787,7 +2787,7 @@ void process_sunlights(bool future)
     }
 
     if (evap_count)
-        mpr("Some water evaporates in the bright sunlight.");
+		mpr("물 일부가 밝은 태양빛을 받아 증발했다.");
 
     invalidate_agrid(true);
 }
@@ -2995,7 +2995,7 @@ static void _decrease_amount(vector<pair<int, int> >& available, int amount)
     if (total_decrease > 1)
         mprf("%d pieces of fruit are consumed!", total_decrease);
     else
-        mpr("A piece of fruit is consumed!");
+		mpr("과일 하나가 소모되었다!");
 }
 
 // Create a ring or partial ring around the caster. The user is
@@ -3026,9 +3026,9 @@ bool fedhas_plant_ring_from_fruit()
     if (max_use == 0)
     {
         if (adjacent.empty())
-            mpr("No empty adjacent squares.");
+			mpr("인접한 빈 공간이 없다.");
         else
-            mpr("No fruit available.");
+			mpr("사용할 수 있는 과일이 없다.");
 
         return false;
     }
@@ -3343,7 +3343,7 @@ bool fedhas_check_evolve_flora(bool quiet)
             return true;
 
     if (!quiet)
-        mpr("No evolvable flora in sight.");
+		mpr("진화할 수 있는 식물이 없다.");
     return false;
 }
 
@@ -3384,20 +3384,20 @@ spret_type fedhas_evolve_flora(bool fail)
     if (!plant)
     {
         if (feat_is_tree(env.grid(spelld.target)))
-            mpr("The tree has already reached the pinnacle of evolution.");
+			mpr("그 나무는 이미 최종 진화 상태다.");
         else
-            mpr("You must target a plant or fungus.");
+			mpr("식물이나 균류를 대상으로 지정해야 한다.");
         return SPRET_ABORT;
     }
 
     if (!mons_is_evolvable(plant))
     {
         if (plant->type == MONS_BALLISTOMYCETE_SPORE)
-            mpr("You can evolve only complete plants, not seeds.");
+			mpr("씨앗이 아니라 온전한 식물만 진화시킬 수 있다.");
         else if (!mons_is_plant(*plant))
-            mpr("Only plants or fungi may be evolved.");
+			mpr("식물이나 균류만 진화가 가능하다.");
         else if (plant->has_ench(ENCH_PETRIFIED))
-            mpr("Stone cannot grow or evolve.");
+			mpr("암석은 진화나 성장이 불가능하다.");
         else
         {
             simple_monster_message(*plant, " has already reached the pinnacle"
@@ -3416,14 +3416,14 @@ spret_type fedhas_evolve_flora(bool fail)
 
         if (total_fruit < upgrade.fruit_cost)
         {
-            mpr("Not enough fruit available.");
+			mpr("사용할 수 있는 과일이 충분하지 않다.");
             return SPRET_ABORT;
         }
     }
 
     if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
     {
-        mpr("Not enough piety available.");
+		mpr("신앙도가 충분하지 않다.");
         return SPRET_ABORT;
     }
 
@@ -3502,7 +3502,7 @@ spret_type fedhas_evolve_flora(bool fail)
     if (upgrade.piety_cost)
     {
         lose_piety(upgrade.piety_cost);
-        mpr("Your piety has decreased.");
+		mpr("당신의 신앙도가 감소했다.");
     }
 
     return SPRET_SUCCESS;
@@ -3546,7 +3546,7 @@ void lugonu_bend_space()
 
 void cheibriados_time_bend(int pow)
 {
-    mpr("The flow of time bends around you.");
+	mpr("당신 주위의 시간의 흐름이 뒤틀린다.");
 
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
@@ -3640,7 +3640,7 @@ bool cheibriados_slouch()
     if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
         return false;
 
-    mpr("You can feel time thicken for a moment.");
+	mpr("순간적으로 시간이 짙어진 것이 느껴진다.");
     dprf("your speed is %d", player_movement_speed());
 
     apply_area_visible(_slouch_monsters, you.pos());
@@ -3685,14 +3685,14 @@ void cheibriados_temporal_distortion()
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;
 
-    mpr("You warp the flow of time around you!");
+	mpr("당신 주위의 시간을 왜곡시켰다!");
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
     const coord_def old_pos = you.pos();
 
-    mpr("You step out of the flow of time.");
+	mpr("당신은 시간의 흐름에서 비껴섰다.");
     flash_view(UA_PLAYER, LIGHTBLUE);
     you.moveto(coord_def(0, 0));
     you.duration[DUR_TIME_STEP] = pow;
@@ -3720,7 +3720,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     you.duration[DUR_TIME_STEP] = 0;
 
     flash_view(UA_PLAYER, 0);
-    mpr("You return to the normal time flow.");
+	mpr("당신은 정상적인 시간의 흐름으로 돌아왔다.");
 }
 
 bool ashenzari_transfer_knowledge()
@@ -3813,7 +3813,7 @@ bool ashenzari_curse_item(int num_rc)
 
     if (!item_is_cursable(item))
     {
-        mpr("You can't curse that!");
+		mpr("그것은 저주할 수 없다!");
         return false;
     }
 
@@ -3892,11 +3892,10 @@ void spare_beogh_convert()
     you.one_time_ability_used.set(GOD_BEOGH);
 
     if (witc == 1)
-        mpr("The priest welcomes you and lets you live.");
+		mpr("사제는 당신을 환영하며 살려 보낸다.");
     else
     {
-        mpr("With a roar of approval, the orcs welcome you as one of their own,"
-            " and spare your life.");
+		mpr("인정의 함성과 함께, 오크들은 당신을 그들의 일원으로 받아들였다.");
     }
 }
 
@@ -3977,7 +3976,7 @@ bool dithmenos_shadow_step()
     // perhaps this should be handled more gracefully.
     if (!you.move_to_pos(tgt.landing_site))
     {
-        mpr("Something blocks your shadow step.");
+		mpr("무언가가 당신의 그림자 밟기를 막고 있다.");
         return true;
     }
 
@@ -4143,7 +4142,7 @@ bool gozag_potion_petition()
 
         if (you.gold < prices[keyin])
         {
-            mpr("You don't have enough gold for that!");
+			mpr("그것을 이용하기에는 금화가 부족하다!");
             more();
             continue;
         }
@@ -4379,7 +4378,7 @@ static int _gozag_choose_shop()
 
     if (you.gold < _gozag_shop_price(shop_index))
     {
-        mpr("You don't have enough gold to fund that merchant!");
+		mpr("그 상점을 후원하기에는 금화가 부족하다!");
         more();
         return _gozag_choose_shop(); // tail recurse
     }
@@ -4906,7 +4905,7 @@ spret_type qazlal_elemental_force(bool fail)
 
     if (targets.empty())
     {
-        mpr("You can't see any clouds you can empower.");
+		mpr("당신이 강화할 구름이 보이지 않는다.");
         return SPRET_ABORT;
     }
 
@@ -4978,7 +4977,7 @@ bool qazlal_disaster_area()
 
     if (targets.empty())
     {
-        mpr("There isn't enough space here!");
+		mpr("여기엔 충분한 공간이 없다!");
         return false;
     }
 
@@ -6130,7 +6129,7 @@ void ru_do_retribution(monster* mons, int damage)
 
 void ru_draw_out_power()
 {
-    mpr("You are restored by drawing out deep reserves of power within.");
+	mpr("당신의 내면 깊숙한 곳에 잠재된 힘을 이끌어내어 회복했다.");
 
     //Escape nets and webs
     int net = get_trapping_net(you.pos());
@@ -6142,13 +6141,13 @@ void ru_draw_out_power()
             destroy_trap(you.pos());
             // XXX: destroying them is dubious in general - abuseable by loons?
             // (but definitely destroy if ammo == 1, per trap-def.h!)
-            mpr("You burst free from the webs!");
+			mpr("당신은 거미줄에서 빠져나왔다!");
         }
     }
     else
     {
         destroy_item(net);
-        mpr("You burst free from the net!");
+		mpr("당신은 그물에서 빠져나왔다!");
     }
     stop_being_held();
 
@@ -6180,7 +6179,7 @@ bool ru_power_leap()
     }
     if (you.is_nervous())
     {
-        mpr("You are too terrified to leap around!");
+		mpr("당신은 도약하기에는 너무 겁에 질렸다!");
         return false;
     }
 
@@ -6233,20 +6232,20 @@ bool ru_power_leap()
         if (mons && you.can_see(*mons))
         {
             clear_messages();
-            mpr("You can't leap on top of the monster!");
+			mpr("적의 머리 위로는 도약할 수 없다!");
             continue;
         }
 
         if (grd(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
-            mpr("You can't leap into the sea!");
+			mpr("바다 한가운데로는 도약할 수 없다!");
             continue;
         }
         else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
-            mpr("You can't leap into the sea of lava!");
+			mpr("용암 한가운데로는 도약할 수 없다!");
             continue;
         }
         else if (!check_moveto(beam.target, "leap"))
@@ -6276,7 +6275,7 @@ bool ru_power_leap()
     if (cell_is_solid(beam.target) || monster_at(beam.target))
     {
         // XXX: try to jump somewhere nearby?
-        mpr("Something unexpectedly blocked you, preventing you from leaping!");
+		mpr("무언가가 예상치 못하게 당신을 막아 도약을 방해했다!");
         return true;
     }
 
@@ -6400,7 +6399,7 @@ bool ru_apocalypse()
             return false;
         }
     }
-    mpr("You reveal the great annihilating truth to your foes!");
+	mpr("당신은 적들에게 위대하고도 파멸적인 진실을 드러냈다!");
     noisy(30, you.pos());
     apply_area_visible(_apply_apocalypse, you.pos());
     drain_player(100, false, true);
@@ -6552,8 +6551,7 @@ bool uskayaw_stomp()
         return false;
     }
 
-    mpr("You stomp with the beat, sending a shockwave through the revelers "
-            "around you!");
+	mpr("당신은 박자에 맞춰 발을 굴러 난봉꾼들에게 충격파를 보낸다.");
     apply_monsters_around_square(_get_stomped, you.pos());
     return true;
 }
@@ -6635,26 +6633,26 @@ bool uskayaw_line_pass()
         if (mons && you.can_see(*mons))
         {
             clear_messages();
-            mpr("You can't stand on top of the monster!");
+			mpr("당신은 적의 머리 위에 설 수 없다!");
             continue;
         }
 
         if (grd(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
-            mpr("You can't line pass into the sea!");
+			mpr("바다 한가운데로는 관통할 수 없다!");
             continue;
         }
         else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
-            mpr("You can't line pass into the sea of lava!");
+			mpr("용암 한가운데로는 관통할 수 없다!");
             continue;
         }
         else if (cell_is_solid(beam.target))
         {
             clear_messages();
-            mpr("You can't walk through walls!");
+			mpr("벽을 통과할 수는 없다!");
             continue;
         }
         else if (!check_moveto(beam.target, "line pass"))
@@ -6679,7 +6677,7 @@ bool uskayaw_line_pass()
     }
 
     if (monster_at(beam.target))
-        mpr("Something unexpectedly blocked you, preventing you from passing!");
+		mpr("무언가가 예상치 못하게 당신을 막아 통과를 방해했다!");
     else
     {
         line_pass.fire();
@@ -6734,7 +6732,7 @@ spret_type uskayaw_grand_finale(bool fail)
         if (!mons || !you.can_see(*mons))
         {
             clear_messages();
-            mpr("You can't perceive a target there!");
+			mpr("그곳에서는 대상이 감지되지 않는다!");
             continue;
         }
 
@@ -6777,7 +6775,7 @@ spret_type uskayaw_grand_finale(bool fail)
     if (!mons->alive())
         move_player_to_grid(beam.target, false);
     else
-        mpr("You spring back to your original position.");
+		mpr("당신은 원래 위치로 튕기듯 돌아갔다.");
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -6800,7 +6798,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
         && companion_is_elsewhere(hepliaklqana_ancestor()))
     {
         // ugly hack to avoid dealing with upgrading offlevel ancestors
-        mpr("You can't make this choice while your ancestor is elsewhere.");
+		mpr("당신의 선조가 다른 곳에 있을 때는 결정할 수 없다.");
         return false;
     }
 
@@ -6857,7 +6855,7 @@ spret_type hepliaklqana_idealise(bool fail)
     const mid_t ancestor_mid = hepliaklqana_ancestor();
     if (ancestor_mid == MID_NOBODY)
     {
-        mpr("You have no ancestor to preserve!");
+		mpr("보호할 선조가 없다!");
         return SPRET_ABORT;
     }
 
@@ -6974,7 +6972,7 @@ spret_type hepliaklqana_transference(bool fail)
 
     if (victim == ancestor)
     {
-        mpr("You can't transfer your ancestor with themself.");
+		mpr("당신의 선조를 그 스스로와 교체할 수는 없다.");
         return SPRET_ABORT;
     }
 
@@ -6983,7 +6981,7 @@ spret_type hepliaklqana_transference(bool fail)
                      || victim->is_stationary());
     if (victim_visible && victim_immovable)
     {
-        mpr("You can't transfer that.");
+		mpr("그것은 교체할 수 없다.");
         return SPRET_ABORT;
     }
 
