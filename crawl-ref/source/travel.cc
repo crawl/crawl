@@ -210,8 +210,12 @@ static inline bool _is_safe_cloud(const coord_def& c)
 // This is done, so traps etc. will usually be circumvented where possible.
 static inline int _feature_traverse_cost(dungeon_feature_type feature)
 {
-    if (feature == DNGN_SHALLOW_WATER || feat_is_closed_door(feature))
+    if (feat_is_closed_door(feature) || feature == DNGN_SHALLOW_WATER
+                                        && (!player_likes_water(true)
+                                            || you.species == SP_MERFOLK))
+    {
         return 2;
+    }
     else if (feat_is_trap(feature))
         return 3;
 
