@@ -2029,3 +2029,71 @@ x.G.G.G.x
 x.......x
 xxxx+xxxx
 ENDMAP
+
+NAME: nzn_arrival_crosshair
+TAGS: arrival
+ORIENT: float
+MAP
+     x+x
+  cccx.xccc
+ cc..x.x..cc
+ c.c.x.x.c.c
+ c..c...c..c
+xxxx.....xxxx
++.....{.....+
+xxxx.....xxxx
+ c..c...c..c
+ c.c.x.x.c.c
+ cc..x.x..cc
+  cccx.xccc
+     x+x
+ENDMAP
+
+
+NAME: nzn_arrival_water_spiral
+ORIENT: float
+TAGS: arrival no_monster_gen no_pool_fixup
+SHUFFLE: {}
+MAP
+      @
+    wwwWwwwwww
+   wwwwwWwwwwwww
+  wwwwwwwWwwwwwww
+ wwwGwwwwwWwwGwww
+ wwwww.wwwwWwwwww
+ wwww.w.wwwwWwwww@
+ www.www.wwWwwww.
+ ww.wwww.}Wwwww.w
+ w.wwwwW{.wwww.ww
+ .wwwwWww.www.www
+@wwwwWwwww.w.wwww
+ wwwwwWwwww.wwwww
+ wwwGwwWwwwwwGwww
+  wwwwwwWwwwwwwww
+   wwwwwwWwwwwww
+    wwwwwwWwwww
+           @
+ENDMAP
+
+NAME: nzn_arrival_depleted_hourglass
+ORIENT: north
+TAGS: arrival no_monster_gen no_pool_fixup no_rotate
+SHUFFLE: +/G
+SUBST: G = x
+MAP
+       xxxxx
+  xxxxxx.{.xxxxxx
+xxx.............xxx
+x.................x
++.................+
+x.................x
+xxx.............xxx
+  xxx.........xxx
+    xxx.....xxx
+  xxx.........xxx
+xxx.............xxx
+x.......WWW.......x
+G.....WWwwwWW.....G
+x....WwwwwwwwW....x
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
