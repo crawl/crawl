@@ -621,8 +621,8 @@ adventures, how they are displayed, and what commands there are to use them:
 /        wands          (use 'V' to evoke)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\\ or |  staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
-\+ or :  spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
+\\ or |   staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
+\+ or :   spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
 }        miscellaneous  (use 'V' for evoking from the inventory)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
