@@ -192,7 +192,7 @@ void mirror_damage_fineff::fire()
                  reflector->name(DESC_THE).c_str());
         }
         else
-            mpr("당신의 피해는 반사되어 되돌아왔다!");
+            mpr("Your damage is reflected back at you!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
     else if (def == MID_PLAYER)
@@ -320,7 +320,7 @@ void trj_spawn_fineff::fire()
         }
     }
     else if (spawned == 1)
-        mpr("로열 젤리의 조각 중 하나가 살아남았다.");
+        mpr("One of the Royal Jelly's fragments survives.");
     else
     {
         mprf("The dying Royal Jelly spits out %s more jellies.",

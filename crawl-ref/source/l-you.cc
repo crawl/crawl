@@ -902,7 +902,7 @@ LUAFN(you_change_species)
 
     if (sp == SP_UNKNOWN)
     {
-		mpr("그 종족은 유효하지 않다.");
+        mpr("That species isn't available.");
         PLUARET(boolean, false);
     }
 

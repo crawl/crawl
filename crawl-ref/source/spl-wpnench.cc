@@ -59,14 +59,14 @@ spret_type cast_excruciating_wounds(int power, bool fail)
     // Can only brand melee weapons.
     if (is_range_weapon(weapon))
     {
-		mpr("당신은 이 주문으로 원거리 무기에 속성을 부여할 수 없다.");
+        mpr("You cannot brand ranged weapons with this spell.");
         return SPRET_ABORT;
     }
 
     bool has_temp_brand = you.duration[DUR_EXCRUCIATING_WOUNDS];
     if (!has_temp_brand && get_weapon_brand(weapon) == which_brand)
     {
-		mpr("이 무기는 이미 고통 속성이 부여되어 있다.");
+        mpr("This weapon is already branded with pain.");
         return SPRET_ABORT;
     }
 

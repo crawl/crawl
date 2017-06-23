@@ -175,7 +175,7 @@ static int l_item_do_remove(lua_State *ls)
 {
     if (you.turn_is_over)
     {
-		mpr("차례가 종료되었다");
+        mpr("Turn is over");
         return 0;
     }
 
@@ -183,14 +183,14 @@ static int l_item_do_remove(lua_State *ls)
 
     if (!item || !in_inventory(*item))
     {
-		mpr("나쁜 물건");
+        mpr("Bad item");
         return 0;
     }
 
     int eq = get_equip_slot(item);
     if (eq < EQ_FIRST_EQUIP || eq >= NUM_EQUIP)
     {
-		mpr("물건이 착용되지 않음");
+        mpr("Item is not equipped");
         return 0;
     }
 

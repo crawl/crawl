@@ -1524,7 +1524,7 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
         succeeded = true;
         if (!quiet)
 #ifdef DGAMELAUNCH
-			mpr("캐릭터의 덤프 파일이 성공적으로 생성되었다.");
+            mpr("Char dumped successfully.");
 #else
             mprf("Char dumped to '%s'.", file_name.c_str());
 #endif

@@ -723,7 +723,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!suppress_msg)
     {
         if (did_map)
-			mpr("당신은 주위를 감지했다.");
+            mpr("You feel aware of your surroundings.");
         else
             canned_msg(MSG_DISORIENTED);
 

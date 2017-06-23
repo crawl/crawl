@@ -63,10 +63,10 @@ void tutorial_death_message()
 {
     canned_msg(MSG_YOU_DIE);
     mpr_nojoin(MSGCH_TUTORIAL,
-		       "크롤의 세계에서는, 죽음은 슬픈 일이지만 흔한 일이기도 하다. "
-		       "기억해라. 대부분의 상황에서 당신은 살 수 있는 길을 찾을 수 있다. "
-		       "예를 들자면 물건을 사용하거나, 도망가거나, 휴식을 취하거나, "
-		       "아니면 완전히 전투를 피할 수도 있을 것이다. "
-		       "노력하고 또 노력해라. 그러면 언젠가는 승리를 쟁취할 수 있을 것이다!");
+               "In Crawl, death is a sad but common occurrence. "
+               "Note that there's usually something you could have done to "
+               "survive, for example by using some kind of item, running away, "
+               "resting between fights, or by avoiding combat entirely. "
+               "Keep trying, eventually you'll prevail!");
     more();
 }

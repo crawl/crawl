@@ -27,7 +27,7 @@ bool player::add_fearmonger(const monster* mon)
                  mon->name(DESC_THE).c_str());
         }
         else
-            mpr("공포스러운 분위기는 이상하게도 소리가 나지않아, 당신에게 아무런 영향을 주지 못했다.");
+            mpr("The fearful aura is strangely muted, and has no effect on you.");
 
         return false;
     }

@@ -1852,7 +1852,7 @@ bool do_god_gift(bool forced)
                     you.num_total_gifts[you.religion]++;
                 }
                 else
-					mpr("당신은 바뀐 것이 아무것도 없다고 느꼈다.");
+                    mpr("You feel as though nothing has changed.");
             }
             break;
 
@@ -2680,7 +2680,7 @@ void excommunication(bool voluntary, god_type new_god)
     you.wield_change = true;
     you.redraw_quiver = true;
 
-	mpr("당신은 신앙을 잃었다!");
+    mpr("You have lost your religion!");
     // included in default force_more_message
 
     if (old_god == GOD_BEOGH)
@@ -3633,7 +3633,7 @@ void join_religion(god_type which_god)
 void god_pitch(god_type which_god)
 {
     if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
-		mpr("당신은 베오그의 선교사에게 경례했다.");
+        mpr("You bow before the missionary of Beogh.");
     else
     {
         mprf("You %s the altar of %s.",

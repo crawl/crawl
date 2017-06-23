@@ -1088,7 +1088,7 @@ void describe_god(god_type which_god, bool give_title)
 {
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
-		mpr("당신은 믿고있는 신이 없다.");
+        mpr("You are not religious.");
         return;
     }
 

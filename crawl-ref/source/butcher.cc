@@ -74,7 +74,7 @@ void finish_butchering(item_def& corpse, bool bottling)
 
     if (bottling)
     {
-		mpr("당신은 시체의 피를 병에 담았다.");
+        mpr("You bottle the corpse's blood.");
 
         if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
             turn_corpse_into_skeleton_and_blood_potions(corpse);
@@ -136,7 +136,7 @@ void butchery(item_def* specific_corpse)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
-		mpr("여기엔 아무것도 없다!");
+        mpr("There isn't anything here!");
         return;
     }
 

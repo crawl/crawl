@@ -107,7 +107,7 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     if (start == target)
     {
         if (msg)
-			mpr("이미 그곳에 몬스터가 있다!");
+            mpr("The monster is already there!");
 
         return true;
     }
@@ -271,7 +271,7 @@ bool monster_pathfind::calc_path_to_neighbours()
             if (npos == target)
             {
 #ifdef DEBUG_PATHFIND
-				mpr("목적지 도착.");
+                mpr("Arrived at target.");
 #endif
                 return true;
             }
@@ -319,7 +319,7 @@ bool monster_pathfind::get_best_position()
 vector<coord_def> monster_pathfind::backtrack()
 {
 #ifdef DEBUG_PATHFIND
-	mpr("길을 되짚는다...");
+    mpr("Backtracking...");
 #endif
     vector<coord_def> path;
     pos = target;

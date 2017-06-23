@@ -462,7 +462,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     behaviour_event(mon, ME_EVAL);
 
     if (could_see && !can_see)
-		mpr("돼지가 사라졌다!");
+        mpr("The hog vanishes!");
     else if (!could_see && can_see)
         mprf("%s appears from out of thin air!", mon->name(DESC_A).c_str());
 }

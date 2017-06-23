@@ -936,13 +936,13 @@ void macro_add_query()
     }
     else if (input == 's')
     {
-		mpr("매크로를 저장한다.");
+        mpr("Saving macros.");
         macro_save();
         return;
     }
     else
     {
-		mpr("중지.");
+        mpr("Aborting.");
         return;
     }
 

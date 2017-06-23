@@ -121,7 +121,7 @@ void try_god_conversion(god_type god)
 
     if (you.species == SP_DEMIGOD)
     {
-        mpr("당신의 신분은 신을 숭배하지 않는다.");
+        mpr("A being of your status worships no god.");
         return;
     }
 
@@ -297,7 +297,7 @@ void jiyva_slurp_item_stack(const item_def& item, int quantity)
     if (gain.piety_gain > PIETY_NONE)
         simple_god_message(" appreciates your sacrifice.");
     if (gain.jiyva_bonus & jiyva_slurp_result::food)
-        mpr("당신은 배고픔이 덜해진 것을 느낀다.");
+        mpr("You feel a little less hungry.");
     if (gain.jiyva_bonus & jiyva_slurp_result::mp)
         canned_msg(MSG_GAIN_MAGIC);
     if (gain.jiyva_bonus & jiyva_slurp_result::hp)
