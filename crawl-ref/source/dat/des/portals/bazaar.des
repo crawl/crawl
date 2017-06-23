@@ -1880,7 +1880,7 @@ KFEAT:  s = w
 KFEAT:  m = W
 KFEAT:  x = open_sea
 FTILE:  _A>1+ = floor_pebble, - = floor_rough, .< = floor_sand
-TILE:   X = wall_brick, n = dngn_transparent_stone
+TILE:   X = wall_brick_lightgray, n = dngn_transparent_stone
 COLOUR: . = brown, -_n+> = white, o = yellow, X = lightgrey
 : set_border_fill_type("open_sea")
 : bazaar_setup(_G, false)
