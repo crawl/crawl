@@ -4309,6 +4309,47 @@ MAP
  .................
 ENDMAP
 
+NAME:   nzn_motion_control
+TAGS:   no_pool_fixup no_trap_gen no_monster_gen
+DEPTH:  D:10-, Lair:4-, Shoals:2-, !Shoals:$
+ORIENT: float
+NSUBST: { = 1:{ / *:s
+SHUFFLE: HY/MC, $/%, eE/rR, {/s
+SUBST:  ER = ., r = x, e = + .
+NSUBST: W = 4:W / *:.
+: if you.in_branch("Shoals") then
+NSUBST: s = 1:S / *:W
+KMONS:  S = merfolk avatar
+SUBST:  $ = % $:20, H = M, Y = C
+: if crawl.one_chance_in(3) then
+NSUBST: % = 1:* / *:%
+: end
+: elseif you.absdepth() < 12 then
+NSUBST: s = 5:W / *:.
+SUBST:  % = $:30 .:15 %:5, H = ., Y = .
+SUBST:  w = W
+: else
+NSUBST: s = 10:W / *:.
+SUBST:  $ = $:20 %:5, H = M, Y = C
+SUBST:  w = w W
+: end
+KMONS:  M = manticore
+KMONS:  C = catoblepas
+MAP
+xxxxxE@Exxxxx
+xH..xxExx..Cx
+x.%WWxexWW$.x
+x.WsswswssW.x
+xxWsssssssWxx
+Rxxwss{sswxxR
+@Rrss{s{ssrR@
+Rxxwss{sswxxR
+xxWsssssssWxx
+x.WsswswssW.x
+x.$WWxexWW%.x
+xM..xxExx..Yx
+xxxxxE@Exxxxx  
+ENDMAP
 
 ###############################################################################
 #
