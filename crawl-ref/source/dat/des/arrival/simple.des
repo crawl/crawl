@@ -2053,7 +2053,6 @@ ENDMAP
 NAME: nzn_arrival_water_spiral
 ORIENT: float
 TAGS: arrival no_monster_gen no_pool_fixup
-SHUFFLE: {}
 MAP
       @
     wwwWwwwwww
@@ -2077,9 +2076,9 @@ ENDMAP
 
 NAME: nzn_arrival_depleted_hourglass
 ORIENT: north
-TAGS: arrival no_monster_gen no_pool_fixup no_rotate
-SHUFFLE: +/G
-SUBST: G = x
+TAGS: arrival no_monster_gen no_pool_fixup no_rotate no_vmirror
+SHUFFLE: +/E
+SUBST: E = x
 MAP
        xxxxx
   xxxxxx.{.xxxxxx
@@ -2093,7 +2092,7 @@ xxx.............xxx
   xxx.........xxx
 xxx.............xxx
 x.......WWW.......x
-G.....WWwwwWW.....G
+E.....WWwwwWW.....E
 x....WwwwwwwwW....x
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
