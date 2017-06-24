@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioPropertySheet
-    ProjectType="Visual C++"
-    Version="8.00"
-    Name="Release"
-    >
-    <Tool
-        Name="VCCLCompilerTool"
-        Optimization="2"
-        InlineFunctionExpansion="2"
-        EnableIntrinsicFunctions="true"
-        FavorSizeOrSpeed="1"
-        RuntimeLibrary="0"
-        BufferSecurityCheck="false"
-        AssemblerOutput="4"
-    />
-    <Tool
-        Name="VCLinkerTool"
-        LinkIncremental="1"
-    />
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Release"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="2"
+		InlineFunctionExpansion="2"
+		EnableIntrinsicFunctions="true"
+		FavorSizeOrSpeed="1"
+		RuntimeLibrary="0"
+		BufferSecurityCheck="false"
+		AssemblerOutput="4"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		LinkIncremental="1"
+	/>
 </VisualStudioPropertySheet>

@@ -40,7 +40,7 @@ int allowed_deaths_door_hp()
 spret_type cast_deaths_door(int pow, bool fail)
 {
     fail_check();
-    mpr("당신은 죽음의 문턱에 들어섰다!");
+	mpr("당신은 죽음의 문턱에 들어섰다!");
     mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
     set_hp(allowed_deaths_door_hp());
@@ -66,16 +66,16 @@ spret_type ice_armour(int pow, bool fail)
     fail_check();
 
     if (you.duration[DUR_ICY_ARMOUR])
-        mpr("당신의 얼음 갑옷은 두꺼워졌다.");
+		mpr("당신의 얼음 갑옷은 두꺼워졌다.");
     else if (you.form == transformation::ice_beast)
-        mpr("당신의 얼음 몸체가 더 탄력있게 느껴진다.");
+		mpr("당신의 얼음 몸체가 더 탄력있게 느껴진다.");
     else
-        mpr("얇은 얼음이 당신의 몸을 뒤덮는다!");
+		mpr("얇은 얼음이 당신의 몸을 뒤덮는다!");
 
     if (you.attribute[ATTR_BONE_ARMOUR] > 0)
     {
         you.attribute[ATTR_BONE_ARMOUR] = 0;
-        mpr("당신의 시체 갑옷이 떨어져 사라졌다.");
+		mpr("당신의 시체 갑옷이 떨어져 사라졌다.");
     }
 
     you.increase_duration(DUR_ICY_ARMOUR, random_range(40, 50), 50);
@@ -169,14 +169,14 @@ spret_type corpse_armour(int pow, bool fail)
     if (!harvested)
     {
         if (harvest_corpses(you, true, true))
-            mpr("이 시체들을 훼손하는 것은 죄가 될 것이다!");
+			mpr("이 시체들을 훼손하는 것은 죄가 될 것이다!");
         else
             canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS; // still takes a turn, etc
     }
 
     if (you.attribute[ATTR_BONE_ARMOUR] <= 0)
-        mpr("죽은 자의 육체가 당신을 감싸기 위해 다가왔다!");
+		mpr("죽은 자의 육체가 당신을 감싸기 위해 다가왔다!");
     else
         mpr("당신을 둘러싸고 있는 살점과 뼈가 두꺼워졌다.");
 
@@ -192,7 +192,7 @@ spret_type deflection(int pow, bool fail)
 {
     fail_check();
     you.attribute[ATTR_DEFLECT_MISSILES] = 1;
-    mpr("당신은 투사체로부터 매우 안전하다고 느낀다.");
+	mpr("당신은 투사체로부터 매우 안전하다고 느낀다.");
 
     return SPRET_SUCCESS;
 }
@@ -209,7 +209,7 @@ spret_type cast_regen(int pow, bool fail)
 spret_type cast_revivification(int pow, bool fail)
 {
     fail_check();
-    mpr("당신의 몸이 놀랍도록 고통스러운 방식으로 치유된다.");
+	mpr("당신의 몸이 놀랍도록 고통스러운 방식으로 치유된다.");
 
     const int loss = 6 + binomial(9, 8, pow);
     dec_max_hp(loss * you.hp_max / 100);
@@ -287,7 +287,7 @@ int cast_selective_amnesia(const string &pre_msg)
 
         if (spell == SPELL_NO_SPELL)
         {
-            mpr("당신은 그 주문을 모른다.");
+			mpr("당신은 그 주문을 모른다.");
             mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
             keyin = get_ch();
         }
@@ -307,9 +307,9 @@ spret_type cast_infusion(int pow, bool fail)
 {
     fail_check();
     if (!you.duration[DUR_INFUSION])
-        mpr("당신은 당신의 공격에 마력을 주입했다.");
+		mpr("당신은 당신의 공격에 마력을 주입했다.");
     else
-        mpr("당신이 시전한 마력 주입의 시간이 연장되었다.");
+		mpr("당신이 시전한 마력 주입의 시간이 연장되었다.");
 
     you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
     you.props["infusion_power"] = pow;
@@ -322,9 +322,9 @@ spret_type cast_song_of_slaying(int pow, bool fail)
     fail_check();
 
     if (you.duration[DUR_SONG_OF_SLAYING])
-        mpr("당신은 새 노래를 시작한다!");
+		mpr("당신은 새 노래를 시작한다!");
     else
-        mpr("당신은 살육의 노래를 부르기 시작한다.");
+		mpr("당신은 살육의 노래를 부르기 시작한다.");
 
     you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
 
@@ -335,7 +335,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
 spret_type cast_silence(int pow, bool fail)
 {
     fail_check();
-    mpr("심오한 침묵이 당신을 에워싼다.");
+	mpr("심오한 침묵이 당신을 에워싼다.");
 
     you.increase_duration(DUR_SILENCE, 10 + pow/4 + random2avg(pow/2, 2), 100);
     invalidate_agrid(true);
@@ -354,7 +354,7 @@ spret_type cast_liquefaction(int pow, bool fail)
     flash_view_delay(UA_PLAYER, YELLOW, 80);
     flash_view_delay(UA_PLAYER, BROWN, 140);
 
-    mpr("당신 주변의 땅이 액화한다!");
+	mpr("당신 주변의 땅이 액화한다!");
 
     you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
@@ -365,9 +365,9 @@ spret_type cast_shroud_of_golubria(int pow, bool fail)
 {
     fail_check();
     if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
-        mpr("당신은 장막의 지속시간을 갱신했다.");
+		mpr("당신은 장막의 지속시간을 갱신했다.");
     else
-        mpr("당신의 몸을 감싸는 얇은 장막을 따라 공간이 미세하게 왜곡된다.");
+		mpr("당신의 몸을 감싸는 얇은 장막을 따라 공간이 미세하게 왜곡된다.");
 
     you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50);
     return SPRET_SUCCESS;

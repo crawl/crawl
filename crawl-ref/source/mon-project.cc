@@ -462,7 +462,7 @@ move_again:
                 if (mons->props[IOOD_DIST].get_int() < 2)
                 {
                     if (you.see_cell(pos))
-                        mpr("구체가 흐지부지되어 사라졌다.");
+						mpr("구체가 흐지부지되어 사라졌다.");
                     monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 }
 
@@ -470,7 +470,7 @@ move_again:
                 if (mon.props[IOOD_DIST].get_int() < 2)
                 {
                     if (you.see_cell(pos))
-                        mpr("구체가 흐지부지되어 사라졌다.");
+						mpr("구체가 흐지부지되어 사라졌다.");
                     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
                     return true;
                 }
@@ -478,9 +478,9 @@ move_again:
             else
             {
                 if (mon.observable())
-                    mpr("구체가 충돌하며 눈부신 폭발을 일으켰다!");
+					mpr("구체가 충돌하며 눈부신 폭발을 일으켰다!");
                 else
-                    mpr("당신은 커다란 마법의 폭발을 들었다!");
+					mpr("당신은 커다란 마법의 폭발을 들었다!");
                 noisy(40, pos);
                 monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 _iood_hit(mon, pos, true);

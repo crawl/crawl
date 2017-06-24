@@ -257,7 +257,7 @@ static void _establish_connection(monster* tentacle,
         if (!last_mon)
         {
             // Should be something there, what to do if there isn't?
-            mpr("오류 발생! 촉수에 감긴 몬스터들의 연결을 변경하는 데 실패했다.");
+			mpr("오류 발생! 촉수에 감긴 몬스터들의 연결을 변경하는 데 실패했다.");
             break;
         }
 
@@ -696,7 +696,7 @@ static int _collect_connection_data(monster* start_monster,
         {
             current_mon = next;
             if (current_mon->tentacle_connect != start_monster->mid)
-                mpr("연결 정보 오염 감지!!! 촉수의 사슬이 기존의 정보와 일치하지 않는다.");
+				mpr("연결 정보 오염 감지!!! 촉수의 사슬이 기존의 정보와 일치하지 않는다.");
             if (!retract_found)
             {
                 retract_pos = current_mon->pos();
@@ -1270,16 +1270,16 @@ void mons_create_tentacles(monster* head)
     if (mons_base_type(*head) == MONS_KRAKEN)
     {
         if (visible_count == 1)
-            mpr("촉수가 물 속에서 솟구쳤다!");
+			mpr("촉수가 물 속에서 솟구쳤다!");
         else if (visible_count > 1)
-            mpr("촉수가 물 속에서 튀어나왔다!");
+			mpr("촉수가 물 속에서 튀어나왔다!");
     }
     else if (head->type == MONS_TENTACLED_STARSPAWN)
     {
         if (visible_count == 1)
-            mpr("촉수가 별의 마물로부터 날아왔다!");
+			mpr("촉수가 별의 마물로부터 날아왔다!");
         else if (visible_count > 1)
-            mpr("별의 마물로부터 촉수가 튀어나왔다!");
+			mpr("별의 마물로부터 촉수가 튀어나왔다!");
     }
     return;
 }

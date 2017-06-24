@@ -165,107 +165,107 @@ HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
 ARCH := $(HOST)
 
 ifdef CROSSHOST
-    ARCH := $(CROSSHOST)
-    ifneq (,$($shell which $(ARCH)-pkg-config 2>/dev/null))
-      PKGCONFIG = $(ARCH)-pkg-config
-    else
-      ifneq (,$(wildcard /usr/$(ARCH)/lib/pkgconfig))
-        PKGCONFIG = PKG_CONFIG_LIBDIR=/usr/$(ARCH)/lib/pkgconfig pkg-config
-      else
-        NO_PKGCONFIG = YesPlease
-        BUILD_LUA = yes
-        BUILD_SQLITE = yes
-        BUILD_ZLIB = YesPlease
-      endif
-    endif
-    NO_AUTO_OPT = YesPlease
-    CONFIGURE_FLAGS += --host=$(CROSSHOST)
+	ARCH := $(CROSSHOST)
+	ifneq (,$($shell which $(ARCH)-pkg-config 2>/dev/null))
+	  PKGCONFIG = $(ARCH)-pkg-config
+	else
+	  ifneq (,$(wildcard /usr/$(ARCH)/lib/pkgconfig))
+	    PKGCONFIG = PKG_CONFIG_LIBDIR=/usr/$(ARCH)/lib/pkgconfig pkg-config
+	  else
+	    NO_PKGCONFIG = YesPlease
+	    BUILD_LUA = yes
+	    BUILD_SQLITE = yes
+	    BUILD_ZLIB = YesPlease
+	  endif
+	endif
+	NO_AUTO_OPT = YesPlease
+	CONFIGURE_FLAGS += --host=$(CROSSHOST)
 
-    # If needed, override uname_S so we get the appropriate
-    # things compiled.
-    ifneq (,$(findstring mingw,$(CROSSHOST)))
-        uname_S=MINGW32
-    endif
+	# If needed, override uname_S so we get the appropriate
+	# things compiled.
+	ifneq (,$(findstring mingw,$(CROSSHOST)))
+		uname_S=MINGW32
+	endif
 
 endif
 
 msys =
 ifneq (,$(findstring MINGW,$(uname_S)))
-    msys = Yes
+	msys = Yes
 endif
 ifneq (,$(findstring MSYS,$(uname_S)))
-    msys = Yes
+	msys = Yes
 endif
 ifdef msys
-    GAME = crawl.exe
-    bin_prefix = .
-    WIN32 = Yes
-    NO_RDYNAMIC = YesPlease
-    NO_NCURSES = YesPlease
-    NEED_LIBW32C = YesPlease
-    BUILD_PCRE = YesPlease
-    BUILD_ZLIB = YesPlease
-    SOUND = YesPlease
-    DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
-    EXTRA_LIBS += -lwinmm
-    ifdef TILES
-        EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lversion contrib/install/$(ARCH)/lib/libSDL2main.a -mwindows
-        BUILD_FREETYPE = YesPlease
-        BUILD_SDL2 = YesPlease
-        BUILD_SDL2IMAGE = YesPlease
-        BUILD_LIBPNG = YesPlease
-        COPY_FONTS = yes
-    endif
-    ifeq ($(shell gcc -v -static -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
-        EXTRA_LIBS += -static -static-libgcc -static-libstdc++
-    endif
+	GAME = crawl.exe
+	bin_prefix = .
+	WIN32 = Yes
+	NO_RDYNAMIC = YesPlease
+	NO_NCURSES = YesPlease
+	NEED_LIBW32C = YesPlease
+	BUILD_PCRE = YesPlease
+	BUILD_ZLIB = YesPlease
+	SOUND = YesPlease
+	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
+	EXTRA_LIBS += -lwinmm
+	ifdef TILES
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lversion contrib/install/$(ARCH)/lib/libSDL2main.a -mwindows
+		BUILD_FREETYPE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
+		BUILD_LIBPNG = YesPlease
+		COPY_FONTS = yes
+	endif
+	ifeq ($(shell gcc -v -static -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
+		EXTRA_LIBS += -static -static-libgcc -static-libstdc++
+	endif
 endif
 ifeq ($(uname_S),Darwin)
-    STRIP := strip -x
-    NEED_APPKIT = YesPlease
-    LIBNCURSES_IS_UNICODE = Yes
-    NO_PKGCONFIG = Yes
-    BUILD_SQLITE = YesPlease
-    BUILD_ZLIB = YesPlease
-    ifdef TILES
-        EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDL2main.a
-        BUILD_FREETYPE = YesPlease
-        BUILD_SDL2 = YesPlease
-        BUILD_SDL2IMAGE = YesPlease
-        ifdef SOUND
-            ifndef WIN32 
-                BUILD_SDL2MIXER = YesPlease
-            endif
-        endif
-        BUILD_LIBPNG = YesPlease
-        COPY_FONTS = yes
-    endif
+	STRIP := strip -x
+	NEED_APPKIT = YesPlease
+	LIBNCURSES_IS_UNICODE = Yes
+	NO_PKGCONFIG = Yes
+	BUILD_SQLITE = YesPlease
+	BUILD_ZLIB = YesPlease
+	ifdef TILES
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDL2main.a
+		BUILD_FREETYPE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
+		ifdef SOUND
+			ifndef WIN32 
+				BUILD_SDL2MIXER = YesPlease
+			endif
+		endif
+		BUILD_LIBPNG = YesPlease
+		COPY_FONTS = yes
+	endif
 endif
 ifdef USE_ICC
-    NO_RDYNAMIC := YesPlease
+	NO_RDYNAMIC := YesPlease
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
-    GAME = crawl.exe
-    NO_RDYNAMIC = YesPlease
-    BUILD_PCRE = YesPlease
-    # newlib doesn't provide Posix functions with c++11
-    STDFLAG = -std=gnu++11
+	GAME = crawl.exe
+	NO_RDYNAMIC = YesPlease
+	BUILD_PCRE = YesPlease
+	# newlib doesn't provide Posix functions with c++11
+	STDFLAG = -std=gnu++11
 endif
 
 ifdef BUILD_ALL
-    BUILD_FREETYPE = YesPlease
-    BUILD_PCRE = YesPlease
-    BUILD_SDL2 = YesPlease
-    BUILD_SDL2IMAGE = YesPlease
-    ifdef SOUND
-        ifndef WIN32 
-            BUILD_SDL2MIXER = YesPlease
-        endif
-    endif
-    BUILD_SQLITE = YesPlease
-    BUILD_LUA = YesPlease
-    BUILD_LIBPNG = YesPlease
-    BUILD_ZLIB = YesPlease
+	BUILD_FREETYPE = YesPlease
+	BUILD_PCRE = YesPlease
+	BUILD_SDL2 = YesPlease
+	BUILD_SDL2IMAGE = YesPlease
+	ifdef SOUND
+		ifndef WIN32 
+			BUILD_SDL2MIXER = YesPlease
+		endif
+	endif
+	BUILD_SQLITE = YesPlease
+	BUILD_LUA = YesPlease
+	BUILD_LIBPNG = YesPlease
+	BUILD_ZLIB = YesPlease
 endif
 
 # Should be the first rule, but must come after $(GAME) is set.
@@ -286,24 +286,24 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-    # FreeBSD keeps all of its userland includes in /usr/local so
-    # look there
-    ifeq ($(uname_S),FreeBSD)
-        SQLITE_INCLUDE_DIR := /usr/local/include
-    else
-        SQLITE_INCLUDE_DIR := /usr/include
-    endif
+	# FreeBSD keeps all of its userland includes in /usr/local so
+	# look there
+	ifeq ($(uname_S),FreeBSD)
+		SQLITE_INCLUDE_DIR := /usr/local/include
+	else
+		SQLITE_INCLUDE_DIR := /usr/include
+	endif
 else
-    # This is totally wrong, works only with some old-style setups, and
-    # on some architectures of Debian/new FHS multiarch -- excluding, for
-    # example, i386.  Fortunately, i386 is rarely cross-compiled to.
-    # There's no support for /usr/local/ too, without thorough handholding.
-    # It's still an improvement over Crawl 0.8 which had no cross-compiling
-    # to non-win32 at all.
-    #
-    # Needs to be replaced by compile checks.  Guessing the paths is fragile,
-    # while the compiler knows them already.
-    SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
+	# This is totally wrong, works only with some old-style setups, and
+	# on some architectures of Debian/new FHS multiarch -- excluding, for
+	# example, i386.  Fortunately, i386 is rarely cross-compiled to.
+	# There's no support for /usr/local/ too, without thorough handholding.
+	# It's still an improvement over Crawl 0.8 which had no cross-compiling
+	# to non-win32 at all.
+	#
+	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
+	# while the compiler knows them already.
+	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
 endif
 SQLITE_LIB := -lsqlite3
 
@@ -743,27 +743,27 @@ endif
 # Debug
 # No optimization, full debugging.
 ifneq (,$(filter debug,$(MAKECMDGOALS)))
-    FULLDEBUG=YesPlease
-    DEBUG=YesPlease
-    NO_OPTIMIZE=YesPlease
+	FULLDEBUG=YesPlease
+	DEBUG=YesPlease
+	NO_OPTIMIZE=YesPlease
 endif
 
 # Debug-Lite
 # No optimization, but little/no debugging spew.
 ifneq (,$(filter debug-lite,$(MAKECMDGOALS)))
-    DEBUG=YesPlease
-    NO_OPTIMIZE=YesPlease
+	DEBUG=YesPlease
+	NO_OPTIMIZE=YesPlease
 endif
 
 # Profile
 # Optimized, with full debugging.
 ifneq (,$(filter profile,$(MAKECMDGOALS)))
-    FULLDEBUG=YesPlease
-    DEBUG=YesPlease
+	FULLDEBUG=YesPlease
+	DEBUG=YesPlease
 endif
 
 ifdef HURRY
-    NO_OPTIMIZE=YesPlease
+	NO_OPTIMIZE=YesPlease
 endif
 
 ifdef FULLDEBUG
@@ -805,17 +805,17 @@ CFWARN_L += -Wuninitialized
 endif
 
 ifneq ($(strip $(chroot_prefix)),)
-    USE_CHROOT=YesPlease
+	USE_CHROOT=YesPlease
 endif
 
 ifdef USE_DGAMELAUNCH
-    CFOTHERS_L += -DDGAMELAUNCH
+	CFOTHERS_L += -DDGAMELAUNCH
 endif
 
 ifdef USE_CHROOT
-    prefix_fp := $(abspath $(strip $(DESTDIR)$(chroot_prefix))/$(strip $(prefix)))
+	prefix_fp := $(abspath $(strip $(DESTDIR)$(chroot_prefix))/$(strip $(prefix)))
 else
-    prefix_fp := $(abspath $(strip $(DESTDIR)$(prefix)))
+	prefix_fp := $(abspath $(strip $(DESTDIR)$(prefix)))
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
@@ -826,7 +826,7 @@ ifneq ($(strip $(SAVEDIR)),)
   else
     ifeq ($(filter /%,$(SAVEDIR)),)
       ifneq ($(prefix),)
-    override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
+	override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
       endif
     endif
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
@@ -842,7 +842,7 @@ ifneq ($(strip $(SHAREDDIR)),)
   else
     ifeq ($(filter /%,$(SHAREDDIR)),)
       ifneq ($(prefix),)
-    override SHAREDDIR := $(strip $(prefix))/$(strip $(SHAREDDIR))
+	override SHAREDDIR := $(strip $(prefix))/$(strip $(SHAREDDIR))
       endif
     endif
     CFOTHERS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
@@ -854,14 +854,14 @@ ifneq ($(strip $(DATADIR)),)
   ifeq ($(filter /%,$(DATADIR)),)
     #relative DATADIR
     ifneq ($(prefix),)
-    override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+	override DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
     endif
   endif
   CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
   FONTDIR = $(abspath $(DATADIR))/dat/tiles/
 else
   ifneq ($(prefix),)
-    DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
         FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
   else
     ifneq ($(DESTDIR)$(ANDROID),)
@@ -877,13 +877,13 @@ ifneq ($(strip $(WEBDIR)),)
   ifeq ($(filter /%,$(WEBDIR)),)
     #relative WEBDIR
     ifneq ($(prefix),)
-    override WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
+	override WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
     endif
   endif
   CFOTHERS_L += -DWEB_DIR_PATH=\"$(abspath $(WEBDIR))/\"
 else
   ifneq ($(prefix),)
-    WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
+	WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
   endif
 endif
 webdir_fp := $(abspath $(strip $(DESTDIR))$(strip $(WEBDIR)))
@@ -941,9 +941,9 @@ endif
 ifndef NO_NCURSES
 
 ifndef CROSSHOST
-    NC_PREFIX = /usr
+	NC_PREFIX = /usr
 else
-    NC_PREFIX = /usr/$(ARCH)
+	NC_PREFIX = /usr/$(ARCH)
 endif
 
 # Include path for (n)curses with Unicode support.
@@ -1148,10 +1148,10 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
-    @if [ ! -e $(GAME) ]; then\
-        printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
-                          "at INSTALL.txt: the solution to your problem just might be in there!";\
-    fi
+	@if [ ! -e $(GAME) ]; then\
+		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
+		                  "at INSTALL.txt: the solution to your problem just might be in there!";\
+	fi
 
 docs: $(GENERATED_DOCS)
 
@@ -1160,10 +1160,10 @@ docs: $(GENERATED_DOCS)
 .PHONY: webserver clean-webserver
 
 webserver/static/%.png: dat/tiles/%.png
-    $(QUIET_COPY)$(COPY) $< webserver/static/
+	$(QUIET_COPY)$(COPY) $< webserver/static/
 
 webserver/game_data/static/%.png: dat/tiles/%.png
-    $(QUIET_COPY)$(COPY) $< webserver/game_data/static/
+	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
@@ -1182,10 +1182,10 @@ STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
 
 webserver/game_data/static/%.js: $(RLTILES)/%.js
-    $(QUIET_COPY)$(COPY) $< webserver/game_data/static/
+	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 clean-webserver:
-    $(RM) $(STATICFILES) webserver/*.pyc
+	$(RM) $(STATICFILES) webserver/*.pyc
 
 ifdef WEBTILES
 webserver: $(STATICFILES)
@@ -1222,15 +1222,15 @@ endif
 
 .cflags: .force-cflags
 ifdef NEED_REBUILD
-    @echo "    * rebuilding crawl: new build flags or prefix"
-    @echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
-    @echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
-    @echo '$(TRACK_CFLAGS)' > .cflags
+	@echo "    * rebuilding crawl: new build flags or prefix"
+	@echo 'TRACK_CFLAGS = $(TRACK_CFLAGS) #EOL'
+	@echo 'OLD_CFLAGS   = $(OLD_CFLAGS) #EOL'
+	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 
 .android-cflags: .cflags
-    @echo $(STDFLAG) $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cxxflags
-    @echo $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cflags
+	@echo $(STDFLAG) $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cxxflags
+	@echo $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cflags
 
 .PHONY: .force-cflags
 
@@ -1270,10 +1270,10 @@ endif
 # This information is included in crash reports, and is printed with
 # "crawl -version"
 compflag.h: $(OBJECTS:.o=.cc) main.cc util/gen-cflg.pl .cflags
-    $(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
+	$(QUIET_GEN)util/gen-cflg.pl compflag.h "$(ALL_CFLAGS)" "$(LDFLAGS)" "$(HOST)" "$(ARCH)"
 
 build.h: $(OBJECTS:.o=.cc) main.cc util/gen_ver.pl
-    $(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
+	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
 version.o: build.h compflag.h
 
@@ -1281,23 +1281,23 @@ version.o: build.h compflag.h
 # Documentation
 #
 $(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt species-data.h aptitudes.h \
-                           util/gen-apt.pl
-    $(QUIET_GEN)./util/gen-apt.pl $@ $^
+						   util/gen-apt.pl
+	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
 $(DOC_BASE)/aptitudes-wide.txt: $(DOC_TEMPLATES)/apt-tmpl-wide.txt species-data.h \
-                           aptitudes.h util/gen-apt.pl
-    $(QUIET_GEN)./util/gen-apt.pl $@ $^
+						   aptitudes.h util/gen-apt.pl
+	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
 $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
-    $(QUIET_GEN)./util/FAQ2html.pl $< $@
+	$(QUIET_GEN)./util/FAQ2html.pl $< $@
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.rst util/unrest.pl
-    $(QUIET_GEN)util/unrest.pl <$< >$@
+	$(QUIET_GEN)util/unrest.pl <$< >$@
 
 CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
 api: $(CLUA_MODULE_SOURCES)
-    mkdir -p luadoc
-    luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
+	mkdir -p luadoc
+	luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
 
 
 ##########################################################################
@@ -1308,30 +1308,30 @@ $(YACC_OBJECTS): $(CONTRIB_LIBS)
 
 ifndef NO_YACC
 
-prebuildyacc:    $(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
-        $(QUIET_COPY)$(COPY) $^ prebuilt/
+prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
+		$(QUIET_COPY)$(COPY) $^ prebuilt/
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
-        +@$(MAKE) -C $(UTIL) levcomp.tab.cc
+		+@$(MAKE) -C $(UTIL) levcomp.tab.cc
 
 $(UTIL)levcomp.lex.cc: $(UTIL)levcomp.lpp $(UTIL)levcomp.tab.cc
-        +@$(MAKE) -C $(UTIL) levcomp.lex.cc
+		+@$(MAKE) -C $(UTIL) levcomp.lex.cc
 
 $(UTIL)levcomp.tab.h: $(UTIL)levcomp.tab.cc
 
 else
 
 prebuildyacc:
-        @echo "**** yacc is not installed, aborting."; false
+		@echo "**** yacc is not installed, aborting."; false
 
 # Pull the level-compiler stuff up from prebuilt/
 
 $(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
-        $(QUIET_COPY)$(COPY) prebuilt/*.h $(UTIL)
-        $(QUIET_COPY)$(COPY) $< $@
+		$(QUIET_COPY)$(COPY) prebuilt/*.h $(UTIL)
+		$(QUIET_COPY)$(COPY) $< $@
 
 $(UTIL)levcomp.lex.cc: prebuilt/levcomp.lex.cc
-        $(QUIET_COPY)$(COPY) $< $@
+		$(QUIET_COPY)$(COPY) $< $@
 
 endif
 
@@ -1351,157 +1351,157 @@ endif
 
 install-data: $(GENERATED_FILES)
 ifeq ($(DESTDIR)$(prefix)$(ANDROID),)
-    @echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
-    @exit 1
+	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
+	@exit 1
 endif
-    [ -d $(datadir_fp) ] || mkdir -p $(datadir_fp)
-    mkdir -p $(datadir_fp)/dat/des
-    mkdir -p $(datadir_fp)/dat/dlua
-    mkdir -p $(datadir_fp)/dat/clua
-    mkdir -p $(datadir_fp)/dat/database
-    mkdir -p $(datadir_fp)/dat/defaults
-    mkdir -p $(datadir_fp)/dat/descript
-    for LANG in $(LANGUAGES); \
-        do mkdir -p $(datadir_fp)/dat/descript/$$LANG; \
-    done
-    mkdir -p $(datadir_fp)/docs/develop
-    mkdir -p $(datadir_fp)/docs/develop/levels
-    mkdir -p $(datadir_fp)/docs/license
-    mkdir -p $(datadir_fp)/settings
-    $(COPY_R) dat/des/* $(datadir_fp)/dat/des/
-    $(COPY_R) dat/dlua/* $(datadir_fp)/dat/dlua/
-    echo "-- Autogenerated list of maps to load and compile:" \
-        >$(datadir_fp)/dat/dlua/loadmaps.lua
-    find dat -name '*.des'|sed s:dat/::| \
-    while read x; \
-        do echo "dgn.load_des_file('$$x')"; \
-        done >>$(datadir_fp)/dat/dlua/loadmaps.lua
-    $(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
-    $(COPY_R) dat/database/* $(datadir_fp)/dat/database/
-    $(COPY_R) dat/defaults/* $(datadir_fp)/dat/defaults/
-    $(COPY) dat/descript/*.txt $(datadir_fp)/dat/descript/
-    for LANG in $(LANGUAGES); \
-        do $(COPY) dat/descript/$$LANG/*.txt $(datadir_fp)/dat/descript/$$LANG; \
-    done
-    $(COPY) ../docs/*.txt $(datadir_fp)/docs/
-    $(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
-    $(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
-    $(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
-    $(COPY) ../CREDITS.txt $(datadir_fp)/docs/
-    $(COPY) ../settings/* $(datadir_fp)/settings/
+	[ -d $(datadir_fp) ] || mkdir -p $(datadir_fp)
+	mkdir -p $(datadir_fp)/dat/des
+	mkdir -p $(datadir_fp)/dat/dlua
+	mkdir -p $(datadir_fp)/dat/clua
+	mkdir -p $(datadir_fp)/dat/database
+	mkdir -p $(datadir_fp)/dat/defaults
+	mkdir -p $(datadir_fp)/dat/descript
+	for LANG in $(LANGUAGES); \
+		do mkdir -p $(datadir_fp)/dat/descript/$$LANG; \
+	done
+	mkdir -p $(datadir_fp)/docs/develop
+	mkdir -p $(datadir_fp)/docs/develop/levels
+	mkdir -p $(datadir_fp)/docs/license
+	mkdir -p $(datadir_fp)/settings
+	$(COPY_R) dat/des/* $(datadir_fp)/dat/des/
+	$(COPY_R) dat/dlua/* $(datadir_fp)/dat/dlua/
+	echo "-- Autogenerated list of maps to load and compile:" \
+	    >$(datadir_fp)/dat/dlua/loadmaps.lua
+	find dat -name '*.des'|sed s:dat/::| \
+	while read x; \
+	    do echo "dgn.load_des_file('$$x')"; \
+	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
+	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
+	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
+	$(COPY_R) dat/defaults/* $(datadir_fp)/dat/defaults/
+	$(COPY) dat/descript/*.txt $(datadir_fp)/dat/descript/
+	for LANG in $(LANGUAGES); \
+		do $(COPY) dat/descript/$$LANG/*.txt $(datadir_fp)/dat/descript/$$LANG; \
+	done
+	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
+	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
+	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
+	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
+	$(COPY) ../CREDITS.txt $(datadir_fp)/docs/
+	$(COPY) ../settings/* $(datadir_fp)/settings/
 ifeq ($(GAME),crawl.exe)
-    sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
+	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
 endif
 ifdef TILES
-    mkdir -p $(datadir_fp)/dat/tiles
-    $(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
+	mkdir -p $(datadir_fp)/dat/tiles
+	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
 ifneq (,$(INSTALL_FONTS))
-    $(COPY) $(INSTALL_FONTS) $(datadir_fp)/dat/tiles/
+	$(COPY) $(INSTALL_FONTS) $(datadir_fp)/dat/tiles/
 endif
 endif
 ifdef WEBTILES
-    mkdir -p $(webdir_fp)
-    $(COPY_R) webserver/game_data/* $(webdir_fp)/
+	mkdir -p $(webdir_fp)
+	$(COPY_R) webserver/game_data/* $(webdir_fp)/
 endif
 ifneq ($(savedir_fp),)
-    mkdir -p $(savedir_fp)/saves
-    mkdir -p $(savedir_fp)/morgue
+	mkdir -p $(savedir_fp)/saves
+	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
-    $(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
-    $(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
-    $(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
-    $(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
-    $(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/morgue || true
+	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
+	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/morgue || true
 endif
 endif
 ifneq ($(shareddir_fp),)
-    mkdir -p $(shareddir_fp)
+	mkdir -p $(shareddir_fp)
 ifneq ($(patsubst /var/%,%,$(shareddir_fp)),$(shareddir_fp))
 # Only if we're being installed for real.  Installations to a staging dir
 # which are then packaged would trample existing files; these need to be
 # handled by packagers themselves.
-    touch $(shareddir_fp)/logfile
-    touch $(shareddir_fp)/scores
+	touch $(shareddir_fp)/logfile
+	touch $(shareddir_fp)/scores
 endif
 ifeq ($(USE_DGAMELAUNCH),)
-    $(CHOWN) -R $(INSTALL_UGRP) $(shareddir_fp) || true
-    $(CHMOD) $(MCHMOD_SAVEDIR) $(shareddir_fp) || true
-    $(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/logfile || true
-    $(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/scores || true
+	$(CHOWN) -R $(INSTALL_UGRP) $(shareddir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(shareddir_fp) || true
+	$(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/logfile || true
+	$(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/scores || true
 endif
 endif
 
 install: all install-data
-    [ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
-    $(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
-    $(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
+	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
+	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
+	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 ifeq ($(USE_DGAMELAUNCH),)
-    $(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
-    $(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
 clean: clean-rltiles clean-webserver clean-android clean-monster
-    +$(MAKE) -C $(UTIL) clean
-    $(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
-        libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-        .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
+	+$(MAKE) -C $(UTIL) clean
+	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
+	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
+	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty \
             rltiles/tiledef-unrand.cc
-    $(RM) -r build-win
-    $(RM) -r build
+	$(RM) -r build-win
+	$(RM) -r build
 
 clean-contrib:
-    +$(MAKE) -C contrib clean
+	+$(MAKE) -C contrib clean
 
 clean-android:
 ifneq ($(ANDROID),)
-    $(RM) -r $(datadir_fp)
-    +cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean \
-     && remove AndroidManifest.xml
+	$(RM) -r $(datadir_fp)
+	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean \
+	 && remove AndroidManifest.xml
 endif
 
 distclean: clean clean-contrib clean-rltiles
-    $(RM) -r morgue saves
-    $(RM) scores $(GAME) core $(DEPENDENCY_MKF)
-    $(RM) -r mac-app-zips
-    $(RM) -r $(DOXYGEN_HTML_GEN)
+	$(RM) -r morgue saves
+	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
+	$(RM) -r mac-app-zips
+	$(RM) -r $(DOXYGEN_HTML_GEN)
 
 $(GAME): $(GAME_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-    +$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME) $(LIBS)
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(GAME_OBJS) -o $(GAME) $(LIBS)
 
 util/monster/vault_monster_data.h: dat/des util/gather_mons
-    util/gather_mons -v > $@
+	util/gather_mons -v > $@
 
 util/monster/monster-main.o: util/monster/vault_monster_data.h
 
 util/monster/monster: $(MONSTER_OBJS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-    +$(QUIET_LINK)$(CXX) $(LDFLAGS) $(MONSTER_OBJS) -o $@ $(LIBS)
+	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(MONSTER_OBJS) -o $@ $(LIBS)
 
 monster: util/monster/monster
 
 test-monster: monster
-    util/monster/monster quasit
+	util/monster/monster quasit
 
 clean-monster:
-    $(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
+	$(RM) util/monster/monster util/monster/vault_monster_data.h tile_info.txt
 
 install-monster: monster
-    util/gather_mons -t > tile_info.txt
-    strip -s util/monster/monster
-    cp util/monster/monster $(HOME)/bin/
-    if [ -f ~/source/announcements.log ]; then \
-      echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
-    fi
+	util/gather_mons -t > tile_info.txt
+	strip -s util/monster/monster
+	cp util/monster/monster $(HOME)/bin/
+	if [ -f ~/source/announcements.log ]; then \
+	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
+	fi
 debug: all
 debug-lite: all
 profile: all
 
 doxy-simple: doxygen-simple
 doxygen-simple:
-    $(DOXYGEN) $(DOXYGEN_SIMPLE_CONF)
+	$(DOXYGEN) $(DOXYGEN_SIMPLE_CONF)
 
 doxy-all: doxygen-all
 doxygen-all:
-    $(DOXYGEN) $(DOXYGEN_ALL_CONF)
+	$(DOXYGEN) $(DOXYGEN_ALL_CONF)
 
 # Dependency generation
 #
@@ -1519,7 +1519,7 @@ ifdef PCH
 %.gch: % .cflags $(CONTRIB_LIBS)
 # This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
 # system headers.
-    $(QUIET_PCH)$(CXX) $(STDFLAG) $(ALL_CFLAGS) -MD -c $< -o $@
+	$(QUIET_PCH)$(CXX) $(STDFLAG) $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -1541,56 +1541,56 @@ $(TILEDEFOBJS): ALL_CFLAGS=$(RLTILES_CFLAGS)
 # This is kind of important when building without ccache.
 
 %.o: %.m .cflags | $(GENERATED_HEADERS)
-    $(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 %.o: %.cc %.d .cflags $(CC_DEP) | $(GENERATED_HEADERS) $(TILEDEFHDRS)
 ifdef NO_INLINE_DEPGEN
-    $(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(STDFLAG) $(ALL_CFLAGS) -MT $*.o $< > $*.d
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(STDFLAG) $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
-    $(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 ifndef NO_INLINE_DEPGEN
-    @if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
+	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
 endif
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
-    $(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
+	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 config.h: util/configure .cflags
-    ${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
+	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
 
 #
 # Contribs
 #
 
 $(CONTRIB_LIBS): .contrib-libs
-    @:
+	@:
 
 .contrib-libs: .cflags
 ifneq (,$(CONTRIBS))
-    @echo "    * Need to build contribs: $(CONTRIBS)"
-    +@$(MAKE) -C contrib $(CONTRIBS) ARCH=$(ARCH)
+	@echo "    * Need to build contribs: $(CONTRIBS)"
+	+@$(MAKE) -C contrib $(CONTRIBS) ARCH=$(ARCH)
 endif
-    @touch $@
+	@touch $@
 
 $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
 art-data.h: art-data.txt util/art-data.pl art-func.h
-    util/art-data.pl
+	util/art-data.pl
 art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 
 mon-mst.h: mon-spell.h util/gen-mst.pl
-    $(QUIET_GEN)util/gen-mst.pl
+	$(QUIET_GEN)util/gen-mst.pl
 
 cmd-name.h: enum.h util/cmd-name.pl
-    $(QUIET_GEN)util/cmd-name.pl
+	$(QUIET_GEN)util/cmd-name.pl
 
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
-    $(QUIET_GEN)util/gen-luatags.pl
+	$(QUIET_GEN)util/gen-luatags.pl
 
 mi-enum.h: mon-info.h util/gen-mi-enum
-    $(QUIET_GEN)util/gen-mi-enum
+	$(QUIET_GEN)util/gen-mi-enum
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 
@@ -1608,24 +1608,24 @@ macro.o: cmd-name.h
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
         # force submake to run properly
-    +$(MAKE) -C $(RLTILES) all ANDROID=1 TILES=1 V=1
+	+$(MAKE) -C $(RLTILES) all ANDROID=1 TILES=1 V=1
         # prove that tiles were generated properly
-    grep tile_info rltiles/*.cc| head
+	grep tile_info rltiles/*.cc| head
 else
-    +$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
 endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
 
 dat/tiles/%.png: $(RLTILES)/%.png
-    $(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
+	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
 ifdef USE_ADVPNG
-    $(QUIET_ADVPNG)$(ADVPNG) $@
+	$(QUIET_ADVPNG)$(ADVPNG) $@
 endif
 
 clean-rltiles:
-    $(RM) $(DESTTILEFILES)
-    +$(MAKE) -C $(RLTILES) distclean
+	$(RM) $(DESTTILEFILES)
+	+$(MAKE) -C $(RLTILES) distclean
 
 ifdef TILES_ANY
 install-data: $(DESTTILEFILES)
@@ -1635,9 +1635,9 @@ endif
 .PHONY: check-fonts
 check-fonts:
 ifneq (,$(INSTALL_FONTS))
-    @for x in $(INSTALL_FONTS); do if [ ! -e "$$x" ]; then echo \
-    "Font file $${x##contrib/fonts/} not found. Please install it (possibly via contribs)."; \
-    exit 1; fi; done
+	@for x in $(INSTALL_FONTS); do if [ ! -e "$$x" ]; then echo \
+	"Font file $${x##contrib/fonts/} not found. Please install it (possibly via contribs)."; \
+	exit 1; fi; done
 endif
 
 #############################################################################
@@ -1647,42 +1647,42 @@ endif
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
 source: removeold prebuildyacc
-    @git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
-    rm -rf build
-    mkdir build
-    (cd ../..;git ls-files| \
-        grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
-        tar cf - -T -)|tar xf - -C build
-    for x in lua pcre sqlite libpng freetype sdl2 sdl2-image sdl2-mixer zlib fonts; \
-      do \
-       mkdir -p $(BSRC)contrib/$$x; \
-       (cd contrib/$$x;git ls-files|tar cf - -T -)| \
-        tar xf - -C $(BSRC)contrib/$$x; \
-      done
-    find build -name .gitignore -execdir rm -f '{}' +
-    git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
-    mv build/crawl-ref build/$(PKG_SRC_DIR)
+	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
+	rm -rf build
+	mkdir build
+	(cd ../..;git ls-files| \
+		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
+		tar cf - -T -)|tar xf - -C build
+	for x in lua pcre sqlite libpng freetype sdl2 sdl2-image sdl2-mixer zlib fonts; \
+	  do \
+	   mkdir -p $(BSRC)contrib/$$x; \
+	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \
+		tar xf - -C $(BSRC)contrib/$$x; \
+	  done
+	find build -name .gitignore -execdir rm -f '{}' +
+	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
+	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
 package-tarball-deps: source
-    cd build && tar cfJ ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
 
 package-zipball-deps: source
-    @if which zip >/dev/null; then \
-      echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
-      cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR); \
-    else \
-      echo "**** No ZIP installed -- not creating the zipball."; \
-    fi
+	@if which zip >/dev/null; then \
+	  echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
+	  cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR); \
+	else \
+	  echo "**** No ZIP installed -- not creating the zipball."; \
+	fi
 
 package-tarball-nodeps: source
-    cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
 
 package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
-    rm -rf build
+	rm -rf build
 
 removeold:
-    if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
-    if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
+	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
 
 #############################################################################
 # Building the unified Windows package.
@@ -1691,65 +1691,65 @@ removeold:
 # You need to have NSIS installed.
 package-windows:
 ifneq (x$(SRC_VERSION),x$(shell cat build-win/version.txt 2>/dev/null))
-    +$(MAKE) build-windows
+	+$(MAKE) build-windows
 endif
-    if $(GXX) -dumpmachine|grep -q x86_64; \
-      then WINARCH=win64; else WINARCH=win32; fi; \
-    makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$$WINARCH" util/crawl.nsi
+	if $(GXX) -dumpmachine|grep -q x86_64; \
+	  then WINARCH=win64; else WINARCH=win32; fi; \
+	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$$WINARCH" util/crawl.nsi
 
 build-windows:
 ifneq ($(GAME),crawl.exe)
-    @echo "This is only for Windows; please specify CROSSHOST.";false
+	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
-    +$(MAKE) clean
-    +$(MAKE) TILES=y DESTDIR=build-win SAVEDIR='~/crawl' install
-    mv build-win/crawl.exe build-win/crawl-tiles.exe
-    +$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
-    mv build-win/crawl.exe build-win/crawl-console.exe
-    mv build-win/docs/CREDITS.txt build-win/
-    echo $(SRC_VERSION) >build-win/version.txt
+	+$(MAKE) clean
+	+$(MAKE) TILES=y DESTDIR=build-win SAVEDIR='~/crawl' install
+	mv build-win/crawl.exe build-win/crawl-tiles.exe
+	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
+	mv build-win/crawl.exe build-win/crawl-console.exe
+	mv build-win/docs/CREDITS.txt build-win/
+	echo $(SRC_VERSION) >build-win/version.txt
 
 ZIP_DOCS=../licence.txt
 package-windows-zips:
 ifneq ($(GAME),crawl.exe)
-    @echo "This is only for Windows; please specify CROSSHOST.";false
+	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
-    +$(MAKE) clean
-    +$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) install
-    cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
-    cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
-    rm -rf build-win
-    +$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) install
-    cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
-    cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
-    rm -rf build-win
-    if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-win32.zip;fi
+	+$(MAKE) clean
+	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
+	rm -rf build-win
+	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
+	rm -rf build-win
+	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-win32.zip;fi
 
 #############################################################################
 # Building Mac app bundles
 #
 
 mac-app-tiles: all
-    +$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles
+	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles
 
 mac-app-console: all
-    +$(MAKE) -j1 -C mac -f Makefile.app-bundle
+	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
 
 #############################################################################
 # Building the Android package
 #
 
 android-project/AndroidManifest.xml: android-project/AndroidManifest.xml.in
-    sed "s/@CRAWL_VERSION@/${SRC_VERSION}/" <android-project/AndroidManifest.xml.in >android-project/AndroidManifest.xml
+	sed "s/@CRAWL_VERSION@/${SRC_VERSION}/" <android-project/AndroidManifest.xml.in >android-project/AndroidManifest.xml
 
 android: install-data .android-cflags android-project/AndroidManifest.xml
 ifeq ($(ANDROID),)
-    @echo Please define ANDROID to use this build.
-    @exit 1
+	@echo Please define ANDROID to use this build.
+	@exit 1
 endif
-    +cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
-    cp bin/DungeonCrawlStoneSoup-debug.apk \
-    ../../../crawl_tiles_android-$(SRC_VERSION).apk
+	+cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
+	cp bin/DungeonCrawlStoneSoup-debug.apk \
+	../../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
@@ -1760,13 +1760,13 @@ nonwiztest: test-test test-nonwiz
 nondebugtest: test-all
 
 test-%: $(GAME) util/fake_pty builddb
-    util/fake_pty test/stress/run $*
-    @echo "Finished: $*"
+	util/fake_pty test/stress/run $*
+	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c
-    $(QUIET_HOSTCC)$(if $(HOSTCC),$(HOSTCC),$(CC)) $(if $(TRAVIS),-DTIMEOUT=9,-DTIMEOUT=60) -Wall $< -o $@ -lutil
+	$(QUIET_HOSTCC)$(if $(HOSTCC),$(HOSTCC),$(CC)) $(if $(TRAVIS),-DTIMEOUT=9,-DTIMEOUT=60) -Wall $< -o $@ -lutil
 
 # Should be not needed, but the race condition in bug #6509 is hard to fix.
 builddb: $(GAME)
-    ./$(GAME) --builddb
+	./$(GAME) --builddb
 .PHONY: builddb

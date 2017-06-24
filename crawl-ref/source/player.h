@@ -278,7 +278,7 @@ public:
 
     demigod_portfolio demigod_portifolio;
     FixedVector<uint8_t, NUM_DEMIGOD_PORTFOLIO> demigod_portifolio_point;
-       
+	
 
     int magic_contamination;
 

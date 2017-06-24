@@ -78,7 +78,7 @@ spret_type cast_delayed_fireball(bool fail)
 {
     fail_check();
     // Okay, this message is weak but functional. - bwr
-    mpr("당신은 마법적으로 충전된 기분이 들었다.");
+	mpr("당신은 마법적으로 충전된 기분이 들었다.");
     you.attribute[ATTR_DELAYED_FIREBALL] = 1;
     return SPRET_SUCCESS;
 }
@@ -101,7 +101,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 {
     if (grid_distance(beam.target, beam.source) > beam.range)
     {
-        mpr("그곳은 최대 사거리 밖이다.");
+		mpr("그곳은 최대 사거리 밖이다.");
         return SPRET_ABORT;
     }
 
@@ -162,7 +162,7 @@ bool cast_smitey_damnation(int pow, bolt &beam)
         return false;
     }
 
-    mpr("당신은 업화의 기둥을 불러일으켰다!");
+	mpr("당신은 업화의 기둥을 불러일으켰다!");
 
     beam.is_tracer = false;
     beam.in_explosion_phase = false;
@@ -317,7 +317,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             }
             case SPELL_CHAIN_OF_CHAOS:
                 if (first && see_source)
-                    mpr("끓어오르는 혼돈의 소용돌이가 나타났다!");
+					mpr("끓어오르는 혼돈의 소용돌이가 나타났다!");
                 break;
             default:
                 break;
@@ -432,7 +432,7 @@ static int _refrigerate_player(const actor* agent, int pow, int avg,
                                     BEAM_COLD, "refrigeration", 0, actual);
     if (actual && hurted > 0)
     {
-        mpr("당신은 엄청난 한기를 느꼈다.");
+		mpr("당신은 엄청난 한기를 느꼈다.");
         if (agent && !agent->is_player())
         {
             ouch(hurted, KILLED_BY_BEAM, agent->mid,
@@ -769,7 +769,7 @@ void sonic_damage(bool scream)
         {
             // Exclamation mark to suggest that a lot of creatures were
             // affected.
-            mpr("주위의 몬스터가 소음으로 비틀거렸다!");
+			mpr("주위의 몬스터가 소음으로 비틀거렸다!");
         }
     }
 
@@ -814,7 +814,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     // TODO: check known rN instead of holiness
     if (mons->observable() && !(mons->holiness() & MH_NATURAL))
     {
-        mpr("당신은 그것으로부터는 생명력을 흡수할 수 없다!");
+		mpr("당신은 그것으로부터는 생명력을 흡수할 수 없다!");
         return SPRET_ABORT;
     }
 
@@ -871,7 +871,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
 
     if (hp_gain && !mons_was_summoned && !you.duration[DUR_DEATHS_DOOR])
     {
-        mpr("당신은 생명력이 당신의 몸속으로 흘러들어오는 것을 느꼈다.");
+		mpr("당신은 생명력이 당신의 몸속으로 흘러들어오는 것을 느꼈다.");
         inc_hp(hp_gain);
     }
 
@@ -1129,13 +1129,13 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
     case DNGN_OPEN_DOOR:
     case DNGN_SEALED_DOOR:
         if (you.see_cell(where))
-            mpr("문이 폭발하듯 부숴졌다!");
+			mpr("문이 폭발하듯 부숴졌다!");
         chance = 100;
         break;
 
     case DNGN_GRATE:
         if (you.see_cell(where))
-            mpr("철문이 산산조각났다!");
+			mpr("철문이 산산조각났다!");
         chance = 100;
         break;
 
@@ -1231,7 +1231,7 @@ spret_type cast_shatter(int pow, bool fail)
     const bool silence = silenced(you.pos());
 
     if (silence)
-        mpr("던전이 요동친다!");
+		mpr("던전이 요동친다!");
     else
     {
         noisy(spell_effect_noise(SPELL_SHATTER), you.pos());
@@ -1268,7 +1268,7 @@ static int _shatter_player(int pow, actor *wielder, bool devastator = false)
 
     if (damage > 0)
     {
-        mpr(damage > 15 ? "당신은 대지를 분쇄하는 힘에 전율했다."
+		mpr(damage > 15 ? "당신은 대지를 분쇄하는 힘에 전율했다."
                         : "당신은 전율했다.");
         if (devastator)
             ouch(damage, KILLED_BY_MONSTER, wielder->mid);
@@ -1381,7 +1381,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message);
         else
-            mpr("분쇄되는 듯한 충격이 있었다!");
+			mpr("분쇄되는 듯한 충격이 있었다!");
     }
 
     // need to do this again to do the actual damage
@@ -1476,7 +1476,7 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
 
     ASSERT(who);
     if (who->is_player())
-        mpr("당신은 통제되지 않는 마법을 마구 분출한다!");
+		mpr("당신은 통제되지 않는 마법을 마구 분출한다!");
     else
     {
         simple_monster_message(*who->as_monster(),
@@ -1674,11 +1674,11 @@ static int _ignite_poison_player(coord_def where, int pow, actor *agent)
 
     const int resist = player_res_fire();
     if (resist > 0)
-        mpr("당신의 혈액이 끓어오르는 듯한 느낌이 들었다!");
+		mpr("당신의 혈액이 끓어오르는 듯한 느낌이 들었다!");
     else if (resist < 0)
-        mpr("당신 체내의 독이 끔찍하게 타올랐다!");
+		mpr("당신 체내의 독이 끔찍하게 타올랐다!");
     else
-        mpr("당신 체내의 독이 타올랐다!");
+		mpr("당신 체내의 독이 타올랐다!");
 
     ouch(damage, KILLED_BY_BEAM, agent->mid,
          "by burning poison", you.can_see(*agent),
@@ -1867,7 +1867,7 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
     else
     {
-        mpr("대기가 화염으로 타올랐다!");
+		mpr("대기가 화염으로 타올랐다!");
 
         vector<coord_def> blast_adjacents;
 
@@ -1960,7 +1960,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
 
     if (victim->is_player())
     {
-        mpr("당신은 번개에 맞았다.");
+		mpr("당신은 번개에 맞았다.");
         damage = 1 + random2(3 + pow / 15);
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
@@ -2003,7 +2003,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     // Low power slight chance added for low power characters -- bwr
     if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
     {
-        mpr("번개가 몰아쳤다!");
+		mpr("번개가 몰아쳤다!");
         pow /= random_range(2, 3);
         damage += apply_random_around_square([pow, agent] (coord_def where2) {
             return discharge_monsters(where2, pow, agent);
@@ -2013,7 +2013,7 @@ int discharge_monsters(coord_def where, int pow, actor *agent)
     {
         // Only printed if we did damage, so that the messages in
         // cast_discharge() are clean. -- bwr
-        mpr("번개가 땅을 치고 튀어올랐다.");
+		mpr("번개가 땅을 치고 튀어올랐다.");
     }
 
     return damage;
@@ -2066,7 +2066,7 @@ spret_type cast_discharge(int pow, bool fail)
     else
     {
         if (coinflip())
-            mpr("당신 주위의 대기가 전기로 파직거렸다.");
+			mpr("당신 주위의 대기가 전기로 파직거렸다.");
         else
         {
             const bool plural = coinflip();
@@ -2348,7 +2348,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     default:
         // Couldn't find a monster or wall to shatter - abort casting!
         if (caster->is_player() && !quiet)
-            mpr("당신은 그걸 부술 수 없다!");
+			mpr("당신은 그걸 부술 수 없다!");
         return false;
     }
 
@@ -2410,7 +2410,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     }
     else if (target == you.pos()) // You explode.
     {
-        mpr("당신은 분쇄되었다!");
+		mpr("당신은 분쇄되었다!");
 
         ouch(beam.damage.roll(), KILLED_BY_BEAM, caster->mid,
              "by Lee's Rapid Deconstruction", true,
@@ -2459,7 +2459,7 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 
     if (num_stones == 0)
     {
-        mpr("주문을 시전하는 데 사용할 돌이 없다.");
+		mpr("주문을 시전하는 데 사용할 돌이 없다.");
         return SPRET_ABORT;
     }
 
@@ -2469,7 +2469,7 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
     if (ret == SPRET_SUCCESS)
     {
         if (dec_inv_item_quantity(letter_to_index(stone->slot), 1))
-            mpr("당신에게 남아있는 돌이 하나도 없다.");
+			mpr("당신에게 남아있는 돌이 하나도 없다.");
         else
             mprf_nocap("%s", stone->name(DESC_INVENTORY).c_str());
     }
@@ -2787,7 +2787,7 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 
     if (hitfunc.beams.size() == 0)
     {
-        mpr("당신은 그 방향으로는 아무 목표도 찾을 수 없다!");
+		mpr("당신은 그 방향으로는 아무 목표도 찾을 수 없다!");
         return SPRET_ABORT;
     }
 
@@ -2821,7 +2821,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         fail_check();
 
         if (!you.duration[DUR_TOXIC_RADIANCE])
-            mpr("당신은 독성을 띄는 기운을 방출하기 시작했다.");
+			mpr("당신은 독성을 띄는 기운을 방출하기 시작했다.");
         else
             mpr("당신이 방출하는 독기가 증가했다.");
 
@@ -2948,7 +2948,7 @@ void handle_searing_ray()
 
     if (!enough_mp(1, true))
     {
-        mpr("당신의 마력이 타오르는 광선을 유지하기 불충분해, 주문이 흩어져 사라졌다.");
+		mpr("당신의 마력이 타오르는 광선을 유지하기 불충분해, 주문이 흩어져 사라졌다.");
         end_searing_ray();
         return;
     }
@@ -2966,7 +2966,7 @@ void handle_searing_ray()
     // If friendlies have moved into the beam path, give a chance to abort
     if (!player_tracer(zap, pow, beam))
     {
-        mpr("당신은 타오르는 광선의 충전을 중단했다.");
+		mpr("당신은 타오르는 광선의 충전을 중단했다.");
         end_searing_ray();
         return;
     }
@@ -2981,7 +2981,7 @@ void handle_searing_ray()
 
     if (++you.attribute[ATTR_SEARING_RAY] > 3)
     {
-        mpr("당신은 타오르는 광선의 충전을 마쳤다.");
+		mpr("당신은 타오르는 광선의 충전을 마쳤다.");
         end_searing_ray();
     }
 }

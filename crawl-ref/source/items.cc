@@ -1320,7 +1320,7 @@ bool pickup_single_item(int link, int qty)
     item_def* item = &mitm[link];
     if (item_is_stationary(mitm[link]))
     {
-              mpr("당신은 그것을 주울 수 없다.");
+		mpr("당신은 그것을 주울 수 없다.");
         return false;
     }
     if (item->base_type == OBJ_GOLD && !qty && !i_feel_safe()
@@ -1364,7 +1364,7 @@ bool pickup_single_item(int link, int qty)
 
     if (!pickup_succ)
     {
-              mpr("그렇게 많은 물건을 들 수는 없다.");
+		mpr("그렇게 많은 물건을 들 수는 없다.");
         learned_something_new(HINT_FULL_INVENTORY);
         return false;
     }
@@ -1399,11 +1399,11 @@ void pickup(bool partial_quantity)
     you.last_pickup.clear();
 
     if (o == NON_ITEM)
-              mpr("여기엔 물건이 없다.");
+		mpr("여기엔 물건이 없다.");
     else if (you.form == transformation::ice_beast
              && grd(you.pos()) == DNGN_DEEP_WATER)
     {
-              mpr("물 위에 떠 있는 동안에는 물 아래의 것을 주울 수 없다.");
+		mpr("물 위에 떠 있는 동안에는 물 아래의 것을 주울 수 없다.");
     }
     else if (num_items == 1) // just one movable item?
     {
@@ -1423,9 +1423,9 @@ void pickup(bool partial_quantity)
     {
         int next;
         if (num_items == 0)
-                     mpr("여기엔 주울 수 있는 물건이 없다.");
+			mpr("여기엔 주울 수 있는 물건이 없다.");
         else
-                     mpr("여기엔 여러 물건이 있다.");
+			mpr("여기엔 여러 물건이 있다.");
         string pickup_warning;
         bool any_selectable = false;
         while (o != NON_ITEM)
@@ -1744,7 +1744,7 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
     if (item_is_stationary(it))
     {
         if (!quiet)
-                     mpr("당신은 그것을 주울 수 없다.");
+			mpr("당신은 그것을 주울 수 없다.");
         // Fake a successful pickup (return 1), so we can continue to
         // pick up anything else that might be on this square.
         return true;
@@ -1845,7 +1845,7 @@ static void _get_rune(const item_def& it, bool quiet)
              rune_type_name(it.sub_type));
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
-                     mpr("당신은 모든 룬을 모았다! 가서 승리를 쟁취하라!");
+			mpr("당신은 모든 룬을 모았다! 가서 승리를 쟁취하라!");
         else if (nrunes == ZOT_ENTRY_RUNES)
         {
             // might be inappropriate in new Sprints, please change it then
@@ -1855,11 +1855,11 @@ static void _get_rune(const item_def& it, bool quiet)
         else if (nrunes > 1)
             mprf("You now have %d runes.", nrunes);
 
-              mpr("}를 눌러 모은 룬을 확인할 수 있다.");
+		mpr("}를 눌러 모은 룬을 확인할 수 있다.");
     }
 
     if (it.sub_type == RUNE_ABYSSAL)
-              mpr("심연의 룬이 당신을 밖으로 이끄는 것을 느꼈다.");
+		mpr("심연의 룬이 당신을 밖으로 이끄는 것을 느꼈다.");
 }
 
 /**
@@ -2448,7 +2448,7 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
-                     mpr("그것을 먼저 벗어야 한다.");
+			mpr("그것을 먼저 벗어야 한다.");
         else if (remove_ring(item_dropped, true))
         {
             // The delay handles the case where the item disappeared.
@@ -2473,7 +2473,7 @@ bool drop_item(int item_dropped, int quant_drop)
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
             if (!Options.easy_unequip)
-                            mpr("그것을 먼저 벗어야 한다.");
+				mpr("그것을 먼저 벗어야 한다.");
             else if (check_warning_inscriptions(item, OPER_TAKEOFF))
             {
                 // If we take off the item, cue up the item being dropped
@@ -2508,7 +2508,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
     {
-              mpr("현재 위치에 물건이 너무 많아, 물건을 버릴 수 없다.");
+		mpr("현재 위치에 물건이 너무 많아, 물건을 버릴 수 없다.");
         return false;
     }
 
@@ -2547,7 +2547,7 @@ void drop_last()
     }
 
     if (items_to_drop.empty())
-              mpr("버릴 물건이 없다.");
+		mpr("버릴 물건이 없다.");
     else
     {
         you.last_pickup.clear();
@@ -4443,7 +4443,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                 item->skill = skill;
             else
             {
-                            mpr("유감이지만 그 기술에 관련된 책은 존재하지 않는다.");
+				mpr("유감이지만 그 기술에 관련된 책은 존재하지 않는다.");
                 item->skill = SK_FIGHTING; // Was probably that anyway.
             }
             item->skill_points = random_range(2000, 3000);

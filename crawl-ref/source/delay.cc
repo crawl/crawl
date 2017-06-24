@@ -157,7 +157,7 @@ bool MemoriseDelay::try_interrupt()
 {
     // Losing work here is okay... having to start from
     // scratch is a reasonable behaviour. -- bwr
-    mpr("당신은 주문을 익히던 중 방해를 받았다.");
+	mpr("당신은 주문을 익히던 중 방해를 받았다.");
     return true;
 }
 
@@ -165,7 +165,7 @@ bool MultidropDelay::try_interrupt()
 {
     // No work lost
     if (!items.empty())
-        mpr("당신은 물건을 버리는 것을 중단했다.");
+		mpr("당신은 물건을 버리는 것을 중단했다.");
     return true;
 }
 
@@ -195,7 +195,7 @@ bool ArmourOnDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep equipping yourself?", false, 0, false))
         {
-            mpr("당신은 갑옷을 입기를 중단했다.");
+			mpr("당신은 갑옷을 입기를 중단했다.");
             return true;
         }
         else
@@ -211,7 +211,7 @@ bool ArmourOffDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep disrobing?", false, 0, false))
         {
-            mpr("당신은 갑옷을 벗기를 중단했다.");
+			mpr("당신은 갑옷을 벗기를 중단했다.");
             return true;
         }
         else
@@ -227,7 +227,7 @@ bool BlurryScrollDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep reading the scroll?", false, 0, false))
         {
-            mpr("당신은 두루마리를 읽기를 중단했다.");
+			mpr("당신은 두루마리를 읽기를 중단했다.");
             return true;
         }
         else
@@ -238,25 +238,25 @@ bool BlurryScrollDelay::try_interrupt()
 
 bool AscendingStairsDelay::try_interrupt()
 {
-    mpr("당신은 계단을 올라가기를 그만뒀다.");
+	mpr("당신은 계단을 올라가기를 그만뒀다.");
     return true;  // short... and probably what people want
 }
 
 bool DescendingStairsDelay::try_interrupt()
 {
-    mpr("당신은 계단을 내려가기를 그만뒀다.");
+	mpr("당신은 계단을 내려가기를 그만뒀다.");
     return true;  // short... and probably what people want
 }
 
 bool PasswallDelay::try_interrupt()
 {
-    mpr("당신은 명상하던 중 방해를 받았다.");
+	mpr("당신은 명상하던 중 방해를 받았다.");
     return true;
 }
 
 bool ShaftSelfDelay::try_interrupt()
 {
-    mpr("당신은 굴파기를 중단했다.");
+	mpr("당신은 굴파기를 중단했다.");
     return true;
 }
 
@@ -379,7 +379,7 @@ static command_type _get_running_command()
         if (!is_resting() && you.running.hp == you.hp
             && you.running.mp == you.magic_points)
         {
-            mpr("대기 완료.");
+			mpr("대기 완료.");
         }
 
         if (Options.rest_delay > 0)
@@ -777,14 +777,14 @@ void MemoriseDelay::finish()
 #ifdef USE_SOUND
     parse_sound(MEMORISE_SPELL_SOUND);
 #endif
-    mpr("당신은 주문을 익히는 데 성공했다.");
+	mpr("당신은 주문을 익히는 데 성공했다.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
 }
 
 void PasswallDelay::finish()
 {
-    mpr("당신은 돌과 동화되는데 성공했다.");
+	mpr("당신은 돌과 동화되는데 성공했다.");
     // included in default force_more_message
 
     if (dest.x == 0 || dest.y == 0)
@@ -795,7 +795,7 @@ void PasswallDelay::finish()
     default:
         if (!you.is_habitable(dest))
         {
-            mpr("...아직 반대편에 무언가가 있다. "
+			mpr("...아직 반대편에 무언가가 있다. "
                 "당신은 재빨리 되돌아왔다.");
             redraw_screen();
             return;
@@ -819,7 +819,7 @@ void PasswallDelay::finish()
         // Might still fail.
         if (monster_at(dest))
         {
-            mpr("...그리고 당신의 경로가 막혀있음을 깨달았다. 당신은 재빨리 돌아왔다.");
+			mpr("...그리고 당신의 경로가 막혀있음을 깨달았다. 당신은 재빨리 돌아왔다.");
             redraw_screen();
             return;
         }
@@ -1319,12 +1319,12 @@ bool interrupt_activity(activity_interrupt_type ai,
     if (ai == AI_FULL_HP && !you.running.notified_hp_full)
     {
         you.running.notified_hp_full = true;
-        mpr("체력 회복됨.");
+		mpr("체력 회복됨.");
     }
     else if (ai == AI_FULL_MP && !you.running.notified_mp_full)
     {
         you.running.notified_mp_full = true;
-        mpr("마력 회복됨.");
+		mpr("마력 회복됨.");
     }
 
     if (_should_stop_activity(delay.get(), ai, at))

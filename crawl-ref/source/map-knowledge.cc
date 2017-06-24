@@ -74,12 +74,12 @@ void clear_map_or_travel_trail()
 {
     if (Options.show_travel_trail && env.travel_trail.size())
     {
-        mpr("이동 경로표시를 지운다.");
+		mpr("이동 경로표시를 지운다.");
         clear_travel_trail();
     }
     else
     {
-        mpr("현재 층의 지도를 청소한다.");
+		mpr("현재 층의 지도를 청소한다.");
         clear_map();
         crawl_view.set_player_at(you.pos());
     }

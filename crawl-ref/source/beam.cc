@@ -840,7 +840,7 @@ void bolt::digging_wall_effect()
             if (feat == DNGN_GRATE)
             {
                 // XXX: should this change for monsters?
-                mpr("손상된 쇠창살이 부숴졌다.");
+				mpr("손상된 쇠창살이 부숴졌다.");
                 return;
             }
             else if (feat == DNGN_SLIMY_WALL)
@@ -1890,11 +1890,11 @@ bool poison_monster(monster* mons, const actor *who, int levels,
         if (who->is_player())
         {
             int poisongod_level = your_demigod_portfolio_level(DEMIGOD_PORTFOLIO_POISON);
-            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_POTENT)            
-                ignore_resist_check = true;            
-            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_SLOW_POISON)            
-                slow_poison = true;            
-            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_WEAKEN_POISON)            
+            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_POTENT)			
+                ignore_resist_check = true;			
+			if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_SLOW_POISON)			
+                slow_poison = true;			
+            if (poisongod_level >= DEMIGOD_PORTFOLIO_POISON_LEVEL_WEAKEN_POISON)			
                 weaken_poison = true;
          }
     }
@@ -2021,7 +2021,7 @@ static bool _curare_hits_player(actor* agent, int levels, string name,
 
         if (hurted)
         {
-            mpr("당신은 숨쉬기가 어렵다.");
+			mpr("당신은 숨쉬기가 어렵다.");
             ouch(hurted, KILLED_BY_CURARE, agent->mid,
                  "curare-induced apnoea");
         }
@@ -2269,7 +2269,7 @@ static void _maybe_imb_explosion(bolt *parent, coord_def center)
         if (first && !beam.is_tracer)
         {
             if (you.see_cell(center))
-                mpr("에너지의 구가 폭발했다!");
+				mpr("에너지의 구가 폭발했다!");
             noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
                   center);
             first = false;
@@ -2506,7 +2506,7 @@ void bolt::affect_endpoint()
     case SPELL_PRIMAL_WAVE:
         if (you.see_cell(pos()))
         {
-            mpr("흔들림이 가라앉았다.");
+			mpr("흔들림이 가라앉았다.");
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
         }
         else
@@ -2642,7 +2642,7 @@ void bolt::affect_ground()
             {
                 remove_mold(pos());
                 if (you.see_cell(pos()))
-                    mpr("버섯이 순식간에 자라났다.");
+					mpr("버섯이 순식간에 자라났다.");
 
             }
         }
@@ -3344,7 +3344,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
-        mpr("기묘한 에너지가 당신의 몸을 통과했다.");
+		mpr("기묘한 에너지가 당신의 몸을 통과했다.");
         you.malmutate(aux_source.empty() ? get_source_name() :
                       (get_source_name() + "/" + aux_source));
         obvious_effect = true;
@@ -3435,7 +3435,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_BANISH:
         if (YOU_KILL(thrower))
         {
-            mpr("이 주문은 당신을 추방하기에는 불충분하다.");
+			mpr("이 주문은 당신을 추방하기에는 불충분하다.");
             break;
         }
         you.banish(agent(), get_source_name(),
@@ -3451,7 +3451,7 @@ void bolt::affect_player_enchantment(bool resistible)
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
         if (dam)
         {
-            mpr("고통이 당신의 몸을 관통했다!");
+			mpr("고통이 당신의 몸을 관통했다!");
             internal_ouch(dam);
             obvious_effect = true;
         }
@@ -3472,7 +3472,7 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         }
 
-        mpr("당신은 경련했다!");
+		mpr("당신은 경련했다!");
 
         if (aux_source.empty())
             aux_source = "by dispel undead";
@@ -3482,7 +3482,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_DISINTEGRATION:
-        mpr("당신은 폭파되었다!");
+		mpr("당신은 폭파되었다!");
 
         if (aux_source.empty())
             aux_source = "disintegration bolt";
@@ -3501,7 +3501,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_PORKALATOR:
         if (!transform(ench_power, transformation::pig, true))
         {
-            mpr("당신은 순간적으로 꿀꿀거리고 싶은 충동에 빠졌다.");
+			mpr("당신은 순간적으로 꿀꿀거리고 싶은 충동에 빠졌다.");
             break;
         }
 
@@ -3526,7 +3526,7 @@ void bolt::affect_player_enchantment(bool resistible)
         if (you.duration[DUR_TELEPORT])
         {
             you.duration[DUR_TELEPORT] = 0;
-            mpr("공간이동이 중단되었다.");
+			mpr("공간이동이 중단되었다.");
         }
         you.redraw_evasion = true;
         obvious_effect = true;
@@ -3534,7 +3534,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_VULNERABILITY:
         if (!you.duration[DUR_LOWERED_MR])
-            mpr("당신의 마법 저항이 사라졌다!");
+			mpr("당신의 마법 저항이 사라졌다!");
         you.increase_duration(DUR_LOWERED_MR, 12 + random2(18), 50);
         obvious_effect = true;
         break;
@@ -3560,7 +3560,7 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         }
 
-        mpr("당신은 독에 더 취약해졌다고 느꼈다.");
+		mpr("당신은 독에 더 취약해졌다고 느꼈다.");
         you.increase_duration(DUR_POISON_VULN, 12 + random2(18), 50);
         obvious_effect = true;
         break;
@@ -3622,7 +3622,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     default:
         // _All_ enchantments should be enumerated here!
-        mpr("소프트웨어 버그가 당신의 발가락을 갉아먹고 있다!");
+		mpr("소프트웨어 버그가 당신의 발가락을 갉아먹고 있다!");
         break;
     }
 
@@ -3849,7 +3849,7 @@ void bolt::affect_player()
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && hurted > 0)
     {
-        mpr("날카로운 가시가 당신의 몸을 파고들고 있다.");
+		mpr("날카로운 가시가 당신의 몸을 파고들고 있다.");
         if (!you.duration[DUR_BARBS])
             you.set_duration(DUR_BARBS,  random_range(3, 6));
         else
@@ -4596,7 +4596,7 @@ void bolt::affect_monster(monster* mon)
         if (you.see_cell(mon->pos()))
         {
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
-                mpr("당신의 수호 악마는 당신의 공격을 피했다.");
+				mpr("당신의 수호 악마는 당신의 공격을 피했다.");
             else if (!bush_immune(*mon))
             {
                 simple_god_message(

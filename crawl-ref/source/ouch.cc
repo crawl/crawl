@@ -121,7 +121,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     case BEAM_WATER:
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (!hurted && doEffects)
-            mpr("당신은 파도를 떨쳐냈다.");
+			mpr("당신은 파도를 떨쳐냈다.");
         break;
 
     case BEAM_STEAM:
@@ -130,7 +130,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("증기가 당신에게 끔찍한 화상을 입혔다!");
+			mpr("증기가 당신에게 끔찍한 화상을 입혔다!");
             xom_is_stimulated(200);
         }
         break;
@@ -141,7 +141,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("화염이 당신을 끔찍하게 태웠다!");
+			mpr("화염이 당신을 끔찍하게 태웠다!");
             xom_is_stimulated(200);
         }
         break;
@@ -155,7 +155,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("당신은 끔찍한 한기를 느꼈다!");
+			mpr("당신은 끔찍한 한기를 느꼈다!");
             xom_is_stimulated(200);
         }
         break;
@@ -222,7 +222,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("당신은 고통스러운 한기를 느꼈다!");
+			mpr("당신은 고통스러운 한기를 느꼈다!");
             xom_is_stimulated(200);
         }
         break;
@@ -234,7 +234,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("용암이 당신을 끔찍하게 태웠다!");
+			mpr("용암이 당신을 끔찍하게 태웠다!");
             xom_is_stimulated(200);
         }
         break;
@@ -261,7 +261,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("당신은 고통에 몸부림쳤다!");
+			mpr("당신은 고통에 몸부림쳤다!");
             xom_is_stimulated(200);
         }
         break;
@@ -408,7 +408,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (power > 0)
     {
-        mpr("당신은 흡수당한 기분이 들었다.");
+		mpr("당신은 흡수당한 기분이 들었다.");
         xom_is_stimulated(15);
 
         you.attribute[ATTR_XP_DRAIN] += power;
@@ -615,7 +615,7 @@ static void _powered_by_pain(int dam)
         {
             if (you.magic_points < you.max_magic_points)
             {
-                mpr("당신은 고통에 집중했다.");
+				mpr("당신은 고통에 집중했다.");
                 int mp = roll_dice(3, 2 + 3 * level);
                 canned_msg(MSG_GAIN_MAGIC);
                 inc_mp(mp);
@@ -624,11 +624,11 @@ static void _powered_by_pain(int dam)
             break;
         }
         case 2:
-            mpr("당신은 고통에 집중했다.");
+			mpr("당신은 고통에 집중했다.");
             potionlike_effect(POT_MIGHT, level * 20);
             break;
         case 3:
-            mpr("당신은 고통에 집중했다.");
+			mpr("당신은 고통에 집중했다.");
             potionlike_effect(POT_AGILITY, level * 20);
             break;
         }
@@ -652,7 +652,7 @@ static void _maybe_fog(int dam)
                && x_chance_in_y(dam - lower_threshold,
                                 upper_threshold - lower_threshold)))
     {
-        mpr("당신은 어두운 연기를 뿜어냈다.");
+		mpr("당신은 어두운 연기를 뿜어냈다.");
         big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
     }
     else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
@@ -710,7 +710,7 @@ static void _place_player_corpse(bool explode)
         dummy.flags &= MF_EXPLODE_KILL;
 
     if (you.form != transformation::none)
-        mpr("당신이 죽으면서, 당신의 모습이 비틀리고 바뀌었다.");
+		mpr("당신이 죽으면서, 당신의 모습이 비틀리고 바뀌었다.");
 
     place_monster_corpse(dummy, false);
 }
@@ -862,7 +862,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
                 if (!you.duration[DUR_NO_SCROLLS])
-                    mpr("당신은 위협받은 나머지 두루마리를 읽을 능력을 상실했다!");
+					mpr("당신은 위협받은 나머지 두루마리를 읽을 능력을 상실했다!");
 
                 you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
             }
@@ -873,7 +873,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
                 if (!you.duration[DUR_NO_POTIONS])
-                    mpr("당신은 위협받은 나머지 물약을 마실 능력을 상실했다!");
+					mpr("당신은 위협받은 나머지 물약을 마실 능력을 상실했다!");
 
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
             }
@@ -1043,7 +1043,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             if (crawl_state.test || !yesno("Die?", false, 'n'))
             {
-                mpr("원하는 대로.");
+				mpr("원하는 대로.");
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();

@@ -499,7 +499,7 @@ static bool _evoke_item_on_target(actor* target)
 
     if (is_known_empty_wand(*item))
     {
-        mpr("그 마법봉은 텅 비어있다.");
+		mpr("그 마법봉은 텅 비어있다.");
         return false;
     }
 

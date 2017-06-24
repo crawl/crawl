@@ -158,17 +158,17 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         return;
 
     if (feat_is_portal(stair))
-        mpr("당신이 관문을 통과하자, 세상이 당신의 중심으로 소용돌이쳤다.");
+		mpr("당신이 관문을 통과하자, 세상이 당신의 중심으로 소용돌이쳤다.");
     else if (feat_is_escape_hatch(stair))
     {
         if (going_up)
-            mpr("알 수 없는 힘이 당신을 위로 밀어냈다.");
+			mpr("알 수 없는 힘이 당신을 위로 밀어냈다.");
         else
         {
             mprf("You %s downwards.",
                  you.airborne() ? "fly" : "slide");
         }
-        mpr("당신의 뒤에서 출입구가 거칠게 닫혔다.");
+		mpr("당신의 뒤에서 출입구가 거칠게 닫혔다.");
     }
     else if (feat_is_gate(stair))
     {
@@ -292,13 +292,13 @@ static bool _check_stairs(const dungeon_feature_type ftype, bool going_up)
                                                      : CMD_GO_DOWNSTAIRS))
         {
             if (ftype == DNGN_STONE_ARCH)
-                mpr("이 돌로 된 아치의 너머에는 아무것도 없다.");
+				mpr("이 돌로 된 아치의 너머에는 아무것도 없다.");
             else if (ftype == DNGN_ABANDONED_SHOP)
-                mpr("이 상점은 문을 닫은 것 같다.");
+				mpr("이 상점은 문을 닫은 것 같다.");
             else if (going_up)
-                mpr("여기서 위로 올라갈 수는 없다!");
+				mpr("여기서 위로 올라갈 수는 없다!");
             else
-                mpr("여기서 아래로 내려갈 수는 없다!");
+				mpr("여기서 아래로 내려갈 수는 없다!");
             return false;
         }
     }
@@ -361,22 +361,22 @@ static void _rune_effect(dungeon_feature_type ftype)
 #else
             flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
 #endif
-            mpr("바위가 불가사의하게 빛났다!");
+			mpr("바위가 불가사의하게 빛났다!");
             // included in default force_more_message
 
             mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
             big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
             viewwindow();
-            mpr("짙은 연기가 바위로부터 흘러나왔다!");
+			mpr("짙은 연기가 바위로부터 흘러나왔다!");
             // included in default force_more_message
         }
 
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
 
         if (silenced(you.pos()))
-            mpr("문이 활짝 열렸다!");
+			mpr("문이 활짝 열렸다!");
         else
-            mpr("큰 쉿쉿 하는 소리와 함께 문이 활짝 열렸다!");
+			mpr("큰 쉿쉿 하는 소리와 함께 문이 활짝 열렸다!");
         // these are included in default force_more_message
     }
 }
@@ -434,7 +434,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
         if (!is_valid_shaft_level())
         {
             if (known_shaft)
-                mpr("구덩이가 마치 망상이었던 것처럼 사라졌다!");
+				mpr("구덩이가 마치 망상이었던 것처럼 사라졌다!");
             _maybe_destroy_shaft(you.pos());
             return dest;
         }
@@ -475,8 +475,8 @@ static level_id _travel_destination(const dungeon_feature_type how,
         {
             if (known_shaft)
             {
-                mpr("이상하게도, 저 구덩이는 이 계층으로 다시 돌아오는 것 같다.");
-                mpr("시공간 연속성의 압력이 구덩이를 무너뜨렸다!");
+				mpr("이상하게도, 저 구덩이는 이 계층으로 다시 돌아오는 것 같다.");
+				mpr("시공간 연속성의 압력이 구덩이를 무너뜨렸다!");
             }
             _maybe_destroy_shaft(you.pos());
             return dest;
@@ -497,7 +497,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
                                   howfar.c_str());
 
         // Shafts are one-time-use.
-        mpr("구덩이가 허물어지더니 사라졌다.");
+		mpr("구덩이가 허물어지더니 사라졌다.");
         _maybe_destroy_shaft(you.pos());
     }
 
@@ -586,7 +586,7 @@ void floor_transition(dungeon_feature_type how,
     if (how == DNGN_EXIT_DUNGEON)
     {
         you.depth = 0;
-        mpr("당신은 탈출했다!");
+		mpr("당신은 탈출했다!");
 
         if (player_has_orb())
             ouch(INSTANT_DEATH, KILLED_BY_WINNING);
@@ -612,14 +612,14 @@ void floor_transition(dungeon_feature_type how,
     if (old_level.branch == BRANCH_VESTIBULE
         && !is_hell_subbranch(you.where_are_you))
     {
-        mpr("지옥을 방문해 주셔서 감사합니다. 빠른 시일내에 다시 찾아 주세요.");
+		mpr("지옥을 방문해 주셔서 감사합니다. 빠른 시일내에 다시 찾아 주세요.");
     }
 
     if (how == DNGN_EXIT_ABYSS
         || how == DNGN_EXIT_PANDEMONIUM
         || how == DNGN_EXIT_THROUGH_ABYSS)
     {
-        mpr("당신은 관문을 통과했다.");
+		mpr("당신은 관문을 통과했다.");
         take_note(Note(NOTE_MESSAGE, 0, 0,
             how == DNGN_EXIT_ABYSS ? "Escaped the Abyss" :
             how == DNGN_EXIT_PANDEMONIUM ? "Escaped Pandemonium" :
@@ -653,14 +653,14 @@ void floor_transition(dungeon_feature_type how,
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
             if (!you.runes[RUNE_ABYSSAL] && you.depth >= ABYSSAL_RUNE_MIN_LEVEL)
-                mpr("이 계층에서는 심연의 룬을 찾을 수 있다.");
+				mpr("이 계층에서는 심연의 룬을 찾을 수 있다.");
             break;
         }
         if (!forced)
-            mpr("당신은 어비스에 입장했다!");
+			mpr("당신은 어비스에 입장했다!");
 
-        mpr("당신은 돌아가려면 탈출구를 찾아야만 한다.");
-        mpr("몬스터를 사냥하는 것은 어비스가 당신에게 길을 허락하게 할 것이다.");
+		mpr("당신은 돌아가려면 탈출구를 찾아야만 한다.");
+		mpr("몬스터를 사냥하는 것은 어비스가 당신에게 길을 허락하게 할 것이다.");
         if (have_passive(passive_t::slow_abyss))
         {
             mprf(MSGCH_GOD, you.religion,
@@ -678,7 +678,7 @@ void floor_transition(dungeon_feature_type how,
 
     case BRANCH_PANDEMONIUM:
         if (old_level.branch == BRANCH_PANDEMONIUM)
-            mpr("당신은 판데모니엄의 다른 지역으로 이동했다.");
+			mpr("당신은 판데모니엄의 다른 지역으로 이동했다.");
         break;
 
     default:
@@ -732,7 +732,7 @@ void floor_transition(dungeon_feature_type how,
 
     // Warn Formicids if they cannot shaft here
     if (you.species == SP_FORMICID && !is_valid_shaft_level())
-        mpr("조심하라. 이 계층에선 당신 스스로 구덩이를 팔 수 없다.");
+		mpr("조심하라. 이 계층에선 당신 스스로 구덩이를 팔 수 없다.");
 
     const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
 

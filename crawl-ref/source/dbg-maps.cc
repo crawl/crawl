@@ -495,7 +495,7 @@ void mapstat_generate_stats()
 
     _dungeon_places();
     clear_messages();
-    mpr("던전의 지도를 생성한다");
+	mpr("던전의 지도를 생성한다");
     printf("Generating map stats for %d iteration(s) of %d level(s) over "
            "%d branch(es).\n", SysEnv.map_gen_iters,
            (int) generated_levels.size(), branch_count);

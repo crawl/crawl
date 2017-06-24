@@ -129,7 +129,7 @@ public:
         }
 
         if (ddoor)
-                     mpr("당신은 메스꺼움을 느꼈다.");
+			mpr("당신은 메스꺼움을 느꼈다.");
         else if (you.can_potion_heal()
                  || !is_potion
                  || you.duration[DUR_POISONING]
@@ -141,7 +141,7 @@ public:
             canned_msg(MSG_GAIN_HEALTH);
         }
         else
-                     mpr("그건 이상하게도 효과가 없는 것 같은 맛이었다.");
+			mpr("그건 이상하게도 효과가 없는 것 같은 맛이었다.");
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])
             you.redraw_hit_points = true;
@@ -190,12 +190,12 @@ public:
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
-                     mpr("당신은 메스꺼움을 느꼈다.");
+			mpr("당신은 메스꺼움을 느꼈다.");
             return false;
         }
         if (!you.can_potion_heal() && is_potion)
         {
-                     mpr("그건 이상하게도 효과가 없는 것 같은 맛이었다.");
+			mpr("그건 이상하게도 효과가 없는 것 같은 맛이었다.");
             return false;
         }
 
@@ -207,7 +207,7 @@ public:
         inc_hp(amount);
         if (is_potion)
             print_potion_heal_message();
-              mpr("당신의 상태가 훨씬 나아졌다.");
+		mpr("당신의 상태가 훨씬 나아졌다.");
         return true;
     }
 };
@@ -237,7 +237,7 @@ public:
     {
         if (you.species == SP_VAMPIRE)
         {
-                     mpr("음 - 신선한 피!");
+			mpr("음 - 신선한 피!");
             lessen_hunger(pow, true);
         }
         else
@@ -432,7 +432,7 @@ public:
     bool quaff(bool was_known) const override
     {
         if (player_res_poison() >= 1)
-                     mpr("당신은 약간의 메스꺼움을 느꼈다.");
+			mpr("당신은 약간의 메스꺼움을 느꼈다.");
         else if (effect(was_known))
             xom_is_stimulated(100 / _xom_factor(was_known));
         return true;
@@ -454,11 +454,11 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         debuff_player();
-              mpr("당신은 마력적으로 중화되었음을 느꼈다.");
+		mpr("당신은 마력적으로 중화되었음을 느꼈다.");
         const int old_contam_level = get_contamination_level();
         contaminate_player(-1 * (1000 + random2(4000)));
         if (old_contam_level && old_contam_level == get_contamination_level())
-                     mpr("당신의 마법 오염이 약간 줄어들었음을 느꼈다.");
+			mpr("당신의 마법 오염이 약간 줄어들었음을 느꼈다.");
         return true;
     }
 };
@@ -486,7 +486,7 @@ public:
             return true;
         }
 
-              mpr("당신은 잠시 건강이 악화된 기분이 들었다.");
+		mpr("당신은 잠시 건강이 악화된 기분이 들었다.");
         return false;
     }
 };
@@ -580,13 +580,13 @@ public:
 
         if (you.experience_level < you.get_max_xl())
         {
-                     mpr("당신의 경험이 늘어났다!");
+			mpr("당신의 경험이 늘어났다!");
             // Defer calling level_change() until later in drink() to prevent
             // SIGHUP abuse.
             adjust_level(1, true);
         }
         else
-                     mpr("기억의 홍수가 당신의 머릿속으로 쏟아져 들어온다.");
+			mpr("기억의 홍수가 당신의 머릿속으로 쏟아져 들어온다.");
         // these are included in default force_more_message
         skill_menu(SKMF_EXPERIENCE, 750 * you.experience_level);
         return true;
@@ -618,7 +618,7 @@ public:
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
         inc_mp(POT_MAGIC_MP);
-              mpr("마력이 당신의 몸속으로 흘러 들어왔다.");
+		mpr("마력이 당신의 몸속으로 흘러 들어왔다.");
         return true;
     }
 };
@@ -643,7 +643,7 @@ public:
     {
         if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         {
-                     mpr("당신은 약간 거슬리는 기분을 느꼈다.");
+			mpr("당신은 약간 거슬리는 기분을 느꼈다.");
             return false;
         }
 
@@ -756,7 +756,7 @@ public:
             did_god_conduct(DID_CHAOS, 10, was_known);
         }
         else
-                     mpr("당신은 잠깐 나무가 된 기분이 들었다.");
+			mpr("당신은 잠깐 나무가 된 기분이 들었다.");
         return true;
     }
 };
@@ -787,7 +787,7 @@ public:
 
     bool effect(bool = true, int = 40, bool = true) const override
     {
-              mpr("당신은 극도로 기묘한 기분을 느꼈다.");
+		mpr("당신은 극도로 기묘한 기분을 느꼈다.");
         bool mutated = false;
         int remove_mutations = random_range(MIN_REMOVED, MAX_REMOVED);
         int add_mutations = random_range(MIN_ADDED, MAX_ADDED);
@@ -840,7 +840,7 @@ public:
 
     bool effect(bool=true, int=40, bool=true) const override
     {
-              mpr("이 액체는 무언가 굉장히 잘못됐다.");
+		mpr("이 액체는 무언가 굉장히 잘못됐다.");
         bool success = false;
         for (int i = 0; i < NUM_STATS; ++i)
             if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
@@ -897,7 +897,7 @@ public:
     {
         if (you.species == SP_VAMPIRE)
         {
-                     mpr("이건 굉장히 맛있다.");
+			mpr("이건 굉장히 맛있다.");
             lessen_hunger(pow, true);
         }
         else
@@ -1026,11 +1026,11 @@ public:
         if (you.species == SP_VAMPIRE
             || you.get_mutation_level(MUT_CARNIVOROUS) == 3)
         {
-                     mpr("어 - 이 물약은 매우 걸쭉하다!");
+			mpr("어 - 이 물약은 매우 걸쭉하다!");
         }
         else
         {
-                     mpr("이 물약은 매우 걸쭉하다!");
+			mpr("이 물약은 매우 걸쭉하다!");
             lessen_hunger(6000, true);
         }
         return true;
@@ -1060,7 +1060,7 @@ public:
     }
     bool effect(bool=true, int=40, bool=true) const override
     {
-              mpr("물과도 같은 맛이 난다.");
+		mpr("물과도 같은 맛이 난다.");
         return true;
     }
 };
@@ -1116,7 +1116,7 @@ public:
 
         // Give a message if no message otherwise.
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
-                     mpr("당신은 상쾌한 기분이 들었다.");
+			mpr("당신은 상쾌한 기분이 들었다.");
         return nothing_happens;
     }
 };
@@ -1169,7 +1169,7 @@ public:
 
     bool effect(bool=true, int=40, bool=true) const override
     {
-              mpr("이건 매우 깔끔한 맛이다.");
+		mpr("이건 매우 깔끔한 맛이다.");
         bool mutated = false;
         for (int i = 0; i < 7; i++)
         {
@@ -1208,14 +1208,14 @@ public:
                                     true, false, false, true);
         if (undead_mutation_rot())
         {
-                     mpr("당신은 내면의 죽음을 느꼈다.");
+			mpr("당신은 내면의 죽음을 느꼈다.");
             return mutated;
         }
 
         if (mutated)
-                     mpr("당신은 환상적인 기분이 들었다!");
+			mpr("당신은 환상적인 기분이 들었다!");
         else
-                     mpr("당신은 잠깐 환상적인 기분이 들었다.");
+			mpr("당신은 잠깐 환상적인 기분이 들었다.");
         learned_something_new(HINT_YOU_MUTATED);
         return mutated;
     }
@@ -1255,7 +1255,7 @@ public:
     }
     bool effect(bool=true, int=40, bool=true) const override
     {
-              mpr("이 물약은 유통기한이 한참 지났다.");
+		mpr("이 물약은 유통기한이 한참 지났다.");
         return true;
     }
 };

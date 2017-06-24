@@ -745,7 +745,7 @@ void handle_behaviour(monster* mon)
                     || isPacified)
                 {
 #ifdef DEBUG_PATHFIND
-                                   mpr("이동이 너무 길었다! 이동을 중지한다.");
+					mpr("이동이 너무 길었다! 이동을 중지한다.");
 #endif
                     mon->travel_path.clear();
                     mon->travel_target = MTRAV_NONE;

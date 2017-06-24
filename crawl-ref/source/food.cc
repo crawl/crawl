@@ -160,7 +160,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     {
         if (!silent)
         {
-            mpr("당신은 먹을 수 없다.");
+			mpr("당신은 먹을 수 없다.");
             crawl_state.zero_turns_taken();
         }
         return false;
@@ -199,7 +199,7 @@ bool eat_food(int slot)
     }
 
     if (you.species == SP_VAMPIRE)
-        mpr("여기엔 흡수할 것이 없다!");
+		mpr("여기엔 흡수할 것이 없다!");
 
     return prompt_eat_item(slot);
 }
@@ -249,7 +249,7 @@ bool food_change(bool initial)
                 if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
                 {
                     print_stats();
-                    mpr("당신은 지금 당장은 더 피를 소화할 수 없다.");
+					mpr("당신은 지금 당장은 더 피를 소화할 수 없다.");
                 }
             }
             else if (you.duration[DUR_TRANSFORMATION])
@@ -359,7 +359,7 @@ static void _finished_eating_message(food_type type)
     {
         if (food_is_meaty(type))
         {
-            mpr("우웩 - 당신에겐 채식이 필요하다!");
+			mpr("우웩 - 당신에겐 채식이 필요하다!");
             return;
         }
     }
@@ -367,7 +367,7 @@ static void _finished_eating_message(food_type type)
     {
         if (type == FOOD_MEAT_RATION)
         {
-            mpr("그 빵 식량은 정말 맛있었다!");
+			mpr("그 빵 식량은 정말 맛있었다!");
             return;
         }
     }
@@ -376,7 +376,7 @@ static void _finished_eating_message(food_type type)
     {
         if (food_is_veggie(type))
         {
-            mpr("우웩 - 당신에겐 고기가 필요하다!");
+			mpr("우웩 - 당신에겐 고기가 필요하다!");
             return;
         }
     }
@@ -385,7 +385,7 @@ static void _finished_eating_message(food_type type)
         switch (type)
         {
         case FOOD_BREAD_RATION:
-            mpr("그 빵 식량은 정말 맛있었다!");
+			mpr("그 빵 식량은 정말 맛있었다!");
             return;
         case FOOD_FRUIT:
         {
@@ -401,7 +401,7 @@ static void _finished_eating_message(food_type type)
     }
 
     if (type == FOOD_ROYAL_JELLY)
-        mpr("이 로열 젤리는 맛있다!");
+		mpr("이 로열 젤리는 맛있다!");
 }
 
 // Returns which of two food items is older (true for first, else false).
@@ -598,9 +598,9 @@ static void _chunk_nutrition_message(int nutrition)
 {
     int perc_nutrition = nutrition * 100 / CHUNK_BASE_NUTRITION;
     if (perc_nutrition < 15)
-        mpr("이것은 극도로 불만족스럽다.");
+		mpr("이것은 극도로 불만족스럽다.");
     else if (perc_nutrition < 35)
-        mpr("별로 만족스럽지 않았다.");
+		mpr("별로 만족스럽지 않았다.");
 }
 
 static int _apply_herbivore_nutrition_effects(int nutrition)
@@ -677,7 +677,7 @@ static void _eat_chunk(item_def& food)
     switch (chunk_effect)
     {
     case CE_MUTAGEN:
-        mpr("이 고기는 정말 이상한 맛이다.");
+		mpr("이 고기는 정말 이상한 맛이다.");
         mutate(RANDOM_MUTATION, "mutagenic meat");
         did_god_conduct(DID_DELIBERATE_MUTATING, 10);
         xom_is_stimulated(100);
@@ -990,7 +990,7 @@ static bool _vampire_consume_corpse(item_def& corpse)
 
     if (!mons_has_blood(mons_type))
     {
-        mpr("이 몸뚱이에는 피가 하나도 없다!");
+		mpr("이 몸뚱이에는 피가 하나도 없다!");
         return false;
     }
 
@@ -1025,7 +1025,7 @@ static void _heal_from_food(int hp_amt)
 
     if (player_rotted())
     {
-        mpr("더 건강해진 것 같다.");
+		mpr("더 건강해진 것 같다.");
         unrot_hp(1);
     }
 
@@ -1087,7 +1087,7 @@ void handle_starvation()
                 });
             if (it != end(you.inv))
             {
-                mpr("당신이 굶주릴수록 무언가를 먹어야 할 것이다.");
+				mpr("당신이 굶주릴수록 무언가를 먹어야 할 것이다.");
                 eat_item(*it);
                 return;
             }

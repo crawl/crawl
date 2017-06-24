@@ -1230,7 +1230,7 @@ bool melee_attack::player_gets_aux_punch()
                                        + attacker_shield_tohit_penalty))
     {
         return false;
-    }    
+    }	
     // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though! + formicid is exeption too
     if (you.species != SP_OCTOPODE && you.species != SP_FORMICID
@@ -1411,7 +1411,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                               * drain);
                 if (drain)
                 {
-                    mpr("당신의 활력이 쇠하는게 느껴졌다.");
+					mpr("당신의 활력이 쇠하는게 느껴졌다.");
                     inc_mp(drain);
                 }
             }
@@ -1875,7 +1875,7 @@ void melee_attack::rot_defender(int amount)
         if (needs_message)
         {
             if (defender->is_player())
-                mpr("당신의 살점이 썩어가는 것이 느껴졌다!");
+				mpr("당신의 살점이 썩어가는 것이 느껴졌다!");
             else if (defender->is_monster() && defender_visible)
                 mprf("%s looks less resilient!", defender_name(false).c_str());
         }
@@ -1932,7 +1932,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (wpn_brand == SPWPN_FLAMING)
     {
         if (defender_visible)
-            mpr("불이 상처를 지지고 있다!");
+			mpr("불이 상처를 지지고 있다!");
         return false;
     }
 
@@ -2777,7 +2777,7 @@ void melee_attack::mons_apply_attack_flavour()
         // Doesn't affect the poison-immune.
         if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
         {
-            mpr("당신의 신성한 기운이 당신을 독으로부터 보호했다!");
+			mpr("당신의 신성한 기운이 당신을 독으로부터 보호했다!");
             break;
         }
         else if (defender->res_poison() >= 3)
@@ -3189,7 +3189,7 @@ void melee_attack::emit_foul_stench()
             && !cell_is_solid(mon->pos())
             && !cloud_at(mon->pos()))
         {
-            mpr("당신은 부패 구름을 내뿜었다!");
+			mpr("당신은 부패 구름을 내뿜었다!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
         }
     }
@@ -3248,7 +3248,7 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_final_multipliers(dmg);
         int hurt = attacker->apply_ac(dmg);
 
-        mpr("당신은 맹렬하게 반격했다!!");
+		mpr("당신은 맹렬하게 반격했다!!");
         dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
         if (hurt <= 0)
         {
@@ -3464,7 +3464,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
 }
 
 bool melee_attack::aux_successful(unarmed_attack_type atk)
-{    
+{	
     int wildlevel = you.wild_level();
     if (atk != UNAT_CONSTRICT && (you.strength() + you.dex() + wildlevel * 10) <= random2(50))
         return false;    
@@ -3472,7 +3472,7 @@ bool melee_attack::aux_successful(unarmed_attack_type atk)
     bool successful;
     unsigned int aux_roll_count = 1 + wildlevel;
     for (unsigned int i = 0; i < aux_roll_count; ++i)
-    {        
+    {		
         switch (atk)
         {
         case UNAT_PECK:
@@ -3496,10 +3496,10 @@ bool melee_attack::aux_successful(unarmed_attack_type atk)
         }
 
         if (successful)
-        {            
+        {			
             return true;
         }
-    }    
+	}	
     return false;
 }
 
@@ -3514,7 +3514,7 @@ int melee_attack::get_aux_count(unarmed_attack_type atk)
     {
         count = you.has_usable_offhand() ? 2 : 0;
         item_def* wp = you.slot_item(EQ_WEAPON);
-        count += you.hands_reqd(*wp) == HANDS_TWO ? 0 : 1;        
+        count += you.hands_reqd(*wp) == HANDS_TWO ? 0 : 1;		
     }
 
     return count;

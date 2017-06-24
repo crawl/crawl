@@ -740,7 +740,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
-                     mpr("보이지 않는 무언가가 물에서 솟구쳐 나왔다.");
+			mpr("보이지 않는 무언가가 물에서 솟구쳐 나왔다.");
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
         break;
@@ -863,7 +863,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_GRASPING_ROOTS_SOURCE:
         if (!quiet && you.see_cell(pos()))
-                     mpr("휘감고 있던 뿌리가 다시 대지로 돌아갔다.");
+			mpr("휘감고 있던 뿌리가 다시 대지로 돌아갔다.");
 
         // Done here to avoid duplicate messages
         if (you.duration[DUR_GRASPING_ROOTS])
@@ -1170,7 +1170,7 @@ static bool _apply_grasping_roots(monster* mons)
             if (x_chance_in_y(10, 50 - ai->evasion()))
             {
                 if (ai->is_player())
-                                   mpr("뿌리가 당신을 휘감으려 했지만, 당신은 민첩하게 피해냈다.");
+					mpr("뿌리가 당신을 휘감으려 했지만, 당신은 민첩하게 피해냈다.");
                 continue;
             }
 
@@ -1249,7 +1249,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
             if (!do_resist)
             {
                 const coord_def oldpos = you.pos();
-                            mpr("노래가 지닌 매력이 당신을 다가오게 만들었다.");
+				mpr("노래가 지닌 매력이 당신을 다가오게 만들었다.");
 
                 if (swapping)
                 {
@@ -1320,7 +1320,7 @@ static void _merfolk_avatar_song(monster* mons)
             // during a song that has already summoned drowned souls (though is
             // technically possible if some existing ally gains HD instead)
             if (you.see_cell(mons->pos()))
-                            mpr("다른 이들이 접근함에 따라, 그림자의 형상이 생겨나기 시작했다.");
+				mpr("다른 이들이 접근함에 따라, 그림자의 형상이 생겨나기 시작했다.");
             mons->props.erase("merfolk_avatar_call");
         }
 
@@ -1658,7 +1658,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         plant->spore_cooldown = 20;
 
                         if (you.see_cell(*ai) && you.see_cell(pos()))
-                                                 mpr("발리스토마이셋이 발리스토마이셋 포자를 만들어냈다.");
+							mpr("발리스토마이셋이 발리스토마이셋 포자를 만들어냈다.");
 
                         // Decrease the count and maybe become inactive
                         // again.
@@ -1752,7 +1752,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 if (you.can_see(*this))
                     simple_monster_message(*this, " suddenly becomes enraged!");
                 else
-                                   mpr("당신은 먼 곳에서, 폭력적으로 때려눕히는 소리를 들었다.");
+					mpr("당신은 먼 곳에서, 폭력적으로 때려눕히는 소리를 들었다.");
             }
 
             attitude = ATT_HOSTILE;

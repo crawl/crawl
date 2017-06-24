@@ -359,7 +359,7 @@ bool fire_warn_if_impossible(bool silent)
     if (you.species == SP_FELID)
     {
         if (!silent)
-                     mpr("당신은 그것들을 던질 수 있을 만큼 꽉 잡고 있을 수 없다.");
+			mpr("당신은 그것들을 던질 수 있을 만큼 꽉 잡고 있을 수 없다.");
         return true;
     }
 

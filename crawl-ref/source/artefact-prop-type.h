@@ -61,6 +61,6 @@ enum artefact_prop_type
     ARTP_SLOW,
     ARTP_FRAGILE,
     ARTP_SHIELDING,
-    ARTP_WILD,
+	ARTP_WILD,
     ARTP_NUM_PROPERTIES
 };
