@@ -270,6 +270,36 @@ MAP
    .....
 ENDMAP
 
+NAME:   nzn_m_altar
+DEPTH:  D:2-
+TAGS:   no_vmirror no_rotate
+NSUBST: 0 = 2:0 / 2:.
+MAP
+  xxxxxxxxxxx
+ xxx..xxx..xxx
+xxx....x....xxx
+xx..xx...xx..xx
+x..xxxxCxxxx..x
+x@xxxxxxxxxxx@x
+ENDMAP
+
+NAME:   nzn_z_altar
+DEPTH:  D:2-
+TAGS:   no_rotate no_vmirror no_hmirror
+MAP
+xxxxxxxxxxxx
+@..........x
+xxxxxxxx..xx
+     xx..xx
+    xx..xx
+   xx.Cxx
+  xx..xx
+ xx..xx
+xx..xxxxxxxx
+x..........@
+xxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # III   Altars to minor gods
 #
