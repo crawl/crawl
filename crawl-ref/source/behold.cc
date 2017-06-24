@@ -28,14 +28,14 @@ void player::add_beholder(const monster& mon, bool axe)
                      mon.name(DESC_THE).c_str());
             }
             else
-				mpr("노래가 기묘하게 조용해졌고, 당신에게 아무런 효과도 미치지 못한다.");
+                mpr("노래가 기묘하게 조용해졌고, 당신에게 아무런 효과도 미치지 못한다.");
         }
         else
         {
             if (can_see(mon))
                 mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
             else
-				mpr("매혹된 대상이 당신에게 갖는 관심이 줄어든 것 같다!");
+                mpr("매혹된 대상이 당신에게 갖는 관심이 줄어든 것 같다!");
         }
 
         return;
@@ -141,14 +141,14 @@ static void _removed_beholder_msg(const monster *mons)
                      mon.name(DESC_THE).c_str());
             }
             else
-				mpr("무언가의 노래가 기묘한 침묵으로 중단되었다.");
+                mpr("무언가의 노래가 기묘한 침묵으로 중단되었다.");
         }
         else
         {
             if (you.can_see(mon))
                 mprf("%s's is no longer quite as mesmerising!", mon.name(DESC_THE).c_str());
             else
-				mpr("매혹된 대상이 당신에게 갖는 관심이 줄어든 것 같다!");
+                mpr("매혹된 대상이 당신에게 갖는 관심이 줄어든 것 같다!");
         }
 
         return;
@@ -164,7 +164,7 @@ static void _removed_beholder_msg(const monster *mons)
                      mon.name(DESC_THE).c_str());
             }
             else
-				mpr("정적이 당신의 정신을 맑게 만들었다.");
+                mpr("정적이 당신의 정신을 맑게 만들었다.");
             return;
         }
 
@@ -177,9 +177,9 @@ static void _removed_beholder_msg(const monster *mons)
     }
 
     if (mons_is_siren_beholder(mon))
-		mpr("무언가가 노래하길 멈추었다.");
+        mpr("무언가가 노래하길 멈추었다.");
     else
-		mpr("매혹된 대상이 당신에게 거의 관심을 갖지 않는다!");
+        mpr("매혹된 대상이 당신에게 거의 관심을 갖지 않는다!");
 }
 
 // Update all beholders' status after changes.

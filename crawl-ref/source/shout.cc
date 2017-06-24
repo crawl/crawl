@@ -535,10 +535,10 @@ static int _issue_orders_prompt()
         }
 
         mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-		mpr("                   r - 후퇴!                s - 공격 중지.");
-		mpr("                   g - 지역 방어.           f - 날 따르라.");
+              mpr("                   r - 후퇴!                s - 공격 중지.");
+              mpr("                   g - 지역 방어.           f - 날 따르라.");
     }
-	mpr(" 나머지 - 취소.");
+       mpr(" 나머지 - 취소.");
 
     if (you.berserk())
         flush_prev_message(); // buffer doesn't get flushed otherwise
@@ -574,15 +574,15 @@ static bool _issue_order(int keyn, int &mons_targd)
             {
                 // Don't reset patrol points for 'Stop fighting!'
                 _set_allies_patrol_point(true);
-				mpr("날 따르라!");
+                            mpr("날 따르라!");
             }
             else
-				mpr("공격 중지!");
+                            mpr("공격 중지!");
             break;
 
         case 'w':
         case 'g':
-			mpr("지역을 방어하라!");
+                     mpr("지역을 방어하라!");
             mons_targd = MHITNOT;
             _set_allies_patrol_point();
             break;
@@ -657,7 +657,7 @@ static bool _issue_order(int keyn, int &mons_targd)
 
             if (targ.isValid)
             {
-				mpr("물러서라!");
+                            mpr("물러서라!");
                 mons_targd = MHITNOT;
             }
 
@@ -685,7 +685,7 @@ void issue_orders()
 
     if (you.cannot_speak() && you.berserk())
     {
-		mpr("당신은 명령을 내리기엔 너무 광폭해져 있고, 소리지를 수 도 없다!");
+              mpr("당신은 명령을 내리기엔 너무 광폭해져 있고, 소리지를 수 도 없다!");
         return;
     }
 
@@ -707,7 +707,7 @@ void issue_orders()
     _set_friendly_foes(keyn == 's' || keyn == 'w');
 
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
-		mpr("공격!");
+              mpr("공격!");
 }
 
 /**
@@ -740,7 +740,7 @@ void yell(const actor* mon)
             }
         }
         else
-			mpr("당신은 소리를 낼 수 없다!");
+                     mpr("당신은 소리를 낼 수 없다!");
 
         return;
     }

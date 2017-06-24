@@ -48,7 +48,7 @@ void debug_dump_levgen()
 
     if (crawl_state.generating_level)
     {
-		mpr("층 생성 중.");
+        mpr("층 생성 중.");
         method = env.level_build_method;
         type   = comma_separated_line(env.level_layout_types.begin(),
                                       env.level_layout_types.end(), ", ");
@@ -80,7 +80,7 @@ void debug_dump_levgen()
 
     if (!env.level_vaults.empty())
     {
-		mpr("층 모음:");
+        mpr("층 모음:");
         for (auto &vault : env.level_vaults)
         {
             string vault_name = vault->map.name;
@@ -415,7 +415,7 @@ void debuglog(const char *format, ...)
 #ifndef DEBUG_DIAGNOSTICS
 void wizard_toggle_dprf()
 {
-	mpr("디버그판에서만 분석 메시지의 출력이 가능하다.");
+    mpr("디버그판에서만 분석 메시지의 출력이 가능하다.");
 }
 #else
 // Be sure to change enum diag_type in mpr.h to match.

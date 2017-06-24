@@ -651,7 +651,7 @@ static int _choose_inventory_deck(const char* prompt)
 
     if (!is_deck(you.inv[slot]))
     {
-		mpr("그건 카드뭉치가 아니다!");
+        mpr("그건 카드뭉치가 아니다!");
         return -1;
     }
 
@@ -686,7 +686,7 @@ bool deck_deal()
     CrawlHashTable &props = deck.props;
     if (props[STACKED_KEY].get_bool())
     {
-		mpr("그 덱은 카드를 뽑기에는 무작위성이 부족하다.");
+        mpr("그 덱은 카드를 뽑기에는 무작위성이 부족하다.");
         crawl_state.zero_turns_taken();
         return false;
     }
@@ -695,7 +695,7 @@ bool deck_deal()
     _deck_ident(deck);
 
     if (num_cards == 1)
-		mpr("그 덱에는 카드 한 장만이 남아있다!");
+        mpr("그 덱에는 카드 한 장만이 남아있다!");
     else if (num_cards < 4)
         mprf("The deck only has %d cards.", num_cards);
 
@@ -717,7 +717,7 @@ bool deck_deal()
     // Nemelex doesn't like dealers with inadequate decks.
     if (num_to_deal < 4)
     {
-		mpr("네멜렉스는 당신이 카드를 마저 뽑을 수 있도록 다른 카드들을 주었다.");
+        mpr("네멜렉스는 당신이 카드를 마저 뽑을 수 있도록 다른 카드들을 주었다.");
         draw_from_deck_of_punishment(true);
     }
 
@@ -839,11 +839,11 @@ bool deck_stack()
     const int num_cards    = cards_in_deck(deck);
 
     if (num_cards == 1)
-		mpr("그 덱에는 카드 한 장만이 남아있다!");
+        mpr("그 덱에는 카드 한 장만이 남아있다!");
     else if (num_cards < 5)
         mprf("The deck only has %d cards.", num_cards);
     else if (num_cards == 5)
-		mpr("그 덱에는 정확히 다섯 장의 카드가 있다.");
+        mpr("그 덱에는 정확히 다섯 장의 카드가 있다.");
     else
     {
         mprf("You draw the first five cards out of %d and discard the rest.",
@@ -999,7 +999,7 @@ bool draw_three(int slot)
     if (num_cards == 1)
     {
         // Only one card to draw, so just draw it.
-		mpr("그 덱에는 카드 한 장만이 남아있다!");
+        mpr("그 덱에는 카드 한 장만이 남아있다!");
         evoke_deck(deck);
         return true;
     }
@@ -1023,7 +1023,7 @@ bool draw_three(int slot)
     {
         if (need_prompt_redraw)
         {
-			mpr("당신은 카드를 뽑는다... (한 장 뽑기, ?를 눌러 설명 확인)");
+            mpr("당신은 카드를 뽑는다... (한 장 뽑기, ?를 눌러 설명 확인)");
             for (int i = 0; i < num_to_draw; ++i)
             {
                 msg::streams(MSGCH_PROMPT)
@@ -1334,7 +1334,7 @@ static void _shaft_card(int power, deck_rarity_type rarity)
         {
             place_specific_trap(you.pos(), TRAP_SHAFT);
             trap_at(you.pos())->reveal();
-			mpr("당신의 발밑에 구덩이가 나타났다!");
+            mpr("당신의 발밑에 구덩이가 나타났다!");
             did_something = true;
         }
 
@@ -1379,7 +1379,7 @@ static void _stairs_card(int /*power*/, deck_rarity_type /*rarity*/)
 
     if (stairs_avail.empty())
     {
-		mpr("움직일 계단이 없다.");
+        mpr("움직일 계단이 없다.");
         return;
     }
 
@@ -1423,7 +1423,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         {
             done_prompt = true;
             mpr(prompt);
-			mpr("당신은 강한 엔트로피를 내뿜고 있다!");
+            mpr("당신은 강한 엔트로피를 내뿜고 있다!");
             apply_visible_monsters([](monster& mons)
             {
                 return !mons.wont_attack()
@@ -1544,11 +1544,11 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     }
 
     if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
-		mpr("당신과 당신의 마력이 빠르게 재생하기 시작했다.");
+        mpr("당신과 당신의 마력이 빠르게 재생하기 시작했다.");
     else if (you.duration[DUR_ELIXIR_HEALTH])
-		mpr("당신은 빠르게 재생하기 시작했다.");
+        mpr("당신은 빠르게 재생하기 시작했다.");
     else
-		mpr("당신의 마력이 빠르게 재생되기 시작했다.");
+        mpr("당신의 마력이 빠르게 재생되기 시작했다.");
 
     apply_visible_monsters([=](monster& mon)
     {
@@ -1574,7 +1574,7 @@ static void _godly_wrath()
             return; // Stop once we find a god willing to punish the player.
     }
 
-	mpr("당신은 가까스로 신의 관심을 피했다...");
+    mpr("당신은 가까스로 신의 관심을 피했다...");
 }
 
 static void _summon_demon_card(int power, deck_rarity_type rarity)
@@ -1617,13 +1617,13 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
                                   you.pos(), MHITYOU, MG_AUTOFOE)
                         .set_summoned(&you, 5 - power_level, 0)))
     {
-		mpr("당신은 연기를 보고 있다.");
+        mpr("당신은 연기를 보고 있다.");
     }
     else if (hostile
              && mons_class_flag(dct, M_INVIS)
              && !you.can_see_invisible())
     {
-		mpr("당신은 친근하지 않은 무언가를 감지했다.");
+        mpr("당신은 친근하지 않은 무언가를 감지했다.");
     }
 
     _friendly(dct2, 5 - power_level);
@@ -1676,7 +1676,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 
     if (!mon)
     {
-		mpr("당신은 연기를 보고 있다.");
+        mpr("당신은 연기를 보고 있다.");
         return;
     }
 
@@ -1771,7 +1771,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     }
 
     if (hostile_invis)
-		mpr("당신은 친근하지 않은 무언가를 감지했다.");
+        mpr("당신은 친근하지 않은 무언가를 감지했다.");
 }
 
 static void _summon_rangers(int power, deck_rarity_type rarity)
@@ -1884,7 +1884,7 @@ static void _cloud_card(int power, deck_rarity_type rarity)
     }
 
     if (something_happened)
-		mpr("구름이 당신의 주위에 생겨났다!");
+        mpr("구름이 당신의 주위에 생겨났다!");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }
@@ -2015,7 +2015,7 @@ static void _wild_magic_card(int power, deck_rarity_type rarity)
         for (int i = 0; i < num_affected; ++i)
             mp += random2(5);
 
-		mpr("당신은 몰려오는 마력을 느꼈다.");
+        mpr("당신은 몰려오는 마력을 느꼈다.");
         if (mp && you.magic_points < you.max_magic_points)
         {
             inc_mp(mp);
@@ -2104,7 +2104,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     case CARD_FAMINE:
         if (you_foodless())
-			mpr("당신은 의기양양해졌다.");
+            mpr("당신은 의기양양해졌다.");
         else
             set_hunger(min(you.hunger, HUNGER_STARVING / 2), true);
         break;
@@ -2113,7 +2113,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
             you.transform_uncancellable = true;
         else
-			mpr("당신은 순간적으로 꿀꿀거리고 싶은 충동에 휩싸였다.");
+            mpr("당신은 순간적으로 꿀꿀거리고 싶은 충동에 휩싸였다.");
         break;
 
 #if TAG_MAJOR_VERSION == 34
@@ -2154,7 +2154,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_FEAST:
     case CARD_CURSE:
     case CARD_DOWSING:
-		mpr("이런 종류의 카드는 더는 존재하지 않는다!");
+        mpr("이런 종류의 카드는 더는 존재하지 않는다!");
         break;
 #endif
 

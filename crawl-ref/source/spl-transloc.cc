@@ -130,7 +130,7 @@ void uncontrolled_blink(bool override_stasis)
     if (!random_near_space(&you, you.pos(), target)
              && !random_near_space(&you, you.pos(), target, true))
     {
-		mpr("당신은 순간적으로 초조한 기분이 들었다.");
+        mpr("당신은 순간적으로 초조한 기분이 들었다.");
         return;
     }
 
@@ -267,14 +267,14 @@ void wizard_blink()
     if (!in_bounds(beam.target))
     {
         clear_messages();
-		mpr("지도 끝으로는 순간이동할 수 없다.");
+        mpr("지도 끝으로는 순간이동할 수 없다.");
         return wizard_blink();
     }
 
     if (monster_at(beam.target))
     {
         clear_messages();
-		mpr("몬스터 내부로는 순간이동할 수 없다.");
+        mpr("몬스터 내부로는 순간이동할 수 없다.");
         return wizard_blink();
     }
 
@@ -333,7 +333,7 @@ spret_type frog_hop(bool fail)
             return SPRET_ABORT;
         if (grid_distance(you.pos(), target) > hop_range)
         {
-			mpr("사정거리 밖이다!"); // ! targeting
+            mpr("사정거리 밖이다!"); // ! targeting
             continue;
         }
         break;
@@ -348,7 +348,7 @@ spret_type frog_hop(bool fail)
     // invisible monster that the targeter didn't know to avoid, or similar
     if (target.origin())
     {
-		mpr("당신은 뛰어 오르려고 했지만, 내려앉을 공간이 없었다!");
+        mpr("당신은 뛰어 오르려고 했지만, 내려앉을 공간이 없었다!");
         // TODO: what to do here?
         return SPRET_SUCCESS; // of a sort
     }
@@ -358,7 +358,7 @@ spret_type frog_hop(bool fail)
     move_player_to_grid(target, false);
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
-	mpr("뿅!");
+    mpr("뿅!");
     you.increase_duration(DUR_NO_HOP, 12 + random2(13));
 
     return SPRET_SUCCESS; // TODO
@@ -396,7 +396,7 @@ spret_type controlled_blink(bool fail, bool safe_cancel)
     // invisible monster that the targeter didn't know to avoid
     if (monster_at(target))
     {
-		mpr("이런! 이미 그곳에 무언가가 있다!");
+        mpr("이런! 이미 그곳에 무언가가 있다!");
         uncontrolled_blink();
         return SPRET_SUCCESS; // of a sort
     }
@@ -477,18 +477,18 @@ void you_teleport()
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
-		mpr("당신은 이상하게 안정적인 느낌을 받았다.");
+        mpr("당신은 이상하게 안정적인 느낌을 받았다.");
         you.duration[DUR_TELEPORT] = 0;
     }
     else
     {
-		mpr("당신은 이상하게 불안정한 느낌을 받았다.");
+        mpr("당신은 이상하게 불안정한 느낌을 받았다.");
 
         int teleport_delay = 3 + random2(3);
 
         if (player_in_branch(BRANCH_ABYSS))
         {
-			mpr("어비스의 기운이 당신의 전이술을 지연시키고 있다!");
+            mpr("어비스의 기운이 당신의 전이술을 지연시키고 있다!");
             teleport_delay += 5 + random2(10);
         }
         else if (orb_limits_translocation())
@@ -673,12 +673,12 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis)
         }
 
         if (newpos == old_pos)
-			mpr("당신의 주위가 잠시 깜빡였다.");
+            mpr("당신의 주위가 잠시 깜빡였다.");
         else if (you.see_cell(newpos))
-			mpr("당신의 주위가 약간 변화했다.");
+            mpr("당신의 주위가 약간 변화했다.");
         else
         {
-			mpr("당신의 주위가 갑자기 변화했다.");
+            mpr("당신의 주위가 갑자기 변화했다.");
             large_change = true;
         }
 
@@ -779,9 +779,9 @@ spret_type cast_portal_projectile(int pow, bool fail)
 {
     fail_check();
     if (!you.duration[DUR_PORTAL_PROJECTILE])
-		mpr("당신은 투사체를 목적지로 순간이동시키기 시작했다.");
+        mpr("당신은 투사체를 목적지로 순간이동시키기 시작했다.");
     else
-		mpr("당신은 만들어낸 관문을 갱신했다.");
+        mpr("당신은 만들어낸 관문을 갱신했다.");
     // Calculate the accuracy bonus based on current spellpower.
     you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
     you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
@@ -803,7 +803,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // weaken this for high power.
     if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
     {
-		mpr("지형이 빽빽해 당신의 주문이 통과하지 못했다.");
+        mpr("지형이 빽빽해 당신의 주문이 통과하지 못했다.");
         return SPRET_ABORT;
     }
 
@@ -812,7 +812,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     const int item_idx = igrd(where);
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
-		mpr("그 곳엔 아이템이 없다.");
+        mpr("그 곳엔 아이템이 없다.");
         return SPRET_ABORT;
     }
 
@@ -821,7 +821,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // Nets can be apported when they have a victim trapped.
     if (item_is_stationary(item) && !item_is_stationary_net(item))
     {
-		mpr("당신은 그것을 끌어당길 수 없다!");
+        mpr("당신은 그것을 끌어당길 수 없다!");
         return SPRET_ABORT;
     }
 
@@ -894,7 +894,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
     if (location_on_path == dist)
     {
-		mpr("그 지형은 통과할 수 없다!");
+        mpr("그 지형은 통과할 수 없다!");
         return SPRET_SUCCESS;
     }
     dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
@@ -958,10 +958,10 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     if (tries >= 100 || tries2 >= 100)
     {
         if (you.trans_wall_blocking(randomized_where))
-			mpr("투명한 벽을 통과하는 경로를 지정할 수는 없다.");
+            mpr("투명한 벽을 통과하는 경로를 지정할 수는 없다.");
         else
             // XXX: bleh, dumb message
-			mpr("골루브리아의 통로를 생성하기 위해선 빈 공간이 필요하다.");
+            mpr("골루브리아의 통로를 생성하기 위해선 빈 공간이 필요하다.");
         return SPRET_ABORT;
     }
 
@@ -974,7 +974,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
     trap_def *trap2 = trap_at(randomized_here);
     if (!trap || !trap2)
     {
-		mpr("무언가 버그에 관련된 일이 일어났다.");
+        mpr("무언가 버그에 관련된 일이 일어났다.");
         return SPRET_ABORT;
     }
 
@@ -1009,7 +1009,7 @@ spret_type cast_dispersal(int pow, bool fail)
             return _disperse_monster(mon, pow);
         }, you.pos(), radius))
     {
-		mpr("당신 주위의 공기가 잠시 아른거렸다.");
+        mpr("당신 주위의 공기가 잠시 아른거렸다.");
     }
     return SPRET_SUCCESS;
 }

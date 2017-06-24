@@ -1689,35 +1689,35 @@ void canned_msg(canned_message_type which_message)
                  player_has_feet() ? "at your feet" : "before you");
             break;
         case MSG_NOTHING_HAPPENS:
-			mpr("아무 일도 일어나지 않았다.");
+            mpr("아무 일도 일어나지 않았다.");
             break;
         case MSG_YOU_UNAFFECTED:
-			mpr("당신은 아무 영향도 받지 않았다.");
+            mpr("당신은 아무 영향도 받지 않았다.");
             break;
         case MSG_YOU_RESIST:
-			mpr("당신은 저항했다.");
+            mpr("당신은 저항했다.");
             learned_something_new(HINT_YOU_RESIST);
             break;
         case MSG_YOU_PARTIALLY_RESIST:
-			mpr("당신은 일부 저항했다.");
+            mpr("당신은 일부 저항했다.");
             break;
         case MSG_TOO_BERSERK:
-			mpr("당신은 너무 광폭해져있다!");
+            mpr("당신은 너무 광폭해져있다!");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_TOO_CONFUSED:
-			mpr("당신은 매우 혼란스럽다!");
+            mpr("당신은 매우 혼란스럽다!");
             break;
         case MSG_PRESENT_FORM:
-			mpr("당신의 지금 모습으로는 그 행동을 할 수 없다.");
+            mpr("당신의 지금 모습으로는 그 행동을 할 수 없다.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NOTHING_CARRIED:
-			mpr("당신은 아무것도 가지고 있지 않다.");
+            mpr("당신은 아무것도 가지고 있지 않다.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_CANNOT_DO_YET:
-			mpr("당신은 아직 그것을 할 수 없다.");
+            mpr("당신은 아직 그것을 할 수 없다.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_OK:
@@ -1725,24 +1725,24 @@ void canned_msg(canned_message_type which_message)
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_UNTHINKING_ACT:
-			mpr("왜 그런 짓을 하려고 하는가?");
+            mpr("왜 그런 짓을 하려고 하는가?");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NOTHING_THERE:
-			mpr("거기엔 아무 것도 없다!");
+            mpr("거기엔 아무 것도 없다!");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NOTHING_CLOSE_ENOUGH:
-			mpr("그 행동을 할만큼 가까운 것이 없다!");
+            mpr("그 행동을 할만큼 가까운 것이 없다!");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NO_ENERGY:
-			mpr("그 주문을 시전하기에는 당신의 마력이 충분하지 못하다.");
+            mpr("그 주문을 시전하기에는 당신의 마력이 충분하지 못하다.");
             // included in default force_more_message
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_SPELL_FIZZLES:
-			mpr("주문이 흐지부지되었다.");
+            mpr("주문이 흐지부지되었다.");
             break;
         case MSG_HUH:
             mprf(MSGCH_EXAMINE_FILTER, "Huh?");
@@ -1764,63 +1764,63 @@ void canned_msg(canned_message_type which_message)
             break;
         }
         case MSG_YOU_BLINK:
-			mpr("당신은 순간이동했다.");
+            mpr("당신은 순간이동했다.");
             break;
         case MSG_STRANGE_STASIS:
-			mpr("당신은 기묘한 정체의 기운을 느꼈다.");
+            mpr("당신은 기묘한 정체의 기운을 느꼈다.");
             break;
         case MSG_NO_SPELLS:
-			mpr("당신은 아무 주문도 알지 못한다.");
+            mpr("당신은 아무 주문도 알지 못한다.");
             break;
         case MSG_MANA_INCREASE:
-			mpr("당신의 마법 수용량이 증가한 것이 느껴졌다.");
+            mpr("당신의 마법 수용량이 증가한 것이 느껴졌다.");
             break;
         case MSG_MANA_DECREASE:
-			mpr("당신의 마법 수용량이 줄어든 것이 느껴졌다.");
+            mpr("당신의 마법 수용량이 줄어든 것이 느껴졌다.");
             break;
         case MSG_DISORIENTED:
-			mpr("당신은 순간적으로 혼란에 빠졌다.");
+            mpr("당신은 순간적으로 혼란에 빠졌다.");
             break;
         case MSG_TOO_HUNGRY:
-			mpr("당신은 너무 배고프다.");
+            mpr("당신은 너무 배고프다.");
             break;
         case MSG_DETECT_NOTHING:
-			mpr("당신은 아무것도 감지하지 못했다.");
+            mpr("당신은 아무것도 감지하지 못했다.");
             break;
         case MSG_CALL_DEAD:
-			mpr("당신은 죽은 자들을 일으켰다...");
+            mpr("당신은 죽은 자들을 일으켰다...");
             break;
         case MSG_ANIMATE_REMAINS:
-			mpr("당신은 죽은 자에게 생명을 부여했다...");
+            mpr("당신은 죽은 자에게 생명을 부여했다...");
             break;
         case MSG_CANNOT_MOVE:
-			mpr("당신은 움직일 수 없다.");
+            mpr("당신은 움직일 수 없다.");
             break;
         case MSG_YOU_DIE:
             mpr_nojoin(MSGCH_PLAIN, "죽었다...");
             break;
         case MSG_GHOSTLY_OUTLINE:
-			mpr("당신은 귀신같은 형체를 보았고, 주문은 흐지부지되었다.");
+            mpr("당신은 귀신같은 형체를 보았고, 주문은 흐지부지되었다.");
             break;
         case MSG_FULL_HEALTH:
-			mpr("당신의 체력은 이미 모두 회복된 상태다.");
+            mpr("당신의 체력은 이미 모두 회복된 상태다.");
             break;
         case MSG_FULL_MAGIC:
-			mpr("당신의 마력은 이미 모두 회복된 상태다.");
+            mpr("당신의 마력은 이미 모두 회복된 상태다.");
             break;
         case MSG_GAIN_HEALTH:
-			mpr("당신의 기분이 나아졌다.");
+            mpr("당신의 기분이 나아졌다.");
             break;
         case MSG_GAIN_MAGIC:
-			mpr("당신의 힘이 돌아오는 것이 느껴졌다.");
+            mpr("당신의 힘이 돌아오는 것이 느껴졌다.");
             break;
         case MSG_MAGIC_DRAIN:
             mprf(MSGCH_WARN, "당신은 갑자기 마력이 빠져나가는 것을 느꼈다!");
             break;
         case MSG_SOMETHING_IN_WAY:
-			mpr("이동경로에 무언가가 있다.");
+            mpr("이동경로에 무언가가 있다.");
         case MSG_CANNOT_SEE:
-			mpr("당신은 그 장소를 볼 수 없다.");
+            mpr("당신은 그 장소를 볼 수 없다.");
             break;
     }
 }

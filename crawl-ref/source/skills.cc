@@ -581,11 +581,11 @@ bool training_restricted(skill_type sk)
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
         return false;
-	case SK_INVOCATIONS:
+       case SK_INVOCATIONS:
         if (you.species == SP_DEMIGOD)
             return false;
-		else
-            return true;		
+              else
+            return true;              
     default:
         return true;
     }
@@ -742,7 +742,7 @@ bool check_selected_skills()
 
     if (trainable_skill)
     {
-		mpr("당신은 최소한 하나의 기술은 수련해야 한다.");
+              mpr("당신은 최소한 하나의 기술은 수련해야 한다.");
         more();
         reset_training();
         skill_menu();
@@ -753,7 +753,7 @@ bool check_selected_skills()
     if (could_train && !you.received_noskill_warning)
     {
         you.received_noskill_warning = true;
-		mpr("당신이 수련할 기술이 없다.");
+              mpr("당신이 수련할 기술이 없다.");
     }
 
     return false;

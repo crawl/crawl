@@ -442,7 +442,7 @@ NORETURN static void _launch_game()
     _god_greeting_message(game_start);
 
     if (!crawl_state.game_is_tutorial())
-		mpr("커맨드 목록과 다른 정보를 보기 위해서는  <w>?</w> 를 누르시오.");
+              mpr("커맨드 목록과 다른 정보를 보기 위해서는  <w>?</w> 를 누르시오.");
 
     _prep_input();
 
@@ -579,7 +579,7 @@ static void _wanderer_startup_message()
         // skills at the start of the game (one or two skills should be
         // easily guessed from starting equipment). Anyway, we'll give
         // the player a message to warn them (and a reason why). - bwr
-		mpr("당신은 혼란스러운 상태에서 막 깨어났기에, 기억나는 것이 별로 없을 것이다.");
+              mpr("당신은 혼란스러운 상태에서 막 깨어났기에, 기억나는 것이 별로 없을 것이다.");
     }
 }
 
@@ -746,7 +746,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_READ_MESSAGES:
     case CMD_SEARCH_STASHES:
     case CMD_LOOKUP_HELP:
-		mpr("정보 관련 커맨드를 반복할 수 없다.");
+              mpr("정보 관련 커맨드를 반복할 수 없다.");
         return false;
 
     // Multi-turn commands
@@ -763,7 +763,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MEMORISE_SPELL:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
-		mpr("여러 턴을 사용하는 커맨드를 반복할 수 없다.");
+              mpr("여러 턴을 사용하는 커맨드를 반복할 수 없다.");
         return false;
 
     // Miscellaneous non-repeatable commands.
@@ -788,20 +788,20 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_EDIT_PLAYER_TILE:
 #endif
     case CMD_LUA_CONSOLE:
-		mpr("그 커맨드를 반복할 수 없다.");
+              mpr("그 커맨드를 반복할 수 없다.");
         return false;
 
     case CMD_DISPLAY_MAP:
-		mpr("지도 관련 커맨드를 반복할 수 없다.");
+              mpr("지도 관련 커맨드를 반복할 수 없다.");
         return false;
 
     case CMD_MOUSE_MOVE:
     case CMD_MOUSE_CLICK:
-		mpr("마우스 클릭이나 이동을 반복할 수 없다.");
+              mpr("마우스 클릭이나 이동을 반복할 수 없다.");
         return false;
 
     case CMD_REPEAT_CMD:
-		mpr("반복 커맨드를 반복할 수는 없다!");
+              mpr("반복 커맨드를 반복할 수는 없다!");
         return false;
 
     case CMD_RUN_LEFT:
@@ -812,14 +812,14 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_RUN_DOWN_LEFT:
     case CMD_RUN_UP_RIGHT:
     case CMD_RUN_DOWN_RIGHT:
-		mpr("왜 실행 커맨드를 반복하려 하는가?");
+              mpr("왜 실행 커맨드를 반복하려 하는가?");
         return false;
 
     case CMD_PREV_CMD_AGAIN:
         ASSERT(!is_again);
         if (crawl_state.prev_cmd == CMD_NO_CMD)
         {
-			mpr("반복할 선행하는 커맨드가 없다.");
+                     mpr("반복할 선행하는 커맨드가 없다.");
             return false;
         }
 
@@ -856,7 +856,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
     case CMD_NO_CMD:
     case CMD_NO_CMD_DEFAULT:
-		mpr("알수 없는 커맨드, 반복할 수 없다.");
+              mpr("알수 없는 커맨드, 반복할 수 없다.");
         return false;
 
     default:
@@ -1242,18 +1242,18 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
             && (!down || !known_shaft))
         {
             if (ftype == DNGN_STONE_ARCH)
-				mpr("그 돌로 된 아치의 반대편에는 아무 것도 없다.");
+                            mpr("그 돌로 된 아치의 반대편에는 아무 것도 없다.");
             else if (ftype == DNGN_ABANDONED_SHOP)
-				mpr("이 상점은 문을 닫은 것 같다.");
+                            mpr("이 상점은 문을 닫은 것 같다.");
             else if (ftype == DNGN_SEALED_STAIRS_UP
                      || ftype == DNGN_SEALED_STAIRS_DOWN )
             {
-				mpr("마법 장애물이 당신의 길을 막고 있다!");
+                            mpr("마법 장애물이 당신의 길을 막고 있다!");
             }
             else if (down)
-				mpr("여기서는 내려갈 수 없다!");
+                            mpr("여기서는 내려갈 수 없다!");
             else
-				mpr("여기서는 올라갈 수 없다!");
+                            mpr("여기서는 올라갈 수 없다!");
             return false;
         }
     }
@@ -1271,7 +1271,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
             if (runes_in_pack() < min_runes)
             {
                 if (min_runes == 1)
-					mpr("이곳에 들어가기 위해서는 룬이 필요하다.");
+                                   mpr("이곳에 들어가기 위해서는 룬이 필요하다.");
                 else
                     mprf("You need at least %d runes to enter this place.",
                          min_runes);
@@ -1387,7 +1387,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
                                      " This will make you lose the game!");
         if (!yesno(prompt.c_str(), false, 'n'))
         {
-			mpr("좋아, 기다려!");
+                     mpr("좋아, 기다려!");
             return false;
         }
     }
@@ -1416,7 +1416,7 @@ static void _take_transporter()
 
     if (dest == INVALID_COORD || !you.is_habitable(dest))
     {
-		mpr("공간이동기의 반대편이 막혀있다!");
+              mpr("공간이동기의 반대편이 막혀있다!");
         return;
     }
 
@@ -1429,7 +1429,7 @@ static void _take_transporter()
         // monsters. -gammafunk
         if (!mon->find_home_near_place(dest))
         {
-			mpr("공간이동기의 반대편이 무언가로 막혀있다!");
+                     mpr("공간이동기의 반대편이 무언가로 막혀있다!");
             return;
         }
     }
@@ -1448,7 +1448,7 @@ static void _take_transporter()
             li->update_transporter(old_pos, you.pos());
             explored_tracked_feature(DNGN_TRANSPORTER);
         }
-		mpr("당신은 공간이동기를 통과했고, 다른 장소에 나타났다.");
+              mpr("당신은 공간이동기를 통과했고, 다른 장소에 나타났다.");
     }
 }
 
@@ -1484,7 +1484,7 @@ static void _take_stairs(bool down)
         ASSERT(trap_triggered);
         you.turn_is_over = (you.pos() != old_pos);
         if (!you.turn_is_over)
-			mpr("이 통로는 아무 곳으로도 통하지 않는다!");
+                     mpr("이 통로는 아무 곳으로도 통하지 않는다!");
     }
     else
     {
@@ -1512,7 +1512,7 @@ static void _experience_check()
     else
     {
         mprf("I'm sorry, level %d is as high as you can go.", you.get_max_xl());
-		mpr("당신이 여기까지 올 수 있었다는 사실이 놀랍다.");
+              mpr("당신이 여기까지 올 수 있었다는 사실이 놀랍다.");
     }
 
     if (you.species == SP_FELID)
@@ -1555,13 +1555,13 @@ static void _do_remove_armour()
 {
     if (you.species == SP_FELID)
     {
-		mpr("유감이지만, 당신의 털을 제거할 수는 없다.");
+              mpr("유감이지만, 당신의 털을 제거할 수는 없다.");
         return;
     }
 
     if (!form_can_wear())
     {
-		mpr("당신의 지금 모습으로는 어떤것도 입거나 벗을 수 없다.");
+              mpr("당신의 지금 모습으로는 어떤것도 입거나 벗을 수 없다.");
         return;
     }
 
@@ -1574,10 +1574,10 @@ static void _toggle_travel_speed()
 {
     you.travel_ally_pace = !you.travel_ally_pace;
     if (you.travel_ally_pace)
-		mpr("이제 당신은 가장 느린 동료의 속도에 맞추어 이동한다.");
+              mpr("이제 당신은 가장 느린 동료의 속도에 맞추어 이동한다.");
     else
     {
-		mpr("당신은 이제 보통 속도로 이동한다.");
+              mpr("당신은 이제 보통 속도로 이동한다.");
         you.running.travel_speed = 0;
     }
 }
@@ -1586,7 +1586,7 @@ static void _do_rest()
 {
     if (you.hunger_state <= HS_STARVING && !you_min_hunger())
     {
-		mpr("당신은 쉬기에는 너무나도 배고프다.");
+              mpr("당신은 쉬기에는 너무나도 배고프다.");
         return;
     }
 
@@ -1596,12 +1596,12 @@ static void _do_rest()
             && (you.magic_points == you.max_magic_points
                 || !player_regenerates_mp()))
         {
-			mpr("당신은 대기를 시작했다.");
+                     mpr("당신은 대기를 시작했다.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
             return;
         }
         else
-			mpr("당신은 휴식을 취했다.");
+                     mpr("당신은 휴식을 취했다.");
     }
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);
@@ -1615,8 +1615,8 @@ static void _do_display_map()
 #ifdef USE_TILE_LOCAL
     // Since there's no actual overview map, but the functionality
     // exists, give a message to explain what's going on.
-	mpr("지도를 보기 위해서는 커서를 옮기거나, 명령어 목록을 보기 "
-		"위해서는 <w>?</w> 를 입력하시오.");
+       mpr("지도를 보기 위해서는 커서를 옮기거나, 명령어 목록을 보기 "
+              "위해서는 <w>?</w> 를 입력하시오.");
     flush_prev_message();
 #endif
 
@@ -1624,7 +1624,7 @@ static void _do_display_map()
     const bool travel = show_map(pos, true, true, true);
 
 #ifdef USE_TILE_LOCAL
-	mpr("게임으로 돌아간다...");
+       mpr("게임으로 돌아간다...");
 #endif
     if (travel)
         start_translevel_travel(pos);
@@ -1634,7 +1634,7 @@ static void _do_cycle_quiver(int dir)
 {
     if (you.species == SP_FELID)
     {
-		mpr("당신은 그걸 던질만큼 꽉 잡고 있을 수 없다.");
+              mpr("당신은 그걸 던질만큼 꽉 잡고 있을 수 없다.");
         return;
     }
 
@@ -1650,10 +1650,10 @@ static void _do_cycle_quiver(int dir)
         you.m_quiver.on_item_fired(you.inv[next], true);
 
         if (next == cur)
-			mpr("다른 투사체가 존재하지 않는다. 다른 물건을 던지기 위해서는 F를 누르시오.");
+                     mpr("다른 투사체가 존재하지 않는다. 다른 물건을 던지기 위해서는 F를 누르시오.");
     }
     else if (cur == -1)
-		mpr("투사체가 존재하지 않는다. 다른 물건을 던지기 위해서는 F를 누르시오.");
+              mpr("투사체가 존재하지 않는다. 다른 물건을 던지기 위해서는 F를 누르시오.");
 }
 
 static void _do_list_gold()
@@ -1889,12 +1889,12 @@ void process_command(command_type cmd)
 
     case CMD_DISPLAY_RELIGION:
     {
-		if (you.species == SP_DEMIGOD)
-		{
-			describe_demigod_portfolio();
-			redraw_screen();
-			break;
-		}
+              if (you.species == SP_DEMIGOD)
+              {
+                     describe_demigod_portfolio();
+                     redraw_screen();
+                     break;
+              }
 #ifdef USE_TILE_WEB
         if (!you_worship(GOD_NO_GOD))
             tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
@@ -1913,7 +1913,7 @@ void process_command(command_type cmd)
 
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
-			mpr("미안하지만, 캐릭터 덤프 파일을 만드는 데 실패했다.");
+                     mpr("미안하지만, 캐릭터 덤프 파일을 만드는 데 실패했다.");
 #ifdef USE_TILE_WEB
         else
             tiles.send_dump_info("command", you.your_name);
@@ -2004,7 +2004,7 @@ void process_command(command_type cmd)
     }
 
     case CMD_SAVE_GAME_NOW:
-		mpr("저장중... 기다릴 것.");
+              mpr("저장중... 기다릴 것.");
         save_game(true);
         break;
 
@@ -2033,7 +2033,7 @@ void process_command(command_type cmd)
     default:
         // The backslash in ?\? is there so it doesn't start a trigraph.
         if (crawl_state.game_is_hints())
-			mpr("알 수 없는 명령이다. (명령어 목록을 보기 위해서는  <w>?\?</w>를 누르시오.)");
+                     mpr("알 수 없는 명령이다. (명령어 목록을 보기 위해서는  <w>?\?</w>를 누르시오.)");
         else // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
@@ -2160,7 +2160,7 @@ static void _update_golubria_traps()
             if (--trap->ammo_qty <= 0)
             {
                 if (you.see_cell(c))
-					mpr("당신이 만든 골루브리아의 통로가 소리를 내며 닫혔다!");
+                                   mpr("당신이 만든 골루브리아의 통로가 소리를 내며 닫혔다!");
                 else
                     mprf(MSGCH_SOUND, "You hear a snapping sound.");
                 trap->destroy();
@@ -2242,8 +2242,8 @@ void world_reacts()
         // a gigabyte of bzipped ttyrec.
         // We could extend the counters to 64 bits, but in the light of the
         // above, it's an useless exercise.
-		mpr("바깥 세상에 종말이 오고 말았다.");
-		mpr("유감이지만, 당신의 오브를 향한 여정은 이제 그 의미를 잃고 말았다."
+              mpr("바깥 세상에 종말이 오고 말았다.");
+              mpr("유감이지만, 당신의 오브를 향한 여정은 이제 그 의미를 잃고 말았다."
             "당신은 모든 것을 그만두었다...");
         // Please do not give it a custom ktyp or make it cool in any way
         // whatsoever, because players are insane. Usually, not being dragged
@@ -2520,7 +2520,7 @@ static void _swing_at_target(coord_def move)
     {
         if (!you.is_stationary())
         {
-			mpr("당신은 너무 혼란해진 나머지 어딘가를 돌아다니지 않고서는 공격할 수가 없다!");
+                     mpr("당신은 너무 혼란해진 나머지 어딘가를 돌아다니지 않고서는 공격할 수가 없다!");
             return;
         }
 
@@ -2533,7 +2533,7 @@ static void _swing_at_target(coord_def move)
             move.y = random2(3) - 1;
             if (move.origin())
             {
-				mpr("당신은 자신을 때릴 뻔 했다!");
+                            mpr("당신은 자신을 때릴 뻔 했다!");
                 you.turn_is_over = true;
                 return;
             }
@@ -2570,7 +2570,7 @@ static void _swing_at_target(coord_def move)
                 attack_cleave_targets(you, cleave_targets);
         }
         else if (!you.fumbles_attack())
-			mpr("당신은 허공을 향해 휘둘렀다.");
+                     mpr("당신은 허공을 향해 휘둘렀다.");
         make_hungry(3, true);
         // Take the usual attack delay.
         you.time_taken = you.attack_delay().roll();
@@ -2610,7 +2610,7 @@ static void _open_door(coord_def move)
 
         if (num == 0)
         {
-			mpr("주위에 열만한 무언가가 없다.");
+                     mpr("주위에 열만한 무언가가 없다.");
             return;
         }
 
@@ -2641,7 +2641,7 @@ static void _open_door(coord_def move)
                                                                  MAT_ANY,
                                                                  "veto_reason");
         if (door_veto_message.empty())
-			mpr("이 문은 굳게 닫혀 있다!");
+                     mpr("이 문은 굳게 닫혀 있다!");
         else
             mpr(door_veto_message);
         if (you.confused())
@@ -2670,14 +2670,14 @@ static void _open_door(coord_def move)
         if (!door_already_open.empty())
             mpr(door_already_open);
         else
-			mpr("그건 이미 열려있다!");
+                     mpr("그건 이미 열려있다!");
         break;
     }
     case DNGN_SEALED_DOOR:
-		mpr("그 문은 봉인되어 있다!");
+              mpr("그 문은 봉인되어 있다!");
         break;
     default:
-		mpr("주위에 당신이 열 수 있는 것이 없다!");
+              mpr("주위에 당신이 열 수 있는 것이 없다!");
         break;
     }
 }
@@ -2704,7 +2704,7 @@ static void _close_door(coord_def move)
         int num = _check_adjacent(DNGN_OPEN_DOOR, move);
         if (num == 0)
         {
-			mpr("주위에 닫을만한 무언가가 없다.");
+                     mpr("주위에 닫을만한 무언가가 없다.");
             return;
         }
         // move got set in _check_adjacent
@@ -2723,7 +2723,7 @@ static void _close_door(coord_def move)
 
         if (door_move.delta.origin())
         {
-			mpr("문 위에 서서 문을 닫을 수는 없다!");
+                     mpr("문 위에 서서 문을 닫을 수는 없다!");
             return;
         }
     }
@@ -2742,10 +2742,10 @@ static void _close_door(coord_def move)
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
     case DNGN_SEALED_DOOR:
-		mpr("그건 이미 닫혀있다!");
+              mpr("그건 이미 닫혀있다!");
         break;
     default:
-		mpr("주위에 당신이 닫을 수 있는 것이 없다!");
+              mpr("주위에 당신이 닫을 수 있는 것이 없다!");
         break;
     }
 }
@@ -2842,12 +2842,12 @@ static void _swap_places(monster* mons, const coord_def &loc)
         }
         else
         {
-			mpr("무언가가 당신이 자리를 바꾸는 것을 방해하고 있다.");
+                     mpr("무언가가 당신이 자리를 바꾸는 것을 방해하고 있다.");
             return;
         }
     }
 
-	mpr("당신은 자리를 바꾸었다.");
+       mpr("당신은 자리를 바꾸었다.");
 
     mons->move_to_pos(loc, true, true);
     return;
@@ -2899,8 +2899,8 @@ static void _move_player(coord_def move)
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
             // shouldn't. Just force confused trees to use ctrl.
-			mpr("당신은 움직일 수 없다. (ctrl+방향키를 눌러 움직이지 않고 "
-				"공격할 수 있다.)");
+                     mpr("당신은 움직일 수 없다. (ctrl+방향키를 눌러 움직이지 않고 "
+                            "공격할 수 있다.)");
             return;
         }
 
@@ -2916,7 +2916,7 @@ static void _move_player(coord_def move)
             move.y = random2(3) - 1;
             if (move.origin())
             {
-				mpr("당신은 움직이기에는 너무 혼란스러운 상태다!");
+                            mpr("당신은 움직이기에는 너무 혼란스러운 상태다!");
                 you.apply_berserk_penalty = true;
                 you.turn_is_over = true;
                 return;
@@ -2955,7 +2955,7 @@ static void _move_player(coord_def move)
     {
         // Why isn't the border permarock?
         if (you.digging)
-			mpr("이 벽은 파내기엔 너무 단단하다.");
+                     mpr("이 벽은 파내기엔 너무 단단하다.");
         return;
     }
 
@@ -3007,9 +3007,9 @@ static void _move_player(coord_def move)
         {
             you.digging = false;
             if (feat_is_solid(grd(targ)))
-				mpr("그건 파낼 수 없다.");
+                            mpr("그건 파낼 수 없다.");
             else
-				mpr("당신은 아래턱을 집어넣었다.");
+                            mpr("당신은 아래턱을 집어넣었다.");
         }
     }
 
@@ -3086,7 +3086,7 @@ static void _move_player(coord_def move)
     {
         if (you.is_nervous())
         {
-			mpr("당신은 주시받으면서 움직이기엔 너무나도 공포에 질려있다!");
+                     mpr("당신은 주시받으면서 움직이기엔 너무나도 공포에 질려있다!");
             stop_running();
             you.turn_is_over = false;
             return;
@@ -3128,10 +3128,10 @@ static void _move_player(coord_def move)
         if (you.duration[DUR_WATER_HOLD])
         {
             if (you.can_swim())
-				mpr("당신은 능숙하게 당신을 삼키고 있던 물 덩이로부터 빠져나왔다.");
+                            mpr("당신은 능숙하게 당신을 삼키고 있던 물 덩이로부터 빠져나왔다.");
             else //Unless you're a natural swimmer, this takes longer than normal
             {
-				mpr("노력 끝에, 당신은 당신을 삼키고 있던 물 덩이를 밀어냈다.");
+                            mpr("노력 끝에, 당신은 당신을 삼키고 있던 물 덩이를 밀어냈다.");
                 you.time_taken = you.time_taken * 3 / 2;
             }
             you.duration[DUR_WATER_HOLD] = 1;
@@ -3265,11 +3265,11 @@ static void _move_player(coord_def move)
         if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
-			mpr("먼 바다로부터 오는 맹렬한 바람과 파도가 당신의 앞길을 막았다.");
+                     mpr("먼 바다로부터 오는 맹렬한 바람과 파도가 당신의 앞길을 막았다.");
         else if (grd(targ) == DNGN_LAVA_SEA)
-			mpr("끝없는 용암의 바다는 썩 갈만한 곳은 아니다.");
+                     mpr("끝없는 용암의 바다는 썩 갈만한 곳은 아니다.");
         else if (feat_is_tree(grd(targ)) && you_worship(GOD_FEDHAS))
-			mpr("당신은 숲 사이로 걸어가기엔 나무가 너무 빽빽하다.");
+                     mpr("당신은 숲 사이로 걸어가기엔 나무가 너무 빽빽하다.");
 
         stop_running();
         move.reset();
@@ -3426,7 +3426,7 @@ static void _do_cmd_repeat()
 
     if (strlen(buf) == 0)
     {
-		mpr("그 명령을 반복할 횟수를 입력해야 한다.");
+              mpr("그 명령을 반복할 횟수를 입력해야 한다.");
         _cancel_cmd_repeat();
         return;
     }
@@ -3506,7 +3506,7 @@ static void _do_prev_cmd_again()
 {
     if (is_processing_macro())
     {
-		mpr("매크로 안에서는 선행 명령을 재실행할 수 없다.");
+              mpr("매크로 안에서는 선행 명령을 재실행할 수 없다.");
         flush_input_buffer(FLUSH_ABORT_MACRO);
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
@@ -3515,7 +3515,7 @@ static void _do_prev_cmd_again()
 
     if (crawl_state.prev_cmd == CMD_NO_CMD)
     {
-		mpr("다시 실행할 선행 명령이 없다.");
+              mpr("다시 실행할 선행 명령이 없다.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
         repeat_again_rec.clear();

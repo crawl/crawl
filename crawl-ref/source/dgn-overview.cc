@@ -963,7 +963,7 @@ void do_annotate(level_id& li)
         level_annotations[li] = buf;
     else
     {
-		mpr("주석을 모두 지웠다.");
+        mpr("주석을 모두 지웠다.");
         level_annotations.erase(li);
     }
 }

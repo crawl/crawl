@@ -360,7 +360,7 @@ static void _give_player_experience(int experience, killer_type killer,
 
     // Give a message for monsters dying out of sight.
     if (exp_gain > 0 && !was_visible)
-		mpr("당신은 경험이 쌓인 느낌이 들었다.");
+              mpr("당신은 경험이 쌓인 느낌이 들었다.");
 
     if (kc == KC_YOU && have_passive(passive_t::share_exp))
         _beogh_spread_experience(experience / 2);
@@ -1160,7 +1160,7 @@ static void _activate_ballistomycetes(monster* mons, const coord_def& origin,
             && mons->attitude == ATT_HOSTILE)
         {
             if (player_kill)
-				mpr("버섯 군체가 파괴되었다.");
+                            mpr("버섯 군체가 파괴되었다.");
 
             // Get rid of the mold, so it'll be more useful when new fungi
             // spawn.
@@ -2038,7 +2038,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
-			mpr("피에 굶주린 목걸이가 폭력적인 붉은 빛으로 번쩍였다.");
+                     mpr("피에 굶주린 목걸이가 폭력적인 붉은 빛으로 번쩍였다.");
         }
     }
 
@@ -2257,7 +2257,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     && !fake_abjure
                     && !mons.friendly())
                 {
-					mpr("이상하게 보람없는 기분이 들었다.");
+                                   mpr("이상하게 보람없는 기분이 들었다.");
                 }
             }
 
@@ -2625,9 +2625,9 @@ item_def* monster_die(monster& mons, killer_type killer,
             && !was_banished)
         {
             if (mons_base_type(mons) == MONS_KRAKEN)
-				mpr("죽은 크라켄의 촉수가 물 속으로 빨려 들어갔다.");
+                            mpr("죽은 크라켄의 촉수가 물 속으로 빨려 들어갔다.");
             else if (mons.type == MONS_TENTACLED_STARSPAWN)
-				mpr("촉수투성이 별의 촉수가 말라 가더니 이내 죽어 버렸다.");
+                            mpr("촉수투성이 별의 촉수가 말라 가더니 이내 죽어 버렸다.");
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(mons.type)

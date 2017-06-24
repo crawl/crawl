@@ -228,7 +228,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { ARTP_CURSE,                 prop_note::plain },
         { ARTP_CLARITY,               prop_note::plain },
         { ARTP_RMSL,                  prop_note::plain },
-		{ ARTP_WILD,         prop_note::plain },
+        { ARTP_WILD,         prop_note::plain },
     };
 
     const unrandart_entry *entry = nullptr;
@@ -461,7 +461,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_SLOW, "It may slow you when you take damage.", false},
         { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
         { ARTP_SHIELDING, "It affects your SH (%d).", false},
-		{ ARTP_WILD, "It makes you attack more with your body parts", false },
+        { ARTP_WILD, "It makes you attack more with your body parts", false },
     };
 
     // Give a short description of the base type, for base types with no

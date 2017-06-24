@@ -30,16 +30,16 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
     bool success = false;
 
     if (you.duration[DUR_DEATHS_DOOR])
-		mpr("당신은 죽음의 문턱에 머물러 있는 동안에는 당신의 원기를 이끌어낼 수 없다.");
+        mpr("당신은 죽음의 문턱에 머물러 있는 동안에는 당신의 원기를 이끌어낼 수 없다.");
     else if (!you.can_bleed())
     {
         if (you.species == SP_VAMPIRE)
-			mpr("당신의 원기를 이끌어 내기엔 당신의 몸에 피가 부족하다.");
+            mpr("당신의 원기를 이끌어 내기엔 당신의 몸에 피가 부족하다.");
         else
-			mpr("당신의 몸엔 피가 하나도 없다.");
+            mpr("당신의 몸엔 피가 하나도 없다.");
     }
     else if (!enough_hp(2, true))
-		mpr("당신의 몸에서 힘을 끌어내려한 시도는 실패로 돌아갔다.");
+        mpr("당신의 몸에서 힘을 끌어내려한 시도는 실패로 돌아갔다.");
     else
     {
         // Take at most 90% of currhp.
@@ -61,9 +61,9 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
                 break;
         }
         if (success)
-			mpr("당신은 자신의 몸에서 마법적 원기를 이끌어냈다!");
+            mpr("당신은 자신의 몸에서 마법적 원기를 이끌어냈다!");
         else
-			mpr("당신의 몸에서 힘을 끌어내려한 시도는 실패로 돌아갔다.");
+            mpr("당신의 몸에서 힘을 끌어내려한 시도는 실패로 돌아갔다.");
     }
 
     return success ? SPRET_SUCCESS : SPRET_ABORT;
@@ -78,7 +78,7 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
     }
 
     fail_check();
-	mpr("악의에 찬 힘이 당신에게 스며들어, 그 방출을 기다리고 있다.");
+    mpr("악의에 찬 힘이 당신에게 스며들어, 그 방출을 기다리고 있다.");
 
     you.increase_duration(DUR_DEATH_CHANNEL, 30 + random2(1 + 2*pow/3), 200);
 
@@ -138,10 +138,10 @@ void start_recall(recall_t type)
 
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
-		mpr("당신은 동료를 부르기 시작했다.");
+        mpr("당신은 동료를 부르기 시작했다.");
     }
     else
-		mpr("아무 것도 당신의 부름에 답하지 않았다.");
+        mpr("아무 것도 당신의 부름에 답하지 않았다.");
 }
 
 // Remind a recalled ally (or one skipped due to proximity) not to run
@@ -218,7 +218,7 @@ void do_recall(int time)
              you.recall_list.size())
         {
             end_recall();
-			mpr("당신은 동료를 부르는 것을 마쳤다.");
+            mpr("당신은 동료를 부르는 것을 마쳤다.");
             return;
         }
     }
@@ -260,7 +260,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     int walls = (dest - you.pos()).rdist() - 1;
     if (walls == 0)
     {
-		mpr("그 벽은 통과할 수 없다.");
+        mpr("그 벽은 통과할 수 없다.");
         return SPRET_ABORT;
     }
 
@@ -270,11 +270,11 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     // player, so we don't make the spell abort (return SPRET_SUCCESS).
     const monster *mon = monster_at(dest);
     if (!in_bounds(dest))
-		mpr("당신은 압도적인 바위의 크기를 느꼈다.");
+        mpr("당신은 압도적인 바위의 크기를 느꼈다.");
     else if (cell_is_solid(dest) || (mon && mon->is_stationary()))
-		mpr("무언가가 바위로 당신의 길을 막고 있다.");
+        mpr("무언가가 바위로 당신의 길을 막고 있다.");
     else if (walls > spell_range(SPELL_PASSWALL, pow))
-		mpr("이 바위는 정말 깊게 묻혀 있는 것 같다.");
+        mpr("이 바위는 정말 깊게 묻혀 있는 것 같다.");
     else
     {
         string msg;
@@ -295,7 +295,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 static int _intoxicate_monsters(coord_def where, int pow)
 {
     bool potent_poison_magic = you_have_demigod_portfolio_level(DEMIGOD_PORTFOLIO_POISON,DEMIGOD_PORTFOLIO_POISON_LEVEL_POTENT);
-    monster* mons = monster_at(where);	
+    monster* mons = monster_at(where);    
     if (mons == nullptr
         || mons_intel(*mons) < I_HUMAN
         || mons->check_clarity(false))
@@ -330,7 +330,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
 spret_type cast_intoxicate(int pow, bool fail)
 {
     fail_check();
-	mpr("당신은 동료를 해독하려 시도했다!");
+    mpr("당신은 동료를 해독하려 시도했다!");
     int count = apply_area_visible([pow] (coord_def where) {
         return _intoxicate_monsters(where, pow);
     }, you.pos());

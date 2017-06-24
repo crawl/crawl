@@ -935,7 +935,7 @@ static void _grab_followers()
             && fol->hit_points < fol->max_hit_points / 2)
         {
             if (fol->visible_to(&you))
-				mpr("유령이 그림자 속으로 사라졌다.");
+                            mpr("유령이 그림자 속으로 사라졌다.");
             monster_teleport(fol, true);
         }
     }
@@ -1666,7 +1666,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     {
         if (!dump_char(you.your_name, true))
         {
-			mpr("유감스럽게도, 캐릭터의 덤프 파일을 만드는 데 실패했다!");
+                     mpr("유감스럽게도, 캐릭터의 덤프 파일을 만드는 데 실패했다!");
             if (!crawl_state.seen_hups)
                 more();
         }
