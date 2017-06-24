@@ -211,7 +211,7 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
                  .set_summoned(mons, abj, spell_cast)))
         {
             if (card_power >= 0)
-				mpr("순간 당신은 당신 옆에 서 있었다.");
+                mpr("순간 당신은 당신 옆에 서 있었다.");
             else
                 mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
@@ -220,7 +220,7 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
             _mons_load_player_enchantments(mons, clone);
         }
         else if (card_power >= 0)
-			mpr("당신은 연기 구름을 보았다.");
+            mpr("당신은 연기 구름을 보았다.");
     }
     else
     {

@@ -111,7 +111,7 @@ static void _run_dlua_interpreter(lua_State *ls)
     _luaterp_running = true;
 
     int status;
-	mpr("[해석 프로그램을 종료하기 위해서는 ESC키를 누르시오.]");
+                   mpr("[해석 프로그램을 종료하기 위해서는 ESC키를 누르시오.]");
     while ((status = _loadline(ls)) != -1)
     {
         if (status == 0)

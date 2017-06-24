@@ -2583,12 +2583,12 @@ static bool _seal_doors_and_stairs(const monster* warden,
                 (warden->visible_to(&you) ? warden->name(DESC_THE, true).c_str()
                                           : "Someone"));
         if (num_closed > 1)
-			mpr("그 문이 쾅 하고 닫혔다!");
+            mpr("그 문이 쾅 하고 닫혔다!");
         else if (num_closed == 1)
-			mpr("문이 쾅 하고 닫혔다!");
+            mpr("문이 쾅 하고 닫혔다!");
 
         if (player_pushed)
-			mpr("당신은 출입구 밖으로 밀려났다!");
+            mpr("당신은 출입구 밖으로 밀려났다!");
 
         return true;
     }
@@ -2943,7 +2943,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     else
     {
         if (seen)
-			mpr("숲으로부터 덩굴이 날아왔다!");
+            mpr("숲으로부터 덩굴이 날아왔다!");
         return true;
     }
 }
@@ -3140,7 +3140,7 @@ static bool _wall_of_brambles(monster* mons)
     }
 
     if (seen)
-		mpr("가시돋힌 관목이 땅으로부터 솟아났다!");
+        mpr("가시돋힌 관목이 땅으로부터 솟아났다!");
 
     return true;
 }
@@ -4308,7 +4308,7 @@ static int _monster_abjuration(const monster* caster, bool actual)
     int maffected = 0;
 
     if (actual)
-		mpr("그들은 왔던 곳으로 돌아갈지어다!");
+        mpr("그들은 왔던 곳으로 돌아갈지어다!");
 
     const int pow = _mons_spellpower(SPELL_ABJURATION, *caster);
 
@@ -4525,7 +4525,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
                                MSGCH_MONSTER_SPELL);
     }
     else
-		mpr("불경한 에너지가 대기를 뒤덮고 있다.");
+        mpr("불경한 에너지가 대기를 뒤덮고 있다.");
 
     if (target->is_player())
     {
@@ -4701,7 +4701,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         if (you.can_see(*mons))
             simple_monster_message(*mons, " radiates an aura of fear!");
         else if (you.see_cell(mons->pos()))
-			mpr("공포의 기운이 대기를 뒤덮고 있다!");
+            mpr("공포의 기운이 대기를 뒤덮고 있다!");
     }
 
     int retval = -1;
@@ -5877,9 +5877,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (foe->is_player())
         {
             if (you.airborne())
-				mpr("대기가 비틀리더니, 비행중인 당신을 거칠게 강타했다!");
+                mpr("대기가 비틀리더니, 비행중인 당신을 거칠게 강타했다!");
             else
-				mpr("대기가 비틀리며 당신을 강타한다!");
+                mpr("대기가 비틀리며 당신을 강타한다!");
         }
         else
         {
@@ -5907,16 +5907,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (one_chance_in(3)
             && lose_stat(STAT_INT, 1 + random2(3)))
         {
-			mpr("무언가가 당신의 지능을 흡수하고 있다!");
+            mpr("무언가가 당신의 지능을 흡수하고 있다!");
             xom_is_stimulated(50);
         }
         else
-			mpr("무언가가 당신의 지능을 흡수하려 하고 있다!");
+            mpr("무언가가 당신의 지능을 흡수하려 하고 있다!");
         return;
 
     case SPELL_SUMMON_SPECTRAL_ORCS:
         if (foe->is_player())
-			mpr("오크 형상의 유령들이 당신의 주위에서 생겨났다.");
+            mpr("오크 형상의 유령들이 당신의 주위에서 생겨났다.");
         else
             simple_monster_message(*foe->as_monster(), " is surrounded by Orcish apparitions.");
         _mons_cast_spectral_orcs(mons);
@@ -5926,7 +5926,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (foe->is_player())
             mpr("당신은 귀기를 느꼈다.");
         else
-			mpr("당신은 악의의 접근을 알아차렸다.");
+            mpr("당신은 악의의 접근을 알아차렸다.");
         _mons_cast_haunt(mons);
         return;
 
@@ -6352,7 +6352,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                  flying ? "" : " up!");
         }
         else if (you.see_cell(mons->pos()))
-			mpr("맹렬한 소용돌이가 공기중에 나타났다!");
+            mpr("맹렬한 소용돌이가 공기중에 나타났다!");
         mons->props["tornado_since"].get_int() = you.elapsed_time;
         mon_enchant me(ENCH_TORNADO, 0, mons, dur);
         mons->add_ench(me);
@@ -6486,7 +6486,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         if (sumcount)
         {
-			mpr("바닥으로부터 벽이 솟아났다!");
+            mpr("바닥으로부터 벽이 솟아났다!");
 
             // XXX: Assume that the entombed monster can regenerate.
             // Also, base the regeneration rate on HD to avoid
@@ -6664,7 +6664,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (you.can_see(*mons))
             simple_monster_message(*mons, " radiates an aura of cold.");
         else if (mons->see_cell_no_trans(you.pos()))
-			mpr("한기가 당신을 지나쳐갔다.");
+            mpr("한기가 당신을 지나쳐갔다.");
         apply_area_visible([splpow, mons] (coord_def where) {
             return englaciate(where, min(splpow, 200), mons);
         }, mons->pos());
@@ -6716,7 +6716,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
         {
             if (!you.can_see(*mons))
-				mpr("당신은 부서지는 소리를 들었다.");
+                mpr("당신은 부서지는 소리를 들었다.");
             else if (coinflip())
             {
                 mprf("The air around %s crackles with electrical energy.",
@@ -6785,7 +6785,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                     && (you.can_see(*victim1)
                         || you.can_see(*victim2)))
                 {
-					mpr("몇몇 몬스터들이 자리를 바꾸었다.");
+                    mpr("몇몇 몬스터들이 자리를 바꾸었다.");
                     did_message = true;
                 }
 

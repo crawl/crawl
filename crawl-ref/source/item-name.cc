@@ -788,7 +788,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
-		case RING_WILD:      return "wild";
+        case RING_WILD:      return "wild";
         case AMU_RAGE:              return "rage";
         case AMU_HARM:              return "harm";
         case AMU_MANA_REGENERATION: return "magic regeneration";
@@ -833,7 +833,7 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
         case RING_FLIGHT:                return "+Fly";
         case RING_LIFE_PROTECTION:       return "rN+";
         case RING_PROTECTION_FROM_MAGIC: return "MR+";
-		case RING_WILD: return "Wild";
+        case RING_WILD: return "Wild";
         case AMU_RAGE:                   return "+Rage";
         case AMU_REGENERATION:           return "Regen";
         case AMU_REFLECTION:             return "Reflect";

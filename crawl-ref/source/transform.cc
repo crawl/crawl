@@ -1500,14 +1500,14 @@ static void _print_head_change_message(int old_heads, int new_heads)
         if (plural)
             mprf("%d of your heads shrink away.", delta);
         else
-			mpr("당신의 머리 중 하나가 작아지더니 사라졌다.");
+            mpr("당신의 머리 중 하나가 작아지더니 사라졌다.");
         return;
     }
 
     if (plural)
         mprf("%d new heads grow.", delta);
     else
-		mpr("새로운 머리가 자라났다.");
+        mpr("새로운 머리가 자라났다.");
 }
 
 /**
@@ -1641,12 +1641,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
-			mpr("당신은 변신을 연장했다.");
+            mpr("당신은 변신을 연장했다.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
         }
         else if (!involuntary && which_trans != transformation::none)
-			mpr("당신은 변신을 연장하는 데 실패했다.");
+            mpr("당신은 변신을 연장하는 데 실패했다.");
 
         return true;
     }
@@ -1747,7 +1747,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     if (you.digging && !form_keeps_mutations(which_trans))
     {
-		mpr("당신의 아래턱이 융화되어 사라졌다.");
+        mpr("당신의 아래턱이 융화되어 사라졌다.");
         you.digging = false;
     }
 
@@ -1767,11 +1767,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::tree:
-		mpr("당신의 뿌리가 땅을 파고들었다.");
+        mpr("당신의 뿌리가 땅을 파고들었다.");
         if (you.duration[DUR_TELEPORT])
         {
             you.duration[DUR_TELEPORT] = 0;
-			mpr("당신은 이상하게 안정적인 느낌이 들었다.");
+            mpr("당신은 이상하게 안정적인 느낌이 들었다.");
         }
         you.duration[DUR_FLIGHT] = 0;
         // break out of webs/nets as well
@@ -1782,13 +1782,13 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             trap_def *trap = trap_at(you.pos());
             if (trap && trap->type == TRAP_WEB)
             {
-				mpr("당신은 거미줄을 갈기갈기 찢어발겼다!");
+                mpr("당신은 거미줄을 갈기갈기 찢어발겼다!");
                 destroy_trap(you.pos());
             }
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
             {
-				mpr("그물이 갈갈이 찢겼다!");
+                mpr("그물이 갈갈이 찢겼다!");
                 destroy_item(net);
             }
 
@@ -1820,9 +1820,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     case transformation::shadow:
         drain_player(25, true, true);
         if (you.invisible())
-			mpr("당신은 그림자 속으로 숨었다.");
+            mpr("당신은 그림자 속으로 숨었다.");
         else
-			mpr("당신은 눈에 덜 띄는 기분이 들었다.");
+            mpr("당신은 눈에 덜 띄는 기분이 들었다.");
         break;
 
     default:
@@ -2044,7 +2044,7 @@ static void _extra_hp(int amount_extra) // must also set in calc_hp
 
 void emergency_untransform()
 {
-	mpr("당신은 빠르게 당신의 원래 모습으로 돌아왔다.");
+    mpr("당신은 빠르게 당신의 원래 모습으로 돌아왔다.");
     untransform(true); // We're already entering the water.
 
     if (you.species == SP_MERFOLK)
@@ -2078,12 +2078,12 @@ void merfolk_start_swimming(bool stepped)
         return;
 
     if (stepped)
-		mpr("당신이 물에 들어가자 당신의 다리가 꼬리로 변했다.");
+        mpr("당신이 물에 들어가자 당신의 다리가 꼬리로 변했다.");
     else
-		mpr("당신이 물에 뛰어들자 당신의 다리가 꼬리로 변했다.");
+        mpr("당신이 물에 뛰어들자 당신의 다리가 꼬리로 변했다.");
 
     if (you.invisible())
-		mpr("...하지만 들키지 않을 것이란 기대는 하지 않는 것이 좋다.");
+        mpr("...하지만 들키지 않을 것이란 기대는 하지 않는 것이 좋다.");
 
     you.fishtail = true;
     remove_one_equip(EQ_BOOTS);

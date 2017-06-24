@@ -1501,12 +1501,12 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.demonic_traits[j].mutation);
     }
 
-	marshallByte(th, you.demigod_portifolio);
-	// how many demigod portrait points?
-	marshallByte(th, NUM_DEMIGOD_PORTFOLIO);
+       marshallByte(th, you.demigod_portifolio);
+       // how many demigod portrait points?
+       marshallByte(th, NUM_DEMIGOD_PORTFOLIO);
     for (int j = 0; j < NUM_DEMIGOD_PORTFOLIO; j++)
     {
-		marshallUByte(th, you.demigod_portifolio_point[j]);
+              marshallUByte(th, you.demigod_portifolio_point[j]);
     }
 
 
@@ -3046,12 +3046,12 @@ static void tag_read_you(reader &th)
     }
 
 #if TAG_MAJOR_VERSION == 34
-	you.demigod_portifolio = static_cast<demigod_portfolio>(unmarshallByte(th));
-	count = unmarshallUByte(th);
-	for (int j = 0; j < count; ++j)
-	{
-		you.demigod_portifolio_point[j] = unmarshallUByte(th);
-	}
+       you.demigod_portifolio = static_cast<demigod_portfolio>(unmarshallByte(th));
+       count = unmarshallUByte(th);
+       for (int j = 0; j < count; ++j)
+       {
+              you.demigod_portifolio_point[j] = unmarshallUByte(th);
+       }
 #endif
 
 #if TAG_MAJOR_VERSION == 34

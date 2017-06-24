@@ -752,7 +752,7 @@ bool can_learn_spell(bool silent)
     if (you.duration[DUR_BRAINLESS])
     {
         if (!silent)
-			mpr("당신 뇌의 기능은 주문을 배우기에 충분하지않다.");
+            mpr("당신 뇌의 기능은 주문을 배우기에 충분하지않다.");
         return false;
     }
 
@@ -820,7 +820,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
     if (spell_removed(specspell))
     {
-		mpr("유감이지만, 이 주문은 이젠 사라졌다!");
+        mpr("유감이지만, 이 주문은 이젠 사라졌다!");
         return false;
     }
 
@@ -838,25 +838,25 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 
     if (you.has_spell(specspell))
     {
-		mpr("당신은 이미 그 주문을 알고 있다!");
+        mpr("당신은 이미 그 주문을 알고 있다!");
         return false;
     }
 
     if (you.spell_no >= MAX_KNOWN_SPELLS)
     {
-		mpr("당신의 머릿속은 이미 주문으로 가득찼다!");
+        mpr("당신의 머릿속은 이미 주문으로 가득찼다!");
         return false;
     }
 
     if (you.experience_level < spell_difficulty(specspell) && !wizard)
     {
-		mpr("당신은 그 주문을 배우기엔 경험이 너무나도 모자라다!");
+        mpr("당신은 그 주문을 배우기엔 경험이 너무나도 모자라다!");
         return false;
     }
 
     if (player_spell_levels() < spell_levels_required(specspell) && !wizard)
     {
-		mpr("당신은 아직 그정도로 높은 수준의 주문을 외울 수 없다!");
+        mpr("당신은 아직 그정도로 높은 수준의 주문을 외울 수 없다!");
         return false;
     }
 

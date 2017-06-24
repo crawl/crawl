@@ -442,7 +442,7 @@ void change_labyrinth(bool msg)
     if (targets.empty())
     {
         if (msg)
-			mpr("탐사되지 않은 벽면이 없다!");
+            mpr("탐사되지 않은 벽면이 없다!");
         return;
     }
 
@@ -887,7 +887,7 @@ static void _evolve(int time_delta)
                > (int)exp_needed(you.experience_level + 1))
         {
             you.attribute[ATTR_EVOL_XP] = 0;
-			mpr("당신은 움직임을 느꼈다.");
+            mpr("당신은 움직임을 느꼈다.");
             bool evol = one_chance_in(5) ?
                 delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
                 mutate(random_choose(RANDOM_GOOD_MUTATION, RANDOM_MUTATION),
@@ -1496,7 +1496,7 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
             if (!silenced(you.pos()))
                 mprf(MSGCH_SOUND, "You hear a deep rumble.");
             else
-				mpr("당신은 땅이 떨리는 것을 느꼈다.");
+                mpr("당신은 땅이 떨리는 것을 느꼈다.");
         }
     }
 }
@@ -1656,9 +1656,9 @@ void timeout_terrain_changes(int duration, bool force)
     }
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
-		mpr("룬 표식들이 사라졌다.");
+        mpr("룬 표식들이 사라졌다.");
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
-		mpr("룬 표식이 사라졌다.");
+        mpr("룬 표식이 사라졌다.");
 }
 
 ////////////////////////////////////////////////////////////////////////////

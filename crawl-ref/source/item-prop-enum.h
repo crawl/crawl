@@ -208,7 +208,7 @@ enum jewellery_type
 #if TAG_MAJOR_VERSION == 34
     RING_TELEPORT_CONTROL,
 #endif
-	RING_WILD,
+       RING_WILD,
     NUM_RINGS,                         //   keep as last ring; should not overlap
                                        //   with amulets!
     // RINGS after num_rings are for unique types for artefacts

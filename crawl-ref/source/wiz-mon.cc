@@ -138,7 +138,7 @@ void wizard_create_spec_monster_name()
 
         if (idx >= MAX_MONSTERS)
         {
-			mpr("플레이어의 유령을 찾을 수 없으므로, 게임이 깨지게 될 것이다.");
+            mpr("플레이어의 유령을 찾을 수 없으므로, 게임이 깨지게 될 것이다.");
             more();
             return;
         }
@@ -157,7 +157,7 @@ void wizard_create_spec_monster_name()
             sp_id = str_to_species(input_str);
         if (sp_id == SP_UNKNOWN)
         {
-			mpr("그런 종족은 없으므로 Hu를 생성한다.");
+            mpr("그런 종족은 없으므로 Hu를 생성한다.");
             sp_id = SP_HUMAN;
         }
         ghost.species = static_cast<species_type>(sp_id);
@@ -172,7 +172,7 @@ void wizard_create_spec_monster_name()
 
         if (job_id == JOB_UNKNOWN)
         {
-			mpr("그런 직업은 없으므로 Fi를 생성한다.");
+            mpr("그런 직업은 없으므로 Fi를 생성한다.");
             job_id = JOB_FIGHTER;
         }
         ghost.job = static_cast<job_type>(job_id);
@@ -642,18 +642,18 @@ void debug_make_monster_shout(monster* mon)
     else
     {
         if (mon->invisible())
-			mpr("그 몬스터는 투명 상태이고 소리를 내지 않는다.");
+            mpr("그 몬스터는 투명 상태이고 소리를 내지 않는다.");
 
         if (silenced(you.pos()) && !silenced(mon->pos()))
         {
-			mpr("당신은 침묵된 상태지만 몬스터는 아니다; 아마 당신은 "
+            mpr("당신은 침묵된 상태지만 몬스터는 아니다; 아마 당신은 "
                 "아무것도 듣지도, 보지도 못할 것이다.");
         }
         else if (!silenced(you.pos()) && silenced(mon->pos()))
-			mpr("그 몬스터는 침묵 상태이므로 아무것도 말하지 않을 것이다.");
+            mpr("그 몬스터는 침묵 상태이므로 아무것도 말하지 않을 것이다.");
         else if (silenced(you.pos()) && silenced(mon->pos()))
         {
-			mpr("당신과 몬스터는 둘 다 침묵된 상태이다, 당신은 "
+            mpr("당신과 몬스터는 둘 다 침묵된 상태이다, 당신은 "
                 "아무것도 듣지 못할 것이다.");
         }
 
@@ -704,7 +704,7 @@ void wizard_give_monster_item(monster* mon)
     mon_itemuse_type item_use = mons_itemuse(*mon);
     if (item_use < MONUSE_STARTING_EQUIPMENT)
     {
-		mpr("그 타입의 몬스터는 어떤 아이템도 쓸 수 없다.");
+        mpr("그 타입의 몬스터는 어떤 아이템도 쓸 수 없다.");
         return;
     }
 
@@ -718,7 +718,7 @@ void wizard_give_monster_item(monster* mon)
 
     if (item_is_equipped(item))
     {
-		mpr("장비하고 있는 아이템을 몬스터에게 하사할 수 없다.");
+        mpr("장비하고 있는 아이템을 몬스터에게 하사할 수 없다.");
         return;
     }
 
@@ -726,7 +726,7 @@ void wizard_give_monster_item(monster* mon)
 
     if (mon_slot == NUM_MONSTER_SLOTS)
     {
-		mpr("그 타입의 아이템을 그 몬스터에게 줄 수 없다.");
+        mpr("그 타입의 아이템을 그 몬스터에게 줄 수 없다.");
         return;
     }
 
@@ -737,7 +737,7 @@ void wizard_give_monster_item(monster* mon)
     }
 
     if (!mon->take_item(player_slot, mon_slot))
-		mpr("오류: 몬스터가 아이템을 습득하는데 실패했다.");
+        mpr("오류: 몬스터가 아이템을 습득하는데 실패했다.");
 }
 
 static void _move_player(const coord_def& where)
@@ -792,7 +792,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 
     if (already_moving)
     {
-		mpr("이미 이동명령을 수행하는 중이다.");
+        mpr("이미 이동명령을 수행하는 중이다.");
         return;
     }
 
@@ -804,7 +804,7 @@ void wizard_move_player_or_monster(const coord_def& where)
     {
         if (crawl_state.arena_suspended)
         {
-			mpr("당신은 그 장소로 이동할 수 없다.");
+            mpr("당신은 그 장소로 이동할 수 없다.");
             more();
             return;
         }
@@ -888,7 +888,7 @@ void wizard_make_monster_summoned(monster* mon)
     }
 
     mon->mark_summoned(dur, true, type);
-	mpr("몬스터가 소환되었다.");
+    mpr("몬스터가 소환되었다.");
 }
 
 void wizard_polymorph_monster(monster* mon)
@@ -910,13 +910,13 @@ void wizard_polymorph_monster(monster* mon)
 
     if (type == old_type)
     {
-		mpr("이전의 타입과 새로운 타입이 같으므로 바뀌지 않았다.");
+        mpr("이전의 타입과 새로운 타입이 같으므로 바뀌지 않았다.");
         return;
     }
 
     if (mons_species(type) == mons_species(old_type))
     {
-		mpr("대상의 현재 종족과는 다른 종족으로 바꿔야 한다.");
+        mpr("대상의 현재 종족과는 다른 종족으로 바꿔야 한다.");
         return;
     }
 
@@ -932,7 +932,7 @@ void wizard_polymorph_monster(monster* mon)
 
     if (mon->type == old_type)
     {
-		mpr("더 노력해봐라");
+        mpr("더 노력해봐라");
         change_monster_type(mon, type);
         if (!mon->alive())
         {
@@ -944,9 +944,9 @@ void wizard_polymorph_monster(monster* mon)
     }
 
     if (mon->type == old_type)
-		mpr("변신에 실패했다.");
+        mpr("변신에 실패했다.");
     else if (mon->type != type)
-		mpr("몬스터가 원하던 형태가 아닌 다른 무언가로 변했다.");
+        mpr("몬스터가 원하던 형태가 아닌 다른 무언가로 변했다.");
 }
 
 void debug_pathfind(int idx)
@@ -954,7 +954,7 @@ void debug_pathfind(int idx)
     if (idx == NON_MONSTER)
         return;
 
-	mpr("운명을 선택하라!");
+    mpr("운명을 선택하라!");
 #ifndef USE_TILE_LOCAL
     more();
 #endif
@@ -983,7 +983,7 @@ void debug_pathfind(int idx)
             tiles.update_minimap(pos);
 #endif
         string path_str;
-		mpr("이 길이 가장 빠른 길이다: ");
+        mpr("이 길이 가장 빠른 길이다: ");
         for (coord_def pos : path)
             path_str += make_stringf("(%d, %d)  ", pos.x, pos.y);
         mpr(path_str);
@@ -993,7 +993,7 @@ void debug_pathfind(int idx)
         path = mp.calc_waypoints();
         path_str = "";
         mpr("");
-		mpr("그리고 여기 요구되는 경유지가 있다: ");
+        mpr("그리고 여기 요구되는 경유지가 있다: ");
         for (coord_def pos : path)
             path_str += make_stringf("(%d, %d)  ", pos.x, pos.y);
         mpr(path_str);
@@ -1025,7 +1025,7 @@ void debug_miscast(int target_index)
 
     if (!target->alive())
     {
-		mpr("이미 죽은 대상에게 주문 실패의 효과를 불러일으킬 수는 없다.");
+        mpr("이미 죽은 대상에게 주문 실패의 효과를 불러일으킬 수는 없다.");
         return;
     }
 
@@ -1051,7 +1051,7 @@ void debug_miscast(int target_index)
 
     if (spell == SPELL_NO_SPELL && school == SPTYP_NONE)
     {
-		mpr("일치하는 주문 또는 학파가 없다.");
+        mpr("일치하는 주문 또는 학파가 없다.");
         return;
     }
     else if (spell != SPELL_NO_SPELL && school != SPTYP_NONE)
@@ -1107,7 +1107,7 @@ void debug_miscast(int target_index)
     {
         if (spell != SPELL_NO_SPELL)
         {
-			mpr("주문이 아닌 학파의 시전 실패 수준만을 설정할 수 있다.");
+            mpr("주문이 아닌 학파의 시전 실패 수준만을 설정할 수 있다.");
             return;
         }
 
@@ -1119,7 +1119,7 @@ void debug_miscast(int target_index)
         }
         else if (level > 3)
         {
-			mpr("시전 실패의 정도는 최대 3까지만 설정할 수 있다.");
+            mpr("시전 실패의 정도는 최대 3까지만 설정할 수 있다.");
             return;
         }
     }
@@ -1172,7 +1172,7 @@ void debug_miscast(int target_index)
     {
         if (kbhit())
         {
-			mpr("키가 입력되어 시전 실패 실험이 중단되었다.");
+            mpr("키가 입력되어 시전 실패 실험이 중단되었다.");
             getchm();
             break;
         }

@@ -317,7 +317,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     string fname = morgue_name(you.your_name, se.get_death_time());
     if (!dump_char(fname, true, true, &se))
     {
-		mpr("유감스럽게도, 캐릭터의 덤프 파일을 만드는 데 실패했다!");
+        mpr("유감스럽게도, 캐릭터의 덤프 파일을 만드는 데 실패했다!");
         if (!crawl_state.seen_hups)
             more();
         clrscr();

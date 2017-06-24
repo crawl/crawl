@@ -435,7 +435,7 @@ static bool _handle_FAQ()
     vector<string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
     {
-		mpr("FAQ에서 질문을 찾을 수 없다! 버그를 제작자에게 보고해 주기 바란다!");
+        mpr("FAQ에서 질문을 찾을 수 없다! 버그를 제작자에게 보고해 주기 바란다!");
         return false;
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);

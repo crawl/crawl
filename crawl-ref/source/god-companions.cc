@@ -196,7 +196,7 @@ void wizard_list_companions()
 {
     if (companion_list.size() == 0)
     {
-		mpr("당신에겐 동료가 없다.");
+        mpr("당신에겐 동료가 없다.");
         return;
     }
 

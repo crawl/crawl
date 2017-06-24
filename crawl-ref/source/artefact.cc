@@ -396,7 +396,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
     { RING_PROTECTION, { { ARTP_AC, 0 } } },
     { RING_EVASION, { { ARTP_EVASION, 0 } } },
     { RING_SLAYING, { { ARTP_SLAYING, 0 } } },
-	{ RING_WILD,{ { ARTP_WILD, 1 } } },
+    { RING_WILD,{ { ARTP_WILD, 1 } } },
 };
 
 /**
@@ -726,8 +726,8 @@ static const artefact_prop_data artp_data[] =
     { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
     { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
-	{ "Wild", ARTP_VAL_BOOL, 30,    // ARTP_WILD,
-	[]() { return 1; }, nullptr, 0, 0 },
+    { "Wild", ARTP_VAL_BOOL, 30,    // ARTP_WILD,
+    []() { return 1; }, nullptr, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000
@@ -1482,9 +1482,9 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_MAGIC_RESISTANCE;
         break;
 
-	case RING_WILD:
-		provides = ARTP_WILD;
-		break;
+    case RING_WILD:
+        provides = ARTP_WILD;
+        break;
 
     case AMU_RAGE:
         provides = ARTP_BERSERK;

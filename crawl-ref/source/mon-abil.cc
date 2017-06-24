@@ -456,7 +456,7 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
         flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
     }
     else if (you.can_see(*initial_slime))
-		mpr("슬라임 덩어리가 갑자기 사라졌다!");
+        mpr("슬라임 덩어리가 갑자기 사라졌다!");
 
     // Have to 'kill' the slime doing the merging.
     monster_die(*initial_slime, KILL_DISMISSED, NON_MONSTER, true);
@@ -976,7 +976,7 @@ void check_grasping_roots(actor& act, bool quiet)
         if (act.is_player())
         {
             if (!quiet)
-				mpr("당신은 당신을 휘감고 있던 뿌리로부터 빠져나왔다.");
+                mpr("당신은 당신을 휘감고 있던 뿌리로부터 빠져나왔다.");
             you.duration[DUR_GRASPING_ROOTS] = 0;
             you.redraw_evasion = true;
             if (you.attribute[ATTR_LAST_FLIGHT_STATUS]
@@ -1193,7 +1193,7 @@ bool mon_special_ability(monster* mons)
                      mons->name(DESC_THE).c_str());
             }
             else if (you.see_cell(mons->pos()))
-				mpr("휘감는 뿌리가 대지로부터 솟구친다!");
+                mpr("휘감는 뿌리가 대지로부터 솟구친다!");
 
             used = true;
         }

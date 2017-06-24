@@ -115,7 +115,7 @@ static void _do_wizard_command(int wiz_command)
         if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
-			mpr("이 명령은 미궁 안에서만 유효하다!");
+            mpr("이 명령은 미궁 안에서만 유효하다!");
         break;
     case CONTROL('K'): wizard_clear_used_vaults(); break;
 
@@ -212,7 +212,7 @@ static void _do_wizard_command(int wiz_command)
 
     case ']':
         if (!wizard_add_mutation())
-			mpr("돌연변이를 부여하는 데 실패했다.");
+            mpr("돌연변이를 부여하는 데 실패했다.");
         break;
     case '}': wizard_reveal_traps(); break;
 

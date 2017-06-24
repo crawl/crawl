@@ -71,9 +71,9 @@ int SkillRegion::handle_mouse(MouseEvent &event)
 #endif
         m_last_clicked_item = item_idx;
         if (!you.can_train[skill])
-			mpr("당신은 이 기술을 수련할 수 없다.");
+                     mpr("당신은 이 기술을 수련할 수 없다.");
         else if (you.skills[skill] >= 27)
-			mpr("이 스킬을 토글하는 것은 이제 아무런 의미가 없다.");
+                     mpr("이 스킬을 토글하는 것은 이제 아무런 의미가 없다.");
         else
         {
             tiles.set_need_redraw();

@@ -455,11 +455,11 @@ void revive()
     if (you.hp_max <= 0)
     {
         you.lives = 0;
-		mpr("당신은 살아가기엔 너무나도 허약하다.");
+        mpr("당신은 살아가기엔 너무나도 허약하다.");
         // possible only with an extreme abuse of Borgnjor's
         ouch(INSTANT_DEATH, KILLED_BY_DRAINING);
     }
 
-	mpr("당신은 이승으로 다시 돌아왔다...");
+    mpr("당신은 이승으로 다시 돌아왔다...");
     // included in default force_more_message
 }
