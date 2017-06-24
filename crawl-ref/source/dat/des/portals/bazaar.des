@@ -50,11 +50,22 @@ function bazaar_portal(timed)
   end
 end
 
-function random_bazaar_colour()
-  local colours = {"blue", "red", "lightblue", "magenta", "green"}
-  local ret = colours[crawl.random2(#colours) + 1]
+local tilesets = {
+  blue      = { rock = "wall_brick_gray", floor = "floor_grass",
+                halo = "halo_grass", colour = "blue" },
+  red       = { rock = "wall_pebble_red", floor = "floor_vault",
+                halo = "halo_vault", colour = "red" },
+  lightblue = { rock = "wall_pebble_lightblue", floor = "floor_grass",
+                halo = "halo_grass2", colour = "lightblue" },
+  magenta   = { rock = "wall_stone_gray", floor = "floor_dirt",
+                halo = "halo_dirt", colour = "magenta" },
+  green     = { rock = "wall_stone_gray", floor = "floor_grass",
+                halo = "halo_grass", colour = "green" },
+}
 
-  return ret
+function random_bazaar_tileset()
+  local keys = util.keys(tilesets)
+  return tilesets[keys[math.random(#keys)]]
 end
 
 function bazaar_setup(e, shop_halo)
@@ -65,6 +76,7 @@ function bazaar_setup(e, shop_halo)
   e.tags('no_monster_gen')
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
+
   if shop_halo then
     dgn.set_branch_epilogue("Bazaar", "fixup_bazaar")
   else
@@ -73,31 +85,13 @@ function bazaar_setup(e, shop_halo)
 end
 
 function set_bazaar_tiles(shop_halo)
-  if shop_halo == nil then
-    shop_halo = true
-  end
+  local tileset = random_bazaar_tileset()
+  dgn.change_floor_colour(tileset.colour)
+  dgn.change_floor_tile(tileset.floor)
+  dgn.change_rock_tile(tileset.rock)
 
-  dgn.change_floor_colour(random_bazaar_colour())
-
-  local default = {rock="wall_vault", floor="floor_vault", halo="halo_vault"}
-  local tileset = {
-    blue = {rock="wall_brick_gray", floor="floor_grass", halo="halo_grass"},
-    red = {rock="wall_pebble_red", floor="floor_vault", halo="halo_vault"},
-    lightblue = {rock="wall_pebble_lightblue", floor="floor_grass", halo="halo_grass2"},
-    magenta = {rock="wall_stone_gray", floor="floor_dirt", halo="halo_dirt"},
-    green = {rock="wall_stone_gray", floor="floor_grass", halo="halo_grass"},
-  }
-
-  local tile = tileset[dgn.get_floor_colour()]
-  if (tile == nil) then
-    tile = default
-  end
-
-  dgn.change_floor_tile(tile.floor)
-  dgn.change_rock_tile(tile.rock)
-
-  if shop_halo then
-    dgn.floor_halo("enter_shop", "yellow", tile.halo)
+  if shop_halo == nil or shop_halo then
+    dgn.floor_halo("enter_shop", "yellow", tileset.halo)
   end
 end
 
@@ -340,7 +334,7 @@ KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
 # special cases for blue floor
-: local colour = random_bazaar_colour()
+: local colour = random_bazaar_tileset().colour
 : lfloorcol(colour)
 : if colour == "blue" then
 SUBST:   w = W
@@ -408,7 +402,7 @@ SUBST:   y=z, r=z, s=z, z=V, Y=Z, R=Z, S=Z
 KFEAT:   Z = abandoned_shop
 SHUFFLE: lw
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
+: local colour = random_bazaar_tileset().colour
 : lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
@@ -451,7 +445,7 @@ KFEAT:   Z = abandoned_shop
 SUBST:   a=T, z=V
 SHUFFLE: lw
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
+: local colour = random_bazaar_tileset().colour
 : lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
@@ -758,7 +752,7 @@ ITEM:    any jewellery / good_item any jewellery
 ITEM:    any book / good_item any book, any magical staff
 SUBST:   d=.d, e=.e, f=.f
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
+: local colour = random_bazaar_tileset().colour
 : lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
@@ -791,7 +785,7 @@ KFEAT:   B = distillery shop
 ITEM:    ring of flight ident:type
 SHUFFLE: lAB/wBA
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
+: local colour = random_bazaar_tileset().colour
 : lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
@@ -1053,7 +1047,7 @@ SHUFFLE: zZ
 SUBST:   z = ., Z = w
 SHUFFLE: wl, ABCD
 # special cases for blue/red floor
-: local colour = random_bazaar_colour()
+: local colour = random_bazaar_tileset().colour
 : lfloorcol(colour)
 : if colour == "red" then
 SUBST: l = w
@@ -1310,7 +1304,8 @@ SUBST:     "=l , '=. , A=l , B=!
 : else
 SUBST:     "=. , '=l , A=! , B=l
 : end
-KFEAT:     ! = jewellery shop / jewellery shop / gadget shop / scroll shop / book shop
+KFEAT:     ! = jewellery shop / jewellery shop / gadget shop / scroll shop / \
+               book shop
 : set_border_fill_type("endless_lava")
 :          bazaar_setup(_G)
 MAP
