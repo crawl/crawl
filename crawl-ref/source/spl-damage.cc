@@ -982,8 +982,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     enable_attack_conducts(conducts);
 
-    int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
-                   + (random2(pow) / 7));
+    int hurted = 8 + random2(2 + div_rand_round(pow, 7));
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
