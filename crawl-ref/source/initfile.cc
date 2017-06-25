@@ -3311,18 +3311,19 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef USE_TILE
 #ifdef USE_TILE_LOCAL
     else if (key == "tile_full_screen")
-        tile_full_screen = (screen_mode)read_bool(field, tile_full_screen);
+    {
+        const maybe_bool fs_val = read_maybe_bool(field);
+        if (fs_val == MB_TRUE)
+            tile_full_screen = SCREENMODE_FULL;
+        else if (fs_val == MB_FALSE)
+            tile_full_screen = SCREENMODE_WINDOW;
+        else
+            tile_full_screen = SCREENMODE_AUTO;
+    }
 #endif // USE_TILE_LOCAL
 #ifdef TOUCH_UI
     else if (key == "tile_use_small_layout")
-    {
-        if (field == "true")
-            tile_use_small_layout = MB_TRUE;
-        else if (field == "false")
-            tile_use_small_layout = MB_FALSE;
-        else
-            tile_use_small_layout = MB_MAYBE;
-    }
+        tile_use_small_layout = read_maybe_bool(field);
 #endif
     else if (key == "tile_show_player_species" && field == "true")
     {

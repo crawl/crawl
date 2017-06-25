@@ -1972,8 +1972,11 @@ tile_force_overlay = false
         the same number of lines. Increase the view_max_height option if you
         find yourself with unused screen estate.
 
-tile_full_screen = false
-        Setting this option to true will start Crawl in full screen mode.
+tile_full_screen = auto
+        Setting this option to true or false will force full screen mode to be
+        on or off. Setting it to anything else will put it in auto mode, which
+        enables full screen mode only if the screen resolution is smaller than
+        width 1200, or height 800.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf
