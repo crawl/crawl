@@ -959,7 +959,7 @@ static int lua_dgn_set_branch_epilogue(lua_State *ls)
 
     const char *func_name = luaL_checkstring(ls, 2);
 
-    if (!func_name || !*func_name)
+    if (!func_name)
         return 0;
 
     dgn_set_branch_epilogue(br, func_name);

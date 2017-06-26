@@ -6272,8 +6272,6 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
 void dgn_set_branch_epilogue(branch_type branch, string func_name)
 {
-    ASSERT(!func_name.empty());
-
     branch_epilogues[branch] = func_name;
 }
 

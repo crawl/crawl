@@ -2,8 +2,7 @@
 # bazaar.des - Bazaar entry vaults and bazaar layouts.
 #
 # Bazaars should in general not contain dangers. Players expect that bazaars
-# are peaceful. Challenges can come up, but those bazaars are weighted to be
-# especially rare. Apart from this, plain and small maps are weighted to be
+# are peaceful. In general, plain and small maps are weighted to be
 # generic (i.e. common), with the weirder or larger ones providing surprises.
 ###############################################################################
 
@@ -63,12 +62,26 @@ local tilesets = {
                 halo = "halo_grass", colour = "green" },
 }
 
+-- Chooses a bazaar tileset from a list of predefined ones.
 function random_bazaar_tileset()
   local keys = util.keys(tilesets)
   return tilesets[keys[math.random(#keys)]]
 end
 
-function bazaar_setup(e, shop_halo)
+-- This should be called for every bazaar vault, as it sets some standard map
+-- headers for bazaar vaults. The arguments give some control over how the
+-- bazaar is modified automatically.
+--
+-- * randomise_tileset: Controls whether to choose the layout from a coupld of
+--                      predefined tilesets.
+-- * shop_halo:         Controls whether floor "halos" should be placed around
+--                      the shops. Has no effect if randomise_tiles == false.
+--
+-- Both arguments default to true.
+function bazaar_setup(e, randomise_tileset, shop_halo)
+  if randomise_tileset == nil then
+    randomise_tileset = true
+  end
   if shop_halo == nil then
     shop_halo = true
   end
@@ -77,30 +90,29 @@ function bazaar_setup(e, shop_halo)
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
 
-  if shop_halo then
-    dgn.set_branch_epilogue("Bazaar", "fixup_bazaar")
+  -- Note: (false, true) makes no sense because of how the floor halos work.
+  -- In most cases, they would look out of place.
+  if randomise_tileset and shop_halo then
+    randomise_bazaar_tiles()
+    dgn.set_branch_epilogue("Bazaar", "create_shop_halos")
+  elseif randomise_tileset and not shop_halo then
+    randomise_bazaar_tiles()
+    dgn.set_branch_epilogue("Bazaar", "")
   else
-    dgn.set_branch_epilogue("Bazaar", "fixup_bazaar_without_halo")
+    dgn.set_branch_epilogue("Bazaar", "")
   end
 end
 
-function set_bazaar_tiles(shop_halo)
+function randomise_bazaar_tiles()
   local tileset = random_bazaar_tileset()
   dgn.change_floor_colour(tileset.colour)
   dgn.change_floor_tile(tileset.floor)
   dgn.change_rock_tile(tileset.rock)
-
-  if shop_halo == nil or shop_halo then
-    dgn.floor_halo("enter_shop", "yellow", tileset.halo)
-  end
 end
 
-function fixup_bazaar()
-  set_bazaar_tiles()
-end
-
-function fixup_bazaar_without_halo()
-  set_bazaar_tiles(false)
+function create_shop_halos()
+  local tileset = tilesets[dgn.get_floor_colour()]
+  dgn.floor_halo("enter_shop", "yellow", tileset.halo)
 end
 
 }}
@@ -303,9 +315,8 @@ ENDMAP
 # upstair, which will be converted into a stone arch (and on which the player
 # will be placed when entering the bazaar). If there's no upstair, the player
 # will arrive on a random square.
-#
-# You can force a particular colour for the rock walls or floor using
-# LROCKCOL and LFLOORCOL directives.
+# 
+# The bazaar_setup function should be called unless you know what you're doing.
 #
 # Maps are sorted by WEIGHTs: common (20), rare (5), very rare (1).
 
@@ -333,14 +344,11 @@ KFEAT:   C = gadget shop / jewellery shop
 KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
-# special cases for blue floor
-: local colour = random_bazaar_tileset().colour
-: lfloorcol(colour)
+: bazaar_setup(_G)
+: local colour = dgn.get_floor_colour()
 : if colour == "blue" then
 SUBST:   w = W
 : end
-#
-:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -401,19 +409,14 @@ SUBST:   b=a, c=a, d=a, e=a, f=a, a=T
 SUBST:   y=z, r=z, s=z, z=V, Y=Z, R=Z, S=Z
 KFEAT:   Z = abandoned_shop
 SHUFFLE: lw
-# special cases for blue/red floor
-: local colour = random_bazaar_tileset().colour
-: lfloorcol(colour)
+SUBST:   w:wWx, l:lx
+: bazaar_setup(_G)
+: local colour = dgn.get_floor_colour()
 : if colour == "red" then
 SUBST: l = w
-: else
-: if colour == "blue" then
+: elseif colour == "blue" then
 SUBST: w = l
 : end
-: end
-#
-SUBST:   w:wWx, l:lx
-:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxxxxxx
@@ -444,19 +447,14 @@ KFEAT:   A = any shop
 KFEAT:   Z = abandoned_shop
 SUBST:   a=T, z=V
 SHUFFLE: lw
-# special cases for blue/red floor
-: local colour = random_bazaar_tileset().colour
-: lfloorcol(colour)
+SUBST:   w:wWx, l:lx
+: bazaar_setup(_G)
+: local colour = dgn.get_floor_colour()
 : if colour == "red" then
 SUBST: l = w
-: else
-: if colour == "blue" then
+: elseif colour == "blue" then
 SUBST: w = l
 : end
-: end
-#
-SUBST:   w:wWx, l:lx
-:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxGxxxxxxxxxxxxxxxx
@@ -562,7 +560,6 @@ COLOUR:    EeFf = yellow
 SUBST:     ab = !, AB = ., cd = !, CD = ., EeFf = $
 KFEAT:     ! = any shop
 KFEAT:     ? = any shop / T
-LFLOORCOL: blue
 :          bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -751,18 +748,13 @@ KFEAT:   B = jewellery shop
 ITEM:    any jewellery / good_item any jewellery
 ITEM:    any book / good_item any book, any magical staff
 SUBST:   d=.d, e=.e, f=.f
-# special cases for blue/red floor
-: local colour = random_bazaar_tileset().colour
-: lfloorcol(colour)
+: bazaar_setup(_G)
+: local colour = dgn.get_floor_colour()
 : if colour == "red" then
 SUBST: l = w
-: else
-: if colour == "blue" then
+: elseif colour == "blue" then
 SUBST: w = l
 : end
-: end
-#
-:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxwwwwwxxxxxx
@@ -784,18 +776,13 @@ KFEAT:   A = gadget shop
 KFEAT:   B = distillery shop
 ITEM:    ring of flight ident:type
 SHUFFLE: lAB/wBA
-# special cases for blue/red floor
-: local colour = random_bazaar_tileset().colour
-: lfloorcol(colour)
+: bazaar_setup(_G)
+: local colour = dgn.get_floor_colour()
 : if colour == "red" then
 SUBST: l = w
-: else
-: if colour == "blue" then
+: elseif colour == "blue" then
 SUBST: w = l
 : end
-: end
-#
-:        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx......>......xxxxxxxxxx
@@ -1046,23 +1033,18 @@ ORIENT:  encompass
 SHUFFLE: zZ
 SUBST:   z = ., Z = w
 SHUFFLE: wl, ABCD
-# special cases for blue/red floor
-: local colour = random_bazaar_tileset().colour
-: lfloorcol(colour)
-: if colour == "red" then
-SUBST: l = w
-: else
-: if colour == "blue" then
-SUBST: w = l
-: end
-: end
-#
 SHUFFLE: AX
 SUBST:   X = <, A = >
 SUBST:   B : T G
 KFEAT:   C = any shop
 KFEAT:   D = weapon shop / book shop / jewellery shop
-:        bazaar_setup(_G)
+: bazaar_setup(_G)
+: local colour = dgn.get_floor_colour()
+: if colour == "red" then
+SUBST: l = w
+: elseif colour == "blue" then
+SUBST: w = l
+: end
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx.x
@@ -1294,20 +1276,20 @@ ENDMAP
 # it almost exceeds the maximum level size.
 # Can't find a way to fix this without
 # ruining the look of the vault.
-NAME:      bazaar_minmay_generic_d
-TAGS:      no_rotate
-WEIGHT:    5
-ORIENT:    encompass
-LFLOORCOL: darkgrey
+NAME:       bazaar_minmay_generic_d
+TAGS:       no_rotate
+WEIGHT:     5
+ORIENT:     encompass
 : if crawl.coinflip() then
-SUBST:     "=l , '=. , A=l , B=!
+SUBST:      "=l , '=. , A=l , B=!
 : else
-SUBST:     "=. , '=l , A=! , B=l
+SUBST:      "=. , '=l , A=! , B=l
 : end
-KFEAT:     ! = jewellery shop / jewellery shop / gadget shop / scroll shop / \
+KFEAT:      ! = jewellery shop / jewellery shop / gadget shop / scroll shop / \
                book shop
+LFLOORCOL:  darkgrey
 : set_border_fill_type("endless_lava")
-:          bazaar_setup(_G)
+: bazaar_setup(_G, false, false)
 MAP
 lllllllllllllllllllllllllllllllllllll
 ll...lllllllllllllllll'''llllllllllll
@@ -1378,15 +1360,16 @@ ll...lllllllllllllllll"""llllllllllll
 lllllllllllllllllllllllllllllllllllll
 ENDMAP
 
-NAME:      bazaar_minmay_trees
-TAGS:      no_rotate
-WEIGHT:    5
-ORIENT:    encompass
-MONS:      bush
-KFEAT:     ! = any shop
-KFEAT:     ? = any shop / .
-LFLOORCOL: green
-:          bazaar_setup(_G)
+NAME:       bazaar_minmay_trees
+TAGS:       no_rotate
+WEIGHT:     5
+ORIENT:     encompass
+MONS:       bush
+KFEAT:      ! = any shop
+KFEAT:      ? = any shop / .
+LFLOORTILE: floor_grass
+LFLOORCOL:  green
+: bazaar_setup(_G, false, false)
 MAP
 ttttttttttttttt
 ttttttttttttttt
@@ -1489,15 +1472,16 @@ xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  xxxxx         xxxxx         xxxxx
 ENDMAP
 
-NAME:      bazaar_minmay_plants
-TAGS:      no_rotate
-WEIGHT:    5
-ORIENT:    encompass
-MONS:      plant / bush w:5
-KFEAT:     ! = any shop
-LFLOORCOL: green
-SUBST:     " = ....111t
-:          bazaar_setup(_G)
+NAME:       bazaar_minmay_plants
+TAGS:       no_rotate
+WEIGHT:     5
+ORIENT:     encompass
+MONS:       plant / bush w:5
+KFEAT:      ! = any shop
+SUBST:      " = ....111t
+LFLOORTILE: floor_grass
+LFLOORCOL:  green
+: bazaar_setup(_G, false, false)
 MAP
 """"""""""""""""""""""""""""""""">
 """"""""""""""""""""""""""""""""""
