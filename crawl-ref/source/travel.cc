@@ -4026,6 +4026,7 @@ void runrest::initialise(int dir, int mode)
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
+    direction = dir;
     notified_hp_full = false;
     notified_mp_full = false;
     init_travel_speed();
@@ -4141,6 +4142,30 @@ bool runrest::run_should_stop() const
             _base_feat_type(env.map_knowledge(p).feat());
 
         if (run_check[i].grid != feat)
+            return true;
+    }
+
+    bool is_running_diag = (direction % 2 == 1);
+    if (is_running_diag && diag_run_passes_door())
+        return true;
+
+    return false;
+}
+
+// Checks whether the player passes a door when running diagonally, since
+// in certain situations those could be overlooked by only checking "left"
+// and "right".
+// Can be extended if other features should lead to stopping as well.
+bool runrest::diag_run_passes_door() const
+{
+    const int diag_left = (direction + 6) % 8;
+    const int diag_right = (direction + 2) % 8;
+    const int diag_dirs[2] = { diag_left, diag_right };
+    for (int dir : diag_dirs)
+    {
+        const coord_def p = you.pos() + Compass[dir];
+        const auto feat = env.map_knowledge(p).feat();
+        if (feat_is_door(feat))
             return true;
     }
 
