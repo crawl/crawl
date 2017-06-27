@@ -698,6 +698,7 @@ public:
     bool notified_hp_full;
     coord_def pos;
     int travel_speed;
+    int direction;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
@@ -735,6 +736,7 @@ public:
 private:
     void set_run_check(int index, int compass_dir);
     bool run_should_stop() const;
+    bool diag_run_passes_door() const;
 };
 
 enum mon_spell_slot_flag
