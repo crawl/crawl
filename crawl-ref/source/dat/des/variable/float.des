@@ -4123,8 +4123,8 @@ ENDMAP
 
 NAME:   gammafunk_beogh_shrine
 TAGS:   no_monster_gen no_trap_gen
-ORIENT: float
 DEPTH:  D:7-, Orc
+ORIENT: float
 KFEAT:  _ = altar_beogh
 KITEM:  _ = $
 : if you.in_branch("Orc") then
@@ -4177,8 +4177,8 @@ ENDMAP
 
 NAME:   gammafunk_corrupted_shrine
 TAGS:   no_monster_gen no_trap_gen
-ORIENT: float
 DEPTH:  Abyss, D:7-, Depths
+ORIENT: float
 KFEAT:  _ = altar_lugonu
 : if you.in_branch("Abyss") then
 MONS: lurking horror / ancient zyme / worldbinder
@@ -4232,8 +4232,8 @@ ENDMAP
 
 NAME:   gammafunk_steamed_eel
 TAGS:   no_monster_gen no_trap_gen no_pool_fixup
-ORIENT: float
 DEPTH:  D:3-9
+ORIENT: float
 KMONS:  p = plant
 KMONS:  1 = electric eel
 ITEM:   wand of flame ident:type
@@ -4258,8 +4258,8 @@ ENDMAP
 
 NAME:   gammafunk_wand_slinger
 TAGS:   no_monster_gen no_trap_gen no_pool_fixup
-ORIENT: float
 DEPTH:  D:3-13
+ORIENT: float
 KPROP:  LM = no_tele_into
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
@@ -8653,7 +8653,8 @@ ENDMAP
 
 NAME: gammafunk_sealed_arena
 TAGS: no_monster_gen no_trap_gen
-DEPTH: Crypt, D:8-, Depths, Elf, Vaults, Zot
+DEPTH: Crypt, D:8-, Depths, Elf, Zot
+ORIENT: float
 ITEM:  any jewellery good_item
 ITEM:  cloak good_item / scarf good_item / helmet good_item / hat good_item \
        / gloves good_item / pair of boots good_item
@@ -8692,6 +8693,7 @@ ENDMAP
 NAME: gammafunk_its_a_trap
 TAGS: no_monster_gen no_trap_gen no_tele_into
 DEPTH: Crypt, D:$, Depths, Elf, Shoals, Spider, Snake, Swamp, Zot
+ORIENT: float
 KMASK: ^ = no_item_gen
 ITEM: any randart jewellery
 SHUFFLE: FGHI / JKLM
