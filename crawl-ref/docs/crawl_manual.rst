@@ -1519,10 +1519,10 @@ Ogres
   talent for magic, but are poor at making use of magical devices.
 
   Their preferred methods of avoiding beatings are dodging and the use of
-  shields. Many Ogres find it natural to wield some large and blunt weapon.
-  (Countless lethal incidents have taught them to leave most edged weapons be.)
-  While all sophisticated forms of missile combat are too awkward for them, they
-  are good at throwing things, in particular boulders.
+  shields. Ogres find it most natural to fight using maces, polearms, staves,
+  and even their bare hands. While all sophisticated forms of missile combat are
+  too awkward for them, they are good at throwing things, in particular
+  boulders.
 
 Trolls
   Trolls are monstrous creatures with powerful claws. They have thick, knobbly
