@@ -761,9 +761,9 @@ public:
     }
 };
 
-const int MIN_REMOVED = 2;
-const int MAX_REMOVED = 6;
-const int MIN_ADDED = 1;
+const int MIN_REMOVED = 1;
+const int MAX_REMOVED = 2;
+const int MIN_ADDED = 2;
 const int MAX_ADDED = 3;
 
 class PotionMutation : public PotionEffect
@@ -798,8 +798,8 @@ public:
         // Add mutations.
         for (int i = 0; i < add_mutations; i++)
             mutated |= mutate(RANDOM_MUTATION, "potion of mutation", false);
-        // Always one good mutation.
-        mutated |= mutate(RANDOM_GOOD_MUTATION, "potion of mutation", false);
+        // Always one bad mutation.
+        mutated |= mutate(RANDOM_BAD_MUTATION, "potion of mutation", false);
 
         learned_something_new(HINT_YOU_MUTATED);
         return mutated;
