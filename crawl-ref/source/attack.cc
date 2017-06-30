@@ -348,6 +348,7 @@ string attack::anon_pronoun(pronoun_type pron)
  */
 void attack::init_attack(skill_type unarmed_skill, int attack_number)
 {
+    ASSERT(attacker);
     weapon          = attacker->weapon(attack_number);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
