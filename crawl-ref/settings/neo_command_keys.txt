@@ -1,0 +1,106 @@
+# Rebind conflicts
+# ----------------
+
+# [l]esen
+bindkey = [l] CMD_READ
+
+# [Ä]rmor
+bindkey = [Ä] CMD_REMOVE_ARMOUR
+
+# [Ö] looks like a ring / [J]ewellery
+bindkey = [Ö] CMD_REMOVE_JEWELLERY
+bindkey = [J] CMD_REMOVE_JEWELLERY
+
+bindkey = [u] CMD_WAIT
+bindkey = [ß] CMD_SAVE_GAME
+bindkey = [ẞ] CMD_SAVE_GAME_NOW
+bindkey = [y] CMD_CAST_SPELL
+bindkey = [Y] CMD_FORCE_CAST_SPELL
+bindkey = [ü] CMD_CAST_SPELL
+bindkey = [Ü] CMD_FORCE_CAST_SPELL
+
+# [ö] looks like a mouth
+bindkey = [ö] CMD_SHOUT
+
+# Unsolved conflicts
+# -------------------
+
+# bindkey = [^R] CMD_REDRAW_SCREEN
+# bindkey = [^Z] CMD_SUSPEND_GAME
+# bindkey = [t] CMD_TARGET_MAYBE_PREV_TARGET
+# bindkey = [T] CMD_MAP_WIZARD_TELEPORT
+# bindkey = [s]  CMD_TARGET_WIZARD_MAKE_SHOUT
+# bindkey = [S]  CMD_TARGET_WIZARD_MAKE_SUMMONED
+
+# Movement keys
+# -------------
+
+# Moving one grid into a given direction:
+bindkey = [z] CMD_MOVE_DOWN_LEFT
+bindkey = [s] CMD_MOVE_LEFT
+bindkey = [n] CMD_MOVE_DOWN
+bindkey = [r] CMD_MOVE_UP
+bindkey = [t] CMD_MOVE_RIGHT
+bindkey = [b] CMD_MOVE_DOWN_RIGHT
+bindkey = [h] CMD_MOVE_UP_RIGHT
+bindkey = [k] CMD_MOVE_UP_LEFT
+
+# Moving into a given direction until interrupted:
+bindkey = [Z] CMD_RUN_DOWN_LEFT
+bindkey = [S] CMD_RUN_LEFT
+bindkey = [N] CMD_RUN_DOWN
+bindkey = [R] CMD_RUN_UP
+bindkey = [T] CMD_RUN_RIGHT
+bindkey = [B] CMD_RUN_DOWN_RIGHT
+bindkey = [H] CMD_RUN_UP_RIGHT
+bindkey = [K] CMD_RUN_UP_LEFT
+
+# Attacking in a given direction without moving:
+bindkey = [^Z] CMD_ATTACK_DOWN_LEFT
+bindkey = [^S] CMD_ATTACK_LEFT
+bindkey = [^N] CMD_ATTACK_DOWN
+bindkey = [^R] CMD_ATTACK_UP
+bindkey = [^T] CMD_ATTACK_RIGHT
+bindkey = [^B] CMD_ATTACK_DOWN_RIGHT
+bindkey = [^H] CMD_ATTACK_UP_RIGHT
+bindkey = [^K] CMD_ATTACK_UP_LEFT
+
+# Move target cursor one step in a given direction:
+bindkey = [z] CMD_TARGET_DOWN_LEFT
+bindkey = [s] CMD_TARGET_LEFT
+bindkey = [n] CMD_TARGET_DOWN
+bindkey = [r] CMD_TARGET_UP
+bindkey = [t] CMD_TARGET_RIGHT
+bindkey = [b] CMD_TARGET_DOWN_RIGHT
+bindkey = [h] CMD_TARGET_UP_RIGHT
+bindkey = [k] CMD_TARGET_UP_LEFT
+
+# Shoot in a given direction:
+bindkey = [Z] CMD_TARGET_DIR_DOWN_LEFT
+bindkey = [S] CMD_TARGET_DIR_LEFT
+bindkey = [N] CMD_TARGET_DIR_DOWN
+bindkey = [R] CMD_TARGET_DIR_UP
+bindkey = [T] CMD_TARGET_DIR_RIGHT
+bindkey = [B] CMD_TARGET_DIR_DOWN_RIGHT
+bindkey = [H] CMD_TARGET_DIR_UP_RIGHT
+bindkey = [K] CMD_TARGET_DIR_UP_LEFT
+
+# Move map cursor one step in a given direction
+bindkey = [z] CMD_MAP_MOVE_DOWN_LEFT
+bindkey = [s] CMD_MAP_MOVE_LEFT
+bindkey = [n] CMD_MAP_MOVE_DOWN
+bindkey = [r] CMD_MAP_MOVE_UP
+bindkey = [t] CMD_MAP_MOVE_RIGHT
+bindkey = [b] CMD_MAP_MOVE_DOWN_RIGHT
+bindkey = [h] CMD_MAP_MOVE_UP_RIGHT
+bindkey = [k] CMD_MAP_MOVE_UP_LEFT
+
+# Move map cursor several steps in a given direction
+bindkey = [Z] CMD_MAP_JUMP_DOWN_LEFT
+bindkey = [S] CMD_MAP_JUMP_LEFT
+bindkey = [N] CMD_MAP_JUMP_DOWN
+bindkey = [R] CMD_MAP_JUMP_UP
+bindkey = [T] CMD_MAP_JUMP_RIGHT
+bindkey = [B] CMD_MAP_JUMP_DOWN_RIGHT
+bindkey = [H] CMD_MAP_JUMP_UP_RIGHT
+bindkey = [K] CMD_MAP_JUMP_UP_LEFT
