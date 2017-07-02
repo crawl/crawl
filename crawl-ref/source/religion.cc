@@ -1817,13 +1817,17 @@ bool do_god_gift(bool forced)
             success = acquirement(gift_type, you.religion);
             if (success)
             {
-                simple_god_message(" grants you a gift!");
-                // included in default force_more_message
-
                 if (gift_type == OBJ_MISSILES)
+                {
+                    simple_god_message(" grants you ammunition!");
                     _inc_gift_timeout(4 + roll_dice(2, 4));
+                }
                 else
                 {
+                    if (gift_type == OBJ_WEAPONS)
+                        simple_god_message(" grants you a weapon!");
+                    else
+                        simple_god_message(" grants you armour!");
                     // Okawaru charges extra for armour acquirements.
                     if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
                         _inc_gift_timeout(30 + random2avg(15, 2));
