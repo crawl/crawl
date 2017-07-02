@@ -5511,6 +5511,9 @@ static void tag_read_level(reader &th)
     EAT_CANARY;
 
     env.map_seen.reset();
+#if TAG_MAJOR_VERSION == 34
+    vector<coord_def> transporters;
+#endif
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
@@ -5518,6 +5521,11 @@ static void tag_read_level(reader &th)
             grd[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
 
+#if TAG_MAJOR_VERSION == 34
+            // Save these for potential destination clean up.
+            if (grd[i][j] == DNGN_TRANSPORTER)
+                transporters.push_back(coord_def(i, j));
+#endif
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions
             if (env.map_knowledge[i][j].monsterinfo())
@@ -5618,6 +5626,21 @@ static void tag_read_level(reader &th)
     env.spawn_random_rate = unmarshallInt(th);
 
     env.markers.read(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TRANSPORTER_LANDING)
+    {
+        for (auto& tr : transporters)
+        {
+            if (grd(tr) != DNGN_TRANSPORTER)
+                continue;
+
+            map_position_marker *marker
+               = get_position_marker_at(tr, DNGN_TRANSPORTER);
+            if (marker && marker->dest != INVALID_COORD)
+                grd(marker->dest) = DNGN_TRANSPORTER_LANDING;
+        }
+    }
+#endif
 
     env.properties.clear();
     env.properties.read(th);
