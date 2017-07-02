@@ -6,9 +6,9 @@ Bugfix Release
 
 * Restore 5 base damage to kick aux attacks, which had been missing since
   0.16.0.
-* Don't let equipped weapon accuracy affected throwing accuracy.
+* Don't let equipped weapon accuracy affect throwing accuracy.
 * Ignore negative relative window sizes in fullscreen mode. Not ignoring these
-  setting caused fullscreen issues on Windows platforms in particular.
+  settings caused fullscreen issues on Windows platforms in particular.
 * 41 other bugfixes and cleanups.
 
 Stone Soup 0.20 (20170525)
