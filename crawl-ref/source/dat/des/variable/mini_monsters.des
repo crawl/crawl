@@ -6407,28 +6407,42 @@ ENDMAP
 
 NAME:    chequers_guarded_unrand_mask_of_the_dragon
 DEPTH:   Zot, !Zot:$
-TAGS:    no_monster_gen no_item_gen transparent
+TAGS:    no_monster_gen no_item_gen
 : if you.unrands("mask_of_the_dragon") then
 ITEM:    hat randart no_pickup
 : else
 ITEM:    mask_of_the_dragon no_pickup
 : end
-MONS:    nonbase draconian, storm dragon, shadow dragon, golden dragon, ghost moth
-NSUBST:  . = 6:1 / 4:5 / 2:2 / 2:3 / 2:4
+MONS:    storm dragon, shadow dragon, golden dragon, ghost moth, moth of wrath
+# Shuffle one transporter destination location
+NSUBST:  r = 1:R / *:-
+# Shuffle the mask location
+NSUBST:  d = 1:d / *:.
+# Randomly swap which transporter is the entrance
+SHUFFLE: PS/QR
+# Place monsters randomly
+NSUBST:  - = 3:1 / 3:2 / 3:3 / 3:4 / 3:5 / *:.
+# Place transporters
+MARKER: P = lua:transp_loc("mask_of_the_dragon_entry")
+MARKER: Q = lua:transp_dest_loc("mask_of_the_dragon_entry")
+MARKER: R = lua:transp_loc("mask_of_the_dragon_exit")
+MARKER: S = lua:transp_dest_loc("mask_of_the_dragon_exit")
 MAP
-   @@     ccccccc
-  c==cccccc.....c
-  cc.........c..cc
-   cc.......ccc..cc
-    cc.....cccc...cc
-     c.....cc......c
-     c......cd.....n
-     c.....cc......c
-    cc.....cccc...cc
-   cc.......ccc..cc
-  cc.........c..cc
-  c==cccccc.....c
-   @@     ccccccc
+         .........
+ .........ccccccc.
+ .ccccccccc-----c..
+ .ccr--------c--cc..
+ ..cc-------ccc--cc..
+  ..cc-----ccc----cc.
+   ..c-----cc------c.
+   S.n--d--rcd--Q--nP@
+   ..c-----cc------c.
+  ..cc-----ccc----cc.
+ ..cc-------ccc--cc..
+ .ccr--------c--cc..
+ .ccccccccc-----c..
+ .........ccccccc.
+         .........
 ENDMAP
 
 ####
