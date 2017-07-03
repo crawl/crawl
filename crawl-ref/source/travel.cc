@@ -744,41 +744,41 @@ static void _explore_find_target_square()
     }
     else
     {
-        if (runed_door_pause)
-            mpr("Partly explored, obstructed by runed door.");
+        // No place to go? Report to the player.
+        const int estatus = _find_explore_status(tp);
+        const bool unknown_trans = _level_has_unknown_transporters();
+        if (!estatus && !unknown_trans)
+        {
+            mpr("Done exploring.");
+            learned_something_new(HINT_DONE_EXPLORE);
+        }
         else
         {
-            // No place to go? Report to the player.
-            const int estatus = _find_explore_status(tp);
-            const bool unknown_trans = _level_has_unknown_transporters();
+            vector<const char *> reasons;
+            vector<const char *> inacc;
+            string inacc_desc = "";
 
-            if (!estatus && !unknown_trans)
+            if (runed_door_pause)
+                reasons.push_back("unopened runed door");
+
+            if (unknown_trans)
+                reasons.push_back("unvisited transporter");
+
+            if (estatus & EST_GREED_UNFULFILLED)
+                inacc.push_back("items");
+            // A runed door already implies an unexplored place.
+            if (!runed_door_pause && estatus & EST_PARTLY_EXPLORED)
+                inacc.push_back("places");
+
+            if (!inacc.empty())
             {
-                mpr("Done exploring.");
-                learned_something_new(HINT_DONE_EXPLORE);
+                inacc_desc = make_stringf("can't reach some %s",
+                                 comma_separated_line(inacc.begin(),
+                                                      inacc.end()).c_str());
+                reasons.push_back(inacc_desc.c_str());
             }
-            else
-            {
-                string explore_desc = "";
-                vector<const char *> inacc;
-
-                if (unknown_trans)
-                    explore_desc = "unvisited transporter";
-
-                if (estatus & EST_GREED_UNFULFILLED)
-                    inacc.push_back("items");
-                if (estatus & EST_PARTLY_EXPLORED)
-                    inacc.push_back("places");
-
-                if (!inacc.empty())
-                {
-                    explore_desc += make_stringf("%scan't reach some %s",
-                         unknown_trans ? " and " : "",
-                         comma_separated_line(inacc.begin(),
-                                              inacc.end()).c_str());
-                }
-                mprf("Partly explored, %s.", explore_desc.c_str());
-            }
+            mprf("Partly explored, %s.",
+                 comma_separated_line(reasons.begin(), reasons.end()).c_str());
         }
         stop_running();
     }
