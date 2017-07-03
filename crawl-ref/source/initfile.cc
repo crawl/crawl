@@ -343,7 +343,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_trap_col), "#aa6644"),
         new TileColGameOption(SIMPLE_NAME(tile_unseen_col), "black"),
         new TileColGameOption(SIMPLE_NAME(tile_upstairs_col), "cyan"),
-        new TileColGameOption(SIMPLE_NAME(tile_transporter_col), "#ffa500"),
+        new TileColGameOption(SIMPLE_NAME(tile_transporter_col), "#0000ff"),
         new TileColGameOption(SIMPLE_NAME(tile_transporter_landing_col), "#5200aa"),
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
