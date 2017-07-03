@@ -3322,8 +3322,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_SIF_MUNA_FORGET_SPELL:
         return TILEG_ABILITY_SIF_MUNA_AMNESIA;
     // Trog
-    case ABIL_TROG_BURN_SPELLBOOKS:
-        return TILEG_ABILITY_TROG_BURN_SPELLBOOKS;
     case ABIL_TROG_BERSERK:
         return TILEG_ABILITY_TROG_BERSERK;
     case ABIL_TROG_REGEN_MR:

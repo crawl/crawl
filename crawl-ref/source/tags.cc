@@ -1411,6 +1411,8 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
 
+    marshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
+
     // how many spells?
     marshallUByte(th, MAX_KNOWN_SPELLS);
     for (int i = 0; i < MAX_KNOWN_SPELLS; ++i)
@@ -1690,10 +1692,6 @@ static void tag_construct_you_items(writer &th)
     marshallByte(th, NUM_FIXED_BOOKS);
     for (int j = 0; j < NUM_FIXED_BOOKS; ++j)
         marshallByte(th,you.had_book[j]);
-
-    marshallShort(th, NUM_SPELLS);
-    for (int j = 0; j < NUM_SPELLS; ++j)
-        marshallByte(th,you.seen_spell[j]);
 
     marshallShort(th, NUM_WEAPONS);
     for (int j = 0; j < NUM_WEAPONS; ++j)
@@ -2397,6 +2395,10 @@ static void tag_read_you(reader &th)
         unmarshallShort(th);
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_GOLDIFY_BOOKS)
+#endif
+        unmarshallFixedBitVector<NUM_SPELLS>(th, you.spell_library);
     // how many spells?
     you.spell_no = 0;
     count = unmarshallUByte(th);
@@ -3718,14 +3720,15 @@ static void tag_read_you_items(reader &th)
         unmarshallByte(th);
 
     // how many spells?
-    count = unmarshallShort(th);
-    ASSERT(count >= 0);
-    for (int j = 0; j < count && j < NUM_SPELLS; ++j)
-        you.seen_spell.set(j, unmarshallByte(th));
-    for (int j = count; j < NUM_SPELLS; ++j)
-        you.seen_spell.set(j, false);
-    for (int j = NUM_SPELLS; j < count; ++j)
-        unmarshallByte(th);
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_BOOKS)
+    {
+        count = unmarshallShort(th);
+        ASSERT(count >= 0);
+        for (int j = 0; j < count && j < NUM_SPELLS; ++j)
+            unmarshallByte(th);
+        for (int j = NUM_SPELLS; j < count; ++j)
+            unmarshallByte(th);
+    }
 
     count = unmarshallShort(th);
     ASSERT(count >= 0);
@@ -3795,6 +3798,11 @@ static void tag_read_you_items(reader &th)
         && you.num_total_gifts[GOD_NEMELEX_XOBEH])
     {
         nemelex_reclaim_decks();
+    }
+    // Move any books from inventory into the player's library.
+    if (th.getMinorVersion() < TAG_MINOR_GOLDIFY_BOOKS)
+    {
+        add_held_books_to_library();
     }
 #endif
 }

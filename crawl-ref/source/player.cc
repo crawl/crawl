@@ -5006,6 +5006,7 @@ player::player()
     runes.reset();
     obtainable_runes = 15;
 
+    spell_library.reset();
     spells.init(SPELL_NO_SPELL);
     old_vehumet_gifts.clear();
     spell_no        = 0;
@@ -5084,7 +5085,6 @@ player::player()
     magic_contamination = 0;
 
     had_book.reset();
-    seen_spell.reset();
     seen_weapon.init(0);
     seen_armour.init(0);
     seen_misc.reset();

@@ -730,6 +730,13 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     return *wand;
 }
 
+static int _acquirement_book_subtype(bool /*divine*/, int & /*quantity*/)
+{
+    return BOOK_MINOR_MAGIC;
+    //this gets overwritten later, but needs to be a sane value
+    //or asserts will get set off
+}
+
 typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
@@ -741,7 +748,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no scrolls
     _acquirement_jewellery_subtype,
     _acquirement_food_subtype, // potion acquirement = food for vampires
-    0, // books handled elsewhere
+    _acquirement_book_subtype,
     _acquirement_staff_subtype,
     0, // no, you can't acquire the orb
     _acquirement_misc_subtype,
@@ -783,9 +790,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         item_def dummy;
         dummy.base_type = class_wanted;
         dummy.sub_type = type_wanted;
+
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
-
         if (!is_useless_item(dummy, false) && !god_hates_item(dummy)
             && (agent >= NUM_GODS || god_likes_item_type(dummy,
                                                          (god_type)agent)))
@@ -832,8 +839,8 @@ static int _book_weight(book_type book)
     int total_weight = 0;
     for (spell_type stype : spellbook_template(book))
     {
-        // Skip over spells already seen.
-        if (you.seen_spell[stype])
+        // Skip over spells already in library.
+        if (you.spell_library[stype])
             continue;
         if (god_hates_spell(stype, you.religion))
             continue;
@@ -1012,6 +1019,24 @@ static bool _do_book_acquirement(item_def &book, int agent)
         break;
     }
     } // switch book choice
+
+    // If we couldn't make a useful book, try to make a manual instead.
+    // We have to temporarily identify the book for this.
+    if (agent != GOD_XOM)
+    {
+        int oldflags = book.flags;
+        book.flags |= ISFLAG_KNOW_TYPE;
+        bool useless = is_useless_item(book);
+        book.flags = oldflags;
+        if (useless && agent != GOD_SIF_MUNA)
+        {
+            destroy_item(book);
+            book.base_type = OBJ_BOOKS;
+            book.quantity = 1;
+            return _acquire_manual(book);
+        }
+    }
+
     return true;
 }
 

@@ -41,11 +41,10 @@ MARKER:  A = lua:tutorial5.msg("dungeon_overview")
 MARKER:  _ = lua:tutorial5.msg("altar")
 MARKER:  B = lua:tutorial5.msg("religion")
 MARKER:  C = lua:tutorial5.msg("piety_on_kill")
-MARKER:  D = lua:tutorial5.msg("burn_book")
-MARKER:  E = lua:tutorial5.msg("berserk")
-MARKER:  F = lua:tutorial5.msg("exhaustion")
-MARKER:  H = lua:tutorial5.msg("hunger")
-MARKER:  I = lua:tutorial5.msg("berserk2")
+MARKER:  D = lua:tutorial5.msg("berserk")
+MARKER:  E = lua:tutorial5.msg("exhaustion")
+MARKER:  F = lua:tutorial5.msg("hunger")
+MARKER:  H = lua:tutorial5.msg("berserk2")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson5", \
                                  onclimb = "tutorial5.exit" }
 MARKER:  ( = lua:one_way_stair { dst  = "tutorial_lesson5", \
@@ -70,28 +69,28 @@ epilogue{{
   tutorial_intro()
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxx.x}xxx
-xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxx.....xx
-xxxxxx....C......1.....xxxxxxxxxxxxxxxxxx....1...x
-xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxx...2....)x
-xxxxxx.xxxxxxxxxx.....xxxxxxxxxxxxxxI....1....1xxx
-xxxxxx.xxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxx...2...xx
-xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxx..4.xxx
-xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxx..xxxxxx.]xxxx
-xt........txxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
-x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxx...xxxxxxxx
-x..mYbbbYm..xxxxxxxDxxxxxxxxxxxxxxxxxx..1...xxxxxx
-x...bb_bb...xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
-x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
-x..mmm.mmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
-xt.........txxxxxxxexxxxxxxxxxxxxxxxxxxxxxxxxHxxxx
-xtt..G.G..ttxxxxx.....xxxxxxxx.......xxxxxx..xxxxx
-xxxxxxAxxxxxxxxxx...........E+.....3.F.....xxxxxxx
-xxxxxx.xxxxxxxxxx.....xxxxxxxx.......xxxxxxxxxxxxx
-xxxxxx.xxxxxxxxxx.2...xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx...d...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx.[.{.(.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.....1.xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx....C......1.....xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxx...1...xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxx.....xxxxxxxxxxx.x}xxxxxxxxxxx
+xxxxxx.xxxxxxxxxxxx.xxxxxxxxxxxx.....xxxxxxxxxx
+xxxxxxBxxxxxxxxxxxx.xxxxxxxxxx....1...xxxxxxxxx
+xtt..G.G..ttxxxxxxx.xxxxxxxxx...2....)xxxxxxxxx
+xt........txxxxxxxx.xxxxxH....1....1xxxxxxxxxxx
+x..mmm.mmm..xxxxxxx.xxxx.xxxxx...2...xxxxxxxxxx
+x..mYbbbYm..xxxxxxx.xxxx.xxxxxxx..4.xxxxxxxxxxx
+x...bb_bb...xxxxxxxDxxxxx..xxxxxx.]xxxxxxxxxxxx
+x..mVbbbVm..xxxxxxx+xxxxxxx.xxxxxxxxxxxxxxxxxxx
+x..mmm.mmm..xxxxxx...xxxxxxx...xxxxxxxxxxxxxxxx
+xt.........txxxxxx...xxxxxx..1...xxxxxxxxxxxxxx
+xtt..G.G..ttxxxxxx...xxxxxxx..1...xxxxxxxxxxxxx
+xxxxxxAxxxxxxxxxxx...xxxxxxxx....xxxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxxx...xxxxxxxxxxxx.xxxxxxxxxxxxx
+xxxxxx.xxxxxxxxxxx.3.xxxxxxxxxxxxxFxxxxxxxxxxxx
+xxxxxx+xxxxxxxxxxxxExxxxxxxxxxx...xxxxxxxxxxxxx
+xxx...d...xxxxxxxxx............xxxxxxxxxxxxxxxx
+xxx.[.{.(.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

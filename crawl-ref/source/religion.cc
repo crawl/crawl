@@ -188,7 +188,6 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
       { 5, "Trog will gift you weapons as your piety grows.",
            "Trog will no longer gift you weapons." },
-      {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
     },
 
     // Nemelex
@@ -1639,7 +1638,6 @@ void vehumet_accept_gift(spell_type spell)
     if (vehumet_is_offering(spell))
     {
         you.vehumet_gifts.erase(spell);
-        you.seen_spell.set(spell);
         you.duration[DUR_VEHUMET_GIFT] = 0;
     }
 }
@@ -1684,11 +1682,12 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
 
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
+            && !you.spell_library[spell]
             && is_player_spell(spell)
             && spell_difficulty(spell) <= max_level
             && spell_difficulty(spell) >= min_level)
         {
-            if (!you.seen_spell[spell] && !_is_old_gift(spell))
+            if (!_is_old_gift(spell))
                 eligible_spells.insert(spell);
             else
                 backup_spells.insert(spell);

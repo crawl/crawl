@@ -426,7 +426,7 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
                 continue;
         }
 
-        if (avoid_known && you.seen_spell[spell])
+        if (avoid_known && you.spell_library[spell])
             continue;
 
         // fixed level randart: only include spells of the given level
@@ -661,7 +661,7 @@ bool make_book_level_randart(item_def &book, int level)
             continue;
         }
 
-        if (avoid_seen[spell_pos] && you.seen_spell[spell] && coinflip())
+        if (avoid_seen[spell_pos] && you.spell_library[spell] && coinflip())
         {
             // Only once.
             avoid_seen[spell_pos] = false;
@@ -1059,7 +1059,7 @@ static int _randbook_spell_weight(spell_type spell, int agent)
         return 1;
 
     // prefer unseen spells
-    const int seen_weight = you.seen_spell[spell] ? 1 : 4;
+    const int seen_weight = you.spell_library[spell] ? 1 : 4;
 
     // prefer spells roughly approximating the player's overall spellcasting
     // ability (?????)

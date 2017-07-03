@@ -176,6 +176,7 @@ public:
     FixedBitVector<NUM_RUNE_TYPES> runes;
     int obtainable_runes; // can be != 15 in Sprint
 
+    FixedBitVector<NUM_SPELLS> spell_library;
     FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
     set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
@@ -278,7 +279,6 @@ public:
     int magic_contamination;
 
     FixedBitVector<NUM_FIXED_BOOKS> had_book;
-    FixedBitVector<NUM_SPELLS>      seen_spell;
     FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;

@@ -64,6 +64,8 @@ int item_on_floor(const item_def &item, const coord_def& where);
 
 void init_item(int item);
 
+bool add_held_books_to_library();
+
 void link_items();
 
 void fix_item_coordinates();
