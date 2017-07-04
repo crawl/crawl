@@ -3494,8 +3494,9 @@ void LevelInfo::get_transporters(vector<coord_def> &tr)
     {
         const dungeon_feature_type feat = grd(*ri);
 
-        if ((*ri == you.pos() || env.map_knowledge(*ri).known())
-            && feat == DNGN_TRANSPORTER)
+        if (feat == DNGN_TRANSPORTER
+            && (*ri == you.pos() || env.map_knowledge(*ri).known())
+            && env.map_knowledge(*ri).seen())
         {
             tr.push_back(*ri);
         }
