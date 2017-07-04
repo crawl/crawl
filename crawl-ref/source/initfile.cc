@@ -344,6 +344,7 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_unseen_col), "black"),
         new TileColGameOption(SIMPLE_NAME(tile_upstairs_col), "cyan"),
         new TileColGameOption(SIMPLE_NAME(tile_transporter_col), "#ffa500"),
+        new TileColGameOption(SIMPLE_NAME(tile_transporter_landing_col), "#5200aa"),
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
@@ -4083,6 +4084,7 @@ static void _write_minimap_colours()
     _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
     _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
     _write_vcolour("tile_transporter_col", Options.tile_transporter_col);
+    _write_vcolour("tile_transporter_landing_col", Options.tile_transporter_landing_col);
     _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
     _write_vcolour("tile_portal_col", Options.tile_portal_col);
     _write_vcolour("tile_feature_col", Options.tile_feature_col);

@@ -625,6 +625,7 @@ bool feat_is_critical(dungeon_feature_type feat)
 {
     return feat_stair_direction(feat) != CMD_NO_CMD
            || feat_altar_god(feat) != GOD_NO_GOD
+           || feat == DNGN_TRANSPORTER_LANDING
            || feat == DNGN_MALIGN_GATEWAY;
 }
 

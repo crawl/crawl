@@ -27,7 +27,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
 #if TAG_MAJOR_VERSION == 34
          U'©',
 #endif
-         U'©', ' ',  '#',  '*', U'÷',  'X',  '`',  '#', // transporter .. explosion
+         U'©', U'©', ' ',  '#',  '*', U'÷',  'X',  '`',  '#', // transporter .. explosion
          U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
         '\\', U'┌', U'┐', U'└', U'┘',  'V', U'Λ',  '>',  '<',
     },
@@ -40,7 +40,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
 #if TAG_MAJOR_VERSION == 34
         '^',
 #endif
-        '^', ' ', '#', '*', '+', 'X', '`', '#', // transporter .. explosion
+        '^', '^', ' ', '#', '*', '+', 'X', '`', '#', // transporter .. explosion
         '-', '|', '+', '+', '+', '+', '-', '|', '/',
         '\\', '*', '*', '*', '*', 'V', '^', '>', '<'
     }
@@ -68,13 +68,13 @@ dungeon_char_type dchar_by_name(const string &name)
 #if TAG_MAJOR_VERSION == 34
         "teleporter",
 #endif
-        "transporter", "space", "fired_bolt", "fired_zap", "fired_burst",
-        "fired_debug", "fired_missile", "explosion", "frame_horiz",
-        "frame_vert", "frame_top_left", "frame_top_right", "frame_bottom_left",
-        "frame_bottom_right", "draw_horiz", "draw_vert", "draw_slash",
-        "draw_backslash", "draw_top_left", "draw_top_right",
-        "draw_bottom_left", "draw_bottom_right", "draw_down", "draw_up",
-        "draw_right", "draw_left",
+        "transporter", "transporter_landing", "space", "fired_bolt",
+        "fired_zap", "fired_burst", "fired_debug", "fired_missile",
+        "explosion", "frame_horiz", "frame_vert", "frame_top_left",
+        "frame_top_right", "frame_bottom_left", "frame_bottom_right",
+        "draw_horiz", "draw_vert", "draw_slash", "draw_backslash",
+        "draw_top_left", "draw_top_right", "draw_bottom_left",
+        "draw_bottom_right", "draw_down", "draw_up", "draw_right", "draw_left",
     };
     COMPILE_CHECK(ARRAYSZ(dchar_names) == NUM_DCHAR_TYPES);
 

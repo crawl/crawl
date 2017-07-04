@@ -518,6 +518,11 @@ A transporter
 A one-way portal to another place on this level. When using a transporter,
 adjacent allies and monsters will travel with you to the other side.
 %%%%
+A transporter landing site
+
+The destination site of a transporter. As the portal is one-way, you cannot use
+this location to return back through the transporter.
+%%%%
 ########################################################################
 ## Doors
 ########################################################################

@@ -79,6 +79,7 @@ enum dungeon_feature_type
 
 #if TAG_MAJOR_VERSION > 34
     DNGN_TRANSPORTER,
+    DNGN_TRANSPORTER_LANDING,
 #endif
 
     // Various gates
@@ -251,6 +252,7 @@ enum dungeon_feature_type
     DNGN_ENDLESS_SALT,
     DNGN_ALTAR_WU_JIAN,
     DNGN_TRANSPORTER,
+    DNGN_TRANSPORTER_LANDING,
 #endif
 
     NUM_FEATURES

@@ -210,6 +210,7 @@ enum tag_minor_version
     TAG_MINOR_TOMB_HATCHES,        // Use fixed-destination hatches in Tomb.
     TAG_MINOR_TRANSPORTERS,        // Transporters and position marker changes.
     TAG_MINOR_SPIT_POISON_AGAIN_AGAIN, // save compat issues for TAG_MINOR_SPIT_POISON_AGAIN.
+    TAG_MINOR_TRANSPORTER_LANDING, // Transporters landing site features.
 
 #endif
     NUM_TAG_MINORS,

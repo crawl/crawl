@@ -224,6 +224,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
 #endif
     case DNGN_TRANSPORTER:
         return TILE_DNGN_TRANSPORTER;
+    case DNGN_TRANSPORTER_LANDING:
+        return TILE_DNGN_TRANSPORTER_LANDING;
     case DNGN_ENTER_SHOP:
         return TILE_SHOP_GENERAL;
     case DNGN_ABANDONED_SHOP:

@@ -157,7 +157,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_player_col"),         // MF_PLAYER
             options.get("tile_deep_water_col"),     // MF_DEEP_WATER
             options.get("tile_portal_col"),         // MF_PORTAL
-            options.get("tile_transporter_col")     // MF_TRANSPORTER
+            options.get("tile_transporter_col"),    // MF_TRANSPORTER
+            options.get("tile_transporter_landing_col") // MF_TRANSPORTER_LANDING
         ].map(vcolour_to_css_colour);
     }
 

@@ -48,6 +48,7 @@ enum dungeon_char_type
     DCHAR_TELEPORTER,
 #endif
     DCHAR_TRANSPORTER,
+    DCHAR_TRANSPORTER_LANDING,
 
     DCHAR_SPACE,
     DCHAR_FIRED_BOLT,
