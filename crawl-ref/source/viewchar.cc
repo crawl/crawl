@@ -11,38 +11,49 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
     // CSET_DEFAULT
     // It must be limited to stuff present both in CP437 and WGL4.
     {
-         '#', U'▓',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<',
-         '#',  '_', U'∩', U'⌠', U'≈',  '8',  '{',
+        // wall .. altar
+         '#', U'▓',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<', '#',  '_',
+        // arch .. invis_exposed
+        U'∩', U'⌠', U'≈',  '8',  '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
         U'⌂', // CP437 but "optional" in WGL4
 #else
         U'∆', // WGL4 and DEC
 #endif
-         '0', U'φ',  ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(',
-         ':',  '|',
+         '0', U'φ',  ')',  '[',  '/',  '%',  '?',  '=',  '!',  '(', ':',  '|',
 #if TAG_MAJOR_VERSION == 34
          '\\',
 #endif
          '}', U'†', U'÷',  '$',  '"', U'§', U'♣',
 #if TAG_MAJOR_VERSION == 34
-         U'©',
+        U'©',
 #endif
-         U'©', U'©', ' ',  '#',  '*', U'÷',  'X',  '`',  '#', // transporter .. explosion
-         U'═', U'║', U'╔', U'╗', U'╚', U'╝', U'─', U'│',  '/',
-        '\\', U'┌', U'┐', U'└', U'┘',  'V', U'Λ',  '>',  '<',
+        // transporter .. frame_top_left
+        U'©', U'©',  ' ',  '#',  '*', U'÷',  'X',  '`',  '#', U'═', U'║', U'╔',
+        // frame_top_right .. draw_down
+        U'╗', U'╚', U'╝', U'─', U'│',  '/', '\\', U'┌', U'┐', U'└', U'┘',  'V',
+        // draw_up .. draw_left
+        U'Λ',  '>',  '<',
     },
     // CSET_ASCII
     {
-        '#', '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
-        '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
-        '{', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '|', '}', '%', '%', '$', '"', '0', '7', // book .. tree
+        // wall .. altar
+         '#',  '#',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<',  '#',  '_',
+        // arch .. item_food
+        '\\',  '}',  '~',  '8',  '{',  '{',  '{',  '}',  ')',  '[',  '/',  '%',
+        // item_scroll .. item_amulet
+         '?',  '=',  '!',  '(',  ':',  '|',  '|',  '}',  '%',  '%',  '$',  '"',
+        // cloud .. tree
+         '0',  '7',
 #if TAG_MAJOR_VERSION == 34
-        '^',
+         '^',
 #endif
-        '^', '^', ' ', '#', '*', '+', 'X', '`', '#', // transporter .. explosion
-        '-', '|', '+', '+', '+', '+', '-', '|', '/',
-        '\\', '*', '*', '*', '*', 'V', '^', '>', '<'
+        // transporter .. frame_top_left
+         '^',  '^',  ' ',  '#',  '*',  '+',  'X',  '`',  '#',  '-',  '|',  '+',
+        // frame_top_right .. draw_down
+         '+',  '+',  '+',  '-',  '|',  '/', '\\',  '*',  '*',  '*',  '*',  'V',
+        // draw_up .. draw_left
+         '^',  '>',  '<'
     }
 };
 COMPILE_CHECK(ARRAYSZ(dchar_table) == NUM_CSET);
@@ -54,9 +65,8 @@ dungeon_char_type dchar_by_name(const string &name)
     static const char *dchar_names[] =
     {
         "wall", "permawall", "wall_magic", "floor", "floor_magic", "door_open",
-        "door_closed", "trap", "stairs_down", "stairs_up",
-        "grate", "altar", "arch", "fountain", "wavy", "statue",
-        "invis_exposed", "item_detected",
+        "door_closed", "trap", "stairs_down", "stairs_up", "grate", "altar",
+        "arch", "fountain", "wavy", "statue", "invis_exposed", "item_detected",
         "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand",
         "item_food", "item_scroll", "item_ring", "item_potion", "item_missile",
         "item_book", "item_staff",
