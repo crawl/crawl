@@ -539,6 +539,13 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGRE
 },
 
 {
+    DNGN_TRANSPORTER_LANDING, "transporter landing site", "transporter_landing",
+    DCHAR_TRANSPORTER_LANDING, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(DARKGREY),
+    FFT_NONE, MF_TRANSPORTER_LANDING,
+},
+
+{
     DNGN_SEALED_STAIRS_UP, "sealed passage leading up", "sealed_stair_up",
     DCHAR_STAIRS_UP, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(LIGHTGREEN),

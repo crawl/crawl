@@ -463,9 +463,12 @@ static void _builder_assertions()
  **/
 void dgn_place_transporter(const coord_def &pos, const coord_def &dest)
 {
+    ASSERT(pos != dest);
+
     env.markers.add(new map_position_marker(pos, DNGN_TRANSPORTER, dest));
     env.markers.clear_need_activate();
     dungeon_terrain_changed(pos, DNGN_TRANSPORTER, false, true);
+    dungeon_terrain_changed(dest, DNGN_TRANSPORTER_LANDING, false, true);
 }
 
 /**
