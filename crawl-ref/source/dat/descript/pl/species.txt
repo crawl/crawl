@@ -14,10 +14,6 @@ Deep Elf
 Najbardziej magiczne ze wszystkich elfów — ale też i najsłabsze i
 najwrażliwsze.
 %%%%
-Demigod
-
-Nie mogąc wyznawać bogów, Półbogowie sami posiadają boskie cechy i zdrowie.
-%%%%
 Demonspawn
 
 Demonie Pomioty są krzyżówką człowieka i demona, zyskując demoniczne cechy w

@@ -179,7 +179,7 @@ function trove.get_trove_item(e, value, base_item)
 end
 
 function trove.get_trove_toll(e)
-  if crawl.one_chance_in(20) and you.race() ~= "Demigod" and you.god() ~= "Gozag" and you.god() ~= "Uskayaw" then
+  if crawl.one_chance_in(20) and you.race() ~= "Golem" and you.god() ~= "Gozag" and you.god() ~= "Uskayaw" then
     return trove.get_toll_nopiety()
   else
     return trove.get_trove_toll_with_item(

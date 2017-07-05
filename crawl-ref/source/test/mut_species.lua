@@ -109,7 +109,7 @@ end
 
 species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling", "troll", "ghoul",
             "human", "kobold", "centaur", "spriggan", "tengu", "deep elf", "ogre", "deep dwarf",
-            "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
+            "vine stalker", "vampire", "golem", "formicid", "naga", "octopode", "felid", "barachi",
             "mummy"}
 
 test_random_mutations_species("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)

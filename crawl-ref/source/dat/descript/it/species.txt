@@ -15,11 +15,6 @@ Deep Elf
 Gli elfi delle profondità sono la specie più affine alla magia, ma anche la più
 fragile.
 %%%%
-Demigod
-
-I semidei non possono adorare una divinità, ma hanno attributi ultraterreni e
-godono di una salute ugualmente straordinaria.
-%%%%
 Demonspawn
 
 I demoniaci sono mezzi uomini e mezzi demoni. Acquisendo potere subiscono

@@ -709,13 +709,6 @@ deep troll shaman
 Un troll des profondeurs ayant des pouvoir divins pour renforcer et accélérer
 ses semblables.
 %%%%
-demigod
-
-L'aura de puissance qui émane de cet être ressemblant à un humain trahit son
-ascendance divine. Et vu les dieux qui sont connus (du moins officiellement)
-pour forniquer avec les mortels, il ne vaudrait mieux pas miser sur sa bonne
-nature...
-%%%%
 demonic crawler
 
 Un insecte infernal avec un corps long et gonflé, se reposant sur des douzaines

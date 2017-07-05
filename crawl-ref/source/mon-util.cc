@@ -201,6 +201,7 @@ void init_mon_name_cache()
         {
             if (mon == MONS_PLAYER_SHADOW
                 || mon == MONS_BAI_SUZHEN_DRAGON
+                || mon == MONS_GOLEM
                 || mon != MONS_SERPENT_OF_HELL
                    && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {

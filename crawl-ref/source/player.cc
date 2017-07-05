@@ -7034,7 +7034,7 @@ bool player::can_bleed(bool allow_tran) const
         return false;
 
     if (is_lifeless_undead() || is_nonliving())
-    {   // demonspawn and demigods have a mere drop of taint
+    {   // demonspawn have a mere drop of taint
         return false;
     }
 

@@ -356,8 +356,8 @@ static string _get_branches(bool display)
 // iterate through every god and display their altar's discovery state by colour
 static string _get_altars(bool display)
 {
-    // Just wastes space for demigods.
-    if (you.species == SP_DEMIGOD)
+    // Just wastes space for golems.
+    if (you.species == SP_GOLEM)
         return "";
 
     string disp;

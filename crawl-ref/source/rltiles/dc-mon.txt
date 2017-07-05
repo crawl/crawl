@@ -568,7 +568,7 @@ master_elementalist MONS_MASTER_ELEMENTALIST
 ## From an entry vault
 halfling MONS_HALFLING
 %rim 0
-demigod MONS_DEMIGOD
+golem MONS_GOLEM
 
 ## Angels ('A')
 %rim 1

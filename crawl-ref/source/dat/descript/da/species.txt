@@ -13,11 +13,6 @@ Deep Elf
 
 Denne elver har det største talent for magi, men er også den skrøbeligste.
 %%%%
-Demigod
-
-De følger aldrig en gud, men halvguder kompenserer for det med guddommelige
-egenskaber og helbred.
-%%%%
 Demonspawn
 
 Dæmonyngel er halvt menneske, halvt dæmon. De pådrager sig stærke, dæmoniske

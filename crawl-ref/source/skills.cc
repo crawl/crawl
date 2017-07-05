@@ -1345,7 +1345,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         { "Adj", species_name(species, SPNAME_ADJ) },
         { "Genus", species_name(species, SPNAME_GENUS) },
         { "genus", lowercase_string(species_name(species, SPNAME_GENUS)) },
-        { "Genus_Short", species == SP_DEMIGOD ? "God" :
+        { "Genus_Short", species == SP_GOLEM ? "God" :
                            species_name(species, SPNAME_GENUS) },
         { "Walker", species_walking_verb(species) + "er" },
         { "Weight", _stk_weight(species) },

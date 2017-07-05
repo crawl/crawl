@@ -963,9 +963,9 @@ void wizard_transform()
 
 void wizard_join_religion()
 {
-    if (you.species == SP_DEMIGOD)
+    if (you.species == SP_GOLEM)
     {
-        mpr("Not even in wizmode may Demigods worship a god!");
+        mpr("Not even in wizmode may Golems worship a god!");
         return;
     }
     god_type god = choose_god();
