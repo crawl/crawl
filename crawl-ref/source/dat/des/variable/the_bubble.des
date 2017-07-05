@@ -117,31 +117,35 @@ NAME: the_bubble_gammafunk_roulette
 TAGS: the_bubble unrand
 NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
 SUBST:  x : bcvx
-NSUBST: S = S / D / E / F
+# Randomize sides on which transporters appear and randomize destinations.
+SHUFFLE: DFJL / EHKM, DE / FH / JK / LM
+NSUBST: S = S / .
+# Make transporter markers. Glyphs are set up so that each transporter takes
+# you to a landing site other than the one next to the transporter you took.
 {{
--- Each transporter goes to the next glyph in the string.
-glyphs = "DEFD"
-for i = 1, #glyphs - 1 do
-  lua_marker(glyphs:sub(i,i), transp_loc("roulette_" .. tostring(i)))
-  lua_marker(glyphs:sub(i+1,i+1), transp_dest_loc("roulette_" .. tostring(i)))
+local trans_glyphs = "DFJL"
+local dest_glyphs = "HKME"
+for i = 1, #trans_glyphs do
+  lua_marker(trans_glyphs:sub(i,i), transp_loc("roulette_" .. tostring(i)))
+  lua_marker(dest_glyphs:sub(i,i), transp_dest_loc("roulette_" .. tostring(i)))
 end
 }}
 : gammafunk_the_bubble_setup(_G, "R", "S")
 MAP
 0.     ...
-....xxx...0
-.....S.....0
+.S..xxx..S0
+....D.E....0
 .00.....00.0
 .00x...x00..
 ..xx...xx..
-...........
-S....R....S
-...........
+M.........F
+.....R.....
+L.........H
 ..xx...xx..
 .00x...x00..
 .00.....00.0
-.....S.....0
-....xxx...0
+....K.J....0
+.S..xxx..S0
 0.     ...
 ENDMAP
 
