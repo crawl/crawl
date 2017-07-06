@@ -6407,7 +6407,7 @@ ENDMAP
 
 NAME:    chequers_guarded_unrand_mask_of_the_dragon
 DEPTH:   Zot, !Zot:$
-TAGS:    no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_trap_gen
 : if you.unrands("mask_of_the_dragon") then
 ITEM:    hat randart no_pickup
 : else
@@ -6415,11 +6415,11 @@ ITEM:    mask_of_the_dragon no_pickup
 : end
 # Shuffle one transporter destination location
 NSUBST:  r = 1:R / *:-
-# Randomly swap which transporter is the entrance, and mask location
-SHUFFLE: PQD/SRE
-# Place the mask
-SUBST: D = d, E = -
-# Place monsters randomly
+# Randomly swap which transporter is the entrance and the loot locations.
+SHUFFLE: PQd|*$ / SRDEFH
+# Replace non-loot locations with floor.
+SUBST: DEFH = -
+# Place monsters randomly.
 # 3 of each dragon (and up to 4 random extras), 3 ghost moth, 3 moth of wrath
 MONS:    storm dragon, shadow dragon, golden dragon, ghost moth, moth of wrath
 NSUBST:  - = 3:1 / 3:2 / 3:3 / 4=123... / 3:4 / 3:5 / *:.
@@ -6434,11 +6434,11 @@ MAP
  .ccccccccc-----c..
  .ccr--------c--cc..
  .cc--------ccc--cc..
-  .ccc-----ccc----cc.
-   ..c-----cc------c.
-   S.nD----rcE---Q-nP@
-   ..c-----cc------c.
-  .ccc-----ccc----cc.
+  .ccc*$---cccF---cc.
+   ..c|$---ccEHH---c.
+   S.nd$---rcDH--Q-nP@
+   ..c|$---ccEHH---c.
+  .ccc*$---cccF---cc.
  .cc--------ccc--cc..
  .ccr--------c--cc..
  .ccccccccc-----c..
