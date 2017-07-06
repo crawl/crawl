@@ -4040,8 +4040,7 @@ MONS: naga mage / naga ritualist / salamander mystic, nagaraja
 SUBST: 5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
 MONS: ghost moth / death cob / curse toe
-MONS: draconian annihilator / draconian scorcher / draconian shifter \
-      / draconian knight / draconian monk / draconian stormcaller
+MONS: nonbase draconian
 MONS: ancient lich, orb of fire
 SUBST: 3 = 2, 4 = 3, 5 = 4
 : end
