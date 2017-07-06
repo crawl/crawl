@@ -1594,9 +1594,7 @@ ENDMAP
 
 NAME:    gammafunk_abyss_rune_reverse_zot
 TAGS:    abyss_rune unrand
-MONS:    draconian
-MONS:    draconian annihilator / draconian scorcher / draconian shifter \
-         / draconian knight / draconian monk / draconian stormcaller w:5
+MONS:    draconian, nonbase draconian
 MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
          / very ugly thing / quicksilver dragon / shadow dragon
 MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
