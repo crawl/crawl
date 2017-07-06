@@ -6413,7 +6413,6 @@ ITEM:    hat randart no_pickup
 : else
 ITEM:    mask_of_the_dragon no_pickup
 : end
-MONS:    storm dragon, shadow dragon, golden dragon, ghost moth, moth of wrath
 # Shuffle one transporter destination location
 NSUBST:  r = 1:R / *:-
 # Randomly swap which transporter is the entrance, and mask location
@@ -6421,7 +6420,9 @@ SHUFFLE: PQD/SRE
 # Place the mask
 SUBST: D = d, E = -
 # Place monsters randomly
-NSUBST:  - = 3:1 / 3:2 / 3:3 / 3:4 / 3:5 / *:.
+# 3 of each dragon (and up to 4 random extras), 3 ghost moth, 3 moth of wrath
+MONS:    storm dragon, shadow dragon, golden dragon, ghost moth, moth of wrath
+NSUBST:  - = 3:1 / 3:2 / 3:3 / 4=123... / 3:4 / 3:5 / *:.
 # Place transporters
 MARKER: P = lua:transp_loc("mask_of_the_dragon_entry")
 MARKER: Q = lua:transp_dest_loc("mask_of_the_dragon_entry")
@@ -6432,13 +6433,13 @@ MAP
  .........ccccccc.
  .ccccccccc-----c..
  .ccr--------c--cc..
- ..cc-------ccc--cc..
-  ..cc-----ccc----cc.
+ .cc--------ccc--cc..
+  .ccc-----ccc----cc.
    ..c-----cc------c.
-   S.nD----rcE----QnP@
+   S.nD----rcE---Q-nP@
    ..c-----cc------c.
-  ..cc-----ccc----cc.
- ..cc-------ccc--cc..
+  .ccc-----ccc----cc.
+ .cc--------ccc--cc..
  .ccr--------c--cc..
  .ccccccccc-----c..
  .........ccccccc.
