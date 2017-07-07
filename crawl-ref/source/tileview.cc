@@ -26,6 +26,7 @@
 #include "tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"

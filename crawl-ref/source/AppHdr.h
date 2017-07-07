@@ -122,9 +122,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #define USE_UNIX_SIGNALS
 
     #define FILE_SEPARATOR '/'
-#ifndef USE_TILE_LOCAL
-    #define USE_CURSES
-#endif
 
     // More sophisticated character handling
     #define CURSES_USE_KEYPAD
@@ -154,12 +151,8 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
         #define USE_UNIX_SIGNALS
     #endif
 
-    #ifdef USE_TILE_WEB
-        #error Webtiles are not supported on Windows.
-    #endif
-    #ifndef USE_TILE_LOCAL
-        #include "libw32c.h"
-    #endif
+    // TODO: libw32c.h still contains an #ifdef USE_TILE_WEB
+    #include "libw32c.h"
 
     // NT and better are happy with /; I'm not sure how 9x reacts.
     #define FILE_SEPARATOR '/'
@@ -400,15 +393,6 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
 
-#ifdef USE_TILE_LOCAL
-# ifndef PROPORTIONAL_FONT
-#  error PROPORTIONAL_FONT not defined
-# endif
-# ifndef MONOSPACED_FONT
-#  error MONOSPACED_FONT not defined
-# endif
-#endif
-
 #ifdef __cplusplus
 
 template < class T >
@@ -461,10 +445,9 @@ static inline void UNUSED(const volatile T &)
 #endif
 
 #ifdef __cplusplus
-# ifdef USE_TILE
-#  include "libgui.h"
-# endif
 # include "tiles.h"
 #endif
+
+#include "libconsole.h"
 
 #endif // !defined __OBJC__

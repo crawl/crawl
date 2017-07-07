@@ -31,6 +31,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "tileview.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "unicode.h"
 #include "view.h"

@@ -45,6 +45,7 @@
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"
 #endif
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"

@@ -265,26 +265,8 @@ void text_popup(const string& text, const wchar_t *caption);
 class mouse_control
 {
 public:
-    mouse_control(mouse_mode mode)
-    {
-        m_previous_mode = ms_current_mode;
-        ms_current_mode = mode;
-
-#ifdef USE_TILE_WEB
-        if (m_previous_mode != ms_current_mode)
-            tiles.update_input_mode(mode);
-#endif
-    }
-
-    ~mouse_control()
-    {
-#ifdef USE_TILE_WEB
-        if (m_previous_mode != ms_current_mode)
-            tiles.update_input_mode(m_previous_mode);
-#endif
-        ms_current_mode = m_previous_mode;
-    }
-
+    mouse_control(mouse_mode mode);
+    ~mouse_control();
     static mouse_mode current_mode() { return ms_current_mode; }
 
 private:

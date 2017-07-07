@@ -19,6 +19,7 @@
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "tilereg-text.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "viewgeom.h"
 #include "windowmanager.h"

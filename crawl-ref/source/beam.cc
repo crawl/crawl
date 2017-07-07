@@ -74,6 +74,7 @@
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
+#include "tiles-build-specific.h"
 #include "transform.h"
 #include "traps.h"
 #include "viewchar.h"

@@ -15,6 +15,7 @@
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)
 {

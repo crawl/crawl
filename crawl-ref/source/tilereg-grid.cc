@@ -9,6 +9,7 @@
 #include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilefont.h"
+#include "tiles-build-specific.h"
 
 InventoryTile::InventoryTile()
 {

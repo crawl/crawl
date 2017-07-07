@@ -15,6 +15,7 @@
  #include "tilepick.h"
  #include "tileview.h"
 #endif
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "view.h"
 

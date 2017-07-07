@@ -30,6 +30,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "tileview.h"
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "view.h"
 #include "wiz-mon.h"

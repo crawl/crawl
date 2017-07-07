@@ -14,6 +14,7 @@
 #include "tile-inventory-flags.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "viewgeom.h"
 
 AbilityRegion::AbilityRegion(const TileRegionInit &init) : GridRegion(init)

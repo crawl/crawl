@@ -8,6 +8,7 @@
 #include "macro.h"
 #include "tilebuf.h"
 #include "tilefont.h"
+#include "tiles-build-specific.h"
 
 MessageRegion::MessageRegion(FontWrapper *font) :
     TextRegion(font),

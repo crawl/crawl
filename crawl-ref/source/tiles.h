@@ -1,6 +1,8 @@
 /**
  * @file
- * @brief Tiles interface, either for SDL or web tiles
+ * @brief Tiles interface, either for SDL or web tiles. This file contains
+ * definitions loaded in all versions (including console). See
+ * `tiles-build-specific.h` for everything that is conditional on build type.
 **/
 
 #pragma once
@@ -57,9 +59,3 @@ struct tile_def
 };
 
 TextureID get_dngn_tex(tileidx_t idx);
-
-#ifdef USE_TILE_LOCAL
- #include "tilesdl.h"
-#elif defined(USE_TILE_WEB)
- #include "tileweb.h"
-#endif

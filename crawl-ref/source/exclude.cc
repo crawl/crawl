@@ -24,6 +24,7 @@
 #include "stringutil.h"
 #include "tags.h"
 #include "terrain.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "view.h"
 

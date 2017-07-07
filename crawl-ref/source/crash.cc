@@ -87,6 +87,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 #include "stringutil.h"
 #include "syscalls.h"
 #include "threads.h"
+#include "tiles-build-specific.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Code for printing out debugging info on a crash.

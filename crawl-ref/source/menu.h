@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "tiles-build-specific.h"
 #include "format.h"
 #ifdef USE_TILE
  #include "tiledoll.h"

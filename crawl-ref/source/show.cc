@@ -26,6 +26,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"

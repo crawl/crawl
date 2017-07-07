@@ -6,7 +6,7 @@
 #include "tileweb-text.h"
 
 #include "stringutil.h"
-#include "tileweb.h"
+#include "tiles-build-specific.h"
 #include "unicode.h"
 
 WebTextArea::WebTextArea(string name) :

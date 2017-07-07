@@ -37,6 +37,7 @@
 #include "tiledef-main.h"
 #include "tilefont.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"

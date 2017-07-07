@@ -16,6 +16,7 @@
 #include "output.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "unicode.h"
 #include "viewgeom.h"
 #if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)

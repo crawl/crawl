@@ -12,6 +12,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tiledef-gui.h"
+#include "tiles-build-specific.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),

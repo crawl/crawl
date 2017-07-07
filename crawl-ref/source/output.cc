@@ -44,6 +44,7 @@
 #include "status.h"
 #include "stringutil.h"
 #include "throw.h"
+#include "tiles-build-specific.h"
 #include "transform.h"
 #include "viewchar.h"
 #include "view.h"
@@ -51,7 +52,6 @@
 
 
 #ifdef USE_TILE_LOCAL
-#include "tilesdl.h"
 
 /*
  * this glorious piece of code works by:

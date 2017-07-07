@@ -21,6 +21,7 @@
 #include "terrain.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
+#include "tiles-build-specific.h"
 #include "viewgeom.h"
 
 CommandRegion::CommandRegion(const TileRegionInit &init,
