@@ -42,6 +42,7 @@
 #include "ng-setup.h"
 #include "notes.h"
 #include "output.h"
+#include "player-save-info.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-book.h"

@@ -12,6 +12,7 @@
 #include "random.h"
 #include "skills.h"
 #include "stringutil.h"
+#include "tiledoll.h"
 
 #include "species-data.h"
 

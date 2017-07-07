@@ -46,6 +46,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "tiledoll.h"
 #include "traps.h"
 #include "view.h"
 #include "viewmap.h"
