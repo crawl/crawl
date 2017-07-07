@@ -54,6 +54,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-save-info.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"

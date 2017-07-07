@@ -39,6 +39,7 @@
 #include "dungeon.h"
 #include "end.h"
 #include "errors.h"
+#include "player-save-info.h"
 #include "fineff.h"
 #include "food.h" //for HUNGER_MAXIMUM
 #include "ghost.h"

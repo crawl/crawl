@@ -25,6 +25,7 @@
 #endif
 #include "options.h"
 #include "player.h"
+#include "player-save-info.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE

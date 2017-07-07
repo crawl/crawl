@@ -13,6 +13,7 @@
 #include "options.h"
 #include "tile-flags.h"
 #include "tiledef-player.h"
+#include "tiledoll.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
 
