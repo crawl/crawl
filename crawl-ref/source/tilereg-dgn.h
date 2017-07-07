@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "cursor-type.h"
+#include "text-tag-type.h"
 #include "tiledgnbuf.h"
 #include "tilereg.h"
 #include "viewgeom.h"

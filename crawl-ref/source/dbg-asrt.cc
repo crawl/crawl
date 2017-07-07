@@ -31,6 +31,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "version.h"
 #include "view.h"

@@ -19,6 +19,7 @@
 #include "tiledef-player.h"
 #include "tilepick.h"
 #include "tilereg-dgn.h"
+#include "tiles-build-specific.h"
 #include "tileview.h"
 #include "viewgeom.h"
 

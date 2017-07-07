@@ -56,6 +56,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"

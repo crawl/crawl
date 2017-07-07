@@ -39,6 +39,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "tiledef-gui.h"    // spell tiles
+#include "tiles-build-specific.h"
 #include "transform.h"
 
 struct spell_desc

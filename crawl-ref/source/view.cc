@@ -71,6 +71,7 @@
  #include "tilepick-p.h"
  #include "tileview.h"
 #endif
+#include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel.h"
 #include "unicode.h"

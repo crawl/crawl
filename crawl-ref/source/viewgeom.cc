@@ -5,6 +5,7 @@
 #include "end.h"
 #include "options.h"
 #include "state.h"
+#include "tiles-build-specific.h"
 
 
 // ----------------------------------------------------------------------

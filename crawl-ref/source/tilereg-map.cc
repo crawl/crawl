@@ -11,7 +11,7 @@
 #include "nearby-danger.h"
 #include "player.h"
 #include "options.h"
-#include "tilesdl.h"
+#include "tiles-build-specific.h"
 #include "travel.h"
 #include "viewgeom.h"
 

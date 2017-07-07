@@ -10,6 +10,13 @@
 #include "text-tag-type.h"
 #include "tilereg.h"
 
+#ifndef PROPORTIONAL_FONT
+# error PROPORTIONAL_FONT not defined
+#endif
+#ifndef MONOSPACED_FONT
+# error MONOSPACED_FONT not defined
+#endif
+
 class Popup;
 class Region;
 class CRTRegion;
@@ -37,6 +44,13 @@ class StatRegion;
 class MessageRegion;
 
 struct map_cell;
+struct crawl_view_geometry;
+
+void gui_init_view_params(crawl_view_geometry &geom);
+
+// If mouse on dungeon map, returns true and sets gc.
+// Otherwise, it just returns false.
+bool gui_get_mouse_grid_pos(coord_def &gc);
 
 typedef map<int, TabbedRegion*>::iterator tab_iterator;
 

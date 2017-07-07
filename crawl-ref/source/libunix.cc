@@ -35,6 +35,7 @@
 #include "cio.h"
 #include "crash.h"
 #include "state.h"
+#include "tiles-build-specific.h"
 #include "unicode.h"
 #include "view.h"
 

@@ -6,6 +6,7 @@
 
 #include "libutil.h"
 #include "macro.h"
+#include "tiles-build-specific.h"
 
 StatRegion::StatRegion(FontWrapper *font) : TextRegion(font)
 {

@@ -66,10 +66,9 @@
 #ifdef USE_TILE
 #include "tilepick.h"
 #include "tiledef-player.h"
-#ifdef USE_TILE_WEB
-#include "tileweb.h"
 #endif
-#endif
+#include "tiles-build-specific.h"
+
 
 
 // For finding the executable's path

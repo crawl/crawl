@@ -3,6 +3,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tiletex.h"
+#include "tiles-build-specific.h"
 
 enum wm_event_type
 {

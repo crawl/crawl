@@ -28,9 +28,7 @@
 #include "sound.h"
 #include "state.h"
 #include "stringutil.h"
-#ifdef USE_TILE_WEB
- #include "tileweb.h"
-#endif
+#include "tiles-build-specific.h"
 #include "unwind.h"
 #include "view.h"
 
