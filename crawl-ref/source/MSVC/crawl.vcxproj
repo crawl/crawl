@@ -783,7 +783,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\lev-pand.h" />
     <ClInclude Include="..\level-state-type.h" />
     <ClInclude Include="..\libconsole.h" />
-    <ClInclude Include="..\libgui.h" />
     <ClInclude Include="..\libunix.h" />
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />
@@ -879,6 +878,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\playable.h" />
     <ClInclude Include="..\player-equip.h" />
     <ClInclude Include="..\player-reacts.h" />
+    <ClInclude Include="..\player-save-info.h" />
     <ClInclude Include="..\player-stats.h" />
     <ClInclude Include="..\player.h" />
     <ClInclude Include="..\potion-type.h" />
@@ -1009,6 +1009,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\tilereg-title.h" />
     <ClInclude Include="..\tilereg.h" />
     <ClInclude Include="..\tiles.h" />
+    <ClInclude Include="..\tiles-build-specific.h" />
     <ClInclude Include="..\tilesdl.h" />
     <ClInclude Include="..\tiletex.h" />
     <ClInclude Include="..\tileview.h" />
