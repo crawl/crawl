@@ -281,10 +281,6 @@ enum mons_equip_desc_level_type
     DESC_WEAPON_WARNING, // like DESC_WEAPON but also includes dancing weapons
 };
 
-#ifndef USE_TILE_LOCAL
-char mlist_index_to_letter(int index);
-#endif
-
 void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
