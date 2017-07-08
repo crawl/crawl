@@ -75,9 +75,7 @@ void describe_skill(skill_type skill);
 
 int hex_chance(const spell_type spell, const int hd);
 
-#ifdef USE_TILE
 string get_command_description(const command_type cmd, bool terse);
-#endif
 
 void print_description(const string &desc);
 void print_description(const describe_info &inf);

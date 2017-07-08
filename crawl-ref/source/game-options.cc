@@ -8,6 +8,7 @@
 #include "game-options.h"
 #include "options.h"
 #include "misc.h"
+#include "tiles-build-specific.h"
 
 static unsigned _curses_attribute(const string &field, string &error)
 {
@@ -108,6 +109,11 @@ string CursesGameOption::loadFromString(string field, rc_line_type) const
 }
 
 #ifdef USE_TILE
+TileColGameOption::TileColGameOption(VColour &val, std::set<std::string> _names,
+                    string _default)
+        : GameOption(_names), value(val),
+          default_value(str_to_tile_colour(_default)) { }
+
 void TileColGameOption::reset() const { value = default_value; }
 
 string TileColGameOption::loadFromString(string field, rc_line_type) const

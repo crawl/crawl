@@ -56,11 +56,3 @@ void random_uselessness();
 
 void prompt_inscribe_item();
 
-#ifdef USE_TILE
-void tile_item_use_floor(int idx);
-void tile_item_pickup(int idx, bool part);
-void tile_item_drop(int idx, bool partdrop);
-void tile_item_eat_floor(int idx);
-void tile_item_use(int idx);
-void tile_item_use_secondary(int idx);
-#endif

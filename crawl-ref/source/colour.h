@@ -96,9 +96,6 @@ protected:
 int str_to_colour(const string &str, int default_colour = -1,
                   bool accept_number = true, bool accept_elemental = true);
 const string colour_to_str(colour_t colour);
-#ifdef USE_TILE
-VColour str_to_tile_colour(string colour);
-#endif
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);

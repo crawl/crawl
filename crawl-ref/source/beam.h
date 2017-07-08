@@ -151,9 +151,7 @@ struct bolt
 
     ray_def     ray;             // shoot on this specific ray
 
-#ifdef USE_TILE
-    int         tile_beam;
-#endif
+    int         tile_beam; // only used if USE_TILE is defined
 
 private:
     bool can_see_invis = false;

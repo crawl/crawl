@@ -561,6 +561,8 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
 
     return true;
 }
+#else
+bool InvEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
 #endif
 
 bool InvMenu::is_selectable(int index) const

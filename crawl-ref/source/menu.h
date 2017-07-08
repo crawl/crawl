@@ -184,9 +184,9 @@ public:
         return get_text();
     }
 
-#ifdef USE_TILE
     virtual bool get_tiles(vector<tile_def>& tileset) const;
 
+#ifdef USE_TILE
     virtual void add_tile(tile_def tile);
 #endif
 };
