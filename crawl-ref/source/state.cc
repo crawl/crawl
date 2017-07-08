@@ -46,10 +46,8 @@ game_state::game_state()
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
       stat_gain_prompt(false), level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
-#ifdef USE_TILE_LOCAL
       tiles_disabled(false),
       title_screen(true),
-#endif
       invisible_targeting(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(), mon_act(nullptr)
