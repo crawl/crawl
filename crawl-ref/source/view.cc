@@ -897,6 +897,8 @@ void view_update_at(const coord_def &pos)
 }
 
 #ifndef USE_TILE_LOCAL
+// TODO: this should be generalized so that it doesn't need to be #ifdef'd
+// if so, check if tiles-build-specific.h can be removed from fineff.cc, god-blessing.cc, melee-attack.cc
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
