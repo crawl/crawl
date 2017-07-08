@@ -100,10 +100,9 @@ struct game_state
     bool viewport_monster_hp;
     bool viewport_weapons;
 
-#ifdef USE_TILE_LOCAL
-    bool tiles_disabled;
-    bool title_screen;
-#endif
+    bool tiles_disabled; // ignored unless USE_TILE_LOCAL is defined
+    bool title_screen; // ignored unless USE_TILE_LOCAL is defined
+
     bool invisible_targeting;
 
     // Area beyond which view should be darkened,  0 = disabled.
