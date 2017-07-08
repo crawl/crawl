@@ -36,6 +36,12 @@ void flash_view(use_animation_type a, colour_t colour,
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
                       targeter *where = nullptr);
 
+// warning: this function is broken (and ifdef'd out) in local tiles.
+void flash_monster_colour(const monster* mon, colour_t fmc_colour,
+                          int fmc_delay);
+
+
+
 enum animation_type
 {
     ANIMATION_SHAKE_VIEWPORT,

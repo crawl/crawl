@@ -19,7 +19,6 @@
 #include "mon-place.h"
 #include "religion.h"
 #include "stringutil.h"
-#include "tiles-build-specific.h"
 #include "view.h"
 
 /**

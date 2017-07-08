@@ -28,7 +28,6 @@
 #include "religion.h"
 #include "state.h"
 #include "terrain.h"
-#include "tiles-build-specific.h"
 #include "transform.h"
 #include "view.h"
 #include "viewchar.h"

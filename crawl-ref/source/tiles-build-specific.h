@@ -30,9 +30,3 @@ void tile_item_eat_floor(int idx);
 void tile_item_use(int idx);
 void tile_item_use_secondary(int idx);
 #endif
-
-#ifndef USE_TILE_LOCAL
-// in view.cc
-void flash_monster_colour(const monster* mon, colour_t fmc_colour,
-                          int fmc_delay);
-#endif
