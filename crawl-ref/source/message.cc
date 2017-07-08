@@ -917,6 +917,9 @@ void webtiles_send_last_messages(int n)
     tiles.json_close_object(true);
     tiles.finish_message();
 }
+#else
+void webtiles_send_messages() { }
+void webtiles_send_last_messages(int n) { }
 #endif
 
 static FILE* _msg_dump_file = nullptr;
