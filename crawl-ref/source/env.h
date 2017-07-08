@@ -56,14 +56,14 @@ struct crawl_environment
     vector<coord_def>                        travel_trail;
 
     // indexed by grid coords
-#ifdef USE_TILE
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
     FixedArray<tileidx_t, GXM, GYM> tile_bk_cloud;
 #endif
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
-#ifdef USE_TILE
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_cloud;

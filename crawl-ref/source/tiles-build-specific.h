@@ -15,3 +15,9 @@ bool is_tiles(); // in tilesdl.cc
 #else
 static inline bool is_tiles() { return false; }
 #endif
+
+#ifndef USE_TILE_LOCAL
+// in view.cc
+void flash_monster_colour(const monster* mon, colour_t fmc_colour,
+                          int fmc_delay);
+#endif
