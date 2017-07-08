@@ -69,6 +69,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
+#include "tiles-build-specific.h"
 #include "transform.h"
 #include "uncancel.h"
 #include "unwind.h"

@@ -129,9 +129,7 @@ class TileColGameOption : public GameOption
 {
 public:
     TileColGameOption(VColour &val, std::set<std::string> _names,
-                      string _default)
-        : GameOption(_names), value(val),
-          default_value(str_to_tile_colour(_default)) { }
+                      string _default);
     void reset() const override;
     string loadFromString(std::string field, rc_line_type) const override;
 

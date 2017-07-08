@@ -928,12 +928,6 @@ FeatureMenuEntry::FeatureMenuEntry(const string &str,
 }
 
 #ifdef USE_TILE
-PlayerMenuEntry::PlayerMenuEntry(const string &str) :
-    MenuEntry(str, MEL_ITEM, 1)
-{
-    quantity = 1;
-}
-
 bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons || tiles.empty())
@@ -941,6 +935,16 @@ bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     tileset.insert(end(tileset), begin(tiles), end(tiles));
     return true;
+}
+#else
+bool MenuEntry::get_tiles(vector<tile_def>& tileset) const { return false; }
+#endif
+
+#ifdef USE_TILE
+PlayerMenuEntry::PlayerMenuEntry(const string &str) :
+    MenuEntry(str, MEL_ITEM, 1)
+{
+    quantity = 1;
 }
 
 void MenuEntry::add_tile(tile_def tile)

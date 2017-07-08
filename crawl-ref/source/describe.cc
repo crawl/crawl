@@ -4033,7 +4033,7 @@ void describe_skill(skill_type skill)
     getchm();
 }
 
-#ifdef USE_TILE
+// only used in tiles
 string get_command_description(const command_type cmd, bool terse)
 {
     string lookup = command_to_name(cmd);
@@ -4056,7 +4056,6 @@ string get_command_description(const command_type cmd, bool terse)
 
     return result.substr(0, result.length() - 1);
 }
-#endif
 
 void alt_desc_proc::nextline()
 {

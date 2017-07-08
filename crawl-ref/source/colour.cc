@@ -12,6 +12,7 @@
 #include "dgn-height.h"
 #include "options.h"
 #include "stringutil.h"
+#include "tiles-build-specific.h"
 #include "libutil.h" // map_find
 
 static FixedVector<unique_ptr<element_colour_calc>, NUM_COLOURS> element_colours;
