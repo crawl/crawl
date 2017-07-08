@@ -896,13 +896,12 @@ void view_update_at(const coord_def &pos)
 #endif
 }
 
-#ifndef USE_TILE_LOCAL
-// TODO: this should be generalized so that it doesn't need to be #ifdef'd
-// if so, check if tiles-build-specific.h can be removed from fineff.cc, god-blessing.cc, melee-attack.cc
+// TODO: this should be fixed so that it can work in local tiles
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay)
 {
     ASSERT(mon); // XXX: change to const monster &mon
+#ifndef USE_TILE_LOCAL
     if ((Options.use_animations & UA_PLAYER) && you.can_see(*mon))
     {
         colour_t old_flash_colour = you.flash_colour;
@@ -918,8 +917,8 @@ void flash_monster_colour(const monster* mon, colour_t fmc_colour,
         view_update_at(c);
         update_screen();
     }
-}
 #endif
+}
 
 bool view_update()
 {

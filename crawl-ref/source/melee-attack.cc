@@ -45,7 +45,6 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
-#include "tiles-build-specific.h"
 #include "transform.h"
 #include "traps.h"
 #include "unwind.h"
