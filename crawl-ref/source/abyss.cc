@@ -795,6 +795,7 @@ static void _abyss_update_transporter(const coord_def &pos,
     if (grd(pos) != DNGN_TRANSPORTER)
         return;
 
+    // Get the marker, since we will need to modify it.
     map_position_marker *marker =
         get_position_marker_at(pos, DNGN_TRANSPORTER);
     if (!marker || marker->dest == INVALID_COORD)

@@ -336,3 +336,4 @@ public:
 
 map_position_marker *get_position_marker_at(const coord_def &pos,
                                             dungeon_feature_type feat);
+coord_def get_transporter_dest(const coord_def &pos);

@@ -1322,3 +1322,23 @@ map_position_marker *get_position_marker_at(const coord_def &pos,
 
     return nullptr;
 }
+
+/**
+ * Get the destination of the transporter at the given pos.
+ *
+ * @param pos     The position of the transporter.
+ * @returns       The destination of the transporter. This will be
+ *                INVALID_COORD if no valid destination exists.
+ **/
+coord_def get_transporter_dest(const coord_def &pos)
+{
+    ASSERT(grd(pos) == DNGN_TRANSPORTER);
+
+    map_position_marker *marker
+        = get_position_marker_at(pos, DNGN_TRANSPORTER);
+    coord_def dest = INVALID_COORD;
+
+    if (marker)
+        dest = marker->dest;
+    return dest;
+}

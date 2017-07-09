@@ -5654,10 +5654,9 @@ static void tag_read_level(reader &th)
             if (grd(tr) != DNGN_TRANSPORTER)
                 continue;
 
-            map_position_marker *marker
-               = get_position_marker_at(tr, DNGN_TRANSPORTER);
-            if (marker && marker->dest != INVALID_COORD)
-                grd(marker->dest) = DNGN_TRANSPORTER_LANDING;
+            const coord_def dest = get_transporter_dest(tr);
+            if (dest != INVALID_COORD)
+                grd(dest) = DNGN_TRANSPORTER_LANDING;
         }
     }
 #endif

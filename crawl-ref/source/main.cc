@@ -1404,13 +1404,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
 
 static void _take_transporter()
 {
-    map_position_marker *marker = get_position_marker_at(you.pos(),
-                                                         DNGN_TRANSPORTER);
     const coord_def old_pos = you.pos();
-    coord_def dest = INVALID_COORD;
+    coord_def dest = get_transporter_dest(you.pos());
 
-    if (marker)
-        dest = marker->dest;
     ASSERT(dest != old_pos);
 
     if (dest == INVALID_COORD || !you.is_habitable(dest))
