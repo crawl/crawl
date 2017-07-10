@@ -4313,41 +4313,33 @@ NAME:   nzn_motion_control
 TAGS:   no_pool_fixup no_trap_gen no_monster_gen
 DEPTH:  D:10-, Lair:4-, Shoals:2-, !Shoals:$
 ORIENT: float
-NSUBST: { = 1:{ / *:s
-SHUFFLE: HY/MC, $/%, eE/rR, {/s
+NSUBST: { = 1:{ / *:S
+SHUFFLE: HY/12, $/%, eE/rR
 SUBST:  ER = ., r = x, e = + .
-NSUBST: W = 4:W / *:.
 : if you.in_branch("Shoals") then
-NSUBST: s = 1:S / *:W
-KMONS:  S = merfolk avatar
-SUBST:  $ = % $:20, H = M, Y = C
-: if crawl.one_chance_in(3) then
-NSUBST: % = 1:* / *:%
-: end
+NSUBST: S = 1:s / *:W
+KFEAT:  s = W
+KMONS:  s = merfolk avatar
+SUBST:  $ = % $:20, H = 1, Y = 2, % = %:40 *
 : elseif you.absdepth() < 12 then
-NSUBST: s = 5:W / *:.
-SUBST:  % = $:30 .:15 %:5, H = ., Y = .
-SUBST:  w = W
+SUBST:  % = $:30 .:15 %:5, H = ., Y = ., S = .
 : else
-NSUBST: s = 10:W / *:.
-SUBST:  $ = $:20 %:5, H = M, Y = C
-SUBST:  w = w W
+SUBST:  $ = $:20 %:5, H = 1, Y = 2, S = .
 : end
-KMONS:  M = manticore
-KMONS:  C = catoblepas
+MONS:  manticore, catoblepas
 MAP
 xxxxxE@Exxxxx
-xH..xxExx..Cx
+xH..xxExx..2x
 x.%WWxexWW$.x
-x.WsswswssW.x
-xxWsssssssWxx
-Rxxwss{sswxxR
-@Rrss{s{ssrR@
-Rxxwss{sswxxR
-xxWsssssssWxx
-x.WsswswssW.x
+x.WSSwSwSSW.x
+xxWSSSSSSSWxx
+RxxwSS{SSwxxR
+@RrSS{S{SSrR@
+RxxwSS{SSwxxR
+xxWSSSSSSSWxx
+x.WSSwSwSSW.x
 x.$WWxexWW%.x
-xM..xxExx..Yx
+x1..xxExx..Yx
 xxxxxE@Exxxxx  
 ENDMAP
 
@@ -8892,80 +8884,57 @@ vvvvvvv4n..S..n4vvvvvvv
 ENDMAP
 
 NAME:   nzn_random_ring
-DEPTH:  D:4-, !D:$, Depths, !Depths:$
+DEPTH:  D:4-, !D:$, Depths, !Depths:$, Lair, !Lair:$, Zot, !Zot:$
 TAGS: no_pool_fixup no_monster_gen no_item_gen no_trap_gen
-: if you.absdepth() < 8 then
-NSUBST: a = 2:0 / *:.
-NSUBST: A = 6:W / 1:^ / *:.
-NSUBST: b = 3:0 / *:.
-NSUBST: B = 1:^ / *:.
-NSUBST: 1 = 3:@ / *:x
-NSUBST: 2 = 2:. / *:x
-NSUBST: 3 = 2:. / *:x
-NSUBST: 4 = 8:W / *:.
-NSUBST: 5 = 1:C / 1:} / 1:R / 1:M
-SUBST:  M = 0 8, R = $:30 %, ^ = ^ ., D = .
+NSUBST: A = 6:0 / 2:^ / 1:r / *:., B = 20:W / 12:w
+NSUBST: C = 1:8 / 6:0 / 2:r / *:., D = 2:^ / 2:r / *:.
+NSUBST: h = 2:+ / *:c, j = 2:. / 7:x / 13:c / *:v
+NSUBST: k = 1:+ / 6:v / 6:b / *:c, E = 2:0 / 2:8 / 2:r / *:.
+NSUBST: H = 1:C / 1:} / 1:R / 1:1
+SUBST:  F = wl
+NSUBST: G = 1:2 / *:G
+:  if you.absdepth() < 8 then
+SHUFFLE: wW/SS
+SUBST:  8 = 0, S = ., 1 = 8:40 9, r = $:30 % ., R = %:30 *, ^ = ^ ., 2 = G
 KFEAT:  ^ = shaft trap / teleport trap / alarm trap
-:   if crawl.coinflip() then
-SUBST: W = .
-:   end
-: elseif you.absdepth() < 15 then
-NSUBST: a = 4:0 / 1:^ / 1:$ / *:.
-NSUBST: A = 8:W / 4:w / 1:^ / *:.
-NSUBST: b = 5:0 / 1:r / *:.
-NSUBST: B = 2:^ / 1:G / 1:r / *:.
-NSUBST: D = 4:. / *:W
-NSUBST: 1 = 2:@ / 2:+ / 15:c / *:x
-NSUBST: 2 = 1:. / 1:+ / 7:c / 4:v / *:x
-NSUBST: 3 = 1:+ / 4:c / 2:v / 2:b / *:x
-NSUBST: 4 = 8:W / 2:w / 2:0 / *:.
-NSUBST: 5 = 1:C / 1:} / 1:R / 1:M
-SUBST:  M = 8:45 9:5, r = % $ ., R = %:30 $ *:2, ^ = ^ .
-SHUFFLE: }/>
+:  elseif you.in_branch("Dungeon") then
+SHUFFLE: wW/SS, }/>
+SUBST:  8 = 0:30 8, 1 = 8:40 9, S = ., r = $ % ., R = $ %:30 *:2, 2 = G:50 1
 KFEAT:  ^ = shaft trap / alarm trap / teleport trap
-:   if crawl.coinflip() then
-SUBST: Ww = .
-:   end
-:   if crawl.one_chance_in(4) then
-KMONS:  G = ice statue / oklob plant
-:   end
-: elseif you.in_branch("Depths") then
-NSUBST: a = 6:0 / 2:^ / 1:$ / 1:% / *:.
-NSUBST: A = 20:W / 12:w
-NSUBST: b = 1:8 / 6:0 / 2:r / *:.
-NSUBST: B = 2:^ / 2:G / 2:r / *:.
-NSUBST: 1 = 2:+ / *:c
-NSUBST: 2 = 2:. / 7:x / 13:c / *:v
-NSUBST: 3 = 1:+ / 6:v / 6:b / *:c
-NSUBST: 4 = 2:0 / 2:8 / 2:r / *:.
-NSUBST: 5 = 1:C / 1:} / 1:R / 1:M
-SUBST:  r = % $, R = % * |:5, D = w
+MONS:   ice statue
+:  elseif you.in_branch("Lair") then
+SHUFFLE: }/>, Ww/SS
+SUBST:  1 = 8:40 9, S = ., r = $ % .:20, R = % *, ^ = ., 2G = .
+:  elseif you.in_branch("Depths") then
+SUBST:  r = $ %, R = *:30 |, 2 = G:50 2
 SHUFFLE: Ww/ll
 KFEAT:  ^ = shaft trap / alarm trap / zot trap
-KMONS:  M = juggernaut / ancient lich / golden dragon
-:   if crawl.coinflip() then
-KMONS: G = w:3 ice statue / w:3 obsidian statue / w:1 orange crystal statue
-:   end
-: end
+MONS:   juggernaut / ancient lich / golden dragon
+MONS:   obsidian statue / orange crystal statue
+:  elseif you.in_branch("Zot") then
+SUBST:  r = % $ ., wW = l, ^ = ^ ., R = ], C = ), 2 = G:50 2
+KFEAT:  ^ = zot trap
+MONS:   ancient lich / orb of fire, orange crystal statue
+:  end
 MAP
-        11111111
-      111aaAAaa111
-    111aaa2222aaa111
-  111aaA222bb222Aaa111
- 11aaaa22bbBBbb22aaaa11
-11aAaa22bB3333Bb22aaAa11
-1aaaA22bB334433Bb22Aaaa1
-1Aaaa2bb33D44D33bb2aaaA1
-1aAAa2bB344mm443Bb2aAAa1
-1aaaA2Bb3D4554D3bB2Aaaa1
-1aaaA2Bb3D4554D3bB2Aaaa1
-1aAAa2bB344mm443Bb2aAAa1
-1Aaaa2bb33D44D33bb2aaaA1
-1aaaA22bB334433Bb22Aaaa1
-11aAaa22bB3333Bb22aaAa11
- 11aaaa22bbBBbb22aaaa11
-  111aaA222bb222Aaa111
-    111aaa2222aaa111
-      111aaAAaa111
-        11111111
+        hhhhhhhh
+      hhhAABBAAhhh
+    hhhAAAjjjjAAAhhh
+  hhhAAAjjjCCjjjBAAhhh
+ hhAAAAjjCCDDCCjjAAAAhh
+hhABAAjjCGkkkkGCjjAABAhh
+hAAABjjCGkkEEkkGCjjBAAAh
+hBAAAjCCkkFEEFkkCCjAAABh
+hABBAjCDkEEmmEEkDCjABBAh
+hAAABjDCkFEHHEFkCDjBAAAh
+hAAABjDCkFEHHEFkCDjBAAAh
+hABBAjCDkEEmmEEkDCjABBAh
+hBAAAjCCkkFEEFkkCCjAAABh
+hAAABjjCGkkEEkkGCjjBAAAh
+hhABAAjjCGkkkkGCjjAABAhh
+ hhAAAAjjCCDDCCjjAAAAhh
+  hhhAABjjjCCjjjBAAhhh
+    hhhAAAjjjjAAAhhh
+      hhhAABBAAhhh
+        hhhhhhhh
 ENDMAP
