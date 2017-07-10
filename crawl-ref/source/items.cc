@@ -1941,6 +1941,8 @@ item_def *auto_assign_item_slot(item_def& item)
 {
     if (!item.defined())
         return nullptr;
+    if (!in_inventory(item))
+        return nullptr;
 
     int newslot = -1;
     bool overwrite = true;
