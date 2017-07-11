@@ -331,40 +331,12 @@ void TextDB::_regenerate_db()
 // DB system
 // ----------------------------------------------------------------------
 
-#if !defined(DGAMELAUNCH) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_LINUX)
-static void* init_db(void *arg)
-{
-    AllDBs[(intptr_t)arg].init();
-    return 0;
-}
-#endif
-
 #define NUM_DB ARRAYSZ(AllDBs)
 
 void databaseSystemInit()
 {
-    // Note: if you're building contrib libraries initially checked out
-    // before 2011-12-28 and this assertion fails, please make sure you have
-    // the current version ("git submodule sync;git submodule update --init").
-    ASSERT(sqlite3_threadsafe());
-
-    thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
-// Using threads for loading on Windows at the moment seems to cause
-// random failures to find files (#5354); thus disabling it here until
-// we can identify what's going on.
-// 2017: this is also happening (with low frequency) on linux builds.
-#if !defined(DGAMELAUNCH) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_LINUX)
-        if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
-#endif
-        {
-            // if thread creation fails, do it serially
-            th[i] = 0;
-            AllDBs[i].init();
-        }
-    for (unsigned int i = 0; i < NUM_DB; i++)
-        if (th[i])
-            thread_join(th[i]);
+        AllDBs[i].init();
 }
 
 void databaseSystemShutdown()
