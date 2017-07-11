@@ -84,6 +84,8 @@ class Delay;
 
 int player_stealth();
 
+enum class mutation_activity_type; // in mutation.h
+
 /// used for you.train[] & for rendering skill tiles (tileidx_skill)
 enum training_status
 {
@@ -607,6 +609,19 @@ public:
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
 
+    // Information about player mutations. Implemented in mutation.cc
+    int       get_base_mutation_level(mutation_type mut, bool innate=true, bool temp=true, bool normal=true) const;
+    int       get_mutation_level(mutation_type mut, bool check_form=true) const;
+    int       get_mutation_level(mutation_type mut, mutation_activity_type minact) const;
+    int       get_innate_mutation_level(mutation_type mut) const;
+    int       get_temp_mutation_level(mutation_type mut) const;
+
+    bool      has_temporary_mutation(mutation_type mut) const;
+    bool      has_innate_mutation(mutation_type mut) const;
+    bool      has_mutation(mutation_type mut, bool check_form=true) const;
+
+    int       how_mutated(bool innate=false, bool levels=false, bool temp=true) const;
+
     int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const
         override;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const
@@ -738,6 +753,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
     bool stasis() const override;
+    bool cloud_immune(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
     bool cancellable_flight() const;
@@ -965,8 +981,6 @@ bool player_kiku_res_torment();
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
 
-int player_mutation_level(mutation_type mut, bool temp = true);
-
 int player_res_electricity(bool calc_unid = true, bool temp = true,
                            bool items = true);
 
@@ -1029,7 +1043,7 @@ void update_player_symbol();
 void update_vision_range();
 
 maybe_bool you_can_wear(equipment_type eq, bool temp = false);
-bool player_has_feet(bool temp = true);
+bool player_has_feet(bool temp = true, bool include_mutations = true);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
@@ -1097,7 +1111,7 @@ void dec_napalm_player(int delay);
 bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
-void dec_exhaust_player(int delay);
+void dec_berserk_recovery_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);

@@ -26,6 +26,8 @@ enum map_feature
     MF_PLAYER,
     MF_DEEP_WATER,
     MF_PORTAL,
+    MF_TRANSPORTER,
+    MF_TRANSPORTER_LANDING,
     MF_MAX,
 
     MF_SKIP,

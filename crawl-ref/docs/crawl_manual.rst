@@ -621,8 +621,8 @@ adventures, how they are displayed, and what commands there are to use them:
 /        wands          (use 'V' to evoke)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\\ or |  staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
-\+ or :  spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
+\\ or |   staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
+\+ or :   spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
 }        miscellaneous  (use 'V' for evoking from the inventory)
 $        gold           (use 'g' to pick up)
 =======  =============  ================================================
@@ -1519,10 +1519,10 @@ Ogres
   talent for magic, but are poor at making use of magical devices.
 
   Their preferred methods of avoiding beatings are dodging and the use of
-  shields. Many Ogres find it natural to wield some large and blunt weapon.
-  (Countless lethal incidents have taught them to leave most edged weapons be.)
-  While all sophisticated forms of missile combat are too awkward for them, they
-  are good at throwing things, in particular boulders.
+  shields. Ogres find it most natural to fight using maces, polearms, staves,
+  and even their bare hands. While all sophisticated forms of missile combat are
+  too awkward for them, they are good at throwing things, in particular
+  boulders.
 
 Trolls
   Trolls are monstrous creatures with powerful claws. They have thick, knobbly
@@ -1710,6 +1710,19 @@ Vine Stalkers
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
+Gnolls
+  Gnolls are a race of caniform humanoids hailing from the arid deserts and
+  grasslands of the east. With a variety of lurid tales told of them, others
+  avoid the Gnolls. Despite their isolation, Gnolls are unusually drawn to
+  the Dungeon.
+
+  Gnolls are quick to learn, picking up the basics of any skill within a
+  short period of time. Their attention wanes quickly, though, and they find it
+  more and more difficult to train a given skill the more practised they become
+  at it. Thus, Gnolls often prefer to dabble in a wide variety of fresh
+  and interesting skills. Their powerful noses indicate to them where treasures
+  lay hidden in the Dungeon.
+
 The Undead
 ========================================
 
@@ -1841,9 +1854,8 @@ Gladiators
 Monks
   The Monk is a member of an ascetic order dedicated to the perfection of one's
   body and soul through the discipline of the martial arts. Monks start with
-  very little equipment, but can survive without the weighty weapons and
-  spellbooks needed by characters of other backgrounds. When they choose a god
-  for the first time, their spiritual training gives them a piety boost.
+  only a simple weapon and a robe. When they choose a god for the first time,
+  their spiritual training gives them a piety boost.
 
 Berserkers
   Berserkers are hardy warriors who worship Trog the Wrathful, from whom they

@@ -222,7 +222,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
         ASSERT_RANGE(keysym.sym, SDLK_F1, SDLK_UNDO + 1);
         return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
 
-        // Hack.  libw32c overloads clear with '5' too.
+        // Hack. libw32c overloads clear with '5' too.
     case SDLK_KP_5:
         return CK_CLEAR + numpad_offset;
 
@@ -412,8 +412,8 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
         const int x = Options.tile_window_width;
         const int y = Options.tile_window_height;
         // By default, fill the whole screen.
-        m_windowsz->x = (x > 0) ? x : _desktop_width + x;
-        m_windowsz->y = (y > 0) ? y : _desktop_height + y;
+        m_windowsz->x = (x > 0) ? x : _desktop_width;
+        m_windowsz->y = (y > 0) ? y : _desktop_height;
     }
     else
     {
@@ -480,6 +480,9 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     *densityDen = m_windowsz->x;
     SDL_SetWindowMinimumSize(m_window, MIN_SDL_WINDOW_SIZE_X,
                              MIN_SDL_WINDOW_SIZE_Y);
+
+    SDL_EnableScreenSaver();
+
     return true;
 }
 

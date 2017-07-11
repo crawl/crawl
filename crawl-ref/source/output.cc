@@ -619,7 +619,7 @@ static void _print_stats_noise(int x, int y)
     //               (though it is possible depending on terrain).
     //   YELLOW = likely to carry outside of your los, up to double.
     //   RED = likely to carry at least 16 spaces, up to much further.
-    //   LIGHTMAGENTA = really f*cking loud.  (Gong, etc.)
+    //   LIGHTMAGENTA = really f*cking loud. (Gong, etc.)
     // In more enclosed areas, these values will be attenuated,
     // and this isn't represented.
     // See player::get_noise_perception for the mapping from internal noise
@@ -1048,7 +1048,9 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SLOW,
         STATUS_SPEED,
         DUR_DEATHS_DOOR,
+        DUR_BERSERK_COOLDOWN,
         DUR_EXHAUSTED,
+        DUR_DEATHS_DOOR_COOLDOWN,
         DUR_QUAD_DAMAGE,
         STATUS_SERPENTS_LASH,
     };
@@ -1947,7 +1949,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_WEAPON
                  && you.form == transformation::blade_hands)
         {
-            const bool plural = !player_mutation_level(MUT_MISSING_HAND);
+            const bool plural = !you.get_mutation_level(MUT_MISSING_HAND);
             str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS
@@ -2353,7 +2355,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
 
     const int rmuta = (you.rmut_from_item(calc_unid)
-                       || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
+                       || you.get_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     if (rmuta)
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
@@ -2362,11 +2364,11 @@ static vector<formatted_string> _get_overview_resistances(
 
     out += _stealth_bar(get_number_of_cols()) + "\n";
 
-    const int regen = (player_regen() + 9) / 10; // round up
-    out += make_stringf("Regen    %d.%d/turn\n", regen/10, regen % 10);
+    const int regen = player_regen(); // round up
+    out += make_stringf("HPRegen  %d.%d%d/turn\n", regen/100, regen/10%10, regen%10);
 
-    const int mp_regen = (player_mp_regen() + 9) / 10; // round up
-    out += make_stringf("MPRegen  %d.%d/turn\n", mp_regen/10, mp_regen % 10);
+    const int mp_regen = player_mp_regen(); // round up
+    out += make_stringf("MPRegen  %d.%d%d/turn\n", mp_regen/100, mp_regen/10%10, mp_regen%10);
 
     cols.add_formatted(0, out, false);
 
@@ -2397,7 +2399,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int stasis = you.stasis();
     // TODO: what about different levels of anger/berserkitis?
     const bool show_angry = (you.angry(calc_unid)
-                             || player_mutation_level(MUT_BERSERK))
+                             || you.get_mutation_level(MUT_BERSERK))
                             && !rclar && !stasis
                             && !you.is_lifeless_undead();
     if (show_angry || rclar)
@@ -2527,40 +2529,9 @@ static string _dragon_abil(string desc)
     return _annotate_form_based(desc, supp);
 }
 
-/// Creates rows of short descriptions for current status effects, mutations,
-/// and runes/Orbs of Zot.
-static string _status_mut_rune_list(int sw)
+string mutation_overview()
 {
-    // print status information
-    string text = "<w>@:</w> ";
-    vector<string> status;
-
-    status_info inf;
-    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
-    {
-        if (fill_status_info(i, &inf) && !inf.short_text.empty())
-            status.emplace_back(inf.short_text);
-    }
-
-    int move_cost = (player_speed() * player_movement_speed()) / 10;
-    if (move_cost != 10)
-    {
-        const char *help = (move_cost <   8) ? "very quick" :
-                           (move_cost <  10) ? "quick" :
-                           (move_cost <  13) ? "slow"
-                                             : "very slow";
-        status.emplace_back(help);
-    }
-
-    if (status.empty())
-        text += "no status effects";
-    else
-        text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
-    text += "\n";
-
-    // print mutation information
-    text += "<w>A:</w> ";
-
+    string mtext;
     vector<string> mutations;
 
     for (const string& str : fake_mutations(you.species, true))
@@ -2609,26 +2580,44 @@ static string _status_mut_rune_list(int sw)
     string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (!you.mutation[i])
+        const mutation_type mut = static_cast<mutation_type>(i);
+        if (!you.has_mutation(mut))
             continue;
 
-        const mutation_type mut = (mutation_type) i;
-        const int level = player_mutation_level(mut);
-        const bool lowered = level < you.mutation[mut];
+        const int current_level = you.get_mutation_level(mut);
+        const int base_level = you.get_base_mutation_level(mut);
+        const bool lowered = current_level < base_level;
+        const int temp_levels = you.get_base_mutation_level(mut, false, true, false); // only temp levels
+        const int ordinary_levels = you.get_base_mutation_level(mut, true, false, true); // excluding temp levels
+
+        const int max_levels = mutation_max_levels(mut);
 
         current = mutation_name(mut);
 
-        if (mutation_max_levels(mut) > 1)
+        if (max_levels > 1)
         {
+            // add on any numeric levels
             ostringstream ostr;
-            ostr << ' ' << level;
-
+            ostr << " ";
+            if (ordinary_levels == 0) // only temporary levels are present
+                ostr << temp_levels;
+            else
+            {
+                // at least some non-temporary levels
+                ostr << ordinary_levels;
+                if (temp_levels)
+                    ostr << "[+" << temp_levels << "]";
+            }
             current += ostr.str();
         }
 
+        // bracket the whole thing
+        if (ordinary_levels == 0)
+            current = "[" + current + "]";
+
         if (!current.empty())
         {
-            if (level == 0)
+            if (current_level == 0) // suppressed by form
                 current = "(" + current + ")";
             if (lowered)
                 current = "<darkgrey>" + current + "</darkgrey>";
@@ -2640,12 +2629,50 @@ static string _status_mut_rune_list(int sw)
         mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
 
     if (mutations.empty())
-        text += "no striking features";
+        mtext += "no striking features";
     else
     {
-        text += comma_separated_line(mutations.begin(), mutations.end(),
+        mtext += comma_separated_line(mutations.begin(), mutations.end(),
                                      ", ", ", ");
     }
+    return mtext;
+}
+
+/// Creates rows of short descriptions for current status effects, mutations,
+/// and runes/Orbs of Zot.
+string _status_mut_rune_list(int sw)
+{
+    // print status information
+    string text = "<w>@:</w> ";
+    vector<string> status;
+
+    status_info inf;
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
+    {
+        if (fill_status_info(i, &inf) && !inf.short_text.empty())
+            status.emplace_back(inf.short_text);
+    }
+
+    int move_cost = (player_speed() * player_movement_speed()) / 10;
+    if (move_cost != 10)
+    {
+        const char *help = (move_cost <   8) ? "very quick" :
+                           (move_cost <  10) ? "quick" :
+                           (move_cost <  13) ? "slow"
+                                             : "very slow";
+        status.emplace_back(help);
+    }
+
+    if (status.empty())
+        text += "no status effects";
+    else
+        text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
+    text += "\n";
+
+    // print mutation information
+    text += "<w>A:</w> ";
+
+    text += mutation_overview();
 
     // print the Orb
     if (player_has_orb())

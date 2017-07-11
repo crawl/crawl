@@ -199,8 +199,7 @@ lessens their resilience to injury, to a degree dependent on (and inversely
 related to) power.
 
 It is powerful enough to literally pull someone out of Death's Door, although
-the shock will briefly confuse and paralyse the caster. It has no effect on the
-undead.
+the shock will briefly paralyse the caster. It has no effect on the undead.
 %%%%
 Brain Feed spell
 
@@ -642,8 +641,7 @@ Speeds the actions of a nearby ally.
 %%%%
 Haste spell
 
-Speeds the actions of a targeted creature. While hasted you will gain magical
-contamination.
+Speeds the actions of a targeted creature.
 %%%%
 Haunt spell
 

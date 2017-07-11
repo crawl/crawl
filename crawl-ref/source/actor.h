@@ -319,6 +319,7 @@ public:
     bool has_notele_item(bool calc_unid = true,
                          vector<item_def> *matches = nullptr) const;
     virtual bool stasis() const = 0;
+    virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
@@ -446,6 +447,9 @@ public:
     string resist_margin_phrase(int margin) const;
 
     void collide(coord_def newpos, const actor *agent, int pow);
+
+    static const actor *ensure_valid_actor(const actor *act);
+    static actor *ensure_valid_actor(actor *act);
 
 private:
     void end_constriction(mid_t whom, bool intentional, bool quiet);

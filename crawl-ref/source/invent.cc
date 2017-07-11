@@ -1023,7 +1023,7 @@ bool item_is_selected(const item_def &i, int selector)
 
         const launch_retval projected = is_launched(&you, you.weapon(), i);
 
-        if (projected == LRET_FUMBLED)
+        if (projected == launch_retval::FUMBLED)
             return false;
 
         return true;
@@ -1992,7 +1992,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
             : "That item can only be evoked when wielded.";
 
-    const bool no_evocables = player_mutation_level(MUT_NO_ARTIFICE);
+    const bool no_evocables = you.get_mutation_level(MUT_NO_ARTIFICE);
     const char* const no_evocable_error = "You cannot evoke magical items.";
 
     if (is_unrandom_artefact(item))

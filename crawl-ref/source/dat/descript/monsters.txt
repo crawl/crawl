@@ -6,9 +6,9 @@ It has been enchanted to dance through the air and attack under its own power.
 # Uniques
 Agnes
 
-This spriggan is aged and weathered from years of travel in distant lands. Her
-exotic weapon and astonishing speed both speak to the training she received
-there. Underestimate her at your peril!
+This spriggan is aged and weathered from years of travel away from the forests
+and swamps that are home to her kin. Her choice of weapon and astonishing speed
+both speak to the training she underwent. Underestimate her at your peril!
 %%%%
 Aizul
 
@@ -937,7 +937,7 @@ its victim's trails.
 draconian
 
 A brown-scaled humanoid with a reptilian tail and small wings. It is yet to
-develop the distinct colouring and powerful breath weapon of its mature form.
+develop the distinct colouring and powerful breath attack of its mature form.
 %%%%
 draconian annihilator
 

@@ -210,12 +210,6 @@ cloak of Starlight
 
 Ein phosphoreszierender Umhang, aus puren Lichtstrahlen gewebt.
 %%%%
-ring of Shaolin
-
-Ein schmuckloser Jade Ring welcher seinem Träger ein unglaubliches Wissen über
-jemandes Körper gibt, was ihm erlaubt beeindruckende und geschickte Kunststücke
-zu vollziehen.
-%%%%
 ring of Robustness
 
 Ein schlichter Ring aus Stahl.

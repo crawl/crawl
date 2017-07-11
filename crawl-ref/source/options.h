@@ -477,6 +477,8 @@ public:
     VColour     tile_door_col;
     VColour     tile_downstairs_col;
     VColour     tile_upstairs_col;
+    VColour     tile_transporter_col;
+    VColour     tile_transporter_landing_col;
     VColour     tile_branchstairs_col;
     VColour     tile_portal_col;
     VColour     tile_feature_col;

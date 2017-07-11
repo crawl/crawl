@@ -23,7 +23,9 @@ enum ability_type
 #endif
     // Abort duration-based spells
     ABIL_END_TRANSFORMATION,
+#if TAG_MAJOR_VERSION == 34
     ABIL_STOP_SINGING, // From song of slaying
+#endif
     ABIL_CANCEL_PPROJ,
 
     // Species-specific abilities.
@@ -242,7 +244,7 @@ enum ability_type
 
     // Wu Jian
     ABIL_WU_JIAN_SERPENTS_LASH = 1280,
-    ABIL_WU_JIAN_HEAVEN_ON_EARTH,
+    ABIL_WU_JIAN_HEAVENLY_STORM,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

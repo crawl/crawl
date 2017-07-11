@@ -714,7 +714,7 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     // Delete cloud.
     delete_cloud(p);
 
-    env.pgrid(p)        = 0;
+    env.pgrid(p)        = terrain_property_t{};
     env.grid_colours(p) = 0;
 #ifdef USE_TILE
     env.tile_bk_fg(p)   = 0;
@@ -774,6 +774,42 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
     }
 }
 
+/**
+ * Updates the destination of a transporter that has been shifted to a new
+ * center. Assumes that the transporter itself and its position marker have
+ * already been moved.
+ *
+ * @param pos            Transporter's new (and current) location.
+ * @param source_center  Center of where the transporter's vault area was
+ *                       shifted from.
+ * @param target_center  Center of where the transporter's vault area is being
+ *                       shifted to.
+ * @param shift_area     A map_bitmask of the entire area being shifted.
+
+ */
+static void _abyss_update_transporter(const coord_def &pos,
+                                      const coord_def &source_centre,
+                                      const coord_def &target_centre,
+                                      const map_bitmask &shift_area)
+{
+    if (grd(pos) != DNGN_TRANSPORTER)
+        return;
+
+    map_position_marker *marker =
+        get_position_marker_at(pos, DNGN_TRANSPORTER);
+    if (!marker || marker->dest == INVALID_COORD)
+        return;
+
+    // Original destination is not being preserved, so disable the transporter.
+    if (!shift_area.get(marker->dest))
+    {
+        marker->dest = INVALID_COORD;
+        return;
+    }
+
+    marker->dest = marker->dest - source_centre + target_centre;
+}
+
 // Moves the player, monsters, terrain and items in the square (circle
 // in movement distance) around the player with the given radius to
 // the square centred on target_centre.
@@ -787,6 +823,7 @@ static void _abyss_move_entities(coord_def target_centre,
 {
     const coord_def source_centre = you.pos();
     const coord_def delta = (target_centre - source_centre).sgn();
+    const map_bitmask original_area_mask = *shift_area_mask;
 
     // When moving a region, walk backward to handle overlapping
     // ranges correctly.
@@ -824,6 +861,8 @@ static void _abyss_move_entities(coord_def target_centre,
                 // Wipe the dstination clean before dropping things on it.
                 _abyss_wipe_square_at(dst);
                 _abyss_move_entities_at(src, dst);
+                _abyss_update_transporter(dst, source_centre, target_centre,
+                                          original_area_mask);
             }
             else
             {

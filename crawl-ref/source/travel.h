@@ -66,6 +66,7 @@ bool feat_is_traversable_now(dungeon_feature_type feat, bool try_fallback = fals
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback = false);
 bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
+bool is_unknown_transporter(const coord_def &p);
 
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
                      vector<coord_def>* coords = nullptr);
@@ -147,50 +148,51 @@ extern travel_distance_grid_t travel_point_distance;
 
 enum explore_stop_type
 {
-    ES_NONE                      = 0x0000,
+    ES_NONE                      = 0x00000,
 
     // Explored into view of an item that is NOT eligible for autopickup.
-    ES_ITEM                      = 0x0001,
+    ES_ITEM                      = 0x00001,
 
     // Picked up an item during greedy explore; will stop for anything
     // that's not explicitly ignored and that is not gold.
-    ES_GREEDY_PICKUP             = 0x0002,
+    ES_GREEDY_PICKUP             = 0x00002,
 
     // Stop when picking up gold with greedy explore.
-    ES_GREEDY_PICKUP_GOLD        = 0x0004,
+    ES_GREEDY_PICKUP_GOLD        = 0x00004,
 
     // Picked up an item during greedy explore, ignoring items that were
     // thrown by the PC, and items that the player already has one of in
     // inventory, or a bunch of other conditions (see
     // _interesting_explore_pickup in items.cc)
-    ES_GREEDY_PICKUP_SMART       = 0x0008,
+    ES_GREEDY_PICKUP_SMART       = 0x00008,
 
     // Greedy-picked up an item previously thrown by the PC.
-    ES_GREEDY_PICKUP_THROWN      = 0x0010,
+    ES_GREEDY_PICKUP_THROWN      = 0x00010,
     ES_GREEDY_PICKUP_MASK        = (ES_GREEDY_PICKUP
                                     | ES_GREEDY_PICKUP_GOLD
                                     | ES_GREEDY_PICKUP_SMART
                                     | ES_GREEDY_PICKUP_THROWN),
 
     // Explored into view of an item eligible for autopickup.
-    ES_GREEDY_ITEM               = 0x0020,
+    ES_GREEDY_ITEM               = 0x00020,
 
     // Stepped onto a stack of items that was previously unknown to
     // the player (for instance, when stepping onto the heap of items
     // of a freshly killed monster).
-    ES_GREEDY_VISITED_ITEM_STACK = 0x0040,
+    ES_GREEDY_VISITED_ITEM_STACK = 0x00040,
 
     // Explored into view of a stair, shop, altar, portal, glowing
     // item, artefact, or branch entrance.
-    ES_STAIR                     = 0x0080,
-    ES_SHOP                      = 0x0100,
-    ES_ALTAR                     = 0x0200,
-    ES_PORTAL                    = 0x0400,
-    ES_GLOWING_ITEM              = 0x0800,
-    ES_ARTEFACT                  = 0x1000,
-    ES_RUNE                      = 0x2000,
-    ES_BRANCH                    = 0x4000,
-    ES_RUNED_DOOR                = 0x8000,
+    ES_STAIR                     = 0x00080,
+    ES_SHOP                      = 0x00100,
+    ES_ALTAR                     = 0x00200,
+    ES_PORTAL                    = 0x00400,
+    ES_GLOWING_ITEM              = 0x00800,
+    ES_ARTEFACT                  = 0x01000,
+    ES_RUNE                      = 0x02000,
+    ES_BRANCH                    = 0x04000,
+    ES_RUNED_DOOR                = 0x08000,
+    ES_TRANSPORTER               = 0x10000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -233,6 +235,7 @@ private:
     vector< named_thing<int> > shops;
     vector< named_thing<int> > altars;
     vector< named_thing<int> > runed_doors;
+    vector< named_thing<int> > transporters;
 
     vector<string> marker_msgs;
     vector<string> marked_feats;
@@ -285,6 +288,34 @@ public:
     bool can_travel() const { return type != PLACEHOLDER; }
 };
 
+struct transporter_info
+{
+public:
+    enum transporter_type
+    {
+        PHYSICAL,
+        MAPPED,
+    };
+
+public:
+    coord_def position;     // Position of transporter
+    coord_def destination;  // The position on the level this transporter leads
+                            // to.
+    transporter_type type;
+
+    transporter_info(const coord_def &p, const coord_def &d,
+                     transporter_type t)
+        : position(p), destination(d), type(t) {
+    }
+
+    transporter_info()
+        : position(-1, -1), destination(), type(PHYSICAL) {
+    }
+
+    void save(writer&) const;
+    void load(reader&);
+};
+
 // Information on a level that interlevel travel needs.
 struct LevelInfo
 {
@@ -301,11 +332,18 @@ struct LevelInfo
         return stairs;
     }
 
-    stair_info *get_stair(int x, int y);
+    vector<transporter_info> &get_transporters()
+    {
+        return transporters;
+    }
+
     stair_info *get_stair(const coord_def &pos);
+    transporter_info *get_transporter(const coord_def &pos);
     bool empty() const;
     bool know_stair(const coord_def &pos) const;
+    bool know_transporter(const coord_def &pos) const;
     int get_stair_index(const coord_def &pos) const;
+    int get_transporter_index(const coord_def &pos) const;
 
     void clear_distances();
     void set_level_excludes();
@@ -326,6 +364,7 @@ struct LevelInfo
     // Updates/creates a StairInfo for the stair at stairpos in grid coordinates
     void update_stair(const coord_def& stairpos, const level_pos &p,
                       bool guess = false);
+    void update_transporter(const coord_def& transpos, const coord_def &dest);
 
     // Clears all stair info for stairs matching this grid type.
     void clear_stairs(dungeon_feature_type grid);
@@ -340,8 +379,10 @@ private:
     // Gets a list of coordinates of all player-known stairs on the current
     // level.
     static void get_stairs(vector<coord_def> &stairs);
+    static void get_transporters(vector<coord_def> &transporters);
 
     void correct_stair_list(const vector<coord_def> &s);
+    void correct_transporter_list(const vector<coord_def> &s);
     void update_stair_distances();
     void sync_all_branch_stairs();
     void sync_branch_stairs(const stair_info *si);
@@ -350,6 +391,7 @@ private:
 
 private:
     vector<stair_info> stairs;
+    vector<transporter_info> transporters;
 
     // Squares that are not safe to travel to.
     exclude_set excludes;
@@ -390,6 +432,7 @@ public:
     }
 
     bool know_stair(const coord_def &c);
+    bool know_transporter(const coord_def &c);
     bool know_level(const level_id &lev) const
     {
         return levels.count(lev);
@@ -413,6 +456,7 @@ public:
 
     void update_excludes();
     void update();
+    void update_transporter(const coord_def &c);
 
     void save(writer&) const;
     void load(reader&, int minorVersion);

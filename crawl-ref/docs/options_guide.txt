@@ -950,7 +950,7 @@ easy_confirm = (none | safe | all)
         to the letter 'y', which can result in accidentally answering
         yes to questions.
 
-simple_targeting =
+simple_targeting = false
         If set to true, disables smart targeting for explosion and bouncing
         bolt spells, making them automatically target the closest monster in
         range rather than trying to find a spot that affects multiple monsters
@@ -1972,8 +1972,11 @@ tile_force_overlay = false
         the same number of lines. Increase the view_max_height option if you
         find yourself with unused screen estate.
 
-tile_full_screen = false
-        Setting this option to true will start Crawl in full screen mode.
+tile_full_screen = auto
+        Setting this option to true or false will force full screen mode to be
+        on or off. Setting it to anything else will put it in auto mode, which
+        enables full screen mode only if the screen resolution is smaller than
+        width 1200, or height 800.
 
 tile_font_crt_file  = VeraMono.ttf
 tile_font_stat_file = VeraMono.ttf
@@ -2101,10 +2104,10 @@ tile_shield_offsets = (<x>,<y> | reset)
         Using the value "reset" will clear any previously defined offset, which
         is using for in-game tile changes via lua.
 
-tile_web_mouse_control = false
-        Whether to enable the experimental mouse control for tooltips/cursor/
-        interaction on Webtiles. Regardless of the value of the setting, the
-        minimap will respond to mouse control.
+tile_web_mouse_control = true
+        Whether to enable mouse control for tooltips/cursor interaction on
+        Webtiles. Regardless of the value of the setting, the minimap will
+        respond to mouse control.
 
 4-  Character Dump.
 ===================

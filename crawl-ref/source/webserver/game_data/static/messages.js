@@ -130,6 +130,7 @@ function ($, comm, client, util, options) {
         input.focus();
 
         function send_input_line(finalChar) {
+            var input = $("#messages .game_message input");
             if (history && input.val().length > 0)
             {
                 if (history.indexOf(input.val()) != -1)
@@ -148,6 +149,7 @@ function ($, comm, client, util, options) {
         }
 
         input.keydown(function (ev) {
+            var input = $("#messages .game_message input");
             if (ev.which == 27)
             {
                 ev.preventDefault();
@@ -175,6 +177,7 @@ function ($, comm, client, util, options) {
             }
         });
         input.keypress(function (ev) {
+            var input = $("#messages .game_message input");
             if (msg.tag == "stash_search")
             {
                 if (String.fromCharCode(ev.which) == "?" && input.val().length === 0)

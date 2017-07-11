@@ -458,7 +458,7 @@ void hints_death_screen()
         print_hint("death conjurer melee");
     }
     else if (you_worship(GOD_TROG) && Hints.hints_berserk_counter <= 3
-             && !you.berserk() && !you.duration[DUR_EXHAUSTED])
+             && !you.berserk() && !you.duration[DUR_BERSERK_COOLDOWN])
     {
         print_hint("death berserker unberserked");
     }
@@ -2647,7 +2647,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             listed.push_back("your <w>%</w>bilities");
             cmd.push_back(CMD_USE_ABILITY);
         }
-        if (Hints.hints_type != HINT_MAGIC_CHAR || how_mutated())
+        if (Hints.hints_type != HINT_MAGIC_CHAR || you.how_mutated())
         {
             listed.push_back("your set of mutations (<w>%</w>)");
             cmd.push_back(CMD_DISPLAY_MUTATIONS);
@@ -3023,7 +3023,7 @@ string hints_describe_item(const item_def &item)
                 ostr << _hints_throw_stuff(item);
                 cmd.push_back(CMD_FIRE);
             }
-            else if (is_launched(&you, you.weapon(), item))
+            else if (is_launched(&you, you.weapon(), item) == launch_retval::LAUNCHED)
             {
                 ostr << "As you're already wielding the appropriate launcher, "
                         "you can simply ";

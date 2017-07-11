@@ -159,7 +159,7 @@ int player::get_experience_level() const
 
 int player::get_max_xl() const
 {
-    return 27 - player_mutation_level(MUT_INEXPERIENCED) * RU_SAC_XP_LEVELS;
+    return 27 - get_mutation_level(MUT_INEXPERIENCED) * RU_SAC_XP_LEVELS;
 }
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
@@ -242,7 +242,7 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     const int DELAY_SCALE = 20;
     const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
-    if (projectile && is_launched(this, weap, *projectile) == LRET_THROWN)
+    if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
@@ -301,8 +301,9 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = div_rand_round(attk_delay, 2);
     }
 
-    // XXX: this is supposed to compensate for DUR_SLOW/DUR_FAST, but behaves
-    // incorrectly if attacking while moving/etc (as with WJC)
+    // TODO: does this really have to depend on `you.time_taken`?  In basic
+    // cases at least, `you.time_taken` is just `player_speed()`. See
+    // `_prep_input`.
     return rv::max(div_rand_round(attk_delay * you.time_taken, BASELINE_DELAY),
                    random_var(2));
 }
@@ -353,7 +354,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 
     if (two_handed && (
         (!ignore_shield && shield())
-        || player_mutation_level(MUT_MISSING_HAND)))
+        || get_mutation_level(MUT_MISSING_HAND)))
     {
         return false;
     }
@@ -410,7 +411,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
-    if (player_mutation_level(MUT_MISSING_HAND)
+    if (get_mutation_level(MUT_MISSING_HAND)
         && you.hands_reqd(item) == HANDS_TWO)
     {
         return false;
@@ -500,7 +501,7 @@ string player::hand_name(bool plural, bool *can_plural) const
     bool _can_plural;
     if (can_plural == nullptr)
         can_plural = &_can_plural;
-    *can_plural = !player_mutation_level(MUT_MISSING_HAND);
+    *can_plural = !get_mutation_level(MUT_MISSING_HAND);
 
     const string singular = _hand_name_singular();
     if (plural && *can_plural)
@@ -520,7 +521,7 @@ static string _foot_name_singular(bool *can_plural)
     if (!get_form()->foot_name.empty())
         return get_form()->foot_name;
 
-    if (player_mutation_level(MUT_HOOVES) >= 3)
+    if (you.get_mutation_level(MUT_HOOVES) >= 3)
         return "hoof";
 
     if (you.has_usable_talons())
@@ -664,8 +665,8 @@ void player::attacking(actor *other, bool ranged)
     if (ranged || mons_is_firewood(*(monster*) other))
         return;
 
-    const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
-    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))
+    const int chance = pow(3, get_mutation_level(MUT_BERSERK) - 1);
+    if (has_mutation(MUT_BERSERK) && x_chance_in_y(chance, 100))
         go_berserk(false);
 }
 
@@ -772,8 +773,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet,
 
     if (berserk())
         msg = "You're already berserk!";
-    else if (duration[DUR_EXHAUSTED])
-         msg = "You're too exhausted to go berserk.";
+    else if (duration[DUR_BERSERK_COOLDOWN])
+         msg = "You're still recovering from your berserk rage.";
     else if (duration[DUR_DEATHS_DOOR])
         msg = "You can't enter a blood rage from death's door.";
     else if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))

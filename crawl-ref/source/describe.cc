@@ -1451,9 +1451,13 @@ static string _describe_armour(const item_def &item, bool verbose)
                            "weaponry, such as bows and javelins (Slay+4).";
             break;
 
-        // This is only for scarves.
+        // These are only for scarves.
         case SPARM_REPULSION:
             description += "It protects its wearer by repelling missiles.";
+            break;
+
+        case SPARM_CLOUD_IMMUNE:
+            description += "It completely protects its wearer from the effects of clouds.";
             break;
         }
     }
@@ -3322,6 +3326,9 @@ static string _monster_stat_description(const monster_info& mi)
             }
         }
     }
+
+    if (mi.props.exists(CLOUD_IMMUNE_MB_KEY) && mi.props[CLOUD_IMMUNE_MB_KEY])
+        extreme_resists.emplace_back("clouds of all kinds");
 
     vector<string> resist_descriptions;
     if (!extreme_resists.empty())

@@ -33,6 +33,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"
+#include "spl-wpnench.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "xom.h"
@@ -471,9 +472,11 @@ static const weapon_def Weapon_prop[] =
     { WPN_RAPIER,           "rapier",               8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 10, 40, SBL_BRANDS },
+#if TAG_MAJOR_VERSION == 34
     { WPN_CUTLASS,          "cutlass",              8,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 0, 0, 0, {}},
+#endif
 
 
     // Long Blades
@@ -826,8 +829,12 @@ bool item_is_cursable(const item_def &item, bool ignore_holy_wrath)
         return false;
     if (item_known_cursed(item))
         return false;
-    if (!ignore_holy_wrath && item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+    if (!ignore_holy_wrath
+        && item.base_type == OBJ_WEAPONS
+        && (get_weapon_brand(item) == SPWPN_HOLY_WRATH
+            || you.duration[DUR_EXCRUCIATING_WOUNDS]
+               && item_is_equipped(item)
+               && you.props[ORIGINAL_BRAND_KEY].get_int() == SPWPN_HOLY_WRATH))
     {
         return false;
     }
@@ -892,7 +899,10 @@ void do_curse_item(item_def &item, bool quiet)
 
     // Holy wrath weapons cannot be cursed.
     if (item.base_type == OBJ_WEAPONS
-        && get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+        && (get_weapon_brand(item) == SPWPN_HOLY_WRATH
+            || you.duration[DUR_EXCRUCIATING_WOUNDS]
+               && item_is_equipped(item)
+               && you.props[ORIGINAL_BRAND_KEY].get_int() == SPWPN_HOLY_WRATH))
     {
         if (!quiet)
         {
@@ -2122,12 +2132,12 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile)
 {
     if (missile.base_type != OBJ_MISSILES)
-        return LRET_FUMBLED;
+        return launch_retval::FUMBLED;
 
     if (launcher && missile.launched_by(*launcher))
-        return LRET_LAUNCHED;
+        return launch_retval::LAUNCHED;
 
-    return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
+    return is_throwable(actor, missile) ? launch_retval::THROWN : launch_retval::FUMBLED;
 }
 
 
@@ -2341,8 +2351,8 @@ int food_value(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
-    const int herb = player_mutation_level(MUT_HERBIVOROUS);
-    const int carn = player_mutation_level(MUT_CARNIVOROUS);
+    const int herb = you.get_mutation_level(MUT_HERBIVOROUS);
+    const int carn = you.get_mutation_level(MUT_CARNIVOROUS);
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
@@ -2506,6 +2516,16 @@ int get_armour_repel_missiles(const item_def &arm, bool check_artp)
 
     if (check_artp && is_artefact(arm))
         return artefact_property(arm, ARTP_RMSL);
+
+    return false;
+}
+
+int get_armour_cloud_immunity(const item_def &arm)
+{
+    ASSERT(arm.base_type == OBJ_ARMOUR);
+
+    if (get_armour_ego_type(arm) == SPARM_CLOUD_IMMUNE)
+        return true;
 
     return false;
 }

@@ -218,8 +218,14 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_SHAFT;
     case DNGN_TRAP_WEB:
         return TILE_DNGN_TRAP_WEB;
+#if TAG_MAJOR_VERSION == 34
     case DNGN_TELEPORTER:
         return TILE_DNGN_TRAP_GOLUBRIA;
+#endif
+    case DNGN_TRANSPORTER:
+        return TILE_DNGN_TRANSPORTER;
+    case DNGN_TRANSPORTER_LANDING:
+        return TILE_DNGN_TRANSPORTER_LANDING;
     case DNGN_ENTER_SHOP:
         return TILE_SHOP_GENERAL;
     case DNGN_ABANDONED_SHOP:
@@ -3206,8 +3212,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;
-    case ABIL_STOP_SINGING:
-        return TILEG_ABILITY_STOP_SINGING;
     case ABIL_CANCEL_PPROJ:
         return TILEG_ABILITY_CANCEL_PPROJ;
 
@@ -3505,8 +3509,8 @@ tileidx_t tileidx_ability(const ability_type ability)
      // Wu Jian
     case ABIL_WU_JIAN_SERPENTS_LASH:
         return TILEG_ABILITY_WU_JIAN_SERPENTS_LASH;
-    case ABIL_WU_JIAN_HEAVEN_ON_EARTH:
-        return TILEG_ABILITY_WU_JIAN_HEAVEN_ON_EARTH;
+    case ABIL_WU_JIAN_HEAVENLY_STORM:
+        return TILEG_ABILITY_WU_JIAN_HEAVENLY_STORM;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

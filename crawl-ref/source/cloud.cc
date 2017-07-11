@@ -858,14 +858,14 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
             if (!act.is_player())
                 return act.res_fire() >= 3;
             return you.duration[DUR_FIRE_SHIELD]
-                || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
+                || you.has_mutation(MUT_FLAME_CLOUD_IMMUNITY)
                 || player_equip_unrand(UNRAND_FIRESTARTER);
         case CLOUD_HOLY:
             return act.res_holy_energy() >= 3;
         case CLOUD_COLD:
             if (!act.is_player())
                 return act.res_cold() >= 3;
-            return you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]
+            return you.has_mutation(MUT_FREEZING_CLOUD_IMMUNITY)
                 || player_equip_unrand(UNRAND_FROSTBITE);
         case CLOUD_MEPHITIC:
             return act.res_poison() > 0 || act.is_unbreathing();
@@ -917,8 +917,9 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
-    // Qazlalites get immunity to clouds.
-    return player && have_passive(passive_t::cloud_immunity);
+    // Qazlalites and scarfwearers get immunity to clouds.
+    // and the Cloud Mage too!
+    return act.cloud_immune();
 }
 
 // Returns a numeric resistance value for the actor's resistance to
@@ -1328,6 +1329,10 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
  */
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours)
 {
+    // If you're immune to clouds, then no clouds are damaging. Bing bong so simple!
+    if (you.cloud_immune())
+        return false;
+
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
     if (type == CLOUD_TORNADO)
         return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];

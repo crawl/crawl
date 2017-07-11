@@ -141,7 +141,7 @@ void make_god_gifts_disappear()
             && mons_is_god_gift(**mi, god))
         {
             // The monster disappears.
-            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
+            monster_die(**mi, KILL_DISMISSED, NON_MONSTER);
         }
     }
 }

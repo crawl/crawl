@@ -278,6 +278,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MOTTLED_DRACONIAN)
     AXED_MON(MONS_DRACONIAN_ZEALOT)
     AXED_MON(MONS_HILL_GIANT)
+    AXED_MON(MONS_BULTUNGIN)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they

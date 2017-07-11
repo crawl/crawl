@@ -69,6 +69,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
+#include "version.h"
 #include "view.h"
 
 #ifdef DEBUG_RELIGION
@@ -151,6 +152,8 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Okawaru
     { { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
+      { 3, "Okawaru will gift you ammunition as your piety grows.",
+           "Okawaru will no longer gift you ammunition." },
       { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" },
       { 5, "Okawaru will gift you equipment as your piety grows.",
            "Okawaru will no longer gift you equipment." },
@@ -343,7 +346,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "strike by moving towards foes, devastating them if distracted",
            "no longer perform lunging strikes" },
       { 4, ABIL_WU_JIAN_SERPENTS_LASH, "briefly move at supernatural speeds" },
-      { 5, ABIL_WU_JIAN_HEAVEN_ON_EARTH, "summon a storm of heavenly clouds to empower your attacks" },
+      { 5, ABIL_WU_JIAN_HEAVENLY_STORM, "summon a storm of heavenly clouds to empower your attacks" },
     },
 };
 
@@ -419,13 +422,30 @@ bool is_unknown_god(god_type god)
     return god == GOD_NAMELESS;
 }
 
-bool is_unavailable_god(god_type god)
+// Not appearing in new games, but still extant.
+static bool _is_disabled_god(god_type god)
 {
-    if (god == GOD_JIYVA && jiyva_is_dead())
+    switch (god)
+    {
+    // Disabled, pending a rework.
+    case GOD_PAKELLAS:
         return true;
 
-    // Disabled, pending a rework.
-    if (god == GOD_PAKELLAS)
+    // Trunk-only until we finish the god.
+    case GOD_WU_JIAN:
+        return Version::ReleaseType != VER_ALPHA;
+
+    default:
+        return false;
+    }
+}
+
+bool is_unavailable_god(god_type god)
+{
+    if (_is_disabled_god(god))
+        return true;
+
+    if (god == GOD_JIYVA && jiyva_is_dead())
         return true;
 
     return false;
@@ -1052,7 +1072,7 @@ static int _pakellas_high_wand()
         WAND_ICEBLAST,
         WAND_ACID,
     };
-    if (!player_mutation_level(MUT_NO_LOVE))
+    if (!you.get_mutation_level(MUT_NO_LOVE))
         high_wands.emplace_back(WAND_ENSLAVEMENT);
 
     return _preferably_unseen_item(high_wands, _seen_wand);
@@ -1104,7 +1124,7 @@ static bool _give_pakellas_gift()
     {
         // All the evoker options here are summon-based, so give another
         // low-level wand instead under Sacrifice Love.
-        if (player_mutation_level(MUT_NO_LOVE))
+        if (you.get_mutation_level(MUT_NO_LOVE))
         {
             basetype = OBJ_WANDS;
             subtype = _pakellas_low_wand();
@@ -1797,13 +1817,17 @@ bool do_god_gift(bool forced)
             success = acquirement(gift_type, you.religion);
             if (success)
             {
-                simple_god_message(" grants you a gift!");
-                // included in default force_more_message
-
                 if (gift_type == OBJ_MISSILES)
+                {
+                    simple_god_message(" grants you ammunition!");
                     _inc_gift_timeout(4 + roll_dice(2, 4));
+                }
                 else
                 {
+                    if (gift_type == OBJ_WEAPONS)
+                        simple_god_message(" grants you a weapon!");
+                    else
+                        simple_god_message(" grants you armour!");
                     // Okawaru charges extra for armour acquirements.
                     if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
                         _inc_gift_timeout(30 + random2avg(15, 2));
@@ -2909,7 +2933,7 @@ void excommunication(bool voluntary, god_type new_god)
 
     case GOD_WU_JIAN:
         you.attribute[ATTR_SERPENTS_LASH] = 0;
-        you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+        you.attribute[ATTR_HEAVENLY_STORM] = 0;
         _set_penance(old_god, 25);
         break;
 
@@ -3056,10 +3080,10 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
-    if (player_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
         return false;
 
-    if (player_mutation_level(MUT_NO_ARTIFICE)
+    if (you.get_mutation_level(MUT_NO_ARTIFICE)
         && which_god == GOD_PAKELLAS)
     {
       return false;
@@ -3664,13 +3688,13 @@ void god_pitch(god_type which_god)
                      " have %d.", fee, you.gold);
             }
         }
-        else if (player_mutation_level(MUT_NO_LOVE)
+        else if (you.get_mutation_level(MUT_NO_LOVE)
                  && _god_rejects_loveless(which_god))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
         }
-        else if (player_mutation_level(MUT_NO_ARTIFICE)
+        else if (you.get_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_PAKELLAS)
         {
             simple_god_message(" does not accept worship from those who are "
@@ -4535,13 +4559,6 @@ static void _place_delayed_monsters()
 static bool _is_god(god_type god)
 {
     return god > GOD_NO_GOD && god < NUM_GODS;
-}
-
-// Not appearing in new games, but still extant.
-static bool _is_disabled_god(god_type god)
-{
-    // Disabled, pending a rework.
-    return god == GOD_PAKELLAS;
 }
 
 static bool _is_temple_god(god_type god)

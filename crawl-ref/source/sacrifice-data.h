@@ -172,7 +172,7 @@ static const sacrifice_def sac_data[] =
   40,
   SK_NONE,
   nullptr,
-  nullptr,
+  []() { return you.species != SP_GNOLL; },
 },
 
 { ABIL_RU_SACRIFICE_EYE, MUT_MISSING_EYE,

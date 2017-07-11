@@ -730,7 +730,7 @@ void full_describe_view()
             desc += "</" + colour_str +">) ";
 #endif
             desc += feature_description_at(c, false, DESC_A, false);
-            if (is_unknown_stair(c))
+            if (is_unknown_stair(c) || is_unknown_transporter(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
             me->tag        = "description";
@@ -1749,7 +1749,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         break;
 
     case CMD_TARGET_WIZARD_KILL_MONSTER:
-        monster_die(m, KILL_YOU, NON_MONSTER);
+        monster_die(*m, KILL_YOU, NON_MONSTER);
         break;
 
     default:
@@ -3044,7 +3044,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (you.duration[DUR_CONFUSING_TOUCH] && !you.weapon()
         || you.form == transformation::fungus && !mons_is_unbreathing(mi.type))
     {
-        descs.emplace_back(make_stringf("confuse odds on hit: %d%%",
+        descs.emplace_back(make_stringf("chance to confuse on hit: %d%%",
                                         melee_confuse_chance(mi.hd)));
     }
 

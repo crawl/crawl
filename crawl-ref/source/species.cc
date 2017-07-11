@@ -376,6 +376,34 @@ static void _swap_equip(equipment_type a, equipment_type b)
     you.melded.set(b, tmp);
 }
 
+species_type find_species_from_string(const string &species)
+{
+    string spec = lowercase_string(species);
+
+    species_type sp = SP_UNKNOWN;
+
+    for (int i = 0; i < NUM_SPECIES; ++i)
+    {
+        const species_type si = static_cast<species_type>(i);
+        const string sp_name = lowercase_string(species_name(si));
+
+        string::size_type pos = sp_name.find(spec);
+        if (pos != string::npos)
+        {
+            if (pos == 0)
+            {
+                // We prefer prefixes over partial matches.
+                sp = si;
+                break;
+            }
+            else
+                sp = si;
+        }
+    }
+
+    return sp;
+}
+
 /**
  * Change the player's species to something else.
  *
@@ -403,24 +431,26 @@ void change_species_to(species_type sp)
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
+
+    // remove all innate mutations
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (you.innate_mutation[i] > 0)
+        if (you.has_innate_mutation(static_cast<mutation_type>(i)))
         {
-            if (you.innate_mutation[i] > you.mutation[i])
-                you.mutation[i] = 0;
-            else
-                you.mutation[i] -= you.innate_mutation[i];
-
+            you.mutation[i] -= you.innate_mutation[i];
+            ASSERT(you.mutation[i] >= 0);
             you.innate_mutation[i] = 0;
         }
         prev_muts[i] = you.mutation[i];
     }
+    // add the appropriate innate mutations for the new species and xl
     give_basic_mutations(sp);
     for (int i = 2; i <= you.experience_level; ++i)
         give_level_mutations(sp, i);
+
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
+        // TODO: why do previous non-innate mutations override innate ones?  Shouldn't this be the other way around?
         if (prev_muts[i] > you.innate_mutation[i])
             you.innate_mutation[i] = 0;
         else

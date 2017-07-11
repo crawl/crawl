@@ -319,7 +319,7 @@ void melee_attack::apply_black_mark_effects()
 {
     // Less reliable effects for players.
     if (attacker->is_player()
-        && you.mutation[MUT_BLACK_MARK]
+        && you.has_mutation(MUT_BLACK_MARK)
         && one_chance_in(5)
         || attacker->is_monster()
            && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
@@ -597,7 +597,7 @@ static void _hydra_devour(monster &victim)
 
     // will eating this actually fill the player up?
     const bool filling = !have_passive(passive_t::goldify_corpses)
-                          && player_mutation_level(MUT_HERBIVOROUS, false) < 3
+                          && you.get_mutation_level(MUT_HERBIVOROUS, false) < 3
                           && you.hunger_state <= max_hunger
                           && you.hunger_state < HS_ENGORGED;
 
@@ -843,8 +843,9 @@ bool melee_attack::attack()
             // Check for defender Spines
             do_spines();
 
-            // Spines can kill!
-            if (!attacker->alive())
+            // Spines can kill! With Usk's pain bond, they can even kill the
+            // defender.
+            if (!attacker->alive() || !defender->alive())
                 return false;
         }
 
@@ -996,39 +997,39 @@ class AuxKick: public AuxAttackType
 {
 public:
     AuxKick()
-    : AuxAttackType(-1, "kick") { };
+    : AuxAttackType(5, "kick") { };
 
     int get_damage() const override
     {
         if (you.has_usable_hooves())
         {
             // Max hoof damage: 10.
-            return player_mutation_level(MUT_HOOVES) * 5 / 3;
+            return damage + you.get_mutation_level(MUT_HOOVES) * 5 / 3;
         }
 
         if (you.has_usable_talons())
         {
             // Max talon damage: 9.
-            return 1 + player_mutation_level(MUT_TALONS);
+            return damage + 1 + you.get_mutation_level(MUT_TALONS);
         }
 
         // Max spike damage: 8.
         // ... yes, apparently tentacle spikes are "kicks".
-        return player_mutation_level(MUT_TENTACLE_SPIKE);
+        return damage + you.get_mutation_level(MUT_TENTACLE_SPIKE);
     }
 
     string get_verb() const override
     {
         if (you.has_usable_talons())
             return "claw";
-        if (player_mutation_level(MUT_TENTACLE_SPIKE))
+        if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
             return "pierce";
         return name;
     }
 
     string get_name() const override
     {
-        if (player_mutation_level(MUT_TENTACLE_SPIKE))
+        if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
             return "tentacle spike";
         return name;
     }
@@ -1042,7 +1043,7 @@ public:
 
     int get_damage() const override
     {
-        return damage + player_mutation_level(MUT_HORNS) * 3;
+        return damage + you.get_mutation_level(MUT_HORNS) * 3;
     }
 };
 
@@ -1061,12 +1062,12 @@ public:
 
     int get_damage() const override
     {
-        return damage + max(0, player_mutation_level(MUT_STINGER) * 2 - 1);
+        return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1);
     }
 
     int get_brand() const override
     {
-        return player_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
+        return you.get_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL;
     }
 };
 
@@ -1114,12 +1115,12 @@ public:
     int get_damage() const override
     {
         const int fang_damage = you.has_usable_fangs() * 2;
-        if (player_mutation_level(MUT_ANTIMAGIC_BITE))
+        if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
             return fang_damage + div_rand_round(you.get_hit_dice(), 3);
 
         const int str_damage = div_rand_round(max(you.strength()-10, 0), 5);
 
-        if (player_mutation_level(MUT_ACIDIC_BITE))
+        if (you.get_mutation_level(MUT_ACIDIC_BITE))
             return fang_damage + str_damage;
 
         return fang_damage + str_damage;
@@ -1127,10 +1128,10 @@ public:
 
     int get_brand() const override
     {
-        if (player_mutation_level(MUT_ANTIMAGIC_BITE))
+        if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
             return SPWPN_ANTIMAGIC;
 
-        if (player_mutation_level(MUT_ACIDIC_BITE))
+        if (you.get_mutation_level(MUT_ACIDIC_BITE))
             return SPWPN_ACID;
 
         return SPWPN_NORMAL;
@@ -1372,7 +1373,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
         }
 
-        if (damage_brand == SPWPN_ANTIMAGIC && you.mutation[MUT_ANTIMAGIC_BITE]
+        if (damage_brand == SPWPN_ANTIMAGIC && you.has_mutation(MUT_ANTIMAGIC_BITE)
             && damage_done > 0)
         {
             const bool spell_user = defender->antimagic_susceptible();
@@ -1613,14 +1614,18 @@ void melee_attack::set_attack_verb(int damage)
             attack_verb = "carve";
             verb_degree = "like the proverbial ham";
         }
-        else if (defender_genus == MONS_TENGU && one_chance_in(3))
+        else if ((defender_genus == MONS_TENGU
+                  || get_mon_shape(defender_genus) == MON_SHAPE_BIRD)
+                 && one_chance_in(3))
         {
             attack_verb = "carve";
             verb_degree = "like a turkey";
         }
         else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
                  && Options.has_fake_lang(flang_t::grunt))
+        {
             attack_verb = "shave";
+        }
         else
         {
             static const char * const slice_desc[][2] =
@@ -2122,7 +2127,7 @@ void melee_attack::apply_staff_damage()
     if (!weapon)
         return;
 
-    if (attacker->is_player() && player_mutation_level(MUT_NO_ARTIFICE))
+    if (attacker->is_player() && you.get_mutation_level(MUT_NO_ARTIFICE))
         return;
 
     if (weapon->base_type != OBJ_STAVES)
@@ -2279,7 +2284,7 @@ void melee_attack::player_stab_check()
 bool melee_attack::player_good_stab()
 {
     return wpn_skill == SK_SHORT_BLADES
-           || player_mutation_level(MUT_PAWS)
+           || you.get_mutation_level(MUT_PAWS)
            || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
               && (!weapon || is_melee_weapon(*weapon));
 }
@@ -3025,7 +3030,7 @@ void melee_attack::mons_apply_attack_flavour()
 
 void melee_attack::do_passive_freeze()
 {
-    if (you.mutation[MUT_PASSIVE_FREEZE]
+    if (you.has_mutation(MUT_PASSIVE_FREEZE)
         && attacker->alive()
         && adjacent(you.pos(), attacker->as_monster()->pos()))
     {
@@ -3059,12 +3064,12 @@ void melee_attack::do_passive_freeze()
 
 void melee_attack::mons_do_eyeball_confusion()
 {
-    if (you.mutation[MUT_EYEBALLS]
+    if (you.has_mutation(MUT_EYEBALLS)
         && attacker->alive()
         && adjacent(you.pos(), attacker->as_monster()->pos())
-        && x_chance_in_y(player_mutation_level(MUT_EYEBALLS), 20))
+        && x_chance_in_y(you.get_mutation_level(MUT_EYEBALLS), 20))
     {
-        const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
+        const int ench_pow = you.get_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
         if (mon->check_res_magic(ench_pow) <= 0)
@@ -3088,7 +3093,7 @@ void melee_attack::mons_do_tendril_disarm()
     const int adj_mon_hd = mon->is_fighter() ? mon->get_hit_dice() * 3 / 2
                                              : mon->get_hit_dice();
 
-    if (player_mutation_level(MUT_TENDRILS)
+    if (you.get_mutation_level(MUT_TENDRILS)
         && one_chance_in(5)
         && (random2(you.dex()) > adj_mon_hd
             || random2(you.strength()) > adj_mon_hd))
@@ -3111,7 +3116,7 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
-        const int mut = player_mutation_level(MUT_SPINY);
+        const int mut = you.get_mutation_level(MUT_SPINY);
 
         if (mut && attacker->alive() && coinflip())
         {
@@ -3165,11 +3170,11 @@ void melee_attack::emit_foul_stench()
 {
     monster* mon = attacker->as_monster();
 
-    if (you.mutation[MUT_FOUL_STENCH]
+    if (you.has_mutation(MUT_FOUL_STENCH)
         && attacker->alive()
         && adjacent(you.pos(), mon->pos()))
     {
-        const int mut = player_mutation_level(MUT_FOUL_STENCH);
+        const int mut = you.get_mutation_level(MUT_FOUL_STENCH);
 
         if (one_chance_in(3))
             mon->sicken(50 + random2(100));
@@ -3223,7 +3228,7 @@ void melee_attack::do_minotaur_retaliation()
         return;
     }
     // This will usually be 2, but could be 3 if the player mutated more.
-    const int mut = player_mutation_level(MUT_HORNS);
+    const int mut = you.get_mutation_level(MUT_HORNS);
 
     if (5 * you.strength() + 7 * you.dex() > random2(600))
     {
@@ -3422,19 +3427,19 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_CONSTRICT:
-        return player_mutation_level(MUT_CONSTRICTING_TAIL)
+        return you.get_mutation_level(MUT_CONSTRICTING_TAIL)
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
 
     case UNAT_KICK:
         return you.has_usable_hooves()
                || you.has_usable_talons()
-               || player_mutation_level(MUT_TENTACLE_SPIKE);
+               || you.get_mutation_level(MUT_TENTACLE_SPIKE);
 
     case UNAT_PECK:
-        return player_mutation_level(MUT_BEAK) && !one_chance_in(3);
+        return you.get_mutation_level(MUT_BEAK) && !one_chance_in(3);
 
     case UNAT_HEADBUTT:
-        return player_mutation_level(MUT_HORNS) && !one_chance_in(3);
+        return you.get_mutation_level(MUT_HORNS) && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
         return you.has_usable_tail() && coinflip();
@@ -3446,9 +3451,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.has_usable_tentacles() && !one_chance_in(3);
 
     case UNAT_BITE:
-        return player_mutation_level(MUT_ANTIMAGIC_BITE)
+        return you.get_mutation_level(MUT_ANTIMAGIC_BITE)
                || (you.has_usable_fangs()
-                   || player_mutation_level(MUT_ACIDIC_BITE))
+                   || you.get_mutation_level(MUT_ACIDIC_BITE))
                    && x_chance_in_y(2, 5);
 
     case UNAT_PUNCH:
@@ -3475,8 +3480,8 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack)
 
     your_to_hit -= 5 * you.inaccuracy();
 
-    if (player_mutation_level(MUT_EYEBALLS))
-        your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
+    if (you.get_mutation_level(MUT_EYEBALLS))
+        your_to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
     if (you.species != SP_VAMPIRE && you.hunger_state <= HS_STARVING)
         your_to_hit -= 3;

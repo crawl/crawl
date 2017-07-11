@@ -523,11 +523,26 @@ FOUNTAIN(DNGN_DRY_FOUNTAIN_SPARKLING, "dry fountain", "non-fountain_sparkling", 
 FOUNTAIN(DNGN_DRY_FOUNTAIN_BLOOD, "dry fountain", "non-fountain_blood", LIGHTGREY),
 #endif
 
+#if TAG_MAJOR_VERSION == 34
 {
     DNGN_TELEPORTER, "short-range portal", "teleporter",
     DCHAR_TELEPORTER, NUM_DCHAR_TYPES,
     COLOUR_AND_MAP(YELLOW),
     FFT_NONE, MF_FEATURE,
+},
+#endif
+{
+    DNGN_TRANSPORTER, "transporter", "transporter",
+    DCHAR_TRANSPORTER, NUM_DCHAR_TYPES,
+    RED, RED, RED, WHITE, WHITE,
+    FFT_NOTABLE, MF_TRANSPORTER,
+},
+
+{
+    DNGN_TRANSPORTER_LANDING, "transporter landing site", "transporter_landing",
+    DCHAR_TRANSPORTER_LANDING, NUM_DCHAR_TYPES,
+    COLOUR_AND_MAP(DARKGREY),
+    FFT_NONE, MF_TRANSPORTER_LANDING,
 },
 
 {

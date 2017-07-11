@@ -194,7 +194,7 @@ void shuffle_array(T *arr, int n)
 
 /**
  * A defer_rand object represents an infinite tree of random values, allowing
- * for a much more functional approach to randomness.  defer_rand values which
+ * for a much more functional approach to randomness. defer_rand values which
  * have been used should not be copy-constructed. Querying the same path
  * multiple times will always give the same result.
  *

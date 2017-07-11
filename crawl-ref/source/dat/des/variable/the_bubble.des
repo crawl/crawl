@@ -1,0 +1,175 @@
+# A set of loot vaults that show the player their reward, but requires them to
+# transport into the vault without seeing what's further inside.
+
+{{
+-- Transporter entry and exit setup. Note that only one exit glyph is used.
+function gammafunk_the_bubble_setup(e, entry_glyph, exit_glyph)
+    e.lua_marker(entry_glyph, transp_dest_loc("the_bubble_entry"))
+    e.nsubst(exit_glyph .. " = " .. exit_glyph .. " / .")
+    e.lua_marker(exit_glyph, transp_loc("the_bubble_exit"))
+end
+}}
+
+NAME: gammafunk_the_bubble
+TAGS: no_monster_gen no_trap_gen
+DEPTH: Crypt, D:7-, Depths, Elf, Zot
+ITEM: any randart jewellery
+ORIENT: float
+SUBVAULT: A : the_bubble
+NSUBST: | = d / |
+MARKER: D = lua:transp_loc("the_bubble_entry")
+MARKER: E = lua:transp_dest_loc("the_bubble_exit")
+SUBST: c : bcv
+MAP
+   ccccccc ccccccc
+  ccccccccccccccccc
+ cccccAAcccccAAAcccc
+.nnn$xAAAAAAAAAAAccc
+.nn*$xAAAAAAAAAAAAcc
+.nn|*+AAAAAAAAAAAAcc
+.nn*$xAAAAAAAAAAAAcc
+.nnn$xAAAAAAAAAAAccc
+.cccccAAAAAAAAAAAccc.
+@DccccAAAAAAAAAAAccE@
+.cccccAAAAAAAAAAAccc.
+.nnn$xAAAAAAAAAAAccc
+.nn*$xAAAAAAAAAAAAcc
+.nn|*+AAAAAAAAAAAAcc
+.nn*$xAAAAAAAAAAAAcc
+.nnn$xAAAAAAAAAAAccc
+ cccccAAcccccAAAcccc
+  ccccccccccccccccc
+   ccccccc ccccccc
+ENDMAP
+
+NAME: the_bubble_gammafunk_split
+TAGS: the_bubble unrand
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+SUBST: x : bcvx
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0S     ...
+.....0..x..
+.xx..x......
+.0xx0.0xx.x.
+...xx.xx0...
+0x.x0.0xxx.
+..0xx.xx...
+S.xx0.0xx.R
+..0xx.xx...
+0x.x0.0xxx.
+...xx.xx0...
+.0xx0.0xx.x.
+.xx..x......
+.....0..x..
+0S     ...
+ENDMAP
+
+NAME: the_bubble_gammafunk_plus_minus
+TAGS: the_bubble unrand
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+SUBST: x : bcvx
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0S     0..
+...........
+.0x0.x.0x...
+.xxx0x.xxx..
+.0x0.x..x...
+...........
+..x.0x0.x..
+S0x.xxx.x.R
+..x.0x0.x..
+...........
+.0x0.x..x...
+.xxx0x.xxx..
+.0x0.x.0x...
+...........
+0S     0..
+ENDMAP
+
+NAME: the_bubble_gammafunk_crates
+TAGS: the_bubble unrand
+SUBST: A = a0, D = d0, E = e0, F = f0, H = h0, J = j0,  P = p0, Q = q0, R = r0
+SUBST: S = s0, a : bcvx, d : bcvx, e : bcvx, f : bcvx, h : bcvx, j : bcvx
+SUBST: k : bcvx, p : bcvx, q : bcvx, r : bcvx, s : bcvx, u = u.., u = bcvx
+NSUBST: 0 = Z / 6=0 / 2=9 / 8=009. / .
+: gammafunk_the_bubble_setup(_G, "y", "Z")
+MAP
+uu     u0.
+0.0.u...Ee.
+.a.a.Dd0ee.u
+0.Aa.dd.S..u
+.Aaa.0..ss.u
+u..0.hHh.s.
+0fFf.hhh..u
+.Fff......y
+u....kk.r.u
+.jj0.Kk.rr.
+0Jjj.kk.Rr.u
+.Jj.P.0.0..u
+0jj.ppp.qq.u
+..0u.0..Qq.
+uu     u0.
+ENDMAP
+
+NAME: the_bubble_gammafunk_roulette
+TAGS: the_bubble unrand
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+SUBST:  x : bcvx
+# Randomize sides on which transporters appear and randomize destinations.
+SHUFFLE: DFJL / EHKM, DE / FH / JK / LM
+NSUBST: S = S / .
+# Make transporter markers. Glyphs are set up so that each transporter takes
+# you to a landing site other than the one next to the transporter you took.
+{{
+local trans_glyphs = "DFJL"
+local dest_glyphs = "HKME"
+for i = 1, #trans_glyphs do
+  lua_marker(trans_glyphs:sub(i,i), transp_loc("roulette_" .. tostring(i)))
+  lua_marker(dest_glyphs:sub(i,i), transp_dest_loc("roulette_" .. tostring(i)))
+end
+}}
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0.     ...
+.S..xxx..S0
+....D.E....0
+.00.....00.0
+.00x...x00..
+..xx...xx..
+M.........F
+.....R.....
+L.........H
+..xx...xx..
+.00x...x00..
+.00.....00.0
+....K.J....0
+.S..xxx..S0
+0.     ...
+ENDMAP
+
+NAME: the_bubble_gammafunk_grid
+TAGS: the_bubble unrand
+SHUFFLE: AB
+SUBST: A = b, B = 0, C : 0b, D : 0b, E : 0b
+SHUFFLE: bv
+NSUBST: 0 = 6=0 / 2=9 / 8=009. / .
+: gammafunk_the_bubble_setup(_G, "R", "S")
+MAP
+0S     0v0
+.v0v.v0v.vE
+0.v.v.v.vDv0
+.v.vAv.vCv.v
+0.vAAAv.v.v0
+.vBvAvBv.v.
+vAvBvBvAv.v
+AAAvBvAAAvR
+vAvBvBvAv.v
+.vBvAvBv.v.
+0.vAAAv.v.v0
+.v.vAv.vCv.v
+0.v.v.v.vDv0
+.v0v.v0v.vE
+0S     0v0
+ENDMAP

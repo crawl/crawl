@@ -127,7 +127,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (amount < 1)
         return;
 
-    bool ignite_blood = player_mutation_level(MUT_IGNITE_BLOOD)
+    bool ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD)
                         && you.see_cell(where);
 
     bool may_bleed = _allow_bleeding_on_square(where, ignite_blood);

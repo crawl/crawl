@@ -316,7 +316,7 @@ distances, and become able to summon a storm of golden clouds to increase their
 precision and damage for as long as they keep using martial attacks.
 
   .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them and attempt to cause slowing.
+  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them.
   .......       .......
 
   ..x....       ..x.... (**) <lightred>Wall Jump</lightred>: Move into a wall to vault towards
@@ -367,7 +367,7 @@ Okawaru powers
 
 Followers of Okawaru will gain the ability to temporarily increase their skills
 in combat, and, much later, to deal much faster blows. Okawaru will eventually
-gift followers with weapons and armour.
+gift followers with ammunition, weapons and armour.
 %%%%
 Pakellas powers
 

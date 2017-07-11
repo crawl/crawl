@@ -1521,6 +1521,10 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     if (force_full || last->threat != m->threat)
         json_write_int("threat", m->threat);
 
+    // tiebreakers for two monsters with the same custom name
+    if (m->is_named())
+        json_write_int("clientid", m->client_id);
+
     json_close_object(true);
 }
 

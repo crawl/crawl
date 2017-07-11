@@ -402,13 +402,12 @@ TILE_EQ: punk
 BRAND:   SPWPN_ACID
 BOOL:    rCorr
 
-ENUM:     KRISHNA
-NAME:     bow of Krishna "Sharnga"
+NAME:     longbow "Zephyr"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8
 COLOUR:   ETC_GOLD
-TILE:     urand_krishna
-TILE_EQ:  krishna
+TILE:     urand_zephyr
+TILE_EQ:  zephyr
 BRAND:    SPWPN_SPEED
 DEX:      3
 BOOL:     seeinv
@@ -635,7 +634,8 @@ BOOL:     nogen
 
 ENUM:     CAPTAIN
 NAME:     captain's cutlass
-OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+OBJ:      OBJ_WEAPONS/WPN_RAPIER
+TYPE:     cutlass
 INSCRIP:  disarm
 PLUS:     +7
 COLOUR:   DARKGREY
@@ -937,11 +937,11 @@ ANGRY:   5
 SLAY:    6
 BOOL:    curse
 
-NAME:    ring of Shaolin
+NAME:    ring of Phasing
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
-TILE:    urand_shaolin
+TILE:    urand_phasing
 
 NAME:    ring of Robustness
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION

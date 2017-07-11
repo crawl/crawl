@@ -32,6 +32,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "ouch.h"
 #include "prompt.h"
 #include "shout.h"
@@ -981,8 +982,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     enable_attack_conducts(conducts);
 
-    int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
-                   + (random2(pow) / 7));
+    int hurted = 8 + random2(2 + div_rand_round(pow, 7));
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
@@ -1016,7 +1016,7 @@ static bool _player_hurt_monster(monster& m, int damage,
         }
         else
         {
-            monster_die(&m, KILL_YOU, NON_MONSTER);
+            monster_die(m, KILL_YOU, NON_MONSTER);
             return true;
         }
     }
@@ -1592,7 +1592,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     // clouds where it's standing!
 
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon == agent)
+    if (invalid_monster(mon) || mon == agent)
         return 0;
 
     // how poisoned is the victim?
@@ -1617,7 +1617,6 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
             return mons_aligned(mon, agent) ? 0 : 1;
         return mons_aligned(mon, agent) ? -1 * damage : damage;
     }
-
     simple_monster_message(*mon, " seems to burn from within!");
 
     dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
@@ -1631,12 +1630,6 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
         // Monster survived, remove any poison.
         mon->del_ench(ENCH_POISON, true); // suppress spam
         print_wounds(*mon);
-    }
-    else
-    {
-        monster_die(mon,
-                    agent->is_player() ? KILL_YOU : KILL_MON,
-                    agent->mindex());
     }
 
     return 1;
@@ -1726,7 +1719,7 @@ static int _ignite_ally_harm(const coord_def &where)
 static bool maybe_abort_ignite()
 {
     // Fire cloud immunity.
-    if (you.duration[DUR_FIRE_SHIELD] || you.mutation[MUT_IGNITE_BLOOD])
+    if (you.duration[DUR_FIRE_SHIELD] || you.has_mutation(MUT_IGNITE_BLOOD))
         return false;
 
     string prompt = "You are standing ";

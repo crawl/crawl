@@ -73,7 +73,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 static int _get_full_exclusion_radius()
 {
     // XXX: dedup with update_vision_range()!
-    return LOS_DEFAULT_RANGE - player_mutation_level(MUT_NIGHTSTALKER)
+    return LOS_DEFAULT_RANGE - you.get_mutation_level(MUT_NIGHTSTALKER)
                              + (you.species == SP_BARACHI ? 1 : 0);
 }
 
@@ -529,7 +529,8 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
 }
 
 // If a cell that was placed automatically no longer contains the original
-// monster (or it is invisible), remove the exclusion.
+// monster (or it is invisible), or if the player is no longer vulnerable to a
+// damaging cloud, then remove the exclusion.
 void maybe_remove_autoexclusion(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
@@ -538,14 +539,21 @@ void maybe_remove_autoexclusion(const coord_def &p)
             return;
 
         const monster* m = monster_at(p);
-        if (!m || !you.can_see(*m)
-            || m->attitude != ATT_HOSTILE
-                && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
-            || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
-                      exc->desc.c_str()) != 0)
+        // We don't want to remove excluded clouds, check exc desc
+        // XXX: This conditional is a mess.
+        string desc = exc->desc;
+        bool cloudy_exc = ends_with(desc, "cloud");
+        if ((!m || !you.can_see(*m)
+                || m->attitude != ATT_HOSTILE
+                    && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
+                || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
+                          exc->desc.c_str()) != 0)
+            && !cloudy_exc)
         {
             del_exclude(p);
         }
+        else if (cloudy_exc && you.cloud_immune())
+            del_exclude(p);
     }
 }
 

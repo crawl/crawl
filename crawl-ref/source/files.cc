@@ -841,7 +841,8 @@ static int _get_dest_stair_type(branch_type old_branch,
 }
 
 static void _place_player_on_stair(branch_type old_branch,
-                                   int stair_taken, const coord_def& dest_pos)
+                                   int stair_taken, const coord_def& dest_pos,
+                                   const string &hatch_name)
 
 {
     bool find_first = true;
@@ -850,7 +851,8 @@ static void _place_player_on_stair(branch_type old_branch,
                                  static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
-    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
+    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
+                                     hatch_name));
 }
 
 static void _clear_env_map()
@@ -1042,8 +1044,9 @@ static void _do_lost_items()
 static void _fedhas_rot_all_corpses(const level_id& old_level)
 {
     bool messaged = false;
-    for (auto &item : mitm)
+    for (size_t mitm_index = 0; mitm_index < mitm.size(); ++mitm_index)
     {
+        item_def &item = mitm[mitm_index];
         if (!item.defined()
             || !item.is_type(OBJ_CORPSES, CORPSE_BODY)
             || item.props.exists(CORPSE_NEVER_DECAYS))
@@ -1051,7 +1054,13 @@ static void _fedhas_rot_all_corpses(const level_id& old_level)
             continue;
         }
 
-        turn_corpse_into_skeleton(item);
+        if (mons_skeleton(item.mon_type))
+            ASSERT(turn_corpse_into_skeleton(item));
+        else
+        {
+            item_was_destroyed(item);
+            destroy_item(mitm_index);
+        }
 
         if (!messaged)
         {
@@ -1199,14 +1208,14 @@ static void _make_level(dungeon_feature_type stair_taken,
  */
 static void _place_player(dungeon_feature_type stair_taken,
                           branch_type old_branch, const coord_def &return_pos,
-                          const coord_def &dest_pos)
+                          const coord_def &dest_pos, const string &hatch_name)
 {
     if (player_in_branch(BRANCH_ABYSS))
         you.moveto(ABYSS_CENTRE);
     else if (!return_pos.origin())
         you.moveto(return_pos);
     else
-        _place_player_on_stair(old_branch, stair_taken, dest_pos);
+        _place_player_on_stair(old_branch, stair_taken, dest_pos, hatch_name);
 
     // Don't return the player into walls, deep water, or a trap.
     for (distance_iterator di(you.pos(), true, false); di; ++di)
@@ -1234,7 +1243,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 
         dprf("%s under player and can't be moved anywhere; killing",
              mon->name(DESC_PLAIN).c_str());
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         // XXX: do we need special handling for uniques...?
     }
 }
@@ -1243,6 +1252,22 @@ static void _place_player(dungeon_feature_type stair_taken,
 void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();
+}
+
+static string _get_hatch_name()
+{
+    vector <map_marker *> markers;
+    markers = find_markers_by_prop(HATCH_NAME_PROP);
+    for (auto m : markers)
+    {
+        if (m->pos == you.pos())
+        {
+            string name = m->property(HATCH_NAME_PROP);
+            ASSERT(!name.empty());
+            return name;
+        }
+    }
+    return "";
 }
 
 /**
@@ -1256,7 +1281,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
 
-    string level_name = level_id::current().describe();
+    const string level_name = level_id::current().describe();
     const bool make_changes =
     (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
 
@@ -1264,6 +1289,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     bool popped = false;
 
     coord_def return_pos; //TODO: initialize to null
+
+    string hatch_name = "";
+    if (feat_is_escape_hatch(stair_taken))
+        hatch_name = _get_hatch_name();
+
     if (load_mode != LOAD_VISITOR)
         popped = _leave_level(stair_taken, old_level, &return_pos);
 
@@ -1369,7 +1399,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         delete_all_clouds();
 
-        _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
+        _place_player(stair_taken, old_level.branch, return_pos, dest_pos,
+                      hatch_name);
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
@@ -1883,6 +1914,15 @@ static bool _restore_game(const string& filename)
 {
     if (Options.no_save)
         return false;
+
+#ifdef USE_TILE_WEB
+    // a more before the player is loaded will crash when it tries to send
+    // enough information to the webtiles client to render the display.
+    // TODO: is there a good way to do any mores in load_messages?
+    unwind_bool save_more(crawl_state.show_more_prompt, false);
+#endif
+
+    clear_message_store();
 
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 

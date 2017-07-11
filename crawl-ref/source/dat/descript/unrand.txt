@@ -139,11 +139,13 @@ A sling made of weird green leather, oozing corrosive slime. Originally the
 weapon of a notorious mischief-maker and general scamp, it's since fallen into
 less savoury hands.
 %%%%
-bow of Krishna "Sharnga"
+longbow "Zephyr"
 
-A wonderful golden longbow that once belonged to a god of distant lands. It can
-fire as fast as thought and hurl divine arrows of terrible power — though,
-sadly, none seem to be available here.
+This bow was woven from the air itself by Eiolaiphi the air mage as a gift for
+one of the children of Uskayaw. The bow can be pulled with incredible speed,
+and it launches swift and true. It is also nearly indestructable, which is
+fortunate given that the original owner was ripped to pieces by jealous
+celebrants.
 %%%%
 giant club "Skullcrusher"
 
@@ -168,8 +170,9 @@ both the wielder and all of his or her mortal followers.
 %%%%
 arbalest "Damnation"
 
-An unholy crossbow, forged in the fires of Gehenna. It transforms the bolts it
-fires with the raw power of its namesake, irresistible by any mortal armour.
+An unholy crossbow, forged in the fires of Gehenna. It imbues the bolts it
+fires with the raw power of its namesake, causing a burst of damnation on
+impact irresistible by any mortal armour.
 %%%%
 # TAG_MINOR_VERSION == 34
 sword of the Doom Knight
@@ -454,10 +457,10 @@ necklace of Bloodlust
 A necklace made of bloodstained human and animal teeth, and something that
 appears to be a piece of spine.
 %%%%
-ring of Shaolin
+ring of Phasing
 
-An unadorned jade ring that gives its wearer an uncanny knowledge of one's
-body, allowing for impressive feats of dexterity.
+An unadorned jade ring. Its wearer may momentarily phase out of reality in order
+to evade attacks.
 %%%%
 ring of Robustness
 
@@ -514,8 +517,8 @@ the amulet vanished from the pages of history.
 %%%%
 autumn katana
 
-An exotic sword, enchanted to provide both mental and physical strength to the
-wielder.
+An exquisitely crafted sword, enchanted to provide both mental and physical
+strength to the wielder.
 %%%%
 shillelagh "Devastator"
 

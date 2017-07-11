@@ -2696,6 +2696,68 @@ xxxwwxxxxxx
                 @.....   @......@......@xxxxxxx
 ENDMAP
 
+NAME: nicolae_lava_and_water
+TAGS: no_pool_fixup transparent extra decor
+DEPTH: D:6-, Depths, Zot
+SHUFFLE: lw
+KPROP: l = no_cloud_gen
+MAP
+  .....
+  .wll....
+  .wcwlww....
+ ..llwlclwll.
+ .lwwcwwlwcw.
+ .lclwllcllw.
+..wwlwcwlww..
+.wllcllwlcl.
+.wcwlwwcwwl.
+.llwlclwll..
+....wwlwcw.
+   ....llw.
+      .....
+ENDMAP
+
+NAME: nicolae_water_bricks
+TAGS: no_pool_fixup transparent extra decor
+DEPTH: D:6-, Depths
+MAP
+           w
+      w   wxw@
+     wxw wx..w
+    wx.xwx...xw
+   wx...x...xw
+  wx...x...xw
+ wx...xwx.xw
+  wx.xwxwx.xw
+   wx.xwx...xw
+  wx...x...xw
+ wx...x...xw
+wx...xwx.xw
+ w..xw wxw
+ @wxw   w
+   w
+ENDMAP
+
+NAME: palyth_stone_intersect
+TAGS: decor extra transparent
+DEPTH: D, Elf, Crypt
+MAP
+..............
+..xx..xx..xx..
+.xxxx....xxxx.
+.xxxxx..xxxxx.
+..xxxx..xxxx..
+...xxx..xxx...
+.x..........x.
+.x..........x.
+...xxx..xxx...
+..xxxx..xxxx..
+.xxxxx..xxxxx.
+.xxxx....xxxx.
+..xx..xx..xx..
+..............
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2921,8 +2983,6 @@ MAP
     .XXXX.
      ....
 ENDMAP
-
-
 
 ####################################################################
 #
@@ -3940,46 +4000,4 @@ MAP
 .x........x.
 .x.xxxxxxxx.
 ............
-ENDMAP
-
-NAME: nicolae_lava_and_water
-TAGS: no_pool_fixup transparent extra decor
-DEPTH: D:6-, Depths, Zot
-SHUFFLE: lw
-KPROP: l = no_cloud_gen
-MAP
-  .....
-  .wll....
-  .wcwlww....
- ..llwlclwll.
- .lwwcwwlwcw.
- .lclwllcllw.
-..wwlwcwlww..
-.wllcllwlcl.
-.wcwlwwcwwl.
-.llwlclwll..
-....wwlwcw.
-   ....llw.
-      .....
-ENDMAP
-
-NAME: nicolae_water_bricks
-TAGS: no_pool_fixup transparent extra decor
-DEPTH: D:6-, Depths
-MAP
-           w
-      w   wxw@
-     wxw wx..w
-    wx.xwx...xw
-   wx...x...xw
-  wx...x...xw
- wx...xwx.xw
-  wx.xwxwx.xw
-   wx.xwx...xw
-  wx...x...xw
- wx...x...xw
-wx...xwx.xw
- w..xw wxw
- @wxw   w
-   w
 ENDMAP

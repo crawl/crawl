@@ -459,14 +459,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case STATUS_HEAVEN_ON_EARTH:
-        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
+    case STATUS_HEAVENLY_STORM:
+        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
         {
             inf->light_colour = WHITE;
             inf->light_text
-               = make_stringf("Hevn (%u)",
-                              you.attribute[ATTR_HEAVEN_ON_EARTH]);
-            inf->short_text = "heaven on earth";
+               = make_stringf("Storm (%u)",
+                              you.attribute[ATTR_HEAVENLY_STORM]);
+            inf->short_text = "heavenly storm";
             inf->long_text = "Heavenly clouds are increasing your damage and "
                              "accuracy.";
         }
@@ -1057,7 +1057,7 @@ static void _describe_missiles(status_info* inf)
     }
     else
     {
-        bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
+        bool perm = you.get_mutation_level(MUT_DISTORTION_FIELD) == 3
                     || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_REPULSION)
                     || you.scan_artefacts(ARTP_RMSL)
                     || have_passive(passive_t::upgraded_storm_shield);

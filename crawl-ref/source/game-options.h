@@ -11,6 +11,7 @@
 
 #include "colour.h"
 #include "stringutil.h"
+#include "maybe-bool.h"
 
 enum rc_line_type
 {
@@ -201,3 +202,4 @@ private:
 };
 
 bool read_bool(const std::string &field, bool def_value);
+maybe_bool read_maybe_bool(const std::string &field);

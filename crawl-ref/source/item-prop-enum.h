@@ -237,12 +237,12 @@ enum jewellery_type
     NUM_JEWELLERY
 };
 
-enum launch_retval
+enum class launch_retval
 {
-    LRET_BUGGY = -1, // could be 0 maybe? TODO: test
-    LRET_FUMBLED,
-    LRET_LAUNCHED,
-    LRET_THROWN,
+    BUGGY = -1, // could be 0 maybe? TODO: test
+    FUMBLED,
+    LAUNCHED,
+    THROWN,
 };
 
 enum misc_item_type
@@ -457,6 +457,7 @@ enum special_armour_type
     SPARM_JUMPING,
 #endif
     SPARM_REPULSION,
+    SPARM_CLOUD_IMMUNE,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
@@ -560,9 +561,6 @@ enum weapon_type
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
     WPN_RAPIER,
-#if TAG_MAJOR_VERSION > 34
-    WPN_CUTLASS,
-#endif
 
     WPN_FALCHION,
     WPN_LONG_SWORD,

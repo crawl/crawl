@@ -272,7 +272,7 @@ static bool _tso_retribution()
 
 static void _zin_remove_good_mutations()
 {
-    if (!how_mutated())
+    if (!you.how_mutated())
         return;
 
     const god_type god = GOD_ZIN;
@@ -295,7 +295,7 @@ static void _zin_remove_good_mutations()
             failMsg = false;
     }
 
-    if (success && !how_mutated())
+    if (success && !you.how_mutated())
         simple_god_message(" rids your body of chaos!", god);
 }
 
@@ -307,7 +307,7 @@ static bool _zin_retribution()
     int punishment = random2(8);
 
     // If not mutated, do something else instead.
-    if (punishment > 7 && !how_mutated())
+    if (punishment > 7 && !you.how_mutated())
         punishment = random2(6);
 
     switch (punishment)
@@ -392,7 +392,6 @@ static bool _cheibriados_retribution()
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
         {
             mprf(MSGCH_WARN, "You feel the world leave you behind!");
-            you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
         break;
@@ -643,14 +642,14 @@ static bool _kikubaaqudgha_retribution()
     }
     else if (random2(you.experience_level) >= 4)
     {
-        // necromancy miscast, 20% chance of additional miscast
-        do
+        // necromancy miscast, 25% chance of additional miscast
+        const int num_miscasts = one_chance_in(4) ? 2 : 1;
+        for (int i = 0; i < num_miscasts; i++)
         {
             MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_NECROMANCY,
-                          2 + div_rand_round(you.experience_level, 9),
-                          random2avg(88, 3), _god_wrath_name(god));
+                      2 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
         }
-        while (one_chance_in(5));
     }
 
     // Every act of retribution causes corpses in view to rise against
@@ -780,8 +779,7 @@ static bool _trog_retribution()
         case 5:
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mprf(MSGCH_WARN, "You suddenly feel exhausted!");
-                you.set_duration(DUR_EXHAUSTED, 200);
+                mprf(MSGCH_WARN, "You suddenly feel lethargic!");
                 slow_player(100);
             }
             break;
@@ -1182,7 +1180,7 @@ static void _jiyva_remove_slime_mutation()
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (is_slime_mutation(static_cast<mutation_type>(i))
-            && you.mutation[i] > 0)
+            && you.has_mutation(static_cast<mutation_type>(i)))
         {
             slimy = true;
         }
@@ -1544,7 +1542,7 @@ static void _qazlal_elemental_vulnerability()
     const god_type god = GOD_QAZLAL;
 
     if (mutate(RANDOM_QAZLAL_MUTATION, _god_wrath_name(god), false,
-               false, true, false, MUTCLASS_TEMPORARY, true))
+               false, true, false, MUTCLASS_TEMPORARY))
     {
         simple_god_message(" strips away your elemental protection.",
                            god);

@@ -304,7 +304,7 @@ static monster* _init_fsim()
 
     if (!adjacent(mon->pos(), you.pos()))
     {
-        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
         mpr("Could not put monster adjacent to player.");
         return 0;
     }
@@ -322,7 +322,7 @@ static monster* _init_fsim()
 
 static void _uninit_fsim(monster *mon)
 {
-    monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+    monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
     reset_training();
 }
 
@@ -438,6 +438,18 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.av_speed = double(iter_limit) * 100 / time_taken;
     fdata.av_eff_dam = fdata.av_dam * 100 / fdata.av_time;
 
+    return fdata;
+}
+
+fight_data wizard_quick_fsim_raw(bool defend)
+{
+    monster *mon = _init_fsim();
+    ASSERT(mon);
+
+    const int iter_limit = Options.fsim_rounds;
+    fight_data fdata = _get_fight_data(*mon, iter_limit, defend);
+
+    _uninit_fsim(mon);
     return fdata;
 }
 

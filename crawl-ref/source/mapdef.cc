@@ -584,8 +584,8 @@ void map_lines::apply_grid_overlay(const coord_def &c, bool is_layout)
             if (colour)
                 dgn_set_grid_colour_at(gc, colour);
 
-            const int property = (*overlay)(x, y).property;
-            if (property >= FPROP_BLOODY)
+            const terrain_property_t property = (*overlay)(x, y).property;
+            if (property.flags >= FPROP_BLOODY)
             {
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
@@ -1211,7 +1211,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
     const map_lines &vlines = vmap.map;
 
     // If vault is bigger than the mask region (mtl, mbr), then it gets
-    // randomly centered.  (vtl, vbr) stores the vault's region.
+    // randomly centered. (vtl, vbr) stores the vault's region.
     coord_def vtl = mtl;
     coord_def vbr = mbr;
 
@@ -1379,7 +1379,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
 
             // Finally, handle merging the cell itself.
 
-            // Glyph becomes SUBVAULT_GLYPH.  (The old glyph gets merged into a
+            // Glyph becomes SUBVAULT_GLYPH. (The old glyph gets merged into a
             // keyspec, above). This is so that the glyphs that are included
             // from a subvault are immutable by the parent vault. Otherwise,
             // latent transformations (like KMONS or KITEM) from the parent
@@ -4856,6 +4856,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "jumping",
 #endif
         "repulsion",
+        "cloud_immunity",
         nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);

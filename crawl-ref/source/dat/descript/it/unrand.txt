@@ -256,12 +256,6 @@ Ti domandi quale bruto possa indossare una collana macchiata di sangue fatta di
 denti animali ed umani insieme a qualcosa che sembra essere un pezzo di colonna
 vertebrale fatta a pezzi.
 %%%%
-ring of Shaolin
-
-Un disadorno anello di giada che da al suo indossatore un'inspiegabile
-conoscenza del proprio corpo, premettendo di fare grande prodezze con la
-propria destrezza.
-%%%%
 ring of Robustness
 
 Un semplice anello d'acciaio.

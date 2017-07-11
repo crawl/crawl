@@ -740,10 +740,10 @@ bool zin_check_able_to_recite(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_BREATH_WEAPON])
+    if (you.duration[DUR_RECITE_COOLDOWN])
     {
         if (!quiet)
-            mpr("You're too short of breath to recite.");
+            mpr("You're not ready to recite again yet.");
         return false;
     }
 
@@ -1180,7 +1180,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 {
                     simple_monster_message(*mon,
                         " melts away into a sizzling puddle of chaotic flesh.");
-                    monster_die(mon, KILL_YOU, NON_MONSTER);
+                    monster_die(*mon, KILL_YOU, NON_MONSTER);
                 }
             }
         }
@@ -1252,7 +1252,7 @@ static void _zin_saltify(monster* mon)
     simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
-    item_def* corpse = monster_die(mon, KILL_YOU, NON_MONSTER);
+    item_def* corpse = monster_die(*mon, KILL_YOU, NON_MONSTER);
     if (corpse)
         destroy_item(corpse->index());
 
@@ -1300,7 +1300,7 @@ void zin_remove_divine_stamina()
 
 bool zin_remove_all_mutations()
 {
-    ASSERT(how_mutated());
+    ASSERT(you.how_mutated());
     ASSERT(can_do_capstone_ability(you.religion));
 
     if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
@@ -1826,7 +1826,7 @@ bool beogh_resurrect()
 
 bool jiyva_remove_bad_mutation()
 {
-    if (!how_mutated())
+    if (!you.how_mutated())
     {
         mpr("You have no bad mutations to be cured!");
         return false;
@@ -2506,7 +2506,7 @@ int fedhas_fungal_bloom()
 
                 const coord_def pos = target->pos();
                 const int colour = target->colour;
-                const item_def* corpse = monster_die(target, KILL_MISC,
+                const item_def* corpse = monster_die(*target, KILL_MISC,
                                                      NON_MONSTER, true);
 
                 // If a corpse didn't drop, create a toadstool.
@@ -2647,12 +2647,14 @@ spret_type fedhas_sunlight(bool fail)
     bolt temp_bolt;
     temp_bolt.colour = YELLOW;
 
+    targeter_smite tgt(&you, LOS_RADIUS, 0, 1);
     direction_chooser_args args;
     args.restricts = DIR_TARGET;
     args.mode = TARG_HOSTILE_SUBMERGED;
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.top_prompt = "Select sunlight destination.";
+    args.hitfunc = &tgt;
     direction(spelld, args);
 
     if (!spelld.isValid)
@@ -3827,8 +3829,8 @@ bool can_convert_to_beogh()
     if (silenced(you.pos()))
         return false;
 
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        if (mons_allows_beogh_now(**mi))
+    for (monster* m : monster_near_iterator(you.pos(), LOS_NO_TRANS))
+        if (mons_allows_beogh_now(*m))
             return true;
 
     return false;
@@ -4464,7 +4466,7 @@ bool gozag_call_merchant()
             continue;
         if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
             continue;
-        if (type == SHOP_EVOKABLES && player_mutation_level(MUT_NO_ARTIFICE))
+        if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
             continue;
         if (you.species == SP_FELID &&
             (type == SHOP_ARMOUR
@@ -5110,7 +5112,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
     for (auto mut : muts)
     {
         // can't give the player this if they're already at max
-        if (player_mutation_level(mut) >= mutation_max_levels(mut))
+        if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
             continue;
 
         // can't give the player this if they have an innate mut that conflicts
@@ -5204,7 +5206,7 @@ static bool _player_sacrificed_arcana()
                                     _arcane_sacrifice_lists)
     {
         for (mutation_type sacrifice : arcane_sacrifice_list)
-            if (player_mutation_level(sacrifice))
+            if (you.get_mutation_level(sacrifice))
                 return true;
     }
     return false;
@@ -5221,7 +5223,7 @@ static bool _player_sacrificed_arcana()
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
     if (sacrifice.mutation != MUT_NON_MUTATION
-        && player_mutation_level(sacrifice.mutation))
+        && you.get_mutation_level(sacrifice.mutation))
     {
         return false;
     }
@@ -5408,9 +5410,9 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             }
             // the other sacrifices get sharply worse if you already
             // have levels of them.
-            else if (player_mutation_level(mut) == 2)
+            else if (you.get_mutation_level(mut) == 2)
                 piety_gain += 28;
-            else if (player_mutation_level(mut) == 1)
+            else if (you.get_mutation_level(mut) == 1)
                 piety_gain += 21;
             else
                 piety_gain += 14;
@@ -5420,37 +5422,37 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
 
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
-            if (player_mutation_level(MUT_NO_LOVE))
+            if (you.get_mutation_level(MUT_NO_LOVE))
                 piety_gain -= 10; // You've already lost some value here
             break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (player_mutation_level(MUT_NO_ARMOUR))
+            if (you.get_mutation_level(MUT_NO_ARMOUR))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
-            if (player_mutation_level(MUT_NO_DODGING))
+            if (you.get_mutation_level(MUT_NO_DODGING))
                 piety_gain += 20;
             break;
         case ABIL_RU_SACRIFICE_LOVE:
-            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-                && player_mutation_level(MUT_NO_ARTIFICE))
+            if (you.get_mutation_level(MUT_NO_SUMMONING_MAGIC)
+                && you.get_mutation_level(MUT_NO_ARTIFICE))
             {
                 // this is virtually useless, aside from zot_tub
                 piety_gain = 1;
             }
-            else if (player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-                || player_mutation_level(MUT_NO_ARTIFICE))
+            else if (you.get_mutation_level(MUT_NO_SUMMONING_MAGIC)
+                || you.get_mutation_level(MUT_NO_ARTIFICE))
             {
                 piety_gain /= 2;
             }
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
-            if (player_mutation_level(MUT_COWARDICE))
+            if (you.get_mutation_level(MUT_COWARDICE))
                 piety_gain += 15;
         case ABIL_RU_SACRIFICE_COURAGE:
-            if (player_mutation_level(MUT_INEXPERIENCED))
+            if (you.get_mutation_level(MUT_INEXPERIENCED))
                 piety_gain += 15;
 
         default:
@@ -6507,10 +6509,15 @@ int pakellas_surge_devices()
     return severity;
 }
 
-static bool _get_stomped(monster& mons)
+static bool _mons_stompable(const monster &mons)
 {
     // Don't hurt your own demonic guardians
-    if (testbits(mons.flags, MF_DEMONIC_GUARDIAN) && mons.friendly())
+    return !testbits(mons.flags, MF_DEMONIC_GUARDIAN) || !mons.friendly();
+}
+
+static bool _get_stomped(monster& mons)
+{
+    if (!_mons_stompable(mons))
         return false;
 
     behaviour_event(&mons, ME_ANNOY, &you);
@@ -6531,6 +6538,22 @@ static bool _get_stomped(monster& mons)
 
 bool uskayaw_stomp()
 {
+    // Demonic guardians are immune but check for other friendlies
+    const bool friendlies = apply_monsters_around_square([] (monster& mons) {
+        return _mons_stompable(mons) && mons_att_wont_attack(mons.attitude);
+    }, you.pos());
+
+    // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
+    // a few places already; see spl_tornado.cc, disaster area, etc.
+    if (friendlies
+        && !yesno("There are friendlies around, "
+                  "are you sure you want to hurt them?",
+                  true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
     mpr("You stomp with the beat, sending a shockwave through the revelers "
             "around you!");
     apply_monsters_around_square(_get_stomped, you.pos());
@@ -6751,7 +6774,7 @@ spret_type uskayaw_grand_finale(bool fail)
         throw_monster_bits(*mons); // have some fun while we're at it
     }
 
-    monster_die(mons, KILL_YOU, NON_MONSTER, false);
+    monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
     if (!mons->alive())
         move_player_to_grid(beam.target, false);

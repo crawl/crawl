@@ -1019,7 +1019,7 @@ static dungeon_feature_type rewrite_feature(dungeon_feature_type x,
     return x;
 }
 
-static dungeon_feature_type unmarshallFeatureType(reader &th)
+dungeon_feature_type unmarshallFeatureType(reader &th)
 {
     dungeon_feature_type x = static_cast<dungeon_feature_type>(unmarshallUByte(th));
     return rewrite_feature(x, th.getMinorVersion());
@@ -2694,11 +2694,28 @@ static void tag_read_you(reader &th)
 
         if (you.innate_mutation[j] + you.temp_mutation[j] > you.mutation[j])
         {
-            mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
-            you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
+            if (th.getMinorVersion() >= TAG_MINOR_SPIT_POISON_AGAIN
+                && th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN_AGAIN
+                && j == MUT_SPIT_POISON)
+            {
+                // this special case needs to be handled diferently or
+                // the level will be set too high; innate is what's corrupted.
+                you.mutation[j] = you.innate_mutation[j] = 1;
+                you.temp_mutation[j] = 0;
+            }
+            else
+            {
+                mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
+                you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
+            }
         }
 #endif
     }
+
+
+    // mutation fixups happen below here.
+    // *REMINDER*: if you fix up an innate mutation, remember to adjust both
+    // `you.mutation` and `you.innate_mutation`.
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_STAT_MUT)
@@ -2944,15 +2961,57 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_MUMMY_RESTORATION)
     {
         if (you.mutation[MUT_MUMMY_RESTORATION])
+        {
             you.mutation[MUT_MUMMY_RESTORATION] = 0;
+            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+        }
         if (you.mutation[MUT_SUSTAIN_ATTRIBUTES])
+        {
             you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+        }
+    }
+    else
+    {
+        // need another fixup due to save compat issues; the first version
+        // above forgot to deal with innate mutations. The mutation might
+        // have been readded in the generic fixup code.
+        if (you.innate_mutation[MUT_MUMMY_RESTORATION])
+        {
+            you.mutation[MUT_MUMMY_RESTORATION] = 0;
+            you.innate_mutation[MUT_MUMMY_RESTORATION] = 0;
+        }
+        if (you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES])
+        {
+            you.mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+            you.innate_mutation[MUT_SUSTAIN_ATTRIBUTES] = 0;
+        }
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN)
     {
         if (you.mutation[MUT_SPIT_POISON] > 1)
             you.mutation[MUT_SPIT_POISON] -= 1;
+        // Before TAG_MINOR_SPIT_POISON_AGAIN_AGAIN this second if was missing.
+        if (you.innate_mutation[MUT_SPIT_POISON] > 1)
+            you.innate_mutation[MUT_SPIT_POISON] -= 1;
+    }
+    else if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON_AGAIN_AGAIN)
+    {
+        // Between these two tags the value for you.innate_mutation could get
+        // corrupted. No valid save after TAG_MINOR_SPIT_POISON_AGAIN should
+        // have innate set to 2 for this for this mutation.
+
+        // this doesn't correct you.mutation, because the 2,2 configuration
+        // can result from two cases: (i) a save was upgraded across
+        // TAG_MINOR_SPIT_POISON_AGAIN, had its mutations corrupted, and
+        // then was fixed up to 2,2 on load, or (ii) a save-pre-
+        // TAG_MINOR_SPIT_POISON_AGAIN had exhale poison, had 1 subtracted
+        // from mutation, and ends up as 2,2. So, some lucky upgrades will get
+        // exhale poison.
+
+        if (you.innate_mutation[MUT_SPIT_POISON] == 2)
+            you.innate_mutation[MUT_SPIT_POISON] = 1;
     }
 
     // Slow regeneration split into two single-level muts:
@@ -3935,6 +3994,16 @@ static void tag_read_you_dungeon(reader &th)
         }
         you.set_place_info(place_info);
     }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TOMB_HATCHES)
+    {
+        PlaceInfo pinfo = you.get_place_info(BRANCH_TOMB);
+        if (pinfo.levels_seen > 0)
+            you.props[TOMB_STONE_STAIRS_KEY] = true;
+    }
+#endif
+
     typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
                          (ssipair (string_set::*)(const string &))
@@ -4012,7 +4081,7 @@ static void tag_construct_level(writer &th)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallMapCell(th, env.map_knowledge[count_x][count_y]);
-            marshallInt(th, env.pgrid[count_x][count_y]);
+            marshallInt(th, env.pgrid[count_x][count_y].flags);
         }
 
     marshallBoolean(th, !!env.map_forgotten.get());
@@ -5444,6 +5513,9 @@ static void tag_read_level(reader &th)
     EAT_CANARY;
 
     env.map_seen.reset();
+#if TAG_MAJOR_VERSION == 34
+    vector<coord_def> transporters;
+#endif
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
@@ -5451,6 +5523,11 @@ static void tag_read_level(reader &th)
             grd[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
 
+#if TAG_MAJOR_VERSION == 34
+            // Save these for potential destination clean up.
+            if (grd[i][j] == DNGN_TRANSPORTER)
+                transporters.push_back(coord_def(i, j));
+#endif
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions
             if (env.map_knowledge[i][j].monsterinfo())
@@ -5461,7 +5538,7 @@ static void tag_read_level(reader &th)
             env.map_knowledge[i][j].flags &= ~MAP_VISIBLE_FLAG;
             if (env.map_knowledge[i][j].seen())
                 env.map_seen.set(i, j);
-            env.pgrid[i][j] = unmarshallInt(th);
+            env.pgrid[i][j].flags = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
         }
@@ -5551,6 +5628,21 @@ static void tag_read_level(reader &th)
     env.spawn_random_rate = unmarshallInt(th);
 
     env.markers.read(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TRANSPORTER_LANDING)
+    {
+        for (auto& tr : transporters)
+        {
+            if (grd(tr) != DNGN_TRANSPORTER)
+                continue;
+
+            map_position_marker *marker
+               = get_position_marker_at(tr, DNGN_TRANSPORTER);
+            if (marker && marker->dest != INVALID_COORD)
+                grd(marker->dest) = DNGN_TRANSPORTER_LANDING;
+        }
+    }
+#endif
 
     env.properties.clear();
     env.properties.read(th);
@@ -6168,7 +6260,7 @@ static void tag_read_level_monsters(reader &th)
             dprf("Killed elsewhere companion %s(%d) on %s",
                     m.name(DESC_PLAIN, true).c_str(), m.mid,
                     level_id::current().describe(false, true).c_str());
-            monster_die(&m, KILL_RESET, -1, true, false);
+            monster_die(m, KILL_RESET, -1, true, false);
             continue;
         }
 

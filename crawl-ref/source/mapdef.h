@@ -505,8 +505,8 @@ private:
     {
         overlay_def() :
             colour(0), rocktile(""), floortile(""), tile(""),
-            no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
-            keyspec_idx(0)
+            no_random(false), last_tile(false), property(),
+            height(INVALID_HEIGHT), keyspec_idx(0)
         {}
         colour_t colour;
         string rocktile;
@@ -514,7 +514,7 @@ private:
         string tile;
         bool no_random;
         bool last_tile;
-        int property;
+        terrain_property_t property;
         int height;      // heightmap height
         int keyspec_idx;
     };

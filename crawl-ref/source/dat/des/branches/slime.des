@@ -576,6 +576,68 @@ MAP
   ...........
 ENDMAP
 
+NAME: cheibrodos_slime_lost_civilization_8
+DEPTH: Slime, !Slime:$
+TAGS: decor
+ORIENT: float
+SUBST: - = xxx., " = ...x
+MAP
+@.............
+.(..----------
+.......".....-
+...".".".".".-
+.-...........-
+.-.".".".".".-
+.-.....".....-
+.-"".""xx..--x
+.-.....xV....x
+.-.".".......x
+.-........)..x
+.-.".".-.....x
+.-.....-....Vx
+.-------xxxxxx
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_9
+DEPTH: Slime, !Slime:$
+TAGS: decor transparent
+ORIENT: float
+SUBST: x = xxx., G = G..
+MAP
+.............
+.xx.xx.xx.xx.
+.xxGxxGxxGxx.
+.............
+.............
+@...........@
+.............
+.............
+.xxGxxGxxGxx.
+.xx.xx.xx.xx.
+.............
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_10
+DEPTH: Slime, !Slime:$
+TAGS: decor transparent
+ORIENT: float
+SUBST: x = xxxx.
+MAP
+...............
+.xxxxxxxxxxxxx.
+.x..V..x.....x.
+.x.............
+.x.....x......@
+.x.....x.......
+.xxxxxxx.....x.
+.x.....x.....x.
+.x...........x.
+.x...........x.
+.x...........x.
+.xx...xxxxxxxx.
+....@..........
+ENDMAP
+
 # inspired by a comment of spacejung on SomethingAwful (dpeg)
 NAME:   dissolution_awaits
 DEPTH:  Slime:2-, !Slime:$
@@ -586,9 +648,8 @@ MAP
 .......
 ...1...
 .[...(.
- .....
+.......
 ENDMAP
-
 
 ################################################################################
 # Slime Pit

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -42,6 +43,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "throw.h"
+#include "unwind.h"
 #include "view.h"
 
 // TODO: template out the differences between this and god_power.
@@ -566,7 +568,7 @@ void ash_check_bondage(bool msg)
             s = ET_ARMOUR;
         // Missing hands mean fewer rings
         else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING
-                 && player_mutation_level(MUT_MISSING_HAND))
+                 && you.get_mutation_level(MUT_MISSING_HAND))
         {
             continue;
         }
@@ -574,7 +576,7 @@ void ash_check_bondage(bool msg)
         else if (you.species == SP_OCTOPODE
                  && ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
                      || (i == EQ_RING_EIGHT
-                         && player_mutation_level(MUT_MISSING_HAND))))
+                         && you.get_mutation_level(MUT_MISSING_HAND))))
         {
             continue;
         }
@@ -604,7 +606,7 @@ void ash_check_bondage(bool msg)
                 {
                     if (s == ET_WEAPON
                         && (_two_handed()
-                            || player_mutation_level(MUT_MISSING_HAND)))
+                            || you.get_mutation_level(MUT_MISSING_HAND)))
                     {
                         cursed[ET_WEAPON] = 3;
                         cursed[ET_SHIELD] = 3;
@@ -1529,20 +1531,20 @@ void wu_jian_trigger_serpents_lash(const coord_def& old_pos)
 
 void wu_jian_heaven_tick()
 {
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
+    if (you.attribute[ATTR_HEAVENLY_STORM] == 0)
         return;
 
-    // TODO: this is ridiculous. REWRITEME!
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 10)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 1;
-    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 15)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 2;
-    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 20)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 3;
-    else if (you.attribute[ATTR_HEAVEN_ON_EARTH] <= 30)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 5;
+    // TODO: this is still ridiculous. REWRITEME!
+    if (you.attribute[ATTR_HEAVENLY_STORM] <= 10)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 1;
+    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 15)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 2;
+    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 20)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 3;
+    else if (you.attribute[ATTR_HEAVENLY_STORM] <= 30)
+        you.attribute[ATTR_HEAVENLY_STORM] -= 5;
     else
-        you.attribute[ATTR_HEAVEN_ON_EARTH] -= 10;
+        you.attribute[ATTR_HEAVENLY_STORM] -= 10;
 
     for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
     {
@@ -1552,15 +1554,15 @@ void wu_jian_heaven_tick()
 
     noisy(15, you.pos());
 
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] == 0)
-        end_heaven_on_earth();
+    if (you.attribute[ATTR_HEAVENLY_STORM] == 0)
+        end_heavenly_storm();
     else
-        you.duration[DUR_HEAVEN_ON_EARTH] = WU_JIAN_HEAVEN_TICK_TIME;
+        you.duration[DUR_HEAVENLY_STORM] = WU_JIAN_HEAVEN_TICK_TIME;
 }
 
-void end_heaven_on_earth()
+void end_heavenly_storm()
 {
-    you.attribute[ATTR_HEAVEN_ON_EARTH] = 0;
+    you.attribute[ATTR_HEAVENLY_STORM] = 0;
     mprf(MSGCH_GOD, "The heavenly storm settles.");
 }
 
@@ -1571,12 +1573,12 @@ bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
            && attack_type != WU_JIAN_ATTACK_TRIGGERED_AUX;
 }
 
-static bool _dont_attack_martial(const monster* mons)
+static bool _can_attack_martial(const monster* mons)
 {
-    return mons->wont_attack()
+    return !(mons->wont_attack()
            || mons_is_firewood(*mons)
            || mons_is_projectile(mons->type)
-           || !you.can_see(*mons);
+           || !you.can_see(*mons));
 }
 
 // A mismatch between attack speed and move speed may cause
@@ -1585,14 +1587,20 @@ static bool _dont_attack_martial(const monster* mons)
 // made the same amount of attacks as tabbing.
 static int _wu_jian_number_of_attacks()
 {
-    const int move_delay = player_movement_speed();
-    const int attack_delay = you.attack_delay().roll();
-    // we square move_delay here because attack_delay is *multiplied* by
-    // move_delay / BASELINE_DELAY as a crude hack to make DUR_SLOW/DUR_HASTE
-    // affect attack speed.
-    // FIXME: apply DUR_HASTE/DUR_SLOW directly to attack_delay instead!
-    return div_rand_round(move_delay * move_delay,
-                          attack_delay * BASELINE_DELAY);
+    const int move_delay = player_movement_speed() * player_speed();
+    int attack_delay;
+
+    {
+        // attack_delay() is dependent on you.time_taken, which won't be set
+        // appropriately during a movement turn. This temporarily resets
+        // you.time_taken to the initial value (see `_prep_input`) used for
+        // basic, simple, melee attacks.
+        // TODO: can `attack_delay` be changed to not depend on you.time_taken?
+        unwind_var<int> reset_speed(you.time_taken, player_speed());
+        attack_delay = you.attack_delay().roll();
+    }
+
+    return div_rand_round(move_delay, attack_delay * BASELINE_DELAY);
 }
 
 static void _wu_jian_lunge(const coord_def& old_pos)
@@ -1601,11 +1609,11 @@ static void _wu_jian_lunge(const coord_def& old_pos)
     coord_def potential_target = you.pos() + lunge_direction;
     monster* mons = monster_at(potential_target);
 
-    if (!mons || _dont_attack_martial(mons) || !mons->alive())
+    if (!mons || !_can_attack_martial(mons) || !mons->alive())
         return;
 
-    if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-        you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+    if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+        you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
     you.apply_berserk_penalty = false;
 
@@ -1641,7 +1649,7 @@ static vector<monster*> _get_whirlwind_targets(coord_def pos)
 {
     vector<monster*> targets;
     for (adjacent_iterator ai(pos, true); ai; ++ai)
-        if (monster_at(*ai) && !_dont_attack_martial(monster_at(*ai)))
+        if (monster_at(*ai) && _can_attack_martial(monster_at(*ai)))
             targets.push_back(monster_at(*ai));
     sort(targets.begin(), targets.end());
     return targets;
@@ -1664,8 +1672,8 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
         if (!mons->alive())
             continue;
 
-        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+            you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
         you.apply_berserk_penalty = false;
 
@@ -1709,7 +1717,7 @@ void wu_jian_trigger_martial_arts(const coord_def& old_pos)
         _wu_jian_whirlwind(old_pos);
 }
 
-bool wu_jian_can_wall_jump(const coord_def& target)
+bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(grd(target))
@@ -1718,6 +1726,13 @@ bool wu_jian_can_wall_jump(const coord_def& target)
     {
         return false;
     }
+    return true;
+}
+
+bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
+{
+    if (!wu_jian_can_wall_jump_in_principle(target))
+        return false;
 
     auto wall_jump_direction = (you.pos() - target).sgn();
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
@@ -1729,21 +1744,58 @@ bool wu_jian_can_wall_jump(const coord_def& target)
         || !you.is_habitable(wall_jump_landing_spot)
         || landing_actor)
     {
-        mpr("You have no room to wall jump.");
+        if (messaging)
+        {
+            bool mon_in_los = false;
+            for (monster *m : monster_near_iterator(&you, LOS_NO_TRANS))
+            {
+                if (_can_attack_martial(m))
+                {
+                    mon_in_los = true;
+                    break;
+                }
+            }
+            if (mon_in_los)
+            {
+                if (landing_actor)
+                {
+                    mprf("You have no room to wall jump; %s is in the way.",
+                        landing_actor->observable() ? landing_actor->name(DESC_THE).c_str()
+                                    : "something you can't see");
+                }
+                else
+                    mpr("You have no room to wall jump.");
+            }
+        }
         return false;
     }
 
     for (adjacent_iterator ai(wall_jump_landing_spot, true); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
-        if (mon && !_dont_attack_martial(mon) && mon->alive())
+        if (mon && mon->alive() && _can_attack_martial(mon))
             return true;
     }
 
-    mpr("There is no target in range.");
-    targeter_walljump range;
-    range.set_aim(wall_jump_landing_spot);
-    flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+    if (messaging)
+    {
+        bool mon_in_los = false;
+        for (monster *m : monster_near_iterator(&you, LOS_NO_TRANS))
+        {
+            if (_can_attack_martial(m))
+            {
+                mon_in_los = true;
+                break;
+            }
+        }
+        if (mon_in_los)
+        {
+            mpr("There is no target in range.");
+            targeter_walljump range;
+            range.set_aim(wall_jump_landing_spot);
+            flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
+        }
+    }
 
     return false;
 }
@@ -1765,7 +1817,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         monster* target = monster_at(*ai);
-        if (target && !_dont_attack_martial(target) && target->alive())
+        if (target && _can_attack_martial(target) && target->alive())
             targets.push_back(target);
 
         if (!cell_is_solid(*ai))
@@ -1777,8 +1829,8 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (!target->alive())
             continue;
 
-        if (you.attribute[ATTR_HEAVEN_ON_EARTH] > 0)
-            you.attribute[ATTR_HEAVEN_ON_EARTH] += 2;
+        if (you.attribute[ATTR_HEAVENLY_STORM] > 0)
+            you.attribute[ATTR_HEAVENLY_STORM] += 2;
 
         you.apply_berserk_penalty = false;
 
@@ -1817,7 +1869,7 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         if (mon && mon->alive()
             && you.can_see(*mon)
             && mon->behaviour != BEH_SLEEP
-            && !_dont_attack_martial(mon)
+            && _can_attack_martial(mon)
             && !mon->has_ench(ENCH_DISTRACTED_ACROBATICS))
         {
             const int distract_chance

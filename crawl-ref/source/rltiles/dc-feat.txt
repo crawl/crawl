@@ -275,6 +275,8 @@ return DNGN_RETURN
 %rim 0
 sealed_stairs_up DNGN_SEALED_STAIRS_UP
 sealed_stairs_down DNGN_SEALED_STAIRS_DOWN
+one_way_stairs_up DNGN_ONE_WAY_STAIRS_UP
+one_way_stairs_down DNGN_ONE_WAY_STAIRS_DOWN
 
 %sdir dngn/shops
 ##enter_shop DNGN_ENTER_SHOP
@@ -489,7 +491,10 @@ dry_fountain DNGN_DRY_FOUNTAIN
 %repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
 %resetcol
 
+# Remove teleporter line when TAG_MAJOR_VERSION > 34
 teleporter DNGN_TELEPORTER
+transporter DNGN_TRANSPORTER
+transporter_landing_site DNGN_TRANSPORTER_LANDING
 
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.

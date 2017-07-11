@@ -151,7 +151,7 @@ NAME:   uniq_harold
 DEPTH:  D:10-12, Orc, !Orc:$, Lair:1-4
 : place_unique(_G, "Harold")
 
-NAME:   uniq_iyjb
+NAME:   uniq_ijyb
 DEPTH:  D:3-5
 : place_unique(_G, "Ijyb")
 

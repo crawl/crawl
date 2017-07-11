@@ -386,7 +386,7 @@ random_var monster::attack_delay(const item_def *projectile,
     const item_def* weap = weapon();
 
     const bool use_unarmed =
-        (projectile) ? is_launched(this, weap, *projectile) != LRET_LAUNCHED
+        (projectile) ? is_launched(this, weap, *projectile) != launch_retval::LAUNCHED
                      : !weap;
 
     if (use_unarmed || !weap)
@@ -2274,6 +2274,8 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
 
     if (mon.type == MONS_NO_MONSTER)
         return "DEAD MONSTER";
+    else if (mon.mid == MID_YOU_FAULTLESS)
+        return "INVALID YOU_FAULTLESS";
     else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
         return _invalid_monster_str(mon.type);
 
@@ -2884,7 +2886,7 @@ void monster::banish(actor *agent, const string &, const int, bool force)
                             true /*possibly wrong*/, this);
         }
     }
-    monster_die(this, KILL_BANISHED, NON_MONSTER);
+    monster_die(*this, KILL_BANISHED, NON_MONSTER);
 
     if (!cell_is_solid(old_pos))
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
@@ -4500,7 +4502,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         {
             int hp_before_pain_bond = hit_points;
             radiate_pain_bond(*this, amount, this);
-            amount += hp_before_pain_bond - hit_points;
+            amount += max(hp_before_pain_bond - hit_points, 0);
         }
 
         // Allow the victim to exhibit passive damage behaviour (e.g.
@@ -4512,7 +4514,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (has_ench(ENCH_MIRROR_DAMAGE)
             && crawl_state.which_god_acting() != GOD_YREDELEMNUL)
         {
-            mirror_damage_fineff::schedule(agent, this, amount * 2 / 3);
+            // ensure that YOU_FAULTLESS is converted to `you`. this may still
+            // fail e.g. when the damage is from a vault-created cloud
+            if (auto valid_agent = ensure_valid_actor(agent))
+                mirror_damage_fineff::schedule(valid_agent, this, amount * 2 / 3);
         }
 
         blame_damage(agent, amount);
@@ -4522,11 +4527,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         && type != MONS_NO_MONSTER)
     {
         if (agent == nullptr)
-            monster_die(this, KILL_MISC, NON_MONSTER);
+            monster_die(*this, KILL_MISC, NON_MONSTER);
         else if (agent->is_player())
-            monster_die(this, KILL_YOU, NON_MONSTER);
+            monster_die(*this, KILL_YOU, NON_MONSTER);
         else
-            monster_die(this, KILL_MON, agent->mindex());
+            monster_die(*this, KILL_MON, agent->mindex());
     }
 
     return amount;
@@ -5311,7 +5316,7 @@ bool monster::malmutate(const string &/*reason*/)
     // Ugly things merely change colour.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_mutate(this);
+        ugly_thing_mutate(*this);
         return true;
     }
 
@@ -5344,7 +5349,7 @@ bool monster::polymorph(int pow)
     // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
     {
-        ugly_thing_mutate(this);
+        ugly_thing_mutate(*this);
         return true;
     }
 
@@ -5359,7 +5364,7 @@ bool monster::polymorph(int pow)
     // and polymorph each part separately.
     if (type == MONS_SLIME_CREATURE)
     {
-        slime_creature_polymorph(this);
+        slime_creature_polymorph(*this);
         return true;
     }
 
@@ -5536,7 +5541,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
 void monster::self_destruct()
 {
     suicide();
-    monster_die(as_monster(), KILL_MON, mindex());
+    monster_die(*as_monster(), KILL_MON, mindex());
 }
 
 /** A higher-level moving method than moveto().
@@ -6004,7 +6009,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // Don't discharge on small amounts of damage (this helps avoid
     // continuously shocking when poisoned or sticky flamed)
     // XXX: this might not be necessary anymore?
-    if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor)
+    if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor && oppressor != this)
     {
         const int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
@@ -6568,6 +6573,13 @@ bool monster::stasis() const
 {
     return mons_genus(type) == MONS_FORMICID
            || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID;
+}
+
+bool monster::cloud_immune(bool calc_unid, bool items) const
+{
+    // Cloud Mage is also checked for in (so stay in sync with)
+    // monster_info::monster_info(monster_type, monster_type).
+    return type == MONS_CLOUD_MAGE || actor::cloud_immune(calc_unid, items);
 }
 
 bool monster::is_illusion() const

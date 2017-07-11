@@ -124,7 +124,7 @@ bool attack::handle_phase_killed()
 {
     monster* mon = defender->as_monster();
     if (!invalid_monster(mon))
-        monster_die(mon, attacker);
+        monster_die(*mon, attacker);
 
     return true;
 }
@@ -178,7 +178,7 @@ int attack::calc_to_hit(bool random)
         else
         {
             // Claws give a slight bonus to accuracy when active
-            mhit += (player_mutation_level(MUT_CLAWS) > 0
+            mhit += (you.get_mutation_level(MUT_CLAWS) > 0
                      && wpn_skill == SK_UNARMED_COMBAT) ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
@@ -214,8 +214,8 @@ int attack::calc_to_hit(bool random)
             mhit -= 5;
 
         // mutation
-        if (player_mutation_level(MUT_EYEBALLS))
-            mhit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
+        if (you.get_mutation_level(MUT_EYEBALLS))
+            mhit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
 
         // hit roll
         mhit = maybe_random2(mhit, random);
@@ -261,7 +261,7 @@ int attack::calc_to_hit(bool random)
     else
     {
         // This can only help if you're visible!
-        const int how_transparent = player_mutation_level(MUT_TRANSLUCENT_SKIN);
+        const int how_transparent = you.get_mutation_level(MUT_TRANSLUCENT_SKIN);
         if (defender->is_player() && how_transparent)
             mhit -= 2 * how_transparent;
 
@@ -348,6 +348,7 @@ string attack::anon_pronoun(pronoun_type pron)
  */
 void attack::init_attack(skill_type unarmed_skill, int attack_number)
 {
+    ASSERT(attacker);
     weapon          = attacker->weapon(attack_number);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
@@ -1595,7 +1596,7 @@ bool attack::apply_damage_brand(const char *what)
     {
         // If a monster with a chaos weapon gets this brand, act like
         // AF_CONFUSE.
-        if (defender->is_player())
+        if (attacker->is_monster())
         {
             if (one_chance_in(3))
             {
@@ -1631,7 +1632,7 @@ bool attack::apply_damage_brand(const char *what)
         if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
             && you.duration[DUR_CONFUSING_TOUCH])
         {
-            you.duration[DUR_CONFUSING_TOUCH] = 1;
+            you.duration[DUR_CONFUSING_TOUCH] = 0;
             obvious_effect = false;
         }
         break;
@@ -1652,11 +1653,7 @@ bool attack::apply_damage_brand(const char *what)
 
     default:
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_DAMNATION))
-        {
-            calc_elemental_brand_damage(BEAM_DAMNATION, "damn", what);
-            defender->expose_to_element(BEAM_DAMNATION);
             attacker->god_conduct(DID_EVIL, 2 + random2(3));
-        }
         break;
     }
 

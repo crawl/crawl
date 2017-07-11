@@ -45,7 +45,7 @@ void tornado_damage(actor *caster, int dur);
 void cancel_tornado(bool tloc = false);
 void tornado_move(const coord_def &pos);
 spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim,
-                            bool fail = false);
+                            bool fail);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const string &msg,
@@ -54,7 +54,7 @@ void forest_damage(const actor *mon);
 
 vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
                             int max_rays, int max_spacing = 3);
-spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail = false);
+spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail);
 
 spret_type cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);
@@ -73,4 +73,4 @@ size_t shotgun_beam_count(int pow);
 spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
                             bool fail = false);
 
-spret_type cast_ignition(const actor *caster, int pow, bool fail = false);
+spret_type cast_ignition(const actor *caster, int pow, bool fail);

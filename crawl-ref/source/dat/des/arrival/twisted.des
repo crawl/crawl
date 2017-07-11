@@ -273,7 +273,7 @@ NAME:    dpeg_arrival_solitude
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: C{! / B(' / V["
-SUBST:   ([ = .
+SUBST:   ([ = x
 SUBST:   C=., !=@
 SHUFFLE: B(' / zzz, V[" / yyy
 SUBST:   z=x, y=x, B=., '=+, V=., "=+

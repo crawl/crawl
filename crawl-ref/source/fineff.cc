@@ -356,7 +356,7 @@ void deferred_damage_fineff::fire()
 static void _do_merge_masses(monster* initial_mass, monster* merge_to)
 {
     // Combine enchantment durations.
-    merge_ench_durations(initial_mass, merge_to);
+    merge_ench_durations(*initial_mass, *merge_to);
 
     merge_to->blob_size += initial_mass->blob_size;
     merge_to->max_hit_points += initial_mass->max_hit_points;
@@ -375,7 +375,7 @@ static void _do_merge_masses(monster* initial_mass, monster* merge_to)
     behaviour_event(merge_to, ME_EVAL);
 
     // Have to 'kill' the slime doing the merging.
-    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+    monster_die(*initial_mass, KILL_DISMISSED, NON_MONSTER, true);
 }
 
 void starcursed_merge_fineff::fire()

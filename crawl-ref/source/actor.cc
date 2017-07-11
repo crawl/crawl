@@ -214,6 +214,11 @@ bool actor::res_corr(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_RCORR, calc_unid));
 }
 
+bool actor::cloud_immune(bool calc_unid, bool items) const
+{
+    return items && (wearing_ego(EQ_CLOAK, SPARM_CLOUD_IMMUNE, calc_unid));
+}
+
 bool actor::holy_wrath_susceptible() const
 {
     return res_holy_energy() < 0;
@@ -323,7 +328,7 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     }
 
     if (is_player())
-        ss += player_mutation_level(MUT_MANA_SHIELD);
+        ss += you.get_mutation_level(MUT_MANA_SHIELD);
 
     return ss;
 }
@@ -356,7 +361,7 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
         saved = random2(1 + ac) + random2(1 + ac) + random2(1 + ac);
         ac *= 3;
         // apply GDR only twice rather than thrice, that's probably still waaay
-        // too good.  50% gives 75% rather than 100%, too.
+        // too good. 50% gives 75% rather than 100%, too.
         gdr = 100 - gdr * gdr / 100;
         break;
     default:
@@ -709,7 +714,7 @@ void actor::handle_constriction()
         if (defender->is_monster()
             && defender->as_monster()->hit_points < 1)
         {
-            monster_die(defender->as_monster(), this);
+            monster_die(*defender->as_monster(), this);
         }
     }
 }
@@ -889,4 +894,35 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 bool actor::evil() const
 {
     return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
+}
+
+/**
+ * Ensures that `act` is valid if possible. If this isn't possible,
+ * return nullptr. This will convert YOU_FAULTLESS into `you`.
+ *
+ * @param act the actor to validate.
+ *
+ * @return an actor that is either the player or passes `!invalid_monster`, or
+ *         otherwise `nullptr`.
+ */
+/* static */ const actor *actor::ensure_valid_actor(const actor *act)
+{
+    if (!act)
+        return nullptr;
+    if (act->is_player())
+        return act;
+    const monster *mon = act->as_monster();
+    if (mon->mid == MID_YOU_FAULTLESS)
+        return &you;
+    if (invalid_monster(mon))
+        return nullptr;
+    return mon;
+}
+
+/// @copydoc actor::ensure_valid_actor(const actor *act)
+/* static */ actor *actor::ensure_valid_actor(actor *act)
+{
+    // Defer to the other function. Since it returns only act, nullptr, or you,
+    // none of which points to a const object, the const_cast here is safe.
+    return const_cast<actor *>(ensure_valid_actor(static_cast<const actor *>(act)));
 }

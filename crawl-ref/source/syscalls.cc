@@ -206,7 +206,7 @@ int fdatasync(int fd)
 #  ifdef F_FULLFSYNC
     // On MacOS X, fsync() doesn't even try to actually do what it was asked.
     // Sane systems might have this problem only on disks that do write caching
-    // but ignore flush requests.  fsync() should never return before the disk
+    // but ignore flush requests. fsync() should never return before the disk
     // claims the flush completed, but this is not the case on OS X.
     //
     // Except, this is the case for internal drives only. For "external" ones,

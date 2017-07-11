@@ -1409,6 +1409,44 @@ MAP
     ...........
 ENDMAP
 
+NAME: cheibrodos_spider_deadly_dance
+TAGS: no_item_gen no_monster_gen
+DEPTH: Spider
+ORIENT: float
+MONS: dancing weapon ; short sword / dancing weapon ; mace \
+      / dancing weapon ; war axe / dancing weapon ; trident \
+      / dancing weapon ; mace
+MONS: tarantella / redback w:3
+KMONS: - = dancing weapon ; short sword / dancing weapon ; mace \
+           / dancing weapon ; war axe / dancing weapon ; trident \
+           / dancing weapon ; mace
+KMONS: " = dancing weapon ; rapier / dancing weapon ; scimitar \
+           / dancing weapon ; broad axe / dancing weapon ; halberd \
+           / dancing weapon ; morningstar
+KITEM: - = plate armour / plate armour good_item w:1 / chain mail \
+           / chain mail good_item w:1 / scale mail / scale mail good_item w:1 \
+           / ring mail / ring mail good_item w:1
+KITEM: " = plate armour / plate armour good_item w:1 / chain mail \
+           / chain mail good_item w:1 / scale mail / scale mail good_item w:1 \
+           / ring mail / ring mail good_item w:1
+KFEAT: ^ = known web trap
+NSUBST: ` = 4:2 / 4=2., ' = 2=*% / 5=%., . = 2:^ / 4=^.
+MAP
+    ccccccccccccc
+    cm"mc'''cm"mc
+    c2...'''...2c
+    c2...'''...2c
+cccccc+cccGccc+cccccc
+cm`.....c2.2c.....`mc
+c-......+.1.+......-c
+cm`.....c...c.....`mc
+ccccc...cc=cc...ccccc
+    c...c...c...c
+    c`.`c...c`.`c
+    cm-mc...cm-mc
+    ccccc.@.ccccc
+ENDMAP
+
 
 ##############################################################################
 # Rune vaults

@@ -30,6 +30,7 @@
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
+#include "version.h"
 
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
@@ -187,7 +188,7 @@ static const species_type species_order[] =
     SP_MERFOLK,        SP_MINOTAUR,
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
-    SP_BARACHI,
+    SP_BARACHI,        SP_GNOLL,
     // mostly human shape but made of a strange substance
     SP_VINE_STALKER,
     // celestial species
@@ -202,6 +203,10 @@ COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES);
 
 bool is_starting_species(species_type species)
 {
+    // Trunk-only until we finish the species.
+    if (species == SP_GNOLL && Version::ReleaseType != VER_ALPHA)
+        return false;
+
     return find(species_order, species_order + ARRAYSZ(species_order),
                 species) != species_order + ARRAYSZ(species_order);
 }
@@ -236,7 +241,11 @@ static void _resolve_species(newgame_def& ng, const newgame_def& ng_choice)
     case SP_RANDOM:
         // any valid species will do
         if (ng.job == JOB_UNKNOWN)
-            ng.species = RANDOM_ELEMENT(species_order);
+        {
+            do {
+                ng.species = RANDOM_ELEMENT(species_order);
+            } while (!is_starting_species(ng.species));
+        }
         else
         {
             // Pick a random legal character.
@@ -686,8 +695,8 @@ static void _add_choice_menu_options(int choice_type,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     // If the player has species chosen, use VIABLE, otherwise use RANDOM
-    if ((choice_type == C_SPECIES && ng.species != SP_UNKNOWN)
-       || (choice_type == C_JOB && ng.job != JOB_UNKNOWN))
+    if ((choice_type == C_SPECIES && ng.job != JOB_UNKNOWN)
+       || (choice_type == C_JOB && ng.species != SP_UNKNOWN))
     {
         tmp->set_id(M_VIABLE);
     }
@@ -894,6 +903,9 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
         if (this_species == SP_UNKNOWN)
             break;
 
+        if (ng.job == JOB_UNKNOWN && !is_starting_species(this_species))
+            continue;
+
         if (ng.job != JOB_UNKNOWN
             && species_allowed(ng.job, this_species) == CC_BANNED)
         {
@@ -959,6 +971,7 @@ static species_group species_groups[] =
             SP_DEEP_ELF,
             SP_OGRE,
             SP_DEEP_DWARF,
+            SP_GNOLL,
         }
     },
     {
@@ -1057,12 +1070,12 @@ static job_group jobs_order[] =
     {
         "Warrior",
         coord_def(0, 0), 15,
-        { JOB_FIGHTER, JOB_GLADIATOR, JOB_HUNTER, JOB_ASSASSIN }
+        { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_ASSASSIN }
     },
     {
         "Adventurer",
         coord_def(0, 7), 15,
-        { JOB_MONK, JOB_ARTIFICER, JOB_WANDERER }
+        { JOB_ARTIFICER, JOB_WANDERER }
     },
     {
         "Zealot",

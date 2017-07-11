@@ -72,6 +72,9 @@ void dluaopen_monsters(lua_State *ls);
 void dluaopen_you(lua_State *ls);
 void dluaopen_dgn(lua_State *ls);
 void dluaopen_colour(lua_State *ls);
+#ifdef WIZARD
+void dluaopen_wiz(lua_State *ls);
+#endif
 
 /*
  * Some shared helper functions.

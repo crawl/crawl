@@ -1318,6 +1318,10 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           In theory, this will create "Ploog's Wand Emporium", which has
           exactly three items, each of which is a randomly chosen wand.
 
+          Note: Transporters are placed in vaults via lua markers, and
+          shouldn't need placement via KFEAT. See the Transporters section
+          below.
+
 KMONS:    ? = orc priest / w:3 deep elf priest
 
           KMONS: allows you to specify a placeholder symbol that indicates
@@ -1681,3 +1685,25 @@ entire group of glyphs being assigned. For example:
     NSUBST: A = 1:. / *:x
     NSUBST: B = 1:. / *:x
     NSUBST: C = 1:. / *:x
+
+Transporters
+------------
+
+Transporters are placed in vaults via two lua marker classes, which can be
+created with the functions transp_loc(name) and transp_dest_loc(name). Here
+`name' is a string shared between the transporter marker and the the
+transporter destination marker. For example,
+
+    MARKER: E = lua:transp_loc("the_bubble_entry")
+    MARKER: F = lua:transp_dest_loc("the_bubble_entry")
+
+will place a transporter on any glyph E that leads to the location of glyph F.
+This form of placement works both within a vault and when the transporter and
+its destination are in different vaults/subvaults, since transporters are
+placed from the markers after the level is generated.
+
+You may have multiple glyphs with the same transporter markers name, and they
+will all lead to the same destination after placement. Note that it's not valid
+to have multiple glyphs with the same destination marker. Any randomization of
+destinations can be done through normal SUBST/NSUBST/SHUFFLE operations before
+the MARKER statements.

@@ -134,13 +134,13 @@ at the end:
 
     case ABIL_LASER_EYES:      // eye lasers
     {
-        int power = 25 + (you.experience_level * 2 * player_mutation_level(MUT_LASER_EYES);
+        int power = 25 + (you.experience_level * 2 * you.get_mutation_level(MUT_LASER_EYES);
         beam.range = _calc_breath_ability_range(abil.ability);
 
-        if (player_mutation_level(MUT_MISSING_EYE) //Ru - Sacrifice an Eye
+        if (you.get_mutation_level(MUT_MISSING_EYE) //Ru - Sacrifice an Eye
             power = power / 2; //only get half power if you only have half as many eyes.
 
-        if (player_mutation_level(MUT_EYEBALLS)) // Jiyva mutation.
+        if (you.get_mutation_level(MUT_EYEBALLS)) // Jiyva mutation.
             power = power * 4; //if you're all eyes, you're also all eye-lasers!
 
         if (!spell_direction(abild, beam)
@@ -182,7 +182,7 @@ shouldn't have any such conditions. We may also need to add the ability
 as a talent (yet another term, this one means 'activateable ability' as
 I've been using it here) in the your_talents function like so:
 
-    if (player_mutation_level(MUT_LASER_EYES) > 0)
+    if (you.get_mutation_level(MUT_LASER_EYES) > 0)
         _add_talent(talents, ABIL_LASER_EYES, check_confused);
 
 You can do all sorts of complicated checks here, and the vampire part
@@ -262,11 +262,11 @@ along with the other auxilliary attacks:
         switch (atk)
         {
         case UNAT_CONSTRICT:
-            return player_mutation_level(MUT_CONSTRICTING_TAIL)
+            return you.get_mutation_level(MUT_CONSTRICTING_TAIL)
                     || you.species == SP_OCTOPODE && you.has_usable_tentacle();
 
         case UNAT_BEARD:
-            return player_mutation_level(MUT_PREHENSILE_BEARD)
+            return you.get_mutation_level(MUT_PREHENSILE_BEARD)
         //REST OF THE FUNCTION TRIMMED FOR SPACE
 
 Now we have to go back to melee_attack.h and add in the new UNAT_BEARD
@@ -315,5 +315,5 @@ Summary Notes:
    - mutations can affect stuff in almost any other file, depending on
      what your mutation changes. Our example changed melee_attack.cc.
    - check for your mutation using
-     "player_mutation_level(MUT_NAME_HERE) > 0"
+     "you.get_mutation_level(MUT_NAME_HERE) > 0"
      as a simple check when getting creative with your code.

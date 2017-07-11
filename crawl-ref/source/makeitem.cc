@@ -799,10 +799,10 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
                                       12, SPARM_PROTECTION);
 
     case ARM_SCARF:
-        return random_choose_weighted(3, SPARM_COLD_RESISTANCE,
-                                      1, SPARM_SPIRIT_SHIELD,
+        return random_choose_weighted(1, SPARM_SPIRIT_SHIELD,
                                       1, SPARM_RESISTANCE,
-                                      1, SPARM_REPULSION);
+                                      1, SPARM_REPULSION,
+                                      1, SPARM_CLOUD_IMMUNE);
 
     case ARM_CLOAK:
         return random_choose(SPARM_POISON_RESISTANCE,
@@ -969,14 +969,16 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                        || !strict;
 
     case SPARM_SPIRIT_SHIELD:
-        return type == ARM_HAT ||
+        return
 #if TAG_MAJOR_VERSION == 34
+               type == ARM_HAT ||
                type == ARM_CAP ||
 #endif
                slot == EQ_SHIELD ||
                type == ARM_SCARF || !strict;
 
     case SPARM_REPULSION:
+    case SPARM_CLOUD_IMMUNE:
         return type == ARM_SCARF;
 
     case NUM_SPECIAL_ARMOURS:
@@ -1032,7 +1034,7 @@ static armour_type _get_random_armour_type(int item_level)
         armtype = random_choose_weighted(6, ARM_BOOTS,
                                          6, ARM_GLOVES,
                                          // Cloak slot
-                                         5, ARM_CLOAK,
+                                         3, ARM_CLOAK,
                                          1, ARM_SCARF,
                                          // Head slot
                                          5, ARM_HELMET,

@@ -140,6 +140,10 @@ static const duration_def duration_data[] =
       "berserking", "berserker",
       "You are possessed by a berserker rage.", D_EXPIRES,
       {{ "You are no longer berserk.", player_end_berserk }}, 6},
+    { DUR_BERSERK_COOLDOWN,
+      YELLOW, "-Berserk",
+      "berserk cooldown", "",
+      "", D_NO_FLAGS},
     { DUR_BREATH_WEAPON,
       YELLOW, "Breath",
       "short of breath", "breath weapon",
@@ -158,9 +162,9 @@ static const duration_def duration_data[] =
       "You are confused.", D_DISPELLABLE,
       {{ "You feel less confused." }}},
     { DUR_CONFUSING_TOUCH,
-      BLUE, "Touch",
+      LIGHTBLUE, "Touch",
       "confusing touch", "",
-      "" , D_DISPELLABLE | D_EXPIRES,
+      "" , D_DISPELLABLE,
       {{ "", []() {
           mprf(MSGCH_DURATION, "%s",
                you.hands_act("stop", "glowing.").c_str());
@@ -193,7 +197,8 @@ static const duration_def duration_data[] =
     { DUR_EXHAUSTED,
       YELLOW, "Exh",
       "exhausted", "",
-      "You are exhausted.", D_NO_FLAGS},
+      "You are exhausted.", D_NO_FLAGS,
+      {{ "You feel less exhausted." }}},
     { DUR_FIRE_SHIELD,
       BLUE, "RoF",
       "immune to fire clouds", "fire shield",
@@ -267,8 +272,13 @@ static const duration_def duration_data[] =
       "death's door", "deaths door",
       "You are standing in death's doorway.", D_EXPIRES,
       {{ "Your life is in your own hands again!", []() {
-            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
+            you.duration[DUR_DEATHS_DOOR_COOLDOWN] = random_range(10, 30);
       }}, { "Your time is quickly running out!", 5 }}, 10},
+    { DUR_DEATHS_DOOR_COOLDOWN,
+      YELLOW, "-DDoor",
+      "death's door cooldown", "",
+      "", D_NO_FLAGS,
+      {{ "You step away from death's doorway." }}},
     { DUR_QUAD_DAMAGE,
       BLUE, "Quad",
       "quad damage", "",
@@ -347,7 +357,7 @@ static const duration_def duration_data[] =
       {{ "Your shroud unravels." },
         { "Your shroud begins to fray at the edges." }}, 6},
     { DUR_TORNADO_COOLDOWN,
-      YELLOW, "Tornado",
+      YELLOW, "-Tornado",
       "", "tornado cooldown",
       "", D_NO_FLAGS,
       {{ "The winds around you calm down.", []() {
@@ -400,6 +410,11 @@ static const duration_def duration_data[] =
       WHITE, "Recite",
       "reciting", "",
       "You are reciting Zin's Axioms of Law.", D_NO_FLAGS},
+    { DUR_RECITE_COOLDOWN,
+      YELLOW, "-Recite",
+      "", "recite cooldown",
+      "", D_NO_FLAGS,
+      {{ "You are ready to recite again." }}},
     { DUR_GRASPING_ROOTS,
       BROWN, "Roots",
       "grasped by roots", "grasping roots",
@@ -449,7 +464,7 @@ static const duration_def duration_data[] =
           you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(160, 260);
       }}}},
     { DUR_DRAGON_CALL_COOLDOWN,
-      YELLOW, "Dragoncall",
+      YELLOW, "-Dragoncall",
       "", "dragon call cooldown",
       "", D_NO_FLAGS,
       {{ "You can once more reach out to the dragon horde." }}},
@@ -594,7 +609,7 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
       {{ "You regain access to your magic." }, {}, true }},
-    { DUR_HEAVEN_ON_EARTH, 0, "", "", "", "", D_NO_FLAGS,
+    { DUR_HEAVENLY_STORM, 0, "", "", "", "", D_NO_FLAGS,
       {{ "",  wu_jian_heaven_tick }}},
 
 #if TAG_MAJOR_VERSION == 34

@@ -348,18 +348,49 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white> ";
 
-    if (manual_bonus)
+    if (manual_bonus || you.species == SP_GNOLL)
     {
-        skm.set_flag(SKMF_MANUAL);
-        text += "<lightgreen>";
+        if (manual_bonus)
+        {
+            skm.set_flag(SKMF_MANUAL);
+            text += "<lightgreen>";
+        }
+
+        int gnoll_bonus = 0;
+
+        // Determine Gnoll aptitude bonus/malus to display if SP_GNOLL
+        if (you.species == SP_GNOLL)
+        {
+            int gnoll_skill = you.skill(m_sk, 1, true);
+
+            // Gnoll aptitude costs start at effective +5 and reduce by -2 for
+            // each level after reaching 6, floor of -9
+            gnoll_bonus = max(5 - max((gnoll_skill - 5) * 2, 0), -9);
+        }
+        manual_bonus = manual_bonus + gnoll_bonus;
 
         // Only room for two characters.
-        if (manual_bonus < 10)
-            text += make_stringf("+%d", manual_bonus);
-        else
-            text += to_string(manual_bonus);
+        if (manual_bonus != 0)
+        {
+            // Add before based on positive or negative bonus (can be different
+            // from bonus being > 10)
+            if (manual_bonus > 0)
+                text += "<lightgreen>";
+            else
+                text += "<red>";
 
-        text += "</lightgreen>";
+            // Add '+' if bonus is positive and below 10, otherwise don't
+            if (manual_bonus < 10 && manual_bonus > 0)
+                text += make_stringf("+%d", manual_bonus);
+            else
+                text += to_string(manual_bonus);
+
+            // Close color tags based on same rules as above
+            if (manual_bonus > 0)
+                text += "</lightgreen>";
+            else
+                text += "</red>";
+        }
     }
 
     m_aptitude->set_text(text);

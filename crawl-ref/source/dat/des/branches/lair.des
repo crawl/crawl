@@ -447,24 +447,24 @@ NAME:   minmay_lair_oklob_tunnel
 DEPTH:  Lair, !Lair:$
 ORIENT: southwest
 MONS:   plant, oklob plant
-NSUBST: 1 = 4:2 / 4 = 10 / *:1
+NSUBST: 1 = 4:2 / 4 = 10 / *=1..
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxllllllllxxxxxxxxxxxxxxxxxxx11xxx111.....
-xxlllllllxxxxxxxxxxxxxx111xxxx111xx111...@
-xxlllllxxxx111xxx11xxxxx111111111111111..x
-xxllxxxxxx11xxxx11xxxx111111111111111111xx
-xxllllxxxx1xxxxxx11111111111111111111x1xx
-xxllxxxxxx11xx1111111111111xxx11111xxxxxx
-xxllx11xx1111111111111111111xxxxxx111x
-xxlxxx1111111111111xx111xxx11xxxxxxxxx
-xxlx%+11111111111xxxxxx11xxxxx
-xxlx%xxx11111xxx11xxxxxxxxxx
-xxlx|xx11xxx11xxxxx
-xxlxxxxxxxxxx111xx
-xxllllllxxxxxxxxx
-xxxx>llxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx11xxx111.....
+xxxxxxxxxxxxxxxxxxxxxxx111xxxx111xx111...@
+xxxxxxxxxxx111xxx11xxxxx111111111111111..x
+xxxxxxxxxx11xxxx11xxxx111111111111111111xx
+xxxxxxxxxx1xxxxxx11111111111111111111x1xx
+xxxxxxxxxx11xx1111111111111xxx11111xxxxxx
+xxxxx11xx1111111111111111111xxxxxx111x
+xxxxxx1111111111111xx111xxx11xxxxxxxxx
+xxxx%+11111111111xxxxxx11xxxxx
+xxxx%xxx11111xxx11xxxxxxxxxx
+xxxx|xx11xxx11xxxxx
+xxxxxxxxxxxxx111xx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxx
 xxxxxxxxx
 ENDMAP
 
@@ -2429,6 +2429,76 @@ MAP
    ........
 ENDMAP
 
+NAME: cheibrodos_lair_overgrown_chateau
+TAGS: no_item_gen no_monster_gen
+DEPTH: Lair:2-, !Lair:$
+ORIENT: float
+MONS: water moccasin / porcupine, hornet, crocodile, bullfrog / spiny frog
+MONS: black mamba / komodo dragon / w:3 rime drake, hydra / lindwurm
+KMONS: PA = plant
+KFEAT: A = W
+SUBST: - = AAW, " = ccct, * = *%%.
+NSUBST: ; = 1=1 / 1=1. / 1=5..
+NSUBST: ' = 3:P / 4=P. / 1:t / 4=t. / 2=1234 / 2=1234.... / 1:5
+NSUBST: p = 3=1234 / 1=5.., q = 2=1234, _ = 1=134.. / 1:3 / 1:4
+MAP
+  cccccccccccttcccccccc
+  c6...+.ppptttt.cPtttc
+  c...."Ppppptt.....Ptc
+  c*..t"Ppppppp.P...ttc
+  c**tt"tppppppPPc..ttt
+  cccc"cc++cm''PPcP..tt
+.cc.(.P"''.'''''Pct.Ptt
+.cG...."-''.'''''ctP.tc
+.cP...-"W-''.''''ctt.tc
+@+...-W"WW''.''''ttt.Pc
+@+...WWmWW''V''''ttt.Pc
+@+..q-W"WW''.''''ct...c
+.c.qqq-"W-''.'''-cP...c
+.ctqqqq"-'''.''-WcW...c
+.cctqqt"'''''.'WWcWW..c
+  cc++"""""tt__WccWW6.c
+  c...."PP_____WWcWW..c
+  c;;..+._____WWWcW..Pc
+  cP;;.+.___-WWWWc**Ptc
+  ctP;;cttt-WWWWGcG|ttc
+  ccccccttccccccccccccc
+ENDMAP
+
+NAME: cheibrodos_lair_river_kwai
+TAGS: no_item_gen no_monster_gen
+DEPTH: Lair
+ORIENT: northeast
+KMONS: P = plant
+MONS: bullfrog / spiny frog, water moccasin / black mamba, hydra
+FTILE: _ = floor_dirt
+SUBST: P = ..P, - = .:1 x
+NSUBST: " = 1:3 / 4:P / 3=P. / 2:. / 2=.W / *:W
+NSUBST: ; = 3=12 / 2=12.. / 2:. / 2=.W / *:W
+NSUBST: ` = 1:1 . 1:2 / 1=12.., ' = 1=|* / 1=*% / *:%
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwxxxxxxxxxxxxxxxxxxx
+PwwwwPPP;-;;+;;+."""""xx
+PwwwwwPP;-;;-;;x".""""xx
+PwwwwwwP;-+---;x".""""xx
+@PwwwwwPP;;;-;;x""."""xx
+.PwwwwwwP``;-;;x""".."xx
+..Pwwwwww``;---xxxxxx.xx
+..Pwwwwwww.P;;;;PPPx''xx
+ ..Pwwwwww_wwwPPPPPx''xx
+ @..Pwwwww_wwwwwwwwxxxxx
+  ...Pwwww_wwwwwwwwwwwwx
+   ...Pwww_wwwwwwwwwwwwx
+    ...---`---wwwwwwwwwx
+    ...-WW`WW-wwwwwwwwwx
+    @..-````W-PPPwwwwwwx
+     ..-````P-```PPPPPxx
+     ..---+---........xx
+      ....@.....@....@xx
+                      xx
+ENDMAP
+
 ###############################################################################
 # Lair endings - split in two types.
 ###############################################################################
@@ -3079,57 +3149,60 @@ PLACE:   Lair:$
 ORIENT:  float
 MONS:    black mamba, steam dragon
 MONS:    hell hound, molten gargoyle
-MONS:    komodo dragon / w:7 wyvern / w:7 basilisk / w:3 hydra
-MONS:    lindwurm / fire crab, fire dragon
+MONS:    komodo dragon / wyvern w:7 / basilisk w:7 / hydra w:2
+MONS:    lindwurm / fire crab w:3, fire dragon
 KMONS:   Y = lava snake
 KFEAT:   Y = lava
-KFEAT:   = = runed_door
+KFEAT:   E = runed_door
 # Generate one of two paths leading to central chamber
 SHUFFLE: ABCDE / HIJKL
-SUBST:   A = @, BH = x, CI = ., K = ", E = =, J = l, L = c
+SUBST:   A = @, BH = x, CI = ., K = ", J = l, L = c
 # Generate one of two perches for dangerous enemies
 SHUFFLE: MN / OP
 SUBST:   M = 6, N = ., OP = l
 # Monster and loot placement
 SHUFFLE: ';`
-NSUBST:  ' = 3:3 / 3 = 3. / 2 = 5 / 2 = 15. / 1 = 2. / *:.
-NSUBST:  ; = 3:5 / 4 = 15. / 1 = 2. / *:., ` = 3:5 / 3 = 15. / 1 = 2. / *:.
+NSUBST:  ' = 3:3 / 2 = 3. / 1 = 5 / 2 = 15. / 1 = 2. / *:.
+NSUBST:  ; = 3:5 / 3 = 15. / 1 = 2. / *:., ` = 3:5 / 3 = 15. / 1 = 2. / *:.
 NSUBST:  - = 1:7 / *:", D = 1:|* / 2 = *% / 3 = $% / 2:$ / *:"
-NSUBST:  G = 3:4 / *:G, l = 5:Y / *:l
+NSUBST:  G = 2:4 / 1 = 4. / *:G, l = 5:Y / *:l
 KMASK:   "$%*|7 = no_trap_gen
 MAP
-            xxxxxxxxxxxx
-           xxllxllxllxxxx
-          xxxxlllllllllxxxxx
-       xxxxxlllllxxx.llllxxxx
-      xxlxxllxxxxxG'.'xlllxxxxxx
-      xlllxllxGxGx'.'.'xxllxxxlxx
-      xxxlxlxxx....'.'.xxxlllxllx
-       xxlllxxG.'.'.'.'xxxxllllxx
-        xxlllxx'.'.'.'.'xxxxxlxx
-       xxxxllxx.'.'.'.'..xxxxlxx
-       xxxxxll.'.'.'.'.'.xxxllxx
-      xxxxxxl..x'.'.'.'.xxlllllx
-   xxxxxx.;x..lxxJJl..xIIllllllxx
-  xxxxxx.;.;.lPllJJllxxlIIllxxllxx
-xxxxxx;.;.;.xllPlJJlllllIIlxxxllxx
-xxx....;.;.;llPccLLccllllIIxxxxxxx
-A.....;.;.xllPccDDDDccllxx`.xGxGxx
-A....;.;xxlllOcDD--DDcllx`.`...xxx
-xxxx..;.;.;.lln"----"nlx`.`...xGxx
-xxxxx..;.;.;xln"----"nlN.`.`.`xxx
-  xxxx;.;.;.xlcKK--KKcNl`.`.`.Gxx
-  xxxG...;.xxlccKKKKccNlx`.`.`xxxx
-   xxx..;.BBlllccEEccMllx.`.`..xxx
-    xGxG.xxBBllllCCllllx.`.`.....H
-    xxxx;llBBxxllCCll.`.`.`.`....H
-     xxxllllBB;.lCCl.`.`.`.`...xxx
-    xxxllllxx`.`..`.`.`.`.`.xxxxxx
-    xlllxllll.`.`..`.`.llllxxxxxx
-   xxllxxxxxllll.`..`llllxxxxxx
-   xllxxxxxxxlllll.`lllxxxxxx
-   xxxxx  xxxxxxllllllllxxxx
-            xxxxxxxxxxxllxxx
-               xxxxxxxxllxx
-                   xxxxxxx
+                xxxxxxx
+             xxxxxxxxxxxxx
+            xxxxxxxxxxxxxxx
+           xxxxllxllxllxxxxxxx
+         xxxxxxxlllllllllxxxxxxx
+       xxxxxxxlllllxxx.llllxxxxxxxx
+      xxxxlxxllxxxxxx'.'.lllGxxxxxxx
+      xxxlllxllxGxGx'.'.'..llxxxlxxxx
+       xxxxlxlxxx....'.'.xxxlllxllxxx
+       xxxxlllxxG.'.'.'.'.Gxxllllxxxx
+        xxxxlllxx'.'.'.'.'xxxxxlxxxx
+        xxxxxllx'.'.'.'.'..Gxxxlxxxx
+      xxxxxxxxll.x.'.'.'.'.xxxllxxxx
+     xxxxxxxGxx..x'.'.'.'.xxlllllxxx
+     xxxGxG.;x..xxxJJl..xxIllllllxxxx
+   xxxxxx..;.;.lPllJJllxxlIIllxxllxxxx
+  xxxxxx;.;.;.xllPlJJllxllIIllxxllxxxx
+ xxxx....;.;.;llPccLLccllllIIxxxxxxxxx
+ Ax.....;.;.xllPccDDDDccllxx'xxGxGxxx
+ x.....;.;xxlllOcDD--DDcllx'.'...xxxx
+xAxxxx..;.;.;.lln"----"nlx`.`...xGxxx
+ xxxxxx..;.;.;xln"----"nlN.`.`.`xxxx
+   xxxxx;.;.;.xlcKK--KKcNl`.`.`.xxxx
+   xxxxG...;.xxlccKKKKccNlx`.`.`xxxxx
+    xxxx..;.BBlllccEEccMllx.`.`..xxxxx
+    xxxGxG.xxBBllllCCllllx.`.`.....xHx
+     xxxxx;llBBxxllCCll.`.`.`.`.....x
+     xxxxxlllxBx;.lCCl.`.`.`.`...xxxH
+    xxxxxllllxx;.`..`.`.`.`.`.xxxxxxx
+    xxxlllxllll.;.`..`.`.llllxxxxxxx
+   xxxxllxxxxxllll.`..`llllxxxxxxx
+   xxxllxxxxxxxlllll.`lllxxxxxxx
+   xxxxxxxxxxxxxGxllllllllxxxxx
+    xxxxxx  xxxxxxxGxGxxxllxxxx
+              xxxxxxxxxxxllxxx
+                 xxxxxxxxxxxx
+                     xxxxxxx
 ENDMAP

@@ -1947,7 +1947,7 @@ static bool _animate_dead_okay(spell_type spell)
         return false;
     }
 
-    if (you.hunger_state < HS_SATIATED && you.mutation[MUT_HERBIVOROUS] < 3)
+    if (you.hunger_state < HS_SATIATED && you.get_base_mutation_level(MUT_HERBIVOROUS) < 3)
         return false;
 
     if (god_hates_spell(spell, you.religion))
@@ -1961,7 +1961,7 @@ static bool _animate_dead_okay(spell_type spell)
 }
 
 // Returns true if the spell is something you wouldn't want done if
-// you had a friendly target...  only returns a meaningful value for
+// you had a friendly target... only returns a meaningful value for
 // non-beam spells.
 static bool _ms_direct_nasty(spell_type monspell)
 {
@@ -2336,70 +2336,103 @@ static bool _should_force_door_shut(const coord_def& door)
     return ((cur_tension - new_tension) * 3) <= cur_tension;
 }
 
-// Find an adjacent space to displace a stack of items or a creature
-// (If act is null, we are just moving items and not an actor)
+/*
+ * Find an adjacent space to displace a stack of items or a creature.
+ *
+ * @param pos the starting position to displace from.
+ * @param newpos if successful, will populate this with the new position.
+ * @param act an actor to displace, or null if the goal is to displace items.
+ * @param ignore_tension should displacement ignore tension, or prioritize spots
+ *                       that maximize tension?  Used for vault wardens, and
+ *                       only affects pushing actors.
+ * @param excluded any spots to rule out a priori. Used for e.g. imprison.
+ *
+ * @return whether displacement is possible. If successful, will also populate
+ *         `newpos` with the preferred target. Otherwise, will not change
+ *         `newpos`.
+ */
 bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
                     bool ignore_tension, const vector<coord_def>* excluded)
 {
     if (act && act->is_stationary())
         return false;
 
+    dungeon_feature_type starting_feat = grd(pos);
     int max_tension = -1;
     coord_def best_spot(-1, -1);
     bool can_push = false;
+    bool found_non_deep_spot = false; // used for pushing items only
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
         dungeon_feature_type feat = grd(*ai);
-        if (feat_has_solid_floor(feat))
+
+        // Make sure the spot wasn't already vetoed. This is used e.g. for
+        // imprison to pre-exclude all the spots where a wall will be.
+        if (excluded && find(begin(*excluded), end(*excluded), *ai)
+                            != end(*excluded))
         {
-            // Extra checks if we're moving a monster instead of an item
-            if (act)
+            continue;
+        }
+
+        // can never push to a solid space
+        if (feat_is_solid(feat))
+            continue;
+
+        // Extra checks if we're moving a monster instead of an item
+        if (act)
+        {
+            // these should get deep water and lava for cases where they matter
+            if (actor_at(*ai)
+                || !act->can_pass_through(*ai)
+                || !act->is_habitable(*ai))
             {
-                if (actor_at(*ai)
-                    || !act->can_pass_through(*ai)
-                    || !act->is_habitable(*ai))
-                {
-                    continue;
-                }
-
-                // Make sure the spot wasn't vetoed.
-                if (excluded && find(begin(*excluded), end(*excluded), *ai)
-                                    != end(*excluded))
-                {
-                    continue;
-                }
-
-                // If we don't care about tension, first valid spot is acceptable
-                if (ignore_tension)
-                {
-                    newpos = *ai;
-                    return true;
-                }
-                else // Calculate tension with monster at new location
-                {
-                    set<coord_def> all_door;
-                    find_connected_identical(pos, all_door);
-                    dungeon_feature_type old_feat = grd(pos);
-
-                    act->move_to_pos(*ai);
-                    _set_door(all_door, DNGN_CLOSED_DOOR);
-                    int new_tension = get_tension(GOD_NO_GOD);
-                    _set_door(all_door, old_feat);
-                    act->move_to_pos(pos);
-
-                    if (new_tension > max_tension)
-                    {
-                        max_tension = new_tension;
-                        best_spot = *ai;
-                        can_push = true;
-                    }
-                }
+                continue;
             }
-            else //If we're not moving a creature, the first open spot is enough
+
+            // If we don't care about tension, first valid spot is acceptable
+            if (ignore_tension)
             {
                 newpos = *ai;
                 return true;
             }
+            else // Calculate tension with monster at new location
+            {
+                set<coord_def> all_door;
+                find_connected_identical(pos, all_door);
+                dungeon_feature_type old_feat = grd(pos);
+
+                act->move_to_pos(*ai);
+                _set_door(all_door, DNGN_CLOSED_DOOR);
+                int new_tension = get_tension(GOD_NO_GOD);
+                _set_door(all_door, old_feat);
+                act->move_to_pos(pos);
+
+                if (new_tension > max_tension)
+                {
+                    max_tension = new_tension;
+                    best_spot = *ai;
+                    can_push = true;
+                }
+            }
+        }
+        else
+        {
+            if (feat_has_solid_floor(feat))
+            {
+                // TODO (?): this will allow pushing items out of deep water.
+                best_spot = *ai;
+                found_non_deep_spot = true;
+                can_push = true;
+            }
+            else if (!found_non_deep_spot
+                && starting_feat == DNGN_DEEP_WATER
+                && feat == DNGN_DEEP_WATER)
+            {
+                // dispreferentially allow pushing items from deep water to deep water
+                best_spot = *ai;
+                can_push = true;
+            }
+            // otherwise, can't position an item on this spot
         }
     }
 
@@ -2459,6 +2492,8 @@ static bool _seal_doors_and_stairs(const monster* warden,
                     const bool success =
                         get_push_space(dc, newpos, act, false, &veto_spots)
                         || get_push_space(dc, newpos, act, true, &veto_spots);
+                    // this assert is only triggered if the code here is out of
+                    // sync with _can_force_door_shut.
                     ASSERTM(success, "No push space from (%d,%d)", dc.x, dc.y);
 
                     move_items(dc, newpos);
@@ -3580,7 +3615,7 @@ static bool _prepare_ghostly_sacrifice(monster &caster, bolt &beam)
         mprf("%s animating energy erupts into ghostly fire!",
              apostrophise(victim->name(DESC_THE)).c_str());
     }
-    monster_die(victim, &caster, true);
+    monster_die(*victim, &caster, true);
     return true;
 }
 

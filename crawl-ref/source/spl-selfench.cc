@@ -219,10 +219,8 @@ spret_type cast_revivification(int pow, bool fail)
     {
         mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
         // XXX: better cause name?
-        paralyse_player("Death's Door abortion", 5 + random2(5));
-        confuse_player(10 + random2(10));
+        paralyse_player("Death's Door abortion");
         you.duration[DUR_DEATHS_DOOR] = 0;
-        you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
     }
     return SPRET_SUCCESS;
 }
