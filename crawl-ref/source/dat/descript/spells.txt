@@ -198,8 +198,8 @@ Instantly heals any and all wounds suffered by the caster, but also permanently
 lessens their resilience to injury, to a degree dependent on (and inversely
 related to) power.
 
-It is powerful enough to literally pull someone out of Death's Door, although
-the shock will briefly paralyse the caster. It has no effect on the undead.
+It is powerful enough to cancel the effects of Death's Door, although doing so
+will briefly paralyse the caster. It has no effect on the undead.
 %%%%
 Brain Feed spell
 
