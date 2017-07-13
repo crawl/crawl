@@ -25,8 +25,8 @@ public:
 #ifdef TARGET_OS_WINDOWS
     virtual void set_window_placement(coord_def *m_windowsz);
 #endif
-    virtual key_mod get_mod_state() const override;
-    virtual void set_mod_state(key_mod mod) override;
+    virtual tiles_key_mod get_mod_state() const override;
+    virtual void set_mod_state(tiles_key_mod mod) override;
 
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,

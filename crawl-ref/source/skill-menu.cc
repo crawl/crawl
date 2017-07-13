@@ -34,7 +34,7 @@ SkillMenu skm;
 bool SkillTextTileItem::handle_mouse(const MouseEvent& me)
 {
     if (me.event == MouseEvent::PRESS
-        && (me.button == MouseEvent::LEFT && me.mod & MOD_SHIFT))
+        && (me.button == MouseEvent::LEFT && me.mod & TILES_MOD_SHIFT))
     {
         skill_type sk = skill_type(get_id());
         if (is_invalid_skill(sk))

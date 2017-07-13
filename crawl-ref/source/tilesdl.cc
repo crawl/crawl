@@ -690,7 +690,7 @@ int TilesFramework::getch_ck()
                     {
                         reload_gl_textures();
                         reset_gl_state();
-                        wm->set_mod_state(MOD_NONE);
+                        wm->set_mod_state(TILES_MOD_NONE);
                         set_need_redraw();
                     }
                 }
@@ -700,7 +700,7 @@ int TilesFramework::getch_ck()
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
                 {
-                    wm->set_mod_state(MOD_NONE);
+                    wm->set_mod_state(TILES_MOD_NONE);
                     set_need_redraw();
                 }
 #endif

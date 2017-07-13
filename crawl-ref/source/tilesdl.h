@@ -3,8 +3,9 @@
  * @brief SDL-related functionality for the tiles port
 **/
 
-#ifdef USE_TILE
 #pragma once
+
+#ifdef USE_TILE_LOCAL
 
 #include "cursor-type.h"
 #include "text-tag-type.h"
@@ -54,12 +55,12 @@ bool gui_get_mouse_grid_pos(coord_def &gc);
 
 typedef map<int, TabbedRegion*>::iterator tab_iterator;
 
-enum key_mod
+enum tiles_key_mod
 {
-    MOD_NONE  = 0x0,
-    MOD_SHIFT = 0x1,
-    MOD_CTRL  = 0x2,
-    MOD_ALT   = 0x4,
+    TILES_MOD_NONE  = 0x0,
+    TILES_MOD_SHIFT = 0x1,
+    TILES_MOD_CTRL  = 0x2,
+    TILES_MOD_ALT   = 0x4,
 };
 
 struct MouseEvent

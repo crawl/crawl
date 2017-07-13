@@ -166,16 +166,16 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         tiles.set_need_redraw();
         if (on_floor)
         {
-            if (event.mod & MOD_SHIFT)
+            if (event.mod & TILES_MOD_SHIFT)
                 tile_item_use_floor(idx);
             else
-                tile_item_pickup(idx, (event.mod & MOD_CTRL));
+                tile_item_pickup(idx, (event.mod & TILES_MOD_CTRL));
         }
         else
         {
-            if (event.mod & MOD_SHIFT)
-                tile_item_drop(idx, (event.mod & MOD_CTRL));
-            else if (event.mod & MOD_CTRL)
+            if (event.mod & TILES_MOD_SHIFT)
+                tile_item_drop(idx, (event.mod & TILES_MOD_CTRL));
+            else if (event.mod & TILES_MOD_CTRL)
                 tile_item_use_secondary(idx);
             else
                 tile_item_use(idx);
@@ -187,7 +187,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     {
         if (on_floor)
         {
-            if (event.mod & MOD_SHIFT)
+            if (event.mod & TILES_MOD_SHIFT)
             {
                 m_last_clicked_item = item_idx;
                 tiles.set_need_redraw();

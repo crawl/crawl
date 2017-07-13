@@ -68,11 +68,11 @@ static unsigned char _kmod_to_mod(int modifier)
 {
     unsigned char mod = 0;
     if (modifier & KMOD_SHIFT)
-        mod |= MOD_SHIFT;
+        mod |= TILES_MOD_SHIFT;
     if (modifier & KMOD_CTRL)
-        mod |= MOD_CTRL;
+        mod |= TILES_MOD_CTRL;
     if (modifier & KMOD_LALT)
-        mod |= MOD_ALT;
+        mod |= TILES_MOD_ALT;
     return mod;
 }
 
@@ -82,15 +82,15 @@ static unsigned char _get_modifiers(SDL_Keysym &keysym)
     {
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
-        return MOD_SHIFT;
+        return TILES_MOD_SHIFT;
         break;
     case SDLK_LCTRL:
     case SDLK_RCTRL:
-        return MOD_CTRL;
+        return TILES_MOD_CTRL;
         break;
     case SDLK_LALT:
     case SDLK_RALT:
-        return MOD_ALT;
+        return TILES_MOD_ALT;
         break;
     default:
         return _kmod_to_mod(keysym.mod);
@@ -161,9 +161,9 @@ static int _translate_keysym(SDL_Keysym &keysym)
 
     int offset = mod ? 1000 + 256 * mod : 0;
     int numpad_offset = 0;
-    if (mod == MOD_CTRL)
+    if (mod == TILES_MOD_CTRL)
         numpad_offset = ctrl_offset;
-    else if (mod == MOD_SHIFT)
+    else if (mod == TILES_MOD_SHIFT)
         numpad_offset = shift_offset;
     else
         numpad_offset = offset;
@@ -270,14 +270,14 @@ static int _translate_keysym(SDL_Keysym &keysym)
         break;
     }
 
-    if (!(mod & (MOD_CTRL | MOD_ALT)))
+    if (!(mod & (TILES_MOD_CTRL | TILES_MOD_ALT)))
         return 0;
 
     int ret = keysym.sym;
 
-    if (mod & MOD_ALT && keysym.sym >= 128)
+    if (mod & TILES_MOD_ALT && keysym.sym >= 128)
         ret -= 3000; // ???
-    if (mod & MOD_CTRL)
+    if (mod & TILES_MOD_CTRL)
         ret -= SDLK_a - 1; // XXX: this might break for strange keysyms
 
     return ret;
@@ -596,7 +596,7 @@ unsigned int SDLWrapper::get_ticks() const
     return SDL_GetTicks();
 }
 
-key_mod SDLWrapper::get_mod_state() const
+tiles_key_mod SDLWrapper::get_mod_state() const
 {
     SDL_Keymod mod = SDL_GetModState();
 
@@ -604,37 +604,37 @@ key_mod SDLWrapper::get_mod_state() const
     {
     case KMOD_LSHIFT:
     case KMOD_RSHIFT:
-        return MOD_SHIFT;
+        return TILES_MOD_SHIFT;
         break;
     case KMOD_LCTRL:
     case KMOD_RCTRL:
-        return MOD_CTRL;
+        return TILES_MOD_CTRL;
         break;
     case KMOD_LALT:
     case KMOD_RALT:
-        return MOD_ALT;
+        return TILES_MOD_ALT;
         break;
     case KMOD_NONE:
     default:
-        return MOD_NONE;
+        return TILES_MOD_NONE;
     }
 }
 
-void SDLWrapper::set_mod_state(key_mod mod)
+void SDLWrapper::set_mod_state(tiles_key_mod mod)
 {
     SDL_Keymod set_to;
     switch (mod)
     {
-    case MOD_NONE:
+    case TILES_MOD_NONE:
         set_to = KMOD_NONE;
         break;
-    case MOD_SHIFT:
+    case TILES_MOD_SHIFT:
         set_to = KMOD_LSHIFT;
         break;
-    case MOD_CTRL:
+    case TILES_MOD_CTRL:
         set_to = KMOD_LCTRL;
         break;
-    case MOD_ALT:
+    case TILES_MOD_ALT:
         set_to = KMOD_LALT;
         break;
     default:
@@ -677,9 +677,9 @@ int SDLWrapper::wait_event(wm_event *event)
             _suppress_textinput();
 
 /*
- * LShift = scancode 0x30; key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT
- * LCtrl  = scancode 0x32; key_mod 0x2; unicode 0x132; sym 0x132 SDLK_LCTRL
- * LAlt   = scancode 0x34; key_mod 0x4; unicode 0x134; sym 0x134 SDLK_LALT
+ * LShift = scancode 0x30; tiles_key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT
+ * LCtrl  = scancode 0x32; tiles_key_mod 0x2; unicode 0x132; sym 0x132 SDLK_LCTRL
+ * LAlt   = scancode 0x34; tiles_key_mod 0x4; unicode 0x134; sym 0x134 SDLK_LALT
  */
         break;
     case SDL_KEYUP:
