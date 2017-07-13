@@ -4006,5 +4006,11 @@ void tutorial_msg(const char *key, bool end)
     for (const string &chunk : split_string("\n", text, false))
         mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
-    stop_running();
+    // tutorial_msg can get called in an vault epilogue during --builddb,
+    // which can lead to a crash on tiles builds in runrest::stop as
+    // there is no `tiles`. This seemed like the best place to fix this.
+    #ifdef USE_TILE_LOCAL
+    if (!crawl_state.tiles_disabled)
+    #endif
+        stop_running();
 }
