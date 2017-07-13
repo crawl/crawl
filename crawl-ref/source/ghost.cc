@@ -274,8 +274,6 @@ static int _player_ghost_movement_energy()
 {
     int energy = 10;
 
-    if (int fast = you.get_mutation_level(MUT_FAST, false))
-        energy -= fast + 1;
     if (int slow = you.get_mutation_level(MUT_SLOW, false))
         energy += slow + 2;
 
@@ -348,6 +346,10 @@ void ghost_demon::init_player_ghost(bool actual_ghost)
                 // Ghosts can't get holy wrath, but they get to keep
                 // the weapon.
                 if (brand == SPWPN_HOLY_WRATH)
+                    brand = SPWPN_NORMAL;
+
+                // Don't let ghosts get chaos brand; too easily abused
+                if (brand == SPWPN_CHAOS)
                     brand = SPWPN_NORMAL;
 
                 // Don't copy ranged- or artefact-only brands (reaping etc.).
