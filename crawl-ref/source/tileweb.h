@@ -5,6 +5,8 @@
 
 #pragma once
 
+#ifdef USE_TILE_WEB
+
 #include <bitset>
 #include <map>
 #include <sys/un.h>
@@ -370,3 +372,5 @@ private:
     WebtilesUIState m_new_state;
     WebtilesUIState m_old_state;
 };
+
+#endif

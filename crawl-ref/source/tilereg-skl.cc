@@ -62,9 +62,9 @@ int SkillRegion::handle_mouse(MouseEvent &event)
     const skill_type skill = (skill_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
-        // TODO: Handle skill transferral using MOD_SHIFT.
+        // TODO: Handle skill transferral using TILES_MOD_SHIFT.
 #ifdef WIZARD
-        if (you.wizard && (event.mod & MOD_CTRL))
+        if (you.wizard && (event.mod & TILES_MOD_CTRL))
         {
             wizard_set_skill_level(skill);
             return CK_MOUSE_CMD;

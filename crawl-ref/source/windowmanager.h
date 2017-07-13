@@ -103,8 +103,8 @@ public:
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;
     virtual bool set_window_icon(const char* icon_name) = 0;
-    virtual key_mod get_mod_state() const = 0;
-    virtual void set_mod_state(key_mod mod) = 0;
+    virtual tiles_key_mod get_mod_state() const = 0;
+    virtual void set_mod_state(tiles_key_mod mod) = 0;
 
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,

@@ -238,7 +238,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
     case MouseEvent::PRESS:
 #ifdef TOUCH_UI
         // ctrl-rolley-wheel on the minimap (this ensures busting out of minimap when zooming in again on very small layouts)
-        if ( (event.mod & MOD_CTRL)
+        if ( (event.mod & TILES_MOD_CTRL)
         && (event.button == MouseEvent::SCROLL_UP || event.button == MouseEvent::SCROLL_DOWN))
         {
             tiles.zoom_dungeon(event.button == MouseEvent::SCROLL_UP);
@@ -263,7 +263,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
 #else
         if (event.button == MouseEvent::LEFT)
         {
-            if (event.mod & MOD_SHIFT)
+            if (event.mod & TILES_MOD_SHIFT)
             {
                 // Start autotravel, or give an appropriate message.
                 do_explore_cmd();
@@ -271,7 +271,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
             }
             else
             {
-                const int cmd = click_travel(gc, event.mod & MOD_CTRL);
+                const int cmd = click_travel(gc, event.mod & TILES_MOD_CTRL);
                 if (cmd != CK_MOUSE_CMD)
                     process_command((command_type) cmd);
 

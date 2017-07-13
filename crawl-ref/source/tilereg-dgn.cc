@@ -617,9 +617,9 @@ static bool _can_fire_item()
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
 {
-    const bool shift = (mod & MOD_SHIFT);
-    const bool ctrl  = (mod & MOD_CTRL);
-    const bool alt   = (shift && ctrl || (mod & MOD_ALT));
+    const bool shift = (mod & TILES_MOD_SHIFT);
+    const bool ctrl  = (mod & TILES_MOD_CTRL);
+    const bool alt   = (shift && ctrl || (mod & TILES_MOD_ALT));
     const item_def* weapon = you.weapon();
 
     // Handle evoking items at monster.
@@ -658,9 +658,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
 
 static bool _handle_zap_player(MouseEvent &event)
 {
-    const bool shift = (event.mod & MOD_SHIFT);
-    const bool ctrl  = (event.mod & MOD_CTRL);
-    const bool alt   = (shift && ctrl || (event.mod & MOD_ALT));
+    const bool shift = (event.mod & TILES_MOD_SHIFT);
+    const bool ctrl  = (event.mod & TILES_MOD_CTRL);
+    const bool alt   = (shift && ctrl || (event.mod & TILES_MOD_ALT));
 
     if (alt && _have_appropriate_evokable(&you))
         return _evoke_item_on_target(&you);
@@ -716,7 +716,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
 #ifdef TOUCH_UI
     if (event.event == MouseEvent::PRESS
-        && (event.mod & MOD_CTRL)
+        && (event.mod & TILES_MOD_CTRL)
         && (event.button == MouseEvent::SCROLL_UP || event.button == MouseEvent::SCROLL_DOWN))
     {
         zoom(event.button == MouseEvent::SCROLL_UP);
@@ -807,7 +807,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         {
         case MouseEvent::LEFT:
         {
-            if ((event.mod & (MOD_CTRL | MOD_ALT)))
+            if ((event.mod & (TILES_MOD_CTRL | TILES_MOD_ALT)))
             {
                 _handle_zap_player(event);
                 // return either way -- everything else in this case
@@ -817,7 +817,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             }
 
             // if there's an item, pick it up, otherwise wait 1 turn
-            if (!(event.mod & MOD_SHIFT))
+            if (!(event.mod & TILES_MOD_SHIFT))
             {
                 const int o = you.visible_igrd(you.pos());
                 if (o == NON_ITEM)
@@ -861,7 +861,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             }
         }
         case MouseEvent::RIGHT:
-            if (!(event.mod & MOD_SHIFT))
+            if (!(event.mod & TILES_MOD_SHIFT))
                 return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
             if (!you_worship(GOD_NO_GOD))
                 return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
@@ -899,9 +899,9 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
             return CK_MOUSE_CMD;
     }
 
-    if ((mod & MOD_CTRL) && adjacent(you.pos(), gc))
+    if ((mod & TILES_MOD_CTRL) && adjacent(you.pos(), gc))
     {
-        const int cmd = click_travel(gc, mod & MOD_CTRL);
+        const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
         if (cmd != CK_MOUSE_CMD)
             process_command((command_type) cmd);
 
@@ -910,10 +910,10 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
-    if (mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
+    if (mod & (TILES_MOD_SHIFT | TILES_MOD_CTRL | TILES_MOD_ALT))
         return CK_MOUSE_CMD;
 
-    const int cmd = click_travel(gc, mod & MOD_CTRL);
+    const int cmd = click_travel(gc, mod & TILES_MOD_CTRL);
     if (cmd != CK_MOUSE_CMD)
         process_command((command_type) cmd);
 

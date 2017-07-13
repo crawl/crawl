@@ -6,11 +6,6 @@
 
 #pragma once
 
-// #include <chrono>
-// #include <list>
-// #include <memory>
-// #include <vector>
-
 #include "game-type.h"
 #include "god-type.h"
 #include "species.h"
