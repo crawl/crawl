@@ -1081,7 +1081,7 @@ static void _input()
         // Lua stack must be empty. Unless there's a leak.
         ASSERT(lua_gettop(clua.state()) == 0);
 
-        if (!has_pending_input() && !kbhit())
+        if (crawl_state.allow_rc_ready && !has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");

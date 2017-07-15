@@ -92,6 +92,7 @@ struct game_state
     int             prev_cmd_repeat_goal;
     bool            cmd_repeat_started_unsafe;
     int             lua_calls_no_turn;
+    bool            allow_rc_ready;
     bool            stat_gain_prompt;
 
     vector<string> startup_errors;

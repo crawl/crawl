@@ -3760,6 +3760,8 @@ enum commandline_option_type
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
+    CLO_ALLOW_RC_READY,
+    CLO_NO_ALLOW_RC_READY,
     CLO_PLAYABLE_JSON, // JSON metadata for species, jobs, combos.
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
@@ -3779,7 +3781,7 @@ static const char *cmd_ops[] =
     "sprint", "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
-    "playable-json",
+    "allow-ready", "no-allow-ready", "playable-json",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4646,6 +4648,19 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_NO_THROTTLE:
             crawl_state.throttle = false;
+            break;
+
+        case CLO_ALLOW_RC_READY:
+#ifndef DISALLOW_RC_READY
+            crawl_state.allow_rc_ready = true;
+#else
+            fprintf(stderr, "ready() is disallowed for this build.\n");
+            end(0);
+#endif
+            break;
+
+        case CLO_NO_ALLOW_RC_READY:
+            crawl_state.allow_rc_ready = false;
             break;
 
         case CLO_EXTRA_OPT_FIRST:

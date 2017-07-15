@@ -729,6 +729,10 @@ ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
 endif
 
+ifdef DISALLOW_RC_READY
+DEFINES += -DDISALLOW_RC_READY
+endif
+
 ifdef USE_DGAMELAUNCH
 SRC_BRANCH    := $(shell git rev-parse --abbrev-ref HEAD || echo release)
 ifneq ($(SRC_BRANCH),$(filter master release stone_soup-%, $(SRC_BRANCH)))

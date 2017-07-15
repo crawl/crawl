@@ -44,6 +44,11 @@ game_state::game_state()
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
+#ifdef DISALLOW_RC_READY
+      allow_rc_ready(false),
+#else
+      allow_rc_ready(true),
+#endif
       stat_gain_prompt(false), level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
       tiles_disabled(false),
