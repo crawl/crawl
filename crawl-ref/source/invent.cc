@@ -1672,6 +1672,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
+    // If you're invis from an item, warn that you're about to get an extra dose
+    // of contam from removing it.
+    if (you.duration[DUR_INVIS] > 1 && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+        return true;
+
     return false;
 }
 

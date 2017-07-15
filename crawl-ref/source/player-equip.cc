@@ -281,7 +281,12 @@ static void _unequip_invis()
         && !you.evokable_invis()
         && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
     {
-        const int invis_duration_left = you.duration[DUR_INVIS];
+
+        // scale up contam by 120% just to ensure that ending invis early is
+        // worse than just resting it off.
+        mpr("You absorb a burst of magical contamination as your invisibility "
+             "abruptly ends!");
+        const int invis_duration_left = you.duration[DUR_INVIS] * 120 / 100;
         const int remaining_contam = div_rand_round(
             invis_duration_left * INVIS_CONTAM_PER_TURN, BASELINE_DELAY
         );
