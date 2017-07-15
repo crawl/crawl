@@ -291,7 +291,7 @@ static void _unequip_invis()
             invis_duration_left * INVIS_CONTAM_PER_TURN, BASELINE_DELAY
         );
         contaminate_player(remaining_contam, true);
-        you.duration[DUR_INVIS] = 1;
+        you.duration[DUR_INVIS] = 0;
     }
 }
 
