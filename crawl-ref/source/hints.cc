@@ -1327,7 +1327,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_JEWELLERY:
-        text << "You have picked up a a piece of jewellery, either a ring"
+        text << "You have picked up a piece of jewellery, either a ring"
              << "<console> ('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_RING))
              << "</w>')</console>"
@@ -1338,7 +1338,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << ". Type <w>%</w> to put it on and <w>%</w> to remove "
                 "it. You can view its properties from your <w>%</w>nventory</console>"
              << "<tiles>. You can click on it to put it on, and click again "
-                "to remove it. By <w>right-clicking> on it, you can view its "
+                "to remove it. By <w>right-clicking</w> on it, you can view its "
                 "properties</tiles>.";
         cmd.push_back(CMD_WEAR_JEWELLERY);
         cmd.push_back(CMD_REMOVE_JEWELLERY);
