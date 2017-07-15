@@ -127,15 +127,16 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     }
 
     monster* mons = monster_at(beam.target);
-    if (!mons || mons->submerged() || !you.can_see(*mons))
+    if (!mons || mons->submerged())
     {
-        mpr("You can't see any monster there!");
-        return SPRET_ABORT;
+        fail_check();
+        canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_SUCCESS; // still losing a turn
     }
 
-    if (actor_cloud_immune(*mons, CLOUD_POISON))
+    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
     {
-        mprf("But poisonous clouds would do no harm to %s!",
+        mprf("But poisonous vapours would do no harm to %s!",
              mons->name(DESC_THE).c_str());
         return SPRET_ABORT;
     }
