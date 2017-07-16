@@ -197,7 +197,7 @@ bool attribute_increase()
             status->text = "Please choose an option below"; // too naggy?
 #endif
         }
-    }
+    } 
 }
 
 /*
@@ -339,6 +339,10 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     if (amount == 0)
         return;
 
+    // Gnolls don't change stats, so don't notify
+    if(you.species == SP_GNOLL)
+        return;
+
     // Stop delays if a stat drops.
     if (amount < 0)
         interrupt_activity(AI_STAT_CHANGE);
@@ -371,36 +375,40 @@ static int _strength_modifier(bool innate_only)
 {
     int result = 0;
 
-    if (!innate_only)
+    // Gnolls can't modify their stats
+    if (you.species != SP_GNOLL)
     {
-        if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
-            result += 5;
+        if (!innate_only)
+        {
+            if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
+                result += 5;
 
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
+            if (you.duration[DUR_DIVINE_STAMINA])
+                result += you.attribute[ATTR_DIVINE_STAMINA];
 
-        result += chei_stat_boost();
+            result += chei_stat_boost();
 
-        // ego items of strength
-        result += 3 * count_worn_ego(SPARM_STRENGTH);
+            // ego items of strength
+            result += 3 * count_worn_ego(SPARM_STRENGTH);
 
-        // rings of strength
-        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
+            // rings of strength
+            result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
 
-        // randarts of strength
-        result += you.scan_artefacts(ARTP_STRENGTH);
+            // randarts of strength
+            result += you.scan_artefacts(ARTP_STRENGTH);
 
-        // form
-        result += get_form()->str_mod;
-    }
+            // form
+            result += get_form()->str_mod;
+        }
 
-    // mutations
-    result += 2 * (_mut_level(MUT_STRONG, innate_only)
-                   - _mut_level(MUT_WEAK, innate_only));
+        // mutations
+        result += 2 * (_mut_level(MUT_STRONG, innate_only)
+                       - _mut_level(MUT_WEAK, innate_only));
 #if TAG_MAJOR_VERSION == 34
-    result += _mut_level(MUT_STRONG_STIFF, innate_only)
-              - _mut_level(MUT_FLEXIBLE_WEAK, innate_only);
+        result += _mut_level(MUT_STRONG_STIFF, innate_only)
+                  - _mut_level(MUT_FLEXIBLE_WEAK, innate_only);
 #endif
+    }
 
     return result;
 }
@@ -409,29 +417,33 @@ static int _int_modifier(bool innate_only)
 {
     int result = 0;
 
-    if (!innate_only)
+    // Gnolls can't modify their stats
+    if (you.species != SP_GNOLL)
     {
-        if (you.duration[DUR_BRILLIANCE])
-            result += 5;
+        if (!innate_only)
+        {
+            if (you.duration[DUR_BRILLIANCE])
+                result += 5;
 
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
+            if (you.duration[DUR_DIVINE_STAMINA])
+                result += you.attribute[ATTR_DIVINE_STAMINA];
 
-        result += chei_stat_boost();
+            result += chei_stat_boost();
 
-        // ego items of intelligence
-        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+            // ego items of intelligence
+            result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
-        // rings of intelligence
-        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+            // rings of intelligence
+            result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
-        // randarts of intelligence
-        result += you.scan_artefacts(ARTP_INTELLIGENCE);
+            // randarts of intelligence
+            result += you.scan_artefacts(ARTP_INTELLIGENCE);
+        }
+
+        // mutations
+        result += 2 * (_mut_level(MUT_CLEVER, innate_only)
+                       - _mut_level(MUT_DOPEY, innate_only));
     }
-
-    // mutations
-    result += 2 * (_mut_level(MUT_CLEVER, innate_only)
-                   - _mut_level(MUT_DOPEY, innate_only));
 
     return result;
 }
@@ -440,38 +452,42 @@ static int _dex_modifier(bool innate_only)
 {
     int result = 0;
 
-    if (!innate_only)
+    // Gnolls can't modify their stats
+    if (you.species != SP_GNOLL)
     {
-        if (you.duration[DUR_AGILITY])
-            result += 5;
+        if (!innate_only)
+        {
+            if (you.duration[DUR_AGILITY])
+                result += 5;
 
-        if (you.duration[DUR_DIVINE_STAMINA])
-            result += you.attribute[ATTR_DIVINE_STAMINA];
+            if (you.duration[DUR_DIVINE_STAMINA])
+                result += you.attribute[ATTR_DIVINE_STAMINA];
 
-        result += chei_stat_boost();
+            result += chei_stat_boost();
 
-        // ego items of dexterity
-        result += 3 * count_worn_ego(SPARM_DEXTERITY);
+            // ego items of dexterity
+            result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
-        // rings of dexterity
-        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
+            // rings of dexterity
+            result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
 
-        // randarts of dexterity
-        result += you.scan_artefacts(ARTP_DEXTERITY);
+            // randarts of dexterity
+            result += you.scan_artefacts(ARTP_DEXTERITY);
 
-        // form
-        result += get_form()->dex_mod;
-    }
+            // form
+            result += get_form()->dex_mod;
+        }
 
-    // mutations
-    result += 2 * (_mut_level(MUT_AGILE, innate_only)
-                  - _mut_level(MUT_CLUMSY, innate_only));
+        // mutations
+        result += 2 * (_mut_level(MUT_AGILE, innate_only)
+                      - _mut_level(MUT_CLUMSY, innate_only));
 #if TAG_MAJOR_VERSION == 34
-    result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
-              - _mut_level(MUT_STRONG_STIFF, innate_only);
-    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
+        result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
+                  - _mut_level(MUT_STRONG_STIFF, innate_only);
+        result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
 #endif
-    result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
+        result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
+    }
 
     return result;
 }
@@ -514,6 +530,10 @@ int stat_loss_roll()
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
+    // Gnolls cannot be stat drained
+    if (you.species == SP_GNOLL)
+        return false;
+
     if (stat_loss <= 0)
         return false;
 
