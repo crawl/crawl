@@ -278,7 +278,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 static void _unequip_invis()
 {
     if (you.duration[DUR_INVIS] > 1
-        && !you.evokable_invis()
+        && you.evokable_invis() == 0
         && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
     {
 

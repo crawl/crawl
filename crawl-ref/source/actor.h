@@ -332,7 +332,7 @@ public:
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
     virtual bool evokable_berserk(bool calc_unid = true) const;
-    virtual bool evokable_invis(bool calc_unid = true) const;
+    virtual int evokable_invis(bool calc_unid = true) const;
 
     // Return an int so we know whether an item is the sole source.
     virtual int evokable_flight(bool calc_unid = true) const;
