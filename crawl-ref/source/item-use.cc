@@ -1316,6 +1316,10 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     if (remove && !safe_to_remove(item, quiet))
         return false;
 
+    //Gnolls don't get stat changes from items, so don't warn about stat zero
+    if(you.species == SP_GNOLL)
+        return true;
+
     int prop_str = 0;
     int prop_dex = 0;
     int prop_int = 0;
