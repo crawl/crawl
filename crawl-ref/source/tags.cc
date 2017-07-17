@@ -2324,8 +2324,28 @@ static void tag_read_you(reader &th)
 
     for (int i = 0; i < NUM_STATS; ++i)
         you.base_stats[i] = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    // Gnolls have stats fixed at 7/7/7.
+    if (th.getMinorVersion() < TAG_MINOR_STATLOCKED_GNOLLS
+        && you.species == SP_GNOLL)
+    {
+        for (int i = 0; i < NUM_STATS; ++i)
+            you.base_stats[i] = 7;
+    }
+#endif
+
     for (int i = 0; i < NUM_STATS; ++i)
         you.stat_loss[i] = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    // Gnolls can't have stat drain.
+    if (th.getMinorVersion() < TAG_MINOR_STATLOCKED_GNOLLS
+        && you.species == SP_GNOLL)
+    {
+        for (int i = 0; i < NUM_STATS; ++i)
+            you.stat_loss[i] = 0;
+    }
+#endif
+
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO_DURATION)
     {

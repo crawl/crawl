@@ -211,6 +211,7 @@ enum tag_minor_version
     TAG_MINOR_TRANSPORTERS,        // Transporters and position marker changes.
     TAG_MINOR_SPIT_POISON_AGAIN_AGAIN, // save compat issues for TAG_MINOR_SPIT_POISON_AGAIN.
     TAG_MINOR_TRANSPORTER_LANDING, // Transporters landing site features.
+    TAG_MINOR_STATLOCKED_GNOLLS,   // Gnolls have stats locked at 7/7/7.
 
 #endif
     NUM_TAG_MINORS,
