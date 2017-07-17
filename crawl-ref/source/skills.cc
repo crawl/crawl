@@ -271,14 +271,10 @@ static void _change_skill_level(skill_type exsk, int n)
     ASSERT(n != 0);
     bool need_reset = false;
 
-    if (-n > you.skills[exsk])
-        n = -you.skills[exsk];
-    you.skills[exsk] += n;
+    you.skills[exsk] = max(0, you.skills[exsk] + n);
 
-    if (n > 0)
-        take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
-    else
-        take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
+    take_note(Note(n > 0 ? NOTE_GAIN_SKILL : NOTE_LOSE_SKILL,
+                   exsk, you.skills[exsk]));
 
     // are you drained/crosstrained/ash'd in the relevant skill?
     const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
