@@ -3500,7 +3500,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.evokable_berserk() && !you.get_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (you.evokable_invis()
+    if (you.evokable_invis() > 0
         && !you.get_mutation_level(MUT_NO_ARTIFICE)
         && !you.duration[DUR_INVIS])
     {
