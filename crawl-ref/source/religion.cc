@@ -3062,7 +3062,7 @@ static bool _god_rejects_loveless(god_type god)
 
 bool player_can_join_god(god_type which_god)
 {
-    if (you.species == SP_DEMIGOD)
+    if (you.species == SP_GOLEM)
         return false;
 
     if (is_good_god(which_god) && you.undead_or_demonic())
@@ -3570,7 +3570,7 @@ void join_religion(god_type which_god)
 {
     ASSERT(which_god != GOD_NO_GOD);
     ASSERT(which_god != GOD_ECUMENICAL);
-    ASSERT(you.species != SP_DEMIGOD);
+    ASSERT(you.species != SP_GOLEM);
 
     redraw_screen();
 

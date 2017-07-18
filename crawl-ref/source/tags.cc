@@ -2145,7 +2145,7 @@ static const char* old_species[]=
     "Hill Orc", "Kobold", "Mummy", "Naga", "Ogre", "Troll",
     "Red Draconian", "White Draconian", "Green Draconian", "Yellow Draconian",
     "Grey Draconian", "Black Draconian", "Purple Draconian", "Mottled Draconian",
-    "Pale Draconian", "Draconian", "Centaur", "Demigod", "Spriggan", "Minotaur",
+    "Pale Draconian", "Draconian", "Centaur", "Golem", "Spriggan", "Minotaur",
     "Demonspawn", "Ghoul", "Tengu", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
     "Octopode",
 };

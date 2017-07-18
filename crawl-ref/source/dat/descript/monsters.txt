@@ -905,10 +905,6 @@ deep troll shaman
 
 A deep troll blessed with divine power to strengthen and hasten its kin.
 %%%%
-demigod
-
-A human-like figure with an aura of power betraying its divine ancestry.
-%%%%
 demonic crawler
 
 A hellish insectoid creature with a long and bloated body, supported by dozens

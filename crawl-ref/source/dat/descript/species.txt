@@ -18,9 +18,9 @@ Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
 %%%%
-Demigod
+Golem
 
-Demigods refuse to worship any god, but make up for this with divine attributes
+Golems are constructs, unable to worship any god, but with exceptional attributes
 and high reserves of health and magic.
 %%%%
 Demonspawn

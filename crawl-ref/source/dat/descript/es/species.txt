@@ -12,11 +12,6 @@ Deep Elf
 
 Los elfos más afines a la magia, pero también los más frágiles.
 %%%%
-Demigod
-
-Nunca siguen a un dios, pero los semidioses lo compensan con atributos divinos
-y vitalidad.
-%%%%
 Demonspawn
 
 Los semidemonios son medio humano, medio demonio. Adquieren poderosas

@@ -136,12 +136,12 @@ static const map<species_type, species_def> species_data =
     { SK_SHORT_BLADES, SK_STAVES, SK_BOWS },
 } },
 
-{ SP_DEMIGOD, {
-    "Dg",
-    "Demigod", "Divine", nullptr,
+{ SP_GOLEM, {
+    "Go",
+    "Golem", "Construct", nullptr,
     SPF_NONE,
     -2, 1, 2, 4,
-    MONS_DEMIGOD,
+    MONS_GOLEM,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 12, 11, // 34
     set<stat_type>(), 28, // No natural stat gain (double chosen instead)

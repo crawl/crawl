@@ -12,11 +12,6 @@ Deep Elf
 
 Magiassa taitavin haltia, mutta myös haurain.
 %%%%
-Demigod
-
-He eivät koskaan seuraa jumalia, mutta Puolijumalilla on sen sijaan pyhät
-ominaisuudet ja terveysvarastot.
-%%%%
 Demonspawn
 
 Demonimies on puoliksi ihminen, puoliksi demoni. Kasvaessaan he saavat

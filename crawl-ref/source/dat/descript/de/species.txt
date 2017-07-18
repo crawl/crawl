@@ -14,11 +14,6 @@ Deep Elf
 
 Die magieaffinsten Elfen, aber auch die gebrechlichsten.
 %%%%
-Demigod
-
-Sie werden niemals einem Gott folgen, aber Halbgötter machen das mit göttlichen
-Attributen und Lebenspunkten wett.
-%%%%
 Demonspawn
 
 Dämonenbruten sind halb Mensch, halb Dämon. Sie erlangen während ihres

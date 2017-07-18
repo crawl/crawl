@@ -4084,7 +4084,7 @@ w:1
 
 @The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
 %%%%
-############ FREDERICK ### An extremely smug (& powerful) demigod
+############ FREDERICK ### An extremely smug (& powerful) golem
 Frederick
 
 @_Frederick_common_@

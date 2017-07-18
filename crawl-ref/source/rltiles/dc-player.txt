@@ -112,8 +112,8 @@ centaur_brown_f
 centaur_brown_m
 centaur_lightbrown_f
 centaur_lightbrown_m
-demigod_f DEMIGOD
-demigod_m
+golem_f GOLEM
+golem_m
 spriggan_m SPRIGGAN
 spriggan_f
 minotaur_m MINOTAUR

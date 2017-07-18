@@ -14,11 +14,6 @@ Deep Elf
 
 L'elfe le plus doué pour la magie, mais aussi le plus fragile.
 %%%%
-Demigod
-
-Ils ne serviront jamais un dieu, mais les Demi-Dieux compensent avec une santé
-et des caractéristiques divines.
-%%%%
 Demonspawn
 
 Les tieffelins sont moitié humain, moitié démon. Ils développent de puissantes
