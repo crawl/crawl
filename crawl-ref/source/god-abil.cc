@@ -4021,6 +4021,17 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
     {
+        // Even god powers cannot override racial berserk/haste restrictions.
+        if (*which == POT_BERSERK_RAGE
+            && (you.undead_state(false)
+                && you.species != SP_VAMPIRE
+                || you.species == SP_FORMICID))
+        {
+            continue;
+        }
+        if (*which == POT_HASTE && you.stasis())
+            continue;
+        // Don't add potions which are already in the list
         bool dup = false;
         for (unsigned int i = 0; i < vec.size(); i++)
             if (vec[i].get_int() == *which)
