@@ -87,9 +87,9 @@ static vector<stair_info> curr_stairs;
 exclude_set curr_excludes;
 
 // This is where we last tried to take a stair during interlevel travel.
-// Note that last_stair.depth should be set to -1 before initiating interlevel
+// Note that last_stair.id.depth should be set to -1 before initiating interlevel
 // travel.
-static level_id last_stair;
+static level_pos last_stair;
 
 // Where travel wants to get to.
 static level_pos level_target;
@@ -175,7 +175,6 @@ bool deviant_route_warning::warn_continue_travel(
 
 static deviant_route_warning _Route_Warning;
 
-static command_type _trans_negotiate_stairs();
 static bool _find_transtravel_square(const level_pos &pos,
                                      bool verbose = true);
 
@@ -830,6 +829,51 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
+// Determine the necessary command when find_travel_pos() indicates that we
+// shouldn't move.
+static command_type _get_non_walking_command()
+{
+    const level_pos curr = level_pos(level_id::current(), you.pos());
+    const bool travel_mode
+        = you.running == RMODE_TRAVEL || you.running == RMODE_INTERLEVEL;
+
+    // We've reached our travel destination.
+    if (travel_mode && level_target == curr)
+    {
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    // If we we're not at our running position and we're not traveled to a
+    // transporter, simply stop running.
+    if (you.pos() != you.running.pos
+        && !(travel_mode && grd(you.pos()) == DNGN_TRANSPORTER))
+    {
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    // We're trying to take the same stairs again, abort.
+    if (last_stair == curr)
+    {
+        stop_running();
+        return CMD_NO_CMD;
+    }
+
+    // Save the previous stair taken, so we can check that we're not trying to
+    // retake them after this command.
+    last_stair.id = level_id::current();
+    last_stair.pos = you.pos();
+
+    // If taking stairs, the running destination will no longer be valid on the
+    // new level. Reset the running pos so travel will search for a new travel
+    // square next turn.
+    if (you.running == RMODE_INTERLEVEL)
+        you.running.pos.reset();
+
+    return feat_stair_direction(grd(you.pos()));
+}
+
 // Top-level travel control (called from input() in main.cc).
 //
 // travel() is responsible for making the individual moves that constitute
@@ -897,11 +941,11 @@ command_type travel()
         }
     }
 
+    // Interlevel travel. Since you.running.x is zero, we've either just
+    // initiated travel, or we've just climbed or descended a staircase, and we
+    // need to figure out where to travel to next.
     if (you.running == RMODE_INTERLEVEL && !you.running.pos.x)
     {
-        // Interlevel travel. Since you.running.x is zero, we've either just
-        // initiated travel, or we've just climbed or descended a staircase,
-        // and we need to figure out where to travel to next.
         if (!_find_transtravel_square(level_target) || !you.running.pos.x)
             stop_running();
         else
@@ -938,64 +982,13 @@ command_type travel()
 
         if (!*move_x && !*move_y)
         {
-            // If we've reached the square we were traveling towards, travel
-            // should stop if this is simple travel. If we're exploring, we
-            // should continue doing so (explore has its own end condition
-            // upstairs); if we're traveling between levels and we've reached
-            // our travel target, we're on a staircase and should take it.
-            if (you.pos() == you.running.pos)
-            {
-                if (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY)
-                    you.running = runmode;       // Turn explore back on
-
-                // For interlevel travel, we'll want to take the stairs unless
-                // the interlevel travel specified a destination square and
-                // we've reached that destination square.
-                else if (runmode == RMODE_INTERLEVEL
-                         && (level_target.pos != you.pos()
-                             || level_target.id != level_id::current()))
-                {
-                    if (last_stair.depth != -1
-                        && last_stair == level_id::current())
-                    {
-                        // We're trying to take the same stairs again. Baaad.
-
-                        // We don't directly call stop_running() because
-                        // you.running is probably 0, and stop_running() won't
-                        // notify Lua hooks if you.running == 0.
-                        you.running = runmode;
-                        stop_running();
-                        return CMD_NO_CMD;
-                    }
-
-                    you.running = RMODE_INTERLEVEL;
-                    result = _trans_negotiate_stairs();
-
-                    // If, for some reason, we fail to use the stairs, we
-                    // need to make sure we don't go into an infinite loop
-                    // trying to take it again and again. We'll check
-                    // last_stair before attempting to take stairs again.
-                    last_stair = level_id::current();
-
-                    // This is important, else we'll probably stop traveling
-                    // the moment we clear the stairs. That's because the
-                    // (running.x, running.y) destination will no longer be
-                    // valid on the new level. Setting running.x to zero forces
-                    // us to recalculate our travel target next turn (see
-                    // previous if block).
-                    you.running.pos.reset();
-                }
-                else
-                {
-                    you.running = runmode;
-                    stop_running();
-                }
-            }
-            else
-            {
-                you.running = runmode;
-                stop_running();
-            }
+            // Re-apply the runmode, which allows for continue exploration or
+            // proper triggering of lua hooks when running ceases. We don't
+            // directly call stop_running() without restoring this because
+            // you.running is probably 0, and stop_running() won't notify Lua
+            // hooks if you.running == 0.
+            you.running = runmode;
+            result = _get_non_walking_command();
         }
         else if (you.running.is_explore() && Options.explore_delay > -1)
             delay(Options.explore_delay);
@@ -1661,38 +1654,90 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
         if (path_flood(c, c + Compass[dir]))
             found_target = true;
 
+    // For travel, we want to pathfind through transporters. Floodout mode
+    // proceeds from source, so we take transporters, but for determining moves
+    // we work in reverse from destination back to source, so we pathfind
+    // through the landing sites.
+    if (runmode == RMODE_TRAVEL || runmode == RMODE_NOT_RUNNING)
+    {
+        if (floodout && grd(c) == DNGN_TRANSPORTER)
+        {
+            LevelInfo &li = travel_cache.get_level_info(level_id::current());
+            transporter_info *ti = li.get_transporter(c);
+            if (ti && ti->destination != INVALID_COORD)
+            {
+                if (path_flood(c, ti->destination))
+                    found_target = true;
+            }
+        }
+        else if (!floodout && grd(c) == DNGN_TRANSPORTER_LANDING)
+        {
+            LevelInfo &li = travel_cache.get_level_info(level_id::current());
+            vector<transporter_info> transporters = li.get_transporters();
+            for (auto ti : transporters)
+            {
+                if (ti.destination == c)
+                    if (path_flood(c, ti.position))
+                         found_target = true;
+            }
+        }
+    }
+
     return found_target;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-// Try to avoid to let travel (including autoexplore) move the player right
-// next to a lurking (previously unseen) monster.
+/**
+ * Run the travel_pathfind algorithm, either from the given position in
+ * floodout mode to populate travel_point_distance relative to that starting
+ * point, or with a destination with the aim of determining the next travel
+ * move. In the latter case, try to avoid to let travel (including autoexplore)
+ * move the player right next to a lurking (previously unseen) monster.
+ *
+ * If move_x and move_y are given, pathfinding runs from you.running.pos to
+ * youpos, and the move contains the next movement relative to youpos to move
+ * closer to you.running.pos. If a runed door is encountered or a transporter
+ * needs to be taken, these are set to 0, and the caller checks for this.
+ *
+ * XXX The two modes of this function (with and without move_x/move_y) should
+ * be split into two different functions, since they aren't really related.
+ *
+ * @param      youpos The starting position.
+ * @param[out] move_x If we want a travel move, the x coordinate.
+ * @param[out] move_y If we want a travel move, the y coordinate.
+ * @param[in]  features A vector of features to give to travel_pathfind.
+ */
 void find_travel_pos(const coord_def& youpos,
                      int *move_x, int *move_y,
                      vector<coord_def>* features)
 {
+    const bool need_move = move_x && move_y;
     travel_pathfind tp;
 
-    if (move_x && move_y)
+    if (need_move)
         tp.set_src_dst(youpos, you.running.pos);
     else
         tp.set_floodseed(youpos);
 
     tp.set_feature_vector(features);
 
-    run_mode_type rmode = (move_x && move_y) ? RMODE_TRAVEL
-                                             : RMODE_NOT_RUNNING;
+    run_mode_type rmode = (need_move) ? RMODE_TRAVEL : RMODE_NOT_RUNNING;
 
     coord_def dest = tp.pathfind(rmode, false);
     if (dest.origin())
         dest = tp.pathfind(rmode, true);
     coord_def new_dest = dest;
 
-    if (grd(dest) == DNGN_RUNED_DOOR)
+    // We'd either have to travel through a runed door, in which case we'll be
+    // stopping, or a transporter, in which case we need to issue a command to
+    // enter.
+    if (need_move
+        && (grd(new_dest) == DNGN_RUNED_DOOR
+            || grd(youpos) == DNGN_TRANSPORTER
+               && grd(new_dest) == DNGN_TRANSPORTER_LANDING
+               && youpos.distance_from(new_dest) > 1))
     {
-        move_x = 0;
-        move_y = 0;
+        *move_x = 0;
+        *move_y = 0;
         return;
     }
 
@@ -1717,26 +1762,25 @@ void find_travel_pos(const coord_def& youpos,
 
         if (unseen != coord_def())
         {
-            // If so, try to use an orthogonally adjacent grid that is
-            // safe to enter.
+            // If so, try to use an orthogonally adjacent grid that is safe to
+            // enter.
             if (youpos.x == unseen.x)
                 new_dest.y = youpos.y;
             else if (youpos.y == unseen.y)
                 new_dest.x = youpos.x;
 
-            // If the new grid cannot be entered, reset to dest.
-            // This means that autoexplore will still sometimes move you
-            // next to a previously unseen monster but the same would
-            // happen by manual movement, so I don't think we need to worry
-            // about this. (jpeg)
+            // If the new grid cannot be entered, reset to dest. This means
+            // that autoexplore will still sometimes move you next to a
+            // previously unseen monster but the same would happen by manual
+            // movement, so I don't think we need to worry about this. (jpeg)
             if (!_is_travelsafe_square(new_dest)
                 || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
             {
                 new_dest = dest;
             }
 #ifdef DEBUG_SAFE_EXPLORE
-            mprf(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), unseen: (%d, %d), "
-                 "new_dest: (%d, %d)",
+            mprf(MSGCH_DIAGNOSTICS, "youpos: (%d, %d), dest: (%d, %d), "
+                     "unseen: (%d, %d), new_dest: (%d, %d)",
                  youpos.x, youpos.y, dest.x, dest.y, unseen.x, unseen.y,
                  new_dest.x, new_dest.y);
             more();
@@ -1746,10 +1790,11 @@ void find_travel_pos(const coord_def& youpos,
 
     if (new_dest.origin())
     {
-        if (move_x && move_y)
+        if (need_move)
             you.running = RMODE_NOT_RUNNING;
     }
-    else if (move_x && move_y)
+
+    if (need_move)
     {
         *move_x = new_dest.x - youpos.x;
         *move_y = new_dest.y - youpos.y;
@@ -2440,7 +2485,8 @@ static void _start_translevel_travel()
     {
         you.running = RMODE_INTERLEVEL;
         you.running.pos.reset();
-        last_stair.depth = -1;
+        last_stair.id.depth = -1;
+        last_stair.pos.reset();
 
         _Route_Warning.new_dest(level_target);
 
@@ -2525,11 +2571,6 @@ static void _start_translevel_travel_prompt()
     }
 
     start_translevel_travel(target);
-}
-
-static command_type _trans_negotiate_stairs()
-{
-    return feat_stair_direction(grd(you.pos()));
 }
 
 static int _target_distance_from(const coord_def &pos)
