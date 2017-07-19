@@ -2544,7 +2544,8 @@ void lose_piety(int pgn)
         _grant_temporary_waterwalk();
     }
     if (will_have_passive(passive_t::stat_boost)
-        && chei_stat_boost(old_piety) > chei_stat_boost())
+        && chei_stat_boost(old_piety) > chei_stat_boost()
+        && you.species != SP_GNOLL)
     {
         string msg = " lowers the support of your attributes";
         if (will_have_passive(passive_t::slowed))
