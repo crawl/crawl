@@ -329,7 +329,14 @@ public:
     unsigned    tc_reachable;   // Colour for squares that are reachable
     unsigned    tc_excluded;    // Colour for excluded squares.
     unsigned    tc_exclude_circle; // Colour for squares in the exclusion radius
-    unsigned    tc_dangerous;   // Colour for trapped squares, deep water, lava.
+    // Colour for squares which are safely traversable but that travel
+    // considers forbidden, either because they are themselves forbidden by
+    // travel options or exclusions or because they are only accessible through
+    // such squares.
+    unsigned    tc_forbidden;
+    // Colour for squares that are not safely traversable (e.g. deep water,
+    // lava, or traps)
+    unsigned    tc_dangerous;
     unsigned    tc_disconnected;// Areas that are completely disconnected.
     vector<text_pattern> auto_exclude; // Automatically set an exclusion
                                        // around certain monsters.

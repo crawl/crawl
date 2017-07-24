@@ -223,6 +223,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
+        new ColourGameOption(SIMPLE_NAME(tc_forbidden), LIGHTCYAN),
         new ColourGameOption(SIMPLE_NAME(tc_dangerous), CYAN),
         new ColourGameOption(SIMPLE_NAME(tc_disconnected), DARKGREY),
         // [ds] Default to jazzy colours.
