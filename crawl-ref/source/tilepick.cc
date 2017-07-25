@@ -1820,6 +1820,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_INFESTED;
     if (mons.is(MB_CORROSION))
         ch |= TILE_FLAG_CORRODED;
+    if (mons.is(MB_SWIFT))
+        ch |= TILE_FLAG_SWIFT;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
