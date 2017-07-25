@@ -3567,6 +3567,15 @@ static void tag_read_you(reader &th)
         you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
     if (th.getMinorVersion() < TAG_MINOR_ZIGFIGS)
         you.props["zig-fixup"] = true;
+
+    // For partially used lightning rods, set the XP debt based on charges.
+    if (th.getMinorVersion() < TAG_MINOR_LIGHTNING_ROD_XP_FIX
+        && you.props.exists("thunderbolt_charge")
+        && evoker_debt(MISC_LIGHTNING_ROD) == 0)
+    {
+        for (int i = 0; i < you.props["thunderbolt_charge"].get_int(); i++)
+            expend_xp_evoker(MISC_LIGHTNING_ROD);
+    }
 #endif
 }
 
