@@ -212,6 +212,7 @@ enum tag_minor_version
     TAG_MINOR_SPIT_POISON_AGAIN_AGAIN, // save compat issues for TAG_MINOR_SPIT_POISON_AGAIN.
     TAG_MINOR_TRANSPORTER_LANDING, // Transporters landing site features.
     TAG_MINOR_STATLOCKED_GNOLLS,   // Gnolls have stats locked at 7/7/7.
+    TAG_MINOR_LIGHTNING_ROD_XP_FIX, // Set XP debt for partially used l. rods.
 
 #endif
     NUM_TAG_MINORS,
