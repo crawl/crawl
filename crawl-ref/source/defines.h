@@ -134,8 +134,10 @@ const int MIN_HIT_MISS_PERCENTAGE = 5;
 const int LIGHTNING_CHARGE_MULT = 100;
 const int LIGHTNING_MAX_CHARGE = 4;
 
-// evoker_debt for evoking one XP evoker
-const int XP_EVOKE_DEBT   = 10;
+// Evoker debt for evoking one XP evoker.
+const int XP_EVOKE_DEBT = 10;
+// Evoker debt for evoking a lightning rod once.
+const int XP_EVOKE_LIGHTNING_ROD_DEBT = 3;
 
 const int BASELINE_DELAY  = 10;
 const int INVIS_CONTAM_PER_TURN = 30;

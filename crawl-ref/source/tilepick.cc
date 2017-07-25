@@ -2382,12 +2382,12 @@ static tileidx_t _tileidx_misc(const item_def &item)
 #endif
 
     case MISC_FAN_OF_GALES:
-        return evoker_is_charged(item) ? TILE_MISC_FAN_OF_GALES
-                                       : TILE_MISC_FAN_OF_GALES_INERT;
+        return evoker_charges(item.sub_type) ? TILE_MISC_FAN_OF_GALES
+                                             : TILE_MISC_FAN_OF_GALES_INERT;
 
     case MISC_LAMP_OF_FIRE:
-        return evoker_is_charged(item) ? TILE_MISC_LAMP_OF_FIRE
-                                       : TILE_MISC_LAMP_OF_FIRE_INERT;
+        return evoker_charges(item.sub_type) ? TILE_MISC_LAMP_OF_FIRE
+                                             : TILE_MISC_LAMP_OF_FIRE_INERT;
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_STONE_OF_TREMORS:
@@ -2395,8 +2395,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
 #endif
 
     case MISC_PHIAL_OF_FLOODS:
-        return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
-                                       : TILE_MISC_PHIAL_OF_FLOODS_INERT;
+        return evoker_charges(item.sub_type) ? TILE_MISC_PHIAL_OF_FLOODS
+                                             : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:
@@ -2413,8 +2413,8 @@ static tileidx_t _tileidx_misc(const item_def &item)
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
 
     case MISC_LIGHTNING_ROD:
-        return evoker_is_charged(item) ? TILE_MISC_LIGHTNING_ROD
-                                       : TILE_MISC_LIGHTNING_ROD_INERT;
+        return evoker_charges(item.sub_type) ? TILE_MISC_LIGHTNING_ROD
+                                             : TILE_MISC_LIGHTNING_ROD_INERT;
 
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;

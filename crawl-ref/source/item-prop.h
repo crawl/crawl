@@ -184,7 +184,10 @@ bool item_is_spellbook(const item_def &item) PURE;
 
 bool is_xp_evoker(const item_def &item);
 int &evoker_debt(int evoker_type);
-bool evoker_is_charged(const item_def &item);
+void expend_xp_evoker(int evoker_type);
+int evoker_charge_xp_debt(int evoker_type);
+int evoker_charges(int evoker_type);
+int evoker_max_charges(int evoker_type);
 
 // ring functions:
 bool jewellery_has_pluses(const item_def &item) PURE;

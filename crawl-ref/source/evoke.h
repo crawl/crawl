@@ -17,8 +17,6 @@ int recharge_wand(bool known = true, const string &pre_msg = "",
 
 void wind_blast(actor* agent, int pow, coord_def target, bool card = false);
 
-void expend_xp_evoker(item_def &item);
-
 bool evoke_check(int slot, bool quiet = false);
 bool evoke_item(int slot = -1, bool check_range = false);
 int wand_mp_cost();
