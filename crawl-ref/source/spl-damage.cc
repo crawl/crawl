@@ -2484,11 +2484,17 @@ static bool _elec_not_immune(const actor *act)
 spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 {
     coord_def prev;
-    if (caster->props.exists("thunderbolt_last")
-        && caster->props["thunderbolt_last"].get_int() + 1 == you.num_turns)
-    {
-        prev = caster->props["thunderbolt_aim"].get_coord();
-    }
+
+    int &charges = caster->props["thunderbolt_charges"].get_int();
+    ASSERT(charges <= LIGHTNING_MAX_CHARGE);
+
+    int &last_turn = caster->props["thunderbolt_last"].get_int();
+    coord_def &last_aim = caster->props["thunderbolt_aim"].get_coord();
+
+    if (last_turn && last_turn + 1 == you.num_turns)
+        prev = last_aim;
+    else
+        charges = 0;
 
     targeter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
                                  prev);
@@ -2502,9 +2508,8 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     fail_check();
 
-    const int juice = (spell_mana(SPELL_THUNDERBOLT)
-                       + caster->props["thunderbolt_charge"].get_int())
-                      * LIGHTNING_CHARGE_MULT;
+    const int juice
+        = (spell_mana(SPELL_THUNDERBOLT) + charges) * LIGHTNING_CHARGE_MULT;
 
     dprf("juice: %d", juice);
 
@@ -2556,9 +2561,9 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.fire();
     }
 
-    caster->props["thunderbolt_last"].get_int() = you.num_turns;
-    caster->props["thunderbolt_aim"].get_coord() = aim;
-    caster->props["thunderbolt_charge"].get_int()++;
+    last_turn = you.num_turns;
+    last_aim = aim;
+    charges = charges == LIGHTNING_MAX_CHARGE ? 0 : charges + 1;
 
     return SPRET_SUCCESS;
 }
