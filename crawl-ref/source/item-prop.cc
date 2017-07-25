@@ -3071,11 +3071,50 @@ int &evoker_debt(int evoker_type)
     return you.props[*prop_name].get_int();
 }
 
-bool evoker_is_charged(const item_def &item)
+/**
+ * How many max charges can the given XP evoker have?
+ *
+ * @param evoker_type The type of evoker.
+ * @returns The max number of charges.
+ */
+int evoker_max_charges(int evoker_type)
 {
-    return evoker_debt(item.sub_type) == 0;
+    return evoker_type == MISC_LIGHTNING_ROD ? LIGHTNING_MAX_CHARGE : 1;
 }
 
+/**
+ * What is the XP debt of using one charge of the given XP evoker type? This
+ * debt represents a cost after scaling by a level-based XP factor.
+ *
+ * @params evoker_type The item sub type of the evoker
+ * @returns The debt of using a charge.
+ */
+int evoker_charge_xp_debt(int evoker_type)
+{
+    return evoker_type == MISC_LIGHTNING_ROD
+        ? XP_EVOKE_LIGHTNING_ROD_DEBT
+        : XP_EVOKE_DEBT;
+}
+
+/**
+ * How many remaining charges does the given XP evoker have?
+ *
+ * @param evoker_type The item subtype of the evoker.
+ * @returns The number of remaining charges.
+ */
+int evoker_charges(int evoker_type)
+{
+    const int max_charges = evoker_max_charges(evoker_type);
+    const int charge_xp_debt = evoker_charge_xp_debt(evoker_type);
+    const int debt = evoker_debt(evoker_type);
+    return min(max_charges,
+            max_charges - debt / charge_xp_debt - (debt % charge_xp_debt > 0));
+}
+
+void expend_xp_evoker(int evoker_type)
+{
+    evoker_debt(evoker_type) += evoker_charge_xp_debt(evoker_type);
+}
 
 /// witchcraft. copied from mon-util.h's get_resist
 static inline int _get_armour_flag(armflags_t all, armour_flag res)

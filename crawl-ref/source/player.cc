@@ -2430,12 +2430,19 @@ static void _recharge_xp_evokers(int exp)
         if (debt == 0)
             continue;
 
+        const int old_charges = evoker_charges(i);
         debt = max(0, debt - div_rand_round(exp, xp_factor));
-        if (debt == 0)
-        {
-            if (i == MISC_LIGHTNING_ROD)
-                you.props["thunderbolt_charge"].get_int() = 0;
+        const int gained = evoker_charges(i) - old_charges;
+        if (!gained)
+            continue;
+
+        if (evoker_max_charges(i) == 1)
             mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
+        else
+        {
+            mprf("%s has regained %s charge%s.",
+                 evoker->name(DESC_YOUR).c_str(),
+                 number_in_words(gained).c_str(), gained > 1 ? "s" : "");
         }
     }
 }

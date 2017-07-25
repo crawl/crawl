@@ -1505,11 +1505,6 @@ static bool _phial_of_floods()
     return false;
 }
 
-void expend_xp_evoker(item_def &item)
-{
-    evoker_debt(item.sub_type) = XP_EVOKE_DEBT;
-}
-
 static spret_type _phantom_mirror()
 {
     bolt beam;
@@ -1754,7 +1749,7 @@ bool evoke_item(int slot, bool check_range)
 
         case MISC_FAN_OF_GALES:
         {
-            if (!evoker_is_charged(item))
+            if (!evoker_charges(item.sub_type))
             {
                 mpr("That is presently inert.");
                 return false;
@@ -1766,20 +1761,20 @@ bool evoke_item(int slot, bool check_range)
                        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 15),
                                                 surge),
                        coord_def());
-            expend_xp_evoker(item);
+            expend_xp_evoker(item.sub_type);
             practise_evoking(3);
             break;
         }
 
         case MISC_LAMP_OF_FIRE:
-            if (!evoker_is_charged(item))
+            if (!evoker_charges(item.sub_type))
             {
                 mpr("That is presently inert.");
                 return false;
             }
             if (_lamp_of_fire())
             {
-                expend_xp_evoker(item);
+                expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
             }
             else
@@ -1794,14 +1789,14 @@ bool evoke_item(int slot, bool check_range)
 #endif
 
         case MISC_PHIAL_OF_FLOODS:
-            if (!evoker_is_charged(item))
+            if (!evoker_charges(item.sub_type))
             {
                 mpr("That is presently inert.");
                 return false;
             }
             if (_phial_of_floods())
             {
-                expend_xp_evoker(item);
+                expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
             }
             else
@@ -1809,14 +1804,14 @@ bool evoke_item(int slot, bool check_range)
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (!evoker_is_charged(item))
+            if (!evoker_charges(item.sub_type))
             {
                 mpr("That is presently inert.");
                 return false;
             }
             if (_evoke_horn_of_geryon())
             {
-                expend_xp_evoker(item);
+                expend_xp_evoker(item.sub_type);
                 practise_evoking(3);
             }
             else
@@ -1841,7 +1836,7 @@ bool evoke_item(int slot, bool check_range)
             break;
 
         case MISC_LIGHTNING_ROD:
-            if (!evoker_is_charged(item))
+            if (!evoker_charges(item.sub_type))
             {
                 mpr("That is presently inert.");
                 return false;
@@ -1849,12 +1844,9 @@ bool evoke_item(int slot, bool check_range)
             if (_lightning_rod())
             {
                 practise_evoking(1);
-                if (you.props["thunderbolt_charge"].get_int() >=
-                    LIGHTNING_MAX_CHARGE)
-                {
+                expend_xp_evoker(item.sub_type);
+                if (!evoker_charges(item.sub_type))
                     mpr("The lightning rod overheats!");
-                    expend_xp_evoker(item);
-                }
             }
             else
                 return false;

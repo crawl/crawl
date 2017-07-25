@@ -1967,16 +1967,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         buff << misc_type_name(item_typ, know_type);
 
-        if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
+        if (is_xp_evoker(*this) && !dbname && !evoker_charges(sub_type))
             buff << " (inert)";
-        else if (!dbname && item_typ == MISC_LIGHTNING_ROD)
+        else if (!dbname && evoker_max_charges(sub_type) > 1)
         {
-            int rod_charge = LIGHTNING_MAX_CHARGE;
-            if (you.props.exists("thunderbolt_charge"))
-                rod_charge -= you.props["thunderbolt_charge"].get_int();
-
-            buff << " (" << rod_charge << "/" << LIGHTNING_MAX_CHARGE << ")";
-
+            buff << " (" << evoker_charges(sub_type) << "/"
+                 << evoker_max_charges(sub_type) << ")";
         }
 
         break;
