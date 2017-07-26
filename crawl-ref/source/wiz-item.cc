@@ -1634,9 +1634,6 @@ void wizard_recharge_evokers()
             continue;
 
         evoker_debt(dummy.sub_type) = 0;
-
-        if (dummy.sub_type == MISC_LIGHTNING_ROD)
-            you.props["thunderbolt_charge"].get_int() = 0;
     }
     mpr("Evokers recharged.");
 }
