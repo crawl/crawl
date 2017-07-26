@@ -2485,11 +2485,12 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 {
     coord_def prev;
 
-    int &charges = caster->props["thunderbolt_charges"].get_int();
+    int &charges = caster->props[THUNDERBOLT_CHARGES_KEY].get_int();
     ASSERT(charges <= LIGHTNING_MAX_CHARGE);
 
-    int &last_turn = caster->props["thunderbolt_last"].get_int();
-    coord_def &last_aim = caster->props["thunderbolt_aim"].get_coord();
+    int &last_turn = caster->props[THUNDERBOLT_LAST_KEY].get_int();
+    coord_def &last_aim = caster->props[THUNDERBOLT_AIM_KEY].get_coord();
+
 
     if (last_turn && last_turn + 1 == you.num_turns)
         prev = last_aim;

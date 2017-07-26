@@ -291,6 +291,10 @@ const char * const MONSTER_MID = "monster-mid";
 const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
 const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
 
+const char * const THUNDERBOLT_CHARGES_KEY = "thunderbolt_charges";
+const char * const THUNDERBOLT_LAST_KEY    = "thunderbolt_last";
+const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
+
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
 #define KEY_MACRO_DISABLE_MORE -1

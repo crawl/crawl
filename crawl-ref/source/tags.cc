@@ -3570,10 +3570,10 @@ static void tag_read_you(reader &th)
 
     // For partially used lightning rods, set the XP debt based on charges.
     if (th.getMinorVersion() < TAG_MINOR_LIGHTNING_ROD_XP_FIX
-        && you.props.exists("thunderbolt_charge")
+        && you.props.exists(THUNDERBOLT_CHARGES_KEY)
         && evoker_debt(MISC_LIGHTNING_ROD) == 0)
     {
-        for (int i = 0; i < you.props["thunderbolt_charge"].get_int(); i++)
+        for (int i = 0; i < you.props[THUNDERBOLT_CHARGES_KEY].get_int(); i++)
             expend_xp_evoker(MISC_LIGHTNING_ROD);
     }
 #endif
