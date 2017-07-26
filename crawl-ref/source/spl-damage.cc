@@ -2564,7 +2564,8 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     last_turn = you.num_turns;
     last_aim = aim;
-    charges = charges == LIGHTNING_MAX_CHARGE ? 0 : charges + 1;
+    if (charges < LIGHTNING_MAX_CHARGE)
+        charges++;
 
     return SPRET_SUCCESS;
 }
