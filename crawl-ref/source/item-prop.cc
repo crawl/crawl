@@ -3015,6 +3015,13 @@ void seen_item(const item_def &item)
         }
     }
 
+    if (is_unrandom_artefact(item) && !(item.flags & ISFLAG_SEEN))
+    {
+        // Use NOTE_SEEN_FEAT since unrands are already identified.
+        take_note(Note(NOTE_SEEN_FEAT, 0, 0, item.name(DESC_A),
+                       origin_desc(item)));
+    }
+
     // major hack. Deconstify should be safe here, but it's still repulsive.
     const_cast<item_def &>(item).flags |= ISFLAG_SEEN;
     if (have_passive(passive_t::identify_items))
