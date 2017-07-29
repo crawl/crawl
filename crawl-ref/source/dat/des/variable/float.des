@@ -8842,14 +8842,14 @@ MARKER:  ` = lua:fog_machine { \
 MARKER:  P = lua:transp_loc("trogsanc_entry")
 MARKER:  Q = lua:transp_dest_loc("trogsanc_entry")
 MARKER:  6 = lua:transp_loc("trogsanc_exit")
-MARKER:  S = lua:transp_dest_loc("trogsanc_exit")
+MARKER:  R = lua:transp_dest_loc("trogsanc_exit")
 MAP
-vvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvvvvvvvvvvvvvvvvv
-vvvvvvvv4vvvvv4vvvvvvvv
-vvvvvvvv-vvvvv-vvvvvvvv
+vvvvvvvv...@...vvvvvvvv
+vvvvvvvv.......vvvvvvvv
+vvvvvvvv.......vvvvvvvv
+vvvvvvvvnv.P.vnvvvvvvvv
+vvvvvvvv4vnnnv4vvvvvvvv
+vvvvvvvv-vnnnv-vvvvvvvv
 vvvvvvv..+.Q.+..vvvvvvv
 vvvvvv...+.'.+...vvvvvv
 vvvvv....v.g.v....vvvvv
@@ -8863,8 +8863,7 @@ vvv5-......1......-5vvv
 vvvvv22.........22vvvvv
 vvvvv-v-vvnnnvv-v-vvvvv
 vvvvv4v`vvnnnvv`v4vvvvv
-vvvvvvvvv..P..vvvvvvvvv
-vvvvvvv4n..S..n4vvvvvvv
-      vvv.....vvv
-           @
+vvvvvvvvv..R..vvvvvvvvv
+vvvvvvv4n.....n4vvvvvvv
+vvvvvvvvv..@..vvvvvvvvv
 ENDMAP
