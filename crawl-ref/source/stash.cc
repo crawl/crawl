@@ -696,6 +696,7 @@ vector<stash_search_result> ShopInfo::matches_search(
     vector<stash_search_result> results;
 
     no_notes nx;
+    bool shop_matches = false;
 
     const string shoptitle = shop_name(shop) + (shop.stock.empty() ? "*" : "");
     if (search.matches(shoptitle + " " + prefix + " {shop}"))
@@ -707,8 +708,12 @@ vector<stash_search_result> ShopInfo::matches_search(
         res.pos.pos = shop.pos;
         results.push_back(res);
         // if the player is just searching for shops, don't show contents
-        if (search.matches("shop"))
+        if (search.matches(prefix + " {shop}")
+            && search.tostring() != "." && search.tostring() != "..")
+        {
             return results;
+        }
+        shop_matches = true;
     }
 
     for (const item_def &item : shop.stock)
@@ -717,7 +722,8 @@ vector<stash_search_result> ShopInfo::matches_search(
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                  &item, true);
 
-        if (search.matches(prefix + " " + ann + " " + sname)
+        if (shop_matches
+            || search.matches(prefix + " " + ann + " " + sname)
             || search.matches(shop_item_desc(item)))
         {
             stash_search_result res;
