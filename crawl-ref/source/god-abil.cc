@@ -5139,7 +5139,9 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         // Gnolls can't get stat-changing mutations
         if ((mut == MUT_DOPEY || mut == MUT_WEAK || mut == MUT_CLUMSY)
             && you.species == SP_GNOLL)
+        {
             continue;
+        }
 
         // The Grunt Algorithm
         // (choose a random element from a set of unknown size without building
