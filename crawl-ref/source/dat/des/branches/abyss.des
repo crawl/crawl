@@ -1602,9 +1602,9 @@ MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
 MONS:    hellephant / ancient lich / hell sentinel / profane servitor
 KITEM:   O = abyssal rune of Zot
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
-MARKER:  P = lua:transp_dest_loc("reverse_zot_exit")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
 MARKER:  R = lua:transp_loc("reverse_zot_exit")
+MARKER:  S = lua:transp_dest_loc("reverse_zot_exit")
 SHUFFLE: AB, CD
 # Make a classed draconian and band in each lung.
 NSUBST:  A = 2 / 2=112 / 2=1' / ', C = 2 / 2=112 / 2=1" / "
@@ -1618,7 +1618,7 @@ COLOUR:  n@OQ012345. = magenta
 FTILE:   nc+@OPQ012345. = floor_rough_magenta
 MAP
          .@.
-ccccccccc.P.ccccccccc
+cccccccccP.Sccccccccc
 ccAAAAcccnnncccCCCCcc
 cAAAAAAccnnnccCCCCCCc
 cAAAAAAc.....cCCCCCCc
