@@ -1599,7 +1599,7 @@ MONS:    wretched star / starcursed mass / apocalypse crab / lurking horror \
          / very ugly thing / quicksilver dragon / shadow dragon
 MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
          / blizzard demon / executioner / angel / daeva
-MONS:    hellephant / ancient lich / hell sentinel / profane servitor
+KMONS:   R = hellephant / ancient lich / hell sentinel / profane servitor
 KITEM:   O = abyssal rune of Zot
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
@@ -1609,13 +1609,11 @@ SHUFFLE: AB, CD
 # Make a classed draconian and band in each lung.
 NSUBST:  A = 2 / 2=112 / 2=1' / ', C = 2 / 2=112 / 2=1" / "
 NSUBST:  B = 3 / 0 / ', D = 3 / 0 / "
-SHUFFLE: hi' / jk"
-SUBST:   hk = c, i = ', j = -, R = 5
 NSUBST:  ' = 003 / 003... / ., " = 003 / 003... / .
 NSUBST:  - = 2=4 / 2=34.. / .
 COLOUR:  c = lightmagenta
-COLOUR:  n@OQ012345. = magenta
-FTILE:   nc+@OPQ012345. = floor_rough_magenta
+COLOUR:  n@O012345. = magenta
+FTILE:   nc+@OPQRS012345. = floor_rough_magenta
 MAP
          .@.
 cccccccccP.Sccccccccc
@@ -1625,13 +1623,13 @@ cAAAAAAc.....cCCCCCCc
 ccAAAAA+..Q..+CCCCCcc
 cAAAAAAc.....cCCCCCCc
 ccAAAAccccnccccCCCCCc
-cccBccccccOccccccDccc
-ccBBBcc--c+c--ccDDDcc
+cccBccccc+O+cccccDccc
+ccBBBcc--ccc--ccDDDcc
 cBBBBBcc-----ccDDDDDc
 cBBBBBcc-----ccDDDDDc
-cBBBBBchhh-jjjcDDDDDc
-cBBBBB+''cnc""+DDDDDc
-ccBBBccc'iRk"cccDDDcc
+cBBBBBc-------cDDDDDc
+cBBBBB+--c+c--+DDDDDc
+ccBBBccc-cRc-cccDDDcc
 ccccccccccccccccccccc
 ENDMAP
 
