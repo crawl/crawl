@@ -77,12 +77,12 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include <shlobj.h>
-#elif defined (__APPLE__)
+#elif defined(TARGET_OS_MACOSX)
 extern char **NXArgv;
 #ifndef DATA_DIR_PATH
 #include <unistd.h>
 #endif
-#elif defined (__linux__)
+#elif defined(TARGET_OS_LINUX) || defined(TARGET_OS_CYGWIN)
 #include <unistd.h>
 #endif
 
