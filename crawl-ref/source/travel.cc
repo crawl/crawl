@@ -831,45 +831,33 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 
 // Determine the necessary command when find_travel_pos() indicates that we
 // shouldn't move.
-static command_type _get_non_walking_command()
+static command_type _get_non_move_command()
 {
+    if (you.running == RMODE_EXPLORE)
+        return CMD_NO_CMD;
+
+    if (you.running == RMODE_EXPLORE_GREEDY)
+        return CMD_INSPECT_FLOOR;
+
     const level_pos curr = level_pos(level_id::current(), you.pos());
-    const bool travel_mode
-        = you.running == RMODE_TRAVEL || you.running == RMODE_INTERLEVEL;
 
     // We've reached our travel destination.
-    if (travel_mode && level_target == curr)
-    {
-        stop_running();
+    if (level_target == curr)
         return CMD_NO_CMD;
-    }
 
     // If we we're not at our running position and we're not traveled to a
     // transporter, simply stop running.
-    if (you.pos() != you.running.pos
-        && !(travel_mode && grd(you.pos()) == DNGN_TRANSPORTER))
-    {
-        stop_running();
+    if (you.pos() != you.running.pos && grd(you.pos()) != DNGN_TRANSPORTER)
         return CMD_NO_CMD;
-    }
 
     // We're trying to take the same stairs again, abort.
     if (last_stair == curr)
-    {
-        stop_running();
         return CMD_NO_CMD;
-    }
 
     // Save the previous stair taken, so we can check that we're not trying to
     // retake them after this command.
     last_stair.id = level_id::current();
     last_stair.pos = you.pos();
-
-    // If taking stairs, the running destination will no longer be valid on the
-    // new level. Reset the running pos so travel will search for a new travel
-    // square next turn.
-    if (you.running == RMODE_INTERLEVEL)
-        you.running.pos.reset();
 
     return feat_stair_direction(grd(you.pos()));
 }
@@ -988,7 +976,18 @@ command_type travel()
             // you.running is probably 0, and stop_running() won't notify Lua
             // hooks if you.running == 0.
             you.running = runmode;
-            result = _get_non_walking_command();
+
+            result = _get_non_move_command();
+            if (result == CMD_NO_CMD)
+                stop_running();
+            // If taking stairs, the running destination will no longer be
+            // valid on the new level. Reset the running pos so travel will
+            // search for a new travel square next turn.
+            else if (you.running == RMODE_INTERLEVEL)
+                you.running.pos.reset();
+
+            return result;
+
         }
         else if (you.running.is_explore() && Options.explore_delay > -1)
             delay(Options.explore_delay);
@@ -1011,11 +1010,6 @@ command_type direction_to_command(int x, int y)
     if (x == -1 && y ==  0) return CMD_MOVE_LEFT;
     if (x == -1 && y ==  1) return CMD_MOVE_DOWN_LEFT;
     if (x ==  0 && y == -1) return CMD_MOVE_UP;
-    if (x ==  0 && y ==  0)
-    {
-        return you.running == RMODE_EXPLORE_GREEDY ? CMD_INSPECT_FLOOR
-                                                   : CMD_NO_CMD;
-    }
     if (x ==  0 && y ==  1) return CMD_MOVE_DOWN;
     if (x ==  1 && y == -1) return CMD_MOVE_UP_RIGHT;
     if (x ==  1 && y ==  0) return CMD_MOVE_RIGHT;
