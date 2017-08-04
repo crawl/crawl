@@ -2353,7 +2353,7 @@ KMONS:   P = plant / fungus w:5
 SHUFFLE: "', ABC
 SUBST:   A = ., BC = x, D = x .:2
 NSUBST:  " = 7:1 / *:., ' = 2:2 / *:.
-NSUBST:  - = 6:3 / *:., ; = 5:3 / *:.
+NSUBST:  - = 6:P / *:., ; = 5:P / *:.
 MAP
   ...........
  ..DDDDCDDDD..
