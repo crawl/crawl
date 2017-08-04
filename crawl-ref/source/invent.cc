@@ -1672,9 +1672,6 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return true;
     }
 
-
-    const special_armour_type ego = get_armour_ego_type(item);
-
     // If you're invis from an item, warn that you're about to get an extra dose
     // of contam from removing it. This check is rough, since we need to
     // establish that the operation is a removal, the item being removed is in
