@@ -843,6 +843,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
                 status_shift += 8;
             }
+            if (fg.SWIFT)
+            {
+                this.draw_icon(icons.SWIFT, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
             if (fg.HASTED)
             {
                 this.draw_icon(icons.HASTED, x, y, -status_shift, 0);
@@ -856,6 +861,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.MIGHT)
             {
                 this.draw_icon(icons.MIGHT, x, y, -status_shift, 0);
+                status_shift += 6;
+            }
+            if (fg.CORRODED)
+            {
+                this.draw_icon(icons.CORRODED, x, y, -status_shift, 0);
                 status_shift += 6;
             }
             if (fg.DRAIN)
