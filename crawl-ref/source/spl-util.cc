@@ -950,7 +950,7 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool player_spell)
+int spell_range(spell_type spell, int pow, bool allow_bonus)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
@@ -960,7 +960,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
     if (maxrange < 0)
         return maxrange;
 
-    if (player_spell
+    if (allow_bonus
         && vehumet_supports_spell(spell)
         && have_passive(passive_t::spells_range)
         && maxrange > 1
