@@ -20,6 +20,7 @@
 #include "exercise.h"
 #include "god-abil.h"
 #include "god-conduct.h"
+#include "god-passive.h"
 #include "hints.h"
 #include "item-prop.h"
 #include "libutil.h"
@@ -362,17 +363,17 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
         auto_id_inventory();
 }
 
-void check_skill_level_change(skill_type sk, bool do_level_up)
+int calc_skill_level_change(skill_type sk, int starting_level, int sk_points)
 {
-    int new_level = you.skills[sk];
+    int new_level = starting_level;
     while (1)
     {
         if (new_level < MAX_SKILL_LEVEL
-            && you.skill_points[sk] >= skill_exp_needed(new_level + 1, sk))
+            && sk_points >= skill_exp_needed(new_level + 1, sk))
         {
             ++new_level;
         }
-        else if (you.skill_points[sk] < skill_exp_needed(new_level, sk))
+        else if (sk_points < skill_exp_needed(new_level, sk))
         {
             new_level--;
             ASSERT(new_level >= 0);
@@ -380,6 +381,12 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
         else
             break;
     }
+    return new_level;
+}
+
+void check_skill_level_change(skill_type sk, bool do_level_up)
+{
+    const int new_level = calc_skill_level_change(sk, you.skills[sk], you.skill_points[sk]);
 
     if (new_level != you.skills[sk])
     {
@@ -1007,18 +1014,33 @@ bool skill_trained(int i)
     return you.can_train[i] && you.train[i];
 }
 
+int _calc_skill_cost_level(int xp, int start)
+{
+    while (start < MAX_SKILL_COST_LEVEL
+           && xp >= skill_cost_needed(start + 1))
+    {
+        ++start;
+    }
+    while (start > 0
+           && xp < skill_cost_needed(start))
+    {
+        --start;
+    }
+    return start;
+}
+
 void check_skill_cost_change()
 {
-    while (you.skill_cost_level < MAX_SKILL_COST_LEVEL
-           && you.total_experience >= skill_cost_needed(you.skill_cost_level + 1))
-    {
-        ++you.skill_cost_level;
-    }
-    while (you.skill_cost_level > 0
-           && you.total_experience < skill_cost_needed(you.skill_cost_level))
-    {
-        --you.skill_cost_level;
-    }
+#ifdef DEBUG_TRAINING_COST
+    int initial_cost = you.skill_cost_level;
+#endif
+
+    you.skill_cost_level = _calc_skill_cost_level(you.total_experience, you.skill_cost_level);
+
+#ifdef DEBUG_TRAINING_COST
+    if (initial_cost != you.skill_cost_level)
+        dprf("Adjusting skill cost level to %d", you.skill_cost_level);
+#endif
 }
 
 void change_skill_points(skill_type sk, int points, bool do_level_up)
@@ -1082,14 +1104,32 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     return skill_inc;
 }
 
-void set_skill_level(skill_type skill, double amount)
+/**
+ * Calculate the difference in skill points and xp for new skill level `amount`.
+ *
+ * If `base_only` is false, this will produce an estimate only. Otherwise, it is
+ * exact. This function is used in both estimating skill targets, and in
+ * actually changing skills. It will work both for cases where the new skill
+ * level is greater, and where it is less, than the current level.
+ *
+ * @param skill the skill to calculate for.
+ * @param amount the new skill level for `skill`.
+ * @param scaled_training how to scale the training values (for estimating what
+ *          happens when other skills are being trained).
+ * @param base_only whether to calculate on actual unmodified skill levels, or
+ *          use various bonuses that apply on top of these (crosstraining, ash,
+ *          manuals).
+ *
+ * @return a pair consisting of the difference in skill points, and the
+ *          difference in xp.
+ */
+skill_diff skill_level_to_diffs(skill_type skill, double amount,
+                            int scaled_training,
+                            bool base_only)
 {
+    // TODO: should this use skill_state?
     double level;
     double fractional = modf(amount, &level);
-
-    you.ct_skill_points[skill] = 0;
-    you.skills[skill] = level;
-
     if (level >= MAX_SKILL_LEVEL)
     {
         level = MAX_SKILL_LEVEL;
@@ -1103,53 +1143,112 @@ void set_skill_level(skill_type skill, double amount)
                   - skill_exp_needed(level, skill)) * fractional + 1;
     }
 
-    if (target == you.skill_points[skill])
-        return;
-
-    // We're updating you.skill_points[skill] and calculating the new
+    // We're calculating you.skill_points[skill] and calculating the new
     // you.total_experience to update skill cost.
 
-    const bool reduced = target < you.skill_points[skill];
+    int you_skill = you.skill_points[skill];
+
+    if (!base_only)
+    {
+        // Factor in crosstraining bonus at the time of the query.
+        // This will not address the case where some cross-training skills are
+        // also being trained.
+        you_skill += get_crosstrain_points(skill);
+
+        // Estimate the ash bonus, based on current skill levels and piety.
+        // This isn't perfectly accurate, because the boost changes as
+        // skill increases. TODO: exact solution.
+        // It also assumes that piety won't change.
+        you_skill += ash_skill_point_boost(skill, you.skills[skill] * 10);
+
+        if (skill_has_manual(skill))
+            target = you_skill + (target - you_skill) / 2;
+    }
+
+    if (target == you_skill)
+        return skill_diff();
+
+    // Do we need to increase or decrease skill points/xp?
+    // XXX: reducing with ash bonuses in play could lead to weird results.
+    const bool decrease_skill = target < you_skill;
+
+    int you_xp = you.total_experience;
+    int you_skill_cost_level = you.skill_cost_level;
 
 #ifdef DEBUG_TRAINING_COST
-    dprf(DIAG_SKILLS, "target: %d.", target);
+    dprf(DIAG_SKILLS, "target skill points: %d.", target);
 #endif
-    while (you.skill_points[skill] != target)
+    while (you_skill != target)
     {
-        int next_level = reduced ? skill_cost_needed(you.skill_cost_level)
-                                 : skill_cost_needed(you.skill_cost_level + 1);
-        int max_xp = abs(next_level - (int)you.total_experience);
+        // each loop is the max skill points that can be gained at the
+        // current skill cost level, up to `target`.
+
+        // If we are decreasing, find the xp needed to get to the current skill
+        // cost level. Otherwise, find the xp needed to get to the next one.
+        const int next_level = skill_cost_needed(you_skill_cost_level +
+                                                    (decrease_skill ? 0 : 1));
+
+        // max xp that can be added (or subtracted) in one pass of the loop
+        int max_xp = abs(next_level - you_xp);
 
         // When reducing, we don't want to stop right at the limit, unless
         // we're at skill cost level 0.
-        if (reduced && you.skill_cost_level)
+        if (decrease_skill && you_skill_cost_level)
             ++max_xp;
 
-        int cost = calc_skill_cost(you.skill_cost_level);
+        const int cost = calc_skill_cost(you_skill_cost_level);
         // Maximum number of skill points to transfer in one go.
         // It's max_xp*10/cost rounded up.
-        int max_skp = (max_xp * 10 + cost - 1) / cost;
-        max_skp = max(max_skp, 1);
-        int delta_skp = min<int>(abs((int)(target - you.skill_points[skill])),
-                                 max_skp);
-        int delta_xp = (delta_skp * cost + 9) / 10;
+        const int max_skp = max((max_xp * 10 + cost - 1) / cost, 1);
 
-        if (reduced)
+        skill_diff delta;
+        delta.skill_points = min<int>(abs((int)(target - you_skill)),
+                                 max_skp);
+        delta.experience = (delta.skill_points * cost + 9) / 10;
+
+        if (decrease_skill)
         {
-            delta_skp = -min<int>(delta_skp, you.skill_points[skill]);
-            delta_xp = -min<int>(delta_xp, you.total_experience);
+            // We are decreasing skill points / xp to reach the target. Ensure
+            // that the delta is negative but won't result in negative skp or xp
+            delta.skill_points = -min<int>(delta.skill_points, you_skill);
+            delta.experience = -min<int>(delta.experience, you_xp);
         }
 
 #ifdef DEBUG_TRAINING_COST
         dprf(DIAG_SKILLS, "cost level: %d, total experience: %d, "
              "next level: %d, skill points: %d, delta_skp: %d, delta_xp: %d.",
-             you.skill_cost_level, you.total_experience, next_level,
-             you.skill_points[skill], delta_skp, delta_xp);
+             you_skill_cost_level, you_xp, next_level,
+             you_skill, delta.skill_points, delta.experience);
 #endif
-        you.skill_points[skill] += delta_skp;
-        you.total_experience += delta_xp;
-        check_skill_cost_change();
+        you_skill += (delta.skill_points * scaled_training
+                                        + (decrease_skill ? -99 : 99)) / 100;
+        you_xp += delta.experience;
+        you_skill_cost_level = _calc_skill_cost_level(you_xp, you_skill_cost_level);
     }
+
+    return skill_diff(you_skill - you.skill_points[skill],
+                                you_xp - you.total_experience);
+}
+
+void set_skill_level(skill_type skill, double amount)
+{
+    double level;
+    modf(amount, &level);
+
+    you.ct_skill_points[skill] = 0;
+
+    skill_diff diffs = skill_level_to_diffs(skill, amount);
+
+    you.skills[skill] = level;
+    you.skill_points[skill] += diffs.skill_points;
+    you.total_experience += diffs.experience;
+#ifdef DEBUG_TRAINING_COST
+    dprf("Change (total): %d skp (%d), %d xp (%d)",
+        diffs.skill_points, you.skill_points[skill],
+        diffs.experience, you.total_experience);
+#endif
+
+    check_skill_cost_change();
 }
 
 int get_skill_progress(skill_type sk, int level, int points, int scale)
@@ -1570,6 +1669,18 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
     default:
         return {};
     }
+}
+
+/**
+ * Calculate the current crosstraining bonus for skill `sk`, in skill points.
+ */
+int get_crosstrain_points(skill_type sk)
+{
+    int points = 0;
+    for (skill_type cross : get_crosstrain_skills(sk))
+        points += you.skill_points[cross] * 2 / 5;
+    return points;
+
 }
 
 /**

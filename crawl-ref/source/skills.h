@@ -30,6 +30,15 @@ struct skill_state
     void restore_training();
 };
 
+struct skill_diff
+{
+    skill_diff() : skill_points(0), experience(0) { }
+    skill_diff(int skp, int xp) : skill_points(skp), experience(xp) { }
+
+    int skill_points;
+    int experience;
+};
+
 typedef set<skill_type> skill_set;
 
 string skill_names(const skill_set &skills);
@@ -50,6 +59,7 @@ void init_can_train();
 void init_training();
 void update_can_train();
 void reset_training();
+int calc_skill_level_change(skill_type sk, int starting_level, int sk_points);
 void check_skill_level_change(skill_type sk, bool do_level_up = true);
 void change_skill_level(skill_type exsk, int num_level);
 void change_skill_points(skill_type sk, int points, bool do_level_up);
@@ -93,9 +103,12 @@ float species_apt_factor(skill_type sk, species_type sp = you.species);
 float apt_to_factor(int apt);
 unsigned int skill_exp_needed(int lev, skill_type sk,
                               species_type sp = you.species);
+skill_diff skill_level_to_diffs(skill_type skill, double amount,
+    int scaled_training=100, bool base_only=true);
 
 bool compare_skills(skill_type sk1, skill_type sk2);
 vector<skill_type> get_crosstrain_skills(skill_type sk);
+int get_crosstrain_points(skill_type sk);
 
 int elemental_preference(spell_type spell, int scale = 1);
 

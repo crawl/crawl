@@ -1026,6 +1026,22 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
     return boost;
 }
 
+/**
+ * Calculate the ash skill point boost for skill sk.
+ *
+ * @param scaled_skill the skill level to calculate it for, scaled by 10.
+ *
+ * @return the skill point bonus to use.
+ */
+unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
+{
+    unsigned int skill_points = 0;
+
+    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
+                    * max(scaled_skill, 1) * species_apt_factor(sk);
+    return skill_points;
+}
+
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
@@ -1034,13 +1050,9 @@ int ash_skill_boost(skill_type sk, int scale)
     // medium bonus -> factor = 5
     // high bonus   -> factor = 7
 
-    unsigned int skill_points = you.skill_points[sk];
-
-    for (skill_type cross : get_crosstrain_skills(sk))
-        skill_points += you.skill_points[cross] * 2 / 5;
-
-    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
-                    * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
+    unsigned int skill_points = you.skill_points[sk]
+                  + get_crosstrain_points(sk)
+                  + ash_skill_point_boost(sk, you.skill(sk, 10, true));
 
     int level = you.skills[sk];
     while (level < MAX_SKILL_LEVEL && skill_points >= skill_exp_needed(level + 1, sk))

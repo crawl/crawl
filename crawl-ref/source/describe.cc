@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cmath>
 #include <iomanip>
 #include <numeric>
 #include <set>
@@ -816,6 +817,54 @@ static string _describe_mutant_beast(const monster_info &mi)
            + " " + _describe_mutant_beast_tier(tier);
 }
 
+static string _skill_target_desc(skill_type skill, double target, int training)
+{
+    string description = "";
+
+    const bool max_training = (training == 100);
+    const bool hypothetical = !crawl_state.need_save || (training != you.training[skill]);
+
+    const skill_diff diffs = skill_level_to_diffs(skill, target, training, false);
+    const int level_diff = xp_to_level_diff(diffs.experience, 10);
+
+    if (max_training)
+        description += "At 100%% training ";
+    else if (!hypothetical)
+    {
+        description += make_stringf("At current training (%d%%) ",
+                                        you.training[skill]);
+    }
+    else
+        description += make_stringf("At a training level of %d%% ", training);
+
+    description += make_stringf(
+        "you %s reach %.1f in %s %d.%d XLs.",
+            hypothetical ? "would" : "will",
+            target,
+            (you.experience_level + (level_diff + 9) / 10) > 27
+                                ? "the equivalent of" : "about",
+            level_diff / 10, level_diff % 10);
+    if (you.wizard)
+    {
+        description += make_stringf("\n    (%d xp, %d skp)",
+                                    diffs.experience, diffs.skill_points);
+    }
+    return description;
+}
+
+static void _append_skill_target_desc(string &description, skill_type skill, double target)
+{
+    if (crawl_state.need_save && you.skill(skill, 1) < target)
+    {
+        description += "\n" + _skill_target_desc(skill, target, 100);
+        if (you.training[skill] > 0 && you.training[skill] < 100)
+        {
+            description += "\n" + _skill_target_desc(skill, target,
+                                                        you.training[skill]);
+        }
+    }
+}
+
 static void _append_weapon_stats(string &description, const item_def &item)
 {
     const int base_dam = property(item, PWPN_DAMAGE);
@@ -823,9 +872,17 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const int ammo_dam = ammo_type == MI_NONE ? 0 :
                                                 ammo_type_damage(ammo_type);
     const skill_type skill = item_attack_skill(item);
+    const int mindelay_skill = weapon_min_delay_skill(item);
+
+    if (skill == SK_SLINGS)
+    {
+        description += make_stringf("\nFiring bullets:    Base damage: %d",
+                                    base_dam +
+                                    ammo_type_damage(MI_SLING_BULLET));
+    }
 
     const string your_skill = crawl_state.need_save ?
-      make_stringf("\n (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
+      make_stringf("\n    (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
       : "";
     description += make_stringf(
     "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
@@ -838,12 +895,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
      weapon_min_delay_skill(item),
      your_skill.c_str());
 
-    if (skill == SK_SLINGS)
-    {
-        description += make_stringf("\nFiring bullets:    Base damage: %d",
-                                    base_dam +
-                                    ammo_type_damage(MI_SLING_BULLET));
-    }
+    _append_skill_target_desc(description, skill, mindelay_skill);
 }
 
 static string _handedness_string(const item_def &item)
@@ -1254,8 +1306,9 @@ static string _describe_ammo(const item_def &item)
     if (dam)
     {
         const int throw_delay = (10 + dam / 2);
+        const int target_skill = (throw_delay - FASTEST_PLAYER_THROWING_SPEED) * 2;
         const string your_skill = crawl_state.need_save ?
-                make_stringf("\n (Your skill: %.1f)",
+                make_stringf("\n    (Your skill: %.1f)",
                     (float) you.skill(SK_THROWING, 10) / 10)
                     : "";
 
@@ -1267,16 +1320,17 @@ static string _describe_ammo(const item_def &item)
             dam,
             (float) throw_delay / 10,
             (float) FASTEST_PLAYER_THROWING_SPEED / 10,
-            (throw_delay - FASTEST_PLAYER_THROWING_SPEED) * 2,
+            target_skill,
             your_skill.c_str()
         );
+
+        _append_skill_target_desc(description, SK_THROWING, target_skill);
     }
 
-
     if (ammo_always_destroyed(item))
-        description += "\nIt will always be destroyed on impact.";
+        description += "\n\nIt will always be destroyed on impact.";
     else if (!ammo_never_destroyed(item))
-        description += "\nIt may be destroyed on impact.";
+        description += "\n\nIt may be destroyed on impact.";
 
     return description;
 }
@@ -1310,12 +1364,13 @@ static string _describe_armour(const item_def &item, bool verbose)
                             + make_stringf("%.1f", skill);
                 if (crawl_state.need_save)
                 {
-                    description += "\n                            "
+                    description += "\n                             "
                                 + make_stringf("(Your skill: %.1f)",
                                                (float) you.skill(SK_SHIELDS, 10) / 10);
                 }
                 else
                     description += "\n";
+                _append_skill_target_desc(description, SK_SHIELDS, skill);
             }
 
             if (is_unrandom_artefact(item, UNRAND_WARLOCK_MIRROR))
