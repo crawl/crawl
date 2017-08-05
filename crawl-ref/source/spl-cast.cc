@@ -1343,7 +1343,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
                                 // it nevertheless requires line-of-fire.
                                 || spell == SPELL_APPORTATION;
 
-        const int range = calc_spell_range(spell, powc);
+        const int range = calc_spell_range(spell, powc, allow_fail);
 
         unique_ptr<targeter> hitfunc = _spell_targeter(spell, powc, range);
 
@@ -2172,11 +2172,11 @@ string spell_power_string(spell_type spell)
         return string(numbars, '#') + string(capbars - numbars, '.');
 }
 
-int calc_spell_range(spell_type spell, int power)
+int calc_spell_range(spell_type spell, int power, bool allow_bonus)
 {
     if (power == 0)
         power = calc_spell_power(spell, true, false, false);
-    const int range = spell_range(spell, power);
+    const int range = spell_range(spell, power, allow_bonus);
 
     return range;
 }
