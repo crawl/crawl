@@ -2697,6 +2697,23 @@ void recalc_and_scale_hp()
     you.hit_points_regeneration = hp % 100;
 }
 
+int xp_to_level_diff(int xp, int scale)
+{
+    ASSERT(xp >= 0);
+    int adjusted_xp = you.experience + xp;
+    int level = you.experience_level;
+    while (adjusted_xp >= exp_needed(level + 1))
+        level++;
+    if (scale > 1)
+    {
+        int remainder = adjusted_xp - exp_needed(level);
+        int denom = exp_needed(level + 1) - exp_needed(level);
+        return (level - you.experience_level) * scale +
+                    (remainder * scale / denom);
+    } else
+        return level - you.experience_level;
+}
+
 /**
  * Handle the effects from a player's change in XL.
  * @param aux                     A string describing the cause of the level
@@ -5707,30 +5724,12 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
     // skills[sk] might not be updated yet if this is in the middle of
     // skill training, so make sure to use the correct value.
-    // This duplicates code in check_skill_level_change(), unfortunately.
     int actual_skill = skills[sk];
     unsigned int effective_points = skill_points[sk];
     if (!real)
-    {
-        for (skill_type cross : get_crosstrain_skills(sk))
-            effective_points += skill_points[cross] * 2 / 5;
-    }
+        effective_points += get_crosstrain_points(sk);
     effective_points = min(effective_points, skill_exp_needed(MAX_SKILL_LEVEL, sk));
-    while (1)
-    {
-        if (actual_skill < MAX_SKILL_LEVEL
-            && effective_points >= skill_exp_needed(actual_skill + 1, sk))
-        {
-            ++actual_skill;
-        }
-        else if (effective_points < skill_exp_needed(actual_skill, sk))
-        {
-            actual_skill--;
-            ASSERT(actual_skill >= 0);
-        }
-        else
-            break;
-    }
+    actual_skill = calc_skill_level_change(sk, actual_skill, effective_points);
 
     int level = actual_skill * scale
       + get_skill_progress(sk, actual_skill, effective_points, scale);
