@@ -35,14 +35,14 @@ the Elixir card
 
 The card depicts a smug smile formed out of nine chalices.
 
-This card rapidly restores the user's health or magic, or both at high power
+Drawing this card rapidly restores the user's health or magic, or both at high power
 levels. It will also heal their allies.
 %%%%
 the Cloud card
 
 The card depicts an iron gate enshrouded in mist.
 
-This card imprisons the user's foes in rings of clouds. The type of clouds
+Drawing this card imprisons the user's foes in rings of clouds. The type of clouds
 produced will improve with card power.
 %%%%
 # Destruction
@@ -56,7 +56,7 @@ the Storm card
 
 The card depicts a ship at sea sinking in a thunderstorm.
 
-Drawing it unleashes a storm of wind and thunder clouds.
+Drawing this card unleashes a storm of wind and thunder clouds.
 %%%%
 Pain card
 
