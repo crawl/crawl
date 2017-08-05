@@ -954,7 +954,7 @@ static void _sdump_vault_list(dump_params &par)
 {
     if (par.full_id || par.se
 #ifdef WIZARD
-        || you.wizard
+        || you.wizard || you.suppress_wizard
 #endif
      )
     {

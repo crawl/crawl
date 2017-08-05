@@ -4980,6 +4980,8 @@ player::player()
     wizard = false;
     explore = false;
 #endif
+    suppress_wizard = false;
+
     birth_time       = time(0);
 
     // Long-term state:
@@ -5237,7 +5239,7 @@ player_save_info& player_save_info::operator=(const player& rhs)
     name             = rhs.your_name;
     experience       = rhs.experience;
     experience_level = rhs.experience_level;
-    wizard           = rhs.wizard;
+    wizard           = rhs.wizard || rhs.suppress_wizard;
     species          = rhs.species;
     species_name     = rhs.chr_species_name;
     class_name       = rhs.chr_class_name;

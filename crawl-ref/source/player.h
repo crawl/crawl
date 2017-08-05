@@ -126,6 +126,7 @@ public:
     // player might have been playing previously under wiz mode.
     bool          wizard;            // true if player has entered wiz mode.
     bool          explore;           // true if player has entered explore mode.
+    bool          suppress_wizard;
     time_t        birth_time;        // start time of game
 
     // ----------------

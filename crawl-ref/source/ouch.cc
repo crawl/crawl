@@ -1034,7 +1034,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 #ifdef WIZARD
     if (!non_death)
     {
-        if (crawl_state.test || you.wizard || (you.explore && !you.lives))
+        if (crawl_state.test || you.wizard || you.suppress_wizard || (you.explore && !you.lives))
         {
             const string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);

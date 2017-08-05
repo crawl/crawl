@@ -655,7 +655,7 @@ static void _take_starting_note()
     notestr.clear();
 
 #ifdef WIZARD
-    if (you.wizard)
+    if (you.wizard || you.suppress_wizard)
     {
         notestr << "You started the game in wizard mode.";
         take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str()));

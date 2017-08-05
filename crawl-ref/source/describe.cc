@@ -1696,7 +1696,7 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (!dump)
+    if (!dump && !you.suppress_wizard)
     {
         description << setfill('0');
         description << "\n\n"
@@ -3199,7 +3199,8 @@ static void _print_bar(int value, int scale, string name,
       result << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
-    result << " (" << value << ")";
+    if (!you.suppress_wizard)
+        result << " (" << value << ")";
 #endif
 
     if (currently_disabled)
@@ -3207,7 +3208,8 @@ static void _print_bar(int value, int scale, string name,
         result << " (Normal " << name << ")";
 
 #ifdef DEBUG_DIAGNOSTICS
-        result << " (" << base_value << ")";
+        if (!you.suppress_wizard)
+            result << " (" << base_value << ")";
 #endif
     }
 }
@@ -3783,6 +3785,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (you.suppress_wizard)
+        return;
     if (mi.pos.origin() || !monster_at(mi.pos))
         return; // not a real monster
     monster& mons = *monster_at(mi.pos);

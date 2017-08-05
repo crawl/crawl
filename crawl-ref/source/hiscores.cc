@@ -1718,7 +1718,7 @@ void scorefile_entry::init(time_t dt)
         for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];
 
-    wiz_mode = (you.wizard ? 1 : 0);
+    wiz_mode = (you.wizard || you.suppress_wizard ? 1 : 0);
     explore_mode = (you.explore ? 1 : 0);
 }
 
@@ -2888,7 +2888,7 @@ void mark_milestone(const string &type, const string &milestone,
             && lastmilestone == milestone)
 #ifndef SCORE_WIZARD_CHARACTERS
         // Don't mark normal milestones in wizmode or explore mode
-        || (type != "crash" && (you.wizard || you.explore))
+        || (type != "crash" && (you.wizard || you.suppress_wizard || you.explore))
 #endif
         )
     {

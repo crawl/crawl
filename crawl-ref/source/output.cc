@@ -1217,6 +1217,8 @@ static void _redraw_title()
     CPRINTF("%s", chop_string(title, WIDTH).c_str());
     if (you.wizard && !small_layout)
         _draw_wizmode_flag("WIZARD");
+    else if (you.suppress_wizard && !small_layout)
+        _draw_wizmode_flag("EX-WIZARD");
     else if (you.explore && !small_layout)
         _draw_wizmode_flag("EXPLORE");
 #ifdef DGL_SIMPLE_MESSAGING
