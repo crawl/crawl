@@ -1017,6 +1017,8 @@ void forget_map(bool rot = false);
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
 
+int xp_to_level_diff(int xp, int scale=1);
+
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
