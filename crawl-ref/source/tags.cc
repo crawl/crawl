@@ -1324,7 +1324,8 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.religion);
     marshallString2(th, you.jiyva_second_name);
 
-    marshallByte(th, you.wizard);
+    // don't save wizmode suppression
+    marshallByte(th, you.wizard || you.suppress_wizard);
 
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())

@@ -1189,7 +1189,7 @@ void mprf_nojoin(const char *format, ...)
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(const char *format, ...)
 {
-    if (Options.quiet_debug_messages[DIAG_NORMAL])
+    if (Options.quiet_debug_messages[DIAG_NORMAL] || you.suppress_wizard)
         return;
 
     va_list argp;
@@ -1200,7 +1200,7 @@ void dprf(const char *format, ...)
 
 void dprf(diag_type param, const char *format, ...)
 {
-    if (Options.quiet_debug_messages[param])
+    if (Options.quiet_debug_messages[param] || you.suppress_wizard)
         return;
 
     va_list argp;

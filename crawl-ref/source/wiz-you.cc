@@ -98,6 +98,13 @@ static xom_event_type _find_xom_event_from_string(const string &event_name)
     return x;
 }
 
+void wizard_suppress()
+{
+    you.wizard = false;
+    you.suppress_wizard = true;
+    redraw_screen();
+}
+
 void wizard_change_job_to(job_type job)
 {
     you.char_class = job;
