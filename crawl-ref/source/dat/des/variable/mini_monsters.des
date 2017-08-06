@@ -1380,7 +1380,7 @@ ENDMAP
 # evil one here?
 NAME:   mikee_hates_you
 TAGS:   no_monster_gen
-DEPTH:  Depths
+DEPTH:  D:13-
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake merfolk avatar
 KMONS:  2 = generate_awake merfolk impaler ; trident ego:distortion w:5 | \
