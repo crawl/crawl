@@ -956,8 +956,8 @@ static void _majin_speak(spell_type spell)
  *
  * @param spell         The type of spell just cast.
  * @param god           Which god is casting the spell; NO_GOD if it's you.
- * @param fake_spell    Whether the spell is evoked, or from an innate or
- *                      divine ability.
+ * @param fake_spell    true if the spell is evoked or from an innate or divine ability
+ *                      false if it is a spell being cast normally.
  */
 static void _spellcasting_side_effects(spell_type spell, god_type god,
                                        bool fake_spell)
@@ -1075,9 +1075,9 @@ static spret_type _do_cast(spell_type spell, int powc, const dist& spd,
  * it can't legally be cast in this circumstance, or because the player opts
  * to cancel it in response to a prompt?
  *
- * @param spell         The spell to be checked.
- * @param fake_spell    Whether the spell is evoked, or from an innate or
- *                      divine ability.
+ * @param spell         The spell to be checked
+ * @param fake_spell    true if the spell is evoked or from an innate or divine ability
+ *                      false if it is a spell being cast normally.
  * @return              Whether the spellcasting should be aborted.
  */
 static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
@@ -1285,7 +1285,9 @@ vector<string> desc_success_chance(const monster_info& mi, int pow, bool evoked,
  *
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
- * @param allow_fail    Whether spell-fail chance applies.
+ * @param allow_fail    true if it is a spell being cast normally.
+ *                      false if the spell is evoked or from an innate or divine ability
+ *
  * @param evoked_item   The wand the spell was evoked from if applicable, or
                         nullptr.
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of

@@ -1068,7 +1068,8 @@ bool spell_is_form(spell_type spell)
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param fake_spell Is the spell evoked, or from an innate or divine ability?
+ * @param fake_spell true if the spell is evoked or from an innate or divine ability
+ *                   false if it is a spell being cast normally.
  * @return           Whether the given spell has no chance of being useful.
  */
 bool spell_is_useless(spell_type spell, bool temp, bool prevent,
@@ -1086,7 +1087,8 @@ bool spell_is_useless(spell_type spell, bool temp, bool prevent,
  *                   (status effects, mana, gods, items, etc.)
  * @param prevent    Whether to only check for effects which prevent casting,
  *                   rather than just ones that make it unproductive.
- * @param fake_spell Is the spell evoked, or from an innate or divine ability?
+ * @param fake_spell true if the spell is evoked or from an innate or divine ability
+ *                   false if it is a spell being cast normally.
  * @return           The reason a spell is useless to the player, if it is;
  *                   "" otherwise. The string should be a full clause, but
  *                   begin with a lowercase letter so callers can put it in
@@ -1344,9 +1346,15 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
     {
         return COL_FORBIDDEN;
     }
+    // Grey out spells for which you lack experience or spell levels.
+    if (spell_difficulty(spell) > you.experience_level
+        || player_spell_levels() < spell_levels_required(spell))
+    {
+        return COL_INAPPLICABLE;
+    }
 
-    if (spell_is_useless(spell, transient))
-        default_colour = COL_USELESS;
+    else if (spell_is_useless(spell, transient))
+        return COL_USELESS;
 
     return default_colour;
 }
