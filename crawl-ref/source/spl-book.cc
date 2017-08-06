@@ -689,10 +689,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
         int colour = LIGHTGRAY;
         if (vehumet_is_offering(spell))
             colour = LIGHTBLUE;
-        // Grey out spells for which you lack experience or spell levels.
-        else if (spell_difficulty(spell) > you.experience_level
-                 || player_spell_levels() < spell_levels_required(spell))
-            colour = DARKGRAY;
         else
             colour = spell_highlight_by_utility(spell);
 
@@ -874,6 +870,11 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 */
 bool learn_spell(spell_type specspell, bool wizard)
 {
+    string mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
+
+    if (mem_spell_warning_string != "")
+        mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
+
     if (!_learn_spell_checks(specspell, wizard))
         return false;
 

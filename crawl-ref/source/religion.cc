@@ -3905,11 +3905,26 @@ bool god_likes_spell(spell_type spell, god_type god)
     }
 }
 
+/**
+ * Does your god hate spellcasting?
+ *
+ * @param god           The god to check against
+ * @return              Whether the god hates spellcasting
+ */
 bool god_hates_spellcasting(god_type god)
 {
     return god == GOD_TROG;
 }
 
+/**
+ * Will your god put you under penance if you actually cast spell?
+ *
+ * @param spell         The spell to check against
+ * @param god           The god to check against
+ * @param fake_spell    true if the spell is evoked or from an innate or divine ability
+ *                      false if it is a spell being cast normally.
+ * @return              true if the god hates the spell
+ */
 bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
 {
     if (god_hates_spellcasting(god))
@@ -3938,6 +3953,13 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
     return false;
 }
 
+/**
+ * Will your god excommunicate you if you actually cast spell?
+ *
+ * @param spell         The spell to check against
+ * @param god           The god to check against
+ * @return              Whether the god loathes the spell
+ */
 bool god_loathes_spell(spell_type spell, god_type god)
 {
     if (spell == SPELL_NECROMUTATION && is_good_god(god))
@@ -3945,6 +3967,27 @@ bool god_loathes_spell(spell_type spell, god_type god)
     if (spell == SPELL_STATUE_FORM && god == GOD_YREDELEMNUL)
         return true;
     return false;
+}
+
+/**
+ * Checks to see if your god hates or loathes this spell,
+ * or just hates spellcasting in general, and returns a warning string
+ *
+ * @param spell         The spell to check against
+ * @param god           The god to check against
+ * @return              Warning string if god has strong opinions on spell
+ *                      Empty string if god doesn't care about spell
+ */
+string god_spell_warn_string(spell_type spell, god_type god)
+{
+    if (god_loathes_spell(spell, god))
+        return "Your god extremely despises this spell!";
+    else if (god_hates_spellcasting(god))
+        return "Your god hates spellcasting!";
+    else if (god_hates_spell(spell, god))
+        return "Your god hates this spell!";
+    else
+        return "";
 }
 
 bool god_hates_ability(ability_type ability, god_type god)
