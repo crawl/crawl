@@ -833,11 +833,17 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 // shouldn't move.
 static command_type _get_non_move_command()
 {
+    // Did we fail to get where we were going?
+    const bool fell_short = you.pos() != you.running.pos;
+
     if (you.running == RMODE_EXPLORE)
         return CMD_NO_CMD;
 
+    // Stop exploring if we fell short of our target (because of a runed
+    // door), but inspect the floor otherwise (because of an item that
+    // could not be picked up).
     if (you.running == RMODE_EXPLORE_GREEDY)
-        return CMD_INSPECT_FLOOR;
+        return fell_short ? CMD_NO_CMD : CMD_INSPECT_FLOOR;
 
     const level_pos curr = level_pos(level_id::current(), you.pos());
 
@@ -847,7 +853,7 @@ static command_type _get_non_move_command()
 
     // If we we're not at our running position and we're not traveled to a
     // transporter, simply stop running.
-    if (you.pos() != you.running.pos && grd(you.pos()) != DNGN_TRANSPORTER)
+    if (fell_short && grd(you.pos()) != DNGN_TRANSPORTER)
         return CMD_NO_CMD;
 
     // We're trying to take the same stairs again, abort.
