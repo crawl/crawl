@@ -86,7 +86,7 @@ for (@files)
     next if /webserver\/static\/scripts\/contrib\//i;
     next if /\.(png|gif|xpm|ttf|ico|icns|fig|tex|eps|pdf|psd)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist|csproj|config|cs)$/i;
-    next if /\.(vcproj|vcproj\.user|vcxproj|vcxproj\.filters)$/i;
+    next if /\.(vcproj|vcproj\.user|vcxproj|vcxproj\.filters|terminal)$/i;
     next if m[(^|/)\.git(modules|attributes)$];
     next if /\.(lex|tab)\./;
     next if !/\./ and !/util\//;
