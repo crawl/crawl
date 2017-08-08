@@ -1219,10 +1219,6 @@ static string _describe_ammo(const item_def &item)
                            "hits into a mindless rage, attacking friend and "
                            "foe alike.";
             break;
-        case SPMSL_RETURNING:
-            description += "A skilled user can throw it in such a way that it "
-                           "will return to its owner.";
-            break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
                            "potentially hitting all targets in its path until "

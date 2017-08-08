@@ -4447,6 +4447,12 @@ void unmarshallItem(reader &th, item_def &item)
         item.brand = SPWPN_NORMAL;
     }
 
+    if (item.base_type == OBJ_MISSILES
+        && item.brand == SPMSL_RETURNING)
+    {
+        item.brand = SPMSL_NORMAL;
+    }
+
     // Not putting these in a minor tag since it's possible for an old
     // random monster spawn list to place flame/frost weapons.
     if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FROST)

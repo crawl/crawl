@@ -624,8 +624,10 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_TOMAHAWK;
     else if (str == "net")
         return FIRE_NET;
+#if TAG_MAJOR_VERSION == 34
     else if (str == "return" || str == "returning")
         return FIRE_RETURNING;
+#endif
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
 

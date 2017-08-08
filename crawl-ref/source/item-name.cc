@@ -387,8 +387,10 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
 #endif
     case SPMSL_FRENZY:
         return "frenzy";
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_RETURNING:
         return t == MBN_TERSE ? "return" : "returning";
+#endif
     case SPMSL_CHAOS:
         return "chaos";
     case SPMSL_PENETRATION:

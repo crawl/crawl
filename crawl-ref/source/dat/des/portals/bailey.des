@@ -67,15 +67,15 @@ end
 
 -- Axes.
 function axe_returning(e)
-  e.mons("generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                  tomahawk ego:returning ident:type q:3 / \
-          generate_awake hobgoblin ; tomahawk ego:returning ident:type q:4 | \
-                                     tomahawk ego:returning ident:type q:3")
+  e.mons("generate_awake kobold ; tomahawk q:12 | \
+                                  tomahawk q:9 / \
+          generate_awake hobgoblin ; tomahawk q:12 | \
+                                     tomahawk q:9")
 end
 
 function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                  tomahawk ego:returning ident:type q:3")
+  e.mons("generate_awake kobold ; tomahawk q:12 | \
+                                  tomahawk q:9")
 end
 
 function easy_axe_fighter(e)
@@ -186,12 +186,12 @@ WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; tomahawk ego:returning ident:type q:4 | \
-                 tomahawk ego:returning ident:type q:3 / \
-        hobgoblin ; tomahawk ego:returning ident:type q:4 | \
-                    tomahawk ego:returning ident:type q:3 / \
-        orc ; tomahawk ego:returning ident:type q:4 | \
-              tomahawk ego:returning ident:type q:3
+MONS:   goblin ; tomahawk q:12 | \
+                 tomahawk q:9 / \
+        hobgoblin ; tomahawk q:12 | \
+                    tomahawk q:9 / \
+        orc ; tomahawk q:12 | \
+              tomahawk q:9
 SUBST: 1 = 122
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -215,8 +215,8 @@ NAME: enter_bailey_5
 TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: goblin ; tomahawk ego:returning ident:type q:4 | \
-               tomahawk ego:returning ident:type q:3
+MONS: goblin ; tomahawk q:12 | \
+               tomahawk q:9
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS: goblin ; spear
@@ -322,8 +322,8 @@ TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: orc ; tomahawk ego:returning ident:type q:3 | \
-            tomahawk ego:returning ident:type q:4 . hand axe
+MONS: orc ; tomahawk q:12 | \
+            tomahawk q:9 . hand axe
 MONS: gnoll ; hand axe / goblin ; hand axe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
@@ -582,8 +582,8 @@ SUBST:   N = nc
 SUBST:   H = W.
 # the following KMONS duplicates monster 1 from kobold_axe_returning
 KFEAT:   ( = exit_bailey
-KMONS:   ( = generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
-                                     tomahawk ego:returning ident:type q:3
+KMONS:   ( = generate_awake kobold ; tomahawk q:12 | \
+                                     tomahawk q:9
 #
 : kobold_axe_returning(_G)
 : easy_axe_fighter(_G)
@@ -956,8 +956,8 @@ ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen no_pool_fixup patrolling
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
-MONS:   centaur ; javelin ego:returning ident:type q:2 | \
-            javelin ego:returning ident:type q:3 . spear | trident | halberd . \
+MONS:   centaur ; javelin q:6 | \
+            javelin q:9 . spear | trident | halberd . \
             ring mail | scale mail | chain mail
 NSUBST: _ = 4:2 / 5:1 / *:.
 NSUBST: ; = 6:2 / 6:1 / *:.

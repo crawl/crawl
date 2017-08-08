@@ -200,7 +200,7 @@ i-antimagic BRAND_ANTIMAGIC
 i-distortion BRAND_DISTORTION
 # Remove when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_REACHING
-# Move i-returning down to missile-only brands when TAG_MAJOR_VERSION > 34
+# Remove when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION

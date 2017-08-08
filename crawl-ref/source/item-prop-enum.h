@@ -473,7 +473,9 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_FROST,
     SPMSL_POISONED,
     SPMSL_CURARE,                      // Needle-only brand
+#if TAG_MAJOR_VERSION == 34
     SPMSL_RETURNING,
+#endif
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
     SPMSL_DISPERSAL,

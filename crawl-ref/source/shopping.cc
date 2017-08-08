@@ -314,7 +314,6 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPMSL_EXPLODING:
             case SPMSL_POISONED:
-            case SPMSL_RETURNING:
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_SLOW:
             case SPMSL_SICKNESS:

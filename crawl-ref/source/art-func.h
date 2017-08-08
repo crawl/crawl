@@ -896,7 +896,7 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 ///////////////////////////////////////////////////
 
 static setup_missile_type _DAMNATION_launch(item_def* item, bolt* beam,
-                                           string* ammo_name, bool* returning)
+                                           string* ammo_name)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
