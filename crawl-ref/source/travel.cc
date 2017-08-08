@@ -210,9 +210,12 @@ static inline bool _is_safe_cloud(const coord_def& c)
 // This is done, so traps etc. will usually be circumvented where possible.
 static inline int _feature_traverse_cost(dungeon_feature_type feature)
 {
-    if (feat_is_closed_door(feature) || feature == DNGN_SHALLOW_WATER
-                                        && (!player_likes_water(true)
-                                            || you.species == SP_MERFOLK))
+    if (feat_is_closed_door(feature)
+        // Higher cost for shallow water if species doesn't like water or if
+        // they are merfolk, since those will prefer to avoid melding their
+        // boots during travel.
+        || feature == DNGN_SHALLOW_WATER
+           && (!player_likes_water(true) || you.species == SP_MERFOLK))
     {
         return 2;
     }
