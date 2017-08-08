@@ -538,12 +538,10 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = random_choose_weighted(32, SPMSL_PENETRATION,
                                     32, SPMSL_POISONED,
                                     21, SPMSL_STEEL,
-                                    20, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL);
         break;
     case MI_TOMAHAWK:
         rc = random_choose_weighted(15, SPMSL_POISONED,
-                                    10, SPMSL_SILVER,
                                     10, SPMSL_STEEL,
                                     12, SPMSL_DISPERSAL,
                                     15, SPMSL_EXPLODING,
@@ -637,8 +635,10 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_EXPLODING:
         return type == MI_TOMAHAWK;
     case SPMSL_STEEL: // deliberate fall through
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SILVER:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
+#endif
     default: break;
     }
 

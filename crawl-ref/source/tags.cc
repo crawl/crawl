@@ -4448,7 +4448,8 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (item.base_type == OBJ_MISSILES
-        && item.brand == SPMSL_RETURNING)
+        && (item.brand == SPMSL_RETURNING
+            || item.brand == SPMSL_SILVER))
     {
         item.brand = SPMSL_NORMAL;
     }

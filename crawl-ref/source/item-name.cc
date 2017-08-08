@@ -337,7 +337,9 @@ static bool _missile_brand_is_prefix(special_missile_type brand)
     case SPMSL_CURARE:
     case SPMSL_EXPLODING:
     case SPMSL_STEEL:
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SILVER:
+#endif
         return true;
     default:
         return false;
@@ -369,8 +371,10 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
         return t == MBN_TERSE ? "explode" : "exploding";
     case SPMSL_STEEL:
         return "steel";
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_SILVER:
         return "silver";
+#endif
     case SPMSL_PARALYSIS:
         return "paralysis";
 #if TAG_MAJOR_VERSION == 34

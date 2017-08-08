@@ -2046,7 +2046,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         default:             return TILE_MI_TOMAHAWK + 1;
         case 0:              return TILE_MI_TOMAHAWK;
         case SPMSL_STEEL:    return TILE_MI_TOMAHAWK_STEEL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:   return TILE_MI_TOMAHAWK_SILVER;
+#endif
         }
 
     case MI_NEEDLE:
@@ -2064,7 +2066,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         default:             return TILE_MI_ARROW + 1;
         case 0:              return TILE_MI_ARROW;
         case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
+#endif
         }
 
     case MI_BOLT:
@@ -2073,7 +2077,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         default:             return TILE_MI_BOLT + 1;
         case 0:              return TILE_MI_BOLT;
         case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
+#endif
         }
 
     case MI_SLING_BULLET:
@@ -2082,7 +2088,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         default:             return TILE_MI_SLING_BULLET + 1;
         case 0:              return TILE_MI_SLING_BULLET;
         case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
+#endif
         }
 
     case MI_JAVELIN:
@@ -2091,7 +2099,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         default:             return TILE_MI_JAVELIN + 1;
         case 0:              return TILE_MI_JAVELIN;
         case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
+#endif
         }
     }
 
@@ -2652,9 +2662,11 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 case SPMSL_STEEL:
                     ch = TILE_MI_SLING_BULLET_STEEL0;
                     break;
+#if TAG_MAJOR_VERSION == 34
                 case SPMSL_SILVER:
                     ch = TILE_MI_SLING_BULLET_SILVER0;
                     break;
+#endif
                 }
                 break;
             case MI_LARGE_ROCK:

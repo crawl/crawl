@@ -297,7 +297,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_CURARE:
             case SPMSL_PARALYSIS:
             case SPMSL_PENETRATION:
+#if TAG_MAJOR_VERSION == 34
             case SPMSL_SILVER:
+#endif
             case SPMSL_STEEL:
             case SPMSL_DISPERSAL:
                 valued *= 30;

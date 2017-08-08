@@ -1237,12 +1237,14 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_STEEL:
             description += "It deals increased damage compared to normal ammo.";
             break;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_SILVER:
             description += "It deals substantially increased damage to chaotic "
                            "and magically transformed beings. It also inflicts "
                            "extra damage against mutated beings, according to "
                            "how mutated they are.";
             break;
+#endif
         }
     }
 

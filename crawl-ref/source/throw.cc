@@ -254,8 +254,10 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     vector<string> descs;
     if (const item_def* item = active_item())
     {
+#if TAG_MAJOR_VERSION == 34
         if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
             descs.emplace_back("chaotic");
+#endif
         if (item->is_type(OBJ_MISSILES, MI_THROWING_NET)
             && (mi.body_size() >= SIZE_GIANT
                 || mons_class_is_stationary(mi.type)
