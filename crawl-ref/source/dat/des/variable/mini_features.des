@@ -2566,6 +2566,102 @@ MAP
 ....    ....
 ENDMAP
 
+NAME: chequers_decorated_corner
+TAGS: decor extra
+DEPTH: D, Depths
+SUBST: T = T:3 V:3 G:1
+MAP
+xxxxxxxxxx
+x.......G@
+x.TG.....@
+x.Gxxxxxxx
+x..x
+xG.x
+x@@x
+ENDMAP
+
+NAME: chequers_jeans
+TAGS: decor extra
+DEPTH: D, Depths
+SUBST: G = G.$
+MAP
+....@....
+.xxxxxxx.
+.xxxGxxx.
+.xxx.xxx.
+.xxx.xxx.
+.xxx.xxx.
+.xx...xx.
+.xx...xx.
+.xx...xx.
+.xx...xx.
+.xx...xx.
+.........
+ENDMAP
+
+NAME: chequers_mini_garden
+TAGS: decor extra
+DEPTH: D
+COLOUR: g = green
+FTILE:  g = floor_grass
+SUBST:  g = . t
+FTILE:  . = floor_dirt / floor_grass / none
+COLOUR: . = brown / green / none
+MAP
+....
+.gg.
+.gg.
+....
+ENDMAP
+
+NAME: chequers_garden
+TAGS: decor extra
+DEPTH: D
+COLOUR: g = green
+FTILE:  g = floor_grass
+SUBST:  g = . t
+FTILE:  . = floor_dirt / floor_grass / none
+COLOUR: . = brown / green / none
+MAP
+........
+........
+..gggg..
+..gg.g..
+..g.gg..
+..gggg..
+........
+........
+ENDMAP
+
+NAME: chequers_avenue
+TAGS: decor extra
+DEPTH: D
+SUBST: t = G:3 t
+SHUFFLE: tG
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+.t.t.t.t.t.t.t.t.t.t.t.t.
+@.......................@
+.t.t.t.t.t.t.t.t.t.t.t.t.
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   chequers_arboreum
+TAGS:   decor extra no_item_gen no_monster_gen
+PLACE:  D:1
+DEPTH:  D
+FTILE:  . = floor_grass
+COLOUR: . = green
+SUBST:  . = t.
+MAP
+xxx+xxx
+x.....x
+x.....x
+x.....x
+x.....x
+xxxxxxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
