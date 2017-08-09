@@ -10,6 +10,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "beam.h"
 #include "butcher.h"
 #include "cloud.h"
 #include "colour.h"
@@ -124,6 +125,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 
     fail_check();
 
+    beam.apply_beam_conducts();
     beam.refine_for_explosion();
     beam.explode(false);
 
@@ -1891,6 +1893,7 @@ spret_type cast_ignition(const actor *agent, int pow, bool fail)
         beam_actual.ex_size       = 0;
         beam_actual.is_explosion  = true;
         beam_actual.loudness      = 0;
+        beam_actual.apply_beam_conducts();
 
 #ifdef DEBUG_DIAGNOSTICS
         dprf(DIAG_BEAM, "ignition dam=%dd%d",
