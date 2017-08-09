@@ -695,6 +695,8 @@ void bolt::apply_beam_conducts()
             break;
         case BEAM_FIRE:
         case BEAM_STICKY_FLAME:
+        case BEAM_LAVA:
+        case BEAM_INNER_FLAME:
             did_god_conduct(DID_FIRE,
                             pierce || is_explosion ? 6 + random2(3)
                                                    : 2 + random2(3),
