@@ -25,6 +25,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "stat-type.h"
 #include "state.h"
 #include "stringutil.h"
@@ -689,4 +690,131 @@ bool have_stat_zero()
             return true;
 
     return false;
+}
+
+/* 
+ * Gnoll ability to shift three points from one attribute to another,
+ * becoming drained if successful.
+ */
+spret_type gnoll_shift_attributes()
+{
+    stat_type source_attribute;
+    stat_type destination_attribute;
+    int keyin;
+#ifdef TOUCH_UI
+    Popup *pop = new Popup("Shift Attributes");
+    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
+    pop->push_entry(new MenuEntry(stat_gain_message + " Shift from:", MEL_TITLE));
+    pop->push_entry(status);
+    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
+    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
+    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
+    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X', false);
+    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+    pop->push_entry(me);
+#else
+    mprf(MSGCH_PROMPT, "Shift from (S)trength, (I)ntelligence, or (D)exterity? ");
+#endif
+    mouse_control mc(MOUSE_MODE_PROMPT);
+#ifdef TOUCH_UI
+    keyin = pop->pop();
+#else
+    keyin = getchm();
+#endif
+    switch (keyin)
+    {
+    case 's':
+    case 'S':
+        source_attribute = STAT_STR;
+        break;
+
+    case 'i':
+    case 'I':
+        source_attribute = STAT_INT;
+        break;
+
+    case 'd':
+    case 'D':
+        source_attribute = STAT_DEX;
+        break;
+
+    case 'X':
+    default:
+        mprf(MSGCH_PROMPT, "Okay, then.");
+        return SPRET_ABORT;
+    }
+    //Cannot shift into stat zero or below
+    if ((you.stat(source_attribute) - 3) <= 0 )
+    {
+        mprf("You do not have enough %s to transfer!", _stat_name(source_attribute).c_str());
+        return SPRET_ABORT;
+    }
+#ifdef TOUCH_UI
+    Popup *pop = new Popup("Shift Attributes");
+    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
+    pop->push_entry(new MenuEntry(stat_gain_message + " Shift to:", MEL_TITLE));
+    pop->push_entry(status);
+    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
+    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
+    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
+    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X', false);
+    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+    pop->push_entry(me);
+#else
+    mprf(MSGCH_PROMPT, "Shift to (S)trength, (I)ntelligence, or (D)exterity? ");
+#endif
+    mouse_control mc2(MOUSE_MODE_PROMPT);
+#ifdef TOUCH_UI
+    keyin = pop->pop();
+#else
+    keyin = getchm();
+#endif
+
+    switch (keyin)
+    {
+    case 's':
+    case 'S':
+        destination_attribute = STAT_STR;
+        break;
+
+    case 'i':
+    case 'I':
+        destination_attribute = STAT_INT;
+        break;
+
+    case 'd':
+    case 'D':
+        destination_attribute = STAT_DEX;
+        break;
+
+    case 'X':
+    default:
+        mprf(MSGCH_PROMPT, "Okay, then.");
+        return SPRET_ABORT;
+    }
+
+    if (source_attribute == destination_attribute)
+    {
+        mpr("You don't feel any different.");
+        return SPRET_ABORT;
+    }
+    else
+    {
+        modify_stat(source_attribute, -3, false);
+        modify_stat(destination_attribute, 3, false);
+        drain_player(75, true, true);
+        return SPRET_SUCCESS;
+    }
 }

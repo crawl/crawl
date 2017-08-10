@@ -71,9 +71,10 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     7, 7, 7, // 21
     { STAT_STR }, 28,  // No natural stat gain, STR is a placeholder
-    { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, },
-    { "Your physical attributes are unchanging."},
-    { "unchanging attributes" },
+    { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, 
+      { MUT_ADAPTATION, 1, 9 }, },
+    { "Your attributes cannot be modified by external sources.", },
+    { "unmodifiable attributes", },
     { JOB_SKALD, JOB_WARPER, JOB_ARCANE_MARKSMAN, JOB_TRANSMUTER,
       JOB_WANDERER },
     { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,

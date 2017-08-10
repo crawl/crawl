@@ -1718,12 +1718,13 @@ Gnolls
 
   Gnolls excel at learning quickly, allowing them to master any skill in a short
   period of time. Unfortunately, the Dungeon has had an especially adverse
-  effect on their bodies over the generations compared to other species. Their
-  physical attributes have become severly impaired and are unable to be altered
-  in any way, even through magic or the power of the gods.
-
-  On the bright side, their powerful noses have adapted to the Dungeon's scents,
-  allowing them to easily locate where treasures lay hidden.
+  effect on their bodies over the generations compared to other residents. Their
+  physical attributes have become severly impaired, unable to be affected by any
+  outside sources. However, stronger gnolls eventually learn to shift their
+  attributes around to adapt to any situation.
+  
+  Finally, their powerful noses have adapted to the Dungeon's scents to easily 
+  locate where rare treasures lie hidden.
 
 The Undead
 ========================================
