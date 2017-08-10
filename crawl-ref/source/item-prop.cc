@@ -814,6 +814,19 @@ bool item_known_cursed(const item_def &item)
            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
+// If item is a new unrand, takes a note of it and returns true.
+// Otherwise, takes no action and returns false.
+static bool _maybe_note_found_unrand(const item_def &item)
+{
+    if (is_unrandom_artefact(item) && !(item.flags & ISFLAG_SEEN))
+    {
+        take_note(Note(NOTE_FOUND_UNRAND, 0, 0, item.name(DESC_THE),
+                       origin_desc(item)));
+        return true;
+    }
+    return false;
+}
+
 /**
  * Is the provided item cursable? Note: this function would leak
  * information about unidentified holy wrath weapons, which is alright
@@ -1087,9 +1100,12 @@ void set_ident_flags(item_def &item, iflags_t flags)
             && !get_ident_type(item)
             && is_interesting_item(item))
         {
-            // Make a note of it.
-            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
-                           origin_desc(item)));
+            if (!_maybe_note_found_unrand(item))
+            {
+                // Make a note of this non-unrand item
+                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A),
+                               origin_desc(item)));
+            }
 
             // Sometimes (e.g. shops) you can ID an item before you get it;
             // don't note twice in those cases.
@@ -3015,12 +3031,16 @@ void seen_item(const item_def &item)
         }
     }
 
+    _maybe_note_found_unrand(item);
+
     // major hack. Deconstify should be safe here, but it's still repulsive.
-    const_cast<item_def &>(item).flags |= ISFLAG_SEEN;
+    item_def& malleable_item = const_cast<item_def &>(item);
+
+    malleable_item.flags |= ISFLAG_SEEN;
     if (have_passive(passive_t::identify_items))
-        const_cast<item_def &>(item).flags |= ISFLAG_KNOW_CURSE;
+        malleable_item.flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
-        const_cast<item_def &>(item).plus = (you_worship(GOD_ZIN)) ? 2 : 1;
+        malleable_item.plus = (you_worship(GOD_ZIN)) ? 2 : 1;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)
