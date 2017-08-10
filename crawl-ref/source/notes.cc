@@ -109,7 +109,8 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC
         || note.type == NOTE_OFFERED_SPELL
-        || note.type == NOTE_ANCESTOR_TYPE)
+        || note.type == NOTE_ANCESTOR_TYPE
+        || note.type == NOTE_FOUND_UNRAND)
     {
         return true;
     }
@@ -367,6 +368,9 @@ string Note::describe(bool when, bool where, bool what) const
                    << " " << name << " death";
             break;
 #endif
+          case NOTE_FOUND_UNRAND:
+            result << "Found " << name;
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
