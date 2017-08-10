@@ -534,7 +534,7 @@ void wizard_value_item()
 
 void wizard_create_all_artefacts()
 {
-    you.octopus_king_rings = 0;
+    you.octopus_king_rings = 0x00;
     int octorings = 8;
 
     // Create all unrandarts.
