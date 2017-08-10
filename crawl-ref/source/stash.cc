@@ -1308,7 +1308,7 @@ static bool _compare_by_name(const stash_search_result& lhs,
         return lhs.primary_sort < rhs.primary_sort;
     }
     else if (!_is_duplicate_for_search(lhs, rhs, true))
-        // are the matches equal for most cases?
+        // are the matches not equal for deduplication purposes?
     {
         // Then sort by 1. whether the item is in a shop, and 2. the full
         // stash description (which is DESC_A plus other stuff). The shop
