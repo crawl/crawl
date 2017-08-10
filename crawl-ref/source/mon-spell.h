@@ -290,7 +290,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_BEAR,
       {
-       { SPELL_BERSERKER_RAGE, 57, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
+       { SPELL_BERSERKER_RAGE, 100, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
       }
     },
 
