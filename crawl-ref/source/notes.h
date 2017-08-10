@@ -59,6 +59,7 @@ enum NOTE_TYPES
     NOTE_ANCESTOR_DEATH,        /* needs: ancestor death (string) */
     NOTE_ANCESTOR_SPECIALIZATION, /* needs: ancestor specialization (string) */
 #endif
+    NOTE_FOUND_UNRAND,          /* needs: item name (string) */
     NOTE_NUM_TYPES
 };
 
