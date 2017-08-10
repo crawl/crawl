@@ -1720,7 +1720,7 @@ static jewellery_type octoring_types[8] =
 
 static void _make_octoring(item_def &item)
 {
-    if (you.octopus_king_rings == 255)
+    if (you.octopus_king_rings == 0xff)
     {
         ASSERT(you.wizard || you.suppress_wizard || crawl_state.test);
         item.sub_type = octoring_types[random2(8)];
@@ -1736,7 +1736,7 @@ static void _make_octoring(item_def &item)
     you.octopus_king_rings |= 1 << which;
 
     // If there are any types left, unset the 'already found' flag
-    if (you.octopus_king_rings != 255)
+    if (you.octopus_king_rings != 0xff)
         _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, UNIQ_NOT_EXISTS);
 }
 
