@@ -1258,9 +1258,11 @@ static bool _is_duplicate_for_search(stash_search_result l, stash_search_result 
         l.item.base_type == OBJ_MISSILES
         && r.item.base_type == OBJ_MISSILES
         && l.item.sub_type == r.item.sub_type
-        && l.item.brand == r.item.brand)
+        && l.item.brand == r.item.brand
+        && is_shop_item(l.item) == is_shop_item(r.item))
     {
-        // special handling for missiles -- ignore stacking for deduplication
+        // Special handling for missile deduplication: ignore that stacks
+        // of different sizes have different "names".
         return true;
     }
     // Otherwise just use the search result description.
@@ -1305,10 +1307,19 @@ static bool _compare_by_name(const stash_search_result& lhs,
         // Sort first by DESC_QUALNAME for items
         return lhs.primary_sort < rhs.primary_sort;
     }
-    else if (!_is_duplicate_for_search(lhs, rhs, true)) // this fun checks whether the matches are equal for most cases
+    else if (!_is_duplicate_for_search(lhs, rhs, true))
+        // are the matches equal for most cases?
     {
-        // Then sort by full stash description (which is DESC_A plus other stuff)
-        return lhs.match < rhs.match;
+        // Then sort by 1. whether the item is in a shop, and 2. the full
+        // stash description (which is DESC_A plus other stuff). The shop
+        // check is there so that non-shop ammo (which isn't considered a
+        // search duplicate for shop ammo) will be adjacent, and thus
+        // collapsible, in _stash_filter_duplicates.
+        const bool l_shop = is_shop_item(lhs.item);
+        const bool r_shop = is_shop_item(rhs.item);
+
+        return !l_shop && r_shop
+            || l_shop == r_shop && lhs.match < rhs.match;
     }
     else if (lhs.player_distance != rhs.player_distance)
     {
