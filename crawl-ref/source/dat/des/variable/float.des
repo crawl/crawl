@@ -4309,19 +4309,19 @@ MAP
 ENDMAP
 
 NAME:   nzn_motion_control
-TAGS:   no_pool_fixup no_trap_gen no_monster_gen
+TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  D:10-, Lair:4-, Shoals:2-, !Shoals:$
 ORIENT: float
-NSUBST: { = 1:{ / *:S
-SHUFFLE: HY/12, $/%, eE/rR
+NSUBST: { = 1:{ / *:W
+SHUFFLE: HY / 12, $%, eE / rR
 SUBST:  ER = ., r = x, e = + .
 : if you.in_branch("Shoals") then
 NSUBST: S = 1:s / *:W
 KFEAT:  s = W
 KMONS:  s = merfolk avatar
-SUBST:  $ = % $:20, H = 1, Y = 2, % = %:40 *
+SUBST:  $ = % $:20, % = %:40 *, H = 1, Y = 2
 : elseif you.absdepth() < 12 then
-SUBST:  % = $:30 .:15 %:5, H = ., Y = ., S = .
+SUBST:  % = $:30 .:15 %:5, HYS = .
 : else
 SUBST:  $ = $:20 %:5, H = 1, Y = 2, S = .
 : end
@@ -4331,15 +4331,15 @@ xxxxxE@Exxxxx
 xH..xxExx..2x
 x.%WWxexWW$.x
 x.WSSwSwSSW.x
-xxWSSSSSSSWxx
-RxxwSS{SSwxxR
-@RrSS{S{SSrR@
-RxxwSS{SSwxxR
-xxWSSSSSSSWxx
+xxWSSWWWSSWxx
+RxxwWW{WWwxxR
+@RrSW{W{WSrR@
+RxxwWW{WWwxxR
+xxWSSWWWSSWxx
 x.WSSwSwSSW.x
 x.$WWxexWW%.x
 x1..xxExx..Yx
-xxxxxE@Exxxxx  
+xxxxxE@Exxxxx
 ENDMAP
 
 ###############################################################################
