@@ -8902,37 +8902,37 @@ vvvvvvvvv..@..vvvvvvvvv
 ENDMAP
 
 NAME:   nzn_random_ring
+TAGS:   no_pool_fixup no_monster_gen no_trap_gen
 DEPTH:  D:4-, !D:$, Depths, !Depths:$, Lair, !Lair:$, Zot, !Zot:$
-TAGS: no_pool_fixup no_monster_gen no_item_gen no_trap_gen
-NSUBST: A = 6:0 / 2:^ / 1:r / *:., B = 20:W / 12:w
+NSUBST: A = 4:0 / 4 = 0. / 2:^ / 1:r / *:., B = 20:W / 12:w
 NSUBST: C = 1:8 / 6:0 / 2:r / *:., D = 2:^ / 2:r / *:.
-NSUBST: h = 2:+ / *:c, j = 2:. / 7:x / 13:c / *:v
-NSUBST: k = 1:+ / 6:v / 6:b / *:c, E = 2:0 / 2:8 / 2:r / *:.
+NSUBST: h = 2:+ / *:c, j = 2:. / *:cv
+NSUBST: k = 1:+ / *:vbc, E = 2:0 / 2:8 / 2:r / *:.
 NSUBST: H = 1:C / 1:} / 1:R / 1:1
 SUBST:  F = wl
-NSUBST: G = 1:2 / *:G
+NSUBST: 2 = 1:2 / *:G
 :  if you.absdepth() < 8 then
-SHUFFLE: wW/SS
-SUBST:  8 = 0, S = ., 1 = 8:40 9, r = $:30 % ., R = %:30 *, ^ = ^ ., 2 = G
+SHUFFLE: wW / SS
+SUBST:  8 = 0, S = ., 1 = 8:40 9, r = $:30 % ., R = %:30 *, ^ = ^., 2 = G
 KFEAT:  ^ = shaft trap / teleport trap / alarm trap
 :  elseif you.in_branch("Dungeon") then
-SHUFFLE: wW/SS, }/>
+SHUFFLE: wW / SS, }>
 SUBST:  8 = 0:30 8, 1 = 8:40 9, S = ., r = $ % ., R = $ %:30 *:2, 2 = G:50 1
 KFEAT:  ^ = shaft trap / alarm trap / teleport trap
 MONS:   ice statue
 :  elseif you.in_branch("Lair") then
-SHUFFLE: }/>, Ww/SS
-SUBST:  1 = 8:40 9, S = ., r = $ % .:20, R = % *, ^ = ., 2G = .
+SHUFFLE: Ww / SS, }>
+SUBST:  1 = 8:40 9, S = ., r = $% .:20, R = % *, ^ = ., 2G = .
 :  elseif you.in_branch("Depths") then
-SUBST:  r = $ %, R = *:30 |, 2 = G:50 2
-SHUFFLE: Ww/ll
-KFEAT:  ^ = shaft trap / alarm trap / zot trap
 MONS:   juggernaut / ancient lich / golden dragon
 MONS:   obsidian statue / orange crystal statue
+SHUFFLE: Ww / ll
+SUBST:  r = $%, R = *:30 |, 2 = G:50 2
+KFEAT:  ^ = shaft trap / alarm trap / zot trap
 :  elseif you.in_branch("Zot") then
-SUBST:  r = % $ ., wW = l, ^ = ^ ., R = ], C = ), 2 = G:50 2
-KFEAT:  ^ = zot trap
 MONS:   ancient lich / orb of fire, orange crystal statue
+SUBST:  r = %$., wW = l, ^ = ^., R = ], C = ), 2 = G:50 2
+KFEAT:  ^ = zot trap
 :  end
 MAP
         hhhhhhhh
@@ -8941,14 +8941,14 @@ MAP
   hhhAAAjjjCCjjjBAAhhh
  hhAAAAjjCCDDCCjjAAAAhh
 hhABAAjjCGkkkkGCjjAABAhh
-hAAABjjCGkkEEkkGCjjBAAAh
+hAAABjjCCkkEEkkCCjjBAAAh
 hBAAAjCCkkFEEFkkCCjAAABh
-hABBAjCDkEEmmEEkDCjABBAh
+hABBAj2DkEEmmEEkD2jABBAh
 hAAABjDCkFEHHEFkCDjBAAAh
 hAAABjDCkFEHHEFkCDjBAAAh
-hABBAjCDkEEmmEEkDCjABBAh
+hABBAj2DkEEmmEEkD2jABBAh
 hBAAAjCCkkFEEFkkCCjAAABh
-hAAABjjCGkkEEkkGCjjBAAAh
+hAAABjjCCkkEEkkCCjjBAAAh
 hhABAAjjCGkkkkGCjjAABAhh
  hhAAAAjjCCDDCCjjAAAAhh
   hhhAABjjjCCjjjBAAhhh
