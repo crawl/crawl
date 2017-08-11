@@ -2095,3 +2095,75 @@ E.....WWwwwWW.....E
 x....WwwwwwwwW....x
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:   giann_horns   
+TAGS:   arrival no_monster_gen
+ORIENT: float
+MAP
+x@xx...................xx@x
+x..xx.................xx..x
+x...xx..G..xx+xx..G..xx...x
+x....xx...xx...xx...xx....x
+x.....xxxxx.....xxxxx.....x
+x............{............x
+xx.......................xx
+ xxxxxxxxxxxx+xxxxxxxxxxxx
+ENDMAP
+
+NAME:   giann_bridges
+TAGS:   arrival no_monster_gen
+MONS:   plant
+ORIENT: float
+MAP
+.........................
+.1wwwwwwww1...1wwwwwwww1.
+.wwwWWWWwww...wwwWWWWwww.
+.wwwWWWWwww...wwwWWWWwww.
+.1wwwwwwww.....wwwwwwww1.
+............{............
+.1wwwwwwww.....wwwwwwww1.
+.wwwWWWWwww...wwwWWWWwww.
+.wwwWWWWwww...wwwWWWWwww.
+.1wwwwwwww1...1wwwwwwww1.
+.........................
+ENDMAP
+
+NAME:   giann_wishing_wells
+TAGS:   arrival no_monster_gen no_item_gen no_rotate
+KITEM:  $ = gold q:1
+SUBST:  S = $.
+ORIENT: float
+MAP
+xxxxxxxxxxx+xxxxxxxxxxx
+x........xG.Gx........x
+x...S....x...x....S...x
+x..STS...xx+xx...STS..x
+xx..S.............S..xx
+ xxxxxx....{....xxxxxx 
+      xx.......xx
+       xxxxxxxxx
+ENDMAP
+
+NAME:   giann_forest_graveyard
+TAGS:   arrival no_monster_gen
+MONS:   plant
+ORIENT: float
+SUBST:  s = hhh..
+: dgn.delayed_decay(_G, 'h', 'human skeleton')
+MAP
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+ tt.......................tt 
+ tt..G..G...........G..G..tt 
+ tt...ss.............ss...tt 
+ttt...ss.............ss...ttt
+tt...G..G...........G..G...tt
+tt............{............tt
+tt...G..G...........G..G...tt
+ttt...ss.............ss...ttt
+ tt...ss.............ss...tt 
+ tt..G..G...........G..G..tt 
+ tt.......................tt 
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+ENDMAP
