@@ -3181,32 +3181,32 @@ ENDMAP
 NAME:   nzn_arrival_settlement
 TAGS:   arrival no_monster_gen no_trap_gen
 ORIENT: float
-SUBST:  g = d '
-SHUFFLE: T/G
+SUBST:  a = -'
+SHUFFLE: TG
 : if crawl.coinflip() then
-SUBST:  ha = ', 3 = t, 24 = ., 15 = d, VQHi6 = x, C = @, IS = A
+SUBST:  de = ', f = t, gh = ., ij = -, kpqr = x, s = @, uy = A
 : else
-SUBST: 45hCS = x, Ii23 = d, aQ = A, 1H = ., V = @
+SUBST: dhjsy = x, gfru = -, ep = A, iq = ., k = @
 : end
-FTILE:  dG = floor_dirt, t'T = floor_grass
-COLOUR: ' = green, d = brown
+FTILE:  -G = floor_dirt, 'Tt = floor_grass
+COLOUR: ' = green, - = brown
 MAP
-               xVx
-            xxxxQxxx
-   xCx   xxxxH1i66xxx
-  xxSxxxxxdx.HIH.''txx
- xx4551..xAx.d..'gg'tx
- x444..11...d..'gtgggx
- xhhh....1.d....ggggtx
- xh3a22222d......g.ggx
- xhah..'..d.ddd.....xx
-xx'2..'t'.dddTddddddxx
-xt'.2..'.d..ddd.''xAx
-xt'..22.d......'txxx@
-xx'....d.......'xx
- xwdd.d....gggggx
- xxx.{..g.ggt''tx
-   xx..ggggg'''gx
-    xxggtggggtgxx
+               xkx
+            xxxxpxxx
+   xsx   xxxxqirrqxxx
+  xxyxxxxx-x.rur.''txx
+ xxhjjii.xAx--i.'aa'tx
+ xhhh..iii---..'ataaax
+ xddd.....-.....aaaatx
+ xdfeggggg-......a.aax
+ xded..'..-.---.....xx
+xx'g..'t'----T------xx
+xt'gg..'--..---.''xAx
+xt'.ggg--......'txxx@
+xx'...--.......'xx
+ xw----....aaaaax
+ xxx.{..a.aat''tx
+   xx..aaaaa'''ax
+    xxaataaaataxx
      xxxxxxxxxxx
 ENDMAP
