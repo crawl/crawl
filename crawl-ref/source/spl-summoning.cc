@@ -63,6 +63,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "timed-effects.h"
+#include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -2990,6 +2991,34 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                 canned_msg(MSG_GHOSTLY_OUTLINE);
         }
         return SPRET_SUCCESS;      // Don't give free detection!
+    }
+
+    // check for traps
+    // TODO: combine with above
+    const trap_def *ptrap = trap_at(where);
+    if (ptrap)
+    {
+        const trap_def& trap = *ptrap;
+        const bool player_knows_trap = (trap.is_known(&you));
+
+        // Only shaft and teleport traps should prevent prisms from being placed
+        if (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT || trap.type == TRAP_SHAFT)
+        {
+            // can you see the trap?
+            if (player_knows_trap)
+            {    // then tell them straight up they can't target it
+                if (caster->is_player())
+                    mpr("You can't place the prism on this trap.");
+                return SPRET_ABORT;
+            }
+            else // Flavor text
+            {
+                //canned_msg(MSG_GHOSTLY_TRAP);
+                mpr("GHOSTLY TRAP");
+            }
+            // we charge mana for the detection of the trap
+            return SPRET_SUCCESS;
+        }
     }
 
     fail_check();
