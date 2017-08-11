@@ -639,7 +639,7 @@ void bolt::initialise_fire()
             && !crawl_state.is_god_acting()
             && (!mon || !mon->observable()))
         {
-            mprf("%s appears from out of thin air!",
+            mprf("옅은 대기에서 %s이(가) 나타났다!",
                  article_a(name, false).c_str());
         }
     }
@@ -827,7 +827,7 @@ void bolt::digging_wall_effect()
             {
                 if (!silenced(you.pos()))
                 {
-                    mprf(MSGCH_SOUND, "You hear a grinding noise.");
+                    mprf(MSGCH_SOUND, "당신은 무언가를 갈아대는 소음을 들었다.");
                     obvious_effect = true; // You may still see the caster.
                     msg_generated = true;
                 }
@@ -841,7 +841,7 @@ void bolt::digging_wall_effect()
             if (feat == DNGN_GRATE)
             {
                 // XXX: should this change for monsters?
-                mpr("The damaged grate falls apart.");
+                mpr("손상된 쇠창살이 부숴졌다.");
                 return;
             }
             else if (feat == DNGN_SLIMY_WALL)
@@ -851,8 +851,8 @@ void bolt::digging_wall_effect()
             else
                 wall = "rock";
 
-            mprf("%s %s shatters into small pieces.",
-                 agent() && agent()->is_player() ? "The" : "Some",
+            mprf("%s %s이(가) 산산조각났다.",
+                 agent() && agent()->is_player() ? "" : "몇몇",
                  wall.c_str());
         }
     }
@@ -1240,7 +1240,7 @@ void bolt::do_fire()
 
         if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
         {
-            mprf("%s appears from out of your range of vision.",
+            mprf("%s이(가) 당신의 시야 범위 밖에서 나타났다.",
                  article_a(name, false).c_str());
         }
 
@@ -1994,7 +1994,7 @@ static bool _curare_hits_player(actor* agent, int levels, string name,
 
         if (hurted)
         {
-            mpr("You have difficulty breathing.");
+            mpr("당신은 숨쉬기가 어렵다.");
             ouch(hurted, KILLED_BY_CURARE, agent->mid,
                  "curare-induced apnoea");
         }
@@ -2242,7 +2242,7 @@ static void _maybe_imb_explosion(bolt *parent, coord_def center)
         if (first && !beam.is_tracer)
         {
             if (you.see_cell(center))
-                mpr("The orb of energy explodes!");
+                mpr("에너지의 구가 폭발했다!");
             noisy(spell_effect_noise(SPELL_ISKENDERUNS_MYSTIC_BLAST),
                   center);
             first = false;
@@ -2271,7 +2271,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     // The victim may die.
     coord_def c = victim->pos();
 
-    mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
+    mprf("%s의 생명력이 제물로 바쳐졌다.", victim->name(DESC_ITS).c_str());
     damage = victim->hurt(agent, damage, BEAM_MALIGN_OFFERING, KILLED_BY_BEAM,
                           "", "by a malign offering");
 
@@ -2285,8 +2285,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
         {
             if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(**ai))
             {
-                mprf("%s %s healed.", ai->name(DESC_THE).c_str(),
-                                      ai->conj_verb("are").c_str());
+                mprf("%s %s 회복되었다.", ai->name(DESC_PLAIN).c_str(),
+                                      ai->conj_verb("은(는)").c_str());
             }
         }
     }
@@ -2479,7 +2479,7 @@ void bolt::affect_endpoint()
     case SPELL_PRIMAL_WAVE:
         if (you.see_cell(pos()))
         {
-            mpr("The wave splashes down.");
+            mpr("흔들림이 가라앉았다.");
             noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
         }
         else
@@ -2533,8 +2533,8 @@ void bolt::drop_object()
     {
         if (you.see_cell(pos()))
         {
-            mprf("%s %s!",
-                 item->name(DESC_THE).c_str(),
+            mprf("%s은(는) %s!",
+                 item->name(DESC_PLAIN).c_str(),
                  summoned_poof_msg(agent() ? agent()->as_monster() : nullptr,
                                    *item).c_str());
         }
@@ -2615,7 +2615,7 @@ void bolt::affect_ground()
             {
                 remove_mold(pos());
                 if (you.see_cell(pos()))
-                    mpr("A fungus suddenly grows.");
+                    mpr("버섯이 순식간에 자라났다.");
 
             }
         }
@@ -2678,7 +2678,7 @@ void bolt::affect_place_clouds()
             || (cloud->type == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
-                mprf(MSGCH_SOUND, "You hear a sizzling sound!");
+                mprf(MSGCH_SOUND, "당신은 지글거리는 소리를 들었다!");
 
             delete_cloud(p);
             extra_range_used += 5;
@@ -3122,9 +3122,9 @@ bool bolt::misses_player()
     if (is_explosion || aimed_at_feet || auto_hit)
     {
         if (hit_verb.empty())
-            hit_verb = engulfs ? "engulfs" : "hits";
+            hit_verb = engulfs ? "삼켰다" : "타격했다";
         if (flavour != BEAM_VISUAL && !is_enchantment())
-            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+            mprf("%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
         return false;
     }
 
@@ -3179,20 +3179,20 @@ bool bolt::misses_player()
             {
                 if (shield && is_shield(*shield) && shield_reflects(*shield))
                 {
-                    mprf("Your %s reflects the %s!",
+                    mprf("당신의 %s은(는) %s을(를) 반사했다!",
                             shield->name(DESC_PLAIN).c_str(),
                             refl_name.c_str());
                 }
                 else
                 {
-                    mprf("The %s reflects off an invisible shield around you!",
+                    mprf("%s은(는) 당신 주위의 보이지 않는 방패에 반사되었다!",
                             refl_name.c_str());
                 }
                 reflect();
             }
             else
             {
-                mprf("You block the %s.", name.c_str());
+                mprf("당신은 %s을(를) 막았다.", name.c_str());
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
@@ -3217,13 +3217,13 @@ bool bolt::misses_player()
 
     if (!_test_beam_hit(real_tohit, dodge, pierce, 0, r))
     {
-        mprf("The %s misses you.", name.c_str());
+        mprf("%s이(가) 당신을 빗겨나갔다.", name.c_str());
         count_action(CACT_DODGE, DODGE_EVASION);
     }
     else if (defl && !_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
         // active voice to imply stronger effect
-        mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
+        mprf(defl == 1 ? "%s이(가) 튕겨나갔다." : "당신은 %s을(를) 흘려보냈다!",
              name.c_str());
         you.ablate_deflection();
         count_action(CACT_DODGE, DODGE_DEFLECT);
@@ -3233,12 +3233,12 @@ bool bolt::misses_player()
         int dodge_more = you.evasion(EV_IGNORE_HELPLESS);
 
         if (hit_verb.empty())
-            hit_verb = engulfs ? "engulfs" : "hits";
+            hit_verb = engulfs ? "삼켰다" : "타격했다";
 
         if (_test_beam_hit(real_tohit, dodge_more, pierce, defl, r))
-            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+            mprf("%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
         else
-            mprf("Helpless, you fail to dodge the %s.", name.c_str());
+            mprf("무기력하게도 당신은 %s을(를) 피하지 못했다.", name.c_str());
 
         miss = false;
     }
@@ -3261,9 +3261,9 @@ void bolt::affect_player_enchantment(bool resistible)
             const monster* mon = monster_by_mid(source_id);
             if (mon && !mon->observable())
             {
-                mprf("Something tries to affect you, but you %s.",
-                     you.res_magic() == MAG_IMMUNE ? "are unaffected"
-                                                   : "resist");
+                mprf("무언가가 당신에게 뭔가를 하려고 했지만 당신은 %s.",
+                     you.res_magic() == MAG_IMMUNE ? "아무런 영향도 받지 않았다"
+                                                   : "저항했다");
                 need_msg = false;
             }
         }
@@ -3275,7 +3275,7 @@ void bolt::affect_player_enchantment(bool resistible)
             {
                 // the message reflects the level of difficulty resisting.
                 const int margin = you.res_magic() - ench_power;
-                mprf("You%s", you.resist_margin_phrase(margin).c_str());
+                mprf("당신은%s", you.resist_margin_phrase(margin).c_str());
             }
         }
         // You *could* have gotten a free teleportation in the Abyss,
@@ -3317,7 +3317,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_MALMUTATE:
     case BEAM_UNRAVELLED_MAGIC:
-        mpr("Strange energies course through your body.");
+        mpr("기묘한 에너지가 당신의 몸을 통과했다.");
         you.malmutate(aux_source.empty() ? get_source_name() :
                       (get_source_name() + "/" + aux_source));
         obvious_effect = true;
@@ -3400,7 +3400,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_ENSLAVE:
-        mprf(MSGCH_WARN, "Your will is overpowered!");
+        mprf(MSGCH_WARN, "당신의 의지가 제압당했다!");
         confuse_player(5 + random2(3));
         obvious_effect = true;
         break;     // enslavement - confusion?
@@ -3408,7 +3408,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_BANISH:
         if (YOU_KILL(thrower))
         {
-            mpr("This spell isn't strong enough to banish yourself.");
+            mpr("이 주문은 당신을 추방하기에는 불충분하다.");
             break;
         }
         you.banish(agent(), get_source_name(),
@@ -3424,7 +3424,7 @@ void bolt::affect_player_enchantment(bool resistible)
         const int dam = resist_adjust_damage(&you, flavour, damage.roll());
         if (dam)
         {
-            mpr("Pain shoots through your body!");
+            mpr("고통이 당신의 몸을 관통했다!");
             internal_ouch(dam);
             obvious_effect = true;
         }
@@ -3445,7 +3445,7 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         }
 
-        mpr("You convulse!");
+        mpr("당신은 경련했다!");
 
         if (aux_source.empty())
             aux_source = "by dispel undead";
@@ -3455,7 +3455,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_DISINTEGRATION:
-        mpr("You are blasted!");
+        mpr("당신은 폭파되었다!");
 
         if (aux_source.empty())
             aux_source = "disintegration bolt";
@@ -3474,7 +3474,7 @@ void bolt::affect_player_enchantment(bool resistible)
     case BEAM_PORKALATOR:
         if (!transform(ench_power, transformation::pig, true))
         {
-            mpr("You feel a momentary urge to oink.");
+            mpr("당신은 순간적으로 꿀꿀거리고 싶은 충동에 빠졌다.");
             break;
         }
 
@@ -3493,13 +3493,13 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_DIMENSION_ANCHOR:
-        mprf("You feel %sfirmly anchored in space.",
-             you.duration[DUR_DIMENSION_ANCHOR] ? "more " : "");
+        mprf("당신은 %s공간에 속박되었음을 느꼈다.",
+             you.duration[DUR_DIMENSION_ANCHOR] ? "더 " : "");
         you.increase_duration(DUR_DIMENSION_ANCHOR, 12 + random2(15), 50);
         if (you.duration[DUR_TELEPORT])
         {
             you.duration[DUR_TELEPORT] = 0;
-            mpr("Your teleport is interrupted.");
+            mpr("공간이동이 중단되었다.");
         }
         you.redraw_evasion = true;
         obvious_effect = true;
@@ -3507,7 +3507,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_VULNERABILITY:
         if (!you.duration[DUR_LOWERED_MR])
-            mpr("Your magical defenses are stripped away!");
+            mpr("당신의 마법 저항이 사라졌다!");
         you.increase_duration(DUR_LOWERED_MR, 12 + random2(18), 50);
         obvious_effect = true;
         break;
@@ -3533,7 +3533,7 @@ void bolt::affect_player_enchantment(bool resistible)
             break;
         }
 
-        mpr("You feel yourself grow more vulnerable to poison.");
+        mpr("당신은 독에 더 취약해졌다고 느꼈다.");
         you.increase_duration(DUR_POISON_VULN, 12 + random2(18), 50);
         obvious_effect = true;
         break;
@@ -3551,8 +3551,8 @@ void bolt::affect_player_enchantment(bool resistible)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
-        mprf(MSGCH_WARN, "Your magic feels %stainted.",
-             you.duration[DUR_SAP_MAGIC] ? "more " : "");
+        mprf(MSGCH_WARN, "당신의 마력이 %s오염되었음을 느꼈다.",
+             you.duration[DUR_SAP_MAGIC] ? "더 " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
         break;
 
@@ -3561,7 +3561,7 @@ void bolt::affect_player_enchantment(bool resistible)
         int amount = min(you.magic_points, random2avg(ench_power / 8, 3));
         if (!amount)
             break;
-        mprf(MSGCH_WARN, "You feel your power leaking away.");
+        mprf(MSGCH_WARN, "당신의 힘이 빠져나가는 것이 느껴졌다.");
         dec_mp(amount);
         if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
                         || agent()->type == MONS_GHOST_MOTH))
@@ -3700,8 +3700,8 @@ void bolt::affect_player()
         if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
         {
             if (hit_verb.empty())
-                hit_verb = engulfs ? "engulfs" : "hits";
-            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+                hit_verb = engulfs ? "삼켰다" : "타격했다";
+            mprf("%s이(가) 당신을 %s!", name.c_str(), hit_verb.c_str());
         }
 
         affect_player_enchantment();
@@ -3793,7 +3793,7 @@ void bolt::affect_player()
             && item_is_jelly_edible(*item)
             && coinflip())
         {
-            mprf("Your attached jelly eats %s!", item->name(DESC_THE).c_str());
+            mprf("당신에게 달라붙은 젤리가 %s을(를) 흡수했다!", item->name(DESC_PLAIN).c_str());
             inc_hp(random2(hurted / 2));
             canned_msg(MSG_GAIN_HEALTH);
             drop_item = false;
@@ -3822,7 +3822,7 @@ void bolt::affect_player()
     // Manticore spikes
     if (origin_spell == SPELL_THROW_BARBS && hurted > 0)
     {
-        mpr("The barbed spikes become lodged in your body.");
+        mpr("날카로운 가시가 당신의 몸을 파고들고 있다.");
         if (!you.duration[DUR_BARBS])
             you.set_duration(DUR_BARBS,  random_range(3, 6));
         else
@@ -3885,7 +3885,7 @@ void bolt::affect_player()
         }
         else
         {
-            mprf(MSGCH_WARN, "You are encased in ice.");
+            mprf(MSGCH_WARN, "당신은 얼음 속에 갇혔다.");
             you.duration[DUR_FROZEN] = (2 + random2(3)) * BASELINE_DELAY;
         }
     }
@@ -4346,8 +4346,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             {
                 if (you.see_cell(*ai))
                 {
-                    mprf("The acid splashes onto %s!",
-                         victim->name(DESC_THE).c_str());
+                    mprf("산이 %s 위에 끼얹어졌다!",
+                         victim->name(DESC_PLAIN).c_str());
                 }
 
                 victim->splash_with_acid(agent(), 3);
@@ -4455,15 +4455,15 @@ void bolt::knockback_actor(actor *act, int dam)
     {
         if (origin_spell == SPELL_CHILLING_BREATH)
         {
-            mprf("%s %s blown backwards by the freezing wind.",
-                 act->name(DESC_THE).c_str(),
-                 act->conj_verb("are").c_str());
+            mprf("%s %s 내뿜은 얼어붙는 바람이 뒤로 밀어냈다.",
+                 act->name(DESC_PLAIN).c_str(),
+                 act->conj_verb("이(가)").c_str());
         }
         else
         {
-            mprf("%s %s knocked back by the %s.",
-                 act->name(DESC_THE).c_str(),
-                 act->conj_verb("are").c_str(),
+            mprf("%s %s %s에 의해 뒤로 밀려났다.",
+                 act->name(DESC_PLAIN).c_str(),
+                 act->conj_verb("이(가)").c_str(),
                  name.c_str());
         }
     }
@@ -4505,8 +4505,8 @@ bool bolt::attempt_block(monster* mon)
         {
             if (shield && is_shield(*shield) && shield_reflects(*shield))
             {
-                mprf("%s reflects the %s off %s %s!",
-                     mon->name(DESC_THE).c_str(),
+                mprf("%s이(가) %s을 반사시킴 : %s의 %s로!",
+                     mon->name(DESC_PLAIN).c_str(),
                      name.c_str(),
                      mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      shield->name(DESC_PLAIN).c_str());
@@ -4514,9 +4514,9 @@ bool bolt::attempt_block(monster* mon)
             }
             else
             {
-                mprf("The %s bounces off an invisible shield around %s!",
+                mprf("%s이(가) %s 주위의  보이지 않는 방패에 막혀 튕겨나왔다!",
                      name.c_str(),
-                     mon->name(DESC_THE).c_str());
+                     mon->name(DESC_PLAIN).c_str());
 
                 item_def *amulet = mon->mslot_item(MSLOT_JEWELLERY);
                 if (amulet)
@@ -4524,14 +4524,14 @@ bool bolt::attempt_block(monster* mon)
             }
         }
         else if (you.see_cell(pos()))
-            mprf("The %s bounces off of thin air!", name.c_str());
+            mprf("%s이(가) 아무것도 없는 공간에서 튕겨나왔다!", name.c_str());
 
         reflect();
     }
     else if (you.see_cell(pos()))
     {
-        mprf("%s blocks the %s.",
-             mon->name(DESC_THE).c_str(), name.c_str());
+        mprf("%s은(는) %s을(를) 막았다.",
+             mon->name(DESC_PLAIN).c_str(), name.c_str());
         finish_beam();
     }
 
@@ -4569,7 +4569,7 @@ void bolt::affect_monster(monster* mon)
         if (you.see_cell(mon->pos()))
         {
             if (testbits(mon->flags, MF_DEMONIC_GUARDIAN))
-                mpr("Your demonic guardian avoids your attack.");
+                mpr("당신의 수호 악마는 당신의 공격을 피했다.");
             else if (!bush_immune(*mon))
             {
                 simple_god_message(
@@ -4583,7 +4583,7 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer)
     {
         if (you.see_cell(mon->pos()))
-            mprf("The %s passes through %s.", name.c_str(), mon->name(DESC_THE).c_str());
+            mprf("%s은(는) %s을(를) 통과했다.", name.c_str(), mon->name(DESC_PLAIN).c_str());
     }
 
     if (ignores_monster(mon))
@@ -4625,11 +4625,11 @@ void bolt::affect_monster(monster* mon)
         if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
         {
             if (hit_verb.empty())
-                hit_verb = engulfs ? "engulfs" : "hits";
+                hit_verb = engulfs ? "삼켰다" : "타격했다";
             if (you.see_cell(mon->pos()))
             {
-                mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
-                     mon->name(DESC_THE).c_str());
+                mprf("%s이(가) %s %s을(를).", name.c_str(), hit_verb.c_str(),
+                     mon->name(DESC_PLAIN).c_str());
             }
             else if (heard && !hit_noise_msg.empty())
                 mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
@@ -4779,12 +4779,12 @@ void bolt::affect_monster(monster* mon)
     {
         // Monsters are never currently helpless in ranged combat.
         if (hit_verb.empty())
-            hit_verb = engulfs ? "engulfs" : "hits";
+            hit_verb = engulfs ? "삼켰다" : "타격했다";
 
-        mprf("The %s %s %s.",
+        mprf("%s이(가) %s %s을(를).",
              name.c_str(),
              hit_verb.c_str(),
-             mon->name(DESC_THE).c_str());
+             mon->name(DESC_PLAIN).c_str());
 
     }
     else if (heard && !hit_noise_msg.empty())
@@ -4794,7 +4794,7 @@ void bolt::affect_monster(monster* mon)
     else if (!silenced(you.pos()) && flavour == BEAM_MISSILE
              && YOU_KILL(thrower))
     {
-        mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
+        mprf(MSGCH_SOUND, "%s이(가) 무언가를 맞췄다.", name.c_str());
     }
 
     if (final > 0)
@@ -5065,10 +5065,10 @@ bool enchant_monster_invisible(monster* mon, const string &how)
         // Can't use simple_monster_message(*) here, since it checks
         // for visibility of the monster (and it's now invisible).
         // - bwr
-        mprf("%s %s%s",
+        mprf("%s이(가) %s%s",
              monster_name.c_str(),
              how.c_str(),
-             is_visible ? " for a moment."
+             is_visible ? " 잠시."
                         : "!");
 
         if (!is_visible && !mons_is_safe(mon))
@@ -5454,7 +5454,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (you.can_see(*mon))
             {
-                mprf("%s magical defenses are stripped away.",
+                mprf("%s의 마법 방어가 벗겨져 나갔다.",
                      mon->name(DESC_ITS).c_str());
                 obvious_effect = true;
             }
@@ -5512,8 +5512,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (you.can_see(*mon))
             {
-                mprf("%s seems less certain of %s magic.",
-                     mon->name(DESC_THE).c_str(), mon->pronoun(PRONOUN_POSSESSIVE).c_str());
+                mprf("%s이(가) %s의 마법에 대한 자신감을 잃은 것 같다.",
+                     mon->name(DESC_PLAIN).c_str(), mon->pronoun(PRONOUN_POSSESSIVE).c_str());
                 obvious_effect = true;
             }
         }
@@ -5532,8 +5532,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                                   dur));
         if (you.can_see(*mon))
         {
-            mprf("%s magic leaks into the air.",
-                 apostrophise(mon->name(DESC_THE)).c_str());
+            mprf("%s의 마력이 대기 중으로 새어나갔다.",
+                 apostrophise(mon->name(DESC_PLAIN)).c_str());
         }
 
         if (agent() && (agent()->type == MONS_EYE_OF_DRAINING
@@ -5802,7 +5802,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         if (!is_tracer && you.see_cell(pos()) && !name.empty())
         {
-            mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
+            mprf(MSGCH_GOD, "진의 권능에 의해 %s은(는) 구속되었다.",
                  name.c_str());
             return true;
         }
