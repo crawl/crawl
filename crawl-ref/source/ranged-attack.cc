@@ -297,10 +297,10 @@ bool ranged_attack::handle_phase_hit()
         }
         else if (needs_message)
         {
-            mprf("%s %s %s but does no damage.",
-                 projectile->name(DESC_THE).c_str(),
+            mprf("%s %s %s 그러나 손상을 주지 못했다.",
+                 projectile->name(DESC_PLAIN).c_str(),
                  attack_verb.c_str(),
-                 defender->name(DESC_THE).c_str());
+                 defender->name(DESC_PLAIN).c_str());
         }
     }
 

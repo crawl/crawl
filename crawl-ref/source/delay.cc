@@ -193,7 +193,7 @@ bool ArmourOnDelay::try_interrupt()
     if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep equipping yourself?", false, 0, false))
+            && !yesno("계속 갑옷을 착용하겠나?", false, 0, false))
         {
             mpr("당신은 갑옷을 입기를 중단했다.");
             return true;
@@ -209,7 +209,7 @@ bool ArmourOffDelay::try_interrupt()
     if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep disrobing?", false, 0, false))
+            && !yesno("계속 벗을것인가?", false, 0, false))
         {
             mpr("당신은 갑옷을 벗기를 중단했다.");
             return true;
@@ -1130,38 +1130,38 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         set_auto_exclude(mon);
 
         if (at.context == SC_DOOR)
-            text += " opens the door.";
+            text += "이(가) 문을 열었다.";
         else if (at.context == SC_GATE)
-            text += " opens the gate.";
+            text += "이(가) 관문을 열었다.";
         else if (at.context == SC_TELEPORT_IN)
-            text += " appears from thin air!";
+            text += "이(가) 얇은 대기속에서 나타났다!";
         else if (at.context == SC_LEAP_IN)
-            text += " leaps into view!";
+            text += "이(가) 시야 안으로 도약했다!";
         else if (at.context == SC_FISH_SURFACES)
         {
-            text += " bursts forth from the ";
+            text += "이(가) 폭발적인 기세로 튀어나옴 : ";
             if (mons_primary_habitat(*mon) == HT_LAVA)
-                text += "lava";
+                text += "용암에서";
             else if (mons_primary_habitat(*mon) == HT_WATER)
-                text += "water";
+                text += "물에서";
             else
                 text += "realm of bugdom";
             text += ".";
         }
         else if (at.context == SC_NONSWIMMER_SURFACES_FROM_DEEP)
-            text += " emerges from the water.";
+            text += "이(가) 물에서 나타났다.";
         else if (at.context == SC_UPSTAIRS)
-            text += " comes up the stairs.";
+            text += "이(가) 계단을 올라갔다.";
         else if (at.context == SC_DOWNSTAIRS)
-            text += " comes down the stairs.";
+            text += "이(가) 계단을 내려갔다.";
         else if (at.context == SC_ARCH)
-            text += " comes through the gate.";
+            text += "이(가) 관문을 통해 왔다.";
         else if (at.context == SC_ABYSS)
             text += _abyss_monster_creation_message(mon);
         else if (at.context == SC_THROWN_IN)
-            text += " is thrown into view!";
+            text += "이(가) 시야 안으로 던져졌다!";
         else
-            text += " comes into view.";
+            text += "이(가) 시야 속으로 들어왔다.";
 
         bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
         bool zin_id = false;

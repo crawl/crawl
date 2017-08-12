@@ -612,50 +612,50 @@ int show_keyhelp_menu(const vector<formatted_string> &lines,
 
         cols.add_formatted(
             0,
-            "<h>Dungeon Crawl Help\n"
+            "<h>던전크롤 도움말\n"
             "\n"
-            "Press one of the following keys to\n"
-            "obtain more information on a certain\n"
-            "aspect of Dungeon Crawl.\n"
+            "던전크롤의 특정 측면에 대한\n"
+            "자세한 정보를 보려면 다음 키 중\n"
+            "하나를 입력하십시오.\n"
 
-            "<w>?</w>: List of commands\n"
-            "<w>^</w>: Quickstart Guide\n"
-            "<w>:</w>: Browse character notes\n"
-            "<w>#</w>: Browse character dump\n"
-            "<w>~</w>: Macros help\n"
-            "<w>&</w>: Options help\n"
-            "<w>%</w>: Table of aptitudes\n"
-            "<w>/</w>: Lookup description\n"
+            "<w>?</w>: 커맨드 목록\n"
+            "<w>^</w>: 빠른시작 가이드\n"
+            "<w>:</w>: 캐릭터 노트 탐색\n"
+            "<w>#</w>: 캐릭터 덤프 탐색\n"
+            "<w>~</w>: 매크로 도움말\n"
+            "<w>&</w>: 옵션 도움말\n"
+            "<w>%</w>: 적성 테이블\n"
+            "<w>/</w>: 기술 설명\n"
             "<w>Q</w>: FAQ\n"
 #ifdef USE_TILE_LOCAL
-            "<w>T</w>: Tiles key help\n"
+            "<w>T</w>: 화면 키 도움말\n"
 #endif
-            "<w>V</w>: Version information\n"
-            "<w>Home</w>: This screen\n");
+            "<w>V</w>: 버전 정보\n"
+            "<w>Home</w>: 현재 화면\n");
 
         cols.add_formatted(
             1,
-            "<h>Manual Contents\n\n"
-            "<w>*</w>       Table of contents\n"
-            "<w>A</w>.      Overview\n"
-            "<w>B</w>.      Starting Screen\n"
-            "<w>C</w>.      Attributes and Stats\n"
-            "<w>D</w>.      Exploring the Dungeon\n"
-            "<w>E</w>.      Experience and Skills\n"
-            "<w>F</w>.      Monsters\n"
-            "<w>G</w>.      Items\n"
-            "<w>H</w>.      Spellcasting\n"
-            "<w>I</w>.      Targeting\n"
-            "<w>J</w>.      Religion\n"
-            "<w>K</w>.      Mutations\n"
-            "<w>L</w>.      Licence, Contact, History\n"
-            "<w>M</w>.      Macros, Options, Performance\n"
-            "<w>N</w>.      Philosophy\n"
-            "<w>1</w>.      List of Character Species\n"
-            "<w>2</w>.      List of Character Backgrounds\n"
-            "<w>3</w>.      List of Skills\n"
-            "<w>4</w>.      List of Keys and Commands\n"
-            "<w>5</w>.      Inscriptions\n");
+            "<h>매뉴얼 내용\n\n"
+            "<w>*</w>       목차\n"
+            "<w>A</w>.      개요\n"
+            "<w>B</w>.      시작 화면\n"
+            "<w>C</w>.      속성 및 통계\n"
+            "<w>D</w>.      던전을 탐험한다는 것\n"
+            "<w>E</w>.      경험과 기술\n"
+            "<w>F</w>.      몬스터\n"
+            "<w>G</w>.      아이템\n"
+            "<w>H</w>.      스펠캐스팅\n"
+            "<w>I</w>.      타겟팅\n"
+            "<w>J</w>.      신앙\n"
+            "<w>K</w>.      돌연변이\n"
+            "<w>L</w>.      라이센스, 연락처, 역사\n"
+            "<w>M</w>.      매크로, 옵션, 포퍼먼스\n"
+            "<w>N</w>.      철학\n"
+            "<w>1</w>.      캐릭터 종족 목록\n"
+            "<w>2</w>.      캐릭터 배경 목록\n"
+            "<w>3</w>.      스킬 목록\n"
+            "<w>4</w>.      키와 커맨드 목록\n"
+            "<w>5</w>.      비문\n");
 
         vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
