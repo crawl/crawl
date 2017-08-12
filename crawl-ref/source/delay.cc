@@ -138,7 +138,7 @@ static void _interrupt_butchering(const char* action)
                {
                    return d->is_butcher();
                });
-    mprf("You stop %s the corpse%s.", action, multiple_corpses ? "s" : "");
+    mprf("당신은 %s 하는 것을 멈췄다 : 시체%s.", action, multiple_corpses ? "들을" : "를");
 }
 
 bool BottleBloodDelay::try_interrupt()
@@ -157,7 +157,7 @@ bool MemoriseDelay::try_interrupt()
 {
     // Losing work here is okay... having to start from
     // scratch is a reasonable behaviour. -- bwr
-    mpr("Your memorisation is interrupted.");
+    mpr("당신은 주문을 익히던 중 방해를 받았다.");
     return true;
 }
 
@@ -165,7 +165,7 @@ bool MultidropDelay::try_interrupt()
 {
     // No work lost
     if (!items.empty())
-        mpr("You stop dropping stuff.");
+        mpr("당신은 물건을 버리는 것을 중단했다.");
     return true;
 }
 
@@ -195,7 +195,7 @@ bool ArmourOnDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep equipping yourself?", false, 0, false))
         {
-            mpr("You stop putting on your armour.");
+            mpr("당신은 갑옷을 입기를 중단했다.");
             return true;
         }
         else
@@ -211,7 +211,7 @@ bool ArmourOffDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep disrobing?", false, 0, false))
         {
-            mpr("You stop removing your armour.");
+            mpr("당신은 갑옷을 벗기를 중단했다.");
             return true;
         }
         else
@@ -227,7 +227,7 @@ bool BlurryScrollDelay::try_interrupt()
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep reading the scroll?", false, 0, false))
         {
-            mpr("You stop reading the scroll.");
+            mpr("당신은 두루마리를 읽기를 중단했다.");
             return true;
         }
         else
@@ -238,25 +238,25 @@ bool BlurryScrollDelay::try_interrupt()
 
 bool AscendingStairsDelay::try_interrupt()
 {
-    mpr("You stop ascending the stairs.");
+    mpr("당신은 계단을 올라가기를 그만뒀다.");
     return true;  // short... and probably what people want
 }
 
 bool DescendingStairsDelay::try_interrupt()
 {
-    mpr("You stop descending the stairs.");
+    mpr("당신은 계단을 내려가기를 그만뒀다.");
     return true;  // short... and probably what people want
 }
 
 bool PasswallDelay::try_interrupt()
 {
-    mpr("Your meditation is interrupted.");
+    mpr("당신은 명상하던 중 방해를 받았다.");
     return true;
 }
 
 bool ShaftSelfDelay::try_interrupt()
 {
-    mpr("You stop digging.");
+    mpr("당신은 굴파기를 중단했다.");
     return true;
 }
 
@@ -379,7 +379,7 @@ static command_type _get_running_command()
         if (!is_resting() && you.running.hp == you.hp
             && you.running.mp == you.magic_points)
         {
-            mpr("Done waiting.");
+            mpr("대기 완료.");
         }
 
         if (Options.rest_delay > 0)
@@ -444,12 +444,12 @@ void clear_macro_process_key_delay()
 
 void ArmourOnDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You start putting on your armour.");
+    mprf(MSGCH_MULTITURN_ACTION, "당신은 갑옷을 입기 시작했다.");
 }
 
 void ArmourOffDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You start removing your armour.");
+    mprf(MSGCH_MULTITURN_ACTION, "당신은 갑옷을 벗기 시작했다.");
 }
 
 void MemoriseDelay::start()
@@ -460,22 +460,22 @@ void MemoriseDelay::start()
             spell_title(spell));
         simple_god_message(message.c_str());
     }
-    mprf(MSGCH_MULTITURN_ACTION, "You start memorising the spell.");
+    mprf(MSGCH_MULTITURN_ACTION, "당신은 주문을 배우기 시작했다.");
 }
 
 void PasswallDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to meditate on the wall.");
+    mprf(MSGCH_MULTITURN_ACTION, "당신은 벽 안에서 명상하기 시작했다.");
 }
 
 void ShaftSelfDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
+    mprf(MSGCH_MULTITURN_ACTION, "당신은 구덩이를 파기 시작했다.");
 }
 
 void BlurryScrollDelay::start()
 {
-    mprf(MSGCH_MULTITURN_ACTION, "You begin reading the scroll.");
+    mprf(MSGCH_MULTITURN_ACTION, "당신은 두루마리를 읽기 시작했다.");
 }
 
 command_type RunDelay::move_cmd() const
@@ -582,8 +582,7 @@ static bool _check_corpse_gone(item_def& item, const char* action)
     }
     else if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
     {
-        mprf("The corpse has rotted away into a skeleton before "
-             "you could %s!", action);
+        mprf("시체가 당신이 %s 하기 전에 해골로 변했다!", action);
         _xom_check_corpse_waste();
         return true;
     }
@@ -744,7 +743,7 @@ void ArmourOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(EQUIP_ARMOUR_SOUND);
 #endif
-    mprf("You finish putting on %s.", armour.name(DESC_YOUR).c_str());
+    mprf("당신은 %s을(를) 입었다.", armour.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -768,7 +767,7 @@ void ArmourOffDelay::finish()
 #ifdef USE_SOUND
     parse_sound(DEQUIP_ARMOUR_SOUND);
 #endif
-    mprf("You finish taking off %s.", armour.name(DESC_YOUR).c_str());
+    mprf("당신은 %s을(를) 벗었다.", armour.name(DESC_YOUR).c_str());
     unequip_item(slot);
 }
 
@@ -777,14 +776,14 @@ void MemoriseDelay::finish()
 #ifdef USE_SOUND
     parse_sound(MEMORISE_SPELL_SOUND);
 #endif
-    mpr("You finish memorising.");
+    mpr("당신은 주문을 익히는 데 성공했다.");
     add_spell_to_memory(spell);
     vehumet_accept_gift(spell);
 }
 
 void PasswallDelay::finish()
 {
-    mpr("You finish merging with the rock.");
+    mpr("당신은 돌과 동화되는데 성공했다.");
     // included in default force_more_message
 
     if (dest.x == 0 || dest.y == 0)
@@ -795,8 +794,8 @@ void PasswallDelay::finish()
     default:
         if (!you.is_habitable(dest))
         {
-            mpr("...yet there is something new on the other side. "
-                "You quickly turn back.");
+            mpr("...아직 반대편에 무언가가 있다. "
+                "당신은 재빨리 되돌아왔다.");
             redraw_screen();
             return;
         }
@@ -819,7 +818,7 @@ void PasswallDelay::finish()
         // Might still fail.
         if (monster_at(dest))
         {
-            mpr("...and sense your way blocked. You quickly turn back.");
+            mpr("...그리고 당신의 경로가 막혀있음을 깨달았다. 당신은 재빨리 돌아왔다.");
             redraw_screen();
             return;
         }
@@ -1083,7 +1082,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 {
     if (ai == AI_SENSE_MONSTER)
     {
-        mprf(MSGCH_WARN, "You sense a monster nearby.");
+        mprf(MSGCH_WARN, "당신은 주위의 몬스터를 감지했다.");
         return true;
     }
     if (ai != AI_SEE_MONSTER)
@@ -1109,8 +1108,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         // during the previous turn.
         if (testbits(mon->flags, MF_WAS_IN_VIEW) && delay)
         {
-            mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                 mon->name(DESC_THE).c_str());
+            mprf(MSGCH_WARN, "당신이 하고픈 걸 하기엔 %s이(가) 너무 가깝다.",
+                 mon->name(DESC_PLAIN).c_str());
         }
     }
     else if (mon->seen_context == SC_JUST_SEEN)
@@ -1227,8 +1226,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                     && mon->get_experience_level() >=
                        random2(you.experience_level))
                 {
-                    mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
-                         mon->name(DESC_THE).c_str());
+                    mprf(MSGCH_GOD, GOD_GOZAG, "고자그가 당신에게 맞서는 %s을(를) 선동했다.",
+                         mon->name(DESC_PLAIN).c_str());
                     gozag_incite(mon);
                 }
             }
@@ -1259,7 +1258,7 @@ void autotoggle_autopickup(bool off)
         {
             Options.autopickup_on = -1;
             mprf(MSGCH_WARN,
-                 "Deactivating autopickup; reactivate with <w>%s</w>.",
+                 "자동 줍기 중지; <w>%s</w>를 눌러 재개.",
                  command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
         if (crawl_state.game_is_hints())
@@ -1271,7 +1270,7 @@ void autotoggle_autopickup(bool off)
     else if (Options.autopickup_on < 0) // was turned off automatically
     {
         Options.autopickup_on = 1;
-        mprf(MSGCH_WARN, "Reactivating autopickup.");
+        mprf(MSGCH_WARN, "자동 줍기 재개.");
     }
 }
 
@@ -1319,12 +1318,12 @@ bool interrupt_activity(activity_interrupt_type ai,
     if (ai == AI_FULL_HP && !you.running.notified_hp_full)
     {
         you.running.notified_hp_full = true;
-        mpr("HP restored.");
+        mpr("체력 회복됨.");
     }
     else if (ai == AI_FULL_MP && !you.running.notified_mp_full)
     {
         you.running.notified_mp_full = true;
-        mpr("Magic restored.");
+        mpr("마력 회복됨.");
     }
 
     if (_should_stop_activity(delay.get(), ai, at))

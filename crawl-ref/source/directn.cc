@@ -591,7 +591,7 @@ void full_describe_view()
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
-        mpr("No monsters, items or features are visible.");
+        mpr("몬스터, 아이템 또는 지형이 시야에 없다.");
         return;
     }
 
@@ -892,9 +892,9 @@ bool direction_chooser::move_is_ok() const
         if (!cell_see_cell(you.pos(), target(), LOS_NO_TRANS))
         {
             if (you.see_cell(target()))
-                mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
+                mprf(MSGCH_EXAMINE_FILTER, "경로에 무언가가 있다.");
             else
-                mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
+                mprf(MSGCH_EXAMINE_FILTER, "당신은 그곳을 볼 수 없다.");
             return false;
         }
 
@@ -906,19 +906,19 @@ bool direction_chooser::move_is_ok() const
                     || self == CONFIRM_PROMPT
                        && Options.allow_self_target == CONFIRM_CANCEL)
                 {
-                    mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
+                    mprf(MSGCH_EXAMINE_FILTER, "그건 자살행위다.");
                     return false;
                 }
                 else if (self != CONFIRM_NONE
                          && Options.allow_self_target != CONFIRM_NONE)
                 {
-                    return yesno("Really target yourself?", false, 'n');
+                    return yesno("정말로 자기 자신을 목표로 하는가?", false, 'n');
                 }
             }
 
             if (self == CONFIRM_CANCEL)
             {
-                mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
+                mprf(MSGCH_EXAMINE_FILTER, "유감이지만, 당신을 목표로 할 수는 없다.");
                 return false;
             }
         }
@@ -926,7 +926,7 @@ bool direction_chooser::move_is_ok() const
 
     // Some odd cases
     if (!moves.isValid && !moves.isCancel)
-        return yesno("Are you sure you want to fizzle?", false, 'n');
+        return yesno("정말로 그런 행동을 할 것인가?", false, 'n');
 
     return true;
 }
@@ -1040,13 +1040,12 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // Special colouring in tutorial or hints mode.
         const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
         mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
-            "All monsters which could be auto-targeted are covered by "
-            "a wall or statue which interrupts your line of fire, even "
-            "though it doesn't interrupt your line of sight.");
+            "자동 조준이 가능한 모든 몬스터가 당신의 시야와는 다르게, "
+            "벽이나 조각상 뒤에 숨어있다.");
 
         if (need_hint)
         {
-            mprf(MSGCH_TUTORIAL, "To return to the main mode, press <w>Escape</w>.");
+            mprf(MSGCH_TUTORIAL, "원래 상태로 돌아가려면, <w>Escape</w> 키를 눌러라.");
             Hints.hints_events[HINT_TARGET_NO_FOE] = false;
         }
     }
@@ -1288,7 +1287,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
         && !in_range(target()))
     {
         mprf(MSGCH_EXAMINE_FILTER, "%s",
-             hitfunc? hitfunc->why_not.c_str() : "That is beyond the maximum range.");
+             hitfunc? hitfunc->why_not.c_str() : "그곳은 최대 사정거리 밖이다.");
         return false;
     }
     moves.isEndpoint = endpoint || (mons && _mon_exposed(mons));
@@ -1305,7 +1304,7 @@ bool direction_chooser::pickup_item()
         ii = env.map_knowledge(target()).item();
     if (!ii || !ii->is_valid(true))
     {
-        mprf(MSGCH_EXAMINE_FILTER, "You can't see any item there.");
+        mprf(MSGCH_EXAMINE_FILTER, "이곳엔 물건이 없다.");
         return false;
     }
     ii->flags |= ISFLAG_THROWN; // make autoexplore greedy
@@ -1334,7 +1333,7 @@ bool direction_chooser::pickup_item()
 
     if (!just_looking) // firing/casting prompt
     {
-        mprf(MSGCH_EXAMINE_FILTER, "Marked for pickup.");
+        mprf(MSGCH_EXAMINE_FILTER, "줍는 것으로 설정.");
         return false;
     }
 
@@ -1378,7 +1377,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
     if (!in_range(target()))
     {
         mprf(MSGCH_EXAMINE_FILTER, "%s",
-             hitfunc ? hitfunc->why_not.c_str() : "Out of range.");
+             hitfunc ? hitfunc->why_not.c_str() : "사정거리 밖.");
     }
 }
 
@@ -1464,7 +1463,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     }
 
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
-         target_prefix ? target_prefix : "Aim",
+         target_prefix ? target_prefix : "조준",
          text.c_str());
 
     // If there's a cloud here, it's been described.
@@ -1509,8 +1508,8 @@ void direction_chooser::print_target_object_description() const
 
     // FIXME: remove the duplication with print_items_description().
     mprf(MSGCH_PROMPT, "%s: %s",
-         target_prefix ? target_prefix : "Aim",
-         menu_colour_item_name(*item, DESC_A).c_str());
+         target_prefix ? target_prefix : "조준",
+         menu_colour_item_name(*item, DESC_PLAIN).c_str());
 }
 
 void direction_chooser::print_items_description() const
@@ -1527,7 +1526,7 @@ void direction_chooser::print_items_description() const
          menu_colour_item_name(*item, DESC_A).c_str());
 
     if (multiple_items_at(target()))
-        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
+        mprf(MSGCH_FLOOR_ITEMS, "바닥에 다른 무언가가 놓여져 있다.");
 }
 
 void direction_chooser::print_floor_description(bool boring_too) const
@@ -1583,7 +1582,7 @@ void direction_chooser::toggle_beam()
 {
     if (!needs_path)
     {
-        mprf(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
+        mprf(MSGCH_EXAMINE_FILTER, "이 주문은 발사 경로 지정이 필요없다.");
         return;
     }
 
@@ -1612,7 +1611,7 @@ bool direction_chooser::select_previous_target()
     }
     else
     {
-        mprf(MSGCH_EXAMINE_FILTER, "Your target is gone.");
+        mprf(MSGCH_EXAMINE_FILTER, "당신의 목표물이 사라졌다.");
         flush_prev_message();
         return false;
     }
@@ -1740,7 +1739,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         m->hit_points = 1;
-        mpr("Brought monster down to 1 HP.");
+        mpr("몬스터의 체력을 1로 설정.");
         flush_prev_message();
         break;
 
@@ -1867,7 +1866,7 @@ bool direction_chooser::do_main_loop()
             break;
 
         if (!is_map_persistent())
-            mpr("You cannot set exclusions on this level.");
+            mpr("당신은 이 층에선 탐사 예외지역을 지정할 수 없다.");
         else
         {
             const bool was_excluded = is_exclude_root(target());
@@ -1876,11 +1875,11 @@ bool direction_chooser::do_main_loop()
             need_beam_redraw   = true;
             const bool is_excluded = is_exclude_root(target());
             if (!was_excluded && is_excluded)
-                mpr("Placed new exclusion.");
+                mpr("탐사 예외지역 지정.");
             else if (was_excluded && !is_excluded)
-                mpr("Removed exclusion.");
+                mpr("탐사 예외지역 해제.");
             else
-                mpr("Reduced exclusion size to a single square.");
+                mpr("탐사 예외지역을 한 칸으로 줄임.");
         }
 
         need_cursor_redraw = true;
@@ -2182,7 +2181,7 @@ static void _extend_move_to_edge(dist &moves)
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void _describe_oos_square(const coord_def& where)
 {
-    mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
+    mprf(MSGCH_EXAMINE_FILTER, "당신은 그곳을 볼 수 없다.");
 
     if (!in_bounds(where) || !env.map_knowledge(where).seen())
     {
@@ -2750,9 +2749,9 @@ void describe_floor()
     if (feat_is_water(grid) || feat_is_lava(grid))
         return;
 
-    mprf(channel, "%s%s here.", prefix, feat.c_str());
+    mprf(channel, "%s%s이(가) 여기 있다.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_LABYRINTH)
-        mprf(MSGCH_EXAMINE, "Beware, the minotaur awaits!");
+        mprf(MSGCH_EXAMINE, "조심해라. 미노타우르스가 당신을 기다린다!");
 }
 
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
@@ -3381,28 +3380,28 @@ static bool _print_cloud_desc(const coord_def where)
 {
     vector<string> areas;
     if (is_sanctuary(where))
-        areas.emplace_back("lies inside a sanctuary");
+        areas.emplace_back("성역이다");
     if (silenced(where))
-        areas.emplace_back("is shrouded in silence");
+        areas.emplace_back("정적으로 둘러싸여있다");
     if (haloed(where) && !umbraed(where))
-        areas.emplace_back("is lit by a halo");
+        areas.emplace_back("후광으로 빛난다");
     if (umbraed(where) && !haloed(where))
-        areas.emplace_back("is wreathed by an umbra");
+        areas.emplace_back("그림자로 둘러싸여있다");
     if (liquefied(where))
-        areas.emplace_back("is liquefied");
+        areas.emplace_back("액화되어있다");
     if (orb_haloed(where) || quad_haloed(where))
-        areas.emplace_back("is covered in magical glow");
+        areas.emplace_back("마력으로 빛난다");
     if (disjunction_haloed(where))
-        areas.emplace_back("is bathed in translocational energy");
+        areas.emplace_back("전이 에너지로 가득하다");
     if (!areas.empty())
     {
-        mprf("This square %s.",
+        mprf("이곳은 %s.",
              comma_separated_line(areas.begin(), areas.end()).c_str());
     }
 
     if (cloud_struct* cloud = cloud_at(where))
     {
-        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
+        mprf(MSGCH_EXAMINE, "그곳엔 %s의 구름이 있다.",
              cloud->cloud_name(true).c_str());
         return true;
     }
@@ -3418,10 +3417,10 @@ static bool _print_item_desc(const coord_def where)
         return false;
 
     string name = menu_colour_item_name(mitm[targ_item], DESC_A);
-    mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
+    mprf(MSGCH_FLOOR_ITEMS, "이곳엔 %s이(가) 있다.", name.c_str());
 
     if (mitm[ targ_item ].link != NON_ITEM)
-        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
+        mprf(MSGCH_FLOOR_ITEMS, "바닥에 다른 무언가가 놓여져 있다.");
 
     return true;
 }
@@ -3480,24 +3479,24 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
 
     if (where == you.pos() && !crawl_state.arena_suspended)
-        mprf(MSGCH_EXAMINE_FILTER, "You.");
+        mprf(MSGCH_EXAMINE_FILTER, "당신.");
 
     if (const monster* mon = monster_at(where))
     {
 #ifdef DEBUG_DIAGNOSTICS
         if (!mon->visible_to(&you))
         {
-            mprf(MSGCH_DIAGNOSTICS, "There is a non-visible %smonster here.",
-                 _mon_exposed_in_water(mon) ? "exposed by water " :
-                 _mon_exposed_in_cloud(mon) ? "exposed by cloud " : "");
+            mprf(MSGCH_DIAGNOSTICS, "이곳엔 %s 보이지 않는 몬스터가 있다.",
+                 _mon_exposed_in_water(mon) ? "물에 의해 드러난 " :
+                 _mon_exposed_in_cloud(mon) ? "구름에 의해 드러난 " : "");
         }
 #else
         if (!mon->visible_to(&you))
         {
             if (_mon_exposed_in_water(mon))
-                mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the water here.");
+                mprf(MSGCH_EXAMINE_FILTER, "물속에 뭔가 이상한 것이 있다.");
             else if (_mon_exposed_in_cloud(mon))
-                mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the cloud here.");
+                mprf(MSGCH_EXAMINE_FILTER, "구름 속에 뭔가 이상한 것이 있다");
 
             goto look_clouds;
         }
@@ -3508,7 +3507,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (!in_range)
         {
-            mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
+            mprf(MSGCH_EXAMINE_FILTER, "%s은(는) 사정거리 밖이다.",
                  mon->pronoun(PRONOUN_SUBJECTIVE).c_str());
         }
 #ifndef DEBUG_DIAGNOSTICS
