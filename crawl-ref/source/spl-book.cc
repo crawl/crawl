@@ -364,7 +364,7 @@ static bool _get_book_spells(const item_def& book, spell_set &spells)
     if (num_spells == 0)
     {
         mprf(MSGCH_ERROR, "Spellbook \"%s\" contains no spells! Please "
-             "file a bug report.", book.name(DESC_PLAIN).c_str());
+             "버그리포트 해주세요.", book.name(DESC_PLAIN).c_str());
         return true;
     }
 
@@ -472,7 +472,7 @@ static string _filter_memorizable_spells(const spell_set &available_spells,
                          + num_restricted;
 
     if (num_known == total)
-        return "You already know all available spells.";
+        return "당신은 이미 사용 가능한 주문을 모두 외우고 있다.";
     if (num_restricted == total || num_restricted + num_known == total)
     {
         return "You cannot currently memorise any of the available spells "
@@ -484,8 +484,8 @@ static string _filter_memorizable_spells(const spell_set &available_spells,
         return "You cannot memorise any of the available spells.";
     }
 
-    return "You can't memorise any new spells for an unknown reason; please "
-           "file a bug report.";
+    return "알 수 없는 이유로 새 주문을 기억 할 수 없다.reason; please "
+           "버그리포트 해주세요.";
 }
 
 
@@ -504,9 +504,9 @@ static void _get_mem_list(spell_list &mem_spells,
         if (!just_check)
         {
             if (book_errors)
-                mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
+                mprf(MSGCH_PROMPT, "당신이 소지한 모든 마법서들에는 어떠한 주문도 적혀 있지 않다.");
             else
-                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
+                mprf(MSGCH_PROMPT, "소지하고 있거나, 혹은 당신이 있는 위치에 떨어진 책이 없다.");
         }
         return;
     }
@@ -748,7 +748,7 @@ bool can_learn_spell(bool silent)
     if (you.duration[DUR_BRAINLESS])
     {
         if (!silent)
-            mpr("Your brain is not functional enough to learn spells.");
+            mpr("당신 뇌의 기능은 주문을 배우기에 충분하지않다.");
         return false;
     }
 
@@ -816,7 +816,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 {
     if (spell_removed(specspell))
     {
-        mpr("Sorry, this spell is gone!");
+        mpr("유감이지만, 이 주문은 이젠 사라졌다!");
         return false;
     }
 
@@ -834,25 +834,25 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
 
     if (you.has_spell(specspell))
     {
-        mpr("You already know that spell!");
+        mpr("당신은 이미 그 주문을 알고 있다!");
         return false;
     }
 
     if (you.spell_no >= MAX_KNOWN_SPELLS)
     {
-        mpr("Your head is already too full of spells!");
+        mpr("당신의 머릿속은 이미 주문으로 가득찼다!");
         return false;
     }
 
     if (you.experience_level < spell_difficulty(specspell) && !wizard)
     {
-        mpr("You're too inexperienced to learn that spell!");
+        mpr("당신은 그 주문을 배우기엔 경험이 너무나도 모자라다!");
         return false;
     }
 
     if (player_spell_levels() < spell_levels_required(specspell) && !wizard)
     {
-        mpr("You can't memorise that many levels of magic yet!");
+        mpr("당신은 아직 그정도로 높은 수준의 주문을 외울 수 없다!");
         return false;
     }
 
@@ -890,10 +890,10 @@ bool learn_spell(spell_type specspell, bool wizard)
         const int severity = fail_severity(specspell);
 
         if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
-            mprf(MSGCH_WARN, "This spell is impossible to cast!");
+            mprf(MSGCH_WARN, "이 주문은 시전이 불가능하다!");
         else if (severity > 0)
         {
-            mprf(MSGCH_WARN, "This spell is %s to cast%s",
+            mprf(MSGCH_WARN, "이 주문은 시전하기가 %s하다%s",
                              fail_severity_adjs[severity],
                              severity > 1 ? "!" : ".");
         }

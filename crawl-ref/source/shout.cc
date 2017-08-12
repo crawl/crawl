@@ -534,11 +534,11 @@ static int _issue_orders_prompt()
                 previous = "   p - Attack previous target.";
         }
 
-        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
-        mpr("                   r - Retreat!             s - Stop attacking.");
-        mpr("                   g - Guard the area.      f - Follow me.");
+        mprf("아군에게 명령:     a - 새로운 목표를 공격.%s", previous.c_str());
+        mpr("                   r - 후퇴!                s - 공격 중지.");
+        mpr("                   g - 지역 방어.           f - 날 따르라.");
     }
-    mpr(" Anything else - Cancel.");
+    mpr(" 나머지 - 취소.");
 
     if (you.berserk())
         flush_prev_message(); // buffer doesn't get flushed otherwise
@@ -574,15 +574,15 @@ static bool _issue_order(int keyn, int &mons_targd)
             {
                 // Don't reset patrol points for 'Stop fighting!'
                 _set_allies_patrol_point(true);
-                mpr("Follow me!");
+                mpr("나를 따르라!");
             }
             else
-                mpr("Stop fighting!");
+                mpr("공격 중지!");
             break;
 
         case 'w':
         case 'g':
-            mpr("Guard this area!");
+            mpr("지역을 방어하라!");
             mons_targd = MHITNOT;
             _set_allies_patrol_point();
             break;
@@ -657,7 +657,7 @@ static bool _issue_order(int keyn, int &mons_targd)
 
             if (targ.isValid)
             {
-                mpr("Fall back!");
+                mpr("물러서라!");
                 mons_targd = MHITNOT;
             }
 
@@ -685,7 +685,7 @@ void issue_orders()
 
     if (you.cannot_speak() && you.berserk())
     {
-        mpr("You're too berserk to give orders, and you can't shout!");
+        mpr("당신은 명령을 내리기엔 너무 광폭해져 있고, 소리지를 수 도 없다!");
         return;
     }
 
@@ -707,7 +707,7 @@ void issue_orders()
     _set_friendly_foes(keyn == 's' || keyn == 'w');
 
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
-        mpr("Attack!");
+        mpr("공격!");
 }
 
 /**
@@ -728,19 +728,19 @@ void yell(const actor* mon)
         {
             if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
-                mprf("You feel a strong urge to %s, but "
-                     "you are unable to make a sound!",
+                mprf("당신은 %s을(를) 지르려고 하였으나, "
+                     "당신은 소리를 낼 수 없었다!",
                      shout_verb.c_str());
             }
             else
             {
-                mprf("You feel a %s rip itself from your throat, "
-                     "but you make no sound!",
+                mprf("%s이(가) 목구멍으로부터 절로 새어나왔으나, "
+                     "아무 소리도 나지 않았다!",
                      shout_verb.c_str());
             }
         }
         else
-            mpr("You are unable to make a sound!");
+            mpr("당신은 소리를 낼 수 없다!");
 
         return;
     }
@@ -750,7 +750,7 @@ void yell(const actor* mon)
         mprf("You %s%s at %s!",
              shout_verb.c_str(),
              you.duration[DUR_RECITE] ? " your recitation" : "",
-             mon->name(DESC_THE).c_str());
+             mon->name(DESC_PLAIN).c_str());
     }
     else
     {

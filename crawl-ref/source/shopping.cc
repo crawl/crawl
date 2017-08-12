@@ -1433,7 +1433,7 @@ void shop()
 {
     if (!shop_at(you.pos()))
     {
-        mprf(MSGCH_ERROR, "Help! Non-existent shop.");
+        mprf(MSGCH_ERROR, "도와줘! 존재하지 않는 가게다.");
         return;
     }
 
@@ -1443,7 +1443,7 @@ void shop()
     // Quick out, if no inventory
     if (shop.stock.empty())
     {
-        mprf("%s appears to be closed.", shopname.c_str());
+        mprf("%s은(는) 문을 닫은 듯 하다.", shopname.c_str());
         destroy_shop_at(you.pos());
         return;
     }
@@ -1472,9 +1472,9 @@ void shop()
         destroy_shop_at(you.pos());
     redraw_screen();
     if (menu.bought_something)
-        mprf("Thank you for shopping at %s!", shopname.c_str());
+        mprf("우리 %s에서 물건을 사 줘서 정말 고마워!", shopname.c_str());
     if (any_on_list)
-        mpr("You can access your shopping list by pressing '$'.");
+        mpr("당신은 '$' 를 눌러 당신의 구매 리스트에 접근 할 수 있다.");
 }
 
 void shop(shop_struct& shop, const level_pos& pos)
@@ -1701,8 +1701,8 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     if (find_thing(item, pos) != -1)
     {
-        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
-             item.name(DESC_THE).c_str());
+        mprf(MSGCH_ERROR, "%s은(는) 이미 구매 목록에 올라와 있다.",
+             item.name(DESC_PLAIN).c_str());
         return false;
     }
 
@@ -1725,7 +1725,7 @@ bool ShoppingList::add_thing(string desc, string buy_verb, int cost,
 
     if (find_thing(desc, pos) != -1)
     {
-        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
+        mprf(MSGCH_ERROR, "%s은(는) 이미 구매 목록에 올라와 있다.",
              desc.c_str());
         return false;
     }
@@ -1783,8 +1783,8 @@ bool ShoppingList::del_thing(const item_def &item,
 
     if (idx == -1)
     {
-        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
-             item.name(DESC_THE).c_str());
+        mprf(MSGCH_ERROR, "%s은(는) 구매 목록에 올라와 있지 않아, 지울 수 없다.",
+             item.name(DESC_PLAIN).c_str());
         return false;
     }
 
@@ -1800,7 +1800,7 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 
     if (idx == -1)
     {
-        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
+        mprf(MSGCH_ERROR, "%s은(는) 구매 목록에 올라와 있지 않아, 지울 수 없다.",
              desc.c_str());
         return false;
     }
@@ -2158,7 +2158,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 
         mpr_comma_separated_list("You now have enough gold to ", descs,
                                  ", or ");
-        mpr("You can access your shopping list by pressing '$'.");
+        mpr("당신은 '$' 를 눌러 당신의 구매 리스트에 접근 할 수 있다.");
 
         // Our gold has changed, maybe we can buy different things now.
         refresh();
@@ -2378,7 +2378,7 @@ void ShoppingList::display()
             del_thing_at_index(index);
             if (list->empty())
             {
-                mpr("Your shopping list is now empty.");
+                mpr("지금 당신의 구매 리스트에는 아무 것도 없다.");
                 break;
             }
 

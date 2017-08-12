@@ -312,7 +312,7 @@ bool add_spell_to_memory(spell_type spell)
         }
 
     if (you.num_turns)
-        mprf("Spell assigned to '%c'.", index_to_letter(j));
+        mprf("'%c'로 주문 키를 바꾸었다.", index_to_letter(j));
 
     // Swapping with an existing spell.
     if (you.spell_letter_table[j] != -1)
@@ -351,10 +351,10 @@ static void _remove_spell_attributes(spell_type spell)
         {
             const int orig_defl = you.missile_deflection();
             you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel %s from missiles.",
+            mprf(MSGCH_DURATION, "당신은 투사체%s을 느꼈다.",
                                  you.missile_deflection() < orig_defl
-                                 ? "less protected"
-                                 : "your spell is no longer protecting you");
+                                 ? "에 덜 보호받음"
+                                 : "를 주문이 더 이상 막아주지 않음");
         }
         break;
 #if TAG_MAJOR_VERSION == 34
@@ -362,7 +362,7 @@ static void _remove_spell_attributes(spell_type spell)
         if (you.attribute[ATTR_DELAYED_FIREBALL])
         {
             you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-            mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
+            mprf(MSGCH_DURATION, "충전해둔 화염구가 소멸했다.");
         }
         break;
 #endif
@@ -381,7 +381,7 @@ bool del_spell_from_memory_by_slot(int slot)
 
     spell_skills(you.spells[slot], you.stop_train);
 
-    mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
+    mprf("%s에 대한 기억을 지웠다.", spell_title(you.spells[slot]));
     _remove_spell_attributes(you.spells[slot]);
 
     you.spells[slot] = SPELL_NO_SPELL;
