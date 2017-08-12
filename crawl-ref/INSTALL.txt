@@ -117,7 +117,7 @@ typing the following as root/sudo:
 apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
   libsqlite3-dev libz-dev pkg-config libsdl2-image-dev libsdl2-mixer-dev    \
   libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
-(the last five are needed only for tiles builds). This is the complete set,
+(the last six are needed only for tiles builds). This is the complete set,
 with it you don't have a need for the bundled "contribs".
 
 If you are going to be rebuilding after doing small changes a lot, it is
