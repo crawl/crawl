@@ -1123,6 +1123,7 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
+        mprf("%s%s은(는) 미믹이었다!", name.c_str(), plural ? "" : "");
 
     const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
