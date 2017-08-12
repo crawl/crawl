@@ -251,7 +251,7 @@ static int _cull_items()
 
     // XXX: Not the prettiest of messages, but the player
     // deserves to know whenever this kicks in. -- bwr
-    mprf(MSGCH_WARN, "Too many items on level, removing some.");
+    mprf(MSGCH_WARN, "이 계층에 너무나 많은 아이템이 있어서, 지우고 있다.");
 
     // Rules:
     //  1. Don't cleanup anything nearby the player
@@ -908,15 +908,15 @@ void item_check()
     if (items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
-            mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
+            mpr_nojoin(MSGCH_FLOOR_ITEMS, "여기에 있는 것들:");
         for (const item_def *it : items)
         {
-            mprf_nocap("%s", menu_colour_item_name(*it, DESC_A).c_str());
+            mprf_nocap("%s", menu_colour_item_name(*it, DESC_PLAIN).c_str());
             _maybe_give_corpse_hint(*it);
         }
     }
     else if (!done_init_line)
-        strm << "There are many items here." << endl;
+        strm << "여기엔 많은 아이템이 있다." << endl;
 
     if (items.size() > 2 && crawl_state.game_is_hints_tutorial())
     {
@@ -1320,11 +1320,11 @@ bool pickup_single_item(int link, int qty)
     item_def* item = &mitm[link];
     if (item_is_stationary(mitm[link]))
     {
-        mpr("You can't pick that up.");
+        mpr("당신은 그것을 주울 수 없다.");
         return false;
     }
     if (item->base_type == OBJ_GOLD && !qty && !i_feel_safe()
-        && !yesno("Are you sure you want to pick up this pile of gold now?",
+        && !yesno("정말로 지금 이 금화 더미를 주울 것인가?",
                   true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -1364,7 +1364,7 @@ bool pickup_single_item(int link, int qty)
 
     if (!pickup_succ)
     {
-        mpr("You can't carry that many items.");
+        mpr("그렇게 많은 물건을 들 수는 없다.");
         learned_something_new(HINT_FULL_INVENTORY);
         return false;
     }
@@ -1399,11 +1399,11 @@ void pickup(bool partial_quantity)
     you.last_pickup.clear();
 
     if (o == NON_ITEM)
-        mpr("There are no items here.");
+        mpr("여기엔 물건이 없다.");
     else if (you.form == transformation::ice_beast
              && grd(you.pos()) == DNGN_DEEP_WATER)
     {
-        mpr("You can't reach the bottom while floating on water.");
+        mpr("물 위에 떠 있는 동안에는 물 아래의 것을 주울 수 없다.");
     }
     else if (num_items == 1) // just one movable item?
     {
@@ -1423,9 +1423,9 @@ void pickup(bool partial_quantity)
     {
         int next;
         if (num_items == 0)
-            mpr("There are no objects that can be picked up here.");
+            mpr("여기엔 주울 수 있는 물건이 없다.");
         else
-            mpr("There are several objects here.");
+            mpr("여기엔 여러 물건이 있다.");
         string pickup_warning;
         bool any_selectable = false;
         while (o != NON_ITEM)
@@ -1489,7 +1489,7 @@ void pickup(bool partial_quantity)
         if (!any_selectable)
         {
             for (stack_iterator si(you.pos(), true); si; ++si)
-                mprf_nocap("%s", menu_colour_item_name(*si, DESC_A).c_str());
+                mprf_nocap("%s", menu_colour_item_name(*si, DESC_PLAIN).c_str());
         }
 
         if (!pickup_warning.empty())
@@ -1722,11 +1722,11 @@ void get_gold(const item_def& item, int quant, bool quiet)
     if (!quiet)
     {
         const string gain = quant != you.gold
-                            ? make_stringf(" (gained %d)", quant)
+                            ? make_stringf(" (금화 %d개 획득함)", quant)
                             : "";
 
-        mprf("You now have %d gold piece%s%s.",
-             you.gold, you.gold != 1 ? "s" : "", gain.c_str());
+        mprf("당신은 현재 %d개의 금화%s%s을(를) 갖고있다.",
+             you.gold, you.gold != 1 ? "" : "", gain.c_str());
         learned_something_new(HINT_SEEN_GOLD);
     }
 }
@@ -1744,7 +1744,7 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
     if (item_is_stationary(it))
     {
         if (!quiet)
-            mpr("You can't pick that up.");
+            mpr("당신은 그것을 주울 수 없다.");
         // Fake a successful pickup (return 1), so we can continue to
         // pick up anything else that might be on this square.
         return true;
@@ -1841,25 +1841,25 @@ static void _get_rune(const item_def& it, bool quiet)
     if (!quiet)
     {
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
-        mprf("You pick up the %s rune and feel its power.",
+        mprf("당신은 %s 룬을 집는 순간, 그 힘을 선명하게 느꼈다.",
              rune_type_name(it.sub_type));
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
-            mpr("You have collected all the runes! Now go and win!");
+            mpr("당신은 모든 룬을 모았다! 가서 승리를 쟁취하라!");
         else if (nrunes == ZOT_ENTRY_RUNES)
         {
             // might be inappropriate in new Sprints, please change it then
-            mprf("%d runes! That's enough to enter the realm of Zot.",
+            mprf("%d개의 룬! 이는 조트의 왕국에 입장하기에 충분하다.",
                  nrunes);
         }
         else if (nrunes > 1)
-            mprf("You now have %d runes.", nrunes);
+            mprf("당신은 현재 %d개의 룬을 갖고있다.", nrunes);
 
-        mpr("Press } to see all the runes you have collected.");
+        mpr("}를 눌러 모은 룬을 확인할 수 있다.");
     }
 
     if (it.sub_type == RUNE_ABYSSAL)
-        mpr("You feel the abyssal rune guiding you out of this place.");
+        mpr("심연의 룬이 당신을 밖으로 이끄는 것을 느꼈다.");
 }
 
 /**
@@ -1872,13 +1872,12 @@ static void _get_orb(const item_def &it, bool quiet)
 {
     run_animation(ANIMATION_ORB, UA_PICKUP);
 
-    mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
+    mprf(MSGCH_ORB, "조트의 오브를 들어올렸다!");
 
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
-    start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
-                                    "of the dungeon!");
+    start_orb_run(CHAPTER_ESCAPING, "이제 던전의 밖으로 떠날 때가 되었다!");
 }
 
 /**
@@ -1917,7 +1916,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (gained %d)",
+            mprf_nocap("%s (%d개 획득함)",
                         menu_colour_item_name(you.inv[inv_slot],
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
@@ -2261,7 +2260,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     }
 
     if (p == you.pos() && _id_floor_item(item))
-        mprf("You see here %s.", item.name(DESC_A).c_str());
+        mprf("당신은 이 곳에서 %s을(를) 보았다.", item.name(DESC_PLAIN).c_str());
 
     return true;
 }
@@ -2450,7 +2449,7 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
-            mpr("You will have to take that off first.");
+            mpr("그것을 먼저 벗어야 한다.");
         else if (remove_ring(item_dropped, true))
         {
             // The delay handles the case where the item disappeared.
@@ -2466,7 +2465,7 @@ bool drop_item(int item_dropped, int quant_drop)
     if (item_dropped == you.equip[EQ_WEAPON]
         && item.base_type == OBJ_WEAPONS && item.cursed())
     {
-        mprf("%s is stuck to you!", item.name(DESC_THE).c_str());
+        mprf("%s은(는) 당신에게 들러붙었다!", item.name(DESC_PLAIN).c_str());
         return false;
     }
 
@@ -2475,7 +2474,7 @@ bool drop_item(int item_dropped, int quant_drop)
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
             if (!Options.easy_unequip)
-                mpr("You will have to take that off first.");
+                mpr("그것을 먼저 벗어야 한다.");
             else if (check_warning_inscriptions(item, OPER_TAKEOFF))
             {
                 // If we take off the item, cue up the item being dropped
@@ -2510,11 +2509,11 @@ bool drop_item(int item_dropped, int quant_drop)
 
     if (!copy_item_to_grid(item, you.pos(), quant_drop, true, true))
     {
-        mpr("Too many items on this level, not dropping the item.");
+        mpr("현재 위치에 물건이 너무 많아, 물건을 버릴 수 없다.");
         return false;
     }
 
-    mprf("You drop %s.", quant_name(item, quant_drop, DESC_A).c_str());
+    mprf("당신은 %s을(를) 떨어뜨렸다.", quant_name(item, quant_drop, DESC_PLAIN).c_str());
 
     // If you drop an item in as a merfolk, it is below the water line and
     // makes no noise falling.
@@ -2549,7 +2548,7 @@ void drop_last()
     }
 
     if (items_to_drop.empty())
-        mpr("No item to drop.");
+        mpr("버릴 물건이 없다.");
     else
     {
         you.last_pickup.clear();
@@ -4082,7 +4081,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
                 line.clear();
             }
         }
-        mprf(MSGCH_PROMPT, "Which rune (ESC to exit)? ");
+        mprf(MSGCH_PROMPT, "어느 룬을 선택하는가? (ESC키로 종료)");
 
         int keyin = toalower(get_ch());
 
@@ -4152,8 +4151,8 @@ static void _deck_from_specs(const char* _specs, item_def &item,
 
     while (item.sub_type == MISC_DECK_UNKNOWN)
     {
-        mprf(MSGCH_PROMPT, "[a] escape [b] destruction [c] summoning? "
-                           "(ESC to exit)");
+        mprf(MSGCH_PROMPT, "[a] 탈출 [b] 파괴 [c] 소환? "
+                           "(종료하려면 ESC)");
 
         const int keyin = toalower(get_ch());
 
@@ -4201,7 +4200,7 @@ static void _deck_from_specs(const char* _specs, item_def &item,
     {
         while (true)
         {
-            mprf(MSGCH_PROMPT, "[a] plain [b] ornate [c] legendary? (ESC to exit)");
+            mprf(MSGCH_PROMPT, "[a] 평범한 [b] 화려한 [c] 전설적인? (종료하려면 ESC)");
 
             int keyin = toalower(get_ch());
 
@@ -4445,7 +4444,7 @@ bool get_item_by_name(item_def *item, const char* specs,
                 item->skill = skill;
             else
             {
-                mpr("Sorry, no books on that skill today.");
+                mpr("유감이지만 그 기술에 관련된 책은 존재하지 않는다.");
                 item->skill = SK_FIGHTING; // Was probably that anyway.
             }
             item->skill_points = random_range(2000, 3000);
@@ -4864,7 +4863,7 @@ static void _identify_last_item(item_def &item)
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :
                                     item_class_name(item.base_type, true);
-    mprf("You have identified the last %s.", class_name.c_str());
+    mprf("당신은 마지막으로 %s을(를) 감정해냈다.", class_name.c_str());
 
     if (in_inventory(item))
     {

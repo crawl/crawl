@@ -1401,7 +1401,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                               * drain);
                 if (drain)
                 {
-                    mpr("You feel invigorated.");
+                    mpr("당신의 활력이 쇠하는게 느껴졌다.");
                     inc_mp(drain);
                 }
             }
@@ -1869,7 +1869,7 @@ void melee_attack::rot_defender(int amount)
         if (needs_message)
         {
             if (defender->is_player())
-                mpr("You feel your flesh rotting away!");
+                mpr("당신의 살점이 썩어가는 것이 느껴졌다!");
             else if (defender->is_monster() && defender_visible)
                 mprf("%s looks less resilient!", defender_name(false).c_str());
         }
@@ -1926,7 +1926,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (wpn_brand == SPWPN_FLAMING)
     {
         if (defender_visible)
-            mpr("The flame cauterises the wound!");
+            mpr("불이 상처를 지지고 있다!");
         return false;
     }
 
@@ -2771,7 +2771,7 @@ void melee_attack::mons_apply_attack_flavour()
         // Doesn't affect the poison-immune.
         if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
         {
-            mpr("Your divine stamina protects you from poison!");
+            mpr("당신의 신성한 기운이 당신을 독으로부터 보호했다!");
             break;
         }
         else if (defender->res_poison() >= 3)
@@ -3183,7 +3183,7 @@ void melee_attack::emit_foul_stench()
             && !cell_is_solid(mon->pos())
             && !cloud_at(mon->pos()))
         {
-            mpr("You emit a cloud of foul miasma!");
+            mpr("당신은 부패 구름을 내뿜었다!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
         }
     }
@@ -3242,7 +3242,7 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_final_multipliers(dmg);
         int hurt = attacker->apply_ac(dmg);
 
-        mpr("You furiously retaliate!");
+        mpr("당신은 맹렬하게 반격했다!!");
         dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
         if (hurt <= 0)
         {

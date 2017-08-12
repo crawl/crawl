@@ -1290,7 +1290,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
 
         if (need_prompt)
         {
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
+            mprf(MSGCH_PROMPT, "%s (메뉴로 돌아가기 <w>?</w>, 종료하기 <w>Esc</w>)",
                  prompt.c_str());
         }
 
@@ -1364,7 +1364,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
             ret = letter_to_index(keyin);
 
             if (!you.inv[ret].defined())
-                mpr("You don't have any such object.");
+                mpr("당신은 그런 물건을 가지고 있지 않다.");
             else
                 break;
         }
@@ -1864,7 +1864,7 @@ int prompt_invent_item(const char *prompt,
 
         if (need_prompt)
         {
-            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
+            mprf(MSGCH_PROMPT, "%s (메뉴로 돌아가기 <w>?</w>, 종료하기 <w>Esc</w>)",
                  prompt);
         }
         else
@@ -1949,11 +1949,11 @@ int prompt_invent_item(const char *prompt,
             ret = letter_to_index(keyin);
 
             if (must_exist && !you.inv[ret].defined())
-                mpr("You don't have any such object.");
+                mpr("당신은 그런 물건을 가지고 있지 않다.");
             else if (must_exist && !item_is_selected(you.inv[ret],
                                                      current_type_expected))
             {
-                mpr("That's the wrong kind of item! (Use * to select it.)");
+                mpr("그건 잘못된 종류의 아이템이다! (*를 눌러 선택)");
             }
             else if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
                 break;
@@ -2062,7 +2062,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if (item.used_count == ZAPCOUNT_EMPTY)
         {
             if (msg)
-                mpr("This wand has no charges.");
+                mpr("이 마법봉은 충전되어 있지 않다.");
             return false;
         }
         return true;
@@ -2083,7 +2083,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         }
 
         if (msg)
-            mpr("That item cannot be evoked!");
+            mpr("그 아이템은 발동할 수 없다!");
         return false;
 
     case OBJ_STAVES:
@@ -2100,7 +2100,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             return true;
         }
         if (msg)
-            mpr("That item cannot be evoked!");
+            mpr("그 아이템은 발동할 수 없다!");
         return false;
 
 #if TAG_MAJOR_VERSION == 34
@@ -2116,7 +2116,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 
     default:
         if (msg)
-            mpr("That item cannot be evoked!");
+            mpr("그 아이템은 발동할 수 없다!");
         return false;
     }
 }
