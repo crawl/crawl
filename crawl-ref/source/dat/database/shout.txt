@@ -14,25 +14,25 @@
 __BUGGY
 
 # This line should never get displayed to the user, even if
-# monster_shout() in shout.cc detects buggy behavior,
+# handle_monster_shouts() in view.cc detects buggy behavior,
 # so showing this line would itself be a bug.
 SOUND:You hear doubly buggy behavior!
 %%%%
 __SHOUT
 
-SOUND:You hear a shout!
+SOUND:당신은 크게 외치는 소리를 들었다!
 %%%%
 __SHOUT seen
 
-SOUND:@The_monster@ shouts!
+SOUND:@The_monster@이(가) 큰 소리로 외쳤다!
 %%%%
 __BARK unseen
 
-SOUND:You hear a bark!
+SOUND:당신은 짖는 소리를 들었다!
 %%%%
 __BARK seen
 
-SOUND:@The_monster@ barks!
+SOUND:@The_monster@이(가) 짖는 소리가 들렸다!
 %%%%
 __HOWL unseen
 
@@ -44,79 +44,83 @@ SOUND:@The_monster@ howls!
 %%%%
 __TWO_SHOUTS unseen
 
-SOUND:You hear two shouts!
+SOUND:당신은 두 개의 외침을 들었다!
 %%%%
 __TWO_SHOUTS seen
 
-SOUND:@The_monster@ shouts in stereo!
+SOUND:@The_monster@이(가) 스테레오로 외쳤다!
 %%%%
 __ROAR unseen
 
-SOUND:You hear a roar!
+SOUND:당신은 포효를 들었다!
 %%%%
 __ROAR seen
 
-SOUND:@The_monster@ roars!
+SOUND:@The_monster@이(가) 포효했다!
 %%%%
 __SCREAM unseen
 
-SOUND:You hear a hideous shriek!
+SOUND:당신은 찢어지는 듯한 쇳소리를 들었다!
 %%%%
 __SCREAM seen
 
-SOUND:@The_monster@ gives a hideous shriek!
+SOUND:@The_monster@은(는) 찢어지는 듯한 쇳소리를 냈다!
 %%%%
 __BELLOW unseen
 
-SOUND:You hear a bellow!
+SOUND:당신은 울부짖음을 들었다!
 %%%%
 __BELLOW seen
 
-SOUND:@The_monster@ bellows!
-%%%%
-__BLEAT unseen
-
-SOUND:You hear a bleat!
-%%%%
-__BLEAT seen
-
-SOUND:@The_monster@ bleats!
+SOUND:@The_monster@이(가) 울부짖었다!
 %%%%
 __TRUMPET unseen
 
-SOUND:You hear a trumpeting!
+SOUND:당신은 울부짖는 소리를 들었다!
 %%%%
 __TRUMPET seen
 
-SOUND:@The_monster@ trumpets!
+SOUND:@The_monster@이(가) 울부짖었다!
 %%%%
 __SCREECH unseen
 
-SOUND:You hear a screech!
+SOUND:당신은 쇳소리를 들었다!
 %%%%
 __SCREECH seen
 
-SOUND:@The_monster@ screeches!
+SOUND:@The_monster@이(가) 쇳소리를 내었다!
 %%%%
 __BUZZ unseen
 
-SOUND:You hear an angry buzzing noise.
+SOUND:당신은 사납게 붕붕거리는 소리를 들었다.
 %%%%
 __BUZZ seen
 
-SOUND:@The_monster@ buzzes angrily.
+SOUND:@The_monster@이(가) 사납게 붕붕거리는 소리를 냈다!
 %%%%
 __MOAN unseen
 
-SOUND:You hear a chilling moan.
+SOUND:당신은 얼어붙는듯한 신음을 들었다.
 %%%%
 __MOAN seen
 
-SOUND:@The_monster@ gives a chilling moan.
+SOUND:@The_monster@이(가) 얼어붙는듯한 신음을 내뱉었다.
+%%%%
+__GURGLE seen
+
+SOUND:@The_monster@이(가) '쏴~' 하는 기분 나쁜 소리를 냈다!
 %%%%
 __GURGLE unseen
 
-SOUND:You hear a horrible gurgling sound!
+SOUND:당신은 '쏴~' 하는 기분나쁜 소리를 들었다!
+%%%%
+__WHINE unseen
+
+SOUND:당신은 귀에 거슬리는 날카로운 신음을 들었다.
+%%%%
+__WHINE seen
+
+SOUND:@The_monster@이(가) 귀에 거슬리는 날카로운 신음을 냈다.
 %%%%
 __GURGLE seen
 
@@ -124,71 +128,71 @@ SOUND:@The_monster@ gurgles horribly!
 %%%%
 __CROAK unseen
 
-SOUND:You hear a loud, deep croak!
+SOUND:당신은 짜증나게 개굴거리는 소리를 들었다.
 
-SOUND:You hear a croak.
+SOUND:당신은 개굴개굴 거리는 소리를 들었다.
 %%%%
 __CROAK seen
 
-SOUND:@The_monster@ gives a loud, deep croak!
+SOUND:@The_monster@이(가) 짜증나게 개굴거리는 소리를 냈다!
 
-SOUND:@The_monster@ croaks.
+SOUND:@The_monster@이(가) 개굴개굴 거리는 소리를 냈다.
 %%%%
 __GROWL unseen
 
-SOUND:You hear an angry growl.
+SOUND:당신은 험악하게 으르렁거리는 소리를 들었다.
 %%%%
 __GROWL seen
 
-SOUND:@The_monster@ growls angrily.
+SOUND:@The_monster@이(가) 험악하게 으르렁거리는 소리를 냈다.
 %%%%
 __HISS unseen
 
-SOUND:You hear an angry hiss.
+SOUND:당신은 '슈~'하는 험악한 소리를 들었다.
 %%%%
 __HISS seen
 
-SOUND:@The_monster@ hisses angrily.
-%%%%
-__SQUEAL unseen
-
-SOUND:You hear an angry squeal.
-%%%%
-__SQUEAL seen
-
-SOUND:@The_monster@ squeals angrily.
+SOUND:@The_monster@이(가) '슈~' 하는 험악한 소리를 냈다.
 %%%%
 __DEMON_TAUNT
 
-@The_monster@ @says@, "@demon_taunt@"
+@The_monster@@says@. "@demon_taunt@"
+%%%%
+__CAW seen
+
+SOUND:@The_monster@이(가) 까악거리며 울었다.
+%%%%
+__CAW unseen
+
+SOUND:당신은 시끄럽게 까악거리는 소리를 들었다.
 %%%%
 __CHERUB seen
 
-SOUND:@The_monster@'s eagle head screeches!
+SOUND:@The_monster@의 독수리 머리가 울부짖었다!
 
-SOUND:@The_monster@'s lion head roars!
+SOUND:@The_monster@의 사자 머리가 고함을 내질렀다!
 
-SOUND:@The_monster@'s ox head lows!
+SOUND:@The_monster@의 소 머리가 음메 하고 소리를 질렀다!
 
-SOUND:@The_monster@'s human head shouts!
+SOUND:@The_monster@의 인간 머리가 외쳤다!
 %%%%
 __CHERUB unseen
 
-SOUND:You hear a shout.
+SOUND:외침 소리가 들린다.
 
-SOUND:You hear a screech.
+SOUND:새가 날카롭게 울부짖는 소리가 들렸다.
 
-SOUND:You hear a roar.
+SOUND:야수의 울부짖는 소리가 들린다.
 
-SOUND:You hear a low.
+SOUND:음메 소리가 들린다.
 %%%%
-__LOUD_ROAR unseen
+__RUMBLE seen
 
-SOUND:You hear a deafening roar!
+SOUND:@The_monster@ rumbles deeply!
 %%%%
-__LOUD_ROAR seen
+__RUMBLE unseen
 
-SOUND:@The_monster@ roars deafeningly!
+SOUND:당신은 까악거리며 우는 소리를 들었다.
 %%%%
 ############################################
 # End of default shouts
@@ -201,7 +205,7 @@ SOUND:@The_monster@ roars deafeningly!
 %%%%
 player ghost
 
-VISUAL:@The_monster@ turns @possessive@ malevolent gaze towards you.
+VISUAL:@The_monster@은(는) 당신에게 악의에 찬 눈빛을 보였다.
 %%%%
 Fighter player ghost
 
@@ -263,6 +267,10 @@ Skald player ghost
 
 @player ghost@
 %%%%
+Death Knight player ghost
+
+@player ghost@
+%%%%
 Venom Mage player ghost
 
 @player ghost@
@@ -272,6 +280,10 @@ Chaos Knight player ghost
 @player ghost@
 %%%%
 Transmuter player ghost
+
+@player ghost@
+%%%%
+Healer player ghost
 
 @player ghost@
 %%%%
@@ -296,11 +308,21 @@ Wanderer player ghost
 %%%%
 'a'
 
-VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
+VISUAL:@The_monster@은(는) 당신이 있는 방향으로 더듬이를 까닥거렸다.
 %%%%
+'cap-B'
+
+VISUAL:@The_monster@은(는) 당신이 있는 방향으로 더듬이를 까닥거렸다.
+%%%%
+# Giant spores have their own visual, this is only for the eyeball
+# related ones.
 'cap-G'
 
-VISUAL:@The_monster@ turns @possessive@ gaze towards you.
+VISUAL:@The_monster@이(가) 당신을 응시했다.
+%%%%
+'j'
+
+VISUAL:@The_monster@이(가) 당신에게로 눈자루를 홱 돌렸다.
 %%%%
 'cap-J'
 
@@ -316,13 +338,11 @@ VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 # Shouts for specific monsters
 ########################################
 %%%%
-ballistomycete spore
+# The giant spore has no eyes, so it can't gaze at the player like the
+# other 'G' monsters.
+giant spore
 
-VISUAL:@The_monster@ waves @possessive@ rhizomes.
-%%%%
-glowing orange brain
-
-VISUAL:@The_monster@ turns @possessive@ attention towards you.
+VISUAL:@The_monster@은(는) 뿌리줄기를 흔들었다.
 %%%%
 # Iron imps, shadow imps and white imps copy imps.
 imp
@@ -330,11 +350,11 @@ imp
 # Shout one half the time, taunt the other half.
 @__SHOUT@
 
-SOUND:@The_monster@ @says@, "@imp_taunt@"
+SOUND:@The_monster@@says@. "@imp_taunt@"
 %%%%
 moth of wrath
 
-VISUAL:@The_monster@'s fur bristles in rage as it notices you.
+VISUAL:@The_monster@이(가) 당신을 노려보고, 온 몸의 털이 분노한듯 삐죽 세워졌다.
 %%%%
 iron imp
 
@@ -354,5 +374,5 @@ white imp
 Polyphemus
 
 # This would also work for other monsters that are surrounded by allies.
-SOUND:@The_monster@ shouts, "Attack, my pets! Attack!"
+SOUND:@The_monster@은(는) 외쳤다, "공격, 내 부하들아! 공격하라!"
 %%%%

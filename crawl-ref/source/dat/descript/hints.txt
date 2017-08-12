@@ -1,210 +1,217 @@
 %%%%
 welcome
 
-<white>Welcome to Dungeon Crawl!</white>
+<white>던전 크롤의 세계에 오신 것을 환영합니다!</white>
 
-Your objective is to lead your <w>{{ return you.race() }} {{ return you.class()
-}}</w> safely through the depths of the dungeon, retrieving the fabled Orb of
-Zot and returning it to the surface. In the beginning, however, let discovery
-be your main goal. Try to delve as deeply as possible but beware; death lurks
-around every corner.
+이 게임의 목적은 당신의 캐릭터인 <w>{{ return you.race() }} {{ return
+you.class() }}</w>를 조종하여, 던전 깊은 곳에 있는 전설의 아티팩트인 '조트의
+오브' 를 회수한 후 던전을 탈출하는 것입니다. 하지만 지금은, 던전을 탐험하는
+데에 게임의 목적을 둡시다. 던전 이곳저곳을 탐험해보세요. 명심하세요. 죽음은
+어디에서나 당신을 기다리고 있습니다.
 
-For the moment, just remember the following keys and their functions:
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — shows the items and the commands
-  <input>$cmd[CMD_SAVE_GAME]</input>  — saves the game, to be resumed later
-(but note that death is permanent)
-  <input>$cmd[CMD_LOOK_AROUND]</input>  — examines something in your vicinity
+일단, 게임에 필요한 몇몇 명령어들을 알아두세요.
+<input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — 게임 내의 명령어들을 보여줍니다.
+<input>$cmd[CMD_SAVE_GAME]</input> — 게임을 저장하여, 다음에 이어 할 수 있게
+해줍니다. (죽은 캐릭터를 살리는 기능이 아닙니다. 이곳에서의 죽음은 돌이킬 수
+없습니다.) <input>$cmd[CMD_LOOK_AROUND]</input> — 캐릭터의 시야 내에 있는
+것들을 조사합니다.
 
-The hint mode will help you play Crawl without reading any documentation. If
-you haven't yet, you might want to try out the tutorial. Also, if you feel
-intrigued, there is more information available in the following files from the
-docs/ directory (all of which can also be read in-game):
-  <lightblue>quickstart.txt</lightblue>     — A very short guide to Crawl.
-  <lightblue>crawl_manual.txt</lightblue>   — This contains all details on
-species, magic, skills, etc.
-  <lightblue>options_guide.txt</lightblue>  — Crawl's interface is highly
-configurable. This document explains all the options.
+힌트 모드는 다른 도움말들을 읽을 필요 없이 바로 게임을 할 수 있도록 도와줍니다.
+하지만 아직 튜토리얼을 해보지 않으셨다면, 가급적 튜토리얼부터 해보시는 것을
+추천합니다. 혹시 게임에 흥미가 생기셨다면, 게임이 설치된 폴더 내의 docs
+폴더에서 게임과 관련된 더 많은 정보를 접할 수 있습니다. (docs 폴더 내의 모든
+글은 게임 내에서도 읽어볼 수 있습니다.)
 
-Happy Crawling!
+'즐던크' 하시길!
 %%%%
 death
 
-Condolences! Your character's premature death is a sad, but common occurrence
-in Crawl. Rest assured that with diligence and playing experience your
-characters will last longer.
+당신의 죽음에 애도를! 캐릭터의 죽음은 슬픈 일이지만, 던전 크롤에서 죽음은 곧
+일상이니 너무 슬퍼하지 마세요. 이번 캐릭터가 죽은 이유를 생각하고 다음에는 같은
+이유로 캐릭터가 죽는 일이 없게 신경 쓰면, 캐릭터의 생존 시간은 점점 늘어날
+것입니다.
 
-Perhaps the following advice can improve your playing style:
+아마 이 도움말이 캐릭터의 생존에 도움이 될 것 같네요 :
 %%%%
 death conjurer melee
 
-As a Conjurer your main weapon should be offensive magic. Cast spells more
-often! Remember to rest when your Magic is low.
+마법사의 무기는? 공격마법이지요. 적과 싸울 때 마력을 아끼지 마세요! 물론 마력이
+없을 때에는 싸우던 도중에라도 도망쳐서 휴식을 취해야겠지요.
 %%%%
 death berserker unberserked
 
-Don't forget to go berserk when fighting particularly difficult foes. It's
-risky, but makes you faster and beefier.
+강하다 싶은 적을 만났을 때에는 광폭화하는 것을 잊지 마세요! 광폭화는 후유증이
+있지만, 캐릭터를 훨씬 강하고 빠르게 만들어줍니다.
 {{
     if you.hunger() < 3 then
-        return "Berserking is impossible while very hungry or worse, so " ..
-               "make sure to stay fed at all times, just in case you need " ..
-               "to berserk."
+        return "'매우 배고픔' 상태 혹은 그보다 더욱 배가 고픈 상태에선 " ..
+               "광폭화를 사용할 수 없습니다. 던전에서는 광폭화를 꼭 써야 하는 "
+..
+               "어떤 돌발상황이 나타날지 모르니, 일정 이상의 만복도는 꼭
+유지하세요."
     end
 }}
 %%%%
 death ranger melee
 
-Your bow and arrows are extremely powerful against distant monsters. Be sure to
-collect all arrows lying around in the dungeon.
+근접전밖에 할 줄 모르는 대부분의 멍청한 적들에게, 활과 화살은 굉장히 강력한
+무기입니다. 던전에서 사용 가능한 화살을 발견했다면, 지체하지 말고 가져가세요.
 %%%%
 death random 0
 
-Always consider using projectiles, wands or spells before engaging monsters in
-close combat.
+적을 멀리서 발견했다면, 무조건 돌진하는 것보다는 뭐라도 던지던가 마법봉을
+휘두른다든가 주문을 외우거나 해서 적의 체력을 줄여놓으세요. 특히 적이 강력해
+보일수록 말이죠.
 %%%%
 death random 1
 
-Learn when to run away from things you can't handle — this is important! It is
-often wise to skip a particularly dangerous level. But don't overdo this as
-monsters will only get harder the deeper you delve.
+적과 싸워 이길 수 있을지 없을지 확신할 수 없는 상황이라면? — 도망가세요! 이
+게임에서 도망치는 것은 결코 비겁한 행동이 아닌, 생존을 위한 필수적인
+전략입니다. 마찬가지로 어떤 층계가 너무 위험하다 싶으면, 그냥 바로 다음 층으로
+가세요. 하지만, 내려갈수록 더욱 강한 적이 나올 테니 너무 남발하지는 마시고요.
 %%%%
 death random 2
 
-Rest between encounters, if possible in an area already explored and cleared of
-monsters. Pressing <input>$cmd[CMD_REST]</input><localtiles>, or
-<input>clicking on the 'rest' button in the command bar'</input></localtiles>
-will rest for 100 turns, or until fully healed.
+전투가 끝나면, 이미 탐험이 끝나 적이 없는 곳에서 휴식을 취하는 것은 필수입니다.
+<input>$cmd[CMD_REST]</input><localtiles>키를 누르거나, 혹은 우측 상태창
+아이콘 중<input>휴식 명령 아이콘</input></localtiles>을 클릭하면, 휴식을
+취하면서 주변 지역을 자동으로 탐색하게 됩니다.  (휴식은 100턴이 지나거나, 혹은
+체력이 다 채워지면 자동으로 종료됩니다.)
 %%%%
 death random 3
 
-Remember to use those scrolls, potions or wands you've found. Learn to
-improvise: identify your items by using them.
-%%%%
-death random 4
-
-If a particular encounter feels overwhelming, don't forget to use emergency
-items early on. A scroll of teleportation or a potion of haste can really save
-your bacon.
+지금껏 발견한 두루마리, 물약, 마법봉 등을 사용하면 위기에 빠진 캐릭터를 구할
+수도 있습니다. 하지만, 감정의 두루마리는 이 모든 물품을 감정하기에는 턱없이
+부족하지요. 그렇다면 임기응변으로, 일단 사용해보세요. 팁을 하나 주자면, 초반에
+유독 많이 나오는 두루마리와 물약은 거의 정해져 있습니다.
 %%%%
 death random 5
 
-Never fight more than one monster, if you can help it. Always back into a
-corridor so that they are forced to fight you one on one.
+가능한 적과 1:1 싸움만을 하세요. 좁고 긴 복도 같은 곳에서 전투를 하면, 적들은
+어쩔 수 없이 캐릭터와 1:1로 싸우게 됩니다.
 %%%%
 finished
 
-Congrats! You survived until the end of the hint mode — be sure to try the
-other ones as well. Note that the command help screen
-(<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) will look very different from now
-on. Here's a last playing hint:
+축하합니다! 당신은 힌트 모드에서 끝까지 살아남는데 성공하셨습니다. 이제 다른
+캐릭터를 해보면서, 어떤 조합이 자신에게 가장 맞는지 실험해보세요. 또한 실제
+게임에서는 도움말 화면(<input>$cmd[CMD_DISPLAY_COMMANDS]?</input> 키)를
+불러오는 것으로, 훨씬 다양한 도움말을 얻을 수 있으니, 기회가 되시면 한번
+눌러보세요. 이건 당신에게 드리는 마지막 ‘힌트’입니다:
 %%%%
 finished explored
 
-Walking around and exploring levels gets easier by using auto-explore
-(<input>$cmd[CMD_EXPLORE]</input>). Crawl will let you automatically move to
-and pick up interesting items.<localtiles>
-
-Autoexploration can also be started by <input>Ctrl-Leftclick</input> on the
-minimap.</localtiles>
+자동 이동(<input>$cmd[CMD_EXPLORE]</input>). 키를 눌러 자동이동 기능을 사용하면
+더 쉽게 던전을 탐험할 수 있습니다. 자동이동 기능은 이동은 물론, 쓸만한 물건이
+있다면 자동으로 주울 수도 있습니다.<localtiles> 자동이동 기능은 미니맵에 커서를
+가져간 후, <input>컨트롤</input>키를 누른 상태로 <input>왼쪽
+마우스버튼</input>을 클릭하여 사용할 수도 있습니다.</localtiles>
 %%%%
 finished travel
 
-There is a convenient way to travel between distant dungeon levels: press
-<input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> and enter the desired destination.
-If your travel gets interrupted, issuing <input>$cmd[CMD_INTERLEVEL_TRAVEL]
-Enter</input> will continue it.
+다른 던전을 가고 싶을 때 사용할 수 있는 편리한 방법을 알려드리겠습니다 :
+<input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> 키를 누른 후에, 가고 싶은 곳을
+선택하세요. 도중에 방해를 받아 목적지에 도착하지 못했을 경우,
+<input>$cmd[CMD_INTERLEVEL_TRAVEL] — 엔터</input> 키를 누르면 이동을 재개할 수
+있습니다.
 %%%%
 finished stashes
 
-You can search among all items existing in the dungeon with the
-<input>$cmd[CMD_SEARCH_STASHES]</input> command. For example,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“dagger”</w> will list all daggers,
-and allow you to travel to them. You can even search for dungeon features, like
-<w>“shop”</w> or <w>“altar”</w>.
+<input>$cmd[CMD_SEARCH_STASHES]</input> 키를 이용하여 던전에 존재하는 것들을
+검색할 수 있습니다. 예를 들어, <input>$cmd[CMD_SEARCH_STASHES] “도끼”</input>
+라고 입력하면 손도끼부터 처형자의 도끼까지 모두 표시해주며, 그 도끼가 있는
+곳으로 이동할 수도 있습니다. <w>“상점”</w> 이나 <w>“제단”</w> 같은 것들도
+검색할 수 있습니다.
 %%%%
 finished random 0
 
-The game keeps an automated log for your characters. Use
-<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> to read it. Once your character
-perishes, two morgue files are left in the <w>morgue/</w> directory. The one
-ending in .txt contains a copy of your log. During play, you can create a dump
-file with <input>$cmd[CMD_CHARACTER_DUMP]</input>.
+게임은 자동으로 캐릭터가 지금까지 해온 일들을 기록하는 일지를 작성하며,
+<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> 키를 눌러서 볼 수 있습니다.
+<input>$cmd[CMD_MAKE_NOTE]</input> 키를 이용하여 직접 일지에 내용을 적어넣을
+수도 있습니다. 캐릭터가 죽으면 <w>morgue</w> 폴더에 일지가 저장되며, 확장자가
+txt로 끝나는 파일을 열어 일지를 확인할 수 있습니다.
+<input>$cmd[CMD_CHARACTER_DUMP]</input> 키를 이용하면 캐릭터가 살아있는
+동안에도 폴더에 일지를 저장할 수 있습니다.
 %%%%
 finished random 1
 
-Crawl has a macro function built in: press <input>~m</input> to define a macro
-by first specifying a trigger key (say, <input>F1</input>) and a command
-sequence, for example <input>za.</input>. The latter will make the
-<input>F1</input> key always zap the spell in slot a at the nearest monster.
-For more information on macros, type
-<input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
+던전 크롤은 게임 내에서 자체적인 매크로 기능을 지원합니다. <input>~m</input>
+키를 눌러 매크로 작성 창을 열 수 있습니다. 매크로 작성 방법은 다음과 같습니다.
+우선 매크로를 저장할 키 (<input>F1</input> 키를 예로 들겠습니다.) 를
+지정합니다. 그 다음, 앞에 저장한 키를 누르면 실행될 동작을 기록합니다. 여기서는
+<input>za+.</input> 키를 기록한다고 가정하겠습니다. 이렇게 하면 매크로 작성이
+완료되며, 이제 <input>F1</input> 키를 누를 때마다 가장 가까운 적에게 자동으로 a
+마법을 발사하게 됩니다. 즉, ‘z로 마법 시전, a로 마법 선택, +로 조준, .로
+발사’ 라는 번거로운 커맨드를, 키 하나만 눌러 편리하게 사용할 수가 있죠. 매크로
+기능에 대해 더 자세히 알고 싶다면, <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>
+키를 누르세요.
 %%%%
 finished random 2
 
-The interface can be greatly customised. All options are explained in the file
-<w>options_guide.txt</w> which can be found in the <w>docs</w> directory. The
-options themselves are set in <w>init.txt</w> or <w>.crawlrc</w>. Crawl will
-complain if it can't find either file.
+게임의 인터페이스는 사용자가 원하는 대로 변경할 수 있습니다.
+<w>Settings</w>폴더에 있는 <w>init.txt</w> 또는 <w>.crawlrc</w> 파일에서 게임의
+옵션을 바꿀 수 있으며, 옵션에 대한 자세한 설명을 보려면 <w>docs</w> 폴더에 있는
+<w>options_guide.txt</w> 파일을 참고하세요. <w>init.txt</w> 파일과
+<w>.crawlrc</w> 파일이 모두 존재하지 않는다면, 던전 크롤은 실행되지 않습니다.
 %%%%
 finished random 3
 
-You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
-(Internet Relay Chat) channel on freenode (<w>irc.freenode.net</w>).
+다른 플레이어들의 조언을 구하고싶다면 아래의 방법들을 이용해보세요.
+
+<w>http://nethack.byus.net</w> (감자넷) : 던전 크롤을 포함한 여러 로그라이크
+게임을 다룹니다. <w>http://gall.dcinside.com/</w> 에서 ‘고전게임 갤러리’ ,
+‘게임 갤러리’ (DC인사이드) : 던전 크롤을 포함한 다양한 고전/일반적인 게임을
+다룹니다. 커뮤니티의 특성상 비속어 사용이 많으니 주의하세요. IRC
+<w>#Stonesoup</w> 채널 : 국내의 던전 크롤 채팅방입니다. 채팅방이라는 특성상,
+질문에 가장 빠른 답을 얻을 수 있을 것입니다. IRC <w>##Crawl</w> 채널 (서버는
+<w>irc.freenode.net</w>) : 공식 던전 크롤 채팅방입니다. 외국 채널이라서 영어를
+사용합니다.
 %%%%
 dissection reminder
 
-Don't forget that you can butcher corpses with <input>$cmd[CMD_BUTCHER]</input>
-<localtiles>, or by clicking on corspes in the floor part of your inventory
-with the <input>left mouse button</input></localtiles>.
+딱히 배가 고프지 않다면, <input>$cmd[CMD_PRAY]</input> 키를 이용해서 {{ return
+you.god() }} 신에게 시체를 바치는 것이 좋습니다.<localtiles> 소지품 창 밑에
+있는, 땅에 있는 물건을 보여주는 곳에서 시체에 <input>왼쪽 마우스버튼</input>을
+클릭하는 방법으로도 시체를 해체할 수 있습니다.</localtiles> (물론 시체를 받지
+않는 신도 있습니다.)  힌트 모드에서는 시체를 볼 때마다 이 메시지가 나올
+것입니다.
 %%%%
 HINT_CONVERT Xom
 
-You've just converted to worshipping <w>Xom</w>. You can keep Xom happy by
-keeping him amused; you absolutely do not want this god to grow bored with you!
+<w>좀</w>을 믿는 순간, 당신은 신의 장난감이 됩니다. 좀은 취향이 특이해서,
+장난감이 위기에 빠지거나 안 좋은 일을 당할수록 즐거워합니다.
 
-If you keep Xom amused he'll treat you like a plaything, randomly helping and
-harming you for his own amusement; otherwise he'll treat you like a disfavoured
-plaything.
-%%%%
-HINT_CONVERT Gozag
-
-You've just converted to worshipping <w>Gozag</w>. Unlike other gods, Gozag only
-cares about gold; each divine power costs gold, and they grow more expensive
-with use. Still, that gold won't do you any good if you're dead, and Gozag's
-Potion Petition can be a huge help in combat! If you run short on food, you can
-use Call Merchant to buy a food shop.
-%%%%
-HINT_CONVERT Ru
-
-You've just converted to worshipping <w>Ru</w>. Unlike other gods, Ru grants
-piety (divine favour) in exchange for personal sacrifices, like giving up your
-ability to drink potions while endangered; the more piety you have, the more
-abilities Ru will grant, and the more powerful those abilities will become.
-Ru will offer sacrifices as you explore the depths of the dungeon.
+좀이 즐거워하는 동안에는 기분 따라 당신에게 좋은 일을 해줄 수도 나쁜 일을 해줄
+수도 있지만, 좀이 당신에게 흥미를 잃은 순간 당신은 좀이 장난감을 얼마나
+과격하게 가지고 놀 수 있는지 알게 될 것입니다.
 %%%%
 HINT_CONVERT
 
-You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
-(divine favour) will increase as you do things to please your new god, and will
-gradually decrease over time.
+당신은 지금까지 믿던 신을 버리고 <w>{{ return you.god() }}</w> 신을 믿기
+시작했습니다. 당신의 신앙심은 시간이 지날수록 점점 줄어들고, 만약 신앙심이 모두
+사라지면 {{ return you.god() }} 신은 당신을 파문하고 징벌을 내릴 것입니다. 이를
+방지하고 더 많은 신앙심을 쌓아 권능을 사용하기 위해서는, {{ return you.god() }}
+신이 좋아할만한 행동을 많이 해야합니다. 오, 겁먹지 마세요 : 처음 신을 믿으면
+상당량의 신앙심을 가지고 시작하니까요. 사실, 이런 일로 파문당하는 사람은 거의
+없습니다.
 
-You can check your god's likes and dislikes, as well as your current standing
-and divine abilities, by typing
-<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles>, or by pressing
-<input>Shift-right-click</input> on your avatar</localtiles>.
+지금 믿고 있는 신이 좋아하는 것과 싫어하는 것은 무엇이며 어떤 권능을 사용할 수
+있는지는 <input>^</input> 키로 볼 수 있습니다.<localtiles> (혹은 캐릭터에
+<input>쉬프트+오른쪽 마우스버튼</input>을 눌러서 볼 수도
+있습니다.)()</localtiles>
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
-That <console>$1 </console>is an item. If you move there and press
-<input>$cmd[CMD_PICKUP]</input><tiles>, or <input>left-click</input> on it in
-your inventory</tiles>, you will pick it up.<console> Generally, items
-are shown by non-letter symbols like <w>%?!"=()[</w>.</console> Some
-objects<tiles>, marked with a green frame,</tiles> will be picked up
-automatically.
+저것<console>$1 </console>은 아이템입니다. 아이템 위에 서서 <input>g</input>키
+혹은 <input>,</input>키를 누르면 아이템을 집어들 수 있죠.<console> 일반적으로
+아이템들은 <w>%?!"=()[</w>과 같은, 문자나 숫자가 아닌 기호로
+표시됩니다.</console><tiles> 혹은 아이템 위에 선 후, 오른쪽 명령어 창 아래에
+있는, 바닥에 있는 해당하는 아이템의 아이콘 그림을  <input>마우스 왼쪽
+버튼</input>으로 클릭하는 것으로도 아이템을 줍는 것이 가능하죠.</tiles>
 
-Once it is in your inventory, you can drop it again with <tiles>a
-<input>Shift-left-click</input>. Whenever you <input>right-click</input> on an
-item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
-item in your inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>,
-you can read about its properties and its description.
+소지품창에 들어온 아이템은, 기본적으로 <input>$cmd[CMD_DROP]</input> 키를 눌러
+버릴 수 있습니다. 그 외로는 <tiles>우측 소지품창의 해당 아이콘을
+<input>쉬프트키<input>를 누른 상태에서 <input>마우스 왼쪽 클릭</input>하거나,
+혹은 아이템을 <input>마우스 오른쪽 버튼</input>으로 클릭하여 </tiles>해당
+아이템의 정보창(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>키)을 띄운 후, 여기서
+<input>$cmd[CMD_DROP]</input>키를 눌러 버릴 수 있습니다.<console></console>
 %%%%

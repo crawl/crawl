@@ -1,2174 +1,1194 @@
 %%%%
-__c_suffix
-
-“When Peleus, some distance away, saw him torn apart by the frightful wound he
-shouted: ‘Accept this tribute to the dead, at least, Crantor, dearest of
-youths’, and with his powerful arm, he hurled his ash spear, at full strength,
-at Demoleon. It ruptured the ribcage, and stuck quivering in the bone. The
-centaur pulled out the shaft minus its head (he tried with difficulty to reach
-that also) but the head was caught in his lung. The pain itself strengthened
-his will: wounded, he reared up at his enemy and beat the hero down with his
-hooves. Peleus received the resounding blows on helmet and shield, and
-defending his upper arms, and controlling the weapon he held out, with one blow
-through the arm he pierced the bi-formed breast.”
-    -Ovid, _Metamorphoses_, XII, 330. 8 AD.
-%%%%
 __d_suffix
 
-“Trogdor was a man!
- I mean, he was a dragon-man!
- Or... maybe he was just a dragon.
+"Trogdor는 인간이야!
+ 내 말은, 용인이라는 거지!
+ 아니면...아마 그냥 용일지도.
  ...
- And the Trogdor comes in the night!”
-    -The Brothers Chaps, “Trogdor”. 2003.
-%%%%
-__q_suffix
-
-<__d_suffix>
+ 그리고 Trogdor는 오늘 밤에 찾아와!"
+    -The Brothers Chaps, "Trogdor". 2003.
 %%%%
 __r_suffix
 
-HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead [Stabs
-through the arras.]
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 4.
-1603.
-%%%%
-__cap-D_suffix
-
-“On the other hand, Confucius is made to say to his disciples, ‘I know how
-birds can fly, how fishes can swim, and how animals can run. But the runner may
-be snared, the swimmer may be hooked, and the flyer may be shot by the arrow.
-But there is the dragon. I cannot tell how he mounts on the wind through the
-clouds, and rises to heaven. Today I have seen Lao-tsze, and can only compare
-him to the dragon.’”
-    -Life of Confucius
-
-“This Dragon had Two furious Wings
-   Each one upon each Shoulder;
- With a Sting in his Tail as long as a Flail,
-   Which made him bolder and bolder.
- He had long Claws, and in his Jaws
-   Four and forty Teeth of Iron;
- With a Hide as tough, as any Buff,
-   Which did him round environ.”
-
-    -“An Excellent Ballad of a most dreadful Combat, fought between Moore of
-Moore-Hall, and the Dragon of Wantley”, retold by Ambrose Philips, _A
-Collection of Old Ballads. Corrected from the Best and Most Ancient Copies
-Extant. With Introductions Historical, Critical, Or Humorous_. 1723.
-%%%%
-__cap-K_suffix
-
-“The Parts Septentrionall are with these Sp'ryts Much haunted.. About the
-places where they dig for Oare. The Greekes and Germans call them Cobali.”
-    -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
-1635.
-%%%%
-__cap-O_suffix
-
-“The little princess, asleep in her cradle, floated on the water, and at last
-she was cast up on the shore of a beautiful country, where, however, very few
-people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
-there-for they ate up everybody. Ogres are terrible people. When once they have
-tasted raw human flesh they will hardly eat anything else, and Tourmentine
-always knew how to make some body come their way, for she was half a fairy.”
-    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, “'Orangier et
-l'Abeille”. 1697.
-
-“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
-it? We both have layers.”
-    -Shrek. 2001.
-%%%%
-__cap-S_suffix
-
-“The latter lived in the country, and before his house there was an oak, in
-which there was a lair of snakes. His servants killed the snakes, but Melampus
-gathered wood and burnt the reptiles, and reared the young ones. And when the
-young were full grown, they stood beside him at each of his shoulders as he
-slept, and they purged his ears with their tongues. He started up in a great
-fright, but understood the voices of the birds flying overhead, and from what
-he learned from them he foretold to men what should come to pass.”
-    -Pseudo-Apollodorus , _Library and Epitome_, 1.9.11. circa 150 BC.
-    trans. Sir James George Frazer, 1913.
-
-“A snake, with mottles rare,
- Surveyed my chamber floor,
- In feature as the worm before,
- But ringed with power.”
-    -Emily Dickinson, “In Winter In My Room”. circa 1860.
-%%%%
-__cap-T_suffix
-
-“Buckshank bold and Elfinstone,
- And more than I can mention here,
- They caused to be built so stout a ship,
- And unto Iceland they would steer.
-
- They launched the ship upon the main,
- Which bellowed like a wrathful bear;
- Down to the bottom the vessel sank,
- A laidly Trold has dragged it there.”
-    -George Borrow, _Lavengro: The Scholar, the Gypsy, the Priest_. 1851.
+"이건 뭐야! 쥐새끼냐? 뒈져라, 콱 뒈져 버려!"
+    -윌리엄 셰익스피어- 햄릿, 3막 4장
 %%%%
 A broken pillar
 
-“Now Absalom in his lifetime had taken
- and reared up for himself a pillar,
- which is in the king's dale: for he said,
- I have no son to keep my name in remembrance...”
-    -KJV Bible, 2 Samuel 18:18.
-%%%%
-A faded altar of an unknown god
-
-“Then Paul stood in the midst of Mars' hill, and said, Ye men of Athens, I
-perceive that in all things ye are too superstitious. For as I passed by, and
-beheld your devotions, I found an altar with this inscription, TO THE UNKNOWN
-GOD.”
-    -KJV Bible, Acts 17:23-24.
+"압살롱이 살았을 때에 자기를 위하여 한 비석을 마련하여 세웠으니 이는 그가 자기
+이름을 전한 아들이 내게 없다고 말할였음이라. 그러므로 자기 이름을 기념하여 그
+비석에 이름을 붙였으며 그 비석이 왕의 골짜기에 있고 이제까지 그것을 압살롱의
+기념비라 일컫더라..."
+    -2 사무엘하 18:18
 %%%%
 A gateway to Hell
 
-“I am the way into the city of woe.
- I am the way to a forsaken people.
- I am the way into eternal sorrow.
+"나를 지나는 사람은 슬픔의 도시로,
+ 나를 지나는 사람은 영원한 비탄으로,
+ 나를 지나는 사람은 망자에 이른다.
 
- Sacred justice moved my architect.
- I was raised here by divine omnipotence,
- Primordial love and ultimate intellect.
+ 정의는 지고하신 주를 움직이시어,
+ 신의 권능과 최고의 지성과
+ 원초의 사랑으로 나를 만들었다.
 
- Only those elements time cannot wear
- Were made before me, and beyond time I stand.
- Abandon all hope, ye who enter here.”
-    -Dante Alighieri, _The Divine Comedy_, “Inferno”, Canto III. ca. 1315.
-     trans. John Ciardi, 1954.
+ 나보다 앞서는 피조물이란
+ 영원한 것 뿐이니, 나 영원히 남으리라.
+ 여기 들어오는 그대, 모든 희망을 버려라."
+    -단테 알리기에리,_신곡_, "지옥 편", 장편시 3. 1315년 경.
 %%%%
 A gateway to a ziggurat
 
-“Captain: Take off every ‘zig’!!
- Captain: For great justice.”
-    -Zero Wing
-%%%%
-A gateway to the decaying netherworld of Tartarus
-
-<Tartarus>
+"함장: 모든 ‘지그’를 벗어라!!
+ 함장: 위대한 정의를 위해."
+    -제로 윙
 %%%%
 A granite statue
 
-“I met a traveller from an antique land
- Who said: Two vast and trunkless legs of stone
- Stand in the desert. Near them on the sand,
- Half sunk, a shatter'd visage lies, whose frown
- And wrinkled lip and sneer of cold command
- Tell that its sculptor well those passions read
- Which yet survive, stamp'd on these lifeless things,
- The hand that mock'd them and the heart that fed.
- And on the pedestal these words appear:
- ‘My name is Ozymandias, king of kings:
- Look on my works, ye Mighty, and despair!’
- Nothing beside remains: round the decay
- Of that colossal wreck, boundless and bare,
- The lone and level sands stretch far away.”
-    -Percy Bysshe Shelley, “Ozymandias”. 1818.
+"나는 고대의 땅에서 온 나그네를 만났다네.
+ 그는 이렇게 말했었지. ‘몸뚱이도 없는 거대한 돌다리 두개가
+ 사막에 서 있었다. 그 근처 모래 위에는,
+ 부서진 얼굴이 하나 반쯤 묻혀 있었다.
+ 찌푸린 표정, 주름진 입술, 깔보는 듯한 냉소에는
+ 조각가가 분출한 열정이 이끌다는 것을 말해주는 듯이
+ 이 무생물에 새겨져 살아있다.
+ 그것을 흉내낸 손과 키운 심장들보다도 오랫동안.
+ 그리고 그 받침대에는 이런 문장이 새겨져 있었다.
+ ’내 이름은 오지만디아스, 왕 중의 왕이니라.
+ 내 업적을 보라, 강대한 자들이여, 그리고 절망하라!’
+ 그 옆-녹슨 주변-에는 아무 것도 남아 있지 않았다.
+ 무너져내린 그 거대한 잔해 주위에는 끝없고 황량한
+ 사막이 저 멀리까지 끝없이 뻗어 있을 뿐이었다"
+    -퍼시 비시 셸리, "오지만디아스" 1818년.
+%%%%
+A portal to a secret trove of treasure
+
+"‘거기 서라! 도둑놈아!’ 마법의 소리. 상인은 계산대를 뛰쳐나오고, 마부는
+마차를; 정육점 주인은 쟁반을 던지고; 제빵사는 바구니를; 우유 배달부는 우유통을;
+심부름 소년은 소포를; 학생은 구슬을; 포장공은 곡괭이를; 꼬마는 장난감을.  다들
+허둥지둥, 허겁지겁 달려간다: 울고 불고, 고함치고, 모퉁이를 돌며 행인들을
+쓰러트리고, 개들을 깨우고, 새들을 놀래키며: 그리고 길가, 광장, 공터에
+메아리친다."
+    -찰스 디킨스, "올리버 트위스트"
+%%%%
+A rock wall
+
+나는 법이 맞는지도 틀린지도 모른다. 다만 구치소에 감금되어있는 자들은 벽이
+튼튼하다는 것만을 알고있고, 하루는 일년과도 같고 일년내내 매일매일 하루가 길게
+느껴진다는 것을 알고 있다.
+    — Oscar Wilde, "레딩옥사의 노래" -
+%%%%
+A tree
+
+"오직 ‘당신’ 만이 산불을 막을 수 있습니다!"
+    -스모키 곰
+%%%%
+Aizul
+
+"나는 천국으로 갔어—
+ 작은 마을이었어—
+ 루비로— 불을 켜고—
+ 솜털로— 욋가지를 엮었지—
+    -에밀리 디킨슨,_나는 천국에 갔다_
+%%%%
+Antaeus
+
+"그 나라는 포세이돈의 아들이며, 외부인에게 레슬링을 시켜 죽여버리곤 하는
+안타에우스의 지배를 받고 있었다. 안타에우스와 레슬링을 하게 되자, 헤라클레스는
+그를 부등켜안고, 높이 들어올려, 목을 부러트려 죽였다. 안타에우스가 지면에
+닿았을 때 그의 몸은 땅과 녹아붙었는데, 어떤 이들은 그것을 안타에우스가 대지의
+아들이기 때문이라 말하였다."
+    -슈도-아폴로도투스, _도서관과 요약집_, 2.5.11. ca. 150 BC. 번역자. 제임스
+조지 프레이저 경, 1913.
+%%%%
+Asmodeus
+
+"나로 말할 것 같으면, 여러 가지 일을 하지. 난 말도 안 되는 커플을 만들어내곤
+해. 난 할아버지와 미성년자를 결혼시키고, 주인과 하인을 눈맞게 하며, 약간 부유한
+소녀와 다정하지만 빈털터리인 남자를 사랑에 빠지게 만들거든. 이 세상에 사치,
+향락, 도박, 화학을 퍼뜨린 것도 이 몸. 내가 이 세상의 첫 번째 요리책의 저자고,
+축제, 춤, 음악, 연극, 최신의 패션의 발명가야. 한마디로 말하자면, 내가 바로 두
+장대의 악마인 아스모데우스다."
+    -알랑 르네 르 사주, _아스모데우스: 두 장대의 악마_. 1707.
+%%%%
+Banishment spell
+
+"광대한 망각의 강이 우리를 이름 없는 심연으로 휩쓸어간다."
+    -에르네스트 르낭, <청소년 시절의 추억>
+%%%%
+Cigotuvi's Monster
+
+"나는 그놈을 바라보았다 — 내가 창조해냈던 비참한 괴물을.
+ 그는 침대의 커튼을 받쳐 들고 있었다. 그리고 그의 눈은,
+ 그것들이 눈이라고 불릴 수 있다면, 그 눈들은 내게 고정되어 있었다.
+ 그의 입은 열려있었고, 뺨에 주름이 패인 채로 미소지으며
+ 불분명한 소리로 중얼거렸다."
+    -메리 셸리, "프랑켄슈타인"
+%%%%
+Crazy Yiuf
+
+턱수염이 있는 늙은이가 말하기를,
+  "그게 내가 무서워하는거야!
+   내 턱수염에는 올빼미 두 마리와 암탉 한 마리,
+   네 마리의 종달새와 굴뚝새 한 마리가
+   둥지를 틀고 있거든!"
+
+    — 에드워드 리어, "넌센스 시집", 1846.
+%%%%
+Darkness spell
+
+"만일 내가 죽어야만 한다면, 나는 어둠을 신부로 삼아,
+ 그녀를 내 품속에 안으리."
+    -윌리엄 세익스피어, "법에는 법으로"
+%%%%
+Dowan
+
+"기술과 기품, 쌍둥이 자매가 자네의 손가락 끝에서 장난스럽게 춤추고 있다네."
+-라빈드라나드 타고르. 치트라. 1막 4장. 1914.
+%%%%
+Edmund
+
+"나의 ’정실‘ 형님, 만약 이 편지가 잘 가서 내 계획이 성공하면 사생아
+ 에드먼드는 정실 형님을 누르게 되는 것이다.  나는 위대해질 것이다. 나는 출세할
+ 것이다. 아, 하늘에 계신 제신들이여, 사생아들의 편을 들어주소서."
+    — 윌리엄 셰익스피어, _리어 왕_, 1막 2장, 1606.
+%%%%
+Fire Storm spell
+
+"몇몇 사람들은 파괴하는 데엔 신경쓸 게 없다고 말했었지. 그거 알아? 그랬던
+놈들은 전부 죽었어."
+    -자야 발라드, 작업 마법사 (매직: 더 개더링)
+%%%%
+Frederick
+
+"난 결투가 정말 싫다. 그게 현명치 않다고 생각하고, 또 위험함을 알고 있다.
+그리고, 죄악스럽다. 만약 어떤 사람이 반드시 나에게 도전하겠다고 한다면, 난 그의
+손을 잡으며 친절하고 관대하게 받아들인 다음, 한적한 곳으로 데리고 가서 죽여버릴
+것이다."
+    -마크 트웨인. 마크 트웨인의 자서전. 1924.
+%%%%
+Ilsuiw
+
+"우리는 바다의 침실에서 머물렀다네.
+ 붉은 갈색 해초로 화환을 두른 바다 소녀의 옆에서.
+ 인간의 소리가 깨울 때까지, 우리는 가라앉았지."
+    -T.S.엘리엇. J.알프레드 프루프록의 연가. 129-131. 1915.
+%%%%
+Khufu
+
+"그리고 내가 모래로 이루어진 흐릿한 지평선 너머, 더 먼 곳을 바라보았을 때,
+나는 황금의 피라미드, 쿠푸가 건축한 불가사의를 보았다. 황금의 불가사의가 내게
+경례하는 것처럼, 황금으로 된 그것이 나를 반기는 것처럼, 나는 그것을 황금의
+기적으로서 기억할 것이다."
+    -로버트 히친스, _이집트의 마력_
+%%%%
+Killer Klown
+
+"온 세상 사람들은 광대를 사랑한단다."
+    -콜 포터, "광대가 되거라". 1948.
+%%%%
+Maurice
+
+"‘거기 서라! 도둑놈아!’ 마법의 소리. 상인은 계산대를 뛰쳐나오고, 마부는
+마차를; 정육점 주인은 쟁반을 던지고; 제빵사는 바구니를; 우유 배달부는 우유통을;
+심부름 소년은 소포를; 학생은 구슬을; 포장공은 곡괭이를; 꼬마는 장난감을.  다들
+허둥지둥, 허겁지겁 달려간다: 울고 불고, 고함치고, 모퉁이를 돌며 행인들을
+쓰러트리고, 개들을 깨우고, 새들을 놀래키며: 그리고 길가, 광장, 공터에
+메아리친다."
+    -찰스 디킨스, "올리버 트위스트". 1838.
+%%%%
+Murray
+
+"뒤를 봐요! 머리 셋 달린 원숭이에요!"
+    -가이브러쉬 쓰립우드,_원숭이 섬의 비밀_
+%%%%
+Nikola
+
+"혹자는 다니엘의 확신을 토대로, 숙련된 전기공학자들이 근미래의 전쟁을 종결지을
+것이라고 예언할 수 있다."
+    -니콜라 테슬라, "평화를 정착시키기 위한 수단으로서의 전선 없는 전기
+에너지의 전파", 전기 세계와 기술자. 1905년 1월 7일.
+%%%%
+Norris
+
+"종말과 죽음만으로도 삶에 의미가 주어지며 그 의미는 전적으로 부정적인
+것이다."
+    -조르주 풀레
+%%%%
+Polyphemus
+
+"...힘든 일을 부지런히 끝내자마자, 그는 내 사람들 두명을 더 움켜쥐더니, 아침
+식사로 그들을 먹는 것이었소. 식사가 끝나자 곧, 그 자는 그 큰 문돌을 힘들이지
+않고 치우더니 양들을 동굴 밖으로 몰아냈소, 그러고 나서 그 돌을 제자리에
+두었소—마치 그저 화살로 가득 찬 화살통 뚜껑을 닫는 것마냥 쉽게 말이오."
+    -호메로스, _오디세이_, 제 9장.번역자. 새뮤얼 버틀러, 1900.
+%%%%
+Prince Ribbit
+
+"공주님! 어린 공주님!
+ 문 좀 열어주셔요!
+ 그대가 어제 시원한 물이 흐르는 분수에서
+
+ 내게 했던 말을 모르시는지요?
+ 공주님, 어린 공주님!
+ 문 좀 열어주셔요!"
+    -그림 형제(마가렛 헌트), _개구리 왕자_
+%%%%
+Psyche
+
+"사이키의 시체에 상복을 입히고,
+ 저기있는 높이 솟은 언덕에 있는 바위 위에 올려라.
+ 그녀의 남편은 인간의 자식이 아니라,
+ 끔찍하고 사나운 뱀의 자식일 것이다.
+ 그는 별이 가득한 밤하늘에 날아올라,
+ 지상의 모든 것을 맹렬한 날갯짓으로 제압한다.
+ 신들과 위대한 자연의 섭리도,
+ 모두 그의 힘에서 벗어나지 못할지어니.
+ 강은 검게 물들고 고통이 넘쳐흘러
+ 어둠 또한 그의 곁에 예속될 것이다."
+    -아풀레이우스,_황금 노새_, "큐피드와 사이키" 기원후 약 160년.
+%%%%
+Sigmund
+
+"하지만 지그문트가 그의 아들을 뒤돌려 세운 후 말하기를, ‘무엇이 너를 걱정하게
+만드느냐, 아들아?
+ 우리의 생은 언제까지나 행복할 수 없고, 우리의 고역은 절대로 끝나지 않기라도
+한다 하더냐?’
+ 신퓌오틀리가 말하길, ‘미래를 점쳐 보았으나, 그곳엔 죽음밖에 없었습니다.’
+ 그리고 듣기 좋은 하프 소리와 노래가 나무의 몸통을 타고 흐른다.
+ 그리고 지그문트는 와인과 몇 년간 쌓인 피로에 지쳐 꿈을 꾼다.
+ 그리고 숲과 마을의 즐거운 소리가 들려온다.
+ 그리고 브랜스톡 숲의 나무들은 막 솟아나는 나뭇가지로 손을 흔든다.
+ 지그문트가 말하기를, ‘잘 보았다 나의 양자야. 그럼 그 점괘나 한번
+ 들어보자.’"
+    -윌리엄 모리스, _지구루트 왕과 니블룽가의 몰락. 1891년.
+%%%%
+Sticky Flame spell
+
+"어떤 사내에게 그저 불씨 하나를 준다면, 그 사내는 하루 동안만 따뜻할 뿐이겠지.
+하지만 불을 피우는 법을 가르쳐 준다면, 그 사내는 평생을 따뜻하게 지낼 수
+있다네."
+    -테리 프래쳇, "징고"
+%%%%
+Tartarus
+
+"지긋지긋하면서도 외로운 지옥의 영토가 있었네.
+ 평범한 어둠은 저 멀리 사라져 버렸음으로부터,
+ 슬프고 평평한 토지에 드리운 그림자들의 의지할 곳 없음은
+ 나의 구절로는 이야기 할 수 없구나."
+    -에드윈 알링턴 로빈슨, "지상주의". 1897.
+%%%%
+Terence
+
+"한 사람이 살인을 저질렀고, 살해당한 사람의 친척에게 쫓기게 되었다. 그가
+나일강에 도달했을 때 둑에 사자가 있어서 그는 크게 겁을 먹고 나무 위로 올라갔다.
+그 위의 나뭇가지에서는 큰 뱀이 있었고, 매우 두려운 나머지 강으로 몸을 던졌다.
+그리고 그 강에 있던 악어가 그를 잡아 먹어버렸다. 이렇게 땅이나 공기나 물이나
+매한가지로 살인자에게 안식할 곳을 주지 않았다."
+    -이솝. 살인자. 기원전 6세기. 조지 파일러 타운센트 번역
+%%%%
+Tomb
+
+"모든 이들의 마음 깊숙한 곳에는 무덤과 지옥이 있다. 비록 빛, 음악, 환락 따위가
+그 위를 덮어 이 파묻히고 숨겨진 것들의 존재를 잊게 한다 해도, 그것들은 엄연히
+존재한다. 가끔, 특히 한밤중에는 자주, 이 어둠의 창고의 문은 거칠게 열린다. 이럴
+때 마음속에 수동적인 생각만 가득 차있다면, 상상력은 통제할 수 없는 거울이 되어
+모든 어둠이 실체화될 것이다. 그렇다면 기도하라. 슬픔은 잠들고, 회한의 형제애가
+족쇄를 풀지 못하도록."
+    — 나다니엘 호손
+%%%%
+amulet
+
+"그랭그와르는 작은 가방을 향해 손을 뻗었으나, 그녀가 제지시켰다. ‘손대지
+말아요! 이건 부적이에요, 당신을 홀려서 나쁜 짓을 하게 만들거나 당신을 다치게 할
+거에요.’"
+    -빅토르 마리 위고, _파리의 노트르담_, 제 2권, 7장 "첫날 밤". 1831.
+%%%%
+apple
+
+"미네르바는 지혜의 여신이었지만, 그녀도 어리석은 일을 한 가지 저질렀다. 유노와
+베누스와 아름다움에 대한 보상을 두고 서로 싸운 것이다. 사건은 이렇게 일어났다.
+펠레우스와 테티스의 결혼식에 불화의 여신인 에리스를 제외한 모든 신이
+초대되었다. 초대받지 못하여 분노한 그녀는 하객들 사이로 이러한 문구가 쓰여진
+황금 사과를 던졌다.‘가장 아름다운 여신에게’라고 쓰여진 사과를 말이다."
+    -불핀치의 신화, 제27장.
+%%%%
+big fish
+
+"그리고 독자들이여, 여러분은 놓친 고래이며, 동시에 잡힌 고래가 아니고
+무엇이겠는가?"
+    -헤르만 멜빌, 모비 딕,  제 lxxxix 장. 1851.
+%%%%
+bow
+
+"그대는 그대의 아이들을 날아가는 화살처럼 앞으로 나아가게 하는 활이니."
+    -칼릴 지브란, 예언자, "아이들에 대하여". 1923.
+%%%%
+bread ration
+
+"한 속주에서 카이사르는 2곳의 홀에서 각각 한 곳에서는 그의 장교들과, 다른 한
+곳에서는 그리스인 동료들과 만찬을 열었고, 다른 로마 시민들과 더 고귀한 신분의
+속주민들은 테이블에 비스듬히 누워 있었다. 그는 집안 식솔들에게 사소한 문제던
+크게 중요한 일이던 하나같이 꽤나 꼼꼼하고 엄격한 성격이었기 때문에, 한 제빵사를
+손님과 자신에게 다른 종류의 빵을 대접했다는 이유로 감옥에 처넣어 버렸다...."
+    — 수에토니우스, "황제열전", 신격 율리우스(카이사르). 110 CE.
+%%%%
+bush
+
+"그리고 관목숲의 중앙에서 시작한 화재의 불꽃안에서 주님의 천사가 그에게
+나타났다: 그리고 그는 보았다. 보아라, 그 불에 타고 있던 관목숲은, 그리고 그
+관목은 타지 않았느니라."
+    -KJV 성서, 출애굽기 3:2
+%%%%
+butterfly
+
+"행복이란 나비와 같아서, 쫓아다닐 때는 항상 당신의 손에 잡힐 듯 말 듯 하지만,
+만일 조용히 앉아있다면, 아마 당신에게 날아들지 모른다."
+    -나타니얼 호손
+%%%%
+cherub
+
+"야훼의 영광은 지품 천사로부터 예정되어 있으며, 집의 입구 너머에 서 있을
+것이다.
+ 그리고 그 집은 구름으로 채워져 있으되 안 뜰은 야훼의 영광의 빛으로 가득차 있을
+것이다. 그분께서 말씀하실 때 지품 천사의 날갯짓 소리는 전능하신 신의 목소리로써
+심지어 바깥 뜰에까지 들릴것이다."
+    -인터넷 성경, 구약10:4-5
+%%%%
+club
+
+"나는 예전부터 ‘점잖게 말하고 큰 몽둥이를 지녀라; 그렇게 하면 먼 길을 갈 수
+있을 것이다’라는 미국 서부 속담이 좋았소. 만약 내가 큰 몽둥이를 갖고 다니지
+않았다면 조직의 후원을 받지도 못했을 것이고, 내가 고함지르고 엄포나 놓아
+댔다면, 팽크허스트(영국 여성 참정권 운동 지도자)나 뭐 그런 부류의 부정직한
+또라이들이 바라던 것처럼, 난 10표도 채 얻지 못했을 것이오."
+    — 시어도어 루즈벨트, 헨리 L. 스프라그에게 보낸 편지에서. 1900년 1월 26일.
+%%%%
+crimson imp
+
+"악마 또한 인간의 아이를 훔친다; 그것들이 태어난 지 여섯 주 지난 어린아이를
+데리고 가는 것은 드문 일이 아니며, 임프들이 그 자리를 대신한다."
+    — 마틴 루터
+%%%%
+dagger
+
+"그 자는 제 단검을 뽑아 들었는데, 그것은 썩 날카롭고도 또 퍽이나 날카롭고도 딱
+맞춤했네.
+ 그리고 그것을 제 밤색 머릿결의 신부에게 밀어넣었고 그겨는 그 발치에 쓰러져
+죽었다네.
+
+ ‘잠깐 날 기다려 주오. 내 사랑 애넷.’ 그는 말했네.
+ ‘잠깐 날 기다려 주오. 내 사랑.’ 그는 울부짖었네.
+ 그리고 그 단검을 이번엔 제 심장 깊숙히 찔러넣었고,
+ 자기도 그녀의 옆에 쓰러져 죽었다네."
+    — 영국 전래 서정시, "토마스 경과 아름다운 내엣", 1650년경.
+%%%%
+electric golem
+
+"나는 전율을 느끼며 노래한다"
+    — 월트 휘트먼, "풀 잎", 1867
+%%%%
+flying skull
+
+"아아, 가엾은 요릭! 난 이 사람을 아네, 호레이쇼, 아주 재미있는 소리를 잘하던
+뛰어난 재담꾼이었지. 그가 나를 등에 업어준 지 수천번도 더 되었는데, 이렇게 되고
+보니 생각만 해도 소름이 끼치는군! 구역질이 날 지경이야."
+    -윌리엄 세익스피어, _햄릿_, 5막 1장. 1603.
+%%%%
+ghost moth
+
+"Always in focus 항상 집중하고 있어
+
+You can't feel my stare. 당신은 나의 응시를 느낄 수 없어.
+
+I zoom into you 나는 당신을 주시하고 있지
+
+You don't know I'm there. 당신은 내가 있다는것을 모르고 있지 "
+
+    -Judas Priest, "Electric Eye"
+%%%%
+ghoul
+
+"사막에서
+ 나는 짐승같이 생긴 생물체가 벌거벗은채 손에 자기심장을 쥐며 땅위에 웅크리고
+ 있는걸 보았지.
+ 그리고 그걸 먹어버리더군.
+ 내가 물었지 ‘그거 맛있나, 친구?’
+ ‘맛이 써......써’ 그가 그렇게 답했어.
+ ‘하지만 난 이게 좋아.
+ 왜냐하면 이건 쓰거든.
+ 게다가 이건 내 심장이기도 하고 말이야.’"
+    -스테판 크레인, _The Black Riders and Other Lines_. 1895
+%%%%
+giant frog
+
+"여보세요, 내 이쁜이
+ 여보세요, 우리 자기
+ 여보세요, 내 래그타임 소녀
+ 나한테 전보로 키스좀 보내줘
+ 이쁜이, 내 심장에 불이 붙었다구.
+ 만약 너가 날 거절한다면
+ 자기, 넌 날 잃게 될거야.
+ 그리곤 넌 홀로 남게 되겠지.
+ 오 자기야 전화해, 그리고 내게 말해줘. 넌 내꺼라고"
+    -이다 에머슨과 조셒 E.호워드,"여보세요 이쁜이"
+%%%%
+giant spiked club
+
+도깨비에 금방망이.
+    — 압도적인 힘을 뜻하는 일본 속담.
+%%%%
+gold piece
+
+"그곳에 삼니움족의 사자들이 와서, 벽난로에서 순무를 끓이고 있는 그를
+발견하고는 그에게 황금을 선물로 주겠다고 했다. 그러나 그는 사자들에게 이렇게
+말하고 그들을 돌려보내 버렸다. 이 정도면 아주 만족할 만한 진수성찬이고, 그에겐
+황금 따위 필요가 없으며 그는 금을 가진 자들을 정복하는 것이 금 자체를 가지는
+것보다 훨씬 영광된 일이라고 생각한다고."
+    — 플루타르크, "마르쿠스 카토", 75 AD.
+%%%%
+hell knight
+
+"좋아, 다시 검토해 보자. 반짝이는 갑옷을 입은 기사님을 불을 뿜는 용에게서
+구해내는 일은 금발의 젊은 아가씨에게 달려있어."
+    -엑시에른
+%%%%
+hobgoblin
+
+"어리석은 일관성은 편협한 정신의 헛된 망상으로, 하찮은 정치인들과 철학자들과
+신학자들이 숭배하는 것이다."
+    -랄프 왈도 에머슨, _에세이 1_, 제 2강: 자신감. 1841.
+%%%%
+hog
+
+"펀은 계단에서 천천히 걸어내려왔다. 우느라 두 눈은 빨개져 있었다. 그녀가
+의자로 다가갔을 때, 상자가 흔들거렸고, 긁는 소리가 났다. 펀은 아버지를
+쳐다보았다. 그러더니 상자의 뚜껑을 들어올렸다. 그 상자 안에는, 그녀를 올려다
+보는, 태어난 지 얼마 안된 아기 돼지가 있었다. 하얀색 털을 지닌 돼지였다. 아침
+햇살이 돼지의 귀를 비추어, 귀를 분홍빛을 띄게 만들었다.
+ "이 아이는 네 것이란다," 애러블 씨가 말했다. "때 이른 죽음을 피한 녀석이지.
+그리고 신께서 내 어리석음을 용서해 주시기를."
+    -E.B. 화이트, _샬롯의 거미줄_
+%%%%
+hound
+
+"눈에 반쯤 묻힌 여행자가, 충직한 사냥개에 의해 발견되었는데, 꽁꽁 얼어붙은
+그의 손에는 여전히 이상한 장치가 그려져 있는 깃발이 쥐어져 있었다, 더욱 더
+높이!"
+    -헨리 워즈워드 롱펠로우, "더욱 더 높이"
+%%%%
+human
+
+"너는 아니
+ 내가 알까
+ ‘인간’이라 불리는 이게 뭔지?
+ 신만이 인간이 무엇인지 아시지!
+ 난 그놈들의 가격만 알 뿐이라고."
+    -베르톨트 브레히트, "방법이 취해지다". 1930.
+%%%%
+kobold
+
+"코볼트는 무해하다."
+    -대담한 베어런드의 묘비(매직: 더 개더링)
+%%%%
+mad acolyte of Lugonu
+
+"심연을 오래 들여다 보면, 심연도 너를 들여다 보게 된다."
+    — 프레드리히 니체, "선과 악을 넘어서". 1886.
+%%%%
+mummy
+
+"나는 이집트와 이집트인들을 본다 — 나는 피라미드와 오벨리스크를 본다;
+ 나는 끌로 파여진 역사를, 노래를, 철학을,
+ 사암 혹은 화강암 벽돌에서 잘라낸 석판을 본다;
+ 나는 멤피스의 피라미드에서, 향료가 발린 채, 린넨 천으로 감싸져,
+ 수많은 세기동안 그 곳에 누워있는 미라들을 본다;
+ 나는 테베의 무너진 석상을 본다, 큰 눈을 하고,
+ 목은 옆으로 뉘인 채, 손은 가슴에 포개져 있는 모습을."
+    -월트 휘트먼, "세계에 대한 인사"
+%%%%
+ooze
+
+"해마들은 끈적이는 진흙탕 속에서 허우적댔고,⏎ 머리를 이리저리 뒤흔들며 주변의
+진흙 속을 바삐 돌아다녔다."⏎ -존 드라이든. _사랑을 위하여 모든 것을_, I, i,
+15-17. 1678.
+%%%%
+phoenix
+
+"그들에게는 불사조라 불리는 또다른 성스러운 새가 있는데, 나는 그 새를 그림에서
+빼고는 전혀 보지 못했다. 참으로 대단히 희귀한 종이며, 이집트에서조차도
+그러한데, (헬리오폴리스의 사람들의 이야기에 의하면) 이 새들은 오직 오백년 만에
+한번, 늙은 불사조가 죽을 때에만 태어나기 때문이다. 불사조의 크기와 외형은, 만일
+그림에서 묘사된 것과 같다면, 다음과 같다:- 깃털은 일부는 붉은 색이며, 일부는
+금색인 반면, 대략적인 형태와 크기는 거의 독수리와 흡사하다. 그들은 이 새가 했던
+일을 말해주었는데, 내게는 믿을만 하다고 여겨지지는 않는 말이었다. 이 불사조는
+몰약이 잔뜩 발리진 자기를 낳은 새의 잔해를 들고, 아라비아에서 건너와, 태양의
+신전에 와서는, 그 몸을 매장했다고 한다. 그 몸을 옮기기 위해서, 그들이 말하기를,
+불사조는 우선 옮길 수 있을만큼의 몰약을 공 모양으로 만들고, 그 속을 비운 후,
+어미 새의 몸을 집어넣은 후, 입구를 신선한 몰약으로 덮으면, 그 몰약 공은 처음
+모았던 몰약의 무게와 정확히 같아진다 한다. 그러면 불사조는 내가 앞서 말했던
+것처럼 몰약이 발라진 그 몸을 이집트로 옮겨서, 태양의 신전에 놓는다고 한다. 이
+이야기가 그들이 말했던 불사조의 생태이다."
+    -헤로도토스, _역사_, II, 73. ca. 440 B.C.
+%%%%
+pillar of salt
+
+"그러자 여호와께서 소돔과 고모라로 유황과 불을 비처럼 내리시고, 그 도시와 모든
+평원, 도시의 모든 거주자와, 그 땅에서 자란 모든 것들을 전복하여 멸하셨노라.
+그러나 [롯의] 아내는 롯의 뒤를 따라가다 뒤를 돌아보았으니, 소금 기둥이
+되었더라."
+    -KJV 성경, 창세기. 19, 24-6.
+%%%%
+player ghost
+
+"너 자신을 알라."
+    -델파이의 아폴로 신전 프로나오스에 적힌 글귀
+%%%%
+potion
+
+"...그래서 전 가지고 있던 잠드는 물약을 따님에게 주었고, 그것이 그만 그대로
+효력을 발휘해서 따님은 거짓 죽음을 하게 되었던 것입니다. 한 편 저는 로미오에게
+이 편지를 써서, 이 무서운 밤이면, 그 약효도 떨어질 때가 되었으니, 로미오가
+이리로 와서, 죽음을 가장한 따님을 구해 내도록 했습니다."
+    -윌리엄 셰익스피어, '로미오와 줄리엣'
+%%%%
+profane servitor
+
+"주문이 외쳐졌고 하늘은 붉게 물들었지
+ 천사의 심장은 얼어붙게 되었다
+ 어두운 하늘에는 검은 구름이 모이고
+ 비명소리가 침묵을 깨트렸어
+ 주문이 외쳐졌고 하늘은 붉게 물들었지
+ 천사의 심장은 얼어붙게 되었다
+ 어두운 하늘 — 죽은 천사들이 잠든 곳에는 침묵이 감돈다
+
+ 눈을 만져보아라... 생기없는 조각상을 어루만져라
+ 죽어라!!!"
+    -디섹션, "죽은 천사들이 잠들어 있는 곳"
+%%%%
+program bug
+
+"만일 건축가들이 프로그래머가 프로그램을 짜는 방식으로 건물을 짓는다면, 문명은
+맨 처음 날아든 딱따구리에 의해 파괴될 것이다."
+    -제랄드 바인베르크, 바인베르크의 두 번째 법칙
+%%%%
+rambutan
+
+"람부탄 (_nephelium lappaceum_)은 내가 이미 언급했던 아름다운 과일로, 거대한
+아르부투스 열매를 닮았으며, 당신이 약간 거리를 두고 바라본다면 처음에는 맛있는
+열대 딸기 한 접시라 생각할 것이다. 하지만 외피를 통해 이 과일의 ‘특별한
+내면’을 조사하면, 당신은 붉고 털이 많은 외피가 길쭉한 타원형의 씨 한개를
+감싸고 있는 반투명하며 새콤달콤한 맛의 과육을 감추고 있음을 발견하게 된다. 이
+해안가의 아름다운 과일에 대한 내 기억에는 이상한 데가 있으나, 과일접시의
+옹기종기 모여있는 아름다움 중 수염달린 장밋빛의 람부탄만큼 내 회상속에 매우
+달콤히 남아있는 것은 없다."
+    -피치 워터맨 테일러, _미국 범선 콜롬비아호에서, 세계 일주와 다양한 국가
+탐방 기록문_. 1847.
+%%%%
+ring
+
+"황금으로 된 반지 그리고 우윳빛깔의 비둘기는 그대를 위한 훌륭한 선물이라네,
+그리고 나무에 매다는 데에 쓰일 너의 사랑을 위한 교수형 밧줄 또한."
+    -오스카 와일드, "샹송". 1881.
+%%%%
+seraph
+
+"웃시야 왕이 죽던 해에 나는 또한 주께서 높이 들린 옥좌에 앉으셨는데, 주의
+옷자락은 성전을 가득 채우셨다. 그곳에는 세라핌들이 서 있었는데, 그들은 여섯
+개의 날개를 지녔으며, 두 개로는 그들의 얼굴을 가렸므여, 두 개로는 발을
+가렸으며, 남은 두 개로는 날더라. 그리고 서로 노래를 부르며, 말하기를, 거룩하다,
+거룩하다, 거룩하다, 만군의 여호와여, 그의 영광이 온 땅을 가득 채우는도다."
+    -KJV 성경, 이사야 제 6장 1-3절
+%%%%
+shadow
+
+"관념과 그리고
+ 실재 사이에
+ 동작과 그리고
+ 행위 사이에
+ 그림자는 내린다
+ 왕국은 주님의 것이오니
+
+ 수태와 그리고
+ 창조 사이에
+ 감정과 그리고
+ 반응 사이에
+ 그림자는 내린다
+ 인생은 매우 길다"
+    -T.S. 엘리엇, "텅 빈 이들". 1925.
+%%%%
+shadow demon
+
+"우리는 나이를 먹어가면서, 죽음이 가까이 오고 있다는 것을 의식하게 된다,
+ 죽음의 그림자가 우리의 길에 드리워지는 것이다..."
+    -슈테판 츠바이크, _어느 여인의 24시간_. 1927.
+%%%%
+shadow dragon
+
+"성스러운 십자가가 저의 빛이 될수 있게 해주시옵고 /사악한 용이 제 지도자가
+ 되지 않도록 해주시옵소서뒤로 물러서라 사탄아 Step back Satan / 헛된 것들로
+나를
+ 유혹하지 말지어다
+ 네가 내게 제시하는 것은 악일지니 / 너는 너 스스로 독을 마시고 있구나."
+    -세인트 베네딕트 메달의 이니셜 전문, 악령을 막기 위해 새겨졌다. 11-15세기
+경의 글귀로, 18세기에 교황 베네딕토 14세에 의해 공식적으로 승인되었음
+%%%%
+slice of pizza
+
+달이 너의 눈에 거대한 피자 파이처럼 보일때, 그것이 사랑이다.
+    -잭 브룩스, "그게 사랑이다." 1952
+%%%%
+staff
+
+"배쇼 오쇼가 제자들에게 말하길, ‘만약 너가 지팡이를 갖고있다면, 난 너에게
+지팡이를 줄것이다. 만약 너가 지팡이를 갖고있지 않다면, 난 그걸 너한테서
+빼앗아갈 것이다.’ 미몬의 평가 그건 다리가 무너졌을 때 내가 강을 헤쳐 넘어가는
+걸 도와줬지. 그건 달도 안뜬 밤에 마을까지 나와 함께했지. 만약 너가 그걸
+지팡이라고 부른다면, 넌 쏜살같이 지옥으로 들어서게 될 것이야."
+    -미몬 에카이, 문없는 문, 케이스44 1228. 역자 카스키 세키다
+%%%%
+stone
+
+길에서 혼자 뒹구는 저 작은 돌 얼마나 행복할까
+
+세상 출셀랑 아랑곳없고 급한 일 일어날까 두려움 없네
+
+천연의 갈색 옷은 지나던 어느 우주가 입혀줬나
+
+혼자 살며 홀로 빛나는 태양처럼 다른 데 의지함 없이
+
+꾸미지 않고 소박하게 살며 하늘의 뜻을 온전히 따르네
+    -"길에 뒹구는 저 작은 돌", 에밀리 디킨슨,1865년
+%%%%
+strawberry
+
+"거대한 호랑이가 그를 쫓기 시작했을 때, 사무라이는 산책중이었다.
+ 사무라이는 살기위해 달렸다, 그의 발아래 있는 절벽을 보지 못할 정도로.
+ 떨어졌을 때, 그는  아래로 늘어진 덩굴을 손을 내밀어 붙잡았다.
+ 그가 아래를 보자 아래에서 어슬렁거리는 또다른 호랑이를 보았다.
+ 처음에 만난 호랑이는 위에서 기다리고 있었다.
+ 그 덩굴은 뽑히기 시작했다.
+ 그후 사무라이는 덩굴 아래에 자라고 있는 한 딸기를 보았다.
+ 그는 손을 내밀어 딸기를 따서 먹었다.
+ 그건 얼마나 달콤한 맛이던지!"
+    -몇몇 일본인 불교승으로부터
+%%%%
+sultana
+
+"터키식 정원은 유대인들이 벤담에게 허가해준 여러 흥미로운 것들 중 하나였다.
+그곳은 덩굴과 여러 나무들이 어우러진 과수원과도 같았으며, 질서나 눈에 보이는
+정형성이 존재하지 않았다. 그 정원에서 벤담은 씨 없는 건포도 표본을 채집해
+영국으로 보냈는데, 그는 이것이 자신의 나라에 처음으로 소개된 씨 없는 건포도
+종임을 확신했다."
+    -존 보우링, _제레미 벤담의 업적들_. 1839.
+%%%%
+swamp drake
+
+"은밀한 늪에 가면 아늑함을 만끽하지,,
+ 그러다 뱀 만나면
+ 다리야 날 살려라 하며
+ 집으로 냅다 달리지
+
+ 그 맘은 애들 아님 아무도 모를..
+ 여름 기분 잡쳐버리는 배신
+ 뱀엔 교활함 뒤따르니"
+    -에밀리 디킨슨, "뱀". 1865.
+%%%%
+throwing net
+
+"그물 속에 놓여있는
+ 저 겁먹은 것의 모습이란!"
+    -에드나 세인트 빈센트 밀레이, "한 해가 저물어 갈 때". 1917.
+%%%%
+very ugly thing
+
+"All the infections that sun sucks up
+ From bogs, fens, flats, on Prosper fall and make him
+ By inch-meal a disease! His spirits hear me
+ And yet I needs must curse. "
+    -William Shakespeare, _The Tempest_, II, 2. 1611.
+%%%%
+whip
+
+"애끓는 이 맘, 매를 맞아서도
+ 돌을 맞아서도 아니다.
+ 내 생전 겪지 못 한 작지만 매서운 채찍
+ 수수께끼의 이맘
+ 쓰러질 때까지, 가해 오는 채찍
+ 말 못할 그 당당함."
+    -에밀리 디킨슨, "애끓는 이 맘". 1865.
+%%%%
+witch
+
+"마녀를 살려두지 말지니라."
+    -KJV 성경, 출애굽기 22장 18절
+%%%%
+wizard
+
+"각 씨족이나 부족은 마법사 혹은 주술사를 의사로 두고 있었는데, 우리는 그들이
+ 주술을 행하는 오두막은 절대로 완전히 확인할 수 없을 것이다."
+    -찰스 다윈, _비글호 항해기_, 챕터. 10. 1839.
+%%%%
+zombie
+
+"좀비가 무덤에서 나오는 동안 짐작되기를, 유령 또한 아니었으며, 그렇지만
+나사로와 같이 부활한 것 또한 아니었다. 좀비는, 사람들이 말하기를, 영혼이 없는
+인간의 시체이며, 죽어있으나, 무덤에서 파헤쳐져 비밀스러운 마법을 부여받아
+기계와도 같은 모습의 삶을 지니게 된다고 한다—좀비는 죽은 자의 몸이 마치 산 자의
+것처럼 걷고 움직이게 된 것이다. 이러한 능력을 지닌 사람들은 매장된 지 얼마
+지나지 않은 무덤으로 가서, 시체가 썩기 전에 파내어, 충격을 가해 움직이도록
+만드며, 하인이나 노예로 삼거나, 때로는 범죄를 수행하기 위해, 대체로는 단순히
+부락 혹은 농장에서 노역을 시키기 위해 부활시켜, 지루하고 고된 일을 시키고,
+동작이 굼떠지면 둔한 짐승을 다루듯 때린다. "
+    -윌리엄 시브룩, _마술의 섬_. 1929년.
 %%%%
 A labyrinth entrance
 
-“Maze-treaders, whose vision ahead and behind is severely constricted and
+"Maze-treaders, whose vision ahead and behind is severely constricted and 
 fragmented, suffer confusion, whereas maze-viewers who see the pattern whole,
 from above or in a diagram, are dazzled by its complex artistry. What you see
 depends on where you stand, and thus, at one and the same time, labyrinths are
 single (there is one physical structure) and double: they simultaneously
 incorporate order and disorder, clarity and confusion, unity and multiplicity,
-artistry and chaos.”
-    -Mark Z. Danielewski, “House of Leaves”. 2000.
+artistry and chaos."
+    -Mark Z. Danielewski, "나뭇잎들의 집". 2000.
 
-“Since I emerged that day from the labyrinth,
- Dazed with the tall and echoing passages,
- The swift recoils, so many I almost feared
- I'd meet myself returning at some smooth corner,
- Myself or my ghost, for all there was unreal
- After the straw ceased rustling and the bull
- Lay dead upon the straw and I remained,
- Blood-splashed, if dead or alive I could not tell
- In the twilight nothingness”
-    -Edwin Muir, “The Labyrinth”. 1949.
-%%%%
-A one-way gate to the infinite horrors of the Abyss
-
-“And if you gaze for long into an abyss, the abyss gazes also into you.”
-    -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
-
-“Well, in our country,” said Alice, still panting a little, “you'd generally
-get to somewhere else — if you ran very fast for a long time, as we've been
-doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
-all the running you can do, to keep in the same place. If you want to get
-somewhere else, you must run at least twice as fast as that!”
-    -Lewis Carroll, _Through the Looking-Glass, and What Alice Found There_,
-ch. 2
-    “The Garden of Live Flowers”. 1871.
-%%%%
-A portal to a secret trove of treasure
-
-“He saw a large cavern and a vaulted [roof], in height equalling the stature
-of a full-grown man and it was hewn in the live stone and lighted up with
-light that came through air-holes and bullseyes in the upper surface of the
-rock which formed the roof. He had expected to find naught save outer gloom
-in this robbers' den, and he was surprised to see the whole room filled
-with bales of all manner stuffs, and heaped up from sole to ceiling with
-camel-loads of silks and brocades and embroidered cloths and mounds on
-mounds of vari-colored carpetings; besides which he espied coins golden and
-silvern without measure or account, some piled upon the ground and others
-bound in leathern bags and sacks. Seeing these goods and moneys in such
-abundance, Ali Baba determined in his mind that not during a few years only
-but for many generations thieves must have stored their gains and spoils in
-this place.”
-    -_The Arabian Nights_. trans. Sir Richard F. Burton, 1885.
-%%%%
-A rock wall
-
-“I know not whether Laws be right,
-   Or whether Laws be wrong;
- All that we know who lie in gaol
-   Is that the wall is strong;
- And that each day is like a year,
-   A year whose days are long.”
-    -Oscar Wilde, “The Ballad of Reading Gaol”. 1898.
-%%%%
-A staircase to the Ecumenical Temple
-
-<Temple>
-%%%%
-A staircase to the Orcish Mines
-
-<Orcish Mines>
-%%%%
-A staircase to the Shoals
-
-<Shoals>
-%%%%
-A staircase to the Tomb
-
-<Tomb>
-%%%%
-A stormy altar of Qazlal
-
-“The storm irresistibly propels him into the future to which his back is turned,
-while the pile of debris before him grows skyward. This storm is what we call
-progress.”
-    -Walter Benjamin, “Theses on the Philosophy of History”. 1940.
-   trans. Harry Zohn, 1969.
-%%%%
-A tree
-
-“I like trees because they seem more resigned to the way they have to live than
-other things do.”
-    -Willa Cather, _O Pioneers_. 1913.
-%%%%
-acid dragon scales
-
-<steam dragon scales>
+"내가 미궁에서 나오던 날 까지,
+ 길고 메아리치는 통로들에 현혹되었고,
+ 재빠른 반동이 너무 많이 일어나, 나는 거의 두려웠지
+ 난 어떤 부드러운 코너에서 돌아오는 나 자신을 만났다네,
+ 나 자신이든 나의 유령이든, 거기 있는 모든것은 사실이 아니였어
+ 지푸라기의 흩날림이 멈췄을 때
+ 그 황소는 짚더미 위에 쓰러져 죽어 있었고 나는 살아있었지,
+ 피가 튀었고, 죽었건 살았건 난 말할 수 없었어
+ 공허의 황혼에서"
+-에드윈 뮤어 "미로". 1949
 %%%%
 Agony spell
 
-“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
-is a secret song at the center of the world, Joey, and its sound is like razors
-through flesh.”
-    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
+고문:
+
+"견딜수 없어, 그렇지? 낯선 이들의 고통, 친구들의 고통. 세계의 중심에는 비밀의 노래가 있어, 조이, 그리고 그 소리는 면도날이 살을 찢는 소리같지."
+    -핀헤드, _헬레이저 3: 지구 위의 지옥_. 1992.
 %%%%
 Asterion
 
-“The fact is that I am unique. What a man can pass unto others does not
-interest me; like the philosopher, I think nothing is communicated by the art
-of writing. Annoying and trivial minutiae have no place in my spirit, a spirit
-which is receptive only to whatsoever is grand.”
-  -Jorge Luis Borges, “The House of Asterion”. 1947.
-   trans. Antonios Sarhanis, 2008.
-%%%%
-Aizul
+아스테리온:
 
-“I went to Heaven —
- 'Twas a small Town —
- Lit — with a Ruby —
- Lathed — with Down —”
-    -Emily Dickinson, _I went to Heaven_. ca. 1860.
-%%%%
-Antaeus
-
-“That country was then ruled by Antaeus, son of Poseidon, who used to kill
-strangers by forcing them to wrestle. Being forced to wrestle with him,
-Hercules hugged him, lifted him aloft, broke and killed him; for when he
-touched earth so it was that he waxed stronger, wherefore some said that he was
-a son of Earth.”
-    -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
-    trans. Sir James George Frazer, 1913.
-%%%%
-arbalest
-
-“(Tell enters with his crossbow)
- W. TELL:
- My precious jewel now, —my chiefest treasure—
- A mark I'll set thee, which the cry of grief
- Could never penetrate,—but thou shalt pierce it,—
- And thou, my trusty bowstring, that so oft
- For sport has served me faithfully and well,
- Desert me not in this dread hour of need,—
- Only be true this once, my own good cord,
- That hast so often wing'd the biting shaft:—
- For shouldst thou fly successless from my hand,
- I have no second to send after thee.”
-    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
-     trans. Sir Theodore Martin, 1898.
-%%%%
-Asmodeus
-
-“For myself, I have other occupations:  I make absurd matches; I marry
-greybeards with minors, masters with servants, girls with small fortunes with
-tender lovers who have none. It is I who introduced into this world luxury,
-debauchery, games of chance, and chemistry. I am the author of the first
-cookery book, the inventor of festivals, of dancing, music, plays, and of the
-newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks.”
-    -Alain René Le Sage, _Asmodeus: Or, The Devil on Two Sticks_. 1707.
-%%%%
-Awaken Forest spell
-
- • Hel: [died to] Infection! She's mine!
- — Thor: From a splinter that she got bravely fighting an elm!
- • Hel: Trees are inanimate plants, you buffoon!
- — Thor: Bravery knows no limits!
-    -Rich Burlew, Order of the Stick, #874
+"진실을 내가 특별하다는 거야. 다른 사람에게 다가가는 사람은 내게 흥미롭니 않아. 철학자처럼, 나는 글쓰기의 미학으로는 아무와도 소통할 수 없다고 생각해. 대단한 것이 아니면 받아들여지지 않을 내 영혼에는 짜증나고 쓸모없는 자질구래한 일들을 위한 자리는 없어."
+호르헤 루이스 보르헤스
+번역. 안토니오스 사해니스, 2008
 %%%%
 Azrael
 
-“And Allah said,
- ‘As thou the deed hast done, so now the office shall be thine, O Azrael,
-  to gather up for me the souls of men and women when their time has come;
-  the souls of saints and sinners, of beggars and of princes,
-  of the old or young, whate'er befall; and even though friends weep,
-  and hearts of loved ones ache with sorrow and with anguish,
-  when bereft of those they love.’
- So Azrael became the messenger of Death.”
+아즈라엘:
 
-    -J. E. Hanauer, _Folk-lore of the Holy Land, Moslem, Christian and Jewish_.
-1907.
-%%%%
-black sun
+"그리고 알라께서 이르시기를
+ '오, 아즈라엘. 그대의 의무를 끝마쳤으니, 그대에게 책무를 주노라,
+  때가 오면 나를 위해 남자와 여자의 영혼을,
+  성자와 죄인의 영혼을, 거지와 왕자의 영혼을,
+  노인과 젊은이의 영혼을 가져다 다오. 
+  운명이 닥쳐, 그들의 친구들이 흐느끼고, 
+  그들이 사랑한 자들이 떠나감에 슬픔과 괴로움에 빠져도 멈추지 말지어다.’
+ 그래서 아즈라엘은 죽음의 전달자가 되었다."
 
-“The sky is sad and beautiful, like a vast altar.
- The sun has drowned in its congealing blood.”
-    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
-     trans. Ruth White, 1969.
-%%%%
-basilisk
-
-“Be thou like the imperial Basilisk
- Killing thy foe with unapparent wounds!
- Gaze on Oppression, till at that dread risk
- Aghast she pass from the Earth's disk:
- Fear not, but gaze—for freemen mightier grow,
- And slaves more feeble, gazing on their foe:—
- If Hope, and Truth, and Justice may avail,
- Thou shalt be great—All hail!”
-    -Percy Bysshe Shelley, “Posthumous Poems”. 1824.
-%%%%
-Banishment spell
-
-“An immense river of oblivion is sweeping us away into a nameless abyss.”
-    -Ernest Renan, Souvenirs
+    -J. E. Hanauer, _성지의 전통 문화, 무슬림, 기독교인과 유태인 _.1907.
 %%%%
 Bat Form ability
 
-“The bats have left the bell tower
- The victims have been bled”
-    -Bauhaus, “Bela Lugosi's Dead”. 1979.
+박쥐 변신:
+
+"박쥐들은 종탑을 떠났고
+ 희생자들은 피를 흘렸다"
+ -Bauhaus, "Bela Lugosi's Dead". 1979.
 %%%%
 Call Canine Familiar spell
 
-“There seemed a strange stillness over everything. But as I listened, I heard
-as if from down below in the valley the howling of many wolves. The Count's
-eyes gleamed, and he said.
+개과 동물 소환:
 
-‘Listen to them, the children of the night. What music they make!’ Seeing, I
-suppose, some expression in my face strange to him, he added, ‘Ah, sir, you
-dwellers in the city cannot enter into the feelings of the hunter.’”
-    -Bram Stoker, _Dracula_. 1897.
-%%%%
-Cause Fear spell
-
-“And when Miranda sang
- Everyone turned away
- Used to the noose, they obey”
-    -The Mars Volta, “Miranda That Ghost Just Isn't Holy Anymore”. 2005.
-%%%%
-Chain Lightning spell
-
-“The trouble ain't that there is too many fools,
- but that the lightning ain't distributed right.”
-    -traditionally attributed to Samuel Clemens
-%%%%
-Cigotuvi's Monster
-
-“I beheld the wretch — the miserable monster whom I had
- created. He held up the curtain of the bed; and his eyes, if
- eyes they may be called, were fixed on me. His jaws opened,
- and he muttered some inarticulate sounds, while a grin
- wrinkled his cheeks.”
-    -Mary Shelley, “Frankenstein”
-%%%%
-Cloud Mage
-
-“And when
- His master plan is unfurled
- There stands a handsome bid
- On the weather systems of the world”
-    -Andrew Bird, “Banking on a Myth”. 2005.
+"모든 것이 이상할정도로 고요했다. 그러나 나는 계곡 저 아래에서 수많은 늑대들이 울부짖는 소리를 들은 것 같았다. Count의 눈이 빛났고, 그가 말했다.
+ '그들, 밤의 아이들의 소리를 들어봐요. 그들이 무슨 음악을 만들어내는지!'
+ 언뜻 보건데,내 추측으로는, 내 표정이 그에게 이상해 보였는지 그가 덧붙였다.
+ '아, 경, 당신들 도시에서 사는 사람들은 사냥꾼의 기분을 공감하지 못하는군요.'"
+    -브램스토커 드라큘라, 1897
 %%%%
 Corrupt ability
 
-“I fumbled to the window to experience the world
- And to hear my Madness singing, sitting on the kerbstone
- [A blind old drunken man who sings and mutters,
-  With broken boot heels stained in many gutters]
- And as he sang the world began to fall apart . . .”
-    -T.S. Eliot, “Prufrock's Pervigilium”. 1912 (published 1996).
-%%%%
-Crazy Yiuf
+타락:
 
-“There was an Old Man with a beard,
- Who said, ‘It is just as I feared!
- Two Owls and a Hen,
- Four Larks and a Wren,
- Have all built their nests in my beard!’”
-    -Edward Lear, _A Book of Nonsense [No. 1]_. 1846.
-%%%%
-Darkness spell
-
-“If I must die, I will encounter darkness as a bride,
-     And hug it in my arms.”
-    -William Shakespeare, “Measure for Measure”
+"나는 세계를 경험하기 위해서 그리고 내 광기가 노래하는것을 듣기위해서 창문을 더듬었고, 
+ [노래하고 중얼거리는, 
+  시궁창에서 얼룩이 생긴 망가진 신발을 신은,
+  앞을 못보는 술취한 늙은이]
+ 가 갓길의 돌위에 앉아서, 노래했고, 세계가 무너지기 시작했다 . . ."
+    -T. S. 앨리엇, "프루프록의 잠못듦".    1912.
 %%%%
 Dispater
 
-“Hoc idem magis ostendit antiquius Iovis nomen: nam olim Diovis et Diespiter
-dictus, id est dies pater; a quo dei dicti qui inde, et dius et divum, unde sub
-divo, Dius Fidius. Itaque inde eius perforatum tectum, ut ea videatur divum, id
-est caelum. Quidam negant sub tecto per hunc deierare oportere. Aelius Dium
-Fidium dicebat Diovis filium, ut Graeci Dioskopon Castorem, et putabat hunc
-esse Sancum ab Sabina lingua et Herculem a Graeca. Idem hic Dis pater dicitur
-infimus, qui est coniunctus terrae, ubi omnia ut oriuntur ita aboriuntur;
-quorum quod finis ortuum, Orcus dictus.”
-    -Marcus Terentius Varro, _De Lingua Latina_, Liber V, circa 40 BC.
-%%%%
-Dowan
-
-“Skill and grace, the twin brother and sister, are dancing playfully on your
-finger tips.”
-    -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
-%%%%
-Duvessa
-
-“Twin children: the Girl, she was plain;
- The Brother was handsome & vain;
- ‘Let him brag of his looks,’
- Father said; ‘mind your books!
- The best beauty is bred in the brain.’”
-    -Aesop & Walter Crane, _The Baby's Own Aesop_, 36: “Brother & Sister”.
-1887.
-%%%%
-Edmund
-
-“And my invention thrive, Edmund the base
- Shall top the legitimate. I grow; I prosper.—
- Now, gods, stand up for bastards!”
-    -William Shakespeare, _King Lear_, I, ii. 1606.
-
-“When the forces stood in array Edmund proposed to decide their claims by
-single combat; but Canute saying that he, a man of small stature, would have
-little chance against the tall athletic Edmund, proposed, on the contrary, for
-them to divide the realm as their fathers had done.”
-    -Thomas Keightley, _The History of England_. 1839.
-%%%%
-Enslavement spell
-
-“He held up his hand, and they all stopped, and I thought he seemed to be
-saying, ‘All these lives will I give you, ay, and many more and greater,
-through countless ages, if you will fall down and worship me!’ And then a red
-cloud, like the colour of blood, seemed to close over my eyes, and before I
-knew what I was doing, I found myself opening the sash and saying to Him,
-‘Come in, Lord and Master!’”
-    -Bram Stoker, _Dracula_. 1897.
-%%%%
-Ensorcelled Hibernation spell
-
-“Sweet dreams are made of this; who am I to disagree?”
-    -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
-%%%%
-Fire Storm spell
-
-“Some have said there is no subtlety to destruction. You know what? They're
-dead.”
-    -Jaya Ballard, task mage (Magic: the Gathering)
-%%%%
-Frederick
-
-“I thoroughly disapprove of duels. I consider them unwise and I know they are
-dangerous. Also, sinful. If a man should challenge me, I would take him kindly
-and forgivingly by the hand and lead him to a quiet retired spot and kill him.”
-    -Mark Twain, _Autobiography of Mark Twain_. 1924.
-%%%%
-Geryon
-
-“Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to
-the triple-headed Geryon, but Geryon was killed by the great strength of
-Herakles at sea-circled Erytheis beside his own shambling cattle on that day
-when Herakles drove those broad-faced cattle toward holy Tiryns, when he
-crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion out
-in the gloomy meadow beyond fabulous Okeanos.”
-    -Hesiod, _Theogony_, circa 700 BCE.
-%%%%
-Ilsuiw
-
-“We have lingered in the chambers of the sea
- By sea-girls wreathed with seaweed red and brown
- Till human voices wake us, and we drown.”
-    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. lines 129-131. 1915.
-%%%%
-Irradiate spell
-
-“Reflex in the sky warn you you're gonna die
- Storm coming, you'd better hide from the atomic tide
- Flashes in the sky turns houses into sties
- Turns people into clay, radiation minds decay”
-    -Black Sabbath, “Electric Funeral”. 1970.
-%%%%
-Khufu
-
-“And then I looked farther, beyond the pallid line of the sands, and I saw a
-Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me,
-as a golden thing it greeted me, as a golden miracle I shall remember it.”
-    -Robert Hichens, _The Spell of Egypt_
-%%%%
-Killer Klown
-
-“All the world loves a clown.”
-    -Cole Porter, “Be a Clown”. 1948.
-%%%%
-Kirke
-
-“Lo, thy comrades yonder in the house of Kirke are penned like swine in
-close-barred sties. And art thou come to release them? Nay, I tell thee, thou
-shalt not thyself return, but shalt remain there with the others.”
-    -Homer, Odysseia
-%%%%
-Lee's Rapid Deconstruction spell
-
-“Now the house was full of men and women; and all the lords of the Philistines
-were there; and there were upon the roof about three thousand men and women,
-that beheld while Samson made sport.
-
-And Samson called unto the LORD, and said, O Lord GOD, remember me, I pray
-thee, and strengthen me, I pray thee, only this once, O God, that I may be at
-once avenged of the Philistines for my two eyes.
-
-And Samson said, Let me die with the Philistines. And he bowed himself with all
-his might; and the house fell upon the lords, and upon all the people that were
-therein. So the dead which he slew at his death were more than they which he
-slew in his life.”
-    -KJV Bible, Judges 16:28-30.
-%%%%
-Mara
-
-“This night the Lord of Illusion passed among you, Mara, mighty among dreamers,
-mighty for ill. He did come upon another who may work with the stuff of dreams
-in a different way. He did meet with Dharma, who may expel a dreamer from his
-dream. They did struggle, and the Lord Mara is no more. Why did they struggle,
-deathgod against illusionist? You say their ways are incomprehensible, being
-the ways of gods. This is not the answer.”
-    -Roger Zelazny, “Lord of Light”. 1967.
-
-“He who lives looking for pleasures only,
- his senses uncontrolled, immoderate in his food,
- idle, and weak, Mara will certainly overthrow him,
- as the wind throws down a weak tree.”
-    -The Buddha, _Dhammapada_, 1:7.
-     trans. F. Max Muller
-%%%%
-Mass Confusion spell
-
-“Go to, let us go down, and there confound their language, that they may not
-understand one another's speech. So the LORD scattered them abroad from thence
-upon the face of all the earth: and they left off to build the city.”
-    -KJV Bible, Genesis 11:7-8.
-%%%%
-Maurice
-
-“‘Stop thief! Stop thief!’ There is a magic in the sound. The tradesman leaves
-his counter, and the car-man his waggon; the butcher throws down his tray; the
-baker his basket; the milkman his pail; the errand-boy his parcels; the
-school-boy his marbles; the paviour his pickaxe; the child his battledore. Away
-they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
-knocking down the passengers as they turn the corners, rousing up the dogs, and
-astonishing the fowls: and streets, squares, and courts, re-echo with the
-sound.”
-    -Charles Dickens, _Oliver Twist_. 1838.
-%%%%
-Menkaure
-
-“Ye men of Egypt, ye have heard your king!
- I go, and I return not. But the will
- Of the great Gods is plain; and ye must bring
- Ill deeds, ill passions, zealous to fulfil
- Their pleasure, to their feet; and reap their praise,
- The praise of Gods, rich boon! and length of days.”
-    -Matthew Arnold, _Mycerinus_
-%%%%
-Murray
-
-“Look behind you! A three-headed monkey!”
-    -Guybrush Threepwood, _The Secret of Monkey Island_
-%%%%
-Natasha
-
-“It dooth appéere that there is in Cats as in all other kindes of beasts, a
-certaine reason and language wherby they vnderstand one another. But as
-touching this Grimmalkin: I take rather to be an Hagat or a VVitch then a Cat.
-For witches haue gone often in that likenes, And therof hath come the prouerb
-as trew as common, that a Cat hath nine liues, that is to say, a witch may take
-on her a Cats body nine times.”
-    -William Baldwin, “Beware the Cat”, 1584
-%%%%
-Nikola
-
-“One can prophesy with a Daniel's confidence that skilled electricians will
-settle the battles of the near future.”
-    -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
-Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
-%%%%
-Orcish Mines
-
-“You load sixteen tons, what do you get
- Another day older and deeper in debt
- Saint Peter don't you call me 'cause I can't go
- I owe my soul to the company store.”
-    -Merle Travis, “Sixteen Tons”. 1946.
-%%%%
-Polyphemus
-
-“...as soon as he had got through with all his work, he clutched up two more of
-my men, and began eating them for his morning's meal. Presently, with the
-utmost ease, he rolled the stone away from the door and drove out his sheep,
-but he at once put it back again—as easily as though he were merely clapping
-the lid on to a quiver full of arrows.”
-    -Homer, _The Odyssey_, Book IX.
-    trans. Samuel Butler, 1900.
-%%%%
-Prince Ribbit
-
-“Princess! youngest princess!
- Open the door for me!
- Dost thou not know what thou saidst to me
-
- Yesterday by the cool waters of the fountain?
- Princess, youngest princess!
- Open the door for me!”
-    -Brothers Grimm (Margaret Hunt), _The Frog King, or Iron Henry_
-%%%%
-Psyche
-
-“Let Psyche's corpse be clad in mourning weed
- And set on rock of yonder hill aloft;
- Her husband is no wight of human seed,
- But serpent dire and fierce, as may be thought,
- Who flies with wings above in starry skies,
- And doth subdue each thing with fiery flight.
- The Gods themselves and powers that seem so wise
- With mighty love be subject to his might.
- The rivers black and deadly floods of pain
- And darkness eke as thrall to him remain.”
-    -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
-    trans. William Adlington, 1566.
-%%%%
-Shatter spell
-
-“And it happened when the people heard the sound of the trumpet, and the people
-shouted with a great shout, that the wall fell down flat. Then the people went
-up into the city, every man straight before him, and they took the city. And
-they utterly destroyed all that was in the city, both man and woman, young and
-old, ox and sheep and donkey, with the edge of the sword.”
-    -KJV Bible, Joshua 6:20-21.
-%%%%
-Shoals
-
-“I often think about that old metaphor, the one that says we are all islands on
-a wide sea. Especially these days, now that things are more difficult than
-before and the world appears to be harsher than we once imagined it to be.
-
-We are all like islands, the philosopher said. Perhaps it's true. Yet I cannot
-help but remember an older saying scratched on a cave wall somewhere by a long-
-forgotten prophet: In the end the sea will claim everything.
-
-The ancient words crash into my mind like waves, waking me from sleep, filling
-me with feelings I cannot fully understand. We are like islands. Does it mean
-we are connected? Do we share a common origin? Or just the common fate of
-sinking?”
-    -“The Sea Will Claim Everything”. 2012.
-%%%%
-Sigmund
-
-“But Sigmund turned him about, and he said: ‘What aileth thee, son?
- Shall our life-days never be merry, and our labour never be done?’
-
- But Sinfiotli said: ‘I have looked, and lo, there is death in the cup.’
-
- And the song, and the tinkling of harp-strings to the roof-tree winded up;
- And Sigmund was dreamy with wine and the wearing of many a year;
- And the noise and the glee of the people as the sound of the wild woods were
- And the blossoming boughs of the Branstock were the wild trees waving about;
-
- So he said: ‘Well seen, my fosterling; let the lip then strain it out.’”
-    -William Morris, _The Story of Sigurd the Volsung and the Fall of the
-Niblungs_. 1891.
-%%%%
-Sticky Flame spell
-
-“Give a man a fire and he's warm for a day, but set fire to him and he's warm
-for the rest of his life.”
-    -Terry Pratchett, “Jingo”. 1997.
-%%%%
-Summon Demon spell
-
-“'Tis now the very witching time of night,
- When churchyards yawn and hell itself breathes out
- Contagion to this world.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 2.
-%%%%
-Tartarus
-
-“There is a drear and lonely tract of hell
- From all the common gloom removed afar:
- A flat, sad land it is, where shadows are,
- Whose lorn estate my verse may never tell.”
-    -Edward Arlington Robinson, “Supremacy”. 1897.
-%%%%
-Temple
-
-“And I heard a great voice out of the temple saying to the seven angels, Go
-your ways, and pour out the vials of the wrath of God upon the earth.”
-    -KJV Bible, Revelations 16:1.
-%%%%
-Terence
-
-“A MAN committed a murder, and was pursued by the relations of the man whom he
-murdered. On his reaching the river Nile he saw a Lion on its bank and being
-fearfully afraid, climbed up a tree. He found a serpent in the upper branches
-of the tree, and again being greatly alarmed, he threw himself into the river,
-where a crocodile caught him and ate him. Thus the earth, the air, and the
-water alike refused shelter to a murderer.”
-    -Aesop, _The Manslayer_. 6th century BCE.
-     trans. George Fyler Townsend
-%%%%
-Tiamat
-
-“He saith that Tiamat our mother hath conceived a hatred for us,
- With all her force she rageth, full of wrath.
- All the gods have turned to her,
- With those, whom ye created, they go at her side.
- They are banded together, and at the side of Tiamat they advance;
- They are furious, they devise mischief without resting night and day.
- They prepare for battle, fuming and raging;
- They have joined their forces and are making war.
- Tiamat who formed all things,
- Made in addition weapons invincible; she spawned monster-serpents,
- Sharp of tooth, and merciless of fang;
- With poison, instead of blood, she filled their bodies.
- Fierce monster-vipers she clothed with terror,
- With splendor she decked them, she made them of lofty stature.
- Whoever beheld them, terror overcame him,
- Their bodies reared up and none could withstand their attack.”
-    -Enuma Elish, Third Tablet. circa 668 BCE.
-%%%%
-Tomb
-
-“In the depths of every heart, there is a tomb and a dungeon, though the
-lights, the music, and revelry above may cause us to forget their existence,
-and the buried ones, or prisoners whom they hide. But sometimes, and oftenest
-at midnight, those dark receptacles are flung wide open. In an hour like this,
-when the mind has a passive sensibility, but no active strength; when the
-imagination is a mirror, imparting vividness to all ideas, without the power of
-selecting or controlling them; then pray that your grieves may slumber, and the
-brotherhood of remorse not break their chain.”
-    -Nathaniel Hawthorne, “The Haunted Mind”. 1835.
-%%%%
-alligator
+디스페이터:
 
-“Alligators commit errors of diet.”
-    -Bennet Bowler, M.D., _Contributions to the Natural History of the
-     Alligator, (Crocodilus Mississipiensis), with a Microscopic Addendum_,
-     p. 17. 1846.
+"이같은 것이 주피터의 훨씬 오래된 이름을 아주 잘 나타낸다:
+ 오래전의 이들에게 그는 '디오비스'나 '디에스파테르'라고 불렸고,
+ 다시말하자면 /diespater/'아버지의 날'이고, 거기에 따라서 그의 자식들은 /dei/'deities(신들)', /dius/'god(신)',
+ 그리고 /divum/'하늘', 거기서 /suv divo/'하늘 아래'를, /Dius Fidius/'믿음의 신'을 뜻한다.
+ 그래서 이러한 이유때문에 그의 신전의 지붕에 커다란 구멍이 뚫린 까닭에,
+ /divum/은 천문기구의 '하늘'을 말하는 것처럼 보인다. 몇몇은 당신이 지붕아래에 있을때,
+ 그의 이름을 내세워 맹세하는것은 부적절한 행동이라고 말한다.
+ 아엘리우스가 말하길 /Dius Fidius/는 Diovius의 아들이었고, 그리스인들은 그를 제우스의 아들 카스토르 라고 불렀고, 아엘리우스는 그리스의 헤라클레스를 사비나 발음으로 /Sancus/라고 생각했다.
+ /Dispater(디스 파테르)/도 그의 지저 세계에서 그런식으로 불렸는데, 그가 대지에 들어설때,  그들이 나타나는 그 순간에 거기있던 모든것이 사라졌다; 그때문에 그는 /ortus/'창조물'의 끝을 나타내고, /Orcus/라 불린다."
+    -마르쿠스 테렌티우스 바로, _라틴어에 대하여_, 라이버 V, 서카 40. 기원전 5년.
+     T.E.Page 외 2명 역, On the Latin Language book 5 에서 발췌
 %%%%
-amulet
+Cause Fear spell
 
-“Gringoire put out his hand for the little bag, but she drew back. ‘Do not
-touch it! It is an amulet, and either you will do mischief to the charm, or it
-will hurt you.’”
-    -Victor Marie Hugo, _Notre Dame de Paris_, Book II, chapter VII “A Wedding
-     Night”. 1831.
-%%%%
-amulet of harm
-
-<amulet>
-%%%%
-amulet of faith
-
-<amulet>
-%%%%
-amulet of guardian spirit
-
-<amulet>
-%%%%
-amulet of inaccuracy
-
-<amulet>
-%%%%
-amulet of magic regeneration
-
-<amulet>
-%%%%
-amulet of rage
-
-<amulet>
-%%%%
-amulet of regeneration
-
-<amulet>
-%%%%
-amulet of nothing
-
-<amulet>
-%%%%
-amulet of the gourmand
-
-“put a knife to thy throat, if thou be a man given to appetite.”
-    -KJV Bible, Proverbs 23:2.
-%%%%
-animal skin
-
-“He killed the noble Mudjokivis.
- Of the skin he made him mittens,
- Made them with the fur side inside,
- Made them with the skin side outside.
- He, to get the warm side inside,
- Put the inside skin side outside;
- He, to get the cold side outside,
- Put the warm side fur side inside.
- That's why he put the fur side inside,
- Why he put the skin side outside,
- Why he turned them inside outside.”
-    -Anonymous, in Wells' _A Parody Anthology_, p. 120. 1904.
-%%%%
-apocalypse crab
-
-“I should have been a pair of ragged claws
- scuttling across the floors of silent seas.”
-    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
-%%%%
-arrow
-
-“I saw in a hall an arrow pointing the way and I thought that this inoffensive
-symbol had once been a thing of iron, an inescapable and fatal projectile that
-pierced the flesh of men and lions and clouded the sun at Thermopylae and gave
-Harald Sigurdarson six feet of English earth forever.”
-    -Jorge Luis Borges, _Mutations_. 1960.
-     trans. Mildred Boyle
-%%%%
-bardiche
-
-“The republic always maintains seven or eight thousand regular troops on the
-frontiers, to prevent the incursions of the Tartars. The King does not maintain
-these troops; he only pays the Heydukes, the Semelles, and the Janizaries. The
-first-mentioned are dressed in blue, with large buttons and plates of tin, and
-have bonnets made of felt upon their heads. They have firelocks, and the
-bardiche, which they say is a very good weapon.”
-    -John Pinkerton, _A General Collection of the Best and Most Interesting
-     Voyages and Travels in all parts of the World, many of which are now first
-     translated into English. Digested on a New Plan_. 1808.
-%%%%
-bat
-
-“The sun was set; the night came on apace,
- And falling dews bewet around the place;
- The bat takes airy rounds on leathern wings,
- And the hoarse owl his woeful dirges sings.”
-    -John Gay, Shepherd's Week, Wednesday; or, The Dumps.
-
-“Ere the bat hath flown
- His cloister'd flight.”
-    -William Shakespeare, _Macbeth_, III, 2, line 40. 1605.
-%%%%
-battleaxe
-
-“On Carian coins, indeed of quite late date, the labrys, set up on its long
-pillar-like handle, with two dependent fillets, has much the appearance of a
-cult image.”
-    -Sir Arthur John Evans, “Mycenaean tree and pillar cult and its
-     Mediterranean relations,” _Journal of Hellenic Studies_ XXI, p. 109. 1901.
-%%%%
-battlesphere
-
-“I'm your only friend
- I'm not your only friend
- But I'm a little glowing friend
- But really I'm not actually your friend
- But I am”
-    -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
-%%%%
-blowgun
-
-“Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety
-of palm (Iriartea setigera Martius)... The Indian selects two stems of such
-sizes that the smaller will exactly fit within the larger. After these stems
-have been carefully dried and the pith cleared out with a long rod, the bore is
-made smooth by drawing back and forth through it a little bunch of tree-fern
-roots. The smaller stem is then inserted in the larger, so that one will serve
-to correct any crookedness that may exist in the other. The wooden mouth-piece
-is then fitted to one end, and about three and one half feet from it, a boar's
-tooth is fastened on the gun by some gummy substance, for a sight. Over the
-outside the maker winds spirally a strip of the dark shiny bark of a creeper
-which gives it an ornamental finish, and his blow-gun is complete.
- ”The arrows are from ten to fourteen inches long, and of the thickness of an
-ordinary lucifer match. Those of the Indians of the Caiary-Uaupes are made from
-the midrib of a palm leaf or of the spinous processes of the Patawa (Enocarpus
-Batawa) sharpened to a point at one end and wound near the other with a
-delicate sort of wild cotton which grows in a pod upon a large tree (Bombax
-ceiba). This mass of cotton is just big enough to fill the tube when the arrow
-is gently pressed into it. The point is dipped into poison, allowed to dry, and
-redipped until well coated. The exact composition of this poison is unknown,
-and probably varies in different localities; but it would seem that the chief
-ingredient is always the juice of a Strychnos plant. It is known among
-different tribes by many names; such as Curari, Ourari, Urari and Woorali.”
-    -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
-%%%%
-boggart
-
-“He thinks every bush a boggart.”
-    -John Ray, _A Compleat Collection of English Proverbs_. 1768.
-
-“A BOGGART intruded himself, upon what pretext or by what authority is unknown,
-into the house of a quiet, inoffensive, and laborious farmer; and, when once it
-had taken possession it disputed the right of domicile with the legal mortal
-tenant, in a very unneighbourly and arbitrary manner. In particular, it seemed
-to have a great aversion to children. As there is no point on which a parent
-feels more acutely than that of the maltreatment of his offspring, the feelings
-of the father and more particularly of his good dame, were daily, ay, and
-nightly, harrowed up by the malice of this malignant and invisible boggart.”
-    -C.J.T., _Folk-lore and Legends: English_  1890.
-%%%%
-bolt
-
-“In the midst of our last assault, which would have carried the gate sure and
-given us Paris and in effect France, Joan was struck down by a crossbow bolt,
-and our men fell back instantly and almost in a panic — for what were they
-without her? She was the army, herself.”
-    -Mark Twain, _Personal Recollections of Joan of Arc, by the Sieur Louis de
-     Conte_, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
-%%%%
-book
-
-“On leaf of palm, on sedge-wrought roll;
- On plastic clay and leathern scroll,
- Man wrote his thoughts; the ages passed,
- And lo! the Press was found at last!”
-    -John Greenleaf Whittier, _The Library_, st. 4.
-%%%%
-bread ration
-
-“It is further reported that in the provinces [Caesar] gave banquets constantly
-in two dining halls, in one of which his officers or Greek companions, in the
-other Roman civilians and the more distinguished of the provincials reclined at
-table. He was so punctilious and strict in the management of his household, in
-small matters as well as in those of greater importance, that he put his baker
-in irons for serving him with one kind of bread and his guests with another...”
-    -Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
-%%%%
-broad axe
-
-“Weapon, shapely, naked, wan!
- Head from the mother's bowels drawn!
- Wooded flesh and metal bone! limb only one, and lip only one!
- Gray-blue leaf by red-heat grown! helve produced from a little seed sown!
- Resting the grass amid and upon,
- To be lean'd, and to lean on.”
-    -Walt Whitman, _Song of the Broad-Axe_, l. 1-6. 1867.
-%%%%
-buckler
-
-“Let who will boast their courage in the field,
- I find but little safety from my shield.
- Nature's, not honour's, law we must obey:
- This made me cast my useless shield away,
- And by a prudent flight and cunning save
- A life, which valour could not, from the grave.
- A better buckler I can soon regain;
- But who can get another life again?”
-    -Archilochos. 7th cent. B.C.
-     trans. William H. Goodwin, 1878.
-%%%%
-bush
-
-“And the angel of the LORD appeared unto him in a flame of fire out of the
-midst of a bush: and he looked, and, behold, the bush burned with fire, and the
-bush was not consumed.”
-    -KJV Bible, Exodus 3:2.
-%%%%
-butterfly
-
-“Happiness is a butterfly, which when pursued, is always just beyond your
-grasp, but which, if you will sit down quietly, may alight upon you.”
-    -Nathaniel Hawthorne
-%%%%
-cacodemon
-
-“We'll call him Cacodemon, with his black Gib there, his Succuba, his Devil's
-Seed, his Spawn of Phlegethon, that o’ my Consience was bred o’ the Spume of
-Cocytus.”
-    -John Fletcher, _The Knight of Malta_. 1647.
-%%%%
-catoblepas
-
-“So passed he over into the island, taking with him the two brothers of
-Anaxius; where he found the forsaken knight attired in his own livery, as black
-as sorrow itself could see itself in the blackest glass: his ornaments of the
-same hue, but formd into the figures of ravens which seemed to gape for
-carrion: only his reins were snakes, which finely wrapping themselves one
-within the other, their heads came together to the cheeks and bosses of the
-bit, where they might seem to bite at the horse, and the horse, as he champed
-the bit, to bite at them, and that the white foam was engendered by the
-poisonous fury of the combat. His impresa was a Catoblepta, which so long lies
-dead as the moon (whereto it hath so natural a sympathy) wants her light. The
-word signified, that the moon wanted not the light, but the poor beast wanted
-the moon's light.”
-    -Sir Philip Sidney
-%%%%
-chain mail
-
-<leather armour>
-%%%%
-cherub
-
-“The glory of Yahweh mounted up from the cherub, and stood over the threshold
-of the house; and the house was filled with the cloud, and the court was full
-of the brightness of Yahweh's glory.
- The sound of the wings of the cherubim was heard even to the outer court, as
-the voice of God Almighty when he speaks.”
-    -WEB Bible, Ezekiel 10:4-5
-%%%%
-triple sword
-
-<demon blade>
-%%%%
-cloak
-
-“O Bell my wife, why dost thou flyte?
-   Now is now, and then was then:
- Seek now all the world throughout,
-   Thou kens not clowns from gentlemen:
- They are clad in black, green, yellow and blue,
-   So far above their own degree.
- Once in my life I'll take a view;
-   For I'll have a new cloak about me.”
-    -Anonymous, “The Old Cloak”. 16th Century.
-%%%%
-club
-
-“I have always been fond of the West African proverb: ‘Speak softly and carry a
-big stick; you will go far.’ If I had not carried the big stick, the
-organization would not have gotten behind me, and if I had yelled and
-blustered, as Pankhurst and the similar dishonest lunatics desired, I would not
-have had ten votes.”
-    -Theodore Roosevelt, in a letter to Henry L. Sprague. January 26, 1900.
-%%%%
-crimson imp
-
-“The Devil, too, sometimes steals human children; it is not infrequent for him
-to carry away infants within the first six weeks after birth, and to substitute
-in their place imps.”
-    -Martin Luther
-%%%%
-crocodile
-
-“How doth the little crocodile
-  Improve his shining tail,
- And pour the waters of the Nile
-  On every golden scale!
+공포 유발:
 
- How cheerfully he seems to grin,
-  How neatly spreads his claws,
- And welcomes little fishes in
-  With gently smiling jaws!”
-    -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
+"그리고 미란다가 노래했을 때
+ 모두가 돌아섰다
+ 올가미에 걸린 것처럼, 그들은 순종했다"
+    -The Mars Volta, 더이상 신성하지 않은 영혼 미란다". 2005.
 %%%%
-daeva
+Chain Lightning spell
 
-“Between these twain the Daevas also chose not aright, for infatuation came
-upon them as they took counsel together, so that they chose the Worst Thought.
-Then they rushed together to Violence, that they might enfeeble the world of
-men.”
-    -the Avesta, Yasna XXX, 6, Ahunavaiti Gatha.
-    trans. Christian Bartholomae, 1951.
-%%%%
-dagger
-
-“He drew his dagger, that was sae sharp,
-   That was sae sharp and meet,
- And drave it into the nut-browne bride,
-   That fell deid at his feit.
-
- ‘Now stay for me, dear Annet,’ he sed,
-   ‘Now stay, my dear,’ he cry'd;
- Then strake the dagger untill his heart,
-   And fell deid by her side.”
-    -English traditional ballad, “Lord Thomas and Fair Annet”, circa 1650.
-%%%%
-dark maul
-
-“This caliber should be appropriate.”
-    -prince Dajmiech, “Kajko and Kokosz: The Battle with Dajmiech”, Janusz
-Christa
-%%%%
-demon blade
-
-“Quemadmodum gladius neminem occidit: occidentis telum est.”
- “A sword by itself does not slay; it is merely the weapon used by the slayer.”
-    -Lucius Annaeus Seneca, _Epistulae Morales ad Lucilium_, Letter LXXXVII:
-     Some arguments in favor of the simple life, l. 30. ca. 65 A.D.
-     trans. Richard Mott Gummere, 1917.
-%%%%
-demon trident
+연쇄 번개:
 
-“At these words he started up, and beheld—not his Sophia—no, nor a Circassian
-maid richly and elegantly attired for the grand Signior's seraglio. No; without
-a gown, in a shift that was somewhat of the coarsest, and none of the cleanest,
-bedewed likewise with some odoriferous effluvia, the produce of the day's
-labour, with a pitchfork in her hand, Molly Seagrim approached.”
-    -Henry Fielding, _The History of Tom Jones, a Foundling_, Book V, ch. X.
-     1749.
+"문제는 너무 많은 바보들이 있다는 것이 아니다.
+ 바로 번개가 제대로 떨어지지 않는다는 것이다"
+   -traditionally attributed to Samuel Clemens
 %%%%
-demon whip
+Cloud Mage
 
-“With a terrible cry the Balrog fell forward, and its shadow plunged down and
-vanished. But even as it fell it swung its whip, and the thongs lashed and
-curled about the wizard's knees, dragging him to the brink. He staggered, and
-fell, grasped vainly at the stone, and slid into the abyss.”
-    -J.R.R. Tolkien, _The Fellowship of the Ring_. II, 5, “The Bridge of
-     Khazad-dûm”. 1954.
-%%%%
-dire flail
-
-“‘Ah! ah! ah!’ laughed his two men, ‘how the Norman villains will be humbled
-when they see their doughty knight's skull beaten in by our brave countryman.’”
-    -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
-%%%%
-doom hound
+구름 마법사:
 
-“Standing over Hugo, and plucking at his throat, there stood a foul thing, a
-great, black beast, shaped like a hound, yet larger than any hound that ever
-mortal eye has rested upon. And even as they looked the thing tore the throat
-out of Hugo Baskerville...”
-    -Arthur Conan Doyle, _The Hound of the Baskervilles_. 1902.
+"그리고
+ 그의 장대한 계획이 펼쳐졌을 때
+ 온 세상 하늘의 날씨가
+ 그의 계획에 멋지게 응하였네."
+    -앤드류 버드, "Banking on a Myth". 2005.
 %%%%
 Dragon's Call spell
 
- “This is where the dragons went.
- They lie...
- Not dead, not asleep. Not waiting, because waiting implies expectation.
- Possibly the word we're looking for here is...
- ...dormant.
- And although the space they occupy isn't like normal space, nevertheless
-   they are packed in tightly. Not a cubic inch there but is filled by a claw,
-   a talon, a scale, the tip of a tail, so the effect is like one of those
-   trick drawings and your eyeballs eventually realise that the space between
-   each dragon is, in fact, another dragon.
- They could put you in mind of a can of sardines, if you thought sardines
-   were huge and scaly and proud and arrogant.
- And presumably, somewhere, there's the key.”
-    -Terry Pratchett, “Guards! Guards!”. 1990.
+용의 부름:
+
+"여기가 용이 떠났던 곳이야.
+ 그들이 속였어...
+ 죽지도 않고, 잠들지도 않아. 기다리지도 않지, 왜냐하면 기다림은 기대라는 감정을 가지고 있을 때나 가능한 것이니까.
+ 아마 우리가 여길 찾고 있는 세계는...
+ ...휴면기야.
+ 그리고 그들이 태어난 세계는 평범한 우주같아 보이지 않아도, 그럼에도 불구하고
+ 그들은 작게 싸여있어. 몇 인치의 상자처럼 보이는 것은 사실 손톱, 발톱, 비늘, 꼬리의 끝으로 가득 차있어, 그래서 그 효과는 착시 그림과 비슷하지. 너의 눈이 갑자기 용들의 사이의 공간들은, 사실, 다은 용이라는 것을 깨닫게 되는거야.
+ 그들은 너를 정어리 한 캔의 마음에 넣을 수 있어, 만약 니가 정어리들이 거대하고 비늘로 덮여있으며 오만하고 거만하다고 생각한다면 말이야.
+ 그리고 짐작하건데, 어딘가에, 거기에 열쇠가 있어."
+    -테리 프레쳇, "경비병! 경비병!". 1990.
 %%%%
-dream sheep
+Duvessa
 
-“How undisturbed, the sleep of the foolish.”
-    -Philip K. Dick
+듀베사:
+
+"쌍둥이 아이: 여자아이, 그녀는 평범했어;
+ 형제는 잘생겼고 자만심이 많았지;
+ ‘그가 외모에 대해 자랑하도록 두자고,’
+ 아빠가 말했지; ‘네 책이나 신경써라!
+ 최고의 미는 뇌에서 만들어진다.’"
+    -이솝 & 월터 크레인, _The Baby’s Own Aesop_, 36: "Brother & Sister".1887.
 %%%%
-dryad
+Enslavement spell
 
- • Roy Quixote: Wait, what's my beef with clean energy again?
- — Durkon Pansa: Dunno, but if'n ye prefer, I know a grove o'peach trees tha've
-been gettin' fresh wit tha locals.
-    -Rich Burlew, “Haleo and Julean”
+노예화:
+
+"그가 그의 손을 잡았고, 그들은 전부 멈췄다. 그리고 나는 그가 이렇게 말하는 것처럼 보인다고 생각했다.
+  '이 모든 삶은 내가 너에게 준 것이다, 아아, 그리고 네가 타락하여 날 섬긴다면 더 많고 더 위대한,
+  셀수 없는 기간을 주마!'
+ 그리고 그후 피처럼 붉은 구름이 내 눈 위를 덮는것처럼 보였고, 내가 나 자신이 무엇을 하고있는지 깨달았을 때,
+ 난 이미 창문을 열고 그에게 말하고 있었다.
+  '들어오세요, 군주이자 주인이여!'"
+    -브램스토커 드라큘라. 1897.
 %%%%
-efreet
+Ensorcelled Hibernation spell
 
-“When the hoopoe returned to Solomon (he told him the news), and he responded
-(to Sheba's people): “Are you giving me money? What GOD has given me is far
-better than what He has given you. You are the ones to rejoice in such gifts.”
-(To the hoopoe, he said), “Go back to them (and let them know that) we will
-come to them with forces they cannot imagine. We will evict them, humiliated
-and debased.” He said, “O you elders, which of you can bring me her mansion,
-before they arrive here as submitters?” One afrit from the jinns said, “I can
-bring it to you before you stand up. I am powerful enough to do this.”
-    -The Quran, Sura 27 Al-Naml
+마법의 동면:
+
+"달콤한 꿈은 이렇게 만들어진다: 내가 누구라고 거부하겠는가?"
+     -유리스믹스, "달콤한 꿈(은 이렇게 만들어진다.)." 1983.
 %%%%
-electric golem
+Irradiate spell
 
-“I sing the Body electric”
-    -Walt Whitman, “I Sing the Body Electric”, _Leaves of Grass_. 1867.
-%%%%
-elephant
+방사능 오염:
 
-“And the King went to where the blind men were, and drawing near said to them:
-‘Do you now know what an elephant is like?’
- ‘Assuredly, Lord: we now know what an elephant is like.’
- ‘Tell me then, O blind men, what an elephant is like.’
- And those blind men, O Bhikkhus, who had felt the head of the elephant, said:
-‘An elephant, Sir, is like a large round jar.
- Those who had felt its ears, said: 'it is like a winnowing basket.’
- Those who had felt its tusks, said: ‘it is like a plough-share.’
- Those who had felt its trunk, said: ‘it is like a plough.’
- Those who had felt its body, said: ‘it is like a granary.’
- Those who had felt its feet, said: ‘it is like a pillar.’
- Those who had felt its back, said: ‘it is like a mortar.’
- Those who had felt its tail, said: ‘it is a like a pestle.’
- Those who had felt the tuft of its tail, said: ‘it is like a broom.’
- And they all fought amongst themselves with their fists, declaring, ‘such is
-an elephant, such is not elephant, an elephant is not like that, it is like
-this.’”
- And the King, O Bhikkhus, was highly delighted.
-    -_Udāna_, VI “Jaccandhavagga”. ca. 5th cent. B.C.
-     trans. Dawsonne Melanchthon Strong, 1902.
-%%%%
-emperor scorpion
-
-“Portents had occurred indicating [Titus Flavius Vespasianus'] approaching end,
-such as the comet which was visible for a long time and the opening of the
-mausoleum of Augustus of its own accord. When his physicians chided him for
-continuing his usual course of living during his illness and attending to all
-the duties that belonged to his office, he answered: ‘The emperor ought to die
-on his feet.’”
-    -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
-     trans. Earnest Cary, 1925.
-%%%%
-ettin
-
-“But he had not been long in his hiding-hole, before the awful Ettin came in;
-and no sooner was he in, than he was heard crying:
- ‘Snouk but and snouk ben,
-  I find the smell of an earthly man,
-  Be he living, or be he dead,
-  His heart this night shall kitchen my bread.’”
-    -Joseph Jacobs, _The Red Ettin_
-%%%%
-eudemon blade
-
-<demon blade>
-%%%%
-eveningstar
-
-“It is said to have been the favourite weapon of the Norman priest, who,
-objecting to the shedding of blood, had no scruple about the dashing out of
-brains.”
-    -T. M. Allison, “The Flail and Kindred Tools (from a historical and
-     literary standpoint)”, _Archaeologia Aeliana_, Third Series, vol. IV.
-     1908.
-%%%%
-executioner's axe
-
-“She danced, and was compelled to dance—to dance in the dark night. The shoes
-carried her on over thorn and brier; she scratched herself till she bled; she
-danced away across the heath to a little lonely house. Here she knew the
-executioner dwelt; and she tapped with her fingers on the panes, and
-called,—‘Come out, come out! I cannot come in, for I must dance!’
- And the Executioner said,—‘You probably don't know who I am? I cut off the bad
-people's heads with my axe, and mark how my axe rings!’
- ‘Do not strike off my head,’ said Karen, ‘for if you do I cannot repent of my
-sin. But strike off my feet with the red shoes?’
- And then she confessed all her sin, and the Executioner cut off her feet with
-the red shoes; but the shoes danced away with the little feet over the fields
-and into the deep forest.
- And he cut her a pair of wooden feet, with crutches, and taught her a psalm,
-which the criminals always sing; and she kissed the hand that had held the axe,
-and went away across the heath.”
-    -Hans Christian Andersen, “The Red Shoes”, _Nye Eventyr. Første Bind.
-     Tredie Samling._. 1845.
-%%%%
-falchion
-
-“I have seen the day, with my good biting falchion
- I would have made them skip: I am old now,
- And these same crosses spoil me.”
-    -William Shakespeare, _King Lear_, V, iii. 1608.
-%%%%
-fire crab
-
-“The planet brought forth scintillating jewelled scuttling crabs, which [they]
-ate, smashing their shells with iron mallets; tall aspiring trees with
-breathtaking slenderness and colour which [they] cut down and burned the crab
-meat with.”
-    -Douglas Adams, The Hitch-hiker's Guide to the Galaxy
-%%%%
-fire dragon scales
-
-<steam dragon scales>
-%%%%
-flail
-
-“Even after forcing their way, with great effort and loss, through this double
-defense, [the Germans] still found themselves at a disadvantage; for their
-armor scarce enabled them to contend on equal terms with the uncouth but
-formidable weapons of their adversaries. The Bohemians were armed with long
-iron flails, which they swung with prodigious force. They seldom failed to hit,
-and when they did so, the flail crashed through brazen helmet, skull and all.”
-    -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
-     “Jon Huss and the Hussite Wars”. 1878.
-%%%%
-flying skull
-
-“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
-excellent fancy. He hath bore me on his back a thousand times, and now how
-abhorr'd in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
-1603.
-%%%%
-ghost moth
-
-“Always in focus
- You can't feel my stare.
- I zoom into you
- You don't know I'm there.”
-    -Judas Priest, “Electric Eye”. 1982.
-%%%%
-ghost-faced bat
-
-<bat>
-%%%%
-ghoul
-
-“In the desert
- I saw a creature, naked, bestial,
- Who, squatting upon the ground,
- Held his heart in his hands,
- And ate of it.
- I said, ‘Is it good, friend?’
- ‘It is bitter — bitter’, he answered,
- ‘But I like it
- Because it is bitter,
- And because it is my heart.’”
-    -Stephen Crane, _The Black Riders and Other Lines_. 1895.
-%%%%
-giant club
-
-“Therewith the gyant buckled him to fight,
- Inflamd with scornefull wrath and high disdaine,
- And lifting up his dreadful club on hight,
- All armed with ragged snubbes and knottie graine,
- Him thought at first encounter to have slaine.”
-    -Edmund Spenser, _The Faerie Queene_, Book I, “The Legend of the Knight of
-     the Red Crosse”, Canto VIII, stanza vii, l. 55-9. 1590.
-%%%%
-floating eye
-
-“El ojo que ves
- no es ojo porque tú lo veas,
- es ojo porque te ve.”
-    -Antonio Machado, Campos de Castilla. 1912-1917.
-%%%%
-bullfrog
-
-“Hello, my baby
- Hello, my honey
- Hello, my ragtime gal
-
- Send me a kiss by wire
- Baby, my hearts on fire
-
- If you refuse me
- Honey, you'll lose me
- Then you'll be left alone
-
- Oh baby, telephone
- And tell me I'm your own.”
-    -Ida Emerson and Joseph E. Howard, “Hello My Baby!”
-%%%%
-giant spiked club
-
- oni-ni-kanabō
- “oni with a spiked iron club”
-    -Japanese proverb indicating overwhelming power
-%%%%
-giga bat
-
-<bat>
-%%%%
-glaive
-
-“To know the perfect length of your ſhort ſtaffe, or half Pike, Forreſt bil,
-Partiſan or Gleue, or ſuch like weapons of vantage and perfect lengths, you
-ſhall ſtand vpright, holding the ſtaffe vpright cloſe by your body, with your
-left hãd, reaching with your right hand your ſtaffe as high as you can, and
-then allow to that length a ſpace to ſet both your hands, when you come to
-fight, wherein you may conueniently ſtrike, thruſt and ward, & that is the iuſt
-length according to you ſtature. And this note, that theſe lengths will
-commonly fall out to be eight or nine foot long, and will fit, although not
-iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
-fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
-to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
-ſtaffe behind the backmoſt hand doth no harme.”
-    -George Silver,_Paradoxes of Defence_.1599.
-%%%%
-gnoll
-
-“Then he descended softly and beckoned to Nuth. But the gnoles had watched him
-through knavish holes that they bore in trunks of the trees, and the unearthly
-silence gave way, as it were with a grace, to the rapid screams of Tonker as
-they picked him up from behind — screams that came faster and faster until they
-were incoherent. And where they took him it is not good to ask, and what they
-did with him I shall not say.”
-    -Lord Dunsany, “How Nuth Would Have Practised His Art Upon the Gnoles”.
-1912.
-%%%%
-goblin
-
-“Swish, smack! Whip crack!
- Batter and beat! Yammer and bleat!
- Work, work! Nor dare to shirk,
- While Goblins quaff, and Goblins laugh,
- Round and round far underground
- Below, my lad!”
-    -J.R.R. Tolkien, _The Hobbit_
-%%%%
-gold dragon scales
-
-<steam dragon scales>
-%%%%
-gold piece
-
-“Here it was that the ambassadors of the Samnites, finding him boiling turnips
-in the chimney corner, offered him a present of gold; but he sent them away
-with this saying; that he, who was content with such a supper, had no need of
-gold; and that he thought it more honourable to conquer those who possessed the
-gold, than to possess the gold itself.”
-    -Plutarch, “Marcus Cato”, _Lives_. 75 AD.
-    trans. John Dryden, 1683.
-%%%%
-golden dragon
-
-“You do not come dramatically, with dragons
- That rear up with my life between their paws
- And dash me butchered down beside the wagons”
-    -Philip Larkin, “To Failure”. 1949.
-%%%%
-golden eye
-
-“No coveting nor envy burns
-   In thy bright golden eye,
- That calm and innocently turns
-   On all below the sky.”
-    -Hannah Flagg Gould, _The Youth's Coronal_
-%%%%
-great mace
-
-“There will arise one named Feridoun, who shall inherit thy throne
- and reverse thy fortunes, and strike thee down with a cow-headed mace.”
-    -Firdausi, _Shahnameh_. ca. 1000 A.D.
-     trans. Helen Zimmern, 1883.
-%%%%
-great sword
-
-<demon blade>
-%%%%
-greater mummy
-
-<mummy>
-%%%%
-guardian golem
-
-“‘Listen Reb _Golem_,’ the old man said, wagging his finger. ‘Pay attention to
-  what I say—you understand?’
- ‘Understand...’
- ‘If you want to stay here, you got to do like Mr. Gumbeiner says.’
- ‘Do-like-Mr.-Gumbeiner-says...’
- ‘_That's_ the way I like to hear a golem talk. Malka, give here the mirror
-  from the pocketbook. Look, you see your face? You see on the forehead, what's
-  written? If you don't do like Mr. Gumbeiner says, he'll wipe out what's
-  written and you'll be no more alive.’
- ‘No-more-alive...’
- ‘_That's_ right. Now, listen. Under the porch you'll find a lawnmower. Take
-  it. And cut the lawn. Then come back. Go.’”
-    -Avram Davidson, “The Golem”, 1955.
-%%%%
-halberd
-
-“And Diarmid oh, Diarmid he perished in the strife;
- His head it was spiked upon a halberd high;
- His colours they were trampled: he had no chance of life
- If the Lord God Himself stood by!—
-  Och, ochone!”
-    -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
-     ca. 1840.
-%%%%
-hand axe
-
-“Lizzie Borden took an axe
- And gave her mother forty whacks.
- When she saw what she had done
- She gave her father forty-one.”
-    -A popular skipping-rope rhyme, after 1893.
-%%%%
-hand crossbow
-
-<arbalest>
-%%%%
-harpy
-
-“Bird-bodied, girl-faced things they are; abominable their droppings, their
-hands are talons, their faces haggard with hunger insatiable.”
-    -Virgil, Aeneid 3
-
-“And Phineus had scarcely taken the first morsel up when, with as little
-warning as a whirlwind or a lightning flash, they dropped from the clouds
-proclaiming their desire for food with raucous cries. The young lords saw them
-coming and raised the alarm. Yet they had hardly done so before the Harpyiai
-had devoured the whole meal and were on the wing once more, far out at sea. All
-they left was an intolerable stench.”
-    -Apollonius Rhodius, Argonautica 2. 179 — 434
-%%%%
-hell hound
-
-“About her middle round
- A cry of Hell-hounds never-ceasing barked
- With wide Cerberean mouths full loud, and rung
- A hideous peal; yet, when they list, would creep,
- If aught disturbed their noise, into her womb,
- And kennel there; yet there still barked and howled
- Within unseen.”
-    -John Milton, _Paradise Lost_, Book II, l. 653-659. 1667.
-%%%%
-hell knight
-
-“Ok, let's review. It's up to the fair young maiden to rescue the dragon from
-the fire breathing knights in shining armour.”
-    -Exiern
-%%%%
-hobgoblin
-
-“A foolish consistency is the hobgoblin of little minds, adored by little
-statesmen and philosophers and divines.”
-    -Ralph Waldo Emerson, _Essays: First Series_, Essay II: Self-Reliance.
-     1841.
-%%%%
-hog
-
-“Fern came slowly down the stairs. Her eyes were red from crying. As she
-approached her chair, the carton wobbled, and there was a scratching noise.
-Fern looked at her father. Then she lifted the lid of the carton. There,
-inside, looking up at her, was the newborn pig. It was a white one. The morning
-light shone through its ears, turning them pink. “He's yours,” said Mr. Arable.
-“Saved from an untimely death. And may the good Lord forgive me for this
-foolishness.”
-    -E.B. White, _Charlotte's Web_
-%%%%
-horn of Geryon
-
-‘So Joshua called together the priests and said, “Take up the Ark of the Lord's
-Covenant, and assign seven priests to walk in front of it, each carrying a
-ram's horn.’
-
-‘When the people heard the sound of the rams’ horns, they shouted as loud as
-they could. Suddenly, the walls of Jericho collapsed, and the Israelites
-charged straight into the town and captured it. They completely destroyed
-everything in it with their swords—men and women, young and old, cattle, sheep,
-goats, and donkeys.’
-    -Joshua 6:6,20-21, New Living Translation
-%%%%
-hound
-
-“A traveller, by the faithful hound, Half-buried in the snow was found, Still
-grasping in his hand of ice That banner with the strange device, Excelsior!”
-    -Henry Wadsworth Longfellow, “Excelsior”
-%%%%
-human
-
-“Do you know
- Do I know
- What's this thing called ‘man’?
- God only knows what a man is!
- I only know his price.”
-    -Bertolt Brecht, “The Measures Taken”. 1930.
-%%%%
-ice bat
-
-<bat>
-%%%%
-ice dragon scales
-
-<steam dragon scales>
-%%%%
-iguana
-
-“Once on a time when Brahmadatta was reigning in Benares, the Bodhisatta was
-born an iguana. When he grew up he dwelt in a big burrow in the river bank with
-a following of many hundreds of other iguanas. Now the Bodhisatta had a son, a
-young iguana, who was great friends with a chameleon, whom he used to clip and
-embrace. This intimacy being reported to the iguana king, he sent for his young
-son and said that such friendship was misplaced, for chameleons were low
-creatures, and that if the intimacy was persisted in, calamity would befall the
-whole of the tribe of iguanas. And he enjoined his son to have no more to do
-with the chameleon. But the son continued in his intimacy.”
-    -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
-     trans. Robert Chalmers, 1895.
-%%%%
-insubstantial wisp
-
-“Lead then, said Eve. Hee leading swiftly rowld
- In tangles, and made intricate seem strait,
- To mischief swift. Hope elevates, and joy
- Bright'ns his Crest, as when a wandring Fire
- Compact of unctuous vapor, which the Night
- Condenses, and the cold invirons round,
- Kindl'd through agitation to a Flame,
- Which oft, they say, some evil Spirit attends
- Hovering and blazing with delusive Light,
- Misleads th' amaz'd Night-wanderer from his way
- To Boggs and Mires, and oft through Pond or Poole,
- There swallow'd up and lost, from succour farr.”
-    -John Milton, _Paradise Lost_
+"하늘에 반사된 광경이 네가 죽을 것을 예고해.
+ 폭풍이 오고 있어, 원자의 홍수를 피해 숨는 것이 좋을 꺼야.
+ 하늘의 섬광이 마을을 폐허로 만들었고
+ 사람들은 곤죽이 되며, 방사성 마음은 부패하네."
+    -블랙 사바스, "전기 장례식", 1970
 %%%%
 Iskenderun's Battlesphere spell
 
-“Maxim 4: Close air support covereth a multitude of sins.”
-    -Howard Tayler, _The Seventy Maxims of Maximally Effective Mercenaries_,
-     in _Schlock Mercenary_. 2008.
+이스켄데룬의 전투 구체:
+
+"규칙 제 4조: 가까운 공중지원은 아주 많은 죄를 덮어 준다."
+  -하워드 테일러, "쉬록 용병 中 최고로 효율적인 해적들의 7가지 습관", 2008
 %%%%
-jackal
+Lee's Rapid Deconstruction spell
 
-“Always ready to take advantage of every favourable opportunity, the Jackal is
-a sad parasite, and hangs on the skirts of the larger carnivora as they roam
-the country for prey, in the hope of securing some share of the creatures
-which they destroy or wound.”
-    -John George Wood, _The Illustrated Natural History: Mammalia_. 1865.
+리의 순간 해체술:
+
+"삼손이 여호와께 부르짖어 이르되 
+ 주 여호와여 구하옵나니 나를 생각하옵소서
+ 하나님이여 구하옵나니 이번만 나를 강하게 하사
+ 나의 두 눈을 뺀 블레셋 사람에게 원수를 단번에 갚게 하옵소서 하고
+
+ 삼손이 집을 버틴 두 기둥 가운데 하나는 왼손으로 하나는 오른손으로 껴 의지하고
+
+ 삼손이 이르되 블레셋 사람과 함께 죽기를 원하노라 하고 힘을 다하여 몸을 굽히매
+ 그 집이 곧 무너져 그 안에 있는 모든 방백들과 온 백성에게 덮이니
+ 삼손이 죽을 때에 죽인 자가 살았을 때에 죽인 자보다 더욱 많았더라"
+     -KJV 성경, 사사기 16장 28절-30절
 %%%%
-javelin
+Mass Confusion spell
 
-“Suppose you found your brother in bed with your wife, and put a javelin
-through both of them, you would be justified, and they would atone for their
-sins, and be received into the kingdom of God.”
-    -Brigham Young, _Journal of Discourses_, 3:247. 1856.
+다수의 혼란:
+
+"자, 우리가 내려가서 거기서 그들의 언어을
+ 혼잡케 하여 그들로 서로 알아듣지
+ 못하게 하자 하시고
+ 여호와께서 거기서 그들을 온 지면에
+ 흩으신고로 그들이 성 쌓기를 그쳤더라"
+    -KJV 성경, 창세기 10장 7-8절.
 %%%%
-jelly
+Orcish Mines
 
-“Beware of the Blob!
- It creeps
- And leaps
- and glides and slides
- Across the floor
- Right through the door
- And all around the wall,
- A splotch, a blotch...”
-    -Burt Bacharach and Mack David, “Beware of the Blob”. 1958.
-%%%%
-kobold
+오크 광산:
 
-“Kobolds are harmless.”
-    -Bearand the Bold, epitaph (Magic: the Gathering)
-
-%%%%
-komodo dragon
-
-“The three of us were sitting ashen faced as if we had just witnessed a foul
-and malignant murder. At least if we had been watching a murder the murderer
-wouldn't have been looking us impassively in the eye as he did it. Maybe it was
-the feeling of cold unflinching arrogance that so disturbed us. But whatever
-malign emotions we tried to pin on to the lizard, we knew that they weren't the
-lizard's emotions at all, only ours. The lizard was simply going about its
-lizardly business in a simple, straightforward lizardly way. It didn't know
-anything about the horror, the guilt, the shame, the ugliness that we,
-uniquely guilty and ashamed animals, were trying to foist on it. So we got it
-all straight back at us, as if reflected in the mirror of its single
-unwavering and disinterested eye.”
-    -Douglas Adams, “Last Chance to See”. 1990.
-%%%%
-kraken
-
-“... Kraken, also called the Crab-fish, which [according to the pilots of
-Norway] is not that huge, for heads and tails counted, he is no larger than our
-Öland is wide [i.e. less than 16 km] ... He stays at the sea floor, constantly
-surrounded by innumerable small fishes, who serve as his food and are fed by
-him in return: for his meal, if I remember correctly what E. Pontoppidan
-writes, lasts no longer than three months, and another three are then needed to
-digest it. His excrements nurture in the following an army of lesser fish, and
-for this reason, fishermen plumb after his resting place ... Gradually, Kraken
-ascends to the surface, and when he is at ten to twelve fathoms, the boats had
-better move out of his vicinity, as he will shortly thereafter burst up, like a
-floating island, spurting water from his dreadful nostrils and making ring
-waves around him, which can reach many miles. Could one doubt that this is the
-Leviathan of Job?”
-    -Jacob Wallenberg, “Min son på galejan”. 1781.
-%%%%
-lajatang
-
-“A weapon that comes down as still
- As snowflakes fall upon the sod;
- But executes a freeman's will,
- As lightning does the will of God.”
-    -John Pierpont, “The Ballot”. ca. 1850.
-%%%%
-large rock
-
-“Well, I run to the rock and I hide my face
- The rock cried out, No hiding place
- There's no hiding place down here.”
-    -Negro spiritual. 19th cent.
-%%%%
-large shield
-
-<buckler>
-%%%%
-leather armour
-
-“Nought can Deform the Human race
- Like to the Armours iron brace”
-    -William Blake, “Auguries of Innocence”, 99-100. 1803.
-%%%%
-lindwurm
-
-“Freilich verbürgt uns keine Silbe die Existenz von solcherlei Thieren, wenn
-wir uns den Drachen oder Lindwurm als ein Ungeheuer vorstellen, dessen langer
-Hals in einen Adler-, Löwen- oder Delphinenkopf endigt; das auf dem breiten
-Rücken Greifs- oder Nachisittige trägt; und am vielfach gerollten Schweif einen
-Stachel mit Widerhaken hat; Feuer speit; sich in Mädchen verliebt und diese
-entführt; bald diese bald jene Gestalt annimmt; auf sauer erworbenen Schatzen
-ruht — kurz, als ein Ungeheuer, das alle Eigenschaften besitzt, welche die
-Fabel ihm andichtet; dann wäre es Wahnsinn, an Drachen und Lindwürmer glauben
-zu wollen. Nehmen wir aber dafür bloß ein furchtbares Ungeheuer überhaupt,
-welches nun aus unserem Welttheile vertilgt ist, so hat der Glaube daran nichts
-Lächerliches.”
-    -Leopold Ziegelhauſer, _Schattenbilder der Vorzeit: Ein Kranz von
-     Geschichten, Sagen, Legenden, Märchen, Skizzen und Heldenmahlen, Aus allen
-     Gegenden Deutschlands und des österreichischen Kaiserstaates_. 1844.
-%%%%
-long sword
-
-“While we were at grips with this great army and their dreadful broadswords
-(maquahuitl [made of obsidian]), many of the most powerful among the enemy seem
-to have decided to capture a horse. They began with a furious attack, and laid
-hands on a good mare well trained both for sport and battle. Her rider, Pedro
-de Moron, was a fine horseman; and as he charged with three other horsemen into
-the enemy ranks—they had been instructed to charge together for mutual
-support—some of them seized his lance so he could not use it, and others
-slashed at him with their broadswords (maquahuitl), wounding him severely. Then
-they slashed at his mare, cutting her head at the neck so that it only hung by
-the skin. The mare fell dead, and if his mounted comrades had not come to
-Moron's rescue, he would probably have been killed also.”
-    -Bernal Díaz del Castillo, _The Conquest of New Spain_. 1623.
-     trans. J.M.Cohen, 1963.
-%%%%
-longbow
-
-“Robyn bent a full goode bowe,
- An arrowe he drowe at wyll;
- He hit so the proud sherife
- Upon the grounde he lay full still.”
-    -_A Gest of Robyn Hode_ Sixth Fytte, l. 120-123. ca. 1450.
-%%%%
-lorocyproca
-
-“There it had assumed a wild, incalculable and incredible shape, twisted into a
-fantastic arabesque — invisible to their eyes, but dreadful nonetheless — into
-the unfamiliar numeral under whose menace they lived.”
-    -Bruno Schulz, “The Brilliant Epoch”. 1937.
-%%%%
-lost soul
-
-“She walks in the twilight, her steps make no sound,
-  Her feet leave no tracks on the dew-covered ground.
- Her hand gently beckons, she whispers your name—
-  But those who go with her are never the same.”
-    -Magic: the Gathering
-%%%%
-mace
-
-“[My plan] does not propose to fill your lobby with squabbling colony agents,
-who will require the interposition of your mace at every instant to keep the
-peace among them.”
-    -Edmund Burke, “On Conciliation with America”, speech in Parliament. 1775.
-%%%%
-mad acolyte of Lugonu
-
-“And when you look long into an abyss, the abyss also looks into you.”
-    -Friedrich Nietzche, “Beyond Good and Evil”. 1886.
-%%%%
-manticore
-
-“Ctesias writeth, that in Aethiopia likewise there is a beast which he calleth
-Mantichora, having three rankes of teeth, which when they meet togither are let
-in one within another like the teeth of combes: with the face and eares of a
-man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile
-armed with a sting like a scorpion: his voice resembleth the noise of a flute
-and trumpet sounded together: very swift he is, and mans flesh of all others
-hee most desireth.”
-    -Pliny the Elder, _Natural History_, Book 8, Chapter XXI
-%%%%
-manual
-
-<book>
-%%%%
-merfolk
-
-“Again at length my thought reviving came,
- When I no longer found my self the same;
- Then first this sea-green beard I felt to grow,
- And these large honours on my spreading brow;
- My long-descending locks the billows sweep,
- And my broad shoulders cleave the yielding deep;
- My fishy tail, my arms of azure hue,
- And ev'ry part divinely chang'd, I view.”
-    -Ovid, _Metamorphoses_, XIII, 546-7. 8 A.D.
-     trans. Garth, Dryden, et al.
-%%%%
-merfolk aquamancer
-
-<merfolk>
-%%%%
-merfolk avatar
-
-“Then up it raise the mermaiden,
- Wi the comb an glass in her hand:
- ‘Here's a health to you, my merrie young men,
- For you never will see dry land.’”
-    -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
-     Child, _The English and Scottish Popular Ballads_. 1898.
-%%%%
-merfolk impaler
-
-<merfolk>
-%%%%
-merfolk javelineer
-
-<merfolk>
-%%%%
-merfolk siren
-
-“Row'd on, in reach of an erected voice,
- The Sirens soon took note, without our noise,
- Tuned those sweet accents that made charms so strong,
- And these learn'd numbers made the Sirens' song:
- ‘Come here, thou worthy of a world of praise,
- That dost so high the Grecian glory raise,
- Ulysses! stay thy ship, and that song hear
- That none past ever but it bent his ear,
- But left him ravish'd, and instructed more
- By us, than any ever heard before.
- For we know all things whatsoever were
- In wide Troy labour'd; whatsoever there
- The Grecians and the Trojans both sustain'd
- By those high issues that the Gods ordain'd.
- And whatsoever all the earth can show
- T' inform a knowledge of desert, we know.’”
-    -Homer, _The Odyssey_, XII, 268-82.
-     trans. George Chapman, 1857.
-%%%%
-microbat
-
-<bat>
-%%%%
-molten gargoyle
-
-<war gargoyle>
-%%%%
-morningstar
-
-“Little did then his pomp of plumes bestead
- The Azteca, or glittering pride of gold.
- Against the tempered sword; little his casque,
- Cay with its feathery coronal, or drest
- In graven terrors, when the Briton's hand
- Drove in through helm and head the spiked mace;
- Or swung its iron weights with shattering sway.
- Which, where they fell, destroyed.”
-    -Robert Southey, _Madoc_. 1805.
-%%%%
-morningstar "Eos"
-
-“But soon as early Dawn appeared, the rosy-fingered, then gathered the folk
- about the pyre of glorious Hector.”
-    -Homer, _The Iliad_, XXIV, 776.
-     trans. A. T. Murray, 1857.
-%%%%
-moth of wrath
-
-“When within sight of their foe Berserks wrought themselves into such a state
-of frenzy, that they bit their shields and rushed forward to the attack,
-throwing away their arms of defence, reckless of every danger, sometimes having
-nothing but a club, which carried with it death and destruction.”
-    -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
-     Customs of the Ancestors of the English Speaking Nations_. 1889.
-%%%%
-mummy
-
-“I see Egypt and the Egyptians — I see the pyramids and obelisks;
- I look on chisel'd histories, songs, philosophies, cut in slabs
-     of sand-stone, or on granite-blocks;
- I see at Memphis mummy-pits, containing mummies, embalm'd, swathed
-     in linen cloth, lying there many centuries;
- I look on the fall'n Theban, the large-ball'd eyes, the side-drooping
-     neck, the hands folded across the breast.”
-    -Walt Whitman, “Salut au Monde”
-%%%%
-naga
-
-“Amongst the deities and Asuras and celestial Rishis, O amiable lady, the Nagas
-are endued with great energy. Possessed of great speed, they are endued again
-with excellent fragrance. They deserve to be worshipped. They are capable of
-granting boons. Indeed, we too deserve to be followed by others in our train. I
-tell thee, O lady, that we are incapable of being seen by human beings.”
-    -Mahābhārata, Santi Parva, Mokshadharma Parva, section CCCLX. ca. 500 B.C.
-     trans. Kisari Mohan Ganguli, 1883.
-%%%%
-naga mage
-
-<naga>
-%%%%
-nagaraja
-
-“Then there have also come
- nagas from Lake Nabhasa,
- Vesali, and Tacchaka.
- Kambalas, Assataras,
- Payagas, and their kin.
- And from the River Yamuna
- comes the prestigious naga, Dhatarattha.
- The great naga Eravanna:
- He, too, has come
- to the forest meeting.”
-    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
-     trans. Thanissaro Bhikkhu
-%%%%
-naga warrior
-
-<naga>
-%%%%
-needle
-
-“I pray that, risen from the dead,
- I may in glory stand—
- A crown, perhaps, upon my head,
- But a needle in my hand.”
-    -Eugene Field, “Grandma's Prayer”. late 19th cent.
-%%%%
-neqoxec
-
-“If thus mutation is influenced by natural selection, it implies, that any
-particular mutation must advance in a direction advantageous for the respective
-species, and, indeed, many examples of mutation known among fossil animals are
-apparently due to the advantage produced by the change. I must add here,
-however that probably not all mutations (in a palaeontological meaning) are due
-to natural selection, but that many do not imply an actual improvement.”
-    -_Proceedings of the American Philosophical Society_, Volume XXV, no. 150.
-     1896.
-%%%%
-octopode
-
-“In their brief time together Slothrop forms the impression that this octopus
-is not in good mental health, though where's his basis for comparing? But there
-is a mad exhuberance, as with inanimate objects which fall off of tables when
-we are sensitive to noise and our own clumsiness and don't want them to fall, a
-sort of wham! ha-ha you hear that? here it is again, WHAM! in the cephalopod's
-every movement, which Slothrop is glad to get away from as he finally scales
-the crab like a discus, with all his strength, out to sea, and the octopus,
-with an eager splash and gurgle, strikes out in pursuit, and is presently
-gone.”
-    -Thomas Pynchon, _Gravity's Rainbow_. 1973.
-%%%%
-oklob plant
-
-“Carbonic acid is one of the three materials which together form the starting
-point of vegetable growth; the others being water and nitric acid. This acid is
-formed of carbon and oxygen in the proportion of one part of the former to two
-of the latter chemically combined. It is a colorless gas, having an acid taste
-and smell; is soluble in water; weighs one-half more than air and can be poured
-from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
-parts of this gas, and it is from this source that the roots of plants derive
-the needed supplies of it.”
-    -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
-    Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
-%%%%
-oklob sapling
-
-<oklob plant>
-%%%%
-ooze
-
-“Sea horses floundering in the slimy mud,
- Tossed up their heads, and dashed the ooze about them.”
-    -John Dryden. _All For Love_, I, i, 15-17. 1678.
-%%%%
-ophan
-
-“As I looked at the living creatures, I saw a wheel on the ground beside
- each creature with its four faces. This was the appearance and structure
- of the wheels: They sparkled like chrysolite, and all four looked alike.
- Each appeared to be made like a wheel intersecting a wheel. As they
- moved, they would go in any one of the four directions the creatures faced;
- the wheels did not turn about as the creatures went. Their rims were
- high and awesome, and all four rims were full of eyes all around.”
-    -Ezekiel 1:15-18 (New International Version)
-%%%%
-The open sea
-
-“I mused upon the mystery of fish, their strange and mindless beauty, how—
-innocently evil—they prey upon each other, devouring the weaker and smaller
-without rage or shout or change of countenance. There, in the realm of water,
-which is also earth and air to them, the great fish passed up and down, growing
-old without aging and enjoying eternal growth without the softness of obesity.
-It was a world without morality, a world without choices, a world of eating and
-spawning and growing great. I envied the great fish, and (in other, smaller
-ponds) the lesser fish, darting and flashing and sparkling gold.
-
-They speak of ‘the beast in man,’ and of ‘the law of the jungle.’ Might they
-not (so I reflected, strolling underneath a sky of clouds as blue and as white
-as the tiles and marble of the Altar of Heaven), might they not better speak of
-‘the fish in man’? And of ‘the law of the sea’? The sea, from which they say we
-came...?”
-    -Avram Davidson, “Dagon”, 1959.
-%%%%
-orange demon
-
-“In Sparkill buried lies that man of mark
- Who brought the Obelisk to Central Park,
- Redoubtable Commander H.H. Gorringe,
- Whose name supplies the long-sought rhyme for ‘orange.’”
-    -Arthur Guiterman, “Local Note”. 1934.
-%%%%
-orb of fire
-
-“There 's not the smallest orb which thou behold'st
- But in his motion like an angel sings,
- Still quiring to the young-eyed cherubins.”
-    -William Shakespeare, _The Merchant of Venice_, V, i. 1597.
-%%%%
-pandemonium lord
-
-“Mean while the winged heralds by command
- Of Sovran power, with awful Ceremony
- And Trumpets sound throughout the Host proclaim
- A solemn Councel forthwith to be held
- At Pandaemonium, the high Capital
- Of Satan and his Peers...”
-    -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
+"당신의 인생은 16톤의 무거운 짐을 짊어지고 있는 거예요. 성 베드로여, 나를 데려가지 말아 주세요. 나의 혼은 회사의 것이니까요."
+    -Merle Travis, "Sixteen Tons". 1946.
 %%%%
 Passwall spell
 
-“He says the best way out is always through.”
-    -Robert Frost, _A Servant to Servants_. 1915.
+"그는 밖으로 나가는 최고의 길은 벽을 통과하는 것이라고 그랬지"
+  -Robert Frost, _A Servant to Servants_. 1915.
 %%%%
-pearl dragon scales
+Shatter spell
 
-<steam dragon scales>
+분쇄:
+
+"이에 백성은 외치고 제사장들은 나팔을 불매 백성이 나팔 소리를 들을 때에 크게 소리 질러 외치니 성벽이
+ 무너져 내린지라 백성이 각기 앞으로 나아가 그 성에 들어가서 그 성을 점령하고,
+ 그 성 안에 있는 모든 것을 온전히 바치되 남녀 노소와 소와 양과 나귀를 칼날로 멸하니라."
+    -KJV 성경, 여호수와 6장 20-21절.
 %%%%
-phantom
+Shoals
 
-“Who wondrous things concerning our welfare, And straunge phantomes doth lett
-us ofte foresee.”
-    -Spenser, _The Faerie Queene_ II. xii. 47
+해안:
+
+"오늘 날따라 그 말이 더더욱 어렵고, 세상이 상상했던 것했던 것보다 훨씬 가혹하다는 것이 드러났으므로,
+ 나는 가끔 그 오래된 은유에 대해 생각하곤 한다, 우리들이 모두 넓은 바다 위의 섬들이라고 말하는 그 은유에 대해. 
+
+ 우리들은 모두 섬과 같다고, 철학자가 말했다. 아마도 그 말이 맞을 것이다. 하지만 오랫동안 잊혀진 예언자가 동굴벽 어딘가에 새겨 놓은 오래된 말을 떠올리지 않을 수가 없다. 끝내 바다가 모든 것을 말해주리라.
+
+ 잠을 깨우고, 의아한 기분으로 나를 채우며, 옛 말이 파도처럼 내 마음에 부딪친다. 우리들은 섬과 같다. 그 말은 우리들이 이어져있다는 의미인가? 우리들이 기원을 공유하고 있다는 의미인가? 아니면 모두 가라앉을 운명에 불과하다는 건가?
+
+    -"바다가 모든 것을 말해주리라". 2012
 %%%%
-phase bat
+Temple
 
-<bat>
+만신전:
+
+"또 내가 들으니 성전에서 큰 음성이 나서 일곱 천사에게 말하되 너희는 가서 하나님의 진노의 일곱 대접을 땅에 쏟으라 하더라."
+    -KJV 성경, 요한계시록 16장 1절.
 %%%%
-pillar of salt
+The open sea
 
-“Then the LORD rained upon Sodom and upon Gomorrah brimstone and fire from the
-LORD out of heaven; And he overthrew those cities, and all the plain, and all
-the inhabitants of the cities, and that which grew upon the ground. But [Lot's]
-wife looked back from behind him, and she became a pillar of salt.”
-    -KJV Bible, Genesis 19:24-6.
+바다:
+
+"난 물고기의 기이하고 무심한 아름다움의 의문에 대해 즐거워했다.
+ 어찌나 순수한 악의인가, 그들은 서로를 잡아먹고,
+ 약하고 더 작은것을 분노나 외침이나 표정의 변화없이 집어삼킨다.
+ 그곳 수중은 물고기들에겐 육지와 공기이다.
+ 거대한 물고기가 지나다니고,
+ 노화없이 늙어가고, 비만에 대한 관대함없이 계속  자란다.
+ 도덕성과 선택지가 없는 세계에서, 잘 먹고 번식하고 자란다.
+ 난 큰 물고기도 부럽고, 혹시 작은 연못이라면, 재빠르고 반짝이고 금빛의, 작은 물고기도 부럽다.
+ 그것들을 '인간의 야수성'이라던가 '정글의 법칙'이라고 말한다.
+ 그들은 틀린것 같다.
+ 구름 위의 하늘 색이 파랗기도 하고 하얗기도 한데, 그게 천국의 제단 의 대리석과 기와의 색인가.
+ 이렇게 부르는게 나을것같다. '인간의 물고기 특성?', '바다의 법칙?'
+ 우리가 온 곳을 바다라고 말하는가...?"
+    -Avram Davidson, "Dagon", 1959.
 %%%%
-player ghost
+Tiamat
 
-“Know thyself.”
-    -Inscription in the pronaos of the Temple of Apollo at Delphi
+티아마트:
+
+"우리의 어머니인 티아마트는 우리에게 증오를 품었고,
+ 분노로 가득찬 그녀는 그녀가 창조해낸 모든 신들과 결집했다.
+ 그들은 매우 분노했고, 밤낮으로 쉬지 않고 재앙을 초래했다.
+ 그들은 분노를 내뿜으며 전투를 준비했다.
+ 그들은 군대를 결성했고,전쟁을 일으키고 있다.
+ 또한 이 모든것을 촉발시킨 티아마트는
+ 대적할 자가 없는 무기들을 만들어 내고,
+ 피대신 채워넣은 독으로 인하여 무자비하고 날카로운 독니를 가진 뱀을 닮은 괴물들을 낳았다.
+ 그녀는 험악한 괴물 독사들에게 공포를 부여하였다.
+ 그녀가 화려하게 창조해 낸 괴물들은 주위에 오만한 악명을 떨쳤다.
+ 괴물들을 바라보는 어떤 자이든 공포가 엄습했으며, 누구도 그들의 공격을 견디지 못하였다" 
+    -에누마 엘리쉬, 세번째 석판. 기원전 668년쯤
 %%%%
-polar bear
+Urug
 
-“The Polar Bear is an animal of tremendous strength and fierceness.iBarentz, in
-his voyage in search of a north-east passage to China, had proofs of the
-ferocity of these animals, in the island of Nova Zembla, where they attacked
-his seamen, seizing them in their mouths; carrying them off with the utmost
-ease, and devouring them in the sight of their comrades. It is said that they
-will attack and attempt to board armed vessels, at a great distance from shore,
-and have sometimes been with much difficulty repelled.”
-    -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I,
-     p. 2. 1800.
+우룩:
+
+U r u g, 무너지면서 굴러떨어지는 것, 마치 작은 폭포에 떨어지는 물과 같이, 언덕에서 땅으로 미끄러져 돌들이 쌓이는 것, 구덩이를 메우기 위해 땅에 돌이 들어가는 것. 자갈이나 다른 물체가 깔리는 것, 산사태.
+
+U r u r u g a n, 분명히 'Urug'의 복수 형태로, 많은 남자들이 어떤 일을 하러가는 것이나,
+싸우거나, 군대로 공격하는 것, 숫자적으로 우세하여 집단으로 뭉게는 것을 말한다.
+    -Jonathan Rigg, A dictionary of the Sunda language of Java. 1862
 %%%%
-potion
+__c_suffix
 
-“Then gave I her, — so tutor'd by my art, —
- A sleeping potion; which so took effect
- As I intended, for it wrought on her
- The form of death: meantime I writ to Romeo
- That he should hither come as this dire night,
- To help to take her from her borrow'd grave,
- Being the time the potion's force should cease.”
-    -William Shakespeare, _Romeo and Juliet_
+센타우르 류:
+
+"펠레우스는 떨어져서, 끔찍한 상처에 의해 너덜해진 그를 보고, 소리쳤다: '적어도 죽었어도 이 헌사를 받아주게 고귀한 청년 크란토르여' 그리고 데멜레온에게 그의 강인한 팔로 전력을 다해, 그의 물푸레 창을 던졌다. 그것은 갈비뼈를 부러트리고, 뼛속에 박혔다. 그 센타로스는 그 머리 없는 막대기를 잡아당겼다 (그것에 손 뻗는 것에 어려움이 있었다) 그러나 그 머릿부분은 그의 폐를 뚫고 있었다. 그 고통 자체가 그의 의지를 고양했다: 상처입은 그는 그의 적을 향해 박차고 일어나서 발굽으로 그 영웅을 때렸다. 펠레우스는 투구와 방패로 그 굉장한 타격들을 받아냈고, 팔 윗부분으로 막아내고, 그가 쥔 무기를 제어하여, 무기를 통한 일격으로, 그는 그 반인반수를 꿰뚫었다."
+    -Ovid, _Metamorphoses_, XII, 330. 8 AD
+%%%%
+__cap-O_suffix
+
+오우거류:
+
+"작은 공주가 요람에 잠들어 물에 띄워져, 마지막으로 수려한 지역의 물가에 이르렀다. 그러나 거기에 오우거 라바지오와 그의 아내 토멘타인이 살고 있어서 거기 사람들을 모두 잡아먹었기 때문에 사람이 거의 살지 않았다. 오우거는 끔찍한 인간이다. 일단 사람의 날고기를 맛본 그들은 다른 것은 먹지 않는다. 그리고 토멘타인은 어떻게 먹을 몸뚱이가 찾아오는지 알고 있었다.  그녀가 혼혈 요정이기 때문이었다."
+    -마리에-캐서린 레 주멜 데 바네빌레, 바로네 드아우노이, "벌 한마리와 오렌지 나무". 1697.
+
+"오 껍질, 양파엔 껍질이 있지. 오우거도 있어. 양파도 있지. 넌 있니? 우리 둘다 껍질이 있네."
+    -슈렉. 2001."                   
+%%%%
+amulet of the gourmand
+
+대식가의 목걸이:
+
+"네가 만일 음식을 탐하는 자이거든 네 목에 칼을 둘것이니라"
+    -KJV 성경, 잠언 23장2절.
+%%%%
+apocalypse crab
+
+묵시의 게:
+
+"차라리 고요한 바다 밑바닥을 허둥지둥 달리는 한쌍의 집게발이고 싶다." 
+-T.S. Eliot- J. Alfred Prufrock의 연가. 1915년
+%%%%
+arrow
+
+화살:
+
+"나는 홀 안에서 한쪽을 가리키고있는 한 화살을 보았다. 그 화살은 지금은 해롭지 않지만, 한때 사람들과 사자들을 꿰뚫고 Thermopylae를 어둡게하던 피할수 없고 치명적인 강철화살 이었을 것이다. 그리고 그것을 영원한 잉글랜드의 6척장신의 왕인 Harald Sigurdarson에게 남겨주었다."
+    -Jorge Luis Borges, _Mutations_. 1960.
+     번역. Mildred Boyle
+%%%%
+battleaxe
+
+전투 도끼:
+
+"꽤 최근 (발견된) Caria의 동전에는, 기둥같이 길쭉한 손잡이의 양날도끼에 두개의 살코기가 달려있는 모습이 마치 우상처럼 그려져있다."
+-Sir Arthur John Evans, "Mycenaean tree and pillar cult and its
+     Mediterranean relations," _그리스학 연구에 대한 학술지_ XXI, p. 109. 1901.
+%%%%
+battlesphere
+
+전투 구체:
+
+"나는 너의 유일한 친구야
+ 나는 너의 유일한 친구가 아니야
+ 하지만 나는 약간 빛나는 친구야
+ 하지만 사실 나는 정말로 너의 친구가 아니야
+ 하지만 나는"
+    -They Might Be Giants, "Birdhouse in Your Soul". 1989.
+%%%%
+black sun
+
+검은 태양:
+
+"하늘은 슬프고 아름다웠다, 마치 거대한 제단처럼
+ 태양은 스스로의 굳어버린 피에 익사했다"
+    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
+     trans. Ruth White, 1969.
+%%%%
+cloak
+
+망토:
+
+"오 나의 아내 벨이여, 왜 당신은 악담을 하는가?
+ 지금은 지금이고, 지난날은 지난날이오:
+ 이제 세상 도처에서 찾으시오,
+ 당신은 광대가 아니라 신사에게서 알아보시오:
+ 그들은 검거나, 초록이거나, 노랗거나 파란 것을 입고 있소
+  그래서 그들의 보통의상보다 훨씬 눈에 띄일 것이오.
+ 일단은 내 아내에 대해서 생각할 것이오;
+  그동안 나는, 날 위한 새로운 망토를 가질 것이오."
+    -미상, "오래된 망토". 16세기.
+%%%%
+crocodile
+
+숲 악어:
+
+"그 작은 크로커다일은 어때요,
+ 그것의 빛나는 꼬리를 이용하고,
+ 나일강의 물이
+ 황금빛 비늘에 부어지는데!
+ 웃는것 같은 그것이 얼마나 기운차보여요,
+ 얼마나 발톱이 가지런히 뻗어나와있고,
+ 그 상냥하게 웃는 턱으로
+ 작은 물고기들을 환영하는데!"
+    -루이스 캐롤, _이상한 나라의 앨리스_,   1865.
+%%%%
+giant eyeball
+
+거대한 눈알:
+
+"응시하고 있는 눈. 당신이 보고 있는 것이 아닌, 당신을 보고 있는 눈."
+    -Antonio Machado, Campos de Castilla. 1912-1917.
+%%%%
+tengu
+
+텐구:
+
+"새가 따라 내려왔다 —
+ 그는 내가 보고있다는 걸 알지못했다 —
+ 그는 지렁이를 반절 물었다
+ 그리고 그 녀석을 먹었다, 생으로"
+    -Emily Dickinson, "A Bird came down the Walk". ca. 1865.
+%%%%
+golden dragon
+
+"넌 용과 함꼐 극적으로 오지는 않았어
+내 삶과 그들의 발 사이를 박차고 일어났지
+ And dash me butchered down beside the wagons"
+    -Philip Larkin, "To Failure". 1949.
+%%%%
+hunting sling
+
+수렵용 슬링:
+
+"손을 주머니에 넣어 돌을 취하며 물매로 던져 블레셋 사람의 이마를 채매 돌이 그 이마에 박히니 땅에 엎드러지니라"
+    -KJV 성경, 사무엘상 17장 49절
+%%%%
+iron rod
+
+강철 마법 막대:
+
+"딱 이러한 순간에 말야, 내가 세상에서 샷건보다 더 존중하는 물건은 없을 꺼라는게 믿기지 않는군."
+    -스티븐 '시체가방' 베링 & 마이클 '흩뿌리는 자' 스튜어드, "둠". 1996
 %%%%
 potion of blood
 
-“Only be sure that thou eat not the blood: for the blood _is_ the life;
-and thou mayest not eat the life with the flesh.”
-    -KJV Bible, Deuteronomy 12:23
-%%%%
-potion of curing
+피의 물약:
 
-“But if when you say ‘whiskey’ you mean the oil of conversation,
- the philosophic wine, the ale that is consumed when good fellows
- get together, that puts a song in their hearts and laughter on
- their lips, and the warm glow of contentment in their eyes...
- then certainly I am for it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
-potion of degeneration
-
-“If when you say ‘whiskey’ you mean the devil's brew, the poison
- scourge, the bloody monster, that defiles innocence, dethrones
- reason, destroys the home, creates misery and poverty, yea,
- literally takes the bread from the mouths of little children...
- then certainly I am against it.”
-    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
-%%%%
-profane servitor
-
-“A spell was cast and the sky turned red
- The angel's heart froze to ice
- In the gloomy sky black clouds were gathering
- The silence was broken by cries
- A spell was cast and the sky turned red
- The angel's heart froze to ice
- In the gloomy sky — The silence where dead angels lie
-
- Touch the snow... Caress the lifeless sculptures
- Die!!!”
-    -Dissection, “Where Dead Angels Lie”. 1996.
-%%%%
-program bug
-
-“If builders built buildings the way programmers wrote programs, then the first
-woodpecker that came along would destroy civilization.”
-    -Gerald Weinberg, Weinberg's Second Law
+"다만 크게 삼가서 그 피는 먹지 말라. 피는 그 생명인즉 네가 그 생명을 고기와 함께 먹지 못하리니"
+    -KJV 성경, 신명기 12장 23절
 %%%%
 quarterstaff
 
-“Then Robin he unbuckled his belt,
- And laid down his bow so long;
- He took up a staff of another oak graff,
- That was both stiff and strong.
- ‘But let me measure,’ said jolly Robin,
- ‘Before we begin our fray;
+"그 다음 로빈이 그의 벨트를 풀었네
+그리고 너무 긴 그의 활을 내려놨지
+ 그는 또다를 오크 graff의 지팡이를 집어들었지,
+ 그것은 뻣뻣하고 강했어.
+ ‘하지만 내가 잴게’ 쾌활한 로빈이 말했네,
+ ‘우리의 싸움을 시작하기 전에;
  For I'll not have mine to be longer than thine,
  For that will be counted foul play.’
  ‘I pass not for length,’ bold Arthur replied,
@@ -2178,1126 +1198,1755 @@ quarterstaff
  Then Robin could no longer forbear,
  He gave him such a knock,
  Quickly and soon the blood came down,
- Before it was ten o'clock.
+ 10시가 되기 전에.
  About and about and about they went,
- Like two wild boars in a chase,
+ 추적하는 두 마리의 야생 맷돼지처럼,
  Striving to aim each other to maim,
- Leg, arm, or any other place.
+ 팔, 다리, 아니면 어디던지.
  And knock for knock they hastily dealt,
- Which held for two hours and more;
+ 두 시간이 더 걸렸다네;
  That all the wood rang at every bang,
- They plied their work so sore.”
-    -Anonymous, “Robin Hood and the Tanner”.
-%%%%
-quasit
-
-“You'll have to pay double reckoning; 'tis only fair you should pay for your
-dexterity.”
-    -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
-     trans. Anna Swanwick, 1914.
+ They plied their work so sore."
+    -익명,"로빈 후드와 테너"
 %%%%
 quick blade
 
-“He hath loosed the fateful lightning of His terrible swift sword...”
-    -Julia Ward Howe, “The Battle Hymn of the Republic”. 1861.
-%%%%
-rakshasa
+퀵 블레이드:
 
-“Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a
-Rakshasa by name Hidimva dwelt on the Sala tree. Possessed of great energy and
-prowess, he was a cruel cannibal of visage that was grim in consequence of his
-sharp and long teeth. He was now hungry and longing for human flesh. Of long
-shanks and a large belly, his locks and beard were both red in hue. His
-shoulders were broad like the neck of a tree; his ears were like unto arrows,
-and his features were frightful.”
-    -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
-     trans. Kisari Mohan Ganguli, 1883.
-%%%%
-rapier
-
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made...”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
-%%%%
-reaper
-
-“All our times have come.
- Here but now they're gone.
- Seasons don't fear the reaper,
- Nor do the wind, the sun or the rain.
- We can be like they are.
- Come on baby, don't fear the reaper.”
-
-    -Buck Dharma, Blue Öyster Cult, “(Don't Fear) The Reaper”. 1976.
-%%%%
-ring
-
-“A ring of gold and a milk-white dove
- Are goodly gifts for thee,
- And a hempen rope for your own love
- To hang upon a tree.”
-    -Oscar Wilde, “Chanson”. 1881.
-%%%%
-ring of the Octopus King
-
-“A mermaid who fancied to sing,
- Roused lust in the Octopus King.
- Her squiggly suitor,
- Tried hard to woo her,
- But she couldn't wear all his rings.”
-%%%%
-ring mail
-
-<leather armour>
-%%%%
-ring of dexterity
-
-<ring>
-%%%%
-ring of evasion
-
-<ring>
+"그분의 재빠른 검이 치명적인 번개를 내던지시니..."
+    -Julia Ward Howe, "The Battle Hymn of the Republic". 1861.
 %%%%
 ring of fire
 
-“Love is a burning thing
- And it makes a fiery ring”
-    -June Carter and Merle Kilgore, “Ring of Fire”. 1963.
+불의 반지:
+
+"사랑은 불타는 것
+ 그리고 불의 반지를 만들지"
+    -June Carter and Merle Kilgore, "불의 반지". 1963.
 %%%%
 ring of flight
 
-“What surprised him the most, however, was the logic of his wings. They seemed
-so natural on that completely human organism that he couldn't understand why
-other men didn't have them too.”
-    -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
-     trans. Gregory Rabassa. 1972
-%%%%
-ring of loudness
+비행의 반지:
 
-<ring>
+"그러나 그를 가장 놀라게 한 것은 그의 날개의 논리였다. 그것은 그가 왜 다른 사람의 몸에는 날개가 없는지 이해할 수 없을 정도로 완전히 자연스러워 보였다."
+    -Gabriel Garcia Marquez, _거대한 날개를 가진 매우 늙은 남자_. 1955.
+     번역. Gregory Rabassa. 1972
 %%%%
 ring of ice
 
-“Some say the world will end in fire;
- Some say in ice.
- From what I've tasted of desire
- I hold with those who favor fire.
- But if it had to perish twice,
- I think I know enough of hate
- To say that for destruction ice
- Is also great
- And would suffice.”
-    -Robert Frost, “Fire and Ice”. 1920.
-%%%%
-ring of intelligence
+얼음의 반지:
 
-<ring>
+"누군가는 새상이 불로서 끝날 것이라고 말하지.
+ 누군가는 얼음이라고 해.
+ 내가 욕망을 맛본 바로는
+ 난 불을 좋아하는 사람들의 그 주장에 찬성해.
+ 하지만 만약 내가 두 번 죽는다면,
+ 난 내가 충분히 증오한다는걸 안다고 생각해.
+ 얼음의 파괴라고 말하는 것도
+ 역시 좋다고
+ 그리고 그걸로 충분하겠지."
+    -Robert Frost, "Fire and Ice". 1920.
 %%%%
-ring of resist corrosion
+ring of invisibility
 
-<ring>
-%%%%
-ring of magical power
+은신의 반지:
 
-<ring>
-%%%%
-ring of poison resistance
-
-<ring>
-%%%%
-ring of positive energy
-
-<ring>
-%%%%
-ring of protection
-
-<ring>
-%%%%
-ring of protection from cold
-
-<ring>
-%%%%
-ring of protection from fire
-
-<ring>
-%%%%
-ring of protection from magic
-
-<ring>
+"기쁨의 고함을 외치며 고블린이 그에게 달려왔다. 공포와 상실의 고통이, 골룸의 고통의 메아리처럼, 빌보를 덮쳤고, 그리고 검을 뽑는것조차 잊은 채, 그는 그의 손을 그의 주머니에 찔러넣었다. 그리고 — 반지는 여전히, 그의 주머니 안에 있었고, 그리고 이것은 그의 손가락으로 미끄러져 들어갔다. 고블린들은 잠깐 멈췄다. 그들은 그를 볼 수 없었다. 그는 사라져버렸다."
+    -J.R.R.톨킨, _호빗, or There and Back Again_. 1937.
 %%%%
 ring of see invisible
 
-“Here is my secret. It is very simple: It is only with the heart that one can
-see rightly; what is essential is invisible to the eye.”
+투명 감지의 반지:
+
+"여기 내 비밀이 있어. 그것은 아주 간단해. 심장으로서만 제대로 볼 수 있어. 근원적인 건 눈에는 보이지 않아.
     -Antoine de Saint Exupéry, _The Little Prince_. 1943.
 %%%%
-ring of slaying
+ring of the Octopus King
 
-<ring>
-%%%%
-ring of strength
+문어왕의 반지:
 
-<ring>
-%%%%
-ring of stealth
-
-<ring>
-%%%%
-ring of teleportation
-
-<ring>
-%%%%
-ring of wizardry
-
-<ring>
+"노래를 즐기는 인어 한 명,
+ 문어 왕의 마음을 흔들었다네.
+ 그녀의 구불구불한 약혼자,
+ 최선을 다해 청혼했으나
+ 그녀는 모든 반지를 낄 수 없었지"
 %%%%
 robe
 
-“CLEOPATRA: Give me my robe, put on my crown; I have
- Immortal longings in me”
-    -William Shakespeare, _Anthony & Cleopatra_, V, ii. ca. 1605.
-%%%%
-rotten bat
+로브:
 
-<bat>
-%%%%
-salamander
-
-“As for example: the Salamander made in fashion of a Lizard, marked with spots
-like to stars, never comes abroad and sheweth it selfe but in great showers;
-for in faire weather he is not seene. He is of so cold a complexion, that if
-hee do but touch the fire, hee wil quench it as presently, as if yce were put
-into it. The Salamander casteth up at the mouth a certaine venomous matter like
-unto milke, let it but once touch any bare part of a man or womans bodie, all
-the haire will fall off: and the part so touched will change the colour of the
-skin to the white morphew.”
-    -Gaius Plinius Secundus, _Naturalis Historia_, Book X, ch. LXVII. 79 A.D.
-     trans. Philemon Holland, 1601.
-%%%%
-scale mail
-
-<leather armour>
-%%%%
-scimitar
-
-“The museum-cabinet and huge library arrogated to themselves the entire lower
-floor — there were the controversial and incompatible books that are somehow
-the history of the nineteenth century; there were scimitars from Nishapur, in
-whose frozen crescents the wind and violence of battle seemed to be living on.”
-    -Jorge Luis Borges, _The Form of the Sword_. 1953.
-     trans. Andrew Hurley.
-%%%%
-scorpion
-
-“Those poisonous fields, with rank luxuriance crown'd,
- Where the dark scorpion gathers death around”
-    -Oliver Goldsmith, “The Deserted Village”, l. 351-2. 1770.
-%%%%
-scroll
-
-“To drift with every passion till my soul
- Is a stringed lute on which all winds can play,
- Is it for this that I have given away
- Mine ancient wisdom, and austere control?
- Methinks my life is a twice-written scroll
- Scrawled over on some boyish holiday.”
-    -Oscar Wilde, _Helas_. 1881.
-%%%%
-scroll of acquirement
-
-<scroll>
-%%%%
-scroll of amnesia
-
-<scroll>
-%%%%
-scroll of blinking
-
-<scroll>
-%%%%
-scroll of brand weapon
-
-<scroll>
-%%%%
-scroll of enchant armour
-
-<scroll>
-%%%%
-scroll of enchant weapon
-
-<scroll>
-%%%%
-scroll of fear
-
-<scroll>
-%%%%
-scroll of fog
-
-<scroll>
-%%%%
-scroll of holy word
-
-<scroll>
-%%%%
-scroll of identify
-
-<scroll>
-%%%%
-scroll of immolation
-
-<scroll>
-%%%%
-scroll of magic mapping
-
-<scroll>
-%%%%
-scroll of noise
-
-<scroll>
-%%%%
-scroll of random uselessness
-
-<scroll>
-%%%%
-scroll of recharging
-
-<scroll>
-%%%%
-scroll of remove curse
-
-<scroll>
-%%%%
-scroll of silence
-
-<scroll>
-%%%%
-scroll of summoning
-
-<scroll>
-%%%%
-scroll of teleportation
-
-<scroll>
-%%%%
-scroll of torment
-
-<scroll>
-%%%%
-scroll of vulnerability
-
-<scroll>
-%%%%
-scythe
-
-“It was instinct. Illogical as lightning striking and not hurting. Each day the
-grain must be cut. It had to be cut. Why? Well, it just did, that was all. He
-laughed at the scythe in his big hands. Then, whistling, he took it out to the
-ripe and waiting field and did the work. He thought himself a little mad. Hell,
-it was an ordinary-enough wheat field, really, wasn't it?”
-    -Ray Bradbury, _The Scythe_. 1943.
-%%%%
-seraph
-
-“In the year that king Uzziah died I saw also the LORD sitting upon a throne,
-high and lifted up, and his train filled the temple.
- Above it stood the seraphims: each one had six wings; with twain he covered
-his face, and with twain he covered his feet, and with twain he did fly.
- And one cried unto another, and said, Holy, holy, holy, is the LORD of hosts:
-the whole earth is full of his glory.”
-    -KJV Bible, Isaiah 6:1-3.
-%%%%
-shadow
-
-“Between the idea
- And the reality
- Between the motion
- And the act
- Falls the Shadow
-     For thine is the Kingdom
-
- Between the conception
- And the creation
- Between the emotion
- And the response
- Falls the Shadow
-     Life is very long”
-    -T.S. Eliot, “The Hollow Men”. 1925.
-%%%%
-shadow demon
-
-“As we grow old, we become aware that death is drawing near; his shadow falls
-across our path...”
-    -Stefan Zweig, _Twenty-Four Hours in the Life of a Woman_. 1927.
-%%%%
-shadow dragon
-
-“Crux sacra sit mihi lux / Non draco sit mihi dux
- Vade retro satana / Numquam suade mihi vana
- Sunt mala quae libas / Ipse venena bibas”
-        “Let the Holy Cross be my light / Let not the dragon be my guide
-        Step back Satan / Never tempt me with vain things
-        What you offer me is evil / You drink the poison yourself.”
-    -full text of initials on the Saint Benedict Medal, worn to ward off evil
-spririts. Inscription from 11-15th century, formally approved by pope Benedict
-XIV in 18th century
+"클레오파트라: 내 로브를 줘, 내 왕관을 씌워줘. 꺼지지 않는 갈망이 내 안에 있다."
+   -윌리엄 셰익스피어, _Anthony & Cleopatra_, V, ii. ca. 1605.
 %%%%
 shadow wraith
 
-“Yesterday, upon the stair,
- I met a man who wasn't there
- He wasn't there again today
- I wish, I wish he'd go away...”
+그림자 망령:
+
+"어제, 계단을 올라가다가
+ 난 거기에 없는 남자를 만났어
+ 그는 오늘도 거기에 없어
+ 나는 정말로, 정말로 그가 가버렸으면 좋겠어..."
     -Hughes Mearns ,_Antigonish_, 1-4. 1899.
-%%%%
-shapeshifter
-
-“And then th' old Sea-God crept
- From forth the deeps, and found his fat calves there,
- Survey'd, and number'd, and came never near
- The craft we used, but told us five for calves.
- His temples then dis-eased with sleep he salves;
- And in rush'd we, with an abhorred cry,
- Cast all our hands about him manfully;
- And then th' old Forger all his forms began:
- First was a lion with a mighty mane,
- Then next a dragon, a pied panther then,
- A vast boar next, and suddenly did strain
- All into water. Last he was a tree,
- Curl'd all at top, and shot up to the sky.”
-    -Homer, _The Odyssey_, IV, 602-14.
-     trans. George Chapman, 1857.
-%%%%
-shield
-
-<buckler>
-%%%%
-shortbow
-
-“You are the bows from which your children as living arrows are sent forth.”
-    -Khalil Ghibran, _The Prophet_, “On Children”. 1923.
 %%%%
 short sword
 
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
-%%%%
-silent spectre
+단검:
 
-“There is a silence where hath been no sound,
- There is a silence where no sound may be,—
- In the cold grave, under the deep, deep sea,
- Or in the wide desert where no life is found.”
-    -Thomas Hood, “Silence”. Early 19th cent.
+"누가 처음에 그 날카로운 칼을 벼려낸것인가?
+ 그의 사나운 혼이 만들어낸 강인한 무기를..."
+    -알비우스 티불루스, _애가_ I, xi. 기원전 25년 경.
+     1822년 제임스 그레인저에 의해 번역됨.  "
 %%%%
-simulacrum
+shortbow
 
-“The simulacrum now hides, not the truth, but the fact that there is none, that
-is to say, the continuation of Nothingness.”
-    -Jean Baudrillard, “Radical Thought”. 1994.
-     trans. François Debrix, 1995.
-%%%%
-sixfirhy
+작은 활:
 
-“I saw a mouth jeering. A smile of melted red iron ran over it. Its laugh was
-full of nails rattling. It was a child's dream of a mouth.
- A fist hit the mouth: knuckles of gun-metal driven by an electric wrist and
-shoulder. It was a child's dream of an arm.
- The fist hit the mouth over and over, again and again. The mouth bled melted
-iron, and laughed its laughter of nails rattling.
- And I saw the more the fist pounded the more the mouth laughed. The fist is
-pounding and pounding, and the mouth answering.”
-    -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
-%%%%
-skeletal bat
-
-<bat>
-%%%%
-skeletal warrior
-
-“Speak! speak! thou fearful guest!
- Who, with thy hollow breast
- Still in rude armor drest,
- Comest to daunt me!
- Wrapt not in Eastern balms,
- But with thy fleshless palms
- Stretched, as if asking alms,
- Why dost thou haunt me?”
-    -Henry Wadsworth Longfellow, “The Skeleton in Armor”. 1841.
+"너는 활이고 네 아이들은 앞으로 쏘아진 화살이다"
+    -Khalil Ghibran, _The Prophet_, "On Children". 1923.
 %%%%
 skeleton
 
-“God save us from the skeleton
- Who sitteth at the feast!”
+해골:
+
+"신께서 우릴 연회에 앉아있는 해골들에게서 구해주셨다!"
     -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
-%%%%
-sky beast
-
-“Her own mother lived the latter years of her life in the horrible suspicion
-that electricity was dripping invisibly all over the house.”
-    -James Thurber, _My Life and Hard Times_. 1934.
-%%%%
-slave
-
-“Who rebels? Who rises in arms? Rarely the slave, but almost always the
-oppressor turned slave.”
-    -E.M. Cioran, _History and Utopia_. 1960.
-%%%%
-slime creature
-
-“The very deep did rot: O Christ!
- That ever this should be!
- Yea, slimy things did crawl with legs
- Upon the slimy sea.”
-    -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
-%%%%
-hunting sling
-
-“And David put his hand in his bag, and took thence a stone, and slang it, and
-smote the Philistine in his forehead, that the stone sunk into his forehead;
-and he fell upon his face to the earth.”
-    -KJV Bible, 1 Samuel 17:49.
-%%%%
-fustibalus
-
-“Thrice whirling round his head
- The whistling thong, Mezentius took his aim.
- Clean through his temples hissed the molten lead,
- And prostrate in the dust, the gallant youth lay dead.”
-    -Virgil, Aeneid 9
-     trans. E. Fairfax Taylor
-%%%%
-sling bullet
-
-“For when things are once come to the execution, there is no secrecy comparable
-to celerity; like the motion of a bullet in the air, which flieth so swift as
-it outruns the eye.”
-    -Francis Bacon, _Essays_, “Of Delays”. 1625.
-%%%%
-small abomination
-
-“No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes —
-and a blemish. It was the pit — the maelstrom — the ultimate abomination.
-Carter, it was the unnamable!”
-    -H.P. Lovecraft, _The Unnamable_. 1925.
-%%%%
-smoke demon
-
-“Why does the thin grey strand
- Floating up from the forgotten
- Cigarette between my fingers,
- Why does it trouble me?”
-    -D.H. Lawrence, “Sorrow”. 1916.
-%%%%
-snapping turtle
-
-“After a while they came to a village. ”Now then,“ said Snapping Turtle, ”in
-the morning at daylight, my friends, we will make on attack. I myself will
-first go to the place,“ the leader of the war party said to them.
-
-”Good,“ said the other little one, ”thou art the one who sees to it what we
-shall do,“ they said to that Snapping Turtle. ”Now then,“ said Snapping Turtle,
-”verily I am now going to tell you what I shall do.“ Thus he spoke. ”Now is the
-time I shall begin to walk toward this village. Verily at the time I shall kill
-the daughter of the chief will be when the light of day is breaking, and at the
-same instant the sky will glow with red in the direction whence the morrow
-comes. ‘Ho, there, our comrade has killed her!’ will thus be the thought in
-your hearts. Then is the time when you want to make a great noise, when you
-shall whoop all keep it up. Now is the time that you go to attack this
-village.“ Thus he spoke to those his young men.
-
-”All right!“ said the other little fellows.”
-    -“When Snapping Turtle went to War”, _Publications of the American
-     Ethnological Society, Volume IX: Kickapoo Tales_. 1915.
-     trans. Truman Michelson
 %%%%
 soul eater
 
-“Negation is the mind's first freedom.”
+영혼 포식자:
+
+"부정은 마음의 첫번째 자유이다"
     -E.M. Cioran, _The Temptation to Exist_. 1956.
 %%%%
-spatial vortex
+steam dragon hide
 
-“It was just a colour out of space—a frightful messenger from unformed realms
-of infinity beyond all Nature as we know it; from realms whose mere existence
-stuns the brain and numbs us with the black extra-cosmic gulfs it throws open
-before our frenzied eyes.”
-    -H.P. Lovecraft, “The Colour out of Space”. 1927.
-%%%%
-spear
+증기 용 가죽:
 
-“The halberd is inferior to the spear on the battlefield. With the spear you
-can take the initiative; the halberd is defensive. In the hands of one of two
-men of equal ability, the spear gives a little extra strength.”
-    -Miyamoto Musashi, _The Book of Five Rings_. 1645.
-%%%%
-spectral thing
-
-“On the hungry craving wind
- My Spectre follows thee behind.”
-    -William Blake, “Broken Love”. ca. 1800.
-%%%%
-spellforged servitor
-
-“When you think
- Your toys have gone berserk
- It's an illusion
- You cannot shirk”
-    -Siouxsie and the Banshees, "Spellbound"
-%%%%
-Spellforged Servitor spell
-
-<spellforged servitor>
-%%%%
-staff
-
-“Bashō Osho said to his disciples, ‘If you have a staff, I will give you a
-staff. If you have no staff, I will take it from you.’
- Mumon's Comment
- It helps me wade across a river when the bridge is down. It accompanies me to
-the village on a moonless night. If you call it a staff, you will enter hell
-like an arrow.”
-    -Mumon Ekai, _The Gateless Gate_, case 44. 1228.
-     trans. Katsuki Sekida
-%%%%
-staff of air
-
-<staff>
-%%%%
-staff of cold
-
-<staff>
-%%%%
-staff of conjuration
-
-<staff>
-%%%%
-staff of death
-
-“'I am Aed Abaid of Ess Rúaid, that is, the good god of wizardry of the Tuatha
-Dé Danann, and the Rúad Rofhessa, and Eochaid Ollathair are my three names.’
- And thus he was, with Cermait Milbél, one of his sons, on his back, who had
-fallen in fight and combat by Lug, son of Cian, High King of Ireland. The Dagda
-betook himself to his knowledge and learning, and therefore frankincense and
-myrrh and herbs were put around the body of Cermait, and he lifted Cermait on
-his back, and bearing Cermait he searched the world, and came to the great
-eastern world.
- He met three men going the road and the way with their father's treasures. The
-Dagda asked news of them, and they said ‘We are three sons of one father and
-mother, and we are sharing our father's treasures.’
- ‘What have ye?’ said the Dagda.
- ‘A shirt and a staff and a cloak,’ said they.
- ‘What virtues have these?’ said the Dagda.
- ‘This great staff that thou seest,’ said he, ‘has a smooth end and a rough
-end. One end slays the living, and the other end brings the dead to life.’”
-    -Osborn Bergin, “How the Dagda Got His Magic Staff”, _Medieval Studies in
-     Memory of Gertrude Schoepperle Loomis_. 1927.
-%%%%
-staff of earth
-
-<staff>
-%%%%
-staff of energy
-
-<staff>
-%%%%
-staff of fire
-
-“The wizard suddenly remembered the words of the god. He remembered that of all
-the creatures that people the earth, Fire was the only one who knew his son to
-be a phantom. This memory, which at first calmed him, ended by tormenting him.
-He feared lest his son should meditate on this abnormal privilege and by some
-means find out he was a mere simulacrum. Not to be a man, to be a projection of
-another man's dreams—what an incomparable humiliation, what madness!”
-    -Jorge Luis Borges, _The Circular Ruins_. 1940.
-    trans. Anthony Bonner, 1962.
-%%%%
-staff of poison
-
-<staff>
-%%%%
-staff of power
-
-<staff>
-%%%%
-staff of summoning
-
-<staff>
-%%%%
-staff of wizardry
-
-<staff>
-%%%%
-starcursed mass
-
-“Did you see that star go out?
- I seen it burn.
-
- That little star went out,
- your little eyes went out.
-
- Our burnt little dreams are hid
- up where the stars get lit.”
-    -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
-%%%%
-steam dragon scales
-
-“His scales are his pride, shut up together as with a close seal. One is so
-near to another, that no air can come between them. They are joined one to
-another, they stick together, that they cannot be sundered.”
-    -KJV Bible, Job 41:15-17.
-%%%%
-stone
-
-“How happy is the little Stone
- That rambles in the Road alone,
- And doesn't care about Careers
- And Exigencies never fears —
- Whose Coat of elemental Brown
- A passing Universe put on,
- And independent as the Sun
- Associates or glows alone,
- Fulfilling absolute Decree
- In casual simplicity —”
-    -Emily Dickinson, “How happy is the little Stone”. ca. 1865.
-%%%%
-stone giant
-
-“I really believe what you say, answered the knight; for, I have been engaged
-with the giant, in the most obstinate and outrageous combat that I believe I
-shall ever fight in all the days of my life: with one backstroke, slam went his
-head to the ground; and discharged such a quantity of blood, that it ran like
-rills of water, along the field.”
-    -Miguel de Cervantes Saavedra, _The Ingenious Gentleman Don Quixote of La
-     Mancha_, IV, 10. 1605.
-     trans. Carlos Fuentes, 1997.
-%%%%
-storm dragon scales
-
-<steam dragon scales>
-%%%%
-sun demon
-
-“Behold him setting in his western skies,
- The shadows lengthening as the vapours rise.”
-    -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
-%%%%
-swamp dragon scales
-
-<steam dragon scales>
-%%%%
-swamp drake
-
-“Sweet is the swamp with its secrets,
- Until we meet a snake;
- 'T is then we sigh for houses,
- And our departure take
-
- At that enthralling gallop
- That only childhood knows.
- A snake is summer's treason,
- And guile is where it goes.”
-    -Emily Dickinson, “A Snake”. ca. 1865.
-%%%%
-swamp worm
-
-“The fool, as I think, at the chasm's brink,
- Prone by the swamp or the marsh's side,
- Did, even as I, in the end rejoice,
- Since the voice of death must be His true voice.”
-    -Arthur Edward Waite, “At The End of Things”. 1906.
-%%%%
-tengu
-
-“A Bird came down the Walk —
- He did not know I saw —
- He bit an Angleworm in halves
- And ate the fellow, raw”
-    -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
-%%%%
-tengu warrior
-
-“I can puff up my feathers, look real mean
- Be the old man that this here's scene
- I'm a struttin' preenin' bantam rooster looking for a fight.”
-    -Andrew Bird's Bowl of Fire, “Cock o' the Walk”. 1998.
-%%%%
-tentacled monstrosity
-
-“Oozing and surging up out of that yawning trap-door in the Cyclopean crypt I
-had glimpsed such an unbelievable behemothic monstrosity that I could not doubt
-the power of its original to kill with its mere sight. Even now I cannot begin
-to suggest it with any words at my command. I might call it gigantic —
-tentacled — proboscidian — octopus-eyed — semi-amorphous — plastic — partly
-squamous and partly rugose — ugh!”
-    -H.P. Lovecraft and Hazel Heald, “Out of the Aeons”, _Weird Tales_, 25, No.
-     4, pp. 478-96. April 1935.
-%%%%
-the Lernaean hydra
-
-“The second Labour which he undertook was the slaying of the Lernaian Hydra,
- springing from whose single body were fashioned a hundred necks, each bearing
- the head of a serpent. And when one head was cut off, the place where it was
- severed put forth two others; for this reason it was considered to be
- invincible, and with good reason, since the part of it which was subdued sent
- forth a two-fold assistance in its place. Against a thing so difficult to
- manage as this Herakles devised an ingenious scheme and commanded Iolaos to
- sear with a burning brand the part which had been severed, in order to check
- the flow of the blood.”
-    -Diodorus Siculus, _Bibliotheca Historica_. [4. 11. 5.]. c. 100.
-%%%%
-throwing net
-
-“The look of a scared thing
- Sitting in a net!”
-    -Edna St. Vincent Millay, “When the Year Grows Old”. 1917.
-%%%%
-titan
-
-“And on the other part the Titans eagerly strengthened their ranks, and both
-sides at one time showed the work of their hands and their might. The boundless
-sea rang terribly around, and the earth crashed loudly: wide Heaven was shaken
-and groaned, and high Olympus reeled from its foundation under the charge of
-the undying gods, and a heavy quaking reached dim Tartarus and the deep sound
-of their feet in the fearful onset and of their hard missiles. So, then, they
-launched their grievous shafts upon one another, and the cry of both armies as
-they shouted reached to starry heaven; and they met together with a great
-battle-cry.”
-    -Hesiod, _Theogony_, 8th cent. B.C.
-     trans. H.G. Evelyn-White, 1914.
-%%%%
-toadstool
-
-“But the Seneschal gathered the toadstool fly-bane.”
-    -Adam Mickiewicz, _Pan Tadeusz_, III. 1834.
-     trans. G.R. Noyes, 1917.
-%%%%
-toenail golem
-
-“Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
-but my toes hardly notice. All they're interested in is turning out
-toenails—semitransparent, flexible sheets of a hornlike material, as defense
-against—whom?”
-    -Jorge Luis Borges, “Toenails”. 1960.
-    trans. Andrew Hurley, 1998.
-%%%%
-tomahawk
-
-“Let them draw the sharpest knife, and whirl the swiftest tomahawk, for their
-bitterest enemy is in their hands.”
-    -James Fenimore Cooper, “The Last of the Mohicans”, 1826.
+"그의 즐비한 비늘은 그의 자랑이로다 튼튼하게 봉인하듯이 닫혀 있구나.
+ 그것들이 서로 달라붙어 있어 바람이 그 사이로 지나가지 못하는구나.
+ 서로 이어져 붙었으니 능히 나눌 수도 없구나"
+    -KJV 성경, 욥기 41장 15절-17절
 %%%%
 tormentor
 
-“Thou art to me a delicious torment.”
+고문의 악마:
+
+"너는 나의 기분좋은 고통이다"
     -Ralph Waldo Emerson, _Essays: First Series_, Essay VI: Friendship. 1841.
-%%%%
-torpor snail
-
-“Snail, snail, slug-slow,
- To me thy four horns show;
- If thou dost not show me thy four,
- I will throw thee out of the door,
- For the crow in the gutter,
- To eat for bread and butter.”
-    -Silesian rhyme. Quoted by S.W. Singer in _Notes and Queries_, no. 69.
-     1851.
-%%%%
-training dummy
-
-“Things are only mannequins and even the great world-historical events are only
-costumes beneath which they exchange glances with nothingness, with the base
-and the banal.”
-    -Walter Benjamin, _Protocols to the Experiments on Hashish, Opium and
-     Mescaline 1927-1934_, “Protocol II: Highlights of the Second Hashish
-     Impression”. 15 January 1928.
-     trans. Scott J. Thompson, 1997.
-%%%%
-trident
-
-“Without noticing the occupations of an intervening day or two, which, as they
-consisted of the ordinary sylvan amusements of shooting and coursing, have
-nothing sufficiently interesting to detain the reader, we pass to one in some
-degree peculiar to Scotland, which may be called a sort of salmon-hunting. This
-chase, in which the fish is pursued and struck with barbed spears, or a sort of
-long shafted trident, called a waster, is much practised at the mouth of the
-Esk, and in the other salmon rivers of Scotland.”
-    -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
-%%%%
-triple crossbow
-
-<arbalest>
-%%%%
-troll leather armour
-
-“THE TROLL KING: Now, listen, Prince Peer, and give way to reason!
- You're cut out for a Troll. Why, look, already
- You bear yourself quite in a Troll-like fashion!
- And you want to become one, don't you?
- PEER GYNT: Of course.
- In return for a bride and a well-found kingdom
- I'm not unwilling to sacrifice something;
- But all things have their natural limit.
- I have taken a tail, it is true; but, then,
- I can undo the knots that our friend has tied
- And take the thing off. I have shed my breeches;
- They were old and patched; but that won't prevent me
- From putting them on if I have a mind to.
- I shall probably find it just as easy
- To deal with your Trollish way of living.
- I can easily swear that a cow's a maiden;
- An oath's not a difficult thing to swallow.
- But to know that one never can get one's freedom —
- Not even to die as a human being —
- To end one's days as a Troll of the mountains —
- Never go back, as you tell me plainly —
- That is a thing that I'll not submit to.”
-    -Henrik Ibsen, _Peer Gynt_ . 1867.
-%%%%
-ufetubus
-
-“We were permitted to shriek in the tongue of dwarfs and demons”
-    -Czesław Miłosz, “A Task”.
-%%%%
-ugly thing
-
-“Beauty is no quality in things themselves: It exists merely in the mind which
-contemplates them; and each mind perceives a different beauty. One person may
-even perceive deformity, where another is sensible of beauty; and every
-individual ought to acquiesce in his own sentiment, without pretending to
-regulate those of others.”
-    -David Hume
-%%%%
-Urug
-
-U r u g, tumbled down, fallen by crumbling down. Slipped down, as earth from a
-hill-side, stones which have been piled up or the like. To fall as water at a
-cascade. To fill up a hollow by putting earth into it. To lay gravel or
-materials on a road. A landslip.
-
-U r u r u g a n, apparently a plural form of 'Urug'. To go with a number of
-men to any work. To make war, to attack with an army. To set upon in numbers,
-as it were to tumble upon in masses.
-
-   -Jonathan Rigg, A dictionary of the Sunda language of Java. 1862.
 %%%%
 unseen horror
 
-“The awful shadow of some unseen Power
- Floats, tho’ unseen, amongst us.”
-    -Percy Bysshe Shelley, “Hymn to Intellectual Beauty”, I, 1-2. 1816.
-%%%%
-vampire
+보이지 않는 두려움:
 
- • Scuze me. My friend Burt says you're a vampire hunter. 'zat so?
- — Uh yes. Yes it is.
- • Well you n'ain't gonna find one round here, mate. They ain't no vampires.
- — You don't believe in vampires?
- • 'course not!
- • But I do believe in con artists. And charletans who like to stir up trouble!
- • Dead people who get up at night and suck blood. How stupid do you think we
-are?
- • My place is haunted with 16 ghosts and they all say there n'ain't no
-vampires!
-    -Rich Morris, Yet Another Fantasy Gamer Comic
+"보이지 않는 힘의 끔찍한 그림자가
+ 미끄러지듯이 걷는다, 비록 보이지 않지만, 우리들 사이로."
+    -Percy Bysshe Shelley, "Hymn to Intellectual Beauty", I, 1-2. 1816.
+%%%%
+alligator
+
+엘리게이터:
+
+"앨리게이터는 식단 조절의 오류를 범했다."
+    -베넷 도울러 M.D., _앨리게이터의 자연사에 대한 기여, (미시시피 악어), 와 미세한 부록_, p. 17. 1846.
+%%%%
+blowgun
+
+블로우건:
+
+Upper Caiary-Uaupes 지역의 블로우건들은 다양한 종려나무의 줄기들로 만들어진다. (Iriartea setigera Martius)... 그 인디언들은 작은것이 큰것안에 꼭 들어맞도록 두 사이즈의 나무줄기를 고르는데. 이 줄기들은 조심스럽게 말리고, 껍질 안쪽을 긴 막대기로 청소한 뒤, 그 구멍을 숲나무 고사리의 뿌리 뭉치를 넣었다 빼는 것을 반복하여 매끄럽게 만든다. 그 다음에 더 작은 나무줄기를 큰 것 안으로 삽입하는데, 이는 다른 나무줄기에 있는 뒤틀림를 교정하기 위함이다.  그 다음, 나무로 된 입 대는 부분을 약 1미터 떨어진 한쪽 끝에 끼워 맞추고, 장식용으로 멧돼지 이빨을 점착성 물질로 고정한다. 바깥쪽에 제작자는 그 검은 빛깔의 덩굴식물 줄기의 끈을 나선 모양으로 감는 것으로 장식을 끝내면, 그의 블로우건이 완성된다. "그 화살은 10에서 14인치 길이이고, 대략 성냥의 두께이다. Caiary-Uaupes의 원주민들의 것은 종려나무 잎이나 patawa(Oenicarpus Batawa)의 주맥으로 만들어지고, 한쪽 끝을 날카롭게 하고, 큰 나무 (bombax ceiba) 아래의 껍질에서 자라는 야생의 면의 연약한 부분을  다른 쪽에 감았다. 이 면 뭉치는 화살이 잘 들어있도록 그 대롱안을 충분히 채운다. 그 모서리에는 독을 뭍혀서,  잘 코팅될때까지 말리고 다시 뭍히는 작업을 반복한다. 정확한 독의 구성성분은 밝혀지지 않았지만, 주요한 재료는 항상 다양한 곳에서 자라는 스트린크노스 식물의 즙이다. 그것은 다른 부족들 사이에 Curari나 Ourari, Urari 와Woorail 등의 다양한 이름으로 알려져 있다"                                                             -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
+%%%%
+boggart
+
+보가트:
+
+"그는 모든 덤불을 보가트로 생각한다."
+    -존 레이, _영시 모음  완전판_.1768.
+
+
+"보가트가, 어떤 핑계나 권한에 의해서인지는 알 수 없지만, 조용하고, 무방비하고, 근면한 농부의 집안으로 쳐들어왔다; 일단 그것이 소유물을 빼앗으면, 거주지의 권리에 대해 법적인 인간 거주자와 진짜 이웃같지도 않고 제멋대로인 태도로 논쟁을 한다. 특히 어린애를 엄청 혐오한다. 부모의 자식 학대에 예민한 점이나, 아버지의 기분이나, 그의 아내의 기분 등은 아무 소용이 없다. 매일 항상 밤에도, 악의에 찬 보이지않는, 보가트의 원한에 의해 망친다."
+    -C.J.T., _민간설화와 전설:  영문판_   1890.
+%%%%
+bolt
+
+석궁화살:
+
+"관문을 확실히 쟁취하고, 파리와 사실상 프랑스를 우리에게 가져다준, 우리의 최후의 공격 도중에, 조안이 석궁 화살에 맞아 쓰러졌고, 그래서 병사들이 즉시 물러나, 거의 공황에 빠졌다 - 그녀가 없는 병사들은 무엇을 위해 존재하는가? 그녀 자신이 군대였다. "
+    -마크 트웨인_개인적인 잔다르크의 기억, 루이스 콘테씨에 의해_, 책 II, 40장 "배신이 조안을 정복하다". 1896.
+%%%%
+book
+
+책:
+
+"종려나무 잎 위에, 사초로 엮은 두루마리 위에;  
+ 소성 점토와 가죽 두루마리 위에,
+ 남자가 자신의 생각을 적었네; 세월이 지나고, 
+ 오 마침내 그 인쇄물은 발견되었네!"
+    -존 그린리프 휘티어, _도서관_, st. 4.
+%%%%
+broad axe
+
+브로드 액스:
+
+"무기, 매끈한, 나체의, 여자!
+ 엄마의 창자로부터 끌려나온 머리!
+ 나뭇쪼가리와 금속뼈대!
+ 수족도 오직 하나, 입술도 오직 하나!
+ 적열로 자라난 회청색 잎사귀!
+ 뿌린 씨앗에서 나온 자루!
+ 잔디 가운데 쉬면서, 기대어 지기도하고, 기대기도 하고."
+    -월트 휘트먼, _브로드-액스의 노래_, I, 1-6.  1867.
+%%%%
+buckler
+
+소형 방패:
+
+"누군가가 전장에서 그들의 용기를 자랑하게 해라,
+ 난 내 방패가 거의 안전하지않음을 알았고,
+ 도의심이 아니라 본성에 의한, 법을 우리는 복종해야 한다:
+ 이것이 내가 쓸모없는 방패를 내다버리고,
+ 신중한 도주와 교활한 목숨의 보전을 하게했다,
+ 무덤에서는 용기를 낼수 없기 때문이다.
+ 더 나은 방패를 곧 다시얻을 것이다;
+ 그렇지만 누가 다른 목숨을 또 얻을수 있을까?"
+    -아르킬로코스. 7세기. 기원전
+     역자(영문) 윌리엄 H. 굿윈 1878년
+%%%%
+cacodemon
+
+카코데몬(악귀):
+
+"우리는 검은 쐐기를 지닌 그를 악귀라고 부를 것이다. 거기에, 그의 몽마와 악의 종자와, 플레게돈의 무리, 내 양심의 가책이 코큐투스의 물거품을 낳았다."
+    -존 플래처, _몰타의 기사_,1647.
+%%%%
+catoblepas
+
+캐토블레파스:
+
+"그래서 그는 아나지우스의 두 형제를 데리고서, 그 섬을 지나갔다; 거기서 그는 제복을 입은 버림받은 군인을 찾았는데, 그 제복은 그것이 가진 비애만큼 까매서, 차광유리를 통해서도 볼수 있을 것이다: 썩은 고기에 아가리를 벌리는 까마귀의 형태를 한, 같은 빛깔의 장식품들:  오직 그의 허리에는 뱀들이 있었는데, 한쪽이 다른쪽 안에 잘 감겨 있었고, 그것의 머리들이 그것의 볼과, 재갈의 부분들에 맞닿아있었는데, 거기에 있는 뱀들은 마치 말을 물려 하는것 같았고, 그리고 그 말은 재갈을 물고있었고, 뱀들에게 덤벼들고, 그 흰 거품은 전투의 지독한 분노에 의해 초래했다. 그의 문장은 캐토블렙타 였고, 그것은 마치 달이(무엇때문에 그것이 자연스럽게 동정심을 일으키는가) 빛나기 원하듯이, 아주 오랫동안 닳아 있었다. 그 문장은, '달이 빛나길 원치 않는게 아니라, 그 불쌍한 짐승이 달빛을 원한다' 라는 것을 의미했다."      -필립 시드니 경
+%%%%
+daeva
+
+데바:
+
+"이 두 데바들 사이에서는 옳지 않음을 정하고,
+ 헤매는 자들이 그들에게 오면 그들은 함께 상담해주는데
+ 그들이 최악의 생각을 고르게 하기 위함이다.
+ 그리고나서 그들은 함께 격렬히 뛰쳐나가는데,
+ 인간세계를 약화시키려 하기 위해서 일지도 모른다."
+
+    -아베스타, 야스나 XXX, 6, 아후나바이티 가타.
+     1951년 크리스티안 바톨로메에 의해 영문번역됨.
+%%%%
+demon blade
+
+악마의 칼:
+
+"Quemadmodum gladius neminem occidit: occidentis telum est."
+"검은 스스로는 벨 수 없다. 이것은 단지 사용자의 문제일 뿐이다."
+
+    -Lucius Annaeus Seneca, _Epistulae Morales ad Lucilium_, Letter LXXXVII:
+     Some arguments in favor of the simple life, l. 30. ca. 65 A.D.
+     trans. Richard Mott Gummere, 1917.
+%%%%
+demon trident
+
+악마의 삼지창:
+
+"그는 이야기를 시작했다, 그리고 보았다—그의 소피아가 아닌—아니, 체르커스인도 아닌, 웅장한 귀족의 궁전을 위한 화려하고 우아한 복장의 하녀를. 아니다; 정복을 입지않은 근무조는 다소 거친 사람들이고, 누구도 깨끗한 사람이 없어, 구린 냄새에 쩔어있었다, 그날의 노동의 산물과, 손에 쇠스랑을 들고, 몰리 시그림이 다가왔다." 
+    -헨리 필딩_퇴역자 톰 존스의 역사_, Book V, ch. X. 1749.
+%%%%
+dire flail
+
+거대 도리깨:
+"하! 하! 하!, 그의 두 남자는 웃었다,
+ '우리의 용맹한 동포가 용감한 용사의 대가리를 때려부수는 것을 보는대로
+  노르만족 악당은 겸손해질거야.'"
+    -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
+%%%%
+emperor scorpion
+
+황제 전갈:
+
+"[티투스 폴라비우스 베스파시아누스]가 끝에 치닿은 것을 나타내는 전조가 일어났는데, 마치 오랫동안 볼수 있는 혜성과, 아우구스투스 묘의 자연적인 개방과 같았다. 그의 내과의들이 그가 아픈 와중에도 보통 일상생활을 지속하고, 그의 사옥에서 모든 책무를 수행하는 것에 대해 꾸짖었는데, 그가 대답했다.
+'황제는 서서 죽어야한다.'"
+    -카시우스 디오, _로마 역사_, LXVI, xvii, 2. 서기 222.
+     1925년 어니스트 캐리에 의해 영문번역됨
+%%%%
+ettin
+
+에틴:
+
+"그러나 그는 위험한 에틴이 안으로 들어오기 전까지는, 숨는 구멍에 오랫동안 있지 않았었다; 얼마안있어 그가 들어왔고, 울부짖는 소리를 들었다:
+ '숨어라  안에 숨어라
+  난 기어다니는 인간의 냄새를 맡았어,
+  그게 살아있든 죽었든,
+  그 심장을 오늘밤 내 빵하고 조리할거야.'"
+    -조셉 제이콥스, _붉은 에틴_
+%%%%
+executioner's axe
+
+처형인의 도끼:
+
+"그녀는 춤췄고, 캄캄한 밤에 강제로 춤춰졌다.
+ 이 구두는 그녀를 가시와 찔레쪽으로 옮겼다;
+ 그녀는 피가 나도록 스스로를 상처입혔다;
+ 그녀는 황야를 가로질러 조그마난 집 한채로 춤추며 갔다.
+ 그녀는 여기가 처형인이 사는 곳이라고 알고 있었다;
+ 그리고 그녀는 손가락들로 유리창을 두드렸고,
+ 그를 불렀다. 
+  '나와봐요, 나와봐요! 난 못들어가요, 춤춰야해서!'
+ 그리고 그 처형인이 말하길,
+  '넌 내가 누군지 모르니?
+   난 나쁜 사람들 머리를 도끼로 자르고,
+   내 도끼가 얼마나 웅웅댔는지 표시를 해!'
+  '내 머리는 날리지 마세요,'
+ 카렌이 말하길,
+   '만약 당신이 하겠다면,
+    난 내 죄를 뉘우칠수 없는걸요.
+    그치만 내 발과 함께 이 빨간 구두를 날려버릴 수 있지요?'
+ 그리고나서 그녀는 모든 죄를 고백하고,
+ 처형인이 그녀의 빨간 구두를 신은 발을 잘랐다;
+ 그러나 그 구두는 작은 발과 함께 춤추며 황야너머 깊은 숲으로 사라졌다.
+ 그리고 처형인은 그녀에게 나무로 만든 의족 한쌍을 목발과 함께 주고,
+ 범죄자들이 항상 부르는 찬송가를 가르쳐주었다.
+ 그녀는 그의 도끼를 쥔 손에 키스하고,
+ 황야를 가로질러 사라졌다."
+    -한스 크리스티안 안데르센, "빨간 구두", _새로운 동화와 이야기집. 1권, 3권 묶음._. 1845.
+%%%%
+flail
+
+프레일:
+
+"심지어 많은 노력과 손실을 수반해서,
+ 억지로 밀고나간 후에도, 이 두번의 방어를 통해서,
+ [독일인들]은 여전히 스스로에게 불리한 점이 있음을 알았다;
+ 그들의 갑옷이 겨우 그들을 야만인들과 같은 조건에서 싸우게 해주지만,
+ 적들의 가공할 무기에는 비할바 못되었다.
+ 보헤미안들은 길다란 쇠 프레일로  무장했는데, 그들이 굉장한 힘으로 휘둘렀다.
+ 그들은 때리는 일을 거의 실패하지 않았고,
+ 그들이 때리면, 프레일이 황동 헬멧을 통해서,
+ 두개골과 모든 것을 박살냈다."
+    -제임스 A. 와일리, _개신교의 역사_, vol. I, book 3, ch. 15 "존 후스와 후스파의 전쟁"
+%%%%
+giant club
+
+거대 몽둥이
+
+"즉시 그 거인은 싸우려는 그를 찌그러트렸고,
+ 경멸스러운 노여움과 높은 업신여김으로 흥분했고,
+ 그의 끔찍한 몽둥이를 높게 들어올려,
+ 누더기가 된 모욕과 뒤틀린 결로 무장한,
+ 그의 생각은 처음 조우하는 자들을 죽이는 것이었다."
+    -에드먼드 스펜서, _요정 여왕_, Book I, "적십자 기사의 전설", 칸토 VIII, 스탠자 vii, I. 55-9.       1590.
+%%%%
+glaive
+
+글레이브:
+
+"당신의 짧은 스태프나 하프 파이크, 포레스트 빌,
+ 파르티잔이나 글루 등의,
+ 이점이 있고 완벽한 길이의 무기들과 같은 것들의,
+ 완벽한 길이를 알기 위해서는, 바로 세워 보아야하고,
+ 왼손으로 스태프를 수직으로 세워두어,
+ 당신의 몸 가까이에 두고,
+ 당신의 오른손을 스태프에 할수 있는한 손을 뻗어라
+ 그러면 양손 간에 어느정도 길이의 공간이 생길 것이다.
+ 당신이 싸움에 임할때, 거기서 당신은 편하게 공격할 수도,
+ 밀고 가거나  후퇴하던지, & 이것은 단순히 당신의 신장에 따른 길이이다.
+ 그리고 이것이 알려준다. 그 길이가 흔히 8에서 9피트 정도 떨어져 있을 것이고,
+ 잘 들어맞을 것이다. 비록 평균 남성의 신장에,
+ 전투에서 어떤 방해요소도 없을 경우지만.
+ 그의 손에서 바뀔지도 모르는 무기들이,
+ 자유롭게 그의 의지로 길게도 짧게도 만들게 하기 위함으로,
+ 맨 뒤의 손에 어떤 방해도 없게 스태프의 1피트 뒤를 남겨둔다."
+    -조지 실버,_방어의 패러독스들_. 1599.-
+%%%%
+gnoll
+
+놀:
+
+"그리고나서 그는 안전하게 내려갔고, 누스에게 손짓했다. 그러나 놀들이 그를, 그들이 나무들에 뚫어놓은, 부정한 구멍을 통해서 지켜봤었고, 과장되었었던 기이한 침묵이 무너지고, 톤커의 급박한 비명에 놀들은 그를 뒤에서부터 들고 나왔다. - 그들이 횡설수설했을 때까지 비명들이 점점더 빨라졌다. 그리고 놀들이  그를 데리고 온 곳은 물어보기 좋지 않았고, 그들이 그에게 무엇을 했는지도 말 안해줬다."           -로드 던세이니, "어떻게 누스가 수많은 놀들 가운데서 기술을 연마했는가". 1912.
+%%%%
+great mace
+
+대형 메이스:
+
+"거기에 페리둔 이라는 이름의, 한 사람이 일어났는데, 당신의 왕좌를 물려받게 될 것이고, 당신의 운명을 뒤집고, 그리고 당신을 소머리의 메이스로 쓰러트릴 자이다."
+    -피르다우시, _샤나메_ , 약 기원전 1000년 쯤  1883년에 헬렌 지멤에 의해 영문 번역됨.
+%%%%
+greater naga
+
+거대 나가:
+
+"그리고 나서 거기에 납하사 호수의 나가들과, 베사일과 타챠카가 모였다. 캄발라스와 아사타라스와 파야가스와, 그들의 친족도 모였다. 야무나 강으로부터 망명있는 나가, 드하타랏타도 왔다. 위대한 나가 에라반나: 그도 숲의 모임에 왔군요."
+
+-대회경, _디가 니까야_, 20. 약 기원전 500년
+ 타니사로 빅쿠에 의해 번역됨
+%%%%
+greatsling
+
+거대 슬링:
+
+"그의 머리 주변에 세번 빙빙도는 것
+ 그 빙빙도는 가죽끈으로, 미젠티우스는 그의 목표를 겨냥했다.
+ 납탄이 그의 관자놀이를 깔끔히 지났고, 먼지속에 엎드려있던, 그 용감한 청년은 죽어있었다."
+    -버질, 아에네이스 9
+     E. 페어팍스 테일러에 의해 번역됨
+%%%%
+guardian golem
+
+수호자 골렘:
+
+"'잘들어 립_골렘_, ' 그 노인이 손가락을 흔들면서 말했다.
+ '내가 말하는 것에 집중해라 ㅡ 이해했니?'
+ '이해합니다...'
+ '만약 니가 여기 머물고싶다면 검베이너 씨가 말한대로 행동해야 한다.'
+ '검베이너-씨가-말한-대로...'     
+ '_그것이_ 내가 골렘의 회화를 듣는 방법이다. 말카가 수첩에서부터 거울을 꺼내주었다. 봐라, 니 얼굴이 보이니? 이마도 보이지? 뭐라고 써져있니? 만약 검베이너씨가 말한대로 하지않으면, 그가 써있는 것을 지우고 너는 더이상 살아있을 수 없게 되.'
+ '더-이상-살수-없다...'
+ '_그것이_맞아. 이제, 들어라. 현관 아래에서 잔디깎이를 찾아서, 그것 가지고 잔디를 깎아라, 다하고 돌아와라 가라.'"
+    -아브람 데이비슨, "골렘", 1955.
+%%%%
+halberd
+
+할버드:
+
+"디아미드 오, 디아미드 그가 분쟁에 휘말려 죽다니;
+ 그의 머리가 할버드 위에 꿰뚫어져 높이 있네;
+ 그들을 짓밟는 그의 핏기:
+ 그는 생명의 기회가 없었지
+ 만약 주님이 옆에 계셨더라면! 오, 오오!"
+    -제임스 클라렌스 매간, _패트릭 사스필드, 루칸 백작에게 작별인사_. 약 1840년
+%%%%
+hand axe
+
+손도끼:
+
+"리지 보든이 도끼를 가져왔다
+ 그리고 그녀의 엄마를 40번 후려쳤다
+ 그녀가 자신이 한 일을 깨달았을 때
+ 그녀는 아빠를 41번 후려쳤다"
+    -A popular skipping-rope rhyme, after 1893.
+%%%%
+harpy
+
+하피:
+
+"새의 몸뚱이와 여인의 얼굴을 한 것이 그것들이다; 그것들의 끔찍한 똥, 그 손은 발톱이고, 그 얼굴은 채워지지않는 굶주림으로 광포하다."
+    -버질, 아에네이스 3
+
+"그리고 피네우스가 첫번째 조각을 집어들자마자, 작은 경고가 선풍과 번개로 나타났는데, 하피들이 시끄럽게 울어대면서 음식에 대한 욕망을 나타내며, 구름에서부터 보낸것이다. 젊은 귀족들은 그것들이 다가오는 것을 보고는 경고를 했다. 그러나 그것들은 거의 듣지 않았고, 하피들은 모든 음식을 다 집어삼키고는 멀리 먼 바다로 한번더 날아갔다. 그것들이 남긴것은 참을수 없는 악취뿐이었다."
+    -아폴로니우스 로디우스, 아르고나우티카 2. 179 — 434
+%%%%
+horn of Geryon
+
+게리욘의 뿔나팔:
+
+그리고 요슈아가 사제들을 모두 불러모아 말하길,
+"주의 약속의 방주를 계속 만들어라 그리고 일곱 사제에게, 각자 뿔나팔을 들고 그것 앞을 걷게 하라. '
+
+'사람들이 뿔나팔의 소리를 들었을 때, 그들은 가능한 크게 소리쳤다. 갑자기, 여리고의 성벽이 무너지고, 이스라엘인들이 마을 안으로 곧장 밀고 들어가 그곳을 점령했다. 그들은 그곳안의 모든것을 그들의 검으로 파괴했다—남자와 여자, 어린애와 노인, 소, 양, 염소, 당나귀도.'
+    -요수아6:6,20-21 , 뉴 리빙 번역
+%%%%
+iguana
+
+이구아나:
+
+"옛날에 브라마닷따가 베나레스에 군림했을 때, 보리살타는 이구아나로 태어났다.
+ 그가 성장했을 때에 그는 강 뒤편의 큰 땅굴에, 수백의 다른 이구아나 부하들과 살았다.
+ 이제 보리살타는 아들을 가졌는데, 그는 끌어안고 달라붙는 카멜레온의 친한 친구였다.
+ 그 친밀함이 이구아나 왕에게 보고되었고, 그는 어린 아들을 불러서 말하길
+ -카멜레온은 하급생물이다 그런 우정은 틀린거다,
+  그리고 혹시 그 친밀함을 고집하겠다면, 전체 이구아나 종에게 재앙이 닥칠것이다
+ -그리고 그는 아들이 카멜레온과 더는 함께하지말라고 명령했다.
+  그러나 아들은 계속 친밀함을 이어갔다."
+    -_쿳다까 니따야_,  본생경 141 "고다-자타까". 약 기원전 4세기.
+%%%%
+jackal
+
+자칼:
+
+"모든 유리한 기회를 챙겨 먹으려고 항상 준비하는,
+ 자칼은 안타까운 기생 동물이다.
+ 좀더 큰 육식동물의 치맛자락에 매달려 육식동물이 사냥하러 그 지역을 거닐때,
+ 그들이 죽이거나 상처입힌 생물들의 일부분을 확보하는 희망을 품는다."
+    -존 조지 우드, _사진을 넣은 자연사: 포유류_.   1865.
+%%%%
+javelin
+
+자벨린:
+
+"당신의 형이 당신의 와이프랑 자고 있는걸 알았다고 가정해보라,
+ 자벨린을 꺼내서 둘다 죽이면, 당신은 정당방위이고,
+ 그들은 속죄하고, 하나님의 나라에 용서를 구해야 한다."
+    -브리검 영, _Journal of Discourses_, 3:247. 1856.
+%%%%
+jelly
+
+젤리:
+
+"그 방울을 조심해!
+ 살금살금 움직여
+ 그리고 튀어 오르지
+ 그리고 미끄러지듯이
+ 복도를 가로질러
+ 문으로 들어가네
+ 그리고 벽 전체에,
+ 큰 얼룩이, 얼룩이..."
+    -버트 바차라치 & 맥 데이비드, "방울을 조심해".  1958.
+%%%%
+kraken
+
+크라켄:
+
+"...크랩-피쉬라고도 불리는, 크라켄은
+ [노르웨이의 선원에 따르면]
+ 그렇게 크진 않고, 머리와 꼬리를 계산하면,
+ 우리 윌란드의 너비보다는 크지않다 [즉 16 km 보다는 작다] ...
+ 그것은 해저에 머물고, 먹이인줄 알다가 대신에 잡아먹히는,
+ 무수한 작은 물고기들에게 계속 둘러싸여있다.
+ 그것의 식사에 대해서는,
+ 내가 E. 폰토피단이 쓴 것을 정확히 기억한다면,
+ 3달 이상은 지속되지 않고, 식사를 소화하는데 또다른 석달을 쓴다고 한다.
+ 그것의 똥은 조그만 물고기 군집같은 것을 키우고,
+ 이러한 이유로 어부들은 그것의 휴식 장소를 찾아내려고한다 ...
+ 점차, 크라켄이 수면으로 올라오면, 10에서 12패덤일때,
+ 보트들은 그 부근을 벗어나는게 나은데,
+ 크라켄이 그 이후 얼마안있어 떠오르 는 섬처럼 튀어나올 것이고,
+ 끔찍한 코로부터 뿜어져나오는 물과,
+ 그것 주위로 수 마일 까지 뻗어나가는 고리모양의 파도가 생긴다.
+ 누가 이걸 레비아탄이 한 일이라고 의심하겠는가?"
+    -제이콥 발렌베리, " My son on the gallery". 1781.
+%%%%
+lajatang
+
+라자탕:
+"자유민의 뜻으로부터 내려오는 이 무기는 마치 잔디위에 떨어진 눈송이와 같으나 이것은 곧 신의 의지를 담은 번개라고도 할수있다."
+    -Jogn pierpont "The ballot". ca. 1850
+%%%%
+large rock
+
+바위:
+
+"음, 난 바위로 뛰어가 얼굴을 숨겼어
+ 바위가 큰 소리를 냈고, 숨을 곳이 없네
+ 여기 아래에는 숨을 곳이 없어."
+    -흑인 영가. 19세기
+%%%%
+lindwurm
+
+린드브룸:
+
+"물론,
+ 우리로부터 숨겨진 그 일언반구의 존재,
+ 이런 종류의 동물들 - 우리가 용이나 서팬트를 상상할때,
+ 긴 목을 가진 독수리의 머리, 사자의 머리나 돌고래의 머리인 괴물로 종결한다;
+ 그것은 그리핀이나 나치스티그의 넓은 등을 가지고;
+ 말려있는 꼬리에 미늘과 가시가 있고;  불을 뿜고;
+ 여성과 사랑에 빠지거나, 납치하거나;
+ 때때로 형태를 바꾸고;
+ 많은 재보 위에서 쉬고있는 - 요약하자면, 괴물로서,
+ 그것이 가진 모든 특징들은 누군가가 주입한 지어낸 이야기이다;
+ 그리고 그것은 믿기힘든 린드브룸이 원하는데 쓰이는 광기일 수도 있다.
+ 그러나 가정해보라 단순히 끔찍한 괴물일 뿐이다.
+ 결론은 그것에 대한 믿음은 아무것도 아닌 터무니없는 소리란 것이다."
+    -레오폴드 지겔하우어, _태고의 그림자: 독일과 오스트리아 제국 전역의 이야기, 전설, 동화, 소문, 스케치와 영웅의 음식으로부터의 화환_, 1844.
+%%%%
+long sword
+
+장검:
+
+"우리가 이 엄청난 군대와 그들의 두려운 대검(마쿠아후이틀[흑요석으로 만들어진])을 붙잡아둔 동안에, 많은 적들 사이의 가장 강력한 이들은 말 한마리를 제압하기로 결정한 듯하다. 그들은 맹렬한 공격을 시작했고, 경주용과 전투용 두가지 모두, 잘 훈련된 좋은 말 한마리에 손을 뻗었다. 승마자인 페드로 디 모론은 좋은 마부였다; 그는 다른마부 셋과 함께 적진에 뛰어드는 임무를 맡았다—그들은 서로 도와가며 임무수행하도록 지시받았다— 적들중 몇몇이 그의 랜스를 붙잡았기때문에 그는 그것을 쓸수 없었고, 다른 적들은 대검(마쿠아후이틀)으로 그를 베었고, 그를 심하게 부상입혔다. 그리고나서  그의 말을 베었고, 잘린 모가지가 가죽에 대롱대롱 매달려있을 뿐이었다. 말이 죽어 쓰러지고, 만약 말을 탄, 그의 동료들이 모론의 구출을 위해 오지 않았더라면, 그 또한 아마 죽었을 것이다."
+    -베르날 디아즈 델 카스틸로,  _뉴 스페인 정복_, 1623.
+     1963년에 J.M.코헨이 영문번역함
+%%%%
+longbow
+
+장궁:
+
+"로빈이 그 좋은 활을 구부렸고, 그가 당긴 화살이 윌에게 갔다; 그는 땅위에 엎드린채 그 자랑스러운 보안관을 쐈다."
+    -_로빈 후드 이야기_여섯째 피트, I. 120-123. 약 1450년 경.
+%%%%
+lorocyproca
+
+롤로시프로카:
+
+"거기에 거칠고, 셀수없는, 굉장한 모양인 것이, 멋진 아라비아풍으로 뒤틀려졌고
+ — 눈에는 투명하지만, 그럼에도 끔찍한
+ — 그것들은 살면서 누군가의 위협이 되는, 낯선 숫자로도 뒤틀려졌다.
+    -브루노 슐츠, "천재의 시대". 1937.
+%%%%
+lost soul
+
+방황하는 영혼:
+
+"그녀는 황혼에 거닐었지, 그 발걸음엔 소리가 없고, 그녀의 발은 이슬 내린 땅위에 어떤 자국도 남기지 않았지. 그녀의 손은 다정하게 손짓하고, 그녀는 당신의 이름을 속삭이지ㅡ
+ 그러나 그녀와 함께 간 이들은 전혀 똑같지 않았지.
+    -매직: 더 게더링
+%%%%
+%%%%
+mace
+
+메이스:
+
+"[내 계획]은, 당신들 사이에서 평온을 유지하기위해,
+ 즉각적으로 메이스의 중재를 요구하게될,
+ 덜떨어진 식민지 프락치들과 로비나 하라고 제안한게 아니다."
+    -에드문드 버크, "미국과의 협력관계", 의회 연설. 1775.
+%%%%
+manticore
+
+만티코어:
+
+"테시아스가 써놓길,
+ 에디오피아에서와 마찬가지로 거기에는 만티코라 라고 불리는 괴물이 있고,
+ 그것은 3열의 이빨을 가지고있어서,
+ 아가리를 닫으면 한쪽이 다른쪽에 맞물린다;
+ 핏빛의 빨간 눈에, 사람의 얼굴과 귀를 가지고,
+ 몸은 사자같고, 전갈의 독침으로 무장한 꼬리를 가지고 있다:
+ 그것의 목소리는 플루트와 트럼펫을 같이 연주하는 듯한 소음과 비슷하다.
+ 그것은 매우 날렵하고, 인육과 다른 모든것의 고기를 가장 좋아한다."
+    -플라이니 더 엘더, _자연사_, 책 8, 챕터 XXI
+%%%%
+merfolk
+
+머포크(인어):
+
+"더이상 그때의 내가 아니란 것을 알았을때, 또다시 한참있다가 사고가 되살아났다; 그리고나선, 먼저 나는 바다처럼 푸른 수염이 자란것을 느꼈고, 넓은 이마엔 커다란 기품이 있었다; 내 길게 내려온 머리털들은 풍파를 쓸어냈고,  넓은 어깨는 심해를 유연히 헤쳐나간다; 내 물고기같은 꼬리와 푸른빛의 두 팔과,  모든 부분이 천부적으로 바뀐것을 보았다."
+    -오비디우스, _메타모포시스_, XII, 546-7. 기원전 8세기.
+    가스 드라이덴 등에 의해 번역됨
+%%%%
+merfolk avatar
+
+머포크 인도자:
+
+"그리곤 그 인어는 일어났지,
+ 투명한 빗을 손에 들고:
+ '당신에게 건강함을 줄게요, 내 명랑한 청년이여,
+  당신을 위해서 이젠 육지를 보지 않을거에요.'"
+    -"패트릭 스펜스 선장", 스코틀랜드 민요, 프란시스 제임스 차일드의 58J 버전, _영국과 스코틀랜드의 유명한 발라드_.   1898.
+%%%%
+morningstar "Eos"
+
+모닝스타 "에오스(여명)":
+
+"장미빛처럼 붉은 이른 아침해가 뜰 무렵,
+사람들이 영광스런 헥토르의 화장대
+ 근처로 모여들기 시작했다."
+    -호메로스, 일리아드, 14장, 776.
+     A. T. 머레이 번역, 1857
+%%%%
+moth of wrath
+
+분노의 나방:
+
+"광포해진 적이 시야안에 들어올때면,
+ 그들 스스로가 광분 상태로 바뀌어, 방패로 파고들어 공격한 자의 쪽으로 밀고 나갔고,
+ 그들의 방어구를 내던지고, 모든 위협에 대해 무모해지고,
+ 때때로 몽둥이 하나로 죽음과 파괴를 가지고다녔다."
+    -폴 벨로니 두 샤일루,_바이킹의 시대: 초기 역사, 매너, 영어권 나라의 조상들의 관습_.   1889.
+%%%%
+naga
+
+나가:
+
+"신들 사이에서 아수라들과 천상의 리시들과, 그 사랑스러운 여인과,
+ 나가들이 위대한 에너지를 부여받았다. 대단한 속도를 가지고,
+ 그들은 또다시 완벽한 향기를 부여받았다.
+ 그들은 숭배받을만 했다. 그들은 이로운 일을 들어줄 능력이 있었다.
+ 사실은, 우리가 우리 무리내의 다른이를 숭배하기에는,
+ 너무 가치가 높아졌다. 나는 그대에게 말했다.
+  '여인이여, 우리는 인간에 의해 내세워질 순 없소.'"
+    -마하바라타, 산티 파바, 모크샤다마 파바, CCCLX 부분.    약 기원전 500년
+     1883년 키사리 모한 갱굴리에 의해 번역됨
+%%%%
+needle
+
+바늘:
+
+"죽은자가 일어나라고, 기도한다
+ 나는 영광에 서있는것 같다 —  혹시 내 머리위에 왕관이
+ 있는게 아니라,  수중에 바늘이 있네."
+    -유진 필드, "할머니의 기도".  19세기 말
+%%%%
+neqoxec
+
+네퀘젝:
+
+"만약에 돌연변이가 자연적인 선택에 의해 영향을 받은것이라면,
+ 은연중에, 어떤 특정한 돌연변이는 각각의 종에 대하여 이로운 방향으로 나아가고,
+ 실은 화석 동물들 사이의, 알려진 돌연변이의 많은 예시들이,
+ 분명히 그 이점 덕분에 변하면서, 번식했다 라는 것을 알게해준다.
+ 여기에 덧붙여 말하자면, 모든 돌연변이가 (화석 인류학에서의 의미하는)
+ 자연적인 선택에 의한것은 아니고,
+ 많은 돌연변이가 사실상의 향상을 의미하는 것은 아니다."
+    -_미국 철학 사회의 진행_, 볼륨 XXV, 넘버 150.   1896.
+%%%%
+octopode
+
+문어:
+
+"함께있는 짧은 시간 동안에, 슬로스롭은 감상을 만들어냈다. '이 문어는 정신 건강에 좋지않네, 근데 비교할만한 근거가 있나? 그치만 터무니없는 윤택함이 있다구, 테이블에서 떨어지는 무생물과 마찬가지인데, 우리는 소음과 어색함에 민감하고, 그것들이 떨어지길 원하지는 않았는데, 뭐랄까 쾅! 하더니, 하-하 너네 들었어? 또 그런다, 쾅! 그 두족류의 매순간의 움직임에 슬로스롭은, 원반같이 전력을 다하여 바다로 나가는 게가 올라가듯이, 멀어져 가는것에 기뻐했다. 그리고 그 문어는, 철썩대고 꾸물꾸물하며, 먹이를 향해 갔고, 이내 사라졌다."
+    -토마스 핀천, _중력의 무지개_.   1973.
+%%%%
+oklob plant
+
+산성초 식물:
+
+"탄산은 채소 성장의 시발점을 함께 구성하는, 세가지 물질중에 하나이다; 탄산은 탄소와 산소로 구성되어 탄소 1, 산소 2 의 비율로 화학적으로 결합한 것을 말한다(CO2). 이것은 무색의 기체이고, 산성인 맛과 냄새를 가졌다; 수용성이고; 무게는 공기의 절반이고, 액화되면, 병으로 옮길수도 있다; 물 100에는 탄산 기체가 106정도 용해되고, 용해된 상태로 식물의 뿌리가 필요한 만큼 가져간다."
+    -헨리 스튜어트, _농작물의 재배: 농사의 과학적의 매뉴얼, 그리고 미국 농부들을 위한 책자_, 챕터 X.    1887.
+%%%%
+ophan
+
+오판:
+
+"그 살아있는 생물들을 바라봤을 때에, 지면의 바퀴 모양인데, 네개의 얼굴을 가진 생물을 보았다.
+ 그 모습과 구조는 바퀴의 것이었다:
+ 그것들은 감람석처럼 반짝였고, 네개의 머리는 서로 닮아있었다.
+ 각각은 바퀴가 바퀴로 교차되듯이 만들어지는것 같았다.
+ 그것들이 움직이면, 그 생물이 보고있는 네 방향 중에 어느 한쪽으로 갈것이다;
+ 그 바퀴들은 지나 갔던곳으로는 돌아가지 않았다.
+ 그것들의 테두리들은 위엄있고 멋졌고, 네개의 테두리들은 전부 눈알로 가득했다.
+    -에스겔 1:15-18 (새 국제화 버전)
+%%%%
+orange demon
+
+주황색 악마:
+
+"스파킬에는, 오벨리스크를 중앙 공원으로 가져다놓은 그 지명 인사가 매장되어있는데, 존경할만한 지휘관 H.H. 고린지는, 그 이름이 오랫동안 '오렌지'의 리듬으로 불려져왔다."
+    -아서 기터먼, "여행 노트"
+%%%%
+orb of fire
+
+화염의 구:
+
+"당신이 보고 있던 그 구체는 가장 작은것이 아니지만
+ 그의, 천사가 노래하는것 같은 몸짓은,
+ 여전히  순수한 눈의 천사들로 구성된 성가대같았다."
+    -윌리엄 세익스피어, _베니스의 상인_, V, i.   1597.
+%%%%
+phantom
+
+환영:
+
+"누군가는 우리의 행복을 우려하는, 경이로운 것들과 낯선 환영이, 종종 우리가 앞일을 예견하게 해준다고 말한다."
+    -스펜서, _요정 여왕_, II.  xii.  47
+%%%%
+polar bear
+
+북극곰:
+
+"북극곰은 무지막지한 힘과 야수성을 지닌 동물이다. 중국으로 가려 북동부 항로를 찾으려 했던 바렌츠의 항해를 통해 이 동물의 난폭성이 증명되었는데, 노바 젬블라 섬에서 이 곰들은 그의 선원들을 덮쳐서 한 입에 아무런 어려움 없이 물고 간 다음 선원들의 동료가 보는 앞에서 찢어먹었다. 이 곰들은 해변으로부터 아주 멀리 떨어진 무장선에도 승선해 공격하려 한다고 알려졌으며, 때떄로 엄청난 노력 후에 격퇴되었다."
+    -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I, p. 2. 1800."
+%%%%
+blue devil
+
+파란 악마:
+
+"그 비통한 바다의 술병으로부터 나는 마개를 뽑았다. 그즉시 거기서 푸른 색의 작은 악마가 튀어나왔다;  내가 말걸기도 전에 내 빈잔에 들어갔고, 곧바로 그 작은 악마는 지루해 했고, 내 빈컵에 옮겨가서는 곧바로 지루해했고, 쪼그려 앉았고, 웃었다 그리고 더는 아무것도 안했다.
+거기서 작은 임프는 내 머리가 어지러운 동안에,  앉아서 날 보며 쪼갰는데, 그때문에 나는 앉지못해서 바닥에 넘어졌다; '너 쫌 나빠보이는데, ' 난 말했다 "말해봐라 파란 악마야,  왜 감정을 갖고 내가 들고 있던 잔 안에서 쪼개느냐"   휠씬 더 나아진 정신으로, "저리가! 날 내버려둬."
+그 임프가 말했다 '두번 다시 안할게!'
+비록 특이한 겁쟁이라고 느꼈지만, 여전히 그 대답이 날 열받게 했고, 꿍꿍이가 있는 저 작은 파란 악마에게 단언했다. 그리고나서 이건 꿈이라고 말했다. 비록 내가 보기엔 갑판이 흔들렸지만; 틀림없이 나는  끔찍한 아침 두통을 가질 것이다. ㅡ지겨운데: 연어는 더이상 못먹어.
+    -J.T.S,"파란 임프", _멜버른 풍자_, Sept. 4, 1856.
+%%%%
+morningstar "Eos"
+
+모닝스타 "에오스":
+"장미빛처럼 붉은 이른 아침해가 뜰 무렵,
+사람들이 영광스런 헥토르의 화장대
+ 근처로 모여들기 시작했다."
+    -호메로스, 일리아드, 14장, 776.
+     A. T. 머레이 번역, 1857
+%%%%
+polar bear
+
+북극곰:
+
+"북극곰은 무지막지한 힘과 야수성을 지닌 동물이다. 중국으로 가려 북동부 항로를 찾으려 했던 바렌츠의 항해를 통해 이 동물의 난폭성이 증명되었는데, 노바 젬블라 섬에서 이 곰들은 그의 선원들을 덮쳐서 한 입에 아무런 어려움 없이 물고 간 다음 선원들의 동료가 보는 앞에서 찢어먹었다. 이 곰들은 해변으로부터 아주 멀리 떨어진 무장선에도 승선해 공격하려 한다고 알려졌으며, 때떄로 엄청난 노력 후에 격퇴되었다."
+
+    -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I,
+     p. 2. 1800.
+%%%%
+potion of curing
+
+치료 물약:
+
+"하지만 네가 '위스키'라고 말할 때 너는 대화의 윤활유, 철학적 와인, 좋은 친구들과 함께 있을때 소비하는 음료, 그들의 심장에는 노래를 입술에는 웃음을 주며 눈에는 따스한 만족의 빛을 담기게 하는 것을 의미하겠지...그리고 난 확실히 이것 때문에 존재하는 거야"
+    -Noah S. Sweat, Jr. "If By Whiskey". 1952
+%%%%
+potion of poison
+
+독 물약:
+
+"하지만 네가 '위스키'라고 말할 때 너는 악마의 음료,  독의 재앙, 잔혹한 괴물, 순수의 오염, 폐위된 이유이고, 집을 파괴하고,  빈곤과 가난을 만드는 것으로, 그래, 문자 그대로 어린애 입에서 빵을 뺏는, 그런 것들을 의미하겠지... 그리고 난 확실히 그것이 싫어."
+    -Noah S. Sweat, Jr. "If By Whiskey". 1952
+%%%%
+quasit
+
+콰짓:
+
+"넌 두배로 계산해서 받아야할거야;
+ 니 재주에 대해서 마땅히 보답받아야한다구."
+    -요한 볼프강 폰 괴테, _에그몬트_, I, 1. 1788.
+     1914년 안나 스완익에 의해 번역됨.
+%%%%
+rakshasa
+
+락샤사:
+
+"바이삼파야나가 말했다. '판다바스가 자는 장소에서 멀지않은 곳에, 하이딤바 라는 이름의 락샤사가 사라수나무 위에 살고있습니다. 엄청난 에너지와 기량을 가지고, 그 락샤사는 잔혹한 살육의 얼굴을 하였고, 날카롭고 긴 이빨로 말미암은 괴물이었습니다. 그것은 배가 고팠고, 인간 고기를 갈망했습니다.
+ 긴 정강이와 커다란 배, 머리털과 수염 둘다 붉은 빛깔이었습니다. 그의 어깨는 나무의 목부분같이 넓었고;
+ 그의 귀는 화살같았고, 그의 다른 특징들도 무시무시했습니다."
+    -_마하바라타_, 아디 파바, 히딤바-바다 파바, CLIV부분. 기원전 500년 경.
+     1883년 키사리 모한 강굴리에 의해 번역됨.
+%%%%
+rapier
+
+레이피어:
+
+"누가 처음에 그 날카로운 칼을 벼려낸것인가?
+ 그의 사나운 혼이 만들어낸 강인한 무기를..."
+    -알비우스 티불루스, _애가_ I, xi. 기원전 25년 경.
+     1822년 제임스 그레인저에 의해 번역됨.  
+%%%%
+reaper
+
+사신:
+
+"우리의 시간이 왔어.
+ 근데 이제 그들은 사라졌지.
+ 사계절은 사신을 겁주지 못해,
+ 바람이 불어도, 해가 내리쬐나 비가 오나.
+ 우리는 그들처럼 될 수 있지.
+ 일로와 애기야, 사신에게 겁먹지마."
+    -벅 다르마, 블루 오이스터 컬트, "(겁먹지 마) 사신". 1976.
+%%%%
+salamander
+
+샐러맨더:
+
+"그 예시에 따르면; 샐러맨더는 도마뱀 풍으로 만들어졌고, 별같은 점들이 표시되있고, 사람앞에 나오거나 군중에게 보인적이 없었다고 한다; 갠 날씨에는 그것을 볼 수 없다. 그것은 매우 차가운 안색을 하고있는데, 그것이 불에만 닿으면, 당장 꺼트려서 마치 얼음을 넣은것 같았다. 샐러맨더는 입에다가 우유같은 어떤 독성 물질을 가지고 다니는데, 사람 몸의 노출된 부위에 닿으면, 그곳의 털이 전부 빠진다; 심하게 닿은 부위는 피부의 색이 변하고 흰색 흠집이 생긴다."
+    -가이우스 플리니우스 세컨더스, _자연사_, Book X, xh. LXVII.  79년.
+     1601년 필레몬 홀랜드에 의해 번역됨
+%%%%
+scimitar
+
+시미터:
+
+"박물관 캐비닛과 거대한 도서관이 그것들 스스로에 의해, 아래층을 점거했다 — 거기에는 논란이 많고 양립할 수 없는, 19세기의 역사책들이 있었다; 니샤푸르의 시미터들도 있었는데, 얼어붙은 바람의 조각과 살아있는듯한 전쟁의 폭력성을 지녔다."
+    -호르헤 루이스 보르헤스, _검의 형태_. 1953.
+     앤드류 헐리에 의해 번역됨.
+%%%%
+scorpion
+
+전갈:
+
+"이 유독한 것들은, 절정의 순전한 풍부함과 함께 보내지고, 그 검은 전갈이 있는 곳은 죽음이 모이는 장소이다."
+    -올리버 골드스미스, "사막 마을", I.  351-2. 1770.
+%%%%
+scroll
+
+두루마리:
+
+"내 영혼에 이르기까지 모든 열정을 다하는 것
+ 모든 소리를 낼수있는, 현의 류트가 있는가,
+ 나는 이것을 위해 거져주었던가
+ 나의 오래된 지혜와 소박한 자제력을
+ 나는 생각한다, 내 삶이 소년의 휴일에 휘갈겨쓴
+ 두번쓴 두루마리라고"
+    -오스카 와일드, _슬프도다!_.  1881.
+%%%%
+scythe
+
+낫:
+
+"본능이었다. 번개에 맞았는데 아프지 않았다는 것처럼 비논리적이다. 매일 곡식을 잘라내야 한다. 잘라냈었어야 했다. 왜냐고? 그랬으니까, 그게 다다. 그는 큰손에 있는 낫을 향해 웃었다. 그리고나선 휘파람불고, 익은것들 쪽으로 갔다놓고 밭에서 대기했다가 곧 곡식을 잘라갔다. 그는 그자신을 약간 화가났다고 생각했다.  지옥인가, 그냥 평범한 크기의 밀밭인데 정말, 안그래?"
+    -레이 브래드버리, _낫_. 1943.2
+%%%%
+silent spectre
+
+침묵의 유령:
+
+"소리없는 침묵이 있고, 소리없을지도 모르는 침묵,— 차가운 묘지나, 깊고 깊은 바다 아래라던가,
+ 아니면 아무도 찾지 않은 넓은 사막이다."
+    -토마스 후드, "침묵". 19세기 초
+%%%%
+simulacrum
+
+시뮬라크르(환영):
+
+"그 시뮬라크르(환영)는 이제 숨었고, 진실도 아니고, 사실은 아무도 없다는 것이다. 다시 말하자면, 연속되는 것은 존재하지 않는 것이다."
+    -장 보드리야르, "급진적인 생각". 1994.
+     1995년 프랑수아 데브릭스에 의해 번역됨.
+%%%%
+siren
+
+세이렌:
+
+"배를 저어나가다, 들려오는 목소리의 근처에 들어서면, 세이렌들이 곧 알아차렸고, 우리의 소음이 없이, 아주 강력한 매료를 거는 달콤한 운율로 노래했고, 이것들을 무리의 배운 사람들이 세이렌의 노래를 만들었다:
+ '여기로 오세요. 이 세상에서 찬미할 가치있는 그대, 그리스인의 영광을 드높이는, 정말 고결한 율리시스! 그대의 배에 머물러, 그 노래를 듣는 그 누구도 지나치지 못한, 노래는 그의 귀를 향해 흘러들어가 황홀함을 남겼고, 좀더 교육받은 우리들로서도, 전에 들었던 어떤 노래보다도 더 그랬다. 왜냐하면 우리가 아는 모든것은 정말이지 트로이의 노동자들에게 널리 알려진 것들 뿐이었다. 그리스인들과 트로이인들은 모두, 신들이 운명지어준 이런 격한 문제들을 견뎌냈다. 틀림없이 대지 전체가, 가치있는 지식을 알려주는 형태로 볼수 있다."
+    -호메로스, _오디세이아_, XII, 268-82.
+     1857년 조지 채프먼에 의해 번역됨.
+%%%%
+sixfirhy
+
+식스파이리:
+
+"나는 조소하는 입을 보았다. 용해된 쇠가 흘러내리는 듯한 미소였다. 그 웃음은 딸깍거리는 손톱소리로 가득했다. 이것은 입에 대한 어린아이의 꿈이었다.  주먹이 입을 때렸다: 전자적인 손목과 어깨에 의해 움직인 청회색의 주먹에 의해서. 이것은 팔에 대한 어린아이의 꿈이었다. 그 주먹이 입을 계속해서 때리고, 또다시 때렸다. 그 입은 용해된 철을 흘렸고,  딸깍거리는 손톱의 웃음소리를 내며 웃었다. 그리고 주먹이 때릴수록 그 입은 더 웃었다. 대답하는 그 입을, 그 주먹은 계속 내리쳤다."
+    -칼 샌드버그, "가고일", _콘허스커_. 1918.
+%%%%
+skeletal archer
+
+해골 궁수:
+
+"모든 악령의 영광을 위하여 승리를 드높여라
+ 고통엔 고통을,
+ 피에는 피
+ 이교도의 전사는 앞으로 빨리 가라
+ 활이 불타는 화살을 쏘려한다..."
+    -Mastiphal, "모든 악령의 영광을 위하여", 1955.
+%%%%
+skeletal warrior
+
+해골 전사:
+
+"말해라! 말해라! 너의 무서운 손님을!
+ 누구냐, 그 푹 꺼진 가슴에
+ 투박한 갑옷을 입고있는,
+ 날 겁주려 온 자는!
+ 동방의 향유를 두르지않고,
+ 그 살점없는 손바닥을
+ 구걸하듯 뻗어오는데,
+ 왜 너는 나를 괴롭히느냐?"
+    -헨리 워즈워스 롱펠로, "갑옷을 입은 해골". 1841.
+%%%%
+sky beast
+
+하늘 짐승:
+
+"그녀의 어머니는 노후를, 집안 전체가 누전된다는, 끔찍한 의심 속에서 살았다."
+    -제임스 서버, _내 삶과 힘든 시기_.  1934.
+%%%%
+sling bullet
+
+슬링 탄환:
+
+"어떤것이 일단 실행으로 옮겨질때면, 기민함에 비교될 비밀은 없다; 공기 중에서의 탄두의 움직임처럼, 너무 빠르게 날아서 눈보다 빠르게 움직인다. "
+    -프랜시스 베이컨, _에세이_, "지연에 대하여". 1625.
+%%%%
+small abomination
+
+작은 흉물:
+
+"안돼 — 그 방법은 전혀 아니야. 그건 어디든 있어
+— 젤라틴 —  슬라임은 아직, 모든 기억너머의 공포의 일천가지 모양을 갖추지 못했다.
+거기에 눈들이 있고 — 그리고 흠집도 있다. 구멍도 있고 — 큰 소용돌이 —  완벽한 흉측한 것이다.
+카터, 이건 형언할 수가 없어!"
+    -H. P. 러브크래프트, _형언할 수 없는것_.   1925.
+%%%%
+snapping turtle
+
+늑대 거북:
+
+"잠시후에 그들이 마을에 왔다. "자 그런데," 늑대 거북이 말했다, "아침 일광중에, 내 친구들과, 우리가 공격을 시작할거야. 난 거기 제일 먼저 갈꺼야," 호전파의 리더가 그들에게 말했다.
+
+"좋은데?" 또 다른 작은 이가 말했고,
+"너 우리보고 그러라고 하는것같다?" 라고 그들이 늑대 거북에게 말했다.
+"저기," 늑대 거북이 말했다,
+"진짜로 지금 니들한테, 내가 할 작정이라고 말하는 거라고." 그래서 늑대 거북은 말했다.
+"지금이 이 마을 쪽으로 들어오기 시작할 시간이야.  해가 지고, 하늘의 아침이 오는 방향이 붉게 빛나면, 진짜 그땐 그 우두머리의 딸도 죽일거야. '우와 저기봐, 우리 동지가 그년을 죽였어!' 라고 니들은 가슴으로 생각할거다. 니네가 시끄럽게 떠들고 싶을때, 소리지르라구. 지금은 니들도 이 마을을 공격할 시간인거야."
+이렇게 해서 늑대거북은 젊은 애들한테 그 사실을 말했다.
+
+"괜찮아!"  다른 작은 동지들에게 말했다."
+    -"늑대 거북이 전쟁에 나갔을때", _미국인의 출판물
+     민족학의 사회, 볼륨 IX: 키카푸 이야기_    1915.
+     트루먼 마이켈스 에 의해 번역됨.
+%%%%
+tentacled monstrosity
+
+촉수괴물
+
+"거대한 무덤에 있는 저 열려있는 낙하문 바깥으로 기어나오고 밀려올라오는 무언가를, 나는 그런 믿을수없는 거대한 흉물을 언뜻 보았었고, 단순히 시야에 들어도 죽임당할것같은, 그것에 내재한 그 힘을, 의심하지 않을수 없었다. 심지어 지금도 나의 언어구사 능력으론 그것에대해 어떤 말도 꺼낼수 없다.  난 그것을 거대하고 — 촉수가 달려있고 — 코끼리 종류같고 — 문어같은 눈에 — 반쯤 형태가 없고 — 가짜같고 — 부분적으로 비늘로 덮이고 주름이 있었던것 같은 — 웩!"
+    -H. P. 러브크래프트와 헤이절 힐드, "영겁으로부터", _기묘한 이야기들_, 25, 넘버 4, 페이지 478-96. 1935년 4월.
+%%%%
+titan
+
+타이탄:
+
+"그리고 타이탄들의 다른 일부는 열심히 자신의 지위를 강화했고, 두 쪽에서 한번씩 그들이 소유한 작품과 그들의 권능을 뽐냈다. 그 끝없는 바다는 사납게 요동쳤고 대지는 굉음을 내며 붕괴했다: 넓은 하늘은 흔들리고 신음했다. 그리고 높은 올림푸스 산은, 불멸의 신들의 관할인 지반부터 비틀거렸고, 육중한 흔들림이 타르타로스 틈새에 닿았고, 끔찍한 시작에서의 깊은 소리에는 그들이 발딛음과  단단한 투척무기의 것이 있었다. 그리고나서 타이탄들은 그들의 무거운 창을 서로 내보냈고, 그들이 외친 두 무장한 병력의 외침은 별이 반짝이는 하늘에 닿았다; 그리고 그 외침들이 만나 전투의 함성을 이루었다."
+    -헤시오도스, _신들의 계보_, 기원전 8세기.
+     1914년 H. G. 이블린 와이트에 의해 번역됨
+%%%%
+toadstool
+
+도깨비 버섯:
+
+"근데 그 집사가 파리잡는 독버섯을 모아왔다구."
+    -아담 미키에비치, _판 타데우슈_, III. 1834.
+     1917년 G. R. 노이즈에 의해 번역됨.
+%%%%
+toenail golem
+
+발톱 골렘:
+
+"멋들어진 양말이 그것들을 날마다 소중히했고, 가죽으로 만들어진 신발이 그것들을 보호하나, 내 발가락들은 거의 의식하지 않았다. 그것들이 흥미있는 것은 발톱을 드러내는 것이 전부였다—뿔같은 재질의 반투명한, 신축성있는 얇은 판은, 무엇을 위한 방어수단인가?
+    -호르헤 루이스 보르헤스, "발톱".   1960.
+     1998년 앤드류 헐리에 의해 번역됨.
+%%%%
+training dummy
+
+연습용 허수아비:
+
+"그것들은 오직 마네킹들이고 심지어 세계사-적으로 대단한 사건들은 오직 무의미한 시선을 교환할, 가치없는 천함과 진부함을 지닌 의상이다.
+    -발터 벤야민, _실험의 초안, 마리화나와 아편, 매스칼린    1927-1934_, "초안 II : 두번째 마리화나 느낌의 하이라이트".  15.    1928년 1월
+     trans. Scott J. Thompson, 1997.6$.
+%%%%
+trident
+
+삼지창:
+
+"하루나 이틀이 걸리는 심심풀이로 알려진바 없이,  그것들은 사격과 사냥의, 일반적인 숲의 유흥으로 구성되어있고, 그때문에 읽는 사람을 붙잡아둘만큼 충분히 흥미로운 것이 아무것도 없었다. 우리는 스코틀랜드에서 어느정도 기이한, 일종의 연어 사냥이라고 불려지던 한가지를 끝냈다. 이것은 추적하는것으로 물고기는 쫒기고, 파괴자라고 불리는 일종의 길다란 삼지창인, 사나운 창에 꿰어진다. 이것은 에스크 강의 입구에서 많이 연습되었고, 스코틀랜드의 연어가 다니는 강에서도 연습이 이루어졌다.
+    -월터 스콧 경, _남성의 예의범절_, ch. XXVI.   1815.
+%%%%
+troll hide
+
+트롤 가죽:
+
+"트롤 킹: 들어라 피어공주, 이유를 들어 포기하도록 해라!  너는 트롤에 적합하지않다. 왜냐고?
+ 봐라 이미 너 자신이 트롤같은 옷차림을 참고있잖느냐! 그런데도 네가 우리처럼 되길 원한다는것인가? 안그런가?
+페르 귄트: 그래요. 부유한 나라의 신부가 되는것 대신에, 무언가를 희생하는게 싫어요; 그치만 모든것은 태생의 한계가 있어요.
+ 난 꼬리를 달고 있죠, 맞아요; 그치만 나는 우리친구들이 묶어놓은 매듭을 풀수있고 그것을 벗을 수 있어요.
+ 난 내 반바지를 벗었어요;  그것은 낡고 얼룩졌거든요; 내가 마음만 먹는다면 그것들을 걸치는 일은, 방해가 되지 않아요.
+ 당신들 트롤이 사는 방식을 따른다는게 그것만큼 쉽다는 것을 알겠어요. 난 숫소의 신부가 되겠다고 맹세할수도 있는걸요;
+ 맹세는 취소하기 어려운것이 아니니까요. 그래도 그걸 아는 사람이 그의 자유를 얻을순 없네요
+ — 인간으로서 죽는것조차 — 산의 트롤 한마리로서의 나날을 끝내는것조차 — 절대 돌아가지않아요 분명히 당신이 말한대로는 — 그게 내가 받아들일수 없는 한가지에요.
+    -헨릭 입센, 페르 퀸트_ . 1867.
 %%%%
 vampire bat
 
-“For something is amiss and out of place
- When mice with wings can wear a human face.”
-    -Theodore Roethke, “The Bat”. 1938.
-%%%%
-very ugly thing
+뱀파이어 박쥐:
 
-“All the infections that sun sucks up
- From bogs, fens, flats, on Prosper fall and make him
- By inch-meal a disease! His spirits hear me
- And yet I needs must curse. ”
-    -William Shakespeare, _The Tempest_, II, 2. 1611.
+"무언가가 잘못됬고 부적절하다고 느낀 동안에
+ 그때 날개를 단 쥐새끼가 인간의 얼굴을 하고있다."
+    -시어도어 로스케, "박쥐".    1938.
 %%%%
 vine stalker
 
-“The monstrous plant bud . . . had grown again with preternatural rapidity,
-from Falmer's head. A loathsome pale-green stem was mounting thickly, and had
-started to branch like antlers after attaining a height of six or seven inches.
- “More dreadful than this, if possible, similar growths had issued from the
-eyes; and their stems, climbing vertically across the forehead, had entirely
-displaced the eyeballs.”
-    -Clark Ashton Smith, “The Seed from the Sepulcher”. 1933.
-%%%%
-wand
+바인 스토커:
 
-“[The principle of selection] is the magician's wand, by means of which he may
-summon into life whatever form and mould he pleases.”
-    -William Youatt, _Sheep: their breeds, management, and diseases; to which
-     is added the Mountain Shepherd's Manual_, ch. III. 1837.
-%%%%
-wand of acid
-
-<wand>
-%%%%
-wand of confusion
-
-<wand>
-%%%%
-wand of digging
-
-<Passwall spell>
-%%%%
-wand of disintegration
-
-<wand>
-%%%%
-wand of enslavement
-
-<Enslavement spell>
-%%%%
-wand of flame
-
-<wand>
-%%%%
-wand of iceblast
-
-<wand>
-%%%%
-wand of lightning
-
-<wand>
-%%%%
-wand of paralysis
-
-<wand>
-%%%%
-wand of polymorph
-
-<wand>
-%%%%
-wand of random effects
-
-<wand>
+"그 괴물같은 식물의 싹. . .이 팔머의 머리로부터 초자연적인 속도로 또 자라났었다. 혐오스러운 담록색 줄기가 잔뜩 타고 올라왔었고, 6에서 7인치에 이르러서는, 사슴뿔처럼 가지를 뻗어내기 시작했다.
+ "이것보다 더 두려운것은, 혹시 가능하다면, 눈으로부터도 비슷한 성장이 일어날수 있다는 것이다; 그리고 그것의 줄기는 이마쪽으로, 수직으로 올라오고는 눈알을 완전히 뽑아낼 것이다."
+    -클락 애쉬톤 스미스, "무덤에서 온 씨앗".   1933.
 %%%%
 wandering mushroom
 
-“Telimena, wearied with the prolonged wrangling, wanted to go out into the
-fresh air, but sought a partner. She took a little basket from the peg.
-“Gentlemen, I see that you wish to remain within doors,” she said, wrapping
-around her head a red cashmere shawl, “but I am going for mushrooms: follow me
-who will!” Under one arm she took the little daughter of the Chamberlain, with
-the other she raised her skirt up to her ankles. Thaddeus silently hastened
-after her—to seek mushrooms!”
-    -Adam Mickiewicz, _Pan Tadeusz_, II. 1834.
-     trans. G.R. Noyes, 1917.
+방황하는 버섯:
+
+"텔리메나는, 그 연장된 논쟁으로인해 지쳤고, 맑은 공기를 쐬고 싶었지만, 동료 한명을 찾았다. 그녀는 못이든 작은 바구니를 가졌다. "여러분,  여러분이 문 안쪽에 남아있길 원하는걸로 저는 보는데요," 그녀가 붉은 캐시미어 숄을 머리에 감싸며 말했다, "그래도 전 버섯을 찾으러 갈거에요: 같이 가실분 오세요!"  한쪽팔 아래에 그녀는 시종의 어린 딸을 데리고, 다른쪽 팔로는 무릎까지 그녀의 치마를 올려놓았다. 다데우스는 잠자코 그녀를 따라 서둘러 갔다—버섯을 찾으러!"
+    -아담 미키에비치, _판 타데우슈_, II.   1834.
+     1917년 G. R.  노이즈에 의해 번역됨.
 %%%%
 war axe
 
-“‘God speed the kiss,’ said Max, and Katie sigh'd,
- With pray'rful palms close seal'd, ‘God speed the axe!’”
-    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
-     Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
+전투 도끼:
+
+"'이건 안녕의 키스야,'  맥스가 말했다, 그리고 케이트는 한숨쉬며 기도하는 손을 가까이 모으고는, '그건 안전을 비는 도끼야!'"
+    -이사벨라 발랑시 크로포드, "말콤의 케이티: 사랑 이야기", 파트 I, 옛 유령들의 구절, 말콤의 케이티 와 다른 시들_.  1884.
 %%%%
 war gargoyle
 
-“Their innumerable sculptures of demons and dragons assumed a lugubrious
-aspect. The restless light of the flame made them move to the eye. There were
-griffins which had the air of laughing, gargoyles which one fancied one heard
-yelping, salamanders which puffed at the fire, tarasques which sneezed in the
-smoke. And among the monsters thus roused from their sleep of stone by this
-flame, by this noise, there was one who walked about, and who was seen, from
-time to time, to pass across the glowing face of the pile, like a bat in front
-of a candle.”
-    -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
-     trans. Isabel F. Hapgood
-%%%%
-wolf
+전쟁 가고일:
 
-“Teacher: How does a dog smell?
- Student: I don't know.
- Teacher: Correct!”
-    -Traditional Spanish joke.
+"그들의 수많은 악마와 드래곤의 조각상들은 우울한 양상을 띠었다. 들썩거리는 불빛은 그것들의 눈을 움직이는것처럼 만들었다. 그리핀들은 허공에서 웃는듯 있었고, 서로를 원하는 가고일들에게서는 비명지르는 것이 들렸고, 샐러맨더들은 불에서 숨을 내쉬고, 용모양 조각상들은 연기속에서 재채기했다. 그 괴물들 사이에서 불꽃과 소음에 의해, 그것들이 석상의 수면으로부터 깨어나게 했고, 때때로 양초앞의 박쥐처럼 빛나는 얼굴을 한 석상 무더기를 가로질러서, 돌아다니는 것과 목격되는 것도 있었다."
+    -빅토르 휴고, _노트르 담의 꼽추_, 10, 챕터 IV. 1831.
+     이사벨 F. 햅굿에 의해 번역됨
 %%%%
 water nymph
 
-“Oh, but you can't expect to wield supreme executive power just because some
-watery tart threw a sword at you.”
-    -Monty Python and the Holy Grail, 1975.
-%%%%
-whip
+물의 요정:
 
-“Not with a Club, the Heart is broken
- Nor with a Stone —
- A Whip so small you could not see it
- I've known
- To lash the Magic Creature
- Till it fell,
- Yet that Whip's Name
- Too noble then to tell.”
-    -Emily Dickinson, “Not with a Club, the Heart is broken”. ca. 1865.
+"오, 근데 택도 아닌 촉촉한 여자가 너한테 칼 한자루 던져줬다고 절대권력을 휘두를순 없어."
+    -몬티 파이톤의 성배, 1975.
 %%%%
 wight
 
-“Unhappie wight, borne to desastrous end,
- That doth his life in so long tendance spend!”
-    -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
-%%%%
-witch
+와이트:
 
-“Thou shalt not suffer a witch to live.”
-    -KJV Bible, Exodus 22:18.
-%%%%
-wizard
-
-“Each family or tribe has a wizard or conjuring doctor, whose office we could
-never clearly ascertain.”
-    -Charles Darwin, _The Voyage of the Beagle_, ch. X. 1839.
+"불행한 사람은, 비참한 끝으로 향하고, 그 사실이 그의 인생을 오랜기간 그런식으로 쓰여지게 했다!"
+    -에드문드 스펜서, "어머니 허버드의 이야기".
 %%%%
 worm
 
-“While the angels, all pallid and wan,
-   Uprising, unveiling, affirm
- That the play is the tragedy, ‘Man’,
-   And its hero, the Conqueror Worm.”
-    -Edgar Allan Poe
+벌레:
+
+"천사들 사이에, 모든 창백하고 허약한, 폭동과 개막식에 대해서 그 놀이는 비극이다 라고 단언한, '남자'와 그것의 영웅, 정복자 구더기."
+    -애드가 앨런 포
 %%%%
 wraith
 
-“God, though this life is but a wraith,
- Although we know not what we use,
- Although we grope with little faith,
- Give me the heart to fight—and lose.”
-    -Louis Untermeyer, “Prayer”. 1919.
+망령:
+
+"신이시여, 비록 산자가 아니라 망자이나,
+ 비록 우리가 어떻게 쓰일지 알지 못하나,
+ 그럼에도 우리는 작은 믿음을 더듬으니,
+ 우리에게 싸우고—잃어버릴, 심장을 주소서 ."
+    -루이스 언터마이어, "기도". 1919.
+%%%%
+__cap-K_suffix
+
+코볼트류:
+
+"북쪽 지역은 많이 놀래키는, 도깨비들도 함께 살았는데, 오아르를 찾기위해 그들은 여기저기를 파헤쳤다. 그리스인과 독일인들은 그들을 코발리 라고 불렀다."
+    - 토마스 헤이우드, _축복받은 천사의 계급_, 책 IX, I. 568. 1635.
+%%%%
+bardiche
+
+버디슈:
+
+"공화국은 달단족의 급습을 막기위해 언제나 7~8천 가량의 상비군을 국경지역에 유지한다. 왕은 이런 병사들을 유지하지 않았다. 그는 앞잡이들-'시멜레스'와 '예니체리'-에게만 봉급을 주었다. 처음 언급한 공화국 상비군들은 큰 단추를 달고 주석 도금을 한 파란 옷을 입고있다. 그리고 펠트로 만든 챙 없는 모자를 머리에 쓰고있다. 그들은, 그들이 말하기로, 매우 좋은 무기인 화승총과 버디슈를 갖고있다."
+    -존 핑커턴,_ 세계 전체의, 최고에 가장 흥미로운 항해와 여행의 종합 모음집, 영문번역판. 새 개정판_.    1808.
+%%%%
+dryad
+
+드라이어드:
+
+로이 키호테: 잠깐만, 청정 에너지로 조리된 내 소고기는 또 뭐야?
+ㅡ더콘 판사: 몰라 근데 너만 좋다면, 난 시골에서 싱싱하게 자란 복숭아 과수원을 알아.
+    -리처드 벌류, "하레오와 줄리안"
+%%%%
+elephant
+
+코끼리:
+
+"그리고 왕이 맹인들이 있던 곳에가서, 다가가면서 그들에게 말했다:
+  '코끼리가 어떻게 생긴지 알고 있나?'
+  '분명히 압니다. 왕이시여: 우리는 코끼리가 어떻게 생긴지 알고 있습니다.'
+  '그러면 말해다오, 맹인들이여, 코끼리가 어떤지.'
+ 그리고 맹인들 중에 코끼리의 머리를 느껴본 맹인이 오 비히쿠스에게 말했다.
+  '이것은 큰 원형 항아리 같습니다.'
+ 귀를 만저본 이가 말했다.
+  '키질하는 바구니 같습니다.'
+ 상아를 만져본 사람이 말했다:
+  '이건 쟁기의 날 부분인거 같습니다.'
+ 코를 만져본 이가 말했다:
+ '이것은 쟁기같습니다.'
+ 몸뚱이를 만져본 이가 말했다:
+  '이것은 곡창같습니다.'
+ 다리를 만져본 이가 말했다:
+  '이것은 기둥같습니다.'
+ 등을 만져본 이가 말했다:
+  '이것은 막자사발 같습니다.'
+ 꼬리를 만져본 이가 말했다:
+  '이것은 막자 같습니다.'
+ 꼬리의 술을 만져본 이가 말했다:
+  '이것은 빗자루 같습니다.'
+ 그리고 맹인들 전부 서로
+  '이런게 코끼리다, 이런건 코끼리가 아니다, 코끼리는 그렇게 생기지 않았다, 그렇게 생겼다.'
+ 주장하며 주먹다짐을 했다.
+ 그리고 왕 오 비히쿠스는 크게 기뻐했다."
+    -_열반경_, VI  "맹인모상" 기원전 5세기
+     Dawsonne Melanchthon Strong이 영문 번역하여 옮김
+%%%%
+eveningstar
+
+이브닝스타:
+
+"이것은 피 흘리는 것을 목표로 하며 뇌를 끄집어 내는데 아무런 가책을 느끼지 못하는 노르만 사제가 가장 선호하는 무기였다고도 전해진다."
+    -T. M. 앨리슨, "플레일 그리고 관련된 도구들 (역사적이고 문학적인 관점에서)", _고고학적 아엘리아나_, 세번째 시리즈, 볼륨 IV.    1908.
+%%%%
+lasher statue
+
+채찍질 석상:
+
+"순간 노예가 되어
+ 그 몸은 잔혹함에 바쳐졌지
+ 살갖에 채찍이 휘둘리고
+ 살점이 튀고, 등이 찢겼지"
+    -Samael, “Flagellation”. 1994.
+%%%%
+leather armour
+
+가죽 갑옷:
+
+"쓸모없는 것은 방어구의 쇠 이음새와 같이 인종을 바꿀 수 있다."
+    -윌리엄 블레이크, "순수의 예언", 99-100. 1803.
+%%%%
+slave
+
+노예:
+
+"누가 반역자인가? 누가 군대를 일으켰는가? 드물게, 하지만 거의 항상 억압하는 자야말로 노예가 된다. "
+    -에밀 시오랑_역사와 유토피아_ 1798
+%%%%
+slime creature
+
+슬라임:
+
+"그 엄청 짙은 물체는 썩어빠진 것이었다. 오 18!  진짜 뭔가 해야한다! 좋아, 저 끈적한 게 끈적한 바다로 기어가네."
+    -사무엘 테일러 콜리지, "옛 선원의 시".  1798.
+%%%%
+spatial vortex
+
+공간의 소용돌이:
+
+"그것은 우주 바깥의 색이었다.ㅡ 우리가 아는 모든 속성을 뛰어넘은 무한의 다 형성되지 않은 영역으로부터의 무서운 전달자; 그 영역으로부터의 단순한 경험을 가진 이들은 뇌가 마비되고, 우리를 시커먼 우주 밖의 격차로 우리를 무기력하게 한다. 우리의 광란한 눈들 보다 먼저 그것은 열렸다."
+    -H.P. 러브크래프트, "우주 바깥의 색채". 1927.
+%%%%
+spectral thing
+
+유령:
+
+"굶주린 바람에 나의 유령이 당신을 뒤따른다네"
+    -윌리엄 블레이크, "부서진 사랑", 약 1800년 경
+%%%%
+staff of fire
+
+불의 지팡이:
+
+"그 마법사는 갑자기 신의 말들을 기억해냈다. 그는 모든 생물들과 지상의 인간들을 기억해내고, 불은 그의 아들이 유령이 된것을 상기시키는 유일한 것이었다. 그 기억은 처음에는 그를 진정시켰으나, 결국 그가 고통받는 것으로 끝났다. 그는 그의 아들이 비정상적인 특권을 꾀하는 것을 걱정했고, 어떤 방법으로 그가 단순한 복제품임을 알아냈다. 살아있는 이가 아니라, 또다른 꿈의 투사체였다-얼마나 비할데 없는 굴욕이요, 미친 짓인가!"
+
+    -호르헤 루이스 보르헤스, _원형 유적_.  1940.
+     1962년 앤서니 보너에 의해 번역됨
+%%%%
+starcursed mass
+
+저주받은 덩어리:
+
+"저 별이 사라지는걸 보았니?
+ 그게 불타 보였어.  
+
+ 저 작은 별도 사라졌고,
+ 너의 작은 눈도 사라졌네. 
+
+ 우리 불에탄 작은 소망들이 감춰졌지
+ 별들이 빛나는 곳까지 ."
+
+    -Thee Silver Mt. Zion, "I Built Myself a Metal Bird". 2010.
+%%%%
+sun demon
+
+태양의 악마:
+
+"그가 서쪽 하늘에 있는, 구름이 생길때 늘어지는 그 그림자를 보게 하라."
+    -존 드라이덴, "압살롬과 아히토펠", I, 268. 1681.
+%%%%
+tomahawk
+
+토마호크:
+
+"그들이 그 날카로운 나이프를 뽑게 두어라 그리고 가장 신속한 토마호크를 돌려라. 그들의 가장 쓰라린 적은 그들의 손 안에 있다."
+    -제임스 페니모어 쿠퍼, "모히칸의 최후", 1826
+%%%%
+ufetubus
+
+우페터버스:
+
+"우리는 드워프나 악마의 언어로 소리치는 것을 허락 받았다" 
+    -체스와프 미워시, "과업"
+%%%%
+A labyrinth entrance
+
+미궁의 입구:
+
+"전후방에 시야를 가진, 미로 탐험가들은 심하게 찌그러지고 분열되었고, 혼란을 겪었다. 도표상으로 그 전체 패턴을 본 미로의 관조자들은 미로의 복잡한 예술가적 기교에 현혹되었다. 동시에 당신이 보는 것은 당신이 서있는 곳에 의해 결정되므로, 미궁은 하나 (하나의 물리적 구조물이 있다)이고 둘이다: 그것들은 끊임없이 계속 질서와 무질서, 명석함과 혼란, 집결과 분열, 예술적 기교와 혼돈을 만들어냈다."
+    -Mark Z. Danielewski, "나뭇잎들의 집". 2000.
+
+"내가 미궁에서 나오던 날 까지,
+ 길고 메아리치는 통로들에 현혹되었고,
+ 재빠른 반동이 너무 많이 일어나, 나는 거의 두려웠지
+ 난 어떤 부드러운 코너에서 돌아오는 나 자신을 만났다네,
+ 나 자신이든 나의 유령이든, 거기 있는 모든것은 사실이 아니였어
+ 지푸라기의 흩날림이 멈췄을 때
+ 그 황소는 짚더미 위에 쓰러져 죽어 있었고 나는 살아있었지,
+ 피가 튀었고, 죽었건 살았건 난 말할 수 없었어
+ 공허의 황혼에서"
+    -에드윈 뮤어 "미로". 1949
+%%%%
+Awaken Forest spell
+
+숲 일으키기:
+
+ •헬 : [죽은 채로] 전염! 그녀는 내꺼다!
+ —토르: 조각을 보아 그녀는 용감히 싸운 느릅나무였다!
+ •헬: 나무는 안움직이는 식물이다, 등신아!
+ —토르: 용기는 한계를 모른다!
+    -리처드 벌류, 오더 오브 더 스틱, #874
+%%%%
+Geryon
+
+게리욘:
+
+"오케아노스의 자랑스러운 딸 칼리레오와
+ 결혼한 크리사오르는 세 머리 게리욘의
+ 아버지였다.
+ 그러나 게리욘은 에리테이스 섬에서
+ 그의 꾸물대는 가축옆에서
+ 그 위대한 힘의 헤라클레스에게 죽었는데,
+ 그날은 헤라클레스가 넓은 얼굴의 가축을 몰아
+ 성스러운 티린스쪽으로 갈 때였고,
+ 그가 오케아노스의 물줄기를 건널때 오르토스와
+ 소몰이 에우리티온을 음울한 목초지에서 죽였는데,
+ 굉장한 오케아노스도 어쩔수 없었다."
+    -헤시오도스, 신들의 계보
+%%%%
+Kirke
+
+키르케:
+
+"자, 키르케의 집에 있는 너의 동료가
+ 빗장친 돼지우리에 돼지처럼 처박혀있다.
+ 그들을 풀어줄껀가?
+ 그게 아니지, 말했잖아.
+ 너만 돌아가면 안된다고,
+ 니가 거기에 그들과 남아야지." 
+    -호메로스, 오디세이아
+%%%%
+Menkaure
+
+멘카우레:
+
+"너희들은 이집트 사람이니, 너희 왕의 말을 들어야 한다!
+ 내가 간다, 그리고 돌아오지않을 것이다.
+ 그러나 그 위대한 신들의 의지는 분명하다;
+ 너희는 반드시 세가지 행동을 해내야한다,
+ 멋진 열정을 갖는 것, 신들의 발 아래에서 그들의 기쁨을 채우기위해, 열성적으로 일하는 것;
+ 그리고 그들의 찬사를 거두는 일이다.
+ 신들의 찬사는, 풍요롭고 관대한 낮의 시간이다."
+ -매튜 아놀드, _멘카우레_
+%%%%
+Natasha
+
+나타샤:
+
+"그것은 다른 모든 맹수의 종들 중에 고양이과에 속해있는 모습을 하고있었고, 어떤 이유와 표현으로 그것들은 서로를 이해했다. 그러나 그 고양이를 건드리자:
+ 그것이 고양이보다는, 늙은 노파나 마녀같다 라는 느낌을 받았다. 마녀들을 대할때는 그런 모습이 종종 사라져있고, 그것들은 흔히 고양이는 아홉개의 목숨을 가지고 있다라는 속담을 떠올리게한다. 다시말하자면  마녀가 고양이의 몸을 9번 차지한 것일지도 모른다."
+    -윌리엄 볼드윈, "고양이를 조심해라",  1584
+%%%%
+Summon Demon spell
+
+악마 소환:
+
+"이제 밤의 매우 마력이 충만한 시간이 왔고,
+ 교회뒷뜰이 아가리를 벌리고 지옥이 스스로 숨을 내쉴때
+ 전염병이 이 세상에 퍼진다."
+    -윌리엄 세익스피어, _덴마크의 왕자, 햄릿의 비극_, III, 2.
+%%%%
+bat
+
+박쥐:
+
+"해가 졌다; 밤이 빠른 속도로 찾아왔고, 떨어진 이슬이 여기저기 젖게 했다;  박쥐는 가죽 날개로 공기의 진동을 받아내고, 목이 쉰 부엉이는 비통한 장송가를 부른다."
+    -존 게이, 목동의 일주일, 수요일; 혹은, 퇴석지.
+
+“머지않아 그 박쥐는 날아올라
+ 그의 세속과 격리된 비행을 했다."
+    -윌리엄 세익스피어, _맥베스_, III, 2, line 40.  1605.
+%%%%
+dark maul
+
+다크 마울:
+
+"이정도 크기가 적당하겠군."
+    -다지미치 왕자, "카이코와 코코스: 다지미치와의 전투", 야누스 크리스티아
+%%%%
+falchion
+
+팔치온:
+
+"난 그날을 목격했지, 내 아주 날카로운 팔치온을 가진채
+ 나는 그것들을 그냥 넘겨왔었지: 이제 나는 늙었고, 이같은 시련들이 나를 망치려 드네."
+    -윌리엄 셰익스피어, _리어왕_, V, iii.   1608.
+%%%%
+pandemonium lord
+
+판데모니엄 군주:
+
+"한편 날개달린 이들이, 최고의 힘을 가진 지휘부에 의해, 위협적인 의식과 트럼펫 소리로 알렸고, 이를 통해서 주인은 당장 판데모니움에서 열릴, 최고위의 사탄과 그의 동료들의, 엄숙한 협의를 선포했다. . ."
+    -존 밀턴, _실낙원_, 책 1권. 1장.  752-7.  1667.
+%%%%
+fire crab
+
+화염 게:
+
+"그 행성은 강철 망치에 껍질이 부서져 소비당하는
+반짝이는 보석으로 장식된 총총 뛰어다니는 게들과
+게 고기를 굽기위해 벌목당하는 숨막힐 정도로 날씬하고 화사한 나무들을 낳았다."
+    -더글러스 애덤스, 은하수를 여행하는 히치하이커들을 위한 안내서
+%%%%
+goblin
+
+고블린:
+
+"휘익, 철썩! 쌩!
+두드려라, 때려라! 울부짖어라!
+일하라, 일! 감히 꾀부리지도 못하도록!
+고블린이 마시고, 고블린이 웃는 동안에도
+머나먼 지하세계를 돌고 돌아
+아래로, 나의 제군들이여!"
+    -J.R.R. 톨킨, 호빗
+%%%%
+golden dragon
+
+황금 용:
+
+"극적으로라도 드래곤을 데리고 오면 안돼
+ 내 목숨을 발톱 사이에서 두고 몸을 일으켜
+ 마차 옆의 깔려있는 나에게 돌진하네"
+    -필립 라킨, "실패에 대하여".  1949.
+%%%%
+griffon
+
+그리폰:
+
+"그리폰이 황무지를 지나, 날아서 갈때 언덕과 황야의 계곡을 넘어서, 아리마스포이 사람을 쫒았는데, 그 사람은 남몰래, 훔친 황금을 지키면서 잠도못자고 관리했다."
+    -존 밀턴, _실낙원_, 책 2권.   1667.
+%%%%
+hell hound
+
+지옥 사냥개:
+
+"그녀가 중간쯤 돌았을때
+ 그치지않는 지옥견들의 울음소리는,
+ 그 케로베로스의 넓은 아가리로 완전 크게 짖었고, 흉칙한 소리를 울렸다;
+ 여전히 그들이 명단에 올릴때, 혹시 그녀의 아랫배나 저쪽의 개집쪽으로 어떤 소음이 불안하게 만들지도 몰라서, 살금살금 갔다;
+ 여전히 짖고있었고, 보이지 않는 곳으로 으르렁거렸다."
+    -존 밀턴, _실낙원_, 책 2권. 1장.  653-659.  1667.
+%%%%
+insubstantial wisp
+
+공허의 위습:
+
+"그럼 안내해주세요, 이브가 말했다. 그는 얽혀있는 길을 신속히 안내했고, 해로운 것을 피하기위해 복잡한 것을 곧바른것처럼 보이게 만들었다. 희망이 커지고, 기쁨이 그의 가슴에서 빛을 발했다. 부유하는 조밀한 불의 유증기에 다다랐을때,  그것에 밤을 응축하여, 냉기가 주위를 둘러쌌고, 불안함이 불꽃과 같이 타들어갔다. 종종 그들이 말하길, 몇몇 악령들은 떠다니고 격렬한 허상의 빛의 형태로 돌아다니고, 그것의 진로에서 보그스와 마이어스에게, 놀라게하는 밤의 배회자 로 오인받았다. 종종 연못이나 웅덩이에 있었고, 거기에 빠져들어 익사한, 오래전 구제를 원하던 것들이였다."
+    -존 밀턴, _실낙원_
+%%%%
+quarterstaff
+
+육척봉:
+
+"그 다음 로빈이 그의 벨트를 풀었고,
+ 그리고 너무 긴 그의 활을 내려놓았다:
+ 그는 또다른 오크 나무 막대기를 집어들었지,
+ 그것은 뻣뻣하고 강했어.
+ ‘만져보게 해줘’ 쾌활한 로빈이 말했네,
+ ‘우리의 싸움을 시작하기 전에;
+ 나는 네것보다 더 긴것을 가지고있지 않았기때문에,
+ 그 이유로 이것은 반칙행위로 계산될거야.’
+ ‘난 길이로 봐주는게 아냐,’ 용감한 아서가 대답했고,
+ ‘내 막대기는 오크 나무를 꺾은거야;
+ 8피트 반이고 송아지를 때려눕힐수 있다고,
+ 그리고 너도 쓰러트릴수 있다고 생각해.’
+ 그직후 로빈은 더이상 참을수 없었고,
+ 그에게 한방 먹였다,
+ 10시가 되기전에, 곧있어 피가 흘러나왔고,
+ 추적하는 두 마리의 야생 맷돼지처럼, 막상막하로 싸워나갔고,
+ 서로를, 팔, 다리, 아니면 어디든지 불구로 만들 목적으로 분투하였고,
+ 한방 한방 그들이 급히 주고받는데 두 시간이 더 걸렸다;
+ 모든 숲에 매 타격음이 울렸고,
+ 매우 격노한 그들이 한 짓이 쌓여갔다."
+    -익명,"로빈 후드와 테너"
+%%%%
+shapeshifter
+
+변형괴물:
+
+"그리고 그 오래된 바다의 신은 심해쪽으로 숨어들었고, 거기서 그의 살이오른 송아지들을 찾았다. 조사하고, 수를 헤아리고는 가까이 가지 않았다. 우리가 사용한 기술은, 우리에게 양이 다섯마리있다고 알려주었다. 그 신의 신전은 그가 달래놓은 양때문에 복잡해졌다; 우리가 들어가자, 싫은 소리를 내서, 우리 모두의 팔을 그 신에게 대담하게 뻗었고, 그 오래된 위조범은 그의 형태를 바꾸는, 작업을 시작했다; 먼저는 갈기숱이 많은 사자였고, 그다음은 드래곤, 얼룩무늬의 표범, 커다란 곰이 다음이었고, 갑자기 물에 뛰어들었다. 마지막에 그는 나무로 변했는데, 끝이 구부러져있고, 하늘을 향해 자라났다."
+    -호메로스, _오디세이아_, IV, 602-14.
+     1857년 조지 챔프먼에 의해 번역됨.
 %%%%
 ynoxinul
 
-“He fixed his eyes upon the door, which, slowly opening, disclosed a stranger
-of majestic form, but scowling features, who demanded sternly, why he was
-summoned? ‘I did not summon you,’ said the trembling student. ‘You did!’ said
-the stranger, advancing, angrily; ‘and the demons are not to be invoked in
-vain.’ The student could make no reply; and the demon, enraged that one of the
-uninitiated should have summoned him out of mere presumption, seized him by the
-throat and strangled him.
+녹시놀:
 
-When Agrippa returned, a few days afterwards, he found his house beset with
-devils. Some of them were sitting on the chimneypots, kicking up their legs in
-the air; while others were playing at leapfrog, on the very edge of the
-parapet. His study was so filled with them that he found it difficult to make
-his way to his desk.”
-    -Charles Mackay, _Memoirs of Extraordinary Popular Delusions_, Vol. III,
-     Part I. 1841.
+"그는 눈을 고쳐뜨고 느리게 열리는 문쪽을 바라보고는, 위풍당당한 모습의 이방인을 드러냈고, 노려보는 얼굴로 준엄하게 요구하는 그를, 왜 그가 불려왔지? '난 널 부르지 않았어,' 벌벌떠는 연구생이 말했다. '니가 했다!' 그 이방인이 전진하며 화난채 말했다; '그리고 악마는 헛되이 불려지지않는다.' 그 연구원은 어떤 대답도 할수 없었다; 그리고 그 악마는 무례하게도 그를 불러낸, 풋내기들중 한명에게 분노하여 그를 붙잡고는 목졸라 죽였다.
+ 아그리파가 몇일 뒤에 돌아왔을때, 그는 그의 집이 악마들에게 고통받는것을 알았다. 그것들 중 몇몇은 굴뚝의 통풍관에 앉아서 다리를 허공으로 찼다; 다른것들은 난간의 끝에서 말뚝박기를 하고 있었다. 그의 연구실은 그것들로 가득해서 그의 책상으로 가는데 어려움이 있음을 알았다."
+    -찰스 맥케이 _대중의 미망과 광기_ 3권 1장. 1841년작
 %%%%
-zombie
+__cap-S_suffix
 
-“It seemed that while the zombie came from the grave, it was neither a ghost,
-nor yet a person who had been raised like Lazarus from the dead. The zombie,
-they say, is a soulless human corpse, still dead, but taken from the grave and
-endowed by sorcery with a mechanical semblance of life—it is a dead body which
-is made to walk and act and move as if it were alive. People who have the power
-to do this go to a fresh grave, dig up the body before it has had time to rot,
-galvanize it into movement, and then make of it a servant or slave,
-occasionally for the commission of some crime, more often simply as a drudge
-around the habitation or the farm, setting it dull heavy tasks, and beating it
-like a dumb beast if it slackens.”
-    -William Seabrook, _The Magic Island_. 1929.
+뱀류:
+
+"후자는 시골에 살았었고, 그리고 그의 집앞에는 오크나무가 있었는데 그곳은 본디 뱀이 살던 둥지였다.
+ 그의 하인이 뱀을 죽였으나, 멜람푸스는 그 뱀을 가여이 여겨 나무를 모아 그 뱀의 사체를 태워주었고, 그 뱀의 새끼들을 데려가 키웠다.
+ 그리고 나중에 그 뱀이 장대히 성장하자, 뱀들은 멜람푸스의 양 어께에 올라가 그의 혀를 핥았다.
+ 그러자 그는 창공을 가르는 새들의 대화를 이해할수 있게 되었고 앞으로 벌어질 일들을 예견할수 있게 되었다."
+    -아폴로도로스, _Library and Epitome_, 1.9.11. circa 150 BC.
+     trans. Sir James George Frazer, 1913.
+
+"얼룩점 드문드문한 뱀 한 마리가
+ 방바닥을 둘러보고 있었죠
+ 모양은 그 벌레였지만
+ 힘을 쓰자 울리는 소리가 났죠"
+    -에밀리 디킨스"겨울에 제방에서". circa 1860.
+%%%%
+__cap-T_suffix
+
+트롤류:
+
+"벅생크 볼드와 엘핀스톤이,  여기서 내가 말할 수 있는것보다 더,
+ 그들은 정말 튼튼한 배를 만들어냈고,
+ 아이슬란드까지 운전할 것이다.
+ 그들은 주갑판에서 격노한 곰처럼 우렁찬 소리를 내는 배를 출발시켰다;
+ 밑바닥 아래로 그 배는 침몰했는데,
+ 역겨운 트롤이 거기서 잡아당겨왔다."
+    -조지 보로, _라벵그로: 학생, 집시, 성직자_. 1851.
+%%%%
+amulet of warding
+
+보호의 목걸이:
+
+[...]보르네오의 여행자의 말에 따르자면: "[...] 마하캄강에서 블루-우 카얀들과 온 무리들이 저를 1897년에 방문햇을때, 어떠한 여성들도 불타고 있는 프레하이딩 나무껍질을 가지고 있지 않으면 집 밖을 나오지도 않았어요, -악마의 영혼을 물리쳐주는 끈끈한 연기를 내뿜기때문이죠."
+    -제임스 조지 프레이저, 황금가지.
+%%%%
+animal skin
+
+동물 가죽:
+
+"그는 고결한 하이어워사를 죽였어요.
+ 그의 거죽으로 벙어리 장갑을 만들고, 털부분은 안쪽으로 살부분은 바깥으로 향하게 만들었어요.
+ 그는, 따스한쪽이 안쪽으로 , 살 안쪽부분은 바깥으로 향하게 만들었어요;
+ 그는 추운 부분을 밖을 향하게 했고 따스한 털부분을 안쪽을 향하게했어요.
+ 그때문에 그는 털부분을 안쪽을 향하게했는데,
+ 왜 그는 살부분을 안쪽으로 만들었을까요,
+ 왜 그는 그것들의 안과 밖을 뒤집어놨을까요."
+    -익명, 캐롤린 웰스의 A Parody Anthology_p120 1904.
+%%%%
+arbalest
+
+아바레스트:
+
+"윌리엄 텔:
+나의 소중한 보석이자 최고의 선물이여... 너에게 과녁 하나를 주겠다.
+한번도 그 경건한 간절함으로도 뚫을수 없었지.
+그러나 그 표적은 저항하지 않을게야.
+그리고 그대. 나의 친밀한 활사위여. 그대는 나와 노니듯 나에게 충성을 다했지...
+절체절명의 순간엔 나를 버리지 말아다오. 이번 이순간. 조금만 견뎌다오. 
+지금 이순간 맥없이 날아가 바닥에 떨어진다면
+내겐 다시 쏠 화살이 없단다."
+    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
+     trans. Sir Theodore Martin, 1898.
+%%%%
+basilisk
+
+바실리스크:
+
+"그들을 황가의 바실리크스로 보아라. 당신들을 모호한 상처를 입혀 죽게할것이다.
+압력을 응시하며, 절망의 때를 두려워하라.
+경악에 쌓인 그녀를 대지의 원반에서 전달하라.
+두려워말라. 그러나 응시하라.-자유민의 힘이 솟아 오르기위하여.
+그리하여 노예들은 점점 허약해질것이고, 적들을 응시할것이다.
+만일 희망과 진실이, 그리고 정의가 닿는다면.
+당신들은 위대해 질것이다.-모두를 찬양하라!"
+    -퍼시 비시 셸리, "유고시선". 1824
+%%%%
+demon whip
+
+악마의 채찍:
+
+"끔찍한 비명과 함께 발록이 떨어지고, 그것의 그림자도 아래로 던져지고 사라졌다. 그러나 떨어지면서도 발록은 그것의 채찍을 휘둘렀고, 그 가죽끈이 휘갈겨져 마법사의 무릎쯤에 감겼고, 순식간에 그를 끌어당겼다. 그는 휘청거렸고, 이내 떨어졌고, 돌을 헛되이 잡고, 심연으로 미끄러져 갔다." 
+    -J.R.R. 톨킨, _반지 원정대_. II, 5, "카잣-둠의 다리".1954
+%%%%
+golden eye
+
+황금 눈알:
+
+"어떠한 탐심도, 
+   어떠한 부러움의 열상도 없습니다.
+ 당신의 밝은 황금빛 눈,
+   그 속의 고요함과 순수함이
+    하늘 아래 모든것의 본질입니다."
+    -한나 플래그 굴드, 어린 시절의 왕관-
+%%%%
+komodo dragon
+
+코모도 용:
+
+"우리 세명은 마치 우리들이 불결하고 악의에 찬 살인을 목격한 것 처럼 사색이 되어 앉아있었다.
+적어도 만약 그 살인마가 우리를 봤다면 무덤덤하게
+보고만 있지는 않았을 것이다.
+그것의 단호한 오만의 서늘함이 우릴 동요시켰다.
+우리들은 모든 해로운 감정들을 그저 도마뱀의 탓으로 돌리려 노력할 뿐이였다.
+도마뱀은 단순히 도마뱀답게 도마뱀만의 방법으로 도마뱀의 일을 시작할뿐,
+공포 죄책감 수치심 추함에 대해선 의식하지 않았다.
+마치 객관적이고 사심없는 눈이 거울에 비춰진 것 처럼
+그렇게 우리는 곧바로 깨달았다.
+우리들만이 억지로 강요된 죄책감과 수치심의 동물이였다는 것을"
+    -더글러스 애덤스, "마지막 기회라니". 1990.
+%%%%
+smoke demon
+
+연기의 악마:
+
+"어째서 내 손가락 사이의 꺼진 담배에서 가느다란 회색빛의 가닥이 떠오르는 건지, 왜 그게 날 괴롭게 하지?"
+    -D.H. 로렌스, "슬픔". 1916.
+%%%%
+spear
+
+창:
+
+"할버드는 전장에서 창보다 열등하다. 창을 쥐면 주도권을 잡을 수 있다; 할버드는 수비적인 무기이다. 같은 능력의 두 사람에게 그 둘을 장비하게 하면, 창쪽이 좀더 유리하다."
+    -미야모토 무사시,  _오륜서_, 1645.
+%%%%
+staff of death
+
+죽음의 지팡이:
+
+" '나는 이스 루아이드의 아에드 아바이드, 즉, 투아하 데 다난의 좋은 신이고, 루어드 로프헤사와 오하드 올라하르가 내 세가지 이름들이다.'
+ 그리고 그의 등에는 아들중 한명인 케르마트 밀리벨이 업혀있었는데,
+ 그는 시안의 아들인 루에 의해 싸우게 되고 사투를 했었다.
+ 다그다는 그의 지식과 학습에 도움을 구하고,
+ 그러므로 유향과 몰약과 허브가 케르마트의 몸 주위에 놓였고,
+ 그는 케르마트를 그의 등에 업고, 케르마트를 떠맡은 채 그는 세계를 찾아 헤매고, 위대한 동방 세계로 왔다.
+ 그는 길가던 세 사람을 만났는데 그들은 그들의 아버지의 보물을 가지고 가는 길이었다.
+ 다그다는 그들의 소식을 물었고, 그들이 말하길
+  '우리는 한 부모의 세 자식들이고, 우리는 우리 아버지의 보물을 나눠가지고 있소.'
+  '보물이라니 뭡니까?'
+ 다그다가 말했다.
+  '셔츠와 지팡이와 망토인데요,'
+ 그들이 말했다.
+  '그것들이 무슨 가치가 있소?'
+ 다그다가 말했다.
+  '당신이 보는 이 대단한 지팡이는, 매끈한 끝부분과 거친 끝부분이 있소. 한쪽 끝은 산 것을 죽일때, 다른쪽 끝은 죽은 자를 살려놓소.'"
+    -오스본 버긴, "다그다가 그의 마법 지팡이를 가진 방법", _중세 사 거트루드 스코퍼리 루미스의 기억_, 1927.
+%%%%
+stone giant
+
+바위 거인:
+
+"난 당신이 말한걸 믿어요, 그 기사가 대답했다; 난 그 거인과 맞섰고, 가장 난감하고 위협적인 전투에서 나는 내 일생 모든 날들을 싸움에 매진하리라 믿었다: 단 한번의 반격으로, 그 일격으로 그의 머리가 지면에 떨어졌다; 그리고 많은 양의 피를 흘렸는데, 평야 사이의 실개천이 흐르는것 같았다."
+    -미구엘 드 세르반테스, _  라만차의 재치있는 신사 돈 키호테_, IV, 10.  1605.
+     1997년에 카를로스 플런테스에 의해 영문 번역됨
+%%%%
+swamp worm
+
+늪지 벌레:
+
+"나는 그 바보가 늪이나 습지의, 좁은 틈새에 빠지기 쉽다고 생각했다, 그리고 빠졌다! 그 죽는듯한 목소리는 그의 목소리임에 분명하다. 그 순간 나는 결국 웃고 말았다."
+    -아서 에드워드 웨이트, "끝에서". 1906.
+%%%%
+the Lernaean hydra
+
+레르나의 히드라:
+
+"그가 받은 두 번째 시련은,
+ 몸통 하나 위에 수많은 목이 돋아나 있고
+ 그 목 위엔 뱀의 머리가 달려있으며,
+ 그것을 잘라내면 그 잘라낸 면에서
+ 또다른 두 머리가 솟아나기 때문에
+ 불사의 존재로 알려졌으며
+ 또 실제로도 그러한, 불사의 존재인
+ 레르나의 히드라를 죽이는 것이었다.
+ 이렇게 상대하기 어려운 존재에 대적하기 위해
+ 헤라클레스는 영리한 계획을 세웠는데,
+ 사촌 이올라오스로 하여금 잘려나간 단면을
+ 불로 지지도록 해서 혈류를 막는 것이었다."
+    -디오도루스 시쿨루스, 비블리오테케 히스토리카 (역사 도서관) [4.11.5]. c. 100
+%%%%
+torpor snail
+
+마비의 달팽이:
+
+"달팽이, 달팽이, 느린 민달팽이여,
+ 내게 당신의 네개의 뿔을 보여주시오,
+ 네개를 당신이 내게 보여주지 않는다면,
+ 내가 당신을 대문 밖으로 던져버릴 것이오,
+ 하수도의 까마귀들은,
+ 당신을 버터를 바른 빵에다 먹을 것이오."
+    -실레지아의 운문. Quoted by S.W. Singer in _노우스 엔드 큐이리즈_, no. 69.
+     1851.
+%%%%
+ugly thing
+
+못생긴 것:
+
+"아름다움은 그것 자체에는 자질이 없다: 그것은 단순히 그것들을 생각하는 마음 속에 존재한다; 그리고 각각의 마음은 다른 아름다움을 감지한다. 한 사람은 심지어, 다른 사람이 아름다움을 느낄 수 있는 것을, 뒤틀린 것으로 여긴다; 그리고 모든 개인은 그 사람의 감성에 대해서 간섭하지 말고, 묵인해야한다."
+    -데이비드 흄
+%%%%
+vampire
+
+뱀파이어:
+
+*저기요 내 친구 버트가 말하길 당신 뱀파이어 사냥꾼이라든데 어때요? 
+ㅡ응 그래.
+*당신 이 근처에선 한마리도 못찾을거에요, 형씨.  그들은 뱀파이어가 아니니까요. 
+ㅡ넌 뱀파이어를 안 믿는군?
+*당연하죠 그치만 사기꾼이 있다는건 믿어요.
+*그리구 문제를 일으키는 돌팔이도요! 죽은 사람이 밤에 일어나서 피를 빤데요. 우리가 얼마나 멍청하다고 생각하는건지?
+*내 집은 유령이 16마리나 귀신들려있는데 걔네들 전부가 그딴건 없데요!
+    -리치 모리스, 꼬리를 무는 판타지 게이머 만화
+%%%%
+Mara
+
+마라:
+
+"그날 밤 환영의 제왕 마라가
+ 당신들 사이로 지나갔다.
+ 꿈꾸는 자들 사이에서도 강력하고,
+ 고통 주는데 탁월한 그는 꿈을
+ 다른 방식으로 취급하는 사람을 만났다.
+ 그는 꿈꾸는 자를 그의 꿈속에서 쭞아낸, 달마를 만났다.
+ 그들은 싸웠고, 제왕 마라는 더는 존재하지 않는다.
+ 왜 그들이 사신 대 환영술사 로 싸웠는가?
+ 당신은 그들의 방식이 납득안간다고 하겠지만,
+ 신들의 방식으로 행하는 일에는, 해답은 없다."
+    -로저 젤라즈니, "신들의 사회". 1967
+
+"오직 즐거움만 좇아 사는 그는,
+ 그의 감각이 제어가 안되고,
+ 음식은 터무니없이 많이 처먹고,
+ 나태하고, 약한데,
+ 마라가 분명히 그를 전복시킨다.
+ 마치 바람이 약한 나무를 뽑아버리는 것 처럼 "
+    -부처, 법구경
+%%%%
+efreet
+
+이프리트:
+
+"그 사신(오디새)이 오매 솔로몬이 그들에게 말하길
+ '너희는 내게 재물 을 주려하느뇨?
+  하나님께서 내게 주신 것이 그분께서 너희에게 준 것보다 나으니라.
+  선물을 만끽하 는 것은 내가 아니라 너희니라.'
+
+ 솔로몬이 오디새에게 말하길 
+ '돌아가라 우리는 그들이 대적할 수 없는 군대를 이끌고 가서
+  그곳으로부터 그들을 추방하리니 그들은 불명예스러운 굴욕을 맛보리라.'
+
+ 그가 말하길 
+ '족장들이여, 그 들이 내게 귀순하여 오기 전에
+  너희 중에 누가 그 여왕의 옥좌를 내게 가져올 수 있느뇨?'
+ 
+ 영마 가운데의 한 요정이 대답하길
+ '당신께서 자리를 일어서기 전에 제가 그것을 가져오겠나이다.
+  실로 저는 힘이 강하니 믿어주소서.'"
+    -코란, 수라 제 27 안-나믈(개미)장 36 - 39 절
+%%%%
+__cap-D_suffix1
+
+드래곤류:
+
+"반면에 콘퓨시우스는 그의 제자에게 말하기로 했다.
+나는 어떻게 새가 날 수 있는지, 물고기는 헤엄칠 수 있는지, 어떻게 동물들이 뛸 수 있는지 알고 있단다.
+하지만 뛰는 녀석은 덫에 걸릴 것이고, 수영하는 녀석은 낚시 바늘에 걸릴 것이며, 나는 녀석은 화살을 맞는 법이지.
+하지만 드래곤이 있지. 나는 어떻게 그것이 바람 위로 솟구쳐, 구름을 뚫고, 천국에 떠오르는지 말해줄 수는 없단다.
+오늘날 나는 Lao-Tsze를 보았단다. 그리고 나는 유일하게도 그만을 드래곤과 비교할 수 있겠구나."
+    -콘퓨시우스의 삶.
+
+"이 드래곤은 두 찬란한 날개를 가졌다네
+각 날개는 각 어깨에 붙어있었다네.
+그의 꼬리에 달린 침은 도리깨 만큼이나 길고, 그것은 드래곤을 지극히 용감하게 만들었지.
+그는 긴 발톱과, 턱에는 40개 하고도 4개의 강철과 같은 이빨이 있었다네.
+주위를 둘러싼 그 어떤 튼튼함과 강건함도 빛을 바래게 하는."
+
+    -"Moore와 Moore-Hall 사이에 있었던 가장 두려운 전투와 Wantley의 드래곤에 관한 완벽한 서사시이다."
+
+    -Ambrose Philips, _ 역사적, 비판적, 혹은 해학적인 설명이 함께하는, 최고이자, 현존하는 가장 오래된 고대사본에서 수집한 옛 서사시 모음집._ 1723.
+%%%%
+bow of Krishna "Sharnga"
+
+크리슈나의 활 "샤랑가":
+
+"혹 카르나가 나를 죽이려 든다면 그대는 어찌할 것이오?"
+ 아르주나가 크리슈나에게 물었다. 크리슈나는 미소지으며 대답하였다."그가 그대를 죽이기 전 태양은 꺼지고, 대지는 수천 개의 조각으로 갈라지며, 불은 열기를 잃을 것이다. 그럼에도 불구하고 그가 그대의 목숨을 앗아간다면, 그것은 세상의 종말을 알리는 신호가 되리라. 나 자신은 어찌하겠느냐 묻는다면, 나는 그를 맨손으로도 죽일 수 있다."
+    -Vyasa,_Mahabharata_, Book Eight: Kama.
+     trans. P. Lal, 1986.
 %%%%

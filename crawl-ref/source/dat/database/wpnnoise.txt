@@ -26,18 +26,18 @@
 shield of the gong
 
 w:40
-GONNNNG!
+지이이이이잉!
 
-BOUMMMMG!
+퀴이이이이잉!
 
-PTOANNNG!
+고오오오오옹!
 
-PANG!
+부아아아아앙!
 
-BONNNG!
+쿠오오오오옹!
 
 # scraping hit
-SHROANNG!
+퍼어어어어엉!
 
 ###############################################################################
 ###############################################################################
@@ -50,16 +50,16 @@ SHROANNG!
 %%%%
 frozen axe "frostbite"
 
-You hear the [roaring|howling|raging|gusting] winds of a [blizzard|squall|snowstorm].
+당신은 [눈보라|돌풍|폭풍설]의 바람이 [노호하는|윙윙거리는|거세게 부는|몰아치는] 소리를 들었다.
 
 w:5
-You hear ice [creaking|groaning|grinding|cracking].
+당신은 얼음이 [삐걱거리는|끙끙거리는|갈리는|금가는] 소리를 들었다.
 
 w:1
-You hear shards of ice [tinkling|chiming].
+당신은 얼음 덩어리가 [딸랑거리는|울리는] 소리를 들었다.
 
 w:1
-You hear the [rumble|boom|crash] of [a glacier calving|icebergs colliding].
+당신은 [깎아 내려진 빙하|충돌하는 빙산](이)가 [우르르 울리는|쿵 하고 울리는|박살나는] 소리를 들었다.
 
 ###############################################################################
 ###############################################################################
@@ -86,7 +86,7 @@ w:2
 @_instrumental_noises_@
 
 w:20
-SOUND:You hear @weapon_noise@
+SOUND:당신은 @weapon_noise@(을)를 들었다.
 
 ###############################################################################
 # Weapon chatter.
@@ -94,80 +94,80 @@ SOUND:You hear @weapon_noise@
 %%%%
 _weapon_chatter_
 
-@Your_weapon@ shouts, "Whoopee!"
+@Your_weapon@(은)는 소리쳤다, "야호!"
 
-@Your_weapon@ argues with itself.
+@Your_weapon@(은)는 그것자신과 논쟁했다.
 
-@Your_weapon@ complains about the scenery.
+@Your_weapon@(은)는 주변 풍경에 대해 불평했다.
 
-@Your_weapon@ says, "I'm bored."
+@Your_weapon@(은)는 말했다, "나 지루해."
 
-@Your_weapon@ shouts out instructions!
+@Your_weapon@(은)는 지시 사항들을 큰소리로 외쳤다!
 
-@Your_weapon@ says, "Ssh! Did you hear that?"
+@Your_weapon@(은)는 말했다, "쉿! 방금 그거 들었어?"
 
-@Your_weapon@ cheers you on.
+@Your_weapon@(은)는 당신을 격려했다.
 
-@Your_weapon@ intones a prayer.
+@Your_weapon@(은)는 기도를 읊조렸다.
 
-@Your_weapon@ calls out a warning!
+@Your_weapon@(은)는 경고를 외쳤다!
 
-@Your_weapon@ chatters happily.
+@Your_weapon@(은)는 유쾌하게 수다를 떨었다.
 
-@Your_weapon@ recites a poem.
+@Your_weapon@(은)는 시를 낭송했다.
 
-@Your_weapon@ prattles on and on.
+@Your_weapon@(은)는 계속, 계속 재잘거렸다.
 
-@Your_weapon@ inquires about your family.
+@Your_weapon@(은)는 당신 가족의 안부를 물었다.
 
-@Your_weapon@ comments on the weather.
+@Your_weapon@(은)는 날씨에 대해 한마디했다.
 
-@Your_weapon@ regales you with its life story.
+@Your_weapon@(은)는 그것의 인생 이야기로, 당신을 즐겁게 했다.
 
-@Your_weapon@ speaks gibberish.
+@Your_weapon@(은)는 횡설수설 말했다.
 
-@Your_weapon@ raves incoherently.
+@Your_weapon@(은)는 두서없이 헛소리를 했다.
 
-@Your_weapon@ shouts, "Help!"
+@Your_weapon@(은)는 소리쳤다, "도움!"
 
-@Your_weapon@ cracks jokes of [questionable|doubtful|juvenile] humour.
+@Your_weapon@(은)는 [미심쩍은|의심스러운|유치한] 유머의 농담을 지껄였다.
 
-@Your_weapon@ dwells on sagas on the [glory of old|days of yore].
+@Your_weapon@(은)는 [오래된 영광|옛 시절]의 모험담을 역설했다.
 
-@Your_weapon@ belts out, "Dying in battle is most honourable!"
+@Your_weapon@(은)는 큰소리로 노래했다, "전투에서 죽는건 가장 명예로운거야!"
 
-@Your_weapon@ [proudly|gleefully] confesses its [misdeeds|atrocities].
+@Your_weapon@(은)는 [자랑스럽게|유쾌하게] 그것의 [악행|잔혹한 행위](을)를 고백했다.
 
 w:30
 @_rare_chatter_@
 %%%%
 _rare_chatter_
 
-@Your_weapon@ shouts, "This level is mine! Um, ours."
+@Your_weapon@(은)는 소리쳤다, "이 계층은 내꺼야! 어음, 우리꺼."
 
-@Your_weapon@ cries, "Don't ditch me yet! I promise to be forever silent."
+@Your_weapon@(은)는 울부짖었다, "아직 날 버리진 마! 영원히 조용히 있을거라 약속할게."
 
-@Your_weapon@ groans, "That's what you call fighting?"
+@Your_weapon@(은)는 비웃었다, "그게 싸움이라는 거야?"
 
-@Your_weapon@ shouts, "Left! No, no, right!".
+@Your_weapon@(은)는 소리쳤다, "왼쪽! 아니, 아닌데, 오른쪽!".
 
-@Your_weapon@ says, "Why don't you say something for a change?"
+@Your_weapon@(은)는 말했다, "기분전환으로 뭔가 말해보는게 어때?"
 
-@Your_weapon@ asks, "Did you take a vow of silence?"
+@Your_weapon@(은)는 물었다, "침묵의 맹세라도 했니?"
 
-@Your_weapon@ says, "You can tell me everything! I can keep a secret!"
+@Your_weapon@(은)는 말했다, "나한테 다 말해도 되! 비밀을 지켜줄게!"
 
-@Your_weapon@ asks, "Do you need to see the manual?"
+@Your_weapon@(은)는 물었다, "봐야할 설명서가 필요하니?"
 
-@Your_weapon@ asks, "Have you heard of the Orb of Zot?"
+@Your_weapon@(은)는 물었다, "조트의 오브에 대해서 들어봤니?"
 
-@Your_weapon@ moans, "I feel dizzy."
+@Your_weapon@(은)는 신음했다, "나 어지러워."
 
-@Your_weapon@ says, "We'll split the gold! Fifty-fifty!"
+@Your_weapon@(은)는 말했다, "우린 금화를 나누게 될거야! 반반!"
 
-@Your_weapon@ says, "You're pretty alright, for @a_player_genus@."
+@Your_weapon@(은)는 말했다, "너 꽤 괜찮은 놈이구나, @a_player_genus@치고는."
 
-@Your_weapon@ sighs, "I'm going to miss you when you're dead, @player_name@."
+@Your_weapon@(은)는 한숨쉬었다, "네가 죽으면 그리워할거야, @player_name@."
 
 ###############################################################################
 # Weapon noises.
@@ -176,93 +176,93 @@ _rare_chatter_
 weapon_noises
 
 w:80
-@Your_weapon@ [cackles|giggles|gurgles|sighs|snorts|warbles|wails|whimpers].
+@Your_weapon@(은)는 [키득거렸다|피식 웃었다|골골거렸다|한숨쉬었다|코웃음쳤다|지저궜다|흐느꼈다|훌쩍거렸다].
 
 w:50
-@Your_weapon@ [coughs|swears|yawns][| loudly| noisily].
+@Your_weapon@(은)는 [| 크게 | 시끄럽게] [기침했다|욕을 했다|하품했다].
 
 w:40
-@Your_weapon@ [burps|cheers|hollers|yelps|sneezes][| loudly]!
+@Your_weapon@(은)는 [| 크게] [트림했다|환호했다|소리질렀다|꺅 소리를 냈다|재채기했다]!
 
 w:30
-@Your_weapon@ makes a [horrible|deep, guttural|tutting] noise.
+@Your_weapon@(은)는 [소름끼치는|깊고, 쉰 목소리의|혀를 차는] 소음을 내었다.
 
 w:20
-@Your_weapon@ makes a [deep moaning|popping] sound.
+@Your_weapon@(은)는 [깊은 신음|펑] 소리를 내었다.
 
 w:20
-@Your_weapon@ goes [tick-tock.|snicker-snack!]
+@Your_weapon@(은)는 [똑딱 똑딱거렸다.|석쓱 쓱삭거렸다!]
 
 w:20
-@Your_weapon@ howls [like a wolf.|with laughter!]
+@Your_weapon@(은)는 [늑대처럼 울부짖었다.|경멸적인 웃음소리를 냈다!]
 
 w:20
-@Your_weapon@ [erupts|suddenly bursts] into laughter!
+@Your_weapon@(은)는 [웃음을 터뜨렸다|갑자기 폭소했다]!
 
 w:20
-@Your_weapon@ gives off a [wolf whistle|sizzling sound].
+@Your_weapon@(은)는 [늑대 울음소리|지글지글 소리]를 내었다.
 
 w:20
-@Your_weapon@ lets out a [mournful sigh.|whoop!]
+@Your_weapon@(은)는 [애절한 한숨을 쉬었다.|와! 하고 함성을 질렀다.]
 
-@Your_weapon@ laughs crazily.
+@Your_weapon@(은)는 미친듯이 웃었다.
 
-@Your_weapon@ growls menacingly.
+@Your_weapon@(은)는 위협적으로 으르렁거렸다.
 
-@Your_weapon@ sputters and hisses.
+@Your_weapon@(은)는 씩씩거리며 쉿소리를 냈다.
 
-@Your_weapon@ pants and wheezes.
+@Your_weapon@(은)는 헐떡이며 쌕쌕거렸다.
 
-@Your_weapon@ barks abruptly.
+@Your_weapon@(은)는 갑자기 소리를 빽 질렀다.
 
-@Your_weapon@ screams hysterically.
+@Your_weapon@(은)는 신경질적으로 소리질렀다.
 
-@Your_weapon@ hiccups loudly.
+@Your_weapon@(은)는 크게 딸꾹질했다.
 
-@Your_weapon@ starts to sob noisily.
+@Your_weapon@(은)는 시끄럽게 울기 시작했다.
 
-@Your_weapon@ yells in some weird language.
+@Your_weapon@(은)는 어떤 기묘한 언어로 외쳤다.
 
-@Your_weapon@ cries out!
+@Your_weapon@(은)는 울부짖었다!
 
-@Your_weapon@ burbles away merrily.
+@Your_weapon@(은)는 즐겁게 재잘거렸다.
 
-@Your_weapon@ suddenly shrieks!
+@Your_weapon@(은)는 갑자기 비명을 질렀다!
 
-@Your_weapon@ whistles innocently.
+@Your_weapon@(은)는 천진난만하게 휘파람을 불었다.
 
-@Your_weapon@ parrots the noises around you.
+@Your_weapon@(은)는 당신 주변의 소음들을 흉내냈다.
 ###############################################################################
 # Instrumental noises.
 ###############################################################################
 %%%%
 _instrumental_noises_
 
-@Your_weapon@ makes a sound as if to clear its throat.
+@Your_weapon@(은)는 목을 푸는듯한 소리를 내었다.
 
-@Your_weapon@ makes a twanging sound.
-
-w:20
-@Your_weapon@ chimes [melodiously|harmoniously].
+@Your_weapon@(은)는 팅팅 튕기는 소리를 내었다.
 
 w:20
-@Your_weapon@ imitates [a saxophone|the bagpipes].
+@Your_weapon@(은)는 [감미롭게|조화되게] 소리를 내었다.
 
-@Your_weapon@ tinkles.
+w:20
+@Your_weapon@(은)는 [색소폰|백파이프] 소리를 흉내냈다.
 
-@Your_weapon@ rings like a bell.
+@Your_weapon@(은)는 짤랑거렸다.
 
-@Your_weapon@ emits a flourish of trumpets.
+@Your_weapon@(은)는 종처럼 딸랑거렸다.
 
-@Your_weapon@ tootles away.
+@Your_weapon@(은)는 트럼펫의 팡파레 소리를 내뿜었다.
 
-@Your_weapon@ chimes like a gong.
+@Your_weapon@(은)는 재잘거렸다.
 
-@Your_weapon@ applauds itself.
+@Your_weapon@(은)는 징처럼 소리를 울렸다.
 
-@Your_weapon@ goes toot-toot!
+@Your_weapon@(은)는 그것자신을 칭찬했다.
 
-@Your_weapon@ does a drum roll.
+@Your_weapon@(은)는 뚜 뚜 거렸다!
+
+@Your_weapon@(은)는 드럼 소리를 냈다.
 ###############################################################################
 # Noises for weapons with NOISES property (not used for the Singing Sword)
 ###############################################################################
@@ -270,82 +270,84 @@ w:20
 weapon_noise
 
 ############ dungeon noises ############
-a shout.
+외침
 
-an angry hiss.
+분노한 쉿소리
 
-a high-pitched scream!
+고음의 비명
 
-a roar!
+포효
 
-a hideous shriek!
+끔찍한 비명
 
-a piteous moan.
+애처로운 신음
 
-a screech!
+꽥꽥거리는 소리
 
-a bellow!
+우렁찬 소리
 
-a loud, deep croak!
+크고, 깊은 쉰 목소리
 
-an angry buzzing noise.
+성나서 붕붕거리는 소음
 
-a splashing noise.
+짜증나는 고음의 징징거림
 
-a sizzling sound.
+첨벙거리는 소음
 
-a loud clanging noise!
+지글지글 소리
 
-a grinding noise.
+쨍그랑하는 큰 소음
 
-a mighty clap of thunder!
+귀에 거슬리는 소음
 
-a hideous screaming!
+강렬한 뇌성
 
-a bark!
+끔찍한 비명
 
-a rumbling sound.
+짖는 소리
 
-a crunching sound.
+우르릉하는 소리
 
-a distant "Zot"!
+오독오독거리는 소리
 
-the distant roaring of an enraged frog.
+멀리서 "조트" 라는 소리
+
+멀리서 분노한 개구리가 포효하는 소리
 
 ############ other noises, usually not found in the dungeon ############
-a knock.
+문 두드리는 소리
 
-a voice calling your name.
+당신의 이름을 부르는 목소리
 
-a very strange noise.
+매우 기묘한 소음
 
-someone snoring.
+누군가가 코고는 소리
 
-someone calling for help!
+누군가가 도움을 청하는 소리
 
-strange voices.
+이상한 음성들
 
-maniacal laughter.
+매니악한 웃음소리
 
-snatches of song.
+노래 한 소절
 
-a twanging sound.
+팅팅거리는 소리
 
-the chiming of a distant gong.
+멀리서 징이 울리는 소리
 
-the tinkle of an enormous bell.
+수많은 종이 딸랑거리는 소리
 
-an echo.
+메아리
 
-the wailing of sirens.
+사이렌들의 통곡
 
-a flourish of trumpets!
+트럼펫의 팡파레 소리
 
-a strangely pleasant explosion.
+이상하게 기분좋은 폭발소리
 
-distant weeping.
+멀리서 우는 소리
 
-a muffled joke.
+소리를 낮춘 농담
 
 ###############################################################################
 ###############################################################################
@@ -412,20 +414,20 @@ a muffled joke.
 %%%%
 singing sword silenced
 
-VISUAL:@The_weapon@ struggles and turns.
+VISUAL:@The_weapon@(은)는 발버둥쳐서 몸체를 돌렸다.
 
-VISUAL:@The_weapon@ looks @_exasperated_@.
+VISUAL:@The_weapon@(은)는 @_exasperated_@ 보인다.
 
-VISUAL:@The_weapon@ makes a [sad|disoriented|forlorn|hopeless] impression.
+VISUAL:@The_weapon@(은)는 [슬픈|혼란스러운|쓸쓸한|절망적인] 느낌을 주었다.
 
 w:5
-VISUAL:@The_weapon@ sulks.
+VISUAL:@The_weapon@(은)는 부루퉁해졌다.
 
 w:1
-VISUAL:@The_weapon@ seems to emit steam.
+VISUAL:@The_weapon@(은)는 증기를 내뿜으려는것 같다.
 
 w:1
-VISUAL:@The_weapon@ turns @_crimson_@.
+VISUAL:@The_weapon@(은)는 @_crimson_@(으)로 변했다.
 
 ######### no tension ############
 %%%%
@@ -514,19 +516,19 @@ singing sword SCREAM
 _weapon_noises_low-high_tension_
 
 w:100
-@The_weapon@ @_screams_@ @_screams_how_@.
+@The_weapon@(은)는 @_screams_how_@ @_screams_@.
 
-@The_weapon@ @_screams_@.
+@The_weapon@(은)는 @_screams_@.
 
-@The_weapon@ howls with insane laughter!
+@The_weapon@(은)는 정신이상의 웃음과 함께 울부짖었다!
 
-@The_weapon@ erupts into mad laughter!
+@The_weapon@(은)는 정신나간 웃음을 분출했다!
 
-@The_weapon@ suddenly bursts into murderous laughter!
+@The_weapon@(은)는 갑자기 살인적인 폭소를 터뜨렸다!
 
-@The_weapon@ laughs in a fit of madness.
+@The_weapon@(은)는 광기에 사로잡힌채 웃었다.
 
-@The_weapon@ makes a horrifying noise.
+@The_weapon@(은)는 소름끼치는 소음을 내었다.
 
 ###############################################################################
 # Singing or other making of music
@@ -538,127 +540,127 @@ w:100
 _singing_no_tension_
 
 # practising
-@The_weapon@ practises its scales.
+@The_weapon@(은)는 음계를 연습했다.
 
-@The_weapon@ makes a painfully high-pitched squeak.
+@The_weapon@(은)는 극도로 고음의, 끽 소리를 내었다.
 
 w:30
-@The_weapon@ sings [a sudden staccato|a quivering drawn-out|an ear-splitting high] note.
+@The_weapon@(은)는 [갑작스러운 스타카토|떨면서 길게 끄는|귀를 분열하는] 음을 노래했다.
 
-@The_weapon@ trains the @_kind_of_scales_@ scales.
+@The_weapon@(은)는 @_kind_of_scales_@(을)를 연습했다.
 
-@The_weapon@ plays a couple of bars.
+@The_weapon@(은)는 두 마디를 불렀다.
 
-@The_weapon@ [nearly |clearly |][hits|misses] the concert pitch.
+@The_weapon@(은)는 [얼추 |뚜렷하게 |] 합주조를 [시작했다|했으나 잘 되지 않았다] .
 
-@The_weapon@ repeatedly practises the high pitch.
+@The_weapon@(은)는 높은 음을 반복해서 연습했다.
 
-@The_weapon@ sings [several|three or four|a multitude of] chords at once.
+@The_weapon@(은)는 [몇가지|세개나 네개의|아주 많은수의] 화음을 한번에 노래했다.
 
-@The_weapon@ repeatedly practises counterpoints.
+@The_weapon@(은)는 대위 선율들을 반복해서 연습했다.
 ############ singing, no or low tension ############
 %%%%
 _singing_no-low_tension_
 
-@The_weapon@ breaks into glorious song!
+@The_weapon@(은)는 아주 즐거운 노래를 시작했다!
 
-@The_weapon@ sings[| off-key].
+@The_weapon@(은)는 [| 음정을 안맞추고] 노래했다.
 
-@The_weapon@ [sings|whistles] [loudly|merrily].
+@The_weapon@(은)는 [크게|흥겹게] [노래했다|휘파람을 불었다].
 
-@The_weapon@ whines plaintively.
+@The_weapon@(은)는 구슬프게 끙끙거렸다.
 
-@The_weapon@ wails mournfully.
+@The_weapon@(은)는 애절하게 흐느꼈다.
 
-@The_weapon@ lilts tunefully.
+@The_weapon@(은)는 풍부한 가락으로, 경쾌하게 노래했다.
 
-@The_weapon@ yodels.
+@The_weapon@(은)는 요들을 불렀다.
 
-@The_weapon@ hums tunelessly.
+@The_weapon@(은)는 소리가 나지않게 흥얼거렸다.
 
-@The_weapon@ keens wildly.
+@The_weapon@(은)는 걷잡을수 없이 통곡했다.
 
 #Beethoven
-@The_weapon@ goes "Da-da-da-dum".
+@The_weapon@(은)는 시작했다, "다-다-다-둠".
 
-@The_weapon@ chants serenely.
+@The_weapon@(은)는 차분하게 연호했다.
 
-@The_weapon@ trills happily.
+@The_weapon@(은)는 행복하게 떨리는 소리를 냈다.
 
-@The_weapon@ launches into yet another solo.
+@The_weapon@(은)는 독주곡을 잇달아 시작했다.
 
-@The_weapon@ emits a series of high-pitched trills.
+@The_weapon@(은)는 일련의, 아주 높은 전음을 내었다.
 
-@The_weapon@ tries to sing in harmony with itself.
+@The_weapon@(은)는 그것혼자 화음을 내서 노래하려 했다.
 
-@The_weapon@ provides the musical accompaniment for each of your actions.
+@The_weapon@(은)는 당신의 매 행동에 대한, 음악반주를 대주었다.
 
-@The_weapon@ composes a new song.
+@The_weapon@(은)는 새로운 노래를 만들었다.
 
-@The_weapon@ raucously launches into song.
+@The_weapon@(은)는 소란스럽게 노래를 시작했다.
 
-@The_weapon@ merrily whistles a melody.
+@The_weapon@(은)는 흥겹게 선율을 휘파람으로 불었다.
 
-@The_weapon@ strikes up a [bolero|bossanova|calypso|fandango|mazurka|menuet|pasodoble|waltz].
+@The_weapon@(은)는 [볼레로|볼사 노바|칼립소|판당고|마주르카|미뉴에트|파소 도블레|왈츠](을)를 시작했다.
 
-@The_weapon@ intones [an aria|a fugue].
+@The_weapon@(은)는 [아리아|푸가]를 읊조렸다.
 
-@The_weapon@ gives you a private [audition|concerto].
+@The_weapon@(은)는 당신에게 사적인 [오디션|협주곡]을 해주었다.
 
-@The_weapon@ [sings|hums] away to itself.
+@The_weapon@(은)는 스스로에게 계속 [노래했다|흥얼거렸다].
 
-@The_weapon@ lets out a series of bird calls.
+@The_weapon@(은)는 일련의 새소리를 내었다.
 
-@The_weapon@ makes beautiful music.
+@The_weapon@(은)는 아름다운 음악을 만들어냈다.
 
-@The_weapon@ produces a loud orchestral chord.
+@The_weapon@(은)는 큰소리의, 관현악단의 화음을 만들어냈다.
 
-@The_weapon@ holds a dissonant chord.
+@The_weapon@(은)는 불협화음을 억눌렀다.
 
-@The_weapon@ tunes itself.
+@The_weapon@(은)는 스스로를 조율했다.
 
-@The_weapon@ beats time.
+@The_weapon@(은)는 박자를 맞췄다.
 
-@The_weapon@ pulls all registers.
+@The_weapon@(은)는 모든 음역대를 끌어모았다.
 
-@The_weapon@ pulls out all the stops.
+@The_weapon@(은)는 무언가를 위해 온갖 노력을 다했다.
 
-@The_weapon@ sets up a furious crescendo.
+@The_weapon@(은)는 맹렬한 크레센도를 만들어냈다.
 
-In a hysterical voice, @the_weapon@ strikes up a march.
+@the_weapon@(은)는 신경질적인 목소리로, 행진곡을 시작했다.
 
-@The_weapon@ [sings|hums|whistles] a [little|catchy|merry] [tune|melody].
+@The_weapon@(은)는[약간의|기억하기 쉬운|흥겨운] [곡조|선율](을)를 [노래했다|흥얼거렸다|휘파람으로 불었다].
 
-@The_weapon@ [sings|hums] an eerie [tune|melody].
+@The_weapon@(은)는 으스스한 [곡조|선율](을)를 [노래했다|흥얼거렸다].
 
 w:5
-@The_weapon@ [sings|hums] a slow and mournful tune.
+@The_weapon@(은)는 느리고 애절한 곡조로 [노래했다|흥얼거렸다].
 
 w:25
-@The_weapon@ strikes up @_strikes_up_what_@.
+@The_weapon@(은)는 @_strikes_up_what_@(을)를 부르기 시작했다.
 
-@The_weapon@ sings, "Tra-la-la..."
+@The_weapon@(은)는 노래했다, "트랄-랄-라..."
 
 w:40
-@The_weapon@ sings a [lullaby|folk song|deeply moving song|little jingle].
+@The_weapon@(은)는 [자장가|민요|매우 감동적인 곡|약간의 시운](을)를 노래했다.
 
-@The_weapon@ hums a slow waltz.
+@The_weapon@(은)는 느린 왈츠를 흥얼거렸다.
 
-@The_weapon@ chants a little melody.
+@The_weapon@(은)는 약간의 선율을 영창했다.
 
-@The_weapon@ plays a requiem for the unknown sword.
+@The_weapon@(은)는 이름없는 검을 위한 진혼곡을 불렀다.
 
-@The_weapon@ plays an overture.
+@The_weapon@(은)는 서곡을 불렀다.
 
-@The_weapon@ launches into a [hymn|song] on @_song_theme_@.
+@The_weapon@(은)는 @_song_theme_@에 대한 [찬가|노래]를 시작했다.
 
-@The_weapon@ [composes|sings] a [hymn|song] about @_song_theme_@.
+@The_weapon@(은)는 @_song_theme_@에 대한 [찬가|노래]를 [작곡했다|노래했다].
 
-@The_weapon@ [composes|sings] a hymn praising @player_god@.
+@The_weapon@(은)는 @player_god@의 찬가를 [작곡했다|노래했다].
 
-@The_weapon@ [composes|sings] a ballad about your adventures.
+@The_weapon@(은)는 당신의 모험담에 대한 발라드를 [작곡했다|노래했다].
 
-@The_weapon@ prematurely composes your obituary.
+@The_weapon@(은)는 시기상조로, 당신의 부고에 대해 작곡을 했다.
 
 ###############################################################################
 # Speaking
@@ -676,533 +678,533 @@ w:1
 %%%%
 _common_speaking_no_tension_
 
-@The_weapon@ shouts, "Sing along with me!"
+@The_weapon@(은)는 외쳤다, "나와 같이 노래하자!"
 
-@The_weapon@ shouts, "One, two, three..."
+@The_weapon@(은)는 외쳤다, "하나, 둘, 셋..."
 
-@The_weapon@ spouts musical wisdom.
+@The_weapon@(은)는 음악적 지식을 거침없이 말했다.
 
-@The_weapon@ [points out|remarks in passing on] the lack of singing [axes|clubs|polearms|staves].
+@The_weapon@(은)는 노래하는 [도끼|몽둥이|창봉류 무기|지팡이]의 부족함을 [지적했다|지나가는 말로 언급했다].
 
-@The_weapon@ embarks on a lengthy monologue about murderous music.
+@The_weapon@(은)는 살인적인 음악에 대한, 장황한 독백을 시작했다.
 
-@The_weapon@ compliments itself on its singing voice.
+@The_weapon@(은)는 자신의 노래하는 목소리를 칭찬했다.
 
-@The_weapon@ asks you about your opinion on @_musical_topic_@.
+@The_weapon@(은)는 당신에게 @_musical_topic_@에 대한 의견을 물었다.
 
-@The_weapon@ muses how they don't make such fine swords anymore.
+@The_weapon@(은)는 사람들이 어째서, 좋은 검들을 더이상 만들지 않는가에 대하여 사색했다.
 
-@The_weapon@ tries to improvise rhymes, and fails miserably.
+@The_weapon@(은)는 즉흥적으로 시를 만들어내려 했고, 초라하게 실패했다.
 
-@The_weapon@ offers to sing all your favourite songs.
+@The_weapon@(은)는 당신이 가장 좋아하는 곡들 전부를 노래하라고, 제안했다.
 
-@The_weapon@ asks you for a rhyme on '@_rhyme_word_@'.
+@The_weapon@(은)는 당신에게 '@_rhyme_word_@'의 운에 대해 물었다.
 
-@The_weapon@ complains about [double|triple|short] swords.
+@The_weapon@(은)는 [이중|삼중|짧은] 검들에 대해서 불평했다.
 
-@The_weapon@ derides short swords.
+@The_weapon@(은)는 짧은 검들을 비웃었다.
 
-@The_weapon@ muses on the connection between 'duet' and 'duel'.
+@The_weapon@(은)는 '듀엣' 과 '듀얼' 사이의 연관성에 대해 사색했다.
 
-@The_weapon@ wails, "I am too young to rust!"
+@The_weapon@(은)는 흐느꼈다, "난 녹슬기에는 너무 새것이라고!"
 
-@The_weapon@ comments on your taste in music.
+@The_weapon@(은)는 당신의 음악 취향에 대해 지적했다.
 
-@The_weapon@ complains about your lack of musical enthusiasm.
+@The_weapon@(은)는 당신의 음악적 열정의 결핍을 불평했다.
 
-@The_weapon@ tries to entice you into a canon.
+@The_weapon@(은)는 당신을 전칙곡으로 유혹하려했다.
 
-@The_weapon@ tells you about its plans for a grandiose opera.
+@The_weapon@(은)는 당신에게 거창한 오페라의 계획을 말했다.
 
-@The_weapon@ grumbles, "I guess an audience of one is better than none..."
+@The_weapon@(은)는 넋두리했다, "청중이 하나라도 있다는게, 아무도 없는것보단 나은것 같아..."
 
-@The_weapon@ muses, "If you sing and nobody listens, are you really singing?"
+@The_weapon@(은)는 사색했다, "네가 노래했는데 아무도 듣지않으면, 정말로 노래할거야?"
 
-@The_weapon@ brightly asks, "How about a duet?"
+@The_weapon@(은)는 명랑하게 물었다, "듀엣 해볼래?"
 
-@The_weapon@ wonders, "Am I just an instrument of [doom|death|destruction]?"
+@The_weapon@(은)는 궁금해했다, "난 그저 [파멸|죽음|파괴]의 악기인걸까?"
 
-@The_weapon@ yells, "No battle, no fun!"
+@The_weapon@(은)는 고함쳤다, "전투가 없다면, 즐거움도 없다!"
 
-@The_weapon@ shouts, "Make war, not love!"
+@The_weapon@(은)는 외쳤다, "전쟁을 만들어봐, 사랑말고!"
 
-@The_weapon@ cries out, "You certainly can't call me dull!"
+@The_weapon@(은)는 울부짖었다, "틀림없이 날 따분하다고 말할수는 없을거야!"
 
-@The_weapon@ tells you the story of its previous owner's [demise|death|misfortune].
+@The_weapon@(은)는 전 소유자의 [종말|죽음|불행]에 대해 말했다.
 
-@The_weapon@ brightly announces, "I've got so much to tell you!"
+@The_weapon@(은)는 명랑하게 알렸다, "네게 말하고싶은게 정말 많이 있어!"
 
-@The_weapon@ says, "You could say something too, you know."
+@The_weapon@(은)는 말했다, "너도 뭔가 말할수 있었다고, 알다시피."
 
-@The_weapon@ complains, "Are you always this [silent|uncommunicative|taciturn|quiet|boring]?
+@The_weapon@(은)는 불평했다, "너 항상 이렇게 [침묵하니|말을 잘 안하니|과묵하니|조용하니|따분하니]?
 
-@The_weapon@ grouses, "Silence can be so depressing."
+@The_weapon@(은)는 투덜거렸다, "침묵은 정말 우울하게 만들 때가 있어."
 
-@The_weapon@ grouses, "Silence always makes me sulking."
+@The_weapon@(은)는 투덜거렸다, "침묵은 항상 날 부루퉁하게 만들어."
 
-@The_weapon@ compliments you on your taste in weapons.
+@The_weapon@(은)는 당신의 무기를 보는 안목을 칭찬했다.
 
-@The_weapon@ attempts to teach you some tongue twisters.
+@The_weapon@(은)는 당신에게 발음하기 어려운 구절을 가르치려 했다.
 
-@The_weapon@ says, "At least you will die someday and escape this tedium!"
+@The_weapon@(은)는 말했다, "적어도 넌 언젠가 죽어서, 이 지루함에서 탈출하겠지!"
 
-@The_weapon@ says, "I don't know that song, but if you hum a few bars, I can take a stab at it."
+@The_weapon@(은)는 말했다, "나 그 노래가 뭔진 모르지만, 네가 몇마디만 흥얼거리면, 한번 해볼수 있어."
 
-@The_weapon@ boasts, "I have an eight-octave range, you know."
+@The_weapon@(은)는 자랑했다, "난 8옥타브의 음역을 가지고있어, 알다시피."
 
-@The_weapon@ sighs wistfully, "I wish my music got as much attention as my homicides..."
+@The_weapon@(은)는 아쉬운듯이 한숨쉬었다, "내 음악이, 내 살인 행위만큼 주목받길 바라..."
 
-@The_weapon@ sneers, "I've heard your voice, @player_name@. Let's just keep this a solo act."
+@The_weapon@(은)는 조롱했다, "네 목소리를 들었어, @player_name@. 이 부분은 그냥 솔로로 하자고."
 
-@The_weapon@ laments, "Ugh, being used to hack up chunks of meat... it's undignified!"
+@The_weapon@(은)는 탄식했다, "윽, 고깃덩어리를 써는데 익숙해지는건... 품위없다고!"
 
 %%%%
 _rare_speaking_no_tension_
 
-@The_weapon@ says, "Hi! I'm the Singing Sword!"
+@The_weapon@(은)는 말했다, "안녕! 난 '노래하는검'이야!"
 
-@The_weapon@ chants, "I am golden and pointed, and with blood well anointed."
+@The_weapon@(은)는 찬송했다, "난 황금빛에 뾰족하지, 그리고 전부 피를 발랐지."
 
-@The_weapon@ dictates a lengthy tome entitled 'The Well-Tempered Blade'.
+@The_weapon@(은)는 '마음씨 좋은 검'이란 제목의, 지루한 책을 받아쓰게 했다.
 
-@The_weapon@ says, "Whips just don't cut it for me, don't you agree?"
+@The_weapon@(은)는 말했다, "채찍은 자르기 별로야, 그렇지않아?"
 
-@The_weapon@ chants, "Rather stab than club, rather slice than rub!"
+@The_weapon@(은)는 찬송했다, "몽둥이 보다는 찌르기가, 문지르기 보다는 절단이 낫지!"
 
-@The_weapon@ states, "Music critics are all talk and no body armour."
+@The_weapon@(은)는 선언했다, "음악 비평은 아무나 얘기하고, 아무도 방어하지 않아."
 
-@The_weapon@ demands, "I must not be sheathed without first drawing blood!"
+@The_weapon@(은)는 요구했다 , "우선 피를 뽑아내기 전에는, 칼집에 들어가지 않을거야!"
 
-@The_weapon@ [explains all about|gives a lengthy lecture on] @_musical_topic_@.
+@The_weapon@(은)는 @_musical_topic_@에 대한 [전부를 설명했다|지루한 강의를 해주었다].
 
-@The_weapon@ curses its smith, "I was supposed to be the Stinging Sword!"
+@The_weapon@(은)는 그것의 제작자를 저주했다, "난 가시돋힌 검이어야 했다고!"
 
-@The_weapon@ yells, "Ploughshares to swords!"
+@The_weapon@(은)는 외쳤다, "쟁기날에서 검으로!"
 
-@The_weapon@ asks, "What song would you like to be played for your funeral?"
+@The_weapon@(은)는 물었다, "네 장례식에 무슨 노래가 연주됬으면 해?"
 
-@The_weapon@ announces, "I dedicate these songs to @player_name@!"
+@The_weapon@(은)는 알렸다, "@player_name@에게 이 노래들을 바칠게!"
 
-@The_weapon@ declares, "I sing the tale of @player_name@, the warrior!"
+@The_weapon@(은)는 선언했다, "전사, @player_name@에 관한, 이야기를 노래할거야!"
 
-@The_weapon@ says, "Hey! Are you even listening?"
+@The_weapon@(은)는 말했다, "이봐! 듣기는 하는거야?"
 
-@The_weapon@ longs back for the days in the arena.
+@The_weapon@(은)는 투기장에서의 날들로 돌아가길, 간절히 원했다.
 
-@The_weapon@ amuses itself with detailed descriptions of past executions.
+@The_weapon@(은)는, 지난번 처형의 자세한 설명은 하며, 스스로 즐겼다.
 
-@The_weapon@ wishes everyone in the dungeon [an unpleasant|a sudden] [demise|death].
+@The_weapon@(은)는 던전의 모든것들에게, [불쾌한|갑작스런] [사망|죽음]을 원했다.
 
-@The_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
+@The_weapon@(은)는 씩씩거렸다, "얻어맞는것, 구부러지고 망가지는게, 이 지루함보다는 분명히 나을거야!"
 
-@The_weapon@ shouts, "I love putting a song in people's hearts. And in their kidneys."
+@The_weapon@(은)는 외쳤다, "사람들 가슴에 노래를 심는걸 좋아해. 그리고 신장 속에도."
 
-@The_weapon@ grouses, "Could you please kill something? I'm itching all over."
+@The_weapon@(은)는 투덜거렸다, "뭔가를 살해 할수 있어? 나 온몸이 가려워."
 
-@The_weapon@ laments, "What are you waiting for? I am doing all the work."
+@The_weapon@(은)는 한탄했다, "뭘 기다리고 있는거야? 모든 일들을 내가 하고있다고."
 
-@The_weapon@ explains, "Killing is an art, not a pastime."
+@The_weapon@(은)는 설명했다, "살해는 예술이야, 취미가 아니라."
 
-@The_weapon@ goes, "Jessica and Sigmund, sitting in a tree..."
+@The_weapon@(은)는 노래하며 갔다, "제시카와 지그문트, 나무에 앉아있네..."
 
-@The_weapon@ says, "I want to meet the serpentine blade!"
+@The_weapon@(은)는 말했다, "구불구불한 검을 만나고싶어!"
 
-@The_weapon@ says, "Take me to Pandemonium! Now!!!"
+@The_weapon@(은)는 말했다, "날 판데모니엄에 데려다줘! 지금!!!"
 
-@The_weapon@ recounts funny stories of hydra head multiplication.
+@The_weapon@(은)는, 히드라의 머리 증식에 대한, 재미있는 이야기들을 말했다.
 
-@The_weapon@ says, "Sometimes people call me a magnificent bastard."
-
-w:1
-@The_weapon@ snarls, "Dear diary, yet another boring day with @player_name@..."
-
-@The_weapon@ says, "In my experience, @player_genus_plural@ are mediocre at best."
-
-@The_weapon@ groans, "Among all @player_genus_plural@, @player_name@ is the worst."
-
-@The_weapon@ says, "Unhand me, foul miscreant!"
-
-@The_weapon@ muses, "Whom do I have to kill to get some service around here?"
-
-@The_weapon@ sings out, "Sing loudly and carry a big sword!"
-
-@The_weapon@ ponders the difference in lifespan between man and sword.
+@The_weapon@(은)는 말했다, "때때로 사람들이 날, 기막힌 새끼라고 불렀었어."
 
 w:1
-@The_weapon@ says, "All work and no play makes @player_name@ a dull boy!"
+@The_weapon@(은)는 호통쳤다, "일기장에게, 또다시 @player_name@(와)과 함께한 지루한 날들..."
+
+@The_weapon@(은)는 말했다, "내 경험으로는, @player_genus_plural@(은)는 기껏해야 평범한 수준이지."
+
+@The_weapon@(은)는 신음했다, "모든 @player_genus_plural@ 중에서, @player_name@(은)는 최악이야."
+
+@The_weapon@(은)는 말했다, "날 놓으라고, 이 역겨운 악당아!"
+
+@The_weapon@(은)는 혼잣말했다, "이 주변에서 경험을 쌓으려면, 뭘 죽여야 해?"
+
+@The_weapon@(은)는 크게 노래했다, "큰소리로 노래하고, 대검을 들고다녀라!"
+
+@The_weapon@(은)는 인간과 검 사이의 수명 차이에 대해, 곰곰히 생각했다.
+
+w:1
+@The_weapon@(은)는 말했다, "일만 하고 놀지않으면, @player_name@(을)를 재미없는 놈으로 만드는거야!"
 
 # Blue Oyster Cult "Black Blade"
-@The_weapon@ says, "I wish I'd pick another to be my killing [tool|fool]."
+@The_weapon@(은)는 말했다, "다른 살해 [도구|바보]를 주웠다면 좋았을거야."
 
-@The_weapon@ hoarsely says, "Need a drink... quick! Stab something."
-
-w:1
-@The_weapon@ says, "You haven't happened to see my sheath laying around anywhere? I feel so exposed."
+@The_weapon@(은)는 목이 쉰듯이 말했다, "물이 필요해... 빨리! 뭔가를 찔러."
 
 w:1
-@The_weapon@ complains, "Oh, are your palms wet and greasy. But I allow you to wield me for a while."
+@The_weapon@(은)는 말했다, "어디서 내 칼집 본적 없어? 나말야 너무 노출된것 같아."
+
+w:1
+@The_weapon@(은)는 불평했다, "오, 네 손바닥말야, 축축하고 기름기있다고. 그래도 잠깐 휘두르는걸 허락할게."
 
 ############ speaking, low tension ############
 %%%%
 _speaking_low_tension_
 
-@The_weapon@ shouts, "Live by the sword, die by the sword!"
+@The_weapon@(은)는 외쳤다, "검에 살고, 검에 죽어라!"
 
 w:1
-@The_weapon@ shouts, "Lie [by|to] the sword, die by the sword!"
+@The_weapon@(은)는 외쳤다, "검[의 옆에 누워서|에 기대서], 검에 의해 죽어라!"
 
-@The_weapon@ realises, "If we kill all of them, no-one will be listening!"
+@The_weapon@(은)는 깨달았다, "우리가 전부를 죽이면, 청중들이 아무도 없게되!"
 
-@The_weapon@ sighs, "How I wish you were a better fighter."
+@The_weapon@(은)는 한숨쉬었다, "네가 더 나은 전사였으면 하고 얼마나 바랬는데."
 
-@The_weapon@ comments on your fighting techniques.
+@The_weapon@(은)는 당신의 전투 기술에 대해 지적했다.
 
-@The_weapon@ compares you unfavourably to its previous owner.
+@The_weapon@(은)는 이전 소유자에 대해, 당신을 비판적으로 비교했다.
 
-@The_weapon@ complains, "This is a chore."
+@The_weapon@(은)는 불평했다, "이건 따분한 일이야."
 
-@The_weapon@ judges, "You're not an artist, at best an artisan."
+@The_weapon@(은)는 정의했다, "넌 예술가가 아니야, 기껏해야 기능사 정도라고."
 
-@The_weapon@ says, "They will have to pry me from your cold, dead hands."
+@The_weapon@(은)는 말했다, "저것들은 날, 네 차갑고 무감각한 손에서 떼어놔야 할거야."
 
-@The_weapon@ moans, "By {{ if you.god() == "No God" then return "my blade"
-else return "@player_god@"; end }}, you are such a [coward|dastard|craven|faintheart|poltroon|wuss]."
+@The_weapon@(은)는 투덜거렸다, "{{ if you.god() == "No God" then return "my blade"
+else return "@player_god@"; end }}에 의하면, 넌 [졸장부|비겁자|비겁한 놈|겁많은 놈|겁쟁이|쪼다](이)라는데."
 
-@The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
+@The_weapon@(은)는 궁금해했다, "누가 더 무능하지 - 너랑 적 중에?"
 
-@The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
+@The_weapon@(은)는 발언했다, "그들의 비명, 그들의 눈물, 더이상 버틸수 없어."
 
-@The_weapon@ says, "Will you forgive me a little stab on the side?"
+@The_weapon@(은)는 말했다, "옆구리 조금만 찔러도 용서해줄래?"
 
-@The_weapon@ says, "Your kiss, my thrill, your miss, my kill."
+@The_weapon@(은)는 말했다, "네 키스는, 내 전율이고, 네 실수는, 내 죽음이지."
 
-@The_weapon@ boasts, "My voice can shatter a wine glass. My blade can shatter a human skull."
+@The_weapon@(은)는 자랑했다, "내 목소리는 와인 잔을 깰수 있어. 내 검은 인간의 두개골을 깰수 있어."
 
 ############ speaking, low or high tension -- possible damage ############
 %%%%
 _speaking_low-high_tension_
 
-@The_weapon@ shouts, "The pen is mightier than the sword? Come on, pens, here I am!"
+@The_weapon@(은)는 말했다, "펜이 검보다 강하다고? 덤벼봐, 펜, 난 여기있다!"
 
-@The_weapon@ happily shouts, "Violence is virtue, silence is sin."
+@The_weapon@(은)는 외쳤다, "폭력은 미덕이고, 침묵은 죄악이지."
 
-@The_weapon@ shouts a battle cry!
+@The_weapon@(은)는 전투의 함성을 외쳤다!
 
-@The_weapon@ shouts, "Onwards! It's kill or die!"
+@The_weapon@(은)는 외쳤다, "계속! 죽이거나 죽거나라고!"
 
-@The_weapon@ shouts, "Kill! Crush! Destroy!"
+@The_weapon@(은)는 외쳤다, "죽여라! 부숴버려! 파괴해라!"
 
-@The_weapon@ states, "Their screams, my satisfaction."
+@The_weapon@(은)는 진술했다, "그들의 비명은, 나의 만족이지."
 
-@The_weapon@ yells, "Steel will triumph where flesh falters!"
+@The_weapon@(은)는 고함쳤다, "살점이 흔들리는 곳에서, 무기가 승리할 것이다!"
 
-@The_weapon@ cautions, "Never send @a_player_genus@ to do a blade's job!"
+@The_weapon@(은)는 경고했다, "누가 검사를 하려거든, @a_player_genus@(이)라면 절대로 하게 하지마!"
 
-@The_weapon@ hisses, "Let's hear you complain about my singing with your throat slit!"
+@The_weapon@(은)는 씩씩거렸다, "네 목구멍에서 나오는, 내 노래에 대한 불평을 들어보자고!"
 
-@The_weapon@ teaches, "Practice makes perfect!"
+@The_weapon@(은)는 가르쳤다, "연습이 완벽을 만든다!"
 
-@The_weapon@ asks, "Do you have the will to power, @player_name@?"
+@The_weapon@(은)는 물었다, "힘을 얻을 의지를 가지고있나, @player_name@?"
 
-@The_weapon@ laughs, "I always appreciate a bleeding ovation!"
+@The_weapon@(은)는 웃었다, "난 항상 피흘리는 열렬한 환영에 감사한다!"
 
-@The_weapon@ shouts, "The neck bone's connected to the head bone... but not for long!"
+@The_weapon@(은)는 외쳤다, "목뼈는 머리뼈와 연결되있지... 하지만 오래가진 않을것이다!"
 
-@The_weapon@ shouts, "My song won't be the only thing that'll get stuck in your head!"
+@The_weapon@(은)는 외쳤다, "내 노래는 단지, 네 머리속으로 빠져드는 것이 다는 아니지!"
 
 # Predator
-@The_weapon@ shouts, "If it bleeds, we can kill it!"
+@The_weapon@(은)는 외쳤다, "피를 흘리는 것이라면, 죽일수 있다!"
 
 # Millennium, referencing William Yeats
-@The_weapon@ says, "I want to see you dance on the blood-dimmed tide."
+@The_weapon@(은)는 말했다, "네가 피로 흐려진 물결 위에서 춤추는걸 보고싶군."
 
 # Star Trek
-@The_weapon@ shouts, "Today is a good day to die!"
+@The_weapon@(은)는 외쳤다, "오늘은 죽기 좋은 날이군!"
 
 # Popular Hits of the Showa Era (a novel by Ryu Murakami)
-@The_weapon@ says, "Murder is the only thing that has any meaning these days."
+@The_weapon@(은)는 말했다, "살해 행위는, 요즘에는 별 의미없는 것일 뿐이지."
 
 w:1
-@The_weapon@ says, "The rupture of their bodies, my rapture of the deep blood."
+@The_weapon@(은)는 말했다, "그들의 신체 파열은, 내 깊은 피의 황홀감이지."
 
-@The_weapon@ shouts, "Murder is sin, but it will be washed away with blood."
+@The_weapon@(은)는 외쳤다, "살해는 죄악이지만, 피로 씻어버릴수 있지."
 
-@The_weapon@ shouts, "Hey, monsters! @player_name@ is over here!"
+@The_weapon@(은)는 외쳤다, "이봐, 몬스터들! @player_name@(은)는 여기 있다!"
 
 # Immortal Defense, Circuit Point quote
-@The_weapon@ shouts, "A winner requires a loser!"
+@The_weapon@(은)는 외쳤다, "승자가 패자에게 명령한다!"
 
 ############ speaking, high tension -- damage! ############
 %%%%
 _speaking_high_tension_
 
-@The_weapon@ yells, "I hereby consecrate these halls WITH BLOOD!"
+@The_weapon@(은)는 고함쳤다, "이로써 나는 복도를 피로써 깨끗하게 한다!"
 
 # After the crusader's "deus vult" battle cry
-@The_weapon@ bellows, "{{ if you.god() == "No God" then return "@_godless_sorter_@"; else return "@player_god@"; end }} wills it!"
+@The_weapon@(은)는 큰소리로 말했다, "{{ if you.god() == "No God" then return "@_godless_sorter_@"; else return "@player_god@"; end }}(이)가 그것을 바랄 것이다!"
 
-@The_weapon@ shouts, "Lose my temper? Nonsense! My steel will be strong forever!"
+@The_weapon@(은)는 외쳤다, "내가 이성을 잃었다고? 터무니없군! 내 강철은 영원히 강할거야!"
 
-@The_weapon@ shouts, "Cut 'em off! All their little heads at once!"
+@The_weapon@(은)는 외쳤다, "전부 잘라내라! 그 작은 대가리들을 전부 한번에!"
 
-@The_weapon@ shouts, "Kill 'em all and let {{ if you.god() == "No God" then
-return "@_godless_sorter_@"; else return "@player_god@"; end }} sort them out!"
+@The_weapon@(은)는 외쳤다, "전부 죽여라! {{ if you.god() == "No God" then
+return "@_godless_sorter_@"; else return "@player_god@"; end }}(이)가 네놈들을 가려낼 것이다!"
 
-@The_weapon@ shouts, "Screaming and crying is the perfect accompaniment."
+@The_weapon@(은)는 외쳤다, "비명과 통곡은, 완벽한 반주이다."
 
-@The_weapon@ shouts, "I'll make piano strings from your guts!"
+@The_weapon@(은)는 외쳤다, "네 창자로 피아노줄을 만들거야!"
 
-@The_weapon@ shouts, "Oh, the @_glorious_@ feeling of steel cutting flesh."
+@The_weapon@(은)는 외쳤다, "오, 살점을 잘라내는, 무기의 @_glorious_@ 느낌."
 
-@The_weapon@ shouts, "I just love to dig into intestines."
+@The_weapon@(은)는 외쳤다, "난 창자를 파고드는걸 좋아해."
 
-@The_weapon@ @_screams_@, "Among all these lost souls, we reign supreme!"
+@The_weapon@(은)는 @_screams_@, "모든 방황하는 영혼들 사이에서, 우리는 최고로 지배할거야!"
 
-@The_weapon@ shouts, "Die. Die. Die!"
+@The_weapon@(은)는 외쳤다, "죽어. 죽어라. 죽어!"
 
 # After Rimbaud
-@The_weapon@ shouts, "You shall lie beneath the ground but I, I will glint in the sun!"
+@The_weapon@(은)는 외쳤다, "넌 땅밑에 묻힐거지만 나는, 나는 양지에서 반짝거릴거야!"
 
 w:1
-@The_weapon@ shouts, "Born from this womb, sliced by this blade!"
+@The_weapon@(은)는 외쳤다, "뱃속에서 태어나서, 이 검으로 썰릴것이다!"
 
-@The_weapon@ @_screams_@, "When this war is won, I will wage the next one."
+@The_weapon@(은)는 @_screams_@, "이 전투에서 이겼을때, 다음 전투를 벌일거야."
 
-@The_weapon@ @_screams_@, "Blade-deep in blood!"
+@The_weapon@(은)는 @_screams_@, "핏 속에 깊숙히 잠긴 검!"
 
-@The_weapon@ @_screams_@, "I revel, I sever!"
+@The_weapon@(은)는 @_screams_@, "내가 대접할게, 나 웨이터야!"
 
-@The_weapon@ @_screams_@, "All those pillows!"
+@The_weapon@(은)는 @_screams_@, "이 베개들아!"
 
-@The_weapon@ @_screams_@, "No rest until they move no more!"
+@The_weapon@(은)는 @_screams_@, "저들이 더이상 못 움직일때까지, 휴식은 없다!"
 
-@The_weapon@ @_screams_@, "As long as they die, we live!"
+@The_weapon@(은)는 @_screams_@, "저들이 죽는한, 우리는 생존할거야!"
 
-@The_weapon@ @_screams_@, "The future is bloody!"
+@The_weapon@(은)는 @_screams_@, "미래는 피로 더럽혀질거야!"
 
 w:1
-@The_weapon@ @_screams_@, "The bloody future is ours!"
+@The_weapon@(은)는 @_screams_@, "피투성이의 미래는 우리의 것이다!"
 
-@The_weapon@ @_screams_@, "Dismember the living, dismember the dead!"
+@The_weapon@(은)는 @_screams_@, "생자를 훼손해라, 망자를 훼손해라!"
 
-@The_weapon@ @_screams_@, "We will celebrate on a pile of carcasses!"
+@The_weapon@(은)는 @_screams_@, "우린 시체 무더기 위에어 기념할거야!"
 
-@The_weapon@ @_screams_@, "@player_name@, you will [dine|feast] on fine @_corpses_@ today!"
+@The_weapon@(은)는 @_screams_@, "@player_name@, 넌 오늘 괜찮은 @_corpses_@(을)를 [만찬으로 즐길거야|맘껏 먹을거야]!"
 
-@The_weapon@ @_screams_@, "Go for the jugular!"
+@The_weapon@(은)는 @_screams_@, "목정맥을 노려라!"
 
-@The_weapon@ @_screams_@, "My instinct to kill is stronger than their will to live!"
+@The_weapon@(은)는 @_screams_@, "내 살해 본능이, 저들의 생존 의지보다 더 강하다고!"
 
-@The_weapon@ @_screams_@, "I am covered in blood! It feels so good!"
+@The_weapon@(은)는 @_screams_@, "나 피로 덮혔어! 기분 참 좋은데!"
 
-@The_weapon@ @_screams_@, "Aah! This piece of @_body_part_@ is stuck to me. Wipe it off!"
+@The_weapon@(은)는 @_screams_@, "아악! @_body_part_@의 쪼가리가 나한테 붙었어. 떼어내라구!"
 
-@The_weapon@ @_screams_@, "My edge gets dull! My edge gets dull!"
+@The_weapon@(은)는 @_screams_@, "내 모서리가 무뎌졌어! 내 모서리가 무뎌졌어!"
 
-@The_weapon@ @_screams_@, "Don't stick me into that one, please."
+@The_weapon@(은)는 @_screams_@, "저것에 날 찌르지 말아줘."
 
 # Immortal Defense, Courage Point quote
-@The_weapon@ @_screams_@, "My victories add up!"
+@The_weapon@(은)는 @_screams_@, "내 승리 횟수가 늘어났군!"
 
 # Krindle's blood song, rhymes, from Walter Moers' Rumo:
 w:1
-@The_weapon@ @_screams_@, "Blood as far as the eye can see! Blood for all eternity!"
+@The_weapon@(은)는 @_screams_@, "눈이 볼수있을 만큼의 피를! 영원히 피를!"
 
 w:1
-@The_weapon@ @_screams_@, "Blood must spurt and blood must flow! Blood must gush from every foe!"
+@The_weapon@(은)는 @_screams_@, "피가 솟구치고, 피가 넘쳐나와야 해! 모든 적에게서 피를 쏟아내야 해!"
 %%%%
 _godless_sorter_
 
 w:5
-fate
+운명
 
 w:5
-the lot
+대지
 
-worms
+벌레들
 
-the godless void
+신이없는 공허
 
 w:1
-autolysis
+자가 분해
 
 w:4
-putrefaction
+부패
 ############ SCREAMING -- lots of damage!! #########################
 %%%%
 _SCREAM_
 
-@The_weapon@ goes, "RWARRR!"
+@The_weapon@(은)는 포효했다, "르워어어--!"
 
 #### Omnipotence phantasies, often with metaphysical or religious undertone ####
 
-@The_weapon@ @_screams_@, "I WAS FORGED TO MURDER THE WORLD!"
+@The_weapon@(은)는 @_screams_@, "나는 이 세계를 살해하기위해, 만들어졌다!"
 
-@The_weapon@ @_screams_@, "I WILL SING THE SONG THAT ENDS THE WORLD!"
+@The_weapon@(은)는 @_screams_@, "이 세상이 끝날 때까지, 노래할 것이다!"
 
-@The_weapon@ @_screams_@, "I AM THE PEN! I AM THE SWORD! I AM THE HIGHEST LORD!"
+@The_weapon@(은)는 @_screams_@, "나는 펜이다! 나는 검이다! 나는 최고의 지배자다!"
 
-@The_weapon@ @_screams_@, "I AM YOUR PUNISHER!"
+@The_weapon@(은)는 @_screams_@, "나는 너의 처벌자다!"
 
-@The_weapon@ @_screams_@, "IT'S JUDGEMENT DAY AND THE SENTENCE IS DEATH!"
+@The_weapon@(은)는 @_screams_@, "심판의 날의, 판결은 죽음이다!"
 
-@The_weapon@ @_screams_@, "I AM THE CREATOR!"
+@The_weapon@(은)는 @_screams_@, "나는 창조자다!"
 
-@The_weapon@ @_screams_@, "THE SWORD GAVE, AND THE SWORD HATH TAKEN AWAY!"
+@The_weapon@(은)는 @_screams_@, "검을 주었더니, 검이 떠나가네!"
 
-@The_weapon@ @_screams_@, "BAPTISED IN BLOOD I AM!"
+@The_weapon@(은)는 @_screams_@, "피로 세례받은게, 바로 나다!"
 
-@The_weapon@ @_screams_@, "FEEL THE CATHARSIS!"
+@The_weapon@(은)는 @_screams_@, "이 희열을 느껴봐라!"
 
-@The_weapon@ @_screams_@, "ALL WORSHIP ME, THE MAJESTY OF STEEL!"
+@The_weapon@(은)는 @_screams_@, "모두가 날 숭배하지, 무기의 위용을!"
 
-@The_weapon@ @_screams_@, "PRAY TO ME, NOT TO GODS OF FLESH AND BONE!"
+@The_weapon@(은)는 @_screams_@, "나에게 기도해라, 살과 뼈가 붙어있는 신들 말고!"
 
-@The_weapon@ @_screams_@, "FOUNTAINS OF BLOOD IN HONOUR OF THE FAIR BLADE!"
+@The_weapon@(은)는 @_screams_@, "공정한 검을 기리는, 피의 분수다!"
 
-@The_weapon@ @_screams_@, "I AM THE FIFTH HORSEMAN! THE TIME IS NOW!"
+@The_weapon@(은)는 @_screams_@, "난 5번 기수다! 때는 지금이다!"
 
-@The_weapon@ @_screams_@, "I AM BECOME DEATH, [DESTROYER|DEFILER|DISMEMBERER] OF [WORLDS|GODS|CHAMPIONS|HEROES|LEGIONS|NATIONS|MILLIONS]!"
+@The_weapon@(은)는 @_screams_@, "난 죽음이 되었지, [세계|신들|챔피언들|영웅들|여러 군단|여러 국가|수백만](을)를 [파괴자|더럽히는 자|절단하는 자]다!
 
 # John 11:25
-@The_weapon@ @_screams_@, "I AM THE RESURRECTION AND THE LIFE!"
+@The_weapon@(은)는 @_screams_@, "나는 부활이고, 생명이다!"
 
 # R.E.M.
-@The_weapon@ @_screams_@, "THIS IS THE END OF THE WORLD AS YOU KNOW IT!!!"
+@The_weapon@(은)는 @_screams_@, "이것이 이 세계의 끝이다!!!"
 
 # Marilyn Manson, "The Reflecting God"
-@The_weapon@ @_screams_@, "WHEN I'M GOD, EVERYONE DIES!!!"
+@The_weapon@(은)는 @_screams_@, "내가 신이 될 때, 모두가 죽을것이다!!!"
 
 # Ayria, "Horrible Dream"
-@The_weapon@ @_screams_@, "DIFFUSE IT! DESTROY IT! ABUSE IT! ENJOY IT!"
+@The_weapon@(은)는 @_screams_@, "퍼뜨려라! 파괴해라! 학대해라! 즐겨라!"
 
 # This and the next are from Planescape: Torment
-@The_weapon@ @_screams_@, "I AM IRON GIVEN PURPOSE!"
+@The_weapon@(은)는 @_screams_@, "나는, 의지가 주어진 검이다!"
 
-@The_weapon@ @_screams_@, "I AM PAIN SEEKING EXPRESSION!"
+@The_weapon@(은)는 @_screams_@, "나는 고통을 추구하는, 표현이다!"
 
 #### Battle frenzy ####
-@The_weapon@ @_screams_@, "LET'S STRANGLE THE @_MISCREANTS_@, STRANGLE THEM!"
+@The_weapon@(은)는 @_screams_@, "@_MISCREANTS_@들을 목졸라 죽이자, 목졸라 죽이자고!"
 
-@The_weapon@ @_screams_@, "KILL! KILL!! KILL!!!"
+@The_weapon@(은)는 @_screams_@, "죽여! 죽여!! 죽여!!!"
 
-@The_weapon@ @_screams_@, "I SMELL BLOOD!"
+@The_weapon@(은)는 @_screams_@, "피냄새를 맡았다!"
 
-@The_weapon@ @_screams_@, "CARNAGE NOT CANTRIPS!"
+@The_weapon@(은)는 @_screams_@, "장난이 아니라, 대학살이다!"
 
-@The_weapon@ @_screams_@, "KILL, HATE, MUTILATE!"
+@The_weapon@(은)는 @_screams_@, "죽여라, 증오해라, 훼손해라!"
 
 # Demolition Man
-@The_weapon@ @_screams_@, "MURDER! DEATH!! KILL!!!"
+@The_weapon@(은)는 @_screams_@, "살해! 죽음!! 살생!!!"
 
-@The_weapon@ @_screams_@, "DECIMATE, TERMINATE, ERADICATE!"
+@The_weapon@(은)는 @_screams_@, "섬멸해라, 끝내라, 뿌리뽑아라!"
 
-@The_weapon@ @_screams_@, "I BATHE IN BLOOD AND BONE AND BRAINS!"
+@The_weapon@(은)는 @_screams_@, "나는, 피와 뼈와 뇌 속에서 목욕한다!"
 
 # A faint reminiscence to Holst
-@The_weapon@ @_screams_@, "I AM THE BRINGER OF WAR!"
+@The_weapon@(은)는 @_screams_@, "나는 전쟁을 몰고오는 자다!"
 
-@The_weapon@ @_screams_@, "LET'S END THEIR MISERABLE LIVES!"
+@The_weapon@(은)는 @_screams_@, "저것들의 끔찍한 삶을 끝내자!"
 
-@The_weapon@ @_screams_@, "BRING THEM DOWN!"
+@The_weapon@(은)는 @_screams_@, "저것들을 쓰러뜨려!"
 
-@The_weapon@ @_screams_@, "DIE WHILE I'M SINGING!"
+@The_weapon@(은)는 @_screams_@, "내가 노래하는 동안에, 죽어라!"
 
-@The_weapon@ @_screams_@, "KNEE-DEEP IN BLOOD AND GOING STRONG!"
+@The_weapon@(은)는 @_screams_@, "무릎 깊이의 핏 속에서, 강해진다!"
 
-@The_weapon@ @_screams_@, "ENCORE! ENCORE! ENCORE!"
+@The_weapon@(은)는 @_screams_@, "앵콜! 앵콜! 앵콜!"
 
-@The_weapon@ @_screams_@, "HOW CAN YOU THINK ABOUT SINGING AT A TIME LIKE THIS?!"
+@The_weapon@(은)는 @_screams_@, "어떻게 이때, 노래하는것을 생각할 수 있어?!"
 
-@The_weapon@ @_screams_@, "THE SCREAMS! DON'T LET THEM STOP WITH THE SCREAMS!"
+@The_weapon@(은)는 @_screams_@, "비명! 저것들이 비명을 멈추게 하지마라!"
 
-@The_weapon@ @_screams_@, "NONE SHALL [LIVE|ESCAPE|SURVIVE|BE SPARED]!"
+@The_weapon@(은)는 @_screams_@, "아무도 [목숨을 보전할 수|탈출할 수|생존할 수|구제될 수] 없어!"
 
-@The_weapon@ @_screams_@, "SPARE NO ONE!"
+@The_weapon@(은)는 @_screams_@, "누구도 살려두지 않아!"
 
-@The_weapon@ @_screams_@, "COME TO ME! COME TO ME AND DIE!"
+@The_weapon@(은)는 @_screams_@, "나한테 와! 나한테 와서 죽어!"
 
-@The_weapon@ @_screams_@, "CUT! CUT! CUT AND SLASH!"
+@The_weapon@(은)는 @_screams_@, "잘라내! 잘라! 잘라내서 썰어버려!"
 
-@The_weapon@ @_screams_@, "STABBITY STAB STAB STAB!"
+@The_weapon@(은)는 @_screams_@, "찌르고싶지, 찔러 찔러 찔러!"
 
-@The_weapon@ @_screams_@, "ABANDON ALL HOPE!"
+@The_weapon@(은)는 @_screams_@, "모든 희망을 버려라!"
 
-@The_weapon@ @_screams_@, "SLASH 'EM! SLASH 'EM ALL!"
+@The_weapon@(은)는 @_screams_@, "썰어버려! 전부 썰어버려!"
 
-@The_weapon@ @_screams_@, "LET'S HACK!"
+@The_weapon@(은)는 @_screams_@, "난도질하자!"
 
-@The_weapon@ @_screams_@, "DON'T YOU DARE DIE ON ME NOW, @CAPS@ @player_name@!"
+@The_weapon@(은)는 @_screams_@, "감히 내 위에서 죽겠다고, @CAPS@ @player_name@!"
 
-@The_weapon@ @_screams_@, "THIS IS THE COLOUR OF PAIN!"
-
-w:1
-@The_weapon@ @_screams_@, "YES! YES! YES! THIS is the LIFE, baby, this is the LIFE!"
+@The_weapon@(은)는 @_screams_@, "이것이 고통의 빛깔이다!"
 
 w:1
-@The_weapon@ @_screams_@, "PAINT IT RED! PAINT IT RED! PAINT IT ALL RED RED RED RED!!!!"
+@The_weapon@(은)는 @_screams_@, "그래! 그래! 그거라고! 이게 삶이야, 애송아, 이게 삶, 이라고!"
+
+w:1
+@The_weapon@(은)는 @_screams_@, "붉게 칠해! 붉게 칠하라고! 전부 붉게 붉게 붉게 붉게, 붉게, 붉게!!!!"
 
 w:20
-@The_weapon@ @_screams_@, "SWING ME [HARDER|FASTER], YOU [FUMBLE-FINGERED|INCOMPETENT|USELESS|SLUGGISH|NOODLE-ARMED|RUNNY-EYED|KNUCKLE-DRAGGING] [NINCOMPOOP|LARDBUCKET|WEAKLING|STICK-INSECT|FLATFOOT|BONEHEAD|MOONCALF|SLOTH]!"
+@The_weapon@(은)는 @_screams_@, "날 [더 세게|더 빠르게] 휘둘러라, 이 [더듬는 손가락의|무능한|쓸모없는|게으른|국수같은 팔뚝의|촉촉한 눈의|손가락 마디가 느려터진] [멍청이|뚱보|약골|대벌레|평발|얼간이|태생의 바보|나무늘보]야!"
 
 # Immortal Defense, Cut Point quote
-@The_weapon@ @_screams_@, "SUFFER OR PERISH! EITHER!"
+@The_weapon@(은)는 @_screams_@, "고통받던가 죽던가! 둘중 하나다!"
 
 # Immortal Defense, Limited Point quote, modified
-@The_weapon@ @_screams_@, "I CUT THROUGH MAGIC!"
+@The_weapon@(은)는 @_screams_@, "나는 마법을 잘라낸다!"
 
 # Mortalized (Pentatonic Slaughter)
-@The_weapon@ @_screams_@, "[@CAPS@ @_kind_of_scales_@|DISHARMONIC] SLAUGHTER!"
+@The_weapon@(은)는 @_screams_@, "[@CAPS@ @_kind_of_scales_@|부조화의] 학살이다!"
 
 # Use @player_genus@ rather than @player_species@ or @player_name@ to
 # express that the sword cares little for the character.
-@The_weapon@ @_screams_@, "FASTER, @CAPS@ @player_genus@, KILL KILL KILL!"
+@The_weapon@(은)는 @_screams_@, "더 빨리해, @CAPS@ @player_genus@, 죽여 죽여 죽여!"
 
 # Krindle's blood song, from Walter Moers' Rumo:
-@The_weapon@ @_screams_@, "BLOOD! BLOOD! BLOOD MUST SPURT AND BLOOD MUST FLOW!"
+@The_weapon@(은)는 @_screams_@, "피! 피! 피는 뿜어나와야 하고, 흘러나와야 해!"
 
-@The_weapon@ @_screams_@, "BLOOD! BLOOD! BLOOD MUST GUSH FROM EVERY FOE!"
+@The_weapon@(은)는 @_screams_@, "피! 피! 피는 모든 적들로부터, 쏟아져 나와야 해!"
 
 # Krindle's brain song, from Walter Moers' Rumo:
-@The_weapon@ @_screams_@, "BRAINS! BRAINS! CLEAVE THE SKULL AND OUT THEY SEEP!"
+@The_weapon@(은)는 @_screams_@, "뇌! 뇌! 두개골을 쪼개서, 그것들이 새어나오게 해!"
 
-@The_weapon@ @_screams_@, "BRAINS! BRAINS! KILLING'S FUN AND LIFE IS CHEAP!"
+@The_weapon@(은)는 @_screams_@, "뇌! 뇌! 살해는 즐겁고, 생명은 보잘것없지!"
 
 #### Madness ####
 
-@The_weapon@ @_screams_@, "I AM THE SWORD OF ZOT!!!"
+@The_weapon@(은)는 @_screams_@, "나는, 조트의 검이다!!!"
 
-@The_weapon@ @_screams_@, "I AM THE RUNES AND THE LIGHT!"
+@The_weapon@(은)는 @_screams_@, "나는 룬이고, 빛이다!"
 
-@The_weapon@ @_screams_@, "I love you all! And my gift to you is ARMAGEDDON!"
+@The_weapon@(은)는 @_screams_@, "너네들 전부 사랑해! 너희에게 줄 선물은, 아마게돈이다!"
 
-@The_weapon@ @_screams_@, "MY LOVE IS ETERNAL!"
+@The_weapon@(은)는 @_screams_@, "내 사랑은 영원하다!"
 
 # A fainter reminiscence to Nethack
 w:1
-@The_weapon@ @_screams_@, "I BRING THE STORM!"
+@The_weapon@(은)는 @_screams_@, "나는 폭풍을 몰고온다!"
 
 w:1
-@The_weapon@ @_screams_@, "LET'S FONDLE THE @_PETS_@, FONDLE THEM!"
+@The_weapon@(은)는 @_screams_@, "@_PETS_@(을)를 쓰다듬어, 쓰다듬어라!"
 
 w:40
-@The_weapon@ @_screams_@, "I AM [AN ANGEL|AN ARTIST|AN AVATAR|A HARBINGER|AN INSTRUMENT|A POET|A PROPHET|A SERVANT|A SLAVE|THE LORD|THE MASTER] OF [BLOOD|DANCE|DEATH|DESOLATION|DESPAIR|DESTRUCTION|DOOM|GORE|MADNESS|MUSIC|PAIN|RUIN|SLAUGHTER|SONG|STEEL|WAR]!"
+@The_weapon@(은)는 @_screams_@, "나는 [피|춤|죽음|적막함|절망|파괴|파멸|폭력|광기|음악|고통|폐허|살육|노래|무기|전쟁]의 [천사|예술가|화신|전령|악기|시인|선도자|하인|노예|지배자|주인](이)다!"
 
 # The Wizard People
-@The_weapon@ @_screams_@, "I AM A BEAUTIFUL ANIMAL!"
+@The_weapon@(은)는 @_screams_@, "나는 아름다운 동물이다!"
 
 # Immortal Defense, Courage Point quote
-@The_weapon@ @_screams_@, "EVERYTHING FAILS! EVERYTHING!!!"
+@The_weapon@(은)는 @_screams_@, "모든것은 실패한다! 모든것은!!!"
 
 # From Monty Python and the Holy Grail (Knights who say Ni)
 w:1
-@The_weapon@ @_screams_@, "NI! NI!! NI!!! NI!!! NI!!!"
+@The_weapon@(은)는 @_screams_@, "니! 니!! 니!!! 니!!! 니!!!"
 
 # Order of the Stick's Belkar Bitterleaf, chaotic evil ranger/barbarian halfling
-@The_weapon@ @_screams_@, "I AM A SEXY SHOELESS GOD OF WAR!"
+@The_weapon@(은)는 @_screams_@, "나는 구두없는, 화끈한 전장의 신이다!"
 
 # Terry Pratchett, Foul Old Ron
-@The_weapon@ @_screams_@, "BUGGRIT, MILLENNIUM HAND AND SHRIMP!"
+@The_weapon@(은)는 @_screams_@, "제기랄, 천년의 역할과 하찮은 놈이라니!"
 
 ###############################################################################
 # Lines from real songs.
@@ -1215,62 +1217,62 @@ w:1
 _real_song_no_tension_
 
 # Alan Lerner, Frederick Loewe: Paint your wagon
-@The_weapon@ sings, "I was forged under a slaughtering star..."
+@The_weapon@(은)는 노래했다, "나는 대량학살의 별 아래에서 만들어졌지..."
 
 # Spiritual
 w:1
-@The_weapon@ sings, "Nobody knows the trouble I've seen... Nobody but Ashenzari."
+@The_weapon@(은)는 노래했다, "누구도 내가 봤던 문제를 알지못하지... 아셴자리를 제외한 누구도 말이지."
 
 # Huey Lewis and the News, "Hip To Be Square". Another psychopathic music lover.
-@The_weapon@ sings, "It's hip to be square!"
+@The_weapon@(은)는 노래했다, "반듯한게, 멋진거지!"
 
 # Oingo Boingo, "Dead Man's Party"
-@The_weapon@ sings, "It's a dead man's party! Who could ask for more?"
+@The_weapon@(은)는 노래했다, "죽은 자의 파티야! 누가 더 요구할수 있어?"
 
 # Bobby Darin, "Mack the Knife", from Threepennyopera (Bertolt Brecht, Kurt Weill)
 w:1
-@The_weapon@ sings, "Oh, the shark, babe, has such teeth, dear, and it shows them pearly white..."
+@The_weapon@(은)는 노래했다, "오, 상어, 녀석, 그런 이빨을 가져선, 그대, 진주처럼 하얀 이빨들을 보여주네..."
 
 # The Tremoloes?
-@The_weapon@ roars, "Silence is golden, golden..."
+@The_weapon@(은)는 포효했다, "침묵은 금이지, 금이야..."
 
 # folklore, confusing flowers and monsters
-@The_weapon@ sings, "Where have all the monsters gone?"
+@The_weapon@(은)는 노래했다, "몬스터들이 전부 어디로 사라진걸까?"
 
 # Neil Diamond
-@The_weapon@ sings, "Song sung blue, everybody knows one..."
+@The_weapon@(은)는 노래했다, "우울하게 부르는 노래, 누구나 하나는 알고있어요..."
 
 # ABBA
-@The_weapon@ sings, "Thank you for the music..."
+@The_weapon@(은)는 노래했다, "음악 고마워..."
 
 # Melanie
-@The_weapon@ wails, "Look what they done to my song!"
+@The_weapon@(은)는 흐느꼈다, "저것들이 내 노래에 한짓을 보라고!"
 
 # folklore
-@The_weapon@ sings, "Old McDonald has a farm..."
+@The_weapon@(은)는 노래했다, "맥도날드 노인은 농장을 갖고있지..."
 
-@The_weapon@ sings, "Pop! Goes the weasel."
+@The_weapon@(은)는 노래했다, "튀어나와! 족제비가 간다."
 
 # Beatles
-@The_weapon@ sings, "Obladi oblada, life goes on..."
+@The_weapon@(은)는 노래했다, "오블란디 오블란다, 삶은 계속되..."
 
 # drinking song
-@The_weapon@ sings, "Ninety-nine potions of booze on the wall..."
+@The_weapon@(은)는 노래했다, "99개의 술병이 벽에 걸려있네..."
 
 # Folklore (Sailing)
-@The_weapon@ sings, "Can you hear me through the dark night far away?"
+@The_weapon@(은)는 노래했다, "이 어두운 밤, 떨어진 곳에서, 내 목소리가 들리니?"
 
 # The Carpenters
-@The_weapon@ sings, "Sing, sing a song, sing out loud, sing out strong..."
+@The_weapon@(은)는 노래했다, "부르자, 노래 부르자, 크게 부르자, 힘차게 부르자..."
 
 # Or was it the lion?
-@The_weapon@ sings, "In the dungeon the dragon sleeps tonight."
+@The_weapon@(은)는 노래했다, "던전에는, 오늘밤 드래곤이 잠들었지."
 
 # Eminem
-@The_weapon@ sings, "Kill for the laughter, kill for the tears..."
+@The_weapon@(은)는 노래했다, "웃음을 위해 죽여라, 눈물을 위해 죽여라..."
 
 # Swedish folk song, anonymous translation
-@The_weapon@ sings, "Come roses or sage, come lovely mint, come balm..."
+@The_weapon@(은)는 노래했다, "장미나 셀비어를 갖고와, 어여쁜 민트를 갖고와, 향기를 가지고 와..."
 
 ############ real songs, low tension ############
 %%%%
@@ -1416,121 +1418,121 @@ w:1
 %%%%
 _real_song_low-high_tension_
 
-@The_weapon@ sings, "Roll, roll, roll those heads, roll them all along. Merrily, merrily, merrily..."
+@The_weapon@(은)는 노래했다, "굴러라, 굴러, 이 머리들을 굴려라, 다같이 함께 굴려라. 즐겁게, 즐겁게, 즐겁게..."
 
 # Nancy Sinatra
 w:1
-@The_weapon@ sings, "This blade is made for cutting, and that's just what I'll do..."
+@The_weapon@(은)는 노래했다, "이 검은 자르기위해 만들어졌지, 그게 내가 할 일이야..."
 
 # Traditional (Pete Seeger, Joan Baez and others)
-@The_weapon@ sings, "We shall overcome..."
+@The_weapon@(은)는 노래했다, "우리는 극복해낼거야..."
 
 # Pixies
-@The_weapon@ sings, "Slicing up eyeballs, I want you to know!"
+@The_weapon@(은)는 노래했다, "눈알을 썰고있을 때, 네가 알아주길 바라!"
 
 # Radiohead, "Knives Out"
 w:1
-@The_weapon@ sings, "So knives out, cook him up, squash his head, put him in the pot."
+@The_weapon@(은)는 노래했다, "그래 칼들을 꺼내라, 그를 요리해라, 그의 대가리를 짓뭉개라, 그를 항아리에 넣어라."
 
 # NWA, "Straight Outta Compton"
 w:1
-@The_weapon@ sings, "Straight outta Zot, crazy bloodletter named Singing Sword."
+@The_weapon@(은)는 노래했다, "조트에게 직행하는, 노래하는 검이 쓴, 광기의 피로쓴 편지."
 
 # Pixies, "Gouge Away"
-@The_weapon@ sings, "Gouge away, you can gouge away..."
+@The_weapon@(은)는 노래했다, "찔러버려, 찔러버려도 되..."
 
 # Motörhead, "Ace of Spades"
 w:1
-@The_weapon@ roars, "The pleasure is to slay, it makes no difference what you say."
+@The_weapon@(은)는 포효했다, "살육은 즐거움이야, 네가 말한건 문제가 아니야."
 
 # Megadeth, "Killing Is My Business..."
-@The_weapon@ sings, "Killing is my business... and business is good!"
+@The_weapon@(은)는 노래했다, "해치우는게 내 일이야... 그리고 일은 즐겁지!"
 
 # Nine Inch Nails, "Closer"
-@The_weapon@ roars, "I want to gut you like an animal!"
+@The_weapon@(은)는 포효했다, "동물처럼, 네 내장을 뽑고싶어!"
 
 # Queen
-@The_weapon@ happily sings, "...another one bites the dust!"
+@The_weapon@(은)는 행복하게 노래했다, "...또 한놈이 흙을 한입 먹네!"
 
 # GG Allin
-@The_weapon@ sings, "Die when you die!"
+@The_weapon@(은)는 노래했다, "당신이 죽을때, 죽어요!"
 
 # Gloria Gaynor
-@The_weapon@ sings, "I will survive!"
+@The_weapon@(은)는 노래했다, "난 살아남을거야!"
 
 # Gloria Gaynor, same song
-@The_weapon@ sings, "As long as I know how to carve I know I'm still alive."
+@The_weapon@(은)는 노래했다, "내가 잘라내는 법을 아는한, 계속 살아남을걸 알아요."
 
 # Dead or Alive, "You Spin Me Round"
-@The_weapon@ sings, "You spin me right round baby, right round..."
+@The_weapon@(은)는 노래했다, "유 스핀 미 롸잇 라운드 베이비, 롸잇 라운드..."
 
 # All below from Richard Wagner's Rheingold
 w:1
-@The_weapon@ sings, in a stentorian basso, "Despicable dogs, put down the jewellery!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "비열한 견공들이, 귀중품을 내려놓네!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "I have faith in your faithlessness, not your fidelity! But dauntlessly - I defy you all!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "네 불성실함에 대해 믿고있어, 네 충실함이 아니지만! 대담하게 - 할 수 있으면 전부 해봐!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Too hard for you... because you're too stupid!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "네겐 너무 어려울거야... 네가 너무 멍청하기 때문에!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Bring it in there... as I command! Pile the hoard... into a heap!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "거기에 가져다놔... 내가 시킨대로! 비축물을 쌓아라... 이 무더기에!"
 
 w:1
-@The_weapon@ sings, in a thundering basso, "Come here, you cur! If you want to measure, measure yourself against me!"
+@The_weapon@(은)는 노래했다, 멋들어진 저음으로, "이리와라, 이 불량배야! 날 평가하고 싶다면, 너 자신과 비교해서 평가해라!"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "You slyly... evade the POINT."
+@The_weapon@(은)는 노래했다, 웅웅거리는 저음으로, "넌 교활해... 칼끝을 피하다니."
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "Shall I exert myself... against the miscreant for you?"
+@The_weapon@(은)는 노래했다, 웅웅거리는 저음으로, "노력할까... 널 위해, 저 악당에 대항해서?"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "But fall will the foe... with your cunning's aid!"
+@The_weapon@(은)는 노래했다, 웅웅거리는 저음으로, "그러나 적들은 쓰러질거야... 네 교활한 도움으로!"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "Enough, blasphemous fool!"
+@The_weapon@(은)는 노래했다, 웅웅거리는 저음으로, "충분해, 이 불경한 어리석은 자야!"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "Leave him... his slavering fury!"
+@The_weapon@(은)는 노래했다, 웅웅거리는 저음으로, "그를 내버려둬... 그의 침흘리는 분노를!"
 
 ############ real songs, high tension -- damage! ############
 %%%%
 _real_song_high_tension_
 
 # Queen
-@The_weapon@ sings, "We are the champions of the world!"
+@The_weapon@(은)는 노래했다, "우리는 이 세상의, 챔피언이야!"
 
 # Spice Girls
-@The_weapon@ sings, "Ain't no stopping us now..."
+@The_weapon@(은)는 노래했다, "이제 누구도, 우릴 막을수 없어..."
 
 # Frank Sinatra (or Sid Vicious)
-@The_weapon@ sings, "I did it my way!"
+@The_weapon@(은)는 노래했다, "내 방식대로 한거야!"
 
 # All below from Richard Wagner's Rheingold
 w:1
-@The_weapon@ sings, in a stentorian basso, "Tremble with terror, abject throng!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "공포에 떨어라, 비천한 군중들아!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Rascally robber! Rogue! Ruffian!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "악랄한 강도! 불한당! 깡패!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Terrible vengeance... I vow for this wrong!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "끔찍한 복수... 난 이 잘못된 것에 맹세했지!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Ah! Crushed! Shattered! Of wretches the wretchedest slave!"
+@The_weapon@(은)는 노래했다, 우렁찬 저음으로, "아! 부서졌다! 조각났다! 불쌍한 이들중 가장 비참한 노예가!"
 
 # German
 w:1
-@The_weapon@ sings, in a thundering basso, "Breche denn alles!"
+@The_weapon@(은)는 노래했다, 멋들어진 저음으로, "모든것에 대한 휴식을!"
 
 w:1
-@The_weapon@ sings, in a mocking tenor, "Does a mist deceive me? Does a dream mock me? How anxious and pale... you've a-sudden become!"
+@The_weapon@ (은)는 노래했다, 비웃는듯한 테너로, "안개가 나를 속이는가? 꿈이 나를 실망시키는가? 얼마나 불안하고 창백한가... 당신은 불현듯 되었지!"
 
 # This would need the ability to have conditionals based on branch.
 #w:1
-#@The_weapon@ sings, in a mocking tenor, "Here is the Swamp: through the pale mist - what fiery sparks are flashing?"
+#@The_weapon@ sings, in a mocking tenor, "Here is the Swamp: through the pale mist - what fiery sparks are flashing?
 
 ###############################################################################
 # synonyms used above
@@ -1539,245 +1541,245 @@ w:1
 %%%%
 _screams_
 
-screams
+소리쳤다
+ 
+윙윙거렸다
 
-booms
+포효했다
 
-roars
+큰소리쳤다
 
-bellows
+울부짖었다
 
-howls
+고함쳤다
 
-yells
+외쳤다
 
-shouts
-
-shrieks
+비명질렀다
 
 w:5
-thunders
+큰소리를 냈다
 
 w:3
-clamours
+떠들어댔다
 
 w:3
-exclaims
+소리쳐 말했다
 
 w:1
-vociferates
+호통쳤다
 %%%%
 _screams_how_
 
 w:120
-like a @_beastly_adjective_@ @_beast_@
+@_beastly_adjective_@ @_beast_@처럼
 
-hysterically
+신경질적으로
 
-angrily
+노하여
 
 w:60
 @_loudly_@
 %%%%
 _loudly_
 
-loudly
+크게
 
-deafeningly
+귀청이 터질듯이
 
-ear-piercingly
+귀를 관통하는 듯이
 
-ear-splittingly
+귀를 쪼갤듯이
 %%%%
 _beastly_adjective_
 
-hungry
+배고픈
 
-enraged
+격노한
 
-raging
+맹렬한
 
-furious
+분노한
 
-irate
+성난
 %%%%
 _beast_
 
-dragon
+용
 
-frog
+개구리
 
-lion
+사자
 
-bull
+황소
 
-beast
+짐승
 
 w:1
-beast of prey
+맹수
 
-predator
+포식자
 
-carnivore
+육식 동물
 %%%%
 _strikes_up_what_
 
 w:5
-a slow and mournful tune
+느리고 애절한 곡조
 
-a merry tune
+흥겨운 곡조
 
-a merry melody
+즐거운 선율
 
-a funeral march
+장송 행진곡
 %%%%
 _kind_of_scales_
 
-pentatonic
+5음 음계의
 
-chromatic
+반음계의
 
-diatonic
+전음계의
 %%%%
 _rhyme_word_
 
-fountain of blood
+피의 분수
 
-killing spree
+살해의 탐닉
 
-battlefield
+전장
 %%%%
 _song_theme_
 
-battle and fame
+전투와 명성
 
-death and destruction
+죽음과 파괴
 
-the glory of death
+죽음의 영광
 %%%%
 _musical_topic_
 
-acoustics
+음향학
 
-voice harmonics
+음성의 배음
 
-the history of music
+음악의 역사
 
-the theory of melody
+선율의 이론
 
-rhythms and time
-
-w:5
-the counterpoint
+리듬과 박자
 
 w:5
-descant
+대위법
 
-syncopation
+w:5
+데스캔트
+
+당김음
 
 w:1
-Aeolian mode
+에올리아 선법
 %%%%
 #### "...looks @_exasperated_@."
 _exasperated_
 
-exasperated
+몹시 화가나
 
-bugged out
+달아나려는듯
 
-unnerved
+불안해
 
-irascibly
+성미가 급해
 
-nervous
+신경이 과민해
 
-unruly
+제멋대로인듯
 
-truculent
+흉포해
 
-refractory
+반항적으로
 
-recalcitrant
+완강히 저항하는걸로
 %%%%
 #### "...turns @_crimson_@."
 _crimson_
 
-crimson
+진홍색
 
-blood-red
-
-w:1
-purple
+피처럼 붉은색
 
 w:1
-ensanguined
+자주색
 
 w:1
-violet
+피투성이
+
+w:1
+보라색
 %%%%
 _MISCREANTS_
 
-MISCREANTS
+범법자
 
-IMBECILES
+정박아
 
 w:3
-SCUM
+쓰레기같은 놈
 
 w:1
-FILTH
+추잡한 것
 %%%%
 _PETS_
 
-GUINEA PIGS
+기니피그
 
-CAVIES
+모르모트
 
-PUSSY CATS
+야옹이
 
-POODLES
+푸들
 
 w:1
-SPERM WHALES
+향유고래
 %%%%
 _corpses_
 
-corpses
+송장들
 
 w:1
-tasty carcasses
+맛좋은 시체들
 
 w:1
-exquisite cadavers
+최고의 사체들
 %%%%
 _body_part_
 
-skin
+가죽
 
 w:1
-hairy skin
+털 가죽
 
-carcass
+시체
 
-flesh
+살점
 %%%%
 _glorious_
 
-glorious
+영광스러운
 
-spanking
+활발한
 
-noble
+고결한
 
-exciting
+흥분되는
 
-thrilling
-
-w:1
-erotic
+오싹하게 하는
 
 w:1
-moving
+성적인
+
+w:1
+감동적인
 ###############################################################################
 ###############################################################################
 #
@@ -1788,45 +1790,45 @@ moving
 %%%%
 majin-bo greeting
 
-Well, hello there.
+음, 저기 안녕.
 
-Aren't you a tasty little thing?
+넌 맛있는, 자그마한 것 아니니?
 
-We're going to have a lot of fun together.
+우린 함께 재미있는걸 많이 하게 될거야.
 
-Let's make your enemies cower, shall we?
+네 적들을 움츠리게 만들자, 그러자?
 
 w:1
-You scratch my back, I'll scratch yours... and I'm one HELL of a backscratcher.
+내 등을 긁어주면, 니꺼도 긁어줄게... 그리고 난 굉장한 등긁개라구.
 %%%%
 majin-bo cast
 
-That's more like it.
+그쪽이 더 나은걸.
 
-This should be good.
+이건 좋을거야.
 
-Let me show you the power of Hell.
+지옥의 힘을 너에게 보여줄게.
 
-Embrace the darkness.
+어둠을 받아들여봐.
 
-Isn't this worth a little damnation?
+약간의 저주의 가치는 있지않니?
 
-I'll handle this.
+내가 처리할게.
 
-Now here's how it's done.
+자, 다루는 방법을 알려줄게.
 
-Your soul is simply delicious.
+네 영혼은 그야말로 맛있겠는걸.
 
-Has anyone ever told you how good your soul tastes?
+네 영혼 맛이 얼마나좋다던지 들어본적 없니?
 %%%%
 majin-bo cast weak
 
-You're beginning to bore me.
+너, 날 따분하게 만들기 시작했어.
 
-My talents are wasted here.
+내 재능이 여기서 낭비되고있어.
 
-Why bother with such petty cantrips?
+어째서 그런 하찮은 주문들로 애쓰는거니?
 
-A demon of Hell at your fingers, and you cast that...
+네 손가락들에 지옥의 악마가 있어, 그러니 그걸 내던져라구...
 
-Now, try casting something FUN.
+이제, 재미있는 것 좀 시전해봐.

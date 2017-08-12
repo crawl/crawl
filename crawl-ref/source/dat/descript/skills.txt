@@ -1,294 +1,54 @@
 %%%%
 Fighting
 
-Fighting skill increases your accuracy and damage in physical combat, and
-also increases your maximum health.
-%%%%
-Short Blades
-
-Short Blades are more effective than any other weapon type at stabbing helpless
-foes.
-
-Being skilled with Short Blades will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
-
-Being skilled with Short Blades increases your effectiveness with Long Blades,
-and vice versa.
-%%%%
-Long Blades
-
-Being skilled with Long Blades will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
-
-Being skilled with Long Blades increases your effectiveness with Short Blades,
-and vice versa.
-%%%%
-Axes
-
-Axes cleave through multiple enemies with a single swing, hitting foes in an
-arc around the wielder.
-
-Being skilled with Axes will allow you to attack more quickly with all weapons
-of this type, as well as increasing your accuracy and damage with them.
-
-Being skilled with Axes increases your effectiveness with Maces & Flails and
-Polearms, and vice versa.
-%%%%
-Maces & Flails
-
-Being skilled with Maces & Flails will allow you to attack more quickly with
-all weapons of this type, as well as increasing your accuracy and damage with
-them.
-
-Being skilled with Maces & Flails increases your effectiveness with Axes and
-Staves, and vice versa.
-%%%%
-Polearms
-
-Polearms can be evoked with ‘v’ to attack enemies from two spaces away.
-
-Being skilled with Polearms will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
-
-Being skilled with Polearms increases your effectiveness with Axes and Staves,
-and vice versa.
-%%%%
-Staves
-
-Staves require a relatively low amount of skill to be used most effectively,
-although they lack the high damage potential of some other weapon classes.
-
-Being skilled with Staves will allow you to attack more quickly with all
-weapons of this type, as well as increasing your accuracy and damage with them.
-
-Being skilled with Staves increases your effectiveness with Maces & Flails and
-Polearms, and vice versa.
-%%%%
-Slings
-
-Being skilled with Slings will let you deal more damage when using the
-appropriate launcher and ammunition.
-
-Being skilled with Slings increases your effectiveness in Throwing, and vice
-versa.
-%%%%
-Bows
-
-Being skilled with Bows will let you deal more damage when using the
-appropriate launcher and ammunition.
-%%%%
-Crossbows
-
-Being skilled with Crossbows will let you deal more damage when using the
-appropriate launcher and ammunition.
+근접 전투에 좀 더 능숙하게 하는 것 외에도, 전투 기술은 당신의 최대 체력을
+늘려준다.
 %%%%
 Throwing
 
-Training Throwing will make thrown weapons (such as javelins) and blowguns more
-effective. In particular, it makes weapons of returning more likely to return
-to their thrower, and makes certain magical needles more likely to have an
-effect when fired from a blowgun.
+투척술을 수련하면 바람총이나 투창, 다트 등의 투척 무기를 더 효과적으로 (더
+빠르게, 더 강하게) 사용할 수 있다. 특히 투척술은 던지면 돌아오는 효과가 있는
+무기를 던졌을 때 제대로 돌아올 확률과, 특수한 효과를 일으키는 바늘을 명중시켰을
+때 적이 저항하지 못할 확률을 높여준다.
 
-Being skilled in Throwing increases your effectiveness with Slings, and vice
-versa.
+투척술을 수련하면 투석술을 수련할 때 큰 도움이 되며, 그 반대 역시 마찬가지로
+적용된다.
 %%%%
 Armour
 
-Armour skill increases the AC gained by wearing heavy armour, and it also helps
-lessen the hindrance of heavy armour on melee combat and spellcasting.
+갑옷 기술은 무거운 갑옷을 입었을 때의 방어력을 높여주며, 무거운 갑옷이 이동,
+마법 시전 등을 덜 방해하도록 만든다.
 %%%%
 Dodging
 
-The Dodging skill will affect your chance of dodging an attack, be it melee,
-ranged or magical. Certain types of attack cannot be dodged, however, such as
-enchantments (which must be resisted) and explosions.
+회피 기술은 근접, 원거리, 마법 공격을 피할 확률에 확실히 영향을 준다. 아쉽게도
+상태이상 부여마법은 피할 수 없다. 대신 그것들을 저항하기 위해선 경험을 쌓거나
+아이템에서 얻을 수 있는 적대적인 부여 마법에 대한 저항력이 필요하다.
 %%%%
-Stealth
+Stabbing
 
-By training Stealth, you can make it less likely that monsters will notice you
-if they are asleep or otherwise unalert, and increase your chances of monsters
-losing track of you after you leave their vision. Note that monsters become
-more suspicious and observant as you descend.
-
-Stealth skill, along with the weapon skill for your equipped weapon, also
-governs the likelihood of doing a great amount of damage when attacking a
-distracted or helpless creature, as well as the amount of extra damage dealt.
+암습은 무방비한 적에게 확률적으로 엄청난 피해를 줄 수 있는 기술이다. (암살자
+대부분은 단검을 이용한다) 적이 자고 있거나 마비가 됐다거나 해서 거의 움직일 수
+없는 상태에서는 절대 빗나가지 않는 일격필살의 암습 공격이 가능하며, 적이 혼란에
+빠졌거나 해서 암살자를 신경 쓰지 못하는 상태에서는 꽤 자주 쓸만한 암습 공격을
+할 수 있다. 단순히 적이 산만해진 틈을 타 암습을 할 수도 있지만, 이 경우에는
+확률도 높지 않고 큰 피해 역시 줄 수 없다. 샤이닝 원은 암습을 비겁한 행위로 여겨
+좋아하지 않는다.
 %%%%
 Shields
 
-A high Shields skill helps you block melee attacks or projectiles (both magical
-and non-magical) with your equipped shield. Some attacks, such as penetrating
-bolts, cannot be blocked at all.
+높은 방패술은 근접 공격이나 (마법을 포함한) 원거리 공격을 더 잘 막을 수 있게
+도와준다. (마법의 방패를 사용할 때도 방패술을 사용한다) 하지만 관통 화살이나
+관통 마법 같은 몇몇 공격은 방패로 막을 수 없다.
+%%%%
+Traps
+
+함정 탐지술은 주변 환경을 더 자세하게 관찰하는 능력으로, 능숙해지면 함정을 더
+빨리 발견하고 복잡한 함정도 해체할 수 있다.
 %%%%
 Unarmed Combat
 
-Being skilled in Unarmed Combat increases your accuracy, damage and attack
-speed in melee combat when barehanded. It also allows you to occasionally punch
-with your off hand as an additional melee attack, provided your hand is free to
-do so.
-%%%%
-Spellcasting
-
-Being skilled in Spellcasting slightly increases the success rate and spell
-power of all spells, along with increasing your magical reserves and reducing
-the effects of spell hunger.
-
-Training Spellcasting also gives you more spell slots to spend on new spells.
-%%%%
-Conjurations
-
-Conjurations are battle oriented spells, which often work by conjuring up a
-chunk of short-lived matter and propelling it towards the victim to deal direct
-damage. Being skilled in Conjurations usually increases the damage and accuracy
-of such spells, and sometimes affects their range or the size of the area
-affected.
-
-Being skilled in Conjurations increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Hexes
-
-Hexes try to bestow various enchantments on nearby things. While none do direct
-damage, being ensorcelled can effectively take an opponent out of combat,
-although they often require overcoming an opponent's resistance to hostile
-enchantments to have an effect. Being skilled in Hexes will help overcome this
-resistance.
-
-Being skilled in Hexes increases the success rate and spell power of spells in
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-%%%%
-Charms
-
-Charms provide you with a number of self-enhancing auras. Training Charms skill
-will often increase the duration or effectiveness of these auras.
-
-Being skilled in Charms increases the success rate and spell power of spells in
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-%%%%
-Summonings
-
-Summonings deals with summoning creatures from another plane of reality to join
-your army or distract your foes. Increasing Summonings skill may have a number
-of effects depending on the spell, such as longer duration, more powerful
-allies, or lower chances of creating hostile creatures. Note that summoned
-beings do not leave corpses and give no experience when killed, and their
-equipment is as ephemeral as they are.
-
-Being skilled in Summonings increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Necromancy
-
-Necromancy is the art of draining and gaining life, although most often
-associated with zombies and other undead. As such, Necromancy spells have a
-wide range of effects, ranging from spells to create or control the undead to
-spells granting unholy healing in various forms.
-
-Being skilled in Necromancy increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Translocations
-
-Translocations focus on the spatial movement of beings or objects, including
-useful spells to translocate yourself over short distances quickly or to
-transport your enemies away from you.
-
-Being skilled in Translocations increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Transmutations
-
-Transmutations deal with changing shapes. Many Transmutations involve changing
-your own form, but the school also contains spells to cause changes in your
-enemies, or to transform objects around you.
-
-Being skilled in Transmutations increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Fire Magic
-
-Fire Magic focuses mainly on dealing fire damage over long distances, with many
-effective Conjurations.
-
-Being skilled in Fire Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Ice Magic
-
-Ice Magic contains a range of direct damage spells, as well as some defensive
-effects such as spells to craft temporary shields and armour from ice.
-
-Being skilled in Ice Magic increases the success rate and spell power of spells
-in this school. Many spells belong to a combination of several schools, in
-which case spellcasting success and power will depend on the average skill in
-these schools.
-%%%%
-Air Magic
-
-Air Magic provides spells to deal damage directly with the wind, as well as
-noisy but powerful lightning Conjurations. It also provides some utility
-spells, such as Charms to call the wind to assist your movement or protect you
-from projectile attacks.
-
-Being skilled in Air Magic increases the success rate and spell power of spells
-in this school. Many spells belong to a combination of several schools, in
-which case spellcasting success and power will depend on the average skill in
-these schools.
-%%%%
-Earth Magic
-
-Earth Magic contains spells able to deal large amounts of direct physical
-damage, which cannot be resisted like fire, cold and lightning damage can. It
-is also linked with some Transmutations, with spells to liquefy the earth
-around you, or to turn your enemies to stone.
-
-Being skilled in Earth Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Poison Magic
-
-Poison Magic provides spells which are highly effective against many natural
-creatures.
-
-Being skilled in Poison Magic increases the success rate and spell power of
-spells in this school. Many spells belong to a combination of several schools,
-in which case spellcasting success and power will depend on the average skill
-in these schools.
-%%%%
-Invocations
-
-Your Invocations skill affects the likelihood that an attempt to use divine
-abilities with certain gods will be successful, and often the power of such
-abilities.
-
-The Invocations skill also affects your magical reserves, but to a lesser
-degree than the Spellcasting skill, and only the highest contribution is used.
-%%%%
-Evocations
-
-Evocations skill affects your ability to use magical items like wands and other
-uncommon objects. High skill may increase the power or success rate of such
-items, and may also let you determine the amount of charges a zapped wand has
-left.
-
-The Evocations skill also affects your magical reserves, but to a lesser degree
-than the Spellcasting skill, and only the highest contribution is used.
+맨손 전투를 수련하면 맨손일 때 더 빠르게, 더 정확하게, 더 강력하게 적을 공격할
+수 있다. 또한 각종 신체 부위를 사용할 수 있다는 가정하에, 다양한 추가 공격을 할
+수도 있다.
 %%%%

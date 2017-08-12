@@ -15,975 +15,884 @@
 _armour_animal_
 
 # microorganisms
-Amoeba
+아메바
 
 # insects
-Butterfly
+나비
 
-Cicada
+매미
 
-Cricket
+귀뚜라미
 
-Ladybird
+무당벌레
 
-Ant
+개미
 
-Cockroach
+바퀴벌레
 
-Locust
+메뚜기
 
-Louse
+이
 
-Mantidfly
+사마귀
 
-Tick
+진드기
 
 # invertebrates
-Slug
+민달팽이 
 
-Snail
+달팽이
 
-Gastropod
+복족류
 
-Trilobite
+삼엽충
 
-Centipede
+지네
 
-Cuttlefish
+갑오징어
 
-Worm
+벌레
 
 # arachnids and clams
-Tarantula
+타란튤라
 
-Clam
+조개
 
-Barnacle
+따개비
 
-Lobster
+랍스터
 
-Quahog
+대합조개
 
 # amphibians and reptiles
-Tortoise
+육지거북
 
-Turtle
+거북이
 
-Frog
+개구리
 
-Komodo Dragon
+코모도 왕도마뱀
 
-Lizard
+도마뱀
 
-Salamander
+샐러맨더
 
-Serpent
+뱀
 
 # fish
-Barracuda
+창꼬치고기
 
-Catfish
+메기
 
-Mackerel
+고등어
 
-Marlin
+청새치
 
-Salmon
+연어
 
-Sturgeon
+철갑상어
 
-Sunfish
+개복치
 
-Trout
+송어
 
-Tuna
+참치
 
 # birds
-Albatross
+알바트로스
 
-Turtledove
+멧비둘기
 
-Nightingale
+나이팅게일
 
-Meadowlark
+들종다리
 
-Eagle
+독수리
 
-Falcon
+매
 
-Heron
+왜가리
 
-Raven
+까마귀
 
-Sparrow
+참새
 
-Swan
-
-Robin
-
-Shrike
+백조
 
 # mammals
-Hare
+토끼
 
-Kangaroo
+캥거루
 
-Elephant
+코끼리
 
-Zebra
+얼룩말
 
-Hippo
+하마
 
-Monkey
+원숭이
 
-Bull
+황소
 
-Camelopard
+기린
 
-Catamount
+스라소니
 
-Dolphin
+돌고래
 
-Echidna
+바늘두더지
 
-Hart
+붉은 수사슴
 
-Lion
+사자
 
-Stallion
+종마
 
-Stag
+수사슴
 
-Okapi
+오카피
 
 # not strictly an animal... :)
-Monkey's Uncle
-
-Circus Animal
+원숭이의 사촌
 
 #classical mythical animals
-Cockatrice
+코카트리스
 
-Dragon
+드래곤
 
-Griffon
+그리폰
 
-Kraken
+크라켄
 
 # modern mythical animals
-Dropbear
+드롭 베어
 
-Jackalope
+재카로프
 
-Wild Haggis
+와일드 해기스
 
-Chupacabra
+츄파카브라
 
-Yeti
+예티
 
 %%%%
 _flower_name_
 
-Lilacs
+라일락
 
-Daffodils
+수선화
 
-the Rose
+장미
 
-the Garden
+정원
 
-Daisies
+데이지
 
-the Thistle
+엉겅퀴
 
-Tulips
+튤립
 
-the Lily
+백합
 
-the Lotus Blossom
+선인장 꽃
 %%%%
 # non-Crawl critters
 _critter_name_
 
-Slorg
+슬로그
 
-Alphagorgon
+알파고르곤
 
 # from the crawl.akrasiac.org patch.
-Hot Ocelot
+핫 오셀롯
 
-Eight Boll Weevils
+에이트 볼 위빌스
 
-Grue
+그루
 
-Jabberwock
+재버워크
 
 w:1
-Were-rabbit
+웨어 레빗
 
-Wumpus
+움퍼스
 %%%%
 _discomfort_and_inaction_
 
 # discomfort
-Minor Irritation
+가벼운 짜증
 
-Bitterness
+쓰라림
 
-Negation
+부정
 
-Failure
+실패
 
-Servitude
+노예 상태
 
-Submission
+굴복
 
-Insecurity
+불안정
 
-Vexation
+성가심
 
-Disappointment
-
-Entitlement
-
-Bad Feelings
+실망
 
 # inaction
-Lifelessness
+활기 없음
 
-Boredom
+지루함
 
-Ennui
+권태감
 
-Restlessness
+쉼없음
 
-Omission
+누락
 
-Negligence
+태만
 
-Inaction
+무대책
 
-Oblivion
+망각
 
-the Doldrums
+침울
 
-Listlessness
+노곤함
 
-Apathy
+무관심
 
-Lethargy
+무기력
 %%%%
 _mental_illness_armour_
 
-Paranoia
+편집증
 
-Claustrophobia
+밀실공포증
 
-Agoraphobia
+광장공포증
 
-Dyspraxia
+통합 운동 장애
 
-Mental Paralysis
+정신적 마비
 
-Catatonia
+긴장증
 
-Depression
+우울함
 
-Hysteria
+히스테리증
 
-Kleptomania
+병적 도벽
 
-Melancholy
+멜랑꼴리
 
-Masochism
+마조히즘
 
-Narcissism
+자아도취증
 %%%%
 _good_or_divine_
 
 # good things
-the Good
+최상품
 
-the Leaf
+낱장
 
-Leaves
+잎사귀들
 
-Music
+음악
 
-Birdsong
+새소리
 
-Brilliance
+훌륭함
 
-Satisfaction
+만족
 
-Fun
+재미
 
-Joy
+즐거움
 
-Happiness
+행복
 
-Wonder
+경이로움
 
-Surprise
+놀라움
 
-Curiosity
+호기심
 
-Creativity
+창의성
 
-Beauty
+아름다움
 
-Life
+생명
 
-Liberty
+독립
 
-Freedom
+자유
 
-Amelioration
+향상
 
-Awe
+경외심
 
-Contentment
+만족
 
-Mirth
-
-Tender Moments
-
-Lucidity
-
-Knowledge
-
-New Discoveries
+웃음소리
 
 # divine events
-Divine Compulsion
+신의 강제
 
-the Invisible Hand
+보이지않는 손
 
-Divine Intervention
+신의 개입
 
-Intercession
+중재
 
-Miracles
+기적
 
-Salvation
+구세
 
-the Will of the Gods
+신들의 의지
 %%%%
 # in contrast to "_wacky_armour_name_" these do have some
 # connection to armour and protection
 _armour_name_shielding_
 
-Shielding
+차폐
 
-Impermeability
+기밀성
 
-Defence
+방어
 
-Death's Door
+죽음의 문
 
-the Gate
+관문
 
-the Saviour
+구세군
 
-the Untouchables
+언터쳐블
 
-the Armoured One
+무장한 자
 
-the Unbroken
+배제
 
-Exclusion
+반발
 
-Repulsion
+불가침
 
-Inviolability
+도피
 
-Refuge
+방어벽
 
-the Bulwark
+병동
 
-the Ward
+강화
 
-Fortification
-
-Complete Protection
+완벽한 보호
 %%%%
 # other armour properties (beside protection)
 _armour_property_name_
 
-Supple Strength
+유연한 힘
 
-Death Resistance
+죽음에 대한 저항
 
-Grace
+품위
 
-Weightlessness
+무중력상태
 
-Shadows and Fog
+그림자와 안개
 
-Disguise
+위장
 
-Least Resistance
+최소한의 저항
 
-Protective Custody
+보호감호
 
-Resilience
+탄성
 
-Fashionability
+유행 가능성
 
-Impressiveness
-
-Gravitas
-
-Resonance
-
-Polish
+장엄함
 %%%%
 _wacky_armour_name_
 
-the Onion
+양파
 
-Vlad
+블라드
 
-the Eternal Fruit
+영원의 과일
 
-Plasticity
+가소성
 
-Baldness
+탈모
 
-Terror
+테러
 
-Good Intentions
+좋은 의도들
 
-Absence
+부재
 
-the Arcane
+아르카나
 
-Anaesthesia
+마취 상태
 
-the Armadillo
+아르마딜로
 
-Weirdness
+기묘함
 
-Pathos
+파토스
 
-Loss
+손실
 
-Hedging
+연계 매매
 
-Indemnity
+배상금
 
-Untold Secrets
+말하지않은 비밀들
 
-the Earth
+대지
 
-Limited Liability
+유한 책임
 
-Incorporation
+혼합
 
-Mezcal
+메스칼
 
-Hadjma
+하드마
 
-Hairiness
+털 많음
 
-Space
+공간
 
-the Vacuum
+진공
 
-Compression
+압축
 
-Decompression
+감압
 
-the Loofah
+목욕용 수세미
 
-Love and Death
+사랑과 죽음
 
-Indecent Exposure
+성기 노출죄
 
-the Road Less Travelled
+미개척의 길
 
-the Blind Marksman
+눈먼 명사수
 
-Too Many Cooks
+너무 많은 음식들
 
-Thrice Damned Blessings
+레알 굉장한 축복
 
-Duck's Teeth
+오리의 이빨
 
-Forking Paths
+갈림길
 
-the Pink Corner
+핑크 코너
 
-Philately
-
-Precision Catastrophes
-
-Poor Excuses
-
-Dramatic Exits
-
-the True Pharaoh
-
-the Unemployed Unperson
-
+우표 수집
 %%%%
 # Lemuel's suggestions
 _celestial_bodies_
 
-Sun
+태양
 
-Moon
+달
 
-Stars
+별
 
-Planets
+행성
 
-Pleiades
+플레이아데스
 
-Morning Star
+모닝 스타
 
-Evening Star
+이브닝 스타
 
-Comet
-
-Constellations
+혜성
 
 w:5
-Midnight Sun
+밤중의 태양
 
 w:5
-Blue Moon
+푸른 달
 
 w:5
-Harvest Moon
+중추명월
 
 # astrological
-Black Moon
+검은 달
 %%%%
 _instrument_name_
 
-the Fiddle
+트럼펫
 
-the Fife
+케틀 드럼
 
-Pan-Flutes
+아코디언
 
-Trumpets
+백파이프
 
-the Kettle-Drum
+류트
 
-the Accordion
+벨
 
-the Bagpipe
+차임
 
-the Lute
+플루트
 
-the Bells
+하프
 
-Chimes
-
-the Flute
-
-the Harp
-
-the Gusle
-
-the Trombone
+구슬라
 %%%%
 _evil_being_
 
-Tempters
+악마
 
-the Tormentor
+악마들
 
-Vampiric Thralls
+하급 악마들
 
-the Lich-sworn
+고위 악마들
 
-the Devil
+철 악마
 
-Demons
+악마의 대변인
 
-Lesser Demons
+악마 대공
 
-Greater Demons
+사악한 자
 
-the Iron Devil
+복수자
 
-the Devil's Advocate
+어둠의 대공
 
-the Devil's Team
-
-the Demon Prince
-
-the Evil One
-
-the Furies
-
-the Prince of Darkness
-
-the Fiend
+상급악마
 
 w:5
-the Archfiend
+대악마
 
-the Little Devil
+소악마
 
-the Imp
+임프
 
-the Villain
+악당
 %%%%
 _weather_name_
 
-the First Snow
+첫눈
 
-Boiling Hail
+거친 우박
 
-Perpetual Drought
+빈번한 가뭄
 
-the Thunderstorm
+번개폭풍
 
-the Hurricane
+허리케인
 
-Blue Skies
+푸른 하늘
 
-Pleasant Breezes
+쾌적한 산들바람
 
-the Blizzard
+한파
 
-Chill Winds
-
-Spring Thaw
-
-Cloud Cover
+쌀쌀한 바람
 %%%%
 _profession_name_
 
-Guilds
+길드원
 
-Guild-Master
+길드마스터
 
-Apprentice
+견습생
 
-Blacksmith
+대장장이
 
-Carpenter
+목수
 
-Wheelwright
+수레바퀴 제조인
 
-Cooper
+통 제조업자
 
-Fisher
+어부
 
-Hunter
+사냥꾼
 
-Ditch-Digger
+막노동자
 
-Guardian
+수호자
 
-Beekeeper
+양봉가
 
-Gardener
+정원사
 
-Soldier
+군인
 
-Farrier
+편자공
 
-Engineer
+엔지니어
 
-Barber Surgeon
+돌팔이 의사
 
-Journeyman
+평범한 일꾼
 
-Scribe
+대서인
 
-Bard
+음유 시인
 
-Undertaker
+장의사
 
-Beggar
+거지
 
-Merchant
+상인
 
-Sailor
+선원
 
-Gravedigger
+무덤 파는 인부
 
-Pirate
+해적
 
-Buccaneer
+무법자
 
-Moneychanger
-
-Thinker
-
-Learner
-
-Teacher
-
-Monk
-
+환전상
 %%%%
 # something for Xom
 _game_name_
 
 # general games
-Fun and Games
+장난과 게임
 
-the Great Game
+훌륭한 게임
 
-the Game Afoot
+계획중인 게임
 
-Parlour Games
+집 안의 게임
 
-the Game of Kings
-
-Dice, Bag, and Bottle
+왕들의 시합
 
 # children's games
-Peek-a-Boo
+까꿍
 
-Hide-and-Seek
+숨바꼭질
 
-Leapfrog
+말뚝박기
 
-Hopscotch
+돌차기
 
-Follow the Leader
+대장 따라하기
 
-the King of the Hill
+골목대장
 
-Mumblety Peg
+잭나이프 던지기
 
 # board games etc.
-the Game of Life
+인생 게임
 
-Card Tricks
+카드 마술
 
-Hangman
+행맨
 
-the Dice
+주사위
 
-Jigsaw
+조각그림
 
-Whack-A-Mole
+두더지 잡기
 
-Snakes and Ladders
+사다리와 뱀
 
-Marbles
+구슬치기
 
-Noughts and Crosses
+OX게임
 %%%%
 _politics_name_armour_
 
-the King
+왕
 
-the Queen
+여왕
 
-Royalty
+왕족
 
-Nobility
+귀족
 
-the Republic
+공화정
 
-the Empire
+왕정
 
-Coronation
+대관식
 
-the Commoners
+평민
 
-the Peasants
+소작농
 
-the Townfolk
+읍민
 
-the City
+도시
 
-the Country
+국가
 
-the Suburbs
+교외
 
-the Mutiny
+폭동
 
-the Crown
+왕권
 
-the Duke
+공작
 
-the Duchess
+공작 부인
 
-the Doge
+총독
 
-the Ban
+금지령
 
-the Castellan
+성주
 
-the Komtur
+지휘관
 
-the Voivode
+정부기관의 장
 
-the Rabble
+대중
 
-the Prince
+왕자
 
-the Princeling
+군주
 
-the Princess
+공주
 
-the Oligarchy
+소수의 독재자
 
-the Cast Vote
+투표
 
-the Burgomaster
+시장
 
-the Failed Coup
+실패한 쿠데타
 
-Sovereignty
-
-the Greedy
-
-Democracy
-
+군주로서
 %%%%
 _other_armour_name_
 
 #unpleasantness
-w:5
-Grot
 
 w:5
-Grottiness
+지저분한 것
 
-Filth
+w:5
+불쾌함
 
-Slovenliness
+오물
+
+단정치 못함
 
 # magic
-Magic
+매직
 
-Sorcery
+소서리
 
-Broken Taboos
+깨진 금기
 
-Bedevilment
+귀신 들림
 
-Muttered Phrases
+w:5
+지저분한 것
 
-the Arcane
+w:5
+불쾌함
 
-Words of Power
+오물
 
-Gestures
+단정치 못함
+
+# magic
+매직
+
+소서리
+
+깨진 금기
+
+귀신 들림
 
 # other
-Crawling
+크롤링
 
-the Orb
+오브
 
-the Orb Guardian
+오브 수호자
 
-the Storm King
+폭풍의 왕
 
-the @_card_@ of @_suit_@
+@_suit_@의 @_card_@ 카드
 
-the Hanged Man
+매달린 남자
 
-Hedge Wizardry
+비밀 신기
 
-Feasting
+잔치
 
-Insatiable Hunger
+채울수없는 갈망
 
-Imperfection
+결함
 
-Trial and Error
+시행 착오
 
-Disaster
+재해
 
-Wrong Decisions
+잘못된 결정
 
-Unambiguity
+명료성의 원리
 
-the Lost Path
+잃어버린 길
 
-Misanthropy
+인간 불신
 
-Wasted Space
+낭비된 공간
 
-the Other World
+이세계
 
-Inevitability
-
-Perfidy
-
-Dogmatism
-
-Happy Babbling
-
-the Slightly Bent
-
-the Moon Troll
-
-Time Monsters
-
-the Sacrificial Victim
-
-Undesirable Species
-
-Going Fast
-
-Insurance
+불가피함
 %%%%
 _card_
 
-Two
+2번
 
-Three
+3번
 
-Four
+4번
 
-Five
+5번
 
-Six
+6번
 
-Seven
+7번
 
-Eight
+8번
 
-Nine
+9번
 
-Ten
+10번
 
-Page
+시종
 
-Knight
+기사
 
-Queen
+여왕
 
-King
+왕
 
-Ace
+1번
 %%%%
 _suit_
 
-Cups
+컵
 
-Pentacles
+펜타클
 
-Wands
+지팡이
 
-Swords
+검
 %%%%
 # "something" rather than of Something
 _plain_armour_name_
 
-Forget-Me-Not
+물망초
 
-Hero's Friend
+영웅의 친구
 
-Trusted Companion
-
-Damnable Contraption
-
-Earthly Heaven
-
-Put-Me-On
+믿음직한 동료
 %%%%

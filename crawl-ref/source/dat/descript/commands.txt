@@ -1,380 +1,377 @@
 %%%%
 CMD_REST
 
-Rest and heal
+휴식 및 회복
 %%%%
 CMD_REST verbose
 
-Rests while your health and magic regenerate. Resting is interrupted as soon
-as a hostile monster comes into view. If health and magic are both already
-full, resting will wait for 100 turns.
+100턴을 소비하여 생명력과 마력을 회복하고, 주변을 살펴본다. 적대적인 대상이
+나타나거나, 체력이 가득 차거나, 함정이나 비밀문을 찾는 등의 일이 발생하면
+휴식을 종료한다.
 %%%%
 CMD_EXPLORE
 
-Autoexplore the current level
+현재 층 자동 탐색
 %%%%
 CMD_EXPLORE verbose
 
-Automatically explores the current level, collecting items on the way.
-Exploration stops as soon as a hostile monster comes into view, or when you
-encounter new items or features.
+현재 캐릭터가 위치한 층에서 가보지 않은 지역을 자동으로 탐사하고, 자동 줍기가
+설정된 아이템을 자동으로 줍는다. 적대적인 대상 혹은 흥미를 끌 만한 물건이
+발견되면 자동 탐색은 종료된다.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
-Travel to distant levels
+층간 자동 이동
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Automatically travels to a chosen level or branch. Travel is interrupted by
-monsters coming into view.
+다른 층 혹은 다른 던전으로 이동한다. 적대적인 대상을 만나면 자동 이동은
+종료된다.
 %%%%
 CMD_USE_ABILITY
 
-Use divine, innate or evokable abilities
+신의 권능 혹은 특수능력 발동
+%%%%
+CMD_PRAY
+
+신에게 기도
 %%%%
 CMD_SEARCH_STASHES
 
-Search for items/features
+아이템 및 지형지물 검색
 %%%%
 CMD_SEARCH_STASHES verbose
 
-Searches for items or features seen elsewhere, and allows you to travel to
-their location.
+다른 곳에서 발견했던 아이템 혹은 지형지물이 있는 곳을 검색하며, 그곳으로 이동할
+수 있다.
 %%%%
 CMD_REPLAY_MESSAGES
 
-Reread recent messages
+최근 메시지 일람
 %%%%
 CMD_RESISTS_SCREEN
 
-Display character overview
+캐릭터 정보 표시
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-Displays an overview of your current resistances, abilities, equipment and
-attributes.
+캐릭터의 저항력, 특수 능력, 장비 등의 정보를 열람한다.
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Display dungeon overview
+던전의 구성도 표시
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
-Displays an overview of dungeon branch locations, discovered altars, shops and
-level annotations.
+지금까지 발견한 서브 던전의 출입구나 상점 등, 주목할만한 곳의 위치를 표시한다.
 %%%%
 CMD_DISPLAY_RELIGION
 
-Display religious status
+신앙 정보 표시
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Displays your god's likes and dislikes, conduct, and your current religious
-standing and divine abilities.
+당신이 믿고 있는 신의 계율과 호불호, 현재 신앙도와 사용할 수 있는 권능 등을
+보여준다.
 %%%%
 CMD_DISPLAY_MUTATIONS
 
-Display mutations
+돌연변이 정보 표시
 %%%%
 CMD_DISPLAY_SKILLS
 
-Manage skills
+기술 관리
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS
 
-Display character status
+캐릭터의 능력치 표시
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-Displays details on your current movement speed, attack speed, stealth, magic
-resistance, and any currently active enchantments or status effects.
+캐릭터에게 걸려있는 각종 주술과, 기타 사항을 확인한다.
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-List discovered item types
+발견한 물건들의 목록 표시
 %%%%
 CMD_SAVE_GAME_NOW
 
-Save and exit
+저장 후 종료
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-Saves the game for later and exits. Once you resume the game, the save file is
-deleted again.
+현재 게임을 저장하고 종료한다. 게임을 재개하면, 저장해둔 파일은 다시 삭제된다.
 %%%%
 CMD_EDIT_PLAYER_TILE
 
-Modify the player tile
+캐릭터의 외모 변경
 %%%%
 CMD_EDIT_PLAYER_TILE verbose
 
-Allows you to modify the equipment and species tile displayed in the player
-doll.
+캐릭터의 외모를 변경한다. 장비나 종족 등을 변화시킬 수 있다.
 %%%%
 CMD_DISPLAY_COMMANDS
 
-Game help
+게임과 관련된 도움말
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-Displays a list of commands.
-%%%%
-CMD_CHARACTER_DUMP
-
-Dump character's progress
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-Dumps detailed information about your character into a file ‘playername.txt’ in
-the morgue directory, to peruse at your leisure. This includes main stats,
-equipment, spells, skills, notes, etc.
+명령어 목록과 옵션, 기타 등등을 열람한다.
 %%%%
 CMD_AUTOFIGHT
 
-Hit the closest monster
+가장 가까이에 있는 적을 공격
 %%%%
 CMD_AUTOFIGHT verbose
 
-Moves towards the closest hostile monster, or attacks an adjacent monster with
-your current weapon.
+가장 가까이에 있는 적 앞으로 이동한 뒤, 현재 장비하고 있는 무기로 공격한다.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
-Hit an adjacent monster
+근처에 있는 적을 공격
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-Attacks an adjacent monster with your current weapon.
+근처에 있는 적을, 현재 장비하고 있는 무기로 공격한다.
 %%%%
 CMD_WAIT
 
-Wait a single turn
+1턴간 대기
 %%%%
 CMD_WAIT verbose
 
-Spends a single turn waiting and resting.
-%%%%
-CMD_SAFE_WAIT
-
-Wait a single turn if safe
-%%%%
-CMD_SAFE_WAIT verbose
-
-Spends a single turn waiting and resting, but only if there are no hostile
-monsters in view.
+대기겸 휴식을 취하면서 한턴을 보낸다.
 %%%%
 CMD_DISPLAY_INVENTORY
 
-Display the contents of your inventory
+현재 소지품 표시
 %%%%
 CMD_DISPLAY_INVENTORY verbose
 
-Displays the contents of your inventory.
+현재 소지품을 볼 수 있다.
 %%%%
 CMD_CAST_SPELL
 
-Cast a spell
+주문 시전
 %%%%
 CMD_CAST_SPELL verbose
 
-Casts a spell.
+주문을 시전한다.
 %%%%
 CMD_BUTCHER
 
-Butcher corpse
+시체 해체
 %%%%
 CMD_BUTCHER verbose
 
-Butchers a corpse into chunks.
+시체를 해체하여 살을 발라낸다. 던전은 보존식량만 먹고 살 수 있을 정도로 그렇게
+만만한 곳이 아니다.
 %%%%
 CMD_MEMORISE_SPELL
 
-Memorise spell
+주문 암기
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-Memorises a chosen spell from a book you are carrying or standing on.
-%%%%
-CMD_LOOKUP_HELP
-
-Lookup help
-%%%%
-CMD_LOOKUP_HELP verbose
-
-Looks up descriptions of monsters, spells, abilities, items and more.
+마법책에 적힌 주문을 외운다. 주문의 수준이 높을수록 더 많은 암기력이 필요하다.
 %%%%
 CMD_DROP
 
-Drop items
+소지품 버리기
 %%%%
 CMD_DROP verbose
 
-Drops one or more items that you are currently holding.
+하나 이상의 소지품을 버린다. 물론 다시 주울 수 있지만, 머리가 조금이라도
+돌아가는 적이라면 당신이 버린 물건을 가만히 보고만 있지는 않을 것이다.
 %%%%
 CMD_DISPLAY_MAP
 
-Enter map mode
+지도 보기
 %%%%
 CMD_DISPLAY_MAP verbose
 
-Displays a map of the current level.
+지금까지 탐험한 곳을 둘러본다.
 %%%%
 CMD_MAP_GOTO_TARGET
 
-Travel to cursor
+마우스로 이동
 %%%%
 CMD_MAP_GOTO_TARGET verbose
 
-Starts travelling to the cursor's current location.
-%%%%
-CMD_MAP_EXPLORE
-
-Find next autoexplore target
-%%%%
-CMD_MAP_EXPLORE verbose
-
-Moves the cursor to the next location that autoexplore will travel to.
+마우스 커서가 있는 곳으로 이동한다.
 %%%%
 CMD_MAP_ADD_WAYPOINT
 
-Add waypoint
+현재 위치 기록
 %%%%
 CMD_MAP_ADD_WAYPOINT verbose
 
-Sets a waypoint at your current position.
+현재 위치를 기록한다. 게임을 중간 저장하는 것이 아니라, 현재 위치를 기억해서
+나중에 편하게 올 수 있는 기능이다.
 %%%%
 CMD_MAP_EXCLUDE_AREA
 
-Create exclusion
+이동 금지지역 설정
 %%%%
 CMD_MAP_EXCLUDE_AREA verbose
 
-Creates a travel exclusion, changes its radius, or removes it.
+이동 금지지역을 설정한다. 해당 지역 ‘만’ 설정하거나, 해당 지역을 볼 수 있는
+곳 전체를 설정하거나, 금지를 해제할 수 있다.
 %%%%
 CMD_MAP_CLEAR_EXCLUDES
 
-Clear travel exclusions
+이동 금지지역 초기화
 %%%%
 CMD_MAP_CLEAR_EXCLUDES verbose
 
-Erases all travel exclusions on the level.
+현재 층계에 설정해놓은 모든 이동 금지지역을 해제한다.
 %%%%
 CMD_MAP_NEXT_LEVEL
 
-Down one level
+아래층 지도 보기
 %%%%
 CMD_MAP_NEXT_LEVEL verbose
 
-Displays the next deeper level.
+아래층의 지도를 본다.
 %%%%
 CMD_MAP_PREV_LEVEL
 
-Up one level
+위층 지도 보기
 %%%%
 CMD_MAP_PREV_LEVEL verbose
 
-Displays the next higher level.
+위층의 지도를 본다.
 %%%%
 CMD_MAP_GOTO_LEVEL
 
-Go to level
+자동 여행 설정
 %%%%
 CMD_MAP_GOTO_LEVEL verbose
 
-Displays another chosen level by branch and depth.
+자동으로 원하는 지역과 층계까지 이동한다. 그곳으로 가는 길을 모르거나 이동 중에
+멈춰야 할 일이 있으면, 이동이 종료된다.
 %%%%
 CMD_MAP_FIND_UPSTAIR
 
-Find stairs up
+올라가는 계단 탐색
 %%%%
 CMD_MAP_FIND_UPSTAIR verbose
 
-Cycles through stairs up.
+올라가는 계단을 캐릭터와 가까운 순서대로 표시한다. 발견한 계단만 표시된다.
 %%%%
 CMD_MAP_FIND_DOWNSTAIR
 
-Find stairs down
+내려가는 계단 탐색
 %%%%
 CMD_MAP_FIND_DOWNSTAIR verbose
 
-Cycles through stairs down.
+내려가는 계단을 캐릭터와 가까운 순서대로 표시한다. 발견한 계단만 표시된다.
 %%%%
 CMD_MAP_FIND_YOU
 
-Find me
+'나 자신' 탐색
 %%%%
 CMD_MAP_FIND_YOU verbose
 
-Moves the map cursor back to your current position.
+캐릭터가 서 있는 곳을 표시한다.
 %%%%
 CMD_MAP_FIND_PORTAL
 
-Find shops and portals
+상점과 관문 탐색
 %%%%
 CMD_MAP_FIND_PORTAL verbose
 
-Cycles through shops and portals on the current level.
+상점과 관문을 캐릭터와 가까운 순서대로 표시한다. 발견한 상점과 관문만 표시된다.
 %%%%
 CMD_MAP_FIND_TRAP
 
-Find traps
+함정 탐색
 %%%%
 CMD_MAP_FIND_TRAP verbose
 
-Cycles through traps on the current level.
+함정을 캐릭터와 가까운 순서대로 표시한다. 발견한 함정만 표시된다.
 %%%%
 CMD_MAP_FIND_ALTAR
 
-Find altars
+제단 탐색
 %%%%
 CMD_MAP_FIND_ALTAR verbose
 
-Cycles through altars on the current level.
+제단을 캐릭터와 가까운 순서대로 표시한다. 발견한 제단만 표시된다.
 %%%%
 CMD_MAP_FIND_EXCLUDED
 
-Find travel exclusion
+이동 금지지역 탐색
 %%%%
 CMD_MAP_FIND_EXCLUDED verbose
 
-Cycles through travel exclusions on the current level.
+이동 금지지역을 캐릭터와 가까운 순서대로 표시한다.
 %%%%
 CMD_MAP_FIND_WAYPOINT
 
-Find waypoint
+저장한 위치 탐색
 %%%%
 CMD_MAP_FIND_WAYPOINT verbose
 
-Cycles through all waypoints on the current level.
+현재 층에서 저장한 위치를 캐릭터와 가까운 순서대로 표시한다.
 %%%%
 CMD_MAP_FIND_STASH
 
-Find stash
+뭐든지 탐색
 %%%%
 CMD_MAP_FIND_STASH verbose
 
-Cycles through all stashes on the current level.
+바닥과 벽을 제외한 모든 것을 캐릭터와 가까운 순서대로 표시한다.
 %%%%
 CMD_ZOOM_IN
 
-Zoom in
+줌 인
 %%%%
 CMD_ZOOM_IN verbose
 
-Zooms in on dungeon area.
+던전 구역 줌 인
 %%%%
 CMD_ZOOM_OUT
 
-Zoom out
+줌 아웃
 %%%%
 CMD_ZOOM_OUT verbose
 
-Zooms out on dungeon area.
+던전 구역 줌 아웃
+%%%%
+CMD_LOOKUP_HELP
+
+도움말 찾기
+%%%%
+CMD_LOOKUP_HELP verbose
+
+몬스터, 주문, 능력, 아이템 등의 설명을 찾는다.
+%%%%
+CMD_MAP_EXPLORE
+
+다음 자동탐험 목표 찾기
+%%%%
+CMD_MAP_EXPLORE verbose
+
+자동탐험이 여행할 지역으로 마우스 커서를 이동한다.
+%%%%
+CMD_SAFE_WAIT
+
+안전하다면 한 턴을 기다린다.
+%%%%
+CMD_SAFE_WAIT verbose
+
+기다리면서 휴식을 취한다. 한턴을 소비한다.
+%%%%
+monsters in view.
+
+
 %%%%
 CMD_SHOW_KEYBOARD
 
-Show keyboard
+키보드 보기
 %%%%
 CMD_SHOW_KEYBOARD verbose
 
-Brings up the on-screen keyboard, if applicable.
+적용 가능할 경우, 온-스크린 키보드를 불러온다.
+%%%%

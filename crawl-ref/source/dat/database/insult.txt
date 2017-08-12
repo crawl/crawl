@@ -11,7 +11,7 @@
 %%%%
 imp_taunt
 
-@run_or_give_up@, thou @generic_insult@!
+@run_or_give_up@, 이 @generic_insult@!
 %%%%
 run_or_give_up
 
@@ -24,164 +24,164 @@ w:1
 demon_taunt
 
 w:1
-@run_away@, thou @generic_insult@!
+@run_away@, 이 @generic_insult@!
 
 w:2
-@give_up@, thou @generic_insult@!
+@give_up@, 이 @generic_insult@!
 
 w:3
 @demon_taunt_special@
 %%%%
 demon_taunt_special
 
-Thy @body_or_spiritual_part@ shall be my @meal@!
+네 @body_or_spiritual_part@(은)는 내 @meal@(이)가 될것이다!
 
-@give_up@, thou tasty @meal@!
+@give_up@, 이 맛있는 @meal@(아)야!
 
-@run_away@ @whilst_thou_can@!
+@run_away@, @whilst_thou_can@!
 
-I @will_or_shall@ @feast_or_devour@ thy @body_or_spiritual_part@!
+네 @body_or_spiritual_part@(을)를 @feast_or_devour@ @will_or_shall@!
 %%%%
 # capitalised "flee" verbs
 run_away
 
-Away with thee
+사라져라
 
-Back with thee
+다시 돌아가라
 
-Begone
+썩 꺼져라
 
-Bolt
+도망가라
 
-Crawl home
+집으로 기어가라
 
-Decamp
+서둘러 떠나라
 
-Escape
+탈출해라
 
-Flee
+도망쳐라
 
-Fly
+날아가라
 
-Get thee gone
+떠나라
 
-Get thee hence
+꺼져라
 
-Give up
+포기해라
 
-Go and return not
+가서 돌아오지 마라
 
-Leave
+가 버려라
 
-Out, out
+나가라, 나가
 
-Quit
+나가라
 
-Remove thy stench
+악취를 지워라
 
-Return whence thou came
+왔던 곳으로 돌아가라
 
-Run away
+도망쳐라
 
-Scamper away
+저리로 잽싸게 꺼져라
 
-Scamper hence
+날쌔게 꺼져라
 
-Scamper home
+집으로 튀어가라
 
-Slither away
+저리로 미끄러져라
 
-Slither hence
+미끄러지며 꺼져라
 
-Slither home
+집으로 미끄러져 가라
 
-Take thy face hence
+얼굴을 치우고 꺼져라
 
-Turn tail
+꽁무니를 빼라
 %%%%
 # capitalised synonyms for "give up"
 give_up
 
-Abandon hope
+희망을 버려라
 
-Accept thy failure
+실패를 수용해라
 
-Accept thy fall
+추락을 수용해라
 
-Accept thy doom
+파멸을 수용해라
 
-Admit defeat
+패배를 인정해라
 
-Beg for mercy
+자비를 빌어라
 
-Capitulate
+저항을 멈춰라
 
-Despair
+절망해라
 
-Despond
+비관해라
 
-Disclaim thyself
+너자신을 포기해라
 
-Embrace submission
+항복을 알아차려라
 
-Embrace thy dedition
+굴복함을 깨달아라
 
-Embrace thy doom
+파멸을 받아들여라
 
-Embrace thy failure
+실패를 포옹해라
 
-Embrace thy fall
+추락을 받아들여라
 
-Face thy fugue
+네 둔주곡과 마주해라
 
-Face thy requiem
+네 위혼곡과 마주해라
 
-Flounder
+버둥거려라
 
-Give in
+항복해
 
-Give up
+포기해라
 
-Kneel
+꿇어라
 
-Quail
+겁 먹어라
 
-Quit
+그만둬라
 
-Surrender
+항복해라
 
-Succumb
+굴복해라
 
-Submit
+받아들여라
 
-Tremble
+떨어라
 
-Relinquish hope
+희망을 손에서 놓아라
 
-Repent
+후회해라
 
-Taste defeat
+패배를 맛보아라
 %%%%
 whilst_thou_can
 
-whilst thou can
+할수 있을 때
 
-whilst thou may
+해도 좋을 때
 
-whilst thou are able
+가능할 때
 
-if wit thou hast
+네가 알고있다면
 
-whilst thy luck holds
+행운이 지속되는 동안에
 
-before doom catcheth thee
+파멸이 너를 쫒기전에
 
-lest death find thee
+죽음이 너를 찾지않도록
 
-whilst thou art whole
+네가 온전할 때
 
 # screen vs. this for undead?
-whilst life thou hast
+목숨이 붙어있을 때
 %%%%
 body_or_spiritual_part
 
@@ -193,99 +193,99 @@ w:1
 %%%%
 will_or_shall
 
-will
+것이다
 
-shall
+것이다
 %%%%
 feast_or_devour
 
-feast on
+만찬을 벌일
 
-devour
+삼켜버릴
 %%%%
 important_body_part
 
-head
+머리
 
-brain
+뇌
 
-heart
+심장
 
-viscera
+내장
 
-eyes
+눈
 
-lungs
+폐
 
-liver
+간
 
-throat
+목젖
 
-neck
+목
 
-gizzard
+근위
 
-skull
+두개골
 
-spine
+척추
 %%%%
 important_spiritual_part
 
-soul
+영혼
 
-spirit
+정신
 
-inner light
+내면의 빛
 
-hope
+희망
 
-faith
+신념
 
-will
+의지
 
-heart
+심장
 
-mind
+마음
 
-sanity
+이성
 
-fortitude
+불굴
 
-life force
+원기
 
-vitality
+생명력
 %%%%
 meal
 
-meal
+음식
 
-breakfast
+아침 식사
 
-lunch
+점심 식사
 
-dinner
+저녁 식사
 
-supper
+만찬
 
-repast
+식사
 
-snack
+간식
 
-victuals
+양식
 
-refection
+보양식
 
-junket
+유제품
 
-luncheon
+오찬
 
-snackling
+훔쳐먹는 음식
 
-curdle
+우유 식품
 
-snacklet
+간식거리
 
-mouthful
+약간의 음식
 %%%%
 #######################################################
 # generic insults consist of three random parts
@@ -306,235 +306,235 @@ w:5
 %%%%
 insult general adj1
 
-artless
+솜씨없는
 
-baffled
+이해할수없는
 
-bawdy
+외설적인
 
-beslubbering
+진창된
 
-bootless
+무익한
 
-bumbling
+갈팡질팡하는
 
-canting
+위선적인
 
-churlish
+무례한
 
-cockered
+응석받이같은
 
-clouted
+멍청한
 
-craven
+비겁한
 
-currish
+들개같은
 
-defiled
+더럽혀진
 
-dankish
+어두운
 
-dissembling
+기만하는
 
-droning
+윙윙대는
 
-ducking
+고개숙인
 
-erky
+성가시게하는
 
-errant
+그릇된
 
-euchred
+계략적인
 
-fawning
+알랑거리는
 
-feckless
+무기력한
 
-feeble
+허약한
 
-fobbing
+속임수쓰는
 
-foisting
+기만적인
 
-foppish
+맵시 내는
 
-froward
+고집 센
 
-frothy
+허황된
 
-fulsome
+지나친
 
-gleeking
+농담스런
 
-goatish
+음란한
 
-gorbellied
+배 튀어나온
 
-grime-gilt
+땟국이 번지르한
 
-horrid
+끔찍한
 
-hateful
+경멸스런
 
-impertinent
+버릇없는
 
-infectious
+전염성의
 
-jarring
+삐걱거리는
 
-loggerheaded
+바보의
 
-lumpish
+둔해빠진
 
-mammering
+투덜거리는
 
-mangled
+짓이겨진
 
-mewling
+갸냘프게 우는
 
-obnoxious
+매우 기분 나쁜
 
-odious
+혐오스런
 
-paunchy
+배불뚝이의
 
-peaked
+야윈
 
-peeagling
+정말이지 가치없는
 
-pribbling
+나약한
 
-puking
+토나오는
 
-puny
+보잘것없는
 
-pandering
+포주 새끼의
 
-pecksniffian
+위선적인
 
-plume-plucked
+깃털이 뽑힌
 
-pottle-deep
+병나발 깊이의
 
-pox-marked
+곰보 투성이의
 
-qualling
+억눌린
 
-quaking
+떨고있는
 
-rank
+썩은내 나는
 
-reeling-ripe
+휘청거리게 썩은
 
-rough-hewn
+거칠게 베어낸
 
-simpering
+실실 쪼개는
 
-skyhacking
+하릴없이 빈둥대는
 
-spongy
+스펀지같은
 
-surly
+무례한
 
-tottering
+비틀거리는
 
-twisted
+일그러진
 
-unctious
+겉치레의
 
-unhinged
+불안정한
 
-unmuzzled
+입마개를 푼
 
-vain
+헛된
 
-venomed
+악의에 찬
 
-villainous
+악랄한
 
-warped
+뒤틀린
 
-wayward
+고집스러운
 
-weedy
+허약한
 
-worthless
+쓸모없는
 
-yeasty
+경박한
 %%%%
 ##########################################################
 # adjective1, Elf special
 ##########################################################
 insult elf adj1
 
-weakly
+힘없는
 
-sickly
+병난
 
-frail
+부서지기 쉬운
 
-delicate
+연약한
 
-fragile
+허약한
 
-frumpy
+촌스러운
 
-brittle
+불안정한
 
-tender
+씹기 쉬운
 
-mooning
+엉덩이를 드러낸
 
-painted
+겉치레의
 
-lily-hearted
+겁많은
 
-dandy
+멋쟁이의
 
-featherweight
+매우 가벼운
 
-flimsy
+빈약한
 
-rootless
+의지할 곳 없는
 
-spindly
+막대기같은
 
-puny
+박약한
 
-shaky
+휘청거리는
 
-prissy
+점잔빼는
 
-underdone
+약간 설익은
 %%%%
 ##########################################################
 # adjective1, Felid special
 ##########################################################
 insult felid adj1
 
-matted
+헝크러진
 
-grungy
+지저분한
 
-rabid
+과격한
 
-picayune
+하찮은
 
-weenchy
+심술궂은
 
-crummy
+형편없는
 
-daggy
+너저분한
 
-feral
+돌아다니며 사는
 
-stray
+길잃은
 
-sticky
+달라붙는
 
-musky
+사향 냄새가 나는
 
-slinking
+살금살금 움직이는
 %%%%
 ##########################################################
 # adjective1, Ghoul special
@@ -903,15 +903,15 @@ w:20
 ##########################################################
 insult undead adj2
 
-deathlike
+죽음과 같은
 
-lifeless
+생명이 없는
 
-undead
+언데드의
 
-corpse-like
+시체 같은
 
-deado
+죽을 자의
 %%%%
 ###############################################
 # noun of the insult
@@ -1171,33 +1171,33 @@ weenchy-treat
 ##########################################################
 insult felid noun
 
-kitten
+냥냥이
 
-fleabag
+벼룩집
 
-vermin
+해충
 
-loo-gargler
+변기물 먹는 놈
 
-pate-warmer
+대머리
 
-pander-nanny
+뚜쟁이 할매
 
-hissie
+쉭쉭이
 
-cooking-fat
+지방덩어리
 
-sand-tongue
+모래 혓바닥
 
-scamp
+혐냥이
 
-fur-fop
+가죽애호가
 
-toe-scratcher
+발가락 긁어주는 놈
 
-filth-coat
+오물덩어리
 
-gob-dollager
+아가리 종결자
 %%%%
 ##########################################################
 # noun, Halfling special
@@ -1286,129 +1286,129 @@ creepsneak
 ##########################################################
 insult centaur noun
 
-crock
+늙은 말
 
-donkey
+나귀
 
-four-legs
+네 다리
 
-hack
+몹쓸 말
 
-half-breed
+잡종
 
-horse-flesh
+말 몸뚱이
 
-horse meat
+말고기
 
-horsey face
+말같은 면상
 
-jade
+야윈 말
 
-mule
+노새
 
-nag
+경주마
 
-nightmare
+나이트메어
 
-pony
+포니
 %%%%
 ##########################################################
 # noun, Minotaur special
 ##########################################################
 insult minotaur noun
 
-bovine
+소과의 동물
 
-brisket
+가슴살
 
-bull-brain
+황소 뇌
 
-cud-chewer
+되새김질 하는 놈
 
-calf-wit
+송아지의 이해력
 
-cloven-toed
+갈라진 발가락
 
-cretin
+천치
 
-cow
+소
 
-cattle
+축우
 
-horn-beast
+뿔난 짐승
 
-meatloaf
+미트 로프
 
-meatball
+미트볼
 
-mooer
+음매하고 우는 놈
 
-rump-roast
+볼기긴살
 
-ruminant
+반추동물
 
-veal
+송아지 고기
 
-walking sirloin
+걸어다니는 등심살
 %%%%
 ##########################################################
 # noun, Mummy special
 ##########################################################
 insult mummy noun
 
-dustbag
+먼지 주머니
 
-deado
+하찮은 놈
 
-fogey
+영감탱이
 
-linensack
+리넨 보따리
 
-clothbag
+포대기
 
-tombling
+무덤에서 튀어나온 놈
 
-mummylet
+하찮은 미라놈
 
-shroud
+수의
 
-paper wrap
+종이 포장지
 
-roll of bandages
+붕대 말아놓은 것
 
-bundle of gauze
+거즈 묶음
 
-cotton waste
+솜 찌끄래기
 
-wrapping tissue
+둘둘 말아놓은 휴지
 
 # susceptibility to fire
-pyre
+장작더미
 
-tinder
+불쏘시개
 %%%%
 ##########################################################
 # noun, Ghoul special
 ##########################################################
 insult ghoul noun
 
-flesh wound
+얕은 상처
 
-running sore
+고름이 흐르는 상처
 
-wreck
+만신창이
 
-dirt collector
+오물 수집가
 
-dust catcher
+집진기
 
-trash-dump
+쓰레기통
 
-refuse
+쓰레기
 
-rubbish heap
+쓰레기 더미
 
-garbage dump
+쓰레기 처리장
 
-walking corpse
+걸어다니는 시체
 %%%%

@@ -65,93 +65,93 @@
 weapon
 
 # weapon specific keywords (see rand_wpn.txt)
-of @_power_or_anger_@
+"@_power_or_anger_@"
 
-of @_battle_or_war_@
+"@_battle_or_war_@"
 
 w:1
-of @player_doom@
+"@player_doom@"
 
 w:9
-of @death_or_doom@
+"@death_or_doom@"
 
 w:16
-of @_strategy_or_justice_@
+"@_strategy_or_justice_@"
 
 w:4
-of the @_people_name_@
+"@_people_name_@"
 
 w:8
-of the @_weapon_animal_@
+"@_weapon_animal_@"
 
 w:2
-of the @_plant_name_@
+"@_plant_name_@"
 
 w:7
-of @_evil_stuff_@
+"@_evil_stuff_@"
 
 w:5
-of @_catastrophe_name_@
+"@_catastrophe_name_@"
 
 w:8
-of @_chaos_name_@
+"@_chaos_name_@"
 
 w:8
-of @_balance_or_order_@
+"@_balance_or_order_@"
 
-of @_economics_or_politics_@
+"@_economics_or_politics_@"
 
 w:8
-of @branch_name@
+"@branch_name@"
 
 w:7
-of @_place_name_@
+"@_place_name_@"
 
 w:5
-of @_discomfort_weapon_@
+"@_discomfort_weapon_@"
 
 w:3
-of @_mental_illness_weapon_@
+"@_mental_illness_weapon_@"
 
 w:4
-of the @_item_name_@
+"@_item_name_@"
 
 w:1
-of @_magic_name_@
+"@_magic_name_@"
 
 w:5
-of @_substance_name_@
+"@_substance_name_@"
 
 w:7
-of @_science_name_@
+"@_science_name_@"
 
 w:5
-of @other_weapon_name@
+"@other_weapon_name@"
 
-w:30
+w:34
 "@_plain_weapon_name_@"
 
 # general keywords (see rand_all.txt)
 w:5
-of @_time_name_@
+"@_time_name_@"
 
 w:5
-of @_sky_or_light_@
+"@_sky_or_light_@"
 
 w:18
-of @_virtue_or_vice_@
+"@_virtue_or_vice_@"
 
-of @_number_or_qualifier_@ @_thing_names_@
+@_number_or_qualifier_@ @_thing_names_@_SUFFIX_
 
 w:5
-of @_destiny_name_@
+"@_destiny_name_@"
 
 w:9
-of @god_name@'s @divine_esteem@
+@god_name@의 @divine_esteem@_SUFFIX_
 
 # hardcoded keywords
 w:1
-of @god_name@
+@god_name@
 %%%%
 ######################################################
 # 2. ARMOUR
@@ -167,83 +167,83 @@ body armour
 armour
 
 # armour specific keywords (see rand_arm.txt)
-of @_armour_name_shielding_@
+"@_armour_name_shielding_@"
 
 w:8
-of @_armour_property_name_@
+"@_armour_property_name_@"
 
 w:20
-of @_wacky_armour_name_@
+"@_wacky_armour_name_@"
 
-of the @_profession_name_@
+"@_profession_name_@"
 
-of @_politics_name_armour_@
+"@_politics_name_armour_@"
 
 w:3
-of @_weather_name_@
+"@_weather_name_@"
 
 w:17
-of @_good_or_divine_@
+"@_good_or_divine_@"
 
 w:5
-of the @_celestial_bodies_@
+"@_celestial_bodies_@"
 
 w:5
-of @_instrument_name_@
+"@_instrument_name_@"
 
 w:20
-of the @_armour_animal_@
+"@_armour_animal_@"
 
 w:3
-of @_flower_name_@
+"@_flower_name_@"
 
 w:3
-of the @_critter_name_@
+"@_critter_name_@"
 
 w:5
-of @_evil_being_@
+"@_evil_being_@"
 
 w:5
-of @_mental_illness_armour_@
+"@_mental_illness_armour_@"
 
-of @_discomfort_and_inaction_@
+"@_discomfort_and_inaction_@"
 
-of @_game_name_@
+"@_game_name_@"
 
 w:15
-of @_other_armour_name_@
+"@_other_armour_name_@"
 
-w:2
+w:1
 "@_plain_armour_name_@"
 
 # weapon specific keywords (see rand_arm.txt)
 w:25
-of @_philosophy_or_science_@
+"@_philosophy_or_science_@"
 
 w:15
-of @_place_name_@
+"@_place_name_@"
 
 # general keywords (see rand_all.txt)
-of @_time_name_@
+"@_time_name_@"
 
 w:8
-of @_sky_or_light_@
+"@_sky_or_light_@"
 
 w:30
-of @_virtue_or_vice_@
+"@_virtue_or_vice_@"
 
 w:16
-of @_number_or_qualifier_@ @_thing_names_@
+@_number_or_qualifier_@ @_thing_names_@
 
 w:20
-of @god_name@'s @divine_esteem@
+@god_name@의 @divine_esteem@_SUFFIX_
 
 # hardcoded keywords
 w:1
-of @god_name@
+"@god_name@"
 
 w:15
-of @branch_name@
+"@branch_name@"
 %%%%
 ######################################################
 # 3. JEWELLERY
@@ -252,64 +252,64 @@ jewellery
 
 # jewellery specials (see rand_all.txt)
 w:3
-of the @_jewellery_animal_@
+"@_jewellery_animal_@"
 
-of @_jewellery_special_name_@
+"@_jewellery_special_name_@"
 
-of @_suspicion_name_@
+"@_suspicion_name_@"
 
 # as defined for weapons (see rand_wpn.txt)
-of the @_people_name_@
+"@_people_name_@"
 
 w:17
-of @_balance_or_order_@
+"@_balance_or_order_@"
 
 w:14
-of @_philosophy_name_@
+"@_philosophy_name_@"
 
 w:7
-of @_mental_illness_weapon_@
+"@_mental_illness_weapon_@"
 
-of @other_weapon_name@
+"@other_weapon_name@"
 
 # as defined for armour (see rand_arm.txt)
 w:20
-of the @_armour_animal_@
+"@_armour_animal_@"
 
 w:3
-of @_flower_name_@
+"@_flower_name_@"
 
 w:5
-of @_evil_being_@
+"@_evil_being_@"
 
 w:20
-of @_good_or_divine_@
+"@_good_or_divine_@"
 
 w:12
-of @_politics_name_armour_@
+"@_politics_name_armour_@"
 
-w:2
+w:1
 "@_plain_armour_name_@"
 
 # same for all three types (see rand_all.txt)
 w:13
-of @_time_name_@
+"@_time_name_@"
 
-of @_sky_or_light_@
+"@_sky_or_light_@"
 
 w:20
-of @god_name@'s @divine_esteem@
+@god_name@'s @divine_esteem@
 
-of Xom's @_xom_esteem_@
+좀의 @_xom_esteem_@
 
 w:7
-of @_virtue_name_@
+"@_virtue_name_@"
 
 w:13
-of @_vice_name_@
+"@_vice_name_@"
 
 w:20
-of @_number_or_qualifier_@ @_thing_names_@
+"@_number_or_qualifier_@ @_thing_names_@"
 %%%%
 ######################################################
 # GOD GIFT specials
@@ -320,76 +320,76 @@ Trog weapon
 
 # names containing battle and death are more likely
 w:25
-of @_power_or_anger_@
+"@_power_or_anger_@"
 
 w:25
-of @_battle_or_war_@
+"@_battle_or_war_@"
 
 w:25
-of @death_or_doom@
+"@death_or_doom@"
 
 w:7
-of @_strategy_name_@
+"@_strategy_name_@"
 
 w:15
-of @_justice_name_@
+"@_justice_name_@"
 
 w:30
-of @_virtue_or_vice_@
+"@_virtue_or_vice_@"
 
 w:1
-of Trog
+트로그
+
+w:40
+트로그의 @divine_esteem@
+
+트로그의 @_anger_name_@
+
+w:15
+"@_weapon_animal_@"
+
+w:15
+"@_evil_stuff_@"
+
+"@_catastrophe_name_@"
+
+w:15
+"@_chaos_name_@"
 
 w:20
-of Trog's @divine_esteem@
-
-of Trog's @_anger_name_@
-
-w:15
-of the @_weapon_animal_@
-
-w:15
-of @_evil_stuff_@
-
-of @_catastrophe_name_@
-
-w:15
-of @_chaos_name_@
+"@_balance_or_order_@"
 
 w:20
-of @_balance_or_order_@
+"@_economics_or_politics_@"
+
+w:15
+"@branch_name@"
+
+w:15
+"@_place_name_@"
+
+w:15
+"@_time_name_@"
+
+"@_sky_or_light_@"
 
 w:20
-of @_economics_or_politics_@
+@_number_or_qualifier_@ @_thing_names_@
+
+"@_discomfort_weapon_@"
+
+"@_mental_illness_weapon_@"
+
+"@_item_name_@"
 
 w:15
-of @branch_name@
+"@_philosophy_name_@"
 
-w:15
-of @_place_name_@
+"@_science_name_@"
 
-w:15
-of @_time_name_@
+"@other_weapon_name@"
 
-of @_sky_or_light_@
-
-w:20
-of @_number_or_qualifier_@ @_thing_names_@
-
-of @_discomfort_weapon_@
-
-of @_mental_illness_weapon_@
-
-of the @_item_name_@
-
-w:15
-of @_philosophy_name_@
-
-of @_science_name_@
-
-of @other_weapon_name@
-
-of @_monster_name_@@killer_name@
+"@_monster_name_@@killer_name@"
 
 w:30
 "@_plain_weapon_name_@"
@@ -405,37 +405,37 @@ w:400
 
 # with a few special cases
 w:2
-of @player_name@'s @_valour_name_@
+@player_name@의 @_valour_name_@
 
-w:3
-of Okawaru's @divine_esteem@
+w:8
+오카와루의 @divine_esteem@
 
 # and bonus probability for some of the more harmless themes
-of @_strategy_or_justice_@
+"@_strategy_or_justice_@"
 
 w:5
-of @_philosophy_name_@
+"@_philosophy_name_@"
 
 w:3
-of @_balance_or_order_@
+"@_balance_or_order_@"
 
 w:5
-of @_power_name_@
+"@_power_name_@"
 
 w:2
-of @_virtue_name_@
+"@_virtue_name_@"
 
 w:1
-of the @_diviner_name_@
+"@_diviner_name_@"
 
 w:5
-of the @_weapon_animal_@
+"@_weapon_animal_@"
 
 w:5
-of @_place_name_@
+"@_place_name_@"
 
 w:2
-of @_item_name_@
+"@_item_name_@"
 %%%%
 ######################################################
 # OKAWARU armour
@@ -455,28 +455,28 @@ w:400
 @armour@
 
 w:2
-of @player_name@'s @_valour_name_@
+"@player_name@의 @_valour_name_@"
 
 w:2
-of Okawaru's @divine_esteem@
+"오카와루의 @divine_esteem@"
 
 w:2
-of the @_armour_animal_@
+"@_armour_animal_@"
 
 w:1
-of @_good_or_divine_@
+"@_good_or_divine_@"
 
 w:2
-of @_armour_name_shielding_@
+"@_armour_name_shielding_@"
 
 w:1
-of @_armour_property_name_@
+"@_armour_property_name_@"
 
 w:1
-of @_wacky_armour_name_@
+"@_wacky_armour_name_@"
 
 w:2
-of @_politics_name_armour_@
+"@_politics_name_armour_@"
 %%%%
 ######################################################
 # XOM weapon
@@ -486,20 +486,20 @@ Xom weapon
 
 # increased chances (obviously!)
 w:5
-of @_chaos_name_@
+"@_chaos_name_@"
 
 w:5
-of Xom's @_xom_esteem_@
+좀의 @_xom_esteem_@
 
 w:2
-of Xom's @divine_esteem@
+"좀의 @divine_esteem@"
 
 # uses the long name
 w:1
-of @xom_name@
+"@xom_name@"
 
 w:1
-of @_game_name_@
+"@_game_name_@"
 
 w:400
 @weapon@
@@ -524,23 +524,23 @@ Xom armour
 
 # increased chances (obviously!)
 w:5
-of @_chaos_name_@
+"@_chaos_name_@"
 
-w:5
-of Xom's @_xom_esteem_@
+w:18
+"좀의 @_xom_esteem_@"
 
 w:2
-of Xom's @divine_esteem@
+"좀의 @divine_esteem@"
 
 # uses the long name
 w:1
-of @xom_name@
+"@xom_name@"
 
 w:1
-of @_game_name_@
+"@_game_name_@"
 
 w:1
-of @player_death@
+"@player_death@"
 
 w:400
 @armour@
@@ -556,26 +556,26 @@ Xom jewellery
 
 # increased chances (obviously!)
 w:5
-of @_chaos_name_@
+"@_chaos_name_@"
 
 w:5
-of Xom's @_xom_esteem_@
+"좀의 @_xom_esteem_@"
 
 w:2
-of Xom's @divine_esteem@
+"@divine_esteem@"
 
 # uses the long name
 w:1
-of @xom_name@
+"@xom_name@"
 
 w:1
-of @_game_name_@
+"@_game_name_@"
 
 w:1
-of @player_death@
+"@player_death@"
 
 w:1
-of @player_doom@
+"@player_doom@"
 
 w:300
 @jewellery@
@@ -590,68 +590,68 @@ w:300
 # common to all three types of randarts
 general appearance
 
-brightly glowing
+밝게 빛나는
 
-smoking
+연기를 피우는
 
-scorched
+그을린
 
-twisted
+왜곡된
 
-shimmering
+반짝반짝 빛나는
 
-warped
+뒤틀린
 
-transparent
+투명한
 
-translucent
+장식된
 
-encrusted
+박힌
 
-pitted
+구멍투성이의
 
-slimy
+미끈미끈한
 
-polished
+닦아내어진
 
-fine
+호화로운
 
-crude
+조잡한
 
-ancient
+낡아 빛바랜
 
-faintly glowing
+약하게 반짝이는
 
-steaming
+증기를 피우는
 
-dazzling
+휘황찬란한
 
 w:2
-blackened
+검게 변한
 %%%%
 weapon appearance
 
-iridescent
+무지개빛의
 
-bloodstained
+피로 물든
 
-crystal
+수정의
 
-jewelled
+보석으로 꾸며진
 
-ichor-stained
-
-w:3
-ivory
+얼룩진
 
 w:3
-bone
+연보라빛
+
+w:3
+뼈로 만들어진
 
 w:1
-sapphire
+사파이어
 
 w:3
-ebony
+흑단
 
 # currently 16 entries, so their overall weight amounts 180
 w:180
@@ -659,67 +659,67 @@ w:180
 %%%%
 robe appearance
 
-fabulously ornate
+화려하게 장식된
 
-dull
+늘어진
 
-sheer
+속이 비치는
 
-thick
+매우 짧은
 
-heavy
+두꺼운
 
-wizard
+무거워 보이는
 
-ominously black
+마력이 느껴지는
 
-brightly glowing
+새까만
 
-smoking
+밝게 반짝이는
 
-twisted
+연기를 피우는
 
-shimmering
+왜곡된
 
-warped
+반짝반짝 빛나는
 
-transparent
+뒤틀린
 
-slimy
+투명한
 
-fine
+미끈미끈한
 
-crude
+호화로운
 
-ripped
+허술한
 
-colourful
+찢어진
 
-creamy pearl
+원색적인
 
-opalescent
+진주빛의
 
-ancient
+오팔빛의
 
-faintly glowing
+낡아 빛바랜
 
-steaming
+약하게 반짝이는
 
-faintly humming
+증기를 피우는
 
-bloodstained
+희미하게 깜박이는
 
-heavily jewelled
+피로 물든
 
-ichor-stained
+큰 보석이 박힌
 
-distressingly furry
+얼룩진
 
-tattered
+거친 털로 덮인
 
-silken
+누더기
 
-shadowed
+비단
 %%%%
 body armour appearance
 
@@ -739,66 +739,66 @@ w:200
 %%%%
 armour appearance
 
-faintly humming
+희미하게 빛나는
 
-bloodstained
+피로 물든
 
-heavily runed
+커다란 룬이 새겨진
 
-jewelled
+보석으로 장식된
 
-ichor-stained
+얼룩진
 
-distressingly furry
+거친 털로 덮인
 
-spiked
+가시박힌
 
 w:160
 @general appearance@
 %%%%
 _gemstone_
 
-diamond
+다이아몬드
 
-ruby
+루비
 
-jacinth
+지르코늄
 
-sapphire
+사파이어
 
-black opal
+흑단백석
 
-emerald
+에메랄드
 
-turquoise
+터키석
 
-citrine
+황수정
 
-aquamarine
+아쿠아마린
 
-amber
+호박
 
-topaz
+토파즈
 
-jet
+석영
 
-opal
+단백석
 
-garnet
+석류석
 
-amethyst
+자수정
 
-jasper
+벽옥
 
-obsidian
+흑요석
 
-agate
+마노
 
-jade
+비취
 
-pearl
+진주
 
-tiger eye
+묘안석
 %%%%
 ######################################################
 # Jewellery appearance
@@ -812,161 +812,161 @@ tiger eye
 # would have, plus a material that a non-artefact might or might not have.
 _jewellery appearance_
 
-scintillating
+이상한 모양의
 
-sparkling
+거품이 이는
 
-flickering
+깜박이는
 
-glittering
+밝게 빛나는
 
-smoking
+연기를 피우는
 
-scorched
+반짝반짝 빛나는
 
-shimmering
+미세하게 떨리는
 
-wavering
+뒤틀린
 
-warped
+투명한
 
-transparent
+구멍투성이의
 
-translucent
+미끈미끈한
 
-pitted
+닦아내어진
 
-slimy
+허술한
 
-fine
+낡아 빛바랜
 
-crude
+밝게 반짝이는
 
-ancient
+약하게 반짝이는
 
-brightly glowing
+증기를 피우는
 
-faintly glowing
+고대 문장의
 
-steaming
+바람이 불어나오는
 
-heavily runed
+크게 룬이 새겨진
 
-vibrating
+요동치는
 
-twitching
+꿈틀대는
 
-coiled
+둥글게 말린
 
-bound
+묶인
 
-clouded
+더럽혀진
 
 w:2
 serpentine
 %%%%
 _ring material_
 
-wooden
+나무
 
-ivory
+상아
 
-bone
+뼈
 
-amber
+호박
 
-silver
+은
 
-golden
+금
 
-platinum
+백금
 
-iron
+철
 
-steel
+강철
 
-bronze
+청동
 
-brass
+놋쇠
 
-copper
+구리
 
-tin
+주석
 
-lead
+납
 
-pewter
+백랍
 
-granite
+화강암
 
-marble
+대리석
 
-jade
+비취
 
-turquoise
+터키석
 
-lapis lazuli
+청금석
 
-glass
+유리
 
 w:2
-gossamer
+거미줄
 %%%%
 _amulet material_
 
-ivory
+상아
 
-bone
+뼈
 
-graven
+해골
 
-silver
+은
 
-golden
+금
 
-platinum
+백금
 
-iron
+철
 
-steel
+강철
 
-bronze
+청동
 
-brass
+놋쇠
 
-copper
+구리
 
-tin
+주석
 
-lead
+납
 
-pewter
+백랍
 
-zirconium
+지르코늄
 
-sapphire
+사파이어
 
-emerald
+에메랄드
 
-garnet
+석류석
 
-ruby
+루비
 
-jade
+비취
 
-ruby
+루비
 
-crystal
+수정
 
-diamond
+다이아몬드
 
-amethyst
+자수정
 %%%%
 ring appearance
 
-@_jewellery appearance_@ @_ring material_@
+@_ring material_@ @_jewellery appearance_@
 %%%%
 amulet appearance
 
-@_jewellery appearance_@ @_amulet material_@
+@_amulet material_@ @_jewellery appearance_@
 %%%%

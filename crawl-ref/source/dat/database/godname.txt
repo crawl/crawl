@@ -1,168 +1,168 @@
 %%%%
 Zin lastname
 
-Zin the Law-Giver
+규율 전파자, 진
 %%%%
 Yredelemnul lastname
 
-Yredelemnul the Dark
+어두운 자, 이레데렘눌
 %%%%
 Okawaru lastname
 
-Warmaster Okawaru
+전쟁의 달인, 오카와루
 %%%%
 Makhleb lastname
 
-Makhleb the Destroyer
+파괴자, 마크레브
 %%%%
 Sif Muna lastname
 
-Sif Muna the Loreminder
+지식의 수호자, 시프 무나
 %%%%
 Trog lastname
 
-Trog the Wrathful
+격노한 자, 트로그
 %%%%
 Elyvilon lastname
 
-Elyvilon the Healer
+치유자, 엘리빌론
 %%%%
 Lugonu lastname
 
-Lugonu the Unformed
+형상없는 자, 루고누
 %%%%
 Beogh lastname
 
-Beogh the Brigand
+약탈자, 베오그
 %%%%
 Fedhas lastname
 
-Fedhas Madash
+페다스 마다쉬
 %%%%
 Cheibriados lastname
 
-Cheibriados the Contemplative
+심사숙고하는 자, 체이브리아도스
 %%%%
 Ashenzari lastname
 
-Ashenzari the Shackled
+구속된 자, 아셴자리
 %%%%
 Dithmenos lastname
 
-Dithmenos the Shadowed
+그늘진 자, 디스메노스
 %%%%
 Nemelex Xobeh lastname
 
-Nemelex Xobeh the Trickster
+재주꾼, 네멜렉스 죠베
 %%%%
 Gozag lastname
 
-Gozag Ym Sagoz the Greedy
+탐욕스러운자, 고자그 임 사고즈
 %%%%
 Qazlal lastname
 
-Qazlal Stormbringer
+폭풍을 부르는 자, 콰즈랄
 %%%%
 Ru lastname
 
-Ru the Awakened
+깨어난 자, 루
 %%%%
 Pakellas lastname
 
-Pakellas the Inventive
+발명가, 피켈라스
 %%%%
 Uskayaw lastname
 
-Uskayaw the Reveler
+난봉꾼 우스카요
 %%%%
 Hepliaklqana lastname
 
-Hepliaklqana the Forgotten
+잊혀진 자 헤플리클카나
 %%%%
 Wu Jian lastname
 
-the Wu Jian Council
+우지안 협회
 %%%%
 Xom lastname
 
 w:280
-Xom of Chaos
+혼돈의 좀
 
 w:5
-Xom the Random
+무작위의 좀
 
 w:5
-Xom the Random Number God
+난수의 신, 좀
 
 w:5
-Xom the Elder Chaos God
+옛 혼돈의 신, 좀
 
-Xom the Tricky
-
-w:5
-Xom the Less-Predictable
+속임수의 좀
 
 w:5
-Xom the Unpredictable
-
-Xom of Many Doors
-
-Xom the Capricious
+예측이 어려운 좀
 
 w:5
-Xom of Bloodstained Whimsey
+예측할수없는 좀
+
+수많은 문의 좀
+
+변덕스러운 자, 좀
 
 w:5
-Xom of Enforced Whimsey
-
-Xom of Bone-Dry Humour
+피투성이 변덕의 좀
 
 w:5
-Xom of Malevolent Giggling
+강요된 변덕의 좀
+
+바싹 마른 유머의 좀
 
 w:5
-Xom of Malicious Giggling
+악의적인 웃음의 좀
 
 w:5
-Xom the Psychotic
+심술궂은 웃음의 좀
 
 w:5
-Xom the Psychopath
+정신병자, 좀
+
+w:5
+싸이코패스, 좀
 
 w:2
-Xom of Gnomic Intent
+금언적 의도의 좀
 
 w:2
-Xom of Ineffable Intent
+형언할수없는 의도의 좀
 
 w:2
-Xom of Fickle Intent
+변덕스러운 의도의 좀
 
 w:2
-Xom of Swiftly Tilting Intent
+신속히 기울어지는 의도의 좀
 
 w:2
-Xom of Unknown Intent
+알수없는 의도의 좀
 
-Xom the Fickle
+변덕스러운 자, 좀
 
-Xom of Unknown Intention
+알수없는 목적의 좀
 
 w:4
-The Xom-Meister
+좀-마이스터
 
 w:2
-The Xom-Meister, Xom-a-lom-a-ding-dong
+좀-마이스터, 좀-어-롬-어-딩-동
 
 w:2
-The Xom-Meister, Xom-o-Rama
+좀-마이스터, 좀-오-라마
 
 w:2
-The Xom-Meister, Xom-Xom-bo-Bom, Banana-Fana-fo-Fom
+좀-마이스터, 좀-좀-보-봄, 바나나-파나-포-폼
 
 w:5
-Xom the Begetter of Turbulence
+격변의 아버지, 좀
 
 w:5
-Xom the Begetter of Discontinuities
+불연속의 아버지, 좀
 %%%%

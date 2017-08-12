@@ -10,8 +10,8 @@
 #  - fixed theme, varying level (Conjurations, Summoning/Earth, ...)
 #  - fixed level, varying theme (level 2 spells etc.)
 #
-# The books are filled with spells matching their type in randbook.cc,
-# either build_themed_book() or make_book_level_randart().
+# The books are filled with spells matching their type in spl-book.cc,
+# either make_book_theme_randart() or make_book_level_randart().
 # The name should likewise take into account the book's type.
 #
 # Themed books use one of the following two naming schemes:
@@ -43,7 +43,7 @@
 # information on randart naming.
 ######################################################
 # Book name should be set in make_book_level_randart() or
-# build_themed_book(), so if this gets picked there's a bug.
+# make_book_theme_randart(), so if this gets picked there's a bug.
 book
 
 Book of Bugginess
@@ -54,55 +54,63 @@ book appearance
 %%%%
 book_noun
 
-Tome
+마법서
 
-Grimoire
+주문서
 
-Almanac
+마도서
 
-Volume
+고서
 
-Compendium
+연감
 
-Handbook
+전서
 
-Incunabulum
+서적
 
-Papyrus
+책
 
-Catalogue
+개요서
+
+논문
+
+핸드북
+
+파피루스
+
+카탈로그
 %%%%
 _book_noun_on_
 
-Guide
+가이드
 
-Collected Works
+전집
 
-Disquisition
+논문
 
-Reference Book
+참고서
 %%%%
 # C++: discipline books, including Kiku's gifts
 book_name
 
 w:9
-@book_noun@ of
+@book_noun@
 
 w:4
-@_book_noun_on_@ on
+@_book_noun_on_@
 %%%%
 # @book_noun@ of ...
 # C++: "totally random" books
 random_book_title
 
 w:15
-the @_book_plant_animal_@
+@_book_plant_animal_@
 
 w:20
 @_number_or_qualifier_@ @_thing_names_@
 
 w:4
-the @_profession_name_@
+@_profession_name@
 
 w:13
 @_philosophy_or_science_@
@@ -179,35 +187,37 @@ w:3
 %%%%
 _book_adjective_
 
-glistering
+말끔한
 
-sparkling
+반짝이는
 
-levitating
+부유하는
 
-droning
+웅웅거리는
 
-conspicuous
+눈에띄는
 
-inconspicuous
+눈에 띄지 않는는
 
-colourful
+컬러풀한
 
-graven
+조각으로 장식된
 
-engraved
+새김 장식된
 
-antique
+오래된
 
-yellowed
+누렇게 변한
 
-rare
+희귀한
 
-black
+검은
 
-blackened
+검게 변한
 
-torn
+찢겨진
+
+양장본
 %%%%
 _the_book_magic_
 
@@ -223,169 +233,275 @@ w:90
 %%%%
 _book_magic_
 
-Magic
+마법
 
-Theurgy
+종합 마법
 
-Thaumaturgy
+실전 마법
 
-w:5
-Casting
+다학파 마법
 
-w:5
-Spellcasting
+기적
 
-Wizardry
+마술
 
-Sorcery
+주문
 
-Witchcraft
+마법학
 
-Witchery
+마도
 
-Spellcraft
+마도학
 
-Spellweaving
+마법 주문
 
-w:5
-Secret Knowledge
+주문학
 
-w:5
-Rites and Rhymes
+위저드리
 
-w:5
-Hermeneutics
+소서리
+
+스펠캐스트
+%%%%
+_book_magic_suffix_
+
+종합 마법
+
+다학파 마법
+
+실전 마법
+
+위저드리
+
+스펠캐스팅
+
+소서리
+
+마법학
+
+마도학
+
+주문학
 %%%%
 _beginners_
 
-Beginners
+초보
+
+초보자
+
+초심자
+
+입문자
 
 w:5
-Neophytes
-
-w:5
-Novices
+뉴비
 
 w:3
-Rookies
-
-w:2
-Absolute Beginners
-
-w:1
-Dummies
+바보
 %%%%
 # level 1
 starting level book
 
-@_the_book_magic_@ for @_beginners_@
+@_beginners_@를 위한 @_the_book_magic_@ 입문
 
-w:2
-@_the_book_magic_@ 101
+@_the_book_magic_@ 입문
 
-A Beginning Course on @_the_book_magic_@
+@_book_magic_suffix_@ : 제 @level@장
 
-@_the_book_magic_@, Part One
+@_book_magic_suffix_@ @level@권
 
-An Introduction to @_the_book_magic_@
+@level@레벨 마법책
 
-w:2
-An Initiation to @_the_book_magic_@
+@_the_book_magic_@ 개론
 
-First Steps in @_the_book_magic_@
+@_the_book_magic_@ 시작하기
+
+초급 @_the_book_magic_@서
+
+따라해 보세요, @_book_magic_suffix_@!
+
+@_the_book_magic_@ 첫걸음
+
+@_the_book_magic_@ 길라잡이
+
+w:3
+@_the_book_magic_@ 가이드 : 초급편
+
+w:3
+1주일 만에 끝내는 @_the_book_magic_@ 가이드
 %%%%
 # level 2-4
 easy level book
 
-A Primer on @_the_book_magic_@
+@_the_book_magic_@ 핵심 길라잡이
 
-@_the_book_magic_@ in Simple Steps
+예제로 배우는 @_book_magic_suffix_@
 
-An Early Guide to @_the_book_magic_@
+실전 @_the_book_magic_@
 
-The Foundations of @_book_magic_@
+중급 @_the_book_magic_@서
 
-Easy @_book_magic_@
+@_the_book_magic_@ 실전서
 
-@_the_book_magic_@, Part @level@
+중급자를 위한 @_book_magic_@서
 
-@_the_book_magic_@ Continued
+좀 더 쉽게 배워보자, @_book_magic_suffix_@
 
-w:1
-@_book_magic_@, and How To Use It
+@_book_magic_suffix_@ : 제 @level@장
+
+@_book_magic_suffix_@ @level@권
+
+@level@레벨 마법책
+
+@_the_book_magic_@ 실전 활용 가이드
+
+@_book_magic_@, 어떻게 사용할 것인가
+
+@_book_magic_@ 실력향상
+%%%%
+_book_elements_
+
+복잡성
+
+위험성
+
+본질
+
+구성 체계
+
+순환 체계
+
+비교 분석
+
+탐구
+
+연구 결과
+
+상관관계 추론
+
+해석
+
+유용성
+%%%%
+_book_elements_t_
+
+@_book_elements_@
 %%%%
 # level 4-6
 moderate level book
 
-Advanced Steps in @_the_book_magic_@
+마법학 교육자를 위한 @_the_book_magic_@ 지침서
 
-The Advanced Guide to @_the_book_magic_@
+@_the_book_magic_@ 분석 및 고찰
 
-Further Steps in @_the_book_magic_@
+@_the_book_magic_@의 진정한 의미와 @_book_elements_@
 
-@_the_book_magic_@, Part @level@
+@_book_elements_@와(과) 깊은 고찰, @_the_book_magic_@에 대해
 
-Advanced @_book_magic_@
+@_the_book_magic_@ 교육자를 위한 가이드
 
-Sophisticated @_book_magic_@
+한발짝 더 나아가자, @_the_book_magic_@ 
 
-Further Progress in @_book_magic_@
+좀 더 깊이 있는 @_the_book_magic_@을(를) 위하여
 
-The Second Course in @_book_magic_@
+@_book_magic_suffix_@ : 제 @level@장
 
-w:1
-Improving Your @_book_magic_@
+@_book_magic_suffix_@ @level@권
 
+@level@레벨 마법책
+
+노련한 마법사를 위한 @_book_magic_suffix_@
+
+@_book_magic_suffix_@ 논문집
+
+@_book_magic_@와(과) 가치
+
+@_book_magic_@의 @_book_elements_@에 대한 연구서
+
+@_thing_names_@의 @_book_magic_suffix_@에 대한 @_book_elements_@
+
+평생 배우는 @_book_magic_suffix_@
+
+@_book_magic_@ 문제 직면
+
+@_book_magic_suffix_@ 철저 분석
 %%%%
 # powerful casters, used for high level books
 _powerful_caster_
 
-Archmage
+w:30
+아크메이지
 
-w:3
-Deep Elf Lorekeeper
+왕국 마법협회
 
-w:3
-Blind Seer
+제국 마술사
 
-w:3
-Prophet
+대마법사
 
-w:1
-Greatest Mummy
+도서관장
+
+눈먼 점성술사
+
+예언자
+
+대 미이라
 %%%%
 _the_powerful_caster_
 
-the @_powerful_caster_@
+@_powerful_caster_@
 
 w:3
-Boris
+보리스
 
 w:1
-Sif Muna
+시프 무나
 %%%%
 _last_or_lost_
 
-Last
+마지막
 
-Lost
+잃어버린
 %%%%
 # level 7-9, books in the form of "XYZ's <bookname>"
 # Prefixed articles will be filtered out.
 _difficult level book owner_
 
-A Thorough Guide to @_the_book_magic_@
+w:20
+궁극의 @_book_magic_suffix_@
 
-The @_last_or_lost_@ Secrets of @_the_book_magic_@
+@_book_magic_suffix_@ 해석
 
-The Arcane Secrets of @_book_magic_@
+@_the_book_magic_@ 전집
 
-The Intricacies of @_the_book_magic_@
+@_book_magic_@ 바이블
 
-The @book_noun@ of Greatest Risks and Utility
+@_the_book_magic_@의 @_last_or_lost_@ 비밀
 
-w:1
-Mastering @_book_magic_@
+@_book_magic_@ 비서
+
+@_book_magic_@ 금서
+
+어떤 @_book_magic_@의 @_book_elements_@
+
+@_book_magic_suffix_@ : 제 @level@장
+
+@_book_magic_suffix_@ @level@권
+
+@level@레벨 마법책
+
+@_the_book_magic_@의 궁극의 @_book_elements_@ 탐구
+
+@_book_magic_suffix_@의 @_book_elements_@와(과) 진리에 대한 연구
+
+진리의 @_book_magic_@
+
+@_book_magic_@에 대한 @_powerful_caster_@와의 연구
+
+@_powerful_caster_@을(를) 위한 @_book_elements_@ 연구서
+
+최고의 @_book_elements_@와(과) @_book_elements_t_@에 관한 @book_noun@
+
+@_book_magic_@ 마스터
 %%%%
 # level 7-9, books without being named after their owner/author
 difficult level book
@@ -393,10 +509,10 @@ difficult level book
 w:50
 @_difficult level book owner_@
 
-The @_last_or_lost_@ @book_noun@ of @_the_powerful_caster_@
+@_the_powerful_caster_@의 @_last_or_lost_@ @book_noun@
 
 w:1
-The Testament of @_the_powerful_caster_@
+@_the_powerful_caster_@의 증거
 %%%%
 # synonyms for predominant spell schools
 # variants starting with the definite article will get "the" prepended
@@ -409,481 +525,613 @@ Confrontation
 
 Attacks
 
-w:5
-Battle Magic
+w:20
+파괴학
+
+비전학
+
+전투 마법
+
+파괴 마법
+
+비전력 제어
 
 w:5
-Combat Magic
+순수 마력
 
 w:5
-Arcane Weapons
-
-w:1
-Blows and Bruises
-
-w:1
-Damage Dealing
+대미지 딜링
 %%%%
 Charms
 
-Enhancements
+w:20
+주술
 
-Talismans
+w:20
+지원 마법
 
-Good Luck
+w:20
+보조 마법
 
-Protection
+보호술
+
+고양술
+
+버프 마법
 
 w:3
-Self-Knowledge
-
-w:3
-Self-Improvement
+자가자양
 
 Aid
 
 Augmentations
 
 w:1
-Benedictions
+축복
 
-Boosts
+부스트
 %%%%
 Fire
 
-Fire
+화염 마법
 
-Flames
+w:20
+불 마법
 
-Heat
+w:20
+불꽃의 마법
 
-the Volcanoes
+화염학
 
-the Blaze
+용암 마법
 
-Ignition
+열역학
 
-the Arsonist
+화산 마법
+
+소각 마법
+
+방화법
+
+소각법
 %%%%
 Hexes
 
-Hexes
+w:20
+저주술
 
-Curses
+w:20
+저주 마법
 
-Malediction
+w:20
+사술
 
-the Oath
+저주학
 
-Execration
+부두술
 
-Enchantment
+부두 마술
 
-Bewitchment
+주술
 
-w:1
-Glamour
+악담서
 
-w:1
-Fascination
+w:3
+매혹 마법
 
-Beguiling
+w:3
+독설서
+
+w:3
+매혹술
+
+w:3
+유혹술
 %%%%
 Ice
 
-Ice
+w:20
+얼음 마법
 
-Snow
+w:20
+냉기 마법
 
-Cold
+w:20
+빙설 마법
 
-the Snowflakes
+냉기술
 
-the Glacier
+냉기학
 
-the Frostbite
+서리 마법
+
+냉동술
+
+냉동학
 %%%%
 Transmutation
 
-Transmigration
+w:20
+변이 마법
 
-Transmutation
+w:20
+변이술
 
-Transformation
+w:20
+변이학
 
-Shape Shifting
+변신 마법
 
-Changing
+변신술
 
-Moulding
+변신학
+
+폴리모프
+
+신체 개조
 %%%%
 # for necromantic books
 _Evil_adjective_
 
-Evil
+w:30
+사악한
 
-Dark
+w:30
+어둠의
 
-Black
+검은
 
-Sinister
+불길한
 
-Unholy
+부정한
+
+고통의
+
+끔찍한
+
+괴로움의
 %%%%
 # also for necromantic books
 _Evil_noun_
 
-Rites
+의식
 
-Arts
+의례
 
-Secrets
+예술
 
-Rituals
+비술
 
-Magic
+마법
+
+마술
 %%%%
 Necromancy
 
-Necromancy
+w:30
+강령 마법
 
-Evil
+w:30
+강령학
 
-Darkness
+w:30
+강령술
 
-Stolen Souls
+사령 마법
 
-w:60
+사령학
+
+사령술
+
+영혼 강탈
+
+어둠
+
+네크로맨시
+
+리치
+
+워록
+
+w:120
 @_Evil_adjective_@ @_Evil_noun_@
 %%%%
 Summoning
 
-Summoning
+w:25
+소환술
 
-Calling
+w:25
+소환 마법
 
-Creation
+w:25
+소환수 다루기
 
-the Entourage
+창조술
 
-Companions
+창조 마법
 
-the Escort
+동료 부리기
 
-w:1
-Illusion
+동물 길들이기
 
-w:2
-Slavery
+테이밍
+
+병법
+
+에스코트
+
+w:3
+분신술
+
+w:3
+노예 부리기
 %%%%
 Translocation
 
-Translocation
+w:30
+전이술
 
-Displacement
+w:30
+전이 마법
 
-Dislocation
+w:30
+전이학
 
-Orientation
+이동술
 
-the Traveller
+순간이동술
 
-the Compass
+방향학
 
-the Voyage
+여행서
 %%%%
 Poison
 
-Poison
+w:30
+독 마법
 
-Venom
+w:30
+맹독 마법
 
-Toxins
+독살법
 
-Poisoning
+유독물 취급법
 
-Intoxication
+오염 마법
 
-Envenoming
+화학
 
-Contamination
+독물 제조
+
+마법오염
 %%%%
 Earth
 
-Earth
+w:30
+대지 마술
 
-Stones
+w:30
+대지술
 
-Clay
+w:30
+땅의 마법
 
-the Mountains
+바위의 마법
 
-the Rocks
+점토학
+
+고산학
+
+지형학
+
+지리학
+
+금속학
 %%%%
 Air
 
-Air
+w:25
+대기 마법
 
-Lightness
+w:25
+바람 마법
 
-Weightlessness
+대기술
 
-Flight
+대기학
 
-the Birds
+w:15
+번개 마법
 
-Feathers
+w:15
+뇌전 마법
+
+비행술
+
+비행학
 %%%%
 # adjectives for secondary spell school
 Conjuration adj
 
-Destructive
+공격용
 
-Harmful
+절륜한
 
-Damaging
+위력적인
 
-Hurtful
-
-Excruciating
+강력한
 
 w:5
-Lethal
+치명적인
 %%%%
 Charms adj
 
-Helpful
+부가적
 
-Lucky
+행운의
 
-Assistive
-
-Boosting
+강화
 %%%%
 Hexes adj
 
-Enchanting
+매혹적인
 
-Bewitching
+홀호리는
 
-Captivating
+매력적인
 
-Fetching
+마음을 사로잡는
 
-Enthralling
+멋진
 
-Ensnaring
-
-Entrancing
+넋을 빼앗는
 %%%%
 Fire adj
 
-Fiery
+고온의
 
-Scorching
+맹렬한
 
-Burning
+가연성
 
-Blistering
+뜨거운
 
-Igneous
-
-Flamy
-
-Torrid
+열렬한
 %%%%
 Ice adj
 
-Glacial
+빙하
 
-Freezing
+혹한의
 
-Icy
+극저온
 
-Congealing
-
-Frigorific
+응결성
 %%%%
 Transmutation adj
 
-Shifting
+쉬프팅
 
-Mutagenic
+유전자적
 
 w:5
-Unstable
+불안정한
 %%%%
 Necromancy adj
 
-Dark
+어두운
 
-Evil
-
-w:5
-Lethal
-
-Doomed
-
-Sinister
-
-Unholy
-
-Ghastly
+사악한
 
 w:5
-Twisted
+치명적인
+
+파멸의
+
+죄악의
+
+부정한
+
+왜곡된
+
+w:5
+뒤틀린
 %%%%
 Summoning adj
 
-Creative
+창조적
 
-Supportive
+지원적
 %%%%
 Translocation adj
 
-Spatial
+공간성
 
-Displaced
+이동성
 
-Dislocated
+전이된
 
-Warped
-
-w:5
-Unstable
+왜곡된
 
 w:5
-Twisted
+불안정한
 
-Quantum
+w:5
+공간 왜곡
+
+양자
 %%%%
 Poison adj
 
-Poisonous
+유독한
 
-Venomous
+악의에 찬
 
-Toxic
+궤양의
 
-Cankerous
+비로우스
 
-Nocuous
+신랄한
 
-Noxious
-
-Virous
-
-Vitriolic
-
-w:1
-Viperous
+W : 1
+독사 같은
 %%%%
 Earth adj
 
-Earthen
+지구 기원
 
-Ashen
+잿빛
 
-Dusty
+먼지 투성이
 %%%%
 Air adj
 
-Aerial
+공중선
 
-Flying
+비행
 
-Floating
+부유
 
-Feathery
+깃털
 
-Cloudy
+흐린
 
-Gliding
+활공
 %%%%
 # potential previous owners of books
 # __NONE is parsed to the empty string
 # First, combinations.
-# (These MUST be in alphabetical order; "Earth Conjurations owner" won't work!)
+Air Conjuration owner
+
+니콜라
+
+__NONE
+%%%%
 highlevel Conjuration Earth owner
 
-Dispater
+디스페이터
 
 @Conjuration Earth owner@
 %%%%
 Conjuration Earth owner
 
-Lee
+리
 
-Lehudib
+레후딥
 %%%%
 highlevel Conjuration Fire owner
 
-Asmodeus
+아스모데우스
 
-Cerebov
+세레보브
 
 w:5
+@Conjuration Fire owner@
+%%%%
+Conjuration Fire owner
+
+아즈라엘
+
+마저리
+
 __NONE
 %%%%
 highlevel Conjuration Necromancy owner
 
-Ereshkigal
+에레쉬키갈
+
+@Conjuration Necromancy owner@
+%%%%
+Conjuration Necromancy owner
+
+보리스
+
+네르갈
+
+__NONE
+%%%%
+Conjuration Poison owner
+
+w:5
+아이줄
 
 __NONE
 %%%%
 highlevel Conjuration Summoning owner
 
-Asmodeus
+아스모데우스
 
-Dispater
+디스페이터
 
 w:5
 __NONE
 %%%%
+Conjuration Translocation owner
+
+w:5
+루이즈
+
+__NONE
+%%%%
+highlevel Conjuration Translocation owner
+
+롬-로본
+
+__NONE
+%%%%
 Earth Transmutation owner
 
-Roxanne
+록산느
 
 __NONE
 %%%%
 highlevel Earth Summoning owner
 
-Dispater
+디스페이터
 
 __NONE
 %%%%
 highlevel Fire Summoning owner
 
-Asmodeus
+아스모데우스
 
 __NONE
 %%%%
 highlevel Necromancy Poison owner
 
-Gloorx Vloq
+그룩스-블록
 
 __NONE
 %%%%
 Necromancy Transmutation owner
 
-Cigotuvi
+시고트비
 
 __NONE
 %%%%
 # Single spell schools.
+Air owner
+
+니콜라
+
+Sojobo
+
+__NONE
+%%%%
 highlevel Conjuration owner
 
-Asmodeus
+아스모데우스
 
-Ereshkigal
+에레쉬키갈
 
-Dispater
+디스페이터
 
-Cerebov
+세레보브
 
-Lom Lobon
+롬-로본
 
-Lehudib
+레후딥
 
 w:30
 @Conjuration owner@
@@ -891,95 +1139,174 @@ w:30
 Conjuration owner
 
 w:2
-Lee
+리
 
-Lehudib
+레후딥
 
-Iskenderun
+이스켄데룬
+
+에롤차
+
+루이즈
+
+보리스
+
+네르갈
+
+조세핀
+
+프레드릭
+
+
 %%%%
 highlevel Earth owner
 
-Dispater
+디스페이터
 
 w:30
 @Earth owner@
 %%%%
 Earth owner
 
-Lehudib
+레후딥
 
-Lee
+리
 
-Roxanne
+록산느
+
+__NONE
+%%%%
+Charms owner
+
+Nessos
+
+Gastronok
+
+Maurice
+
+__NONE
+%%%%
+rare Hexes owner
+
+지그문트
+
+w:2
+가스트로노크
+%%%%
+Hexes owner
+
+노리스
+
+키르케
+
+w:2
+@rare Hexes owner@
 
 __NONE
 %%%%
 highlevel Fire owner
 
-Asmodeus
+아스모데우스
 
-Cerebov
+세레보브
+
+w:20
+@Fire owner@
+%%%%
+Fire owner
+
+아즈라엘
+
+마저리
 
 __NONE
 %%%%
 Ice owner
 
-Ozocubu
+오조크브
+
+판나르
+
+아일스이
 
 __NONE
 %%%%
 highlevel Necromancy owner
 
-Ereshkigal
+에레쉬키갈
 
-Gloorx Vloq
+그룩스-블록
 
 w:40
 @Necromancy owner@
 %%%%
 Necromancy owner
 
-Borgnjor
+보르그노르
 
-Cigotuvi
+시고트비
 
-Khufu
+보리스
+
+프랜시스
+
+머리
+
+네르갈
+
+멘카우레
+
+쿠푸
 %%%%
 highlevel Poison owner
 
-Gloorx Vloq
+그룩스-블록
 
 @Poison owner@
 %%%%
 Poison owner
 
-Olgreb
+올그레브
 
-Alistair
+앨리스테이아
 
 __NONE
 %%%%
 highlevel Summoning owner
 
-Asmodeus
+아스모데우스
 
-Dispater
+디스페이터
 
-Mnoleg
+무노레그
+
+@Summoning owner@
+%%%%
+Summoning owner
+
+w:5
+유스타키오
 
 __NONE
 %%%%
 highlevel Translocation owner
 
-Lom Lobon
+롬-로본
+
+@Translocation owner@
+%%%%
+Translocation owner
+
+w:5
+모리스
 
 __NONE
 %%%%
 Transmutation owner
 
-Cigotuvi
+시고트비
 
-Roxanne
+록산느
 
 __NONE
 %%%%

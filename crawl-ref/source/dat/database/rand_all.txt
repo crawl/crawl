@@ -18,64 +18,62 @@
 ######################################################
 _jewellery_animal_
 
-Firefly
+반딧불이
 
-Scarab
-
-Death Scarab
+딱정벌레
 
 w:5
-Magpie
+까치
 
 w:5
-Raven
+갈까마귀
 %%%%
 _jewellery_special_name_
 
-Disaster
+재앙
 
-Ephemeral Luck
+잠깐의 행운
 
-Wishful Thinking
+희망적인 생각
 
-Moodiness
+변덕
 
-Reimbursement
+상환
 
-the Tempest
+폭풍
 
-Finality
+궁극
 
-Attitude
+태도
 
-Lady Luck
+행운의 여신
 
-Temptation
+유혹
 
-False Pretenses
+허위
 
 # FIXME: should appear on amulets only
-Yendor
+옌더
 %%%%
 _suspicion_name_
 
-Secrets
+비밀
 
-Suspicion
+의심
 
-Mistrust
+불신
 
-Jealousy
+시기
 
-Incredulity
+불신
 
-Doubts
+의심
 
-Suspected Treachery
+미심쩍은 배반
 
-Scepticism
+회의
 
-Trepidation
+동요
 
 w:20
 @_conflict_name_@
@@ -87,38 +85,38 @@ w:20
 divine_esteem
 
 # good
-Esteem
+존중
 
-Favour
+호의
 
-Hope
+희망
 
-Regard
+경의
 
-Approval
+호의
 
-Delight
+기쁨
 
-Pride
+긍지
 
-Generosity
+관대함
 
-Supremacy
+지고
 
-Benevolence
+선의
 
-Whim
+변덕
 
 # bad
-Displeasure
+불만
 
-Envy
+시기
 
-Castigation
+혹평
 
-Condemnation
+책망
 
-Reproof
+비난
 
 w:70
 @_anger_name_@
@@ -129,139 +127,127 @@ _xom_esteem_
 w:40
 @divine_esteem@
 
-Entertainment
+유희
 
-Best Wishes
+정성
 
-Amusement
+여흥
 
-Ringing Laughter
+솟아나는 웃음소리
 
-Bemusement
+곤혹함
 
-Passing Interest
+일시적인 흥미
 
-Full Attention
+전념
 
-Whimsicality
+기행
 
-Capriciousness
+불규칙적임
 
-Sleight of Hands
+교묘한 속임수
 
-Flight of Fancy
+허황된 일
 
-Absentmindedness
+방심
 
-Malicious Joy
+악의적인 즐거움
 
-Fair Game
+공정한 시합
 
-Wantonness
+무자비함
 
-Recklessness
+무모함
 %%%%
 _time_name_
 
-Day
+주간
 
-Midnight
+한밤중
 
-Twilight
+황혼
 
-Dawn
-
-w:5
-Spring
+새벽
 
 w:5
-Springtime
+봄
 
 w:5
-Summer
+봄철
 
 w:5
-Summertime
+여름
 
-Autumn
+w:5
+서머타임
 
-Winter
+가을
 
-Midsummer
+겨울
 
-Midwinter
+한여름
 
-the Solstice
+한겨울
 
-the Harvest
+지점
 
-Eternal Night
+수확기
 
-Eternity
+영원한 밤
 
-Noon
+영겁
 
-the Present
+정오
 
-the Morning
+현재
 
-the Evening
+아침
 
-the Equinox
+저녁
 
-the Everdark
-
-the Distant Future
-
-the Past
-
-Yesterday
-
-Tomorrow
+주야 평분시
 %%%%
 _sky_colour_name_
 
-Black
+어두운
 
-Blue
+푸른
 
-Grey
+회색
 
-Orange
+주황빛
 
-Purple
+보라빛
 
-Red
+붉은
 %%%%
 _sky_or_light_
 
-the Sun
+태양
 
-the Moon
+달
 
-Light
+빛
 
-Darkness
+어둠
 
-Dim Light
+희미한 빛
 
-the Shining Light
+환한 빛
 
-Sunlight
+햇빛
 
-Starshine
+별빛
 
-the Sky
+하늘
 
-the Gloaming
+땅거미
 
-the Heavens
+하늘나라
 
-the Skies Above
+하늘 위쪽
 
-the Endless Expanse
-
-the @_sky_colour_name_@ Skies
+@_sky_colour_name_@ 하늘
 %%%%
 _virtue_or_vice_
 
@@ -274,361 +260,226 @@ w:5
 %%%%
 _virtue_name_
 
-Virtue
+미덕
 
-Truth
+진실
 
-Honesty
+정직
 
-Benevolence
+자비
 
-Devotion
+헌신
 
-Generosity
+관대함
 
-Grace
+은혜
 
-Temperance
+절제
 
-Hospitality
+환대
 
-Charity
+자선
 
-Patience
+인내
 
-Modesty
-
-Discretion
-
-Wisdom
-
-Wariness
-
-Thoughtfulness
-
-Kindness
-
-Generosity
-
-Compassion
-
-Understanding
+겸손
 %%%%
 _vice_name_
 
 # some of the deadly sins
-Sloth
+나태
 
-Vanity
+허영심
 
-Gluttony
+식탐
 
-Pride
+교만
 
-Greed
+탐욕
 
 # general immorality
-Sin
+죄악
 
-the Original Sin
+원죄
 
-Lies
+거짓
 
-Dishonesty
+부정
 
-Cowardice
+비겁함
 
-Dishonour
+부도
 
-Impatience
+성급함
 
-Immorality
+부도덕
 
-Amorality
+무도덕
 
-Untruth
+그릇됨
 
-Spite
-
-Youthful Indiscretion
-
-Foolhardiness
-
-Recklessness
-
-Past Mistakes
-
-Moral Flaws
+원한
 %%%%
 _destiny_name_
 
-Causality
+인과관계
 
-Destiny
+데스티니
 
-Fate
+페이트
 
-Karma
+카르마
 
-Kismet
+키스멧
 
-Wyrd
+위드
 
-Doom
-
+불안한 운명
 %%%%
 _number_or_qualifier_
 
 # exact numbers
-the Three
+셋
 
-the Four
+넷
 
-the Five
+다섯
 
-the Six
+여섯
 
-the Seven
+일곱
 
-the Eight
+여덟
 
-the Nine
+아홉
 
-the Ten
+십
 
-the Eleven
-
-w:5
-the Twelve
+열 하나
 
 w:5
-the Dozen
-
-the Thirteen
+열 둘
 
 w:5
-the Twenty
+한 다스
 
-the Fifty
+열 셋
 
-w:5
-the Sixty-Six
-
-w:5
-the Seventy-Seven
+오십
 
 w:5
-the Ninety-Nine
+일백
 
 w:5
-a Hundred
+백배
 
-w:5
-the Hundredfold
-
-a Thousand
-
-a Million
-
-a Billion
+일천
 
 # vague numbers
-the
+그
 
-the Many
+많은 수
 
-the Countless
+셀수 없는 것
 
-the Assorted
+여러 가지
 
-the Manifold
-
-the Several
+다중
 
 # other qualifiers
-the Lost
+잃어버린 것
 
-the Forgotten
+잊혀진 것
 
-the Forsaken
+고독함
 
-the Hidden
+숨겨진 것
 
-the Last
+최후
 
-the Lonely
+외로움
 
-the Jolly
+즐거움
 
-the Ancient
+고대
 
-the Exiled
+추방된 것
 
-the Illusory
+가공
 
-the Pure
+단일
 
-the Peculiar
+특정함
 
-the Special
+특별함
 
-the First
-
-the Neverending
-
-the Endless
-
-the Lumpy
-
-the Disturbing
-
-the Secret
-
-the Wary
-
-the Crushed
-
-the Battered
-
-the Bruised
-
-the Unstoppable
-
-the Immovable
-
-the Foremost
-
-the Curious
-
-the Insatiable
-
-the Bouncing
-
-the Thirsty
-
-the Tired
-
-the Ageless
-
-the Aged
-
-the Inquisitive
-
-the Thoughtful
-
-the Well-Known
-
-the Sneaky
-
-the Final
-
-the Modern
-
-the Postmodern
-
-the Invisible
-
-the Vanishing
-
+첫번째
 %%%%
 _thing_names_
 
-Suns
+태양
 
-Moons
+달
 
-Stars
+별
 
-Planets
+행성
 
-Hells
+지옥
 
-Lives
+삶
 
-Deaths
+죽음
 
-Curses
+저주
 
-Blessings
+축복
 
-Gods
+신
 
-Spirits
+정령
 
-Ghosts
+유령
 
-Demons
+악마
 
-Wars
+전쟁
 
-Mice
+쥐
 
-Eyes
+안구
 
-Nights
+밤
 
-Orbs
+오브
 
-Runes
+룬 문자
 
-Seas
+바다
 
-Places
+장소
 
-Realms
+영역
 
-Wishes
+소망
 
-Wonders
+경이로움
 
-Beds
+침대
 
-Beggars
+거지
 
-Cities
+도시
 
-Dances
+춤사위
 
-Lies
+거짓말
 
-Ships
+선박
 
-Songs
+노래
 
-Souls
+영혼
 
-Tales
-
-Friends
-
-Allies
-
-People
-
-Lovers
-
-Dreams
-
-Scars
-
-Coins
-
-Continents
-
-Princes
-
-Queens
-
-Emperors
-
-Yaks
-
-Shrikes
-
-Stories
-
-Tables
-
-w:5
-Spreadsheets
+이야기
 %%%%

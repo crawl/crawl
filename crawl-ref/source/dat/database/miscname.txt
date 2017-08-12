@@ -9,421 +9,534 @@
 # Any word other than "glowing" itself will work here.
 _glowing_adj_
 
-bright
+밝은 
 
-brilliant
+눈부신 
 
-dark
+어두운 
 
-dull
+칙칙한
 
-faint
+희미한 
 
-mottled
+얼룩덜룩한 
 
-pale
+옅은
 
-pulsating
+진동하는
 
-shimmering
+희미하게 빛나는 
 
-shining
+반짝이는 
 %%%%
 _colour_name_
 
-aubergine
+가지색 
 
-azure
+푸른색
 
-beige
+베이지색
 
-black
+검은색
 
-blue
+파란색
 
-bronze
+황동빛
 
-brown
+갈색
 
-charcoal
+암회색
 
-chartreuse
+연노랑색
 
-cobalt blue
+암청색 
 
-copper
+구리빛
 
-cyan
+청록색 
 
-dun
+회갈색
 
-gold
+금빛
 
-green
+녹색
 
-grey
+회색
 
-gridelin
+푸르스름한 홍색
 
-indigo
+청색 
 
-lavender
+연보라색 
 
-leaf green
+황록색
 
-lime green
+라임빛 녹색
 
-magenta
+자홍색 
 
-marigold
+밝은 노란색 
 
-mauve
+담자색 
 
-ochre
+황토색 
 
-orange
+주황색 
 
-pink
+분홍색 
 
-purple
+자주색 
 
-red
+적색
 
-rubric
+선홍색
 
-scarlet
+진홍색
 
-silver
+은색
 
-umber
+암갈색
 
-viridian
+청록색
 
-white
+흰색
 
-yellow
+노란색
 %%%%
 # "dust glows XXX", "eyes glow XXX", "hands glow XXX", "<actor> glows XXX".
 # If a language needs these keys split, please say so.
+#
+# Also used by Tome of Destruction below.
 glowing_colour_name
 
 @_glowing_adj_@ @_colour_name_@
 %%%%
+_writing_adj_
+
+angular
+
+blocky
+
+bold
+
+faded
+
+flowing
+
+glowing
+
+shifting
+
+sinuous
+
+spidery
+
+writhing
+%%%%
+_writing_noun_
+
+2진법 코드의
+
+수치가 기입된
+
+그래프의
+
+상형문자의
+
+인쇄물
+
+룬이 새겨진
+
+낙서의 
+
+도장의
+
+상징의
+
+문자의
+
+쓰여진
+%%%%
+# Tome of Destruction: "The book opens to a page covered in XXX."
+writing_name
+
+@_colour_name_@ @_writing_noun_@
+
+@glowing_colour_name@ @_writing_noun_@
+
+@_writing_adj_@ @_colour_name_@ @_writing_noun_@
+
+@_writing_adj_@ @_writing_noun_@
+%%%%
 # random uselessness: "You smell XXX."
 smell_name
 
-baking bread
+구운 빵
 
-burning hair
+타는 머리카락
 
-coffee
+커피
 
-dragon dung
+불과 유황
 
-fire and brimstone
+후추
 
-mustard
+소금
 
-pepper
+기묘한 무언가
 
-salt
+황산 가스
 
-something weird
+찻잎
 
-sulphur
-
-tea
-
-the scent of fear
-
-wet wool
+젖은 양모
 %%%%
 # This doesn't necessarily have to make sense. For example, a name of a
 # fruit or an insect will work here.
 _roaring_animal_name_
 
-albino dragon
+알비노 용
 
-dragon
+용
 
-eggplant
+가지
 
-frog
+개구리
 
-human
+인간
 
-millipede
+노래기
 
-pill bug
+콩벌레
 
-slug
+민달팽이
 
-wumpus
+움퍼스
 
-yak
+야크 
 %%%%
 # random uselessness: "You hear XXX."
 sound_name
 
-a burbling brook
+오도독거리는 소리
 
-a crunching sound
+매우 이상한 소음
 
-a lullaby played backwards
+정말이지 매우 기묘한 소음
 
-a very strange noise
+누군가의 이름을 부르는 목소리
 
-a very strange noise indeed
+불길이 타오르는 소리
 
-a voice calling someone else's name
+노랫가락
 
-roaring flames
+멀리서 분노한 @_roaring_animal_name_@(이)가 울부짖는 소리 
 
-snatches of song
+멀리 떨어져있는 징이 울리는 소리
 
-the distant roaring of an enraged @_roaring_animal_name_@
-
-the chiming of a distant gong
-
-the sound of one hand clapping
-
-the tinkle of a tiny bell
-
-the ringing of an enormous bell
-
-whispers in an ancient language
-
-whistling wind
+거대한 종이 딸랑거리는 소리
 %%%%
-# Used by Summon Horrible Things.
+# Used both by Summon Horrible Things and Malign Gateway.
 SHT_int_loss
 
-Your mind reels, touched by the horrors through the portal.
+당신의 정신이 어지러웠다, 관문을 통해 기어나온 무서운 것에 의해 약간 실성하였다.
 
-You quiver within your mortal coil, caressed by the liquid insanity through the scintillating gateway.
+당신은 번뇌속에서 떨었고, 반짝이는 관문을 통해 나온 불안정한 광기가 당신을 스쳤다.
 
 # Bal-Sagoth
-The summoning rite seems to take a not insignificant toll on your sanity.
+그 소환 의식은 당신의 정신에서 사소한 댓가를 받아가려는것 같지는 않았다.
 
-You have a brief vision of a great black cyclopean cityscape with towering stygian walls.
+당신은 새까만 벽으로 둘러싸인 칠흑의 거대한 도시경관이 보이는, 순간의 환각에 사로잡혔다.
 
-Your vision is obscured by outlandish glyphs which seem to writhe squamously and alter their shape.
+당신의 시야가 기이한 상형문자들로 가려졌는데, 그것들은 비늘모양으로 비틀려있는듯했고, 모양을 바꿔나갔다.
 
-You feel inexorably dogged by some nameless and implacable gloom.
+당신은 형언할수없는 깊은 어둠에 의한,  거침없이 시달리는 기분을 느꼈다.
 #-----------
 
-You reel in agony as your mind is raked by horrors beyond mortal ken.
+당신의 정신은 인지를 초월한 공포에 의해 상처입어, 고통속에서 비틀거렸다.
 
-Your mind is seduced by sublime insanity as you glimpse through the portal into the nether beyond.
+명계 너머의 포탈을 잠깐 본것으로 인해, 당신의 정신은 극단적인 광기에 사로잡혔다. 
 
-You cackle madly at the sight of the eldritch monstrosity.
+당신은 이세상것이 아닌 끔찍한 것을 보고는, 미친듯이 낄낄댔다.
 
-You are seized by madness!
+당신은 광기에 붙잡혔다!
 
-Attempting to comprehend the unknowable depths of infinity takes a toll on your sanity.
+알수없는 무한한 심연을 이해하려는 시도는, 당신의 정신을 댓가로 받아간다.
 
-Your thoughts are inescapably tormented by a ceaseless, buzzing drone.
+당신의 사고는 끊임없이 웅웅거리는 소리에 의해 불가피하게 고통받았다.
 
-Your mind collapses in madness at the sight of this blasphemy against creation!
+창세에 반하는 신성모독을 목격하고는, 당신의 정신은 광기속에서 쇠약해졌다!
 
-Your mind briefly shatters, though you barely manage to hold yourself together.
+당신의 정신은 간단히 박살났지만, 그럼에도 가까스로 정신을 유지하였다.
 
-You feel your tenuous grasp on sanity beginning to erode.
+당신은 정신의 미약한 통제가 약화되기 시작하는것을 느꼈다.
 
-Penetrating whispers of deepest heresy ceaselessly assail your thoughts.
+가장교활한 이단의 속삭임이 관통하는것이, 당신의 사고를 끊임없이 괴롭혔다.
 
-Your mind aches with revulsion at the sight of the undulating horrors you have wrought.
+당신의 정신은 당신이 초래한, 출렁이는 끔찍한 것에 의한 공포감으로 고통받았다.
 
-For but a moment your mind is laid bare before the towering infinitude of the unimaginable.
+한순간이지만 당신의 정신은 상상할수없는 끝없는 무한한것의 앞에서 무방비해졌다.
 
-Your skull pulses and throbs as words spoken in an unspeakable tongue drift across your psyche.
+당신의 두개골이 꿈틀거리고 고동쳤다, 그리고 발성이 안되는 혀에서 나온 단어들이 당신의 마음속에 떠다녔다.
 
-A thin, monotonous whinny from outside of time grows ever louder in your ears.
+시간의 바깥쪽으로부터의 가냘픈, 단조로운 소리는 당신의 귓속에서 점점 커지고있다.
 
-Shapeless horrors persist on the edge of your vision, drawing ever closer.
+무형의 공포가 당신 시야의 가장자리에서 계속되었고, 지금도 점점 다가온다.
 
-You are overcome with an inexorable feeling of implacable gloom.
+당신은 깊은 어둠의 거침없는 느낌에 의해서 압도되었다.
 
-Coherent, reasonable thoughts seem alien to you.
+일관성있는, 이성적인 사고가 당신에게 이질적으로 느껴졌다.
 
-Tendrils of madness seep and wend into the darkest crevices of your mind.
+광기의 덩쿨손이 스며들어 당신 마음의 가장 어두운 틈의 안으로 이동했다.
 
-You struggle to grasp the nature of the incomprehensible forces at work.
+당신은 작용하고있는, 이해할수없는 힘의 본질을 파악하기위해 애를 썼다.
 
-Nightmarish fiends assault your waking thoughts!
+두려운 악마들이 당신의 깨어있는 사고를 괴롭게했다!
 
-Seething terrors besiege your sanity!
+혹독한 공포가 당신의 정신을 애워쌌다!
 
-Lucidity slithers from your feeble grasp.
+당신의 의식이, 연약한 통제로부터 빠져나갔다.
 %%%%
 welcome_spam
 
-Will you prevail where others failed? Will you find the Orb of Zot?
+당신은 다른 이들이 실패한 곳에서 승리할 수 있을까? 조트의 오브를 찾아낼 수 있을까?
 
-The bosom of this dungeon contains the fabled artefact, the Orb of Zot.
+이 던전의 내부에는 전설적인 유물인, 조트의 오브가 있다.
 
-Will you be the one to retrieve the fabulous Orb of Zot from the depths?
+당신은 깊은 곳으로부터, 전설 속의 조트의 오브를 되찾아올 유일한 자가 될것인가?
 
-It is said that the Orb of Zot exists deep within this dungeon.
+조트의 오브는 던전 깊은 곳에 존재한다고들 말하지만, 그 누구도 찾아내지 못했다.
 %%%%
 welcome_spam Halloween
 
-@welcome_spam@ Be careful! Halloween tonight.
+@welcome_spam@ 조심해라! 오늘은 할로윈의 밤이다.
 
-The monsters here aren't big trick-or-treat fans. If they won't give you the Orb of Zot, you'll have to take it.
+이곳의 괴물들은 할로윈의 사탕을 주는 풍습을 그리 좋아하지 않는다. 이들은 결코 당신의 장난을 피하기 위해 조트의 오브를 주지 않을 것이고, 당신은 그것을 강제로 챙겨야만 한다.
 
-A terrible geas has sent you after the Orb of Zot. What a horrible night to have a curse!
+조트의 오브를 쫓아야만 하는 끔찍한 서약이 당신을 얽매기 시작했다. 정말 끔찍한 밤이 아닌가!
 
-As you descend in search of the Orb, ghosts and spectres flock about you. This place is haunted!
+당신이 오브를 수색하기 위해 던전을 내려가면 유령과 악령들이 당신에게 모여들 것이다. 이곳은 귀신들린 곳이다!
 
-You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a toad!
+갑작스럽게 마녀의 웃음소리가 들려왔고, 당신은 어느새 던전에 도착해 있었다. 만약 당신이 조트의 오브를 찾아내지 못하고 도망친다면 당신은 두꺼비로 변해버릴 것이다.
 %%%%
 hell_effect_quiet
 
 {{
 if you.can_smell() then
-    return "You smell brimstone."
+    return "당신은 유황의 냄새를 맡았다."
 else
-    return "Brimstone rains from above."
+    return "유황이 위에서 쏟아져내렸다."
 end
 }}
 
-You feel lost and a long, long way from home...
+당신은 잊혀지고 집에서 아주, 아주 멀리있는 기분이 들었다...
 
-You shiver with fear.
+당신은 공포에 떨었다.
 
-You feel a terrible foreboding...
+당신은 끔찍한 예감을 느꼈다.
 
-Something frightening happens.
+무언가 두려운 일이 일어났다.
 
-You sense an ancient evil watching you...
+당신은 고대의 악이 당신을 지켜보고 있는것을 느꼈다...
 
-You suddenly feel all small and vulnerable.
+당신은 갑자기 모든것이 작고 취약하게 느껴졌다.
 
-You sense a hostile presence.
+당신은 적대적인 존재를 느꼈다.
 
-"You will not leave this place."
+"너는 이 장소를 떠나지 못할 것이다."
 
-"Die, mortal!"
+"죽어라, 필멸자!"
 
-"We do not forgive those who trespass against us!"
+"우리는 무단침입자를 용서하지 않는다!"
 
-"Trespassers are not welcome here!"
+"무단침입자들은 여기서 환영받지 못한다!"
 
-"You do not belong in this place!"
+"넌 이곳에 속한 자가 아니야!"
 
-"Leave now, before it is too late!"
+"떠나라, 너무 늦기 전에!"
 
-"We have you now!"
+"너는 이제 우리의 것이다!"
 %%%%
 hell_effect_noisy
 
-A gut-wrenching scream fills the air!
+내장을 쥐어짜는 비명소리가 허공을 채운다!
 
-You hear words spoken in a strange and terrible language...
+당신은 낯설고 끔찍한 언어로 말해진 단어를 들었다.
 
-You hear diabolical laughter!
+당신은 악마적인 웃음소리를 들었다!
+%%%%
+eating_pizza
+
+@_carni_mmm_@ 햄과 파인애플이네.
+
+@_carni_mmm_@ 슈퍼 수프림.
+
+# Apparently, in some locales "pepperoni" is a word for sausage rather than
+# a type of bell peppers like in Europe.
+@_carni_mmm_@ 패퍼로니군.
+
+{{
+if you.race() == "Ghoul" then
+    return "앤초비는... 심지어 당신에게도 꽤나 지독하다."
+elseif you.race() == "Felid" then
+    return "앤초비! 완벽하다냥..."
+else
+    return "우웩! 앤초비잖아."
+end
+}}
+
+@_carni_mmm_@ 치킨.
+
+음... 그건 전설적인 판데모니엄 피자였다!
+
+음... @_cheese_kind_@ 피자.
+
+@_herbi_mmm_@ 야채다.
+
+@_herbi_mmm_@ 후추다.
+
+@_herbi_mmm_@ 버섯이다.
+%%%%
+_carni_mmm_
+
+{{
+if you.mutation("herbivore") > 0 then
+    return "우웩!"
+else
+    return "음..."
+end
+}}
+%%%%
+_herbi_mmm_
+
+{{
+if you.mutation("carnivore") > 0 then
+    return "우웩!"
+else
+    return "음..."
+end
+}}
+%%%%
+_cheese_kind_
+
+체다 치즈
+
+에담 치즈
+
+웬슬리데일 치즈
+
+까망베르 치즈
+
+염소젖 치즈
+
+과일 치즈
+
+모짜렐라 치즈
+
+양젖 치즈
+
+야크젖 치즈
 %%%%
 eating_fruit
 
-Mmmm... Yummy @_fruit_type_@.
+음... 맛있다. @_fruit_type_@.
 
-That @_fruit_type_@ was delicious!
+그 @_fruit_type_@은 맛있었다!
 
-Mmm - a full handful of @_small_fruits_@!
-
-w:1
-That @_peel_fruit_@ was delicious! Even the peel tasted good!
+음- 한 손 가득의 @_small_fruits_@!
 
 w:1
-That @_sour_fruit_@ was rather sour... but delicious nonetheless!
-
-That choko was very bland.
+그 @_peel_fruit_@는 맛있었다! 껍질마저도 맛있었다!
 
 w:1
-That durian smelled terrible... but tasted delicious!
+그 @_sour_fruit_@은 아주 시다... 하지만 그럼에도 맛있었다!
+
+그 초코는 아주 밍밍한 맛이다.
 
 w:1
-That snozzcumber tasted truly putrid!
+그 두리안은 끔찍한 냄새가 난다... 하지만 맛은 아주 좋다!
+
+w:1
+그 오이는 정말 고약한 맛이다!
 %%%%
 _fruit_type_
 
-orange
+오렌지
 
-banana
+바나나
 
-pear
+배
 
-apple
+사과
 
-apricot
+살구
 
-tomato
+토마토
 
-peach
+복숭아
 
-plum
+자두
 
-rambutan
+람부탄
 
-lychee
+리치
 
-mango
+망고
 
-watermelon
+수박
 
-coconut
+코코넛
 
-breadfruit
+빵나무 열매
 
-eggfruit
+가지
 
-dragonfruit
+용과
 
-guava
+구아바
 
-mangosteen
+망고스틴
 
-tangerine
+탄제린
 %%%%
 _small_fruits_
 
-strawberries
+딸기
 
-blueberries
+블루베리
 
-blackberries
+블랙베리
 
-bilberries
+빌베리
 
-raspberries
+산딸기
 
-huckleberries
+허클베리
 
-gooseberries
+구스베리
 
-cherries
+체리
 
-grapes
+포도
 
-sultanas
+건포도
 
-figs
+무화과
 
-dates
+대추야자
 
-almonds
+아몬드
 
 %%%%
 _peel_fruit_
 
-orange
+오렌지
 
-banana
+바나나
 %%%%
 _sour_fruit_
 
-lemon
+레몬
 
-lime
+라임
 %%%%

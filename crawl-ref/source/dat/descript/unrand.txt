@@ -1,672 +1,516 @@
 %%%%
 Singing Sword
 
-An enchanted blade which loves nothing more than to sing to its owner, whether
-they want it to or not.
-%%%%
-Sulking Sword
-
-<Singing Sword>
-%%%%
-Screaming Sword
-
-<Singing Sword>
+이 축복받은 무기는 주인을 위해 노래 부르는 것을 가장 좋아한다. 주인이 노래를
+좋아하는지 싫어하는지는 별 관심이 없는 것 같다.
 %%%%
 Wrath of Trog
 
-A bloodstained axe that was the favourite weapon of the old god Trog, before it
-was lost. It induces a bloodthirsty berserker rage in warriors who use it in
-battle.
+이 무기는 고대의 신 트로그가 잃어버리기 전까지 가장 좋아했던 도끼였다. 이
+무기로 적을 공격하면 피에 굶주린 광전사의 분노가 사용자의 몸을 지배할 것이다.
 %%%%
-mace of Variability
+Mace of Variability
 
-A weapon with a peculiar reputation — said to be at times peerless in quality,
-and other times virtually useless. No one knows exactly who would have made
-such a weapon, or why, but Xom is probably to blame somehow.
+이 무기는 — 특히 그 강화 수치를 — 믿을 수 없다.
 %%%%
-glaive of Prune
+Glaive of Prune
 
-A purple glaive that was created by a mad god, and carries a curse which
-transforms anyone wielding it into a prune. Fortunately, the curse works very
-slowly, and one can use it briefly with no consequences worse than slightly
-purple skin and a few wrinkles.
+이 창은 정신 나간 어떤 신의 창조물로, 소유자를 자두로 바꿔버리는 저주가
+걸려있다. 다행히도 이 저주는 굉장히 느리게 진행되기 때문에, 잠시 이 창을
+사용하는 정도로는 피부가 약간 보랏빛이 나고 살짝 주름지게 되는 정도의 부작용만
+일어난다.
 %%%%
-sword of Power
+Sword of Power
 
-A mighty sword which rewards the powerful with power and the meek with
-weakness.
+이 무기는 건강한 자에게는 강대한 힘을, 허약한 자에게는 미약한 힘을 준다.
 %%%%
-staff of Olgreb
+Staff of Olgreb
 
-A staff which was once wielded by the mighty wizard Olgreb. It increases the
-power of its wielder's poison magic, and can be evoked to activate its own
-venomous spells. Its touch may poison even resistant creatures, and it grants
-immunity to all venoms while wielded.
+이 마법 지팡이는 위대한 마법사 올그레브가 던전에서 그의 최후를 맞이하기
+직전까지 들고 있던 무기다. 이 지팡이는 착용자의 독 마법을 강화시켜주며,
+지팡이에 마법들이 담겨있어 발동시킬 수 있다. 전해지는 이야기로는 올그레브가
+어떤 독도 통하지 않는 생명체마저 어느 정도 중독시킬 수 있는, 희귀한 독에 대해
+연구를 했다고 한다. 이러한 명백한 이유로, 올그레브는 그의 독에 대해서도 완전한
+방어를 제공하는 지팡이를 만들어 냈다.
 %%%%
-staff of Wucad Mu
+Staff of Wucad Mu
 
-A crystal staff overflowing with magical energies. It can be evoked to restore
-large amounts of magical energy, but with the risk of damaging the user's mind.
-Its power depends on the wielder's Evocations skill.
+이 지팡이는 현명한 자가 들수록 더 강해진다. 그리고 이 지팡이를 발동시키면 많은
+양의 마법력을 회복할 수 있지만, 그 대가로 사용자의 정신에 피해를 줄 수도 있다.
 %%%%
-Vampire's Tooth
+Scythe of Curses
 
-An ivory-like dagger that looks like it could have been crafted from the tooth
-of some enormous predatory creature. It is lethally vampiric, and restores a
-greater portion of life to its user than other vampiric weapons.
+이 무기는 심각할 정도로 짜증 나는 저주가 걸려있어서, 저주 해제 두루마리로도
+저주를 완전히 해제할 수 없다.
 %%%%
-scythe of Curses
+Sceptre of Torment
 
-A scythe surrounded by an ominous aura of dread. It carries a terrible and
-highly irritating curse, which it busily inflicts on both the wielder and their
-enemies.
+이 저주받은 무기는 지옥에서 사용되는 고문 도구 중 하나다.
 %%%%
-sceptre of Torment
+Sword of Cerebov
 
-An accursed golden sceptre, created by some unknown hellish power. When used in
-combat, it causes agonising pain in all those unfortunate enough to gaze upon
-it.
+기괴한 불꽃이 비틀린 칼날을 감싸고 있다.  칼의 악마적인 힘이 상대의 화염 저항의
+일부를 태워버린다.
 %%%%
-sword of Zonguldrok
+faerie dragon armour
 
-A blade imbued with the essence of a legendary necromancer. Those slain in its
-presence are reanimated by its power and forced to fight on.
-%%%%
-sword of Cerebov
-
-A twisted blade, covered in eerie flames. Its demonic power burns away some of
-the fire resistance of those it strikes.
-%%%%
-staff of Dispater
-
-A legendary staff, granting the power to unleash damnation — although not
-without draining the wielder's vitality in the process.
-%%%%
-sceptre of Asmodeus
-
-A bright ruby sceptre, carrying some of the powers of the arch-fiend Asmodeus.
-Evoking it can summon fiery demons from their infernal home to do your bidding,
-although they will not remain enslaved for long.
-%%%%
-faerie dragon scales
-
-An enchanted suit of armour created from the scales of a rare breed of dragon,
-now thought to be extinct. This prized relic is now one of the last proofs that
-the vividly coloured faerie dragons ever existed.
+요정 용은 얼룩무늬 용의 사촌뻘 되는 작은 용이었다. 그들의 선명하고도 아름다운
+가죽은 사냥꾼들의 관심을 끌기에 충분했고, 안타깝게도 그들의 자랑이었어야 할
+가죽 때문에 요정 용은 멸종해버리고 말았다. 이 소중한 유물은, 요정 용이
+존재했었다는 것을 증명하기 위한 마지막 증거물일지도 모른다.
 %%%%
 demon blade "Bloodbane"
 
-A blade forged in Hell by the sacrifice of countless tortured souls. It
-inflicts the rage and suffering of those souls upon its wielder.
+귀신들린 검이다. 착용자는 피를 보고자 하는 광기에 휩싸이게 된다.
 %%%%
 scimitar of Flaming Death
 
-A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
-covering opponents in magical flame.
+검에서 연기가 난다!
 %%%%
-# TAG_MAJOR_VERSION == 34
-eveningstar "Brilliance"
+mace of Brilliance
 
-A brightly shining eveningstar. It illuminates the dungeon's recesses, but its
-halo may alert enemies to your presence. Its light is hated by the undead, and
-reveals the machinations of those who would prefer to stay invisible.
-%%%%
-demon blade "Leech"
-
-An unerringly vampiric blade which gorges itself on drained life force every
-time it strikes.
+이 무기는 어두침침한 던전에 한 줄기 빛이 될 것이며, 덕분에 적들은 당신의 존재를
+더 빨리 알아챌 수 있을 것이다. 이 빛은 언데드와 악마가 증오하는 대상이며,
+투명해지기 위해 온갖 노력을 한 적들의 수고를 물거품으로 만들 어버릴 것이다.
 %%%%
 dagger of Chilly Death
 
-A dagger made of one huge shard of sapphire. It covers opponents in ice,
-slowing down their movement somewhat.
-%%%%
-dagger "Morg"
-
-An ugly rusty dagger. Many years ago it was the property of a powerful mage
-called Boris. He got lost in the Dungeon while seeking the Orb.
+거대한 사파이어 조각으로 만들어진 단검이다.
 %%%%
 scythe "Finisher"
 
-A long and exceedingly sharp scythe. Its extraordinary speed is the work of a
-mad wizard, who spent years refining it before discarding it in a fit of rage.
-
-The blade looses a low keen as it cuts through the air.
+특별히 전투용으로 만들어진, 길고 날카로운 대형 낫이다.
 %%%%
 sling "Punk"
 
-A sling made of weird green leather, oozing corrosive slime. Originally the
-weapon of a notorious mischief-maker and general scamp, it's since fallen into
-less savoury hands.
-%%%%
-longbow "Zephyr"
-
-This bow was woven from the air itself by Eiolaiphi the air mage as a gift for
-one of the children of Uskayaw. The bow can be pulled with incredible speed,
-and it launches swift and true. It is also nearly indestructable, which is
-fortunate given that the original owner was ripped to pieces by jealous
-celebrants.
+기묘한 푸른빛 가죽으로 만들어진 투석구다.
 %%%%
 giant club "Skullcrusher"
 
-A massive enchanted cudgel that augments the already considerable strength of
-anyone mighty enough to wield it.
+이 사랑스러운 거대 곤봉은 오우거에게 최고의 선물이 될 것이다. 적에게 충격이나
+공포 — 혹은 둘 다 — 를 안겨줄 시간이다!
 %%%%
 glaive of the Guard
 
-A glaive commissioned several years ago by a wealthy queen fearful for the
-safety of her vast treasury. No foe, the smith promised, could defeat a guard
-wielding such a weapon!
-
-It was stolen a few months later, along with the rest of the queen's treasury;
-the guard, it transpired, had been caught napping. Still, it should serve more
-than adequately in the hands of a waking user.
+이 창은 과거 왕의 보물을 지키던 파수꾼 ‘가-도우’ 가 쓰던 무기였다. 전설에
+따르면, 그는 던전 어딘가에서 행방불명 되었다고 한다.
 %%%%
-zealot's sword
+sword of Jihad
 
-A sword made of one huge piece of crystal. Legend says it was the Shining One's
-gift to a worshipper. This blade is notorious for inducing bloodthirsty rage in
-both the wielder and all of his or her mortal followers.
+거대한 수정 덩어리로 만들어진 장검이다. 전설에 따르면, 샤이닝 원이 자신을
+따르는 성기사에게 선물했던 무기라고 한다. 이 검은 사용자와, 사용자를 따르는
+모든 살아 있는 추종자에게 격한 분노를 일으키는 것으로도 특히 잘 알려져 있다.
 %%%%
-arbalest "Damnation"
+crossbow "Hellfire"
 
-An unholy crossbow, forged in the fires of Gehenna. It imbues the bolts it
-fires with the raw power of its namesake, causing a burst of damnation on
-impact irresistible by any mortal armour.
+지옥불에서 단조된 타오르는 석궁. 이름처럼 불타는 화살로 가득 차있다.
 %%%%
-# TAG_MINOR_VERSION == 34
 sword of the Doom Knight
 
-An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
-who eschewed the use of magic in combat, preferring to destroy her enemies with
-brute force. Unfortunately for her, not all of her opponents shared her
-limitations.
+아다만틴 합금으로 만든 대검이다.
 %%%%
 morningstar "Eos"
 
-A jewelled morningstar, glowing brightly with the light of the dawn. It
-illuminates the dungeon's recesses, revealing the machinations of those who
-would prefer to stay invisible.
+오늘도 나의 장밋빛 손가락으로 밤의 장막을 거두리라...
 %%%%
-# TAG_MAJOR_VERSION == 34
 spear of the Botono
 
-A dark and malign artefact. It increases the potency of hexes cast by anyone
-unwise enough to risk wielding it.
-%%%%
-trident of the Octopus King
-
-A trident stolen many years ago from the Octopus King's garden. Luckily, he
-seems to be in no hurry to get it back.
+굉장히 사악하며 악의에 가득 찬 유물이다. 현명한 자는 손조차 대려 하지 않을
+것이다.
 %%%%
 mithril axe "Arga"
 
-A beautiful mithril axe, probably lost by some dwarven hero.
-%%%%
-Elemental Staff
-
-A powerful staff which used to belong to the leader of the Guild of Five
-Elements. In addition to the protection it provides, those skilled in
-Evocations may discharge powerful blasts of elemental energy when striking with
-it.
-%%%%
-heavy crossbow "Sniper"
-
-The sacred weapon of Toth-Mos, first apostle of the god Ashenzari. It grants
-the wielder a fraction of Ashenzari's own vision, ensuring that every shot will
-land true.
+아름다운 미스릴 도끼로, 어떤 드워프 영웅이 잃어버린 무기인 것 같다.
 %%%%
 longbow "Piercer"
 
-An exceptionally large metal longbow.
+엄청나게 큰, 금속 재질의 장궁이다.
 %%%%
-# TAG_MAJOR_VERSION == 34
 blowgun of the Assassin
 
-This blowgun seems to guide the needle to seek the most lethal point to hit
-the target, packing a nasty punch.
+감추기 쉽도록 아주 작게 만들어졌지만, 여전히 적의 목 뒤에 강력한 독침을
+꽂아넣을 수 있는 바람총이다.
 %%%%
 lance "Wyrmbane"
 
-An enchanted lance deadly to all dragonkind. It grows more powerful every time
-it inflicts a killing blow on a strong dragon. The more powerful it grows, the
-harder it will be to find a worthy opponent.
-%%%%
-Spriggan's Knife
-
-A dainty little knife which was made by Spriggans, or for Spriggans, or
-possibly from Spriggans. Anyway, it's in some way associated with those fey
-folk.
+용의 목숨을 끊을 때마다 더욱 강력하게 성장하는 마법이 걸린 창이다. 창이
+강해질수록 더욱 강한 용을 죽여야 성장할 수 있다.
 %%%%
 plutonium sword
 
-A triple sword made of weird glowing metal. It irradiates those it strikes,
-causing a range of unpredictable effects — if they survive the impact of the
-blade itself, that is.
+기이한 빛을 내는 금속으로 만든 클레이모어다. 이 검을 장시간 사용한 사용자는, 이
+검에 두 개의 보조 칼날이 달린 것 처럼, 두 개의 머리가 양어깨 위에 자라날지도
+모른다.
 %%%%
 great mace "Undeadhunter"
 
-A weapon imbued with magic to disrupt and destroy the forces binding undead
-creatures together. Legends say that, long ago, a lich lord created many
-such weapons to ensure the loyalty of his undead servants. Sadly, this mace
-might be the last one left.
-%%%%
-whip "Snakebite"
+전설에 따르면 옛날, 생각 없이 기계처럼 움직이는 언데드 부하들에 싫증이 난 한
+강대한 리치가 이성을 지닌 종복들을 만드는 실험을 했다고 한다. 완성된
+실험작들에게 권위를 부여하기 위해, 리치는 언데드를 이 세상에 묶어놓는 마력에
+직접적인 충격을 줘서 그들에게 엄청난 피해를 주는 무기를 몇 개 만들어주었다고
+한다.
 
-A double-ended whip made from the cured hides of black mambas, and enchanted
-with toxins ranging from ordinary venoms to asphyxiating curare.
+비록 그 리치는 오래전에 최후를 맞이하였지만, 그가 만든 언데드를 분쇄해버리는
+무기는 수많은 전설이 만들어져 사람들에게 알려질 정도로 유명해졌다. 지금 당신이
+보고 있는 이 무기는, 아마도 — 강령술로 인해 일어난 존재와 싸우기 위해서라도,
+절대 강령술을 사용해서는 안 된다고 말하고 다니던 — 샤이닝 원의 대리자 덕분에
+지금까지 남아있는 전설상의 무기일 것이다.
 %%%%
-# TAG_MAJOR_VERSION == 34
 knife of Accuracy
 
-It is almost unerringly accurate.
+이 무기는 절대 빗나가지 않는다. ...아마도.
 %%%%
-# TAG_MAJOR_VERSION == 34
 Lehudib's crystal spear
 
-Presumably this relic led to the invention of the famous spell, or maybe the
-other way around.
+아마 동명의 유명한 주문을 발견하는데, 이 고대의 유물이 크게 기여했을 것이다.
+아니면 그 반대거나.
 %%%%
 captain's cutlass
 
-An infamous weapon, once used by a vile pirate captain to slaughter countless
-innocents. He finally met his destiny when a kraken swallowed his ship, and the
-cutlass was thought to be lost with him. It has the capability to suddenly
-relieve opponents of their weapons, dealing extra damage in the process.
+이 악명 높은 무기는, 도덕관념이라고는 찾아볼 수 없던 한 해적 선장이 수많은
+무고한 자들을 학살할 때 사용했던 검이다. 천벌을 받은 것인지 그는 바다에서
+크라켄을 만나, 배와 선원들과 함께 수장되었으며 이 커틀러스는 영원히 찾을 수
+없는 무기가 됐다고 여겨졌다. 하지만 그 찾을 수 없다던 무기는 지금 당신 눈앞에,
+자신의 존재를 증명하고 있다.
 %%%%
 storm bow
 
-A longbow with the colour of dark rain clouds.
-{{
-    if you.can_smell() then
-        return "It smells like a storm just past, or one about to begin."
-    end
-}}
+어두운 비구름 색의 이 활에서는, 번개가 친 곳에서 맡을 수 있는 오존 특유의
+냄새가 난다.
 %%%%
 large shield of Ignorance
 
-A shield unearthed from the remains of a ruined city. It bears an inscription
-written in an ancient language. Scholars and wise men laboured for countless
-hours to decipher it, and in time, a translation was finally settled on:
-
-"With a shield like this, who needs to think?"
+“그렇게 개방적인 사고방식은, 마치 빗장도 수비병도 없는 요새와도 같으니라.”
 %%%%
 robe of Augmentation
 
-A variegated robe, woven with enchantments to enhance the wearer's physical and
-mental abilities. Its creators wove in strands of hair from a hundred different
-animals, each chosen for the unique strengths it could grant the robe's wearer.
+최고급 비단으로 만들어진 로브다.
 %%%%
 cloak of the Thief
 
-A pitch-black cloak which allows its wearer to excel in the arts of thievery,
-and can be evoked to release thick clouds of smoke for a hasty escape.
+이 망토는 착용자에게 예술적으로 탁월한 도둑질 능력을 선사한다.
 %%%%
-# TAG_MAJOR_VERSION == 34
 large shield "Bullseye"
 
-Just in case you had trouble getting hit.
+적에게 얻어맞을 경우를 위한, 완벽한 대비책.
 %%%%
 crown of Dyrovepreva
 
-A large circlet of dull bronze, set with a dazzling array of gemstones. It was
-first worn by a prince of the Titans, who sought protection from the incessant
-warfare between his fellow princes. In practice, the main effect of the
-artefact was to unite his rivals against him.
+현기증이 날 정도로 많은 보석이 박힌, 빛바랜 청동제의 큰 왕관이다.
 %%%%
 hat of the Bear Spirit
 
-A fur hat once owned by Ukta, a powerful ogre shaman. It houses the spirit of
-an especially mighty bear.
+강력한 오우거 주술사 ‘우크타’ 가 사용하던 모자로, 이 털모자에는 위대한 곰의
+영혼이 깃들어있다.
 %%%%
 robe of Misfortune
 
-A splendid flowing robe of fur and silk.
+모피와 비단이 길게 펼쳐진, 호화스럽고 현란한 로브다.
 %%%%
-# TAG_MAJOR_VERSION == 34
 cloak of Flash
 
-A cloak that twitches and jerks without any intervention.
+희미하게 진동이 느껴지는 망토다.
 %%%%
 boots of the Assassin
 
-A pair of soft boots, specially designed by the Assassin's Guild, that allow
-the wearer to sense potential victims nearby. They also allow the wearer to
-easily find vulnerabilities when attacking unaware opponents, allowing
-effective stabbing attacks with any weapon.
+암살자 조합에서 특별히 제작한 푹신한 장화이다. 이 장화는 착용자가 적을 더욱 잘
+파악하게 하여, 당신을 알아차리지 못한 적들의 약점을 찾아 공격하는 데 도움을
+준다.
 %%%%
 Lear's hauberk
 
-A well-made golden hauberk that covers all of its wearer's body parts. It
-includes a chainmail coif, chausses and maille gauntlets.
+튼튼하게 만들어진 황금 전신 갑옷으로, 착용자의 모든 신체 부위를 완전하게
+덮는다. 이 갑옷에는 사슬두건과 정강이 보호대, 그리고 그물 모양의 건틀렛이
+포함되어 있다.
 %%%%
 skin of Zhor
 
-The {{
-    if you.can_smell() then
-        return "smelly "
-    end
-}}skin of some strange animal, native to cold and distant lands.
+어떤 희귀한 동물의 가죽이다. 이상한 냄새가 나는 것 같다.
 %%%%
 salamander hide armour
 
-Most salamanders' bodies are consigned to the fiery depths from which they
-sprang. Rarely, though, salamanders instead preserve the skins of those that
-passed. The runes and decorations on this hide suggest it once belonged to a
-respected warrior or priest - perhaps even a king.
+용암에서 사는 포악한 동물, 살라만더의 가죽으로 만들어진 갑옷이다.
 %%%%
 gauntlets of War
 
-A pair of thick steel gauntlets. They were Okawaru's reward for a mighty
-warlord. The owner is destined to die in battle, but what a death it will be!
+이 두꺼운 전투용 강철 장갑은, 오카와루가 강력한 전쟁영웅에게만 하사하던
+방어구다. 당신에게는 그만한 자격이 있는가?
 %%%%
 shield of Resistance
 
-A bronze shield, looking almost exactly like a tortoise's shell. It was built
-by the adherents of an obscure minor faith, who imbued it with the power of
-their god. As the god is said to, this shield protects against sword and sling,
-frost and flame.
+청동제 방패다.
 %%%%
 robe of Folly
 
-A dull grey robe. It is enchanted to provide its wearer with immeasurable power
-and wisdom, but...
+칙칙한 회색 로브다.
 %%%%
 Maxwell's patent armour
 
-A suit of armour created by the famous inventor Maxwell, providing unparalleled
-protective qualities at a very affordable price. His unorthodox materials left
-it with certain shortcomings, but he's yet to have anyone come back for a
-refund.
+기이하게 생긴 갑옷이다.
 %%%%
 mask of the Dragon
 
-The mask of the High Priest of ancient Erebora. In ancient times, the gods of
-the Ereborans ceased to answer their prayers, and in desperation, the people
-turned to the forbidden worship of dragons. Now, of their works, only this mask
-remains.
+착용자의 얼굴을 용의 얼굴을 닮도록 만들어주는 단단하면서도 유연한 가죽으로
+만들어진 기묘한 푸른 투구이다.
 %%%%
-robe of Night
+armour of the Dragon King
 
-A long black robe made of strange glossy material. It shrouds its wearer in
-darkness, reducing the range of vision. According to legend, it was the gift
-of Ratri the Goddess of the Night to one of her followers.
-%%%%
-scales of the Dragon King
-
-A suit of armour created from the enchanted scales of a once-mighty king of
-dragons. In his time, titans and lesser dragons struggled with him in vain —
-but as with all things, even he was eventually cast down and undone. Of his
-life and deeds, this is all that remains.
+오래전, 한 강력한 황금용이 모든 용들의 지배자가 되어 세계를 다스리던 시절이
+있었다. 하지만 그의 통치는 그리 오래가지 못하였으니, 한낱 연약한 인간에게
+패배한 용은 가죽이 벗겨져 갑옷으로 만들어지는 수모를 당했다. 그리고 지금,
+당신은 한때 세계의 지배자였던 용의 최후를 보고 있다.
 %%%%
 hat of the Alchemist
 
-A dirty hat. It bears signs of surviving many weird explosions, which suggests
-it may have means of protecting the head inside from the risks involved with
-alchemy experiments.
+손때가 많이 묻은, 더러운 모자다. 이 모자에는 다양한 종류의 폭발을 견딘 흔적이
+남아있는데, 이는 곧 이 모자가 착용자를 위험한 연금술 실험으로부터 보호하는
+능력이 있음을 의미한다. 제정신이 박힌 사람이라면 아무리 이 강력한 모자를 썼다
+하더라도 그런 실험을 하지는 못했을 것이며, 이 모자의 원래 주인은 확실히 머리에
+문제가 있었을 것이다. 그것도 아주 많이.
 %%%%
 fencer's gloves
 
-A pair of gloves made of white silk. They have a natural affinity with the
-riposte, allowing their wielder to retaliate against some missed attacks with
-any weapon, or to retaliate against most attacks when using a long blade.
+흰색 비단으로 만들어진 장갑이다.
 %%%%
 cloak of Starlight
 
-A phosphorescent cloak, woven of pure light beams.
+순수한 빛줄기를 엮어 만든, 환하게 빛나는 망토다.
 %%%%
 ratskin cloak
 
-A cloak stitched from the hides of hundreds of hell rats, by an enchantress
-with a magic loom and too much time on her hands. It provides excellent
-protection from rats of all kinds.
-
-It can be evoked to summon rats from the Dungeon to accompany the wearer,
-for a time.
-%%%%
-shield of the Gong
-
-A heavy bronze gong that can be worn as a shield. According to some mystics,
-beating on such a gong can grant the wearer spiritual protection.
+한 여자 주술사가, 수많은 오렌지색 쥐들의 가죽을 한 땀 한 땀 이어붙여 짜낸 마법
+망토다. 이것을 입으면 매우 어색하고 바보 같아 보이겠지만, 최소한 다른 쥐들이
+달라붙는 것에 대해서는 완벽히 대비할 수 있을 것이다.
 %%%%
 amulet of the Air
 
-A sky-blue amulet. It must have been given its many protective properties by a
-powerful air mage, although it seems the one thing they lacked was a steady
-hand.
+이 하늘빛 목걸이는 한 강력한 대기술사가 만든 것으로, 대기마법 학파의 각종
+보호술식이 담겨있다.
 %%%%
-ring of Shadows
-
-A black ring that can make its wearer one with the shadows. It creates a dark
-umbra that surrounds the wearer and increases stealth greatly, and reduces the
-accuracy of all those within it.
-%%%%
-# TAG_MAJOR_VERSION == 34
 amulet of Cekugob
 
-A strange-looking piece of crystal on an ordinary-looking string, with an odd
-selection of powers.
+평범한 목줄에 무척 특이하게 생긴 수정 조각이 달린 목걸이로, 희귀한 힘이
+깃들어있다.
 %%%%
 amulet of the Four Winds
 
-A pendant made of purest jade. It grants its wearer an immense mystic strength,
-sufficient to shrug off all but the most potent of hostile enchantments.
+최고급 비취만을 사용하여 만든 이 팬던트는, 착용자에게 적대적인 주술로부터
+자유롭게 만들어주는 신비로운 힘을 부여한다.
 %%%%
 necklace of Bloodlust
 
-A necklace made of bloodstained human and animal teeth, and something that
-appears to be a piece of spine.
+대체 어떤 잔혹한 전사가 이런 걸 착용하고 다녔는지는 모르겠지만, 이 피투성이의
+목걸이는 인간과 동물의 이빨, 뭔지 모를 짐승의 척추뼈로 만들어졌다.
 %%%%
-ring of Phasing
+ring of Shaolin
 
-An unadorned jade ring. Its wearer may momentarily phase out of reality in order
-to evade attacks.
+옥으로 만든 이 아무런 장식도 없는 반지는, 착용자의 몸에 대한 비밀을 일깨워
+움직임을 훨씬 날렵하게 만든다.
 %%%%
 ring of Robustness
 
-A plain steel ring that causes its wearer to become substantially more
-resilient.
+아무 무늬도 없는 강철 반지다. 이상할 정도로 아무 무늬도 없다. 미세한 긁힌 자국
+하나조차도 발견할 수 없다.
 %%%%
 ring of the Mage
 
-An enchanted sapphire, inset into a ring. It aids the spellcasting of its
-wearer.
+마법이 깃든 사파이어가 반지에 박혀있다. 이 반지는 착용자의 주문 시전을
+도와준다.
 %%%%
 brooch of Shielding
 
-A brooch with an intricate inlaid design, providing a range of magical
-protections. Back in the good old days, every adventurer had one of these handy
-devices. That, and a pony.
+평화로웠던 지난 시절에는, 모든 모험가들이 이런 유용한 도구를 가지고 다녔다고
+한다... 조랑말 한 마리와 함께.
 %%%%
 robe of Clouds
 
-A robe of a material as flimsy and insubstantial as the clouds.
-%%%%
-hat of Pondering
-
-The favourite hat of the slug wizard Gastronok, stained with reddish slime and
-enchanted to aid in his arcane pondering. It has been specially enchanted to
-protect against the desiccating effects of salt.
+꼭 구름처럼 보이는, 솜뭉치 비슷한 물질로 만들어진 로브다.
 %%%%
 obsidian axe
 
-An axe with a powerful curse placed on it by one of the lords of Pandemonium,
-so that unsuspecting adventurers would unleash demons into this world. Beware,
-for it has ways of taking its wielder under its command...
+판데모니움의 군주에 의해 저주받은 이 도끼는 당신같이 의심 없는 모험가가
+장비하는 순간, 이 세계에 악마들을 풀어놓는다. 이 도끼는 그 나름의 방식으로
+사용자의 정신을 지배한다는 것을 주의하라.
 %%%%
 lightning scales
 
-A set of scales fashioned into armour for a naga's lower body. Faintly
-crackling with electricity, they have been enchanted to allow their wearer to
-slither at almost a human's pace.
+이 비늘은 나가 사이에서 유행하던 꼬리갑옷이다. 희미하게 전격이 파직거리는 이
+비늘은, 착용한 나가를 번개같이 빨리 움직이게 하여 보통 사람과 거의 비슷한
+속도로 움직이게 한다.
 %%%%
 Black Knight's horse barding
 
-A heavy barding made from pitch-black steel and inlaid with plates of black
-diamond. It once protected the steed of the Black Knight during his reign of
-terror. Those who wear it become partially undead, gaining some of the benefits
-without the unfortunate downsides, although the great weight of metal and stone
-slows the wearer somewhat.
+이 장비는 세계를 공포에 떨게 한 흑기사의 군마가 착용하던 마갑이다. 지금까지
+봐온 어떤 검은색보다도 더 새까만데, 이는 마갑 전체가 검은색 다이아몬드로
+만들어졌기 때문이다. (자세히 보니, 마갑의 일부분은 생전 처음 보는 검은색 강철로
+만들어졌다) 이 금속과 광석의 무게 때문에, 착용자는 예전보다 이동속도가 조금
+느려질 것이다. 하지만 이 마갑의 단단함은 착용자의 방어력을 크게 올려줄 것이며,
+장비가 품고 있는 마법적인 효과로 착용자는 약간의 — 배가 덜 고파지고 음에너지를
+저항하게 되는 정도의 — 언데드화가 진행될 것이다.
 %%%%
-amulet of Vitality
+ring of Vitality
 
-A jewelled amulet famed for its powers of resilience and recuperation. Its
-greatest notoriety came from its use by the dread necromancer Borgnjor, who
-relied upon it to maintain her slender hold on life. After her final demise,
-the amulet vanished from the pages of history.
+착용자를 이전보다 훨씬 건강하게 만들어주는, 유명한 반지다.
 %%%%
 autumn katana
 
-An exquisitely crafted sword, enchanted to provide both mental and physical
-strength to the wielder.
+이국적인 느낌이 나는 이 검은, 검에 통달하여 그 어떤 상황에서도 혼란에 빠지지
+않았던 자의 무기라고 한다.
 %%%%
 shillelagh "Devastator"
 
-A wooden cudgel, loaded with more than just lead.
+이 막대기는 끝 부분에 납과 어떤 물질의 혼합물이 들어있어서, 적을 공격할 때마다
+폭발한다.
 %%%%
 dragonskin cloak
 
-An opalescent cloak gleaming with the colours of all kinds of dragons. It
-protects its wearer from most elemental attacks, although somewhat unreliably.
+모든 용의 색깔이 희미하게 섞인 유백색 망토다. 이 망토는 착용자를 모든 원소
+공격으로부터 보호해주지만, 그 보호력을 확신하기에는 상당히 미심쩍은 부분이 많은
+것 같다.
 %%%%
 ring of the Octopus King
 
-One of the eight rings once worn by the Octopus King and now scattered across
-the land. Each has its own unique enchantment.
+“노래를 좋아하는 한 인어가 있었다네.
+ 문어왕은 그녀에게 첫눈에 반했다네.
+ 문어왕은 그녀와 평생을 함께하고 싶었다네.
+ 문어왕은 그녀에게 그의 반지들을 선물하며 사랑을 고백했다네.
+ 하지만, 그녀는 그가 준 여덟 개의 반지들을 모두 낄 수 없었다네.”
 %%%%
 Axe of Woe
 
-As you hold this axe your mind does not feel fully your own. Your body begins
-to exhibit strength far beyond its capabilities, and your movements become
-guided by Makhleb.
+이 도끼를 잡는 순간, 당신의 마음은 더이상 당신의 것이 아니게 될 것이다. 당신의
+육체는, 지금까지 당신이 보여왔던 힘 따위는 아득히 넘어서버린 능력을 보여줄
+것이며, 당신이 앞으로 행할 모든 움직임은 마크레브의 지도에 따라갈 것이다.
 %%%%
 moon troll leather armour
 
-A suit of armour rumoured to have been created by enchanting the hide of a
-now-extinct species of troll. Whether the name rings true or is merely
-appropriated to add mystique is something of a mystery. The armour's innate
-powers of regeneration and magical protection, however, are hard to dispute.
+이 갑옷은 지금은 멸망한 트롤 종의 가죽에 마법적인 처리를 해서 만들어졌다고
+전해진다. 이 갑옷이 정말로 말로만 전해지는 바람같은 공포의 일부인지, 아니면
+단순히 신비스러움을 더하기 위한 이름일 뿐인지는 수수께끼지만, 착용자의 마법력을
+사용하는 빠른 재생의 힘에는 논쟁의 여지가 없다.
 %%%%
 macabre finger necklace
 
-An ugly dangling finger on a string. It would look better with a ring on it.
+이 매달려 있는 손가락에 반지가 있다면 더 나아 보일 것 같다.
 %%%%
-# TAG_MAJOR_VERSION == 34
 boots of the spider
 
-A novel pair of boots invented by a suitor of Arachne.
+아라크네에게 구혼을 한 남자가 발명한 신기한 장화.
 %%%%
-dark maul
-
-A large, iron-shod maul specialised for dealing massively powerful blows. Such
-power comes at a price: the maul's head is so heavy it takes a great length of
-time to lift it up for another swing.
-%%%%
-# TAG_MAJOR_VERSION == 34
 hat of the High Council
 
-A relic of some ancient wizarding war. Centuries later, it still crackles with
-effects from the residual hexes and magical energies it was once subjected to
-on a daily basis; spellcasters able to get a handle on its power, however, will
-find it enhances the power of their spells.
-%%%%
-arc blade
-
-A blade somehow crafted from pure electricity. Striking an enemy with it
-occasionally unleashes a static discharge.
-%%%%
-demon whip "Spellbinder"
-
-A weapon said to have once been used to keep unruly imprisoned wizards in line;
-it violently disrupts their ability to use magic, inflicting wild and
-unpredictable magical effects on those it strikes.
-%%%%
-lajatang of Order
-
-A silver-bladed lajatang, once bestowed upon a favoured worshipper of Zin. It
-became the most prized weapon of the many priests of Zin. After their order was
-destroyed, it fell into disuse and vanished from history.
-%%%%
-great mace "Firestarter"
-
-A huge mace imbued with potent fire magic. It fills those it strikes with
-inner flame, and offers protection against the resulting devastation as well
-as immunity to clouds of flame.
-%%%%
-orange crystal plate armour
-
-A suit of armour carved from transparent orange crystal. It provides remarkable
-protection for both mind and body. The wearer can even channel psychic energies
-through the crystal itself, enhancing their magical abilities. However, it's
-rather heavy...
-%%%%
-Majin-Bo
-
-A staff inhabited by a mighty demon, tricked and trapped in this form long
-ago. To survive, she now offers tremendous arcane power at a small price: a
-tiny portion of the caster's life essence, taken alongside the magic used every
-time its wielder casts a spell.
-%%%%
-pair of quick blades "Gyre" and "Gimble"
-
-Two quick blades joined by a chain. Swinging one compels the wielder to swing
-the other, as if they have minds of their own.
-%%%%
-Maxwell's etheric cage
-
-A fine mesh cage designed to capture magical energy. Experimental notes suggest
-that research was abandoned when the cage began to capture magical
-contamination almost as effectively. Anyone reckless enough to place it on
-their head would find their magic regeneration dramatically increased, at the
-cost of multiplying any magical contamination received.
-%%%%
-# TAG_MAJOR_VERSION == 34
-crown of Eternal Torment
-
-A gold crown set with jet-black gems. It permanently afflicts its wearer with
-agonising pain, substantially reducing their resilience but rendering them
-immune to further torments.
-%%%%
-robe of Vines
-
-A robe woven of living vines. The vines form a symbiotic relationship with
-their wearer, greatly increasing their regeneration, but preventing them from
-being healed by potions and wands.
+고대 마법전쟁의 유물. 몇 세기후에도 여전히 한때 매일같이 부여되었던 잔여 마법과
+마법에너지로 타는 듯한 소리가 난다. 그러나 마법사들은 손잡이에서 그들의
+주문력을 상승시켜주는 힘을 얻을 수 있다.
 %%%%
 Kryia's mail coat
 
-A coat of armour said to have been forged for Queen Kryia in her old age. She
-continued to insist on leading her armies from the front even into her dotage,
-and as her aging body failed her, this coat helped to enhance the healing
-draughts that kept her alive. The wearer of this garment will have
-significantly increased healing from potions.
-%%%%
-frozen axe "Frostbite"
+크리야의 미늘 코트:
 
-A massive axe that looks like it was carved from a glacier, or possibly calved
-from one. It leaves ice crystals in its wake as it swings through the air, and
-grants its wielder immunity to freezing vapours.
-%%%%
-# TAG_MAJOR_VERSION == 34
-armour of Talos
+이 갑옷은 Kryia가 노년에 벼려냈다고 전해집니다. 여왕은 늙었을 때 조차 그녀의 군대들을 앞에서 이끌겠다고 고집했지만 그녀의 늙은 몸은 그녀를 약하게 만들었습니다. 이 코트는 회복 물약의 효과를 증가시켜 그녀의 삶을 유지하는것을 도왔습니다.
 
-A huge and weighty suit of bronze plate armour. Only one with a correspondingly
-huge body can wear it.
+이 옷은 착용자가 도구로 회복할 때 그 효과를 크게 증가시켜줄 것입니다.
 %%%%
-warlock's mirror
+Majin-Bo
 
-A handheld array of hexagonal mirrors, synthesized from a truly exotic
-substance and polished to a blinding sheen. A skilled user will find that it
-can reflect almost anything, even spells that pierce through lesser materials
-and hexes with no physical manifestation at all.
+마인봉:
+
+먼 옛날 속아서 이 안에 갇힌 강력한 악마가 살고있는 지팡이입니다. 이제 그녀는 살아남기 위해 막대하고 신비한 힘들을 낮은 비용에 제공한다. 이 무기를 들고 있는 자가 주문을 외울 때 마다 그 사람의 생명 정수를 일부 흡수한다.
 %%%%
-amulet of invisibility
+Maxwell's etheric cage
 
-An amulet that can be activated to render its wearer invisible.
+맥스웰의 에테르 수집 우리:
+
+마법 에너지를 잡기 위해 고안된 질 좋은 그물망 우리. 실험 노트는 실험이 이 우리가 마법 오염을 잡아두기 시작했다는 것을 알아낸 뒤로 폐기되었다는 것을 알려준다. 어쨌든 이걸 머리에 쓸 수 있을지도?
 %%%%
-Maxwell's thermic engine
+amulet of Vitality
 
-A strange sword, one blade blistering hot and the other icy cold. When it hits
-its target the thermal gradient increases. What causes this effect is unknown
-but it is rumored that otherworldly forces are involved.
+활력의 아뮬렛:
+
+회복과 복구의 힘으로 이름높은 보석박힌 부적입니다.
+%%%%
+arbalest "Hellfire"
+
+알바레스트 "지옥불":
+
+게헨나의 불꽃으로 며려진 불타는 쇠뇌입니다. 이 쇠뇌은 발사한 화살에 이것의 이름과 같은 가공되지 않은 힘을 가득 채우며, 어떤 필멸의 갑옷이나 화염저항도 이 힘에 저항할 수 없습니다.
+%%%%
+arc blade
+
+아크 블레이드:
+
+어떤 방식으로 순수한 전기로부터 가공된 검입니다. 이 무기로 적을 공격하면 가끔 모인 전기를 방출합니다.
+%%%%
+crown of Eternal Torment
+
+영원한 고통의 왕관:
+
+칠흑의 보석으로 장식된 금 왕관. 이 왕관은 영구적으로 착용자를 고통으로 괴롭히며 착용자의 회복력을 상당히 감소시키지만 그 외의 지옥의 고문에 대해 면역이 되게 합니다.
+%%%%
+dark maul
+
+다크 마울:
+
+육중하고 강력한 위력을 가진 커다란 철제 망치이다. 강력한 위력을 내는 것은 대가가 필요하다. 망치의 머리부분이 매우 무거워서 다시 일격을 날리기 위해선 긴 시간이 필요하다.
+%%%%
+demon whip "Spellbinder"
+
+악마의 채찍 "마법구속자":
+
+다루기 힘든 마법사 수감자를 정렬시키기 위해 사용되었다고 전해지는 무기입니다. 이것은 마법을 사용하는 능력을폭력적으로 방해하며, 타격시 사납고 예상할 수 없는 마법적 효과를 발생시킵니다.
+%%%%
+eveningstar "Brilliance"
+
+이브닝스타 "광명":
+
+밝게 빛나는 이브닝스타입니다.
+ 이것은 던전의 깊은 곳을 밝히지만,
+ 이 후광은 근처에 있는 적들을 부를 수 있습니다.
+ 이 빛은 언데드들에게 해로우며
+ 투명한 적을 드러나게 합니다.
+%%%%
+great mace "Firestarter"
+
+대형 메이스 "점화기":
+
+잠재적인 화염 마법을 가진 거대한 메이스입니다.
+ 이것은 타격한 적을 이너플레임으로 채우며
+ 그 결과 발생하는 파괴로부터 작용자를 보호합니다.
+%%%%
+greatsling "Punk"
+
+대형 슬링 "펑크":
+
+이상한 푸른색 가죽으로 제작된 투석구입니다. 원래는 악명높은 장난꾼과 평범한 악동들의 무기였지만, 이제는 덜 정의러운 손에 쥐어지게 되었습니다.
+%%%%
+heavy crossbow "Sniper"
+
+중형 쇠뇌"저격수":
+
+검은 물질로 만들어진 거대한 쇠뇌입니다. 이것은 매우 강력한 피해를 입히지만, 매우 무겁고 느립니다.
+%%%%
+lajatang of Order
+
+질서의 라자탕:
+
+한때 진의 열렬한 숭배자에게만 수여되었던 은제 라자탕. 이후 이 라자탕은 수많은 진의 사제들에게는 가장 영광스러운 상이었다. 그들의 질서가 무너지고난 후, 질서의 라자탕은 사용되지 않게 되었고 역사속으로 사라졌다.
+%%%%
+orange crystal plate armour
+
+오렌지 수정 판금갑옷:
+
+착용자의 몸과 정신을 놀라우리만치 보호해주는 투명한 오렌지빛 수정으로 만들어진 갑옷이다. 
+착용자는 심지어 이 오렌지빛 크리스탈을 통해 정신 에너지를 연결하고 마법 능력을 강화할 수 있다. 그러나 이 갑옷은 여전히 무겁기만 하다.
+%%%%
+pair of quick blades "Gyre" and "Gimble"
+
+한쌍의 퀵블레이드 "기르"와 "김블"
+
+사슬로 연결된 두 개의 퀵블레이드 입니다.마치 이 무기들에게 마음이 있는것처럼, 둘 중 하나를 휘두르면 다른 하나도 휘둘러야 합니다.
+%%%%
+robe of vines
+
+덩굴로브:
+
+자라나는 덩굴로 짜여진 로브. 덩굴의 빠른 성장은 착용자에게도 전해지는 것 처럼 보이지만, 이 옷은 착용자가 물약이나 마법봉로 회복하는 것 또한 막습니다.
 %%%%
