@@ -1434,7 +1434,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
-            simple_god_message(" protects your body from mutation!");
+            simple_god_message("은 당신을 돌연변이로부터 보호하였다!");
             return false;
         }
     }
@@ -1526,7 +1526,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     you.attribute[ATTR_TEMP_MUT_XP] = 0;
             }
             you.mutation[mutat]--;
-            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
+            mprf(MSGCH_MUTATION, "당신의 변이들이 좀 더 안정된 느낌이다.");
             take_note(Note(NOTE_PERM_MUTATION, mutat,
                     you.get_base_mutation_level(mutat), reason.c_str()));
             gain_msg = false;
@@ -1576,7 +1576,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         {
         case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
         case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-            mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
+            mprf(MSGCH_MUTATION, "%s이(가) 느껴졌다.", _stat_mut_desc(mutat, true));
             gain_msg = false;
             break;
 
@@ -1787,7 +1787,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
     case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-        mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, false));
+        mprf(MSGCH_MUTATION, "%s이(가) 느껴졌다.", _stat_mut_desc(mutat, false));
         lose_msg = false;
         break;
 

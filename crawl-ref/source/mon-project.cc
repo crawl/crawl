@@ -446,8 +446,8 @@ move_again:
             && you.see_cell(pos)
             && you.see_cell(mon.pos()))
         {
-            mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
-                 feature_description_at(pos, false, DESC_A).c_str());
+            mprf("%s은(는) %s을(를) 공격했다.", mon.name(DESC_PLAIN, true).c_str(),
+                 feature_description_at(pos, false, DESC_PLAIN).c_str());
         }
 
         monster* mons = (victim && victim->is_monster()) ?
@@ -462,7 +462,7 @@ move_again:
                 if (mons->props[IOOD_DIST].get_int() < 2)
                 {
                     if (you.see_cell(pos))
-                        mpr("The orb fizzles.");
+                        mpr("구체가 흐지부지되어 사라졌다.");
                     monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 }
 
@@ -470,7 +470,7 @@ move_again:
                 if (mon.props[IOOD_DIST].get_int() < 2)
                 {
                     if (you.see_cell(pos))
-                        mpr("The orb fizzles.");
+                        mpr("구체가 흐지부지되어 사라졌다.");
                     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
                     return true;
                 }
@@ -478,9 +478,9 @@ move_again:
             else
             {
                 if (mon.observable())
-                    mpr("The orbs collide in a blinding explosion!");
+                    mpr("구체가 충돌하며 눈부신 폭발을 일으켰다!");
                 else
-                    mpr("You hear a loud magical explosion!");
+                    mpr("당신은 커다란 마법의 폭발을 들었다!");
                 noisy(40, pos);
                 monster_die(*mons, KILL_DISMISSED, NON_MONSTER);
                 _iood_hit(mon, pos, true);
@@ -510,11 +510,11 @@ move_again:
             if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
             {
                 if (victim->is_player())
-                    mprf("You block %s.", mon.name(DESC_THE, true).c_str());
+                    mprf("당신은 %s을(를) 막았다.", mon.name(DESC_PLAIN, true).c_str());
                 else
                 {
-                    simple_monster_message(*mons, (" blocks "
-                        + mon.name(DESC_THE, true) + ".").c_str());
+                    simple_monster_message(*mons, ("은(는) "
+                        + mon.name(DESC_PLAIN, true) + "을 막았다.").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
                 _iood_stop(mon);
@@ -525,15 +525,15 @@ move_again:
             {
                 if (shield && shield_reflects(*shield))
                 {
-                    mprf("Your %s reflects %s!",
+                    mprf("당신의 %s은(는) %s을(를) 반사했다!",
                          shield->name(DESC_PLAIN).c_str(),
-                         mon.name(DESC_THE, true).c_str());
+                         mon.name(DESC_PLAIN, true).c_str());
                     ident_reflector(shield);
                 }
                 else // has reflection property not from shield
                 {
-                    mprf("%s reflects off an invisible shield around you!",
-                         mon.name(DESC_THE, true).c_str());
+                    mprf("%s은(는) 당신 주위의 보이지않는 방패에 반사되었다!",
+                         mon.name(DESC_PLAIN, true).c_str());
                 }
             }
             else if (you.see_cell(pos))
@@ -542,18 +542,18 @@ move_again:
                 {
                     if (shield && shield_reflects(*shield))
                     {
-                        mprf("%s reflects %s with %s %s!",
-                             victim->name(DESC_THE, true).c_str(),
-                             mon.name(DESC_THE, true).c_str(),
+                        mprf("%s은(는) %s와(과) %s의 %s에 반사되었다!",
+                             victim->name(DESC_PLAIN, true).c_str(),
+                             mon.name(DESC_PLAIN, true).c_str(),
                              mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
                              shield->name(DESC_PLAIN).c_str());
                         ident_reflector(shield);
                     }
                     else
                     {
-                        mprf("%s reflects off an invisible shield around %s!",
-                             mon.name(DESC_THE, true).c_str(),
-                             victim->name(DESC_THE, true).c_str());
+                        mprf("%s은(는) %s 주위의 보이지않는 방패에 반사되었다!",
+                             mon.name(DESC_PLAIN, true).c_str(),
+                             victim->name(DESC_PLAIN, true).c_str());
 
                         item_def *amulet = victim->slot_item(EQ_AMULET);
                         if (amulet)
@@ -562,8 +562,8 @@ move_again:
                 }
                 else
                 {
-                    mprf("%s bounces off thin air!",
-                         mon.name(DESC_THE, true).c_str());
+                    mprf("%s이(가) 공중에서 튕겨져나갔다!",
+                         mon.name(DESC_PLAIN, true).c_str());
                 }
             }
             victim->shield_block_succeeded(&mon);

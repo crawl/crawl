@@ -280,11 +280,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         {
             if (!quiet)
             {
-                mprf("You %sdetect the %s %s.",
-                     friendly() ? "" : "can no longer ",
-                     ench.ench == ENCH_HEXED ? "hexed" :
-                     ench.ench == ENCH_CHARM ? "charmed"
-                                             : "bribed",
+                mprf("당신은 %s %s을(를) %s.",
+                     friendly() ? "탐지함 : " : "더 이상 탐지하지 못함 : ",
+                     ench.ench == ENCH_HEXED ? "저주받은" :
+                     ench.ench == ENCH_CHARM ? "매혹된"
+                                             : "매수된",
                      name(DESC_PLAIN, true).c_str());
             }
 
@@ -322,7 +322,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_RING_OF_THUNDER:
         _place_thunder_ring(*this);
-        mprf(MSGCH_WARN, "A violent storm begins to rage around %s.",
+        mprf(MSGCH_WARN, "격렬한 폭풍이 %s의 주위에서 요동치기 시작한다.",
              name(DESC_THE).c_str());
         break;
 
@@ -458,16 +458,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_HASTE:
         calc_speed();
         if (!quiet)
-            simple_monster_message(*this, " is no longer moving quickly.");
+            simple_monster_message(*this, "은(는) 더 이상 빠르게 움직일 수 없다.");
         break;
 
     case ENCH_SWIFT:
         if (!quiet)
         {
             if (type == MONS_ALLIGATOR)
-                simple_monster_message(*this, " slows down.");
+                simple_monster_message(*this, "은(는) 점차 느려졌다.");
             else
-                simple_monster_message(*this, " is no longer moving quickly.");
+                simple_monster_message(*this, "은(는) 더 이상 빠르게 움직일 수 없다.");
         }
         break;
 
@@ -476,43 +476,43 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet && !silenced(pos()))
         {
             if (alive())
-                simple_monster_message(*this, " becomes audible again.");
+                simple_monster_message(*this, "은(는) 이제 다시 들을 수 있다.");
             else
-                mprf("As %s %s, the sound returns.",
-                     name(DESC_THE).c_str(),
-                     wounded_damaged(holiness()) ? "is destroyed" : "dies");
+                mprf("%s이(가) %s, 소리가 돌아온다.",
+                     name(DESC_PLAIN).c_str(),
+                     wounded_damaged(holiness()) ? "파괴되었다" : "죽었다");
         }
         break;
 
     case ENCH_MIGHT:
         if (!quiet)
-            simple_monster_message(*this, " no longer looks unusually strong.");
+            simple_monster_message(*this, "은(는) 더 이상 비정상적으로 강해보이지 않는다.");
         break;
 
     case ENCH_SLOW:
         if (!quiet)
-            simple_monster_message(*this, " is no longer moving slowly.");
+            simple_monster_message(*this, "은(는) 더 이상 느리게 움직이지 않는다.");
         calc_speed();
         break;
 
     case ENCH_OZOCUBUS_ARMOUR:
         if (!quiet && you.can_see(*this))
         {
-            mprf("%s icy armour evaporates.",
-                 apostrophise(name(DESC_THE)).c_str());
+            mprf("%s의 얼음 갑옷이 증발했다.",
+                 apostrophise(name(DESC_PLAIN)).c_str());
         }
         break;
 
     case ENCH_PARALYSIS:
         if (!quiet)
-            simple_monster_message(*this, " is no longer paralysed.");
+            simple_monster_message(*this, "은(는) 더 이상 마비상태가 아니다.");
 
         behaviour_event(this, ME_EVAL);
         break;
 
     case ENCH_PETRIFIED:
         if (!quiet)
-            simple_monster_message(*this, " is no longer petrified.");
+            simple_monster_message(*this, "은(는) 더 이상 석화상태가 아니다.");
         del_ench(ENCH_PETRIFYING);
 
         behaviour_event(this, ME_EVAL);
@@ -531,12 +531,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (is_nonliving() || berserk_or_insane())
         {
             // This should only happen because of fleeing sanctuary
-            msg = " stops retreating.";
+            msg = " 후퇴를 멈췄다.";
         }
         else if (!mons_is_tentacle_or_tentacle_segment(type))
         {
-            msg = " seems to regain " + pronoun(PRONOUN_POSSESSIVE, true)
-                                      + " courage.";
+            msg = "은 " + pronoun(PRONOUN_POSSESSIVE, true)
+                                      + "의 용기를 되찾은 것 같다.";
         }
 
         if (!quiet)
@@ -549,7 +549,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CONFUSION:
         if (!quiet)
-            simple_monster_message(*this, " seems less confused.");
+            simple_monster_message(*this, "은(는) 이제 덜 혼란스러워 보인다.");
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -564,7 +564,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             && !friendly())
         {
             if (!quiet)
-                mprf("%s appears from thin air!", name(DESC_A, true).c_str());
+                mprf("%s이(가) 갑자기 나타났다!", name(DESC_PLAIN, true).c_str());
 
             autotoggle_autopickup(false);
             handle_seen_interrupt(this);
@@ -582,17 +582,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             {
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
                 {
-                    mprf("%s breaks free of your control!",
+                    mprf("%s은(는) 당신의 제어에서 벗어났다!",
                          name(DESC_THE, true).c_str());
                 }
                 else
-                    mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
-                         me.ench == ENCH_CHARM   ? "charmed"
-                         : me.ench == ENCH_HEXED ? "hexed"
-                                                 : "bribed");
+                    mprf("%s은(는) 더 이상 %s상태가 아니다.", name(DESC_PLAIN, true).c_str(),
+                         me.ench == ENCH_CHARM   ? "매혹"
+                         : me.ench == ENCH_HEXED ? "저주"
+                                                 : "매수된");
 
-                mprf("You can %s detect the %s.",
-                     friendly() ? "once again" : "no longer",
+                mprf("당신은 %s을(를) %s.",
+                     friendly() ? "다시 한번 탐지했다" : "탐지하지 못했다",
                      name(DESC_PLAIN, true).c_str());
             }
 
@@ -605,15 +605,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
                 {
                     simple_monster_message(*this,
-                                           " breaks free of your control!");
+                                           "이(가) 당신의 제어에서 벗어났다!");
                 }
                 else
                     simple_monster_message(*this,
                                         me.ench == ENCH_CHARM
-                                        ? " is no longer charmed."
+                                        ? "은(는) 더 이상 매혹상태가 아니다."
                                         : me.ench == ENCH_HEXED
-                                        ? " is no longer hexed."
-                                        : " is no longer bribed.");
+                                        ? "은(는) 더 이상 저주상태가 아니다."
+                                        : "은(는) 더 이상 매수상태가 아니다.");
             }
 
         }
@@ -649,10 +649,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     if (!quiet)
         {
             if (visible_to(&you))
-                simple_monster_message(*this, " stops glowing.");
+                simple_monster_message(*this, "이(가) 빛나던 것이 멈췄다.");
             else if (has_ench(ENCH_INVIS) && you.see_cell(pos()))
             {
-                mprf("%s stops glowing and disappears.",
+                mprf("%s은(는) 빛을 발하던 것을 멈추고, 사라졌다.",
                      name(DESC_THE, true).c_str());
             }
         }
@@ -660,12 +660,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_STICKY_FLAME:
         if (!quiet)
-            simple_monster_message(*this, " stops burning.");
+            simple_monster_message(*this, "이(가) 타오르던 것이 멈췄다.");
         break;
 
     case ENCH_POISON:
         if (!quiet)
-            simple_monster_message(*this, " looks more healthy.");
+            simple_monster_message(*this, "은(는) 이제 더 건강해보인다.");
         break;
 
     case ENCH_HELD:
@@ -679,7 +679,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 props.erase(NEWLY_TRAPPED_KEY);
 
             if (!quiet)
-                simple_monster_message(*this, " breaks free.");
+                simple_monster_message(*this, "은(는) 속박에서 벗어났다.");
             break;
         }
 
@@ -700,7 +700,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 ENCH_ABJ : ENCH_FAKE_ABJURATION, 0, 0, -1));
 
         if (berserk())
-            simple_monster_message(*this, " is no longer berserk.");
+            simple_monster_message(*this, "은(는) 더 이상 광포 하지않다.");
 
         monster_die(*this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
                             (quiet) ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
@@ -733,14 +733,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet && feat_is_watery(grd(pos())))
             {
-                mprf(MSGCH_WARN, "%s bursts forth from the water.",
-                     name(DESC_A, true).c_str());
+                mprf(MSGCH_WARN, "%s이(가) 물 속에서 폭발적으로 솟구쳤다.",
+                     name(DESC_PLAIN, true).c_str());
                 seen_monster(this);
             }
         }
         else if (you.see_cell(pos()) && feat_is_watery(grd(pos())))
         {
-            mpr("Something invisible bursts forth from the water.");
+            mpr("보이지 않는 무언가가 물에서 솟구쳐 나왔다.");
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
         break;
@@ -749,21 +749,22 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
         {
             simple_monster_message(*this,
-                                   "'s soul is no longer ripe for the taking.");
+                                   "의 영혼은 더 이상 수확하기에 "
+                                   "매력적인 대상이 아니다.");
         }
         break;
 
     case ENCH_AWAKEN_FOREST:
         env.forest_awoken_until = 0;
         if (!quiet)
-            forest_message(pos(), "The forest calms down.");
+            forest_message(pos(), "숲이 진정 된다.");
         break;
 
     case ENCH_LIQUEFYING:
         invalidate_agrid();
 
         if (!quiet)
-            simple_monster_message(*this, " is no longer liquefying the ground.");
+            simple_monster_message(*this, "은(는) 더 이상 땅을 액화 시키지 않는다.");
         break;
 
     case ENCH_FLIGHT:
@@ -772,24 +773,24 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_DAZED:
         if (!quiet && alive())
-                simple_monster_message(*this, " is no longer dazed.");
+                simple_monster_message(*this, "은(는) 더 이상 현혹상태가 아니다.");
         break;
 
     case ENCH_INNER_FLAME:
         if (!quiet && alive())
-            simple_monster_message(*this, "'s inner flame fades away.");
+            simple_monster_message(*this, "의 내면의 불꽃이 사그라든다.");
         break;
 
     //The following should never happen, but just in case...
 
     case ENCH_MUTE:
         if (!quiet && alive())
-                simple_monster_message(*this, " is no longer mute.");
+                simple_monster_message(*this, "은(는) 더 이상 변이상태가 아니다.");
         break;
 
     case ENCH_BLIND:
         if (!quiet && alive())
-            simple_monster_message(*this, " is no longer blind.");
+            simple_monster_message(*this, "은(는) 더 이상 실명상태가 아니다.");
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -797,7 +798,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_DUMB:
         if (!quiet && alive())
-            simple_monster_message(*this, " is no longer stupefied.");
+            simple_monster_message(*this, "은(는) 더 이상 어리석지않다.");
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -805,7 +806,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_MAD:
         if (!quiet && alive())
-            simple_monster_message(*this, " is no longer mad.");
+            simple_monster_message(*this, "은(는) 더 이상 미친상태가 아니다.");
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -813,23 +814,23 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_REGENERATION:
         if (!quiet)
-            simple_monster_message(*this, " is no longer regenerating.");
+            simple_monster_message(*this, "은(는) 더 이상 재생상태가 아니다.");
         break;
 
     case ENCH_RAISED_MR:
         if (!quiet)
         {
-            simple_monster_message(*this, " is no longer resistant to hostile "
-                                          "enchantments.");
+            simple_monster_message(*this, "은(는) 적대적인 마법에 대한 저항력을 "
+                                          "잃었다.");
         }
         break;
 
     case ENCH_WRETCHED:
         if (!quiet)
         {
-            const string msg = " seems to return to " +
+            const string msg = "은 정상적인 " +
                                pronoun(PRONOUN_POSSESSIVE, true) +
-                               " normal shape.";
+                               "의 형상으로 돌아가는 것 같다.";
             simple_monster_message(*this, msg.c_str());
         }
         break;
@@ -849,7 +850,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_WEAK:
         if (!quiet)
-            simple_monster_message(*this, " is no longer weakened.");
+            simple_monster_message(*this, "은(는) 더 이상 질병상태가 아니다.");
         break;
 
     case ENCH_AWAKEN_VINES:
@@ -858,12 +859,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_TOXIC_RADIANCE:
         if (!quiet && you.can_see(*this))
-            mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
+            mprf("%s의 독기가 사라졌다.", name(DESC_ITS).c_str());
         break;
 
     case ENCH_GRASPING_ROOTS_SOURCE:
         if (!quiet && you.see_cell(pos()))
-            mpr("The grasping roots settle back into the ground.");
+            mpr("휘감고 있던 뿌리가 다시 대지로 돌아갔다.");
 
         // Done here to avoid duplicate messages
         if (you.duration[DUR_GRASPING_ROOTS])
@@ -873,7 +874,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_FIRE_VULN:
         if (!quiet)
-            simple_monster_message(*this, " is no longer more vulnerable to fire.");
+            simple_monster_message(*this, "은(는) 이제 화염에 더 취약한 상태가 아니다.");
         break;
 
     case ENCH_MERFOLK_AVATAR_SONG:
@@ -882,95 +883,95 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_POISON_VULN:
         if (!quiet)
-            simple_monster_message(*this, " is no longer more vulnerable to poison.");
+            simple_monster_message(*this, "은(는) 이제 독에 더 취약한 상태가 아니다.");
         break;
 
     case ENCH_ICEMAIL:
         if (!quiet && you.can_see(*this))
         {
-            mprf("%s icy envelope dissipates!",
-                 apostrophise(name(DESC_THE)).c_str());
+            mprf("%s의 얼음막이 흩어졌다!",
+                 apostrophise(name(DESC_PLAIN)).c_str());
         }
         break;
 
     case ENCH_AGILE:
         if (!quiet)
-            simple_monster_message(*this, " is no longer unusually agile.");
+            simple_monster_message(*this, "은(는) 더 이상 비정상적으로 기민 하지않다.");
         break;
 
     case ENCH_FROZEN:
         if (!quiet)
-            simple_monster_message(*this, " is no longer encased in ice.");
+            simple_monster_message(*this, "은(는) 더 이상 얼음에 싸여 있지않다.");
         calc_speed();
         break;
 
     case ENCH_BLACK_MARK:
         if (!quiet)
         {
-            simple_monster_message(*this, " is no longer absorbing vital"
-                                         " energies.");
+            simple_monster_message(*this, "은(는) 더 이상 생체 에너지를 흡수하지"
+                                         " 않는다.");
         }
         calc_speed();
         break;
 
     case ENCH_SAP_MAGIC:
         if (!quiet)
-            simple_monster_message(*this, " is no longer being sapped.");
+            simple_monster_message(*this, "은(는) 더 이상 혈액을 흘리지 않는다.");
         break;
 
     case ENCH_CORROSION:
         if (!quiet)
-           simple_monster_message(*this, " is no longer covered in acid.");
+           simple_monster_message(*this, "은(는) 더 이상 산으로 덮힌 상태가 아니다.");
         break;
 
     case ENCH_GOLD_LUST:
         if (!quiet)
-           simple_monster_message(*this, " is no longer distracted by gold.");
+           simple_monster_message(*this, "은(는) 더 이상 금화로 산만 하지 않다.");
         break;
 
     case ENCH_DRAINED:
         if (!quiet)
-            simple_monster_message(*this, " seems less drained.");
+            simple_monster_message(*this, "은(는) 이제 덜 흡수당한 것처럼 보인다.");
         break;
 
     case ENCH_REPEL_MISSILES:
         if (!quiet)
-            simple_monster_message(*this, " is no longer repelling missiles.");
+            simple_monster_message(*this, "은(는) 더 이상 투사체방어 상태가 아니다.");
         break;
 
     case ENCH_DEFLECT_MISSILES:
         if (!quiet)
-            simple_monster_message(*this, " is no longer deflecting missiles.");
+            simple_monster_message(*this, "은(는) 더 이상 투사체저지 상태가 아니다.");
         break;
 
     case ENCH_RESISTANCE:
         if (!quiet)
-            simple_monster_message(*this, " is no longer unusually resistant.");
+            simple_monster_message(*this, "은(는) 이제 비정상적인 저항력을 갖고 있지않다.");
         break;
 
     case ENCH_BRILLIANCE_AURA:
         if (!quiet)
-            simple_monster_message(*this, " is no longer giving off an aura.");
+            simple_monster_message(*this, "은(는) 더 이상 오라를 내지 않는다.");
         break;
 
     case ENCH_EMPOWERED_SPELLS:
         if (!quiet)
-            simple_monster_message(*this, " seems less brilliant.");
+            simple_monster_message(*this, "은(는) 이제 덜 총명해 보인다.");
         break;
 
     case ENCH_IDEALISED:
         if (!quiet)
-            simple_monster_message(*this, " loses the glow of perfection.");
+            simple_monster_message(*this, "은(는) 완전무결한 광휘를 잃었다.");
         break;
 
     case ENCH_BOUND_SOUL:
         if (!quiet && you.can_see(*this))
-            mprf("%s soul is no longer bound.", name(DESC_ITS).c_str());
+            mprf("그 %s의 영혼은 더 이상 묶여 있지않다.", name(DESC_PLAIN).c_str());
         break;
 
     case ENCH_INFESTATION:
         if (!quiet)
-            simple_monster_message(*this, " is no longer infested.");
+            simple_monster_message(*this, "은(는) 더 이상 감염된 상태가 아니다.");
         break;
 
     case ENCH_STILL_WINDS:
@@ -1144,9 +1145,9 @@ static bool _apply_grasping_roots(monster* mons)
     if (you.see_cell(mons->pos()) && one_chance_in(12))
     {
         mprf(MSGCH_TALK_VISUAL, "%s", random_choose(
-                "Tangled roots snake along the ground.",
-                "The ground creaks as gnarled roots bulge its surface.",
-                "A root reaches out and grasps at passing movement."));
+                "얽힌 뿌리는 땅을 따라서 꿈틀거렸다.",
+                "썩은 뿌리가 땅에 쌓이면서 표면이 부풀어올랐다.",
+                "뿌리가 땅을 뚫고 솟아올라 움직이는 물체를 붙잡았다."));
     }
 
     bool found_hostile = false;
@@ -1170,21 +1171,21 @@ static bool _apply_grasping_roots(monster* mons)
             if (x_chance_in_y(10, 50 - ai->evasion()))
             {
                 if (ai->is_player())
-                    mpr("Roots rise up to grasp you, but you nimbly evade.");
+                    mpr("뿌리가 당신을 휘감으려 했지만, 당신은 민첩하게 피해냈다.");
                 continue;
             }
 
             if (you.can_see(**ai))
             {
-                mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
-                     ai->name(DESC_THE).c_str(),
+                mprf("뿌리가 %s 아래에서 솟아올라 %s을 %s땅으로 잡아당겼다.",
+                     ai->name(DESC_PLAIN).c_str(),
                      ai->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                     ai->is_monster() ? "" : "back ");
+                     ai->is_monster() ? "" : "");
             }
         }
         else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
         {
-            mprf("Roots grasp at your %s, making movement difficult.",
+            mprf("뿌리가 당신의 %s을(를) 잡아채, 움직이기 어렵게 만들고 있다.",
                  you.foot_name(true).c_str());
         }
 
@@ -1249,15 +1250,14 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
             if (!do_resist)
             {
                 const coord_def oldpos = you.pos();
-                mpr("The pull of its song draws you forwards.");
+                mpr("노래가 지닌 매력이 당신을 다가오게 만들었다.");
 
                 if (swapping)
                 {
                     if (monster_at(oldpos))
                     {
-                        mprf("Something prevents you from swapping places "
-                             "with %s.",
-                             mon->name(DESC_THE).c_str());
+                        mprf("무언가가 당신이 %s와 자리를 바꾸지 못하게 한다.",
+                             mon->name(DESC_PLAIN).c_str());
                         return do_resist;
                     }
 
@@ -1269,7 +1269,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
                     // Plunk it down.
                     mgrd(mon->pos()) = swap_mon;
 
-                    mprf("You swap places with %s.",
+                    mprf("당신은 %s와 자리를 바꾸었다.",
                          mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true);
@@ -1320,7 +1320,7 @@ static void _merfolk_avatar_song(monster* mons)
             // during a song that has already summoned drowned souls (though is
             // technically possible if some existing ally gains HD instead)
             if (you.see_cell(mons->pos()))
-                mpr("The shadowy forms in the deep grow still as others approach.");
+                mpr("다른 이들이 접근함에 따라, 그림자의 형상이 생겨나기 시작했다.");
             mons->props.erase("merfolk_avatar_call");
         }
 
@@ -1339,7 +1339,7 @@ static void _merfolk_avatar_song(monster* mons)
         {
             if (you.see_cell(mons->pos()))
             {
-                mprf("Shadowy forms rise from the deep at %s song!",
+                mprf("%s의 노래 깊은 곳에서 어둠의 형상이 떠오른다!",
                      mons->name(DESC_ITS).c_str());
             }
             mons->props["merfolk_avatar_call"].get_bool() = true;
@@ -1381,7 +1381,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INSANE:
         if (decay_enchantment(en))
         {
-            simple_monster_message(*this, " is no longer in an insane frenzy.");
+            simple_monster_message(*this, "은(는) 더 이상 제정신을 잃고 미쳐 날뛰지 않는다.");
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
@@ -1391,7 +1391,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BERSERK:
         if (decay_enchantment(en))
         {
-            simple_monster_message(*this, " is no longer berserk.");
+            simple_monster_message(*this, "은(는) 더 이상 광포 하지않다.");
             const int duration = random_range(70, 130);
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0, duration));
             add_ench(mon_enchant(ENCH_SLOW, 0, 0, duration));
@@ -1401,7 +1401,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FATIGUE:
         if (decay_enchantment(en))
         {
-            simple_monster_message(*this, " looks more energetic.");
+            simple_monster_message(*this, "은(는) 더 이상 활력넘쳐 보이지 않는다.");
             del_ench(ENCH_SLOW, true);
         }
         break;
@@ -1466,7 +1466,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_MIRROR_DAMAGE:
         if (decay_enchantment(en))
-            simple_monster_message(*this, "'s dark mirror aura disappears.");
+            simple_monster_message(*this, "의 거무스름한 거울의 오라가 사라졌다.");
         break;
 
     case ENCH_SILENCE:
@@ -1551,8 +1551,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             if (you.can_see(*this))
             {
-                mprf("The flames covering %s go out.",
-                     name(DESC_THE, false).c_str());
+                mprf("%s을 뒤덮던 불길이 사그라 들었다.",
+                     name(DESC_PLAIN, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
             break;
@@ -1562,7 +1562,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            simple_monster_message(*this, " burns!");
+            simple_monster_message(*this, "이(가) 불타고 있다!");
             dprf("sticky flame damage: %d", dam);
 
             if (mons_genus(type) == MONS_SHEEP)
@@ -1581,7 +1581,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
                         if (visible_to(&you))
-                            mprf("%s catches fire!", mon->name(DESC_A).c_str());
+                            mprf("%s에 불이 옮겨붙었다!", mon->name(DESC_PLAIN).c_str());
                         behaviour_event(mon, ME_SCARE, me.agent());
                         xom_is_stimulated(100);
                     }
@@ -1608,12 +1608,12 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (you.can_see(*this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
-                    mprf("%s crumbles away.", name(DESC_THE, false).c_str());
+                    mprf("%s이(가) 무너져내렸다.", name(DESC_PLAIN, false).c_str());
                 else if (type == MONS_BLOCK_OF_ICE)
-                    mprf("%s melts away.", name(DESC_THE, false).c_str());
+                    mprf("%s은(는) 녹아 없어졌다.", name(DESC_PLAIN, false).c_str());
                 else
                 {
-                    mprf("A nearby %s withers and dies.",
+                    mprf("근처의 %s이(가) 시들어 말라 비틀어졌다.",
                          name(DESC_PLAIN, false).c_str());
                 }
             }
@@ -1658,7 +1658,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         plant->spore_cooldown = 20;
 
                         if (you.see_cell(*ai) && you.see_cell(pos()))
-                            mpr("A ballistomycete spawns a ballistomycete spore.");
+                            mpr("발리스토마이셋이 발리스토마이셋 포자를 만들어냈다.");
 
                         // Decrease the count and maybe become inactive
                         // again.
@@ -1721,7 +1721,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             coord_def base_position = props["base_position"].get_coord();
             // Do a thing.
             if (you.see_cell(base_position))
-                mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
+                mprf("관문이 닫히고, %s은(는) 두동강났다.", name(DESC_PLAIN).c_str());
 
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
                 env.grid(base_position) = DNGN_FLOOR;
@@ -1750,9 +1750,9 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (!silenced(you.pos()))
             {
                 if (you.can_see(*this))
-                    simple_monster_message(*this, " suddenly becomes enraged!");
+                    simple_monster_message(*this, "이(가) 갑자기 격분한 것 같다!");
                 else
-                    mpr("You hear a distant and violent thrashing sound.");
+                    mpr("당신은 먼 곳에서, 폭력적으로 때려눕히는 소리를 들었다.");
             }
 
             attitude = ATT_HOSTILE;
@@ -1764,7 +1764,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SEVERED:
     {
-        simple_monster_message(*this, " writhes!");
+        simple_monster_message(*this, "이(가) 몸부림쳤다!");
         coord_def base_position = props["base_position"].get_coord();
         maybe_bloodify_square(base_position);
         hurt(me.agent(), 20);
@@ -1813,8 +1813,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             add_ench(ENCH_TORNADO_COOLDOWN);
             if (you.can_see(*this))
             {
-                mprf("The winds around %s start to calm down.",
-                     name(DESC_THE).c_str());
+                mprf("%s을(를) 둘러싼 바람이 점차 가라앉는다.",
+                     name(DESC_PLAIN).c_str());
             }
         }
         break;
@@ -1825,7 +1825,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (how_chaotic())
         {
             int dam = roll_dice(2, 4) - 1;
-            simple_monster_message(*this, " is seared!");
+            simple_monster_message(*this, "이(가) 시들었다!");
             dprf("Zin's Corona damage: %d", dam);
             hurt(me.agent(), dam);
         }
@@ -1843,8 +1843,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(en, true, false);
             if (you.can_see(*this))
             {
-                mprf("%s chant is interrupted.",
-                     name(DESC_ITS).c_str());
+                mprf("그 %s의 기도가 방해로 중단되었다.",
+                     name(DESC_PLAIN).c_str());
             }
             break;
         }
@@ -1928,7 +1928,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             remove_tornado_clouds(mid);
             if (you.can_see(*this))
-                mprf("The winds around %s calm down.", name(DESC_THE).c_str());
+                mprf("%s을(를) 둘러싼 바람이 가라앉았다.", name(DESC_PLAIN).c_str());
         }
         break;
 
@@ -1941,8 +1941,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             del_ench(ENCH_MERFOLK_AVATAR_SONG, true, false);
             if (you.can_see(*this))
             {
-                mprf("%s song is interrupted.",
-                     name(DESC_ITS).c_str());
+                mprf("%s의 노래가 방해로 중단되었다.",
+                     name(DESC_PLAIN).c_str());
             }
             break;
         }
@@ -1958,9 +1958,9 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_PAIN_BOND:
         if (decay_enchantment(en))
         {
-            const string msg = " is no longer sharing " +
+            const string msg = "은(는)  더 이상 " +
                                pronoun(PRONOUN_POSSESSIVE, true) +
-                               " pain.";
+                               "의 고통을 공유하지 않는다.";
             simple_monster_message(*this, msg.c_str());
         }
         break;

@@ -1270,16 +1270,16 @@ void mons_create_tentacles(monster* head)
     if (mons_base_type(*head) == MONS_KRAKEN)
     {
         if (visible_count == 1)
-            mpr("A tentacle rises from the water!");
+            mpr("촉수가 물 속에서 솟구쳤다!");
         else if (visible_count > 1)
-            mpr("Tentacles burst out of the water!");
+            mpr("촉수가 물 속에서 튀어나왔다!");
     }
     else if (head->type == MONS_TENTACLED_STARSPAWN)
     {
         if (visible_count == 1)
-            mpr("A tentacle flies out from the starspawn's body!");
+            mpr("촉수가 별의 마물로부터 날아왔다!");
         else if (visible_count > 1)
-            mpr("Tentacles burst from the starspawn's body!");
+            mpr("별의 마물로부터 촉수가 튀어나왔다!");
     }
     return;
 }

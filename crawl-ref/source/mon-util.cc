@@ -1060,14 +1060,14 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
     if (!you.see_cell(pos))
         return;
 
-    const char* const smoke_str = can_place_smoke ? " in a puff of smoke" : "";
+    const char* const smoke_str = can_place_smoke ? "연기처럼" : "";
 
     const bool can_cackle = !silenced(pos) && !silenced(you.pos());
     const string db_cackle = getSpeakString("_laughs_");
-    const string cackle = db_cackle != "" ? db_cackle : "cackles";
-    const string cackle_str = can_cackle ? cackle + " and " : "";
+    const string cackle = db_cackle != "" ? db_cackle : "낄낄대고는"; //cackle
+    const string cackle_str = can_cackle ? cackle : "";
 
-    mprf("The %s mimic %svanishes%s!",
+    mprf("%s 미믹은 %s %s 사라졌다!",
          name.c_str(), cackle_str.c_str(), smoke_str);
     interrupt_activity(AI_MIMIC);
 }
@@ -1112,8 +1112,8 @@ void discover_mimic(const coord_def& pos)
         return;
     }
 
-    const string name = feature_mimic ? "the " + string(feat_type_name(feat))
-                                      : item->name(DESC_THE, false, false,
+    const string name = feature_mimic ? string(feat_type_name(feat))
+                                      : item->name(DESC_PLAIN, false, false,
                                                              false, true);
     const bool plural = feature_mimic ? false : item->quantity > 1;
 
@@ -1123,7 +1123,6 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf("%s %s a mimic!", name.c_str(), plural ? "are" : "is");
 
     const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
@@ -3555,7 +3554,7 @@ void mons_pacify(monster& mon, mon_attitude_type att, bool no_xp)
     if (mon.type == MONS_GERYON)
     {
         simple_monster_message(mon,
-            make_stringf(" discards %s horn.",
+            make_stringf("은(는) %s의 뿔피리를 떨어뜨렸다.",
                          mon.pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(&mon, false, item_is_horn_of_geryon);
     }
@@ -4635,33 +4634,33 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     static const char * sound_list[] =
     {
-        "says",         // actually S_SILENT
-        "shouts",
-        "barks",
-        "howls",
-        "shouts",
-        "roars",
-        "screams",
-        "bellows",
-        "bleats",
-        "trumpets",
-        "screeches",
-        "buzzes",
-        "moans",
-        "gurgles",
-        "croaks",
-        "growls",
-        "hisses",
-        "sneers",       // S_DEMON_TAUNT
-        "says",         // S_CHERUB -- they just speak normally.
-        "squeals",
-        "roars",
+        "말했다",         // actually S_SILENT
+        "소리쳤다",
+        "짖었다",
+        "울부짖었다",
+        "소리쳤다",
+        "포효했다",
+        "소리질렀다",
+        "음머거렸다",
+        "매애거렸다",
+        "뿌우거렸다",
+        "날카로운 소리를 냈다",
+        "웅웅거렸다",
+        "투덜거렸다",
+        "꾸륵거렸다",
+        "개굴거렸다",
+        "으르렁거렸다",
+        "쉬익거렸다",
+        "비웃었다",       // S_DEMON_TAUNT
+        "말했다",         // S_CHERUB -- they just speak normally.
+        "꽥꽥거렸다",
+        "포효했다",
         "buggily says", // NUM_SHOUTS
-        "breathes",     // S_VERY_SOFT
-        "whispers",     // S_SOFT
-        "says",         // S_NORMAL
-        "shouts",       // S_LOUD
-        "screams",      // S_VERY_LOUD
+        "나직이 속삭였다",     // S_VERY_SOFT
+        "속삭였다",     // S_SOFT
+        "말했다",         // S_NORMAL
+        "소리쳤다",       // S_LOUD
+        "소리질렀다",      // S_VERY_LOUD
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
@@ -5629,9 +5628,9 @@ void throw_monster_bits(const monster& mon)
 
         int damage = 1 + random2(mon.get_hit_dice());
 
-        mprf("%s is hit by a flying piece of %s!",
-                target->name(DESC_THE, false).c_str(),
-                mon.name(DESC_THE, false).c_str());
+        mprf("%s은(는) 날아가던 %s에 맞았다!",
+                target->name(DESC_PLAIN, false).c_str(),
+                mon.name(DESC_PLAIN, false).c_str());
 
         // Because someone will get a kick out of this some day.
         if (mons_class_flag(mons_base_type(mon), M_ACID_SPLASH))
@@ -5699,7 +5698,7 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         if (find(old_spells.begin(), old_spells.end(), spellslot.spell)
             == old_spells.end())
         {
-            mprf("%s regains %s memory of %s.",
+            mprf("%s은(는) %s의 %s에 대한 기억을 되찾았다.",
                  ancestor.name(DESC_YOUR, true).c_str(),
                  ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
                  spell_title(spellslot.spell));

@@ -228,8 +228,8 @@ void change_monster_type(monster* mons, monster_type targetc)
     // trj spills out jellies when polied, as if he'd been hit for mhp.
     if (mons->type == MONS_ROYAL_JELLY)
     {
-        simple_monster_message(*mons, "'s form twists and warps, and jellies "
-                               "spill out!");
+        simple_monster_message(*mons, "의 형태가 뒤틀리고, 휘어지며 "
+                               "젤리가 쏟아져 나왔다!");
         trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
                                    mons->hit_points);
     }
@@ -445,7 +445,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (source_tier == -1)
     {
         return simple_monster_message(*mons,
-            "'s appearance momentarily alters.");
+            "의 모습이 순간적으로 바뀌었다.");
     }
     relax = 1;
 
@@ -465,7 +465,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 relax++;
 
             if (relax > 50)
-                return simple_monster_message(*mons, " shudders.");
+                return simple_monster_message(*mons, "이(가) 흔들렸다.");
         }
         while (tries-- && (!_valid_morph(mons, targetc)
                            || source_tier != target_tier && !x_chance_in_y(relax, 200)
@@ -499,7 +499,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
 
     if (!_valid_morph(mons, targetc))
-        return simple_monster_message(*mons, " looks momentarily different.");
+        return simple_monster_message(*mons, "의 모습이 순간적으로 바뀌었다.");
 
     change_monster_type(mons, targetc);
 
@@ -510,26 +510,26 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (could_see)
     {
         string verb = "";
-        string obj = can_see ? mons_type_name(targetc, DESC_A)
-                             : "something you cannot see";
+        string obj = can_see ? mons_type_name(targetc, DESC_PLAIN)
+                             : "무언가 당신이 볼 수 없는 것으로";
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         {
-            verb = "grows a second head";
+            verb = "머리가 하나 자라났다.";
             obj = "";
         }
         else if (mons->is_shapeshifter())
-            verb = "changes into ";
+            verb = "로 바뀌었다.";
         else if (_jiyva_slime_target(targetc))
-            verb = "quivers uncontrollably and liquefies into ";
+            verb = "불안정하게 떨리면서 녹아내렸다.";
         else
-            verb = "evaporates and reforms as ";
+            verb = "끓어오르면서 바뀌었다.";
 
         mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
     }
     else if (can_see)
     {
-        mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
+        mprf("%s이(가) 갑자기 나타났다!", mons->name(DESC_PLAIN).c_str());
         autotoggle_autopickup(false);
     }
     else
@@ -537,8 +537,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     if (need_note || could_see && can_see && mons_is_notable(*mons))
     {
-        string new_name = can_see ? mons->full_name(DESC_A)
-                                  : "something unseen";
+        string new_name = can_see ? mons->full_name(DESC_PLAIN)
+                                  : "볼 수 없는 무언가";
 
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
 
@@ -599,7 +599,7 @@ void slimify_monster(monster* mon, bool hostile)
     // Bail out if jellies can't live here.
     if (!monster_habitable_grid(target, grd(mon->pos())))
     {
-        simple_monster_message(*mon, " quivers momentarily.");
+        simple_monster_message(*mon, "은(는) 한 순간 떨었다.");
         return;
     }
 
