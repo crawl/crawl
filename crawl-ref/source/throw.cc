@@ -359,7 +359,7 @@ bool fire_warn_if_impossible(bool silent)
     if (you.species == SP_FELID)
     {
         if (!silent)
-            mpr("You can't grasp things well enough to throw them.");
+                     mpr("당신은 그것들을 던질 수 있을 만큼 꽉 잡고 있을 수 없다.");
         return true;
     }
 
@@ -377,7 +377,7 @@ bool fire_warn_if_impossible(bool silent)
         if (!weapon || !is_range_weapon(*weapon))
         {
             if (!silent)
-                mprf("You cannot throw anything while %s.", held_status());
+                mprf("%s 상태에서는 아무것도 던질 수 없다.", held_status());
             return true;
         }
         else if (weapon->sub_type != WPN_BLOWGUN)

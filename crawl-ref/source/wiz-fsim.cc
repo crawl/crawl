@@ -287,7 +287,7 @@ static monster* _init_fsim()
         mon = create_monster(temp);
         if (!mon)
         {
-            mpr("Failed to create monster.");
+                     mpr("몬스터 생성에 실패했다.");
             return nullptr;
         }
     }
@@ -305,7 +305,7 @@ static monster* _init_fsim()
     if (!adjacent(mon->pos(), you.pos()))
     {
         monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
-        mpr("Could not put monster adjacent to player.");
+              mpr("몬스터를 플레이어 옆에 붙여 생성할 수 없다.");
         return 0;
     }
 
@@ -573,7 +573,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         // kill the loop if the user hits escape
         if (kbhit() && getchk() == 27)
         {
-            mpr("Cancelling simulation.\n");
+            mpr("시뮬레이션을 취소한다.\n");
             fprintf(o, "Simulation cancelled!\n\n");
             break;
         }
@@ -619,7 +619,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
             // kill the loop if the user hits escape
             if (kbhit() && getchk() == 27)
             {
-                mpr("Cancelling simulation.\n");
+                mpr("시뮬레이션을 취소한다.\n");
                 fprintf(o, "\nSimulation cancelled!\n\n");
                 return;
             }
@@ -724,7 +724,7 @@ void wizard_fight_sim(bool double_scale)
         set_xl(xl, false);
 
     _uninit_fsim(mon);
-    mpr("Done.");
+    mpr("완료.");
 }
 
 #endif

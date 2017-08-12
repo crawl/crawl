@@ -853,7 +853,7 @@ void slime_wall_damage(actor* act, int delay)
                                              roll_dice(2, strength));
         if (dam > 0 && you.can_see(*mon))
         {
-            mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
+            mprf((walls > 1) ? "%s은(는) 근처 산성질 벽에 의해 화상을 입었다!" : "%s은(는) 근처 산성질 벽에 의해 화상을 입었다!",
                   mon->name(DESC_THE).c_str());
         }
         mon->hurt(nullptr, dam, BEAM_ACID);
@@ -866,11 +866,11 @@ void feat_splash_noise(dungeon_feature_type feat)
     {
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
-        mprf(MSGCH_SOUND, "You hear a splash.");
+        mprf(MSGCH_SOUND, "물보라 소리를 들었다.");
         return;
 
     case DNGN_LAVA:
-        mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+        mprf(MSGCH_SOUND, "지글지글거리는 소리를 들었다.");
         return;
 
     default:
@@ -1598,29 +1598,29 @@ void fall_into_a_pool(dungeon_feature_type terrain)
         }
     }
 
-    mprf("You fall into the %s!",
-         (terrain == DNGN_LAVA)       ? "lava" :
-         (terrain == DNGN_DEEP_WATER) ? "water"
-                                      : "programming rift");
+    mprf("당신은 %s 안으로 떨어졌다!",
+         (terrain == DNGN_LAVA)       ? "용암" :
+         (terrain == DNGN_DEEP_WATER) ? "물"
+                                      : "프로그래밍 균열");
     // included in default force_more_message
 
     clear_messages();
     if (terrain == DNGN_LAVA)
     {
         if (you.species == SP_MUMMY)
-            mpr("You burn to ash...");
+            mpr("당신은 재가 되었다...");
         else
-            mpr("The lava burns you to a cinder!");
+            mpr("용암이 당신을 잿더미로 만들어버렸다!");
         ouch(INSTANT_DEATH, KILLED_BY_LAVA);
     }
     else if (terrain == DNGN_DEEP_WATER)
     {
-        mpr("You sink like a stone!");
+        mpr("당신은 돌처럼 가라앉았다!");
 
         if (you.is_nonliving() || you.undead_state())
-            mpr("You fall apart...");
+            mpr("당신은 허물어져 내렸다...");
         else
-            mpr("You drown...");
+            mpr("당신은 가라앉았다...");
 
         ouch(INSTANT_DEATH, KILLED_BY_WATER);
     }
