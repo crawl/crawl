@@ -188,16 +188,16 @@ void mirror_damage_fineff::fire()
                                    defender()->as_monster() : nullptr;
         if (reflector)
         {
-            mprf("%s reflects your damage back at you!",
-                 reflector->name(DESC_THE).c_str());
+            mprf("%s이(가) 피해를 당신에게 반사했다!",
+                 reflector->name(DESC_PLAIN).c_str());
         }
         else
-            mpr("Your damage is reflected back at you!");
+            mpr("당신의 피해는 반사되어 되돌아왔다!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
     else if (def == MID_PLAYER)
     {
-        simple_god_message(" mirrors your injury!");
+        simple_god_message("은 당신의 피해를 반사했다!");
 #ifndef USE_TILE_LOCAL
         flash_monster_colour(monster_by_mid(att), RED, 200);
 #endif
@@ -304,26 +304,26 @@ void trj_spawn_fineff::fire()
 
     if (trj)
     {
-        const string monnam = trj->name(DESC_THE);
-        mprf("%s shudders%s.", monnam.c_str(),
-             spawned >= 5 ? " alarmingly" :
-             spawned >= 3 ? " violently" :
-             spawned > 1 ? " vigorously" : "");
+        const string monnam = trj->name(DESC_PLAIN);
+        mprf("%s은(는) %s몸을 떨었다.", monnam.c_str(),
+             spawned >= 5 ? "놀랄 만큼 " :
+             spawned >= 3 ? "폭력적으로 " :
+             spawned > 1 ? "힘차게 " : "");
 
         if (spawned == 1)
-            mprf("%s spits out another jelly.", monnam.c_str());
+            mprf("%s 또다른 젤리를 뱉어냈다.", monnam.c_str());
         else
         {
-            mprf("%s spits out %s more jellies.",
+            mprf("%s %s개의 젤리를 더 뱉어냈다.",
                  monnam.c_str(),
                  number_in_words(spawned).c_str());
         }
     }
     else if (spawned == 1)
-        mpr("One of the Royal Jelly's fragments survives.");
+        mpr("로열 젤리의 조각 중 하나가 살아남았다.");
     else
     {
-        mprf("The dying Royal Jelly spits out %s more jellies.",
+        mprf("로열 젤리가 죽어가며 %s개의 젤리를 더 뱉어냈다.",
              number_in_words(spawned).c_str());
     }
 }
@@ -455,15 +455,15 @@ void shock_serpent_discharge_fineff::fire()
     const monster* serpent = defender() ? defender()->as_monster() : nullptr;
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s electric aura discharges%s, shocking %s!",
-             serpent->name(DESC_ITS).c_str(),
-             power < 4 ? "" : " violently",
-             oppressor.name(DESC_THE).c_str());
+        mprf("%s의 전기가 %s방출되었고, %s을(를) 감전시켰다!",
+             serpent->name(DESC_PLAIN).c_str(),
+             power < 4 ? "" : "폭력적으로 ",
+             oppressor.name(DESC_PLAIN).c_str());
     }
     else if (you.can_see(oppressor))
     {
-        mprf("The air sparks with electricity, shocking %s!",
-             oppressor.name(DESC_THE).c_str());
+        mprf("대기에 전기 스파크가 일어났고, %s을(를) 감전시켰다!",
+             oppressor.name(DESC_PLAIN).c_str());
     }
 
 
@@ -507,7 +507,7 @@ void rakshasa_clone_fineff::fire()
     if (you.can_see(*rakshasa))
     {
         mprf(MSGCH_MONSTER_SPELL,
-             "The injured %s weaves a defensive illusion!",
+             "부상당한 %s이(가) 방어적인 환상을 자아냈다!",
              rakshasa->name(DESC_PLAIN).c_str());
     }
 }
@@ -541,7 +541,7 @@ void infestation_death_fineff::fire()
 
         if (you.see_cell(posn) || you.can_see(*scarab))
         {
-            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+            mprf("%s이(가) %s로부터 뿜어져 나왔다!", scarab->name(DESC_PLAIN, true).c_str(),
                                        name.c_str());
         }
     }

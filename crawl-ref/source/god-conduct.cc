@@ -665,11 +665,11 @@ static like_response okawaru_kill(const char* desc)
             if (piety > 3200)
             {
                 mprf(MSGCH_GOD, you.religion,
-                     "<white>%s is honoured by your kill.</white>",
+                     "<white>%s은(는) 당신의 살해를 명예롭게 생각한다.</white>",
                      uppercase_first(god_name(you.religion)).c_str());
             }
             else if (piety > 9) // might still be miniscule
-                simple_god_message(" accepts your kill.");
+                simple_god_message("은(는) 당신의 살해를 기뻐했다.");
         }
     };
 }

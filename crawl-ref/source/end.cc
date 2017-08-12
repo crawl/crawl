@@ -240,8 +240,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         switch (you.religion)
         {
         case GOD_FEDHAS:
-            simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.");
+            simple_god_message("은 당신의 생태계에 대한 공헌을 칭찬했다.");
             break;
 
         case GOD_NEMELEX_XOBEH:
@@ -267,12 +266,11 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
         case GOD_YREDELEMNUL:
             if (you.undead_state() != US_ALIVE)
-                simple_god_message(" claims you as an undead slave.");
+                simple_god_message("은 당신을 언데드 노예로서 요구했다.");
             else if (se.get_death_type() != KILLED_BY_DISINT
                      && se.get_death_type() != KILLED_BY_LAVA)
             {
-                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless "
-                     "zombie.");
+                mprf(MSGCH_GOD, "당신의 육체는 죽음으로부터 영혼없는 좀비로 되살아났다.");
             }
             // No message if you're not undead and your corpse is lost.
             break;
@@ -302,7 +300,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
                 && se.get_death_type() != KILLED_BY_DISINT
                 && se.get_death_type() != KILLED_BY_LAVA)
             {
-                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+                mprf(MSGCH_GOD, "당신의 육체는 한 무더기의 금으로 변했다.");
             }
             break;
         }
@@ -347,7 +345,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
     clua.save_persist();
 
     // Prompt for saving macros.
-    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
+    if (crawl_state.unsaved_macros && yesno("매크로를 저장합니까?", true, 'n'))
         macro_save();
 
     clrscr();
