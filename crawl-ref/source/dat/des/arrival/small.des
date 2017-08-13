@@ -2651,7 +2651,7 @@ ENDMAP
 ##############################################################
 # A small-room arrival with wooden doors and big ring of trees and rocks.
 NAME:    saegor_arrival_under_anarchy
-TAGS:    arrival no_trap_gen no_monster_gen
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 NSUBST:  @ = 3:@ / *:X
 SUBST:   X = tc w:1
@@ -2685,7 +2685,7 @@ ENDMAP
 ##############################################################
 # Moated graveyard arrival (oiseaux)
 NAME:    moated_graveyard_arrival
-TAGS:    arrival no_monster_gen no_trap_gen no_pool_fixup no_rotate
+TAGS:    arrival no_monster_gen no_pool_fixup no_rotate
 ORIENT:  float
 FTILE:   t{G = FLOOR_PEBBLE_BROWN
 TILE:    ' = FLOOR_PEBBLE_BROWN / FLOOR_PEBBLE_DARKGRAY
@@ -3160,7 +3160,7 @@ ccc...ccc
 ENDMAP
 
 NAME:   kennysheep_arrival_forest
-TAGS:   arrival no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen
 ORIENT: south
 FTILE:  t'G = floor_grass
 COLOUR: ' = green
@@ -3179,7 +3179,7 @@ xtttttttttttttttttttttx
 ENDMAP
 
 NAME:   nzn_arrival_settlement
-TAGS:   arrival no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SUBST:  a = -'
 SHUFFLE: TG

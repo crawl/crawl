@@ -2031,7 +2031,7 @@ xxxx+xxxx
 ENDMAP
 
 NAME: nzn_arrival_crosshair
-TAGS: arrival
+TAGS: arrival no_monster_gen
 ORIENT: float
 MAP
      x+x
@@ -2077,8 +2077,7 @@ ENDMAP
 NAME: nzn_arrival_depleted_hourglass
 ORIENT: north
 TAGS: arrival no_monster_gen no_pool_fixup no_rotate no_vmirror
-SHUFFLE: +/E
-SUBST: E = x
+SUBST: E : x+
 MAP
        xxxxx
   xxxxxx.{.xxxxxx
