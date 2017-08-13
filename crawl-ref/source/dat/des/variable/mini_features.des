@@ -1200,17 +1200,17 @@ SUBST:  @ = x
 SUBST:  + = x+
 : end
 MAP
-.........@.
-@xxxxxxx.x.
-.......x.x.
+@x........@
+..xxxxxx..x
+.x.....x.x.
 .xxxxx.x.x.
 .x...x.x.x.
 .x.xx+xx.x.
 .x.x.x...x.
 .x.x.xxxxx.
-.x.x.......
-.x.xxxxxxx@
-.@.........
+.x.x.....x.
+x.xxxxxxx..
+@........x@
 ENDMAP
 
 NAME:   roderic_curled_sauvastika
@@ -1407,15 +1407,15 @@ SUBST:   " : x
 
 MAP
 ...........
-.x'''x"""x.
+.x'''""""x.
 .".?.x...'.
 .".?.x.??'.
-."...x...'.
-.xxxxxxxxx.
-.'...x...".
+."..x.x..'.
+.'xx.x.xx'.
+.'..x.x..".
 .'??.x.?.".
 .'...x.?.".
-.x"""x'''x.
+.x""""'''x.
 ...........
 ENDMAP
 
