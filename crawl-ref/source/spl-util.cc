@@ -1335,10 +1335,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
  * @param spell           The type of spell to be coloured.
  * @param default_colour   Colour to be used if the spell is unremarkable.
  * @param transient       If true, check if spell is temporarily useless.
+ * @param memcheck        If true, check if spell can be memorised
  * @return                The colour to highlight the spell.
  */
 int spell_highlight_by_utility(spell_type spell, int default_colour,
-                               bool transient)
+                               bool transient, bool memcheck)
 {
     // If your god hates the spell, that overrides all other concerns.
     if (god_hates_spell(spell, you.religion)
@@ -1347,13 +1348,13 @@ int spell_highlight_by_utility(spell_type spell, int default_colour,
         return COL_FORBIDDEN;
     }
     // Grey out spells for which you lack experience or spell levels.
-    if (spell_difficulty(spell) > you.experience_level
-        || player_spell_levels() < spell_levels_required(spell))
+    if (memcheck && (spell_difficulty(spell) > you.experience_level
+        || player_spell_levels() < spell_levels_required(spell)))
     {
         return COL_INAPPLICABLE;
     }
-
-    else if (spell_is_useless(spell, transient))
+    // Check if the spell is considered useless based on your current status
+    if (spell_is_useless(spell, transient))
         return COL_USELESS;
 
     return default_colour;

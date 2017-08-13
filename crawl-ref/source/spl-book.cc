@@ -690,7 +690,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
         if (vehumet_is_offering(spell))
             colour = LIGHTBLUE;
         else
-            colour = spell_highlight_by_utility(spell);
+        {
+            bool transient = false;
+            bool memcheck = true;
+            colour = spell_highlight_by_utility(spell, COL_UNKNOWN, transient, memcheck);
+        }
+
 
         desc << "<" << colour_to_str(colour) << ">";
 
