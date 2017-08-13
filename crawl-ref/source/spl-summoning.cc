@@ -953,32 +953,9 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
         return SPRET_SUCCESS;
     }
 
-    // check for traps
-    const trap_def *ptrap = trap_at(where);
-    if (ptrap)
-    {
-        const trap_def& trap = *ptrap;
-        const bool player_knows_trap = (trap.is_known(&you));
-
-        // Only shaft and teleport traps should prevent spires from being placed
-        if (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT || trap.type == TRAP_SHAFT)
-        {
-            // if you can see the trap, tell the player straight up they can't target it
-            if (player_knows_trap)
-            {
-                mpr("You can't place the spire on this trap.");
-                return SPRET_ABORT;
-            }
-            //give a vague message. players won't know if it's a teleport or shaft trap
-            else
-            {
-                fail_check();
-                mpr("You see a shimmering outline there, and the spell fizzles.");
-            }
-            // we charge mana for the detection of the trap
-            return SPRET_SUCCESS;
-        }
-    }
+    spret_type handle_trap = handle_trap_at_target_location(where, fail);
+    if (handle_trap != SPRET_NONE)
+        return handle_trap;
 
     fail_check();
 
@@ -3020,33 +2997,9 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
-    // check for traps
-    const trap_def *ptrap = trap_at(where);
-    if (ptrap)
-    {
-        const trap_def& trap = *ptrap;
-        const bool player_knows_trap = (trap.is_known(&you));
-
-        // Only shaft and teleport traps should prevent prisms from being placed
-        if (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT || trap.type == TRAP_SHAFT)
-        {
-            // if you can see the trap, tell the player straight up they can't target it
-            if (player_knows_trap)
-            {
-                if (caster->is_player())
-                    mpr("You can't place the prism on this trap.");
-                return SPRET_ABORT;
-            }
-            //give a vague message. players won't know if it's a teleport or shaft trap
-            else
-            {
-                fail_check();
-                mpr("You see a shimmering outline there, and the spell fizzles.");
-            }
-            // we charge mana for the detection of the trap
-            return SPRET_SUCCESS;
-        }
-    }
+    spret_type handle_trap = handle_trap_at_target_location(where, fail);
+    if (handle_trap != SPRET_NONE)
+        return handle_trap;
 
     fail_check();
 
@@ -3494,4 +3447,35 @@ int count_summons(const actor *summoner, spell_type spell)
     }
 
     return count;
+}
+
+spret_type handle_trap_at_target_location(const coord_def& where, bool fail)
+{
+    // check for traps
+    const trap_def *ptrap = trap_at(where);
+    if (ptrap)
+    {
+        const trap_def& trap = *ptrap;
+        const bool player_knows_trap = (trap.is_known(&you));
+
+        // Only shaft and teleport traps should prevent spires from being placed
+        if (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT || trap.type == TRAP_SHAFT)
+        {
+            // if you can see the trap, tell the player straight up they can't target it
+            if (player_knows_trap)
+            {
+                mpr("You can't place the spire on this trap.");
+                return SPRET_ABORT;
+            }
+            //give a vague message. players won't know if it's a teleport or shaft trap
+            else
+            {
+                fail_check();
+                mpr("You see a shimmering outline there, and the spell fizzles.");
+            }
+            // we charge mana for the detection of the trap
+            return SPRET_SUCCESS;
+        }
+    }
+    return SPRET_NONE;
 }
