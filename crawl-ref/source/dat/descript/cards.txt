@@ -1,71 +1,187 @@
 %%%%
-Damnation card
+# Escape
+Velocity card
 
-추방 카드:
+The card depicts an empty, well-worn pair of boots. Sand, ashes, and turf
+coat the boots' soles.
 
-이 카드는 근처에 있는 1마리 이상의 적들을 어비스로 추방시킨다. 카드의 사용자도
-여기에 포함될 수 있음을 명심하라!
+Drawing this card can grant great speed or terrible slowness to foes and allies
+alike. The beneficial aspects depend on card power.
 %%%%
-the Stairs card
+the Tomb card
 
-이 카드는 근처의 계단들을 사용자 근처로 오게하거나 더 멀어지게 한다. (이 카드는
-버그입니다! 버그를 발견한 사실을 친구들에게 자랑하세요.)
+The card depicts a royal crypt, its entrance sealed by a heavy stone slab.
+
+Drawing this card entombs its user in protective, temporary walls of solid rock.
+At lower power levels or with adjacent creatures, the tomb may be imperfect.
 %%%%
-a buggy card
+Exile card
 
-버그. (축하합니다! 당신의 이 게임의 버그를 발견하셨습니다! 이 사실을 주변
-사람들에게 자랑하세요.)
-%%%%
-a very buggy card
+The card depicts ceaseless hands from a yawning portal overcoming a panicked
+figure.
 
-버그. (축하합니다! 당신의 이 게임의 버그를 발견하셨습니다! 이 사실을 주변
-사람들에게 자랑하세요.)
-%%%%
-Degeneration card
-
-퇴화의 카드:
-
-이 카드는 비늘이 벗겨져 연약한 속살을 드러내는 용의 모습을 묘사하고 있다. 이 카드를 뽑으면 주변 적들을 본래보다 약한 형태로 변신시킨다.
-%%%%
-Fortitude card
-
-불굴의 카드:
-
-이 카드는 길게 뻗은 맨손에 의해 산산조각나는 칼의 모습을 묘사하고 있다. 이 카드를 뽑으면 강력한 힘과 더불어 부상을 무시하는 능력을 부여한다.
-%%%%
-the Cloud card
-
-구름의 카드:
-
-이 카드는 안개에 완전히 감싸인 철문을 묘사하고 있다. 이 카드를 뽑으면 플레이어의 시야를 구름으로 가린다. 생성되는 구름의 종류는 카드의 파워에 비례한다.
-%%%%
-the Elements card
-
-원소의 카드:
-
-이 카드는 모래폭풍 속에 숨은 거대한 짐승을 묘사하고 있다. 이 카드를 뽑으면 사대원소의 소환수를 셋 소환한다.
-%%%%
-the Illusion card
-
-환영의 카드:
-
-이 카드는 거울의 방 안에서 수많은 자신의 상과 마주하고 있는 누군가를 묘사하고 있다. 이 카드를 뽑으면 플레이어의 환영을 소환하며, 그 능력은 본체의 능력에 비례한다.
-%%%%
-the Rangers card
-
-유격대의 카드:
-
-이 카드는 과녁의 정중앙에 꽂힌 화살이, 두 번째 화살에 의해 쪼개지는 모습을 묘사하고 있다. 이 카드를 뽑으면 서넛의 궁수를 소환한다.
+Drawing this card will banish one or more nearby creatures to the Abyss,
+possibly including the user.
 %%%%
 the Shaft card
 
 갱도의 카드:
 
-이 카드는 아래에 입을 벌린 균열에 빠지는 여행자의 모습을 묘사하고 있다. 이 카드를 뽑으면 플레이어의 아래에 다음 층으로 빠질 수 있는 구멍을 만들며, 어쩌면 적의 아래에도 구멍을 만든다.
+이 카드는 아래에 입을 벌린 균열에 빠지는 여행자의 모습을 묘사하고 있다.
+이 카드를 뽑으면 플레이어의 아래에 다음 층으로 빠질 수 있는 구멍을 만들며,
+어쩌면 적의 아래에도 구멍을 만든다.
+%%%%
+the Elixir card
+
+The card depicts a smug smile formed out of nine chalices.
+
+Drawing this card rapidly restores the user's health or magic, or both at high power
+levels. It will also heal their allies.
+%%%%
+the Cloud card
+
+구름의 카드:
+
+이 카드는 안개에 완전히 감싸인 철문을 묘사하고 있다.
+이 카드를 뽑으면 플레이어의 시야를 구름으로 가린다.
+생성되는 구름의 종류는 카드의 파워에 비례한다.
+%%%%
+# Destruction
+Vitriol card
+
+The card depicts an oklob plant, dripping with its distinctive corrosive sap.
+
+Drawing this card will unleash a corrosive attack spell.
 %%%%
 the Storm card
 
 폭풍의 카드:
 
-이 카드는 몰아치는 번개폭풍에 의해 바다에 가라앉는 배를 묘사하고 있다. 이 카드를 뽑으면 폭풍과 번개구름을 불러일으킨다. 
+이 카드는 몰아치는 번개폭풍에 의해 바다에 가라앉는 배를 묘사하고 있다.
+이 카드를 뽑으면 폭풍과 번개구름을 불러일으킨다. 
+%%%%
+Pain card
+
+The card depicts an iron wheel, menacing with spikes and rusted with blood.
+
+Drawing this card unleashes a necromantic attack spell.
+%%%%
+the Orb card
+
+The card depicts a figure surrounded by floating, glowing orbs of energy.
+
+Drawing this card unleashes one or possibly more destructive orbs of pure magic.
+%%%%
+Degeneration card
+
+퇴화의 카드:
+
+이 카드는 비늘이 벗겨져 연약한 속살을 드러내는 용의 모습을 묘사하고 있다.
+이 카드를 뽑으면 주변 적들을 본래보다 약한 형태로 변신시킨다.
+%%%%
+Wild Magic card
+
+The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
+
+Drawing this card causes wild magic (as if from miscasting a spell) to act upon
+its user's enemies. Each creature affected will restore some of the user's
+magic.
+# Summoning
+%%%%
+the Elements card
+
+원소의 카드:
+
+이 카드는 모래폭풍 속에 숨은 거대한 짐승을 묘사하고 있다.
+이 카드를 뽑으면 사대원소의 소환수를 셋 소환한다.
+%%%%
+the Pentagram card
+
+The card depicts cultists marking out a ritual pentagram on the floor.
+
+Drawing this card will summon a pair of demons to the user's aid.
+%%%%
+the Dance card
+
+The card depicts an extravagantly-dressed, masked figure dancing alone in a
+vast room.
+
+Drawing this card will summon a dancing weapon. Its quality, brand, and
+friendliness are all affected by card power.
+%%%%
+Foxfire card
+
+The card depicts a swamp at night, suffused with an eerie glow.
+
+Drawing this card will summon forth flying swarms. Some of their members may
+be hostile.
+%%%%
+the Rangers card
+
+The card depicts an arrow in a bull's-eye, which has been split by a second
+arrow.
+
+Drawing this card will summon several archers.
+%%%%
+the Illusion card
+
+환영의 카드:
+
+이 카드는 거울의 방 안에서 수많은 자신의 상과 마주하고 있는 누군가를 묘사하고 있다.
+이 카드를 뽑으면 플레이어의 환영을 소환하며, 그 능력은 본체의 능력에 비례한다.
+%%%%
+# Punishment
+Wrath card
+
+The card depicts the hand of the divine, reaching down from the heavens to hurl
+furious lightning.
+
+Drawing this card will draw a god's wrath against the user.
+%%%%
+Famine card
+
+The card depicts a gaunt figure crawling along an expanse of dry, cracked
+earth.
+
+Drawing this card will leave its user on the brink of starvation.
+%%%%
+the Wraith card
+
+The card depicts absolutely nothing.
+
+Drawing this card will drain the user.
+%%%%
+the Swine card
+
+The card depicts several feral hogs wallowing in a mud pit.
+
+Drawing this card will make its user turn pink and root for truffles.
+%%%%
+Torment card
+
+The card depicts a screaming figure being tortured on the rack.
+
+Drawing this card will cause agonising injury to the user.
+%%%%
+# cards for wizmode testing (&c)
+the Stairs card
+
+The card depicts water flowing down a set of stairs.
+
+Drawing this card makes staircases slide towards or away from the user. It is a
+bug if one ever finds it in a deck.
+%%%%
+# buggy cards
+a buggy card
+
+The card depicts a Crawl player filing a bug report on Mantis.
+
+Drawing this card is a bug, if one ever encounters it as such.
+%%%%
+a very buggy card
+
+The card depicts several Crawl players angrily filing several bug reports on
+Mantis.
+
+Drawing this card is a bug, if one ever encounters it as such.
 %%%%
