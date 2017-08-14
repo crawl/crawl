@@ -572,17 +572,17 @@ void dec_penance(god_type god, int val)
             // TSO's halo is once more available.
             if (!had_halo && have_passive(passive_t::halo))
             {
-                mprf(MSGCH_GOD, "Your divine halo returns!");
+                mprf(MSGCH_GOD, "성스러운 후광이 돌아왔다.");
                 invalidate_agrid(true);
             }
             if (!had_umbra && have_passive(passive_t::umbra))
             {
-                mprf(MSGCH_GOD, "Your aura of darkness returns!");
+                mprf(MSGCH_GOD, "암흑의 오오라가 돌아왔다.");
                 invalidate_agrid(true);
             }
             if (have_passive(passive_t::sinv))
             {
-                mprf(MSGCH_GOD, "Your vision regains its divine sight.");
+                mprf(MSGCH_GOD, "신성한 예지를 다시 얻었다.");
                 autotoggle_autopickup(false);
             }
             if (have_passive(passive_t::stat_boost))
@@ -593,7 +593,7 @@ void dec_penance(god_type god, int val)
             }
             if (have_passive(passive_t::storm_shield))
             {
-                mprf(MSGCH_GOD, "A storm instantly forms around you!");
+                mprf(MSGCH_GOD, "당신 주변에 갑자기 폭풍이 형성된다.");
                 you.redraw_armour_class = true; // also handles shields
             }
             // When you've worked through all your penance, you get
@@ -620,7 +620,7 @@ void dec_penance(god_type god, int val)
             {
                 // Penance just ended w/o worshipping Pakellas;
                 // notify the player that MP regeneration will start again.
-                mprf(MSGCH_GOD, god, "You begin regenerating magic.");
+                mprf(MSGCH_GOD, god, "마력이 재생되기 시작했다.");
             }
             else if (god == GOD_HEPLIAKLQANA)
             {
@@ -708,12 +708,12 @@ static void _inc_penance(god_type god, int val)
 
         if (had_halo && !have_passive(passive_t::halo))
         {
-            mprf(MSGCH_GOD, god, "Your divine halo fades away.");
+            mprf(MSGCH_GOD, god, "성스러운 후광이 사라졌다.");
             invalidate_agrid();
         }
         if (had_umbra && !have_passive(passive_t::umbra))
         {
-            mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
+            mprf(MSGCH_GOD, god, "암흑의 오오라가 사라졌다.");
             invalidate_agrid();
         }
 
@@ -766,29 +766,29 @@ static void _inc_penance(god_type god, int val)
             // just gained penance.
             if (you.piety >= piety_breakpoint(0))
             {
-                mprf(MSGCH_GOD, god, "The storm surrounding you dissipates.");
+                mprf(MSGCH_GOD, god, "주변의 폭풍이 사그라졌다.");
                 you.redraw_armour_class = true;
             }
             if (you.duration[DUR_QAZLAL_FIRE_RES])
             {
-                mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+                mprf(MSGCH_DURATION, "화염에 대한 저항이 사라졌다.");
                 you.duration[DUR_QAZLAL_FIRE_RES] = 0;
             }
             if (you.duration[DUR_QAZLAL_COLD_RES])
             {
-                mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+                mprf(MSGCH_DURATION, "냉기에 대한 저항이 사라졌다.");
                 you.duration[DUR_QAZLAL_COLD_RES] = 0;
             }
             if (you.duration[DUR_QAZLAL_ELEC_RES])
             {
                 mprf(MSGCH_DURATION,
-                     "Your resistance to electricity fades away.");
+                     "전기에 대한 저항이 사라졌다.");
                 you.duration[DUR_QAZLAL_ELEC_RES] = 0;
             }
             if (you.duration[DUR_QAZLAL_AC])
             {
                 mprf(MSGCH_DURATION,
-                     "Your resistance to physical damage fades away.");
+                     "물리적 피해에 대한 저항이 사라졌다.");
                 you.duration[DUR_QAZLAL_AC] = 0;
                 you.redraw_armour_class = true;
             }
@@ -1007,7 +1007,7 @@ static bool _give_nemelex_gift(bool forced = false)
             deck.deck_rarity = rarity;
             deck.flags |= ISFLAG_KNOW_TYPE;
 
-            simple_god_message(" grants you a gift!");
+            simple_god_message("은(는) 당신에게 선물을 하사했다!");
             // included in default force_more_message
             canned_msg(MSG_SOMETHING_APPEARS);
 
@@ -1174,7 +1174,7 @@ static bool _give_pakellas_gift()
 
     if (success)
     {
-        simple_god_message(" grants you a gift!");
+        simple_god_message("은(는) 당신에게 선물을 하사했다!");
         // included in default force_more_message
 
         you.num_current_gifts[you.religion]++;
@@ -1294,7 +1294,7 @@ static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
 
 static bool _jiyva_mutate()
 {
-    simple_god_message(" alters your body.");
+    simple_god_message("는 당신의 몸을 변형했다.");
 
     const int rand = random2(100);
 
@@ -1819,15 +1819,15 @@ bool do_god_gift(bool forced)
             {
                 if (gift_type == OBJ_MISSILES)
                 {
-                    simple_god_message(" grants you ammunition!");
+                    simple_god_message("은(는) 당신에게 탄환을 하사했다!");
                     _inc_gift_timeout(4 + roll_dice(2, 4));
                 }
                 else
                 {
                     if (gift_type == OBJ_WEAPONS)
-                        simple_god_message(" grants you a weapon!");
+                        simple_god_message("은(는) 당신에게 무기를 하사했다!");
                     else
-                        simple_god_message(" grants you armour!");
+                        simple_god_message("은(는) 당신에게 방어구를 하사했다!");
                     // Okawaru charges extra for armour acquirements.
                     if (you_worship(GOD_OKAWARU) && gift_type == OBJ_ARMOUR)
                         _inc_gift_timeout(30 + random2avg(15, 2));
@@ -1874,7 +1874,7 @@ bool do_god_gift(bool forced)
                     you.num_total_gifts[you.religion]++;
                 }
                 else
-                    mpr("You feel as though nothing has changed.");
+                    mpr("당신은 바뀐 것이 아무것도 없다고 느꼈다.");
             }
             break;
 
@@ -1957,7 +1957,7 @@ bool do_god_gift(bool forced)
 
             if (success)
             {
-                simple_god_message(" grants you a gift!");
+                simple_god_message("은(는) 당신에게 선물을 하사했다!");
                 // included in default force_more_message
 
                 you.num_current_gifts[you.religion]++;
@@ -2030,12 +2030,12 @@ bool do_god_gift(bool forced)
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
     if (old_num_current_gifts < you.num_current_gifts[you.religion])
     {
-        mprf(MSGCH_DIAGNOSTICS, "Current number of gifts from this god: %d",
+        mprf(MSGCH_DIAGNOSTICS, "현재 신으로부터 받은 선물 수 : %d",
              you.num_current_gifts[you.religion]);
     }
     if (old_num_total_gifts < you.num_total_gifts[you.religion])
     {
-        mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
+        mprf(MSGCH_DIAGNOSTICS, "신으로부터 받은 선물의 총 수 : %d",
              you.num_total_gifts[you.religion]);
     }
 #endif
@@ -2356,9 +2356,9 @@ static void _gain_piety_point()
             }
         }
         if (rank == rank_for_passive(passive_t::halo))
-            mprf(MSGCH_GOD, "A divine halo surrounds you!");
+            mprf(MSGCH_GOD, "성스러운 후광이 당신을 휘감았다!");
         if (rank == rank_for_passive(passive_t::umbra))
-            mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
+            mprf(MSGCH_GOD, "당신은 암흑의 오오라에 가려졌다!");
         if (rank == rank_for_passive(passive_t::sinv))
             autotoggle_autopickup(false);
         if (rank == rank_for_passive(passive_t::clarity))
@@ -2704,7 +2704,7 @@ void excommunication(bool voluntary, god_type new_god)
     you.wield_change = true;
     you.redraw_quiver = true;
 
-    mpr("You have lost your religion!");
+    mpr("당신은 신앙을 잃었다!");
     // included in default force_more_message
 
     if (old_god == GOD_BEOGH)
@@ -2728,12 +2728,12 @@ void excommunication(bool voluntary, god_type new_god)
 
     if (had_halo)
     {
-        mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
+        mprf(MSGCH_GOD, old_god, "성스러운 후광이 사라졌다.");
         invalidate_agrid(true);
     }
     if (had_umbra)
     {
-        mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
+        mprf(MSGCH_GOD, old_god, "암흑의 오오라가 사라졌다.");
         invalidate_agrid(true);
     }
     // You might have lost water walking at a bad time...
@@ -2748,7 +2748,7 @@ void excommunication(bool voluntary, god_type new_god)
     switch (old_god)
     {
     case GOD_KIKUBAAQUDGHA:
-        mprf(MSGCH_GOD, old_god, "You sense decay."); // in the state of Denmark
+        mprf(MSGCH_GOD, old_god, "당신은 부패를 감지했다."); // in the state of Denmark
         add_daction(DACT_ROT_CORPSES);
         break;
 
@@ -2783,7 +2783,7 @@ void excommunication(bool voluntary, god_type new_god)
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
                                "are?\"", old_god);
-            mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
+            mprf(MSGCH_MONSTER_ENCHANT, "모든 추종자들은 당신을 버리기로 결정했다.");
             add_daction(DACT_ALLY_BEOGH);
             remove_all_companions(GOD_BEOGH);
         }
@@ -2834,7 +2834,7 @@ void excommunication(bool voluntary, god_type new_god)
 
         if (query_daction_counter(DACT_ALLY_SLIME))
         {
-            mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
+            mprf(MSGCH_MONSTER_ENCHANT, "모든 동료 슬라임들은 당신에게 등을 돌렸다.");
             add_daction(DACT_ALLY_SLIME);
         }
         break;
@@ -2842,7 +2842,7 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_FEDHAS:
         if (query_daction_counter(DACT_ALLY_PLANT))
         {
-            mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon turn on you.");
+            mprf(MSGCH_MONSTER_ENCHANT, "던전의 모든 식물들은 당신에게 등을 돌렸다.");
             add_daction(DACT_ALLY_PLANT);
         }
         break;
@@ -2864,8 +2864,8 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_GOZAG:
         if (you.attribute[ATTR_GOZAG_SHOPS_CURRENT])
         {
-            mprf(MSGCH_GOD, old_god, "Your funded stores close, unable to pay "
-                                     "their debts without your funds.");
+            mprf(MSGCH_GOD, old_god, "당신이 투자한 상점들이 문을 닫았다, 당신의 투자 "
+                                     "없이는 빚을 갚을 수가 없었기 때문이다.");
             you.attribute[ATTR_GOZAG_SHOPS_CURRENT] = 0;
         }
         you.duration[DUR_GOZAG_GOLD_AURA] = 0;
@@ -2882,36 +2882,36 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_QAZLAL:
         if (old_piety >= piety_breakpoint(0))
         {
-            mprf(MSGCH_GOD, old_god, "Your storm instantly dissipates.");
+            mprf(MSGCH_GOD, old_god, "당신의 폭풍이 급격히 사그라졌다.");
             you.redraw_armour_class = true;
         }
         if (you.duration[DUR_QAZLAL_FIRE_RES])
         {
-            mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+            mprf(MSGCH_DURATION, "화염에 대한 저항이 사라졌다.");
             you.duration[DUR_QAZLAL_FIRE_RES] = 0;
         }
         if (you.duration[DUR_QAZLAL_COLD_RES])
         {
-            mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+            mprf(MSGCH_DURATION, "냉기에 대한 저항이 사라졌다.");
             you.duration[DUR_QAZLAL_COLD_RES] = 0;
         }
         if (you.duration[DUR_QAZLAL_ELEC_RES])
         {
             mprf(MSGCH_DURATION,
-                 "Your resistance to electricity fades away.");
+                 "전기에 대한 저항이 사라졌다.");
             you.duration[DUR_QAZLAL_ELEC_RES] = 0;
         }
         if (you.duration[DUR_QAZLAL_AC])
         {
             mprf(MSGCH_DURATION,
-                 "Your resistance to physical damage fades away.");
+                 "물리적 피해에 대한 저항이 사라졌다.");
             you.duration[DUR_QAZLAL_AC] = 0;
             you.redraw_armour_class = true;
         }
         break;
 
     case GOD_PAKELLAS:
-        simple_god_message(" continues to block your magic from regenerating.",
+        simple_god_message("는 당신의 자연적인 마법 재생을 막고 있다.",
                            old_god);
         if (you.duration[DUR_DEVICE_SURGE])
             you.duration[DUR_DEVICE_SURGE] = 0;
@@ -2921,7 +2921,7 @@ void excommunication(bool voluntary, god_type new_god)
         break;
 
     case GOD_CHEIBRIADOS:
-        simple_god_message(" continues to slow your movements.", old_god);
+        simple_god_message("는 당신의 움직임을 느리게 하고있다.", old_god);
         break;
 
     case GOD_HEPLIAKLQANA:
@@ -3101,7 +3101,7 @@ static void _god_welcome_handle_gear()
     item_def *amulet = you.slot_item(EQ_AMULET, false);
     if (amulet && amulet->sub_type == AMU_FAITH && !is_useless_item(*amulet))
     {
-        mprf(MSGCH_GOD, "Your amulet flashes!");
+        mprf(MSGCH_GOD, "당신의 목걸이가 반짝였다!");
         flash_view_delay(UA_PLAYER, god_colour(you.religion), 300);
     }
 
@@ -3134,7 +3134,7 @@ static void _god_welcome_handle_gear()
         const item_def* item = you.slot_item(static_cast<equipment_type>(i));
         if (item && god_hates_item(*item))
         {
-            mprf(MSGCH_GOD, "%s warns you to remove %s.",
+            mprf(MSGCH_GOD, "%s은(는) %s을(를) 해제하는 것에 대해 경고했다.",
                  uppercase_first(god_name(you.religion)).c_str(),
                  item->name(DESC_YOUR, false, false, false).c_str());
         }
@@ -3381,7 +3381,7 @@ static void _join_gozag()
     if (fee > 0)
     {
         ASSERT(you.gold >= fee);
-        mprf(MSGCH_GOD, "You pay a service fee of %d gold.", fee);
+        mprf(MSGCH_GOD, "당신은 사용료 %d골드를 지불했다.", fee);
         you.gold -= fee;
         you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
     }
@@ -3467,7 +3467,7 @@ static void _join_jiyva()
     mg.set_summoned(&you, 0, 0, GOD_JIYVA);
 
     delayed_monster(mg);
-    simple_god_message(" grants you a jelly!");
+    simple_god_message("는 젤리를 선물했다!");
 }
 
 /// Setup when joining the sacred cult of Ru.
@@ -3491,7 +3491,7 @@ static void _join_trog()
     if (query_daction_counter(DACT_ALLY_SPELLCASTER))
     {
         add_daction(DACT_ALLY_SPELLCASTER);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");
+        mprf(MSGCH_MONSTER_ENCHANT, "당신의 마법사용자 동료들은 당신을 저버렸다.");
     }
 }
 
@@ -3503,7 +3503,7 @@ static void _join_zin()
     if (query_daction_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
     {
         add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
+        mprf(MSGCH_MONSTER_ENCHANT, "당신의 불결하고 혼돈스런 동료들은 당신을 저버렸다.");
     }
 
     // Need to pay St. Peters.
@@ -3525,7 +3525,7 @@ static void _join_zin()
 // Setup when becoming an overworked assistant to Pakellas.
 static void _join_pakellas()
 {
-    mprf(MSGCH_GOD, "You stop regenerating magic.");
+    mprf(MSGCH_GOD, "마력의 재생을 멈췄다.");
     pakellas_id_device_charges();
     you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
 }
@@ -3615,7 +3615,7 @@ void join_religion(god_type which_god)
         && query_daction_counter(DACT_ALLY_UNHOLY_EVIL))
     {
         add_daction(DACT_ALLY_UNHOLY_EVIL);
-        mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
+        mprf(MSGCH_MONSTER_ENCHANT, "당신의 부정하고 사악한 동료들은 당신을 저버렸다.");
     }
 
     // Move gold to top of piles with Gozag.
@@ -3665,7 +3665,7 @@ void join_religion(god_type which_god)
 void god_pitch(god_type which_god)
 {
     if (which_god == GOD_BEOGH && grd(you.pos()) != DNGN_ALTAR_BEOGH)
-        mpr("You bow before the missionary of Beogh.");
+        mpr("당신은 베오그의 선교사에게 경례했다.");
     else
     {
         mprf("You %s the altar of %s.",
@@ -3685,23 +3685,23 @@ void god_pitch(god_type which_god)
         you.turn_is_over = false;
         if (which_god == GOD_GOZAG)
         {
-            simple_god_message(" does not accept service from beggars like you!",
+            simple_god_message("는 당신같은 거지로부터 서비스는 받아들이지 않는다!",
                                which_god);
             if (you.gold == 0)
             {
-                mprf("The service fee for joining is currently %d gold; you have"
-                     " none.", fee);
+                mprf("현재 가입비는 %d골드인데; 당신은"
+                     " 한 푼도 없다.", fee);
             }
             else
             {
-                mprf("The service fee for joining is currently %d gold; you only"
-                     " have %d.", fee, you.gold);
+                mprf("현재 가입비는 %d골드인데; 당신은"
+                     " 딱 %d골드 밖에 없다.", fee, you.gold);
             }
         }
         else if (you.get_mutation_level(MUT_NO_LOVE)
                  && _god_rejects_loveless(which_god))
         {
-            simple_god_message(" does not accept worship from the loveless!",
+            simple_god_message(" (은)는 사랑없는자의 숭배를 받아들이지 않는다.",
                                which_god);
         }
         else if (you.get_mutation_level(MUT_NO_ARTIFICE)
@@ -3718,8 +3718,8 @@ void god_pitch(god_type which_god)
         }
         else
         {
-            simple_god_message(" does not accept worship from those such as"
-                               " you!",
+            simple_god_message("(은)는 당신 같은 존재의 기도는 받아주지"
+                               " 않는다!",
                                which_god);
         }
         return;
@@ -3728,7 +3728,7 @@ void god_pitch(god_type which_god)
     if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
     {
         you.turn_is_over = false;
-        simple_god_message(" refuses to forgive you so easily!", which_god);
+        simple_god_message("(은)는 당신의 용서를, 쉽게 거절했다.", which_god);
         return;
     }
 
@@ -3749,8 +3749,8 @@ void god_pitch(god_type which_god)
         else
         {
             service_fee = make_stringf(
-                    "The service fee for joining is currently %d gold; you"
-                    " have %d.\n",
+                    "서비스 가입 수수료는 현재 %d gold이다; 당신은"
+                    " %d을 가지고 있다.\n",
                     fee, you.gold);
         }
     }

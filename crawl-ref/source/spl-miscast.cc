@@ -592,7 +592,7 @@ bool MiscastEffect::avoid_lethal(int dam)
     {
         // Any possible miscast would kill you, now that's interesting.
         if (you_worship(GOD_XOM))
-            simple_god_message(" watches you with interest.");
+            simple_god_message("은 당신을 흥미롭게 지켜보았다.");
         return true;
     }
 
@@ -955,7 +955,7 @@ void MiscastEffect::_hexes(int severity)
         case 2:
             if (target->is_player())
             {
-                mpr("You feel dizzy.");
+                mpr("당신은 혼란스러워졌다.");
                 you.increase_duration(DUR_VERTIGO, 10 + random2(11), 50);
                 break;
             }
@@ -1564,8 +1564,8 @@ void MiscastEffect::_necromancy(int severity)
             // An actual necromancy miscast.
             if (x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
-                simple_god_message(" protects you from your miscast "
-                                   "necromantic spell!");
+                simple_god_message("는 당신을 강령술 주문시전 실패로부터 "
+                                   "보호하였다!");
                 return;
             }
         }
@@ -1573,12 +1573,12 @@ void MiscastEffect::_necromancy(int severity)
         {
             if (coinflip())
             {
-                simple_god_message(" averts the curse.");
+                simple_god_message("는 저주를 막아주었다.");
                 return;
             }
             else
             {
-                simple_god_message(" partially averts the curse.");
+                simple_god_message("는 저주를 부분적으로 막아주었다.");
                 severity = max(severity - 1, 0);
             }
         }
@@ -3113,7 +3113,7 @@ void MiscastEffect::_zot()
             lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         case 12:
-            mpr("An unnatural silence engulfs you.");
+            mpr("부자연스러운 침묵이 당신을 감싼다.");
             you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
             invalidate_agrid(true);
             break;

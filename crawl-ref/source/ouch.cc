@@ -83,7 +83,7 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
         if (you.has_mutation(MUT_ICEMAIL))
         {
             if (!you.duration[DUR_ICEMAIL_DEPLETED])
-                mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
+                mprf(MSGCH_DURATION, "당신의 외투형태 얼음 갑옷이 소멸됐다!");
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
@@ -121,7 +121,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     case BEAM_WATER:
         hurted = resist_adjust_damage(&you, flavour, hurted);
         if (!hurted && doEffects)
-            mpr("You shrug off the wave.");
+            mpr("당신은 파도를 떨쳐냈다.");
         break;
 
     case BEAM_STEAM:
@@ -130,7 +130,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("The steam scalds you terribly!");
+            mpr("증기가 당신에게 끔찍한 화상을 입혔다!");
             xom_is_stimulated(200);
         }
         break;
@@ -141,7 +141,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("The fire burns you terribly!");
+            mpr("화염이 당신을 끔찍하게 태웠다!");
             xom_is_stimulated(200);
         }
         break;
@@ -155,7 +155,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You feel a terrible chill!");
+            mpr("당신은 끔찍한 한기를 느꼈다!");
             xom_is_stimulated(200);
         }
         break;
@@ -222,7 +222,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You feel a painful chill!");
+            mpr("당신은 고통스러운 한기를 느꼈다!");
             xom_is_stimulated(200);
         }
         break;
@@ -234,7 +234,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("The lava burns you terribly!");
+            mpr("용암이 당신을 끔찍하게 태웠다!");
             xom_is_stimulated(200);
         }
         break;
@@ -261,7 +261,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
         {
-            mpr("You writhe in agony!");
+            mpr("당신은 고통에 몸부림쳤다!");
             xom_is_stimulated(200);
         }
         break;
@@ -317,7 +317,7 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
 
     if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
     {
-        mprf(MSGCH_WARN, "The flames go out!");
+        mprf(MSGCH_WARN, "불꽃이 잦아들었다!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.props.erase("sticky_flame_source");
         you.props.erase("sticky_flame_aux");
@@ -332,7 +332,7 @@ static void _lose_level_abilities()
     {
         you.increase_duration(DUR_FLIGHT, 50, 100);
         you.attribute[ATTR_PERM_FLIGHT] = 0;
-        mprf(MSGCH_WARN, "You feel your flight won't last long.");
+        mprf(MSGCH_WARN, "비행 시간이 얼마 남지 않음을 느꼈다.");
     }
 }
 
@@ -350,7 +350,7 @@ void lose_level()
     you.experience_level--;
 
     mprf(MSGCH_WARN,
-         "You are now level %d!", you.experience_level);
+         "당신은 레벨 %d(으)로 되돌아갔다!", you.experience_level);
 
     calc_hp();
     calc_mp();
@@ -408,7 +408,7 @@ bool drain_player(int power, bool announce_full, bool ignore_protection)
 
     if (power > 0)
     {
-        mpr("You feel drained.");
+        mpr("당신은 흡수당한 기분이 들었다.");
         xom_is_stimulated(15);
 
         you.attribute[ATTR_XP_DRAIN] += power;
@@ -591,10 +591,10 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
             }
             else
             {
-                mprf("You shudder from the %s and a %s!",
-                     death_type == KILLED_BY_MONSTER ? "blow" : "blast",
-                     count_created > 1 ? "flood of jellies pours out from you"
-                                       : "jelly pops out");
+                mprf("당신이 %s으로 인해 몸서리치자 %s나왔다!",
+                     death_type == KILLED_BY_MONSTER ? "충격" : "폭발",
+                     count_created > 1 ? "젤리가 당신으로부터 물밀듯이 쏟아져 "
+                                       : "젤리가 튀어");
             }
         }
     }
@@ -615,7 +615,7 @@ static void _powered_by_pain(int dam)
         {
             if (you.magic_points < you.max_magic_points)
             {
-                mpr("You focus on the pain.");
+                mpr("당신은 고통에 집중했다.");
                 int mp = roll_dice(3, 2 + 3 * level);
                 canned_msg(MSG_GAIN_MAGIC);
                 inc_mp(mp);
@@ -624,11 +624,11 @@ static void _powered_by_pain(int dam)
             break;
         }
         case 2:
-            mpr("You focus on the pain.");
+            mpr("당신은 고통에 집중했다.");
             potionlike_effect(POT_MIGHT, level * 20);
             break;
         case 3:
-            mpr("You focus on the pain.");
+            mpr("당신은 고통에 집중했다.");
             potionlike_effect(POT_AGILITY, level * 20);
             break;
         }
@@ -652,7 +652,7 @@ static void _maybe_fog(int dam)
                && x_chance_in_y(dam - lower_threshold,
                                 upper_threshold - lower_threshold)))
     {
-        mpr("You emit a cloud of dark smoke.");
+        mpr("당신은 어두운 연기를 뿜어냈다.");
         big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
     }
     else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
@@ -710,7 +710,7 @@ static void _place_player_corpse(bool explode)
         dummy.flags &= MF_EXPLODE_KILL;
 
     if (you.form != transformation::none)
-        mpr("Your shape twists and changes as you die.");
+        mpr("당신이 죽으면서, 당신의 모습이 비틀리고 바뀌었다.");
 
     place_monster_corpse(dummy, false);
 }
@@ -862,7 +862,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
                 if (!you.duration[DUR_NO_SCROLLS])
-                    mpr("You feel threatened and lose the ability to read scrolls!");
+                    mpr("당신은 위협받은 나머지 두루마리를 읽을 능력을 상실했다!");
 
                 you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
             }
@@ -873,7 +873,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
                 if (!you.duration[DUR_NO_POTIONS])
-                    mpr("You feel threatened and lose the ability to drink potions!");
+                    mpr("당신은 위협받은 나머지 물약을 마실 능력을 상실했다!");
 
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
             }
@@ -906,7 +906,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
-            simple_god_message(" protects you from harm!");
+            simple_god_message("은(는) 당신을 피해로부터 지켰다!");
             // Ensure divine intervention wakes sleeping players. Necessary
             // because we otherwise don't wake players who take fatal damage.
             you.check_awaken(500);
@@ -926,7 +926,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr
         if (dam > 0 && you.hp_max <= dam * 2)
-            mprf(MSGCH_DANGER, "Ouch! That really hurt!");
+            mprf(MSGCH_DANGER, "악! 이건 정말로 아프다!");
 
         if (you.hp > 0 && dam > 0)
         {
@@ -935,7 +935,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
                 && (death_type != KILLED_BY_POISON || poison_is_lethal()))
             {
                 flash_view_delay(UA_HP, RED, 50);
-                mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
+                mprf(MSGCH_DANGER, "* * * 경고! 생명력이 낮음 * * *");
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
 
@@ -1041,9 +1041,9 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
-            if (crawl_state.test || !yesno("Die?", false, 'n'))
+            if (crawl_state.test || !yesno("죽을 것인가?", false, 'n'))
             {
-                mpr("Thought so.");
+                mpr("원하는 대로.");
                 take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
                                 death_desc.c_str()), true);
                 _wizard_restore_life();

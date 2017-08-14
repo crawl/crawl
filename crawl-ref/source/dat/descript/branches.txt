@@ -1,266 +1,47 @@
 %%%%
-Dungeon
-
-It is still a mystery how this bizarre place was created. Some claim that it is
-the playground of bored gods, whereas others maintain that it was shaped by all
-kinds of species who fled the overworld and shunned the light. No matter what
-its origin, this deep cavern is filled with riches unheard of as well as with
-ample dangers to any intruder. Few have escaped alive, and even fewer have kept
-some sliver of sanity sufficient to tell the tale.
-%%%%
-Temple
-
-The Ecumenical Temple is a place of peace and refuge from the insanity of the
-dungeon. It usually contains altars to most of the known gods.
-%%%%
-Orcish Mines
-
-The Orcish Mines are filled with the cave orcs native to the Dungeon, their
-humanoid labourers, and piles of freshly mined gold. Enterprising merchants
-have set up trading posts to help relieve the orcs of the latter.
-%%%%
 Elven Halls
 
-The Elven Halls are home to the deep elves, a race that turned their backs on
-the sun long ago. Their halls are filled with riches, but a deadly welcome
-awaits any would-be robbers. In their long seclusion, the deep elves have
-perfected dark sorceries of a power the orcs can only dream of!
+엘프 회랑:
+
+거의 모든 엘프 종족들은 이 어두침침하고 복잡한 지하로 이주하는 것을
+거부했었지만, 딥 엘프들만은 이곳으로 이주하는 것을 찬성하였다. 그들의 회랑
+끝에는 지금껏 그들이 쌓아놓은 보물들로 가득하지만, 그 누구든 이들의 회랑을
+침범하려는 자는 딥 엘프 종족이 가진 전설적인 기량의 마법을 상대해야 할 것이다.
+
+엘프 회랑은 3개의 층으로 구성되어 있다.
 %%%%
 Lair
 
-Most adventurers find the Lair of Beasts to be an exciting change of climate.
-And indeed, there is something to be said about getting gored, mauled and eaten
-rather than sliced, burnt or stabbed.
+짐승 소굴:
 
-The Lair contains the entrances to one of the Swamp or the Shoals, one of the
-Snake Pit or the Spider Nest, and to the Pits of Slime.
-%%%%
-Swamp
+많은 여행자들이, 이 짐승들의 서식지를 이용해서 지금까지의 눅눅한 공기에
+익숙해졌던 여행에서 즐거운 여행으로 분위기 전환을 하려 한다. 물론, 이곳에서는
+짐승을 꼬챙이에 찔러 구워먹는 일보다 짐승에게 산산이 찢겨 잡아먹히는 일이 더
+많이 일어나지만.
 
-A swampy wasteland, the Swamp is filled with ooze, muck, flies and large
-slavering carnivorous monsters.
-
-A dungeon features only one of the Swamp and Shoals branches.
-%%%%
-Shoals
-
-The exotic underground beaches of the Shoals make up a few small islands in a
-seemingly endless sea. The merfolk have made it their home, alongside many
-dreaded sea creatures.
-
-A dungeon features only one of the Shoals and Swamp branches.
-%%%%
-Snake Pit
-
-The corridors of the Snake Pit are home to all varieties of serpent, and are
-inhabited by a society of powerful nagas and salamanders.
-
-A dungeon features only one of the Snake Pit and Spider Nest branches.
-%%%%
-Spider Nest
-
-The crumbling, web-choked caverns of the Spider Nest are packed with poisonous
-arthropods and assorted creepy-crawlies.
-
-A dungeon features only one of the Spider Nest and Snake Pit branches.
-%%%%
-Slime Pits
-
-The Slime Pits are the amorphous realm of acids, jellies and slimes. Even the
-walls drip with painful acid. Any trace of intelligent beings has long been
-dissolved. Still, there are rumours of great treasures deep down, hidden safely
-away in secret chambers without any entrance.
-%%%%
-Vaults
-
-Possibly constructed by some powerful madman, the Vaults are said to be home to
-great treasures. The blood spattered liberally around the entrance suggests
-that there is a certain amount of violence, too.
-%%%%
-Crypt
-
-The Crypt is a huge repository for the ancient dead. The air is chill and
-fetid, the walls cold and damp. Bones are strewn liberally everywhere, and
-every noise echoes worryingly, violating the overbearing silence of the grave.
-%%%%
-Tomb
-
-The Tomb of the Ancients is a place of damnation, of horrors animated by the
-vilest necromancy. The list of those who have returned from this place of pure
-death is exceedingly short.
-%%%%
-Hell
-
-The Vestibule of Hell is guarded by Geryon, along with various denizens of
-each of the hells themselves.
-
-Portals to the Vestibule of Hell are found abundantly in the Depths.
-%%%%
-Dis
-
-The Iron City of Dis is home to many of the most resilient guardians of hell.
-Those who do not belong in the halls of Dis will find the very earth itself
-opposing them.
-%%%%
-Gehenna
-
-Gehenna is a realm of lava, flames and damnation. Those who linger will have
-fire and brimstone rained down upon them.
-%%%%
-Cocytus
-
-Cocytus is a grim and frost-bitten wasteland. Intruders will find the biting
-winds and icy inhabitants of the wastes impeding their progress.
-%%%%
-Tartarus
-
-Tartarus is a decaying netherworld. Over time, the undead, demons and devils of
-this place drain the life from any who dare to enter.
-%%%%
-Zot
-
-The Realm of Zot is a region of the dungeon that is so terrifying, so full of
-madness, frenzy and lunacy, that it has been locked securely against random
-trespassers. Only the most demented adventurers would dare gather the required
-keys, break the seal and penetrate deeper — all in the vain hope for a fabled
-artefact no one has ever laid eyes on before.
-%%%%
-Abyss
-
-The Abyss is a truly bizarre place, ever-changing and twisted. It is filled
-with all sorts of monsters, mostly of demonic nature, whose common aim is to
-feast on intruders. It is also the garbage dump for many sorcerers, who delight
-in sending would-be champions like you to these proving grounds of madness.
-Reportedly, there is some structure to the chaos, as Lugonu seems to concoct
-schemes around this place and its denizens.
-
-Portals to the Abyss are found abundantly in the Depths.
-
-The Abyss consists of five infinite levels. The abyssal rune of Zot can be
-found from the third level onwards, and is more common at greater depths.
-Portals back to the dungeon are scattered throughout the Abyss, and are found
-more commonly at greater depths or while carrying the abyssal rune. Killing
-monsters will warp the substance of the Abyss, eventually generating a gateway
-out. Further persistence will wear holes in the Abyss, allowing descent into
-deeper layers.
-%%%%
-Pandemonium
-
-Pandemonium is an infinite realm of pain and suffering. While there are many
-treasures to be found within, they are guarded by cruel demons and even
-crueller demon lords.
-
-Portals to Pandemonium are found abundantly in the Depths.
-
-Pandemonium is endless. Each area of Pandemonium has a small chance of
-containing a portal back to the dungeon, either directly or via the Abyss.
-
-No fewer than five runes of Zot can be found in Pandemonium:
- • the fiery rune resides in the blazing realm of Cerebov
- • the glowing rune can be found in the contaminated domain of Mnoleg
- • the magical rune is guarded by the arcane powers of Lom Lobon
- • the dark rune is hidden in the shadowy abode of Gloorx Vloq
- • the demonic rune exists in multiple places, owned by less famous lords
-%%%%
-Ziggurat
-
-A ziggurat is a strange tower constructed of incrementally larger combat
-arenas, each containing greater wealth and even greater danger than the last.
-Beware, for a ziggurat is not a place for the faint of heart: even the bravest
-and most skilled adventurers have met their ends in one. While a portal to
-safety will be present on every level, once left, a ziggurat cannot be
-re-entered.
-
-One ziggurat is guaranteed in the Depths. Tales tell of an magical item found
-at the bottom of each ziggurat, granting access to a new ziggurat in turn. Such
-an item is also said to be found at the bottom of the Tomb of the Ancients. Each
-time a ziggurat is conquered by exiting it from the final floor, subsequent
-ziggurats will become increasingly dangerous and lucrative.
-%%%%
-Labyrinth
-
-The labyrinth is a complex, ever-shifting maze designed by subtle and malicious
-minds for reasons long lost to history. Old stories say that the labyrinth was
-constructed as a prison for a fearsome minotaur. More recent stories say this
-beast dwells there still, guarding the labyrinth's sole exit — as well as a
-rich hoard of treasure taken from the bodies of foolish adventurers.
-%%%%
-Bazaar
-
-While some merchants set up shop in the dungeon, others travel in caravans from
-place to place. The bazaars of these intinerant traders feature a number of
-different shops and often have better stock than the sedentary ones, sometimes
-even at a bargain.
-%%%%
-Trove
-
-Once upon a time, an enterprising thief and wizard created a system of portals
-leading into the secret treasure troves and chambers of the rich. Too scared to
-loot them himself, he instead charged an extortionate fee for entry to anyone
-who wanted to rifle through them.
-
-The items inside such troves are likely to be useful, but beware: the wizard is
-long dead, and even while alive he never offered a money-back guarantee.
+짐승 소굴은 8개의 층으로 구성되어 있으며, 총 3개의 다른 지역으로 이어지는
+계단이 존재한다.
 %%%%
 Sewer
 
-Every inhabited place needs to dispose of its waste products. The Dungeon too
-has its stinking sewers and drains, full of filthy water and ignored by most
-but used as hideaways by the disgusting and the desperate. Old tales speak of
-dangerous creatures stalking through the foul-smelling green water, preying on
-each other without mercy. The tales also allude to valuable items accidentally
-washed into the drainage tunnels, forgotten and left to grow mouldy in the damp
-caverns.
-%%%%
-Ossuary
-
-The ossuary is a small tomb containing the remains and grave goods of some
-distant relatives of the pharaohs, along with the corpses of their retainers
-and household animals. It is undoubtedly riddled with many traps, and its
-undead denizens are unlikely to take kindly to looting.
-%%%%
-Bailey
-
-The bailey is the still-occupied and well-guarded fortress of an orcish lord.
-The treasures within are protected by both physical barriers and large numbers
-of well-armed humanoid warriors.
-%%%%
-Ice Cave
-
-The ice cave is a desolate cavern shaped from solid ice and filled with the
-echoes of bestial howls. The intricate carvings and statues which once lined
-its walls have been warped and obscured by centuries of slow melting and
-refreezing.
+무언가가 사는 공간에는 필연적으로 폐기물을 처리하는 공간이 필요하며, 던전이라고
+예외일 수는 없다. 던전의 각종 오·폐수가 유입되는 이 하수도는 역겨운 물로
+가득하며 대부분 이 더러운 곳을 피해 다니지만, 역겹고 가망 없는 생명체들의
+은신처로 종종 쓰이기도 한다. 한 오래된 이야기는 썩은내나는 녹색 물 사이를
+은밀하게 돌아다니는 생명체들이 서로 잡아먹기 위해 자비심 없이 싸운다고 하며, 또
+다른 이야기는 하수구로 빠진 각종 귀중품이, 곰팡이 피고 빛을 잃은 채 이 축축한
+지역에 있다고도 한다.
 %%%%
 Volcano
 
-Built from enormous blocks of obsidian, the volcano's sweltering chambers may
-once have served as a temple to some strange deity, or perhaps the dwelling of
-a mighty fire giant. The air shimmers with oppressive heat, and the dull roar
-of the volcano's heart never ceases.
-%%%%
-Wizlab
-
-In ages past, the most powerful mages would frequently find or construct small
-realms sealed off from the rest of the world, where they could isolate
-themselves in the pursuit of ever-greater magical knowledge and power. The
-mages are long gone, but many of their arcane laboratories still exist, filled
-with the results of their experiments. Those willing to explore these
-laboratories may find powerful magical treasures, but be warned: any wizard
-capable of constructing such a realm deserved their reputation.
+이 수없이 많은 흑요석 벽돌로 만들어진 고온의 공간은 아마 어떤 신을 모시던
+신전이었거나, 혹은 강력한 화염 거인이 살던 곳이었을지도 모른다. 이곳의 대기는
+후덥지근한 열기를 뿜어내면서 희미하게 빛나고 있으며, 화산의 중심에서는
+지금이라도 폭발할 것만 같은 둔탁한 울림소리가 멈추지 않는다.
 %%%%
 Depths
 
-The Depths are the deepest part of the dungeon proper, subject to the
-corrupting influence of the Realm of Zot without being considered a part of it.
-%%%%
-Desolation
+심층부:
 
-The Desolation was once ruled by the divines Sheza and Sargol. After the dread
-twins were cast down, the good gods reduced their former realm to salt, that
-such a terrible cult would never rise again. Amidst the ruins, only the last
-cultists of the dead gods, their heretical constructs, and the guardians
-of the cult's legendary treasure yet remain.
-
-# important note: the Twins were religion '2', as TSO is '1'. Not 'S'.
+'심층'은 던전의 가장 깊숙한 부분이고 조트의 영역의 타락의 효과에 노출되어 있지만 그 일부로 여겨지지는 않는다.
 %%%%

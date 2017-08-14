@@ -893,14 +893,14 @@ command_type travel()
 
     if (Options.travel_key_stop && kbhit())
     {
-        mprf("Key pressed, stopping %s.", you.running.runmode_name().c_str());
+        mprf("키 입력됨, %s 중지.", you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
     }
 
     if (you.confused())
     {
-        mprf("You're confused, stopping %s.",
+        mprf("혼란에 걸려, %s을(를) 중지했다.",
              you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
@@ -909,7 +909,7 @@ command_type travel()
     // Excluded squares are only safe if marking stairs, i.e. another level.
     if (is_excluded(you.pos()) && !is_stair_exclusion(you.pos()))
     {
-        mprf("You're in a travel-excluded area, stopping %s.",
+        mprf("탐험 예외 지역에 도달하여, %s을(를) 중지했다.",
              you.running.runmode_name().c_str());
         stop_running();
         return CMD_NO_CMD;
@@ -2120,7 +2120,7 @@ static int _prompt_travel_branch(int prompt_flags)
                                               ", ", ", ");
             shortcuts += ") ";
         }
-        mprf(MSGCH_PROMPT, "Where to? %s",
+        mprf(MSGCH_PROMPT, "어디로? %s",
              shortcuts.c_str());
 
         int keyin = get_ch();
@@ -2402,8 +2402,8 @@ static level_pos _prompt_travel_depth(const level_id &id)
     while (true)
     {
         clear_messages();
-        mprf(MSGCH_PROMPT, "What level of %s? "
-             "(default %s, ? - help) ",
+        mprf(MSGCH_PROMPT, "%s의 몇 층으로 이동하는가? "
+             "(디폴트:%s, ? - 도움말) ",
              branches[target.id.branch].longname,
              _get_trans_travel_dest(target, true).c_str());
 
@@ -2484,7 +2484,7 @@ static void _start_translevel_travel()
     if (level_id::current() == level_target.id
         && (level_target.pos.x == -1 || level_target.pos == you.pos()))
     {
-        mpr("You're already here!");
+        mpr("당신은 이미 그 곳에 있다!");
         return ;
     }
 
@@ -2510,15 +2510,15 @@ void start_translevel_travel(const level_pos &pos)
     if (!can_travel_to(pos.id))
     {
         if (!can_travel_interlevel())
-            mpr("Sorry, you can't auto-travel out of here.");
+            mpr("유감이지만, 당신은 자동탐사를 할 수 없다.");
         else
-            mpr("Sorry, I don't know how to get there.");
+            mpr("유감이지만 그 곳으로 가는 방법을 알지 못한다.");
         return;
     }
 
     if (pos.is_valid() && !in_bounds(pos.pos))
     {
-        mpr("Sorry, I don't know how to get there.");
+        mpr("유감이지만 그 곳으로 가는 방법을 알지 못한다.");
         return;
     }
 
@@ -2542,7 +2542,7 @@ void start_translevel_travel(const level_pos &pos)
         {
             if (!_loadlev_populate_stair_distances(pos))
             {
-                mpr("Level memory is imperfect, aborting.");
+                mpr("층에 대한 기억이 완벽하지 못하다. 취소한다.");
                 return ;
             }
         }
@@ -2972,11 +2972,11 @@ void start_explore(bool grab_items)
 void do_explore_cmd()
 {
     if (you.hunger_state <= HS_STARVING && !you_min_hunger())
-        mpr("You need to eat something NOW!");
+        mpr("당신은 지금 당장 먹을게 필요하다!");
     else if (you.berserk())
-        mpr("Calm down first, please.");
+        mpr("일단 진정하길.");
     else if (player_in_branch(BRANCH_LABYRINTH))
-        mpr("No exploration algorithm can help you here.");
+        mpr("이곳에서는 어떤 탐사 알고리즘도 당신을 도울 수 없다.");
     else                        // Start exploring
         start_explore(Options.explore_greedy);
 }
@@ -3820,9 +3820,9 @@ void TravelCache::delete_waypoint()
     while (get_waypoint_count())
     {
         clear_messages();
-        mpr("Existing waypoints:");
+        mpr("존재하는 목적지:");
         list_waypoints();
-        mprf(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
+        mprf(MSGCH_PROMPT, "어느 지점을 삭제하겠는가? (* - 모두 삭제, Esc - 취소) ");
 
         int key = getchm();
         if (key >= '0' && key <= '9')
@@ -3849,14 +3849,14 @@ void TravelCache::delete_waypoint()
     }
 
     clear_messages();
-    mpr("All waypoints deleted. Have a nice day!");
+    mpr("모든 목적지가 삭제되었다. 좋은 하루 보내시길!");
 }
 
 void TravelCache::add_waypoint(int x, int y)
 {
     if (!can_travel_interlevel())
     {
-        mpr("Sorry, you can't set a waypoint here.");
+        mpr("유감이지만, 이곳을 목적지로 설정할 수는 없다.");
         return;
     }
 
@@ -3865,12 +3865,12 @@ void TravelCache::add_waypoint(int x, int y)
     const bool waypoints_exist = get_waypoint_count();
     if (waypoints_exist)
     {
-        mpr("Existing waypoints:");
+        mpr("존재하는 목적지:");
         list_waypoints();
     }
 
-    mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
-         waypoints_exist? ", D - delete waypoint" : "");
+    mprf(MSGCH_PROMPT, "목적지에 어떤 숫자를 배정하겠는가? (0-9%s) ",
+         waypoints_exist? ", D - 기억한 지점 삭제" : "");
 
     int keyin = toalower(get_ch());
 
@@ -3908,10 +3908,10 @@ void TravelCache::add_waypoint(int x, int y)
     if (overwrite)
     {
         if (lid == old_lid) // same level
-            mprf("Waypoint %d re-assigned to your current position.", waynum);
+            mprf("지점 %d이(가) 현재 위치로 재설정되었다.", waynum);
         else
         {
-            mprf("Waypoint %d re-assigned from %s to %s.",
+            mprf("지점 %d은(는) %s에서 %s(으)로 재설정되었다.",
                  waynum, old_dest.c_str(), new_dest.c_str());
         }
     }
@@ -4172,7 +4172,7 @@ bool runrest::run_should_stop() const
     {
 #ifndef USE_TILE_LOCAL
         // XXX: Remove this once exclusions are visible.
-        mprf(MSGCH_WARN, "Stopped running for exclusion.");
+        mprf(MSGCH_WARN, "탐험 예외 지역에 도달하여, 연속 이동을 멈추었다.");
 #endif
         return true;
     }
@@ -4565,7 +4565,7 @@ template <class C> void explore_discoveries::say_any(
 
     if (has_duplicates(coll.begin(), coll.end()))
     {
-        mprf("Found %s %s.", number_in_words(size).c_str(), category);
+        mprf("%s %s을(를) 발견했다.", number_in_words(size).c_str(), category);
         return;
     }
 
@@ -4573,7 +4573,7 @@ template <class C> void explore_discoveries::say_any(
                            comma_separated_line(coll.begin(), coll.end()) + ".";
 
     if (printed_width(message) >= get_number_of_cols())
-        mprf("Found %s %s.", number_in_words(size).c_str(), category);
+        mprf("%s %s을(를) 발견했다.", number_in_words(size).c_str(), category);
     else
         mpr(message);
 }
@@ -4610,7 +4610,7 @@ bool explore_discoveries::stop_explore() const
         mpr(msg);
 
     for (const string &marked : marked_feats)
-        mprf("Found %s", marked.c_str());
+        mprf("%s개의 아이템을 발견했다.", marked.c_str());
 
     if (!es_flags)
         return marker_stop;
@@ -4635,12 +4635,12 @@ void do_interlevel_travel()
     {
         if (you.running.pos == you.pos())
         {
-            mpr("You're already here!");
+            mpr("당신은 이미 그 곳에 있다!");
             return;
         }
         else if (!you.running.pos.x || !you.running.pos.y)
         {
-            mpr("Sorry, you can't auto-travel out of here.");
+            mpr("유감이지만, 당신은 자동탐사를 할 수 없다.");
             return;
         }
 

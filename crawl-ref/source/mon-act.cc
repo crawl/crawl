@@ -239,8 +239,8 @@ static bool _swap_monsters(monster& mover, monster& moved)
 
     if (you.can_see(mover) && you.can_see(moved))
     {
-        mprf("%s and %s swap places.", mover.name(DESC_THE).c_str(),
-             moved.name(DESC_THE).c_str());
+        mprf("%s와 %s이(가) 자리를 바꾸었다.", mover.name(DESC_PLAIN).c_str(),
+             moved.name(DESC_PLAIN).c_str());
     }
 
     _escape_water_hold(mover);
@@ -880,9 +880,9 @@ static bool _handle_swoop(monster& mons)
 
         if (you.can_see(mons))
         {
-            mprf("%s swoops through the air toward %s!",
-                 mons.name(DESC_THE).c_str(),
-                 defender->name(DESC_THE).c_str());
+            mprf("%s이(가) 허공에서 %s을(를) 덮쳤다!",
+                 mons.name(DESC_PLAIN).c_str(),
+                 defender->name(DESC_PLAIN).c_str());
         }
         mons.move_to_pos(tracer.path_taken[j+1]);
         fight_melee(&mons, defender);
@@ -1009,8 +1009,8 @@ static bool _handle_scroll(monster& mons)
     case SCR_SUMMONING:
         if (mons.can_see(you))
         {
-            simple_monster_message(mons, " reads a scroll.");
-            mprf("Wisps of shadow swirl around %s.", mons.name(DESC_THE).c_str());
+            simple_monster_message(mons, "이(가) 두루마리를 읽었다.");
+            mprf("한 가닥의 그림자가 %s 주위에서 소용돌이친다.", mons.name(DESC_PLAIN).c_str());
             read = true;
             int count = roll_dice(2, 2);
             for (int i = 0; i < count; ++i)
@@ -1088,10 +1088,10 @@ static bool _setup_wand_beam(bolt& beem, monster& mons, const item_def& wand)
 static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
                             bool was_visible, bool niceWand)
 {
-    if (!simple_monster_message(mons, " zaps a wand."))
+    if (!simple_monster_message(mons, "이(가) 마법봉을 휘둘렀다."))
     {
         if (!silenced(you.pos()))
-            mprf(MSGCH_SOUND, "You hear a zap.");
+            mprf(MSGCH_SOUND, "휘두르는 소리가 들린다.");
     }
 
     // charge expenditure {dlb}
@@ -1106,7 +1106,7 @@ static void _mons_fire_wand(monster& mons, item_def &wand, bolt &beem,
         set_ident_type(OBJ_WANDS, wand_type, true);
         if (!mons.props["wand_known"].get_bool())
         {
-            mprf("It is %s.", wand.name(DESC_A).c_str());
+            mprf("이것은 %s였다.", wand.name(DESC_PLAIN).c_str());
             mons.props["wand_known"] = true;
         }
 
@@ -1144,10 +1144,10 @@ static bool _handle_wand(monster& mons)
     {
         if (wand->used_count != ZAPCOUNT_EMPTY)
         {
-            if (simple_monster_message(mons, " zaps a wand."))
+            if (simple_monster_message(mons, "이(가) 마법봉을 휘둘렀다."))
                 canned_msg(MSG_NOTHING_HAPPENS);
             else if (!silenced(you.pos()))
-                mprf(MSGCH_SOUND, "You hear a zap.");
+                mprf(MSGCH_SOUND, "휘두르는 소리가 들린다.");
             wand->used_count = ZAPCOUNT_EMPTY;
             mons.lose_energy(EUT_ITEM);
             return true;
@@ -1296,14 +1296,14 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         if (interference == DO_BLOCK_ATTACK)
         {
             simple_monster_message(*mons,
-                                " is stunned by your will and fails to attack.",
+                                "이(가) 당신의 의지에 의해 정신을 잃고 공격에 실패했다.",
                                 MSGCH_GOD);
             return false;
         }
         else if (interference == DO_REDIRECT_ATTACK)
         {
-            mprf(MSGCH_GOD, "You redirect %s's attack!",
-                    mons->name(DESC_THE).c_str());
+            mprf(MSGCH_GOD, "당신은 %s의 공격을 되돌려보냈다!",
+                    mons->name(DESC_PLAIN).c_str());
             int pfound = 0;
             for (radius_iterator ri(you.pos(),
                 LOS_DEFAULT); ri; ++ri)
@@ -1620,11 +1620,11 @@ void handle_monster_move(monster* mons)
             {
                 if (you.can_see(*mons))
                 {
-                    simple_monster_message(*mons, " crackles loudly.",
+                    simple_monster_message(*mons, "이(가) 시끄럽게 따닥거렸다.",
                                            MSGCH_WARN);
                 }
                 else
-                    mprf(MSGCH_SOUND, "You hear a loud crackle.");
+                    mprf(MSGCH_SOUND, "당신은 시끄럽게 따닥거리는 소리를 들었다.");
             }
             // Done this way to keep the detonation timer predictable
             mons->speed_increment -= BASELINE_DELAY;
@@ -1916,7 +1916,7 @@ void handle_monster_move(monster* mons)
                         if (interference == DO_BLOCK_ATTACK)
                         {
                             simple_monster_message(*mons,
-                                " is stunned by your will and fails to attack.",
+                                "이(가) 당신의 의지에 의해 정신을 잃고 공격에 실패했다.",
                                 MSGCH_GOD);
                             mons->speed_increment -= non_move_energy;
                             return;
@@ -1948,8 +1948,8 @@ void handle_monster_move(monster* mons)
                     // attack that target
                     mons->target = new_target->pos();
                     mons->foe = new_target->mindex();
-                    mprf(MSGCH_GOD, "You redirect %s's attack!",
-                         mons->name(DESC_THE).c_str());
+                    mprf(MSGCH_GOD, "당신은 %s의 공격을 되돌려보냈다!",
+                         mons->name(DESC_PLAIN).c_str());
                     fight_melee(mons, new_target);
                 }
                 else
@@ -2086,10 +2086,10 @@ void monster::struggle_against_net()
                 if (you.see_cell(pos()))
                 {
                     if (!visible_to(&you))
-                        mpr("Something you can't see is thrashing in a web.");
+                        mpr("당신이 볼 수 없는 무언가가 거미줄에서 몸부림치고 있다.");
                     else
                         simple_monster_message(*this,
-                                           " struggles to get unstuck from the web.");
+                                           " 거미줄에서 벗어나기 위해 몸부림쳤다.");
                 }
                 return;
             }
@@ -2102,9 +2102,9 @@ void monster::struggle_against_net()
     if (you.see_cell(pos()))
     {
         if (!visible_to(&you))
-            mpr("Something wriggles in the net.");
+            mpr("무언가가 그물 안에서 움직이고 있다.");
         else
-            simple_monster_message(*this, " struggles against the net.");
+            simple_monster_message(*this, " 그물에서 벗어나기 위해 몸부림쳤다.");
     }
 
     int damage = 1 + random2(2);
@@ -2122,11 +2122,11 @@ void monster::struggle_against_net()
         {
             if (visible_to(&you))
             {
-                mprf("The net rips apart, and %s comes free!",
-                     name(DESC_THE).c_str());
+                mprf("그물이 찢어지고, %s 풀려났다!",
+                     name(DESC_PLAIN).c_str());
             }
             else
-                mpr("All of a sudden the net rips apart!");
+                mpr("갑자기 그물이 찢어졌다!");
         }
         destroy_item(net);
 
@@ -2148,8 +2148,8 @@ static void _ancient_zyme_sicken(monster* mons)
         {
             if (!you.duration[DUR_SICKENING])
             {
-                mprf(MSGCH_WARN, "You feel yourself growing ill in the presence of %s.",
-                    mons->name(DESC_THE).c_str());
+                mprf(MSGCH_WARN, "%s의 존재로 인해 당신의 몸에서 질병이 자라난다.",
+                    mons->name(DESC_PLAIN).c_str());
             }
 
             you.duration[DUR_SICKENING] += (2 + random2(4)) * BASELINE_DELAY;
@@ -2200,8 +2200,8 @@ static void _torpor_snail_slow(monster* mons)
     {
         if (!you.duration[DUR_SLOW])
         {
-            mprf("Being near %s leaves you feeling lethargic.",
-                 mons->name(DESC_THE).c_str());
+            mprf("%s의 근처에 서자 당신은 무기력해졌다.",
+                 mons->name(DESC_PLAIN).c_str());
         }
 
         if (you.duration[DUR_SLOW] <= 1)
@@ -2259,9 +2259,9 @@ static void _post_monster_move(monster* mons)
                 if (grd(*ai) != DNGN_SHALLOW_WATER && grd(*ai) != DNGN_FLOOR
                     && you.see_cell(*ai))
                 {
-                    mprf("%s watery aura covers %s",
-                         apostrophise(mons->name(DESC_THE)).c_str(),
-                         feature_description_at(*ai, false, DESC_THE).c_str());
+                    mprf("%s의 물의 오라가 %s을(를) 뒤덮는다.",
+                         apostrophise(mons->name(DESC_PLAIN)).c_str(),
+                         feature_description_at(*ai, false, DESC_PLAIN).c_str());
                 }
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
                                     TERRAIN_CHANGE_FLOOD, mons);
@@ -2454,10 +2454,10 @@ static bool _jelly_divide(monster& parent)
     child->set_new_monster_id();
     child->move_to_pos(child_spot);
 
-    if (!simple_monster_message(parent, " splits in two!")
+    if (!simple_monster_message(parent, "이(가) 둘로 갈라졌다!")
         && (player_can_hear(parent.pos()) || player_can_hear(child->pos())))
     {
-        mprf(MSGCH_SOUND, "You hear a squelching noise.");
+        mprf(MSGCH_SOUND, "철벅거리는 소음이 들린다.");
     }
 
     if (crawl_state.game_is_arena())
@@ -2512,8 +2512,8 @@ static bool _monster_eat_item(monster* mons)
 
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
-            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 you.see_cell(mons->pos()) ? "" : " distant");
+            mprf(MSGCH_SOUND, "%s 호로록거리는 소음이 들린다.",
+                 you.see_cell(mons->pos()) ? "" : " 멀리서");
             shown_msg = true;
         }
 
@@ -2626,7 +2626,7 @@ static bool _handle_pickup(monster* mons)
 
 static void _mons_open_door(monster& mons, const coord_def &pos)
 {
-    const char *adj = "", *noun = "door";
+    const char *adj = "", *noun = "문";
 
     bool was_seen   = false;
 
@@ -2647,7 +2647,7 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
     {
         viewwindow();
 
-        string open_str = "opens the ";
+        string open_str = "을 열었다 ";
         open_str += adj;
         open_str += noun;
         open_str += ".";
@@ -2657,12 +2657,12 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
 
         if (!you.can_see(mons))
         {
-            mprf("Something unseen %s", open_str.c_str());
+            mprf("보이지 않는 무언가가 %s", open_str.c_str());
             interrupt_activity(AI_FORCE_INTERRUPT);
         }
         else if (!you_are_delayed())
         {
-            mprf("%s %s", mons.name(DESC_A).c_str(),
+            mprf("%s %s", mons.name(DESC_PLAIN).c_str(),
                  open_str.c_str());
         }
     }
@@ -3092,8 +3092,8 @@ static void _jelly_grows(monster& mons)
 {
     if (player_can_hear(mons.pos()))
     {
-        mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-             you.see_cell(mons.pos()) ? "" : " distant");
+        mprf(MSGCH_SOUND, "%s 호로록거리는 소음이 들린다.",
+             you.see_cell(mons.pos()) ? "" : "멀리서");
     }
 
     const int avg_hp = mons_avg_hp(mons.type);
@@ -3154,8 +3154,8 @@ static void _ballisto_on_move(monster& mons, const coord_def& position)
 
     if (you.can_see(*plant))
     {
-        mprf("%s grows in the wake of %s.",
-             plant->name(DESC_A).c_str(), mons.name(DESC_THE).c_str());
+        mprf("%s안에서 %s가 자란다.",
+             plant->name(DESC_PLAIN).c_str(), mons.name(DESC_PLAIN).c_str());
     }
 
     // reset the cooldown.
@@ -3263,7 +3263,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
                 if (!you.can_see(mons))
                 {
-                    mpr("The door bursts into shrapnel!");
+                    mpr("문이 산산조각났다!");
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
@@ -3288,7 +3288,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
 
                 if (!you.can_see(mons))
                 {
-                    mpr("The door mysteriously vanishes.");
+                    mpr("문이 신비하게도 사라져버렸다.");
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
@@ -3361,8 +3361,8 @@ static bool _monster_move(monster* mons)
             {
                 if (one_chance_in(10))
                 {
-                    mprf(MSGCH_TALK_VISUAL, "%s rages.",
-                         mons->name(DESC_THE).c_str());
+                    mprf(MSGCH_TALK_VISUAL, "%s이(가) 분노한다.",
+                         mons->name(DESC_PLAIN).c_str());
                 }
                 noisy(noise_level, mons->pos(), mons->mid);
             }
@@ -3545,7 +3545,7 @@ static bool _monster_move(monster* mons)
                 _mons_fire_wand(*mons, wand, beem, you.can_see(*mons), false);
             }
             else
-                simple_monster_message(*mons, " falters for a moment.");
+                simple_monster_message(*mons, "이(가) 순간적으로 주춤거린다.");
             mons->lose_energy(EUT_SPELL);
             return true;
         }
@@ -3565,17 +3565,17 @@ static bool _monster_move(monster* mons)
                 if (you.see_cell(target))
                 {
                     const bool actor_visible = you.can_see(*mons);
-                    mprf("%s knocks down a tree!",
+                    mprf("%s이(가) 나무를 쓰러뜨렸다!",
                          actor_visible?
-                         mons->name(DESC_THE).c_str() : "Something");
+                         mons->name(DESC_PLAIN).c_str() : "무언가가");
                     noisy(25, target);
                 }
                 else
-                    noisy(25, target, "You hear a crashing sound.");
+                    noisy(25, target, "우지끈거리는 소리가 들린다.");
             }
             // Dissolution dissolves walls.
             else if (player_can_hear(mons->pos() + mmov))
-                mprf(MSGCH_SOUND, "You hear a sizzling sound.");
+                mprf(MSGCH_SOUND, "지글거리는 소리가 들린다.");
         }
     }
 

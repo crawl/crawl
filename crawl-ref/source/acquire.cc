@@ -1018,7 +1018,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
 static int _failed_acquirement(bool quiet)
 {
     if (!quiet)
-        mpr("The demon of the infinite void smiles upon you.");
+        mpr("무한한 공허의 악마가 당신을 향해 미소 짓는다.");
     return NON_ITEM;
 }
 
@@ -1455,7 +1455,7 @@ int acquirement_create_item(object_class_type class_wanted,
         && agent < NUM_GODS)
     {
         if (agent == GOD_XOM)
-            simple_god_message(" snickers.", GOD_XOM);
+            simple_god_message("은 낄낄대며 웃었다.", GOD_XOM);
         else
             return _failed_acquirement(quiet);
     }
@@ -1490,19 +1490,19 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {
-        { OBJ_WEAPONS,    "Weapon" },
-        { OBJ_ARMOUR,     "Armour" },
-        { OBJ_JEWELLERY,  "Jewellery" },
-        { OBJ_BOOKS,      "Book" },
-        { OBJ_STAVES,     "Staff " },
-        { OBJ_MISCELLANY, "Evocables" },
+        { OBJ_WEAPONS,    "무기" },
+        { OBJ_ARMOUR,     "갑옷" },
+        { OBJ_JEWELLERY,  "장신구" },
+        { OBJ_BOOKS,      "책" },
+        { OBJ_STAVES,     "지팡이  " },
+        { OBJ_MISCELLANY, "발동물" },
         { OBJ_FOOD,       0 }, // amended below
-        { OBJ_GOLD,       "Gold" },
+        { OBJ_GOLD,       "금화" },
     };
     ASSERT(acq_classes[6].type == OBJ_FOOD);
-    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "Fruit":
-                          you.species == SP_VAMPIRE  ? "Blood":
-                                                       "Food";
+    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "과일":
+                          you.species == SP_VAMPIRE  ? "피":
+                                                       "음식";
 
     int thing_created = NON_ITEM;
 
@@ -1534,7 +1534,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 line.clear();
             }
         }
-        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire? (\\ to view known items)");
+        mprf(MSGCH_PROMPT, "어떤 종류의 아이템을 원하는가? (\\ 를 눌러 알고 있는 아이템 보기)");
 
         const int keyin = toalower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))

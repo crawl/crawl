@@ -381,7 +381,7 @@ static bool _cheibriados_retribution()
             dec_penance(god, 1); // and fall-through.
     // High tension wrath
     case 3:
-        mpr("You lose track of time.");
+        mpr("당신은 시간의 길을 잃었다.");
         you.put_to_sleep(nullptr, 30 + random2(20));
         if (coinflip())
             break;
@@ -391,14 +391,14 @@ static bool _cheibriados_retribution()
     case 2:
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
         {
-            mprf(MSGCH_WARN, "You feel the world leave you behind!");
+            mprf(MSGCH_WARN, "세상이 당신을 두고 떠나가는 기분이 들었다!");
             slow_player(100);
         }
         break;
     // Low/no tension
     case 1:
     case 0:
-        mpr("Time shudders.");
+        mpr("시간이 요동친다.");
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM,
                       5 + div_rand_round(you.experience_level, 9),
                       random2avg(88, 3), _god_wrath_name(god));
@@ -768,7 +768,7 @@ static bool _trog_retribution()
         case 3:
             if (!you.duration[DUR_PARALYSIS])
             {
-                mprf(MSGCH_WARN, "You suddenly pass out!");
+                mprf(MSGCH_WARN, "당신은 갑자기 정신을 잃었다!");
                 const int turns = 2 + random2(6);
                 take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
                 you.increase_duration(DUR_PARALYSIS, turns, 13);
@@ -779,7 +779,7 @@ static bool _trog_retribution()
         case 5:
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mprf(MSGCH_WARN, "You suddenly feel lethargic!");
+                mprf(MSGCH_WARN, "당신은 갑자기 무기력한 기분이 들었다!");
                 slow_player(100);
             }
             break;
@@ -791,7 +791,7 @@ static bool _trog_retribution()
         // -- actually, this function partially exists to remove that,
         //    we'll leave this effect in, but we'll remove the wild
         //    fire magic. -- bwr
-        mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
+        mprf(MSGCH_WARN, "당신에게 쏟아지는 트로그의 분노가 느껴졌다!");
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_FIRE,
                       8 + you.experience_level, random2avg(98, 3),
                       _god_wrath_name(god));
@@ -982,7 +982,7 @@ static void _lugonu_transloc_retribution()
     {
         // Give extra opportunities for embarrassing teleports.
         simple_god_message("'s wrath finds you!", god);
-        mpr("Space warps around you!");
+        mpr("당신 주위의 공간이 휘어진다!");
         if (!one_chance_in(3))
             you_teleport_now();
         else
@@ -1797,7 +1797,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
             if (!you.confused())
             {
-                mprf(MSGCH_WARN, "The divine experience confuses you!");
+                mprf(MSGCH_WARN, "신의 진노가 당신을 혼란시켰다!");
                 confuse_player(5 + random2(3));
             }
         }
@@ -1805,7 +1805,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mprf(MSGCH_WARN, "The divine experience drains your vigour!");
+                mprf(MSGCH_WARN, "신의 진노가 당신의 활력을 앗아갔다!");
 
                 slow_player(random2(20));
             }

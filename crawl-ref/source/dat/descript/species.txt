@@ -1,133 +1,139 @@
 %%%%
-Barachi
-
-Barachim are amphibious humanoids who rebelled against the gods. They're fast
-learners and can hop long distances, but are otherwise slow and easily seen.
-%%%%
 Centaur
 
-Swift, strong and bulky, Centaurs are particularly skilled with ranged
-weaponry.
+빠르고, 강하고, 큰 몸집을 지닌 종족이다. 이들은 살아가는데 다른 종족들보다 더
+많은 음식이 필요하며, 원거리 무기를 특히 잘 다룬다.
 %%%%
 Deep Dwarf
 
-Deep Dwarves live underground and cannot regenerate health naturally, but they
-are very resilient to damage, and have a limited ability to heal at will.
+햇빛이 들어오지 않는 깊은 지하에서 살아온 종족으로, 자연적인 재생 능력을
+잃어버린 종족이다. 하지만 이들은 굉장히 강인하며, 상처를 치유할 수 있는 도구를
+항상 가지고 다닌다.
 %%%%
 Deep Elf
 
-Deep Elves have a strong affinity for all kinds of magic, but are very fragile.
+마법과 가장 친화적인 엘프 종족이다. 물론 육체적인 능력과는 가장 동떨어진
+종족이기도 하다.
 %%%%
 Demigod
 
-Demigods refuse to worship any god, but make up for this with divine attributes
-and high reserves of health and magic.
+자기 자신이 반신이기 때문에, 절대 다른 신을 섬기지 않는 종족이다. 신적인
+능력치와 체력으로 모든 것을 극복하려 하지만, 그 길이 그리 쉬워 보이지는 않는다.
 %%%%
 Demonspawn
 
-Demonspawn are half human, half demon. They acquire strong demonic mutations as
-they grow.
+인간과 악마 사이에서 태어난 종족으로, 강해지면서 점차 자신의 악마적 특성들을
+갖게 된다.
 %%%%
 Draconian
 
-Draconians are versatile hybrids. They mature when reaching level 7 and develop
-a colour.
-%%%%
-Formicid
-
-Formicids are humanoid ants adept at digging. Their limbs are exceptionally
-strong and they live in a state of permanent stasis.
+드라코니언, 즉 용인들은 여러 용의 피가 섞인 잡종이다. 성체가 되기 전에는 섞인
+피 때문에 종족의 특성이 나타나지 않지만, 7레벨에 도달하면 완전한 성체가 되어
+자신만의 색을 갖게 된다.
 %%%%
 Felid
 
-Felids are many-lived cats possessing sentience. They are incapable of advanced
-item manipulation or the use of armour or weapons.
+거의 모든 도구, 무기, 갑옷을 사용할 수 없는 종족이다. 왜냐고? 그건 바로 이
+종족이 ‘지성을 갖게 된 고양이’ 이기 때문이다! 고양이가 돌아다닐 수 있을
+정도로 던전이 그리 만만하지는 않지만, 너무 좌절할 필요는 없다. 고양이의 목숨은
+9개쯤 된다는 말도 있으니까.
 %%%%
 Ghoul
 
-Ghouls are undead creatures, damned to rot eternally. They have sharp claws,
-and they feed on decaying flesh to sustain themselves.
+몸이 영원히 썩어나가는 저주를 받은 언데드 종족이다. 눈에 보이는 모든 것들을
+손톱으로 찢어버린 뒤, 시체를 먹어 자신의 몸을 복구하려 한다. 자신이 언데드라서
+그런지는 몰라도, 신선한 시체보다 썩은 시체를 더 좋아한다.
 %%%%
 Gargoyle
 
-Made of living stone, Gargoyles have a preternatural affinity for the earth.
-They have low health, but their stone bodies are incredibly tough.
-%%%%
-Gnoll
-
-Gnolls are canine-like humanoids. They are quick to learn any skill, but are
-unable to alter their poor physical attributes.
+살아있는 돌로 만들어진 가고일은, 대지에 관해서는 초자연적인 친밀감을 가지고
+있다.
 %%%%
 Halfling
 
-Small but hardy, Halflings excel with slings. They have an increased resistance
-to mutagenic effects.
+작지만 강인하며, 특히 투석구를 잘 쓰는 종족이다. 약간이지만, 돌연변이에 대한
+저항력이 있다.
+%%%%
+High Elf
+
+자존심 높은 엘프 종족으로 마법, 검술, 궁술 중 어느 하나 빠지는 것 없이 모두
+능숙하게 다룰 수 있다.
 %%%%
 Hill Orc
 
-Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
-most, orcs are very proud and many of them feel superior.
+근접 전투를 선호하지만, 공격적인 마법도 어느 정도 구사할 수 있는 오크 종족이다.
+오크야말로 최고의 종족이며 다른 것들은 열등하다는 생각을 하고 있어, 대부분의
+‘다른 것’ 들이 증오하는 종족이다.
 %%%%
 Human
 
-Humans advance quickly in levels and have equal abilities in most skills.
+지극히 평범한 인간이다. 인간의 장점은 ‘단점이 없다’ 는 것이고, 인간의 단점은
+‘장점이 없다는 것’ 이다.
 %%%%
 Tengu
 
-Tengu are bird-people who love to fight, both with weapons and spells. They are
-quite fragile, but they learn to fly swiftly later on.
+무기와 마법을 이용한 전투를 사랑하는, 새와 인간의 특성을 모두 가진 종족이다. 꽤
+허약한 편이지만, 어느 정도 강해지면 자유롭게 하늘을 날아다닐 수 있다.
 %%%%
 Kobold
 
-Kobolds are small, mischievous and a little fragile, but multi-talented.
+작고 짓궂은 종족으로, 조금 허약하지만 다재다능하다. 더럽거나 썩은 고기도 잘
+먹으며, 배고프지 않아도 거리낌 없이 고기를 먹을 수 있다.
+%%%%
+Lava Orc
+
+이 대지술과 화염술의 달인들은 던전 아래 깊숙한 곳에서 찾아왔으며, 이들의 신체
+능력은 그들의 체온에 따라 변화한다.
 %%%%
 Merfolk
 
-Half fish, half human, Merfolk are citizens of both water and land. They are
-strong combatants, and adept at using magic to assist in battle.
+반은 인간 반은 물고기인 종족으로, 육지와 바다 모두 자유롭게 돌아다닐 수 있다.
+이들은 뛰어난 창병이며, 마법에도 어느 정도 소질이 있어 전투에 도움을 준다.
 %%%%
 Minotaur
 
-Minotaurs are large muscular humans with bovine heads. They excel at all forms
-of close and ranged combat.
+근육질 인간의 몸에 소의 머리를 가진 종족으로, 근접전과 원거리 전투의 최강자라
+불리기에 손색이 없을 정도로 강력하다.
 %%%%
 Mummy
 
-Compelled to walk by an ancient curse, Mummies are adept at Necromancy but
-learn other skills very slowly. They are unable to consume any food or potions.
+방부 처리된 시체에 붕대가 감긴 언데드 종족으로, 고대의 저주받은 마력으로
+움직이고 있다.
 %%%%
 Naga
 
-Nagas are hybrids; human from the chest up, with a scaly, muscular torso
-trailing off like that of a snake. They move slowly but are naturally resilient.
+가슴 위로는 인간이지만 그 밑은 비늘 달린 뱀과 같은, 근육질의 몸통을 지닌
+종족이다. 이들의 움직임은 느리지만, 자연적인 저항력이 뛰어나다.
 %%%%
 Octopode
 
-Octopodes are a species of amphibious cephalopods. They can wear eight rings,
-but almost no armour fits them.
+땅과 물을 넘나드는 (꼭 문어처럼 생긴) 두족류 종족이다. 이들은 8개의 반지를
+각각의 촉수에 착용할 수 있지만, 대부분의 방어구는 이들의 몸과 맞지 않는다.
 %%%%
 Ogre
 
-Large and strong, Ogres are mostly seen as brutes. They are extremely robust,
-and have an excellent grasp of magic.
+거대하고 강인하며 야만적인 종족이다. 뜻밖에도, 기본적인 마법 정도는 능숙하게
+다룰 수 있다.
 %%%%
 Spriggan
 
-Very small, very frail and very fast, Spriggans make highly competent stabbers
-and spellcasters.
+굉장히 작고 허약하지만, 엄청나게 빠른 종족이다. 최고의 암살자이며, 강력한
+마법사이기도 하다.
 %%%%
 Troll
 
-Trolls are monstrous creatures with powerful claws, always hungering for raw
-meat. They regenerate health rapidly.
+거대한 야만 종족으로, 모든 것을 찢어발길 생각으로 머릿속이 가득 차있다.
+엄청나게 멍청하며, 언제나 배고픈 종족이다.
 %%%%
-Vampire
+Formicid
 
-Shifting between the states of life and undeath, Vampires are accomplished
-stabbers and casters.
+포미시드는 굴착에 숙련된 인간형 개미입니다. 그들의 팔다리는 특별히 강력하며 영구적인 정지 상태에 있습니다.
 %%%%
 Vine Stalker
 
-Frail symbionts, Vine Stalkers cannot regain health from devices or potions.
-Their magical reserves absorb damage, and they pack a magic-restoring bite.
+연약한 공생체인 바인스토커는 장비나 포션을 통해 체력을 얻을 수 없습니다. 그들의 마력은 데미지를 흡수하며, 깨물기를 통해 마력을 흡수할 수 있습니다.
+%%%%
+Vampire
+
+생명체상태와 언데드상태 사이를 바꿀 수 있는 뱀파이어는 완성된 암살자이며 마법사입니다.
 %%%%

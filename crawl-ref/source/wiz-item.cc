@@ -126,7 +126,7 @@ void wizard_create_spec_object()
     int thing_created = get_mitm_slot();
     if (thing_created == NON_ITEM)
     {
-        mpr("Could not allocate item.");
+        mpr("그 아이템은 줄 수 없다.");
         return;
     }
     item_def& item(mitm[thing_created]);
@@ -159,19 +159,19 @@ void wizard_create_spec_object()
 
         if (mon == MONS_NO_MONSTER || mon == MONS_PROGRAM_BUG)
         {
-            mpr("No such monster.");
+            mpr("몬스터를 찾을 수 없다.");
             return;
         }
 
         if (!mons_class_can_leave_corpse(mon))
         {
-            mpr("That monster doesn't leave corpses.");
+            mpr("그 몬스터는 시체를 생성하지 않는다.");
             return;
         }
 
         if (mons_is_draconian_job(mon))
         {
-            mpr("You can't make a draconian corpse by its background.");
+            mpr("칭호가 붙은 용인의 시체를 생성할 수는 없다.");
             mon = MONS_DRACONIAN;
         }
 
@@ -187,7 +187,7 @@ void wizard_create_spec_object()
 
         if (!place_monster_corpse(dummy, false, true))
         {
-            mpr("Failed to create corpse.");
+            mpr("시체 생성에 실패했다.");
             return;
         }
     }
@@ -217,7 +217,7 @@ void wizard_create_spec_object()
 
         if (!get_item_by_name(&item, specs, class_wanted, true))
         {
-            mpr("No such item.");
+            mpr("아이템을 찾을 수 없다.");
 
             // Clean up item
             destroy_item(thing_created);
@@ -462,7 +462,7 @@ void wizard_tweak_object()
             && (!you.inv[item].props.exists(KNOWN_PROPS_KEY)
              || !you.inv[item].props.exists(ARTEFACT_PROPS_KEY)))
         {
-            mpr("You can't set this flag on a non-artefact.");
+            mpr("당신은 아티팩트가 아닌 물건엔 이 특성을 부여할 수 없다.");
             continue;
         }
 
@@ -597,13 +597,13 @@ void wizard_make_object_randart()
 
     if (is_unrandom_artefact(item))
     {
-        mpr("That item is already an unrandom artefact.");
+        mpr("그 물건은 이미 고정 아티팩트이다.");
         return;
     }
 
     if (!_item_type_can_be_artefact(item.base_type))
     {
-        mpr("That item cannot be turned into an artefact.");
+        mpr("그 물건은 아티팩트로 바꿀 수 없다.");
         return;
     }
 
@@ -634,7 +634,7 @@ void wizard_make_object_randart()
     {
         god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
-            mpr("No such god, leaving item origin alone.");
+            mpr("신을 찾을 수 없다. 물건을 신과 별개로 남긴다.");
         else
         {
             mprf("God gift of %s.", god_name(god, false).c_str());
@@ -646,13 +646,13 @@ void wizard_make_object_randart()
     {
         if (!_make_book_randart(item))
         {
-            mpr("Failed to turn book into randart.");
+            mpr("책을 아티팩트로 만드는 데 실패했다.");
             return;
         }
     }
     else if (!make_item_randart(item, true))
     {
-        mpr("Failed to turn item into randart.");
+        mpr("물건을 아티팩트로 만드는 데 실패했다.");
         return;
     }
 
@@ -690,7 +690,7 @@ void wizard_uncurse_item()
         {
             if (!_item_type_can_be_cursed(item.base_type))
             {
-                mpr("That type of item cannot be cursed.");
+                mpr("이 유형의 아이템은 저주를 받을 수 없다.");
                 return;
             }
             do_curse_item(item);
@@ -701,7 +701,7 @@ void wizard_uncurse_item()
 
 void wizard_identify_pack()
 {
-    mpr("You feel a rush of knowledge.");
+    mpr("지식이 차오르는 것을 느꼈다.");
     identify_inventory();
     you.wield_change  = true;
     you.redraw_quiver = true;
@@ -717,7 +717,7 @@ static void _forget_item(item_def &item)
 
 void wizard_unidentify_pack()
 {
-    mpr("You feel a rush of antiknowledge.");
+    mpr("지식이 사라지는 것을 느꼈다.");
     for (auto &item : you.inv)
         if (item.defined())
             _forget_item(item);
@@ -735,7 +735,7 @@ void wizard_unidentify_pack()
 
 void wizard_list_items()
 {
-    mpr("Item stacks (by location and top item):");
+    mpr("쌓여있는 물건 (위치와 위에 있는 물건 순):");
     for (const auto &item : mitm)
     {
         if (item.defined() && !item.held_by_monster() && item.link != NON_ITEM)
@@ -747,7 +747,7 @@ void wizard_list_items()
     }
 
     mpr("");
-    mpr("Floor items (stacks only show top item):");
+    mpr("바닥의 물건들 (더미는 가장 위의 아이템만 보여줌):");
 
     const coord_def start(1,1), end(GXM-1, GYM-1);
     for (rectangle_iterator ri(start, end); ri; ++ri)
@@ -818,14 +818,14 @@ static void _debug_acquirement_stats(FILE *ostat)
     int p = get_mitm_slot(11);
     if (p == NON_ITEM)
     {
-        mpr("Too many items on level.");
+        mpr("이 층에 너무 많은 아이템이 있다.");
         return;
     }
     mitm[p].base_type = OBJ_UNASSIGNED;
 
     clear_messages();
-    mpr("[a] Weapons [b] Armours   [c] Jewellery [d] Books");
-    mpr("[e] Staves  [f] Evocables [g] Food");
+    mpr("[a] 무기    [b] 방어구    [c] 장신구    [d] 서적");
+    mpr("[e] 스태프  [f] 발동 도구 [g] 음식");
     mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
     object_class_type type;
@@ -871,7 +871,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         if (kbhit())
         {
             getchk();
-            mpr("Stopping early due to keyboard input.");
+            mpr("키 입력으로 인해 작업이 중단되었다.");
             break;
         }
 
@@ -881,7 +881,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             || item_index == NON_ITEM
             || !mitm[item_index].defined())
         {
-            mpr("Acquirement failed, stopping early.");
+            mpr("획득에 실패해 작업이 일찍 중단되었다.");
             break;
         }
 
@@ -942,7 +942,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     if (total_quant == 0 || acq_calls == 0)
     {
-        mpr("No items generated.");
+        mpr("아이템이 생성되지 않았다.");
         return;
     }
 
@@ -1280,7 +1280,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     }
     fprintf(ostat, "-----------------------------------------\n\n");
 
-    mpr("Results written into 'items.stat'.");
+    mpr("결과가 'items.stat' 에 기록되었다.");
 }
 
 /**
@@ -1313,7 +1313,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     if (!make_item_randart(item))
     {
-        mpr("Can't make a randart out of that type of item.");
+        mpr("그 종류의 물건은 아티팩트로 만들 수 없다.");
         return;
     }
 
@@ -1343,7 +1343,7 @@ static void _debug_rap_stats(FILE *ostat)
         if (kbhit())
         {
             getchk();
-            mpr("Stopping early due to keyboard input.");
+            mpr("키 입력으로 인해 작업이 중단되었다.");
             break;
         }
 
@@ -1531,7 +1531,7 @@ static void _debug_rap_stats(FILE *ostat)
     }
 
     fprintf(ostat, "\n-----------------------------------------\n\n");
-    mpr("Results written into 'items.stat'.");
+    mpr("결과가 'items.stat' 에 기록되었다.");
 }
 
 void debug_item_statistics()
@@ -1544,7 +1544,7 @@ void debug_item_statistics()
         return;
     }
 
-    mpr("Generate stats for: [a] acquirement [b] randart properties");
+    mpr("정보를 생성한다: [a] 획득의 두루마리 [b] 랜덤 아티팩트 정보");
     flush_prev_message();
 
     const int keyin = toalower(get_ch());
@@ -1566,7 +1566,7 @@ void wizard_draw_card()
     char buf[80];
     if (cancellable_get_line_autohist(buf, sizeof buf))
     {
-        mpr("Unknown card.");
+        mpr("알 수 없는 카드다.");
         return;
     }
 
@@ -1587,7 +1587,7 @@ void wizard_draw_card()
         }
     }
     if (!found_card)
-        mpr("Unknown card.");
+        mpr("알 수 없는 카드다.");
 }
 
 void wizard_identify_all_items()
@@ -1635,6 +1635,6 @@ void wizard_recharge_evokers()
 
         evoker_debt(dummy.sub_type) = 0;
     }
-    mpr("Evokers recharged.");
+    mpr("발동 도구 재충전 됨.");
 }
 #endif

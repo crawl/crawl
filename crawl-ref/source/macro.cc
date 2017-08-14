@@ -703,7 +703,7 @@ static keyseq _getch_mul(int (*rgetch)() = nullptr)
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
     {
-        mprf(MSGCH_ERROR, "(Key replay ran out of keys)");
+        mprf(MSGCH_ERROR, "(키 리플레이 : 키가 부족함)");
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
     }
@@ -899,8 +899,8 @@ void macro_add_query()
 
     clear_messages();
     mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
-                       "[(k) default, (x) level-map, (t)argeting, "
-                       "(c)onfirm, m(e)nu], (s)ave? ");
+                       "[(k) 디폴트, (x) 층 지도, (t) 조준, "
+                       "(c)결정, (e)메뉴], (s)저장? ");
     input = m_getch();
     int low = toalower(input);
 
@@ -936,13 +936,13 @@ void macro_add_query()
     }
     else if (input == 's')
     {
-        mpr("Saving macros.");
+        mpr("매크로를 저장한다.");
         macro_save();
         return;
     }
     else
     {
-        mpr("Aborting.");
+        mpr("중지.");
         return;
     }
 
@@ -1360,25 +1360,25 @@ void bind_command_to_key(command_type cmd, int key)
     {
         if (command_name == "CMD_NO_CMD")
         {
-            mprf(MSGCH_ERROR, "Cannot bind command #%d to a key.",
+            mprf(MSGCH_ERROR, "#%d는 하나의 키로 묶을 수 없다.",
                  (int) cmd);
             return;
         }
 
-        mprf(MSGCH_ERROR, "Cannot bind command '%s' to a key.",
+        mprf(MSGCH_ERROR, "'%s'는 하나의 키로 묶을 수 없다.",
              command_name.c_str());
         return;
     }
 
     if (is_userfunction(key))
     {
-        mprf(MSGCH_ERROR, "Cannot bind user function keys to a command.");
+        mprf(MSGCH_ERROR, "유저 기능 키는 하나의 명령키로 묶을 수 없다.");
         return;
     }
 
     if (is_synthetic_key(key))
     {
-        mprf(MSGCH_ERROR, "Cannot bind synthetic keys to a command.");
+        mprf(MSGCH_ERROR, "조합 키는 하나의 명령키로 묶을 수 없다.");
         return;
     }
 

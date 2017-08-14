@@ -123,22 +123,22 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 {
     // XM_NORMAL
     {
-        "Xom is interested.",
-        "Xom is mildly amused.",
-        "Xom is amused.",
-        "Xom is highly amused!",
-        "Xom thinks this is hilarious!",
-        "Xom roars with laughter!"
+        "Xom은 흥미로워한다.",
+        "Xom은 약간 즐거워한다.",
+        "Xom은 즐거워한다.",
+        "Xom은 매우 즐거워한다!",
+        "Xom은 이것이 재미있다고 생각한다!",
+        "Xom은 광소했다!"
     },
 
     // XM_INTRIGUED
     {
-        "Xom is interested.",
-        "Xom is very interested.",
-        "Xom is extremely interested.",
-        "Xom is intrigued!",
-        "Xom is very intrigued!",
-        "Xom is fascinated!"
+        "Xom은 흥미로워한다.",
+        "Xom은 매우 흥미로워한다.",
+        "Xom은 극도로 흥미로워한다.",
+        "Xom은 호기심을 못견뎌한다!",
+        "Xom은 매우 호기심을 못견뎌한다!",
+        "Xom은 매혹되었다!"
     }
 };
 
@@ -392,9 +392,9 @@ void xom_tick()
             if (interest > 0)
             {
                 if (interest < 25)
-                    simple_god_message(" is interested.");
+                    simple_god_message("은 흥미로워한다.");
                 else
-                    simple_god_message(" is intrigued.");
+                    simple_god_message("는 호기심을 못견뎌하고 있다.");
 
                 you.gift_timeout += interest;
                 //updating piety status line
@@ -588,7 +588,7 @@ static void _xom_detect_items(int sever)
     if (detect_items(sever) == 0)
         canned_msg(MSG_DETECT_NOTHING);
     else
-        mpr("You detect items!");
+        mpr("당신은 아이템을 발견했다!");
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                    "divination: detect items"), true);
@@ -611,10 +611,10 @@ static void _xom_detect_creatures(int sever)
         // still on the map when the original one has been killed. Then
         // another one is spawned, so the number is the same as before.
         // There's no way we can check this, however.
-        mpr("You detect no further creatures.");
+        mpr("당신은 더 이상의 생명체를 발견하지 못했다.");
     }
     else
-        mpr("You detect creatures!");
+        mpr("당신은 생명체를 발견했다!");
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                    "divination: detect creatures"), true);
@@ -669,7 +669,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
     move_item_to_grid(&thing_created, you.pos());
 
     if (thing_created == NON_ITEM) // if it fell into lava
-        simple_god_message(" snickers.", GOD_XOM);
+        simple_god_message("은 낄낄대며 웃었다.", GOD_XOM);
 
     stop_running();
 }
@@ -1258,7 +1258,7 @@ static void _xom_rearrange_pieces(int sever)
             {
                 if (!did_message)
                 {
-                    mpr("Some monsters swap places.");
+                    mpr("일부 몬스터들의 위치가 뒤바뀌었다.");
                     did_message = true;
                 }
                 if (one_chance_in(4))
@@ -1345,7 +1345,7 @@ static void _xom_snakes_to_sticks(int sever)
         item.quantity = 1;
 
         // Output some text since otherwise snakes will disappear silently.
-        mprf("%s reforms as %s.", mi->name(DESC_THE).c_str(),
+        mprf("%s은(는) %s(으)로 모습을 바꾸었다.", mi->name(DESC_PLAIN).c_str(),
              item.name(DESC_A).c_str());
 
         // Dismiss monster silently.
@@ -1417,8 +1417,8 @@ static void _xom_animate_monster_weapon(int sever)
     mon->unequip(*(mon->mslot_item(MSLOT_WEAPON)), false, true);
     mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
-    mprf("%s %s dances into the air!",
-         apostrophise(mon->name(DESC_THE)).c_str(),
+    mprf("%s %s이(가) 공중으로 떠올라 춤을 추기 시작했다!",
+         apostrophise(mon->name(DESC_PLAIN)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
     destroy_item(dancing->inv[MSLOT_WEAPON]);
@@ -1447,7 +1447,7 @@ static void _xom_give_mutations(bool good)
              num_tries > 1 ? "s" : "");
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
-    mpr("Your body is suffused with distortional energy.");
+    mpr("당신의 몸에 뒤틀린 기운이 만연하다.");
 
     bool failMsg = true;
 
@@ -2284,8 +2284,8 @@ static void _xom_player_confusion_effect(int sever)
         return;
 
     god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
-    mprf(MSGCH_WARN, "You are %sconfused.",
-         conf ? "more " : "");
+    mprf(MSGCH_WARN, "당신은 %s혼란스러워졌다.",
+         conf ? "더 " : "");
 
     // At higher severities, Xom is less likely to confuse surrounding
     // creatures.
@@ -2379,7 +2379,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     ray_def ray;
     if (!find_ray(begin, towards, ray, opc_solid_see))
     {
-        mprf(MSGCH_ERROR, "Couldn't find ray between player and stairs.");
+        mprf(MSGCH_ERROR, "플레이어와 계단 사이의 직선거리를 파악할 수 없다.");
         return stairs_moved;
     }
 
@@ -2414,7 +2414,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             return stairs_moved;
         }
 
-        mprf(MSGCH_ERROR, "Ray didn't cross stairs.");
+        mprf(MSGCH_ERROR, "광선은 계단을 지나가지 못했다.");
     }
 
     if (away && past_stairs <= 0)
@@ -2538,7 +2538,7 @@ static void _xom_repel_stairs(bool unclimbable)
     if (!count_moved)
     {
         if (one_chance_in(8))
-            mpr("Nothing appears to happen... Ominous!");
+            mpr("아무일도 없는 것 같다.... 불길하게도!");
         else
             canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -3358,13 +3358,13 @@ xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
 void xom_check_lost_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
-        xom_is_stimulated(100, "Xom snickers.", true);
+        xom_is_stimulated(100, "Xom은 낄낄대며 웃었다.", true);
 }
 
 void xom_check_destroyed_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
-        xom_is_stimulated(100, "Xom snickers.", true);
+        xom_is_stimulated(100, "Xom은 낄낄대며 웃었다.", true);
 }
 
 static bool _death_is_funny(const kill_method_type killed_by)
@@ -3522,8 +3522,8 @@ void xom_new_level_noise_or_stealth()
         if (!player_under_penance(GOD_XOM) && coinflip())
         {
             god_speaks(GOD_XOM, _get_xom_speech("stealth player").c_str());
-            mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
-                                          : "You feel stealthy.");
+            mpr(you.duration[DUR_STEALTH] ? "당신은 더 고양이스러워진 기분이 든다."
+                                          : "당신은 은밀해진 느낌이 들었다.");
             you.increase_duration(DUR_STEALTH, 10 + random2(80));
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                            "stealth player"), true);

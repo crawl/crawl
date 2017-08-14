@@ -5,16 +5,16 @@
 # 'cornered' is when they realize they have nowhere to go.
 #########
 %%%%
-dream sheep flee
+sheep flee
 
 w:30
-@The_monster@ bleats in terror.
+@The_monster@은 공포에 울부짖었다.
 
-VISUAL:@The_monster@ is struck with panic!
+VISUAL:@The_monster@은 두려움에 빠졌다!
 
-VISUAL:@The_monster@ panics and turns to flee.
+VISUAL:@The_monster@은 겁을 먹고는 도망갔다.
 
-VISUAL:A frightened @monster@ leaps away.
+VISUAL:겁에질린 @monster@은 뛰쳐나갔다.
 
-VISUAL:@The_monster@ stampedes away.
+VISUAL:@The_monster@은 우르르 몰려갔다.
 %%%%

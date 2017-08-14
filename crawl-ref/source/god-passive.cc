@@ -522,7 +522,7 @@ void jiyva_eat_offlevel_items()
 
                 // Needs a message now to explain possible hp or mp
                 // gain from jiyva_slurp_bonus()
-                mpr("You hear a distant slurping noise.");
+                mpr("당신은 먼 곳에서 털썩거리는 소음을 들었다.");
                 jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
@@ -1204,31 +1204,31 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 
     if (what != BEAM_FIRE && you.duration[DUR_QAZLAL_FIRE_RES])
     {
-        mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+        mprf(MSGCH_DURATION, "당신의 화염에 대한 저항력이 사라졌다.");
         you.duration[DUR_QAZLAL_FIRE_RES] = 0;
     }
 
     if (what != BEAM_COLD && you.duration[DUR_QAZLAL_COLD_RES])
     {
-        mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+        mprf(MSGCH_DURATION, "당신의 냉기에 대한 저항력이 사라졌다.");
         you.duration[DUR_QAZLAL_COLD_RES] = 0;
     }
 
     if (what != BEAM_ELECTRICITY && you.duration[DUR_QAZLAL_ELEC_RES])
     {
-        mprf(MSGCH_DURATION, "Your resistance to electricity fades away.");
+        mprf(MSGCH_DURATION, "당신의 전기에 대한 저항력이 사라졌다.");
         you.duration[DUR_QAZLAL_ELEC_RES] = 0;
     }
 
     if (what != BEAM_MISSILE && you.duration[DUR_QAZLAL_AC])
     {
-        mprf(MSGCH_DURATION, "Your resistance to physical damage fades away.");
+        mprf(MSGCH_DURATION, "당신의 물리적 타격에 대한 저항력이 사라졌다.");
         you.duration[DUR_QAZLAL_AC] = 0;
         you.redraw_armour_class = true;
     }
 
-    mprf(MSGCH_GOD, "You feel %sprotected from %s.",
-         you.duration[dur] > 0 ? "more " : "", descript.c_str());
+    mprf(MSGCH_GOD, "당신은 %s 보호받는 느낌이 들었다 : %s에 대해.",
+         you.duration[dur] > 0 ? "더 " : "", descript.c_str());
 
     // was scaled by 10 * strength. But the strength parameter is used so inconsistently that
     // it seems like a constant would be better, based on the typical value of 2.
@@ -1498,8 +1498,8 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     beem.target = target;
     beem.aimed_at_spot = orig_beam->aimed_at_spot;
 
-    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
-         mon->name(DESC_THE).c_str());
+    mprf(MSGCH_FRIEND_SPELL, "%s이(가) 당신의 주문을 모방했다!",
+         mon->name(DESC_PLAIN).c_str());
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
 
     shadow_monster_reset(mon);
@@ -1563,7 +1563,7 @@ void wu_jian_heaven_tick()
 void end_heavenly_storm()
 {
     you.attribute[ATTR_HEAVENLY_STORM] = 0;
-    mprf(MSGCH_GOD, "The heavenly storm settles.");
+    mprf(MSGCH_GOD, "천상의 폭풍이 사라진다.");
 }
 
 bool wu_jian_has_momentum(wu_jian_attack_type attack_type)
@@ -1621,17 +1621,18 @@ static void _wu_jian_lunge(const coord_def& old_pos)
 
     if (number_of_attacks == 0)
     {
-        mprf("You lunge at %s, but your attack speed is too slow for a blow "
-             "to land.", mons->name(DESC_THE).c_str());
+        mprf("당신은 %s을(를) 향해 돌진했지만, "
+             "공격 속도가 너무 느려 한 번도 찌르지 못했다.",
+             mons->name(DESC_PLAIN).c_str());
         return;
     }
     else
     {
-        mprf("You lunge%s at %s%s.",
+        mprf("당신은 %s %s을(를) %s.",
              wu_jian_has_momentum(WU_JIAN_ATTACK_LUNGE) ?
-                 " with incredible momentum" : "",
-             mons->name(DESC_THE).c_str(),
-             number_of_attacks > 1 ? " in a flurry of attacks" : "");
+                 "믿을 수 없는 가속도로 " : "",
+             mons->name(DESC_PLAIN).c_str(),
+             number_of_attacks > 1 ? "난도질했다" : "찔렀다");
     }
 
     for (int i = 0; i < number_of_attacks; i++)
@@ -1680,17 +1681,18 @@ static void _wu_jian_whirlwind(const coord_def& old_pos)
         const int number_of_attacks = _wu_jian_number_of_attacks();
         if (number_of_attacks == 0)
         {
-            mprf("You spin to attack %s, but your attack speed is too slow for "
-                 "a blow to land.", mons->name(DESC_THE).c_str());
+            mprf("당신은 %s을(를) 공격하기 위해 몸을 회전했지만, "
+                 "공격 속도가 너무 느려 "
+                 "한 번도 베지 못했다.", mons->name(DESC_PLAIN).c_str());
             continue;
         }
         else
         {
-            mprf("You spin and attack %s%s%s.",
-                 mons->name(DESC_THE).c_str(),
-                 number_of_attacks > 1 ? " repeatedly" : "",
+            mprf("당신은 돌면서 %s을(를) %s%s 베었다.",
+                 mons->name(DESC_PLAIN).c_str(),
+                 number_of_attacks > 1 ? " 수차례" : "",
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WHIRLWIND) ?
-                     " with incredible momentum" : "");
+                     " 믿을 수 없는 가속도로" : "");
         }
 
         for (int i = 0; i < number_of_attacks; i++)
@@ -1759,12 +1761,12 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
             {
                 if (landing_actor)
                 {
-                    mprf("You have no room to wall jump; %s is in the way.",
-                        landing_actor->observable() ? landing_actor->name(DESC_THE).c_str()
-                                    : "something you can't see");
+                    mprf("벽을 짚고 뛸 만한 공간이 없다; %s이(가) 길목에 있다.",
+                        landing_actor->observable() ? landing_actor->name(DESC_PLAIN).c_str()
+                                    : "당신이 볼 수 없는 무언가");
                 }
                 else
-                    mpr("You have no room to wall jump.");
+                    mpr("뛰어 넘을 벽이 없다.");
             }
         }
         return false;
@@ -1790,7 +1792,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, bool messaging)
         }
         if (mon_in_los)
         {
-            mpr("There is no target in range.");
+            mpr("범위 안에 대상이 없다.");
             targeter_walljump range;
             range.set_aim(wall_jump_landing_spot);
             flash_view_delay(UA_RANGE, DARKGREY, 100, &range);
@@ -1837,17 +1839,18 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
         const int number_of_attacks = _wu_jian_number_of_attacks();
         if (number_of_attacks == 0)
         {
-            mprf("You attack %s from above, but your attack speed is too slow"
-                 " for a blow to land.", target->name(DESC_THE).c_str());
+            mprf("당신은 %s을(를) 뛰어넘으며 공격했지만, "
+                 "공격 속도가 너무 느려 착지할 때까지 "
+                 "한 번도 공격하지 못했다.", target->name(DESC_PLAIN).c_str());
             continue;
         }
         else
         {
-            mprf("You %sattack %s from above%s.",
-                 number_of_attacks > 1 ? "repeatedly " : "",
-                 target->name(DESC_THE).c_str(),
+            mprf("당신은 %s 공격했다 : %s을(를) 뛰어넘으며 %s.",
+                 number_of_attacks > 1 ? "수차례 " : "",
+                 target->name(DESC_PLAIN).c_str(),
                  wu_jian_has_momentum(WU_JIAN_ATTACK_WALL_JUMP) ?
-                     " with incredible momentum" : "");
+                     " 믿을 수 없는 가속도로" : "");
         }
 
         for (int i = 0; i < number_of_attacks; i++)

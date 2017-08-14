@@ -903,7 +903,7 @@ bool show_map(level_pos &lpos,
                     MapKnowledge *old = new MapKnowledge(env.map_knowledge);
                     _forget_map();
                     env.map_forgotten.reset(old);
-                    mpr("Level map cleared.");
+                    mpr("층 청소 완료.");
                 }
                 break;
 
@@ -912,10 +912,10 @@ bool show_map(level_pos &lpos,
                 {
                     _unforget_map();
                     env.map_forgotten.reset();
-                    mpr("Remembered map restored.");
+                    mpr("층에 대한 기억 복원 완료.");
                 }
                 else
-                    mpr("No remembered map.");
+                    mpr("기억하고 있는 층 지도가 없음.");
                 break;
 
             case CMD_MAP_ADD_WAYPOINT:
@@ -1192,7 +1192,7 @@ bool show_map(level_pos &lpos,
                 le.go_to(lpos.id);
 
                 if (!is_map_persistent())
-                    mpr("You can't annotate this level.");
+                    mpr("이 층에는 주석을 달 수 없다.");
                 else
                     do_annotate(lpos.id);
 

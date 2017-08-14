@@ -1233,12 +1233,12 @@ static void _unmeld_equipment_type(equipment_type e)
 
     if (force_remove)
     {
-        mprf("%s is pushed off your body!", item.name(DESC_YOUR).c_str());
+        mprf("%s이(가) 벗겨져 나갔다!", item.name(DESC_YOUR).c_str());
         unequip_item(e);
     }
     else
     {
-        mprf("%s unmelds from your body.", item.name(DESC_YOUR).c_str());
+        mprf("%s이(가) 당신의 몸으로부터 빠져나왔다.", item.name(DESC_YOUR).c_str());
         unmeld_slot(e);
     }
 }
@@ -1601,7 +1601,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         && x_chance_in_y(you.piety, MAX_PIETY)
         && which_trans != transformation::none)
     {
-        simple_god_message(" protects your body from unnatural transformation!");
+        simple_god_message("은 당신을 부자연스러운 변형으로부터 보호했다!");
         return false;
     }
 
@@ -1651,12 +1651,12 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
-            mpr("You extend your transformation's duration.");
+            mpr("당신은 변신을 연장했다.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
         }
         else if (!involuntary && which_trans != transformation::none)
-            mpr("You fail to extend your transformation any further.");
+            mpr("당신은 변신을 연장하는 데 실패했다.");
 
         return true;
     }
@@ -1757,7 +1757,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     if (you.digging && !form_keeps_mutations(which_trans))
     {
-        mpr("Your mandibles meld away.");
+        mpr("당신의 아래턱이 융화되어 사라졌다.");
         you.digging = false;
     }
 
@@ -1767,7 +1767,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     case transformation::statue:
         if (you.duration[DUR_ICY_ARMOUR])
         {
-            mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
+            mprf(MSGCH_DURATION, "당신의 새로운 육체가 얼음 갑옷을 깨트렸다.");
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
         break;
@@ -1777,11 +1777,11 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         break;
 
     case transformation::tree:
-        mpr("Your roots penetrate the ground.");
+        mpr("당신의 뿌리가 땅을 파고들었다.");
         if (you.duration[DUR_TELEPORT])
         {
             you.duration[DUR_TELEPORT] = 0;
-            mpr("You feel strangely stable.");
+            mpr("당신은 이상하게 안정적인 느낌이 들었다.");
         }
         you.duration[DUR_FLIGHT] = 0;
         // break out of webs/nets as well
@@ -1792,13 +1792,13 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             trap_def *trap = trap_at(you.pos());
             if (trap && trap->type == TRAP_WEB)
             {
-                mpr("You shred the web into pieces!");
+                mpr("당신은 거미줄을 갈기갈기 찢어발겼다!");
                 destroy_trap(you.pos());
             }
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
             {
-                mpr("The net rips apart!");
+                mpr("그물이 갈갈이 찢겼다!");
                 destroy_item(net);
             }
 
@@ -1810,7 +1810,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
         {
-            mprf(MSGCH_DURATION, "You stop regenerating.");
+            mprf(MSGCH_DURATION, "당신의 재생이 멈추었다.");
             you.duration[DUR_REGENERATION] = 0;
         }
 
@@ -1830,9 +1830,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
     case transformation::shadow:
         drain_player(25, true, true);
         if (you.invisible())
-            mpr("You fade into the shadows.");
+            mpr("당신은 그림자 속으로 숨었다.");
         else
-            mpr("You feel less conspicuous.");
+            mpr("당신은 눈에 덜 띄는 기분이 들었다.");
         break;
 
     default:
@@ -2007,7 +2007,7 @@ void untransform(bool skip_move)
         you.duration[DUR_ICY_ARMOUR] = 0;
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        mprf(MSGCH_DURATION, "%s cracks your icy armour.",
+        mprf(MSGCH_DURATION, "%s이(가) 당신의 얼음 갑옷을 깨트렸다.",
              armour->name(DESC_YOUR).c_str());
     }
 
@@ -2054,7 +2054,7 @@ static void _extra_hp(int amount_extra) // must also set in calc_hp
 
 void emergency_untransform()
 {
-    mpr("You quickly transform back into your natural form.");
+    mpr("당신은 빠르게 당신의 원래 모습으로 돌아왔다.");
     untransform(true); // We're already entering the water.
 
     if (you.species == SP_MERFOLK)
@@ -2088,12 +2088,12 @@ void merfolk_start_swimming(bool stepped)
         return;
 
     if (stepped)
-        mpr("Your legs become a tail as you enter the water.");
+        mpr("당신이 물에 들어가자 당신의 다리가 꼬리로 변했다.");
     else
-        mpr("Your legs become a tail as you dive into the water.");
+        mpr("당신이 물에 뛰어들자 당신의 다리가 꼬리로 변했다.");
 
     if (you.invisible())
-        mpr("...but don't expect to remain undetected.");
+        mpr("...하지만 들키지 않을 것이란 기대는 하지 않는 것이 좋다.");
 
     you.fishtail = true;
     remove_one_equip(EQ_BOOTS);

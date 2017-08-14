@@ -135,12 +135,12 @@ bool attribute_increase()
         || innate_stat(STAT_INT) != you.intel()
         || innate_stat(STAT_DEX) != you.dex())
     {
-        mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
+        mprf(MSGCH_PROMPT, "당신의 기본능력치는 힘 %d, 지능 %d, 민첩 %d 이다.",
              innate_stat(STAT_STR),
              innate_stat(STAT_INT),
              innate_stat(STAT_DEX));
     }
-    mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
+    mprf(MSGCH_PROMPT, "(S)힘 (I)지능 (D)민첩 중, 어느 능력을 올리는가?");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
 
@@ -290,7 +290,7 @@ void jiyva_stat_action()
         }
     if (choices)
     {
-        simple_god_message("'s power touches on your attributes.");
+        simple_god_message("의 힘이, 당신의 능력에 영향을 주었다.");
         modify_stat(static_cast<stat_type>(stat_up_choice), 1, false);
         modify_stat(static_cast<stat_type>(stat_down_choice), -1, false);
     }
@@ -326,7 +326,7 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
     if (!suppress_msg)
     {
         mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
-             "You feel %s.",
+             "%s을(를) 느꼈다.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
@@ -357,7 +357,7 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
     if (!suppress_msg)
     {
         mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
-             "You feel %s.",
+             "%s을(를) 느꼈다.",
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
@@ -547,13 +547,13 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force)
     {
         if (you.duration[DUR_DIVINE_STAMINA] > 0)
         {
-            mprf("Your divine stamina protects you from %s loss.",
+            mprf("신성한 원기가 당신을 %s의 감소로부터 보호했다.",
                  _stat_name(which_stat).c_str());
             return false;
         }
     }
 
-    mprf(MSGCH_WARN, "You feel %s.", stat_desc(which_stat, SD_LOSS));
+    mprf(MSGCH_WARN, "%s을(를) 느꼈다.", stat_desc(which_stat, SD_LOSS));
 
     you.stat_loss[which_stat] = min<int>(100,
                                          you.stat_loss[which_stat] + stat_loss);
@@ -605,7 +605,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     if (!suppress_msg)
     {
         mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
-             "You feel your %s returning.",
+             "%s이(가) 회복된 것을 느꼈다.",
              _stat_name(which_stat).c_str());
     }
 
@@ -637,7 +637,7 @@ static void _handle_stat_change(stat_type stat)
         // Time required for recovery once the stat is restored, randomised slightly.
         you.duration[stat_zero_duration(stat)] =
             (20 + random2(20)) * BASELINE_DELAY;
-        mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
+        mprf(MSGCH_WARN, "당신은 %s을(를) 잃었다.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
         // 2 to 5 turns of paralysis (XXX: decremented right away?)

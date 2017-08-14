@@ -847,7 +847,7 @@ bool curse_an_item(bool ignore_holy_wrath)
     // allowing these would enable mummy scumming
     if (have_passive(passive_t::want_curses))
     {
-        mprf(MSGCH_GOD, "The curse is absorbed by %s.",
+        mprf(MSGCH_GOD, "저주는 %s에게 흡수되었다.",
              god_name(you.religion).c_str());
         return false;
     }
@@ -906,7 +906,8 @@ void do_curse_item(item_def &item, bool quiet)
     {
         if (!quiet)
         {
-            mprf("Your %s glows black briefly, but repels the curse.",
+            mprf("당신의 %s은(는) 검은색으로 희미하게 빛났으나, "
+                 "곧 저주를 튕겨내었다.",
                  item.name(DESC_PLAIN).c_str());
             if (is_artefact(item))
                 artefact_learn_prop(item, ARTP_BRAND);
@@ -921,7 +922,7 @@ void do_curse_item(item_def &item, bool quiet)
 
     if (!quiet)
     {
-        mprf("Your %s glows black for a moment.",
+        mprf("당신의 %s은(는) 순간 검은 빛을 띄었다.",
              item.name(DESC_PLAIN).c_str());
 
         // If we get the message, we know the item is cursed now.

@@ -180,11 +180,11 @@ bool yred_slaves_abandon_you()
     if (num_reclaim > 0)
     {
         if (num_reclaim == 1 && num_slaves > 1)
-            simple_god_message(" reclaims one of your granted undead slaves!");
+            simple_god_message("은 당신의 언데드 수하 중 하나를 회수하였다!");
         else if (num_reclaim == num_slaves)
-            simple_god_message(" reclaims your granted undead slaves!");
+            simple_god_message("은 당신의 언데드 수하들을 회수하였다!");
         else
-            simple_god_message(" reclaims some of your granted undead slaves!");
+            simple_god_message("은 당신의 언데드 수하 중 일부를 회수하였다!");
         return true;
     }
 
@@ -358,15 +358,15 @@ static void _jiyva_convert_slime(monster* slime)
     {
         if (mons_genus(slime->type) == MONS_FLOATING_EYE)
         {
-            mprf(MSGCH_GOD, "%s stares at you suspiciously for a moment, "
-                            "then relaxes.",
+            mprf(MSGCH_GOD, "%s은(는) 당신을 잠시 의심스럽게 응시하다가, "
+                            "안정을 되찾았다.",
 
-            slime->name(DESC_THE).c_str());
+            slime->name(DESC_PLAIN).c_str());
         }
         else
         {
-            mprf(MSGCH_GOD, "%s trembles before you.",
-                 slime->name(DESC_THE).c_str());
+            mprf(MSGCH_GOD, "%s은(는) 당신 앞에서 하늘거렸다.",
+                 slime->name(DESC_PLAIN).c_str());
         }
     }
 

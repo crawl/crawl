@@ -402,14 +402,14 @@ void banished(const string &who, const int power)
         else
         {
             // On Abyss:5 we can't go deeper; cause a shift to a new area
-            mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
+            mprf(MSGCH_BANISHMENT, "당신은 심연의 다른 구역으로 추방되었다.");
             abyss_teleport();
         }
         return;
     }
 
     const int depth = _banished_depth(power);
-    const string what = make_stringf("Cast into level %d of the Abyss", depth)
+    const string what = make_stringf("어비스 %d층으로 전송됨", depth)
                       + _who_banished(who);
     take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
@@ -573,7 +573,7 @@ public:
         const bool rune_is_near = abyss_rune_nearness();
 
         if (exit_was_near && !exit_is_near || rune_was_near && !rune_is_near)
-            xom_is_stimulated(200, "Xom snickers loudly.", true);
+            xom_is_stimulated(200, "좀은 낄낄거리며 폭소했다.", true);
 
         if (!rune_was_near && rune_is_near || !exit_was_near && exit_is_near)
             xom_is_stimulated(200);
@@ -627,7 +627,7 @@ static void _place_displaced_monsters()
             maybe_bloodify_square(mon->pos());
             if (you.can_see(*mon))
             {
-                simple_monster_message(*mon, " is pulled into the Abyss.",
+                simple_monster_message(*mon, "은(는) 어비스로 끌려 들어갔다.",
                         MSGCH_BANISHMENT);
             }
             _abyss_lose_monster(*mon);
@@ -1664,7 +1664,7 @@ void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
-    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
+    mprf(MSGCH_BANISHMENT, "당신은 갑자기 심연의 다른 구역으로 끌려 들어갔다!");
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
@@ -1979,7 +1979,7 @@ bool is_level_incorruptible(bool quiet)
     if (_is_level_corrupted())
     {
         if (!quiet)
-            mpr("This place is already infused with evil and corruption.");
+            mpr("이 공간은 이미 악과 부패로 가득 차 있다.");
         return true;
     }
 
@@ -2010,7 +2010,7 @@ bool lugonu_corrupt_level(int power)
     if (is_level_incorruptible())
         return false;
 
-    simple_god_message("'s Hand of Corruption reaches out!");
+    simple_god_message("의 타락의 손이 뻗쳐온다!");
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
     mark_corrupted_level(level_id::current());
@@ -2052,8 +2052,8 @@ void abyss_maybe_spawn_xp_exit()
     big_cloud(CLOUD_TLOC_ENERGY, &you, you.pos(), 3 + random2(3), 3, 3);
     redraw_screen(); // before the force-more
     mprf(MSGCH_BANISHMENT,
-         "The substance of the Abyss twists violently,"
-         " and a gateway leading %s appears!", stairs ? "down" : "out");
+         "심연의 물질계가 격렬하게 뒤틀리고, "
+         " %s으로 향하는 관문이 나타났다!", stairs ? "더 깊은 곳" : "밖");
 
     you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     you.props[ABYSS_SPAWNED_XP_EXIT_KEY] = true;

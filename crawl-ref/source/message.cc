@@ -1686,142 +1686,142 @@ void canned_msg(canned_message_type which_message)
     switch (which_message)
     {
         case MSG_SOMETHING_APPEARS:
-            mprf("Something appears %s!",
-                 player_has_feet() ? "at your feet" : "before you");
+            mprf("무엇인가 %s 나타났다!",
+                 player_has_feet() ? "당신의 발 밑에" : "당신 앞에");
             break;
         case MSG_NOTHING_HAPPENS:
-            mpr("Nothing appears to happen.");
+            mpr("아무 일도 일어나지 않았다.");
             break;
         case MSG_YOU_UNAFFECTED:
-            mpr("You are unaffected.");
+            mpr("당신은 아무 영향도 받지 않았다.");
             break;
         case MSG_YOU_RESIST:
-            mpr("You resist.");
+            mpr("당신은 저항했다.");
             learned_something_new(HINT_YOU_RESIST);
             break;
         case MSG_YOU_PARTIALLY_RESIST:
-            mpr("You partially resist.");
+            mpr("당신은 일부 저항했다.");
             break;
         case MSG_TOO_BERSERK:
-            mpr("You are too berserk!");
+            mpr("당신은 너무 광폭해져있다!");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_TOO_CONFUSED:
-            mpr("You're too confused!");
+            mpr("당신은 매우 혼란스럽다!");
             break;
         case MSG_PRESENT_FORM:
-            mpr("You can't do that in your present form.");
+            mpr("당신의 지금 모습으로는 그 행동을 할 수 없다.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NOTHING_CARRIED:
-            mpr("You aren't carrying anything.");
+            mpr("당신은 아무것도 가지고 있지 않다.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_CANNOT_DO_YET:
-            mpr("You can't do that yet.");
+            mpr("당신은 아직 그것을 할 수 없다.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_OK:
-            mprf(MSGCH_PROMPT, "Okay, then.");
+            mprf(MSGCH_PROMPT, "알았다, 그럼.");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_UNTHINKING_ACT:
-            mpr("Why would you want to do that?");
+            mpr("왜 그런 짓을 하려고 하는가?");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NOTHING_THERE:
-            mpr("There's nothing there!");
+            mpr("거기엔 아무 것도 없다!");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NOTHING_CLOSE_ENOUGH:
-            mpr("There's nothing close enough!");
+            mpr("그 행동을 할만큼 가까운 것이 없다!");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_NO_ENERGY:
-            mpr("You don't have the energy to cast that spell.");
+            mpr("그 주문을 시전하기에는 당신의 마력이 충분하지 못하다.");
             // included in default force_more_message
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_SPELL_FIZZLES:
-            mpr("The spell fizzles.");
+            mpr("주문이 흐지부지되었다.");
             break;
         case MSG_HUH:
-            mprf(MSGCH_EXAMINE_FILTER, "Huh?");
+            mprf(MSGCH_EXAMINE_FILTER, "뭐?");
             crawl_state.cancel_cmd_repeat();
             break;
         case MSG_EMPTY_HANDED_ALREADY:
         case MSG_EMPTY_HANDED_NOW:
         {
             const char* when =
-            (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
+            (which_message == MSG_EMPTY_HANDED_ALREADY ? "이미" : "지금");
             if (you.species == SP_FELID)
-                mprf("Your mouth is %s empty.", when);
+                mprf("당신의 입은 %s 비어있다.", when);
             else if (you.has_usable_claws(true))
-                mprf("You are %s empty-clawed.", when);
+                mprf("당신의 손톱은 %s 비어있다.", when);
             else if (you.has_usable_tentacles(true))
-                mprf("You are %s empty-tentacled.", when);
+                mprf("당신의 촉수는 %s 비어있다.", when);
             else
-                mprf("You are %s empty-handed.", when);
+                mprf("당신의 손은 %s 비어있다.", when);
             break;
         }
         case MSG_YOU_BLINK:
-            mpr("You blink.");
+            mpr("당신은 순간이동했다.");
             break;
         case MSG_STRANGE_STASIS:
-            mpr("You feel a strange sense of stasis.");
+            mpr("당신은 기묘한 정체의 기운을 느꼈다.");
             break;
         case MSG_NO_SPELLS:
-            mpr("You don't know any spells.");
+            mpr("당신은 아무 주문도 알지 못한다.");
             break;
         case MSG_MANA_INCREASE:
-            mpr("You feel your magic capacity increase.");
+            mpr("당신의 마법 수용량이 증가한 것이 느껴졌다.");
             break;
         case MSG_MANA_DECREASE:
-            mpr("You feel your magic capacity decrease.");
+            mpr("당신의 마법 수용량이 줄어든 것이 느껴졌다.");
             break;
         case MSG_DISORIENTED:
-            mpr("You feel momentarily disoriented.");
+            mpr("당신은 순간적으로 혼란에 빠졌다.");
             break;
         case MSG_TOO_HUNGRY:
-            mpr("You're too hungry.");
+            mpr("당신은 너무 배고프다.");
             break;
         case MSG_DETECT_NOTHING:
-            mpr("You detect nothing.");
+            mpr("당신은 아무것도 감지하지 못했다.");
             break;
         case MSG_CALL_DEAD:
-            mpr("You call on the dead to rise...");
+            mpr("당신은 죽은 자들을 일으켰다...");
             break;
         case MSG_ANIMATE_REMAINS:
-            mpr("You attempt to give life to the dead...");
+            mpr("당신은 죽은 자에게 생명을 부여했다...");
             break;
         case MSG_CANNOT_MOVE:
-            mpr("You cannot move.");
+            mpr("당신은 움직일 수 없다.");
             break;
         case MSG_YOU_DIE:
-            mpr_nojoin(MSGCH_PLAIN, "You die...");
+            mpr_nojoin(MSGCH_PLAIN, "죽었다...");
             break;
         case MSG_GHOSTLY_OUTLINE:
-            mpr("You see a ghostly outline there, and the spell fizzles.");
+            mpr("당신은 귀신같은 형체를 보았고, 주문은 흐지부지되었다.");
             break;
         case MSG_FULL_HEALTH:
-            mpr("Your health is already full.");
+            mpr("당신의 체력은 이미 모두 회복된 상태다.");
             break;
         case MSG_FULL_MAGIC:
-            mpr("Your reserves of magic are already full.");
+            mpr("당신의 마력은 이미 모두 회복된 상태다.");
             break;
         case MSG_GAIN_HEALTH:
-            mpr("You feel better.");
+            mpr("당신의 기분이 나아졌다.");
             break;
         case MSG_GAIN_MAGIC:
-            mpr("You feel your power returning.");
+            mpr("당신의 힘이 돌아오는 것이 느껴졌다.");
             break;
         case MSG_MAGIC_DRAIN:
-            mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
+            mprf(MSGCH_WARN, "당신은 갑자기 마력이 빠져나가는 것을 느꼈다!");
             break;
         case MSG_SOMETHING_IN_WAY:
-            mpr("There's something in the way.");
+            mpr("이동경로에 무언가가 있다.");
         case MSG_CANNOT_SEE:
-            mpr("You can't see that place.");
+            mpr("당신은 그 장소를 볼 수 없다.");
             break;
     }
 }

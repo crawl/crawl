@@ -87,12 +87,12 @@ string quant_name(const item_def &item, int quant,
 static const char* _interesting_origin(const item_def &item)
 {
     if (origin_as_god_gift(item) != GOD_NO_GOD)
-        return "god gift";
+        return "신의 선물";
 
     if (item.orig_monnum == MONS_DONALD && get_equip_desc(item)
         && item.is_type(OBJ_ARMOUR, ARM_SHIELD))
     {
-        return "Donald";
+        return "도날드";
     }
 
     return nullptr;
@@ -254,16 +254,16 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         if (eq != EQ_NONE)
         {
             if (you.melded[eq])
-                buff << " (melded)";
+                buff << " (녹아듬)";
             else
             {
                 switch (eq)
                 {
                 case EQ_WEAPON:
                     if (is_weapon(*this))
-                        buff << " (weapon)";
+                        buff << " (무기)";
                     else if (you.species == SP_FELID)
-                        buff << " (in mouth)";
+                        buff << " (입에 뭄)";
                     else
                         buff << " (in " << you.hand_name(false) << ")";
                     break;
@@ -273,7 +273,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_BOOTS:
                 case EQ_SHIELD:
                 case EQ_BODY_ARMOUR:
-                    buff << " (worn)";
+                    buff << " (착용함)";
                     break;
                 case EQ_LEFT_RING:
                 case EQ_RIGHT_RING:
@@ -281,16 +281,16 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_RING_TWO:
                     buff << " (";
                     buff << ((eq == EQ_LEFT_RING || eq == EQ_RING_ONE)
-                             ? "left" : "right");
+                             ? "왼" : "오른");
                     buff << " ";
                     buff << you.hand_name(false);
                     buff << ")";
                     break;
                 case EQ_AMULET:
                     if (you.species == SP_OCTOPODE && form_keeps_mutations())
-                        buff << " (around mantle)";
+                        buff << " (몸통)";
                     else
-                        buff << " (around neck)";
+                        buff << " (목)";
                     break;
                 case EQ_RING_THREE:
                 case EQ_RING_FOUR:
@@ -298,10 +298,10 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_RING_SIX:
                 case EQ_RING_SEVEN:
                 case EQ_RING_EIGHT:
-                    buff << " (on tentacle)";
+                    buff << " (촉수)";
                     break;
                 case EQ_RING_AMULET:
-                    buff << " (on amulet)";
+                    buff << " (부적)";
                     break;
                 default:
                     die("Item in an invalid slot");
@@ -309,7 +309,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             }
         }
         else if (item_is_quivered(*this))
-            buff << " (quivered)";
+            buff << " (장전)";
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
@@ -323,7 +323,7 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
         && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE)))
     {
-        buff << " (curse)";
+        buff << " (저주)";
     }
 
     return buff.str();
@@ -357,47 +357,47 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
     {
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_FLAME:
-        return "flame";
+        return "화염";
     case SPMSL_FROST:
-        return "frost";
+        return "서리";
 #endif
     case SPMSL_POISONED:
-        return t == MBN_NAME ? "poisoned" : "poison";
+        return t == MBN_NAME ? "독이 발린 " : "독";
     case SPMSL_CURARE:
-        return t == MBN_NAME ? "curare-tipped" : "curare";
+        return t == MBN_NAME ? "쿠라레 발린 " : "쿠라레";
     case SPMSL_EXPLODING:
-        return t == MBN_TERSE ? "explode" : "exploding";
+        return t == MBN_TERSE ? "폭발" : "폭발하는 ";
     case SPMSL_STEEL:
-        return "steel";
+        return "강철";
     case SPMSL_SILVER:
-        return "silver";
+        return "은";
     case SPMSL_PARALYSIS:
-        return "paralysis";
+        return "마비";
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_SLOW:
-        return t == MBN_TERSE ? "slow" : "slowing";
+        return t == MBN_TERSE ? "감속" : "감속중";
 #endif
     case SPMSL_SLEEP:
-        return t == MBN_TERSE ? "sleep" : "sleeping";
+        return t == MBN_TERSE ? "수면" : "수면중";
     case SPMSL_CONFUSION:
-        return t == MBN_TERSE ? "conf" : "confusion";
+        return t == MBN_TERSE ? "혼란" : "혼란중";
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_SICKNESS:
-        return t == MBN_TERSE ? "sick" : "sickness";
+        return t == MBN_TERSE ? "질병" : "질병";
 #endif
     case SPMSL_FRENZY:
-        return "frenzy";
+        return "폭주";
     case SPMSL_RETURNING:
-        return t == MBN_TERSE ? "return" : "returning";
+        return t == MBN_TERSE ? "귀환" : "귀환중";
     case SPMSL_CHAOS:
         return "chaos";
     case SPMSL_PENETRATION:
-        return t == MBN_TERSE ? "penet" : "penetration";
+        return t == MBN_TERSE ? "관통" : "관통중";
     case SPMSL_DISPERSAL:
-        return t == MBN_TERSE ? "disperse" : "dispersal";
+        return t == MBN_TERSE ? "분산" : "분산중";
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
-        return t == MBN_TERSE ? "blind" : "blinding";
+        return t == MBN_TERSE ? "실명" : "실명중";
 #endif
     case SPMSL_NORMAL:
         return "";
@@ -408,50 +408,50 @@ const char* missile_brand_name(const item_def &item, mbn_type t)
 
 static const char *weapon_brands_terse[] =
 {
-    "", "flame", "freeze", "holy", "elec",
+    "", "화염", "냉기", "신성", "전기",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "venom", "protect", "drain", "speed", "buggy-vorpal",
+    "맹독", "보호", "흡수", "신속", "buggy-vorpal",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "vamp", "pain", "antimagic", "distort",
+    "흡혈", "고통", "반마법", "왜곡",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "chaos",
+    "혼돈",
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "buggy-num", "acid",
+    "관통", "수확", "buggy-num", "산성",
 #if TAG_MAJOR_VERSION > 34
-    "confuse",
+    "혼란",
 #endif
     "debug",
 };
 
 static const char *weapon_brands_verbose[] =
 {
-    "", "flaming", "freezing", "holy wrath", "electrocution",
+    "", "화염 ", "냉기 ", "신성한 분노 ", "전격 ",
 #if TAG_MAJOR_VERSION == 34
     "orc slaying", "dragon slaying",
 #endif
-    "venom", "protection", "draining", "speed", "buggy-vorpal",
+    "맹독 ", "보호 ", "흡수 ", "신속 ", "buggy-vorpal",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
-    "", "pain", "", "distortion",
+    "흡혈 ", "고통 ", "반마법 ", "왜곡 ",
 #if TAG_MAJOR_VERSION == 34
-    "reaching", "returning",
+    "도달", "귀환",
 #endif
-    "chaos",
+    "혼돈 ",
 #if TAG_MAJOR_VERSION == 34
-    "evasion", "confusion",
+    "회피", "혼란",
 #endif
-    "penetration", "reaping", "buggy-num", "acid",
+    "관통 ", "수확 ", "buggy-num", "산성 ",
 #if TAG_MAJOR_VERSION > 34
-    "confusion",
+    "혼란 ",
 #endif
     "debug",
 };
@@ -467,20 +467,20 @@ static const char* _vorpal_brand_name(const item_def &item, bool terse)
 {
     // Dummy "All Hand Weapons" item from objstat.
     if (item.sub_type == NUM_WEAPONS)
-        return "vorpal";
+        return "보팔";
 
     if (is_range_weapon(item))
-        return "velocity";
+        return "벨로시티";
 
     // Would be nice to implement this as an array (like other brands), but
     // mapping the DVORP flags to array entries seems very fragile.
     switch (get_vorpal_type(item))
     {
-        case DVORP_CRUSHING: return terse ? "crush" :"crushing";
-        case DVORP_SLICING:  return terse ? "slice" : "slicing";
-        case DVORP_PIERCING: return terse ? "pierce" : "piercing";
-        case DVORP_CHOPPING: return terse ? "chop" : "chopping";
-        case DVORP_SLASHING: return terse ? "slash" :"slashing";
+        case DVORP_CRUSHING: return terse ? "부숨" :"부수는";
+        case DVORP_SLICING:  return terse ? "썸" : "써는";
+        case DVORP_PIERCING: return terse ? "찌름" : "찌르는";
+        case DVORP_CHOPPING: return terse ? "쪼갬" : "쪼개는";
+        case DVORP_SLASHING: return terse ? "벰" :"베는";
         default:             return terse ? "buggy vorpal"
                                           : "buggy destruction";
     }
@@ -537,35 +537,35 @@ const char* armour_ego_name(const item_def& item, bool terse)
             // they are possible. The terse ego name for these is {run}
             // still to avoid player confusion, it used to be {sslith}.
             if (item.sub_type == ARM_NAGA_BARDING)
-                                      return "speedy slithering";
+                                      return "빠른 미끄러짐";
             else
-                                      return "running";
-        case SPARM_FIRE_RESISTANCE:   return "fire resistance";
-        case SPARM_COLD_RESISTANCE:   return "cold resistance";
-        case SPARM_POISON_RESISTANCE: return "poison resistance";
-        case SPARM_SEE_INVISIBLE:     return "see invisible";
-        case SPARM_INVISIBILITY:      return "invisibility";
-        case SPARM_STRENGTH:          return "strength";
-        case SPARM_DEXTERITY:         return "dexterity";
-        case SPARM_INTELLIGENCE:      return "intelligence";
-        case SPARM_PONDEROUSNESS:     return "ponderousness";
-        case SPARM_FLYING:            return "flying";
+                                      return "질주";
+        case SPARM_FIRE_RESISTANCE:   return "화염 저항";
+        case SPARM_COLD_RESISTANCE:   return "냉기 저항";
+        case SPARM_POISON_RESISTANCE: return "독 저항";
+        case SPARM_SEE_INVISIBLE:     return "투명 감지";
+        case SPARM_INVISIBILITY:      return "투명";
+        case SPARM_STRENGTH:          return "힘";
+        case SPARM_DEXTERITY:         return "민첩";
+        case SPARM_INTELLIGENCE:      return "지능";
+        case SPARM_PONDEROUSNESS:     return "무거움";
+        case SPARM_FLYING:            return "비행";
 
-        case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
-        case SPARM_PROTECTION:        return "protection";
-        case SPARM_STEALTH:           return "stealth";
-        case SPARM_RESISTANCE:        return "resistance";
-        case SPARM_POSITIVE_ENERGY:   return "positive energy";
-        case SPARM_ARCHMAGI:          return "the Archmagi";
+        case SPARM_MAGIC_RESISTANCE:  return "마법 저항";
+        case SPARM_PROTECTION:        return "보호";
+        case SPARM_STEALTH:           return "은신";
+        case SPARM_RESISTANCE:        return "저항";
+        case SPARM_POSITIVE_ENERGY:   return "양 에너지";
+        case SPARM_ARCHMAGI:          return "대 마법사";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_JUMPING:           return "jumping";
         case SPARM_PRESERVATION:      return "preservation";
 #endif
-        case SPARM_REFLECTION:        return "reflection";
-        case SPARM_SPIRIT_SHIELD:     return "spirit shield";
-        case SPARM_ARCHERY:           return "archery";
-        case SPARM_REPULSION:         return "repulsion";
-        case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
+        case SPARM_REFLECTION:        return "반사";
+        case SPARM_SPIRIT_SHIELD:     return "수호정령";
+        case SPARM_ARCHERY:           return "궁도";
+        case SPARM_REPULSION:         return "반발";
+        case SPARM_CLOUD_IMMUNE:      return "구름 면역";
         default:                      return "bugginess";
         }
     }
@@ -574,7 +574,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
-        case SPARM_RUNNING:           return "run";
+        case SPARM_RUNNING:           return "질주";
         case SPARM_FIRE_RESISTANCE:   return "rF+";
         case SPARM_COLD_RESISTANCE:   return "rC+";
         case SPARM_POISON_RESISTANCE: return "rPois";
@@ -583,23 +583,23 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_STRENGTH:          return "Str+3";
         case SPARM_DEXTERITY:         return "Dex+3";
         case SPARM_INTELLIGENCE:      return "Int+3";
-        case SPARM_PONDEROUSNESS:     return "ponderous";
+        case SPARM_PONDEROUSNESS:     return "무거움";
         case SPARM_FLYING:            return "Fly";
         case SPARM_MAGIC_RESISTANCE:  return "MR+";
         case SPARM_PROTECTION:        return "AC+3";
         case SPARM_STEALTH:           return "Stlth+";
         case SPARM_RESISTANCE:        return "rC+ rF+";
         case SPARM_POSITIVE_ENERGY:   return "rN+";
-        case SPARM_ARCHMAGI:          return "Archmagi";
+        case SPARM_ARCHMAGI:          return "대마법사";
 #if TAG_MAJOR_VERSION == 34
         case SPARM_JUMPING:           return "obsolete";
         case SPARM_PRESERVATION:      return "obsolete";
 #endif
-        case SPARM_REFLECTION:        return "reflect";
-        case SPARM_SPIRIT_SHIELD:     return "Spirit";
-        case SPARM_ARCHERY:           return "archery";
-        case SPARM_REPULSION:         return "repulsion";
-        case SPARM_CLOUD_IMMUNE:      return "cloud immunity";
+        case SPARM_REFLECTION:        return "반사";
+        case SPARM_SPIRIT_SHIELD:     return "수호정령";
+        case SPARM_ARCHERY:           return "궁도";
+        case SPARM_REPULSION:         return "반발";
+        case SPARM_CLOUD_IMMUNE:      return "구름 면역";
         default:                      return "buggy";
         }
     }
@@ -609,19 +609,19 @@ static const char* _wand_type_name(int wandtype)
 {
     switch (wandtype)
     {
-    case WAND_FLAME:           return "flame";
-    case WAND_PARALYSIS:       return "paralysis";
-    case WAND_CONFUSION:       return "confusion";
-    case WAND_DIGGING:         return "digging";
-    case WAND_ICEBLAST:        return "iceblast";
-    case WAND_LIGHTNING:       return "lightning";
-    case WAND_POLYMORPH:       return "polymorph";
-    case WAND_ENSLAVEMENT:     return "enslavement";
-    case WAND_ACID:            return "acid";
-    case WAND_RANDOM_EFFECTS:  return "random effects";
-    case WAND_DISINTEGRATION:  return "disintegration";
-    case WAND_CLOUDS:          return "clouds";
-    case WAND_SCATTERSHOT:     return "scattershot";
+    case WAND_FLAME:           return "불꽃";
+    case WAND_PARALYSIS:       return "마비";
+    case WAND_CONFUSION:       return "혼란";
+    case WAND_DIGGING:         return "굴착";
+    case WAND_ICEBLAST:        return "얼음 폭발";
+    case WAND_LIGHTNING:       return "번개";
+    case WAND_POLYMORPH:       return "변이";
+    case WAND_ENSLAVEMENT:     return "노예화";
+    case WAND_ACID:            return "산성";
+    case WAND_RANDOM_EFFECTS:  return "무작위 효과";
+    case WAND_DISINTEGRATION:  return "분해";
+    case WAND_CLOUDS:          return "구름";
+    case WAND_SCATTERSHOT:     return "산탄";
     default:                   return item_type_removed(OBJ_WANDS, wandtype)
                                     ? "removedness"
                                     : "bugginess";
@@ -631,9 +631,9 @@ static const char* _wand_type_name(int wandtype)
 static const char* wand_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "", "jewelled ", "curved ", "long ", "short ", "twisted ", "crooked ",
-        "forked ", "shiny ", "blackened ", "tapered ", "glowing ", "worn ",
-        "encrusted ", "runed ", "sharpened "
+        "", "보석박힌 ", "굽은 ", "기다란 ", "짧은 ", "꼬인 ", "손잡이달린 ",
+        "갈라진 ", "빛나는 ", "그을린 ", "끝이 가는 ", "반짝이는 ", "낡은 ",
+        "장식된 ", "룬이 새겨진 ", "뾰족한 "
     };
     COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_WAND_SEC);
     return secondary_strings[s % NDSC_WAND_SEC];
@@ -642,8 +642,8 @@ static const char* wand_secondary_string(uint32_t s)
 static const char* wand_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "iron", "brass", "bone", "wooden", "copper", "gold", "silver",
-        "bronze", "ivory", "glass", "lead", "fluorescent"
+        "철", "놋쇠", "뼈", "나무", "구리", "금", "은",
+        "청동", "상아", "유리", "납", "형광"
     };
     COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_WAND_PRI);
     return primary_strings[p % NDSC_WAND_PRI];
@@ -653,49 +653,49 @@ const char* potion_type_name(int potiontype)
 {
     switch (static_cast<potion_type>(potiontype))
     {
-    case POT_CURING:            return "curing";
-    case POT_HEAL_WOUNDS:       return "heal wounds";
-    case POT_HASTE:             return "haste";
-    case POT_MIGHT:             return "might";
-    case POT_AGILITY:           return "agility";
-    case POT_BRILLIANCE:        return "brilliance";
+    case POT_CURING:            return "치료";
+    case POT_HEAL_WOUNDS:       return "상처 치유";
+    case POT_HASTE:             return "가속";
+    case POT_MIGHT:             return "힘";
+    case POT_AGILITY:           return "기민";
+    case POT_BRILLIANCE:        return "총명";
 #if TAG_MAJOR_VERSION == 34
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
-    case POT_STRONG_POISON:     return "strong poison";
-    case POT_PORRIDGE:          return "porridge";
-    case POT_SLOWING:           return "slowing";
+    case POT_STRONG_POISON:     return "맹독";
+    case POT_PORRIDGE:          return "오트밀";
+    case POT_SLOWING:           return "감속";
 #endif
-    case POT_FLIGHT:            return "flight";
+    case POT_FLIGHT:            return "비행";
 #if TAG_MAJOR_VERSION == 34
-    case POT_POISON:            return "poison";
+    case POT_POISON:            return "독";
 #endif
-    case POT_CANCELLATION:      return "cancellation";
-    case POT_AMBROSIA:          return "ambrosia";
-    case POT_INVISIBILITY:      return "invisibility";
-    case POT_DEGENERATION:      return "degeneration";
+    case POT_CANCELLATION:      return "취소";
+    case POT_AMBROSIA:          return "암브로시아";
+    case POT_INVISIBILITY:      return "투명화";
+    case POT_DEGENERATION:      return "약화";
 #if TAG_MAJOR_VERSION == 34
-    case POT_DECAY:             return "decay";
+    case POT_DECAY:             return "부패";
 #endif
-    case POT_EXPERIENCE:        return "experience";
-    case POT_MAGIC:             return "magic";
+    case POT_EXPERIENCE:        return "경험";
+    case POT_MAGIC:             return "마력";
 #if TAG_MAJOR_VERSION == 34
-    case POT_RESTORE_ABILITIES: return "restore abilities";
+    case POT_RESTORE_ABILITIES: return "능력치 회복";
 #endif
-    case POT_BERSERK_RAGE:      return "berserk rage";
+    case POT_BERSERK_RAGE:      return "광폭화";
 #if TAG_MAJOR_VERSION == 34
-    case POT_CURE_MUTATION:     return "cure mutation";
+    case POT_CURE_MUTATION:     return "돌연변이 치료";
 #endif
-    case POT_MUTATION:          return "mutation";
-    case POT_BLOOD:             return "blood";
+    case POT_MUTATION:          return "돌연변이";
+    case POT_BLOOD:             return "피";
 #if TAG_MAJOR_VERSION == 34
-    case POT_BLOOD_COAGULATED:  return "coagulated blood";
+    case POT_BLOOD_COAGULATED:  return "굳은 피";
 #endif
-    case POT_RESISTANCE:        return "resistance";
-    case POT_LIGNIFY:           return "lignification";
+    case POT_RESISTANCE:        return "저항";
+    case POT_LIGNIFY:           return "목질화";
 #if TAG_MAJOR_VERSION == 34
-    case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
+    case POT_BENEFICIAL_MUTATION: return "좋은 돌연변이";
 #endif
     default:                    return "bugginess";
     }
@@ -705,32 +705,32 @@ static const char* scroll_type_name(int scrolltype)
 {
     switch (static_cast<scroll_type>(scrolltype))
     {
-    case SCR_IDENTIFY:           return "identify";
-    case SCR_TELEPORTATION:      return "teleportation";
-    case SCR_FEAR:               return "fear";
-    case SCR_NOISE:              return "noise";
-    case SCR_REMOVE_CURSE:       return "remove curse";
-    case SCR_SUMMONING:          return "summoning";
-    case SCR_ENCHANT_WEAPON:     return "enchant weapon";
-    case SCR_ENCHANT_ARMOUR:     return "enchant armour";
-    case SCR_TORMENT:            return "torment";
-    case SCR_RANDOM_USELESSNESS: return "random uselessness";
+    case SCR_IDENTIFY:           return "식별";
+    case SCR_TELEPORTATION:      return "공간이동";
+    case SCR_FEAR:               return "공포";
+    case SCR_NOISE:              return "소음";
+    case SCR_REMOVE_CURSE:       return "저주 해제";
+    case SCR_SUMMONING:          return "소환";
+    case SCR_ENCHANT_WEAPON:     return "무기 강화";
+    case SCR_ENCHANT_ARMOUR:     return "방어구 강화";
+    case SCR_TORMENT:            return "고문";
+    case SCR_RANDOM_USELESSNESS: return "쓸모없는 무작위";
 #if TAG_MAJOR_VERSION == 34
-    case SCR_CURSE_WEAPON:       return "curse weapon";
-    case SCR_CURSE_ARMOUR:       return "curse armour";
-    case SCR_CURSE_JEWELLERY:    return "curse jewellery";
+    case SCR_CURSE_WEAPON:       return "무기 저주";
+    case SCR_CURSE_ARMOUR:       return "방어구 저주";
+    case SCR_CURSE_JEWELLERY:    return "장신구 저주";
 #endif
-    case SCR_IMMOLATION:         return "immolation";
-    case SCR_BLINKING:           return "blinking";
-    case SCR_MAGIC_MAPPING:      return "magic mapping";
-    case SCR_FOG:                return "fog";
-    case SCR_ACQUIREMENT:        return "acquirement";
-    case SCR_BRAND_WEAPON:       return "brand weapon";
-    case SCR_RECHARGING:         return "recharging";
-    case SCR_HOLY_WORD:          return "holy word";
-    case SCR_VULNERABILITY:      return "vulnerability";
-    case SCR_SILENCE:            return "silence";
-    case SCR_AMNESIA:            return "amnesia";
+    case SCR_IMMOLATION:         return "발화";
+    case SCR_BLINKING:           return "순간이동";
+    case SCR_MAGIC_MAPPING:      return "마법적 탐색";
+    case SCR_FOG:                return "안개";
+    case SCR_ACQUIREMENT:        return "획득";
+    case SCR_BRAND_WEAPON:       return "무기 속성 부여";
+    case SCR_RECHARGING:         return "충전";
+    case SCR_HOLY_WORD:          return "신성한 언어";
+    case SCR_VULNERABILITY:      return "취약";
+    case SCR_SILENCE:            return "침묵";
+    case SCR_AMNESIA:            return "망각";
     default:                     return "bugginess";
     }
 }
@@ -751,48 +751,48 @@ const char* jewellery_effect_name(int jeweltype, bool terse)
 #if TAG_MAJOR_VERSION == 34
         case RING_REGENERATION:          return "obsoleteness";
 #endif
-        case RING_PROTECTION:            return "protection";
-        case RING_PROTECTION_FROM_FIRE:  return "protection from fire";
-        case RING_POISON_RESISTANCE:     return "poison resistance";
-        case RING_PROTECTION_FROM_COLD:  return "protection from cold";
-        case RING_STRENGTH:              return "strength";
-        case RING_SLAYING:               return "slaying";
-        case RING_SEE_INVISIBLE:         return "see invisible";
-        case RING_RESIST_CORROSION:      return "resist corrosion";
-        case RING_LOUDNESS:              return "loudness";
-        case RING_TELEPORTATION:         return "teleportation";
-        case RING_EVASION:               return "evasion";
+        case RING_PROTECTION:            return "보호";
+        case RING_PROTECTION_FROM_FIRE:  return "화염 저항";
+        case RING_POISON_RESISTANCE:     return "독 저항";
+        case RING_PROTECTION_FROM_COLD:  return "냉기 저항";
+        case RING_STRENGTH:              return "힘";
+        case RING_SLAYING:               return "살육";
+        case RING_SEE_INVISIBLE:         return "투명 보기";
+        case RING_RESIST_CORROSION:      return "산성 저항";
+        case RING_LOUDNESS:              return "소음";
+        case RING_TELEPORTATION:         return "공간이동";
+        case RING_EVASION:               return "회피";
 #if TAG_MAJOR_VERSION == 34
-        case RING_SUSTAIN_ATTRIBUTES:    return "sustain attributes";
+        case RING_SUSTAIN_ATTRIBUTES:    return "능력치 유지";
 #endif
-        case RING_STEALTH:               return "stealth";
-        case RING_DEXTERITY:             return "dexterity";
-        case RING_INTELLIGENCE:          return "intelligence";
-        case RING_WIZARDRY:              return "wizardry";
-        case RING_MAGICAL_POWER:         return "magical power";
-        case RING_FLIGHT:                return "flight";
-        case RING_LIFE_PROTECTION:       return "positive energy";
-        case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
-        case RING_FIRE:                  return "fire";
-        case RING_ICE:                   return "ice";
+        case RING_STEALTH:               return "은신";
+        case RING_DEXTERITY:             return "민첩";
+        case RING_INTELLIGENCE:          return "지능";
+        case RING_WIZARDRY:              return "마법사";
+        case RING_MAGICAL_POWER:         return "마력";
+        case RING_FLIGHT:                return "비행";
+        case RING_LIFE_PROTECTION:       return "양 에너지";
+        case RING_PROTECTION_FROM_MAGIC: return "마법 저항";
+        case RING_FIRE:                  return "화염";
+        case RING_ICE:                   return "얼음";
 #if TAG_MAJOR_VERSION == 34
         case RING_TELEPORT_CONTROL:      return "teleport control";
 #endif
-        case AMU_RAGE:              return "rage";
-        case AMU_HARM:              return "harm";
-        case AMU_MANA_REGENERATION: return "magic regeneration";
-        case AMU_THE_GOURMAND:      return "gourmand";
+        case AMU_RAGE:              return "격노";
+        case AMU_HARM:              return "상해";
+        case AMU_MANA_REGENERATION: return "마나 재생";
+        case AMU_THE_GOURMAND:      return "대식가";
 #if TAG_MAJOR_VERSION == 34
         case AMU_DISMISSAL:         return "obsoleteness";
         case AMU_CONSERVATION:      return "conservation";
         case AMU_CONTROLLED_FLIGHT: return "controlled flight";
 #endif
-        case AMU_INACCURACY:        return "inaccuracy";
-        case AMU_NOTHING:           return "nothing";
-        case AMU_GUARDIAN_SPIRIT:   return "guardian spirit";
-        case AMU_FAITH:             return "faith";
-        case AMU_REFLECTION:        return "reflection";
-        case AMU_REGENERATION:      return "regeneration";
+        case AMU_INACCURACY:        return "부정확";
+        case AMU_NOTHING:           return "공백";
+        case AMU_GUARDIAN_SPIRIT:   return "수호정령";
+        case AMU_FAITH:             return "신앙";
+        case AMU_REFLECTION:        return "반사";
+        case AMU_REGENERATION:      return "재생";
         default: return "buggy jewellery";
         }
     }
@@ -851,7 +851,7 @@ static const char* _jewellery_class_name(int jeweltype)
 {
 #if TAG_MAJOR_VERSION == 34
     if (jeweltype == RING_REGENERATION)
-        return "ring of";
+        return "반지 of";
 #endif
 
     if (jeweltype < RING_FIRST_RING || jeweltype >= NUM_JEWELLERY
@@ -861,8 +861,8 @@ static const char* _jewellery_class_name(int jeweltype)
     }
 
     if (jeweltype < NUM_RINGS)
-        return "ring of";
-    return "amulet of";
+        return "반지 of";
+    return "목걸이 of";
 }
 
 /**
@@ -882,9 +882,9 @@ static string jewellery_type_name(int jeweltype)
 static const char* ring_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "", "encrusted ", "glowing ", "tubular ", "runed ", "blackened ",
-        "scratched ", "small ", "large ", "twisted ", "shiny ", "notched ",
-        "knobbly "
+        "", "장식된 ", "반짝거리는 ", "튜브형 ", "룬이 새겨진 ", "그을린 ",
+        "긁힌 ", "작은 ", "커다란 ", "꼬인 ", "빛나는 ", "홈 있는 ",
+        "울퉁불퉁한 "
     };
     COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_JEWEL_SEC);
     return secondary_strings[s % NDSC_JEWEL_SEC];
@@ -893,11 +893,11 @@ static const char* ring_secondary_string(uint32_t s)
 static const char* ring_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "wooden", "silver", "golden", "iron", "steel", "tourmaline", "brass",
-        "copper", "granite", "ivory", "ruby", "marble", "jade", "glass",
-        "agate", "bone", "diamond", "emerald", "peridot", "garnet", "opal",
-        "pearl", "coral", "sapphire", "cabochon", "gilded", "onyx", "bronze",
-        "moonstone"
+        "나무", "은", "금", "철", "강철", "전기석", "놋쇠",
+        "구리", "화강암", "상아", "루비", "대리석", "옥", "유리",
+        "마노", "뼈", "다이아몬드", "에메랄드", "감람석", "가넷", "오팔",
+        "진주", "산호", "사파이어", "카보숑", "도금", "오닉스", "청동",
+        "월장석"
     };
     COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_JEWEL_PRI);
     return primary_strings[p % NDSC_JEWEL_PRI];
@@ -906,9 +906,9 @@ static const char* ring_primary_string(uint32_t p)
 static const char* amulet_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "dented ", "square ", "thick ", "thin ", "runed ", "blackened ",
-        "glowing ", "small ", "large ", "twisted ", "tiny ", "triangular ",
-        "lumpy "
+        "찌그러진 ", "사각형 ", "두툼한 ", "얇은 ", "룬이 새겨진 ", "그을린 ",
+        "반짝거리는 ", "작은 ", "커다란 ", "꼬인 ", "자그마한 ", "삼각형 ",
+        "우둘투둘한 "
     };
     COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_JEWEL_SEC);
     return secondary_strings[s % NDSC_JEWEL_SEC];
@@ -917,11 +917,11 @@ static const char* amulet_secondary_string(uint32_t s)
 static const char* amulet_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "sapphire", "zirconium", "golden", "emerald", "garnet", "bronze",
-        "brass", "copper", "ruby", "citrine", "bone", "platinum", "jade",
-        "fluorescent", "amethyst", "cameo", "pearl", "blue", "peridot",
-        "jasper", "diamond", "malachite", "steel", "cabochon", "silver",
-        "soapstone", "lapis lazuli", "filigree", "beryl"
+        "사파이어", "지르코늄", "금", "에메랄드", "가넷", "청동",
+        "놋쇠", "구리", "루비", "황수정", "뼈", "백금", "옥",
+        "형광색", "자수정", "카메오", "진주", "파란", "감람석",
+        "벽옥", "다이아몬드", "공작석", "강철", "카보숑", "은",
+        "동석", "청금석", "선세공된", "녹주석"
     };
     COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_JEWEL_PRI);
     return primary_strings[p % NDSC_JEWEL_PRI];
@@ -931,29 +931,29 @@ const char* rune_type_name(short p)
 {
     switch (static_cast<rune_type>(p))
     {
-    case RUNE_DIS:         return "iron";
-    case RUNE_GEHENNA:     return "obsidian";
-    case RUNE_COCYTUS:     return "icy";
-    case RUNE_TARTARUS:    return "bone";
-    case RUNE_SLIME:       return "slimy";
-    case RUNE_VAULTS:      return "silver";
-    case RUNE_SNAKE:       return "serpentine";
-    case RUNE_ELF:         return "elven";
-    case RUNE_TOMB:        return "golden";
-    case RUNE_SWAMP:       return "decaying";
-    case RUNE_SHOALS:      return "barnacled";
-    case RUNE_SPIDER:      return "gossamer";
-    case RUNE_FOREST:      return "mossy";
+    case RUNE_DIS:         return "강철";
+    case RUNE_GEHENNA:     return "흑요석";
+    case RUNE_COCYTUS:     return "차가운";
+    case RUNE_TARTARUS:    return "뼈";
+    case RUNE_SLIME:       return "끈적끈적한";
+    case RUNE_VAULTS:      return "은";
+    case RUNE_SNAKE:       return "뱀무늬";
+    case RUNE_ELF:         return "엘프";
+    case RUNE_TOMB:        return "황금";
+    case RUNE_SWAMP:       return "부패";
+    case RUNE_SHOALS:      return "따개비";
+    case RUNE_SPIDER:      return "거미줄";
+    case RUNE_FOREST:      return "숲";
 
     // pandemonium and abyss runes:
-    case RUNE_DEMONIC:     return "demonic";
-    case RUNE_ABYSSAL:     return "abyssal";
+    case RUNE_DEMONIC:     return "악마";
+    case RUNE_ABYSSAL:     return "심연";
 
     // special pandemonium runes:
-    case RUNE_MNOLEG:      return "glowing";
-    case RUNE_LOM_LOBON:   return "magical";
-    case RUNE_CEREBOV:     return "fiery";
-    case RUNE_GLOORX_VLOQ: return "dark";
+    case RUNE_MNOLEG:      return "빛나는";
+    case RUNE_LOM_LOBON:   return "마법의";
+    case RUNE_CEREBOV:     return "이글거리는";
+    case RUNE_GLOORX_VLOQ: return "어둠의";
     default:               return "buggy";
     }
 }
@@ -962,9 +962,9 @@ const char* deck_rarity_name(deck_rarity_type rarity)
 {
     switch (rarity)
     {
-    case DECK_RARITY_COMMON:    return "plain";
-    case DECK_RARITY_RARE:      return "ornate";
-    case DECK_RARITY_LEGENDARY: return "legendary";
+    case DECK_RARITY_COMMON:    return "평범한";
+    case DECK_RARITY_RARE:      return "화려한";
+    case DECK_RARITY_LEGENDARY: return "전설적인";
     default:                    return "buggy rarity";
     }
 }
@@ -980,28 +980,28 @@ static string misc_type_name(int type, bool known)
 
     switch (static_cast<misc_item_type>(type))
     {
-    case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
-    case MISC_BOX_OF_BEASTS:             return "box of beasts";
+    case MISC_CRYSTAL_BALL_OF_ENERGY:    return "에너지 수정구";
+    case MISC_BOX_OF_BEASTS:             return "짐승상자";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_EBONY_CASKET:        return "removed ebony casket";
 #endif
-    case MISC_FAN_OF_GALES:              return "fan of gales";
-    case MISC_LAMP_OF_FIRE:              return "lamp of fire";
+    case MISC_FAN_OF_GALES:              return "질풍의 부채";
+    case MISC_LAMP_OF_FIRE:              return "화염의 램프";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BUGGY_LANTERN_OF_SHADOWS:  return "removed lantern of shadows";
 #endif
-    case MISC_HORN_OF_GERYON:            return "horn of Geryon";
-    case MISC_LIGHTNING_ROD:             return "lightning rod";
+    case MISC_HORN_OF_GERYON:            return "게리욘의 뿔";
+    case MISC_LIGHTNING_ROD:             return "번개 마법막대";
 #if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:            return "empty flask";
     case MISC_RUNE_OF_ZOT:               return "obsolete rune of zot";
     case MISC_STONE_OF_TREMORS:          return "removed stone of tremors";
 #endif
-    case MISC_QUAD_DAMAGE:               return "quad damage";
-    case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
-    case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
-    case MISC_PHANTOM_MIRROR:            return "phantom mirror";
-    case MISC_ZIGGURAT:                  return "figurine of a ziggurat";
+    case MISC_QUAD_DAMAGE:               return "대미지 4배";
+    case MISC_PHIAL_OF_FLOODS:           return "홍수의 물병";
+    case MISC_SACK_OF_SPIDERS:           return "거미주머니";
+    case MISC_PHANTOM_MIRROR:            return "환영거울";
+    case MISC_ZIGGURAT:                  return "지구라트 모형";
 #if TAG_MAJOR_VERSION == 34
     case MISC_XOMS_CHESSBOARD:           return "removed chess piece";
 #endif
@@ -1022,8 +1022,8 @@ static const char* book_secondary_string(uint32_t s)
         return "";
 
     static const char* const secondary_strings[] = {
-        "", "chunky ", "thick ", "thin ", "wide ", "glowing ",
-        "dog-eared ", "oblong ", "runed ", "", "", ""
+        "", "두툼한 ", "두꺼운 ", "얇은 ", "넓은 ", "반짝거리는 ",
+        "페이지가 접힌 ", "길쭉한 ", "룬이 새겨진 ", "", "", ""
     };
     return secondary_strings[(s / NDSC_BOOK_PRI) % ARRAYSZ(secondary_strings)];
 }
@@ -1031,7 +1031,7 @@ static const char* book_secondary_string(uint32_t s)
 static const char* book_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "paperback", "hardcover", "leatherbound", "metal-bound", "papyrus",
+        "종이표지", "양장본", "가죽장정된 ", "금속테두리", "파피루스",
     };
     COMPILE_CHECK(NDSC_BOOK_PRI == ARRAYSZ(primary_strings));
 
@@ -1042,50 +1042,50 @@ static const char* _book_type_name(int booktype)
 {
     switch (static_cast<book_type>(booktype))
     {
-    case BOOK_MINOR_MAGIC:            return "Minor Magic";
-    case BOOK_CONJURATIONS:           return "Conjurations";
-    case BOOK_FLAMES:                 return "Flames";
-    case BOOK_FROST:                  return "Frost";
-    case BOOK_SUMMONINGS:             return "Summonings";
-    case BOOK_FIRE:                   return "Fire";
-    case BOOK_ICE:                    return "Ice";
-    case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
-    case BOOK_ENCHANTMENTS:           return "Enchantments";
-    case BOOK_TEMPESTS:               return "the Tempests";
-    case BOOK_DEATH:                  return "Death";
-    case BOOK_MISFORTUNE:             return "Misfortune";
-    case BOOK_CHANGES:                return "Changes";
-    case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
-    case BOOK_BATTLE:                 return "Battle";
-    case BOOK_CLOUDS:                 return "Clouds";
-    case BOOK_NECROMANCY:             return "Necromancy";
-    case BOOK_CALLINGS:               return "Callings";
-    case BOOK_MALEDICT:               return "Maledictions";
-    case BOOK_AIR:                    return "Air";
-    case BOOK_SKY:                    return "the Sky";
-    case BOOK_WARP:                   return "the Warp";
+    case BOOK_MINOR_MAGIC:            return "하급 마법";
+    case BOOK_CONJURATIONS:           return "파괴술";
+    case BOOK_FLAMES:                 return "불꽃";
+    case BOOK_FROST:                  return "서리";
+    case BOOK_SUMMONINGS:             return "소환술";
+    case BOOK_FIRE:                   return "화염";
+    case BOOK_ICE:                    return "얼음";
+    case BOOK_SPATIAL_TRANSLOCATIONS: return "공간 전이";
+    case BOOK_ENCHANTMENTS:           return "주술";
+    case BOOK_TEMPESTS:               return "폭풍";
+    case BOOK_DEATH:                  return "죽음";
+    case BOOK_MISFORTUNE:             return "불운";
+    case BOOK_CHANGES:                return "변화";
+    case BOOK_TRANSFIGURATIONS:       return "변신";
+    case BOOK_BATTLE:                 return "전투";
+    case BOOK_CLOUDS:                 return "구름";
+    case BOOK_NECROMANCY:             return "강령술";
+    case BOOK_CALLINGS:               return "부름";
+    case BOOK_MALEDICT:               return "저주";
+    case BOOK_AIR:                    return "대기";
+    case BOOK_SKY:                    return "하늘";
+    case BOOK_WARP:                   return "왜곡";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_ENVENOMATIONS:          return "Envenomations";
+    case BOOK_ENVENOMATIONS:          return "중독";
 #endif
-    case BOOK_ANNIHILATIONS:          return "Annihilations";
-    case BOOK_UNLIFE:                 return "Unlife";
+    case BOOK_ANNIHILATIONS:          return "섬멸";
+    case BOOK_UNLIFE:                 return "불생";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_CONTROL:                return "Control";
+    case BOOK_CONTROL:                return "제어";
 #endif
-    case BOOK_GEOMANCY:               return "Geomancy";
-    case BOOK_EARTH:                  return "the Earth";
+    case BOOK_GEOMANCY:               return "흙점술";
+    case BOOK_EARTH:                  return "대지";
 #if TAG_MAJOR_VERSION == 34
-    case BOOK_WIZARDRY:               return "Wizardry";
+    case BOOK_WIZARDRY:               return "마법사";
 #endif
-    case BOOK_POWER:                  return "Power";
-    case BOOK_CANTRIPS:               return "Cantrips";
-    case BOOK_PARTY_TRICKS:           return "Party Tricks";
-    case BOOK_DEBILITATION:           return "Debilitation";
-    case BOOK_DRAGON:                 return "the Dragon";
-    case BOOK_BURGLARY:               return "Burglary";
-    case BOOK_DREAMS:                 return "Dreams";
-    case BOOK_ALCHEMY:                return "Alchemy";
-    case BOOK_BEASTS:                 return "Beasts";
+    case BOOK_POWER:                  return "힘";
+    case BOOK_CANTRIPS:               return "장난";
+    case BOOK_PARTY_TRICKS:           return "파티용 마술";
+    case BOOK_DEBILITATION:           return "약화";
+    case BOOK_DRAGON:                 return "용";
+    case BOOK_BURGLARY:               return "도둑질";
+    case BOOK_DREAMS:                 return "꿈";
+    case BOOK_ALCHEMY:                return "연금술";
+    case BOOK_BEASTS:                 return "짐승";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -1095,8 +1095,8 @@ static const char* _book_type_name(int booktype)
 static const char* staff_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "crooked ", "knobbly ", "weird ", "gnarled ", "thin ", "curved ",
-        "twisted ", "thick ", "long ", "short ",
+        "갈고리손잡이 ", "울퉁불퉁한 ", "이상한 ", "뒤틀린 ", "얇은 ", "휜 ",
+        "꼬인 ", "굵은 ", "기다란 ", "짧은 ",
     };
     COMPILE_CHECK(NDSC_STAVE_SEC == ARRAYSZ(secondary_strings));
     return secondary_strings[s % ARRAYSZ(secondary_strings)];
@@ -1105,7 +1105,7 @@ static const char* staff_secondary_string(uint32_t s)
 static const char* staff_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "glowing ", "jewelled ", "runed ", "smoking "
+        "빛나는 ", "보석박힌 ", "룬이 새겨진 ", "연기이는 "
     };
     COMPILE_CHECK(NDSC_STAVE_PRI == ARRAYSZ(primary_strings));
     return primary_strings[p % ARRAYSZ(primary_strings)];
@@ -1115,20 +1115,20 @@ static const char* staff_type_name(int stafftype)
 {
     switch ((stave_type)stafftype)
     {
-    case STAFF_WIZARDRY:    return "wizardry";
-    case STAFF_POWER:       return "power";
-    case STAFF_FIRE:        return "fire";
-    case STAFF_COLD:        return "cold";
-    case STAFF_POISON:      return "poison";
-    case STAFF_ENERGY:      return "energy";
-    case STAFF_DEATH:       return "death";
-    case STAFF_CONJURATION: return "conjuration";
+    case STAFF_WIZARDRY:    return "마법사";
+    case STAFF_POWER:       return "힘";
+    case STAFF_FIRE:        return "화염";
+    case STAFF_COLD:        return "냉기";
+    case STAFF_POISON:      return "독";
+    case STAFF_ENERGY:      return "에너지";
+    case STAFF_DEATH:       return "죽음";
+    case STAFF_CONJURATION: return "파괴";
 #if TAG_MAJOR_VERSION == 34
     case STAFF_ENCHANTMENT: return "enchantment";
 #endif
-    case STAFF_AIR:         return "air";
-    case STAFF_EARTH:       return "earth";
-    case STAFF_SUMMONING:   return "summoning";
+    case STAFF_AIR:         return "대기";
+    case STAFF_EARTH:       return "대지";
+    case STAFF_SUMMONING:   return "소환";
     default:                return "bugginess";
     }
 }
@@ -1416,7 +1416,7 @@ static string _curse_prefix(const item_def &weap, description_level_type desc,
         return "";
 
     if (weap.cursed())
-        return "cursed ";
+        return "저주받은 ";
 
     // We don't bother printing "uncursed" if the item is identified
     // for pluses (its state should be obvious), this is so that
@@ -1430,7 +1430,7 @@ static string _curse_prefix(const item_def &weap, description_level_type desc,
     if (!ident && !item_type_known(weap)
         || !is_artefact(weap))
     {
-        return "uncursed ";
+        return "저주받지 않은 ";
     }
     return "";
 }
@@ -1459,9 +1459,9 @@ static string _cosmetic_text(const item_def &weap, iflags_t ignore_flags)
     switch (desc)
     {
         case ISFLAG_RUNED:
-            return "runed ";
+            return "룬이 박힌 ";
         case ISFLAG_GLOWING:
-            return "glowing ";
+            return "반짝이는 ";
         default:
             return "";
     }
@@ -1480,14 +1480,14 @@ static string _ego_prefix(const item_def &weap, description_level_type desc,
     switch (get_weapon_brand(weap))
     {
         case SPWPN_VAMPIRISM:
-            return "vampiric ";
+            return "흡혈 ";
         case SPWPN_ANTIMAGIC:
-            return "antimagic ";
+            return "반마법 ";
         case SPWPN_NORMAL:
             if (!_know_pluses(weap, desc, ident, ignore_flags)
                 && get_equip_desc(weap))
             {
-                return "enchanted ";
+                return "인챈트 된 ";
             }
             // fallthrough to default
         default:
@@ -1697,7 +1697,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << make_stringf("%+d ", plus);
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
-            buff << "pair of ";
+            buff << "한 쌍의 ";
 
         if (is_artefact(*this) && !dbname)
         {
@@ -1766,7 +1766,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_WANDS:
         if (basename)
         {
-            buff << "wand";
+            buff << "마법봉";
             break;
         }
 
@@ -1774,12 +1774,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "supercharged ";
 
         if (know_type)
-            buff << "wand of " << _wand_type_name(item_typ);
+            buff << "마법봉 of " << _wand_type_name(item_typ);
         else
         {
             buff << wand_secondary_string(subtype_rnd / NDSC_WAND_PRI)
                  << wand_primary_string(subtype_rnd % NDSC_WAND_PRI)
-                 << " wand";
+                 << " 마법봉";
         }
 
         if (dbname)
@@ -1798,23 +1798,23 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (!know_pluses && with_inscription)
         {
             if (used_count == ZAPCOUNT_EMPTY)
-                buff << " {empty}";
+                buff << " {텅 빔}";
             else if (used_count == ZAPCOUNT_RECHARGED)
-                buff << " {recharged}";
+                buff << " {재충전됌}";
             else if (used_count > 0)
-                buff << " {zapped: " << used_count << '}';
+                buff << " {휘두름: " << used_count << '}';
         }
         break;
 
     case OBJ_POTIONS:
         if (basename)
         {
-            buff << "potion";
+            buff << "물약";
             break;
         }
 
         if (know_type)
-            buff << "potion of " << potion_type_name(item_typ);
+            buff << "물약 of " << potion_type_name(item_typ);
         else
         {
             const int pqual   = PQUAL(subtype_rnd);
@@ -1847,31 +1847,31 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             const char *clr =  (pcolour < 0 || pcolour >= PDC_NCOLOURS) ?
                                    "bogus" : potion_colours[pcolour];
 
-            buff << qualifier << clr << " potion";
+            buff << qualifier << clr << " 물약";
         }
         break;
 
     case OBJ_FOOD:
         switch (item_typ)
         {
-        case FOOD_MEAT_RATION: buff << "meat ration"; break;
-        case FOOD_BREAD_RATION: buff << "bread ration"; break;
-        case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
-        case FOOD_FRUIT: buff << "fruit"; break;
+        case FOOD_MEAT_RATION: buff << "고기 식량"; break;
+        case FOOD_BREAD_RATION: buff << "빵 식량"; break;
+        case FOOD_ROYAL_JELLY: buff << "로얄 젤리"; break;
+        case FOOD_FRUIT: buff << "과일"; break;
         case FOOD_CHUNK:
             switch (determine_chunk_effect(*this))
             {
                 case CE_MUTAGEN:
-                    buff << "mutagenic ";
+                    buff << "돌연변이성 ";
                     break;
                 case CE_NOXIOUS:
-                    buff << "inedible ";
+                    buff << "먹을 수 없는 ";
                     break;
                 default:
                     break;
             }
 
-            buff << "chunk of flesh";
+            buff << "살덩어리";
             break;
 #if TAG_MAJOR_VERSION == 34
         default: buff << "removed food"; break;
@@ -1881,7 +1881,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
 
     case OBJ_SCROLLS:
-        buff << "scroll";
+        buff << "두루마리";
         if (basename)
             break;
         else
@@ -1898,9 +1898,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (basename)
         {
             if (jewellery_is_amulet(*this))
-                buff << "amulet";
+                buff << "목걸이";
             else
-                buff << "ring";
+                buff << "반지";
 
             break;
         }
@@ -1941,13 +1941,13 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             {
                 buff << amulet_secondary_string(subtype_rnd / NDSC_JEWEL_PRI)
                      << amulet_primary_string(subtype_rnd % NDSC_JEWEL_PRI)
-                     << " amulet";
+                     << " 목걸이";
             }
             else  // i.e., a ring
             {
                 buff << ring_secondary_string(subtype_rnd / NDSC_JEWEL_PRI)
                      << ring_primary_string(subtype_rnd % NDSC_JEWEL_PRI)
-                     << " ring";
+                     << " 반지";
             }
         }
         if (know_curse && cursed() && terse)
@@ -1983,7 +1983,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             buff << get_artefact_name(*this);
             if (!know_type)
-                buff << "book";
+                buff << "책";
             break;
         }
         if (basename)
@@ -2688,7 +2688,7 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
         text += colour_to_str(colour);
         text += ">";
         text += rune_type_name(rune);
-        text += " rune of Zot";
+        text += " 조트의 룬";
         if (!you.runes[rune])
         {
             text += " (";
@@ -2707,10 +2707,10 @@ static MenuEntry* _fixup_runeorb_entry(MenuEntry* me)
     else if (entry->item->is_type(OBJ_ORBS, ORB_ZOT))
     {
         if (player_has_orb())
-            entry->text = "<magenta>The Orb of Zot</magenta>";
+            entry->text = "<magenta>조트의 오브</magenta>";
         else
         {
-            entry->text = "<darkgrey>The Orb of Zot"
+            entry->text = "<darkgrey>조트의 오브"
                           " (the Realm of Zot)</darkgrey>";
         }
     }
@@ -2724,8 +2724,8 @@ void display_runes()
                runes_in_pack() < you.obtainable_runes ? "green" :
                                                    "lightgreen";
 
-    auto title = make_stringf("<white>Runes of Zot (</white>"
-                              "<%s>%d</%s><white> collected) & Orbs of Power</white>",
+    auto title = make_stringf("<white>조트의 룬 (</white>"
+                              "<%s>%d</%s><white>개 얻음) & 힘의 오브</white>",
                               col, runes_in_pack(), col);
     title = string(max(0, 39 - printed_width(title) / 2), ' ') + title;
 

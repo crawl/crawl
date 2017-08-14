@@ -1,878 +1,941 @@
 %%%%
 No ability ability
 
-If you get this description, it is a bug.
+버그를 발견하셨습니다! 한글화 팀의 잘못이 아니니, 게임 개발자들을 욕하세요.
 %%%%
 Spit Poison ability
 
-Spits poison at a targeted creature.
+대상에게 독침을 내뱉는다.
 %%%%
 Blink ability
 
-Randomly translocates the user a short distance.
+임의의 장소로 순간이동을 한다. 어디로 이동할지는 알 수 없다.
 %%%%
 Breathe Dispelling Energy ability
 
-Breathes a bolt of dispelling energy at a targeted creature, possibly removing
-some of its enchantments.
+대상에게 마력이 깃든 숨결을 내뿜는다. 이 숨결은 적에게 걸려있는 각종 효과를
+없애버린다.
 %%%%
 Breathe Fire ability
 
 {{
-    local desc = "Breathes a blast of fire at a targeted creature"
+    local desc = "지정한 몬스터에게 불꽃 입김을 내뿜"
 
     if you.race() == "Red Draconian" then
-        desc = desc .. ", leaving a cloud of flames at the endpoint"
+        desc = desc .. "는다. 입김의 끝자락에는 화염 구름이 남"
     end
 
-    desc = desc .. "."
+    desc = desc .. "는다."
 
     return desc
 }}
 %%%%
 Breathe Frost ability
 
-<Chilling Breath spell>
+대상에게 냉기를 내뿜는다. 날아다니는 적은 그 충격에 뒤로 밀릴 것이다.
 %%%%
 Breathe Poison Gas ability
 
-Breathes a blast of poison gas at a targeted creature.
+대상에게 독구름을 내뿜는다.
 %%%%
 Breathe Lightning ability
 
-Releases a great discharge of electricity, causing an uncontrollable lightning
-storm. It partially bypasses armour.
+막대한 양의 전기를 뿜어내어, 통제할 수 없는 번개 폭풍을 만들어낸다.
 %%%%
-Breathe Acid ability
+Breathe Sticky Flame ability
 
-Spits a glob of acid at a nearby creature, covering it in corrosive slime
-for a short time. It may also splash onto other nearby creatures on impact.
+대상에게 점착화염을 내뿜는다. 그 이름에서 알 수 있듯이, 점착화염은 적에게
+달라붙어, 꺼질 때까지 적을 괴롭힌다. 대상 주변에 다른 적이 있다면, 불꽃이 튀어
+주변의 적들이 동시에 타오른다.
 %%%%
 Breathe Steam ability
 
-Breathes a jet of steam at a targeted location, which will scald any creatures
-it hits and will also obscure vision.
+대상에게 뜨거운 증기를 내뿜는다. 증기구름이 대량으로 발생한다.
 %%%%
 Breathe Noxious Fumes ability
 
-Breathes a blast of noxious fumes at a targeted creature.
+대상에게 냄새나는 숨결을 내뿜는다. 숨결이 지나가는 길에 악취구름을 만들어낸다.
 %%%%
 Bat Form ability
 
-Transforms the user into a swift-moving vampire bat, increasing evasion but
-substantially weakening melee attacks.
+재빠른 흡혈박쥐로 변신한다. 박쥐가 되면 어떤 도구도 사용할 수 없으며
+(떨어트리거나 줍는 것은 가능하다) 주문도 사용할 수 없다. 변신 중에는 민첩해지나
+힘이 약해지므로, 당신의 힘이 너무 약하다면 변신할 수 없다. 힘의 감소 때문에
+소지품이 감당하지 못할 만큼 무겁게 느껴질 수도 있으니 주의하라.
+%%%%
+Bottle Blood ability
 
-While tranformed, any equipped weapons, armour and rings are melded, and the
-user becomes unable to evoke wands or to cast spells.
+레벨 6 이상일 때, 뱀파이어는 신선한 피를 가진 시체에서 피 한 병을 뽑아낼 수
+있다.
+%%%%
+Spit Acid ability
+
+대상에게 산성 액체를 내뱉는다.
 %%%%
 Fly ability
 
-Starts flight. During flight you can safely cross water and similar obstacles.
-Be warned, though, that some forms of flight are temporary and may expire at
-inopportune moments.
+공중으로 날아오른다.
 %%%%
-Hurl Damnation ability
+Hellfire ability
 
-Blasts a targeted enemy with damnation. These unholy forces harm the victim and
-anyone adjacent, and are not affected by any means of protection, such as armour
-or resistances. However, certain creatures, usually those able to invoke
-damnation themselves, are entirely unscathed by damnation.
+대상과 그 주변을 지옥불로 불태워버린다.
 %%%%
-Cancel Portal Projectile ability
+Stop Singing ability
 
-Ends your Portal Projectile status.
+살육의 노래 부르기를 멈춘다.
 %%%%
-Heal Wounds ability
+Device Recharging ability
 
-Heals the user significantly, with a chance of permanently reducing the user's
-maximum magic capacity by one.
+영구적으로 최대 마력을 1 소비하는 대신, 마법봉 혹은 마법 막대를 재충전한다.
 %%%%
-Dig ability
+Evoke Teleportation ability
 
-Allows making tunnels through soft rock and rusted grates. Activating the
-ability has no cost and simply prepares you to start digging; once active,
-moving into a wall will start tunneling. Doing so makes some noise and causes
-hunger, and is a little slower than walking.
-%%%%
-Shaft Self ability
-
-Sends you to a random position one to two floors down, as if you jumped into a
-shaft trap. It takes some time to dig the shaft.
-%%%%
-Evoke Blink ability
-
-<Blink ability>
+현재 층의 임의의 장소로 공간이동한다. 이동까지 약간의 시간이 필요하다.
 %%%%
 Evoke Berserk Rage ability
 
-<Berserk ability>
+광폭화 상태가 되어, 생명력과 근접전투력을 짧은 시간 동안 크게 향상시킨다.
+아무도 죽이지 않는다면 금방 분노가 풀리지만, 적을 죽이면 죽일수록 분노가 더
+오래갈 확률이 높아진다. 분노가 끝나면 후유증으로 움직임이 느려짐과 동시에
+탈진하여 광폭화 상태가 될 수 없으며, 심지어 잠시 기절할 수도 있다. (트로그를
+믿고 있다면, 신앙심에 따라 기절할 확률이 줄어든다) 또한 분노한 상태에서는
+원거리 공격, 장비 장착 및 해제, 물약 마시기, 마법봉이나 다른 도구 발동, 주문
+시전 등 이성이 필요한 행동을 할 수 없다.
 %%%%
 Evoke Invisibility ability
 
-Turns the user invisible. Turning invisible causes magical contamination and
-may eventually cause glowing, nullifying the invisibility.
+짧은 시간동안 몸을 투명하게 만든다. 투명 상태에서는 마법오염이 조금씩 쌓이며,
+마법오염이 너무 많이 쌓이면 발광 상태가 되어 적이 볼 수 있게 된다.
 %%%%
 Turn Visible ability
 
-Turns visible again.
-%%%%
-Evoke Flight ability
-
-<Fly ability>
+투명화를 해제한다.
 %%%%
 Stop Flying ability
 
-Stops flying.
+비행을 그만둔다.
 %%%%
 Evoke Fog ability
 
-Releases a thick cloud of fog to obscure vision.
-%%%%
-Evoke Ratskin ability
-
-Summons up to two dungeon rats to serve their master for a brief time.
+시야를 가리기 위해 두꺼운 안개구름을 일으킨다.
 %%%%
 End Transformation ability
 
-Reverts you to your normal form.
-%%%%
-# Zin
-Recite ability
-
-Preaches to nearby monsters about Zin's laws for a short duration. After
-finishing a recitation, it cannot be repeated for a short time.
-
-The recitation will have different effects depending on the target: the chaotic
-and unclean will be affected by powerful and damaging effects, undead and
-demons will be affected by weaker rebukes, and any other intelligent creatures
-will have confusion sown amongst them, with heretics and priests of gods other
-than Zin being punished much more strongly. The effectiveness of the recitation
-is increased by Invocations skill.
+현재 변신상태를 해제한다. 해제하는데 약간의 시간이 걸린다.
 %%%%
 Vitalisation ability
 
-Temporarily provides protection from poison, confusion, petrification, rotting
-and sickness, and increases and sustains your strength, intelligence and
-dexterity. The increases to your attributes are determined by Invocations skill.
+진으로부터 신성한 체력을 부여받아 질병, 독, 석화, 혼란, 부패, 능력치 감소로부터
+보호받으며, 기도술에 따라 힘, 민첩, 지능을 일시적으로 강화시켜준다. 약간의
+만복도 또한 회복된다.
 %%%%
 Imprison ability
 
-Temporarily imprisons a monster in walls of silver. The duration of the prison
-is increased by Invocations skill.
+몬스터를 은빛 감옥에 일시적으로 가둔다.  감옥이 유지되는 시간은 기도술이
+늘어남에 따라 증가한다.
 %%%%
 Sanctuary ability
 
-Creates a divine refuge for a short duration. While you are inside the
-sanctuary, monsters will not attack you, but the protection will disappear at
-once should you breach the divine peace.
+짧은 시간 동안 당신을 중심으로 한 성역을 만든다. 성역 안에서는 적이 당신을
+공격하지 못하고 도망가며, 해로운 구름이나 원거리 공격도 당신을 위협하지 못한다.
+하지만 당신이 성역에서 적을 공격해 성역의 평온을 깬다면, 그 순간 성역은
+사라진다.
 %%%%
 Cure All Mutations ability
 
-Cures all your mutations — but only once.
+모든 돌연변이를 없애버린다. 딱 한 번만 사용할 수 있다.
 %%%%
-# The Shining One
 Divine Shield ability
 
-Grants a temporary divine shield. Because it is held aloft by the Shining One's
-power, it does not interfere with your equipment, but it functions otherwise as
-a normal, physical shield. The strength and duration of the shield are increased
-by Invocations skill.
+샤이닝 원의 힘으로 신성한 방패를 만들어낸다. 신의 힘으로 떠다디는 방패이기
+때문에 거슬리거나 하지 않아, 양손무기를 들거나 마법을 사용할 때 방해되지
+않는다. 자신의 의지로 조종하는 방패이기 때문에, 방패 사용에 능숙한 사람일수록
+권능을 더 효과적으로 쓸 수 있을 것이다.
 %%%%
 Cleansing Flame ability
 
-Invokes a huge blast of divine fury centered on the user, severely damaging
-undead and demons and dealing damage to all other hostile creatures. The user's
-allies are never affected. The power of the blast is increased by Invocations
-skill.
+당신의 주변에 성스러운 불꽃을 일으킨다. 언데드와 악마에게 특히 효과적이며 다른
+종류의 적에게도 어느 정도 피해를 주지만, 당신과 동료들은 그 어떤 피해도 입지
+않는다.
 %%%%
 Summon Divine Warrior ability
 
-Summons a powerful warrior against evil, either an angel or a daeva. The
-duration of their assistance is increased by Invocations skill, and glory in
-battle may lead the Shining One to bless them with an even longer stay.
+악에 맞서 싸우는 천사 혹은 데바를 하나 소환한다. 이들이 악을 단죄할 때마다,
+샤이닝 원이 축복을 내려 이 세계에 더 오래 머무르게 될 확률이 있다.
 %%%%
-Brand Weapon With Holy Wrath ability
-
-Permanently blesses a weapon of your choice with the holy wrath of the Shining
-One. Demon weapons will be converted into a more powerful sacred weapon. This
-blessing may only be used once, and it cannot be used on artefact weapons.
-%%%%
-# Kikubaaqudgha
 Receive Corpses ability
 
-Creates one or more reanimatable monster corpses nearby. The number and
-freshness of these are dependent on Necromancy skill.
+하나 혹은 그 이상의 시체를 당신에게 선사한다. 시체의 숫자와 신선도는 당신의
+강령술에 달려있다.
 %%%%
 Torment ability
 
-Sacrifices a cadaver to make all living creatures in sight experience all
-the pain that being suffered in its life. This damage is never directly lethal.
-Kikubaaqudgha may shield you from the effect, depending on your piety.
-%%%%
-Brand Weapon With Pain ability
+시체를 희생하여, 당신을 포함한 시야 내의 모든 적에게 지금껏 겪어보지 못했을
+극심한 고통을 선사한다. 이 고통은 현재 생명력의 절반을 앗아갈 것이다.
 
-Permanently bloodies a weapon of your choice with the essence of pain
-itself. This blessing cannot be used on artefact weapons. You must choose
-between this gift or that of the Necronomicon, and either gift may only be
-received once.
+키쿠바쿠드하는 이 고통으로부터 당신을 보호해줄 때도 있다. ...안 해줄 때도
+있지만.
 %%%%
-Receive Necronomicon ability
-
-Grants you the Necronomicon, a spellbook containing the most powerful and
-sinister secrets of Necromancy. You must choose between this gift or that of
-branding a weapon with pain, and either gift may only be received once.
-%%%%
-# Yredelemnul
 Animate Remains ability
 
-Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
-cannot leave the level they were created on.
+주변의 시체나 해골 하나를 일으켜 당신의 언데드 수하로 만든다. 이 권능으로
+되살아난 좀비와 해골은 다른 층으로 이동할 수 없다.
 %%%%
 Recall Undead Slaves ability
 
-Recalls your undead followers from anywhere in the dungeon to your immediate
-surroundings.
-%%%%
-Injury Mirror ability
-
-Reflects damage taken for a short duration, hurting attackers whenever any
-damage is taken and reducing piety depending on the amount of damage dealt.
+당신의 오크 추종자들을 주변으로 불러온다. 추종자가 어디에 있어도 (즉, 같은 층에
+있지 않아도)  불러오는 것이 가능하다.
 %%%%
 Animate Dead ability
 
-Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
-skeletons cannot leave the level they were created on.
+주변의 모든 시체와 해골들을 일으켜 당신의 언데드 수하로 만든다. 이 권능으로
+되살아난 좀비와 해골은 다른 층으로 이동할 수 없다.
 %%%%
 Drain Life ability
 
-Drains the life force of any nearby creatures, healing the user depending on
-the damage dealt. The amount of life force drained is increased by Invocations
-skill.
+주변에 있는 모든 적들의 생명력을 흡수하여, 당신의 것으로 만든다.
 %%%%
 Enslave Soul ability
 
-Marks a monster's soul as ripe for the taking. Intelligent living, holy and
-demonic monsters can be targeted (excepting most lords of Pandemonium), as
-long as they are relatively uninjured. The duration of the mark is dependent on
-Invocations skill. If the monster dies while still marked, its soul will become
-yours.
+살아있는 지성체의 영혼에 각인을 새긴다. 각인을 새긴 적이 죽으면, 그 영혼을
+가져올 수 있다.
 
-The enslaved soul will retain the monster's faculties, equipment and abilities,
-as well as some of its innate healing. However, only one soul can be enslaved
-at a time.
+지배당한 영혼은 생전의 장비와 능력, 타고난 재생력과 같은 특징들을 그대로
+이어받는다. 하지만 각인은 생명력이 충분한 적에게만 새길 수 있으며, 한번에
+하나의 영혼만을 지배할 수 있다. 기도술이 높을수록, 각인은 오래 남아 적이 죽는
+순간만을 기다린다.
+
+지배당한 영혼은 당신을 따르기 위해 그들이 만들어진 층을 벗어날 수 있다.
 %%%%
-# Okawaru
+Animate Remains or Dead ability
+
+버그를 발견하셨습니다! 친구들에게 이 사실을 자랑하세요.
+%%%%
 Heroism ability
 
-Temporarily increases all of your combat skills, both offensive and defensive.
-The duration is increased by Invocations skill.
+잠시동안 영웅의 힘을 빌어, 전투와 관련된 모든 기술들을 더 능숙하게 만들어준다.
+은밀한 이동과 함정 탐지까지도 더 능숙해지지만, 마법과 관련된 능력과 기도술,
+발동술은 영향을 받지 않는다.
 %%%%
 Finesse ability
 
-Greatly increases your combat speed. The duration is increased by Invocations
-skill.
+공격 속도를 정확도 하락 없이 큰 폭으로 향상한다. 단, 이와 같은 부자연스러운
+효과는 마법오염을 일으킬 수 있으므로 주의해야 한다.
 %%%%
-# Makhleb
 Minor Destruction ability
 
-Shoots a random harmful blast at the targeted creature. Damage and accuracy
-are increased by Invocations skill.
-%%%%
-Lesser Servant of Makhleb ability
-
-Summons a minor demon. Failing to use this ability correctly will turn the
-demon hostile.
+대상이 된 적을, 임의의 파괴 마법으로 공격한다.
 %%%%
 Major Destruction ability
 
-Shoots a random harmful beam or explosion at the targeted creature. Damage and
-accuracy are increased by Invocations skill.
+대상을 파괴의 광선이나 폭발로 공격한다. 어떤 속성의 공격이 나갈지는 정할 수
+없다.
 %%%%
-Greater Servant of Makhleb ability
+Channel Energy ability
 
-Summons a major demon. Failing to use this ability correctly will turn the
-demon hostile.
-%%%%
-# Sif Muna
-Divine Energy ability
-
-Calls on Sif Muna for divine energy. While active, Sif Muna will allow you to
-cast spells even with insufficient reserves of magic. Doing so will cause you
-to briefly lose access to your magic after the spell is cast.
-%%%%
-Stop Divine Energy ability
-
-Stops requesting divine energy from Sif Muna, no longer allowing you to cast
-spells without sufficient magical reserves.
-%%%%
-Channel Magic ability
-
-Dramatically increases the user's regeneration of magical power for a duration
-that increases with Invocations skill.
+마력을 조금 회복한다. 회복되는 양은 기도술의 영향을 받는다.
 %%%%
 Forget Spell ability
 
-Removes a known spell from memory, so as to free memory to learn others.
+기억한 주문을 잊어버리고, 그만큼의 마법 포인트를 돌려받는다.
 %%%%
-# Trog
 Burn Spellbooks ability
 
-Sets all spellbooks within your field of vision on fire. The fire is fuelled by
-Trog's hatred, and it burns hotter than mere parchment would — which can be
-useful if you throw the book under someone's feet first. Trog greatly
-appreciates the burning of spellbooks.
+주변의 모든 마법책들을 불태운다. 마법을 향한 트로그의 분노가 책을 불태우는
+원동력이며, 평범한 양피지가 불타는 것보다 훨씬 강력한 화염을 내뿜는다 —
+누군가의 발 밑에 책을 먼저 던져 둔다면 상당히 유용하게 쓸 수 있을 것이다.
+트로그는 이 능력을 사용하는 것을 대단히 기뻐하는 것으로 알려져 있다.
 %%%%
 Berserk ability
 
-Sends the user into a berserk rage. Going berserk temporarily increases health,
-speed, and damage dealt in melee. It will time out quickly outside of combat,
-but may be extended by multiple kills. While berserk, almost all actions other
-than movement and melee combat are prevented. When the rage expires, the user
-will be briefly slowed and occasionally may even pass out, and will be unable
-to berserk again for a short time.
-%%%%
-Trog's Hand ability
-
-Invokes a powerful regeneration ability which stacks with all other sources and
-is effective even on those who would not otherwise be able to regenerate. While
-active, the user will also be granted significant protection from hostile
-enchantments.
+광폭화 상태가 되어, 생명력과 근접전투력을 짧은 시간 동안 크게 향상시킨다.
+아무도 죽이지 않는다면 금방 분노가 풀리지만, 적을 죽이면 죽일수록 분노가 더
+오래갈 확률이 높아진다. 분노가 끝나면 후유증으로 움직임이 느려짐과 동시에
+탈진하여 광폭화 상태가 될 수 없으며, 심지어 잠시 기절할 수도 있다. (트로그를
+믿고 있다면, 신앙심에 따라 기절할 확률이 줄어든다) 또한 분노한 상태에서는
+원거리 공격, 장비 장착 및 해제, 물약 마시기, 마법봉이나 다른 도구 발동, 주문
+시전 등 이성이 필요한 행동을 할 수 없다.
 %%%%
 Brothers in Arms ability
 
-Summons huge angry allies to wreak havoc.
+광폭화 상태의 거인족이 소환되어, 당신의 적들에게 재앙을 일으킬 것이다.
 %%%%
-# Elyvilon
 Divine Protection ability
 
-Beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
-may undo the killing blow. Especially pious individuals may be certain of this
-help, but in that case, any intervention costs piety (as opposed to merely
-asking for intervention, which is always free). Killing others while asking
-for divine protection will cause penance.
+엘리빌론에게 구제를 요청한다. 보호를 받는 동안에는 신이 최후의 일격을
+무효화해줄 확률이 극도로 커지며, 당신이 독실한 신도라면 100% 보호받을 수도
+있다. 하지만, 신이 당신을 지켜줄 때마다 신앙심이 많이 감소하며 (보호를 요청하지
+않았는데 확률적으로 지켜줄 때는 신앙심이 감소하지 않는다) 보호받는 도중에
+살생하는 것은 엄청난 죄가 되므로 주의해야한다.
 %%%%
-Lesser Healing ability
+Lesser Self-Healing ability
 
-Heals a small amount of health, depending on Invocations skill.
+당신의 기도술과 비례한 양만큼, 당신의 생명력을 약간 회복시킨다.
 %%%%
 Purification ability
 
-Purges your body of negative effects such as poison, confusion, slowness,
-petrification, rotting, and sickness, and fully restores any lost strength,
-dexterity or intelligence.
-%%%%
-Heal Other ability
-
-Heals a creature other than yourself by a moderate amount, depending on
-Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on animals, and is less effective on humanoids and
-other intelligent creatures. Undead and demons are harder still to pacify.
-Mindless creatures cannot be pacified, and no monster can be pacified while it
-is asleep.
-
-Whether the pacification succeeds or not, the invested food, piety and magic
-points are lost. If it does succeed, the monster is healed and you gain half
-the monster's experience value. Otherwise, the monster is unaffected and you
-gain nothing.
+당신의 몸에서 질병, 독, 감속, 석화, 혼란, 부패 등의 안좋은 효과들을 모두
+제거한다. 또한 당신의 힘, 민첩, 지능을 모두 회복한다.
 %%%%
 Greater Healing ability
 
-Heals a moderate amount of health, depending on Invocations skill. Greater
-Healing will heal approximately three times as much as Lesser Healing, but at a
-slightly higher total piety cost.
-%%%%
-Divine Vigour ability
+당신의 기도술과 비례한 양만큼, 당신을 제외한 다른 개체를 상당량 회복시킨다.
+적대적인 괴물에게 사용할 경우 그들을 중립화시킬 확률이 존재한다. 이 중립화
+확률은 적이 동물일 때 가장 높고, 자신과 동족일 때 조금 낮으며, 신성체일 때 조금
+더 낮고, 다른 인간형 종족일 경우 더욱 낮으며, 악마와 언데드일 때의 확률이 가장
+낮다. 지능이 없는 생명체일 경우 중립화되지 않으며, 자고 있는 적은 중립화시킬 수
+없다. 성공적인 중립화의 확률은 치료량이 얼마나 되느냐에 달려있으며, 이는 곧
+소치료에 비해 중립화의 성공 확률이 훨씬 높다는 것을 의미한다.
 
-Greatly increases your maximum health and magic points, depending on
-Invocations skill. Your current health and magic points will also be increased
-proportionally.
+중립화의 성공 여부와 관계없이 마력, 신앙심, 만복도는 소비된다. 만약 중립화가
+성공한다면 해당 적은 치료 및 중립화가 되며, 당신은 절반의 경험치를 얻고 또한
+약간의 신앙심을 획득할 것이다. 중립화에 실패하면 적은 치료되지 않는다.
+
+이 권능은 동료 또는 중립 상태의 다른 개체에게도 사용할 수 있다.
 %%%%
-# Lugonu
+Greater Self-Healing ability
+
+당신의 기도술과 비례한 양만큼, 당신의 생명력을 회복시킨다. 대략적으로, 대치료는
+소치료에 비해 약간 더 많은 신앙심을 소비해서 3배정도 더 많은 양을 회복시켜준다.
+%%%%
 Depart the Abyss ability
 
-Transports you out of the Abyss, returning you to the location from which you
-entered it.
-%%%%
-Bend Space ability
-
-Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating and damaging other adjacent creatures. In
-warping the fabric of space, this ability ignores effects that would usually
-prevent translocations. Invocations skill increases the chance of affecting
-nearby creatures and the damage dealt to those affected.
+어비스를 떠나, 원래 있던 곳으로 되돌아간다.
 %%%%
 Banish ability
 
-Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and half the creature's experience value. Invocations skill makes it
-harder to resist.
+적을 어비스로 추방한다. 적의 마법 저항에 따라 실패할 확률이 있다.
 %%%%
 Corrupt ability
 
-Corrupts the current level by unleashing Abyssal energies on it. This will
-cause the area nearby to change appearance, and will gate in creatures from the
-Abyss bent on causing destruction. This will not work on levels already
-corrupted or in the Abyss itself. The size of the effect is increased by
-Invocations skill.
+당신이 있는 층에 어비스의 기운을 불러와 오염시킨다. 주변의 모습이 완전히
+달라지며, 어비스의 악마들이 나타나 모든 것을 파괴하려고 할 것이다. 이미
+오염시킨 층이나 어비스에서는 사용할 수 없다.
 %%%%
 Enter the Abyss ability
 
-Transports you to Lugonu's realm instantly. The effort of even using the
-ability will leave your health depleted.
+당신을 루고누가 지배하는 지역으로 즉시 이동시킨다. 대신 그 대가로 최대 생명력과
+마력이 영구적으로 감소하며, 현재 생명력과 마력 역시 크게 소모된다.
 %%%%
-Brand Weapon With Distortion ability
-
-Permanently corrupts a weapon of your choice with a localized field of
-distortion. This blessing may only be used once, and it cannot be used on
-artefact weapons.
-%%%%
-# Nemelex Xobeh
 Triple Draw ability
 
-Draws three cards from any deck in your inventory, and allows you to choose one
-to keep, discarding the other two.
+카드 덱에서 세 장을 뽑아 확인한 다음, 한 장은 사용하고 두 장은 버린다.
 %%%%
 Deal Four ability
 
-Deals four cards from any unmarked deck in the time it normally takes to draw a
-single card. The rest of the deck is lost. If the deck does not contain enough
-cards, Nemelex will give you one extra card, but you might not like it.
+다음 카드가 어떤 카드인지 표시되지 않은 덱에서, 한 턴만에 4장의 카드를 뽑아
+차례대로 발동시키고 나머지를 버린다. 만약 카드 덱에 충분한 카드가 있지 않을
+경우, 네멜렉스가 한 장의 추가 카드를 만들어서 마무리를 짓는다. 하지만, 이 추가
+카드를 보고 좋아할 사람은 아마 아무도 없을 것이다.
 %%%%
 Stack Five ability
 
-Shows you five cards from any unmarked deck in your inventory, losing the rest
-of the deck, and allows you to sort them into any order. Subsequently, you can
-draw these cards in the order you chose.
+다음 카드가 어떤 카드인지 표시되지 않은 덱에서 5장의 카드를 남기고, 나머지
+카드를 버린다. 남긴 카드들을 보고 마음에 드는 순서대로 배치할 수 있으며, 다음에
+카드를 뽑을 때 배치한 순서대로 카드를 뽑을 수 있다.
 %%%%
-# Beogh
 Smiting ability
 
-Smites any targeted enemy within sight, with no direct line of fire required.
-The strength of the smiting is increased by Invocations skill.
+시야 내의 적 하나에게 징벌을 내린다. 적이 보이기만 하면 사용할 수 있으며, 숨을
+수도, 막을 수도, 피할 수도 없다. 단, 유리벽 너머로 보이는 적에게는 사용할 수
+없다.
 %%%%
 Recall Orcish Followers ability
 
-Recalls your orcish followers from anywhere in the dungeon to your immediate
-surroundings.
+당신의 오크 추종자들을 주변으로 불러온다. 추종자가 어디에 있어도 (즉, 같은 층에
+있지 않아도)  불러오는 것이 가능하다.
 %%%%
 Stop Recall ability
 
-Stops recalling your followers.
-%%%%
-Give Item to Named Follower ability
-
-Gives a weapon or piece of armour to a named orcish follower. An orc can only
-ever receive one of these gifts.
-%%%%
-Resurrection ability
-
-Bring an orc corpse back to life. The orc will be an ally, even if it was not
-already one before it died.
-%%%%
-# Fedhas
-Fungal Bloom ability
-
-Call up Fedhas to accelerate the natural process of decay, transforming all
-corpses nearby into fast-growing, short-lived toadstools. Zombies, ghouls,
-and necrophages are considered walking corpses, and are affected accordingly;
-zombies rot into skeletons, and ghouls and necrophages rot away entirely,
-granting no experience.
+당신의 동료들을 소집하는 것을 중지한다.
 %%%%
 Sunlight ability
 
-Calls sunlight down over a small area of the dungeon. Monsters illuminated by
-the light will be easier to hit. Water affected by the sunlight will evaporate.
-In particular, deep water will become shallow water, and shallow water will dry
-up completely, revealing the dungeon floor.
-%%%%
-Growth ability
-
-Uses fruit to grow a ring of plants around yourself. If a complete ring cannot
-be formed (because you do not have enough fruit), plants will grow on squares
-adjacent to you that are close to monsters. The plants you create gain bonus
-health proportional to your Invocations skill.
+던전의 좁은 지역에 강한 햇빛을 비춘다. 빛을 받은 적은 좀 더 맞추기 쉬워지며,
+투명한 적도 윤곽이 드러나 볼 수 있게 된다. 깊은 물이 햇빛을 받으면 증발하여
+얕아지며, 얕은 물은 완전히 말라버린다.
 %%%%
 Rain ability
 
-Causes rain to fall around you, turning the dungeon floor into shallow water
-and shallow water into deep water. This may also allow plants and mushrooms to
-grow in areas that are not directly drenched. Invocations skill increases the
-number of rain-clouds created.
+주변에 비를 내려 물이 고이게 하고, 얕은 물은 더욱 깊게 만든다. 주변에 식물이나
+버섯이 자라날 수도 있다.
 %%%%
 Reproduction ability
 
-Creates ballistomycete spores from corpses in your line of sight. The spores will
-explode, causing damage to you or your enemies.
+주변의 시체에서 거대 포자를 만든다. 이 포자는 적에게 부딪히면 폭발하여 피해를
+준다.
 %%%%
 Evolution ability
 
-Turns plants and fungi into stronger species. Upgrading fungi requires piety,
-while upgrading plants requires fruit. Upgraded plants gain a bonus to attack
-accuracy proportional to the user's Invocations skill, and oklob plants are
-more likely to spit acid at higher Invocations.
+식물이나 버섯류를 더욱 강한 종으로 진화시킨다. 버섯류의 진화에는 신앙심이,
+식물류의 진화에는 과일이 필요하다. 사용자의 기도 스킬과 비례하여 식물들의 공격
+명중률이 높아지며, 오클롭 식물의 경우 기도 스킬이 높을수록 좀 더 빈번하게 산성
+물질을 뱉어내게 된다.
 %%%%
-# Cheibriados
 Bend Time ability
 
-Attempts to slow down everyone adjacent to you. High Invocations skill makes it
-harder to resist.
+인접한 모든 적들을 느리게 만든다. 기도술이 능숙해질수록, 적들은 저항하지 못하고
+느려질 것이다.
 %%%%
 Temporal Distortion ability
 
-Warps the flow of time, causing monsters to skip forwards in time relative to
-you.
-%%%%
-Slouch ability
-
-Causes damage to everyone in sight who is moving faster than you, dealing more
-damage with greater differences in speed.
+시간의 흐름을 비틀어서, 몇 턴 후의 미래로 이동한다. 이동은 턴 소모 없이
+이루어지며, 이동하는 동안 자신은 이 세계에 존재하지 않는 것으로 취급된다.
 %%%%
 Step From Time ability
 
-Removes you completely from the flow of time. Things around you will happen at
-their usual busy pace, and monsters will wander and may even forget about you.
-After some time has passed, you will return in the same state as the very
-second you departed. Invocations skill increases the amount of time that passes
-while you're gone.
+존재를 지워, 시간의 흐름에서 사라진다. 주변의 다른 존재들은 영향을 받지 않기
+때문에 적은 떠돌아다니고 시체는 부패하며, 식물은 자라난다. 충분한 시간이 지난
+뒤에, 당신은 전과 같은 모습으로 제자리에 돌아온다.
 %%%%
-# Jiyva
 Request Jelly ability
 
-Creates a neutral jelly that will wander the floor and digest items.
+중립적인 젤리를 소환한다. 이들은 주변을 배회하며, 눈에 보이는 모든 물건을
+먹어치운다.
 %%%%
 Slimify ability
 
-Coats a wielded weapon or your fists with slime, turning the next living or
-corporeal undead monster hit into a neutral slime.
+무기 또는 주먹에 점액을 두른다. 이 점액은 생명체나 언데드를 슬라임으로
+만들어버리며, 어떤 방식으로도 저항할 수조차 없다.
 %%%%
 Cure Bad Mutation ability
 
-Removes a randomly selected bad mutation.
+나쁜 돌연변이를 치료한다. 어떤 돌연변이가 선택될지는 알 수 없다.
 %%%%
-# Ashenzari
 Scrying ability
 
-Provides astral sight, allowing you to see through walls.
+벽 너머를 볼 수 있는 초자연적인 시력을 얻는다. 하지만 벽 너머의 적을 볼 수
+있다고 해서, 벽 너머의 적에게 마법이나 원거리 공격을 사용할 수는 없다.
 %%%%
 Transfer Knowledge ability
 
-Sacrifices part of one of your skills to improve another. The transfer will
-take place gradually as you gain experience.
+하나의 기술을 희생하여, 다른 기술을 향상시킨다.
 %%%%
 End Transfer Knowledge ability
 
-Aborts an ongoing skill transfer.
+진행 중인 기술 이전을 중단한다.
 %%%%
-# Dithmenos
 Shadow Step ability
 
-Allows you to step into the shadow of any hostile creature within your umbra,
-as long as they are immobile or asleep, landing adjacent to the target.
-%%%%
-Shadow Form ability
-
-Transforms you into a swirling mass of dark shadows. While in this form, you
-are permanently invisible and are immune to poison, draining, torment, and
-hostile enchantments. All incoming damage will be halved, and you will bleed
-smoke on any incoming attack. However, your ability to deal damage in melee and
-with ranged attacks will be halved, your spellcasting power will be greatly
-hampered, and your skills will be further drained when taking damage.
-Invocations skill increases the duration of the transformation.
-%%%%
-# Gozag
-Potion Petition ability
-
-Petitions Gozag to sell you the effects of a set of potions. Gozag will offer
-three lists at a time, with varying prices.
-%%%%
-Call Merchant ability
-
-Sends funds to a merchant to help them set up shop at your location. The cost of
-funding a shop increases with the number of shops funded.{{
-    if you.race() == "Mummy" then
-        return
-    end
-
-    local desc = " You will always have the option to fund a shop selling "
-
-    if you.race() == "Ghoul" then
-        desc = desc .. "carrion"
-    elseif you.race() == "Vampire" then
-        desc = desc .. "blood"
-    else
-        desc = desc .. "food"
-    end
-
-    desc = desc .. "."
-
-    return desc
-}}
-%%%%
-Bribe Branch ability
-
-Gives 3000 gold to Gozag to spread throughout the inhabitants of the current
-branch, only possible if the branch has intelligent inhabitants. Those monsters
-may then become uninterested in fighting you (with tougher inhabitants having
-an increasing chance of being bribed), and more rarely will join your ranks,
-though they will not leave their home branch. Enemies accepting a bribe will
-lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
-indifferent if they have not become your allies.
-%%%%
-# Pakellas
-Device Surge ability
-
-Readies a device surge, which triggers on your next usage of a magical device
-to strengthen its power at the cost of some magic. The amount of magical power
-that can be used for a surge varies, but correlates with how devoted a follower
-is to Pakellas.
-%%%%
-Quick Charge ability
-
-Spends two thirds of your current pool of magic to charge a wand. The
-effectiveness of this depends on your current pool of magic and your
-Evocations skill.
-%%%%
-Supercharge ability
-
-Infuses magical energy into a wand. Its capacity is significantly increased
-beyond normal and fully charged to this new capacity. This ability may only be
-used once.
-%%%%
-# Qazlal
-Upheaval ability
-
-Calls on the forces of nature to blast a small area with magma, ice, wind,
-or rubble. Invocations skill increases both damage and area affected.
-%%%%
-Elemental Force ability
-
-Causes your elemental clouds to coalesce into friendly elementals. Your
-Invocations skill increases the maximum number of elementals that can be
-created with one use of the ability.
-%%%%
-Disaster Area ability
-
-Blasts the entire area around you with powerful natural forces. Invocations
-skill increases both damage and area affected.
-%%%%
-# Ru
-Draw Out Power ability
-
-Taps into your inner power to restore health and magic, as well as freeing your
-body and mind from external constraints, including nets, webs, constriction,
-petrification, slowness, and confusion. The amount of health and magic restored
-increases with piety.
-%%%%
-Power Leap ability
-
-Performs an incredibly fast leap to a targeted location, causing an explosion
-upon landing which damages all adjacent foes. The amount of damage done
-increases with your piety and experience level.
-%%%%
-Apocalypse ability
-
-Reveals Ru's truth to your enemies, dealing severe damage to all enemies in
-your line of sight. Affected creatures may be paralyzed, slowed or have their
-magic drained. The damage dealt increases with your piety and experience level.
-%%%%
-Sacrifice Purity ability
-
-Sacrifices purity of body or mind, causing a single mutation.
-%%%%
-Sacrifice Words ability
-
-Sacrifices the ability to use magical scrolls while threatened.
-%%%%
-Sacrifice Drink ability
-
-Sacrifices the ability to drink potions while threatened.
-%%%%
-Sacrifice Essence ability
-
-Sacrifices magical essence, causing a single mutation.
-%%%%
-Sacrifice Health ability
-
-Sacrifices physical health, causing a single mutation.
-%%%%
-Sacrifice Stealth ability
-
-Sacrifices stealth, causing you to always be noticed by foes and preventing
-you from having any ranks in the Stealth skill.
-%%%%
-Sacrifice Artifice ability
-
-Sacrifices the ability to evoke any magical items, and prevents you from having
-any ranks in the Evocations skill.
-%%%%
-Sacrifice Love ability
-
-Sacrifices love, causing all creatures to become hostile, even those created
-by you. Monsters that are spell residue and which do not act independently,
-such as orbs of destruction and spectral weapons, are the only things which can
-remain friendly.
-%%%%
-Sacrifice Courage ability
-
-Sacrifices courage, causing you to become terrified of dangerous monsters. Such
-monsters fill you with horror, which reduces the power of your spells and your
-ability to hit and damage monsters in combat.
-%%%%
-Sacrifice Arcana ability
-
-Sacrifices arcana, causing you to lose the ability to use certain schools of
-magic and preventing you from having any ranks in those skills.
-%%%%
-Sacrifice Nimbleness ability
-
-Sacrifices nimbleness, preventing you from having any ranks in the Dodging
-skill. This sacrifice is worth more if you cannot train Armour.
-%%%%
-Sacrifice Durability ability
-
-Sacrifices durability, preventing you from having any ranks in the Armour
-skill. This sacrifice is worth more if you cannot train Dodging.
-%%%%
-Sacrifice a Hand ability
-
-Sacrifices a hand, causing you to lose the ability to use shields{{
-    if you.race() ~= "Formicid" then
-        return " and two-handed weapons"
-    end
-}}, and to be able to wear one fewer ring.
-%%%%
-Sacrifice Experience ability
-
-Sacrifices some of your past experiences, causing you to lose two levels
-immediately and also to have the maximum level you can attain lowered by two.
-%%%%
-Sacrifice Skill ability
-
-Sacrifices your skills, causing you to have all of your skill aptitudes
-decreased by one. This will likely cause you to lose ranks in trained skills.
-%%%%
-Sacrifice an Eye ability
-
-Sacrifices an eye, causing you to have a much harder time hitting targets, as
-if wearing an amulet of inaccuracy.
-%%%%
-Sacrifice Resistance ability
-
-Sacrifices your resistance to extreme temperatures, causing you to become
-vulnerable to heat and cold.
-%%%%
-Reject Sacrifices ability
-
-Rejects all offered sacrifices. Doing so means Ru will take more time
-evaluating your readiness for future sacrifices. Ru will not offer more
-sacrifices while there is an existing offer still extended.
-
-Each consecutive rejection increases the sacrifice timer significantly.
-Accepting a sacrifice will reset the timer to the standard length.
-%%%%
-# Uskayaw
-Stomp ability
-
-Stomps down in time with the rhythm of the dance, sending a shockwave through
-all adjacent creatures. The shockwave damages each creature by a percentage of
-its maximum health, with the percentage increasing with Invocations skill.
-%%%%
-Line Pass ability
-
-Passes through a contiguous line of creatures at superhuman speed, ending up
-in a new location. Any creatures passed through in this way will be confused
-briefly, with the duration of confusion increasing with Invocations skill.
-%%%%
-Grand Finale ability
-
-Merges with a target emotionally and physically, and then bursts forth from
-them, violently splitting them apart and killing them instantly. This ability
-becomes easier to use as the worshipper's piety and Invocations skill increase.
-
-More violent Uskayaw sects consider their members not to be true worshippers
-until they have performed this rite.
+만약 당신의 음영 안에 있는 대상이 움직이지 않아 당신이 대상의 그림자에 집중할
+수 있다면, 이 능력은 당신이 대상의 그림자에 침입하여 대상 바로 옆으로 순간이동
+할 수 있게 한다.
 %%%%
 Renounce Religion ability
 
-Renounces your faith. This will make you leave your god (and usually anger
-said god).
+현재 믿고 있는 신을 버린다. 당신에게 버림받은 신은 분노하여 징벌을 내릴 것이다.
 %%%%
 Convert to Beogh ability
 
-Swears fealty to Beogh, the god of cave orcs. This god demands that all
-non-believers must die, but new believers must be spared and accepted into the
-fold. Beware, for orcs who do not see you convert may still be hostile until
-you have built your reputation!
+동굴 오크들의 신, 베오그에게 대해 당신의 충절을 서약한다. 베오그는 모든
+‘불신자’ 들에게 죽음을 선사하길 요구하고 있지만, 다만 베오그를 따를 새로운
+신자들에이라면 기꺼이 환영할 것이다.  조심할 점은, 이 자리에 없는 다른
+오크들은, 이후 당신이 웬만한 명성을 쌓지 않는 이상 당신에게 여전히 적대적일수도
+있다는 것이다.
 
-All other gods hate Beogh, and do not take desertion lightly.
+다른 신들은 베오그를 싫어하며, 쉽게 저버리지 않을 것이다.
+%%%%
+Make oklob sapling ability
+
+해당 지역에 산을 뿌리는 오클롭 식물의 새싹을 심는다.
+%%%%
+Make arrow trap ability
+
+해당 지역에 화살 함정을 만든다.
+%%%%
+Make plant ability
+
+해당 지역에 식물이 자라게 한다.
+%%%%
+Remove Curse ability
+
+현재 입고있는 장비에 걸린 모든 저주를 해제한다.
+%%%%
+Make burning bush ability
+
+해당 지역에 투명한 적들을 볼 수 있으며 불을 뿜는, 화염의 식물을 심는다.
+%%%%
+Make altar ability
+
+당신이 서있는 곳에, 선택한 신의 제단을 만든다.
+%%%%
+Make grenades ability
+
+당신의 근처에, 폭발하는 거대 포자를 몇 개 소환한다.
+%%%%
+Make oklob plant ability
+
+해당 지역에 산을 뿌리는 다 자란 오클롭 식물을 심는다.
+%%%%
+Make net trap ability
+
+해당 지역에 그물 함정을 만든다.
+%%%%
+Make ice statue ability
+
+해당 지역에 냉기공격과 관련된 여러 능력을 가진 석상을 설치한다.
+%%%%
+Make spear trap ability
+
+해당 지역에 창 함정을 만든다.
+%%%%
+Make alarm trap ability
+
+해당 지역에 알람 함정을 만들어서, 다른 적들의 존재를 알 수 있게 한다.
+%%%%
+Make mushroom circle ability
+
+해당 지역을 중심으로 하는 버섯의 원을 자라게 한다.
+%%%%
+Make bolt trap ability
+
+해당 지역에 석궁화살 함정을 만든다.
+%%%%
+Make crystal statue ability
+
+해당 지역에 적들을 혼란하게 만드는 석상을 설치한다.
+%%%%
+Make needle trap ability
+
+해당 지역에 독이 발린 바늘 함정을 만든다.
+%%%%
+Zot-teleport ability
+
+제어된 공간이동을 사용한다.
+%%%%
+Make water ability
+
+당신이 서있는 곳에 얕은 물을 만든다.
+%%%%
+Make lightning spire ability
+
+해당 지역에 전기를 발사하는 능력을 가진 번개탑을 설치한다.
+%%%%
+Make obsidian statue ability
+
+해당 지역에 동료 악마를 소환하는 석상을 설치한다.
+%%%%
+Make bazaar ability
+
+당신이 서있는 곳에, 상점가로 가는 포탈을 만든다.
+%%%%
+Acquire gold ability
+
+백만장자가 된다.
+%%%%
+Make oklob circle ability
+
+해당 지역을 중심으로 하는 오클롭 식물의 원을 자라게 한다.
+%%%%
+Sage ability
+
+당신이 획득한 경험치의 일부가 강제로 특정 기술에 투자되지만, 그 대신 평소보다
+기술의 수련 속도가 빨라진다.
+%%%%
+Acquirement ability
+
+선택한 종류의 물건을 얻는다.
+%%%%
+Make blade trap ability
+
+해당 지역에 칼날 함정을 만든다.
+%%%%
+Make curse skull ability
+
+해당 지역에 언데드 동료를 소환하는 저주받은 해골을 설치한다. 끔찍한 것을
+만들어낸 대가로, 강령술 마법의 실패효과를 겪게 된다.
+%%%%
+Apocalypse ability
+
+대재앙:
+
+루의 진정한 힘을 적에게 드러낸다. 시야의 모든 적은 심각한 데미지를 입는다.
+그리고 침묵, 마비, 감속등에 걸릴 수 있다. 이 권능의 데미지는
+당신의 신앙도와 레벨에 따라 증가한다.
+
+이 권능을 사용하면 당신은 탈진하게 되거나 심각한 흡수상태에 빠질것이다.
+%%%%
+Bend Space ability
+
+공간 구부리기:
+
+공간 구조를 구부린다. 즉시 짧은 거리를 이동하며, 
+이동은 인접한 생물에게 피해를 줄 수 있다. 공간의 구조 자체를 뒤틀어 버리므로, 
+이 능력은 공간이동 방해 효과를 무시한다.
+%%%%
+Brand Weapon With Distortion ability
+
+왜곡 속성 부여:
+
+당신이 선택한 무기 하나에 왜곡장을 덮어 영구적으로 오염시킨다.
+이 축복은 오직 한번만 가능하며, 아티팩트 무기에는 불가능합니다.
+%%%%
+Brand Weapon With Holy Wrath ability
+
+신성한 분노 속성 부여:
+
+당신이 선택한 무기 하나에 샤이닝 원의 거룩한 분노를 담아 영구적으로 축복한다.
+악마의 무기들은 더욱 강력한 신성무기가 될 것이다.
+이 축복은 오직 한번만 가능하며, 아티팩트 무기에는 불가능합니다.
+%%%%
+Brand Weapon With Pain ability
+
+고통 속성 부여:
+
+당신이 선택한 무기 하나에 고통의 정수 그 자체를 담아 흉악하게 만든다.
+이 축복은 아티팩트 무기에는 불가능합니다.
+당신은 신의 선물을 이것 혹은 네크로노미콘 중에 하나를 선택해야합니다.
+선물은 오직 한번만 받을 수 있습니다.
+%%%%
+Bribe Branch ability
+
+분파 매수:
+
+현재 구역에 지적인 생명체가 있을 경우, 3,000골드를 고자그께 바쳐 
+현재 구역에 있는 거주자들에게 뿌리게 만듭니다.
+돈을 받은 생명체는 당신과 싸우는 데 관심을 가지지 않으며,
+(강력한 존재는 매수될 확률이 올라갑니다.) 드물게 당신의 대열에 합류하나,
+그들의 고향인 현재 지역을 떠나지는 않을 것입니다. 
+매수된 적은 남아있는 매수자금을 감소시키며, 
+(자금이)고갈되었을 때 매수된 적이 당신의 동료가 되지 않는다면
+당신에 대해 관심을 갖지 않습니다.
+%%%%
+Call Merchant ability
+
+상인 호출:
+
+상인들에게 자금을 보내 던전에서 상점을 열도록 지원합니다.
+상점은 아직 방문하지 않은  볼트, 뎁스 같은 장소에 세워질 수도 있고
+상점을 세우기 적당한 지점이 없다면 당신 근처에 세워질 수도 있습니다.
+상점을 열면 열수록 상점을 개설하는 가격이 비싸집니다.
+%%%%
+title
+
+desc
+%%%%
+Dig ability
+
+땅파기:
+
+연한 암석이나 녹슨 쇠살대를 뚫고 터널을 만들 수 있습니다.
+능력을 사용하는 데 비용이 들지는 않고 단순히 땅을 팔 준비를 합니다.
+능력을 발동하면 벽으로 파고들어 터널을 뚫기 시작합니다.
+터널을 파면 소음이 발생하고 허기가 집니다.
+터널을 파는 속도는 이동 속도보다 조금 느립니다.
+%%%%
+Disaster Area ability
+
+재앙구역:
+
+당신 주변의 구역 전체에 강력한 자연의 힘을 일으켜 파괴한다.
+%%%%
+Divine Vigour ability
+
+신성한 활력:
+
+당신의 기도술 수치에 따라 최대 체력과 마력을 대폭 증가시킵니다.
+당신의 현재 체력과 마력 역시 비례하여 증가합니다.
 %%%%
 Donate Gold ability
 
-Donates half of your gold to Zin, which will increase your piety over time. The
-overall increase is determined by the size of your donation.
+황금 기부:
+
+당신의 소지금의 반절을 진에게 기부한다. 신앙도는 시간이 지남에 따라 증가한다.
+신앙의 총 증가량은 기부금의 양에 따라 결정된다
 %%%%
-Curse Item ability
+Draw Out Power ability
 
-Curses a chosen item, at the cost of a scroll of remove curse.
+힘의 분출:
+
+내면의 힘을 끌어내어 체력과 마력을 회복하고 
+그물, 거미줄, 조이기, 석화, 둔화, 혼란 등의
+외부적인 구속으로부터 신체와 정신을 해방시킵니다.
+회복되는 체력과 마력은 신앙심에 비례해서 증가합니다.
+이 능력을 사용하면 drain exh 상태가 됩니다. 
 %%%%
-Recall Ancestor ability
+Elemental Force ability
 
-Recalls your ancestor from anywhere in the dungeon to your immediate
-surroundings.
+속성의 군대:
+
+주변의 원소구름을 합쳐 정령으로 부린다. 자신이 만든 구름은 아군 정령으로
+적대적인 구름은 적군 정령으로, 중립구름은 중립정령이 된다.
 %%%%
-Idealise ability
+Give Item to Named Follower ability
 
-Restores your ancestor to an idyllic vision of their best self. Their wounds
-are forgotten and a glow of perfection infuses them, giving them a short-lived
-but dramatic increase in strength, spellcasting, and armour. The quality of the
-healing and duration of the idealisation granted are both improved by the
-Invocations skill.
+유명한 신도에게 장비수여:
+
+1개의 무기 혹은 1개의 방어구를 이름있는 오크 추종자에게 하사한다.
+오크는 이런 선물을 딱 하나만 받을 수 있다.
 %%%%
-Transference ability
+Greater Servant of Makhleb ability
 
-Forces a targeted creature to pass through the realms of memory and exchange
-places with your ancestor.
+마크레브의 고위 종복:
 
-With great piety, those near the target will be drained to a degree depending
-on Invocations skill.
+대악마를 소환한다. 이 능력을 정확히 이용하지 못하면 악마는 적의를 갖고
+소환될 것이다.
 %%%%
-Ancestor Life: Knight ability
+Growth ability
 
-Remembers your ancestor as a knight, a strong melee combatant with superior
-defenses. This choice is permanent and cannot be undone.
+성장:
+
+과일을 사용하여 사용자의 주변을 감싸는 식물을 자라게 합니다.
+만약 완벽하게 감쌀 수 없다면(가지고 있는 과일이 모자른 경우)
+식물은 적과 인접한 방향에 사각형 모양으로 자랍니다.
+당신이 만든 식물은 기도술 스킬에 비례하여 추가적인 체력을 얻습니다.
 %%%%
-Ancestor Life: Battlemage ability
+Heal Other ability
 
-Remembers your ancestor as a battlemage, a warrior capable of relentless offense
-with both melee and conjurations. This choice is permanent and cannot be undone.
+타인 치료:
+
+기도술 스킬에 의존해서 당신이 아닌 다른 생물을 회복시킵니다.
+이 능력을 적대적인 몬스터에게 사용하면 그들을 중립화하려고 시도합니다.
+이는 동물들에게 가장 잘 통하고, 당신과 같은 종족에게 효과적이고,
+다른 인간형 몬스터에게 덜 효과적이고, 언데드와 악마들에게는 잘 통하지 않습니다.
+지성이 없는 몬스터들은 교화되지 않고, 잠을 자는 몬스터들 또한 교화될수 없습니다.
+ 
+교화가 성공하건 실패하건 사용된 만복도 신앙도 마력은 회복되지 않습니다.
+만약 교화에 성공했다면, 그 몬스터는 회복되고 그 몬스터의 경험치의 반을 얻습니다.
+그렇지 않다면, 아무 일도 일어나지 않고 당신은 아무것도 얻을 수 없습니다.
 %%%%
-Ancestor Life: Hexer ability
+Injury Mirror ability
 
-Remembers your ancestor as a hexer, a cunning rogue capable of skilled
-knifework and debilitating spellcasting. This choice is permanent and cannot be
-undone.
+고통 반사:
+
+짧은 시간동안 받는 피해를 반사하고 어떤 피해를 입든 공격자에게 피해를 줍니다.
+줄어드는 신앙심은 받는 피해량에 따라 다릅니다.
 %%%%
-Ancestor Identity ability
+Jelly Paralyse ability
 
-Recalls who your ancestor preferred to be known as, correcting their name and
-gender. This does not take any time.
+젤리 마비:
+
+인근에 있는 젤리를 불러 아이템 흡수를 멈추게 하고 짧은 시간동아 지이바에게 기도를 합니다.
+사용하는 신앙심의 양은 효과를 받는 젤리의 수에 따라 달라집니다.
 %%%%
-Serpent's Lash ability
+Lesser Healing ability
 
-Allows you to move at supernatural speeds for a short distance, causing the
-next two movement actions taken to be instant. Martial attacks performed under
-the effect of Serpent's Lash are more effective.
+소 치료:
+
+소량의 체력을 회복한다. 회복량은 기도술에 따라 적용된다.
 %%%%
-Heavenly Storm ability
+Lesser Servant of Makhleb ability
 
-Invokes a storm of heavenly clouds. While the storm rages, striking enemies
-with martial attacks provides an increasing bonus to melee damage and accuracy.
-The bonus fades over time, and the storm lasts until the bonus has faded
-completely. The heavenly clouds prevent invisibility, and obscure the vision of
-those outside the storm.
+마크레브의 하위 종복:
+
+소악마를 소환한다. 이 능력을 정확히 이용하지 못하면 악마는 적의를 갖고
+소환될 것이다.
 %%%%
-Hop ability
+Potion Petition ability
 
-Hops toward a chosen destination, landing somewhere nearby. After using this
-ability, you will be unable to hop again until you have spent some time not
-moving. (Other actions, such as casting spells and attacking, are fine.)
+물약 청원:
+
+고자그에게 한 세트의 포션의 효과를 사겠다고 요청한다.
+고자그는 3가지 세트를 선보일 것이다. 세트의 가격은 각각 다르다.
+%%%%
+Power Leap ability
+
+강력한 도약:
+
+당신을 구성하고 있는 힘을 이용하여 강력한 도약을 합니다.
+착지할 때 그 힘이 외부로 분출되어 당신 주변을 모든 적들에게 피해를 줍니다.
+그 피해량은 당신의 신앙도와 경험치에 비례합니다.
+이 능력을 사용하면 exh 상태가 됩니다. 
+%%%%
+Receive Necronomicon ability
+
+네크로노미콘 하사:
+
+키쿠바쿠드하는 가장 강력하고 사악한 비밀이 담긴 강령술 마법서를 당신에게 하사합니다.
+당신은 이 선물과 당신의 무기 중 하나의 고통 브랜드를 부여하는 것 중 하나를 선택해야만 합니다.
+%%%%
+Recite ability
+
+암송:
+
+근처에 있는 몬스터에게 진의 율법을 설파합니다.
+낭독은 짧은 시간동안 진행되지만, 주문 시전, 스크롤 읽기, 물약 마시기 등의 행동을 하면 취소됩니다.
+
+낭독은 대상에 따라 다른 효과를 가지고 있습니다.
+혼돈과 부정의 존재는 강력하고 피해를 주는 효과를 받습니다.
+언데드와 악마들은 약한 질책의 효과를 받습니다.
+다른 지적 생명체 사이에는 혼란이 퍼지게 됩니다.
+이단과 다른 신을 섬기는 사제들은 더욱 강력하게 처벌받습니다.
+%%%%
+Reject Sacrifices ability
+
+희생 거부:
+
+제시된 모든 희생을 거부합니다.
+이것은 루가 다음 희생을 위해 당신의 준비를 평가하는데 더 많은 시간을 쓴다는 것을 의미합니다.
+루는 기존 희생 선택이 남아있는 동안 새로운 희생을 제공하지 않습니다.
+연이은 거부는 희생 시간을 더 증가시킬 것입니다.
+만약 희생을 받아들인다면 이 시간은 표준적으로 되돌아갑니다.
+%%%%
+Release Delayed Fireball ability
+
+지연된 화염구:
+
+미리 준비해둔 (지연된) 화염구를 추가적인 마법이나 허기 없이 즉시 발사합니다.
+%%%%
+Sacrifice Arcana ability
+
+아르카나 희생:
+
+아르카나를 희생한다.
+당신은 특정한 학파의 마법을 사용할 수 없으며 해당 학파를 수련 할 수 없게됩니다.
+%%%%
+Sacrifice Artifice ability
+
+발동술 희생:
+
+마법적 물품을 발동시키는 능력을 희생하고 발동술 수련을 할 수 없게 됩니다.
+%%%%
+Sacrifice Courage ability
+
+용기 희생:
+
+용기를 희생합니다, 당신은 위험한 몬스터들을 두려워하게 됩니다.
+그런 몬스터들과의 전투에서 당신은 공포를 느껴 주문의 위력과 전투에서
+몬스터를 명중시키고 피해를 주는 능력이 감소합니다.
+%%%%
+Sacrifice Drink ability
+
+마시기 희생:
+
+위기시에 포션을 마시는 능력을 희생한다.
+%%%%
+Sacrifice Durability ability
+
+내구 희생:
+
+내구성을 희생한다.
+당신이 가지고 있는 모든 등급의 갑옷 기술을 제거한다.
+이 희생은 당신이 회피를 수련하지 못할 때, 더 값지다.
+%%%%
+Sacrifice Essence ability
+
+정수 희생:
+
+마법의 정수 희생은 하나의 돌연변이를 유발합니다.
+그 돌연변이는 마력 최대치나 마법 저항력 감소시키거나 주문 시전 난이도를 높입니다.
+%%%%
+Sacrifice Experience ability
+
+경험 희생:
+
+약간의 과거 경험을 희생합니다.
+이 희생은 즉각적으로 2개의 레벨을 잃게 하며 당신의 최고 레벨 또한 두 단계 내려갑니다.
+%%%%
+Sacrifice Health ability
+
+건강 희생:
+
+신체의 건강함을 희생한다. 하나의 돌연변이가 생긴다. 
+이 때 생기는 돌연변이는 낮은 체력, 낮은 회피, 낮은 AC 중 하나다.
+%%%%
+Sacrifice Nimbleness ability
+
+민첩 희생:
+
+민첩성을 희생합니다.
+회피 스킬레벨을 전부 잃습니다.
+만약 당신이 갑옷을 입을 수 없다면, 이 희생은 더 값질 것입니다.
+%%%%
+Sacrifice Purity ability
+
+순수성 희생:
+
+신체 혹은 정신의 순수성을 희생한다. 하나의 돌연변이가 생긴다.
+이 때 생기는 돌연변이는 문둥병, 기형 몸통, 제어불가 함성, 나쁜 도구 회복,
+굼뜸, 약함, 멍청함 중 하나다.
+%%%%
+Sacrifice Resistance ability
+
+저항 희생:
+
+극한 기후에 대한 저항력을 희생합니다.
+당신을 열과 냉기에 취약하게 합니다.
+%%%%
+Sacrifice Skill ability
+
+기술 희생:
+
+스킬을 희생한다. 모든 스킬의 적성을 1 낮춘다.
+이것은 이미 숙련된 스킬에도 영향을 끼친다.
+%%%%
+Sacrifice Stealth ability
+
+은신 희생:
+
+은밀성을 희생한다. 은밀 스킬을 수련할 수 없으며 시야에 들어온 적이 항상 당신을 알아챕니다.
+%%%%
+Sacrifice Words ability
+
+목소리 희생:
+
+위기시에 마법 스크롤을 사용할 능력을 희생한다.
+%%%%
+Sacrifice a Hand ability
+
+한 손 희생:
+
+한손을 희생합니다. 이 효과로는 방패를 쓸 수 없게 됩니다.{{
+    if you.race() ~= ""Formicid"" then
+        return "" 그리고 양손무기를 낄 수 없게 됩니다.""
+    end
+}}, 또, 반지 1개를 착용 못하게 합니다.
+%%%%
+Sacrifice an Eye ability
+
+눈 희생:
+
+눈을 희생합니다. 부정확의 부적을 낀 것처럼, 목표를 때리는 것을 더 어렵게 만듭니다.
+%%%%
+Self-Restoration ability
+
+자가 수복:
+
+당신의 최대 마력을 1만큼 영구히 사용하여 힘, 민첩, 지능을 복구하고 부패된 체력을 회복합니다. 
+%%%%
+Shadow Form ability
+
+그림자 변신:
+
+당신을 흔들리는 어두운 그림자의 형태로 변환합니다.
+영구적인 투명상태가 되며, 독,드레인,고통, 그리고 적대적인 상태이상에 면역이 됩니다.
+모든 공격의 피해가 반으로 감소하며, 피해를 입을시, 안개를 주변에 흩뿌립니다.
+하지만, 당신의 근접전에 의한 피해가 반으로 감소하며, 당신의 주문력은 매우 약화될 것입니다.
+또한, 이 기술을 사용할때와, 피해를 입을때마다 드레인 효과를 받습니다.
+%%%%
+Shaft Self ability
+
+자가 굴착:
+
+틈새 함정에 빠진것처럼, 당신을 1~3층 사이의 랜덤한 위치로 보냅니다.
+틈새를 파내는데 약간의 시간이 걸립니다.
+%%%%
+Slouch ability
+
+게으른 징벌:
+
+당신보다 빠른, 시야의 모든이에게 손상을 입힌다. 
+속도의 차이가 크면 클수록 큰 데미지를 입힌다.
+%%%%
+Trog's Hand ability
+
+트로그의 손길:
+
+모든 재생 효과와 중첩이 가능하며, 심지어 자연 재생이 되지 않는 종족도 재생이 가능한 강력한 재생 능력을 부여합니다. 또한, 이 능력을 활성화 하는 동안에는 시전자는 적대적인 주술에 대해 보호를 받습니다.
+%%%%
+Upheaval ability
+
+격변:
+
+자연의 힘을 불러와 좁은 영역에 마그마, 얼음, 바람, 돌의 폭발을 일으킨다.
+%%%%
+Sacrifice Love ability
+
+사랑 희생:
+
+사랑을 희생하여, 당신에 의해 창조된 것을 포함한 모든 생명체에게 적대감을 유발한다. 주문 사용에 의해 잔류형태로 소환되는, 독립적으로 행동하지 못하는 몬스터들 - 즉 파괴의 오브나 스펙트럴 웨폰 같은 - 경우가, 유일하게 동료를 남길 수 있는 방법이다.
+%%%%
+

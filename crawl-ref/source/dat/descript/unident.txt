@@ -1,38 +1,36 @@
 %%%%
 amulet
 
-A talisman to be worn as jewellery around the neck, charged with arcane powers
-of unknown provenance.
+목에 걸 수 있는 장신구 형태의 부적으로, 알 수 없는 마력으로 가득 차 있다.
 %%%%
 book
 
-An arcane textbook containing magical spells of unknown origin.
+기원을 알 수 없는 주문들이 적힌 마법책.
 %%%%
 deck of cards
 
-A deck of powerful magical cards painted in the ichor of demons. They may have
-any number of helpful or dangerous effects when drawn.
+악마의 정수로 그려진, 강력한 마법 카드로 이루어진 카드 덱이다. 뽑은 카드는
+당신에게 이로울 수도, 해로울 수도 있다.
 %%%%
 potion
 
-An unlabelled flask containing a single dose of unknown liquid.
+뭔지 모를 액체가 담겨있는 작은 병이다.
 %%%%
 ring
 
-A talisman charged with arcane forces of unknown provenance, to be worn as
-jewellery on a finger.
+알 수 없는 마력으로 가득찬 부적으로, 손가락에 낄 수 있는 반지 모양을 하고있다.
 %%%%
 scroll
 
-A disposable arcane formula inscribed on parchment by a professional scribe or
-sorcerer. Anyone can evoke the power of the arcane formula by reading it out
-loud, but the nature of that power is not a priori apparent.
+전문적인 필경사나 마법사가 만든, 일회용 주문이 새겨진 양피지 두루마리다.
+두루마리에 써진 글을 크게 읽는 것만으로도 누구나 사용할 수 있다.
 %%%%
 staff
 
-A staff improved with arcane powers of unknown nature.
+알 수 없는 성질의 마력으로 강화된 지팡이다.
 %%%%
 wand
 
-An unusually magical sort of stick.
+마력이 담겨있을 것 같은 막대기다. 발동하려면 손이 필요해서, 펠리드나 동물의
+형태로 변이중이라면 사용할 수 없을 것 같다.
 %%%%

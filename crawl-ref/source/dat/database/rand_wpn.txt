@@ -22,248 +22,220 @@ w:7
 %%%%
 _power_name_
 
-Power
+파워
 
-Might
+마이트
 
-Wondrous Power
+경이로운 힘
 
-Invincibility
+무적
 
-Glory
+영광
 
-Success
+성공
 
-Triumph
+업적
 
-Domination
+지배
 
-Dominance
+권세
 
-Victory
+승리
 
-Intimidation
+협박
 
-Grandeur
+그랜져
 
-Mastery
+숙달
 
-Superiority
+우월성
 
-Magnificence
-
-Hubris
-
-Big Damage
+장엄함
 %%%%
 _conflict_name_
 
-Conflict
+갈등
 
-Tension
+긴장
 
-Discord
+디스코드
 
-Division
+분열
 
-Doubt
+의심
 
-Internal Strife
+내분
 
-Contention
+논쟁
 
-Dissent
+반대
 
-Quarrel
-
-Resumed Hostilities
-
-Fighting Over It
-
-a Spat
-
-Kerfluffle
-
-Brawl
-
-Melee
+다툼 
 %%%%
 _anger_name_
 
-Anger
+분노
 
-Fury
+격분
 
-Righteous Anger
+의분
 
-Righteous Fury
+정의로운 분노
 
-Wrath
+분노
 
-Brutal Revenge
+잔혹한 복수
 
-Vengeance
+앙갚음
 
-Hatred
+증오
 
-Indignation
+분개
 
-Outrage
+격노
 
-Scorn
-
-Disproportionate Response
-
-No More Talking
-
-the Extremely Mad
-
-the Absolute Madman
+경멸
 %%%%
 _battle_or_war_
 
-Battle
+전투
 
-Crusades
+십자군
 
-War
+전쟁
 
-Eternal War
+영원한 전쟁
 
-the Eternal Warrior
+영원한 전사
 
-the Onslaught
+맹공격
 
-Skirmishing
+소규모 접전
 
-the Endless March
+끝없는 행군
 
-Plunder
+약탈
 
-Ravage
+유린
 
-Iconoclasm
+우상 파괴
 
-Regicide
+국왕 시해
 
 # Lemuel's Suggestions
-the Warrior
+전사
 
-the Doomed Warrior
+불운한 전사
 
 # akrasiac patch
-the Pyrrhic Victory
+상처뿐인 승리
 
 #killing
-Blood-Lust
+살인 충동
 
-Callousness
+기쁨을 주는 살육
 
-Joyful Slaughter
+살상
 
-Wounding
+피
 
-Blood
+공포
 
-Diet Blood
-
-Fear
-
-Massacring
+학살
 
 # was Pain, clashing with the brand
-Insufficient Pleasure
+불충분한 쾌락
 
-Agony
+괴로움
 
-Trauma
+트라우마
 
 # Lemuel's suggestion
-Hacking and Slashing
+핵 앤 슬래쉬
 
 # related to cutting
-Truncation
+머리끝 자르기
 
-Severance
+단절
 
-Dullness
+둔감
 
-Precise Incision
+정밀한 절개
 
-Laceration
+찢어진 상처
 
 #collateral effects
-Mourning
+애도
 
-Death's Door
+죽음의 문
 
-the Grave
+종말
 %%%%
 # used from C++'s side
 death_or_doom
 
 # death
-Death
+죽음
 
-Bloody Death
+피투성이 죽음
 
-Painful Death
+고통스러운 죽음
 
-Quick Death
+빠른 죽음
 
-Instant Death
+순간의 죽음
 
-Imminent Death
+임박한 죽음
 
-Sudden Death
+갑작스러운 죽음
 
-Slow Death
+느린 죽음
 
-Certain Death
+틀림없는 죽음
 
-Uncertain Death
+불특정한 죽음
 
-Exquisite Death
+강렬한 죽음
 
-Pain and Death
+고통과 죽음
 
-Untimely Demise
+때 이른 사망
 
 # doom
-Doom
+파멸
 
-Premature Burial
+생매장
 
-Peril
+위험
 
-Execution
+처형
 
-Destruction
+파괴
 
-Disembowelment
+할복
 
-Evisceration
+내장 적출
 
-Extermination
+구제
 
-Extinguishment
+소멸
 
 # pain and misery
-Infinite Pain
+무한의 고통
 
-Dismemberment
+분열
 
-Terror
+두려움
 
-Misery
+재앙
 
-Woe
+비통
 
-Excruciating Pain
+극심한 고통
 
-Exquisite Torment
+강렬한 격통
 
-Anguish
+고뇌
 %%%%
 _strategy_or_justice_
 
@@ -279,161 +251,159 @@ w:3
 _strategy_name_
 
 #strategy
-Defence
+방어
 
-Defence by Offence
+범죄 방어
 
-Offence
+범죄
 
-Reinforcement
+증원
 
-Expedience
+방편
 
-Optimality
+최적성
 
-Overwhelming Force
+압도적인 힘
 
-Subterfuge
+협잡
 
-Strategic Superiority
+전략적 우위
 
-Guile
+교활한 속임수
 %%%%
 _valour_name_
 
-Honour
+명예
 
-Integrity
+완전한 상태
 
-Responsibility
+책임
 
-Watchfulness
+주의깊음
 
-Duty
+의무
 
-Prudence
+사려 분별
 
-Valour
+전장의 용기
 
-Resourcefulness
+기지가 넘침
 
-Action
+행동
 
-Purpose
+목적의식
 
-Fortitude
+인내
 
-Defiance
+불복종
 
-Valiance
+용감
 
-Courage
+용기
 
-Eternal Vigilance
+끊임없는 경계
 
-Gallantry
+용맹
 
-Tenacity
+집념
 
-True Grit
+진정한 기개
 
-Indomitability
+불굴의 정신
 
-Conscience
+우연의 일치
 %%%%
 _justice_name_
 
-Tender Mercy
+깊은 자비
 
-Cruel Justice
+잔혹한 정의
 
-Punishment
+처벌
 
-Innocence
+무죄
 
-Guilt
+유죄
 
-Tortfeasance
+불법 행위
 
-Extenuating Circumstances
+정상참작의 상황
 
-Absolution
+사면
 
-Exoneration
+면죄
 
-False Accusations
+허위사실에 대한 고소
 
-Wrongful Imprisonment
+불법 구금
 
-Corporal Punishment
+태형
 
-Capital Punishment
+사형
 
-Forgiveness
+용서
 
-Trial by Ordeal
+가책에 의한 심판
 
-Blind Justice
+눈먼 정의
 
-Judgement
-
-Accidental Termination
+심판
 %%%%
 _diviner_name_
 
-Augurer
+역술인
 
-Water Diviner
+수맥 점쟁이
 
-Soothsayer
+예언자
 
-Seeker
+탐구자
 
-Visionary
+선지자
 
-Oracle
+오라클
 
-Fortune-Teller
+점쟁이
 
-Sybil
+무당
 
-Seer
+예견자
 %%%%
 _people_name_
 
-King
+왕
 
-Queen
+여왕
 
-Jester
+광대
 
-Fool
+바보
 
-Ancients
+고대인
 
-Saviour
+구세주
 
-Messenger
+전령
 
-Genius
+천재
 
-Coward
+겁쟁이
 
-Philosopher
+철학자
 
-Hero
+영웅
 
-Traitor
+반역자
 
-Enemy
+적
 
-Priest
+사제
 
-Madman
+미치광이
 
-Scavenger
+거리 청소부
 
-Pariah
+부랑자
 
 w:15
 @_diviner_name_@
@@ -441,595 +411,588 @@ w:15
 _weapon_animal_
 
 # insects
-Pill Bug
+쥐며느리
 
-Butterfly
+나비
 
-Wasp
+말벌
 
-Moth
+나방
 
-Mosquito
+모기
 
-Gnat
+각다귀
 
-Blowfly
+검정파리
 
-Dragonfly
+잠자리
 
-Firefly
+반딧불이
 
 # arachnids
-Spider
+거미
 
-Scorpion
+전갈
 
 # amphibians and reptiles
-Rattle-Snake
+방울뱀
 
-Viper
+독사
 
-Asp
+살모사
 
 # fish
-Shark
+상어
 
-Lamprey
+칠성장어
 
-Eel
+뱀장어
 
-Salmon
-
-Big Fish
+연어
 
 # birds
-Penguin
+펭귄
 
-Puffin
+바다오리
 
-Fulmar
+풀머갈매기
 
-Dove
+비둘기
 
-Hawk
+매
 
-Hummingbird
+벌새
 
-Owl
+부엉이
 
-Stork
+황새
 
-Vulture
-
-Shrike
+독수리
 
 # mammals
 w:5
-Weasel
+족제비
 
-Goat
+염소
 
-Whale
+고래
 
-Ass
+당나귀
 
-Badger
+오소리
 
-Bear
+곰
 
-Boar
+야생돼지
 
-Fox
+여우
 
-Rat
+쥐
 
 w:5
-Stoat
+담비
 
-Tiger
+호랑이
 
-Wolf
+늑대
 %%%%
 # plants and fungi
 _plant_name_
 
 #plants
-Eggplant
+가지
 
-Turnip
+순무
 
-Chickpea
+병아리콩
 
-Lettuce
+상추
 
-Radish
+무
 
-Sugar Beet
+사탕무
 
-Shallot
+샬롯
 
-Tomato
+토마토
 
 # er...aren't whelks gastropods?
-Whelk
+쇠고둥
 
 #fungus and similar
-Mushroom
+버섯
 
-w:5
-Magic Mushroom
+독버섯
 
-Toadstool
+먼지 버섯
 
-Puffball
-
-Slime-mould
+변형균류
 %%%%
 # undead and evil beings
 _evil_stuff_
 
-Hell's Wrath
+지옥의 분노
 
-the Undead
+언데드
 
-Ancient Evil
+고대의 악
 
-Evil
+악
 
-the Beast
+야수
 
-Shrieking Terror
+비명지르는 공포
 
-the Lurker
+잠복자
 
-the Crawling Thing
+기어다니는 것
 
-the Thing
+그것
 
-Abomination
+끔찍한 것
 
-Mutilation
+훼손
 
-Deformation
+변형
 
-Infection
+감염
 
-Corruption
+타락
 
-Demonkind
+악마들
 
-Abuse
+남용
 
-the Dead
+죽은자
 
-Defilement
+오염
 
-the Evil Eye
+악마의 눈
 
-the Ghost
+귀신
 
-the Living Dead
+리빙 데드
 
-Nightmares
+악몽
 
-Perversion
+왜곡된 것
 
-Putrescence
+부패
 
-the Reaper
+사신
 
-the Spectre
+공포
 
-the Unliving
+살아있지 않은 것
 
-the Unspeakable One
+형언할수 없는 자
 
-the Wraith
+유령
 %%%%
 # catastrophes etc.
 _catastrophe_name_
 
-the Inferno
+화재
 
-Earthquakes
+지진
 
-Cataclysm
+대변동
 
-Drought
+가뭄
 
-Floods
+홍수
 
-Ruination
+파멸
 
 # the Apocalypse
-the Apocalypse
+종말
 
-Armageddon
+아마게돈
 
-World's End
+세계의 끝
 
-Ragnarok
+라그나로크
 
-Fimbulwinter
+핌불베트르
 
-Annihilation
+전멸
 
-the End of Times
+시대의 끝
 
-World Downfall
+세계의 몰락
 
 # the Apocalyptic Riders (except Death)
-Pestilence
+역병
 
-Plague
+저주
 
-Famine
+기아
 
-War
+전쟁
 %%%%
 _chaos_name_
 
-Chaos
+혼돈
 
-Chance
+가능성
 
-Mayhem
+아수라장
 
-Havoc
+황폐
 
-Turmoil
+소란
 
-Calamity
+재앙
 
-Arbitration
+중재
 
-the Extremes
+극치
 
-Disorder
+무질서
 
-Disaster
+재난
 
-Imbalance
+불균형
 
-Disharmony
+부조화
 
-Ambiguity
+애매함
 
-Change
+변화
 
-Extremism
+극단주의
 
-Impermanence
+덧없음
 
-Constant Reorganisation
+계속되는 개편
 
-Contradiction
+모순
 
-Disarray
+혼란
 
-Disintegration
+붕괴
 
-Dissolution
+해제
 
-Distraction
+주의 산만
 
-Forced Transition
+강제 이행
 
-the Fray
+소동
 
-Revolt
+반란
 
-Tumult
+소란
 
-Upheaval
+격변
 
-Incongruity
+부조화
 %%%%
 _balance_or_order_
 
-the Middle
+가운데
 
-the Median
+중앙
 
-Departure
+출발
 
-Arrival
+도착
 
-Ascent
+상승
 
-Descent
+하강
 
-Symmetry
+대칭
 
-Bodily Harmony
+신체의 조화
 
-Moderation
+절제
 
-Eternal Harmony
+영원한 조화
 
-Peace
+평화
 
-Equivalence
+평형
 
-Balance
+균형
 
-Harmony
+조화
 
-Fragile Peace
+깨지기 쉬운 평화
 
-Circularity
+순환성
 
-Linearity
+선형성
 
-Law
+법
 
-Accord
+합의
 
-Conformity
+순응
 
-Due Proportion
+적당한 비율
 
-Equilibrium
+균등
 
-the Establishment
+기관
 
-the Final Decision
+최종 결정
 
-Propriety
+적법성
 %%%%
 _economics_or_politics_
 
 # economics
-Inflation
+인플레이션
 
-Deflation
+디플레이션
 
-Supply
+공급
 
-Demand
+수요
 
-Amortisation
+할부 상환
 
-Animal Spirits
+야성적 충동
 
-Bankruptcy
+파산
 
-Collusion
+공모
 
-Compound Interest
+복리
 
-Currency
+통화
 
-Debt
+부채
 
-Dividends
+배당금
 
-Exchange
+교체
 
-Growth
+성장
 
-Income
+소득
 
-Luxury
+사치
 
-Profit
+이득
 
-Risk Management
+위기 관리
 
-Taxation
+과세 제도
 
-Valuable Assets
+귀중한 자산들
 
-Welfare
+복지
 
 # politics
-the Imperium
+주권
 
-Greatest Utility
+큰 효요성
 
-the Revolution
+혁명
 
-Defenestration
+축출
 
-the People
+사람들
 
-the Little People
+일반 대중
 
-Wealth
+복리
 
-Poverty
+빈곤
 
-Reapportionment
+재분배
 
-Checks and Balances
+견제와 균형
 
-the Common Good
+공익
 
-Conservatism
+보수성
 
-the Dark Horse
+지명 후보
 
-the Demagogue
+선동 정치가
 
-Governance
+통치
 
-the Lame Duck
+레임덕
 
-the Lesser Evil
+덜 나쁜 것
 
-Popular Demand
+민간 수요
 
-Radicalism
+급진주의
 
-Royalism
+왕정주의
 
-the Silent Majority
+소리없는 대중
 
 # akrasiac patch
-Impeachment
+탄핵
 
 # umm, quoi?
-Freehold
+자유보유권
 
-Attainder
+권리박탈
 
-Fee Simple
+단순 부동산권
 
-Mandamus
+직무 집행 영장
 
-Breach
+파기
 
-Fundamental Breach
+근본적 위반
 
-Termination
+만기
 
-Sequestration
+가압류
 %%%%
 _place_name_
 
-the World
+세상
 
-the Sea
+바다
 
-the Forest
+삼림
 
-the Trees
+숲
 
-the Volcano
+화산지대
 
-the Equator
+적도
 
-the Poles
+극지
 
-the Old World
+낡은 세상
 
-the New World
+새로운 세상
 
-Distant Worlds
+떨어져있는 세계
 
-the Unseen Realm
+보이지않는 영역
 
-the Spheres
+천체
 
-Proximity
+근접
 
-the Wilderness
+황무지
 
-the Maze
+미로
 
-the Pit
+갱 
 
-the Eternal Void
+영원한 공허
 
-Beyond
+저편
 
-the Blessed Realm
+축복받은 영역
 
-the Desert
+사막
 
-Distant Shores
+떨어진 호숫가
 
-the Hidden Vale
+숨겨진 계곡
 
-the Hills
+산
 
-the Known World
+알려진 세상
 
-the Land of Plenty
+비옥한 땅
 
-the Other Side
+다른쪽
 
-Parts Unknown
+미확인된 지점
 
-Somewhere Else
+어딘가
 
-the Shore
+해안
 
-the Tundras
+툰드라
 
-the Valley
+계곡
 
-the Valley of Death
+죽음의 계곡
 
-the Wasteland
+불모지
 %%%%
 _discomfort_weapon_
 
-Unpleasantness
+악감정
 
-Discomfort
+불쾌함
 
-Disgust
+혐오감
 
-Frustration
+좌절감
 
-Chagrin
+원통함
 
-Dismay
+낭패감
 
-Desperation
+자포자기
 
-Shame
+수치심
 
-Embarrassment
+당혹감
 
-Annoyance
+짜증
 
-Anxiety
+불안
 
-Urgency
+긴급성
 
-Awkwardness
+어색함
 
-Dissatisfaction
+불만
 
-Foul Odors
+악취
 
-Flawed Execution
+결함있는 실행
 
-Gloom
+침울
 
-Inconvenience
+불편함
 
-Irritation
+짜증
 
-Malaise
+불쾌감
 
-Stickiness
+끈적거림
 
-Uncomfortable Rashes
+고통스러운 발진
 %%%%
 _mental_illness_weapon_
 
-Psychosis
+정신병
 
-Neurosis
+노이로제
 
-Fixation
+강박 관념
 
-Megalomania
+과대망상증
 
-Egomania
+자기 중심벽
 
-Obsession
+집착
 
-Compulsion
+강박증
 
-Fatigue
+피로
 
-Exhibitionism
+노출증
 
-Insomnia
+불면증
 
-Oenomania
+음주벽
 
-Perfectionism
+완벽주의
 
-Pyromania
+방화벽
 
-Satyriasis
+음란증
 
-Suicidal Tendencies
+자살 성향
 %%%%
 _philosophy_or_science_
 
@@ -1039,387 +1002,365 @@ _philosophy_or_science_
 %%%%
 _philosophy_name_
 
-Monotheism
+유일신교
 
-Henotheism
+단일신교
 
-Polytheism
+다신론
 
-Atheism
+무신론
 
-Autotheism
+자기 신격화
 
-Pantheism
+범신론
 
-Panentheism
+만유 내재신론
 
-Agnosticism
+불가지론
 
-Existentialism
+실존주의
 
-Relativism
+상대주의
 
-Absolutism
+절대주의
 
-Abstinence
+금욕
 
-Hedonism
+쾌락주의
 
-Orthodoxy
+통설
 
-Heresy
+이단
 
-Free Expression
+자유로운 표현
 
-the Ego
+자아
 
-Optimism
+낙천주의
 
-Pessimism
+비관주의
 
-Serendipity
+뜻밖의 재미
 
-Limitation
+한계
 
-Levity
+경박
 
-Nihilism
+허무주의
 
-Pragmatism
+실용주의
 
-Idealism
+관념론
 
-Activism
+능동주의
 
-Altruism
+이타주의
 
-Anarchy
+무정부 상태
 
-Dogma
+도그마
 
-Egalitarianism
+평등주의
 
-Elitism
+엘리트 의식
 
-Ethics
+윤리
 
-Fallacy
+오류
 
-Fanaticism
+광신
 
-Free Will
+자유 의지
 
-Liberalism
+진보주의
 
-Morality
+도덕성
 
-Mysticism
+신비주의
 
-Rationality
-
-Mutualism
-
-Syndicalism
+합리성
 %%%%
 _science_name_
 
-Reason
+근거
 
-Unreason
+불합리
 
-Calculation
+계산
 
-Instinct
+본능
 
-Intuition
+직관
 
-Circular Logic
+순환 논리
 
-Context
+맥락
 
-Articulation
+조음
 
-the Mind
+정신
 
-the Nexus
+결합
 
-the Beginning
+시작
 
-the End
+끝
 
-Analysis
+분석
 
-Infinity
+무한
 
-Quantum Leap
+양자 비약
 
-Gravity
+중력
 
-Rotation
+로테이션
 
-the Big Bang
+빅뱅
 
-the Boiling Point
+끓는점
 
-Classification
+범주
 
-Evolution
+진화
 
-Experimentation
+실험
 
-Focus
+초점
 
-Inference
+추론
 
-Inquiry
+연구
 
-Objectivity
+객관적 실재
 
-Subjectivity
+주관성
 
-Patterns
+패턴
 
-Theory
+이론
 %%%%
 _item_name_
 
 # items
-Orb
+오브
 
-Egg
+알
 
-Globe
+지구본
 
-Candle
+양초
 
-Candelabrum
+촛대
 
-Key
+열쇠
 
-Ring
+고리
 
-Chain
+체인
 
-Coin
+동전
 
-Cup
+컵
 
-Feather
+깃털
 
-Girdle
+거들
 
-Horn
+뿔
 
-Pillar
+기둥
 
-Purse
+지갑
 
-Scroll
+두루마리
 
-Ship
+배
 
-Tent
+천막
 
-Vase
+화분
 
-Vine
+포도나무
 
-Walnut
+호두
 
-Wheel
+바퀴
 
-Yoke
+멍에
 
 # body parts
-Heart
+심장
 
-Brain
+뇌
 
-Tooth
+치아
 
-Foot
+발
 
-Hand
+손
 
-Head
+머리
 
-Mouth
+입
 
-Throat
+목구멍
 
-Kidney
+신장
 %%%%
 _magic_name_
 
-the Magi
+동방박사
 
-the Warrior-Mage
+전투 마법사
 
-the Hierophant
+최고 사제
 
-the Sage
+현자
 %%%%
 # substances
 _substance_name_
 
-Bread
+빵
 
-Sulphur
+유황
 
-Crystal
+크리스탈
 
-Bloodstone
+혈석
 
-Oozing Pus
+흘러나오는 고름
 
-Ash
+재
 
-Slime
+슬라임
 
-Bile
+담즙
 
-Bodily Humours
+몸 개그
 
-Cobwebs
+거미줄
 
-Cheese
+치즈
 
-Dried Tears
+마른 눈물
 
-Dung
+약
 
-Ointment
+연고
 
-Paper
+종이
 
-Rubbish
+쓰레기
 
-Salt
+소금
 
-Saltpetre
+질산칼륨
 
-Sharkskin
+상어 가죽
 
-Terra Cotta
+테라 코타
 
 # these don't really fit
-Mana
+마력
 
-Yeast
+효모균
 
-Spores
+포자
 
-Dust
+먼지
 %%%%
 # non-groupables
 other_weapon_name
 
-the Omega Point
+오메가 점
 
-Crawling
+크롤링
 
-Conversion
+전환
 
-Prescription
+처방전
 
-the Open Hand
+대범함
 
-Spontaneous Combustion
+자연 연소
 
-Res Nullius
+무주물
 
-Terra Nullius
+무주지
 
-Desertification
+사막화
 
-the Spinneret
+방적 돌기
 
-Grontol
+그론톨
 
-the Two Names
+두개의 이름들
 
-No Interval
+휴식 없음
 
-Interdependent Arising
+상호의존적인 발생
 
-the Blind Eye
+멀어버린 눈
 
-the Briny Deep
+바다의 깊은곳
 
-Broken Luck
+끝장난 행운
 
-Entrepreneurial Spirit
+기업가 정신
 
-the Vendetta
+앙갚음
 
-the Empty Page
+빈 페이지
 
-the Final Chapter
+최종장
 
-Hard Scrabble
+먹고살기 힘듦
 
-Red Wine
+레드 와인
 
-Vodka
+실패의 원인
 
-Gin and Tonic
-
-Undoing
-
-the Unkillable
-
-Checkmate
-
-Traps
-
-Doors
-
-Butchery
-
-the Real Monster
-
-False Hope
-
-the Pharaoh's Fist
+잘 죽지않는 것
 
 # akrasiac patch
-Irrepressible Laughter
+억누를수 없는 웃음소리
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
 short_monster_name_
 
-Dragon
+용
 
-Hydra
+히드라
 
-Ogre
+오우거
 
-Spider
+거미
 
-Newt
+뉴트
 
-Giant
+거인
 
-Beetle
+딱정벌레
 
-Jelly
-
-w:1
-Testudine
+젤리
 
 w:1
-Lacertilian
+거북목
 
 w:1
-Acarine
+도마뱀류
 
-Beast
+w:1
+진드기
 
-Demon
+야수
 
-Goblin
+악마
 
-Imp
+고블린
+
+임프
 %%%%
 _monster_name_
 
@@ -1427,157 +1368,157 @@ _monster_name_
 
 @player_species@
 
-Killer Bee
+킬러 비
 
-Killer Klown
+살인자 삐에로
 
-Orb Guardian
+오브 수호자
 %%%%
 _short_killer_name_
 
-bane
+파멸
 
-slayer
+살해자
 %%%%
 # used from the C++ side
 killer_name
 
-'s Bane
+의 파멸
 
-'s Death
+의 죽음
 
-'s Doom
+의 불행한 운명
 
-'s Foe
+의 적
 
-'s Regret
+의 후회
 
-'s Curse
+의 저주
 
-'s Peril
+의 위험성
 %%%%
 _long_killer_name_
 
-'s Death Toll
+의 사망 도구
 
-'s Funeral
+의 장례식
 
-'s Nightmare
+의 악몽
 
-'s Undoing
+의 실패의 원인
 
-'s Demise
+의 종말
 
 w:1
-'s Looming Annihilation
+의 다가오는 최후
 %%%%
 _real_weapon_name_
 
-Grim Tooth
+사나운 이빨
 
 w:5
-Widowmaker
+과부 제조기
 
 w:5
-Widowermaker
+홀아비 제조기
 
-Lifebane
+라이프베인
 
-Conservator
+콘서베이터
 
-Banisher
+추방자
 
-Tormentor
+고문관
 
-Pendulum
+추
 
-Murmur
+소곤거림
 
-Sarcophage
+석관
 
-Concordance
+일치
 
-Dragon's Tongue
+용의 혓바닥
 
-Arbiter
+중재자
 
-Death Rattle
+죽음의 딸랑이
 
-Arcanum
+비결
 
-Transmigrator
+윤회하는 자
 
-Ultimatum
+최후통첩
 
-Earthworm
+지렁이
 
-Worm
+벌레
 
-Worm's Wrath
+벌레의 분노
 
-Leviticus
+레위기
 
-Grim
+암울함
 
 # Lemuel's suggestions
-Eviscerator
+내장 제거기
 
-Undertaker
+언더테이커
 
-Embalmer
+방부 처리기
 
-Trog's @_anger_name_@
+트로그의 @_anger_name_@
 
-Hellblazer
+헬블레이저
 
-Hell-Harrower
+지옥의 약탈자
 
 # Sigmund's sword
-Gram
+그람
 %%%%
 _joke_weapon_name_
 
-Secret Weapon
+비밀 병기
 
-With Two Names
+두가지 이름
 
-Thing
+물건
 
-Mud Pie of Death
+죽음의 진흙 파이
 
-Xom's @_xom_esteem_@
+좀의 @_xom_esteem_@
 
-String
+덩굴손
 
-Stringbean
+완두콩
 
-Blob
+방울
 
-Globulus
+덩어리
 
-Hulk
+헐크
 
-Raisin
+건포도
 
-Starlight
+별빛
 
-Giant's Toothpick
+거인의 이쑤시개
 
-Backscratcher
+등긁개
 
-Brush
+청소솔
 
-Grom
+그롬
 
-Grum
+그럼
 
-Rummage
+수색
 
-Omelette
+오믈렛
 
-Egg
+알
 
-Aubergine
+가지
 
 Z
 
@@ -1587,27 +1528,27 @@ Q
 
 Ox
 
-Tattletale
+수다쟁이
 
-Fish
+물고기
 
-Bung
+검은돈
 
-Bingo
+빙고
 
 # from the crawl.akrasiac.org patch
-Cookie Cutter
+쿠키 커터
 
-ETAOIN SHRDLU
+에테이어인 슈러들루
 
-Lorem Ipsum
+로렘 입숨
 
 # These three are from old Crawl code.
-Plojy
+플로이
 
-Glorpo
+글로포
 
-Loopy
+루피
 %%%%
 _plain_weapon_name_
 

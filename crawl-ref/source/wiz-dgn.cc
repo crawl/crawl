@@ -55,7 +55,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
     // Can't go down from bottom level of a branch.
     if (depth > brdepth[you.where_are_you])
     {
-        mpr("Can't go down from the bottom of a branch.");
+        mpr("이 서브던전의 아래층으로 내려갈 수 없다.");
         return DNGN_UNSEEN;
     }
     // Going up from top level of branch
@@ -71,7 +71,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
     }
     else
     {
-        mpr("Bug in determining level exit.");
+        mpr("층의 출구를 만드는 데 버그가 있었다.");
         return DNGN_UNSEEN;
     }
 }
@@ -359,7 +359,7 @@ void wizard_map_level()
         env.properties[FORCE_MAPPABLE_KEY] = true;
     }
 
-    mpr("Mapping level.");
+    mpr("현재 계층을 밝힌다.");
     magic_mapping(1000, 100, true, true);
 
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
@@ -380,7 +380,7 @@ bool debug_make_trap(const coord_def& pos)
 
     if (gridch != DNGN_FLOOR)
     {
-        mpr("You need to be on a floor square to make a trap.");
+        mpr("함정을 만들기 위해서는 일반적인 바닥 위에 있어야 한다.");
         return false;
     }
 
@@ -448,7 +448,7 @@ bool debug_make_trap(const coord_def& pos)
             : trap_at(you.pos())->name(DESC_A).c_str());
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
-        mpr("NOTE: Shaft traps aren't valid on this level.");
+        mpr("주의: 구덩이 함정은 이 층에서는 효과가 없다.");
 
     return true;
 }
@@ -457,7 +457,7 @@ bool debug_make_shop(const coord_def& pos)
 {
     if (grd(pos) != DNGN_FLOOR)
     {
-        mpr("Insufficient floor-space for new Wal-Mart.");
+        mpr("새로운 상점을 세우기엔 바닥의 공간이 부족하다.");
         return false;
     }
 
@@ -480,7 +480,7 @@ bool debug_make_shop(const coord_def& pos)
     }
 
     place_spec_shop(pos, new_shop_type);
-    mpr("Done.");
+    mpr("완료.");
     return true;
 }
 
@@ -728,7 +728,7 @@ void wizard_list_levels()
 
     vector<level_id> levs = travel_cache.known_levels();
 
-    mpr("Known levels:");
+    mpr("이미 알고 있는 층:");
     for (unsigned int i = 0; i < levs.size(); i++)
     {
         const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
@@ -757,7 +757,7 @@ void wizard_list_levels()
 
 void wizard_recreate_level()
 {
-    mpr("Regenerating level.");
+    mpr("층 재생성.");
 
     // Need to allow reuse of vaults, otherwise we'd run out of them fast.
     _free_all_vaults();
@@ -798,7 +798,7 @@ void wizard_clear_used_vaults()
     you.uniq_map_names.clear();
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
-    mpr("All vaults are now eligible for [re]use.");
+    mpr("이제 모든 보물창고를 재사용[re]할 수 있다.");
 }
 
 void wizard_abyss_speed()

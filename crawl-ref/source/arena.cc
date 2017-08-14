@@ -685,7 +685,7 @@ namespace arena
         if (key_is_escape(ch) || toalower(ch) == 'q')
         {
             contest_cancelled = true;
-            mpr("Canceled contest at user request");
+            mpr("사용자의 요청으로 대회를 중지했다");
             return;
         }
 
@@ -1203,7 +1203,7 @@ void arena_monster_died(monster* mons, killer_type killer,
              && arena::faction_b.active_members <= 0)
     {
         if (mons->flags & MF_HARD_RESET && !MON_KILL(killer))
-            mpr("Last arena monster was dismissed.");
+            mpr("지난번 아레나의 몬스터들은 해산되었다.");
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
         // winner, since self-destruction is their purpose. But if a

@@ -279,21 +279,21 @@ static void _change_skill_level(skill_type exsk, int n)
     // are you drained/crosstrained/ash'd in the relevant skill?
     const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
     if (you.skills[exsk] == MAX_SKILL_LEVEL)
-        mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        mprf(MSGCH_INTRINSIC_GAIN, "당신은 %s을(를) 마스터했다!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
-             specify_base ? "base " : "",
-             skill_name(exsk), (n > 0) ? "increases" : "decreases",
+        mprf(MSGCH_INTRINSIC_GAIN, "당신의 %s %s 스킬이 %s했다. 현재레벨 : %d!",
+             specify_base ? "기본 " : "",
+             skill_name(exsk), (n > 0) ? "상승" : "감소",
              you.skills[exsk]);
     }
     else if (you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s %d levels and is now "
-             "at level %d!",
-             specify_base ? "base " : "",
+        mprf(MSGCH_INTRINSIC_GAIN, "당신의 %s%s 스킬이 %s %d 레벨. 그래서 이제 "
+             "%d 레벨에 도달하였다!",
+             specify_base ? "기본 " : "",
              skill_name(exsk),
-             (n > 0) ? "gained" : "lost",
+             (n > 0) ? "얻음 :" : "잃음 :",
              abs(n), you.skills[exsk]);
     }
 
@@ -492,7 +492,7 @@ static void _check_start_train()
             ++it;
 
     if (!skills.empty())
-        mprf("You resume training %s.", skill_names(skills).c_str());
+        mprf("당신은 %s 수련을 재개했다.", skill_names(skills).c_str());
 
     you.start_train.clear();
 }
@@ -521,7 +521,7 @@ static void _check_stop_train()
 
     if (!skills.empty())
     {
-        mprf("You stop training %s.", skill_names(skills).c_str());
+        mprf("당신은 %s 수련을 멈추었다.", skill_names(skills).c_str());
         check_selected_skills();
     }
 
@@ -707,7 +707,7 @@ bool check_selected_skills()
 
     if (trainable_skill)
     {
-        mpr("You need to enable at least one skill for training.");
+              mpr("당신은 최소한 하나의 기술은 수련해야 한다.");
         more();
         reset_training();
         skill_menu();
@@ -718,7 +718,7 @@ bool check_selected_skills()
     if (could_train && !you.received_noskill_warning)
     {
         you.received_noskill_warning = true;
-        mpr("You cannot train any new skill.");
+              mpr("당신이 수련할 기술이 없다.");
     }
 
     return false;

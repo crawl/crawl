@@ -236,7 +236,7 @@ static void _decrement_petrification(int delay)
             you.fully_petrify(nullptr);
         }
         else if (dur < 15 && old_dur >= 15)
-            mpr("Your limbs are stiffening.");
+            mpr("당신의 손가락이 뻣뻣해졌다.");
     }
 }
 
@@ -376,11 +376,11 @@ static void _update_cowardice()
         return;
 
     if (horror_level >= HORROR_LVL_OVERWHELMING)
-        mpr("Monsters! Monsters everywhere! You have to get out of here!");
+        mpr("몬스터! 사방이 몬스터다! 이곳에서 당장 나가야 한다!");
     else if (horror_level >= HORROR_LVL_EXTREME)
-        mpr("You reel with horror at the sight of these foes!");
+        mpr("적들이 시야에 들어오는 순간 당신은 공포에 질려 비틀거렸다!");
     else
-        mpr("You feel a twist of horror at the sight of this foe.");
+        mpr("적들이 시야에 들어오는 순간 당신은 공포에 취해 일그러졌다.");
 }
 
 // Uskawyaw piety decays incredibly fast, but only to a baseline level of *.
@@ -755,7 +755,7 @@ static void _decrement_durations()
     if (you.duration[DUR_DARKNESS] && you.haloed())
     {
         you.duration[DUR_DARKNESS] = 0;
-        mpr("The divine light dispels your darkness!");
+        mpr("신성한 빛이 당신의 어둠을 몰아냈다!");
         update_vision_range();
     }
 
@@ -900,7 +900,7 @@ static void _handle_emergency_flight()
 
     if (!is_feat_dangerous(orig_terrain(you.pos()), true, false))
     {
-        mpr("You float gracefully downwards.");
+        mpr("당신은 공중에서 부드럽게 착지했다.");
         land_player();
         you.props.erase(EMERGENCY_FLIGHT_KEY);
     }
@@ -994,7 +994,7 @@ void player_reacts()
     {
         if (you.duration[DUR_SONG_OF_SLAYING])
         {
-            mpr("The silence causes your song to end.");
+            mpr("침묵이 당신이 부르던 노래를 중단시켰다.");
             _decrement_a_duration(DUR_SONG_OF_SLAYING, you.duration[DUR_SONG_OF_SLAYING]);
         }
     }

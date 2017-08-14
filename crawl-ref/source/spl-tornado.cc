@@ -132,7 +132,7 @@ spret_type cast_tornado(int powc, bool fail)
     }
 
     if (friendlies
-        && !yesno("There are friendlies around, are you sure you want to hurt them?",
+        && !yesno("주문 사용시, 주위의 아군들에게 피해가 갈 수 있다. 계속하겠는가?",
                   true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -314,7 +314,7 @@ void tornado_damage(actor *caster, int dur)
                 grd(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
-                    mpr("A tree falls to the hurricane!");
+                    mpr("나무가 허리케인 안으로 빨려갔다!");
                 if (caster->is_player())
                     did_god_conduct(DID_KILL_PLANT, 1);
             }
@@ -363,7 +363,7 @@ void tornado_damage(actor *caster, int dur)
                     {
                         bool standing = !you.airborne();
                         if (standing)
-                            mpr("The vortex of raging winds lifts you up.");
+                            mpr("맹렬한 바람의 소용돌이가 당신을 들어올렸다.");
                         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
                         you.duration[DUR_FLIGHT]
                             = max(you.duration[DUR_FLIGHT], 20);
@@ -463,7 +463,7 @@ void tornado_damage(actor *caster, int dur)
             && !need_expiration_warning(old_player_pos)
             && need_expiration_warning(new_player_pos))
         {
-            mprf(MSGCH_DANGER, "Careful! You are now flying above %s",
+            mprf(MSGCH_DANGER, "주의! 당신은 지금 %s위를 비행중이다",
                  feature_description_at(new_player_pos, false, DESC_PLAIN)
                      .c_str());
         }

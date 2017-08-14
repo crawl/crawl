@@ -379,7 +379,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {
         if (!quiet)
-            mpr("That's too large and heavy for you to wield.");
+            mpr("당신이 장비하기엔 너무 크고 무겁다");
         return false;
     }
 
@@ -389,7 +389,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mprf("You can't wield %s.", base_type_string(item));
+                mprf("당신은 %s을(를) 손에 들 수 없다.", base_type_string(item));
             return false;
         }
 
@@ -398,7 +398,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     else if (species == SP_FELID)
     {
         if (!quiet)
-            mpr("You can't use weapons.");
+            mpr("당신은 무기를 착용할 수 없다");
         return false;
     }
 
@@ -407,7 +407,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (!is_weapon_wieldable(item, bsize))
     {
         if (!quiet)
-            mpr("That's too large for you to wield.");
+            mpr("당신이 장비하기엔 너무 크다");
         return false;
     }
 
@@ -421,7 +421,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (!ignore_brand && undead_or_demonic() && is_holy_item(item))
     {
         if (!quiet)
-            mpr("This weapon is holy and will not allow you to wield it.");
+            mpr("당신은 성스러운 무기를 착용할 수 없다");
         return false;
     }
 
@@ -450,10 +450,10 @@ string player::name(description_level_type dt, bool, bool) const
         return "";
     case DESC_A: case DESC_THE:
     default:
-        return "you";
+        return "당신";
     case DESC_YOUR:
     case DESC_ITS:
-        return "your";
+        return "당신의";
     }
 }
 
@@ -639,7 +639,7 @@ bool player::fumbles_attack()
     {
         if (x_chance_in_y(3, 8))
         {
-            mpr("Your unstable footing causes you to fumble your attack.");
+            mpr("불안정한 지반때문에 헛손질을 했다");
             did_fumble = true;
         }
         if (floundering())
@@ -690,7 +690,7 @@ static bool _god_prevents_berserk_haste(bool intentional)
     // a part of your penance.
     if (!intentional)
     {
-        simple_god_message(" protects you from inadvertent hurry.");
+        simple_god_message("는 당신을 예기치 못한 가속으로부터 지켰다.");
         return true;
     }
 
@@ -699,7 +699,7 @@ static bool _god_prevents_berserk_haste(bool intentional)
     if (!you_worship(old_religion))
         return false;
 
-    simple_god_message(" forces you to slow down.");
+    simple_god_message("는 당신의 가속을 막았다.");
     return true;
 }
 
@@ -722,18 +722,18 @@ bool player::go_berserk(bool intentional, bool potion)
     if (crawl_state.game_is_hints())
         Hints.hints_berserk_counter++;
 
-    mpr("A red film seems to cover your vision as you go berserk!");
+    mpr("당신이 광분하는 순간 시야가 붉게 물들었다!");
 
     if (you.duration[DUR_FINESSE] > 0)
     {
         you.duration[DUR_FINESSE] = 0; // Totally incompatible.
-        mpr("Your finesse ends abruptly.");
+        mpr("당신의 전사의 기교가 갑작스럽게 중단되었다.");
     }
 
     if (!_god_prevents_berserk_haste(intentional))
-        mpr("You feel yourself moving faster!");
+        mpr("당신은 신속히 행동할 수 있다!");
 
-    mpr("You feel mighty!");
+    mpr("당신은 강해짐을 느꼈다!");
 
     int berserk_duration = (20 + random2avg(19,2)) / 2;
 
@@ -830,7 +830,7 @@ bool player::shove(const char* feat_name)
         {
             moveto(*di);
             if (*feat_name)
-                mprf("You are pushed out of the %s.", feat_name);
+                mprf("당신은 %s에서 밀려났다.", feat_name);
             dprf("Moved to (%d, %d).", pos().x, pos().y);
             return true;
         }

@@ -219,8 +219,8 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player() && you.afraid_of(defender->as_monster())
         && one_chance_in(3))
     {
-        mprf("You attempt to attack %s, but flinch away in fear!",
-             defender->name(DESC_THE).c_str());
+        mprf("당신은 %s을 공격하려했지만, 공포에 질려 손을 떼었다!",
+             defender->name(DESC_PLAIN).c_str());
         return false;
     }
 
@@ -229,9 +229,9 @@ bool melee_attack::handle_phase_attempted()
     {
         if (you.see_cell(attack_position))
         {
-            mprf("%s strikes at %s from the darkness!",
-                 attacker->name(DESC_THE, true).c_str(),
-                 defender->name(DESC_THE).c_str());
+            mprf("%s이(가) 어둠속에서 %s을 공격했다!",
+                 attacker->name(DESC_PLAIN, true).c_str(),
+                 defender->name(DESC_PLAIN).c_str());
         }
         to_hit = AUTOMATIC_HIT;
         needs_message = false;
@@ -1383,10 +1383,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             // MP drain suppressed under Pakellas, but antimagic still applies.
             if (!have_passive(passive_t::no_mp_regen) || spell_user)
             {
-                mprf("You %s %s %s.",
-                     have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
+                mprf("당신은 %s %s %s.",
+                     have_passive(passive_t::no_mp_regen) ? "붕괴" : "흡수",
                      defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                     spell_user ? "magic" : "power");
+                     spell_user ? "마법" : "마력");
             }
 
             if (!have_passive(passive_t::no_mp_regen)
@@ -1401,7 +1401,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                               * drain);
                 if (drain)
                 {
-                    mpr("You feel invigorated.");
+                    mpr("당신의 활력이 쇠하는게 느껴졌다.");
                     inc_mp(drain);
                 }
             }
@@ -1409,10 +1409,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     }
     else // no damage was done
     {
-        mprf("You %s %s%s.",
+        mprf("당신은 %s %s%s.",
              aux_verb.c_str(),
-             defender->name(DESC_THE).c_str(),
-             you.can_see(*defender) ? ", but do no damage" : "");
+             defender->name(DESC_PLAIN).c_str(),
+             you.can_see(*defender) ? ", 그러나 손상을 주지 못했다" : "");
     }
 
     if (defender->as_monster()->hit_points < 1)
@@ -1426,9 +1426,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
 void melee_attack::player_announce_aux_hit()
 {
-    mprf("You %s %s%s%s",
+    mprf("당신은 %s %s%s%s",
          aux_verb.c_str(),
-         defender->name(DESC_THE).c_str(),
+         defender->name(DESC_PLAIN).c_str(),
          debug_damage_number().c_str(),
          attack_strength_punctuation(damage_done).c_str());
 }
@@ -1452,15 +1452,15 @@ string melee_attack::player_why_missed()
                                           : string("armour");
 
         if (armour_miss && !shield_miss)
-            return "Your " + armour_name + " prevents you from hitting ";
+            return "당신의 " + armour_name + "이(가) 공격을 방해한다 ";
         else if (shield_miss && !armour_miss)
-            return "Your shield prevents you from hitting ";
+            return "당신의 방패가 공격을 방해한다 ";
         else
-            return "Your shield and " + armour_name
-                   + " prevent you from hitting ";
+            return "당신의 방패와 " + armour_name
+                   + "이(가) 공격을 방해한다 ";
     }
 
-    return "You" + evasion_margin_adverb() + " miss ";
+    return "당신" + evasion_margin_adverb() + " miss ";
 }
 
 void melee_attack::player_warn_miss()
@@ -1469,7 +1469,7 @@ void melee_attack::player_warn_miss()
 
     mprf("%s%s.",
          player_why_missed().c_str(),
-         defender->name(DESC_THE).c_str());
+         defender->name(DESC_PLAIN).c_str());
 
     // Upset only non-sleeping non-fleeing monsters if we missed.
     if (!defender->asleep() && !mons_is_fleeing(*defender->as_monster()))
@@ -1869,7 +1869,7 @@ void melee_attack::rot_defender(int amount)
         if (needs_message)
         {
             if (defender->is_player())
-                mpr("You feel your flesh rotting away!");
+                mpr("당신의 살점이 썩어가는 것이 느껴졌다!");
             else if (defender->is_monster() && defender_visible)
                 mprf("%s looks less resilient!", defender_name(false).c_str());
         }
@@ -1926,7 +1926,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (wpn_brand == SPWPN_FLAMING)
     {
         if (defender_visible)
-            mpr("The flame cauterises the wound!");
+            mpr("불이 상처를 지지고 있다!");
         return false;
     }
 
@@ -2771,7 +2771,7 @@ void melee_attack::mons_apply_attack_flavour()
         // Doesn't affect the poison-immune.
         if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
         {
-            mpr("Your divine stamina protects you from poison!");
+            mpr("당신의 신성한 기운이 당신을 독으로부터 보호했다!");
             break;
         }
         else if (defender->res_poison() >= 3)
@@ -2989,7 +2989,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (needs_message && visible_effect)
             {
-                mprf("%s magical defenses are stripped away!",
+                mprf("%s의 마법 방어장치가 제거되었다!",
                      def_name(DESC_ITS).c_str());
             }
         }
@@ -3046,7 +3046,7 @@ void melee_attack::do_passive_freeze()
         if (!hurted)
             return;
 
-        simple_monster_message(*mon, " is very cold.");
+        simple_monster_message(*mon, "은(는) 매우 추워한다.");
 
 #ifndef USE_TILE_LOCAL
         flash_monster_colour(mon, LIGHTBLUE, 200);
@@ -3074,8 +3074,8 @@ void melee_attack::mons_do_eyeball_confusion()
 
         if (mon->check_res_magic(ench_pow) <= 0)
         {
-            mprf("The eyeballs on your body gaze at %s.",
-                 mon->name(DESC_THE).c_str());
+            mprf("당신의 몸에 돋아난 눈알이 %s을 응시했다.",
+                 mon->name(DESC_PLAIN).c_str());
 
             if (!mon->check_clarity(false))
             {
@@ -3129,7 +3129,7 @@ void melee_attack::do_spines()
                 return;
 
             simple_monster_message(*attacker->as_monster(),
-                                   " is struck by your spines.");
+                                   "은(는) 당신의 바늘에 찔렸다.");
 
             attacker->hurt(&you, hurt);
         }
@@ -3155,11 +3155,11 @@ void melee_attack::do_spines()
                 return;
             if (you.can_see(*defender) || attacker->is_player())
             {
-                mprf("%s %s struck by %s %s.", attacker->name(DESC_THE).c_str(),
-                     attacker->conj_verb("are").c_str(),
+                mprf("%s은(는) %s%s의 %s에 찔렸다.", attacker->name(DESC_PLAIN).c_str(),
+                     attacker->conj_verb("").c_str(),
                      defender->name(DESC_ITS).c_str(),
-                     defender->type == MONS_BRIAR_PATCH ? "thorns"
-                                                        : "spines");
+                     defender->type == MONS_BRIAR_PATCH ? "가시"
+                                                        : "바늘");
             }
             attacker->hurt(defender, hurt, BEAM_MISSILE, KILLED_BY_SPINES);
         }
@@ -3183,7 +3183,7 @@ void melee_attack::emit_foul_stench()
             && !cell_is_solid(mon->pos())
             && !cloud_at(mon->pos()))
         {
-            mpr("You emit a cloud of foul miasma!");
+            mpr("당신은 부패 구름을 내뿜었다!");
             place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
         }
     }
@@ -3200,16 +3200,16 @@ void melee_attack::do_minotaur_retaliation()
             if (you.see_cell(defender->pos()))
             {
                 const string defname = defender->name(DESC_THE);
-                mprf("%s furiously retaliates!", defname.c_str());
+                mprf("%s은(는) 맹렬하게 보복했다!", defname.c_str());
                 if (hurt <= 0)
                 {
-                    mprf("%s headbutts %s, but does no damage.", defname.c_str(),
-                         attacker->name(DESC_THE).c_str());
+                    mprf("%s은(는) %s에게 박치기를 했다, 그러나 손상을 주지 못했다.", defname.c_str(),
+                    attacker->name(DESC_PLAIN).c_str());
                 }
                 else
                 {
-                    mprf("%s headbutts %s%s", defname.c_str(),
-                         attacker->name(DESC_THE).c_str(),
+                    mprf("%s은(는) %s%s에게 박치기했다", defname.c_str(),
+                         attacker->name(DESC_PLAIN).c_str(),
                          attack_strength_punctuation(hurt).c_str());
                 }
             }
@@ -3242,18 +3242,18 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_final_multipliers(dmg);
         int hurt = attacker->apply_ac(dmg);
 
-        mpr("You furiously retaliate!");
+        mpr("당신은 맹렬하게 반격했다!!");
         dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
         if (hurt <= 0)
         {
-            mprf("You headbutt %s, but do no damage.",
-                 attacker->name(DESC_THE).c_str());
+            mprf("당신은 %s에게 박치기했다, 하지만 손상을 주지 못했다.",
+                 attacker->name(DESC_PLAIN).c_str());
             return;
         }
         else
         {
-            mprf("You headbutt %s%s",
-                 attacker->name(DESC_THE).c_str(),
+            mprf("당신은 %s%s에게 박치기했다",
+                 attacker->name(DESC_PLAIN).c_str(),
                  attack_strength_punctuation(hurt).c_str());
             attacker->hurt(&you, hurt);
         }
@@ -3271,8 +3271,8 @@ void melee_attack::riposte()
 {
     if (you.see_cell(defender->pos()))
     {
-        mprf("%s riposte%s.", defender->name(DESC_THE).c_str(),
-             defender->is_player() ? "" : "s");
+        mprf("%s은(는) %s을(를) 되찔렀다.", defender->name(DESC_PLAIN).c_str(),
+             defender->is_player() ? "" : "");
     }
     melee_attack attck(defender, attacker, 0, effective_attack_number + 1);
     attck.is_riposte = true;
@@ -3581,14 +3581,14 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && you.form != transformation::bat)
     {
-        mprf("You bite %s, and draw %s blood!",
-             mon->name(DESC_THE, true).c_str(),
+        mprf("당신은 %s을(를) 물었다, 그리고 %s의 피를 흡수했다!",
+             mon->name(DESC_PLAIN, true).c_str(),
              mon->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
     else
     {
-        mprf("You draw %s blood!",
-             apostrophise(mon->name(DESC_THE, true)).c_str());
+        mprf("당신은 %s의 피를 흡수했다!",
+             apostrophise(mon->name(DESC_PLAIN, true)).c_str());
     }
 
     // Regain hp.

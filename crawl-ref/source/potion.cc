@@ -129,7 +129,7 @@ public:
         }
 
         if (ddoor)
-            mpr("You feel queasy.");
+            mpr("당신은 메스꺼움을 느꼈다.");
         else if (you.can_potion_heal()
                  || !is_potion
                  || you.duration[DUR_POISONING]
@@ -141,7 +141,7 @@ public:
             canned_msg(MSG_GAIN_HEALTH);
         }
         else
-            mpr("That felt strangely inert.");
+            mpr("그건 이상하게도 효과가 없는 것 같은 맛이었다.");
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])
             you.redraw_hit_points = true;
@@ -190,12 +190,12 @@ public:
     {
         if (you.duration[DUR_DEATHS_DOOR])
         {
-            mpr("You feel queasy.");
+            mpr("당신은 메스꺼움을 느꼈다.");
             return false;
         }
         if (!you.can_potion_heal() && is_potion)
         {
-            mpr("That seemed strangely inert.");
+            mpr("그건 이상하게도 효과가 없는 것 같은 맛이었다.");
             return false;
         }
 
@@ -207,7 +207,7 @@ public:
         inc_hp(amount);
         if (is_potion)
             print_potion_heal_message();
-        mpr("You feel much better.");
+        mpr("당신의 상태가 훨씬 나아졌다.");
         return true;
     }
 };
@@ -237,7 +237,7 @@ public:
     {
         if (you.species == SP_VAMPIRE)
         {
-            mpr("Yummy - fresh blood!");
+            mpr("음 - 신선한 피!");
             lessen_hunger(pow, true);
         }
         else
@@ -321,8 +321,8 @@ public:
     {
         const bool were_mighty = you.duration[DUR_MIGHT] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_mighty ? "mightier" : "very mighty");
+        mprf(MSGCH_DURATION, "갑자기 %s해졌다.",
+             were_mighty ? "강" : "매우 강");
         you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
         if (!were_mighty)
             notify_stat_change(STAT_STR, 5, true);
@@ -345,8 +345,8 @@ public:
     {
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_brilliant ? "more clever" : "clever");
+        mprf(MSGCH_DURATION, "갑자기 %s해졌다.",
+             were_brilliant ? "더 명료" : "명료");
         you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
         if (!were_brilliant)
             notify_stat_change(STAT_INT, 5, true);
@@ -369,8 +369,8 @@ public:
     {
         const bool were_agile = you.duration[DUR_AGILITY] > 0;
 
-        mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_agile ? "more agile" : "agile");
+        mprf(MSGCH_DURATION, "갑자기 %s해졌다.",
+             were_agile ? "더 기민" : "기민");
 
         you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
 
@@ -432,7 +432,7 @@ public:
     bool quaff(bool was_known) const override
     {
         if (player_res_poison() >= 1)
-            mpr("You feel slightly nauseous.");
+            mpr("당신은 약간의 메스꺼움을 느꼈다.");
         else if (effect(was_known))
             xom_is_stimulated(100 / _xom_factor(was_known));
         return true;
@@ -454,11 +454,11 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         debuff_player();
-        mpr("You feel magically purged.");
+        mpr("당신은 마력적으로 중화되었음을 느꼈다.");
         const int old_contam_level = get_contamination_level();
         contaminate_player(-1 * (1000 + random2(4000)));
         if (old_contam_level && old_contam_level == get_contamination_level())
-            mpr("You feel slightly less contaminated with magical energies.");
+            mpr("당신의 마법 오염이 약간 줄어들었음을 느꼈다.");
         return true;
     }
 };
@@ -486,7 +486,7 @@ public:
             return true;
         }
 
-        mpr("You feel briefly invigorated.");
+        mpr("당신은 잠시 건강이 악화된 기분이 들었다.");
         return false;
     }
 };
@@ -508,28 +508,28 @@ public:
         {
             vector<const char *> afflictions;
             if (you.haloed() && !you.umbraed())
-                afflictions.push_back("halo");
+                afflictions.push_back("후광");
             if (player_severe_contamination())
-                afflictions.push_back("magical contamination");
+                afflictions.push_back("마법 오염");
             if (you.duration[DUR_CORONA])
-                afflictions.push_back("corona");
+                afflictions.push_back("코로나");
             if (you.duration[DUR_LIQUID_FLAMES])
-                afflictions.push_back("liquid flames");
+                afflictions.push_back("액체 불꽃");
             if (you.duration[DUR_QUAD_DAMAGE])
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
             mprf(MSGCH_DURATION,
-                 "You become %stransparent, but the glow from %s "
-                 "%s prevents you from becoming completely invisible.",
-                 you.duration[DUR_INVIS] ? "more " : "",
-                 you.haloed() && you.halo_radius() == -1 ? "the" : "your",
+                 "당신은 %s투명해졌으나, %s%s에 의한 빛이 "
+                 "당신을 완전히 투명하게 만드는 것을 막고있다.",
+                 you.duration[DUR_INVIS] ? "더욱 " : "",
+                 you.haloed() && you.halo_radius() == -1 ? "" : "당신의 ",
                  comma_separated_line(afflictions.begin(),
                                       afflictions.end()).c_str());
         }
         else
         {
             mprf(MSGCH_DURATION, !you.duration[DUR_INVIS]
-                 ? "You fade into invisibility!"
-                 : "You fade further into invisibility.");
+                 ? "투명하게 되었다!"
+                 : "투명한 상태를 계속 유지하고 있다.");
         }
 
         // Now multiple invisiblity casts aren't as good. -- bwr
@@ -580,13 +580,13 @@ public:
 
         if (you.experience_level < you.get_max_xl())
         {
-            mpr("You feel more experienced!");
+            mpr("당신의 경험이 늘어났다!");
             // Defer calling level_change() until later in drink() to prevent
             // SIGHUP abuse.
             adjust_level(1, true);
         }
         else
-            mpr("A flood of memories washes over you.");
+            mpr("기억의 홍수가 당신의 머릿속으로 쏟아져 들어온다.");
         // these are included in default force_more_message
         skill_menu(SKMF_EXPERIENCE, 750 * you.experience_level);
         return true;
@@ -618,7 +618,7 @@ public:
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
         inc_mp(POT_MAGIC_MP);
-        mpr("Magic courses through your body.");
+        mpr("마력이 당신의 몸속으로 흘러 들어왔다.");
         return true;
     }
 };
@@ -643,7 +643,7 @@ public:
     {
         if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         {
-            mpr("You feel slightly irritated.");
+            mpr("당신은 약간 거슬리는 기분을 느꼈다.");
             return false;
         }
 
@@ -699,7 +699,7 @@ public:
 
     bool effect(bool=true, int pow = 40, bool=true) const override
     {
-        mprf(MSGCH_DURATION, "You feel protected.");
+        mprf(MSGCH_DURATION, "보호를 받는 느낌을 받았다.");
         you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
         return true;
     }
@@ -756,7 +756,7 @@ public:
             did_god_conduct(DID_CHAOS, 10, was_known);
         }
         else
-            mpr("You feel woody for a moment.");
+            mpr("당신은 잠깐 나무가 된 기분이 들었다.");
         return true;
     }
 };
@@ -787,7 +787,7 @@ public:
 
     bool effect(bool = true, int = 40, bool = true) const override
     {
-        mpr("You feel extremely strange.");
+        mpr("당신은 극도로 기묘한 기분을 느꼈다.");
         bool mutated = false;
         int remove_mutations = random_range(MIN_REMOVED, MAX_REMOVED);
         int add_mutations = random_range(MIN_ADDED, MAX_ADDED);
@@ -840,7 +840,7 @@ public:
 
     bool effect(bool=true, int=40, bool=true) const override
     {
-        mpr("There was something very wrong with that liquid.");
+        mpr("이 액체는 무언가 굉장히 잘못됐다.");
         bool success = false;
         for (int i = 0; i < NUM_STATS; ++i)
             if (lose_stat(static_cast<stat_type>(i), 1 + random2(3)))
@@ -897,7 +897,7 @@ public:
     {
         if (you.species == SP_VAMPIRE)
         {
-            mpr("This tastes delicious.");
+            mpr("이건 굉장히 맛있다.");
             lessen_hunger(pow, true);
         }
         else
@@ -1026,11 +1026,11 @@ public:
         if (you.species == SP_VAMPIRE
             || you.get_mutation_level(MUT_CARNIVOROUS) == 3)
         {
-            mpr("Blech - that potion was really gluggy!");
+            mpr("어 - 이 물약은 매우 걸쭉하다!");
         }
         else
         {
-            mpr("That potion was really gluggy!");
+            mpr("이 물약은 매우 걸쭉하다!");
             lessen_hunger(6000, true);
         }
         return true;
@@ -1060,7 +1060,7 @@ public:
     }
     bool effect(bool=true, int=40, bool=true) const override
     {
-        mpr("This tastes like water.");
+        mpr("물과도 같은 맛이 난다.");
         return true;
     }
 };
@@ -1109,14 +1109,14 @@ public:
         bool nothing_happens = true;
         if (you.duration[DUR_BREATH_WEAPON])
         {
-            mprf(MSGCH_RECOVERY, "You have got your breath back.");
+            mprf(MSGCH_RECOVERY, "호흡이 돌아오는 것이 느껴진다.");
             you.duration[DUR_BREATH_WEAPON] = 0;
             nothing_happens = false;
         }
 
         // Give a message if no message otherwise.
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
-            mpr("You feel refreshed.");
+            mpr("당신은 상쾌한 기분이 들었다.");
         return nothing_happens;
     }
 };
@@ -1169,7 +1169,7 @@ public:
 
     bool effect(bool=true, int=40, bool=true) const override
     {
-        mpr("It has a very clean taste.");
+        mpr("이건 매우 깔끔한 맛이다.");
         bool mutated = false;
         for (int i = 0; i < 7; i++)
         {
@@ -1208,14 +1208,14 @@ public:
                                     true, false, false, true);
         if (undead_mutation_rot())
         {
-            mpr("You feel dead inside.");
+            mpr("당신은 내면의 죽음을 느꼈다.");
             return mutated;
         }
 
         if (mutated)
-            mpr("You feel fantastic!");
+            mpr("당신은 환상적인 기분이 들었다!");
         else
-            mpr("You feel fantastic for a moment.");
+            mpr("당신은 잠깐 환상적인 기분이 들었다.");
         learned_something_new(HINT_YOU_MUTATED);
         return mutated;
     }
@@ -1255,7 +1255,7 @@ public:
     }
     bool effect(bool=true, int=40, bool=true) const override
     {
-        mpr("That potion was far past its expiry date.");
+        mpr("이 물약은 유통기한이 한참 지났다.");
         return true;
     }
 };
@@ -1334,7 +1334,7 @@ bool quaff_potion(item_def &potion)
     {
         set_ident_flags(potion, ISFLAG_IDENT_MASK);
         set_ident_type(potion, true);
-        mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
+        mprf("이건 %s였다.", potion.name(DESC_QUALNAME).c_str());
     }
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
