@@ -3602,7 +3602,7 @@ int targeting_behaviour::get_key()
     flush_prev_message();
     msgwin_got_input();
     return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
-                                   false, false);
+                                   false);
 }
 
 command_type targeting_behaviour::get_command(int key)

@@ -43,7 +43,7 @@ int m_getch();
 // to vi key sequences (shifted/control key directions are also handled). Non
 // direction keys (hopefully) pass through unmangled.
 int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
-                            bool fake_ctrl = true, bool fake_shift = true);
+                            bool allow_fake_modifiers = true);
 
 void nowrap_eol_cprintf(PRINTF(0, ));
 
