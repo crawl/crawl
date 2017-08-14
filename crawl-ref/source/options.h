@@ -432,6 +432,8 @@ public:
     int         level_map_cursor_step;  // The cursor increment in the level
                                         // map.
 
+    bool        use_modifier_prefix_keys; // Treat '/' as SHIFT and '*' as CTRL
+
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
 

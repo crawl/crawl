@@ -75,28 +75,31 @@ private:
 };
 
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
-                            bool fake_ctrl, bool fake_shift)
+                            bool allow_fake_modifiers)
 {
     // Kludging running and opening as two character sequences.
     // This is useful when you can't use control keys (macros, lua) or have
     // them bound to something on your system.
 
-    /* can we say yuck? -- haranp */
-    if (fake_ctrl && keyin == '*')
+    if (allow_fake_modifiers && Options.use_modifier_prefix_keys)
     {
-        unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
-        cprintf("CTRL");
-        keyin = getchm(keymap);
-        // return control-key
-        keyin = CONTROL(toupper(_numpad2vi(keyin)));
-    }
-    else if (fake_shift && keyin == '/')
-    {
-        unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
-        cprintf("SHIFT");
-        keyin = getchm(keymap);
-        // return shift-key
-        keyin = toupper(_numpad2vi(keyin));
+        /* can we say yuck? -- haranp */
+        if (keyin == '*')
+        {
+            unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
+            cprintf("CTRL");
+            keyin = getchm(keymap);
+            // return control-key
+            keyin = CONTROL(toupper(_numpad2vi(keyin)));
+        }
+        else if (keyin == '/')
+        {
+            unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
+            cprintf("SHIFT");
+            keyin = getchm(keymap);
+            // return shift-key
+            keyin = toupper(_numpad2vi(keyin));
+        }
     }
 
     // [dshaligram] More lovely keypad mangling.
