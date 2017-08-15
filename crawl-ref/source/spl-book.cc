@@ -877,7 +877,7 @@ bool learn_spell(spell_type specspell, bool wizard)
 {
     string mem_spell_warning_string = god_spell_warn_string(specspell, you.religion);
 
-    if (mem_spell_warning_string != "")
+    if (!mem_spell_warning_string.empty())
         mprf(MSGCH_WARN, "%s", mem_spell_warning_string.c_str());
 
     if (!_learn_spell_checks(specspell, wizard))

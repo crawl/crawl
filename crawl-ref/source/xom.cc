@@ -3839,7 +3839,7 @@ void debug_xom_effects()
         mood          = describe_xom_mood();
         if (old_mood != mood)
         {
-            if (old_mood != "")
+            if (!old_mood.empty())
             {
                 all_effects.push_back(mood_effects);
                 mood_effects.clear();

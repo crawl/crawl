@@ -431,7 +431,7 @@ mouse_control::~mouse_control()
 string unwrap_desc(string&& desc)
 {
     // Don't append a newline to an empty description.
-    if (desc == "")
+    if (desc.empty())
         return "";
 
     trim_string_right(desc);
@@ -445,7 +445,7 @@ string unwrap_desc(string&& desc)
         desc.erase(0, pos + 1);
         if (tag == "nowrap")
             return desc;
-        else if (desc == "")
+        else if (desc.empty())
             return "";
     }
 

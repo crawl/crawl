@@ -708,7 +708,7 @@ void wizard_fight_sim(bool double_scale)
             else
             {
                 mprf("Aborting sim on %s", kit.c_str());
-                if (error != "")
+                if (!error.empty())
                     mpr(error);
                 break;
             }

@@ -3307,7 +3307,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         // orig_field because this function wants capitals
         const string possible_error = read_rc_file_macro(orig_field);
 
-        if (possible_error != "")
+        if (!possible_error.empty())
             report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
@@ -3686,7 +3686,7 @@ void get_system_environment()
 #endif
 
 #ifdef SAVE_DIR_PATH
-    if (SysEnv.crawl_dir == "")
+    if (SysEnv.crawl_dir.empty())
         SysEnv.crawl_dir = SAVE_DIR_PATH;
 #endif
 

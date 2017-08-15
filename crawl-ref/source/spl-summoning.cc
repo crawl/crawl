@@ -1635,7 +1635,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     // No experience for monsters animated by god wrath or the Sword of
     // Zonguldrok.
-    if (nas != "")
+    if (!nas.empty())
         mg.extra_flags |= MF_NO_REWARD;
 
     mg.non_actor_summoner = nas;

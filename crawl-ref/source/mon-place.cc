@@ -1410,7 +1410,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->colour = mg.colour;
     }
 
-    if (mg.mname != "")
+    if (!mg.mname.empty())
         mon->mname = mg.mname;
 
     if (mg.props.exists(MGEN_NUM_HEADS))

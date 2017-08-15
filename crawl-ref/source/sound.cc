@@ -64,7 +64,7 @@ sound_mapping check_sound_patterns(const string& message)
 
 void play_sound(sound_mapping sound_data)
 {
-    if (sound_data.soundfile != "")
+    if (!sound_data.soundfile.empty())
         play_sound(sound_data.soundfile.c_str(), sound_data.interrupt_game);
 }
 

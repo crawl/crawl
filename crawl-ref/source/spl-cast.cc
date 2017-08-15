@@ -1101,7 +1101,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
         msg = spell_uselessness_reason(spell, true, true, fake_spell);
     }
 
-    if (msg != "")
+    if (!msg.empty())
     {
         mpr(msg);
         return true;

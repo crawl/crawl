@@ -366,7 +366,7 @@ static string _highlight_pattern(const newgame_def& ng)
         if (is_good_combination(species, ng.job, false, true))
             ret += species_name(species) + "  |";
 
-    if (ret != "")
+    if (!ret.empty())
         ret.resize(ret.size() - 1);
     return ret;
 }
