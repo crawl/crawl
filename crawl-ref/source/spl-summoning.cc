@@ -950,6 +950,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 
         // invisible monster
         canned_msg(MSG_GHOSTLY_OUTLINE);
+        autotoggle_autopickup(true);
         return SPRET_SUCCESS;
     }
 
@@ -2983,7 +2984,6 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
 
         fail_check();
 
-        // FIXME: maybe should do _paranoid_option_disable() here?
         if (caster->is_player()
             || (you.can_see(*caster) && you.see_cell(where)))
         {
@@ -2993,7 +2993,10 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                victim->conj_verb("twitch").c_str());
             }
             else
+            {
                 canned_msg(MSG_GHOSTLY_OUTLINE);
+                autotoggle_autopickup(true);
+            }
         }
         return SPRET_SUCCESS;      // Don't give free detection!
     }
