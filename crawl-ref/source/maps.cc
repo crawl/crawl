@@ -388,13 +388,14 @@ static bool _may_overwrite_feature(const coord_def p,
     return true;
 }
 
+static bool _marker_is_portal(map_marker* marker)
+{
+    return marker && !marker->property("portal").empty();
+}
+
 static bool _is_portal_place(const coord_def &c)
 {
-    map_marker* marker = env.markers.find(c, MAT_LUA_MARKER);
-    if (!marker)
-        return false;
-
-    return marker->property("portal") != "";
+    return _marker_is_portal(env.markers.find(c, MAT_LUA_MARKER));
 }
 
 static bool _map_safe_vault_place(const map_def &map,
@@ -505,7 +506,7 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
     vector<coord_def> candidates;
     for (auto marker : env.markers.get_all(MAT_LUA_MARKER))
     {
-        if (marker->property("portal") != "")
+        if (_marker_is_portal(marker))
         {
             coord_def v1(marker->pos);
             if ((!check_place
