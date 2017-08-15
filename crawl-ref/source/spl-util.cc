@@ -1075,7 +1075,7 @@ bool spell_is_form(spell_type spell)
 bool spell_is_useless(spell_type spell, bool temp, bool prevent,
                       bool fake_spell)
 {
-    return spell_uselessness_reason(spell, temp, prevent, fake_spell) != "";
+    return !spell_uselessness_reason(spell, temp, prevent, fake_spell).empty();
 }
 
 /**

@@ -906,7 +906,7 @@ int main(int argc, char* argv[])
             defenses += colour(YELLOW, "(spiny 5d4)");
         if (mons_species(mons_base_type(mon)) == MONS_MINOTAUR)
             defenses += colour(LIGHTRED, "(headbutt: d20-1)");
-        if (defenses != "")
+        if (!defenses.empty())
             printf(" %s", defenses.c_str());
 
         mon.wield_melee_weapon();

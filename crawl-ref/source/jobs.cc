@@ -159,7 +159,7 @@ void debug_jobdata()
         for (const string& it : entry.second.equipment)
         {
             const string error = dummy.add_item(it, false);
-            if (error != "")
+            if (!error.empty())
                 fails += error + "\n";
         }
 

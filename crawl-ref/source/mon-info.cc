@@ -1575,7 +1575,7 @@ string monster_info::constriction_description() const
     string cinfo = "";
     bool bymsg = false;
 
-    if (constrictor_name != "")
+    if (!constrictor_name.empty())
     {
         cinfo += constrictor_name;
         bymsg = true;
@@ -1584,7 +1584,7 @@ string monster_info::constriction_description() const
     string constricting = comma_separated_line(constricting_name.begin(),
                                                constricting_name.end());
 
-    if (constricting != "")
+    if (!constricting.empty())
     {
         if (bymsg)
             cinfo += ", ";

@@ -611,7 +611,7 @@ bool Menu::process_key(int keyin)
         break;
 
     case '_':
-        if (help_key() != "")
+        if (!help_key().empty())
         {
             show_specific_help(help_key());
             nav     = true;

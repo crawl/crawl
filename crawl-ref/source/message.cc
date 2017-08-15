@@ -1448,7 +1448,7 @@ void msgwin_got_input()
 int msgwin_get_line(string prompt, char *buf, int len,
                     input_history *mh, const string &fill)
 {
-    if (prompt != "")
+    if (!prompt.empty())
         msgwin_prompt(prompt);
 
     int ret = cancellable_get_line(buf, len, mh, nullptr, fill);

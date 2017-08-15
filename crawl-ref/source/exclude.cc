@@ -577,7 +577,7 @@ string exclude_set::get_exclusion_desc()
         if (ma != auto_unique_annotations.end())
             continue;
 
-        if (ex.desc != "")
+        if (!ex.desc.empty())
             desc.push_back(ex.desc);
         else
             count_other++;

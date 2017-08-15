@@ -807,7 +807,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
                 msg_type = MSGCH_FRIEND_SPELL;
             if (msg_type == MSGCH_MONSTER_ENCHANT && mons->friendly())
                 msg_type = MSGCH_FRIEND_ENCHANT;
-            if (line == "")
+            if (line.empty())
                 continue;
         }
 

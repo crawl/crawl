@@ -4583,7 +4583,7 @@ static void _place_delayed_monsters()
             _delayed_success.pop_front();
             _delayed_done_callbacks.pop_front();
 
-            if (msg == "")
+            if (msg.empty())
             {
                 if (cback)
                     (*cback)(mg, lastmon, placed);

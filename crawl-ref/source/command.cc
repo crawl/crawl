@@ -568,7 +568,7 @@ private:
 };
 
 help_highlighter::help_highlighter(string highlight_string) :
-    pattern(highlight_string == "" ? get_species_key() : highlight_string)
+    pattern(highlight_string.empty() ? get_species_key() : highlight_string)
 {
 }
 

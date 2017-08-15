@@ -216,7 +216,7 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
         return true;
     }
 
-    if (msg != "")
+    if (!msg.empty())
         mpr(msg);
     else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
         mpr("You cannot enter water in your current form.");
@@ -238,7 +238,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
         if (prompted)
             *prompted = true;
 
-        if (msg != "")
+        if (!msg.empty())
             prompt = msg + " ";
 
         prompt += "Are you sure you want to " + move_verb;
@@ -6376,7 +6376,7 @@ bool player::no_tele_print_reason(bool calc_unid, bool blinking) const
  */
 bool player::no_tele(bool calc_unid, bool /*permit_id*/, bool blinking) const
 {
-    return no_tele_reason(calc_unid, blinking) != "";
+    return !no_tele_reason(calc_unid, blinking).empty();
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)

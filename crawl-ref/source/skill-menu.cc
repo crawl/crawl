@@ -723,10 +723,10 @@ void SkillMenuSwitch::update()
         text += make_stringf("<%s>%s</%s>", col.c_str(), get_name(*it).c_str(),
                              col.c_str());
     }
-    if (m_name != "")
-        text += make_stringf(" %s  ", m_name.c_str());
-    else
+    if (m_name.empty())
         text += "  ";
+    else
+        text += make_stringf(" %s  ", m_name.c_str());
     set_text(text);
 }
 
@@ -1324,7 +1324,7 @@ void SkillMenu::set_default_help()
 
 void SkillMenu::set_help(string msg)
 {
-    if (msg == "")
+    if (msg.empty())
         set_default_help();
     else
         m_help->set_text(msg);

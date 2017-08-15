@@ -279,7 +279,7 @@ static string _brand_suffix(int brand)
 string Form::get_uc_attack_name(string default_name) const
 {
     const string brand_suffix = _brand_suffix(get_uc_brand());
-    if (uc_attack == "")
+    if (uc_attack.empty())
         return default_name + brand_suffix;
     return uc_attack + brand_suffix;
 }
@@ -442,7 +442,7 @@ bool Form::all_blocked(int slotflags) const
 string Form::player_prayer_action() const
 {
     // If the form is naturally flying & specifies an action, use that.
-    if (can_fly == FC_ENABLE && prayer_action != "")
+    if (can_fly == FC_ENABLE && !prayer_action.empty())
         return prayer_action;
     // Otherwise, if you're flying, use the generic flying action.
     // XXX: if we ever get a default-permaflying species again that wants to
@@ -450,7 +450,7 @@ string Form::player_prayer_action() const
     if (you.airborne())
         return "hover solemnly before";
     // Otherwise, if you have a verb, use that...
-    if (prayer_action != "")
+    if (!prayer_action.empty())
         return prayer_action;
     // Finally, default to your species' verb.
     return species_prayer_action(you.species);
@@ -1953,7 +1953,7 @@ void untransform(bool skip_move)
     }
 
     const string message = get_form(old_form)->get_untransform_message();
-    if (message != "")
+    if (!message.empty())
         mprf(MSGCH_DURATION, "%s", message.c_str());
 
     const int str_mod = get_form(old_form)->str_mod;
