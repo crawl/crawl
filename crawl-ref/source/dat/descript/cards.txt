@@ -2,26 +2,31 @@
 # Escape
 Velocity card
 
-The card depicts an empty, well-worn pair of boots. Sand, ashes, and turf
-coat the boots' soles.
+속도의 카드:
 
-Drawing this card can grant great speed or terrible slowness to foes and allies
-alike. The beneficial aspects depend on card power.
+이 카드는 주인 없는 한 쌍의 해진 부츠를 묘사하고 있다.
+모래, 재, 잔디가 부츠 밑창을 뒤덮고 있다.
+
+이 카드를 뽑으면 적과 아군 모두가 매우 빨라지거나 몹시 느려진다.
+유익한 측면은 카드의 파워에 달려있다.
 %%%%
 the Tomb card
 
-The card depicts a royal crypt, its entrance sealed by a heavy stone slab.
+무덤의 카드:
 
-Drawing this card entombs its user in protective, temporary walls of solid rock.
-At lower power levels or with adjacent creatures, the tomb may be imperfect.
+이 카드는 왕실의 지하실을 묘사한다. 입구가 무거운 돌판으로 막혀있다.
+
+이 카드를 뽑으면 사용자를 단단한 돌벽으로 일시적으로 가두어 보호한다.
+위력이 약하거나 인접한 생명체가 있다면 무덤이 불완전할 수 있다.
 %%%%
 Exile card
 
-The card depicts ceaseless hands from a yawning portal overcoming a panicked
-figure.
+추방의 카드:
 
-Drawing this card will banish one or more nearby creatures to the Abyss,
-possibly including the user.
+이 카드는 거대한 포탈에서 끊임없이 나오는 손에 압도당해 겁에 질린 인물을 묘사한다.
+
+이 카드를 뽑으면 적어도 하나의 주변 생명체를 어비스로 추방한다.
+사용자도 예외는 아닐 것이다.
 %%%%
 the Shaft card
 
@@ -33,59 +38,70 @@ the Shaft card
 %%%%
 the Elixir card
 
-The card depicts a smug smile formed out of nine chalices.
+엘릭서의 카드:
 
-Drawing this card rapidly restores the user's health or magic, or both at high power
-levels. It will also heal their allies.
+이 카드는 아홉 개의 성배를 등진 의기양양한 웃음을 묘사하고 있다.
+
+이 카드를 뽑으면 사용자의 체력이나 마력을, 위력이 높다면 양쪽 모두를 빠르게 회복한다.
+그리고 아군 또한 치료한다.
 %%%%
 the Cloud card
 
 구름의 카드:
 
 이 카드는 안개에 완전히 감싸인 철문을 묘사하고 있다.
+
 이 카드를 뽑으면 플레이어의 시야를 구름으로 가린다.
 생성되는 구름의 종류는 카드의 파워에 비례한다.
 %%%%
 # Destruction
 Vitriol card
 
-The card depicts an oklob plant, dripping with its distinctive corrosive sap.
+황산의 카드:
 
-Drawing this card will unleash a corrosive attack spell.
+이 카드는 독특한 부식성 수액을 흘리고 있는 오클롭 식물을 묘사한다.
+
+이 카드를 뽑으면 부식성의 공격 스펠을 발사한다.
 %%%%
 the Storm card
 
 폭풍의 카드:
 
 이 카드는 몰아치는 번개폭풍에 의해 바다에 가라앉는 배를 묘사하고 있다.
+
 이 카드를 뽑으면 폭풍과 번개구름을 불러일으킨다. 
 %%%%
 Pain card
 
-The card depicts an iron wheel, menacing with spikes and rusted with blood.
+고통의 카드:
 
-Drawing this card unleashes a necromantic attack spell.
+이 카드는 피에 부식된 가시 돋힌 철제 바퀴를 위협적으로 묘사하고 있다.
+
+이 카드를 뽑으면 강령술의 공격 스펠을 발사한다.
 %%%%
 the Orb card
+오브의 카드:
 
-The card depicts a figure surrounded by floating, glowing orbs of energy.
+이 카드는 떠다니며 빛나는 에너지의 구체에 둘러싸인 인물을 묘사하고 있다.
 
-Drawing this card unleashes one or possibly more destructive orbs of pure magic.
+이 카드를 뽑으면 순수한 마력으로 이루어진 파괴적인 구체를 한 개 이상 발사한다.
 %%%%
 Degeneration card
 
 퇴화의 카드:
 
 이 카드는 비늘이 벗겨져 연약한 속살을 드러내는 용의 모습을 묘사하고 있다.
+
 이 카드를 뽑으면 주변 적들을 본래보다 약한 형태로 변신시킨다.
 %%%%
 Wild Magic card
 
-The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
+격렬한 마법의 카드:
 
-Drawing this card causes wild magic (as if from miscasting a spell) to act upon
-its user's enemies. Each creature affected will restore some of the user's
-magic.
+이 카드는 불에 그을린 뾰족한 마법사 모자가 잿더미 위에 놓인 모습을 묘사하고 있다.
+
+이 카드를 뽑으면 스펠에 실패했을 때와 같은 격렬한 마법이 사용자의 적을 덮친다.
+사용자는 영향을 받은 생명체마다 약간의 마력을 회복한다.
 # Summoning
 %%%%
 the Elements card
@@ -93,95 +109,112 @@ the Elements card
 원소의 카드:
 
 이 카드는 모래폭풍 속에 숨은 거대한 짐승을 묘사하고 있다.
+
 이 카드를 뽑으면 사대원소의 소환수를 셋 소환한다.
 %%%%
 the Pentagram card
 
-The card depicts cultists marking out a ritual pentagram on the floor.
+오망성의 카드:
 
-Drawing this card will summon a pair of demons to the user's aid.
+이 카드는 바닥에 오망성을 그려 의식을 치르는 광신도를 묘사하고 있다.
+
+이 카드를 뽑으면 한 쌍의 악마가 소환되어 사용자를 돕는다.
 %%%%
 the Dance card
 
-The card depicts an extravagantly-dressed, masked figure dancing alone in a
-vast room.
+춤의 카드:
 
-Drawing this card will summon a dancing weapon. Its quality, brand, and
-friendliness are all affected by card power.
+이 카드는 매우 화려하게 차려입은 인물이 가면을 쓰고 광활한 방에서 혼자 춤을 추는 모습을 묘사하고 있다.
+
+이 카드를 뽑으면 춤추는 무기를 소환한다.
+무기의 질이나 브랜드, 피아관계는 카드 위력에 따라 결정된다.
 %%%%
 Foxfire card
 
-The card depicts a swamp at night, suffused with an eerie glow.
+여우불의 카드:
 
-Drawing this card will summon forth flying swarms. Some of their members may
-be hostile.
+이 카드는 으스스한 빛으로 물든 밤중의 늪를 묘사하고 있다.
+
+이 카드를 뽑으면 날아다니는 몬스터 떼를 소환한다.
+그중 일부는 적대적일지도 모른다.
 %%%%
 the Rangers card
 
-The card depicts an arrow in a bull's-eye, which has been split by a second
-arrow.
+사수의 카드:
 
-Drawing this card will summon several archers.
+이 카드는 과녁의 정중앙을 맞춘 화살과, 그 화살을 가른 두 번째 화살을 묘사하고 있다.
+
+이 카드를 뽑으면 궁수를 몇명 소환한다
 %%%%
 the Illusion card
 
 환영의 카드:
 
 이 카드는 거울의 방 안에서 수많은 자신의 상과 마주하고 있는 누군가를 묘사하고 있다.
+
 이 카드를 뽑으면 플레이어의 환영을 소환하며, 그 능력은 본체의 능력에 비례한다.
 %%%%
 # Punishment
 Wrath card
 
-The card depicts the hand of the divine, reaching down from the heavens to hurl
-furious lightning.
+분노의 카드:
 
-Drawing this card will draw a god's wrath against the user.
+이 카드는 천상에서 분노의 번개를 내리는 신의 손을 묘사하고 있다. 
+
+이 카드를 뽑으면 사용자에게 신의 징벌을 내린다.
 %%%%
 Famine card
 
-The card depicts a gaunt figure crawling along an expanse of dry, cracked
-earth.
+기근의 카드:
 
-Drawing this card will leave its user on the brink of starvation.
+이 카드는 마르고 금간 대지를 기는 수척한 형상을 묘사하고 있다.
+
+이 카드를 뽑으면 사용자를 굶주리기 직전의 상태로 만든다.
 %%%%
 the Wraith card
 
-The card depicts absolutely nothing.
+망령의 카드:
 
-Drawing this card will drain the user.
+이 카드는 아무것도 그려져 있지 않다.
+
+이 카드를 뽑으면 사용자의 생명력을 흡수한다.
 %%%%
 the Swine card
 
-The card depicts several feral hogs wallowing in a mud pit.
+돼지의 카드:
 
-Drawing this card will make its user turn pink and root for truffles.
+이 카드는 진흙탕을 뒹구는 몇 마리 흉폭한 돼지를 묘사하고 있다.
+
+이 카드를 뽑으면 사용자를 송로버섯을 쫓는 분홍색 돼지로 만들 것이다.
 %%%%
 Torment card
 
-The card depicts a screaming figure being tortured on the rack.
+고문의 카드:
 
-Drawing this card will cause agonising injury to the user.
+이 카드는 고문대에서 고통받으며 비명을 지르는 형상을 묘사하고 있다.
+
+이 카드를 뽑으면 사용자에게 고통스러운 부상을 유발한다.
 %%%%
 # cards for wizmode testing (&c)
 the Stairs card
 
-The card depicts water flowing down a set of stairs.
+계단의 카드:
 
-Drawing this card makes staircases slide towards or away from the user. It is a
-bug if one ever finds it in a deck.
+이 카드는 계단 밑으로 흐르는 물을 보여주고 있다.
+
+이 카드를 뽑으면 사용자 쪽으로 혹은 사용자로부터 멀어지는 방향으로
+미끄러지는 계단을 생성한다. 이것을 덱에서 뽑는다면, 버그이다.
 %%%%
 # buggy cards
 a buggy card
 
-The card depicts a Crawl player filing a bug report on Mantis.
+이 카드는 Mantis에 버그 리포트를 제출하는 크롤 플레이어를 묘사하고 있다.
 
-Drawing this card is a bug, if one ever encounters it as such.
+이 카드를 뽑는 것은 말 그대로, 버그이다.
 %%%%
 a very buggy card
 
-The card depicts several Crawl players angrily filing several bug reports on
-Mantis.
+이 카드는 Mantis에 다수의 버그 리포트들을 제출하는 뿔난 크롤 플레이어들을 묘사하고 있다.
 
-Drawing this card is a bug, if one ever encounters it as such.
+이 카드를 뽑는 것은 말 그대로, 버그이다.
 %%%%

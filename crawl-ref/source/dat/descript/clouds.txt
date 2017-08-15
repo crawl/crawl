@@ -1,36 +1,45 @@
 %%%%
 flame cloud
 
-A cloud of raging fire. Any creature not entirely immune to fire will be hurt
-by time spent in the flames.
+불꽃 구름:
 
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
+맹렬한 화염의 구름. 이 안에 머문 생명체가, 화염에 완전한 면역이 아니라면 피해를 입을 것이다.
+원거리 냉기 공격이 이 구름을 통과할 경우 사거리가 매우 감소하게 되며, 이 과정중 구름이 흩어진다.
 
-If placed near or over water, the heat will generate steam nearby.
+만약 물 주변에 위치할 경우, 열기는 가까이에 수증기를 생성할 것이다.
+만약 구름이 물 위에 직접 위치한다면, 더욱 빨리 소멸하게 된다.
 %%%%
 noxious fumes cloud
 
-A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming confused by the gases, unless resistant to poison.
-Tougher, more experienced creatures are less likely to be affected.
+유독 가스 구름:
+
+숨막히는 지독한 냄새의 구름. 이 안에 들어가 가스를 들이마시는 생명체는
+독에 대한 저항이 없을 경우 혼란에 걸릴 위험부담을 가진다.
+더 강력하고 경험 많은 생물들은 이 구름에 영향을 받을 확률이 줄어들게된다.
 %%%%
 freezing vapour cloud
 
-A cloud of freezing air. Any creature not entirely immune to cold will be hurt
-by time spent inside.
+결빙된 증기 구름:
 
-Ranged fire attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
+얼어붙은 공기의 구름. 이 안에 머문 생명체가,
+냉기에 완전한 면역이 아니라면 피해를 입을 것이다.
+
+원거리 냉기(화염) 공격이 이 구름을 통과할 경우 사거리가 매우 감소하게 되며,
+이 과정중 구름이 흩어진다.
+만약 구름이 용암 위에 위치한다면, 더욱 빨리 소멸하게 된다.
 %%%%
 poison gas cloud
 
-A cloud of deadly poison. Any creature without resistance to poison will be
-both poisoned and directly harmed by time spent in it.
+독가스 구름:
+
+치명적인 독구름. 독 저항 능력이 없는 생물이 여기 있으면
+중독되며 직접적인 피해를 입는다.
 %%%%
 _smoke_cloud_
 
-A cloud of coloured smoke. Harmless, except to the asthmatic.
+연기 구름:
+
+알록달록한 연기의 구름. 천식 환자를 제외하고는 무해하다.
 %%%%
 black smoke cloud
 
@@ -50,120 +59,162 @@ purple smoke cloud
 %%%%
 translocational energy cloud
 
-The remnant of some creature that was recently here but is no longer, banished
-nearby, across the level, or out of reality itself, all the way into the Abyss.
-Some wizards say these are a kind of "allergic reaction" the universe
-produces, in response to magic that warps space in impossible ways; a cosmic
-sneeze. Perhaps metaphysically gross, but otherwise harmless.
+전이 에너지 구름:
+
+대개는 전이술의 흔적으로서, 가까운 곳으로 추방당하거나, 공간을 뛰어넘거나,
+스스로 현실 밖으로 튀어나가거나, 모든 방법으로 어비스에 도달하였을대 생기는 흔적이다.
+일부 마법사는 불가능한 방법을 사용하여 공간을 휘게 하는 마법에 대한 반응으로
+우주가 생성한 "알러지 반응" 이라 표현한다; 우주의 재채기.
+아마도 육안으로 보기에 형이상학적 이겠지만, 보기와는 달리 무해하다.
 %%%%
 spreading flames cloud
 
-A raging forest fire. Any creature not entirely immune to fire will be hurt by
-time spent in the flames. The flames will intermittently flare up and fill
-their surroundings with lesser fires. Any trees unfortunate enough to be nearby
-will often find themselves transformed into more kindling for the fire.
+퍼져나가는 화염 구름:
 
-Ranged cold attacks passing through the cloud are substantially reduced in
-range, dissipating the cloud in the process.
+맹렬한 산불. 화염에 완전 면역이 아닌 생물은 이 화염에서 있는 동안 피해를 입는다.
+화염은 간헐적으로 타올라 근처에 작은 불기둥을 일으키며, 너무 가까이 있던 운 없는 나무들은
+대개 불쏘시개에 더욱 가까워진 존재가 된다.
 
-If placed near or over water, the heat will generate steam nearby.
+이 구름을 통과하는 원거리 냉기 공격은 대개 사거리가 줄어들고, 그 과정에서 구름을 없애게 된다.
+
+구름이 물 가까이에 위치한다면, 열기는 근처에 증기를 만들어낸다. 구름이 물 바로 위에 떠있다면,
+구름은 더 빨리 사라지게 된다.
 %%%%
 steam cloud
 
-A cloud of scalding steam. Creatures caught within will be mildly injured,
-and fire resistance will further reduce the damage.
+증기 구름:
+
+끓어오르는 증기의 구름이다. 이 안의 생명체는 약간의 부상을 입으며,
+화염 저항이 있을 경우 피해를 줄일 수 있다.
 %%%%
 ink cloud
 
-A cloud of ink, completely filling the water.
+먹물 구름:
+
+물을 완전히 메우고 있는 먹물 구름.
 %%%%
 calcifying dust cloud
 
-A petrifying cloud. Creatures caught in the cloud for any length of time will
-find themselves turning to stone, though more experienced creatures may be able
-to resist the effects.
+석화 먼지 구름:
+
+석화 구름. 이 구름에서 시간을 보낸 생물은 몸이 돌로 변하는 광경을 보게 되지만,
+경험이 많은 생물들은 이 효과에 저항할 수 있다.
+
 %%%%
 blessed fire cloud
 
-A cloud of divine fire, imbued with holy power. Those in the service of one of
-the good gods will be unaffected by it. All other creatures will be hurt by it,
-with undead and demonic creatures being greatly harmed.
+신성한 불꽃의 구름:
+
+신성한 힘으로 가득찬 거룩한 불꽃의 구름. 선한 신을 따르는 자는 영향을 받지 않는다.
+그렇지 않은 자들은 대개 피해를 입으며, 불 저항력은 이를 보호해주지 못한다.
+사악한 신을 따르는 자들은 더 많은 피해를 입으며, 언데드와 악마적인 존재는 그보다도 더 많은 피해를 입는다.
 %%%%
 foul pestilence cloud
 
-# XXX: clarify vine stalkers, gargoyles
-A cloud of dark miasma. Any living being not subject to Zin's divine protection
-will find themselves poisoned, and may also find their movements slowing and
-their flesh rotting away.
+역겨운 전염병 구름:
+
+# XXX: 바인 스토커와 가고일은 이 구름에 효과를 받지 않는다.
+
+어두운 기운을 내뿜는 구름. 진의 신성한 보호를 받고 있지 않는
+살아있는 생명체가 이 구름에 노출된다면 독에 감염되고 움직임이
+느려지며 살이 썩어들어갈 것이다.
 %%%%
 thin mist cloud
 
-A cloud of thin mist. Atmospheric, but harmless.
+옅은 안개 구름:
+
+옅은 안개의 구름이다. 분위기를 내지만, 무해하다.
 %%%%
 seething chaos cloud
 
-A cloud of seething chaos. A wide variety of unpredictable effects apply to
-those within the clouds, ranging from invisibility to berserk rage to complete
-paralysis.
+끓어오르는 혼돈의 구름:
+
+끓어오르는 혼돈의 구름이다.
+투명화에 광폭화에 완전한 마비에 이르기까지,
+예측할수 없는 다양한 효과가 이 구름안에서 적용된다.
 %%%%
 rain cloud
 
-An extremely localized rainstorm. It may produce pools of shallow water, or
-temporarily deepen existing pools. Beings made entirely out of fire are averse
-to spending much time in the rain.
+비 구름:
+
+굉장히 한정된 지역에 내리는 비구름. 얕은 물웅덩이를 만들거나,
+존재하는 물웅덩이를 일시적으로 더욱 깊게 만들 수 있다.
+불에서 비롯된 존재들은 빗속에서 많은 시간을 보내기 싫어한다.
 %%%%
 mutagenic fog cloud
 
-A cloud of pure, unstructured magic, condensed into a scintilliating mist;
-essentially toxic magical waste. Creatures venturing within will find
-themselves increasingly contaminated with magical radiation, sufficient amounts
-of which will inflict negative mutations when dissipating.
+변이 안개 구름:
+
+불안정하고 순수한 마법의 구름, 반짝이는 안개로 응축되어있으며
+근본적으로 독성있는 마법의 부산물이다.
+이 안을 탐험하는 생명체들은 그들 스스로가 부정적 돌연변이를 일으키기에
+충분한 양의 마법적 방사능에 빠르게 오염되는것을 알아차릴수 있을것입니다.
 %%%%
 magical condensation cloud
 
-The wake of some highly concentrated magical energy, itself entirely harmless.
+마법의 응결 구름:
+
+마법 에너지가 몹시 응축된 결과물, 그 자체는 완전히 무해하다.
 %%%%
 raging winds cloud
 
-The winds of a raging tornado. It will deal severe damage to anyone within it.
+휘몰아치는 바람의 구름:
+
+휘몰아치는 용오름 바람. 이 안에 있는 모든 존재에게 치명적인 피해를 줍니다.
 %%%%
 sparse dust cloud
 
-A cloud of sparse dust. Atmospheric, but harmless.
+희미한 먼지 구름:
+
+작은 먼지의 구름이다. 분위기를 내지만, 무해하다.
 %%%%
 spectral mist cloud
 
-A cloud of spectral mist. It causes minor damage to all creatures other than
-the undead. Dangerous but short-lived spectral undead creatures will coalesce
-from the mist over time.
+혼령의 안개 구름:
+
+혼령의 안개 구름.
+언데드가 아닌 모든 생물에게 경미한 피해를 입힌다.
+시간이 지나면서 안개가 뭉치면, 위험하지만 지속시간이 짧은 혼령 언데드 크리처가 된다.
 %%%%
 acidic fog cloud
 
-A cloud of flesh-searing acid, which will deal damage and apply corrosion to
-those within it. Resistance to corrosion will provide immunity to its effects.
+산성 구름:
+
+살이 타는듯한 산성의 구름은 그 안에 있는 것에게 피해와 부식을 유발한다.
+부식에 대한 저항이 있으면, 그 효과에 면역된다.
 %%%%
 thunder cloud
 
-A dark storm cloud. It will intermittently strike those within with lightning,
-dealing severe damage to those without resistance to electricity.
+번개 구름:
+
+어두운 빛을 띄는 폭풍의 구름. 이것은 구름안으로 들어온 전기저항이 없는
+적들에게 심각한 피해를 입히는 간혈적인 번개를 내리친다.
 %%%%
 negative energy cloud
 
-A cloud of necromantic energy. Living creatures trapped within will find
-themselves drained of their life energies, though protection from negative
-energy will mitigate the effects.
+음에너지 구름:
+
+강령술 에너지의 구름. 이 안의 살아있는 존재들은
+그들의 생명 에너지가 흡수되는 것을 발견할 것이며,
+음에너지 저항이 이 효과를 완화할 수 있을 것이다.
 %%%%
 white fluffiness cloud
 
-A white, fluffy cloud. Not actually solid enough to use as a pillow, and yet
-still oddly peaceful.
+흰 솜털 구름:
+
+흰색, 솜털 구름. 베개로 사용하기에 충분히 통통하지만, 여전히 이상하게
+평화롭습니다.
 %%%%
 salt cloud
 
-A cloud of rapidly whirling dust and salt. It stings the eyes and skin of any
-creatures caught within, although it is ultimately harmless.
+소금 구름:
+
+엄청난 속도로 휘몰아치는 먼지와 소금의 구름. 궁극적으로는 피해가 없지만
+이 안에 있는 존재의 눈과 피부를 자극한다.
 %%%%
 golden dust cloud
 
-A cloud of shimmering golden dust. While within it, followers of the Council
-gain tremendous strength in combat.
+황금 먼지 구름:
+
+반짝이는 황금 먼지 구름. 그 안에서 협회의 제자들은 전투에서 강대한 힘을
+얻을 수 있다.
