@@ -954,6 +954,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
     }
 
     spret_type handle_trap = handle_trap_at_target_location(where, &you, fail);
+
     if (handle_trap != SPRET_NONE)
         return handle_trap;
 
@@ -2998,6 +2999,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
     }
 
     spret_type handle_trap = handle_trap_at_target_location(where, caster, fail);
+
     if (handle_trap != SPRET_NONE)
         return handle_trap;
 
@@ -3468,12 +3470,14 @@ spret_type handle_trap_at_target_location(const coord_def& where, actor* caster,
                     mpr("The trap prevents you from targeting this location.");
                 return SPRET_ABORT;
             }
-            //give a vague message. players won't know if it's a teleport or shaft trap
-            else
-            {
-                fail_check();
-                mpr("You see a shimmering outline there, and the spell fizzles.");
-            }
+
+            fail_check();
+
+            // give a vague message. players won't know if it's a teleport or shaft trap
+            // we only provide a message if the player is the caster
+            if (caster->is_player())
+                mpr("You see a mysterious outline, and the spell fizzles.");
+
             // we charge mana for the detection of the trap
             return SPRET_SUCCESS;
         }
