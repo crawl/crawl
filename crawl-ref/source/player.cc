@@ -229,8 +229,7 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg, bool *prompted)
 {
     if (!_check_moveto_dangerous(p, msg))
-        return false
-;
+        return false;
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
