@@ -953,7 +953,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = handle_trap_at_target_location(where, fail);
+    spret_type handle_trap = handle_trap_at_target_location(where, &you, fail);
     if (handle_trap != SPRET_NONE)
         return handle_trap;
 
@@ -2997,7 +2997,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
-    spret_type handle_trap = handle_trap_at_target_location(where, fail);
+    spret_type handle_trap = handle_trap_at_target_location(where, caster, fail);
     if (handle_trap != SPRET_NONE)
         return handle_trap;
 
@@ -3449,7 +3449,7 @@ int count_summons(const actor *summoner, spell_type spell)
     return count;
 }
 
-spret_type handle_trap_at_target_location(const coord_def& where, bool fail)
+spret_type handle_trap_at_target_location(const coord_def& where, actor* caster, bool fail)
 {
     // check for traps
     const trap_def *ptrap = trap_at(where);
@@ -3464,7 +3464,8 @@ spret_type handle_trap_at_target_location(const coord_def& where, bool fail)
             // if you can see the trap, tell the player straight up they can't target it
             if (player_knows_trap)
             {
-                mpr("You can't place the spire on this trap.");
+                if (caster->is_player())
+                    mpr("The trap prevents you from targeting this location.");
                 return SPRET_ABORT;
             }
             //give a vague message. players won't know if it's a teleport or shaft trap
