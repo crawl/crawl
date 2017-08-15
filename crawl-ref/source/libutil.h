@@ -80,7 +80,7 @@ description_level_type description_type_by_name(const char *desc);
 
 bool shell_safe(const char *file);
 
-string unwrap_desc(string desc);
+string unwrap_desc(string&& desc);
 
 /** Ignore any number of arguments and return true.
  *

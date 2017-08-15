@@ -428,7 +428,7 @@ mouse_control::~mouse_control()
     ms_current_mode = m_previous_mode;
 }
 
-string unwrap_desc(string desc)
+string unwrap_desc(string&& desc)
 {
     // Don't append a newline to an empty description.
     if (desc == "")
