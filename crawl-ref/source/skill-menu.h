@@ -94,6 +94,7 @@ private:
     void set_reskill_progress();
     void set_title();
     void set_training();
+    void set_targets();
 };
 
 class SkillMenuSwitch : public FormattedTextItem

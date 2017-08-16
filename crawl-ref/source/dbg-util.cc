@@ -356,6 +356,11 @@ skill_type debug_prompt_for_skill(const char *prompt)
     return skill_from_name(lowercase_string(specs).c_str());
 }
 
+/**
+ * Get a skill type from a skill name, accepting abbreviations.
+ *
+ * @see str_to_skill for an exact version.
+ */
 skill_type skill_from_name(const char *name)
 {
     skill_type skill = SK_NONE;
