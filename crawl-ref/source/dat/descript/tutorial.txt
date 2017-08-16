@@ -49,11 +49,10 @@ tutorial1 levelmap
 마우스버튼</input>을 클릭한 채로 미니맵에서 보고 싶은 곳에 커서를 가져가 대보면
 그곳의 지형을 볼 수 있으며, <input>왼쪽 마우스버튼</input>을 클릭하면 지금 보고
 있는 곳, 혹은 미니맵을 클릭했을 경우 해당 지역으로 빠르게 이동할 수
-있습니다.</localtiles><webtiles> You can </webtiles><nomouse>enter the
-overmap view with <input>$cmd[CMD_DISPLAY_MAP]</input> and then move the cursor
-around to look around the level. You also can travel wherever your cursor is
-pointing by pressing <input>.</input> or <input>Enter</input>. Press
-<input>Escape</input> to return to the normal game mode.</nomouse>
+있습니다.</localtiles><webtiles> 당신은 </webtiles><nomouse> <input>$cmd[CMD_DISPLAY_MAP]</input>
+을 사용하여 오버맵보기를 입력 한 다음 커버를 움직여 레벨을 둘러 볼 수 있습니다.
+<input>.</input> 또는 <input>Enter</input>을 눌러 커서가 가리키는 곳을 이동할 수도 있습니다.
+<input>Escape</input>를 눌러 일반 게임 모드로 돌아갑니다.</nomouse>
 %%%%
 tutorial1 autoexplore
 
@@ -216,7 +215,9 @@ tutorial2 eat_reminder
 tutorial2 compare_monster_desc
 
 :nowrap
-<localtiles><input>마우스 커서</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>를위치시켜서 두 괴물들을 살펴보고, <localtiles><input>오른쪽 마우스버튼</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</input></nomouse>을 이용해서 두 괴물의 상세한 설명을 읽어보세요. 이렇게얻은 정보들을 토대로, 어느 쪽 문을 여는 게 더 안전할지 결정해보세요.
+<localtiles><input>마우스 커서</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>를위치시켜서 두 괴물들을 살펴보고,
+<localtiles><input>오른쪽 마우스버튼</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</input></nomouse>을 이용해서 두 괴물의 상세한 설명을 읽어보세요.
+이렇게얻은 정보들을 토대로, 어느 쪽 문을 여는 게 더 안전할지 결정해보세요.
 %%%%
 tutorial2 downstairs
 
