@@ -1,8 +1,1 @@
-/**
- * @file
- * @brief Functions used in Pandemonium.
-**/
-
-#pragma once
-
-void init_pandemonium();
+/**  * @file  * @brief Functions used in Pandemonium. **/  #pragma once  void init_pandemonium(); 

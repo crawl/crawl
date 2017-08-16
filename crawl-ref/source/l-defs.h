@@ -1,11 +1,1 @@
-/**
- * @file
- * @brief Functions defined in the Lua bindings but used elsewhere.
-**/
-// TODO: Move these where they belong.
-
-#pragma once
-
-string dgn_set_default_depth(const string &s);
-void dgn_reset_default_depth();
-bool in_show_bounds(const coord_def &c);
+/**  * @file  * @brief Functions defined in the Lua bindings but used elsewhere. **/ // TODO: Move these where they belong.  #pragma once  string dgn_set_default_depth(const string &s); void dgn_reset_default_depth(); bool in_show_bounds(const coord_def &c); 

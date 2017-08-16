@@ -1,3 +1,1 @@
-#pragma once
-
-void create_wanderer();
+#pragma once  void create_wanderer(); 
