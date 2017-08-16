@@ -217,6 +217,7 @@ enum tag_minor_version
     TAG_MINOR_LEVEL_XP_INFO_FIX,   // Fix orb spawn XP tracking.
     TAG_MINOR_FOLLOWER_TRANSIT_TIME, // Handle updating lost_ones after placing.
     TAG_MINOR_GNOLLS_REDUX,        // Handle Gnolls that always train all skills and no stat lock.
+    TAG_MINOR_TRAINING_TARGETS,    // training targets for skills
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

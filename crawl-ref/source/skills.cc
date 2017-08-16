@@ -739,7 +739,7 @@ bool check_selected_skills()
     // or level 27, so we don't assert.
 }
 
-/*
+/**
  * Reset the training array. Disabled skills are skipped.
  * In automatic mode, we use values from the exercise queue.
  * In manual mode, all enabled skills are set to the same value.
@@ -899,9 +899,14 @@ static void _train_skills(int exp, const int cost, const bool simu)
          you.skill_cost_level, cost, exp);
 #endif
 
+    // pre-check training targets -- may disable some skills.
+    if (!simu)
+        check_training_targets();
+
     // We scale the training array to the amount of XP available in the pool.
     // That gives us the amount of XP available to train each skill.
     for (int i = 0; i < NUM_SKILLS; ++i)
+    {
         if (you.training[i] > 0)
         {
             sk_exp[i] = you.training[i] * exp / 100;
@@ -915,6 +920,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
             }
             training_order.push_back(static_cast<skill_type>(i));
         }
+    }
 
     if (!skip_first_phase)
     {
@@ -975,6 +981,10 @@ static void _train_skills(int exp, const int cost, const bool simu)
 #endif
     }
 
+    // clean up any cross-training effects
+    if (!simu)
+        check_training_targets();
+
 #ifdef DEBUG_DIAGNOSTICS
     if (!crawl_state.script)
     {
@@ -1012,6 +1022,67 @@ static void _train_skills(int exp, const int cost, const bool simu)
 bool skill_trained(int i)
 {
     return you.can_train[i] && you.train[i];
+}
+
+/**
+ * Is the training target, if any, met or exceeded for skill sk?
+ *
+ * @param sk the skill to check.
+ * @param real if true, check the base skill level, otherwise incorporate other
+ *             factors (crosstraining, etc). Does not factor in draining.
+ *
+ * @return whether the skill target has been met.
+ *
+ * @see player::skill for the effect of `real`.
+ */
+bool target_met(skill_type sk, bool real)
+{
+    return you.skill(sk, 10, real) >= you.training_targets[sk];
+}
+
+/**
+ * Check the training target (if any) for skill sk, and change state
+ * appropriately. If the target has been met or exceeded, this will turn off
+ * targeting for that skill, and stop training it. This does *not* reset the
+ * training percentages, though, so if it's used mid-training, you need to take
+ * care of that.
+ *
+ * @param sk the skill to check.
+ * @return whether a target was reached.
+ */
+bool check_training_target(skill_type sk)
+{
+    if (you.training_targets[sk] && target_met(sk, false))
+    {
+        mprf("%sraining target %d.%d for %s reached!",
+            you.attribute[ATTR_XP_DRAIN] ? "Base t" : "T",
+            you.training_targets[sk] / 10,
+            you.training_targets[sk] % 10, skill_name(sk));
+
+        you.training_targets[sk] = 0;
+        you.train[sk] = TRAINING_DISABLED;
+        you.train_alt[sk] = TRAINING_DISABLED;
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Check the training target (if any) for all skills, and change state
+ * appropriately.
+ *
+ * @return whether any target was reached.
+ *
+ * @see check_training_target
+ */
+bool check_training_targets()
+{
+    bool change = false;
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        change |= check_training_target(sk);
+    if (change)
+        reset_training();
+    return change;
 }
 
 int _calc_skill_cost_level(int xp, int start)
@@ -1094,7 +1165,12 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
 
     if (!simu)
+    {
+        // TODO should check_training_targets be called here, to halt training
+        // and clean up cross-training immediately?
+        check_training_target(exsk);
         redraw_skill(exsk, old_best_skill);
+    }
 
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
@@ -1249,6 +1325,9 @@ void set_skill_level(skill_type skill, double amount)
 #endif
 
     check_skill_cost_change();
+
+    // need to check them all, to handle crosstraining.
+    check_training_targets();
 }
 
 int get_skill_progress(skill_type sk, int level, int points, int scale)
@@ -1280,18 +1359,77 @@ int get_skill_percentage(const skill_type x)
     return get_skill_progress(x, 100);
 }
 
+/**
+ * Get the training target for a skill.
+ *
+ * @param sk the skill to set
+ * @return the current target, scaled by 10 -- so between 0 and 270.
+ *         0 means no target.
+ */
+int player::get_training_target(const skill_type sk) const
+{
+    ASSERT_RANGE(training_targets[sk], 0, 270);
+    return training_targets[sk];
+}
+
+/**
+ * Set the training target for a skill.
+ *
+ * @param sk the skill to set
+ * @param target the new target, between 0.0 and 27.0.  0.0 means no target.
+ */
+void player::set_training_target(const skill_type sk, const double target)
+{
+    dprf("Setting target for %s to %d", skill_name(sk), (int) round(target * 10));
+    set_training_target(sk, (int) round(target * 10));
+}
+
+/**
+ * Set the training target for a skill, scaled by 10.
+ *
+ * @param sk the skill to set
+ * @param target the new target, scaled by ten, so between 0 and 270.  0 means
+ *               no target.
+ */
+void player::set_training_target(const skill_type sk, const int target)
+{
+    training_targets[sk] = min(max((int) target, 0), 270);
+}
+
 const char *skill_name(skill_type which_skill)
 {
     return skill_titles[which_skill][0];
 }
 
+/**
+ * Get a skill_type from an (exact, case-insensitive) skill name.
+ *
+ * @return a valid skill_type, or SK_NONE on failure.
+ *
+ * @see skill_from_name for a non-exact version.
+ */
 skill_type str_to_skill(const string &skill)
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         if (lowercase_string(skill) == lowercase_string(skill_titles[sk][0]))
             return sk;
 
-    return SK_FIGHTING;
+    return SK_NONE;
+}
+
+/**
+ * Get a skill_type from a skill name.
+ *
+ * @return a valid skill_type, or SK_FIGHTING on failure.
+ */
+skill_type str_to_skill_safe(const string &skill)
+{
+    // legacy behavior -- ensure that a valid skill is returned.
+    skill_type sk = str_to_skill(skill);
+    if (sk == SK_NONE)
+        return SK_FIGHTING;
+    else
+        return sk;
 }
 
 static string _stk_weight(species_type species)
@@ -1893,6 +2031,7 @@ void skill_state::save()
     train              = you.train;
     training           = you.training;
     skill_points       = you.skill_points;
+    training_targets   = you.training_targets;
     ct_skill_points    = you.ct_skill_points;
     skill_cost_level   = you.skill_cost_level;
     skill_order        = you.skill_order;
@@ -1922,8 +2061,10 @@ void skill_state::restore_levels()
 void skill_state::restore_training()
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+    {
         if (you.skills[sk] < MAX_SKILL_LEVEL)
             you.train[sk] = train[sk];
+    }
 
     you.can_train                   = can_train;
     you.auto_training               = auto_training;
@@ -1945,6 +2086,8 @@ void fixup_skills()
 
     if (you.exp_available >= calc_skill_cost(you.skill_cost_level))
         skill_menu(SKMF_EXPERIENCE);
+
+    check_training_targets();
 }
 
 /** Can the player enable training for this skill?

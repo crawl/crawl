@@ -1,5 +1,7 @@
 #include "AppHdr.h"
 
+#include <cmath>
+
 #include "l-libs.h"
 
 #include "ability.h"
@@ -488,21 +490,21 @@ LUAFN(you_is_level_on_stack)
 
 LUAFN(you_skill)
 {
-    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
 
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
 LUAFN(you_base_skill)
 {
-    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
 
     PLUARET(number, you.skill(sk, 10, true) * 0.1);
 }
 
 LUAFN(you_train_skill)
 {
-    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && can_enable_skill(sk))
     {
         you.train[sk] = min(max((training_status)luaL_checkint(ls, 2),
@@ -514,9 +516,36 @@ LUAFN(you_train_skill)
     PLUARET(number, you.train[sk]);
 }
 
+LUAFN(you_get_training_target)
+{
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(sk_name);
+    if (sk == SK_NONE)
+    {
+        string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+
+    PLUARET(number, (double) you.get_training_target(sk) * 0.1);
+}
+
+LUAFN(you_set_training_target)
+{
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(sk_name);
+    if (sk == SK_NONE)
+    {
+        string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    else
+        you.set_training_target(sk, luaL_checknumber(ls, 2));
+    return 1;
+}
+
 LUAFN(you_skill_cost)
 {
-    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
     float cost = scaled_skill_cost(sk);
     if (cost == 0)
     {
@@ -596,6 +625,8 @@ static const struct luaL_reg you_clib[] =
     { "best_skill",   you_best_skill },
     { "train_skill",  you_train_skill },
     { "skill_cost"  , you_skill_cost },
+    { "get_training_target", you_get_training_target },
+    { "set_training_target", you_set_training_target },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
