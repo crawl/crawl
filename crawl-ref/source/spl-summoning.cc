@@ -2994,11 +2994,13 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
             }
             else
             {
+                // let player know there's a monster here and toggle autopickup
                 canned_msg(MSG_GHOSTLY_OUTLINE);
                 autotoggle_autopickup(true);
             }
         }
-        return SPRET_SUCCESS;      // Don't give free detection!
+        // We charge mana for the detection of the invisible monster
+        return SPRET_SUCCESS;
     }
 
     spret_type handle_trap = handle_trap_at_target_location(where, caster, fail);
@@ -3454,16 +3456,28 @@ int count_summons(const actor *summoner, spell_type spell)
     return count;
 }
 
+/**
+ * Handle trap interaction for spells with fixed-position summons
+ * Teleport and shaft traps cannot be targeted
+ * If the trap is known, player is simply informed they cannot target it
+ * If the trap is unknown, player is given a mysterious flavor message
+ *
+ * @param where  The target coordinate to check
+ * @param caster The actor casting the spell. Player or monster
+ * @param fail If true, return SPRET_FAIL unless the spell is aborted.
+ * @returns SPRET_ABORT if the target location is not valid,
+ *          SPRET_NONE if there is no trap,
+ *          otherwise SPRET_SUCCESS or SPRET_FAIL based on fail.
+ */
 spret_type handle_trap_at_target_location(const coord_def& where, actor* caster, bool fail)
 {
-    // check for traps
+    //look for a trap at the target location
     const trap_def *ptrap = trap_at(where);
     if (ptrap)
     {
         const trap_def& trap = *ptrap;
         const bool player_knows_trap = (trap.is_known(&you));
 
-        // Only shaft and teleport traps should prevent spires from being placed
         if (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT || trap.type == TRAP_SHAFT)
         {
             // if you can see the trap, tell the player straight up they can't target it
@@ -3476,12 +3490,12 @@ spret_type handle_trap_at_target_location(const coord_def& where, actor* caster,
 
             fail_check();
 
-            // give a vague message. players won't know if it's a teleport or shaft trap
-            // we only provide a message if the player is the caster
+            // If player can't see the trap, give a vague message
+            // Players won't know if it's a teleport or shaft trap
             if (caster->is_player())
                 mpr("You see a mysterious outline, and the spell fizzles.");
 
-            // we charge mana for the detection of the trap
+            // We charge mana for the detection of the trap
             return SPRET_SUCCESS;
         }
     }
