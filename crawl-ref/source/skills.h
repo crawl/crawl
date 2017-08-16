@@ -17,6 +17,7 @@ struct skill_state
     FixedVector<training_status, NUM_SKILLS>       train;
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
+    FixedVector<unsigned int, NUM_SKILLS> training_targets;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     int skill_cost_level;
@@ -78,6 +79,7 @@ int get_skill_progress(skill_type sk, int scale);
 int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const string &skill);
+skill_type str_to_skill_safe(const string &skill);
 
 string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
@@ -120,6 +122,10 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 int skill_bump(skill_type skill, int scale = 1);
 void fixup_skills();
 bool can_enable_skill(skill_type sk);
+
+bool target_met(skill_type sk, bool real=false);
+bool check_training_target(skill_type sk);
+bool check_training_targets();
 
 static const skill_type skill_display_order[] =
 {

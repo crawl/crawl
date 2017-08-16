@@ -196,6 +196,7 @@ void SkillMenuEntry::set_display()
     {
     case SKM_VIEW_TRAINING:  set_training();         break;
     case SKM_VIEW_COST:      set_cost();             break;
+    case SKM_VIEW_TARGETS:   set_targets();          break;
     case SKM_VIEW_PROGRESS:  set_progress();         break;
     case SKM_VIEW_TRANSFER:  set_reskill_progress(); break;
     case SKM_VIEW_NEW_LEVEL: set_new_level();        break;
@@ -440,6 +441,24 @@ void SkillMenuEntry::set_progress()
     m_progress->set_fg_colour(CYAN);
 }
 
+void SkillMenuEntry::set_targets()
+{
+    int target = you.get_training_target(m_sk);
+    if (target == 0)
+    {
+        m_progress->set_text("--");
+        m_progress->set_fg_colour(DARKGREY);
+    }
+    else
+    {
+        m_progress->set_text(make_stringf("%d.%d", target / 10, target % 10));
+        if (target_met(m_sk))
+            m_progress->set_fg_colour(DARKGREY); // mainly comes up in wizmode
+        else
+            m_progress->set_fg_colour(get_colour());
+    }
+}
+
 void SkillMenuEntry::set_reskill_progress()
 {
     string text;
@@ -484,6 +503,7 @@ void SkillMenuEntry::set_title()
     switch (skm.get_state(SKM_VIEW))
     {
     case SKM_VIEW_TRAINING:  m_progress->set_text("Train"); break;
+    case SKM_VIEW_TARGETS:   m_progress->set_text("Target"); break;
     case SKM_VIEW_PROGRESS:  m_progress->set_text("Progr"); break;
     case SKM_VIEW_TRANSFER:  m_progress->set_text("Trnsf"); break;
     case SKM_VIEW_POINTS:    m_progress->set_text("Points");break;
@@ -498,7 +518,7 @@ void SkillMenuEntry::set_training()
     if (!you.training[m_sk])
         m_progress->set_text("");
     else
-        m_progress->set_text(make_stringf(" %2d%%", you.training[m_sk]));
+        m_progress->set_text(make_stringf("%2d%%", you.training[m_sk]));
     m_progress->set_fg_colour(BROWN);
 }
 
@@ -619,6 +639,8 @@ string SkillMenuSwitch::get_help()
         else
             return "The percentage of incoming experience used"
                    " to train each skill is in <brown>brown</brown>.\n";
+    case SKM_VIEW_TARGETS:
+        return "The current training targets, if any.\n";
     case SKM_VIEW_PROGRESS:
         return "The percentage of the progress done before reaching next "
                "level is in <cyan>cyan</cyan>.\n";
@@ -660,6 +682,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
                                              : "reduced";
     case SKM_LEVEL_NORMAL:   return "base";
     case SKM_VIEW_TRAINING:  return "training";
+    case SKM_VIEW_TARGETS:   return "targets";
     case SKM_VIEW_PROGRESS:  return "progress";
     case SKM_VIEW_TRANSFER:  return "transfer";
     case SKM_VIEW_POINTS:    return "points";
@@ -1223,6 +1246,8 @@ void SkillMenu::init_switches()
         if (!you.auto_training)
             sw->set_state(SKM_VIEW_COST);
     }
+
+    sw->add(SKM_VIEW_TARGETS);
 
     if (you.wizard)
     {

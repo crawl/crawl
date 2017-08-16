@@ -973,7 +973,7 @@ void scorefile_entry::init_with_fields()
     lvl     = fields->int_field("xl");
     race_class_name = fields->str_field("char");
 
-    best_skill     = str_to_skill(fields->str_field("sk"));
+    best_skill     = str_to_skill_safe(fields->str_field("sk"));
     best_skill_lvl = fields->int_field("sklev");
     title          = fields->str_field("title");
 
