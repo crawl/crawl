@@ -186,15 +186,15 @@ struct dislike_response
             static int last_glowing_lecture = -1;
             if (!level)
             {
-                simple_god_message(" is not enthusiastic about the "
-                                   "mutagenic glow surrounding you.");
+                simple_god_message("은 당신을 둘러싼 돌연변이 유발에너지에 "
+                                   "열광하지 않는다.");
             }
             else if (last_glowing_lecture != you.num_turns)
             {
                 last_glowing_lecture = you.num_turns;
                 // Increase contamination within yellow glow.
-                simple_god_message(" does not appreciate the extra "
-                                   "mutagenic glow surrounding you!");
+                simple_god_message("은 당신을 둘러싼 엄청난 돌연변이 유발에너지를 "
+                                   "좋게 평가하지 않는다!");
             }
         }
 
@@ -734,7 +734,7 @@ static like_map divine_likes[] =
                                      const monster* victim)
             {
                 piety *= 2;
-                simple_god_message(" appreciates your killing of a holy being.");
+                simple_god_message("은(는) 당신이 성스러운 존재를 살해한 것을 감사했다.");
             },
             true
         ) },
@@ -891,11 +891,11 @@ static like_map divine_likes[] =
 
                 if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
                 {
-                    simple_god_message(" thoroughly appreciates the change of pace.");
+                    simple_god_message("는 속도의 변화에 대해 완벽히 감사했다.");
                     piety *= 2;
                 }
                 else
-                    simple_god_message(" appreciates the change of pace.");
+                    simple_god_message("는 속도의 변화에 대해 감사했다.");
             }
         } }
     },

@@ -456,7 +456,7 @@ void MemoriseDelay::start()
 {
     if (vehumet_is_offering(spell))
     {
-        string message = make_stringf(" grants you knowledge of %s.",
+        string message = make_stringf("은 %s에 대한 지식을 제공했다.",
             spell_title(spell));
         simple_god_message(message.c_str());
     }

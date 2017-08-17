@@ -265,7 +265,7 @@ bool zin_donate_gold()
 
     if (donation < 1)
     {
-        simple_god_message(" finds your generosity lacking.");
+        simple_god_message("이(가) 당신에게 관대함이 부족한 것을 발견하였다.");
         return false;
     }
 
@@ -873,9 +873,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (mon->can_speak() && one_chance_in(5))
     {
         if (check < -10)
-            simple_monster_message(*mon, " guffaws at your puny god.");
+            simple_monster_message(*mon, "이(가) 당신의 고약한 신에게 너털웃음을 터뜨렸다.");
         else if (check < -5)
-            simple_monster_message(*mon, " sneers at your recitation.");
+            simple_monster_message(*mon, "이(가) 당신의 설교를 비웃었다.");
     }
 
     if (check <= 0)
@@ -1058,7 +1058,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (mon->add_ench(mon_enchant(ENCH_DAZED, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            simple_monster_message(*mon, " is dazed by your recitation.");
+            simple_monster_message(*mon, "이(가) 당신의 설교에 현혹되었다.");
             affected = true;
         }
         break;
@@ -1069,9 +1069,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             if (prayertype == RECITE_HERETIC)
-                simple_monster_message(*mon, " is confused by your recitation.");
+                simple_monster_message(*mon, "이(가) 당신의 설교에 의해 혼란스러워 한다.");
             else
-                simple_monster_message(*mon, " stumbles about in disarray.");
+                simple_monster_message(*mon, "이(가) 어지러워서 넘어졌다.");
             affected = true;
         }
         break;
@@ -1081,17 +1081,17 @@ bool zin_recite_to_single_monster(const coord_def& where)
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
-                minor ? " is awed by your recitation."
-                      : " is aghast at the heresy of your recitation.");
+                minor ? "은(는) 당신의 설교를 두려워한다."
+                      : "은(는) 당신의 이단적인 설교에 경악했다.");
             affected = true;
         }
         break;
 
     case zin_eff::smite:
         if (minor)
-            simple_monster_message(*mon, " is smitten by the wrath of Zin.");
+            simple_monster_message(*mon, "은(는) 진의 진노에 맞았다.");
         else
-            simple_monster_message(*mon, " is blasted by the fury of Zin!");
+            simple_monster_message(*mon, "은(는) 진의 분노에 휩쌓였다!");
         // XXX: This duplicates code in cast_smiting().
         mon->hurt(&you, 7 + (random2(spellpower) * 33 / 191));
         if (mon->alive())
@@ -1102,7 +1102,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case zin_eff::blind:
         if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(*mon, " is struck blind by the wrath of Zin!");
+            simple_monster_message(*mon, "은(는) 진의 진노에 눈이 멀었다!");
             affected = true;
         }
         break;
@@ -1111,7 +1111,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         if (mon->add_ench(mon_enchant(ENCH_SILVER_CORONA, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
-            simple_monster_message(*mon, " is limned with silver light.");
+            simple_monster_message(*mon, "은(는) 은빛으로 빛났다.");
             affected = true;
         }
         break;
@@ -1122,8 +1122,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
                           (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
             simple_monster_message(*mon,
-                minor ? " quails at your recitation."
-                      : " looks feeble and powerless before your recitation.");
+                minor ? "은(는) 당신의 설교에 기가 죽었다."
+                      : "은(는) 당신이 설교하기 전부터 미약하고 무력해보였다.");
             affected = true;
         }
         break;
@@ -1131,7 +1131,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case zin_eff::mute:
         if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(*mon, " is struck mute by the wrath of Zin!");
+            simple_monster_message(*mon, "은(는) 진의 진노에 의해 벙어리가 되었다!");
             affected = true;
         }
         break;
@@ -1139,7 +1139,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case zin_eff::mad:
         if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(*mon, " is driven mad by the wrath of Zin!");
+            simple_monster_message(*mon, "은(는) 진의 진노에 의해 미쳐버렸다!");
             affected = true;
         }
         break;
@@ -1147,7 +1147,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case zin_eff::dumb:
         if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you, INFINITE_DURATION)))
         {
-            simple_monster_message(*mon, " is left stupefied by the wrath of Zin!");
+            simple_monster_message(*mon, "은(는) 진의 진노를 겪고도 무감각했다!");
             affected = true;
         }
         break;
@@ -1168,9 +1168,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 if (mon->alive())
                 {
                     simple_monster_message(*mon,
-                      (damage < 25) ? "'s chaotic flesh sizzles and spatters!" :
-                      (damage < 50) ? "'s chaotic flesh bubbles and boils."
-                                    : "'s chaotic flesh runs like molten wax.");
+                      (damage < 25) ? "의 무질서한 살덩이가 지글거리다 사방으로 튀었다!" :
+                      (damage < 50) ? "의 무질서한 살덩이가 거품을 일으키며 끓었다."
+                                    : "의 무질서한 살덩이가 녹은 왁스처럼 흘렀다.");
 
                     print_wounds(*mon);
                     behaviour_event(mon, ME_WHACK, &you);
@@ -1179,7 +1179,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
                 else
                 {
                     simple_monster_message(*mon,
-                        " melts away into a sizzling puddle of chaotic flesh.");
+                        "은(는) 녹아서 무질서한 살덩이의 지글거리는 진창이 되었다.");
                     monster_die(*mon, KILL_YOU, NON_MONSTER);
                 }
             }
@@ -1202,13 +1202,13 @@ bool zin_recite_to_single_monster(const coord_def& where)
             {
             case RECITE_CHAOTIC:
                 simple_monster_message(*mon,
-                    minor ? "'s chaotic flesh is covered in bleeding sores."
-                          : "'s chaotic flesh erupts into weeping sores!");
+                    minor ? "의 무질서한 살덩이가 피를 뿜는 상처로 뒤덮였다."
+                          : "의 무질서한 살덩이가 진물 흐르는 상처로 터져나갔다!");
                 break;
             case RECITE_IMPURE:
                 simple_monster_message(*mon,
-                    minor ? "'s impure flesh rots away."
-                          : "'s impure flesh sloughs off!");
+                    minor ? "의 불결한 살덩이가 썩어나갔다."
+                          : "의 불결한 살덩이가 떨어져 나갔다!");
                 break;
 
             default:
@@ -1249,7 +1249,7 @@ static void _zin_saltify(monster* mon)
                                 : mons_species(mon->type);
     const int hd = mon->get_hit_dice();
 
-    simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
+    simple_monster_message(*mon, "은(는) 진의 진노에 의해 소금 기둥으로 바뀌었다!");
 
     // If the monster leaves a corpse when it dies, destroy the corpse.
     item_def* corpse = monster_die(*mon, KILL_YOU, NON_MONSTER);
@@ -1273,7 +1273,7 @@ static void _zin_saltify(monster* mon)
 
 bool zin_vitalisation()
 {
-    simple_god_message(" grants you divine stamina.");
+    simple_god_message("은 당신에게 신성한 활력을 하사했다.");
 
     // Add divine stamina.
     const int stamina_amt =
@@ -1290,7 +1290,7 @@ bool zin_vitalisation()
 
 void zin_remove_divine_stamina()
 {
-    mprf(MSGCH_DURATION, "당신의 신성한 활기가 사그라들었다.");
+    mprf(MSGCH_DURATION, "당신의 신성한 활력이 사그라들었다.");
     notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA], true);
     notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA], true);
     notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA], true);
@@ -1303,7 +1303,7 @@ bool zin_remove_all_mutations()
     ASSERT(you.how_mutated());
     ASSERT(can_do_capstone_ability(you.religion));
 
-    if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
+    if (!yesno("정말로 당신의 모든 돌연변이를 치유하고 싶은가?", true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
@@ -1316,7 +1316,7 @@ bool zin_remove_all_mutations()
 
     you.one_time_ability_used.set(GOD_ZIN);
     take_note(Note(NOTE_GOD_GIFT, you.religion));
-    simple_god_message(" draws all chaos from your body!");
+    simple_god_message("은 당신의 몸에서 모든 혼돈을 끌어냈다!");
     delete_all_mutations("Zin's power");
     return true;
 }
@@ -1555,7 +1555,7 @@ bool trog_burn_spellbooks()
 
     if (totalpiety)
     {
-        simple_god_message(" is delighted!", GOD_TROG);
+        simple_god_message("는 매우 기뻐했다!", GOD_TROG);
         gain_piety(totalpiety);
     }
     else if (totalblocked)
@@ -2010,8 +2010,8 @@ bool kiku_receive_corpses(int pow)
     {
         if (you_worship(GOD_KIKUBAAQUDGHA))
         {
-            simple_god_message(corpses_created > 1 ? " delivers you corpses!"
-                                                   : " delivers you a corpse!");
+            simple_god_message(corpses_created > 1 ? "는 당신에게 시체들을 배달해주었다!"
+                                                   : "는 당신에게 시체를 배달해주었다!");
         }
         maybe_update_stashes();
         return true;
@@ -2019,7 +2019,7 @@ bool kiku_receive_corpses(int pow)
     else
     {
         if (you_worship(GOD_KIKUBAAQUDGHA))
-            simple_god_message(" can find no cadavers for you!");
+            simple_god_message("는 당신을 위한 시체들을 찾을 수 없었다");
         return false;
     }
 }
@@ -2062,7 +2062,7 @@ bool kiku_gift_necronomicon()
         return false;
     }
     set_ident_type(mitm[thing_created], true);
-    simple_god_message(" grants you a gift!");
+    simple_god_message("은(는) 당신에게 선물을 하사했다!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -2485,7 +2485,7 @@ int fedhas_fungal_bloom()
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(*target)))
                 {
-                    simple_monster_message(*target, "'s flesh rots away.");
+                    simple_monster_message(*target, "의 살점이 썩어나갔다.");
 
                     downgrade_zombie_to_skeleton(target);
 
@@ -2500,7 +2500,7 @@ int fedhas_fungal_bloom()
                 // Ghoul-type monsters are always destroyed.
             case MONS_GHOUL:
             {
-                simple_monster_message(*target, " rots away and dies.");
+                simple_monster_message(*target, "은(는) 썩어서 죽었다.");
 
                 kills = true;
 
@@ -2584,8 +2584,8 @@ int fedhas_fungal_bloom()
 
     if (processed_count)
     {
-        simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.");
+        simple_god_message("는 당신이 생태계에 헌신하는 것에 대하여 "
+                           "감사하였다.");
         // Doubling the expected value per sacrifice to approximate the
         // extra piety gain blood god worshipers get for the initial kill.
         // -cao
@@ -3402,8 +3402,7 @@ spret_type fedhas_evolve_flora(bool fail)
             mpr("암석은 진화나 성장이 불가능하다.");
         else
         {
-            simple_monster_message(*plant, " has already reached the pinnacle"
-                                   " of evolution.");
+            simple_monster_message(*plant, "은(는) 이미 진화의 정점에 달했다.");
         }
 
         return SPRET_ABORT;
@@ -3436,19 +3435,19 @@ spret_type fedhas_evolve_flora(bool fail)
     case MONS_OKLOB_PLANT:
     {
         if (plant->type == MONS_OKLOB_SAPLING)
-            simple_monster_message(*plant, " appears stronger.");
+            simple_monster_message(*plant, "은(는) 더 강력하게 보인다.");
         else
         {
-            string evolve_desc = " can now spit acid";
+            string evolve_desc = "은(는) 이제 산성을 뱉을 수 있다";
             const int skill = you.skill(SK_INVOCATIONS);
             if (skill >= 20)
-                evolve_desc += " continuously";
+                evolve_desc += " 연달아서";
             else if (skill >= 15)
-                evolve_desc += " quickly";
+                evolve_desc += " 재빠르게";
             else if (skill >= 10)
-                evolve_desc += " rather quickly";
+                evolve_desc += " 보다 빠르게";
             else if (skill >= 5)
-                evolve_desc += " somewhat quickly";
+                evolve_desc += " 어느정도 빠르게";
             evolve_desc += ".";
 
             simple_monster_message(*plant, evolve_desc.c_str());
@@ -3457,11 +3456,11 @@ spret_type fedhas_evolve_flora(bool fail)
     }
 
     case MONS_WANDERING_MUSHROOM:
-        simple_monster_message(*plant, " can now pick up its mycelia and move.");
+        simple_monster_message(*plant, "은(는) 이제 그것의 균사를 뿜어내고 움직일 수 있다.");
         break;
 
     case MONS_HYPERACTIVE_BALLISTOMYCETE:
-        simple_monster_message(*plant, " appears agitated.");
+        simple_monster_message(*plant, "이(가) 들썩이며 나타났다.");
         env.level_state |= LSTATE_GLOW_MOLD;
         break;
 
@@ -3566,8 +3565,8 @@ void cheibriados_time_bend(int pow)
             }
 
             simple_god_message(
-                make_stringf(" rebukes %s.",
-                             mon->name(DESC_THE).c_str()).c_str(),
+                make_stringf("가 %s을(를) 꾸짖었다.",
+                             mon->name(DESC_PLAIN).c_str()).c_str(),
                              GOD_CHEIBRIADOS);
             do_slow_monster(*mon, &you);
         }
@@ -4643,8 +4642,8 @@ bool gozag_bribe_branch()
             {
                 branch_type stair_branch = gozag_fixup_branch(it->id);
                 string prompt =
-                    make_stringf("Do you want to bribe the denizens of %s?",
-                                 stair_branch == BRANCH_VESTIBULE ? "the Hells"
+                    make_stringf("%s의 주민들을 매수하길 원하는가?",
+                                 stair_branch == BRANCH_VESTIBULE ? "지옥"
                                  : branches[stair_branch].longname);
                 if (yesno(prompt.c_str(), true, 'n'))
                 {
@@ -4670,8 +4669,8 @@ bool gozag_bribe_branch()
     }
 
     string prompt =
-        make_stringf("Do you want to bribe the denizens of %s?",
-                     branch == BRANCH_VESTIBULE ? "the Hells" :
+        make_stringf("%s의 주민들을 매수하길 원하는가?",
+                     branch == BRANCH_VESTIBULE ? "지옥" :
                      branches[branch].longname);
 
     if (prompted || yesno(prompt.c_str(), true, 'n'))
@@ -4679,8 +4678,8 @@ bool gozag_bribe_branch()
         you.del_gold(bribe_amount);
         you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
-        string msg = make_stringf(" spreads your bribe to %s!",
-                                  branch == BRANCH_VESTIBULE ? "the Hells" :
+        string msg = make_stringf("뇌물을 %s에 퍼뜨려라!",
+                                  branch == BRANCH_VESTIBULE ? "지옥" :
                                   branches[branch].longname);
         simple_god_message(msg.c_str());
         add_daction(DACT_SET_BRIBES);
@@ -5648,7 +5647,7 @@ void ru_offer_new_sacrifices()
                                   possible_sacrifices.end());
     }
 
-    simple_god_message(" believes you are ready to make a new sacrifice.");
+    simple_god_message(" 는 당신이 새로운 희생을 할 준비가 됐다고 믿는다.");
     // included in default force_more_message
 }
 
@@ -5662,15 +5661,15 @@ string ru_sacrifice_vector(ability_type sac)
 static const char* _describe_sacrifice_piety_gain(int piety_gain)
 {
     if (piety_gain >= 40)
-        return "an incredible";
+        return "믿을 수 없는";
     else if (piety_gain >= 29)
-        return "a major";
+        return "상당한";
     else if (piety_gain >= 21)
-        return "a significant";
+        return "중대한";
     else if (piety_gain >= 13)
-        return "a modest";
+        return "미약한";
     else
-        return "a trivial";
+        return "하찮은";
 }
 
 static const string _piety_asterisks(int piety)
@@ -5689,7 +5688,7 @@ static bool _execute_sacrifice(ability_type sac, const char* message)
 {
     mprf("루는 당신이 %s 할 것을 요구했다.", message);
     mpr(ru_sacrifice_description(sac));
-    if (!yesno("Do you really want to make this sacrifice?",
+    if (!yesno("정말로 이 희생을 할 것인가?",
                false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -5860,7 +5859,7 @@ static int _ru_get_sac_piety_gain(ability_type sac)
 string ru_sacrifice_description(ability_type sac)
 {
     const int piety_gain = _ru_get_sac_piety_gain(sac);
-    return make_stringf("This is %s sacrifice. Piety after sacrifice: %s",
+    return make_stringf("이것은 %s 희생이다. 희생으로 도달할 신앙심: %s",
                         _describe_sacrifice_piety_gain(piety_gain),
                         _piety_asterisks(you.piety + piety_gain).c_str());
 }
@@ -5994,7 +5993,7 @@ bool ru_do_sacrifice(ability_type sac)
                   you.piety + _ru_get_sac_piety_gain(sac)));
 
     if (you.piety == piety_breakpoint(5))
-        simple_god_message(" indicates that your awakening is complete.");
+        simple_god_message("는 당신의 각성이 끝났음을 인지시켜주었다.");
 
     // Clean up.
     _ru_expire_sacrifices();
@@ -6026,7 +6025,7 @@ bool ru_reject_sacrifices(bool forced_rejection)
 
     ru_reset_sacrifice_timer(false, true);
     _ru_expire_sacrifices();
-    simple_god_message(" will take longer to evaluate your readiness.");
+    simple_god_message("는 당신의 준비를 평가하는데 더 오래 걸릴것이다.");
     return true;
 }
 
@@ -6354,22 +6353,22 @@ static int _apply_apocalypse(coord_def where)
         case 0:
             if (mons->antimagic_susceptible())
             {
-                message = " loses " + mons->pronoun(PRONOUN_POSSESSIVE)
-                          + " magic into the devouring truth!";
+                message = "은(는) 집어삼키는 진리에 의해 " + mons->pronoun(PRONOUN_POSSESSIVE)
+                          + "의 마력을 잃었다!";
                 enchantment = ENCH_ANTIMAGIC;
                 duration = 500 + random2(200);
                 num_dice = 4;
                 break;
             } // if not antimagicable, fall through to paralysis.
         case 1:
-            message = " is paralysed by terrible understanding!";
+            message = "은(는) 끔찍한 것을 이해하고 마비되었다!";
             enchantment = ENCH_PARALYSIS;
             duration = 80 + random2(60);
             num_dice = 4;
             break;
 
         case 2:
-            message = " slows down under the weight of truth!";
+            message = "은(는) 진리의 무게에 의해 느려졌다!";
             enchantment = ENCH_SLOW;
             duration = 300 + random2(100);
             num_dice = 6;
@@ -6400,7 +6399,7 @@ bool ru_apocalypse()
     int count = apply_area_visible(cell_has_valid_target, you.pos());
     if (!count)
     {
-        if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
+        if (!yesno("이 곳엔 몬스터가 보이지 않는다. 그래도 묵시를 해방하겠는가?",
             true, 'n'))
         {
             return false;
@@ -6875,7 +6874,7 @@ spret_type hepliaklqana_idealise(bool fail)
 
     fail_check();
 
-    simple_god_message(make_stringf(" grants %s healing and protection!",
+    simple_god_message(make_stringf("는 %s에 회복시키고 방어력을 하사했다!",
                                     ancestor->name(DESC_YOUR).c_str()).c_str());
 
     // 1/3 mhp healed at 0 skill, full at 27 invo
@@ -6885,9 +6884,9 @@ spret_type hepliaklqana_idealise(bool fail)
     if (ancestor->heal(healing))
     {
         if (ancestor->hit_points == ancestor->max_hit_points)
-            simple_monster_message(*ancestor, " is fully restored!");
+            simple_monster_message(*ancestor, "은(는) 완전히 수복되었다!");
         else
-            simple_monster_message(*ancestor, " is healed somewhat.");
+            simple_monster_message(*ancestor, "은(는) 다소 회복되었다.");
     }
 
     const int dur = random_range(50, 80)
@@ -6939,7 +6938,7 @@ static void _transfer_drain_nearby(coord_def destination)
             = random_range(1 + you.skill_rdiv(SK_INVOCATIONS, 1, 27),
                            2 + you.skill_rdiv(SK_INVOCATIONS, 4, 27));
         if (mon->add_ench(mon_enchant(ENCH_DRAINED, degree, &you, dur)))
-            simple_monster_message(*mon, " is drained by nostalgia.");
+            simple_monster_message(*mon, "은(는) 이상향으로 흡수당했다.");
     }
 }
 

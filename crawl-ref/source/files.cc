@@ -1057,7 +1057,7 @@ static void _fedhas_rot_all_corpses(const level_id& old_level)
 
         if (!messaged)
         {
-            simple_god_message("'s fungi set to work.");
+            simple_god_message("가 곰팡이가 작동하도록 설정하였다.");
             messaged = true;
         }
 

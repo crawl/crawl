@@ -211,7 +211,7 @@ void mirror_damage_fineff::fire()
     }
     else
     {
-        simple_monster_message(*monster_by_mid(att), " suffers a backlash!");
+        simple_monster_message(*monster_by_mid(att), "은 반발감을 겪었다!");
         attack->hurt(defender(), damage);
     }
 }
@@ -393,7 +393,7 @@ void starcursed_merge_fineff::fire()
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
             simple_monster_message(*mon,
-                    " shudders and is absorbed by its neighbour.");
+                    "은 요동치며 이웃에게 흡수당했다.");
             _do_merge_masses(mon, mergee);
             return;
         }
@@ -436,7 +436,7 @@ void starcursed_merge_fineff::fire()
 
             if (moved)
             {
-                simple_monster_message(*mon, " shudders and withdraws towards its neighbour.");
+                simple_monster_message(*mon, "은 요동치며 이웃에게서 물러섰다.");
                 mon->speed_increment -= 10;
             }
         }

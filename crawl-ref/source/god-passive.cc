@@ -1885,9 +1885,9 @@ void wu_jian_wall_jump_effects(const coord_def& old_pos)
                 continue;
 
             if (mon->holiness() == MH_NONLIVING)
-                simple_monster_message(*mon, " loses track of your position.");
+                simple_monster_message(*mon, "은(는) 당신의 위치를 추적하는걸 실패했다.");
             else
-                simple_monster_message(*mon, " is distracted by your jump.");
+                simple_monster_message(*mon, "은(는) 당신의 점프에 의해 정신이 산만해졌다 ");
 
             mon->add_ench(
                 mon_enchant(ENCH_DISTRACTED_ACROBATICS, 1, nullptr,
@@ -1944,7 +1944,7 @@ void uskayaw_prepares_audience()
     int count = apply_area_visible(_check_for_uskayaw_targets, you.pos());
     if (count > 0)
     {
-        simple_god_message(" prepares the audience for your solo!");
+        simple_god_message("는 청중들을 당신의 독무대를 위해 준비시켰다!");
         apply_area_visible(_prepare_audience, you.pos());
 
         // Increment a delay timer to prevent players from spamming this ability
@@ -1981,7 +1981,7 @@ void uskayaw_bonds_audience()
     int count = apply_area_visible(_check_for_uskayaw_targets, you.pos());
     if (count > 1)
     {
-        simple_god_message(" links your audience in an emotional bond!");
+        simple_god_message("는 당신의 청중들을 감정적인 유대로 결속시켰다!");
         apply_area_visible(_bond_audience, you.pos());
 
         // Increment a delay timer to prevent players from spamming this ability

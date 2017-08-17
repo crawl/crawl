@@ -237,8 +237,8 @@ bool beogh_followers_abandon_you()
 
     if (reconvert) // Maybe all of them are invisible.
     {
-        simple_god_message("'s voice booms out, \"Who do you think you "
-                           "are?\"", GOD_BEOGH);
+        simple_god_message("의 목소리가 터져나왔다, \"네놈은 스스로가 뭐라고 "
+                           "생각하는거냐?\"", GOD_BEOGH);
 
         ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
 

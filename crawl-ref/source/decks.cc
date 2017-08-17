@@ -1279,10 +1279,10 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                   }
 
                   if (did_haste)
-                      simple_monster_message(mon, " seems to speed up.");
+                      simple_monster_message(mon, "은 빨라진 것처럼 보인다.");
 
                   if (did_swift)
-                      simple_monster_message(mon, " is moving somewhat quickly.");
+                      simple_monster_message(mon, "은 어느 정도 빨라졌다.");
               }
               return affected;
           })
@@ -1556,7 +1556,7 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         {
             const int hp = mon.max_hit_points / (4 - power_level);
             if (mon.heal(hp + random2avg(hp, 2)))
-               simple_monster_message(mon, " is healed.");
+               simple_monster_message(mon, "은 회복되었다.");
         }
         return true;
     });
@@ -1820,11 +1820,11 @@ bool recruit_mercenary(int mid)
     mon->props.erase("mercenary_fee");
     if (!paid)
     {
-        simple_monster_message(*mon, " attacks!");
+        simple_monster_message(*mon, "은 공격했다!");
         return true;
     }
 
-    simple_monster_message(*mon, " joins your ranks!");
+    simple_monster_message(*mon, "은 당신의 군단에 합류했다!");
     for (mon_inv_iterator ii(*mon); ii; ++ii)
         ii->flags &= ~ISFLAG_SUMMONED;
     mon->flags &= ~MF_HARD_RESET;
@@ -1968,7 +1968,7 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
                    const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
                    mons.add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));
                    simple_monster_message(mons,
-                                          " is dazed by the mutagenic energy.");
+                                          "은 돌연변이 유발 에너지에 의해 현혹되었다.");
                }
                return true;
            }))
