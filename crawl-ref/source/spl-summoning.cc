@@ -93,8 +93,10 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
 
 
 /**
- * Handle trap interaction for spells with fixed-position summons.
- * Currently, only players can cast spells that target a location.
+ * Check target location to ensure it's valid for fixed position summons.
+ * Only players can cast spells that target a location.
+ *
+ * Currently, this function only checks for proper trap interaction.
  * Players cannot target Teleport and shaft traps.
  * If the trap is known, player is simply informed they cannot target it.
  * If the trap is unknown, player is given a mysterious flavor message.
@@ -106,9 +108,9 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
  *          SPRET_NONE if there is no trap, otherwise
  *          SPRET_SUCCESS or SPRET_FAIL based on fail.
  */
-static spret_type _cast_on_trap_location(const coord_def& where,
-                                 monster_type mon_type,
-                                 bool fail)
+static spret_type _check_fixed_summon_loc(const coord_def& where,
+                                          monster_type mon_type,
+                                          bool fail)
 {
     // Look for a trap at the target location.
     const trap_def *ptrap = trap_at(where);
@@ -1005,9 +1007,9 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = _cast_on_trap_location(where,
-                                                    MONS_LIGHTNING_SPIRE,
-                                                    fail);
+    spret_type handle_trap = _check_fixed_summon_loc(where,
+                                                     MONS_LIGHTNING_SPIRE,
+                                                     fail);
 
     if (handle_trap != SPRET_NONE)
         return handle_trap;
@@ -3056,9 +3058,9 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = _cast_on_trap_location(where,
-                                                    MONS_FULMINANT_PRISM,
-                                                    fail);
+    spret_type handle_trap = _check_fixed_summon_loc(where,
+                                                     MONS_FULMINANT_PRISM,
+                                                     fail);
 
     if (handle_trap != SPRET_NONE)
         return handle_trap;
