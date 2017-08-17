@@ -231,7 +231,7 @@ static void _iood_stop(monster& mon, bool msg = true)
         return;
 
     if (msg)
-        simple_monster_message(mon, " dissipates.");
+        simple_monster_message(mon, "이(가) 소멸되었다.");
     dprf("iood: dissipating");
     monster_die(mon, KILL_DISMISSED, NON_MONSTER);
 }

@@ -213,9 +213,9 @@ static void _tso_summon_warriors()
             success = true;
     }
 
-    simple_god_message(success ? " sends the divine host to punish "
-                       "you for your evil ways!"
-                       : "'s divine host fails to appear.", GOD_SHINING_ONE);
+    simple_god_message(success ? "이 당신의 사악한 행보를 벌하기 위해 "
+                       "신성한 군대를 파견했다!"
+                       : "의 신성한 군대가 나타나지 않는다.", GOD_SHINING_ONE);
 
 }
 
@@ -224,8 +224,8 @@ static void _tso_summon_warriors()
  */
 static void _tso_shouts()
 {
-    simple_god_message(" booms out: "
-                       "\"Take the path of righteousness! REPENT!\"",
+    simple_god_message("의 외침: "
+                       "\"정당한 행보를 받아들여라! 회.개.하.라!\"",
                        GOD_SHINING_ONE);
     noisy(25, you.pos()); // same as scroll of noise
 }
@@ -236,7 +236,7 @@ static void _tso_shouts()
 static void _tso_squelches()
 {
     god_speaks(GOD_SHINING_ONE,
-               "You feel the Shining One's silent rage upon you!");
+               "당신은 샤이닝원의 침묵의 분노를 느꼈다!");
     cast_silence(25);
 }
 
@@ -278,7 +278,7 @@ static void _zin_remove_good_mutations()
     const god_type god = GOD_ZIN;
     bool success = false;
 
-    simple_god_message(" draws some chaos from your body!", god);
+    simple_god_message("이 당신의 몸에서 약간의 혼돈을 뽑아냈다!", god);
 
     bool failMsg = true;
 
@@ -296,7 +296,7 @@ static void _zin_remove_good_mutations()
     }
 
     if (success && !you.how_mutated())
-        simple_god_message(" rids your body of chaos!", god);
+        simple_god_message("이 당신의 몸에서 혼돈을 제거했다!", god);
 }
 
 static bool _zin_retribution()
@@ -315,7 +315,7 @@ static bool _zin_retribution()
     case 0:
     case 1:
     case 2: // recital
-        simple_god_message(" recites the Axioms of Law to you!", god);
+        simple_god_message("이 당신에게 법의 이치를 설교한다!", god);
         switch (random2(3))
         {
         case 0:
@@ -331,11 +331,11 @@ static bool _zin_retribution()
         break;
     case 3:
     case 4: // famine
-        simple_god_message(" sends a famine down upon you!", god);
+        simple_god_message("이 당신에게 기근을 보냈다!", god);
         make_hungry(you.hunger / 2, false);
         break;
     case 5: // noisiness
-        simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
+        simple_god_message("의 외침: \"빛으로 돌아와라! 회.개.하.라!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
     case 6:
@@ -371,7 +371,7 @@ static bool _cheibriados_retribution()
     {
     // Very high tension wrath
     case 4:
-        simple_god_message(" adjusts the clock.", god);
+        simple_god_message("가 시계를 조정한다.", god);
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM,
                       5 + div_rand_round(you.experience_level, 9),
                       random2avg(88, 3), _god_wrath_name(god));
@@ -413,7 +413,7 @@ static bool _cheibriados_retribution()
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
 {
-    simple_god_message(" rains destruction down upon you!", god);
+    simple_god_message("이(가) 당신의 머리 위로 파멸을 내린다!", god);
     bolt beam;
     beam.source = you.pos();
     beam.target = you.pos();
@@ -507,7 +507,7 @@ static bool _makhleb_call_down_destruction()
 
     if (avatar == nullptr)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message("은(는) 지금 당장은 당신에게 신경 쓸 시간이 없다.", god);
         return false; // not a very dazzling divine experience...
     }
 
@@ -584,9 +584,9 @@ static bool _makhleb_summon_servants()
             summoned++;
     }
 
-    simple_god_message(summoned > 1 ? " sends minions to punish you." :
-                       summoned > 0 ? " sends a minion to punish you."
-                       : "'s minions fail to arrive.", GOD_MAKHLEB);
+    simple_god_message(summoned > 1 ? "가 당신을 벌할 부하들을 보냈다." :
+                       summoned > 0 ? "가 당신을 벌할 부하를 보냈다."
+                       : "의 부하가 도착하지 못했다.", GOD_MAKHLEB);
 
     return true;
 
@@ -612,8 +612,8 @@ static bool _kikubaaqudgha_retribution()
     // death/necromancy theme
     const god_type god = GOD_KIKUBAAQUDGHA;
 
-    god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
-                               : "Kikubaaqudgha's malice focuses upon you.");
+    god_speaks(god, coinflip() ? "당신은 키쿠바쿠드하의 비명소리를 들었다."
+                               : "키쿠바쿠드하의 악의가 당신에게 집중된다.");
 
     if (!count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
     {
@@ -691,14 +691,14 @@ static bool _yredelemnul_retribution()
                 }
             }
 
-            simple_god_message(count > 1 ? " sends servants to punish you." :
-                               count > 0 ? " sends a servant to punish you."
-                                         : "'s servants fail to arrive.", god);
+            simple_god_message(count > 1 ? "이 당신을 벌할 종복들을 보냈다." :
+                               count > 0 ? "이 당신을 벌할 종복을 보냈다."
+                                         : "의 종복이 도착하지 못했다.", god);
         }
     }
     else
     {
-        simple_god_message("'s anger turns toward you for a moment.", god);
+        simple_god_message("의 분노가 잠시 당신을 향했다.", god);
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_NECROMANCY,
                       2 + div_rand_round(you.experience_level, 9),
                       random2avg(88, 3), _god_wrath_name(god));
@@ -741,14 +741,14 @@ static bool _trog_retribution()
             }
         }
 
-        simple_god_message(count > 1 ? " sends monsters to punish you." :
-                           count > 0 ? " sends a monster to punish you."
-                                     : " has no time to punish you... now.",
+        simple_god_message(count > 1 ? "가 당신을 벌할 괴물들을 보냈다." :
+                           count > 0 ? "가 당신을 벌할 괴물을 보냈다."
+                                     : "은 당신을 벌할 시간이 없다....지금 당장은.",
                            god);
     }
     else if (!one_chance_in(3))
     {
-        simple_god_message("'s voice booms out, \"Feel my wrath!\"", god);
+        simple_god_message("의 외침. \"내 분노를 느껴라!\"", god);
 
         // A collection of physical effects that might be better
         // suited to Trog than wild fire magic... messages could
@@ -856,9 +856,9 @@ static bool _beogh_retribution()
         if (num_created > 0)
         {
             ostringstream msg;
-            msg << " throws "
-                << (num_created == 1 ? "an implement" : "implements")
-                << " of electrocution at you.";
+            msg << "이(가) 전기를 띤 "
+                << (num_created == 1 ? "도구를" : "도구들을")
+                << " 당신에게 던졌다.";
             simple_god_message(msg.str().c_str(), god);
             break;
         } // else fall through
@@ -896,8 +896,8 @@ static bool _beogh_retribution()
             give_monster_proper_name(*mons);
 
         simple_god_message(
-            mons ? " sends forth an army of orcs."
-                 : " is still gathering forces against you.", god);
+            mons ? "가 오크의 군대를 보냈다."
+                 : "는 아직 당신에게 맞설 군대를 모으는 중이다.", god);
     }
     }
 
@@ -915,8 +915,8 @@ static bool _okawaru_retribution()
     for (; how_many > 0; --how_many)
         count += _okawaru_random_servant();
 
-    simple_god_message(count > 0 ? " sends forces against you!"
-                                 : "'s forces are busy with other wars.", god);
+    simple_god_message(count > 0 ? "가 당신에게 맞설 군대를 보냈다!"
+                                 : "의 군대는 다른 전쟁을 치르느라 바쁘다.", god);
 
     return true;
 }
@@ -926,7 +926,7 @@ static bool _sif_muna_retribution()
     // magic/intelligence theme
     const god_type god = GOD_SIF_MUNA;
 
-    simple_god_message("'s wrath finds you.", god);
+    simple_god_message("의 분노가 당신을 향한다.", god);
 
     switch (random2(10))
     {
@@ -974,14 +974,14 @@ static void _lugonu_transloc_retribution()
 
     if (coinflip())
     {
-        simple_god_message("'s wrath finds you!", god);
+        simple_god_message("의 분노가 당신을 향한다!", god);
         MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_TRANSLOCATION, 9,
                       90, "Lugonu's touch");
     }
     else if (coinflip())
     {
         // Give extra opportunities for embarrassing teleports.
-        simple_god_message("'s wrath finds you!", god);
+        simple_god_message("의 분노가 당신을 향한다!", god);
         mpr("당신 주위의 공간이 휘어진다!");
         if (!one_chance_in(3))
             you_teleport_now();
@@ -1043,8 +1043,8 @@ static void _lugonu_minion_retribution()
             success = true;
     }
 
-    simple_god_message(success ? " sends minions to punish you."
-                               : "'s minions fail to arrive.", god);
+    simple_god_message(success ? "가 당신을 벌할 부하들을 보냈다."
+                               : "의 부하들이 도착하지 못했다.", god);
 }
 
 /**
@@ -1134,14 +1134,14 @@ static bool _vehumet_retribution()
     monster* avatar = get_avatar(god);
     if (!avatar)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message("은 지금 당장 당신에게 신경 쓸 시간이 없다.", god);
         return false;
     }
 
     const spell_type spell = _vehumet_wrath_type();
     if (spell == SPELL_NO_SPELL)
     {
-        simple_god_message(" has no time to deal with you just now.", god);
+        simple_god_message("은 지금 당장 당신에게 신경 쓸 시간이 없다.", god);
         _reset_avatar(*avatar);
         return false;
     }
@@ -1156,7 +1156,7 @@ static bool _nemelex_retribution()
     // card theme
     const god_type god = GOD_NEMELEX_XOBEH;
 
-    simple_god_message(" makes you draw from the deck of Punishment.", god);
+    simple_god_message("가 당신으로 하여금 징벌의 덱에서 카드를 뽑게 하였다.", god);
     draw_from_deck_of_punishment();
     return true;
 }
@@ -1167,7 +1167,7 @@ static bool _nemelex_retribution()
 static void _jiyva_mutate_player()
 {
     const god_type god = GOD_JIYVA;
-    god_speaks(god, "You feel Jiyva alter your body.");
+    god_speaks(god, "당신은 지이바가 당신의 육체를 바꾸었다는 것을 느꼈다.");
 
     const int mutations = 1 + random2(3);
     for (int i = 0; i < mutations; ++i)
@@ -1190,7 +1190,7 @@ static void _jiyva_remove_slime_mutation()
         return;
 
     const god_type god = GOD_JIYVA;
-    simple_god_message("'s gift of slime is revoked.", god);
+    simple_god_message("의 슬라임 하사가 중단되었다.", god);
     delete_mutation(RANDOM_SLIME_MUTATION, _god_wrath_name(god),
                     true, false, true);
 }
@@ -1201,7 +1201,7 @@ static void _jiyva_remove_slime_mutation()
 static void _jiyva_transform()
 {
     const god_type god = GOD_JIYVA;
-    god_speaks(god, "Mutagenic energy floods into your body!");
+    god_speaks(god, "돌연변에 에너지가 당신의 몸에 흘러 넘친다!");
 
     const transformation form = random_choose(transformation::bat,
                                               transformation::fungus,
@@ -1218,7 +1218,7 @@ static void _jiyva_transform()
 static void _jiyva_contaminate()
 {
     const god_type god = GOD_JIYVA;
-    god_speaks(god, "Mutagenic energy floods into your body!");
+    god_speaks(god, "돌연변이 에너지가 당신의 몸에 흘러 넘친다!");
     contaminate_player(random2(you.penance[god] * 500));
 }
 
@@ -1252,8 +1252,8 @@ static void _jiyva_summon_slimes()
             success = true;
     }
 
-    god_speaks(god, success ? "Some slimes ooze up out of the ground!"
-                            : "The ground quivers slightly.");
+    god_speaks(god, success ? "땅에서 약간의 슬라임이 흘러나왔다!"
+                            : "땅이 약간 흔들린다.");
 }
 
 /**
@@ -1288,7 +1288,7 @@ static bool _jiyva_retribution()
 static void _fedhas_elemental_miscast()
 {
     const god_type god = GOD_FEDHAS;
-    simple_god_message(" invokes the elements against you.", god);
+    simple_god_message("가 당신에게 맞설 정령들을 불러 일으켰다.", god);
 
     const spschool_flag_type stype = random_choose(SPTYP_ICE, SPTYP_FIRE,
                                                    SPTYP_EARTH, SPTYP_AIR);
@@ -1378,7 +1378,7 @@ static bool _fedhas_summon_plants()
 
     if (success)
     {
-        god_speaks(god, "Plants grow around you in an ominous manner.");
+        god_speaks(god, "주위에서 식물이 불길한 방식으로 자라난다.");
         return false;
     }
 
@@ -1407,7 +1407,7 @@ static bool _fedhas_retribution()
         // fall through to the elemental miscast effects.
         if (fedhas_corpse_spores(BEH_HOSTILE))
         {
-            simple_god_message(" produces spores.", god);
+            simple_god_message("가 포자를 생산한다.", god);
             return true;
         }
 
@@ -1439,8 +1439,8 @@ static bool _dithmenos_retribution()
             if (_dithmenos_random_shadow(count, tier))
                 count++;
         }
-        simple_god_message(count ? " calls forth shadows to punish you."
-                                 : " fails to incite the shadows against you.",
+        simple_god_message(count ? "가 당신을 벌하기 위한 그림자를 불러냈다."
+                                 : "가 당신에게 맞설 그림자를 부르지 못했다.",
                            god);
         break;
     }
@@ -1464,20 +1464,20 @@ static bool _dithmenos_retribution()
                 count++;
             }
         }
-        simple_god_message(count ? " weaves monsters from the shadows."
-                                 : " fails to weave monsters from the shadows.",
+        simple_god_message(count ? "가 그림자로부터 적의 존재를 엮어낸다."
+                                 : "가 그림자로부터 적을 엮어내지 못했다.",
                            god);
         break;
     }
     case 2:
     {
         // This is possibly kind of underwhelming?
-        god_speaks(god, "You feel overwhelmed by the shadows around you.");
+        god_speaks(god, "당신은 주의의 그림자에게 압도당했다.");
         you.put_to_sleep(nullptr, 30 + random2(20));
         break;
     }
     case 3:
-        simple_god_message(" tears the shadows away from you.", god);
+        simple_god_message("가 당신의 그림자를 찢어발겼다.", god);
         you.sentinel_mark();
         break;
     }
@@ -1529,9 +1529,9 @@ static void _qazlal_summon_elementals()
     }
 
     if (success)
-        simple_god_message(" incites the elements against you!", god);
+        simple_god_message("이 정령의 힘을 당신에게 향한다!", god);
     else
-        simple_god_message(" fails to incite the elements against you.", god);
+        simple_god_message("이 정령의 힘을 당신에게 향하지 못했다.", god);
 }
 
 /**
@@ -1544,12 +1544,12 @@ static void _qazlal_elemental_vulnerability()
     if (mutate(RANDOM_QAZLAL_MUTATION, _god_wrath_name(god), false,
                false, true, false, MUTCLASS_TEMPORARY))
     {
-        simple_god_message(" strips away your elemental protection.",
+        simple_god_message("이 당신의 속성 보호를 벗겨냈다.",
                            god);
     }
     else
     {
-        simple_god_message(" fails to strip away your elemental protection.",
+        simple_god_message("이 당신의 속성 보호를 벗겨내지 못했다.",
                            god);
     }
 }
@@ -1565,7 +1565,7 @@ static bool _qazlal_retribution()
 {
     if (coinflip())
     {
-        simple_god_message(" causes a mighty clap of thunder!",
+        simple_god_message("이 강력한 뇌성을 일으켰다!",
                            GOD_QAZLAL);
         noisy(25, you.pos());
     }
@@ -1659,26 +1659,26 @@ static bool _wu_jian_retribution()
         switch (random2(4))
         {
         case 0:
-            wu_jian_sifu_message(" says: Die by a thousand cuts!");
+            wu_jian_sifu_message("이 말했다 : 천 번을 찢겨 죽어라!");
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
-            wu_jian_sifu_message(" whispers: Nowhere to run...");
+            wu_jian_sifu_message("이 속삭인다: 도망칠 곳은 없다...");
             you.set_duration(DUR_SLOW, random_range(5, 10));
             break;
         case 2:
-            wu_jian_sifu_message(" whispers: These will loosen your tongue!");
+            wu_jian_sifu_message("이 속삭인다: 이것이 네 혓바닥을 멈출 것이다!");
             you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
             invalidate_agrid(true);
             break;
         case 3:
-            wu_jian_sifu_message(" says: Suffer, mortal!");
+            wu_jian_sifu_message("이 말했다: 고통받아라, 필멸자여!");
             you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
             break;
         }
     }
     else
-        simple_god_message("'s divine weapons fail to arrive.", god);
+        simple_god_message("의 신성한 무기가 도착하지 못했다.", god);
 
     return true;
 }
@@ -1697,8 +1697,8 @@ static bool _uskayaw_retribution()
     case 1:
         if (mon && mon->can_go_berserk())
         {
-            simple_god_message(make_stringf(" drives %s into a dance frenzy!",
-                                     mon->name(DESC_THE).c_str()).c_str(), god);
+            simple_god_message(make_stringf("이 %s을(를) 광란의 무도로 이끌었다!",
+                                     mon->name(DESC_PLAIN).c_str()).c_str(), god);
             mon->go_berserk(true);
             return true;
         }
@@ -1708,7 +1708,7 @@ static bool _uskayaw_retribution()
     case 3:
         if (mon)
         {
-            simple_god_message(" booms out, \"Time for someone else to take a solo\"",
+            simple_god_message("의 외침, \"네 독무대는 끝났다\"",
                                     god);
             paralyse_player(_god_wrath_name(god));
             dec_penance(god, 1);
@@ -1717,7 +1717,7 @@ static bool _uskayaw_retribution()
         // else we intentionally fall through
 
     case 4:
-        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
+        simple_god_message("의 외침: \"주정뱅이들아, 춤 출 시간이다!\"", god);
         noisy(35, you.pos());
         break;
     }
@@ -1825,7 +1825,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
     if (message)
         god_speaks(GOD_SHINING_ONE, message);
 
-    simple_god_message(" blasts you with cleansing flame!",
+    simple_god_message("이 당신에게 정화의 불꽃을 내렸다!",
                        GOD_SHINING_ONE);
 
     // damage is 2d(pow), *3/2 for undead and demonspawn
@@ -1865,7 +1865,7 @@ static void _god_smites_you(god_type god, const char *message,
     for (int i = 0; i < 5; ++i)
         divine_hurt += random2(you.experience_level);
 
-    simple_god_message(" smites you!", god);
+    simple_god_message("이 당신을 강타했다!", god);
     ouch(divine_hurt, death_type, MID_NOBODY, aux.c_str());
 }
 

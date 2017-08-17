@@ -1431,24 +1431,24 @@ static void _mons_indicate_level_exit(const monster* mon)
     const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
 
     if (feat_is_gate(feat))
-        simple_monster_message(*mon, " passes through the gate.");
+        simple_monster_message(*mon, "이(가) 관문을 통과했다.");
     else if (feat_is_travelable_stair(feat))
     {
         command_type dir = feat_stair_direction(feat);
         simple_monster_message(*mon,
-            make_stringf(" %s the %s.",
-                dir == CMD_GO_UPSTAIRS     ? "goes up" :
-                dir == CMD_GO_DOWNSTAIRS   ? "goes down"
-                                           : "takes",
-                feat_is_escape_hatch(feat) ? "escape hatch"
-                                           : "stairs").c_str());
+            make_stringf(" %s : %s.",
+                dir == CMD_GO_UPSTAIRS     ? "올라간다" :
+                dir == CMD_GO_DOWNSTAIRS   ? "내려간다"
+                                           : "타고간다",
+                feat_is_escape_hatch(feat) ? "비상용 해치"
+                                           : "계단").c_str());
     }
     else if (is_shaft)
     {
         simple_monster_message(*mon,
-            make_stringf(" %s the shaft.",
-                mon->airborne() ? "goes down"
-                                : "jumps into").c_str());
+            make_stringf("이 구덩이로 %s.",
+                mon->airborne() ? "내려간다"
+                                : "뛰어든다").c_str());
     }
 }
 

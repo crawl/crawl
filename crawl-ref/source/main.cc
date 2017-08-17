@@ -3049,8 +3049,8 @@ static void _move_player(coord_def move)
         else if (targ_monst->temp_attitude() == ATT_NEUTRAL && !you.confused()
                  && targ_monst->visible_to(&you))
         {
-            simple_monster_message(*targ_monst, " refuses to make way for you. "
-                                             "(Use ctrl+direction to attack.)");
+            simple_monster_message(*targ_monst, "이(가) 당신에게 길을 비켜주지 않는다. "
+                                             "(ctrl+방향키를 눌러 공격.)");
             you.turn_is_over = false;
             return;
         }

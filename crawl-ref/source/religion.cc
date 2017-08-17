@@ -587,7 +587,7 @@ void dec_penance(god_type god, int val)
             }
             if (have_passive(passive_t::stat_boost))
             {
-                simple_god_message(" restores the support of your attributes.");
+                simple_god_message("가 다시 당신의 능력을 지원해준다.");
                 redraw_screen();
                 notify_stat_change();
             }
@@ -625,7 +625,7 @@ void dec_penance(god_type god, int val)
             else if (god == GOD_HEPLIAKLQANA)
             {
                 calc_hp(); // frailty ends
-                mprf(MSGCH_GOD, god, "Your full life essence returns.");
+                mprf(MSGCH_GOD, god, "당신의 완전한 삶의 정수가 돌아온다.");
             }
         }
     }
@@ -2373,8 +2373,8 @@ static void _gain_piety_point()
         // TODO: add one-time ability check in have_passive
         if (have_passive(passive_t::unlock_slime_vaults) && can_do_capstone_ability(you.religion))
         {
-            simple_god_message(" will now unseal the treasures of the "
-                               "Slime Pits.");
+            simple_god_message("는 이제 슬라임 굴의"
+                               "보물창고를 개방했다.");
             dlua.callfn("dgn_set_persistent_var", "sb",
                         "fix_slime_vaults", true);
             // If we're on Slime:6, pretend we just entered the level
@@ -2400,9 +2400,9 @@ static void _gain_piety_point()
         && chei_stat_boost(old_piety) < chei_stat_boost()
         && you.species != SP_GNOLL)
     {
-        string msg = " raises the support of your attributes";
+        string msg = "가 당신의 능력 지원을";
         if (have_passive(passive_t::slowed))
-            msg += " as your movement slows";
+            msg += " 당신의 움직임이 느려질수록 더욱 강화한다";
         msg += ".";
         simple_god_message(msg.c_str());
         notify_stat_change();
@@ -2721,7 +2721,7 @@ void excommunication(bool voluntary, god_type new_god)
     if (god_hates_your_god(old_god, new_god))
     {
         simple_god_message(
-            make_stringf(" does not appreciate desertion%s!",
+            make_stringf("은(는) %s로 향한 배교를 용납하지 않는다!",
                          _god_hates_your_god_reaction(old_god, new_god).c_str()).c_str(),
             old_god);
     }
@@ -2756,7 +2756,7 @@ void excommunication(bool voluntary, god_type new_god)
         you.duration[DUR_MIRROR_DAMAGE] = 0;
         if (query_daction_counter(DACT_ALLY_YRED_SLAVE))
         {
-            simple_god_message(" reclaims all of your granted undead slaves!",
+            simple_god_message("이 당신이 하사받은 모든 언데드 노예를 거둬들였다!",
                                old_god);
             add_daction(DACT_ALLY_YRED_SLAVE);
             remove_all_companions(GOD_YREDELEMNUL);
@@ -2781,8 +2781,8 @@ void excommunication(bool voluntary, god_type new_god)
     case GOD_BEOGH:
         if (query_daction_counter(DACT_ALLY_BEOGH))
         {
-            simple_god_message("'s voice booms out, \"Who do you think you "
-                               "are?\"", old_god);
+            simple_god_message("의 목소리가 터져나왔다, \"네놈이 누구라고"
+                               "생각하느냐?\"", old_god);
             mprf(MSGCH_MONSTER_ENCHANT, "모든 추종자들은 당신을 버리기로 결정했다.");
             add_daction(DACT_ALLY_BEOGH);
             remove_all_companions(GOD_BEOGH);
@@ -3316,7 +3316,7 @@ static void _check_good_god_wrath(god_type old_god)
         }
 
         const string wrath_message
-            = make_stringf(" says: %s!",
+            = make_stringf("이(가) 말했다: %s!",
                            _good_god_wrath_message(good_god).c_str());
         simple_god_message(wrath_message.c_str(), good_god);
         set_penance_xp_timeout();
@@ -3386,7 +3386,7 @@ static void _join_gozag()
         you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
     }
     else
-        simple_god_message(" waives the service fee.");
+        simple_god_message("가 이용료를 면제해준다.");
 
     // Note relevant powers.
     bool needs_redraw = false;
@@ -3395,7 +3395,7 @@ static void _join_gozag()
         if (power.abil == ABIL_GOZAG_POTION_PETITION
             && !you.attribute[ATTR_GOZAG_FIRST_POTION])
         {
-            simple_god_message(" offers you a free set of potion effects!");
+            simple_god_message("가 당신에게 무료 물약 한 세트를 제공했다!");
             needs_redraw = true;
             continue;
         }
@@ -3451,8 +3451,8 @@ static void _join_hepliaklqana()
     // Complimentary ancestor upon joining.
     const mgen_data mg = hepliaklqana_ancestor_gen_data();
     delayed_monster(mg);
-    simple_god_message(make_stringf(" forms a fragment of your life essence"
-                                    " into the memory of your ancestor, %s!",
+    simple_god_message(make_stringf("가 당신의 생명의 조각을"
+                                    "당신의 선조, %s의 기억으로 만들어냈다!",
                                     mg.mname.c_str()).c_str());
 }
 
@@ -3536,8 +3536,8 @@ static void _join_cheibriados()
     // Gnolls don't gain attribute bonuses under Chei
     if (you.species != SP_GNOLL)
     {
-        simple_god_message(" begins to support your attributes as your "
-                           "movement slows.");
+        simple_god_message("가 당신의 움직임이 느려질수록"
+                           "당신의 능력을 돕는다.");
         notify_stat_change();
     }
 }
@@ -3598,8 +3598,8 @@ void join_religion(god_type which_god)
                            || is_good_god(which_god)
                               && you.species == SP_BARACHI;
     simple_god_message(
-        make_stringf(" welcomes you%s!",
-                     returning ? " back" : "").c_str());
+        make_stringf("이 당신%s을 환영한다!",
+                     returning ? "의 귀환" : "").c_str());
     // included in default force_more_message
 #ifdef DGL_WHEREIS
     whereis_record();
@@ -3707,13 +3707,13 @@ void god_pitch(god_type which_god)
         else if (you.get_mutation_level(MUT_NO_ARTIFICE)
                  && which_god == GOD_PAKELLAS)
         {
-            simple_god_message(" does not accept worship from those who are "
-                               "unable to use magical devices!", which_god);
+            simple_god_message("는 마법적 도구를 사용할 수 없는 자들의"
+                               "신앙 따위는 받지 않는다!", which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
-            simple_god_message(" says: How dare you approach in such a "
-                               "loathsome form!",
+            simple_god_message("이 말했다: 감히 그따위"
+                               "혐오스러운 형상을 취하다니!",
                                which_god);
         }
         else

@@ -2087,7 +2087,7 @@ void drink(item_def* potion)
 
     if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
-        simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
+        simple_god_message("의 청원이 당신의 물약 복용을 막았다.", GOD_GOZAG);
         you.turn_is_over = true;
         return;
     }

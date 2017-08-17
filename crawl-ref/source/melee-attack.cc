@@ -819,7 +819,7 @@ bool melee_attack::attack()
             && ev_margin >= 0
             && one_chance_in(20))
         {
-            simple_god_message(" blocks your attack.", GOD_ELYVILON);
+            simple_god_message("이 당신의 공격을 막았다.", GOD_ELYVILON);
             handle_phase_end();
             return false;
         }
@@ -1252,7 +1252,7 @@ bool melee_attack::player_aux_test_hit()
         && to_hit >= evasion
         && one_chance_in(20))
     {
-        simple_god_message(" blocks your attack.", GOD_ELYVILON);
+        simple_god_message("이 당신의 공격을 막았다.", GOD_ELYVILON);
         return false;
     }
 
@@ -1934,7 +1934,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
     if (heads >= limit - 1)
         return false; // don't overshoot the head limit!
 
-    simple_monster_message(*defender->as_monster(), " grows two more!");
+    simple_monster_message(*defender->as_monster(), "이(가) 둘 더 자라났다!");
     defender->as_monster()->num_heads += 2;
     defender->heal(8 + random2(8));
 
@@ -2105,7 +2105,7 @@ void melee_attack::attacker_sustain_passive_damage()
     else
     {
         simple_monster_message(*attacker->as_monster(),
-                               " is burned by acid!");
+                               "이(가) 산성으로 타오른다!");
     }
     attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
                    KILLED_BY_ACID, "", "", false);
@@ -2882,8 +2882,8 @@ void melee_attack::mons_apply_attack_flavour()
                 vine->lose_ench_duration(me, random2(damage_done) + 1);
                 simple_monster_message(*attacker->as_monster(),
                                        spell_user
-                                       ? " looks very invigorated."
-                                       : " looks invigorated.");
+                                       ? "이(가) 굉장히 활기차 보인다."
+                                       : "이(가) 활기차 보인다.");
             }
         }
         break;
