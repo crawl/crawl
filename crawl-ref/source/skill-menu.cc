@@ -287,7 +287,7 @@ COLOURS SkillMenuEntry::get_colour() const
         || you.train[m_sk] == TRAINING_FOCUSED;
 
     if (is_set(SKMF_HELP))
-        return DARKGREY;
+        return LIGHTGRAY;
     else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
         return BROWN;
     else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TRANSFER
