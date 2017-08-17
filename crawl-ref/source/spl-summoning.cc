@@ -91,6 +91,59 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
     return _summon_data(you, pal, dur, god, spell);
 }
 
+
+/**
+ * Handle trap interaction for spells with fixed-position summons.
+ * Currently, only players can cast spells that target a location.
+ * Players cannot target Teleport and shaft traps.
+ * If the trap is known, player is simply informed they cannot target it.
+ * If the trap is unknown, player is given a mysterious flavor message.
+ *
+ * @param where        The target coordinate to check.
+ * @param caster       The actor casting the spell.
+ * @param monster_type The type of monster to be checked for placement.
+ * @param fail         If true, return SPRET_FAIL unless the spell is aborted.
+ * @returns Returns SPRET_ABORT if the target location is not valid,
+ *          SPRET_NONE if there is no trap, otherwise
+ *          SPRET_SUCCESS or SPRET_FAIL based on fail.
+ */
+static spret_type _cast_on_trap_location(const coord_def& where,
+                                 actor* caster,
+                                 monster_type mon_type,
+                                 bool fail)
+{
+    // Look for a trap at the target location.
+    const trap_def *ptrap = trap_at(where);
+    if (ptrap)
+    {
+        const trap_def& trap = *ptrap;
+        const trap_type trap_type = ptrap->type;
+        const bool player_knows_trap = (trap.is_known(&you));
+
+        if  (!can_place_on_trap(mon_type, trap_type))
+        {
+            // Tell player they can't target this kind of trap.
+            if (player_knows_trap)
+            {
+                if (caster->is_player())
+                    mpr("The trap prevents you from targeting this location.");
+                return SPRET_ABORT;
+            }
+
+            fail_check();
+
+            // If player can't see the trap, give a vague message.
+            // Players won't know if it's a teleport or shaft trap.
+            if (caster->is_player())
+                mpr("You see a mysterious outline, and the spell fizzles.");
+
+            // We charge mana for the detection of the trap.
+            return SPRET_SUCCESS;
+        }
+    }
+    return SPRET_NONE;
+}
+
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -948,13 +1001,17 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 
         fail_check();
 
-        // invisible monster
+        // Let player know there's a monster here and toggle autopickup.
         canned_msg(MSG_GHOSTLY_OUTLINE);
         autotoggle_autopickup(true);
+
+        // We charge mana for the detection of the invisible monster.
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = handle_trap_at_target_location(where, &you, fail);
+    spret_type handle_trap = _cast_on_trap_location(where, &you,
+                                                    MONS_LIGHTNING_SPIRE,
+                                                    fail);
 
     if (handle_trap != SPRET_NONE)
         return handle_trap;
@@ -2994,16 +3051,18 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
             }
             else
             {
-                // let player know there's a monster here and toggle autopickup
+                // Let player know there's a monster here & toggle autopickup.
                 canned_msg(MSG_GHOSTLY_OUTLINE);
                 autotoggle_autopickup(true);
             }
         }
-        // We charge mana for the detection of the invisible monster
+        // We charge mana for the detection of the invisible monster.
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = handle_trap_at_target_location(where, caster, fail);
+    spret_type handle_trap = _cast_on_trap_location(where, caster,
+                                                    MONS_FULMINANT_PRISM,
+                                                    fail);
 
     if (handle_trap != SPRET_NONE)
         return handle_trap;
@@ -3454,50 +3513,4 @@ int count_summons(const actor *summoner, spell_type spell)
     }
 
     return count;
-}
-
-/**
- * Handle trap interaction for spells with fixed-position summons
- * Teleport and shaft traps cannot be targeted
- * If the trap is known, player is simply informed they cannot target it
- * If the trap is unknown, player is given a mysterious flavor message
- *
- * @param where  The target coordinate to check
- * @param caster The actor casting the spell. Player or monster
- * @param fail If true, return SPRET_FAIL unless the spell is aborted.
- * @returns SPRET_ABORT if the target location is not valid,
- *          SPRET_NONE if there is no trap,
- *          otherwise SPRET_SUCCESS or SPRET_FAIL based on fail.
- */
-spret_type handle_trap_at_target_location(const coord_def& where, actor* caster, bool fail)
-{
-    //look for a trap at the target location
-    const trap_def *ptrap = trap_at(where);
-    if (ptrap)
-    {
-        const trap_def& trap = *ptrap;
-        const bool player_knows_trap = (trap.is_known(&you));
-
-        if (trap.type == TRAP_TELEPORT || trap.type == TRAP_TELEPORT_PERMANENT || trap.type == TRAP_SHAFT)
-        {
-            // if you can see the trap, tell the player straight up they can't target it
-            if (player_knows_trap)
-            {
-                if (caster->is_player())
-                    mpr("The trap prevents you from targeting this location.");
-                return SPRET_ABORT;
-            }
-
-            fail_check();
-
-            // If player can't see the trap, give a vague message
-            // Players won't know if it's a teleport or shaft trap
-            if (caster->is_player())
-                mpr("You see a mysterious outline, and the spell fizzles.");
-
-            // We charge mana for the detection of the trap
-            return SPRET_SUCCESS;
-        }
-    }
-    return SPRET_NONE;
 }
