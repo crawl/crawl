@@ -509,7 +509,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
                 if (penance)
-                    prompt += " This could place you under penance!";
+                    prompt += " 이것은 당신을 참회에 빠뜨린다!";
 
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
@@ -552,8 +552,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Switching to a launcher while berserk is likely a mistake.
     if (you.berserk() && is_range_weapon(new_wpn))
     {
-        string prompt = "You can't shoot while berserk! Really wield " +
-                        new_wpn.name(DESC_INVENTORY) + "?";
+        string prompt = "당신은 광폭화 중에 쏠 수 없다! 정말로 " +
+                        new_wpn.name(DESC_INVENTORY) + "을(를) 휘두르겠는가?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -1405,8 +1405,8 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
             verb = "Wear";
     }
 
-    string prompt = make_stringf("%sing this item will reduce your %s to zero "
-                                 "or below. Continue?", verb.c_str(),
+    string prompt = make_stringf("이것을 %s하면 당신의 %s은 0이 될 것이다. "
+                                 "계속하겠는가?", verb.c_str(),
                                  stat_desc(red_stat, SD_NAME));
     if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
@@ -2294,7 +2294,7 @@ static item_def* _choose_target_item_for_scroll(bool scroll_known, object_select
                        {
                            if (scroll_known
                                || crawl_state.seen_hups
-                               || yesno("Really abort (and waste the scroll)?", false, 0))
+                               || yesno("정말로 중단하고 (두루마리를 낭비할 것인가)?", false, 0))
                            {
                                return true;
                            }
@@ -2774,7 +2774,7 @@ void read(item_def* scroll)
     // need to handle this before we waste time (with e.g. blurryvis)
     if (scroll->sub_type == SCR_BLINKING && item_type_known(*scroll)
         && orb_limits_translocation()
-        && !yesno("Your blink will be uncontrolled - continue anyway?",
+        && !yesno("당신은 순간이동을 통제할 수 없다 - 그래도 계속하겠는가?",
                   false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -2783,7 +2783,7 @@ void read(item_def* scroll)
 
     if (you.get_mutation_level(MUT_BLURRY_VISION)
         && !i_feel_safe(false, false, true)
-        && !yesno("Really read with blurry vision while enemies are nearby?",
+        && !yesno("정말로 적들이 근처에 있는 동안 흐릿한 시야로 읽을 것인가?",
                   false, 'n'))
     {
         canned_msg(MSG_OK);

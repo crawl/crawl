@@ -1308,7 +1308,7 @@ static bool _check_ability_possible(const ability_def& abil,
         {
             if (action.matches(name))
             {
-                string prompt = "Really use " + string(name) + "?";
+                string prompt = "정말로 " + string(name) + "을 사용하는가?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);

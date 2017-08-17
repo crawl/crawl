@@ -630,11 +630,11 @@ bool wielded_weapon_check(item_def *weapon)
 
     string prompt;
     if (weapon)
-        prompt = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+        prompt = "정말로 " + weapon->name(DESC_YOUR) + "을 휘둘러 공격할 것인가?";
     else
-        prompt = "Really attack barehanded?";
+        prompt = "정말로 맨손으로 공격할 것인가?";
     if (penance)
-        prompt += " This could place you under penance!";
+        prompt += " 이것은 당신을 참회시킬 것이다!";
 
     const bool result = yesno(prompt.c_str(), true, 'n');
 
@@ -985,9 +985,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     else
         verb = "attack ";
 
-    const string prompt = make_stringf("Really %s%s%s?%s",
+    const string prompt = make_stringf("정말로 %s%s%s?%s",
              verb.c_str(), mon_name.c_str(), suffix.c_str(),
-             penance ? " This attack would place you under penance!" : "");
+             penance ? " 이 공격은 당신을 참회에 빠뜨릴 것이다!" : "");
 
     if (prompted)
         *prompted = true;
@@ -1048,9 +1048,9 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
         adj = "the " + adj;
     mon_name = adj + mon_name;
 
-    const string prompt = make_stringf("Really %s %s%s?%s",
+    const string prompt = make_stringf("정말로 %s %s%s?%s",
              verb, mon_name.c_str(), suffix.c_str(),
-             penance ? " This attack would place you under penance!" : "");
+             penance ? " 이 공격은 당신을 참회에 빠뜨릴 것이다!" : "");
 
     if (prompted)
         *prompted = true;

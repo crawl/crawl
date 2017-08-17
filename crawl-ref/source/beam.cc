@@ -341,8 +341,8 @@ static bool _stop_because_god_hates_target_prompt(monster* mon,
         bool prompt = first && god_hates_item(*first)
                       || second && god_hates_item(*second);
         if (prompt
-            && !yesno("Animating this weapon would place you under penance. "
-            "Really cast this spell?", false, 'n'))
+            && !yesno("이 무기를 되살리는 행위는 참회를 부를 것이다. "
+            "정말로 주문을 시전하는가?", false, 'n'))
         {
             return true;
         }

@@ -225,7 +225,7 @@ bool BlurryScrollDelay::try_interrupt()
     if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
-            && !yesno("Keep reading the scroll?", false, 0, false))
+            && !yesno("계속 두루마리를 읽을 것인가?", false, 0, false))
         {
             mpr("당신은 두루마리를 읽기를 중단했다.");
             return true;
@@ -717,9 +717,9 @@ void JewelleryOnDelay::finish()
         && needs_notele_warning(jewellery, OPER_PUTON)
         && item_ident(jewellery, ISFLAG_KNOW_TYPE))
     {
-        string prompt = "Really put on ";
+        string prompt = "정말로 공간이동 시도 중에 ";
         prompt += jewellery.name(DESC_INVENTORY);
-        prompt += " while about to teleport?";
+        prompt += "을 착용할 것인가?";
         if (!yesno(prompt.c_str(), false, 'n'))
             return;
     }

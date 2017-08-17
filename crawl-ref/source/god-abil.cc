@@ -148,15 +148,15 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
         return false;
 
-    string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
-                       + " ";
+    string prompt = "당신의 " + wpn.name(DESC_YOUR)
+                       + "을(를) ";
     if (brand == SPWPN_PAIN)
-        prompt += "bloodied with pain";
+        prompt += "고통과 피로 적시기를";
     else if (brand == SPWPN_DISTORTION)
-        prompt += "corrupted with distortion";
+        prompt += "왜곡으로 타락시키기를";
     else
-        prompt += "blessed with holy wrath";
-    prompt += "?";
+        prompt += "성스러운 분노로 축복하기를";
+    prompt += " 원하는가?";
     if (!yesno(prompt.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -243,7 +243,7 @@ bool zin_donate_gold()
         return false;
     }
 
-    if (!yesno("Do you wish to donate half of your money?", true, 'n'))
+    if (!yesno("정말로 전 재산의 절반을 기부하는가?", true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
@@ -1770,9 +1770,9 @@ bool beogh_resurrect()
         if (si->props.exists(ORC_CORPSE_KEY))
         {
             found_any = true;
-            if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
-                       + "?").c_str(), true, 'n'))
+            if (yesno((""
+                       + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_PLAIN)
+                       + "을 부활시키고 싶은가?").c_str(), true, 'n'))
             {
                 corpse = &*si;
                 break;
@@ -2049,7 +2049,7 @@ bool kiku_gift_necronomicon()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
+    if (!yesno("네크로미콘을 원하는가?", true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
@@ -3254,7 +3254,7 @@ int fedhas_check_corpse_spores(bool quiet)
 #endif
     }
 
-    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    if (yesnoquit("포자를 만들어내겠는가?", true, 'y') <= 0)
     {
         viewwindow(false);
         return -1;
@@ -3630,7 +3630,7 @@ bool cheibriados_slouch()
 {
     int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
-        if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
+        if (!yesno("서두르는 자는 보이지않는다. 그래도 게으른 징벌을 발하겠는가?",
                    true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -3772,7 +3772,7 @@ bool ashenzari_end_transfer(bool finished, bool force)
         mprf("당신은 현재 %s에서 %s(으)로 지식을 전송하고 있다.",
              skill_name(you.transfer_from_skill),
              skill_name(you.transfer_to_skill));
-        if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
+        if (!yesno("이전을 취소하고 싶은가?", false, 'n'))
             return false;
     }
 
@@ -4982,8 +4982,7 @@ bool qazlal_disaster_area()
     }
 
     if (friendlies
-        && !yesno("There are friendlies around; are you sure you want to hurt "
-                  "them?", true, 'n'))
+        && !yesno("주위에 아군이 있다; 당신은 그들을 다치게 하고 싶은가?", true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
@@ -6016,7 +6015,7 @@ bool ru_do_sacrifice(ability_type sac)
 bool ru_reject_sacrifices(bool forced_rejection)
 {
     if (!forced_rejection &&
-        !yesno("Do you really want to reject the sacrifices Ru is offering?",
+        !yesno("루가 제공하는 희생을 정말로 거부할 것인가?",
                false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -6549,8 +6548,8 @@ bool uskayaw_stomp()
     // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
     // a few places already; see spl_tornado.cc, disaster area, etc.
     if (friendlies
-        && !yesno("There are friendlies around, "
-                  "are you sure you want to hurt them?",
+        && !yesno("주위에 아군이 있다, "
+                  "당신은 그들을 다치게 하고 싶은가?",
                   true, 'n'))
     {
         canned_msg(MSG_OK);
@@ -6819,8 +6818,7 @@ bool hepliaklqana_choose_ancestor_type(int ancestor_choice)
     const auto ancestor_type = *ancestor_mapped;
     const string ancestor_type_name = mons_type_name(ancestor_type, DESC_A);
 
-    if (!yesno(make_stringf("Are you sure you want to remember your ancestor "
-                            "as %s?", ancestor_type_name.c_str()).c_str(),
+    if (!yesno(make_stringf("조상을 %s으로 기억하겠는가?", ancestor_type_name.c_str()).c_str(),
                false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -6969,7 +6967,7 @@ spret_type hepliaklqana_transference(bool fail)
     actor* victim = actor_at(target);
     const bool victim_visible = victim && you.can_see(*victim);
     if ((!victim || !victim_visible)
-        && !yesno("You can't see anything there. Try transferring anyway?",
+        && !yesno("그곳에는 아무것도 볼 수 없다. 그래도 전송하겠는가?",
                   true, 'n'))
     {
         canned_msg(MSG_OK);
