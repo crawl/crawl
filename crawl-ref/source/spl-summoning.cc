@@ -100,7 +100,6 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
  * If the trap is unknown, player is given a mysterious flavor message.
  *
  * @param where        The target coordinate to check.
- * @param caster       The actor casting the spell.
  * @param monster_type The type of monster to be checked for placement.
  * @param fail         If true, return SPRET_FAIL unless the spell is aborted.
  * @returns Returns SPRET_ABORT if the target location is not valid,
@@ -108,7 +107,6 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
  *          SPRET_SUCCESS or SPRET_FAIL based on fail.
  */
 static spret_type _cast_on_trap_location(const coord_def& where,
-                                 actor* caster,
                                  monster_type mon_type,
                                  bool fail)
 {
@@ -125,8 +123,7 @@ static spret_type _cast_on_trap_location(const coord_def& where,
             // Tell player they can't target this kind of trap.
             if (player_knows_trap)
             {
-                if (caster->is_player())
-                    mpr("The trap prevents you from targeting this location.");
+                mpr("The trap prevents you from targeting this location.");
                 return SPRET_ABORT;
             }
 
@@ -134,8 +131,7 @@ static spret_type _cast_on_trap_location(const coord_def& where,
 
             // If player can't see the trap, give a vague message.
             // Players won't know if it's a teleport or shaft trap.
-            if (caster->is_player())
-                mpr("You see a mysterious outline, and the spell fizzles.");
+            mpr("You see a mysterious outline, and the spell fizzles.");
 
             // We charge mana for the detection of the trap.
             return SPRET_SUCCESS;
@@ -1009,7 +1005,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = _cast_on_trap_location(where, &you,
+    spret_type handle_trap = _cast_on_trap_location(where,
                                                     MONS_LIGHTNING_SPIRE,
                                                     fail);
 
@@ -3060,7 +3056,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
         return SPRET_SUCCESS;
     }
 
-    spret_type handle_trap = _cast_on_trap_location(where, caster,
+    spret_type handle_trap = _cast_on_trap_location(where,
                                                     MONS_FULMINANT_PRISM,
                                                     fail);
 
