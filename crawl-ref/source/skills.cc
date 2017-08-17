@@ -1368,7 +1368,7 @@ int get_skill_percentage(const skill_type x)
  */
 int player::get_training_target(const skill_type sk) const
 {
-    ASSERT_RANGE(training_targets[sk], 0, 270);
+    ASSERT_RANGE(training_targets[sk], 0, 271);
     return training_targets[sk];
 }
 
@@ -1380,8 +1380,13 @@ int player::get_training_target(const skill_type sk) const
  */
 void player::set_training_target(const skill_type sk, const double target)
 {
-    dprf("Setting target for %s to %d", skill_name(sk), (int) round(target * 10));
     set_training_target(sk, (int) round(target * 10));
+}
+
+void player::clear_training_targets()
+{
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        set_training_target(sk, 0);
 }
 
 /**
@@ -1393,6 +1398,7 @@ void player::set_training_target(const skill_type sk, const double target)
  */
 void player::set_training_target(const skill_type sk, const int target)
 {
+    dprf("Setting target for %s to %d", skill_name(sk), target);
     training_targets[sk] = min(max((int) target, 0), 270);
 }
 
