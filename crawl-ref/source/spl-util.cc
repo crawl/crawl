@@ -1287,7 +1287,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_PASSWALL:
         if (temp && you.is_stationary())
-            return "you can't move";
+            return "you can't move.";
         break;
 
     case SPELL_ANIMATE_DEAD:
