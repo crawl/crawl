@@ -3279,7 +3279,8 @@ bool is_bad_item(const item_def &item, bool temp)
             return !you.stasis();
 #endif
         case POT_DEGENERATION:
-            return true;
+            // Only useless if your stats can't be drained.
+            return you.species != SP_GNOLL;
 #if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
@@ -3589,6 +3590,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return !you.can_potion_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        case POT_DEGENERATION:
+            return you.species == SP_GNOLL;
         }
 
         return false;
