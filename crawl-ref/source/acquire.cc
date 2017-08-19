@@ -415,14 +415,14 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
         type_wanted = FOOD_FRUIT;
     }
     else
-        type_wanted = coinflip() ? FOOD_ROYAL_JELLY : FOOD_RATION;
+        type_wanted = FOOD_RATION;
 
     quantity = 3 + random2(5);
 
     // giving more of the lower food value items
     if (type_wanted == FOOD_FRUIT)
         quantity = 8 + random2avg(15, 2);
-    else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
+    else if (type_wanted == FOOD_CHUNK)
         quantity += 2 + random2avg(10, 2);
     else if (type_wanted == POT_BLOOD)
         quantity = 8 + random2(5);

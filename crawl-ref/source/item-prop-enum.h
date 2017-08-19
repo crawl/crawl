@@ -743,9 +743,9 @@ enum food_type
     FOOD_APPLE,
     FOOD_CHOKO,
 #endif
-    FOOD_ROYAL_JELLY,
 #if TAG_MAJOR_VERSION == 34
-    FOOD_UNUSED, // was: royal jelly
+    FOOD_ROYAL_JELLY,   // was: royal jelly
+    FOOD_UNUSED, // was: royal jelly and/or pizza
 #endif
     FOOD_FRUIT,  // was: snozzcumber
 #if TAG_MAJOR_VERSION == 34

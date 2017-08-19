@@ -684,30 +684,30 @@ static const food_def Food_prop[] =
 
     { FOOD_FRUIT,        "fruit",         850,     0,  1000 },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,  2000,  2000 },
 
 #if TAG_MAJOR_VERSION == 34
-    // is_real_food assumes we list FOOD_UNUSED as the first removed
+    // is_real_food assumes we list FOOD_ROYAL_JELLY as the first removed
     // food here, after all the unremoved foods.
-    { FOOD_UNUSED,       "buggy",           0,     0,     0 },
+    { FOOD_UNUSED,       "buggy pizza",     0,     0,     0 },
+    { FOOD_ROYAL_JELLY,  "buggy jelly",  2000,  2000,  2000 },
     { FOOD_BREAD_RATION, "buggy ration", 4400,     0,  5900 },
-    { FOOD_AMBROSIA,     "buggy",           0,     0,     0 },
-    { FOOD_ORANGE,       "buggy",        1000,  -300,   300 },
-    { FOOD_BANANA,       "buggy",        1000,  -300,   300 },
-    { FOOD_LEMON,        "buggy",        1000,  -300,   300 },
-    { FOOD_PEAR,         "buggy",         700,  -200,   200 },
-    { FOOD_APPLE,        "buggy",         700,  -200,   200 },
-    { FOOD_APRICOT,      "buggy",         700,  -200,   200 },
-    { FOOD_CHOKO,        "buggy",         600,  -200,   200 },
-    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200 },
-    { FOOD_LYCHEE,       "buggy",         600,  -200,   200 },
-    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50 },
-    { FOOD_GRAPE,        "buggy",         100,   -20,    20 },
-    { FOOD_SULTANA,      "buggy",          70,   -20,    20 },
-    { FOOD_CHEESE,       "buggy",        1200,     0,     0 },
-    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400 },
-    { FOOD_BEEF_JERKY,   "buggy",        1500,   200,  -200 },
-    { FOOD_PIZZA,        "buggy",        1500,     0,     0 },
+    { FOOD_AMBROSIA,     "buggy fruit",     0,     0,     0 },
+    { FOOD_ORANGE,       "buggy fruit",  1000,  -300,   300 },
+    { FOOD_BANANA,       "buggy fruit",  1000,  -300,   300 },
+    { FOOD_LEMON,        "buggy fruit",  1000,  -300,   300 },
+    { FOOD_PEAR,         "buggy fruit",   700,  -200,   200 },
+    { FOOD_APPLE,        "buggy fruit",   700,  -200,   200 },
+    { FOOD_APRICOT,      "buggy fruit",   700,  -200,   200 },
+    { FOOD_CHOKO,        "buggy fruit",   600,  -200,   200 },
+    { FOOD_RAMBUTAN,     "buggy fruit",   600,  -200,   200 },
+    { FOOD_LYCHEE,       "buggy fruit",   600,  -200,   200 },
+    { FOOD_STRAWBERRY,   "buggy fruit",   200,   -50,    50 },
+    { FOOD_GRAPE,        "buggy fruit",   100,   -20,    20 },
+    { FOOD_SULTANA,      "buggy fruit",    70,   -20,    20 },
+    { FOOD_CHEESE,       "buggy fruit",  1200,     0,     0 },
+    { FOOD_SAUSAGE,      "buggy fruit",  1200,   150,  -400 },
+    { FOOD_BEEF_JERKY,   "buggy fruit",  1500,   200,  -200 },
+    { FOOD_PIZZA,        "buggy fruit",  1500,     0,     0 },
 #endif
 };
 
@@ -792,6 +792,8 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
     { OBJ_FOOD,      FOOD_BREAD_RATION },
+    { OBJ_FOOD,      FOOD_ROYAL_JELLY },
+    { OBJ_FOOD,      FOOD_UNUSED },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },

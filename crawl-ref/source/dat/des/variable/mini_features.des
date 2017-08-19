@@ -1179,7 +1179,7 @@ TAGS:    transparent extra decor
 DEPTH:   D, Depths, Elf
 WEIGHT:  1
 SHUFFLE: defg
-ITEM:    q:1 $, fruit q:1, royal jelly q:1, stone q:1
+ITEM:    q:1 $, fruit q:1, ration q:1 w:5, stone q:1
 NSUBST:  ' = 9:d / *:.
 MAP
 '.......'.......'

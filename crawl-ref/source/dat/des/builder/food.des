@@ -98,11 +98,12 @@ DEPTH:  D:8-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
-ITEM:   royal jelly
+ITEM:   ration
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
 NSUBST: 2 = 12:2 / * = 2.
+SUBST:  d = d.
 MAP
 ............
 ....aaaa....
@@ -167,18 +168,16 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   hornet / worm w:5 / worker ant
 MONS:   hornet w:7 / soldier ant w:13
-ITEM:   ration q:1 / fruit q:3
-ITEM:   royal jelly q:3, royal jelly q:6
+ITEM:   ration q:1 w:10 / ration q:2 w:10 / fruit q:3 w:20
 MAP
 .xxxxxxx
 @xx.x.xcccc
- ..x1x2cdec
-@xx.x.x+fdc
+ ..x1x2cddc
+@xx.x.x+ddc
 .x1x.x2cccc
  xxxxxxx
 ENDMAP
 
-# 25k (min 20k)
 NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
 : food_weight(_G, 8)
@@ -189,7 +188,7 @@ KMONS:  B = ooze
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end
-KITEM:  C = royal jelly q:10
+KITEM:  C = ration q:4
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
 MARKER: + = lua:props_marker({ door_restrict="veto" })
@@ -215,7 +214,7 @@ KMONS:    C = yak
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
-KITEM:    C = royal jelly q:2
+KITEM:    C = ration
 KITEM:    E = falchion ego:flaming ident:type / \
               hand axe ego:flaming ident:type
 KITEM:    H = ration q:2
@@ -252,7 +251,7 @@ KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
 KITEM:   Ya = ration
-KITEM:   b = royal jelly / fruit q:1
+KITEM:   b = ration / fruit q:1 w:20
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
@@ -347,14 +346,14 @@ MONS:   human ; animal skin . hand axe
     mons("hog w:" .. hog_weight .. " / yak w:1")
   end
 }}
-ITEM:   royal jelly q:4, ration q:2
+ITEM:   ration q:2
 ITEM:   ration q:1
 KFEAT:  K = iron_grate
 KFEAT:  - = open_door
 MAP
 .xxxxxxx
-@+...fdx
-.x...1ex
+@+...edx
+.x...1dx
  xKK-KKx
  x2...2x
  x.2.2.x

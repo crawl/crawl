@@ -619,11 +619,6 @@ forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, n�
 den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
 grundlæggende effektivitet med våbnet.
 %%%%
-royal jelly
-
-En særligt fed og gylden geléagtig tingest. Hvis du indtager den, giver den,
-udover næring, dig dine tabte evner tilbage.
-%%%%
 rune of zot
 
 En talisman, som lader dig træde ind i Zots domæne.

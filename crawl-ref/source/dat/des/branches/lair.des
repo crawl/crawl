@@ -339,7 +339,7 @@ MONS:    basilisk / wyvern w:25 / komodo dragon / crocodile w:25
 NSUBST:  2 = 3:2 / 3 = 2. / *:.
 SUBST:   z = .xc
 SHUFFLE: %*RO
-KITEM:   R = royal jelly
+KITEM:   R = ration
 KFEAT:   O = enter_lair
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2564,11 +2564,10 @@ MONS:    black bear, polar bear
 KMONS:   P = plant
 # The one big reward and the several smaller stacks of items
 # are randomly split between the mostly-dog and mostly-bear sections.
-KITEM:   $ = any, any w:1 / nothing w:5, ration q:1
-KITEM:   % = any, any w:1 / nothing w:5, royal jelly q:2
+KITEM:   % = any, any w:1 / nothing w:5, ration q:1
 KITEM:   *| = gold, gold, gold, acquire any
 NSUBST:  2 = 2:22334 / *:3
-SHUFFLE: %'*" / '$"|
+SHUFFLE: %'*" / %'"|
 SUBST:   X = xx., z = xx`, ' = ., " = x, p = PP.
 SUBST:   H = 3:3 4:1, 0 = 2
 CLEAR:   `
