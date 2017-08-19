@@ -7223,34 +7223,6 @@ int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
 }
 
-void player::set_place_info(PlaceInfo place_info)
-{
-    place_info.assert_validity();
-
-    if (place_info.is_global())
-        global_info = place_info;
-    else
-        branch_info[place_info.branch] = place_info;
-}
-
-vector<PlaceInfo> player::get_all_place_info(bool visited_only,
-                                             bool dungeon_only) const
-{
-    vector<PlaceInfo> list;
-
-    for (branch_iterator it; it; ++it)
-    {
-        if (visited_only && branch_info[it->id].num_visits == 0
-            || dungeon_only && !is_connected_branch(*it))
-        {
-            continue;
-        }
-        list.push_back(branch_info[it->id]);
-    }
-
-    return list;
-}
-
 // Used for falling into traps and other bad effects, but is a slightly
 // different effect from the player invokable ability.
 bool player::do_shaft()

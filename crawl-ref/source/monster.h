@@ -68,6 +68,7 @@ public:
     mon_enchant_list enchantments;
     FixedBitVector<NUM_ENCHANTMENTS> ench_cache;
     monster_flags_t flags;             // bitfield of boolean flags
+    bool is_spawn;
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour

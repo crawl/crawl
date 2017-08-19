@@ -1738,6 +1738,17 @@ static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
     marshallInt(th, place_info.elapsed_other);
 }
 
+static void marshallLevelXPInfo(writer &th, LevelXPInfo xp_info)
+{
+    marshall_level_id(th, xp_info.level);
+
+    marshallInt(th, xp_info.spawn_xp);
+    marshallInt(th, xp_info.generated_xp);
+    marshallInt(th, xp_info.spawn_count);
+    marshallInt(th, xp_info.generated_count);
+    marshallInt(th, xp_info.turns);
+}
+
 static void tag_construct_you_dungeon(writer &th)
 {
     // how many unique creatures?
@@ -1782,6 +1793,14 @@ static void tag_construct_you_dungeon(writer &th)
 
     for (const PlaceInfo &place : list)
         marshallPlaceInfo(th, place);
+
+    marshallLevelXPInfo(th, you.global_xp_info);
+
+    vector<LevelXPInfo> xp_info_list = you.get_all_xp_info();
+    // How many different levels do we have info on?
+    marshallShort(th, xp_info_list.size());
+    for (const auto info: xp_info_list)
+        marshallLevelXPInfo(th, info);
 
     marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
                       marshallString);
@@ -3873,6 +3892,23 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     return place_info;
 }
 
+static LevelXPInfo unmarshallLevelXPInfo(reader &th)
+{
+    LevelXPInfo xp_info;
+
+    xp_info.level = unmarshall_level_id(th);
+
+    xp_info.spawn_xp        = unmarshallInt(th);
+    xp_info.generated_xp    = unmarshallInt(th);
+
+    xp_info.spawn_count     = unmarshallInt(th);
+    xp_info.generated_count = unmarshallInt(th);
+
+    xp_info.turns           = unmarshallInt(th);
+
+    return xp_info;
+}
+
 #if TAG_MAJOR_VERSION == 34
 static branch_type old_entries[] =
 {
@@ -4033,6 +4069,18 @@ static void tag_read_you_dungeon(reader &th)
             you.props[TOMB_STONE_STAIRS_KEY] = true;
     }
 #endif
+
+    auto xp_info = unmarshallLevelXPInfo(th);
+    ASSERT(xp_info.is_global());
+    you.set_level_xp_info(xp_info);
+
+    count_p = (unsigned short) unmarshallShort(th);
+    for (int i = 0; i < count_p; i++)
+    {
+        xp_info = unmarshallLevelXPInfo(th);
+        ASSERT(!xp_info.is_global());
+        you.set_level_xp_info(xp_info);
+    }
 
     typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
@@ -5008,6 +5056,7 @@ void marshallMonster(writer &th, const monster& m)
     ASSERT(m.mid > 0);
     marshallInt(th, m.mid);
     marshallString(th, m.mname);
+    marshallByte(th, m.is_spawn);
     marshallByte(th, m.get_experience_level());
     marshallByte(th, m.speed);
     marshallByte(th, m.speed_increment);
@@ -5830,6 +5879,7 @@ void unmarshallMonster(reader &th, monster& m)
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th);
+    m.is_spawn        = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_MON_AC_EV)
     {
