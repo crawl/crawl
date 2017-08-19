@@ -20,11 +20,11 @@ end
 # Guarantee at least some really minimal food supply.
 ##########################################################################
 
-NAME:   first_bread
+NAME:   first_ration
 DEPTH:  D:2-5
 CHANCE: 2500, 3333 (D:3), 5000 (D:4), 10000 (D:5)
 TAGS:   uniq_first_food extra transparent
-ITEM:   bread ration
+ITEM:   ration
 MAP
 d
 ENDMAP
@@ -65,7 +65,7 @@ MAP
 .....
 ENDMAP
 
-# 17.6k/26.6k/0
+# 18.8k/11.8k/13k
 NAME:   the_bakery
 DEPTH:  D:7-14
 # Previously this was a 25% CHANCE; I'm assuming this was meant to weight this
@@ -75,7 +75,7 @@ DEPTH:  D:7-14
 : food_weight(_G, 7)
 WEIGHT: 25
 TAGS:   uniq_second_food extra chance_second_food
-ITEM:   bread ration q:2
+ITEM:   ration q:2
 : if crawl.one_chance_in(8) then
 :   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
 : else
@@ -141,7 +141,6 @@ cccc....cccc
 cccccccccccc
 ENDMAP
 
-# 23.2k/19.9k/13k
 # Not really a fish farm now that fish are gone...
 NAME:   hangedman_fish_farm
 DEPTH:  D:9-14
@@ -151,7 +150,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
         patrolling
 KMONS:  A = merfolk ; spear
 KFEAT:  g = shallow_water
-ITEM:   meat ration q:2, bread ration q:3, throwing net
+ITEM:   ration q:2, throwing net
 :       dgn.delayed_decay(_G, 'g', 'electric eel corpse')
 MAP
 xxxxxx
@@ -161,7 +160,6 @@ xWWWWx
 xxxxxx
 ENDMAP
 
-# 18k/18.8k/16.6k (min 18k/12k/12k), plus perishable 6k/6k/0
 NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 : food_weight(_G, 8)
@@ -169,7 +167,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   hornet / worm w:5 / worker ant
 MONS:   hornet w:7 / soldier ant w:13
-ITEM:   meat ration q:1 / fruit q:3
+ITEM:   ration q:1 / fruit q:3
 ITEM:   royal jelly q:3, royal jelly q:6
 MAP
 .xxxxxxx
@@ -205,7 +203,6 @@ MAP
  .Wxxxxxx
 ENDMAP
 
-# 22.3k/18.8k/19k (min 9.6k)
 NAME:     hangedman_ranch
 DEPTH:    D:8-14
 : food_weight(_G, 8)
@@ -221,7 +218,7 @@ KMONS:    F = plant
 KITEM:    C = royal jelly q:2
 KITEM:    E = falchion ego:flaming ident:type / \
               hand axe ego:flaming ident:type
-KITEM:    H = meat ration q:2
+KITEM:    H = ration q:2
 KITEM:    I = halberd
 KFEAT:    EF = shallow_water
 MAP
@@ -237,7 +234,6 @@ xFFW.W.W.x
 xxxxx@xxxx
 ENDMAP
 
-# 20.6k/23k/12.5k (min 18k/6k/0)
 NAME:    hangedman_stone_soup
 DEPTH:   D:10-14
 : food_weight(_G, 8)
@@ -255,7 +251,7 @@ KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
-KITEM:   Ya = bread ration / meat ration
+KITEM:   Ya = ration
 KITEM:   b = royal jelly / fruit q:1
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
@@ -277,7 +273,6 @@ MAP
  .......
 ENDMAP
 
-# 22.0k/29.5k/0
 # A tengu has staked out a little piece of the dungeon.
 NAME:   grunt_tengu_nest
 DEPTH:  D:10-14
@@ -286,7 +281,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   tengu warrior / tengu conjurer, plant
 NSUBST: 2 : 3:2 / *:.
-ITEM:   bread ration / fruit q:7
+ITEM:   ration / fruit q:7
 MAP
  xx+xx
 xx2.2xx
@@ -318,7 +313,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
   dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
                              .. ' / dwarf skeleton')
 }}
-ITEM:   bread ration q:3, meat ration q:1, throwing net
+ITEM:   ration q:3, ration q:1, throwing net
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -352,8 +347,8 @@ MONS:   human ; animal skin . hand axe
     mons("hog w:" .. hog_weight .. " / yak w:1")
   end
 }}
-ITEM:   royal jelly q:4, bread ration q:2
-ITEM:   meat ration q:1
+ITEM:   royal jelly q:4, ration q:2
+ITEM:   ration q:1
 KFEAT:  K = iron_grate
 KFEAT:  - = open_door
 MAP

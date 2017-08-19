@@ -45,7 +45,7 @@ COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 500) .. " gold")
-KITEM:  * = animal skin, meat ration, any good_item
+KITEM:  * = animal skin, ration, any good_item
 KITEM:  ' = ident:type wand of digging, ident:type scroll of teleportation
 MARKER: + = lua:restrict_door()
 MARKER: # = lua:fog_machine { cloud_type = "flame", \
@@ -61,7 +61,7 @@ KFEAT:  7 = tree
 KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
             w:50 whip | wand of enslavement
 KFEAT:  B = food shop name:Jack type:Jerk-a-riffic suffix:Jerky count:10 ; \
-            q:1 meat ration
+            q:1 ration
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:50 ; potion of mutation
 : local smithy = string.gsub(crawl.make_name(), " ", "_")
@@ -172,7 +172,7 @@ KITEM: - = animal skin
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
-KITEM:  $ = q:5 meat ration / nothing, \
+KITEM:  $ = q:5 ration / nothing, \
             giant spiked club / giant club / nothing
 : local frosty = crawl.random2(6)
 : if frosty == 5 then
@@ -273,11 +273,11 @@ SUBST:   2 = 2.
 SUBST:   3 = 3.
 NSUBST:  . = 5:% / *:.
 KITEM:   % = w:12 animal skin / club / hand axe /\
-             meat ration / royal jelly / nothing
+             ration / royal jelly / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
 KITEM:   $ = battleaxe / nothing, plate armour / nothing, \
-             meat ration / nothing, gold, any, any
+             ration / nothing, gold, any, any
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
                  size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
@@ -338,7 +338,7 @@ KITEM:  $ = centaur barding / nothing, q:30 bolt / any good_item
 :end
 SHUFFLE: %$
 SUBST:  % = %W
-KITEM:  % = q:2 meat ration
+KITEM:  % = q:2 ration
 SUBST:  8 = 82
 KFEAT:  8 = granite_statue / floor
 MARKER: + = lua:restrict_door()

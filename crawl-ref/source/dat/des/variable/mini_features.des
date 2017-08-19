@@ -2780,8 +2780,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen extra
-ITEM:   bread ration / meat ration / arrow /\
-        bolt / spear / any potion w:5
+ITEM:   ration w:20 / arrow / bolt / spear / any potion w:5
 MAP
 x+xx
 xddx
@@ -2885,7 +2884,7 @@ SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.f
-ITEM:   meat ration / w:5 minotaur chunk
+ITEM:   ration / w:5 minotaur chunk
 : dgn.delayed_decay(_G, 'e', 'minotaur corpse')
 ITEM:   hand axe
 SUBST:  ' = .

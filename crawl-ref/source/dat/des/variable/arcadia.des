@@ -38,7 +38,7 @@ KMONS:   Q = bush
 KMONS:   R = plant
 ITEM:    dagger / short sword / rapier / flail / whip / blowgun / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon scales w:1
-ITEM:    bread ration q:3
+ITEM:    ration q:3
 KFEAT:   _ = altar_trog
 NSUBST:  . = 10:0 / 8 = 00... / 2:O / 1:3 / 1:5 / *:.
 NSUBST:  6 = 1:9 / 2 = 669 / *:6
