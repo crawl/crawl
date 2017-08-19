@@ -16,6 +16,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "monster.h" // SEEN_SPELLS_KEY
 #include "prompt.h"
 #include "religion.h"
@@ -516,9 +517,21 @@ static void _describe_book(const spellbook_contents &book,
         }
         else
         {
-            description.cprintf("%c - %s",
+           int pow = mons_power_for_hd(spell, hd, false);
+           int range = spell_range(spell, pow, false);
+           if (range > 0)
+           {
+                description.cprintf("%c - %s (%d)",
+                            spell_letter,
+                            chop_string(spell_title(spell), 25).c_str(),
+                            range);
+           }
+           else
+           {
+                description.cprintf("%c - %s",
                             spell_letter,
                             chop_string(spell_title(spell), 29).c_str());
+           }
         }
 
         // only display type & level for book spells
