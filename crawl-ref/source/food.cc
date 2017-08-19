@@ -372,13 +372,6 @@ static void _finished_eating_message(food_type type)
         mpr("Blech - you need meat!");
         return;
     }
-    
-    if (type == FOOD_FRUIT)
-    {
-        const string taste = getMiscString("eating_fruit");
-        mpr(taste.empty() ? "Eugh, buggy fruit." : taste);
-        return;
-    }
 }
 
 // Returns which of two food items is older (true for first, else false).

@@ -1236,7 +1236,8 @@ WEIGHT: 20
 ORIENT: encompass
 # Loot: 11 items, 8 gold.
 : volcano_setup(_G)
-KITEM:  h = fruit
+NSUBST: h = 1:h / *:W
+KITEM:  h = ration
 COLOUR: m = blue
 MONS:   wizard ; mace ego:flaming . robe ego:fire_resistance ident:type
 MONS:   toenail golem

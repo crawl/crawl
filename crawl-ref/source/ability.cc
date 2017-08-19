@@ -95,8 +95,8 @@ enum class abflag
                         //0x00000040,
                         //0x00000080,
     conf_ok             = 0x00000100, // can use even if confused
-    fruit               = 0x00000200, // ability requires fruit
-    variable_fruit      = 0x00000400, // ability requires fruit or piety
+    ration              = 0x00000200, // ability requires a ration
+    variable_ration     = 0x00000400, // ability requires ration or piety
     variable_mp         = 0x00000800, // costs a variable amount of MP
                         //0x00001000,
                         //0x00002000,
@@ -503,11 +503,11 @@ static const ability_def Ability_List[] =
     { ABIL_FEDHAS_FUNGAL_BLOOM, "Fungal Bloom",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_FEDHAS_EVOLUTION, "Evolution",
-      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::variable_fruit },
+      2, 0, 0, 0, {fail_basis::invo, 30, 6, 20}, abflag::variable_ration },
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight",
       2, 0, 50, 0, {fail_basis::invo, 30, 6, 20}, abflag::none },
     { ABIL_FEDHAS_PLANT_RING, "Growth",
-      2, 0, 0, 0, {fail_basis::invo, 40, 5, 20}, abflag::fruit },
+      2, 0, 0, 0, {fail_basis::invo, 40, 5, 20}, abflag::ration },
     { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction",
       4, 0, 100, 1, {fail_basis::invo, 60, 4, 25}, abflag::none },
     { ABIL_FEDHAS_RAIN, "Rain",
@@ -773,11 +773,11 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::instant)
         ret += ", Instant"; // not really a cost, more of a bonus - bwr
 
-    if (abil.flags & abflag::fruit)
-        ret += ", Fruit";
+    if (abil.flags & abflag::ration)
+        ret += ", Ration";
 
-    if (abil.flags & abflag::variable_fruit)
-        ret += ", Fruit or Piety";
+    if (abil.flags & abflag::variable_ration)
+        ret += ", Ration or Piety";
 
     if (abil.flags & abflag::skill_drain)
         ret += ", Skill drain";
@@ -2706,7 +2706,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_FEDHAS_PLANT_RING:
         fail_check();
-        if (!fedhas_plant_ring_from_fruit())
+        if (!fedhas_plant_ring_from_rations())
             return SPRET_ABORT;
         break;
 

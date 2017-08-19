@@ -1614,7 +1614,7 @@ SUBST: ghi = .
 KMONS: D = patrolling spriggan rider
 KMONS: SGHI = spriggan / nothing
 KMONS: F = spriggan druid
-KITEM: f = ration w:20 / fruit
+KITEM: f = ration / nothing w:8
 MAP
        ttttt
   ttttttgggt
@@ -1816,7 +1816,7 @@ KMONS: . = plant w:5 / fungus w:5 / nothing w:100
 KMONS: - = plant / fungus / nothing w:80
 KITEM: h^m = % / * w:5
 KITEM: o = * / | w:5
-KITEM: f = fruit
+KITEM: f = ration / nothing
 KITEM: b = Fen Folio ident:type
 KFEAT: ^, = .
 CLEAR: _

@@ -203,7 +203,6 @@ bool food_is_meaty(const item_def &item) PURE;
 bool food_is_veggie(int food_type) PURE;
 bool food_is_veggie(const item_def &item) PURE;
 int food_value(const item_def &item) PURE;
-bool is_fruit(const item_def &item) PURE;
 
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;

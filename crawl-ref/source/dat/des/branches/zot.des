@@ -893,8 +893,8 @@ MONS:   elephant / w:5 dire elephant / w:2 hellephant
 MONS:   human ; club
 SUBST:  1 = 1 2:5 3:20
 SUBST:  2 = 2 2 .
-SUBST:  % = !:20 ?:5 .:20
-KITEM:  ! = fruit
+SUBST:  % = !:10 ?:4 .:20
+KITEM:  ! = ration / nothing
 KITEM:  ? = wand of random effects
 COLOUR: " : yellow
 MAP
@@ -2253,7 +2253,7 @@ TAGS: no_monster_gen transparent
 MONS: lightning spire, patrolling electric golem
 NSUBST: % = 2:!
 KMONS: ! = patrolling death cob
-KITEM: %! = fruit q:1 / ration w:2 / nothing w:8
+KITEM: %! = ration w:2 / nothing w:8
 MAP
 @xxxxx@
 .......

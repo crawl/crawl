@@ -54,7 +54,7 @@ ENDMAP
 NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup unrand
 KMONS:  P = plant
-ITEM:   fruit q:4
+ITEM:   ration
 NSUBST: . = 1:d / *:., " = 2:d / *:.
 FTILE:  .dP = floor_grey_dirt / floor_grass w:20 / floor_dirt w:15
 COLOUR: .dP = lightgrey / green w:20 / brown w:15
@@ -168,7 +168,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   hornet / worm w:5 / worker ant
 MONS:   hornet w:7 / soldier ant w:13
-ITEM:   ration q:1 w:10 / ration q:2 w:10 / fruit q:3 w:20
+ITEM:   ration q:1 w:40 / ration q:2 w:10
 MAP
 .xxxxxxx
 @xx.x.xcccc
@@ -251,7 +251,7 @@ KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 w:50 no_pickup / large rock q:1 w:24 / \
              mundane hand axe w:1 no_pickup
 KITEM:   Ya = ration
-KITEM:   b = ration / fruit q:1 w:20
+KITEM:   b = ration / nothing w:12
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
@@ -280,7 +280,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   tengu warrior / tengu conjurer, plant
 NSUBST: 2 : 3:2 / *:.
-ITEM:   ration / fruit q:7
+ITEM:   ration
 MAP
  xx+xx
 xx2.2xx

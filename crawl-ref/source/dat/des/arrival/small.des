@@ -1770,16 +1770,14 @@ SHUFFLE: 1x
 SUBST:   x = '
 NSUBST:  ' = 2:d / *:'
 NSUBST:  . = '.
-KITEM:   d : fruit q:1
-KFEAT:   d = '
-FTILE:   d'1{ = floor_grass
-COLOUR:  d' = green
+FTILE:   '1{ = floor_grass
+COLOUR:  ' = green
 MAP
   .....
  .x...x.
- '1'''1'
+ '''''''
 ..''{''..
- '1'''1'
+ '''''''
  .x...x.
   .....
 ENDMAP
@@ -2123,7 +2121,7 @@ NAME:    onia_arrival_mini_maze
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    fruit q:1 / nothing w:20 / stone
+ITEM:    ration w:2 / nothing w:20 / stone
 SHUFFLE: Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
@@ -2149,7 +2147,7 @@ NAME:    onia_arrival_mini_maze_b
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    fruit q:1 / nothing w:50 / stone
+ITEM:    ration w:2 / nothing w:50 / stone
 SHUFFLE: AB
 SUBST:   A : x , B = +., X = x+
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
