@@ -112,6 +112,9 @@ struct mgen_data
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
 
+    // Was this creature spawned after level generation.
+    bool            is_spawn;
+
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
               const coord_def &p = coord_def(-1, -1),
@@ -124,7 +127,7 @@ struct mgen_data
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
           extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
-          initial_shifter(RANDOM_MONSTER)
+          initial_shifter(RANDOM_MONSTER), is_spawn(false)
     { }
 
     mgen_data &set_non_actor_summoner(string nas)

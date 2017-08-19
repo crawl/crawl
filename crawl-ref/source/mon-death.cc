@@ -334,7 +334,8 @@ static int _calc_player_experience(const monster* mons)
 }
 
 static void _give_player_experience(int experience, killer_type killer,
-                                    bool pet_kill, bool was_visible)
+                                    bool pet_kill, bool was_visible,
+                                    bool was_spawn)
 {
     if (experience <= 0 || crawl_state.game_is_arena())
         return;
@@ -358,6 +359,26 @@ static void _give_player_experience(int experience, killer_type killer,
     curr_PlaceInfo += delta;
     curr_PlaceInfo.assert_validity();
 
+    LevelXPInfo& curr_xp_info = you.get_level_xp_info();
+    LevelXPInfo xp_delta;
+
+    if (was_spawn)
+    {
+        xp_delta.spawn_xp += exp_gain;
+        xp_delta.spawn_count++;
+    }
+    else
+    {
+        xp_delta.generated_xp += exp_gain;
+        xp_delta.generated_count++;
+    }
+
+    you.global_xp_info += xp_delta;
+    you.global_xp_info.assert_validity();
+
+    curr_xp_info += xp_delta;
+    curr_xp_info.assert_validity();
+
     // Give a message for monsters dying out of sight.
     if (exp_gain > 0 && !was_visible)
         mpr("You feel a bit more experienced.");
@@ -368,9 +389,11 @@ static void _give_player_experience(int experience, killer_type killer,
 
 static void _give_experience(int player_exp, int monster_exp,
                              killer_type killer, int killer_index,
-                             bool pet_kill, bool was_visible)
+                             bool pet_kill, bool was_visible,
+                             bool was_spawn)
 {
-    _give_player_experience(player_exp, killer, pet_kill, was_visible);
+    _give_player_experience(player_exp, killer, pet_kill, was_visible,
+            was_spawn);
     _give_monster_experience(monster_exp, killer_index);
 }
 
@@ -2737,7 +2760,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (corpse && _reaping(&mons))
             corpse = nullptr;
         _give_experience(player_xp, monster_xp, killer, killer_index,
-                         pet_kill, was_visible);
+                         pet_kill, was_visible, mons.is_spawn);
         crawl_state.dec_mon_acting(&mons);
 
         return corpse;
@@ -2819,8 +2842,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 
     if (!mons_reset)
     {
-        _give_experience(player_xp, monster_xp, killer, killer_index, pet_kill,
-                         was_visible);
+        _give_experience(player_xp, monster_xp, killer, killer_index,
+                pet_kill, was_visible, mons.is_spawn);
     }
     return corpse;
 }

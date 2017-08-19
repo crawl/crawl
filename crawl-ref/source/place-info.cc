@@ -126,11 +126,162 @@ PlaceInfo& player::get_place_info(branch_type branch) const
 
 void player::clear_place_info()
 {
-    global_info = PlaceInfo();
+    global_xp_info = LevelXPInfo();
     for (branch_iterator it; it; ++it)
     {
         branch_info[it->id] = PlaceInfo();
         branch_info[it->id].branch = it->id;
         branch_info[it->id].assert_validity();
     }
+}
+
+void player::set_place_info(PlaceInfo place_info)
+{
+    place_info.assert_validity();
+
+    if (place_info.is_global())
+        global_info = place_info;
+    else
+        branch_info[place_info.branch] = place_info;
+}
+
+vector<PlaceInfo> player::get_all_place_info(bool visited_only,
+                                             bool dungeon_only) const
+{
+    vector<PlaceInfo> list;
+
+    for (branch_iterator it; it; ++it)
+    {
+        if (visited_only && branch_info[it->id].num_visits == 0
+            || dungeon_only && !is_connected_branch(*it))
+        {
+            continue;
+        }
+        list.push_back(branch_info[it->id]);
+    }
+
+    return list;
+}
+
+LevelXPInfo::LevelXPInfo()
+    : level(level_id(GLOBAL_BRANCH_INFO, -1)), spawn_xp(0), spawn_count(0),
+      generated_xp(0), generated_count(0), turns(0)
+{
+}
+
+LevelXPInfo::LevelXPInfo(const level_id &lev)
+    : level(lev), spawn_xp(0), spawn_count(0), generated_xp(0),
+      generated_count(0), turns(0)
+{
+}
+
+bool LevelXPInfo::is_global() const
+{
+    return level.branch == GLOBAL_BRANCH_INFO;
+}
+
+void LevelXPInfo::assert_validity() const
+{
+    if (level.branch == GLOBAL_BRANCH_INFO)
+    {
+        ASSERT(level.depth == -1);
+        return;
+    }
+
+    ASSERT(level.is_valid());
+}
+
+const LevelXPInfo &LevelXPInfo::operator += (const LevelXPInfo &other)
+{
+    spawn_xp += other.spawn_xp;
+    spawn_count += other.spawn_count;
+    generated_xp += other.generated_xp;
+    generated_count += other.generated_count;
+    turns += other.turns;
+
+    return *this;
+}
+
+const LevelXPInfo &LevelXPInfo::operator -= (const LevelXPInfo &other)
+{
+    spawn_xp -= other.spawn_xp;
+    spawn_count -= other.spawn_count;
+    generated_xp -= other.generated_xp;
+    generated_count -= other.generated_count;
+    turns -= other.turns;
+
+    return *this;
+}
+
+LevelXPInfo LevelXPInfo::operator + (const LevelXPInfo &other) const
+{
+    LevelXPInfo copy = *this;
+    copy += other;
+    return copy;
+}
+
+LevelXPInfo LevelXPInfo::operator - (const LevelXPInfo &other) const
+{
+    LevelXPInfo copy = *this;
+    copy -= other;
+    return copy;
+}
+
+LevelXPInfo& player::get_level_xp_info()
+{
+    return get_level_xp_info(level_id::current());
+}
+
+LevelXPInfo& player::get_level_xp_info(const level_id &lev)
+{
+    ASSERT(lev.is_valid());
+    ASSERT(lev.depth <= brdepth[lev.branch]);
+
+    if (!you.level_xp_info.count(lev))
+    {
+        LevelXPInfo xp_info;
+        xp_info.level = lev;
+        level_xp_info[lev] = xp_info;
+    }
+    return (LevelXPInfo &) level_xp_info[lev];
+}
+
+vector<LevelXPInfo> player::get_all_xp_info(bool must_have_kills) const
+{
+    vector<LevelXPInfo> list;
+
+    for (branch_iterator it; it; ++it)
+    {
+
+        for (int d = 1; d <= brdepth[it->id]; ++d)
+        {
+            const auto lev = level_id(it->id, d);
+            map<level_id, LevelXPInfo>::iterator mi
+                = you.level_xp_info.find(lev);
+
+            if (mi == you.level_xp_info.end())
+                continue;
+
+            if (must_have_kills
+                && mi->second.spawn_count == 0
+                && mi->second.generated_count == 0)
+            {
+                continue;
+            }
+
+            list.push_back(mi->second);
+        }
+    }
+
+    return list;
+}
+
+void player::set_level_xp_info(LevelXPInfo &xp_info)
+{
+    xp_info.assert_validity();
+
+    if (xp_info.is_global())
+        global_xp_info = xp_info;
+    else
+        level_xp_info[xp_info.level] = xp_info;
 }

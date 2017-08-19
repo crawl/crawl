@@ -311,6 +311,9 @@ public:
     map<level_id, vector<string> > vault_list;
 
     PlaceInfo global_info;
+
+    LevelXPInfo global_xp_info;
+
     player_quiver m_quiver;
 
     // monsters mesmerising player; should be protected, but needs to be saved
@@ -453,6 +456,7 @@ public:
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES> branch_info;
+    map<level_id, LevelXPInfo> level_xp_info;
 
 public:
     player();
@@ -839,6 +843,9 @@ public:
     PlaceInfo& get_place_info(branch_type branch) const;
     void clear_place_info();
 
+    LevelXPInfo& get_level_xp_info();
+    LevelXPInfo& get_level_xp_info(const level_id &lev);
+
     void goto_place(const level_id &level);
 
     void set_place_info(PlaceInfo info);
@@ -846,6 +853,9 @@ public:
     // modify the player object.
     vector<PlaceInfo> get_all_place_info(bool visited_only = false,
                                          bool dungeon_only = false) const;
+
+    void set_level_xp_info(LevelXPInfo &xp_info);
+    vector<LevelXPInfo> get_all_xp_info(bool must_have_kills = false) const;
 
     bool did_escape_death() const;
     void reset_escaped_death();
