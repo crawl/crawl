@@ -16,6 +16,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "monster.h" // SEEN_SPELLS_KEY
 #include "prompt.h"
 #include "religion.h"
@@ -502,6 +503,12 @@ static void _describe_book(const spellbook_contents &book,
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [&spell](const pair<spell_type,char>& e) { return e.first == spell; });
         const char spell_letter = entry != spell_map.end() ? entry->second : ' ';
+
+        int pow = mons_power_for_hd(spell, hd, false);
+        int range = spell_range(spell, pow, false);
+        string range_str = range >= 0 ? make_stringf(" (%d)", range) : "";
+        string hex_str = "";
+
         if (hd > 0 && crawl_state.need_save
 #ifndef DEBUG_DIAGNOSTICS
             && mon_owner->attitude != ATT_FRIENDLY
@@ -509,26 +516,19 @@ static void _describe_book(const spellbook_contents &book,
             && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
         {
             if (you.immune_to_hex(spell))
-            {
-                description.cprintf("%c - (immune) %s",
-                                spell_letter,
-                                chop_string(spell_title(spell), 20).c_str());
-            }
+                hex_str = "(immune) ";
             else
             {
                 int chance = hex_chance(spell, hd);
-                int ch_len = to_string(chance).length();
-                description.cprintf("%c - (%d%%) %s",
-                    spell_letter, chance,
-                    chop_string(spell_title(spell), 25-ch_len).c_str());
+                hex_str = make_stringf("(%d%%) ", chance);
             }
         }
-        else
-        {
-            description.cprintf("%c - %s",
-                            spell_letter,
-                            chop_string(spell_title(spell), 29).c_str());
-        }
+
+        int hex_len = hex_str.length(), range_len = range_str.length();
+
+        description.cprintf("%c - %s%s%s", spell_letter, hex_str.c_str(),
+                chop_string(spell_title(spell), 29-hex_len-range_len).c_str(),
+                range_str.c_str());
 
         // only display type & level for book spells
         if (doublecolumn)
