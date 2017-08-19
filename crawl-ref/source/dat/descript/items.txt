@@ -876,10 +876,6 @@ A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
 offers little protection against physical harm, but does not hinder evasion or
 spellcasting.
 %%%%
-royal jelly
-
-A particularly rich and golden gelatinous thing.
-%%%%
 rune of zot
 
 A talisman which allows entry into the Realm of Zot.

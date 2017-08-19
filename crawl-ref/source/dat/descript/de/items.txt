@@ -571,12 +571,6 @@ rod of inaccuracy
 Dieser Stab erlaubt seinem Benutzer, einen kräftigen aber äußerst ungenauen
 Energieblitz abzuschießen.
 %%%%
-royal jelly
-
-Eine besonders reiche und goldene gallertartige Sache. Der Konsum wird
-verlorene Fähigkeiten wieder herstellen, zusätzlich zu der Ernährung die es
-bietet.
-%%%%
 rune of zot
 
 Ein Talisman, der Eintritt in Zots Reich gewährt.

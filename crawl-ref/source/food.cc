@@ -379,9 +379,6 @@ static void _finished_eating_message(food_type type)
         mpr(taste.empty() ? "Eugh, buggy fruit." : taste);
         return;
     }
-
-    if (type == FOOD_ROYAL_JELLY)
-        mpr("That royal jelly was delicious!");
 }
 
 // Returns which of two food items is older (true for first, else false).

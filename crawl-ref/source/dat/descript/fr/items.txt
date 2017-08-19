@@ -795,11 +795,6 @@ rod of shadows
 
 Ce sceptre tire des créatures des ombres et de l’éther.
 %%%%
-royal jelly
-
-Une gelée dorée et particulièrement nourrissante. La consommer restaure les
-caractéristiques en plus de la satiété qu'elle apporte.
-%%%%
 rune of zot
 
 Un talisman qui permet d'entrer dans le domaine de Zot.
