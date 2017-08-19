@@ -342,10 +342,6 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
-cutlass
-
-A broad curved short sword.
-%%%%
 dagger
 
 A double-edged fighting knife with a sharp point.

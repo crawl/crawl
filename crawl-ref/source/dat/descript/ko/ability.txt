@@ -107,10 +107,6 @@ Evoke Invisibility ability
 짧은 시간동안 몸을 투명하게 만든다. 투명 상태에서는 마법오염이 조금씩 쌓이며,
 마법오염이 너무 많이 쌓이면 발광 상태가 되어 적이 볼 수 있게 된다.
 %%%%
-Turn Visible ability
-
-투명화를 해제한다.
-%%%%
 Stop Flying ability
 
 비행을 그만둔다.

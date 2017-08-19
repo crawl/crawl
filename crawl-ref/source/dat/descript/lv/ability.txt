@@ -27,10 +27,6 @@ Evoke Teleportation ability
 
 Aizteleportē sevi uz nejaušu līmeņu vietu.
 %%%%
-Turn Visible ability
-
-Atkal kļūt redzamam.
-%%%%
 Cure All Mutations ability
 
 Izdziedēt visas mutācijas, taču tikai vienreiz.
