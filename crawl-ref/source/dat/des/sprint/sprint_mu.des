@@ -168,7 +168,7 @@ MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
- meat ration / bread ration / royal jelly w:20 / fruit, \
+ ration w:20 / royal jelly w:20 / fruit, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
@@ -201,7 +201,7 @@ MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
- meat ration / bread ration / royal jelly w:20 / fruit, \
+ ration w:20 / royal jelly w:20 / fruit, \
  scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \

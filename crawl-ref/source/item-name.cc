@@ -1835,8 +1835,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     case OBJ_FOOD:
         switch (item_typ)
         {
-        case FOOD_MEAT_RATION: buff << "meat ration"; break;
-        case FOOD_BREAD_RATION: buff << "bread ration"; break;
+        case FOOD_RATION: buff << "ration"; break;
         case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_FRUIT: buff << "fruit"; break;
         case FOOD_CHUNK:
@@ -1855,6 +1854,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << "chunk of flesh";
             break;
 #if TAG_MAJOR_VERSION == 34
+        case FOOD_BREAD_RATION: buff << "buggy ration"; break;
         default: buff << "removed food"; break;
 #endif
         }
@@ -2359,11 +2359,9 @@ public:
             case FOOD_CHUNK:
                 name = "chunks";
                 break;
-            case FOOD_MEAT_RATION:
-                name = "meat rations";
-                break;
+            case FOOD_RATION:
             case FOOD_BREAD_RATION:
-                name = "bread rations";
+                name = "rations";
                 break;
 #if TAG_MAJOR_VERSION == 34
             default:

@@ -627,9 +627,7 @@ SUBVAULT: Y : storerooms_room_b
 SUBVAULT: T : the_temple
 SUBVAULT: U : equipment_1
 # Initial consumables
-KITEM: a = bread ration q:7, \
-       meat ration q:7, \
-       fruit q:40
+KITEM: a = ration q:7 w:20, fruit q:40
 KITEM: b = scroll of summoning ident:all q:1, \
        scroll of amnesia q:5 ident:all, \
        scroll of remove curse q:3 ident:all, \
@@ -1892,8 +1890,7 @@ TILE:   v = wall_cobalt_stone
 : base_monster_setup(_G)
 KITEM:  34CBDEJK = superb_item ident:all w:66 /\
                    royal jelly q:6 /\
-                   bread ration ident:all q:2 /\
-                   meat ration ident:all q:2
+                   ration q:2 w:20
 : lua_marker('_', props_marker {
 :           door_description_suffix=" to a Minivault (Hard)",
 :           })

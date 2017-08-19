@@ -415,12 +415,7 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
         type_wanted = FOOD_FRUIT;
     }
     else
-    {
-        type_wanted = coinflip()
-            ? FOOD_ROYAL_JELLY
-            : you.get_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
-                                                      : FOOD_MEAT_RATION;
-    }
+        type_wanted = coinflip() ? FOOD_ROYAL_JELLY : FOOD_RATION;
 
     quantity = 3 + random2(5);
 

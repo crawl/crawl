@@ -604,8 +604,8 @@ KPROP: YycfZ. = no_tide
 KPROP: ZYcf. = no_tele_into
 KMONS: c = patrolling hungry ghost
 NSUBST: f = 1:g / 2:f / *:.
-KITEM: g = meat ration / bread ration
-KITEM: f = meat ration / bread ration / nothing w:20
+KITEM: g = ration
+KITEM: f = ration / nothing w:10
 : dgn.delayed_decay(_G, 'c', 'human skeleton')
 SUBST: Z = yY
 KFEAT: y = w

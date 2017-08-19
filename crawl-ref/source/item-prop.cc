@@ -679,10 +679,8 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,  6500,     0 },
+    { FOOD_RATION,       "ration",       4700,  3250,  2950 },
     { FOOD_CHUNK,        "chunk",        1000,  1300,     0 },
-
-    { FOOD_BREAD_RATION, "bread ration", 4400,     0,  5900 },
 
     { FOOD_FRUIT,        "fruit",         850,     0,  1000 },
 
@@ -692,6 +690,7 @@ static const food_def Food_prop[] =
     // is_real_food assumes we list FOOD_UNUSED as the first removed
     // food here, after all the unremoved foods.
     { FOOD_UNUSED,       "buggy",           0,     0,     0 },
+    { FOOD_BREAD_RATION, "buggy ration", 4400,     0,  5900 },
     { FOOD_AMBROSIA,     "buggy",           0,     0,     0 },
     { FOOD_ORANGE,       "buggy",        1000,  -300,   300 },
     { FOOD_BANANA,       "buggy",        1000,  -300,   300 },
@@ -792,6 +791,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_CURSE_WEAPON },
     { OBJ_SCROLLS,   SCR_CURSE_ARMOUR },
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
+    { OBJ_FOOD,      FOOD_BREAD_RATION },
 #endif
     // Outside the #if because we probably won't remove these.
     { OBJ_RUNES,     RUNE_ELF },

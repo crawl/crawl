@@ -106,10 +106,6 @@ book of wizardry
 
 Um livro de magia.
 %%%%
-bread ration
-
-Uma refeição farta de pão dormido mas massudo.
-%%%%
 buckler
 
 Um escudo pequeno.

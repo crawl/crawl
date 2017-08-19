@@ -3861,7 +3861,7 @@ static void tag_read_you_items(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_FOOD_AUTOPICKUP)
     {
         const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
-        you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_RATION] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_FRUIT] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_ROYAL_JELLY] = oldstate;
 
@@ -4864,6 +4864,9 @@ void unmarshallItem(reader &th, item_def &item)
         _fixup_dragon_artefact_name(item, ARTEFACT_NAME_KEY);
         _fixup_dragon_artefact_name(item, ARTEFACT_APPEAR_KEY);
     }
+
+    if (item.is_type(OBJ_FOOD, FOOD_BREAD_RATION))
+        item.sub_type = FOOD_RATION;
 #endif
 
     if (is_unrandom_artefact(item))

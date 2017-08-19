@@ -159,10 +159,6 @@ Una pieza curva de madera con una cuerda atada entre sus extremos, diseñada
 para disparar flechas. Hace bastante daño en combate, y alguien con habilidad
 puede usarlo con gran eficiencia.
 %%%%
-bread ration
-
-Pan un poco rancio, aunque sustancioso.
-%%%%
 buckler
 
 Un pequeño escudo.
@@ -330,10 +326,6 @@ excelente en combate y un arquero experimentado puede usarlo muy eficazmente.
 lychee
 
 Una fruta tropical.
-%%%%
-meat ration
-
-Una ración nutritiva de carne seca y en conserva.
 %%%%
 orange
 

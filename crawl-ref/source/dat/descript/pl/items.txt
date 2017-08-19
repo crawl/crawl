@@ -159,10 +159,6 @@ box of beasts
 Magiczne pudełko zawierające wiele dzikich bestii. Możesz wypuścić je na
 wolność otwierając wieko.
 %%%%
-bread ration
-
-Solidna porcja czerstwego ale wciąż dobrego chleba.
-%%%%
 buckler
 
 Mała tarcza.
@@ -344,10 +340,6 @@ zwłaszcza w rękach zaawansowanego łucznika.
 lychee
 
 Tropikalny owoc.
-%%%%
-meat ration
-
-Duża pożywna porcja suszonego i zakonserwowanego mięsa.
 %%%%
 mottled dragon scales
 

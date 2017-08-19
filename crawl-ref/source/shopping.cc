@@ -528,8 +528,7 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_FOOD:
         switch (item.sub_type)
         {
-        case FOOD_MEAT_RATION:
-        case FOOD_BREAD_RATION:
+        case FOOD_RATION:
             valued = 50;
             break;
 
