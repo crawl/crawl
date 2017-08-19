@@ -7037,7 +7037,7 @@ bool player::is_lifeless_undead(bool temp) const
     if (undead_state() == US_SEMI_UNDEAD)
         return temp ? hunger_state < HS_SATIATED : false;
     else
-        return undead_state() != US_ALIVE;
+        return undead_state(temp) != US_ALIVE;
 }
 
 bool player::can_polymorph() const

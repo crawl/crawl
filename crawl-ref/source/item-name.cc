@@ -3542,12 +3542,9 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
-            return you.undead_state(temp)
-                   && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state < HS_SATIATED)
-                   || you.species == SP_FORMICID;
+            return !you.can_go_berserk(true, true, true, nullptr, temp);
         case POT_HASTE:
-            return you.species == SP_FORMICID;
+            return you.stasis();
 
 #if TAG_MAJOR_VERSION == 34
         case POT_CURE_MUTATION:
