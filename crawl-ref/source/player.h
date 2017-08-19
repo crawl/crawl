@@ -661,7 +661,8 @@ public:
     void attacking(actor *other, bool ranged = false) override;
     bool can_go_berserk() const override;
     bool can_go_berserk(bool intentional, bool potion = false,
-                        bool quiet = false, string *reason = nullptr) const;
+                        bool quiet = false, string *reason = nullptr,
+                        bool temp = true) const;
     bool go_berserk(bool intentional, bool potion = false) override;
     bool berserk() const override;
     bool can_mutate() const override;

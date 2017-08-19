@@ -4023,9 +4023,7 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
     {
         // Even god powers cannot override racial berserk/haste restrictions.
         if (*which == POT_BERSERK_RAGE
-            && (you.undead_state(false)
-                && you.species != SP_VAMPIRE
-                || you.species == SP_FORMICID))
+            && !you.can_go_berserk(true, false, true, nullptr, false))
         {
             continue;
         }
