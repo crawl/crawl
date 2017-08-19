@@ -2098,7 +2098,7 @@ ENDMAP
 
 ###############################################################################
 
-NAME:   giann_horns   
+NAME:   giann_horns
 TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
@@ -2141,7 +2141,7 @@ x........xG.Gx........x
 x...S....x...x....S...x
 x..STS...xx+xx...STS..x
 xx..S.............S..xx
- xxxxxx....{....xxxxxx 
+ xxxxxx....{....xxxxxx
       xx.......xx
        xxxxxxxxx
 ENDMAP
@@ -2154,16 +2154,16 @@ SUBST:  s = hhh..
 : dgn.delayed_decay(_G, 'h', 'human skeleton')
 MAP
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
- tt.......................tt 
- tt..G..G...........G..G..tt 
- tt...ss.............ss...tt 
+ tt.......................tt
+ tt..G..G...........G..G..tt
+ tt...ss.............ss...tt
 ttt...ss.............ss...ttt
 tt...G..G...........G..G...tt
 tt............{............tt
 tt...G..G...........G..G...tt
 ttt...ss.............ss...ttt
- tt...ss.............ss...tt 
- tt..G..G...........G..G..tt 
- tt.......................tt 
+ tt...ss.............ss...tt
+ tt..G..G...........G..G..tt
+ tt.......................tt
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
 ENDMAP
