@@ -2329,15 +2329,14 @@ int food_value(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
-    const int herb = you.get_mutation_level(MUT_HERBIVOROUS);
-    const int carn = you.get_mutation_level(MUT_CARNIVOROUS);
-
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
     int ret = food.value;
 
-    ret += carn * food.carn_mod;
-    ret += herb * food.herb_mod;
+    if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
+        ret += 3 * food.carn_mod;
+    else if (you.get_mutation_level(MUT_CARNIVOROUS) > 0)
+        ret += 3 * food.herb_mod;
 
     return ret;
 }
