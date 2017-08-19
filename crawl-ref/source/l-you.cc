@@ -129,7 +129,8 @@ LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
 LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
 LUARET1(you_gourmand, boolean, you.gourmand(false))
 LUARET1(you_res_corr, boolean, you.res_corr(false))
-LUARET1(you_like_chunks, number, player_likes_chunks(true))
+// Returning a number so as not to break existing scripts.
+LUARET1(you_like_chunks, number, player_likes_chunks(true) ? 3 : 0)
 LUARET1(you_flying, boolean, you.airborne())
 LUARET1(you_transform, string, you.form == transformation::none
                                ? "" : transform_name())
@@ -380,10 +381,8 @@ static int you_gold(lua_State *ls)
 
 static int you_can_consume_corpses(lua_State *ls)
 {
-    lua_pushboolean(ls,
-                     you.get_mutation_level(MUT_HERBIVOROUS) < 3
-                     && !you_foodless()
-                  );
+    lua_pushboolean(ls, you.get_mutation_level(MUT_HERBIVOROUS) == 0
+                        && !you_foodless());
     return 1;
 }
 
