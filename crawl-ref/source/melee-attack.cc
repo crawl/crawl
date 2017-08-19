@@ -581,12 +581,12 @@ bool melee_attack::handle_phase_aux()
 static void _hydra_devour(monster &victim)
 {
     // what's the highest hunger level this lets the player get to?
-    const hunger_state_t max_hunger =
-        static_cast<hunger_state_t>(HS_SATIATED + player_likes_chunks());
+    const hunger_state_t max_hunger = player_likes_chunks() ? HS_ENGORGED
+                                                            : HS_SATIATED;
 
     // will eating this actually fill the player up?
     const bool filling = !have_passive(passive_t::goldify_corpses)
-                          && you.get_mutation_level(MUT_HERBIVOROUS, false) < 3
+                          && you.get_mutation_level(MUT_HERBIVOROUS, false) == 0
                           && you.hunger_state <= max_hunger
                           && you.hunger_state < HS_ENGORGED;
 

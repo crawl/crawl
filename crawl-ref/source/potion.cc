@@ -217,7 +217,7 @@ public:
  */
 static string _blood_flavour_message()
 {
-    if (you.get_mutation_level(MUT_HERBIVOROUS) < 3 && player_likes_chunks())
+    if (you.get_mutation_level(MUT_HERBIVOROUS) == 0 && player_likes_chunks())
         return "This tastes like blood.";
     return "Yuck - this tastes like blood.";
 }
@@ -1032,7 +1032,7 @@ public:
     bool effect(bool=true, int=40, bool=true) const override
     {
         if (you.species == SP_VAMPIRE
-            || you.get_mutation_level(MUT_CARNIVOROUS) == 3)
+            || you.get_mutation_level(MUT_CARNIVOROUS) > 0)
         {
             mpr("Blech - that potion was really gluggy!");
         }

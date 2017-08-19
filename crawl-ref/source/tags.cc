@@ -2248,6 +2248,20 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
         you.explore = unmarshallBoolean(th);
 }
 
+static void _cap_mutation_at(mutation_type mut, int cap)
+{
+    if (you.mutation[mut] > cap)
+    {
+        // Don't convert real mutation levels to temporary.
+        int real_levels = you.get_base_mutation_level(mut, true, false, true);
+        you.temp_mutation[mut] = max(cap - real_levels, 0);
+
+        you.mutation[mut] = cap;
+    }
+    if (you.innate_mutation[mut] > cap)
+        you.innate_mutation[mut] = cap;
+}
+
 static void tag_read_you(reader &th)
 {
     int count;
@@ -2887,7 +2901,6 @@ static void tag_read_you(reader &th)
     {
         you.mutation[MUT_CARNIVOROUS] = you.innate_mutation[MUT_CARNIVOROUS];
         you.mutation[MUT_HERBIVOROUS] = you.innate_mutation[MUT_HERBIVOROUS];
-
     }
 
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS
@@ -2905,8 +2918,8 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_FAST_METABOLISM] -= 1;
             you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
 
-            you.mutation[MUT_HERBIVOROUS] -= 1;
-            you.innate_mutation[MUT_HERBIVOROUS] -= 1;
+            you.mutation[MUT_HERBIVOROUS] = 1;
+            you.innate_mutation[MUT_HERBIVOROUS] = 1;
         }
         else if (you.species == SP_HALFLING)
         {
@@ -3095,6 +3108,10 @@ static void tag_read_you(reader &th)
         if (you.innate_mutation[MUT_SPIT_POISON] == 2)
             you.innate_mutation[MUT_SPIT_POISON] = 1;
     }
+
+    // Carnivore and herbivore used to be 3-level mutations.
+    _cap_mutation_at(MUT_HERBIVOROUS, 1);
+    _cap_mutation_at(MUT_CARNIVOROUS, 1);
 
     // Slow regeneration split into two single-level muts:
     // * Inhibited regeneration (no regen in los of monsters, what Gh get)
