@@ -431,10 +431,6 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
-fruit
-
-A delicious edible flower ovary.
-%%%%
 fustibalus
 
 A length of wood with a reinforced sling at one end, able to fire projectiles

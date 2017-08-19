@@ -726,7 +726,7 @@ DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_tele_into
 MONS:    plant, fungus, oklob plant, bush, toadstool
-KITEM:   d = fruit q:3 / fruit q:2 / fruit q:1 / nothing
+KITEM:   d = food_ration / nothing w:20
 KFEAT:   d = floor
 SUBST:   x = TTPPPPP.
 # Only make "oklob behind bushes" situation possible a bit deeper.
@@ -801,7 +801,7 @@ NSUBST: f = 4:A/*:.
 NSUBST: w = 2:4 / *:w
 KFEAT:  C = altar_fedhas
 KFEAT:  A = .
-KITEM:  A = fruit q:3 / fruit q:2 / fruit q:1 / nothing
+KITEM:  A = ration / nothing w:20
 FTILE:  .tfCA = floor_moss
 FTILE:  d = floor_hall
 COLOUR: fd = brown
@@ -2192,7 +2192,7 @@ DEPTH:  D:2-9
 TAGS:   temple_overflow_1 temple_overflow_uskayaw
 KFEAT:  _ = altar_uskayaw
 ITEM:   any potion q:1, any weapon
-ITEM:   fruit q:3
+ITEM:   ration
 MAP
 ...........
 .G.......G.

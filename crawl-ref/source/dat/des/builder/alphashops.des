@@ -92,7 +92,7 @@
       elseif s == "F" then i = { "book of fire", "book of flames", "flail",
        "book of frost", "falchion", "fan of gales", "fire dragon scales",
        "potion of flight", "ring of fire", "scroll of fear", "staff of fire",
-       "fen folio", "ring of flight", "scroll of fog", "fruit", "wand of flame",
+       "fen folio", "ring of flight", "scroll of fog", "wand of flame",
        "manual of fighting", "amulet of faith", "manual of fire magic",
        "fustibalus" }
 

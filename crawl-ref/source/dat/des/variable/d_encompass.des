@@ -631,7 +631,7 @@ KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
 KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / bullfrog w:40
 KMONS:  6 = wyvern w:5 / manticore w:2 / hippogriff w:2 / black bear w:19
-KITEM:  o5 = fruit q:1 / nothing w:400
+KITEM:  o5 = ration / nothing w:1000
 SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4
 NSUBST: F = 5:5 / 5 = 55o / * = o:100 R:57

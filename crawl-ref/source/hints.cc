@@ -1275,7 +1275,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "</w>')</console>"
                 ". You can eat it by typing <w>e</w>"
                 "<tiles> or by <w>left-clicking</w> on it</tiles>"
-                ". However, it is usually best to conserve rations and fruit, "
+                ". However, it is usually best to conserve rations, "
                 "since raw meat from corpses is generally plentiful.";
         break;
 
