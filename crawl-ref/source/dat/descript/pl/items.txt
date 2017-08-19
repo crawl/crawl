@@ -521,11 +521,6 @@ Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
 wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
 skutki są dość brutalne.
 %%%%
-royal jelly
-
-Lekko złotawa galaretowata substancja, wyjątkowo bogata w składniki odżywcze.
-Oprócz wartości pokarmowych, pozwala także odzyskać utracone siły.
-%%%%
 rune of zot
 
 Talizman który pozwala otworzyć bramę do krainy Zot.

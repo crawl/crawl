@@ -511,11 +511,6 @@ rod of inaccuracy
 
 このロッドは手にしている者に強力だがとても不正確な力の矢を射つことを可能にする。
 %%%%
-royal jelly
-
-とりわけ豪華な、金色をしたゼリー状の存在だ。 Consuming it will restore lost
-abilities, in addition to the nutrition it provides.
-%%%%
 rune of zot
 
 ゾットの領域に訪れることを可能にする御守りだ。

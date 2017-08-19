@@ -482,11 +482,6 @@ ring of wizardry
 
 Este anillo incrementa la habilidad de su portador para usar hechizos mágicos.
 %%%%
-royal jelly
-
-Una cosa gelatinosa dorada bastante nutritiva. Consumirla restaurará tus
-habilidades, además de que es saludable.
-%%%%
 rune of zot
 
 Un talismán que permite la entrada a los dominios de Zot.
