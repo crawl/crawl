@@ -197,10 +197,6 @@ bow
 Kaartuva kappale puuta ja jännettä nuolten ampumiseen. Se tekee paljon vahinkoa
 taistelussa, ja taitavan käyttäjän käsissä se on erittäin tehokas.
 %%%%
-bread ration
-
-Täyttävä ateria väljähtänyttä, mutta runsasta leipää.
-%%%%
 buckler
 
 Pieni kappale puuta ja metallia, jonka voi kiinnittää käteen hihnalla

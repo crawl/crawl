@@ -355,49 +355,29 @@ static void _finished_eating_message(food_type type)
     const bool herbivorous = you.get_mutation_level(MUT_HERBIVOROUS) > 0;
     const bool carnivorous = you.get_mutation_level(MUT_CARNIVOROUS) > 0;
 
-    if (herbivorous)
+    if (type == FOOD_RATION)
     {
-        if (food_is_meaty(type))
-        {
-            mpr("Blech - you need greens!");
-            return;
-        }
-    }
-    else
-    {
-        if (type == FOOD_MEAT_RATION)
-        {
-            mpr("That meat ration really hit the spot!");
-            return;
-        }
+        mpr("That ration really hit the spot!");
+        return;
     }
 
-    if (carnivorous)
+    if (herbivorous && food_is_meaty(type))
     {
-        if (food_is_veggie(type))
-        {
-            mpr("Blech - you need meat!");
-            return;
-        }
+        mpr("Blech - you need greens!");
+        return;
     }
-    else
+
+    if (carnivorous && food_is_veggie(type))
     {
-        switch (type)
-        {
-        case FOOD_BREAD_RATION:
-            mpr("That bread ration really hit the spot!");
-            return;
-        case FOOD_FRUIT:
-        {
-            string taste = getMiscString("eating_fruit");
-            if (taste.empty())
-                taste = "Eugh, buggy fruit.";
-            mpr(taste);
-            return;
-        }
-        default:
-            break;
-        }
+        mpr("Blech - you need meat!");
+        return;
+    }
+    
+    if (type == FOOD_FRUIT)
+    {
+        const string taste = getMiscString("eating_fruit");
+        mpr(taste.empty() ? "Eugh, buggy fruit." : taste);
+        return;
     }
 
     if (type == FOOD_ROYAL_JELLY)

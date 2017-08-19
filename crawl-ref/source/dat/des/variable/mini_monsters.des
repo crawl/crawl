@@ -464,7 +464,7 @@ ENDMAP
 NAME:  minmay_rat_hole
 DEPTH: D:2-4
 MONS:  rat, quokka
-ITEM:  bread ration / meat ration / nothing w:60
+ITEM:  ration / nothing w:30
 MAP
  xxx
 xxdx
@@ -1221,7 +1221,7 @@ NAME:   minmay_ogre_servants
 DEPTH:  D:3-6
 MONS:   ogre
 NSUBST: " = 6:" / *:'
-KITEM:  ' = meat ration
+KITEM:  ' = ration
 KMONS:  "' = goblin
 MAP
 xxxxx
@@ -1412,7 +1412,7 @@ NAME:    bh_hangedman_babel_library
 TAGS:    transparent no_monster_gen no_item_gen
 DEPTH:   D:10-, !D:$, Elf, !Elf:$
 MONS:    wizard / deep elf mage
-ITEM:    bread ration
+ITEM:    ration
 ITEM:    randbook numspells:2 title:Dhcmrlchtdj
 ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
 ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
@@ -1898,7 +1898,7 @@ ENDMAP
 NAME: lightli_orcish_oven
 DEPTH: D:6-11, Orc
 MONS: orc warrior, orc
-ITEM: meat ration, bread ration
+ITEM: ration
 MAP
 xxxxxxxxxx
 xvvv....xx
@@ -1907,8 +1907,8 @@ xvvv.212.x
 xxxx...xxx
 xxx.x..xxx
 xxx+xx..xx
-xed.xx..xx
-xdexx..xxx
+xdd.xx..xx
+xddxx..xxx
 xxxx.@xxxx
 ENDMAP
 
@@ -2393,7 +2393,7 @@ TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
 KMONS:  A = unseen horror
-ITEM:   fruit q:1, royal jelly q:q, bread ration q:1
+ITEM:   fruit q:1, royal jelly q:q, ration q:1
 SUBST:  D : DDDDE
 NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP

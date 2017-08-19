@@ -274,17 +274,6 @@ bow
 werden.“
     -Khalil Ghibran, _The Hellseher _, „Auf Kindern“. 1923.
 %%%%
-bread ration
-
-„Es wird weiter berichtet, dass in den Provinzen [Caesar] Bankette ständig in
-zwei Speisesälen gegeben hat, in von dem einem sich seine Offiziere oder
-griechische Begleiter, in den anderen römischen Bürgern und dem
-ausgezeichneteren vom provincials beim Tisch zurückgelehnt haben. Er war im
-Management seines Haushalts, in kleinen Sachen sowie in denjenigen der größeren
-Wichtigkeit so pedantisch und streng, dass er seinen Bäcker in Eisen gebracht
-hat, um ihm mit einer Art von Brot und seinen Gästen mit einem anderen...“
-    -Suetonius, _De Vita Caesarum, Divus Iulius_ zu dienen. 110 CE.
-%%%%
 broad axe
 
 „Waffe, wohl geformt, nackt, blass!
@@ -668,20 +657,16 @@ quick blade
 losgelassen ...“
     -Julia Ward Howe, „The Battle Hymn of the Republic“.  1861.
 %%%%
-rambutan
+ration
 
-„Die Rambutan (_nephelium lappaceum_) ist eine schöne Frucht, auf die ich
-bereits hingewiesen habe, ähnlich dem Mammut Erdbeerbaum; und Sie vermissen sie
-erst, wenn Sie in einer kleinen Entfernung, ein leckeres Gericht von einer
-tropischen Erdbeere bekommen. Aber Sie finden in den ‚Angaben innerhalb‘ des
-äußeren Mantels, dass es unterhalb der rot-haarigen Abdeckung ein
-halbdurchlässiges Fruchtfleisch mit angenehm sauren Geschmack, welches einen
-einzigen ovalen und länglich Samen umhüllt. Ich weiß nicht, aber ich habe eine
-eigenartige Erinnerung der schönen Früchte der Meerenge, aber keiner hält sich
-in meiner Erinnerung so süß in ihren angehäuften Schönheiten eines Obst-Tellers
-als die bärtige und rosige rambutan.“
-    -Fitch-Waterman Taylor, _A Voyage Round the World And Visits to Various
-Foreign Countries, in the United States Frigate Columbia_.  1847.
+„Es wird weiter berichtet, dass in den Provinzen [Caesar] Bankette ständig in
+zwei Speisesälen gegeben hat, in von dem einem sich seine Offiziere oder
+griechische Begleiter, in den anderen römischen Bürgern und dem
+ausgezeichneteren vom provincials beim Tisch zurückgelehnt haben. Er war im
+Management seines Haushalts, in kleinen Sachen sowie in denjenigen der größeren
+Wichtigkeit so pedantisch und streng, dass er seinen Bäcker in Eisen gebracht
+hat, um ihm mit einer Art von Brot und seinen Gästen mit einem anderen...“
+    -Suetonius, _De Vita Caesarum, Divus Iulius_ zu dienen. 110 CE.
 %%%%
 ring
 

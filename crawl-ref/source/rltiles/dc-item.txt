@@ -551,8 +551,7 @@ i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
 
 #################OBJ_FOOD
 %sdir item/food
-meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
-bread_ration FOOD_BREAD_RATION
+bread_ration FOOD_RATION UNSEEN_FOOD
 
 apple FOOD_FRUIT_FIRST FOOD_APPLE
 apricot

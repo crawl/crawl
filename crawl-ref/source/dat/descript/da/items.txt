@@ -220,10 +220,6 @@ Denne æske indeholder en forkvaklet troldmands magiske eksperimenters bizarre
 rester. Hvis den åbnes, kan den slippe en venlig kimære løs: en mytisk hybrid
 som består af dele fra tre separate væsener.
 %%%%
-bread ration
-
-Et stort, mættende måltid af tørt brød.
-%%%%
 buckler
 
 Et lille stykke træ og metal, som spændes på den ene arm til forsvar. Det er
@@ -432,10 +428,6 @@ dygtig bueskytte kan bruge den overordentligt effektivt.
 lychee
 
 En tropisk frugt.
-%%%%
-meat ration
-
-En mættende ration af tørret og konserveret kød.
 %%%%
 mottled dragon scales
 

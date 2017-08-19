@@ -237,7 +237,7 @@ dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe, randbook, '
 
  -- Spriggan stabber. 4 items.
 dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
-   .. 'quick blade w:1, bread ration, cloak, randbook disc:hexes / any book' )
+   .. 'quick blade w:1, ration, cloak, randbook disc:hexes / any book' )
 
  -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
 dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'shortbow good_item / longbow w:2, '
@@ -283,7 +283,7 @@ dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / 
 
  -- Ogre, maybe an ogre mage of some kind. 4-5 items.
 dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '
-   .. 'giant spiked club good_item, robe, large rock, meat ration, '
+   .. 'giant spiked club good_item, robe, large rock, ration, '
    .. 'any book / nothing' )
 }}
 MAP

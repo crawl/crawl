@@ -221,10 +221,6 @@ Ein rundes Stück Holz mit einer Sehne, zum Schießen von Pfeilen. Es verursacht
 guten Schaden im Kampf, und ein fähiger Benutzer kann es sehr wirksam
 verwenden.
 %%%%
-bread ration
-
-Eine sättigende Mahlzeit aus abgestandenem, aber herzhaftem Brot.
-%%%%
 buckler
 
 Ein kleines Stück von Holz und Metall, um auf einem Arm für die Verteidigung
@@ -404,10 +400,6 @@ verwenden.
 lychee
 
 Eine tropische Frucht.
-%%%%
-meat ration
-
-Eine sättigende Ration aus getrocknetem und konserviertem Fleisch.
 %%%%
 orange
 

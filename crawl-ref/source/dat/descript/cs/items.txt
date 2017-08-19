@@ -59,10 +59,6 @@ bow
 Zakřivený kus dřeva s tětivou, určený k střílení šípů. V boji způsobuje
 obstojné zranění, a zkušený uživatel jej bude schopen dobře využít.
 %%%%
-bread ration
-
-Ztvrdlé, ale vydatné pečivo.
-%%%%
 centaur barding
 
 Zbroj určená kentaurům, kteří jej nosí na své koňské polovině těla.
@@ -136,10 +132,6 @@ lukostřelec jej může použít s velkým efektem.
 lychee
 
 Tropické ovoce.
-%%%%
-meat ration
-
-Sytá porce sušené konzervovaného masa různého druhu.
 %%%%
 orange
 
