@@ -205,8 +205,8 @@ MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
         robe . potion of berserk rage q:1 ident:type
 KMONS:  L = water nymph
 KMONS:  P = plant
-ITEM:   fruit q:1 / fruit q:2 / nothing w:180
-ITEM:   any potion / fruit q:1 / nothing w:30
+ITEM:   ration / nothing w:90
+ITEM:   any potion / ration w:5 / nothing w:35
 KFEAT:  L = deep_water
 NSUBST: w = 2:L / *:w
 SUBST:  X = xt, T = t.

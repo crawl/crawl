@@ -1020,10 +1020,10 @@ TAGS:  patrolling no_monster_gen transparent
 DEPTH: D:2-5
 KMONS: 2 = adder
 KMONS: 3 = plant
-ITEM:  fruit
+ITEM:  ration
 SUBST: - = wwwwwwWWW
 SUBST: . = ........33
-SUBST: ? = .wwt3%dd22
+SUBST: ? = ..wwwtt33%%d222
 : if you.absdepth() < 4 then
 SUBST: 2 = .
 : end
@@ -2393,7 +2393,7 @@ TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
 KMONS:  A = unseen horror
-ITEM:   fruit q:1, ration q:1 w:20
+ITEM:   ration q:1 w:15 / nothing
 SUBST:  D : DDDDE
 NSUBST: D = 1 = A:4 .:1 / 2:d / 2:e / 1:1, E = 2:d / 2:e / 2:1
 MAP
@@ -2766,7 +2766,7 @@ DEPTH:  D:8-, !D:$
 TAGS:   extra no_monster_gen
 NSUBST: T = 1:. / 1:t
 KMONS:  1 = oklob plant
-KITEM:  1A_ = fruit q:3
+KITEM:  1A_ = ration / nothing w:7
 KFEAT:  _ = altar_fedhas
 MAP
  tttttttttt
@@ -3135,9 +3135,9 @@ TAGS:    no_monster_gen
 DEPTH:   D:13-
 MONS:    patrolling cherub, patrolling dancing weapon ; great sword ego:flaming
 KMONS:   p = plant
-ITEM:    fruit tile:food_apple
+ITEM:    ration tile:food_apple
 NSUBST:  1 = 2:1 / *:.
-NSUBST:  d = 3:d / *:.
+NSUBST:  d = 2:d / *:.
 SUBST:   3 = 33.
 RTILE:   x = wall_lair
 FTILE:   12p.dt@ = floor_lair

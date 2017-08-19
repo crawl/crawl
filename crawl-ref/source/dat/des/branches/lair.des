@@ -1141,10 +1141,10 @@ NAME:    grunt_forest_small_clearings
 TAGS:    transparent extra decor
 DEPTH:   Lair
 MONS:    plant / bush
-KITEM:   d = fruit
+KITEM:   d = ration
 KMASK:   G = no_monster_gen
 SHUFFLE: Ww. / ''` / ''`
-SUBST:   t = t.., '` = 1:49 d:36 .:405
+SUBST:   t = t.., '` = 1:49 d:7 .:405
 SUBST:   G = w., W = WW., w = wwW
 MAP
  tt@@@tt
@@ -1230,11 +1230,11 @@ MONS:    wolf, black bear / polar bear, spriggan / centaur w:4
 KMONS:   9 = 9
 KMONS:   * = spriggan rider / faun w:4
 KMONS:   P = plant / bush
-ITEM:    fruit q:1
+ITEM:    ration
 KITEM:   9* = *
 KFEAT:   9 = W
 SHUFFLE: wW'"-~_9 / ''GG'''* / '''0'''% / `````11G
-SUBST:   t = t.., '. = 1:49 d:36 .:405, W = WW., "w = wwwW
+SUBST:   t = t.., '. = 1:49 d:7 .:405, W = WW., "w = wwwW
 NSUBST:  2 = 3:1 / 2:2 / 1:3 / *:.
 MAP
       tt@@@tt
@@ -1563,16 +1563,15 @@ DEPTH:  Lair
 ORIENT: float
 WEIGHT: 9
 MONS:   plant, butterfly
-ITEM:   fruit q:1 / fruit q:2 w:7 / fruit q:3 w:3 /\
-        fruit q:4 w:1 / fruit q:5 w:1 / fruit q:6 w:1
+ITEM:   ration
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
-SUBST:  '`"- = ^:20 ~:15 ., . = d:6 .:150 1:10 2:4
+SUBST:  '`"- = ^:20 ~:15 ., . = d:3 .:150 1:10 2:4
 : elseif size > 3 then
-SUBST:  "` = ^:20 ~:15 ., . = d .:50 1:8 2:4
+SUBST:  "` = ^:20 ~:15 ., . = d:5 .:50 1:8 2:4
 : else
-SUBST:  '" = ^:20 ~:15 ., . = d .:50 1:8 2:4
+SUBST:  '" = ^:20 ~:15 ., . = d:5 .:50 1:8 2:4
 : end
 CLEAR:  `'"-
 COLOUR: ^ = green
@@ -1604,15 +1603,15 @@ TAGS:   extra transparent decor
 DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
-KITEM:  a : fruit q:1
+KITEM:  a : ration
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
-SUBST:  0`-. = .:90 a:10 2:1
+SUBST:  0`-. = .:90 a:2 2:1
 SUBST:  _ = .:90 a:4
 : else
 CLEAR:  '-_
 SUBST:  `" = . a 2:1
-SUBST:  ~. = .:90 a:10 2:1
+SUBST:  ~. = .:90 a:2 2:1
 SUBST:  0 = 1
 : end
 MAP
@@ -1829,8 +1828,8 @@ NAME:    lemuel_ratsnest
 ORIENT:  northeast
 DEPTH:   D:5-8, Lair:1-3
 MONS:    rat, quokka, river rat, hell rat
-ITEM:    fruit
-SUBST:   d = d$..., e = d$
+ITEM:    ration
+SUBST:   d = d$$$........., e = d$$$
 SHUFFLE: 234 / 324 / 243
 : if you.in_branch("Lair") then
 NSUBST:  4 = 1:4 / * = 40, 3 = 2:3 / * = 34.
@@ -2090,8 +2089,8 @@ TAGS:   no_monster_gen
 DEPTH:  Lair
 MONS:   river rat band, hell rat, river rat / rat
 KMONS:  P = plant / fungus w:2
-KITEM:  d = fruit / ration
-NSUBST: ' = 1:1 / 2:P / 2:2 / 2:3 / 2:d
+KITEM:  d = ration
+NSUBST: ' = 1:1 / 2:P / 2:2 / 2:3 / 1:d
 MAP
  xxxx
  xxxxxx
@@ -2109,8 +2108,8 @@ NAME:   kennysheep_abandoned_house
 TAGS:   ruin
 DEPTH:  Lair
 MONS:   rat, river rat, hell rat
-KITEM:  d = fruit / ration
-NSUBST: d = 1:d / 1:* / 1:9 / 1:3 / * = dd11223.......
+KITEM:  d = ration
+NSUBST: d = 1:d / 1:* / 1:9 / 1:3 / * = d11223.......
 MAP
       .......
 .......ccccc.........
@@ -2278,8 +2277,8 @@ KMONS:  Y = yak
 KMONS:  D = death yak
 KMONS:  C = catoblepas
 KMONS:  P = plant
-KITEM:  f = fruit
-SUBST:  P = P., f = f.
+KITEM:  f = ration
+SUBST:  P = P., f = f...
 NSUBST: D = 1:D / *:.
 MAP
         .@@@.
