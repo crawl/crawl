@@ -130,10 +130,6 @@ Evoke Invisibility ability
 Gør dig usynlig i en begrænset periode. Det øger din magiske besmittelse at
 være usynlig og kan i sidste ende forårsage gløden.
 %%%%
-Turn Visible ability
-
-Bliv synlig igen.
-%%%%
 Stop Flying ability
 
 Hold op med at flyve.
