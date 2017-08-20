@@ -366,7 +366,7 @@ void xom_tick()
         }
 
         if (you.gift_timeout == 1)
-            simple_god_message(" is getting BORED.");
+            simple_god_message("은 지.루.해.졌.다.");
     }
 
     if (x_chance_in_y(2 + you.faith(), 6))
@@ -1006,9 +1006,9 @@ static void _confuse_monster(monster* mons, int sever)
           &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
     {
         if (was_confused)
-            simple_monster_message(*mons, " looks rather more confused.");
+            simple_monster_message(*mons, "은(는) 더욱 더 혼란스러워졌다.");
         else
-            simple_monster_message(*mons, " looks rather confused.");
+            simple_monster_message(*mons, "은(는) 더 혼란스러워졌다.");
     }
 }
 

@@ -185,9 +185,9 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
     if (levels_gained)
     {
         if (mons_intel(*this) >= I_HUMAN)
-            simple_monster_message(mcopy, " looks more experienced.");
+            simple_monster_message(mcopy, "은(는) 경험이 더욱 쌓인 것처럼 보였다.");
         else
-            simple_monster_message(mcopy, " looks stronger.");
+            simple_monster_message(mcopy, "은(는) 강해진 것처럼 보였다.");
     }
 
     if (get_experience_level() < MAX_MONS_HD

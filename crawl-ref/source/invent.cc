@@ -1505,7 +1505,7 @@ bool check_old_item_warning(const item_def& item,
     prompt += old_item.name(DESC_INVENTORY);
     prompt += "?";
     if (penance)
-        prompt += " This could place you under penance!";
+        prompt += " 이것은 당신을 참회에 빠뜨린다!";
     return yesno(prompt.c_str(), false, 'n');
 }
 
@@ -1775,7 +1775,7 @@ bool check_warning_inscriptions(const item_def& item,
         }
         prompt += "?";
         if (penance)
-            prompt += " This could place you under penance!";
+            prompt += " 이것은 당신을 참회에 빠뜨린다!";
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);
     }

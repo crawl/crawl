@@ -2181,7 +2181,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     else if (mons.type == MONS_BRIAR_PATCH)
     {
         if (timeout && !silent)
-            simple_monster_message(mons, " crumbles away.");
+            simple_monster_message(mons, "이(가) 부서져버렸다.");
     }
     else if (mons.type == MONS_SPECTRAL_WEAPON)
     {

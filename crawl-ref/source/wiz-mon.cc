@@ -670,7 +670,7 @@ void wizard_gain_monster_level(monster* mon)
     // but cap the levels gained to just 1.
     bool worked = mon->gain_exp(INT_MAX - mon->experience, 1);
     if (!worked)
-        simple_monster_message(*mon, " seems unable to mature further.", MSGCH_WARN);
+        simple_monster_message(*mon, "은(는) 더 성장할 수 없는듯 하다.", MSGCH_WARN);
 
     // (The gain_exp() method will chop the monster's experience down
     // to half-way between its new level and the next, so we needn't

@@ -201,7 +201,7 @@ static void _hell_effects(int /*time_delta*/)
     if (have_passive(passive_t::resist_hell_effects)
         && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
     {
-        simple_god_message("'s power protects you from the chaos of Hell!");
+        simple_god_message("의 권능이 당신을 지옥의 혼돈으로부터 보호했다!");
         return;
     }
 
@@ -854,15 +854,15 @@ static void _jiyva_effects(int /*time_delta*/)
             switch (random2(3))
             {
                 case 0:
-                    simple_god_message(" gurgles merrily.");
+                    simple_god_message("는 명랑하게 꾸륵거렸다.");
                     break;
                 case 1:
-                    mprf(MSGCH_SOUND, "You hear %s splatter%s.",
-                         total_jellies > 1 ? "a series of" : "a",
-                         total_jellies > 1 ? "s" : "");
+                    mprf(MSGCH_SOUND, "당신은 %s 튀기는 소리를 들었다%s.",
+                         total_jellies > 1 ? "여러 개의" : "",
+                         total_jellies > 1 ? "" : "");
                     break;
                 case 2:
-                    simple_god_message(" says: Divide and consume!");
+                    simple_god_message("가 말했다: 분열해라! 먹어치워라!");
                     break;
             }
         }

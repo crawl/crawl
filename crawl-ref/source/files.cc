@@ -1057,7 +1057,7 @@ static void _fedhas_rot_all_corpses(const level_id& old_level)
 
         if (!messaged)
         {
-            simple_god_message("'s fungi set to work.");
+            simple_god_message("가 곰팡이가 작동하도록 설정하였다.");
             messaged = true;
         }
 
@@ -1637,7 +1637,7 @@ static void _save_game_exit()
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros
         && !crawl_state.seen_hups
-        && yesno("Save macros?", true, 'n'))
+        && yesno("매크로를 저장하는가?", true, 'n'))
     {
         macro_save();
     }
@@ -1923,10 +1923,10 @@ static bool _restore_game(const string& filename)
     {
         // Note: if we are here, the save info was properly read, it would
         // raise an exception otherwise.
-        if (yesno(("This game comes from an incompatible version of Crawl ("
+        if (yesno(("이 게임은 호환되지 않는 크롤링 버전에서 제공된다 ("
                    + you.prev_save_version + ").\n"
-                   "Unless you reinstall that version, you can't load it.\n"
-                   "Do you want to DELETE that game and start a new one?"
+                   "해당 버전을 다시 설치하지 않으면 로드할 수 없다.\n"
+                   "그 게임을 삭제하고 새 게임을 시작하는가?"
                   ).c_str(),
                   true, 'n'))
         {
@@ -1941,8 +1941,8 @@ static bool _restore_game(const string& filename)
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
-        if (!yesno("This game comes from a previous release of Crawl. If you "
-                   "load it now, you won't be able to go back. Continue?",
+        if (!yesno("이 게임은 이전 크롤링 버전에서 제공되었다. 지금 로드하면 "
+                   "되돌릴 수 없다. 계속하겠는가?",
                    true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
@@ -2020,8 +2020,8 @@ bool restore_game(const string& filename)
     catch (corrupted_save &err)
     {
         if (yesno(make_stringf(
-                   "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s). Do you want to delete it?", err.what()).c_str(),
+                   "해당 이름으로 저장이 있지만 유효하지 않은 것으로 보인다.\n"
+                   "(Error: %s). 삭제하겠나?", err.what()).c_str(),
                   true, 'n'))
         {
             if (you.save)

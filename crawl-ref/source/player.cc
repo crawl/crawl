@@ -787,7 +787,7 @@ bool berserk_check_wielded_weapon()
         string prompt = "Do you really want to go berserk while wielding "
                         + wpn->name(DESC_YOUR) + "?";
         if (penance)
-            prompt += " This could place you under penance!";
+            prompt += " 이것은 당신을 참회에 빠뜨린다!";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {

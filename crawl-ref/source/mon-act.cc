@@ -163,7 +163,7 @@ static void _escape_water_hold(monster& mons)
         {
             mons.speed_increment -= 5;
         }
-        simple_monster_message(mons, " pulls free of the water.");
+        simple_monster_message(mons, "이(가) 물을 빠져나온다.");
         mons.del_ench(ENCH_WATER_HOLD);
     }
 }
@@ -986,7 +986,7 @@ static bool _handle_scroll(monster& mons)
         {
             if (mons.caught() || mons_is_fleeing(mons) || mons.pacified())
             {
-                simple_monster_message(mons, " reads a scroll.");
+                simple_monster_message(mons, "이(가) 두루마리를 읽었다.");
                 read = true;
                 monster_teleport(&mons, false);
             }
@@ -997,7 +997,7 @@ static bool _handle_scroll(monster& mons)
         if ((mons.caught() || mons_is_fleeing(mons) || mons.pacified())
             && mons.can_see(you) && !mons.no_tele(true, false))
         {
-            simple_monster_message(mons, " reads a scroll.");
+            simple_monster_message(mons, "이(가) 두루마리를 읽었다.");
             read = true;
             if (mons.caught())
                 monster_blink(&mons);
@@ -1429,7 +1429,7 @@ static void _pre_monster_move(monster& mons)
         monster* awakener = monster_by_mid(mons.props["vine_awakener"].get_int());
         if (awakener && !awakener->can_see(mons))
         {
-            simple_monster_message(mons, " falls limply to the ground.");
+            simple_monster_message(mons, "이(가) 무기력하게 바닥에 쓰러졌다.");
             monster_die(mons, KILL_RESET, NON_MONSTER);
             return;
         }
@@ -1661,7 +1661,7 @@ void handle_monster_move(monster* mons)
 
     if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
-        simple_monster_message(*mons, " is lost in a daze.");
+        simple_monster_message(*mons, "이(가) 현혹당해 정신을 잃었다.");
         mons->speed_increment -= non_move_energy;
         return;
     }
@@ -1691,14 +1691,14 @@ void handle_monster_move(monster* mons)
             if (gozag_gold_in_los(mons))
             {
                 simple_monster_message(*mons,
-                    " is distracted by the nearby gold.");
+                    "이(가) 근처의 금화에 한눈이 팔렸다.");
             }
             else if (you.gold > 0)
-                simple_monster_message(*mons, " is distracted by your gold.");
+                simple_monster_message(*mons, "이(가) 당신의 금화에 한눈이 팔렸다.");
             // Just in case!
             else
                 simple_monster_message(*mons,
-                                       " is distracted by imaginary riches.");
+                                       "이(가) 망상 속의 보물에 한눈이 팔렸다.");
 
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
@@ -3241,10 +3241,10 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     if (mons.is_constricted())
     {
         if (mons.attempt_escape())
-            simple_monster_message(mons, " escapes!");
+            simple_monster_message(mons, "이(가) 빠져나왔다!");
         else
         {
-            simple_monster_message(mons, " struggles to escape constriction.");
+            simple_monster_message(mons, "이(가) 속박에서 빠져나오려고 발버둥친다.");
             _swim_or_move_energy(mons);
             return true;
         }
@@ -3267,7 +3267,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
-                    simple_monster_message(mons, " bursts through the door, destroying it!");
+                    simple_monster_message(mons, "이(가) 문을 부수고 튀어나왔다!");
             }
         }
         else if (mons_can_open_door(mons, f))
@@ -3292,7 +3292,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
                     interrupt_activity(AI_FORCE_INTERRUPT);
                 }
                 else
-                    simple_monster_message(mons, " eats the door!");
+                    simple_monster_message(mons, "이(가) 문을 먹어치웠다!");
             }
         } // done door-eating jellies
     }
@@ -3301,7 +3301,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
     if (mons.seen_context == SC_JUST_SEEN && !you.see_cell(f))
-        simple_monster_message(mons, " moves out of view.");
+        simple_monster_message(mons, "이(가) 시야에서 사라졌다.");
     else if (crawl_state.game_is_hints() && mons.flags & MF_WAS_IN_VIEW
              && !you.see_cell(f))
     {
@@ -3412,7 +3412,7 @@ static bool _monster_move(monster* mons)
         }
         if (adj_move.empty())
         {
-            simple_monster_message(*mons, " flops around on dry land!");
+            simple_monster_message(*mons, "이(가) 땅바닥에서 팔딱거린다!");
             return false;
         }
 
@@ -3428,7 +3428,7 @@ static bool _monster_move(monster* mons)
             && (newpos == you.pos() && mons->wont_attack()
                 || (mon2 && mons->wont_attack() == mon2->wont_attack())))
         {
-            simple_monster_message(*mons, " flops around on dry land!");
+            simple_monster_message(*mons, "이(가) 땅바닥에서 팔딱거린다!");
             return false;
         }
 

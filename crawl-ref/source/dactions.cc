@@ -183,7 +183,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_YRED_SLAVE:
             if (mon->type == MONS_ZOMBIE)
             {
-                simple_monster_message(*mon, " crumbles into dust!");
+                simple_monster_message(*mon, "은 먼지로 부서졌다!");
                 monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
                 break;
             }
@@ -208,7 +208,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_ALLY_HEPLIAKLQANA:
-            simple_monster_message(*mon, " returns to the mists of memory.");
+            simple_monster_message(*mon, "은 기억의 안개로 돌아갔다.");
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
@@ -218,7 +218,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_OLD_ENSLAVED_SOULS_POOF:
-            simple_monster_message(*mon, " is freed.");
+            simple_monster_message(*mon, "은 풀려났다.");
             // The monster disappears.
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
             break;

@@ -848,8 +848,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_DOWN_RIGHT:
         if (!i_feel_safe())
         {
-            return yesno("Really repeat movement command while monsters "
-                         "are nearby?", false, 'n');
+            return yesno("몬스터가 근처에 있는 동안 정말로 이동 명령을 반복할 것인가?", false, 'n');
         }
 
         return true;
@@ -1298,13 +1297,12 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ABYSS:
-        return yesno("If you enter this portal you might not be able to return "
-                     "immediately. Continue?", false, 'n');
+        return yesno("이 관문에 입장하면 당신의 힘으로는 바로 돌아올 수 없다. "
+                     "계속하겠는가?", false, 'n');
 
     case DNGN_MALIGN_GATEWAY:
-        return yesno("Are you sure you wish to approach this portal? There's no "
-                     "telling what its forces would wreak upon your fragile "
-                     "self.", false, 'n');
+        return yesno("이 관문에 접근 할 것인가? 그 힘이 당신의 깨지기 쉬운 "
+                     "자아에 어떤 영향을 미칠지 알 수 없다.", false, 'n');
 
     default:
         return true;
@@ -1354,7 +1352,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     {
         // "unsafe", as often you bail at single-digit hp and a wasted turn to
         // an overeager prompt cancellation might be nasty.
-        if (!yesno("Are you sure you want to leave this ziggurat?", false, 'n'))
+        if (!yesno("이 지구라트에서 나갈 것인가?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
@@ -1371,7 +1369,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     if (!down && player_in_branch(BRANCH_ZOT) && you.depth == 5
         && you.chapter == CHAPTER_ANGERED_PANDEMONIUM)
     {
-        if (!yesno("Really leave the Orb behind?", false, 'n'))
+        if (!yesno("오브를 뒤에 남겨 둘 것인가?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
@@ -1381,10 +1379,10 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        string prompt = make_stringf("Are you sure you want to leave %s?%s",
+        string prompt = make_stringf("%s을 종료할 것인가?%s",
                                      branches[root_branch].longname,
                                      crawl_state.game_is_tutorial() ? "" :
-                                     " This will make you lose the game!");
+                                     " 이것은 당신이 게임을 잃게 만들 것이다!");
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             mpr("좋아, 기다려!");
@@ -1395,9 +1393,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))
-            return yesno("Really go through this one-way escape hatch?", true, 'n');
+            return yesno("정말로 일방통행 비상용 해치를 지나가는가?", true, 'n');
         if (down && shaft) // voluntary shaft usage
-            return yesno("Really dive through this shaft in the floor?", true, 'n');
+            return yesno("정말로 바닥에서 구멍으로 뛰어들 것인가?", true, 'n');
     }
 
     return true;
@@ -1983,8 +1981,8 @@ void process_command(command_type cmd)
     {
         const char * const prompt
             = (Options.restart_after_game && Options.restart_after_save)
-              ? "Save game and return to main menu?"
-              : "Save game and exit?";
+              ? "게임을 저장하고 메인 메뉴로 나갈 것인가?"
+              : "게임을 저장하고 나갈 것인가?";
         explicit_keymap map;
         map['S'] = 'y';
         if (yesno(prompt, true, 'n', true, true, false, &map))
@@ -2406,8 +2404,8 @@ static bool _cancel_barbed_move()
 {
     if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
     {
-        string prompt = "The barbs in your skin will harm you if you move."
-                        " Continue?";
+        string prompt = "당신이 움직이면 피부의 가시가 당신을 해칠 것이다."
+                        " 계속하겠는가?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -2484,7 +2482,7 @@ static bool _cancel_confused_move(bool stationary)
         prompt += "?";
 
         if (penance)
-            prompt += " This could place you under penance!";
+            prompt += " 이것은 당신을 참회에 빠뜨린다!";
 
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno(prompt.c_str(), false, 'n'))
@@ -3049,8 +3047,8 @@ static void _move_player(coord_def move)
         else if (targ_monst->temp_attitude() == ATT_NEUTRAL && !you.confused()
                  && targ_monst->visible_to(&you))
         {
-            simple_monster_message(*targ_monst, " refuses to make way for you. "
-                                             "(Use ctrl+direction to attack.)");
+            simple_monster_message(*targ_monst, "이(가) 당신에게 길을 비켜주지 않는다. "
+                                             "(ctrl+방향키를 눌러 공격.)");
             you.turn_is_over = false;
             return;
         }

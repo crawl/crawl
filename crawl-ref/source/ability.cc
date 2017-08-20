@@ -834,7 +834,7 @@ static const string _detailed_cost_description(ability_type ability)
     ostringstream ret;
 
     bool have_cost = false;
-    ret << "This ability costs: ";
+    ret << "이 능력의 비용: ";
 
     if (abil.mp_cost > 0)
     {
@@ -891,7 +891,7 @@ static const string _detailed_cost_description(ability_type ability)
     }
 
     if (!have_cost)
-        ret << "nothing.";
+        ret << "없음.";
 
     if (abil.flags & abflag::breath)
         ret << "\nYou must catch your breath between uses of this ability.";
@@ -1073,10 +1073,10 @@ static string _desc_sac_mut(const CrawlStoreValue &mut_store)
 static string _sacrifice_desc(const ability_type ability)
 {
     const string boilerplate =
-        "\nIf you make this sacrifice, your powers granted by Ru "
-        "will become stronger in proportion to the value of the "
-        "sacrifice, and you may gain new powers as well.\n\n"
-        "Sacrifices cannot be taken back.\n";
+        "\n이 희생을 하면, 루가 부여한 권능이 희생의 "
+        "가치에 비례하여 강해질 것이며 새로운 힘도 "
+        "얻을 수 있다.\n\n"
+        "희생은 되돌릴 수 없다.\n";
     const string piety_info = ru_sacrifice_description(ability);
     const string desc = boilerplate + piety_info;
 
@@ -1308,7 +1308,7 @@ static bool _check_ability_possible(const ability_def& abil,
         {
             if (action.matches(name))
             {
-                string prompt = "Really use " + string(name) + "?";
+                string prompt = "정말로 " + string(name) + "을 사용하는가?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
@@ -2507,15 +2507,15 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_SIF_MUNA_DIVINE_ENERGY:
-        simple_god_message(" will now grant you divine energy when your "
-                           "reserves of magic are depleted.");
+        simple_god_message("은 당신의 마법에너지가 고갈 될 때 신성한 "
+                           "에너지를 부여할 것이다.");
         mpr("이런 방식으로 주문을 시전 한 후에는 잠깐동안 "
             "마법에 닿지 못한다.");
         you.attribute[ATTR_DIVINE_ENERGY] = 1;
         break;
 
     case ABIL_SIF_MUNA_STOP_DIVINE_ENERGY:
-        simple_god_message(" stops granting you divine energy.");
+        simple_god_message("은 당신에게 신성한 에너지를 부여하는 것을 중단했다.");
         you.attribute[ATTR_DIVINE_ENERGY] = 0;
         break;
 
@@ -3007,7 +3007,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_PAKELLAS_SUPERCHARGE:
     {
         fail_check();
-        simple_god_message(" will supercharge a wand.");
+        simple_god_message("이 완드를 과충할 것이다.");
         // included in default force_more_message
 
         int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,

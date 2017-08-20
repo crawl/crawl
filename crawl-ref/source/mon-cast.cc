@@ -255,7 +255,7 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
             int damage = 0;
             fire_los_attack_spell(slot.spell, splpow, &caster, false, &damage);
             if (damage > 0 && caster.heal(damage))
-                simple_monster_message(caster, " is healed.");
+                simple_monster_message(caster, "은 치유되었다.");
         },
         nullptr,
         MSPELL_NO_AUTO_NOISE,
@@ -696,12 +696,12 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
     {
         const char* msgs[] =
         {
-            " casts a cantrip, but nothing happens.",
-            " begins to cast a cantrip, but forgets the words!",
-            " miscasts a cantrip.",
-            " looks braver for a moment.",
-            " looks encouraged for a moment.",
-            " looks satisfied for a moment.",
+            "이 장난을 외웠지만, 아무 일도 일어나지 않았다.",
+            "이 장난을 외우기 시작했지만, 단어를 잊어버렸다!",
+            "이 장난을 사용하는데 실패했다.",
+            "은 잠시 용감해보였다.",
+            "은 잠시 용맹해진 것 같다.",
+            "은 잠시 만족스러워 보인다.",
         };
 
         simple_monster_message(mons, RANDOM_ELEMENT(msgs), channel);
@@ -751,7 +751,7 @@ static void _cast_cantrip(monster &mons, mon_spell_slot slot, bolt& pbolt)
 static void _cast_injury_mirror(monster &mons, mon_spell_slot slot, bolt&)
 {
     const string msg
-        = make_stringf(" offers %s to %s, and fills with unholy energy.",
+        = make_stringf("은 %s을(를) %s에게 바치고, 불경한 에너지로 가득찼다.",
                        mons.pronoun(PRONOUN_REFLEXIVE).c_str(),
                        god_name(mons.god).c_str());
     simple_monster_message(mons, msg.c_str(), MSGCH_MONSTER_SPELL);
@@ -2833,7 +2833,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
             mon->behaviour = BEH_SEEK;
             mon->foe = foe;
             ++num_recalled;
-            simple_monster_message(*mon, " is recalled.");
+            simple_monster_message(*mon, "은(는) 소집했다.");
         }
         // Can only recall a couple things at once
         if (num_recalled == recall_target)
@@ -3285,7 +3285,7 @@ static void _cast_black_mark(monster* agent)
             && mons_has_attacks(*mon))
         {
             mon->add_ench(ENCH_BLACK_MARK);
-            simple_monster_message(*mon, " begins absorbing vital energies!");
+            simple_monster_message(*mon, "은(는) 생명력을 흡수하기 시작했다!");
         }
     }
 }
@@ -4124,7 +4124,7 @@ bool handle_mon_spell(monster* mons)
         if (interference == DO_BLOCK_ATTACK)
         {
             const string message
-                = make_stringf(" begins to %s, but is stunned by your will!",
+                = make_stringf("은 %s의 사용을 시작했지만, 당신의 의지로 인해 기절했다!",
                                _ru_spell_stop_desc(*mons).c_str());
             simple_monster_message(*mons, message.c_str(), MSGCH_GOD);
             mons->lose_energy(EUT_SPELL);
@@ -4513,7 +4513,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
     if (!hp_cost)
     {
         simple_monster_message(mons,
-                               " is infused with unholy energy, but nothing happens.",
+                               "은(는) 불경한 에너지를 주입받았지만, 아무 일도 일어나지 않았다.",
                                MSGCH_MONSTER_SPELL);
         return;
     }
@@ -4523,7 +4523,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
     if (you.can_see(mons))
     {
         simple_monster_message(mons,
-                               " is infused with unholy energy.",
+                               "은(는) 불경한 에너지를 주입받았다.",
                                MSGCH_MONSTER_SPELL);
     }
     else
@@ -4535,7 +4535,7 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
         if (mons.heal(hp_cost * 2 / 3))
         {
             simple_monster_message(mons,
-                " draws life force from you and is healed!");
+                "은(는) 당신에게서 생명력을 끌어와서 치유되었다!");
         }
     }
     else
@@ -4546,13 +4546,13 @@ static void _mons_vampiric_drain(monster &mons, mon_spell_slot slot, bolt&)
         if (mtarget->is_summoned())
         {
             simple_monster_message(mons,
-                                   make_stringf(" draws life force from %s!",
+                                   make_stringf("은(는) %s에게서 생명력을 끌어왔다!",
                                                 targname.c_str()).c_str());
         }
         else if (mons.heal(hp_cost * 2 / 3))
         {
             simple_monster_message(mons,
-                make_stringf(" draws life force from %s and is healed!",
+                make_stringf("은(는) %s에게서 생명력을 끌어와서 치유되었다!",
                 targname.c_str()).c_str());
         }
         if (mtarget->alive())
@@ -4701,7 +4701,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
     if (actual)
     {
         if (you.can_see(*mons))
-            simple_monster_message(*mons, " radiates an aura of fear!");
+            simple_monster_message(*mons, "이(가) 공포의 형상을 발산한다!");
         else if (you.see_cell(mons->pos()))
             mpr("공포의 기운이 대기를 뒤덮고 있다!");
     }
@@ -4779,7 +4779,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             retval = 1;
 
             if (you.can_see(**mi))
-                simple_monster_message(**mi, " looks frightened!");
+                simple_monster_message(**mi, "이(가) 무서워보인다!");
 
             behaviour_event(*mi, ME_SCARE, mons);
 
@@ -5018,7 +5018,7 @@ static void _blink_allies_encircle(const monster* mon)
                 if (!(ally->flags & MF_WAS_IN_VIEW)
                     && ally->flags & MF_SEEN)
                 {
-                    simple_monster_message(*ally, " blinks into view!");
+                    simple_monster_message(*ally, "이(가) 시야에서 점멸한다!");
                 }
                 ally->behaviour = BEH_SEEK;
                 ally->foe = mon->foe;
@@ -5886,7 +5886,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         else
         {
             simple_monster_message(*foe->as_monster(),
-                                   " is struck by the twisting air!");
+                                   "이(가) 비틀린 공기에 맞았다!");
         }
 
         pbolt.flavour = BEAM_AIR;
@@ -5920,7 +5920,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         if (foe->is_player())
             mpr("오크 형상의 유령들이 당신의 주위에서 생겨났다.");
         else
-            simple_monster_message(*foe->as_monster(), " is surrounded by Orcish apparitions.");
+            simple_monster_message(*foe->as_monster(), "이(가) 오크적인 환영에 둘러싸여있다.");
         _mons_cast_spectral_orcs(mons);
         return;
 
@@ -6631,7 +6631,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_INJURY_BOND:
     {
         simple_monster_message(*mons,
-            make_stringf(" begins to accept %s allies' injuries.",
+            make_stringf("이(가) 동맹의 부상을 %s으로 받아들인다.",
                          mons->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         // FIXME: allies preservers vs the player
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
@@ -6664,7 +6664,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_ENGLACIATION:
         if (you.can_see(*mons))
-            simple_monster_message(*mons, " radiates an aura of cold.");
+            simple_monster_message(*mons, "은(는) 냉기의 오라를 발산했다.");
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("한기가 당신을 지나쳐갔다.");
         apply_area_visible([splpow, mons] (coord_def where) {
@@ -6853,7 +6853,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             monster* targ = targets[random2(targets.size())];
             if (cast_phantom_mirror(mons, targ))
-                simple_monster_message(*targ, " shimmers and seems to become two!");
+                simple_monster_message(*targ, "이(가) 흐릿해지고는 두명처럼 보인다!");
         }
         return;
     }
@@ -6916,12 +6916,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_REPEL_MISSILES:
-        simple_monster_message(*mons, " begins repelling missiles!");
+        simple_monster_message(*mons, "은(는) 투사체 방어를 하기 시작했다!");
         mons->add_ench(mon_enchant(ENCH_REPEL_MISSILES));
         return;
 
     case SPELL_DEFLECT_MISSILES:
-        simple_monster_message(*mons, " begins deflecting missiles!");
+        simple_monster_message(*mons, "은(는) 투사체 저지를 하기 시작했다!");
         mons->add_ench(mon_enchant(ENCH_DEFLECT_MISSILES));
         return;
 
@@ -6945,7 +6945,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CLEANSING_FLAME:
-        simple_monster_message(*mons, " channels a blast of cleansing flame!");
+        simple_monster_message(*mons, "에게서 정화의 불길이 폭발적으로 흘러나온다!");
         cleansing_flame(5 + (5 * mons->spell_hd(spell_cast) / 12),
                         CLEANSING_FLAME_SPELL, mons->pos(), mons);
         return;
@@ -6976,13 +6976,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_AURA_OF_BRILLIANCE:
-        simple_monster_message(*mons, " begins emitting a brilliant aura!");
+        simple_monster_message(*mons, "은(는) 총명의 오라를 내뿜기 시작한다!");
         mons->add_ench(ENCH_BRILLIANCE_AURA);
         aura_of_brilliance(mons);
         return;
 
     case SPELL_BIND_SOULS:
-        simple_monster_message(*mons, " binds the souls of nearby monsters.");
+        simple_monster_message(*mons, "이(가) 근처에 있는 괴물의 영혼을 속박한다.");
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
         {
             if (*mi == mons)

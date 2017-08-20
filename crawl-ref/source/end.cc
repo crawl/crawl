@@ -253,13 +253,13 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
             if (holi & (MH_NONLIVING | MH_UNDEAD))
             {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... oblivion!\"");
+                simple_god_message(" 괴음: \"넌 날 실망시켰다! "
+                                   "오너라... 망각속으로!\"");
             }
             else
             {
-                simple_god_message(" rasps: \"You have failed me! "
-                                   "Welcome... death!\"");
+                simple_god_message(" 괴음: \"넌 날 실망시켰다! "
+                                   "오너라... 죽음속으로!\"");
             }
             break;
         }
@@ -280,9 +280,9 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
             {
                 if (killer->is_monster() && killer->deity() == GOD_BEOGH)
                 {
-                    const string msg = " appreciates "
-                        + killer->name(DESC_ITS)
-                        + " killing of a heretic priest.";
+                    const string msg = "이 이교도 성직자 "
+                        + killer->name(DESC_PLAIN)
+                        + "을(를) 살해한 것을 높이 평가한다.";
                     simple_god_message(msg.c_str());
                 }
             }

@@ -708,9 +708,9 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 {
                     if (have_passive(passive_t::safe_distortion))
                     {
-                        simple_god_message(" absorbs the residual spatial "
-                                           "distortion as you unwield your "
-                                           "weapon.");
+                        simple_god_message("가 당신이 무기를 해제할 때 "
+                                           "잔류한 공간 왜곡을 "
+                                           "흡수했다.");
                         break;
                     }
                     // Makes no sense to discourage unwielding a temporarily
@@ -1217,8 +1217,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mpr("자신감이 솟구친다.");
         else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         {
-            simple_god_message(" says: An ascetic of your devotion"
-                               " has no use for such trinkets.");
+            simple_god_message("가 말했다: 네 고행에 대한 헌신은 "
+                               "그런 장식품 따위가 없어도 알고 있다.");
         }
         else if (you_worship(GOD_GOZAG))
             simple_god_message("는 오직 금화만을 원한다!");

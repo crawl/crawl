@@ -331,7 +331,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
             if (!mon->visible_to(&you))
                 mpr("그물이 어떤 거대한 것에 맞고 튕겨져 나왔다!");
             else
-                simple_monster_message(*mon, " is too large for the net to hold!");
+                simple_monster_message(*mon, "은(는) 그물로 포박하기엔 너무 거대하다!");
         }
         return false;
     }
@@ -368,7 +368,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
             if (!mon->visible_to(&you))
                 mpr("무언가가 그물에 걸렸다!");
             else
-                simple_monster_message(*mon, " is caught in the net!");
+                simple_monster_message(*mon, "은(는) 그물에 걸렸다!");
         }
         return true;
     }
@@ -424,7 +424,7 @@ void check_net_will_hold_monster(monster* mons)
             free_stationary_net(net);
 
         simple_monster_message(*mons,
-                               " drifts right through the net!");
+                               "은(는) 그물 속에서 허우적거렸다!");
     }
     else
         mons->add_ench(ENCH_HELD);
@@ -546,7 +546,7 @@ void trap_def::trigger(actor& triggerer)
             if (you_trigger)
                 mpr("당신은 골루브리아의 통로에 들어갔다.");
             else
-                simple_monster_message(*m, " enters the passage of Golubria.");
+                simple_monster_message(*m, "은(는) 골루브리아의 통로에 입장했다.");
 
             if (triggerer.move_to_pos(to))
             {
@@ -651,7 +651,7 @@ void trap_def::trigger(actor& triggerer)
                 if (you_know)
                 {
                     simple_monster_message(*m,
-                                           " fails to trigger a blade trap.");
+                                           "은(는) 칼날 함정을 작동하는데 실패했다.");
                 }
                 else
                     hide();
@@ -661,7 +661,7 @@ void trap_def::trigger(actor& triggerer)
             {
                 if (in_sight
                     && !simple_monster_message(*m,
-                                            " avoids a huge, swinging blade."))
+                                            "은(는) 휘젓는 거대한 칼날을 피했다."))
                 {
                     mpr("거대한 칼날이 튀어나왔다!");
                 }
@@ -732,7 +732,7 @@ void trap_def::trigger(actor& triggerer)
                 // Not triggered, trap stays.
                 triggered = false;
                 if (you_know)
-                    simple_monster_message(*m, " fails to trigger a net trap.");
+                    simple_monster_message(*m, "은(는) 그물 함정을 작동하는데 실패했다.");
                 else
                     hide();
             }
@@ -745,8 +745,8 @@ void trap_def::trigger(actor& triggerer)
                 if (in_sight)
                 {
                     if (!simple_monster_message(*m,
-                                                " nimbly jumps out of the way "
-                                                "of a falling net."))
+                                                "은(는) 그물이 떨어지는 경로에서 날렵하게"
+                                                "점프해 벗어났다."))
                     {
                         mpr("거대한 그물이 떨어졌다!");
                     }
@@ -796,7 +796,7 @@ void trap_def::trigger(actor& triggerer)
             if (you_trigger)
                 mprf("당신은 %s로 그물을 찢어버렸다.", you_know ? "" : "");
             else if (m)
-                simple_monster_message(*m, " tears through a web.");
+                simple_monster_message(*m, "은(는) 거미줄을 관통해 찢어발겼다.");
             break;
         }
 
@@ -805,9 +805,9 @@ void trap_def::trigger(actor& triggerer)
             if (m)
             {
                 if (m->is_insubstantial())
-                    simple_monster_message(*m, " passes through a web.");
+                    simple_monster_message(*m, "은(는) 거미줄을 통과했다.");
                 else if (mons_genus(m->type) == MONS_JELLY)
-                    simple_monster_message(*m, " oozes through a web.");
+                    simple_monster_message(*m, "은(는) 거미줄을 통과해 흘렀다.");
                 // too spammy for spiders, and expected
             }
             break;
@@ -835,7 +835,7 @@ void trap_def::trigger(actor& triggerer)
             {
                 // Not triggered, trap stays.
                 if (you_know)
-                    simple_monster_message(*m, " evades a web.");
+                    simple_monster_message(*m, "은(는) 거미줄을 회피했다.");
                 else
                     hide();
             }
@@ -845,7 +845,7 @@ void trap_def::trigger(actor& triggerer)
                 if (in_sight)
                 {
                     if (m->visible_to(&you))
-                        simple_monster_message(*m, " is caught in a web!");
+                        simple_monster_message(*m, "은(는) 거미줄에 걸렸다!");
                     else
                         mpr("무언가가 걸리면서 거미줄이 미친듯이 흔들렸다!");
                 }
@@ -1238,11 +1238,11 @@ void monster_web_cleanup(const monster &mons, bool quiet)
         {
             // temp web from e.g. jumpspider/spidersack
             if (!quiet)
-                simple_monster_message(mons, " tears the web.");
+                simple_monster_message(mons, "은(는) 거미줄을 찢어발겼다.");
             destroy_trap(mons.pos());
         }
         else if (!quiet)
-            simple_monster_message(mons, " pulls away from the web.");
+            simple_monster_message(mons, "은(는) 거미줄에서 벗어났다.");
     }
 }
 
@@ -1783,7 +1783,7 @@ bool ensnare(actor *fly)
     }
     else
     {
-        simple_monster_message(*fly->as_monster(), " is caught in a web!");
+        simple_monster_message(*fly->as_monster(), "은(는) 거미줄에 걸렸다!");
         fly->as_monster()->add_ench(ENCH_HELD);
     }
 
