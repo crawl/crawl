@@ -4070,6 +4070,10 @@ static void tag_read_you_dungeon(reader &th)
     }
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_LEVEL_XP_INFO)
+    {
+#endif
     auto xp_info = unmarshallLevelXPInfo(th);
     ASSERT(xp_info.is_global());
     you.set_level_xp_info(xp_info);
@@ -4081,6 +4085,9 @@ static void tag_read_you_dungeon(reader &th)
         ASSERT(!xp_info.is_global());
         you.set_level_xp_info(xp_info);
     }
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
@@ -5879,6 +5886,9 @@ void unmarshallMonster(reader &th, monster& m)
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_LEVEL_XP_INFO)
+#endif
     m.is_spawn        = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_MON_AC_EV)
