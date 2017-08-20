@@ -2332,8 +2332,8 @@ int food_value(const item_def &item)
 
     const food_def &food = Food_prop[Food_index[item.sub_type]];
 
-    return you.get_mutation_level(MUT_HERBIVOROUS) > 0 ? food.carn_nutr
-         : you.get_mutation_level(MUT_CARNIVOROUS) > 0 ? food.herb_nutr
+    return you.get_mutation_level(MUT_HERBIVOROUS) > 0 ? food.herb_nutr
+         : you.get_mutation_level(MUT_CARNIVOROUS) > 0 ? food.carn_nutr
                                                        : food.normal_nutr;
 }
 
