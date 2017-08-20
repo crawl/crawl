@@ -1190,8 +1190,6 @@ static void _input()
 
     _update_replay_state();
 
-    _update_place_info();
-
     crawl_state.clear_god_acting();
 
 }
@@ -2279,6 +2277,8 @@ void world_reacts()
     {
         if (you.num_turns < INT_MAX)
             you.num_turns++;
+
+        _update_place_info();
 
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
