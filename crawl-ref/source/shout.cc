@@ -599,8 +599,8 @@ static bool _issue_order(int keyn, int &mons_targd)
         case 'a':
             if (env.sanctuary_time > 0)
             {
-                if (!yesno("An ally attacking under your orders might violate "
-                           "sanctuary; order anyway?", false, 'n'))
+                if (!yesno("당신의 명령에 따라 공격하는 동료는 성역을 위반할 수 있다; "
+                           "그래도 명령하겠는가?", false, 'n'))
                 {
                     canned_msg(MSG_OK);
                     return false;

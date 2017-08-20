@@ -141,9 +141,9 @@ spret_type cast_tornado(int powc, bool fail)
 
     fail_check();
 
-    mprf("A great vortex of raging winds %s.",
+    mprf("거친 바람의 큰 소용돌이가 %s.",
          (you.airborne() || get_form()->forbids_flight()) ?
-         "appears around you" : "appears and lifts you up");
+         "당신의 주변에 나타난다" : "나타나 당신을 들어올린다");
 
     if (you.fishtail)
         merfolk_stop_swimming();

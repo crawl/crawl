@@ -3743,8 +3743,8 @@ void god_pitch(god_type which_god)
     {
         if (fee == 0)
         {
-            service_fee = string("Gozag will waive the service fee if you ")
-                          + random_choose("act now", "join today") + "!\n";
+            service_fee = string("고자그는 서비스 요금을 면제 해준다 ")
+                          + random_choose("지금 하면", "오늘 가입하면") + "!\n";
         }
         else
         {
@@ -3754,9 +3754,9 @@ void god_pitch(god_type which_god)
                     fee, you.gold);
         }
     }
-    const string prompt = make_stringf("%sDo you wish to %sjoin this religion?",
+    const string prompt = make_stringf("%s이 종교에 %s가입하고 싶은가?",
                                        service_fee.c_str(),
-                                       (you.worshipped[which_god]) ? "re" : "");
+                                       (you.worshipped[which_god]) ? "재" : "");
 
     cgotoxy(1, 21, GOTO_CRT);
     textcolour(channel_to_colour(MSGCH_PROMPT));
@@ -3767,7 +3767,7 @@ void god_pitch(god_type which_god)
         return;
     }
 
-    const string abandon = make_stringf("Are you sure you want to abandon %s?",
+    const string abandon = make_stringf("정말로 %s을 버릴 것인가?",
                                         god_name(you.religion).c_str());
     if (!you_worship(GOD_NO_GOD) && !yesno(abandon.c_str(), false, 'n', true,
                                            true, false, nullptr, GOTO_CRT))

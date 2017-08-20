@@ -1468,11 +1468,11 @@ bool check_form_stat_safety(transformation new_form)
     if (!bad_str && !bad_dex)
         return true;
 
-    string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
+    string prompt = make_stringf("%s 당신의 %s이 0이 된다. 계속하겠는가?",
                                  new_form == transformation::none
-                                     ? "Turning back"
-                                     : "Transforming",
-                                 bad_str ? "strength" : "dexterity");
+                                     ? "되돌아가면"
+                                     : "변신하면",
+                                 bad_str ? "힘" : "민첩");
     if (yesno(prompt.c_str(), false, 'n'))
         return true;
 

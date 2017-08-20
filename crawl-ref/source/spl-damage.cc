@@ -1722,7 +1722,7 @@ static bool maybe_abort_ignite()
     if (you.duration[DUR_FIRE_SHIELD] || you.has_mutation(MUT_IGNITE_BLOOD))
         return false;
 
-    string prompt = "You are standing ";
+    string prompt = "당신은 ";
 
     // XXX XXX XXX major code duplication (ChrisOelmueller)
 
@@ -1730,9 +1730,9 @@ static bool maybe_abort_ignite()
     {
         if (cloud->type == CLOUD_MEPHITIC || cloud->type == CLOUD_POISON)
         {
-            prompt += "in a cloud of ";
+            prompt += "";
             prompt += cloud->cloud_name(true);
-            prompt += "! Ignite poison anyway?";
+            prompt += "의 구름 위에 서있다! 그래도 발화하겠는가?";
             if (!yesno(prompt.c_str(), false, 'n'))
                 return true;
         }
@@ -1740,7 +1740,7 @@ static bool maybe_abort_ignite()
 
     if (apply_area_visible(_ignite_ally_harm, you.pos()) > 0)
     {
-        return !yesno("You might harm nearby allies! Ignite poison anyway?",
+        return !yesno("당신의 동료를 해칠 수도 있다! 그래도 발화하겠는가?",
                       false, 'n');
     }
 

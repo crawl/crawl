@@ -75,7 +75,7 @@ spret_type cast_excruciating_wounds(int power, bool fail)
     if (dangerous_disto)
     {
         const string prompt =
-              "Really brand " + weapon.name(DESC_INVENTORY) + "?";
+              "정말로 " + weapon.name(DESC_INVENTORY) + "에 속성을 부여하겠는가?";
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -93,8 +93,8 @@ spret_type cast_excruciating_wounds(int power, bool fail)
     }
 
     noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());
-    mprf("%s %s in agony.", weapon.name(DESC_YOUR).c_str(),
-                            silenced(you.pos()) ? "writhes" : "shrieks");
+    mprf("%s은(는) 고통에 %s.", weapon.name(DESC_YOUR).c_str(),
+                            silenced(you.pos()) ? "몸부림쳤다" : "비명을 질렀다");
 
     if (!has_temp_brand)
     {

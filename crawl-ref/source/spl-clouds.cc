@@ -286,7 +286,7 @@ spret_type cast_corpse_rot(bool fail)
         {
             if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
-                if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
+                if (!yesno(("정말로 시체부패를 " + si->name(DESC_PLAIN) + "이(가) 서있는 곳에 시전하겠는가?").c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
                     return SPRET_ABORT;

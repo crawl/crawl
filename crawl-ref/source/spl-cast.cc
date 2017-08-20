@@ -837,9 +837,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
-            "Casting this spell will cause instant excommunication! "
-            "Really cast?" :
-            "Casting this spell will place you under penance. Really cast?",
+            "이 주문을 시전하면 즉시 파문당할 것이다! "
+            "정말로 시전하겠는가?" :
+            "이 주문을 시전하면 참회당할 것이다. 정말로 시전하겠는가?",
             true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -1110,7 +1110,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             if (!action.matches(name))
                 continue;
 
-            string prompt = "Really cast " + string(name) + "?";
+            string prompt = "정말로 " + string(name) + "을(를) 시전하겠는가?";
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -1127,7 +1127,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
         && !fake_spell)
     {
         string prompt = make_stringf("The spell is %s to cast%s "
-                                     "Continue anyway?",
+                                     "그래도 계속하겠는가?",
                                      fail_severity_adjs[severity],
                                      severity > 1 ? "!" : ".");
 
