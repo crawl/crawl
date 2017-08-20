@@ -69,7 +69,7 @@ static const map<species_type, species_def> species_data =
     0, 0, 0, 3,
     MONS_GNOLL,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    7, 7, 7, // 21
+    10, 10, 10, // 30
     { STAT_STR }, 28,  // No natural stat gain, STR is a placeholder
     { { MUT_STRONG_NOSE, 1, 1 },  { MUT_FANGS, 1, 1 }, 
       { MUT_ADAPTATION, 1, 9 }, },
