@@ -21,10 +21,10 @@
 {{
 function pan_lord_epilogue(name)
     local msgs = {
-        Mnoleg = "The air here is shimmering with an eerie glow.",
-        ['Lom Lobon'] = "You sense a powerful magical presence. It is not pleased.",
-        Cerebov = "Searing heat pours from the floors and walls of this place.",
-        ['Gloorx Vloq'] = "Shadowy figures dance across your vision."
+        Mnoleg = "이곳의 공기가 섬뜩한 빛으로 반짝인다.",
+        ['Lom Lobon'] = "당신은 마법적 존재감을 감지했다. 그것은 기뻐 보이지않는다.",
+        Cerebov = "이 장소의 바닥과 벽에서 뜨거운 열기가 쏟아진다.",
+        ['Gloorx Vloq'] = "어둠의 형상이 당신의 시야를 가로질러 춤춘다."
     }
     local runes = {
         Mnoleg = "glowing",
@@ -34,7 +34,7 @@ function pan_lord_epilogue(name)
     }
 
     crawl.mpr(msgs[name], "warning")
-    crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
+    crawl.mpr("강력한 판데모니엄 군주 " .. name .. " 이(가) 여기에 있다.", "warning")
     -- Counterpart to branch_rune_desc from lookup-help.cc
     crawl.mpr("It guards the " .. runes[name] .. " rune of Zot.")
     crawl.take_note('Entered the realm of ' .. name .. '.')

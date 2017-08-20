@@ -108,10 +108,10 @@ bool attribute_increase()
     if (you.species == SP_GNOLL)
         return true;
 
-    const string stat_gain_message = make_stringf("Your experience leads to a%s "
-                                                  "increase in your attributes!",
+    const string stat_gain_message = make_stringf("당신의 경험으로 당신의 능력치가 %s"
+                                                  " 증가하였다!",
                                                   you.species == SP_DEMIGOD ?
-                                                  " dramatic" : "n");
+                                                  " 드마라틱하게" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);

@@ -152,9 +152,9 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        string prompt = make_stringf("Really %s into that cloud of %s?",
-                                     move_verb.c_str(),
-                                     cloud_type_name(ctype).c_str());
+        string prompt = make_stringf("정말로 %s 구름 속으로 %s?",
+                                     cloud_type_name(ctype).c_str(),
+                                     move_verb.c_str());
         learned_something_new(HINT_CLOUD_WARNING);
 
         if (!yesno(prompt.c_str(), false, 'n'))
@@ -176,7 +176,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
     if (trap->type == TRAP_ZOT && !trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        string msg = "Do you really want to %s into the Zot trap?";
+        string msg = "정말로 조트의 함정 속으로 %s?";
         string prompt = make_stringf(msg.c_str(), move_verb.c_str());
 
         if (prompted)
@@ -193,10 +193,10 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
 
         if (prompted)
             *prompted = true;
-        prompt = make_stringf("Really %s %s that %s?", move_verb.c_str(),
+        prompt = make_stringf("정말로 %s %s that %s?", move_verb.c_str(),
                               (trap->type == TRAP_ALARM
-                               || trap->type == TRAP_PLATE) ? "onto"
-                              : "into",
+                               || trap->type == TRAP_PLATE) ? "에"
+                              : "으로",
                               feature_description_at(p, false, DESC_BASENAME,
                                                      false).c_str());
         if (!yesno(prompt.c_str(), true, 'n'))
@@ -332,7 +332,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     if (mons->is_constricted())
     {
         if (!quiet)
-            simple_monster_message(*mons, " is being constricted!");
+            simple_monster_message(*mons, "이(가) 조여지고 있다!");
         return false;
     }
 
@@ -393,9 +393,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 static void _splash()
 {
     if (you.can_swim())
-        noisy(4, you.pos(), "Floosh!");
+        noisy(4, you.pos(), "풍덩!");
     else if (!you.can_water_walk())
-        noisy(8, you.pos(), "Splash!");
+        noisy(8, you.pos(), "첨벙!");
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
@@ -422,9 +422,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             {
                 if (!feat_is_water(old_feat))
                 {
-                    mprf("You %s the %s water.",
-                         stepped ? "enter" : "fall into",
-                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                    mprf("당신은 %s 물 속에 %s.",
+                         new_grid == DNGN_SHALLOW_WATER ? "얕은" : "깊은",
+                         stepped ? "들어갔다" : "빠졌다");
                 }
 
                 if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
@@ -2762,7 +2762,7 @@ void level_change(bool skip_attribute_increase)
             if (new_exp == 27)
                 mprf(MSGCH_INTRINSIC_GAIN, "당신은 최고 레벨인 27레벨에 도달했다!");
             else if (new_exp == you.get_max_xl())
-                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d, the highest you will ever reach!",
+                mprf(MSGCH_INTRINSIC_GAIN, "당신이 도달할 수 있는 최고 레벨, %d레벨에 도달했다!",
                         you.get_max_xl());
             else
             {
@@ -2873,10 +2873,10 @@ void level_change(bool skip_attribute_increase)
                         const int newapt = species_apt(sk, you.species);
                         if (oldapt != newapt)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "You learn %s %s%s.",
+                            mprf(MSGCH_INTRINSIC_GAIN, "당신은 %s을(를) %s%s 익힌다.",
                                  skill_name(sk),
-                                 abs(oldapt - newapt) > 1 ? "much " : "",
-                                 oldapt > newapt ? "slower" : "quicker");
+                                 abs(oldapt - newapt) > 1 ? "꽤 " : "",
+                                 oldapt > newapt ? "느리게" : "빠르게");
                         }
 
                         you.skills[sk] = saved_skills[sk];

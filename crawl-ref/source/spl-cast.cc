@@ -87,16 +87,16 @@ void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
     {
-        const string modifier = (enhanced  < -2) ? "extraordinarily" :
-                                (enhanced == -2) ? "extremely" :
-                                (enhanced ==  2) ? "strong" :
-                                (enhanced  >  2) ? "huge"
+        const string modifier = (enhanced  < -2) ? "압도적으로 강력한" :
+                                (enhanced == -2) ? "아주 강력한" :
+                                (enhanced ==  2) ? "강대한" :
+                                (enhanced  >  2) ? "커다란"
                                                  : "";
-        mprf("You feel %s %s",
-             !modifier.length() ? "a"
+        mprf("당신은 %s %s",
+             !modifier.length() ? ""
                                 : article_a(modifier).c_str(),
-             (enhanced < 0) ? "numb sensation."
-                            : "surge of power!");
+             (enhanced < 0) ? "무감각하게 느낀다."
+                            : "힘의 파동을 느꼈다!");
     }
 }
 
@@ -978,7 +978,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             && you.props[SAP_MAGIC_KEY].get_int() < 3
             && !fake_spell && coinflip())
         {
-            mprf(MSGCH_WARN, "Your control over your magic is sapped.");
+            mprf(MSGCH_WARN, "당신의 마법에 대한 지배력이 약화되었다.");
             you.props[SAP_MAGIC_KEY].get_int()++;
         }
 
@@ -1567,7 +1567,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         if (is_valid_spell(spell))
         {
-            mprf(MSGCH_ERROR, "%s 사용가능한 주문이 아니다.",
+            mprf(MSGCH_ERROR, "%s은(는) 사용가능한 주문이 아니다.",
                  spell_title(spell));
         }
         else

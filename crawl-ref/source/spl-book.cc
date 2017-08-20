@@ -475,13 +475,13 @@ static string _filter_memorizable_spells(const spell_set &available_spells,
         return "당신은 이미 사용 가능한 주문을 모두 외우고 있다.";
     if (num_restricted == total || num_restricted + num_known == total)
     {
-        return "You cannot currently memorise any of the available spells "
-               "because you cannot use those schools of magic.";
+        return "당신은 해당 학파의 마법을 사용할 수 없기 때문에 "
+               "현재 사용 가능한 마법을 시전할 수 없다.";
     }
     if (num_misc == total || (num_known + num_misc) == total
         || num_misc + num_known + num_restricted == total)
     {
-        return "You cannot memorise any of the available spells.";
+        return "당신은 어떤 마법도 시전할 수 없다.";
     }
 
     return "알 수 없는 이유로 새 주문을 기억 할 수 없다.reason; please "
@@ -884,7 +884,7 @@ bool learn_spell(spell_type specspell, bool wizard)
             && !player_effectively_in_light_armour())
         {
             mprf(MSGCH_WARN,
-                 "Your armour is too heavy for you to cast this spell!");
+                 "갑옷이 너무 무거워서 이 마법을 사용할 수 없다!");
         }
 
         const int severity = fail_severity(specspell);

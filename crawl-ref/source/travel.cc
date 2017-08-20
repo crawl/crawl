@@ -755,7 +755,7 @@ static void _explore_find_target_square()
         const bool unknown_trans = _level_has_unknown_transporters();
         if (!estatus && !unknown_trans)
         {
-            mpr("Done exploring.");
+            mpr("탐사 완료.");
             learned_something_new(HINT_DONE_EXPLORE);
         }
         else
@@ -783,7 +783,7 @@ static void _explore_find_target_square()
                                                       inacc.end()).c_str());
                 reasons.push_back(inacc_desc.c_str());
             }
-            mprf("Partly explored, %s.",
+            mprf("탐사를 부분적으로 완료하였다, %s.",
                  comma_separated_line(reasons.begin(), reasons.end()).c_str());
         }
         stop_running();
@@ -2904,9 +2904,9 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
             || target.pos.x != -1 && target.pos != you.pos())
         {
             if (!maybe_traversable)
-                mpr("Sorry, I don't know how to traverse that place.");
+                mpr("유감이지만 그 곳으로 가는 방법을 알지 못한다.");
             else
-                mpr("Sorry, I don't know how to get there.");
+                mpr("유감이지만 그 곳으로 도착 하는 방법을 알지 못한다.");
         }
     }
 

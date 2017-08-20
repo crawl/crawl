@@ -672,12 +672,12 @@ static const mutation_def mut_data[] =
 { MUT_TENGU_FLIGHT, 0, 2, mutflag::good, false,
   "able to fly",
 
-  {"You can fly.",
-   "You can fly continuously.",
+  {"당신은 날 수 있다.",
+   "당신은 계속 날 수 있다.",
    ""},
 
-  {"You have gained the ability to fly.",
-   "You can now fly continuously.",
+  {"당신은 이제 비행능력을 얻었다.",
+   "당신은 이제 영구히 날 수 있다.",
    ""},
 
   {"", "", ""},
@@ -686,8 +686,8 @@ static const mutation_def mut_data[] =
 { MUT_HURL_DAMNATION, 0, 1, mutflag::good, false,
   "hurl damnation",
 
-  {"You can hurl damnation.", "", ""},
-  {"You smell a hint of brimstone.", "", ""},
+  {"당신은 업화를 던질 수 있다.", "", ""},
+  {"당신은 유황에 대한 암시를 맡았다.", "", ""},
   {"", "", ""},
 },
 

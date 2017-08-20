@@ -953,13 +953,13 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
         if (mons->observable())
         {
             mprf("그러나, 공기는 %s에게 피해를 입히지 못했다!",
-                 mons->name(DESC_THE).c_str());
+                 mons->name(DESC_PLAIN).c_str());
             return SPRET_ABORT;
         }
 
         fail_check();
         mprf("공기의 흐름이 물결쳐 꼬였으나, %s에게 피해를 입히지 못하고 흩어졌다.",
-             mons->name(DESC_THE).c_str());
+             mons->name(DESC_PLAIN).c_str());
         // Bailing out early, no need to upset the gods or the target.
         return SPRET_SUCCESS; // you still did discover the invisible monster
     }
@@ -1809,9 +1809,9 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool tracer)
             : UA_MONSTER,
         RED, 100, &hitfunc);
 
-    mprf("%s %s the poison in %s surroundings!", agent->name(DESC_THE).c_str(),
-         agent->conj_verb("ignite").c_str(),
-         agent->pronoun(PRONOUN_POSSESSIVE).c_str());
+    mprf("%s은(는) %s 주위의 독을 %s 시켰다!", agent->name(DESC_PLAIN).c_str(),
+         agent->pronoun(PRONOUN_POSSESSIVE).c_str(),
+         agent->conj_verb("발화").c_str());
 
     // this could conceivably cause crashes if the player dies midway through
     // maybe split it up...?
@@ -2069,13 +2069,13 @@ spret_type cast_discharge(int pow, bool fail)
         else
         {
             const bool plural = coinflip();
-            mprf("%s blue arc%s ground%s harmlessly %s you.",
-                 plural ? "Some" : "A",
-                 plural ? "s" : "",
-                 plural ? " themselves" : "s itself",
-                 plural ? "around" : random_choose_weighted(2, "beside",
-                                                            1, "behind",
-                                                            1, "before"));
+            mprf("%s 시퍼런 방전%s이 %s을(를) 돌아 당신 %s 땅으로 흩어졌다.",
+                 plural ? "약간의" : "한",
+                 plural ? "들" : "",
+                 plural ? " 그들 자신" : "그 자체",
+                 plural ? "" : random_choose_weighted(2, "을 빗겨나가",
+                                                            1, "뒤쪽의",
+                                                            1, "앞의"));
         }
     }
     return SPRET_SUCCESS;

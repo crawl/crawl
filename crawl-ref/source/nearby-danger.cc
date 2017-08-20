@@ -230,7 +230,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             {
                 if (announce)
                 {
-                    mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
+                    mprf(MSGCH_WARN, "당신은 %s의 구름에 들어와 있다!",
                          cloud_type_name(type).c_str());
                 }
                 return false;
@@ -253,7 +253,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         if (you.duration[DUR_LIQUID_FLAMES])
         {
             if (announce)
-                mprf(MSGCH_WARN, "You are on fire!");
+                mprf(MSGCH_WARN, "당신의 몸에 불이 붙었다!");
 
             return false;
         }
@@ -272,9 +272,9 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         msg = make_stringf("%s is nearby!", m.name(DESC_A).c_str());
     }
     else if (visible.size() > 1)
-        msg = "There are monsters nearby!";
+        msg = "주변에 몬스터가 있다!";
     else if (_exposed_monsters_nearby(want_move))
-        msg = "There is a strange disturbance nearby!";
+        msg = "주변에서 무언가에게 방해를 받고 있다!";
     else
         return true;
 

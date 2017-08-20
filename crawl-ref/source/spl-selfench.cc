@@ -41,7 +41,7 @@ spret_type cast_deaths_door(int pow, bool fail)
 {
     fail_check();
     mpr("당신은 죽음의 문턱에 들어섰다!");
-    mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
+    mprf(MSGCH_SOUND, "모래시계에서 모래가 떨어지는 소리를 들은 것 같다...");
 
     set_hp(allowed_deaths_door_hp());
     deflate_hp(you.hp_max, false);
@@ -56,7 +56,7 @@ spret_type cast_deaths_door(int pow, bool fail)
 
 void remove_ice_armour()
 {
-    mprf(MSGCH_DURATION, "Your icy armour melts away.");
+    mprf(MSGCH_DURATION, "당신의 얼음 갑옷이 녹아 내린다.");
     you.redraw_armour_class = true;
     you.duration[DUR_ICY_ARMOUR] = 0;
 }
@@ -217,7 +217,7 @@ spret_type cast_revivification(int pow, bool fail)
 
     if (you.duration[DUR_DEATHS_DOOR])
     {
-        mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
+        mprf(MSGCH_DURATION, "삶이 당신의 손으로 다시 한번 되돌아왔다.");
         // XXX: better cause name?
         paralyse_player("Death's Door abortion");
         you.duration[DUR_DEATHS_DOOR] = 0;
@@ -232,12 +232,12 @@ spret_type cast_swiftness(int power, bool fail)
     if (you.in_liquid())
     {
         // Hint that the player won't be faster until they leave the liquid.
-        mprf("The %s foams!", you.in_water() ? "water"
-                                             : "liquid ground");
+        mprf("%s 거품!", you.in_water() ? "물"
+                                             : "액화된");
     }
 
     you.set_duration(DUR_SWIFTNESS, 12 + random2(power)/2, 30,
-                     "You feel quick.");
+                     "당신은 빨라진 것을 느낀다.");
     you.attribute[ATTR_SWIFTNESS] = you.duration[DUR_SWIFTNESS];
 
     return SPRET_SUCCESS;
