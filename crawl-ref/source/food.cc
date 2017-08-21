@@ -353,23 +353,15 @@ static void _describe_food_change(int food_increment)
 static void _finished_eating_message(food_type type)
 {
     const bool herbivorous = you.get_mutation_level(MUT_HERBIVOROUS) > 0;
-    const bool carnivorous = you.get_mutation_level(MUT_CARNIVOROUS) > 0;
 
     if (type == FOOD_RATION)
     {
         mpr("That ration really hit the spot!");
         return;
     }
-
-    if (herbivorous && food_is_meaty(type))
+    else if (herbivorous && food_is_meaty(type))
     {
         mpr("Blech - you need greens!");
-        return;
-    }
-
-    if (carnivorous && food_is_veggie(type))
-    {
-        mpr("Blech - you need meat!");
         return;
     }
 }
@@ -798,6 +790,9 @@ bool is_preferred_food(const item_def &food)
     if (you.species == SP_VAMPIRE)
         return is_blood_potion(food);
 
+    if (you.species == SP_GHOUL)
+        return food.is_type(OBJ_FOOD, FOOD_CHUNK);
+
 #if TAG_MAJOR_VERSION == 34
     if (food.is_type(OBJ_POTIONS, POT_PORRIDGE)
         && item_type_known(food))
@@ -806,20 +801,6 @@ bool is_preferred_food(const item_def &food)
     }
 #endif
 
-    if (food.base_type != OBJ_FOOD)
-        return false;
-
-    // Poisoned, mutagenic, etc. food should never be marked as "preferred".
-    if (is_bad_food(food))
-        return false;
-
-    if (you.get_mutation_level(MUT_CARNIVOROUS) > 0)
-        return food_is_meaty(food.sub_type);
-
-    if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
-        return food_is_veggie(food.sub_type);
-
-    // No food preference.
     return false;
 }
 
@@ -881,14 +862,7 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
     else if (food.base_type == OBJ_CORPSES)
         return false;
 
-    if (food_is_veggie(food))
-    {
-        if (you.get_mutation_level(MUT_CARNIVOROUS) > 0)
-            FAIL("Sorry, you're a carnivore.")
-        else
-            return true;
-    }
-    else if (food_is_meaty(food))
+    if (food_is_meaty(food))
     {
         if (you.get_mutation_level(MUT_HERBIVOROUS) > 0)
             FAIL("Sorry, you're a herbivore.")
