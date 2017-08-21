@@ -2309,23 +2309,6 @@ bool food_is_meaty(const item_def &item)
     return food_is_meaty(item.sub_type);
 }
 
-bool food_is_veggie(int food_type)
-{
-    ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
-            "Bad food type %d (NUM_FOODS = %d)",
-            food_type, NUM_FOODS);
-
-    return Food_prop[Food_index[food_type]].carn_nutr == 0;
-}
-
-bool food_is_veggie(const item_def &item)
-{
-    if (item.base_type != OBJ_FOOD)
-        return false;
-
-    return food_is_veggie(item.sub_type);
-}
-
 int food_value(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
