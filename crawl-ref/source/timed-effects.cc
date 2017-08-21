@@ -1376,6 +1376,12 @@ void update_level(int elapsedTime)
 
     const int turns = elapsedTime / 10;
 
+#ifdef DEBUG_DIAGNOSTICS
+    int mons_total = 0;
+
+    dprf("turns: %d", turns);
+#endif
+
     rot_floor_items(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
@@ -1391,56 +1397,55 @@ void update_level(int elapsedTime)
     dungeon_events.fire_event(
         dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));
 
-
-    update_monsters(turns);
-
-    delete_all_clouds();
-}
-
-void update_monsters(int turns)
-{
-#ifdef DEBUG_DIAGNOSTICS
-    int mons_total = 0;
-
-    dprf("turns: %d", turns);
-#endif
-
     for (monster_iterator mi; mi; ++mi)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mons_total++;
 #endif
 
-        // Pacified monsters often leave the level now.
-        if (mi->pacified() && turns > random2(40) + 21)
-        {
-            make_mons_leave_level(*mi);
-            continue;
-        }
-
-        // Following monsters don't get movement.
-        if (mi->flags & MF_JUST_SUMMONED)
+        if (!update_monster(*mi, turns))
             continue;
 
-        // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
-        // const bool healthy = (mi->hit_points * 2 > mi->max_hit_points);
 
-        mi->heal(div_rand_round(turns * mi->off_level_regen_rate(), 100));
-
-        // Handle nets specially to remove the trapping property of the net.
-        if (mi->caught())
-            mi->del_ench(ENCH_HELD, true);
-
-        _catchup_monster_moves(*mi, turns);
-
-        mi->foe_memory = max(mi->foe_memory - turns, 0);
-
-        if (turns >= 10 && mi->alive())
-            mi->timeout_enchantments(turns / 10);
     }
+
 #ifdef DEBUG_DIAGNOSTICS
     dprf("total monsters on level = %d", mons_total);
 #endif
+
+    delete_all_clouds();
+}
+
+bool update_monster(monster* mon, int turns)
+{
+    // Pacified monsters often leave the level now.
+    if (mon->pacified() && turns > random2(40) + 21)
+    {
+        make_mons_leave_level(mon);
+        return false;
+    }
+
+    // Following monsters don't get movement.
+    if (mon->flags & MF_JUST_SUMMONED)
+        return false;
+
+    // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
+    // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
+
+    mon->heal(div_rand_round(turns * mon->off_level_regen_rate(), 100));
+
+    // Handle nets specially to remove the trapping property of the net.
+    if (mon->caught())
+        mon->del_ench(ENCH_HELD, true);
+
+    _catchup_monster_moves(mon, turns);
+
+    mon->foe_memory = max(mon->foe_memory - turns, 0);
+
+    if (turns >= 10 && mon->alive())
+        mon->timeout_enchantments(turns / 10);
+
+    return true;
 }
 
 static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
