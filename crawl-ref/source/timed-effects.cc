@@ -1418,6 +1418,7 @@ void update_level(int elapsedTime)
 
 bool update_monster(monster* mon, int turns)
 {
+    mprf(MSGCH_WARN, "placing %s, %i", mon->name(DESC_PLAIN).c_str(),turns);
     // Pacified monsters often leave the level now.
     if (mon->pacified() && turns > random2(40) + 21)
     {
@@ -1428,6 +1429,8 @@ bool update_monster(monster* mon, int turns)
     // Following monsters don't get movement.
     if (mon->flags & MF_JUST_SUMMONED)
         return false;
+
+
 
     // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
     // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
