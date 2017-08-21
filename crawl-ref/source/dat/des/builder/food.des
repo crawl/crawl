@@ -35,8 +35,6 @@ ENDMAP
 # These should give around 20k nutrition.  Currently all strict
 # carnivores have a large buffer so they can survive lulls in edible supply
 # well until Crypt, so all-veggie is ok.
-#
-# normal/herbi/carni
 
 ##############################################################################
 # A number of fruity vaults, by blue_anna
@@ -47,10 +45,6 @@ ENDMAP
 #
 # TODO: Using KMONS and KITEM, we could have fruits on the same
 #       square as a plant, though it'd change nutrition averages.
-#
-# The average of the old averages, for herbivore 3, seemed to have
-# been ~10.1k nutrition. It now provides that much more directly.
-#
 NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup unrand
 KMONS:  P = plant
@@ -65,7 +59,6 @@ MAP
 .....
 ENDMAP
 
-# 18.8k/11.8k/13k
 NAME:   the_bakery
 DEPTH:  D:7-14
 # Previously this was a 25% CHANCE; I'm assuming this was meant to weight this
@@ -91,7 +84,6 @@ x.1xxx
 x+xxxx
 ENDMAP
 
-# 14k
 NAME:   david_nohive_1
 DEPTH:  D:8-14
 : food_weight(_G, 8)
@@ -119,7 +111,6 @@ MAP
 ............
 ENDMAP
 
-# 20.6k/46.5k/0
 NAME:     blue_anna_alchemist
 DEPTH:    D:8-14
 : food_weight(_G, 8)
@@ -291,7 +282,6 @@ xxdddxx
  xxxxx
 ENDMAP
 
-# 22.2k/17.7k/12.6k
 # An ogre roasts intruders over his little campfire.
 NAME:   grunt_ogre_cave
 DEPTH:  D:7-14
@@ -330,7 +320,6 @@ xx.xxx.
   @
 ENDMAP
 
-# 22.6k/22.6k/15k (+ perishable up to 16k, avg 6k)
 NAME:   grunt_livestock
 DEPTH:  D:7-14
 : food_weight(_G, 7)
