@@ -560,9 +560,6 @@ void OGLShapeBuffer::add_line(const GLWPrim &rect)
 }
 
 // Draw the buffer
-#if 0
-void OGLShapeBuffer::draw(const GLState &state, const GLW_3VF *pt, const GLW_3VF *ps)
-#endif
 void OGLShapeBuffer::draw(const GLState &state)
 {
     if (m_position_buffer.empty())

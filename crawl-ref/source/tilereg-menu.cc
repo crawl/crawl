@@ -107,14 +107,6 @@ int MenuRegion::handle_mouse(MouseEvent &event)
 
             return m_entries[entry].key;
         }
-#if 0
-        // TODO enne - these events are wonky on OS X.
-        // TODO enne - fix menus so that mouse wheeling doesn't easy exit
-        case MouseEvent::SCROLL_UP:
-            return CK_UP;
-        case MouseEvent::SCROLL_DOWN:
-            return CK_DOWN;
-#endif
         default:
             return 0;
         }
