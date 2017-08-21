@@ -162,14 +162,6 @@ void TextRegion::cgotoxy(int x, int y)
     print_x = x-1;
     print_y = y-1;
 
-#if 0
-    if (cursor_region != nullptr && cursor_flag)
-    {
-        cursor_x = -1;
-        cursor_y = -1;
-        cursor_region = nullptr;
-    }
-#endif
     if (cursor_flag)
     {
         cursor_x = print_x;

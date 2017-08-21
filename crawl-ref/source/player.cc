@@ -3078,9 +3078,6 @@ int player_stealth()
         // Now 2 * EP^2 / 3 after EP rescaling.
         const int evp = you.unadjusted_body_armour_penalty();
         const int penalty = evp * evp * 2 / 3;
-#if 0
-        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
-#endif
         stealth -= penalty;
 
         const int pips = armour_type_prop(arm->sub_type, ARMF_STEALTH);
