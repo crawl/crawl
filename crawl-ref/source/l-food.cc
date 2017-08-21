@@ -99,8 +99,7 @@ static int food_ismeaty(lua_State *ls)
 
 static int food_isveggie(lua_State *ls)
 {
-    LUA_ITEM(ls, item, 1);
-    lua_pushboolean(ls, food_is_veggie(*item));
+    lua_pushboolean(ls, false);
     return 1;
 }
 

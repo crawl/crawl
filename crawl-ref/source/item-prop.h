@@ -200,8 +200,6 @@ bool is_real_food(food_type food) PURE;
 bool is_blood_potion(const item_def &item) PURE;
 bool food_is_meaty(int food_type) PURE;
 bool food_is_meaty(const item_def &item) PURE;
-bool food_is_veggie(int food_type) PURE;
-bool food_is_veggie(const item_def &item) PURE;
 int food_value(const item_def &item) PURE;
 
 // generic item property functions:
