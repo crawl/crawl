@@ -483,8 +483,8 @@ up completely, revealing the dungeon floor.
 %%%%
 Growth ability
 
-Uses fruit to grow a ring of plants around yourself. If a complete ring cannot
-be formed (because you do not have enough fruit), plants will grow on squares
+Uses food to grow a ring of plants around yourself. If a complete ring cannot
+be formed (because you do not have enough food), plants will grow on squares
 adjacent to you that are close to monsters. The plants you create gain bonus
 health proportional to your Invocations skill.
 %%%%
@@ -503,7 +503,7 @@ explode, causing damage to you or your enemies.
 Evolution ability
 
 Turns plants and fungi into stronger species. Upgrading fungi requires piety,
-while upgrading plants requires fruit. Upgraded plants gain a bonus to attack
+while upgrading plants requires food. Upgraded plants gain a bonus to attack
 accuracy proportional to the user's Invocations skill, and oklob plants are
 more likely to spit acid at higher Invocations.
 %%%%
