@@ -679,7 +679,7 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_RATION,       "ration",       4700,  3250,  2950 },
+    { FOOD_RATION,       "ration",       4700,  2600,  2600 },
     { FOOD_CHUNK,        "chunk",        1000,  1300,     0 },
 
 #if TAG_MAJOR_VERSION == 34
