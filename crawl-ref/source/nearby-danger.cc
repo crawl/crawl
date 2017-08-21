@@ -245,7 +245,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         if (poison_is_lethal())
         {
             if (announce)
-                mprf(MSGCH_WARN, "There is a lethal amount of poison in your body!");
+                mprf(MSGCH_WARN, "당신의 몸은 치사량의 독에 중독되었다!");
 
             return false;
         }

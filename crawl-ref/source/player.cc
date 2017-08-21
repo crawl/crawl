@@ -242,18 +242,18 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
         if (msg != "")
             prompt = msg + " ";
 
-        prompt += "Are you sure you want to " + move_verb;
+        prompt += "당신은 정말로 " + move_verb;
 
         if (you.ground_level())
-            prompt += " into ";
+            prompt += "";
         else
-            prompt += " over ";
+            prompt += "";
 
-        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
+        prompt += env.grid(p) == DNGN_DEEP_WATER ? "깊은 물로" : "용암 너머로";
 
         prompt += need_expiration_warning(DUR_FLIGHT, p)
-            ? " while you are losing your buoyancy?"
-            : " while your transformation is expiring?";
+            ? " 부유력을 잃는 중에 갈 것인가?"
+            : " 변이가 만료되어가는 중에 갈 것인가?";
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -276,7 +276,7 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
     {
         if (prompted)
             *prompted = true;
-        prompt = make_stringf("Really %s into a travel-excluded area?",
+        prompt = make_stringf("정말로 탐험금지 설정구역으로 %s?",
                               move_verb.c_str());
 
         if (!yesno(prompt.c_str(), false, 'n'))
@@ -339,14 +339,14 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     if (mons->is_stationary() || mons->asleep() || mons->cannot_move())
     {
         if (!quiet)
-            simple_monster_message(*mons, " cannot move out of your way!");
+            simple_monster_message(*mons, "은(는) 당신을 벗어날 수 없다!");
         return false;
     }
 
     // prompt when swapping into known zot traps
     if (!quiet && trap_at(loc) && trap_at(loc)->type == TRAP_ZOT
         && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
-        && !yes_or_no("Do you really want to swap %s into the Zot trap?",
+        && !yes_or_no("당신은 정말로 %s을(를) 조트의 함정으로 위치를 바꿀 것인가?",
                       mons->name(DESC_YOUR).c_str()))
     {
         return false;
@@ -382,7 +382,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     {
         // Might not be ideal, but it's better than insta-killing
         // the monster... maybe try for a short blink instead? - bwr
-        simple_monster_message(*mons, " cannot make way for you.");
+        simple_monster_message(*mons, "은(는) 당신을 위해 길을 열어 줄 수 없다.");
         // FIXME: AI_HIT_MONSTER isn't ideal.
         interrupt_activity(AI_HIT_MONSTER, mons);
     }
@@ -784,8 +784,8 @@ bool berserk_check_wielded_weapon()
         && (!is_melee_weapon(*wpn)
             || needs_handle_warning(*wpn, OPER_ATTACK, penance)))
     {
-        string prompt = "Do you really want to go berserk while wielding "
-                        + wpn->name(DESC_YOUR) + "?";
+        string prompt = "정말로 "
+                        + wpn->name(DESC_YOUR) + "을 휘두르는 중에 광폭화를 할 것인가?";
         if (penance)
             prompt += " 이것은 당신을 참회에 빠뜨린다!";
 
@@ -3227,36 +3227,36 @@ static void _display_char_status(int value, const char *fmt, ...)
 
 static void _display_vampire_status()
 {
-    string msg = "At your current hunger state you ";
+    string msg = "현재의 만복도 상태에서 ";
     vector<const char *> attrib;
 
     switch (you.hunger_state)
     {
         case HS_FAINTING:
         case HS_STARVING:
-            attrib.push_back("are immune to poison");
-            attrib.push_back("significantly resist cold");
-            attrib.push_back("are immune to negative energy");
-            attrib.push_back("resist torment");
-            attrib.push_back("do not heal.");
+            attrib.push_back("독에 면역이다");
+            attrib.push_back("냉기에 상당히 저항한다");
+            attrib.push_back("음에너지에 면역이다");
+            attrib.push_back("고문에 저항한다");
+            attrib.push_back("치유되지 않는다.");
             break;
         case HS_NEAR_STARVING:
         case HS_VERY_HUNGRY:
         case HS_HUNGRY:
-            attrib.push_back("resist poison");
-            attrib.push_back("resist cold");
-            attrib.push_back("significantly resist negative energy");
-            attrib.push_back("have a slow metabolism");
-            attrib.push_back("heal slowly.");
+            attrib.push_back("독에 저항한다");
+            attrib.push_back("냉기에 저항한다");
+            attrib.push_back("음에너지에 상당히 저항한다");
+            attrib.push_back("신진대사가 느리다");
+            attrib.push_back("치유가 느리다.");
             break;
         case HS_SATIATED:
-            attrib.push_back("resist negative energy.");
+            attrib.push_back("음에너지에 저항한다.");
             break;
         case HS_FULL:
         case HS_VERY_FULL:
         case HS_ENGORGED:
-            attrib.push_back("have a fast metabolism");
-            attrib.push_back("heal quickly.");
+            attrib.push_back("신진대사가 빠르다");
+            attrib.push_back("치유가 빠르다.");
             break;
     }
 
@@ -3280,27 +3280,27 @@ static void _display_movement_speed()
     const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
                             && you.attribute[ATTR_SWIFTNESS] < 0);
 
-    _display_char_status(move_cost, "Your %s speed is %s%s%s",
+    _display_char_status(move_cost, "당신의 %s 속도는 %s%s%s",
           // order is important for these:
-          (swim)    ? "swimming" :
+          (swim)    ? "수영" :
           (water)   ? "wading" :
-          (fly)     ? "flying"
-                    : "movement",
+          (fly)     ? "비행"
+                    : "걷는",
 
-          (!water && swift) ? "aided by the wind" :
-          (!water && antiswift) ? "hindered by the wind" : "",
+          (!water && swift) ? "바람에 힘입어" :
+          (!water && antiswift) ? "바람에 의해 방해받아" : "",
 
-          (!water && swift) ? ((move_cost >= 10) ? ", but still "
-                                                 : " and ") :
-          (!water && antiswift) ? ((move_cost <= 10) ? ", but still "
-                                                     : " and ")
+          (!water && swift) ? ((move_cost >= 10) ? ", 지만 그래도 "
+                                                 : " 서 ") :
+          (!water && antiswift) ? ((move_cost <= 10) ? ", 지만 그래도 "
+                                                     : " 서 ")
                             : "",
 
-          (move_cost <   8) ? "very quick" :
-          (move_cost <  10) ? "quick" :
-          (move_cost == 10) ? "average" :
-          (move_cost <  13) ? "slow"
-                            : "very slow");
+          (move_cost <   8) ? "매우 빠르다" :
+          (move_cost <  10) ? "빠르다" :
+          (move_cost == 10) ? "평범하다" :
+          (move_cost <  13) ? "느리다"
+                            : "매우 느리다");
 }
 
 static void _display_tohit()
@@ -3316,16 +3316,16 @@ static void _display_tohit()
 
 static const char* _attack_delay_desc(int attack_delay)
 {
-    return (attack_delay >= 200) ? "extremely slow" :
-           (attack_delay >= 155) ? "very slow" :
-           (attack_delay >= 125) ? "quite slow" :
-           (attack_delay >= 105) ? "below average" :
-           (attack_delay >=  95) ? "average" :
-           (attack_delay >=  75) ? "above average" :
-           (attack_delay >=  55) ? "quite fast" :
-           (attack_delay >=  45) ? "very fast" :
-           (attack_delay >=  35) ? "extremely fast" :
-                                   "blindingly fast";
+    return (attack_delay >= 200) ? "극도로 느림" :
+           (attack_delay >= 155) ? "매우 느림" :
+           (attack_delay >= 125) ? "꽤 느림" :
+           (attack_delay >= 105) ? "평균 이하" :
+           (attack_delay >=  95) ? "평범" :
+           (attack_delay >=  75) ? "평균 이상" :
+           (attack_delay >=  55) ? "꽤 빠름" :
+           (attack_delay >=  45) ? "매우 빠름" :
+           (attack_delay >=  35) ? "극도로 빠름" :
+                                   "눈부시게 빠름";
 }
 
 /**
@@ -3357,12 +3357,12 @@ static void _display_attack_delay()
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
 
-    _display_char_status(avg, "Your attack speed is %s%s%s",
+    _display_char_status(avg, "당신의 공격속도는 %s%s%s",
                          _attack_delay_desc(avg),
                          at_min_delay ?
-                            " (and cannot be improved with additional weapon skill)" : "",
+                            " (부가적인 무기 기술로는 향상 될 수 없다)" : "",
                          you.adjusted_shield_penalty() ?
-                            " (and is slowed by your insufficient shield skill)" : "");
+                            " (당신의 불충분한 방패기술로 느려진다)" : "");
 }
 
 // forward declaration
@@ -4028,13 +4028,13 @@ string describe_contamination(int cont)
     static const string contam_descriptions[] =
     {
         "",
-        "You are very lightly contaminated with residual magic.",
-        "You are lightly contaminated with residual magic.",
-        "You are contaminated with residual magic.",
-        "You are heavily infused with residual magic.",
-        "You are practically glowing with residual magic!",
-        "Your entire body has taken on an eerie glow!",
-        "You are engulfed in a nimbus of crackling magics!",
+        "당신은 잔류 마법으로 매우 가볍게 오염되었다.",
+        "당신은 잔류 마법으로 가볍게 오염되었다.",
+        "당신은 잔류 마법으로 오염되었다.",
+        "당신은 잔류 마법으로 가득 차있다.",
+        "당신은 잔류 마법으로 거의 빛나고 있다!",
+        "당신의 몸 전체가 섬뜩한 빛을 발하고 있다!",
+        "당신은 지지직거리는 마법의 후광에 휩싸였다!",
     };
 
     ASSERT(cont >= 0);
@@ -4081,7 +4081,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         else if (player_severe_contamination() || was_glowing)
         {
             mprf(MSGCH_RECOVERY,
-                 "You feel less contaminated with magical energies.");
+                 "당신은 마법적 에너지로 오염된 느낌이 줄어듬을 느꼈다.");
         }
 
         if (!player_severe_contamination() && was_glowing && you.invisible())
