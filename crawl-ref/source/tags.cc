@@ -4867,7 +4867,6 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = FOOD_RATION;
     else if (item.is_type(OBJ_FOOD, FOOD_ROYAL_JELLY))
     {
-   
         item.sub_type = FOOD_RATION;
         item.quantity = max(1, div_rand_round(item.quantity, 3));
     }
