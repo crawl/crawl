@@ -1488,9 +1488,8 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_GOLD,       "Gold" },
     };
     ASSERT(acq_classes[6].type == OBJ_FOOD);
-    acq_classes[6].name = you_worship(GOD_FEDHAS) ? "Fruit":
-                          you.species == SP_VAMPIRE  ? "Blood":
-                                                       "Food";
+    acq_classes[6].name = you.species == SP_VAMPIRE ? "Blood":
+                                                      "Food";
 
     int thing_created = NON_ITEM;
 
