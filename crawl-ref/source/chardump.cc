@@ -410,6 +410,15 @@ static void _sdump_misc(dump_params &par)
 
 #define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))
 
+static string _denanify(const string &s)
+{
+    string out = replace_all(s, " nan ", " N/A ");
+    out = replace_all(out, " -nan ", " N/A  ");
+    out = replace_all(out, " 1#IND ", "  N/A  ");
+    out = replace_all(out, " -1#IND ", "  N/A   ");
+    return out;
+}
+
 static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
 {
     PlaceInfo   gi = you.global_info;
@@ -436,9 +445,7 @@ static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
         make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %13.1f\n",
                      name.c_str(), a, b, c , d, e, f);
 
-    out = replace_all(out, " nan ", " N/A ");
-
-    return out;
+    return _denanify(out);
 }
 
 static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
@@ -462,9 +469,7 @@ static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
                      c, xp_info.spawn_count, xp_info.generated_count, f,
                      xp_info.turns);
 
-    out = replace_all(out, " nan ", " N/A ");
-
-    return out;
+    return _denanify(out);
 }
 
 static void _sdump_turns_by_place(dump_params &par)
@@ -940,9 +945,7 @@ static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
                      " %13.1f\n",
                      name.c_str(), a, b, c , d, e, f);
 
-    out = replace_all(out, " nan ", " N/A ");
-
-    return out;
+    return _denanify(out);
 }
 
 static void _sdump_kills_by_place(dump_params &par)
