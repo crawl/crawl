@@ -19,6 +19,7 @@
 #include "libutil.h" // map_find
 #include "mon-place.h"
 #include "religion.h"
+#include "timed-effects.h"
 
 #define MAX_LOST 100
 
@@ -143,7 +144,14 @@ void place_followers()
 static bool _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-    return f.place(false);
+    if (f.place(false))
+    {
+        //update monster
+        int turns = (you.elapsed_time - f.transit_start_time)/10;
+        return update_monster(&f.mons, turns);
+    }
+    else
+        return false;
 }
 
 static void _level_place_lost_monsters(m_transit_list &m)
@@ -165,6 +173,7 @@ static void _level_place_lost_monsters(m_transit_list &m)
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
             m.erase(mon);
+
         }
     }
 }
