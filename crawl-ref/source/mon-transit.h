@@ -14,6 +14,7 @@ struct follower
 {
     monster mons;
     FixedVector<item_def, NUM_MONSTER_SLOTS> items;
+    int transit_start_time;
 
     follower() : mons(), items() { }
     follower(const monster& m);

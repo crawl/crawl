@@ -66,6 +66,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
 
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.emplace_back(m);
+    mlist.back().transit_start_time = you.elapsed_time;
 
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
