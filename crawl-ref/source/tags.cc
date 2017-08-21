@@ -2365,6 +2365,15 @@ static void tag_read_you(reader &th)
             you.base_stats[i] = 7;
     }
 #endif
+#if TAG_MAJOR_VERSION == 34
+    // Gnoll stats changed to 10/10/10.
+    if (th.getMinorVersion() < TAG_MINOR_GNOLL_BUFFS
+        && you.species == SP_GNOLL)
+    {
+        for (int i = 0; i < NUM_STATS; ++i)
+            you.base_stats[i] = 10;
+    }
+#endif
 
     for (int i = 0; i < NUM_STATS; ++i)
         you.stat_loss[i] = unmarshallByte(th);
@@ -3064,6 +3073,14 @@ static void tag_read_you(reader &th)
 
         if (you.innate_mutation[MUT_SPIT_POISON] == 2)
             you.innate_mutation[MUT_SPIT_POISON] = 1;
+    }
+
+    if (you.species == SP_GNOLL
+        && th.getMinorVersion() < TAG_MINOR_GNOLL_BUFFS)
+    {
+        you.innate_mutation[MUT_ADAPTATION] = 1;
+        if(you.experience_level >= 9)
+            you.mutation[MUT_ADAPTATION] = 1;
     }
 
     // Slow regeneration split into two single-level muts:

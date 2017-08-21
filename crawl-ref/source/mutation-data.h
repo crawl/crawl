@@ -1925,7 +1925,7 @@ static const mutation_def mut_data[] =
 
 { MUT_ADAPTATION, 0, 1, mutflag::good, false,
   "adaptation",
-    
+
     {"You can shift your attributes around at will.", "", ""},
     {"You feel like you can adapt to any situation.", "", ""},
     {"You feel less adaptable.", "", ""},
