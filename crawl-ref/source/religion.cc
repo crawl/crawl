@@ -1009,7 +1009,7 @@ static bool _give_nemelex_gift(bool forced = false)
             // included in default force_more_message
             canned_msg(MSG_SOMETHING_APPEARS);
 
-            _inc_gift_timeout(15 + random2avg(9, 2));
+            _inc_gift_timeout(5 + random2avg(9, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
             take_note(Note(NOTE_GOD_GIFT, you.religion));
@@ -1187,12 +1187,12 @@ static bool _give_pakellas_gift()
 
 static bool _give_zin_gift()
 {
-    if (!you.how_mutated()) {
+    if (!you.how_mutated())
         return false;
-    }
     bool success = delete_mutation(RANDOM_MUTATION, "Zin's grace", true,
                               true, true);
-    if (success) {
+    if (success)
+    {
         mpr("Zin's grace purifies you.");
         _inc_gift_timeout(15 + roll_dice(2, 4));
     }
