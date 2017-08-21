@@ -97,7 +97,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
       { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
       {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
-      { -1, "Zin will remove mutations as your piety grows." },
+      { -1, "Zin will remove mutations as you gain piety." },
     },
 
     // TSO
@@ -131,7 +131,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 2, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
       { 2, ABIL_YRED_INJURY_MIRROR, "mirror injuries on your foes" },
       { 3, ABIL_YRED_ANIMATE_DEAD, "animate legions of the dead" },
-      { 3, "Yredelemnul will gift you servants as your piety grows.",
+      { 3, "Yredelemnul will gift you servants as you gain piety.",
            "Yredelemnul will no longer gift you servants." },
       { 4, ABIL_YRED_DRAIN_LIFE, "drain ambient life force" },
       { 5, ABIL_YRED_ENSLAVE_SOUL, "enslave living souls" },
@@ -153,7 +153,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, "Okawaru will gift you ammunition as your piety grows.",
            "Okawaru will no longer gift you ammunition." },
       { 5, ABIL_OKAWARU_FINESSE, "speed up your combat" },
-      { 5, "Okawaru will gift you equipment as your piety grows.",
+      { 5, "Okawaru will gift you equipment as you gain piety.",
            "Okawaru will no longer gift you equipment." },
     },
 
@@ -174,7 +174,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_SIF_MUNA_CHANNEL_ENERGY, "call upon Sif Muna for magical energy"},
       { 4, ABIL_SIF_MUNA_FORGET_SPELL, "freely open your mind to new spells",
           "forget spells at will" },
-      { 5, "Sif Muna will gift you books as your piety grows.",
+      { 5, "Sif Muna will gift you books as you gain piety.",
            "Sif Muna will no longer gift you books." },
     },
 
@@ -184,7 +184,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 2, ABIL_TROG_REGEN_MR, "call upon Trog for regeneration and protection "
                                "from hostile enchantments" },
       { 4, ABIL_TROG_BROTHERS_IN_ARMS, "call in reinforcements" },
-      { 5, "Trog will gift you weapons as your piety grows.",
+      { 5, "Trog will gift you weapons as you gain piety.",
            "Trog will no longer gift you weapons." },
       {-1, ABIL_TROG_BURN_SPELLBOOKS, "call upon Trog to burn spellbooks in your surroundings" },
     },
@@ -226,7 +226,7 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Jiyva
     { { 1, ABIL_JIYVA_CALL_JELLY, "request a jelly" },
-      { 3, "Jiyva will mutate your body as your piety grows.",
+      { 3, "Jiyva will mutate your body as you gain piety.",
            "Jiyva will no longer mutate your body." },
       { 4, ABIL_JIYVA_SLIMIFY, "turn your foes to slime" },
       { 5, "You may now expel jellies when seriously injured.",
