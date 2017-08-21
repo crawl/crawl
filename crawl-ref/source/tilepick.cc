@@ -3268,8 +3268,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZIN_IMPRISON;
     case ABIL_ZIN_SANCTUARY:
         return TILEG_ABILITY_ZIN_SANCTUARY;
-    case ABIL_ZIN_CURE_ALL_MUTATIONS:
-        return TILEG_ABILITY_ZIN_CURE_MUTATIONS;
     case ABIL_ZIN_DONATE_GOLD:
         return TILEG_ABILITY_ZIN_DONATE_GOLD;
     // TSO

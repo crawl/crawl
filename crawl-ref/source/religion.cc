@@ -97,9 +97,7 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 3, ABIL_ZIN_IMPRISON, "call upon Zin to imprison the lawless" },
       { 5, ABIL_ZIN_SANCTUARY, "call upon Zin to create a sanctuary" },
       {-1, ABIL_ZIN_DONATE_GOLD, "donate money to Zin" },
-      { 7, ABIL_ZIN_CURE_ALL_MUTATIONS,
-           "Zin will cure all your mutations... once.",
-           "Zin is no longer ready to cure all your mutations." },
+      { -1, "Zin will remove mutations as your piety grows." },
     },
 
     // TSO
@@ -1187,6 +1185,20 @@ static bool _give_pakellas_gift()
     return false;
 }
 
+static bool _give_zin_gift()
+{
+    if (!you.how_mutated())
+        return false;
+    bool success = delete_mutation(RANDOM_MUTATION, "Zin's grace", true,
+                              true, true);
+    if (success)
+    {
+        mpr("Zin's grace purifies you.");
+        _inc_gift_timeout(15 + roll_dice(2, 4));
+    }
+    return true;
+}
+
 void mons_make_god_gift(monster& mon, god_type god)
 {
     const god_type acting_god =
@@ -1779,6 +1791,10 @@ bool do_god_gift(bool forced)
             success = _give_pakellas_gift();
             break;
 
+        case GOD_ZIN:
+            success = _give_zin_gift();
+            break;
+
         case GOD_OKAWARU:
         case GOD_TROG:
         {
@@ -2304,7 +2320,9 @@ static void _gain_piety_point()
     {
         if (you.piety >= MAX_PIETY
             || you.piety >= piety_breakpoint(5) && one_chance_in(3)
-            || you.piety >= piety_breakpoint(3) && one_chance_in(3))
+            || you.piety >= piety_breakpoint(3) && one_chance_in(3)
+            // Zin gifting starts at 0*
+            || (you_worship(GOD_ZIN) && one_chance_in(3)))
         {
             do_god_gift();
             return;

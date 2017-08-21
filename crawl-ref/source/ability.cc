@@ -364,8 +364,6 @@ static const ability_def Ability_List[] =
       5, 0, 0, 4, {fail_basis::invo, 60, 5, 20}, abflag::none },
     { ABIL_ZIN_SANCTUARY, "Sanctuary",
       7, 0, 0, 15, {fail_basis::invo, 80, 4, 25}, abflag::none },
-    { ABIL_ZIN_CURE_ALL_MUTATIONS, "Cure All Mutations",
-      0, 0, 0, 0, {fail_basis::invo}, abflag::none },
     { ABIL_ZIN_DONATE_GOLD, "Donate Gold",
       0, 0, 0, 0, {fail_basis::invo}, abflag::none },
 
@@ -1341,15 +1339,6 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
     }
 
-    case ABIL_ZIN_CURE_ALL_MUTATIONS:
-        if (!you.how_mutated())
-        {
-            if (!quiet)
-                mpr("You have no mutations to be cured!");
-            return false;
-        }
-        return true;
-
     case ABIL_ZIN_SANCTUARY:
         if (env.sanctuary_time)
         {
@@ -2208,12 +2197,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_ZIN_SANCTUARY:
         fail_check();
         zin_sanctuary();
-        break;
-
-    case ABIL_ZIN_CURE_ALL_MUTATIONS:
-        fail_check();
-        if (!zin_remove_all_mutations())
-            return SPRET_ABORT;
         break;
 
     case ABIL_ZIN_DONATE_GOLD:
@@ -3661,7 +3644,6 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_KIKU_GIFT_NECRONOMICON:
         first_slot = letter_to_index('N');
         break;
-    case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
