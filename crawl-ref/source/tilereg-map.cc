@@ -169,10 +169,6 @@ void MapRegion::update_bounds()
         }
 
     recenter();
-#if 0
-    // Not needed? (jpeg)
-    m_dirty = true;
-#endif
 }
 
 void MapRegion::set_window(const coord_def &start, const coord_def &end)

@@ -1187,14 +1187,6 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (fullname || mons_is_pghost(m1.type))
         return m1.mname < m2.mname;
 
-#if 0 // for now, sort mb together.
-    // By descending mb, so no mb sorts to the end
-    if (m1.mb > m2.mb)
-        return true;
-    else if (m1.mb < m2.mb)
-        return false;
-#endif
-
     return false;
 }
 

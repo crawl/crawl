@@ -591,27 +591,6 @@ int TilesFramework::handle_mouse(MouseEvent &event)
             return CK_MOUSE_CMD;
     }
 
-    // TODO enne - in what cases should the buttons be returned?
-#if 0
-    // If nothing else, return the mouse button that was pressed.
-    switch (event.button)
-    {
-    case MouseEvent::LEFT:
-        return CK_MOUSE_B1;
-    case MouseEvent::RIGHT:
-        return CK_MOUSE_B2;
-    case MouseEvent::MIDDLE:
-        return CK_MOUSE_B3;
-    case MouseEvent::SCROLL_UP:
-        return CK_MOUSE_B4;
-    case MouseEvent::SCROLL_DOWN:
-        return CK_MOUSE_B5;
-    default:
-    case MouseEvent::NONE:
-        return 0;
-    }
-#endif
-
     return 0;
 }
 
