@@ -1376,12 +1376,6 @@ void update_level(int elapsedTime)
 
     const int turns = elapsedTime / 10;
 
-#ifdef DEBUG_DIAGNOSTICS
-    int mons_total = 0;
-
-    dprf("turns: %d", turns);
-#endif
-
     rot_floor_items(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
@@ -1396,6 +1390,20 @@ void update_level(int elapsedTime)
 
     dungeon_events.fire_event(
         dgn_event(DET_TURN_ELAPSED, coord_def(0, 0), turns * 10));
+
+
+    update_monsters(turns);
+
+    delete_all_clouds();
+}
+
+void update_monsters(int turns)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    int mons_total = 0;
+
+    dprf("turns: %d", turns);
+#endif
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -1430,12 +1438,9 @@ void update_level(int elapsedTime)
         if (turns >= 10 && mi->alive())
             mi->timeout_enchantments(turns / 10);
     }
-
 #ifdef DEBUG_DIAGNOSTICS
     dprf("total monsters on level = %d", mons_total);
 #endif
-
-    delete_all_clouds();
 }
 
 static void _drop_tomb(const coord_def& pos, bool premature, bool zin)

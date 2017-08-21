@@ -8,6 +8,7 @@
 void change_labyrinth(bool msg = false);
 
 void update_level(int elapsedTime);
+void update_monsters(int turns);
 void handle_time();
 
 void timeout_tombs(int duration);
