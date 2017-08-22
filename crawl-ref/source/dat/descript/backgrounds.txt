@@ -38,6 +38,12 @@ Conjurer
 
 Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
+
+Destroyer
+
+Destroyers' damaging magic is enhanced by Vehumet. They know the Magic Dart
+spell and eventually learn new spells directly from their god.
+%%%%
 Earth Elementalist
 
 Earth Elementalists know the Sandblast spell, and carry stones to fuel the

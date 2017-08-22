@@ -264,6 +264,14 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
 
+    case JOB_DESTROYER:
+        you.religion = GOD_VEHUMET;
+        you.piety = 35;
+        add_spell_to_memory(SPELL_MAGIC_DART);
+        you.gift_timeout = roll_dice(2, 5);
+        
+        break;
+
     case JOB_ABYSSAL_KNIGHT:
         you.religion = GOD_LUGONU;
         if (!crawl_state.game_is_sprint())

@@ -108,6 +108,16 @@ static const map<job_type, job_def> job_data =
       { SK_STEALTH, 2 }, },
 } },
 
+{ JOB_DESTROYER, {
+    "De", "Destroyer",
+    0, 7, 5,
+    { SP_BARACHI, SP_DEEP_ELF, SP_GARGOYLE, SP_FELID, SP_TENGU, },
+    { "robe" },
+    WCHOICE_NONE,
+    { { SK_CONJURATIONS, 4 }, { SK_SPELLCASTING, 1 }, 
+      { SK_DODGING, 1 }, { SK_STEALTH, 1 }, },
+} },
+
 { JOB_EARTH_ELEMENTALIST, {
     "EE", "Earth Elementalist",
     0, 7, 5,
