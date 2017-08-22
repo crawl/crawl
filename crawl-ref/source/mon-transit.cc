@@ -148,9 +148,10 @@ static bool _place_lost_monster(follower &f)
     {
         //update monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
-        mprf(MSGCH_WARN, "updating lost monster: %s, and simulating %i turns",
+        mprf(MSGCH_WARN, "updating lost monster: %s, and simulating %d turns",
              f.mons.name(DESC_PLAIN, true).c_str(), turns);
-        return update_monster(&f.mons, turns);
+        monster *monpass = &f.mons;
+        return update_monster(monpass, turns);
     }
     else
         return false;
@@ -175,7 +176,6 @@ static void _level_place_lost_monsters(m_transit_list &m)
                 // old loc isn't really meaningful
                 new_mon->apply_location_effects(new_mon->pos());
             m.erase(mon);
-
         }
     }
 }
