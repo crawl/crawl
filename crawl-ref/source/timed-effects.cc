@@ -1417,19 +1417,19 @@ void update_level(int elapsedTime)
     delete_all_clouds();
 }
 
-bool update_monster(monster& mon, int turns)
+monster* update_monster(monster& mon, int turns)
 {
     mprf(MSGCH_WARN, "placing %s, %d", mon.name(DESC_PLAIN).c_str(),turns);
     // Pacified monsters often leave the level now.
     if (mon.pacified() && turns > random2(40) + 21)
     {
         make_mons_leave_level(&mon);
-        return false;
+        return nullptr;
     }
 
     // Following monsters don't get movement.
     if (mon.flags & MF_JUST_SUMMONED)
-        return false;
+        return &mon;
 
 
 
@@ -1454,7 +1454,7 @@ bool update_monster(monster& mon, int turns)
         mon.timeout_enchantments(turns / 10);
     }
 
-    return true;
+    return &mon;
 }
 
 static void _drop_tomb(const coord_def& pos, bool premature, bool zin)

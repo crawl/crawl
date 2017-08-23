@@ -144,16 +144,16 @@ void place_followers()
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-    if (f.place(false))
+    if (monster* mons = f.place(false))
     {
         //update monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
         mprf(MSGCH_WARN, "updating lost monster: %s, and simulating %d turns",
-             f.mons.name(DESC_PLAIN, true).c_str(), turns);
-        return update_monster(f.mons, turns);
+             mons->name(DESC_PLAIN, true).c_str(), turns);
+        return update_monster(*mons, turns);
     }
     else
-        return false;
+        return nullptr;
 }
 
 static void _level_place_lost_monsters(m_transit_list &m)
