@@ -73,10 +73,10 @@ monster::monster()
       speed(0), speed_increment(0), target(), firing_pos(),
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
-      enchantments(), flags(), experience(0), base_monster(MONS_NO_MONSTER),
-      number(0), colour(COLOUR_INHERIT), foe_memory(0), god(GOD_NO_GOD),
-      ghost(), seen_context(SC_NONE), client_id(0), hit_dice(0),
-      xp_tracking(XP_GENERATED)
+      enchantments(), flags(), xp_tracking(XP_GENERATED), experience(0),
+      base_monster(MONS_NO_MONSTER), number(0), colour(COLOUR_INHERIT),
+      foe_memory(0), god(GOD_NO_GOD), ghost(), seen_context(SC_NONE),
+      client_id(0), hit_dice(0)
 
 {
     type = MONS_NO_MONSTER;
