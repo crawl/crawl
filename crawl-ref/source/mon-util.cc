@@ -1063,12 +1063,10 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
     const char* const smoke_str = can_place_smoke ? " in a puff of smoke" : "";
 
     const bool can_cackle = !silenced(pos) && !silenced(you.pos());
-    const string db_cackle = getSpeakString("_laughs_");
-    const string cackle = db_cackle != "" ? db_cackle : "cackles";
-    const string cackle_str = can_cackle ? cackle + " and " : "";
+    const string cackle = can_cackle ? getSpeakString("_laughs_") + " and " : "";
 
     mprf("The %s mimic %svanishes%s!",
-         name.c_str(), cackle_str.c_str(), smoke_str);
+         name.c_str(), cackle.c_str(), smoke_str);
     interrupt_activity(AI_MIMIC);
 }
 

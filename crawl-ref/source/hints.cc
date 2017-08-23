@@ -2554,7 +2554,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_GLOWING:
         text << "You've accumulated so much magical contamination that you're "
                 "glowing! You usually acquire magical contamination from using "
-                "some powerful magics, like invisibility or haste, or from "
+                "some powerful magics, like invisibility, or from "
                 "miscasting spells. ";
 
         if (!player_severe_contamination())

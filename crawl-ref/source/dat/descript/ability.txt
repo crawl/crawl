@@ -112,10 +112,6 @@ Evoke Invisibility ability
 Turns the user invisible. Turning invisible causes magical contamination and
 may eventually cause glowing, nullifying the invisibility.
 %%%%
-Turn Visible ability
-
-Turns visible again.
-%%%%
 Evoke Flight ability
 
 <Fly ability>

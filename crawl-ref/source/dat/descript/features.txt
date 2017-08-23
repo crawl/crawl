@@ -242,10 +242,6 @@ A stone staircase leading up
 
 A staircase leading back up.
 %%%%
-A short-range portal
-
-A portal that will send you to a nearby location.
-%%%%
 A tree
 
 A large tree. While in most places the dim light of the dungeon is not bright

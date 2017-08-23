@@ -135,10 +135,9 @@ bool recall_offlevel_ally(mid_t mid)
         return false;
 
     companion* comp = &companion_list[mid];
-    if (!comp->mons.place(true))
+    monster* mons = comp->mons.place(true);
+    if (!mons)
         return false;
-
-    monster* mons = monster_by_mid(mid);
 
     // The monster is now on this level
     remove_monster_from_transit(comp->level, mid);

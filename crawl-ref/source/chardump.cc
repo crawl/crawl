@@ -76,6 +76,7 @@ static void _sdump_messages(dump_params &);
 static void _sdump_screenshot(dump_params &);
 static void _sdump_kills_by_place(dump_params &);
 static void _sdump_kills(dump_params &);
+static void _sdump_xp_by_level(dump_params &);
 static void _sdump_newline(dump_params &);
 static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
@@ -133,6 +134,7 @@ static dump_section_handler dump_handlers[] =
     { "screenshot",     _sdump_screenshot    },
     { "kills_by_place", _sdump_kills_by_place},
     { "kills",          _sdump_kills         },
+    { "xp_by_level",    _sdump_xp_by_level   },
     { "overview",       _sdump_overview      },
     { "hiscore",        _sdump_hiscore       },
     { "monlist",        _sdump_monster_list  },
@@ -408,6 +410,15 @@ static void _sdump_misc(dump_params &par)
 
 #define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))
 
+static string _denanify(const string &s)
+{
+    string out = replace_all(s, " nan ", " N/A ");
+    out = replace_all(out, " -nan ", " N/A  ");
+    out = replace_all(out, " 1#IND ", "  N/A  ");
+    out = replace_all(out, " -1#IND ", "  N/A   ");
+    return out;
+}
+
 static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
 {
     PlaceInfo   gi = you.global_info;
@@ -434,9 +445,31 @@ static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
         make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %13.1f\n",
                      name.c_str(), a, b, c , d, e, f);
 
-    out = replace_all(out, " nan ", " N/A ");
+    return _denanify(out);
+}
 
-    return out;
+static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
+{
+    string out;
+
+    if (name.empty())
+        name = xp_info.level.describe();
+
+    float c, f;
+    unsigned int total_xp = xp_info.spawn_xp + xp_info.generated_xp;
+    unsigned int total_count
+        = xp_info.spawn_count + xp_info.generated_count;
+
+    c = TO_PERCENT(xp_info.spawn_xp, total_xp);
+    f = TO_PERCENT(xp_info.spawn_count, total_count);
+
+    out =
+        make_stringf("%11s | %7d | %7d | %5.1f | %7d | %7d | %5.1f | %7d\n",
+                     name.c_str(), xp_info.spawn_xp, xp_info.generated_xp,
+                     c, xp_info.spawn_count, xp_info.generated_count, f,
+                     xp_info.turns);
+
+    return _denanify(out);
 }
 
 static void _sdump_turns_by_place(dump_params &par)
@@ -472,6 +505,41 @@ static void _sdump_turns_by_place(dump_params &par)
 
     text += "               ";
     text += "+-------+-------+-------+-------+-------+----------------------\n";
+
+    text += "\n";
+}
+
+static void _sdump_xp_by_level(dump_params &par)
+{
+    string &text(par.text);
+
+    vector<LevelXPInfo> all_info = you.get_all_xp_info(true);
+
+    text +=
+"Table legend:\n"
+" A = Spawn XP\n"
+" B = Non-spawn XP\n"
+" C = Spawn XP percentage of total XP\n"
+" D = Spawn monster count\n"
+" E = Non-spawn monster count\n"
+" F = Spawn count percentage of total count\n"
+" G = Total turns spent on level\n\n";
+
+    text += "            ";
+    text += "     A         B        C        D         E        F        G    \n";
+    text += "            ";
+    text += "+---------+---------+-------+---------+---------+-------+---------\n";
+
+    text += _sdump_level_xp_info(you.global_xp_info, "Total");
+
+    text += "            ";
+    text += "+---------+---------+-------+---------+---------+-------+---------\n";
+
+    for (const LevelXPInfo &mi : all_info)
+        text += _sdump_level_xp_info(mi);
+
+    text += "            ";
+    text += "+---------+---------+-------+---------+---------+-------+---------\n";
 
     text += "\n";
 }
@@ -877,9 +945,7 @@ static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
                      " %13.1f\n",
                      name.c_str(), a, b, c , d, e, f);
 
-    out = replace_all(out, " nan ", " N/A ");
-
-    return out;
+    return _denanify(out);
 }
 
 static void _sdump_kills_by_place(dump_params &par)

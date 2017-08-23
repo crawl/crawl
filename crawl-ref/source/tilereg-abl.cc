@@ -110,13 +110,6 @@ bool AbilityRegion::update_tip_text(string& tip)
         cmd.push_back(CMD_USE_ABILITY);
     }
 
-    // TODO: command to display abilities outside of use
-#if 0
-    tip += "\n[R-Click] Describe (%)";
-    cmd.push_back(CMD_DISPLAY_SPELLS);
-    insert_commands(tip, cmd);
-#endif
-
     return true;
 }
 

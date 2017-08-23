@@ -18,7 +18,9 @@ struct follower
 
     follower() : mons(), items() { }
     follower(const monster& m);
-    bool place(bool near_player = false);
+
+    // if placement was successful, returns a pointer to the placed monster
+    monster* place(bool near_player = false);
     void load_mons_items();
     void restore_mons_items(monster& m);
 };

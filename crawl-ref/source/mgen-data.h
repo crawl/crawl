@@ -5,6 +5,7 @@
 #include "god-type.h"
 #include "mgen-enum.h"
 #include "mon-flags.h"
+#include "xp-tracking-type.h"
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
@@ -112,6 +113,9 @@ struct mgen_data
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
 
+    // What class of XP is this for LevelXPInfo tracking purposes.
+    xp_tracking_type xp_tracking;
+
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
               const coord_def &p = coord_def(-1, -1),
@@ -124,7 +128,7 @@ struct mgen_data
           base_type(MONS_NO_MONSTER), colour(COLOUR_INHERIT),
           proximity(PROX_ANYWHERE), place(level_id::current()), hd(0), hp(0),
           extra_flags(MF_NO_FLAGS), mname(""), non_actor_summoner(""),
-          initial_shifter(RANDOM_MONSTER)
+          initial_shifter(RANDOM_MONSTER), xp_tracking(XP_GENERATED)
     { }
 
     mgen_data &set_non_actor_summoner(string nas)

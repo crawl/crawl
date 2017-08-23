@@ -213,6 +213,8 @@ enum tag_minor_version
     TAG_MINOR_TRANSPORTER_LANDING, // Transporters landing site features.
     TAG_MINOR_STATLOCKED_GNOLLS,   // Gnolls have stats locked at 7/7/7.
     TAG_MINOR_LIGHTNING_ROD_XP_FIX, // Set XP debt for partially used l. rods.
+    TAG_MINOR_LEVEL_XP_INFO       , // Track XP gain by level.
+    TAG_MINOR_LEVEL_XP_INFO_FIX   , // Fix orb spawn XP tracking.
 
 #endif
     NUM_TAG_MINORS,

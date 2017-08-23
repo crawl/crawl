@@ -10,6 +10,7 @@
 #include "potion-type.h"
 #include "seen-context-type.h"
 #include "spl-util.h"
+#include "xp-tracking-type.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -68,6 +69,7 @@ public:
     mon_enchant_list enchantments;
     FixedBitVector<NUM_ENCHANTMENTS> ench_cache;
     monster_flags_t flags;             // bitfield of boolean flags
+    xp_tracking_type xp_tracking;
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour

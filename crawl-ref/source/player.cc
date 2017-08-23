@@ -3078,9 +3078,6 @@ int player_stealth()
         // Now 2 * EP^2 / 3 after EP rescaling.
         const int evp = you.unadjusted_body_armour_penalty();
         const int penalty = evp * evp * 2 / 3;
-#if 0
-        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
-#endif
         stealth -= penalty;
 
         const int pips = armour_type_prop(arm->sub_type, ARMF_STEALTH);
@@ -7037,7 +7034,7 @@ bool player::is_lifeless_undead(bool temp) const
     if (undead_state() == US_SEMI_UNDEAD)
         return temp ? hunger_state < HS_SATIATED : false;
     else
-        return undead_state() != US_ALIVE;
+        return undead_state(temp) != US_ALIVE;
 }
 
 bool player::can_polymorph() const
@@ -7221,34 +7218,6 @@ void player::check_awaken(int disturbance)
 int player::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 {
     return check_your_resists(hurted, beam.flavour, source, &beam, doEffects);
-}
-
-void player::set_place_info(PlaceInfo place_info)
-{
-    place_info.assert_validity();
-
-    if (place_info.is_global())
-        global_info = place_info;
-    else
-        branch_info[place_info.branch] = place_info;
-}
-
-vector<PlaceInfo> player::get_all_place_info(bool visited_only,
-                                             bool dungeon_only) const
-{
-    vector<PlaceInfo> list;
-
-    for (branch_iterator it; it; ++it)
-    {
-        if (visited_only && branch_info[it->id].num_visits == 0
-            || dungeon_only && !is_connected_branch(*it))
-        {
-            continue;
-        }
-        list.push_back(branch_info[it->id]);
-    }
-
-    return list;
 }
 
 // Used for falling into traps and other bad effects, but is a slightly

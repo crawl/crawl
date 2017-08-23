@@ -131,10 +131,6 @@ Evoke Invisibility ability
 Vous rend invisible pour un temps limité. Devenir invisible accroit votre
 contamination magique et peut vous rendre luminescent.
 %%%%
-Turn Visible ability
-
-Redevenir à nouveau visible.
-%%%%
 Stop Flying ability
 
 Atterrir.

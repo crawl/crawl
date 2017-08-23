@@ -632,6 +632,7 @@
     <ClInclude Include="..\wiz-you.h" />
     <ClInclude Include="..\worley.h" />
     <ClInclude Include="..\xom.h" />
+    <ClInclude Include="..\xp-tracking-type.h" />
     <ClInclude Include="..\zap-data.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
     <ClInclude Include="..\random-pick.h" />

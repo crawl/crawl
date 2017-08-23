@@ -1481,24 +1481,3 @@ void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
     }
     desc = replace_all(desc, "percent", "%");
 }
-
-#if 0
-// Currently unused, might be useful somewhere.
-static void _list_all_commands(string &commands)
-{
-    for (int i = CMD_NO_CMD; i < CMD_MAX_CMD; i++)
-    {
-        const command_type cmd = (command_type) i;
-
-        const string command_name = command_to_name(cmd);
-        if (command_name == "CMD_NO_CMD")
-            continue;
-
-        if (_context_for_command(cmd) != KMC_DEFAULT)
-            continue;
-
-        commands += command_name + ": " + command_to_string(cmd) + "\n";
-    }
-    commands += "\n";
-}
-#endif
