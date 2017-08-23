@@ -472,18 +472,18 @@ static const char * const book_of_zin[][3] =
 
 static const char * const sinner_text[] =
 {
-    "hordes of the Abyss",
-    "bastard children of Xom",
-    "amorphous wretches",
-    "fetid masses",
-    "agents of filth",
-    "squalid dregs",
-    "unbelievers",
-    "heretics",
-    "guilty",
-    "legions of the damned",
-    "servants of Hell",
-    "forces of darkness",
+    "심연의 떼거리",
+    "좀의 잡종놈들",
+    "길잃은 비참한 존재",
+    "악취나는 놈들",
+    "오물의 대리인",
+    "비열한 찌꺼기",
+    "불신자들",
+    "이교도",
+    "죄인",
+    "천벌받을 군단",
+    "지옥의 시종",
+    "어둠의 군세",
 };
 
 // First column is adjective, then noun.
