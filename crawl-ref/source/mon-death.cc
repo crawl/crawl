@@ -335,7 +335,7 @@ static int _calc_player_experience(const monster* mons)
 
 static void _give_player_experience(int experience, killer_type killer,
                                     bool pet_kill, bool was_visible,
-                                    bool was_spawn)
+                                    xp_tracking_type xp_tracking)
 {
     if (experience <= 0 || crawl_state.game_is_arena())
         return;
@@ -362,12 +362,12 @@ static void _give_player_experience(int experience, killer_type killer,
     LevelXPInfo& curr_xp_info = you.get_level_xp_info();
     LevelXPInfo xp_delta;
 
-    if (was_spawn)
+    if (xp_tracking == XP_SPAWNED)
     {
         xp_delta.spawn_xp += exp_gain;
         xp_delta.spawn_count++;
     }
-    else
+    else if (xp_tracking == XP_GENERATED)
     {
         xp_delta.generated_xp += exp_gain;
         xp_delta.generated_count++;
@@ -390,10 +390,10 @@ static void _give_player_experience(int experience, killer_type killer,
 static void _give_experience(int player_exp, int monster_exp,
                              killer_type killer, int killer_index,
                              bool pet_kill, bool was_visible,
-                             bool was_spawn)
+                             xp_tracking_type xp_tracking)
 {
     _give_player_experience(player_exp, killer, pet_kill, was_visible,
-            was_spawn);
+            xp_tracking);
     _give_monster_experience(monster_exp, killer_index);
 }
 
@@ -2760,7 +2760,7 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (corpse && _reaping(&mons))
             corpse = nullptr;
         _give_experience(player_xp, monster_xp, killer, killer_index,
-                         pet_kill, was_visible, mons.is_spawn);
+                         pet_kill, was_visible, mons.xp_tracking);
         crawl_state.dec_mon_acting(&mons);
 
         return corpse;
@@ -2843,7 +2843,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (!mons_reset)
     {
         _give_experience(player_xp, monster_xp, killer, killer_index,
-                pet_kill, was_visible, mons.is_spawn);
+                pet_kill, was_visible, mons.xp_tracking);
     }
     return corpse;
 }
