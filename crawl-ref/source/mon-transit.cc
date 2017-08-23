@@ -150,8 +150,7 @@ static bool _place_lost_monster(follower &f)
         int turns = (you.elapsed_time - f.transit_start_time)/10;
         mprf(MSGCH_WARN, "updating lost monster: %s, and simulating %d turns",
              f.mons.name(DESC_PLAIN, true).c_str(), turns);
-        monster *monpass = &f.mons;
-        return update_monster(monpass, turns);
+        return update_monster(f.mons, turns);
     }
     else
         return false;

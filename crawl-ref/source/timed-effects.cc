@@ -1403,7 +1403,7 @@ void update_level(int elapsedTime)
         mons_total++;
 #endif
 
-        if (!update_monster(*mi, turns))
+        if (!update_monster(**mi, turns))
             continue;
 
 
@@ -1416,18 +1416,18 @@ void update_level(int elapsedTime)
     delete_all_clouds();
 }
 
-bool update_monster(monster* mon, int turns)
+bool update_monster(monster& mon, int turns)
 {
-    mprf(MSGCH_WARN, "placing %s, %i", mon->name(DESC_PLAIN).c_str(),turns);
+    mprf(MSGCH_WARN, "placing %s, %d", mon.name(DESC_PLAIN).c_str(),turns);
     // Pacified monsters often leave the level now.
-    if (mon->pacified() && turns > random2(40) + 21)
+    if (mon.pacified() && turns > random2(40) + 21)
     {
-        make_mons_leave_level(mon);
+        make_mons_leave_level(&mon);
         return false;
     }
 
     // Following monsters don't get movement.
-    if (mon->flags & MF_JUST_SUMMONED)
+    if (mon.flags & MF_JUST_SUMMONED)
         return false;
 
 
@@ -1435,18 +1435,23 @@ bool update_monster(monster* mon, int turns)
     // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
     // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
 
-    mon->heal(div_rand_round(turns * mon->off_level_regen_rate(), 100));
+    mprf(MSGCH_WARN,"monHP pre  %d",mon.hit_points);
+    mon.heal(div_rand_round(turns * mon.off_level_regen_rate(), 100));
+    mprf(MSGCH_WARN,"monHP post %d",mon.hit_points);
 
     // Handle nets specially to remove the trapping property of the net.
-    if (mon->caught())
-        mon->del_ench(ENCH_HELD, true);
+    if (mon.caught())
+        mon.del_ench(ENCH_HELD, true);
 
-    _catchup_monster_moves(mon, turns);
+    _catchup_monster_moves(&mon, turns);
 
-    mon->foe_memory = max(mon->foe_memory - turns, 0);
+    mon.foe_memory = max(mon.foe_memory - turns, 0);
 
-    if (turns >= 10 && mon->alive())
-        mon->timeout_enchantments(turns / 10);
+    if (turns >= 10 && mon.alive())
+    {
+        mprf(MSGCH_WARN,"Timing out enches");
+        mon.timeout_enchantments(turns / 10);
+    }
 
     return true;
 }
