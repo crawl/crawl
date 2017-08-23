@@ -410,14 +410,14 @@ void spawn_random_monsters()
         mg.proximity = prox;
         mg.foe = (player_on_orb_run()) ? MHITYOU : MHITNOT;
         // Don't count orb run spawns in the xp_info dump
-        mg.is_spawn = !player_on_orb_run();
+        mg.xp_tracking = player_on_orb_run() ? XP_UNTRACKED : XP_SPAWNED;
         mons_place(mg);
         viewwindow();
         return;
     }
 
     mgen_data mg(WANDERING_MONSTER);
-    mg.is_spawn = true;
+    mg.xp_tracking = XP_SPAWNED;
     if (player_in_branch(BRANCH_PANDEMONIUM)
         && !env.properties.exists("vault_mon_weights")
         && !one_chance_in(40))
@@ -1260,7 +1260,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     mon->set_new_monster_id();
     mon->type         = mg.cls;
     mon->base_monster = mg.base_type;
-    mon->is_spawn     = mg.is_spawn;
+    mon->xp_tracking  = mg.xp_tracking;
 
     // Set pos and link monster into monster grid.
     if (!dont_place && !mon->move_to_pos(fpos))

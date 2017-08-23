@@ -5063,7 +5063,7 @@ void marshallMonster(writer &th, const monster& m)
     ASSERT(m.mid > 0);
     marshallInt(th, m.mid);
     marshallString(th, m.mname);
-    marshallByte(th, m.is_spawn);
+    marshallByte(th, m.xp_tracking);
     marshallByte(th, m.get_experience_level());
     marshallByte(th, m.speed);
     marshallByte(th, m.speed_increment);
@@ -5888,9 +5888,20 @@ void unmarshallMonster(reader &th, monster& m)
     m.mname           = unmarshallString(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_LEVEL_XP_INFO)
+    {
+        // This was monster::is_spawn before the level XP info fix.
+        if (th.getMinorVersion() < TAG_MINOR_LEVEL_XP_INFO_FIX)
+            m.xp_tracking = unmarshallByte(th) ? XP_SPAWNED : XP_GENERATED;
+        else
 #endif
-    m.is_spawn        = unmarshallByte(th);
+    m.xp_tracking     = static_cast<xp_tracking_type>(unmarshallUByte(th));
 #if TAG_MAJOR_VERSION == 34
+    }
+    // Don't track monsters generated before TAG_MINOR_LEVEL_XP_INFO.
+    else
+        m.xp_tracking = XP_UNTRACKED;
+
+
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_MON_AC_EV)
     {
         unmarshallByte(th);
