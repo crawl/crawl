@@ -307,166 +307,166 @@ static void _zin_saltify(monster* mon);
 static const char * const book_of_zin[][3] =
 {
     {
-        "It was the word of Zin that there would not be @sin_noun@...",
-        "...and did the people not suffer until they had @smitten@...",
-        "...the @sinners@, after which all was well?",
+        "진께서는 말씀하셨노라. @sin_noun@이(가) 없을 것이다...",
+        "...사람들은 @sinners@가 @smitten@될 때까지...",
+        "...고통을 겪지 않았노라, 그 후에 모든 게 괜찮았느냐?",
     },
 
     {
-        "The voice of Zin, pure and clear, did say that the @sinners@...",
-        "...were not @virtuous@! And hearing this, the people rose up...",
-        "...and embraced @virtue@, for they feared Zin's wrath.",
+        "진의 목소리는, 깨끗하고도 분명하게, @sinners@에게 말했다...",
+        "...@virtuous@지 않다! 이를 듣자, 사람들이 모두 일어섰다...",
+        "...그들은 진의 분노를 두려워했기에, @virtue@를 받아들였다.",
     },
 
     {
-        "Zin spoke of the doctrine of @virtue@, and...",
-        "...saw the @sinners@ filled with fear, for they were...",
-        "...@sin_adj@ and knew Zin's wrath would come for them.",
+        "진께서는 @virtue@의 교리에 대해 말하였고...",
+        "...@sinners@들이 두려움에 떠는것을 보았다, 왜냐하면 그들은...",
+        "...@sin_adj@, 진의 분노가 그들에게 향할것임을 알았기 때문이다.",
     },
 
     {
-        "And so Zin bade the @sinners@ to come before...",
-        "...the altar, that judgement might be passed...",
-        "...upon those who were not @virtuous@.",
+        "그리하여 진께서는 @sinners@들을 질책하셨다...",
+        "...제단 앞에 오도록, 그리하여 심판이 내려지도록...",
+        "...@virtuous@이지 않은 이들에게.",
     },
 
     {
-        "To the devout, Zin provideth. From the rest...",
-        "...ye @sinners@, ye guilty...",
-        "...of @sin_noun@, Zin taketh.",
+        "독실한 이에게는, 진께서 베푸시리라. 그렇지 않은...",
+        "...너희 @sinners@, @sin_noun@를 저지른...",
+        "...너희 죄인들은, 진께서 가져가시리라.",
     },
 
     {
-        "Zin saw the @sin_noun@ of the @sinners@, and...",
-        "...was displeased, for did the law not say that...",
-        "...those who did not become @virtuous@ would be @smitten@?",
+        "...진께서 @sinners@의 @sin_noun@을 보시메,...",
+        "...율법에 따르지 않았기에 그것이 보기에 좋지 않으셨더라,...",
+        "... @virtuous@ 않은 이들은 @smitten@해야하지 않겠는가?",
     },
 
     {
-        "Zin said that @virtue@ shall be the law of the land, and...",
-        "...those who turn to @sin_noun@ will be @smitten@. This was fair...",
-        "...and just, and not a voice dissented.",
+        "...진께서 이르시되 @virtue@가 곧 땅의 법이며,...",
+        "...@sin_noun@를 범하는 이는 @smitten@ 받아야 하리라. 이것이 공정하다 하셨다...",
+        "...그리고 이에 반하는 목소리는 없었도다.",
     },
 
     {
-        "Damned, damned be the @sinners@ and...",
-        "...all else who abandon @virtue@! Let them...",
-        "...be @smitten@ by the jurisprudence of Zin!",
+        "천벌 받을 @sinners@ 그리고...",
+        "...@virtue@를 버린 모든 이들아! 너희들은...",
+        "...진의 율법 아래 @smitten@될 것이다!",
     },
 
     {
 
-        "And Zin said to all in attendance, 'Which of ye...",
-        "...number among the @sinners@? Come before me, that...",
-        "...I may @smite@ you now for your @sin_noun@!'",
+        "진께서 청중들에게 이르시길, '너희들 중 누가...",
+        "...@sinners@ 중 하나인가? 내게로 오라,...",
+        "...내가 너를 너의 @sin_noun@로 지금 @smite@하겠노라!'",
     },
 
     {
-        "Yea, I say unto thee, bring forth...",
-        "...the @sinners@ that they may know...",
-        "...the wrath of Zin, and thus be @smitten@!",
+        "참으로 내가 네게 이르노니, 네가...",
+        "...@sinners@들을 불러다가...",
+        "그들이 진의 진노를 알게 하고, @smitten@되게 하라!",
     },
 
     {
-        "In a great set of silver scales are weighed the...",
-        "...souls of the @sinners@, and with their @sin_adj@...",
-        "...ways, the balance hath tipped against them!",
+        "위대한 은 저울들이 무게를 재리라...",
+        "...@sinners@의 영혼들을, 그들의 @sin_adj@ 방법을,...",
+        "...천칭은 그들 쪽으로 기울게 되리라!",
     },
 
     {
-        "It is just that the @sinners@ shall be @smitten@...",
-        "...in due time, for @virtue@ is what Zin has declared...",
-        "...the law of the land, and Zin's word is law!",
+        "@sinners@들은 마땅히 @smitten@받기로 예정되어 있으며...",
+        "...,이는 @virtue@를 위함이 진께서 선언하신...",
+        "...땅의 율법이기에, 그리고 진께서 말씀하신 바가 곧 법이기 때문이다!",
     },
 
     {
-        "Thus the people made the covenant of @virtue@ with...",
-        "...Zin, and all was good, for they knew that the...",
-        "...@sinners@ would trouble them no longer.",
+        "그리하여 백성들에게 @virtue@의 언약을 ...",
+        "...진께서 하셨다, 모든 것이 좋았도다, 백성들이 알게 하셨기 때문에...",
+        "...@sinners@가 더 이상 괴롭게 하지 않으리라는 것을.",
     },
 
     {
-        "What of the @sinners@? @Smitten@ for their...",
-        "...@sin_noun@ they shall be! Zin will @smite@ them again...",
-        "...and again, and again!",
+        "저것들이 다 무엇이더냐! @sinners@? @Smitten@ 이 있을 것이다...",
+        "...바로 너희의 @sin_noun@에 대해! 진께서 다시 저들에게 @smite@ 하실 것이다...",
+        "...다시, 또 다시!",
     },
 
     {
-        "And lo, the wrath of Zin did find...",
-        "...them wherever they hid, and the @sinners@...",
-        "...were @smitten@ for their @sin_noun@!",
+        "그리고, 진의 진노는 알아낼 수 있노라...",
+        "...@sinners@가 어디에 숨어있든 간에,...",
+        "...그들의 @sin_noun@로 하여금, 그들은 @smitten@받으리라!",
     },
 
     {
-        "Zin looked out upon the remains of the @sinners@...",
-        "...and declared it good that they had been...",
-        "...@smitten@. And thus justice was done.",
+        "진께서 @sinners@의 잔해를 보시메...",
+        "...이것이 선이라 선언했노라 그들이...",
+        "...@smitten@된 것을. 이와 같이 정의가 이루어졌노라.",
     },
 
     {
-        "The law of Zin demands thee...",
-        "...be @virtuous@, and that the punishment for @sin_noun@...",
-        "...shall be swift and harsh!",
+        "진의 율법이 네게 요구하노라...",
+        "...@virtuous@하라, 그리고 @sin_noun@를 위한 처벌은...",
+        "...신속하고 엄해야 하느니라!",
     },
 
     {
-        "It was then that Zin bade them...",
-        "...not to stray from @virtue@, lest...",
-        "...they become as damned as the @sinners@.",
+        "그리고 진께서 질책하시메...",
+        "...@virtue@에서 멀어지지 않도록 하라, 그렇지 않다면...",
+        "...@sinners@만큼 천벌 받을 것들이 되리라.",
     },
 
     {
-        "Only the @virtuous@ shall be judged worthy, and...",
-        "...all the @sinners@ will be found wanting. Such is...",
-        "...the word of Zin, and such is the law!",
+        "오직 @virtuous@만이 가치 있게 판단될 것이며,...",
+        "...모든 @sinners@들은 갈망하게 될 것이다. 이는...",
+        "...진께서 말하신 바이며, 또한 이는 법도이다!",
     },
 
     {
-        "To those who would swear an oath of @virtue@ on my altar...",
-        "...I bring ye salvation. To the rest, ye @sinners@...",
-        "...and the @sin_adj@, the name of Zin shall be thy damnation.",
+        "내 제단에서 @virtue@의 언약을 맹세한 자들에게...",
+        "...나는 너희에게 구원을 주노라. 그렇지 않은, 너희 @sinners@들아...",
+        "...그리고 @sin_adj@인 것들아, 진의 이름은 너희의 업화가 되리라.",
     },
 
     {
-        "And Zin decreed that the people would be...",
-        "...protected from @sin_noun@ in all its forms, and...",
-        "...preserved in their @virtue@ for all the days to come.",
+        "그리고 진께서 널리 이르시길, 백성들은...",
+        "...어떠한 모습의 @sin_noun@들로부터도 보호될 것이며,...",
+        "...모든 다가올 날들에 그들의 @virtue@는 보존될 것이라 하셨다.",
     },
 
     {
-        "For those who would enter Zin's holy bosom...",
-        "...and live in @virtue@, Zin provideth. Such is...",
-        "...the covenant, and such is the way of things.",
+        "진의 거룩한 가슴에 들어오려는 이들...",
+        "...@virtue@로 살아가는 이들에게, 진께서 베푸시리라. 이것이...",
+        "...언약이며, 이것이 만물의 법도이니라.",
     },
 
     {
-        "Zin hath not damned the @sinners@, but it is they...",
-        "...that have damned themselves for their @sin_noun@, for...",
-        "...did Zin not decree that to be @sin_adj@ was wrong?",
+        "진께서는 @sinners@들에게 신벌을 내리지 않으시지만, 그들이...",
+        "...그들 자신에게 그들의 @sin_noun@로서 신벌을 내리노라, 왜냐하면...",
+        "...진께서는 @sin_adj@이 잘못된 것이라 널리 선언하지 않으셨던가?",
     },
 
     {
-        "And Zin, furious at their @sin_noun@, held...",
-        "...aloft a silver sceptre! The @sinners@...",
-        "...were @smitten@, and thus the way of things was maintained.",
+        "그리고 진께서, 그들의 @sin_noun@에 진노하시메, 집으셨노라...",
+        "...순은의 홀을! 그 @sinners@...",
+        "...@smitten@ 받았노라, 그러자 만물의 법도가 유지되었도다.",
     },
 
     {
-        "When the law of the land faltered, Zin rose...",
-        "...from the silver throne, and the @sinners@ were...",
-        "...@smitten@. And it was thus that the law was made good.",
+        "땅의 법도가 위태로울 때, 고결한 은 왕좌에서...",
+        "...진께서 일어나시니, @sinners@은...",
+        "...@smitten@되리라. 이것으로 모든 율법이 다시 자신의 길로 가더라.",
     },
 
     {
-        "Zin descended from on high in a silver chariot...",
-        "...to @smite@ the @sinners@ for their...",
-        "...@sin_noun@, and thus judgement was rendered.",
+        "진께서 고결한 은 마차를 타고 낮은 곳에 강림하시어...",
+        "...그들의 @sin_noun@로 하여금 @sinners@에게...",
+        "...@smite@ 하시메, 그리하여 정의가 참되게 하시더라.",
     },
 
     {
-        "The @sinners@ stood before Zin, and in that instant...",
-        "...they knew they would be found guilty of @sin_noun@...",
-        "...for that is the word of Zin, and Zin's word is law.",
+        "그 @sinners@이 진 앞에 섰노라, 그 순간에...",
+        "...그들은 @sin_noun@의 죄악이 들키리란 걸 알아챌 것이다...",
+        "...그것은 진의 말씀에 의한 것이며, 진의 말씀이 곧 율법이기 때문이다.",
     },
 };
 
