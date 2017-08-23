@@ -1,0 +1,81 @@
+# keymap with working vi keys for workman keyboards
+
+bindkey = [y] CMD_MOVE_LEFT
+bindkey = [e] CMD_MOVE_DOWN
+bindkey = [n] CMD_MOVE_UP
+bindkey = [o] CMD_MOVE_RIGHT
+bindkey = [j] CMD_MOVE_UP_LEFT
+bindkey = [f] CMD_MOVE_UP_RIGHT
+bindkey = [k] CMD_MOVE_DOWN_LEFT
+bindkey = [l] CMD_MOVE_DOWN_RIGHT
+
+bindkey = [Y] CMD_RUN_LEFT
+bindkey = [E] CMD_RUN_DOWN
+bindkey = [N] CMD_RUN_UP
+bindkey = [O] CMD_RUN_RIGHT
+bindkey = [J] CMD_RUN_UP_LEFT
+bindkey = [F] CMD_RUN_UP_RIGHT
+bindkey = [K] CMD_RUN_DOWN_LEFT
+bindkey = [L] CMD_RUN_DOWN_RIGHT
+
+bindkey = [y] CMD_TARGET_LEFT
+bindkey = [e] CMD_TARGET_DOWN
+bindkey = [n] CMD_TARGET_UP
+bindkey = [o] CMD_TARGET_RIGHT
+bindkey = [j] CMD_TARGET_UP_LEFT
+bindkey = [f] CMD_TARGET_UP_RIGHT
+bindkey = [k] CMD_TARGET_DOWN_LEFT
+bindkey = [l] CMD_TARGET_DOWN_RIGHT
+
+bindkey = [Y] CMD_TARGET_DIR_LEFT
+bindkey = [E] CMD_TARGET_DIR_DOWN
+bindkey = [N] CMD_TARGET_DIR_UP
+bindkey = [O] CMD_TARGET_DIR_RIGHT
+bindkey = [J] CMD_TARGET_DIR_UP_LEFT
+bindkey = [F] CMD_TARGET_DIR_UP_RIGHT
+bindkey = [K] CMD_TARGET_DIR_DOWN_LEFT
+bindkey = [L] CMD_TARGET_DIR_DOWN_RIGHT
+
+bindkey = [y] CMD_MAP_MOVE_LEFT
+bindkey = [e] CMD_MAP_MOVE_DOWN
+bindkey = [n] CMD_MAP_MOVE_UP
+bindkey = [o] CMD_MAP_MOVE_RIGHT
+bindkey = [j] CMD_MAP_MOVE_UP_LEFT
+bindkey = [f] CMD_MAP_MOVE_UP_RIGHT
+bindkey = [k] CMD_MAP_MOVE_DOWN_LEFT
+bindkey = [l] CMD_MAP_MOVE_DOWN_RIGHT
+
+bindkey = [Y] CMD_MAP_JUMP_LEFT
+bindkey = [E] CMD_MAP_JUMP_DOWN
+bindkey = [N] CMD_MAP_JUMP_UP
+bindkey = [O] CMD_MAP_JUMP_RIGHT
+bindkey = [J] CMD_MAP_JUMP_UP_LEFT
+bindkey = [F] CMD_MAP_JUMP_UP_RIGHT
+bindkey = [K] CMD_MAP_JUMP_DOWN_LEFT
+bindkey = [L] CMD_MAP_JUMP_DOWN_RIGHT
+
+# replace (e) with (b)
+bindkey = [b] CMD_EAT
+bindkey = [b] CMD_TARGET_EXCLUDE
+bindkey = [b] CMD_MAP_EXCLUDE_AREA
+bindkey = [B] CMD_EXPERIENCE_CHECK
+bindkey = [B] CMD_MAP_FIND_EXCLUDED
+bindkey = [^B] CMD_TOGGLE_TRAVEL_SPEED
+bindkey = [^B] CMD_MAP_CLEAR_EXCLUDES
+
+# replace (o) with (u)
+bindkey = [u] CMD_EXPLORE
+bindkey = [u] CMD_MAP_EXPLORE
+bindkey = [u] CMD_TARGET_WIZARD_GIVE_ITEM
+bindkey = [U] CMD_OPEN_DOOR
+bindkey = [U] CMD_MAP_FIND_STASH_REVERSE
+bindkey = [^U] CMD_DISPLAY_OVERMAP
+
+# replace (f) with (h)
+bindkey = [h] CMD_FIRE
+bindkey = [h] CMD_TARGET_SELECT
+bindkey = [H] CMD_THROW_ITEM_NO_QUIVER
+bindkey = [H] CMD_TARGET_WIZARD_MAKE_FRIENDLY
+bindkey = [H] CMD_MAP_FIND_WAYPOINT
+bindkey = [^H] CMD_SEARCH_STASHES
+bindkey = [^H] CMD_MAP_FORGET
