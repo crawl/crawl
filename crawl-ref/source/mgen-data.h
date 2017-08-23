@@ -5,6 +5,7 @@
 #include "god-type.h"
 #include "mgen-enum.h"
 #include "mon-flags.h"
+#include "xp-tracking-type.h"
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.

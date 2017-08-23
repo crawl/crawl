@@ -10,6 +10,7 @@
 #include "potion-type.h"
 #include "seen-context-type.h"
 #include "spl-util.h"
+#include "xp-tracking-type.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
