@@ -1288,6 +1288,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_DISTRACTED_ACROBATICS:
         case ENCH_STILL_WINDS: case ENCH_RING_OF_THUNDER:
+            mprf(MSGCH_WARN,"timing out %d, %d", entry.first, levels);
             lose_ench_levels(entry.second, levels);
             break;
 
