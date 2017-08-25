@@ -150,6 +150,9 @@ static monster* _place_lost_monster(follower &f)
         int turns = (you.elapsed_time - f.transit_start_time)/10;
         mprf(MSGCH_WARN, "updating lost monster: %s, and simulating %d turns",
              mons->name(DESC_PLAIN, true).c_str(), turns);
+        //Unflag as summoned or else monster will be ignored in update_monster
+        //FIXME: add MF_SHAFTED flag?
+        mons->flags &= ~MF_JUST_SUMMONED;
         return update_monster(*mons, turns);
     }
     else
