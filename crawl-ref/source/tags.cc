@@ -1825,7 +1825,13 @@ static follower unmarshall_follower(reader &th)
 {
     follower f;
     unmarshallMonster(th, f.mons);
-    f.transit_start_time = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_FOLLOWER_TRANSIT_TIME)
+        f.transit_start_time = unmarshallInt(th);
+    else
+        //Set transit_start_time to 0 and let follower heal completely
+        f.transit_start_time = 0;
+#endif
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         unmarshallItem(th, f.items[i]);
     return f;
