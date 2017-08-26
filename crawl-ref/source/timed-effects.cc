@@ -1433,7 +1433,7 @@ monster* update_monster(monster& mon, int turns)
 
     // Ignore monsters flagged to skip their next action
     if (mon.flags & MF_JUST_SUMMONED)
-        return nullptr;
+        return &mon;
 
     // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
     // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
