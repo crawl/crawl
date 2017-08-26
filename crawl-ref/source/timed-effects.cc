@@ -1402,7 +1402,7 @@ void update_level(int elapsedTime)
 #ifdef DEBUG_DIAGNOSTICS
         mons_total++;
 #endif
-        // Try to update monster. If we return nullptr, we
+
         if (!update_monster(**mi, turns))
             continue;
     }
@@ -1418,7 +1418,7 @@ void update_level(int elapsedTime)
  * Update the monster upon the player's return
  *
  * @param mon   The monster to update.
- * @param turns How many turns the monster has been away from the player.
+ * @param turns How many turns (not auts) since the monster left the player
  * @returns     Returns nullptr if monster is not updated.
  *              Returns the updated monster if it was updated.
  */
@@ -1448,6 +1448,7 @@ monster* update_monster(monster& mon, int turns)
 
     mon.foe_memory = max(mon.foe_memory - turns, 0);
 
+    // FIXME:  Convert literal string 10 to constant to convert to auts
     if (turns >= 10 && mon.alive())
         mon.timeout_enchantments(turns / 10);
 

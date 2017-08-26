@@ -149,9 +149,6 @@ static monster* _place_lost_monster(follower &f)
         // Figure out how many turns we need to update the monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
 
-        dprf(MSGCH_WARN, "Updating lost monster: %s, and simulating %d turns",
-             mons->name(DESC_PLAIN, true).c_str(), turns);
-
         //Unflag as summoned or else monster will be ignored in update_monster
         mons->flags &= ~MF_JUST_SUMMONED;
         return update_monster(*mons, turns);
