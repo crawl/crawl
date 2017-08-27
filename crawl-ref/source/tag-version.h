@@ -215,6 +215,7 @@ enum tag_minor_version
     TAG_MINOR_LIGHTNING_ROD_XP_FIX, // Set XP debt for partially used l. rods.
     TAG_MINOR_LEVEL_XP_INFO       , // Track XP gain by level.
     TAG_MINOR_LEVEL_XP_INFO_FIX   , // Fix orb spawn XP tracking.
+    TAG_MINOR_FOLLOWER_TRANSIT_TIME, // Handle updating lost_ones after placing.
 
 #endif
     NUM_TAG_MINORS,
