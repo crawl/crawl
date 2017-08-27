@@ -4312,7 +4312,6 @@ NAME:   nzn_motion_control
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  D:10-, Lair:4-, Shoals:2-, !Shoals:$
 ORIENT: float
-NSUBST: { = 1:{ / *:W
 SHUFFLE: HY / 12, $%, eE / rR
 SUBST:  ER = ., r = x, e = + .
 : if you.in_branch("Shoals") then
@@ -4331,11 +4330,11 @@ xxxxxE@Exxxxx
 xH..xxExx..2x
 x.%WWxexWW$.x
 x.WSSwSwSSW.x
-xxWSSWWWSSWxx
-RxxwWW{WWwxxR
-@RrSW{W{WSrR@
-RxxwWW{WWwxxR
-xxWSSWWWSSWxx
+xxWSSSSSSSWxx
+RxxwSWWWSwxxR
+@RrSSW{WSSrR@
+RxxwSWWWSwxxR
+xxWSSSSSSSWxx
 x.WSSwSwSSW.x
 x.$WWxexWW%.x
 x1..xxExx..Yx
