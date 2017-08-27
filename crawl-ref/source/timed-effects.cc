@@ -1419,8 +1419,8 @@ void update_level(int elapsedTime)
  *
  * @param mon   The monster to update.
  * @param turns How many turns (not auts) since the monster left the player
- * @returns     Returns nullptr if monster is not updated.
- *              Returns the updated monster if it was updated.
+ * @returns     Returns nullptr if monster was destroyed by the update;
+ *              Returns the updated monster if it still exists.
  */
 monster* update_monster(monster& mon, int turns)
 {
