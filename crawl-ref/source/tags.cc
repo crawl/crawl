@@ -1816,6 +1816,7 @@ static void marshall_follower(writer &th, const follower &f)
     ASSERT(!invalid_monster_type(f.mons.type));
     ASSERT(f.mons.alive());
     marshallMonster(th, f.mons);
+    marshallInt(th, f.transit_start_time);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         marshallItem(th, f.items[i]);
 }
@@ -1824,6 +1825,17 @@ static follower unmarshall_follower(reader &th)
 {
     follower f;
     unmarshallMonster(th, f.mons);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_FOLLOWER_TRANSIT_TIME)
+#endif
+        f.transit_start_time = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    else
+    {
+        //Set transit_start_time to 0 and let follower heal completely
+        f.transit_start_time = 0;
+    }
+#endif
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         unmarshallItem(th, f.items[i]);
     return f;

@@ -19,6 +19,7 @@
 #include "libutil.h" // map_find
 #include "mon-place.h"
 #include "religion.h"
+#include "timed-effects.h"
 
 #define MAX_LOST 100
 
@@ -66,6 +67,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
 
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.emplace_back(m);
+    mlist.back().transit_start_time = you.elapsed_time;
 
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
@@ -142,7 +144,17 @@ void place_followers()
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-    return f.place(false);
+    if (monster* mons = f.place(false))
+    {
+        // Figure out how many turns we need to update the monster
+        int turns = (you.elapsed_time - f.transit_start_time)/10;
+
+        //Unflag as summoned or else monster will be ignored in update_monster
+        mons->flags &= ~MF_JUST_SUMMONED;
+        return update_monster(*mons, turns);
+    }
+    else
+        return nullptr;
 }
 
 static void _level_place_lost_monsters(m_transit_list &m)
