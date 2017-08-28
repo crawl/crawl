@@ -339,7 +339,7 @@ static const char * const book_of_zin[][3] =
     {
         "...진께서 @sinners@의 @sin_noun@을 보시메,...",
         "...율법에 따르지 않았기에 그것이 보기에 좋지 않으셨더라,...",
-        "... @virtuous@지 않은 이들은 @smitten@해야하지 않겠는가?",
+        "... @virtuous@지 않은 이들은 @smite@해야하지 않겠는가?",
     },
 
     {
@@ -387,7 +387,7 @@ static const char * const book_of_zin[][3] =
 
     {
         "저것들이 다 무엇이더냐! @sinners@? @Smitten@리라...",
-        "...바로 너희의 @sin_noun@에 대해! 진께서 다시 저들에게 @smite@리라...",
+        "...바로 너희의 @sin_noun@에 대해! 진께서 다시 저들에게 @smitten@리라...",
         "...다시, 또 다시!",
     },
 
@@ -506,32 +506,32 @@ static const char * const sin_text[][2] =
 // First column is adjective, then noun.
 static const char * const virtue_text[][2] =
 {
-    { "ordered",   "order" },
-    { "harmonic",  "harmony" },
-    { "lawful",    "lawfulness" },
-    { "clean",     "cleanliness" },
-    { "pure",      "purity" },
-    { "hygienic",  "hygiene" },
-    { "faithful",  "faithfulness" },
-    { "loyal",     "loyalty" },
-    { "believing", "belief" },
-    { "reverent",  "reverence" },
-    { "pious",     "piety" },
-    { "obedient",  "obedience" },
+    { "정돈되어 있", "정돈" },
+    { "조화롭", "조화" },
+    { "질서 있", "질서" },
+    { "청결되어 있", "청결" },
+    { "순수하", "순수" },
+    { "위생적이", "위생" },
+    { "충실하", "충실" },
+    { "충성스럽", "충성" },
+    { "믿음직하", "믿음" },
+    { "경건하", "경건" },
+    { "독실하", "독실" },
+    { "순종적이", "순종" },
 };
 
 // First column is infinitive, then gerund.
 static const char * const smite_text[][2] =
 {
-    { "purify",      "purified" },
-    { "censure",     "censured" },
-    { "condemn",     "condemned" },
-    { "strike down", "struck down" },
-    { "expel",       "expelled" },
-    { "oust",        "ousted" },
-    { "smite",       "smitten" },
-    { "castigate",   "castigated" },
-    { "rebuke",      "rebuked" },
+    { "정화하", "정화되" },
+    { "비난하", "비난받으" },
+    { "경멸하", "경멸되" },
+    { "내려치", "내려쳐지" },
+    { "추방하", "추방되" },
+    { "쫓아내", "축출되" },
+    { "강타하", "강타 받으" },
+    { "징벌하", "징벌 받으" },
+    { "힐난하", "힐난 받으" },
 };
 
 /** Get the verse to recite this turn.
