@@ -489,18 +489,18 @@ static const char * const sinner_text[] =
 // First column is adjective, then noun.
 static const char * const sin_text[][2] =
 {
-    { "chaotic",      "chaos" },
-    { "discordant",   "discord" },
-    { "anarchic",     "anarchy" },
-    { "unclean",      "uncleanliness" },
-    { "impure",       "impurity" },
-    { "contaminated", "contamination" },
-    { "unfaithful",   "unfaithfulness" },
-    { "disloyal",     "disloyalty" },
-    { "doubting",     "doubt" },
-    { "profane",      "profanity" },
-    { "blasphemous",  "blasphemy" },
-    { "sacrilegious", "sacrilege" },
+    { "혼돈의",      "혼돈" },
+    { "불협화음",   "불화" },
+    { "무질서한",     "무질서" },
+    { "부정한",      "부정" },
+    { "불결한",       "불결" },
+    { "오염된", "오염" },
+    { "믿음을 저버린",   "불신" },
+    { "불충한",     "불충" },
+    { "의심하는",     "의심" },
+    { "모독하는",      "모독" },
+    { "불경한",  "불경" },
+    { "신성모독적인", "신성모독" },
 };
 
 // First column is adjective, then noun.
