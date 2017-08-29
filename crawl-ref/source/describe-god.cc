@@ -895,9 +895,11 @@ static void _describe_god_powers(god_type which_god)
                 piety >= piety_breakpoint(2) ? "" :
                                                "slightly ");
         if (you.species != SP_GNOLL)
-        cprintf("%s supports your attributes. (+%d)\n",
-                uppercase_first(god_name(which_god)).c_str(),
-                chei_stat_boost(piety));
+        {
+            cprintf("%s supports your attributes. (+%d)\n",
+                    uppercase_first(god_name(which_god)).c_str(),
+                    chei_stat_boost(piety));
+        }
         break;
 
     case GOD_VEHUMET:
