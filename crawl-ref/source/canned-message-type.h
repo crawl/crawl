@@ -41,4 +41,5 @@ enum canned_message_type
     MSG_MAGIC_DRAIN,
     MSG_SOMETHING_IN_WAY,
     MSG_CANNOT_SEE,
+    MSG_GOD_DECLINES,
 };

@@ -1300,6 +1300,17 @@ static bool _check_ability_possible(const ability_def& abil,
         }
     }
 
+    const god_power* god_power;
+    if (god_power_from_ability(abil.ability, &god_power))
+    {
+        if (!god_power_usable(*god_power))
+        {
+            if (!quiet)
+                canned_msg(MSG_GOD_DECLINES);
+            return false;
+        }
+    }
+
     vector<text_pattern> &actions = Options.confirm_action;
     if (!actions.empty())
     {
@@ -3755,22 +3766,12 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
     if (!ignore_silence && silenced(you.pos()))
         return abilities;
     // Remaining abilities are unusable if silenced.
-
     for (const auto& power : get_god_powers(you.religion))
     {
-        // not an activated power
-        if (power.abil == ABIL_NON_ABILITY)
-            continue;
-        const ability_type abil = fixup_ability(power.abil);
-        ASSERT(abil != ABIL_NON_ABILITY);
-        if ((power.rank <= 0
-             || power.rank == 7 && can_do_capstone_ability(you.religion)
-             || piety_rank() >= power.rank
-             || ignore_piety)
-            && (!player_under_penance()
-                || power.rank == -1
-                || ignore_penance))
+        if (god_power_usable(power, ignore_piety, ignore_penance))
         {
+            const ability_type abil = fixup_ability(power.abil);
+            ASSERT(abil != ABIL_NON_ABILITY);
             abilities.push_back(abil);
         }
     }
