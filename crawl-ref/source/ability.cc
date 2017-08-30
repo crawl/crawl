@@ -1300,15 +1300,12 @@ static bool _check_ability_possible(const ability_def& abil,
         }
     }
 
-    const god_power* god_power;
-    if (god_power_from_ability(abil.ability, &god_power))
+    const god_power* god_power = god_power_from_ability(abil.ability);
+    if (god_power && !god_power_usable(*god_power))
     {
-        if (!god_power_usable(*god_power))
-        {
-            if (!quiet)
-                canned_msg(MSG_GOD_DECLINES);
-            return false;
-        }
+        if (!quiet)
+            canned_msg(MSG_GOD_DECLINES);
+        return false;
     }
 
     vector<text_pattern> &actions = Options.confirm_action;

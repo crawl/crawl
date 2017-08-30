@@ -195,5 +195,5 @@ struct god_power
 
 void set_god_ability_slots();
 vector<god_power> get_god_powers(god_type god);
-bool god_power_from_ability(ability_type abil, const god_power** result);
+const god_power* god_power_from_ability(ability_type abil);
 bool god_power_usable(const god_power& power, bool ignore_piety=false, bool ignore_penance=false);

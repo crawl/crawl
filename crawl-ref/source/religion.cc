@@ -4673,16 +4673,16 @@ bool god_power_usable(const god_power& power, bool ignore_piety, bool ignore_pen
         return false;
     const ability_type abil = fixup_ability(power.abil);
     ASSERT(abil != ABIL_NON_ABILITY);
-    return ((power.rank <= 0
-             || power.rank == 7 && can_do_capstone_ability(you.religion)
-             || piety_rank() >= power.rank
-             || ignore_piety)
-            && (!player_under_penance()
-                || power.rank == -1
-                || ignore_penance));
+    return (power.rank <= 0
+            || power.rank == 7 && can_do_capstone_ability(you.religion)
+            || piety_rank() >= power.rank
+            || ignore_piety)
+           && (!player_under_penance()
+               || power.rank == -1
+               || ignore_penance);
 }
 
-bool god_power_from_ability(ability_type abil, const god_power** result)
+const god_power* god_power_from_ability(ability_type abil)
 {
     for (int god = GOD_NO_GOD; god < NUM_GODS; god++)
     {
@@ -4690,10 +4690,9 @@ bool god_power_from_ability(ability_type abil, const god_power** result)
         {
             if (power.abil == abil)
             {
-                *result = &power;
-                return true;
+                return &power;
             }
         }
     }
-    return false;
+    return nullptr;
 }
