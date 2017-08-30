@@ -631,9 +631,9 @@ static const char* _wand_type_name(int wandtype)
 static const char* wand_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "", "jewelled ", "curved ", "long ", "short ", "twisted ", "crooked ",
-        "forked ", "shiny ", "blackened ", "tapered ", "glowing ", "worn ",
-        "encrusted ", "runed ", "sharpened "
+        "", "보석박힌 ", "굽은 ", "기다란 ", "짧은 ", "꼬인 ", "손잡이달린 ",
+        "갈라진 ", "빛나는 ", "그을린 ", "끝이 가는 ", "반짝이는 ", "낡은 ",
+        "장식된 ", "룬이 새겨진 ", "뾰족한 "
     };
     COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_WAND_SEC);
     return secondary_strings[s % NDSC_WAND_SEC];
@@ -642,8 +642,8 @@ static const char* wand_secondary_string(uint32_t s)
 static const char* wand_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "iron", "brass", "bone", "wooden", "copper", "gold", "silver",
-        "bronze", "ivory", "glass", "lead", "fluorescent"
+        "철", "놋쇠", "뼈", "나무", "구리", "금", "은",
+        "청동", "상아", "유리", "납", "형광"
     };
     COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_WAND_PRI);
     return primary_strings[p % NDSC_WAND_PRI];
@@ -882,9 +882,9 @@ static string jewellery_type_name(int jeweltype)
 static const char* ring_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "", "encrusted ", "glowing ", "tubular ", "runed ", "blackened ",
-        "scratched ", "small ", "large ", "twisted ", "shiny ", "notched ",
-        "knobbly "
+        "", "장식된 ", "반짝거리는 ", "튜브형 ", "룬이 새겨진 ", "그을린 ",
+        "긁힌 ", "작은 ", "커다란 ", "꼬인 ", "빛나는 ", "홈 있는 ",
+        "울퉁불퉁한 "
     };
     COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_JEWEL_SEC);
     return secondary_strings[s % NDSC_JEWEL_SEC];
@@ -893,11 +893,11 @@ static const char* ring_secondary_string(uint32_t s)
 static const char* ring_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "wooden", "silver", "golden", "iron", "steel", "tourmaline", "brass",
-        "copper", "granite", "ivory", "ruby", "marble", "jade", "glass",
-        "agate", "bone", "diamond", "emerald", "peridot", "garnet", "opal",
-        "pearl", "coral", "sapphire", "cabochon", "gilded", "onyx", "bronze",
-        "moonstone"
+        "나무", "은", "금", "철", "강철", "전기석", "놋쇠",
+        "구리", "화강암", "상아", "루비", "대리석", "옥", "유리",
+        "마노", "뼈", "다이아몬드", "에메랄드", "감람석", "가넷", "오팔",
+        "진주", "산호", "사파이어", "카보숑", "도금", "오닉스", "청동",
+        "월장석"
     };
     COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_JEWEL_PRI);
     return primary_strings[p % NDSC_JEWEL_PRI];
@@ -906,9 +906,9 @@ static const char* ring_primary_string(uint32_t p)
 static const char* amulet_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "dented ", "square ", "thick ", "thin ", "runed ", "blackened ",
-        "glowing ", "small ", "large ", "twisted ", "tiny ", "triangular ",
-        "lumpy "
+        "찌그러진 ", "사각형 ", "두툼한 ", "얇은 ", "룬이 새겨진 ", "그을린 ",
+        "반짝거리는 ", "작은 ", "커다란 ", "꼬인 ", "자그마한 ", "삼각형 ",
+        "우둘투둘한 "
     };
     COMPILE_CHECK(ARRAYSZ(secondary_strings) == NDSC_JEWEL_SEC);
     return secondary_strings[s % NDSC_JEWEL_SEC];
@@ -917,11 +917,11 @@ static const char* amulet_secondary_string(uint32_t s)
 static const char* amulet_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "sapphire", "zirconium", "golden", "emerald", "garnet", "bronze",
-        "brass", "copper", "ruby", "citrine", "bone", "platinum", "jade",
-        "fluorescent", "amethyst", "cameo", "pearl", "blue", "peridot",
-        "jasper", "diamond", "malachite", "steel", "cabochon", "silver",
-        "soapstone", "lapis lazuli", "filigree", "beryl"
+        "사파이어", "지르코늄", "금", "에메랄드", "가넷", "청동",
+        "놋쇠", "구리", "루비", "황수정", "뼈", "백금", "옥",
+        "형광색", "자수정", "카메오", "진주", "파란", "감람석",
+        "벽옥", "다이아몬드", "공작석", "강철", "카보숑", "은",
+        "동석", "청금석", "선세공된", "녹주석"
     };
     COMPILE_CHECK(ARRAYSZ(primary_strings) == NDSC_JEWEL_PRI);
     return primary_strings[p % NDSC_JEWEL_PRI];
@@ -1022,8 +1022,8 @@ static const char* book_secondary_string(uint32_t s)
         return "";
 
     static const char* const secondary_strings[] = {
-        "", "chunky ", "thick ", "thin ", "wide ", "glowing ",
-        "dog-eared ", "oblong ", "runed ", "", "", ""
+        "", "두툼한 ", "두꺼운 ", "얇은 ", "넓은 ", "반짝거리는 ",
+        "페이지가 접힌 ", "길쭉한 ", "룬이 새겨진 ", "", "", ""
     };
     return secondary_strings[(s / NDSC_BOOK_PRI) % ARRAYSZ(secondary_strings)];
 }
@@ -1031,7 +1031,7 @@ static const char* book_secondary_string(uint32_t s)
 static const char* book_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "paperback", "hardcover", "leatherbound", "metal-bound", "papyrus",
+        "종이표지", "양장본", "가죽장정된 ", "금속테두리", "파피루스",
     };
     COMPILE_CHECK(NDSC_BOOK_PRI == ARRAYSZ(primary_strings));
 
@@ -1095,8 +1095,8 @@ static const char* _book_type_name(int booktype)
 static const char* staff_secondary_string(uint32_t s)
 {
     static const char* const secondary_strings[] = {
-        "crooked ", "knobbly ", "weird ", "gnarled ", "thin ", "curved ",
-        "twisted ", "thick ", "long ", "short ",
+        "갈고리손잡이 ", "울퉁불퉁한 ", "이상한 ", "뒤틀린 ", "얇은 ", "휜 ",
+        "꼬인 ", "굵은 ", "기다란 ", "짧은 ",
     };
     COMPILE_CHECK(NDSC_STAVE_SEC == ARRAYSZ(secondary_strings));
     return secondary_strings[s % ARRAYSZ(secondary_strings)];
@@ -1105,7 +1105,7 @@ static const char* staff_secondary_string(uint32_t s)
 static const char* staff_primary_string(uint32_t p)
 {
     static const char* const primary_strings[] = {
-        "glowing ", "jewelled ", "runed ", "smoking "
+        "빛나는 ", "보석박힌 ", "룬이 새겨진 ", "연기나는 "
     };
     COMPILE_CHECK(NDSC_STAVE_PRI == ARRAYSZ(primary_strings));
     return primary_strings[p % ARRAYSZ(primary_strings)];
@@ -1822,9 +1822,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
             static const char *potion_qualifiers[] =
             {
-                "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
-                "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
-                "gluggy ", "oily ", "slimy ", "emulsified ",
+                "", "거품이는 ", "연기나는 ", "부글거리는 ", "찐득찐득한 ", "덩어리진 ",
+                "검은 연기나는 ", "빛나는 ", "침전된 ", "금속성 ", "칙칙한 ",
+                "끈적한 ", "기름진 ", "불쾌한 ", "유화된 ",
             };
             COMPILE_CHECK(ARRAYSZ(potion_qualifiers) == PDQ_NQUALS);
 
@@ -1833,10 +1833,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 #if TAG_MAJOR_VERSION == 34
                 "clear",
 #endif
-                "blue", "black", "silvery", "cyan", "purple", "orange",
-                "inky", "red", "yellow", "green", "brown", "ruby", "white",
-                "emerald", "grey", "pink", "coppery", "golden", "dark", "puce",
-                "amethyst", "sapphire",
+                "파란색", "검은색", "은색", "옥색", "자주색", "주황색",
+                "잉크색", "빨간색", "노란색", "녹색", "갈색", "루비색", "흰색",
+                "에메랄드색", "회색", "핑크색", "동색", "황금색", "진흑색", "암갈색",
+                "자수정색", "사파이어색",
             };
             COMPILE_CHECK(ARRAYSZ(potion_colours) == PDC_NCOLOURS);
 
