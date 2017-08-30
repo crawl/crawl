@@ -1823,6 +1823,9 @@ void canned_msg(canned_message_type which_message)
         case MSG_CANNOT_SEE:
             mpr("You can't see that place.");
             break;
+        case MSG_GOD_DECLINES:
+            mpr("Your god isn't willing to do this for you now.");
+            break;
     }
 }
 
