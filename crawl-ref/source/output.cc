@@ -611,7 +611,7 @@ static void _print_stats_noise(int x, int y)
     int level = silence ? 0 : you.get_noise_perception(true);
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    cprintf("Noise: ");
+    cprintf("소음: ");
     colour_t noisecolour;
 
     // This is calibrated roughly so that in an open-ish area:
@@ -661,7 +661,7 @@ static void _print_stats_noise(int x, int y)
 
         // This needs to be one extra wide in case silence happens
         // immediately after super-loud (magenta) noise
-        CPRINTF("Silenced  ");
+        CPRINTF("침묵  ");
         Noise_Bar.reset(); // so it doesn't display a change bar after silence ends
     }
     else
@@ -694,7 +694,7 @@ static void _print_stats_gold(int x, int y, colour_t colour)
 {
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("Gold:");
+    CPRINTF("금화:");
     CGOTOXY(x+6, y, GOTO_STAT);
     if (you.duration[DUR_GOZAG_GOLD_AURA])
         textcolour(LIGHTBLUE);
@@ -725,7 +725,7 @@ static void _print_stats_mp(int x, int y)
 
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "MP: " : "Magic:  ");
+    CPRINTF(player_rotted() ? "MP: " : "마력:  ");
     textcolour(mp_colour);
     CPRINTF("%d", you.magic_points);
     if (!boosted)
@@ -772,7 +772,7 @@ static void _print_stats_hp(int x, int y)
     // Health: xxx/yyy (zzz)
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "HP: " : "Health: ");
+    CPRINTF(player_rotted() ? "HP: " : "체력: ");
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
@@ -1353,7 +1353,7 @@ void print_stats()
         else
         {
             textcolour(Options.status_caption_colour);
-            CPRINTF("Next: ");
+            CPRINTF("경험치: ");
             textcolour(HUD_VALUE_COLOUR);
             CPRINTF("%2d%% ", get_exp_progress());
         }
@@ -1438,7 +1438,7 @@ void print_stats_level()
     int ypos = 8;
     cgotoxy(19, ypos, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF("Place: ");
+    CPRINTF("장소: ");
 
     textcolour(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
@@ -1466,16 +1466,16 @@ void draw_border()
 
     //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
     CGOTOXY(1, mp_pos, GOTO_STAT);
-    CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("AC:");
-    CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("EV:");
-    CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("SH:");
+    CGOTOXY(1, ac_pos, GOTO_STAT); CPRINTF("방어:");
+    CGOTOXY(1, ev_pos, GOTO_STAT); CPRINTF("회피:");
+    CGOTOXY(1, sh_pos, GOTO_STAT); CPRINTF("방패:");
 
-    CGOTOXY(19, str_pos, GOTO_STAT); CPRINTF("Str:");
-    CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF("Int:");
-    CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF("Dex:");
+    CGOTOXY(19, str_pos, GOTO_STAT); CPRINTF("   힘:");
+    CGOTOXY(19, int_pos, GOTO_STAT); CPRINTF(" 지능:");
+    CGOTOXY(19, dex_pos, GOTO_STAT); CPRINTF(" 민첩:");
 
     CGOTOXY(19, 9, GOTO_STAT);
-    CPRINTF(Options.show_game_time ? "Time:" : "Turn:");
+    CPRINTF(Options.show_game_time ? " 시간:" : " 턴:");
     // Line 8 is exp pool, Level
 }
 
@@ -2124,7 +2124,7 @@ static vector<formatted_string> _get_overview_stats()
     if (player_rotted())
         entry.cprintf("HP:   ");
     else
-        entry.cprintf("Health: ");
+        entry.cprintf("체력: ");
 
     if (_boosted_hp())
         entry.textcolour(LIGHTBLUE);
@@ -2142,7 +2142,7 @@ static vector<formatted_string> _get_overview_stats()
     if (player_rotted())
         entry.cprintf("MP:   ");
     else
-        entry.cprintf("Magic:  ");
+        entry.cprintf("마력:  ");
 
     if (_boosted_mp())
         entry.textcolour(LIGHTBLUE);
@@ -2156,9 +2156,9 @@ static vector<formatted_string> _get_overview_stats()
 
     entry.textcolour(HUD_CAPTION_COLOUR);
     if (player_rotted())
-        entry.cprintf("Gold: ");
+        entry.cprintf("금화: ");
     else
-        entry.cprintf("Gold:   ");
+        entry.cprintf("금화:   ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
 
@@ -2168,7 +2168,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("AC: ");
+    entry.cprintf("방어: ");
 
     if (_boosted_ac())
         entry.textcolour(LIGHTBLUE);
@@ -2181,7 +2181,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("EV: ");
+    entry.cprintf("회피: ");
 
     if (_boosted_ev())
         entry.textcolour(LIGHTBLUE);
@@ -2194,7 +2194,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("SH: ");
+    entry.cprintf("방패: ");
 
     if (_boosted_sh())
         entry.textcolour(LIGHTBLUE);
@@ -2207,7 +2207,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Str: ");
+    entry.cprintf("  힘: ");
 
     entry.textcolour(_get_stat_colour(STAT_STR));
 
@@ -2219,7 +2219,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Int: ");
+    entry.cprintf("지능: ");
 
     entry.textcolour(_get_stat_colour(STAT_INT));
 
@@ -2231,7 +2231,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Dex: ");
+    entry.cprintf("민첩: ");
 
     entry.textcolour(_get_stat_colour(STAT_DEX));
 
@@ -2243,7 +2243,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("XL:     ");
+    entry.cprintf("  XL:   ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
     entry.cprintf("%d", you.experience_level);
@@ -2251,7 +2251,7 @@ static vector<formatted_string> _get_overview_stats()
     if (you.experience_level < you.get_max_xl())
     {
         entry.textcolour(HUD_CAPTION_COLOUR);
-        entry.cprintf("   Next: ");
+        entry.cprintf("  경험치: ");
 
         entry.textcolour(HUD_VALUE_COLOUR);
         entry.cprintf("%d%%", get_exp_progress());
@@ -2261,7 +2261,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("God:    ");
+    entry.cprintf("  신:  ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
 
@@ -2276,10 +2276,10 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    entry.cprintf("Spells: ");
+    entry.cprintf(" 주문: ");
 
     entry.textcolour(HUD_VALUE_COLOUR);
-    entry.cprintf("%d/%d levels left",
+    entry.cprintf("%d/%d 남은 포인트",
                   player_spell_levels(), player_total_spell_levels());
 
     cols.add_formatted(3, entry.to_colour_string(), false);
@@ -2288,13 +2288,13 @@ static vector<formatted_string> _get_overview_stats()
     if (you.species == SP_FELID)
     {
         entry.textcolour(HUD_CAPTION_COLOUR);
-        entry.cprintf("Lives:  ");
+        entry.cprintf("목숨:  ");
 
         entry.textcolour(HUD_VALUE_COLOUR);
         entry.cprintf("%d", you.lives);
 
         entry.textcolour(HUD_CAPTION_COLOUR);
-        entry.cprintf("   Deaths: ");
+        entry.cprintf("   사망횟수: ");
 
         entry.textcolour(HUD_VALUE_COLOUR);
         entry.cprintf("%d", you.deaths);
