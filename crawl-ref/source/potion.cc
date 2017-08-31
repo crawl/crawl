@@ -740,8 +740,7 @@ public:
             if (is_damaging_cloud(cloud, false)
                 // Tree form is immune to these two.
                 && cloud != CLOUD_MEPHITIC && cloud != CLOUD_POISON
-                && !yesno(make_stringf("Really become a tree while standing in "
-                                       "a cloud of %s?",
+                && !yesno(make_stringf("정말로 %s의 구름 위에서 나무가 될 것인가?",
                                        cloud_type_name(cloud).c_str()).c_str(),
                           false, 'n'))
             {
@@ -811,8 +810,8 @@ public:
         if (was_known && !check_known_quaff())
             return false;
 
-        string msg = "Really drink that potion of mutation";
-        msg += you.rmut_from_item() ? " while resistant to mutation?" : "?";
+        string msg = "정말로 돌연변이 물약을 마실 것인가";
+        msg += you.rmut_from_item() ? " 돌연변이 저항이 있는 상태에서?" : "?";
         if (was_known && (you_worship(GOD_ZIN) || you.rmut_from_item())
             && !yesno(msg.c_str(), false, 'n'))
         {
@@ -1157,7 +1156,7 @@ public:
 
         if (was_known
             && you.how_mutated(false, true) > you.how_mutated(false, true, false)
-            && !yesno("Your transient mutations will not be cured; Quaff anyway?",
+            && !yesno("일시적인 돌연변이는 제거할 수 없다; 그래도 들이키겠는가?",
                       false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -1227,7 +1226,7 @@ public:
 
         // Beneficial mutations go rMut, so don't prompt in this case.
         if (was_known && you_worship(GOD_ZIN)
-            && !yesno("Really drink that potion of mutation?",
+            && !yesno("정말로 돌연변이 물약을 마시겠는가?",
                       false, 'n'))
         {
             canned_msg(MSG_OK);

@@ -190,7 +190,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
     if (pacified_hp * 23 / 20 < mon_hp)
     {
         // not even close.
-        mprf("엘리빌론의 빛이 %s에 닿지 못했다.",
+        mprf("엘리빌론의 빛이 %s에게 닿지 못했다.",
              mon.name(DESC_PLAIN).c_str());
         return SPRET_SUCCESS;
     }
@@ -198,7 +198,7 @@ static spret_type _try_to_pacify(monster &mon, int healed, int max_healed,
     if (pacified_hp < mon_hp)
     {
         // closer! ...but not quite.
-        mprf("엘리빌론의 빛이 %s에 거의 닿았다.",
+        mprf("엘리빌론의 빛이 %s에게 거의 닿았다.",
              mon.name(DESC_PLAIN).c_str());
         return SPRET_SUCCESS;
     }
@@ -420,7 +420,7 @@ void debuff_player()
     }
 
     if (need_msg)
-        mprf(MSGCH_WARN, "Your magical effects are unravelling.");
+        mprf(MSGCH_WARN, "당신의 마법적 효과가 풀린다.");
 }
 
 

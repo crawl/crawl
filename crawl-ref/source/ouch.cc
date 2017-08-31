@@ -586,7 +586,7 @@ static void _maybe_spawn_monsters(int dam, const bool is_torment,
         {
             if (mon == MONS_BUTTERFLY)
             {
-                mprf(MSGCH_GOD, "A shower of butterflies erupts from you!");
+                mprf(MSGCH_GOD, "당신에게서 나비들이 빗발치듯 쏟아져나온다!");
                 take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "butterfly on damage"), true);
             }
             else
@@ -657,7 +657,7 @@ static void _maybe_fog(int dam)
     }
     else if (you_worship(GOD_XOM) && x_chance_in_y(dam, 30 * upper_threshold))
     {
-        mprf(MSGCH_GOD, "You emit a cloud of colourful smoke!");
+        mprf(MSGCH_GOD, "당신은 알록달록한 안개 구름을 뿜어냈다!");
         big_cloud(CLOUD_XOM_TRAIL, &you, you.pos(), 50, 4 + random2(5), -1);
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "smoke on damage"), true);
     }
@@ -668,7 +668,7 @@ static void _deteriorate(int dam)
     if (x_chance_in_y(you.get_mutation_level(MUT_DETERIORATION), 4)
         && dam > you.hp_max / 10)
     {
-        mprf(MSGCH_WARN, "Your body deteriorates!");
+        mprf(MSGCH_WARN, "당신의 신체 일부분이 떨어져나간다!");
         lose_stat(STAT_RANDOM, 1);
     }
 }

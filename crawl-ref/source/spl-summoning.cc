@@ -344,7 +344,7 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     if (monster *hydra = create_monster(mg))
     {
         if (you.see_cell(hydra->pos()))
-            mprf("%s가 나타났다.", hydra->name(DESC_A).c_str());
+            mprf("%s이(가) 나타났다.", hydra->name(DESC_PLAIN).c_str());
     }
     else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -756,9 +756,9 @@ static bool _check_tukima_validity(const actor *target)
             bool plural = true;
             const string hand = target->hand_name(true, &plural);
 
-            mprf("%s %s %s.",
-                 apostrophise(target->name(DESC_THE)).c_str(),
-                 hand.c_str(), conjugate_verb("twitch", plural).c_str());
+            mprf("%s의 %s %s.",
+                 apostrophise(target->name(DESC_PLAIN)).c_str(),
+                 hand.c_str(), conjugate_verb("경련했다", plural).c_str());
         }
         return false;
     }
@@ -864,7 +864,7 @@ static void _animate_weapon(int pow, actor* target)
 
     if (why)
     {
-        simple_god_message(" 외침, \"이런 불결한 존재를 불러내다니!\"");
+        simple_god_message("의 외침, \"이런 불결한 존재를 불러내다니!\"");
         did_god_conduct(why, 10, true, mons);
     }
 }
@@ -1555,7 +1555,7 @@ static void _display_undead_motions(int motions)
         mpr("시체들이 일어났다!");
     else
     {
-        mprf("The dead are %s!", comma_separated_line(motions_list.begin(),
+        mprf("죽음이 %s!", comma_separated_line(motions_list.begin(),
              motions_list.end()).c_str());
     }
 }
@@ -1758,7 +1758,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             {
                 mprf("당신이 %s던 시체가, 갑자기 일어나 %s!",
                      was_draining ? "마시"
-                                  : "해체하",
+                                  : "도축하",
                      beha == BEH_FRIENDLY ? "당신의 군단에 합류했다"
                                           : "공격했다");
             }
@@ -1952,8 +1952,8 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         if (corpse.props[CORPSE_HEADS].get_short() == 0)
         {
             // No monster to conj_verb with :(
-            mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
-                 how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
+            mprf("머리 없는 히드라 얼음환영%s이 %s에서 일어나는 즉시 붕괴되어 눈처럼 내렸다!",
+                 how_many == 1 ? "" : "", how_many == 1 ? "들" : "");
             if (!turn_corpse_into_skeleton(corpse))
                 butcher_corpse(corpse, MB_FALSE, false);
             return SPRET_SUCCESS;
@@ -2054,8 +2054,8 @@ bool monster_simulacrum(monster *mon, bool actual)
                 // Ignore quiet.
                 if (was_butchering || was_draining)
                 {
-                    mprf("The flesh of the corpse you are %s vaporises!",
-                         was_draining ? "drinking from" : "butchering");
+                    mprf("당신이 %s 시체의 고기가 기화한다!",
+                         was_draining ? "마시던" : "도축하던");
                     xom_is_stimulated(200);
                 }
 
@@ -2064,9 +2064,9 @@ bool monster_simulacrum(monster *mon, bool actual)
     }
 
     if (num_seen > 1)
-        mprf("Some icy apparitions appear!");
+        mprf("여러 얼음의 환영이 나타났다");
     else if (num_seen == 1)
-        mprf("An icy apparition appears!");
+        mprf("한 얼음의 환영이 나타났다!");
 
     return did_creation;
 }
@@ -2223,7 +2223,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
     if (seen_masses > 0)
     {
-        mprf("%s corpses meld into %s of writhing flesh!",
+        mprf("%s시체들이 녹아 내려, 몸부림치는 %s로 변했다!",
              _count_article(2, seen_crawlies + seen_lost == 0),
              seen_masses == 1 ? "an agglomeration" : "agglomerations");
     }

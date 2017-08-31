@@ -217,8 +217,8 @@ static void _decrement_petrification(int delay)
                                             "flesh" :
                                             get_form()->flesh_equivalent;
 
-        mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             flesh_equiv.c_str());
+        mprf(MSGCH_DURATION, "당신의 몸이 %s로 돌아와 다시 움직일 수 있다.",
+            flesh_equiv.c_str());
     }
 
     if (you.duration[DUR_PETRIFYING])
@@ -250,7 +250,7 @@ static void _decrement_paralysis(int delay)
 
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
-            mprf(MSGCH_DURATION, "You can move again.");
+            mprf(MSGCH_DURATION, "당신은 다시 움직일 수 있다.");
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
@@ -272,7 +272,7 @@ static void _maybe_melt_armour()
     if (you.props.exists(MELT_ARMOUR_KEY))
     {
         you.props.erase(MELT_ARMOUR_KEY);
-        mprf(MSGCH_DURATION, "The heat melts your icy armour.");
+        mprf(MSGCH_DURATION, "열기가 당신의 얼음으로 된 갑옷을 녹인다.");
     }
 }
 
@@ -490,7 +490,7 @@ static bool _check_recite()
         || you.petrified()
         || you.berserk())
     {
-        mprf(MSGCH_DURATION, "Your recitation is interrupted.");
+        mprf(MSGCH_DURATION, "당신의 설교가 방해받았다.");
         you.duration[DUR_RECITE] = 0;
         return false;
     }
@@ -526,7 +526,7 @@ static void _handle_recitation(int step)
             if (!closure.empty())
                 speech << ' ' << closure;
         }
-        mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
+        mprf(MSGCH_DURATION, "당신은 %s 암송을 마쳤다", speech.str().c_str());
     }
 }
 
@@ -539,8 +539,8 @@ static void _try_to_respawn_ancestor()
      if (!ancestor)
          return;
 
-    mprf("%s emerges from the mists of memory!",
-         ancestor->name(DESC_YOUR).c_str());
+    mprf("%s이 기억의 안개 속에서 나타났다!",
+        ancestor->name(DESC_YOUR).c_str());
     add_companion(ancestor);
     check_place_cloud(CLOUD_MIST, ancestor->pos(), random_range(1,2),
                       ancestor); // ;)
@@ -590,10 +590,10 @@ static void _decrement_durations()
 
     const bool melted = you.props.exists(MELT_ARMOUR_KEY);
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
-                              "Your icy armour evaporates.",
+                              "당신의 얼음으로 된 갑옷이 증발한다.",
                               melted ? 0 : coinflip(),
                               melted ? nullptr
-                              : "Your icy armour starts to melt."))
+                              : "당신의 얼음으로 된 갑옷이 녹기 시작한다."))
     {
         if (you.props.exists(ICY_ARMOUR_KEY))
             you.props.erase(ICY_ARMOUR_KEY);
@@ -628,7 +628,7 @@ static void _decrement_durations()
         }
 
         if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
-                                  "Your transformation is almost over."))
+                                  "당신의 변신이 거의 끝나간다."))
         {
             untransform();
         }
@@ -637,8 +637,8 @@ static void _decrement_durations()
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
     {
         if (_decrement_a_duration(DUR_SWIFTNESS, delay,
-                                  "You feel sluggish.", coinflip(),
-                                  "You start to feel a little slower."))
+                                  "당신은 굼떠진 느낌이 든다.", coinflip(),
+                                  "약간 느려진 것 같은 기분이 든다."))
         {
             // Start anti-swiftness.
             you.duration[DUR_SWIFTNESS] = you.attribute[ATTR_SWIFTNESS];
@@ -648,8 +648,8 @@ static void _decrement_durations()
     else
     {
         if (_decrement_a_duration(DUR_SWIFTNESS, delay,
-                                  "You no longer feel sluggish.", coinflip(),
-                                  "You start to feel a little faster."))
+                                  "당신은 더 이상 굼뜬 느낌이 들지 않는다.", coinflip(),
+                                  "약간 빨라진 것 같은 기분이 든다."))
         {
             you.attribute[ATTR_SWIFTNESS] = 0;
         }
@@ -678,7 +678,7 @@ static void _decrement_durations()
         if (you.stat(s) > 0
             && _decrement_a_duration(stat_zero_duration(s), delay))
         {
-            mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
+            mprf(MSGCH_RECOVERY, "당신의 %s이 복구되었다.", stat_desc(s, SD_NAME));
             you.redraw_stats[s] = true;
         }
     }
@@ -698,7 +698,7 @@ static void _decrement_durations()
         mprf(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
 
         if (you.duration[DUR_PIETY_POOL] == 0)
-            mprf(MSGCH_DIAGNOSTICS, "Piety pool is now empty.");
+            mprf(MSGCH_DIAGNOSTICS, "신앙심이 비었다.");
 #endif
     }
 
@@ -710,7 +710,7 @@ static void _decrement_durations()
     {
         tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
         if (_decrement_a_duration(DUR_TORNADO, delay,
-                                  "The winds around you start to calm down."))
+                                  "당신 주위의 바람이 잦아들기 시작한다."))
         {
             you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
         }
@@ -721,7 +721,7 @@ static void _decrement_durations()
         if (!you.permanent_flight())
         {
             if (_decrement_a_duration(DUR_FLIGHT, delay, nullptr, random2(6),
-                                      "You are starting to lose your buoyancy."))
+                                      "당신의 부유력이 약해지기 시작한다."))
             {
                 land_player();
             }
@@ -747,7 +747,7 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_CLOUD_TRAIL, delay,
-            "Your trail of clouds dissipates."))
+            "당신 뒤의 구름이 자취를 감췄다."))
     {
         you.props.erase(XOM_CLOUD_TRAIL_TYPE_KEY);
     }
@@ -889,7 +889,7 @@ static void _rot_ghoul_players()
     if (one_chance_in(resilience))
     {
         dprf("rot rate: 1/%d", resilience);
-        mprf(MSGCH_WARN, "You feel your flesh rotting away.");
+        mprf(MSGCH_WARN, "당신의 살점이 썩어버리는 것이 느껴진다.");
         rot_hp(1);
     }
 }

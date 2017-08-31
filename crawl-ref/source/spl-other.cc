@@ -324,7 +324,7 @@ spret_type cast_intoxicate(int pow, bool fail)
     {
         if (x_chance_in_y(60 - pow/3, 100))
         {
-            mprf(MSGCH_WARN, "The world spins around you!");
+            mprf(MSGCH_WARN, "세상이 당신을 중심으로 빙빙 돈다!");
             you.increase_duration(DUR_VERTIGO, 4 + random2(20 + (100 - pow) / 10));
             you.redraw_evasion = true;
         }
@@ -337,9 +337,9 @@ spret_type cast_darkness(int pow, bool fail)
 {
     fail_check();
     if (you.duration[DUR_DARKNESS])
-        mprf(MSGCH_DURATION, "It gets a bit darker.");
+        mprf(MSGCH_DURATION, "조금 더 어두워진다.");
     else
-        mprf(MSGCH_DURATION, "It gets dark.");
+        mprf(MSGCH_DURATION, "어두워진다.");
     you.increase_duration(DUR_DARKNESS, 15 + random2(1 + pow/3), 100);
     update_vision_range();
 

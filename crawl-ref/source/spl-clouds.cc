@@ -136,8 +136,8 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
 
     if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
     {
-        mprf("But poisonous vapours would do no harm to %s!",
-             mons->name(DESC_THE).c_str());
+        mprf("그러나 유독성 증기는 %s에게 피해를 끼치지 못한다!",
+             mons->name(DESC_PLAIN).c_str());
         return SPRET_ABORT;
     }
 
@@ -165,7 +165,7 @@ spret_type cast_poisonous_vapours(int pow, const dist &beam, bool fail)
     else
     {
         place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
-        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
+        mprf("유독성 증기가%s을(를) 감싼다!", mons->name(DESC_PLAIN).c_str());
     }
 
     behaviour_event(mons, ME_WHACK, &you);
@@ -286,7 +286,7 @@ spret_type cast_corpse_rot(bool fail)
         {
             if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
-                if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
+                if (!yesno(("정말로 시체부패를 " + si->name(DESC_PLAIN) + "이(가) 서있는 곳에 시전하겠는가?").c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
                     return SPRET_ABORT;
@@ -332,7 +332,7 @@ void corpse_rot(actor* caster)
     }
 
     if (saw_rot)
-        mprf("무언가 썩는 것을 %s.", you.can_smell() ? "맡았다" : "감지했다");
+        mprf("무언가가 썩는 것을 %s.", you.can_smell() ? "맡았다" : "감지했다");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }

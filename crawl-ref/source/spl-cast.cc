@@ -87,16 +87,16 @@ void surge_power(const int enhanced)
 {
     if (enhanced)               // one way or the other {dlb}
     {
-        const string modifier = (enhanced  < -2) ? "extraordinarily" :
-                                (enhanced == -2) ? "extremely" :
-                                (enhanced ==  2) ? "strong" :
-                                (enhanced  >  2) ? "huge"
+        const string modifier = (enhanced  < -2) ? "압도적으로 강력한" :
+                                (enhanced == -2) ? "아주 강력한" :
+                                (enhanced ==  2) ? "강대한" :
+                                (enhanced  >  2) ? "커다란"
                                                  : "";
-        mprf("You feel %s %s",
-             !modifier.length() ? "a"
+        mprf("당신은 %s %s",
+             !modifier.length() ? ""
                                 : article_a(modifier).c_str(),
-             (enhanced < 0) ? "numb sensation."
-                            : "surge of power!");
+             (enhanced < 0) ? "무감각하게 느낀다."
+                            : "힘의 파동을 느꼈다!");
     }
 }
 
@@ -837,9 +837,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
-            "Casting this spell will cause instant excommunication! "
-            "Really cast?" :
-            "Casting this spell will place you under penance. Really cast?",
+            "이 주문을 시전하면 즉시 파문당할 것이다! "
+            "정말로 시전하겠는가?" :
+            "이 주문을 시전하면 참회당할 것이다. 정말로 시전하겠는가?",
             true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -978,7 +978,7 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
             && you.props[SAP_MAGIC_KEY].get_int() < 3
             && !fake_spell && coinflip())
         {
-            mprf(MSGCH_WARN, "Your control over your magic is sapped.");
+            mprf(MSGCH_WARN, "당신의 마법에 대한 지배력이 약화되었다.");
             you.props[SAP_MAGIC_KEY].get_int()++;
         }
 
@@ -1110,7 +1110,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
             if (!action.matches(name))
                 continue;
 
-            string prompt = "Really cast " + string(name) + "?";
+            string prompt = "정말로 " + string(name) + "을(를) 시전하겠는가?";
             if (!yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -1127,7 +1127,7 @@ static bool _spellcasting_aborted(spell_type spell, bool fake_spell)
         && !fake_spell)
     {
         string prompt = make_stringf("The spell is %s to cast%s "
-                                     "Continue anyway?",
+                                     "그래도 계속하겠는가?",
                                      fail_severity_adjs[severity],
                                      severity > 1 ? "!" : ".");
 
@@ -1567,7 +1567,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail,
 
         if (is_valid_spell(spell))
         {
-            mprf(MSGCH_ERROR, "%s 사용가능한 주문이 아니다.",
+            mprf(MSGCH_ERROR, "%s은(는) 사용가능한 주문이 아니다.",
                  spell_title(spell));
         }
         else

@@ -180,7 +180,7 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel,
         if (!beam.isValid || beam.target == you.pos())
         {
             const string prompt =
-                "Are you sure you want to cancel this " + verb + "?";
+                "정말로 이" + verb + " 작업을 취소하겠는가?";
             if (!safe_cancel && !yesno(prompt.c_str(), false, 'n'))
             {
                 clear_messages();
@@ -457,13 +457,13 @@ spret_type cast_controlled_blink(bool fail, bool safe)
 
     if (orb_limits_translocation())
     {
-        if (!yesno("당신의 순간이동은 제어가 불가능할겁니다. - 그래도 계속하겠습니까?",
+        if (!yesno("당신의 순간이동은 제어가 불가능할 것이다. - 그래도 계속하겠는가?",
                    false, 'n'))
         {
             return SPRET_ABORT;
         }
 
-        mprf(MSGCH_ORB, "The Orb prevents control of your translocation!");
+        mprf(MSGCH_ORB, "오브가 당신의 전이술을 통제하지 못하게 한다");
         return cast_blink(fail);
     }
 

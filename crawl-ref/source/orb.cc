@@ -64,14 +64,14 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
         if (msg)
             mprf(MSGCH_ORB, "%s", msg);
         else
-            mprf(MSGCH_ORB, "The Orb lets out a hideous shriek!");
+            mprf(MSGCH_ORB, "오브가 끔찍한 괴성을 지른다!");
     }
     else
     {
         if (msg2)
             mprf(MSGCH_ORB, "%s", msg2);
         else
-            mprf(MSGCH_ORB, "The Orb lets out a furious burst of light!");
+            mprf(MSGCH_ORB, "오브가 강력한 빛을 맹렬히 쏟아낸다!");
     }
 }
 
@@ -88,9 +88,9 @@ void start_orb_run(game_chapter chapter, const char* message)
 {
     if (you.chapter != CHAPTER_ANGERED_PANDEMONIUM)
     {
-        mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
+        mprf(MSGCH_WARN, "판데모니움 군주들이 적잖이 화났다. 주의하라!");
         if (have_passive(passive_t::slow_orb_run))
-            simple_god_message(" tells them not to hurry.");
+            simple_god_message("는 그들에게 서두르지 말라고 지시했다.");
     }
 
     mprf(MSGCH_ORB, "%s", message);
