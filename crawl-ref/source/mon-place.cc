@@ -321,7 +321,6 @@ void spawn_random_monsters()
     {
         dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
-        proximity_type prox = PROX_AWAY_FROM_PLAYER;
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE;
