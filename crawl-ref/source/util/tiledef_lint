@@ -11,6 +11,7 @@ sub check_defs($$$@)
     open IN, "<rltiles/tiledef-$file.h" or die "tiledefs must be generated\n";
     while (<IN>)
     {
+        next if /TILE${symbol}_MONS_OLD_/;
         next unless /TILE${symbol}_($prefix[A-Z0-9_]+)/;
         # multi-tile enums receive _1 _2 _3 automatically. Could cause problems
         # if we get such a name written manually.
@@ -18,6 +19,14 @@ sub check_defs($$$@)
         $defs{$1} = 1;
     }
     close IN;
+    open IN, "<mon-data.h";
+    while (<IN>)
+    {
+        if (/AXED_MON\(([^)]*)\)/)
+        {
+            delete $defs{$1};
+        }
+    }
 
     delete $defs{$_} for @ok;
 

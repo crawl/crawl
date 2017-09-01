@@ -9,10 +9,10 @@ for (grep /\.des$/, `git ls-files`)
     { undef local $/; $_ = <IN>; }
     close IN;
 
-    $ptile{"\U$_"}=1 for /\btile:([^ \n"']+)/mg; #"
+    $ptile{"\U$_"}=1 for /\b(?:tile|dbname):([^ \n"']+)/mg; #"
 }
 
-for my $file (qw(mon-data.h tilepick.cc)) {
+for my $file (qw(mon-data.h tilepick.cc tilemcache.cc)) {
     open IN, "<", $file or die "Can't read $file\n";
     { undef local $/; $_ = <IN>; }
     close IN;
@@ -20,10 +20,6 @@ for my $file (qw(mon-data.h tilepick.cc)) {
 }
 
 $ptile{$_}=1 for split "\n", <<___;
-MONS_CENTAUR_MELEE
-MONS_CENTAUR_WARRIOR_MELEE
-MONS_YAKTAUR_MELEE
-MONS_YAKTAUR_CAPTAIN_MELEE
 MONS_UNKNOWN
 ___
 
