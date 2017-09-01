@@ -3763,7 +3763,6 @@ static void _builder_monsters()
     int mon_wanted = _num_mons_wanted();
 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
-    const bool in_pan    = player_in_branch(BRANCH_PANDEMONIUM);
     if (in_shoals)
         dgn_shoals_generate_flora();
 
@@ -3777,12 +3776,20 @@ static void _builder_monsters()
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
-        if (!in_pan)
+        // Chance to generate the monster awake, but away from level stairs.
+        if (player_in_connected_branch()
+            // Exclude D:1 from generating these awake monsters.
+            && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 1)
+            && one_chance_in(8))
+        {
+            mg.proximity = PROX_AWAY_FROM_STAIRS;
+        }
+        // Pan monsters always generate awake.
+        else if (!player_in_branch(BRANCH_PANDEMONIUM))
             mg.behaviour = BEH_SLEEP;
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
-
         place_monster(mg);
     }
 
