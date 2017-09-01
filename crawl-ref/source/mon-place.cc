@@ -1309,7 +1309,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // that nothing "hydra-shaped" has more than one attack,
         // because any that do will need cleaning up to fit into the
         // attack-per-head policy.
-
+        COMPILE_CHECK(ARRAYSZ(m_ent->attack) >= 2);
         ASSERT(m_ent->attack[1].type == AT_NONE);
     }
 
