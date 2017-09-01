@@ -603,6 +603,13 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     {
         return false;
     }
+    // Check that the location is not proximal to level stairs.
+    else if (mg.proximity == PROX_AWAY_FROM_STAIRS)
+    {
+        for (distance_iterator di(mg_pos, false, false, LOS_RADIUS); di; ++di)
+            if (feat_is_stone_stair(grd(*di)))
+                return false;
+    }
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
