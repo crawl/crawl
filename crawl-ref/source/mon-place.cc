@@ -1303,12 +1303,19 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mons_genus(mg.base_type) == MONS_HYDRA)
     {
-        // Usually hydrae have exactly one attack (which is implicitly
-        // repeated for each head), but a "hydra" may have zero if it
-        // is actually a hydra-shaped block of ice. We verify here
-        // that nothing "hydra-shaped" has more than one attack,
-        // because any that do will need cleaning up to fit into the
-        // attack-per-head policy.
+        // We're about to check m_ent->attack[1], so we may as well add a
+        // compile-time check to ensure that the array is at least 2 elements
+        // large, else we risk undefined behaviour (The array's size is known at
+        // compile time even though its value is not). This CHECK would only
+        // ever fail if we made it impossible for monsters to have two melee
+        // attacks, in which case the ASSERT becomes silly.
+        COMPILE_CHECK(ARRAYSZ(m_ent->attack) > 1);
+
+        // Usually hydrae have exactly one attack (which is implicitly repeated
+        // for each head), but a "hydra" may have zero if it is actually a
+        // hydra-shaped block of ice. We verify here that nothing "hydra-shaped"
+        // has more than one attack, because any that do will need cleaning up
+        // to fit into the attack-per-head policy.
 
         ASSERT(m_ent->attack[1].type == AT_NONE);
     }
