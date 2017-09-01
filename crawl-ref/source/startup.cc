@@ -627,6 +627,7 @@ again:
     _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
+    tmp->set_text("이름을 입력:");
     tmp->set_bounds(coord_def(1, NAME_START_Y),
                     coord_def(SCROLLER_MARGIN_X, NAME_START_Y + 1));
     freeform->attach_item(tmp);
