@@ -2,7 +2,7 @@
 
 use warnings;
 
-for (grep /\.cc$/, `git ls-files`)
+for (grep /(\.cc|spl-data\.h)$/, `git ls-files`)
 {
     chomp;
     open IN, "<", $_ or die "Can't read $_\n";
