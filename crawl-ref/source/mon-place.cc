@@ -1310,12 +1310,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // ever fail if we made it impossible for monsters to have two melee
         // attacks, in which case the ASSERT becomes silly.
 
-        // Usually hydrae have exactly one attack (which is implicitly
-        // repeated for each head), but a "hydra" may have zero if it
-        // is actually a hydra-shaped block of ice. We verify here
-        // that nothing "hydra-shaped" has more than one attack,
-        // because any that do will need cleaning up to fit into the
-        // attack-per-head policy.
+        // Usually hydrae have exactly one attack (which is implicitly repeated
+        // for each head), but a "hydra" may have zero if it is actually a
+        // hydra-shaped block of ice. We verify here that nothing "hydra-shaped"
+        // has more than one attack, because any that do will need cleaning up
+        // to fit into the attack-per-head policy.
 
         COMPILE_CHECK(ARRAYSZ(m_ent->attack) >= 2);
         ASSERT(m_ent->attack[1].type == AT_NONE);
