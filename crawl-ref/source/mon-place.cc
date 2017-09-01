@@ -1309,6 +1309,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // compile time even though its value is not). This CHECK would only
         // ever fail if we made it impossible for monsters to have two melee
         // attacks, in which case the ASSERT becomes silly.
+        COMPILE_CHECK(ARRAYSZ(m_ent->attack) >= 2);
 
         // Usually hydrae have exactly one attack (which is implicitly repeated
         // for each head), but a "hydra" may have zero if it is actually a
@@ -1316,7 +1317,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // has more than one attack, because any that do will need cleaning up
         // to fit into the attack-per-head policy.
 
-        COMPILE_CHECK(ARRAYSZ(m_ent->attack) >= 2);
         ASSERT(m_ent->attack[1].type == AT_NONE);
     }
 
