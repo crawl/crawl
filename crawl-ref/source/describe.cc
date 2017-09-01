@@ -1274,9 +1274,9 @@ static string _describe_ammo(const item_def &item)
 
 
     if (ammo_always_destroyed(item))
-        description += "\nIt will always be destroyed on impact.";
+        description += "\n충격으로 인해 항상 파괴된다.";
     else if (!ammo_never_destroyed(item))
-        description += "\nIt may be destroyed on impact.";
+        description += "\n충격으로 인해 파괴 될 수 있다.";
 
     return description;
 }

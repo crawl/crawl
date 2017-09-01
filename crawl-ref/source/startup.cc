@@ -382,7 +382,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Dungeon Crawl";
+    text = "던전 크롤";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -390,8 +390,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Dungeon Crawl: The main game: full of monsters, "
-                              "items, gods and danger!");
+    tmp->set_description_text("던전 크롤: 주요 게임: 괴물, 아이템, "
+                              "신들과 위험이 가득!");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -401,7 +401,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Tutorial for Dungeon Crawl";
+    text = "던전 크롤 튜토리얼";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -409,8 +409,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Tutorial that covers the basics of "
-                              "Dungeon Crawl survival.");
+    tmp->set_description_text("던전 크롤의 생존의 기본 사항을 "
+                              "다루는 튜토리얼입니다.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -420,7 +420,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Hints Mode for Dungeon Crawl";
+    text = "던전 크롤 힌트모드";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -428,8 +428,8 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("A mostly normal game that provides more "
-                              "advanced hints than the tutorial.");
+    tmp->set_description_text("튜토리얼보다 고급 힌트를 제공하는 "
+                              "거의 일반게임입니다.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -439,7 +439,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Dungeon Sprint";
+    text = "던전 스프린트";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -447,7 +447,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Hard, fixed single level game mode.");
+    tmp->set_description_text("어렵고, 고정된 싱글 레벨의 게임 모드.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -457,7 +457,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "Instructions";
+    text = "설명과 정보";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -465,7 +465,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Help menu.");
+    tmp->set_description_text("도움말 메뉴.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -475,7 +475,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "The Arena";
+    text = "아레나";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -483,7 +483,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Pit computer controlled teams versus each other!");
+    tmp->set_description_text("컴퓨터가 조종하는 팀 대 팀의 아레나!");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -493,7 +493,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     tmp = new TextItem();
 #endif
-    text = "High Scores";
+    text = "점수판";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -501,7 +501,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("View the high score list.");
+    tmp->set_description_text("높은점수 목록보기.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 }
@@ -514,7 +514,7 @@ static void _add_newgame_button(MenuScroller* menu, int num_chars)
 #else
     TextItem* tmp = new TextItem();
 #endif
-    tmp->set_text("New Game");
+    tmp->set_text("새 게임");
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
     tmp->set_fg_colour(WHITE);
     tmp->set_highlight_colour(WHITE);
@@ -627,14 +627,13 @@ again:
     _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
-    tmp->set_text("Enter your name:");
     tmp->set_bounds(coord_def(1, NAME_START_Y),
                     coord_def(SCROLLER_MARGIN_X, NAME_START_Y + 1));
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
     tmp = new NoSelectTextItem();
-    tmp->set_text("Choices:");
+    tmp->set_text("선택:");
     tmp->set_bounds(coord_def(1, GAME_MODES_START_Y),
                     coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y + 1));
     freeform->attach_item(tmp);
@@ -652,20 +651,20 @@ again:
 
     tmp = new NoSelectTextItem();
 
-    string text = "Use the up/down keys to select the type of game or load a "
-                  "character.";
+    string text = "위/아래 키를 사용하여 게임 유형을 선택하거나 캐릭터를 "
+                  "로드하십시오.";
 #ifdef USE_TILE_LOCAL
     if (tiles.is_using_small_layout())
         text += " ";
     else
 #endif
         text += "\n";
-    text +=       "You can type your name; if you leave it blank you will be "
-                  "asked later.\n"
-                  "Press Enter to start";
+    text +=       "이름을 입력할 수 있습니다; 공란으로 남겨두면 나중에 다시 "
+                  "물어볼 것입니다.\n"
+                  "시작하려면 엔터 키를 누르십시오";
     // TODO: this should include a description of that character.
     if (_game_defined(defaults))
-        text += ", Tab to repeat the last game's choice";
+        text += ", 마지막 게임의 선택을 반복하려면 탭을 누르십시오";
     text += ".\n";
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, help_start), coord_def(max_col - 1, help_end));
