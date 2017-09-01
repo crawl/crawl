@@ -1301,6 +1301,18 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         define_monster(*mon);
 
+    if (mons_genus(mg.base_type) == MONS_HYDRA)
+    {
+        // Usually hydrae have exactly one attack (which is implicitly
+        // repeated for each head), but a "hydra" may have zero if it
+        // is actually a hydra-shaped block of ice. We verify here
+        // that nothing "hydra-shaped" has more than one attack,
+        // because any that do will need cleaning up to fit into the
+        // attack-per-head policy.
+
+        ASSERT(m_ent->attack[1].type == AT_NONE);
+    }
+
     if (mon->type == MONS_MUTANT_BEAST)
     {
         vector<int> gen_facets;
