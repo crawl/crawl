@@ -9,15 +9,16 @@ for (grep /(\.cc|spl-data\.h)$/, `git ls-files`)
     { undef local $/; $_ = <IN>; }
     close IN;
 
-    for (/\bTILEG_[A-Z_]+\b/g)
+    for (/\bTILEG_[A-Z0-9_]+\b/g)
     {
         s/^TILEG_//;
         $tile{$_}=1;
-        if (/^([A-Z_]+)_ON$/)
+        if (/^([A-Z0-9_]+)_ON$/)
         {
             $tile{"${1}_OFF"}  =1;
             $tile{"${1}_FOCUS"}=1;
             $tile{"${1}_MAX"}  =1;
+            $tile{"${1}_INACTIVE"}=1;
         }
     }
 }
