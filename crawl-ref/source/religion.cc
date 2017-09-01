@@ -4689,9 +4689,7 @@ const god_power* god_power_from_ability(ability_type abil)
         for (const auto& power : god_powers[god])
         {
             if (power.abil == abil)
-            {
                 return &power;
-            }
         }
     }
     return nullptr;
