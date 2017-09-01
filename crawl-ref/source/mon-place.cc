@@ -511,53 +511,6 @@ bool drac_colour_incompatible(int drac, int colour)
     return drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN;
 }
 
-// Finds a random square as close to a staircase as possible
-static bool _find_mon_place_near_stairs(coord_def& pos,
-                                        dungeon_char_type *stair_type,
-                                        level_id &place)
-{
-    pos = get_random_stair();
-    const dungeon_feature_type feat = grd(pos);
-    *stair_type = get_feature_dchar(feat);
-
-    // First, assume a regular stair.
-    switch (feat_stair_direction(feat))
-    {
-    case CMD_GO_UPSTAIRS:
-        if (place.depth > 1)
-            place.depth--;
-        break;
-    case CMD_GO_DOWNSTAIRS:
-        if (place.depth < brdepth[place.branch])
-            place.depth++;
-        break;
-    default: ;
-    }
-
-    // Is it a branch stair?
-    for (branch_iterator it; it; ++it)
-    {
-        if (it->entry_stairs == feat)
-        {
-            place = it->id;
-            break;
-        }
-        else if (it->exit_stairs == feat)
-        {
-            place = brentry[it->id];
-            // This can happen on D:1 and in wizmode with random spawns on the
-            // first floor of a branch that didn't generate naturally.
-            if (!place.is_valid())
-                return false;
-            break;
-        }
-    }
-    const monster_type habitat_target = MONS_BAT;
-    int distance = 3;
-    pos = find_newmons_square_contiguous(habitat_target, pos, distance);
-    return in_bounds(pos);
-}
-
 bool needs_resolution(monster_type mon_type)
 {
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
@@ -624,29 +577,6 @@ monster_type resolve_monster_type(monster_type mon_type,
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))
     {
-        // Respect destination level for staircases.
-        if (proximity == PROX_NEAR_STAIRS)
-        {
-            const level_id orig_place = *place;
-
-            if (_find_mon_place_near_stairs(*pos, stair_type, *place))
-            {
-                // No monsters spawned in the Temple.
-                if (branches[place->branch].id == BRANCH_TEMPLE)
-                    proximity = PROX_AWAY_FROM_PLAYER;
-            }
-            else
-                proximity = PROX_AWAY_FROM_PLAYER;
-            if (proximity == PROX_NEAR_STAIRS)
-            {
-                dprf(DIAG_MONPLACE, "foreign monster from %s",
-                     place->describe().c_str());
-            }
-            else // we dunt cotton to no ferrniers in these here parts
-                *place = orig_place;
-
-        } // end proximity check
-
         // Only use the vault list if the monster comes from this level.
         if (!vault_mon_types.empty() && *place == level_id::current())
         {
@@ -711,53 +641,10 @@ monster_type resolve_monster_type(monster_type mon_type,
             // Now pick a monster of the given branch and level.
             mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
 
-            // Don't allow monsters too stupid to use stairs (e.g.
-            // non-spectral zombified undead) to be placed near
-            // stairs.
-            if (proximity != PROX_NEAR_STAIRS
-                || mons_class_can_use_stairs(mon_type))
-            {
-                break;
-            }
-
             *place = orig_place;
         }
-
-        if (proximity == PROX_NEAR_STAIRS && tries >= 300)
-            mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
     }
     return mon_type;
-}
-
-// A short function to check the results of near_stairs().
-// Returns 0 if the point is not near stairs.
-// Returns 1 if the point is near unoccupied stairs.
-// Returns 2 if the point is near player-occupied stairs.
-static int _is_near_stairs(coord_def &p)
-{
-    int result = 0;
-
-    for (int i = -1; i <= 1; ++i)
-        for (int j = -1; j <= 1; ++j)
-        {
-            if (!in_bounds(p))
-                continue;
-
-            const dungeon_feature_type feat = grd(p);
-            if (feat_is_stair(feat))
-            {
-                // Shouldn't matter for escape hatches.
-                if (feat_is_escape_hatch(feat))
-                    continue;
-
-                // Should there be several stairs, don't overwrite the
-                // player on stairs info.
-                if (result < 2)
-                    result = (p == you.pos()) ? 2 : 1;
-            }
-        }
-
-    return result;
 }
 
 // For generation purposes, don't treat simulacra of lava enemies as
@@ -794,12 +681,9 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
         return false;
     }
 
-    // Check player proximity to avoid band members being placed
-    // close to the player erroneously.
-    // XXX: This is a little redundant with proximity checks in
-    // place_monster.
-    if (mg.proximity == PROX_AWAY_FROM_PLAYER
-        && grid_distance(you.pos(), mg_pos) <= LOS_RADIUS)
+    bool close_to_player = grid_distance(you.pos(), mg_pos) <= LOS_RADIUS;
+    if (mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player
+        || mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player)
     {
         return false;
     }
@@ -878,16 +762,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         create_band = false;
     }
 
-    // Re-check for PROX_NEAR_STAIRS here - if original monster
-    // type wasn't RANDOM_MONSTER then the position won't
-    // have been set.
-    if (mg.proximity == PROX_NEAR_STAIRS && mg.pos.origin())
-    {
-        level_id lev;
-        if (!_find_mon_place_near_stairs(mg.pos, &stair_type, lev))
-            mg.proximity = PROX_AWAY_FROM_PLAYER;
-    } // end proximity check
-
     if (mg.cls == MONS_PROGRAM_BUG)
         return 0;
 
@@ -916,28 +790,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         ugly_thing_apply_uniform_band_colour(mg, band_monsters, band_size);
     }
 
-    // Returns 2 if the monster is placed near player-occupied stairs.
-    int pval = _is_near_stairs(mg.pos);
-    if (mg.proximity == PROX_NEAR_STAIRS)
-    {
-        // For some cases disallow monsters on stairs.
-        if (mons_class_is_stationary(mg.cls)
-            || (pval == 2 // Stairs occupied by player.
-                && (mons_class_base_speed(mg.cls) == 0
-                    || grd(mg.pos) == DNGN_LAVA
-                    || grd(mg.pos) == DNGN_DEEP_WATER)))
-        {
-            mg.proximity = PROX_AWAY_FROM_PLAYER;
-        }
-    }
-
-    // (4) For first monster, choose location. This is pretty intensive.
-    bool proxOK;
-    bool close_to_player;
-
-    // Player shoved out of the way?
-    bool shoved = false;
-
+    // For first monster, choose location. This is pretty intensive.
     if (!mg.use_position() && !force_pos)
     {
         tries = 0;
@@ -952,10 +805,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             if (tries++ >= 45)
                 return nullptr;
 
-            // Placement already decided for PROX_NEAR_STAIRS.
-            // Else choose a random point on the map.
-            if (mg.proximity != PROX_NEAR_STAIRS)
-                mg.pos = random_in_bounds();
+            mg.pos = random_in_bounds();
 
             if (!_valid_monster_generation_location(mg))
                 continue;
@@ -964,70 +814,8 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             if (map_masked(mg.pos, mg.map_mask))
                 continue;
 
-            // Let's recheck these even for PROX_NEAR_STAIRS, just in case.
-            // Check proximity to player.
-            proxOK = true;
-
-            switch (mg.proximity)
-            {
-            case PROX_ANYWHERE:
-                if (grid_distance(you.pos(), mg.pos) < 2 + random2(3))
-                    proxOK = false;
-                break;
-
-            case PROX_CLOSE_TO_PLAYER:
-            case PROX_AWAY_FROM_PLAYER:
-                // If this is supposed to measure los vs not los,
-                // then see_cell(mg.pos) should be used instead. (jpeg)
-                close_to_player = (grid_distance(you.pos(), mg.pos) <=
-                                   LOS_RADIUS);
-
-                if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
-                    || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
-                {
-                    proxOK = false;
-                }
-                break;
-
-            case PROX_NEAR_STAIRS:
-                if (pval == 2) // player on stairs
-                {
-                    if (mons_class_base_speed(mg.cls) == 0)
-                    {
-                        proxOK = false;
-                        break;
-                    }
-                    // Swap the monster and the player spots, unless the
-                    // monster was generated in lava or deep water.
-                    if (grd(mg.pos) == DNGN_LAVA
-                        || grd(mg.pos) == DNGN_DEEP_WATER)
-                    {
-                        proxOK = false;
-                        break;
-                    }
-
-                    // You can't be shoved if you're caught in a net.
-                    if (you.caught())
-                    {
-                        proxOK = false;
-                        break;
-                    }
-
-                    shoved = true;
-                    coord_def mpos = mg.pos;
-                    mg.pos         = you.pos();
-                    you.moveto(mpos);
-                }
-                proxOK = (pval > 0);
-                break;
-            }
-
-            if (!proxOK)
-                continue;
-
-            // Cool.. passes all tests.
             break;
-        } // end while... place first monster
+        }
     }
     // Sanity check that the specified position is valid.
     else if (!_valid_monster_generation_location(mg) && !dont_place)
@@ -1062,24 +850,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
     }
 
-    // Message to player from stairwell/gate/abyss appearance.
-    if (shoved)
-    {
-        mprf("%s shoves you out of the %s!",
-             mon->visible_to(&you) ? mon->name(DESC_A).c_str() : "Something",
-             stair_type == DCHAR_ARCH ? "gateway" : "stairwell");
-    }
-    else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(*mon))
-    {
-        switch (stair_type)
-        {
-        case DCHAR_STAIRS_DOWN: mon->seen_context = SC_UPSTAIRS; break;
-        case DCHAR_STAIRS_UP:   mon->seen_context = SC_DOWNSTAIRS; break;
-        case DCHAR_ARCH:        mon->seen_context = SC_ARCH; break;
-        default: ;
-        }
-    }
-    else if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
+    if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
              && !crawl_state.generating_level
              && !mg.summoner
              && !crawl_state.is_god_acting()
@@ -1089,14 +860,10 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Now, forget about banding if the first placement failed, or there are
-    // too many monsters already, or we successfully placed by stairs.
-    if (mon->mindex() >= MAX_MONSTERS - 30
-        || (mg.proximity == PROX_NEAR_STAIRS))
-    {
+    // too many monsters already.
+    if (mon->mindex() >= MAX_MONSTERS - 30)
         return mon;
-    }
 
-    // Not PROX_NEAR_STAIRS, so it will be part of a band, if there is any.
     if (band_size > 1)
         mon->flags |= MF_BAND_MEMBER;
 
