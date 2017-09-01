@@ -128,6 +128,7 @@ enum proximity_type   // proximity to player to create monster
     PROX_ANYWHERE,
     PROX_CLOSE_TO_PLAYER,
     PROX_AWAY_FROM_PLAYER,
+    PROX_AWAY_FROM_STAIRS,
 };
 
 enum mgen_flag
