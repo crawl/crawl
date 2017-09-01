@@ -950,7 +950,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         while (true)
         {
             if (tries++ >= 45)
-                return 0;
+                return nullptr;
 
             // Placement already decided for PROX_NEAR_STAIRS.
             // Else choose a random point on the map.
@@ -1029,17 +1029,14 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             break;
         } // end while... place first monster
     }
+    // Sanity check that the specified position is valid.
     else if (!_valid_monster_generation_location(mg) && !dont_place)
-    {
-        // Sanity check that the specified position is valid.
-        return 0;
-    }
+        return nullptr;
 
-    monster* mon = _place_monster_aux(mg, 0, place, force_pos, dont_place);
-
-    // Bail out now if we failed.
+    monster* mon = _place_monster_aux(mg, nullptr, place, force_pos,
+                                      dont_place);
     if (!mon)
-        return 0;
+        return nullptr;
 
     if (mg.props.exists("map"))
         mon->set_originating_map(mg.props["map"].get_string());
@@ -1216,7 +1213,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // If the space is occupied, try some neighbouring square instead.
     if (dont_place)
         fpos.reset();
-    else if (leader == 0 && in_bounds(mg.pos)
+    else if (!leader
+        && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY ||
             (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype)))
         && !monster_at(mg.pos)
