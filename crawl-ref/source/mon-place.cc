@@ -74,11 +74,6 @@ static vector<bool> vault_mon_bands;
 #define VAULT_MON_BANDS_KEY   "vault_mon_bands"
 #endif
 
-// proximity is the same as for mons_place:
-// 0 is no restrictions
-// 1 attempts to place near player
-// 2 attempts to avoid player LOS
-
 #define BIG_BAND        20
 
 static monster_type _band_member(band_type band, int which,
@@ -229,37 +224,6 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         return false;
 }
 
-static bool _is_spawn_scaled_area(const level_id &here)
-{
-    return is_connected_branch(here.branch)
-           && !is_hell_subbranch(here.branch)
-           && here.branch != BRANCH_VESTIBULE
-           && here.branch != BRANCH_ZOT;
-}
-
-// Scale monster generation parameter with time spent on level. Note:
-// (target_value - base_value) * dropoff_ramp_turns must be < INT_MAX!
-static int _scale_spawn_parameter(int base_value,
-                                  int target_value,
-                                  int final_value,
-                                  int dropoff_start_turns = 3000,
-                                  int dropoff_ramp_turns  = 12000)
-{
-    if (!_is_spawn_scaled_area(level_id::current()))
-        return base_value;
-
-    const int turns_on_level = env.turns_on_level;
-    return turns_on_level <= dropoff_start_turns ? base_value :
-           turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
-           final_value :
-
-           // Actual scaling, strictly linear at the moment:
-           (base_value +
-            (target_value - base_value)
-            * (turns_on_level - dropoff_start_turns)
-            / dropoff_ramp_turns);
-}
-
 static void _apply_ood(level_id &place)
 {
     // OODs do not apply to any portal vaults, any 1-level branches, Zot and
@@ -272,25 +236,21 @@ static void _apply_ood(level_id &place)
         return;
     }
 
-    // The OOD fuzz roll is not applied at level generation time on
-    // D:1, and is applied slightly less often (0.75*0.14) on D:2. All
-    // other levels have a straight 14% chance of moderate OOD fuzz
-    // for each monster at level generation, and the chances of
-    // moderate OODs go up to 100% after a ramp-up period.
-
-    if (place.branch == BRANCH_DUNGEON
-        && (place.depth == 1 && env.turns_on_level < 701
-         || place.depth == 2 && (env.turns_on_level < 584 || one_chance_in(4))))
-    {
-        return;
-    }
-
 #ifdef DEBUG_DIAGNOSTICS
     level_id old_place = place;
 #endif
 
-    if (x_chance_in_y(_scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
-                      1000))
+    // The OOD fuzz roll is not applied on D:1, and is applied slightly less
+    // often (0.75*0.14) on D:2. All other levels have a straight 14% chance of
+    // moderate OOD fuzz for each monster at level generation.
+    if (place.branch == BRANCH_DUNGEON
+        && (place.depth == 1
+            || place.depth == 2 && one_chance_in(4)))
+    {
+        return;
+    }
+
+    if (x_chance_in_y(14, 100))
     {
         const int fuzzspan = 5;
         const int fuzz = max(0, random_range(-fuzzspan, fuzzspan, 2));
@@ -304,31 +264,14 @@ static void _apply_ood(level_id &place)
         }
     }
 
-    // On D:13 and deeper, and for those who tarry, something extreme:
-    if (env.turns_on_level > 1400 - place.absdepth() * 117
-        && x_chance_in_y(_scale_spawn_parameter(2, 10000, 10000, 3000, 9000),
-                         10000))
-    {
-        // this maxes depth most of the time
-        place.depth += random2avg(27, 2);
-        dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
-             old_place.describe().c_str(), place.describe().c_str());
-    }
-}
-
-static int _vestibule_spawn_rate()
-{
-    // Monster generation in the Vestibule drops off quickly.
-    const int taper_off_turn = 500;
-    int genodds = 240;
-    // genodds increases once you've spent more than 500 turns in Hell.
-    if (env.turns_on_level > taper_off_turn)
-    {
-        genodds += (env.turns_on_level - taper_off_turn);
-        genodds  = (genodds < 0 ? 20000 : min(genodds, 20000));
-    }
-
-    return genodds;
+     // On D:13 and deeper, something extreme:
+     if (place.absdepth() >= 12 && x_chance_in_y(2, 10000))
+     {
+         // this maxes depth most of the time
+         place.depth += random2avg(27, 2);
+         dprf(DIAG_MONPLACE, "Super OOD roll: Old: %s, New: %s",
+              old_place.describe().c_str(), place.describe().c_str());
+     }
 }
 
 //#define DEBUG_MON_CREATION
@@ -348,7 +291,9 @@ void spawn_random_monsters()
     if (crawl_state.game_is_arena()
         || (crawl_state.game_is_sprint()
             && player_in_connected_branch()
-            && you.chapter == CHAPTER_ORB_HUNTING))
+            && you.chapter == CHAPTER_ORB_HUNTING)
+        // Spawns no longer occur outside the Orb run in connected branches.
+        || !player_on_orb_run() && player_in_connected_branch())
     {
         return;
     }
@@ -365,20 +310,8 @@ void spawn_random_monsters()
         return;
     }
 
-    if (player_in_branch(BRANCH_VESTIBULE))
-        rate = _vestibule_spawn_rate();
-
     if (player_on_orb_run())
         rate = have_passive(passive_t::slow_orb_run) ? 16 : 8;
-    else if (!player_in_starting_abyss())
-        rate = _scale_spawn_parameter(rate, 6 * rate, 0);
-
-    if (rate == 0)
-    {
-        dprf(DIAG_MONPLACE, "random monster gen scaled off, %d turns on level",
-             env.turns_on_level);
-        return;
-    }
 
     if (player_in_branch(BRANCH_ABYSS))
     {
@@ -391,26 +324,22 @@ void spawn_random_monsters()
     if (!x_chance_in_y(5, rate))
         return;
 
-    // Place normal dungeon monsters, but not in player LOS. Don't generate orb
-    // spawns in Abyss to show some mercy to players that get banished there on
-    // the orb run.
-    if (player_in_connected_branch()
-        || (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)))
+    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
+    // players that get banished there on the orb run.
+    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
     {
         dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
-        proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
-                                                 : PROX_AWAY_FROM_PLAYER);
+        proximity_type prox = PROX_AWAY_FROM_PLAYER;
 
         // The rules change once the player has picked up the Orb...
-        if (player_on_orb_run())
-            prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
+        prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
-        mg.foe = (player_on_orb_run()) ? MHITYOU : MHITNOT;
+        mg.foe = MHITYOU;
         // Don't count orb run spawns in the xp_info dump
-        mg.xp_tracking = player_on_orb_run() ? XP_UNTRACKED : XP_SPAWNED;
+        mg.xp_tracking = XP_UNTRACKED;
         mons_place(mg);
         viewwindow();
         return;
@@ -702,13 +631,6 @@ static bool _valid_monster_generation_location(mgen_data &mg)
     return _valid_monster_generation_location(mg, mg.pos);
 }
 
-// Returns true if the player is on a level that should be sheltered from
-// OOD packs, based on depth and time spent on-level.
-static bool _in_ood_pack_protected_place()
-{
-    return env.turns_on_level < 1400 - env.absdepth0 * 117;
-}
-
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
@@ -749,16 +671,15 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         return 0;
 
     bool create_band = mg.permit_bands();
-    // If we drew an OOD monster and there hasn't been much time spent
-    // on level, disable band generation. This applies only to
-    // randomly picked monsters -- chose_ood_monster will never be set
-    // true for explicitly specified monsters in vaults and other
-    // places.
-    if (chose_ood_monster && _in_ood_pack_protected_place())
+    // If we drew an OOD monster and the level has less absdepth than D:13
+    // disable band generation. This applies only to randomly picked monsters
+    // -- chose_ood_monster will never be set true for explicitly specified
+    // monsters in vaults and other places.
+    if (chose_ood_monster && env.absdepth0 < 12)
     {
-        dprf(DIAG_MONPLACE, "Chose monster with OOD roll: %s,"
-                            " disabling band generation",
-                            get_monster_data(mg.cls)->name);
+        dprf(DIAG_MONPLACE,
+             "Chose monster with OOD roll: %s, disabling band generation",
+             get_monster_data(mg.cls)->name);
         create_band = false;
     }
 
