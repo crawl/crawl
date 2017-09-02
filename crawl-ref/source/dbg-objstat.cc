@@ -743,7 +743,6 @@ void objstat_record_monster(const monster *mons)
         _record_monster_stat(lev, mons_ind, "NumVault", 1);
     else
         _record_monster_stat(lev, mons_ind, "NumNonVault", 1);
-    _record_monster_stat(lev, mons_ind, "Num", 1);
     _record_monster_stat(lev, mons_ind, "NumForIter", 1);
     _record_monster_stat(lev, mons_ind, "MonsXP", exper_value(*mons));
     _record_monster_stat(lev, mons_ind, "TotalXP", exper_value(*mons));
