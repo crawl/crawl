@@ -4751,15 +4751,18 @@ bool invis_allowed(bool quiet, string *fail_reason)
     if (you.haloed() && you.halo_radius() != -1)
     {
         if (player_equip_unrand(UNRAND_EOS))
-            reason = "weapon";
+            reason = "Your weapon shines too brightly";
         if (you.attribute[ATTR_HEAVENLY_STORM] > 0 ||
             you.religion == GOD_SHINING_ONE)
         {
-            reason = (reason == "" ? "Divine Halo" : reason + " and Divine Halo");
+            if (reason.empty())
+                reason = "Your divine halo glows too radiantly";
+            else
+                reason = "Your weapon and divine halo glow too brightly";
         }
 
-        ASSERT(reason != "");
-        msg = "Your " + reason + " prevents invisibility.";
+        ASSERT(!reason.empty());
+        msg = reason + " to become invisible.";
         success = false;
     }
     else if (you.backlit())
