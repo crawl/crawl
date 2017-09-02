@@ -1301,7 +1301,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else
         define_monster(*mon);
 
-    if (mons_genus(mg.base_type) == MONS_HYDRA)
+    if (mons_genus(mg.cls) == MONS_HYDRA)
     {
         // We're about to check m_ent->attack[1], so we may as well add a
         // compile-time check to ensure that the array is at least 2 elements
