@@ -96,19 +96,14 @@ static mgen_data _pal_data(monster_type pal, int dur, god_type god,
  * Check target location to ensure it's valid for fixed position summons.
  * Only players can cast spells that target a location.
  *
- * Currently, this function only checks for proper trap interaction.
- * Players cannot target Teleport and shaft traps.
- * If the trap is known, player is simply informed they cannot target it.
- * If the trap is unknown, player is given a mysterious flavor message.
- *
  * @param where         The target coordinate to check.
  * @param monster_type  The type of monster to be checked for placement.
  * @param spell         The spell being cast.
  * @param pow           The spell power.
  * @param fail          If true, return SPRET_FAIL unless the spell is aborted.
- * @returns Returns SPRET_ABORT if the target location is not valid,
- *          SPRET_NONE if there is no trap, otherwise
- *          SPRET_SUCCESS or SPRET_FAIL based on fail.
+ * @returns             Returns SPRET_ABORT if target location is not valid,
+ *                      SPRET_NONE if there is no trap, otherwise
+ *                      SPRET_SUCCESS or SPRET_FAIL based on fail.
  */
 static spret_type _check_fixed_summon_loc(const coord_def& where,
                                           monster_type mon_type,
@@ -167,8 +162,7 @@ static spret_type _check_fixed_summon_loc(const coord_def& where,
 
             fail_check();
 
-            // If player can't see the trap, give a vague message.
-            // Players won't know if it's a teleport or shaft trap.
+            // Let the player know there's a shaft or teleport trap here
             mpr("You see a mysterious outline, and the spell fizzles.");
 
             // We charge mana for the detection of the trap.
