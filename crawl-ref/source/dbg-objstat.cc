@@ -169,9 +169,10 @@ static const char* equip_brand_fields[] = {"OrdBrandNums", "ArteBrandNums",
 static const char* missile_brand_field = "BrandNums";
 
 static const vector<string> monster_fields = {
-    "Num", "NumMin", "NumMax", "NumSD", "MonsHD", "MonsHP",
-    "MonsXP", "TotalXP", "MonsNumChunks", "MonsNumMutChunks", "TotalNutr",
-    "TotalCarnNutr", "TotalGhoulNutr",
+    "Num", "NumNonVault", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD",
+    "MonsHP", "MonsXP", "TotalXP", "TotalNonVaultXP", "TotalVaultXP",
+    "MonsNumChunks", "MonsNumMutChunks", "TotalNutr", "TotalCarnNutr",
+    "TotalGhoulNutr",
 };
 
 static map<monster_type, int> valid_monsters;
@@ -722,6 +723,8 @@ static void _record_monster_stat(const level_id &lev, int mons_ind, string field
 void objstat_record_monster(const monster *mons)
 {
     monster_type type;
+    bool from_vault = !mons->originating_map().empty();
+
     if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
         type = MONS_GLOWING_SHAPESHIFTER;
     else if (mons->has_ench(ENCH_SHAPESHIFTER))
@@ -736,9 +739,24 @@ void objstat_record_monster(const monster *mons)
     level_id lev = level_id::current();
 
     _record_monster_stat(lev, mons_ind, "Num", 1);
+    if (from_vault)
+        _record_monster_stat(lev, mons_ind, "NumVault", 1);
+    else
+        _record_monster_stat(lev, mons_ind, "NumNonVault", 1);
+    _record_monster_stat(lev, mons_ind, "Num", 1);
     _record_monster_stat(lev, mons_ind, "NumForIter", 1);
     _record_monster_stat(lev, mons_ind, "MonsXP", exper_value(*mons));
     _record_monster_stat(lev, mons_ind, "TotalXP", exper_value(*mons));
+    if (from_vault)
+    {
+        _record_monster_stat(lev, mons_ind, "TotalVaultXP",
+                exper_value(*mons));
+    }
+    else
+    {
+        _record_monster_stat(lev, mons_ind, "TotalNonVaultXP",
+                exper_value(*mons));
+    }
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
 

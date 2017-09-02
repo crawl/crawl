@@ -3042,13 +3042,10 @@ static string _monster_attacks_description(const monster_info& mi)
         ++attack_counts[attack_info];
     }
 
-    // XXX: hack alert
+    // Hydrae have only one explicit attack, which is repeated for each head.
     if (mons_genus(mi.base_type) == MONS_HYDRA)
-    {
-        ASSERT(attack_counts.size() == 1);
         for (auto &attack_count : attack_counts)
             attack_count.second = mi.num_heads;
-    }
 
     vector<string> attack_descs;
     for (const auto &attack_count : attack_counts)
