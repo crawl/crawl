@@ -1338,12 +1338,12 @@ static int _num_mons_wanted()
         return 0;
 
     if (player_in_branch(BRANCH_CRYPT))
-        return roll_dice(3, 10);
+        return roll_dice(3, 13);
 
-    int mon_wanted = roll_dice(3, 12);
+    int mon_wanted = roll_dice(3, 15);
 
     if (player_in_hell())
-        mon_wanted += roll_dice(3, 10);
+        mon_wanted += roll_dice(3, 13);
 
     if (mon_wanted > 60)
         mon_wanted = 60;
