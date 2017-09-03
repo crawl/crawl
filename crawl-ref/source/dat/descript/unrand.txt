@@ -503,10 +503,9 @@ Black Knight's horse barding
 %%%%
 amulet of Vitality
 
-A jewelled amulet famed for its powers of resilience and recuperation. Its
-greatest notoriety came from its use by the dread necromancer Borgnjor, who
-relied upon it to maintain her slender hold on life. After her final demise,
-the amulet vanished from the pages of history.
+회복과 탄력의 힘으로 유명한 보석 목걸이다. 이 목걸이는 무시무시한 강령술사
+보르그니르가 그녀의 삷을 지속시키는데 사용한 걸로 악명이 높다.
+그녀가 마침내 최후를 맞이한 뒤, 목걸이는 역사속으로 사라졌다.
 %%%%
 autumn katana
 

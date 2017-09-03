@@ -33,7 +33,7 @@ amulet of magic regeneration
 %%%%
 amulet of nothing
 
-An amulet with no special properties.
+특별한 성질이 없는 목걸이.
 %%%%
 amulet of rage
 
@@ -58,463 +58,458 @@ amulet of the gourmand
 %%%%
 animal skin
 
-A large piece of thick skin covered in fur, cut from the corpse of an animal
-and worn as a primitive garment. It offers rudimentary protection against harm,
-but, having never been tanned, it carries a light stench of rotting flesh.
+털로 뒤덮인 두텁고 커다란 가죽. 동물 사체를 잘라내 만들었다. 
+원시인은 이것을 옷으로 입었다. 기초적인 방어력을 제공하지만, 
+기본적인 무두질도 하지 않았기에 썩어가는 살점의 악취를 옅게 풍긴다.
 %%%%
 arbalest
 
-A large piece of machinery used for firing bolts, braced with steel and cranked
-with a windlass. It takes some time to load and fire.
+정밀공학의 거대한 산물. 강철로 보강하여 윈들라스를 크랭크로 썼다. 
+장전하고 쏘는 데 시간을 상당히 소요한다.
 %%%%
 arrow
 
-A long shafted projectile intended to be shot with a shortbow or longbow,
-fletched with feathers at one end and a point at the other.
+단궁이나 장궁으로 쏘는 탄환. 
+화살대는 길고, 한쪽 끝은 새털로 깃을 세웠고 한쪽 끝은 뾰족하다.
 %%%%
 bardiche
 
-A long pole with an enormous, cleaving blade on one end.
+거대하고 예리한 칼날이 달린 길다란 장대.
 %%%%
 battleaxe
 
-A large war axe with a formidable double-sided head.
+무시무시한 날이 양쪽으로 달린 커다란 전쟁 도끼.
 %%%%
 blowgun
 
-A long, light tube, open at both ends, through which various types of needles
-are propelled by puffs of breath at enemies. It makes very little noise.
+길고 가벼운 튜브. 빨대처럼 양쪽이 뚫려 있는데, 숨을 불어넣어
+ 다양한 종류의 바늘을 적의 목에 쏠 수 있다. 소음이 아주 작게 일어난다.
 %%%%
 bolt
 
-A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
+화살보다 짧은 금속 탄환. 석궁에 장전해 사용한다.
 %%%%
 book of air
 
-A primer on the elemental magics of Air. Particularly dedicated students have
-found themselves convinced of their own ability to fly, with tragic results.
+공기의 원소 마법에 대한 입문서. 마법에 심취했던 몇몇 학생들은
+비극적 결과를 통해 그들 스스로의 비행 능력을 과신했었음을 알게 되었다.
 %%%%
 book of alchemy
 
-A book focusing on alchemical processes and their use in magic spells,
-collecting the wisdom of many ancient alchemists.
+연금술의 진행 과정과 그들이 쓰던 마법 주문에 초점을 맞춘 책.
+옛 연금술사들의 지혜가 담겨있다.
 %%%%
 book of annihilations
 
-A tome of arcane fury, greatly sought after by sorcerers. It allows the gifted
-and resourceful to conjure destruction with ease.
+예로부터 마법사들이 추구한 강력한 마법에 대한 책. 지혜롭고 
+현명한 자에겐 강력한 파괴력을 부여한다.
 %%%%
 book of battle
 
-A book of battle songs, containing spells to assist in combat.
+마법적인 도움을 주는 전투 노래들이 담겨있는 책이다.
 %%%%
 book of beasts
 
-A book of spells focused on the summoning of beasts. Its pages nip at careless
-readers' fingers.
+각종 야수들을 소환하는데에 초점을 둔 마법서. 책장을 넘길때 부주의한 독자의 손가락을
+꼬집기도 한다.
 %%%%
 book of burglary
 
-A book containing many diverse spells useful for theft, breaking and entering,
-and other miscellaneous larceny.
+이 책에는 무단침입, 도주 및 기타 잡다한 절도 등에 도움을 주는
+각양각색의 주문이 있다.
 %%%%
 book of callings
 
-An introductory text on the magical summoning of beasts and beings from other
-realms.
+짐승이나 다른 차원의 존재들을 마법적으로 소환하는 법에 대한
+입문용 서적.
 %%%%
 book of cantrips
 
-A book containing a small selection of very basic magic spells, intended for
-beginners who wish to learn the rudiments of one of the featured magical
-schools.
+다양한 마법 주문을 선발해내 만들어진 이 책은,
+각 마법 학파의 기초를 습득하고자 하는 초보자들을 위해 제작되었다.
+그러나 숙련된 마법사에게도 이 책의 주문들은 충분히 유용할 것이다.
 %%%%
 book of changes
 
-A student's primer to the magic arts of Transmutations, filled with lavish
-illustrations of spellcasting mistakes: half-wizard-half-spiders, blade noses,
-beaked tentacles where legs belong. The text is full of reassurances that these
-almost never happen.
+변이술 마법을 배우려 하는 학도들의 입문서.
+이 책에는 앞서 이 길을 간 선배들의 실험적 행보들이 풍부한 일러스트를 통해 기록되어 있다 : 
+반 마법사-반 거미, 칼날 코, 다리 대신 자라난 촉수 등등. 책의 본문엔 저런 종류의 일들이
+더 이상 일어나진 않을 거라고 설득하는 소리가 가득하다.
 %%%%
 book of clouds
 
-A book of magic spells for creating an assortment of clouds. It is difficult to
-read, as the text is frequently interrupted by descriptions of unusually-shaped
-clouds the author spotted while writing.
+구름을 일으키는 마법 주문을 한 데 모아놓은 책이다. 이 책은 매우 읽기
+어려운데, 저자가 쓰는동안 발견한 비정상적인 구름의 모양에 대한 설명때문에 
+글이 자주 끊기기 때문이다.
 %%%%
 book of conjurations
 
-A book containing an introduction to the destructive magical arts of
-Conjurations.
+파괴술의 파괴적인 마법에 대한 소개가 담겨있는 책
 %%%%
 book of death
 
-A manuscript containing dark spells of Necromancy. Each page is filled with
-grotesque art depicting scenes of disgusting decay.
+어둠의 강령술 주문이 적힌 문서다. 매 페이지마다 역겨운 부패와
+끔찍한 죽음이 기괴하게 묘사되어 있다.
 %%%%
 book of debilitation
 
-A spellbook containing Hexes that obstruct and impede, compiled by rebels
-fighting an empire long-since passed.
+갖가지 주술과 상대를 방해하는 마법에 대해 소개하는 마법책, 오래 전 부터
+제국과 싸우던 반군들에 의해 작성되었다.
 %%%%
 book of dreams
 
-The somniloquent utterings of a famed mystic, using uniquely bizarre imagery
-and cryptic digressions to describe spells drawn from the mystic's visions.
+유명한 신비주의자가 잠결에 한 말들을, 독특하고도 기묘한
+이미지와 암호문들을 사용하여 주문을 신비주의적으로 묘사했다.
 %%%%
 book of enchantments
 
-A spellbook containing an assortment of powerful Hexes and Charms, which
-sparkles and shimmers as the pages are flipped.
+강력한 주술과 부여술 마법을 한데 모은 책으로, 책장을 넘길 때마다
+빛이 반짝이거나 아지랑이가 어른거린다.
 %%%%
 book of fire
 
-A book containing advanced spells in the elemental school of Fire, stolen from
-the secret college of the djinn.
+화염 학파의 고급 주문들이 담겨있는 책으로, 지니의 비밀 모임에서
+도난당한 책이다.
 %%%%
 book of fixed level
 
-A book of magic spells.
+마법 주문에 관한 책이다.
 %%%%
 book of fixed theme
 
-A book of magic spells.
+마법 주문에 관한 책이다.
 %%%%
 book of flames
 
-The standard text used in arcane academies by students of the elemental magic
-of Fire.
+비전 아카데미에서 화염 학파 학생을 가르칠 때 사용하는 표준 교과서.
 %%%%
 book of frost
 
-A book of magic spells, often used as an introduction to the elemental magics
-of Ice.
+얼음 원소 마법 입문서로 주로 사용되는 책이다.
 %%%%
 book of geomancy
 
-A book containing basic spells involving the element of Earth.
+땅 원소에 관한 기초 주문을 서술하는 책이다
 %%%%
 book of ice
 
-A book of advanced magical spells using the element of Ice.
+얼음 원소를 이용하는 고급 마법 주문이 담긴 책. 
 %%%%
 book of maledictions
 
-A book of Hexes, describing spells to confound and weaken.
+상대방을 약화시키고 혼란스럽게 하는 주술에 대한 책.
 %%%%
 book of minor magic
 
-A spellbook containing a variety of simple but useful magical incantations.
-Many prominent spellcasters used this book to begin their arcane studies.
+간단하지만 유용한 각종 주문을 담은 마법서다.
+많은 유명한 마법사들이 햇병아리 시절 이 책을 가지고 공부하곤 했다.
 %%%%
 book of misfortune
 
-A spellbook dedicated to the art of inflicting creative calamities on one's
-foes. Superstitious wizards claim that the book itself actually absorbs ill
-fortune, and carry it around as a talisman, but the effects of this seem
-subtle at best.
+이 마법서는 누군가의 적에게 독특한 재난을 일으키는 방법을 전문적으로 다루고 있다. 
+미신을 믿는 마법사들은 이 책이 실제로 불운을 흡수한다고 말하며 
+책을 부적 대용으로 들고 다니기도 하지만, 아무리 좋게 봐도 그 효과는 
+지극히 미미해 보인다.
 %%%%
 book of necromancy
 
-A macabre book containing basic Necromancy spells.
+이 섬뜩한 책은, 초보 강령술사가 가장 처음 접하고 배우는 마도서다.
 %%%%
 book of party tricks
 
-A book containing a variety of fun spells guaranteed to liven up any wizarding
-party, as well as a number of toasts, jokes, and party games.
+마법사 파티에서 분위기를 띄우는 목적으로 사용하는 재미난 주문들을 담은 책이다. 
+이 주문들은 건배, 농담, 파티 게임 등에도 몇 번이고 써먹을 수 있다.
 %%%%
 book of power
 
-A book of powerful magic spells, crackling and shuddering with barely-contained
-energies.
+강력한 마법이 담긴 이 책은, 억제되고 있는 에너지로 인해 웅웅거리는 소리를 내며 옅게 진동하고 있다.
 %%%%
 book of spatial translocations
 
-A basic spellbook on the magical field of Translocations.
+전이 마법의 마법 공간에 관한 기본적인 마법서이다.
 %%%%
 book of summonings
 
-An advanced treatise on Summoning magics, detailing ways of summoning and
-binding creatures from all manners of realms.
+소환 마법에 대한 선진적인 논문이다. 온갖 차원의 끔찍한 존재들을 
+불러내어 속박하는 방법에 대해 다루고 있다.
 %%%%
 book of the dragon
 
-A magical book of spells which allow some command over dragons and their
-aspects.
+용을 다루고 용의 능력을 쓸 수 있게 해주는 마법서다
+마법서다.
 %%%%
 book of the earth
 
-A textbook of advanced Earth magic.
+숙련된 대지 마법사를 위한 교과서.
 %%%%
 book of the sky
 
-A magical book containing powerful elemental spells of Air.
+강력한 대기 원소 주문이 적힌 마법서.
 %%%%
 book of the tempests
 
-A book containing magic spells which command some of the most destructive
-forces of nature.
+이 책은 자연의 가장 파괴적인 힘을 다루는
+마법 주문을 담고 있다.
 %%%%
 book of the warp
 
-A book of advanced Translocations spells.
+숙련된 전이술사를 위한 전이술 주문서.
 %%%%
 book of transfigurations
 
-An advanced book of Transmutations spells.
+변이 주문을 다루는 고급 서적.
 %%%%
 book of unlife
 
-An unholy book describing a variety of magical methods for the creation and
-command of undead servants.
+이 불경한 서적은 언데드 노예를 일으키고 조종하는 
+마법적 방법들에 대해 서술한다.
 %%%%
 box of beasts
 
-A box filled with the bizarre leftovers of a depraved wizard's magical
-experimentations. Opening it might set loose a friendly mutant beast: bizarre
-creatures, each with their own combination of traits. Increased skill with
-Evocations will allow stronger beasts to be released. There is a one in three
-chance of accidentally destroying the box when using it.
+이 상자엔 타락한 마법사가 남긴 기기묘묘한 마법 실험의 결과물이 들어 있다. 
+상자를 열면 우호적인 뮤턴트 짐승이 풀려난다. 
+이 기묘한 존재들은 저마다 독특한 특징을 가지고 있다. 
+발동술이 능숙할수록 강력한 짐승을 풀어놓을 수 있다.
+상자를 사용할 때마다 3분의 1의 확률로 상자가 파괴될 수도 있다.
 
-There are six known traits:
- * Bat beasts fly and move very quickly, but erratically.
- * Fire beasts resist and breathe fire.
- * Ox beasts resist cold, are armoured with thick fur, and can knock back foes.
- * Shock beasts resist electricity and can transform into living lightning.
- * Sting beasts resist poison and have a reaching poison-tail attack.
- * Weird beasts can see invisible and attack with constricting tentacles.
+짐승 상자의 짐승들에 대해서는 여섯 가지의 특징이 알려져 있다 :
+* 박쥐 - 날 수 있고 빠르게 움직이지만, 이름 그대로 변덕스럽다.
+* 불 - 불 저항이 있고 불을 뿜을 수 있다.
+* 소 - 냉기 저항이 있고, 두꺼운 털로 덮혀 있으며, 적들을 뒤로 밀칠 수 있다.
+* 쇼크 - 전기 저항이 있고, 살아있는 번개로 변형할 수 있다.
+* 벌 - 독 저항이 있고, 도달 속성이 있는 독침 공격을 할 수 있다.
+* 기이함 - 투명한 존재를 볼 수 있고, 촉수로 속박 공격을 할 수 있다.
 
-As far as anyone knows, all beasts have exactly two of these traits.
+알려진 바에 의하면, 짐승은 다음 중 두 가지 특징이 혼합된 채 나온다 :
 %%%%
 bread ration
 
-A filling meal of stale, but hearty, bread.
+오래 묵었지만 푸짐한 빵 덩어리.
 %%%%
 broad axe
 
-An axe with langets, spikes, a lengthed haft and a single-bladed crescent head.
+도끼날을 널찍하게, 자루를 길게 강화시킨 전쟁 도끼. 반달 모양 날이 한 쪽에 붙어 있다.
 %%%%
 buckler
 
-A small piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+나무와 금속으로 이루어진 판. 한 팔에 묶어 적의 공격을 방어하는 용도로 쓴다.
+착용 시 거치적거려서, 숙련되지 않은 사용자는 회피 능력, 
+주문 시전 능력 및 공격 속도에 약간 방해를 받는다.
 %%%%
 centaur barding
 
-An armour made for centaurs, to wear over their equine half.
+센타우르를 위해 제작된 특별한 갑옷. 말의 하반신 부분에 장비한다.
 %%%%
 chain mail
 
-A suit of armour made entirely out of tiny metal rings.
+자그마한 금속 고리로 만들어진 갑옷이다.
 %%%%
 chunk of flesh
 
-A piece of raw meat found in the dungeon. It won't stay fresh for long.
+던전에서 발견할 수 있는 생고기. 그 신선함은 오래 유지되진 않을 것이다.
 %%%%
 cloak
 
-A cloth cloak.
+천 망토.
 %%%%
 club
 
-A heavy piece of wood. While clubs are rather primitive weapons, bashing
-someone's skull in with one remains a very popular and effective means of
-dispute resolution.
+무거운 나무토막. 비록 몽둥이가 원시적인 무기라고는 하나, 
+몽둥이로 누군가의 두개골을 내려치는 것은
+분쟁을 해결할 수 있는 가장 효과적이고 인기 있는 수단이다.
 %%%%
 corpse
 
-A corpse. You can butcher it to produce chunks of meat.
+시체. 해체하여 고깃덩이를 얻을 수 있다.
 %%%%
 crystal ball of energy
 
-A magical device which can be used to restore magical energy, with its
-effectiveness increasing with Evocations skill. However, it may fail and drain
-all of those energies completely, or cause other negative mental effects. When
-used with low reserves of magic it becomes increasingly likely to deplete those
-reserves.
+마력을 회복하는 용도로 사용하는 마법 도구다.
+ 발동술에 능숙할수록 효과가 증가한다. 
+하지만 실패하여 모든 마력이 빨려나가거나, 
+부정적인 정신적 효과가 나타날 가능성도 있다. 
+마력이 조금밖에 남지 않았을 때 사용하면 도구 용량이 줄어들 위험이 있다.
 %%%%
 crystal plate armour
 
-An incredibly heavy but extremely effective suit of crystalline armour.
+어마어마하게 무겁지만, 어마어마하게 효과적인 수정 방어구.
 %%%%
 dagger
 
-A double-edged fighting knife with a sharp point.
+끝이 날카로운 전투용 양날 나이프.
 %%%%
 decaying skeleton
 
-A decaying skeleton.
+썩어가는 해골이다.
 %%%%
 deck of destruction
 
-A deck of magical cards, most of which hurl death and destruction at one's foes
-(or, if unlucky, at oneself).
+죽음과 파괴를 적에게 (혹은 불운한 경우 자신에게) 선사하는 
+마법의 카드 덱.
 %%%%
 deck of escape
 
-A deck of magical cards, mainly dealing with various forms of escape.
+주로 다양한 방식으로 도주할 수 있게 해주는 마법의 카드 덱.
 %%%%
 deck of punishment
 
-A deck of magical cards which wreak havoc on the user.
+사용자를 무자비하게 파괴시키는 마법의 카드 덱.
 %%%%
 deck of summoning
 
-A deck of magical cards, depicting a range of weird and wonderful creatures.
+기기묘묘하고 신비로운 존재들이 그려진 마법의 카드 덱.
 %%%%
 demon blade
 
-A terrible weapon, forged in the fires of Hell.
+지옥불로 만들어진 끔찍한 무기.
 %%%%
 demon trident
 
-A terrible three-pronged weapon, moulded by fire and brimstone.
+불과 유황으로 주조된 끔찍한 삼지창.
 %%%%
 demon whip
 
-A terrible weapon, woven in the depths of the inferno.
+불지옥 깊은 곳에서 태어난 끔찍한 무기.
 %%%%
 dire flail
 
-A flail with long spikes and a heavy head.
+머리 부분이 보다 무겁고 길쭉한 못이 박힌 플레일.
 %%%%
 double sword
 
-A magical weapon with two razor-sharp blades.
+예리한 검날이 두 개 달린 마법적인 무기.
 %%%%
 eggplant
 
-A rotten eggplant which you can throw at the Crawl developers. It's a bug if
-you ever see this message.
+Crawl 개발진들에게 던질 수 있는 썩어가는 가지이다.
+발견한다면, 버그입니다. 연락 주세요!
 %%%%
 eudemon blade
 
-A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
-favoured weapon of the Shining One's servants, and cannot be wielded by the
-forces of evil.
+천국의 대장간에서 만들어진 신성한 검. 선한 영이 깃들어 있다. 
+샤이닝 원의 추종자들이 가장 선호하는 무기로, 
+악한 존재는 장비할 수 없다.
 %%%%
 eveningstar
 
-The opposite of a morningstar.
+모닝스타의 반대이다.
 %%%%
 executioner's axe
 
-A fearsome weapon covered in dried blood and crude engravings of torture and
-death, bearing an enormous axehead.
+피가 말라붙어 있는, 고문과 죽음으로 점철된 공포스런 무기. 
+도끼날 크기가 어마어마하다.
 %%%%
 falchion
 
-A long single-edged sword with a slightly curved blade.
+날이 살짝 휘어진 양날 장검.
 %%%%
 fan of gales
 
-An enchanted fan. Swinging the fan unleashes a powerful blast of wind around
-the bearer.
+자애로운 공기의 정령이 깃들어 있는 마법의 부채.
+부채를 저으면 주위에 돌풍이 일으켜 적들을 멀리 날려버린다.
 %%%%
 fen folio
 
-A collection of spells once used by the great swamp civilizations.
+과거 늪지에서 번성했던 위대한 문명이 사용한 주문의 모음집이다.
 %%%%
 figurine of a ziggurat
 
-A small figurine made of some strange material, shaped like a stepped pyramid.
-It is remarkably detailed – almost like a real, vast structure, shrunk somehow
-smaller than a human hand.
+모종의 기묘한 재료로 만들어진 작은 모형. 층 피라미드 모양이다.
+사람 손보다 작게 축소한 물건이지만, 디테일이 놀랍도록 정교해서 
+마치 진짜 피라미드 같다.
 %%%%
 fire dragon scales
 
-The scales of a fire-breathing dragon. It provides great protection from fire,
-while rendering its wearer more susceptible to cold.
+화염을 토하는 용의 비늘이다. 화염에 대해 드높은 저항력을 부여하지만, 
+동시에 냉기에 취약해지게 만든다.
 %%%%
 flail
 
-A mace with a short chain connecting the head to the haft.
+손잡이에 머리 부분을 짧은 사슬로 연결한 메이스.
 %%%%
 fruit
 
-A delicious edible flower ovary.
+참 맛있는 꽃의 씨방.
 %%%%
 fustibalus
 
-A length of wood with a reinforced sling at one end, able to fire projectiles
-at high velocity. It deals more damage when launching purpose-made ammunition,
-rather than stones found on the floor.
+강화된 슬링이 끝에 붙어 있어, 탄환들을 빠르게 발사할 수 있는 나무조각. 
+땅바닥에서 주울 수 있는 돌보다는, 전문적으로 제작된 탄환을 발사할 때 
+더 큰 위력을 낸다.
 %%%%
 giant club
 
-A giant lump of wood.
+거대한 목제 둔기.
 %%%%
 giant spiked club
 
-A giant lump of wood with sharp spikes at one end.
+끝에 날카로운 가시가 막힌 거대한 목제 둔기.
 %%%%
 glaive
 
-A pole with a large, heavy blade on one end.
+끝에 크고 무거운 칼날이 달린 장대.
 %%%%
 gold dragon scales
 
-The scales of a gold dragon. It is much heavier than most dragon scale armours,
-and grants its wearer resistance to poison, fire and cold.
+황금 용의 비늘이다. 대부분의 용 가죽 갑옷보다 무겁다. 
+화염, 냉기, 독에 대한 저항력을 제공한다.
 %%%%
 gold piece
 
-A pile of glittering gold coins.
+반짝반짝 빛나는 금화 무더기.
 %%%%
 grand grimoire
 
-A book describing how the mighty among summoners can bend to their will the
-terrible things from betwixt the planes. Many have been the unwary souls,
-however, who have toyed with this tome and been driven mad by unimaginable
-eldritch horrors.
+죽음과도 같은 정적이 이 책을 감싸고 있다. 책을 펼치면, 흉측스러운 삽화에 공기가 반발하여 치솟는다. 
+혐오스러운 룬으로 뒤덮인 책장은, 소환사가 힘을 어떻게 사용해야 차원 사이의 끔찍한 것들을 
+이 세상에 묶어둘 수 있는지 설명하고 있다. 부주의한 영혼을 지닌 많은 이들은 
+이 책의 장난감으로 전락하여, 상상조차 할 수도 없는 끔찍한 공포 때문에 미쳐버리고 말았다.
 %%%%
 great mace
 
-An enormous metal war club, of great cumbrousness.
+크기가 어마어마한 전쟁용 강철 둔기. 다루기가 거추장스럽다.
 %%%%
 great sword
 
-A sword with a very long, heavy blade and a long handle.
+검신이 아주 길고 무거우며, 칼자루도 넉넉한 검이다.
 %%%%
 halberd
 
-A polearm consisting of an axe blade topped with a spike, mounted on a long
-shaft.
+길다란 창대 끝에 도끼날을 달고 뾰족한 가시를 
+박은 창.
 %%%%
 hand axe
 
-A small axe.
+자그마한 도끼.
 %%%%
 hand crossbow
 
-A compact piece of machinery, used for firing bolts. It takes some time to load
-and fire.
+정밀한 공학의 산물. 석궁 탄환을 발사한다. 
+장전하고 쏘는 데 시간을 상당히 소요한다.
 %%%%
 hat
 
-A cloth hat.
+천으로 된 모자.
 %%%%
 helmet
 
-A piece of metal headgear.
+강철 머리 방어구.
 %%%%
-horn of Geryon
+게리욘의 뿔나팔
 
-The horn belonging to Geryon, guardian of the Vestibule of Hell. It has the
-power to call forth demonic beasts. With high Evocations skill, it will call
-greater numbers of beasts, with lower chances of those beasts being hostile.
+그 뿔나팔은 지옥의 입구를 수호하는 수문장, 게리욘이 지니고 있다.
+이 부정한 물건은 악마적인 짐승을 부르는 힘을 가지고 있다.
+발동술이 높을 수록 많은 수의 짐승을 부르며, 적대적일 확률을 낮춘다.
 %%%%
 hunting sling
 
-A piece of cloth and leather for launching stones, adequate for hunting small
-game like rabbits or goblins. It deals more damage when launching purpose-made
-ammunition, rather than rocks found on the floor.
+천과 가죽으로 만든, 돌을 발사하는 도구로 토끼나 고블린 등을 사냥하는 데 최적화된 물건.
+땅바닥에서 주울 수 있는 돌보다는, 전문적으로 제작된 탄환을 쏠 때 더 큰 위력을 낸다.
 %%%%
 ice dragon scales
 
-The scales of a cold-breathing dragon. It provides great protection from cold,
-while rendering its wearer more susceptible to fire.
+냉기를 내뿜는 용의 비늘이다.
+냉기에 대해 드높은 저항력을 부여하지만, 동시에 화염에 취약해지게 만든다.
 %%%%
 inedible chunk of flesh
 
@@ -522,82 +517,82 @@ inedible chunk of flesh
 %%%%
 javelin
 
-A lightweight spear, designed for throwing.
+이 가벼운 창은 투척하는 용도로 쓰인다. 맞은 적에게 중상을 입힐 수 있다.
 {{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
-        return "Unfortunately, it is too long and awkward for you to use."
-    else
-        return ""
-    end
+if you.race() == "Halfling"
+or you.race() == "Kobold"
+or you.race() == "Spriggan"
+then
+return "불행하게도, 사용하기에 너무 길고 다루기 힘들다."
+else
+return ""
+end
 }}
 %%%%
 lajatang
 
-A very rare and extremely effective weapon, featuring a pole with half-moon
-blades at both ends.
+희귀하고 위력적인 이국의 무기. 
+양 끝에 반달 모양 칼날이 달려 있는 것이 특징이다.
 %%%%
 lamp of fire
 
-A magical lamp which can be aimed at a creature to unleash trails of searing
-flame around the target.
+살아있는 생명체에게 비추어 타는 듯한 불길의 흔적을
+일으킬 수 있는 마법의 램프이다.
 %%%%
 large rock
 
-A very large and very heavy stone. {{
-    if you.race() == "Ogre"
-       or you.race() == "Troll"
-   then
-       return ""
-   else
-       return "Only large creatures are capable of throwing it."
-   end
+엄청나게 크고 엄청나게 무거운 암석. {{
+if you.race() == "Ogre"
+or you.race() == "Troll"
+then
+return ""
+else
+return "오직 거대한 존재만이 이 육중한 물건을 던질 수 있다."
+end
 }}
 %%%%
 large shield
 
-A large piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+나무와 금속으로 이루어진 거대한 판. 한쪽 팔에 묶어 적의 공격을 방어하는 용도로 쓴다. 
+착용하면 엄청나게 거치적거려서 전사는 공격속도가 크게 느려지고, 그 외 회피와 주문 시전에도 방해를 받는다. 
+방패술에 크게 숙달되어야 이런 패널티가 사라진다.
 %%%%
 leather armour
 
-A suit made from layers of tanned animal hide. It provides basic protection
-with almost no hindrance to spellcasting or stealthy movement.
+무두질한 동물 가죽을 겹쳐 만든 갑옷이다. 이 경갑은 기초적인 방어력을 제공하면서도, 
+정교한 움직임이나 신속하고 은밀한 동작에 거의 방해가 되지 않는다.
 %%%%
 lightning rod
 
-A rod that allows its wielder to fire unavoidable blasts of lightning.
-Consecutive evocations cause the discharge to be sustained, which increases the
-power level up to four times and allows the blast to be redirected to affect an
-area.
+피할 수 없는 번개를 발사할 수 있게 해 주는 막대이다.
+방전은 연속적이며, 처음 발사한 뒤 바로 다음 턴에 막대를 발동해서 
+공격 영역을 지정할 수 있다(이에 실패하면 트리거가 발동할 것이다).
+위력은 4회에 걸쳐서 증가한다.
 %%%%
 long sword
 
-A sword with a long, slashing blade.
+날이 길고 날카로운 검.
 %%%%
 longbow
 
-A long, strong bow made of yew.
+주목나무로 된 길쭉하고 튼튼한 활.
 %%%%
 mace
 
-A short club with a metal head.
+끄트머리를 쇠로 만든 짧은 몽둥이.
 %%%%
 manual
 
-A valuable book which allows one to practise a certain skill more efficiently
+가지고 있으면 특정한 기술(스킬)을 효과적으로 수련할 수 있게 만들어주는 값진 책이다.
 when carried.
 %%%%
 meat ration
 
-A filling ration of dried and preserved meats.
+건조시켜 만든 넉넉한 고기 보존식량.
 %%%%
 morningstar
 
-A mace with a head covered in short spikes.
+머리에 짧은 가시가 박힌 메이스.
 %%%%
 mutagenic chunk of flesh
 
@@ -605,651 +600,626 @@ mutagenic chunk of flesh
 %%%%
 naga barding
 
-A special armour made for nagas, to wear over their tails.
+나가를 위해 제작된 특별한 갑옷. 꼬리 부분에 착용한다.
 %%%%
 necronomicon
 
-An extremely rare book, powerful and sinister. Many foolhardy magicians have
-tried to study this tome, only to find themselves entangled within necromantic
-forces they could not hope to control.
+극도로 희귀하며, 강력하고 불길한 책. 알 수 없는 존재의 섬세한 가죽으로 제본되었다.
+많은 무모한 마법사들이 이 책을 익히려 시도했으나,
+그러한 시도는 오직 제어할 수 없는 강령술의 힘에 스스로를 속박하는 결과만을 낳았을 뿐이다.
 %%%%
 needle
 
-A thin piece of metal, typically coated in some harmful substance. When
-launched from a blowgun it can deliver its toxins into the bloodstream of a
-living or demonic being.
+독성 물질을 칠한 작은 금속 조각.
+블로우건으로 발사하면 살아있는 존재나 악마의 혈류에 맹독을 주입한다.
 %%%%
 orb of zot
 
-An invaluable artefact. Once you have escaped to the surface with it, your
-quest is complete.
+이 가치를 헤아릴 수 없는 보물을 지상으로 가지고 돌아간다면, 당신의 사명은 끝난다.
 %%%%
 pair of boots
 
-A pair of boots. They are worn on the feet, and cover all but the largest
-hooves and talons.
+한 켤레 신발. 그것은 발에 신을 수 있으며, 가장 큰 발굽과 발톱을 제외한
+모든 발을 덮을 수 있다.
 %%%%
 pair of gloves
 
-A pair of gloves. They are worn on the hands, and cover all but the largest
+한 쌍의 장갑. 그것은 손에 낄 수 있으며, 가장 큰 손톱을 제외한 손에 낄 수 있다.
 claws.
 %%%%
 pearl dragon scales
 
-The nacreous scales of a pearl dragon. It grants its wearer resistance to
-negative energies.
+진주 용의 무지갯빛 비늘이다. 음에너지에 대한 저항력을 제공한다.
 %%%%
 phantom mirror
 
-A hand mirror which can create a reflection of a nearby creature, shattering
-in the process. The reflection's duration increases with Evocations skill and
-decreases with the magic resistance of the target. It is, invariably, slightly
-weaker than the creature it mirrors.
+이 손거울은 근처에 있는 존재를 반영한 형상을 만들어낸다.
+형상은 시간이 지남에 따라 산산이 부서져간다.
+반영의 지속시간은 발동술 스킬에 따라 증가한다.
+반영은 언제나 원본보다 살짝 약하다.
 %%%%
 phial of floods
 
-An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial and sets free the water elementals
-that dwell within it.
+정령의 물로 넘쳐흐르는 마법의 물병이다.
+마개를 따면 격류가 세차게 뿜어져 나오고, 병 안에 살던 물의 정령들이 자유롭게 해방된다.
+한 번 사용하면 이 도구와, 종류가 같은 모든 도구는 일시적으로 비활성 상태가 될 것이다.
+경험치를 얻으면 도구는 재충전된다.
 %%%%
 plate armour
 
-A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
-and greaves. It provides excellent protection.
+강철 판으로 만들어진 몸통 방어구 한 벌. 
+흉갑, 완갑, 허리 갑옷, 각반까지 한 세트다. 방어력이 훌륭하다.
 %%%%
 potion of agility
 
-A potion which greatly increases the dexterity and evasiveness of one who
-drinks it.
+이 마법의 물약은 마신 자의 민첩성과 회피력을 크게 증가시킨다.
 %%%%
 potion of ambrosia
 
-A strange substance, produced by ghost moths. Consuming it causes regeneration
-of health and magic, along with total befuddlement. The two effects are
-fundamentally linked – the regeneration ends the moment the confusion does.
+유령 나방이 만들어낸 이상한 물질이다.
+이것을 먹으면 체력과 마력이 급속도로 회복되지만, 정신이 혼미해진다.
+재생이 끝나는 순간 혼란의 시간도 끝나는 것으로 보아, 이 두 가지 효과는 서로 연결되어 있는 듯하다.
 %%%%
 potion of berserk rage
 
-A potion which can send one into an incoherent rage.
+이 물약을 마신 자는 걷잡을 수 없는 분노 속에 빠져든다.
 %%%%
 potion of blood
 
-A potion containing the essence of life.
+생명의 정수 그 자체인 물약.
 %%%%
 potion of brilliance
 
-A potion which greatly increases the intelligence and magical power of one who
-drinks it.
+이 포션을 마시는 자의 지능과 마법 능력은 크게 증폭된다.
 %%%%
 potion of cancellation
 
-A potion which ends most magical effects, good or bad, affecting one who drinks
-it. It also reduces magical contamination.
+이 물약은 당신에게 작용하고 있는 거의 모든 마법 효과를 없애버린다. 
+그것이 좋은 것이든, 나쁜 것이든 간에. 또한 이 물약은 마법 오염 수치를 낮춘다.
 %%%%
 potion of curing
 
-A potion which heals some wounds, clears the mind and cures poison and disease.
-It can also slightly repair rotting.
+얕은 상처를 치료하고, 마음을 깨끗이 하며 독과 질병을 치료하는 물약이다.
+이 물약은 부패로 손실된 체력을 미미하게 수복해주기도 한다.
 %%%%
 potion of degeneration
 
-A noxious concotion which reduces strength, intelligence and dexterity.
+힘, 지능, 민첩을 감소시키는 유해한 혼합물.
 %%%%
 potion of experience
 
-A truly wonderful and very rare drink, which grants experience when consumed.
+실로 경이롭고 지극히 희귀한 음료.
 %%%%
 potion of flight
 
-A potion which confers great buoyancy on one who consumes it.
+이 물약을 삼키는 사람은 막대한 부양력을 얻는다.
 %%%%
 potion of heal wounds
 
-A magical healing elixir which causes wounds to close and heal almost
-instantly. It can also repair rotting.
+상처를 급속도로 아물게 하는 마법의 치유 물약. 부패하여 감소한 체력도 치유한다.
 %%%%
 potion of invisibility
 
-A potion which confers invisibility on one who consumes it.
+다른 존재의 시야로부터 당신을 감춰주는 물약.
 %%%%
 potion of lignification
 
-A potion which transforms the imbiber into an animated tree with branches
-capable of holding weapons. Such a tree is very resilient, although it is
-rooted in place while the transformation lasts, and cannot teleport.
+가지에 무기를 쥐어든 살아 움직이는 나무로 잠깐 동안 변신하게 만들어주는 물약.
+나무는 상당히 단단하지만, 변신해 있는 동안엔 그 어떤 방법으로도 도망칠 수 없다.
 %%%%
 potion of magic
 
-A valuable potion which grants an infusion of magical energy.
+마력을 주입해주는 값진 포션이다.
 %%%%
 potion of might
 
-A potion which greatly increases the strength and physical power of one who
-drinks it.
+힘과 물리적 능력을 크게 증가시키는 마법의 물약.
 %%%%
 potion of mutation
 
-A potion which mutates the drinker, removing several mutations then
-granting a few mutations, at least one beneficial.
+마시는 자를 돌연변이시키는 물약으로 몇가지 돌연변이를 제거하고
+몇가지 돌연변이를 부여하며, 최소한 하나는 좋은 변이를 부여한다.
 %%%%
 potion of resistance
 
-A potion which grants temporary resistance to a variety of harmful effects:
-fire, cold, electricity, poison, and acid.
+다양한 해로운 효과에 일시적으로 저항력을 부여하는 물약:
+화염, 냉기, 전기, 독, 산성
 %%%%
 potion of haste
 
-An enchanted beverage which speeds the actions of anyone who drinks it.
+마시는 자의 행동을 가속시키는 마법이 담긴 음료.
 %%%%
 quad damage
 
-A mysterious item resembling a rune of some kind. Once evoked, it will make the
-user glow blue and add a reverb to all sound... and there may be other effects
+어떤 종류의 룬을 닮은 수수께끼 같은 물건. 일단 사용하면 사용자가 파란색으로 빛나고
+모든 사운드에 리버브를 추가한다... 어쩌면 다른 효과가있을 수 있다.
 as well.
 %%%%
 quarterstaff
 
-A sturdy wooden pole, meant for fighting.
+전투에 최적화된 단단한 나무 장대.
 %%%%
 quicksilver dragon scales
 
-The scales of a quicksilver dragon. Although it does not provide its wearer
-with as much protection as the scales of some heavier dragons, it is somewhat
-lighter and less encumbering. It is excellent at repelling hostile enchantments
-– and also cannot be enchanted beyond its current form as a result.
+수은 용의 비늘이다.
+다른 무거운 용의 비늘처럼 대단한 보호능력을 제공하진 못하지만,
+이 갑옷은 보다 가볍고 덜 거치적거린다.  적의 주술을 격퇴하는 효과가 뛰어나지만,
+– 그 때문에 갑옷을 강화할 수는 없을 듯하다.
 %%%%
 quick blade
 
-A carefully wrought dagger which is preternaturally well-balanced, making it
-much easier for even inexperienced handlers to attack with it quickly.
+주의 깊게 제작된 이 단검은 부자연스러울 정도로 균형이 잘 잡혀 있다.
+제아무리 미숙한 실력을 가진 사람이라도 이 무기를 쥔다면 신속하게 공격을 펼칠 수 있을 것이다.
 %%%%
 rapier
 
-A slender, sharply pointed sword, with an uncommonly elegant design.
+가느다랗고 끝이 뾰족한 검. 굉장히 우아한 모양새다.
 %%%%
 ring mail
 
-A light leather suit reinforced with a covering of metal rings. It is
-protective in combat, but slightly uncomfortable due to the added weight.
+가벼운 가죽옷 위에 금속 링을 덧씌운 갑옷이다.
+ 전투에서 적당한 방어력을 제공하지만, 무게 때문에 약간 불편하다.
 %%%%
 ring of dexterity
 
-A ring that increases or decreases the dexterity of its wearer, depending on
-its degree of enchantment.
+민첩을 증가시키거나 감소시키는 반지다. 수치는 인챈트 정도에 따라 결정된다.
 %%%%
 ring of evasion
 
-A ring that makes its wearer either more or less capable of avoiding attacks,
-depending on its degree of enchantment.
+이 반지는 공격을 피하기 쉽게, 혹은 어렵게끔 만든다. 수치는 인챈트 정도에 따라 결정된다.
 %%%%
 ring of fire
 
-A ring that brings its wearer more in contact with the powers of fire. It
-grants resistance to heat and enhances fire magic, but causes vulnerability to
-cold.
+불의 힘과 깊게 교감할 수 있게 해주는 반지다.
+착용하면 불 저항력을 얻으며 화염 마법을 더욱 효과적으로 사용할 수 있다. 그러나 냉기에 취약해진다.
 %%%%
 ring of flight
 
-A ring that allows its wearer to fly. Its power cannot be evoked while already
-airborne, making it ill-suited for longer trips above deadly liquid.
+날아다닐 수 있게 만들어주는 반지다.
+이미 공중에 떠 있는 상태에선 발동할 수 없기에, 위험한 액체 위에서 긴 시간 여행하는 데는 적합하지 못하다.
 %%%%
 ring of ice
 
-A ring that brings its wearer more in contact with the powers of ice. It grants
-resistance to cold and enhances ice magic, but causes vulnerability to heat.
+냉기와 얼음의 힘과 깊게 교감할 수 있게 해주는 반지다.
+ 착용하면 냉기 저항력을 얻으며 얼음 마법을 더욱 효과적으로 사용할 수 있다. 그러나 불에 취약해진다.
 %%%%
 ring of intelligence
 
-A ring that increases or decreases the mental ability of its wearer, depending
-on its degree of enchantment.
+정신적 능력을 증가시키거나 감소시키는 반지다. 수치는 인챈트 정도에 따라 결정된다.
 %%%%
 ring of resist corrosion
 
-A ring that protects the wearer from acid damage and from corrosion caused by
-acids, although not infallibly so.
+산성 피해와 산으로 인한 부식에서 보호해주는 반지다.
+효과가 항상 확실한 건 아니지만.
 %%%%
 ring of loudness
 
-A ring that makes the player less stealthy.
+이 반지는 착용자를 은밀해지기가 힘들게 만든다.
 %%%%
 ring of magical power
 
-A ring that increases its wearer's reserves of magical power.
+착용자의 마력 량을 증가시키는 반지다.
 %%%%
 ring of poison resistance
 
-A ring that provides protection from the effects of poisons and venom.
+가지각색 독에 대한 방어력을 제공하는 반지다.
 %%%%
 ring of positive energy
 
-A ring that protects the life-force of its wearer from negative energy, making
-them partially immune to the draining effects of undead and necromantic magic.
+음에너지로부터 생명력을 보호해주는 반지다.
+언데드와 강령술 마법의 생기 흡수 효과를 부분적으로 무효화한다.
 %%%%
 ring of protection
 
-A ring that either protects its wearer from harm or makes them more vulnerable
-to injury, depending on its degree of enchantment.
+이 반지는 피해로부터 보호해주거나, 혹은 상처에 취약해지게끔 만든다.
+수치는 인챈트 정도에 따라 결정된다.
 %%%%
 ring of protection from cold
 
-A ring that provides protection from cold.
+냉기에 대한 저항력을 제공하는 반지다.
 %%%%
 ring of protection from fire
 
-A ring that provides protection from fire.
+화염에 대한 저항력을 제공하는 반지다.
 %%%%
 ring of protection from magic
 
-A ring that increases its wearer's resistance to hostile enchantments.
+적대적인 마법 주술에 대한 저항력을 증가시키는 반지다.
 %%%%
 ring of see invisible
 
-A ring that allows its wearer to see those things hidden from view by magic.
+마법으로 모습을 감춘 존재를 볼 수 있게 만들어주는 반지다.
 %%%%
 ring of slaying
 
-A ring that increases or decreases the wearer's effectiveness with ranged
-weapons and melee attacks, depending on its degree of enchantment.
+원거리 무기와 근접 무기 공격 효과를 증가시키거나 감소시키는 반지다.
 %%%%
 ring of stealth
 
-A ring that allows its wearer to move quietly, making them more stealthy.
+조용하게 움직일 수 있게 해줌으로써, 착용자를 보다 은밀하게 만들어주는 반지다.
 %%%%
 ring of strength
 
-A ring that increases or decreases the physical strength of its wearer,
-depending on its degree of enchantment.
+이 반지는 물리적 근력을 증가시키거나 혹은 감소시킨다. 수치는 인챈트 정도에 따라 결정된다.
 %%%%
 ring of teleportation
 
-A ring that occasionally exerts its power to teleport its wearer next to
-monsters.
+착용자를 때때로 몬스터 옆으로 공간이동시키는 반지다.
 %%%%
 ring of wizardry
 
-A ring that increases the ability of its wearer to use magical spells.
+마법 주문을 손쉽게 사용할 수 있게 해주는 반지다.
 %%%%
 robe
 
-A large, loose-fitting, wide-sleeved outer garment made of light cloth. It
-offers little protection against physical harm, but does not hinder evasion or
-spellcasting.
+크고 헐렁하며, 소매통이 넓고, 가벼운 천으로 만든 의복.
+물리적인 공격을 막는 데는 별 도움이 못 되지만,
+공격을 회피하거나 주문을 시전할 때 전혀 방해가 되지 않는다.
 %%%%
 royal jelly
 
-A particularly rich and golden gelatinous thing.
+영양분이 특히 풍부한 황금색 젤라틴질 물질.
 %%%%
 rune of zot
 
-A talisman which allows entry into the Realm of Zot.
+조트의 영지로 들어가는 입구를 열어주는 탈리스만.
 %%%%
 sack of spiders
 
-A woven silk bag. Opening it will release a number of spiders and other
-insects, as well as creating webs nearby. Evocations skill increases its
-effectiveness. There is a one in three chance of accidentally destroying the
-sack when using it.
+명주실로 짜인 자루.
+개봉하면 수많은 거미와 다른 곤충을 풀 수있을뿐만 아니라 근처에 웹을 만들 수 있다.
+발동술이 높을 수록 이 효과를 증가시킨다. 자루가 우연히 파괴 할 확률은 1/3이다.
 %%%%
 sacred scourge
 
-A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
-a favoured weapon of the Shining One's servants.
+천국에서 성자가 만들어낸 축복받은 무기.
+부정한 존재는 이 물건을 혐오한다. 샤이닝 원을 따르는 신도들이 가장 선호하는 무기다.
 %%%%
 scale mail
 
-A leather suit covered with metal plates attached to each other in overlapping
-rows to provide full protection, but at the cost of reduced freedom of
-movement.
+가죽 옷 위에 금속 판을 덧대 만든 갑옷이다.
+상당한 방어력을 제공하지만, 움직임이 다소 자유롭지 못하게 된다.
 %%%%
 scarf
 
-A length of stylish fabric. At its creation, enchantments were woven into it,
-and as such it cannot accept further enchantment.
+기다랗고 멋진 직물이다.
+생성될 때부터 주문이 부여되었으며, 그러므로 더 이상의 강화를 받아들이지 않는다.
 %%%%
 scimitar
 
-A long sword with a wide, curved blade.
+칼날이 넓직하고 휘어진 검.
 %%%%
 scroll of acquirement
 
-A wonderful scroll which causes the creation of a valuable item, with the
-reader choosing the type of item to be created. The item produced will be
-heavily biased towards something fitting the reader's skills, and also towards
-gear that hasn't been seen yet, but, alas, nothing is guaranteed.
+이 환상적인 두루마리는 값진 아이템을 창조한다. 두루마리를 읽는 자는 가지고 싶은 아이템의 종류를 고를 수 있다.
+두루마리를 읽으면, 읽은 자가 연마한 기술(skill)에 걸맞는 아이템이 눈앞에 나타날 것이다.
+또한 이 두루마리는 아직 발견하지 못한 장비를 만들어내는 경향이 높다.
+그러나, 뭐, 앞서 설명한 이야기는 언제나 그렇다는 소리만은 아니다.
 %%%%
 scroll of amnesia
 
-A scroll that allows its reader to selectively erase one spell from memory to
-recapture the magical energy bound up with it.
+이 두루마리는 사용자의 기억에서 하나의 주문을 지워,
+새로운 마법적 에너지를 다시 수집할 수 있게끔 해준다.
 %%%%
 scroll of blinking
 
-A scroll that allows its reader to teleport a short distance, with precise
-control. Be wary that controlled teleports will cause the subject to become
-contaminated with magical energy.
+이 두루마리는 사용자를 짧은 거리 내로 순간이동시킨다.
+사용자는 이동할 위치를 정밀하게 제어할 수 있다.
+다만 제어 순간이동이 마법 에너지 오염을 일으킬 수 있다는 점은 유의하라.
 %%%%
 scroll of brand weapon
 
-A scroll that imbues a weapon with a random brand, such as flame, freezing, or
-venom. Any existing brand will be replaced. Blowguns and artefacts cannot be
-branded in this way.
+이 두루마리는 무기에 임의의 속성을 부여한다.
+예를 들자면 화염, 냉기, 맹독과 같은. 기존에 존재하던 속성은 새로운 것으로 교체될 것이다.
+블로우건이나 아티팩트는 이 두루마리의 효과에 영향을 받지 않는다.
 %%%%
 scroll of enchant armour
 
-A scroll that places an enchantment on a piece of armour chosen by the reader.
-Body armour and bardings can be enchanted up to the same value as their base
-AC. Bucklers, shields and large shields can be enchanted up to +3, +5 or +8
-respectively, and other armour can be enchanted up to +2. Magical artefacts
-cannot be enchanted at all.
-
-It can also be used to enchant the hides of certain exotic creatures.
+이 두루마리는 방어구 한 점을 강화한다. 몸통 방어구와 마갑(馬甲)은 기본 AC 수치만큼 강화할 수 있다.
+버클러, 방패와 대형 방패는 각각 +3, +5, +8까지 강화할 수 있다.
+기타 방어구는 +2까지 강화할 수 있다.
+마법 아티팩트는 강화할 수 없다.
 %%%%
 scroll of enchant weapon
 
-A scroll that places an enchantment on a weapon chosen by the reader,
-increasing both accuracy and damage. Weapons can be enchanted up to +9. Magical
-artefacts cannot be enchanted at all.
+이 두루마리는 사용자가 선택한 무기 한 점의 대미지와 명중률을 강화한다.
+무기는 최대 +9까지 강화할 수 있다. 마법 아티팩트는 강화할 수 없다.
 %%%%
 scroll of fear
 
-A scroll that causes great fear in those who see the one who reads it.
+이 두루마리를 읽는 자가 응시하는 모든 것들은 크나큰 공포에 질려 달아난다.
 %%%%
 scroll of fog
 
-A scroll that surrounds the reader with a dense cloud of fog.
+이 두루마리를 읽으면 읽는 이의 주위에 두터운 안개가 솟아오른다.
 %%%%
 scroll of holy word
 
-A scroll that calls on the good gods to cause great damage to any nearby undead
-or demonic creature — possibly including the reader! It will briefly daze
-monsters that are affected.
+이 두루마리는 선신의 힘을 빌어 근처의 모든 언데드와 악마들에게 막대한 피해를 입힌다.
+ 그러나 이 때 당신도 피해를 입을 수 있음에 유의하라! 천벌을 받은 몬스터들은 잠시 경직된다.
 %%%%
 scroll of identify
 
-A useful magic scroll which identifies the properties of any unknown object.
+이 유용한 마법 두루마리는 모든 물건의 특징을 밝혀낸다.
 %%%%
 scroll of immolation
 
-A scroll that fills the creatures around the reader with an unstable and
-powerful inner flame.
+이 두루마리는 사용자 주위의 모든 존재의 내면에 불안정하고도 위력적인 불씨(inner flame)를 불어넣는다.
 %%%%
 scroll of magic mapping
 
-A scroll that reveals the surroundings of the one who reads it.
+이 두루마리는 사용자의 주위 지형을 밝힌다.
 %%%%
 scroll of noise
 
-A prank scroll that creates a loud noise when read.
+이 두루마리를 읽으면 큰 소음을 만들어낸다.
 %%%%
 scroll of random uselessness
 
-A scroll with no apparent practical use.
+실용적인 사용법이 없는 두루마리.
 %%%%
 scroll of recharging
 
-A scroll that restores the charges of any magical wand chosen by its reader.
+이 두루마리는 모든 마법봉의 사용량을 충전시킨다.
 %%%%
 scroll of remove curse
 
-A scroll that removes any curses from the reader's equipped items.
+이 두루마리를 읽으면 당신이 사용 중인 아이템에서 저주가 해제된다.
 %%%%
 scroll of silence
 
-A scroll that eliminates all sound near the reader. This makes reading scrolls,
-casting spells, invoking divine abilities, or shouting impossible in the
-reader's vicinity. The scroll's oppressive, unnatural effect will greatly
-hamper stealth.
+이 두루마리는 읽는 이의 주위로부터 모든 소리를 제거한다.
+이 효과가 적용된 시전자 주위에서 두루마리를 읽거나, 주문을 외우거나, 고함을 지르는 것은 불가능하다.
+이 억압적이고, 비정상적인 효과는 사용자를 은밀하게 만드는 모든 효과를 크게 방해한다.
 
-Certain monsters have innate magical or special abilities which will still be
-usable while silenced.
+정적은 최초 큰 반경에 작용한다.
+반경은 차차 줄어들어 최후에는 사용자 주위만을 둘러싸게 되고, 이후 꺼진다.
 
-The effect starts out with a large radius, which will then shrink, eventually
-covering only the reader, before it times out.
+어떤 종류의 존재들, 예를 들어 악마나 천사 같은 몬스터는 아무 말 없이도 주문을 시전할 수 있다.
+그들의 선천적인 마력이나 특수능력은 정적 속에서도 여전히 마법을 사용할 수 있게끔 해준다.
 %%%%
 scroll of summoning
 
-A scroll that calls forth several creatures woven from shadow into the shapes
-of those beings found within the reader's immediate vicinity.
+이 두루마리는 그림자로 이루어진 존재들을 여럿 불러낸다.
+ 그림자들은 사용자가 현재 위치한 곳에서 발견되는 존재의 형상을 취한다.
 %%%%
 scroll of teleportation
 
-A scroll that translocates the reader to a random position after a short delay.
+이 두루마리는 당신을 임의의 위치로 공간이동시킨다. 이동에는 약간의 딜레이가 있다.
 %%%%
 scroll of torment
 
-A scroll that calls on the powers of darkness to inflict great pain on any
-nearby creature — including the reader! This halves the resilience of all
-living creatures, although it is never directly fatal.
+지옥의 힘을 불러와 시전자 근방의 모든 생명체에게 — 읽는 시전자 역시 예외없이! — 
+끔찍한 고통을 준다. 이 스크롤은 죽음을 가져올 정도로 치명적이진 않지만, 모든 생명체의
+체력을 절반으로 줄인다.
 %%%%
 scroll of vulnerability
 
-A scroll that briefly halves the resistance to hostile enchantments of the
-reader and any nearby beings. The scroll cannot affect those fully immune to
-magic.
+이 두루마리는 시전자와 시전자 주위에 있는 모든 존재의 마법 저항을 
+잠시 동안 절반으로 감소시킨다. 이 두루마리의 효과는 마법에 완전히 면역인 적에게는 
+작용하지 않는다.
 %%%%
 scythe
 
-A farm implement, usually only used by untrained mobs in combat.
+농기구. 대개 미숙한 적들이 주로 사용한다.
 %%%%
 shield
 
-A piece of wood and metal, to be strapped on one arm for defence. It is
-cumbersome to wear, and impedes the evasion, spellcasting ability, and attack
-speed of an unskilled wearer.
+나무와 금속으로 이루어진 판. 한쪽 팔에 묶어 적의 공격을 방어하는 용도로 쓴다. 
+착용하기 번거롭고, 회피 능력, 스펠캐스팅 능력, 숙달되지 않은 착용자의
+공격 속도를 감소시킨다.
 %%%%
 shortbow
 
-A curved piece of wood and string, for shooting arrows.
+구부러진 나무와 실. 화살을 발사한다.
 %%%%
 short sword
 
-A personal stabbing weapon with a short grip.
+짧은 손잡이를 지닌 찌르기에 좋은 휴대용 무기.
 %%%%
 sling bullet
 
-A small, heavy projectile specially shaped for use with slings. It is more
-effective as ammunition than simple stones.
+투석구 발사용으로 특화된 작지만 무거운 투사체.
+돌을 탄환으로 쓰는 것보다 효과적이다.
 %%%%
 spear
 
-A hunting weapon consisting of a wooden shaft with a pointed metal head
-fastened on one end.
+나무 자루 끝에 뾰족하고 날카로운 쇠촉이 달린 사냥 무기.
 %%%%
 staff of air
 
-A staff that increases the power of air spells cast by its wielder, and
-insulates them from electricity. If the wielder is skilled in Evocations and
-Air Magic, they can shock those struck by it.
+이 지팡이는 공기 주문의 위력을 증폭시킨다.
+이 지팡이를 쥔 자는 절연 효과를 얻는다.
+발동술과 공기 마법에 숙련되어 있다면, 지팡이로 타격한 적은 감전된다.
 %%%%
 staff of cold
 
-A staff that increases the power of ice spells cast by its wielder, and
-protects them from the effects of cold. If the wielder is skilled in Evocations
-and Ice Magic, they can freeze those struck by it.
+이 지팡이는 냉기 주문의 위력을 증폭시킨다.
+이 지팡이를 쥔 자는 냉기로부터 보호받는다.
+발동술과 냉기 마법에 숙련되어 있다면, 지팡이로 타격한 적은 얼어붙는다.
 %%%%
 staff of conjuration
 
-A staff that increases the power of conjurations cast by its wielder.
+이 지팡이는 파괴술 주문의 위력을 증폭시킨다.
 %%%%
 staff of death
 
-A staff that increases the power of necromantic spells cast by its wielder, and
-protects them from negative energy. If the wielder is skilled in Evocations and
-Necromancy, they can inflict great pain on those living souls they strike.
+이 지팡이는 강령술 주문의 위력을 증폭시키며, 자신을 쥔 자를 음에너지로부터 보호해준다.
+발동술과 강령술 마법에 숙련되어 있다면,
+이 지팡이에 타격당한 생명체는 지독한 고통에 몸부림치게 될 것이다.
 %%%%
 staff of earth
 
-A staff that increases the power of earth spells cast by its wielder. If the
-wielder is skilled in Evocations and Earth magic, they can crush those struck
+이 지팡이는 땅 주문의 위력을 증폭시킨다.
+발동술과 땅 마법에 숙련되어 있다면, 지팡이로 타격한 적이 분쇄된다.
 by it.
 %%%%
 staff of energy
 
-A staff that allows its wielder to control magical energy. It allows the
-wielder to cast spells without gaining hunger, and to channel ambient magical
-energy to restore their reserves of magic.
+이 지팡이는 마력을 제어할 수 있게끔 해준다.
+시전하는 주문은 더 이상 배고픔을 초래하지 않을 것이며,
+주위에 흐르는 마력은 당신의 의사에 따라 흘러들어올 것이다.
 %%%%
 staff of fire
 
-A staff that increases the power of fire spells cast by its wielder, and
-protects them from the effects of fire. If the wielder is skilled in Evocations
-and Fire Magic, they can burn those struck by it.
+이 지팡이는 화염 주문의 위력을 증폭시킨다.
+이 지팡이를 쥔 자는 화염으로부터 보호받는다.
+발동술과 화염 마법에 숙련되어 있다면, 지팡이로 타격한 적은 화상을 입는다.
 %%%%
 staff of poison
 
-A staff that increases the power of poisoning spells cast by its wielder, and
-protects them from the effects of poison. If the wielder is skilled in
-Evocations and Poison Magic, they can poison creatures struck by it — even if
-the victims are normally resistant.
+이 지팡이는 독 주문의 위력을 증폭시키며,
+자신을 쥔 자를 독으로부터 보호해준다.
+발동술과 독 마법에 숙련되어 있다면,
+이 지팡이는 타격한 적을 중독시킬 수도 있다 ─ 상대가 독 저항이 있는 경우라도.
 %%%%
 staff of power
 
-A staff that provides an increased reservoir of magical power to its wielder.
+이 지팡이는 마력량을 크게 증가시켜준다.
 %%%%
 staff of summoning
 
-A staff that increases the power of summonings cast by its wielder.
+이 지팡이는 소환술 주문의 위력을 증폭시켜준다.
 %%%%
 staff of wizardry
 
-A staff that increases the ability of its wielder to use magical spells.
+이 지팡이는 마법 주문을 사용하는 능력을 증폭시켜준다.
 %%%%
 steam dragon scales
 
-The scales of a steam-breathing dragon. Unlike the scales of some larger
-dragons, it does not provide its wearer with much protection (beyond a
-resistance to scalding steam), but it is extremely light and supple.
+증기를 내뱉는 용의 비늘이다.
+다른 거대한 용의 비늘과는 달리, 이 갑옷은 (델 듯이 뜨거운 증기에 대한 저항력을 제외한다면)
+대단한 보호능력은 없지만, 지극히 가볍고 유연하다.
 %%%%
 stone
 
-A small chunk of dense but otherwise unremarkable natural mineral. It can be
-thrown by hand or launched with a sling.
+단단한 덩어리, 혹은 평범한 천연 광물.
+손으로 던지거나 투석구로 발사할 수 있다.
 %%%%
 shadow dragon scales
 
-The scales of a great umbral dragon. It is heavier than most dragon scale
-armours, but despite this, blends in so well with the shadows as to provide a
-substantial benefit to the wearer's stealth.
+거대한 그림자 용의 비늘이다.
+대부분의 용 비늘보다 무겁지만,
+형상이 마치 그림자 속에 녹아드는 듯해 은신에 상당한 편익이 제공된다.
 %%%%
 storm dragon scales
 
-The scales of a lightning-breathing dragon. It is heavier than most dragon
-scale armours, and gives its wearer resistance to electrical discharges.
+번개를 뿜어내는 용의 비늘이다.
+대부분의 용 비늘보다 무겁다. 전기 방전에 대한 저항력을 제공한다.
 %%%%
 swamp dragon scales
 
-The scales of a swamp dragon. It confers resistance to poison on its wearer.
+늪지 용의 비늘이다. 착용자에게 독에 대한 저항력을 부여한다.
 %%%%
 throwing net
 
-A mesh of ropes knotted together with weights around the edge, used to entangle
-and entrap targets. Struggling victims can eventually destroy the net and break
-free, if they live long enough.
+끝에 무거운 추를 매달은 밧줄 그물 뭉치. 원래는 사냥꾼들이 사냥감을 얽어매어 속박하는 용도로만 쓰였으나,
+곧 이 물건은 전쟁이나 검투사 투기장에서도 유용하게 응용될 수 있다는 사실이 발견되었다.
+발버둥치는 희생양은 곧 그물을 찢고 빠져나올 것이다, 만약 그 때까지 살아있다면 말이지만.
 %%%%
 tomahawk
 
-A small axe, designed for throwing.
+투척 용도로 제작된, 도끼를 닮은 작은 물건.
 %%%%
 trident
 
-A fishing spear improved with a longer shaft and a three-pronged metal head.
+길쭉한 창대에 쇠촉이 세 갈래로 갈라진 고기 작살.
 %%%%
 triple crossbow
 
-A crossbow with three strings arranged in series to provide exceptional power,
-initially designed as a siege weapon and then scaled down. It takes a
-considerable amount of time to load and fire.
+처음엔 공성무기로 개발되었으나 크기를 축소하였다.
+세 줄로 이루어진 석궁 시위는 막강한 위력을 내뿜는다.
+장전하고 쏘는 데 어마어마한 시간을 소요한다.
 %%%%
 triple sword
 
-A magical weapon with three great razor-sharp blades.
+예리한 검날이 세 개 달린 마법적인 무기다. 효과적으로 사용하려면 검술에 능숙해야 한다.
 %%%%
 trishula
 
-A blessed trident moulded by cleansing flame, with three points symbolising the
-combined might of the three holy gods. It is a favoured weapon of the Shining
-One's servants.
+신성한 정화의 불길로 만들어진 축복받은 삼지창.
+세 가닥 창살은 세 성스러운 신의 합쳐진 힘을 상징한다.
+샤이닝 원의 신도들이 가장 선호하는 무기다.
 %%%%
 troll leather armour
 
-The stiff and knobbly skin of a troll. It magically regenerates its wearer's
-flesh.
+트롤의 뻣뻣하고 울퉁불퉁한 가죽으로 만든 갑옷.
+마법적인 힘이 장비한 자의 상처를 재생시킨다.
 %%%%
 wand of acid
 
-A magical device which throws bolts of corrosive acid.
+부식성 산을 발사하는 마법 도구.
 %%%%
 wand of clouds
 
-A magical device that allows its wielder to blast a cone-shaped area in front
-of them with various destructive clouds, their lethality increasing with
-Evocations skill. At low power it will create noxious fumes, and as power
-increases this gives way to roaring flames, freezing vapours, and poisonous
-gas. At the highest tiers of power storm clouds, acidic fog and clouds of
-negative energy become available.
+장착한 자에게 정면의 원뿔 모양 지역에 다양한 파괴적 구름을 뿌릴 수 있게 해주는 마법적 도구. 
+발동술 능력에 따라 치명적인 구름이 나올 확률이 커진다.
+저출력일 때는 악취 구름이 발생하고, 위력이 강해짐에 따라
+거센 불길과 얼어붙은 증기, 유독가스가 발생한다.
+출력이 매우 높아진다면 폭풍구름과 산성구름, 음에너지의 구름이 발생할 것이다.
+
 %%%%
 wand of confusion
 
-A magical device which induces confusion and bewilderment in a target creature.
+목표물에게 혼란과 어리둥절함을 유도하는 마법 도구.
 %%%%
 wand of digging
 
-A magical device which drills tunnels through unworked rock.
+가공되지 않은 바위 벽에 터널을 뚫는 마법 도구.
 %%%%
 wand of disintegration
 
-A magical device which disrupts the physical structure of a target creature,
-dealing heavy damage and bypassing armour.
+대상의 물리적 구조를 붕괴시키는 마법 도구.
+갑옷을 우회하는 강력한 데미지를 가한다.
 %%%%
 wand of enslavement
 
-A magical device which causes slavish obedience in a creature.
+목표물에게 노예적인 복종심을 불러일으키는 마법 도구.
 %%%%
 wand of flame
 
-A magical device which throws little puffs of flame.
+조그마한 불꽃을 발사하는 마법 도구.
 %%%%
 wand of iceblast
 
-A magical device which throws exploding shards of ice, partially harming even
-creatures resistant to cold.
+발동하면 날카롭게 폭발하는 얼음 조각을 발사한다.
+냉기에 내성이 있는 적에게도 다소 피해를 줄 수 있다.
 %%%%
 wand of lightning
 
-A magical device which throws great bolts of lightning. They inflict less
-damage than other similar bolts, but their damage partially bypasses armour
-and they can be bounced off walls to hit targets twice.
+어마어마한 번개를 발사하는 마법 도구다.
+그것은 다른 유사한 볼트보다 적은 데미지를 입히지만,
+데미지는 부분적으로 갑옷을 우회하며, 벽에 튕겨서 대상을 두 번 공격 할 수 있다.
 %%%%
 wand of paralysis
 
-A magical device which can render a creature immobile, incapable of moving any
-of its limbs.
+목표를 마비시켜 손끝 하나 움직이지 못하게 만드는 마법 도구다.
 %%%%
 wand of polymorph
 
-A magical device which causes a creature to be transmogrified into another
-form. It is especially effective against shape-changing creatures.
+목표를 다른 모습으로 변신시키는 마법 도구다. 
+정해진 형체가 없이 변신하는 적에게 특히 효과적이다.
 %%%%
 wand of random effects
 
-A magical device which can produce a variety of effects.
+다양한 효과를 발생시키는 마법 도구다.
 %%%%
 wand of scattershot
 
-A magical device which fires powerful blasts of metallic shrapnel. Its damage
-is strongly reduced by armour.
+이 마법봉은 금속 파편을 강력하고 폭발적으로 발사한다.
+갑옷에 대해 데미지가 급격히 감소한다.
 %%%%
 war axe
 
-A military axe with a long haft and a single-bladed head.
+길쭉한 자루에 날이 한 쪽으로 달린 군용 도끼.
 %%%%
 whip
 
-A long plaited strip of leather. Originally developed for use in disagreements
-with cattle, this simple weapon is now widely used to settle differences
-between all sorts of creatures.
+가죽을 길쭉하게 잘라 땋은 것이다.
+원래는 소를 칠 때 쓸 용도로 발명되었지만,
+이 간단한 무기는 이제 모든 종류의 존재를 치는 용도로 쓰이고 있다.
 %%%%
 young poisoner's handbook
 
-An introductory book for the magic arts of poison.
+독 마법에 대한 입문서.
 %%%%
