@@ -848,7 +848,9 @@ static int _cloud_base_damage(const actor *act,
  */
 bool actor_cloud_immune(const actor &act, cloud_type type)
 {
-    if (is_harmless_cloud(type))
+    // Qazlalites and scarfwearers get immunity to clouds.
+    // and the Cloud Mage too!
+    if (is_harmless_cloud(type) || act.cloud_immune())
         return true;
 
     switch (type)
@@ -917,9 +919,7 @@ bool actor_cloud_immune(const actor &act, const cloud_struct &cloud)
         return true;
     }
 
-    // Qazlalites and scarfwearers get immunity to clouds.
-    // and the Cloud Mage too!
-    return act.cloud_immune();
+    return false;
 }
 
 // Returns a numeric resistance value for the actor's resistance to
