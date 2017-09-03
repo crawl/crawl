@@ -839,10 +839,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
 {
     cols.add_formatted(
             0,
-            "<h>Movement:\n"
-            "To move in a direction or to attack, \n"
-            "use the numpad (try Numlock off and \n"
-            "on) or vi keys:\n");
+            "<h>움직이기:\n"
+            "어떤 방향으로 움직이거나 공격하려면, \n"
+            "numpad를 사용하거나 (Numlock을 끄거나 \n"
+            "켜보십시오.) 혹은 vi 키를 사용해보십시오.:\n");
 
     _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
@@ -855,44 +855,44 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Rest:\n");
+            "<h>휴식:\n");
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
-    _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
+    _add_command(cols, 0, CMD_WAIT, "턴을 기다리기 (또는 <w>s</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_REST, "휴식과 긴 기다림; 다음과 같은 상황", 2);
     cols.add_formatted(
             0,
-            "    Health or Magic become full or\n"
-            "    something is detected. If Health\n"
-            "    and Magic are already full, stops\n"
-            "    when 100 turns over (<w>numpad-5</w>)\n",
+            "    체력과 마법이 꽉 차거나 혹은\n"
+            "    무엇인가 감지되었을 때 멈출 것입니다.\n"
+            "    체력과 마법이 이미 최대인 경우에는, \n"
+            "    100턴이 경과한 경우에 멈추게 될 것입니다. (<w>numpad-5</w>)\n",
             false);
 
     cols.add_formatted(
             0,
-            "<h>Extended Movement:\n");
+            "<h>확장된 움직임:\n");
 
-    _add_command(cols, 0, CMD_EXPLORE, "auto-explore");
-    _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
-    _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
-    _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
+    _add_command(cols, 0, CMD_EXPLORE, "자동 탐색");
+    _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "간격이 있는 탐색");
+    _add_command(cols, 0, CMD_SEARCH_STASHES, "아이템 탐색");
+    _add_command(cols, 0, CMD_FIX_WAYPOINT, "웨이포인터 설정");
 
     cols.add_formatted(
             0,
-            "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move \n",
+            "<w>/ Dir.</w>, <w>Shift-Dir.</w>: 긴 걸음\n"
+            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : 이동 없이 공격하기 \n",
             false);
 
     cols.add_formatted(
             0,
-            "<h>Autofight:\n"
-            "<w>Tab</w>       : attack nearest monster,\n"
-            "            moving if necessary\n"
-            "<w>Shift-Tab</w> : attack nearest monster\n"
-            "            without moving\n");
+            "<h>전투하기:\n"
+            "<w>Tab</w>       : 가장 가까운 적을 공격합니다,\n"
+            "            필요시에만 이동함\n"
+            "<w>Shift-Tab</w> : 움직임 없이 가장 가까운 적을\n"
+            "            공격합니다.\n");
 
     cols.add_formatted(
             0,
-            "<h>Item types (and common commands)\n");
+            "<h>아이템 종류 (그리고 통상적인 커맨드들)\n");
 
     _add_insert_commands(cols, 0, "<cyan>)</cyan> : hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
@@ -938,34 +938,34 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "<h>Other Gameplay Actions:\n");
+            "<h>게임플레이에 필요한 다른 행동들:\n");
 
-    _add_insert_commands(cols, 0, 2, "use special Ability (<w>%!</w> for help)",
+    _add_insert_commands(cols, 0, 2, "특수한 능력 사용하기 (<w>%!</w> 로 도움말 켜기)",
                          CMD_USE_ABILITY, CMD_USE_ABILITY, 0);
-    _add_command(cols, 0, CMD_CAST_SPELL, "cast spell, abort without targets", 2);
-    _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "cast spell, no matter what", 2);
-    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "list all spells", 2);
+    _add_command(cols, 0, CMD_CAST_SPELL, "타겟이 없어도 주문 외우기", 2);
+    _add_command(cols, 0, CMD_FORCE_CAST_SPELL, "뭐든 상관 없이 주문 외우기", 2);
+    _add_command(cols, 0, CMD_DISPLAY_SPELLS, "모든 주문 목록", 2);
 
-    _add_insert_commands(cols, 0, 2, "tell allies (<w>%t</w> to shout)",
+    _add_insert_commands(cols, 0, 2, "동료들에게 말하기 (<w>%t</w> 로 외침)",
                          CMD_SHOUT, CMD_SHOUT, 0);
-    _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "re-do previous command", 2);
-    _add_command(cols, 0, CMD_REPEAT_CMD, "repeat next command # of times", 2);
+    _add_command(cols, 0, CMD_PREV_CMD_AGAIN, "이전 행동을 다시 하기", 2);
+    _add_command(cols, 0, CMD_REPEAT_CMD, "# 번 다음 커맨드를 반복하기", 2);
 
     cols.add_formatted(
             0,
-            "<h>Non-Gameplay Commands / Info\n");
+            "<h>게임 밖의 행동들 / Info\n");
 
-    _add_command(cols, 0, CMD_REPLAY_MESSAGES, "show Previous messages");
-    _add_command(cols, 0, CMD_REDRAW_SCREEN, "Redraw screen");
+    _add_command(cols, 0, CMD_REPLAY_MESSAGES, "지나간 메시지창을 보기");
+    _add_command(cols, 0, CMD_REDRAW_SCREEN, "화면을 변경합니다");
     _add_command(cols, 0, CMD_CLEAR_MAP, "Clear main and level maps");
-    _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "annotate the dungeon level", 2);
-    _add_command(cols, 0, CMD_CHARACTER_DUMP, "dump character to file", 2);
-    _add_insert_commands(cols, 0, 2, "add note (use <w>%:</w> to read notes)",
+    _add_command(cols, 0, CMD_ANNOTATE_LEVEL, "이 층에 주석 달기", 2);
+    _add_command(cols, 0, CMD_CHARACTER_DUMP, "캐릭터 파일 덮어씌우기", 2);
+    _add_insert_commands(cols, 0, 2, "노트 작성 (<w>%:</w> 로 노트를 읽기)",
                          CMD_MAKE_NOTE, CMD_DISPLAY_COMMANDS, 0);
     _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
-    _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
+    _add_command(cols, 0, CMD_ADJUST_INVENTORY, "인벤토리/주문 커맨드 재설정", 2);
 #ifdef USE_TILE_LOCAL
-    _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
+    _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "캐릭터 외모 꾸미기", 2);
 #else
 #ifdef USE_TILE_WEB
     if (tiles.is_controlled_from_web())
@@ -980,130 +980,130 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>Game Saving and Quitting:\n");
+            "<h>게임 저장하고 종료하기:\n");
 
-    _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
-    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
-    _add_command(cols, 1, CMD_QUIT, "Abandon the current character");
-    cols.add_formatted(1, "         and quit the game\n",
+    _add_command(cols, 1, CMD_SAVE_GAME, "게임을 저장하고 나갑니다");
+    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "게임을 저장하고 나가시겠습니까?");
+    _add_command(cols, 1, CMD_QUIT, "이 캐릭터를 폐기");
+    cols.add_formatted(1, "         하고 게임을 종료하시겠습니까?\n",
                        false);
 
     cols.add_formatted(
             1,
-            "<h>Player Character Information:\n");
+            "<h>플레이어 캐릭터 정보:\n");
 
-    _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
-    _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
-    _add_command(cols, 1, CMD_RESISTS_SCREEN, "character overview", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
-    _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
-    _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
-    _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
-    _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
-    _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
-    _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
+    _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "캐릭터 기본 스탯 보기", 2);
+    _add_command(cols, 1, CMD_DISPLAY_SKILLS, "스킬 관리 창 보기", 2);
+    _add_command(cols, 1, CMD_RESISTS_SCREEN, "캐릭터 상태 보기", 2);
+    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "신앙 상태 보기", 2);
+    _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "능력/돌연변이 보기", 2);
+    _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "파악된 아이템 확인하기", 2);
+    _add_command(cols, 1, CMD_DISPLAY_RUNES, "수집한 룬 보기", 2);
+    _add_command(cols, 1, CMD_LIST_ARMOUR, "착용한 방어구 보기", 2);
+    _add_command(cols, 1, CMD_LIST_JEWELLERY, "착용한 장신구 보기", 2);
+    _add_command(cols, 1, CMD_LIST_GOLD, "소유한 골드 보기", 2);
+    _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "경험치 상태 보기", 2);
 
     cols.add_formatted(
             1,
-            "<h>Dungeon Interaction and Information:\n");
+            "<h>던전의 정보와 상호작용:\n");
 
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : 문 열기/닫기",
                          CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : 계단 오르내리기",
                          CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
     cols.add_formatted(1, "         pickup part of a single stack\n",
                        false);
 
-    _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
-    _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
+    _add_command(cols, 1, CMD_LOOK_AROUND, "주변/타겟을 탐색하기(eXamine)");
+    _add_insert_commands(cols, 1, 7, "이 층의 지도를 검토하기(eXamine) (<w>%?</w>로 도움말)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
-    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
-    cols.add_formatted(1, "         in view\n",
+    _add_command(cols, 1, CMD_FULL_VIEW, "시야 안의 몬스터들, 아이템들,");
+    cols.add_formatted(1, "          특징들 목록\n",
                        false);
-    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
-    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
-    _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+    _add_command(cols, 1, CMD_SHOW_TERRAIN, "격자 시야 켜거나 끄기");
+    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "던전 보기");
+    _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "아이템 자동 수집 켜거나 끄기");
 #ifdef USE_SOUND
-    _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
+    _add_command(cols, 1, CMD_TOGGLE_SOUND, "음소거/해제");
 #endif
-    _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
-    cols.add_formatted(1, "         slowest ally\n",
+    _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "가장 느린 동료에게");
+    cols.add_formatted(1, "         걸음 속도 맞추기\n",
                            false);
 
     cols.add_formatted(
             1,
-            "<h>Item Interaction (inventory):\n");
+            "<h>아이템과 상호작용 (인벤토리):\n");
 
-    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
-    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
-    _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
-    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
-    _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
+    _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "인벤토리 목록 보기", 2);
+    _add_command(cols, 1, CMD_INSCRIBE_ITEM, "아이템에 이름을 새기기", 2);
+    _add_command(cols, 1, CMD_FIRE, "다음의 적절한 아이템을 발사하기", 2);
+    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "아이템을 선택하고, 이를 발사하기", 2);
+    _add_command(cols, 1, CMD_QUIVER_ITEM, "투사체 항목 슬롯 중의 아이템을 선택하기", 2);
 
     {
-        string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
-                                                     : "Eat food");
-        interact += " (tries floor first)\n";
+        string interact = (you.species == SP_VAMPIRE ? "시체 흡수하기"
+                                                     : "음식 먹기");
+        interact += " (바닥에 먼저 시도해보세요)\n";
         _add_command(cols, 1, CMD_EAT, interact, 2);
     }
 
-    _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);
-    _add_command(cols, 1, CMD_READ, "Read a scroll or book", 2);
-    _add_command(cols, 1, CMD_MEMORISE_SPELL, "Memorise a spell from a book", 2);
-    _add_command(cols, 1, CMD_WIELD_WEAPON, "Wield an item (<w>-</w> for none)", 2);
-    _add_command(cols, 1, CMD_WEAPON_SWAP, "wield item a, or switch to b", 2);
+    _add_command(cols, 1, CMD_QUAFF, "물약 들이키기", 2);
+    _add_command(cols, 1, CMD_READ, "두루마리나 책 읽기", 2);
+    _add_command(cols, 1, CMD_MEMORISE_SPELL, "책으로부터 주문 외우기", 2);
+    _add_command(cols, 1, CMD_WIELD_WEAPON, "아이템 장착하기 (<w>-</w>로 무효화하기)", 2);
+    _add_command(cols, 1, CMD_WEAPON_SWAP, "아이템 a 장착하기, 혹은 b로 바꾸기", 2);
 
-    _add_insert_commands(cols, 1, "    (use <w>%</w> to assign slots)",
+    _add_insert_commands(cols, 1, "    (<w>%</w> 로 슬롯 할당하기)",
                          CMD_ADJUST_INVENTORY, 0);
 
-    _add_command(cols, 1, CMD_EVOKE_WIELDED, "eVoke power of wielded item", 2);
-    _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
+    _add_command(cols, 1, CMD_EVOKE_WIELDED, "장비한 아이템의 능력 발동하기", 2);
+    _add_command(cols, 1, CMD_EVOKE, "마법 완드나 잡동사니 사용하기", 2);
 
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : 방어구를 입거나 벗기",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : 장신구를 입거나 벗기",
                          CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
 
     cols.add_formatted(
             1,
-            "<h>Item Interaction (floor):\n");
+            "<h>아이템 상호작용 (바닥):\n");
 
-    _add_command(cols, 1, CMD_PICKUP, "pick up items (also <w>g</w>)", 2);
+    _add_command(cols, 1, CMD_PICKUP, "아이템 줍기 (<w>g</w>도 가능)", 2);
     cols.add_formatted(
             1,
-            "    (press twice for pick up menu)\n",
+            "    (두 번 눌러 줍기 메뉴 켜기)\n",
             false);
 
-    _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
-    _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
+    _add_command(cols, 1, CMD_DROP, "아이템 떨어뜨리기", 2);
+    _add_insert_commands(cols, 1, "<w>%#</w>: 특정 갯수의 아이템을 떨어뜨리기",
                          CMD_DROP, 0);
-    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
+    _add_command(cols, 1, CMD_DROP_LAST, "최근에 주운 아이템(s) 떨어뜨리기", 2);
     {
         const bool vampire = you.species == SP_VAMPIRE;
-        string butcher = vampire ? "Bottle blood from"
-                                 : "Chop up";
-        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse", 2);
+        string butcher = vampire ? "피를 병에 받기"
+                                 : "살점 해체하기";
+        _add_command(cols, 1, CMD_BUTCHER, butcher + " 시체에서", 2);
 
-        string eat = vampire ? "Drain corpses on"
-                             : "Eat food from";
-        eat += " floor\n";
+        string eat = vampire ? "시체로부터 흡수하기"
+                             : "음식 먹기";
+        eat += " 바닥에서\n";
         _add_command(cols, 1, CMD_EAT, eat, 2);
     }
 
     cols.add_formatted(
             1,
-            "<h>Additional help:\n");
+            "<h>추가 도움말:\n");
 
     string text =
-            "Many commands have context sensitive "
-            "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
-            "form of targeting), <w>%</w>, and <w>%</w>.\n"
-            "You can read descriptions of your "
-            "current spells (<w>%</w>), skills (<w>%?</w>) and "
-            "abilities (<w>%!</w>).";
+            "많은 커맨드들은 문맥 의존적인 커맨드들을 갖고 있습니다. "
+            "<w>%</w>, <w>%</w>, <w>%</w> (혹은 다른 형식의 타겟팅 "
+            "<w>%</w>, and <w>%</w> 중에 도움을 얻을 수 있습니다.\n"
+            "당신은 캐릭터의 다음에 대한 기술들을 읽을 수 있습니다. "
+            "현재 주문 (<w>%</w>), 적성 (<w>%?</w>) 그리고 "
+            "능력 (<w>%!</w>).";
     insert_commands(text, { CMD_DISPLAY_MAP, CMD_LOOK_AROUND, CMD_FIRE,
                             CMD_SEARCH_STASHES, CMD_INTERLEVEL_TRAVEL,
                             CMD_DISPLAY_SPELLS, CMD_DISPLAY_SKILLS,

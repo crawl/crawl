@@ -1,147 +1,147 @@
-                            Crawl Quick-Start Guide
-                        (Copyright 1999 Linley Henzell)
+던전 크롤 빠른 시작 가이드
+(Copyright 1999 Linley Henzell)
 
-So, you want to start playing Crawl straight away without bothering with the
-manual? Read this, the guide to starting Crawl with a minimum of preparation.
+그래서, 당신은 설명서를 읽지 않고 바로 던전 크롤을 플레이 하길 원하십니까?
+이 가이드에서는 최소한의 준비만으로 던전 크롤을 플레이하는 방법을 안내합니다.
 
-I suggest printing it out and following its instructions while playing your
-first few games (you can also press '?' twice while playing for a list of
-commands).
+처음 몇번의 게임동안은 이 지침을 따라해 보는것도 좋습니다.
+('?'를 두번 눌러 조작법 목록을 볼 수 있습니다.)
 
-When you get some more time, you can read crawl_manual.txt in the docs/
-directory for more detailed information.
 
- INTRODUCTION TO CRAWL
+만약 당신에게 넉넉한 시간이 있다면, docs 폴더 안에 있는 crawl_manual.txt를 
+읽어보고 더욱 자세한 정보를 얻을 수 있습니다.
 
-Crawl is a large and very random game of subterranean exploration in a fantasy
-world of magic and frequent violence. Your quest is to travel into the depths
-of the Dungeon (which is different each time you play) and retrieve the Orb of
-Zot.
+던전 크롤으로의 입문
 
-Crawl is an RPG of the 'rogue-like' type, one of the descendants of Rogue. Its
-graphics are simple but highly informative, designed to be understood at a
-glance, and control is exercised largely through one-keystroke commands.
+던전 크롤은 마법과 수많은 위험이 도사리는 판타지 세계에서 벌어지는 거대하고 
+매우 무작위적인 지하 탐험 게임입니다. 당신의 목적은 던전의 심층부
+(당신이 플레이할 때마다 매번 달라질 것입니다.)를 탐험하고 조트의 오브를
+찾아오는 것입니다.
 
- STARTING OUT
+돌죽은 '로그-라이크'형식의 RPG이며, Rouge로부터 유래된 게임들 중 하나입니다. 
+이 게임의 그래픽은 단순하지만 많은 정보를 담으며, 한눈에 이해할 수 있도록 
+설계되었고, 조작은 대부분 하나의 키 입력을 통해 수행됩니다.
 
-After starting the program you will be greeted with a message asking for your
-name. Don't spend too much time over this, as your first character will *not*
-last very long (sorry, but it's true).
+시작하기
 
-Next you are given menus of species and backgrounds from which to choose.
-A hill orc, minotaur or troll Fighter is a good bet. Elves are quite fragile,
-humans are pretty average at everything, and the weirder species are mostly
-too tricky for beginning players. Finally, you may be given a choice of
-weapons. I suggest an axe (axes are fun).
+프로그램을 시작한 후 당신의 이름을 묻는 메시지가 당신을 반겨줄 것입니다.
+여기에 너무 많은 시간을 뺏기진 마세요, 당신의 첫 캐릭터는 *절대* 오래 살진 못할 겁니다
+(미안해요. 하지만 이건 사실이라구요).
 
-Now you are in the game. The game screen has three parts:
- - the Map takes up the upper left part of the screen. In its very centre is
-   the @ sign which represents You. The coloured parts of the Map are the parts
-   you can see, while places which you have visited before but cannot currently
-   see are shown in grey.
- - the Message box is the large part of the screen below the map. It describes
-   events as they happen and asks you questions from time to time.
- - the Stats area (to the right of the Map) contains various indicators of
-   your health and abilities.
+그리고 당신은 종족과 직업을 고를 수 있는 메뉴를 제공받을 것입니다.
+힐 오크, 미노타우르스나 트롤 전사는 좋은 생각일 것입니다. 엘프들은 매우 연약하고,
+인간들은 모든 것에서 대체로 평균적입니다. 그리고, 특이한 종족들은 대개
+초심자들이 플레이하기에는 너무 까다롭습니다. 마지막으로, 당신은 무기를 선택할 기회를
+얻습니다. 전 도끼를 추천할게요(도끼는 정말 재밌거든요). 
 
- EXPLORING
+그리고 당신은 이제 게임 안에 있을 것입니다. 게임 스크린은 세 가지 부분으로 되어 있습니다.
+- 맵은 화면의 왼쪽 상단에 위치해있습니다. 그리고 정 중앙에 위치한 @ 모양이 바로 당신입니다.
+당신이 가본적이 있는곳은 색깔로 칠해져 맵에서 확인할 수 있습니다
+그러나 당신이 그곳에 방문하지 않았다면.
+회색으로 칠해져있을것입니다.
+- 그리고 상태창은 맵의 바로 아래쪽에 위치하여있습니다.
+이것은 당신에게 행동을 묻거나 또는 여러 이벤트나 상태 등을 나타냅니다.
+- 그리고 상태창은 (맵 오른쪽을 보십시오.) 당신의 능력 , 체력 등을 포함한
+다양한 지표를 나타내고 있습니다.
 
-Try walking around, using either the numeric keypad (try numlock off and on) or
-the Rogue (hjklyubn) keys. Pressing 'o' will activate auto-explore, which will
-move until an enemy is seen, or some other notable event (e.g. finding a set of
-stairs) occurs.
+탐험
 
-If you want to know what a certain character on the screen represents, you can
-use the 'x' (examine) command to get a short description, and then 'v' to get
-more information. You use the 'O', 'C' commands to open or close doors, and the
-'<' (up) and '>' (down) commands to climb staircases.
+주변을 돌아다녀 보세요. 오른쪽의 숫자 키패드 (numlock 상태를 확인하세요) 혹은
+그냥 키보드(hjkiyubn) 버튼을 사용하세요. 알파벳 'o' 버튼을 누르는 것은 자동 여행
+모드로 들어서게 할 것이지만, 이것은 시야 내에 적이 나타나거나 기타 상황(예를
+들어 계단을 찾거나)이 눈에 뜨이면 종료됩니다.
 
-The Dungeon gets more dangerous (but more interesting!) as you go down. If you
-get lost you can access a map of the whole level you are on with the 'X'
-command, which uses the whole screen.
+만약 당신이 스크린에 존재하는 특정한 캐릭터가 무엇을 표현하는지 알고 싶다면,
+당신은 'x' ( 조사하기 ) 를 눌러 캐릭터의 상태를 확인할 수 있습니다.
+그러고 난 다음에 'v' 키를 눌러 더욱 많은 정보를 흭득하십시오.
+당신은 'O' , 'C' 를 눌러 문을 열고 닫을 수 있으며 또한 '<' ( 올라가기 ) 과 '>' ( 내려가기 ) 를 눌러 계단을 오르내릴 수 있습니다.
 
- ITEMS
+던전은 내려갈수록 점점 더 험난해집니다 ( 그러나 더욱 흥미롭기도 하죠 ! )
+만약 당신이 길을 잃었다면 'X'키를 눌러 근처를 확인할 수 있습니다.
 
-After walking around for a while, you will no doubt come across some items
-lying around (you may come across some monsters as well; for help in dealing
-with them skip to the Monsters section). You can pick up items with the 'g'
-(get) or ',' commands and drop them again with 'd' (drop), and the 'i'
-(inventory) command shows you what you're carrying. While examining your
-inventory, press any item's key to see more information about it, and to list
-available commands.
 
-There are several different types of items:
+아이템
 
- - Weapons, represented by the ) sign. Wield them with the 'w' (wield)
-   command. Some weapons are cursed and cannot be un-wielded without the use of
-   magic.
+돌아다니다 보면, 당신은 분명히 지상에 놓여있는 몇몇 아이템(몬스터들과 싸우게
+도와주거나 상황을 넘기게 도와줄 물건들이죠)을 마주할 것입니다. 당신은 이
+아이템들을 알파벳 'g'(get) 버튼 혹은 ',' (반점) 버튼을 눌러서 획득할 수 있으며, 'd' 
+(drop) 버튼을 눌러서 버릴 수 있습니다. 그리고 'i' (inventory) 버튼을 눌러서 당신의
+현재 인벤토리 상황을 볼 수 있습니다. 당신의 장비 칸을 보는 중에 아무 아이템의 
+키 (물건 앞에 붙어있는 알파벳) 을 눌러서 더 자세한 설명을 보거나, 가능한 
+커맨드를 확인할 수 있습니다.
 
- - Armour ([). Wear it, or take it off, with the 'W' (Wear) command. Heavier
-   armours give more protection, but may hamper your ability to fight, dodge,
-   and cast spells. These can also be cursed.
+다양한 타입의 아이템들이 있습니다.
 
- - Ammunition (which has the ( sign). Throw it with 'f' and 'F' (fire).
-   Stones, tomahawks and javelins are meant to be thrown by hand; other
-   missiles need an appropriate launcher to be wielded (e.g. arrows are only
-   effective when shot with a bow).
+- 무기들은 ) 형태로 표현됩니다. 무기들은 'w' (장착) 커맨드를 이용해 장착할 수 있습니다.
+몇몇 무기들은 저주받았을 수 있고, 마법을 사용하지 않는다면 장착을 해체하지 못할 수도 있습니다.
 
- - Wands (/), Scrolls (?) and Potions (!) can be very valuable, but have
-   limited uses (scrolls and potions can only be used once each, wands contain
-   only a certain number of charges). Wands are e'V'oked, scrolls are 'r'ead
-   and potions are 'q'uaffed. Unfortunately, you won't at first know what a
-   wand, scroll or potion does; it will only be described by its physical
-   appearance. But once you have used, for example, a potion of curing, you
-   will in future recognise all potions of curing.
 
- - Rings (=) and Amulets (") provide various mostly-helpful effects. They are
-   put on with 'P' (put on) and can be removed with 'R'. They can, like
-   weapons, be cursed.
+- 방어구는 ([)로 확인 가능. 'W' ( 입기 ) 키를 사용하여 입거나 벗을 수 있습니다.
+방어구는 당신의 몸을 지켜주기도 하지만 당신이 싸우거나 움직이거나 또는 주문을 사용할때 걸리적거릴 수 있습니다.
+그리고 저주받았을 가능성이 있죠.
 
- - Food (%) is vital to your survival. Eat it with the 'e' (eat) command when
-   hungry. Monsters' corpses, also %, can be eaten if chopped up (the 'c'
-   command), though not all of them are edible.
+- 투척무기  ( 표식을 가지고 있는 ). 'f' 또는 'F' ( 발사 ) 키를 사용하여 원하는 장소에 던질 수 있습니다.
+돌 , 토마호크 그리고 투창은 손을 사용하여 던질 수 있습니다.
+어떤 특정한 투척무기들은 도구가 있어야지만 사용할 수 있습니다.
+( 예를 들면 화살은 활이 있어야만 발사할 수 있는 물건입니다.)
 
- - Money ($) can be used to buy stuff in shops.
+- 완드들 (/), 스크롤들 (?) 그리고 포션들 (!)은 매우 유용하게 쓰일 수 있습니다. 그렇지만
+제한된 사용량을 갖고 있습니다. (스크롤들과 포션들은 한개당 오직 단 한번만 사용할 수 있으며, 완드들은
+오직 특정한 충전 횟수들만 갖고 있습니다.). 완드들은  발동(e'V'oke)할 수 있으며, 스크를들은 읽을 수 있고 ('r'ead)
+포션들은 들이킬 수 있습니다.('q'uaffed). 불행하게도, 당신은 처음 획득한 완드, 스크롤
+그리고 포션들이 무엇을 하는 것인지 전혀 알지 못합니다. 이건 오직 물리적 형태로만
+기술이 될 것입니다. 그러나 당신이 한번이라도 사용한다면, 그 다음부터는 그게 무엇인지 
+알게 될 것입니다. 예를 들어, '회복의 포션'을 사용했다면, 나중에도 그게 무엇인지 인지할 것이라는 것입니다.
 
-There are a few other types of items, but you will discover these as you play.
+ - 반지 (=) 와 목걸이 (") 는 다양하고 도움이 되는 기능이 있습니다. 그것들은 'P'
+(Put on) 을 눌러 장비할 수 있고 'R' 을 눌러 해제할 수 있습니다. 그것들은
+무기처럼 저주받은 채로 등장할 수 있습니다.
 
- MONSTERS
+- 음식 (%) 은 살아남기 위해 필수적입니다. 음식을 먹으려면 배고플 때 'e' (eat)
+를 누르면 됩니다. 몬스터의 시체 (%) 또한 잘 요리하면 ('c') 먹을 수 있지만, 그 중
+일부는 식용으로 부적절합니다.
 
-You will also run into monsters (most of which are represented by letters of
-the alphabet). You can attack a monster by trying to move into the square it
-is occupying. Pressing Tab will automatically move toward & attack nearby
-monsters.
+- 돈 ($) 은 상점에서 몇몇 물건들을 살 수 있게 해줍니다.
 
-When you are wounded you lose hit points (displayed near the top of the stats
-list); these return gradually over time through the natural process of
-healing. If you lose all of your hp you die.
+그 외에도 몇 가지 다양한 타입의 아이템이 있겠지만, 플레이하며 직접 찾아보세요.
 
-To survive, you will need to develop a few basic tactics:
- - Never fight more than one monster if you can help it. Always back into a
-   corridor so that they must fight you one-on-one.
- - If you are badly wounded, you can run away from monsters to buy some time.
-   Try losing them in corridors, or as a very last resort find a place where
-   you can run around in circles to heal while the monster chases you.
- - Remember to use projectiles before engaging monsters in close combat.
- - Rest between encounters. The 's', '.', delete or keypad-5 commands make you
-   rest for one turn, while pressing '5' or Shift-and-keypad-5 make you rest
-   for a longer time (you will stop resting when fully healed).
- - Learn when to run away from things you can't handle - this is important!
-   It is often wise to skip a dangerous level. But don't overdo this.
+몬스터
 
- DEATH
+당신은 몬스터(그것들 대부분은 아스키 버전에서 알파벳으로 표시됩니다)와 
+마주하게 될 것입니다. 당신은 몬스터가 있는 칸으로 이동하려고 시도함으로서
+몬스터를 공격할 수 있습니다만, Tab 키를 누르면 가장 가까운 몬스터를 향해
+자동으로 움직이거나 공격할 수 있습니다.
 
-Before long, you'll probably end up dead.
+당신이 전투로 인해서 체력 포인트(디스플레이의 상단 부근에 있습니다) 를 잃었어도
+시간이 지나면 hp는 천천히 회복됩니다. 다만 hp를 모두 잃게 되면 당신은
+죽게 됩니다.
 
-Death in Crawl is permanent; you cannot just reload a saved game and start
-again where you left off. The 'S' (save) command exists only to let you leave
-a game part-way through and come back to it later. Quitting ('Ctrl-Q') lets
-you commit suicide if you can't even be bothered to help your character escape
-alive.
+살아남기 위해선 다음과 같은 기본적인 전략이 유효합니다:
+- 당신이 할 수 있는 한, 한 마리 이상의 몬스터와 싸우지 마십시오. 언제나 
+1대 1로 싸울 수 있도록 통로로 물러 서십시오.
+- 만약 당신이 전투를 지속하기가 어려운 상황이면, 도망가는 것도 좋습니다.
+그들을 통로로 유인하던가 또는 쉴수 있는 장소를 찾으십시오.
+당신은 몬스터와 싸우는 도중에도 원을 그리는 식으로 도망가며 체력을 회복할 수 있습니다.
+- 근접 전투를 개시하기 전에 투사체를 활용해보세요.
+- 적과의 전투 이후에 휴식을 취하고싶다면  's' 또는 '.', delete나 숫자키의 5를 누르면 한턴을 넘길 수 있습니다.
+그리고 키패드의 '5' 와 'shift' 를 함께 누르면 긴 시간동안 휴식을 취할 수 있습니다.
+(체력이 완전이 회복되면 자동으로 휴식을 그만둘 것입니다).
+- 덤벼야 할 상황과 도망가야 할 상황을 가리세요 - 이것은 매우 중요합니다!
+이것은 던전의 위험한 층을 넘겨버려도 된다는 것을 의미합니다만, 남용하지는 마십시오.
 
-Well, that's it for the quick-start guide. This should help you through your
-first few games, but Crawl is extremely (some would say excessively) complex
-and cannot be adequately described in so short a document. So when you feel
-ready to start playing with magic, skills, and religions, browse the manual.
+죽음
 
-Happy Crawling!
+오래지 않아, 당신은 죽게 될 것입니다.
+
+던전 크롤에서의 죽음은 영구적입니다. 당신은 저장된 게임을 다시 불러와 당신이 중단했던 지점에서
+다시 시작할 수 없습니다.. The 'S'(저장) 커맨드는 오직 당신이 게임을 그만두고
+떠났다가 다시 돌아올 때를 위해서 존재합니다. 종료 ('Ctrl-Q')는 
+당신의 캐릭터가 생존을 위해 탈출하는 것조차 하지 못할 때, 당신이 자살할 수 있도록 
+도와줍니다.
+
+자, 이게 빠른 시작을 위한 가이드의 전부입니다. 이건 당신이 처음의 몇 게임들을 플레이할 때 
+도움이 될 것입니다. 그러나 던전 크롤은 엄청나게 (몇몇은 지나치게라고 말하겠죠) 복잡하고, 
+짧은 문서에서 충분하게 기술하기는 불가능합니다. 그러니 만약 당신이 마법, 적성,
+그리고 신앙과 함께 플레이할 준비가 되었다고 느껴진다면, 매뉴얼을 찾아보세요.
+
+즐거운 던전 크롤 되세요!
