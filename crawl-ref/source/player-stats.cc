@@ -97,28 +97,22 @@ int innate_stat(stat_type s)
 
 static void _handle_stat_change(stat_type stat);
 
-/**
- * Handle manual, permanent character stat increases. (Usually from every third
- * XL.
- *
- * @return Whether the stat was actually increased (HUPs can interrupt this).
+/*
+ * Opens a prompt to choose a stat, and returns the stat_type chosen.
+ * If increase_attribute is true, ensure player chooses a stat. If they
+ * do not, restart the prompt.  If choice fails or is cancelled, return
+ * STAT_RANDOM to indicate failure. (hackish, needs better solution?)
  */
-bool attribute_increase()
+stat_type choose_stat(string title, string message, string prompt, bool increase_attribute)
 {
-    // Gnolls don't get stat gains
-    if (you.species == SP_GNOLL)
-        return true;
-
-    const string stat_gain_message = make_stringf("Your experience leads to a%s "
-                                                  "increase in your attributes!",
-                                                  you.species == SP_DEMIGOD ?
-                                                  " dramatic" : "n");
-    crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
-    learned_something_new(HINT_CHOOSE_STAT);
-    Popup *pop = new Popup("Increase Attributes");
+    if (increase_attribute)
+    {
+        learned_something_new(HINT_CHOOSE_STAT);
+    }
+    Popup *pop = new Popup(title);
     MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
+    pop->push_entry(new MenuEntry(message + prompt, MEL_TITLE));
     pop->push_entry(status);
     MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
     me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
@@ -129,32 +123,42 @@ bool attribute_increase()
     me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
     me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
     pop->push_entry(me);
-#else
-    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
-    learned_something_new(HINT_CHOOSE_STAT);
-    if (innate_stat(STAT_STR) != you.strength()
-        || innate_stat(STAT_INT) != you.intel()
-        || innate_stat(STAT_DEX) != you.dex())
+    if (!increase_attribute)
     {
-        mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
-             innate_stat(STAT_STR),
-             innate_stat(STAT_INT),
-             innate_stat(STAT_DEX));
+        me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X', false);
+        me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+        pop->push_entry(me);
     }
-    mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
+#else
+    if (increase_attribute)
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "%s", message.c_str());
+
+        learned_something_new(HINT_CHOOSE_STAT);
+        if (innate_stat(STAT_STR) != you.strength()
+            || innate_stat(STAT_INT) != you.intel()
+            || innate_stat(STAT_DEX) != you.dex())
+        {
+            mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
+                 innate_stat(STAT_STR),
+                 innate_stat(STAT_INT),
+                 innate_stat(STAT_DEX));
+        }
+    }
+    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 #endif
+
     mouse_control mc(MOUSE_MODE_PROMPT);
-
-    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
-
-    bool tried_lua = false;
     int keyin;
-    while (true)
+    bool tried_lua = false;
+
+    do
     {
         // Calling a user-defined lua function here to let players reply to
         // the prompt automatically. Either returning a string or using
         // crawl.sendkeys will work.
-        if (!tried_lua && clua.callfn("choose_stat_gain", 0, 1))
+        if (!tried_lua && clua.callfn("choose_stat_gain", 0, 1)
+            && increase_attribute)
         {
             string result;
             clua.fnreturns(">s", &result);
@@ -177,31 +181,81 @@ bool attribute_increase()
             // normally, when the player reloads, the game will re-prompt
             // for their level-up stat gain.
             if (crawl_state.seen_hups)
-                return false;
+            {
+                return STAT_RANDOM;
+            }
             break;
 
         case 's':
         case 'S':
-            for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_STR, 1, false);
-            return true;
+            return STAT_STR;
 
         case 'i':
         case 'I':
-            for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_INT, 1, false);
-            return true;
+            return STAT_INT;
 
         case 'd':
         case 'D':
-            for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_DEX, 1, false);
-            return true;
-#ifdef TOUCH_UI
+            return STAT_DEX;
+
+        case 'X':
         default:
-            status->text = "Please choose an option below"; // too naggy?
+            //If this function was called by attribute_increase(), keep looping
+            //until a valid choice has been made (or the game closes).
+            if (increase_attribute)
+            {
+#ifdef TOUCH_UI
+                status->text = "Please choose an option below"; // too naggy?
 #endif
+                break;
+            }
+            return STAT_RANDOM;
         }
+    } while (increase_attribute);
+
+    //Failsafe in case loop exists before function returns (assume cancel/close)
+    return STAT_RANDOM;
+}
+
+/**
+ * Handle manual, permanent character stat increases. (Usually from every third
+ * XL.
+ *
+ * @return Whether the stat was actually increased (HUPs can interrupt this).
+ */
+bool attribute_increase()
+{
+    // Gnolls don't get stat gains
+    if (you.species == SP_GNOLL)
+        return true;
+
+    const string popup_title = "Increase Attributes";
+    const string stat_gain_message = make_stringf("Your experience leads to a%s "
+                                                  "increase in your attributes!",
+                                                  you.species == SP_DEMIGOD ?
+                                                  " dramatic" : "n");
+    string prompt = "Increase (S)trength, (I)ntelligence, or (D)exterity? ";
+#ifdef TOUCH_UI
+    prompt = " Increase:";
+#endif
+    crawl_state.stat_gain_prompt = true;
+
+    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
+
+    stat_type chosen_stat = choose_stat(popup_title, stat_gain_message, prompt, true);
+
+    //If STAT_RANDOM, choose_stat closed prematurely due to game closing
+    if (chosen_stat == STAT_RANDOM)
+    {
+        return false;
+    }
+    else
+    {
+        for (int i = 0; i < statgain; i++)
+        {
+                modify_stat(chosen_stat, 1, false);
+        }
+        return true;
     }
 }
 
@@ -698,114 +752,39 @@ bool have_stat_zero()
  */
 spret_type gnoll_shift_attributes()
 {
-    stat_type source_attribute;
-    stat_type destination_attribute;
-    int keyin;
+    const string popup_title = "Shift Attributes";
+    string prompt = "Shift from (S)trength, (I)ntelligence, or (D)exterity? ";
 #ifdef TOUCH_UI
-    Popup *pop = new Popup("Shift Attributes");
-    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(stat_gain_message + " Shift from:", MEL_TITLE));
-    pop->push_entry(status);
-    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
-    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
-    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
-    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X', false);
-    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
-    pop->push_entry(me);
-#else
-    mprf(MSGCH_PROMPT, "Shift from (S)trength, (I)ntelligence, or (D)exterity? ");
+    prompt = "Shift from:";
 #endif
-    mouse_control mc(MOUSE_MODE_PROMPT);
-#ifdef TOUCH_UI
-    keyin = pop->pop();
-#else
-    keyin = getchm();
-#endif
-    switch (keyin)
+    stat_type source_attribute = choose_stat(popup_title, "", prompt, false);
+
+    //If STAT_RANDOM, choose_stat was cancelled so abort skill
+    if (source_attribute == STAT_RANDOM)
     {
-    case 's':
-    case 'S':
-        source_attribute = STAT_STR;
-        break;
-
-    case 'i':
-    case 'I':
-        source_attribute = STAT_INT;
-        break;
-
-    case 'd':
-    case 'D':
-        source_attribute = STAT_DEX;
-        break;
-
-    case 'X':
-    default:
         mprf(MSGCH_PROMPT, "Okay, then.");
         return SPRET_ABORT;
     }
     //Cannot shift into stat zero or below
-    if ((you.stat(source_attribute) - 3) <= 0 )
+    else if ((you.stat(source_attribute) - 3) <= 0 )
     {
         mprf("You do not have enough %s to transfer!", _stat_name(source_attribute).c_str());
         return SPRET_ABORT;
     }
+
+    prompt = "Shift to (S)trength, (I)ntelligence, or (D)exterity? ";
 #ifdef TOUCH_UI
-    Popup *pop = new Popup("Shift Attributes");
-    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(stat_gain_message + " Shift to:", MEL_TITLE));
-    pop->push_entry(status);
-    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
-    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
-    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
-    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("Cancel", MEL_ITEM, 0, 'X', false);
-    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
-    pop->push_entry(me);
-#else
-    mprf(MSGCH_PROMPT, "Shift to (S)trength, (I)ntelligence, or (D)exterity? ");
+    prompt = "Shift to:";
 #endif
-    mouse_control mc2(MOUSE_MODE_PROMPT);
-#ifdef TOUCH_UI
-    keyin = pop->pop();
-#else
-    keyin = getchm();
-#endif
+    stat_type destination_attribute = choose_stat(popup_title, "", prompt, false);
 
-    switch (keyin)
-    {
-    case 's':
-    case 'S':
-        destination_attribute = STAT_STR;
-        break;
-
-    case 'i':
-    case 'I':
-        destination_attribute = STAT_INT;
-        break;
-
-    case 'd':
-    case 'D':
-        destination_attribute = STAT_DEX;
-        break;
-
-    case 'X':
-    default:
+    //If STAT_RANDOM, choose_stat was cancelled so abort skill
+    if (destination_attribute == STAT_RANDOM)
+    {    
         mprf(MSGCH_PROMPT, "Okay, then.");
         return SPRET_ABORT;
     }
-
-    if (source_attribute == destination_attribute)
+    else if (source_attribute == destination_attribute)
     {
         mpr("You don't feel any different.");
         return SPRET_ABORT;
