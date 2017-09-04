@@ -245,10 +245,12 @@ bool attribute_increase()
                                                   "increase in your attributes!",
                                                   you.species == SP_DEMIGOD ?
                                                   " dramatic" : "n");
-    string prompt = "Increase (S)trength, (I)ntelligence, or (D)exterity? ";
 #ifdef TOUCH_UI
-    prompt = " Increase:";
+    string prompt = " Increase:";
+#else
+    string prompt = "Increase (S)trength, (I)ntelligence, or (D)exterity? ";
 #endif
+
     crawl_state.stat_gain_prompt = true;
 
     const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
@@ -764,9 +766,10 @@ bool have_stat_zero()
 spret_type gnoll_shift_attributes()
 {
     const string popup_title = "Shift Attributes";
-    string prompt = "Shift from (S)trength, (I)ntelligence, or (D)exterity? ";
 #ifdef TOUCH_UI
-    prompt = "Shift from:";
+    string prompt = "Shift from:";
+#else
+    string prompt = "Shift from (S)trength, (I)ntelligence, or (D)exterity? ";
 #endif
     stat_type source_attribute = choose_stat(popup_title, "", prompt, false);
 
@@ -782,10 +785,11 @@ spret_type gnoll_shift_attributes()
         mprf("You do not have enough %s to transfer!", _stat_name(source_attribute).c_str());
         return SPRET_ABORT;
     }
-
-    prompt = "Shift to (S)trength, (I)ntelligence, or (D)exterity? ";
+    
 #ifdef TOUCH_UI
     prompt = "Shift to:";
+#else
+    prompt = "Shift to (S)trength, (I)ntelligence, or (D)exterity? ";
 #endif
     stat_type destination_attribute = choose_stat(popup_title, "", prompt, false);
 
