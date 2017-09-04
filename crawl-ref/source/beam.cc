@@ -1968,8 +1968,8 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     {
         if (verbose)
             simple_monster_message(*mons, " is covered in liquid flames!");
-        ASSERT(who);
-        behaviour_event(mons, ME_WHACK, who);
+        if (who)
+            behaviour_event(mons, ME_WHACK, who);
     }
 
     return new_flame.degree > old_flame.degree;
