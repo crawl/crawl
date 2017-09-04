@@ -363,41 +363,41 @@ static const char* _jewellery_base_ability_description(int subtype)
     {
 #if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES:
-        return "It sustains your strength, intelligence and dexterity.";
+        return "이것은 힘, 지능, 민첩을 유지시켜준다.";
 #endif
     case RING_WIZARDRY:
-        return "It improves your spell success rate.";
+        return "이것은 주문 성공률을 높여준다.";
     case RING_FIRE:
-        return "It enhances your fire magic.";
+        return "이것은 화염 마법을 향상시킨다.";
     case RING_ICE:
-        return "It enhances your ice magic.";
+        return "이것은 냉기 마법을 향상시킨다.";
     case RING_TELEPORTATION:
-        return "It may teleport you next to monsters.";
+        return "이것은 당신을 몬스터 옆으로 텔레포트시킬 지 모른다.";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:
-        return "It can be evoked for teleport control.";
+        return "이것은 조정 가능한 텔레포트를 발동시킬 수 있다.";
 #endif
     case AMU_HARM:
-        return "It increases damage dealt and taken.";
+        return "이것은 주고 받는 데미지를 증가시킨다.";
     case AMU_MANA_REGENERATION:
-        return "It increases your magic regeneration.";
+        return "이것은 마력 재생량을 증진시킨다.";
     case AMU_THE_GOURMAND:
-        return "It allows you to eat raw meat even when not hungry.";
+        return "이것은 당신이 배고프지 않아도 생고기를 먹을 수 있도록 도와준다.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
+        return "이것은 당신을 해칠 수 있는 크리쳐들을 텔레포트시킬 지 모른다.";
     case AMU_CONSERVATION:
-        return "It protects your inventory from destruction.";
+        return "이것은 파괴로부터 인벤토리를 보호한다.";
 #endif
     case AMU_GUARDIAN_SPIRIT:
-        return "It causes incoming damage to be split between your health and "
-               "magic.";
+        return "이것은 받는 피해량을 체력과 마력에 나눠 받도록 "
+               "한다.";
     case AMU_FAITH:
-        return "It allows you to gain divine favour quickly.";
+        return "이것은 신의 호의를 빠르게 받을 수 있도록 도와준다.";
     case AMU_REFLECTION:
-        return "It shields you and reflects attacks.";
+        return "이것은 방패처럼 당신을 보호해주고, 공격을 반사한다.";
     case AMU_INACCURACY:
-        return "It reduces the accuracy of all your attacks.";
+        return "이것은 당신이 하는 모든 공격의 정확도를 감소시킨다.";
     }
     return "";
 }
@@ -419,45 +419,45 @@ static string _randart_descrip(const item_def &item)
 
     const property_descriptor propdescs[] =
     {
-        { ARTP_AC, "It affects your AC (%d).", false },
-        { ARTP_EVASION, "It affects your evasion (%d).", false},
-        { ARTP_STRENGTH, "It affects your strength (%d).", false},
-        { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
-        { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { ARTP_SLAYING, "It affects your accuracy and damage with ranged "
-                        "weapons and melee attacks (%d).", false},
-        { ARTP_FIRE, "fire", true},
-        { ARTP_COLD, "cold", true},
-        { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
-        { ARTP_POISON, "poison", true},
-        { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
-                                 "enchantments.", false},
-        { ARTP_HP, "It affects your health (%d).", false},
-        { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
-        { ARTP_SEE_INVISIBLE, "It lets you see invisible.", false},
-        { ARTP_INVISIBLE, "It lets you turn invisible.", false},
-        { ARTP_FLY, "It lets you fly.", false},
-        { ARTP_BLINK, "It lets you blink.", false},
-        { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_NOISE, "It may make noises in combat.", false},
-        { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
-        { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
+        { ARTP_AC, "당신의 AC에 (%d)만큼 영향을 준다.", false },
+        { ARTP_EVASION, "당신의 회피에 (%d)만큼 영향을 준다", false},
+        { ARTP_STRENGTH, "당신의 힘에 (%d)만큼 영향을 준다.", false},
+        { ARTP_INTELLIGENCE, "당신의 지능에 (%d)만큼 영향을 준다.", false},
+        { ARTP_DEXTERITY, "당신의 민첩성에 (%d)만큼 영향을 준다.", false},
+        { ARTP_SLAYING, "당신의 원거리 무기와 근접 무기의 정확도와 피해량에"
+                        "(%d)만큼 영향을 준다.", false},
+        { ARTP_FIRE, "화염", true},
+        { ARTP_COLD, "냉기", true},
+        { ARTP_ELECTRICITY, "절연되어 있어 전기로부터 당신을 보호한다.", false},
+        { ARTP_POISON, "독", true},
+        { ARTP_NEGATIVE_ENERGY, "음에너지", true},
+        { ARTP_MAGIC_RESISTANCE, "적대적인 마법부여에 대한 " 
+                                 " 당신의 저항에 영향을 준다.", false},
+        { ARTP_HP, "당신의 체력에 (%d)만큼 영향을 준다.", false},
+        { ARTP_MAGICAL_POWER, "당신의 마력 비축량에 (%d)만큼 영향을 준다.", false},
+        { ARTP_SEE_INVISIBLE, "보이지 않는 것들을 당신이 보게 해준다.", false},
+        { ARTP_INVISIBLE, "당신을 보이지 않도록 만든다", false},
+        { ARTP_FLY, "당신이 날 수 있도록 만든다.", false},
+        { ARTP_BLINK, "당신이 블링크할 수 있도록 만든다.", false},
+        { ARTP_BERSERK, "당신이 광폭화할 수 있게 한다.", false},
+        { ARTP_NOISE, "전투 중에 소음을 만들 수 있다.", false},
+        { ARTP_PREVENT_SPELLCASTING, "당신이 주문을 외우는 것을 막는다.", false},
+        { ARTP_CAUSE_TELEPORTATION, "몬스터 옆으로 당신을 텔레포트시킬 수도 있다.", false},
+        { ARTP_PREVENT_TELEPORTATION, "텔레포트 형태 대부분을 막는다.",
           false},
-        { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
-        { ARTP_CURSE, "It curses itself when equipped.", false},
-        { ARTP_CLARITY, "It protects you against confusion.", false},
-        { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
-        { ARTP_RMSL, "It protects you from missiles.", false},
-        { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
-        { ARTP_RCORR, "It protects you from acid and corrosion.", false},
-        { ARTP_RMUT, "It protects you from mutation.", false},
-        { ARTP_CORRODE, "It may corrode you when you take damage.", false},
-        { ARTP_DRAIN, "It causes draining when unequipped.", false},
-        { ARTP_SLOW, "It may slow you when you take damage.", false},
-        { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
-        { ARTP_SHIELDING, "It affects your SH (%d).", false},
+        { ARTP_ANGRY, "전투 중에 당신을 광폭화시킬 수도 있다.", false},
+        { ARTP_CURSE, "장착 시에 스스로를 저주한다.", false},
+        { ARTP_CLARITY, "당신을 혼란스럽지 않게 막아준다.", false},
+        { ARTP_CONTAM, "벗을 때 마법 오염을 유발한다.", false},
+        { ARTP_RMSL, "당신을 투사체로부터 지켜준다.", false},
+        { ARTP_REGENERATION, "당신의 회복 속도를 올려준다.", false},
+        { ARTP_RCORR, "당신을 산과 부식으로부터 지켜준다.", false},
+        { ARTP_RMUT, "당신을 돌연변이로부터 지켜준다.", false},
+        { ARTP_CORRODE, "피격될 때 당신을 부식시킬 수도 있다.", false},
+        { ARTP_DRAIN, "벗을 때 생명력을 흡수한다.", false},
+        { ARTP_SLOW, "피격될 때 당신을 느리게 만들 수도 있다.", false},
+        { ARTP_FRAGILE, "벗을 때 파괴될 것이다.", false },
+        { ARTP_SHIELDING, "당신의 방패 수치에 (%d)만큼 영향을 준다.", false},
     };
 
     // Give a short description of the base type, for base types with no
