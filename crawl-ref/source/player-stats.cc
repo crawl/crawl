@@ -151,6 +151,8 @@ stat_type choose_stat(string title, string message, string prompt, bool increase
     mouse_control mc(MOUSE_MODE_PROMPT);
     int keyin;
     bool tried_lua = false;
+    // NUM_STATS is a placeholder for null
+    stat_type chosen_stat = NUM_STATS;
 
     do
     {
@@ -182,26 +184,29 @@ stat_type choose_stat(string title, string message, string prompt, bool increase
             // for their level-up stat gain.
             if (crawl_state.seen_hups)
             {
-                return STAT_RANDOM;
+                chosen_stat = STAT_RANDOM;
             }
             break;
 
         case 's':
         case 'S':
-            return STAT_STR;
+            chosen_stat = STAT_STR;
+            break;
 
         case 'i':
         case 'I':
-            return STAT_INT;
+            chosen_stat = STAT_INT;
+            break;
 
         case 'd':
         case 'D':
-            return STAT_DEX;
+            chosen_stat = STAT_DEX;
+            break;
 
         case 'X':
         default:
-            //If this function was called by attribute_increase(), keep looping
-            //until a valid choice has been made (or the game closes).
+            // If this function was called by attribute_increase(), keep looping
+            // until a valid choice has been made (or the game closes).
             if (increase_attribute)
             {
 #ifdef TOUCH_UI
@@ -209,12 +214,18 @@ stat_type choose_stat(string title, string message, string prompt, bool increase
 #endif
                 break;
             }
-            return STAT_RANDOM;
+            chosen_stat = STAT_RANDOM;
+            break;
         }
-    } while (increase_attribute);
-
-    //Failsafe in case loop exists before function returns (assume cancel/close)
-    return STAT_RANDOM;
+    } while (chosen_stat == NUM_STATS);
+// Manually delete Popup and MenuEntrys (unsure if it is already being deleted
+// elsewhere?)
+#ifdef TOUCH_UI
+    delete pop;
+    delete status;
+    delete me;
+#endif
+    return chosen_stat;
 }
 
 /**
