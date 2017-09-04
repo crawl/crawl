@@ -492,13 +492,13 @@ static string _randart_descrip(const item_def &item)
 
                 const char* prefixes[] =
                 {
-                    "It makes you extremely vulnerable to ",
-                    "It makes you very vulnerable to ",
-                    "It makes you vulnerable to ",
+                    "당신을 다음 속성에 대해 극단적으로 취약하게 만든다 : ",
+                    "당신을 다음 속성에 대해 매우 취약하게 만든다 : ",
+                    "당신을 다음 속성에 대해 취약하게 한다 : ",
                     "Buggy descriptor!",
-                    "It protects you from ",
-                    "It greatly protects you from ",
-                    "It renders you almost immune to "
+                    "당신을 다음 속성으로부터 보호한다 : ",
+                    "당신을 다음 속성으로부터 강력히 보호한다 : ",
+                    "당신을 다음 속성에 대해 거의 면역이도록 한다 : "
                 };
                 sdesc = prefixes[idx] + sdesc + '.';
             }
@@ -512,9 +512,9 @@ static string _randart_descrip(const item_def &item)
     {
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
-        snprintf(buf, sizeof buf, "\nIt makes you %s%s stealthy.",
-                 (stval < -1 || stval > 1) ? "much " : "",
-                 (stval < 0) ? "less" : "more");
+        snprintf(buf, sizeof buf, "\n당신을 %s%s 은밀하게 만든다.",
+                 (stval < -1 || stval > 1) ? "더 " : "",
+                 (stval < 0) ? "적게" : "많이");
         description += buf;
     }
 
@@ -828,8 +828,8 @@ static void _append_weapon_stats(string &description, const item_def &item)
       make_stringf("\n (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
       : "";
     description += make_stringf(
-    "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d."
+    "\n기본 명중률: %+d 기본 피해량: %d 기본 공격 지연시간: %.1f"
+    "\n이 무기를 최소 공격 지연시간 (%.1f)으로 다루려면 숙련도 %d에 도달해야한다."
     "%s",
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
@@ -840,7 +840,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (skill == SK_SLINGS)
     {
-        description += make_stringf("\nFiring bullets:    Base damage: %d",
+        description += make_stringf("\n탄환 발사:    기본 피해량: %d",
                                     base_dam +
                                     ammo_type_damage(MI_SLING_BULLET));
     }
@@ -854,12 +854,12 @@ static string _handedness_string(const item_def &item)
     {
     case HANDS_ONE:
         if (you.species == SP_FORMICID)
-            description += "It is a weapon for one hand-pair.";
+            description += "한 손의 쌍으로 사용하는 무기다.";
         else
-            description += "It is a one handed weapon.";
+            description += "이것은 한 손으로 사용하는 무기다.";
         break;
     case HANDS_TWO:
-        description += "It is a two handed weapon.";
+        description += "이것은 양손으로 사용하는 무기다.";
         break;
     }
 
@@ -889,22 +889,21 @@ static string _describe_weapon(const item_def &item, bool verbose)
         switch (item_attack_skill(item))
         {
         case SK_POLEARMS:
-            description += "\n\nIt can be evoked to extend its reach.";
+            description += "\n\n이것은 발동하여 도달 범위를 늘릴 수 있다.";
             break;
         case SK_AXES:
-            description += "\n\nIt hits all enemies adjacent to the wielder, "
-                           "dealing less damage to those not targeted.";
+            description += "\n\n착용자와 밀착한 모든 적들을 공격할 수 있으나, "
+                           "대상이 아닌 적들에게는 보다 적은 피해량을 준다.";
             break;
         case SK_LONG_BLADES:
-            description += "\n\nIt can be used to riposte, swiftly "
-                           "retaliating against a missed attack.";
+            description += "\n\n이것은 반격을 사용할 수 있다, 공격을 회피했을 때 "
+                           "신속하게 보복할 수 있다.";
             break;
         case SK_SHORT_BLADES:
             {
-                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
-                                                           : "particularly";
-                description += "\n\nIt is " + adj + " good for stabbing"
-                               " unaware enemies.";
+                string adj = (item.sub_type == WPN_DAGGER) ? "극단적으로"
+                                                           : "부분적으로";
+                description += "\n\n부주의한 적들을 암습하기에 " + adj + "좋다.";
             }
             break;
         default:
@@ -927,145 +926,145 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_FLAMING:
             if (is_range_weapon(item))
             {
-                description += "It causes projectiles fired from it to burn "
-                    "those they strike,";
-            }
+            description += "이 무기는 발사한 투사체가"
+                "적중한 대상을 불태우도록 한다,";
+                }
             else
-            {
-                description += "It has been specially enchanted to burn "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes and up to half "
-                           "again as much damage against particularly "
-                           "susceptible opponents.";
+                {
+            description += "이 무기에는 적중한 대상을 불태우기 위해 "
+                "특별히 마법이 부여돼있다,";
+                }
+            description += " 대부분의 적들에게 추가적인 피해를 입히고, "
+                "특별히 취약한 몇몇 적들에게는 최대 절반의 피해를 "
+                "추가로 입힌다.";
             if (!is_range_weapon(item) &&
-                (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
-            {
-                description += " Big, fiery blades are also staple "
-                    "armaments of hydra-hunters.";
-            }
+            (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
+                {
+            description += " 크고, 불타는 칼날은 "
+                " 히드라 사냥꾼의 주요한 무기이다.";
+                }
             break;
-        case SPWPN_FREEZING:
+            case SPWPN_FREEZING:
             if (is_range_weapon(item))
-            {
-                description += "It causes projectiles fired from it to freeze "
-                    "those they strike,";
-            }
+                {
+            description += "이 무기는 발사한 투사체가"
+                "적중한 대상을 얼리도록 한다,";
+                }
             else
-            {
-                description += "It has been specially enchanted to freeze "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes "
-                    "and up to half again as much damage against particularly "
-                    "susceptible opponents.";
+                {
+            description += "이 무기에는 타격된 대상을 얼리기 위해 "
+                "특별히 마법이 부여돼있다,";
+                }
+            description += " 대부분의 적들에게 추가적인 피해를 주고 "
+                "특별히 취약한 몇몇 적들에게는 최대 절반의 피해를 "
+                "추가로 입힌다.";
             if (is_range_weapon(item))
-                description += " They";
+            description += "투사체들은";
             else
-                description += " It";
-            description += " can also slow down cold-blooded creatures.";
+            description += " 이 무기는";
+            description += " 냉혈 동물들을 느리게 만들 수도 있다.";
             break;
-        case SPWPN_HOLY_WRATH:
-            description += "It has been blessed by the Shining One";
+            case SPWPN_HOLY_WRATH:
+            description += "이 무기는 샤이닝원의 축복을 받았다";
             if (is_range_weapon(item))
-            {
-                description += ", and any ";
+                {
+            description += "와, 여기에서 발사된 ";
+            description += ammo_name(item);
+            description += " 투사체들은";
+                }
+            else
+            description += " ";
+            description += "언데드들과 악마들에게 큰 피해를 유발하도록 샤이닝 원으로부터 축복받았다.";
+            break;
+            case SPWPN_ELECTROCUTION:
+            if (is_range_weapon(item))
+                {
+            description += "이 무기는 발사한 탄환에 전하를 "
+                "충전한다; 탄환이 적중하는 경우 때때로 이 탄환들에서 "
+                "전하가 방출되고 강력한 피해를 입힐 수 있다.";
+                }
+            else
+                {
+            description += "때로, 적을 맞추는 경우, 이것은 "
+                "전기 에너지를 방출하여 강력한 피해를 입힐 수 "
+                "있다.";
+                }
+            break;
+            case SPWPN_VENOM:
+            if (is_range_weapon(item))
+            description += "이 무기는 발사하는 탄환에 독성을 부여한다.";
+            else
+            description += "이 무기는 적중한 대상을 중독시킨다.";
+            break;
+            case SPWPN_PROTECTION:
+            description += "이 무기는 사용자를 부상으로부터 "
+                "보호한다 (피격 시 +AC).";
+            break;
+            case SPWPN_DRAINING:
+            description += "참으로 소름끼치는 이 무기는, 맞은 대상의 "
+                "생명력을 흡수한다.";
+            break;
+            case SPWPN_SPEED:
+            description += "이 무기를 들면 확실히 빠르게 공격할 수 있다.";
+            break;
+            case SPWPN_VORPAL:
+            if (is_range_weapon(item))
+                {
+                description += "이 무기로부터 발사된 모든 ";
                 description += ammo_name(item);
-                description += " fired from it will";
-            }
+                description += "은(는) 추가적인 피해를 입힌다.";
+                }
             else
-                description += " to";
-            description += " cause great damage to the undead and demons.";
+                {
+            description += "이 무기는 적에게 추가적인 피해를 "
+                "입힌다.";
+                }
             break;
-        case SPWPN_ELECTROCUTION:
+            case SPWPN_CHAOS:
             if (is_range_weapon(item))
-            {
-                description += "It charges the ammunition it shoots with "
-                    "electricity; occasionally upon a hit, such missiles "
-                    "may discharge and cause terrible harm.";
-            }
+                {
+            description += "이 무기에서 발사된 각각의 투사체는 "
+                "매번 다른, 무작위 효과를 가진다.";
+                }
             else
-            {
-                description += "Occasionally, upon striking a foe, it will "
-                    "discharge some electrical energy and cause terrible "
-                    "harm.";
-            }
+                {
+            description += "이 무기가 적대적인 대상을 때릴 때마다, 이것은 "
+                "매번 다른, 무작위한 효과를 가진다.";
+                }
             break;
-        case SPWPN_VENOM:
-            if (is_range_weapon(item))
-                description += "It poisons the ammo it fires.";
-            else
-                description += "It poisons the flesh of those it strikes.";
+            case SPWPN_VAMPIRISM:
+            description += "이 무기는 추가적인 피해를 입히지는 못하지만, 사용자가 "
+                "살아있는 적에게 피해를 줄 경우 사용자를 회복시킨다.";
             break;
-        case SPWPN_PROTECTION:
-            description += "It protects the one who uses it against "
-                "injury (+AC on strike).";
+            case SPWPN_PAIN:
+            description += "강령 마법에 숙달된 이가 사용할 경우, "
+                "이 무기는 생명체에게 추가적인 피해를 입힌다.";
             break;
-        case SPWPN_DRAINING:
-            description += "A truly terrible weapon, it drains the "
-                "life of those it strikes.";
+            case SPWPN_DISTORTION:
+            description += "이 무기는 주변의 공간을 전이시키고 왜곡시킨다. "
+                "이 장비를 해제하는 것은 추방이나 큰 피해를 유발할 수 있다.";
             break;
-        case SPWPN_SPEED:
-            description += "Attacks with this weapon are significantly faster.";
+            case SPWPN_PENETRATION:
+            description += "이 무기에서 발사된 탄환들은 맞은 대상들을 "
+                "관통하며, 최대 사거리에 도달할 때 까지 경로에 있는 "
+                "모든 대상들을 맞출 수도 있다.";
             break;
-        case SPWPN_VORPAL:
-            if (is_range_weapon(item))
-            {
-                description += "Any ";
-                description += ammo_name(item);
-                description += " fired from it inflicts extra damage.";
-            }
-            else
-            {
-                description += "It inflicts extra damage upon your "
-                    "enemies.";
-            }
+            case SPWPN_REAPING:
+            description += "이것으로 인해 사망한 몬스터는 괜찮은 상태의 "
+                "시체를 남기며, 이 시체들은 다시 일으켜져서 "
+                "살해자에게 우호적인 좀비로서 살아날 것이다.";
             break;
-        case SPWPN_CHAOS:
-            if (is_range_weapon(item))
-            {
-                description += "Each projectile launched from it has a "
-                               "different, random effect.";
-            }
-            else
-            {
-                description += "Each time it hits an enemy it has a "
-                    "different, random effect.";
-            }
+            case SPWPN_ANTIMAGIC:
+            description += "이 무기는 사용자의 마법적인 에너지를 감소시키며, "
+                "맞은 대상들의 주문과 마법적인 능력들을 방해한다 "
+                "자연적인 능력들과 성스러운 기도들은 영향을 "
+                "받지 않는다.";
             break;
-        case SPWPN_VAMPIRISM:
-            description += "It inflicts no extra harm, but heals "
-                "its wielder when it wounds a living foe.";
-            break;
-        case SPWPN_PAIN:
-            description += "In the hands of one skilled in necromantic "
-                "magic, it inflicts extra damage on living creatures.";
-            break;
-        case SPWPN_DISTORTION:
-            description += "It warps and distorts space around it. "
-                "Unwielding it can cause banishment or high damage.";
-            break;
-        case SPWPN_PENETRATION:
-            description += "Ammo fired by it will pass through the "
-                "targets it hits, potentially hitting all targets in "
-                "its path until it reaches maximum range.";
-            break;
-        case SPWPN_REAPING:
-            description += "If a monster killed with it leaves a "
-                "corpse in good enough shape, the corpse will be "
-                "animated as a zombie friendly to the killer.";
-            break;
-        case SPWPN_ANTIMAGIC:
-            description += "It reduces the magical energy of the wielder, "
-                    "and disrupts the spells and magical abilities of those "
-                    "hit. Natural abilities and divine invocations are not "
-                    "affected.";
-            break;
-        case SPWPN_NORMAL:
+            case SPWPN_NORMAL:
             ASSERT(enchanted);
-            description += "It has no special brand (it is not flaming, "
-                    "freezing, etc), but is still enchanted in some way - "
-                    "positive or negative.";
+            description += "이 무기는 특별한 속성이 부여되어 있지 않지만,"
+                "(화염, 냉기 등), 좋든 나쁘든 간에 여전히 어떤 속성이 "
+                "부여되어 있다.";
             break;
         }
     }
