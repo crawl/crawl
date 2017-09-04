@@ -840,9 +840,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<h>움직이기:\n"
-            "어떤 방향으로 움직이거나 공격하려면, \n"
-            "numpad를 사용하거나 (Numlock을 끄거나 \n"
-            "켜보십시오.) 혹은 vi 키를 사용해보십시오.:\n");
+            "To move in a direction or to attack, \n"
+            "use the numpad (try Numlock off and \n"
+            "on) or vi keys:\n");
 
     _add_insert_commands(cols, 0, "                 <w>7 8 9      % % %",
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
@@ -857,14 +857,14 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<h>휴식:\n");
 
-    _add_command(cols, 0, CMD_WAIT, "턴을 기다리기 (또는 <w>s</w>, <w>Del</w>)", 2);
-    _add_command(cols, 0, CMD_REST, "휴식과 긴 기다림; 다음과 같은 상황", 2);
+            _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
+            _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
-            "    체력과 마법이 꽉 차거나 혹은\n"
-            "    무엇인가 감지되었을 때 멈출 것입니다.\n"
-            "    체력과 마법이 이미 최대인 경우에는, \n"
-            "    100턴이 경과한 경우에 멈추게 될 것입니다. (<w>numpad-5</w>)\n",
+            "    Health or Magic become full or\n"
+            "    something is detected. If Health\n"
+            "    and Magic are already full, stops\n"
+            "    when 100 turns over (<w>numpad-5</w>)\n",
             false);
 
     cols.add_formatted(
@@ -980,57 +980,57 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>게임 저장하고 종료하기:\n");
+            "<h>Game Saving and Quitting:\n");
 
-    _add_command(cols, 1, CMD_SAVE_GAME, "게임을 저장하고 나갑니다");
-    _add_command(cols, 1, CMD_SAVE_GAME_NOW, "게임을 저장하고 나가시겠습니까?");
-    _add_command(cols, 1, CMD_QUIT, "이 캐릭터를 폐기");
-    cols.add_formatted(1, "         하고 게임을 종료하시겠습니까?\n",
+            _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
+            _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
+            _add_command(cols, 1, CMD_QUIT, "Abandon the current character");
+            cols.add_formatted(1, "         and quit the game\n",
                        false);
 
     cols.add_formatted(
             1,
-            "<h>플레이어 캐릭터 정보:\n");
-
-    _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "캐릭터 기본 스탯 보기", 2);
-    _add_command(cols, 1, CMD_DISPLAY_SKILLS, "스킬 관리 창 보기", 2);
-    _add_command(cols, 1, CMD_RESISTS_SCREEN, "캐릭터 상태 보기", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RELIGION, "신앙 상태 보기", 2);
-    _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "능력/돌연변이 보기", 2);
-    _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "파악된 아이템 확인하기", 2);
-    _add_command(cols, 1, CMD_DISPLAY_RUNES, "수집한 룬 보기", 2);
-    _add_command(cols, 1, CMD_LIST_ARMOUR, "착용한 방어구 보기", 2);
-    _add_command(cols, 1, CMD_LIST_JEWELLERY, "착용한 장신구 보기", 2);
-    _add_command(cols, 1, CMD_LIST_GOLD, "소유한 골드 보기", 2);
-    _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "경험치 상태 보기", 2);
+            "<h>Player Character Information:\n");
+            
+                _add_command(cols, 1, CMD_DISPLAY_CHARACTER_STATUS, "display character status", 2);
+                _add_command(cols, 1, CMD_DISPLAY_SKILLS, "show skill screen", 2);
+                _add_command(cols, 1, CMD_RESISTS_SCREEN, "character overview", 2);
+                _add_command(cols, 1, CMD_DISPLAY_RELIGION, "show religion screen", 2);
+                _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
+                _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
+                _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
+                _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
+                _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
+                _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
+                _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
 
     cols.add_formatted(
             1,
-            "<h>던전의 정보와 상호작용:\n");
+            "<h>Dungeon Interaction and Information:\n");
 
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : 문 열기/닫기",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Open/Close door",
                          CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
-    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : 계단 오르내리기",
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
                          CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
     cols.add_formatted(1, "         pickup part of a single stack\n",
                        false);
 
-    _add_command(cols, 1, CMD_LOOK_AROUND, "주변/타겟을 탐색하기(eXamine)");
-    _add_insert_commands(cols, 1, 7, "이 층의 지도를 검토하기(eXamine) (<w>%?</w>로 도움말)",
+                       _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
+                       _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
-    _add_command(cols, 1, CMD_FULL_VIEW, "시야 안의 몬스터들, 아이템들,");
-    cols.add_formatted(1, "          특징들 목록\n",
+                         _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
+                         cols.add_formatted(1, "         in view\n",
                        false);
-    _add_command(cols, 1, CMD_SHOW_TERRAIN, "격자 시야 켜거나 끄기");
-    _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "던전 보기");
-    _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "아이템 자동 수집 켜거나 끄기");
-#ifdef USE_SOUND
-    _add_command(cols, 1, CMD_TOGGLE_SOUND, "음소거/해제");
-#endif
-    _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "가장 느린 동료에게");
-    cols.add_formatted(1, "         걸음 속도 맞추기\n",
+                       _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle view layers");
+                       _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
+                       _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
+                   #ifdef USE_SOUND
+                       _add_command(cols, 1, CMD_TOGGLE_SOUND, "mute/unmute sound effects");
+                   #endif
+                       _add_command(cols, 1, CMD_TOGGLE_TRAVEL_SPEED, "set your travel speed to your");
+                       cols.add_formatted(1, "         slowest ally\n",
                            false);
 
     cols.add_formatted(
