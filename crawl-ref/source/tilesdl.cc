@@ -283,25 +283,21 @@ void TilesFramework::do_map_display()
 
 int TilesFramework::draw_popup(Popup *popup)
 {
-    PopupRegion* reg = new PopupRegion(m_image, m_fonts[m_crt_font].font);
+    PopupRegion reg(m_image, m_fonts[m_crt_font].font);
     // place popup region to cover screen
-    reg->place(0, 0, 0);
-    reg->resize_to_fit(m_windowsz.x, m_windowsz.y);
+    reg.place(0, 0, 0);
+    reg.resize_to_fit(m_windowsz.x, m_windowsz.y);
 
     // get menu items to draw
     int col = 0;
     while (MenuEntry *me = popup->next_entry())
     {
         col++;
-        reg->set_entry(col, me->get_text(true), me->colour, me, false);
+        reg.set_entry(col, me->get_text(true), me->colour, me, false);
     }
     // fetch a return value
-    use_control_region(reg,false);
-    int retval = reg->get_retval();
-
-    // clean up and return
-    delete reg;
-    return retval;
+    use_control_region(&reg, false);
+    return reg.get_retval();
 }
 
 void TilesFramework::use_control_region(ControlRegion *reg,
