@@ -821,6 +821,7 @@ void init_mons_spells()
     monster fake_mon;
     fake_mon.type       = MONS_BLACK_DRACONIAN;
     fake_mon.hit_points = 1;
+    fake_mon.mid = MID_NOBODY; // used indirectly, through _mon_special_name
 
     bolt pbolt;
 
