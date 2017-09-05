@@ -65,16 +65,17 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
 #ifdef TOUCH_UI
-    Popup *pop = new Popup(prompt);
-    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
-    pop->push_entry(new MenuEntry(prompt, MEL_TITLE));
-    pop->push_entry(status);
-    MenuEntry *me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y', false);
-    me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
-    pop->push_entry(me);
-    me = new MenuEntry("No", MEL_ITEM, 0, 'N', false);
-    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
-    pop->push_entry(me);
+    Popup pop{prompt};
+    MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
+    MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y');
+    y_me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
+    MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 0, 'N');
+    n_me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+
+    pop.push_entry(new MenuEntry(prompt, MEL_TITLE));
+    pop.push_entry(status);
+    pop.push_entry(y_me);
+    pop.push_entry(n_me);
 #endif
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
@@ -83,7 +84,7 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
         if (!crawl_state.seen_hups)
         {
 #ifdef TOUCH_UI
-            tmp = pop->pop();
+            tmp = pop.pop();
 #else
             if (!noprompt)
             {
