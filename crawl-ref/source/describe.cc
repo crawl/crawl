@@ -825,7 +825,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const skill_type skill = item_attack_skill(item);
 
     const string your_skill = crawl_state.need_save ?
-      make_stringf("\n (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
+      make_stringf("\n (당신의 기술: %.1f)", (float) you.skill(skill, 10) / 10)
       : "";
     description += make_stringf(
     "\n기본 명중률: %+d 기본 피해량: %d 기본 공격 지연시간: %.1f"
