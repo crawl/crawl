@@ -349,7 +349,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
         macro_save();
 
     clrscr();
-    cprintf("Goodbye, %s.", you.your_name.c_str());
+    cprintf("잘가게, %s.", you.your_name.c_str());
     cprintf("\n\n    "); // Space padding where # would go in list format
 
     string hiscore = hiscores_format_single_long(se, true);
@@ -358,7 +358,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
 
     cprintf("%s", hiscore.c_str());
 
-    cprintf("\nBest Crawlers - %s\n",
+    cprintf("\n최상의 크롤러들 - %s\n",
             crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
@@ -366,7 +366,7 @@ NORETURN void end_game(scorefile_entry &se, int hiscore_index)
                         hiscore_index);
 
 #ifndef DGAMELAUNCH
-    cprintf("\nYou can find your morgue file in the '%s' directory.",
+    cprintf("\n영안실 파일은 '%s' 디렉토리에서 찾을 수 있습니다.",
             morgue_directory().c_str());
 #endif
 

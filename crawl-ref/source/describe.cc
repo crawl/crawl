@@ -363,41 +363,41 @@ static const char* _jewellery_base_ability_description(int subtype)
     {
 #if TAG_MAJOR_VERSION == 34
     case RING_SUSTAIN_ATTRIBUTES:
-        return "It sustains your strength, intelligence and dexterity.";
+        return "이것은 힘, 지능, 민첩을 유지시켜준다.";
 #endif
     case RING_WIZARDRY:
-        return "It improves your spell success rate.";
+        return "이것은 주문 성공률을 높여준다.";
     case RING_FIRE:
-        return "It enhances your fire magic.";
+        return "이것은 화염 마법을 향상시킨다.";
     case RING_ICE:
-        return "It enhances your ice magic.";
+        return "이것은 냉기 마법을 향상시킨다.";
     case RING_TELEPORTATION:
-        return "It may teleport you next to monsters.";
+        return "이것은 당신을 몬스터 옆으로 텔레포트시킬 지 모른다.";
 #if TAG_MAJOR_VERSION == 34
     case RING_TELEPORT_CONTROL:
-        return "It can be evoked for teleport control.";
+        return "이것은 조정 가능한 텔레포트를 발동시킬 수 있다.";
 #endif
     case AMU_HARM:
-        return "It increases damage dealt and taken.";
+        return "이것은 주고 받는 데미지를 증가시킨다.";
     case AMU_MANA_REGENERATION:
-        return "It increases your magic regeneration.";
+        return "이것은 마력 재생량을 증진시킨다.";
     case AMU_THE_GOURMAND:
-        return "It allows you to eat raw meat even when not hungry.";
+        return "이것은 당신이 배고프지 않아도 생고기를 먹을 수 있도록 도와준다.";
 #if TAG_MAJOR_VERSION == 34
     case AMU_DISMISSAL:
-        return "It may teleport away creatures that harm you.";
+        return "이것은 당신을 해칠 수 있는 크리쳐들을 텔레포트시킬 지 모른다.";
     case AMU_CONSERVATION:
-        return "It protects your inventory from destruction.";
+        return "이것은 파괴로부터 인벤토리를 보호한다.";
 #endif
     case AMU_GUARDIAN_SPIRIT:
-        return "It causes incoming damage to be split between your health and "
-               "magic.";
+        return "이것은 받는 피해량을 체력과 마력에 나눠 받도록 "
+               "한다.";
     case AMU_FAITH:
-        return "It allows you to gain divine favour quickly.";
+        return "이것은 신의 호의를 빠르게 받을 수 있도록 도와준다.";
     case AMU_REFLECTION:
-        return "It shields you and reflects attacks.";
+        return "이것은 방패처럼 당신을 보호해주고, 공격을 반사한다.";
     case AMU_INACCURACY:
-        return "It reduces the accuracy of all your attacks.";
+        return "이것은 당신이 하는 모든 공격의 정확도를 감소시킨다.";
     }
     return "";
 }
@@ -419,45 +419,45 @@ static string _randart_descrip(const item_def &item)
 
     const property_descriptor propdescs[] =
     {
-        { ARTP_AC, "It affects your AC (%d).", false },
-        { ARTP_EVASION, "It affects your evasion (%d).", false},
-        { ARTP_STRENGTH, "It affects your strength (%d).", false},
-        { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
-        { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { ARTP_SLAYING, "It affects your accuracy and damage with ranged "
-                        "weapons and melee attacks (%d).", false},
-        { ARTP_FIRE, "fire", true},
-        { ARTP_COLD, "cold", true},
-        { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
-        { ARTP_POISON, "poison", true},
-        { ARTP_NEGATIVE_ENERGY, "negative energy", true},
-        { ARTP_MAGIC_RESISTANCE, "It affects your resistance to hostile "
-                                 "enchantments.", false},
-        { ARTP_HP, "It affects your health (%d).", false},
-        { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},
-        { ARTP_SEE_INVISIBLE, "It lets you see invisible.", false},
-        { ARTP_INVISIBLE, "It lets you turn invisible.", false},
-        { ARTP_FLY, "It lets you fly.", false},
-        { ARTP_BLINK, "It lets you blink.", false},
-        { ARTP_BERSERK, "It lets you go berserk.", false},
-        { ARTP_NOISE, "It may make noises in combat.", false},
-        { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { ARTP_CAUSE_TELEPORTATION, "It may teleport you next to monsters.", false},
-        { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
+        { ARTP_AC, "당신의 AC에 (%d)만큼 영향을 준다.", false },
+        { ARTP_EVASION, "당신의 회피에 (%d)만큼 영향을 준다", false},
+        { ARTP_STRENGTH, "당신의 힘에 (%d)만큼 영향을 준다.", false},
+        { ARTP_INTELLIGENCE, "당신의 지능에 (%d)만큼 영향을 준다.", false},
+        { ARTP_DEXTERITY, "당신의 민첩성에 (%d)만큼 영향을 준다.", false},
+        { ARTP_SLAYING, "당신의 원거리 무기와 근접 무기의 정확도와 피해량에"
+                        "(%d)만큼 영향을 준다.", false},
+        { ARTP_FIRE, "화염", true},
+        { ARTP_COLD, "냉기", true},
+        { ARTP_ELECTRICITY, "절연되어 있어 전기로부터 당신을 보호한다.", false},
+        { ARTP_POISON, "독", true},
+        { ARTP_NEGATIVE_ENERGY, "음에너지", true},
+        { ARTP_MAGIC_RESISTANCE, "적대적인 마법부여에 대한 " 
+                                 " 당신의 저항에 영향을 준다.", false},
+        { ARTP_HP, "당신의 체력에 (%d)만큼 영향을 준다.", false},
+        { ARTP_MAGICAL_POWER, "당신의 마력 비축량에 (%d)만큼 영향을 준다.", false},
+        { ARTP_SEE_INVISIBLE, "보이지 않는 것들을 당신이 보게 해준다.", false},
+        { ARTP_INVISIBLE, "당신을 보이지 않도록 만든다", false},
+        { ARTP_FLY, "당신이 날 수 있도록 만든다.", false},
+        { ARTP_BLINK, "당신이 블링크할 수 있도록 만든다.", false},
+        { ARTP_BERSERK, "당신이 광폭화할 수 있게 한다.", false},
+        { ARTP_NOISE, "전투 중에 소음을 만들 수 있다.", false},
+        { ARTP_PREVENT_SPELLCASTING, "당신이 주문을 외우는 것을 막는다.", false},
+        { ARTP_CAUSE_TELEPORTATION, "몬스터 옆으로 당신을 텔레포트시킬 수도 있다.", false},
+        { ARTP_PREVENT_TELEPORTATION, "텔레포트 형태 대부분을 막는다.",
           false},
-        { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
-        { ARTP_CURSE, "It curses itself when equipped.", false},
-        { ARTP_CLARITY, "It protects you against confusion.", false},
-        { ARTP_CONTAM, "It causes magical contamination when unequipped.", false},
-        { ARTP_RMSL, "It protects you from missiles.", false},
-        { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
-        { ARTP_RCORR, "It protects you from acid and corrosion.", false},
-        { ARTP_RMUT, "It protects you from mutation.", false},
-        { ARTP_CORRODE, "It may corrode you when you take damage.", false},
-        { ARTP_DRAIN, "It causes draining when unequipped.", false},
-        { ARTP_SLOW, "It may slow you when you take damage.", false},
-        { ARTP_FRAGILE, "It will be destroyed if unequipped.", false },
-        { ARTP_SHIELDING, "It affects your SH (%d).", false},
+        { ARTP_ANGRY, "전투 중에 당신을 광폭화시킬 수도 있다.", false},
+        { ARTP_CURSE, "장착 시에 스스로를 저주한다.", false},
+        { ARTP_CLARITY, "당신을 혼란스럽지 않게 막아준다.", false},
+        { ARTP_CONTAM, "벗을 때 마법 오염을 유발한다.", false},
+        { ARTP_RMSL, "당신을 투사체로부터 지켜준다.", false},
+        { ARTP_REGENERATION, "당신의 회복 속도를 올려준다.", false},
+        { ARTP_RCORR, "당신을 산과 부식으로부터 지켜준다.", false},
+        { ARTP_RMUT, "당신을 돌연변이로부터 지켜준다.", false},
+        { ARTP_CORRODE, "피격될 때 당신을 부식시킬 수도 있다.", false},
+        { ARTP_DRAIN, "벗을 때 생명력을 흡수한다.", false},
+        { ARTP_SLOW, "피격될 때 당신을 느리게 만들 수도 있다.", false},
+        { ARTP_FRAGILE, "벗을 때 파괴될 것이다.", false },
+        { ARTP_SHIELDING, "당신의 방패 수치에 (%d)만큼 영향을 준다.", false},
     };
 
     // Give a short description of the base type, for base types with no
@@ -492,13 +492,13 @@ static string _randart_descrip(const item_def &item)
 
                 const char* prefixes[] =
                 {
-                    "It makes you extremely vulnerable to ",
-                    "It makes you very vulnerable to ",
-                    "It makes you vulnerable to ",
+                    "당신을 다음 속성에 대해 극단적으로 취약하게 만든다 : ",
+                    "당신을 다음 속성에 대해 매우 취약하게 만든다 : ",
+                    "당신을 다음 속성에 대해 취약하게 한다 : ",
                     "Buggy descriptor!",
-                    "It protects you from ",
-                    "It greatly protects you from ",
-                    "It renders you almost immune to "
+                    "당신을 다음 속성으로부터 보호한다 : ",
+                    "당신을 다음 속성으로부터 강력히 보호한다 : ",
+                    "당신을 다음 속성에 대해 거의 면역이도록 한다 : "
                 };
                 sdesc = prefixes[idx] + sdesc + '.';
             }
@@ -512,9 +512,9 @@ static string _randart_descrip(const item_def &item)
     {
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
-        snprintf(buf, sizeof buf, "\nIt makes you %s%s stealthy.",
-                 (stval < -1 || stval > 1) ? "much " : "",
-                 (stval < 0) ? "less" : "more");
+        snprintf(buf, sizeof buf, "\n당신을 %s%s 은밀하게 만든다.",
+                 (stval < -1 || stval > 1) ? "더 " : "",
+                 (stval < 0) ? "적게" : "많이");
         description += buf;
     }
 
@@ -825,11 +825,11 @@ static void _append_weapon_stats(string &description, const item_def &item)
     const skill_type skill = item_attack_skill(item);
 
     const string your_skill = crawl_state.need_save ?
-      make_stringf("\n (Your skill: %.1f)", (float) you.skill(skill, 10) / 10)
+      make_stringf("\n (당신의 기술: %.1f)", (float) you.skill(skill, 10) / 10)
       : "";
     description += make_stringf(
-    "\nBase accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d."
+    "\n기본 명중률: %+d 기본 피해량: %d 기본 공격 지연시간: %.1f"
+    "\n이 무기를 최소 공격 지연시간 (%.1f)으로 다루려면 숙련도 %d에 도달해야한다."
     "%s",
      property(item, PWPN_HIT),
      base_dam + ammo_dam,
@@ -840,7 +840,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
 
     if (skill == SK_SLINGS)
     {
-        description += make_stringf("\nFiring bullets:    Base damage: %d",
+        description += make_stringf("\n탄환 발사:    기본 피해량: %d",
                                     base_dam +
                                     ammo_type_damage(MI_SLING_BULLET));
     }
@@ -854,12 +854,12 @@ static string _handedness_string(const item_def &item)
     {
     case HANDS_ONE:
         if (you.species == SP_FORMICID)
-            description += "It is a weapon for one hand-pair.";
+            description += "한 손의 쌍으로 사용하는 무기다.";
         else
-            description += "It is a one handed weapon.";
+            description += "이것은 한 손으로 사용하는 무기다.";
         break;
     case HANDS_TWO:
-        description += "It is a two handed weapon.";
+        description += "이것은 양손으로 사용하는 무기다.";
         break;
     }
 
@@ -889,22 +889,21 @@ static string _describe_weapon(const item_def &item, bool verbose)
         switch (item_attack_skill(item))
         {
         case SK_POLEARMS:
-            description += "\n\nIt can be evoked to extend its reach.";
+            description += "\n\n이것은 발동하여 도달 범위를 늘릴 수 있다.";
             break;
         case SK_AXES:
-            description += "\n\nIt hits all enemies adjacent to the wielder, "
-                           "dealing less damage to those not targeted.";
+            description += "\n\n착용자와 밀착한 모든 적들을 공격할 수 있으나, "
+                           "대상이 아닌 적들에게는 보다 적은 피해량을 준다.";
             break;
         case SK_LONG_BLADES:
-            description += "\n\nIt can be used to riposte, swiftly "
-                           "retaliating against a missed attack.";
+            description += "\n\n이것은 반격을 사용할 수 있다, 공격을 회피했을 때 "
+                           "신속하게 보복할 수 있다.";
             break;
         case SK_SHORT_BLADES:
             {
-                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
-                                                           : "particularly";
-                description += "\n\nIt is " + adj + " good for stabbing"
-                               " unaware enemies.";
+                string adj = (item.sub_type == WPN_DAGGER) ? "극단적으로"
+                                                           : "부분적으로";
+                description += "\n\n부주의한 적들을 암습하기에 " + adj + "좋다.";
             }
             break;
         default:
@@ -927,145 +926,145 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_FLAMING:
             if (is_range_weapon(item))
             {
-                description += "It causes projectiles fired from it to burn "
-                    "those they strike,";
-            }
+            description += "이 무기는 발사한 투사체가"
+                "적중한 대상을 불태우도록 한다,";
+                }
             else
-            {
-                description += "It has been specially enchanted to burn "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes and up to half "
-                           "again as much damage against particularly "
-                           "susceptible opponents.";
+                {
+            description += "이 무기에는 적중한 대상을 불태우기 위해 "
+                "특별히 마법이 부여돼있다,";
+                }
+            description += " 대부분의 적들에게 추가적인 피해를 입히고, "
+                "특별히 취약한 몇몇 적들에게는 최대 절반의 피해를 "
+                "추가로 입힌다.";
             if (!is_range_weapon(item) &&
-                (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
-            {
-                description += " Big, fiery blades are also staple "
-                    "armaments of hydra-hunters.";
-            }
+            (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
+                {
+            description += " 크고, 불타는 칼날은 "
+                " 히드라 사냥꾼의 주요한 무기이다.";
+                }
             break;
-        case SPWPN_FREEZING:
+            case SPWPN_FREEZING:
             if (is_range_weapon(item))
-            {
-                description += "It causes projectiles fired from it to freeze "
-                    "those they strike,";
-            }
+                {
+            description += "이 무기는 발사한 투사체가"
+                "적중한 대상을 얼리도록 한다,";
+                }
             else
-            {
-                description += "It has been specially enchanted to freeze "
-                    "those struck by it,";
-            }
-            description += " causing extra injury to most foes "
-                    "and up to half again as much damage against particularly "
-                    "susceptible opponents.";
+                {
+            description += "이 무기에는 타격된 대상을 얼리기 위해 "
+                "특별히 마법이 부여돼있다,";
+                }
+            description += " 대부분의 적들에게 추가적인 피해를 주고 "
+                "특별히 취약한 몇몇 적들에게는 최대 절반의 피해를 "
+                "추가로 입힌다.";
             if (is_range_weapon(item))
-                description += " They";
+            description += "투사체들은";
             else
-                description += " It";
-            description += " can also slow down cold-blooded creatures.";
+            description += " 이 무기는";
+            description += " 냉혈 동물들을 느리게 만들 수도 있다.";
             break;
-        case SPWPN_HOLY_WRATH:
-            description += "It has been blessed by the Shining One";
+            case SPWPN_HOLY_WRATH:
+            description += "이 무기는 샤이닝원의 축복을 받았다";
             if (is_range_weapon(item))
-            {
-                description += ", and any ";
+                {
+            description += "와, 여기에서 발사된 ";
+            description += ammo_name(item);
+            description += " 투사체들은";
+                }
+            else
+            description += " ";
+            description += "언데드들과 악마들에게 큰 피해를 유발하도록 샤이닝 원으로부터 축복받았다.";
+            break;
+            case SPWPN_ELECTROCUTION:
+            if (is_range_weapon(item))
+                {
+            description += "이 무기는 발사한 탄환에 전하를 "
+                "충전한다; 탄환이 적중하는 경우 때때로 이 탄환들에서 "
+                "전하가 방출되고 강력한 피해를 입힐 수 있다.";
+                }
+            else
+                {
+            description += "때로, 적을 맞추는 경우, 이것은 "
+                "전기 에너지를 방출하여 강력한 피해를 입힐 수 "
+                "있다.";
+                }
+            break;
+            case SPWPN_VENOM:
+            if (is_range_weapon(item))
+            description += "이 무기는 발사하는 탄환에 독성을 부여한다.";
+            else
+            description += "이 무기는 적중한 대상을 중독시킨다.";
+            break;
+            case SPWPN_PROTECTION:
+            description += "이 무기는 사용자를 부상으로부터 "
+                "보호한다 (피격 시 +AC).";
+            break;
+            case SPWPN_DRAINING:
+            description += "참으로 소름끼치는 이 무기는, 맞은 대상의 "
+                "생명력을 흡수한다.";
+            break;
+            case SPWPN_SPEED:
+            description += "이 무기를 들면 확실히 빠르게 공격할 수 있다.";
+            break;
+            case SPWPN_VORPAL:
+            if (is_range_weapon(item))
+                {
+                description += "이 무기로부터 발사된 모든 ";
                 description += ammo_name(item);
-                description += " fired from it will";
-            }
+                description += "은(는) 추가적인 피해를 입힌다.";
+                }
             else
-                description += " to";
-            description += " cause great damage to the undead and demons.";
+                {
+            description += "이 무기는 적에게 추가적인 피해를 "
+                "입힌다.";
+                }
             break;
-        case SPWPN_ELECTROCUTION:
+            case SPWPN_CHAOS:
             if (is_range_weapon(item))
-            {
-                description += "It charges the ammunition it shoots with "
-                    "electricity; occasionally upon a hit, such missiles "
-                    "may discharge and cause terrible harm.";
-            }
+                {
+            description += "이 무기에서 발사된 각각의 투사체는 "
+                "매번 다른, 무작위 효과를 가진다.";
+                }
             else
-            {
-                description += "Occasionally, upon striking a foe, it will "
-                    "discharge some electrical energy and cause terrible "
-                    "harm.";
-            }
+                {
+            description += "이 무기가 적대적인 대상을 때릴 때마다, 이것은 "
+                "매번 다른, 무작위한 효과를 가진다.";
+                }
             break;
-        case SPWPN_VENOM:
-            if (is_range_weapon(item))
-                description += "It poisons the ammo it fires.";
-            else
-                description += "It poisons the flesh of those it strikes.";
+            case SPWPN_VAMPIRISM:
+            description += "이 무기는 추가적인 피해를 입히지는 못하지만, 사용자가 "
+                "살아있는 적에게 피해를 줄 경우 사용자를 회복시킨다.";
             break;
-        case SPWPN_PROTECTION:
-            description += "It protects the one who uses it against "
-                "injury (+AC on strike).";
+            case SPWPN_PAIN:
+            description += "강령 마법에 숙달된 이가 사용할 경우, "
+                "이 무기는 생명체에게 추가적인 피해를 입힌다.";
             break;
-        case SPWPN_DRAINING:
-            description += "A truly terrible weapon, it drains the "
-                "life of those it strikes.";
+            case SPWPN_DISTORTION:
+            description += "이 무기는 주변의 공간을 전이시키고 왜곡시킨다. "
+                "이 장비를 해제하는 것은 추방이나 큰 피해를 유발할 수 있다.";
             break;
-        case SPWPN_SPEED:
-            description += "Attacks with this weapon are significantly faster.";
+            case SPWPN_PENETRATION:
+            description += "이 무기에서 발사된 탄환들은 맞은 대상들을 "
+                "관통하며, 최대 사거리에 도달할 때 까지 경로에 있는 "
+                "모든 대상들을 맞출 수도 있다.";
             break;
-        case SPWPN_VORPAL:
-            if (is_range_weapon(item))
-            {
-                description += "Any ";
-                description += ammo_name(item);
-                description += " fired from it inflicts extra damage.";
-            }
-            else
-            {
-                description += "It inflicts extra damage upon your "
-                    "enemies.";
-            }
+            case SPWPN_REAPING:
+            description += "이것으로 인해 사망한 몬스터는 괜찮은 상태의 "
+                "시체를 남기며, 이 시체들은 다시 일으켜져서 "
+                "살해자에게 우호적인 좀비로서 살아날 것이다.";
             break;
-        case SPWPN_CHAOS:
-            if (is_range_weapon(item))
-            {
-                description += "Each projectile launched from it has a "
-                               "different, random effect.";
-            }
-            else
-            {
-                description += "Each time it hits an enemy it has a "
-                    "different, random effect.";
-            }
+            case SPWPN_ANTIMAGIC:
+            description += "이 무기는 사용자의 마법적인 에너지를 감소시키며, "
+                "맞은 대상들의 주문과 마법적인 능력들을 방해한다 "
+                "자연적인 능력들과 성스러운 기도들은 영향을 "
+                "받지 않는다.";
             break;
-        case SPWPN_VAMPIRISM:
-            description += "It inflicts no extra harm, but heals "
-                "its wielder when it wounds a living foe.";
-            break;
-        case SPWPN_PAIN:
-            description += "In the hands of one skilled in necromantic "
-                "magic, it inflicts extra damage on living creatures.";
-            break;
-        case SPWPN_DISTORTION:
-            description += "It warps and distorts space around it. "
-                "Unwielding it can cause banishment or high damage.";
-            break;
-        case SPWPN_PENETRATION:
-            description += "Ammo fired by it will pass through the "
-                "targets it hits, potentially hitting all targets in "
-                "its path until it reaches maximum range.";
-            break;
-        case SPWPN_REAPING:
-            description += "If a monster killed with it leaves a "
-                "corpse in good enough shape, the corpse will be "
-                "animated as a zombie friendly to the killer.";
-            break;
-        case SPWPN_ANTIMAGIC:
-            description += "It reduces the magical energy of the wielder, "
-                    "and disrupts the spells and magical abilities of those "
-                    "hit. Natural abilities and divine invocations are not "
-                    "affected.";
-            break;
-        case SPWPN_NORMAL:
+            case SPWPN_NORMAL:
             ASSERT(enchanted);
-            description += "It has no special brand (it is not flaming, "
-                    "freezing, etc), but is still enchanted in some way - "
-                    "positive or negative.";
+            description += "이 무기는 특별한 속성이 부여되어 있지 않지만,"
+                "(화염, 냉기 등), 좋든 나쁘든 간에 여전히 어떤 속성이 "
+                "부여되어 있다.";
             break;
         }
     }
@@ -1096,38 +1095,38 @@ static string _describe_weapon(const item_def &item, bool verbose)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
             && item_type_known(item))
         {
-            description += "\nThis weapon may have some hidden properties.";
+            description += "\n이 무기는 숨겨진 속성을 가지고 있는 것 같다.";
         }
     }
 
     if (verbose)
     {
-        description += "\n\nThis ";
+        description += "\n\n이 ";
         if (is_unrandom_artefact(item))
             description += get_artefact_base_name(item);
         else
-            description += "weapon";
-        description += " falls into the";
+            description += "무기는";
+        description += " 에서 얻었다";
 
         const skill_type skill = item_attack_skill(item);
 
         description +=
-            make_stringf(" '%s' category. ",
+            make_stringf(" '%s' 카테고리. ",
                          skill == SK_FIGHTING ? "buggy" : skill_name(skill));
 
         description += _handedness_string(item);
 
         if (!you.could_wield(item, true) && crawl_state.need_save)
-            description += "\nIt is too large for you to wield.";
+            description += "\n이것은 당신이 장비하기엔 너무 크다.";
     }
 
     if (!is_artefact(item))
     {
         if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
-            description += "\nIt cannot be enchanted further.";
+            description += "\n이것은 더이상 강화될 수 없다.";
         else
         {
-            description += "\nIt can be maximally enchanted to +"
+            description += "\n이것은 최대 다음 수치까지 강화될 수 있다 : +"
                            + to_string(MAX_WPN_ENCHANT) + ".";
         }
     }
@@ -1151,101 +1150,101 @@ static string _describe_ammo(const item_def &item)
         string threw_or_fired;
         if (can_throw)
         {
-            threw_or_fired += "threw";
+            threw_or_fired += "투척된";
             if (can_launch)
-                threw_or_fired += " or ";
+                threw_or_fired += " 혹은 ";
         }
         if (can_launch)
-            threw_or_fired += "fired";
+            threw_or_fired += "발사된";
 
         switch (item.brand)
         {
 #if TAG_MAJOR_VERSION == 34
         case SPMSL_FLAME:
-            description += "It burns those it strikes, causing extra injury "
-                    "to most foes and up to half again as much damage against "
-                    "particularly susceptible opponents. Compared to normal "
-                    "ammo, it is twice as likely to be destroyed on impact.";
+        description += "이것은 타격한 대상을 불태우며, 대부분의 적들에게 추가적인 "
+                       "피해를 입히고 특히 취약한 적들에게는 최대 절반의 추가 피해를 "
+                       "입힐 수 있다. 일반 탄환과 비교해 봤을 때 "
+                       "충격에 의해 파괴될 확률이 두 배이다.";
             break;
         case SPMSL_FROST:
-            description += "It freezes those it strikes, causing extra injury "
-                    "to most foes and up to half again as much damage against "
-                    "particularly susceptible opponents. It can also slow down "
-                    "cold-blooded creatures. Compared to normal ammo, it is "
-                    "twice as likely to be destroyed on impact.";
+        description += "이것은 맞은 대상을 빙결시키며, 대부분의 적들에게 추가적인 "
+                       "피해를 입히고 특히 취약한 적들에게는 최대 절반의 추가 피해를 "
+                       "입힐 수 있다. 또한, 냉혈 피조물들에게는 감속을 "
+                       "유발할 수 있다. 일반 탄화과 비교해 봤을 때 "
+                       "충격에 의해 파괴될 확률이 두 배이다.";
             break;
 #endif
         case SPMSL_CHAOS:
-            description += "When ";
+            description += "언제 ";
 
             if (can_throw)
             {
-                description += "thrown, ";
+                description += "투척됐는지, ";
                 if (can_launch)
-                    description += "or ";
+                    description += "혹은 ";
             }
 
             if (can_launch)
-                description += "fired from an appropriate launcher, ";
+                description += "적절한 발사대에서 발사된, ";
 
-            description += "it has a random effect.";
+            description += "이 투사체는 무작위 효과를 가진다.";
             break;
         case SPMSL_POISONED:
-            description += "It is coated with poison.";
+            description += "이 투사체에는 독이 발라져 있다.";
             break;
         case SPMSL_CURARE:
-            description += "It is tipped with a substance that causes "
-                           "asphyxiation, dealing direct damage as well as "
-                           "poisoning and slowing those it strikes.\n"
-                           "It is twice as likely to be destroyed on impact as "
-                           "other needles.";
+        description += "이 바늘에는 질식을 유발하는 물질이 발라져 있으며 "
+                       "적중한 대상에게 직접적인 피해를 가하는 한편 "
+                       "중독과 감속 또한 유발한다.\n"
+                       "이 바늘은 다른 바늘들과 비교해 보았을 때 충격에 의해 파괴될 확률이 "
+                       "두 배이다.";
             break;
         case SPMSL_PARALYSIS:
-            description += "It is tipped with a paralysing substance.";
+            description += "이 투사체에는 마비를 유발하는 물질이 발라져 있다.";
             break;
         case SPMSL_SLEEP:
-            description += "It is coated with a fast-acting tranquilizer.";
+            description += "이 투사체에는 급속 진정제가 입혀져 있다.";
             break;
         case SPMSL_CONFUSION:
-            description += "It is tipped with a substance that causes confusion.";
-            break;
+        description += "이 투사체에는 혼란을 유발하는 물질이 발라져 있다.";
+        break;
 #if TAG_MAJOR_VERSION == 34
-        case SPMSL_SICKNESS:
-            description += "It has been contaminated by something likely to cause disease.";
-            break;
+    case SPMSL_SICKNESS:
+        description += "이 투사체는 질병을 유발하는 무언가에 의해 오염되었다.";
+        break;
 #endif
-        case SPMSL_FRENZY:
-            description += "It is tipped with a substance that sends those it "
-                           "hits into a mindless rage, attacking friend and "
-                           "foe alike.";
-            break;
-        case SPMSL_RETURNING:
-            description += "A skilled user can throw it in such a way that it "
-                           "will return to its owner.";
-            break;
-        case SPMSL_PENETRATION:
-            description += "It will pass through any targets it hits, "
-                           "potentially hitting all targets in its path until "
-                           "it reaches its maximum range.";
-            break;
-        case SPMSL_DISPERSAL:
-            description += "It will cause any target it hits to blink, with a "
-                           "tendency towards blinking further away from the "
-                           "one who " + threw_or_fired + " it.";
-            break;
-        case SPMSL_EXPLODING:
-            description += "It will explode into fragments upon hitting a "
-                           "target, hitting an obstruction, or reaching its "
-                           "maximum range.";
-            break;
-        case SPMSL_STEEL:
-            description += "It deals increased damage compared to normal ammo.";
-            break;
-        case SPMSL_SILVER:
-            description += "It deals substantially increased damage to chaotic "
-                           "and magically transformed beings. It also inflicts "
-                           "extra damage against mutated beings, according to "
-                           "how mutated they are.";
+    case SPMSL_FRENZY:
+        description += "이 투사체는 적중한 대상을 생각없는 분노 상태로 만들는 물질이 "
+                    "발라져 있으며, 분노한 대상은 자신에게 우호적인 대상들을 "
+                    "공격한다.";
+        break;
+    case SPMSL_RETURNING:
+        description += "숙련된 사용자는 이 투사체를 투척해 다시 자신에게 돌아오도록 "
+                    "할 수 있다.";
+        break;
+    case SPMSL_PENETRATION:
+        description += "이 투사체는 적중한 모든 대상을 관통하며, "
+                    "최대 사거리에 도달할 때까지 경로에 있는 모든 대상들을 "
+                    "맞출 수도 있다.";
+        break;
+    case SPMSL_DISPERSAL:
+        description += "이 투사체는 적중한 대상에게 순간이동을 유발하며, 이들은 대개"
+                    "로부터 멀어지는 방향으로 순간이동한다"
+                    "한 사람 " + threw_or_fired + " 그것을.";
+        break;
+    case SPMSL_EXPLODING:
+        description += "이 투사체는 대상을 적중시키거나, 장애물을 맞추거나, "
+                    "혹은 최대 사거리에 도달하는 경우 폭발하여 파편으로 "
+                    "분해된다.";
+        break;
+    case SPMSL_STEEL:
+        description += "이 탄환은 일반적인 탄환에 비해 증가한 피해를 입힌다.";
+        break;
+    case SPMSL_SILVER:
+        description += "이 투사체는 혼돈의 존재들과 마법적으로 변형된 존재들에 대해 "
+                    "엄청나게 증가된 피해를 입힌다. 또한 변이된 존재들에 대해서도 "
+                    "추가적인 피해를 입히는데, 피해를 입히는 정도는 "
+                    "변이된 정도에 따라 다르다.";
             break;
         }
     }
@@ -1255,14 +1254,14 @@ static string _describe_ammo(const item_def &item)
     {
         const int throw_delay = (10 + dam / 2);
         const string your_skill = crawl_state.need_save ?
-                make_stringf("\n (Your skill: %.1f)",
+                make_stringf("\n (당신의 기술: %.1f)",
                     (float) you.skill(SK_THROWING, 10) / 10)
                     : "";
 
         description += make_stringf(
-            "\nBase damage: %d  Base attack delay: %.1f"
-            "\nThis projectile's minimum attack delay (%.1f) "
-                "is reached at skill level %d."
+            "\n기본 데미지: %d 기본 공격 속도: %.1f"
+            "\n이 투사체의 최소 공격 속도는 (%.1f) "
+              "다음 기술 레벨에서 얻어진다 : %d."
             "%s",
             dam,
             (float) throw_delay / 10,
@@ -1274,9 +1273,9 @@ static string _describe_ammo(const item_def &item)
 
 
     if (ammo_always_destroyed(item))
-        description += "\nIt will always be destroyed on impact.";
+        description += "\n충격으로 인해 항상 파괴된다.";
     else if (!ammo_never_destroyed(item))
-        description += "\nIt may be destroyed on impact.";
+        description += "\n충격으로 인해 파괴 될 수 있다.";
 
     return description;
 }
@@ -1302,16 +1301,16 @@ static string _describe_armour(const item_def &item, bool verbose)
         {
             const float skill = you.get_shield_skill_to_offset_penalty(item);
             description += "\n";
-            description += "\nBase shield rating: "
+            description += "\n기본 방패 수치: "
                         + to_string(property(item, PARM_AC));
             if (!is_useless_item(item))
             {
-                description += "       Skill to remove penalty: "
+                description += "       페널티 무효화 기술 수치: "
                             + make_stringf("%.1f", skill);
                 if (crawl_state.need_save)
                 {
                     description += "\n                            "
-                                + make_stringf("(Your skill: %.1f)",
+                                + make_stringf("(당신의 기술: %.1f)",
                                                (float) you.skill(SK_SHIELDS, 10) / 10);
                 }
                 else
@@ -1324,26 +1323,26 @@ static string _describe_armour(const item_def &item, bool verbose)
         else
         {
             const int evp = property(item, PARM_EVASION);
-            description += "\n\nBase armour rating: "
+            description += "\n\n기본 갑옷 수치: "
                         + to_string(property(item, PARM_AC));
             if (get_armour_slot(item) == EQ_BODY_ARMOUR)
             {
-                description += "       Encumbrance rating: "
+                description += "       방해도 수치: "
                             + to_string(-evp / 10);
             }
             // Bardings reduce evasion by a fixed amount, and don't have any of
             // the other effects of encumbrance.
             else if (evp)
             {
-                description += "       Evasion: "
+                description += "       회피: "
                             + to_string(evp / 30);
             }
 
             // only display player-relevant info if the player exists
             if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
             {
-                description += make_stringf("\nWearing mundane armour of this type "
-                                            "will give the following: %d AC",
+                description += make_stringf("\n이 종류의 보통 갑옷을 입으면 "
+                                            "다음과 같은 효과를 얻을 수 있다: %d AC",
                                              you.base_ac_from(item));
             }
         }
@@ -1361,103 +1360,103 @@ static string _describe_armour(const item_def &item, bool verbose)
         {
         case SPARM_RUNNING:
             if (item.sub_type == ARM_NAGA_BARDING)
-                description += "It allows its wearer to slither at a great speed.";
+            description += "이것은 착용자가 대단한 속도로 이동하게 해 준다.";
             else
-                description += "It allows its wearer to run at a great speed.";
+            description += "이것은 착용자가 대단한 속도로 달릴 수 있게 해 준다.";
             break;
         case SPARM_FIRE_RESISTANCE:
-            description += "It protects its wearer from heat.";
+            description += "이것은 착용자를 열로부터 보호한다.";
             break;
         case SPARM_COLD_RESISTANCE:
-            description += "It protects its wearer from cold.";
+            description += "이것은 착용자를 냉기로부터 보호한다.";
             break;
         case SPARM_POISON_RESISTANCE:
-            description += "It protects its wearer from poison.";
+            description += "이것은 착용자를 독으로부터 보호한다.";
             break;
         case SPARM_SEE_INVISIBLE:
-            description += "It allows its wearer to see invisible things.";
+            description += "이것은 착용자가 보이지 않는 존재를 볼 수 있도록 해 준다.";
             break;
         case SPARM_INVISIBILITY:
-            description += "When activated it hides its wearer from "
-                "the sight of others, but also increases "
-                "their metabolic rate by a large amount.";
+            description += "이것이 활성화되면 착용자를 다른 이의 시야로부터 "
+                "숨기지만, 동시에 착용자의 신진대사 속도 또한 "
+                "크게 향상시킨다.";
             break;
         case SPARM_STRENGTH:
-            description += "It increases the physical power of its wearer (+3 to strength).";
+            description += "이것은 착용자의 힘을 증가시킨다 (힘 +3).";
             break;
         case SPARM_DEXTERITY:
-            description += "It increases the dexterity of its wearer (+3 to dexterity).";
+            description += "이것은 착용자의 민첩성을 증가시킨다 (민첩 +3).";
             break;
         case SPARM_INTELLIGENCE:
-            description += "It makes you more clever (+3 to intelligence).";
+            description += "이것은 당신을 더 영리하게 만들어준다 (지능 +3).";
             break;
         case SPARM_PONDEROUSNESS:
-            description += "It is very cumbersome, thus slowing your movement.";
+            description += "이것은 매우 육중하여, 당신의 움직임을 느리게 만든다.";
             break;
         case SPARM_FLYING:
-            description += "It can be activated to allow its wearer to "
-                "fly indefinitely.";
+            description += "이것은 착용자가 원하는 동안 계속해서 날 수 있는 능력을 "
+                "가지고 있다.";
             break;
         case SPARM_MAGIC_RESISTANCE:
-            description += "It increases its wearer's resistance "
-                "to enchantments.";
+            description += "이것은 착용자의 마법에 대한 저항력을 "
+                "증가시킨다.";
             break;
         case SPARM_PROTECTION:
-            description += "It protects its wearer from harm (+3 to AC).";
+            description += "이것은 착용자를 피해로부터 보호한다 (AC +3).";
             break;
         case SPARM_STEALTH:
-            description += "It enhances the stealth of its wearer.";
+            description += "이것은 착용자의 은밀도를 증가시킨다.";
             break;
         case SPARM_RESISTANCE:
-            description += "It protects its wearer from the effects "
-                "of both cold and heat.";
+            description += "이것은 착용자를 열과 냉기 둘 다로부터 "
+                "보호한다.";
             break;
         case SPARM_POSITIVE_ENERGY:
-            description += "It protects its wearer from "
-                "the effects of negative energy.";
+            description += "이것은 착용자를 음에너지로부터 "
+                "보호한다.";
             break;
 
         // This is only for robes.
         case SPARM_ARCHMAGI:
-            description += "It increases the power of its wearer's "
-                "magical spells.";
+            description += "이것은 착용자의 마법 주문의 위력을 "
+                "증가시킨다.";
             break;
 #if TAG_MAJOR_VERSION == 34
         case SPARM_PRESERVATION:
-            description += "It does nothing special.";
+            description += "이것은 별다른 능력이 없다.";
             break;
 #endif
         case SPARM_REFLECTION:
-            description += "It reflects blocked things back in the "
-                "direction they came from.";
+            description += "이것은 날아오는 딱딱한 물건들을 반사하여 "
+                "날아온 방향으로 되돌려 보낸다.";
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            description += "It shields its wearer from harm at the cost "
-                "of magical power.";
+            description += "이것은 마법 능력을 대가로 착용자를 피해로부터 "
+                "보호한다.";
             break;
 
         case SPARM_NORMAL:
             ASSERT(enchanted);
-            description += "It has no special ego (it is not resistant to "
-                           "fire, etc), but is still enchanted in some way - "
-                           "positive or negative.";
+            description += "이것은 특별한 능력은 없지만 (불에 대한 저항 등,) "
+                           "좋든 나쁘든 간에 어떤 능력이 부여되어 있긴 하다"
+                           ".";
 
             break;
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves your effectiveness with ranged "
-                           "weaponry, such as bows and javelins (Slay+4).";
+            description += "이것은 당신이 활과 석궁 등의 원거리 무기를 "
+                           "보다 탁월하게 다루게 해 준다. (Slay+4).";
             break;
 
         // These are only for scarves.
         case SPARM_REPULSION:
-            description += "It protects its wearer by repelling missiles.";
+            description += "이것은 투사체를 반사함으로서 착용자를 보호한다.";
             break;
 
         case SPARM_CLOUD_IMMUNE:
-            description += "It completely protects its wearer from the effects of clouds.";
+            description += "이것은 착용자를 구름의 영향으로부터 완벽하게 보호한다.";
             break;
         }
     }
@@ -1473,18 +1472,18 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // Can't happen, right? (XXX)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
-            description += "\nThis armour may have some hidden properties.";
+            description += "\n이 방어구에는 숨겨진 능력이 있는 것 같다.";
     }
     else
     {
         const int max_ench = armour_max_enchant(item);
         if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            description += "\n\nIt can be maximally enchanted to +"
+            description += "\n\n이것은 최대 다음 수치까지 강화될 수 있다 : +"
                            + to_string(max_ench) + ".";
         }
         else
-            description += "\n\nIt cannot be enchanted further.";
+            description += "\n\n이것은 더 이상 강화될 수 없다.";
     }
 
     return description;
@@ -1505,38 +1504,38 @@ static string _describe_jewellery(const item_def &item, bool verbose)
             switch (item.sub_type)
             {
             case RING_PROTECTION:
-                description += make_stringf("\nIt affects your AC (%+d).",
+                description += make_stringf("\n이것은 당신의 AC에 영향을 준다 (%+d).",
                                             item.plus);
                 break;
 
             case RING_EVASION:
-                description += make_stringf("\nIt affects your evasion (%+d).",
+                description += make_stringf("\n이것은 당신의 회피력에 영향을 준다 (%+d).",
                                             item.plus);
                 break;
 
             case RING_STRENGTH:
-                description += make_stringf("\nIt affects your strength (%+d).",
+                description += make_stringf("\n이것은 당신의 힘에 영향을 준다 (%+d).",
                                             item.plus);
                 break;
 
             case RING_INTELLIGENCE:
-                description += make_stringf("\nIt affects your intelligence (%+d).",
+                description += make_stringf("\n이것은 당신의 지능에 영향을 준다 (%+d).",
                                             item.plus);
                 break;
 
             case RING_DEXTERITY:
-                description += make_stringf("\nIt affects your dexterity (%+d).",
+                description += make_stringf("\n이것은 당신의 민첩에 영향을 준다 (%+d).",
                                             item.plus);
                 break;
 
             case RING_SLAYING:
-                description += make_stringf("\nIt affects your accuracy and"
-                      " damage with ranged weapons and melee attacks (%+d).",
+                description += make_stringf("\n이것은 당신의 원거리, 근거리 공격의"
+                      " 피해량과 적중률에 영향을 준다 (%+d).",
                       item.plus);
                 break;
 
             case AMU_REFLECTION:
-                description += make_stringf("\nIt affects your shielding (%+d).",
+                description += make_stringf("\n이것은 당신의 SH에 영향을 준다 (%+d).",
                                             item.plus);
                 break;
 
@@ -1558,9 +1557,9 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
             !item_ident(item, ISFLAG_KNOW_TYPE))
         {
-            description += "\nThis ";
-            description += (jewellery_is_amulet(item) ? "amulet" : "ring");
-            description += " may have hidden properties.";
+            description += "\n이 ";
+            description += (jewellery_is_amulet(item) ? "목걸이" : "반지");
+            description += "에는 숨겨진 능력이 있을 수도 있다.";
         }
     }
 
@@ -1607,7 +1606,7 @@ static string _describe_deck(const item_def &item)
     if (item_type_known(item))
         description += deck_contents(item.sub_type) + "\n";
 
-    description += make_stringf("\nMost decks begin with %d to %d cards.",
+    description += make_stringf("\n대부분의 덱은 %d 에서 %d 카드로 시작한다.",
                                 MIN_STARTING_CARDS,
                                 MAX_STARTING_CARDS);
 
@@ -1615,7 +1614,7 @@ static string _describe_deck(const item_def &item)
     if (!drawn_cards.empty())
     {
         description += "\n";
-        description += "Drawn card(s): ";
+        description += "뽑은 카드(들): ";
         description += comma_separated_fn(drawn_cards.begin(),
                                           drawn_cards.end(),
                                           card_name);
@@ -1647,7 +1646,7 @@ static string _describe_deck(const item_def &item)
     if (!seen_top_cards.empty())
     {
         description += "\n";
-        description += "Next card(s): ";
+        description += "다음 카드(들): ";
         description += comma_separated_fn(seen_top_cards.begin(),
                                           seen_top_cards.end(),
                                           card_name);
@@ -1658,7 +1657,7 @@ static string _describe_deck(const item_def &item)
         sort(other_seen_cards.begin(), other_seen_cards.end(),
              _compare_card_names);
 
-        description += "Seen card(s): ";
+        description += "본 카드(들): ";
         description += comma_separated_fn(other_seen_cards.begin(),
                                           other_seen_cards.end(),
                                           card_name);
@@ -1836,20 +1835,20 @@ string get_item_description(const item_def &item, bool verbose,
 
         if (!item_ident(item, ISFLAG_KNOW_PLUSES) && !known_empty)
         {
-            description << "\nIf evoked without being fully identified,"
-                           " several charges will be wasted out of"
-                           " unfamiliarity with the device.";
+            description << "\n감정되지 않은 상태로 발동될 경우, "
+                           "장비에 대한 미숙함으로 인해 수 회의 충전량이 "
+                           "낭비될 것이다.";
         }
 
 
         if (item_type_known(item) && !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            description << "\nIt can have at most " << wand_max_charges(item)
-                        << " charges.";
+            description << "\n이것은 최대 " << wand_max_charges(item)
+                        << " 회의 충전량을 가진다.";
         }
 
         if (known_empty)
-            description << "\nUnfortunately, it has no charges left.";
+            description << "\n안타깝게도, 이것은 더 이상의 충전량이 남아있지 않다.";
         break;
     }
 
@@ -1864,11 +1863,11 @@ string get_item_description(const item_def &item, bool verbose,
             switch (determine_chunk_effect(item))
             {
             case CE_MUTAGEN:
-                description << "\n\nEating this meat will cause random "
-                               "mutations.";
+                description << "\n\n이 고기를 먹는 것은 무작위 돌연변이를 "
+                               "유발한다.";
                 break;
             case CE_NOXIOUS:
-                description << "\n\nThis meat is toxic.";
+                description << "\n\n이 고기는 독성이다.";
                 break;
             default:
                 break;
@@ -1882,7 +1881,7 @@ string get_item_description(const item_def &item, bool verbose,
             _append_weapon_stats(stats, item);
             description << stats;
         }
-        description << "\n\nIt falls into the 'Staves' category. ";
+        description << "\n\n이것은 '봉' 범주 안에 들어간다. ";
         description << _handedness_string(item);
         break;
 
@@ -1892,27 +1891,27 @@ string get_item_description(const item_def &item, bool verbose,
         if (item.sub_type == MISC_ZIGGURAT && you.zigs_completed)
         {
             const int zigs = you.zigs_completed;
-            description << "\n\nIt is surrounded by a "
-                        << (zigs >= 27 ? "blinding " : // just plain silly
-                            zigs >=  9 ? "dazzling " :
-                            zigs >=  3 ? "bright " :
-                                         "gentle ")
-                        << "glow.";
+            description << "\n\n이것 "
+                        << (zigs >= 27 ? "은 눈이 멀 것 같은 광채를 내뿜고 " : // just plain silly
+                            zigs >=  9 ? "은 눈부신 광채에 둘러싸여 " :
+                            zigs >=  3 ? "은 밝게 빛나고 " :
+                                         "은 은은하게 빛나고 ")
+                        << "있다.";
         }
         if (is_xp_evoker(item))
         {
-            description << "\n\nOnce "
+            description << "\n\n한 번 "
                         << (item.sub_type == MISC_LIGHTNING_ROD
-                            ? "all charges have been used"
-                            : "activated")
-                        << ", this device "
+                            ? "모든 충전량이 사용된"
+                            : "발동된")
+                        << ", 이 도구 "
                         << (!item_is_horn_of_geryon(item) ?
-                           "and all other devices of its kind " : "")
-                        << "will be rendered temporarily inert. However, "
-                        << (!item_is_horn_of_geryon(item) ? "they " : "it ")
-                        << "will recharge as you gain experience."
+                           "그리고 같은 종류의 모든 다른 도구들 " : "")
+                        << "은 일시적으로 비활성화 상태가 될 것이다. 그러나, "
+                        << (!item_is_horn_of_geryon(item) ? "그것들은 " : "그것은 ")
+                        << "당신이 경험치를 얻음에 따라, 재충전할 것이다."
                         << (!evoker_charges(item.sub_type) ?
-                           " The device is presently inert." : "");
+                           " 이 장치는 현재 비활성화 상태이다." : "");
         }
         break;
 
@@ -1954,7 +1953,7 @@ string get_item_description(const item_def &item, bool verbose,
     }
 
     if (!verbose && item_known_cursed(item))
-        description << "\nIt has a curse placed upon it.";
+        description << "\n이것은 저주받았다.";
     else
     {
         if (verbose)
@@ -1962,21 +1961,21 @@ string get_item_description(const item_def &item, bool verbose,
             if (need_extra_line)
                 description << "\n";
             if (item_known_cursed(item))
-                description << "\nIt has a curse placed upon it.";
+                description << "\n이것은 저주받았다.";
 
             if (is_artefact(item))
             {
                 if (item.base_type == OBJ_ARMOUR
                     || item.base_type == OBJ_WEAPONS)
                 {
-                    description << "\nThis ancient artefact cannot be changed "
-                        "by magic or mundane means.";
+                    description << "\n이 고대의 아티팩트는 마법이나 평범한 "
+                        "방법으로는 변화시킬 수 없다.";
                 }
                 // Randart jewellery has already displayed this line.
                 else if (item.base_type != OBJ_JEWELLERY
                          || (item_type_known(item) && is_unrandom_artefact(item)))
                 {
-                    description << "\nIt is an ancient artefact.";
+                    description << "\n이것은 고대의 아티팩트이다.";
                 }
             }
         }
@@ -1985,7 +1984,7 @@ string get_item_description(const item_def &item, bool verbose,
     if (god_hates_item_handling(item))
     {
         description << "\n\n" << uppercase_first(god_name(you.religion))
-                    << " disapproves of the use of such an item.";
+                    << "은(는) 그러한 물건을 사용하는 것을 허락하지 않는다.";
     }
 
     if (verbose && origin_describable(item))
@@ -2080,11 +2079,11 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
 /// A message explaining how the player can toggle between quote &
 static const string _toggle_message =
-    "Press '<w>!</w>'"
+    "누르시오 '<w>!</w>'"
 #ifdef USE_TILE_LOCAL
-    " or <w>Right-click</w>"
+    " 혹은 <w>우클릭</w>"
 #endif
-    " to toggle between the description and quote.";
+    " 설명과 인용구를 전환하려면.";
 
 /**
  * If the given description has an associated quote, print a message at the
@@ -2390,8 +2389,8 @@ void inscribe_item(item_def &item)
     mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
 
     const bool is_inscribed = !item.inscription.empty();
-    string prompt = is_inscribed ? "Replace inscription with what? "
-                                 : "Inscribe with what? ";
+    string prompt = is_inscribed ? "새겨진 글귀를 무엇으로 다시 새길것인가? "
+                                 : "무엇으로 새기겠는가? ";
 
     char buf[79];
     int ret = msgwin_get_line(prompt, buf, sizeof buf, nullptr,
@@ -2475,13 +2474,13 @@ string get_skill_description(skill_type skill, bool need_title)
             if (you.species == SP_DEMIGOD)
             {
                 result += "\n";
-                result += "How on earth did you manage to pick this up?";
+                result += "도대체 이것을 어떻게 얻은 것인가?";
             }
             else if (you_worship(GOD_TROG))
             {
                 result += "\n";
-                result += "Note that Trog doesn't use Invocations, due to its "
-                          "close connection to magic.";
+                result += "기도술이 마법과 꽤나 연관이 있기 때문에, 트로그는 기도술을 "
+                          "사용하지 않는다는 점을 기억하라.";
             }
             break;
 
@@ -2489,8 +2488,7 @@ string get_skill_description(skill_type skill, bool need_title)
             if (you_worship(GOD_TROG))
             {
                 result += "\n";
-                result += "Keep in mind, though, that Trog will greatly "
-                          "disapprove of this.";
+                result += "명심하라, 트로그가 이것에 대해 강력히 반대한다는 것을.";
             }
             break;
         default:
@@ -2543,33 +2541,33 @@ static string _player_spell_desc(spell_type spell)
     const int limit = summons_limit(spell);
     if (limit)
     {
-        description += "You can sustain at most " + number_in_words(limit)
-                        + " creature" + (limit > 1 ? "s" : "")
-                        + " summoned by this spell.\n";
+        description += "당신은 이 주문으로 소환한 존재를 " + number_in_words(limit)
+                        + "마리만" + (limit > 1 ? "" : "")
+                        + " 유지할 수 있다.\n";
     }
 
     if (god_hates_spell(spell, you.religion))
     {
         description += uppercase_first(god_name(you.religion))
-                       + " frowns upon the use of this spell.\n";
+                       + "은(는) 이 주문을 사용하는 행위에 눈살을 찌푸린다.\n";
         if (god_loathes_spell(spell, you.religion))
-            description += "You'd be excommunicated if you dared to cast it!\n";
+            description += "감히 이 주문을 캐스팅한다면 파문 당할 것이다!\n";
     }
     else if (god_likes_spell(spell, you.religion))
     {
         description += uppercase_first(god_name(you.religion))
-                       + " supports the use of this spell.\n";
+                       + "이(가) 이 주문의 사용을 지원한다.\n";
     }
 
     if (!you_can_memorise(spell))
     {
-        description += "\nYou cannot memorise this spell because "
+        description += "\n당신은 이 주문을 외울 수 없다. 왜냐하면 "
                        + desc_cannot_memorise_reason(spell)
                        + "\n";
     }
     else if (spell_is_useless(spell, true, false))
     {
-        description += "\nThis spell will have no effect right now because "
+        description += "\n이 주문은 지금 사용해도 아무런 효과가 없다. 왜냐하면 "
                        + spell_uselessness_reason(spell, true, false)
                        + "\n";
     }
@@ -2753,28 +2751,28 @@ static string _describe_draconian(const monster_info& mi)
     switch (subsp)
     {
     case MONS_BLACK_DRACONIAN:
-        description += "Sparks flare out of its mouth and nostrils.";
+        description += "입과 콧구멍에서 스파크가 터져 나온다.";
         break;
     case MONS_YELLOW_DRACONIAN:
-        description += "Acidic fumes swirl around it.";
+        description += "산성 기체가 주위를 소용돌이치고 있다.";
         break;
     case MONS_GREEN_DRACONIAN:
-        description += "Venom drips from its jaws.";
+        description += "턱에서 독액이 뚝뚝 떨어지고 있다.";
         break;
     case MONS_PURPLE_DRACONIAN:
-        description += "Its outline shimmers with magical energy.";
+        description += "형체가 마법 에너지로 일렁거리고 있다.";
         break;
     case MONS_RED_DRACONIAN:
-        description += "Smoke pours from its nostrils.";
+        description += "콧구멍에서 연기가 뿜어져 나오고 있다.";
         break;
     case MONS_WHITE_DRACONIAN:
-        description += "Frost pours from its nostrils.";
+        description += "콧구멍에서 서리가 뿜어져 나오고 있다.";
         break;
     case MONS_GREY_DRACONIAN:
-        description += "Its scales and tail are adapted to the water.";
+        description += "비늘과 꼬리가 물에 적응했다.";
         break;
     case MONS_PALE_DRACONIAN:
-        description += "It is cloaked in a pall of superheated steam.";
+        description += "초고열의 짙은 증기 속에서 모습이 잘 보이지 않는다.";
         break;
     default:
         break;
@@ -2788,16 +2786,16 @@ static string _describe_demonspawn_role(monster_type type)
     switch (type)
     {
     case MONS_BLOOD_SAINT:
-        return "It weaves powerful and unpredictable spells of devastation.";
+        return "강력하고 예측할 수 없는 파괴적인 주문들을 연성한다.";
     case MONS_WARMONGER:
-        return "It is devoted to combat, disrupting the magic of its foes as "
-               "it battles endlessly.";
+        return "전투에 최적화되어 있으며, 끊임없이 싸우며 자신에게 적대적인 존재들의 "
+               "마법 사용을 방해한다.";
     case MONS_CORRUPTER:
-        return "It corrupts space around itself, and can twist even the very "
-               "flesh of its opponents.";
+        return "주위의 공간을 타락시키며, 적대적인 존재들의 육체를 "
+               "비틀어버릴 수 있다.";
     case MONS_BLACK_SUN:
-        return "It shines with an unholy radiance, and wields powers of "
-               "darkness from its devotion to the deities of death.";
+        return "위험한 빛으로 빛나며, 죽음의 신에 대한 충성의 대가로 "
+               "어둠의 힘을 사용한다.";
     default:
         return "";
     }
@@ -2808,13 +2806,13 @@ static string _describe_demonspawn_base(int species)
     switch (species)
     {
     case MONS_MONSTROUS_DEMONSPAWN:
-        return "It is more beast now than whatever species it is descended from.";
+        return "기원이 무엇이었는지는 모르겠지만, 그보다 훨씬 야수성을 띤 것은 분명해 보인다.";
     case MONS_GELID_DEMONSPAWN:
-        return "It is covered in icy armour.";
+        return "얼음 갑옷으로 둘러싸여 있다.";
     case MONS_INFERNAL_DEMONSPAWN:
-        return "It gives off an intense heat.";
+        return "강력한 열을 방출한다.";
     case MONS_TORTUROUS_DEMONSPAWN:
-        return "It menaces with bony spines.";
+        return "앙상한 뼈들로 위협을 가한다.";
     }
     return "";
 }
@@ -3743,42 +3741,42 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << It << " is incapable of using stairs.\n";
+        inf.body << It << " 계단을 오르내릴 수 없다.\n";
         stair_use = true;
     }
 
     if (mi.is(MB_SUMMONED))
     {
-        inf.body << "\nThis monster has been summoned, and is thus only "
-                    "temporary. Killing " << it_o << " yields no experience, "
-                    "nutrition or items";
+        inf.body << "\n이 몬스터는 소환되었으며, 그래서 "
+                    "일시적이다. " << it_o << "을(를) 죽이더라도 경험치를 얻지 못하며, "
+                    "음식이나 아이템들도 얻을 수 없을 것이다.";
         if (!stair_use)
-            inf.body << ", and " << it << " is incapable of using stairs";
+            inf.body << ", 또한 " << it << " 계단을 오르내릴 수 없다";
         inf.body << ".\n";
     }
     else if (mi.is(MB_PERM_SUMMON))
     {
-        inf.body << "\nThis monster has been summoned in a durable way. "
-                    "Killing " << it_o << " yields no experience, nutrition "
-                    "or items, but " << it_o << " cannot be abjured.\n";
+        inf.body << "\n이 몬스터는 지속 가능한 방법으로 소환되었다. "
+                    "" << it_o << "을(를) 죽이더라도 경험치나 음식, 아이템들을 얻을 수 "
+                    "없지만, " << it_o << "은(는) 송환시킬 수 없다.\n";
     }
     else if (mi.is(MB_NO_REWARD))
     {
-        inf.body << "\nKilling this monster yields no experience, nutrition or"
-                    " items.";
+        inf.body << "\n이 몬스터를 죽이더라도 경험치는 없으며, 음식이나"
+                    " 아이템도 없을 것이다.";
     }
     else if (mons_class_leaves_hide(mi.type))
     {
-        inf.body << "\nIf " << it << " is slain, it may be possible to "
-                    "recover " << mi.pronoun(PRONOUN_POSSESSIVE)
-                 << " hide, which can be used as armour.\n";
+        inf.body << "\n만약 " << it << "이(가) 죽는다면, "
+                    "방어구로 사용할 수 있는 " << mi.pronoun(PRONOUN_POSSESSIVE)
+                 << "의 짐승 가죽을, 복구하는 것이 가능할 지 모른다.\n";
     }
 
     if (mi.is(MB_SUMMONED_CAPPED))
     {
-        inf.body << "\nYou have summoned too many monsters of this kind to "
-                    "sustain them all, and thus this one will shortly "
-                    "expire.\n";
+        inf.body << "\n이 종류의 몬스터들을 모두 유지하기에는 이 종류의 몬스터들을 "
+                    "너무 많이 소환했다. 그래서 이 몬스터에 대한 소환은 곧 "
+                    "만료될 것이다.\n";
     }
 
     if (!inf.quote.empty())
@@ -4127,11 +4125,11 @@ string extra_cloud_info(cloud_type cloud_type)
 {
     const bool opaque = is_opaque_cloud(cloud_type);
     const string opacity_info = !opaque ? "" :
-        "\nThis cloud is opaque; one tile will not block vision, but "
-        "multiple will.";
+        "\n이 구름은 불투명하다; 타일 하나의 구름은 시야를 가리지 않으나, "
+        "다수의 구름은 시야를 가릴 것이다.";
     const string vanish_info
-        = make_stringf("\nClouds of this kind an adventurer makes will vanish "
-                       "%s once outside their sight.",
-                       opaque ? "quickly" : "almost instantly");
+        = make_stringf("\n모험가가 만드는 이 종류의 구름은 그들의 시야 밖에서 "
+                       "%s 사라질 것이다.",
+                       opaque ? "빠르게" : "거의 즉시");
     return opacity_info + vanish_info;
 }

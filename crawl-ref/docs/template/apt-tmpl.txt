@@ -1,39 +1,39 @@
-TABLES OF APTITUDES
+적성 일람표
 
-The following three tables describe all aptitudes of the various species
-for the various skills. Knowledge, neither explicit nor implicit, of these
-are not necessary for winning in Crawl. The qualitative information behind
-this sheet (i.e., which species are good at which tasks) can be obtained in
-two other ways:
-- Read the species section in the manual about strengths and weaknesses.
-- Look at which combinations of species and background are recommended.
+다음 세가지 일람표는 게임 내 여러가지 기술들에 대한 종족들의 적성을 
+설명합니다. 이 지식들은 절대적인 것이 아니며, 던전 크롤에서 승리하는데에
+반드시 필요한 것은 아닙니다. 이 문서에서 얻을 수 있는 것보다  더 많은 정보를
+원하신다면 (즉, 어떤 종족이 무엇을 잘하는지는) 다음과 같은 두 가지 방법을
+참고하세요:
+- 매뉴얼의 종족 부분에서 장점과 단점에 대해 읽으세요.
+- 종족과 직업의 조합을 보는것을 추천합니다.
 
- --  no aptitude (cannot learn this skill at all)
- -5  abysmal aptitude
- -4  terrible aptitude (learning half as fast as at 0 aptitude)
- -3  very poor aptitude
- -2  poor aptitude
- -1  slightly disfavoured aptitude
-  0  standard aptitude
- +1  slightly favoured aptitude
- +2  strong aptitude
- +3  very strong aptitude
- +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
- +5  exceptional aptitude
+ --  적성 없음 (해당 기술을 배울수 없음)
+ -5  최악의 적성
+ -4  끔찍한 적성(0의 적성은 이보다 50% 빠르게 습득함)
+ -3  매우 나쁜 적성
+ -2  나쁜 적성
+ -1  약간 나쁜 적성
+  0  평범한 적성
+ +1  약간 좋은 적성
+ +2  좋은 적성
+ +3  매우 좋은 적성
+ +4  뛰어난 적성(0의 적성은 이보다 50% 느리게 습득함)
+ +5  예외적 적성
 
-There are four special values: HP, MP, Experience and Magic Resistance:
-- The HP value indicates the percentage of hit points gained per experience
-  level, 100% being the Human standard.
+여기 네가지의 특수값: HP, MP, 경험치, 그리고 마법 저항력이 있습니다:
+- HP는 레벨당 얻는 체력 수치의 백분율을 나타내며, 100%가 인간의 
+  표준치 입니다.
 - The MP value indicates a fixed additive modifier to magic points.
-- The Experience value indicates how much experience has to be earned in
-  order to gain a new experience level, +1 being the Human standard. These
-  values use the same scale as the skill aptitudes.
-- The Magic Resistance value indicates resistance to hostile enchantments per
-  experience level, +3 being the Human standard.
+- 경험치는 캐릭터가 레벨을 올리는데에 얼마나 많은 경험치를 필요로 하는지
+  나타냅니다. +1이 인간의 표준치입니다. 경험치의 계산은 적성과 같은 계산식을
+  사용합니다.
+- 마법 저항력은 레벨당 얻는 적대적인 마법에 대한 저항력을 나타내며, +3이
+  인간의 표준치 입니다.
 
-The abbreviations used for the skills are:
+기술들에 사용되는 줄임말은 다음과 같습니다:
 
-General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
+일반 기술, 경험치             근접 & 원거리 전투술          주문 시전술과 마법학파
 --------------------------   -----------------------     ----------------------
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                SBl - Short Blades          Coj - Conjurations

@@ -1999,7 +1999,7 @@ void process_command(command_type cmd)
 
     case CMD_QUIT:
         if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no("Are you sure you want to abandon this character and quit the game?"))
+            || yes_or_no("이 캐릭터를 포기하고 게임을 종료 하겠는가?"))
         {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }
