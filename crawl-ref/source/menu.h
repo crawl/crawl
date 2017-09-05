@@ -1178,8 +1178,9 @@ string get_linebreak_string(const string& s, int maxcol);
 class Popup
 {
 public:
-    // constructors
+    // constructors/destructor
     Popup(string prompt);
+    ~Popup();
 
     // accessors
     //  get/set prompt text

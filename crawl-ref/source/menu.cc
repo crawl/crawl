@@ -63,6 +63,11 @@ Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)
 {
 }
 
+Popup::~Popup()
+{
+    deleteAll(m_entries);
+}
+
 void Popup::set_prompt(string prompt)
 {
     m_prompt = prompt;
