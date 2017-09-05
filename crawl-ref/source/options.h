@@ -126,6 +126,7 @@ struct game_options
 {
 public:
     game_options();
+    ~game_options();
     void reset_options();
 
     void read_option_line(const string &s, bool runscripts = false);
