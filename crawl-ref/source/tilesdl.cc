@@ -159,10 +159,13 @@ void TilesFramework::shutdown()
     delete m_region_map;
     delete m_region_tab;
     delete m_region_inv;
+    delete m_region_abl;
     delete m_region_spl;
     delete m_region_mem;
-    delete m_region_abl;
     delete m_region_mon;
+    delete m_region_cmd;
+    delete m_region_cmd_meta;
+    delete m_region_cmd_map;
     delete m_region_crt;
     delete m_region_menu;
 
@@ -172,10 +175,13 @@ void TilesFramework::shutdown()
     m_region_map   = nullptr;
     m_region_tab   = nullptr;
     m_region_inv   = nullptr;
+    m_region_abl   = nullptr;
     m_region_spl   = nullptr;
     m_region_mem   = nullptr;
-    m_region_abl   = nullptr;
     m_region_mon   = nullptr;
+    m_region_cmd   = nullptr;
+    m_region_cmd_meta = nullptr;
+    m_region_cmd_map  = nullptr;
     m_region_crt   = nullptr;
     m_region_menu  = nullptr;
 
