@@ -3747,6 +3747,10 @@ MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
 
 MenuScroller::~MenuScroller()
 {
+#ifdef USE_TILE_LOCAL
+    delete m_arrow_up;
+    delete m_arrow_down;
+#endif
     deleteAll(m_entries);
 }
 
