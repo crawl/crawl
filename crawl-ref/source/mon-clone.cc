@@ -256,32 +256,29 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
 }
 
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
-                    mon_attitude_type mon_att, coord_def pos)
+                    mon_attitude_type mon_att)
 {
     // Is there an open slot in menv?
     monster* mons = get_free_monster();
+    coord_def pos(0, 0);
 
     if (!mons)
         return nullptr;
 
-    if (!in_bounds(pos))
+    for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
     {
-        for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
+        if (in_bounds(*ai)
+            && !actor_at(*ai)
+            && monster_habitable_grid(orig, grd(*ai)))
         {
-            if (in_bounds(*ai)
-                && !actor_at(*ai)
-                && monster_habitable_grid(orig, grd(*ai)))
-            {
-                pos = *ai;
-            }
+            pos = *ai;
         }
-
-        if (!in_bounds(pos))
-            return nullptr;
     }
 
+    if (!in_bounds(pos))
+        return nullptr;
+
     ASSERT(!actor_at(pos));
-    ASSERT_IN_BOUNDS(pos);
 
     *mons          = *orig;
     mons->set_new_monster_id();
